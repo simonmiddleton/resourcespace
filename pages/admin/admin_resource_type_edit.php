@@ -206,8 +206,8 @@ if($actions_required)
 	<div class="clearerleft"> </div>
     </div>
     <div class="QuestionSubmit">		
-        <input name="cancel" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["cancel"]) ?>&nbsp;&nbsp;" onClick="history.go(-1);return false;"/>
-        <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["action-delete"]) ?>&nbsp;&nbsp;" onClick="if(confirm('<?php  echo escape_quoted_data($lang["confirm-deletion"]) ?>')){jQuery('#restype_delete').val('yes');this.form.submit();}else{jQuery('#restype_delete').val('');}return false;"/>
+        <input name="cancel" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["cancel"]) ?>&nbsp;&nbsp;" onClick="history.go(-1);return false;"/>
+        <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["action-delete"]) ?>&nbsp;&nbsp;" onClick="if(confirm('<?php  echo escape_quoted_data($lang["confirm-deletion"]) ?>')){jQuery('#restype_delete').val('yes');this.form.submit();}else{jQuery('#restype_delete').val('');}return false;"/>
 
     </div>
     <?php
@@ -223,7 +223,7 @@ else
     
     <div class="Question">
 	<label><?php echo htmlspecialchars($lang["property-name"]) ?></label>
-	<input name="name" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string)$restypedata["name"])?>" />
+	<input name="name" type="text" class="stdwidth" value="<?php echo escape_quoted_data((string)$restypedata["name"])?>" />
 	<div class="clearerleft"> </div>
     </div>
 
@@ -233,7 +233,7 @@ else
     
     <div class="Question">
 	<label><?php echo htmlspecialchars($lang["property-allowed_extensions"]) ?></label>
-	<input name="allowed_extensions" type="text" class="stdwidth" value="<?php echo htmlspecialchars((string)$restypedata["allowed_extensions"])?>" />
+	<input name="allowed_extensions" type="text" class="stdwidth" value="<?php echo escape_quoted_data((string)$restypedata["allowed_extensions"])?>" />
 	
 	<div class="FormHelp" style="padding:0;clear:left;" >
 	    <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-allowed_extensions"])  ?>
