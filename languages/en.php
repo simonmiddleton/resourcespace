@@ -2759,6 +2759,8 @@ $lang['jq_notify_user_preparing_archive'] = 'Preparing archive for collection do
 /* Manage external shares */
 $lang['permission_manage_external_shares'] = 'Can manage external shares with expiry set to "Never"';
 $lang['manage_external_shares'] = 'External shares';
+$lang['external_shares_options'] = 'External share options';
+$lang['email_shares_options_summary'] = 'These options will only apply for shares created using an external email address';
 $lang['filter_label'] = 'Filter';
 /* end of Manage external shares */
 
