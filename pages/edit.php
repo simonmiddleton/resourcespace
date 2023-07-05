@@ -1738,7 +1738,7 @@ if ($upload_review_mode && count($locked_fields) > 0 && $lastedited > 0)
 if (($ref < 0 || $upload_review_mode) 
     && isset($metadata_template_resource_type)
     && (isset($metadata_template_title_field))
-    && in_array($metadata_template_resource_type, explode(",",(string)$resource["resource_types"]))
+    && $resource["resource_type"]==$metadata_template_resource_type
     )
     {
     # recreate fields array, first with metadata template field
@@ -1746,17 +1746,17 @@ if (($ref < 0 || $upload_review_mode)
     $fields_count = count($fields);
     for ($n=0;$n<$fields_count;$n++)
         {
-        if (in_array($metadata_template_resource_type, explode(",",(string)$resource["resource_types"])))
+        if (in_array($metadata_template_resource_type, explode(",",(string)$fields[$n]["resource_types"])))
             {
             $newfields[$x]=$fields[$n];
             ++$x;
             }
         }
-    # then add the others
+    # Then add the global fields
     $fields_count = count($fields);
     for ($n=0;$n<$fields_count;$n++)
         {
-        if (!in_array($metadata_template_resource_type, explode(",",(string)$resource["resource_types"])))
+        if ($fields[$n]["global"] == 1)
             {
             $newfields[$x]=$fields[$n];
             ++$x;
