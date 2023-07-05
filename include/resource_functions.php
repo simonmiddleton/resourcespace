@@ -7848,52 +7848,11 @@ function get_fields($field_refs)
         }
 
     $fields=ps_query("
-        SELECT
-               ref,
-               name,
-               title,
-               field_constraint,
-               type,
-               order_by,
-               keywords_index,
-               partial_index,
-               resource_column,
-               display_field,
-               use_for_similar,
-               iptc_equiv,
-               display_template,
-               tab_name,
-               required,
-               smart_theme_name,
-               exiftool_field,
-               advanced_search,
-               simple_search,
-               help_text,
-               display_as_dropdown,
-               external_user_access,
-               autocomplete_macro,
-               hide_when_uploading,
-               hide_when_restricted,
-               value_filter,
-               exiftool_filter,
-               omit_when_copying,
-               tooltip_text,
-               regexp_filter,
-               sync_field,
-               display_condition,
-               onchange_macro,
-               linked_data_field,
-               automatic_nodes_ordering,
-               fits_field,
-               personal_data,
-               include_in_csv_export,
-               browse_bar,
-               read_only,
-               active,
-               full_width
-          FROM resource_type_field
-         WHERE ref IN (" . ps_param_insert(count($field_refs)) . ")
-      ORDER BY order_by", ps_param_fill($field_refs,"i"),"schema");
+        SELECT " . columns_in("resource_type_field","rtf") . ", t.name AS tab_name
+          FROM resource_type_field rtf
+          LEFT JOIN tab t ON t.ref=rtf.tab          
+         WHERE rtf.ref IN (" . ps_param_insert(count($field_refs)) . ")
+      ORDER BY rtf.order_by", ps_param_fill($field_refs,"i"),"schema");
 
     $return = array();
     foreach($fields as $field)
