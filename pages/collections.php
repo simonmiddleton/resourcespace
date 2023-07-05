@@ -505,6 +505,17 @@ if ($add!="")
             <?php
             }
         }
+    else
+        {
+        foreach ($addarray as $add)
+            {
+            $resaccess = get_resource_access($add);
+            if($resaccess > 1)
+                {
+                $allowadd = false;
+                }
+            }
+        }
 
     if($allowadd)
         {
@@ -529,6 +540,12 @@ if ($add!="")
             {
             ?><script language="Javascript">alert("<?php echo escape_quoted_data($lang["sharedcollectionaddwarning"])?>");</script><?php
             }
+        }
+    else
+        {
+        ?>
+        <script language="Javascript">alert("<?php echo escape_quoted_data($lang["error-permissiondenied"])?>");</script>
+        <?php
         }
     }
 
