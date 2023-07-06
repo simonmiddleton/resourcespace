@@ -489,7 +489,7 @@ function ProcessFolder($folder)
                 reset($rt_ext_mappings);
                 foreach($rt_ext_mappings as $rt => $extensions)
                     {
-                    if(in_array($extension, $extensions)) { $type = $rt; }
+                    if(in_array(strtolower($extension), $extensions)) { $type = $rt; }
                     }
                 $modified_type = hook('modify_type', 'staticsync', array( $type ));
                 if (is_numeric($modified_type)) { $type = $modified_type; }
