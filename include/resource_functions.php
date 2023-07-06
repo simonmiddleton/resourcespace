@@ -3246,13 +3246,11 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
     $field_data_sql = "
              SELECT group_concat(n.name SEPARATOR ', ') AS `value`,
                     group_concat(n.ref) AS `nodes`,
-                    group_concat(rtfrt.resource_type) AS `resource_types`,
                     f.ref resource_type_field,
                     f.ref AS fref,
                     f.required AS frequired, " .
                     columns_in("resource_type_field", "f") . 
               "FROM resource_type_field f
-          LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field=f.ref
           LEFT JOIN (SELECT ref, name, resource_type_field FROM node WHERE ref IN (SELECT node FROM resource_node WHERE resource = ?) ORDER BY order_by) AS n
                     ON n.resource_type_field = f.ref
               WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . ") " . $restypesql . ")
