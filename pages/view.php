@@ -1486,7 +1486,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 { 
                                 ?>
                                 <table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions">
-                                    <tr <?php hook("downloadtableheaderattributes")?>>
+                                    <tr <?php hook("downloadtableheaderattributes")?> id="ResourceDownloadOptionsHeader">
                                         <?php
                                         $table_headers_drawn=false;
                                         $nodownloads=false;$counter=0;$fulldownload=false;
@@ -2441,11 +2441,16 @@ if($image_preview_zoom_lib_required)
 	?>
 
 <script>
-jQuery('document').ready(function()
-    {
-	/* Call SelectTab upon page load to select first tab*/
-    SelectMetaTab(<?php echo $ref.",0,".($modal ? "true" : "false") ?>);
-    registerCollapsibleSections(false);
+    jQuery('document').ready(function(){
+        /* Call SelectTab upon page load to select first tab*/
+        SelectMetaTab(<?php echo $ref.",0,".($modal ? "true" : "false") ?>);
+        registerCollapsibleSections(false);
+
+        // Hide Downloads tab if nothing inside the table
+        if (document.getElementById('ResourceDownloadOptionsHeader').innerHTML.trim().length == 0) {
+            jQuery("#DownloadsTab").hide();
+            jQuery("#DownloadsTabButton").hide();
+        }
     });
     jQuery('#previewimage').click(function(){
         window.location='#Header';
