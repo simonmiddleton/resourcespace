@@ -14,6 +14,7 @@ $offset=getval("offset",0,true);
 $restypes=getval("restypes","");
 if (strpos($search,"!")!==false) {$restypes="";}
 $archive=getval("archive",0,true);
+$modal=(getval("modal", "") == "true");
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
@@ -65,7 +66,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoshareresource"]); ?></a></p>
+<p><a onClick="return <?php echo ($modal?'ModalLoad':'CentralSpaceLoad');?>(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoshareresource"]); ?></a></p>
 
 <h1><?php echo htmlspecialchars($lang["emailresourcetitle"])?></h1>
 
@@ -130,7 +131,13 @@ include "../include/user_select.php"; ?>
 
 if(!$user_select_internal)
 	{
-    render_share_options();    
+    ?>
+    <h2 class="CollapsibleSectionHead collapsed"><?php echo htmlspecialchars($lang['external_shares_options']);?></h2>
+    <div class="CollapsibleSection" id="ExternalShareOptionsSection">
+        <p><?php echo htmlspecialchars($lang['email_shares_options_summary']);?></p>
+    <?php
+    render_share_options();
+    ?></div><?php    
     }
 	?>
 
@@ -163,7 +170,12 @@ if(!$user_select_internal)
 
 </form>
 </div>
-
+<script>
+jQuery('document').ready(function()
+    {
+    registerCollapsibleSections(true)
+    });
+</script>
 <?php		
 include "../include/footer.php";
 ?>
