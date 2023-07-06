@@ -341,6 +341,11 @@ else
 # Fetch resource data.
 $resource=get_resource_data($ref);
 
+if ($resource === false)
+    {
+    exit($lang["resourcenotfound"]);
+    }
+
 $metadatatemplate = getval('metadatatemplate',0,true);
     
 if ($upload_review_mode && $lastedited > 0)
