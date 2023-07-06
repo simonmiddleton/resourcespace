@@ -501,7 +501,7 @@ if ($add!="")
         if(!$allowadd)
             {			
             ?>
-            <script language="Javascript">alert("<?php echo escape_quoted_data($lang["sharedcollectionaddblocked"])?>");</script>
+            <script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>", "<?php echo escape_quoted_data($lang["sharedcollectionaddblocked"])?>");</script>
             <?php
             }
         }
@@ -525,7 +525,7 @@ if ($add!="")
             #add to current collection		
             if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getval("size",""))==false)
                 { ?>
-                <script language="Javascript">alert("<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
+                <script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>","<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
                 }
             else
                 {		
@@ -538,7 +538,7 @@ if ($add!="")
         # Show warning?
         if (isset($collection_share_warning) && $collection_share_warning)
             {
-            ?><script language="Javascript">alert("<?php echo escape_quoted_data($lang["sharedcollectionaddwarning"])?>");</script><?php
+            ?><script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['status-warning'])?>", "<?php echo escape_quoted_data($lang["sharedcollectionaddwarning"])?>");</script><?php
             }
         }
     else
@@ -570,7 +570,7 @@ if ($remove!="")
         #remove from current collection
         if (remove_resource_from_collection($remove, ($from_collection === '') ? $usercollection : $from_collection) == false)
             {
-            ?><script language="Javascript">alert("<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
+            ?><script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>","<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
             }
         else
             {
@@ -595,7 +595,7 @@ if ($addsearch!=-1)
 
     if ($usercollection == -$userref || !collection_writeable($usercollection))
         { ?>
-        <script language="Javascript">alert("<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
+        <script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>","<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
         }
     else
         {
@@ -605,7 +605,7 @@ if ($addsearch!=-1)
             {
             // If collection has been shared externally users with this permission can't add resources
             ?>
-            <script language="Javascript">alert("<?php echo escape_quoted_data($lang["sharedcollectionaddblocked"])?>");</script>
+            <script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>", "<?php echo escape_quoted_data($lang["sharedcollectionaddblocked"])?>");</script>
             <?php
             }
         else
@@ -663,7 +663,7 @@ if ($removesearch!="")
 	{
     if (!collection_writeable($usercollection))
         { ?>
-        <script language="Javascript">alert("<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
+        <script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>", "<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
         }
     else
         {
