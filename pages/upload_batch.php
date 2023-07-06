@@ -88,6 +88,12 @@ if (($k=="" || (!check_access_key_collection($collection_add,$k))) && !($tusuplo
         }
     }
 
+// Disable CSRF when someone is accessing an external upload share
+if ($k !== '' && $upload_share_active)
+    {
+    $CSRF_enabled = false;
+    }
+
 if($tusupload && $tus_validated)
     {
     // Process file upload. This code handles the actual TUS file upload from Uppy/Companion.
