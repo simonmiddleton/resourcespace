@@ -2189,6 +2189,13 @@ function display_field($n, $field, $newtab=false,$modal=false)
 			{
 			echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(trim(preg_replace('/\s\s+/', ' ', (string) $field['value']))) . "'>";
 			}
+        elseif ($field['type'] === FIELD_TYPE_DATE && $GLOBALS['use_native_input_for_date_field'])
+            {
+            if ($GLOBALS['blank_date_upload_template'] && $value !== '' && $ref <= 0)
+                {
+                $value = '';
+                }
+            }
 
         $is_search = false;
 
