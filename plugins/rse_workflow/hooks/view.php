@@ -192,13 +192,19 @@ function HookRse_workflowViewAdditionaldownloadtabs()
 function HookRse_workflowViewAdditionaldownloadtabbuttons()
     {
     global $lang, $modal;
-    ?>
-    <div class="Tab" id="ResourceWorkflowActionsButton">
-        <a href="#" onclick="selectDownloadTab('ResourceWorkflowActions',<?php echo $modal ? 'true' : 'false'; ?>);">
-            <?php echo htmlspecialchars($lang["rse_workflow_actions_heading"]) ?>
-        </a>
-    </div>
-    <?php
+
+    $validactions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), false);
+
+    if (count($validactions) > 0)
+        {
+        ?>
+        <div class="Tab" id="ResourceWorkflowActionsButton">
+            <a href="#" onclick="selectDownloadTab('ResourceWorkflowActions',<?php echo $modal ? 'true' : 'false'; ?>);">
+                <?php echo htmlspecialchars($lang["rse_workflow_actions_heading"]) ?>
+            </a>
+        </div>
+        <?php
+        }
     }
 
 function HookRse_workflowViewReplacetitleprefix($state)
