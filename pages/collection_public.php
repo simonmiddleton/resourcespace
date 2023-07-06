@@ -250,7 +250,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
             el.attr('data-actions-populating','1');
             var action_selection_id = el.attr('id');
             var colref = el.attr('data-col-id');
-            LoadActions('collections',action_selection_id,'collection',colref);
+            LoadActions('collectionpublic',action_selection_id,'collection',colref);
             });
         });
     </script>
@@ -263,7 +263,5 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
 </form>
 <div class="BottomInpageNav"><?php pager(false); ?></div>
 </div>
-
 <?php
 include "../include/footer.php";
-?>
