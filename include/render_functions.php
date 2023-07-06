@@ -1071,12 +1071,14 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         {
         $action_selection_id .= '_' . str_replace("-","_",$collection_data['ref']);
         }
-        
-        
+    
+
     if(!$optionsonly)
             {?>
     
-            <div class="ActionsContainer  <?php if($top_actions) { echo 'InpageNavLeftBlock'; } ?>">
+            <div class="ActionsContainer  <?php if($top_actions) { echo 'InpageNavLeftBlock'; } ?>"
+                data-actions-loaded="0"
+            >
                 <?php
         
                 if($two_line)
