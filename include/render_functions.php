@@ -3658,6 +3658,7 @@ function render_selected_collection_actions()
     global $USER_SELECTION_COLLECTION, $usercollection, $usersession, $lang, $CSRF_token_identifier, $search,
            $render_actions_extra_options, $render_actions_filter, $resources_count, $result;
 
+    $orig_resources_count = $resources_count;
     $orig_search = $search;
     $search = "!collection{$USER_SELECTION_COLLECTION}";
 
@@ -3711,6 +3712,7 @@ function render_selected_collection_actions()
 
     $search = $orig_search;
     $result = $orig_result;
+    $resources_count = $orig_resources_count;
 
     return;
     }
