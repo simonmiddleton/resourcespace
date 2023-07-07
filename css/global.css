@@ -596,6 +596,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 }
 .RecordPanel.RecordPanelLarge .RecordDownloadSpace {
     padding: 6px 1rem;
+    overflow: hidden;
 }
 .RecordPanelLarge #ResourceToolsContainer, .FloatingOptions {
     display: inline-grid;
