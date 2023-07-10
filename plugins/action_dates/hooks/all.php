@@ -490,7 +490,7 @@ function build_actiondates_urls(array $resource_refs)
 
     if (count($resource_refs) <= 250)
         {
-        $return_urls['single'] = '<a href="' . $baseurl . "/pages/search.php?search=!list" . implode(":", $resource_refs) . '">' . htmlspecialchars($lang["link"]) . '</a>';
+        $return_urls['single'] = "$baseurl/pages/search.php?search=!list" . implode(":", $resource_refs);
         }
     else
         {
