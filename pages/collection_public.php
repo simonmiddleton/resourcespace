@@ -138,25 +138,25 @@ $collcount = count($collections);
 switch ($collcount)
     {
     case 0:
-        echo htmlspecialchars($lang["total-collections-0"]);
+        echo strip_tags_and_attributes($lang["total-collections-0"]);
         break;
     case 1:
-        echo htmlspecialchars($lang["total-collections-1"]);
+        echo strip_tags_and_attributes($lang["total-collections-1"]);
         break;
     default:
-        echo str_replace("%number", $collcount, $lang["total-collections-2"]);
+        echo strip_tags_and_attributes(str_replace("%number", $collcount, $lang["total-collections-2"]));
     }
 echo " ";
 switch ($mycollcount)
     {
     case 0:
-        echo htmlspecialchars($lang["owned_by_you-0"]);
+        echo strip_tags_and_attributes($lang["owned_by_you-0"]);
         break;
     case 1:
-        echo htmlspecialchars($lang["owned_by_you-1"]);
+        echo strip_tags_and_attributes($lang["owned_by_you-1"]);
         break;
     default:
-        echo str_replace("%mynumber", $mycollcount, $lang["owned_by_you-2"]);
+        echo strip_tags_and_attributes(str_replace("%mynumber", $mycollcount, $lang["owned_by_you-2"]));
     }
 echo "<br />";
 ?>
