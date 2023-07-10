@@ -137,7 +137,7 @@ $links_trail = array(
 renderBreadcrumbs($links_trail);
 ?>
 	<p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>	
-
+    <?php if(getval("submitted", false) == true){?><div class="PageInformal"><?php echo htmlspecialchars($lang['changessaved']);?></div><?php }?>
     <form method="post" id="copypermissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="return CentralSpacePost(this,true);">	
         <?php generateFormToken("permissions"); ?>
         <input type="hidden" name="save" value="1">
@@ -446,7 +446,7 @@ $custom_permissions = join(",", array_diff($permissions, $permissions_done));
  *                       }
  * @return {void}
  */
-function SavePermissions(perms)
+function SavePermissions(perms, formsubmit)
     {
     console.debug('SavePermissions(perms = %o)', perms);
 
@@ -495,7 +495,11 @@ function SavePermissions(perms)
         .done(function(response, textStatus, jqXHR)
             {
             // redraw page to show/hide any dependendant permissions
-            CentralSpaceLoad('<?php echo $admin_group_permissions_url; ?>', false);
+            CentralSpaceLoad('<?php echo $admin_group_permissions_url; ?>' + (formsubmit?'&submitted=true':''), false);
+            if(formsubmit)
+                {
+                pageScrolltop(scrolltopElementCentral);
+                }
             })
         .fail(function(data, textStatus, jqXHR)
             {
@@ -549,7 +553,7 @@ function SaveCustomPermissions()
         });
     });
 
-    SavePermissions(custom_perms);
+    SavePermissions(custom_perms, true);
     }
 
 /**
