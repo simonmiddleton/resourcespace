@@ -99,6 +99,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
 
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
     text-align: center;
+    max-width: 500px;
 }
 
 #ResourceDownloadOptions td.DownloadFileName.AlternativeFile a {
@@ -556,6 +557,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .FormWide .Question .tickset .stdwidth{width: 99%}
 .FormWide .Question .FormHelp {margin: 0 10px 4px 20%;}
 .FormWide .Question .FormHelp .FormHelpInner {width: 87.2%; margin-left: 10px;}
+.FormWide .Question .label-spacer {margin-left: calc(20% + 10px);}
 
 .Question .Fixed {    width: 300px;float: left;margin-top: 0.4em;font-weight: bold;} 
 .FormError{font-weight: bold;font-size: 1.1em;margin: 0 0 10px 190px;padding: 10px 0 0;}
