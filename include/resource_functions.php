@@ -3420,8 +3420,9 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     // Get field_info
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
+    $nontree_fields = get_resource_type_fields("","ref","asc",'',$nontree_field_types);
     
-    $field_restypes = get_resource_type_field_resource_types();
+    $field_restypes = get_resource_type_field_resource_types($nontree_fields);
 
     // Create array to store data
     $allresdata=array();
