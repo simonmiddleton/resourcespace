@@ -3420,9 +3420,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     // Get field_info
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
-    $nontree_fields = get_resource_type_fields("","ref","asc",'',$nontree_field_types);
-    
-    $field_restypes = get_resource_type_field_resource_types($nontree_fields);
+    $field_restypes = get_resource_type_field_resource_types();
 
     // Create array to store data
     $allresdata=array();
@@ -3452,52 +3450,13 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                 $getresources[]["ref"] = $resource;
                 }
             }
-    
+
         $field_data_sql = "
                 SELECT rn.resource,
                         group_concat(n.name) AS `value`,
-                        f.ref,
                         f.ref resource_type_field,
                         f.ref AS fref,
-                        f.name,
-                        f.title,
-                        f.type,
-                        f.order_by,
-                        f.keywords_index,
-                        f.partial_index,
-                        f.display_field,
-                        f.use_for_similar,
-                        f.display_template,
-                        f.tab,
-                        f.smart_theme_name,
-                        f.advanced_search,
-                        f.simple_search,
-                        f.help_text,
-                        f.display_as_dropdown,
-                        f.external_user_access,
-                        f.autocomplete_macro,
-                        f.hide_when_uploading,
-                        f.value_filter,
-                        f.exiftool_filter,
-                        f.hide_when_restricted,
-                        f.omit_when_copying,
-                        f.tooltip_text,
-                        f.regexp_filter,
-                        f.sync_field,
-                        f.display_condition,
-                        f.onchange_macro,
-                        f.field_constraint,
-                        f.linked_data_field,
-                        f.fits_field,
-                        f.browse_bar,
-                        f.read_only,
-                        f.active,
-                        f.required AS frequired,
-                        f.automatic_nodes_ordering,
-                        f.personal_data,
-                        f.include_in_csv_export,
-                        f.full_width,
-                        f.global
+                        " . columns_in("resource_type_field", "f") . "
                 FROM resource_node rn
             LEFT JOIN node n ON n.ref=rn.node
             LEFT JOIN resource_type_field f ON f.ref=n.resource_type_field
@@ -3535,10 +3494,6 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
             }
 
         // Convert to array with resource ID as index
-
-
-        //$res=0;
-        //$validtypes = array();
         for ($n=0;$n<count($fields);$n++)
             {
             $rowadded = false;
@@ -3549,18 +3504,11 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
             // Skip fields which are not applicable
             $rtype = $restype[$fields[$n]["resource"]];
-            if(!isset($field_restypes[$fields[$n]["ref"]]) || !in_array($restype[$fields[$n]["resource"]],$field_restypes[$fields[$n]["ref"]]))
+            if($fields[$n]["global"] != 1 && (!isset($field_restypes[$fields[$n]["ref"]]) || !in_array($restype[$fields[$n]["resource"]],$field_restypes[$fields[$n]["ref"]])))
                 {
                 // This resource's resource_type is not associated with this field
                 continue;
                 }
-
-            // if(!isset($validtypes[$fields[$n]["ref"]]))
-            //     {
-            //     $rtype = ];
-            //     $validtypes[$fields[$n]["ref"]] = array();
-            //     $validtypes[$fields[$n]["ref"]][] = $rtype;
-            //     }
 
             // Add data to array
             if  (
@@ -3598,21 +3546,21 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
     foreach($allresdata as $resourceid => $resdata)
         {
         $fieldorder_by = array();
-        $fieldrestype = array();
+        $fieldglobal = array();
         $fieldref = array();
         foreach($resdata as $fkey => $field)
             {
             $fieldorder_by[$fkey]   = $field["order_by"];
-            $fieldrestype[$fkey]    = $rtype;
+            $fieldglobal[$fkey]     = $field["global"] == 1 ? 0 : 1;
             $fieldref[$fkey]        = $field["ref"];
             }
         if($ord_by)
             {
-            array_multisort($fieldorder_by, SORT_ASC, $fieldrestype, SORT_ASC, $fieldref, SORT_ASC, $allresdata[$resourceid]);
+            array_multisort($fieldorder_by, SORT_ASC, $fieldglobal, SORT_ASC, $fieldref, SORT_ASC, $allresdata[$resourceid]);
             }
         else
             {
-            array_multisort($fieldrestype, SORT_ASC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $allresdata[$resourceid]);
+            array_multisort($fieldglobal, SORT_ASC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $allresdata[$resourceid]);
             }
         }
     return $allresdata;
