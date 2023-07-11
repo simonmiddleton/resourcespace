@@ -950,20 +950,29 @@ elseif (($k != "" && !$internal_share_access))
         <?php echo $count_result . " " . $lang["youfoundresources"]?><br />
         </div>
         <?php
-        if ($download_usage && ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0)) { ?>
-            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>&url=<?php echo urlencode("pages/download_usage.php?collection=" .  $usercollection . "&k=" . $k)?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a>
-        <?php } else if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) { ?>
-        <a href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>&url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a>
-        <?php }
+        $min_access=collection_min_access($result);
+        if ($min_access==0) {
+            # Ability to download only if minimum access allows it
+            if ($download_usage && ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0)) { ?>
+                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>
+                    &url=<?php echo urlencode("pages/download_usage.php?collection=" .  $usercollection . "&k=" . $k)?>">
+                    <?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a><br />
+            <?php 
+            } else if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) { ?>
+                <a href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>
+                    &url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>
+                    " onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a><br />
+            <?php 
+            }
+        }
         if ($feedback) {?><br /><br /><a onclick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["sendfeedback"])?></a><?php } ?>
         <?php if ($count_result>0 && checkperm("q"))
             { 
             # Ability to request a whole collection (only if user has restricted access to any of these resources)
-            $min_access=collection_min_access($result);
             if ($min_access!=0)
                 {
                 ?>
-                <br/><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["requestall"])?></a>
+                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["requestall"])?></a><br />
                 <?php
                 }
             }
