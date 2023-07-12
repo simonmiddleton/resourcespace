@@ -1863,7 +1863,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 * Function used to create a list of nodes found in a search string
 * 
 * IMPORTANT: use resolve_given_nodes() if you need to detect nodes based on
-* search string format (ie. @@253@@255 and/ or !@@260)
+* search string format (ie. @@253@@255 and/ or @@!260)
 * 
 * @param string $string
 * 
@@ -1882,16 +1882,19 @@ function resolve_nodes_from_string($string)
 
     resolve_given_nodes($string, $node_bucket, $node_bucket_not);
 
-    $merged_nodes = array_merge($node_bucket, $node_bucket_not);
-
-    foreach($merged_nodes as $nodes)
+    foreach($node_bucket as $nodes)
         {
         foreach($nodes as $node)
             {
             $return[] = $node;
             }
         }
-
+    
+    foreach($node_bucket as $node_not)
+        {
+        $return[]="-".$node_not;
+        }
+        
     return $return;
     }
 
