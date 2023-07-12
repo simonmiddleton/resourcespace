@@ -1576,7 +1576,7 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
                 $template_selected = ' selected';
                 }
                 ?>
-            <option value="<?php echo $template["ref"] ?>" <?php echo $template_selected; ?>><?php echo htmlspecialchars($template["field{$metadata_template_title_field}"]); ?></option>
+            <option value="<?php echo $template["ref"] ?>" <?php echo $template_selected; ?>><?php echo htmlspecialchars((string)$template["field{$metadata_template_title_field}"]); ?></option>
             <?php   
             }
             ?>
@@ -1743,17 +1743,20 @@ if ($upload_review_mode && count($locked_fields) > 0 && $lastedited > 0)
 if (($ref < 0 || $upload_review_mode) 
     && isset($metadata_template_resource_type)
     && (isset($metadata_template_title_field))
-    && in_array($metadata_template_resource_type, explode(",",(string)$resource["resource_types"]))
+    && $metadata_template_resource_type == (int)$resource["resource_type"]
     )
     {
     # recreate fields array, first with metadata template field
     $x=0;
     $fields_count = count($fields);
+    $addedfields = [];
     for ($n=0;$n<$fields_count;$n++)
         {
-        if (in_array($metadata_template_resource_type, explode(",",(string)$resource["resource_types"])))
+        // Add fields that are template specific first
+        if (count(array_diff(explode(",",$fields[$n]["resource_types"]),[$metadata_template_resource_type])) == 0)
             {
             $newfields[$x]=$fields[$n];
+            $addedfields[] = $fields[$n]["ref"];
             ++$x;
             }
         }
@@ -1761,7 +1764,7 @@ if (($ref < 0 || $upload_review_mode)
     $fields_count = count($fields);
     for ($n=0;$n<$fields_count;$n++)
         {
-        if (!in_array($metadata_template_resource_type, explode(",",(string)$resource["resource_types"])))
+        if (!in_array($fields[$n]["ref"],$addedfields))
             {
             $newfields[$x]=$fields[$n];
             ++$x;

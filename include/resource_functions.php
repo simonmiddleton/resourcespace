@@ -3235,6 +3235,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
     // Category tree fields need special handling
     $nontree_field_types    = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
 
+    $field_restypes = get_resource_type_field_resource_types();
     $restypesql = "";
     $restype_params = [];
     if(!$multi)
@@ -3295,7 +3296,6 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
         $addfield["fref"] = $tree_field["ref"];
         $fields[] = $addfield;
         }
-
     if (empty($fields))
         {
         return false;
@@ -3316,7 +3316,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
         array_multisort($fieldglobal, SORT_DESC, $fieldorder_by, SORT_ASC, $fieldref, SORT_ASC, $fields);
         }
 
-        for ($n = 0; $n < count($fields); $n++)
+    for ($n = 0; $n < count($fields); $n++)
         {
         if  (
                 (!$use_permissions
@@ -3331,7 +3331,8 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
             {
             debug("field".$fields[$n]["title"]."=".$fields[$n]["value"]);
             $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");
-
+            // Add in asscoiated resource types
+            $fields[$n]["resource_types"] = implode(",",$field_restypes[$fields[$n]["ref"]]);
             // Sort nodes
             if(in_array($fields[$n]['type'],$FIXED_LIST_FIELD_TYPES)
                 && $fields[$n]['type'] != FIELD_TYPE_CATEGORY_TREE
