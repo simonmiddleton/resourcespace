@@ -11,6 +11,12 @@ if (!in_array($plugin_name, $plugins))
 $page_heading = $lang['openai_gpt_title'];
 $page_intro = "<p>" . $lang['openai_gpt_intro'] . "</p>";
 
+// Can't use old model since move to chat API
+if(trim($openai_gpt_model) == "text-davinci-003")
+    {
+    $openai_gpt_model = $openai_gpt_fallback_model;
+    }
+
 // Build configuration variable descriptions
 $page_def[] = config_add_text_input("openai_gpt_api_key",$lang["openai_gpt_api_key"]);
 $page_def[] = config_add_section_header($lang["plugin_category_advanced"]);
