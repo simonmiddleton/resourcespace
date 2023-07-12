@@ -1890,11 +1890,11 @@ function resolve_nodes_from_string($string)
             }
         }
     
-    foreach($node_bucket as $node_not)
+    foreach($node_bucket_not as $node_not)
         {
         $return[]="-".$node_not;
         }
-        
+
     return $return;
     }
 
