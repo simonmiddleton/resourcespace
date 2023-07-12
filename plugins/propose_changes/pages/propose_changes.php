@@ -85,7 +85,7 @@ $arr_fields = get_resource_type_fields();
 $fieldrestypes = [];
 foreach($arr_fields as $arr_field)
     {
-    $valid_restypes = explode(",",$arr_field["resource_types"]);
+    $valid_restypes = explode(",",(string)$arr_field["resource_types"]);
     $fieldrestypes[$arr_field["ref"]] = $valid_restypes;
     }
 
