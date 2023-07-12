@@ -21,7 +21,7 @@ if($ajax != "" && $current_css_reload != 0 && $current_css_reload != $css_reload
     http_response_code(205);
     $return["error"] = array(
         "status" => 205,
-        "title"  => $lang["error-reload-required"],
+        "title"  => htmlspecialchars($lang["error-reload-required"]),
     );
     echo json_encode($return);
     exit();
