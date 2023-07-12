@@ -14,7 +14,10 @@
 function openai_gpt_update_field($resources,$target_field,$values)
     {
     global $valid_ai_field_types, $FIXED_LIST_FIELD_TYPES,$language, $defaultlanguage, $openai_gpt_message_input_JSON, 
-    $openai_gpt_message_output_json, $openai_gpt_message_text, $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,$openai_gpt_temperature,$openai_gpt_example_json_user,$openai_gpt_example_json_assistant,$openai_gpt_example_text_user,$openai_gpt_example_text_assistant,$openai_gpt_max_tokens, $openai_gpt_max_data_length, $openai_gpt_system_message;
+    $openai_gpt_message_output_json, $openai_gpt_message_text, $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,
+    $openai_gpt_temperature,$openai_gpt_example_json_user,$openai_gpt_example_json_assistant,$openai_gpt_example_text_user,
+    $openai_gpt_example_text_assistant,$openai_gpt_max_tokens, $openai_gpt_max_data_length, $openai_gpt_system_message,
+    $openai_gpt_fallback_model, $openai_gpt_message_output_text;
 
     // Don't update if not a valid field type
     if(!in_array($target_field["type"],$valid_ai_field_types))
@@ -62,7 +65,7 @@ function openai_gpt_update_field($resources,$target_field,$values)
         $return_json = in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES);
 
         $intype = $send_as_json ? $openai_gpt_message_input_JSON : $openai_gpt_message_text; 
-        $outtype = $return_json ? $openai_gpt_message_output_json : $openai_gpt_message_text;
+        $outtype = $return_json ? $openai_gpt_message_output_json : $openai_gpt_message_output_text;
 
         $system_message = str_replace(["%%IN_TYPE%%","%%OUT_TYPE%%"],[$intype,$outtype],$openai_gpt_system_message);
 
@@ -82,8 +85,10 @@ function openai_gpt_update_field($resources,$target_field,$values)
         $messages[] = ["role"=>"user","content"=> $target_field["openai_gpt_prompt"] . ": " . ($send_as_json ? json_encode($prompt_values) : $prompt_values[0])];
 
 
-        debug("openai_gpt - sending request prompt " . json_encode($messages));    
-        $openai_response = openai_gpt_generate_completions($openai_gpt_api_key,$openai_gpt_model,$messages,$openai_gpt_temperature,$openai_gpt_max_tokens);
+        debug("openai_gpt - sending request prompt " . json_encode($messages));
+        // Can't use old model since move to chat API
+        $use_model =trim($openai_gpt_model) == "text-davinci-003" ? $openai_gpt_fallback_model : $openai_gpt_model;
+        $openai_response = openai_gpt_generate_completions($openai_gpt_api_key,$use_model,$messages,$openai_gpt_temperature,$openai_gpt_max_tokens);
 
         if(trim($openai_response) != "")
             {
