@@ -1159,6 +1159,21 @@ function get_user_dash($user)
         $buildstring = explode('?', $tile['url']);
         parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
 
+        if ($tile['all_users'] == 1 && strpos($tile['link'], 'team_analytics_edit.php') !== false)
+            {
+            // Dash tile is a graph from an analytics report. Clicking this tile should only link to the analytics report for the report owner.
+            // The tile won't do anything for other users as they don't have access to view the report.
+            if (!isset($user_analytics_reports))
+                {
+                $user_analytics_reports = ps_array('SELECT ref AS `value` FROM user_report WHERE user = ?', array('i', $user));
+                }
+            $analytics_report_id = (int) substr(strrchr($tile['link'], '='), 1);
+            if (!in_array($analytics_report_id, $user_analytics_reports))
+                {
+                $tile['link'] = '';
+                }
+            }
+
         $tlsize = (isset($buildstring['tlsize']) ? $buildstring['tlsize'] : '');
         if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
             {
