@@ -1090,7 +1090,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         }
                     
                     // Add to array for logging
-                    $oldnodenames[$use_node] = $fields[$n]['value'];
+                    if (!is_null($use_node))
+                        {
+                        $oldnodenames[$use_node] = $fields[$n]['value'];
+                        }
                     }
 
                 # If this is a 'joined' field we need to add it to the resource column

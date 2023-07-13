@@ -222,9 +222,11 @@ function delete_nodes_for_resource_type_field($ref)
 * @param  integer  $ref              ID of the node
 * @param  array    $returned_node    If a value does exist it will be returned through
 *                                    this parameter which is passed by reference
+* @param  bool     $cache            By default this function returns cached data. This may not be appropriate if called after
+*                                    a value has been changed, for example after editing a node name. Set to false to not use cache.
 * @return boolean
 */
-function get_node($ref, array &$returned_node)
+function get_node($ref, array &$returned_node, $cache = true)
     {
     if(is_null($ref) || (trim($ref)=="") || 0 >= $ref)
         {
@@ -235,7 +237,7 @@ function get_node($ref, array &$returned_node)
     $sql = columns_in("node");
     add_sql_node_language($sql,$parameters);    
     $parameters[] = "i";$parameters[] = $ref;
-    $node  = ps_query("SELECT " . $sql . " FROM node WHERE ref = ?",$parameters,"schema");
+    $node  = ps_query("SELECT " . $sql . " FROM node WHERE ref = ?",$parameters, $cache ? "schema" : "");
 
     if(count($node)==0)
         {

@@ -412,7 +412,7 @@ function log_node_changes($resource,$nodes_new,$nodes_current,$lognote = "",$nod
         foreach ($nodes_current as $node)
             {
             $nodedata = array();
-            if(get_node($node, $nodedata))
+            if(get_node($node, $nodedata, false))
                 {
                 if(in_array($nodedata["resource_type_field"],$treefields) && $nodedata["parent"] > 0)
                     {
@@ -428,7 +428,7 @@ function log_node_changes($resource,$nodes_new,$nodes_current,$lognote = "",$nod
         foreach ($nodes_new as $node)
             {
             $nodedata = array();
-            if(get_node($node, $nodedata))
+            if(get_node($node, $nodedata, false))
                 {
                 if(in_array($nodedata["resource_type_field"],$treefields) && $nodedata["parent"] > 0)
                     {
@@ -445,8 +445,14 @@ function log_node_changes($resource,$nodes_new,$nodes_current,$lognote = "",$nod
         }
     foreach ($nodes_renamed as $nodeid=>$oldname)
         {
+        if (!in_array($nodeid, $nodes_new))
+            {
+            // $nodes_renamed contains a node that's not being used.
+            // This could be after changing from unique node to one used elsewhere.
+            continue;
+            }
         $nodedata = array();
-        if(get_node($nodeid, $nodedata))
+        if(get_node($nodeid, $nodedata, false)) // Don't use cache - always get the latest node name when writing to the log
             {
             $nodefieldchanges[$nodedata["resource_type_field"]][0][] = $oldname;
             $nodefieldchanges[$nodedata["resource_type_field"]][1][] = $nodedata["name"];
