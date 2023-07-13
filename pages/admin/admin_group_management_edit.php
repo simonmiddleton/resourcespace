@@ -394,10 +394,9 @@ include "../../include/header.php";
             <label for="ip_restrict"><?php echo $lang["property-ip_address_restriction"]; ?></label>
             <input name="ip_restrict" type="text" class="stdwidth" value="<?php echo $record['ip_restrict']; ?>">
             <div class="clearerleft"></div>
-        </div>
-
-        <div class="FormHelp">
-            <div class="FormHelpInner"><?php echo $lang["information-ip_address_restriction"]; ?></div>
+            <div class="FormHelp">
+                <div class="FormHelpInner"><?php echo $lang["information-ip_address_restriction"]; ?></div>
+            </div>
         </div>
 
         <div class="Question">
@@ -459,10 +458,9 @@ include "../../include/header.php";
             <label><?php echo $lang["fieldtitle-tick_to_delete_group"]?></label>
             <input id="delete_user_group" name="deleteme" type="checkbox" value="yes" <?php if($has_dependants) { ?> disabled="disabled"<?php } ?>>
             <div class="clearerleft"></div>
-        </div>
-        
-        <div class="FormHelp">
-            <div class="FormHelpInner"><?php echo $lang["fieldhelp-tick_to_delete_group"]; ?></div>
+            <div class="FormHelp">
+                <div class="FormHelpInner"><?php echo $lang["fieldhelp-tick_to_delete_group"]; ?></div>
+            </div>
         </div>
         
         <div class="QuestionSubmit">
