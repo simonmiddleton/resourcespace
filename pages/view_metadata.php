@@ -256,6 +256,13 @@ foreach($fields_tab_names as $tab_ref => $tabname)
 
 if(empty($fields_tab_names))
     {
+    // Sort the fields via order_by
+    foreach($fields as $field)
+        {
+        $fieldorders[$field["ref"]] = $field["order_by"];
+        }
+    array_multisort($fieldorders, SORT_ASC, $fields);
+
     for($i = 0; $i < count($fields); $i++)
         {
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
