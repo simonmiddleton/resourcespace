@@ -188,6 +188,7 @@ function simpleldap_authenticate($username,$password)
     debug("LDAP - retrieving attributes: " . implode(",",$attributes));
 
     $result = ldap_search($ldapconnections, $dn, $filter, $attributes);
+    $search = null;
 	foreach ($result as $value) 
         {
         debug("LDAP - found " . ldap_count_entries($ds,$value) . " entries");
@@ -197,7 +198,7 @@ function simpleldap_authenticate($username,$password)
             break; 
             }
         } 
-    if (isset($search))
+    if (!is_null($search))
         {
         $entries = ldap_get_entries($ds, $search);
         }
