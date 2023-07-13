@@ -1523,6 +1523,7 @@ function save_resource_type(int $ref, array $savedata)
         }
 
     clear_query_cache("schema");
+    return true;
     }
 
 

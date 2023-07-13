@@ -97,7 +97,7 @@ parameters:
 
 		-
 			message: "#^Undefined variable\\: \\$preview_quality$#"
-			count: 2
+			count: 1
 			path: include/image_processing.php
 
 		-
@@ -234,11 +234,6 @@ parameters:
 			message: "#^Function GetStem not found\\.$#"
 			count: 1
 			path: include/search_do.php
-
-		-
-			message: "#^Undefined variable\\: \\$search_includes_themes$#"
-			count: 1
-			path: include/search_functions.php
 
 		-
 			message: "#^Result of function log_activity \\(void\\) is used\\.$#"
