@@ -394,6 +394,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         }
 
     // A file has been specified so add it as alternative
+    global $valid_upload_paths;
     $deletesourcefile = false;
     if (api_validate_upload_url($file))
         {
@@ -402,7 +403,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         $file = temp_local_download_remote_file($file, $upload_key);
         $deletesourcefile = true;
         }
-    else if (is_valid_upload_path($file))
+    else if (is_valid_upload_path($file, $valid_upload_paths))
         {
         // Path is a file
         if (is_banned_extension(pathinfo($file, PATHINFO_EXTENSION)))
