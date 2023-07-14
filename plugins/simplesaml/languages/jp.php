@@ -54,7 +54,6 @@ $lang["simplesaml_rsconfig"]='標準のResourceSpace設定ファイルを使用�
 $lang["simplesaml_sp_generate_config"]='SP設定を生成する';
 $lang["simplesaml_sp_config"]='サービスプロバイダー(SP)の設定';
 $lang["simplesaml_sp_data"]='サービスプロバイダー（SP）情報';
-$lang["simplesaml_idp_section"]='IdPの日本語への翻訳は「識別プロバイダー」です。';
 $lang["simplesaml_idp_metadata_xml"]='IdPメタデータXMLを貼り付けてください。';
 $lang["simplesaml_sp_cert_path"]='SP証明書ファイルへのパス（生成する場合は空白のままにして、以下の証明書の詳細を入力してください）';
 $lang["simplesaml_sp_key_path"]='SPキーのファイルパス（.pem）（空白の場合は生成）';
@@ -73,9 +72,6 @@ $lang["simplesaml_sp_samlphp_link"]='SimpleSAMLphpのテストサイトを訪問
 $lang["simplesaml_sp_technicalcontact_name"]='技術連絡担当者名';
 $lang["simplesaml_sp_technicalcontact_email"]='技術的な連絡先のメールアドレス';
 $lang["simplesaml_sp_auth.adminpassword"]='SP テストサイトの管理者パスワード';
-$lang["simplesaml_acs_url"]='ACS URL / Reply URLの翻訳は次の通りです：
-
-ACS URL / リプライ URL';
 $lang["simplesaml_entity_id"]='エンティティID / メタデータURL';
 $lang["simplesaml_single_logout_url"]='シングルログアウトURL';
 $lang["simplesaml_start_url"]='開始/サインオンURL';

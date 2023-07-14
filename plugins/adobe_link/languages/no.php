@@ -1,7 +1,6 @@
 <?php
 
 
-$lang["adobe_link_title"]='Adobe Link kan oversettes til "Adobe-lenke" på norsk.';
 $lang["adobe_link_configuration"]='Adobe lenkeoppsett';
 $lang["adobe_link_document_extensions"]='Adobe filformatutvidelser';
 $lang["adobe_link_asset_extensions"]='Adobe-filressursutvidelser. Disse filtypene kan importeres til Adobe InDesign.';

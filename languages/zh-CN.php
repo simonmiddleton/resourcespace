@@ -1085,7 +1085,6 @@ $lang["property-tab_name"]='选项卡名称';
 $lang["property-push_metadata"]='推送元数据';
 $lang["property-icon"]='图标';
 $lang["property-smart_theme_name"]='智能特色集合名称';
-$lang["property-exiftool_field"]='请翻译：Exiftool字段';
 $lang["property-fits_field"]='FITS字段';
 $lang["property-read_only_field"]='只读元数据字段（即在下载时不会写回）。';
 $lang["information-fits_field"]='FITS（文件信息工具集）字段将覆盖Exiftool的值，如果可以找到一个值！ 
@@ -1218,7 +1217,6 @@ $lang["nothing_to_download"]='没有可下载的内容。';
 $lang["collectionsnothemeselected"]='您必须选择或输入一个特色集合类别名称。';
 $lang["downloaded"]='已下载';
 $lang["contents"]='内容';
-$lang["forthispackage"]='请翻译：for this package';
 $lang["didnotinclude"]='未包含。';
 $lang["selectcollection"]='选择集合。';
 $lang["total"]='总计';
@@ -1395,7 +1393,6 @@ $lang["property-tab_name"]='选项卡名称';
 $lang["property-push_metadata"]='推送元数据';
 $lang["property-icon"]='图标';
 $lang["property-smart_theme_name"]='智能特色集合名称';
-$lang["property-exiftool_field"]='请翻译：Exiftool字段';
 $lang["property-fits_field"]='FITS字段';
 $lang["property-read_only_field"]='只读元数据字段（即在下载时不会写回）。';
 $lang["information-fits_field"]='FITS（文件信息工具集）字段将覆盖Exiftool的值，如果可以找到一个值！ 
@@ -1651,9 +1648,6 @@ $lang["were_available-2"]='可用的。';
 $lang["resource-0"]='资源';
 $lang["resource-1"]='资源';
 $lang["resource-2"]='资源';
-$lang["status-note"]='请翻译：NOTE
-
-备注';
 $lang["action-changelanguage"]='更改语言';
 $lang["loading"]='加载中...';
 $lang["disable_languages"]='禁用语言选择选项';
@@ -1746,11 +1740,6 @@ $lang["exportcomplete"]='您的系统配置导出已准备就绪。';
 $lang["exportfailed"]='您的系统配置导出失败。请联系您的系统管理员。';
 $lang["altfiledeletefail"]='无法删除备选文件。';
 $lang["altfilesdeletefail"]='无法删除一个或多个备选文件。';
-$lang["ratingremovehover"]='请翻译：移除您的评分。 
-
-移除您的评分。 -> Remove your rating. 
-
-将其翻译为简体字：删除您的评分。';
 $lang["ratingremoved"]='您的评分已被删除。';
 $lang["userrequestnotificationemailprotection1"]='用户登录请求表单已填写完毕，使用现有的电子邮件地址和以下详细信息：';
 $lang["userrequestnotificationemailprotection2"]='请访问下面的URL以比较此请求与现有账户。';
@@ -1779,9 +1768,6 @@ $lang["setup-binpath"]='%bin 路径';
 $lang["setup-begin_installation"]='开始安装！';
 $lang["setup-smtp-settings"]='SMTP设置';
 $lang["setup-if-usesmtp"]='使用外部SMTP服务器发送电子邮件（例如Gmail）。使用PHPMailer。';
-$lang["setup-if-smtpsecure"]='请翻译：\'\'，\'tls\'或\'ssl\'。对于Gmail，需要使用\'tls\'或\'ssl\'。
-
-TLS或SSL是一种加密协议，用于保护网络通信的安全性。在使用Gmail等电子邮件服务时，需要使用TLS或SSL来确保邮件内容的安全传输。';
 $lang["setup-if-smtphost"]='主机名，例如 \'smtp.gmail.com\'。';
 $lang["setup-if-smtpport"]='端口号，例如使用SSL的Gmail的端口号为465。';
 $lang["setup-if-smtpauth"]='发送凭据到SMTP服务器（false表示使用匿名访问）';
@@ -1923,9 +1909,6 @@ $lang["new_tags"]='新的Exiftool标签（将在下载时添加）';
 $lang["date_of_download"]='下载日期';
 $lang["metadata-report-fits_section"]='FITS标签映射';
 $lang["usagecomments"]='使用';
-$lang["dosavedsearch"]='请翻译：Do saved search
-
-已保存的搜索';
 $lang["allresourcessearchbar"]='所有资源';
 $lang["allcollectionssearchbar"]='所有收藏';
 $lang["continuetoresults"]='继续查看结果';
@@ -1990,9 +1973,6 @@ $lang["columnheader-added"]='添加的';
 $lang["columnheader-creation_date"]='创建日期';
 $lang["columnheader-sent"]='发送';
 $lang["columnheader-last_seen"]='最后查看时间';
-$lang["period"]='请翻译：Period
-
-句子本身不太清楚上下文，但如果是在数字资产管理软件ResourceSpace中，"Period" 可能指的是时间段或期间，例如资源的创建时间段或最后修改时间段。在这种情况下，"Period" 可以翻译为 "时间段" 或 "期间"。';
 $lang["lastndays"]='最近？天';
 $lang["specificdays"]='特定天数';
 $lang["specificdaterange"]='特定日期范围';
@@ -2115,7 +2095,6 @@ $lang["nodownloadcollection"]='您没有权限下载此集合中的任何资源�
 $lang["progress"]='进度';
 $lang["ticktodeletethisresearchrequest"]='勾选以删除此请求。';
 $lang["done"]='完成。';
-$lang["latlong"]='请翻译：纬度/经度';
 $lang["geographicsearch"]='地理位置搜索';
 $lang["geographicsearchresults"]='地理位置搜索结果';
 $lang["geographicsearchmissing"]='地理搜索条件缺失。';
@@ -2146,9 +2125,6 @@ $lang["nopreviewresources"]='没有预览的资源';
 $lang["action-delete_permanently"]='永久删除';
 $lang["horizontal"]='水平的';
 $lang["vertical"]='竖直 (Shùzhí)';
-$lang["cc-emailaddress"]='请翻译：CC %emailaddress
-
-抄送 %emailaddress';
 $lang["list-recipients-label"]='列出电子邮件中的所有收件人？';
 $lang["list-recipients"]='此消息已发送至以下电子邮件地址：';
 $lang["sort"]='排序';
@@ -2359,9 +2335,6 @@ $lang["embedded_metadata"]='嵌入式元数据';
 $lang["embedded_metadata_extract_option"]='提取';
 $lang["embedded_metadata_donot_extract_option"]='请勿提取。';
 $lang["embedded_metadata_append_option"]='追加';
-$lang["embedded_metadata_prepend_option"]='请翻译：Prepend
-
-在数字资产管理软件ResourceSpace中，"Prepend"通常指在资源名称或元数据字段前添加文本。因此，"Prepend"可以翻译为"前置"。';
 $lang["embedded_metadata_custom_option"]='自定义';
 $lang["related_resource_confirm_delete"]='这将删除关系，但不会删除资源。';
 $lang["batch_replace_filename_intro"]='替换一批资源，您可以上传文件，文件名与唯一资源ID匹配。或者，您可以选择包含文件名的元数据字段，系统将查找与上传的文件名匹配的文件以确定需要替换的文件。';
@@ -2824,7 +2797,6 @@ $lang["report-graph-by-pie"]='故障 (gùzhàng)';
 $lang["report-graph-by-piegroup"]='按用户组。';
 $lang["report-graph-by-pieresourcetype"]='按资源类型分类';
 $lang["report-graph-by-line"]='随着时间的推移';
-$lang["report-graph-by-summary"]='请翻译：摘要';
 $lang["update_report"]='更新报告';
 $lang["save_report"]='保存报告';
 $lang["save_report_as"]='保存报告为...';
@@ -2876,12 +2848,10 @@ $lang["actions_resource_review"]='显示我在我的操作列表中可以编辑�
 $lang["actions_modal"]='显示操作链接，例如用户请求、资源请求在模态（弹出）窗口中？';
 $lang["actions_resource_review_default"]='默认情况下在操作列表中显示可编辑资源';
 $lang["actions_notify_states"]='以下状态中的可编辑资源将被显示。';
-$lang["actions_resource_types_hide"]='请翻译：不要显示以下类型的可编辑资源';
 $lang["actions_resource_requests"]='在我的操作列表中显示资源请求。';
 $lang["actions_resource_requests_default"]='默认情况下在操作列表中显示资源请求。';
 $lang["actions_account_requests"]='在我的操作列表中显示用户账户请求。';
 $lang["actions_account_requests_default"]='默认情况下在操作列表中显示账户请求。';
-$lang["actions_approve_hide_groups"]='请翻译：不要显示以下组的账户请求';
 $lang["actions_type_resourcereview"]='资源审核';
 $lang["actions_type_resourcerequest"]='资源请求';
 $lang["actions_type_userrequest"]='账户请求';
@@ -2898,9 +2868,6 @@ $lang["set_metadata_then_upload"]='请先设置元数据，再上传。';
 $lang["annotate_text_link_label"]='注释模式切换';
 $lang["annotate_annotation_label"]='注释';
 $lang["annotate_annotations_label"]='注释';
-$lang["byte_prefix_mode_decimal"]='请翻译：使用十进制表示文件大小（1000的倍数，KB/MB/GB/TB），而不是二进制（1024的倍数，KiB/MiB/GiB/TiB）。 
-
-请使用十进制表示文件大小（1000的倍数，KB/MB/GB/TB），而不是二进制（1024的倍数，KiB/MiB/GiB/TiB）。';
 $lang["error_upload_resource_alternatives_batch"]='使用此功能（请参见$upload_alternatives_suffix），您的原始文件必须是队列中的第一个！';
 $lang["error_upload_resource_not_found"]='资源 ID 未找到！';
 $lang["error_user_registration_opt_in"]='请勾选该框以表示您的同意。';
@@ -2974,9 +2941,6 @@ $lang["filter_criteria_all"]='所有规则都必须被满足。';
 $lang["filter_criteria_none"]='规则中不能有任何一个被满足。';
 $lang["filter_criteria_any"]='任何一个规则都必须被满足。';
 $lang["filter_is_not_in"]='不是';
-$lang["filter_or"]='请翻译：OR
-
-或者';
 $lang["filter_and"]='和';
 $lang["browse_bar_text"]='浏览';
 $lang["field_show_in_browse_bar"]='在浏览栏中显示';

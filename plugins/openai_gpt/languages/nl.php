@@ -3,7 +3,6 @@
 
 $lang["openai_gpt_title"]='OpenAI-integratie';
 $lang["openai_gpt_intro"]='Voegt metadata toe die wordt gegenereerd door bestaande gegevens door te geven aan de OpenAI API met een aanpasbare prompt. Haal uw API-sleutel op van <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a><br />Raadpleeg https://beta.openai.com/docs/introduction voor meer gedetailleerde informatie.';
-$lang["property-openai_gpt_prompt"]='GPT Prompt vertalen naar het Nederlands is: GPT-opdracht.';
 $lang["property-openai_gpt_input_field"]='GPT Invoerveld';
 $lang["openai_gpt_api_key"]='OpenAI API-sleutel';
 $lang["openai_gpt_model"]='Naam van het API-model om te gebruiken (bijv. \'text-davinci-003\')';

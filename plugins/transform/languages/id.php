@@ -1,9 +1,7 @@
 <?php
 
 
-$lang["transform"]='Menerjemahkan: Transformasi';
 $lang["transformimage"]='Mentransformasi Gambar.';
-$lang["transformed"]='Menerjemahkan: Transformasi';
 $lang["imagetools"]='Alat gambar.';
 $lang["imagetoolstransform"]='Alat gambar - Transformasi';
 $lang["imagetoolstransformoriginal"]='Alat gambar - Ubah Asli';

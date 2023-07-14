@@ -3,7 +3,6 @@
 
 $lang["rss_setup_heading"]='RSS2の設定';
 $lang["rss_fields"]='RSSフィールド：';
-$lang["rss_ttl"]='RSS TTLの翻訳は「RSS TTL」です。';
 $lang["rss_show_field_titles"]='フィールドタイトルを表示する';
 $lang["new_content_rss_feed"]='新しいコンテンツのRSSフィード';
 $lang["subject"]='件名';

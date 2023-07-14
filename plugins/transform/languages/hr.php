@@ -21,7 +21,6 @@ $lang["errorspecifiedbiggerthanoriginal"]='Greška: Navedena širina ili visina 
 $lang["savealternative"]='Spremi kao alternativnu datoteku.';
 $lang["rotation"]='Rotacija';
 $lang["rotation0"]='Nema rotacije.';
-$lang["rotation90"]='Molimo prevedite: 90 stupnjeva u smjeru kazaljke na satu.';
 $lang["rotation180"]='180 stupnjeva.';
 $lang["rotation270"]='90 stupnjeva u suprotnom smjeru kazaljke na satu (CCW).';
 $lang["fliphorizontal"]='Okrenuti vodoravno?';

@@ -17,7 +17,6 @@ $lang["video_bitrate_resource_field"]='Video bithastighet utgang.';
 $lang["video_size_resource_field"]='Video størrelsesutgang';
 $lang["frame_rate_resource_field"]='Bildetakt utgangshastighet';
 $lang["aspect_ratio_resource_field"]='Sideforhold for utdata.';
-$lang["video-splice"]='Video Splice kan oversettes til "Video sammenskjøting" på norsk.';
 $lang["video-splice-intro"]='Sett sammen flere videokilder til én samlet videokilde. Dra og slipp miniatyrbildene nedenfor for å endre rekkefølgen på videoklippene.';
 $lang["action-splice"]='Splice: spleis';
 $lang["video_splice_order"]='Videoressurser i rekkefølge.';

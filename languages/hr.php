@@ -663,7 +663,6 @@ $lang["fieldtitle-artist"]='Umjetnik.';
 $lang["fieldtitle-album"]='Album.';
 $lang["fieldtitle-track"]='Pratiti.';
 $lang["fieldtitle-year"]='Godina';
-$lang["fieldtitle-genre"]='Molimo prevedite: Žanr.';
 $lang["fieldtitle-duration"]='Trajanje.';
 $lang["fieldtitle-channel_mode"]='Način kanala.';
 $lang["fieldtitle-sample_rate"]='Stopa uzorkovanja.';
@@ -695,9 +694,6 @@ $lang["fieldtype-radio_buttons"]='Radio gumbi.';
 $lang["fieldtype-warning_message"]='Upozorenje';
 $lang["fieldtype-date_range"]='Raspon datuma.';
 $lang["documentation-permissions"]='Pogledajte <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Bazu znanja</a></b> za dodatne informacije o dozvolama.';
-$lang["property-reference"]='Molimo prevedite: Reference
-
-Referenca';
 $lang["property-name"]='Ime';
 $lang["property-permissions"]='Dozvole.';
 $lang["property-permissions_inherit"]='Naslijedi od nadređene grupe.';
@@ -1212,7 +1208,6 @@ $lang["setup-binpath"]='Putanja %bin';
 $lang["setup-begin_installation"]='Započni instalaciju!';
 $lang["setup-smtp-settings"]='SMTP postavke.';
 $lang["setup-if-usesmtp"]='Koristi vanjski SMTP poslužitelj za odlazne e-pošte (npr. Gmail). Koristi PHPMailer.';
-$lang["setup-if-smtpsecure"]='"Molimo prevedite: \'\', \'tls\' ili \'ssl\'. Za Gmail, potreban je \'tls\' ili \'ssl\'."';
 $lang["setup-if-smtphost"]='Naziv poslužitelja, npr. \'smtp.gmail.com\'.';
 $lang["setup-if-smtpport"]='Broj porta, npr. 465 za Gmail korištenjem SSL-a.';
 $lang["setup-if-smtpauth"]='Pošalji vjerodajnice na SMTP poslužitelj (false za korištenje anonimnog pristupa)';
@@ -1437,7 +1432,6 @@ $lang["indicateusagemedium"]='Sredstvo upotrebe.';
 $lang["usageincorrect"]='Morate opisati planiranu upotrebu i odabrati medij.';
 $lang["savesearchassmartcollection"]='Spremi pretragu kao pametnu zbirku.';
 $lang["smartcollection"]='Pametna kolekcija.';
-$lang["dosavedsearch"]='Molimo prevedite: Spremljena pretraga';
 $lang["all"]='Sve.';
 $lang["allresourcessearchbar"]='Svi resursi.';
 $lang["allcollectionssearchbar"]='Sve kolekcije.';
@@ -1607,7 +1601,6 @@ $lang["metadatafields"]='Polja metapodataka.';
 $lang["resource_creation_and_management"]='Stvaranje / upravljanje resursima';
 $lang["themes_and_collections"]='Kolekcije';
 $lang["administration"]='Upravljanje (or Administracija)';
-$lang["other"]='Molim vas prevedite: Ostalo.';
 $lang["custompermissions"]='Prilagođena dopuštenja.';
 $lang["searchcapability"]='Pretraživanje';
 $lang["access_to_restricted_and_confidential_resources"]='Može preuzeti ograničene resurse i pregledati povjerljive resurse<br>(obično samo za administratore)';
@@ -1655,9 +1648,6 @@ $lang["nodownloadcollection"]='Nemate pristup za preuzimanje bilo kojeg resursa 
 $lang["progress"]='Napredak.';
 $lang["ticktodeletethisresearchrequest"]='Označite za brisanje ovaj zahtjev.';
 $lang["done"]='Gotovo.';
-$lang["latlong"]='Molim vas prevedite: Lat / long
-
-"LAT / LONG" se odnosi na geografsku širinu i dužinu, odnosno koordinate koje se koriste za označavanje točne lokacije na Zemlji. Na hrvatskom se to obično prevodi kao "geografska širina / dužina" ili skraćeno "GPS koordinate".';
 $lang["geographicsearch"]='Pretraga po geografskoj lokaciji.';
 $lang["geographicsearchresults"]='Geografski rezultati pretrage.';
 $lang["geographicsearchmissing"]='Nedostaju kriteriji pretrage po geografskoj lokaciji.';
@@ -1689,9 +1679,6 @@ $lang["nopreviewresources"]='Resursi bez pregleda.';
 $lang["action-delete_permanently"]='Trajno izbriši.';
 $lang["horizontal"]='Vodoravno.';
 $lang["vertical"]='Vertikalno.';
-$lang["cc-emailaddress"]='Molimo prevedite: CC %emailaddress
-
-CC %emailaddress -> Kopija (CC) %emailaddress';
 $lang["list-recipients-label"]='Izlistaj sve primatelje u e-pošti?';
 $lang["list-recipients"]='Ova poruka je poslana na sljedeće e-mail adrese:';
 $lang["sort"]='Sortiranje';
@@ -1874,7 +1861,6 @@ $lang["user_made_request"]='Sljedeći korisnik je poslao zahtjev:';
 $lang["download_collection"]='Preuzmi zbirku.';
 $lang["all-resourcetypes"]='resursi';
 $lang["all-collectiontypes"]='kolekcije';
-$lang["resourcetypes-no_collections"]='Molimo prevedite: Svi %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Sve %collectiontypes%';
 $lang["resourcetypes-collections"]='Svi %resourcetypes% i svi %collectiontypes%';
 $lang["hide_view_access_to_workflow_state"]='Blokiraj pristup stanju radnog tijeka.';
@@ -2547,7 +2533,6 @@ $lang["collection_actiontype_3"]='Uredi';
 $lang["collection_actiontype_4"]='Podijeli';
 $lang["collection_actiontype_5"]='Istraživanje.';
 $lang["collection_actiontype_6"]='Napredno.';
-$lang["collection_actiontype_999"]='Molim vas prevedite: Ostalo.';
 $lang["unknown_date_format_error"]='Greška: %row% \'%date%\' u [%field%] nije u ispravnom formatu yyyy-mm-dd hh:mm (dijelovi su dopušteni, npr. bez vremena, dana ili mjeseca)';
 $lang["date_format_error"]='Greška: %row% \'%date%\' u [%field%] neispravan unos u %parts% dijelu/dijelovima.';
 $lang["invalid_date_error"]='Greška: %row% \'%date%\' u [%field%] nije valjani datum.';
@@ -2589,9 +2574,6 @@ $lang["my_jobs"]='Poslovi';
 $lang["job_reset"]='Poništi.';
 $lang["job_status_0"]='Onemogućeno.';
 $lang["job_status_1"]='Aktivan';
-$lang["job_status_2"]='Molim vas prevedite: Complete
-
-Potpuno';
 $lang["job_status_3"]='U tijeku.';
 $lang["job_status_5"]='Nije uspjelo.';
 $lang["jobs_action_purge_complete"]='Očisti završene i neuspješne zadatke.';

@@ -8,7 +8,6 @@ $lang["discount"]='割引 (Waribiki)';
 $lang["code-expires"]='有効期限';
 $lang["confirm-delete-code"]='この割引コードを削除してもよろしいですか？';
 $lang["add_code"]='コードを追加する';
-$lang["newcode"]='NEWCODEの翻訳はありません。この単語がどのような文脈で使用されるか、追加の情報があれば教えてください。';
 $lang["code-expires-yyyymmdd"]='有効期限: (yyyy-mm-dd)';
 $lang["add_discount_code"]='割引コードを追加する';
 $lang["enter-code"]='もし割引コードを受け取っている場合は、以下に入力してください。';

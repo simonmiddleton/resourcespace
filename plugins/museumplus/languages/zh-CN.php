@@ -19,7 +19,6 @@ $lang["museumplus_object_details_title"]='MuseumPlus 详细信息';
 $lang["museumplus_script_header"]='脚本设置';
 $lang["museumplus_last_run_date"]='脚本上次运行时间';
 $lang["museumplus_enable_script"]='启用MuseumPlus脚本';
-$lang["museumplus_interval_run"]='请翻译：在以下时间间隔内运行脚本（例如+1天，+2周，两周）。如果留空，它将在cron_copy_hitcount.php每次运行时运行。';
 $lang["museumplus_log_directory"]='存储脚本日志的目录。如果留空或无效，则不会发生记录日志。';
 $lang["museumplus_integrity_check_field"]='完整性检查字段';
 $lang["museumplus_modules_configuration_header"]='模块配置';

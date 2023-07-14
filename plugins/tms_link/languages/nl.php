@@ -66,5 +66,4 @@ $lang["tms_link_tms_module_name"]='Naam van de TMS-module.';
 $lang["tms_link_encoding"]='codering';
 $lang["tms_link_not_found_error_title"]='Niet gevonden.';
 $lang["tms_link_not_deleted_error_detail"]='Kan de gevraagde module configuratie niet verwijderen.';
-$lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field vertalen naar het Nederlands zou zijn: TMS %module_naam %tms_uid_veld.';
 $lang["tms_link_confirm_delete_module_config"]='Weet u zeker dat u deze module configuratie wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt!';

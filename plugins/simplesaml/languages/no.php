@@ -73,7 +73,6 @@ $lang["simplesaml_sp_cert_gen_error"]='Kan ikke generere sertifikat.';
 $lang["simplesaml_sp_technicalcontact_name"]='Teknisk kontaktnavn';
 $lang["simplesaml_sp_technicalcontact_email"]='Teknisk kontakt-e-post.';
 $lang["simplesaml_sp_auth.adminpassword"]='SP Test nettsted administrator passord.';
-$lang["simplesaml_acs_url"]='ACS URL / Reply URL kan oversettes til ACS-URL / Svar-URL.';
 $lang["simplesaml_entity_id"]='Entitets-ID/metadata-URL';
 $lang["simplesaml_single_logout_url"]='Enkel utlogging URL';
 $lang["simplesaml_start_url"]='Start/Påloggings-URL';
