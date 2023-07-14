@@ -848,7 +848,7 @@ if ($processupload)
                 if ($replace_resources === false)
                     {
                     $result["status"] = false;
-                    $result["message"] = $lang["error_upload_replace_file_fail_invalid_collection"];
+                    $result["message"] = htmlspecialchars($lang["error_upload_replace_file_fail_invalid_collection"]);
                     $result["error"] = 109;
                     $result["id"] = htmlspecialchars($batch_replace_col);
                     unlink($upfilepath);
