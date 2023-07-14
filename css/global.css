@@ -1105,12 +1105,12 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     float: left;
     position: relative;
     color: #0299d8;
-    margin-top: -31px;
-    margin-left: 221px;
+    margin-top: -35px;
+    margin-left: 219px;
     font-size: 17px;
     background-color: #e8edf1;
     box-shadow: none;
-    padding: 0 5px;
+    padding: 7px 6px 6px 6px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     filter: unset;
