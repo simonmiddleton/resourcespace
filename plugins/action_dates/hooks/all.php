@@ -474,12 +474,13 @@ function HookAction_datesCronCron()
     }
 
 /**
- * Limit the length of url by adding a maximum of 250 resources. Multiple urls will be returned, formatted to include in 
- * action dates notifications.
+ * Limit the length of !list special search url by adding a maximum of 650 characters of resource references per link including separators.
+ * Mail servers may break very long text strings into multiple lines and this will cause the special search to fail.
+ * Multiple urls will be returned, formatted to include in action dates notifications.
  *
  * @param  array   $resource_refs   Array containing resource references to include in url.
  * 
- * @return array   Array containing 'single' value of url (250 resources or less) and 'multiple' value of url (more than 250 resources).
+ * @return array   Array containing 'single' value of url (650 characters of resources or less) and 'multiple' value of url (more than 650 characters of resources).
  */
 function build_actiondates_urls(array $resource_refs)
     {
@@ -488,7 +489,27 @@ function build_actiondates_urls(array $resource_refs)
     $return_urls['single'] = ''; // Two values returned to determine where the url is placed in message_add() - multiple urls must be passed in message, not url parameter.
     $return_urls['multiple'] = '';
 
-    if (count($resource_refs) <= 250)
+    if (count($resource_refs) === 0)
+        {
+        return $return_urls;
+        }
+
+    $total_string_length = 0;
+    $link = 1;
+    $resource_links = array();
+    foreach ($resource_refs as $cur_ref)
+        {
+        $cur_ref_length = strlen($cur_ref) + 1; // +1 represents separator ':'
+        $total_string_length = $total_string_length + $cur_ref_length;
+        if ($total_string_length > 650)
+            {
+            $total_string_length = $cur_ref_length;
+            $link = ++$link;
+            }
+        $resource_links[$link][] = $cur_ref;
+        }
+
+    if (count($resource_links) === 1)
         {
         $return_urls['single'] = "$baseurl/pages/search.php?search=!list" . implode(":", $resource_refs);
         }
@@ -496,14 +517,12 @@ function build_actiondates_urls(array $resource_refs)
         {
         $urls = array('<br /><div><ul>');
 
-        $link_no = 1;
-        foreach(array_chunk($resource_refs, 250) as $refs_chunk)
+        foreach($resource_links as $link_no => $refs_chunk)
             {
             $url = $baseurl . "/pages/search.php?search=!list";
             $url .= implode(":", $refs_chunk);
             $url = '<li><a href="' . $url . '">' . htmlspecialchars($lang["show_affected_resources"]) . ' [' . htmlspecialchars($lang["group_no"]) . ' ' . $link_no . ']</a></li>';
             $urls[] = $url;
-            $link_no ++;
             }
         
         $urls[] = '</ul></div>';
