@@ -268,15 +268,15 @@ function remove_empty_temp_directory(string $path_to_file = "")
 
 
 /**
- * Confirm upload path is one of valid paths adding any in $valid_upload_paths from config.
+ * Confirm upload path is one of valid paths.
  *
- * @param   string   $file_path   Upload path.
- * @return  bool
+ * @param   string   $file_path            Upload path.
+ * @param   array    $valid_upload_paths   Array of valid upload paths to test against.
+ * 
+ * @return  bool     true when path is valid else false
  */
-function is_valid_upload_path(string $file_path) : bool
+function is_valid_upload_path(string $file_path, array $valid_upload_paths) : bool
     {
-    global $storagedir, $syncdir, $batch_replace_local_folder, $valid_upload_paths, $tempdir;
-
     $GLOBALS["use_error_exception"] = true;
     try
         {
@@ -288,11 +288,6 @@ function is_valid_upload_path(string $file_path) : bool
         return false;
         }
     unset($GLOBALS["use_error_exception"]);
-    $valid_upload_paths = $valid_upload_paths ?? [];
-    $valid_upload_paths[] = $storagedir;
-    if (!empty($syncdir)) { $valid_upload_paths[] = $syncdir; }   
-    if (!empty($batch_replace_local_folder)) { $valid_upload_paths[] = $batch_replace_local_folder; }
-    if (isset($tempdir)) { $valid_upload_paths[] = $tempdir; }
 
     foreach($valid_upload_paths as $valid_upload_path)
         {

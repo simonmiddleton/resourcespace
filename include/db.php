@@ -458,7 +458,12 @@ if(file_exists($stemming_file))
 $hook_cache = array();
 $hook_cache_hits = 0;
 
-
+# Build array of valid upload paths
+$valid_upload_paths = $valid_upload_paths ?? [];
+$valid_upload_paths[] = $storagedir;
+if (!empty($syncdir)) { $valid_upload_paths[] = $syncdir; }
+if (!empty($batch_replace_local_folder)) { $valid_upload_paths[] = $batch_replace_local_folder; }
+if (isset($tempdir)) { $valid_upload_paths[] = $tempdir; }
 
 // IMPORTANT: make sure the upgrade.php is the last line in this file
 include_once __DIR__ . '/../upgrade/upgrade.php';
