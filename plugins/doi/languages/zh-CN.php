@@ -14,7 +14,6 @@ $lang["doi_info_testmode"]='在<a target="_blank" href="https://mds.datacite.org
 $lang["doi_setup_use_testprefix"]='请使用<a target="_blank" href="https://mds.datacite.org/static/apidoc#tocAnchor-9">测试前缀（10.5072）</a>。';
 $lang["doi_info_testprefix"]='在<a target="_blank" href="https://mds.datacite.org/static/apidoc#tocAnchor-9">测试前缀</a>上。';
 $lang["doi_setup_publisher"]='出版商';
-$lang["doi_info_publisher"]='请翻译：在“出版商”字段上。';
 $lang["doi_resource_conditions_title"]='资源需要满足以下先决条件才能符合DOI注册的要求：';
 $lang["doi_resource_conditions"]='<li>您的项目需要是公开的，也就是说，需要有一个公共区域。</li>
 <li>资源必须是公开可访问的，也就是说，需要将其访问权限设置为<strong>开放</strong>。</li>

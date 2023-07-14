@@ -1971,9 +1971,6 @@ $lang["allresourcessearchbar"]='Kaikki resurssit.';
 $lang["allcollectionssearchbar"]='Kaikki kokoelmat.';
 $lang["continuetoresults"]='Jatka tuloksiin';
 $lang["purchase_email_address"]='Ole hyvä ja syötä kelvollinen sähköpostiosoite, jos haluat vastaanottaa vahvistuksen ostoksestasi.';
-$lang["user_pref_autorotate"]='Kääntäkää: Käännetään kuvat automaattisesti latauksen yhteydessä? 
-
-Automaattisesti kääntää kuvat latauksen yhteydessä?';
 $lang["run_report_on_search_results"]='Suorita raportti näistä tuloksista.';
 $lang["report_error_no_reports_supporting_search_results"]='Ei ole raportteja, jotka tukevat suorittamista hakutuloksissa.';
 $lang["report_delete_periodic_email_link"]='Poistaaksesi tämän raportin, klikkaa alla olevaa linkkiä:';

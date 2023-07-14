@@ -1,8 +1,6 @@
 <?php
 
 
-$lang["adobe_link_title"]='Adobe Link vertalen naar het Nederlands is: Adobe Link. Dit is een term die niet vertaald wordt omdat het een merknaam is.';
-$lang["adobe_link_configuration"]='Adobe link setup vertalen naar het Nederlands is: Adobe koppeling instellen.';
 $lang["adobe_link_document_extensions"]='Adobe bestandsformaat extensies.';
 $lang["adobe_link_asset_extensions"]='Adobe-bestandsextensies voor digitale middelen. Deze bestandstypen kunnen worden geïmporteerd in Adobe InDesign.';
 $lang["adobe_link_open"]='Open: Openen';

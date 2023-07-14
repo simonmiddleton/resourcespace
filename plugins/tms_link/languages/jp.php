@@ -66,5 +66,4 @@ $lang["tms_link_tms_module_name"]='TMSモジュール名';
 $lang["tms_link_encoding"]='エンコーディング';
 $lang["tms_link_not_found_error_title"]='見つかりませんでした。';
 $lang["tms_link_not_deleted_error_detail"]='要求されたモジュール構成を削除できません。';
-$lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field の翻訳は、「TMS %module_name %tms_uid_field」です。';
 $lang["tms_link_confirm_delete_module_config"]='このモジュールの設定を削除してもよろしいですか？この操作は元に戻すことができません！';

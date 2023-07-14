@@ -15,7 +15,6 @@ $lang["emu_script_mode_option_1"]='从 EMu 导入元数据';
 $lang["emu_script_mode_option_2"]='提取所有 EMu 记录并保持 RS 和 EMu 同步。';
 $lang["emu_enable_script"]='启用 EMu 脚本';
 $lang["emu_test_mode"]='测试模式 - 设置为 true，脚本将运行但不会更新资源。';
-$lang["emu_interval_run"]='请翻译：在以下时间间隔内运行脚本（例如+1天，+2周，两周）。如果留空，它将在cron_copy_hitcount.php每次运行时运行。';
 $lang["emu_log_directory"]='存储脚本日志的目录。如果留空或无效，则不会发生记录日志。';
 $lang["emu_created_by_script_field"]='用于存储资源是否由 EMu 脚本创建的元数据字段';
 $lang["emu_settings_header"]='EMu设置';

@@ -1,7 +1,6 @@
 <?php
 
 
-$lang["falcon_link_title"]='Falcon Linkの翻訳はありません。';
 $lang["falcon_link_manage"]='Falconの公開/アーカイブ化';
 $lang["falcon_link_publish"]='Falcon に公開する。';
 $lang["falcon_link_archive"]='ファルコンのアーカイブ';

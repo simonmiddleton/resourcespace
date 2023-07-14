@@ -7,7 +7,6 @@ $lang["feedback_your_full_name"]='您的全名';
 $lang["feedback_remind_me_later"]='稍后提醒我';
 $lang["feedback_user feedback_configuration"]='用户反馈配置';
 $lang["feedback_pop-up_prompt_box_text"]='弹出提示框文本：';
-$lang["feedback_questions"]='请翻译：Questions';
 $lang["feedback_type"]='类型：';
 $lang["feedback_small_text_field"]='小文本字段';
 $lang["feedback_large_text_field"]='大型文本字段';

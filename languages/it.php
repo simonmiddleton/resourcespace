@@ -1738,7 +1738,6 @@ $lang["nopreviewresources"]='Risorse senza anteprime.';
 $lang["action-delete_permanently"]='Elimina definitivamente.';
 $lang["horizontal"]='Orizzontale';
 $lang["vertical"]='Verticale';
-$lang["cc-emailaddress"]='Si prega di tradurre: CC %emailaddress';
 $lang["list-recipients-label"]='Elencare tutti i destinatari nella email?';
 $lang["list-recipients"]='Questo messaggio è stato inviato ai seguenti indirizzi e-mail:';
 $lang["sort"]='Ordina';

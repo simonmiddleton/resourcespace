@@ -54,7 +54,6 @@ $lang["simplesaml_sp_generate_config"]='生成SP配置';
 $lang["simplesaml_sp_config"]='服务提供商（SP）配置';
 $lang["simplesaml_sp_data"]='服务提供商（SP）信息';
 $lang["simplesaml_idp_section"]='IdP 的中文翻译为 "身份提供者"。';
-$lang["simplesaml_idp_metadata_xml"]='请翻译：粘贴 IdP 元数据 XML';
 $lang["simplesaml_sp_cert_path"]='SP证书文件路径（留空以生成，但填写下面的证书详细信息）';
 $lang["simplesaml_sp_key_path"]='SP密钥文件的路径（.pem）（留空以生成）';
 $lang["simplesaml_sp_idp"]='IdP标识符（如果处理XML，请留空）';
