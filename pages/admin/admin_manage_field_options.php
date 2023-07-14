@@ -1097,12 +1097,11 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
     <h3><?php echo htmlspecialchars($lang['import_export']); ?></h3>
 
     <?php 
-    // Select a parent node to import for
     if($field_data['type'] == FIELD_TYPE_CATEGORY_TREE)
         {
+        // Select a parent node to import for
         $import_export_parent_nodes = array('' => '');
         $level = 0;
-        //$currentparent = 0;
         foreach(get_nodes($field, null, true) as $import_export_parent_node)
             {
             if(is_null($import_export_parent_node['parent']))
@@ -1118,8 +1117,6 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
                 $level--;
                 }
             // Otherwise level stays the same
-
-            if($import_export_parent_node['ref'])
             $import_export_parent_nodes[$import_export_parent_node['ref']] = (str_repeat("-",$level)) . $import_export_parent_node['name'];
             $lastnode = $import_export_parent_node;
             }
