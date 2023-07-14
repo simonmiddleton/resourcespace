@@ -22,9 +22,6 @@ $page_def[] = config_add_text_input("openai_gpt_api_key",$lang["openai_gpt_api_k
 $page_def[] = config_add_section_header($lang["plugin_category_advanced"]);
 $page_def[] = config_add_html("<div class='Question'><strong>" . htmlspecialchars($lang["openai_gpt_advanced"]) . "</strong><div class='clearerleft'></div></div>");
 $page_def[] = config_add_text_input("openai_gpt_model",$lang["openai_gpt_model"]);
-// $page_def[] = config_add_text_input("openai_gpt_prompt_prefix",$lang["openai_gpt_prompt_prefix"]);
-// $page_def[] = config_add_text_input("openai_gpt_prompt_return_json",$lang["openai_gpt_prompt_return_json"]);
-// $page_def[] = config_add_text_input("openai_gpt_prompt_return_text",$lang["openai_gpt_prompt_return_text"]);
 $page_def[] = config_add_text_input("openai_gpt_system_message",$lang["openai_gpt_system_message"]);
 $page_def[] = config_add_text_input("openai_gpt_temperature",$lang["openai_gpt_temperature"]);
 $page_def[] = config_add_text_input("openai_gpt_max_tokens",$lang["openai_gpt_max_tokens"]);
