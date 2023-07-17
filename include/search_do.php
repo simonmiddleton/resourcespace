@@ -904,14 +904,13 @@ function do_search(
                                             return false;
                                             }
 
+                                        $restypesql = new PreparedStatementQuery();
                                         $nodatafieldinfo = get_resource_type_field($nodatafield);
                                         if ($nodatafieldinfo["global"] != 1)
                                             {
-                                            $restypesql = " AND r[union_index].resource_type IN (" . (string)$nodatafieldinfo["resource_types"] . ") ";
-                                            }
-                                        else
-                                            {
-                                            $restypesql = "";
+                                            $nodatarestypes = explode(",",$nodatafieldinfo["resource_types"]);
+                                            $restypesql->sql = " AND r[union_index].resource_type IN (" . ps_param_insert(count($nodatarestypes)) . ") ";
+                                            $restypesql->parameters = ps_param_fill("i",$nodatarestypes);
                                             }
 
                                         // Check that nodes are empty
@@ -921,10 +920,10 @@ function do_search(
                                         SELECT rn.resource FROM
                                         node n
                                         RIGHT JOIN resource_node rn ON rn.node=n.ref
-                                        WHERE  n.resource_type_field = ? $restypesql
+                                        WHERE  n.resource_type_field = ? $restypesql->sql
                                         GROUP BY rn.resource
                                         )";
-                                        $union->parameters = ["i",$nodatafield];
+                                        $union->parameters = array_merge(["i",$nodatafield],$restypesql->parameters);
                                         $sql_keyword_union[] = $union;
                                         $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
                                         $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";
