@@ -195,17 +195,25 @@ function embedslideshow_ShowPage(page_set,from_auto,jump)
       
     if (embedslideshow_auto) {timer = setTimeout("embedslideshow_ShowPage(embedslideshow_page+1,true,false);",<?php echo ($transition==0?4000:$transition * 1000) ?>);} else {clearTimeout(timer);}
     
-    document.getElementById('embedslideshow_page_box').value=embedslideshow_page;
+    if(jQuery('#embedslideshow_page_box'))
+        {
+        jQuery('#embedslideshow_page_box').val(embedslideshow_page);
+        }
     }
 
 
 embedslideshow_ShowPage(1,false,false);
 
-// publishes total page count after forward slash next to actual page
-function totalPages(){
-    document.getElementById('page-count').innerHTML = <?php echo $maxpages ?>;
-}
-totalPages();
+<?php if ($width>200)
+    {
+    ?>
+    // publishes total page count after forward slash next to actual page
+    function totalPages(){
+        document.getElementById('page-count').innerHTML = <?php echo $maxpages ?>;
+        }
+    totalPages();
+   <?php
+   }?>
 
 </script>
 
