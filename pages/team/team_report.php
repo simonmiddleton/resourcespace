@@ -7,6 +7,8 @@
  */
 include "../../include/db.php";
 
+// Unsubscribe bypasses t permission so anon access needs to be disabled to ensure user logs in
+unset($anonymous_login); 
 include "../../include/authenticate.php";if (getval('unsubscribe', '') == '' && !checkperm("t")) {exit ("Permission denied.");}
 include "../../include/reporting_functions.php";
 
