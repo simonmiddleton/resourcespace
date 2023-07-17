@@ -1,7 +1,6 @@
 <?php
 
 command_line_only();
-#020300_get_activity_log.php
 include_once(dirname(__DIR__, 2) . '/include/log_functions.php');
 global $userref;
 $placeholderref = $userref;
