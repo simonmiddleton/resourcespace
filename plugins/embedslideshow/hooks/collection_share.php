@@ -134,7 +134,7 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
             ed.style.position='absolute';
             ed.style.top='20px';
             ed.style.left='20px';
-            ed.src='$maximise_src_url&height' + ((window.innerHeight)-40) + 'width' + ((window.innerWidth)-40) + ';
+            ed.src='$maximise_src_url&height=' + ((window.innerHeight)-40) + '&width=' + ((window.innerWidth)-40);
             ed.style.zIndex=999;
             document.getElementById('embedslideshow_minimise_$ref').style.display='block';
             document.getElementById('embedslideshow_maximise_$ref').style.display='none';	
