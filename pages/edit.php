@@ -343,7 +343,7 @@ $resource=get_resource_data($ref);
 
 if ($resource === false)
     {
-    exit($lang["resourcenotfound"]);
+    exit(htmlspecialchars($lang["resourcenotfound"]));
     }
 
 $metadatatemplate = getval('metadatatemplate',0,true);
