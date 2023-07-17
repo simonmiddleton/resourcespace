@@ -176,7 +176,7 @@ $lang["property-display_condition"]="Display condition";
 $lang["information-display_condition"]="Display condition: this field will only display if the following conditions are met. The conditioning field being checked must be one of the fixed types: dropdown list, checkbox list, radio buttons, dynamic keyword or category tree. Uses same format as group search filter i.e. shortname=value1|value2, shortnamea=validoptiona;shortnameb=validoptionb1|validoptionb2";
 $lang["property-onchange_macro"]="On change macro";
 $lang["information-onchange_macro"]="On change macro: code to be executed when field value is changed. CAUTION ADVISED";
-$lang["information-derestrict_filter"]="Derestrict filter. Only effective when used in conjunction with removing the g permission so that all resources are restricted unless the metadata condition is met";
+$lang["information-derestrict_filter"]="Derestrict filter. Intended for use in conjunction with the 'Restrict access to all available resources' permission. With this combination enabled all resources will be restricted unless the filter condition is met.";
 $lang["information-push_metadata"]="If set, the metadata for this resource will be displayed on the resource view page for any related resources. For example, you may relate several photos to a person resource. If this property is set on the person resource, then the person metadata will appear on all related photo resource records, avoiding duplication of data in the system.";
 
 $lang["property-query"]="Query";
