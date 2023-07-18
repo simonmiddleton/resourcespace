@@ -3247,32 +3247,61 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
         $restype_params[] = "i";$restype_params[] = $rtype;
         }
 
-    $field_data_sql = "
-             SELECT group_concat(n.name SEPARATOR ', ') AS `value`,
-                    group_concat(n.ref) AS `nodes`,
-                    f.ref resource_type_field,
-                    f.ref AS fref,
-                    f.required AS frequired, " .
-                    columns_in("resource_type_field", "f") . 
-              "FROM resource_type_field f
-          LEFT JOIN (SELECT ref, name, resource_type_field FROM node WHERE ref IN (SELECT node FROM resource_node WHERE resource = ?) ORDER BY order_by) AS n
-                    ON n.resource_type_field = f.ref
-              WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . ") " . $restypesql . ")
-              GROUP BY f.ref
-              ORDER BY {$order_by_sql}";
+    $field_info_sql = 
+    "SELECT f.ref resource_type_field,
+            f.ref AS fref,
+            f.required AS frequired, " .
+            columns_in("resource_type_field", "f") . 
+    " FROM resource_type_field f
+    WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . ") " . $restypesql . ")
+    ORDER BY {$order_by_sql}";
 
-    $field_data_params = array_merge(["i", $ref], ps_param_fill($nontree_field_types,"i"),$restype_params);
-    if(!$ord_by)
-        {
-        debug('GENERAL/GET_RESOURCE_FIELD_DATA: use perms: ' . !$use_permissions);
+    $field_info_params = array_merge(ps_param_fill($nontree_field_types,"i"),$restype_params);
+
+    # Fetch field information first
+    $fields = ps_query($field_info_sql,$field_info_params);
+
+    # Now fetch field values ensuring that multiple node values are ordered correctly
+    $field_value_sql = 
+    "SELECT rn.resource, n.resource_type_field `field`, rn.node, n.name 
+        FROM resource_node rn
+    INNER JOIN node n on n.ref = rn.node and rn.resource=?
+    ORDER BY n.resource_type_field, n.order_by";
+
+    $field_values = ps_query($field_value_sql,array("i", $ref));
+
+    $field_node_list=array();
+    $field_ref_list=array();
+    $last_field=null;
+    
+    # Assemble comma separated lists of node names and refs to attach to the fields array
+    foreach($field_values as $field_value) {
+        $this_field=$field_value['field'];
+        if($this_field===$last_field) {
+            $field_node_list[$this_field]['values'] .= ("," . $field_value['name']);
+            $field_ref_list[$this_field]['refs'] .= ("," . $field_value['node']);
         }
+        else {
+            $field_node_list[$this_field]['values'] = $field_value['name'];
+            $field_ref_list[$this_field]['refs'] = $field_value['node'];
+            $last_field=$this_field;
+        }
+    }
 
-    $fields = ps_query($field_data_sql,$field_data_params);
-    
+    # Attach the lists of node names and refs to the corresponding fields array entry
+    foreach (array_keys($fields) as $fikey) {
+        $this_field = $fields[$fikey]['ref'];
+        if(isset($field_node_list[$this_field])) {
+            $fields[$fikey]['value'] = $field_node_list[$this_field]['values'];
+            $fields[$fikey]['nodes'] = $field_ref_list[$this_field]['refs'];
+        }
+        else{
+            $fields[$fikey]['value'] = null;
+            $fields[$fikey]['nodes'] = null;
+        }
+    }
+
     # Build an array of valid resource types and only return fields for these types. Translate field titles.
-    
-
-    // Add category tree values, reflecting tree structure
     if ($multi)
         {
         // Get all fields
@@ -3283,6 +3312,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
         $valid_resource_types = [$rtype] ;
         }
 
+    # Add category tree values, reflecting tree structure
     $tree_fields = get_resource_type_fields($valid_resource_types,"ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
     foreach($tree_fields as $tree_field)
         {
