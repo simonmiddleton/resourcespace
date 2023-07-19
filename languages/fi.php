@@ -1822,7 +1822,6 @@ $lang["collection_download_tar_applink"]='Etkö voi avata TAR-tiedostoja? Hanki 
 $lang["confirm_edit_all_selected_resources"]='Oletko varma, että haluat tallentaa? Tämä ylikirjoittaa valitun kentän(t) olemassa olevat arvot kaikille valituille resursseille.';
 $lang["resourcetypereordered"]='Resurssityypin järjestys muutettu.';
 $lang["resourcetypefieldreordered"]='Resurssityypin kentän järjestystä muutettu.';
-$lang["warningdismiss"]='Hylkää tämä varoitus.';
 $lang["relate_selected_resources"]='Liitä valitut resurssit toisiinsa.';
 $lang["relateallresources_confirmation"]='Kaikki tämän kokoelman resurssit ovat nyt liittyneet toisiinsa.';
 $lang["contactsheet_data_field_value_limit"]='Enimmäismerkit kenttää kohden.';

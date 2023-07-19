@@ -1136,7 +1136,6 @@ $lang["collection_download_tar_applink"]='Δεν μπορείτε να ανοί�
 $lang["confirm_edit_all_selected_resources"]='Είστε σίγουροι ότι θέλετε να αποθηκεύσετε; Αυτό θα αντικαταστήσει τις υπάρχουσες τιμές για το επιλεγμένο πεδίο/πεδία για όλους τους επιλεγμένους πόρους.';
 $lang["resourcetypereordered"]='Αναδιάταξη θέσης τύπου πόρου.';
 $lang["resourcetypefieldreordered"]='Αναδιάταξη θέσης πεδίου τύπου πόρου.';
-$lang["warningdismiss"]='Απορρίψτε αυτήν την προειδοποίηση.';
 $lang["prependtext"]='Προσθήκη κειμένου στην αρχή.';
 $lang["removetext"]='Αφαίρεση κειμένου / επιλογής(ων)';
 $lang["relate_selected_resources"]='Σχετίστε τους επιλεγμένους πόρους.';

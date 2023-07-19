@@ -2944,7 +2944,6 @@ $lang["add_selected_to_collection"]='Pridať vybrané do zbierky.';
 $lang["remove_selected_from_collection"]='Odstrániť vybrané z kolekcie.';
 $lang["collection_download_tar_started"]='Súbory TAR sa začnú sťahovať v krátkom čase.';
 $lang["confirm_edit_all_selected_resources"]='Ste si istý, že chcete uložiť? Tým prepíšete existujúce hodnoty pre vybrané pole(y) pre všetky vybrané zdroje.';
-$lang["warningdismiss"]='Zamietnuť toto upozornenie.';
 $lang["relate_selected_resources"]='Prepoji vybrané zdroje.';
 $lang["requiredfield_resource_type"]='Typ zdroja: Toto pole je povinné.';
 $lang["altfiledeletefail"]='Nemožno vymazať alternatívny súbor.';

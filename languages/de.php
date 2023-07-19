@@ -2117,7 +2117,6 @@ $lang["collection_download_tar_applink"]='Können TAR-Dateien nicht geöffnet we
 $lang["confirm_edit_all_selected_resources"]='Sind Sie sicher, dass Sie speichern möchten? Dadurch werden die vorhandenen Werte für das/die ausgewählte(n) Feld(er) aller ausgewählten Ressourcen überschrieben.';
 $lang["resourcetypereordered"]='Ressourcentyp-Position neu geordnet.';
 $lang["resourcetypefieldreordered"]='Neuanordnung der Feldposition des Ressourcentyps.';
-$lang["warningdismiss"]='Entferne diese Warnung.';
 $lang["relate_selected_resources"]='Verknüpfe ausgewählte Ressourcen.';
 $lang["relateallresources_confirmation"]='Alle Ressourcen in dieser Sammlung sind jetzt miteinander verknüpft.';
 $lang["contactsheet_data_field_value_limit"]='Maximale Zeichen pro Feld.';

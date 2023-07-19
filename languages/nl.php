@@ -1041,7 +1041,6 @@ $lang["confirmpublishall"]='Weet u zeker dat u wilt publiceren? Dit zal de besta
 $lang["confirmunpublishall"]='Weet u zeker dat u deze bronnen wilt uitgeven? Dit zal de bestaande waarde(n) voor het/de geselecteerde veld(en) overschrijven voor alle bronnen in uw huidige collectie en ze verwijderen van openbare weergave.';
 $lang["resourcetypereordered"]='Herschikking van de positie van het bronbestandstype.';
 $lang["resourcetypefieldreordered"]='Herpositionering van het veld \'Resource type\' is gewijzigd.';
-$lang["warningdismiss"]='Negeer deze waarschuwing.';
 $lang["prependtext"]='Voeg tekst toe aan het begin.';
 $lang["removetext"]='Verwijder tekst / optie(s)';
 $lang["relate_selected_resources"]='Koppel geselecteerde resources.';

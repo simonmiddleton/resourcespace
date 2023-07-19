@@ -1149,7 +1149,6 @@ $lang["confirmpublishall"]='Jeste li sigurni da želite objaviti? To će prebris
 $lang["confirmunpublishall"]='Jeste li sigurni da želite poništiti objavljivanje ovih resursa? To će prebrisati postojeće vrijednosti za odabrana polja za sve resurse u vašoj trenutnoj kolekciji i ukloniti ih iz javnog pregledavanja.';
 $lang["resourcetypereordered"]='Pozicija vrste resursa je preuređena.';
 $lang["resourcetypefieldreordered"]='Preuredio sam poziciju polja vrste resursa.';
-$lang["warningdismiss"]='Odbaci ovu upozorenje.';
 $lang["prependtext"]='Dodajte tekst na početak.';
 $lang["removetext"]='Ukloni tekst / opciju(e)';
 $lang["relate_selected_resources"]='Poveži odabrane resurse.';

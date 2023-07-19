@@ -1146,7 +1146,6 @@ $lang["confirmpublishall"]='Er du sikker på, at du ønsker at publicere? Dette 
 $lang["confirmunpublishall"]='Er du sikker på, at du ønsker at fjerne offentliggørelsen af disse ressourcer? Dette vil overskrive de eksisterende værdier for de valgte felter for alle ressourcer i din nuværende samling og fjerne dem fra offentlig visning.';
 $lang["resourcetypereordered"]='Ressourcetype position omarrangeret.';
 $lang["resourcetypefieldreordered"]='Omarrangeret position for ressourcetypefeltet.';
-$lang["warningdismiss"]='Afbryd denne advarsel.';
 $lang["prependtext"]='Foranstalt tekst.';
 $lang["removetext"]='Fjern tekst / mulighed(er)';
 $lang["relate_selected_resources"]='Relater valgte ressourcer.';

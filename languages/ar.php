@@ -1302,7 +1302,6 @@ $lang["collection_download_tar_applink"]='لا يمكن فتح ملفات TAR؟ 
 $lang["confirm_edit_all_selected_resources"]='هل أنت متأكد أنك تريد الحفظ؟ سيؤدي هذا إلى استبدال القيم الموجودة لحقل (حقول) المحددة لجميع الموارد المحددة.';
 $lang["resourcetypereordered"]='إعادة ترتيب موضع نوع المورد.';
 $lang["resourcetypefieldreordered"]='إعادة ترتيب موضع حقل نوع المورد.';
-$lang["warningdismiss"]='تجاهل هذا التحذير';
 $lang["prependtext"]='إضافة نص في بداية النص.';
 $lang["relate_selected_resources"]='ربط الموارد المحددة';
 $lang["relateallresources_confirmation"]='جميع الموارد في هذه المجموعة مرتبطة الآن.';

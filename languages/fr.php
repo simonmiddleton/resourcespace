@@ -1249,7 +1249,6 @@ $lang["confirmpublishall"]='Êtes-vous sûr(e) de vouloir publier ? Cela écrase
 $lang["confirmunpublishall"]='Êtes-vous sûr(e) de vouloir dépublier ces ressources ? Cela écrasera les valeurs existantes pour le(s) champ(s) sélectionné(s) pour toutes les ressources de votre collection actuelle et les retirera de la vue publique.';
 $lang["resourcetypereordered"]='Réorganisation de l\'ordre des types de ressources.';
 $lang["resourcetypefieldreordered"]='Réorganisation de la position du champ de type de ressource.';
-$lang["warningdismiss"]='Fermer cet avertissement.';
 $lang["prependtext"]='Préfixer le texte.';
 $lang["removetext"]='Supprimer le texte / l\'option (les options)';
 $lang["relate_selected_resources"]='Relier les ressources sélectionnées.';
