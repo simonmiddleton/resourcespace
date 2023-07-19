@@ -916,7 +916,6 @@ function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$
     }
     $all_resource_types = get_resource_types();
     $resource_types = array_column($all_resource_types,"name","ref");
-    //exit(print_r($all_resource_types));
     ?>
     <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
@@ -939,7 +938,7 @@ function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$
                 $str_restypes = " (" .  implode(",",$fieldrestypenames) . ")";
                 }
             }
-        echo '<option value="'. $field['ref'] . '"' . (in_array($field['ref'],$current) ? ' selected':'') . '>' . lang_or_i18n_get_translated($field['title'],'fieldtitle-') .  $str_restypes .  '</option>';
+        echo '<option value="'. $field['ref'] . '"' . (in_array($field['ref'],$current) ? ' selected':'') . '>' . htmlspecialchars(lang_or_i18n_get_translated($field['title'],'fieldtitle-') .  $str_restypes) .  '</option>';
         }
 ?>
     </select>

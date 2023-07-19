@@ -359,7 +359,7 @@ define("COLLECTION_TYPE_UPLOAD",        1); # for collections used in upload the
 define("COLLECTION_TYPE_SELECTION",     2); # selecting resources to be edited in batch for the active user (allowed only one per user)
 define("COLLECTION_TYPE_FEATURED",      3); # featured collections (used for both parents and children featured collections)
 define("COLLECTION_TYPE_PUBLIC",        4); # public collections
-define("COLLECTION_TYPE_SHARE_UPLOAD",  5); # public collections
+define("COLLECTION_TYPE_SHARE_UPLOAD",  5); # External upload share
 define("COLLECTION_TYPE_REQUEST",       6); # Resource requests - can't be edited
 
 
@@ -369,7 +369,7 @@ $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS = array(
     "most_popular_images" => 10,
     "manual" => 100,
 );
-$COLLECTION_PUBLIC_TYPES = array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED, COLLECTION_TYPE_SHARE_UPLOAD);
+$COLLECTION_PUBLIC_TYPES = array(COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED);
 
 
 // ----------------------------------------------

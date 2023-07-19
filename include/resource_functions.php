@@ -3325,7 +3325,6 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
         $valstring = $forcsv ? ("\"" . implode("\",\"",$treenodenames) . "\"") : implode(",",$treenodenames);
         $addfield["value"] = count($treenodenames) > 0 ? $valstring : "";
         $addfield["resource_type_field"] = $tree_field["ref"];
-        //$addfield["resource_type"] = $rtype; // Not used?
         $addfield["fref"] = $tree_field["ref"];
         $fields[] = $addfield;
         }
@@ -3466,12 +3465,12 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
             {
             // This is an array of search results so we already have the resource types
             $restype = array_column($resource_chunk,"resource_type","ref");
-            $resourceids = array_filter(array_column($resource_chunk,"ref"),function($v){return (string)(int)$v == (string)$v;});
+            $resourceids = array_filter(array_column($resource_chunk,"ref"),function($v){return is_int_loose($v);});
             $getresources = $resource_chunk;
             }
         else
             {
-            $resource_chunk = array_filter($resource_chunk,function($v){return (string)(int)$v == $v;});
+            $resource_chunk = array_filter($resource_chunk,function($v){return is_int_loose($v);});
             $resourceids = $resource_chunk;
             $allresourcedata = ps_query("SELECT ref, resource_type FROM resource WHERE ref IN (" . ps_param_insert(count($resource_chunk)) . ")", ps_param_fill($resource_chunk,"i"));
             foreach($allresourcedata as $resourcedata)

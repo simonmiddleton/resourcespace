@@ -1453,7 +1453,7 @@ function save_resource_type(int $ref, array $savedata)
     $restypes = array_combine($restype_refs,$restypes);
     foreach($savedata as $savecol=>$saveval)
         {
-        debug("checking for column " . $savecol . " in " . print_r($restype_refs,true));
+        debug("checking for column " . $savecol . " in " . json_encode(($restype_refs),true));
         if($saveval == $restypes[$ref][$savecol])
             {
             // Unchanged value, skip
@@ -1503,7 +1503,7 @@ function save_resource_type(int $ref, array $savedata)
                 break;
             }
         }
-    if(count($setcolumns) == 0)
+    if(count($setcolumns) === 0)
         {
         return false;
         }
@@ -1537,14 +1537,13 @@ function save_resource_type(int $ref, array $savedata)
  */
 function rs_get_resource_type(int $ref)
     {
-    $return = ps_query("SELECT " . columns_in('resource_type') . "
+    return ps_query("SELECT " . columns_in('resource_type') . "
                     FROM resource_type
                 WHERE ref = ?
                 ORDER BY `name`",
             array("i",$ref),
             "schema"
             );
-    return $return;
     }
 
 /**
@@ -1557,13 +1556,13 @@ function rs_get_resource_type(int $ref)
  * @return bool 
  * 
  */
-function save_resource_type_field($ref,$columns,$postdata)
+function save_resource_type_field(int $ref, array $columns, $postdata): bool
     {
     global $regexp_slash_replace, $migrate_data, $onload_message, $lang, $baseurl;
 
     $sync_field = (int)$postdata["sync_field"] ?? 0;
     $existingfield = get_resource_type_field($ref);
-    $params=array();$syncparams=array();
+    $params= $syncparams = [];
 
     $resource_types=get_resource_types("",true,false,true);
 
@@ -1573,9 +1572,13 @@ function save_resource_type_field($ref,$columns,$postdata)
         {
         $resource_type_array[$resource_type["ref"]]=$resource_type["name"];
         }
-        
+    $valid_columns = columns_in("resource_type_field",null,null,true);
     foreach ($columns as $column=>$column_detail)		
         {
+        if(!in_array($column,$valid_columns))
+            {
+            continue;
+            }
         if ($column_detail[2]==1)
             {
             $val= (int)(bool)($postdata[$column] ?? 0);
