@@ -3278,7 +3278,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
     foreach($field_values as $field_value) {
         $this_field=$field_value['field'];
         if($this_field===$last_field) {
-            $field_node_list[$this_field]['values'] .= ("," . $field_value['name']);
+            $field_node_list[$this_field]['values'] .= (", " . $field_value['name']);
             $field_ref_list[$this_field]['refs'] .= ("," . $field_value['node']);
         }
         else {
