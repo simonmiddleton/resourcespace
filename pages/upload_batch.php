@@ -418,8 +418,13 @@ if($upload_here)
     $uploadparams['resource_type'] = $resource_type;
     $uploadparams['status'] = $setarchivestate;
     }
+    $hook_params = hook('addtopluploadurl');
+    if(!empty($hook_params))
+        {
+        $uploadparams = array_merge($uploadparams, $hook_params);
+        }
 
-$uploadurl = generateURL("{$baseurl}/pages/upload_batch.php", $uploadparams, $uploadurl_extra_params) . hook('addtopluploadurl');
+$uploadurl = generateURL("{$baseurl}/pages/upload_batch.php", $uploadparams, $uploadurl_extra_params);
 
 $default_sort_direction="DESC";
 if (substr($order_by,0,5)=="field"){$default_sort_direction="ASC";}
