@@ -2,7 +2,7 @@ name: posixldapauth
 title: POSIX LDAP Authorisation
 author: Brian Adams, Guenter Bartsch, David White
 version: 0.99
-desc: [Deprecated] LDAP plugin for AD & LDAP. Use simpleldap for AD integration.
+desc: [DEPRECATED] LDAP plugin for AD & LDAP. Use simpleldap for AD integration.
 icon: fa fa-sign-in-alt
 config_url: /plugins/posixldapauth/pages/setup.php
 category: authentication
