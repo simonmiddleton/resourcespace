@@ -979,7 +979,6 @@ $lang["comment"]='Comentariu.';
 $lang["warningexpired"]='Resursa a expirat.';
 $lang["warningexpiredtext"]='Atenție! Această resursă a depășit data de expirare. Trebuie să faceți clic pe link-ul de mai jos pentru a activa funcționalitatea de descărcare.';
 $lang["warningexpiredok"]='Permiteți descărcarea resursei.';
-$lang["warningdismiss"]='Ignoră această avertizare.';
 $lang["userrequestcomment"]='Comentariu.';
 $lang["addresourcebatchbrowser"]='Încărcați resurse.';
 $lang["replaceresourcebatch"]='Înlocuirea lotului de resurse.';

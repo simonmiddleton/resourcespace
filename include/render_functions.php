@@ -4169,38 +4169,36 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
     $dismisstext="";
     $dismisslink="";
     # Handle expiry date warning messages
-	if (!$valueonly && $field["type"]==FIELD_TYPE_EXPIRY_DATE && $value != "" && $value<=date("Y-m-d H:i") && $show_expiry_warning) 
+	if (!$valueonly && $field["type"] == FIELD_TYPE_EXPIRY_DATE && $value != "" && $value <= date("Y-m-d H:i") && $show_expiry_warning) 
 		{
         $title = htmlspecialchars($lang["warningexpired"]);
         $warningtext = htmlspecialchars($lang["warningexpiredtext"]);
         $dismisstext = LINK_CARET . htmlspecialchars($lang["warningexpiredok"]);
         $dismisslink = "<p id=\"WarningOK\">
-        <a href=\"#\" onClick=\"document.getElementById('RecordDownload').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
-        $extra.="<style>#RecordDownload {display:none;}</style>";
+        <a href=\"#\" onClick=\"document.getElementById('RecordDownloadTabContainer').style.display='block';document.getElementById('WarningOK').style.display='none';\">{$dismisstext}</a></p>";
+        $extra.="<style>#RecordDownloadTabContainer {display:none;}</style>";
 
         # If there is no display template then prepare the full markup here
         if (trim((string) $field["display_template"]) == "") 
             {
-            $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
-            <p>{$value}</p><p>{$warningtext}</p>{$dismisslink}</div>
-            <style>#RecordDownload {display:none;}</style>";
+            $extra.="<div class=\"clearerleft\"></div><div class=\"RecordStory\"><h1>{$title}</h1>
+            <p>{$value}</p><p>{$warningtext}</p>{$dismisslink}</div>";
             }   
 		}
 	
 	# Handle general warning messages
-	if (!$valueonly && $field["type"]==FIELD_TYPE_WARNING_MESSAGE && trim((string)$value) != "") 
+	if (!$valueonly && $field["type"] == FIELD_TYPE_WARNING_MESSAGE && trim((string)$value) != "") 
 		{
-        # title comes from field
-        # value comes from field
         $warningtext = $value;
-        $dismisstext = LINK_CARET . htmlspecialchars($lang["warningdismiss"]);
+        $dismisstext = LINK_CARET . htmlspecialchars($lang["warningexpiredok"]);
         $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
-        <a href=\"#\" onClick=\"document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
+        <a href=\"#\" onClick=\"document.getElementById('RecordDownloadTabContainer').style.display='block';document.getElementById('WarningOK_{$field['ref']}').style.display='none';\">{$dismisstext}</a></p>";
+        $extra.="<style>#RecordDownloadTabContainer {display:none;}</style>";
 
         # If there is no display template then prepare the full markup here
         if (trim((string) $field["display_template"]) == "") 
             {
-            $extra.="<div class=\"RecordStory\"><h1>{$title}</h1>
+            $extra.="<div class=\"clearerleft\"></div><div class=\"RecordStory\"><h1>{$title}</h1>
             <p>".nl2br(htmlspecialchars(i18n_get_translated($warningtext)))."</p>{$dismisslink}</div>";
             }
         }
@@ -4303,14 +4301,13 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 			    }
 
             # Use a display template to render this field
-            $template = $field['display_template'];
+            $template = strip_tags_and_attributes($field['display_template'], array("a"), array("href", "target"));
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', $value, $template);
-            $template = str_replace('[url]', urlencode($value_for_url), $template);
-            $template = str_replace('[warning]', $warningtext, $template);
+            $template = str_replace('[url]', htmlspecialchars($value_for_url), $template);
+            $template = str_replace('[warning]', htmlspecialchars($warningtext), $template);
             $template = str_replace('[ref]', (int) $ref, $template);
-            $template = str_replace('[link]', $dismisslink, $template);
-            $template = strip_tags_and_attributes($template, array("a"), array("href", "target"));
+            $template = str_replace('[link]', strip_tags_and_attributes($dismisslink, array("a"), array("href", "onclick")), $template);
 
             /*Language strings
             Format: [lang-language-name_here]

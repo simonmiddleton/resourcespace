@@ -1030,7 +1030,6 @@ $lang["comment"]='Comentário.';
 $lang["warningexpired"]='Recurso expirado.';
 $lang["warningexpiredtext"]='Aviso! Este recurso excedeu a data de validade. Você deve clicar no link abaixo para habilitar a funcionalidade de download.';
 $lang["warningexpiredok"]='Ativar download de recurso.';
-$lang["warningdismiss"]='Ignorar este aviso.';
 $lang["userrequestcomment"]='Comentário.';
 $lang["addresourcebatchbrowser"]='Carregar recursos.';
 $lang["replaceresourcebatch"]='Substituir lote de recursos.';

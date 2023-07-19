@@ -1265,7 +1265,6 @@ $lang["confirmpublishall"]='公開してもよろしいですか？これによ�
 $lang["confirmunpublishall"]='これらのリソースを非公開にしてもよろしいですか？これにより、現在のコレクション内のすべてのリソースの選択されたフィールドの既存の値が上書きされ、公開表示が解除されます。';
 $lang["resourcetypereordered"]='リソースタイプの位置が再配置されました。';
 $lang["resourcetypefieldreordered"]='リソースタイプのフィールド位置が再配置されました。';
-$lang["warningdismiss"]='この警告を解除してください。';
 $lang["prependtext"]='テキストを先頭に追加する';
 $lang["removetext"]='テキスト/オプションを削除する';
 $lang["relate_selected_resources"]='選択したリソースを関連付ける。';

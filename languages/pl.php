@@ -1361,7 +1361,6 @@ $lang["collection_download_tar_applink"]='Nie można otworzyć plików TAR? Pobi
 $lang["confirm_edit_all_selected_resources"]='Czy na pewno chcesz zapisać? Spowoduje to nadpisanie istniejących wartości dla wybranego pola lub pól dla wszystkich wybranych zasobów.';
 $lang["resourcetypereordered"]='Zmieniono kolejność typu zasobów.';
 $lang["resourcetypefieldreordered"]='Zmieniono kolejność pola typ zasobu.';
-$lang["warningdismiss"]='Odrzuć to ostrzeżenie.';
 $lang["prependtext"]='Dodaj tekst na początku.';
 $lang["relate_selected_resources"]='Powiąż wybrane zasoby.';
 $lang["relateallresources_confirmation"]='Wszystkie zasoby w tej kolekcji są teraz powiązane.';

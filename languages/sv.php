@@ -1996,7 +1996,6 @@ $lang["collection_download_tar_applink"]='Kan inte öppna TAR-filer? Hämta öpp
 $lang["confirm_edit_all_selected_resources"]='Är du säker på att du vill spara? Detta kommer att skriva över befintliga värden för det/de valda fälten för alla valda resurser.';
 $lang["resourcetypereordered"]='Resurstypens position omordnad.';
 $lang["resourcetypefieldreordered"]='Områdes typfält position omordnad.';
-$lang["warningdismiss"]='Avfärda denna varning.';
 $lang["relate_selected_resources"]='Relatera valda resurser.';
 $lang["relateallresources_confirmation"]='Alla resurser i denna samling är nu relaterade.';
 $lang["contactsheet_data_field_value_limit"]='Maximala antal tecken per fält.';

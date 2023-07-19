@@ -1598,7 +1598,6 @@ $lang["collection_download_tar_applink"]='Kan ikke åpne TAR-filer? Få åpen ki
 $lang["confirm_edit_all_selected_resources"]='Er du sikker på at du ønsker å lagre? Dette vil overskrive eksisterende verdi(er) for de valgte feltene for alle de valgte ressursene.';
 $lang["resourcetypereordered"]='Omorganisert ressurstype-posisjon.';
 $lang["resourcetypefieldreordered"]='Omorganisert posisjon for ressurstypefeltet.';
-$lang["warningdismiss"]='Avvisningen kan avvises.';
 $lang["prependtext"]='Foranstill tekst';
 $lang["relate_selected_resources"]='Relaterte valgte ressurser.';
 $lang["relateallresources_confirmation"]='Alle ressurser i denne samlingen er nå relatert.';

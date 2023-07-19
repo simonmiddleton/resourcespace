@@ -1193,7 +1193,6 @@ $lang["confirmpublishall"]='¿Está seguro de que desea publicar? Esto sobrescri
 $lang["confirmunpublishall"]='¿Está seguro de que desea despublicar estos recursos? Esto sobrescribirá el/los valor(es) existente(s) para el/los campo(s) seleccionado(s) para todos los recursos en su colección actual y los eliminará de la vista pública.';
 $lang["resourcetypereordered"]='Reordenada la posición del tipo de recurso.';
 $lang["resourcetypefieldreordered"]='Reordenada la posición del campo de tipo de recurso.';
-$lang["warningdismiss"]='Descartar esta advertencia.';
 $lang["prependtext"]='Agregar texto al principio.';
 $lang["removetext"]='Eliminar texto / opción(es)';
 $lang["relate_selected_resources"]='Relacionar los recursos seleccionados.';

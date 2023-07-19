@@ -1108,7 +1108,6 @@ $lang["confirmpublishall"]='Esteu segur que voleu publicar? Això sobreescriurà
 $lang["confirmunpublishall"]='Esteu segur que voleu despublicar aquests recursos? Això sobreescriurà el(s) valor(s) existent(s) per al(s) camp(s) seleccionat(s) per a tots els recursos de la vostra col·lecció actual i els eliminarà de la visualització pública.';
 $lang["resourcetypereordered"]='Reordenada la posició del tipus de recurs.';
 $lang["resourcetypefieldreordered"]='Reordenada la posició del camp de tipus de recurs.';
-$lang["warningdismiss"]='Descarta aquesta advertència.';
 $lang["prependtext"]='Afegir text al principi.';
 $lang["removetext"]='Eliminar text / opció(s)';
 $lang["relate_selected_resources"]='Relacionar els recursos seleccionats.';

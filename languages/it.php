@@ -1056,7 +1056,6 @@ $lang["confirmpublishall"]='Sei sicuro di voler pubblicare? Ciò sovrascriverà 
 $lang["confirmunpublishall"]='Sei sicuro di voler rendere non pubblici questi elementi? Ciò sovrascriverà i valori esistenti per il/i campo/i selezionato/i per tutti gli elementi nella tua collezione corrente e li rimuoverà dalla visualizzazione pubblica.';
 $lang["resourcetypereordered"]='Riordinamento della posizione del tipo di risorsa.';
 $lang["resourcetypefieldreordered"]='Riordinata la posizione del campo tipo di risorsa.';
-$lang["warningdismiss"]='Ignora questo avviso.';
 $lang["prependtext"]='Aggiungi testo all\'inizio.';
 $lang["removetext"]='Rimuovi testo/opzione(i)';
 $lang["relate_selected_resources"]='Collegare le risorse selezionate.';

@@ -1714,7 +1714,6 @@ $lang["collection_download_tar_applink"]='无法打开 TAR 文件？在此处获
 $lang["confirm_edit_all_selected_resources"]='您确定要保存吗？这将覆盖所选资源的所有选定字段的现有值。';
 $lang["resourcetypereordered"]='资源类型位置已重新排序';
 $lang["resourcetypefieldreordered"]='资源类型字段位置已重新排序。';
-$lang["warningdismiss"]='关闭此警告。';
 $lang["prependtext"]='在前面添加文本';
 $lang["relate_selected_resources"]='关联所选资源';
 $lang["relateallresources_confirmation"]='此集合中的所有资源现在都已关联。';

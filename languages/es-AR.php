@@ -1422,7 +1422,6 @@ $lang["collection_download_tar_applink"]='¿No puedes abrir archivos TAR? Obtén
 $lang["confirm_edit_all_selected_resources"]='¿Está seguro de que desea guardar? Esto sobrescribirá el/los valor(es) existente(s) para el campo seleccionado en todos los recursos seleccionados.';
 $lang["resourcetypereordered"]='Reordenada la posición del tipo de recurso.';
 $lang["resourcetypefieldreordered"]='Reordenada la posición del campo de tipo de recurso.';
-$lang["warningdismiss"]='Descartar esta advertencia.';
 $lang["addresourcebatchbrowser"]='Subir recursos';
 $lang["prependtext"]='Agregar texto al principio.';
 $lang["relate_selected_resources"]='Relacionar los recursos seleccionados.';
