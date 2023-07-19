@@ -1,6 +1,6 @@
 name: resourceconnect
 title: ResourceConnect
-desc: Connects ResourceSpace installations together to allow cross-installation searching
+desc: [DEPRECATED] Connects ResourceSpace installations together to allow cross-installation searching
 icon: fa fa-exchange-alt
 author: Montala Limited
 version: 1.0
