@@ -536,7 +536,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .Question #capswarning { margin-left: 190px; display: none; color: red;font-weight: bold;}
 .Question .stdwidth,.stdwidth, .dynamickeywords {width: 420px;font-size: 1em;}
 .Question .medwidth,.medwidth{width: 285px;font-size: 1em;}
-.Question .shrtwidth,.shrtwidth{width: 145px;font-size: 1em;margin: 0;}
+.Question .shrtwidth,.shrtwidth{width: 145px;font-size: 1em;}
 .Question .vshrtwidth{width: 93px;font-size: 0.9em;}
 .Question .medcomplementwidth{width: 105px;font-size: 1em;}
 .Question .Inline {float: left;margin: 0 10px 0 0;vertical-align: middle;}
@@ -553,10 +553,10 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .FormWide .Question label{width: 20%}
 .FormWide .Question .Inline label { width: auto; }
-.FormWide .Question .stdwidth, .FormWide .Question .tickset{width: 70%; max-width: 600px;}
+.FormWide .Question .stdwidth, .FormWide .Question .tickset{width: 70%; max-width: 625px;}
 .FormWide .Question .tickset .stdwidth{width: 99%}
 .FormWide .Question .FormHelp {margin: 0 10px 4px 20%;}
-.FormWide .Question .FormHelp .FormHelpInner {width: 89%; margin-left: 10px; max-width: 600px; box-sizing: border-box; font-style: italic;}
+.FormWide .Question .FormHelp .FormHelpInner {width: 89%; margin-left: 10px; max-width: 625px; box-sizing: border-box; font-style: italic;}
 .FormWide .Question .label-spacer {margin-left: calc(20% + 10px);}
 
 .Question .Fixed {    width: 300px;float: left;margin-top: 0.4em;font-weight: bold;} 

@@ -77,11 +77,6 @@ input[type="text"], input[type="password"], input[type="number"], textarea, sele
     background: #5c5c5d;
 }
 
-/* Fix position of simple search icon */
-.search-icon, .search-icon:hover, .search-icon:active {
-    margin-top: -32px;
-}
-
 /* Fix position of Browse Bar button */
 .BrowseBarTabText {
     margin-left: 29px;
