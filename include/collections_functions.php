@@ -4412,7 +4412,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         }
 
     // Delete
-    if(($k=="" || $internal_share_access) && (($userref == $collection_data['user']) || checkperm('h')) && ($collection_data['cant_delete'] == 0)) 
+    if(($k=="" || $internal_share_access) && (($userref == $collection_data['user']) || checkperm('h')) && ($collection_data['cant_delete'] == 0) && $collection_data['type'] != COLLECTION_TYPE_REQUEST) 
         {
         $options[$o]['value']='delete_collection';
         $options[$o]['label']=$lang['action-deletecollection'];
@@ -6790,7 +6790,7 @@ function purge_expired_shares($filteropts)
  */
 function can_delete_collection($collection_data, $userref, $k = "")
     {
-    if(!($k == '' && (($userref == $collection_data['user']) || checkperm('h')) && $collection_data['cant_delete'] == 0))
+    if(!($k == '' && (($userref == $collection_data['user']) || checkperm('h')) && $collection_data['cant_delete'] == 0) || $collection_data['type'] == COLLECTION_TYPE_REQUEST)
         {
         return false;
         }
