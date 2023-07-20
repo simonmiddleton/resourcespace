@@ -1591,7 +1591,7 @@ $lang['reportbug-detail']="The following information has been compiled for inclu
 $lang['reportbug-login']="NOTE: Click here to login to the bug tracker BEFORE clicking prepare.";
 $lang['reportbug-preparebutton']="Prepare bug report";
 
-$lang["enterantispamcode"]="<strong>Anti-Spam</strong> <sup>*</sup><br /> Please enter the following code:";
+$lang["enterantispamcode"]="Anti-Spam, please enter the following code";
 
 $lang["groupaccess"]="Group access";
 $lang["plugin-groupsallaccess"]="This plugin is activated for all groups";

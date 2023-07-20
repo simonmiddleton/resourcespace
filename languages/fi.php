@@ -1127,7 +1127,7 @@ $lang['reportbug-detail']="Seuraava tieto on valmisteltu sisällytettäväksi bu
 $lang['reportbug-login']="Huomaa: Napsauta tästä kirjautuaksesi bugiraportointiin ENNEN kuin napsautat valmistele.";
 $lang['reportbug-preparebutton']="Valmistele bugiraportti";
 
-$lang["enterantispamcode"]="<strong>Roskapostintorjunta</strong> <sup>*</sup><br /> Ole hyvä ja kirjoita seuraava koodi:";
+$lang["enterantispamcode"]="Roskapostin esto, anna seuraava koodi";
 
 $lang["groupaccess"]="Pääsy ryhmään";
 $lang["plugin-groupsallaccess"]="Tämä lisäosa on aktivoitu kaikille ryhmille";
