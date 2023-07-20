@@ -93,7 +93,7 @@ if(isset($saved_text))
             </select>
         </p>
         <p align="right">
-            <input type="submit" name="copy" value="<?php echo htmlspecialchars($lang['copy']) ; ?>" style="width:100px;">
+            <input type="submit" name="copy" value="<?php echo escape_quoted_data($lang['copy']) ; ?>" style="width:100px;">
         </p>
     </form>
 

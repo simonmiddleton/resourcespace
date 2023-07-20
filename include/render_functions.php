@@ -496,9 +496,9 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         # Dynamic keyword list behaviour replaced with regular input field under these circumstances
         if ((int)$field['field_constraint']==0)
             {
-			?><input class="<?php echo $class ?>" type=text name="<?php echo $name ?>" id="<?php echo $id ?>" value="<?php echo escape_quoted_data((string)$value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo escape_quoted_data((string)$field["name"]) ?>',<?php echo htmlspecialchars((string)$field["resource_types"]) ?>);}"<?php } ?>><?php 
+			?><input class="<?php echo escape_quoted_data($class) ?>" type=text name="<?php echo escape_quoted_data($name) ?>" id="<?php echo escape_quoted_data($id) ?>" value="<?php echo escape_quoted_data((string)$value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo escape_quoted_data((string)$field["name"]) ?>',<?php echo htmlspecialchars((string)$field["resource_types"]) ?>);}"<?php } ?>><?php 
 			# Add to the clear function so clicking 'clear' clears this box.
-			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : $field["name"]) . "').value='';";
+			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : escape_quoted_data($field["name"])) . "').value='';";
 		    }
         // number view - manipulate the form value (don't send these but send a compiled numrange value instead
         else if ((int)$field['field_constraint']==1)
@@ -507,8 +507,8 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 			$minmax=explode('|',str_replace("numrange","",$value));
 			($minmax[0]=='')?$minvalue='':$minvalue=str_replace("neg","-",$minmax[0]);
 			(isset($minmax[1]))?$maxvalue=str_replace("neg","-",$minmax[1]):$maxvalue='';
-            echo htmlspecialchars($lang["from"]); ?><input id="<?php echo $name ?>_min" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo $name?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo escape_quoted_data($minvalue)?>"><?php echo htmlspecialchars($lang["to"]); ?><input id="<?php echo $name ?>_max" onChange="jQuery('#<?php echo $name?>').val('numrange'+jQuery('#<?php echo $name?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo escape_quoted_data($maxvalue)?>">
-			<input id="<?php echo $name?>" name="<?php echo $name?>" type="hidden" value="<?php echo $value?>">
+            echo htmlspecialchars($lang["from"]); ?><input id="<?php echo escape_quoted_data($name) ?>_min" onChange="jQuery('#<?php echo escape_quoted_data($name) ?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo escape_quoted_data($name) ?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo escape_quoted_data($minvalue)?>"><?php echo htmlspecialchars($lang["to"]); ?><input id="<?php echo escape_quoted_data($name) ?>_max" onChange="jQuery('#<?php echo escape_quoted_data($name) ?>').val('numrange'+jQuery('#<?php echo escape_quoted_data($name) ?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo escape_quoted_data($maxvalue)?>">
+			<input id="<?php echo escape_quoted_data($name) ?>" name="<?php echo escape_quoted_data($name) ?>" type="hidden" value="<?php echo escape_quoted_data($value) ?>">
 		    <?php 
 			# Add to the clear function so clicking 'clear' clears this box.
 			 $clear_function.="document.getElementById('".$name."_max').value='';";
@@ -525,7 +525,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 				
 				jQuery(document).ready(function () { 
 				
-					jQuery("#field_<?php echo escape_quoted_data($field["ref"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo escape_quoted_data($field["name"]) ?>&fieldref=<?php echo $field["ref"]?>"} );
+					jQuery("#field_<?php echo escape_quoted_data($field["ref"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo escape_quoted_data($field["name"]) ?>&fieldref=<?php echo escape_quoted_data($field["ref"]) ?>"} );
 					})
 				
 				</script>
@@ -572,9 +572,9 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 # Show as a dropdown box
                 $name = "nodes_searched[{$field['ref']}]";
                 ?>
-                <select class="<?php echo $class ?>" name="<?php echo $name ?>" id="<?php echo $id ?>"
+                <select class="<?php echo escape_quoted_data($class) ?>" name="<?php echo escape_quoted_data($name) ?>" id="<?php echo escape_quoted_data($id) ?>"
                     <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
-                          if($forsearchbar){ ?>onChange="FilterBasicSearchOptions('<?php echo escape_quoted_data($field["name"]) ?>',<?php echo htmlspecialchars(($field["global"] == 1 ? "[0]" : "[" . (string)$field["resource_types"] . "]")) ?>);" <?php } ?>>
+                          if($forsearchbar){ ?>onChange="FilterBasicSearchOptions('<?php echo escape_quoted_data($field["name"]) ?>',<?php echo htmlspecialchars(($field["global"] == 1 ? "[0]" : "[" . escape_quoted_data((string)$field["resource_types"]) . "]")) ?>);" <?php } ?>>
                     <option value=""></option>
                 <?php
                 foreach($field['nodes'] as $node)
@@ -6211,7 +6211,7 @@ function display_related_resources($context)
  * @return void
  * 
  */
-function admin_resource_type_field_constraint($ref, $currentvalue)
+function admin_resource_type_field_constraint(int $ref, int $currentvalue): void
 	{
 	global $lang;
 	$constraint=ps_value("SELECT field_constraint value FROM resource_type_field WHERE ref=?",array("i",$ref),0, "schema");
@@ -6242,9 +6242,9 @@ function admin_resource_type_field_constraint($ref, $currentvalue)
  * @return void
  * 
  */
-function admin_resource_type_field_option($propertyname,$propertytitle,$helptext,$type,$currentvalue,$fieldtype,$system_date_field)
+function admin_resource_type_field_option(string $propertyname,string $propertytitle, string $helptext, $type,$currentvalue,int $fieldtype, bool $system_date_field) : void
 	{
-    debug("admin_resource_type_field_option(\$propertyname = '{$propertyname}', \$propertytitle = '{$propertytitle}', \$type = '{$type}', \$currentvalue = '{$currentvalue}', \$fieldtype = '{$fieldtype}');");
+    debug_function_call("admin_resource_type_field_option",func_get_args());
 
 	global $ref,$lang, $baseurl_short,$FIXED_LIST_FIELD_TYPES, $daterange_edtf_support, $allfields, $newfield,
     $resource_type_array, $existingrestypes, $regexp_slash_replace, $resource_type_array;
@@ -6303,8 +6303,8 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
                     <tr>
                         <td>
                             <input type="checkbox"
-                                name="field_restype_select_<?php echo $resource_type; ?>"
-                                id="field_restype_select_<?php echo $resource_type; ?>" 
+                                name="field_restype_select_<?php echo escape_quoted_data($resource_type); ?>"
+                                id="field_restype_select_<?php echo escape_quoted_data($resource_type); ?>" 
                                 class="field_restype_select"
                                 value="1"
                                 <?php if($currentvalue == 1) { ?> disabled="true"<?php } ?>
@@ -6452,7 +6452,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 					{
 					if($field["ref"]!=$ref) // Don't show itself as an option to sync with
 					    {?>
-					    <option value="<?php echo $field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($field["title"])  . "&nbsp;(" . (($field["name"]=="")?"":escape_quoted_data((string) $field["name"]) )?></option>
+					    <option value="<?php echo escape_quoted_data($field["ref"]) ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($field["title"])  . "&nbsp;(" . (($field["name"]=="")?"":escape_quoted_data((string) $field["name"]) )?></option>
 					    <?php
 					    }
 					}
@@ -6505,7 +6505,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 				{
 				?>
 				<div class="FormHelp" style="padding:0;clear:left;" >
-					<div class="FormHelpInner"><?php echo str_replace("%ref",$ref,$helptext) ?>
+					<div class="FormHelpInner"><?php echo htmlspecialchars(str_replace("%ref",$ref,$helptext)) ?>
 					</div>
 				</div>
 				<?php
@@ -6515,7 +6515,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
         {
         ?>
         <div id="shortname_err_msg" class="FormHelp DisplayNone" style="padding:0;clear:left;" >
-            <div class="FormHelpInner PageInformal"><?php  echo htmlspecialchars($lang["warning_duplicate_shortname_fields"]) ; ?></div>
+            <div class="FormHelpInner PageInformal"><?php echo htmlspecialchars($lang["warning_duplicate_shortname_fields"]) ; ?></div>
         </div>
         <script>
         var validate_shortname_in_progress = false;
@@ -6531,7 +6531,7 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
             jQuery.get(
                 baseurl + "/pages/admin/ajax/validate_rtf_shortname.php",
                 {
-                ref: "<?php echo $ref; ?>",
+                ref: "<?php echo escape_quoted_data($ref); ?>",
                 new_shortname: event.target.value
                 },
                 function (response)
@@ -6570,23 +6570,23 @@ function admin_resource_type_field_option($propertyname,$propertytitle,$helptext
 * @param string     $name       name of form select
 * @param string     $class      array CSS class to apply
 * @param boolean    $hidden     optionally hide the question usng CSS display:none
-* @param array      $current    Current selected value
+* @param int        $current    Current selected value
 * 
 * @return void
 */
-function render_resource_type_selector_question($label, $name, $class = "stdwidth", $hidden = false, $current = 0)
+function render_resource_type_selector_question(string $label, string $name, string $class = "stdwidth", bool $hidden = false, $current = 0) : void
     {
     global $lang;
     $resource_types = get_resource_types('',true,false,true);
 
-    echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
+    echo "<div class='Question' id='" . escape_quoted_data($name) . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
     echo "<label for='" . escape_quoted_data($name) . "' >" . htmlspecialchars($label) . "</label>";
     echo "<select name='" . escape_quoted_data($name) . "' id='" . escape_quoted_data($name) . "' class='" . $class . "'>";
-    echo "<option value='' selected >" . $lang["select"] . "</option>";
+    echo "<option value='' selected >" . htmlspecialchars($lang["select"]) . "</option>";
     foreach($resource_types as $resource_type)
         {
         $selected = ($resource_type["ref"] == $current ? "selected" : "");
-        echo "<option value='{$resource_type['ref']}' {$selected}>" . lang_or_i18n_get_translated($resource_type['name'],'fieldtitle-') . "</option>";
+        echo "<option value='{$resource_type['ref']}' {$selected}>" . htmlspecialchars(lang_or_i18n_get_translated($resource_type['name'],'fieldtitle-')) . "</option>";
         }
     echo "</select>";
     echo "<div class='clearerleft'></div>";

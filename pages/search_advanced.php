@@ -254,6 +254,7 @@ for ($n=0;$n<count($types);$n++)
 function advSearchShowHideSection(name,show) {
     // Show or hide sections
     console.debug('advSearchShowHide(' + name + ',' + show + ');');
+    name = DOMPurify.sanitize(name);
     if(show){
         jQuery('#AdvancedSearch' + name + 'SectionHead').show();
         if (getCookie('AdvancedSearch' + name + 'Section') != "collapsed") {

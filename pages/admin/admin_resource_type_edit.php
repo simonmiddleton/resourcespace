@@ -147,7 +147,7 @@ renderBreadcrumbs($links_trail);
 <?php if (isset($error_text)) { ?><div class="FormError"><?php echo $error_text?></div><?php } ?>
 <?php if (isset($saved_text)) { ?><div class="PageInfoMessage"><?php echo $saved_text?></div><?php } ?>
 
-<form method=post action="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo urlencode($ref) ?>&backurl=<?php echo urlencode ($url) ?>" onSubmit="return CentralSpacePost(this,true);">
+<form method=post action="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo (int)$ref ?>&backurl=<?php echo urlencode ($url) ?>" onSubmit="return CentralSpacePost(this,true);">
 
 <input type="hidden" name="ref" value="<?php echo urlencode($ref) ?>">
 <input type="hidden" id="restype_save" name="restype_save" value="">

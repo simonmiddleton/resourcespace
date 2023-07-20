@@ -259,7 +259,7 @@ function get_collection($ref, $usecache = false)
         
         $return["request_feedback"]=$request_feedback;
         
-        // Legacy property which is now superseeded by types. FCs need to be public before they can be put under a category by an admin (perm h)
+        // Legacy property which is now superseded by types. FCs need to be public before they can be put under a category by an admin (perm h)
         global $COLLECTION_PUBLIC_TYPES;
         $return["public"] = (int) in_array($return["type"], $COLLECTION_PUBLIC_TYPES);
 
