@@ -20,7 +20,7 @@ $lang["note-2"]="%number annotations"; # %number will be replaced, e.g. 3 notes
 
 $lang["annotate_configuration"]="Annotate Configuration";
 $lang["extensions_to_exclude"]="Extensions to exclude<br />(comma separated):";
-$lang["resource_types_to_exclude"]="Resource Types to exclude<br />(tick to exclude):";
+$lang["resource_types_to_exclude"]="Resource Types to exclude (tick to exclude):";
 $lang["annotatedebug"]="Debug:";
 $lang["toggle"]="Toggle";
 $lang["annotate_public_view"] = "Are annotations publicly visible e.g. when sharing collections?";

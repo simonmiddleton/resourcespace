@@ -20,7 +20,7 @@ $lang["note-2"]="%number аннотаций"; # %number will be replaced, e.g. 3
 
 $lang["annotate_configuration"]="Настройки аннотаций";
 $lang["extensions_to_exclude"]="Исключить разрешения<br />(разделяя запятыми):";
-$lang["resource_types_to_exclude"]="Исключить типы объектов<br />(отметить):";
+$lang["resource_types_to_exclude"]="Исключить типы объектов (отметить):";
 $lang["annotatedebug"]="Debug:";
 $lang["toggle"]="Вкл/Выкл";
 $lang["annotate_public_view"] = "Публичны ли аннотации (например, когда делятся коллекциями)?";

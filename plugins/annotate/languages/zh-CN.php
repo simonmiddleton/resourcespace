@@ -16,9 +16,7 @@ $lang["annotate_configuration"]='注释配置';
 $lang["extensions_to_exclude"]='需要翻译的字符串: Extensions to exclude<br />(comma separated):
 
 要排除的扩展名（逗号分隔）：';
-$lang["resource_types_to_exclude"]='需要翻译的字符串：Resource Types to exclude<br />(tick to exclude):
-
-要排除的资源类型（勾选以排除）：';
+$lang["resource_types_to_exclude"]='要排除的资源类型（勾选以排除）:';
 $lang["annotatedebug"]='调试：';
 $lang["toggle"]='切换 (Qiēhuàn)';
 $lang["annotate_public_view"]='注释是否公开可见，例如在共享集合时？S';
