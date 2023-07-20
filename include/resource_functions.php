@@ -3455,9 +3455,24 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
     $field_restypes = get_resource_type_field_resource_types();
 
+    $field_info_sql = 
+    "SELECT f.ref resource_type_field,
+            f.ref AS fref,
+            f.required AS frequired, " .
+            columns_in("resource_type_field", "f") . 
+    " FROM resource_type_field f
+    WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . "))
+    ORDER BY f.order_by, f.ref";
+
+    $field_info_params = ps_param_fill($nontree_field_types,"i");
+
+    # Fetch field information first
+    $fields_info = ps_query($field_info_sql,$field_info_params);
+
     // Create array to store data
     $allresdata=array();
 
+    # Build arrays of resources
     $resource_chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
     foreach($resource_chunks as $resource_chunk)
         {
@@ -3483,24 +3498,96 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                 $getresources[]["ref"] = $resource;
                 }
             }
+    
+        # Fields array is no longer built from direct SQL using group concat
+        $fields=array();
 
-        $field_data_sql = "
-                SELECT rn.resource,
-                        group_concat(n.name) AS `value`,
-                        f.ref resource_type_field,
-                        f.ref AS fref,
-                        " . columns_in("resource_type_field", "f") . "
-                FROM resource_node rn
-            LEFT JOIN node n ON n.ref=rn.node
-            LEFT JOIN resource_type_field f ON f.ref=n.resource_type_field
-                WHERE rn.resource IN (" . ps_param_insert(count($resourceids)) . ")
-                        AND (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . "))
-                GROUP BY resource, f.ref";
+        # Fetch field values at node level for all resources in chunk ensuring that multiple node values are ordered correctly
+        $field_value_sql = 
+        "SELECT rn.resource, n.resource_type_field `field`, rn.node, n.name 
+            FROM resource_node rn
+        INNER JOIN node n on n.ref = rn.node and rn.resource IN (" . ps_param_insert(count($resourceids)) . ")
+        ORDER BY rn.resource, n.resource_type_field, n.order_by";
 
-        $field_data_params = array_merge(ps_param_fill($resourceids,"i"), ps_param_fill($nontree_field_types,"i"));
+        $field_values_allresources = ps_query($field_value_sql,ps_param_fill($resourceids,"i"));
 
-        $fields = ps_query($field_data_sql,$field_data_params);
-        
+        # Append an ending sentinal
+        $field_values_allresources[]=array('resource'=>null,'field'=>null,'node'=>null,'name'=>null); 
+
+        $field_node_list=array();
+        $field_ref_list=array();
+        $last_resource=null;
+        $last_field=null;
+
+        # Assemble comma separated lists of node names and refs to attach to the fields array
+        foreach($field_values_allresources as $field_value) {
+            $this_resource=$field_value['resource'];
+            if($this_resource===null && $last_resource===null) { break; } # Sentinal reached, nothing to assemble
+            $this_field=$field_value['field'];
+            if($this_resource===$last_resource) {
+                # Same resource
+                if($this_field===$last_field) {
+                    # Same field so append
+                    $field_node_list[$this_field]['values'] .= (", " . $field_value['name']);
+                    $field_ref_list[$this_field]['refs'] .= ("," . $field_value['node']);
+                }
+                else {
+                    # New field so replace
+                    $field_node_list[$this_field]['values'] = $field_value['name'];
+                    $field_ref_list[$this_field]['refs'] = $field_value['node'];
+                    $last_field=$this_field;
+                }
+            }
+            else {
+                # Change of resource
+                if(!is_null($last_resource)) {
+                    # Process the data just assembled for the last resource
+
+                    # Build an array of fields for this resource using the fields_info array
+                    foreach (array_keys($fields_info) as $fikey) {
+                        $this_base_field=$fields_info[$fikey]['resource_type_field'];
+                        # Add base field info for this field
+                        $data_for_this_field=$fields_info[$fikey];
+                        # Now enrich the data for this field for this resource
+                        $data_for_this_field['resource'] = $last_resource;
+                        if(isset($field_node_list[$this_base_field])) {
+                            $data_for_this_field['value'] = $field_node_list[$this_base_field]['values'];
+                            $data_for_this_field['nodes'] = $field_ref_list[$this_base_field]['refs'];
+                            # The data for this resource field is ready so attach it to the final result array for this chunk
+                            $fields[]=$data_for_this_field;
+                        }
+                        else {
+                            # Empty fields are not attached
+                            $data_for_this_field['value'] = null;
+                            $data_for_this_field['nodes'] = null;
+                        }
+                    }
+
+                    # Clear node list and ref list for new resource
+                    $field_node_list=array();
+                    $field_ref_list=array();
+                    $last_field=null;
+                    if($this_resource===null) { 
+                        break; 
+                    } # Sentinal reached, assembly is complete
+                }
+                # Attach 
+                if($this_field===$last_field) {
+                    # Same field so append
+                    $field_node_list[$this_field]['values'] .= (", " . $field_value['name']);
+                    $field_ref_list[$this_field]['refs'] .= ("," . $field_value['node']);
+                }
+                else {
+                    # New field so replace
+                    $field_node_list[$this_field]['values'] = $field_value['name'];
+                    $field_ref_list[$this_field]['refs'] = $field_value['node'];
+                    $last_field=$this_field;
+                }
+                $last_resource=$this_resource;
+            }
+
+        } # End of allresources for this chunk
+
         foreach($tree_fields as $tree_field)
             {
             // Establish the tree strings for all nodes belonging to the tree field
@@ -3521,6 +3608,7 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                 }
             }
 
+        // Prepare the all resource data array if there is data
         if (empty($fields))
             {
             return array();

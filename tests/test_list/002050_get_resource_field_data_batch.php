@@ -48,15 +48,15 @@ update_field($resourcee,$fruitfield,"Banana");
 $allresources = array($resourcea,$resourceb,$resourcec,$resourced,$resourcee);
 $alldata = get_resource_field_data_batch($allresources);
 if(
-    ($alldata[$resourcea][0]["value"] != "Comedy,Action")
+    ($alldata[$resourcea][0]["value"] != "Comedy, Action")
      || 
     ($alldata[$resourcea][1]["value"] != "Lemon")
      || 
-    ($alldata[$resourceb][0]["value"] != "Comedy,Horror")
+    ($alldata[$resourceb][0]["value"] != "Comedy, Horror")
      ||
     ($alldata[$resourceb][1]["value"] != "Orange")
      ||
-     ($alldata[$resourcec][0]["value"] != "Comedy,Action,Horror")
+     ($alldata[$resourcec][0]["value"] != "Comedy, Action, Horror")
      ||
      ($alldata[$resourcec][1]["value"] != "Mango")
      ||

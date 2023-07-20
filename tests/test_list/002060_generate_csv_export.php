@@ -54,9 +54,9 @@ $csvh=fopen($tempcsv,"r");
 while (($row = fgetcsv($csvh,5000)) !== false)
     {
     if(
-        ($row[0] == $resourcea && !in_array("Vincent Price,Peter Cushing",$row))
+        ($row[0] == $resourcea && !in_array("Vincent Price, Peter Cushing",$row))
         ||
-        ($row[0] == $resourceb && !in_array("Vincent Price,Christopher Lee",$row))
+        ($row[0] == $resourceb && !in_array("Vincent Price, Christopher Lee",$row))
         ||
         ($row[0] == $resourcec && !in_array("Christopher Lee",$row))
         ||
