@@ -1305,7 +1305,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 <?php
                 }
 
-            if(!$top_actions || !empty($collection_data))
+            if((!$top_actions || !empty($collection_data)) &&  $collection_data['type'] != COLLECTION_TYPE_REQUEST)
                 {
                 global $search;
                 $search_collection='';
