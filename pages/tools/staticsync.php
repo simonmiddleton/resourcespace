@@ -82,7 +82,7 @@ echo "Preloading data... ";
 $merge_filename_with_title=false;
 
 $count = 0;
-$done=array();
+$done = $fcs_to_reorder = [];
 $errors = array();
 $syncedresources = ps_query("SELECT ref, file_path, file_modified, archive FROM resource WHERE LENGTH(file_path)>0");
 foreach($syncedresources as $syncedresource)
@@ -784,8 +784,11 @@ function ProcessFolder($folder)
                             if(count($test) == 0)
                                 {
                                 ps_query("INSERT INTO collection_resource (collection, resource, date_added) VALUES (?, ?, NOW())", ['i', $collection, 'i', $r]);
-                                $new_fcs_order = reorder_all_featured_collections_with_parent($sqlset['parent'] ?? null);
-                                log_activity("via Static Sync, adding resource to collection #{$collection}", LOG_CODE_REORDERED, implode(', ', $new_fcs_order), 'collection');
+                                $featured_collection_parent = validate_collection_parent(get_collection($collection, false));
+                                if (!in_array($featured_collection_parent, $GLOBALS['fcs_to_reorder']))
+                                    {
+                                    $GLOBALS['fcs_to_reorder'][] = $featured_collection_parent;
+                                    }
                                 }
                             }
                         else
@@ -1251,6 +1254,13 @@ if (!$staticsync_ingest)
                 echo " -- Deleted featured collection #{$fc["ref"]}" . PHP_EOL;
                 }
             }
+        }
+
+    echo " - Checking if featured collections have to be re-ordered (e.g if a category has become just a featured collection)" . PHP_EOL;
+    foreach($fcs_to_reorder as $fc_parent)
+        {
+        $new_fcs_order = reorder_all_featured_collections_with_parent($fc_parent);
+        log_activity("via Static Sync, re-ordering for parent #{$fc_parent}", LOG_CODE_REORDERED, implode(', ', $new_fcs_order), 'collection');
         }
     }
 
