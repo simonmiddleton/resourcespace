@@ -405,13 +405,17 @@ function db_rollback_transaction($name)
 function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
-    $storagedir, $scramble_key, $query_cache_expires_minutes,
+    $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_enabled,
     $query_cache_already_completed_this_time,$prepared_statement_cache;
 	
     // Check cache for this query
     $cache_write=false;
     $serialised_query=$sql . ":" . serialize($parameters); // Serialised query needed to differentiate between different queries.
-    if ($cache!="" && (!isset($query_cache_already_completed_this_time) || !in_array($cache,$query_cache_already_completed_this_time))) // Caching active and this cache group has not been cleared by a previous operation this run
+    // Caching active and this cache group has not been cleared by a previous operation this run
+    if (
+        $query_cache_enabled
+        && $cache !== ""
+        && (!isset($query_cache_already_completed_this_time) || !in_array($cache,$query_cache_already_completed_this_time)))
         {
         $cache_write=true;
         $cache_location=get_query_cache_location();

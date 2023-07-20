@@ -20,7 +20,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
     $csv_field_headers      = array();
     $csvoptions = array("csvexport"=>true,"personal"=>$personal,"alldata"=>$alldata);
     $allfields = get_resource_type_fields("","order_by","asc");
-    $cache_location=get_query_cache_location();
+    $cache_location = get_temp_dir();
     $cache_data = array();
     $restypearr = get_resource_types();
     $resource_types = array();

@@ -107,7 +107,8 @@ $saved_url = $baseurl != "http://my.site/resourcespace" ? $baseurl : "http://loc
 include "../include/config.default.php";
 eval(file_get_contents("../include/config.new_installs.php"));
 $baseurl = $saved_url;
-   
+$query_cache_enabled = false;
+
 foreach($saved as $key => $savedsetting)    
     {
     $$key = $savedsetting;

@@ -92,6 +92,9 @@ $scramble_key="abcdef123";
 # global number of installations, users and resources.
 $send_statistics=true;
 
+# Enable database query cache (for better performance). Production environments should have this enabled.
+$query_cache_enabled = true;
+
 # Query cache time in minutes. How long before the disk cache is refreshed for a given result set. Should not be necessary to change this.
 $query_cache_expires_minutes=30;
 
