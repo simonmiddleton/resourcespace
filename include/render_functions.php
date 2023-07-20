@@ -5025,8 +5025,8 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
     // The description can contain <br> tags and "&mdash;" HTML entities which we still want to allow.
     $description_escaped = nl2br(
         str_replace(
-            '&amp;',
-            '&',
+            ['&amp;', '&lt;em&gt;', '&lt;/em&gt;'],
+            ['&', '<em>', '</em>'],
             htmlspecialchars(preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, $description))
         ),
         false
