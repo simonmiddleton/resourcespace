@@ -2374,7 +2374,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
         }
 
     # Update location?
-    if (($postvals["editlocation"] ?? "") != "")
+    if (($postvals["editlocation"] ?? "") != "" || ($postvals["editmaplocation"] ?? "") != "")
         {
         $location=explode(",",$postvals["location"]);
         if (count($list)>0)
