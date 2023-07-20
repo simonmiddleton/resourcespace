@@ -833,7 +833,7 @@ $lang['reportbug']="Prepare bug report for ResourceSpace team";
 $lang['reportbug-detail']="The following information has been compiled for inclusion in the bug report.  You'll be able to change all values before submitting a report.";
 $lang['reportbug-login']="NOTE: Click here to login to the bug tracker BEFORE clicking prepare.";
 
-$lang["enterantispamcode"]="<strong>Anti-Spam</strong><br /> Please enter the following code:";
+$lang["enterantispamcode"]="Anti-Spam, wprowadź następujący kod";
 
 $lang["groupaccess"]="Group Access";
 $lang["plugin-groupsallaccess"]="This plugin is activated for all groups";

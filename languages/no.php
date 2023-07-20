@@ -950,7 +950,7 @@ $lang['reportbug-detail']="Følgende informasjon har blitt samlet inn til feilme
 $lang['reportbug-login']="OBS: Klikk her for å logge inn til feil-loggeren FØR du klikker 'Lag feilmelding'.";
 $lang['reportbug-preparebutton']="Lag feilmelding";
 
-$lang["enterantispamcode"]="<strong>Anti-Spam</strong><br /> Vennligst tast inn følgende kode:";
+$lang["enterantispamcode"]="Anti-Spam, vennligst skriv inn følgende kode";
 
 $lang["groupaccess"]="Gruppetilgang";
 $lang["plugin-groupsallaccess"]="Dette programtillegget er aktivert for alle grupper";

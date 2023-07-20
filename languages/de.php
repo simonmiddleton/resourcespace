@@ -1193,7 +1193,7 @@ $lang["markers"] = "Markierungen";
  $lang['reportbug-login']="HINWEIS: Klicken Sie hier, um sich einzuloggen, BEVOR Sie auf vorbereiten klicken.";
  $lang['reportbug-preparebutton']="Fehlerbericht vorbereiten";
 
- $lang["enterantispamcode"]="<strong>Anti-Spam</strong><br /> Bitte geben Sie den folgenden Code ein:";
+ $lang["enterantispamcode"]="Anti-Spam, bitte geben Sie den folgenden Code ein";
 
  $lang["groupaccess"]="Gruppenzugriff";
  $lang["plugin-groupsallaccess"]="Dieses Plugin ist für alle Gruppen aktiv";

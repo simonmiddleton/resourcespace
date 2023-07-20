@@ -2789,5 +2789,5 @@ $lang["error_invalid_revert_date"]='التاريخ المخزن سابقًا \'%
 $lang["batch_edit_save_warning_message"]='تم اكتشاف أخطاء أثناء تحرير الموارد التالية-';
 $lang["batch_edit_save_warning_alert"]='تم اكتشاف بعض الأخطاء أثناء تنفيذ هذه العملية. يرجى الرجوع إلى الرسائل الخاصة بك لمزيد من التفاصيل.';
 $lang["page_collections_message"]='الاستمرار سيؤدي إلى إلغاء تحديد المجموعات المحددة للحذف على هذه الصفحة.';
-$lang["enterantispamcode"]='<strong>مكافحة البريد المزعج</strong> <sup>*</sup><br /> يرجى إدخال الرمز التالي:';
+$lang["enterantispamcode"]='مكافحة البريد العشوائي ، الرجاء إدخال الرمز التالي';
 $lang["job_status_2"]='اكتمال';
