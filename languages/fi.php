@@ -2289,11 +2289,6 @@ $lang["download_click__introtext"]='Ladataksesi resurssitiedoston, napsauta link
 $lang["download_progress__introtext"]='Latauksesi alkaa pian. Kun lataus on valmis, käytä alla olevia linkkejä jatkaaksesi.';
 $lang["downloadfile_nofile"]='Pyydettyä tiedostoa ei löytynyt.';
 $lang["edit__multiple"]='Valitse kentät, jotka haluat ylikirjoittaa. Kentät, joita et valitse, jätetään koskemattomiksi.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> (Suomi)
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> (English)';
 $lang["home__restrictedtext"]='Ole hyvä ja klikkaa sähköpostiisi lähetettyä linkkiä päästäksesi käsiksi sinulle valittuihin resursseihin.';
 $lang["home__restrictedtitle"]='Tervetuloa ResourceSpaceen [ver]';
 $lang["home__welcometext"]='Yksinkertainen, nopea ja ilmainen tapa järjestää digitaaliset varasi.';

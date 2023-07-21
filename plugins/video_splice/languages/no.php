@@ -1,8 +1,8 @@
 <?php
 
 
-$lang["action-trim"]='Trim -> Beskjær';
-$lang["video-trim"]='Video Trim -> Trim video';
+$lang["action-trim"]='Beskjær';
+$lang["video-trim"]='Trim video';
 $lang["video-trim-warning"]='Beskjæringsadvarsel.';
 $lang["video-trim-warning-text"]='Ditt start- eller sluttpunkt for beskjæringen går utover videoforhåndsvisningslengden.<br><br>Forhåndsvisningen som er gitt vil ikke fullt ut representere det endelige resultatet. Vennligst vurder å øke lengden på videoforhåndsvisningen og opprette nye forhåndsvisningsfiler hvis du ønsker å forhåndsvise det beskjærte resultatet.';
 $lang["video-trim_upload-type"]='Opplastningstype';
@@ -18,7 +18,7 @@ $lang["video_size_resource_field"]='Video størrelsesutgang';
 $lang["frame_rate_resource_field"]='Bildetakt utgangshastighet';
 $lang["aspect_ratio_resource_field"]='Sideforhold for utdata.';
 $lang["video-splice-intro"]='Sett sammen flere videokilder til én samlet videokilde. Dra og slipp miniatyrbildene nedenfor for å endre rekkefølgen på videoklippene.';
-$lang["action-splice"]='Splice: spleis';
+$lang["action-splice"]='Spleis';
 $lang["video_splice_order"]='Videoressurser i rekkefølge.';
 $lang["video_splice_select_video"]='Videoformat';
 $lang["video_splice_select_resolution"]='Videooppløsning';

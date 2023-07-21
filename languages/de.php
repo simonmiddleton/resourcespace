@@ -2386,13 +2386,6 @@ $lang["all__footer"]='Angetrieben von <a target="_blank" href="https://www.resou
 $lang["collection_download__write_metadata_on_download_label"]='Metadaten der Ressource in die heruntergeladenen Dateien einbetten? Wenn Sie dies aktivieren, wird Ihr Download langsamer.';
 $lang["collection_email__introtextthemeshare"]='Bitte füllen Sie das untenstehende Formular aus, um die vorgestellten Sammlungen in dieser vorgestellten Sammlungskategorie per E-Mail zu senden. Die Empfänger erhalten eine E-Mail mit Links zu jeder der vorgestellten Sammlungen.';
 $lang["downloadfile_nofile"]='Die angeforderte Datei wurde nicht gefunden.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-This is an HTML code that embeds a web page from the ResourceSpace knowledge base into another web page. The translation is:
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-Dies ist ein HTML-Code, der eine Webseite aus der ResourceSpace-Wissensdatenbank in eine andere Webseite einbettet.';
 $lang["local_tz"]='Lokale Zeitzone';
 $lang["team_report__err_report_too_long"]='Der Bericht ist zu groß, um angezeigt zu werden, und wurde abgeschnitten. Bitte laden Sie ihn stattdessen herunter!';
 $lang["team_user__confirm-deletion"]='Sind Sie sicher, dass Sie diesen Benutzer dauerhaft löschen möchten?';
@@ -2818,7 +2811,7 @@ $lang["filter_criteria_any"]='Jede der Regeln muss erfüllt werden.';
 
 $lang["filter_is_not_in"]='IST NICHT.';
 $lang["filter_and"]='UND';
-$lang["browse_bar_text"]='Durchsuchen.';
+$lang["browse_bar_text"]='Durchsuche';
 $lang["field_show_in_browse_bar"]='Anzeigen in der Browser-Leiste';
 $lang["error-sessionexpired"]='Ihre Sitzung ist abgelaufen oder ungültig.';
 $lang["error-invalid_resource_type"]='Ungültiger Ressourcentyp.';

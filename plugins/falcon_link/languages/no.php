@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["falcon_link_title"]='Falcon Link -> Falcon Lenke';
+$lang["falcon_link_title"]='Falcon Lenke';
 $lang["falcon_link_manage"]='Falcon publisering/arkivering.';
 $lang["falcon_link_publish"]='Publiser til Falcon.';
 $lang["falcon_link_archive"]='Arkiv i Falcon.';

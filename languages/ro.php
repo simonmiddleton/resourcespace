@@ -651,7 +651,6 @@ $lang["ticktodelete"]='Bifați pentru a șterge acest utilizator.';
 $lang["edituser"]='Editare utilizator.';
 $lang["fullname"]='Nume complet.';
 $lang["columnheader-full_name"]='Nume complet.';
-$lang["email"]='E-mail -> Poștă electronică';
 $lang["emailaddress"]='Adresă de e-mail.';
 $lang["columnheader-e-mail_address"]='Adresă de e-mail.';
 $lang["suggest"]='Vă rugăm să traduceți: Suggest
@@ -773,7 +772,6 @@ $lang["action-less"]='Mai puțin.';
 $lang["action-select"]='Select - Selectați';
 $lang["action-selectrequesteditems"]='Afișează toate elementele solicitate în bara mea de colecție.';
 $lang["action-download"]='Descărcare.';
-$lang["action-email"]='E-mail -> Poștă electronică';
 $lang["action-edit"]='Editare';
 $lang["action-editmetadata"]='Editarea metadatelor.';
 $lang["action-delete"]='Ștergeți.';
@@ -2047,9 +2045,6 @@ $lang["download_click__introtext"]='Pentru a descărca fișierul resursă, face�
 $lang["download_progress__introtext"]='Descărcarea va începe în curând. Când descărcarea se va finaliza, utilizați link-urile de mai jos pentru a continua.';
 $lang["downloadfile_nofile"]='Fișierul solicitat nu a fost găsit.';
 $lang["edit__multiple"]='Vă rugăm să selectați câmpurile pe care doriți să le suprascrieți. Câmpurile pe care nu le selectați vor rămâne neschimbate.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> 
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> (This is a technical code and it does not require translation. It is an HTML code that embeds a web page from the ResourceSpace knowledge base into another web page.)';
 $lang["home__restrictedtext"]='Vă rugăm să faceți clic pe link-ul primit prin e-mail pentru a accesa resursele selectate pentru dvs.';
 $lang["home__restrictedtitle"]='Bun venit în ResourceSpace [ver]';
 $lang["home__welcometext"]='Modalitatea simplă, rapidă și gratuită de a organiza activele tale digitale.';

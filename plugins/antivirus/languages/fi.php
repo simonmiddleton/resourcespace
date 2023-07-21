@@ -2,7 +2,7 @@
 
 
 $lang["antivirus_configuration"]='Antiviruksen asetukset.';
-$lang["antivirus_label"]='Antivirus -> Antivirus';
+$lang["antivirus_label"]='Antivirus';
 $lang["antivirus_action_label"]='Valitse sopiva toimenpide haitallisten tiedostojen löytämisen jälkeen.';
 $lang["antivirus_quarantine_status_label"]='Valitse arkistotila, jota käytetään karanteenialueena.';
 $lang["antivirus_action_delete"]='Poista pysyvästi.';

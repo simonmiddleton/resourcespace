@@ -2,7 +2,7 @@
 
 
 $lang["antivirus_configuration"]='Antivirus-konfiguration';
-$lang["antivirus_label"]='Antivirus -> Antivirusprogram';
+$lang["antivirus_label"]='Antivirusprogram';
 $lang["antivirus_action_label"]='Välj lämplig åtgärd att vidta vid upptäckt av skadliga filer.';
 $lang["antivirus_quarantine_status_label"]='Välj en arkivstatus som ska användas som karantänområde.';
 $lang["antivirus_action_delete"]='Radera permanent';

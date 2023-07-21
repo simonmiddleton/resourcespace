@@ -2004,9 +2004,6 @@ $lang["done__user_request"]='Το αίτημά σας για έναν λογαρ
 $lang["download_progress__introtext"]='Η λήψη σας θα ξεκινήσει σύντομα. Όταν ολοκληρωθεί η λήψη, χρησιμοποιήστε τους παρακάτω συνδέσμους για να συνεχίσετε.';
 $lang["downloadfile_nofile"]='Το αρχείο που ζητήθηκε δε βρέθηκε.';
 $lang["edit__multiple"]='Παρακαλώ επιλέξτε ποια πεδία θέλετε να αντικαταστήσετε. Τα πεδία που δεν θα επιλέξετε θα παραμείνουν ανέγγιχτα.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["home__restrictedtext"]='Παρακαλώ κάντε κλικ στον σύνδεσμο που σας έχει αποσταλεί με email για να αποκτήσετε πρόσβαση στους πόρους που έχουν επιλεγεί για εσάς.';
 $lang["home__restrictedtitle"]='Καλώς ήρθατε στο ResourceSpace [έκδοση]';
 $lang["home__welcometext"]='Ο απλός, γρήγορος και δωρεάν τρόπος για την οργάνωση των ψηφιακών σας περιουσιακών στοιχείων.';

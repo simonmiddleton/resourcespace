@@ -74,7 +74,6 @@ $lang["simplesaml_sp_samlphp_link"]='Posjetite SimpleSAMLphp testnu stranicu.';
 $lang["simplesaml_sp_technicalcontact_name"]='Ime tehničkog kontakta.';
 $lang["simplesaml_sp_technicalcontact_email"]='Tehnička e-mail adresa za kontakt.';
 $lang["simplesaml_sp_auth.adminpassword"]='SP Test stranica administratorska lozinka.';
-$lang["simplesaml_acs_url"]='ACS URL / Reply URL -> ACS URL / URL za odgovor';
 $lang["simplesaml_entity_id"]='Identifikator entiteta / URL metapodataka';
 $lang["simplesaml_single_logout_url"]='Jedinstveni URL za odjavu.';
 $lang["simplesaml_start_url"]='Početna/URL za prijavu';

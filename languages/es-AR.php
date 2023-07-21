@@ -2062,9 +2062,6 @@ $lang["download_click__introtext"]='Para descargar el archivo de recurso, haga c
 $lang["download_progress__introtext"]='Su descarga comenzará en breve. Cuando su descarga finalice, utilice los enlaces a continuación para continuar.';
 $lang["downloadfile_nofile"]='El archivo solicitado no fue encontrado.';
 $lang["edit__multiple"]='Por favor, seleccione qué campos desea sobrescribir. Los campos que no seleccione permanecerán sin cambios.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-Translated: <iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["home__restrictedtext"]='Por favor, haga clic en el enlace que se le envió por correo electrónico para acceder a los recursos seleccionados para usted.';
 $lang["home__restrictedtitle"]='Bienvenido a ResourceSpace [ver]';
 $lang["home__welcometext"]='La forma simple, rápida y gratuita de organizar tus activos digitales.';

@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["falcon_link_title"]='Falcon Link -> Haukka Linkki';
+$lang["falcon_link_title"]='Falcon Link';
 $lang["falcon_link_manage"]='Falcon julkaisee/arkistoi.';
 $lang["falcon_link_publish"]='Julkaise Falconiin.';
 $lang["falcon_link_archive"]='Arkisto Falconissa.';

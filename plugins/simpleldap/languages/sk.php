@@ -2,7 +2,7 @@
 
 
 $lang["simpleldap_ldaptype"]='Poskytovateľ adresára.';
-$lang["ldapserver"]='LDAP server -> LDAP server';
+$lang["ldapserver"]='LDAP server';
 $lang["ldap_encoding"]='Kodiranje podatkov prejeto iz strežnika LDAP (nastavljeno, če ni UTF-8 in podatki se ne prikažejo pravilno - npr. prikazno ime)';
 $lang["domain"]='AD doména, ak je viacero, oddelte ich bodkočiarkou.';
 $lang["emailsuffix"]='Koncovka e-mailu - použije se, pokud nejsou k dispozici žádná data atributu e-mailu.';
