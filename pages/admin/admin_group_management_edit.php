@@ -485,7 +485,7 @@ include "../../include/header.php";
 
         if(<?php echo $language_specific_results; ?> > 0 && jQuery('#delete_user_group').is(':checked'))
             {
-            alert('<?php echo $alert_message; ?>');
+            alert("<?php echo escape_quoted_data($alert_message); ?>");
             }
     });
 </script>

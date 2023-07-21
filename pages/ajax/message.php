@@ -393,7 +393,7 @@
             title: '<?php echo $lang['message'] . " " . strtolower($lang["from"]) . " "; ?>' + owner,
             modal: true,
             resizable: false,
-            buttons: [{text: '<?php echo $lang['ok'] ?>',
+            buttons: [{text: "<?php echo $lang['ok'] ?>",
                         click: function() {
                         jQuery( this ).dialog( "close" );
                         }}],
