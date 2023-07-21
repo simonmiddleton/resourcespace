@@ -2991,7 +2991,7 @@ function copy_filter($filter)
         {
         ps_query("INSERT INTO filter_rule (filter) VALUES (?)",array("i",$newfilter));
         $newrule = sql_insert_id();
-        ps_query("INSERT INTO filter_rule_node (filter_rule, node_condition, node) SELECT ? , node_condition, node FROM filter_rule_node WHERE filter_rule=?",array("i",$newfilter,"i",$rule));
+        ps_query("INSERT INTO filter_rule_node (filter_rule, node_condition, node) SELECT ? , node_condition, node FROM filter_rule_node WHERE filter_rule=?",array("i",$newrule,"i",$rule));
         }
 
     return $newfilter;
