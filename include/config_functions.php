@@ -1029,7 +1029,7 @@ function config_generate_AutoSaveConfigOption_function($post_url)
                 jQuery('#AutoSaveStatus-' + option_name).html('<?php echo $lang["saved"]; ?>');
                 jQuery('#AutoSaveStatus-' + option_name).fadeOut('slow');
                 }
-                else if(response.success === false && response.message && response.message.length > 0)
+            else if(response.success === false && response.message && response.message.length > 0)
                 {
                 jQuery('#AutoSaveStatus-' + option_name).html("<?php echo escape_quoted_data($lang['save-error']); ?> " + response.message);
                 }
