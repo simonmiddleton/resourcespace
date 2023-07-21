@@ -2563,7 +2563,7 @@ $lang["filter_or"]='Пожалуйста, переведите: OR.
 
 "OR" переводится на русский язык как "ИЛИ".';
 $lang["filter_and"]='И.';
-$lang["browse_bar_text"]='Просмотреть.';
+$lang["browse_bar_text"]='Просмотреть';
 $lang["field_show_in_browse_bar"]='Показать в панели просмотра.';
 $lang["error-sessionexpired"]='Ваша сессия истекла или недействительна.';
 $lang["error-invalid_resource_type"]='Неверный тип ресурса.';

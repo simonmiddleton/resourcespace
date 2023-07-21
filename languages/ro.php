@@ -2510,7 +2510,7 @@ $lang["filter_or"]='Vă rugăm să traduceți: OR
 
 SAU';
 $lang["filter_and"]='ȘI';
-$lang["browse_bar_text"]='Navigare.';
+$lang["browse_bar_text"]='Navigare';
 $lang["field_show_in_browse_bar"]='Afișează în bara de navigare.';
 $lang["error-sessionexpired"]='Sesiunea ta a expirat sau este invalidă în alt mod.';
 $lang["error-invalid_resource_type"]='Tip de resursă nevalid.';
