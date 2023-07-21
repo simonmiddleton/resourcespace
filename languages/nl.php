@@ -487,7 +487,7 @@ $lang["usergroup-restricted_user_-_requests_managed"]='Beperkte gebruiker - Behe
 $lang["usergroup-restricted_user_-_payment_immediate"]='Beperkte gebruiker - Onmiddellijke betaling';
 $lang["usergroup-restricted_user_-_payment_invoice"]='Beperkte gebruiker - Betalingsfactuur';
 $lang["resourcetype-photo"]='Foto';
-$lang["resourcetype-document"]='Document -> Document';
+$lang["resourcetype-document"]='Document';
 $lang["resourcetype-video"]='Video';
 $lang["resourcetype-audio"]='Audio';
 $lang["resourcetype-global_fields"]='Globale velden.';
@@ -2103,9 +2103,6 @@ $lang["download_click__introtext"]='Om het bronbestand te downloaden, klik met d
 $lang["download_progress__introtext"]='Uw download start binnenkort. Gebruik onderstaande links om door te gaan wanneer uw download is voltooid.';
 $lang["downloadfile_nofile"]='Het gevraagde bestand kon niet worden gevonden.';
 $lang["edit__multiple"]='Selecteer alstublieft welke velden u wilt overschrijven. Velden die u niet selecteert, blijven ongewijzigd.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-This is already in English and does not require translation. It is an HTML code that embeds the ResourceSpace knowledge base into a webpage.';
 $lang["home__restrictedtext"]='Klik op de link die per e-mail naar je is gestuurd om toegang te krijgen tot de voor jou geselecteerde resources.';
 $lang["home__restrictedtitle"]='Welkom bij ResourceSpace [ver]';
 $lang["home__welcometext"]='De eenvoudige, snelle en gratis manier om uw digitale assets te organiseren.';

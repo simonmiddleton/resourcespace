@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["falcon_link_title"]='Falcon Link -> Sokolí odkaz';
+$lang["falcon_link_title"]='Falcon Link';
 $lang["falcon_link_manage"]='Zverejniť/Archivovať sokola.';
 $lang["falcon_link_publish"]='Zverejniť na Falcon.';
 $lang["falcon_link_archive"]='Archív v Falcone.';

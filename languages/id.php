@@ -4684,9 +4684,6 @@ $lang["download_click__introtext"]='Untuk mengunduh berkas sumber daya, klik kan
 $lang["download_progress__introtext"]='Unduhan Anda akan segera dimulai. Setelah unduhan selesai, gunakan tautan di bawah ini untuk melanjutkan.';
 $lang["downloadfile_nofile"]='Berkas yang diminta tidak ditemukan.';
 $lang["edit__multiple"]='Silakan pilih kolom mana yang ingin Anda timpa. Kolom yang tidak dipilih akan tetap tidak berubah.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-Artinya: <iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="lebar:1235px;tinggi:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["home__restrictedtext"]='Silakan klik tautan yang telah dikirimkan melalui email untuk mengakses sumber daya yang telah dipilih untuk Anda.';
 $lang["home__restrictedtitle"]='Selamat datang di ResourceSpace [ver]';
 $lang["home__welcometext"]='Cara sederhana, cepat, dan gratis untuk mengatur aset digital Anda.';

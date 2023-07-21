@@ -2156,7 +2156,6 @@ $lang["download_progress__introtext"]="Sťahovanie začne čoskoro. Po dokončen
 $lang["downloadfile_nofile"]="Požadovaný súbor nebol nájdený.";
 $lang["edit__batch"]="";
 $lang["edit__multiple"]="Vyberte, ktoré polia chcete prepísať. Polia, ktoré nevyberiete, zostanú nedotknuté.";
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["home__help"]="Pomoc a rady, ako využiť ResourceSpace naplno.";
 $lang["home__mycollections"]="Usporiadajte, spolupracujte a zdieľajte svoje zdroje.S pomocou týchto nástrojov môžete pracovať efektívnejšie.";
 $lang["home__restrictedtext"]="Kliknutím na odkaz, ktorý vám bol zaslaný e-mailom, získate prístup k vybraným zdrojom.";

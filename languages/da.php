@@ -2040,9 +2040,6 @@ $lang["download_click__introtext"]='For at downloade ressourcefilen, højreklik 
 $lang["download_progress__introtext"]='Dit download vil starte om kort tid. Når din download er færdig, brug venligst nedenstående links for at fortsætte.';
 $lang["downloadfile_nofile"]='Den anmodede fil blev ikke fundet.';
 $lang["edit__multiple"]='Vælg venligst hvilke felter du ønsker at overskrive. Felter du ikke vælger vil forblive uændrede.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-Translated: <iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> (This is a technical code and does not require translation.)';
 $lang["home__restrictedtext"]='Venligst klik på linket, som du har modtaget på e-mail, for at få adgang til de ressourcer, der er valgt til dig.';
 $lang["home__restrictedtitle"]='Velkommen til ResourceSpace [ver]';
 $lang["home__welcometext"]='Den enkle, hurtige og gratis måde at organisere dine digitale aktiver på.';

@@ -1833,7 +1833,7 @@ $lang["upload_finished_processing"]='Traitement terminé. Fichiers : %COUNT%. Er
 $lang["plupload-maxfilesize"]='La taille maximale autorisée pour le téléchargement est de %s.';
 $lang["collections-2"]='(<strong>%d</strong> collections avec <strong>%d</strong> éléments)';
 $lang["total-collections-0"]='<strong>Total : 0</strong> Collections';
-$lang["total-collections-1"]='<strong>Total : 1</strong> Collection -> <strong>Total : 1</strong> Collection';
+$lang["total-collections-1"]='<strong>Total : 1</strong> Collection';
 $lang["total-collections-2"]='<strong>Total : %number</strong> Collections';
 $lang["owned_by_you-0"]='(<strong>0</strong> vous appartiennent)';
 $lang["owned_by_you-1"]='(<strong>1</strong> appartenant à vous)';
@@ -1973,7 +1973,7 @@ $lang["request_id"]='Identifiant de demande :';
 $lang["user_made_request"]='L\'utilisateur suivant a fait une demande :';
 $lang["download_collection"]='Télécharger la collection.';
 $lang["all-resourcetypes"]='ressources';
-$lang["all-collectiontypes"]='collections → collections';
+$lang["all-collectiontypes"]='collections';
 $lang["resourcetypes-no_collections"]='Tous les %resourcetypes%';
 $lang["no_resourcetypes-collections"]='Tous les %collectiontypes%';
 $lang["resourcetypes-collections"]='Tous les %resourcetypes% et tous les %collectiontypes%.';
@@ -2123,11 +2123,6 @@ $lang["delete_user_group_checkbox_alert_message"]='Veuillez noter que cette acti
 $lang["collection_download__write_metadata_on_download_label"]='Incorporer les métadonnées de la ressource dans le(s) fichier(s) téléchargé(s) ? Activer cette option ralentira votre téléchargement.';
 $lang["collection_email__introtextthemeshare"]='Remplissez le formulaire ci-dessous pour envoyer par e-mail les collections en vedette dans cette catégorie de collections en vedette. Les destinataires recevront un e-mail contenant des liens vers chacune des collections en vedette.';
 $lang["downloadfile_nofile"]='Le fichier demandé n\'a pas été trouvé.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> (in French)
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["local_tz"]='Fuseau horaire local';
 $lang["team_report__err_report_too_long"]='Le rapport est trop volumineux pour être affiché et a été tronqué, veuillez le télécharger à la place !';
 $lang["team_user__confirm-deletion"]='Êtes-vous sûr(e) de vouloir supprimer définitivement cet utilisateur ?';
@@ -2341,7 +2336,7 @@ $lang["current_profile"]='Image de profil actuelle.';
 $lang["error_not_jpeg"]='Le fichier sélectionné n\'est pas au format jpg/jpeg.';
 $lang["error_upload_failed"]='Une erreur est survenue lors du téléchargement du fichier.';
 $lang["seen"]='Vu.';
-$lang["mymessages"]='Messages: Messages';
+$lang["mymessages"]='Messages';
 $lang["mymessages_markread"]='Marquer comme lu.';
 $lang["mymessages_markunread"]='Marquer comme non lu.';
 $lang["mymessages_markallread"]='Marquer tous comme lus.';

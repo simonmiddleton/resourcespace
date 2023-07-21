@@ -1401,7 +1401,6 @@ $lang["resource_type_marker_colour"]='Colore del marcatore sulla mappa.';
 $lang["map_options"]='Opzioni di mappa di ricerca.';
 $lang["legend_text"]='Tipi di risorse:';
 $lang["map_download"]='Scarica la mappa come file PNG, seleziona una dimensione sulla destra.';
-$lang["map_osm_group"]='OpenStreetMap (OSM) --> Mappa Libera di OpenStreetMap (OSM)';
 $lang["map_osm"]='Predefinito';
 $lang["map_osmde"]='Stile tedesco.';
 $lang["map_osmch"]='OSM Svizzera';
@@ -2093,9 +2092,6 @@ $lang["download_click__introtext"]='Per scaricare il file della risorsa, fai cli
 $lang["download_progress__introtext"]='Il download inizierà a breve. Quando il download sarà completato, utilizza i link sottostanti per continuare.';
 $lang["downloadfile_nofile"]='Il file richiesto non è stato trovato.';
 $lang["edit__multiple"]='Si prega di selezionare i campi che si desidera sovrascrivere. I campi non selezionati saranno lasciati intatti.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["home__restrictedtext"]='Per favore, clicca sul link che ti è stato inviato via e-mail per accedere alle risorse selezionate per te.';
 $lang["home__restrictedtitle"]='Benvenuti in ResourceSpace [ver]';
 $lang["home__welcometext"]='Il modo semplice, veloce e gratuito per organizzare le tue risorse digitali.';

@@ -2243,11 +2243,6 @@ $lang["download_click__introtext"]='For å laste ned ressursfilen, høyreklikk p
 $lang["download_progress__introtext"]='Nedlastingen vil starte om kort tid. Når nedlastingen er fullført, bruk lenkene nedenfor for å fortsette.';
 $lang["downloadfile_nofile"]='Filen som ble forespurt ble ikke funnet.';
 $lang["edit__multiple"]='Vennligst velg hvilke felt du ønsker å overskrive. Felt du ikke velger vil bli stående urørt.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" /> (In Norwegian)
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["home__restrictedtext"]='Vennligst klikk på lenken som ble sendt til deg på e-post for å få tilgang til ressursene som er valgt for deg.';
 $lang["home__restrictedtitle"]='Velkommen til ResourceSpace [ver]';
 $lang["home__welcometext"]='Den enkle, raske og gratis måten å organisere dine digitale ressurser på.';

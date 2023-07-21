@@ -2135,9 +2135,6 @@ $lang["collection_download__write_metadata_on_download_label"]='¿Incrustar los 
 $lang["collection_email__introtextthemeshare"]='Completa el formulario a continuación para enviar por correo electrónico las colecciones destacadas en esta categoría de colecciones destacadas. Los destinatarios recibirán un correo electrónico que contiene enlaces a cada una de las colecciones destacadas.';
 $lang["done__resource_email"]='Se ha enviado un correo electrónico que contiene un enlace al recurso a los usuarios que especificaste.';
 $lang["downloadfile_nofile"]='El archivo solicitado no fue encontrado.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-Translated: <iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["local_tz"]='Zona horaria local.';
 $lang["team_report__err_report_too_long"]='¡El informe es demasiado grande para mostrarlo y se truncó, por favor descárguelo en su lugar!';
 $lang["team_user__confirm-deletion"]='¿Estás seguro/a de que quieres eliminar permanentemente a este usuario?';

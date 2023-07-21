@@ -666,7 +666,7 @@ $lang["fieldtitle-year"]='Godina';
 $lang["fieldtitle-duration"]='Trajanje.';
 $lang["fieldtitle-channel_mode"]='Način kanala.';
 $lang["fieldtitle-sample_rate"]='Stopa uzorkovanja.';
-$lang["fieldtitle-audio_bitrate"]='Audio bitrate -> Audio bit brzina.';
+$lang["fieldtitle-audio_bitrate"]='Audio bit brzina.';
 $lang["fieldtitle-frame_rate"]='Broj sličica u sekundi (FPS)';
 $lang["fieldtitle-video_bitrate"]='Brzina bitova videa.';
 $lang["fieldtitle-aspect_ratio"]='Omjer stranica.';
@@ -1189,7 +1189,7 @@ $lang["setup-visitwiki"]='Posjetite <a target="_blank" href="https://www.resourc
 $lang["php-config-file"]='PHP konfiguracija: \'%phpinifile\'';
 $lang["setup-mysqltestfailed"]='Test nije uspio (nije moguće provjeriti MySQL)';
 $lang["setup-admin_fullname"]='Puno ime administratora.';
-$lang["setup-admin_email"]='Admin e-mail -> E-mail administratora';
+$lang["setup-admin_email"]='E-mail administratora';
 $lang["setup-admin_username"]='Korisničko ime administratora.';
 $lang["setup-admin_password"]='Lozinka administratora.';
 $lang["setup-mysql_read_only_username"]='MySQL korisničko ime samo za čitanje.';
@@ -1344,7 +1344,6 @@ $lang["map_osm"]='Zadano.';
 $lang["map_osmde"]='Njemački stil.';
 $lang["map_osmfrance"]='OSM Francuska.';
 $lang["map_osmch"]='OSM Švicarska.';
-$lang["map_osmbzh"]='OSM Luxembourg -> OSM Luksemburg';
 $lang["map_osmhot"]='Humanitarni.';
 $lang["map_osmmtb"]='Karta planinskih biciklističkih staza Europe.';
 $lang["map_osmhikebike"]='Planinarska i biciklistička karta.';
@@ -2037,9 +2036,6 @@ $lang["download_click__introtext"]='Za preuzimanje datoteke resursa, desnom tipk
 $lang["download_progress__introtext"]='Vaše preuzimanje će uskoro početi. Kada se preuzimanje završi, koristite donje veze za nastavak.';
 $lang["downloadfile_nofile"]='Datoteka koja je zatražena nije pronađena.';
 $lang["edit__multiple"]='Molimo odaberite koja polja želite prebrisati. Polja koja ne odaberete ostat će netaknuta.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["home__restrictedtext"]='Molimo kliknite na poveznicu koju ste dobili e-poštom kako biste pristupili odabranim resursima.';
 $lang["home__restrictedtitle"]='Dobrodošli u ResourceSpace [ver]';
 $lang["home__welcometext"]='Jednostavan, brz i besplatan način organiziranja vaših digitalnih resursa.';

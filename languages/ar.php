@@ -2166,9 +2166,6 @@ $lang["download_click__introtext"]='لتحميل ملف المصدر، انقر 
 $lang["download_progress__introtext"]='سيبدأ تنزيل الملف الخاص بك قريبًا. عند اكتمال التنزيل، استخدم الروابط أدناه للاستمرار.';
 $lang["downloadfile_nofile"]='الملف المطلوب غير موجود.';
 $lang["edit__multiple"]='يرجى اختيار الحقول التي ترغب في الكتابة فوقها. الحقول التي لم تختارها سيتم تركها دون تغيير.';
-$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />
-
-<إطار الصفحة src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
 $lang["home__restrictedtext"]='يرجى النقر على الرابط الذي تم إرساله إليك عبر البريد الإلكتروني للوصول إلى الموارد المحددة لك.';
 $lang["home__restrictedtitle"]='مرحبًا بك في ResourceSpace [ver]';
 $lang["home__welcometext"]='الطريقة البسيطة والسريعة والمجانية لتنظيم أصولك الرقمية.';
