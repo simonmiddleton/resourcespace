@@ -2708,7 +2708,7 @@ NO: ENHVER av reglene må oppfylles';
 $lang["filter_is_not_in"]='ER IKKE';
 $lang["filter_or"]='ELLER';
 $lang["filter_and"]='OG';
-$lang["browse_bar_text"]='Bla gjennom.';
+$lang["browse_bar_text"]='Bla gjennom';
 $lang["field_show_in_browse_bar"]='Vis i Navigasjonslinjen';
 $lang["error-sessionexpired"]='Din økt har utløpt eller er på annen måte ugyldig.';
 $lang["error-invalid_resource_type"]='Ugyldig ressurstype.';

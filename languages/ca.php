@@ -2548,7 +2548,7 @@ $lang["filter_or"]='Per favor, tradueix: OR
 
 "OR" es pot traduir com "O" en català.';
 $lang["filter_and"]='I translates as "I" in Catalan. However, if you meant to translate the English word "and" to Catalan, it is "i".';
-$lang["browse_bar_text"]='Navegar.';
+$lang["browse_bar_text"]='Navegar';
 $lang["field_show_in_browse_bar"]='Mostra a la barra de navegació.';
 $lang["error-sessionexpired"]='La teva sessió ha caducat o no és vàlida.';
 $lang["error-invalid_resource_type"]='Tipus de recurs no vàlid.';
