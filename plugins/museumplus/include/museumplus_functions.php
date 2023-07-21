@@ -77,7 +77,33 @@ function do_http_request($url, $basic_auth, $content_type, $request_method, $dat
             }
     );
 
+    if ($GLOBALS['debug_log'] && $curl_verbose_stream_handle = fopen('php://temp', 'w+'))
+        {
+        curl_setopt($curl_handle, CURLOPT_VERBOSE, true);
+        curl_setopt($curl_handle, CURLOPT_STDERR, $curl_verbose_stream_handle);
+        }
+
     $result = curl_exec($curl_handle);
+    if ($GLOBALS['debug_log'])
+        {
+        debug(sprintf('[do_http_request][curl] POSTd data >>> %s <<<', str_replace(PHP_EOL, '', $data)));
+        
+        if (is_resource($curl_verbose_stream_handle))
+            {
+            rewind($curl_verbose_stream_handle);
+            debug(sprintf(
+                '[do_http_request][curl] Verbose request-response output%s%s',
+                PHP_EOL,
+                stream_get_contents($curl_verbose_stream_handle)
+            ));
+            }
+
+        if ($result === false)
+            {
+            debug(sprintf('[do_http_request][curl] errno #%d: %s', curl_errno($curl_handle), curl_error($curl_handle)));
+            }
+        }
+
     $response_status_code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
     curl_close($curl_handle);
 
@@ -86,6 +112,11 @@ function do_http_request($url, $basic_auth, $content_type, $request_method, $dat
         'headers'     => $curl_response_headers,
         'result'      => $result,
     );
+    debug(sprintf(
+        '[do_http_request][curl] Response (status = %d) >>> %s <<<',
+        $response_status_code,
+        str_replace(PHP_EOL, '', $result)
+    ));
 
     return $response;
     }
@@ -437,8 +468,14 @@ function mplus_validate_association(array $ramc, bool $use_technical_id, bool $f
             != value | value | to validate. Module name and/or MpID changed so we need to revalidate (and clear the current __id) the association
             */
             $r_ref = $r_mpdata['ref'];
-            $r_technical_id = trim($r_mpdata['museumplus_technical_id']);
-            $r_md5 = trim($r_mpdata['museumplus_data_md5']);
+            $r_technical_id = trim((string) $r_mpdata['museumplus_technical_id']);
+            $r_md5 = trim((string) $r_mpdata['museumplus_data_md5']);
+            debug(sprintf(
+                'mplus_validate_association(): Checking resource #%s with technical_id = "%s" and MD5 = "%s"',
+                $r_ref,
+                $r_technical_id,
+                $r_md5
+            ));
 
             // The computed MD5 helps us figure out if either the module name or MpID have changed since our last attempt. 
             // A different computed MD5 should always trigger validation of the resource-module association
