@@ -1084,7 +1084,7 @@ body {
     #responsive_collection_toggle {
         height: 160px;
         width: 40px;
-        position: absolute;
+        position: fixed;
         top: 160px;
         right: 0;
         z-index: 999;
