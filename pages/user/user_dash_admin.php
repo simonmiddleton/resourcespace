@@ -112,8 +112,15 @@ include "../../include/header.php";
 				function(data){
 					jQuery("#tile"+tile).removeClass("positiveglow");
 					jQuery("#tile"+tile).removeClass("negativeglow");
-					jQuery("#tile"+tile).addClass(data);
-					window.setTimeout(function(){jQuery("#tile"+tile).removeClass(data);},2000);
+                    if(data == 'positiveglow')
+                        {
+                        jQuery("#tile"+tile).addClass(data);
+					    window.setTimeout(function(){jQuery("#tile"+tile).removeClass(data);},2000);
+                        }
+                    else
+                        {
+                        CentralSpaceLoad("<?php echo $baseurl . '/pages/user/user_dash_admin.php'; ?>");
+                        }
 				}
 			);
 		}
