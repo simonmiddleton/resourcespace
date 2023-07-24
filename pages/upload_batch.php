@@ -146,8 +146,7 @@ $collectionname                         = getval('entercolname', '');
 $search                                 = getval('search', '');
 $offset                                 = getval('offset', '', true);
 $order_by                               = getval('order_by', '');
-$no_exif_raw                            = getval('no_exif', $metadata_read_default ? '' : 'yes');
-$no_exif                                = $no_exif_raw == "yes" || $no_exif_raw =="1" ? true : false;
+$no_exif                                = getval('no_exif', '');
 $autorotate                             = getval('autorotate','') == 'true';
 // This is the archive state for searching, NOT the archive state to be set from the form POST
 $archive                                = getval('archive', '', true);
@@ -382,7 +381,8 @@ if($merge_filename_with_title)
 
 if($embedded_data_user_select || isset($embedded_data_user_select_fields))
     {
-    foreach($_GET as $getname=>$getval)
+    // When uploading is complete, form data is moved to $_POST
+    foreach($processupload ? $_POST : $_GET as $getname => $getval)
         {
         if (strpos($getname,"exif_option_")!==false)
             {
@@ -391,7 +391,7 @@ if($embedded_data_user_select || isset($embedded_data_user_select_fields))
         }
     if(getval("exif_override","")!="")
         {
-        $uploadparams['exif_override']=true;
+        $uploadparams['exif_override']="true";
         }
     }
 
@@ -1955,7 +1955,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
         if ((getval("upload_a_file","")!="" || getval("replace_resource","")!=""  || getval("replace","")!="") && $metadata_read)
             { ?>
             <div class="Question">
-                <label for="no_exif"><?php echo htmlspecialchars($lang["no_exif"])?></label><input type=checkbox <?php if ($no_exif){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
+                <label for="no_exif"><?php echo htmlspecialchars($lang["no_exif"])?></label><input type=checkbox <?php if (!$metadata_read_default){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
                 <div class="clearerleft"> </div>
             </div>
             <?php
