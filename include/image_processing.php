@@ -1783,7 +1783,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             if($imagemagick_mpr)
                 {
                 $mpr_parts['id']=$id;
-                $mpr_parts['quality']=$preview_quality;
+                $mpr_parts['quality']=$imagemagick_quality;
                 $mpr_parts['tw']=($id=='hpr' && $tw==999999 && isset($o_width) ? $o_width : $tw); // might as well pass on the original dimension
                 $mpr_parts['th']=($id=='hpr' && $th==999999 && isset($o_height) ? $o_height : $th); // might as well pass on the original dimension
                 
