@@ -43,6 +43,10 @@ unset(
     $video_tracks_plugin_config['video_tracks_output_formats_saved'],
     $video_tracks_plugin_config['video_tracks_export_folder']
 );
-set_plugin_config('video_tracks', $video_tracks_plugin_config);
+
+if (!is_null($video_tracks_plugin_config))
+    {
+    set_plugin_config('video_tracks', $video_tracks_plugin_config);
+    }
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Finished Video Tracks plugin configuration upgrade!');
