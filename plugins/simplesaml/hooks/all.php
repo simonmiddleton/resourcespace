@@ -63,18 +63,39 @@ function HookSimplesamlAllPreheaderoutput()
 
 	// Check for exclusions
     $k = getval('k', '');
-    if(
-        $simplesaml_allow_public_shares &&
-        '' != $k &&
-        (
-            // Hard to determine at this stage what we consider a collection/ resource ID so we
-            // use the most general ones
-            check_access_key_collection(str_replace('!collection', '', getval('search', '')), $k) ||
-            check_access_key(getval('ref', ''), $k)
-        )
-    )
+    $resource = getval('ref', '');
+    $search = getval('search', '');
+    $collection_from_search=str_replace('!collection', '', $search);
+    
+    if(is_numeric($collection_from_search))
         {
-        return true;
+        $collection_from_search=(int)$collection_from_search;
+        }
+    else
+        {
+        $collection_from_search=null;    
+        }
+    if(is_numeric($resource))
+        {
+        $resource=(int)$resource;
+        }
+    else
+        {
+        $resource=null;    
+        }
+
+    if( $simplesaml_allow_public_shares && '' != $k )
+        {
+        // Hard to determine at this stage what we consider a collection/ resource ID so we
+        // use the most general ones
+        if($collection_from_search && check_access_key_collection($collection_from_search, $k)) 
+            {
+            return true;
+            }
+        if($resource && check_access_key($resource, $k))
+            {
+            return true;
+            }
         }
 
     $url=str_replace("\\","/", $_SERVER["PHP_SELF"]);
