@@ -1303,7 +1303,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         $saved_archive_standard = $archive_standard;
         $archive_standard = false;
         // Search archive but don't log this to daily_stat
-        $arcresults=do_search($search,$restypes,$order_by,2,0,'desc',false,0,false,false,'',false,false);
+        $arcresults=do_search($search,$restypes,$order_by,2,-1,'desc',false,0,false,false,'',false,false);
         $archive_standard = $saved_archive_standard;
         if (is_array($arcresults)) {$arcresults=count($arcresults);} else {$arcresults=0;}
         if ($arcresults>0) 
