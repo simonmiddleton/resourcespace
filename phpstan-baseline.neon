@@ -55,10 +55,6 @@ parameters:
 			count: 1
 			path: include/csv_export_functions.php
 
-		-
-			message: "#^Undefined variable\\: \\$build_url_param$#"
-			count: 1
-			path: include/dash_functions.php
 
 		-
 			message: "#^Undefined variable\\: \\$error$#"
