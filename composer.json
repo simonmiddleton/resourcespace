@@ -7,9 +7,7 @@
     "require": {
         "php": "^7.4 || ~8.2.0",
         "ext-mbstring": "*",
-        "ext-json": "*",
-        "ankitpokhrel/tus-php": "~2.2.1",
-        "spipu/html2pdf": "^5.2"
+        "ext-json": "*"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.8"

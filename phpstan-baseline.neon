@@ -291,6 +291,16 @@ parameters:
 			path: pages/tools/staticsync.php
 
 		-
+			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"
+			count: 1
+			path: pages/upload_batch.php
+
+		-
+			message: "#^Instantiated class TusPhp\\\\Tus\\\\Server not found\\.$#"
+			count: 1
+			path: pages/upload_batch.php
+
+		-
 			message: "#^Undefined variable\\: \\$original_download_name$#"
 			count: 1
 			path: plugins/adobe_link/hooks/view.php
@@ -384,6 +394,11 @@ parameters:
 			message: "#^Undefined variable\\: \\$simplesamlconfig$#"
 			count: 1
 			path: plugins/simplesaml/include/simplesaml_functions.php
+
+		-
+			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"
+			count: 1
+			path: plugins/vimeo_publish/include/vimeo_publish_functions.php
 
 		-
 			message: "#^Caught class Google_ServiceException not found\\.$#"
