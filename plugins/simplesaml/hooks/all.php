@@ -66,7 +66,7 @@ function HookSimplesamlAllPreheaderoutput()
     $resource = getval('ref', '');
     $search = getval('search', '');
     $collection_from_search=str_replace('!collection', '', $search);
-    $collection_add = getval('collection_add', '');
+    $c = getval('c', '');
 
     if(is_numeric($collection_from_search))
         {
@@ -76,13 +76,13 @@ function HookSimplesamlAllPreheaderoutput()
         {
         $collection_from_search=null;    
         }
-    if(is_numeric($collection_add))
+    if(is_numeric($c))
         {
-        $collection_add=(int)$collection_add;
+        $c=(int)$c;
         }
     else
         {
-        $collection_add=null;    
+        $c=null;    
         }
     if(is_numeric($resource))
         {
@@ -101,7 +101,7 @@ function HookSimplesamlAllPreheaderoutput()
             {
             return true;
             }
-        if($collection_add && check_access_key_collection($collection_add, $k)) 
+        if($c && check_access_key_collection($c, $k)) 
             {
             return true;
             }
