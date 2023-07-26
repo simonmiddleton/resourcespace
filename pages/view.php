@@ -314,7 +314,7 @@ $fields_all=get_resource_field_data($ref,$multi_fields,FALSE,NULL,($k!="" && !$i
 $fields=get_resource_field_data($ref,$multi_fields,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
 $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($modified_view_fields){$fields=$modified_view_fields;}
 
-# If no fields were found advise of conifguration issue and exit.
+# If no fields were found advise of configuration issue and exit.
 if (!$fields_all || !$fields)
     {
     error_alert($lang["error_no_metadata"], false);

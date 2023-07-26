@@ -3243,7 +3243,8 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
     $restype_params = [];
     if(!$multi)
         {
-        $restypesql = "AND (f.global=1 OR f.ref IN (SELECT resource_type_field FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type=?))";
+        $restypesql = "AND (f.global=1 OR f.ref=? OR f.ref IN (SELECT resource_type_field FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type=?))";
+        $restype_params[] = "i";$restype_params[] = $view_title_field;
         $restype_params[] = "i";$restype_params[] = $rtype;
         }
 
