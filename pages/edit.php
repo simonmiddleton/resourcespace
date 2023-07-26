@@ -1576,7 +1576,7 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
                 $template_selected = ' selected';
                 }
                 ?>
-            <option value="<?php echo $template["ref"] ?>" <?php echo $template_selected; ?>><?php echo htmlspecialchars((string)$template["field{$metadata_template_title_field}"]); ?></option>
+            <option value="<?php echo (int)$template["ref"] ?>" <?php echo $template_selected; ?>><?php echo htmlspecialchars((string)$template["field{$metadata_template_title_field}"]); ?></option>
             <?php   
             }
             ?>

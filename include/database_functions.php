@@ -101,7 +101,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         <?php
         }
 
-    // Optionally log errors to a cental server.
+    // Optionally log errors to a central server.
     if (isset($log_error_messages_url))
         {
         $errline = ($errline == "N/A" || !is_numeric($errline) ? 0 : $errline);

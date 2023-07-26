@@ -3363,7 +3363,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
             {
             debug("field".$fields[$n]["title"]."=".$fields[$n]["value"]);
             $fields[$n]["title"] = lang_or_i18n_get_translated($fields[$n]["title"], "fieldtitle-");
-            // Add in asscoiated resource types
+            // Add in associated resource types
             $fields[$n]["resource_types"] = implode(",",$field_restypes[$fields[$n]["ref"]]);
             // Sort nodes
             if(in_array($fields[$n]['type'],$FIXED_LIST_FIELD_TYPES)
