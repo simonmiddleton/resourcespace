@@ -2052,14 +2052,17 @@ function get_node_tree($parentId = "", array $nodes = array())
  * 
  */
 function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) {
+    $sql_query = "SELECT n.ref, n.resource_type_field, n.name, coalesce(n.parent, 0) parent, n.order_by, rn.resource FROM node n ";
+    if ($allnodes)
+        {
+        $sql_query .= " LEFT OUTER ";
+        }
+    $sql_query .=  "JOIN resource_node rn on rn.resource = ? and rn.node = n.ref WHERE n.resource_type_field=? order by n.parent, n.order_by";
 
-    $nodeentries = ps_query("SELECT n.ref, n.resource_type_field, n.name, coalesce(n.parent, 0) parent, n.order_by, rn.resource 
-                            FROM node n
-                            LEFT OUTER JOIN resource_node rn on rn.resource = ? and rn.node = n.ref  
-                            WHERE n.resource_type_field=? order by n.parent, n.order_by",array("i",(int)$resource, "i",(int)$treefield));
+    $nodeentries = ps_query($sql_query, array("i", (int) $resource, "i", (int) $treefield));
 
     # Category trees have no container root, so create one to carry all top level category tree nodes which don't have a parent
-    $rootnode = cattree_node_creator(0, 0, "ROOT", null, 0, null, array());                                               
+    $rootnode = cattree_node_creator(0, 0, "ROOT", null, 0, null, array());
 
     $nodeswithpointers = array(0 => &$rootnode);
 
