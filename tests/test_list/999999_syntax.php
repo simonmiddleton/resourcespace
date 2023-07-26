@@ -16,6 +16,7 @@ $TestPage = function($page) {
 $exclude_paths = array(
     "/lib/",
     "/filestore/",
+    "/vendor/",
 );
 $Directory = new RecursiveDirectoryIterator(dirname(__FILE__) . "/../../");
 $Iterator = new RecursiveIteratorIterator($Directory);
