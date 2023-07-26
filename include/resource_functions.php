@@ -8286,7 +8286,7 @@ function notify_resource_change($resource)
         $notifymessage = new ResourceSpaceUserNotification();
         $notifymessage->set_subject("lang_notify_resource_change_email_subject");
         $notifymessage->set_text("lang_notify_resource_change_email",["[days]","[url]"],[$notify_on_resource_change_days,$baseurl . "/?r=" . $resource]);
-        $notifymessage->preference = "user_pref_resource_notifications";
+        $notifymessage->user_preference = "user_pref_resource_notifications";
         $notifymessage->url = $baseurl . "/?r=" . $resource;
         $notifymessage->template = 'notify_resource_change_email';
         $notifymessage->templatevars = ["days"=>$notify_on_resource_change_days,"url"=>$baseurl . "/?r=" . $resource];
