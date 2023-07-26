@@ -69,40 +69,15 @@ function HookSimplesamlAllPreheaderoutput()
     $collection_add = getval('collection_add', '');
     $c = getval('c', '');
 
-    if(is_numeric($collection_from_search))
-        {
-        $collection_from_search=(int)$collection_from_search;
-        }
-    else
-        {
-        $collection_from_search=null;    
-        }
-    if(is_numeric($collection_add))
-        {
-        $collection_add=(int)$collection_add;
-        }
-    else
-        {
-        $collection_add=null;    
-        }
-    if(is_numeric($c))
-        {
-        $c=(int)$c;
-        }
-    else
-        {
-        $c=null;    
-        }
-    if(is_numeric($resource))
-        {
-        $resource=(int)$resource;
-        }
-    else
-        {
-        $resource=null;    
-        }
+    $collection_from_search = is_numeric($collection_from_search) ? (int)$collection_from_search : null;
 
-    if( $simplesaml_allow_public_shares && '' != $k )
+    $collection_add = is_numeric($collection_add) ? (int)$collection_add : null;
+
+    $c = is_numeric($c) ? (int)$c : null;
+
+    $resource = is_numeric($resource) ? (int)$resource : null;
+
+    if( $simplesaml_allow_public_shares && '' !== $k )
         {
         // Hard to determine at this stage what we consider a collection/ resource ID so we
         // use the most general ones
