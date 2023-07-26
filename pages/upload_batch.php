@@ -187,7 +187,7 @@ if($upload_then_edit)
         // Resource type selection was forced so use the resource type passed in on the url
         update_resource_type(0 - $userref, $resource_type);
         }
-    else
+    else if (!$upload_here)
         {
         // Otherwise use the resource type from the template
         $resource_type=ps_value("select resource_type value from resource where ref=?",array("i",0 - $userref),0);

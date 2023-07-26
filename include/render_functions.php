@@ -3219,10 +3219,18 @@ function render_upload_here_button(array $search_params, $return_params_only = f
     // Archive can be a list (e.g from advanced search) so always select the first archive state user access to, 
     // favouring the Active one
     $search_archive = explode(',', $search_params['archive']);
-    $default_workflow_state = get_default_archive_state();
-    if($default_workflow_state == 0)
+    $use_default = false;
+
+    if (count($search_archive) == 1 && $search_archive[0] == "")
         {
-        $upload_here_params['status'] = $default_workflow_state;
+        $search_archive = array();
+        $use_default = true;
+        }
+
+    // Check access to Active state
+    if(in_array(0, $search_archive) && checkperm("e0"))
+        {
+        $upload_here_params['status'] = 0;
         $search_archive = array();
         }
     // Check remaining states
@@ -3233,18 +3241,18 @@ function render_upload_here_button(array $search_params, $return_params_only = f
             continue;
             }
 
-        if(get_default_archive_state($archive) != $archive)
+        if(checkperm("e{$archive}"))
             {
-            continue;
+            $upload_here_params['status'] = $archive;
+            $search_archive = array();
+            break;
             }
-        
-        $upload_here_params['status'] = $archive;
-        break;
         }
-    // Last attempt to set the archive state
-    if(!isset($upload_here_params['status']))
+
+    if (count($search_archive) != 0 || $use_default)
         {
-        $upload_here_params['status'] = $default_workflow_state;
+        // None of the supplied archive states were accessible with e permission so use default.
+        $upload_here_params['status'] = get_default_archive_state();
         }
 
     // Option to return out just the upload params
