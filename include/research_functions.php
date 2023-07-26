@@ -76,7 +76,7 @@ function send_research_request(array $rr_cfields)
     $userconfirmmessage->set_text("'$username' ($userfullname - $useremail) ");
     $userconfirmmessage->append_text("lang_haspostedresearchrequest");
     $userconfirmmessage->append_text(".\n\n");  
-    $userconfirmmessage->preference = "user_pref_resource_access_notifications";
+    $userconfirmmessage->user_preference = "user_pref_resource_access_notifications";
     $userconfirmmessage->template = "emailnewresearchrequestwaiting";
     $userconfirmmessage->templatevars = $templatevars;
     $userconfirmmessage->url = $templatevars["teamresearchurl"];
