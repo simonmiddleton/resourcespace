@@ -371,11 +371,6 @@ parameters:
 			path: plugins/image_text/hooks/download.php
 
 		-
-			message: "#^Function mplus_generate_connection_data not found\\.$#"
-			count: 1
-			path: plugins/museumplus/pages/museumplus_object_details.php
-
-		-
 			message: "#^Result of function send_mail \\(void\\) is used\\.$#"
 			count: 1
 			path: plugins/offline_archive/pages/restore_request.php
