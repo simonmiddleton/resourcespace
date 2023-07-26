@@ -66,6 +66,7 @@ function HookSimplesamlAllPreheaderoutput()
     $resource = getval('ref', '');
     $search = getval('search', '');
     $collection_from_search=str_replace('!collection', '', $search);
+    $collection_add = getval('collection_add', '');
     $c = getval('c', '');
 
     if(is_numeric($collection_from_search))
@@ -75,6 +76,14 @@ function HookSimplesamlAllPreheaderoutput()
     else
         {
         $collection_from_search=null;    
+        }
+    if(is_numeric($collection_add))
+        {
+        $collection_add=(int)$collection_add;
+        }
+    else
+        {
+        $collection_add=null;    
         }
     if(is_numeric($c))
         {
@@ -98,6 +107,10 @@ function HookSimplesamlAllPreheaderoutput()
         // Hard to determine at this stage what we consider a collection/ resource ID so we
         // use the most general ones
         if($collection_from_search && check_access_key_collection($collection_from_search, $k)) 
+            {
+            return true;
+            }
+        if($collection_add && check_access_key_collection($collection_add, $k)) 
             {
             return true;
             }
