@@ -496,7 +496,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         # Dynamic keyword list behaviour replaced with regular input field under these circumstances
         if ((int)$field['field_constraint']==0)
             {
-			?><input class="<?php echo escape_quoted_data($class) ?>" type=text name="<?php echo escape_quoted_data($name) ?>" id="<?php echo escape_quoted_data($id) ?>" value="<?php echo escape_quoted_data((string)$value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo escape_quoted_data((string)$field["name"]) ?>',<?php echo htmlspecialchars((string)$field["resource_types"]) ?>);}"<?php } ?>><?php 
+			?><input class="<?php echo escape_quoted_data($class) ?>" type=text name="<?php echo escape_quoted_data($name) ?>" id="<?php echo escape_quoted_data($id) ?>" value="<?php echo escape_quoted_data((string)$value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo escape_quoted_data((string)$field["name"]) ?>',[<?php echo htmlspecialchars((string)$field["resource_types"]) ?>]);}"<?php } ?>><?php 
 			# Add to the clear function so clicking 'clear' clears this box.
 			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : escape_quoted_data($field["name"])) . "').value='';";
 		    }
@@ -804,7 +804,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 {
                     jQuery('#SearchBox').on('categoryTreeChanged', function(e,node)
                     {
-                        FilterBasicSearchOptions('<?php echo escape_quoted_data($field["name"]) ?>',<?php echo htmlspecialchars((string)$field["resource_types"]) ?>);
+                        FilterBasicSearchOptions('<?php echo escape_quoted_data($field["name"]) ?>',[<?php echo htmlspecialchars((string)$field["resource_types"]) ?>]);
                     });
                 });
             </script>
