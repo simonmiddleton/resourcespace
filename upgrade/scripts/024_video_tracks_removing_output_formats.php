@@ -14,6 +14,7 @@ if (
     && !empty($video_tracks_plugin_config['video_tracks_output_formats_saved'])
 )
     {
+    register_plugin_language('video_tracks');
     $config_to_copy = plugin_decode_complex_configs($video_tracks_plugin_config['video_tracks_output_formats_saved']);
     $notification_users = array_column(get_notification_users('SYSTEM_ADMIN'), 'ref');
 
