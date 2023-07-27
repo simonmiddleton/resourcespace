@@ -731,9 +731,9 @@ $lang["property-automatic_nodes_ordering_label"]='Αυτόματη παραγγ�
 $lang["property-required"]='Απαιτείται.';
 $lang["property-order_by"]='Ταξινόμηση κατά';
 $lang["property-indexing"]='Ευρετηρίαση';
-$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]='Εάν ενεργοποιήσετε τον ευρετήριο παρακάτω και το πεδίο περιέχει ήδη δεδομένα, θα χρειαστεί να <strong><a target=_blank href=../tools/reindex_field.php?field=%ref>επανυπολογίσετε αυτό το πεδίο</a></strong>.';
+$lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]='Εάν ενεργοποιήσετε τον ευρετήριο παρακάτω και το πεδίο περιέχει ήδη δεδομένα, θα χρειαστεί να <a target=_blank href=../tools/reindex_field.php?field=%ref>επανυπολογίσετε αυτό το πεδίο</a>.';
 $lang["property-index_this_field"]='Ευρετήστε αυτό το πεδίο.';
-$lang["information_index_warning"]='Παρακαλούμε ανατρέξτε στην <strong><a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Βάση Γνώσεων</a></strong> για λεπτομερείς πληροφορίες σχετικά με τη δεικτοδότηση πεδίων.';
+$lang["information_index_warning"]='Παρακαλούμε ανατρέξτε στην <a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Βάση Γνώσεων</a> για λεπτομερείς πληροφορίες σχετικά με τη δεικτοδότηση πεδίων.';
 $lang["property-enable_partial_indexing"]='Ενεργοποίηση μερικού ευρετηρίσματος.';
 $lang["property-shorthand_name"]='Συντομογραφία (Syntomografía)';
 $lang["property-display_field"]='Πεδίο εμφάνισης';

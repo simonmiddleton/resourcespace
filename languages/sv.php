@@ -1789,7 +1789,7 @@ $lang["property-field_constraint-singlekeyword"]='Enkelval.';
 $lang["property-field_raw_edtf"]='Om ett datumintervall anges i EDTF-format, lagra rådata i detta fält.';
 $lang["property-options_edit_link"]='Hantera alternativ.';
 $lang["property-automatic_nodes_ordering_label"]='Automatisk beställning.';
-$lang["information_index_warning"]='Vänligen hänvisa till <strong><a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Kunskapsbasen</a></strong> för detaljerad information om fältindexering.';
+$lang["information_index_warning"]='Vänligen hänvisa till <a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Kunskapsbasen</a> för detaljerad information om fältindexering.';
 $lang["property-field_full_width"]='Visa i full bredd på visningssidan.';
 $lang["property-system_date_help_text"]='Det går inte att inaktivera detta eftersom fältet är inställt som systemets specifika datumfält. Du kan ändra detta via konfiguration eller genom att fråga en administratör.';
 $lang["property-push_metadata"]='Tryck metadata.';
