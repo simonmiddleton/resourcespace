@@ -1319,7 +1319,7 @@ $default_resource_type=1;
 $ip_forwarded_for=false;
 
 # When extracting text from documents (e.g. HTML, DOC, TXT, PDF) which field is used for the actual content?
-# Comment out the line to prevent extraction of text content
+# Unset it to prevent extraction of text content
 $extracted_text_field=72;
 
 # Enable user rating of resources
