@@ -61,19 +61,22 @@ if($delete_filter != "" && enforcePostRequest("admin_filter_edit"))
     else
         {
         $response   = array('deleted' => false);
-        $response["errors"] = array();
-        $response["errors"][] = $lang["filter_delete_error"] . ":- ";
+        $errors = array();
+        $errors[] = htmlspecialchars($lang["filter_delete_error"]) . ":- ";
         foreach($result["groups"] as $group)
             {
-            $response["errors"][] = $lang["group"] . ": <a href='" . $baseurl_short . "/pages/admin/admin_group_management_edit.php?ref=" . $group . "' target='_blank' >" . $group . "</a>";
+            $errors[] = htmlspecialchars($lang["group"]) . ": <a href='" . $baseurl_short . "/pages/admin/admin_group_management_edit.php?ref=" . $group . "' target='_blank' >" . $group . "</a>";
             }
            
         foreach($result["users"] as $user)
             {
-            $response["errors"][] = $lang["user"] . ": <a href='" . $baseurl_short . "?u=" . $user . "' target='_blank' >" . $user . "</a>";
+            $errors[] = htmlspecialchars($lang["user"]) . ": <a href='" . $baseurl_short . "?u=" . $user . "' target='_blank' >" . $user . "</a>";
             }
-        
-        exit(json_encode($response));
+        if(getval("filter_manage_page","") != "")
+            {
+            $response['errors'] = $errors;
+            exit(json_encode($response));
+            }
         }
     }
 if($delete_filter_rule != "" && enforcePostRequest("delete_filter_rule"))
@@ -104,7 +107,7 @@ elseif($filterid != "" && getval("save","") != "" && enforcePostRequest("admin_f
         {
         save_filter($filterid,$filter_name,$filter_condition);
         
-        if(getval("filter_manage_page","") == "")
+        if(getval("filter_manage_page","") == "" && !isset($errors) && empty($errors))
             {
             redirect($backurl);    
             } 
@@ -284,7 +287,7 @@ include "../../include/header.php";
                 </div>
                         
                 <div class="QuestionSubmit">
-                    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" onClick="return CentralSpacePost(this.form,true);">
+                    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["save"]);?>&nbsp;&nbsp;" onClick="return CentralSpacePost(this.form,true);">
                 </div>
 
 
@@ -323,6 +326,20 @@ function deleteFilterRule(rule)
         
         return false;
     }
+
+jQuery(document).ready(function(){
+    let errors = <?php echo (isset($errors)?json_encode($errors):[]);?>;
+    if(errors.length > 0)
+        {
+        error_message = '';
+        for (var i in errors) 
+            {
+            error_message += errors[i] + "<br />";
+            }
+        console.log(error_message);
+        styledalert("<?php echo escape_quoted_data($lang['error']); ?>", error_message);
+        }
+})
 </script>
 
 
