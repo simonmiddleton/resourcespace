@@ -74,13 +74,13 @@ function HookLightbox_previewViewGetpreviewurlforsize()
     }
 
 
-function HookLightbox_previewViewRenderaltthumb()
+function HookLightbox_previewViewRenderaltthumb($n)
     {
     if(isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'],"TRIDENT") !== false || strpos($_SERVER['HTTP_USER_AGENT'],"MSIE") !== false))
         {
         return false;
         }
-    global $baseurl_short, $ref, $resource, $alt_thm, $altfiles, $n, $k, $search,
+    global $baseurl_short, $ref, $resource, $alt_thm, $altfiles, $k, $search,
             $offset, $sort, $order_by, $archive;
 
     $url = getPreviewURL($resource, $altfiles[$n]['ref']);
