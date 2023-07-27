@@ -551,21 +551,18 @@ elseif($restypes=='')
             {
             resourcetypes = resourcetypes.toString().split(",");
             // When selecting resource type specific fields, automatically untick all other resource types, because selecting something from this field will never produce resources from the other resource types.
-            allselected = false;
-            if(jQuery('#rttickallres').prop('checked'))
-                {
-                allselected = true;
-                // Always untick the Tick All box
-                if (jQuery('#rttickallres')) {jQuery('#rttickallres').prop('checked', false);}
-                }
+            
+            // Always untick the Tick All box
+            if (jQuery('#rttickallres')) {jQuery('#rttickallres').prop('checked', false);}
             <?php
+            # Untick all other resource types.
             for ($n=0;$n<count($types);$n++)
                 {
                 ?>
                 if (resourcetypes.indexOf('<?php echo $types[$n]["ref"]?>') == -1) {
                     jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', false);
                 }
-                else if (allselected){
+                else {
                     jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', true);
                 }
                 <?php
@@ -587,7 +584,6 @@ elseif($restypes=='')
             }
 
         if (resetvalues) {
-            console.log("Resetting values");
             SimpleSearchFieldsResetValues(false); // false = exclude globals
         }
 
@@ -610,14 +606,13 @@ elseif($restypes=='')
                     {
                     echo "hidethisfield=false;\n";
                     foreach(explode(",",(string)$fields[$n]["resource_types"]) as $restype)
-                        {
-                        $display_for_resource_types[] = "(document.getElementById('TickBox$restype') !== null && !jQuery('#TickBox$restype').prop('checked'))";
-                        }
-                        ?>
-                        if (<?php echo implode(" && ", $display_for_resource_types) ?>)
+                        {?>
+                        if (document.getElementById('TickBox<?php echo $restype ?>') !== null && !jQuery('#TickBox<?php echo $restype ?>').prop('checked'))
                             {
                             hidethisfield=true;
                             }
+                        <?php
+                        }?>
 
                     if(hidethisfield)
                         {
@@ -670,6 +665,7 @@ elseif($restypes=='')
                     else
                         {
                         // Process checked element
+
                         <?php
                         if(in_array($fields[$n]['type'],array(2,3)) || ($fields[$n]["type"]==9 && $simple_search_show_dynamic_as_dropdown))
                             {
@@ -700,8 +696,10 @@ elseif($restypes=='')
         document.getElementById('ssearchhiddenfields').value=ssearchhiddenfieldsstring;
         SetCookie('ssearchhiddenfields',ssearchhiddenfieldsstring);
         console.log("SETCOOKIE SSEARCHHIDDENFIELDS="+ssearchhiddenfieldsstring);
-        }
 
+        }   
+
+        
     function SimpleSearchFieldsResetValues(includeglobals) {
     <?php
     # Reset the data in each of the searchfields including global 
@@ -709,27 +707,11 @@ elseif($restypes=='')
         {
         if ($fields[$n]["global"]==1) 
             {
-            $hidecondition = " if (includeglobals) {";
-            }
-        else
-            {
-            $hideconditions =  [];
-            $showconditions =  [];
-            // Check if resource types are valid for field
-            $validrestypes = explode(",",(string)$fields[$n]["resource_types"]);
-            $invalidrestypes = array_diff(array_column($types,"ref"),array_merge($hide_resource_types,$validrestypes));
-            // Don't hide if any of the valid resource types are checked AND none of the invalid types are checked
-            foreach($validrestypes as $validrestype)
+            ?>
+            if (includeglobals) 
                 {
-                $showconditions[] = "jQuery('#TickBox" . $validrestype . "').prop('checked') == false";
-                }
-            foreach($invalidrestypes as $invalidrestype)
-                {
-                $hideconditions[] = "jQuery('#TickBox" . $invalidrestype . "').prop('checked')";
-                }
-            $hidecondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $hideconditions) . ") {";
+        <?php
             }
-        echo "// Start of hide field code\n" . $hidecondition;
         # Duplicate fields are skipped
         # Fields subjected to display conditioning are skipped
         if ( !in_array($fields[$n]["name"],$duplicate_fields) 
@@ -777,7 +759,6 @@ elseif($restypes=='')
                 case FIELD_TYPE_DROP_DOWN_LIST:
                 case FIELD_TYPE_RADIO_BUTTONS:
                     ?>
-                    console.log("Clearing field <?php echo $fields[$n]["ref"]; ?>"); 
                     jQuery('select[name="nodes_searched[<?php echo $fields[$n]["ref"]; ?>]"]').val('');
                     <?php                            
                     break;  
@@ -789,8 +770,16 @@ elseif($restypes=='')
                     <?php }
                 }
             }
-        echo "} // End of hide field condition\n";
-        }?>
+
+            if ($fields[$n]["global"]==1) 
+                {
+                ?>
+                }
+            <?php
+                }
+
+        }
+    ?>
     }
 
     </script>
