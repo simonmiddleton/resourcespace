@@ -744,6 +744,10 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $new_checksums[$fields[$n]['ref']] = md5(implode(',',$ui_selected_node_values));
                     $updated_resources[$ref][$fields[$n]['ref']] = $new_nodevals; // To pass to hook
                     }
+                else
+                    {
+                    $val = "";
+                    }
                 } // End of if in $FIXED_LIST_FIELD_TYPES
             else
                 {
