@@ -96,6 +96,7 @@ $imversion = get_imagemagick_version();
 $orig_ext = $resource["file_extension"];
 hook('transformcropbeforegetsize');
 $originalpath = get_resource_path($ref,true,'',false,$orig_ext);
+debug(sprintf('[transform][pages/crop][line@%d] $originalpath = %s ', __LINE__, $originalpath));
 
 $usesize    = "scr";
 $useext     = "jpg";
@@ -125,13 +126,16 @@ else
 
 // Check if an uncropped preview exists
 $previewsourcepath = $org = get_resource_path($ref,true,"original_copy",false,$useext);
+debug(sprintf('[transform][pages/crop][line@%d] $org = %s ', __LINE__, $org));
 
 if(!file_exists($org))
     {
     $previewsourcepath = get_resource_path($ref,true,$usesize,false,$useext);
+    debug(sprintf('[transform][pages/crop][line@%d] $previewsourcepath = %s ', __LINE__, $previewsourcepath));
     if(!file_exists($previewsourcepath))
         {
         $previewsourcepath=get_preview_source_file($ref, $orig_ext, false, true,-1,!is_null($resource["file_path"]));
+        debug(sprintf('[transform][pages/crop][line@%d] $previewsourcepath = %s ', __LINE__, $previewsourcepath));
         }
     }
 
@@ -155,6 +159,8 @@ $preview_actions["new_width"] = 600;
 $preview_actions["new_height"] = 600;
 $preview_actions["preview"] = true;
 
+debug(sprintf('[transform][pages/crop][line@%d] $previewsourcepath = %s ', __LINE__, $previewsourcepath));
+debug(sprintf('[transform][pages/crop][line@%d] $crop_pre_file = %s ', __LINE__, $crop_pre_file));
 $generated = transform_file($previewsourcepath,$crop_pre_file, $preview_actions);
 
 if($reload_image)
@@ -205,7 +211,7 @@ $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 
 if ($saveaction != '' && enforcePostRequest(false))
     {
-
+    debug("[transform][pages/crop] save action triggered - $saveaction");
     $original_rotation = get_image_orientation($originalpath);
     $preview_rotation  = get_image_orientation($crop_pre_file);
     
@@ -301,11 +307,11 @@ if ($saveaction != '' && enforcePostRequest(false))
     
     $newpath = "$tmpdir/transform_plugin/download_" . $ref . uniqid() . "." . $new_ext;
 
-    // Preserve scr of original file incase transforms are used for previews
+    // Preserve original file preview (source) in case transforms are used for previews
     if(!file_exists($org))
         {
-        $scr = get_resource_path($ref,true,"scr",false,$useext);
-        rename($scr,$org);
+        debug("[transform][pages/crop] rename($previewsourcepath, $org)");
+        rename($previewsourcepath, $org);
         }
 
     // Perform the actual transformation
