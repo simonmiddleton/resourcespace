@@ -12,7 +12,7 @@ $iaccept     = getval('iaccept', 'off');
 $url         = getval('url', '');
 
 $email       = getval('email', '');
-$usage       = getval("usage", '');
+$usage       = getval("usage", '', true);
 $usagecomment = getval("usagecomment", '');
 
 $error = array();
@@ -151,7 +151,7 @@ if(isset($download_usage_prevent_options))
                 <?php 
                 for ($n=0;$n<count($download_usage_options);$n++)
                     {
-                    $selected = ($n == $usage) ? "selected" : "";
+                    $selected = ($n === $usage) ? "selected" : "";
                     ?>
                     <option <?php echo $selected ?> value="<?php echo $n; ?>"><?php echo htmlspecialchars($download_usage_options[$n]) ?></option>
                     <?php
