@@ -65,12 +65,12 @@ if($delete_filter != "" && enforcePostRequest("admin_filter_edit"))
         $errors[] = htmlspecialchars($lang["filter_delete_error"]) . ":- ";
         foreach($result["groups"] as $group)
             {
-            $errors[] = htmlspecialchars($lang["group"]) . ": <a href='" . $baseurl_short . "/pages/admin/admin_group_management_edit.php?ref=" . $group . "' target='_blank' >" . $group . "</a>";
+            $errors[] = htmlspecialchars($lang["group"]) . ": <a href='" . $baseurl_short . "/pages/admin/admin_group_management_edit.php?ref=" . (int) $group . "' target='_blank' >" . (int) $group . "</a>";
             }
            
         foreach($result["users"] as $user)
             {
-            $errors[] = htmlspecialchars($lang["user"]) . ": <a href='" . $baseurl_short . "?u=" . $user . "' target='_blank' >" . $user . "</a>";
+            $errors[] = htmlspecialchars($lang["user"]) . ": <a href='" . $baseurl_short . "?u=" . (int) $user . "' target='_blank' >" . (int) $user . "</a>";
             }
         if(getval("filter_manage_page","") != "")
             {
@@ -328,7 +328,7 @@ function deleteFilterRule(rule)
     }
 
 jQuery(document).ready(function(){
-    let errors = <?php echo (isset($errors)?json_encode($errors):[]);?>;
+    let errors = <?php echo (isset($errors)?json_encode($errors):'""');?>;
     if(errors.length > 0)
         {
         error_message = '';
