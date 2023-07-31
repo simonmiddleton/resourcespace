@@ -4312,7 +4312,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             $template = strip_tags_and_attributes($field['display_template'], array("a"), array("href", "target"));
             $template = str_replace('[title]', $title, $template);
             $template = str_replace('[value]', $value, $template);
-            $template = str_replace('[url]', htmlspecialchars($value_for_url), $template);
+            $template = str_replace(['[url]', '%5Burl%5D'], htmlspecialchars($value_for_url), $template);
             $template = str_replace('[warning]', htmlspecialchars($warningtext), $template);
             $template = str_replace('[ref]', (int) $ref, $template);
             $template = str_replace('[link]', strip_tags_and_attributes($dismisslink, array("a"), array("href", "onclick")), $template);
