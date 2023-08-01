@@ -2931,7 +2931,7 @@ function delete_filter($filter)
             }
             
     // Check for existing use of filter
-    $checkgroups = ps_array("SELECT ref value FROM usergroup WHERE search_filter_id=? OR edit_filter=? OR derestrict_filter=?",['i', $filter,'i', $filter,'i', $filter], "");
+    $checkgroups = ps_array("SELECT ref value FROM usergroup WHERE search_filter_id=? OR edit_filter_id=? OR derestrict_filter_id=?",['i', $filter,'i', $filter,'i', $filter], "");
     $checkusers  = ps_array("SELECT ref value FROM user WHERE search_filter_o_id=? ",array("i",$filter),"");
     
     if(count($checkgroups)>0 || count($checkusers)>0)
