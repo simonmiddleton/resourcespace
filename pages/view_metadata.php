@@ -233,6 +233,7 @@ foreach($fields_tab_names as $tab_ref => $tabname)
     include '../include/related_resources.php';
 
     // Now render any markup previously sidelined in $extra (eg. fields with a display template)
+    ?><div class="clearerleft"></div><?php
     echo $extra;
     $extra = '';
     ?>
