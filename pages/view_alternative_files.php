@@ -6,7 +6,7 @@ if ($access==0 || $alt_files_visible_when_restricted) $alt_access=true; # open a
 
 if ($alt_access) 
 	{
-	global $use_larger_layout;
+	global $use_larger_layout, $request_adds_to_collection;
 	$alt_order_by="";$alt_sort="";
 	if ($alt_types_organize){$alt_order_by="alt_type";$alt_sort="asc";}
 	if(!isset($altfiles))
