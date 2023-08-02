@@ -346,7 +346,7 @@ include "../../include/header.php";
             </select>
             <div class="clearerleft"></div>
             <div class="FormHelp">
-                <div class="FormHelpInner"><?php echo $lang["information-derestrict_filter"]; ?></div>
+                <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-derestrict_filter"]); ?></div>
             </div>
         </div>
         <div class="Question">
