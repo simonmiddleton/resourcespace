@@ -598,7 +598,10 @@ switch($csvstep)
                                 $fieldrestypenames = [];
                                 foreach($fieldrestypes as $fieldrestype)
                                     {
-                                    $fieldrestypenames[] = $resource_types[$fieldrestype]["name"];
+                                    if (in_array($fieldrestype, array_keys($resource_types)))
+                                        {
+                                        $fieldrestypenames[] = $resource_types[$fieldrestype]["name"];
+                                        }
                                     }
                                 if(count($fieldrestypes) < count($restypearr)-1)
                                     {
