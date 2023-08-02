@@ -8231,33 +8231,35 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
         $groupcondition = " HAVING ((" . implode(") OR (",$restypeconditions) . "))";
         }
 
-    if ($include_inactive==false)
+    if ($include_inactive===false)
         {
-        $conditions[]  = "active=1";
+        $conditions[]  = " (rtf.active=1)";
         }
     if($find!="")
         {
-        $conditions[] =" name LIKE ? OR title LIKE ? OR tab_name LIKE ? OR exiftool_field LIKE ? OR help_text LIKE ? OR ref LIKE ? OR tooltip_text LIKE ? OR display_template LIKE ?)";
+        $conditions[] =" (rtf.name LIKE ? OR rtf.title LIKE ? OR t.name LIKE ? OR rtf.exiftool_field LIKE ? OR rtf.help_text LIKE ? 
+            OR rtf.ref LIKE ? OR rtf.tooltip_text LIKE ? OR rtf.display_template LIKE ?)";
         $params = array_merge($params, ['s', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%", 's', "%$find%"]);
         }
     $newfieldtypes = array_filter($fieldtypes,"is_int_loose");
 
     if(count($newfieldtypes) > 0)
         {        
-        $conditions[] = " type IN (". ps_param_insert(count($newfieldtypes)) .")";
+        $conditions[] = " rtf.type IN(". ps_param_insert(count($newfieldtypes)) .")";
         $params = array_merge($params, ps_param_fill($newfieldtypes, 'i'));
 		}
     
-    $conditionstring = count($conditions) > 0 ? (" WHERE (" . implode(") AND (",$conditions) . ")") : "";
+    $conditionstring = count($conditions) > 0 ? (" WHERE " . implode(" AND ",$conditions) . " ") : "";
 
     $params = array_merge($params,$groupparams);
-    $allfields = ps_query("
-           SELECT " . columns_in("resource_type_field", "rtf") . $restypeselect . "
-             FROM resource_type_field rtf " . implode(" ",$joins)  . $conditionstring . " 
-         GROUP BY rtf.ref " . $groupcondition . "
-         ORDER BY active desc," . $field_order_by . " " . $field_sort,
-          $params,
-          "schema");
+
+    $allfieldsquery="SELECT " . columns_in("resource_type_field", "rtf") . $restypeselect . "
+        FROM resource_type_field rtf " . implode(" ",$joins)  . $conditionstring . " 
+        GROUP BY rtf.ref " . $groupcondition . "
+        ORDER BY rtf.active desc," . $field_order_by . " " . $field_sort;
+
+    $allfields = ps_query($allfieldsquery, $params, "schema");
+
     // Sort by translated strings if sorting by title
     if(strtolower($field_order_by) == "title")
         {
