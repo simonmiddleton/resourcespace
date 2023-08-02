@@ -1921,7 +1921,7 @@ $lang["property-field_constraint-singlekeyword"]='Einzelne Auswahl';
 $lang["property-field_raw_edtf"]='Wenn ein Datumsbereich im EDTF-Format eingegeben wird, speichern Sie die Rohdaten in diesem Feld.';
 $lang["property-options_edit_link"]='Verwalten Sie Optionen.';
 $lang["property-automatic_nodes_ordering_label"]='Automatische Bestellung';
-$lang["information_index_warning"]='Bitte beachten Sie die <strong><a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Wissensdatenbank</a></strong> für detaillierte Informationen zur Feldindizierung.';
+$lang["information_index_warning"]='Bitte beachten Sie die <a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Wissensdatenbank</a> für detaillierte Informationen zur Feldindizierung.';
 $lang["property-field_full_width"]='Anzeige in voller Breite auf der Ansichtsseite.';
 $lang["property-system_date_help_text"]='Nicht möglich, dies zu deaktivieren, da dieses Feld als systemspezifisches Datumsfeld festgelegt ist. Sie können dies über die Konfiguration ändern oder einen Administrator um Hilfe bitten.';
 $lang["property-push_metadata"]='Metadaten übertragen.';

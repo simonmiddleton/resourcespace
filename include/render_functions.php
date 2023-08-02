@@ -6505,7 +6505,7 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
 				{
 				?>
 				<div class="FormHelp" style="padding:0;clear:left;" >
-					<div class="FormHelpInner"><?php echo htmlspecialchars(str_replace("%ref",$ref,$helptext)) ?>
+					<div class="FormHelpInner"><?php echo strip_tags_and_attributes(str_replace("%ref",$ref,$helptext), ["a"], ["href", "target"]) ?>
 					</div>
 				</div>
 				<?php

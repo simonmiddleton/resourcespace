@@ -1580,7 +1580,7 @@ $lang["property-field_constraint-singlekeyword"]='Yksittäisvalinta.';
 $lang["property-field_raw_edtf"]='Jos päivämääräväli syötetään EDTF-muodossa, tallenna raakadata tähän kenttään.';
 $lang["property-options_edit_link"]='Hallitse vaihtoehtoja.';
 $lang["property-automatic_nodes_ordering_label"]='Automaattinen tilaus';
-$lang["information_index_warning"]='Ole hyvä ja tutustu <strong><a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Tietopankkiin</a></strong> saadaksesi yksityiskohtaista tietoa kentän indeksoinnista.';
+$lang["information_index_warning"]='Ole hyvä ja tutustu <a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Tietopankkiin</a> saadaksesi yksityiskohtaista tietoa kentän indeksoinnista.';
 $lang["property-field_full_width"]='Näytä koko leveydellä katselusivulla.';
 $lang["property-system_date_help_text"]='Ei voida poistaa käytöstä, koska tämä kenttä on asetettu järjestelmän omaksi päivämääräkentäksi. Voit muuttaa tätä konfiguraation kautta tai pyytämällä ylläpitäjältä.';
 $lang["property-push_metadata"]='Työnnä metatietoja.';

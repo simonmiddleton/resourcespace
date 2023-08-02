@@ -2873,7 +2873,7 @@ $lang["intro-plupload_external_share"]      = "Pomocou tejto stránky nahrajte V
 $lang["imagesize-largest"]='Največja razpoložljiva.';
 $lang["property-support_non_correlated_sql"]='Podpora výsledkov vyhľadávania.';
 $lang["icon_picker_placeholder"]='Napíšte pre filtrovanie.';
-$lang["information_index_warning"]='Prosím, pozrite si <strong><a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Bázu znalostí</a></strong> pre podrobné informácie o indexovaní polí.';
+$lang["information_index_warning"]='Prosím, pozrite si <a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Bázu znalostí</a> pre podrobné informácie o indexovaní polí.';
 $lang["property-field_full_width"]='Zobraziť na celej šírke na stránke zobrazenia.';
 $lang["property-system_date_help_text"]='Nie je možné toto vypnúť, pretože toto pole je nastavené ako systémové pole dátumu. Môžete to zmeniť pomocou konfigurácie alebo požiadania administrátora.';
 $lang["property-icon"]='Ikona.';
