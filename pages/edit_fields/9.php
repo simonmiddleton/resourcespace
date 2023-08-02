@@ -218,7 +218,7 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
                 }
             });        
         }
-    else if(keyword.substring(0, <?php echo mb_strlen($lang['noentryexists'], 'UTF-8') ?>) == '<?php echo $lang["noentryexists"]; ?>')
+    else if(keyword.substring(0, <?php echo mb_strlen(escape_quoted_data($lang['noentryexists']), 'UTF-8') ?>) == '<?php echo escape_quoted_data($lang["noentryexists"]); ?>')
         {
         document.getElementById('<?php echo $name; ?>_selector').value = '';
 
