@@ -217,9 +217,6 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
 		else if($pagename=="team_export"){
 			$pagetitle=$lang["exportdata"];
 		}
-		else if($pagename=="team_export"){
-			$pagetitle=$lang["exportdata"];
-		}
 		else if($pagename=="team_stats"){
 			$pagetitle=$lang["viewstatistics"];
 		}

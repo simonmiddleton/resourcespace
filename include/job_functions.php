@@ -395,7 +395,6 @@ function get_job_type_priority($type="")
             case 'replace_batch_local':
             case 'create_alt_file':
             case 'delete_file':
-            case 'replace_batch_local':
             case 'update_resource':
             case 'upload_processing':
                 return JOB_PRIORITY_SYSTEM;

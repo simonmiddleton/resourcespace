@@ -121,6 +121,5 @@ function get_editable_resource_sql()
     $editable_resource_query=do_search("",$searchable_restypes,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
 
     return $editable_resource_query;
-    return $editable_resource_query;
     }
 
