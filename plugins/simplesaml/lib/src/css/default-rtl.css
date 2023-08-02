@@ -75,7 +75,7 @@ fieldset.fancyfieldset legend {
 }
 .message-box {
     border-left-style: initial;
-    order-left-width: 0;
+    border-left-width: 0;
     border-left-color: none;
     border-right-style: solid;
     border-right-width: 0.3125rem;
