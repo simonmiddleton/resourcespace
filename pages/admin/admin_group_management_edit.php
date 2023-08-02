@@ -269,8 +269,8 @@ include "../../include/header.php";
                 }?>
                 
             <div id ="permissions_area" <?php if(in_array("permissions",$record['inherit'])){echo "style=display:none;";} ?>>
-                <input type="button" class="stdwidth<?php echo $record['parent'] ? ' label-spacer' : ''; ?>" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo $ref . $url_params; ?>',true);" value="<?php echo htmlspecialchars($lang["launchpermissionsmanager"]); ?>"></input>                       
-                <div class="clearerleft"></div>         
+                <input type="button" class="stdwidth<?php echo $record['parent'] ? ' label-spacer' : ''; ?>" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo escape_quoted_data($ref . $url_params); ?>',true);" value="<?php echo htmlspecialchars($lang["launchpermissionsmanager"]); ?>"></input>                       
+                <div class="clearerleft"></div>            
             </div> <!-- End of permissions_area -->
         </div>
 
