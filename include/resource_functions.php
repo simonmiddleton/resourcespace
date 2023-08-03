@@ -550,7 +550,7 @@ function create_resource($resource_type,$archive=999,$user=-1,$origin='')
     daily_stat("Create resource",$insert);
 
     resource_log($insert, LOG_CODE_CREATED, 0,$origin);
-    if(upload_share_active())
+    if(upload_share_active() !== false)
         {
         # Terms needed to be accepted to complete upload
         $notes = ($terms_upload ? "Terms accepted" : "");
