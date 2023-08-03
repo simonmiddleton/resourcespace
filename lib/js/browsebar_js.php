@@ -333,7 +333,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
                     b_loading.splice(loadindex, 1);
                     }
                 browse_clicked = false;
-                styledalert('<?php echo htmlspecialchars($lang["error"]); ?> ' + xhr.status, '<?php echo htmlspecialchars($lang['error_generic']); ?> : ' + error);	 refreshicon.removeClass("fa-spin");
+                styledalert('<?php echo htmlspecialchars($lang["error"]); ?> ' + xhr.status, '<?php echo escape_quoted_data($lang['error_generic']); ?> : ' + error);	 refreshicon.removeClass("fa-spin");
                 }
             });
 
@@ -396,7 +396,7 @@ function BrowseBarInit()
                         {
                         styledalert('<?php echo $lang['error']; ?>','<?php echo $lang['error-invalid_resource_type']; ?>');
                         browse_err = document.createElement( "div" ),
-                        jQuery(browse_err).html('<?php echo $lang["save-error"] ?>');
+                        jQuery(browse_err).html('<?php echo escape_quoted_data($lang["save-error"]) ?>');
                         jQuery(browsetarget).append(browse_err);
                         jQuery(browse_err).fadeOut('slow');
                         }
