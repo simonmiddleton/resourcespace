@@ -187,7 +187,8 @@ if($upload_then_edit)
         // Resource type selection was forced so use the resource type passed in on the url
         update_resource_type(0 - $userref, $resource_type);
         }
-    else if (!$upload_here)
+
+    if (!$upload_here && !$resource_type_force_selection)
         {
         // Otherwise use the resource type from the template
         $resource_type=ps_value("select resource_type value from resource where ref=?",array("i",0 - $userref),0);
@@ -195,6 +196,13 @@ if($upload_then_edit)
     }
 
 $resource_type=empty($resource_type)?"":$resource_type;
+
+if ($resource_type_force_selection && $resource_type != "" && checkperm("XU" . $resource_type))
+    {
+    // Server side check that resource type supplied can be uploaded to. Use default if blocked.
+    $resource_type = '';
+    $resource_type_force_selection = false;
+    }
 
 // If upload_then_edit we may not have a resource type, so we need to find the first resource type
 // which does not have an XU? (restrict upload) permission
@@ -700,23 +708,12 @@ if ($processupload)
                 // For upload_then_edit mode ONLY, set the resource type based on the extension. User
                 // can later change this at the edit stage
                 // IMPORTANT: Change resource type only if user has access to it
-                if($upload_then_edit) 
+                if($upload_then_edit && !$resource_type_force_selection) 
                     {
-                    if($resource_type_force_selection) 
-                        {
-                        // Resource type selection was forced so set the default resource type to the configured default
-                        $resource_type_default_to_use = $resource_type_extension_mapping_default;
-                        }
-                    else
-                        {
-                        // Otherwise set the default resource type to the one already fetched from the template
-                        $resource_type_default_to_use = $resource_type;
-                        }
-                    // Now derive the resource type from the extension if possible, otherwise use the default
                     $resource_type_from_extension = get_resource_type_from_extension(
                         pathinfo($upfilepath, PATHINFO_EXTENSION),
                         $resource_type_extension_mapping,
-                        $resource_type_default_to_use
+                        $resource_type_extension_mapping_default
                     );
                     // Only update the resource when resource_type permissions allow
                     if(!checkperm("XU{$resource_type_from_extension}") && in_array($resource_type_from_extension,array_column($all_resource_types,"ref")))
