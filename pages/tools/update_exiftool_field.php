@@ -84,7 +84,7 @@ foreach ($fieldrefs as $fieldref)
     $type=(int)$fieldref_info["type"];
     $exiftool_filter=(string)$fieldref_info["exiftool_filter"];
     $exiftool_tag=(string)$fieldref_info["exiftool_field"];
-    $restypes = explode(",",$fieldref_info["resource_types"]);
+    $restypes = explode(",",$fieldref_info["resource_types"]??"");
     if ($exiftool_tag=="")
         {
         die ("Please add an exiftool mapping to your $title Field");
