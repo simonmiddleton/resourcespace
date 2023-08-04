@@ -610,6 +610,7 @@ elseif($restypes=='')
                     {
                     $hideconditions =  [];
                     $showconditions =  [];
+                    $notypeconditions = [];
                     // Check if resource types are valid for field
                     $validrestypes = explode(",",(string)$fields[$n]["resource_types"]);
                     $invalidrestypes = array_diff(array_column($types,"ref"),array_merge($hide_resource_types,$validrestypes));
@@ -623,7 +624,12 @@ elseif($restypes=='')
                         {
                         $hideconditions[] = "jQuery('#TickBox" . $invalidrestype . "').prop('checked')";
                         }
-                    $hidecondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $hideconditions) . ") {";
+                    foreach (array_diff(array_column($types,"ref"),$hide_resource_types) as $displayedrestype)
+                        {
+                        // Check to field if no resource types are selected
+                        $notypeconditions[] = "jQuery('#TickBox" . $displayedrestype . "').prop('checked') == false";
+                        }
+                    $hidecondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $hideconditions) . " || (" . implode(" && ", $notypeconditions) . ")) {";
                     echo "// Start of hide field code\n" . $hidecondition;?>
                         // Process unchecked element
                         ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"] ?>';
@@ -732,6 +738,7 @@ elseif($restypes=='')
                 {
                 $resetconditions[] = "jQuery('#TickBox" . $invalidrestype . "').prop('checked')";
                 }
+
             $resetcondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $resetconditions) . ") {";
             }
         echo "// Start of reset field code\n" . $resetcondition;
