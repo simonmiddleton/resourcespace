@@ -36,7 +36,15 @@ $use_cases = [
         'expected' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' . PHP_EOL,
     ],
     [
-        'name' => 'Text with a <script> tag in',
+        'name' => 'Text with a tag allowed by default requires post processing',
+        'input' => [
+            'html' => 'Lorem ipsum <strong>dolor</strong> sit amet, consectetur adipiscing elit.',
+        ],
+        'post-process' => 'strip_paragraph_tags',
+        'expected' => 'Lorem ipsum <strong>dolor</strong> sit amet, consectetur adipiscing elit.',
+    ],
+    [
+        'name' => 'Text with a <script> (not allowed by default) tag in',
         'input' => [
             'html' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. <script>alert("XSS test")</script>',
         ],
@@ -136,9 +144,17 @@ foreach($use_cases as $use_case)
     $tags = $use_case['input']['tags'] ?? [];
     $attributes = $use_case['input']['attributes'] ?? [];
 
-    if(strip_tags_and_attributes($html, $tags, $attributes) !== $use_case['expected'])
+    $processed = strip_tags_and_attributes($html, $tags, $attributes);
+    if (isset($use_case['post-process']) && is_callable($use_case['post-process']))
+        {
+        $processed = $use_case['post-process']($processed);
+        }
+
+    if ($processed !== $use_case['expected'])
         {
         echo "Use case: {$use_case['name']} - ";
+        // printf('%s html = %s',  PHP_EOL, $html);
+        // printf('%s processed = %s',  PHP_EOL, $processed);
         return false;
         }
     }
