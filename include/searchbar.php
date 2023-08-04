@@ -618,16 +618,16 @@ elseif($restypes=='')
                     // Don't hide if any of the valid resource types are checked AND none of the invalid types are checked
                     foreach($validrestypes as $validrestype)
                         {
-                        $showconditions[] = "jQuery('#TickBox" . $validrestype . "').prop('checked') == false";
+                        $showconditions[] = "jQuery('#TickBox" . (int) $validrestype . "').prop('checked') == false";
                         }
                     foreach($invalidrestypes as $invalidrestype)
                         {
-                        $hideconditions[] = "jQuery('#TickBox" . $invalidrestype . "').prop('checked')";
+                        $hideconditions[] = "jQuery('#TickBox" . (int) $invalidrestype . "').prop('checked')";
                         }
                     foreach (array_diff(array_column($types,"ref"),$hide_resource_types) as $displayedrestype)
                         {
                         // Check to field if no resource types are selected
-                        $notypeconditions[] = "jQuery('#TickBox" . $displayedrestype . "').prop('checked') == false";
+                        $notypeconditions[] = "jQuery('#TickBox" . (int) $displayedrestype . "').prop('checked') == false";
                         }
                     $hidecondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $hideconditions) . " || (" . implode(" && ", $notypeconditions) . ")) {";
                     echo "// Start of hide field code\n" . $hidecondition;?>
@@ -732,11 +732,11 @@ elseif($restypes=='')
             // Don't reset if any of the valid resource types are checked AND none of the invalid types are checked
             foreach($validrestypes as $validrestype)
                 {
-                $showconditions[] = "jQuery('#TickBox" . $validrestype . "').prop('checked') == false";
+                $showconditions[] = "jQuery('#TickBox" . (int) $validrestype . "').prop('checked') == false";
                 }
             foreach($invalidrestypes as $invalidrestype)
                 {
-                $resetconditions[] = "jQuery('#TickBox" . $invalidrestype . "').prop('checked')";
+                $resetconditions[] = "jQuery('#TickBox" . (int) $invalidrestype . "').prop('checked')";
                 }
             $resetcondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $resetconditions) . ") {";
             }
