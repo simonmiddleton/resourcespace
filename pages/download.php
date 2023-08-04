@@ -47,8 +47,11 @@ $modal              = (getval("modal","")=="true");
 $tempfile           = getval("tempfile","");
 $slideshow          = getval("slideshow",0,true);
 $userfiledownload   = getval('userfile', '');
+$write_exif_data    = (getval('exif_write', '') == 'true');
 
 $log_download = true;
+
+global $exiftool_write;
 
 // Ensure terms have been accepted and usage has been supplied when required. Not for slideshow files etc.
 $checktermsusage =  !in_array($size, $sizes_always_allowed)
@@ -84,7 +87,16 @@ if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
 if('' != $userfiledownload)
     {
     $noattach       = '';
-    $exiftool_write = false;
+    // Provide a way of overriding $exiftool_write = false depending on download source e.g. from format chooser
+    if ($exiftool_write && $write_exif_data)
+        {
+        $exiftool_write = true;
+        }
+    else
+        {
+        $exiftool_write = false;
+        }
+
     $filedetails    = explode('_', $userfiledownload);
     $ref            = (int)$filedetails[0];
     $downloadkey    = strip_extension($filedetails[1]);
@@ -261,31 +273,32 @@ else
         $info = get_resource_data($ref);
         $path = '../gfx/' . get_nopreview_icon($info['resource_type'], $ext, 'thm');
         }
+    }
 
-    // Process metadata
-    // Note: only for downloads (not previews)
-    if('' == $noattach && -1 == $alternative)
+
+// Process metadata
+// Note: only for downloads (not previews)
+if('' == $noattach && -1 == $alternative)
+    {
+    // Strip existing metadata only if we do not plan on writing metadata, otherwise this will be done twice
+    if($exiftool_remove_existing && !$exiftool_write)
         {
-        // Strip existing metadata only if we do not plan on writing metadata, otherwise this will be done twice
-        if($exiftool_remove_existing && !$exiftool_write)
-            {
-            $temp_file_stripped_metadata = createTempFile($path, '', '');
+        $temp_file_stripped_metadata = createTempFile($path, '', '');
 
-            if($temp_file_stripped_metadata !== false && stripMetadata($temp_file_stripped_metadata))
-                {
-                $path = $temp_file_stripped_metadata;
-                }
+        if($temp_file_stripped_metadata !== false && stripMetadata($temp_file_stripped_metadata))
+            {
+            $path = $temp_file_stripped_metadata;
             }
+        }
 
-        // writing RS metadata to files: exiftool
-        if($exiftool_write)
+    // writing RS metadata to files: exiftool
+    if($exiftool_write)
+        {
+        $tmpfile = write_metadata($path, $ref);
+
+        if(false !== $tmpfile && file_exists($tmpfile))
             {
-            $tmpfile = write_metadata($path, $ref);
-
-            if(false !== $tmpfile && file_exists($tmpfile))
-                {
-                $path = $tmpfile;
-                }
+            $path = $tmpfile;
             }
         }
     }

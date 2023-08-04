@@ -143,7 +143,7 @@ function sendFile($filename, string $download_filename, $usage = -1, $usagecomme
 	$suffix = pathinfo($filename, PATHINFO_EXTENSION);
 	$size = filesize_unlimited($filename);
 
-    global $baseurl, $username, $scramble_key;
+    global $baseurl, $username, $scramble_key, $exiftool_write;
 
     list($resource_ref, $download_key) = explode('_', pathinfo($filename, PATHINFO_FILENAME));
     $user_downloads_path = sprintf('%s/%s_%s.%s',
@@ -162,7 +162,8 @@ function sendFile($filename, string $download_filename, $usage = -1, $usagecomme
             'usage'         => $usage,
             'usagecomment'  => $usagecomment,
 			'k'             => getval('k', ''),
-			'ref'           => getval('ref', '')
+			'ref'           => getval('ref', ''),
+			'exif_write'    => ($exiftool_write ? 'true' : '')
         ]
     );
     redirect($user_download_url);
