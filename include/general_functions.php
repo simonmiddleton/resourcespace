@@ -3735,6 +3735,18 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
     return $html;
     }
 
+/**
+* Remove paragraph tags from start and end of text
+* 
+* @param string $text HTML string
+* 
+* @return string Returns the text without surrounding <p> and </p> tags.
+*/
+function strip_paragraph_tags(string $text): string
+    {
+    return rtrim(ltrim($text, '<p>'), '</p>');
+    }
+
 
 /**
 * Helper function to quickly return the inner HTML of a specific tag element from a DOM document.
