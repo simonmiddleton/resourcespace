@@ -738,7 +738,6 @@ elseif($restypes=='')
                 {
                 $resetconditions[] = "jQuery('#TickBox" . $invalidrestype . "').prop('checked')";
                 }
-
             $resetcondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $resetconditions) . ") {";
             }
         echo "// Start of reset field code\n" . $resetcondition;
