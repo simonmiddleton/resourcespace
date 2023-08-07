@@ -84,7 +84,7 @@ foreach ($fieldrefs as $fieldref)
     $type=(int)$fieldref_info["type"];
     $exiftool_filter=(string)$fieldref_info["exiftool_filter"];
     $exiftool_tag=(string)$fieldref_info["exiftool_field"];
-    $restypes = !is_null($fieldref_info["resource_types"])?explode(",",$fieldref_info["resource_types"]):[];
+    $restypes = !is_null($fieldref_info["resource_types"])?explode(",",(string)$fieldref_info["resource_types"]):[];
     if ($exiftool_tag=="")
         {
         die ("Please add an exiftool mapping to your $title Field");
@@ -115,7 +115,6 @@ foreach ($fieldrefs as $fieldref)
         }
     else
         {
-            echo "bang". ps_param_insert(count($restypes));
         $rd= ps_query("SELECT ref,file_extension FROM resource $join WHERE resource_type IN(" . ps_param_insert(count($restypes)) . ") $conditionand ORDER BY ref", array_merge(ps_param_fill($restypes,"i"), $params));
         }	
     $exiftool_tags=explode(",",$exiftool_tag);
