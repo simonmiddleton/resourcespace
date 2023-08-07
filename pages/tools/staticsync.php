@@ -351,7 +351,7 @@ function ProcessFolder($folder)
                     if ($file_checksums_50k)
                         {
                         # Fetch the string used to generate the unique ID
-                        $use=filesize_unlimited($fullpath) . "_" . file_get_contents($fullpath,null,null,0,50000);
+                        $use=filesize_unlimited($fullpath) . "_" . file_get_contents($fullpath,false,null,0,50000);
                         $checksum=md5($use);
                         }
                     else
