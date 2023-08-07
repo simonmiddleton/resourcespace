@@ -2414,7 +2414,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 for ($d=1;$d<=12;$d++)
                     {
                     $m=str_pad($d,2,"0",STR_PAD_LEFT);
-                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php  echo htmlspecialchars($lang["months"]) [$d-1] ?></option><?php
+                    ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php  echo htmlspecialchars($lang["months"][$d-1])  ?></option><?php
                     }?>
             </select>
             <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_start_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
