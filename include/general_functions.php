@@ -5048,3 +5048,28 @@ function set_order_by_to_zero(array $item): array
     $item['order_by'] = 0;
     return $item;
     }
+    
+/** 
+ * Check if a date is correctly formatted i.e. Y-m-d with optional H:i:s for datetime values
+ * 
+ * @param string $date String value to be checked
+ * @param bool $date_only Should $date be checked as a date or date and time?
+ * 
+ * @return bool true if the date is an accepted format, otherwise false
+*/
+
+function check_date($date, $date_only = false)
+    {
+    $date = trim($date);
+    if($date == '')
+        {
+        return false;
+        }
+    
+    $format = 'Y-m-d H:i:s';
+    if($date_only)
+        {
+        $format = 'Y-m-d';
+        }
+    return strpos(date($format, strtotime($date)), $date) !== false;
+    }

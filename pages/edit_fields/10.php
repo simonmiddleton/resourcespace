@@ -1,5 +1,6 @@
 <?php
-if ($GLOBALS['use_native_input_for_date_field'])
+$valid = check_date($value, true) || empty($value);
+if ($GLOBALS['use_native_input_for_date_field'] && $valid)
     {
     $onchange_attr = $edit_autosave ? sprintf('onchange="AutoSave(%s);"', (int) $field['ref']) : '';
     ?>
