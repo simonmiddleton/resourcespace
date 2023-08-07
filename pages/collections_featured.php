@@ -8,6 +8,10 @@ if($k == "" || !check_access_key_collection($parent, $k))
     include "../include/authenticate.php";
     $parent = (int) getval("parent", $featured_collections_root_collection, true);
     }
+else
+    {
+    $CSRF_enabled = false;
+    }
 
 if(!$enable_themes)
     {
@@ -210,9 +214,7 @@ jQuery(document).ready(function ()
                 jQuery('.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"][data-fc-ref="' + k + '"]')
                     .text(total_count + ' ' + (total_count == 1 ? lang_resource : lang_resources));
                 });
-
-            },
-            <?php echo generate_csrf_js_object('get_collections_resource_count'); ?>
+            }
         );
         }
     <?php if (!$themes_simple_view)
