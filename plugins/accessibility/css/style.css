@@ -77,11 +77,6 @@ input[type="text"], input[type="password"], input[type="number"], textarea, sele
     background: #5c5c5d;
 }
 
-/* Fix position of Browse Bar button */
-.BrowseBarTabText {
-    margin-left: 29px;
-}
-
 /* Larger resource type icons */
 .ResourceTypeIcon.fa-fw {
     width: 20px;
