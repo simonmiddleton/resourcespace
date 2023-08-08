@@ -36,6 +36,10 @@ function HookResourceconnectAllCheck_access_key($resource,$key)
     global $is_resourceconnect;
     $is_resourceconnect=true;
 
+    # To disable collections - not needed when accessed remotely. Don't load collection bar.
+    global $usercollection;
+    $usercollection = null;
+
     # Disable maps
     global $disable_geocoding;
     $disable_geocoding=true;
