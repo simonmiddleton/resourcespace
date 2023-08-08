@@ -64,9 +64,26 @@
         <?php } ?>
 
         <?php if (!hook("replacerecentlink")) { ?>
-            <?php if (checkperm("s") && $recent_link) { ?>
+            <?php if (checkperm("s") && $recent_link) {
+                if ($recent_search_by_days) 
+                    {
+                    $recent_url_params = [
+                        "search"            => "",
+                        "recentdaylimit"    => $recent_search_by_days_default,
+                    ];
+                    } 
+                else 
+                    {
+                    $recent_url_params = [
+                        "search"            => "!last".$recent_search_quantity
+                    ];
+                    }
+                $recent_url_params["order_by"]  = "resourceid";
+                $recent_url_params["sort"]      = "desc";
+                $recenturl = generateURL("$baseurl/pages/search.php",$recent_url_params);
+                ?>
                 <li class="HeaderLink">
-                    <a href="<?php echo $baseurl?>/pages/search.php?search=<?php if ($recent_search_by_days) {echo "&amp;recentdaylimit=" . $recent_search_by_days_default . "&amp;order_by=resourceid&amp;sort=desc";} else {echo urlencode("!last".$recent_search_quantity);}?>&order_by=resourceid" onClick="return CentralSpaceLoad(this,true);">
+                    <a href="<?php echo $recenturl ?>" onClick="return CentralSpaceLoad(this,true);">
                         <?php echo RECENT_ICON . $lang["recent"]?>
                     </a>
                 </li>
