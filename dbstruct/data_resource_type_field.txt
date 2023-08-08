@@ -11,7 +11,7 @@
 12,date,Date,,4,90,1,0,1,creation_date,1,1,2#055,,0,,"DateTimeOriginal,IPTC:DateCreated,XMP:DateCreated",0,0,,0,1,,0,0,"if ($value!=''){$value=nicedate($value,false);}",,,,,,,,,,,0,1,1,0,1,0,
 18,caption,Caption,,1,20,1,0,1,,1,0,2#120,"<div class=""item""><h3>[title]</h3><p>[value]</p></div>
 
-<div class=""clearerleft""> </div>",0,,"IPTC:Caption-Abstract,IPTC:ImageDescription,XMP:Description",1,0,,0,1,,0,0,,,,,,,,,,,,0,1,1,0,1,0,
+<div class=""clearerleft""> </div>",0,,"IPTC:Caption-Abstract,XMP:Description",1,0,,0,1,,0,0,,,,,,,,,,,,0,1,1,0,1,0,
 25,notes,Notes,,1,130,0,0,1,,1,0,2#103,"<div class=""RecordStory"">
 
   <h1>[title]</h1>
