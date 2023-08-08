@@ -667,12 +667,19 @@ function extract_exif_comment($ref,$extension="")
                     $value = str_replace('..', chr(10),$value);
 
                     # Convert to UTF-8 if not already encoded
-                    $encoding=mb_detect_encoding($value,"UTF-8",true);
-                    if($encoding!="UTF-8")
+                    $encoding = mb_detect_encoding($value, "UTF-8", true);
+                    if($encoding != "UTF-8")
                         {
-                        debug("extract_exif_comment: non-utf-8 value found. Extracted value: " . $value);
-                        $value = mb_convert_encoding($value, 'UTF-8', $encoding);
-
+                        if (!$encoding)
+                            {
+                            debug("extract_exif_comment: Unable to detect encoding for value in " . substr($metaline, 0, $pos) . " - possible invalid character. Attempting to convert to UTF-8 anyway.");
+                            $value = mb_convert_encoding($value, 'UTF-8');
+                            }
+                        else
+                            {
+                            debug("extract_exif_comment: non-utf-8 value found. Extracted value: " . $value);
+                            $value = mb_convert_encoding($value, 'UTF-8', $encoding);
+                            }
                         debug("extract_exif_comment: Converted value: " . $value);
                         }
                     
