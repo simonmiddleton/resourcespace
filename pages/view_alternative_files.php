@@ -91,7 +91,7 @@ if ($alt_access)
             } ?>
 		<td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?> rowspan="<?php echo escape_quoted_data((string)$rowspan);?>">
 		<?php
-        if(!hook("renderaltthumb","",[$n]))
+        if(!hook("renderaltthumb","",[$n,$altfiles[$n]]))
             {
             if ($alt_thm!="")
                 {

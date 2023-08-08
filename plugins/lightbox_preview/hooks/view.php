@@ -74,23 +74,30 @@ function HookLightbox_previewViewGetpreviewurlforsize()
     }
 
 
-function HookLightbox_previewViewRenderaltthumb($n)
+/**
+ * HookLightbox_previewViewRenderaltthumb
+ *
+ * @param  integer $n index value for alternative file
+ * @param  array   $altfile parameters of alternative file to be rendered
+ * @return boolean
+ */
+function HookLightbox_previewViewRenderaltthumb($n,$altfile)
     {
     if(isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'],"TRIDENT") !== false || strpos($_SERVER['HTTP_USER_AGENT'],"MSIE") !== false))
         {
         return false;
         }
-    global $baseurl_short, $ref, $resource, $alt_thm, $altfiles, $k, $search,
+    global $baseurl_short, $ref, $resource, $alt_thm, $k, $search,
             $offset, $sort, $order_by, $archive;
 
-    $url = getPreviewURL($resource, $altfiles[$n]['ref']);
+    $url = getPreviewURL($resource, $altfile['ref']);
     if ($url === false)
         return false;
 
     # Replace the link to add the 'altlink' ID
     ?>
     <a id="altlink_<?php echo $n; ?>" class="AltThumbLink" href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php
-            echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]['ref']?>&k=<?php
+            echo urlencode($ref)?>&alternative=<?php echo $altfile['ref']?>&k=<?php
             echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo
             urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo
             urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php
@@ -98,7 +105,7 @@ function HookLightbox_previewViewRenderaltthumb($n)
         <img src="<?php echo $alt_thm; ?>" class="AltThumb">
     </a>
     <?php
-    addLightBox('#altlink_' . $n, $url, $altfiles[$n]['name'], "alt");
+    addLightBox('#altlink_' . $n, $url, $altfile['name'], "alt");
 
     return true;
     }
