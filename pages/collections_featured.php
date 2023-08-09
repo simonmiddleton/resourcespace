@@ -214,7 +214,8 @@ jQuery(document).ready(function ()
                 jQuery('.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"][data-fc-ref="' + k + '"]')
                     .text(total_count + ' ' + (total_count == 1 ? lang_resource : lang_resources));
                 });
-            }
+            },
+            <?php echo generate_csrf_js_object('get_collections_resource_count'); ?>
         );
         }
     <?php if (!$themes_simple_view)
