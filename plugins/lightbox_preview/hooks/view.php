@@ -81,7 +81,7 @@ function HookLightbox_previewViewGetpreviewurlforsize()
  * @param  array   $altfile parameters of alternative file to be rendered
  * @return boolean
  */
-function HookLightbox_previewViewRenderaltthumb($n,$altfile)
+function HookLightbox_previewViewRenderaltthumb(int $n,array $altfile)
     {
     if(isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'],"TRIDENT") !== false || strpos($_SERVER['HTTP_USER_AGENT'],"MSIE") !== false))
         {
