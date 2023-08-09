@@ -698,7 +698,7 @@ renderBreadcrumbs($links_trail);
                 var curCoords = jcrop_api.tellSelect();
                 if(curCoords.w === 0 && curCoords.h === 0)
                     {
-                    styledalert('<?php echo $lang['error'] ?>','<?php echo escape_quoted_data($lang['error_crop_invalid']) ?>');
+                    styledalert('<?php echo escape_quoted_data($lang['error']) ?>','<?php echo escape_quoted_data($lang['error_crop_invalid']) ?>');
                     return false;
                     }
                 }

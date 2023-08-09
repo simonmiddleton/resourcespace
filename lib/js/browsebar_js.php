@@ -333,7 +333,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
                     b_loading.splice(loadindex, 1);
                     }
                 browse_clicked = false;
-                styledalert('<?php echo htmlspecialchars($lang["error"]); ?> ' + xhr.status, '<?php echo escape_quoted_data($lang['error_generic']); ?> : ' + error);	 refreshicon.removeClass("fa-spin");
+                styledalert('<?php echo escape_quoted_data($lang["error"]); ?> ' + xhr.status, '<?php echo escape_quoted_data($lang['error_generic']); ?> : ' + error);	 refreshicon.removeClass("fa-spin");
                 }
             });
 
