@@ -95,8 +95,8 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
 					ps_query("update user set logged_in = 0, session = '' where ref= ?",array("i",$userref));
 					hook("removeuseridcookie");
 					# Blank cookie / var
-					rs_setcookie("user", "", time() - 3600, "", "", substr($baseurl,0,5)=="https", true);					
-					rs_setcookie("user", "", time() - 3600, "/pages", "", substr($baseurl,0,5)=="https", true);
+					rs_setcookie("user", "", -1, "", "", substr($baseurl,0,5)=="https", true);					
+					rs_setcookie("user", "", -1, "/pages", "", substr($baseurl,0,5)=="https", true);
 					unset($username);
 		
 					if (isset($anonymous_login))
