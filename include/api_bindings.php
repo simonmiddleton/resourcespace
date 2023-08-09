@@ -1253,3 +1253,44 @@ function api_get_users_by_permission($permissions)
         }
     return get_users_by_permission($permissions); 
     }
+
+function api_upload_multipart(int $ref, bool $no_exif, bool $revert/* , array $file_meta */): array
+    {
+    $request_checks = [
+        fn(): array => api_assert_post_request(),
+        fn(): array => assert_content_type('multipart/form-data', $_SERVER['CONTENT_TYPE']),
+    ];
+    foreach ($request_checks as $check)
+        {
+        $check_result = $check();
+        if (!empty($check_result))
+            {
+            return $check_result;
+            }
+        }
+
+    return [
+        'ref' => "$ref (type: " . gettype($ref). ")",
+        'no_exif' => "$no_exif (type: " . gettype($no_exif). ")",
+        'revert' => "$revert (type: " . gettype($revert). ")",
+        'file_' => $_FILES['file'],
+        // 'file_meta' => "(type: " . gettype($file_meta). ")",
+    ];
+
+    // $file = $_FILES['file']; # if missing, let client know
+
+    // validate
+    // check extenstion mime type => is it banned?...
+    // does the actual mime type match the file metadata?
+    // move to filestore
+
+    // All OK?
+    $uploaded = $safe = true;
+    if ($uploaded && $safe)
+        {
+        http_response_code(204);
+        return ajax_response_ok_no_data();
+        }
+    
+    return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_upload_failed']));
+    }

@@ -461,6 +461,7 @@ function api_validate_upload_url($url)
  */
 function api_assert_post_request(): array
     {
+    todo: refactor this so that other bindings can rely on it. Perhaps create a different constant which gets set when API_AUTHMODE_NATIVE or requested
     // Applicable only to native authmode to limit BC only for the ResourceSpace UI (which is using this mode)
     if (!defined('API_AUTHMODE_NATIVE') || $_SERVER['REQUEST_METHOD'] === 'POST')
         {
@@ -469,4 +470,20 @@ function api_assert_post_request(): array
 
     http_response_code(405);
     return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-method-not_allowed']));
+    }
+
+/**
+ * Assert API POSTd the expected content type.
+ */
+function assert_content_type(string $expected, string $received_raw): array
+    {
+    $encoding = 'UTF-8';
+    $received = mb_strcut($received_raw, 0, mb_strlen($expected, $encoding), $encoding);
+    if ($expected === $received)
+        {
+        return [];
+        }
+
+    http_response_code(400);
+    return ajax_response_fail(ajax_build_message('test...'));
     }
