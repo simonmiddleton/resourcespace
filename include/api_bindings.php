@@ -1254,28 +1254,43 @@ function api_get_users_by_permission($permissions)
     return get_users_by_permission($permissions); 
     }
 
-function api_upload_multipart(int $ref, bool $no_exif, bool $revert/* , array $file_meta */): array
+/**
+ * Upload files using HTTP multipart.
+ *
+ * @param int $ref Resource ID
+ * @param bool $no_exif Do not extract embedded metadata
+ * @param bool $revert Delete all data and re-extract embedded data
+ *
+ * @return array Returns JSend data back {@see ajax_functions.php} if upload failed, otherwise 204 HTTP status
+ */
+function api_upload_multipart(int $ref, bool $no_exif, bool $revert): array
     {
     $request_checks = [
         fn(): array => assert_post_request(true),
         fn(): array => assert_content_type('multipart/form-data', $_SERVER['CONTENT_TYPE'] ?? ''),
-        // Ensure a file has been POSTd
-        fn(): array => isset($_FILES['file'])
-            ? []
-            : ajax_response_fail(ajax_build_message(
-                str_replace('%key', 'file', $GLOBALS['lang']['error-request-missing-key'])
-            )),
-        // Check file has been uploaded & processed
+        // Ensure a "file" has been POSTd
+        function(): array
+            {
+            http_response_code(400);
+            return isset($_FILES['file'])
+                ? []
+                : ajax_response_fail(ajax_build_message(
+                    str_replace('%key', 'file', $GLOBALS['lang']['error-request-missing-key'])
+                ));
+            },
+        // Check file has been received
         function(): array
             {
             if ($_FILES['file']['error'] === UPLOAD_ERR_INI_SIZE)
                 {
+                http_response_code(413);
                 return ajax_response_fail(ajax_build_message(
                     sprintf($GLOBALS['lang']['plupload-maxfilesize'], ini_get('upload_max_filesize'))
                 ));
                 }
             else if ($_FILES['file']['error'] !== UPLOAD_ERR_OK)
                 {
+                http_response_code(500);
                 return ajax_response_fail(ajax_build_message(
                     sprintf(
                         '(%s #%s) %s',
@@ -1299,38 +1314,22 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert/* , array $f
             }
         }
 
-    
+    $duplicates = check_duplicate_checksum($_FILES['file']['tmp_name'], false);
+    if (count($duplicates) > 0)
+        {
+        return ajax_response_fail(ajax_build_message(
+            str_replace('%%RESOURCES%%', implode(', ', $duplicates), $GLOBALS['lang']['error_upload_duplicate_file'])
+        ));
+        }   
 
-
-
-    $file = $_FILES['file'];
-
-
-
-
-
-
-    return [
-        'ref' => "$ref (type: " . gettype($ref). ")",
-        'no_exif' => "$no_exif (type: " . gettype($no_exif). ")",
-        'revert' => "$revert (type: " . gettype($revert). ")",
-        'file_' => $_FILES['file'] ?? [],
-        // 'file_meta' => "(type: " . gettype($file_meta). ")",
-    ];
-
-
-    // validate
-    // check extenstion mime type => is it banned?...
-    // does the actual mime type match the file metadata?
-    // move to filestore
-
-    // All OK?
-    $uploaded = $safe = true;
-    if ($uploaded && $safe)
+    // Set the userfile so upload_file can carry out the rest of the work as usual
+    $_FILES['userfile'] = $_FILES['file'];
+    if (upload_file($ref, $no_exif, $revert))
         {
         http_response_code(204);
         return ajax_response_ok_no_data();
         }
-    
+
+    http_response_code(500);
     return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_upload_failed']));
     }
