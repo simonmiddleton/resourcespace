@@ -474,9 +474,20 @@ function api_assert_post_request(): array
 
 /**
  * Assert API POSTd the expected content type.
+ *
+ * @param string $expected MIME type
+ * @param string $received_raw MIME type
+ *
+ * @return array Returns JSend data back {@see ajax_functions.php} if received Content-Type is unexpected
  */
 function assert_content_type(string $expected, string $received_raw): array
     {
+    $expected = trim($expected);
+    if ($expected === '')
+        {
+        trigger_error('Expected MIME type MUST not be a blank string', E_USER_ERROR);
+        }
+
     $encoding = 'UTF-8';
     $received = mb_strcut($received_raw, 0, mb_strlen($expected, $encoding), $encoding);
     if ($expected === $received)
@@ -484,6 +495,7 @@ function assert_content_type(string $expected, string $received_raw): array
         return [];
         }
 
-    http_response_code(400);
-    return ajax_response_fail(ajax_build_message('test...'));
+    http_response_code(415);
+    header("Accept: {$expected}");
+    return ajax_response_fail([]);
     }
