@@ -457,23 +457,32 @@ function api_validate_upload_url($url)
 
 /**
  * Assert API request is using POST method.
+ *
+ * @param bool $force Force the assertion
+ *
  * @return array Returns JSend data back {@see ajax_functions.php} if not POST method
  */
-function api_assert_post_request(): array
+function assert_post_request(bool $force): array
     {
-    todo: refactor this so that other bindings can rely on it. Perhaps create a different constant which gets set when API_AUTHMODE_NATIVE or requested
-    // Applicable only to native authmode to limit BC only for the ResourceSpace UI (which is using this mode)
-    if (!defined('API_AUTHMODE_NATIVE') || $_SERVER['REQUEST_METHOD'] === 'POST')
+    // Legacy use cases we don't want to break backwards compatibility for (e.g JS api() makes only POST requests but
+    // other clients might only use GET because it was allowed if not authenticating with native mode)
+    if (!$force)
         {
         return [];
         }
-
-    http_response_code(405);
-    return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-method-not_allowed']));
+    else if ($_SERVER['REQUEST_METHOD'] === 'POST')
+        {
+        return [];
+        }
+    else
+        {
+        http_response_code(405);
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-method-not_allowed']));
+        }
     }
 
 /**
- * Assert API POSTd the expected content type.
+ * Assert API sent the expected content type.
  *
  * @param string $expected MIME type
  * @param string $received_raw MIME type
