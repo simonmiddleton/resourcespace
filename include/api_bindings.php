@@ -1259,6 +1259,36 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert/* , array $f
     $request_checks = [
         fn(): array => assert_post_request(true),
         fn(): array => assert_content_type('multipart/form-data', $_SERVER['CONTENT_TYPE'] ?? ''),
+        // Ensure a file has been POSTd
+        fn(): array => isset($_FILES['file'])
+            ? []
+            : ajax_response_fail(ajax_build_message(
+                str_replace('%key', 'file', $GLOBALS['lang']['error-request-missing-key'])
+            )),
+        // Check file has been uploaded & processed
+        function(): array
+            {
+            if ($_FILES['file']['error'] === UPLOAD_ERR_INI_SIZE)
+                {
+                return ajax_response_fail(ajax_build_message(
+                    sprintf($GLOBALS['lang']['plupload-maxfilesize'], ini_get('upload_max_filesize'))
+                ));
+                }
+            else if ($_FILES['file']['error'] !== UPLOAD_ERR_OK)
+                {
+                return ajax_response_fail(ajax_build_message(
+                    sprintf(
+                        '(%s #%s) %s',
+                        $GLOBALS['lang']['error'],
+                        $_FILES['file']['error'],
+                        $GLOBALS['lang']['upload_error_unknown'])
+                ));
+                }
+            else
+                {
+                return [];
+                }
+        },
     ];
     foreach ($request_checks as $check)
         {
@@ -1269,6 +1299,17 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert/* , array $f
             }
         }
 
+    
+
+
+
+    $file = $_FILES['file'];
+
+
+
+
+
+
     return [
         'ref' => "$ref (type: " . gettype($ref). ")",
         'no_exif' => "$no_exif (type: " . gettype($no_exif). ")",
@@ -1277,7 +1318,6 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert/* , array $f
         // 'file_meta' => "(type: " . gettype($file_meta). ")",
     ];
 
-    // $file = $_FILES['file']; # if missing, let client know
 
     // validate
     // check extenstion mime type => is it banned?...
