@@ -1258,7 +1258,7 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert/* , array $f
     {
     $request_checks = [
         fn(): array => api_assert_post_request(),
-        fn(): array => assert_content_type('multipart/form-data', $_SERVER['CONTENT_TYPE']),
+        fn(): array => assert_content_type('multipart/form-data', $_SERVER['CONTENT_TYPE'] ?? ''),
     ];
     foreach ($request_checks as $check)
         {
