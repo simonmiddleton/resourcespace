@@ -2376,9 +2376,21 @@ if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access
         {
         for ($n=0;$n<count($keywords);$n++)
             {
+            $keyword = strip_tags_and_attributes($keywords[$n]);
             ?>
-            <div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n  ?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
-            onClick="<?php echo $context ?>UpdateFSResultCount();"><label class="customFieldLabel" for="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n?>"><?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
+            <div class="SearchSimilar">
+                <input 
+                    type=checkbox 
+                    id="<?php echo $context . "similar_search_" . $keyword . "_" . $n  ?>" 
+                    name="keyword_<?php echo $keyword?>" 
+                    value="yes"
+                    onClick="<?php echo $context ?>UpdateFSResultCount();">
+                    <label 
+                        class="customFieldLabel" 
+                        for="<?php echo $context . "similar_search_" . $keyword . "_" . $n?>">
+                        <?php echo i18n_get_translated($keyword)?>
+                    </label>
+                </div>
             <?php
             }        
         ?>
