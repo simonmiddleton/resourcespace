@@ -115,8 +115,8 @@ if(file_exists($originalpath))
     else
         {
         $origsizes  = getimagesize($originalpath);        
-        $origwidth  = $origsizes[0];
-        $origheight = $origsizes[1];
+        $origwidth  = $origsizes[0]??0;
+        $origheight = $origsizes[1]??0;
         }
     }
 else
