@@ -136,6 +136,13 @@ $use_cases = [
         ],
         'expected' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>',
     ],
+    [
+        'name' => 'Multi byte characters',
+        'input' => [
+            'html' => 'Multi byte characters: © è å 泉',
+        ],
+        'expected' => 'Multi byte characters: © è å 泉',
+    ],
 ];
 
 foreach($use_cases as $use_case)
