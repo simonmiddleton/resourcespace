@@ -8,6 +8,15 @@ if($k == "" || !check_access_key_collection($parent, $k))
     include "../include/authenticate.php";
     $parent = (int) getval("parent", $featured_collections_root_collection, true);
     }
+else
+    {
+    // Disable CSRF when someone is accessing an external share (public context)
+    $CSRF_enabled = false;
+
+    // Force simple view because otherwise it assumes you're logged in. The JS api function will use the native mode to
+    // get the resource count and loading the actions always authenticates and both actions will (obviously) error.
+    $themes_simple_view = true;
+    }
 
 if(!$enable_themes)
     {
@@ -210,7 +219,6 @@ jQuery(document).ready(function ()
                 jQuery('.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"][data-fc-ref="' + k + '"]')
                     .text(total_count + ' ' + (total_count == 1 ? lang_resource : lang_resources));
                 });
-
             },
             <?php echo generate_csrf_js_object('get_collections_resource_count'); ?>
         );
