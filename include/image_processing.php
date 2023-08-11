@@ -1445,7 +1445,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         }
 
     $icc_transform_complete=false;
-    debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested)");
+    debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested,onlysizes=" . json_encode($onlysizes) . ")");
 
     if (isset($imagemagick_path))
         {
@@ -1467,15 +1467,33 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             {
             $origfile = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
             }
-        
-        $hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);    
-        if (file_exists($hpr_path) && !$previewbased) {unlink($hpr_path);}  
-        $lpr_path=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",$alternative);    
-        if (file_exists($lpr_path) && !$previewbased) {unlink($lpr_path);}  
-        $scr_path=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"",$alternative);    
-        if (file_exists($scr_path) && !$previewbased) {unlink($scr_path);}
-        $scr_wm_path=get_resource_path($ref,true,"scr",false,"jpg",-1,1,true,"",$alternative);  
-        if (file_exists($scr_wm_path) && !$previewbased) {unlink($scr_wm_path);}
+
+        # If $onlysizes set, don't remove other preview sizes.
+        $unlink_size = fn($check_size) => count($onlysizes) == 0 || (count($onlysizes) > 0 && in_array($check_size, $onlysizes));
+
+        $hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);
+        if (file_exists($hpr_path) && !$previewbased && $unlink_size('hpr'))
+            {
+            unlink($hpr_path);
+            }
+
+        $lpr_path=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",$alternative);
+        if (file_exists($lpr_path) && !$previewbased && $unlink_size('lpr'))
+            {
+            unlink($lpr_path);
+            }
+
+        $scr_path=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"",$alternative);
+        if (file_exists($scr_path) && !$previewbased && $unlink_size('scr'))
+            {
+            unlink($scr_path);
+            }
+
+        $scr_wm_path=get_resource_path($ref,true,"scr",false,"jpg",-1,1,true,"",$alternative);
+        if (file_exists($scr_wm_path) && !$previewbased && $unlink_size('scr'))
+            {
+            unlink($scr_wm_path);
+            }
 
         $prefix = '';
         # Camera RAW images need prefix
