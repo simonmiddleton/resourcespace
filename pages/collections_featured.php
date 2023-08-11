@@ -10,7 +10,12 @@ if($k == "" || !check_access_key_collection($parent, $k))
     }
 else
     {
+    // Disable CSRF when someone is accessing an external share (public context)
     $CSRF_enabled = false;
+
+    // Force simple view because otherwise it assumes you're logged in. The JS api function will use the native mode to
+    // get the resource count and loading the actions always authenticates and both actions will (obviously) error.
+    $themes_simple_view = true;
     }
 
 if(!$enable_themes)
