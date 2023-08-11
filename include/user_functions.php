@@ -1839,7 +1839,7 @@ function check_access_key($resources,$key,$checkcollection=true)
             exit();
             }
         }
-        
+    
     $user       = $keys[0]["user"];
     $group      = $keys[0]["usergroup"];
     $expires    = $keys[0]["expires"];
@@ -1858,7 +1858,7 @@ function check_access_key($resources,$key,$checkcollection=true)
         }
     # "Emulate" the user that e-mailed the resource by setting the same group and permissions        
     emulate_user($user, $group);
-    
+
     global $usergroup,$userpermissions,$userrequestmode,$usersearchfilter,$external_share_groups_config_options; 
             $groupjoin = "u.usergroup = g.ref";
             $permissionselect = "g.permissions";
@@ -1913,7 +1913,7 @@ function check_access_key($resources,$key,$checkcollection=true)
                 }
             $emulate_plugins_set=true;                  
             }
-        
+
         if($external_share_groups_config_options || stripos(trim(isset($userinfo[0]["config_options"])),"external_share_groups_config_options=true")!==false)
             {
             # Apply config override options
@@ -3197,7 +3197,7 @@ function emulate_user($user, $usergroup="")
             foreach($enabled_plugins as $plugin)
                 {
                 $s=explode(",",$plugin['enabled_groups']);
-                if (in_array($usergroup,$s))
+                if (in_array($usergroup,$s) && !in_array($plugin['name'], $plugins))
                     {
                     include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
                     register_plugin($plugin['name']);
