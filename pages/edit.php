@@ -1405,7 +1405,7 @@ else
             $titleh1 = $lang["addresourcebatchbrowser"];
             }?>        
         <h1><?php echo $titleh1 ?></h1>
-        <p><?php echo htmlspecialchars($lang["intro-batch_edit"]);render_help_link("user/uploading");?></p>
+        <p><?php echo strip_tags_and_attributes($lang["intro-batch_edit"]);render_help_link("user/uploading");?></p>
         <?php
         }
     }

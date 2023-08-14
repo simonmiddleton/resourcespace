@@ -2377,8 +2377,19 @@ if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access
         for ($n=0;$n<count($keywords);$n++)
             {
             ?>
-            <div class="SearchSimilar"><input type=checkbox id="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n  ?>" name="keyword_<?php echo urlencode($keywords[$n])?>" value="yes"
-            onClick="<?php echo $context ?>UpdateFSResultCount();"><label class="customFieldLabel" for="<?php echo $context ?>similar_search_<?php echo urlencode($keywords[$n]) . "_" . $n?>"><?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?></label></div>
+            <div class="SearchSimilar">
+                <input 
+                    type=checkbox 
+                    id="<?php echo escape_quoted_data($context . "similar_search_" . $keywords[$n] . "_" . $n)  ?>" 
+                    name="keyword_<?php echo escape_quoted_data($keywords[$n])?>" 
+                    value="yes"
+                    onClick="<?php echo escape_quoted_data($context) ?>UpdateFSResultCount();">
+                    <label 
+                        class="customFieldLabel" 
+                        for="<?php echo escape_quoted_data($context . "similar_search_" . $keywords[$n] . "_" . $n)?>">
+                        <?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?>
+                    </label>
+                </div>
             <?php
             }        
         ?>
