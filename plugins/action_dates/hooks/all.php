@@ -221,6 +221,11 @@ function HookAction_datesCronCron()
                     if($action_dates_remove_from_collection)
                         {
                         // Remove the resource from any collections
+                        $ref_containing_collections = ps_array("SELECT collection AS `value` FROM collection_resource where resource = ?", array('i', $ref));
+                        foreach ($ref_containing_collections as $collection)
+                            {
+                            collection_log($collection, LOG_CODE_COLLECTION_REMOVED_RESOURCE, $ref, $lang['action_dates_delete_logtext']);
+                            }
                         ps_query("DELETE FROM collection_resource WHERE resource=?",["i",$ref]);
                         }
                 
