@@ -114,7 +114,23 @@ if(file_exists($originalpath))
         }
     else
         {
-        $origsizes  = getimagesize($originalpath);        
+        $origsizes  = getimagesize($originalpath);
+        if ($origsizes === false)
+            {
+            $identify_path = get_utility_path('im-identify');
+            $command = $identify_path . " " . $originalpath;
+            $identify_results = run_command($command);
+            if(!strpos($identify_results,"error"))
+                {
+                $identify_results = explode(" ",$identify_results);
+                $origsizes = explode('x',$identify_results[2]);
+                }
+            else
+                {
+                // Unable to get a result from identify so set values to 0
+                $origsizes = [0,0];
+                }
+            }
         $origwidth  = $origsizes[0]??0;
         $origheight = $origsizes[1]??0;
         }
