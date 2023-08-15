@@ -242,40 +242,46 @@ jQuery(document).ready(function ()
         }?>
     });
 
-
-// Re-order capability
-jQuery(function() {
-    // Disable for touch screens
-    if(is_touch_device())
-        {
-        return false;
-        }
-
-    jQuery('.BasicsBox.FeaturedSimpleLinks').sortable({
-        items: '.SortableItem',
-        update: function(event, ui)
+<?php
+if ($allow_fc_reorder)
+    {
+    ?>
+    // Re-order capability
+    jQuery(function() {
+        // Disable for touch screens
+        if(is_touch_device())
             {
-            let html_ids_new_order = jQuery('.BasicsBox.FeaturedSimpleLinks').sortable('toArray');
-            let fcs_new_order = html_ids_new_order.map(id => jQuery('#' + id).data('fc-ref'));
-            console.debug('fcs_new_order=%o', fcs_new_order);
-            <?php
-            if($descthemesorder)
-                {
-                ?>
-                fcs_new_order = fcs_new_order.reverse();
-                console.debug('fcs_new_order_reversed=%o', fcs_new_order);
-                <?php
-                }
-                ?>
-            api(
-                'reorder_featured_collections',
-                {'refs': fcs_new_order},
-                null,
-                <?php echo generate_csrf_js_object('reorder_featured_collections'); ?>
-            );
+            return false;
             }
+
+        jQuery('.BasicsBox.FeaturedSimpleLinks').sortable({
+            items: '.SortableItem',
+            update: function(event, ui)
+                {
+                let html_ids_new_order = jQuery('.BasicsBox.FeaturedSimpleLinks').sortable('toArray');
+                let fcs_new_order = html_ids_new_order.map(id => jQuery('#' + id).data('fc-ref'));
+                console.debug('fcs_new_order=%o', fcs_new_order);
+                <?php
+                if($descthemesorder)
+                    {
+                    ?>
+                    fcs_new_order = fcs_new_order.reverse();
+                    console.debug('fcs_new_order_reversed=%o', fcs_new_order);
+                    <?php
+                    }
+                    ?>
+                api(
+                    'reorder_featured_collections',
+                    {'refs': fcs_new_order},
+                    null,
+                    <?php echo generate_csrf_js_object('reorder_featured_collections'); ?>
+                );
+                }
+        });
     });
-});
+    <?php
+    }
+    ?>
 </script>
 <?php
 if($themes_show_background_image && !$full_width)
