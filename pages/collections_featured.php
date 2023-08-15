@@ -10,7 +10,12 @@ if($k == "" || !check_access_key_collection($parent, $k))
     }
 else
     {
+    // Disable CSRF when someone is accessing an external share (public context)
     $CSRF_enabled = false;
+
+    // Force simple view because otherwise it assumes you're logged in. The JS api function will use the native mode to
+    // get the resource count and loading the actions always authenticates and both actions will (obviously) error.
+    $themes_simple_view = true;
     }
 
 if(!$enable_themes)
@@ -214,7 +219,8 @@ jQuery(document).ready(function ()
                 jQuery('.FeaturedSimpleTile.FullWidth .FeaturedSimpleTileContents h2 span[data-tag="resources_count"][data-fc-ref="' + k + '"]')
                     .text(total_count + ' ' + (total_count == 1 ? lang_resource : lang_resources));
                 });
-            }
+            },
+            <?php echo generate_csrf_js_object('get_collections_resource_count'); ?>
         );
         }
     <?php if (!$themes_simple_view)
@@ -311,7 +317,10 @@ if($themes_show_background_image && !$full_width)
 
         if(isset($bg_fc_images) && is_array($bg_fc_images) && !empty($bg_fc_images))
             {
-            $background_image_url = $bg_fc_images[0]; # get_fc_imgs_ctx is limiting to 1 so we know we have this
+            if(strpos($bg_fc_images[0], '/gfx/') === false)
+                {
+                $background_image_url = $bg_fc_images[0]; # get_fc_imgs_ctx is limiting to 1 so we know we have this
+                }
 
             // Reset slideshow files as we want to use the featured collection image
             $slideshow_files = array();

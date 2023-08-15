@@ -114,7 +114,22 @@ if(file_exists($originalpath))
         }
     else
         {
-        $origsizes  = getimagesize($originalpath);        
+        $origsizes  = getimagesize($originalpath);
+        if ($origsizes === false)
+            {
+            $identify_path = get_utility_path('im-identify');
+            $command = $identify_path . " -format '%w,%h' " . $originalpath;
+            $identify_results = run_command($command);
+            if(preg_match("~\d+,\d+~",$identify_results))
+                {
+                $origsizes = explode(',',$identify_results);
+                }
+            else
+                {
+                $errors[] = "Unable to get image resolution";
+                $origsizes = [0,0];
+                }
+            }
         $origwidth  = $origsizes[0];
         $origheight = $origsizes[1];
         }
@@ -310,8 +325,8 @@ if ($saveaction != '' && enforcePostRequest(false))
     // Preserve original file preview (source) in case transforms are used for previews
     if(!file_exists($org))
         {
-        debug("[transform][pages/crop] rename($previewsourcepath, $org)");
-        rename($previewsourcepath, $org);
+        debug("[transform][pages/crop] copy($previewsourcepath, $org)");
+        copy($previewsourcepath, $org);
         }
 
     // Perform the actual transformation
@@ -698,7 +713,7 @@ renderBreadcrumbs($links_trail);
                 var curCoords = jcrop_api.tellSelect();
                 if(curCoords.w === 0 && curCoords.h === 0)
                     {
-                    styledalert('<?php echo $lang['error'] ?>','<?php echo escape_quoted_data($lang['error_crop_invalid']) ?>');
+                    styledalert('<?php echo escape_quoted_data($lang['error']) ?>','<?php echo escape_quoted_data($lang['error_crop_invalid']) ?>');
                     return false;
                     }
                 }

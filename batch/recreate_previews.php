@@ -32,7 +32,7 @@ else
     echo "recreate_previews.php - update previews for all/selected resources\n\n";
     echo "- extra options to use existing uploaded previews or to force recreation of video previews e.g. when changing to mp4/hls previews\n";
     echo "USAGE:\n";
-    echo "php recreate_previews.php [collection|resource] [id] [maxref] [sizes] [comma separated size ids][-previewbased] [-videoupdate]\n\n";
+    echo "php recreate_previews.php [collection|resource] [id] [maxref] [sizes] [comma separated size ids] [types] [comma separated type ids] [-previewbased] [-videoupdate]\n\n";
     echo "examples\n";
     echo "php recreate_previews.php collection 247\n";
     echo "- this will update previews for all resources in collection #247\n\n";
@@ -46,9 +46,11 @@ else
     echo "- this will update previews for all video resources that do not have the required '\$ffmpeg_preview_extension' extension or hls m3u8 playlist files\n\n";
     echo "php recreate_previews.php collection 247 sizes scr,col\n";
     echo "- this will update only the col and scr preview sizes for all resources in collection #247\n\n";
+    echo "php recreate_previews.hpp resource 110 types 1,2\n";
+    echo "- this will start at resource 110 and recreate previews for resource types 1 and 2\n\n";
     echo "php recreate_previews.php collection 247 -delete\n";
     echo "- this will remove all existing previews before recreating all preview sizes for all resources in collection #247\n";
-    echo "- the -delete option cannot be used with options -videoupdate, -previewbased or sizes\n\n";
+    echo "- the -delete option cannot be used with options -videoupdate, -previewbased, sizes, or types\n\n";
     exit();
     }
 
@@ -59,6 +61,15 @@ if(in_array("sizes",$argv))
 else
     {
     $sizes = array();
+    }
+
+if(in_array("types",$argv))
+    {
+    $resource_types = explode(",",$argv[array_search("types",$argv) + 1]);
+    }
+else
+    {
+    $resource_types = array();
     }
 
 $previewbased = in_array("-previewbased",$argv);
@@ -98,10 +109,15 @@ if (!isset($collectionid))
         $conditions[] = "file_extension in (" . ps_param_insert(count($ffmpeg_supported_extensions)) . ")";
         $conditions_params = array_merge($conditions_params, ps_param_fill($ffmpeg_supported_extensions, "s"));
         }
-     if (isset($resource_deletion_state))
+    if (isset($resource_deletion_state))
         {
         $conditions[] = "archive <> ?";
         $conditions_params = array_merge($conditions_params, array("i", $resource_deletion_state));
+        }
+    if (!empty($resource_types))
+        {
+        $conditions[] = "resource_type in (" . ps_param_insert(count($resource_types)) . ")";
+        $conditions_params = array_merge($conditions_params, ps_param_fill($resource_types, "i"));
         }
     $resources = ps_array("SELECT ref value FROM resource WHERE ref >= ?" . ((count($conditions) > 0) ? " AND " . implode(" AND ", $conditions):"") . " ORDER BY ref asc", $conditions_params, 0);
     }

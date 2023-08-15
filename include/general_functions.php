@@ -3654,7 +3654,8 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         }
 
     //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
-    $html = htmlspecialchars_decode(htmlentities($html, ENT_NOQUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8', false));
+    $html = htmlspecialchars_decode($html);
+    $html = mb_encode_numericentity($html, array(0x80, 0x10FFFF, 0, 0xFFFFFF), 'UTF-8');
 
     // Basic way of telling whether we had any tags previously
     // This allows us to know that the returned value should actually be just text rather than HTML
