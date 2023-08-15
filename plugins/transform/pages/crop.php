@@ -118,21 +118,20 @@ if(file_exists($originalpath))
         if ($origsizes === false)
             {
             $identify_path = get_utility_path('im-identify');
-            $command = $identify_path . " " . $originalpath;
+            $command = $identify_path . " -format '%w,%h' " . $originalpath;
             $identify_results = run_command($command);
-            if(!strpos($identify_results,"error"))
+            if(preg_match("~\d+,\d+~",$identify_results))
                 {
-                $identify_results = explode(" ",$identify_results);
-                $origsizes = explode('x',$identify_results[2]);
+                $origsizes = explode(',',$identify_results);
                 }
             else
                 {
-                // Unable to get a result from identify so set values to 0
+                $errors[] = "Unable to get image resolution";
                 $origsizes = [0,0];
                 }
             }
-        $origwidth  = $origsizes[0]??0;
-        $origheight = $origsizes[1]??0;
+        $origwidth  = $origsizes[0];
+        $origheight = $origsizes[1];
         }
     }
 else
