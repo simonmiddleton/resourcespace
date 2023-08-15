@@ -326,8 +326,8 @@ if ($saveaction != '' && enforcePostRequest(false))
     // Preserve original file preview (source) in case transforms are used for previews
     if(!file_exists($org))
         {
-        debug("[transform][pages/crop] rename($previewsourcepath, $org)");
-        rename($previewsourcepath, $org);
+        debug("[transform][pages/crop] copy($previewsourcepath, $org)");
+        copy($previewsourcepath, $org);
         }
 
     // Perform the actual transformation
