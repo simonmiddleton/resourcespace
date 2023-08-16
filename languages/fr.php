@@ -399,7 +399,6 @@ $lang["next"]="Suivant";
 $lang["previous"]="Précédent";
 $lang["page"]="Page";
 $lang["of"]="de"; # e.g. page 1 of 2
-$lang["items"]="éléments"; # e.g. 17 items
 $lang["item"]="élément"; # e.g. 17 items
 
 # Statistics
@@ -569,7 +568,6 @@ $lang["maxcollectionthumbsreached"]="Il y a trop de documents dans cette collect
 $lang["ratethisresource"]="Quelle note donnez-vous à ce document ?";
 $lang["ratingthankyou"]="Merci pour cette évaluation.";
 $lang["ratings"]="évaluations";
-$lang["rating"]="évaluation";
 $lang["cannotemailpassword"]="Vous ne pouvez pas envoyer aux utilisateurs leur mot de passe actuel par mél car il n'est pas enregistré (un hachage cryptographique est enregistré à la place).<br/><br/> Vous devez utiliser le bouton 'Suggérer' ci-dessus pour générer un nouveau mot de passe et activer la fonction d'envoi par mél.";
 
 $lang["userrequestnotification1"]="Le formulaire de demande de compte utilisateur a été complété avec les informations suivantes :";

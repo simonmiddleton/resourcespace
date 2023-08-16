@@ -393,7 +393,6 @@ $lang["next"]="Volgende";
 $lang["previous"]="Vorige";
 $lang["page"]="Pagina";
 $lang["of"]="van"; # e.g. page 1 of 2
-$lang["items"]="materialen"; # e.g. 17 items
 
 # Statistics
 $lang["stat-addpubliccollection"]="Voeg openbare collectie toe";

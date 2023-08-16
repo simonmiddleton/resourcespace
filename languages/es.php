@@ -136,7 +136,6 @@ $lang["hidethumbnails"]="Esconder vista en miniatura";
 $lang["showthumbnails"]="Mostrar vista en miniatura";
 $lang["mycollection"]="Mi colección";
 $lang["editresearchrequests"]="Editar peticiones de material";
-$lang["manageresearchrequests"]="Controlar peticiones de material";
 $lang["savedsearch"]="Búsqueda guardada";
 $lang["mustspecifyoneusername"]="Debes especificar un usuario como mínimo";
 $lang["couldnotmatchallusernames"]="No se han encontrado todos los nombres de usuarios";
@@ -386,7 +385,6 @@ $lang["next"]="Siguiente";
 $lang["previous"]="Previo";
 $lang["page"]="Página";
 $lang["of"]="de"; # e.g. page 1 of 2";
-$lang["items"]="ítems"; # e.g. 17 items 
 $lang["format"]="Formato";
 
 # Lists
@@ -468,7 +466,6 @@ $lang["country"]="País";
 # New for 1.5
 $lang["columns"]="Columnas";
 $lang["contactsheetconfiguration"]="Configurar hoja de contacto";
-$lang["thumbnails"]="Vista miniatura";
 $lang["contactsheetintrotext"]="Por favor, selecciona el tamaño de la lista y el número de columnas para tu lista de contactos.";
 $lang["size"]="Tamaño";
 $lang["orientation"]="Orientación";
@@ -557,21 +554,12 @@ $lang["maxcollectionthumbsreached"]="Hay demasiados materiales en esta colecció
 $lang["ratethisresource"]="¿Cómo puntúas este material?";
 $lang["ratingthankyou"]="Gracias por tu puntuación.";
 $lang["ratings"]="Ránkings";
-$lang["rating"]="Ránking";
 
 $lang["restrictedsharecollection"]="Tienes el acceso restringido a uno o más de los materiales de esta colección y, por tanto, no la podrás compartir con usuarios externos.";
 
 $lang["resourcemetadata"]="Metadatos del material";
 
 # Updated/improved entries.
-$lang["password_not_min_length"]="La contraseña debe tener una longitud mínima de ? caracteres";
-$lang["password_not_min_alpha"]="La contraseña debe tener como mínimo ? caracteres alfabéticos";
-$lang["password_not_min_uppercase"]="La contraseña debe tener como mínimo ? caracteres en mayúscula";
-$lang["password_not_min_numeric"]="La contraseña debe tener como mínimo ? caracteres numéricos";
-$lang["password_not_min_special"]="La contraseña debe tener como mínimo ? caracteres alfa-numéricos (!@$%&* etc.)";
-$lang["password_matches_existing"]="La contraseña introducida es la misma que la contraseña existente";
-$lang["password_expired"]="Tu contraseña ha caducado. Debes crear una nueva";
-$lang["max_login_attempts_exceeded"]="Has excedido el número máximo de intentos. Deberás esperar ? minutos antes de poder entrar de nuevo.";
 $lang["youfoundresult"]="Resultado";
 $lang["searchitemsdiskusage"]="Espacio en disco según el resultado";
 $lang['location-title'] = "Localización";
@@ -581,14 +569,11 @@ $lang["intro-plupload_dragdrop"] = "Arrastre y suelte o seleccione Agregar Archi
 $lang["xlthumbs"]="X-Grande";
 $lang["smallthumbs"]="Pequeño";
 $lang["geographicsearch_help"]="Arrastre para seleccionar el área.";
-$lang["type"]="Tipo de Recurso";
 $lang["upload-options"]="Opciones de subida";
 $lang["associatedcollections"]="Colecciones asociadas";
 $lang["selectcollection"]="Seleccionar colección";
 $lang["theme_home_promote"]="Promocionar en página de inicio?";
-$lang["log"]="Registros";
 $lang["youfoundresource"]="recurso";
-$lang["sharecollection"]="Compartir colección";
 $lang["noattachedusers"]="No se han adjuntado usuarios.";
 $lang["externalusersharing"]="Compartición con usuarios externos";
 $lang["noexternalsharing"]="No hay compartición externa.";

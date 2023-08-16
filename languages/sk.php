@@ -1374,7 +1374,6 @@ $lang['location-edit'] = 'Upraviť polohu';
 $lang['location-details'] = 'Potiahnutím mapy zmeňte polohu, kliknutím označte polohu. Na priblíženie a oddialenie použite ovládacie prvky priblíženia. Kliknutím na Uložiť uložíte polohu špendlíka a úroveň priblíženia.';
 $lang['location-missing'] = 'Nasledujúce zdroje nemajú geolokačné údaje a preto sa nezobrazujú:';
 $lang['location-noneselected']="Nevybrali ste žiadne miesto";
-$lang['location-noneselected']="Žiadne údaje o polohe";
 $lang['location'] = 'Poloha';
 $lang['mapzoom'] = 'Priblíženie mapy';
 $lang['openstreetmap'] = "OpenStreetMap";
@@ -1485,7 +1484,6 @@ $lang["proceedtocheckout"]="Pokračujte k pokladni";
 $lang["totalprice"]="Celková cena";
 $lang["price"]="Cena";
 $lang["waitingforpaymentauthorisation"]="Ľutujeme, ešte sme nedostali autorizáciu platby. Počkajte chvíľu, potom nižšie kliknite na tlačidlo „Obnoviť“, nižšie.";
-$lang["reload"]="Obnoviť";
 $lang["downloadpurchaseitems"]="Stiahnite si zakúpené položky";
 $lang["downloadpurchaseitemsnow"]="Ak chcete okamžite stiahnuť svoje zakúpené položky, použite odkazy nižšie. <br><br>Neodchádzajte z tejto stránky, kým si nestiahnete všetky položky.";
 $lang["alternatetype"]="Alternatívny typ";
@@ -1560,7 +1558,6 @@ $lang["period"]="Obdobie";
 $lang["lastndays"]="Posledných ? dní"; # ? is replaced by the system with the number of days, for example "Posledných 100 dní".
 $lang["specificdays"]="Konkrétny počet dní";
 $lang["specificdaterange"]="Konkrétny rozsah dátumov";
-$lang["to"]="do";
 
 $lang["emailperiodically"]="Vytvorte nový pravidelný e-mail";
 $lang["emaileveryndays"]="Poslať túto správu emailom každých ? dní na:";
@@ -1674,7 +1671,6 @@ $lang["can_manage_users"]="Môže spravovať používateľov";
 $lang["can_manage_keywords"]="Môže spravovať kľúčové slová";
 $lang["can_access_system_setup"]="Prístup do sekcie Nastavenie systému";
 $lang["can_change_own_password"]="Môže zmeniť heslo vlastného účtu. Zrušením začiarknutia tohto políčka <strong> pridá </strong> povolenie „p“";
-$lang["can_manage_users"]="Môže spravovať používateľov";
 $lang["can_manage_users_in_children_groups"]="Môže spravovať používateľov v podskupinách skupiny, do ktorej patrí";
 $lang["can_email_resources_to_own_and_children_and_parent_groups"]="Môže odosielať zdroje e-mailom používateľom v rovnakej skupine používateľov, jej podskupinách a nadradenej skupine";
 
@@ -2112,10 +2108,7 @@ $lang["show_resources"]="Zobraziť zdroje";
 $lang["team_user_contributions"]="Príspevky";
 $lang["team_user_view_contributions"]="Zobraziť príspevky";
 $lang['action-title_apply'] = "Aplikovať";
-$lang['property-allow_preview'] = "Povoliť ukážku";
-$lang['property-allow_restricted_download'] = "Povoliť obmedzené sťahovanie";
 $lang['property-orphaned'] = "Osirelý";
-$lang['property-pad_to_size'] = "Nadstaviť na veľkosť";
 $lang['admin_field_deleted'] = "Zmazané pole";
 $lang['action-move-up'] = 'Posunúť nahor';
 $lang['action-move-down'] = 'Posunúť nadol';
@@ -2419,7 +2412,6 @@ $lang["action-addrow"]="Pridať riadok";
 
 /* Messaging */
 $lang["seen"]="Videné";
-$lang["from"]="Od";
 $lang["mymessages"]="Moje správy";
 $lang["mymessages_markread"]="Označiť ako prečítané";
 $lang["mymessages_markunread"]="Označiť ako neprečítané";
@@ -2653,7 +2645,6 @@ $lang['login_word'] = "Prihlásenie";
 
 $lang['error-duplicatesfound'] = "Bol nájdený duplikát: zdroj(e) %resourceref% zodpovedá súboru %filename%"; # %resourceref to be replaced by list of refs that match incoming file and %filename to be replaced by the incoming files name or location
 $lang['see_log'] = "Podrobnosti o tomto nahratí nájdete v denníku nižšie.";
-$lang["edit_copy_from_field"]       = "Skopírujte údaje z poľa";
 // Filter rules 
 $lang["filter_migration"]           = "Migrácia filtrov";
 $lang["filter_search_success"]      = "Vyhľadávací filter bol úspešne migrovaný.";
@@ -2680,9 +2671,6 @@ $lang["filter_is_in"]               = "JE ";
 $lang["filter_is_not_in"]           = "NIE JE ";
 $lang["filter_or"]                  = "OR";
 $lang["filter_and"]                 = "A";
-$lang['see_log'] = "Podrobnosti o tomto nahratí nájdete v denníku nižšie.";
-$lang['login_word'] = "Prihlásiť sa";
-$lang["edit_copy_from_field"]       = "Skopírujte údaje z poľa";
 
 /* Browse bar */
 $lang['browse_bar_text']                = "Prehľadávať";
@@ -2715,7 +2703,6 @@ $lang["file_integrity_fail_search"]         = "Zlyhania kontroly integrity súbo
 $lang["all__file_integrity_fail_email"]     = "[img_headerlogo]<br />\n[lang_file_integrity_summary_failed] <br /><br /> \n[lang_file_integrity_fail_search] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["team_resource_integrity_fail"]       = "Zobraziť podozrivé zdroje";
 $lang["team_resource_integrity_fail_info"]  = "Zdroje s chýbajúcimi alebo pravdepodobne poškodenými súbormi";
-$lang["collection_description"]         = "Popis";
 $lang["collection_copy_resources"]      = "Kopírovať zdroje zbierky";
 $lang["collection_actiontype_1"]        = "Zdroje";
 $lang["collection_actiontype_2"]        = "Zbierka";
@@ -2732,8 +2719,6 @@ $lang["backtosharecollection"]="Späť na zdieľanú zbierku";
 $lang["db-default-encoding"] = "(kódovanie znakov databázy: %encoding)";
 $lang["unauthorized"] = "Neoprávnený";
 $lang["warning_duplicate_shortname_fields"] = "Pole typu prostriedku s rovnakým krátkym menom už existuje. Prosím, zvoľte jedinečné meno!";
-$lang['relateallresources_confirmation'] = 'Všetky zdroje v tejto zbierke sú súvisiace';
-$lang["exportdata"]="Export systémových údajov";
 $lang['exportdata-instructions'] = "Týmto sa exportujú konfiguračné údaje systému z vášho systému na účely riešenia problémov. Všetky údaje (možnosti polí, používateľské mená, e-maily, metadáta atď.) budú zamaskované, ak inak neurčí správca aplikácie./br>Vyberte informácie, ktoré chcete exportovať, a kliknite na tlačidlo „Exportovať“. Vytvorí sa offline úloha a po jej dokončení dostanete upozornenie o pripravenosti dát na stiahnutie.";
 $lang["exportobfuscate"]="Zamaskovať exportované údaje?";
 $lang['export_separate_sql']  = "Vytvorte samostatné súbory exportov SQL pre každú databázovú tabuľku?";
@@ -2744,12 +2729,7 @@ $lang["setup-mysql_read_only_username"] = "MySQL login s oprávnením iba na č�
 $lang["setup-mysql_read_only_password"] = "MySQL heslo s oprávnením iba na čítanie dát";
 $lang["setup-if_mysql_read_only_username"] = "Používateľské meno použité na pripojenie k serveru MySQL v režime iba na čítanie. Tento používateľ musí mať iba oprávnenia typu SELECT. Je voliteľný a nevyžaduje práva na vytváranie tabuliek alebo vkladanie údajov.";
 $lang["setup-if_mysqlpassword"]= $lang["setup-if_mysql_read_only_password"] = "Heslo pre užívateľské meno MySQL zadané vyššie.";
-$lang["collectionlogheader"]="Protokol zbierky - %collection"; # %collection will be replaced, e.g. Collection Log - Default Collection
-$lang["mycollection_notpublic"]="„Predvolenú zbierku“ nemôžete zmeniť na odporúčanú alebo verejnú zbierku. Na tento účel je potrebné vytvoriť novú zbierku.";
-$lang["requestaddedtocollection"]="Tento zdroj bol pridaný do vašej aktuálnej zbierky. Všetky položky vo svojej zbierke môžete vyžiadať kliknutím na položku „Vyžiadať všetky“ na paneli s výberom nižšie.";
 $lang["error-geotile-server-error"] = "Nepodarilo sa načítať dlaždice zo servera dlaždíc.";
-$lang["emptycollection"] = "Odstrániť všetky zdroje";
-$lang["upload_files-to_collection"]="Nahrať súbory (do zbierky '%collection')"; # %collection will be replaced, e.g. Upload Files (to the collection 'Predvolená zbierka')
 $lang['group_download_limit_title'] = "Limit na sťahovanie zdrojov. Nastavte nulovú hodnotu pre deaktiváciu limitu";
 $lang['group_download_limit_period'] = "Obdobie platnosti limitu sťahovania zdrojov (limit za posledných X dní). Totálny limit počtu stiahnutí zdrojov nastavením hodnoty na 0";
 $lang['download_limit_error'] = "Dosiahli ste limit sťahovania zdrojv.";
@@ -2758,16 +2738,11 @@ $lang['download_limit_summary'] = "Stiahli ste %% DOWNLOADED %% z celkového lim
 $lang['download_limit_request_text'] = "Bol dosiahnutý limit sťahovania: %% STIAHNUTÉ %% / %% LIMIT %%";
 
 $lang["admin_delete_field_error"]="Pole sa nepodarilo odstrániť. Obráťte sa na správcu systému. Toto pole sa používa pre nasledujúce možnosti konfigurácie:-";
-$lang["admin_resource_type_field_reorder_information_normal_order"]="Zmena poradia je k dispozícii, len ak je vybratý typ zdroja „Všetky“.";
-$lang["admin_resource_type_field_reorder_select_restype"]="Ak chcete povoliť zmenu poradia, vyberte typ zdroja Všetky";
-$lang["team_research__introtext"]="Usporiadajte a spravujte „Žiadosti o asistenciu“. <br /> <br /> Vyberte 'Upraviť žiadosť', aby ste skontrolovali podrobnosti žiadosti a priradili ju členovi tímu. Žiadosť o výskum je možné založiť na predchádzajúcej zbierke zadaním ID kolekcie na obrazovke „Upraviť“. <br /> <br /> Po priradení žiadosti o asistenciu riešiteľovi, vyberte možnosť Upraviť zbierku a pridajte žiadosť o asistenciu na panel Predvolená zbierka. Pomocou štandardných nástrojov je potom možné do zbierky pridať zdroje. <br /> <br /> Po dokončení vyberte možnosť „Upraviť asistenciu“, zmeňte stav na dokončenie a používateľovi, ktorý o asistenciu požiadal, sa automaticky pošle e-mail. E-mail obsahuje odkaz na výsledok, ktorý sa automaticky pridá aj na do „Predvolených zbierok“.";
 $lang["manage_metadata_text"]="Táto stránka sa používa na úpravu dostupných možností poľa. Týmto sa automaticky aktualizujú aj existujúce vybraté možnosti zdrojov";
 $lang["print_report"]="Tlač správy";
 
 $lang["oj-creation-failure-text"]            = "Nastala chyba. Vytvorenie úlohy offline zlyhalo";
 $lang["oj-creation-success"]                 = "Úloha offline bola vytvorená. Po dokončení sa vám zobrazí upozornenie";
-$lang["userresources_status_change"]    = "Zdroje, ktorými ste prispeli, zmenili stav na:";
-$lang["collection_description"]         = "Popis";
 
  # Date checks
  # %row% row number if in csv or similar, %date% field data, %field% field name

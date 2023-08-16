@@ -618,7 +618,6 @@ $lang["passwordnotmatch"]="Kirjoitetut salasanat eivät sovi yhteen";
 $lang["wrongpassword"]="Väärä salasana, ole hyvä ja yritä uudestaan";
 $lang["action-view"]="Katso";
 $lang["action-preview"]="Esikatsele";
-$lang["action-viewmatchingresources"]="Katsele yhteensopivia resursseja";
 $lang["action-expand"]="Laajenna";
 $lang["action-select"]="Valitse";
 $lang["action-download"]="Lataa";

@@ -133,8 +133,7 @@ $lang["showthumbnails"]="サムネイル表示";
 $lang["contactsheet"]="コンタクト・シート";
 $lang["mycollection"]="マイコレクション";
 $lang["editresearchrequests"]="調査依頼の編集";
-$lang["savedsearch"]="検索保存";$lang["about__about"]="★サイトの説明を記述してください★";
-$lang["mustspecifyoneusername"]="一つ以上のユーザ名を指定してください";
+$lang["savedsearch"]="検索保存";
 $lang["mustspecifyoneusername"]="一つ以上のユーザ名を指定してください";
 $lang["couldnotmatchallusernames"]="マッチするユーザ名がありません";
 $lang["emailcollectionmessage"]="$applicationname から'マイコレクション'のページに追加するリソースのコレクションをメールしました。"; # ユーザ名の後に 例) "フレッドはあなたにコレクションをメールしました.."
@@ -567,7 +566,6 @@ $lang["maxcollectionthumbsreached"]="サムネイル表示するコレクショ�
 $lang["ratethisresource"]="このリソースを評価してください。";
 $lang["ratingthankyou"]="評価していただきありがとうございます。";
 $lang["ratings"]="評価";
-$lang["rating"]="評価";
 $lang["cannotemailpassword"]="パスワードは保存されていないため(ハッシュ化された暗号が代わりに保存されています)、既存のパスワードをユーザにメールできません。<br /><br />新しいパスワードを生成し、メールさせるには'サジェスト'ボタンを使用しなければなりません。";
 
 $lang["userrequestnotification1"]="ユーザログイン依頼フォームは以下の詳細を記入します:";

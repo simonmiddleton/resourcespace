@@ -1677,7 +1677,6 @@ $lang['comments_flag-this-comment']="Flagga denna kommentar";
 $lang['comments_flag-has-been-flagged']="Denna kommentar har blivit flaggad";
 $lang['comments_flag-reason-placeholder']="Skäl till att flagga denna kommentar";
 $lang['comments_validation-fields-failed']="Du måste fylla i alla obligatoriska fält!";
-#$lang['comments_block_comment_label']="block comment";
 $lang['comments_flag-email-default-subject']="Avisering av flaggad kommentar";
 $lang['comments_flag-email-default-body']="Den här kommentaren har blivit flaggad:";
 $lang['comments_flag-email-flagged-by']="Flaggad av:";

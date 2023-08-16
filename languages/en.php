@@ -1476,7 +1476,6 @@ $lang['maps-disabled'] = 'Maps disabled.';
 $lang['mapadd-introtext'] = 'Pan and zoom to the map view of interest for this resource, then click the Add Marker button below the zoom control on the map left and click the map location where the resource is located.  Change the basemap using the upper right map button.  Save the map to a PNG file using the lower left map button.';
 $lang['mapadd2-introtext'] = 'The blue marker indicates the location for the resource which can be moved by dragging.  Change the basemap using the upper right map button.  Save the map to a PNG file using the lower left map button.';
 $lang['location-noneselected']='No location selected';
-$lang['location-noneselected']='No location data';
 $lang['location'] = 'Location';
 $lang['mapzoom'] = 'Map zoom';
 $lang['openstreetmap'] = 'OpenStreetMap';
@@ -1672,7 +1671,6 @@ $lang["proceedtocheckout"]="Proceed to checkout";
 $lang["totalprice"]="Total price";
 $lang["price"]="Price";
 $lang["waitingforpaymentauthorisation"]="Sorry, we have not yet received the payment authorisation. Please wait a few moments then click 'reload' below.";
-$lang["reload"]="Reload";
 $lang["downloadpurchaseitems"]="Download purchased items";
 $lang["downloadpurchaseitemsnow"]="Please use the links below to download your purchased items immediately.<br><br>Do not navigate away from this page until you have downloaded all the items.";
 $lang["alternatetype"]="Alternative type";
@@ -1751,7 +1749,6 @@ $lang["period"]="Period";
 $lang["lastndays"]="Last ? days"; # ? is replaced by the system with the number of days, for example "Last 100 days".
 $lang["specificdays"]="Specific number of days";
 $lang["specificdaterange"]="Specific date range";
-$lang["to"]="to";
 
 $lang["emailperiodically"]="Create new periodic e-mail";
 $lang["emaileveryndays"]="E-mail this report every ? days to:";
@@ -1877,7 +1874,6 @@ $lang["can_manage_users"]="Can manage users";
 $lang["can_manage_keywords"]="Can manage keywords";
 $lang["can_access_system_setup"]="Can access the System Setup area";
 $lang["can_change_own_password"]="Can change own account password";
-$lang["can_manage_users"]="Can manage users";
 $lang["can_manage_users_in_children_groups"]="Can manage users in children groups to the user's group only";
 $lang["can_email_resources_to_own_and_children_and_parent_groups"]="Can only message and share resources with other users in child, parent and own groups";
 $lang["permission_nolock"] = "Disable locking of editable resources (locking is used to prevent resources being edited by other users)";
@@ -2336,10 +2332,7 @@ $lang["show_resources"]="Show resources";
 $lang["team_user_contributions"]="Contributions";
 $lang["team_user_view_contributions"]="View contributions";
 $lang['action-title_apply'] = "Apply";
-$lang['property-allow_preview'] = "Allow preview";
-$lang['property-allow_restricted_download'] = "Allow restricted download";
 $lang['property-orphaned'] = "Orphaned";
-$lang['property-pad_to_size'] = "Pad to size";
 $lang['admin_field_deleted'] = "Deleted field";
 $lang['action-move-up'] = 'Move up';
 $lang['action-move-down'] = 'Move down';
@@ -2685,7 +2678,6 @@ $lang['error_upload_failed'] = "An error occurred while uploading the file.";
 
 /* Messaging */
 $lang["seen"]="Seen";
-$lang["from"]="From";
 $lang["mymessages"]="Messages";
 $lang["mymessages_markread"]="Mark read";
 $lang["mymessages_markunread"]="Mark unread";
@@ -2935,7 +2927,7 @@ $lang['home_page'] = "Home page";
 $lang['login_word'] = "Login";
 
 $lang['error-duplicatesfound'] = "Duplicate found: resource(s) %resourceref% matches file %filename%"; # %resourceref to be replaced by list of refs that match incoming file and %filename to be replaced by the incoming files name or location
-$lang['see_log'] = "Please refer to the log below for more details on this upload.";$lang["edit_copy_from_field"]       = "Copy data from field";
+$lang['see_log'] = "Please refer to the log below for more details on this upload.";
 // Filter rules 
 $lang["filter_migration"]           = "Filter migration";
 $lang["filter_migrate_success"]     = "Filter has been successfully migrated.";
@@ -2963,7 +2955,6 @@ $lang["filter_is_in"]               = "IS ";
 $lang["filter_is_not_in"]           = "IS NOT ";
 $lang["filter_or"]                  = "OR";
 $lang["filter_and"]                 = "AND";
-$lang['see_log'] = "Please refer to the log below for more details on this upload.";$lang['login_word'] = "Login";$lang["edit_copy_from_field"]       = "Copy data from field";
 
 /* Browse bar */
 $lang['browse_bar_text']                = "Browse";
@@ -2996,7 +2987,6 @@ $lang["file_integrity_fail_search"]         = "File integrity failures";
 $lang["all__file_integrity_fail_email"]     = "[img_headerlogo]<br />\n[lang_file_integrity_summary_failed] <br /><br /> \n[lang_file_integrity_fail_search] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
 $lang["team_resource_integrity_fail"]       = "View suspect resources";
 $lang["team_resource_integrity_fail_info"]  = "Resources with missing or possibly corrupted files";
-$lang["collection_description"]             = "Description";
 $lang["collection_copy_resources"]          = "Copy collection resources";
 $lang["collection_actiontype_1"]            = "Resources";
 $lang["collection_actiontype_2"]            = "Collection";
@@ -3114,10 +3104,10 @@ $lang["share_type_upload"]                  = "Upload";
 $lang["intro-plupload_external_share"]      = "Please use this page to upload your files. Once they have uploaded you will be redirected to a page where you can enter information about yourself and the files you have uploaded. Please complete these details or your files may be deleted.";
 $lang["log-reference"]                      = "Log entry";
 $lang["log_column"]                         = "Log data";
-$lang["log_value"]                          = "Value";$lang['error_slideshow_invalid']            = "Invalid sequence number. Please enter a numeric value";
+$lang["log_value"]                          = "Value";
+$lang['error_slideshow_invalid']            = "Invalid sequence number. Please enter a numeric value";
 $lang['error-file-permissions']             = "Unable to perform file operation. Please check file permissions on %%PATH%%";
 
-$lang["log_value"]                          = "Value";
 $lang["new_message"]                        ="New message";
 $lang["message_recipients"]                 = "Recipient(s)";
 $lang["error_invalid_user"]                 = "Invalid user specified";
