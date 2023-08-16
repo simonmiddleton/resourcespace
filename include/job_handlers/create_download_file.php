@@ -38,7 +38,7 @@ foreach($offline_job_prefixes as $offline_job_prefix)
     }
     
 // Skip if any other unwanted characters in command (|,<,>,!,&,#,; or `)
-if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|;|`)/i", $shell_exec_cmd))
+if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|`)/i", $shell_exec_cmd))
     {
     if ($config_windows)
         {
