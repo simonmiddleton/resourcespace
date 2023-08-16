@@ -62,7 +62,7 @@ else if($resource !== false && !is_null($alternative) && $alternative > 0 && $ex
 
     if(is_null($file_path) && $upload_file_by_url != "")
         {
-        copy($upload_file_by_url, $alt_path);;
+        copy($upload_file_by_url, $alt_path);
         }
     else if(!is_null($file_path) && $file_path != "")
         {

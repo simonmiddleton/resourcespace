@@ -108,7 +108,7 @@ if(!isset($joberror))
     if(file_exists($zipfile))
         {
         $download_url = $baseurl_short . "pages/download.php?userfile=" . $userref . "_" . $randstring . ".zip";
-        $message = $lang["exportcomplete"];;
+        $message = $lang["exportcomplete"];
         message_add($job["user"],$message,$download_url,0);
         if($offline_job_delete_completed)
             {

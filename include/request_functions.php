@@ -112,7 +112,7 @@ function save_request($request)
         $approvemessage= new ResourceSpaceUserNotification;
         $approvemessage->set_subject($applicationname . ": ");
         $approvemessage->append_subject("lang_requestcollection");
-        $approvemessage->append_subject(" - ");;
+        $approvemessage->append_subject(" - ");
         $approvemessage->append_subject("lang_resourcerequeststatus1");
         $approvemessage->set_text("lang_requestapprovedmail");
         $approvemessage->append_text("<br /><br />");
@@ -127,7 +127,7 @@ function save_request($request)
             $approvemessage->append_text("<br /><br />");
             $approvemessage->append_text("lang_requestapprovedexpires");
             $approvemessage->append_text(" " . nicedate($expires) . "\n");
-            $templatevars["expires"] = "<br /><br />" . $lang["requestapprovedexpires"] . " " . nicedate($expires) . "\n";;
+            $templatevars["expires"] = "<br /><br />" . $lang["requestapprovedexpires"] . " " . nicedate($expires) . "\n";
             }
         else
             {
@@ -157,7 +157,7 @@ function save_request($request)
         $declinemessage= new ResourceSpaceUserNotification;
         $declinemessage->set_subject($applicationname . ": ");
         $declinemessage->append_subject("lang_requestcollection");
-        $declinemessage->append_subject(" - ");;
+        $declinemessage->append_subject(" - ");
         $declinemessage->append_subject("lang_resourcerequeststatus2");
         $declinemessage->set_text("lang_requestdeclinedmail");
         $declinemessage->append_text("<br /><br />");

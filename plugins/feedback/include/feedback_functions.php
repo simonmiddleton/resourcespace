@@ -77,7 +77,7 @@ function save_feedback_data(array $data)
                     {
                     $n++;
                     # This is to skip fields that are marked as lables so that the question ids match up correctly 
-                    $type = ps_value('SELECT type AS value FROM feedback_fields WHERE id = ?', array("i",$offset+$n), '');;
+                    $type = ps_value('SELECT type AS value FROM feedback_fields WHERE id = ?', array("i",$offset+$n), '');
                     }
                 ps_query('INSERT INTO feedback_data (field_id, value, date, user) VALUES(?, ?, ?, ?)', ['i', $offset+$n, 's', $datum, 's', $date, 's', $user]);
                 $n++;

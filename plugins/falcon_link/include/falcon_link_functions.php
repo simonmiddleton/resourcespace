@@ -162,7 +162,7 @@ function falcon_link_publish($resources,$template_text,$template_tags)
                 $falcon_errors[] = $lang["falcon_link_error_falcon_api"];
                 }
                 
-            $result["results"][$ref] = $lang["falcon_link_error_falcon_api_detailed"] . " '" . strip_tags($curl_response) . "'";;
+            $result["results"][$ref] = $lang["falcon_link_error_falcon_api_detailed"] . " '" . strip_tags($curl_response) . "'";
             if ($curl_info['http_code'] == 502)
                 {
                 $result["results"][$ref] .= ". " . $lang["falcon_link_error_falcon_check_tags"];

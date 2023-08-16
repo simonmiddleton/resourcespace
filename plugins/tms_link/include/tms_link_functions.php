@@ -4,7 +4,7 @@ function unistr_to_ords($str, $encoding = 'UTF-8'){
     // Turns a string of unicode characters into an array of ordinal values,
     // Even if some of those characters are multibyte.
     $str = mb_convert_encoding((string) $str,"UCS-4BE",$encoding);
-    $ords = "";;
+    $ords = "";
     
     // Visit each unicode character
     for($i = 0; $i < mb_strlen($str,"UCS-4BE"); $i++){        

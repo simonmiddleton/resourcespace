@@ -64,7 +64,7 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
         }
      else
         {
-        $linkurl = $baseurl . "/pages/search.php?search=!list" . implode(":",$resource);;
+        $linkurl = $baseurl . "/pages/search.php?search=!list" . implode(":",$resource);
         }
     
   

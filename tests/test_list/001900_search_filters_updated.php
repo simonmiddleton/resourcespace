@@ -44,7 +44,7 @@ debug("eldoradonode: " . $eldoradonode . "\n");
 debug("atlantisnode: " . $atlantisnode . "\n");
 debug("marketingnode: " . $marketingnode . "\n");
 debug("publicnode: " . $publicnode . "\n");
-debug("sensitivenode: " . $sensitivenode . "\n");;
+debug("sensitivenode: " . $sensitivenode . "\n");
 debug("happynode: " . $happynode . "\n");
 
 // Add nodes to resource a

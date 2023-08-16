@@ -241,7 +241,7 @@
                         }
                     if (actioncount>0)
                         {
-                        jQuery('span.ActionCountPill').html(actioncount).fadeIn();;
+                        jQuery('span.ActionCountPill').html(actioncount).fadeIn();
                         }
                     else
                         {
@@ -249,7 +249,7 @@
                         }
                     if (messagecount>0)
                         {
-                        jQuery('span.MessageCountPill').html(messagecount).fadeIn();;
+                        jQuery('span.MessageCountPill').html(messagecount).fadeIn();
                         }
                     else
                         {

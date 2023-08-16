@@ -531,7 +531,7 @@ function build_actiondates_urls(array $resource_refs)
             }
         
         $urls[] = '</ul></div>';
-        $return_urls['multiple'] = implode("", $urls);;
+        $return_urls['multiple'] = implode("", $urls);
         }
 
     return $return_urls;

@@ -79,7 +79,7 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 	    $target_temp_id = $resource['ref'] . "_" . md5($username . $randstring . $scramble_key);
 		$path = write_metadata($originalPath, $resource['ref'], "format_chooser/" . $target_temp_id);
         //$temp_path for removal later to assure not removing original path
-        $temp_path = get_temp_dir(false,"format_chooser/" . $resource['ref'] . "_" . md5($username . $randstring . $scramble_key));;
+        $temp_path = get_temp_dir(false,"format_chooser/" . $resource['ref'] . "_" . md5($username . $randstring . $scramble_key));
         }
     else
 	    {

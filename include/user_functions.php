@@ -224,7 +224,7 @@ function setup_user(array $userdata)
         }
             
     $usereditfilter         = (isset($userdata["edit_filter_id"]) && is_numeric($userdata["edit_filter_id"]) && $userdata['edit_filter_id'] > 0) ? $userdata['edit_filter_id'] : $userdata["edit_filter"];
-    $userderestrictfilter   = (isset($userdata["derestrict_filter_id"]) && is_numeric($userdata["derestrict_filter_id"]) && $userdata['derestrict_filter_id'] > 0) ? $userdata['derestrict_filter_id'] : $userdata["derestrict_filter"];;
+    $userderestrictfilter   = (isset($userdata["derestrict_filter_id"]) && is_numeric($userdata["derestrict_filter_id"]) && $userdata['derestrict_filter_id'] > 0) ? $userdata['derestrict_filter_id'] : $userdata["derestrict_filter"];
 
     $hidden_collections=explode(",",(string) $userdata["hidden_collections"]);
     $userresourcedefaults=$userdata["resource_defaults"];
@@ -2640,7 +2640,7 @@ function offset_user_local_timezone($datetime, $format)
     $server_dt = new DateTime($datetime, $server_dtz);
     $user_local_dt = new DateTime($datetime, $user_local_dtz);
 
-    $time_offset = $user_local_dt->getOffset() - $server_dt->getOffset();;
+    $time_offset = $user_local_dt->getOffset() - $server_dt->getOffset();
 
     $user_local_dt->add(DateInterval::createFromDateString((string) $time_offset . ' seconds'));
 

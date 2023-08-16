@@ -358,7 +358,7 @@ if(isset($resource["field".$view_title_field]))
             ?>
             <div id="previewimagewrapper">
                 <?php
-                include dirname (__FILE__, 4) . "/pages/video_player.php";;
+                include dirname (__FILE__, 4) . "/pages/video_player.php";
                 ?>
             </div>
             <?php

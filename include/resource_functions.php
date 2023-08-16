@@ -2524,7 +2524,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     $value = $data_joins_field_value = trim((string)$value);
     if($value === '' && $fieldinfo['required'])
         {
-        $errors[] = i18n_get_translated($fieldinfo['title']) . ": {$lang['requiredfield']}";;
+        $errors[] = i18n_get_translated($fieldinfo['title']) . ": {$lang['requiredfield']}";
         return false;
         }
     

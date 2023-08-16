@@ -77,7 +77,7 @@ $collection = (int) $collection;
 $field = 0;
 if(array_key_exists('field', $cli_options))
     {
-    $field = $cli_options['field'];;
+    $field = $cli_options['field'];
     }
 $field = getval("field", $field);
 if (!is_numeric($field)) { exit ('Metadata field reference provided must be numeric.' . PHP_EOL); }

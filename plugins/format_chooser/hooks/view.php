@@ -298,7 +298,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 		</script>
 		<?php
 		}
-    global $altfiles, $alt_order_by, $alt_sort, $access,$alt_types_organize,$alternative_file_previews,$alternative_file_previews_mouseover,$userrequestmode,$alt_files_visible_when_restricted;;
+    global $altfiles, $alt_order_by, $alt_sort, $access,$alt_types_organize,$alternative_file_previews,$alternative_file_previews_mouseover,$userrequestmode,$alt_files_visible_when_restricted;
     $altfiles=get_alternative_files($ref,$alt_order_by,$alt_sort);
     # Alternative files listing
     include __DIR__ . "/../../../pages/view_alternative_files.php";
