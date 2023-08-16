@@ -2198,7 +2198,7 @@ function error_alert($error, $back = true, $code = 403)
         jQuery(document).ready(function()
             {
             ModalClose();
-            styledalert('" . $lang["error"] . "', '" . escape_quoted_data($error, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401) . "');
+            styledalert('" . $lang["error"] . "', '" . escape_quoted_data($error) . "');
             " . ($back ? "window.setTimeout(function(){history.go(-1);},2000);" : "") ."
             });
         </script>";
