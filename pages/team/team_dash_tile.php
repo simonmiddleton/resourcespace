@@ -14,7 +14,8 @@ if(!(
 
 include "../../include/dash_functions.php";
 
-$show_usergroups_dash = ('true' == getval('show_usergroups_dash', '') ? true : false);
+$show_usergroups_dash = ('true' == getval('show_usergroups_dash', '')) && checkperm('h') && checkperm('hdt_ug');
+
 if($show_usergroups_dash)
     {
     $user_groups         = get_usergroups(false, '', true);
