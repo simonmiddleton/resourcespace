@@ -55,7 +55,6 @@ parameters:
 			count: 1
 			path: include/csv_export_functions.php
 
-
 		-
 			message: "#^Undefined variable\\: \\$error$#"
 			count: 1
@@ -385,11 +384,6 @@ parameters:
 			message: "#^Class RSSFeed does not have a constructor and must be instantiated without any parameters\\.$#"
 			count: 1
 			path: plugins/rss2/pages/rssfilter.php
-
-		-
-			message: "#^Undefined variable\\: \\$simplesamlconfig$#"
-			count: 1
-			path: plugins/simplesaml/include/simplesaml_functions.php
 
 		-
 			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"
