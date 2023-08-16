@@ -45,7 +45,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
             }
 
         # Function get_editable_resource_sql() now returns a query object
-        $editable_resource_query=get_editable_resource_sql($countonly);
+        $editable_resource_query=get_editable_resource_sql();
 
         $actionsql->sql .="SELECT creation_date as date,ref, created_by as user, " 
            .$generated_title_field." as description, 'resourcereview' as type FROM (" . $editable_resource_query->sql . ") resources" ;
