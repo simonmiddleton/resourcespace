@@ -330,7 +330,7 @@ function simplesaml_generate_keypair($dn)
  */
 function get_saml_sp_name()
     {
-    global $simplesaml_sp, $safe_sp, $simplesaml_rsconfig;
+    global $simplesaml_sp, $safe_sp, $simplesaml_rsconfig, $simplesamlconfig;
     if($safe_sp != "")
         {
         return $safe_sp;
