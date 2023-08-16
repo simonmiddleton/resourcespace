@@ -266,8 +266,6 @@ function get_collection($ref, $usecache = false)
         $GLOBALS['get_collection_cache'][$ref] = $return;
         return $return;
         }
-
-    return false;
     }
 
 /**
