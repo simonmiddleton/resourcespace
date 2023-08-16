@@ -46,7 +46,7 @@ else
     echo "- this will update previews for all video resources that do not have the required '\$ffmpeg_preview_extension' extension or hls m3u8 playlist files\n\n";
     echo "php recreate_previews.php collection 247 sizes scr,col\n";
     echo "- this will update only the col and scr preview sizes for all resources in collection #247\n\n";
-    echo "php recreate_previews.hpp resource 110 types 1,2\n";
+    echo "php recreate_previews.php resource 110 types 1,2\n";
     echo "- this will start at resource 110 and recreate previews for resource types 1 and 2\n\n";
     echo "php recreate_previews.php collection 247 -delete\n";
     echo "- this will remove all existing previews before recreating all preview sizes for all resources in collection #247\n";
