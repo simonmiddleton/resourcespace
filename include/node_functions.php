@@ -1940,20 +1940,21 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
 * @param  string    $value                  The node name to return
 * @param  integer   $resource_type_field    The field to search
 *  
-* @return           false = not found
+* @return false|int false = not found
 *                   integer = node ID of matching keyword.
 */
 function get_node_id($value,$resource_type_field)
     {
-    $node=ps_query("select ref from node where resource_type_field=? and name=?",array("i",$resource_type_field,"s",$value));
-    if (count($node)>0)
-        {
-        return $node[0]["ref"];
-        }
-    else
-        {
-        return false;
-        }
+    // Finding a match needs to distinguish nodes which are different only by diacritics
+    $collation = (mysqli_get_charset($GLOBALS['db']['read_write']))->charset . '_bin';
+    $node = ps_query(
+        'SELECT ref FROM node WHERE resource_type_field = ? AND `name` = ? COLLATE ' . $collation,
+        [
+            'i',$resource_type_field,
+            's',$value,
+        ]
+    );
+    return count($node) > 0 ? $node[0]['ref'] : false;
     }
 
 
