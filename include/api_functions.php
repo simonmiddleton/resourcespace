@@ -457,16 +457,54 @@ function api_validate_upload_url($url)
 
 /**
  * Assert API request is using POST method.
+ *
+ * @param bool $force Force the assertion
+ *
  * @return array Returns JSend data back {@see ajax_functions.php} if not POST method
  */
-function api_assert_post_request(): array
+function assert_post_request(bool $force): array
     {
-    // Applicable only to native authmode to limit BC only for the ResourceSpace UI (which is using this mode)
-    if (!defined('API_AUTHMODE_NATIVE') || $_SERVER['REQUEST_METHOD'] === 'POST')
+    // Legacy use cases we don't want to break backwards compatibility for (e.g JS api() makes only POST requests but
+    // other clients might only use GET because it was allowed if not authenticating with native mode)
+    if (!$force)
+        {
+        return [];
+        }
+    else if ($_SERVER['REQUEST_METHOD'] === 'POST')
+        {
+        return [];
+        }
+    else
+        {
+        http_response_code(405);
+        return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-method-not_allowed']));
+        }
+    }
+
+/**
+ * Assert API sent the expected content type.
+ *
+ * @param string $expected MIME type
+ * @param string $received_raw MIME type
+ *
+ * @return array Returns JSend data back {@see ajax_functions.php} if received Content-Type is unexpected
+ */
+function assert_content_type(string $expected, string $received_raw): array
+    {
+    $expected = trim($expected);
+    if ($expected === '')
+        {
+        trigger_error('Expected MIME type MUST not be a blank string', E_USER_ERROR);
+        }
+
+    $encoding = 'UTF-8';
+    $received = mb_strcut($received_raw, 0, mb_strlen($expected, $encoding), $encoding);
+    if ($expected === $received)
         {
         return [];
         }
 
-    http_response_code(405);
-    return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error-method-not_allowed']));
+    http_response_code(415);
+    header("Accept: {$expected}");
+    return ajax_response_fail([]);
     }

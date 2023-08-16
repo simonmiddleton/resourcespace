@@ -47,7 +47,7 @@
 * 
 * function some_test($required, $num, $optional_bool = false)
 *     {
-*     debug_function_call("some_test", func_get_args());
+*     debug_function_call(__FUNCTION__, func_get_args());
 * 
 *     echo "called some_test" . PHP_EOL;
 * 

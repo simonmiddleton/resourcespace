@@ -116,7 +116,7 @@ function api_get_resource_field_data($resource)
 
 function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,$revert=false,$autorotate=false,$metadata="")
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -203,7 +203,7 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
 
 function api_update_field($resource,$field,$value,$nodevalues=false)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -242,7 +242,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
 
 function api_delete_resource($resource)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -253,7 +253,7 @@ function api_delete_resource($resource)
 
 function api_copy_resource($from,$resource_type=-1)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -270,7 +270,7 @@ function api_get_resource_log($resource, $fetchrows=-1)
     
 function api_update_resource_type($resource,$type)
 	{
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -341,7 +341,7 @@ function api_get_resource_data($resource)
 
 function api_put_resource_data($resource,array $data)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -371,7 +371,7 @@ function api_get_resource_types()
 
 function api_add_alternative_file($resource, $name, $description = '', $file_name = '', $file_extension = '', $file_size = 0, $alt_type = '', $file = '')
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -451,7 +451,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
 
 function api_delete_access_keys($access_keys, $resources, $collections)
 	{
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -481,7 +481,7 @@ function api_delete_access_keys($access_keys, $resources, $collections)
 
 function api_delete_alternative_file($resource,$ref)
 	{
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -496,7 +496,7 @@ function api_delete_alternative_file($resource,$ref)
 
 function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="")
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -523,7 +523,7 @@ function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$fi
     
 function api_upload_file_by_url($ref,$no_exif=false,$revert=false,$autorotate=false,$url="")
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -612,7 +612,7 @@ function api_get_user_collections()
     
 function api_add_resource_to_collection($resource,$collection='',$search='')
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -628,7 +628,7 @@ function api_add_resource_to_collection($resource,$collection='',$search='')
     
 function api_collection_add_resources($collection='',$resources = '',$search = '',$selected=false)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -644,7 +644,7 @@ function api_collection_add_resources($collection='',$resources = '',$search = '
 
 function api_remove_resource_from_collection($resource,$collection='')
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -660,7 +660,7 @@ function api_remove_resource_from_collection($resource,$collection='')
 
 function api_collection_remove_resources($collection='',$resources='',$removeall = false,$selected=false)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -676,7 +676,7 @@ function api_collection_remove_resources($collection='',$resources='',$removeall
     
 function api_create_collection($name,$forupload=false)
 	{
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -698,7 +698,7 @@ function api_create_collection($name,$forupload=false)
     
 function api_delete_collection($ref)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -728,7 +728,7 @@ function api_search_public_collections($search="", $order_by="name", $sort="ASC"
     
 function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by = 0,$returnexisting = false)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -753,13 +753,13 @@ function api_set_node($ref, $resource_type_field, $name, $parent = '', $order_by
 
 function api_add_resource_nodes($resource,$nodestring)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
         }
 
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -804,7 +804,7 @@ function api_add_resource_nodes($resource,$nodestring)
     
  function api_add_resource_nodes_multi($resources,$nodestring)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -836,7 +836,7 @@ function api_get_node_id($value, $resource_type_field)
     }
 function api_replace_resource_file($ref, $file_location, $no_exif=false, $autorotate=false, $keep_original=true)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -959,7 +959,7 @@ function api_get_resource_collections($ref)
 
 function api_update_related_resource($ref, $related, $add = 1)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1017,7 +1017,7 @@ function api_get_users($find="", $exact_username_match=false)
 
 function api_save_collection(int $ref, array $coldata)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1079,7 +1079,7 @@ function api_get_collection(int $ref)
 
 function api_send_user_message($users,$text)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1101,7 +1101,7 @@ function api_get_system_status()
 
 function api_relate_all_resources($related)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1121,7 +1121,7 @@ function api_relate_all_resources($related)
 
 function api_show_hide_collection($collection, $show, $user)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1132,7 +1132,7 @@ function api_show_hide_collection($collection, $show, $user)
 
 function api_send_collection_to_admin($collection)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1143,7 +1143,7 @@ function api_send_collection_to_admin($collection)
 
 function api_reorder_featured_collections($refs)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1167,7 +1167,7 @@ function api_get_dash_search_data($link,$promimg)
 
 function api_reorder_tabs($refs)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1185,7 +1185,7 @@ function api_reorder_tabs($refs)
 
 function api_delete_tabs($refs)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1202,7 +1202,7 @@ function api_delete_tabs($refs)
 
 function api_save_tab($tab)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1226,7 +1226,7 @@ function api_save_tab($tab)
 
 function api_mark_email_as_invalid($email)
     {
-    $assert_post = api_assert_post_request();
+    $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
         return $assert_post;
@@ -1252,4 +1252,84 @@ function api_get_users_by_permission($permissions)
         $permissions = explode(",",$permissions);
         }
     return get_users_by_permission($permissions); 
+    }
+
+/**
+ * Upload files using HTTP multipart.
+ *
+ * @param int $ref Resource ID
+ * @param bool $no_exif Do not extract embedded metadata
+ * @param bool $revert Delete all data and re-extract embedded data
+ *
+ * @return array Returns JSend data back {@see ajax_functions.php} if upload failed, otherwise 204 HTTP status
+ */
+function api_upload_multipart(int $ref, bool $no_exif, bool $revert): array
+    {
+    $request_checks = [
+        fn(): array => assert_post_request(true),
+        fn(): array => assert_content_type('multipart/form-data', $_SERVER['CONTENT_TYPE'] ?? ''),
+        // Ensure a "file" has been POSTd
+        function(): array
+            {
+            http_response_code(400);
+            return isset($_FILES['file'])
+                ? []
+                : ajax_response_fail(ajax_build_message(
+                    str_replace('%key', 'file', $GLOBALS['lang']['error-request-missing-key'])
+                ));
+            },
+        // Check file has been received
+        function(): array
+            {
+            if ($_FILES['file']['error'] === UPLOAD_ERR_INI_SIZE)
+                {
+                http_response_code(413);
+                return ajax_response_fail(ajax_build_message(
+                    sprintf($GLOBALS['lang']['plupload-maxfilesize'], ini_get('upload_max_filesize'))
+                ));
+                }
+            else if ($_FILES['file']['error'] !== UPLOAD_ERR_OK)
+                {
+                http_response_code(500);
+                return ajax_response_fail(ajax_build_message(
+                    sprintf(
+                        '(%s #%s) %s',
+                        $GLOBALS['lang']['error'],
+                        $_FILES['file']['error'],
+                        $GLOBALS['lang']['upload_error_unknown'])
+                ));
+                }
+            else
+                {
+                return [];
+                }
+        },
+    ];
+    foreach ($request_checks as $check)
+        {
+        $check_result = $check();
+        if (!empty($check_result))
+            {
+            return $check_result;
+            }
+        }
+
+    $duplicates = check_duplicate_checksum($_FILES['file']['tmp_name'], false);
+    if (count($duplicates) > 0)
+        {
+        return ajax_response_fail(ajax_build_message(
+            str_replace('%%RESOURCES%%', implode(', ', $duplicates), $GLOBALS['lang']['error_upload_duplicate_file'])
+        ));
+        }   
+
+    // Set the userfile so upload_file can carry out the rest of the work as usual
+    $_FILES['userfile'] = $_FILES['file'];
+    if (upload_file($ref, $no_exif, $revert))
+        {
+        http_response_code(204);
+        return ajax_response_ok_no_data();
+        }
+
+    http_response_code(500);
+    return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_upload_failed']));
     }
