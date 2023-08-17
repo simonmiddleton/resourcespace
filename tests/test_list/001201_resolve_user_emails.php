@@ -2,23 +2,25 @@
 command_line_only();
 
 // --- Set up
-$test_1201_setup_user = function(array $info)
+$test_id = test_generate_random_ID(6);
+$test_1201_setup_user = function(array $info) use ($test_id)
     {
     unset($GLOBALS['udata_cache']);
-    $user = get_user(get_user_by_username($info['username']) ?: new_user($info['username'], 3));
-    if(is_null($user['email']))
+    $test_run_username = "{$info['username']}_$test_id";
+    $new_user_id = new_user($test_run_username, 3);
+    if ($new_user_id !== false)
         {
-        $_POST['username'] = $info['username'];
+        $_POST['username'] = $test_run_username;
         $_POST['fullname'] = $info['fullname'];
-        $_POST['email'] = "test_1201_{$info['email']}";
+        $_POST['email'] = "test_1201_{$test_id}_{$info['email']}";
         $_POST['password'] = generateSecureKey(8);
         $_POST['approved'] = $info['approved'] ?? '1';
         $_POST['account_expires'] = $info['account_expires'] ?? '';
-        save_user($user['ref']);
+        save_user($new_user_id);
         unset($GLOBALS['udata_cache']);
-        $user = get_user($user['ref']);
+        $new_user_id = get_user($new_user_id);
         }
-    return $user;
+    return $new_user_id;
     };
 
 $active_user = $test_1201_setup_user([
