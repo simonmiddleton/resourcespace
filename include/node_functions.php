@@ -1945,10 +1945,9 @@ function get_node_by_name(array $nodes, $name, $i18n = true)
 */
 function get_node_id($value,$resource_type_field)
     {
-    // Finding a match needs to distinguish nodes which are different only by diacritics
-    $collation = (mysqli_get_charset($GLOBALS['db']['read_write']))->charset . '_bin';
+    // Finding a match MUST distinguish nodes which are different only by diacritics or casing
     $node = ps_query(
-        'SELECT ref FROM node WHERE resource_type_field = ? AND `name` = ? COLLATE ' . $collation,
+        'SELECT ref FROM node WHERE resource_type_field = ? AND `name` = BINARY(?)',
         [
             'i',$resource_type_field,
             's',$value,
