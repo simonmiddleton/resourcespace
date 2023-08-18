@@ -15,6 +15,7 @@ $useoriginal=getval("use_original","no");
 $collectiondata=get_collection($collection);
 $tardisabled=getval("tardownload","")=="off";
 $include_csv_file = getval('include_csv_file', '');
+$force_online_download = getval('force_online', false); 
 
 if($k != "" || (isset($anonymous_login) && $username == $anonymous_login))
     {
@@ -168,7 +169,7 @@ if ($submitted != "")
 			}
 		}
 
-    if(!$collection_download_tar && $offline_job_queue)
+    if(!$collection_download_tar && $offline_job_queue && !$force_online_download)
         {
         foreach ($result as $key => $resdata)
             {
@@ -780,6 +781,17 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     </div>
     <?php
     }
+
+if($offline_job_queue)
+    {
+    ?>
+    <div class="Question">
+        <label for="force_online"><?php echo htmlspecialchars($lang['collection_download_force_online']); ?></label>
+        <input type="checkbox" id="force_online" name="force_online" value="yes">
+        <div class="clearerleft"></div>
+    </div>
+    <?php    
+    }    
 ?>
 
 <script>var tar = <?php echo ($collection_download_tar_option ? 'true' : 'false'); ?>;</script>
@@ -808,7 +820,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 	<label for="download"> </label>
 	<input type="submit"
-           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, tar); return false;"
+           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?> && !jQuery('#force_online').is(':checked'), tar); return false;"
            value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
 	
 	<div class="clearerleft"> </div>
