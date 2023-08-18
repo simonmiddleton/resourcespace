@@ -398,7 +398,7 @@ if (isset($ffmpeg_alternatives))
                 }
 
 				if(!file_exists($apath) && file_exists($targetfile) && RUNNING_ASYNC) {
-					error_log('FFmpeg alternative failed: ' . $shell_exec_cmd);
+					debug('FFmpeg alternative failed: ' . $shell_exec_cmd);
 					# Change flag as the preview was created and that is the most important of them all
 					ps_query("UPDATE resource SET is_transcoding = 0 WHERE ref = ?", array("i", $ref));
 				}
