@@ -843,9 +843,8 @@ function allowed_type_mime($allowedtype)
  * @param  string $cc               Optional CC addresses
  * @param  string $bcc              Optional BCC addresses
  * @param  array $files             Optional array of file paths to attach in the format [filename.txt => /path/to/file.txt]
- * @return void
  */
-function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
+function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array()): bool
     {
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $username, $useremail, $userfullname;
     global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override;
@@ -1042,6 +1041,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     log_mail($email,$subject,$reply_to);
     mail ($email,$subject,$message,$headers);
     cleanup_files($deletefiles);
+    return true;
     }
 
 /**

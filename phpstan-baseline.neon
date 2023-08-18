@@ -331,11 +331,6 @@ parameters:
 			path: plugins/image_text/hooks/download.php
 
 		-
-			message: "#^Result of function send_mail \\(void\\) is used\\.$#"
-			count: 1
-			path: plugins/offline_archive/pages/restore_request.php
-
-		-
 			message: "#^Class RSSFeed does not have a constructor and must be instantiated without any parameters\\.$#"
 			count: 1
 			path: plugins/rss2/pages/rssfilter.php
