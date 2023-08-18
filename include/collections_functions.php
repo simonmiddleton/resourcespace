@@ -1965,9 +1965,8 @@ function get_smart_themes_nodes($field, $is_category_tree, $parent = null, array
  * @param  boolean $add_internal_access
  * @param  string $group
  * @param  string $sharepwd
- * @return void
  */
-function email_collection($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$themeshare=false,$themename="",$themeurlsuffix="",$list_recipients=false, $add_internal_access=false,$group="",$sharepwd="")
+function email_collection($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$themeshare=false,$themename="",$themeurlsuffix="",$list_recipients=false, $add_internal_access=false,$group="",$sharepwd=""): string
 	{
 	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup;
 	if ($useremail==""){$useremail=$email_from;}
