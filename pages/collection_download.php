@@ -820,7 +820,7 @@ if($offline_job_queue)
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 	<label for="download"> </label>
 	<input type="submit"
-           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?> && !jQuery('#force_online').is(':checked'), tar); return false;"
+           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true && !jQuery(\'#force_online\').is(\':checked\')' : 'false'); ?>, tar); return false;"
            value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
 	
 	<div class="clearerleft"> </div>
