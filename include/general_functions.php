@@ -5074,3 +5074,18 @@ function check_date($date, $date_only = false)
         }
     return strpos(date($format, strtotime($date)), $date) !== false;
     }
+
+/**
+ * Helper function to cast functions that only echo things out (e.g render functions) to string type.
+ *
+ * @param callable $fn Function to cast
+ * @param array $args Provide function's arguments (if applicable)
+ */
+function cast_echo_to_string(callable $fn, array $args = []): string
+    {
+    ob_start();
+    $fn(...$args);
+    $result = ob_get_contents();
+    ob_end_clean();
+    return $result;
+    }

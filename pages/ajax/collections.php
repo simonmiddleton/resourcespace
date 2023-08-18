@@ -70,7 +70,7 @@ if($action == "render_selected_resources_counter")
 
 if($action == "render_clear_selected_btn")
     {
-    ajax_send_text_response(200, render_clear_selected_btn());
+    ajax_send_text_response(200, cast_echo_to_string('render_clear_selected_btn'));
     }
 
 if($action == "render_edit_selected_btn")
