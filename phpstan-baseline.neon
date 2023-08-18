@@ -221,11 +221,6 @@ parameters:
 			path: include/user_functions.php
 
 		-
-			message: "#^Result of function send_collection_feedback \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/collection_feedback.php
-
-		-
 			message: "#^Array has 2 duplicate keys with value 'sortable' \\(\"sortable\", \"sortable\"\\)\\.$#"
 			count: 1
 			path: pages/manage_jobs.php

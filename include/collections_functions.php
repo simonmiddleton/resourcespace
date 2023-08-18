@@ -3292,7 +3292,7 @@ function get_collection_comments($collection)
  *
  * @param  integer $collection  Collection ID
  * @param  string  $comment     Comment text
- * @return void
+ * @return array|void
  */
 function send_collection_feedback($collection,$comment)
     {
