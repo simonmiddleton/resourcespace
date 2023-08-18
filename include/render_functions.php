@@ -3153,7 +3153,7 @@ function render_filter_bar_button($text, $attr, $icon)
 * @param array   $search_params
 * @param boolean $return_params_only Exception to the rule! Rather than render, return the upload here params
 * 
-* @return void
+* @return void|array
 */
 function render_upload_here_button(array $search_params, $return_params_only = false)
     {

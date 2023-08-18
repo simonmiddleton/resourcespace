@@ -226,11 +226,6 @@ parameters:
 			path: pages/manage_jobs.php
 
 		-
-			message: "#^Result of function render_upload_here_button \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/search.php
-
-		-
 			message: "#^Undefined variable\\: \\$lang$#"
 			count: 1
 			path: pages/setup.php
