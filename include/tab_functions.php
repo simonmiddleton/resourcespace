@@ -160,7 +160,7 @@ function delete_tabs(array $refs)
         return false;
         }
 
-    $batch_activity_logger = function($ref) { return log_activity(null, LOG_CODE_DELETED, null, 'tab', 'name', $ref); };
+    $batch_activity_logger = function($ref) { log_activity(null, LOG_CODE_DELETED, null, 'tab', 'name', $ref); };
     $refs_chunked = array_chunk(
         // Sanitise list: only numbers and never allow the "Default" tab (ref #1) to be deleted
         array_diff(array_filter($refs, 'is_int_loose'), [1]),

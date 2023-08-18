@@ -216,11 +216,6 @@ parameters:
 			path: include/search_do.php
 
 		-
-			message: "#^Result of function log_activity \\(void\\) is used\\.$#"
-			count: 1
-			path: include/tab_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$lang$#"
 			count: 2
 			path: include/user_functions.php
