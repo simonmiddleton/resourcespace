@@ -121,11 +121,6 @@ parameters:
 			path: include/message_functions.php
 
 		-
-			message: "#^Result of function render_featured_collection_category_selector \\(void\\) is used\\.$#"
-			count: 1
-			path: include/render_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$default_perpage_list$#"
 			count: 1
 			path: include/render_functions.php

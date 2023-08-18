@@ -4665,7 +4665,8 @@ function render_featured_collection_category_selector(int $parent, array $contex
         }
 
     $context["depth"] = ++$depth;
-    return render_featured_collection_category_selector($next_level_parent, $context);
+    render_featured_collection_category_selector($next_level_parent, $context);
+    return;
     }
 
 
