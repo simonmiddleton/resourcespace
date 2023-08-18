@@ -221,11 +221,6 @@ parameters:
 			path: include/user_functions.php
 
 		-
-			message: "#^Result of function render_edit_selected_btn \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/ajax/collections.php
-
-		-
 			message: "#^Result of function email_collection \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/collection_email.php

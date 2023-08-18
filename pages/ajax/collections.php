@@ -79,7 +79,7 @@ if($action == "render_edit_selected_btn")
 
     $restypes = getval("restypes", "");
     $archive = getval("archive", "");
-    ajax_send_text_response(200, render_edit_selected_btn());
+    ajax_send_text_response(200, cast_echo_to_string('render_edit_selected_btn'));
     }
 
 if($action == "remove_selected_from_collection")
