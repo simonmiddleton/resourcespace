@@ -77,6 +77,7 @@ $usertempdir=get_temp_dir(false,"rs_" . $user_data[0]["ref"] . "_" . $id);
 $randstring=md5(rand() . microtime());
 $zippath = get_temp_dir(false,'user_downloads');
 $zipfile = $zippath . "/" . $user_data[0]["ref"] . "_" . md5($user_data[0]["username"] . $randstring . $scramble_key) . ".zip";
+debug('Collection download : $zipfile =' . $zipfile);
 $zip = new ZipArchive();
 $zip->open($zipfile, ZIPARCHIVE::CREATE);
 
@@ -100,6 +101,7 @@ for($n = 0; $n < count($collection_resources); $n++)
     // Do not download resources without proper access level
     if(!($access == 0 || $access == 1))
         {
+        debug('Collection download : skipping resource ID ' . $ref . ' user ID ' . $user_data['ref'] . ' does not have access to this resource');
         continue;
         }
 
@@ -189,6 +191,10 @@ for($n = 0; $n < count($collection_resources); $n++)
         )
     )
         {
+        debug('Collection download : Skipping resource ID ' . (int) $ref . ' file inaccessible to user - $target_exists = ' . $target_exists . ', $access = ' . $access . 
+              ' image_size_restricted_access('.$size.') = ' . image_size_restricted_access($size) . ' $usesize = ' . $usesize . ' $restriceted_full_dowload = ' . $restriceted_full_dowload .
+              'resource_download_allowed() = ' . resource_download_allowed($ref, $usesize, $resource_data['resource_type'])
+            );
         continue;
         }
 
@@ -236,7 +242,8 @@ for($n = 0; $n < count($collection_resources); $n++)
 
     if($GLOBALS['use_zip_extension'])
         {
-        $zip->addFile($p,$filename);
+        $success = $zip->addFile($p,$filename);
+        debug('Collection download : Added resource ' . $ref . ' to zip archive = ' . ($success?'true':'false'));
         }
 
     collection_download_log_resource_ready($tmpfile, $deletion_array, $ref, $usesize);
