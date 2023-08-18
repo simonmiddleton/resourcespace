@@ -76,7 +76,7 @@ foreach($tabs_to_migrate as $tab_ref => $entity_links)
         array_walk($entity_links_rtfs, function($ref) use ($tab_ref, $system_tabs, $lang)
             {
             $log_note = sprintf($lang['tabs_migration_log_note'], $system_tabs[$tab_ref]);
-            return log_activity($log_note, LOG_CODE_EDITED, $tab_ref, 'resource_type_field', 'tab', $ref, null, 0);
+            log_activity($log_note, LOG_CODE_EDITED, $tab_ref, 'resource_type_field', 'tab', $ref, null, 0);
             });
         }
 
@@ -92,7 +92,7 @@ foreach($tabs_to_migrate as $tab_ref => $entity_links)
         array_walk($entity_links_rts, function($ref) use ($tab_ref, $system_tabs, $lang)
             {
             $log_note = sprintf($lang['tabs_migration_log_note'], $system_tabs[$tab_ref]);
-            return log_activity($log_note, LOG_CODE_EDITED, $tab_ref, 'resource_type', 'tab', $ref, null, 0);
+            log_activity($log_note, LOG_CODE_EDITED, $tab_ref, 'resource_type', 'tab', $ref, null, 0);
             });
         }
     }

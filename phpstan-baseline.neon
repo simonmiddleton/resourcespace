@@ -349,8 +349,3 @@ parameters:
 			message: "#^Function reorder_collections not found\\.$#"
 			count: 1
 			path: upgrade/scripts/018_fc_star_name_to_orderby.php
-
-		-
-			message: "#^Result of function log_activity \\(void\\) is used\\.$#"
-			count: 2
-			path: upgrade/scripts/021_migrate_tabs.php
