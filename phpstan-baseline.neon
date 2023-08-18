@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Result of function ajax_send_response \\(void\\) is used\\.$#"
-			count: 1
-			path: include/ajax_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$position_prefix$#"
 			count: 1
 			path: include/api_functions.php

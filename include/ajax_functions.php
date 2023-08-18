@@ -120,7 +120,7 @@ function ajax_response_ok_no_data()
 function ajax_unauthorized()
     {
     global $lang;
-    return ajax_send_response(401, ajax_response_fail(ajax_build_message($lang['error-permissiondenied'])));
+    ajax_send_response(401, ajax_response_fail(ajax_build_message($lang['error-permissiondenied'])));
     }
 
 
