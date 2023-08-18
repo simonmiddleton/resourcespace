@@ -226,11 +226,6 @@ parameters:
 			path: pages/manage_jobs.php
 
 		-
-			message: "#^Result of function email_resource_request \\(void\\) is used\\.$#"
-			count: 1
-			path: pages/resource_request.php
-
-		-
 			message: "#^Result of function render_upload_here_button \\(void\\) is used\\.$#"
 			count: 1
 			path: pages/search.php
