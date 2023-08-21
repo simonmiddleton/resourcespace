@@ -8,7 +8,7 @@ if(!$valid)
     {
     include '0.php';
     ?>
-    <i aria-hidden="true" class="fa fa-fw fa-info" title="<?php echo htmlspecialchars(str_replace('%%VALUE%%', $value, $lang['error_invalid_revert_date']));?>"></i>
+    <i aria-hidden="true" class="fa fa-fw fa-info" title="<?php echo escape_quoted_data(str_replace('%%VALUE%%', $value, $lang['error_invalid_revert_date']));?>"></i>
     <?php
     }
 else
