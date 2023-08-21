@@ -66,12 +66,17 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         return array();
         }
     $getsizes=explode(",",$getsizes);
+
     $structured = false;
-    if(is_array($fetchrows) || strpos((string)$fetchrows,",") !== false)
+    if(strpos((string)$fetchrows,",") !== false)
+        {
+        // Convert string into array, removing square brackets if passed as array syntax in string form
+        $fetchrows = explode(",",trim($fetchrows," []"));
+        }
+    if(is_array($fetchrows))
         {
         $structured = true;
         }
-    
     $results = search_get_previews($search,$restypes,$order_by,$archive,$fetchrows,$sort,false,false,false,$recent_search_daylimit,false,false,false,false,false,$getsizes,$previewext);    
            
     if(is_array($results) && isset($results["total"]))

@@ -1933,8 +1933,7 @@ function search_get_previews($search,$restypes="",$order_by="relevance",$archive
         }
     elseif(!is_array($fetchrows) && strpos((string)$fetchrows,",") !== false)
         {
-        // Convert string into array,removing square brackets if passed as array syntax in string form
-        $fetchrows = explode(",",trim($fetchrows," []"));
+        $fetchrows = explode(",",$fetchrows);
         if(count($fetchrows) == 2)
             {
             $structured = true;
