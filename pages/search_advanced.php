@@ -13,7 +13,7 @@ foreach($archivechoices as $archivechoice)
     }
 
 $archive=implode(",",$selected_archive_states);
-$archiveonly=count(array_intersect($selected_archive_states,array(1,2)))>0;
+$archiveonly=count(array_diff($selected_archive_states,array(1,2)))==0;
 
 # Selectedtypes is a list of (resource type) checkboxes which are checked
 # Selectedtypes can also contain FeaturedCollections if $search_includes_themes = true
