@@ -272,7 +272,7 @@ function api_get_resource_log($resource, $fetchrows=-1)
     {
     return get_resource_log($resource, $fetchrows)["data"];
     }
-    
+
 function api_update_resource_type($resource,$type)
 	{
     $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
@@ -1338,3 +1338,27 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert): array
     http_response_code(500);
     return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_upload_failed']));
     }
+
+/**
+ * Get metadata field information
+ * 
+ * @param int $ref Metadata field ID
+ * @return array Returns the fields' information or 403 HTTP status if not authorised
+ */
+function api_get_resource_type_field(int $ref): array
+    {
+    if (!checkperm("a"))
+        {
+        http_response_code(403);
+        return [];
+        }
+
+    $rtf = get_resource_type_field($ref);
+    if ($GLOBALS['execution_lockout'])
+        {
+        unset($rtf['autocomplete_macro'], $rtf['value_filter'], $rtf['exiftool_filter'], $rtf['onchange_macro']);
+        }
+
+    return $rtf;
+    }
+ 
