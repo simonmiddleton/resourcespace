@@ -265,8 +265,7 @@ echo config_single_select("ldaptype", $lang['simpleldap_ldaptype'], $simpleldap[
 echo config_boolean_field(
 	'LDAPTLS_REQCERT_never',
 	$lang['simpleldap_LDAPTLS_REQCERT_never_label'],
-	$simpleldap['LDAPTLS_REQCERT_never'],
-	30);
+	$simpleldap['LDAPTLS_REQCERT_never']);
 echo config_text_field("ldapserver",$lang['ldapserver'],$simpleldap['ldapserver'],60);
 echo config_text_field("ldap_encoding", $lang['ldap_encoding'], $simpleldap['ldap_encoding'], 60);?>
 <?php echo config_text_field("domain",$lang['domain'],$simpleldap['domain'],60);?>
@@ -278,10 +277,10 @@ echo config_text_field("ldap_encoding", $lang['ldap_encoding'], $simpleldap['lda
 <?php echo config_text_field("loginfield",$lang['loginfield'],$simpleldap['loginfield'],30);?>
 <?php echo config_text_field("usersuffix",$lang['usersuffix'],$simpleldap['usersuffix'],30);?>
 <?php echo config_text_field("ldapgroupfield",$lang['groupfield'],$simpleldap['ldapgroupfield'],30);?>
-<?php echo config_boolean_field("createusers",$lang['createusers'],$simpleldap['createusers'],30);?>
-<?php echo config_boolean_field("create_new_match_email",$lang['simpleldap_create_new_match_email'],$simpleldap['create_new_match_email'],30);?>
-<?php echo config_boolean_field("allow_duplicate_email",$lang['simpleldap_allow_duplicate_email'],$simpleldap['allow_duplicate_email'],30);?>
-<?php echo config_boolean_field("update_group",$lang['simpleldap_update_group'],$simpleldap['update_group'],30);?>
+<?php echo config_boolean_field("createusers",$lang['createusers'],$simpleldap['createusers']);?>
+<?php echo config_boolean_field("create_new_match_email",$lang['simpleldap_create_new_match_email'],$simpleldap['create_new_match_email']);?>
+<?php echo config_boolean_field("allow_duplicate_email",$lang['simpleldap_allow_duplicate_email'],$simpleldap['allow_duplicate_email']);?>
+<?php echo config_boolean_field("update_group",$lang['simpleldap_update_group'],$simpleldap['update_group']);?>
 <?php echo config_text_field("notification_email",$lang['simpleldap_notification_email'],$simpleldap['notification_email'],60);?>
 
 <div class="Question">
