@@ -6114,7 +6114,7 @@ function get_featured_collections_by_resources(array $r_refs)
         {
         return array();
         }
-    
+
     $featured_type_filter_sql = "";
     $featured_type_filter_sql_params =[];
     $fcf_sql = featured_collections_permissions_filter_sql("AND", "c.ref");
@@ -6124,20 +6124,27 @@ function get_featured_collections_by_resources(array $r_refs)
         $featured_type_filter_sql_params = array_merge(["i",COLLECTION_TYPE_FEATURED],$fcf_sql[1]);
         }
 
-        
-    $sql = sprintf(
-        "SELECT c.ref, c.`name`, c.`parent`
-           FROM collection_resource AS cr
-           JOIN collection AS c ON cr.collection = c.ref AND c.`type` = %s
-          WHERE cr.resource IN (%s)
-            %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
-        COLLECTION_TYPE_FEATURED,
-        ps_param_insert(count($resources)),
-        $featured_type_filter_sql
-        );
+    # Add chunking to avoid exceeding MySQL parameter limits
+    $fcs = array();
+    foreach (array_chunk($resources, 10000) as $resource_chunk)
+        {
+        $sql = sprintf(
+            "SELECT c.ref, c.`name`, c.`parent`
+            FROM collection_resource AS cr
+            JOIN collection AS c ON cr.collection = c.ref AND c.`type` = %s
+            WHERE cr.resource IN (%s)
+                %s # access control filter (ok if empty - it means we don't want permission checks or there's nothing to filter out)",
+            COLLECTION_TYPE_FEATURED,
+            ps_param_insert(count($resource_chunk)),
+            $featured_type_filter_sql
+            );
 
-    $fcs = ps_query($sql, array_merge(ps_param_fill($resources, 'i'), $featured_type_filter_sql_params));
-    
+        $fcs_chunk = ps_query($sql, array_merge(ps_param_fill($resource_chunk, 'i'), $featured_type_filter_sql_params));
+        $fcs = array_merge($fcs, $fcs_chunk);
+        }
+
+    $fcs = array_unique($fcs, SORT_REGULAR);
+
     $results = array();
     foreach($fcs as $fc)
         {
