@@ -7080,7 +7080,7 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
         array_merge(['i', COLLECTION_TYPE_FEATURED], $sql_where_parent->parameters)
     );
 
-    $fcs_at_depth = array_map('set_order_by_to_zero', $fcs_at_depth);
+    if(!$GLOBALS['allow_fc_reorder'])$fcs_at_depth = array_map('set_order_by_to_zero', $fcs_at_depth);
     usort($fcs_at_depth, 'order_featured_collections');
     $new_fcs_order = array_column($fcs_at_depth, 'ref');
     sql_reorder_records('collection', $new_fcs_order);
