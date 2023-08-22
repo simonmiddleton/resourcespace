@@ -119,7 +119,7 @@ if($html_validation !== true && $html_validation !== '')
         <input type="hidden" name="custom" value="<?php echo getval('custom', 0, true)?>">
         <div class="Question">
             <label><?php echo $lang["page"]?></label>
-            <div class="Fixed"><?php echo ($page==""?$lang["all"]:escape_quoted_data($page)) ?></div>
+            <div class="Fixed"><?php echo escape_quoted_data(($page==""?$lang["all"]:$page)) ?></div>
             <div class="clearerleft"></div>
         </div>
 
