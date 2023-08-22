@@ -331,7 +331,6 @@ $lang["tools"]="Инструменты";
 $lang["created"]="Создано";
 $lang["user"]="Пользователь";
 $lang["owner"]="Владелец";
-$lang["Owner"]="Владелец";
 $lang["message"]="Сообщение";
 $lang["name"]="Имя";
 $lang["action"]="Действий";

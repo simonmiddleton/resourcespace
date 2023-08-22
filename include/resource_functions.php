@@ -6806,7 +6806,6 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
 
 /**
 * Update resource data for 'locked' fields from last edited resource. Used for upload_then_edit
-* Update resource data for 'locked' fields from last edited resource. Used for upload_then_edit
 *
 * @uses get_resource_data()
 * @uses update_resource_type()
@@ -7602,7 +7601,6 @@ function update_node_hitcount_from_search($resource,$search)
 
 function copy_hitcount_to_live()
     {
-    # Also update the resource table
     # Also update the resource table
     # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability)
     ps_query("update resource set hit_count=greatest(hit_count,new_hit_count)");
@@ -8814,12 +8812,10 @@ function delete_resource_type_field($ref)
     ps_query("DELETE FROM resource_type_field WHERE ref=?",["i",$ref]);
 
     // Remove all nodes and keywords or resources. Always remove nodes last otherwise foreign keys will not work
-    // Remove all nodes and keywords or resources. Always remove nodes last otherwise foreign keys will not work
     ps_query("DELETE rn.* FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field = ?",["i",$ref]);
     ps_query("DELETE nk.* FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.resource_type_field = ?",["i",$ref]);
     ps_query("DELETE FROM node WHERE resource_type_field = ?",["i",$ref]);
 
-    hook("after_delete_resource_type_field");
     hook("after_delete_resource_type_field");
 
     log_activity('Deleted metadata field "' . $fieldinfo["title"] . '" (' . $fieldinfo["ref"] . ')',LOG_CODE_DELETED,null,'resource_type_field',null,$ref);

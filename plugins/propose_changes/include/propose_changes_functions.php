@@ -220,7 +220,6 @@ function save_proposed_changes($ref)
 				if ($error) 
 					{
 					global $lang;
-					global $lang;
 					if (getval("autosave","")!="")
 						{
 						exit($error);

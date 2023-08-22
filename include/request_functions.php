@@ -407,7 +407,6 @@ function email_collection_request($ref,$details,$external_email): bool
         $requestrestypes=ps_array("SELECT r.resource_type AS value FROM collection_resource cr 
                                     LEFT JOIN resource r ON cr.resource=r.ref WHERE cr.collection = ?",array("i",$ref));
         $requestrestypes=array_unique($requestrestypes);
-        $requestrestypes=array_unique($requestrestypes);
         if(count($requestrestypes)==1 && isset($resource_type_request_emails[$requestrestypes[0]]))
             {
             // Is this a system user? If so we can send a notification instead of an email

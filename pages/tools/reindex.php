@@ -82,7 +82,6 @@ foreach($allfields as $field)
     }
 
 $time_end = microtime(true);
-$time_end = microtime(true);
 $time     = $time_end - $time_start;
 
 echo "Reindex took $time seconds" . PHP_EOL;

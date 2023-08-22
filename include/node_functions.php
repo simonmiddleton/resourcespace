@@ -1680,7 +1680,6 @@ function copy_resource_nodes($resourcefrom, $resourceto)
     
 /**
 * Copy all nodes from one metadata field to another one.
-* Copy all nodes from one metadata field to another one.
 * Used mostly with copy field functionality
 * 
 * @param integer $from resource_type_field ID FROM which we copy

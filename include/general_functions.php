@@ -915,7 +915,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         }
 
     # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
-    # Send a mail - but correctly encode the message/subject in quoted-printable UTF-8.
     if ($use_phpmailer)
         {
         send_mail_phpmailer($email,$subject,$message,$from,$reply_to,$html_template,$templatevars,$from_name,$cc,$bcc,$attachfiles); 
@@ -1201,7 +1200,6 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                 }
 
 
-            if (isset($templatevars))
             if (isset($templatevars))
                 {
                 foreach($templatevars as $key=>$value)
