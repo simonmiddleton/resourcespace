@@ -312,7 +312,6 @@ if(
     }
 
 include "../../../include/header.php";
-include "../../../include/header.php";
 
 
 if (isset($resulttext))
