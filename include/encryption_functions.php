@@ -152,11 +152,8 @@ function resign_all_code($confirm = true, $output = true, $output_changes_only =
         array("resource_type",          "config_options"),
         array("usergroup",              "config_options")
         );
-    foreach ($todo as $do)
+    foreach ($todo as [$table, $column])
         {
-        $table=$do[0];$column=$do[1];
-
-        // Iterate through all columns
         $rows=ps_query("select ref,`$column` from `$table`");
         foreach ($rows as $row)
             {
