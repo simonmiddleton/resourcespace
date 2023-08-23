@@ -3651,8 +3651,10 @@ function strip_tags_and_attributes($html, array $tags = array(), array $attribut
         return $html;
         }
 
-    //Convert to html before loading into libxml as we will lose non-ASCII characters otherwise
     $html = htmlspecialchars_decode($html);
+    // Return character codes for non-ASCII characters (UTF-8 characters more than a single byte - 0x80 / 128 decimal or greater).
+    // This will prevent them being lost when loaded into libxml.
+    // Second parameter represents convert mappings array - in UTF-8 convert characters of 2,3 and 4 bytes, 0x80 to 0x10FFFF, with no offset and add mask to return character code.
     $html = mb_encode_numericentity($html, array(0x80, 0x10FFFF, 0, 0xFFFFFF), 'UTF-8');
 
     // Basic way of telling whether we had any tags previously
