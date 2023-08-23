@@ -1,6 +1,6 @@
 <?php
-$valid = check_date($value, true) || empty($value);
-if ($GLOBALS['use_native_input_for_date_field'] && $valid)
+$valid_date = validateDatetime($value, 'Y-m-d');
+if ($GLOBALS['use_native_input_for_date_field'] && $valid_date)
     {
     $onchange_attr = $edit_autosave ? sprintf('onchange="AutoSave(%s);"', (int) $field['ref']) : '';
     ?>
@@ -11,6 +11,13 @@ if ($GLOBALS['use_native_input_for_date_field'] && $valid)
         value="<?php echo escape_quoted_data($value); ?>"
         <?php echo $onchange_attr; ?>
     >
+    <?php
+    }
+elseif(!$valid_date && $GLOBALS['use_native_input_for_date_field'])
+    {
+    include '0.php';
+    ?>
+    <i aria-hidden="true" class="fa fa-fw fa-info" title="<?php echo escape_quoted_data(str_replace('%%VALUE%%', $value, $lang['error_invalid_revert_date']));?>"></i>
     <?php
     }
 else
