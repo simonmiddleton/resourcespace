@@ -1063,9 +1063,19 @@ function extract_exif_comment($ref,$extension="")
                 update_field($ref,$exif_date,$date);
                 }
             }
-            
+
         # Try IPTC headers
-        $size = @getimagesize($image, $info);
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            $size = getimagesize($image, $info);
+            }
+        catch (Throwable $e)
+            {
+            debug("extract_exif_comment: unable to get IPTC headers");
+            }
+        unset($GLOBALS["use_error_exception"]);
+
         if (isset($info["APP13"]))
             {
             $iptc = iptcparse($info["APP13"]);
