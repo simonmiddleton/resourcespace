@@ -22,7 +22,7 @@ include_once __DIR__ . '/../csv_export_functions.php';
 
 global $lang, $baseurl, $baseurl_short, $offline_job_delete_completed, $exiftool_write_option, $usage, $usagecomment,
 $text, $collection_download_settings, $pextension, $scramble_key, $archiver_fullpath,$archiver_listfile_argument,
-$collection_download_settings,$restricted_full_download, $download_file_lifetime;
+$collection_download_settings,$restricted_full_download, $download_file_lifetime, $ffmpeg_supported_extensions, $ffmpeg_audio_extensions;
 
 foreach($job_data as $arg => $value)
     {
@@ -116,18 +116,47 @@ for($n = 0; $n < count($collection_resources); $n++)
         }
 
     # Check for the availability of each size and load it to the available_sizes array
-    foreach ($sizes as $sizeinfo)
-        {
-        $size_id=$sizeinfo['id'];
-        $size_extension = get_extension($resource_data, $size_id);
-        $p=get_resource_path($ref,true,$size_id,false,$size_extension);
-
-        if (resource_download_allowed($ref,$size_id,$resource_data['resource_type']))
+	foreach ($sizes as $sizeinfo)
+		{
+        if(in_array($resource_data['file_extension'], $ffmpeg_supported_extensions))
             {
-            if (hook('size_is_available', '', array($resource_data, $p, $size_id)) || file_exists($p))
-                $available_sizes[$size_id][]=$ref;
+            $size_id=$sizeinfo['id'];
+            //Video files only have a 'pre' sized derivative so flesh out the sizes array using that.
+            $p = get_resource_path($ref,true,'pre',false,$resource_data['file_extension']);
+            $size_id = 'pre';
+            if(resource_download_allowed($ref,$size_id,$resource_data['resource_type']))
+                {            
+                if (hook('size_is_available', '', array($resource_data, $p, $size_id)) || file_exists($p))
+                    {
+                    $available_sizes[$sizeinfo['id']][]=$ref;
+                    }
+                }
             }
-        }      
+        elseif(in_array($resource_data['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])))
+            {
+            //Audio files are ported to mp3 and do not have different preview sizes
+            $p = get_resource_path($ref,true,'',false,'mp3');
+            if(resource_download_allowed($ref,'',$resource_data['resource_type']))
+                {            
+                if (hook('size_is_available', '', array($resource_data, $p, '')) || file_exists($p))
+                    {
+                    $available_sizes[$sizeinfo['id']][]=$ref;
+                    }
+                }
+            }
+        else
+            {
+            $size_id=$sizeinfo['id'];
+            $size_extension = get_extension($resource_data, $size_id);
+            $p=get_resource_path($ref,true,$size_id,false,$size_extension);
+
+            if (resource_download_allowed($ref,$size_id,$resource_data['resource_type']))
+                {
+                if (hook('size_is_available', '', array($resource_data, $p, $size_id)) || file_exists($p))
+                    $available_sizes[$size_id][]=$ref;
+                }
+            }
+		}     
 
     // Check which size to use
     if($size=="largest")
@@ -151,8 +180,25 @@ for($n = 0; $n < count($collection_resources); $n++)
         $usesize = ($size == 'original') ? "" : $size;
         }
 
-    $pextension = get_extension($resource_data, $usesize);
-    $p = get_resource_path($ref, true, $usesize, false, $pextension, -1, 1, $use_watermark);
+    if(in_array($resource_data['file_extension'], $ffmpeg_supported_extensions) && $usesize !== 'original')
+        {
+        //Supported video formates will only have a pre sized derivative
+        $pextension = $resource_data['file_extension'];
+        $p = get_resource_path($ref,true,'pre',false,$pextension,-1,1);
+        $usesize = 'pre';
+        }
+    elseif(in_array($resource_data['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])) && $usesize !== 'original')
+        {
+        //Supported audio formats are ported to mp3
+        $pextension = 'mp3';
+        $p = get_resource_path($ref,true,'',false,'mp3',-1,1);
+        $usesize = '';
+        }
+    else
+        {
+        $pextension = get_extension($resource_data, $usesize);
+        $p = get_resource_path($ref, true, $usesize, false, $pextension, -1, 1, $use_watermark);
+        }
 
     $subbed_original = false;
     $target_exists = file_exists($p);
