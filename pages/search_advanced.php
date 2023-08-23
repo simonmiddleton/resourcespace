@@ -284,7 +284,7 @@ function checkHideTypeSpecific() {
 
 jQuery(document).ready(function()
     {
-    selectedtypes=['<?php echo implode("','",$selectedtypes) ?>'];
+    selectedtypes=['<?php echo implode("','",array_filter($selectedtypes,fn($v) => (is_int_loose($v) || $v == "Global"))) ?>'];
     if(selectedtypes[0]===""){selectedtypes.shift();}
 
     // Hide invalid fields
