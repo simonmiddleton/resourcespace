@@ -4387,17 +4387,16 @@ function update_resource_type($ref,$type)
 */
 function get_exiftool_fields($resource_type, string $option_separator = ",", bool $skip_translation = false)
     {
-    return ps_query("
+    global $FIXED_LIST_FIELD_TYPES;
+    $return = ps_query("
            SELECT f.ref,
                   f.type,
                   f.exiftool_field,
                   f.exiftool_filter,
-                  group_concat(n.name) AS options,
                   f.name,
                   f.read_only
              FROM resource_type_field AS f
         LEFT JOIN resource_type_field_resource_type rtfrt ON f.ref=rtfrt.resource_type_field
-        LEFT JOIN node AS n ON f.ref = n.resource_type_field
             WHERE length(exiftool_field) > 0
               AND (rtfrt.resource_type = ? OR f.global=1)
          GROUP BY ref
@@ -7761,54 +7760,61 @@ function get_related_resources($ref)
     }
 
 
-function get_field_options($ref, $nodeinfo = false, bool $skip_translation = false)
+/**
+ * Get available options for fixed list field types
+ *
+ * @param int   $ref
+ * @param bool  $nodeinfo
+ * @param bool  $skip_translation
+ * 
+ * @return array Array of 
+ * 
+ */
+function get_field_options(int $ref, $nodeinfo = false, bool $skip_translation = false) : array
     {
+    global $FIXED_LIST_FIELD_TYPES, $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys
-    if(!is_numeric($ref))
+    if(!is_int_loose($ref))
         {
-        $ref = ps_value("select ref value from resource_type_field where name=?",array("s",$ref), "", "schema"); // $ref is a string in this case
+        return false;
         }
 
     $field = get_resource_type_field($ref);
-    $options = get_nodes($ref, null, $field["type"]==FIELD_TYPE_CATEGORY_TREE);
+    if(!in_array($field["type"],$FIXED_LIST_FIELD_TYPES))
+        {
+        return false;
+        }
+
+    $options = get_nodes($ref, null, $field["type"]==FIELD_TYPE_CATEGORY_TREE);    
     if($options === false){return false;}
-    # Translate options,
     for ($m=0;$m<count($options);$m++)
         {
-        if (!$skip_translation)
+        if(!$nodeinfo)
             {
-            $options[$m]["name"] = i18n_get_translated($options[$m]["name"]);
-            }
-        unset($options[$m]["resource_type_field"]); // Not needed
-        }
-
-    if($nodeinfo)
-        {
-        // Add full path for category trees to differentiate nodes with the same name
-        $fieldinfo = get_resource_type_field($ref);
-        if($fieldinfo["type"] == FIELD_TYPE_CATEGORY_TREE)
-            {
-            $node_options = get_node_strings($options, true);
-            for ($m=0;$m<count($options);$m++)
+            if($field["type"]==FIELD_TYPE_CATEGORY_TREE)
                 {
-                $options[$m]["path"] = isset($node_options[$options[$m]["ref"]]) ? $node_options[$options[$m]["ref"]] : "";
-                }
-            }
-        }
-
-    if(!$nodeinfo)
-        {
-        $options = array_column($options,"name");
-        global $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
-        if ($auto_order_checkbox)
-            {
-            if($auto_order_checkbox_case_insensitive)
-                {
-                natcasesort($options);
-                $return=array_values($options);
+                $options[$m] = $skip_translation ? $options[$m]["path"] : $options[$m]["translated_path"];
                 }
             else
-                {sort($options);}
+                {
+                $options[$m] = $skip_translation ? $options[$m]["name"] : $options[$m]["translated_name"];
+                }
+            }
+        else
+            {
+            unset($options[$m]["resource_type_field"]); // Not needed
+            }
+        }
+
+    if(!$nodeinfo && $field["type"] == FIELD_TYPE_CHECK_BOX_LIST && $auto_order_checkbox)
+        {
+        if($auto_order_checkbox_case_insensitive)
+            {
+            natcasesort($options);
+            }
+        else
+            {
+            sort($options);
             }
         }
 

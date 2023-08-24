@@ -1560,7 +1560,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
     {
     global $regexp_slash_replace, $migrate_data, $onload_message, $lang, $baseurl;
 
-    $sync_field = (int)$postdata["sync_field"] ?? 0;
+    $sync_field = isset($postdata["sync_field"]) ? (int)$postdata["sync_field"] : 0;
     $existingfield = get_resource_type_field($ref);
     $params= $syncparams = [];
 
@@ -1591,7 +1591,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
                 $val = str_replace('\\', $regexp_slash_replace, $val);   
                 }
         
-            if($column == "type" && $val != $existingfield["type"] && (bool)$postdata["migrate_data"] ?? false)
+            if($column == "type" && $val != $existingfield["type"] && isset($postdata["migrate_data"]) && (bool)$postdata["migrate_data"] ?? false)
                 {
                 // Need to migrate field data
                 $migrate_data = true;				
@@ -1712,4 +1712,63 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
     
     return true;
     }
-   
+
+function get_resource_type_field_columns()
+    {
+    global $lang, $execution_lockout;
+
+    $resource_type_field_column_definitions = [
+        'active'                   => array($lang['property-field_active'],'',1,1),
+        'global'                   => array($lang['property-resource_type'],'',1,0),
+        'title'                    => array($lang['property-title'],'',0,1),
+        'type'                     => array($lang['property-field_type'],'',0,1),
+        'linked_data_field'        => array($lang['property-field_raw_edtf'],'',0,1),
+        'name'                     => array($lang['property-shorthand_name'],$lang['information-shorthand_name'],0,1),
+        'required'                 => array($lang['property-required'],'',1,1),
+        'order_by'                 => array($lang['property-order_by'],'',0,0),
+        'keywords_index'           => array($lang['property-index_this_field'],$lang["information_index_warning"] . " " . $lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1),
+        'display_field'            => array($lang['property-display_field'],'',1,1),
+        'full_width'               => array($lang['property-field_full_width'],'',1,1),
+        'advanced_search'          => array($lang['property-enable_advanced_search'],'',1,1),
+        'simple_search'            => array($lang['property-enable_simple_search'],'',1,1),        
+        'browse_bar'               => array($lang['field_show_in_browse_bar'],'',1,1),
+        'read_only'                => array($lang['property-read_only_field'], '', 1, 1),
+        'exiftool_field'           => array($lang['property-exiftool_field'],'',0,1),
+        'fits_field'               => array($lang['property-fits_field'], $lang['information-fits_field'], 0, 1),
+        'personal_data'            => array($lang['property-personal_data'],'',1,1),
+        'use_for_similar'          => array($lang['property-use_for_find_similar_searching'],'',1,1),
+        'hide_when_uploading'      => array($lang['property-hide_when_uploading'],'',1,1),
+        'hide_when_restricted'     => array($lang['property-hide_when_restricted'],'',1,1),
+        'help_text'                => array($lang['property-help_text'],'',2,1),
+        'tooltip_text'             => array($lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1),
+        'tab'                      => array($lang['property-tab_name'], '', 0, 0),
+        'partial_index'            => array($lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1),
+        'iptc_equiv'               => array($lang['property-iptc_equiv'],'',0,1),                                  
+        'display_template'         => array($lang['property-display_template'],'',2,1),
+        'display_condition'        => array($lang['property-display_condition'],$lang['information-display_condition'],2,1),
+        'regexp_filter'            => array($lang['property-regexp_filter'],$lang['information-regexp_filter'],2,1),
+        'smart_theme_name'         => array($lang['property-smart_theme_name'],'',0,1),
+        'display_as_dropdown'      => array($lang['property-display_as_dropdown'],$lang['information-display_as_dropdown'],1,1),
+        'external_user_access'     => array($lang['property-external_user_access'],'',1,1),
+        'omit_when_copying'        => array($lang['property-omit_when_copying'],'',1,1),
+        'sync_field'               => array($lang['property-sync_with_field'],'',0,0),
+        'include_in_csv_export'    => array($lang['property-include_in_csv_export'],'',1,1),
+    ];
+
+    if (!$execution_lockout)
+        {
+        // These fields can't be edited if $execution_lockout is set to prevent code execution
+        $resource_type_field_column_definitions['autocomplete_macro'] = [$lang['property-autocomplete_macro'],'',2,1];
+        $resource_type_field_column_definitions['exiftool_filter'] = [$lang['property-exiftool_filter'],'',2,1];
+        $resource_type_field_column_definitions['value_filter'] = [$lang['property-value_filter'],'',2,1];
+        $resource_type_field_column_definitions['onchange_macro'] = [$lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1];
+        }
+
+    $modify_resource_type_field_definitions=hook("modifyresourcetypefieldcolumns","",array($resource_type_field_column_definitions));
+    if($modify_resource_type_field_definitions!='')
+        {
+        $resource_type_field_column_definitions=$modify_resource_type_field_definitions;
+        }
+
+    return $resource_type_field_column_definitions;
+    }
