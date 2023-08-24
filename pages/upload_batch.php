@@ -180,22 +180,11 @@ if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_r
     $replace_resource = false;
     }
 
-if($upload_then_edit) 
+if($upload_then_edit && $resource_type_force_selection && getval('posting', '') != '') 
     {
-    if($resource_type_force_selection && getval('posting', '') != '') 
-        {
-        // Resource type selection was forced so use the resource type passed in on the url
-        update_resource_type(0 - $userref, $resource_type);
-        }
-
-    if (!$upload_here && !$resource_type_force_selection)
-        {
-        // Otherwise use the resource type from the template
-        $resource_type=ps_value("select resource_type value from resource where ref=?",array("i",0 - $userref),0);
-        }
+    // Resource type selection was forced so use the resource type passed in on the url
+    update_resource_type(0 - $userref, $resource_type);
     }
-
-$resource_type=empty($resource_type)?"":$resource_type;
 
 if ($resource_type_force_selection && $resource_type != "" && checkperm("XU" . $resource_type))
     {
