@@ -187,13 +187,14 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
         }
 
     $log_codes = array_values(LOG_CODE_get_all());
-    $when_statements  = "";
-    $when_parameters  = [];
+    $col_when_statements  = "";$res_when_statements  = "";
+    $col_when_parameters  = [];$res_when_parameters  = [];
+    $res_log_codes_processed = [];
     foreach($log_codes as $log_code)
         {
         $log_code_description = "";
 
-        if(!isset($GLOBALS['lang']["log_code_{$log_code}"]))
+        if(!isset($GLOBALS['lang']["log_code_{$log_code}"]) || in_array($log_code, $res_log_codes_processed))
             {
             if(!isset($GLOBALS['lang']["collectionlog-{$log_code}"]))
                 {
@@ -201,17 +202,18 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                 }
 
             $log_code_description = $GLOBALS['lang']["collectionlog-{$log_code}"];
-
-            $when_statements .= " WHEN BINARY(?) THEN ?";
-            $when_parameters  = array_merge($when_parameters, ['s', $log_code, 's', $log_code_description]);
+            $col_when_statements .= " WHEN BINARY(?) THEN ?";
+            $col_when_parameters  = array_merge($col_when_parameters, ['s', $log_code, 's', $log_code_description]);
 
             continue;
             }
 
         $log_code_description = $GLOBALS['lang']["log_code_{$log_code}"];
 
-        $when_statements .= " WHEN BINARY(?) THEN ?";
-        $when_parameters  = array_merge($when_parameters, ['s', $log_code, 's', $log_code_description]);
+        $res_when_statements .= " WHEN BINARY(?) THEN ?";
+        $res_when_parameters  = array_merge($res_when_parameters, ['s', $log_code, 's', $log_code_description]);
+
+        $res_log_codes_processed[] = $log_code;
         }
 
     $count_statement_start = "";
@@ -223,7 +225,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                     SELECT
                         `activity_log`.`logged` AS 'datetime',
                         `user`.`username` AS 'user',
-                        CASE BINARY(`activity_log`.`log_code`) {$when_statements} ELSE `activity_log`.`log_code` END AS 'operation',
+                        CASE BINARY(`activity_log`.`log_code`) ".$res_when_statements.$col_when_statements." ELSE `activity_log`.`log_code` END AS 'operation',
                         `activity_log`.`note` AS 'notes',
                         NULL AS 'resource_field',
                         `activity_log`.`value_old` AS 'old_value',
@@ -237,7 +239,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
         LEFT OUTER JOIN `user` ON `activity_log`.`user`=`user`.`ref`
                   WHERE
                     {$where_activity_log_statement}";
-    $sql_query->parameters = array_merge($sql_query->parameters, $when_parameters);
+    $sql_query->parameters = array_merge($sql_query->parameters, array_merge($res_when_parameters,$col_when_parameters));
 
     $search_block = 
                        "`activity_log`.`ref` LIKE ?
@@ -253,8 +255,8 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                         OR ? LIKE (CASE BINARY(`activity_log`.`log_code`)";
     
 
-    $sql_query->sql .=  "(" . $search_block . " {$when_statements} ELSE `activity_log`.`log_code` END) )";
-    $sql_query->parameters = array_merge($sql_query->parameters, ps_fill_param_array($search_block, "%{$search}%", 's'), $when_parameters);
+    $sql_query->sql .=  "(" . $search_block . " ".$res_when_statements.$col_when_statements." ELSE `activity_log`.`log_code` END) )";
+    $sql_query->parameters = array_merge($sql_query->parameters, ps_fill_param_array($search_block, "%{$search}%", 's'), array_merge($res_when_parameters,$col_when_parameters));
 
     $sql_query->sql .=
                   "UNION
@@ -262,14 +264,14 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                  SELECT
                         `resource_log`.`date` AS 'datetime',
                         `user`.`username` AS 'user',
-                        CASE BINARY(`resource_log`.`type`) {$when_statements} ELSE `resource_log`.`type` END AS 'operation',
+                        CASE BINARY(`resource_log`.`type`) {$res_when_statements} ELSE `resource_log`.`type` END AS 'operation',
                         `resource_log`.`notes` AS 'notes',
                         `resource_type_field`.`title` AS 'resource_field',
                         `resource_log`.`previous_value` AS 'old_value',
                         '' AS 'new_value',
                         if(`resource_log`.`diff`='','',concat('<pre>',`resource_log`.`diff`,'</pre>')) AS 'difference',
                         `resource_log`.`access_key` AS 'access_key',
-                        'resource' AS 'table',
+                        'resource_test' AS 'table',
                         'ref' AS 'column',
                         `resource_log`.`resource` AS 'table_reference'
                    FROM `resource_log`
@@ -277,7 +279,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
         LEFT OUTER JOIN `resource_type_field` ON `resource_log`.`resource_type_field`=`resource_type_field`.`ref`
                   WHERE
                         {$where_resource_log_statement}";
-    $sql_query->parameters = array_merge($sql_query->parameters, $when_parameters);
+    $sql_query->parameters = array_merge($sql_query->parameters, $res_when_parameters);
 
         $search_block =
                           "`resource_log`.`ref` LIKE ?
@@ -290,8 +292,8 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                             OR `resource_log`.`resource` LIKE ?
                             OR ? LIKE (CASE BINARY(`resource_log`.`type`)"; 
                             
-    $sql_query->sql .= "(" . $search_block . " {$when_statements} ELSE `resource_log`.`type` END) )";
-    $sql_query->parameters = array_merge($sql_query->parameters, ps_fill_param_array($search_block, "%{$search}%", 's'), $when_parameters);
+    $sql_query->sql .= "(" . $search_block . " {$res_when_statements} ELSE `resource_log`.`type` END) )";
+    $sql_query->parameters = array_merge($sql_query->parameters, ps_fill_param_array($search_block, "%{$search}%", 's'), $res_when_parameters);
 
 
     $sql_query->sql .=
@@ -300,7 +302,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                  SELECT
                         `collection_log`.`date` AS 'datetime',
                         `user`.`username` AS 'user',
-                        CASE BINARY(`collection_log`.`type`) {$when_statements} ELSE `collection_log`.`type` END AS 'operation',
+                        CASE BINARY(`collection_log`.`type`) {$col_when_statements} ELSE `collection_log`.`type` END AS 'operation',
                         `collection_log`.`notes` AS 'notes',
                         NULL AS 'resource_field',
                         '' AS 'old_value',
@@ -315,7 +317,7 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
         LEFT OUTER JOIN `collection` ON `collection_log`.`collection`=`collection`.`ref`
                   WHERE
                         {$where_collection_log_statement}";
-    $sql_query->parameters = array_merge($sql_query->parameters, $when_parameters);
+    $sql_query->parameters = array_merge($sql_query->parameters, $col_when_parameters);
 
     $search_block = 
                            "`collection_log`.`collection` LIKE ?
@@ -326,8 +328,8 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                             OR `user`.`username` LIKE ?
                             OR ? LIKE (CASE BINARY(`collection_log`.`type`)";
     
-    $sql_query->sql .= "(" . $search_block . " {$when_statements} ELSE `collection_log`.`type` END) )";
-    $sql_query->parameters = array_merge($sql_query->parameters, ps_fill_param_array($search_block, "%{$search}%", 's'), $when_parameters);
+    $sql_query->sql .= "(" . $search_block . " {$col_when_statements} ELSE `collection_log`.`type` END) )";
+    $sql_query->parameters = array_merge($sql_query->parameters, ps_fill_param_array($search_block, "%{$search}%", 's'), $col_when_parameters);
 
     $sql_query->sql .= "ORDER BY `datetime` DESC";
 
