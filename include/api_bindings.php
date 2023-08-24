@@ -1340,25 +1340,67 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert): array
     }
 
 /**
- * Get metadata field information
- * 
- * @param int $ref Metadata field ID
- * @return array Returns the fields' information or 403 HTTP status if not authorised
+ * Get metadata field information for all (matching) fields.
+ *
+ * @param string $by_resource_types Filter result by resource type. If multiple, use a CSV of resource types.
+ * @param string $find Filter result by fuzzy searching in different properties (e.g name, title, ref, help text etc)
+ * @param string $by_types Filter result by field type ({@see FIELD_TYPE_* constants}). If multiple, use a CSV of field types.
+ *
+ * @return array Returns the matching fields' information or 403 HTTP status if not authorised
  */
-function api_get_resource_type_field(int $ref): array
+function api_get_resource_type_fields(string $by_resource_types = '', string $find = '', string $by_types = ''): array
     {
-    if (!checkperm("a"))
+    if (!checkperm('a'))
         {
         http_response_code(403);
         return [];
         }
 
-    $rtf = get_resource_type_field($ref);
-    if ($GLOBALS['execution_lockout'])
-        {
-        unset($rtf['autocomplete_macro'], $rtf['value_filter'], $rtf['exiftool_filter'], $rtf['onchange_macro']);
-        }
-
-    return $rtf;
+    return array_map(
+        'execution_lockout_remove_resource_type_field_props',
+        get_resource_type_fields(
+            parse_csv_to_list_of_type($by_resource_types, 'is_int_loose'),
+            'ref',
+            'asc',
+            trim($find),
+            parse_csv_to_list_of_type($by_types, 'is_int_loose'),
+            true
+        )
+    );
     }
  
+/**
+ * Create metadata field
+ *
+ * @param string $name Field name
+ * @param string $resource_types CSV of applicable resource types for this field. Use 0 (zero) for global, for others
+ *                               {@see API get_resource_types()}
+ * @param int $type Metadata field type. For values, {@see FIELD_TYPE_* constants}
+ * @return array Returns JSend data back {@see ajax_functions.php} and 200 HTTP status or 403 HTTP status if not authorised
+ */
+function api_create_resource_type_field(string $name, string $resource_types, int $type): array
+    {
+    if (!checkperm('a'))
+        {
+        http_response_code(403);
+        return [];
+        }
+
+    $parse_rt_csv = function(string $RT): int|array
+        {
+        // Parse CSV to ordered list of integers
+        $parse_input = parse_csv_to_list_of_type($RT, 'is_int_loose');
+        $parse_input = array_map('intval', $parse_input);
+        asort($parse_input, SORT_NUMERIC);
+        $parse_input = array_values($parse_input);
+
+        // Global field? (ie resource type = 0)
+        $rev = array_reverse($parse_input);
+        return array_pop($rev) === 0 ? 0 : $parse_input;
+        };
+
+    $ref = create_resource_type_field($name, $parse_rt_csv($resource_types), $type, '', true);
+    return $ref !== false
+        ? ajax_response_ok(['ref' => $ref])
+        : ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_fail_save']));
+    }

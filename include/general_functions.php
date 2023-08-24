@@ -5064,3 +5064,41 @@ function cast_echo_to_string(callable $fn, array $args = []): string
     ob_end_clean();
     return $result;
     }
+
+/**
+ * Helper function to parse input to a list of a particular type.
+ * 
+ * @param string $csv CSV of raw data
+ * @param callable(string) $type Function parsing each CSV value as required by your context
+ */
+function parse_csv_to_list_of_type(string $csv, callable $type): array
+    {
+    $list = explode(',', $csv);
+    $return = [];
+    foreach ($list as $value)
+        {
+        $value = trim($value);
+        if ($type($value))
+            {
+            $return[] = $value;
+            }
+        }
+    return $return;
+    }
+
+/**
+ * Remove metadata field properties during execution lockout
+ *
+ * @param array $rtf Resource type field data structure
+ * @return array Returns without the relevant properties if execution lockout is enabled
+ */
+function execution_lockout_remove_resource_type_field_props(array $rtf): array
+    {
+    $props = [
+        'autocomplete_macro',
+        'value_filter',
+        'exiftool_filter',
+        'onchange_macro',
+    ];
+    return $GLOBALS['execution_lockout'] ? array_diff_key($rtf, array_flip($props)) : $rtf;
+    }
