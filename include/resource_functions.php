@@ -8661,7 +8661,7 @@ function alt_is_ffmpeg_alternative($alternative)
 * Create a new resource type field with the specified name of the required type
 *
 * @param string $name - name of new field
-* @param integer $restype - resource type - resource type(s) that field applies to (0 = global, single value = one type, array = multiple types)
+* @param integer|array $restype - resource type - resource type(s) that field applies to (0 = global, single value = one type, array = multiple types)
 * @param integer $type - field type - refer to include/definitions.php
 * @param string $shortname - shortname of new field
 * @param boolean $index - should new field be indexed?
@@ -8670,7 +8670,7 @@ function alt_is_ffmpeg_alternative($alternative)
 */
 function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT_BOX_SINGLE_LINE, $shortname = "", $index=false)
     {
-    if((trim($name)=="") || !is_numeric($type) || !is_numeric($restype))
+    if((trim($name)=="") || !is_numeric($type) || !(is_numeric($restype) || is_array($restype)))
         {
         return false;
         }
@@ -8685,14 +8685,15 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
     $default_tab = ps_value("SELECT MIN(ref) value FROM tab",[],0,"schema");
 
     // Global type?
-    $global=0;$restypes=array();
     if ($restype==0)
         {
-        $global=1;
+        $global = 1;
+        $restypes = [];
         }
     else
         {
-        if (!is_array($restype)) {$restypes=array($restype);} // Single resource type passed, put it in an array
+        $global = 0;
+        $restypes = is_array($restype) ? $restype : [$restype];
         }
 
     ps_query("INSERT INTO resource_type_field (title, global, type, `name`, keywords_index, order_by, tab) VALUES (?, ?, ?, ?, ?, ?, ?)",
