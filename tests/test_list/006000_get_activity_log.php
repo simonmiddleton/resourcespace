@@ -113,7 +113,6 @@ foreach($usecases as $usecase)
         if(count($results) != $usecase['expected']['count'])
             {
             echo 'ERROR - Result count doesn\'t match expected count for test - ' . $usecase['name'] . ' ';
-            print_r($results);
             return false;
             }
         }
