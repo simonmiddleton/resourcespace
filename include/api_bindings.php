@@ -1386,7 +1386,8 @@ function api_create_resource_type_field(string $name, string $resource_types, in
         return [];
         }
 
-    $parse_rt_csv = function(string $RT): int|array
+    /** @var int|array $parse_rt_csv */
+    $parse_rt_csv = function(string $RT)
         {
         // Parse CSV to ordered list of integers
         $parse_input = parse_csv_to_list_of_type($RT, 'is_int_loose');
