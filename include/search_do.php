@@ -352,7 +352,12 @@ function do_search(
                 {
                 // Full text search
                 $fulltext_string = str_replace(FULLTEXT_SEARCH_QUOTES_PLACEHOLDER,"\"",substr($keyword,strlen(FULLTEXT_SEARCH_PREFIX)+2,-1));
-                
+                if(strpos($fulltext_string,"@") !== false) 
+                    {
+                    // There's an @ character in the fulltext search which InnoDB does not permit, so quote-wrap the search string 
+                    $fulltext_string = "'\"".$fulltext_string."\"'";
+                    }
+
                 $freetextunion = new PreparedStatementQuery();
                 $freetextunion->sql = " SELECT resource, [bit_or_condition] 1 AS score FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node WHERE MATCH(name) AGAINST (? IN BOOLEAN MODE)";
                 $freetextunion->parameters = ["s",$fulltext_string];
