@@ -24,6 +24,12 @@ if(!is_array($fielddata))
     exit();
     }
 
+if(!isset($fielddata['nodes']) || !is_array($fielddata['nodes']))
+    {
+    echo json_encode($results);
+    exit();
+    }
+
 foreach($fielddata['nodes'] as $node)
     {
     $trans = i18n_get_translated($node['name']);
