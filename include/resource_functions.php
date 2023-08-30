@@ -6833,11 +6833,12 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
 
     if(in_array("resource_type",$locked_fields) && $resource["resource_type"] != $lastresource["resource_type"])
         {
-        $resource["resource_type"] = $lastresource["resource_type"];
         if (!checkperm("XU" . $lastresource["resource_type"]))
             {
             update_resource_type($resource["ref"],$lastresource["resource_type"]);
+            apply_resource_default((int) $resource["resource_type"], (int) $lastresource["resource_type"], (int) $resource["ref"]);
             }
+        $resource["resource_type"] = $lastresource["resource_type"];
         }
 
     if(in_array("archive",$locked_fields) && $resource["archive"] != $lastresource["archive"])
@@ -7031,7 +7032,11 @@ function process_edit_form($ref, $resource)
             }
         else
             {
-            update_resource_type($ref,$resource_type);
+            update_resource_type($ref, $resource_type);
+            if (!$multiple && $upload_review_mode)
+                {
+                apply_resource_default((int) $resource["resource_type"], (int) $resource_type, (int) $ref);
+                }
             }
         }
     $resource=get_resource_data($ref,false); # Reload resource data.
@@ -9387,4 +9392,32 @@ function revert_resource_file($resource,$logentry,$createpreviews=true)
         create_previews($resource,false,$revert_ext);
         }
     return true;
+    }
+
+/**
+ * When changing resource type, new resource type specific fields may become available. This function will apply any resource default
+ * values for resource type specific fields that were not previously available (i.e. not containing user data). This is used by upload
+ * then edit mode after switching resource types and also when locking the resource type with save and next.
+ *
+ * @param  int   $old_resource_type   Original resource type.
+ * @param  int   $new_resource_type   Resource type being switched to.
+ * @param  int   $resource            Resource id.
+ * 
+ * @return void
+ */
+function apply_resource_default(int $old_resource_type, int $new_resource_type, int $resource) : void
+    {
+    $fields_for_old_resource_type = array_column(get_resource_type_fields($old_resource_type), 'ref');
+    $fields_for_new_resource_type = array_column(get_resource_type_fields($new_resource_type), 'ref');
+    $check_resource_default_fields = array_diff($fields_for_new_resource_type, $fields_for_old_resource_type);
+    if (count($check_resource_default_fields) > 0)
+        {
+        global $get_resource_data_cache;
+        if (isset($get_resource_data_cache[$resource]))
+            {
+            # update_field() calls get_resource_data() which needs to return the new resource type.
+            unset($get_resource_data_cache[$resource]);
+            }
+        set_resource_defaults($resource, $check_resource_default_fields);
+        }
     }
