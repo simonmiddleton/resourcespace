@@ -5068,8 +5068,11 @@ function cast_echo_to_string(callable $fn, array $args = []): string
 /**
  * Helper function to parse input to a list of a particular type.
  * 
+ * @example include/api_bindings.php Used in api_get_resource_type_fields() or api_create_resource_type_field()
+ * 
  * @param string $csv CSV of raw data
- * @param callable(string) $type Function parsing each CSV value as required by your context
+ * @param callable(string) $type Function checking each CSV item, as required by your context, to determine if it should
+ *                               be allowed in the result set
  */
 function parse_csv_to_list_of_type(string $csv, callable $type): array
     {
