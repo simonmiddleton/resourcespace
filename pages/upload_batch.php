@@ -637,6 +637,26 @@ if ($processupload)
             {
             # Standard upload of a new resource
             # create ref via copy_resource() or other method
+
+            // For upload_then_edit mode ONLY, set the resource type based on the extension. User
+            // can later change this at the edit stage
+            // IMPORTANT: Change resource type only if user has access to it
+            if($upload_then_edit && !$resource_type_force_selection) 
+                {
+                $resource_type_from_extension = get_resource_type_from_extension(
+                    pathinfo($upfilepath, PATHINFO_EXTENSION),
+                    $resource_type_extension_mapping,
+                    $resource_type_extension_mapping_default
+                );
+                // Only update the resource when resource_type permissions allow
+                if(!checkperm("XU{$resource_type_from_extension}") && in_array($resource_type_from_extension,array_column($all_resource_types,"ref")))
+                    {
+                    $resource_type = $resource_type_from_extension;
+                    // The resource type has been changed so clear the cached value
+                    $GLOBALS['get_resource_data_cache'] = array();
+                    }
+                }
+
             $modified_ref=hook("modifyuploadref");
             if ($modified_ref!="")
                 {
@@ -694,25 +714,6 @@ if ($processupload)
                     update_related_resource($relateto,$ref);
                     }
 
-                // For upload_then_edit mode ONLY, set the resource type based on the extension. User
-                // can later change this at the edit stage
-                // IMPORTANT: Change resource type only if user has access to it
-                if($upload_then_edit && !$resource_type_force_selection) 
-                    {
-                    $resource_type_from_extension = get_resource_type_from_extension(
-                        pathinfo($upfilepath, PATHINFO_EXTENSION),
-                        $resource_type_extension_mapping,
-                        $resource_type_extension_mapping_default
-                    );
-                    // Only update the resource when resource_type permissions allow
-                    if(!checkperm("XU{$resource_type_from_extension}") && in_array($resource_type_from_extension,array_column($all_resource_types,"ref")))
-                        {
-                        update_resource_type($ref, $resource_type_from_extension);
-                        // The resource type has been changed so clear the cached value
-                        $GLOBALS['get_resource_data_cache'] = array();
-                        }
-                    }
-            
                 if($upload_then_edit && $reset_date_upload_template)
                     {
                     // If extracting embedded metadata than expect the date to be overriden as it would be if
