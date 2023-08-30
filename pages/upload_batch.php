@@ -73,12 +73,6 @@ if($collection_add =='false' && $external_upload)
     }
 // External share support
 $k = getval('k','');
-$is_upload_share_active = (upload_share_active() !== false);
-if($is_upload_share_active && $terms_upload && !check_upload_terms($collection_add,$k))
-        {
-        error_alert($lang["mustaccept"],false);
-        exit();
-        }
 if (($k=="" || (!check_access_key_collection($collection_add,$k))) && !($tusupload && $tus_validated))
     {
     include "../include/authenticate.php";
@@ -88,6 +82,12 @@ if (($k=="" || (!check_access_key_collection($collection_add,$k))) && !($tusuplo
         }
     }
 
+$is_upload_share_active = (upload_share_active() !== false);
+if($is_upload_share_active && $terms_upload && !check_upload_terms($collection_add,$k))
+        {
+        error_alert($lang["mustaccept"],false);
+        exit();
+        }
 // Disable CSRF when someone is accessing an external upload share
 if ($k !== '' && $is_upload_share_active)
     {
