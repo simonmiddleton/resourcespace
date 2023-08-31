@@ -145,7 +145,6 @@ $lang["property-autocomplete_macro"]="Autoförslagsmakro";
 $lang["property-hide_when_uploading"]="Dölj vid överföring";
 $lang["property-hide_when_restricted"]="Dölj för användare med begränsad åtkomst";
 $lang["property-omit_when_copying"]="Utelämna vid kopiering";
-$lang["property-sync_with_field"]="Synkronisera med fält";
 $lang["information-copy_field"]="<a href=field_copy.php?ref=%ref>Kopiera fält</a>";
 $lang["property-display_condition"]="Visningsvillkor";
 $lang["information-display_condition"]="Visningsvillkor: Det här fältet visas endast om angivna villkor är uppfyllda. Samma format som för sökfilter för grupper används, det vill säga kortnamn=värde1|värde2, kortnamnA=giltigtalternativA;kortnamnB=giltigtalternativB1|giltigtalternativB2";
@@ -1622,7 +1621,6 @@ $lang["error-pageload"] = "Sidan kunde inte läsas in. Om du utförde en söknin
 
 $lang["copy-field"]="Kopiera fält";
 $lang["copy-to-resource-type"]="Kopiera till materialtyp";
-$lang["synchronise-changes-with-this-field"]="Synkronisera ändringar med detta fält";
 $lang["copy-completed"]="Kopieringen slutförd. Det nya fältet har nr ?.";
 
 $lang["nothing-to-display"]="Inget att visa.";

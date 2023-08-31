@@ -163,7 +163,6 @@ $lang["property-autocomplete_macro"]="Makro automatického dopĺňania";
 $lang["property-hide_when_uploading"]="Skryť pri nahrávaní";
 $lang["property-hide_when_restricted"]="Skryť, keď je obmedzený";
 $lang["property-omit_when_copying"]="Pri kopírovaní vynechať";
-$lang["property-sync_with_field"]="Synchronizovať s poľom";
 $lang["information-copy_field"]="<a href=field_copy.php?ref=%ref> Skopírovať pole </a>";
 $lang["property-display_condition"]="Podmienky zobrazenia";
 $lang["information-display_condition"]="Podmienky zobrazenia: toto pole sa zobrazí, iba ak sú splnené nasledujúce podmienky. Používa rovnaký formát ako filter skupinového vyhľadávania, tj shortname=value1|value2, shortnamea=validoptiona;shortnameb=validoptionb1|validoptionb2";
@@ -1871,7 +1870,6 @@ $lang["error-pageload"] = "Ľutujeme, pri načítaní tejto stránky sa vyskytla
 
 $lang["copy-field"]="Skopírovať pole";
 $lang["copy-to-resource-type"]="Kopírovať do zdroja typu";
-$lang["synchronise-changes-with-this-field"]="Synchronizujte zmeny s týmto poľom";
 $lang["copy-completed"]="Kópia bola dokončená. Nové pole má ID ?.";
 
 $lang["nothing-to-display"]="Nič na zobrazenie.";
