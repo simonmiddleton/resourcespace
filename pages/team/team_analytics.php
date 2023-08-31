@@ -13,10 +13,10 @@ $findtext=getval("findtext","");
 
 $delete=getval("delete","");
 if ($delete != "" && enforcePostRequest(false))
-	{
-	# Delete report
-	ps_query("delete from user_report where ref= ? and user= ?", ['i', $delete, 'i', $userref]);
-	}
+    {
+    # Delete report
+    ps_query("delete from user_report where ref= ? and user= ?", ['i', $delete, 'i', $userref]);
+    }
 
 include dirname(__FILE__)."/../../include/header.php";
 
@@ -29,11 +29,11 @@ $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
         'href'  => $baseurl_short . "pages/team/team_home.php",
-		'menu' =>  true
+        'menu' =>  true
     ),
     array(
         'title' => $lang["rse_analytics"],
-		'help'  => 'resourceadmin/analytics'
+        'help'  => 'resourceadmin/analytics'
     )
 );
 
@@ -41,7 +41,7 @@ renderBreadcrumbs($links_trail);
 
 $search_sql="";
 $params = ['i', $userref];
-if ($findtext!="") 
+if ($findtext!="")
     {
     $search_sql="and name like CONCAT('%', ? ,'%')";
     $params[] = 's'; $params[] = $findtext;
@@ -77,19 +77,19 @@ $jumpcount=1;
 
 <?php
 for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
-	{
-	?>
-	<tr>
-	<td><div class="ListTitle"><a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"] ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($reports[$n]["name"],$findtext,true);?></a></div></td>
-	<td>
-	<div class="ListTools">
-		<a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
-		<a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]?>';document.getElementById('reportsform').submit();} return false;"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?></a>
-		</div>
-	</td>
-	</tr>
-	<?php
-	}
+    {
+    ?>
+    <tr>
+    <td><div class="ListTitle"><a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"] ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($reports[$n]["name"],$findtext,true);?></a></div></td>
+    <td>
+    <div class="ListTools">
+        <a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
+        <a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]?>';document.getElementById('reportsform').submit();} return false;"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?></a>
+        </div>
+    </td>
+    </tr>
+    <?php
+    }
 ?>
 
 </table>
@@ -98,31 +98,31 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
 </div>
 
 <div class="BasicsBox">
-	<form method="post" onSubmit="return CentralSpacePost(this,true);">
+    <form method="post" onSubmit="return CentralSpacePost(this,true);">
         <?php generateFormToken("team_analytics_search"); ?>
-		<div class="Question">
-			<label for="find"><?php echo $lang["find"]?><br/></label>
-			<div class="tickset">
-			 <div class="Inline">			
-            <input 
-                type=text 
-                placeholder="<?php echo $lang['searchbytext']?>" 
-                name="findtext" 
-                id="findtext" 
-                value="<?php echo escape_quoted_data($findtext)?>" 
-                maxlength="100" 
-                class="shrtwidth" 
+        <div class="Question">
+            <label for="find"><?php echo htmlspecialchars($lang["find"]) ?><br/></label>
+            <div class="tickset">
+             <div class="Inline">
+            <input
+                type=text
+                placeholder="<?php echo escape_quoted_data($lang['searchbytext'])?>"
+                name="findtext"
+                id="findtext"
+                value="<?php echo escape_quoted_data($findtext)?>"
+                maxlength="100"
+                class="shrtwidth"
             />
-			
-			<input type="button" value="<?php echo $lang['clearbutton']?>" onClick="$('findtext').value='';form.submit();" />
-			<input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />
-			 
-			</div>
-			</div>
-			<div class="clearerleft"> 
-			</div>
-		</div>
-	</form>
+
+            <input type="button" value="<?php echo $lang['clearbutton']?>" onClick="$('findtext').value='';form.submit();" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />
+
+            </div>
+            </div>
+            <div class="clearerleft">
+            </div>
+        </div>
+    </form>
 
 </div>
 
