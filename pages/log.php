@@ -216,7 +216,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
         {
         if(isset($download_usage_options[$log[$n]["usageoption"]]) && $log[$n]["usageoption"] != -1 && $log[$n]["usageoption"] >= 0)
             {
-            $logentry["usage"] = nl2br(htmlspecialchars($download_usage_options[$log[$n]["usageoption"]]));
+            $logentry["usage"] = nl2br(htmlspecialchars(i18n_get_translated($download_usage_options[$log[$n]["usageoption"]])));
             }
         $logentry["usagemedium"]  = htmlspecialchars($log[$n]["notes"]);
         $tabledata["data"][] = $logentry;        
