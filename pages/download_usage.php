@@ -153,7 +153,7 @@ if(isset($download_usage_prevent_options))
                     {
                     $selected = ($n === $usage) ? "selected" : "";
                     ?>
-                    <option <?php echo $selected ?> value="<?php echo $n; ?>"><?php echo htmlspecialchars($download_usage_options[$n]) ?></option>
+                    <option <?php echo $selected ?> value="<?php echo $n; ?>"><?php echo htmlspecialchars(i18n_get_translated($download_usage_options[$n])) ?></option>
                     <?php
                     } ?>
             </select>

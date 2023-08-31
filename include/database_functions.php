@@ -276,12 +276,12 @@ function sql_connect()
         # Group concat limit increased to support option based metadata with more realistic limit for option entries
         # Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)
         db_set_connection_mode($db_connection_mode);
-        ps_query("SET SESSION group_concat_max_len = 32767", [], false, -1, false, 0); 
+        ps_query("SET SESSION group_concat_max_len = 32767", [], '', -1, false, 0); 
 
         if ($mysql_force_strict_mode)    
             {
             db_set_connection_mode($db_connection_mode);
-            ps_query("SET SESSION sql_mode='STRICT_ALL_TABLES'", [], false, -1, false, 0);
+            ps_query("SET SESSION sql_mode='STRICT_ALL_TABLES'", [], '', -1, false, 0);
             continue;
             }
 
@@ -296,7 +296,7 @@ function sql_connect()
             $sql_mode_string_new = implode (",", $sql_mode_array_new);
 
             db_set_connection_mode($db_connection_mode);
-            ps_query("SET SESSION sql_mode = '$sql_mode_string_new'", [], false, -1, false, 0);
+            ps_query("SET SESSION sql_mode = '$sql_mode_string_new'", [], '', -1, false, 0);
             }
         }
 
@@ -925,7 +925,7 @@ function CheckDBStruct($path,$verbose=false)
 	
     # Tables first.
     # Load existing tables list
-    $ts=ps_query("show tables",[],false,-1,false);
+    $ts = ps_query("show tables", [], '', -1, false);
     $tables=array();
     for ($n=0;$n<count($ts);$n++)
         {
@@ -1008,7 +1008,7 @@ function CheckDBStruct($path,$verbose=false)
                 # Verbose mode, used for better output from the test script.
                 if ($verbose) {echo "$table ";ob_flush();}
 
-                ps_query("create table $table ($sql)",[],false,-1,false);
+                ps_query("create table $table ($sql)", [], '', -1, false);
 
                 # Add initial data
                 $data=str_replace("table_","data_",$file);
@@ -1043,7 +1043,7 @@ function CheckDBStruct($path,$verbose=false)
                         ps_query(
                             "insert into `$table` values (" . ps_param_insert(count($row)) . ")",
                             $sql_params,
-                            false,
+                            '',
                             -1,
                             false
                         );
@@ -1055,7 +1055,7 @@ function CheckDBStruct($path,$verbose=false)
                 # Table already exists, so check all columns exist
 
                 # Load existing table definition
-                $existing=ps_query("describe $table",[],false,-1,false);
+                $existing=ps_query("describe $table", [], '', -1, false);
 
                 ##########
                 # Copy needed resource_data into resource for search displays
@@ -1077,7 +1077,7 @@ function CheckDBStruct($path,$verbose=false)
                             # Add this column.
                             $sql="alter table $table add column ";
                             $sql.="field".$joins[$m] . " VARCHAR(" . $resource_field_column_limit . ")";
-                            ps_query($sql,[],false,-1,false);
+                            ps_query($sql, [], '', -1, false);
                             }
                         }
                     }
@@ -1136,7 +1136,7 @@ function CheckDBStruct($path,$verbose=false)
                                 if ($col[4]!="") {$sql.=" default " . $col[4];}
                                 if ($col[3]=="PRI") {$sql.=" primary key";}
                                 if ($col[5]=="auto_increment") {$sql.=" auto_increment ";}
-                                ps_query($sql,[],false,-1,false);
+                                ps_query($sql, [], '', -1, false);
                                 }	
                             }
                         }
@@ -1145,7 +1145,7 @@ function CheckDBStruct($path,$verbose=false)
 
             # Check all indices exist
             # Load existing indexes
-            $existing=ps_query("show index from $table",[],false,-1,false);
+            $existing = ps_query("show index from $table", [], '', -1, false);
 
             $file=str_replace("table_","index_",$file);
             if (file_exists($path . "/" . $file))
@@ -1180,7 +1180,7 @@ function CheckDBStruct($path,$verbose=false)
                             }
 
                         $sql="CREATE " . ($col[10]=="FULLTEXT" ? "FULLTEXT" : "") . " INDEX " . $col[2] . " ON $table (" . join(",",$cols) . ")";
-                        ps_query($sql,[],false,-1,false);
+                        ps_query($sql, [], '', -1, false);
                         $done[]=$col[2];
                         }
                     }
@@ -1244,7 +1244,7 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, in
     {
     global $cache_search_count;
     $limit = sql_limit($offset, $rows);
-    $data = ps_query("{$query->sql} {$limit}", $query->parameters);    
+    $data = ps_query("{$query->sql} {$limit}", $query->parameters);
     $total_query = is_a($countquery,"PreparedStatementQuery") ? $countquery : $query;
     $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$total_query->sql}) AS count_select", $total_query->parameters, 0, ($cachecount && $cache_search_count) ? "searchcount" : "");
     $datacount = count($data);
