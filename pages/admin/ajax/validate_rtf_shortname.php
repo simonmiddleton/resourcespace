@@ -14,16 +14,6 @@ $new_shortname = getval("new_shortname", "");
 $rtf_data = get_resource_type_field($ref);
 $duplicate = (boolean) ps_value("SELECT count(ref) AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$new_shortname),0, "schema");
 
-$is_synced_field = (
-    (int) $rtf_data["sync_field"] > 0
-    && (bool) ps_value("SELECT count(ref) AS `value` FROM resource_type_field WHERE ref = ? OR sync_field = ?", array("i",$rtf_data["sync_field"],"i",$rtf_data["ref"]), false, "schema")
-);
-
-$return["data"]["valid"] = true;
-if($rtf_data["name"] != $new_shortname && $duplicate && !$is_synced_field)
-    {
-    $return["data"]["valid"] = false;
-    }
-
+$return["data"]["valid"] = $rtf_data["name"] != $new_shortname && !$duplicate;
 echo json_encode($return);
 exit();
