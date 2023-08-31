@@ -34,9 +34,9 @@
 			// field does probably not exist: create and try again
 			ps_query("INSERT INTO `resource_type_field` (`name`, `title`, `type`, `order_by`, `keywords_index`, `partial_index`, `resource_type`, `resource_column`, `display_field`, `use_for_similar`, `iptc_equiv`,
 			`display_template`, `tab_name`, `required`, `smart_theme_name`, `exiftool_field`, `advanced_search`, `simple_search`, `help_text`, `display_as_dropdown`, `external_user_access`, `autocomplete_macro`, `hide_when_uploading`, `hide_when_restricted`,
-			`value_filter`, exiftool_filter, `omit_when_copying`, `tooltip_text`, `regexp_filter`, `sync_field`, `display_condition`)
+			`value_filter`, exiftool_filter, `omit_when_copying`, `tooltip_text`, `regexp_filter`, `display_condition`)
 			VALUES ('doi', 'DOI', '0', '130', '0', '0', '0', NULL, '1', '1', NULL, NULL, NULL, '0', NULL, 'XMP-prism:doi', '1', '0',
-			'~de:Bezeichner eintragen, wie z.B. 10.1000/182 (für DOI-Handbuch). Ein Digital Object Identifier ist eine eindeutige und dauerhafte Bezeichnung einer digitalen Ressource (z. B. Forschungsdaten). Es ist eine Referenz, die durch doi.org aufgelöst werden kann.~en:Insert identifier, e.g., 10.1000/182 (for DOI handbook). A digital object identifier (DOI) is a serial code used to uniquely identify objects. It is resolveable by doi.org.', '0', '1', NULL, '0', '0', NULL, NULL, '0', NULL, NULL, NULL, NULL);");
+			'~de:Bezeichner eintragen, wie z.B. 10.1000/182 (für DOI-Handbuch). Ein Digital Object Identifier ist eine eindeutige und dauerhafte Bezeichnung einer digitalen Ressource (z. B. Forschungsdaten). Es ist eine Referenz, die durch doi.org aufgelöst werden kann.~en:Insert identifier, e.g., 10.1000/182 (for DOI handbook). A digital object identifier (DOI) is a serial code used to uniquely identify objects. It is resolveable by doi.org.', '0', '1', NULL, '0', '0', NULL, NULL, '0', NULL, NULL, NULL);");
 			log_activity('DOI field created',LOG_CODE_CREATED,null,'resource_type_field','title','DOI',null,'');
 			update_field($ref, $doi_field_shortname, $doi);
 		}
