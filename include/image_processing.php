@@ -1980,10 +1980,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         if($crop)
                             {
                             // Add crop argument for tiling
-                            $runcommand .= " -crop " . escapeshellarg($cropw) . "x" . escapeshellarg($croph) . "+" . escapeshellarg($cropx) . "+" . escapeshellarg($cropy);
+                            $runcommand .= " -crop " . escapeshellarg($cropw . "x" . $croph . "+" . $cropx . "+" . $cropy);
                             }
                         
-                        $runcommand .= " -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . $addcheckbdafter . escapeshellarg($path);
+                        $runcommand .= " -resize " . escapeshellarg($tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?"":">")) . " " . $addcheckbdafter . escapeshellarg($path);
                         if(!hook("imagepskipthumb"))
                             {
                             $command_list.=$runcommand."\n";
