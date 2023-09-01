@@ -2328,8 +2328,8 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             if($new_created_by > 0 && $new_created_by != $created_by)
                 {
                 ps_query("UPDATE resource SET created_by=? WHERE ref=?",array("i",$new_created_by,"i",$ref));
-                $olduser=get_user($created_by,true);
-                $newuser=get_user($new_created_by,true);
+                $olduser=get_user($created_by);
+                $newuser=get_user($new_created_by);
                 resource_log($ref,LOG_CODE_CREATED_BY_CHANGED,0,"",$created_by . " (" . ($olduser["fullname"]=="" ? $olduser["username"] : $olduser["fullname"])  . ")",$new_created_by . " (" . ($newuser["fullname"]=="" ? $newuser["username"] : $newuser["fullname"])  . ")");
                 $successfully_edited_resources[] = $ref;
                 }
@@ -4667,7 +4667,7 @@ function write_metadata($path, $ref, $uniqid="")
                             }
                             if ($strip_rich_field_tags)
                             {
-                                $command.= escapeshellarg("-" . $group_tag . "=" . trim(strip_tags(i18n_get_translated($writevalue,false)))) . " ";
+                                $command.= escapeshellarg("-" . $group_tag . "=" . trim(strip_tags(i18n_get_translated($writevalue)))) . " ";
                             }
                             else
                             {

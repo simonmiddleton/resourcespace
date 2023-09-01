@@ -160,7 +160,7 @@ for ($n=0;$n<count($result);$n++)
 	
 	$imgurl="";
 	$imgurl=get_resource_path($result[$n]['ref'],true,"col",false);
-	if ($result[$n]['has_image']!=1){ $imgurl=$baseurl."/gfx/".get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true,false,true);} 
+	if ($result[$n]['has_image']!=1){ $imgurl=$baseurl."/gfx/".get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true);} 
 	else{$imgurl=get_resource_path($result[$n]['ref'],false,"col",false);}
 	$add_desc="";
 	foreach ($rss_fields as $rssfield)

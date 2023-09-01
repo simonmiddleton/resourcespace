@@ -106,7 +106,7 @@ if(!hook('iconcollect') && $pagename!="collections")
             }
 
         $onclick = 'toggle_addremove_to_collection_icon(this);';
-        echo add_to_collection_link($ref, $search, $onclick, '', implode(' ', array_merge(['fa'], $col_link_class)), $basket) . '</a>';
+        echo add_to_collection_link($ref, $search, $onclick, '', implode(' ', array_merge(['fa'], $col_link_class))) . '</a>';
         }
     } # end hook iconcollect
     ?>

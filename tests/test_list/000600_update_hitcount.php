@@ -9,7 +9,7 @@ update_hitcount($resourcehit);
 update_hitcount($resourcehit);
 
 # Transfer hit count data to live.
-copy_hitcount_to_live($resourcehit);
+copy_hitcount_to_live();
 
 # Read the resource data.
 $data=get_resource_data($resourcehit,false); # Fetch without caching.
