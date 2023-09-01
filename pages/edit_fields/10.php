@@ -1,5 +1,5 @@
 <?php
-$valid_date = validateDatetime($value, 'Y-m-d') || empty($value);
+$valid_date = validateDatetime($value, 'Y-m-d') || trim($value) === '';
 if ($GLOBALS['use_native_input_for_date_field'] && $valid_date)
     {
     $onchange_attr = $edit_autosave ? sprintf('onchange="AutoSave(%s);"', (int) $field['ref']) : '';
