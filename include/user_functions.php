@@ -435,7 +435,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         return $return_sql;
         }
 
-    $r = ps_query($query, $sql_params, false, $fetchrows);
+    $r = ps_query($query, $sql_params, '', $fetchrows);
 
     # Translates group names in the newly created array.
     for ($n = 0;$n<count($r);$n++)
@@ -471,7 +471,7 @@ function get_users_with_permission($permission)
                    LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref 
                    WHERE (g.ref IN (" . ps_param_insert(count($matched)) . ") OR (find_in_set('permissions', g.inherit_flags) > 0 
                    AND g.parent IN (" . ps_param_insert(count($matched)) . "))) ORDER BY username",
-                   array_merge(ps_param_fill($matched, "i"), ps_param_fill($matched, "i")), false);
+                   array_merge(ps_param_fill($matched, "i"), ps_param_fill($matched, "i")));
 
     # Translates group names in the newly created array.
     $return = array();
@@ -491,7 +491,7 @@ function get_users_with_permission($permission)
  */
 function get_user_by_email($email)
     {
-    $r = ps_query("SELECT " . columns_in('user', 'u') . ", g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref WHERE u.email LIKE ? ORDER BY username", array("s", "%".$email."%"), false);
+    $r = ps_query("SELECT " . columns_in('user', 'u') . ", g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref WHERE u.email LIKE ? ORDER BY username", array("s", "%".$email."%"));
 
     # Translates group names in the newly created array.
     $return = array();
@@ -1477,7 +1477,7 @@ function get_user_log($user, $fetchrows=-1)
     {
     global $view_title_field;
     # Executes query.
-    $r = ps_query("select r.ref resourceid, r.field" . (int) $view_title_field . " resourcetitle, l.date, l.type, f.title, l.purchase_size, l.purchase_price, l.notes, l.diff from resource_log l left outer join resource r on l.resource = r.ref left outer join resource_type_field f on f.ref = l.resource_type_field where l.user = ? order by l.date desc", array("i", $user), false, $fetchrows);
+    $r = ps_query("select r.ref resourceid, r.field" . (int) $view_title_field . " resourcetitle, l.date, l.type, f.title, l.purchase_size, l.purchase_price, l.notes, l.diff from resource_log l left outer join resource r on l.resource = r.ref left outer join resource_type_field f on f.ref = l.resource_type_field where l.user = ? order by l.date desc", array("i", $user), '', $fetchrows);
 
     # Translates field titles in the newly created array.
     $return = array();
