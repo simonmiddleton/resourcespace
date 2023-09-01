@@ -275,7 +275,7 @@ function get_config_options($user_id, array &$returned_options)
         $params = ['i', $user_id];
         }
 
-    $query = 'SELECT parameter, `value` FROM user_preferences WHERE ' . $sql;
+    $query = 'SELECT parameter, `value` FROM user_preferences WHERE ' . $sql . ' and `value` != \'RS_UNSET_CONFIG\'';
     $config_options = ps_query($query, $params,"preferences");
 
     if(empty($config_options))
@@ -490,16 +490,26 @@ function config_add_hidden_input(string $cf_var_name, string $cf_var_value = '')
 * @param string $form_action URL where the form should post to
 * @param int    $width       Wdidth of the input file HTML tag. Default - 420
 */
-function config_file_input($name, $label, $current, $form_action, $width = 420, $valid_extensions = array())
+function config_file_input($name, $label, $current, $form_action, $width = 420, $valid_extensions = array(), $file_preview = false)
     {
     global $lang,$storagedir;
     
     if($current !=='')
-		{ 
-		$missing_file = str_replace('[storage_url]', $storagedir, $current);
-		$pathparts=explode("/",$current);
-		}
-		
+        {
+        $origin_in_config = (substr($current, 0, 13) != '[storage_url]');
+        if ($origin_in_config)
+            {
+            # Current value may have originated in config.php - file uploader to consider this unset
+            # to enable override of config.php by uploading a file.
+            $current = '';
+            }
+        else
+            {
+            $missing_file = str_replace('[storage_url]', $storagedir, $current);
+            $pathparts=explode("/",$current);
+            }
+        }
+
     ?>
     <div class="Question" id="question_<?php echo $name; ?>">
         <form method="POST" action="<?php echo $form_action; ?>" enctype="multipart/form-data">
@@ -548,6 +558,15 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             generateFormToken($name);
             ?>
         </form>
+        <?php
+        if ($file_preview && $current !== "")
+            {
+            global $baseurl; ?>
+            <div id="preview_<?php echo $name; ?>">
+            <label></label>
+            <div><img src="<?php echo $baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current) . '?v=' . date("s") ?>" style="max-height: 200px; max-width: 200px;"alt="<?php echo escape_quoted_data($lang["preview"] . ' - ' . $label) ?>"></div>
+            </div>
+            <?php } ?>
         <div class="clearerleft"></div>
     </div>
     <?php
@@ -632,9 +651,9 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
 * @param int     $width              Width of the input file HTML tag. Default - 420
 * @param array   $valid_extensions   Optional array of file extensions that will be validated during upload, see config_process_file_input()
 */
-function config_add_file_input($config_var, $label, $form_action, $width = 420, $valid_extensions = array())
+function config_add_file_input($config_var, $label, $form_action, $width = 420, $valid_extensions = array(), $file_preview = false)
     {   
-    return array('file_input', $config_var, $label, $form_action, $width, $valid_extensions);
+    return array('file_input', $config_var, $label, $form_action, $width, $valid_extensions, $file_preview);
     }
 
 
@@ -1084,7 +1103,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                     unlink($delete_filename);
                     hook("configdeletefilesuccess",'',array($delete_filename));
                     }
-                set_config_option(null, $config_name, '');
+                set_config_option(null, $config_name, 'RS_UNSET_CONFIG');
                 $redirect = true;
                 }
             }
@@ -1170,7 +1189,7 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'file_input':
-                config_file_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                config_file_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6]);
                 break;
 
             case 'boolean_select':

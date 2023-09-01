@@ -155,6 +155,16 @@ $page_def[] = config_add_file_input(
     $baseurl . '/pages/admin/admin_system_config.php',
     420
 );
+
+$page_def[] = config_add_file_input(
+    'watermark',
+    $lang['wartermark_label'],
+    $baseurl . '/pages/admin/admin_system_config.php',
+    420,
+    array('png'),
+    true
+);
+
 $page_def[] = config_add_single_select(
     'header_size',
     $lang['userpreference_headersize'],

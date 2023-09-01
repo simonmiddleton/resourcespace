@@ -2024,8 +2024,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,'',$alternative);
                     if (file_exists($wmpath)) {unlink($wmpath);}
                     
-                    $watermarkreal=dirname(__FILE__) ."/../" . $watermark;
-                    
                     if($imagemagick_mpr)
                         {
                         $mpr_parts['wmpath']=$wmpath;
@@ -2033,13 +2031,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     
                     if(!isset($watermark_single_image))
                         {
-                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
+                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . "\">\" -tile ".escapeshellarg($watermark)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
                         }
                     
                     // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
                     if ( in_array($extension,array("png","gif","tif","tiff")) )
                         {
-                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . ' ' . $profile . " " . $flatten . ' -quality ' . $imagemagick_quality ." -tile ".escapeshellarg($watermarkreal)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
+                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . ' ' . $profile . " " . $flatten . ' -quality ' . $imagemagick_quality ." -tile ".escapeshellarg($watermark)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
                         }
 
                     // Generate the command for a single watermark instead of a tiled one
@@ -2080,7 +2078,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             }
 
                         // Get watermark dimensions
-                        list($wmw, $wmh) = getFileDimensions($identify_fullpath, '', $watermarkreal, 'jpeg');
+                        list($wmw, $wmh) = getFileDimensions($identify_fullpath, '', $watermark, 'jpeg');
                         $wm_scale = $watermark_single_image['scale'];
 
                         // Landscape
@@ -2107,7 +2105,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
                             $convert_fullpath,
                             escapeshellarg($file),
-                            escapeshellarg($watermarkreal),
+                            escapeshellarg($watermark),
                             escapeshellarg($watermark_single_image['position']),
                             escapeshellarg("{$wm_scaled_width}x{$wm_scaled_height}+0+0"),
                             escapeshellarg("{$tw}x{$th}" . ($previews_allow_enlarge && $id != "hpr" ? "" : ">")),
@@ -2294,7 +2292,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $TILEROLL=$TILESIZE/4;
                         
                         // let's create the watermark and save as an mpr
-                        $command.=" \( " . escapeshellarg($watermarkreal) . " -resize x" . escapeshellarg($TILESIZE) . " -background none -write mpr:" . $ref . " +delete \)";
+                        $command.=" \( " . escapeshellarg($watermark) . " -resize x" . escapeshellarg($TILESIZE) . " -background none -write mpr:" . $ref . " +delete \)";
                         $command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escapeshellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
                         $mpr_init_write=true;
                         $mpr_wm_created=true;
