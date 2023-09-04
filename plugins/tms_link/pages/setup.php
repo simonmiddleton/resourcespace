@@ -46,6 +46,7 @@ $page_def[] = config_add_text_input('tms_link_mediatypeid',$lang['tms_link_media
 $page_def[] = config_add_text_input('tms_link_formatid',$lang['tms_link_formatid']);
 $page_def[] = config_add_text_input('tms_link_colordepthid',$lang['tms_link_colordepthid']);
 $page_def[] = config_add_text_input('tms_link_media_path',$lang['tms_link_media_path']);
+$page_def[] = config_add_text_input('tms_link_mediapaths_resource_reference_column',$lang['tms_link_mediapaths_resource_reference_column']);
 
 $page_def[] = config_add_section_header($lang['tms_link_modules_mappings']);
 $tms_modules_mappings_html = "

@@ -39,6 +39,8 @@ $tms_link_field_mappings_saved=base64_encode(serialize(array()));
 $tms_link_text_columns=array("ObjectStatus","Department","Classification","Curator","Cataloguer","ObjectName","SubjectKeywords","Creators","Titles","StylePeriod","CulturalContext","Medium","Geography","CreditLine","Description","RelatedObjects","Inscription","Provenance","CurrLocDisplay","Copyright","Dimensions","Restrictions","CreditLineRepro","ObjRightsType");
 $tms_link_numeric_columns=array("ObjectID","ObjectNumber","CuratorRevISODate","Dated","RowChecksum");
 
+$tms_link_mediapaths_resource_reference_column = ""; # Column to store resource ID in for TMS media ID creation
+
 
 $tms_link_modules_saved_mappings = base64_encode(
     serialize(
