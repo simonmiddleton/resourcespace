@@ -3105,6 +3105,7 @@ $download_filename_field = 8; # Set this to the $view_title_field value
 $prefix_filename_string = "";
 $prefix_resource_id_to_filename = false;
 */
+$auto_generated_resource_title_format = '';
 
 // When uncommented the extensions listed will be removed from any metadata string at the point it is used in generating a download filename. 
 // This will not alter the stored metadata value but provides an option to strip from it given file extensions. 
@@ -3114,8 +3115,6 @@ $prefix_resource_id_to_filename = false;
 //   	'jpeg',
 //   	'tif',
 //   	'png');
-
-$auto_generated_resource_title_format = '';
 
 // List of extensions for which ResourceSpace should only generate the internal preview sizes.
 $non_image_types = array();
