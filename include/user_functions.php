@@ -1281,6 +1281,7 @@ function new_user($newuser, $usergroup = 0)
 function get_active_users()
     {
     global $usergroup;
+    // Establish which user groups the supplied user group acts as an approver for
     $approver_groups = get_approver_usergroups($usergroup);
     $sql = "where logged_in = 1 and unix_timestamp(now()) - unix_timestamp(last_active) < (3600*2)";
     $sql_params = array();
@@ -1297,24 +1298,11 @@ function get_active_users()
             $sql_params = array("i", $usergroup);
             }
         }
-
-    // Return users in both user's user group and children groups
-    elseif ((checkperm("U") || count($approver_groups) > 0))
-        {
-        if (count($approver_groups) > 0)
-            {
-            $sql .= " and (g.ref = ? OR find_in_set(?, g.parent) or usergroup in (" . ps_param_insert(count($approver_groups)) . "))";
-            $sql_params = array_merge(array("i", $usergroup, "i", $usergroup), ps_param_fill($approver_groups,"i"));
-            }
-        else
-            {
-            $sql .= " and (g.ref = ? OR find_in_set(?, g.parent))";
-            $sql_params = array("i", $usergroup, "i", $usergroup);
-            }
-        }
     
     # Returns a list of all active users, i.e. users still logged on with a last-active time within the last 2 hours.
-    return ps_query("select u.ref, u.username, round((unix_timestamp(now()) - unix_timestamp(u.last_active)) / 60, 0) t from user u left outer join usergroup g on u.usergroup = g.ref $sql order by t;", $sql_params);
+    return ps_query("SELECT u.ref, u.username, round((unix_timestamp(now()) - unix_timestamp(u.last_active)) / 60, 0) t 
+                    from user u left outer join usergroup g on u.usergroup = g.ref 
+                    $sql order by t;", $sql_params);
     }
 
 /**
