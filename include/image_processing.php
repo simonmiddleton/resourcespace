@@ -772,7 +772,6 @@ function extract_exif_comment($ref,$extension="")
                         
                         # First fetch all options in all languages
                         $options=trim_array(explode(NODE_NAME_STRING_SEPARATOR,strtolower($read_from[$i]["options"])));
-                        for ($n=0;$n<count($options);$n++)  {$options[$n]=$options[$n];}
 
                         # If not in the options list, do not read this value
                         $s=trim_array(explode(",",$value));

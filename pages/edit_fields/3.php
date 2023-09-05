@@ -7,11 +7,6 @@
 if(!isset($selected_nodes))
     {
     $selected_nodes = array();
-
-    if(isset($searched_nodes) && is_array($selected_nodes))
-        {
-        $selected_nodes = $selected_nodes;
-        }
     }
 
 if((bool) $field['automatic_nodes_ordering'])
