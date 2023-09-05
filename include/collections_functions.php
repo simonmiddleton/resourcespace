@@ -171,7 +171,7 @@ function get_user_collections($user,$find="",$order_by="name",$sort="ASC",$fetch
         $keyparams
     );
 
-    $return = ps_query($query,$queryparams);
+    $return = ps_query($query,$queryparams,'collection_access');
 
     if ($order_by=="name")
         {
@@ -1277,6 +1277,7 @@ function add_collection($user,$collection)
 	remove_collection($user,$collection);
 	ps_query("insert into user_collection(user,collection) values (?,?)",array("i",$user,"i",$collection));
     clear_query_cache('col_total_ref_count_w_perm');
+    clear_query_cache('collection_access');
 	collection_log($collection,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, ps_value ("select username as value from user where ref = ?",array("i",$user),""));
 
     return true;
@@ -1652,6 +1653,7 @@ function save_collection($ref, $coldata=array())
         # log this only if a user is being added
         if($coldata["users"]!="")
             {
+            clear_query_cache('collection_access');
             collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, join(", ",$ulist));
             }
         
@@ -1700,6 +1702,7 @@ function save_collection($ref, $coldata=array())
                     }
                 }
             #log this
+            clear_query_cache('collection_access');
             collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, $groupnames);
             }
         }
@@ -2036,6 +2039,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                     }
                 
                 #log this
+                clear_query_cache('collection_access');
                 collection_log($reflist[$nx1], LOG_CODE_COLLECTION_SHARED_COLLECTION, 0, ps_value ("select username as value from user where ref = ?", array("i", $urefs[$nx2]), ""));
                 }
             }
