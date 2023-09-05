@@ -872,7 +872,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $val = getval("field_{$fields[$n]['ref']}", '');
                         if($val !== '' && !validateDatetime($val, 'Y-m-d'))
                             {
-                            $errors[$fields[$n]['ref']] = $val;
+                            $errors[$fields[$n]['ref']] = $lang['error_invalid_date'] . ' : ' . $val;
                             continue;
                             }
                         }
