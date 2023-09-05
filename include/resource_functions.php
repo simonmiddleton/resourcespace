@@ -6061,7 +6061,7 @@ function update_disk_usage($resource)
 		{
 		if ($f!=".." && $f!=".")
 			{
-			$s=filesize_unlimited($dir . "/" .$f);
+            $s=(int) filesize_unlimited($dir . "/" .$f);
 			$total+=$s;
 			}
 		}
