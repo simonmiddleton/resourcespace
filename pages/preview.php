@@ -287,7 +287,7 @@ if (!file_exists($video_preview_file) || $block_video_playback)
     $video_preview_file=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative);
     $block_video_playback = resource_has_access_denied_by_RT_size($resource['resource_type'], '');
     }
-if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && file_exists($video_preview_file) && !$block_video_playback && (strpos(strtolower($video_preview_file),".".$ffmpeg_preview_extension)!==false))
+if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && file_exists($video_preview_file) && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre') && !$block_video_playback && (strpos(strtolower($video_preview_file),".".$ffmpeg_preview_extension)!==false))
 	{
 	# Include the video player if a video preview exists for this resource.
 	$download_multisize=false;

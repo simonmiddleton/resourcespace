@@ -352,7 +352,7 @@ if(isset($resource["field".$view_title_field]))
     <div class="RecordPanel RecordPanelLarge">
         <div class="RecordResource">
         <?php
-        if ((!(isset($resource["is_transcoding"]) && $resource["is_transcoding"]!=0) && file_exists($video_preview_file)))
+        if ((!(isset($resource["is_transcoding"]) && $resource["is_transcoding"]!=0) && file_exists($video_preview_file)) && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre'))
             {
             // Include the player if a video preview file exists for this resource.
             ?>
