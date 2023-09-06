@@ -4858,6 +4858,20 @@ function try_unlink($deletefile)
     return $deleted;
     }
 
+function try_getimagesize(string $filename, &$image_info = NULL)
+    {
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        $return = getimagesize($filename,$image_info);
+        }
+    catch (Throwable $e)
+        {
+        $return = false;
+        }
+    unset($GLOBALS["use_error_exception"]);
+    return $return;
+    }
 
 /**
  * Check filestore folder browseability.
