@@ -158,6 +158,7 @@ if(!file_exists($org))
 $imgactions = array();
 // Transformations must be carried out in the order the user performed them
 $tfactions = getval("tfactions","");
+debug(sprintf('[transform][pages/crop] $tfactions = %s ', $tfactions));
 $imgactions["tfactions"] = explode(",",$tfactions);
 
 $imgactions["quality"] = getval("quality",100,TRUE);
@@ -227,19 +228,6 @@ $terms_url = $baseurl_short."pages/terms.php?ref=".$ref;
 if ($saveaction != '' && enforcePostRequest(false))
     {
     debug("[transform][pages/crop] save action triggered - $saveaction");
-    $original_rotation = get_image_orientation($originalpath);
-    $preview_rotation  = get_image_orientation($crop_pre_file);
-    
-    $temp_original_file = false;
-    if($original_rotation !== $preview_rotation)
-        {
-        $tmp_path = get_temp_dir(false,'') . "/transform_temp_rotated_original.jpg";
-        copy($originalpath, $tmp_path);
-        AutoRotateImage($tmp_path);
-        $originalpath = $tmp_path;
-        $temp_original_file = true;
-        }
-    
     $imgactions["repage"] = $cropper_use_repage;
 
     // Get values from jcrop selection
@@ -331,10 +319,6 @@ if ($saveaction != '' && enforcePostRequest(false))
 
     // Perform the actual transformation
     $transformed = transform_file($originalpath, $newpath, $imgactions);
-    if($temp_original_file === true)
-        {
-        unlink($tmp_path);
-        }
 
     if($transformed)
         {
@@ -822,6 +806,13 @@ renderBreadcrumbs($links_trail);
                     flippedy = true;
                     }
                 }
+            else if(action == 'correct-image-orientation')
+                {
+                tfactions.push('cio'); 
+                imgheight = jQuery('#cropimage').height();
+                imgwidth = jQuery('#cropimage').width();
+                }
+
             // Update form input
             jQuery("#tfactions").val(tfactions.join());
             var crop_data = {
@@ -1103,6 +1094,11 @@ renderBreadcrumbs($links_trail);
         "action"    => "jQuery('.imagetools_actions').hide();jQuery('#croptools').show();jQuery('#imagetools_corrections_actions').show();return false;",
         "icon"      => "fa fa-fw fa-sliders-h",
         );
+    $imagetools[] = [
+        'name'      => $lang['transform_correct_image_orientation'],
+        'action'    => "cropReload('correct-image-orientation'); return false;",
+        'icon'      => 'fa-solid fa-camera-rotate',
+    ];
 
     hook("imagetools_extra");
     
@@ -1114,7 +1110,7 @@ renderBreadcrumbs($links_trail);
             {
             echo "<tr class='toolbar-icon'>";
             echo "<td>";
-            echo "<a href=\"#\" onclick=\"" . htmlspecialchars($imagetool["action"]) . "\" title=\"" . htmlspecialchars($imagetool["name"]) . "\">";
+            echo "<a href=\"#\" onclick=\"" . htmlspecialchars($imagetool["action"]) . "\" title=\"" . escape_quoted_data($imagetool["name"]) . "\">";
             echo "<span class=\"" . htmlspecialchars($imagetool["icon"]) . "\"></span>";
             echo "</a></td>";
             echo "</tr>";

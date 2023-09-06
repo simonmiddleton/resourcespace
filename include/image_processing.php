@@ -3782,6 +3782,7 @@ function compute_tiles_at_scale_factor(int $sf, int $sw, int $sh)
  */
 function transform_file(string $sourcepath, string $outputpath, array $actions)
     {
+    debug_function_call(__FUNCTION__, func_get_args());
     global $imagemagick_colorspace, $imagemagick_preserve_profiles, $cropperestricted;
     global $cropper_allow_scale_up;
     global $image_quality_presets, $preview_no_flatten_extensions;
@@ -3930,22 +3931,42 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
                 $tfparams .= " -rotate 90 ";
                 $swaphw += 1;
                 break;
+
             case "r180":
                 $tfparams .= " -rotate 180 ";
                 break;
+
             case "r270":
                 $tfparams .= " -rotate 270 ";
                 $swaphw += 1;
                 break;
+
             case "x":
                 $tfparams .= " -flop ";
-            break;
+                break;
+
             case "y":
                 $tfparams .= " -flip ";
-            break;
+                break;
+
+            case 'cio':
+                // Correcting an image orientation will always be carried out before applying any other transforms so a copy
+                // shouldn't discard previous changes. End users should always start with this if the orientation is wrong anyway.
+                $tmp_path = sprintf(
+                    '%s/transform_cio_sourcepath-%s.tmp.jpg',
+                    get_temp_dir(),
+                    get_checksum($sourcepath) ?: generateSecureKey(32)
+                );
+
+                if (copy($sourcepath, $tmp_path) && AutoRotateImage($tmp_path))
+                    {
+                    $sourcepath = $tmp_path;
+                    }
+                break;
+
             default:
                 // No transform action
-            break;
+                break;
             }
         }
 
@@ -3976,18 +3997,18 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
             $finalwidth= round($finalheight *  $desiredratio,0);
             }
 
-        debug("width:  " . $actions["width"]);
-        debug("height:  " . $actions["height"]);
-        debug("finalxcoord:  " . $finalxcoord);
-        debug("finalycoord:  " . $finalycoord);
-        debug("cropwidth:  " . $actions["cropwidth"]);
-        debug("cropheight:  " . $actions["cropheight"]);
-        debug("origwidth:  " . $origwidth);
-        debug("origheight:  " . $origheight);
-        debug("new_width:  " . $actions["new_width"]);
-        debug("new_height:  " . $actions["new_height"]);
-        debug("finalwidth:  " . $finalwidth);
-        debug("finalheight:  " . $finalheight);
+        debug(sprintf('[transform_file] $actions["width"] = %s', $actions["width"]));
+        debug(sprintf('[transform_file] $actions["height"] = %s', $actions["height"]));
+        debug(sprintf('[transform_file] $finalxcoord = %s', $finalxcoord));
+        debug(sprintf('[transform_file] $finalycoord = %s', $finalycoord));
+        debug(sprintf('[transform_file] $actions["cropwidth"] = %s', $actions["cropwidth"]));
+        debug(sprintf('[transform_file] $actions["cropheight"] = %s', $actions["cropheight"]));
+        debug(sprintf('[transform_file] $origwidth = %s', $origwidth));
+        debug(sprintf('[transform_file] $origheight = %s', $origheight));
+        debug(sprintf('[transform_file] $actions["new_width"] = %s', $actions["new_width"]));
+        debug(sprintf('[transform_file] $actions["new_height"] = %s', $actions["new_height"]));
+        debug(sprintf('[transform_file] $finalwidth = %s', $finalwidth));
+        debug(sprintf('[transform_file] $finalheight = %s', $finalheight));
 
         $cmd_args['%finalwidth'] = $finalwidth;
         $cmd_args['%finalheight'] = $finalheight;
