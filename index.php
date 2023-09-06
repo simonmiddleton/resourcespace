@@ -3,12 +3,12 @@ include "include/db.php";
 debug("[index.php] Reached index page...");
 
 if (getval("rp","")!="")
-	{
-	# quick redirect to reset password
-	$rp=getval("rp","");
-	$topurl="pages/user/user_change_password.php?rp=" . $rp;
+    {
+    # quick redirect to reset password
+    $rp=getval("rp","");
+    $topurl="pages/user/user_change_password.php?rp=" . $rp;
         redirect($topurl);
-	}
+    }
         
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $k = getval('k', '');
@@ -19,11 +19,11 @@ if('' == $k || (!check_access_key_collection(getval('c', ''), $k) && !check_acce
     }
 
 if (!hook("replacetopurl"))
-	{ 
-	$topurl="pages/" . $default_home_page . "?login=true";
-	if($use_theme_as_home) { $topurl = "pages/collections_featured.php"; }
-	if ($use_recent_as_home) {$topurl="pages/search.php?search=" . urlencode("!last".$recent_search_quantity);}
-	} /* end hook replacetopurl */ 
+    { 
+    $topurl="pages/" . $default_home_page . "?login=true";
+    if($use_theme_as_home) { $topurl = "pages/collections_featured.php"; }
+    if ($use_recent_as_home) {$topurl="pages/search.php?search=" . urlencode("!last".$recent_search_quantity);}
+    } /* end hook replacetopurl */ 
 
 
 $c = trim(getval("c", ""));
@@ -55,47 +55,47 @@ if($c != "")
     }
 
 if (getval("r","")!="")
-	{
-	# quick redirect to a resource (from e-mails)
-	$r=getval("r","");
-	$topurl="pages/view.php?ref=" . $r . "&k=" . $k;
-	}
+    {
+    # quick redirect to a resource (from e-mails)
+    $r=(int) getval("r","");
+    $topurl="pages/view.php?ref=" . $r . "&k=" . $k;
+    }
 
 if (getval("u","")!="")
-	{
-	# quick redirect to a user (from e-mails)
-	$u=getval("u","");
-	$topurl="pages/team/team_user_edit.php?ref=" . $u;
-	}
-	
+    {
+    # quick redirect to a user (from e-mails)
+    $u=getval("u","");
+    $topurl="pages/team/team_user_edit.php?ref=" . $u;
+    }
+    
 if (getval("q","")!="")
-	{
-	# quick redirect to a request (from e-mails)
-	$q=getval("q","");
-	$topurl="pages/team/team_request_edit.php?ref=" . $q;
-	}
+    {
+    # quick redirect to a request (from e-mails)
+    $q=getval("q","");
+    $topurl="pages/team/team_request_edit.php?ref=" . $q;
+    }
 
 if (getval('ur', '') != '')
-	{
-	# quick redirect to periodic report unsubscriptions.
-	$ur = getval('ur', '');
+    {
+    # quick redirect to periodic report unsubscriptions.
+    $ur = getval('ur', '');
 
-	$topurl = 'pages/team/team_report.php?unsubscribe=' . $ur;
-	}
+    $topurl = 'pages/team/team_report.php?unsubscribe=' . $ur;
+    }
 
 if(getval('dr', '') != '')
-	{
-	# quick redirect to periodic report deletion.
-	$dr = getval('dr', '');
+    {
+    # quick redirect to periodic report deletion.
+    $dr = getval('dr', '');
 
-	$topurl = 'pages/team/team_report.php?delete=' . $dr;
+    $topurl = 'pages/team/team_report.php?delete=' . $dr;
     }
     
 if (getval("upload","") != "")
-	{
+    {
     # Redirect to upload page
     $topurl = get_upload_url($c,$k);
-	}
+    }
 
 # Redirect.
 redirect($topurl);
