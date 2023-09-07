@@ -806,7 +806,7 @@ renderBreadcrumbs($links_trail);
                     flippedy = true;
                     }
                 }
-            else if(action == 'correct-image-orientation')
+            else if(action === 'correct-image-orientation')
                 {
                 tfactions.push('cio'); 
                 imgheight = jQuery('#cropimage').height();
@@ -1108,12 +1108,18 @@ renderBreadcrumbs($links_trail);
         <?php
         foreach($imagetools as $imagetool)
             {
-            echo "<tr class='toolbar-icon'>";
-            echo "<td>";
-            echo "<a href=\"#\" onclick=\"" . htmlspecialchars($imagetool["action"]) . "\" title=\"" . escape_quoted_data($imagetool["name"]) . "\">";
-            echo "<span class=\"" . htmlspecialchars($imagetool["icon"]) . "\"></span>";
-            echo "</a></td>";
-            echo "</tr>";
+            ?>
+            <tr class="toolbar-icon">
+                <td>
+                    <a
+                        href="#"
+                        onclick="<?php echo escape_quoted_data($imagetool["action"]); ?>"
+                        title="<?php echo escape_quoted_data($imagetool["name"]); ?>">
+                        <span class="<?php echo escape_quoted_data($imagetool["icon"]); ?>"></span>
+                    </a>
+                </td>
+            </tr>
+            <?php
             }
             ?>            
         </table>
