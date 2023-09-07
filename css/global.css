@@ -239,9 +239,7 @@ select::-ms-expand
 #HeaderNav1 ul, #Headernav2 ul {padding: 0.2em 0;}
 .HeaderImgLink{float:left;height:100%;width: auto;margin-right: 20px;}
 #HeaderImg{margin:0;max-height: 40px; }
-.HorizontalNav li,  .HorizontalNav li {display: inline-block;zoom: 1;}
-.HorizontalNav li a, .HorizontalNav li a{display: inline-block;zoom: 1;}
-.RecordBox {margin: 10px 20px 10px 0;}
+.HorizontalNav li a {display: inline-block;zoom: 1;}
 h2#CollectionsPanelHeader {display:none;}
 
 .ProfileImage { vertical-align:top; width:36px; height:36px; border-radius:36px}
@@ -323,7 +321,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
     text-align:left;
     }
 #CentralSpaceContainerRestrict {margin:0 15px 20px 25px;padding:0;text-align:left;}
-#CentralSpaceLogin {margin: 100px auto;padding:0;width: 600px;text-align:left;}
+#CentralSpaceLogin {margin: 100px auto;padding:0;width: 600px;text-align:left; position: relative;}
 #CentralSpace {text-align:left;position:relative;display: inline-block; width: 100%;}
 
 .TopInpageNav {clear: left;margin-bottom:10px;margin-right: 0;position:relative;min-height: 30px;}
@@ -342,7 +340,7 @@ div#CentralSpaceContainer.SlimHeaderFixedPosition { margin-top: 100px; }
 
 
 .HorizontalNav ul {padding:0.2em 0;margin:0;list-style:none;white-space: nowrap; overflow: hidden;font-size: 0;}
-.HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0; font-size: 16px; line-height: 36px;}
+.HorizontalNav li {display:inline;padding:0 0.35em 0 0.5em;margin:0; font-size: 16px; line-height: 36px; zoom: 1;}
 .HorizontalNav a:link, .HorizontalNav a:visited {text-decoration:none;}
 .HorizontalNav a:hover, .HorizontalNav a:active {text-decoration:underline;}
 .HorizontalWhiteNav li:first-child {border-left:none;}
@@ -531,7 +529,6 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
     }
 }
 .Question label, .QuestionSubmit label{ width: 300px;float: left;margin-top: 0.3em;padding-right:10px;}
-.Question .customFieldLabel { width: auto; margin: 0;}
 .Question .customFieldset { padding: 0; border: 0;}
 .Question #capswarning { margin-left: 190px; display: none; color: red;font-weight: bold;}
 .Question .stdwidth,.stdwidth, .dynamickeywords {width: 420px;font-size: 1em;}
@@ -682,8 +679,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 
 .HomePanelPromotedImageWrap {text-align:center;min-height:155px;vertical-align:middle;}
 #SlideshowContainer #HomeSiteText {width: 100%;clear: left;}
-a.HomePanel {text-decoration:none;}
-a.HomePanel {cursor:pointer;}
+a.HomePanel {text-decoration:none; cursor:pointer;}
 
 .TabBar {padding:8px 0 0 0;margin-bottom: -1px;}
 .Tab a {margin:0 5px 0 0;padding:5px 1rem;display:inline-block; border-top-right-radius:5px;border-top-left-radius:5px;}
@@ -1579,10 +1575,6 @@ a.FeaturedSimpleLink:hover, a.FeaturedSimpleLink:active  {
     
 }
 
-#CentralSpaceLogin {
-    position: relative;
-}
-
 #login_box {
     padding: 20px 25px 5px 25px;
     border-radius: 15px;
@@ -1786,11 +1778,13 @@ form.FormFilter button.ClearButton {
     
 .CollectionPanelTools {visibility:hidden;text-align:right;}
 .CollectionPanelShell:hover .CollectionPanelTools {visibility:visible;}
-#FilterNodeOptions .FilterItemContainer > label { width: 150px; }.tag-editor li { padding: initial; }
+.tag-editor li { padding: initial; }
 
 /* Pill-like display for keywords */
 .ResponsiveViewFullSite { display: none; }
 .Question .customFieldLabel {
+    width: auto;
+    margin: 0;
     float: left;
     border-radius:4px;
     padding:2px 6px;
