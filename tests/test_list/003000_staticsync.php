@@ -7,7 +7,12 @@ $saved_user_data    = $userdata;
 $saved_userref      = $userref;
 $saved_perms        = $userpermissions;
 $userpermissions    = array("s","g","j*");
-$saved_unoconv_path = $unoconv_path;
+if(isset($unoconv_path))
+    {
+    $saved_unoconv_path = $unoconv_path;
+    // Disable unoconv previews as this is not being tested here and failures can interrupt test
+    unset($unoconv_path);
+    }
 $saved_alternative_file_previews = $alternative_file_previews;
 $saved_enable_thumbnail_creation_on_upload = $enable_thumbnail_creation_on_upload;
 
@@ -37,8 +42,6 @@ $staticsync_ingest=true;
 $staticsync_autotheme = true;
 $enable_thumbnail_creation_on_upload = false;
 $alternative_file_previews = false;
-// Disable unoconv previews as this is not being tested here and failures can interrupt test
-unset($unoconv_path);
 
 // Create file to sync
 copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', $test_path . "teststatic.jpg");
@@ -242,7 +245,10 @@ $userpermissions    = $saved_perms;
 $userdata           = $saved_user_data;
 $argv = $savedargv;
 $argc = $savedargc;
-$unoconv_path = $saved_unoconv_path;
+if(isset($unoconv_path))
+    {
+    $unoconv_path = $saved_unoconv_path;
+    }
 $alternative_file_previews = $saved_alternative_file_previews;
 $enable_thumbnail_creation_on_upload = $saved_enable_thumbnail_creation_on_upload;
 
