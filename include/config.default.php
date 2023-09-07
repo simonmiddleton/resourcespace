@@ -2752,6 +2752,9 @@ $user_pref_user_management_notifications=false;
 # User preference - user_pref_system_management_notifications (System admins only). Option to receive notifications about system events e.g. low disk space
 $user_pref_system_management_notifications=true;
 
+# User preference - user_pref_new_action_emails. Option to receive an email notifyingg them of all new actions in the past X hours  as defined by $new_action_email_interval. Only appears if that is set to a positive value;
+$user_pref_new_action_emails = false;
+
 # User preference - email_user_notifications. Option to receive emails instead of new style system notifications where appropriate. 
 $email_user_notifications=false;
 
@@ -2907,6 +2910,11 @@ $actions_approve_hide_groups=""; // Groups to exclude from notifications
 
 # Option to show action links e.g. user requests, resource requests in a modal
 $actions_modal=true;
+
+// $new_action_email_interval - if this is set to a postive value users can choose to be notifed of new 
+// actions - see $user_pref_new_action_emails. IMPORTANT - to work correctly this requires the cron tasks 
+// to be run more frequently than the interval specified. 
+$new_action_email_interval = 0;
 
 # Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)
 $daterange_edtf_support=false;

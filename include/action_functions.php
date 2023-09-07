@@ -17,7 +17,7 @@
 function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC")
     {
     global $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups,$userref,
-    $actions_resource_requests,$actions_account_requests, $view_title_field, $actions_on,$messages_actions_usergroup, $actions_notify_states;
+    $actions_resource_requests,$actions_account_requests, $view_title_field, ,$messages_actions_usergroup, $actions_notify_states;
 
     // Make sure all states are excluded if they had the legacy option $actions_resource_review set to false.
     get_config_option($userref,'actions_resource_review', $actions_resource_review, true);
@@ -28,7 +28,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
     $actionsql = new PreparedStatementQuery();
     $filtered = $type!="";
 
-    if(!$actions_on){return array();}
+    if(!){return array();}
 
     if((!$filtered || 'resourcereview'==$type) && trim($actions_notify_states) != "")
         {
@@ -123,3 +123,68 @@ function get_editable_resource_sql()
     return $editable_resource_query;
     }
 
+
+/**
+ * Get recent user actions, optionally for all users
+ *
+ * @param  int  $minutes     Return actions that were created in the last minutes
+ * @param  bool $allusers    Return actions for all users?  If false, or if the current user does not have
+ *                           the 'a' permission and the current script is not running from CLI then only the currently logged on
+ *                           user's actions will be returned
+ * 
+ * 
+ * @return array            An array with the user id as the index and the following arrays of sub elements.
+ *                          Included columns are as per get_user_actions()
+ *                          - resourcerequest  -  array of resource requests 
+ *                          - userrequest - array of user requests
+ *                          - resourcereview - array of resources to reviewdescription)
+ */
+function get_user_actions_recent(int $minutes, bool $allusers) : array
+    {
+    global $view_title_field;
+    
+    // Find all resources that have changed archive state in the given number of minutes
+    if(is_int_loose($view_title_field)) 
+        {
+        $generated_title_field = "field".$view_title_field;
+        }
+    else
+        {
+        $generated_title_field = "r.ref";
+        }
+    $sql = "SELECT r.ref, r.archive, rl.user MAX(rl.date) date, $generated_title_field AS description 
+              FROM resource_log rl 
+         LEFT JOIN resource r ON rl.resource=r.ref
+             WHERE rl.type = 's' 
+               AND TIMESTAMPDIFF(MINUTE,date,NOW())<?
+          GROUP BY r.ref,rl.ref
+          ORDER BY rl.ref DESC";
+
+    $params = ["i",$minutes];
+    $resources = ps_query($sql,$params);
+
+    // Find all resource requests created in the given number of minutes
+    $sql = "SELECT r.ref, r.created, r.user, r.comments, r.assigned_to
+              FROM request r
+             WHERE status <> 2
+               AND TIMESTAMPDIFF(MINUTE,created,NOW())<?
+          ORDER BY r.ref ASC";
+    $params = ["i",$minutes];
+    $requests = ps_query($sql,$params);
+
+    // Find all account requests created in the last XX minutes
+    $sql = "SELECT ref, created, comments, usergroup
+              FROM user
+             WHERE approved =  0
+               AND TIMESTAMPDIFF(MINUTE,created,NOW())<?
+          ORDER BY r.ref ASC";
+    $params = ["i",$minutes];
+    $users = ps_query($sql,$params);
+
+    // TODO Add hook and update plugin to find all proposed changes submitted in the last XX minutes
+
+    $action_notify_users = get_users_by_preference("new_action_email_interval","1");
+
+    
+    return array();
+    }

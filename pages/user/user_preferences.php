@@ -180,17 +180,20 @@ include "../../include/header.php";
 
     // Email section, only show if user has got an email address
 	if ($useremail!="")
-		{
-		$page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['email'] . '</h2><div id="UserPreferenceEmailSection" class="CollapsibleSection">');
-		$page_def[] = config_add_boolean_select('cc_me', $lang['userpreference_cc_me_label'], $enable_disable_options, 300, '', true);
-		$page_def[] = config_add_boolean_select('email_user_notifications', $lang['userpreference_email_me_label'], $enable_disable_options, 300, '', true);
-		$page_def[] = config_add_boolean_select('email_and_user_notifications', $lang['user_pref_email_and_user_notifications'], $enable_disable_options, 300, '', true);
-		$page_def[] = config_add_boolean_select('user_pref_daily_digest', $lang['user_pref_daily_digest'], $enable_disable_options, 300, '', true);
-		$page_def[] = config_add_boolean_select('user_pref_inactive_digest', str_replace("%%DAYS%%",(string)(int)$inactive_message_auto_digest_period,$lang['user_pref_inactive_digest']), $enable_disable_options, 300, '', true);
+        {
+        $page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['email'] . '</h2><div id="UserPreferenceEmailSection" class="CollapsibleSection">');
+        $page_def[] = config_add_boolean_select('cc_me', $lang['userpreference_cc_me_label'], $enable_disable_options, 300, '', true);
+        $page_def[] = config_add_boolean_select('email_user_notifications', $lang['userpreference_email_me_label'], $enable_disable_options, 300, '', true);
+        $page_def[] = config_add_boolean_select('email_and_user_notifications', $lang['user_pref_email_and_user_notifications'], $enable_disable_options, 300, '', true);
+        if($actions_on && $new_action_email_interval > 0)
+            {
+            $page_def[] = config_add_boolean_select('user_pref_new_action_emails', $lang['user_pref_new_action_emails'], $enable_disable_options, 300, '', true);
+            }
+        $page_def[] = config_add_boolean_select('user_pref_daily_digest', $lang['user_pref_daily_digest'], $enable_disable_options, 300, '', true);
+        $page_def[] = config_add_boolean_select('user_pref_inactive_digest', str_replace("%%DAYS%%",(string)(int)$inactive_message_auto_digest_period,$lang['user_pref_inactive_digest']), $enable_disable_options, 300, '', true);
         $page_def[] = config_add_boolean_select('user_pref_daily_digest_mark_read', $lang['user_pref_daily_digest_mark_read'], $enable_disable_options, 300, '', true);
-		$page_def[] = config_add_html('</div>');
-		}
-
+        $page_def[] = config_add_html('</div>');
+        }
 
 	// System notifications section - used to disable system generated messages 
 	$page_def[] = config_add_html('<h2 class="CollapsibleSectionHead">' . $lang['mymessages'] . '</h2><div id="UserPreferenceMessageSection" class="CollapsibleSection">');

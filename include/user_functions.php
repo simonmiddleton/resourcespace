@@ -3378,3 +3378,28 @@ function is_anonymous_user()
     global $anonymous_login, $username;
     return isset($anonymous_login) && $username == $anonymous_login;
     }
+
+
+/**
+ * Retrieve all user records with the user preference specified
+ *
+ * @param  string $preference   Preference to check
+ * @param  string $value        Preference value to check for
+ * 
+ * @return array                Array of user refs with the preference set as specified
+ * 
+ * 
+ **/
+function get_users_by_preference(string $preference, string $value) : array
+    {
+    $sql = "SELECT up.user value
+              FROM user_preferences up 
+        RIGHT JOIN user u 
+                ON u.ref=up.user
+             WHERE u.approved=1
+               AND parameter = ? 
+               AND value = ?";
+    $params = ["s",$preference,"s", $value];
+
+    return ps_array($sql,$params);    
+    }
