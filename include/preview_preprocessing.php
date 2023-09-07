@@ -138,7 +138,7 @@ if ($exiftool_fullpath!=false)
                     $scr_height=$scr_size[0]['height'];
                     if (!hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative)))
                         {
-                        if (isset($watermark) && $alternative==-1)
+                        if ($watermark !== '' && $alternative==-1)
                             {
                             $path=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
                             if (file_exists($path)) {unlink($path);}
@@ -1047,7 +1047,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             # Add a watermarked image too?
             global $watermark;
             if (!hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative))){
-                if (isset($watermark) && $alternative==-1)
+                if ($watermark !== '' && $alternative==-1)
                     {
                 $path=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
                 if (file_exists($path)) {unlink($path);}

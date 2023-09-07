@@ -5821,7 +5821,7 @@ function check_use_watermark($download_key = "", $resource="")
     global $access,$k,$watermark,$watermark_open,$pagename,$watermark_open_search, $terms_download;
 
     # Cannot watermark without a watermark
-    if(!isset($watermark))
+    if($watermark === '')
         {
         return false;
         }

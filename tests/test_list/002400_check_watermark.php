@@ -35,7 +35,7 @@ $verify_watermark_check = function($expected, $wm_path, $wm_perm, $wm_access, $w
 };
 
 # Test conditions
-define ('WM_NOPATH', null);
+define ('WM_NOPATH', '');
 define ('WM_PATH', "watermark.png");
 
 define ('W_NOPERM', "x");

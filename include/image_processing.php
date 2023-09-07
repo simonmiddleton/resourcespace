@@ -1443,7 +1443,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
-    global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
+    global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors, $watermark;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
 
     # We will need this to log errors
@@ -1860,7 +1860,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             # Always make preview sizes for smaller file sizes.
             #
             # Always make pre/thm/col sizes regardless of source image size.
-            if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && isset($watermark)) || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
+            if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && $watermark !== '') || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
                 {           
                 # Debug
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',"Generating preview size " . $ps[$n]["id"]); // log the size being created but not the path
@@ -2019,7 +2019,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                 if (!hook("replacewatermarkcreation","",array($ref, $ps, $n, $alternative, $profile, $command))
                      && ($alternative==-1 || ($alternative!==-1 && $alternative_file_previews)) 
-                     && isset($watermark) && ($ps[$n]["internal"]==1 || $ps[$n]["allow_preview"]==1))
+                     && $watermark !== '' && ($ps[$n]["internal"]==1 || $ps[$n]["allow_preview"]==1))
                     {
                     $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,'',$alternative);
                     if (file_exists($wmpath)) {unlink($wmpath);}
@@ -3461,7 +3461,7 @@ function delete_previews($resource,$alternative=-1)
                 {
                 unlink($previewpath);
                 }
-            if (isset($watermark))
+            if ($watermark !== '')
                 {
                 $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "",$alternative);
                 if (file_exists($wm_path))

@@ -106,7 +106,7 @@ if ($errors!="")
 				$path=get_resource_path ($ref, false,"",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
 				}
 		
-		?><a class="lightbox-feedback" href="<?php echo $path?>" title="<?php echo escape_quoted_data($displaytitle) ?>"><img width="<?php echo $result[$n]["thumb_width"]?>" height="<?php echo $result[$n]["thumb_height"]?>" src="<?php echo get_resource_path($ref,false,"thm",false,$result[$n]["preview_extension"],-1,1,(checkperm("w") || ($k!="" && isset($watermark))) && $access==1,$result[$n]["file_modified"])?>" class="ImageBorder"></a>
+		?><a class="lightbox-feedback" href="<?php echo $path?>" title="<?php echo escape_quoted_data($displaytitle) ?>"><img width="<?php echo $result[$n]["thumb_width"]?>" height="<?php echo $result[$n]["thumb_height"]?>" src="<?php echo get_resource_path($ref,false,"thm",false,$result[$n]["preview_extension"],-1,1,(checkperm("w") || ($k!="" && $watermark !== "")) && $access==1,$result[$n]["file_modified"])?>" class="ImageBorder"></a>
 		<?php } else { ?>		<img border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>"/><?php } ?>
 
 		

@@ -186,7 +186,7 @@ if (!hook("replacelistitem"))
         <div class="ListTools">
         <?php 
         # Work out image to use, otherwise preview will always use un-watermarked image.
-        if(isset($watermark))
+        if($watermark !== '')
             {
             $use_watermark=check_use_watermark();
             }

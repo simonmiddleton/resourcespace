@@ -5115,12 +5115,7 @@ function execution_lockout_remove_resource_type_field_props(array $rtf): array
 function set_watermark_image()
     {
     global $watermark, $storagedir;
-
-    if ($watermark === '')
-        {
-        unset($GLOBALS["watermark"]);  # No watermark set.
-        }
-
+    
     if (substr($watermark, 0, 13) == '[storage_url]')
         {
         $GLOBALS["watermark"] = str_replace('[storage_url]', $storagedir, $watermark);  # Watermark from system configuration page
