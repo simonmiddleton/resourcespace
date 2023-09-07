@@ -156,15 +156,6 @@ $page_def[] = config_add_file_input(
     420
 );
 
-$page_def[] = config_add_file_input(
-    'watermark',
-    $lang['wartermark_label'],
-    $baseurl . '/pages/admin/admin_system_config.php',
-    420,
-    array('png'),
-    true
-);
-
 $page_def[] = config_add_single_select(
     'header_size',
     $lang['userpreference_headersize'],
@@ -247,6 +238,17 @@ $page_def[] = config_add_boolean_select(
 );
 $page_def[] = config_add_html('</div>');
 
+// Watermark section
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['wartermark_header'] . '</h3><div id="SystemConfigWatermarkSection" class="CollapsibleSection">');
+$page_def[] = config_add_file_input(
+    'watermark',
+    $lang['wartermark_label'],
+    $baseurl . '/pages/admin/admin_system_config.php',
+    420,
+    array('png'),
+    true
+);
+$page_def[] = config_add_html('</div>');
 
 // Multilingual section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['systemconfig_multilingual'] . '</h3><div id="SystemConfigMultilingualSection" class="CollapsibleSection">');

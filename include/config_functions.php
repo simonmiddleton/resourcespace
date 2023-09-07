@@ -513,9 +513,17 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
     ?>
     <div class="Question" id="question_<?php echo $name; ?>">
         <form method="POST" action="<?php echo $form_action; ?>" enctype="multipart/form-data">
-            <label for="<?php echo $name; ?>"><?php echo $label; ?></label>
+        <?php 
+        if ($file_preview && $current !== "")
+            { ?>
+            <label id="config-image-preview-label" for="<?php echo $name; ?>"><?php echo $label; ?></label> <?php
+            }
+        else
+            { ?>
+            <label for="<?php echo $name; ?>"><?php echo $label; ?></label> <?php
+            } ?>
             <div class="AutoSaveStatus">
-                <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
+            <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
             </div>
         <?php
         if($current !== '' && $pathparts[1]=="system" && !file_exists($missing_file))
@@ -563,8 +571,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             {
             global $baseurl; ?>
             <div id="preview_<?php echo $name; ?>">
-            <label></label>
-            <div><img src="<?php echo $baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current) . '?v=' . date("s") ?>" style="max-height: 200px; max-width: 200px;"alt="<?php echo escape_quoted_data($lang["preview"] . ' - ' . $label) ?>"></div>
+            <img class="config-image-preview" src="<?php echo $baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current) . '?v=' . date("s") ?>" alt="<?php echo escape_quoted_data($lang["preview"] . ' - ' . $label) ?>">
             </div>
             <?php } ?>
         <div class="clearerleft"></div>

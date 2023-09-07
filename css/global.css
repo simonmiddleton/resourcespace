@@ -2488,3 +2488,13 @@ input[type="text"]#iconpicker-input {
     top: 50px;
     opacity: 1;
 }
+
+.config-image-preview {
+    float: left;
+    max-height: 200px;
+    max-width: 200px;
+}
+
+#config-image-preview-label{
+    height: 240px;
+}
