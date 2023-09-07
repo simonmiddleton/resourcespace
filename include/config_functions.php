@@ -160,6 +160,56 @@ function set_config_option($user_id, $param_name, $param_value)
 
     return true;
     }
+    
+
+/**
+ * Delete entry from the user_preferences table completely (instead of setting to blank via set_config_option).
+ * Used by system preferences page when deleting a file to allow fallback to value (if set) in config.php instead
+ * of replacing it with blank from user_preference value.
+ *
+ * @param  integer  $user_id      User ID. Use NULL for system wide config options.
+ * @param  mixed    $param_name   Parameter name
+ * 
+ * @return bool     True if preference was deleted else false.
+ */
+function delete_config_option($user_id, string $param_name) : bool
+    {
+    if(empty($param_name))
+        {
+        return false;
+        }
+
+    $current_param_value = null;
+    if(get_config_option($user_id, $param_name, $current_param_value))
+        {
+        if(is_null($user_id))
+            {
+            $user_query = 'user IS NULL';
+            }
+        else
+            {
+            $user_query = 'user = ?';
+            $params[] = 'i'; $params[] = $user_id;
+            }
+
+        $query = "DELETE FROM user_preferences WHERE ". $user_query ." AND parameter = ?";
+        $params[] = "s"; $params[] = $param_name;
+
+        if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
+            {
+            log_activity(null, LOG_CODE_DELETED, null, 'user_preferences', 'value', "parameter='" . $param_name . "'", null, $current_param_value);
+            }
+
+        ps_query($query,$params);
+
+        // Clear disk cache
+        clear_query_cache("preferences");
+
+        return true;
+        }
+
+    return false;
+    }
 
 
 /**
@@ -275,7 +325,7 @@ function get_config_options($user_id, array &$returned_options)
         $params = ['i', $user_id];
         }
 
-    $query = 'SELECT parameter, `value` FROM user_preferences WHERE ' . $sql . ' and `value` != \'RS_UNSET_CONFIG\'';
+    $query = 'SELECT parameter, `value` FROM user_preferences WHERE ' . $sql;
     $config_options = ps_query($query, $params,"preferences");
 
     if(empty($config_options))
@@ -1102,7 +1152,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                     unlink($delete_filename);
                     hook("configdeletefilesuccess",'',array($delete_filename));
                     }
-                set_config_option(null, $config_name, 'RS_UNSET_CONFIG');
+                delete_config_option(null, $config_name);
                 $redirect = true;
                 }
             }
