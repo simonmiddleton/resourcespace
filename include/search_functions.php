@@ -3134,11 +3134,19 @@ function update_search_from_request($search)
 
 function get_search_default_restypes()
     {
-    global $search_includes_resources, $search_includes_themes;
+    global $search_includes_resources, $search_includes_themes,$default_res_types;
     $defaultrestypes=array();
+    
     if($search_includes_resources)
         {
-        $defaultrestypes[] = "Global";
+        if($default_res_types == "")
+            {
+            $defaultrestypes[] = "Global";
+            }
+        else
+            {
+            $defaultrestypes = (is_array($default_res_types)?$default_res_types:explode(",",(string) $default_res_types));
+            }
         }
     else
         {
