@@ -3,7 +3,9 @@ ini_set('zlib.output_compression','off'); // disable PHP output compression sinc
 include "../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../include/authenticate.php";}include_once '../include/csv_export_functions.php';
+$k=getval("k","");
+if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../include/authenticate.php";}
+include_once '../include/csv_export_functions.php';
 include_once '../include/pdf_functions.php';
 ob_end_clean();
 $uniqid="";$id="";
@@ -619,7 +621,7 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox">
 <?php if($k!=""){
-	?><p><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection?>&k=<?php echo $k?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo $lang['back']?></a></p><?php
+	?><p><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection?>&k=<?php echo urlencode($k)?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo $lang['back']?></a></p><?php
 }?>
 
 <h1><?php echo $lang["downloadzip"]?></h1>
