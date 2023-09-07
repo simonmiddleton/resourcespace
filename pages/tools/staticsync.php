@@ -510,6 +510,7 @@ function ProcessFolder($folder)
 
                 # Import this file
                 $r = import_resource($shortpath, $type, $title, $staticsync_ingest,$enable_thumbnail_creation_on_upload, $extension);
+                echo " - Created resource #" . $r . PHP_EOL;
                 if ($r !== false)
                     {
                     # Add to mapped category tree (if configured)
