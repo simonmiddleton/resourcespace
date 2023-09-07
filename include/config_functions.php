@@ -513,18 +513,10 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
     ?>
     <div class="Question" id="question_<?php echo $name; ?>">
         <form method="POST" action="<?php echo $form_action; ?>" enctype="multipart/form-data">
-        <?php 
-        if ($file_preview && $current !== "")
-            { ?>
-            <label id="config-image-preview-label" for="<?php echo $name; ?>"><?php echo $label; ?></label> <?php
-            }
-        else
-            { ?>
-            <label for="<?php echo $name; ?>"><?php echo $label; ?></label> <?php
-            } ?>
-            <div class="AutoSaveStatus">
-            <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
-            </div>
+        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo $name; ?>"><?php echo $label; ?></label>
+        <div class="AutoSaveStatus">
+        <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
+        </div>
         <?php
         if($current !== '' && $pathparts[1]=="system" && !file_exists($missing_file))
 			{
