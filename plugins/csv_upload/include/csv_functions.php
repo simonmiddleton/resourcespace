@@ -885,7 +885,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     $logtext = str_replace($find,$replace,$lang["csv_upload_processing_complete"]);
     csv_upload_log($logfile, $logtext);
     
-    sprintf("Completed in %01.2f seconds.\n", microtime(true) - $processing_start_time);
+    csv_upload_log($logfile, sprintf("Completed in %01.2f seconds.\n", microtime(true) - $processing_start_time));
 
     if($processcsv && file_exists($flagpath))
         {

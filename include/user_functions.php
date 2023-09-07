@@ -1679,7 +1679,7 @@ function check_password($password)
     {
     global $lang, $password_min_length, $password_min_alpha, $password_min_uppercase, $password_min_numeric, $password_min_special;
 
-    trim($password);
+    $password = trim($password);
     if (strlen($password)<$password_min_length) {return str_replace("?",$password_min_length,$lang["password_not_min_length"]);}
 
     $uppercase="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
