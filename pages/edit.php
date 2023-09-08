@@ -2278,12 +2278,10 @@ if ($multiple && !$disable_geocoding)
     <div id="editmaplocation_map" style="display:none; width: 99%; margin-top:0px; margin-bottom:0px; height:300px; border:1px solid black; float:none; overflow: hidden;">
 
     <script>
-        var Leaflet1 = L.noConflict();
-
         <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
         <?php set_geo_map_centerview(); ?>
-        var map3 = new Leaflet1.map('editmaplocation_map').setView(mapcenterview,mapdefaultzoom);
-        var defaultLayer = new Leaflet1.tileLayer.provider('<?php echo $map_default;?>', {
+        var map3 = new L.map('editmaplocation_map').setView(mapcenterview,mapdefaultzoom);
+        var defaultLayer = new L.tileLayer.provider('<?php echo $map_default;?>', {
             attribution: 'Map data © <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors'
         }).addTo(map3);
 
