@@ -144,95 +144,100 @@ foreach($advanced_search_properties as $advanced_search_property=>$code)
 $values=array();
 
 if (getval("resetform","")!="")
-  {
-  $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";$full_text_search="";
-  $restypes=get_search_default_restypes();
-  $selected_archive_states=array(0);
-  rs_setcookie("search","",0,"","",false,false);
-  rs_setcookie("saved_archive","",0,"","",false,false);
+    {
+    $found_year="";$found_month="";$found_day="";$found_start_date="";$found_end_date="";$allwords="";$full_text_search="";
+    $restypes=get_search_default_restypes();
+    rs_setcookie('restypes', implode(",",$restypes),0,"","",false,false);
+    $selected_archive_states=array(0);
+    rs_setcookie("search","",0,"","",false,false);
+    rs_setcookie("saved_archive","",0,"","",false,false);
 
-  $access = null;
-  rs_setcookie("access", "", 0, "{$baseurl_short}pages/", "", false, false);
-  }
+    $access = null;
+    rs_setcookie("access", "", 0, "{$baseurl_short}pages/", "", false, false);
+    }
 else
-  {
-  if(getval("restypes","")=="")
-	{$restypes=get_search_default_restypes();}
-  else
-		{$restypes=explode(",",getval("restypes",""));}
+    {
+    if(getval("restypes","")=="")
+        {
+        $restypes=get_search_default_restypes();
+        }
+    else
+        {
+        $restypes=explode(",",getval("restypes",""));
+        }
 
-  for ($n=0;$n<count($keywords);$n++)
-	  {
-	  $keyword=trim($keywords[$n]);
-      $quoted_string=(substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"";
-	  if (strpos($keyword,":")!==false && substr($keyword,0,1)!="!")
-		  {
-
-          if((substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"")
+    for ($n=0;$n<count($keywords);$n++)
+        {
+        $keyword=trim($keywords[$n]);
+        $quoted_string=(substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"";
+        if (strpos($keyword,":")!==false && substr($keyword,0,1)!="!")
             {
-            $nk=explode(":",substr($keyword,1,-1));
-            if($nk[0] == FULLTEXT_SEARCH_PREFIX)
+
+            if((substr($keyword,0,1)=="\""  || substr($keyword,0,2)=="-\"" ) && substr($keyword,-1,1)=="\"")
                 {
-                $name=trim($nk[0]);
-                $full_text_search = str_replace(FULLTEXT_SEARCH_QUOTES_PLACEHOLDER,"\"",$nk[1]);
+                $nk=explode(":",substr($keyword,1,-1));
+                if($nk[0] == FULLTEXT_SEARCH_PREFIX)
+                    {
+                    $name=trim($nk[0]);
+                    $full_text_search = str_replace(FULLTEXT_SEARCH_QUOTES_PLACEHOLDER,"\"",$nk[1]);
+                    }
+                else
+                    {
+                    $name=trim($nk[0]);
+                    $keyword = "\"" . trim($nk[1]) . "\"";
+                    }
                 }
             else
                 {
+                $nk=explode(":",$keyword);
                 $name=trim($nk[0]);
-                $keyword = "\"" . trim($nk[1]) . "\"";
+                $keyword=trim($nk[1]);
                 }
-            }
-		  else
-            {
-            $nk=explode(":",$keyword);
-            $name=trim($nk[0]);
-            $keyword=trim($nk[1]);
-            }
-		  if ($name=="basicday") {$found_day=$keyword;}
-		  if ($name=="basicmonth") {$found_month=$keyword;}
-		  if ($name=="basicyear") {$found_year=$keyword;}
-		  if ($name=="startdate") {$found_start_date=$keyword;}
-		  if ($name=="enddate") {$found_end_date=$keyword;}
-		  if (isset($values[$name])){$values[$name].=" ".$keyword;}
-		  else
-			 {
-			 $values[$name]=$keyword;
-			 }
-		  }
-	  elseif (substr($keyword,0,11)=="!properties")
-		  {
-		  $properties = explode(";",substr($keyword,11));
-		  $propertyfields = array_flip($advanced_search_properties);
-		  foreach($properties as $property)
-			  {
-			  $propertycheck=explode(":",$property);
-			  $propertyname=isset($propertycheck[0])?$propertycheck[0]:"";
-			  $propertyval=isset($propertycheck[1])?$propertycheck[1]:"";
-			  if($propertyval!="")
-				{
-				$fieldname=$propertyfields[$propertyname];
-				$$fieldname=$propertyval;
-				}
-			  }
-		  }
-        // Nodes search
-        else if(strpos($keyword, NODE_TOKEN_PREFIX) !== false)
-            {
-            $nodes = resolve_nodes_from_string($keyword);
-
-            foreach($nodes as $node)
+            if ($name=="basicday") {$found_day=$keyword;}
+            if ($name=="basicmonth") {$found_month=$keyword;}
+            if ($name=="basicyear") {$found_year=$keyword;}
+            if ($name=="startdate") {$found_start_date=$keyword;}
+            if ($name=="enddate") {$found_end_date=$keyword;}
+            if (isset($values[$name])){$values[$name].=" ".$keyword;}
+            else
                 {
-                $searched_nodes[] = $node;
+                $values[$name]=$keyword;
                 }
             }
-	  else
-		  {
-		  if ($allwords=="") {$allwords=$keyword;} else {$allwords.=", " . $keyword;}
-		  }
-	  }
+        elseif (substr($keyword,0,11)=="!properties")
+            {
+            $properties = explode(";",substr($keyword,11));
+            $propertyfields = array_flip($advanced_search_properties);
+            foreach($properties as $property)
+                {
+                $propertycheck=explode(":",$property);
+                $propertyname=isset($propertycheck[0])?$propertycheck[0]:"";
+                $propertyval=isset($propertycheck[1])?$propertycheck[1]:"";
+                if($propertyval!="")
+                    {
+                    $fieldname=$propertyfields[$propertyname];
+                    $$fieldname=$propertyval;
+                    }
+                }
+            }
+            // Nodes search
+            else if(strpos($keyword, NODE_TOKEN_PREFIX) !== false)
+                {
+                $nodes = resolve_nodes_from_string($keyword);
 
-    $allwords = str_replace(', ', ' ', $allwords);
-  }
+                foreach($nodes as $node)
+                    {
+                    $searched_nodes[] = $node;
+                    }
+                }
+        else
+            {
+            if ($allwords=="") {$allwords=$keyword;} else {$allwords.=", " . $keyword;}
+            }
+        }
+
+        $allwords = str_replace(', ', ' ', $allwords);
+    }
 
 include "../include/header.php";
 ?>
