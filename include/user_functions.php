@@ -2857,7 +2857,6 @@ function save_usergroup($ref,$groupoptions)
         $newgroup = sql_insert_id();
         return $newgroup;
         }
-    return false;
     }
 
 

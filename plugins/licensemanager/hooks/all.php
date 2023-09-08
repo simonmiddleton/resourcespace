@@ -3,7 +3,6 @@
 function HookLicensemanagerAllExport_add_tables()
     {
     return array("license"=>array("scramble"=>array("holder"=>"mix_text","license_usage"=>"mix_text","description"=>"mix_text")));
-    return array("resource_license"=>array("scramble"=>array()));
     }
 
 function HookLicensemanagerAllRender_actions_add_collection_option($top_actions,array $options, array $collection_data)
