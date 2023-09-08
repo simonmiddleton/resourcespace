@@ -474,8 +474,9 @@ if ($type=="summary")
         # Define styles locally for dash display
         ?>
         <style>
-        .ReportSummary td {padding:3px 0 3px 0;vertical-align:bottom;display:block;width:45%;}
-        .ReportMetric {font-size:200%;padding-left:5px;}
+        .ReportSummary {background: none;color:inherit;}
+        .ReportSummary td {padding:3px 0 3px 0;display:block;width:45%;border:none;color:inherit;}
+        .ReportMetric {font-size:200%;padding-left:5px;color:inherit;background:none;}
         </style>
         <?php
         }
