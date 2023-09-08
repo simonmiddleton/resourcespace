@@ -337,7 +337,7 @@ parameters:
 
 		-
 			message: "#^Caught class Google_ServiceException not found\\.$#"
-			count: 6
+			count: 5
 			path: plugins/youtube_publish/include/youtube_functions.php
 
 		-
