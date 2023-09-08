@@ -1403,12 +1403,6 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
         exit;
         }
-    catch (\Exception $e)
-        {
-        echo "Message could not be sent. <p>";
-        debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
-        exit;
-        }
     unset($GLOBALS["use_error_exception"]);
     hook("aftersendmailphpmailer","",$email);   
 }

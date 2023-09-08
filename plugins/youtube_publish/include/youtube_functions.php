@@ -236,17 +236,7 @@ function upload_video()
         $htmlBody = sprintf('<p>A client error occurred: <code>%s</code></p>',
         htmlspecialchars($e->getMessage()));
         exit($htmlBody);
-        }
-    catch (Google_ServiceException $e)
-        {
-        $errortext = sprintf('<p>A service error occurred: <code>%s</code></p>',
-        htmlspecialchars($e->getMessage()));
-        }
-    catch (Google_Exception $e)
-        {
-        $errortext = sprintf('<p>A client error occurred: <code>%s</code></p>',
-        htmlspecialchars($e->getMessage()));
-        }        
+        }     
         
     if(isset($errortext))
         {
