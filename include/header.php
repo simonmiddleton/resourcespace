@@ -264,9 +264,9 @@ if(!$disable_geocoding)
     // Geocoding & leaflet maps
     // Load Leaflet and plugin files.
     ?>
-    <!--Leaflet.js v1.7.1 files-->
-    <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.css"/>
-    <script src="<?php echo $baseurl?>/lib/leaflet_1.7.1/leaflet.min.js"></script>
+    <!--Leaflet.js files-->
+    <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/leaflet/leaflet.css?css_reload_key=<?php echo $css_reload_key; ?>"/>
+    <script src="<?php echo $baseurl; ?>/lib/leaflet/leaflet.js?<?php echo $css_reload_key; ?>"></script>
 
     <?php 
     if($geo_leaflet_maps_sources)
