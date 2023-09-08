@@ -82,7 +82,6 @@ $upload_here = (getval('upload_here', '') != '' ? true : false);
 
 $uploadparams = array();
 $uploadparams["relateto"] = getval("relateto","");
-$uploadparams["redirecturl"] =  getval("redirecturl","");
 $uploadparams["collection_add"] =  $collection_add;
 $uploadparams["metadatatemplate"] = getval("metadatatemplate","");
 $uploadparams["no_exif"] = $no_exif;
