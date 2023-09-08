@@ -1054,18 +1054,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 
                                                 return false;
                                                 }
-
-                                            <?php
-                                            if(checkPreviewToolsOptionUniqueness('annotate_enabled'))
-                                                {
-                                                ?>
-                                                jQuery('#PreviewToolsOptionsWrapper').on('readyToUseAnnotorious', function ()
-                                                    {
-                                                    toggleAnnotationsOption(jQuery('.AnnotationsOption'));
-                                                    });
-                                                <?php
-                                                } ?>
-
                                             </script>
                                             <?php
                                             }
@@ -1138,18 +1126,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 
                                                 return false;
                                                 }
-
-                                            <?php
-                                            if(checkPreviewToolsOptionUniqueness('image_preview_zoom'))
-                                                {
-                                                ?>
-                                                jQuery(document).ready(function ()
-                                                    {
-                                                    toggleImagePreviewZoomOption(jQuery('.ImagePreviewZoomOption'));
-                                                    });
-                                                <?php
-                                                }
-                                                ?>
                                             </script>
                                             <?php
                                             }
@@ -2435,9 +2411,6 @@ if($annotate_enabled)
         <?php
         }
         ?>
-    <script>
-    jQuery('#PreviewToolsOptionsWrapper').trigger('readyToUseAnnotorious');
-    </script>
     <!-- End of Annotorious -->
     <?php
 	}
