@@ -3,9 +3,7 @@ ini_set('zlib.output_compression','off'); // disable PHP output compression sinc
 include "../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getval("k","");
-if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../include/authenticate.php";}
-include_once '../include/csv_export_functions.php';
+$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../include/authenticate.php";}include_once '../include/csv_export_functions.php';
 include_once '../include/pdf_functions.php';
 ob_end_clean();
 $uniqid="";$id="";
@@ -17,7 +15,6 @@ $useoriginal=getval("use_original","no");
 $collectiondata=get_collection($collection);
 $tardisabled=getval("tardownload","")=="off";
 $include_csv_file = getval('include_csv_file', '');
-$force_online_download = getval('force_online', false); 
 
 if($k != "" || (isset($anonymous_login) && $username == $anonymous_login))
     {
@@ -109,44 +106,15 @@ for ($n=0;$n<count($result);$n++)
 	# check for the availability of each size and load it to the available_sizes array
 	foreach ($sizes as $sizeinfo)
 		{
-        if(in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions))
-            {
-            $size_id=$sizeinfo['id'];
-            //Video files only have a 'pre' sized derivative so flesh out the sizes array with that.
-            $p = get_resource_path($ref,true,'pre',false,$result[$n]['file_extension']);
-            $size_id = 'pre';
-            if(resource_download_allowed($ref,$size_id,$result[$n]['resource_type']))
-                {            
-                if (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
-                    {
-                    $available_sizes[$sizeinfo['id']][]=$ref;
-                    }
-                }
-            }
-        elseif(in_array($result[$n]['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])))
-            {
-            //Audio files are ported to mp3 and do not have different preview sizes
-            $p = get_resource_path($ref,true,'',false,'mp3');
-            if(resource_download_allowed($ref,'',$result[$n]['resource_type']))
-                {            
-                if (hook('size_is_available', '', array($result[$n], $p, '')) || file_exists($p))
-                    {
-                    $available_sizes[$sizeinfo['id']][]=$ref;
-                    }
-                }
-            }
-        else
-            {
-            $size_id=$sizeinfo['id'];
-            $size_extension = get_extension($result[$n], $size_id);
-            $p=get_resource_path($ref,true,$size_id,false,$size_extension);
+		$size_id=$sizeinfo['id'];
+		$size_extension = get_extension($result[$n], $size_id);
+		$p=get_resource_path($ref,true,$size_id,false,$size_extension);
 
-            if (resource_download_allowed($ref,$size_id,$result[$n]['resource_type']))
-                {
-                if (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
-                    $available_sizes[$size_id][]=$ref;
-                }
-            }
+		if (resource_download_allowed($ref,$size_id,$result[$n]['resource_type']))
+			{
+			if (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
+				$available_sizes[$size_id][]=$ref;
+			}
 		}
 
     if(in_array($result[$n]['resource_type'], $data_only_resource_types))
@@ -200,7 +168,7 @@ if ($submitted != "")
 			}
 		}
 
-    if(!$collection_download_tar && $offline_job_queue && !$force_online_download)
+    if(!$collection_download_tar && $offline_job_queue)
         {
         foreach ($result as $key => $resdata)
             {
@@ -382,27 +350,10 @@ if ($submitted != "")
             else
                 {
                 $usesize = ($size == 'original') ? "" : $size;
-                }
-
-            if(in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && $usesize !== 'original')
-                {
-                //Supported video formates will only have a pre sized derivative
-                $pextension = $result[$n]['file_extension'];
-                $p = get_resource_path($ref,true,'pre',false,$pextension,-1,1);
-                $usesize = 'pre';
-                }
-            elseif(in_array($result[$n]['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])) && $usesize !== 'original')
-                {
-                //Supported audio formats are ported to mp3
-                $pextension = 'mp3';
-                $p = get_resource_path($ref,true,'',false,'mp3',-1,1);
-                $usesize = '';
-                }
-            else
-                {
-                $pextension = get_extension($result[$n], $usesize);
-                $p=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
-                }
+                }      
+            
+            $pextension = get_extension($result[$n], $usesize);
+            $p=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
 
 			# Determine whether target exists
 			$subbed_original = false;
@@ -428,7 +379,7 @@ if ($submitted != "")
 				$subbed_original = true;
 				$target_exists = file_exists($p);
 				}
-            
+
 			# Process the file if it exists, and (if restricted access) that the user has access to the requested size
 			if ((($target_exists && $access==0) ||
 				($target_exists && $access==1 &&
@@ -621,7 +572,7 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox">
 <?php if($k!=""){
-	?><p><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection?>&k=<?php echo urlencode($k)?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo $lang['back']?></a></p><?php
+	?><p><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection?>&k=<?php echo $k?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo $lang['back']?></a></p><?php
 }?>
 
 <h1><?php echo $lang["downloadzip"]?></h1>
@@ -829,17 +780,6 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     </div>
     <?php
     }
-
-if($offline_job_queue)
-    {
-    ?>
-    <div class="Question">
-        <label for="force_online"><?php echo htmlspecialchars($lang['collection_download_force_online']); ?></label>
-        <input type="checkbox" id="force_online" name="force_online" value="yes">
-        <div class="clearerleft"></div>
-    </div>
-    <?php    
-    }    
 ?>
 
 <script>var tar = <?php echo ($collection_download_tar_option ? 'true' : 'false'); ?>;</script>
@@ -868,7 +808,7 @@ if($offline_job_queue)
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 	<label for="download"> </label>
 	<input type="submit"
-           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true && !jQuery(\'#force_online\').is(\':checked\')' : 'false'); ?>, tar); return false;"
+           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, tar); return false;"
            value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
 	
 	<div class="clearerleft"> </div>
