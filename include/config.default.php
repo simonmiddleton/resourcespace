@@ -2000,6 +2000,16 @@ $staticsync_ignore_deletion_states = array(2, 3);
 #		"archive"=>2
 #		);
 #
+# If "field" is set to "resource_type" the folder can be used to set the state for the resource. The folder names must
+# be the same case as the resource type name.
+#	$staticsync_mapfolders[]=array
+#		(
+#		"match"=>"/projects/",
+#		"field"=>"resource_type",
+#		"level"=>2
+#		);
+
+#
 # ALTERNATIVE FILES
 #
 # There are a number of options for adding alternative files automatically using staticsync. These only work when staticsync_ingest is true
