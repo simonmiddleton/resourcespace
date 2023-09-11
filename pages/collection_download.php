@@ -3,7 +3,9 @@ ini_set('zlib.output_compression','off'); // disable PHP output compression sinc
 include "../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../include/authenticate.php";}include_once '../include/csv_export_functions.php';
+$k=getval("k","");
+if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../include/authenticate.php";}
+include_once '../include/csv_export_functions.php';
 include_once '../include/pdf_functions.php';
 ob_end_clean();
 $uniqid="";$id="";
@@ -106,16 +108,45 @@ for ($n=0;$n<count($result);$n++)
 	# check for the availability of each size and load it to the available_sizes array
 	foreach ($sizes as $sizeinfo)
 		{
-		$size_id=$sizeinfo['id'];
-		$size_extension = get_extension($result[$n], $size_id);
-		$p=get_resource_path($ref,true,$size_id,false,$size_extension);
+        if(in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions))
+            {
+            $size_id=$sizeinfo['id'];
+            //Video files only have a 'pre' sized derivative so flesh out the sizes array with that.
+            $p = get_resource_path($ref,true,'pre',false,$result[$n]['file_extension']);
+            $size_id = 'pre';
+            if(resource_download_allowed($ref,$size_id,$result[$n]['resource_type']))
+                {            
+                if (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
+                    {
+                    $available_sizes[$sizeinfo['id']][]=$ref;
+                    }
+                }
+            }
+        elseif(in_array($result[$n]['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])))
+            {
+            //Audio files are ported to mp3 and do not have different preview sizes
+            $p = get_resource_path($ref,true,'',false,'mp3');
+            if(resource_download_allowed($ref,'',$result[$n]['resource_type']))
+                {            
+                if (hook('size_is_available', '', array($result[$n], $p, '')) || file_exists($p))
+                    {
+                    $available_sizes[$sizeinfo['id']][]=$ref;
+                    }
+                }
+            }
+        else
+            {
+            $size_id=$sizeinfo['id'];
+            $size_extension = get_extension($result[$n], $size_id);
+            $p=get_resource_path($ref,true,$size_id,false,$size_extension);
 
-		if (resource_download_allowed($ref,$size_id,$result[$n]['resource_type']))
-			{
-			if (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
-				$available_sizes[$size_id][]=$ref;
-			}
-		}
+            if (resource_download_allowed($ref,$size_id,$result[$n]['resource_type']))
+                {
+                if (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
+                    $available_sizes[$size_id][]=$ref;
+                }
+            }
+        }
 
     if(in_array($result[$n]['resource_type'], $data_only_resource_types))
         {
@@ -352,8 +383,25 @@ if ($submitted != "")
                 $usesize = ($size == 'original') ? "" : $size;
                 }      
             
-            $pextension = get_extension($result[$n], $usesize);
-            $p=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
+            if(in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && $usesize !== 'original')
+                {
+                //Supported video formates will only have a pre sized derivative
+                $pextension = $result[$n]['file_extension'];
+                $p = get_resource_path($ref,true,'pre',false,$pextension,-1,1);
+                $usesize = 'pre';
+                }
+            elseif(in_array($result[$n]['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])) && $usesize !== 'original')
+                {
+                //Supported audio formats are ported to mp3
+                $pextension = 'mp3';
+                $p = get_resource_path($ref,true,'',false,'mp3',-1,1);
+                $usesize = '';
+                }
+            else
+                {
+                $pextension = get_extension($result[$n], $usesize);
+                $p=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
+                }
 
 			# Determine whether target exists
 			$subbed_original = false;
@@ -572,7 +620,7 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox">
 <?php if($k!=""){
-	?><p><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection?>&k=<?php echo $k?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo $lang['back']?></a></p><?php
+	?><p><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection?>&k=<?php echo urlencode($k)?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo htmlspecialchars($lang['back'])?></a></p><?php
 }?>
 
 <h1><?php echo $lang["downloadzip"]?></h1>
