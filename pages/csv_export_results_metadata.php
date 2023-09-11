@@ -79,7 +79,8 @@ if($submitted && $resultcount > 0)
     else
         {
         log_activity($lang['csvExportResultsMetadata'],LOG_CODE_DOWNLOADED,$search . ($restypes == '' ? '' : ' (' . $restypes . ')'));
-    
+        debug("csv_export_metadata created zip download file {$csv_filename}");
+
         if (!hook('csvreplaceheader'))
             {
             header("Content-type: application/octet-stream");
