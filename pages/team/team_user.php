@@ -150,7 +150,12 @@ include "../../include/header.php";
     $totalpages	=ceil($results/$per_page);
     $curpage	=floor($offset/$per_page)+1;
 
-    $url=$baseurl_short."pages/team/team_user.php?group=" . $group . "&order_by=" . $order_by . "&find=" . urlencode($find);
+    $url=generateURL(
+        $baseurl_short . "pages/team/team_user.php",
+        ["group"     => $group,
+        "order_by"  => $order_by,
+        "find"      =>$find]
+    );
     $jumpcount=1;
 
     # Create an a-z index
@@ -172,10 +177,38 @@ include "../../include/header.php";
 
     <div class="TopInpageNav"><div class="TopInpageNavLeft"><?php echo $atoz?>	<div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
         <?php 
-        for($n=0;$n<count($list_display_array);$n++){?>
-        <?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php } else { ?><a href="<?php echo $url; ?>&per_page_list=<?php echo $list_display_array[$n]?>" onClick="return CentralSpaceLoad(this);"><?php echo $list_display_array[$n]?></a><?php } ?>&nbsp;|
-        <?php } ?>
-        <?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]?></span><?php } else { ?><a href="<?php echo $url; ?>&per_page_list=99999" onClick="return CentralSpaceLoad(this);"><?php echo $lang["all"]?></a><?php } ?>
+        for($n=0;$n<count($list_display_array);$n++)
+            {
+            if ($per_page==$list_display_array[$n])
+                {
+                ?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php
+                }
+            else
+                {
+                ?>
+                <a
+                    href="<?php echo $url; ?>&per_page_list=<?php echo urlencode($list_display_array[$n])?>"
+                    onClick="return CentralSpaceLoad(this);"
+                    ><?php echo urlencode($list_display_array[$n])?>
+                </a>
+                <?php
+                }
+            ?>&nbsp;|<?php
+            }
+
+        if ($per_page==99999)
+            {
+            ?><span class="Selected"><?php echo $lang["all"]?></span><?php
+            }
+        else
+            {
+            ?>
+            <a
+                href="<?php echo $url; ?>&per_page_list=99999"
+                onClick="return CentralSpaceLoad(this);"
+                ><?php echo $lang["all"]?>
+            </a><?php
+            } ?>
         </div></div> <?php pager(false); ?><div class="clearerleft"></div></div>
 
     <div class="Listview">
@@ -192,9 +225,14 @@ include "../../include/header.php";
         else
             $image = '';
 
-        ?><td><a href="<?php echo $baseurl ?>/pages/team/team_user.php?offset=0&group=<?php
-                echo $group; ?>&order_by=<?php echo $orderName . ($order_by==$orderName ? '+desc' : '');
-                ?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php
+        $column_header_url = generateURL(
+            $baseurl ."/pages/team/team_user.php",
+            ["offset"   =>"0",
+            "group"     =>$group,
+            "order_by"  =>$orderName . ($order_by==$orderName ? '+desc' : ''),
+            "find"      =>$find]
+        );
+        ?><td><a href="<?php echo $column_header_url?>" onClick="return CentralSpaceLoad(this);"><?php
                 echo $lang[$labelKey] . $image ?></a></td>
         <?php
     }
@@ -268,8 +306,18 @@ include "../../include/header.php";
         if($userref != $users[$n]["ref"])
             {
             // Add message link
-            echo '<a href="' . $baseurl_short . 'pages/user/user_message.php?msgto=' . $users[$n]["ref"] . '"  onClick="return CentralSpaceLoad(this,true);">' .  '<i class="fas fa-envelope"></i>&nbsp;' . $lang["message"] . '</a>';
-            }       
+            $message_link_url = generateURL(
+                $baseurl_short . "pages/user/user_message.php",
+                ["msgto"=>$users[$n]["ref"]]
+            );
+            ?>
+            <a
+                href=<?php echo $message_link_url ?>
+                onClick="return CentralSpaceLoad(this,true);"
+                ><i class="fas fa-envelope"></i>&nbsp;<?php echo $lang["message"]?>
+            </a>
+            <?php
+            }
         hook("usertool")?>
         </div><?php } ?>
         </td>
