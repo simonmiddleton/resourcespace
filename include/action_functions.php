@@ -17,7 +17,7 @@
 function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC")
     {
     global $default_display, $list_display_fields, $search_all_workflow_states,$actions_approve_hide_groups,$userref,
-    $actions_resource_requests,$actions_account_requests, $view_title_field, ,$messages_actions_usergroup, $actions_notify_states;
+    $actions_resource_requests,$actions_account_requests, $view_title_field, $actions_on, $messages_actions_usergroup, $actions_notify_states;
 
     // Make sure all states are excluded if they had the legacy option $actions_resource_review set to false.
     get_config_option($userref,'actions_resource_review', $actions_resource_review, true);
@@ -28,7 +28,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
     $actionsql = new PreparedStatementQuery();
     $filtered = $type!="";
 
-    if(!){return array();}
+    if(!$actions_on){return array();}
 
     if((!$filtered || 'resourcereview'==$type) && trim($actions_notify_states) != "")
         {
@@ -53,7 +53,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         }
     if(checkperm("R") && $actions_resource_requests && (!$filtered || 'resourcerequest'==$type))
         {
-        # This get_requests call now returns a query object with two properties; sql string and paramaters array
+        # This get_requests call now returns a query object with two properties; sql string and parameters array
         $request_query = get_requests(true,true,true);      
         $actionsql->sql .= (($actionsql->sql != "")?" UNION ":"") . "SELECT created
         as date,ref, user, substring(comments,21) as description,'resourcerequest' as type FROM (" . $request_query->sql . ") requests";
@@ -141,7 +141,10 @@ function get_editable_resource_sql()
  */
 function get_user_actions_recent(int $minutes, bool $allusers) : array
     {
-    global $view_title_field;
+    debug_function_call(__FUNCTION__,func_get_args());
+    global $view_title_field, $userref;
+
+    $newactions = [];
     
     // Find all resources that have changed archive state in the given number of minutes
     if(is_int_loose($view_title_field)) 
@@ -152,7 +155,7 @@ function get_user_actions_recent(int $minutes, bool $allusers) : array
         {
         $generated_title_field = "r.ref";
         }
-    $sql = "SELECT r.ref, r.archive, rl.user MAX(rl.date) date, $generated_title_field AS description 
+    $sql = "SELECT r.ref, r.archive, rl.user, MAX(rl.date) AS date, $generated_title_field AS description, 'resourcereview' AS type 
               FROM resource_log rl 
          LEFT JOIN resource r ON rl.resource=r.ref
              WHERE rl.type = 's' 
@@ -161,30 +164,115 @@ function get_user_actions_recent(int $minutes, bool $allusers) : array
           ORDER BY rl.ref DESC";
 
     $params = ["i",$minutes];
-    $resources = ps_query($sql,$params);
+    $newactions["resourcereview"] = ps_query($sql,$params);
 
     // Find all resource requests created in the given number of minutes
-    $sql = "SELECT r.ref, r.created, r.user, r.comments, r.assigned_to
+    $sql = "SELECT r.ref, r.user, r.created AS date, r.expires, r.comments AS description, r.assigned_to, 'resourcerequest' as type
               FROM request r
-             WHERE status <> 2
+             WHERE status = 0
                AND TIMESTAMPDIFF(MINUTE,created,NOW())<?
           ORDER BY r.ref ASC";
     $params = ["i",$minutes];
-    $requests = ps_query($sql,$params);
+    $newactions["resourcerequest"] = ps_query($sql,$params);
 
     // Find all account requests created in the last XX minutes
-    $sql = "SELECT ref, created, comments, usergroup
+    $sql = "SELECT ref, ref as user, created AS date, comments AS description, usergroup, 'userrequest' as type
               FROM user
              WHERE approved =  0
                AND TIMESTAMPDIFF(MINUTE,created,NOW())<?
-          ORDER BY r.ref ASC";
+          ORDER BY ref ASC";
     $params = ["i",$minutes];
-    $users = ps_query($sql,$params);
+    $newactions["userrequest"] = ps_query($sql,$params);
 
     // TODO Add hook and update plugin to find all proposed changes submitted in the last XX minutes
+    $userrecent = [];
+    if($allusers)
+        {
+        $action_notify_users = get_users_by_preference("user_pref_new_action_emails","1");
+        foreach($action_notify_users as $action_notify_user)
+            {
+            $userrecent[$action_notify_user] = actions_filter_by_user($action_notify_user,$newactions);
+            }
+        }
+    else
+        {
+        $userrecent[$userref] = actions_filter_by_user($userref,$newactions);
+        }
 
-    $action_notify_users = get_users_by_preference("new_action_email_interval","1");
+    return $userrecent;
+    }
 
-    
-    return array();
+/**
+ * Filter actions in the provided array to return only those applicable to the given user
+ *
+ * @param int       $actionuser User ref to get actions for
+ * @param array     $actions    Array of actions as returned by get_user_actions_recent()
+ * 
+ * @return array    Subset of actions for the given user as would be provided by get_user_actions()
+ * 
+ */
+function actions_filter_by_user(int $actionuser,array $actions) : array
+    {
+    debug_function_call(__FUNCTION__,func_get_args());
+    global $userref, $actions_resource_requests, $actions_account_requests, $actions_approve_hide_groups; 
+
+    $return = [];
+    if(!isset($userref) || $actionuser != $userref)
+        {
+        $actionuserdata = get_user($actionuser);
+        setup_user($actionuserdata);
+        }
+
+    foreach($actions as $actiontype=>$typeactions)
+        {
+        switch($actiontype)
+            {
+            case "resourcereview":
+                get_config_option($userref,'actions_resource_review', $actions_resource_review, true);
+                if($actions_resource_review == false)
+                    {
+                    $arrnotifystates = [];
+                    }
+                else
+                    {
+                    get_config_option($userref,"actions_notify_states", $notifystates,"");
+                    $arrnotifystates = explode(",",$notifystates);
+                    }
+                foreach($typeactions as $typeaction)
+                    {
+                    if(in_array($typeaction["archive"],$arrnotifystates) && get_edit_access($typeaction["ref"]))
+                        {
+                        $return["resourcereview"][] = $typeaction;
+                        }
+                    }
+                break;
+            case "resourcerequest":
+                if($actions_resource_requests)
+                    {                   
+                    foreach($typeactions as $typeaction)
+                        {                        
+                        if(resource_request_visible($typeaction))
+                            {
+                            $return["resourcerequest"][] = $typeaction;
+                            }
+                        }
+                    }
+                break;
+            case "userrequest":                
+                if(checkperm("u") && $actions_account_requests)
+                    {
+                    foreach($typeactions as $typeaction)
+                        {
+                        if(checkperm_user_edit($typeaction["ref"]))
+                            {
+                            $return["userrequest"][] = $typeaction;
+                            }
+                        }
+                    }
+                break;
+            default;
+                break;
+            }
+        }
+    return $return;
     }
