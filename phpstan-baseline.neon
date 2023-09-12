@@ -221,11 +221,6 @@ parameters:
 			path: include/user_functions.php
 
 		-
-			message: "#^Array has 2 duplicate keys with value 'sortable' \\(\"sortable\", \"sortable\"\\)\\.$#"
-			count: 1
-			path: pages/manage_jobs.php
-
-		-
 			message: "#^Undefined variable\\: \\$lang$#"
 			count: 1
 			path: pages/setup.php
