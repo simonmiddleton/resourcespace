@@ -114,7 +114,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         // Prepare the post data.
         $postdata = http_build_query(array(
             'baseurl' => $baseurl,
-            'referer' => $_SERVER['HTTP_REFERER'] ?: '',
+            'referer' => (isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:''),
             'pagename' => (isset($pagename)?$pagename:''),
             'error' => $error_info,
             'username' => (isset($username)?$username:''),

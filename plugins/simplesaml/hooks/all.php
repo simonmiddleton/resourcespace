@@ -416,7 +416,7 @@ function HookSimplesamlAllProvideusercredentials()
                         if (filter_var($simplesaml_multiple_email_notify, FILTER_VALIDATE_EMAIL) && getval("usesso","") != "")
                             {
                             // Already account(s) with this email address, notify the administrator (provided it is an actual attempt to pevent unnecessary duplicates)
-                            simplesaml_duplicate_notify($username,$group,$email,$email_matches,$email,$userid);
+                            simplesaml_duplicate_notify($username,$group,$email,$email_matches,$userid);
                             }
                         // We are blocking accounts with the same email
                         if($simplesaml_allow_standard_login)

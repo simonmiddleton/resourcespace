@@ -119,8 +119,6 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
 
         jQuery(document).ready(function ()
             {
-            var LeafletView = L.noConflict();
-
             <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
             var <?php echo $map_container_obj; ?>_geo_lat = <?php echo $resource['geo_lat']; ?>;
             var <?php echo $map_container_obj; ?>_geo_long = <?php echo $resource['geo_long']; ?>;
@@ -130,9 +128,9 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
                 {
                 <?php echo $map_container_obj; ?>.remove();
                 }
-            var <?php echo $map_container_obj; ?> = new LeafletView.map(<?php echo $map_container; ?>, {
+            var <?php echo $map_container_obj; ?> = new L.map(<?php echo $map_container; ?>, {
             preferCanvas: true,
-                renderer: LeafletView.canvas(),
+                renderer: L.canvas(),
                 zoomsliderControl: <?php echo $zoomslider?>,
                 zoomControl: <?php echo $zoomcontrol?>
                 }).setView([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], <?php echo $map_container_obj; ?>_zoom);
@@ -142,7 +140,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
 
             <!--Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js-->
     
-            var defaultLayer = new LeafletView.tileLayer.provider('<?php echo $map_default;?>', {
+            var defaultLayer = new L.tileLayer.provider('<?php echo $map_default;?>', {
                 useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
                 detectRetina: '<?php echo $map_retina;?>', <!--Use retina high resolution map tiles?-->
                 attribution: default_attribute
@@ -156,17 +154,17 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
                 exclusive: false
             };
 
-            var control = LeafletView.Control.styledLayerControl(baseMaps,options);
+            var control = L.Control.styledLayerControl(baseMaps,options);
             <?php echo $map_container_obj; ?>.addControl(control);
 
             <!--Show zoom history navigation bar and add to Leaflet map using Leaflet.NavBar.min.js-->
             <?php if ($map_zoomnavbar && $view_mapheight >= 400)
                 { ?>
-                LeafletView.control.navbar().addTo(<?php echo $map_container_obj; ?>); <?php
+                L.control.navbar().addTo(<?php echo $map_container_obj; ?>); <?php
                 } ?>
 
             <!--Add a scale bar to the Leaflet map using leaflet.min.js-->
-            new LeafletView.control.scale().addTo(<?php echo $map_container_obj; ?>);
+            new L.control.scale().addTo(<?php echo $map_container_obj; ?>);
 
             <!--Add a KML overlay to the Leaflet map using leaflet-omnivore.min.js-->
             <?php if ($map_kml)
@@ -180,7 +178,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
             }
 
             <!--Add a marker for the resource-->
-            LeafletView.marker([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], {
+            L.marker([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], {
                 <?php
                 $maprestype = get_resource_types($resource['resource_type']);
                 $markercolour = (isset($maprestype[0]) && isset($MARKER_COLORS[$maprestype[0]["colour"]])) ? (int)$maprestype[0]["colour"] : ($resource['resource_type'] % count($MARKER_COLORS));
@@ -195,7 +193,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
                 $polygon = leaflet_polygon_parsing($fields, false);
                 if (!is_null($polygon['values']) && $polygon['values'] != "" && $polygon['values'] != "[]")
                     { ?>
-                    var refPolygon = LeafletView.polygon([<?php echo $polygon['values']; ?>]).addTo(<?php echo $map_container_obj; ?>);
+                    var refPolygon = L.polygon([<?php echo $polygon['values']; ?>]).addTo(<?php echo $map_container_obj; ?>);
                     <?php echo $map_container_obj; ?>.fitBounds(refPolygon.getBounds(), {
                         padding: [25, 25]
                     }); <?php

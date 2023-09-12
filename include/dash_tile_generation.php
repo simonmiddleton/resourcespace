@@ -19,8 +19,7 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
 		{
 		switch($tile_style)
 			{
-			case "thmsl": 	global $usertile;
-							tile_config_themeselector($tile,$tile_id,$usertile,$tile_width,$tile_height);
+			case "thmsl":	tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height);
 							exit;
 			case "custm":	tile_config_custom($tile,$tile_id,$tile_width,$tile_height);
 							exit;

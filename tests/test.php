@@ -162,6 +162,11 @@ mkdir($storagedir);
 $storageurl .= '/rs_test';
 echo "Filestore is now at $storagedir\n";
 
+// General environment configuration 
+$password_min_length = 7;
+$password_min_alpha = $password_min_numeric = 1;
+$password_min_uppercase = $password_min_special = 0;
+
 $test_dir = $performancetest ? "performance_tests" : "test_list";
 # Get a list of core tests
 $core_tests = scandir($test_dir);

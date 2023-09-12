@@ -13,7 +13,7 @@ $test_1201_setup_user = function(array $info) use ($test_id)
         $_POST['username'] = $test_run_username;
         $_POST['fullname'] = $info['fullname'];
         $_POST['email'] = "test_1201_{$test_id}_{$info['email']}";
-        $_POST['password'] = generateSecureKey(8);
+        $_POST['password'] = make_password();
         $_POST['approved'] = $info['approved'] ?? '1';
         $_POST['account_expires'] = $info['account_expires'] ?? '';
         save_user($new_user_id);

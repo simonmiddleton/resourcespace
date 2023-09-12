@@ -310,10 +310,11 @@ body {
         width: 100%;
         clear: both;
         text-align: right;
+        padding-left: 0;
     }
     #Header .HorizontalNav ul li {
         display: inline-block;
-        padding:0;
+        padding: 0 5px;
         border:0;
         float: left;
     }
@@ -360,13 +361,6 @@ body {
         color: #3a3a3a;
         opacity: 1;
         background-color: #ffffff;
-    }
-    #HeaderNav2 {
-        padding-left: 0;
-    }
-
-    #Header .HorizontalNav ul li  {
-        padding:0 5px;     
     }
     
     #Header .HorizontalNav ul li.UploadButton a {
@@ -475,9 +469,6 @@ body {
         width: 250px;
         margin-top: 10px;
     }
-    #searchspace {
-        padding:0;
-    }
     #Rssearchexpand {
         width:122px;
     }
@@ -557,6 +548,7 @@ body {
         margin: 0 8px 4px 0;
     }
     #searchspace {
+        padding: 0;
         width: 90%;
         margin-left: auto;
         margin-right: auto;
@@ -671,9 +663,9 @@ body {
         display:inline-block;
     }
     #HomeSiteText {
-        width: 99%;
+        width: 100%;
         margin-left: 0.5%;
-        max-width: 98.5%;
+        max-width: 99%;
         padding:0;
     }
     #HomePanelContainer {
@@ -682,10 +674,6 @@ body {
         margin-right:auto;
         clear:both;
         width:auto;
-    }
-    #HomeSiteText {
-        width: 100%;
-        max-width: 99%;
     }
 }
 @media(max-width:580px) {

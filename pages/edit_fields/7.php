@@ -38,6 +38,11 @@ else
     $selected_nodes = [];
     }
 
+// When editing multiple resources, we don't want to preselect any options; the user must make the necessary selection
+if($multiple) 
+    {
+    $selected_nodes = [];
+    }
 
 // Strip out invalid nodes
 $valid_nodes = [];

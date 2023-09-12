@@ -36,7 +36,7 @@ $use_cases = [
         'name' => 'Date in wrong (dmY) format should error and let user know',
         'input' => ['ref' => $resource_b, 'autosave_field' => $rtf_date],
         'post' => ['value' => '01-04-2022'],
-        'expected' => [$rtf_date => '01-04-2022'], // it means it errored - see save_resource_data
+        'expected' => [$rtf_date => $lang['error_invalid_date'] . ' : 01-04-2022'], // it means it errored - see save_resource_data
     ],
 ];
 foreach ($use_cases as $uc)

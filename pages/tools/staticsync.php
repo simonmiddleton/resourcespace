@@ -510,6 +510,7 @@ function ProcessFolder($folder)
 
                 # Import this file
                 $r = import_resource($shortpath, $type, $title, $staticsync_ingest,$enable_thumbnail_creation_on_upload, $extension);
+                echo " - Created resource #" . $r . PHP_EOL;
                 if ($r !== false)
                     {
                     # Add to mapped category tree (if configured)
@@ -608,7 +609,7 @@ function ProcessFolder($folder)
                                                     {
                                                     // The $staticsync_extension_mapping_append_values variable actually refers to folder->metadata mapping, not the file extension
                                                     $curnodes = get_resource_nodes($r,$field);
-                                                    $field_nodes[$field]   = array_merge($curnodes,$newnodes);
+                                                    $field_nodes[$field]   = array_merge($curnodes,$newnodes,$field_nodes[$field]??[]);
                                                     }
                                                 else
                                                     {
@@ -663,6 +664,7 @@ function ProcessFolder($folder)
                                 {
                                 $nodes_to_add = array_merge($nodes_to_add,$nodeids);
                                 }
+                            debug("BANG " . __LINE__. " adding " . implode(",",$nodes_to_add));
                             add_resource_nodes($r,$nodes_to_add);
                             }
                         }

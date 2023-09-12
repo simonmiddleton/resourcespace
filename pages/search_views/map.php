@@ -48,15 +48,14 @@ get_geo_maps_scripts();
 </div>
 
 <script type="text/javascript">
-    var LeafletMap = L.noConflict();
     if(typeof map1 !== 'undefined')
         {
         map1.remove();
         }
     <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
     <?php set_geo_map_centerview(); ?>
-    var map1 = new LeafletMap.map('map_results', {
-        renderer: LeafletMap.canvas(),
+    var map1 = new L.map('map_results', {
+        renderer: L.canvas(),
         zoomsliderControl: <?php echo $zoomslider; ?>,
         zoomControl: <?php echo $zoomcontrol; ?>
     }).setView(mapcenterview,mapdefaultzoom);
@@ -65,7 +64,7 @@ get_geo_maps_scripts();
     <?php include '../include/map_processing.php'; ?>
 
     <!--Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js-->
-    var defaultLayer = new LeafletMap.tileLayer.provider('<?php echo $map_default;?>', {
+    var defaultLayer = new L.tileLayer.provider('<?php echo $map_default;?>', {
         useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
         detectRetina: '<?php echo $map_retina;?>', <!--Use retina high resolution map tiles?-->
         attribution: default_attribute
@@ -86,17 +85,17 @@ get_geo_maps_scripts();
         return +(Math.round(num + "e+6") + "e-6");
         }
 
-    var control = LeafletMap.Control.styledLayerControl(baseMaps,options);
+    var control = L.Control.styledLayerControl(baseMaps,options);
     map1.addControl(control);
 
     <!--Show zoom history navigation bar and add to Leaflet map using Leaflet.NavBar.min.js-->
     <?php if ($map_zoomnavbar)
         { ?>
-        LeafletMap.control.navbar().addTo(map1); <?php
+        L.control.navbar().addTo(map1); <?php
         } ?>
 
     <!--Add a scale bar to the Leaflet map using leaflet.min.js-->
-    new LeafletMap.control.scale().addTo(map1);
+    new L.control.scale().addTo(map1);
 
     <?php
     hook("map_additional");
@@ -117,7 +116,7 @@ get_geo_maps_scripts();
         var win_url;
 
         <!--Setup marker clustering using leaflet.markercluster.js for many overlapping markers common in low zoom levels-->
-        var markers = LeafletMap.markerClusterGroup({
+        var markers = L.markerClusterGroup({
             maxClusterRadius: 75,
             disableClusteringAtZoom: 14,
             chunkedLoading: true, <!--Load markers in chunks to avoid slow browser response-->
@@ -189,14 +188,14 @@ get_geo_maps_scripts();
 
                 <!--Define the marker arrays for the markers, zoom to the markers, and marker click function using leaflet.js and leaflet-color-markers.js-->
                 <!--Create a marker for each resource for map zoom to the markers-->
-                markerArray.push(new LeafletMap.marker([lat, lon], {
+                markerArray.push(new L.marker([lat, lon], {
                     opacity: 0
                 }).addTo(map1));
 
                 <!--Create a marker for each resource-->
                 <?php if ($marker_resource_preview)
                     { ?>
-                    var marker = new LeafletMap.marker([lat, lon], {
+                    var marker = new L.marker([lat, lon], {
                         icon: iconColor,
                         riseOnHover: true,
                         win_url: geomarker[i][2],
@@ -216,7 +215,7 @@ get_geo_maps_scripts();
                     } 
                 else // Show resource ID in marker tooltip.
                     { ?> 
-                    var marker = new LeafletMap.marker([lat, lon], {
+                    var marker = new L.marker([lat, lon], {
                         icon: iconColor,
                         title: 'ID# ' + rf,
                         riseOnHover: true,
@@ -235,7 +234,7 @@ get_geo_maps_scripts();
         jQuery(document).ready(function()
             {
             <!--Zoom to the markers on the map regardless of the initial view-->
-            var group = LeafletMap.featureGroup(markerArray);
+            var group = L.featureGroup(markerArray);
             map1.fitBounds(group.getBounds().pad(0.25));
             });
         

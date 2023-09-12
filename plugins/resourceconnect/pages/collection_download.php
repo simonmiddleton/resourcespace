@@ -72,7 +72,7 @@ if ($submitted != "")
 			{
 			$usesize=$size;
 			$pextension = ($size == 'original') ? $result[$n]["file_extension"] : 'jpg';
-			($size == 'original') ? $usesize="" : $usesize=$usesize;
+            if($size == 'original') {$usesize="";}
 			$p=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
 
 			if ((!file_exists($p)) && $useoriginal == 'yes' && resource_download_allowed($ref,'',$result[$n]['resource_type'])){

@@ -159,7 +159,7 @@ function mplus_get_connection_data()
 */
 function mplus_notify(array $users, $message)
     {
-    if(count($users) < 0 || trim($message) === '')
+    if(count($users) == 0 || trim($message) === '')
         {
         return false;
         }

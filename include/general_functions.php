@@ -1403,12 +1403,6 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
         exit;
         }
-    catch (\Exception $e)
-        {
-        echo "Message could not be sent. <p>";
-        debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
-        exit;
-        }
     unset($GLOBALS["use_error_exception"]);
     hook("aftersendmailphpmailer","",$email);   
 }
@@ -1862,7 +1856,7 @@ function clear_process_lock($name)
  * Custom function for retrieving a file size. A resolution for PHP's issue with large files and filesize(). 
  *
  * @param  string $path
- * @return integer  The file size in bytes
+ * @return integer|bool  The file size in bytes
  */
 function filesize_unlimited($path)
     {
@@ -1898,7 +1892,16 @@ function filesize_unlimited($path)
 
     if(!is_int($bytesize))
         {
-        $bytesize = @filesize($path); # Bomb out, the output wasn't as we expected. Return the filesize() output.
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            $bytesize = filesize($path); # Bomb out, the output wasn't as we expected. Return the filesize() output.
+            }
+        catch (Throwable $e)
+            {
+            return false;
+            }
+        unset($GLOBALS["use_error_exception"]);
         }
 
     hook('afterfilesize_unlimited', '', array($path));
@@ -4849,6 +4852,20 @@ function try_unlink($deletefile)
     return $deleted;
     }
 
+function try_getimagesize(string $filename, &$image_info = NULL)
+    {
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        $return = getimagesize($filename,$image_info);
+        }
+    catch (Throwable $e)
+        {
+        $return = false;
+        }
+    unset($GLOBALS["use_error_exception"]);
+    return $return;
+    }
 
 /**
  * Check filestore folder browseability.

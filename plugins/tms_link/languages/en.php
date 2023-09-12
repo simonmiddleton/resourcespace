@@ -56,7 +56,7 @@ $lang["tms_link_mediatypeid"]="MediaTypeID to use for inserted media records";
 $lang["tms_link_formatid"]="FormatID  to use for inserted media records";
 $lang["tms_link_colordepthid"]="ColorDepthID   to use for inserted media records";
 $lang["tms_link_media_path"]="Root path to filestore that will be stored in TMS e.g. \\RS_SERVER\filestore\. Make sure the trailing slash is included. The filename stored in TMS will include the relative path from the filestore root.";
-
+$lang['tms_link_mediapaths_resource_reference_column']="Column to use in MediaMaster table to store Resource ID. This is optional and is used to avoid multiple resources using the same Media Master ID.";
 $lang["tms_link_modules_mappings"] = "Synchronisation from extra modules (tables/ views)";
 $lang["tms_link_module"] = "Module";
 $lang["tms_link_tms_uid_field"] = "TMS UID field";
