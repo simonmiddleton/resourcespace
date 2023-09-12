@@ -1195,3 +1195,9 @@ body {
     max-width: 150px;
     }
 }
+
+@media (max-width: 1200px) {
+    #config-image-preview-label{
+        height: auto;
+    }
+}

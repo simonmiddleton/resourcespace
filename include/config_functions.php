@@ -160,6 +160,56 @@ function set_config_option($user_id, $param_name, $param_value)
 
     return true;
     }
+    
+
+/**
+ * Delete entry from the user_preferences table completely (instead of setting to blank via set_config_option).
+ * Used by system preferences page when deleting a file to allow fallback to value (if set) in config.php instead
+ * of replacing it with blank from user_preference value.
+ *
+ * @param  integer  $user_id      User ID. Use NULL for system wide config options.
+ * @param  mixed    $param_name   Parameter name
+ * 
+ * @return bool     True if preference was deleted else false.
+ */
+function delete_config_option($user_id, string $param_name) : bool
+    {
+    if(empty($param_name))
+        {
+        return false;
+        }
+
+    $current_param_value = null;
+    if(get_config_option($user_id, $param_name, $current_param_value))
+        {
+        if(is_null($user_id))
+            {
+            $user_query = 'user IS NULL';
+            }
+        else
+            {
+            $user_query = 'user = ?';
+            $params[] = 'i'; $params[] = $user_id;
+            }
+
+        $query = "DELETE FROM user_preferences WHERE ". $user_query ." AND parameter = ?";
+        $params[] = "s"; $params[] = $param_name;
+
+        if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
+            {
+            log_activity(null, LOG_CODE_DELETED, null, 'user_preferences', 'value', "parameter='" . $param_name . "'", null, $current_param_value);
+            }
+
+        ps_query($query,$params);
+
+        // Clear disk cache
+        clear_query_cache("preferences");
+
+        return true;
+        }
+
+    return false;
+    }
 
 
 /**
@@ -490,23 +540,33 @@ function config_add_hidden_input(string $cf_var_name, string $cf_var_value = '')
 * @param string $form_action URL where the form should post to
 * @param int    $width       Wdidth of the input file HTML tag. Default - 420
 */
-function config_file_input($name, $label, $current, $form_action, $width = 420, $valid_extensions = array())
+function config_file_input($name, $label, $current, $form_action, $width = 420, $valid_extensions = array(), $file_preview = false)
     {
     global $lang,$storagedir;
     
     if($current !=='')
-		{ 
-		$missing_file = str_replace('[storage_url]', $storagedir, $current);
-		$pathparts=explode("/",$current);
-		}
-		
+        {
+        $origin_in_config = (substr($current, 0, 13) != '[storage_url]');
+        if ($origin_in_config)
+            {
+            # Current value may have originated in config.php - file uploader to consider this unset
+            # to enable override of config.php by uploading a file.
+            $current = '';
+            }
+        else
+            {
+            $missing_file = str_replace('[storage_url]', $storagedir, $current);
+            $pathparts=explode("/",$current);
+            }
+        }
+
     ?>
     <div class="Question" id="question_<?php echo $name; ?>">
         <form method="POST" action="<?php echo $form_action; ?>" enctype="multipart/form-data">
-            <label for="<?php echo $name; ?>"><?php echo $label; ?></label>
-            <div class="AutoSaveStatus">
-                <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
-            </div>
+        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo $name; ?>"><?php echo $label; ?></label>
+        <div class="AutoSaveStatus">
+        <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
+        </div>
         <?php
         if($current !== '' && $pathparts[1]=="system" && !file_exists($missing_file))
 			{
@@ -548,6 +608,14 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             generateFormToken($name);
             ?>
         </form>
+        <?php
+        if ($file_preview && $current !== "")
+            {
+            global $baseurl; ?>
+            <div id="preview_<?php echo $name; ?>">
+            <img class="config-image-preview" src="<?php echo $baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current) . '?v=' . date("s") ?>" alt="<?php echo escape_quoted_data($lang["preview"] . ' - ' . $label) ?>">
+            </div>
+            <?php } ?>
         <div class="clearerleft"></div>
     </div>
     <?php
@@ -632,9 +700,9 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
 * @param int     $width              Width of the input file HTML tag. Default - 420
 * @param array   $valid_extensions   Optional array of file extensions that will be validated during upload, see config_process_file_input()
 */
-function config_add_file_input($config_var, $label, $form_action, $width = 420, $valid_extensions = array())
+function config_add_file_input($config_var, $label, $form_action, $width = 420, $valid_extensions = array(), $file_preview = false)
     {   
-    return array('file_input', $config_var, $label, $form_action, $width, $valid_extensions);
+    return array('file_input', $config_var, $label, $form_action, $width, $valid_extensions, $file_preview);
     }
 
 
@@ -1084,7 +1152,7 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                     unlink($delete_filename);
                     hook("configdeletefilesuccess",'',array($delete_filename));
                     }
-                set_config_option(null, $config_name, '');
+                delete_config_option(null, $config_name);
                 $redirect = true;
                 }
             }
@@ -1170,7 +1238,7 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'file_input':
-                config_file_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5]);
+                config_file_input($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6]);
                 break;
 
             case 'boolean_select':

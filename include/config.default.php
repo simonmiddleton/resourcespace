@@ -1023,7 +1023,7 @@ $show_related_themes=true;
 # NOTE: if set, you must be sure watermarks are generated for all images; This can be done using pages/tools/update_previews.php?previewbased=true
 # NOTE: also, if set, restricted external emails will recieve watermarked versions. Restricted mails inherit the permissions of the sender, but
 # if watermarks are enabled, we must assume restricted access requires the equivalent of the "w" permission
-# $watermark="gfx/watermark.png";
+$watermark="";
 
 # Set to true to watermark thumb/preview for groups with the 'w' permission even when access is 'open'.
 # This makes sense if $terms_download is active.
