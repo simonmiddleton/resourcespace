@@ -13,35 +13,35 @@ $resource_type=getval("resource_type","");
 $period=getval("period",$reporting_periods_default[1]);
 $period_init=$period;
 if ($period==0)
-	{
-	# Specific number of days specified.
-	$period=getval("period_days","");
-	if (!is_numeric($period) || $period<1) {$period=1;} # Invalid period specified.
-	}
+    {
+    # Specific number of days specified.
+    $period=getval("period_days","");
+    if (!is_numeric($period) || $period<1) {$period=1;} # Invalid period specified.
+    }
 if ($period==-1)
-	{
-	# Specific date range specified.
-	$from_y = getval("from-y","");
-	$from_m = getval("from-m","");
-	$from_d = getval("from-d","");
-	
-	$to_y = getval("to-y","");
-	$to_m = getval("to-m","");
-	$to_d = getval("to-d","");
-	}
-else
-	{
-	# Work out the from and to range based on the provided period in days.
-	$start=time()-(60*60*24*$period);
+    {
+    # Specific date range specified.
+    $from_y = getval("from-y","");
+    $from_m = getval("from-m","");
+    $from_d = getval("from-d","");
 
-	$from_y = date("Y",$start);
-	$from_m = date("m",$start);
-	$from_d = date("d",$start);
-		
-	$to_y = date("Y");
-	$to_m = date("m");
-	$to_d = date("d");
-	}
+    $to_y = getval("to-y","");
+    $to_m = getval("to-m","");
+    $to_d = getval("to-d","");
+    }
+else
+    {
+    # Work out the from and to range based on the provided period in days.
+    $start=time()-(60*60*24*$period);
+
+    $from_y = date("Y",$start);
+    $from_m = date("m",$start);
+    $from_d = date("d",$start);
+
+    $to_y = date("Y");
+    $to_m = date("m");
+    $to_d = date("d");
+    }
 $groups=getval("groups","");
 $collection=getval("collection","");
 $external=getval("external","0");
@@ -58,10 +58,10 @@ if ($tile!="")
     }
 
 $condition="where
-activity_type=? and 
+activity_type=? and
 (
 d.year>?
-or 
+or
 (d.year=? and d.month>?)
 or
 (d.year=? and d.month=? and d.day>=?)
@@ -69,7 +69,7 @@ or
 and
 (
 d.year<?
-or 
+or
 (d.year=? and d.month<?)
 or
 (d.year=? and d.month=? and d.day<=?)
@@ -89,7 +89,7 @@ $resource_activity_types = array(
     'Add resource to collection',
     'Create resource',
     'Removed resource from collection',
-    'Resource download', 
+    'Resource download',
     'Resource edit',
     'Resource upload',
     'Resource view');
@@ -128,7 +128,7 @@ if (!$from_dash)
         }
     ?>
     <h2><?php echo $title ?>
-    
+
     <?php
     # Add to dash tile function
     $graph_params="activity_type=" . urlencode($activity_type) . "&groups=" . urlencode($groups) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . getval("period","") . "&period_days=" . getval("period_days",""). "&collection=" . $collection . "&external=" . $external . "&type=" . urlencode($type) . "&resource_type=" . $resource_type . "&from_dash=true";
@@ -139,27 +139,27 @@ if (!$from_dash)
     }
 else
     {
-    # Dash 
+    # Dash
     # Load title
     $title= getval("tltitle",ps_value("select title value from dash_tile where ref=?",array("i",$tile), ""));
     ?>
     <div style="padding:10px 15px">
-    <h2 style="font-size:120%;margin:0;padding:0 0 8px 0;background:none;white-space: nowrap;overflow: hidden;
+    <h2 style="font-size:120%;margin:0;padding:<?php echo ($from_dash?"0":"0 0 8px 0")?>;background:none;white-space: nowrap;overflow: hidden;
   text-overflow: ellipsis;"><?php echo $title ?></h2>
     <?php
     }
 ?>
-    
+
     <?php if ($type!="summary") { ?><div id="placeholder<?php echo $type . $n ?>"
-    
+
     <?php if ($from_dash) { ?>
     style="width:220px;height:105px;"
     <?php } else { ?>
     style="width:100%;height:80%;"
     <?php } ?>
-    
-    ></div><?php 
-    } 
+
+    ></div><?php
+    }
 
 if ($type=="pie")
     {
@@ -173,17 +173,17 @@ if ($type=="pie")
         $join_table="user";
         $join_display="fullname";
         }
-        
+
     $data=ps_query("select d.object_ref,j." . $join_display . " name,sum(count) c from daily_stat d join $join_table j on d.object_ref=j.ref $join $condition group by object_ref,j." . $join_display . " order by c desc limit 50",$params); // Note only params in $condition need to be prepared statement parameters - the rest are hardcoded above.
 
     # Work out total so we can add an "other" block.
-    $total=ps_value("select sum(count) value from daily_stat d $join $condition",$params, 0); 
+    $total=ps_value("select sum(count) value from daily_stat d $join $condition",$params, 0);
     if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit();}
     ?>
-    <script type="text/javascript"> 
+    <script type="text/javascript">
     jQuery(function () {
-	
-	jQuery.plot('#placeholder<?php echo $type . $n ?>', [
+
+    jQuery.plot('#placeholder<?php echo $type . $n ?>', [
 
                 <?php
                 $rt=0;
@@ -197,24 +197,24 @@ if ($type=="pie")
                     <?php
                     }
                     ?>
-                
-		], {
-	series: {
-	    pie: {
-		show: true,
-		label: {
+
+        ], {
+    series: {
+        pie: {
+        show: true,
+        label: {
                 show: false
-		},
-		stroke: { width: 0 }
-	    }
-	}
-	,
-	grid: {
-	    hoverable: true,borderWidth:0
-	},
-	legend: {
+        },
+        stroke: { width: 0 }
+        }
+    }
+    ,
+    grid: {
+        hoverable: true,borderWidth:0
+    },
+    legend: {
         show: false
-	},
+    },
     tooltip: {
         show: true,
         content: '%p.0%, %s',
@@ -228,8 +228,8 @@ if ($type=="pie")
     });
 
     </script>
-    <?php } 
-    
+    <?php }
+
     if ($type=="piegroup")
         {
         # External conditions
@@ -248,9 +248,9 @@ if ($type=="pie")
         $data=ps_query("select $usergroup_resolve as usergroup,$name_resolve as `name`,sum(count) c from daily_stat d left outer join usergroup ug on d.usergroup=ug.ref $join $condition group by $usergroup_resolve, $name_resolve order by c desc",$params);
         if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
         ?>
-        <script type="text/javascript"> 
+        <script type="text/javascript">
         jQuery(function () {
-        
+
         jQuery.plot('#placeholder<?php echo $type . $n ?>', [
 
                     <?php foreach ($data as $row) { ?>{data:<?php echo $row["c"] ?>,label:"<?php echo $row["name"]  ?>"},<?php } ?>
@@ -287,11 +287,11 @@ if ($type=="pie")
         </script>
         <?php
         }
-    
+
 if ($type=="pieresourcetype")
         {
     // Pie chart to break down resource activities by type
-        
+
     $data=ps_query("
         select
             ret.name as res_type_name,
@@ -315,13 +315,13 @@ if ($type=="pieresourcetype")
         ?>
         <p><?php echo $lang["report_no_data"] ?></p>
         <script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script>
-        <?php 
-        exit(); 
+        <?php
+        exit();
         }
 
     ?>
 
-    <script type="text/javascript"> 
+    <script type="text/javascript">
         jQuery(function ()
             {
             jQuery.plot('#placeholder<?php echo $type . $n ?>', [
@@ -363,14 +363,14 @@ if ($type=="pieresourcetype")
                 });
             });
     </script>
-    <?php 
+    <?php
     }
-    
+
 if ($type=="line")
     {
     $data=ps_query("select unix_timestamp(concat(year,'-',month,'-',day))*1000 t,sum(count) c from daily_stat d $join $condition group by year,month,day order by t",$params);
     if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
-    
+
     # Find zero days and fill in the gaps
 
     $day_ms=(60*60*24*1000); # One day in milliseconds.
@@ -393,12 +393,12 @@ if ($type=="line")
         }
         }
     ?>
-        <script type="text/javascript"> 
+        <script type="text/javascript">
 jQuery(function () {
-                        
+
     jQuery.plot("#placeholder<?php echo $type . $n ?>", [
-    
-        
+
+
             {
         data: [
         <?php foreach ($newdata as $t=>$c) { ?>
@@ -411,7 +411,7 @@ jQuery(function () {
         shadowSize: 4,
         <?php if ($from_dash) { ?>color: "#fff"<?php } else { ?>color: "#0be"<?php } ?>
     },
-        
+
     ],
         {
     <?php if (!$from_dash) { ?>
@@ -425,7 +425,7 @@ jQuery(function () {
         legend: {show: false },
         grid: { <?php if (!$from_dash) { ?>hoverable: true, clickable: true, backgroundColor: "#fff", <?php } ?> borderWidth: <?php echo $from_dash?0:2 ?>, autoHighlight: true }
         }
-    
+
     );
     <?php if (!$from_dash) { ?>
         jQuery("<div id='tooltip<?php echo $type . $n ?>'></div>").css({
@@ -443,25 +443,25 @@ jQuery(function () {
         if (item) {
                 var x = item.datapoint[0], y = item.datapoint[1].toFixed(0);
                 var d = new Date(x);
-                
+
                 jQuery("#tooltip<?php echo $type . $n ?>").html(d.toDateString() + " = " + y)
                         .css({top: item.pageY+5, left: item.pageX+5})
                         .fadeIn(200);
-                        
+
         } else {
                 jQuery("#tooltip<?php echo $type . $n ?>").hide();
         }
     }
     );
     <?php }  else  {
-    
+
     # Specific from dash styling
-    ?>    
+    ?>
     jQuery(".flot-text").css("color","#ddd");
-    <?php } ?>        
+    <?php } ?>
     });
 
-    </script> 
+    </script>
     <?php
     }
 
@@ -475,7 +475,7 @@ if ($type=="summary")
         ?>
         <style>
         .ReportSummary {background: none;color:inherit;}
-        .ReportSummary td {padding:3px 0 3px 0;display:block;width:45%;border:none;color:inherit;}
+        .ReportSummary td {padding:0;display:block;width:45%;border:none;color:inherit;}
         .ReportMetric {font-size:200%;padding-left:5px;color:inherit;background:none;}
         </style>
         <?php
@@ -484,14 +484,67 @@ if ($type=="summary")
     ?>
     <table style="width:100%;" class="ReportSummary">
     <tr>
-    <td width="<?php echo $cellwidth ?>%"><?php echo $lang["report_total"]   ?> <span class="ReportMetric"><?php echo ps_value("select ifnull(format(sum(count),0),0) value from daily_stat d $join $condition",$params,0); ?></span></td>
-    <td width="<?php echo $cellwidth ?>%"><?php echo $lang["report_average"] ?> <span class="ReportMetric"><?php echo ps_value("select ifnull(format(avg(c),1),0) value from (select year,month,day,sum(count) c from daily_stat d $join $condition group by year,month,day) intable",$params,0); ?></span></td>
-    </table>    
-    <?php 
+    <td
+        width="<?php echo $cellwidth ?>%"
+        ><?php
+            if($from_dash)
+                {
+                echo "<span style=\"display:block;\">" . $lang["report_total"] . "</span>";
+                }
+            else
+                {
+                echo $lang["report_total"];
+                }
+        ?>
+
+        <span
+            class="ReportMetric"
+            ><?php echo ps_value(
+                "SELECT IFNULL(format(sum(count),0),0) `value` FROM daily_stat d $join $condition",
+                $params,
+                0
+                );
+            ?>
+        </span>
+    </td>
+    <td
+        width="<?php echo $cellwidth ?>%"
+        ><?php
+            if ($from_dash)
+                {
+                echo "<span style=\"display:block;\">" . $lang["report_average"] . "</span>";
+                }
+            else
+                {
+                echo $lang["report_average"];
+                }
+        ?>
+
+        <span
+            class="ReportMetric"
+            ><?php echo ps_value(
+                "SELECT
+                    IFNULL(format(avg(c),1),0) `value`
+                FROM
+                    (SELECT
+                        year,month,day,sum(count) c
+                    FROM
+                        daily_stat d
+                    $join
+                    $condition
+                    GROUP BY year,month,day) intable",
+                $params,
+                0
+                );
+                ?>
+        </span>
+    </td>
+    </table>
+    <?php
     }
 
 if ($from_dash)
-    { 
+    {
     if($tile>0)
         {
         # Update $tile and $usertile for generate_dash_tile_toolbar purposes
@@ -503,5 +556,5 @@ if ($from_dash)
         }
     ?>
     </div>
-    <?php 
+    <?php
     }
