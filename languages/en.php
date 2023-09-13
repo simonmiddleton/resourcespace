@@ -170,7 +170,6 @@ $lang["property-autocomplete_macro"]="Autocomplete macro";
 $lang["property-hide_when_uploading"]="Hide when uploading";
 $lang["property-hide_when_restricted"]="Hide when restricted";
 $lang["property-omit_when_copying"]="Omit when copying";
-$lang["property-sync_with_field"]="Sync with field";
 $lang["information-copy_field"]="<a href=field_copy.php?ref=%ref>Copy field</a>";
 $lang["property-display_condition"]="Display condition";
 $lang["information-display_condition"]="Display condition: this field will only display if the following conditions are met. The conditioning field being checked must be one of the fixed types: dropdown list, checkbox list, radio buttons, dynamic keyword or category tree. Uses same format as group search filter i.e. shortname=value1|value2, shortnamea=validoptiona;shortnameb=validoptionb1|validoptionb2";
@@ -2080,7 +2079,6 @@ $lang["error-pageload"] = "Sorry, there has been an error loading this page. If 
 
 $lang["copy-field"]="Copy field";
 $lang["copy-to-resource-type"]="Copy to resource type";
-$lang["synchronise-changes-with-this-field"]="Synchronise changes with this field";
 $lang["copy-completed"]="Copy completed. New field has ID ?.";
 
 $lang["nothing-to-display"]="Nothing to display.";

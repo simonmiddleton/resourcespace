@@ -1628,7 +1628,6 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
     {
     global $regexp_slash_replace, $migrate_data, $onload_message, $lang, $baseurl;
 
-    $sync_field = isset($postdata["sync_field"]) ? (int)$postdata["sync_field"] : 0;
     $existingfield = get_resource_type_field($ref);
     $params= $syncparams = [];
 
@@ -1718,30 +1717,6 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
             }
 
         log_activity(null,LOG_CODE_EDITED,$val,'resource_type_field',$column,$ref);
-
-        // Add SQL to update synced fields if field is marked as a sync field
-        if ($sync_field!="" && $sync_field>0 && $column_detail[3]==1)
-            {
-            if (isset($syncsql))
-                {
-                $syncsql.=",";
-                }
-            else
-                {
-                $syncsql="UPDATE resource_type_field SET ";
-                }
-            $syncsql.="{$column}=";
-            if ($val=="")
-                {
-                $syncsql.="NULL";
-                }
-            else    
-                {
-                $syncsql.="?";
-                $syncparams[]=($column_detail[2]==1?"i":"s"); // Set the type, boolean="i", other two are strings
-                $syncparams[]=$val;
-                }
-            }
         }
     // add field_constraint sql
     if (isset($postdata["field_constraint"]) && trim($postdata["field_constraint"]) != "")
@@ -1761,14 +1736,6 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
     clear_query_cache("schema");
     clear_query_cache("featured_collections");
 
-    if($sync_field!="" && $sync_field>0)
-        {
-        $syncsql.=" WHERE ref=? OR sync_field=?";
-        $syncparams[]="i";$syncparams[]=$sync_field;
-        $syncparams[]="i";$syncparams[]=$ref;
-
-        ps_query($syncsql,$syncparams);
-        }
     if(count($remove_data_restypes)>0)
         {
         // Don't delete invalid nodes immediately in case of accidental/inadvertent change - just show a link to the cleanup page
@@ -1819,7 +1786,6 @@ function get_resource_type_field_columns()
         'display_as_dropdown'      => array($lang['property-display_as_dropdown'],$lang['information-display_as_dropdown'],1,1),
         'external_user_access'     => array($lang['property-external_user_access'],'',1,1),
         'omit_when_copying'        => array($lang['property-omit_when_copying'],'',1,1),
-        'sync_field'               => array($lang['property-sync_with_field'],'',0,0),
         'include_in_csv_export'    => array($lang['property-include_in_csv_export'],'',1,1),
     ];
 
