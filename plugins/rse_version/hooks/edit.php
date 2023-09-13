@@ -49,10 +49,11 @@ function HookRse_versionEditEdit_all_after_findreplace($field,$n)
     {
     # Add a revert date/time box after 'edit all' mode selector when reversion mode selected.
     global $lang;
+    $initial_revert_to_date=offset_user_local_timezone(date('YmdHis'), 'Y-m-d H:i');
     ?>
     <div class="Question" id="revert_<?php echo $n?>" style="display:none;border-top:none;">
     <label>&nbsp;</label>
-    <input type="text" name="revert_<?php echo $field["ref"]?>" class="stdwidth" value="<?php echo date("Y-m-d H:i"); ?>" />
+    <input type="text" name="revert_<?php echo $field["ref"]?>" class="stdwidth" value="<?php echo $initial_revert_to_date; ?>" />
     </div>
     <?php
     }
