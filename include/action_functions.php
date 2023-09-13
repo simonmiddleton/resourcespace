@@ -125,13 +125,12 @@ function get_editable_resource_sql()
 
 
 /**
- * Get recent user actions, optionally for all users
+ * Get recent user actions, optionally for all users. For use by action notifications cron job.
  *
- * @param  int  $minutes     Return actions that were created in the last minutes
+ * @param  int  $minutes     Return actions that were created in the last $minutes minutes
  * @param  bool $allusers    Return actions for all users?  If false, or if the current user does not have
  *                           the 'a' permission and the current script is not running from CLI then only the currently logged on
  *                           user's actions will be returned
- * 
  * 
  * @return array            An array with the user id as the index and the following arrays of sub elements.
  *                          Included columns are as per get_user_actions()
@@ -184,7 +183,20 @@ function get_user_actions_recent(int $minutes, bool $allusers) : array
     $params = ["i",$minutes];
     $newactions["userrequest"] = ps_query($sql,$params);
 
-    // TODO Add hook and update plugin to find all proposed changes submitted in the last XX minutes
+    // Any actions that add to the array using the hook below should return an element including the function and parameters to be checked for a user to be able to see the action
+    // e.g. 
+    // $newactions["access_callback"] = 
+    //     ["function"=>"get_edit_access",
+    //      "parameters => 12345,
+    //      "required => true,
+    //     ]
+    $hookactions = hook("user_actions_recent","",[$minutes,$newactions]);
+    if($hookactions != false)
+        {
+        $newactions = $hookactions;     
+        }
+
+
     $userrecent = [];
     if($allusers)
         {
@@ -219,6 +231,7 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
     $return = [];
     if(!isset($userref) || $actionuser != $userref)
         {
+        $saved_user = $userref ?? 0;
         $actionuserdata = get_user($actionuser);
         setup_user($actionuserdata);
         }
@@ -271,8 +284,25 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
                     }
                 break;
             default;
+                // Handle any actions added by plugins
+                foreach($typeactions as $typeaction)
+                    {
+                    if(isset($typeaction["access_callback"]))
+                        {
+                        if(call_user_func_array($typeaction["access_callback"]["function"],$typeaction["access_callback"]["parameters"]) == $typeaction["access_callback"]["required"])
+                            {                    
+                            $return["userrequest"][] = $typeaction;
+                            }
+                        }
+                    }
+              
                 break;
             }
+        }
+    if(isset($saved_user) && $saved_user !=0)
+        {
+        $saveduserdata = get_user($saved_user);
+        setup_user($saveduserdata);
         }
     return $return;
     }
