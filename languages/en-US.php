@@ -9,7 +9,6 @@
 
 # Top navigation bar (also reused for page titles)
 $lang["colour"]="Color";
-$lang["synchronise-changes-with-this-field"]="Synchronize changes with this field";
 $lang["rotateanticlockwise"]="Rotate counter-clockwise";
 $lang["fieldtitle-expiry_date"]="Expiration date";
 $lang["fieldtype-expiry_date"]="Expiration date";

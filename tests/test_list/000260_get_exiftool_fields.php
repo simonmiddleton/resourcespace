@@ -55,3 +55,5 @@ foreach ($use_cases as $uc)
             }
         }
     }
+
+delete_resource_type_field($newfield);

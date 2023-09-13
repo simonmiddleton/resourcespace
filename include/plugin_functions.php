@@ -150,7 +150,7 @@ function get_plugin_yaml($path, $validate=true)
             
         if ($plugin_yaml['config_url']!='' && $plugin_yaml['config_url'][0]=='/') # Strip leading spaces from the config url.
             {
-            trim($plugin_yaml['config_url'], '/');
+            $plugin_yaml['config_url'] = trim($plugin_yaml['config_url'], '/');
             }
         fclose($yaml_file_ptr);
         if ($validate)

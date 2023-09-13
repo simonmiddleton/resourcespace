@@ -88,7 +88,7 @@ function isPathWhitelisted($path, array $whitelisted_paths)
 * @param  string  $path     Path to file
 * @param  bool  $forcefull  Force use of whole file and ignore $file_checksums_50k setting
 * 
-* @return string
+* @return string|false Return the checksum value, false otherwise.
 */
 function get_checksum($path, $forcefull = false)
     {

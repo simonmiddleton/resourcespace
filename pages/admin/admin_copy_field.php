@@ -14,7 +14,6 @@ $title = $current["title"];
 # Perform copy
 if (getval("saveform","")!="" && $ref > 0 && enforcePostRequest(false))
 	{
-	$sync=getval("sync","");
     $allcolumns = columns_in("resource_type_field",null,null,true);
 	$allcolumns = array_diff($allcolumns,["name"]);
 	$insert = array_diff($allcolumns,["ref","name"]);
@@ -29,11 +28,6 @@ if (getval("saveform","")!="" && $ref > 0 && enforcePostRequest(false))
 
     // Copy any field mappings
     ps_query("INSERT INTO resource_type_field_resource_type (resource_type_field,resource_type) SELECT ?,resource_type FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$copied,"i",$ref]);
-
-    if ($sync==1)
-        {
-        ps_query("UPDATE resource_type_field SET sync_field = ? WHERE ref = ?",["i",$ref,"i",$copied]);
-        }
 
     // Copy nodes if resource type is a fixed list type:
     copy_resource_type_field_nodes($ref, $copied);
@@ -85,13 +79,6 @@ if(isset($saved_text))
         <?php generateFormToken("admin_copy_field"); ?>
         <input type="hidden" name="saveform" value="true">
         <input type="hidden" name="ref" value="<?php echo $ref; ?>">
-        <p>
-        <?php echo htmlspecialchars($lang['synchronise-changes-with-this-field']) ; ?><br />
-            <select name="sync" style="width:100%;">
-                <option value="0"><?php echo htmlspecialchars($lang['no']) ; ?></option>
-                <option value="1"><?php echo htmlspecialchars($lang['yes']) ; ?></option>
-            </select>
-        </p>
         <p align="right">
             <input type="submit" name="copy" value="<?php echo escape_quoted_data($lang['copy']) ; ?>" style="width:100px;">
         </p>

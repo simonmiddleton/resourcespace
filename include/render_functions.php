@@ -22,6 +22,9 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     node_field_options_override($field);
 	
 	global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES, $maxyear_extends_current;
+
+    # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering the search field  
+    $multiple=false;
 ?>
 <!-- RENDERING FIELD=<?php echo $field['ref']." ".$field['name'];?> -->
 <?php
@@ -6439,28 +6442,6 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                 <?php
                 }
             }
-		elseif($propertyname=="sync_field")
-			{
-			global $allfields, $resource_type_array;
-			
-			// Sort  so that the display order makes some sense
-			
-			?>
-			  <select id="field_edit_<?php echo escape_quoted_data((string) $propertyname); ?>" name="<?php echo escape_quoted_data((string) $propertyname); ?>" class="stdwidth">
-				<option value="" <?php if ($currentvalue == "") { echo " selected"; } ?>><?php  echo htmlspecialchars($lang["select"]) ; ?></option>
-				<?php
-				foreach($allfields as $field)
-					{
-					if($field["ref"]!=$ref) // Don't show itself as an option to sync with
-					    {?>
-					    <option value="<?php echo escape_quoted_data($field["ref"]) ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo i18n_get_translated($field["title"])  . "&nbsp;(" . (($field["name"]=="")?"":escape_quoted_data((string) $field["name"]) )?></option>
-					    <?php
-					    }
-					}
-				?>				
-				</select>
-			<?php
-			}
         else if($propertyname === 'tab')
             {
             ?>

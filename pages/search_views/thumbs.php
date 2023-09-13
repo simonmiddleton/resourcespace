@@ -96,7 +96,7 @@ if (!hook("renderresultthumb"))
         if (!hook("renderimagethumb")) 
             {
             # Work out image to use.
-            if(isset($watermark))
+            if($watermark !== '')
                 {
                 $use_watermark=check_use_watermark();
                 }

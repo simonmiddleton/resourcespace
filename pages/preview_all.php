@@ -157,7 +157,7 @@ if ($access==2)
 # Locate the resource
 $path="";
 $url="";
-	if ($access==1&&(checkperm('w')|| ($k!="" && isset($watermark)))){$watermark=true;} else {$watermark=false;}
+	if ($access==1&&(checkperm('w')|| ($k != "" && $watermark !== ""))){$watermark=true;} else {$watermark=false;}
 $path=get_resource_path($ref,true,"scr",false,$ext,-1,$page,$watermark,$result[$x]["file_modified"],$alternative,false);
 
 if (file_exists($path) && resource_download_allowed($result[$x],"scr",$resource_data["resource_type"]))

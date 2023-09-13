@@ -146,7 +146,6 @@ $lang["property-autocomplete_macro"]="Makro für Autovervollständigen";
 $lang["property-hide_when_uploading"]="Beim Upload verstecken";
 $lang["property-hide_when_restricted"]="Verstecken wenn eingeschränkt";
 $lang["property-omit_when_copying"]="Beim Kopieren ignorieren";
-$lang["property-sync_with_field"]="Abgleichen mit Feld";
 $lang["information-copy_field"]="<a href=field_copy.php?ref=%ref>Feld kopieren</a>";
 $lang["property-display_condition"]="Voraussetzung zur Anzeige";
 $lang["information-display_condition"]="Voraussetzung zur Anzeige: Dieses Feld wird nur angezeigt, wenn die folgenden Voraussetzungen erfüllt sind. Verwenden Sie das gleiche Format wie bei Suchfiltern, z.B. kurzname=wert1|wert2, kurznamea=optiona;kurznameb=optionb1|optionb2";
@@ -1639,7 +1638,6 @@ $lang["error-pageload"] = "Entschuldigung, beim Laden der Seite ist ein Fehler a
 
 $lang["copy-field"]="Feld kopieren";
 $lang["copy-to-resource-type"]="In Ressourcen-Typ kopieren";
-$lang["synchronise-changes-with-this-field"]="Änderungen mit diesem Feld synchronisieren";
 $lang["copy-completed"]="Kopieren fertiggestellt. Das neue Feld hat die ID ?.";
 
 $lang["nothing-to-display"]="Nichts anzuzeigen.";

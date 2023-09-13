@@ -765,7 +765,6 @@ $lang["property-autocomplete_macro"]='Αυτόματη συμπλήρωση μα
 $lang["property-hide_when_uploading"]='Απόκρυψη κατά τη μεταφόρτωση.';
 $lang["property-hide_when_restricted"]='Απόκρυψη όταν είναι περιορισμένο.';
 $lang["property-omit_when_copying"]='Παράλειψη κατά την αντιγραφή.';
-$lang["property-sync_with_field"]='Συγχρονισμός με πεδίο.';
 $lang["information-copy_field"]='<a href=field_copy.php?ref=%ref>Αντιγραφή πεδίου</a>';
 $lang["property-display_condition"]='Προϋπόθεση εμφάνισης.';
 $lang["property-onchange_macro"]='Στη μεταβολή μακροεντολής';
@@ -1779,7 +1778,6 @@ $lang["theme_home_page_text"]='Κείμενο αρχικής σελίδας';
 $lang["theme_home_page_image"]='Εικόνα αρχικής σελίδας.';
 $lang["copy-field"]='Αντιγραφή πεδίου';
 $lang["copy-to-resource-type"]='Αντιγραφή σε τύπο πόρου.';
-$lang["synchronise-changes-with-this-field"]='Συγχρονίστε τις αλλαγές με αυτό το πεδίο.';
 $lang["copy-completed"]='Η αντιγραφή ολοκληρώθηκε. Το νέο πεδίο έχει αναγνωριστικό ID ?.';
 $lang["nothing-to-display"]='Δεν υπάρχει τίποτα για εμφάνιση.';
 $lang["report-send-all-users"]='Να σταλεί ο αναφορά σε όλους τους ενεργούς χρήστες;';

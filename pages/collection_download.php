@@ -3,7 +3,9 @@ ini_set('zlib.output_compression','off'); // disable PHP output compression sinc
 include "../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
-$k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../include/authenticate.php";}include_once '../include/csv_export_functions.php';
+$k=getval("k","");
+if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include "../include/authenticate.php";}
+include_once '../include/csv_export_functions.php';
 include_once '../include/pdf_functions.php';
 ob_end_clean();
 $uniqid="";$id="";
@@ -15,7 +17,6 @@ $useoriginal=getval("use_original","no");
 $collectiondata=get_collection($collection);
 $tardisabled=getval("tardownload","")=="off";
 $include_csv_file = getval('include_csv_file', '');
-$force_online_download = getval('force_online', false); 
 
 if($k != "" || (isset($anonymous_login) && $username == $anonymous_login))
     {
@@ -145,7 +146,7 @@ for ($n=0;$n<count($result);$n++)
                     $available_sizes[$size_id][]=$ref;
                 }
             }
-		}
+        }
 
     if(in_array($result[$n]['resource_type'], $data_only_resource_types))
         {
@@ -198,7 +199,7 @@ if ($submitted != "")
 			}
 		}
 
-    if(!$collection_download_tar && $offline_job_queue && !$force_online_download)
+    if(!$collection_download_tar && $offline_job_queue)
         {
         foreach ($result as $key => $resdata)
             {
@@ -380,8 +381,8 @@ if ($submitted != "")
             else
                 {
                 $usesize = ($size == 'original') ? "" : $size;
-                }
-
+                }      
+            
             if(in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && $usesize !== 'original')
                 {
                 //Supported video formates will only have a pre sized derivative
@@ -426,7 +427,7 @@ if ($submitted != "")
 				$subbed_original = true;
 				$target_exists = file_exists($p);
 				}
-            
+
 			# Process the file if it exists, and (if restricted access) that the user has access to the requested size
 			if ((($target_exists && $access==0) ||
 				($target_exists && $access==1 &&
@@ -619,7 +620,7 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox">
 <?php if($k!=""){
-	?><p><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection?>&k=<?php echo $k?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo $lang['back']?></a></p><?php
+	?><p><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection?>&k=<?php echo urlencode($k)?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo htmlspecialchars($lang['back'])?></a></p><?php
 }?>
 
 <h1><?php echo $lang["downloadzip"]?></h1>
@@ -827,17 +828,6 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     </div>
     <?php
     }
-
-if($offline_job_queue)
-    {
-    ?>
-    <div class="Question">
-        <label for="force_online"><?php echo htmlspecialchars($lang['collection_download_force_online']); ?></label>
-        <input type="checkbox" id="force_online" name="force_online" value="yes">
-        <div class="clearerleft"></div>
-    </div>
-    <?php    
-    }    
 ?>
 
 <script>var tar = <?php echo ($collection_download_tar_option ? 'true' : 'false'); ?>;</script>
@@ -866,7 +856,7 @@ if($offline_job_queue)
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 	<label for="download"> </label>
 	<input type="submit"
-           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true && !jQuery(\'#force_online\').is(\':checked\')' : 'false'); ?>, tar); return false;"
+           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, tar); return false;"
            value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
 	
 	<div class="clearerleft"> </div>

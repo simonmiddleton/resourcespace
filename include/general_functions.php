@@ -1403,12 +1403,6 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
         exit;
         }
-    catch (\Exception $e)
-        {
-        echo "Message could not be sent. <p>";
-        debug("PHPMailer Error: email: " . $email . " - " . $e->errorMessage());
-        exit;
-        }
     unset($GLOBALS["use_error_exception"]);
     hook("aftersendmailphpmailer","",$email);   
 }
@@ -5127,4 +5121,24 @@ function execution_lockout_remove_resource_type_field_props(array $rtf): array
         'onchange_macro',
     ];
     return $GLOBALS['execution_lockout'] ? array_diff_key($rtf, array_flip($props)) : $rtf;
+    }
+
+/**
+ * Update global variable watermark to point to the correct file. Watermark set on System Configuration page will override a watermark
+ * set in config.php. config.default.php will apply otherwise (blank) so no watermark will be applied.
+ *
+ * @return void
+ */
+function set_watermark_image()
+    {
+    global $watermark, $storagedir;
+    
+    if (substr($watermark, 0, 13) == '[storage_url]')
+        {
+        $GLOBALS["watermark"] = str_replace('[storage_url]', $storagedir, $watermark);  # Watermark from system configuration page
+        }
+    else if ($watermark !== '')
+        {
+        $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
+        }
     }

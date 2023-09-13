@@ -928,7 +928,6 @@ $lang["property-autocomplete_macro"]='الماكرو التلقائي لإكما
 $lang["property-hide_when_uploading"]='إخفاء أثناء الرفع';
 $lang["property-hide_when_restricted"]='إخفاء عند القيود';
 $lang["property-omit_when_copying"]='حذف عند النسخ';
-$lang["property-sync_with_field"]='مزامنة مع الحقل';
 $lang["information-copy_field"]='<a href=field_copy.php?ref=%ref>نسخ الحقل</a>';
 $lang["property-display_condition"]='شرط العرض';
 $lang["information-display_condition"]='شرط العرض: سيتم عرض هذا الحقل فقط إذا تم تلبية الشروط التالية. يجب أن يكون الحقل المشروط المفحوص واحدًا من الأنواع الثابتة: قائمة منسدلة، قائمة خانات الاختيار، أزرار الراديو، الكلمات الرئيسية الديناميكية أو شجرة الفئات. يستخدم نفس تنسيق فلتر بحث المجموعة، أي shortname=value1|value2، shortnamea=validoptiona؛ shortnameb=validoptionb1|validoptionb2.';
@@ -1921,7 +1920,6 @@ $lang["theme_home_page_image"]='صورة الصفحة الرئيسية';
 $lang["error-pageload"]='عذرًا، حدث خطأ أثناء تحميل هذه الصفحة. إذا كنت تقوم بعملية بحث، يرجى محاولة تحسين استعلام البحث الخاص بك. إذا استمرت المشكلة، يرجى الاتصال بمسؤول النظام الخاص بك.';
 $lang["copy-field"]='نسخ الحقل';
 $lang["copy-to-resource-type"]='نسخ إلى نوع المورد';
-$lang["synchronise-changes-with-this-field"]='مزامنة التغييرات مع هذا الحقل';
 $lang["copy-completed"]='تم النسخ بنجاح. الحقل الجديد لديه معرف؟';
 $lang["nothing-to-display"]='لا يوجد شيء للعرض.';
 $lang["report-send-all-users"]='هل ترسل التقرير إلى جميع المستخدمين النشطين؟';

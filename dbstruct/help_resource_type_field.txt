@@ -29,7 +29,6 @@ exiftool_filter,text,PHP code to modify extracted exiftool $value upon import in
 omit_when_copying,int(11),Specifies that the field should not be copied when using the resource copy function.
 tooltip_text,text,Text that will appear in simple/advanced search when the cursor hovers over the field.
 regexp_filter,varchar(400),Regular expression used to add constraints on the values input to the field.
-sync_field,int(11),Ability to keep the settings of this field in sync with the ones of another one.
 display_condition,varchar(400),Adding dependencies on other field values for displaying the current field.
 onchange_macro,text,PHP code to be executed when updating the field value.
 linked_data_field,text,Used for date range fields

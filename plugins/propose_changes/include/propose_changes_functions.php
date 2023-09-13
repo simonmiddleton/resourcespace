@@ -380,6 +380,9 @@ function propose_changes_display_field($n, $field)
     $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess,
     $FIXED_LIST_FIELD_TYPES,$range_separator, $edit_autosave;
 
+    # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering propose change field  
+    $multiple=false;
+
     $edit_autosave=false;
     $name="field_" . $field["ref"];
     $value=$field["value"];

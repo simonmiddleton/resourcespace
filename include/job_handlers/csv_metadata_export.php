@@ -46,6 +46,9 @@ $csvurl = $baseurl_short . "pages/download.php?userfile=" . $userref . "_" . $ra
 
 generateResourcesMetadataCSV($exportresources,$personaldata, $allavailable, $csvfile);
 
+log_activity($lang['csvExportResultsMetadata'],LOG_CODE_DOWNLOADED);
+debug("Job handler 'csv_metadata_export' created zip download file {$csv_filename}");
+
 $jobsuccess = true;
 
 message_add($job["user"], $job_success_text, $csvurl);

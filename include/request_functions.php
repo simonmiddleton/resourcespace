@@ -89,6 +89,12 @@ function save_request($request)
             $assignedmessage->set_subject($applicationname . ": " );
             $assignedmessage->append_subject("lang_requestassignedtoyou");
             $assignedmessage->set_text("lang_requestassignedtoyoumail");
+            $assignedmessage->append_text("<br/><br/>");
+            $assignedmessage->append_text("lang_username");
+            $assignedmessage->append_text(": " . $currentrequest['username'] . "<br/>");
+            $assignedmessage->append_text("lang_requestreason");
+            $request_reason = substr($currentrequest['comments'], strpos($currentrequest['comments'], ':'));
+            $assignedmessage->append_text($request_reason);
             $assignedmessage->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications],"actions_resource_requests" =>["requiredvalue"=>false,"default"=>true]];
             $assignedmessage->url = $baseurl . "/?q=" . $request;
             $assignedmessage->eventdata = ["type"  => MANAGED_REQUEST,"ref"   => $request];

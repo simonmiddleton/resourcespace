@@ -416,6 +416,7 @@ if($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers && !in_array($pagena
 # End of basic CORS and automated CSRF protection
 # ----------------------------------------------------------------------------------------------------------------------
 
+set_watermark_image();
 
 // Facial recognition setup
 if($facial_recognition)

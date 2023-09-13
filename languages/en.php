@@ -170,7 +170,6 @@ $lang["property-autocomplete_macro"]="Autocomplete macro";
 $lang["property-hide_when_uploading"]="Hide when uploading";
 $lang["property-hide_when_restricted"]="Hide when restricted";
 $lang["property-omit_when_copying"]="Omit when copying";
-$lang["property-sync_with_field"]="Sync with field";
 $lang["information-copy_field"]="<a href=field_copy.php?ref=%ref>Copy field</a>";
 $lang["property-display_condition"]="Display condition";
 $lang["information-display_condition"]="Display condition: this field will only display if the following conditions are met. The conditioning field being checked must be one of the fixed types: dropdown list, checkbox list, radio buttons, dynamic keyword or category tree. Uses same format as group search filter i.e. shortname=value1|value2, shortnamea=validoptiona;shortnameb=validoptionb1|validoptionb2";
@@ -1041,7 +1040,6 @@ $lang["collection_download_use_tar"] = "TAR archive";
 $lang["collection_download_tar_info"] = "TAR files will start downloading instantly. If you do not use this option you may find that your download is limited.";
 $lang["collection_download_tar_started"] = "TAR files will start downloading shortly.";
 $lang["collection_download_tar_applink"] = "Can't open TAR files? Get the open source 7-zip <a href='http://www.7-zip.org/download.html' target='_blank'>here</a>";
-$lang["collection_download_force_online"] = "Download collection now?";
 $lang["downloadsize"]="Download size";
 $lang["existingkeywords"]="Existing keywords:";
 $lang["extrakeywords"]="Extra keywords";
@@ -2081,7 +2079,6 @@ $lang["error-pageload"] = "Sorry, there has been an error loading this page. If 
 
 $lang["copy-field"]="Copy field";
 $lang["copy-to-resource-type"]="Copy to resource type";
-$lang["synchronise-changes-with-this-field"]="Synchronise changes with this field";
 $lang["copy-completed"]="Copy completed. New field has ID ?.";
 
 $lang["nothing-to-display"]="Nothing to display.";
@@ -2594,6 +2591,8 @@ $lang['systemconfig_customfont_label'] = 'Custom font file';
 $lang['systemconfig_invalid_extension'] = "File type not valid for this selection. Please choose from: %%EXTENSIONS%%";
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
 $lang['systemconfig_header_favicon_label'] = 'Application favicon';
+$lang['wartermark_header'] = 'Watermark';
+$lang['wartermark_label'] = 'Watermark image - Recreate previews after changing watermark to update existing resources. Removing file will disable watermarking.';
 $lang['systemconfig_description'] = 'The options on this page are system wide and can change some of the functionality available to the users. Please note that any option that is also user specific will take precedence if set.';
 $lang['systemconfig_multilingual'] = 'Multilingual';
 $lang['systemconfig_default_language_label'] = 'Default language';

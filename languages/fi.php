@@ -1552,7 +1552,6 @@ $lang["error-pageload"] = "Valitettavasti tätä sivua ladattaessa on tapahtunut
 
 $lang["copy-field"]="Kopioi kenttä";
 $lang["copy-to-resource-type"]="Kopioi resurssityyppiin";
-$lang["synchronise-changes-with-this-field"]="Synkronisoi muutokset tämän kentän kanssa";
 $lang["copy-completed"]="Kopiointi valmis. Uudella kentällä on tunnus ?.";
 
 $lang["nothing-to-display"]="Ei mitään näytettävää";
@@ -1587,7 +1586,6 @@ $lang["property-icon"]='Kuvake';
 $lang["property-fits_field"]='FITS-kenttä.';
 $lang["property-read_only_field"]='Vain luku -metadatakenttä (eli ei kirjoita takaisin latauksen yhteydessä).';
 $lang["information-fits_field"]='FITS (File Information Tool Set) -kenttä ylikirjoittaa Exiftool-arvot, jos arvo löytyy!';
-$lang["property-sync_with_field"]='Synkronoi kentän kanssa.';
 $lang["information-copy_field"]='<a href=field_copy.php?ref=%ref>Kopioi kenttä</a>';
 $lang["property-display_condition"]='Näyttöehdotus.';
 $lang["information-display_condition"]='Näyttöehdotus: Tämä kenttä näytetään vain, jos seuraavat ehdot täyttyvät. Tarkistettavan ehtokentän on oltava yksi kiinteistä tyypeistä: avattava luettelo, valintaruutuluettelo, radiopainikkeet, dynaaminen avainsana tai kategoriahierarkia. Käyttää samaa muotoa kuin ryhmähakusuodatin, eli lyhytnimi=arvo1|arvo2, lyhytnimia=sallittuvalinta1;lyhytnimib=sallittuvalintab1|sallittuvalintab2.';

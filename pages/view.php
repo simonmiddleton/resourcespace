@@ -7,7 +7,7 @@
  */
 include_once "../include/db.php";
 
-$ref=getval("ref",0,true);
+$ref=(int) getval("ref",0,true);
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $k=getval("k","");if (($k=="") || (!check_access_key($ref,$k))) {include "../include/authenticate.php";}
@@ -1054,18 +1054,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 
                                                 return false;
                                                 }
-
-                                            <?php
-                                            if(checkPreviewToolsOptionUniqueness('annotate_enabled'))
-                                                {
-                                                ?>
-                                                jQuery('#PreviewToolsOptionsWrapper').on('readyToUseAnnotorious', function ()
-                                                    {
-                                                    toggleAnnotationsOption(jQuery('.AnnotationsOption'));
-                                                    });
-                                                <?php
-                                                } ?>
-
                                             </script>
                                             <?php
                                             }
@@ -1138,18 +1126,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 
                                                 return false;
                                                 }
-
-                                            <?php
-                                            if(checkPreviewToolsOptionUniqueness('image_preview_zoom'))
-                                                {
-                                                ?>
-                                                jQuery(document).ready(function ()
-                                                    {
-                                                    toggleImagePreviewZoomOption(jQuery('.ImagePreviewZoomOption'));
-                                                    });
-                                                <?php
-                                                }
-                                                ?>
                                             </script>
                                             <?php
                                             }
@@ -2435,9 +2411,6 @@ if($annotate_enabled)
         <?php
         }
         ?>
-    <script>
-    jQuery('#PreviewToolsOptionsWrapper').trigger('readyToUseAnnotorious');
-    </script>
     <!-- End of Annotorious -->
     <?php
 	}
