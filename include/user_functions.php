@@ -435,7 +435,7 @@ function get_users($group=0,$find="",$order_by="u.username",$usepermissions=fals
         return $return_sql;
         }
 
-    $r = ps_query($query, $sql_params, false, $fetchrows);
+    $r = ps_query($query, $sql_params, '', $fetchrows);
 
     # Translates group names in the newly created array.
     for ($n = 0;$n<count($r);$n++)
@@ -471,7 +471,7 @@ function get_users_with_permission($permission)
                    LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref 
                    WHERE (g.ref IN (" . ps_param_insert(count($matched)) . ") OR (find_in_set('permissions', g.inherit_flags) > 0 
                    AND g.parent IN (" . ps_param_insert(count($matched)) . "))) ORDER BY username",
-                   array_merge(ps_param_fill($matched, "i"), ps_param_fill($matched, "i")), false);
+                   array_merge(ps_param_fill($matched, "i"), ps_param_fill($matched, "i")));
 
     # Translates group names in the newly created array.
     $return = array();
@@ -491,7 +491,7 @@ function get_users_with_permission($permission)
  */
 function get_user_by_email($email)
     {
-    $r = ps_query("SELECT " . columns_in('user', 'u') . ", g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref WHERE u.email LIKE ? ORDER BY username", array("s", "%".$email."%"), false);
+    $r = ps_query("SELECT " . columns_in('user', 'u') . ", g.name groupname, g.ref groupref, g.parent groupparent FROM user u LEFT OUTER JOIN usergroup g ON u.usergroup = g.ref WHERE u.email LIKE ? ORDER BY username", array("s", "%".$email."%"));
 
     # Translates group names in the newly created array.
     $return = array();
@@ -1281,6 +1281,7 @@ function new_user($newuser, $usergroup = 0)
 function get_active_users()
     {
     global $usergroup;
+    // Establish which user groups the supplied user group acts as an approver for
     $approver_groups = get_approver_usergroups($usergroup);
     $sql = "where logged_in = 1 and unix_timestamp(now()) - unix_timestamp(last_active) < (3600*2)";
     $sql_params = array();
@@ -1297,24 +1298,11 @@ function get_active_users()
             $sql_params = array("i", $usergroup);
             }
         }
-
-    // Return users in both user's user group and children groups
-    elseif ((checkperm("U") || count($approver_groups) > 0))
-        {
-        if (count($approver_groups) > 0)
-            {
-            $sql .= " and (g.ref = ? OR find_in_set(?, g.parent) or usergroup in (" . ps_param_insert(count($approver_groups)) . "))";
-            $sql_params = array_merge(array("i", $usergroup, "i", $usergroup), ps_param_fill($approver_groups,"i"));
-            }
-        else
-            {
-            $sql .= " and (g.ref = ? OR find_in_set(?, g.parent))";
-            $sql_params = array("i", $usergroup, "i", $usergroup);
-            }
-        }
     
     # Returns a list of all active users, i.e. users still logged on with a last-active time within the last 2 hours.
-    return ps_query("select u.ref, u.username, round((unix_timestamp(now()) - unix_timestamp(u.last_active)) / 60, 0) t from user u left outer join usergroup g on u.usergroup = g.ref $sql order by t;", $sql_params);
+    return ps_query("SELECT u.ref, u.username, round((unix_timestamp(now()) - unix_timestamp(u.last_active)) / 60, 0) t 
+                    from user u left outer join usergroup g on u.usergroup = g.ref 
+                    $sql order by t;", $sql_params);
     }
 
 /**
@@ -1477,7 +1465,7 @@ function get_user_log($user, $fetchrows=-1)
     {
     global $view_title_field;
     # Executes query.
-    $r = ps_query("select r.ref resourceid, r.field" . (int) $view_title_field . " resourcetitle, l.date, l.type, f.title, l.purchase_size, l.purchase_price, l.notes, l.diff from resource_log l left outer join resource r on l.resource = r.ref left outer join resource_type_field f on f.ref = l.resource_type_field where l.user = ? order by l.date desc", array("i", $user), false, $fetchrows);
+    $r = ps_query("select r.ref resourceid, r.field" . (int) $view_title_field . " resourcetitle, l.date, l.type, f.title, l.purchase_size, l.purchase_price, l.notes, l.diff from resource_log l left outer join resource r on l.resource = r.ref left outer join resource_type_field f on f.ref = l.resource_type_field where l.user = ? order by l.date desc", array("i", $user), '', $fetchrows);
 
     # Translates field titles in the newly created array.
     $return = array();
@@ -1691,7 +1679,7 @@ function check_password($password)
     {
     global $lang, $password_min_length, $password_min_alpha, $password_min_uppercase, $password_min_numeric, $password_min_special;
 
-    trim($password);
+    $password = trim($password);
     if (strlen($password)<$password_min_length) {return str_replace("?",$password_min_length,$lang["password_not_min_length"]);}
 
     $uppercase="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -2869,7 +2857,6 @@ function save_usergroup($ref,$groupoptions)
         $newgroup = sql_insert_id();
         return $newgroup;
         }
-    return false;
     }
 
 

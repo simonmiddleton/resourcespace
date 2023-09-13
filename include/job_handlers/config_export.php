@@ -105,6 +105,10 @@ if(!isset($joberror))
 
     $zip->close();
 
+    # Log this 
+    log_activity($lang["exportdata"], LOG_CODE_DOWNLOADED);
+    debug("Job handler 'config_export' created zip download file {$dumpfile}");
+
     if(file_exists($zipfile))
         {
         $download_url = $baseurl_short . "pages/download.php?userfile=" . $userref . "_" . $randstring . ".zip";

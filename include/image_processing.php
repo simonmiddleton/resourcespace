@@ -772,7 +772,6 @@ function extract_exif_comment($ref,$extension="")
                         
                         # First fetch all options in all languages
                         $options=trim_array(explode(NODE_NAME_STRING_SEPARATOR,strtolower($read_from[$i]["options"])));
-                        for ($n=0;$n<count($options);$n++)  {$options[$n]=$options[$n];}
 
                         # If not in the options list, do not read this value
                         $s=trim_array(explode(",",$value));
@@ -1353,7 +1352,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                 }
 
             # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
-            if ((list($sw,$sh) = @getimagesize($file))===false) {return false;}
+            if ((list($sw,$sh) = try_getimagesize($file))===false) {return false;}
         
             $ps=ps_query("select " . columns_in("preview_size") . " from preview_size $sizes", $params);
             for ($n=0;$n<count($ps);$n++)
@@ -1443,7 +1442,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
-    global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors;
+    global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors, $watermark;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
 
     # We will need this to log errors
@@ -1713,7 +1712,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         {
                         if(file_exists($pre_source))
                             {
-                            list($checkw,$checkh) = @getimagesize($pre_source);
+                            list($checkw,$checkh) = try_getimagesize($pre_source);
                             if($checkw>$ps[$n]['width'] && $checkh>$ps[$n]['height'] || $override_size || $pre_source == $origfile) // If $pre_source == $origfile get icc profile again as this size maybe used as source for smaller sizes
                                 {
                                 $file = $pre_source;
@@ -1860,7 +1859,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             # Always make preview sizes for smaller file sizes.
             #
             # Always make pre/thm/col sizes regardless of source image size.
-            if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && isset($watermark)) || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
+            if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && $watermark !== '') || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
                 {           
                 # Debug
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',"Generating preview size " . $ps[$n]["id"]); // log the size being created but not the path
@@ -1980,10 +1979,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         if($crop)
                             {
                             // Add crop argument for tiling
-                            $runcommand .= " -crop " . escapeshellarg($cropw) . "x" . escapeshellarg($croph) . "+" . escapeshellarg($cropx) . "+" . escapeshellarg($cropy);
+                            $runcommand .= " -crop " . escapeshellarg($cropw . "x" . $croph . "+" . $cropx . "+" . $cropy);
                             }
                         
-                        $runcommand .= " -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . (($previews_allow_enlarge && $id!="hpr")?" ":"\">\" ") . $addcheckbdafter . escapeshellarg($path);
+                        $runcommand .= " -resize " . escapeshellarg($tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?"":">")) . " " . $addcheckbdafter . escapeshellarg($path);
                         if(!hook("imagepskipthumb"))
                             {
                             $command_list.=$runcommand."\n";
@@ -2019,12 +2018,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 
                 if (!hook("replacewatermarkcreation","",array($ref, $ps, $n, $alternative, $profile, $command))
                      && ($alternative==-1 || ($alternative!==-1 && $alternative_file_previews)) 
-                     && isset($watermark) && ($ps[$n]["internal"]==1 || $ps[$n]["allow_preview"]==1))
+                     && $watermark !== '' && ($ps[$n]["internal"]==1 || $ps[$n]["allow_preview"]==1))
                     {
                     $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,'',$alternative);
                     if (file_exists($wmpath)) {unlink($wmpath);}
-                    
-                    $watermarkreal=dirname(__FILE__) ."/../" . $watermark;
                     
                     if($imagemagick_mpr)
                         {
@@ -2033,13 +2030,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     
                     if(!isset($watermark_single_image))
                         {
-                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . "\">\" -tile ".escapeshellarg($watermarkreal)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
+                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . "\">\" -tile ".escapeshellarg($watermark)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
                         }
                     
                     // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
                     if ( in_array($extension,array("png","gif","tif","tiff")) )
                         {
-                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . ' ' . $profile . " " . $flatten . ' -quality ' . $imagemagick_quality ." -tile ".escapeshellarg($watermarkreal)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
+                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . ' ' . $profile . " " . $flatten . ' -quality ' . $imagemagick_quality ." -tile ".escapeshellarg($watermark)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath); 
                         }
 
                     // Generate the command for a single watermark instead of a tiled one
@@ -2080,7 +2077,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             }
 
                         // Get watermark dimensions
-                        list($wmw, $wmh) = getFileDimensions($identify_fullpath, '', $watermarkreal, 'jpeg');
+                        list($wmw, $wmh) = getFileDimensions($identify_fullpath, '', $watermark, 'jpeg');
                         $wm_scale = $watermark_single_image['scale'];
 
                         // Landscape
@@ -2107,7 +2104,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
                             $convert_fullpath,
                             escapeshellarg($file),
-                            escapeshellarg($watermarkreal),
+                            escapeshellarg($watermark),
                             escapeshellarg($watermark_single_image['position']),
                             escapeshellarg("{$wm_scaled_width}x{$wm_scaled_height}+0+0"),
                             escapeshellarg("{$tw}x{$th}" . ($previews_allow_enlarge && $id != "hpr" ? "" : ">")),
@@ -2294,7 +2291,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $TILEROLL=$TILESIZE/4;
                         
                         // let's create the watermark and save as an mpr
-                        $command.=" \( " . escapeshellarg($watermarkreal) . " -resize x" . escapeshellarg($TILESIZE) . " -background none -write mpr:" . $ref . " +delete \)";
+                        $command.=" \( " . escapeshellarg($watermark) . " -resize x" . escapeshellarg($TILESIZE) . " -background none -write mpr:" . $ref . " +delete \)";
                         $command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escapeshellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
                         $mpr_init_write=true;
                         $mpr_wm_created=true;
@@ -2545,7 +2542,7 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
 
     imagejpeg($source,$file,95);        
 
-    list($tw,$th) = @getimagesize($file);   
+    list($tw,$th) = try_getimagesize($file);   
     
     # Save all images
     $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE (internal=1 OR allow_preview=1) AND id <> ?", ['s', $top]);
@@ -2554,7 +2551,7 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
         # fetch target width and height
         $file=get_resource_path($ref,true,$ps[$n]["id"],false,$extension,-1,1,false,'',$alternative);       
         if (file_exists($file)){
-            list($sw,$sh) = @getimagesize($file);
+            list($sw,$sh) = try_getimagesize($file);
         
             if ($rotateangle!=0) {$temp=$sw;$sw=$sh;$sh=$temp;}
         
@@ -2667,7 +2664,7 @@ function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alte
         {
         $wm_file=get_resource_path($ref,true,$ps[$n]["id"],false,$extension,-1,1,true,'',$alternative);
         if (!file_exists($wm_file)) {return false;}
-        list($sw,$sh) = @getimagesize($wm_file);
+        list($sw,$sh) = try_getimagesize($wm_file);
         
         $wm_source = imagecreatefromjpeg($wm_file);
         
@@ -2687,7 +2684,7 @@ function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alte
             
         if ($gamma!=0) {imagegammacorrect($wm_source,1.0,$gamma);}
         imagejpeg($wm_source,$wm_file,95);
-                list($tw,$th) = @getimagesize($wm_file);
+                list($tw,$th) = try_getimagesize($wm_file);
         if ($rotateangle!=0) {$temp=$sw;$sw=$sh;$sh=$temp;}
         
         # Rescale image
@@ -3463,7 +3460,7 @@ function delete_previews($resource,$alternative=-1)
                 {
                 unlink($previewpath);
                 }
-            if (isset($watermark))
+            if ($watermark !== '')
                 {
                 $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "",$alternative);
                 if (file_exists($wm_path))
@@ -3536,23 +3533,11 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
         // we really need dimensions here, so fallback to php's method
         if (is_readable($file) && filesize_unlimited($file) > 0 && !in_array($extension,config_merge_non_image_types()))
             {
-            $GLOBALS["use_error_exception"] = true;
-            try
-                {
-                list($w,$h) = getimagesize($file);
-                }
-            catch (Exception $e)
-                {
-                $returned_error = $e->getMessage();
-                debug("getFileDimensions: Unable to get image size for file: $file  -  $returned_error");
-                $w = null; 
-                $h = null;
-                }
-           unset($GLOBALS["use_error_exception"]);
+            list($w,$h) = try_getimagesize($file)?:[NULL,NULL];
             }
         else
             {
-            $w = null; 
+            $w = null;
             $h = null;
             debug("getFileDimensions: Unable to get image size for file: $file");
             }
@@ -3795,6 +3780,7 @@ function compute_tiles_at_scale_factor(int $sf, int $sw, int $sh)
  */
 function transform_file(string $sourcepath, string $outputpath, array $actions)
     {
+    debug_function_call(__FUNCTION__, func_get_args());
     global $imagemagick_colorspace, $imagemagick_preserve_profiles, $cropperestricted;
     global $cropper_allow_scale_up;
     global $image_quality_presets, $preview_no_flatten_extensions;
@@ -3943,22 +3929,42 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
                 $tfparams .= " -rotate 90 ";
                 $swaphw += 1;
                 break;
+
             case "r180":
                 $tfparams .= " -rotate 180 ";
                 break;
+
             case "r270":
                 $tfparams .= " -rotate 270 ";
                 $swaphw += 1;
                 break;
+
             case "x":
                 $tfparams .= " -flop ";
-            break;
+                break;
+
             case "y":
                 $tfparams .= " -flip ";
-            break;
+                break;
+
+            case 'cio':
+                // Correcting an image orientation will always be carried out before applying any other transforms so a copy
+                // shouldn't discard previous changes. End users should always start with this if the orientation is wrong anyway.
+                $tmp_path = sprintf(
+                    '%s/transform_cio_sourcepath-%s.tmp.jpg',
+                    get_temp_dir(),
+                    get_checksum($sourcepath) ?: generateSecureKey(32)
+                );
+
+                if (copy($sourcepath, $tmp_path) && AutoRotateImage($tmp_path))
+                    {
+                    $sourcepath = $tmp_path;
+                    }
+                break;
+
             default:
                 // No transform action
-            break;
+                break;
             }
         }
 
@@ -3989,18 +3995,18 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
             $finalwidth= round($finalheight *  $desiredratio,0);
             }
 
-        debug("width:  " . $actions["width"]);
-        debug("height:  " . $actions["height"]);
-        debug("finalxcoord:  " . $finalxcoord);
-        debug("finalycoord:  " . $finalycoord);
-        debug("cropwidth:  " . $actions["cropwidth"]);
-        debug("cropheight:  " . $actions["cropheight"]);
-        debug("origwidth:  " . $origwidth);
-        debug("origheight:  " . $origheight);
-        debug("new_width:  " . $actions["new_width"]);
-        debug("new_height:  " . $actions["new_height"]);
-        debug("finalwidth:  " . $finalwidth);
-        debug("finalheight:  " . $finalheight);
+        debug(sprintf('[transform_file] $actions["width"] = %s', $actions["width"]));
+        debug(sprintf('[transform_file] $actions["height"] = %s', $actions["height"]));
+        debug(sprintf('[transform_file] $finalxcoord = %s', $finalxcoord));
+        debug(sprintf('[transform_file] $finalycoord = %s', $finalycoord));
+        debug(sprintf('[transform_file] $actions["cropwidth"] = %s', $actions["cropwidth"]));
+        debug(sprintf('[transform_file] $actions["cropheight"] = %s', $actions["cropheight"]));
+        debug(sprintf('[transform_file] $origwidth = %s', $origwidth));
+        debug(sprintf('[transform_file] $origheight = %s', $origheight));
+        debug(sprintf('[transform_file] $actions["new_width"] = %s', $actions["new_width"]));
+        debug(sprintf('[transform_file] $actions["new_height"] = %s', $actions["new_height"]));
+        debug(sprintf('[transform_file] $finalwidth = %s', $finalwidth));
+        debug(sprintf('[transform_file] $finalheight = %s', $finalheight));
 
         $cmd_args['%finalwidth'] = $finalwidth;
         $cmd_args['%finalheight'] = $finalheight;

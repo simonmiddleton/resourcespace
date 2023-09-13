@@ -681,9 +681,6 @@ $lang["fieldtitle-video_bitrate"]='Kecepatan bit video.';
 $lang["information-permissions"]='CATATAN: Izin global dari konfigurasi mungkin juga berlaku.';
 $lang["information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field"]='Jika Anda mengaktifkan pengindeksan di bawah dan bidang tersebut sudah berisi data, Anda perlu <a target=_blank href=../tools/reindex_field.php?field=%ref>menyusun ulang indeks bidang ini</a>.';
 $lang["information_index_warning"]='Silakan merujuk ke <a href=\'https://www.resourcespace.com/knowledge-base/resourceadmin/indexing-metadata\' target=\'_blank\'>Basis Pengetahuan</a> untuk informasi terperinci tentang indeks bidang.';
-$lang["property-iptc_equiv"]='Mohon diterjemahkan: Iptc equiv
-Equivalent IPTC (IIM) metadata.
-(Metadata IPTC (IIM) yang setara.)';
 $lang["property-push_metadata"]='Mendorong metadata.';
 $lang["strip"]='Menghapus.';
 $lang["pluginmanager"]='Plugin (soket program)';

@@ -14,9 +14,10 @@ function HookRse_versionEditEdit_all_extra_modes($field)
 
 function HookRse_versionEditEdit_all_mode_js()
     {
-    # Add to the JS executed when a mode selector is changed on 'edit all'
+    # Add to the JS executed when a mode selector is changed on 'edit all', but not immediately after the preceding closing brace
     global $n;
-    ?>var r=document.getElementById('revert_<?php echo $n?>');
+    ?>
+    var r=document.getElementById('revert_<?php echo $n?>');
     if (this.value=='Revert')
         {
          /* 

@@ -312,7 +312,7 @@ if (!hook("replacecomments"))
 
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["lastbrowser"])?></label>
-<div class="Fixed"><?php echo resolve_user_agent($user["last_browser"],true)?></div>
+<div class="Fixed"><?php echo resolve_user_agent($user["last_browser"])?></div>
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["profile_image"])?></label>

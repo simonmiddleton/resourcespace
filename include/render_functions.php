@@ -22,6 +22,9 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     node_field_options_override($field);
 	
 	global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES, $maxyear_extends_current;
+
+    # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering the search field  
+    $multiple=false;
 ?>
 <!-- RENDERING FIELD=<?php echo $field['ref']." ".$field['name'];?> -->
 <?php

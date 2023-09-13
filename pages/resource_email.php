@@ -48,7 +48,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
 	
     // Email single resource
-    $errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$minaccess,$group, $sharepwd);
+    $errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$minaccess,$group);
     if ($errors=="")
         {
         // Log this			

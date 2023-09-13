@@ -140,7 +140,7 @@ function i18n_get_collection_name($mixedcollection, $index="name")
         }
 
     # Ordinary collection - translate with i18n_get_translated
-    return htmlspecialchars(i18n_get_translated($name_untranslated, false));
+    return htmlspecialchars(i18n_get_translated($name_untranslated));
     }
 
 /**

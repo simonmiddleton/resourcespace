@@ -8,7 +8,6 @@ $lang['usage_date']     = 'Usage date';
 
 $lang['usage_id_new']   = 'new';
 
-$lang['new_usage']      = 'New usage';
 $lang['edit_usage']     = 'Edit usage';
 $lang['delete_usage']   = 'Delete usage';
 $lang['resource_usage_configuration'] = "Resource usage configuration";

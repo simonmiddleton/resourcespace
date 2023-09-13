@@ -106,7 +106,7 @@ $tabledata = array(
 
 if(checkperm('a'))
     {
-    $priorityheader = array("name"=>$lang["job_priority"],"sortable"=>false,"html"=>true, "width" => "40px", "sortable"=>true);
+    $priorityheader = array("name"=>$lang["job_priority"],"sortable"=>true,"html"=>true, "width" => "40px");
     $tabledata["headers"] = array_merge(array("priority" => $priorityheader),$tabledata["headers"]);
     }
 

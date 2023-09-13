@@ -369,7 +369,7 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
 	
 	// ============================ MediaMaster Table ================================
 	// Get a MediaMaster record ID to use, if there is not one unused then create one
-	$mediamasterid = tms_get_mediamasterid();
+	$mediamasterid = tms_get_mediamasterid(true,$resource);
 	if(!$mediamasterid)
 	  {
 	  debug("tms_link: ERROR: Unable to get a MediaMasterID. ");
@@ -429,11 +429,31 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
     
   }
     
-function tms_get_mediamasterid($create=true)
+/**
+ * tms_get_mediamasterid
+ * Retrieve a list of unused Media Master IDs from the TMS database and return the first available.
+ * If no IDs are found then create a new one and then retry
+ * To avoid Media Master IDs being used by multiple resources $tms_link_mediapaths_resource_reference_column can be set.
+ * This will store the resource ID in the MediaMaster table when creating the new ID so that it is not used by another Resource
+ *
+ * @param  mixed $create    flag to create a new ID if none found
+ * @param  mixed $resource  ResourceSpace resource ID
+ * @return bool|string      False if no ID found, otherwise the Media Master ID is returned
+ */
+function tms_get_mediamasterid(bool $create=true,string $resource="")
   {
-  global $conn, $errormessage, $tms_link_tms_loginid;
+  global $conn, $errormessage, $tms_link_tms_loginid,$tms_link_mediapaths_resource_reference_column ;
   // Get the latest inserted ID that we have not used
-  $tmssql = "select MediaMasterID FROM MediaMaster where LoginID = '" . $tms_link_tms_loginid . "' and DisplayRendID='-1' and PrimaryRendID='-1'";
+  $tmssql = "SELECT MediaMasterID FROM MediaMaster 
+    WHERE LoginID = '$tms_link_tms_loginid' 
+      AND DisplayRendID='-1' 
+      AND PrimaryRendID='-1'";
+
+  if ($tms_link_mediapaths_resource_reference_column != "" && $resource !="")
+    {
+      $tmssql .= "AND $tms_link_mediapaths_resource_reference_column = '$resource'";
+    }
+
   $mediamasterresult=odbc_exec($conn,$tmssql);
 
   if(!$mediamasterresult)
@@ -456,7 +476,19 @@ function tms_get_mediamasterid($create=true)
     }
   elseif($create)  
     {
-    $tmssql="INSERT INTO MediaMaster (LoginID,DisplayRendID, PrimaryRendID) VALUES ('" . $tms_link_tms_loginid . "',-1,-1)";
+    $insert_columns = ["LoginID","DisplayRendID","PrimaryRendID"];
+    $insert_values  = [$tms_link_tms_loginid,-1,-1];
+
+    if ($tms_link_mediapaths_resource_reference_column != "" && $resource !="")
+      {
+      $insert_columns[]=$tms_link_mediapaths_resource_reference_column;
+      $insert_values[]=$resource;
+      }
+    
+    $insert_columns = implode(",",$insert_columns);
+    $insert_values= implode("','",$insert_values);
+
+    $tmssql="INSERT INTO MediaMaster ($insert_columns) VALUES ('$insert_values')";
     $tmsinsert=odbc_exec($conn,$tmssql);
     if(!$tmsinsert)
       {
@@ -464,7 +496,7 @@ function tms_get_mediamasterid($create=true)
       debug("tms_link: ERROR = " . $errormessage);  
       return false;
       }
-    $newmasterid=tms_get_mediamasterid(false);
+    $newmasterid=tms_get_mediamasterid(false,$resource);
     return $newmasterid;
     }
   else  

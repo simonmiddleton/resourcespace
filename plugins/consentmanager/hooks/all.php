@@ -3,7 +3,6 @@
 function HookConsentmanagerAllExport_add_tables()
     {
     return array("consent"=>array("scramble"=>array("name"=>"mix_text","email"=>"mix_email","telephone"=>"mix_text","consent_usage"=>"mix_text","expires"=>"mix_date")));
-    return array("resource_consent"=>array("scramble"=>array()));
     }
 
 function HookConsentmanagerAllRender_actions_add_collection_option($top_actions,array $options, array $collection_data)

@@ -872,7 +872,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         $val = getval("field_{$fields[$n]['ref']}", '');
                         if($val !== '' && !validateDatetime($val, 'Y-m-d'))
                             {
-                            $errors[$fields[$n]['ref']] = $val;
+                            $errors[$fields[$n]['ref']] = $lang['error_invalid_date'] . ' : ' . $val;
                             continue;
                             }
                         }
@@ -2328,8 +2328,8 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             if($new_created_by > 0 && $new_created_by != $created_by)
                 {
                 ps_query("UPDATE resource SET created_by=? WHERE ref=?",array("i",$new_created_by,"i",$ref));
-                $olduser=get_user($created_by,true);
-                $newuser=get_user($new_created_by,true);
+                $olduser=get_user($created_by);
+                $newuser=get_user($new_created_by);
                 resource_log($ref,LOG_CODE_CREATED_BY_CHANGED,0,"",$created_by . " (" . ($olduser["fullname"]=="" ? $olduser["username"] : $olduser["fullname"])  . ")",$new_created_by . " (" . ($newuser["fullname"]=="" ? $newuser["username"] : $newuser["fullname"])  . ")");
                 $successfully_edited_resources[] = $ref;
                 }
@@ -4667,7 +4667,7 @@ function write_metadata($path, $ref, $uniqid="")
                             }
                             if ($strip_rich_field_tags)
                             {
-                                $command.= escapeshellarg("-" . $group_tag . "=" . trim(strip_tags(i18n_get_translated($writevalue,false)))) . " ";
+                                $command.= escapeshellarg("-" . $group_tag . "=" . trim(strip_tags(i18n_get_translated($writevalue)))) . " ";
                             }
                             else
                             {
@@ -5821,7 +5821,7 @@ function check_use_watermark($download_key = "", $resource="")
     global $access,$k,$watermark,$watermark_open,$pagename,$watermark_open_search, $terms_download;
 
     # Cannot watermark without a watermark
-    if(!isset($watermark))
+    if($watermark === '')
         {
         return false;
         }
@@ -6061,7 +6061,7 @@ function update_disk_usage($resource)
 		{
 		if ($f!=".." && $f!=".")
 			{
-			$s=filesize_unlimited($dir . "/" .$f);
+            $s=(int) filesize_unlimited($dir . "/" .$f);
 			$total+=$s;
 			}
 		}
@@ -8595,49 +8595,6 @@ function canSeeAnnotationsFields(): array
     return $can_view_fields;
     }
 
-/**
-* Helper function for Preview tools feature. Checks if a config option that manipulates the preview image (on view page)
-* is the only one enabled.
-*
-* IMPORTANT: When adding new preview tool options, make sure to check if you need to add a new type check (at the
-* moment it only checks for boolean config options and anything else is seen as enabled).
-*
-* @param string $config_option Preview tool config option name to check
-*
-* @return boolean False means there are other preview tool options enabled.
-*/
-function checkPreviewToolsOptionUniqueness($config_option)
-    {
-    $count_options_enabled = 0;
-    $preview_tool_options = array(
-        'annotate_enabled',
-        'image_preview_zoom'
-    );
-
-    foreach($preview_tool_options as $preview_tools_option)
-        {
-        if($preview_tools_option === $config_option)
-            {
-            continue;
-            }
-
-        if(!isset($GLOBALS[$preview_tools_option]))
-            {
-            continue;
-            }
-
-        $check_option = $GLOBALS[$preview_tools_option];
-
-        if(is_bool($check_option) && !$check_option)
-            {
-            continue;
-            }
-
-        $count_options_enabled++;
-        }
-
-    return (0 === $count_options_enabled ? true : false);
-    }
 
 /**
 * Determine if a video alternative was created from $ffmpeg_alternatives settings.

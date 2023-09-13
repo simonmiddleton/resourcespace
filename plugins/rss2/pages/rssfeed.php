@@ -11,7 +11,7 @@ class RSSFeed
   var $optional = array();
   var $image = array('url' => '', 'title' => '', 'link' => '', 'description' => '', 'w' => 0, 'h' => 0);
 
-  function _RSSFeed($title, $link, $description, $optional = '')
+  public function __construct($title, $link, $description, $optional = '')
   {
     $this->title = $title;
     $this->link = $link;

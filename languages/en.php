@@ -1040,7 +1040,6 @@ $lang["collection_download_use_tar"] = "TAR archive";
 $lang["collection_download_tar_info"] = "TAR files will start downloading instantly. If you do not use this option you may find that your download is limited.";
 $lang["collection_download_tar_started"] = "TAR files will start downloading shortly.";
 $lang["collection_download_tar_applink"] = "Can't open TAR files? Get the open source 7-zip <a href='http://www.7-zip.org/download.html' target='_blank'>here</a>";
-$lang["collection_download_force_online"] = "Download collection now?";
 $lang["downloadsize"]="Download size";
 $lang["existingkeywords"]="Existing keywords:";
 $lang["extrakeywords"]="Extra keywords";
@@ -2592,6 +2591,8 @@ $lang['systemconfig_customfont_label'] = 'Custom font file';
 $lang['systemconfig_invalid_extension'] = "File type not valid for this selection. Please choose from: %%EXTENSIONS%%";
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
 $lang['systemconfig_header_favicon_label'] = 'Application favicon';
+$lang['wartermark_header'] = 'Watermark';
+$lang['wartermark_label'] = 'Watermark image - Recreate previews after changing watermark to update existing resources. Removing file will disable watermarking.';
 $lang['systemconfig_description'] = 'The options on this page are system wide and can change some of the functionality available to the users. Please note that any option that is also user specific will take precedence if set.';
 $lang['systemconfig_multilingual'] = 'Multilingual';
 $lang['systemconfig_default_language_label'] = 'Default language';
@@ -3125,6 +3126,7 @@ $lang["search_full_text"]                   = "Search all text (full text search
 
 $lang["error_invalid_revert_option"]        = "The previously stored value '%%VALUE%%' could not be found in the current options. Please check if the name of this option has changed and manually update the resource if required.";
 $lang["error_invalid_revert_date"]          = "The previously stored date '%%VALUE%%' is invalid. Please update the resource manually if required.";
+$lang["error_invalid_date_format"]          = "\"%%VALUE%%\" is an invalid date. All values in this field must be formatted as YYYY-MM-DD";
 $lang["batch_edit_save_warning_message"]    = "Errors were encountered while editing the following resources-";
 $lang["batch_edit_save_warning_alert"]      = "Some errors were encountered performing this operation. Please refer to your messages for more detail";
 $lang["related_resource_create"]            = "Create new related resource";

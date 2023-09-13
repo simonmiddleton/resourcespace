@@ -146,11 +146,11 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         {
         if ($ref == null)
             {
-            return ps_value("SELECT `ref` AS 'value' FROM `node` WHERE `resource_type_field`=? AND `name`=?",array("i",$resource_type_field,"s",$name),0);
+            $return = ps_value("SELECT `ref` AS 'value' FROM `node` WHERE `resource_type_field`=? AND `name`=?",array("i",$resource_type_field,"s",$name),0);
             }
         else
             {
-            return $ref;
+            $return = $ref;
             }
         }
     else
@@ -165,12 +165,15 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
             {
             add_node_keyword_mappings(array('ref' => $new_ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
             }
-        return $new_ref;
+        $return = $new_ref;
         }
+
     if (in_array($resource_type_field_data['type'], $FIXED_LIST_FIELD_TYPES))
         {
         clear_query_cache("schema");
         }
+
+    return $return;
     }
 
 

@@ -73,7 +73,7 @@ if(is_featured_collection_category($collection))
     else
         {
         $sub_fcs = get_featured_collections($collection["ref"], array());
-        $sub_fcs = array_filter($sub_fcs, function($fc) { return !is_featured_collection_category($fc, array()); });
+        $sub_fcs = array_filter($sub_fcs, function($fc) { return !is_featured_collection_category($fc); });
         $sub_fcs = array_values(array_column($sub_fcs, "ref"));
         }
     $collection["sub_fcs"] = $sub_fcs;

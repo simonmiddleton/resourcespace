@@ -236,7 +236,7 @@ else
             ?>
         <?php } else { ?>
                 
-        <img border=0 src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($result["resource_type"],$result["file_extension"],false,false,true) ?>"
+        <img border=0 src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($result["resource_type"],$result["file_extension"],false) ?>"
 
         /><?php } ?></a>
     

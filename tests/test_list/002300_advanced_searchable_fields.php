@@ -1,10 +1,7 @@
 <?php
 command_line_only();
 
-
-
 define ('ECHOFEEDBACK',false); # Whether or not to echo progress; for testing of this test script
-
 define ('ADVANCED_TRUE', 1);
 define ('ADVANCED_FALSE', 0);
 
@@ -13,6 +10,31 @@ global $date_field;
 $saved_date_field = $date_field;
 
 $fldref=array();
+
+function make_field($fieldname, $resourcetype, $fieldtype, $advanced) {
+    $ref = create_resource_type_field($fieldname, $resourcetype, $fieldtype);
+    $sql = "update resource_type_field set advanced_search=?, keywords_index=? where ref=?"; 
+    ps_query($sql,array("i",$advanced,"i",$advanced,"i",$ref));
+    return $ref;
+}
+
+function verify_field_position($fieldname, $searchfieldarray, $expectedposition) {
+    foreach($searchfieldarray as $key => $searchfieldentry ) {
+        if($searchfieldentry['title'] == $fieldname) {
+            if($key == $expectedposition) {
+                feedback("FIELD ".$fieldname." PASSED".PHP_EOL);
+                return true;
+            }
+        }
+    }
+    # Error; not located in the expected position
+    feedback("FIELD ".$fieldname." FAILED".PHP_EOL);
+    return false;
+}
+
+function feedback($buffer) {
+    if(ECHOFEEDBACK) echo $buffer;
+}
 
 # Shipped resource types are as follows
 #  1 Photo
@@ -130,27 +152,3 @@ feedback("RESTORED DATE_FIELD= ".$date_field.PHP_EOL);
 
 return true;
 
-function make_field($fieldname, $resourcetype, $fieldtype, $advanced) {
-    $ref = create_resource_type_field($fieldname, $resourcetype, $fieldtype);
-    $sql = "update resource_type_field set advanced_search=?, keywords_index=? where ref=?"; 
-    ps_query($sql,array("i",$advanced,"i",$advanced,"i",$ref));
-    return $ref;
-}
-
-function verify_field_position($fieldname, $searchfieldarray, $expectedposition) {
-    foreach($searchfieldarray as $key => $searchfieldentry ) {
-        if($searchfieldentry['title'] == $fieldname) {
-            if($key == $expectedposition) {
-                feedback("FIELD ".$fieldname." PASSED".PHP_EOL);
-                return true;
-            }
-        }
-    }
-    # Error; not located in the expected position
-    feedback("FIELD ".$fieldname." FAILED".PHP_EOL);
-    return false;
-}
-
-function feedback($buffer) {
-    if(ECHOFEEDBACK) echo $buffer;
-}
