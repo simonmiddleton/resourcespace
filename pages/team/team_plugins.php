@@ -350,11 +350,11 @@ if($searching)
                    // Correct path to support plugins that are located in filestore/plugins
                    if(substr($plugin['config_url'],0,8)=="/plugins")
                     {
-                    $pluginlugin_config_url = str_replace("/plugins/" . $plugin['name'], get_plugin_path($plugin['name'],true), $plugin['config_url']);
+                    $plugin_config_url = str_replace("/plugins/" . $plugin['name'], get_plugin_path($plugin['name'],true), $plugin['config_url']);
                     }
                    else
-                    {$pluginlugin_config_url = $baseurl . $plugin['config_url'];}
-                   echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $pluginlugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' . $lang['options'].'</a> ';        
+                    {$plugin_config_url = $baseurl_short . $plugin['config_url'];}
+                   echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' . $lang['options'].'</a> ';        
                    }
                 ?>
                     </div><!-- End of ListTools -->
@@ -448,7 +448,7 @@ if (count($inst_plugins)>0)
                 $plugin_config_url = str_replace("/plugins/" . $p['name'], (string)get_plugin_path($p['name'],true), $p['config_url']);
                 }
                else
-                {$plugin_config_url = $baseurl . $p['config_url'];}
+                {$plugin_config_url = $baseurl_short . $p['config_url'];}
                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' .$lang['options'].'</a> ';        
                }
             echo '</div></td></tr>';
