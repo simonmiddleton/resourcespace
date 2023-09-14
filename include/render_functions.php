@@ -5275,7 +5275,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
  */
 function render_table($tabledata)
     {
-    global $list_display_array, $lang;
+    global $list_display_array, $lang, $default_perpage_list;
     $modal = isset($tabledata["modal"]) && $tabledata["modal"];
     $alertcolumn = count(array_column($tabledata["data"],'alerticon')) > 0;
     if(isset($tabledata["pager"]))
