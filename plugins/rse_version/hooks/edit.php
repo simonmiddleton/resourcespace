@@ -4,7 +4,7 @@ function HookRse_versionEditEdit_all_extra_modes($field)
     {
     global $lang;
     ?>
-    <option value="Revert"><?php echo $lang["revertmetadatatodatetime"] ?></option>
+    <option value="Revert"><?php echo htmlspecialchars($lang["revertmetadatatodatetime"]); ?></option>
     <?php
     }
     
@@ -17,7 +17,7 @@ function HookRse_versionEditEdit_all_mode_js()
     # Add to the JS executed when a mode selector is changed on 'edit all', but not immediately after the preceding closing brace
     global $n;
     ?>
-    var r=document.getElementById('revert_<?php echo $n?>');
+    var r=document.getElementById('revert_<?php echo (int) $n?>');
     if (this.value=='Revert')
         {
          /* 
@@ -51,9 +51,9 @@ function HookRse_versionEditEdit_all_after_findreplace($field,$n)
     global $lang;
     $initial_revert_to_date=offset_user_local_timezone(date('YmdHis'), 'Y-m-d H:i');
     ?>
-    <div class="Question" id="revert_<?php echo $n?>" style="display:none;border-top:none;">
+    <div class="Question" id="revert_<?php echo (int) $n?>" style="display:none;border-top:none;">
     <label>&nbsp;</label>
-    <input type="text" name="revert_<?php echo $field["ref"]?>" class="stdwidth" value="<?php echo $initial_revert_to_date; ?>" />
+    <input type="text" name="revert_<?php echo (int) $field["ref"]?>" class="stdwidth" value="<?php echo escape_quoted_data($initial_revert_to_date); ?>" />
     </div>
     <?php
     }
@@ -91,10 +91,10 @@ function HookRse_versionEditBefore_status_question()
         });
     </script>
     <div class="Question" id="edit_mode_status" style="display: none; padding-bottom: 0px; margin-bottom: 0px;">
-        <label><?php echo $lang["editmode"]; ?></label>
+        <label><?php echo htmlspecialchars($lang["editmode"]); ?></label>
         <select id="modeselect_status" class="stdwidth" name="modeselect_status" onchange="modeselect_status_onchange(this);">
             <option value=""></option>
-            <option value="revert"><?php echo $lang["revertmetadatatodatetime"]; ?></option>
+            <option value="revert"><?php echo htmlspecialchars($lang["revertmetadatatodatetime"]); ?></option>
         </select>
         <script>
         function modeselect_status_onchange(el)
