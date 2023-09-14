@@ -2856,6 +2856,7 @@ $lang["set_metadata_then_upload"]="Set metadata first, then upload";
 $lang['annotate_text_link_label'] = 'Annotate mode toggle';
 $lang['annotate_annotation_label'] = 'Annotation';
 $lang['annotate_annotations_label'] = 'Annotations';
+$lang['annotate_select'] = 'Select field...';
 
 $lang["byte_prefix_mode_decimal"]="Use decimal for file sizes (1000 multiples, KB/MB/GB/TB) as opposed to binary (1024 multiples , KiB/MiB/GiB/TiB)";
 
