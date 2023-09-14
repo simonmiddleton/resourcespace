@@ -2924,6 +2924,7 @@ $actions_modal=true;
 // $new_action_email_interval - if this is set to a postive value users can choose to be notifed of new 
 // actions - see $user_pref_new_action_emails. IMPORTANT - to work correctly this requires the cron tasks 
 // to be run more frequently than the interval specified. 
+// The maximum accepted value for this option is 168 hours (1 week). For any values greater than this 168 will be used instead.
 $new_action_email_interval = 0;
 
 # Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)

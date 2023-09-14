@@ -154,12 +154,12 @@ function get_user_actions_recent(int $minutes, bool $allusers) : array
         {
         $generated_title_field = "r.ref";
         }
-    $sql = "SELECT r.ref, r.archive, rl.user, MAX(rl.date) AS date, $generated_title_field AS description, 'resourcereview' AS type 
+    $sql = "SELECT r.ref, r.archive, r.resource_type, rl.user, MAX(rl.date) AS date, $generated_title_field AS description, 'resourcereview' AS type 
               FROM resource_log rl 
          LEFT JOIN resource r ON rl.resource=r.ref
-             WHERE rl.type = 's' 
+             WHERE rl.type IN('" . LOG_CODE_STATUS_CHANGED . "','" . LOG_CODE_CREATED . "')
                AND TIMESTAMPDIFF(MINUTE,date,NOW())<?
-          GROUP BY r.ref,rl.ref
+          GROUP BY r.ref
           ORDER BY rl.ref DESC";
 
     $params = ["i",$minutes];
@@ -183,7 +183,7 @@ function get_user_actions_recent(int $minutes, bool $allusers) : array
     $params = ["i",$minutes];
     $newactions["userrequest"] = ps_query($sql,$params);
 
-    // Any actions that add to the array using the hook below should return an element including the function and parameters to be checked for a user to be able to see the action
+    // Any actions that add actions to the array using the hook below should return an element including the function name, parameters and required value to be returned for a user to be able to see the action
     // e.g. 
     // $newactions["access_callback"] = 
     //     ["function"=>"get_edit_access",
@@ -195,7 +195,6 @@ function get_user_actions_recent(int $minutes, bool $allusers) : array
         {
         $newactions = $hookactions;     
         }
-
 
     $userrecent = [];
     if($allusers)
@@ -250,10 +249,13 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
                     {
                     get_config_option($userref,"actions_notify_states", $notifystates,"");
                     $arrnotifystates = explode(",",$notifystates);
+
+                    get_config_option($userref,"actions_resource_types_hide", $ignoretypes,"");
+                    $arrignoretypes = explode(",",$ignoretypes);
                     }
                 foreach($typeactions as $typeaction)
                     {
-                    if(in_array($typeaction["archive"],$arrnotifystates) && get_edit_access($typeaction["ref"]))
+                    if(in_array($typeaction["archive"],$arrnotifystates) && !in_array($typeaction["resource_type"],$arrignoretypes) && get_edit_access($typeaction["ref"]))
                         {
                         $return["resourcereview"][] = $typeaction;
                         }
@@ -299,6 +301,8 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
                 break;
             }
         }
+
+    // TODO - filter out actions that were created by the same user - they don't need to be notified
     if(isset($saved_user) && $saved_user !=0)
         {
         $saveduserdata = get_user($saved_user);
