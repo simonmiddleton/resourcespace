@@ -5,9 +5,14 @@
 
 /**
 * Generates the CSV content of the metadata for resources passed in the array
+* The CSV is echoed to output for direct download or saved to a file
 *
-* @param array $resources (array of resource ids)
-* @return string
+* @param array  $resources  array of resource ids to create a CSV for
+* @param bool   $personal   flag to include only fields expected to include personal data
+* @param bool   $alldata    flag to include extra data from the resource table
+* @param string $outputfile optional file path to output CSV to
+*
+* @return bool|void TRUE if the file has been created, void if the data has been sent as a direct download
 */
 function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=false,$outputfile="")
     {

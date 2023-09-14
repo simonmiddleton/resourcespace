@@ -5513,6 +5513,8 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         return false;
         }
 
+    # Unable to determine access
+    return false;
     }
 
 

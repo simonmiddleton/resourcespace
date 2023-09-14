@@ -215,8 +215,9 @@ function save_request($request)
 
         # Clear any outstanding notifications about this request that may have been sent to other admins
         message_remove_related(MANAGED_REQUEST,$request);
-        return true;
         }
+
+    return true;
     }
 
 

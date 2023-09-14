@@ -46,11 +46,6 @@ parameters:
 			path: include/collections_functions.php
 
 		-
-			message: "#^Function generateResourcesMetadataCSV\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: include/csv_export_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$error$#"
 			count: 1
 			path: include/database_functions.php
@@ -131,22 +126,12 @@ parameters:
 			path: include/render_functions.php
 
 		-
-			message: "#^Function save_request\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: include/request_functions.php
-
-		-
 			message: "#^Call to static method compare\\(\\) on an unknown class Diff\\.$#"
 			count: 1
 			path: include/resource_functions.php
 
 		-
 			message: "#^Call to static method toString\\(\\) on an unknown class Diff\\.$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
-			message: "#^Function resource_download_allowed\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: include/resource_functions.php
 
