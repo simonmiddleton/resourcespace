@@ -316,16 +316,6 @@ parameters:
 			path: plugins/flickr_theme_publish/inc/flickr_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$imagemagick_path$#"
-			count: 2
-			path: plugins/image_text/hooks/collection_download.php
-
-		-
-			message: "#^Undefined variable\\: \\$imagemagick_path$#"
-			count: 2
-			path: plugins/image_text/hooks/download.php
-
-		-
 			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"
 			count: 1
 			path: plugins/vimeo_publish/include/vimeo_publish_functions.php

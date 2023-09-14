@@ -5,7 +5,8 @@ function HookImage_textDownloadModifydownloadfile()
 	global $ref, $path, $tmpfile, $userref, $usergroup,  $ext, $resource_data,
 	$image_text_restypes, $image_text_override_groups, $image_text_filetypes,
 	$size, $page, $use_watermark, $alternative, $image_text_height_proportion,
-	$image_text_max_height, $image_text_min_height, $image_text_font, $image_text_position, $image_text_banner_position;
+	$image_text_max_height, $image_text_min_height, $image_text_font, $image_text_position,
+    $image_text_banner_position, $imagemagick_path;
     
 	# Return if not configured for this resource type or if user has requested no overlay and is permitted this
     if(!is_array($resource_data)

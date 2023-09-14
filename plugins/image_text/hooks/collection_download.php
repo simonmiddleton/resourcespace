@@ -22,7 +22,8 @@ function HookImage_textCollection_downloadModifydownloadfile()
 	$image_text_restypes, $image_text_override_groups, $image_text_filetypes,
 	$usesize, $pextension, $use_watermark, $alternative, $tmpfile,
 	$filename, $image_text_height_proportion, $image_text_max_height, 
-	$image_text_min_height, $image_text_font, $image_text_position,$image_text_banner_position;
+	$image_text_min_height, $image_text_font, $image_text_position,$image_text_banner_position,
+	$imagemagick_path;
 	
 	# Return if not configured for this resource type or if user has requested no overlay and is permitted this
 	if(!in_array($result[$n]['resource_type'], $image_text_restypes) || !in_array(strtoupper($result[$n]['file_extension']), $image_text_filetypes) || (getval("nooverlay","")!="" && in_array($usergroup, $image_text_override_groups)) || $use_watermark){return false;}
