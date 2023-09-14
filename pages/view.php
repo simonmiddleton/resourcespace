@@ -976,7 +976,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     {
                                                     anno.addPlugin('RSTagging',
                                                         {
-                                                        select              : '<?php echo $lang['annotate_select']?>',
+                                                        select              : '<?php echo htmlspecialchars($lang['annotate_select'])?>',
                                                         annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
                                                         nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
                                                         resource            : <?php echo (int) $ref; ?>,
