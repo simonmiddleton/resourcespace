@@ -7035,10 +7035,7 @@ function process_edit_form($ref, $resource)
         else
             {
             update_resource_type($ref, $resource_type);
-            if (!$multiple && $upload_review_mode)
-                {
-                apply_resource_default((int) $resource["resource_type"], (int) $resource_type, (int) $ref);
-                }
+            $previous_resource_type = $resource["resource_type"];
             }
         }
     $resource=get_resource_data($ref,false); # Reload resource data.
@@ -7057,6 +7054,11 @@ function process_edit_form($ref, $resource)
         {
         # Perform the save
         $save_errors=save_resource_data($ref,$multiple,$autosave_field);
+        }
+
+    if (isset($previous_resource_type) && !$multiple && $upload_review_mode)
+        {
+        apply_resource_default((int) $previous_resource_type, (int) $resource_type, (int) $ref);
         }
 
     if($relate_on_upload && $enable_related_resources && getval("relateonupload", "") != "")
