@@ -806,12 +806,6 @@ renderBreadcrumbs($links_trail);
                     flippedy = true;
                     }
                 }
-            else if(action === 'correct-image-orientation')
-                {
-                tfactions.push('cio'); 
-                imgheight = jQuery('#cropimage').height();
-                imgwidth = jQuery('#cropimage').width();
-                }
 
             // Update form input
             jQuery("#tfactions").val(tfactions.join());
@@ -1094,11 +1088,6 @@ renderBreadcrumbs($links_trail);
         "action"    => "jQuery('.imagetools_actions').hide();jQuery('#croptools').show();jQuery('#imagetools_corrections_actions').show();return false;",
         "icon"      => "fa fa-fw fa-sliders-h",
         );
-    $imagetools[] = [
-        'name'      => $lang['transform_correct_image_orientation'],
-        'action'    => "cropReload('correct-image-orientation'); return false;",
-        'icon'      => 'fa-solid fa-camera-rotate',
-    ];
 
     hook("imagetools_extra");
     
