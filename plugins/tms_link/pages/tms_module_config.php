@@ -7,7 +7,19 @@ if(!checkperm('a'))
     exit($lang["error-permissiondenied"]);
     }
 
-
+// Get available tables
+$conn = odbc_connect($tms_link_dsn_name, $tms_link_user,$tms_link_password);
+$arrtables=[];
+$alltables = odbc_tables($conn);
+while (odbc_fetch_row($alltables))
+    {
+    $type = odbc_result($alltables, 4);
+    if ($type == "TABLE")
+        {
+        $tablename = odbc_result($alltables,3);
+        $arrtables[$tablename] = $tablename;
+        }
+    }
 
 $id = getval('id', '');
 $action = getval('action', '');
@@ -96,12 +108,10 @@ include '../../../include/header.php';
         ));
     ?>
     <form id="TmsModuleConfigForm" method="post" action="<?php echo $form_action; ?>">
-        <?php generateFormToken("tms_module_config"); ?>
-        <div class="Question">
-            <label><?php echo $lang["tms_link_tms_module_name"]; ?></label>
-            <input name="tms_link_module_name" type="text" class="stdwidth" value="<?php echo htmlspecialchars($tms_link_module_name); ?>">
-            <div class="clearerleft"></div>
-        </div>
+        <?php
+        generateFormToken("tms_module_config");
+        render_dropdown_question($lang["tms_link_tms_module_name"],"tms_link_module_name",$arrtables,$tms_link_module_name); ?>
+
         <div class="Question">
             <label><?php echo $lang["tms_link_tms_uid_field"]; ?></label>
             <input name="tms_link_tms_uid_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($tms_link_tms_uid_field); ?>">
@@ -231,9 +241,8 @@ include '../../../include/header.php';
             // This function reindexes the attribute 'name' when 'Add mapping' or 'Delete' is pressed
             function reindexTable()
                 {
-                                
                 // Go through each row (not first or last though)
-                jQuery('#tmsModulesMappingTable tr').not(':first').not(':last').each(function(i) 
+                jQuery('#tmsModulesMappingTable tr').not(':first').not(':last').each(function(i)
                     {
 
                     // Build strings again using correct number
