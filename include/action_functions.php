@@ -154,12 +154,13 @@ function get_user_actions_recent(int $minutes, bool $allusers) : array
         {
         $generated_title_field = "r.ref";
         }
-    $sql = "SELECT r.ref, r.archive, r.resource_type, rl.user, MAX(rl.date) AS date, $generated_title_field AS description, 'resourcereview' AS type 
+    $sql = "SELECT r.ref, r.archive, r.resource_type, rl.user, rl.date AS date, $generated_title_field AS description, 'resourcereview' AS type 
               FROM resource_log rl 
+         LEFT JOIN resource_log rl2 ON (rl.resource=rl2.resource AND rl.ref<rl2.ref) 
          LEFT JOIN resource r ON rl.resource=r.ref
-             WHERE rl.type IN('" . LOG_CODE_STATUS_CHANGED . "','" . LOG_CODE_CREATED . "')
-               AND TIMESTAMPDIFF(MINUTE,date,NOW())<?
-          GROUP BY r.ref
+             WHERE rl2.ref IS NULL 
+               AND rl.type IN('" . LOG_CODE_STATUS_CHANGED . "','" . LOG_CODE_CREATED . "')
+               AND TIMESTAMPDIFF(MINUTE,rl.date,NOW())<?
           ORDER BY rl.ref DESC";
 
     $params = ["i",$minutes];
@@ -228,13 +229,14 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
     global $userref, $actions_resource_requests, $actions_account_requests, $actions_approve_hide_groups; 
 
     $return = [];
+
     if(!isset($userref) || $actionuser != $userref)
         {
         $saved_user = $userref ?? 0;
         $actionuserdata = get_user($actionuser);
         setup_user($actionuserdata);
+        echo "action user now " . $actionuser . PHP_EOL;
         }
-
     foreach($actions as $actiontype=>$typeactions)
         {
         switch($actiontype)
@@ -255,7 +257,11 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
                     }
                 foreach($typeactions as $typeaction)
                     {
-                    if(in_array($typeaction["archive"],$arrnotifystates) && !in_array($typeaction["resource_type"],$arrignoretypes) && get_edit_access($typeaction["ref"]))
+                    if(in_array($typeaction["archive"],$arrnotifystates)
+                        && !in_array($typeaction["resource_type"],$arrignoretypes)
+                        && get_edit_access($typeaction["ref"])
+                        && $typeaction["user"] != $actionuser // Filter out if the user changed the state themselves
+                        )
                         {
                         $return["resourcereview"][] = $typeaction;
                         }
@@ -301,8 +307,7 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
                 break;
             }
         }
-
-    // TODO - filter out actions that were created by the same user - they don't need to be notified
+    
     if(isset($saved_user) && $saved_user !=0)
         {
         $saveduserdata = get_user($saved_user);
