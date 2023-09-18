@@ -2,127 +2,134 @@
 command_line_only();
 
 include_once __DIR__ . "/../../include/action_functions.php";
+include_once __DIR__ . "/../../include/request_functions.php";
 
 // Save settings
 $saved_timezone = date_default_timezone_get();
 $saved_new_action_email_interval = $new_action_email_interval; // TODO is this required?
 
+// Clean out old data
+ps_query("TRUNCATE resource");
+ps_query("TRUNCATE user");
+ps_query("TRUNCATE request");
+
+// set up environment
+$new_action_email_interval = 1;
+unset($resource_type_request_emails);
+$send_default_notifications = false;
+
+$debug_log=true;
+$debug_log_location = "/var/log/resourcespace/debug_dev.log";
+$debug_extended_info = true;
+
+
 // Set up test users
-// Admin user, USA west coast timezone, Spanish
+
+// Admin user
 $adminuser = new_user("actionuser005100_1");
-$language   = "es";
 $emailadress= "adminuser005100_1@test.resourcespace.com";
 $usergroup  = 3;
 $approved   = 1;
 $params = ["i",$approved,"s",$emailadress,"i",$usergroup,"s",$language,"i",$adminuser];
 ps_query("UPDATE user SET approved = ?,email = ?,usergroup = ?,lang = ? WHERE ref = ?",$params);
-set_config_option($adminuser, "user_local_timezone", "America/Los_Angeles");
 
-// General user, UK timezone, British english
+// General user
 $generaluser = new_user("generaluser005100_2");
-$language   = "en";
 $emailadress= "actionuser005100_1@test.resourcespace.com";
 $usergroup  = 2;
 $approved   = 1;
 $params = ["i",$approved,"s",$emailadress,"i",$usergroup,"s",$language,"i",$generaluser];
 ps_query("UPDATE user SET approved = ?,email = ?,usergroup = ?,lang = ? WHERE ref = ?",$params);
-set_config_option($generaluser, "user_local_timezone", "Europe/London");
 
-$use_cases = [
-    [
-    'name' => 'Get resource review actions - admin user',
-    'user' => $adminuser,
-    'resources' => [
-        [1,0,$adminuser],
-        [1,-1,$adminuser],
-        [2,0,$adminuser],
-        [2,-1,$adminuser],
-        [3,-1,$adminuser],
-        ],
-
-    'preferences' => [
-        [$adminuser,"user_pref_new_action_emails", "1"],
-        [$adminuser,"actions_resource_review", "1"],
-        [$adminuser,"actions_notify_states", "-1"],
-        [$adminuser,"user_pref_new_action_emails", "1"],
-        [$adminuser,"actions_resource_types_hide", "2"],
-        ],
-    'expectedcount' => ["resourcereview","2"],
-    'expected' => [
-        [$adminuser,'resourcereview',5],
-        [$adminuser,'resourcereview',2],
-        ],
-    ],
-    [
-    'name' => 'Get resource review actions - general user',
-    'user' => $generaluser,
-    // [type,archive)]
-    'resources' => [
-        [1,-1,$generaluser],
-        [1,-1,$generaluser],
-        [2,-1,$generaluser],
-        [2,-1,$generaluser],
-        [3,-1,$generaluser],
-        ],
-    
-    'preferences' => [
-        [$generaluser,"user_pref_new_action_emails", "1"],
-        [$adminuser,"actions_resource_review", "1"],
-        [$generaluser,"actions_notify_states", "-2"],
-        [$generaluser,"user_pref_new_action_emails", "1"],
-        [$generaluser,"actions_resource_types_hide", "2"],
-        ],
-    'expectedcount' => ["resourcereview","0"],
-    'expected' => [],
-    ],
-
-];
-
-$new_action_email_interval = 1;
-foreach($use_cases as $use_case)
+// Test A - Get resource review actions - admin user
+$resourcea = create_resource(1,0,$adminuser);
+$resourceb = create_resource(1,-1,$adminuser);
+$resourcec = create_resource(2,0,$adminuser);
+$resourced = create_resource(2,-1,$adminuser);
+$resourcee = create_resource(3,-1,$adminuser);
+set_config_option($adminuser,"user_pref_new_action_emails", "1");
+set_config_option($adminuser,"actions_resource_review", "1");
+set_config_option($adminuser,"actions_notify_states", "-1");
+set_config_option($adminuser,"actions_resource_types_hide", "2");
+$actions = get_user_actions_recent(5,true);
+if(!isset($actions[$adminuser]["resourcereview"]) || 
+    !match_values(array_column($actions[$adminuser]["resourcereview"],"ref"),[$resourceb, $resourcee])
+    )
     {
-    if(isset($use_case["resources"]))
-        {
-        foreach($use_case["resources"] as $resource)
-            {
-            create_resource($resource[0],$resource[1], $resource[2]);
-            }
-        }
-    if(isset($use_case["preferences"]))
-        {
-        foreach($use_case["preferences"] as $preference)
-            {
-            set_config_option($preference[0],$preference[1], $preference[2]);
-            }
-        }
+    echo "Test A - failed to get correct actions" . PHP_EOL;
+    echo print_r($actions);
+    return false;
+    }
+    
+// Test B - Get resource review actions - standard user
+$resourcef = create_resource(1,-1,$generaluser);
+$resourceg = create_resource(1,-1,$generaluser);
+$resourceh = create_resource(2,-1,$generaluser);
+$resourcei = create_resource(2,-1,$generaluser);
+$resourcej = create_resource(3,-1,$generaluser);
+set_config_option($generaluser,"user_pref_new_action_emails", "1");
+set_config_option($generaluser,"actions_resource_review", "1");
+set_config_option($generaluser,"actions_notify_states", "-2");
+set_config_option($generaluser,"actions_resource_types_hide", "2");
+$actions = get_user_actions_recent(5,true);
+if(isset($actions[$generaluser]["resourcereview"]))
+    {
+    echo "Test B - failed to get correct actions" . PHP_EOL;
+    echo print_r($actions);
+    return false;
+    }
 
-    // Perform test 
-    $actions = get_user_actions_recent(5,true);
-
-    if(isset($actions[$use_case["user"]][$use_case["expectedcount"][0]]) 
-        && $use_case["expectedcount"][1] != count($actions[$use_case["user"]][$use_case["expectedcount"][0]])
-        )
-        {
-        echo $use_case["name"] . ": failed to get correct action count for user " . $use_case["user"] . ". Expected: " . $use_case["expectedcount"][1] . ", returned: " . (isset($actions[$use_case["user"]][$use_case["expectedcount"][0]]) ? count($actions[$use_case["user"]][$use_case["expectedcount"][0]]) : 0) . " ";
-        echo print_r($actions);
-        return false;
-        }
-    foreach($use_case["expected"] as $expected)
-        {
-        if(!isset($actions[$expected[0]])
-            || !isset($actions[$expected[0]][$expected[1]])
-            || !in_array($expected[2],array_column($actions[$expected[0]][$expected[1]],"ref"))
-            )
-            {
-            echo $use_case["name"] . ": failed to get correct actions for resource " . $expected[2] . " ";
-            return false;
-            }
-        }
+// Test C - move resource contributed by $generaluser back to pending submission
+update_archive_status($resourcef,-2);
+update_archive_status($resourceh,-2);
+update_archive_status($resourcej,-2);
+$actions = get_user_actions_recent(5,true);
+if(!isset($actions[$generaluser]["resourcereview"]) || 
+    !match_values(array_column($actions[$generaluser]["resourcereview"],"ref"),[$resourcef, $resourcej])
+    )
+    {
+    echo "Test C - failed to get correct actions" . PHP_EOL;
+    echo print_r($actions);
+    return false;
     }
 
 
+// Test D - check resource requests
+ps_query("UPDATE resource SET access=1 WHERE ref IN (?,?)",["i",$resourcea,"i",$resourcec]);
+$genuserdata = get_user($generaluser);
+setup_user($genuserdata);
+$col1 = create_collection($generaluser,"test_005100",1);
+add_resource_to_collection($resourcea,$col1);
+$request = managed_collection_request($col1,"Test request",false);
+// Get actions only for admin user
+$adminuserdata = get_user($adminuser);
+setup_user($adminuserdata);
+$actions = get_user_actions_recent(5,false);
+if(!isset($actions[$adminuser]["resourcerequest"]) || 
+    isset($actions[$generaluser]) ||
+    !match_values(array_column($actions[$adminuser]["resourcerequest"],"ref"),[$request])
+    )
+    {
+    echo "Test D - failed to get resourcerequest action" . PHP_EOL;
+    echo print_r($actions);
+    return false;
+    }
+
+// Test E - check user account request
+$userrequest = new_user("newuser_005100");
+ps_query("UPDATE user set approved=0 WHERE ref=?",["i",$userrequest]);
+// Get actions only for admin user
+$actions = get_user_actions_recent(5,false);
+if(!isset($actions[$adminuser]["userrequest"]) || 
+    !match_values(array_column($actions[$adminuser]["userrequest"],"ref"),[$userrequest])
+    )
+    {
+    echo "Test E - failed to get userrequest action" . PHP_EOL;
+    echo print_r($actions);
+    return false;
+    }
+
 // Cleanup
-date_default_timezone_set($saved_timezone);
 $new_action_email_interval = $saved_new_action_email_interval;
 
 return true;
