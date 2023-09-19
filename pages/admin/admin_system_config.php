@@ -31,6 +31,7 @@ $page_def[] = config_add_single_select(
     420,
     '',
     true);
+$page_def[] = config_add_text_input('download_filename_format', $lang['setup-download_filename_format'], false, 420, false, '', true);
 $page_def[] = config_add_html('</div>');
 
 

@@ -3387,3 +3387,23 @@ IMPORTANT: enabling this will mean partial dates (e.g May 2023) are no longer su
 cleared after the next resource edit (as & when users do it).
 */
 $use_native_input_for_date_field = false;
+
+
+/* 
+Format the download file name.
+
+Available placeholders:
+- %resource -> resource ref (ID)
+- %fieldXX -> where XX is the actual metadata field ID (technical terms: resource_type_field).
+    If user doesn't have permission to view the field, then blank (empty string) will be used instead.
+- %filename -> the actual original/alternative file name
+- %size -> "scr", "pre", etc - if present
+- %extension -> jpg, png etc
+- %if-alternative/%alt_alternative/ -> where:
+    * %if-alternative is the conditional construct (ie not a placeholder), and
+    * in between slash (/) characters the admins can add formatting specifically for the alternatives
+    The "%alt" is a sub placeholder for the alternative ID, valid only in the %if-alternative context.
+
+The %fieldXX placeholder will enforce its access control rules.
+*/
+$download_filename_format = '';
