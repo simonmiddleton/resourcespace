@@ -31,6 +31,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         array_push ($messages,str_replace("%%FILE%%", $filename,$lang["csv_upload_error_file_missing"]));
         }
 
+    $flagpath="";
     if($processcsv)
         {
         // Set a flag to prevent processing the same CSV multiple times

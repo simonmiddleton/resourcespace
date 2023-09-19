@@ -271,11 +271,6 @@ parameters:
 			path: plugins/annotate/include/annotate_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$flagpath$#"
-			count: 2
-			path: plugins/csv_upload/include/csv_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$_MIME_TYPES$#"
 			count: 1
 			path: plugins/emu/include/emu_api.php
