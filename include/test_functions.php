@@ -23,13 +23,15 @@ function resource_random_jpg($resource,$width, $height)
 
 /**
  * Generate a random image which can be used during testing (e.g to upload, or create previews for)
- * 
+ *
  * @param array $info Set image parameters:
  * - text -> Image content text
- * - filename (optional) 
- * - width (optional) 
- * - height (optional) 
+ * - filename (default: random) 
+ * - width (default: 150) 
+ * - height (default: 50) 
  * - bg[red|green|blue] -> Background colour (RGB), e.g $info['bg']['red'] = 234;
+ *
+ * @return array Returns an "error" key if something went wrong, otherwise provides some useful info (e.g path)
  */
 function create_random_image(array $info): array
     {
@@ -59,5 +61,80 @@ function create_random_image(array $info): array
         ];
         }
 
-    return [];
+    return [
+        'error' => 'Failed to create image',
+    ];
+    }
+
+/**
+ * Generate a random video which can be used during testing (e.g to upload, or create previews for)
+ *
+ * @param array $info Set video parameters:
+ * - duration (default: 5 seconds) 
+ * - width (default: 300) 
+ * - height (default: 300) 
+ * - filename (default: random) 
+ * - extension (default: mp4) 
+ * - text -> Video content text (optional) 
+ *
+ * @return array Returns an "error" key if something went wrong, otherwise provides some useful info (e.g path)
+ */
+function create_random_video(array $info): array
+    {
+    $duration = $info['duration'] ?? 5;
+    $width = $info['width'] ?? 300;
+    $height = $info['height'] ?? 300;
+    $filename = $info['filename'] ?? generateSecureKey(32);
+    $extension = $info['extension'] ?? 'mp4';
+
+    $ffmpeg = get_utility_path('ffmpeg');
+    if ($ffmpeg !== false && in_array($extension, $GLOBALS['ffmpeg_supported_extensions']))
+        {
+        // Add text to video only if supported
+        if (isset($info['text']) && mb_strpos(run_command($ffmpeg, true), '--enable-libfontconfig') !== false)
+            {
+            $cmd_vf = '-vf %filtergraph';
+            $cmd_vf_params = [
+                '%filtergraph' => "drawtext=text='{$info['text']}'"
+                    . ":font='Times New Roman':fontsize=10:fontcolor=black:box=1:boxcolor=white:boxborderw=5",
+            ];
+            }
+        else
+            {
+            $cmd_vf = '';
+            $cmd_vf_params = [];
+            }
+
+        // Create video file
+        $path = get_temp_dir() . DIRECTORY_SEPARATOR . "{$filename}.{$extension}";
+        $cmd_output = run_command(
+            "$ffmpeg -f lavfi -i testsrc=duration=%duration:size=%wx%h:rate=30 $cmd_vf %outfile",
+            true,
+            array_merge(
+                [
+                    '%duration' => $duration,
+                    '%w' => $width,
+                    '%h' => $height,
+                    '%outfile' => $path,
+                ]
+                ,
+                $cmd_vf_params
+            )
+        );
+
+        if (mb_strpos($cmd_output, ' Error ') !== false)
+            {
+            return [
+                'error' => $cmd_output,
+            ];
+            }
+
+        return [
+            'path' => $path,
+        ];
+        }
+
+    return [
+        'error' => 'FFMpeg missing',
+    ];
     }
