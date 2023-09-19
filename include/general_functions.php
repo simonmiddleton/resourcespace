@@ -1890,7 +1890,7 @@ function filesize_unlimited($path)
         $bytesize = exec("stat -c '%s' " . escapeshellarg($path));
         }
 
-    if(!is_int($bytesize))
+    if(!is_int_loose($bytesize))
         {
         $GLOBALS["use_error_exception"] = true;
         try
