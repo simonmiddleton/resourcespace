@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Undefined variable\\: \\$position_prefix$#"
-			count: 1
-			path: include/api_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$collection$#"
 			count: 4
 			path: include/collections_functions.php

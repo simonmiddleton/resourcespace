@@ -199,7 +199,8 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         {
 		$size = (strtolower($iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
         $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
-
+        $position_prefix="";
+        
         if(!file_exists($img_path))
             {
             continue;
