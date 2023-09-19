@@ -484,7 +484,7 @@ function config_text_input($name, $label, $current, $password = false, $width = 
         <input id="<?php echo $name; ?>"
                name="<?php echo $name; ?>"
                type="<?php echo $password ? 'password' : 'text'; ?>"
-               value="<?php echo escape_quoted_data($current); ?>"
+               value="<?php echo escape_quoted_data((string) $current); ?>"
                <?php if($autosave) { ?>onFocusOut="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
                style="width:<?php echo $width; ?>px" />
         <?php
