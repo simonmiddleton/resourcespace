@@ -2492,3 +2492,14 @@ input[type="text"]#iconpicker-input {
 #config-image-preview-label{
     height: 240px;
 }
+
+/* jsTree improvements */
+.SearchSpace .jstree-default .jstree-wholerow-hovered {
+    background: gray;
+}
+.SearchSpace .jstree-default .jstree-wholerow-clicked {
+    background: #737373;
+}
+.jstree-default .jstree-wholerow {
+    border-radius: 4px;
+}
