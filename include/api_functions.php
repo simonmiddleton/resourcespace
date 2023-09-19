@@ -190,10 +190,8 @@ function execute_api_call($query,$pretty=false)
 * 
 * @return array
 */
-function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
-    {
-    global $rooturl,$rootimageurl;	
-			
+function iiif_get_canvases($iiif, $iiif_results,$sequencekeys=false)
+    {			
     $canvases = array();
     foreach ($iiif_results as $iiif_result)
         {
@@ -207,7 +205,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
             }
 			
 		$position = $iiif_result["iiif_position"];
-        $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
+        $canvases[$position]["@id"] = $iiif->rooturl . $iiif->id . "/canvas/" . $position;
         $canvases[$position]["@type"] = "sc:Canvas";
         $canvases[$position]["label"] = (isset($position_prefix)?$position_prefix:'') . $position;
         
@@ -223,7 +221,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
 			$image_size[2] = $image_size[2] * 2;
 			}
         
-        $canvases[$position]["thumbnail"] = iiif_get_thumbnail($iiif_result["ref"]);
+        $canvases[$position]["thumbnail"] = iiif_get_thumbnail($iiif, $iiif_result["ref"]);
         
         // Add image (only 1 per canvas currently supported)
 		$canvases[$position]["images"] = array();
@@ -231,7 +229,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
             'identifier' => $size,
             'return_height_width' => false,
         );
-        $canvases[$position]["images"][] = iiif_get_image($identifier, $iiif_result["ref"], $position, $size_info);
+        $canvases[$position]["images"][] = iiif_get_image($iiif, $iiif_result["ref"], $position, $size_info);
         }
     
 	if($sequencekeys)
@@ -259,10 +257,8 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
 *
 * @return array
 */
-function iiif_get_thumbnail($resourceid)
-    {
-	global $rootimageurl;
-	
+function iiif_get_thumbnail($iiif, $resourceid)
+    {	
 	$img_path = get_resource_path($resourceid,true,'thm',false);
 	if(!file_exists($img_path))
             {
@@ -270,7 +266,7 @@ function iiif_get_thumbnail($resourceid)
             }
 			
 	$thumbnail = array();
-	$thumbnail["@id"] = $rootimageurl . $resourceid . "/full/thm/0/default.jpg";
+	$thumbnail["@id"] = $iiif->rootimageurl . $resourceid . "/full/thm/0/default.jpg";
 	$thumbnail["@type"] = "dctypes:Image";
 	
 	 // Get the size of the images
@@ -290,7 +286,7 @@ function iiif_get_thumbnail($resourceid)
 	
 	$thumbnail["service"] =array();
 	$thumbnail["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
-	$thumbnail["service"]["@id"] = $rootimageurl . $resourceid;
+	$thumbnail["service"]["@id"] = $iiif->rootimageurl . $resourceid;
 	$thumbnail["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
 	return $thumbnail;
 	}
@@ -316,10 +312,8 @@ function iiif_get_thumbnail($resourceid)
 * 
 * @return array
 */	
-function iiif_get_image($identifier,$resourceid,$position, array $size_info)
+function iiif_get_image($iiif,$resourceid,$position, array $size_info)
     {
-    global $rooturl,$rootimageurl;
-
     // Quick validation of the size_info param
     if(empty($size_info) || (!isset($size_info['identifier']) && !isset($size_info['return_height_width'])))
         {
@@ -339,12 +333,12 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
 			
 	$images = array();
 	$images["@context"] = "http://iiif.io/api/presentation/2/context.json";
-	$images["@id"] = $rooturl . $identifier . "/annotation/" . $position;
+	$images["@id"] = $iiif->rooturl . $iiif->id . "/annotation/" . $position;
 	$images["@type"] = "oa:Annotation";
 	$images["motivation"] = "sc:painting";
 	
 	$images["resource"] = array();
-	$images["resource"]["@id"] = $rootimageurl . $resourceid . "/full/max/0/default.jpg";
+	$images["resource"]["@id"] = $iiif->rootimageurl . $resourceid . "/full/max/0/default.jpg";
 	$images["resource"]["@type"] = "dctypes:Image";
 	$images["resource"]["format"] = "image/jpeg";
 
@@ -353,9 +347,9 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
 
 	$images["resource"]["service"] =array();
 	$images["resource"]["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
-	$images["resource"]["service"]["@id"] = $rootimageurl . $resourceid;
+	$images["resource"]["service"]["@id"] = $iiif->rootimageurl . $resourceid;
 	$images["resource"]["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
-	$images["on"] = $rooturl . $identifier . "/canvas/" . $position;
+	$images["on"] = $iiif->rooturl . $iiif->id . "/canvas/" . $position;
 
     if($return_height_width)
         {
@@ -375,7 +369,6 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
  */
 function iiif_error($errorcode = 404, $errors = array())
     {
-    global $iiif_debug;
     if(function_exists("http_response_code"))
         {
         http_response_code($errorcode); # Send error status
@@ -509,3 +502,105 @@ function assert_content_type(string $expected, string $received_raw): array
     header("Accept: {$expected}");
     return ajax_response_fail([]);
     }
+
+
+function iiif_parse_url(&$iiif)
+    {
+    // Extract IIIF request details from the URL path
+    // Root level request 
+    // type - root manifest , image or presentation API
+   
+    $request_url=strtok($_SERVER["REQUEST_URI"],'?');
+    $path=substr($request_url,strpos($request_url,$iiif->rootlevel) + strlen($iiif->rootlevel));
+    $xpath = explode("/",$path);
+
+    // Set API type
+    if(strtolower($xpath[0]) == "image")
+        {
+        $iiif->api = "image";
+        }
+    elseif(count($xpath) > 1 ||  $xpath[0] != "")
+        {
+        $iiif->api = "presentation";
+        }
+    else
+        {
+        $iiif->api  = "root";
+        return;
+        }
+
+    if($iiif->api == "image")
+        {
+        // For image need to extract: -
+        // - Resource ID
+        // - type (manifest)
+        // - region
+        // - size
+        // - rotation
+        // - quality
+        // - format
+        $iiif->id = trim($xpath[1] ?? '');
+        $iiif->region = trim($xpath[2] ?? '');
+        $iiif->size = trim($xpath[3] ?? '');
+        $iiif->rotation = trim($xpath[4] ?? '');
+        $iiif->filename = trim($xpath[5] ?? '');
+        
+        if($iiif->id  === '')
+            {
+            iiif_error(400, ['Missing identifier']);
+            }
+
+        if($iiif->region == "")
+            {
+            // Redirect to image information document
+            $redirurl = $iiif->rootimageurl . $iiif->id . '/info.json';
+            if(function_exists("http_response_code"))
+                {
+                http_response_code(303);
+                }
+            header ("Location: " . $redirurl);
+            exit();
+            }
+        // Check the request parameters
+        elseif($iiif->region != "info.json")
+            {
+            if(($iiif->size == "" 
+                    || 
+                    !is_int_loose($iiif->rotation)
+                    ||
+                    $iiif->filename != "default.jpg"
+                    )
+                )
+                {
+                // Not request for image information document and no sizes specified
+                $errors = ["Invalid image request format."];
+                iiif_error(400,$errors);
+                }
+            
+            $formatparts = explode(".",$iiif->filename);
+            if(count($formatparts) != 2)
+                {
+                // Format. As we only support IIIF Image level 0 a value of 'jpg' is required 
+                $errors = ["Invalid quality or format requested. Try using 'default.jpg'"];
+                iiif_error(400,$errors);
+                }
+            else
+                {
+                $iiif->quality = $formatparts[0];
+                $iiif->format = $formatparts[1];
+                }
+            }     
+        }
+    elseif($iiif->api == "presentation")
+        {
+        // Presentation -  need
+        // - identifier
+        // - type (manifest/canvas/sequence/annotation
+
+        $iiif->id = trim($xpath[0] ?? '');
+        $iiif->type = trim($xpath[1] ?? '');
+        $iiif->typeid = trim($xpath[2] ?? '');
+        }
+    return;
+    }
+
