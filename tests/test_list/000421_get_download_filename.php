@@ -3,16 +3,18 @@ command_line_only();
 
 
 // --- Set up
-// $run_id = test_generate_random_ID(10);
 $original_state = $GLOBALS;
 $setup_global_env = function() use ($original_state)
     {
     $GLOBALS['download_filename_format'] = 'RS%resource';
 
-    // (re)loading plugins on the fly
+    // Fake (re)loading plugins on the fly so we can add one when a use case requires it
     unset($GLOBALS['hook_cache']);
     $GLOBALS['plugins'] = $original_state['plugins'];
     };
+
+$rtf_text = create_resource_type_field("Test #421 text", 0, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "test_421_text", false);
+$rtf_text2 = create_resource_type_field("Test #421 text 2", 0, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "test_421_text2", false);
 
 $resource_jpg_file = create_resource(1, 0);
 $resource_mp4_file = create_resource(3, 0);
@@ -128,12 +130,41 @@ $use_cases = [
         'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => $resource_jpg_file_alt_ref, 'ext' => 'png'],
         'expected' => "RS{$resource_jpg_file}-test 421 alternative image.png",
     ],
+    [
+        'name' => 'Format with %fieldXX placeholder',
+        'setup' => function() use ($resource_mp4_file, $rtf_text)
+            {
+            update_field($resource_mp4_file, $rtf_text, 'Lorem ipsum dolor sit amet.');
+            $GLOBALS['download_filename_format'] = "RS%resource-%field{$rtf_text}.%extension";
+            },
+        'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
+        'expected' => "RS{$resource_mp4_file}-Lorem ipsum dolor sit amet..mp4",
+    ],
+    [
+        'name' => 'Format with multiple %fieldXX placeholders',
+        'setup' => function() use ($resource_mp4_file, $rtf_text, $rtf_text2)
+            {
+            update_field($resource_mp4_file, $rtf_text, 'valueFromText1');
+            update_field($resource_mp4_file, $rtf_text2, 'valueFromText2');
+            $GLOBALS['download_filename_format'] = "RS%resource-%field{$rtf_text}-%field{$rtf_text2}.%extension";
+            },
+        'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
+        'expected' => "RS{$resource_mp4_file}-valueFromText1-valueFromText2.mp4",
+    ],
+    [
+        'name' => 'Truncate the final filename (if > 255)',
+        'setup' => function() use ($resource_mp4_file, $rtf_text)
+            {
+            update_field($resource_mp4_file, $rtf_text, str_repeat('X', 256));
+            $GLOBALS['download_filename_format'] = "%field{$rtf_text}";
+            },
+        'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
+        'expected' => str_repeat('X', 255),
+    ],
 ];
 foreach($use_cases as $use_case)
     {
     $setup_global_env();
-
-    // Set up the use case environment
     if(isset($use_case['setup']))
         {
         $use_case['setup']();
@@ -152,6 +183,18 @@ foreach($use_cases as $use_case)
 
 // Tear down
 $GLOBALS['enable_thumbnail_creation_on_upload'] = $original_state['enable_thumbnail_creation_on_upload'];
-unset($run_id, $original_state, $setup_global_env, $resource_jpg_file, $resource_mp4_file, $file_jpg, $file_mp4);
+unset(
+    $original_state,
+    $setup_global_env,
+    $rtf_text,
+    $rtf_text2,
+    $resource_jpg_file,
+    $resource_mp4_file,
+    $file_jpg,
+    $file_mp4,
+    $resource_jpg_file_alt_ref,
+    $use_cases,
+    $result
+);
 
 return true;

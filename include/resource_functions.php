@@ -8403,7 +8403,7 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
     $fallback_format = "RS{$ref}.{$ext}";
 
     // todo: get preference (watch out if empty string! either here or during configuration loading - preferred?)
-    $format = $GLOBALS['download_filename_format'];
+    $formatted_str = $GLOBALS['download_filename_format'];
 
     $bind['%resource'] = $ref;
     $bind['%extension'] = $ext;
@@ -8419,21 +8419,36 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
         }
     $bind['%filename'] = strip_extension(mb_basename($filename_val), true);
 
-    // Legacy: do an extra check to see if the filename has an uppercase extension that could be preserved
+    // Do an extra check to see if the filename has an uppercase extension that could be preserved
     $filename_val_ext = pathinfo($filename_val, PATHINFO_EXTENSION);
     if ($filename_val_ext !== '' && mb_strtolower($filename_val_ext) === mb_strtolower($ext))
         {
         $bind['%extension'] = $filename_val_ext;
         }
 
+    // Get specific field value
+    $matching_fields = []; 
+    if (preg_match_all('/%field(\d+)/', $formatted_str, $matching_fields, PREG_SET_ORDER))
+        {
+        foreach($matching_fields as [$placeholder, $field_id])
+            {
+            if (!metadata_field_view_access($field_id))
+                {
+                $bind[$placeholder] = '';
+                }
 
+            $field_data = trim(get_data_by_field($ref, $field_id, true));
+            if ($field_data !== '')
+                {
+                $bind[$placeholder] = $field_data;
+                }
+            }
+        }
 
+    // Build the filename
+    $filename = str_replace(array_keys($bind), array_values($bind), $formatted_str);
 
-    $filename = str_replace(array_keys($bind), array_values($bind), $format);
-
-
-
-
+    // Allow plugins to completely overwrite it
     $hook_downloadfilenamealt = hook('downloadfilenamealt', '', [$ref, $size, $alternative, $ext]);
     if (is_string($hook_downloadfilenamealt) && $hook_downloadfilenamealt !== '')
         {
@@ -8448,7 +8463,13 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
         trim(strip_tags(nl2br($filename)))
     );
 
-    // todo: truncate to 255 characters - {@see https://en.wikipedia.org/wiki/Comparison_of_file_systems#Limits} for filename lengths
+    /**
+     * If required, truncate to 255 characters - {@see https://en.wikipedia.org/wiki/Comparison_of_file_systems#Limits}
+     */
+    if (mb_strlen($filename, 'UTF-8') > 255)
+        {
+        $filename = mb_strcut($filename, 0, 255, 'UTF-8');
+        }
 
     if ($filename !== '')
         {
@@ -8457,19 +8478,6 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
     
     debug('[get_download_filename] Invalid download filename, fall back.');
     return $fallback_format;
-
-// OLD logic -- to be removed
-
-    # Constructs a filename for download
-    global $download_filename_field;
-    if (isset($download_filename_field))
-        {
-        $newfilename = get_data_by_field($ref, $download_filename_field);
-        if ($newfilename)
-            {
-            $filename = mb_basename(substr($filename, 0, 200)) . '.' . $ext;
-            }
-        }
     }
 
 

@@ -237,3 +237,6 @@ $download_id_only_with_size = false;
 
 # Use original filename when downloading a file?
 $original_filenames_when_downloading=true;
+
+# Option to select metadata field that will be used for downloaded filename (do not include file extension)
+#$download_filename_field=8;
