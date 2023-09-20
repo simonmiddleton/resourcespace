@@ -8397,20 +8397,28 @@ function metadata_field_edit_access($field)
  * @param  string $ext File extension
  * @return string  Filename to use
  */
-function get_download_filename($ref,$size,$alternative,$ext): string
+function get_download_filename(int $ref, string $size, int $alternative, string $ext): string
     {
+    [$size, $ext] = array_map('trim', [$size, $ext]);
+
     $fallback_format = "RS{$ref}.{$ext}";
-    $filename = $GLOBALS['download_filename_format'];
-    $filename = str_replace(['%resource', '%extension'], [$ref, $ext], $filename);
+    $format = $GLOBALS['download_filename_format'];
 
-    // printf(PHP_EOL.'$filename: %s = %s' . PHP_EOL, gettype($filename), $filename);
+    $placeholders = ['%resource', '%extension', '%size', '%alternative'];
+    $replacements = [$ref, $ext];
+    $replacements[] = $size !== '' ? "_$size" : '';
+    $replacements[] = $alternative > 0 ? "_$alternative" : '';
 
 
+    // todo: parse %alternative (similar to size - use the underscore to automatically prefix it)
 
+
+    $filename = str_replace($placeholders, $replacements, $format);
 
     $hook_downloadfilenamealt = hook('downloadfilenamealt', '', [$ref, $size, $alternative, $ext]);
     if (is_string($hook_downloadfilenamealt) && $hook_downloadfilenamealt !== '')
         {
+        debug('[get_download_filename] Filename overriden by a hook');
         $filename = $hook_downloadfilenamealt;
         }
 
@@ -8418,8 +8426,11 @@ function get_download_filename($ref,$size,$alternative,$ext): string
     $filename = preg_replace('/(:|\r\n|\r|\n)/', '_', $filename);
     if ($filename === null)
         {
+        debug('[get_download_filename] Failed to remove invalid characters, using fallback format instead');
         $filename = $fallback_format;
         }
+    
+    // todo: striptags
 
     return $filename;
 

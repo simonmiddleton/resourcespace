@@ -7,7 +7,7 @@ command_line_only();
 $original_state = $GLOBALS;
 $setup_global_env = function() use ($original_state)
     {
-    // $GLOBALS['download_filename_format'] = 'RS%resource';
+    $GLOBALS['download_filename_format'] = 'RS%resource';
 
     // (re)loading plugins on the fly
     unset($GLOBALS['hook_cache']);
@@ -76,12 +76,30 @@ $use_cases = [
         'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
         'expected' => "RS{$resource_jpg_file}.jpg",
     ],
-    // [
-    //     'name' => 'todo...',
-    //     'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource---%filename.%extension',
-    //     'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
-    //     'expected' => "RS{$resource_jpg_file}_".pathinfo($file_jpg['path'], PATHINFO_BASENAME),
-    // ],
+    [
+        'name' => '%size for original file is replaced with empty string',
+        'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource%size.%extension',
+        'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
+        'expected' => "RS{$resource_jpg_file}.jpg",
+    ],
+    [
+        'name' => '%size for screen preview is prefixed with underscore',
+        'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource%size.%extension',
+        'input' => ['ref' => $resource_jpg_file, 'size' => 'scr', 'alternative' => 0, 'ext' => 'jpg'],
+        'expected' => "RS{$resource_jpg_file}_scr.jpg",
+    ],
+    [
+        'name' => '%alternative for original file is replaced with empty string',
+        'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource%alternative.%extension',
+        'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
+        'expected' => "RS{$resource_jpg_file}.jpg",
+    ],
+    [
+        'name' => 'For alternative files, prefix %alternative with an underscore',
+        'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource%alternative.%extension',
+        'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 421, 'ext' => 'jpg'],
+        'expected' => "RS{$resource_jpg_file}_421.jpg",
+    ],
 ];
 foreach($use_cases as $use_case)
     {
