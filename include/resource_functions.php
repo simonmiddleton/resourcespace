@@ -8409,11 +8409,10 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
     $replacements[] = $size !== '' ? "_$size" : '';
     $replacements[] = $alternative > 0 ? "_$alternative" : '';
 
-
-    // todo: parse %alternative (similar to size - use the underscore to automatically prefix it)
-
-
     $filename = str_replace($placeholders, $replacements, $format);
+
+
+
 
     $hook_downloadfilenamealt = hook('downloadfilenamealt', '', [$ref, $size, $alternative, $ext]);
     if (is_string($hook_downloadfilenamealt) && $hook_downloadfilenamealt !== '')
@@ -8431,17 +8430,16 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
         }
     
     // todo: striptags
+    $filename = trim(nl2br(strip_tags($newfilename)));
 
     return $filename;
 
 // OLD logic -- to be removed
 
     # Constructs a filename for download
-    global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,
+    global $original_filenames_when_downloading,$download_id_only_with_size,
     $download_filename_id_only,$download_filename_field,$filename_field,
     $filename,$server_charset;
-
-    $filename = (($download_filenames_without_size || $size == "") ? "" : "_" . $size . "") . ($alternative>0 ? "_" . $alternative : "") . "." . $ext;
 
     if ($original_filenames_when_downloading)
         {
@@ -8486,14 +8484,7 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
             # Use the original filename if one has been set.
             # Strip any path information (e.g. if the staticsync.php is used).
             # append preview size to base name if not the original
-            if($size != '' && !$download_filenames_without_size)
-                {
-                $filename = strip_extension(mb_basename($origfile),true) . '-' . $size . '.' . $ext;
-                }
-            else
-                {
-                $filename = strip_extension(mb_basename($origfile),true) . '.' . $ext;
-                }
+            $filename = strip_extension(mb_basename($origfile),true) . '.' . $ext;
             }
         }
 
@@ -8515,15 +8506,7 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
         $newfilename = get_data_by_field($ref, $download_filename_field);
         if ($newfilename)
             {
-            $filename = trim(nl2br(strip_tags($newfilename)));
-            if($size != "" && !$download_filenames_without_size)
-                {
-                $filename = mb_basename(substr($filename, 0, 200)) . '-' . $size . '.' . $ext;
-                }
-            else
-                {
-                $filename = mb_basename(substr($filename, 0, 200)) . '.' . $ext;
-                }
+            $filename = mb_basename(substr($filename, 0, 200)) . '.' . $ext;
             }
         }
 

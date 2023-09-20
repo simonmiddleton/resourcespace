@@ -1068,9 +1068,6 @@ $simple_search_pills_view = false;
 # Use original filename when downloading a file?
 $original_filenames_when_downloading=true;
 
-# Should the download filename have the size appended to it?
-$download_filenames_without_size = false;
-
 # Display a 'new' flag next to new themes (by default themes created < 2 weeks ago)
 # Note: the age take days as parameter. Anything less than that would mean that a theme becomes old after a few hours which is highly unlikely.
 $flag_new_themes     = true;
@@ -3382,14 +3379,11 @@ Format the download file name.
 
 Available placeholders:
 - %resource -> resource ref (ID)
+- %extension -> jpg, png etc
+- %filename -> the actual original/alternative file name
 - %fieldXX -> where XX is the actual metadata field ID (technical terms: resource_type_field).
     If the user doesn't have permission to view the field, then blank (empty string) will be used instead.
-- %filename -> the actual original/alternative file name
-- %size -> "scr", "pre", etc - if present
-- %extension -> jpg, png etc
-- %if-alternative/%alt_alternative/ -> where:
-    * %if-alternative is the conditional construct (ie not a placeholder), and
-    * in between slash (/) characters the admins can add formatting specifically for the alternatives
-    The "%alt" is a sub placeholder for the alternative ID, valid only in the %if-alternative context.
+- %size -> scr, pre etc. Note: when applicable, an underscore will be automatically prefxed
+- %alternative -> alternative ref (ID). Note: when applicable, an underscore will be automatically prefxed
 */
 $download_filename_format = '';

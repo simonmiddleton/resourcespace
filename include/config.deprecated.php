@@ -224,3 +224,6 @@ $prefix_filename_string="RS";
 # This ensures unique filenames when downloading multiple files.
 # WARNING: if switching this off, be aware that when downloading a collection as a zip file, a file with the same name as another file in the collection will overwrite that existing file. It is therefore advisiable to leave this set to 'true'.
 $prefix_resource_id_to_filename=true;
+
+# Should the download filename have the size appended to it?
+$download_filenames_without_size = false;
