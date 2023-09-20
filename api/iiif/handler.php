@@ -20,15 +20,19 @@ if($iiif_user === false)
 $userdata[0] = $iiif_user;
 setup_user($iiif_user);
 
-// Set up required variables
+// Set up request object
 $iiif = new stdClass();
 $iiif->rootlevel = $baseurl_short . "iiif/";
 $iiif->rooturl = $baseurl . "/iiif/";
 $iiif->rootimageurl = $baseurl . "/iiif/image/";
+$iiif->identifier_field = $iiif_identifier_field;
+$iiif->description_field = $iiif_description_field;
+$iiif->sequence_field = $iiif_sequence_field ?? 0;
+$iiif->license_field = $iiif_license_field ?? 0;
+$iiif->title_field = $view_title_field;
+
 // Extract request details
 iiif_parse_url($iiif);
-
-
 
 $getext="";
 
@@ -36,40 +40,40 @@ $getext="";
 // exit();
 
 
-$response=array();
-$validrequest = false;
-$iiif_headers = array();
-$errors=array();
-if ($iiif->api == "root")
+$iiif->response=[];
+$iiif->validrequest = false;
+$iiif_headers = [];
+$iiif->errors=[];
+if ($iiif->request["api"] == "root")
 	{
 	# Root level request - send information file only
-	$response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-  	$response["@id"] = $iiif->rooturl;
-  	$response["@type"] = "sc:Manifest";
-  	$response["@label"] = "";
-	$response["width"] = 6000;
-	$response["height"] = 4000;
+	$iiif->response["@context"] = "http://iiif.io/api/presentation/2/context.json";
+  	$iiif->response["@id"] = $iiif->rooturl;
+  	$iiif->response["@type"] = "sc:Manifest";
+  	$iiif->response["@label"] = "";
+	$iiif->response["width"] = 6000;
+	$iiif->response["height"] = 4000;
 
-    $response["tiles"] = array();
-    $response["tiles"][] = array("width" => $preview_tile_size, "height" => $preview_tile_size, "scaleFactors" => $preview_tile_scale_factors);
-	$response["profile"] = array("http://iiif.io/api/image/2/level0.json");
+    $iiif->response["tiles"] = array();
+    $iiif->response["tiles"][] = array("width" => $preview_tile_size, "height" => $preview_tile_size, "scaleFactors" => $preview_tile_scale_factors);
+	$iiif->response["profile"] = array("http://iiif.io/api/image/2/level0.json");
 
-	$validrequest = true;
+	$iiif->validrequest = true;
     }
-elseif($iiif->api == "image")
+elseif($iiif->request["api"] == "image")
     {
     // IMAGE REQUEST (http://iiif.io/api/image/2.1/)
     // The IIIF Image API URI for requesting an image must conform to the following URI Template:
     // {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
-    if($iiif->id === '')
+    if($iiif->request["id"] === '')
         {
         iiif_error(400, ['Missing identifier']);
         }
 
-    if($iiif->region == "")
+    if($iiif->request["region"] == "")
         {
         // Redirect to image information document
-        $redirurl = $iiif->rootimageurl . $iiif->id . '/info.json';
+        $redirurl = $iiif->rootimageurl . $iiif->request["id"] . '/info.json';
         if(function_exists("http_response_code"))
             {
             http_response_code(303);
@@ -78,10 +82,10 @@ elseif($iiif->api == "image")
         exit();
         }
 
-    if (is_numeric($iiif->id))
+    if (is_numeric($iiif->request["id"]))
         {
-        $resource =  get_resource_data($iiif->id);
-        $resource_access =  get_resource_access($iiif->id);
+        $resource =  get_resource_data($iiif->request["id"]);
+        $resource_access =  get_resource_access($iiif->request["id"]);
         }
     else
         {
@@ -91,20 +95,20 @@ elseif($iiif->api == "image")
         {
         // Check resource actually exists and is active
         $fulljpgsize = strtolower($resource["file_extension"]) != "jpg" ? "hpr" : "";
-        $img_path = get_resource_path($iiif->id,true,$fulljpgsize,false, "jpg");
+        $img_path = get_resource_path($iiif->request["id"],true,$fulljpgsize,false, "jpg");
         if(!file_exists($img_path))
             {
             // Missing file
-            $errors[] = "No image available for this identifier";
-            iiif_error(404,$errors);
+            $iiif->errors[] = "No image available for this identifier";
+            iiif_error(404,$iiif->errors);
             }
-        $image_size = get_original_imagesize($iiif->id,$img_path, "jpg");
+        $image_size = get_original_imagesize($iiif->request["id"],$img_path, "jpg");
         $imageWidth = (int) $image_size[1];
         $imageHeight = (int) $image_size[2];
         $portrait = ($imageHeight >= $imageWidth) ? TRUE : FALSE;
 
         // Get all available sizes
-        $sizes = get_image_sizes($iiif->id,true,"jpg",false);
+        $sizes = get_image_sizes($iiif->request["id"],true,"jpg",false);
         $availsizes = array();
         if ($imageWidth > 0 && $imageHeight > 0)
             {
@@ -129,20 +133,20 @@ elseif($iiif->api == "image")
                 }
             }
 
-        if($iiif->region == "info.json")
+        if($iiif->request["region"] == "info.json")
             {
             // Image information request. Only fullsize available in this initial version
-            $response["@context"] = "http://iiif.io/api/image/2/context.json";
-            $response["@id"] = $iiif->rootimageurl . $iiif->id;
+            $iiif->response["@context"] = "http://iiif.io/api/image/2/context.json";
+            $iiif->response["@id"] = $iiif->rootimageurl . $iiif->request["id"];
                             
-            $response["height"] = $imageHeight;
-            $response["width"]  = $imageWidth;
+            $iiif->response["height"] = $imageHeight;
+            $iiif->response["width"]  = $imageWidth;
             
-            $response["profile"] = array();
-            $response["profile"][] = "http://iiif.io/api/image/2/level0.json";
+            $iiif->response["profile"] = array();
+            $iiif->response["profile"][] = "http://iiif.io/api/image/2/level0.json";
             if($iiif_custom_sizes)
                 {
-                $response["profile"][] = array(
+                $iiif->response["profile"][] = array(
                     "formats" => array("jpg"),
                     "qualities" => array("default"),
                     "maxWidth" => $iiif_max_width,
@@ -152,7 +156,7 @@ elseif($iiif->api == "image")
                 }
             else
                 {
-                $response["profile"][] = array(
+                $iiif->response["profile"][] = array(
                     "formats" => array("jpg"),
                     "qualities" => array("default"),
                     "maxWidth" => $iiif_max_width,
@@ -160,33 +164,33 @@ elseif($iiif->api == "image")
                     );
                 }
 
-            $response["protocol"] = "http://iiif.io/api/image";
-            $response["sizes"] = $availsizes;
+            $iiif->response["protocol"] = "http://iiif.io/api/image";
+            $iiif->response["sizes"] = $availsizes;
             if($preview_tiles)
                 {
-                $response["tiles"] = array();
-                $response["tiles"][] = array("height" => $preview_tile_size, "width" => $preview_tile_size, "scaleFactors" => $preview_tile_scale_factors);
+                $iiif->response["tiles"] = array();
+                $iiif->response["tiles"][] = array("height" => $preview_tile_size, "width" => $preview_tile_size, "scaleFactors" => $preview_tile_scale_factors);
                 }
             $iiif_headers[] = 'Link: <http://iiif.io/api/image/2/level0.json>;rel="profile"';
-            $validrequest = true;
+            $iiif->validrequest = true;
             }
         else
             {
             // Process requested region
-            if(!isset($errorcode) && $iiif->region != "full" && $iiif->region != "max" && $preview_tiles)
+            if(!isset($iiif->errorcode) && $iiif->request["region"] != "full" && $iiif->request["region"] != "max" && $preview_tiles)
                 {
                 // If the request specifies a region which extends beyond the dimensions reported in the image information document,
                 // then the service should return an image cropped at the image’s edge, rather than adding empty space.
                 // If the requested region’s height or width is zero, or if the region is entirely outside the bounds
                 // of the reported dimensions, then the server should return a 400 status code.
 
-                $regioninfo = explode(",",$iiif->region);
+                $regioninfo = explode(",",$iiif->request["region"]);
                 $region_filtered = array_filter($regioninfo, 'is_numeric');
                 if(count($region_filtered) != 4)
                     {
                     // Invalid region
-                    $errors[]  = "Invalid region requested. Use 'full' or 'x,y,w,h'";
-                    iiif_error(400,$errors);
+                    $iiif->errors[]  = "Invalid region requested. Use 'full' or 'x,y,w,h'";
+                    iiif_error(400,$iiif->errors);
                     }
                 else
                     {
@@ -198,8 +202,8 @@ elseif($iiif->api == "image")
                     if(fmod($regionx,$preview_tile_size) != 0 || fmod($regiony,$preview_tile_size) != 0)
                         {
                         // Invalid region
-                        $errors[]  = "Invalid region requested. Supported tiles are " . $preview_tile_size . "x" . $preview_tile_size . " at scale factors " . implode(",",$preview_tile_scale_factors) . ".";
-                        iiif_error(400,$errors);
+                        $iiif->errors[]  = "Invalid region requested. Supported tiles are " . $preview_tile_size . "x" . $preview_tile_size . " at scale factors " . implode(",",$preview_tile_scale_factors) . ".";
+                        iiif_error(400,$iiif->errors);
                         }
                     else
                         {
@@ -214,10 +218,10 @@ elseif($iiif->api == "image")
                 }
 
             // Process size
-            if(strpos($iiif->size,",") !== false)
+            if(strpos($iiif->request["size"],",") !== false)
                 {
                 // Currently support 'w,' and ',h' syntax requests
-                $getdims    = explode(",",$iiif->size);
+                $getdims    = explode(",",$iiif->request["size"]);
                 $getwidth   = (int)$getdims[0];
                 $getheight  = (int)$getdims[1];
                 if($tile_request)
@@ -238,14 +242,14 @@ elseif($iiif->api == "image")
                             }
                         else
                             {
-                            $errors[] = "Invalid tile size requested";
-                            iiif_error(501,$errors);
+                            $iiif->errors[] = "Invalid tile size requested";
+                            iiif_error(501,$iiif->errors);
                             }
                                                     
                         if(!in_array($scale,$preview_tile_scale_factors))
                             {
-                            $errors[] = "Invalid tile size requested";
-                            iiif_error(501,$errors); 
+                            $iiif->errors[] = "Invalid tile size requested";
+                            iiif_error(501,$iiif->errors); 
                             }
                         }
                     elseif(($getwidth == $preview_tile_size && $getheight == 0) ||
@@ -256,8 +260,8 @@ elseif($iiif->api == "image")
                         }
                     else
                         {
-                        $errors[] = "Invalid tile size requested";
-                        iiif_error(400,$errors);                             
+                        $iiif->errors[] = "Invalid tile size requested";
+                        iiif_error(400,$iiif->errors);                             
                         }
                         
                     $getsize = "tile_" . $regionx . "_" . $regiony . "_". $regionw . "_". $regionh;
@@ -289,8 +293,8 @@ elseif($iiif->api == "image")
                         if(!$iiif_custom_sizes || $getwidth > $iiif_max_width || $getheight > $iiif_max_height)
                             {
                             // Invalid size requested
-                            $errors[] = "Invalid size requested";
-                            iiif_error(400,$errors);                   
+                            $iiif->errors[] = "Invalid size requested";
+                            iiif_error(400,$iiif->errors);                   
                             }
                         else
                             {
@@ -301,19 +305,19 @@ elseif($iiif->api == "image")
                     }
                 
                 }
-            elseif($iiif->size == "full"  || $iiif->size == "max" || $iiif->size == "thm")
+            elseif($iiif->request["size"] == "full"  || $iiif->request["size"] == "max" || $iiif->request["size"] == "thm")
                 {
                 if($tile_request)
                     {
-                    if($iiif->size == "full"  || $iiif->size == "max")
+                    if($iiif->request["size"] == "full"  || $iiif->request["size"] == "max")
                         {
                         $getsize = "tile_" . $regionx . "_" . $regiony . "_". $regionw . "_". $regionh;
                         $getext = "jpg";
                         }
                     else
                         {
-                        $errors[] = "Invalid tile size requested";
-                        iiif_error(501,$errors);    
+                        $iiif->errors[] = "Invalid tile size requested";
+                        iiif_error(501,$iiif->errors);    
                         }
                     }
                 else
@@ -334,33 +338,33 @@ elseif($iiif->api == "image")
                 }
             else
                 {
-                $errors[] = "Invalid size requested";
-                iiif_error(400,$errors);  
+                $iiif->errors[] = "Invalid size requested";
+                iiif_error(400,$iiif->errors);  
                 }
             
-            if($iiif->rotation!=0)
+            if($iiif->request["rotation"]!=0)
                 {
                 // Rotation. As we only support IIIF Image level 0 only a rotation value of 0 is accepted 
-                $errors[] = "Invalid rotation requested. Only '0' is permitted.";
-                iiif_error(404,$errors);  
+                $iiif->errors[] = "Invalid rotation requested. Only '0' is permitted.";
+                iiif_error(404,$iiif->errors);  
                 }
                 if(isset($quality) && $quality != "default" && $quality != "color")
                 {
                 // Quality. As we only support IIIF Image level 0 only a quality value of 'default' or 'color' is accepted 
-                $errors[] = "Invalid quality requested. Only 'default' is permitted";
-                iiif_error(404,$errors);  
+                $iiif->errors[] = "Invalid quality requested. Only 'default' is permitted";
+                iiif_error(404,$iiif->errors);  
                 }
                 if(isset($format) && strtolower($format) != "jpg")
                 {
                 // Format. As we only support IIIF Image level 0 only a value of 'jpg' is accepted 
-                $errors[] = "Invalid format requested. Only 'jpg' is permitted."; 
-                iiif_error(404,$errors);    
+                $iiif->errors[] = "Invalid format requested. Only 'jpg' is permitted."; 
+                iiif_error(404,$iiif->errors);    
                 }
 
-            if(!isset($errorcode))
+            if(!isset($iiif->errorcode))
                 {
                 // Request is supported, send the image
-                $imgpath = get_resource_path($iiif->id,true,$getsize,false,$getext);
+                $imgpath = get_resource_path($iiif->request["id"],true,$getsize,false,$getext);
                 debug ("IIIF: image path: " . $imgpath);
                 if(file_exists($imgpath))
                     {
@@ -368,38 +372,38 @@ elseif($iiif->api == "image")
                     }
                 else
                     {
-                    if($iiif->region != "full" && $iiif->region != "max")
+                    if($iiif->request["region"] != "full" && $iiif->request["region"] != "max")
                         {
                         // Tiles have not yet been created
                         if(is_process_lock('create_previews_' . $resource["ref"] . "_tiles"))
                             {
-                            $errors[] = "Requested image is not currently available"; 
-                            iiif_error(503,$errors);
+                            $iiif->errors[] = "Requested image is not currently available"; 
+                            iiif_error(503,$iiif->errors);
                             }
                         set_process_lock('create_previews_' . $resource["ref"] . "_tiles");
-                        $imgfound = @create_previews($iiif->id,false,"jpg",false,true,-1,true,false,false,array("tiles"));
+                        $imgfound = @create_previews($iiif->request["id"],false,"jpg",false,true,-1,true,false,false,array("tiles"));
                         clear_process_lock('create_previews_' . $resource["ref"] . "_tiles");
                         }
                     else
                         {
                         if(is_process_lock('create_previews_' . $resource["ref"] . "_" . $getsize))
                             {
-                            $errors[] = "Requested image is not currently available"; 
-                            iiif_error(503,$errors);
+                            $iiif->errors[] = "Requested image is not currently available"; 
+                            iiif_error(503,$iiif->errors);
                             }
-                        $imgfound = @create_previews($iiif->id,false,"jpg",false,true,-1,true,false,false,array($getsize));
+                        $imgfound = @create_previews($iiif->request["id"],false,"jpg",false,true,-1,true,false,false,array($getsize));
                         clear_process_lock('create_previews_' . $resource["ref"] . "_" . $getsize);
                         }
                     }
                 if($imgfound)
                     {
-                    $validrequest = true;
-                    $response_image=$imgpath; 
+                    $iiif->validrequest = true;
+                    $iiif->response_image=$imgpath; 
                     }
                 else
                     {
-                    $errorcode = "404";
-                    $errors[] = "No image available for this identifier";
+                    $iiif->errorcode = "404";
+                    $iiif->errors[] = "No image available for this identifier";
                     }
                 }
             }
@@ -407,357 +411,33 @@ elseif($iiif->api == "image")
         }
     else
         {
-        $errors[] = "Missing or invalid identifier";
-        iiif_error(404,$errors);
+        $iiif->errors[] = "Missing or invalid identifier";
+        iiif_error(404,$iiif->errors);
         }
     } // End of image API
-elseif($iiif->api == "presentation")
+elseif($iiif->request["api"] == "presentation")
     {
     // Presentation API
-    if($iiif->id != "" && $iiif->type == "")
-        {
-        // Redirect to image information document
-        $redirurl = $_SERVER["REQUEST_URI"] . ($iiif->id != "" ? "/" : "") . "manifest";
-        if(function_exists("http_response_code"))
-            {
-            http_response_code(303); # Send error status
-            }
-        header ("Location: " . $redirurl);
-        exit();
-        }
-
-    $iiif_field = get_resource_type_field($iiif_identifier_field);
-    $iiif_search = $iiif_field["name"] . ":" . $iiif->id;
-    $iiif_results = do_search($iiif_search);
-    
-    // exit(print_r($iiif_search));
-    if(is_array($iiif_results) && count($iiif_results)>0)
-        {
-
-
-        if($iiif->type == "")
-            {
-            $errorcode=404;
-            $errors[] = "Bad request. Valid options are 'manifest', 'sequence' or 'canvas' e.g. ";
-            $errors[] = "For the manifest: " . $iiif->rooturl . $iiif->id . "/manifest";
-            $errors[] = "For a sequence : " . $iiif->rooturl . $iiif->id . "/sequence";
-            $errors[] = "For a canvas : " . $iiif->rooturl . $iiif->id . "/canvas/<identifier>";
-            }
-        else
-            {
-            if(!is_array($iiif_results) || count($iiif_results) == 0)
-                {
-                $errorcode=404;
-                $errors[] = "Invalid identifier: " . $iiif->id;
-                }
-            else
-                {
-                // Add sequence position information
-                $resultcount = count($iiif_results);
-                $iiif_results_with_position = array();
-                $iiif_results_without_position = array();
-                for ($n=0;$n<$resultcount;$n++)
-                    {
-                    if(isset($iiif_sequence_field))
-                        {
-                        if(isset($iiif_results[$n]["field" . $iiif_sequence_field]))
-                            {
-                            $position = $iiif_results[$n]["field" . $iiif_sequence_field];
-                            }
-                        else
-                            {
-                            $position = get_data_by_field($iiif_results[$n]["ref"],$iiif_sequence_field);
-                            }
-                        $position_field=get_resource_type_field($iiif_sequence_field);
-                        $position_prefix = $position_field["name"] . " ";
-
-                        if(!isset($position) || trim($position) == "")
-                            {
-                            // Processing resources without a sequence position separately
-                            debug("iiif position empty for resource ref " . $iiif_results[$n]["ref"]);
-                            $iiif_results_without_position[] = $iiif_results[$n];
-                            continue;
-                            }
-
-                        debug("iiif position $position found in resource ref " . $iiif_results[$n]["ref"]);
-                        $iiif_results[$n]["iiif_position"] = $position;
-                        $iiif_results_with_position[] = $iiif_results[$n];
-                        }
-                    else
-                        {
-                        $position = $n;
-                        debug("iiif position $position assigned to resource ref " . $iiif_results[$n]["ref"]);
-                        $iiif_results[$n]["iiif_position"] = $position;
-                        }
-                    }
-
-                // Sort by user supplied position (handle blanks and duplicates)
-                if (isset($iiif_sequence_field))
-                    {
-                    # First sort by ref. Any duplicate positions will then be sorted oldest resource first.
-                    usort($iiif_results_with_position, function($a, $b) { return $a['ref'] - $b['ref']; });
-                    # Sort resources with user supplied position.
-                    usort($iiif_results_with_position, function($a, $b)
-                        {
-                        if(is_int_loose($a['iiif_position']) && is_int_loose($b['iiif_position']))
-                            {
-                            return $a['iiif_position'] - $b['iiif_position'];
-                            }
-                        return strcmp($a['iiif_position'],$b['iiif_position']);
-                        });
-
-                    if (count($iiif_results_without_position) > 0 && count($iiif_results_with_position) > 0)
-                        {
-                        # Sort resources without a user supplied position by resource reference.
-                        # These will appear at the end of the sequence after those with a user supplied position.
-                        # Only applies if some resources have a sequence position else return in search results order per earlier behaviour.
-                        usort($iiif_results_without_position, function($a, $b) { return $a['ref'] - $b['ref']; });
-                        }
-
-                    $iiif_results = array_merge($iiif_results_with_position, $iiif_results_without_position);
-                    foreach ($iiif_results as $result_key => $result_val)
-                        {
-                        # Update iiif_position after sorting using unique array key, removing potential user entered duplicates in sequence field.
-                        # iiif_get_canvases() requires unique iiif_position values.
-                        $iiif_results[$result_key]['iiif_position'] = $result_key;
-                        debug("final iiif position $result_key given for resource ref " . $iiif_results[$result_key]["ref"]);
-                        }
-                    }
-
-                if($iiif->type == "manifest" || $iiif->type == "")
-                    {
-                    /* MANIFEST REQUEST - see http://iiif.io/api/presentation/2.1/#manifest */
-                    $response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-                    $response["@id"] = $iiif->rooturl . $iiif->id . "/manifest";
-                    $response["@type"] = "sc:Manifest";		
-
-                    // Descriptive metadata about the object/work
-                    // The manifest data should be the same for all resources that are returned.
-                    // This is the default when using the tms_link plugin for TMS integration.
-                    // Therefore we use the data from the first returned result.
-                    $iiif_data = get_resource_field_data($iiif_results[0]["ref"]);
-
-                    // Label property
-                    foreach($iiif_results as $iiif_result)
-                        {
-                        // Keep on until we find a label
-                        $iiif_label = get_data_by_field($iiif_results[0]["ref"], $view_title_field);
-                        if(trim($iiif_label) != "")
-                            {
-                            $response["label"] = $iiif_label;
-                            break;
-                            }
-                        }
-
-                    if(!$iiif_label)
-                        {
-                        $response["label"] = $lang["notavailableshort"];
-                        }
-
-                    $response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
-                    
-                    // Construct metadata array from resource field data 
-                    $response["metadata"] = array();
-                    $n=0;
-                    foreach($iiif_data as $iiif_data_row)
-                        {
-                        if(in_array($iiif_data_row["type"],$FIXED_LIST_FIELD_TYPES))
-                            {
-                            // Don't use the data as this has already concatentated the translations, add an entry for each node translation by building up a new array
-                            $resnodes = get_resource_nodes($iiif_results[0]["ref"],$iiif_data_row["resource_type_field"],true);
-                            if(count($resnodes) == 0)
-                                {
-                                continue;
-                                }
-                            $langentries = array();
-                            $nodecount = 0;
-                            unset($def_lang);
-                            foreach($resnodes as $resnode)
-                                {
-                                debug("iiif: translating " . $resnode["name"] . " from field '" . $iiif_data_row["title"] . "'");
-                                $node_langs = i18n_get_translations($resnode["name"]);
-                                $transcount=0;
-                                $defaulttrans = "";
-                                foreach($node_langs as $nlang => $nltext)
-                                    {
-                                    if(!isset($langentries[$nlang]))
-                                        {
-                                        // This is the first translated node entry for this language. If we already have translations copy the default language array to make sure no nodes with missing translations are lost
-                                        debug("iiif: Adding a new translation entry for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "'");
-                                        $langentries[$nlang] = isset($def_lang)?$def_lang:array();
-                                        }
-                                    // Add the node text to the array for this language;
-                                    debug("iiif: Adding node translation for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "': " . $nltext);
-                                    $langentries[$nlang][] = $nltext;
-                                    
-                                    // Set default text for any translations
-                                    if($nlang == $defaultlanguage || $defaulttrans == ""){$defaulttrans = $nltext;}
-                                    $transcount++;
-                                    }
-                                $nodecount++;
-
-                                // There may not be translations for all nodes, fill any arrays that don't have an entry with the untranslated versions
-                                foreach($langentries as $mdlang => $mdtrans)
-                                    {
-                                    debug("iiif: enry count for " . $mdlang . ":" . count($mdtrans));
-                                    debug("iiif: node count: " . $nodecount);
-                                    if(count($mdtrans) != $nodecount)
-                                        {
-                                        debug("iiif: No translation found for " . $mdlang . ". Adding default translation to language array for field '" . $iiif_data_row["title"] . "': " . $mdlang . ": " . $defaulttrans);
-                                        $langentries[$mdlang][] =  $defaulttrans;
-                                        }
-                                    }
-
-                                // To ensure that no nodes are lost due to missing translations,  
-                                // Save the default language array to make sure we include any untranslated nodes that may be missing when/if we find new languages for the next node
-                                
-                                debug("iiif: Saving default language array for field '" . $iiif_data_row["title"] . "': " . implode(",",$langentries[$defaultlanguage]));
-                                // Default language is the ideal, but if no default language entries for this node have been found copy the first language we have
-                                reset($langentries);
-                                $def_lang = isset($langentries[$defaultlanguage])?$langentries[$defaultlanguage]:$langentries[key($langentries)];
-                                }		
-
-                            
-                            $response["metadata"][$n] = array();
-                            $response["metadata"][$n]["label"] = $iiif_data_row["title"];
-                            $response["metadata"][$n]["value"] = array();
-                            
-                            // Add each tag
-                            $o=0;
-                            foreach($langentries as $mdlang => $mdtrans)
-                                {
-                                debug("iiif: adding to metadata language array: " . $mdlang . ": " . implode(",",$mdtrans));
-                                $response["metadata"][$n]["value"][$o]["@value"] = implode(",",array_values($mdtrans));
-                                $response["metadata"][$n]["value"][$o]["@language"] = $mdlang;
-                                $o++;
-                                }
-                            $n++;
-                            }
-                        elseif(trim((string) $iiif_data_row["value"]) !== "")
-                            {
-                            $response["metadata"][$n] = array();
-                            $response["metadata"][$n]["label"] = $iiif_data_row["title"];
-                            $response["metadata"][$n]["value"] = $iiif_data_row["value"];
-                            $n++;
-                            }
-                        }
-
-                    $response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
-                    if(isset($iiif_license_field))
-                        {
-                        $response["license"] = get_data_by_field($iiif_results[0]["ref"], $iiif_license_field);
-                        }
-
-                    // Thumbnail property
-                    foreach($iiif_results as $iiif_result)
-                        {
-                        // Keep on until we find an image
-                        $iiif_thumb = iiif_get_thumbnail($iiif, $iiif_results[0]["ref"]);
-                        if($iiif_thumb)
-                            {
-                            $response["thumbnail"] = $iiif_thumb;
-                            break;
-                            }
-                        }
-
-                    if(!$iiif_thumb)
-                        {
-                        $response["thumbnail"] = $baseurl . "/gfx/" . get_nopreview_icon($iiif_results[0]["resource_type"],"jpg",false);
-                        }
-                        
-                    // Sequences
-                    $response["sequences"] = array();
-                    $response["sequences"][0]["@id"] = $iiif->rooturl . $iiif->id . "/sequence/normal";
-                    $response["sequences"][0]["@type"] = "sc:Sequence";
-                    $response["sequences"][0]["label"] = "Default order";
-                        
-                                            
-                    $response["sequences"][0]["canvases"]  = iiif_get_canvases($iiif,$iiif_results,false);
-                    $validrequest = true;	
-                    /* MANIFEST REQUEST END */
-                    }
-                elseif($iiif->type == "canvas")
-                    {                       
-                    // This is essentially a resource
-                    // {scheme}://{host}/{prefix}/{identifier}/canvas/{name}
-                    $canvasid = $iiif->typeid;
-                    $allcanvases = iiif_get_canvases($iiif->id,$iiif_results,true);
-                    $response["@context"] =  "http://iiif.io/api/presentation/2/context.json";
-                    $response = array_merge($response,$allcanvases[$canvasid]);
-                    $validrequest = true;
-                }
-                elseif($iiif->type == "sequence")
-                    {
-                    if($iiif->typeid=="normal")
-                        {
-                        $response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-                        $response["@id"] = $iiif->rooturl . $iiif->id . "/sequence/normal";
-                        $response["@type"] = "sc:Sequence";
-                        $response["label"] = "Default order";
-                        $response["canvases"] = iiif_get_canvases($iiif->id,$iiif_results);
-                        $validrequest = true;
-                        }
-                    }
-                elseif($iiif->type == "annotation")
-                    {
-                    // See http://iiif.io/api/presentation/2.1/#image-resources
-                    
-                    // Need to find the resourceid the annotation is linked to
-                    foreach($iiif_results as $iiif_result)
-                        {
-                        if($iiif_result["iiif_position"] == $iiif->typeid)
-                            {
-                            $resourceid = $iiif_result["ref"];
-                            $size_info = array(
-                                'identifier' => (strtolower($iiif_result['file_extension']) != 'jpg') ? 'hpr' : '',
-                                'return_height_width' => false,
-                            );
-                            $validrequest = true;
-                            break;
-                            }
-                        }
-                    if($validrequest)
-                        {
-                        $response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-                        $response["@id"] = $iiif->rooturl . $iiif->id . "/annotation/" . $iiif->typeid;
-                        $response["@type"] = "oa:Annotation";
-                        $response["motivation"] = "sc:painting";
-                        $response["resource"] = iiif_get_image($iiif, $resourceid, $iiif->typeid, $size_info);
-                        $response["on"] = $iiif->rooturl . $iiif->id . "/canvas/" . $iiif->typeid;
-                        }
-                    else
-                        {
-                        $errorcode=404;
-                        $errors[] = "Invalid annotation identifier: " . $iiif->id;
-                        }
-                    }
-                }
-            }
-        } // End of valid $identifier check based on search results
-    else
-        {
-        $errorcode=404;
-        $errors[] = "Invalid identifier: " . $iiif->id;
-        }
+    iiif_generate_manifest($iiif);
     }
 
 // Send the data 
-if($validrequest)
+if($iiif->validrequest)
     {
     if(function_exists("http_response_code"))
         {
         http_response_code(200); # Send OK
         }
     header("Access-Control-Allow-Origin: *");
-    if(isset($response_image) && file_exists($response_image))
+    if(isset($iiif->response_image) && file_exists($iiif->response_image))
         {
         // Send the image
-        $file_size   = filesize_unlimited($response_image);
-        $file_handle = fopen($response_image, 'rb');
+        $file_size   = filesize_unlimited($iiif->response_image);
+        $file_handle = fopen($iiif->response_image, 'rb');
         header("Access-Control-Allow-Origin: *");
         header('Content-Disposition: inline;');
         header('Content-Transfer-Encoding: binary');
-        $mime = get_mime_type($response_image);
+        $mime = get_mime_type($iiif->response_image);
         header("Content-Type: {$mime}");
         $sent = 0;
         while($sent < $file_size)
@@ -783,14 +463,18 @@ if($validrequest)
             }
         if(defined('JSON_PRETTY_PRINT'))
             {
-            echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            echo json_encode($iiif->response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             }
         else
             {
-            echo json_encode($response);
+            echo json_encode($iiif->response);
             }
         }
-    exit();
     }
+elseif(count($iiif->errors) > 0)
+    {
+    iiif_error($iiif->errorcode ?? 400,$iiif->errors);
+    }
+
 		
 	
