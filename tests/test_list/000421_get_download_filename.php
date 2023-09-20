@@ -5,6 +5,14 @@ command_line_only();
 // --- Set up
 // $run_id = test_generate_random_ID(10);
 $original_state = $GLOBALS;
+$setup_global_env = function() use ($original_state)
+    {
+    // $GLOBALS['download_filename_format'] = 'RS%resource';
+
+    // (re)loading plugins on the fly
+    unset($GLOBALS['hook_cache']);
+    $GLOBALS['plugins'] = $original_state['plugins'];
+    };
 
 $resource_jpg_file = create_resource(1, 0);
 $resource_mp4_file = create_resource(3, 0);
@@ -52,11 +60,7 @@ $use_cases = [
     ],
     [
         'name' => 'Download filename overriden by a hook',
-        'setup' => function()
-            {
-            $GLOBALS['plugins'][] = 'testframework';
-            $GLOBALS['download_filename_format'] = 'RS%resource';
-            },
+        'setup' => fn() => $GLOBALS['plugins'][] = 'testframework',
         'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
         'expected' => HookTestframeworkAllDownloadfilenamealt(),
     ],
@@ -81,9 +85,7 @@ $use_cases = [
 ];
 foreach($use_cases as $use_case)
     {
-    // (re)loading plugins on the fly
-    unset($GLOBALS['hook_cache']);
-    $GLOBALS['plugins'] = $original_state['plugins'];
+    $setup_global_env();
 
     // Set up the use case environment
     if(isset($use_case['setup']))
@@ -91,13 +93,7 @@ foreach($use_cases as $use_case)
         $use_case['setup']();
         }
 
-    $result = get_download_filename(
-        $use_case['input']['ref'],
-        $use_case['input']['size'],
-        $use_case['input']['alternative'],
-        $use_case['input']['ext']
-    );
-
+    $result = get_download_filename(...$use_case['input']);
     if($use_case['expected'] !== $result)
         {
         echo "Use case: {$use_case['name']} - ";
@@ -110,6 +106,6 @@ foreach($use_cases as $use_case)
 
 // Tear down
 $GLOBALS['enable_thumbnail_creation_on_upload'] = $original_state['enable_thumbnail_creation_on_upload'];
-unset($run_id, $original_state, $resource_jpg_file, $resource_mp4_file, $file_jpg, $file_mp4);
+unset($run_id, $original_state, $setup_global_env, $resource_jpg_file, $resource_mp4_file, $file_jpg, $file_mp4);
 
 return true;
