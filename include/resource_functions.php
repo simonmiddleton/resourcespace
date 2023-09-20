@@ -8427,8 +8427,8 @@ function get_download_filename($ref,$size,$alternative,$ext): string
 
     # Constructs a filename for download
     global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,
-    $download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,
-    $prefix_filename_string, $filename,$server_charset;
+    $download_filename_id_only,$download_filename_field,$filename_field,
+    $filename,$server_charset;
 
     $filename = (($download_filenames_without_size || $size == "") ? "" : "_" . $size . "") . ($alternative>0 ? "_" . $alternative : "") . "." . $ext;
 
@@ -8516,31 +8516,6 @@ function get_download_filename($ref,$size,$alternative,$ext): string
             }
         }
 
-    if($prefix_resource_id_to_filename)
-        {
-        $filename = $ref . (substr($filename,0,1) == "." ? "" : '_') . $filename;
-        }
-
-    if(isset($prefix_filename_string) && trim($prefix_filename_string) != '')
-        {
-        $filename = $prefix_filename_string . $filename;
-        }
-
-    # Remove critical characters from filename
-    $altfilename=hook("downloadfilenamealt");
-    if(!($altfilename)) $filename = preg_replace('/(:|\r\n|\r|\n)/', '_', $filename);
-    else $filename=$altfilename;
-
-    # Convert $filename to the charset used on the server.
-    if (!isset($server_charset)) {$to_charset = 'UTF-8';}
-    else
-        {
-        if ($server_charset!="") {$to_charset = $server_charset;}
-        else {$to_charset = 'UTF-8';}
-        }
-    $filename = mb_convert_encoding($filename, $to_charset, 'UTF-8');
-
-    hook("downloadfilename");
     return $filename;
     }
 

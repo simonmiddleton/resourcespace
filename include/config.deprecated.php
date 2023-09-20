@@ -214,3 +214,13 @@ $wildcard_always_applied=false;
 #
 # $zip_contents_field=18;
 $zip_contents_field_crop=1; # The number of lines to remove from the top of the zip contents output (in order to remove the filename field and other unwanted header information).
+
+# When using $prefix_resource_id_to_filename above, what string should be used prior to the resource ID?
+# This is useful to establish that a resource was downloaded from ResourceSpace and that the following number
+# is a ResourceSpace resource ID.
+$prefix_filename_string="RS";
+
+# When $original_filenames_when_downloading, should the original filename be prefixed with the resource ID?
+# This ensures unique filenames when downloading multiple files.
+# WARNING: if switching this off, be aware that when downloading a collection as a zip file, a file with the same name as another file in the collection will overwrite that existing file. It is therefore advisiable to leave this set to 'true'.
+$prefix_resource_id_to_filename=true;
