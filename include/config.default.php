@@ -1065,9 +1065,6 @@ $simple_search_pills_view = false;
 # $custom_top_nav[1]['modal']=true;
 
 
-# Use original filename when downloading a file?
-$original_filenames_when_downloading=true;
-
 # Display a 'new' flag next to new themes (by default themes created < 2 weeks ago)
 # Note: the age take days as parameter. Anything less than that would mean that a theme becomes old after a few hours which is highly unlikely.
 $flag_new_themes     = true;
@@ -2483,13 +2480,6 @@ $keyboard_scroll_jump=false;
 
 # How long until the Loading popup appears during an ajax request (milliseconds)
 $ajax_loading_timer=500;
-
-#Option for downloaded filename to be just <resource id>.extension, without indicating size or whether an alternative file. Will override $original_filenames_when_downloading which is set as default
-$download_filename_id_only = false;
-
-# Append the size to the filename when downloading
-# Required: $download_filename_id_only = true;
-$download_id_only_with_size = false;
 
 # Allow searching by the 'contributed by' field (this no longer actually requires indexing)?
 $index_contributed_by=false;

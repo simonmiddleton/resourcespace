@@ -227,3 +227,13 @@ $prefix_resource_id_to_filename=true;
 
 # Should the download filename have the size appended to it?
 $download_filenames_without_size = false;
+
+#Option for downloaded filename to be just <resource id>.extension, without indicating size or whether an alternative file. Will override $original_filenames_when_downloading which is set as default
+$download_filename_id_only = false;
+
+# Append the size to the filename when downloading
+# Required: $download_filename_id_only = true;
+$download_id_only_with_size = false;
+
+# Use original filename when downloading a file?
+$original_filenames_when_downloading=true;

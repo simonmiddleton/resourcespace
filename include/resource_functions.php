@@ -8400,16 +8400,36 @@ function metadata_field_edit_access($field)
 function get_download_filename(int $ref, string $size, int $alternative, string $ext): string
     {
     [$size, $ext] = array_map('trim', [$size, $ext]);
-
     $fallback_format = "RS{$ref}.{$ext}";
+
+    // todo: get preference (watch out if empty string! either here or during configuration loading - preferred?)
     $format = $GLOBALS['download_filename_format'];
 
-    $placeholders = ['%resource', '%extension', '%size', '%alternative'];
-    $replacements = [$ref, $ext];
-    $replacements[] = $size !== '' ? "_$size" : '';
-    $replacements[] = $alternative > 0 ? "_$alternative" : '';
+    $bind['%resource'] = $ref;
+    $bind['%extension'] = $ext;
+    $bind['%size'] = $size !== '' ? "_$size" : '';
+    $bind['%alternative'] = $alternative > 0 ? "_$alternative" : '';
 
-    $filename = str_replace($placeholders, $replacements, $format);
+    // Get (original) filename value
+    $filename_val = get_data_by_field($ref, $GLOBALS['filename_field'], true);
+    if ($alternative > 0)
+        {
+        $alt_file = get_alternative_file($ref, $alternative);
+        $filename_val = $alt_file !== false ? $alt_file['name'] : '';
+        }
+    $bind['%filename'] = strip_extension(mb_basename($filename_val), true);
+
+    // Legacy: do an extra check to see if the filename has an uppercase extension that could be preserved
+    $filename_val_ext = pathinfo($filename_val, PATHINFO_EXTENSION);
+    if ($filename_val_ext !== '' && mb_strtolower($filename_val_ext) === mb_strtolower($ext))
+        {
+        $bind['%extension'] = $filename_val_ext;
+        }
+
+
+
+
+    $filename = str_replace(array_keys($bind), array_values($bind), $format);
 
 
 
@@ -8422,86 +8442,27 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
         }
 
     // Remove invalid characters
-    $filename = preg_replace('/(:|\r\n|\r|\n)/', '_', $filename);
-    if ($filename === null)
+    $filename = (string) preg_replace(
+        '/(:|\r\n|\r|\n)/',
+        '_',
+        trim(strip_tags(nl2br($filename)))
+    );
+
+    // todo: truncate to 255 characters - {@see https://en.wikipedia.org/wiki/Comparison_of_file_systems#Limits} for filename lengths
+
+    if ($filename !== '')
         {
-        debug('[get_download_filename] Failed to remove invalid characters, using fallback format instead');
-        $filename = $fallback_format;
+        return $filename;
         }
     
-    // todo: striptags
-    $filename = trim(nl2br(strip_tags($newfilename)));
-
-    return $filename;
+    debug('[get_download_filename] Invalid download filename, fall back.');
+    return $fallback_format;
 
 // OLD logic -- to be removed
 
     # Constructs a filename for download
-    global $original_filenames_when_downloading,$download_id_only_with_size,
-    $download_filename_id_only,$download_filename_field,$filename_field,
-    $filename,$server_charset;
-
-    if ($original_filenames_when_downloading)
-        {
-        # Use the original filename.
-        if ($alternative>0)
-            {
-            # Fetch from the resource_alt_files alternatives table (this is an alternative file)
-            $origfile=get_alternative_file($ref,$alternative);
-            $filename=$origfile["name"];
-
-            //Try to use the name that the user has set for the file and if not then default to the original filename.
-            if(strpos($filename, '.') != false && substr($filename, strrpos($filename,'.')+1) == $ext)
-                {
-                $origfile=$filename;
-                }
-            elseif(strpos($filename, '.') != false && substr($filename, strrpos($filename,'.')+1) != $ext)
-                {
-                $origfile=remove_extension($filename) . '.' . $ext;
-                }
-            elseif($ext != '' && strpos($filename, '.') == false)
-                {
-                $origfile=$filename . '.' . $ext;
-                }
-            else
-                {
-                $origfile=$origfile["file_name"];
-                }
-            }
-        else
-            {
-            # Fetch from field data or standard table
-            $origfile=get_data_by_field($ref,$filename_field);
-            }
-        if (strlen($origfile)>0)
-            {
-            # do an extra check to see if the original filename might have uppercase extension that can be preserved.
-            $pathparts=pathinfo($origfile);
-            if (isset($pathparts['extension'])){
-                if (strtolower($pathparts['extension'])==$ext){$ext=$pathparts['extension'];}
-            }
-
-            # Use the original filename if one has been set.
-            # Strip any path information (e.g. if the staticsync.php is used).
-            # append preview size to base name if not the original
-            $filename = strip_extension(mb_basename($origfile),true) . '.' . $ext;
-            }
-        }
-
-    elseif ($download_filename_id_only)
-        {
-        if(!hook('customdownloadidonly', '', array($ref, $ext, $alternative)))
-            {
-            $filename=$ref . "." . $ext;
-
-            if($size != '' && $download_id_only_with_size)
-                {
-                $filename = $ref . '-' . $size . '.' . $ext;
-                }
-            }
-        }
-
-    elseif (isset($download_filename_field))
+    global $download_filename_field;
+    if (isset($download_filename_field))
         {
         $newfilename = get_data_by_field($ref, $download_filename_field);
         if ($newfilename)
@@ -8509,8 +8470,6 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
             $filename = mb_basename(substr($filename, 0, 200)) . '.' . $ext;
             }
         }
-
-    return $filename;
     }
 
 

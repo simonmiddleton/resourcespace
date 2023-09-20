@@ -43,6 +43,16 @@ $enable_thumbnail_creation_on_upload = false;
 upload_file($resource_jpg_file, false, false, false, $file_jpg['path'], false, true);
 upload_file($resource_mp4_file, false, false, false, $file_mp4['path'], false, true);
 
+$resource_jpg_file_alt_ref = add_alternative_file(
+    $resource_jpg_file,
+    'test 421 alternative image',
+    '',
+    'alt_file_test_421',
+    'png',
+    42100,
+    'alttype:test421'
+);
+
 function HookTestframeworkAllDownloadfilenamealt()
     {
     return 'Hook download filename';
@@ -57,6 +67,12 @@ $use_cases = [
         'setup' => fn() => $GLOBALS['download_filename_format'] = "RS%resource_with:_or\r\n_or\r_or\n.%extension",
         'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
         'expected' => sprintf('RS%s_with__or__or__or_.%s', $resource_jpg_file, pathinfo($file_jpg['path'], PATHINFO_EXTENSION)),
+    ],
+    [
+        'name' => 'Remove HTML tags from end result',
+        'setup' => fn() => $GLOBALS['download_filename_format'] = "RS%resource_<b>without_tags</b>.%extension",
+        'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
+        'expected' => "RS{$resource_jpg_file}_without_tags.jpg",
     ],
     [
         'name' => 'Download filename overriden by a hook',
@@ -99,6 +115,18 @@ $use_cases = [
         'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource%alternative.%extension',
         'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 421, 'ext' => 'jpg'],
         'expected' => "RS{$resource_jpg_file}_421.jpg",
+    ],
+    [
+        'name' => '%filename for original file',
+        'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource-%filename.%extension',
+        'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
+        'expected' => sprintf('RS%s-%s.jpg', $resource_jpg_file, pathinfo($file_jpg['path'], PATHINFO_FILENAME)),
+    ],
+    [
+        'name' => '%filename for alternative file',
+        'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource-%filename.%extension',
+        'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => $resource_jpg_file_alt_ref, 'ext' => 'png'],
+        'expected' => "RS{$resource_jpg_file}-test 421 alternative image.png",
     ],
 ];
 foreach($use_cases as $use_case)
