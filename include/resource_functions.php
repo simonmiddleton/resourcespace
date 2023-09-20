@@ -8397,8 +8397,34 @@ function metadata_field_edit_access($field)
  * @param  string $ext File extension
  * @return string  Filename to use
  */
-function get_download_filename($ref,$size,$alternative,$ext)
+function get_download_filename($ref,$size,$alternative,$ext): string
     {
+    $fallback_format = "RS{$ref}.{$ext}";
+    $filename = $GLOBALS['download_filename_format'];
+    $filename = str_replace(['%resource', '%extension'], [$ref, $ext], $filename);
+
+    // printf(PHP_EOL.'$filename: %s = %s' . PHP_EOL, gettype($filename), $filename);
+
+
+
+
+    $hook_downloadfilenamealt = hook('downloadfilenamealt', '', [$ref, $size, $alternative, $ext]);
+    if (is_string($hook_downloadfilenamealt) && $hook_downloadfilenamealt !== '')
+        {
+        $filename = $hook_downloadfilenamealt;
+        }
+
+    // Remove invalid characters
+    $filename = preg_replace('/(:|\r\n|\r|\n)/', '_', $filename);
+    if ($filename === null)
+        {
+        $filename = $fallback_format;
+        }
+
+    return $filename;
+
+// OLD logic -- to be removed
+
     # Constructs a filename for download
     global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,
     $download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,

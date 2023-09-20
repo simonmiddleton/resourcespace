@@ -34,23 +34,57 @@ if (isset($file_mp4['error']))
 $enable_thumbnail_creation_on_upload = false;
 upload_file($resource_jpg_file, false, false, false, $file_jpg['path'], false, true);
 upload_file($resource_mp4_file, false, false, false, $file_mp4['path'], false, true);
+
+function HookTestframeworkAllDownloadfilenamealt()
+    {
+    return 'Hook download filename';
+    }
 // --- End of Set up
 
-// var_dump(pathinfo($file_jpg['path'], PATHINFO_BASENAME));die;
-
-// $dldFilename = get_download_filename($resource_mp4_file, '', 0, 'jpg');
-// var_dump($dldFilename);
 
 
 $use_cases = [
     [
-        'name' => 'todo...',
+        'name' => 'Remove invalid file name characters from end result',
+        'setup' => fn() => $GLOBALS['download_filename_format'] = "RS%resource_with:_or\r\n_or\r_or\n.%extension",
         'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
-        'expected' => "RS{$resource_jpg_file}_".pathinfo($file_jpg['path'], PATHINFO_BASENAME),
+        'expected' => sprintf('RS%s_with__or__or__or_.%s', $resource_jpg_file, pathinfo($file_jpg['path'], PATHINFO_EXTENSION)),
     ],
+    [
+        'name' => 'Download filename overriden by a hook',
+        'setup' => function()
+            {
+            $GLOBALS['plugins'][] = 'testframework';
+            $GLOBALS['download_filename_format'] = 'RS%resource';
+            },
+        'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
+        'expected' => HookTestframeworkAllDownloadfilenamealt(),
+    ],
+    [
+        'name' => 'Format with %resource placeholder',
+        'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource',
+        'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
+        'expected' => "RS{$resource_jpg_file}",
+    ],
+    [
+        'name' => 'Format with %resource and %extension placeholders',
+        'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource.%extension',
+        'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
+        'expected' => "RS{$resource_jpg_file}.jpg",
+    ],
+    // [
+    //     'name' => 'todo...',
+    //     'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource---%filename.%extension',
+    //     'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
+    //     'expected' => "RS{$resource_jpg_file}_".pathinfo($file_jpg['path'], PATHINFO_BASENAME),
+    // ],
 ];
 foreach($use_cases as $use_case)
     {
+    // (re)loading plugins on the fly
+    unset($GLOBALS['hook_cache']);
+    $GLOBALS['plugins'] = $original_state['plugins'];
+
     // Set up the use case environment
     if(isset($use_case['setup']))
         {
@@ -67,6 +101,7 @@ foreach($use_cases as $use_case)
     if($use_case['expected'] !== $result)
         {
         echo "Use case: {$use_case['name']} - ";
+        printf(PHP_EOL.'$result: %s = %s' . PHP_EOL, gettype($result), $result);
         return false;
         }
     }
