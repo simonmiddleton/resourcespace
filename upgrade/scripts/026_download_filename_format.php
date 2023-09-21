@@ -125,8 +125,12 @@ foreach ($user_groups as $user_group)
     logScript("Format for {$user_group['name']} is $ug_dld_filename_format");
 
 
-    $msg = str_replace(['%entity%', '%format%'],
-        ["{$user_group['name']} ({$lang['user_group']})", $build_download_filename_format()],
+    $msg = str_replace(
+        ['%entity%', '%format%'],
+        [
+            "{$user_group['name']} ({$lang['user_group']})",
+            $build_download_filename_format()
+        ],
         $lang['upgrade_026_notification']
     );
 
