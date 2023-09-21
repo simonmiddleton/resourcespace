@@ -8388,17 +8388,6 @@ function metadata_field_edit_access($field)
     return (!checkperm("F*") || checkperm("F-" . $field))&& !checkperm("F" . $field);
     }
 
-function init_download_filename_format()
-    {
-    // todo: get preference (watch out if empty string! either here or during configuration loading - preferred?)
-    if (get_config_option(null, 'download_filename_format', $formatted_str) && $formatted_str === '')
-        {
-        debug('[get_download_filename] Invalid download_filename_format configuration, fall back.');
-        return $fallback_format;
-        }
-
-    }
-
 /**
  * Work out the filename to use when downloading the specified resource file with the given settings
  *
@@ -8410,10 +8399,9 @@ function init_download_filename_format()
  */
 function get_download_filename(int $ref, string $size, int $alternative, string $ext): string
     {
-    [$size, $ext] = array_map('trim', [$size, $ext]);
-    $fallback_format = "RS{$ref}.{$ext}";
-
-    $formatted_str = $GLOBALS['download_filename_format'];
+    [$size, $ext, $dff] = array_map('trim', [$size, $ext, $GLOBALS['download_filename_format']]);
+    $fallback_filename = "RS{$ref}.{$ext}";
+    $formatted_str = $dff ?: DEFAULT_DOWNLOAD_FILENAME_FORMAT;
 
     $bind['%resource'] = $ref;
     $bind['%extension'] = $ext;
@@ -8486,9 +8474,9 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
         {
         return $filename;
         }
-    
+
     debug('[get_download_filename] Invalid download filename, fall back.');
-    return $fallback_format;
+    return (string) preg_replace('/(:|\r\n|\r|\n)/', '_', strip_tags(nl2br($fallback_filename)));
     }
 
 

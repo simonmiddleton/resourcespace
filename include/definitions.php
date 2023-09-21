@@ -827,3 +827,5 @@ const BLOCKED_STREAM_WRAPPERS = ['php', 'file'];
 
 // Separator to use when rendering date range field values
 define('DATE_RANGE_SEPARATOR'," / ");
+
+const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource%filename.%extension';

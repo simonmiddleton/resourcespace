@@ -3370,4 +3370,4 @@ Available placeholders:
 - %size -> scr, pre etc. Note: when applicable, an underscore will be automatically prefxed
 - %alternative -> alternative ref (ID). Note: when applicable, an underscore will be automatically prefxed
 */
-$download_filename_format = '';
+$download_filename_format = DEFAULT_DOWNLOAD_FILENAME_FORMAT;
