@@ -8435,6 +8435,7 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
             if (!metadata_field_view_access($field_id))
                 {
                 $bind[$placeholder] = '';
+                continue;
                 }
 
             $field_data = trim(get_data_by_field($ref, $field_id, true));

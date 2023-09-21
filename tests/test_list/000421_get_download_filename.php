@@ -7,6 +7,7 @@ $original_state = $GLOBALS;
 $setup_global_env = function() use ($original_state)
     {
     $GLOBALS['download_filename_format'] = 'RS%resource';
+    $GLOBALS['userpermissions'] = $original_state['userpermissions'];
 
     // Fake (re)loading plugins on the fly so we can add one when a use case requires it
     unset($GLOBALS['hook_cache']);
@@ -160,6 +161,17 @@ $use_cases = [
             },
         'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
         'expected' => str_repeat('X', 255),
+    ],
+    [
+        'name' => 'Enforce access control for %fieldXX placeholder',
+        'setup' => function() use ($resource_mp4_file, $rtf_text)
+            {
+            update_field($resource_mp4_file, $rtf_text, 'valueFromText2');
+            $GLOBALS['userpermissions'][] = "f-{$rtf_text}";
+            $GLOBALS['download_filename_format'] = "RS%resource-%field{$rtf_text}.%extension";
+            },
+        'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
+        'expected' => "RS{$resource_mp4_file}-.mp4",
     ],
 ];
 foreach($use_cases as $use_case)
