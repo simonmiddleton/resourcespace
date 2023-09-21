@@ -1,12 +1,8 @@
 <?php
-if(PHP_SAPI == 'cli')
-    {
-    include_once __DIR__ . "/../../include/db.php";
-    }
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Start download_filename_format configuration upgrade...');
 
 /*
-Reference only, the deprecated configs defaults, grouped by how they relate:
+Reference only, the deprecated configs defaults (now in config.deprecated), grouped by how they relate:
 
 $prefix_resource_id_to_filename=true;
 $prefix_filename_string="RS";
@@ -75,11 +71,8 @@ $build_download_filename_format = function(): string
     return implode('', array_merge($format_parts, $filename_parts));
     };
 
-// $original_filenames_when_downloading=false;
-// $download_filename_id_only = true;
-// $download_filename_field=223;
-
-$upgrade_26_admin_messages = [];
+set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Processing system wide config...');
+$system_wide_cfg_msg = [];
 $system_wide_dld_filename_format = $build_download_filename_format();
 if (set_config_option(null, 'download_filename_format', $system_wide_dld_filename_format))
     {
@@ -90,9 +83,12 @@ if (set_config_option(null, 'download_filename_format', $system_wide_dld_filenam
     }
 else
     {
-    $upgrade_26_admin_messages[] = "Unable to set system wide config option 'download_filename_format' to '{$system_wide_dld_filename_format}'. Please do it manually.";
+    $system_wide_cfg_msg[] = str_replace(
+        '%format%',
+        $system_wide_dld_filename_format,
+        $lang['upgrade_026_error_unable_to_set_config_system_wide']
+    );
     }
-logScript("System wide config generated: $system_wide_dld_filename_format");
 
 // Override only the options that have been deprecated
 $deprecated_options = [
@@ -108,73 +104,51 @@ if (isset($GLOBALS['download_filename_field']))
     $deprecated_options['download_filename_field'] = $GLOBALS['download_filename_field'];
     }
 
+$process_config_overrides = function(array $rows, string $what)
+    use ($lang, $build_download_filename_format, $deprecated_options): array
+    {
+    $messages = [];
+    foreach($rows as $row)
+        {
+        set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, sprintf("%s: %s", ucfirst($what), $row['name']));
+        $config_options = trim((string) $row['config_options']);
+        if ($config_options === '')
+            {
+            continue;
+            }
+
+        override_rs_variables_by_eval($deprecated_options, $config_options);
+        $messages[] = str_replace(
+            ['%entity%', '%format%'],
+            [
+                sprintf("%s (%s)", $row['name'], mb_strtolower($what)),
+                $build_download_filename_format()
+            ],
+            $lang['upgrade_026_notification']
+        );
+        }
+    return $messages;
+    };
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Processing user group config overrides...');
-$user_groups = get_usergroups();
-foreach ($user_groups as $user_group)
+$ug_msg = $process_config_overrides(get_usergroups(), $lang['user_group']);
+
+set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Processing resource type config overrides...');
+$rt_msg = $process_config_overrides(get_resource_types('', true, true, false), $lang['property-resource_type']);
+
+set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Notify admins');
+$upgrade_26_admin_messages = array_filter(array_merge($system_wide_cfg_msg, $ug_msg, $rt_msg));
+$notification_users = array_column(get_notification_users('SYSTEM_ADMIN'), 'ref');
+foreach ($upgrade_26_admin_messages as $msg)
     {
-    set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "User group: {$user_group['name']}");
-    $ug_config_options = trim((string) $user_group['config_options']);
-    if ($ug_config_options === '')
-        {
-        continue;
-        }
-
-    override_rs_variables_by_eval($deprecated_options, $ug_config_options);
-    $ug_dld_filename_format = $build_download_filename_format();
-    logScript("Format for {$user_group['name']} is $ug_dld_filename_format");
-
-
-    $msg = str_replace(
-        ['%entity%', '%format%'],
-        [
-            "{$user_group['name']} ({$lang['user_group']})",
-            $build_download_filename_format()
-        ],
-        $lang['upgrade_026_notification']
-    );
-
-    echo $msg;
-    }
-
-
-// $notification_users = array_column(get_notification_users('SYSTEM_ADMIN'), 'ref');
-
-
-
-
-set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Finished download_filename_format configuration upgrade!');
-die;
-
-#######
-
-if (
-    isset($video_tracks_plugin_config['video_tracks_output_formats_saved'])
-    && !empty($video_tracks_plugin_config['video_tracks_output_formats_saved'])
-)
-    {
-    register_plugin_language('video_tracks');
-    $config_to_copy = plugin_decode_complex_configs($video_tracks_plugin_config['video_tracks_output_formats_saved']);
-    $notification_users = array_column(get_notification_users('SYSTEM_ADMIN'), 'ref');
-
-    $msg = str_replace(
-        [
-            '%nl%',
-            '%output_formats_config%'
-        ],
-        [
-            PHP_EOL,
-            sprintf('$video_tracks_output_formats = %s;%s', var_export($config_to_copy, true), PHP_EOL)
-        ],
-        $lang['video_tracks_upgrade_msg_deprecated_output_format']
-    );
-
     message_add(
         $notification_users,
-        "{$lang['upgrade_script']} #024: {$msg}",
+        "{$lang['upgrade_script']} #026: {$msg}",
         '',
         null,
         MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,
         MESSAGE_DEFAULT_TTL_SECONDS
     );
     }
+
+set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Finished download_filename_format configuration upgrade!');
