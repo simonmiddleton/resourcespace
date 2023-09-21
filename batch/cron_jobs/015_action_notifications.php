@@ -10,7 +10,7 @@ if((int)$new_action_email_interval == 0)
     return;
     }
 
-$new_action_email_interval = min($new_action_email_interval,168);
+$new_action_email_interval = ceil(min($new_action_email_interval,168));
 
 $last_action_notifications = get_sysvar('last_action_notification_emails', '1970-01-01');
 $action_notifications_elapsed_sec = time()-strtotime($last_action_notifications);
@@ -28,7 +28,7 @@ $this_run_start = date("Y-m-d H:i:s");
 $action_notify_users = get_users_by_preference("user_pref_new_action_emails","1");
 
 // If cron hasn't been run for a long time only go back a maximum of 7 days
-$action_notifications_check_minutes = floor(min($action_notifications_elapsed_sec,7*24*60*60))/60;
+$action_notifications_check_minutes = floor(min($action_notifications_elapsed_sec,7*24*60*60)/60);
 
 logScript(" - Finding actions created in the last $action_notifications_check_minutes minutes");
 $recentactions = get_user_actions_recent(ceil($action_notifications_check_minutes)+1,true);
@@ -53,7 +53,7 @@ foreach($recentactions as $notifyuser=>$user_actions)
         }
 
     // Construct email notification
-    logScript(" - Creating action email notification for user " . $usermail);
+    logScript(" - Checking action email notification for user " . $usermail);
 
     $usernotification = new ResourceSpaceUserNotification();
     $usernotification->set_subject($applicationname . ": " );

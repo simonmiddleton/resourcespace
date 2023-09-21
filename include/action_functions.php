@@ -235,7 +235,6 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
         $saved_user = $userref ?? 0;
         $actionuserdata = get_user($actionuser);
         setup_user($actionuserdata);
-        echo "action user now " . $actionuser . PHP_EOL;
         }
     foreach($actions as $actiontype=>$typeactions)
         {
