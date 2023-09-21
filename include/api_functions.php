@@ -948,3 +948,378 @@ function iiif_generate_metadata(&$iiif)
             }
         }
     }
+
+function iiif_process_image_request(&$iiif)
+    {
+    if($iiif->request["id"] === '')
+        {
+        iiif_error(400, ['Missing identifier']);
+        }
+
+    if($iiif->request["region"] == "")
+        {
+        // Redirect to image information document
+        $redirurl = $iiif->rootimageurl . $iiif->request["id"] . '/info.json';
+        if(function_exists("http_response_code"))
+            {
+            http_response_code(303);
+            }
+        header ("Location: " . $redirurl);
+        exit();
+        }
+
+    if (is_numeric($iiif->request["id"]))
+        {
+        $resource =  get_resource_data($iiif->request["id"]);
+        $resource_access =  get_resource_access($iiif->request["id"]);
+        }
+    else
+        {
+        $resource_access = 2;	
+        }
+    if($resource_access==0 && !in_array($resource["file_extension"], config_merge_non_image_types()))
+        {
+        // Check resource actually exists and is active
+        $fulljpgsize = strtolower($resource["file_extension"]) != "jpg" ? "hpr" : "";
+        $img_path = get_resource_path($iiif->request["id"],true,$fulljpgsize,false, "jpg");
+        if(!file_exists($img_path))
+            {
+            // Missing file
+            $iiif->errors[] = "No image available for this identifier";
+            iiif_error(404,$iiif->errors);
+            }
+        $image_size = get_original_imagesize($iiif->request["id"],$img_path, "jpg");
+        $imageWidth = (int) $image_size[1];
+        $imageHeight = (int) $image_size[2];
+        $portrait = ($imageHeight >= $imageWidth) ? TRUE : FALSE;
+
+        // Get all available sizes
+        $sizes = get_image_sizes($iiif->request["id"],true,"jpg",false);
+        $availsizes = array();
+        if ($imageWidth > 0 && $imageHeight > 0)
+            {
+            foreach($sizes as $size)
+                {
+                // Compute actual pixel size - use same calculations as when generating previews
+                if ($portrait)
+                    {
+                    // portrait or square
+                    $preheight = $size['height'];
+                    $prewidth = round(($imageWidth * $preheight + $imageHeight - 1) / $imageHeight);
+                    }
+                else
+                    {
+                    $prewidth = $size['width'];
+                    $preheight = round(($imageHeight * $prewidth + $imageWidth - 1) / $imageWidth);
+                    }
+                if($prewidth > 0 && $preheight > 0 && $prewidth <= $iiif->max_width && $preheight <= $iiif->max_height)
+                    {
+                    $availsizes[] = array("id"=>$size['id'],"width" => $prewidth, "height" => $preheight);
+                    }
+                }
+            }
+
+        if($iiif->request["region"] == "info.json")
+            {
+            // Image information request. Only fullsize available in this initial version
+            $iiif->response["@context"] = "http://iiif.io/api/image/2/context.json";
+            $iiif->response["@id"] = $iiif->rootimageurl . $iiif->request["id"];
+                            
+            $iiif->response["height"] = $imageHeight;
+            $iiif->response["width"]  = $imageWidth;
+            
+            $iiif->response["profile"] = array();
+            $iiif->response["profile"][] = "http://iiif.io/api/image/2/level0.json";
+            if($iiif->custom_sizes)
+                {
+                $iiif->response["profile"][] = array(
+                    "formats" => array("jpg"),
+                    "qualities" => array("default"),
+                    "maxWidth" => $iiif->max_width,
+                    "maxHeight" => $iiif->max_height,
+                    "supports" => array("sizeByH","sizeByW")
+                    );
+                }
+            else
+                {
+                $iiif->response["profile"][] = array(
+                    "formats" => array("jpg"),
+                    "qualities" => array("default"),
+                    "maxWidth" => $iiif->max_width,
+                    "maxHeight" => $iiif->max_height
+                    );
+                }
+
+            $iiif->response["protocol"] = "http://iiif.io/api/image";
+            $iiif->response["sizes"] = $availsizes;
+            if($iiif->preview_tiles)
+                {
+                $iiif->response["tiles"] = array();
+                $iiif->response["tiles"][] = array("height" => $iiif->preview_tile_size, "width" => $iiif->preview_tile_size, "scaleFactors" => $iiif->preview_tile_scale_factors);
+                }
+            $iiif->headers[] = 'Link: <http://iiif.io/api/image/2/level0.json>;rel="profile"';
+            $iiif->validrequest = true;
+            }
+        else
+            {
+            // Process requested region
+            if(!isset($iiif->errorcode) && $iiif->request["region"] != "full" && $iiif->request["region"] != "max" && $iiif->preview_tiles)
+                {
+                // If the request specifies a region which extends beyond the dimensions reported in the image information document,
+                // then the service should return an image cropped at the image’s edge, rather than adding empty space.
+                // If the requested region’s height or width is zero, or if the region is entirely outside the bounds
+                // of the reported dimensions, then the server should return a 400 status code.
+
+                $regioninfo = explode(",",$iiif->request["region"]);
+                $region_filtered = array_filter($regioninfo, 'is_numeric');
+                if(count($region_filtered) != 4)
+                    {
+                    // Invalid region
+                    $iiif->errors[]  = "Invalid region requested. Use 'full' or 'x,y,w,h'";
+                    iiif_error(400,$iiif->errors);
+                    }
+                else
+                    {
+                    $regionx = (int)$region_filtered[0];
+                    $regiony = (int)$region_filtered[1];
+                    $regionw = (int)$region_filtered[2];
+                    $regionh = (int)$region_filtered[3];
+                    debug("IIIF region requested: x:" . $regionx . ", y:" . $regiony . ", w:" .  $regionw . ", h:" . $regionh);
+                    if(fmod($regionx,$iiif->preview_tile_size) != 0 || fmod($regiony,$iiif->preview_tile_size) != 0)
+                        {
+                        // Invalid region
+                        $iiif->errors[]  = "Invalid region requested. Supported tiles are " . $iiif->preview_tile_size . "x" . $iiif->preview_tile_size . " at scale factors " . implode(",",$iiif->preview_tile_scale_factors) . ".";
+                        iiif_error(400,$iiif->errors);
+                        }
+                    else
+                        {
+                        $tile_request = true;
+                        }
+                    }
+                }
+            else
+                {
+                // Full image requested
+                $tile_request = false;
+                }
+
+            // Process size
+            if(strpos($iiif->request["size"],",") !== false)
+                {
+                // Currently support 'w,' and ',h' syntax requests
+                $getdims    = explode(",",$iiif->request["size"]);
+                $getwidth   = (int)$getdims[0];
+                $getheight  = (int)$getdims[1];
+                if($tile_request)
+                    {
+                    if(($regionx + $regionw) >= $imageWidth || ($regiony + $regionh) >= $imageHeight)
+                        {
+                        // Size specified is not the standard tile width, may be right or bottom edge of image
+                        $validtileh = false;
+                        $validtilew = false;
+                        
+                        if($getwidth > 0 && $getheight == 0)
+                            {
+                            $scale = ceil($regionw / $getwidth);
+                            }
+                        elseif($getheight > 0 && $getwidth == 0)
+                            {
+                            $scale = ceil($regionh / $getheight);
+                            }
+                        else
+                            {
+                            $iiif->errors[] = "Invalid tile size requested";
+                            iiif_error(501,$iiif->errors);
+                            }
+                                                    
+                        if(!in_array($scale,$iiif->preview_tile_scale_factors))
+                            {
+                            $iiif->errors[] = "Invalid tile size requested";
+                            iiif_error(501,$iiif->errors); 
+                            }
+                        }
+                    elseif(($getwidth == $iiif->preview_tile_size && $getheight == 0) ||
+                            ($getheight == $iiif->preview_tile_size && $getwidth == 0) ||
+                            ($getheight == $iiif->preview_tile_size && $getwidth == $iiif->preview_tile_size))
+                        {
+                        $valid_tile = true;
+                        }
+                    else
+                        {
+                        $iiif->errors[] = "Invalid tile size requested";
+                        iiif_error(400,$iiif->errors);                             
+                        }
+                        
+                    $iiif->request["getsize"] = "tile_" . $regionx . "_" . $regiony . "_". $regionw . "_". $regionh;
+                    $iiif->request["getext"] = "jpg";
+                        
+                    debug("IIIF" . $regionx . "_" . $regiony . "_". $regionw . "_". $regionh);
+                    }
+                else
+                    {
+                    if($getheight == 0)
+                        {
+                        $getheight = floor($getwidth * ($imageHeight/$imageWidth));
+                        }
+                    elseif($getwidth == 0)
+                        {
+                        $getwidth = floor($getheight * ($imageWidth/$imageHeight));
+                        }
+                    // Establish which preview size this request relates to
+                    foreach($availsizes  as $availsize)
+                        {
+                        debug("IIIF - checking available size for resource " . $resource["ref"]  . ". Size '" . $availsize["id"] . "': " . $availsize["width"] . "x" . $availsize["height"] . ". Requested size: " . $getwidth . "x" . $getheight);
+                        if($availsize["width"] == $getwidth && $availsize["height"] == $getheight)
+                            {
+                            $iiif->request["getsize"] = $availsize["id"];
+                            }
+                        }
+                    if(!isset($iiif->request["getsize"]))
+                        {
+                        if(!$iiif->custom_sizes || $getwidth > $iiif->max_width || $getheight > $iiif->max_height)
+                            {
+                            // Invalid size requested
+                            $iiif->errors[] = "Invalid size requested";
+                            iiif_error(400,$iiif->errors);                   
+                            }
+                        else
+                            {
+                            $iiif->request["getsize"] = "resized_" . $getwidth . "_". $getheight;
+                            $iiif->request["getext"] = "jpg";
+                            }
+                        }   
+                    }
+                
+                }
+            elseif($iiif->request["size"] == "full"  || $iiif->request["size"] == "max" || $iiif->request["size"] == "thm")
+                {
+                if($tile_request)
+                    {
+                    if($iiif->request["size"] == "full"  || $iiif->request["size"] == "max")
+                        {
+                        $iiif->request["getsize"] = "tile_" . $regionx . "_" . $regiony . "_". $regionw . "_". $regionh;
+                        $iiif->request["getext"] = "jpg";
+                        }
+                    else
+                        {
+                        $iiif->errors[] = "Invalid tile size requested";
+                        iiif_error(501,$iiif->errors);    
+                        }
+                    }
+                else
+                    {
+                    // Full/max image region requested
+                    if($iiif->max_width >= $imageWidth && $iiif->max_height >= $imageHeight)
+                        {
+                        $isjpeg = in_array(strtolower($resource["file_extension"]),array("jpg","jpeg"));
+                        $iiif->request["getext"] = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
+                        $iiif->request["getsize"] = $isjpeg ? "" : "hpr";
+                        }
+                    else
+                        {
+                        $iiif->request["getext"] = "jpg";
+                        $iiif->request["getsize"] = count($availsizes) > 0 ? $availsizes[0]["id"] : "thm";
+                        }
+                    }
+                }
+            else
+                {
+                $iiif->errors[] = "Invalid size requested";
+                iiif_error(400,$iiif->errors);  
+                }
+            
+            if($iiif->request["rotation"]!=0)
+                {
+                // Rotation. As we only support IIIF Image level 0 only a rotation value of 0 is accepted 
+                $iiif->errors[] = "Invalid rotation requested. Only '0' is permitted.";
+                iiif_error(404,$iiif->errors);  
+                }
+                if(isset($quality) && $quality != "default" && $quality != "color")
+                {
+                // Quality. As we only support IIIF Image level 0 only a quality value of 'default' or 'color' is accepted 
+                $iiif->errors[] = "Invalid quality requested. Only 'default' is permitted";
+                iiif_error(404,$iiif->errors);  
+                }
+                if(isset($format) && strtolower($format) != "jpg")
+                {
+                // Format. As we only support IIIF Image level 0 only a value of 'jpg' is accepted 
+                $iiif->errors[] = "Invalid format requested. Only 'jpg' is permitted."; 
+                iiif_error(404,$iiif->errors);    
+                }
+
+            if(!isset($iiif->errorcode))
+                {
+                // Request is supported, send the image
+                $imgpath = get_resource_path($iiif->request["id"],true,$iiif->request["getsize"],false,$iiif->request["getext"]);
+                debug ("IIIF: image path: " . $imgpath);
+                if(file_exists($imgpath))
+                    {
+                    $imgfound = true;
+                    }
+                else
+                    {
+                    if($iiif->request["region"] != "full" && $iiif->request["region"] != "max")
+                        {
+                        // Tiles have not yet been created
+                        debug("IIIF: no preview tiles found for resource ". $resource["ref"]);
+                        $iiif->errors[] = "Requested image is not currently available"; 
+                        iiif_error(503,$iiif->errors);
+                        }
+                    else
+                        {
+                        if(is_process_lock('create_previews_' . $resource["ref"] . "_" . $iiif->request["getsize"]))
+                            {
+                            $iiif->errors[] = "Requested image is not currently available"; 
+                            iiif_error(503,$iiif->errors);
+                            }
+                        $imgfound = @create_previews($iiif->request["id"],false,"jpg",false,true,-1,true,false,false,array($iiif->request["getsize"]));
+                        clear_process_lock('create_previews_' . $resource["ref"] . "_" . $iiif->request["getsize"]);
+                        }
+                    }
+                if($imgfound)
+                    {
+                    $iiif->validrequest = true;
+                    $iiif->response_image=$imgpath; 
+                    }
+                else
+                    {
+                    $iiif->errorcode = "404";
+                    $iiif->errors[] = "No image available for this identifier";
+                    }
+                }
+            }
+        /* IMAGE REQUEST END */
+        }
+    else
+        {
+        $iiif->errors[] = "Missing or invalid identifier";
+        iiif_error(404,$iiif->errors);
+        }
+    }
+
+
+function iiif_render_image(&$iiif)
+    {
+    // Send the image
+    $file_size   = filesize_unlimited($iiif->response_image);
+    $file_handle = fopen($iiif->response_image, 'rb');
+    header("Access-Control-Allow-Origin: *");
+    header('Content-Disposition: inline;');
+    header('Content-Transfer-Encoding: binary');
+    $mime = get_mime_type($iiif->response_image);
+    header("Content-Type: {$mime}");
+    $sent = 0;
+    while($sent < $file_size)
+        {
+        echo fread($file_handle, $iiif->download_chunk_size);        
+        ob_flush();
+        flush();        
+        $sent += $iiif->download_chunk_size;        
+        if(0 != connection_status())
+            {
+            break;
+            }
+        }
+
+    fclose($file_handle);
+    }
