@@ -8388,6 +8388,17 @@ function metadata_field_edit_access($field)
     return (!checkperm("F*") || checkperm("F-" . $field))&& !checkperm("F" . $field);
     }
 
+function init_download_filename_format()
+    {
+    // todo: get preference (watch out if empty string! either here or during configuration loading - preferred?)
+    if (get_config_option(null, 'download_filename_format', $formatted_str) && $formatted_str === '')
+        {
+        debug('[get_download_filename] Invalid download_filename_format configuration, fall back.');
+        return $fallback_format;
+        }
+
+    }
+
 /**
  * Work out the filename to use when downloading the specified resource file with the given settings
  *
@@ -8402,7 +8413,6 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
     [$size, $ext] = array_map('trim', [$size, $ext]);
     $fallback_format = "RS{$ref}.{$ext}";
 
-    // todo: get preference (watch out if empty string! either here or during configuration loading - preferred?)
     $formatted_str = $GLOBALS['download_filename_format'];
 
     $bind['%resource'] = $ref;
@@ -8419,7 +8429,7 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
         }
     $bind['%filename'] = strip_extension(mb_basename($filename_val), true);
 
-    // Do an extra check to see if the filename has an uppercase extension that could be preserved
+    // Legacy: do an extra check to see if the filename has an uppercase extension that could be preserved
     $filename_val_ext = pathinfo($filename_val, PATHINFO_EXTENSION);
     if ($filename_val_ext !== '' && mb_strtolower($filename_val_ext) === mb_strtolower($ext))
         {
