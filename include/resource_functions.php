@@ -8389,7 +8389,8 @@ function metadata_field_edit_access($field)
     }
 
 /**
- * Work out the filename to use when downloading the specified resource file with the given settings
+ * Work out the filename to use, based on the download_filename_format configuration option, when downloading the
+ * specified resource file with the given settings
  *
  * @param  int $ref Resource ID
  * @param  string $size size code

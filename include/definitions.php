@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 25);
+define('SYSTEM_UPGRADE_LEVEL', 26);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID'))
@@ -828,4 +828,4 @@ const BLOCKED_STREAM_WRAPPERS = ['php', 'file'];
 // Separator to use when rendering date range field values
 define('DATE_RANGE_SEPARATOR'," / ");
 
-const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource%filename.%extension';
+const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource_%filename%size.%extension';

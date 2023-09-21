@@ -2220,6 +2220,7 @@ $lang['send_collection_to_admin_collectionname'] = 'Collection name: ';
 $lang['send_collection_to_admin_numberofresources'] = 'Number of resources: ';
 
 # User group management
+$lang['user_group'] = "user group";
 $lang['page-title_user_group_management'] = "User groups";
 $lang['page-subtitle_user_group_management'] = "Use this section to add, remove and modify user groups.";
 $lang['action-title_create_user_group_called'] = "Create user group called...";
@@ -2497,6 +2498,7 @@ $lang['upgrade_available_title'] = 'Upgrade available';
 $lang['upgrade_available_text'] = 'View version information on the ResourceSpace website';
 $lang["upgrade_in_progress"] = "Upgrade in progress";
 $lang["upgrade_script"] = "Upgrade script";
+$lang['upgrade_026_notification'] = "The upgrade has deprecated some configuration options which your %entity% is overriding.\r\n\r\nTo continue having the download filename formatted as close as possible to the old way please update its configuration override with:\r\n\$download_filename_format = '%format%';";
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
