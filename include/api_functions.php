@@ -204,8 +204,8 @@ function iiif_get_canvases($iiif, $sequencekeys=false)
             }
 			
 		$position = $iiif_result["iiif_position"];
-        $canvases[$position]["@id"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
-        $canvases[$position]["@type"] = "sc:Canvas";
+        $canvases[$position]["id"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
+        $canvases[$position]["type"] = "Canvas";
         $canvases[$position]["label"] = (isset($position_prefix)?$position_prefix:'') . $position;
         
         // Get the size of the images
@@ -265,8 +265,8 @@ function iiif_get_thumbnail($iiif, $resourceid)
             }
 			
 	$thumbnail = array();
-	$thumbnail["@id"] = $iiif->rootimageurl . $resourceid . "/full/thm/0/default.jpg";
-	$thumbnail["@type"] = "dctypes:Image";
+	$thumbnail["id"] = $iiif->rootimageurl . $resourceid . "/full/thm/0/default.jpg";
+	$thumbnail["type"] = "dctypes:Image";
 	
 	 // Get the size of the images
     if ((list($tw,$th) = @getimagesize($img_path))!==false)
@@ -285,7 +285,7 @@ function iiif_get_thumbnail($iiif, $resourceid)
 	
 	$thumbnail["service"] =array();
 	$thumbnail["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
-	$thumbnail["service"]["@id"] = $iiif->rootimageurl . $resourceid;
+	$thumbnail["service"]["id"] = $iiif->rootimageurl . $resourceid;
 	$thumbnail["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
 	return $thumbnail;
 	}
@@ -332,13 +332,13 @@ function iiif_get_image($iiif,$resourceid,$position, array $size_info)
 			
 	$images = array();
 	$images["@context"] = "http://iiif.io/api/presentation/2/context.json";
-	$images["@id"] = $iiif->rooturl . $iiif->request["id"] . "/annotation/" . $position;
-	$images["@type"] = "oa:Annotation";
+	$images["id"] = $iiif->rooturl . $iiif->request["id"] . "/annotation/" . $position;
+	$images["type"] = "oa:Annotation";
 	$images["motivation"] = "sc:painting";
 	
 	$images["resource"] = array();
-	$images["resource"]["@id"] = $iiif->rootimageurl . $resourceid . "/full/max/0/default.jpg";
-	$images["resource"]["@type"] = "dctypes:Image";
+	$images["resource"]["id"] = $iiif->rootimageurl . $resourceid . "/full/max/0/default.jpg";
+	$images["resource"]["type"] = "dctypes:Image";
 	$images["resource"]["format"] = "image/jpeg";
 
     $images["resource"]["height"] = intval($image_size[2]);
@@ -346,7 +346,7 @@ function iiif_get_image($iiif,$resourceid,$position, array $size_info)
 
 	$images["resource"]["service"] =array();
 	$images["resource"]["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
-	$images["resource"]["service"]["@id"] = $iiif->rootimageurl . $resourceid;
+	$images["resource"]["service"]["id"] = $iiif->rootimageurl . $resourceid;
 	$images["resource"]["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
 	$images["on"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
 
@@ -607,11 +607,11 @@ function iiif_parse_url(&$iiif)
 
 function iiif_generate_manifest(&$iiif)
     {
-    global $lang, $baseurl;
+    global $lang, $baseurl, $defaultlanguage;
     if($iiif->request["id"] != "" && $iiif->request["type"] == "")
         {
-        // Redirect to image information document
-        $redirurl = $_SERVER["REQUEST_URI"] . ($iiif->request["id"] != "" ? "/" : "") . "manifest";
+        // Redirect to manifest
+        $redirurl = $iiif->rooturl . $iiif->request["id"] . "/manifest";
         if(function_exists("http_response_code"))
             {
             http_response_code(303); # Send error status
@@ -652,8 +652,6 @@ function iiif_generate_manifest(&$iiif)
                         {
                         $position = get_data_by_field($iiif->searchresults[$n]["ref"],$iiif->sequence_field);
                         }
-                    $position_field=get_resource_type_field($iiif->sequence_field);
-                    // $position_prefix = $position_field["name"] . " ";
 
                     if(!isset($position) || trim($position) == "")
                         {
@@ -710,10 +708,10 @@ function iiif_generate_manifest(&$iiif)
 
             if($iiif->request["type"] == "manifest" || $iiif->request["type"] == "")
                 {
-                /* MANIFEST REQUEST - see http://iiif.io/api/presentation/2.1/#manifest */
+                /* MANIFEST REQUEST - see http://iiif.io/api/presentation/3.0/#manifest */
                 $iiif->response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-                $iiif->response["@id"] = $iiif->rooturl . $iiif->request["id"] . "/manifest";
-                $iiif->response["@type"] = "sc:Manifest";		
+                $iiif->response["id"] = $iiif->rooturl . $iiif->request["id"] . "/manifest";
+                $iiif->response["type"] = "sc:Manifest";		
 
                 // Descriptive metadata about the object/work
                 // The manifest data should be the same for all resources that are returned.
@@ -725,25 +723,37 @@ function iiif_generate_manifest(&$iiif)
                 foreach($iiif->searchresults as $iiif_result)
                     {
                     // Keep on until we find a label
-                    $iiif_label = get_data_by_field($iiif->searchresults[0]["ref"], $iiif->title_field);
+                    $iiif_label = get_data_by_field($iiif_result["ref"], $iiif->title_field);
                     if(trim($iiif_label) != "")
                         {
-                        $iiif->response["label"] = $iiif_label;
+                        $i18n_values = i18n_get_translations($iiif_label);
+                        foreach($i18n_values as $langcode=>$langstring)
+                            {
+                            $iiif->response["label"][$langcode] =[$langstring];
+                            }
                         break;
                         }
                     }
-
                 if(!$iiif_label)
                     {
-                    $iiif->response["label"] = $lang["notavailableshort"];
+                    $iiif->response["label"][$defaultlanguage] = $lang["notavailableshort"];
                     }
 
-                $iiif->response["description"] = get_data_by_field($iiif->searchresults[0]["ref"], $iiif->description_field);
-                
+                foreach($iiif->searchresults as $iiif_result)
+                    {
+                    $description = get_data_by_field($iiif_result["ref"], $iiif->description_field);
+                    if(trim($description) != "")
+                        {
+                        $i18n_values = i18n_get_translations($description);
+                        foreach($i18n_values as $langcode=>$langstring)
+                            {
+                            $iiif->response["summary"][$langcode] =[$langstring];
+                            }
+                        break;
+                        }
+                    }
                 // Construct metadata array from resource field data 
                 iiif_generate_metadata($iiif);
-                
-                $iiif->response["description"] = get_data_by_field($iiif->searchresults[0]["ref"], $iiif->description_field);
                 if($iiif->license_field != 0)
                     {
                     $iiif->response["license"] = get_data_by_field($iiif->searchresults[0]["ref"], $iiif->license_field);
@@ -767,13 +777,7 @@ function iiif_generate_manifest(&$iiif)
                     }
                     
                 // Sequences
-                $iiif->response["sequences"] = array();
-                $iiif->response["sequences"][0]["@id"] = $iiif->rooturl . $iiif->request["id"] . "/sequence/normal";
-                $iiif->response["sequences"][0]["@type"] = "sc:Sequence";
-                $iiif->response["sequences"][0]["label"] = "Default order";
-                    
-                                        
-                $iiif->response["sequences"][0]["canvases"]  = iiif_get_canvases($iiif,false);
+                $iiif->response["items"]  = iiif_get_canvases($iiif,false);
                 $iiif->validrequest = true;	
                 /* MANIFEST REQUEST END */
                 }
@@ -805,9 +809,13 @@ function iiif_generate_sequence(&$iiif)
     if($iiif->request["typeid"]=="normal")
         {
         $iiif->response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-        $iiif->response["@id"] = $iiif->rooturl . $iiif->request["id"] . "/sequence/normal";
-        $iiif->response["@type"] = "sc:Sequence";
-        $iiif->response["label"] = "Default order";
+        $iiif->response["id"] = $iiif->rooturl . $iiif->request["id"] . "/sequence/normal";
+        $iiif->response["type"] = "sc:Sequence";
+        $arr_langdefault = i18n_get_all_translations("default");
+        foreach($arr_langdefault as $langcode=>$langdefault)
+            {
+            $iiif->response["label"][$langcode] = $langdefault;
+            }
         $iiif->response["canvases"] = iiif_get_canvases($iiif->request["id"]);
         $iiif->validrequest = true;
         }
@@ -847,8 +855,8 @@ function iiif_generate_annotation(&$iiif)
     if($iiif->validrequest)
         {
         $iiif->response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-        $iiif->response["@id"] = $iiif->rooturl . $iiif->request["id"] . "/annotation/" . $iiif->request["typeid"];
-        $iiif->response["@type"] = "oa:Annotation";
+        $iiif->response["id"] = $iiif->rooturl . $iiif->request["id"] . "/annotation/" . $iiif->request["typeid"];
+        $iiif->response["type"] = "oa:Annotation";
         $iiif->response["motivation"] = "sc:painting";
         $iiif->response["resource"] = iiif_get_image($iiif, $resourceid, $iiif->request["typeid"], $size_info);
         $iiif->response["on"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $iiif->request["typeid"];
@@ -1023,7 +1031,7 @@ function iiif_process_image_request(&$iiif)
             {
             // Image information request. Only fullsize available in this initial version
             $iiif->response["@context"] = "http://iiif.io/api/image/2/context.json";
-            $iiif->response["@id"] = $iiif->rootimageurl . $iiif->request["id"];
+            $iiif->response["id"] = $iiif->rootimageurl . $iiif->request["id"];
                             
             $iiif->response["height"] = $imageHeight;
             $iiif->response["width"]  = $imageWidth;

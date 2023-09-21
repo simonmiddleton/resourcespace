@@ -50,9 +50,13 @@ if ($iiif->request["api"] == "root")
 	{
 	# Root level request - send information file only
 	$iiif->response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-  	$iiif->response["@id"] = $iiif->rooturl;
-  	$iiif->response["@type"] = "sc:Manifest";
-  	$iiif->response["@label"] = "";
+  	$iiif->response["id"] = $iiif->rooturl;
+  	$iiif->response["type"] = "sc:Manifest";
+    $arr_langdefault = i18n_get_all_translations("iiif");
+    foreach($arr_langdefault as $langcode=>$langdefault)
+        {
+        $iiif->response["label"][$langcode] = [$langdefault];
+        }
 	$iiif->response["width"] = 6000;
 	$iiif->response["height"] = 4000;
     $iiif->response["tiles"] = array();
