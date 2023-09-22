@@ -846,7 +846,7 @@ function allowed_type_mime($allowedtype)
  */
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array()): bool
     {
-    global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $username, $useremail, $userfullname;
+    global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $baseurl, $userfullname;
     global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override;
 
     if(defined("RS_TEST_MODE"))
@@ -1035,6 +1035,11 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     else
         {
         $headers .= "Content-Type: text/html; charset=\"UTF-8\"" . $eol;
+        // Add CSS links so email can use the styles
+        $messageprefix = '<link href="' . $baseurl . '/css/global.css" rel="stylesheet" type="text/css" media="screen,projection,print" />';
+        $messageprefix .= '<link href="' . $baseurl . '/css/colour.css" rel="stylesheet" type="text/css" media="screen,projection,print" />';
+        $messageprefix .= '<link href="' . $baseurl . '/css/css_override.php" rel="stylesheet" type="text/css" media="screen,projection,print" />';
+        $message = $messageprefix . $message;
         }
     $headers .= "Content-Transfer-Encoding: quoted-printable" . $eol;
     log_mail($email,$subject,$reply_to);

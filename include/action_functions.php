@@ -11,7 +11,7 @@
  *         userrequest
  * @param  string $order_by
  * @param  string $sort
- * 
+ *
  * @return mixed Count or array of actions
  */
 function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC")
@@ -35,7 +35,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         $search_all_workflow_states = false;
         $default_display	= $list_display_fields;
 
-        if(is_int_loose($view_title_field)) 
+        if(is_int_loose($view_title_field))
             {
             $generated_title_field = "field".$view_title_field;
             }
@@ -47,14 +47,14 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         # Function get_editable_resource_sql() now returns a query object
         $editable_resource_query=get_editable_resource_sql();
 
-        $actionsql->sql .="SELECT creation_date as date,ref, created_by as user, " 
+        $actionsql->sql .="SELECT creation_date as date,ref, created_by as user, "
            .$generated_title_field." as description, 'resourcereview' as type FROM (" . $editable_resource_query->sql . ") resources" ;
         $actionsql->parameters=array_merge($actionsql->parameters, $editable_resource_query->parameters);
         }
     if(checkperm("R") && $actions_resource_requests && (!$filtered || 'resourcerequest'==$type))
         {
         # This get_requests call now returns a query object with two properties; sql string and parameters array
-        $request_query = get_requests(true,true,true);      
+        $request_query = get_requests(true,true,true);
         $actionsql->sql .= (($actionsql->sql != "")?" UNION ":"") . "SELECT created
         as date,ref, user, substring(comments,21) as description,'resourcerequest' as type FROM (" . $request_query->sql . ") requests";
         $actionsql->parameters=array_merge($actionsql->parameters, $request_query->parameters);
@@ -64,7 +64,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
         $availgroups=get_usergroups(true);
         $get_groups=implode(",",array_diff(array_column($availgroups,"ref"),explode(",",$actions_approve_hide_groups)));
 
-        $account_requests_query = get_users($get_groups,"","u.created",true,-1,0,true,"u.ref,u.created,u.fullname,u.email,u.username, u.comments"); 
+        $account_requests_query = get_users($get_groups,"","u.created",true,-1,0,true,"u.ref,u.created,u.fullname,u.email,u.username, u.comments");
 
         $actionsql->sql .= (($actionsql->sql != "")?" UNION ":"") . "SELECT created 
             as date,ref,ref as user,comments as description,'userrequest' as type FROM (" . $account_requests_query->sql . ") users";
@@ -194,7 +194,7 @@ function get_user_actions_recent(int $minutes, bool $allusers) : array
     $hookactions = hook("user_actions_recent","",[$minutes,$newactions]);
     if($hookactions != false)
         {
-        $newactions = $hookactions;     
+        $newactions = $hookactions;
         }
 
     $userrecent = [];
@@ -248,9 +248,15 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
                     }
                 else
                     {
-                    get_config_option($userref,"actions_notify_states", $notifystates,"");
-                    $arrnotifystates = explode(",",$notifystates);
-
+                    get_config_option($userref,"actions_notify_states", $notifystates);
+                    if(is_null($notifystates))
+                        {
+                        $arrnotifystates = get_default_notify_states();
+                        }
+                    else
+                        {
+                        $arrnotifystates = explode(",",$notifystates);
+                        }
                     get_config_option($userref,"actions_resource_types_hide", $ignoretypes,"");
                     $arrignoretypes = explode(",",$ignoretypes);
                     }
@@ -268,9 +274,9 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
                 break;
             case "resourcerequest":
                 if($actions_resource_requests)
-                    {                   
+                    {
                     foreach($typeactions as $typeaction)
-                        {                        
+                        {
                         if(resource_request_visible($typeaction))
                             {
                             $return["resourcerequest"][] = $typeaction;
@@ -278,7 +284,7 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
                         }
                     }
                 break;
-            case "userrequest":                
+            case "userrequest":
                 if(checkperm("u") && $actions_account_requests)
                     {
                     foreach($typeactions as $typeaction)
@@ -297,16 +303,14 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
                     if(isset($typeaction["access_callback"]))
                         {
                         if(call_user_func_array($typeaction["access_callback"]["function"],$typeaction["access_callback"]["parameters"]) == $typeaction["access_callback"]["required"])
-                            {                    
+                            {
                             $return["userrequest"][] = $typeaction;
                             }
                         }
                     }
-              
                 break;
             }
         }
-    
     if(isset($saved_user) && $saved_user !=0)
         {
         $saveduserdata = get_user($saved_user);

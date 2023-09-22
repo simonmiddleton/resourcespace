@@ -32,7 +32,6 @@ $action_notifications_check_minutes = floor(min($action_notifications_elapsed_se
 
 logScript(" - Finding actions created in the last $action_notifications_check_minutes minutes");
 $recentactions = get_user_actions_recent(ceil($action_notifications_check_minutes)+1,true);
-
 foreach($recentactions as $notifyuser=>$user_actions)
     {
     if(!in_array($notifyuser,$action_notify_users))
@@ -57,32 +56,25 @@ foreach($recentactions as $notifyuser=>$user_actions)
 
     $usernotification = new ResourceSpaceUserNotification();
     $usernotification->set_subject($applicationname . ": " );
-    $usernotification->append_subject("lang_actions_email_new_actions_title");
-    $usernotification->set_text("<link href='" . $baseurl . "/css/global.css' rel='stylesheet' type='text/css'
-    media='screen,projection,print' />\n");
-    $usernotification->append_text("<link href='" . $baseurl . "/css/colour.css' rel='stylesheet' type='text/css'
-    media='screen,projection,print' />\n");
-    $usernotification->append_text("<link href='" . $baseurl . "/css/css_override.php' rel='stylesheet' type='text/css'
-    media='screen,projection,print' />\n");
+    $usernotification->append_subject('lang_actions_email_new_actions_title');
 
-    $usernotification->append_text("<div id='CentralSpaceContainer'><div id='CentralSpace'><div class='BasicsBox'>");
-    $usernotification->append_text("lang_actions_email_new_actions_intro");
-    $usernotification->append_text("<br /><br />");
-    $usernotification->append_text("<div class='Listview'><table class='ListviewStyle'>");
-    $usernotification->append_text("<tr class='ListviewTitleStyle'><td>");
-    $usernotification->append_text("lang_date");
-    $usernotification->append_text("</td><td>");
-    $usernotification->append_text("lang_property-reference");
-    $usernotification->append_text("</td><td>");
-    $usernotification->append_text("lang_user");
-    $usernotification->append_text("</td><td>");
-    $usernotification->append_text("lang_description");
-    $usernotification->append_text("</td><td>");
-    $usernotification->append_text("lang_type");
-    $usernotification->append_text("</td><td>");
-    $usernotification->append_text("lang_tools");
-    $usernotification->append_text("</td></tr>");
-        
+    $usernotification->set_text('<div id="CentralSpaceContainer"><div id="CentralSpace"><div class="BasicsBox">');
+    $usernotification->append_text('lang_actions_email_new_actions_intro');
+    $usernotification->append_text('<br /><br />');
+    $usernotification->append_text('<div class="Listview"><table class="ListviewStyle" style="min-width: 70%">');
+    $usernotification->append_text('<tr class="ListviewTitleStyle"><td>');
+    $usernotification->append_text('lang_date');
+    $usernotification->append_text('</td><td>');
+    $usernotification->append_text('lang_property-reference');
+    $usernotification->append_text('</td><td>');
+    $usernotification->append_text('lang_user');
+    $usernotification->append_text('</td><td>');
+    $usernotification->append_text('lang_description');
+    $usernotification->append_text('</td><td>');
+    $usernotification->append_text('lang_type');
+    $usernotification->append_text('</td><td>');
+    $usernotification->append_text('lang_tools');
+    $usernotification->append_text('</td></tr>');
     foreach($user_actions as $actiontype=>$type_actions)
         {
         foreach($type_actions as $user_action)
@@ -119,45 +111,43 @@ foreach($recentactions as $notifyuser=>$user_actions)
             $editlink=($actioneditlink=='')?'':generateURL($actioneditlink,$linkparams);
             $viewlink=($actionviewlink=='')?'':generateURL($actionviewlink,$linkparams);
 
-            $usernotification->append_text("<tr><td>" . nicedate($user_action["date"], true, true, true) . "</td>");
-            $usernotification->append_text("<td><a href=\"" . $editlink . "\" >" . $user_action["ref"] . "</a></td>");
+            $usernotification->append_text('<tr><td>' . nicedate($user_action["date"], true, true, true) . '</td>');
+            $usernotification->append_text('<td><a href="' . $editlink . '" >' . $user_action["ref"] . '</a></td>');
 
 
             $actionfromuser = get_user($user_action["user"]);
-            $usernotification->append_text("<td>" . (isset($actionfromuser["fullname"]) ? $actionfromuser["fullname"] : $actionfromuser["username"]) . "</td>");
-
-
-            $usernotification->append_text("<td>" . htmlspecialchars(tidy_trim($user_action["description"],200)) . "</td>");
-            $usernotification->append_text("<td>");
-            $langtype = "actions_type_" . $user_action["type"];
-            $usernotification->append_text("lang_" . $langtype);
-            $usernotification->append_text("</td>");
-            $usernotification->append_text("<td><div class='ListTools'>");
+            $usernotification->append_text('<td>' . (isset($actionfromuser["fullname"]) ? $actionfromuser["fullname"] : $actionfromuser["username"]) . '</td>');
+            $usernotification->append_text('<td>' . htmlspecialchars(tidy_trim($user_action["description"],200)) . '</td>');
+            $usernotification->append_text('<td>');
+            $langtype = 'actions_type_' . $user_action['type'];
+            $usernotification->append_text('lang_' . $langtype);
+            $usernotification->append_text('</td>');
+            $usernotification->append_text('<td><div class="ListTools">');
 
             if($editlink!="")
                 {
-                $usernotification->append_text("<a href='" . $editlink . "'>");
-                $usernotification->append_text("lang_action-edit");
-                $usernotification->append_text("</a>");
+                $usernotification->append_text('<a href="' . $editlink . '">');
+                $usernotification->append_text('lang_action-edit');
+                $usernotification->append_text('</a>&nbsp;&nbsp;');
                 }
             if($viewlink!="")
                 {
-                $usernotification->append_text("<a href='" . $viewlink . "'>");
-                $usernotification->append_text("lang_view");
-                $usernotification->append_text("</a>");
+                $usernotification->append_text('<a href="' . $viewlink . '">');
+                $usernotification->append_text('lang_view');
+                $usernotification->append_text('</a>');
                 }
-            $usernotification->append_text("</div></td></tr>");
+            $usernotification->append_text('</div></td></tr>');
             }
         }
-    $usernotification->append_text("</table>\n</div><!-- End of Listview -->\n");    
+    $usernotification->append_text('</table></div><!-- End of Listview -->');    
     $userprefurl = $baseurl . "/pages/user/user_preferences.php#UserPreferenceEmailSection";
-    $usernotification->append_text("<br /><br />");
-    $usernotification->append_text("lang_actions_introtext");
-    $usernotification->append_text("<br /><a href='" . $userprefurl  . "'>" . $userprefurl . "</a>");
-    $usernotification->append_text("</div><!-- End of Listview -->\n");
-    $usernotification->append_text("</div><!-- End of BasicsBox -->\n");
-    $usernotification->append_text("</div><!-- End of CentralSpace -->\n");
-    $usernotification->append_text("</div><!-- End of CentralSpaceContainer -->\n");            
+    $usernotification->append_text('<br /><br />');
+    $usernotification->append_text('lang_actions_introtext');
+    $usernotification->append_text('<br /><a href="' . $userprefurl  . '">' . $userprefurl . '</a>');
+    $usernotification->append_text('</div><!-- End of Listview -->');
+    $usernotification->append_text('</div><!-- End of BasicsBox -->');
+    $usernotification->append_text('</div><!-- End of CentralSpace -->');
+    $usernotification->append_text('</div><!-- End of CentralSpaceContainer -->');
     if(count($user_actions) > 0)
         {
         // Send the email

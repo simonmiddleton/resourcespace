@@ -275,17 +275,7 @@ function setup_user(array $userdata)
     get_config_option($userref,'actions_resource_review', $legacy_resource_review, true); // Deprecated option
     if(trim($user_actions_notify_states) == '' && $legacy_resource_review)
         {
-        $default_notify_states = [];
-        // Add action for users who can submit 'pending submission' resources for review
-        if(checkperm("e-2") && checkperm("e-1") && checkperm('d'))
-            {
-            $default_notify_states[] = -2;
-            }
-        if(checkperm("e-1") && checkperm("e0"))
-            {
-            // Add action for users who can make pending resources active
-            $default_notify_states[] = -1;
-            }
+        $default_notify_states = get_default_notify_states();
         $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
         }
     elseif ($legacy_resource_review)
@@ -3401,4 +3391,26 @@ function get_users_by_preference(string $preference, string $value) : array
     $params = ["s",$preference,"s", $value];
 
     return ps_array($sql,$params);    
+    }
+
+/**
+ * Get the default notification workflow states for the current user. Used by setup_user() and get_user_actions() if no user preference has been set
+ *
+ * @return array    Array if workflow sate refs
+ * 
+ */
+function get_default_notify_states(): array
+    {
+    $default_notify_states = [];
+    // Add action for users who can submit 'pending submission' resources for review
+    if(checkperm("e-2") && checkperm("e-1") && checkperm('d'))
+        {
+        $default_notify_states[] = -2;
+        }
+    if(checkperm("e-1") && checkperm("e0"))
+        {
+        // Add action for users who can make pending resources active
+        $default_notify_states[] = -1;
+        }
+    return $default_notify_states;
     }
