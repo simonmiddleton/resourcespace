@@ -40,7 +40,7 @@ $page_def[] = config_add_boolean_select("google_vision_translation_keep_english"
 
 
 // Do the page generation ritual
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
+config_gen_setup_html($page_def, $plugin_name, null, $page_heading, $page_intro);
 include '../../../include/footer.php';

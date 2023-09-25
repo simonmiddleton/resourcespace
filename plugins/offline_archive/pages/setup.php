@@ -23,7 +23,7 @@ $page_def[] = config_add_text_input('offline_archive_archivepath', $lang['offlin
 $page_def[] = config_add_text_input('offline_archive_restorepath', $lang['offline_archive_restorepath']);
 $page_def[] = config_add_boolean_select('offline_archive_preservedate', $lang['offline_archive_preservedate']);
 // Do the page generation ritual -- don't change this section.
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_page_heading);
+config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
 include '../../../include/footer.php';

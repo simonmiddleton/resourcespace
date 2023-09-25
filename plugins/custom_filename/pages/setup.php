@@ -19,12 +19,12 @@ $page_def[] = config_add_single_ftype_select('cf_field', $lang['custom_filename_
 
 
 
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 if(isset($error))
     {
     $error = htmlspecialchars($error);
     echo "<div class=\"PageInformal\">{$error}</div>";
     }
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $lang['custom_filename_configuration']);
+config_gen_setup_html($page_def, $plugin_name, null, $lang['custom_filename_configuration']);
 include '../../../include/footer.php';

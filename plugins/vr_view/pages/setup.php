@@ -31,8 +31,8 @@ $page_def[] = config_add_single_ftype_select('vr_view_yaw_only_field', $lang['vr
 $page_def[] = config_add_text_input('vr_view_yaw_only_value', $lang['vr_view_yaw_only_value']);
 
 // Do the page generation ritual -- don't change this section.
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_page_heading);
+config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
 include '../../../include/footer.php';
 

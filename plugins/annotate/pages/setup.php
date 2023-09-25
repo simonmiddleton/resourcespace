@@ -30,7 +30,7 @@ $page_def[] = config_add_multi_group_select('annotate_admin_edit_access', $lang[
 $page_def[] = config_add_single_ftype_select("annotate_resource_type_field", $lang["admin_resource_type_field"],300,false,[FIELD_TYPE_DYNAMIC_KEYWORDS_LIST]); 
 
 // Do the page generation ritual -- don't change this section.
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 if(empty($annotate_resource_type_field) || $annotate_resource_type_field == 0)
     {
@@ -39,5 +39,5 @@ if(empty($annotate_resource_type_field) || $annotate_resource_type_field == 0)
     <script>jQuery(document).ready(function(){jQuery('#annotate_resource_type_field').addClass('highlighted');});</script>
     <?php
     }
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_page_heading);
+config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
 include '../../../include/footer.php';

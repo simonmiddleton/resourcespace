@@ -178,13 +178,13 @@ if(!isset($php_path) || '' == $php_path)
     $error = '$php_path config option MUST be set in order for testing scripts functionality to work!';
     }
 
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 if(isset($error))
     {
     echo "<div class=\"PageInformal\">{$error}</div>";
     }
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $lang['emu_configuration']);
+config_gen_setup_html($page_def, $plugin_name, null, $lang['emu_configuration']);
 ?>
 <script>
 function addEmuRsMappingRow()

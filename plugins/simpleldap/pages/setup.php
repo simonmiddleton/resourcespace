@@ -7,7 +7,6 @@ $plugin_name="simpleldap";
 if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
 	
-$upload_status="";
 
 if (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag","")!="" && enforcePostRequest(false))
 	{

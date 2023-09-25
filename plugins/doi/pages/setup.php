@@ -114,9 +114,9 @@ HTML;
 	$page_def[] = config_add_text_input('doi_password', $lang['doi_setup_password'], TRUE);
 
 	// Do the page generation ritual -- don't change this section.
-	$upload_status = config_gen_setup_post($page_def, $plugin_name);
+	config_gen_setup_post($page_def, $plugin_name);
 	include '../../../include/header.php';
-	config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
+	config_gen_setup_html($page_def, $plugin_name, null, $page_heading, $page_intro);
 
 	# "onclick" of test button
 	$doi_state = getval('doi_state', '');
