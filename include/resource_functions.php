@@ -4349,12 +4349,14 @@ function get_themes_by_resource($ref)
 
 function update_resource_type($ref,$type)
     {
+    global $lang;
+    
     if (checkperm("XU" . $type))
         {
         return false;
         }
 
-
+    $old_rt = ps_value("SELECT resource_type `value` FROM resource WHERE ref = ?",["i",$ref], '');
     ps_query("UPDATE resource SET resource_type = ? WHERE ref = ?",["i",$type,"i",$ref]);
 
     # Clear data that is no longer needed (data/keywords set for other types).
@@ -4370,6 +4372,12 @@ function update_resource_type($ref,$type)
                                 )"
                 ,["i",$ref,"i",$type]);
 
+    if($type != $old_rt)
+        {
+        $rts = get_resource_types("$type,$old_rt");
+        $rts = array_column($rts, 'name', 'ref');
+        resource_log($ref, '', null, $lang["log-rtchange"], $rts[$old_rt], $rts[$type]);
+        }
     return true;
     }
 
