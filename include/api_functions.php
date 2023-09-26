@@ -191,7 +191,7 @@ function execute_api_call($query,$pretty=false)
 */
 function iiif_get_canvases($iiif, $sequencekeys=false)
     {			
-    $canvases = array();
+    $canvases = [];
     foreach ($iiif->searchresults as $iiif_result)
         {
 		$size = (strtolower($iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
@@ -207,28 +207,6 @@ function iiif_get_canvases($iiif, $sequencekeys=false)
         $canvases[$position]["id"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
         $canvases[$position]["type"] = "Canvas";
         $canvases[$position]["label"] = (isset($position_prefix)?$position_prefix:'') . $position;
-        
-        // Get the size of the images
-        $image_size = get_original_imagesize($iiif_result["ref"],$img_path);
-        $canvases[$position]["height"] = intval($image_size[2]);
-        $canvases[$position]["width"] = intval($image_size[1]);
-				
-		// "If the largest image�s dimensions are less than 1200 pixels on either edge, then the canvas�s dimensions should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
-		if($image_size[1] < 1200 || $image_size[2] < 1200)
-			{
-			$image_size[1] = $image_size[1] * 2;
-			$image_size[2] = $image_size[2] * 2;
-			}
-        
-        $canvases[$position]["thumbnail"] = iiif_get_thumbnail($iiif, $iiif_result["ref"]);
-        
-        // Add image (only 1 per canvas currently supported)
-		$canvases[$position]["images"] = array();
-        $size_info = array(
-            'identifier' => $size,
-            'return_height_width' => false,
-        );
-        $canvases[$position]["images"][] = iiif_get_image($iiif, $iiif_result["ref"], $position, $size_info);
         }
     
 	if($sequencekeys)
@@ -331,24 +309,21 @@ function iiif_get_image($iiif,$resourceid,$position, array $size_info)
     $image_size = get_original_imagesize($resourceid, $img_path);
 			
 	$images = array();
-	$images["@context"] = "http://iiif.io/api/presentation/2/context.json";
 	$images["id"] = $iiif->rooturl . $iiif->request["id"] . "/annotation/" . $position;
-	$images["type"] = "oa:Annotation";
-	$images["motivation"] = "sc:painting";
+	$images["type"] = "Annotation";
+	$images["motivation"] = "painting";
 	
-	$images["resource"] = array();
-	$images["resource"]["id"] = $iiif->rootimageurl . $resourceid . "/full/max/0/default.jpg";
-	$images["resource"]["type"] = "dctypes:Image";
-	$images["resource"]["format"] = "image/jpeg";
+	$images["body"] = array();
+	$images["body"]["id"] = $iiif->rootimageurl . $resourceid . "/full/max/0/default.jpg";
+	$images["body"]["type"] = "Image";
+	$images["body"]["format"] = "image/jpeg";
+	$images["body"]["service"] =array();
+	$images["body"]["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
+	$images["body"]["service"]["id"] = $iiif->rootimageurl . $resourceid;
+	$images["body"]["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
 
-    $images["resource"]["height"] = intval($image_size[2]);
-    $images["resource"]["width"] = intval($image_size[1]);
-
-	$images["resource"]["service"] =array();
-	$images["resource"]["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
-	$images["resource"]["service"]["id"] = $iiif->rootimageurl . $resourceid;
-	$images["resource"]["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
-	$images["on"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
+    $images["body"]["height"] = intval($image_size[2]);
+    $images["body"]["width"] = intval($image_size[1]);
 
     if($return_height_width)
         {
@@ -623,7 +598,6 @@ function iiif_generate_manifest(&$iiif)
     $iiif_field = get_resource_type_field($iiif->identifier_field);
     $iiif_search = $iiif_field["name"] . ":" . $iiif->request["id"];
     $iiif->searchresults = do_search($iiif_search);
-    
     if(is_array($iiif->searchresults) && count($iiif->searchresults)>0)
         {
         if($iiif->request["type"] == "")
@@ -705,7 +679,6 @@ function iiif_generate_manifest(&$iiif)
                     debug("final iiif position $result_key given for resource ref " . $iiif->searchresults[$result_key]["ref"]);
                     }
                 }
-
             if($iiif->request["type"] == "manifest" || $iiif->request["type"] == "")
                 {
                 /* MANIFEST REQUEST - see http://iiif.io/api/presentation/3.0/#manifest */
@@ -756,7 +729,7 @@ function iiif_generate_manifest(&$iiif)
                 iiif_generate_metadata($iiif);
                 if($iiif->license_field != 0)
                     {
-                    $iiif->response["license"] = get_data_by_field($iiif->searchresults[0]["ref"], $iiif->license_field);
+                    $iiif->response["rights"] = get_data_by_field($iiif->searchresults[0]["ref"], $iiif->license_field);
                     }
 
                 // Thumbnail property
@@ -777,7 +750,7 @@ function iiif_generate_manifest(&$iiif)
                     }
                     
                 // Sequences
-                $iiif->response["items"]  = iiif_get_canvases($iiif,false);
+                $iiif->response["items"]  = iiif_get_canvases($iiif,false,true);
                 $iiif->validrequest = true;	
                 /* MANIFEST REQUEST END */
                 }
@@ -816,7 +789,7 @@ function iiif_generate_sequence(&$iiif)
             {
             $iiif->response["label"][$langcode] = $langdefault;
             }
-        $iiif->response["canvases"] = iiif_get_canvases($iiif->request["id"]);
+        $iiif->response["canvases"] = iiif_get_canvases($iiif);
         $iiif->validrequest = true;
         }
     return;
@@ -826,10 +799,56 @@ function iiif_generate_canvas(&$iiif)
     {
     // This is essentially a resource
     // {scheme}://{host}/{prefix}/{identifier}/canvas/{name}
+    $canvas = [];
     $canvasid = $iiif->request["typeid"];
-    $allcanvases = iiif_get_canvases($iiif->request["id"],true);
-    $iiif->response["@context"] =  "http://iiif.io/api/presentation/2/context.json";
-    $iiif->response = array_merge($iiif->response,$allcanvases[$canvasid]);
+    $canvasidx = array_search($canvasid,array_column($iiif->searchresults,"position"));
+    //$allcanvases = iiif_get_canvases($iiif,true);
+    $resource = $iiif->searchresults[$canvasidx];
+
+    $size = (strtolower($resource["file_extension"]) != "jpg") ? "hpr" : "";
+    $img_path = get_resource_path($resource["ref"],true,$size,false);
+        
+    if(!file_exists($img_path))
+        {
+        $iiif->errors[] = "Invalid canvas requested";
+        iiif_error(404,$iiif->errors);
+        }
+    $position_prefix = "";
+    $position_field=get_resource_type_field($iiif->sequence_field);
+    if($position_field !== false)
+        {
+        $position_prefix = $position_field["name"] . " ";
+        }
+    $position = $resource["iiif_position"];
+    $canvas["id"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
+    $canvas["type"] = "Canvas";
+    $canvas["label"]["none"] = [$position_prefix . $position];
+        
+  
+    // Get the size of the images
+    $image_size = get_original_imagesize($resource["ref"],$img_path);
+    $canvas["height"] = intval($image_size[2]);
+    $canvas["width"] = intval($image_size[1]);
+            
+    // "If the largest image�s dimensions are less than 1200 pixels on either edge, then the canvas�s dimensions should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
+    if($image_size[1] < 1200 || $image_size[2] < 1200)
+        {
+        $image_size[1] = $image_size[1] * 2;
+        $image_size[2] = $image_size[2] * 2;
+        }
+    
+    //$canvases[$position]["thumbnail"] = iiif_get_thumbnail($iiif, $resource["ref"]);
+    
+    // Add image (only 1 per canvas currently supported)
+    $canvas["items"] = [];
+    $size_info = array(
+        'identifier' => $size,
+        'return_height_width' => false,
+    );
+    $canvas["items"][] = iiif_get_annotationpage($iiif, $resource["ref"], $position, $size_info);
+    
+
+    $iiif->response = array_merge($iiif->response,$canvas);
     $iiif->validrequest = true;
     }
 
@@ -1330,4 +1349,14 @@ function iiif_render_image(&$iiif)
         }
 
     fclose($file_handle);
+    }
+
+function iiif_get_annotationpage($iiif, $resource, $position, $size_info)
+    {
+    $annotationpages=[];
+	$annotationpages["id"] = $iiif->rooturl . $iiif->request["id"] . "/annotation/" . $position;
+	$annotationpages["type"] = "AnnotationPage";
+	//$annotationpages["on"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
+	$annotationpages["items"][] = iiif_get_image($iiif, $resource, $position, $size_info);
+    return $annotationpages;
     }
