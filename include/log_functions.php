@@ -114,7 +114,7 @@ function logScript($message, $file = null)
 * 
 * @return array
 */   
-function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, $field = 0, $log_code = '')
+function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $fields = [], $log_code = '')
     {
     if(!checkperm('v'))
         {
@@ -134,10 +134,11 @@ function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, $field 
         $parameters[]="i"; $parameters[]=(int)$days;
         }
 
-    if($field > 0)
+    $fields = array_filter($fields, fn($val) => is_int_loose($val) && $val > 0);
+    if($fields !== [])
         {
-        $sql .= " AND resource_type_field = ?";
-        $parameters[]="i"; $parameters[]=(int)$field;
+        $sql .= sprintf(' AND resource_type_field IN (%s)', ps_param_insert(count($fields)));
+        $parameters = array_merge($parameters, ps_param_fill($fields, 'i'));
         }
         
     if($log_code != "")
