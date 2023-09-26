@@ -6097,6 +6097,12 @@ function update_disk_usage_cron()
         echo " - Skipping update_disk_usage_cron  - last run: " . $lastrun . "<br/>\n";
         return false;
         }
+    if (is_process_lock("disk_usage_cron"))
+        {
+        echo " - disk_usage_cron process lock is in place. Skipping.\n";
+        return;
+        }
+    set_process_lock("disk_usage_cron");
 
     $resources=ps_array(
         "SELECT ref value
@@ -6114,6 +6120,7 @@ function update_disk_usage_cron()
 
     clear_query_cache("stats");
     set_sysvar("last_update_disk_usage_cron",date("Y-m-d H:i:s"));
+    clear_process_lock("disk_usage_cron");
     }
 
 /**
