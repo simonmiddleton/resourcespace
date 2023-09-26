@@ -40,7 +40,7 @@ $use_cases = [
             {
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['notes' => 'UC#1']);
             },
-        'input' => ['minref' => ++$last_log_ref, 'days' => 7, 'maxrecords' => 0, 'fields' => [0], 'log_code' => ''],
+        'input' => ['minref' => ++$last_log_ref, 'days' => 7, 'maxrecords' => 0, 'fields' => [0], 'log_codes' => []],
     ],
     [
         'name' => 'Get logs in the last 3 days',
@@ -56,7 +56,7 @@ $use_cases = [
                 'notes' => 'UC#2: 2d'
             ]);
             },
-        'input' => ['minref' => 0, 'days' => 3, 'maxrecords' => 0, 'fields' => [0], 'log_code' => ''],
+        'input' => ['minref' => 0, 'days' => 3, 'maxrecords' => 0, 'fields' => [0], 'log_codes' => []],
     ],
     [
         'name' => 'Return only a certain number of records back',
@@ -66,7 +66,7 @@ $use_cases = [
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['notes' => 'UC#3']);
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['notes' => 'UC#3']);
             },
-        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 3, 'fields' => [0], 'log_code' => ''],
+        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 3, 'fields' => [0], 'log_codes' => []],
     ],
     [
         'name' => 'Filter by metadata field',
@@ -74,7 +74,7 @@ $use_cases = [
             {
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['rtf' => $rtf_text, 'notes' => 'UC#4']);
             },
-        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [$rtf_text], 'log_code' => ''],
+        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [$rtf_text], 'log_codes' => []],
     ],
     [
         'name' => 'Filter by log code',
@@ -83,7 +83,7 @@ $use_cases = [
             $test413_resource_log(['type' => LOG_CODE_COPIED, 'notes' => 'UC#5']);
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['type' => LOG_CODE_DELETED, 'notes' => 'UC#5']);
             },
-        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [0], 'log_code' => LOG_CODE_DELETED],
+        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [0], 'log_codes' => [LOG_CODE_DELETED]],
     ],
     [
         'name' => 'Enforce access control',
@@ -95,13 +95,23 @@ $use_cases = [
         'input' => [],
     ],
     [
-        'name' => 'Filter by multiple metadata field',
+        'name' => 'Filter by multiple metadata fields',
         'setup' => function() use ($rtf_chk, $rtf_drop, $test413_resource_log)
             {
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['rtf' => $rtf_chk, 'notes' => 'UC#7-checkbox']);
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['rtf' => $rtf_drop, 'notes' => 'UC#7-dropdown']);
             },
-        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [$rtf_drop, $rtf_chk], 'log_code' => ''],
+        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [$rtf_drop, $rtf_chk], 'log_codes' => []],
+    ],
+    [
+        'name' => 'Filter by multiple log codes',
+        'setup' => function() use ($test413_resource_log)
+            {
+            $test413_resource_log(['type' => LOG_CODE_COPIED, 'notes' => 'UC#8']);
+            $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['type' => LOG_CODE_LOCKED, 'notes' => 'UC#8']);
+            $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['type' => LOG_CODE_EMAILED, 'notes' => 'UC#8']);
+            },
+        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [0], 'log_codes' => [LOG_CODE_LOCKED, LOG_CODE_EMAILED]],
     ],
 ];
 foreach($use_cases as $i => $use_case)

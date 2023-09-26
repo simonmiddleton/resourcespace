@@ -109,12 +109,12 @@ function logScript($message, $file = null)
 * @param integer   $minref      (Optional) Minimum ref of resource log entry to return (default 0)
 * @param integer   $days       (Optional) Number of days to return. e.g 3 = all results for today, yesterday and the day before. Default = 7 (ignored if minref supplied)
 * @param integer   $maxrecords  (Optional) Maximum number of records to return. Default = all rows (0)
-* @param integer   $field       (Optional) Limit results to a particular metadata field
-* @param string    $log_code    (Optional) Limit results to a particular log code
+* @param array     $fields      (Optional) Limit results to particular metadata field(s)
+* @param array     $log_codes    (Optional) Limit results to particular log code(s)
 * 
 * @return array
 */   
-function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $fields = [], $log_code = '')
+function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $fields = [], array $log_codes = [])
     {
     if(!checkperm('v'))
         {
@@ -134,17 +134,18 @@ function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $
         $parameters[]="i"; $parameters[]=(int)$days;
         }
 
-    $fields = array_filter($fields, fn($val) => is_int_loose($val) && $val > 0);
+    $fields = array_filter($fields, 'is_positive_int_loose');
     if($fields !== [])
         {
         $sql .= sprintf(' AND resource_type_field IN (%s)', ps_param_insert(count($fields)));
         $parameters = array_merge($parameters, ps_param_fill($fields, 'i'));
         }
-        
-    if($log_code != "")
+
+    $log_codes = array_filter($log_codes, 'LOG_CODE_validate');
+    if($log_codes !== [])
         {
-        $sql .= " AND type = ?";
-        $parameters[]="s"; $parameters[]=$log_code;
+        $sql .= sprintf(' AND `type` IN (%s)', ps_param_insert(count($log_codes)));
+        $parameters = array_merge($parameters, ps_param_fill($log_codes, 's'));
         }
 
     if($maxrecords > 0)
