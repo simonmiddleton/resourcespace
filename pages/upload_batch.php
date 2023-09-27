@@ -1333,7 +1333,10 @@ jQuery(document).ready(function () {
 if (is_numeric($collection_add) && count(get_collection_external_access($collection_add))>0)
     {
     # Show warning.
-    ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php
+    ?>styledalert(
+        "<?php echo escape_quoted_data($lang["status-warning"]) ?>",
+        "<?php echo escape_quoted_data($lang["sharedcollectionaddwarningupload"])?>"
+        );<?php
     }
 ?>
 

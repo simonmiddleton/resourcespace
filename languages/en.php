@@ -1002,7 +1002,7 @@ $lang["confirmdeleteaccessmultimix"]="Are you sure you wish to delete these acce
 $lang["editingexternalshare"]="Editing external share";
 $lang["noexternalsharing"]="No external URLs generated yet.";
 $lang["sharedcollectionaddwarning"]="Warning: This collection has been shared with external users. The resource you have added has now been made available to these users. Click 'share' to manage the external access for this collection.";
-$lang["sharedcollectionaddwarningupload"]="Warning: The selected collection has been shared with external users. The resources you upload will be made available to these users. Click 'share' in the bottom bar to manage the external access for this collection.";
+$lang["sharedcollectionaddwarningupload"]="The selected collection has been shared with external users. The resources you upload will be made available to these users. Click 'share' in the bottom bar to manage the external access for this collection.";
 $lang["confirmdeleteusercustomaccessresource"]='Are you sure you wish to delete custom access for this user?';
 
 $lang["sharedcollectionaddblocked"]="You are not permitted to add resources to a collection that has been shared with external users.";
