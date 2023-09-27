@@ -5470,7 +5470,7 @@ function render_array_in_table_cells($array)
 */
 function render_top_page_error_style(string $err_msg)
     {
-    if(trim($err_msg) == "")
+    if(trim($err_msg) === '')
         {
         return;
         }
