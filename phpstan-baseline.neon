@@ -71,11 +71,6 @@ parameters:
 			path: include/general_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$original_extension$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
 			message: "#^Undefined variable\\: \\$processfile$#"
 			count: 1
 			path: include/image_processing.php
