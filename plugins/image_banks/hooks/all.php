@@ -1,9 +1,42 @@
 <?php
+
+use function ImageBanks\getProviders;
+
+function HookImage_banksAllExtra_warn_checks()
+    {
+    $errors = [];
+    $providers = getProviders($GLOBALS['image_banks_loaded_providers']);
+    foreach($providers as $provider)
+        {
+        $provider_name = $provider->getName();
+
+        $dependency_check = $provider->checkDependencies();
+        if ($dependency_check !== true)
+            {
+            $errors[$provider_name] = str_replace(
+                '%PROVIDER',
+                $provider_name,
+                "{$GLOBALS['lang']['image_banks_provider_unmet_dependencies']} - {$dependency_check}"
+            );
+            }
+        }
+
+    if ($errors !== [])
+        {
+        return [[
+            'name' => 'image_banks',
+            'info' => implode(PHP_EOL, $errors),
+        ]];
+        }
+
+    return false;
+    }
+
 function HookImage_banksAllSearchfiltertop()
     {
     global $lang, $image_banks_loaded_providers, $clear_function;
 
-    $providers = \ImageBanks\getProviders($image_banks_loaded_providers);
+    $providers = getProviders($image_banks_loaded_providers);
 
     foreach($providers as $provider_id => $provider)
         {
@@ -89,7 +122,7 @@ function HookImage_banksAllAdd_folders_to_delete_from_temp(array $folders_scan_l
     {
     global $image_banks_loaded_providers;
 
-    $providers = \ImageBanks\getProviders($image_banks_loaded_providers);
+    $providers = getProviders($image_banks_loaded_providers);
 
     if(count($providers) == 0)
         {
@@ -119,7 +152,6 @@ function HookImage_banksAllClearsearchcookies()
     }
 
 function HookImage_banksAllSimplesearchfieldsarehidden()
-{
-$hib_simpleSearchFieldsAreHidden = ( getval("image_bank_provider_id",0, true) > 0 );
-return $hib_simpleSearchFieldsAreHidden;
-}  
+    {
+    return getval('image_bank_provider_id', 0, true) > 0;
+    }  
