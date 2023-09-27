@@ -853,7 +853,14 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 			<?php
 			# Add to clear function
 			$clear_function .= "
-                jQuery('#search_tree_{$field['ref']}').jstree(true).deselect_all();
+                jQuery('#search_tree_{$field['ref']}').jstree({
+                    'core' : {
+                        'themes' : {
+                            'name' : 'default-dark',
+                            'icons': false
+                        }
+                    }
+                }).deselect_all();
 
                 /* remove the hidden inputs */
                 var elements = document.getElementsByName('nodes_searched[{$field['ref']}][]');

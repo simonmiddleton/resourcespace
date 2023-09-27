@@ -167,7 +167,7 @@ if($simple_search_pills_view)
 <script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.tooltip.min.js"></script>
 
 <!-- jsTree -->
-<link rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jstree/themes/default/style.min.css">
+<link rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jstree/themes/default-dark/style.min.css">
 <script src="<?php echo $baseurl_short; ?>lib/jstree/jstree.min.js"></script>
 <script src="<?php echo $baseurl_short; ?>lib/js/category_tree.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
