@@ -5,6 +5,10 @@ $lang["image_banks_search_image_banks_info_text"] = "Please specify which Image 
 $lang["image_banks_pixabay_api_key"] = "API key";
 $lang["image_banks_image_bank"] = "Image Bank";
 $lang["image_banks_create_new_resource"] = "Create new resource";
+$lang["image_banks_shutterstock_token"]="Shutterstock token (<a href='https://www.shutterstock.com/account/developers/apps' target='_blank'>generate</a>)";
+$lang["image_banks_shutterstock_result_limit"]="Result limit (max. 1000 for free accounts)";
+$lang["image_banks_shutterstock_id"]="Shutterstock image ID";
+$lang["image_banks_label_resourcespace_instances_cfg"] = "Instances access (format: name|baseURL|username|key|config)";
 
 // Errors
 $lang["image_banks_provider_unmet_dependencies"] = "Provider '%PROVIDER' has unmet dependencies!";
@@ -23,9 +27,5 @@ $lang["image_banks_error_detail_curl"] = "php-curl package is not installed";
 // Logs
 $lang["image_banks_local_download_attempt"] = "User tried to download '%FILE' using the ImageBank plugin by pointing to a system which is not part of allowed providers";
 $lang["image_banks_bad_file_create_attempt"] = "User tried to create a resource with '%FILE' file using the ImageBank plugin by pointing to a system which is not part of allowed providers";
-
-$lang["image_banks_shutterstock_token"]="Shutterstock token (<a href='https://www.shutterstock.com/account/developers/apps' target='_blank'>generate</a>)";
-$lang["image_banks_shutterstock_result_limit"]="Result limit (max. 1000 for free accounts)";
-$lang["image_banks_shutterstock_id"]="Shutterstock image ID";
 
 $lang["image_banks_createdfromimagebanks"] = "Created from Image Banks plugin";

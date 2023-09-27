@@ -14,6 +14,7 @@ if(!in_array($plugin_name, $plugins))
     }
 
 $page_def = array();
+$error = '';
 
 $providers = \ImageBanks\getProviders($image_banks_loaded_providers);
 foreach($providers as $provider)
@@ -32,11 +33,6 @@ foreach($providers as $provider)
 // Render setup page ritual
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-if(isset($error))
-    {
-    ?>
-    <div class="PageInformal"><?php echo htmlspecialchars($error); ?></div>
-    <?php
-    }
+render_top_page_error_style($error);
 config_gen_setup_html($page_def, $plugin_name, null, $lang['image_banks_configuration']);
 include '../../../include/footer.php';
