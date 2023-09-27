@@ -34,6 +34,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing, $valid_upload_paths;
 
+    $original_extension="";
+    
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
 
