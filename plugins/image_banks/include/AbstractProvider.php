@@ -21,7 +21,7 @@ abstract class Provider
     * 
     * @return void  
     */
-    public final function registerConfigurationNeeds(array $globals)
+    final public function registerConfigurationNeeds(array $globals)
         {
         foreach($this->configs as $config => $value)
             {
@@ -61,7 +61,7 @@ abstract class Provider
     * 
     * @return \ImageBanks\ProviderSearchResults
     */
-    public final function search($keywords, $per_page = 24, $page = 1)
+    final public function search($keywords, $per_page = 24, $page = 1)
         {
         $search_results = $this->runSearch($keywords, $per_page, $page);
 
@@ -79,7 +79,7 @@ abstract class Provider
     * 
     * @return string
     */
-    public final function getTempDirPath()
+    final public function getTempDirPath()
         {
         return $this->temp_dir_path;
         }
@@ -93,7 +93,7 @@ abstract class Provider
     * 
     * @return boolean|string  Returns FALSE if no cache found or the content of the file
     */
-    protected final function getCache($id, $ttl)
+    final protected function getCache($id, $ttl)
         {
         $files = new \DirectoryIterator($this->temp_dir_path);
 
@@ -133,7 +133,7 @@ abstract class Provider
     * 
     * @return void
     */
-    protected final function setCache($id, $value)
+    final protected function setCache($id, $value)
         {
         $file = $this->temp_dir_path . DIRECTORY_SEPARATOR . $id;
 
@@ -155,12 +155,12 @@ abstract class Provider
         return $this->id;
         }
 
-    public final function getName()
+    final public function getName()
         {
         return $this->name;
         }
 
-    public final function getAllowedDownloadEndpoint()
+    final public function getAllowedDownloadEndpoint()
         {
         return $this->download_endpoint;
         }
