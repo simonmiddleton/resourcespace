@@ -144,7 +144,7 @@ function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $
     $log_codes = array_filter($log_codes, 'LOG_CODE_validate');
     if($log_codes !== [])
         {
-        $sql .= sprintf(' AND `type` IN (%s)', ps_param_insert(count($log_codes)));
+        $sql .= sprintf(' AND BINARY `type` IN (%s)', ps_param_insert(count($log_codes)));
         $parameters = array_merge($parameters, ps_param_fill($log_codes, 's'));
         }
 
@@ -152,7 +152,7 @@ function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $
         {
         $sql .= " LIMIT " . (int)$maxrecords;
         }
-        
+
     $results = ps_query($sql,$parameters);
     return $results;
     }

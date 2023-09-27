@@ -12,6 +12,7 @@ $setup_global_env = function() use ($original_state)
 $rtf_text = create_resource_type_field("Test #413 text", 1, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "test_413_text", false);
 $rtf_drop = create_resource_type_field("Test #413 drop", 1, FIELD_TYPE_DROP_DOWN_LIST, "test_413_drop", false);
 $rtf_chk = create_resource_type_field("Test #413 chk", 1, FIELD_TYPE_CHECK_BOX_LIST, "test_413_chk", false);
+$rtf_radio = create_resource_type_field("Test #413 radio", 1, FIELD_TYPE_RADIO_BUTTONS, "test_413_radio", false);
 
 $test413_resource_log = function(array $info)
     {
@@ -40,7 +41,7 @@ $use_cases = [
             {
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['notes' => 'UC#1']);
             },
-        'input' => ['minref' => ++$last_log_ref, 'days' => 7, 'maxrecords' => 0, 'fields' => [0], 'log_codes' => []],
+        'input' => ['minref' => ++$last_log_ref, 'days' => 7, 'maxrecords' => 0, 'fields' => [], 'log_codes' => []],
     ],
     [
         'name' => 'Get logs in the last 3 days',
@@ -56,7 +57,7 @@ $use_cases = [
                 'notes' => 'UC#2: 2d'
             ]);
             },
-        'input' => ['minref' => 0, 'days' => 3, 'maxrecords' => 0, 'fields' => [0], 'log_codes' => []],
+        'input' => ['minref' => 0, 'days' => 3, 'maxrecords' => 0, 'fields' => [], 'log_codes' => []],
     ],
     [
         'name' => 'Return only a certain number of records back',
@@ -66,7 +67,7 @@ $use_cases = [
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['notes' => 'UC#3']);
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['notes' => 'UC#3']);
             },
-        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 3, 'fields' => [0], 'log_codes' => []],
+        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 3, 'fields' => [], 'log_codes' => []],
     ],
     [
         'name' => 'Filter by metadata field',
@@ -83,7 +84,7 @@ $use_cases = [
             $test413_resource_log(['type' => LOG_CODE_COPIED, 'notes' => 'UC#5']);
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['type' => LOG_CODE_DELETED, 'notes' => 'UC#5']);
             },
-        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [0], 'log_codes' => [LOG_CODE_DELETED]],
+        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [], 'log_codes' => [LOG_CODE_DELETED]],
     ],
     [
         'name' => 'Enforce access control',
@@ -111,7 +112,23 @@ $use_cases = [
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['type' => LOG_CODE_LOCKED, 'notes' => 'UC#8']);
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['type' => LOG_CODE_EMAILED, 'notes' => 'UC#8']);
             },
-        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [0], 'log_codes' => [LOG_CODE_LOCKED, LOG_CODE_EMAILED]],
+        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [], 'log_codes' => [LOG_CODE_LOCKED, LOG_CODE_EMAILED]],
+    ],
+    [
+        'name' => 'Invalid metadata fields',
+        'setup' => function() use ($rtf_radio, $test413_resource_log)
+            {
+            $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['rtf' => $rtf_radio, 'notes' => 'UC#9']);
+            },
+        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [0, 23.34, 'test', $rtf_radio], 'log_codes' => []],
+    ],
+    [
+        'name' => 'Invalid log codes',
+        'setup' => function() use ($test413_resource_log)
+            {
+            $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['type' => LOG_CODE_CREATED, 'notes' => 'UC#10']);
+            },
+        'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [], 'log_codes' => ['t413UC10', LOG_CODE_CREATED]],
     ],
 ];
 foreach($use_cases as $i => $use_case)
