@@ -19,7 +19,7 @@ $error = '';
 $providers = \ImageBanks\getProviders($image_banks_loaded_providers);
 foreach($providers as $provider)
     {
-    if ($provider->checkDependencies() !== true)
+    if ($provider->checkDependencies() !== [])
         {
         $error = str_replace('%PROVIDER', $provider->getName(), "{$lang['image_banks_provider_unmet_dependencies']}");
         break;

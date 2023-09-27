@@ -17,16 +17,13 @@ class Shutterstock extends Provider
         $this->temp_dir_path = $temp_dir_path;
         }
 
-    public function checkDependencies()
+    public function checkDependencies(): array
         {
-            if (!function_exists('curl_version'))
+        if (!function_exists('curl_version'))
             {
             return [$this->lang["image_banks_error_detail_curl"]];
             }
-            else
-            {
-            return true;
-            }
+        return [];
         }
 
     public function buildConfigPageDefinition(array $page_def)

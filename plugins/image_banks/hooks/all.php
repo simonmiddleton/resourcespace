@@ -10,7 +10,7 @@ function HookImage_banksAllExtra_warn_checks()
         {
         $provider_name = $provider->getName();
         $dependency_check = $provider->checkDependencies();
-        if ($dependency_check !== true)
+        if ($dependency_check !== [])
             {
             $errors[$provider_name] = $dependency_check;
             }
@@ -36,7 +36,7 @@ function HookImage_banksAllSearchfiltertop()
 
     foreach($providers as $provider_id => $provider)
         {
-        if($provider->checkDependencies() !== true)
+        if($provider->checkDependencies() !== [])
             {
             unset($providers[$provider_id]);
             }

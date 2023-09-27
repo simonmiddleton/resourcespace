@@ -11,7 +11,13 @@ abstract class Provider
     protected array $configs;
     protected string $warning;
 
-    abstract public function checkDependencies();
+    /**
+     * Allow each provider to register its own dependency checks.
+     * Note: Image Banks implements the extra_warn_checks hook which will use these errors to notify sysadmins.
+     *
+     * @return array List of failed (system) dependencies.
+     */
+    abstract public function checkDependencies(): array;
     abstract public function buildConfigPageDefinition(array $page_def);
 
     /**
