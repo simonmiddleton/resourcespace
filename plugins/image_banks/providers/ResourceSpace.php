@@ -19,10 +19,9 @@ class ResourceSpace extends Provider
 
     public function checkDependencies()
         {
-        if (true)
-        // if (!function_exists('curl_version'))
+        if (!function_exists('curl_version'))
             {
-            return $this->lang["image_banks_error_detail_curl"];
+            return [$this->lang["image_banks_error_detail_curl"]];
             }
 
         return true;

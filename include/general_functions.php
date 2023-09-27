@@ -4818,6 +4818,12 @@ function get_system_status()
                 'status' => 'WARNING',
                 'info' => $extra_warn_check['info'],
                 ];
+
+            $warn_details = $extra_warn_check['details'] ?? [];
+            if ($warn_details !== [])
+                {
+                $return['results'][$extra_warn_check['name']]['details'] = $warn_details;
+                }
             }
         }
 

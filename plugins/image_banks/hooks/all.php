@@ -9,15 +9,10 @@ function HookImage_banksAllExtra_warn_checks()
     foreach($providers as $provider)
         {
         $provider_name = $provider->getName();
-
         $dependency_check = $provider->checkDependencies();
         if ($dependency_check !== true)
             {
-            $errors[$provider_name] = str_replace(
-                '%PROVIDER',
-                $provider_name,
-                "{$GLOBALS['lang']['image_banks_provider_unmet_dependencies']} - {$dependency_check}"
-            );
+            $errors[$provider_name] = $dependency_check;
             }
         }
 
@@ -25,7 +20,8 @@ function HookImage_banksAllExtra_warn_checks()
         {
         return [[
             'name' => 'image_banks',
-            'info' => implode(PHP_EOL, $errors),
+            'info' => $GLOBALS['lang']['image_banks_system_unmet_dependencies'],
+            'details' => $errors,
         ]];
         }
 

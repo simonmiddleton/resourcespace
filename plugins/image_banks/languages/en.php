@@ -11,7 +11,8 @@ $lang["image_banks_shutterstock_id"]="Shutterstock image ID";
 $lang["image_banks_label_resourcespace_instances_cfg"] = "Instances access (format: name|baseURL|username|key|config)";
 
 // Errors
-$lang["image_banks_provider_unmet_dependencies"] = "Provider '%PROVIDER' has unmet dependencies!";
+$lang["image_banks_system_unmet_dependencies"] = "ImageBanks plugin has unmet system dependencies!";
+$lang["image_banks_provider_unmet_dependencies"] = "'%PROVIDER' provider has unmet dependencies!";
 $lang["image_banks_provider_id_required"] = "Provider ID required to complete search";
 $lang["image_banks_provider_not_found"] = "Provider could not be identified using ID";
 $lang["image_banks_bad_request_title"] = "Bad Request";
