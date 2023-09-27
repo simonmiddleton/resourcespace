@@ -620,7 +620,10 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox">
 <?php if($k!=""){
-	?><p><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collection?>&k=<?php echo urlencode($k)?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo htmlspecialchars($lang['back'])?></a></p><?php
+    $urlparams = array(
+        "search"      =>  "!collection".$collection,
+        "k"           =>  $k);
+	?><p><a href="<?php echo generateURL($baseurl_short."pages/search.php",$urlparams); ?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo htmlspecialchars($lang['back'])?></a></p><?php
 }?>
 
 <h1><?php echo $lang["downloadzip"]?></h1>
