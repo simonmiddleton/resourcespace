@@ -9,6 +9,7 @@ $lang["image_banks_shutterstock_token"]="Shutterstock token (<a href='https://ww
 $lang["image_banks_shutterstock_result_limit"]="Result limit (max. 1000 for free accounts)";
 $lang["image_banks_shutterstock_id"]="Shutterstock image ID";
 $lang["image_banks_label_resourcespace_instances_cfg"] = "Instances access (format: name|baseURL|username|key|config)";
+$lang["image_banks_label_select_providers"] = "Select active providers";
 
 // Errors
 $lang["image_banks_system_unmet_dependencies"] = "ImageBanks plugin has unmet system dependencies!";

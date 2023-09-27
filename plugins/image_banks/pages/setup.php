@@ -29,6 +29,17 @@ foreach($providers as $provider)
     $page_def = $provider->buildConfigPageDefinition($page_def);
     }
 
+$page_def = array_merge(
+    [
+        config_add_multi_select(
+            'image_banks_available_providers',
+            $lang['image_banks_label_select_providers'],
+            ['A', 'B']
+        )
+    ],
+    $page_def
+);
+
 // Render setup page ritual
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ImageBanks;
 
-class ResourceSpace extends Provider
+class ResourceSpace extends Provider implements MultipleInstanceProviderInterface
     {
     function __construct(array $lang, string $temp_dir_path)
             {
@@ -57,4 +57,9 @@ class ResourceSpace extends Provider
         trigger_error('[ImageBanks][ResourceSpace] to be implemented...');
         }
 
+    public function supportMultipleInstances(): bool
+        {
+        // this might not be required
+        return true;
+        }
     }
