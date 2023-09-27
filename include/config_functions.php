@@ -167,8 +167,8 @@ function set_config_option($user_id, $param_name, $param_value)
  * Used by system preferences page when deleting a file to allow fallback to value (if set) in config.php instead
  * of replacing it with blank from user_preference value.
  *
- * @param  integer  $user_id      User ID. Use NULL for system wide config options.
- * @param  mixed    $param_name   Parameter name
+ * @param  mixed    $user_id      User ID. Use NULL for system wide config options.
+ * @param  string   $param_name   Parameter name
  * 
  * @return bool     True if preference was deleted else false.
  */
