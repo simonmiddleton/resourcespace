@@ -21,9 +21,11 @@ foreach($providers as $provider)
     $dependency_check = $provider->checkDependencies();
     if ($dependency_check !== true)
         {
-        $error = str_replace('%PROVIDER', $provider->getName(), $lang['image_banks_provider_unmet_dependencies']." - ".$dependency_check);
+        $error = str_replace('%PROVIDER', $provider->getName(), "{$lang['image_banks_provider_unmet_dependencies']} - {$dependency_check}");
         break;
         }
+
+    $page_def[] = config_add_section_header($provider->getName());
     $page_def = $provider->buildConfigPageDefinition($page_def);
     }
 

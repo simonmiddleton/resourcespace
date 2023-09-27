@@ -6,7 +6,11 @@ require_once 'ProviderResult.php';
 require_once 'ProviderSearchResults.php';
 
 
-function autoloadProviders()
+/**
+ * Autoload providers
+ * @return array List of loaded provider names
+ */
+function autoloadProviders(): array
     {
     $providers_path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'providers';
 

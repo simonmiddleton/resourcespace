@@ -28,7 +28,6 @@ class Pixabay extends Provider
 
     public function buildConfigPageDefinition(array $page_def)
         {
-        $page_def[] = \config_add_section_header($this->name);
         $page_def[] = \config_add_text_input('pixabay_api_key', $this->lang["image_banks_pixabay_api_key"]);
 
         return $page_def;

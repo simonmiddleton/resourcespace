@@ -31,7 +31,6 @@ class Shutterstock extends Provider
 
     public function buildConfigPageDefinition(array $page_def)
         {
-        $page_def[] = \config_add_section_header($this->name);
         $page_def[] = \config_add_text_input('shutterstock_token', $this->lang["image_banks_shutterstock_token"],false,800,true);
         $page_def[] = \config_add_text_input('shutterstock_result_limit', $this->lang["image_banks_shutterstock_result_limit"]);
 
