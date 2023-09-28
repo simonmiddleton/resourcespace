@@ -1070,7 +1070,6 @@ if ($showextraerrors != "")
 include "../include/header.php";
 ?>
 <script>
-autosave_enacted = false;
 <?php
 if ($upload_review_mode)
     {
