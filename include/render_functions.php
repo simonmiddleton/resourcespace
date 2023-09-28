@@ -4513,7 +4513,13 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             echo "<input id='edit_reset_button' name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
             ?>
-        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"<?php } ?>
+        <input 
+        <?php 
+        if ($multiple) 
+            { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"
+            <?php 
+            } 
+            ?>
                name="save"
                id="edit_save_button"
                class="editsave"

@@ -938,9 +938,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     # Set the value exactly as sent.
                     $val=getval("field_" . $fields[$n]["ref"],"");
                     $rawval = getval("field_" . $fields[$n]["ref"],"");
-                    // Check if resource field data has been changed between form being loaded and submitted
+                    # Check if resource field data has been changed between form being loaded and submitted
+                    # post_cs is the checksum of the data when it was loaded from the database
+                    # current_cs is the checksum of the data on the database now
+                    # if they are the same then there has been no intervening update and so its ok to update with our new value
+                    # if our new data yields a different checksum, then we know the new value represents a change
+                    # the new checksum for the new value of a field is stored in $new_checksums[$fields[$n]['ref']]
                     $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
                     $current_cs = md5(trim(preg_replace('/\s\s+/', ' ', (string) $fields[$n]['value'])));
+
                     if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
                         {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
@@ -1108,12 +1114,17 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
 
                 }
-            # Add any onchange code
-            if($fields[$n]["onchange_macro"]!="")
+
+            # Add any onchange code if new checksum for field shows that it has changed
+            if(isset($fields[$n]["onchange_macro"]) && $fields[$n]["onchange_macro"]!=="" 
+                    && $post_cs !==""
+                    && isset($new_checksums[$fields[$n]["ref"]]) 
+                    && $post_cs !== $new_checksums[$fields[$n]["ref"]])
                 {
                 $macro_resource_id=$ref;
                 eval(eval_check_signed($fields[$n]["onchange_macro"]));
                 }
+
 			} # End of if "allowed to edit field conditions"        
 		} # End of for $fields
 

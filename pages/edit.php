@@ -1070,6 +1070,7 @@ if ($showextraerrors != "")
 include "../include/header.php";
 ?>
 <script>
+autosave_enacted = false;
 <?php
 if ($upload_review_mode)
     {
@@ -1201,6 +1202,7 @@ jQuery(document).ready(function()
                     {
                     jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["saved"]); ?>');
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
+                    // Refresh checksums returned by the autosave update
                     if (typeof(saveresult['checksums']) !== undefined)
                         {
                         for (var i in saveresult['checksums']) 
