@@ -206,7 +206,10 @@ function iiif_get_canvases($iiif, $sequencekeys=false)
 		$position = $iiif_result["iiif_position"];
         $canvases[$position]["id"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
         $canvases[$position]["type"] = "Canvas";
-        $canvases[$position]["label"] = (isset($position_prefix)?$position_prefix:'') . $position;
+        $canvases[$position]["label"]["none"] = [];
+        $canvases[$position]["label"]["none"][] = (isset($position_prefix)?$position_prefix:'') . $position;
+        $canvases[$position]["items"] = [];
+        $canvases[$position]["items"][] = iiif_generate_canvas($iiif,$position);
         }
     
 	if($sequencekeys)
@@ -262,9 +265,10 @@ function iiif_get_thumbnail($iiif, $resourceid)
 	$thumbnail["format"] = "image/jpeg";
 	
 	$thumbnail["service"] =[];
-	$thumbnail["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
+	// $thumbnail["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
 	$thumbnail["service"]["id"] = $iiif->rootimageurl . $resourceid;
-	$thumbnail["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
+	$thumbnail["service"]["type"] = "ImageService3";
+	$thumbnail["service"]["profile"] = "level1";
 	return $thumbnail;
 	}
 	
@@ -314,9 +318,10 @@ function iiif_get_image($iiif,$resource,$position, array $size_info)
 	$images["type"] = "Image";
 	$images["format"] = "image/jpeg";
 	$images["service"] =[];
-	$images["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
+	// $images["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
 	$images["service"]["id"] = $iiif->rootimageurl . $resource;
-	$images["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
+	$images["service"]["type"] = "ImageService3";
+	$images["service"]["profile"] = "level1";
 
     $images["height"] = intval($image_size[2]);
     $images["width"] = intval($image_size[1]);
@@ -690,7 +695,7 @@ function iiif_generate_manifest(&$iiif)
                 /* MANIFEST REQUEST - see http://iiif.io/api/presentation/3.0/#manifest */
                 $iiif->response["@context"] = "http://iiif.io/api/presentation/3/context.json";
                 $iiif->response["id"] = $iiif->rooturl . $iiif->request["id"] . "/manifest";
-                $iiif->response["type"] = "sc:Manifest";		
+                $iiif->response["type"] = "Manifest";		
 
                 // Descriptive metadata about the object/work
                 // The manifest data should be the same for all resources that are returned.
@@ -756,28 +761,31 @@ function iiif_generate_manifest(&$iiif)
                     }
                     
                 // Sequences
-                $iiif->response["items"] = [];
-                $iiif->response["items"][]  = iiif_get_canvases($iiif,false,true);
+                $iiif->response["items"] = iiif_get_canvases($iiif,false,true);
                 $iiif->validrequest = true;	
                 /* MANIFEST REQUEST END */
                 }
             elseif($iiif->request["type"] == "canvas")
                 {
-                iiif_get_resource($iiif,$iiif->request["typeid"]);
-                iiif_generate_canvas($iiif,$iiif->request["typeid"]);
+                iiif_get_resource_from_position($iiif,$iiif->request["typeid"]);
+
+                $iiif->response = iiif_generate_canvas($iiif,$iiif->request["typeid"]);;
+                $iiif->validrequest = true;
                 }
             elseif($iiif->request["type"] == "sequence")
                 {
-                iiif_generate_sequence($iiif);
+                $iiif->response = iiif_generate_sequence($iiif);
+                $iiif->validrequest = true;	
                 }
             elseif($iiif->request["type"] == "annotationpage")
                 {
-                iiif_get_resource($iiif,$iiif->request["typeid"]);
-                iiif_generate_annotation_page($iiif,$iiif->request["typeid"]);
+                iiif_get_resource_from_position($iiif,$iiif->request["typeid"]);
+                $iiif->response = iiif_generate_annotation_page($iiif,$iiif->request["typeid"]);
+                $iiif->validrequest = true;	
                 }
             elseif($iiif->request["type"] == "annotation")
                 {
-                iiif_get_resource($iiif,$iiif->request["typeid"]);
+                iiif_get_resource_from_position($iiif,$iiif->request["typeid"]);
                 $iiif->response = iiif_generate_annotation($iiif,$iiif->request["typeid"]);
                 $iiif->validrequest = true;	
                 // exit("HERE " . print_r($iiif));
@@ -872,15 +880,10 @@ function iiif_generate_canvas(&$iiif, $position)
     //$canvases[$position]["thumbnail"] = iiif_get_thumbnail($iiif, $resource["ref"]);
     
     // Add image (only 1 per canvas currently supported)
-    $canvas["items"] = [];
-    $size_info = array(
-        'identifier' => $size,
-        'return_height_width' => false,
-    );
+    iiif_get_resource_from_position($iiif,$position);
     $canvas["items"][] = iiif_generate_annotation_page($iiif, $position);
 
-    $iiif->response = array_merge($iiif->response,$canvas);
-    $iiif->validrequest = true;
+    return $canvas;
     }
 
 
@@ -930,7 +933,7 @@ function iiif_generate_annotation(&$iiif, int $position=0)
     $annotation["id"] = $iiif->rooturl . $iiif->request["id"] . "/annotation/" . $position;
     $annotation["type"] = "Annotation";
     $annotation["motivation"] = "Painting";
-    $annotation["body"] = iiif_get_image($iiif, $iiif->request["resource"], $position, $iiif->request["size_info"]);
+    $annotation["body"] = iiif_get_image($iiif, $iiif->processing["resource"], $position, $iiif->processing["size_info"]);
     $annotation["target"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
     return $annotation;
     }
@@ -944,66 +947,108 @@ function iiif_generate_metadata(&$iiif)
         {
         if(in_array($iiif_data_row["type"],$FIXED_LIST_FIELD_TYPES))
             {
+
+
+
+
+
+
+
+
+
             // Don't use the data as this has already concatentated the translations, add an entry for each node translation by building up a new array
             $resnodes = get_resource_nodes($iiif->searchresults[0]["ref"],$iiif_data_row["resource_type_field"],true);
+
+            // print_r($resnodes);
             if(count($resnodes) == 0)
                 {
                 continue;
                 }
-            $langentries = [];
-            $nodecount = 0;
-            unset($def_lang);
-            foreach($resnodes as $resnode)
-                {
-                debug("iiif: translating " . $resnode["name"] . " from field '" . $iiif_data_row["title"] . "'");
-                $node_langs = i18n_get_translations($resnode["name"]);
-                $transcount=0;
-                $defaulttrans = "";
-                foreach($node_langs as $nlang => $nltext)
-                    {
-                    if(!isset($langentries[$nlang]))
-                        {
-                        // This is the first translated node entry for this language. If we already have translations copy the default language array to make sure no nodes with missing translations are lost
-                        debug("iiif: Adding a new translation entry for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "'");
-                        $langentries[$nlang] = isset($def_lang)?$def_lang:[];
-                        }
-                    // Add the node text to the array for this language;
-                    debug("iiif: Adding node translation for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "': " . $nltext);
-                    $langentries[$nlang][] = $nltext;
+            // $langentries = [];
+            // $nodecount = 0;
+            // unset($def_lang);
+            // foreach($resnodes as $resnode)
+            //     {
+            //     debug("iiif: translating " . $resnode["name"] . " from field '" . $iiif_data_row["title"] . "'");
+            //     $node_langs = i18n_get_translations($resnode["name"]);
+
+
+                // $transcount=0;
+                // $defaulttrans = "";
+                // foreach($node_langs as $nlang => $nltext)
+                //     {
+                //     if(!isset($langentries[$nlang]))
+                //         {
+                //         // This is the first translated node entry for this language. If we already have translations copy the default language array to make sure no nodes with missing translations are lost
+                //         debug("iiif: Adding a new translation entry for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "'");
+                //         $langentries[$nlang] = isset($def_lang)?$def_lang:[];
+                //         }
+                //     // Add the node text to the array for this language;
+                //     debug("iiif: Adding node translation for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "': " . $nltext);
+                //     $langentries[$nlang][] = $nltext;
                     
-                    // Set default text for any translations
-                    if($nlang == $defaultlanguage || $defaulttrans == ""){$defaulttrans = $nltext;}
-                    $transcount++;
-                    }
-                $nodecount++;
+                //     // Set default text for any translations
+                //     if($nlang == $defaultlanguage || $defaulttrans == ""){$defaulttrans = $nltext;}
+                //     $transcount++;
+                //     }
+                // $nodecount++;
 
                 // There may not be translations for all nodes, fill any arrays that don't have an entry with the untranslated versions
-                foreach($langentries as $mdlang => $mdtrans)
-                    {
-                    debug("iiif: enry count for " . $mdlang . ":" . count($mdtrans));
-                    debug("iiif: node count: " . $nodecount);
-                    if(count($mdtrans) != $nodecount)
-                        {
-                        debug("iiif: No translation found for " . $mdlang . ". Adding default translation to language array for field '" . $iiif_data_row["title"] . "': " . $mdlang . ": " . $defaulttrans);
-                        $langentries[$mdlang][] =  $defaulttrans;
-                        }
-                    }
+                // foreach($langentries as $mdlang => $mdtrans)
+                //     {
+                //     debug("iiif: entry count for " . $mdlang . ":" . count($mdtrans));
+                //     debug("iiif: node count: " . $nodecount);
+                //     if(count($mdtrans) != $nodecount)
+                //         {
+                //         debug("iiif: No translation found for " . $mdlang . ". Adding default translation to language array for field '" . $iiif_data_row["title"] . "': " . $mdlang . ": " . $defaulttrans);
+                //         $langentries[$mdlang][] =  $defaulttrans;
+                //         }
+                //     }
 
                 // To ensure that no nodes are lost due to missing translations,  
                 // Save the default language array to make sure we include any untranslated nodes that may be missing when/if we find new languages for the next node
                 
-                debug("iiif: Saving default language array for field '" . $iiif_data_row["title"] . "': " . implode(",",$langentries[$defaultlanguage]));
-                // Default language is the ideal, but if no default language entries for this node have been found copy the first language we have
-                reset($langentries);
-                $def_lang = isset($langentries[$defaultlanguage])?$langentries[$defaultlanguage]:$langentries[key($langentries)];
-                }		
+                // debug("iiif: Saving default language array for field '" . $iiif_data_row["title"] . "': " . implode(",",$langentries[$defaultlanguage]));
+                // // Default language is the ideal, but if no default language entries for this node have been found copy the first language we have
+                // reset($langentries);
+                // $def_lang = isset($langentries[$defaultlanguage])?$langentries[$defaultlanguage]:$langentries[key($langentries)];
+                // }		
 
-            
+            // Add all translated field names
             $iiif->response["metadata"][$n] = [];
-            $iiif->response["metadata"][$n]["label"] = $iiif_data_row["title"];
-            $iiif->response["metadata"][$n]["value"] = [];
-            
+            $iiif->response["metadata"][$n]["label"] = [];
+            $i18n_titles = i18n_get_translations($iiif_data_row["title"]);
+            foreach($i18n_titles as $langcode=>$langstring)
+                {
+                $iiif->response["metadata"][$n]["label"][$langcode] =[$langstring];
+                }
+
+
+            // Add all translated node names
+            //$iiif->response["metadata"][$n]["value"] = [];
             // Add each tag
+            $arr_alllangs = [];
+            foreach($resnodes as $resnode)
+                {
+                $i18n_names = i18n_get_translations($resnode["name"]);
+                foreach($i18n_names as $langcode=>$langstring)
+                    {
+                    if(!isset($arr_alllangs[$langcode]))
+                        {
+                        $arr_alllangs[$langcode] = [];
+                        }
+                    $arr_alllangs[$langcode][] =$langstring; 
+                    }
+                }
+            $iiif->response["metadata"][$n]["value"] = []
+            foreach()
+                {
+                
+                }
+            [$langcode] =[$langstring];
+
+
+                
             $o=0;
             foreach($langentries as $mdlang => $mdtrans)
                 {
@@ -1013,12 +1058,36 @@ function iiif_generate_metadata(&$iiif)
                 $o++;
                 }
             $n++;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
         elseif(trim((string) $iiif_data_row["value"]) !== "")
             {
             $iiif->response["metadata"][$n] = [];
-            $iiif->response["metadata"][$n]["label"] = $iiif_data_row["title"];
-            $iiif->response["metadata"][$n]["value"] = $iiif_data_row["value"];
+            $iiif->response["metadata"][$n]["label"] = [];
+            $i18n_titles = i18n_get_translations($iiif_data_row["title"]);
+            foreach($i18n_titles as $langcode=>$langstring)
+                {
+                $iiif->response["metadata"][$n]["label"][$langcode] =[$langstring];
+                }
+            $iiif->response["metadata"][$n]["value"]=[];
+            $i18n_titles = i18n_get_translations($iiif_data_row["value"]);
+            foreach($i18n_titles as $langcode=>$langstring)
+                {
+                $iiif->response["metadata"][$n]["value"][$langcode] =[$langstring];
+                }
             $n++;
             }
         }
@@ -1097,33 +1166,33 @@ function iiif_process_image_request(&$iiif)
         if($iiif->request["region"] == "info.json")
             {
             // Image information request. Only fullsize available in this initial version
-            $iiif->response["@context"] = "http://iiif.io/api/image/2/context.json";
+            $iiif->response["@context"] = "http://iiif.io/api/image/3/context.json";
             $iiif->response["id"] = $iiif->rootimageurl . $iiif->request["id"];
                             
             $iiif->response["height"] = $imageHeight;
             $iiif->response["width"]  = $imageWidth;
             
-            $iiif->response["profile"] = [];
-            $iiif->response["profile"][] = "http://iiif.io/api/image/2/level0.json";
-            if($iiif->custom_sizes)
-                {
-                $iiif->response["profile"][] = array(
-                    "formats" => array("jpg"),
-                    "qualities" => array("default"),
-                    "maxWidth" => $iiif->max_width,
-                    "maxHeight" => $iiif->max_height,
-                    "supports" => array("sizeByH","sizeByW")
-                    );
-                }
-            else
-                {
-                $iiif->response["profile"][] = array(
-                    "formats" => array("jpg"),
-                    "qualities" => array("default"),
-                    "maxWidth" => $iiif->max_width,
-                    "maxHeight" => $iiif->max_height
-                    );
-                }
+            $iiif->response["type"] = "ImageService3";
+            $iiif->response["profile"] = "level1";
+            // if($iiif->custom_sizes)
+            //     {
+            //     $iiif->response["profile"][] = array(
+            //         "formats" => array("jpg"),
+            //         "qualities" => array("default"),
+            //         "maxWidth" => $iiif->max_width,
+            //         "maxHeight" => $iiif->max_height,
+            //         "supports" => array("sizeByH","sizeByW")
+            //         );
+            //     }
+            // else
+            //     {
+            //     $iiif->response["profile"][] = array(
+            //         "formats" => array("jpg"),
+            //         "qualities" => array("default"),
+            //         "maxWidth" => $iiif->max_width,
+            //         "maxHeight" => $iiif->max_height
+            //         );
+            //     }
 
             $iiif->response["protocol"] = "http://iiif.io/api/image";
             $iiif->response["sizes"] = $availsizes;
@@ -1415,15 +1484,15 @@ function iiif_get_resources(&$iiif)
     }
 
 
-function iiif_get_resource(&$iiif, $position)
+function iiif_get_resource_from_position(&$iiif, $position)
     {
-    $iiif->request["size_info"]=[];
+    $iiif->processing = [];
     foreach($iiif->searchresults as $iiif_result)
         {
         if($iiif_result["iiif_position"] == $position)
             {
-            $iiif->request["resource"] = $iiif_result["ref"];
-            $iiif->request["size_info"] = [
+            $iiif->processing["resource"] = $iiif_result["ref"];
+            $iiif->processing["size_info"] = [
                 'identifier' => (strtolower($iiif_result['file_extension']) != 'jpg') ? 'hpr' : '',
                 'return_height_width' => false,
                 ];
