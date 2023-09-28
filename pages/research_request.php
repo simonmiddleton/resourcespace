@@ -26,10 +26,28 @@ if ($save)
         $error_description = true;
         }
 
-    if (isset($anonymous_login) && $anonymous_login == $username && $email == "")
+    if (isset($anonymous_login) && $anonymous_login == $username)
         {
-        $errors = true;
-        $error_email = true;
+        if($email == "")
+            {
+            $errors = true;
+            $error_email = true;
+            }
+
+        $spamcode = getval("antispamcode","");
+        $usercode = getval("antispam","");
+        $spamtime = getval("antispamtime",0);
+
+        if($spamtime<(time()-180) || $spamtime>time())
+            {
+            $errors = true;
+            $antispam_error=$lang["expiredantispam"];    
+            }
+        elseif(!hook('replaceantispam_check') && !verify_antispam($spamcode, $usercode, $spamtime))
+            {
+            $errors = true;
+            $antispam_error=$lang["requiredantispam"];
+            }
         }
 
     if(count_errors($processed_rr_cfields) > 0)
@@ -175,6 +193,15 @@ include "../include/header.php";
         if(file_exists(dirname(__FILE__) . "/../plugins/research_request.php"))
             {
             include dirname(__FILE__) . "/../plugins/research_request.php";
+            }
+
+        if (isset($anonymous_login) && $anonymous_login == $username && !hook("replaceantispam"))
+            {
+            if(isset($antispam_error))
+                {
+                error_alert($antispam_error, false);
+                }
+            render_antispam_question();
             }
         ?>
         <div class="QuestionSubmit">      
