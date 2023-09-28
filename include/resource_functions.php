@@ -7787,14 +7787,14 @@ function get_related_resources($ref)
 /**
  * Get available options for fixed list field types
  *
- * @param int   $ref
- * @param bool  $nodeinfo
- * @param bool  $skip_translation
+ * @param int   $ref                    Metadata field ref
+ * @param bool  $nodeinfo               Get full node details?
+ * @param bool  $skip_translation       Do not translate node name. Only relevant if $nodeinfo=false
  * 
- * @return array Array of 
+ * @return array Array of field options, either as a simple array or with full node details
  * 
  */
-function get_field_options(int $ref, $nodeinfo = false, bool $skip_translation = false) : array
+function get_field_options(int $ref, bool $nodeinfo = false, bool $skip_translation = false) : array
     {
     global $FIXED_LIST_FIELD_TYPES, $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys

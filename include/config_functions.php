@@ -167,8 +167,8 @@ function set_config_option($user_id, $param_name, $param_value)
  * Used by system preferences page when deleting a file to allow fallback to value (if set) in config.php instead
  * of replacing it with blank from user_preference value.
  *
- * @param  mixed    $user_id      User ID. Use NULL for system wide config options.
- * @param  string   $param_name   Parameter name
+ * @param  integer  $user_id      User ID. Use NULL for system wide config options.
+ * @param  mixed    $param_name   Parameter name
  * 
  * @return bool     True if preference was deleted else false.
  */
@@ -1750,53 +1750,48 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
 
 function get_resource_type_field_columns()
     {
-    global $lang, $execution_lockout;
+    global $lang;
 
-    $resource_type_field_column_definitions = [
-        'active'                   => array($lang['property-field_active'],'',1,1),
-        'global'                   => array($lang['property-resource_type'],'',1,0),
-        'title'                    => array($lang['property-title'],'',0,1),
-        'type'                     => array($lang['property-field_type'],'',0,1),
-        'linked_data_field'        => array($lang['property-field_raw_edtf'],'',0,1),
-        'name'                     => array($lang['property-shorthand_name'],$lang['information-shorthand_name'],0,1),
-        'required'                 => array($lang['property-required'],'',1,1),
-        'order_by'                 => array($lang['property-order_by'],'',0,0),
-        'keywords_index'           => array($lang['property-index_this_field'],$lang["information_index_warning"] . " " . $lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1),
-        'display_field'            => array($lang['property-display_field'],'',1,1),
-        'full_width'               => array($lang['property-field_full_width'],'',1,1),
-        'advanced_search'          => array($lang['property-enable_advanced_search'],'',1,1),
-        'simple_search'            => array($lang['property-enable_simple_search'],'',1,1),        
-        'browse_bar'               => array($lang['field_show_in_browse_bar'],'',1,1),
-        'read_only'                => array($lang['property-read_only_field'], '', 1, 1),
-        'exiftool_field'           => array($lang['property-exiftool_field'],'',0,1),
-        'fits_field'               => array($lang['property-fits_field'], $lang['information-fits_field'], 0, 1),
-        'personal_data'            => array($lang['property-personal_data'],'',1,1),
-        'use_for_similar'          => array($lang['property-use_for_find_similar_searching'],'',1,1),
-        'hide_when_uploading'      => array($lang['property-hide_when_uploading'],'',1,1),
-        'hide_when_restricted'     => array($lang['property-hide_when_restricted'],'',1,1),
-        'help_text'                => array($lang['property-help_text'],'',2,1),
-        'tooltip_text'             => array($lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1),
-        'tab'                      => array($lang['property-tab_name'], '', 0, 0),
-        'partial_index'            => array($lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1),
-        'iptc_equiv'               => array($lang['property-iptc_equiv'],'',0,1),                                  
-        'display_template'         => array($lang['property-display_template'],'',2,1),
-        'display_condition'        => array($lang['property-display_condition'],$lang['information-display_condition'],2,1),
-        'regexp_filter'            => array($lang['property-regexp_filter'],$lang['information-regexp_filter'],2,1),
-        'smart_theme_name'         => array($lang['property-smart_theme_name'],'',0,1),
-        'display_as_dropdown'      => array($lang['property-display_as_dropdown'],$lang['information-display_as_dropdown'],1,1),
-        'external_user_access'     => array($lang['property-external_user_access'],'',1,1),
-        'omit_when_copying'        => array($lang['property-omit_when_copying'],'',1,1),
-        'include_in_csv_export'    => array($lang['property-include_in_csv_export'],'',1,1),
-    ];
-
-    if (!$execution_lockout)
-        {
-        // These fields can't be edited if $execution_lockout is set to prevent code execution
-        $resource_type_field_column_definitions['autocomplete_macro'] = [$lang['property-autocomplete_macro'],'',2,1];
-        $resource_type_field_column_definitions['exiftool_filter'] = [$lang['property-exiftool_filter'],'',2,1];
-        $resource_type_field_column_definitions['value_filter'] = [$lang['property-value_filter'],'',2,1];
-        $resource_type_field_column_definitions['onchange_macro'] = [$lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1];
-        }
+    $resource_type_field_column_definitions = execution_lockout_remove_resource_type_field_props([
+        'active'                   => [$lang['property-field_active'],'',1,1],
+        'global'                   => [$lang['property-resource_type'],'',1,0],
+        'title'                    => [$lang['property-title'],'',0,1],
+        'type'                     => [$lang['property-field_type'],'',0,1],
+        'linked_data_field'        => [$lang['property-field_raw_edtf'],'',0,1],
+        'name'                     => [$lang['property-shorthand_name'],$lang['information-shorthand_name'],0,1],
+        'required'                 => [$lang['property-required'],'',1,1],
+        'order_by'                 => [$lang['property-order_by'],'',0,0],
+        'keywords_index'           => [$lang['property-index_this_field'],$lang["information_index_warning"] . " " . $lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1],
+        'display_field'            => [$lang['property-display_field'],'',1,1],
+        'full_width'               => [$lang['property-field_full_width'],'',1,1],
+        'advanced_search'          => [$lang['property-enable_advanced_search'],'',1,1],
+        'simple_search'            => [$lang['property-enable_simple_search'],'',1,1],        
+        'browse_bar'               => [$lang['field_show_in_browse_bar'],'',1,1],
+        'read_only'                => [$lang['property-read_only_field'], '', 1, 1],
+        'exiftool_field'           => [$lang['property-exiftool_field'],'',0,1],
+        'fits_field'               => [$lang['property-fits_field'], $lang['information-fits_field'], 0, 1],
+        'personal_data'            => [$lang['property-personal_data'],'',1,1],
+        'use_for_similar'          => [$lang['property-use_for_find_similar_searching'],'',1,1],
+        'hide_when_uploading'      => [$lang['property-hide_when_uploading'],'',1,1],
+        'hide_when_restricted'     => [$lang['property-hide_when_restricted'],'',1,1],
+        'help_text'                => [$lang['property-help_text'],'',2,1],
+        'tooltip_text'             => [$lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1],
+        'tab'                      => [$lang['property-tab_name'], '', 0, 0],
+        'partial_index'            => [$lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1],
+        'iptc_equiv'               => [$lang['property-iptc_equiv'],'',0,1],                                  
+        'display_template'         => [$lang['property-display_template'],'',2,1],
+        'display_condition'        => [$lang['property-display_condition'],$lang['information-display_condition'],2,1],
+        'regexp_filter'            => [$lang['property-regexp_filter'],$lang['information-regexp_filter'],2,1],
+        'smart_theme_name'         => [$lang['property-smart_theme_name'],'',0,1],
+        'display_as_dropdown'      => [$lang['property-display_as_dropdown'],$lang['information-display_as_dropdown'],1,1],
+        'external_user_access'     => [$lang['property-external_user_access'],'',1,1],
+        'omit_when_copying'        => [$lang['property-omit_when_copying'],'',1,1],
+        'include_in_csv_export'    => [$lang['property-include_in_csv_export'],'',1,1],
+        'autocomplete_macro'       => [$lang['property-autocomplete_macro'],'',2,1],
+        'exiftool_filter'          => [$lang['property-exiftool_filter'],'',2,1],
+        'value_filter'             => [$lang['property-value_filter'],'',2,1],
+        'onchange_macro'           => [$lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1],
+    ]);
 
     $modify_resource_type_field_definitions=hook("modifyresourcetypefieldcolumns","",array($resource_type_field_column_definitions));
     if($modify_resource_type_field_definitions!='')
