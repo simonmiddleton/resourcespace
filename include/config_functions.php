@@ -167,12 +167,12 @@ function set_config_option($user_id, $param_name, $param_value)
  * Used by system preferences page when deleting a file to allow fallback to value (if set) in config.php instead
  * of replacing it with blank from user_preference value.
  *
- * @param  integer  $user_id      User ID. Use NULL for system wide config options.
- * @param  mixed    $param_name   Parameter name
+ * @param  int|null   $user_id      User ID. Use NULL for system wide config options.
+ * @param  string     $param_name   Parameter name
  * 
- * @return bool     True if preference was deleted else false.
+ * @return bool       True if preference was deleted else false.
  */
-function delete_config_option($user_id, string $param_name) : bool
+function delete_config_option(?int $user_id, string $param_name) : bool
     {
     if(empty($param_name))
         {
@@ -543,7 +543,7 @@ function config_add_hidden_input(string $cf_var_name, string $cf_var_value = '')
 function config_file_input($name, $label, $current, $form_action, $width = 420, $valid_extensions = array(), $file_preview = false)
     {
     global $lang,$storagedir;
-    
+
     if($current !=='')
         {
         $origin_in_config = (substr($current, 0, 13) != '[storage_url]');
@@ -561,25 +561,25 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
         }
 
     ?>
-    <div class="Question" id="question_<?php echo $name; ?>">
-        <form method="POST" action="<?php echo $form_action; ?>" enctype="multipart/form-data">
-        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo $name; ?>"><?php echo $label; ?></label>
+    <div class="Question" id="question_<?php echo escape_quoted_data($name); ?>">
+        <form method="POST" action="<?php echo escape_quoted_data($form_action); ?>" enctype="multipart/form-data">
+        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo escape_quoted_data($name); ?>"><?php echo htmlspecialchars($label); ?></label>
         <div class="AutoSaveStatus">
-        <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
+        <span id="AutoSaveStatus-<?php echo escape_quoted_data($name); ?>" style="display:none;"></span>
         </div>
         <?php
         if($current !== '' && $pathparts[1]=="system" && !file_exists($missing_file))
-			{
-			?>
-            <span><?php echo $lang['applogo_does_not_exists']; ?></span>
-            <input type="submit" name="clear_<?php echo $name; ?>" value="<?php echo $lang["clearbutton"]; ?>">
+            {
+            ?>
+            <span><?php echo htmlspecialchars($lang['applogo_does_not_exists']); ?></span>
+            <input type="submit" name="clear_<?php echo escape_quoted_data($name); ?>" value="<?php echo escape_quoted_data($lang["clearbutton"]); ?>">
             <?php
-			}
+            }
         elseif('' === $current || !get_config_option(null, $name, $current_option) || $current_option === '')
             {
             ?>
-            <input type="file" name="<?php echo $name; ?>" style="width:<?php echo $width; ?>px">
-            <input type="submit" name="upload_<?php echo $name; ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension()"';} ?> value="<?php echo $lang['upload']; ?>">
+            <input type="file" name="<?php echo escape_quoted_data($name); ?>" style="width:<?php echo (int) $width; ?>px">
+            <input type="submit" name="upload_<?php echo escape_quoted_data($name); ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension()"';} ?> value="<?php echo escape_quoted_data($lang['upload']); ?>">
             <?php
             if (count($valid_extensions) > 0)
                 {
@@ -587,11 +587,11 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
                 <script>
                 function checkValidExtension()
                     {
-                    let file_path = document.getElementsByName("<?php echo $name; ?>")[0].value;
+                    let file_path = document.getElementsByName("<?php echo escape_quoted_data($name); ?>")[0].value;
                     let ext = file_path.toLowerCase().substr(file_path.lastIndexOf(".")+1);
-                    let valid_extensions = [<?php echo '"' . implode('", "', $valid_extensions) . '"'; ?>];
+                    let valid_extensions = [<?php echo '"' . escape_quoted_data(implode('", "', $valid_extensions)) . '"'; ?>];
                     if (file_path != "" && valid_extensions.includes(ext)) return true;
-                    alert(<?php echo '"' . str_replace('%%EXTENSIONS%%', implode(', ', $valid_extensions), $lang['systemconfig_invalid_extension']) .'"'?>);
+                    alert(<?php echo '"' . escape_quoted_data(str_replace('%%EXTENSIONS%%', implode(', ', $valid_extensions), $lang['systemconfig_invalid_extension'])) .'"'?>);
                     return false;
                     }
                 </script>
@@ -602,7 +602,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             {
             ?>
             <span><?php echo htmlspecialchars(str_replace('[storage_url]/', '', $current), ENT_QUOTES); ?></span>
-            <input type="submit" name="delete_<?php echo $name; ?>" value="<?php echo $lang['action-delete']; ?>">
+            <input type="submit" name="delete_<?php echo escape_quoted_data($name); ?>" value="<?php echo escape_quoted_data($lang['action-delete']); ?>">
             <?php
             }
             generateFormToken($name);
@@ -612,8 +612,8 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
         if ($file_preview && $current !== "")
             {
             global $baseurl; ?>
-            <div id="preview_<?php echo $name; ?>">
-            <img class="config-image-preview" src="<?php echo $baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current) . '?v=' . date("s") ?>" alt="<?php echo escape_quoted_data($lang["preview"] . ' - ' . $label) ?>">
+            <div id="preview_<?php echo escape_quoted_data($name); ?>">
+            <img class="config-image-preview" src="<?php echo escape_quoted_data($baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current)) . '?v=' . date("s") ?>" alt="<?php echo escape_quoted_data($lang["preview"] . ' - ' . $label) ?>">
             </div>
             <?php } ?>
         <div class="clearerleft"></div>
