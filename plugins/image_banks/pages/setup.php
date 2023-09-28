@@ -23,8 +23,8 @@ $error = '';
 $page_def = array();
 $providers_select_list = [];
 
-list($providers, $errors) = getProviders($image_banks_loaded_providers);
-printf('<pre>%s</pre>', print_r($errors, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
+[$providers, $errors] = getProviders($image_banks_loaded_providers);
+// printf('<pre>%s</pre>', print_r($errors, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
 foreach($providers as $provider)
     {
     $provider_name = $provider->getName();

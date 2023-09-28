@@ -76,7 +76,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
                 $this->instances[] = $parsed;
                 continue;
                 }
-            $errs[] = $this->lang[$parsed];
+            $errs[] = $this->lang[$parsed] ?? "%PROVIDER - $parsed";
             }
         return $errs;
         }
