@@ -55,11 +55,14 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             }
 
         trigger_error('[ImageBanks][ResourceSpace] to be implemented...');
+        return [];
         }
 
-    public function supportMultipleInstances(): bool
+    public function getProviderLinkedSystems(): array
         {
-        // this might not be required
-        return true;
+        // process provider config and parse it as needed to get the list out
+        $raw_instances = explode(PHP_EOL, trim($this->configs['resourcespace_instances_cfg']));
+        printf('<pre>%s</pre>', print_r($raw_instances, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
+        return [];
         }
     }

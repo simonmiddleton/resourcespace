@@ -6,7 +6,9 @@ namespace ImageBanks;
 
 interface MultipleInstanceProviderInterface
     {
-    public function supportMultipleInstances(): bool;
-    // public function getProviderLinkedSystems(): array;#: [<ProviderInstanceInterface>]
+    /**
+     * @return list<ProviderInstanceInterface>
+     */
+    public function getProviderLinkedSystems(): array;
     // public function selectSystemInstance();
     }

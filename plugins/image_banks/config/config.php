@@ -1,6 +1,13 @@
 <?php
-$image_banks_plugin_root = dirname(__DIR__);
-include_once "{$image_banks_plugin_root}/include/image_banks_functions.php";
-$image_banks_loaded_providers = \ImageBanks\autoloadProviders();
 
-$image_banks_available_providers = [];
+use function ImageBanks\autoloadProviders;
+
+include_once dirname(__DIR__) . '/include/image_banks_functions.php';
+
+$image_banks_loaded_providers = autoloadProviders();
+
+/* 
+Note: multi-instance Providers (e.g. ResourceSpace) will have to be selected by the user after they've 
+configured at least one instance since in that case the instance is the real provider.
+*/
+$image_banks_selected_providers = ['Pixabay', 'Shutterstock'];
