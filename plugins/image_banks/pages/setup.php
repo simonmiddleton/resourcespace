@@ -23,7 +23,8 @@ $error = '';
 $page_def = array();
 $providers_select_list = [];
 
-$providers = getProviders($image_banks_loaded_providers);
+list($providers, $errors) = getProviders($image_banks_loaded_providers);
+printf('<pre>%s</pre>', print_r($errors, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
 foreach($providers as $provider)
     {
     $provider_name = $provider->getName();
@@ -36,7 +37,8 @@ foreach($providers as $provider)
 
     if ($provider instanceof MultipleInstanceProviderInterface)
         {
-        $provider_linked_systems = $provider->getProviderLinkedSystems();
+        $provider_instances = $provider->getAllInstances();
+        printf('<pre>%s</pre>', print_r($provider_instances, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
         // todo: convert to only a list of Provider Instance names
         $providers_select_list = array_merge($providers_select_list, []);
         }

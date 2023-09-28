@@ -6,6 +6,12 @@ namespace ImageBanks;
 
 class ResourceSpace extends Provider implements MultipleInstanceProviderInterface
     {
+    /**
+     * Only valid instances
+     * @var list<ResourceSpaceProviderInstance>
+     */
+    private array $instances = [];
+
     function __construct(array $lang, string $temp_dir_path)
             {
             $this->id = 3;
@@ -58,11 +64,25 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         return [];
         }
 
-    public function getProviderLinkedSystems(): array
+    public function parseInstancesConfiguration(): array
         {
-        // process provider config and parse it as needed to get the list out
+        $errs = [];
         $raw_instances = explode(PHP_EOL, trim($this->configs['resourcespace_instances_cfg']));
-        printf('<pre>%s</pre>', print_r($raw_instances, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
-        return [];
+        foreach ($raw_instances as $ri)
+            {
+            $parsed = ResourceSpaceProviderInstance::parseRaw($ri);
+            if ($parsed instanceof ResourceSpaceProviderInstance)
+                {
+                $this->instances[] = $parsed;
+                continue;
+                }
+            $errs[] = $this->lang[$parsed];
+            }
+        return $errs;
+        }
+
+    public function getAllInstances(): array
+        {
+        return $this->instances;
         }
     }

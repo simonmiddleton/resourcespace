@@ -5,6 +5,8 @@ require_once 'AbstractProvider.php';
 require_once 'ProviderResult.php';
 require_once 'ProviderSearchResults.php';
 require_once 'MultipleInstanceProviderInterface.php';
+require_once 'ProviderInstanceInterface.php';
+require_once 'ResourceSpaceProviderInstance.php';
 
 
 /**
@@ -41,11 +43,16 @@ function autoloadProviders(): array
     }
 
 
-function getProviders(array $loaded_providers)
+/**
+ * Get loaded providers
+ * @param array $loaded_providers
+ * @return array{'providers': list<Provider>, 'errors': list<string>}
+ */
+function getProviders(array $loaded_providers): array
     {
     global $lang;
 
-    $providers = array();
+    $errors = $providers = [];
 
     foreach($loaded_providers as $loaded_provider)
         {
@@ -58,31 +65,22 @@ function getProviders(array $loaded_providers)
 
         if(!($provider instanceof Provider))
             {
-            $admin_notify_users = array();
-
-            foreach(get_notification_users("SYSTEM_ADMIN") as $notify_user)
-                {
-                get_config_option($notify_user['ref'], 'user_pref_system_management_notifications', $send_message);
-
-                if($send_message == false)
-                    {
-                    continue;
-                    }
-
-                $admin_notify_users[] = $notify_user['ref'];
-                }
-
-            message_add($admin_notify_users, "image_banks plugin: Provider - {$loaded_provider} - MUST be an instance of Provider");
-
+            debug("[image_banks] Provider - {$loaded_provider} - MUST be an instance of Provider");
             continue;
             }
 
         $provider->registerConfigurationNeeds($GLOBALS);
+        if ($provider instanceof MultipleInstanceProviderInterface)
+            {
+            $parse_errs = array_unique($provider->parseInstancesConfiguration());
+            $errors = array_merge($errors, array_map(fn($E) => str_replace('%PROVIDER', $provider->getName(), $E), $parse_errs));
+            todo: create separate function for the array map
+            }
 
         $providers[$provider->getId()] = $provider;
         }
 
-    return $providers;
+    return [$providers, $errors];
     }
 
 function validFileSource($file, array $loaded_providers)
