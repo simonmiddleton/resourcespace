@@ -56,6 +56,21 @@ if(!is_array($resource))
     exit();
     }
 
+if(!is_array($resource_field_data))
+    {
+    if(getval("ajax","") != "")
+        {
+        error_alert($lang['error_no_metadata'], false);
+        }
+    else
+        {
+        include "../include/header.php";
+        $onload_message = array("title" => $lang["error"],"text" => $lang['error_no_metadata']);
+        include "../include/footer.php";
+        }
+    exit();
+    }
+
 resource_type_config_override($resource["resource_type"]);
 
 $resource_title = '';
