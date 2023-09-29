@@ -3476,6 +3476,10 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
         else
             {
             $resource_chunk = array_filter($resource_chunk,function($v){return is_int_loose($v);});
+            if ($resource_chunk === [])
+                {
+                break;
+                }
             $resourceids = $resource_chunk;
             $allresourcedata = ps_query("SELECT ref, resource_type FROM resource WHERE ref IN (" . ps_param_insert(count($resource_chunk)) . ")", ps_param_fill($resource_chunk,"i"));
             foreach($allresourcedata as $resourcedata)

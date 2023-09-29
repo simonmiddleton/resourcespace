@@ -71,3 +71,13 @@ if(
     {
     return false;
     }
+
+if (get_resource_field_data_batch(['bad']) !== [])
+    {
+    echo "Use case: Invalid list of resources - ";
+    return false;
+    }
+
+ 
+ 
+return true;
