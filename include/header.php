@@ -168,7 +168,7 @@ if($simple_search_pills_view)
 
 <!-- Chart.js for graphs -->
 <script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/chartjs-4-4-0.js"></script>
-<script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/js/dayjs.js"></script>
+<script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/date-fns.js"></script>
 <script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/chartjs-adapter-date-fns.js"></script>
 
 <!-- jsTree -->

@@ -150,16 +150,17 @@ else
     }
 ?>
 
-    <?php if ($type!="summary") { $id ="placeholder" . $type . $n; ?><canvas id= "<?php echo $id ?>"
-
-    <?php if ($from_dash) { ?>
-    style="width:220px;height:105px;"
-    <?php } else { ?>
-    style="width:100%;height:80%;"
-    <?php } ?>
-
-    ></canvas><?php
-    }
+    <?php if ($type!="summary") { 
+        $id ="placeholder" . $type . $n; 
+        ?><div
+        <?php if ($from_dash) { ?>
+        style="width:220px;height:105px;"
+        <?php } else { ?>
+        style="width:100%;height:80%;"
+        <?php } ?>>
+        <canvas id= "<?php echo $id ?>"></canvas>
+        </div><?php
+        }
 
 if ($type=="pie")
     {

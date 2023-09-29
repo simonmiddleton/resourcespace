@@ -744,18 +744,18 @@ function render_pie_graph($id,$data,$total=NULL)
             ]
         },
         options: {
+            plugins: {
+                tooltip: {
+                        // enabled: false
+                    },
+                    chartAreaBorder: {
+                        borderWidth: 2,
+                        borderDash: [ 5, 5 ],
+                        borderDashOffset: 2,
+                    }
+            },
+        },
 
-        },
-        plugins: {
-            tooltip: {
-                    // enabled: false
-                },
-                chartAreaBorder: {
-                    borderWidth: 2,
-                    borderDash: [ 5, 5 ],
-                    borderDashOffset: 2,
-                }
-        },
 
     });
 
@@ -784,7 +784,11 @@ function render_bar_graph($id,$data)
                 ]
             },
             options: {
-
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                },
                 scales: {
                     xAxis: {
                         type: 'time',
@@ -798,11 +802,7 @@ function render_bar_graph($id,$data)
                     }
                 }
             },
-            plugins: {
-                legend: {
-                    display: false
-                },
-            },
+
         }
         );
     </script>
