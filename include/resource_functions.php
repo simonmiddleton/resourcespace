@@ -3457,36 +3457,25 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     global $view_title_field, $NODE_FIELDS;
 
+    $restype = $allresdata = [];
     $csvexport = isset($exportoptions["csvexport"]) ? $exportoptions["csvexport"] : false;
     $personal = isset($exportoptions["personal"]) ? $exportoptions["personal"] : false;
     $alldata = isset($exportoptions["alldata"]) ? $exportoptions["alldata"] : false;
-
-    // Category tree fields need special handling
     $nontree_field_types = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
-
-    // Create array to store all the $resources resource_type info
-    $restype = array();
 
     // Get field_info
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
     $field_restypes = get_resource_type_field_resource_types();
-
-    $field_info_sql = 
-    "SELECT f.ref resource_type_field,
-            f.ref AS fref,
-            f.required AS frequired, " .
-            columns_in("resource_type_field", "f") . 
-    " FROM resource_type_field f
-    WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . "))
-    ORDER BY f.order_by, f.ref";
-
-    $field_info_params = ps_param_fill($nontree_field_types,"i");
-
-    # Fetch field information first
-    $fields_info = ps_query($field_info_sql,$field_info_params);
-
-    // Create array to store data
-    $allresdata=array();
+    $fields_info = ps_query(
+        "SELECT f.ref resource_type_field,
+                f.ref AS fref,
+                f.required AS frequired, " .
+                columns_in("resource_type_field", "f") . 
+        " FROM resource_type_field f
+        WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . "))
+        ORDER BY f.order_by, f.ref",
+        ps_param_fill($nontree_field_types, 'i')
+    );
 
     # Build arrays of resources
     $resource_chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
@@ -3496,12 +3485,16 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
             {
             // This is an array of search results so we already have the resource types
             $restype = array_column($resource_chunk,"resource_type","ref");
-            $resourceids = array_filter(array_column($resource_chunk,"ref"),function($v){return is_int_loose($v);});
+            $resourceids = array_filter(array_column($resource_chunk,"ref"), 'is_int_loose');
             $getresources = $resource_chunk;
             }
         else
             {
-            $resource_chunk = array_filter($resource_chunk,function($v){return is_int_loose($v);});
+            $resource_chunk = array_filter($resource_chunk, 'is_int_loose');
+            if ($resource_chunk === [])
+                {
+                break;
+                }
             $resourceids = $resource_chunk;
             $allresourcedata = ps_query("SELECT ref, resource_type FROM resource WHERE ref IN (" . ps_param_insert(count($resource_chunk)) . ")", ps_param_fill($resource_chunk,"i"));
             foreach($allresourcedata as $resourcedata)

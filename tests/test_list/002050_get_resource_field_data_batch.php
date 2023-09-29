@@ -45,29 +45,29 @@ update_field($resourcec,$fruitfield,"Mango");
 update_field($resourced,$fruitfield,"Apple");
 update_field($resourcee,$fruitfield,"Banana");
 
-$allresources = array($resourcea,$resourceb,$resourcec,$resourced,$resourcee);
-$alldata = get_resource_field_data_batch($allresources);
+$alldata = get_resource_field_data_batch([$resourcea,$resourceb,$resourcec,$resourced,$resourcee]);
 if(
-    ($alldata[$resourcea][0]["value"] != "Comedy, Action")
-     || 
-    ($alldata[$resourcea][1]["value"] != "Lemon")
-     || 
-    ($alldata[$resourceb][0]["value"] != "Comedy, Horror")
-     ||
-    ($alldata[$resourceb][1]["value"] != "Orange")
-     ||
-     ($alldata[$resourcec][0]["value"] != "Comedy, Action, Horror")
-     ||
-     ($alldata[$resourcec][1]["value"] != "Mango")
-     ||
-     ($alldata[$resourced][0]["value"] != "Action")
-     ||
-     ($alldata[$resourced][1]["value"] != "Apple")
-     ||
-     ($alldata[$resourcee][0]["value"] != "Horror")
-     ||
-     ($alldata[$resourcee][1]["value"] != "Banana")
-     )
+    $alldata[$resourcea][0]["value"] != "Comedy, Action"
+    || $alldata[$resourcea][1]["value"] != "Lemon"
+    || $alldata[$resourceb][0]["value"] != "Comedy, Horror"
+    || $alldata[$resourceb][1]["value"] != "Orange"
+    || $alldata[$resourcec][0]["value"] != "Comedy, Action, Horror"
+    || $alldata[$resourcec][1]["value"] != "Mango"
+    || $alldata[$resourced][0]["value"] != "Action"
+    || $alldata[$resourced][1]["value"] != "Apple"
+    || $alldata[$resourcee][0]["value"] != "Horror"
+    || $alldata[$resourcee][1]["value"] != "Banana"
+)
     {
     return false;
     }
+
+if (get_resource_field_data_batch(['bad']) !== [])
+    {
+    echo "Use case: Invalid list of resources - ";
+    return false;
+    }
+
+
+
+return true;
