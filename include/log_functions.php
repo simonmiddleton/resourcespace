@@ -237,7 +237,8 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                         `activity_log`.`remote_ref` AS 'table_reference'
                    FROM `activity_log`
         LEFT OUTER JOIN `user` ON `activity_log`.`user`=`user`.`ref`
-                  WHERE ";
+                  WHERE
+                    {$where_activity_log_statement}";
     $sql_query->parameters = array_merge($sql_query->parameters, array_merge($res_when_parameters,$col_when_parameters));
 
     $search_block = 
@@ -276,7 +277,8 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                    FROM `resource_log`
         LEFT OUTER JOIN `user` ON `resource_log`.`user`=`user`.`ref`
         LEFT OUTER JOIN `resource_type_field` ON `resource_log`.`resource_type_field`=`resource_type_field`.`ref`
-                  WHERE ";
+                  WHERE
+                        {$where_resource_log_statement}";
     $sql_query->parameters = array_merge($sql_query->parameters, $res_when_parameters);
 
         $search_block =
@@ -313,7 +315,8 @@ function get_activity_log($search, $offset, $rows, array $where_statements, $tab
                    FROM `collection_log`
         LEFT OUTER JOIN `user` ON `collection_log`.`user`=`user`.`ref`
         LEFT OUTER JOIN `collection` ON `collection_log`.`collection`=`collection`.`ref`
-                  WHERE ";
+                  WHERE
+                        {$where_collection_log_statement}";
     $sql_query->parameters = array_merge($sql_query->parameters, $col_when_parameters);
 
     $search_block = 
