@@ -709,3 +709,102 @@ function report_process_query_placeholders(string $query, array $placeholders): 
 
     return $sql;
     }
+
+function render_pie_graph($id,$data,$total=NULL)
+    {
+    $rt=0;
+    $labels = [];
+    $values = [];
+    foreach ($data as $row)
+        {
+        $rt+=$row["c"];
+        $values[ ]= $row["c"];
+        $labels[] = $row["name"];
+        }
+    
+    if (!is_null($total) && $total>$rt)
+        {
+        # The total doesn't match, some rows were truncated, add an "Other".
+        $values[] = $total-$rt;
+        $labels[] = "Other";
+        }
+    ?>
+    <script type="text/javascript">
+    // Setup Styling
+
+
+    new Chart(document.getElementById('<?php echo $id ?>'), {
+        type: 'pie',
+        data: {
+            labels: ['<?php echo implode("', '",$labels) ?>'],
+                datasets: [
+                {
+                    data: [<?php echo implode(", ",$values) ?>]
+                }
+            ]
+        },
+        options: {
+
+        },
+        plugins: {
+            tooltip: {
+                    // enabled: false
+                },
+                chartAreaBorder: {
+                    borderWidth: 2,
+                    borderDash: [ 5, 5 ],
+                    borderDashOffset: 2,
+                }
+        },
+
+    });
+
+    </script>
+    <?php
+    }
+
+function render_bar_graph($id,$data)
+    {
+    $values = "";
+    foreach ($data as $t => $c)
+        {
+        $values .= "{x: $t, y: $c },\n";
+        }
+    ?>
+    <script type="text/javascript">
+        new Chart(
+            document.getElementById('<?php echo $id ?>'),
+            {
+            type: 'line',
+            data: {
+                datasets: [
+                    {
+                        data: [<?php echo $values ?>]
+                    }
+                ]
+            },
+            options: {
+
+                scales: {
+                    xAxis: {
+                        type: 'time',
+                        time: {
+                            unit:'day',
+                            displayFormats :{
+                                day: 'dd-MM-YYY',
+                            }
+                        },
+                        unit: 'seconds',
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+            },
+        }
+        );
+    </script>
+    <?php
+    }
