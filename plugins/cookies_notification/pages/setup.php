@@ -21,7 +21,7 @@ $page_def[] = config_add_boolean_select(
 
 
 // Render setup page ritual
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $lang['cookies_notification_configuration']);
+config_gen_setup_html($page_def, $plugin_name, null, $lang['cookies_notification_configuration']);
 include '../../../include/footer.php';

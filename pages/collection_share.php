@@ -285,7 +285,10 @@ include "../include/header.php";
 	<ul>
 	<?php
 	
-	if(!$editing || $editexternalurl)
+    # Flag to prevent duplicate rendering of the "generateinternalurl" text and associated input field
+    $generateinternalurl_rendered=false;
+
+    if(!$editing || $editexternalurl)
 		{?>
 		<?php if ($email_sharing) { ?><li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_email.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&collection=<?php echo urlencode($collection_url); ?>&restypes=<?php echo urlencode($restypes); ?>&order_by=<?php echo urlencode($order_by); ?>&col_order_by=<?php echo urlencode($col_order_by); ?>&sort=<?php echo urlencode($sort); ?>&offset=<?php echo urlencode($offset); ?>&find=<?php echo urlencode($find); ?>&k=<?php echo urlencode($k); ?>"><?php echo htmlspecialchars($lang["emailcollectiontitle"])?></a></li><?php } ?>
 
@@ -311,11 +314,12 @@ include "../include/header.php";
             && allow_featured_collection_share($collection)
             || $collection["public"]==1 || $ignore_collection_access)
             && !$generateurl) // Just show the internal share URL straight away as there is no generate link
-			{ ?>
-			<p><?php echo htmlspecialchars($lang["generateurlinternal"]); ?></p><br />
-			<p><input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
-			<?php
-			}?>
+                {?>
+                <p><?php echo htmlspecialchars($lang["generateurlinternal"])?></p>
+                <p><input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
+                <?php
+                $generateinternalurl_rendered=true;
+                }?>
 
 		<?php hook("extra_share_options");
 		}
@@ -323,10 +327,14 @@ include "../include/header.php";
 		{
         if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl) && $collection["public"]==1 || $ignore_collection_access)
 			{
-			?>
-			<p><?php echo htmlspecialchars($lang["generateurlinternal"])?></p>
-			
-			<p><input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
+            # Only render "generateinternalurl" text and associated input field if it hasn't already been rendered
+            if(!$generateinternalurl_rendered) 
+                {?>
+                <p><?php echo htmlspecialchars($lang["generateurlinternal"])?></p>
+                <p><input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
+                <?php
+                $generateinternalurl_rendered=true;
+                }?>
 			<?php
 			}
 			

@@ -1053,9 +1053,15 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
         {
         // Add header image to email if not using template
         $img_url = get_header_image(true);
-        $img_div_style = "max-height:50px;padding: 5px;";
-        $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
-        $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
+        $img_div_style = 'float: left;width: 100%;max-height:50px;padding: 5px;';
+        $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "#fff") . ";";
+
+        $headerimghtml .= '<div style="' . $img_div_style . '">';
+        $headerimghtml .= '<div style="float: left;">';
+        $headerimghtml .= '<div>';        
+        
+        $headerimghtml .= '<img src="' . $img_url . '" style="max-height:50px;"  />';
+        $headerimghtml .= '</div></div></div><br /><br />';
         }
 
     foreach($userlanguages as $userlanguage=>$notifications)

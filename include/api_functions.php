@@ -208,7 +208,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
 		$position = $iiif_result["iiif_position"];
         $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
         $canvases[$position]["@type"] = "sc:Canvas";
-        $canvases[$position]["label"] = (isset($position_prefix)?$position_prefix:'') . $position;
+        $canvases[$position]["label"] = ($GLOBALS['position_prefix'] ?? '') . $position;
         
         // Get the size of the images
         $image_size = get_original_imagesize($iiif_result["ref"],$img_path);

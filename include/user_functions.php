@@ -275,17 +275,7 @@ function setup_user(array $userdata)
     get_config_option($userref,'actions_resource_review', $legacy_resource_review, true); // Deprecated option
     if(trim($user_actions_notify_states) == '' && $legacy_resource_review)
         {
-        $default_notify_states = [];
-        // Add action for users who can submit 'pending submission' resources for review
-        if(checkperm("e-2") && checkperm("e-1") && checkperm('d'))
-            {
-            $default_notify_states[] = -2;
-            }
-        if(checkperm("e-1") && checkperm("e0"))
-            {
-            // Add action for users who can make pending resources active
-            $default_notify_states[] = -1;
-            }
+        $default_notify_states = get_default_notify_states();
         $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
         }
     elseif ($legacy_resource_review)
@@ -3376,4 +3366,51 @@ function is_anonymous_user()
     {
     global $anonymous_login, $username;
     return isset($anonymous_login) && $username == $anonymous_login;
+    }
+
+
+/**
+ * Retrieve all user records with the user preference specified
+ *
+ * @param  string $preference   Preference to check
+ * @param  string $value        Preference value to check for
+ * 
+ * @return array                Array of user refs with the preference set as specified
+ * 
+ * 
+ **/
+function get_users_by_preference(string $preference, string $value) : array
+    {
+    $sql = "SELECT up.user value
+              FROM user_preferences up 
+        RIGHT JOIN user u 
+                ON u.ref=up.user
+             WHERE u.approved=1
+               AND parameter = ? 
+               AND value = ?";
+    $params = ["s",$preference,"s", $value];
+
+    return ps_array($sql,$params);    
+    }
+
+/**
+ * Get the default notification workflow states for the current user. Used by setup_user() and get_user_actions() if no user preference has been set
+ *
+ * @return array    Array if workflow sate refs
+ * 
+ */
+function get_default_notify_states(): array
+    {
+    $default_notify_states = [];
+    // Add action for users who can submit 'pending submission' resources for review
+    if(checkperm("e-2") && checkperm("e-1") && checkperm('d'))
+        {
+        $default_notify_states[] = -2;
+        }
+    if(checkperm("e-1") && checkperm("e0"))
+        {
+        // Add action for users who can make pending resources active
+        $default_notify_states[] = -1;
+        }
+    return $default_notify_states;
     }

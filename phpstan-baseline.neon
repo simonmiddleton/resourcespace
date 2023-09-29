@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Undefined variable\\: \\$position_prefix$#"
-			count: 1
-			path: include/api_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$collection$#"
 			count: 4
 			path: include/collections_functions.php
@@ -74,16 +69,6 @@ parameters:
 			message: "#^Undefined variable\\: \\$result$#"
 			count: 1
 			path: include/general_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$original_extension$#"
-			count: 1
-			path: include/image_processing.php
-
-		-
-			message: "#^Undefined variable\\: \\$processfile$#"
-			count: 1
-			path: include/image_processing.php
 
 		-
 			message: "#^Undefined variable\\: \\$where_activity_log_statement$#"
@@ -269,11 +254,6 @@ parameters:
 			message: "#^Instantiated class MYPDF not found\\.$#"
 			count: 1
 			path: plugins/annotate/include/annotate_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$flagpath$#"
-			count: 2
-			path: plugins/csv_upload/include/csv_functions.php
 
 		-
 			message: "#^Undefined variable\\: \\$_MIME_TYPES$#"

@@ -823,9 +823,11 @@ function api_add_resource_nodes($resource,$nodestring)
     return add_resource_nodes_multi($resourcearr,$nodes,false,true);
     }
     
-function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, $field = 0, $log_code="")
+function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, string $field = '', string $log_code = '')
     {
-    return resource_log_last_rows($minref, $days, $maxrecords, $field, $log_code);
+    $fields = explode(',', $field);
+    $log_codes = explode(',', $log_code);
+    return resource_log_last_rows($minref, $days, $maxrecords, $fields, $log_codes);
     }
     
 function api_get_resource_all_image_sizes($resource)

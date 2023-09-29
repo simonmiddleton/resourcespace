@@ -338,6 +338,14 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
     # For all configured periodic reports, send a mail if necessary.
     global $lang,$baseurl, $report_rows_zip_limit, $email_notify_usergroups, $userref;
 
+    if (is_process_lock("periodic_report_emails")) 
+        {
+        echo " - periodic_report_emails process lock is in place. Skipping.\n";
+        return;
+        }
+    
+    set_process_lock("periodic_report_emails");
+
     # Query to return all 'pending' report e-mails, i.e. where we haven't sent one before OR one is now overdue.
     $query = "
         SELECT pe.ref,
@@ -547,6 +555,8 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             }
         }
     unset($GLOBALS["use_error_exception"]);
+
+    clear_process_lock("periodic_report_emails");
     }
 
 function delete_periodic_report($ref)

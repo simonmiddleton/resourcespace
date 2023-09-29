@@ -181,16 +181,15 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                         $uploaded_extension = $path_parts['extension'];
                         }
 
-                    if(isset($user_set_filename_path_parts['extension']) && (!isset($uploaded_extension) || $uploaded_extension == $user_set_filename_path_parts['extension']))
+                    if(
+                        isset($user_set_filename_path_parts['extension'])
+                        && (
+                            !isset($uploaded_extension)
+                            || $uploaded_extension == $user_set_filename_path_parts['extension']
+                        )
+                    )
                         {
                         $filename = $user_set_filename;
-                        }
-
-                    // If the user filename doesn't have an extension add the original one
-                    $path_parts = pathinfo($filename);
-                    if(!isset($path_parts['extension']) && isset($original_extension) && $original_extension != "") 
-                        {
-                        $filename .= '.' . $uploaded_extension;
                         }
                     }
                 }
@@ -613,6 +612,8 @@ function extract_exif_comment($ref,$extension="")
     global $exif_comment,$exiftool_no_process,$exiftool_resolution_calc, $disable_geocoding, $embedded_data_user_select_fields,$filename_field,$lang;
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['exiftooltag']);
 
+    $processfile['name']='';
+
     $exiftool_fullpath = get_utility_path("exiftool");
     if (($exiftool_fullpath!=false) && !in_array($extension,$exiftool_no_process))
         {
@@ -927,7 +928,7 @@ function extract_exif_comment($ref,$extension="")
                             $original_filename = '';
                             if(isset($_REQUEST['file_name'])) {
                                 $original_filename = $_REQUEST['file_name'];
-                            } elseif(isset($processfile)) {
+                            } elseif(isset($processfile['name'])) {
                                 $original_filename = $processfile['name'];
                             }
 

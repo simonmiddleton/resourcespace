@@ -28,7 +28,7 @@ foreach($providers as $provider)
     }
 
 // Render setup page ritual
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 if(isset($error))
     {
@@ -36,5 +36,5 @@ if(isset($error))
     <div class="PageInformal"><?php echo htmlspecialchars($error); ?></div>
     <?php
     }
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $lang['image_banks_configuration']);
+config_gen_setup_html($page_def, $plugin_name, null, $lang['image_banks_configuration']);
 include '../../../include/footer.php';

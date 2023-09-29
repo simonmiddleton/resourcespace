@@ -751,7 +751,14 @@ elseif($restypes=='')
                 case FIELD_TYPE_CATEGORY_TREE:
                     ?>
                     var ref = <?php echo htmlspecialchars($fields[$n]["ref"]) ?>;
-                    jQuery('#search_tree_' + ref).jstree(true).deselect_all();
+                    jQuery('#search_tree_' + ref).jstree({
+                        'core' : {
+                            'themes' : {
+                                'name' : 'default-dark',
+                                'icons': false
+                            }
+                        }
+                    }).deselect_all();
 
                     /* remove the hidden inputs */
                     var elements = document.getElementsByName('nodes_searched[' + ref + ']');
