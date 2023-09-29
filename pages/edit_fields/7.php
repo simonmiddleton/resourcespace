@@ -212,14 +212,15 @@ echo $hidden_input_elements;
                             };
                     }
             },
-            'multiple' : true,
             'themes' : {
-                'icons' : false
-            }
+                    'name' : 'default-dark',
+                    'icons': false
+            },
+            'multiple' : true,
         },
         'plugins' : [
             'wholerow',
-            'checkbox'
+            'checkbox',
         ],
         'checkbox' : {
             // jsTree Documentation: three_state is a boolean indicating if checkboxes should cascade down and have an 

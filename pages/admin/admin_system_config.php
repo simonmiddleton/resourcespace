@@ -239,10 +239,10 @@ $page_def[] = config_add_boolean_select(
 $page_def[] = config_add_html('</div>');
 
 // Watermark section
-$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['wartermark_header'] . '</h3><div id="SystemConfigWatermarkSection" class="CollapsibleSection">');
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['watermark_header'] . '</h3><div id="SystemConfigWatermarkSection" class="CollapsibleSection">');
 $page_def[] = config_add_file_input(
     'watermark',
-    $lang['wartermark_label'],
+    $lang['watermark_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
     420,
     array('png'),

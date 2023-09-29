@@ -34,6 +34,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing, $valid_upload_paths;
 
+    $original_extension="";
+    
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
 
@@ -613,6 +615,8 @@ function extract_exif_comment($ref,$extension="")
     global $exif_comment,$exiftool_no_process,$exiftool_resolution_calc, $disable_geocoding, $embedded_data_user_select_fields,$filename_field,$lang;
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['exiftooltag']);
 
+    $processfile['name']='';
+
     $exiftool_fullpath = get_utility_path("exiftool");
     if (($exiftool_fullpath!=false) && !in_array($extension,$exiftool_no_process))
         {
@@ -927,7 +931,7 @@ function extract_exif_comment($ref,$extension="")
                             $original_filename = '';
                             if(isset($_REQUEST['file_name'])) {
                                 $original_filename = $_REQUEST['file_name'];
-                            } elseif(isset($processfile)) {
+                            } elseif(isset($processfile['name'])) {
                                 $original_filename = $processfile['name'];
                             }
 

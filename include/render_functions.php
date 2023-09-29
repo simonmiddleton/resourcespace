@@ -853,7 +853,14 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 			<?php
 			# Add to clear function
 			$clear_function .= "
-                jQuery('#search_tree_{$field['ref']}').jstree(true).deselect_all();
+                jQuery('#search_tree_{$field['ref']}').jstree({
+                    'core' : {
+                        'themes' : {
+                            'name' : 'default-dark',
+                            'icons': false
+                        }
+                    }
+                }).deselect_all();
 
                 /* remove the hidden inputs */
                 var elements = document.getElementsByName('nodes_searched[{$field['ref']}][]');
@@ -4506,7 +4513,13 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             echo "<input id='edit_reset_button' name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
             ?>
-        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"<?php } ?>
+        <input 
+        <?php 
+        if ($multiple) 
+            { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"
+            <?php 
+            } 
+            ?>
                name="save"
                id="edit_save_button"
                class="editsave"

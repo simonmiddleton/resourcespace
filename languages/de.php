@@ -784,7 +784,7 @@ $lang["confirmdeleteaccess"]="Sind Sie sicher, dass Sie diesen Zugangscode lösc
 $lang["confirmdeleteaccessresource"]="Sind Sie sicher, dass Sie diesen Zugangscode löschen wollen? Benutzer, denen Sie den Zugangscode geschickt haben, können dann nicht mehr auf die Ressource zugreifen.";
 $lang["noexternalsharing"]="Nicht an externe Benutzer weitergegeben.";
 $lang["sharedcollectionaddwarning"]="Achtung: Diese Kollektion wurde an externe Benutzer weitergegeben. Die Ressource, die Sie zur Kollektion hinzugefügt haben, ist nun auch für diese Benutzer verfügbar. Klicken Sie auf 'Weitergeben', um die Einstellungen zu verwalten.";
-$lang["sharedcollectionaddwarningupload"]="Achtung: Diese Kollektion wurde an externe Benutzer weitergegeben. Die Ressourcen, die Sie hochladen, werden auch für diese Benutzer verfügbar. Klicken Sie auf 'Weitergeben', um die Einstellungen zu verwalten.";
+$lang["sharedcollectionaddwarningupload"]="Diese Kollektion wurde an externe Benutzer weitergegeben. Die Ressourcen, die Sie hochladen, werden auch für diese Benutzer verfügbar. Klicken Sie auf 'Weitergeben', um die Einstellungen zu verwalten.";
 
 $lang["restrictedsharecollection"]="Sie haben eingeschränkten Zugriff auf eine oder mehrere Ressourcen in dieser Kollektion, daher ist die Weitergabe deaktiviert.";
 $lang["selectgenerateurlexternal"]="Um eine URL für Nutzer ohne Login zu generieren, wählen Sie bitte die Zugriffsrechte aus, die Sie für diese Ressourcen gewähren wollen.";
