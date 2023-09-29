@@ -5147,3 +5147,11 @@ function set_watermark_image()
         $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
         }
     }
+
+/**
+ * Helper function to check if value is a positive integer looking type.
+ */
+function is_positive_int_loose(int|float|string $V): bool
+    {
+    return is_int_loose($V) && $V > 0;
+    }
