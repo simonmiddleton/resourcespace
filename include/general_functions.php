@@ -5150,8 +5150,10 @@ function set_watermark_image()
 
 /**
  * Helper function to check if value is a positive integer looking type.
+ * 
+ * @param int|float|string $V Value to be tested
  */
-function is_positive_int_loose(int|float|string $V): bool
+function is_positive_int_loose($V): bool
     {
     return is_int_loose($V) && $V > 0;
     }
