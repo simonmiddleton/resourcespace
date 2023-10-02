@@ -5049,3 +5049,89 @@ function set_order_by_to_zero(array $item): array
     $item['order_by'] = 0;
     return $item;
     }
+
+/**
+ * Helper function to cast functions that only echo things out (e.g render functions) to string type.
+ *
+ * @param callable $fn Function to cast
+ * @param array $args Provide function's arguments (if applicable)
+ */
+function cast_echo_to_string(callable $fn, array $args = []): string
+    {
+    ob_start();
+    $fn(...$args);
+    $result = ob_get_contents();
+    ob_end_clean();
+    return $result;
+    }
+
+/**
+ * Helper function to parse input to a list of a particular type.
+ * 
+ * @example include/api_bindings.php Used in api_get_resource_type_fields() or api_create_resource_type_field()
+ * 
+ * @param string $csv CSV of raw data
+ * @param callable(string) $type Function checking each CSV item, as required by your context, to determine if it should
+ *                               be allowed in the result set
+ */
+function parse_csv_to_list_of_type(string $csv, callable $type): array
+    {
+    $list = explode(',', $csv);
+    $return = [];
+    foreach ($list as $value)
+        {
+        $value = trim($value);
+        if ($type($value))
+            {
+            $return[] = $value;
+            }
+        }
+    return $return;
+    }
+
+/**
+ * Remove metadata field properties during execution lockout
+ *
+ * @param array $rtf Resource type field data structure
+ * @return array Returns without the relevant properties if execution lockout is enabled
+ */
+function execution_lockout_remove_resource_type_field_props(array $rtf): array
+    {
+    $props = [
+        'autocomplete_macro',
+        'value_filter',
+        'exiftool_filter',
+        'onchange_macro',
+    ];
+    return $GLOBALS['execution_lockout'] ? array_diff_key($rtf, array_flip($props)) : $rtf;
+    }
+
+/**
+ * Update global variable watermark to point to the correct file. Watermark set on System Configuration page will override a watermark
+ * set in config.php. config.default.php will apply otherwise (blank) so no watermark will be applied.
+ *
+ * @return void
+ */
+function set_watermark_image()
+    {
+    global $watermark, $storagedir;
+    
+    if (substr($watermark, 0, 13) == '[storage_url]')
+        {
+        $GLOBALS["watermark"] = str_replace('[storage_url]', $storagedir, $watermark);  # Watermark from system configuration page
+        }
+    else if ($watermark !== '')
+        {
+        $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
+        }
+    }
+
+/**
+ * Helper function to check if value is a positive integer looking type.
+ * 
+ * @param int|float|string $V Value to be tested
+ */
+function is_positive_int_loose($V): bool
+    {
+    return is_int_loose($V) && $V > 0;
+    }
