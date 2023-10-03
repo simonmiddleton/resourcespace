@@ -91,7 +91,7 @@ if($iiif->validrequest)
         }
     else
         {
-        header("Content-Type: application/ld+json");
+        header('Content-Type: application/ld+json;profile="http://iiif.io/api/image/3/context.json"');
         foreach($iiif->headers as $iiif_header)
             {
             header($iiif_header);

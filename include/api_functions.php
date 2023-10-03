@@ -276,7 +276,6 @@ function iiif_get_thumbnail($iiif, $resourceid)
 *
 * @param object $iiif		  IIIF request object
 * @param integer $resourceid  Resource ID
-* @param string $position     The canvas identifier, i.e position in the sequence. If $iiif_sequence_field is defined
 * @param array $size          ResourceSpace size information. Required information: identifier and whether it
 *                             requires to return height & width back (e.g annotations don't require it).
 *                             Please note for the identifier - we use 'hpr' if the original file is not a JPG file it
@@ -289,7 +288,7 @@ function iiif_get_thumbnail($iiif, $resourceid)
 *
 * @return array
 */
-function iiif_get_image($iiif,$resource,$position, array $size_info)
+function iiif_get_image($iiif,$resource, array $size_info)
     {
     // Quick validation of the size_info param
     if(empty($size_info) || (!isset($size_info['identifier']) && !isset($size_info['return_height_width'])))
@@ -688,6 +687,7 @@ function iiif_generate_manifest(&$iiif)
                 $iiif->response["@context"] = "http://iiif.io/api/presentation/3/context.json";
                 $iiif->response["id"] = $iiif->rooturl . $iiif->request["id"] . "/manifest";
                 $iiif->response["type"] = "Manifest";
+                $iiif->response["behavior"] = "paged";
 
                 // Descriptive metadata about the object/work
                 // The manifest data should be the same for all resources that are returned.
@@ -751,7 +751,11 @@ function iiif_generate_manifest(&$iiif)
                     }
 
                 // Sequences
-                $iiif->response["items"] = iiif_get_canvases($iiif,false,true);
+                $iiif->response["items"] = iiif_get_canvases($iiif,false);
+
+                // Add as sequences for Universal Viewer support (images not working with a v3.0 manifest at time of writing)
+                $iiif->response["sequences"] = iiif_generate_sequence($iiif);
+
                 $iiif->validrequest = true;
                 /* MANIFEST REQUEST END */
                 }
@@ -847,10 +851,11 @@ function iiif_generate_canvas(object &$iiif, $position)
         }
 
     $position = $resource["iiif_position"];
-    $canvas["@context"] = "http://iiif.io/api/presentation/3/context.json";
+    $position_val = $resource["field" . $iiif->sequence_field] ?? get_data_by_field($resource["ref"], $iiif->sequence_field);
+    //$canvas["@context"] = "http://iiif.io/api/presentation/3/context.json";
     $canvas["id"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
     $canvas["type"] = "Canvas";
-    $canvas["label"]["none"] = [$position_prefix . $position];
+    $canvas["label"]["none"] = [$position_prefix . $position_val];
 
 
     // Get the size of the images
@@ -909,7 +914,7 @@ function iiif_generate_annotation(object &$iiif, int $position=0) : array
     $annotation["id"] = $iiif->rooturl . $iiif->request["id"] . "/annotation/" . $position;
     $annotation["type"] = "Annotation";
     $annotation["motivation"] = "Painting";
-    $annotation["body"] = iiif_get_image($iiif, $iiif->processing["resource"], $position, $iiif->processing["size_info"]);
+    $annotation["body"] = iiif_get_image($iiif, $iiif->processing["resource"], $iiif->processing["size_info"]);
     $annotation["target"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
     return $annotation;
     }
@@ -1056,14 +1061,14 @@ function iiif_process_image_request(&$iiif) : void
             iiif_error(404,$iiif->errors);
             }
         $image_size = get_original_imagesize($iiif->request["id"],$img_path, "jpg");
-        $imageWidth = (int) $image_size[1];
-        $imageHeight = (int) $image_size[2];
-        $portrait = ($imageHeight >= $imageWidth) ? TRUE : FALSE;
+        $iiif->imagewidth = (int) $image_size[1];
+        $iiif->imageheight = (int) $image_size[2];
+        $portrait = ($iiif->imageheight >= $iiif->imagewidth) ? TRUE : FALSE;
 
         // Get all available sizes
         $sizes = get_image_sizes($iiif->request["id"],true,"jpg",false);
         $availsizes = [];
-        if ($imageWidth > 0 && $imageHeight > 0)
+        if ($iiif->imagewidth > 0 && $iiif->imageheight > 0)
             {
             foreach($sizes as $size)
                 {
@@ -1072,12 +1077,12 @@ function iiif_process_image_request(&$iiif) : void
                     {
                     // portrait or square
                     $preheight = $size['height'];
-                    $prewidth = round(($imageWidth * $preheight + $imageHeight - 1) / $imageHeight);
+                    $prewidth = round(($iiif->imagewidth * $preheight + $iiif->imageheight - 1) / $iiif->imageheight);
                     }
                 else
                     {
                     $prewidth = $size['width'];
-                    $preheight = round(($imageHeight * $prewidth + $imageWidth - 1) / $imageWidth);
+                    $preheight = round(($iiif->imageheight * $prewidth + $iiif->imagewidth - 1) / $iiif->imagewidth);
                     }
                 if($prewidth > 0 && $preheight > 0 && $prewidth <= $iiif->max_width && $preheight <= $iiif->max_height)
                     {
@@ -1098,11 +1103,11 @@ function iiif_process_image_request(&$iiif) : void
                 ];
             $iiif->response["id"] = $iiif->rootimageurl . $iiif->request["id"];
 
-            $iiif->response["height"] = $imageHeight;
-            $iiif->response["width"]  = $imageWidth;
+            $iiif->response["height"] = $iiif->imageheight;
+            $iiif->response["width"]  = $iiif->imagewidth;
 
             $iiif->response["type"] = "ImageService3";
-            $iiif->response["profile"] = "level1";
+            $iiif->response["profile"] = "level0";
             // if($iiif->custom_sizes)
             //     {
             //     $iiif->response["profile"][] = array(
@@ -1130,7 +1135,7 @@ function iiif_process_image_request(&$iiif) : void
                 $iiif->response["tiles"] = [];
                 $iiif->response["tiles"][] = array("height" => $iiif->preview_tile_size, "width" => $iiif->preview_tile_size, "scaleFactors" => $iiif->preview_tile_scale_factors);
                 }
-            $iiif->headers[] = 'Link: <http://iiif.io/api/image/2/level0.json>;rel="profile"';
+            $iiif->headers[] = 'Link: <http://iiif.io/api/image/3/level0.json>;rel="profile"';
             $iiif->validrequest = true;
             }
         else
@@ -1153,12 +1158,12 @@ function iiif_process_image_request(&$iiif) : void
                     }
                 else
                     {
-                    $regionx = (int)$region_filtered[0];
-                    $regiony = (int)$region_filtered[1];
-                    $regionw = (int)$region_filtered[2];
-                    $regionh = (int)$region_filtered[3];
-                    debug("IIIF region requested: x:" . $regionx . ", y:" . $regiony . ", w:" .  $regionw . ", h:" . $regionh);
-                    if(fmod($regionx,$iiif->preview_tile_size) != 0 || fmod($regiony,$iiif->preview_tile_size) != 0)
+                    $iiif->regionx = (int)$region_filtered[0];
+                    $iiif->regiony = (int)$region_filtered[1];
+                    $iiif->regionw = (int)$region_filtered[2];
+                    $iiif->regionh = (int)$region_filtered[3];
+                    debug("IIIF region requested: x:" . $iiif->regionx . ", y:" . $iiif->regiony . ", w:" .  $iiif->regionw . ", h:" . $iiif->regionh);
+                    if(fmod($iiif->regionx,$iiif->preview_tile_size) != 0 || fmod($iiif->regiony,$iiif->preview_tile_size) != 0)
                         {
                         // Invalid region
                         $iiif->errors[]  = "Invalid region requested. Supported tiles are " . $iiif->preview_tile_size . "x" . $iiif->preview_tile_size . " at scale factors " . implode(",",$iiif->preview_tile_scale_factors) . ".";
@@ -1181,74 +1186,41 @@ function iiif_process_image_request(&$iiif) : void
                 {
                 // Currently support 'w,' and ',h' syntax requests
                 $getdims    = explode(",",$iiif->request["size"]);
-                $getwidth   = (int)$getdims[0];
-                $getheight  = (int)$getdims[1];
+                $iiif->getwidth   = (int)$getdims[0];
+                $iiif->getheight  = (int)$getdims[1];
                 if($tile_request)
                     {
-                    if(($regionx + $regionw) >= $imageWidth || ($regiony + $regionh) >= $imageHeight)
-                        {
-                        // Size specified is not the standard tile width, may be right or bottom edge of image
-                        $validtileh = false;
-                        $validtilew = false;
-
-                        if($getwidth > 0 && ($getheight == 0 || $getheight == $iiif->preview_tile_size))
-                            {
-                            $scale = ceil($regionw / $getwidth);
-                            }
-                        elseif($getheight > 0 && ($getwidth == 0 || $getwidth == $iiif->preview_tile_size))
-                            {
-                            $scale = ceil($regionh / $getheight);
-                            }
-                        else
-                            {
-                            $iiif->errors[] = "Invalid tile size requested";
-                            iiif_error(501,$iiif->errors);
-                            }
-
-                        if(!in_array($scale,$iiif->preview_tile_scale_factors))
-                            {
-                            $iiif->errors[] = "Invalid tile size requested";
-                            iiif_error(501,$iiif->errors);
-                            }
-                        }
-                    elseif(($getwidth == $iiif->preview_tile_size && $getheight == 0) ||
-                            ($getheight == $iiif->preview_tile_size && $getwidth == 0) ||
-                            ($getheight == $iiif->preview_tile_size && $getwidth == $iiif->preview_tile_size))
-                        {
-                        $valid_tile = true;
-                        }
-                    else
+                    if(!is_valid_tile_request($iiif))
                         {
                         $iiif->errors[] = "Invalid tile size requested";
                         iiif_error(400,$iiif->errors);
                         }
 
-                    $iiif->request["getsize"] = "tile_" . $regionx . "_" . $regiony . "_". $regionw . "_". $regionh;
-
-                    debug("IIIF" . $regionx . "_" . $regiony . "_". $regionw . "_". $regionh);
+                    $iiif->request["getsize"] = "tile_" . $iiif->regionx . "_" . $iiif->regiony . "_". $iiif->regionw . "_". $iiif->regionh;
+                    debug("IIIF" . $iiif->regionx . "_" . $iiif->regiony . "_". $iiif->regionw . "_". $iiif->regionh);
                     }
                 else
                     {
-                    if($getheight == 0)
+                    if($iiif->getheight == 0)
                         {
-                        $getheight = floor($getwidth * ($imageHeight/$imageWidth));
+                        $iiif->getheight = floor($iiif->getwidth * ($iiif->imageheight/$iiif->imagewidth));
                         }
-                    elseif($getwidth == 0)
+                    elseif($iiif->getwidth == 0)
                         {
-                        $getwidth = floor($getheight * ($imageWidth/$imageHeight));
+                        $iiif->getwidth = floor($iiif->getheight * ($iiif->imagewidth/$iiif->imageheight));
                         }
                     // Establish which preview size this request relates to
                     foreach($availsizes  as $availsize)
                         {
-                        debug("IIIF - checking available size for resource " . $resource["ref"]  . ". Size '" . $availsize["id"] . "': " . $availsize["width"] . "x" . $availsize["height"] . ". Requested size: " . $getwidth . "x" . $getheight);
-                        if($availsize["width"] == $getwidth && $availsize["height"] == $getheight)
+                        debug("IIIF - checking available size for resource " . $resource["ref"]  . ". Size '" . $availsize["id"] . "': " . $availsize["width"] . "x" . $availsize["height"] . ". Requested size: " . $iiif->getwidth . "x" . $iiif->getheight);
+                        if($availsize["width"] == $iiif->getwidth && $availsize["height"] == $iiif->getheight)
                             {
                             $iiif->request["getsize"] = $availsize["id"];
                             }
                         }
                     if(!isset($iiif->request["getsize"]))
                         {
-                        if(!$iiif->custom_sizes || $getwidth > $iiif->max_width || $getheight > $iiif->max_height)
+                        if(!$iiif->custom_sizes || $iiif->getwidth > $iiif->max_width || $iiif->getheight > $iiif->max_height)
                             {
                             // Invalid size requested
                             $iiif->errors[] = "Invalid size requested";
@@ -1256,7 +1228,7 @@ function iiif_process_image_request(&$iiif) : void
                             }
                         else
                             {
-                            $iiif->request["getsize"] = "resized_" . $getwidth . "_". $getheight;
+                            $iiif->request["getsize"] = "resized_" . $iiif->getwidth . "_". $iiif->getheight;
                             }
                         }
                     }
@@ -1268,7 +1240,7 @@ function iiif_process_image_request(&$iiif) : void
                     {
                     if($iiif->request["size"] == "full"  || $iiif->request["size"] == "max")
                         {
-                        $iiif->request["getsize"] = "tile_" . $regionx . "_" . $regiony . "_". $regionw . "_". $regionh;
+                        $iiif->request["getsize"] = "tile_" . $iiif->regionx . "_" . $iiif->regiony . "_". $iiif->regionw . "_". $iiif->regionh;
                         $iiif->request["getext"] = "jpg";
                         }
                     else
@@ -1280,7 +1252,7 @@ function iiif_process_image_request(&$iiif) : void
                 else
                     {
                     // Full/max image region requested
-                    if($iiif->max_width >= $imageWidth && $iiif->max_height >= $imageHeight)
+                    if($iiif->max_width >= $iiif->imagewidth && $iiif->max_height >= $iiif->imageheight)
                         {
                         $isjpeg = in_array(strtolower($resource["file_extension"]),array("jpg","jpeg"));
                         $iiif->request["getext"] = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
@@ -1460,6 +1432,50 @@ function generate_iiif_image_service(object $iiif, int $resourceid) : array
     // $thumbnail["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
 	$service["id"] = $iiif->rootimageurl . $resourceid;
 	$service["type"] = "ImageService3";
-	$service["profile"] = "level1";
+	$service["profile"] = "level0";
     return $service;
+    }
+
+
+function is_valid_tile_request(object &$iiif)
+    {
+    // echo "\nregionx $iiif->regionx";
+    // echo "\nregionw $iiif->regionw";
+    // echo "\nregiony $iiif->regiony";
+    // echo "\nregionh $iiif->regionh";
+    // echo "\ngetheight $iiif->getheight";
+    // echo "\ngetwidth $iiif->getwidth";
+    // echo "\nimagewidth $iiif->imagewidth";
+    // echo "\nimageheight $iiif->imageheight";
+    // echo "\nregionx + regionw " . $iiif->regionx + $iiif->regionw;
+    // echo "\nregiony + regionh " . $iiif->regiony + $iiif->regionh;
+    // echo "\nfmod regionw/getwidth " . fmod($iiif->regionw,$iiif->getwidth);
+    // echo "\nfmod regionh/getheight " . fmod($iiif->regionh,$iiif->getheight);
+
+    if(($iiif->getwidth == $iiif->preview_tile_size && $iiif->getheight == 0) // "w," 
+        || ($iiif->getheight == $iiif->preview_tile_size && $iiif->getwidth == 0) // ",h" 
+        || ($iiif->getheight == $iiif->preview_tile_size && $iiif->getwidth == $iiif->preview_tile_size)) // "w,h"
+        {
+        // Standard tile widths
+        return true;
+        }
+    elseif(($iiif->regionx + $iiif->regionw) === ($iiif->imagewidth)
+        || ((int)$iiif->regiony + (int)$iiif->regionh) === ((int)$iiif->imageheight)
+        )
+        {
+        // Size specified is not the standard tile width - only valid for right side or bottom edge of image
+        if(fmod($iiif->regionw,$iiif->getwidth) == 0
+            && fmod($iiif->regionh,$iiif->getheight) == 0
+            )
+            {
+            // return true;
+            $hscale = ceil($iiif->regionw / $iiif->getwidth);
+            $vscale = ceil($iiif->regionh / $iiif->getheight);
+            if($hscale == $vscale && count(array_diff([$hscale,$vscale],$iiif->preview_tile_scale_factors)) == 0)
+                {
+                return true;
+                }
+            }
+        }
+    return false;
     }
