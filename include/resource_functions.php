@@ -3228,7 +3228,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
     # for this resource, for display in an edit / view form.
     # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
 
-    global $view_title_field, $metadata_template_resource_type, $NODE_FIELDS, $FIXED_LIST_FIELD_TYPES;
+    global $view_title_field, $metadata_template_resource_type, $NODE_FIELDS, $FIXED_LIST_FIELD_TYPES, $pagename;
 
     # Find the resource type.
     if (is_null($originalref)) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
@@ -3256,7 +3256,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
     $field_restypes = get_resource_type_field_resource_types();
     $restypesql = "";
     $restype_params = [];
-    if(!$multi)
+    if(!$multi && $pagename !== 'edit')
         {
         $restypesql = "AND (f.global=1 OR f.ref=? OR f.ref IN (SELECT resource_type_field FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type=?))";
         $restype_params[] = "i";$restype_params[] = $view_title_field;
