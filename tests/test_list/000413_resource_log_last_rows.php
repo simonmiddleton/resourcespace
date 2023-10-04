@@ -93,12 +93,13 @@ $use_cases = [
             $test413_resource_log(['notes' => 'UC#6']);
             $GLOBALS['userpermissions'] = array_diff($GLOBALS['userpermissions'], ['v']);
             },
-        'input' => [],
+        'input' => ['minref' => 0, 'days' => 7, 'maxrecords' => 0, 'fields' => [], 'log_codes' => []],
     ],
     [
         'name' => 'Filter by multiple metadata fields',
         'setup' => function() use ($rtf_chk, $rtf_drop, $test413_resource_log)
             {
+            $GLOBALS['userpermissions'][] ='v';
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['rtf' => $rtf_chk, 'notes' => 'UC#7-checkbox']);
             $GLOBALS['use_case_expected_logs'][] = $test413_resource_log(['rtf' => $rtf_drop, 'notes' => 'UC#7-dropdown']);
             },
@@ -131,7 +132,7 @@ $use_cases = [
         'input' => ['minref' => 0, 'days' => 2, 'maxrecords' => 0, 'fields' => [], 'log_codes' => ['t413UC10', LOG_CODE_CREATED]],
     ],
 ];
-foreach($use_cases as $i => $use_case)
+foreach($use_cases as $use_case)
     {
     $setup_global_env();
     if(isset($use_case['setup']))
@@ -140,7 +141,17 @@ foreach($use_cases as $i => $use_case)
         }
 
     // We use the notes just for debugging the use cases
-    $result = array_column(resource_log_last_rows(...$use_case['input']), 'notes', 'ref');
+    $result = array_column(
+        resource_log_last_rows(
+            $use_case['input']['minref'],
+            $use_case['input']['days'],
+            $use_case['input']['maxrecords'],
+            $use_case['input']['fields'],
+            $use_case['input']['log_codes']
+        ),
+        'notes',
+        'ref'
+    );
     if(array_keys($result) !== $GLOBALS['use_case_expected_logs'])
         {
         echo "Use case: {$use_case['name']} - ";
