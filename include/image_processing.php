@@ -1838,13 +1838,16 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $mpr_parts['targetpath']=$path;
                 }
             
-            # Delete any file at the target path. Unless using the previewbased option, in which case we need it.           
+            # Delete any file at the target path. Unless using the previewbased option, in which case we need it.
             if(!hook("imagepskipdel") && !$keep_for_hpr)
                 {
                 if (!$previewbased)
                     {
                     if (file_exists($path))
-                        {unlink($path);}
+                        {
+                        debug("Deleting file at path: $path");
+                        unlink($path);
+                        }
                     }
                 }
             if ($keep_for_hpr){$keep_for_hpr=false;}
