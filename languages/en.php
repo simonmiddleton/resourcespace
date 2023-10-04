@@ -1017,7 +1017,8 @@ $lang["notapprovedsharetheme"]="Sharing is prohibited for at least one collectio
 $lang["notapprovedresources"]="The following resources are not active and cannot be added to a shared collection: ";
 $lang['error_generating_access_key'] = 'Could not generate an access key';
 $lang['access_key_deleted'] = "Access key '%access_key' deleted";
-$lang['email_error_user_list_not_valid'] = 'No valid emails to send to (users might not be approved)';
+$lang['email_error_user_list_not_valid'] = 'No valid notifications to send (users might not be approved)';
+$lang['email_error_user_list_some_skipped'] = 'Skipped notifications for following users (users might not be approved)';
 
 
 # New for 1.3
@@ -2363,7 +2364,7 @@ $lang["all__researchrequest"]="Let our resources team find the resources you nee
 $lang["change_language__introtext"]="Please select your language below.";
 $lang['collection_download__write_metadata_on_download_label'] = 'Embed resource metadata in the downloaded file(s)? Enabling this will slow down your download.';
 $lang["collection_edit__introtext"] = "Organise and manage your work by grouping resources together. Create collections to suit your way of working.\n\n<br />\n\nAll the collections in your list appear in the 'My Collections' panel at the bottom of the screen\n\n<br /><br />";
-$lang["collection_email__introtext"]="Please complete the form below. The recipients will receive an email containing links to the collections rather than file attachments so they can choose and download the appropriate resources.";
+$lang["collection_email__introtext"]="Please complete the form below.<br />The recipients will receive an email or system message containing links to the collections rather than file attachments so they can choose and download the appropriate resources.";
 $lang["collection_email__introtextthemeshare"]="Complete the form below to e-mail the featured collections in this featured collection category. The recipients will receive an email containing links to each of the featured collections.";
 $lang["collection_manage__findpublic"]="Public collections are groups of resources made widely available by users of the system. Enter a collection ID, or all or part of a collection name or username to find public collections. Add them to your list of collections to access the resources.";
 $lang["collection_manage__introtext"]="Organise and manage your work by grouping resources together. Create 'Collections' to suit your way of working. You may want to group resources under projects that you are working on independently, share resources amongst a project team or simply keep your favourite resources together in one place. All the collections in your list appear in the 'My Collections' panel at the bottom of the screen.";

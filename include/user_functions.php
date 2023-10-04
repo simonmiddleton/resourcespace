@@ -2230,7 +2230,7 @@ function resolve_user_emails($user_list)
             && (time() > strtotime($email_details[0]['account_expires']))
         )
             {
-            debug('Email collection: ' . __FUNCTION__ . '() Username ' . $user . ' skipped as their user account has expired.');
+            debug('EMAIL: ' . __FUNCTION__ . '() Username ' . $user . ' skipped as their user account has expired.');
             continue;
             }
 
@@ -2254,7 +2254,6 @@ function resolve_user_emails($user_list)
         if($email_details[0]['approved'] != 1)
             {
             debug('EMAIL: ' . __FUNCTION__ . '() skipping e-mail "' . $email_details[0]['email'] . '" because it belongs to user account which is not approved');
-
             continue;
             }
             
@@ -2264,7 +2263,7 @@ function resolve_user_emails($user_list)
             continue;                    
             }
             
-        // Internal, approved user account - add e-mail address from user account
+        // Internal unexpired approved user account - add e-mail address from user account
         $emails_key_required['unames'][]       = $user;
         $emails_key_required['emails'][]       = $email_details[0]['email'];
         $emails_key_required['refs'][]         = $email_details[0]['ref'];

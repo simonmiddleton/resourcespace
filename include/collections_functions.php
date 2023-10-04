@@ -2008,44 +2008,47 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         return $lang['email_error_user_list_not_valid'];
         }
 
+    # Make an array of all emails, whether internal or external
     $emails=$emails_keys['emails'];
+    # Make a corresponding array stating whether keys are necessary for the links
     $key_required=$emails_keys['key_required'];
+
+    # Make an array of internal userids which are unexpired approved with valid emails
     $internal_user_ids = $emails_keys['refs'] ?? array();
 
-    # Add the collection(s) to the user's My Collections page
-    $urefs = ps_array("SELECT ref value FROM user WHERE username IN ("  . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist, "s"));
-    if (count($urefs)>0)
+    if (count($internal_user_ids)>0)
         {
         # Delete any existing collection entries
-        ps_query("DELETE FROM user_collection WHERE collection IN (" . ps_param_insert(count($reflist)) . ") AND user IN (" . ps_param_insert(count($urefs)) . ")",array_merge(ps_param_fill($reflist,"i"),ps_param_fill($urefs,"i")));
+        ps_query("DELETE FROM user_collection WHERE collection IN (" . ps_param_insert(count($reflist)) . ") 
+                AND user IN (" . ps_param_insert(count($internal_user_ids)) . ")",array_merge(ps_param_fill($reflist,"i"),ps_param_fill($internal_user_ids,"i")));
         
         # Insert new user_collection row(s)
         #loop through the collections
         for ($nx1=0;$nx1<count($reflist);$nx1++)
             {
             #loop through the users
-            for ($nx2=0;$nx2<count($urefs);$nx2++)
+            for ($nx2=0;$nx2<count($internal_user_ids);$nx2++)
                 {
-                ps_query("INSERT INTO user_collection(collection,user,request_feedback) VALUES (?,?,?)",["i",$reflist[$nx1],"i",$urefs[$nx2],"i",$feedback ]);
+                ps_query("INSERT INTO user_collection(collection,user,request_feedback) VALUES (?,?,?)",["i",$reflist[$nx1],"i",$internal_user_ids[$nx2],"i",$feedback ]);
                 if ($add_internal_access)
                     {		
                     foreach (get_collection_resources($reflist[$nx1]) as $resource)
                         {
                         if (get_edit_access($resource))
                             {
-                            open_access_to_user($urefs[$nx2],$resource,$expires);
+                            open_access_to_user($internal_user_ids[$nx2],$resource,$expires);
                             }
                         }
                     }
                 
                 #log this
                 clear_query_cache('collection_access');
-                collection_log($reflist[$nx1], LOG_CODE_COLLECTION_SHARED_COLLECTION, 0, ps_value ("select username as value from user where ref = ?", array("i", $urefs[$nx2]), ""));
+                collection_log($reflist[$nx1], LOG_CODE_COLLECTION_SHARED_COLLECTION, 0, ps_value ("select username as value from user where ref = ?", array("i", $internal_user_ids[$nx2]), ""));
                 }
             }
         }
 
-    # Send an e-mail to each resolved user
+    # Send an e-mail to each resolved email address
 
     # htmlbreak is for composing list
     $htmlbreak="\r\n";
@@ -2253,6 +2256,28 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         }
 
     hook("additional_email_collection","",array($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access,$expires,$useremail,$from_name,$cc,$themeshare,$themename,$themeurlsuffix,$template,$templatevars));
+
+    # Identify user accounts which have been skipped  
+    $candidate_users = ps_query("SELECT ref, username FROM user 
+       WHERE username IN ("  . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist, "s"));
+    $skipped_usernames=array();
+    if(count($candidate_users) != count($internal_user_ids))
+        {
+        foreach($candidate_users as $candidate_user) 
+            {
+            if(!in_array($candidate_user['ref'],$internal_user_ids))
+                {
+                $skipped_usernames[]=$candidate_user['username'];
+                }
+            }
+        }
+
+    # Report skipped accounts
+    if(count($skipped_usernames) > 0)
+        {
+        return $lang['email_error_user_list_some_skipped'].' '.implode(', ',$skipped_usernames);
+        }
+
     # Return an empty string (all OK).
     return "";
     }
