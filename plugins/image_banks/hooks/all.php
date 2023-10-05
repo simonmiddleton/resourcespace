@@ -1,6 +1,7 @@
 <?php
 
 use function ImageBanks\getProviders;
+use function ImageBanks\listProviderInstanceNames;
 
 function HookImage_banksAllExtra_warn_checks()
     {
@@ -33,33 +34,45 @@ function HookImage_banksAllSearchfiltertop()
     global $lang, $image_banks_loaded_providers, $clear_function;
 
     [$providers, $errors] = getProviders($image_banks_loaded_providers);
+
+    if ($errors !== [])
+        {
+        return;
+        }
+
+    $providers_select_list = [];
     foreach($providers as $provider_id => $provider)
         {
-        if($provider->checkDependencies() !== [])
+        if ($provider->checkDependencies() === [])
             {
-            unset($providers[$provider_id]);
+            $providers_select_list += listProviderInstanceNames($provider);
             }
         }
 
-    if(count($providers) == 0)
+    $providers_select_list = array_filter(
+        $providers_select_list,
+        fn($P) => in_array($P, $GLOBALS['image_banks_selected_providers'])
+    );
+
+    if($providers_select_list === [])
         {
         return;
         }
 
     $search_image_banks_text = htmlspecialchars($lang["image_banks_search_image_banks_label"]);
     $search_image_banks_info_text = htmlspecialchars($lang["image_banks_search_image_banks_info_text"]);
-    $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
+    $image_bank_provider_id = (int) getval("image_bank_provider_id", 0, true);
     ?>
     <div id="SearchImageBanksItem" class="SearchItem" title="">
         <label for="SearchImageBanks"><?php echo $search_image_banks_text; ?></label>
         <select id="SearchImageBanks" class="SearchWidth" name="image_bank_provider_id" onchange="toggleUnwantedElementsFromSimpleSearch(jQuery(this));SimpleSearchFieldsHideOrShow(true);">
             <option value=""></option>
             <?php
-            foreach($providers as $provider)
+            foreach($providers_select_list as $provider_id => $provider)
                 {
-                $selected = ($image_bank_provider_id == $provider->getId() ? "selected" : "");
+                $selected = ($image_bank_provider_id == $provider_id ? "selected" : "");
                 ?>
-                <option value="<?php echo $provider->getId(); ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($provider->getName()); ?></option>
+                <option value="<?php echo (int) $provider_id; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($provider); ?></option>
                 <?php
                 }
                 ?>

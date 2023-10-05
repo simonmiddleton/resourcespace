@@ -4,6 +4,7 @@ use ImageBanks\MultipleInstanceProviderInterface;
 use ImageBanks\Provider;
 
 use function ImageBanks\getProviders;
+use function ImageBanks\listProviderInstanceNames;
 
 include '../../../include/db.php';
 include '../../../include/authenticate.php';
@@ -33,19 +34,7 @@ foreach($providers as $provider)
         $dependency_errors[] = str_replace('%PROVIDER', $provider_name, "{$lang['image_banks_provider_unmet_dependencies']}");
         }
 
-    if ($provider instanceof MultipleInstanceProviderInterface)
-        {
-        $provider_instances = $provider->getAllInstances();
-        foreach ($provider_instances as $instance)
-            {
-            $providers_select_list[] = sprintf('%s - %s', $provider_name, $instance->getName());
-            }
-        }
-    else
-        {
-        $providers_select_list[] = $provider_name;
-        }
-
+    $providers_select_list = array_merge($providers_select_list, listProviderInstanceNames($provider));
     $page_def[] = config_add_section_header($provider_name);
     $page_def = $provider->buildConfigPageDefinition($page_def);
     }

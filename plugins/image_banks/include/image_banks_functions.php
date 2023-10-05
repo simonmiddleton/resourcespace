@@ -103,3 +103,25 @@ function validFileSource($file, array $loaded_providers)
 
     return $valid_source;
     }
+
+/**
+ * List providers' (instance) name.
+ * @return array Returns an array where the key is the Providers' (or its instance) ID and the value is its name
+ */
+function listProviderInstanceNames(Provider $provider): array
+    {
+    if ($provider instanceof MultipleInstanceProviderInterface)
+        {
+        $instance_names = [];
+        $provider_instances = $provider->getAllInstances();
+        foreach ($provider_instances as $i => $instance)
+            {
+            // Generate an instance ID based on its Provider ID.
+            $id = ($provider->getId() * 100) + $i;
+            $instance_names[$id] = sprintf('%s - %s', $provider->getName(), $instance->getName());
+            }
+        return $instance_names;
+        }
+
+    return [$provider->getId() => $provider->getName()];
+    }
