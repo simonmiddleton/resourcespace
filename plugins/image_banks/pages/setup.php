@@ -1,8 +1,5 @@
 <?php
 
-use ImageBanks\MultipleInstanceProviderInterface;
-use ImageBanks\Provider;
-
 use function ImageBanks\getProviders;
 use function ImageBanks\listProviderInstanceNames;
 
