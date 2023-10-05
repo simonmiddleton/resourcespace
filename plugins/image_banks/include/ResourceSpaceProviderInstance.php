@@ -10,30 +10,26 @@ final class ResourceSpaceProviderInstance implements ProviderInstanceInterface
     private string $baseURL;
     private string $username;
     private string $key;
-    private array $configuration = [];
+    private array $configuration;
 
-    private function __construct(string $name, string $baseURL, string $username, string $key, array $configuration)
+    private function __construct(string $name, array $details)
         {
-        todo: use as input an array (keep input simple)
         $this->name = i18n_get_translated($name);
-        $this->baseURL = $baseURL;
-        $this->username = $username;
-        $this->key = $key;
-        $this->configuration = $configuration;
+        $this->baseURL = $details['baseURL'];
+        $this->username = $details['username'];
+        $this->key = $details['key'];
+        $this->configuration = $details['configuration'];
         }
 
-    public static function parseRaw($instance): self|string
+    public static function parseRaw(string $data)
         {
-        // $instance = '~en:Release~ro:Lansare|http://localhost|api_user|api_ky|{"title": 8}';
-        todo: updte interface based on this implementation
-
-        $instance_parts = array_filter(array_map('trim', explode('|', $instance)));
-        $instance_parts_count = count($instance_parts);
-        if ($instance_parts_count > 0 && $instance_parts_count < 5)
+        $data_parts = array_values(array_filter(array_map('trim', explode('|', $data))));
+        $data_parts_count = count($data_parts);
+        if ($data_parts_count > 0 && $data_parts_count < 5)
             {
             return 'image_banks_error_resourcespace_invalid_instance_cfg';
             }
-        [$name, $baseURL, $username, $key, $json_cfg] = $instance_parts;
+        [$name, $baseURL, $username, $key, $json_cfg] = $data_parts;
 
         if ('http' !== mb_strtolower(mb_substr($baseURL, 0, 4)))
             {
@@ -46,6 +42,19 @@ final class ResourceSpaceProviderInstance implements ProviderInstanceInterface
             return '(JSON) ' . json_last_error_msg();
             }
 
-        return new self($name, $baseURL, $username, $key, $configuration);
+        return new self(
+            $name,
+            [
+                'baseURL' => $baseURL,
+                'username' => $username,
+                'key' => $key,
+                'configuration' => $configuration,
+            ]
+        );
+        }
+
+    public function getName(): string
+        {
+        return $this->name;
         }
     }

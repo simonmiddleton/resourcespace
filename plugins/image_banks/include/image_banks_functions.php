@@ -74,7 +74,6 @@ function getProviders(array $loaded_providers): array
             {
             $parse_errs = array_unique($provider->parseInstancesConfiguration());
             $errors = array_merge($errors, array_map(fn($E) => str_replace('%PROVIDER', $provider->getName(), $E), $parse_errs));
-            todo: create separate function for the array map
             }
 
         $providers[$provider->getId()] = $provider;

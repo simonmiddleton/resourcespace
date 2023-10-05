@@ -67,7 +67,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
     public function parseInstancesConfiguration(): array
         {
         $errs = [];
-        $raw_instances = explode(PHP_EOL, trim($this->configs['resourcespace_instances_cfg']));
+        $raw_instances = array_values(array_filter(explode(PHP_EOL, trim($this->configs['resourcespace_instances_cfg']))));
         foreach ($raw_instances as $ri)
             {
             $parsed = ResourceSpaceProviderInstance::parseRaw($ri);

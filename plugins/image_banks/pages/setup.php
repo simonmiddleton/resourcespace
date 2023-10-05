@@ -19,28 +19,27 @@ if(!in_array($plugin_name, $plugins))
     plugin_activate_for_setup($plugin_name);
     }
 
-$error = '';
+$dependency_errors = [];
 $page_def = array();
 $providers_select_list = [];
 
 [$providers, $errors] = getProviders($image_banks_loaded_providers);
-// printf('<pre>%s</pre>', print_r($errors, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
 foreach($providers as $provider)
     {
     $provider_name = $provider->getName();
 
     if ($provider->checkDependencies() !== [])
         {
-        $error = str_replace('%PROVIDER', $provider_name, "{$lang['image_banks_provider_unmet_dependencies']}");
-        break;
+        $dependency_errors[] = str_replace('%PROVIDER', $provider_name, "{$lang['image_banks_provider_unmet_dependencies']}");
         }
 
     if ($provider instanceof MultipleInstanceProviderInterface)
         {
         $provider_instances = $provider->getAllInstances();
-        printf('<pre>%s</pre>', print_r($provider_instances, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
-        // todo: convert to only a list of Provider Instance names
-        $providers_select_list = array_merge($providers_select_list, []);
+        foreach ($provider_instances as $instance)
+            {
+            $providers_select_list[] = sprintf('%s - %s', $provider_name, $instance->getName());
+            }
         }
     else
         {
@@ -67,6 +66,6 @@ $page_def = array_merge(
 // Render setup page ritual
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-render_top_page_error_style($error);
+array_map('render_top_page_error_style', array_merge($dependency_errors, $errors));
 config_gen_setup_html($page_def, $plugin_name, null, $lang['image_banks_configuration']);
 include '../../../include/footer.php';

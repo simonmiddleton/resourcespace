@@ -32,8 +32,7 @@ function HookImage_banksAllSearchfiltertop()
     {
     global $lang, $image_banks_loaded_providers, $clear_function;
 
-    $providers = getProviders($image_banks_loaded_providers);
-
+    [$providers, $errors] = getProviders($image_banks_loaded_providers);
     foreach($providers as $provider_id => $provider)
         {
         if($provider->checkDependencies() !== [])
