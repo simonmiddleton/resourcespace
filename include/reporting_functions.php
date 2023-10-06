@@ -778,7 +778,7 @@ function render_pie_graph($id,$data,$total=NULL)
     }
 
 /**
- * Output the Javascript to build a pie chart in the canvas denoted by $id
+ * Output the Javascript to build a bar chart in the canvas denoted by $id
  * $data must be in the following format
  * $data = array(
  *     "point_a x value" => "point_a y value",
