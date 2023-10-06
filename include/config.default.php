@@ -1313,6 +1313,9 @@ $imperial_measurements=false;
 # Use day-month-year format? If set to false format will be month-day-year.
 $date_d_m_y=true;
 
+# Attempt to validate dates on the edit page
+$date_validation_js = true;
+
 # What is the default resource type to use for batch upload templates?
 $default_resource_type=1;
 
