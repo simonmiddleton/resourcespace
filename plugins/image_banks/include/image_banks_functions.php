@@ -1,6 +1,8 @@
 <?php
 namespace ImageBanks;
 
+use Closure;
+
 require_once 'AbstractProvider.php';
 require_once 'ProviderResult.php';
 require_once 'ProviderSearchResults.php';
@@ -114,14 +116,49 @@ function listProviderInstanceNames(Provider $provider): array
         {
         $instance_names = [];
         $provider_instances = $provider->getAllInstances();
-        foreach ($provider_instances as $i => $instance)
+        foreach ($provider_instances as $id => $instance)
             {
-            // Generate an instance ID based on its Provider ID.
-            $id = ($provider->getId() * 100) + $i;
             $instance_names[$id] = sprintf('%s - %s', $provider->getName(), $instance->getName());
             }
         return $instance_names;
         }
 
     return [$provider->getId() => $provider->getName()];
+    }
+
+/**
+ * Check if a Provider (or its instance) is selected as active from the plugins' setup page.
+ * @param string $provider A providers' (or instance) name
+ */
+function isProviderActive(string $provider): bool
+    {
+    return in_array($provider, $GLOBALS['image_banks_selected_providers']);
+    }
+
+/**
+ * Convert a list of providers to a list of providers (or their instances) that have all dependencies and are currently
+ * active.
+ *
+ * @param list<Provider> $providers
+ * @return array Returns an array where the key is the Providers' (or its instance) ID and the value is its name
+ */
+function providersCheckedAndActive(array $providers): array
+    {
+    $providers_select_list = [];
+    foreach($providers as $provider)
+        {
+        if ($provider->checkDependencies() === [])
+            {
+            $providers_select_list += listProviderInstanceNames($provider);
+            }
+        }
+    return array_filter($providers_select_list, 'ImageBanks\isProviderActive');
+    }
+
+/**
+ * Helper function to generate an instance ID based on its Provider ID.
+ */ 
+function createProviderInstanceId(Provider $provider): Closure
+    {
+    return fn(int $id) => ($provider->getId() * 100) + $id;
     }

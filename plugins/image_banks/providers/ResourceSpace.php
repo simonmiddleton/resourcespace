@@ -68,12 +68,13 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         {
         $errs = [];
         $raw_instances = array_values(array_filter(explode(PHP_EOL, trim($this->configs['resourcespace_instances_cfg']))));
-        foreach ($raw_instances as $ri)
+        $create_instance_id_from = createProviderInstanceId($this);
+        foreach ($raw_instances as $id => $data)
             {
-            $parsed = ResourceSpaceProviderInstance::parseRaw($ri);
+            $parsed = ResourceSpaceProviderInstance::parseRaw($data);
             if ($parsed instanceof ResourceSpaceProviderInstance)
                 {
-                $this->instances[] = $parsed;
+                $this->instances[$create_instance_id_from($id)] = $parsed;
                 continue;
                 }
             $errs[] = $this->lang[$parsed] ?? "%PROVIDER - $parsed";

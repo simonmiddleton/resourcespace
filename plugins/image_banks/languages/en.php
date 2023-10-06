@@ -1,7 +1,6 @@
 <?php
 $lang["image_banks_configuration"] = "Image Banks";
 $lang["image_banks_search_image_banks_label"] = "Search external image banks";
-$lang["image_banks_search_image_banks_info_text"] = "Please specify which Image Bank you wish to search through";
 $lang["image_banks_pixabay_api_key"] = "API key";
 $lang["image_banks_image_bank"] = "Image Bank";
 $lang["image_banks_create_new_resource"] = "Create new resource";
@@ -25,7 +24,7 @@ $lang["image_banks_warning"] = "WARNING: ";
 $lang["image_banks_warning_rate_limit_almost_reached"] = "Provider '%PROVIDER' will only allow %RATE-LIMIT-REMAINING more searches. This limit will reset in %TIME";
 $lang["image_banks_try_something_else"] = "Try something else.";
 $lang["image_banks_error_detail_curl"] = "php-curl package is not installed";
-// $lang["image_banks_error_generic_parse"] = "Unable to parse '%PROVIDER' configuration (for multi-instance)";
+$lang["image_banks_error_generic_parse"] = "Unable to parse providers' configuration (for multi-instance)";
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"] = "Invalid configuration format for '%PROVIDER' (provider) instance";
 $lang["image_banks_error_bad_url_scheme"] = "Invalid URL scheme found for '%PROVIDER' (provider) instance";
 

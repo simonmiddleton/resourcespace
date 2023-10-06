@@ -9,7 +9,7 @@ interface MultipleInstanceProviderInterface
     public function parseInstancesConfiguration(): array;
 
     /**
-     * @return list<ProviderInstanceInterface>
+     * @return array<ProviderInstanceInterface>
      */
     public function getAllInstances(): array;
 

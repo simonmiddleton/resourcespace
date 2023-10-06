@@ -1,12 +1,16 @@
 <?php
-$rs_root = dirname(dirname(dirname(__DIR__)));
-include_once "{$rs_root}/include/db.php";
 
+use ImageBanks\ProviderSearchResults;
+
+use function ImageBanks\getProviders;
+use function ImageBanks\providersCheckedAndActive;
+
+$rs_root = dirname(__DIR__, 3);
+include_once "{$rs_root}/include/db.php";
 include_once "{$rs_root}/include/authenticate.php";
 
-$search                 = getval("search", "");
-$image_bank_provider_id = getval("image_bank_provider_id", 0, true);
-
+$search = getval("search", "");
+$image_bank_provider_id = (int) getval("image_bank_provider_id", 0, true);
 $search_params = array(
     "search"                 => $search,
     "image_bank_provider_id" => $image_bank_provider_id,
@@ -15,33 +19,47 @@ $search_params = array(
 
 // Paging functionality
 $url = generateURL("{$baseurl_short}pages/search.php", $search_params);
-
 $offset = (int) getval("offset", 0, true);
-
 $per_page = (int) getval("per_page", $default_perpage, true);
 rs_setcookie("per_page", $per_page, 0, "", "", false, false);
-
 $curpage = floor($offset / $per_page) + 1;
 // End of Paging functionality
 
-if($image_bank_provider_id == 0)
+
+[$providers,] = getProviders($image_banks_loaded_providers);
+$providers_select_list = providersCheckedAndActive($providers);
+
+$results = new ProviderSearchResults();
+if($image_bank_provider_id === 0)
     {
-    trigger_error($lang["image_banks_provider_id_required"]);
+    $results->setError($lang['image_banks_provider_id_required']);
+    }
+else if(!array_key_exists($image_bank_provider_id, $providers_select_list))
+    {
+    $results->setError($lang['image_banks_provider_not_found']);
     }
 
-$providers = \ImageBanks\getProviders($image_banks_loaded_providers);
-
-if(!array_key_exists($image_bank_provider_id, $providers))
+if ($results->getError() === '' && $providers_select_list !== [])
     {
-    trigger_error($lang["image_banks_provider_not_found"]);
+    // todo: get provider ID if multi-instance (detect from ID)
+    // make it run the search taking into account the instance if need be
+    printf('<pre>%s</pre>', print_r($providers_select_list, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
+    $provider = $providers[$image_bank_provider_id];
+    $results = $provider->search($search, $per_page, $curpage);
+    }
+else
+    {
+    $provider = new class()
+        {
+        public function getName()
+            {
+            return $GLOBALS['lang']['unknown'];
+            }
+        };
     }
 
-$provider = $providers[$image_bank_provider_id];
-
-$results = $provider->search($search, $per_page, $curpage);
 $results_error = $results->getError();
 $results_warning = $results->getWarning();
-
 $totalpages  = ceil($results->total / $per_page);
 
 include_once "{$rs_root}/include/header.php";

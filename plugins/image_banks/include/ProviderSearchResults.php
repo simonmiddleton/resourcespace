@@ -144,13 +144,10 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
 
     /**
     * Set error message
-    * 
-    * @return void
     */
-    public function setError($message) : void
+    public function setError(string $message): void
         {
-        $this->error = $message;
-
+        $this->error = trim($message);
         return;
         }
 
@@ -166,13 +163,10 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
 
     /**
     * Set warning message
-    * 
-    * @return void
     */
-    public function setWarning($message) : void
+    public function setWarning(string $message): void
         {
-        $this->warning = $message;
-
+        $this->warning = trim($message);
         return;
         }
 
