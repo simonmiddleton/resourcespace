@@ -3405,3 +3405,6 @@ IMPORTANT: enabling this will mean partial dates (e.g May 2023) are no longer su
 cleared after the next resource edit (as & when users do it).
 */
 $use_native_input_for_date_field = false;
+
+// Option to disable all system generated emails from being sent - no notice will be given to users
+// $emails_suppress = false;

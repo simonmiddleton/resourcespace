@@ -849,8 +849,9 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $baseurl, $userfullname;
     global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override;
 
-    if(defined("RS_TEST_MODE"))
+    if(defined("RS_TEST_MODE") || (isset($GLOBALS["emails_suppress"]) && $GLOBALS["emails_suppress"]))
         {
+        debug("Email to {$email} suppressed due to \$emails_suppress being enabled");
         return false;
         }
 
