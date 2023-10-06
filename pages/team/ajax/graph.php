@@ -152,14 +152,15 @@ else
 
     <?php if ($type!="summary") { 
         $id ="placeholder" . $type . $n; 
-        ?><div
+        ?><!-- Start chart canvas -->
+        <div
         <?php if ($from_dash) { ?>
         style="width:220px;height:105px;"
         <?php } else { ?>
         style="width:100%;height:80%;"
         <?php } ?>>
         <canvas id= "<?php echo $id ?>"></canvas>
-        </div><?php
+        <?php
         }
 
 if ($type=="pie")
@@ -231,7 +232,7 @@ if ($type=="pieresourcetype")
     if (count($data)==0)
         {
         ?>
-        <p><?php echo $lang["report_no_data"] ?></p>
+        <p class='analytics-nodata'><?php echo $lang["report_no_data"] ?></p>
         <script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script>
         <?php
         exit();
@@ -362,3 +363,6 @@ if ($from_dash)
     </div>
     <?php
     }
+
+?></div>
+<!-- End chart canvas -->
