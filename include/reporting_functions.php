@@ -710,6 +710,20 @@ function report_process_query_placeholders(string $query, array $placeholders): 
     return $sql;
     }
 
+/**
+ * Output the Javascript to build a pie chart in the canvas denoted by $id
+ * $data must be in the following format
+ * $data = array(
+ *     "slice_a label" => "slice_a value",
+ *     "slice_b label" => "slice_b value",
+ * );
+ * 
+ * @param  string       $id     identifier for the canvas to render the chart in
+ * @param  array        $data   data to be rendered in the chart
+ * @param  string|null  $total  null will mean that the data is complete and an extra field is not required
+ *                              a string can be used to denote the total value to pad the data to
+ * @return void
+ */
 function render_pie_graph($id,$data,$total=NULL)
     {
     $rt=0;
@@ -738,7 +752,7 @@ function render_pie_graph($id,$data,$total=NULL)
         data: {
             labels: ['<?php echo implode("', '",$labels) ?>'],
                 datasets: [
-                {
+                        {
                     data: [<?php echo implode(", ",$values) ?>]
                 }
             ]
@@ -763,7 +777,18 @@ function render_pie_graph($id,$data,$total=NULL)
     <?php
     }
 
-function render_bar_graph($id,$data)
+/**
+ * Output the Javascript to build a pie chart in the canvas denoted by $id
+ * $data must be in the following format
+ * $data = array(
+ *     "point_a x value" => "point_a y value",
+ *     "point_b x value" => "point_b y value",
+ *
+ * @param  string   $id     identifier for the canvas to render the chart in
+ * @param  array    $data   data to be rendered in the chart
+ * @return void
+ */
+function render_bar_graph(string $id, array $data)
     {
     $values = "";
     foreach ($data as $t => $c)
