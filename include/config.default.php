@@ -2621,6 +2621,9 @@ $resource_share_filter_collections=false;
 # Option to turn off email sharing.
 $email_sharing=true;
 
+# Option to limit e-mails sent by the whole system per hour (to limit use of the system for spamming, for example)
+# $email_rate_limit=10;
+
 #Resource Share Expiry Controls
 $resource_share_expire_days=150; #Maximum number of days allowed for the share 
 $resource_share_expire_never=true; #Allow the 'Never' option.

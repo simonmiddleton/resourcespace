@@ -827,7 +827,8 @@ function save_user($ref)
 
     if($emailresetlink != '')
         {
-        email_reset_link($email, true);
+        $result=email_reset_link($email, true);
+        if ($result!==true) return $result; // Pass any error back.
         }
         
     if(getval('approved', '')!='')
@@ -912,12 +913,14 @@ function email_reset_link($email,$newuser=false)
         if($blockreset)
             {
             $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
-            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         else
             {
             $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
-            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         }
     else
@@ -927,15 +930,16 @@ function email_reset_link($email,$newuser=false)
         if($blockreset)
             {
             $message .=  "\n\n" . $lang["passwordresetnotpossible"] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl;
-            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         else
             {
             $message.="\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
-            send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+            $result=send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         }   
-    
     return true;
     }
 

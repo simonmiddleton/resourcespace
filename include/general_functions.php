@@ -844,7 +844,7 @@ function allowed_type_mime($allowedtype)
  * @param  string $bcc              Optional BCC addresses
  * @param  array $files             Optional array of file paths to attach in the format [filename.txt => /path/to/file.txt]
  */
-function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array()): bool|string
+function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
     { 
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $baseurl, $userfullname;
     global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override, $userref, $email_rate_limit, $lang, $useremail_rate_limit_active;
@@ -859,7 +859,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         {
         // Limit the number of e-mails sent across the system per hour.
         $count=ps_value("select count(*) value from mail_log where date >= DATE_SUB(now(),interval 1 hour)",[],0);
-        if ($count>$email_rate_limit)
+        if ($count>=$email_rate_limit)
             {
             if (isset($userref) && ($useremail_rate_limit_active ?? false) == false)
                 {
