@@ -149,6 +149,10 @@ if($submitted)
                     array_unshift($messages,$lang["upload_shares_emailed"]); 
                     }
                 }
+            elseif (is_string($result))
+                {
+                $messages[]=$result; // An error message was returned.
+                }
             }
         }
     }

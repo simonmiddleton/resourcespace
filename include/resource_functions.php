@@ -3052,7 +3052,8 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
             }
 
         $body.=$templatevars['fromusername']." ". $lang["hasemailedyouaresource"]."\n\n" . $templatevars['message']."\n\n" . $lang["clicktoviewresource"] . "\n\n" . $templatevars['url'];
-        send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
+        $send_result=send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
+        if ($send_result!==true) {return $send_result;}
 
         # log this
         resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);

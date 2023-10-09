@@ -1042,7 +1042,8 @@ function email_resource_request($ref,$details)
     send_user_notification($notify_users,$notification_message);
     foreach($notify_emails as $notify_email)
         {
-        send_mail($notify_email,$applicationname . ": " . $lang["requestresource"] . " - $ref",$message->get_text(),$email_from,$email_from,"emailresourcerequest",$templatevars);
+        $send_result=send_mail($notify_email,$applicationname . ": " . $lang["requestresource"] . " - $ref",$message->get_text(),$email_from,$email_from,"emailresourcerequest",$templatevars);
+        if ($send_result!==true) {return $send_result;}
         }
 
     if ($request_senduserupdates)

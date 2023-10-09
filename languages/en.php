@@ -3141,3 +3141,6 @@ $lang["cleanup_invalid_node_dry_run"]       = "Don't delete data, just return th
 $lang["advancedsearch_resource_section"]    = "Resource data";
 $lang["error-reload-required"]              = "ResourceSpace has been updated. Please reload the page";
 $lang["user_pref_new_action_emails"]        = "Email me if new actions are created";
+
+$lang["email_rate_limit_active"] = "The maximum number of e-mails per hour sent by this system has been exceeded. E-mails are not currently being sent by this system.";
+$lang["email_rate_limit_inactive"] = "The e-mail limit has been lifted and e-mails are now being sent.";

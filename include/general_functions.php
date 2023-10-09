@@ -844,15 +844,41 @@ function allowed_type_mime($allowedtype)
  * @param  string $bcc              Optional BCC addresses
  * @param  array $files             Optional array of file paths to attach in the format [filename.txt => /path/to/file.txt]
  */
-function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array()): bool
-    {
+function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array()): bool|string
+    { 
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $baseurl, $userfullname;
-    global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override;
+    global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override, $userref, $email_rate_limit, $lang, $useremail_rate_limit_active;
 
     if(defined("RS_TEST_MODE") || (isset($GLOBALS["emails_suppress"]) && $GLOBALS["emails_suppress"]))
         {
         debug("Email to {$email} suppressed due to \$emails_suppress being enabled");
         return false;
+        }
+
+    if (isset($email_rate_limit))
+        {
+        // Limit the number of e-mails sent across the system per hour.
+        $count=ps_value("select count(*) value from mail_log where date >= DATE_SUB(now(),interval 1 hour)",[],0);
+        if ($count>$email_rate_limit)
+            {
+            if (isset($userref) && ($useremail_rate_limit_active ?? false) == false)
+                {
+                // Rate limit not previously active, activate and warn them.
+                ps_query("update user set email_rate_limit_active=1 where ref=?",["i",$userref]);
+                message_add([$userref],$lang["email_rate_limit_active"]);
+                }
+            return $lang["email_rate_limit_active"]; // Don't send the e-mail and return the error.
+            }
+        else    
+            {
+            // It's OK to send mail, if rate limit was previously active, reset it
+            if ($useremail_rate_limit_active ?? false)
+                {
+                ps_query("update user set email_rate_limit_active=0 where ref=?",["i",$userref]);
+                // Send them a message 
+                message_add([$userref],$lang["email_rate_limit_inactive"]);
+                }
+            }
         }
 
     if($always_email_copy_admin)

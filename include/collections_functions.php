@@ -2235,7 +2235,8 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
             $body .= $templatevars['fromusername']." " . $externalmessage . "\n\n" . $templatevars['message']."\n\n" . $viewlinktext ."\n\n".$templatevars['list'];
 
             $emailsubject = $notifymessage->get_subject();
-            send_mail($emails[$nx1],$emailsubject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
+            $send_result=send_mail($emails[$nx1],$emailsubject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
+            if ($send_result!==true) {return $send_result;}
             }
         else
             {
@@ -6576,7 +6577,8 @@ function create_upload_link($collection,$shareoptions)
                 {
                 $body .= "<br/><br/>\n" . $passwordtext;
                 }
-            send_mail($shareoptions["emails"][$n],$subject,$body,$templatevars['from_name'],"","upload_share_email_template",$templatevars);
+            $send_result=send_mail($shareoptions["emails"][$n],$subject,$body,$templatevars['from_name'],"","upload_share_email_template",$templatevars);
+            if ($send_result!==true) {return $send_result;}
             }
         $lognotes = array();
         foreach($setcolumns as $column => $value)

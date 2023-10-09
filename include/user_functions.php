@@ -51,6 +51,7 @@ function validate_user($user_select_sql, $getuserdata=true)
                        u.last_active,
                        timestampdiff(second, u.last_active, now()) AS idle_seconds,
                        u.email,
+                       u.email_rate_limit_active,
                        u.password,
                        u.fullname,
                        g.search_filter,
@@ -116,7 +117,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 */
 function setup_user(array $userdata)
 	{
-    global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
+    global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $useremail_rate_limit_active, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
@@ -163,6 +164,10 @@ function setup_user(array $userdata)
     $userfullname=$userdata["fullname"];
     $userorigin=$userdata["origin"];
     $usersession = $userdata["session"];
+    if (isset($userdata["email_rate_limit_active"]))
+        {
+        $useremail_rate_limit_active=$userdata["email_rate_limit_active"];
+        }
 
     $ip_restrict_group=trim((string) $userdata["ip_restrict_group"]);
     $ip_restrict_user=trim((string) $userdata["ip_restrict_user"]);
