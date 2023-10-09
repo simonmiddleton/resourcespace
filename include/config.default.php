@@ -2605,6 +2605,9 @@ $resource_share_filter_collections=false;
 # Option to turn off email sharing.
 $email_sharing=true;
 
+# Option to limit e-mails sent by the whole system per hour (to limit use of the system for spamming, for example)
+# $email_rate_limit=10;
+
 #Resource Share Expiry Controls
 $resource_share_expire_days=150; #Maximum number of days allowed for the share 
 $resource_share_expire_never=true; #Allow the 'Never' option.
@@ -3375,6 +3378,3 @@ IMPORTANT: enabling this will mean partial dates (e.g May 2023) are no longer su
 cleared after the next resource edit (as & when users do it).
 */
 $use_native_input_for_date_field = false;
-
-// Option to disable all system generated emails from being sent - no notice will be given to users
-// $emails_suppress = false;

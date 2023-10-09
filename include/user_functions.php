@@ -51,6 +51,7 @@ function validate_user($user_select_sql, $getuserdata=true)
                        u.last_active,
                        timestampdiff(second, u.last_active, now()) AS idle_seconds,
                        u.email,
+                       u.email_rate_limit_active,
                        u.password,
                        u.fullname,
                        g.search_filter,
@@ -116,7 +117,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 */
 function setup_user(array $userdata)
 	{
-    global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
+    global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $useremail_rate_limit_active, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
@@ -163,6 +164,10 @@ function setup_user(array $userdata)
     $userfullname=$userdata["fullname"];
     $userorigin=$userdata["origin"];
     $usersession = $userdata["session"];
+    if (isset($userdata["email_rate_limit_active"]))
+        {
+        $useremail_rate_limit_active=$userdata["email_rate_limit_active"];
+        }
 
     $ip_restrict_group=trim((string) $userdata["ip_restrict_group"]);
     $ip_restrict_user=trim((string) $userdata["ip_restrict_user"]);
@@ -832,7 +837,8 @@ function save_user($ref)
 
     if($emailresetlink != '')
         {
-        email_reset_link($email, true);
+        $result=email_reset_link($email, true);
+        if ($result!==true) return $result; // Pass any error back.
         }
         
     if(getval('approved', '')!='')
@@ -917,12 +923,14 @@ function email_reset_link($email,$newuser=false)
         if($blockreset)
             {
             $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
-            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         else
             {
             $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
-            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         }
     else
@@ -932,15 +940,16 @@ function email_reset_link($email,$newuser=false)
         if($blockreset)
             {
             $message .=  "\n\n" . $lang["passwordresetnotpossible"] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl;
-            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         else
             {
             $message.="\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
-            send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+            $result=send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         }   
-    
     return true;
     }
 
