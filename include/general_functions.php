@@ -854,38 +854,6 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         return false;
         }
 
-    if (isset($email_rate_limit))
-        {
-        // Limit the number of e-mails sent across the system per hour.
-        $count=ps_value("select count(*) value from mail_log where date >= DATE_SUB(now(),interval 1 hour)",[],0);
-        if ($count>=$email_rate_limit)
-            {
-            if (isset($userref) && ($useremail_rate_limit_active ?? false) == false)
-                {
-                // Rate limit not previously active, activate and warn them.
-                ps_query("update user set email_rate_limit_active=1 where ref=?",["i",$userref]);
-                message_add([$userref],$lang["email_rate_limit_active"]);
-                }
-            debug("E-mail not sent due to $email_rate_limit");
-            return $lang["email_rate_limit_active"]; // Don't send the e-mail and return the error.
-            }
-        else    
-            {
-            // It's OK to send mail, if rate limit was previously active, reset it
-            if ($useremail_rate_limit_active ?? false)
-                {
-                ps_query("update user set email_rate_limit_active=0 where ref=?",["i",$userref]);
-                // Send them a message 
-                message_add([$userref],$lang["email_rate_limit_inactive"]);
-                }
-            }
-        }
-
-    if($always_email_copy_admin)
-        {
-        $bcc.="," . $email_notify;
-        }
-
     /*
     Checking email is valid. Email argument can be an RFC 2822 compliant string so handle multi addresses as well
     IMPORTANT: FILTER_VALIDATE_EMAIL is not fully RFC 2822 compliant, an email like "Another User <anotheruser@example.com>"
@@ -913,6 +881,40 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         }
     // Valid emails? then make it back into an RFC 2822 compliant string
     $email = implode(', ', $valid_emails);
+
+    if (isset($email_rate_limit))
+        {
+        // Limit the number of e-mails sent across the system per hour.
+        $count=ps_value("select count(*) value from mail_log where date >= DATE_SUB(now(),interval 1 hour)",[],0);
+        if (($count + count($valid_emails))>$email_rate_limit)
+            {
+            if (isset($userref) && ($useremail_rate_limit_active ?? false) == false)
+                {
+                // Rate limit not previously active, activate and warn them.
+                ps_query("update user set email_rate_limit_active=1 where ref=?",["i",$userref]);
+                message_add([$userref],$lang["email_rate_limit_active"]);
+                }
+            debug("E-mail not sent due to $email_rate_limit");
+            return $lang["email_rate_limit_active"]; // Don't send the e-mail and return the error.
+            }
+        else    
+            {
+            // It's OK to send mail, if rate limit was previously active, reset it
+            if ($useremail_rate_limit_active ?? false)
+                {
+                ps_query("update user set email_rate_limit_active=0 where ref=?",["i",$userref]);
+                // Send them a message 
+                message_add([$userref],$lang["email_rate_limit_inactive"]);
+                }
+            }
+        }
+
+    if($always_email_copy_admin)
+        {
+        $bcc.="," . $email_notify;
+        }
+
+
 
     // Validate all files to attach are valid and copy any that are URLs locally
     $attachfiles = array();
