@@ -287,7 +287,12 @@ if($editsearch)
     
     # Editable_only=false (so returns resources whether editable or not)
     $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false);
-    if (!is_array($searchitems)){$searchitems = array();}
+    if (!is_array($searchitems) || count($searchitems) == 0)
+        {
+        $error = $lang['searchnomatches'];
+        error_alert($error, !$modal);
+        exit();
+        }
     $all_resources_count = count($searchitems);
     $all_resource_refs=array_column($searchitems,"ref");
 
