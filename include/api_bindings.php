@@ -285,7 +285,7 @@ function api_update_resource_type($resource,$type)
     }
 
 function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $extension="jpg", $page=1, $watermarked=false, $alternative=-1)
-    {   
+    {
     # Set defaults
     if ($alternative=="") {$alternative=-1;}
     if ($page=="") {$page=1;}
@@ -303,6 +303,15 @@ function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $ex
                 continue;
                 }
             $return[$ref] = get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
+            if($GLOBALS["hide_real_filepath"])
+                {
+                // Add a temporary key so the file can be accessed unauthenticated
+                $accesskey = generate_temp_download_key($GLOBALS["userref"], $ref);
+                if($accesskey !== "")
+                    {
+                    $return[$ref] .= "&access_key={$accesskey}";
+                    }
+                }
             }
         return $return;
         }

@@ -75,7 +75,7 @@ foreach ($resources as $resource)
         $preview_path=get_resource_path($resource["ref"],false,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
         }
         
-
+    $preview_path .= "&k=" . $key;
     
     # sets height and width to display 
     if((isset($resource["thumb_width"])&&$resource["thumb_width"]<1) || (isset($resource["thumb_height"])&&$resource["thumb_height"] <1)) {continue;/*No Preview Available*/}

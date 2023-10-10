@@ -3053,7 +3053,7 @@ function user_set_usergroup($user,$usergroup)
  * 
  * Used to generate initial spider and scramble keys.
  * 
- * @param  int    $length Lenght of desired string of bytes
+ * @param  int    $length Length of desired string of bytes
  * @return string         Random character string
  */
 function generateSecureKey($length = 64)

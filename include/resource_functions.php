@@ -43,6 +43,11 @@ function get_resource_path(
     $includemodified = true
 )
     {
+    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
+    $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
+    $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate,
+    $baseurl, $k, $get_resource_path_extra_download_query_string_params;
+
     # returns the correct path to resource $ref of size $size ($size==empty string is original resource)
     # If one or more of the folders do not exist, and $generate=true, then they are generated
     if(!preg_match('/^[a-zA-Z0-9]+$/',(string) $extension))
@@ -66,15 +71,10 @@ function get_resource_path(
         return $override;
         }
 
-    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
-           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
-           $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate;
 
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
-    if(!$getfilepath && $hide_real_filepath && !in_array($size,array("col","thm","pre")))
+    if(!$getfilepath && $hide_real_filepath)
         {
-        global $baseurl, $k, $get_resource_path_extra_download_query_string_params;
-
         if(
             !isset($get_resource_path_extra_download_query_string_params)
             || is_null($get_resource_path_extra_download_query_string_params)
