@@ -4,7 +4,12 @@ function HookEmbeddocumentViewAfterresourceactions2()
 	{
 	global $embeddocument_resourcetype,$resource,$ref,$baseurl,$lang,$access;
 	
-	if ($resource["resource_type"]!=$embeddocument_resourcetype)
+	if ($resource["resource_type"]!=$embeddocument_resourcetype
+        || !$GLOBALS["allow_share"]
+        || checkperm("noex")
+        || get_resource_access($resource) != 0
+    )
+
         {
         return false;
         }
