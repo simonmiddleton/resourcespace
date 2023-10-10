@@ -73,12 +73,11 @@ foreach ($resources as $resource)
         {
         # Fall back to 'pre' size
         $preview_path=get_resource_path($resource["ref"],false,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
-        }
-        
+        }        
     $preview_path .= "&k=" . $key;
     
     # sets height and width to display 
-    if((isset($resource["thumb_width"])&&$resource["thumb_width"]<1) || (isset($resource["thumb_height"])&&$resource["thumb_height"] <1)) {continue;/*No Preview Available*/}
+    if((isset($resource["thumb_width"])&&$resource["thumb_width"]<1) || (isset($resource["thumb_height"]) && $resource["thumb_height"] <1)) {continue;/*No Preview Available*/}
     $ratio=$resource["thumb_width"]/$resource["thumb_height"];
     
     if ($ratio > $player_ratio) // Base on the width unless we have been asked to scale to specific width
@@ -152,8 +151,6 @@ $('#embedslideshow_auto').fadeTo(100,0.4);
 <li class="embedslideshow_jump-box"> <input type="text" id="embedslideshow_page_box" size="1" /> / <span id="page-count">#</span> </li>
 <?php } ?>
 </ul>
-
-
 
 <script type="text/javascript">
 
