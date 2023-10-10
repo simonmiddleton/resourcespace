@@ -31,7 +31,6 @@ $modal              = (getval("modal","")=="true");
 $tempfile           = getval("tempfile","");
 $slideshow          = getval("slideshow",0,true);
 $userfiledownload   = getval('userfile', '');
-$system_image       = getval('system_image','');
 $write_exif_data    = (getval('exif_write', '') == 'true');
 $k                  = getval('k', '');
 $download_temp_key  = trim(getval("access_key",""));
