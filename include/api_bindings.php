@@ -100,6 +100,21 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         if(is_array($results[$n]))
             {
             $results[$n] = process_resource_data_joins_values($results[$n], $get_resource_table_joins);
+            if($GLOBALS["hide_real_filepath"])
+                {
+                // Add a temporary key so the file can be accessed unauthenticated
+                $accesskey = generate_temp_download_key($GLOBALS["userref"], $results[$n]["ref"]);
+                if($accesskey !== "")
+                    {
+                    foreach($getsizes as $getsize)
+                        {
+                        if(isset($results[$n]["url_" . $getsize]))
+                            {
+                            $results[$n]["url_" . $getsize] .= "&access_key={$accesskey}";
+                            }
+                        }
+                    }
+                }            
             }
         }
     return $structured ? ["total"=> $totalcount, "data" => $results] : $results;
