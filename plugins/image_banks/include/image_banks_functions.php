@@ -3,7 +3,7 @@
 namespace ImageBanks;
 
 require_once 'AbstractProvider.php';
-require_once 'UnknownProvider.php';
+require_once 'NoProvider.php';
 require_once 'ProviderResult.php';
 require_once 'ProviderSearchResults.php';
 require_once 'MultipleInstanceProviderInterface.php';
