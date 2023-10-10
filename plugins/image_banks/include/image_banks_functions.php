@@ -1,9 +1,9 @@
 <?php
+
 namespace ImageBanks;
 
-use Closure;
-
 require_once 'AbstractProvider.php';
+require_once 'UnknownProvider.php';
 require_once 'ProviderResult.php';
 require_once 'ProviderSearchResults.php';
 require_once 'MultipleInstanceProviderInterface.php';
@@ -158,7 +158,51 @@ function providersCheckedAndActive(array $providers): array
 /**
  * Helper function to generate an instance ID based on its Provider ID.
  */ 
-function createProviderInstanceId(Provider $provider): Closure
+function createProviderInstanceId(Provider $provider): callable
     {
-    return fn(int $id) => ($provider->getId() * 100) + $id;
+    return fn(int $id) => computeProviderBaseInstanceId($provider) + $id;
+    }
+
+/** Helper function to compute a Providers' base ID (for multi-instance) */
+function computeProviderBaseInstanceId(Provider $provider): int
+    {
+    if ($provider instanceof MultipleInstanceProviderInterface)
+        {
+        return $provider->getId() * IMAGE_BANKS_MAX_INSTANCE_COUNT; 
+        }
+    return $provider->getId(); 
+    }
+
+/**
+ * Get a Provider (or its instance if multi-instance supported).
+ *
+ * @param array<Provider> $providers
+ * @param int $selected ID for the selected Provider (or its instance)
+ */
+function getProviderSelectInstance(array $providers, int $selected): Provider
+    {
+    // Normal providers
+    if (isset($providers[$selected]))
+        {
+        return $providers[$selected];
+        }
+
+    // Multi-instance providers
+    // These have the IDs based on their actual provider {@see computeProviderBaseInstanceId()}
+    $provider_ids = array_filter(
+        array_map('ImageBanks\computeProviderBaseInstanceId', $providers),
+        fn(int $id) => $id > IMAGE_BANKS_MAX_INSTANCE_COUNT
+    );
+    foreach ($provider_ids as $provider_id => $base_id)
+        {
+        $instance_id = $selected - $base_id;
+        if ($instance_id >= 0 && $instance_id < IMAGE_BANKS_MAX_INSTANCE_COUNT)
+            {
+            $provider = $providers[$provider_id];
+            // todo: call selectSystemInstance before proceeding - to be implemented - see MultipleInstanceProviderInterface
+            return $provider;
+            }
+        }
+
+    return new NoProvider($GLOBALS['lang'], get_temp_dir(false, 'ImageBanks-NoProvider'));
     }

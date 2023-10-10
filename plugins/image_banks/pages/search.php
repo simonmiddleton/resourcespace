@@ -1,8 +1,10 @@
 <?php
 
+use ImageBanks\NoProvider;
 use ImageBanks\ProviderSearchResults;
 
 use function ImageBanks\getProviders;
+use function ImageBanks\getProviderSelectInstance;
 use function ImageBanks\providersCheckedAndActive;
 
 $rs_root = dirname(__DIR__, 3);
@@ -29,7 +31,8 @@ $curpage = floor($offset / $per_page) + 1;
 [$providers,] = getProviders($image_banks_loaded_providers);
 $providers_select_list = providersCheckedAndActive($providers);
 
-$results = new ProviderSearchResults();
+$provider = new NoProvider($lang, get_temp_dir(false, 'ImageBanks-NoProvider'));
+$results = $provider->search($search, $per_page, $curpage);
 if($image_bank_provider_id === 0)
     {
     $results->setError($lang['image_banks_provider_id_required']);
@@ -39,28 +42,22 @@ else if(!array_key_exists($image_bank_provider_id, $providers_select_list))
     $results->setError($lang['image_banks_provider_not_found']);
     }
 
+// Try selecting a Provider (or its instance) and perform the requested search
 if ($results->getError() === '' && $providers_select_list !== [])
     {
-    // todo: get provider ID if multi-instance (detect from ID)
-    // make it run the search taking into account the instance if need be
-    printf('<pre>%s</pre>', print_r($providers_select_list, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
-    $provider = $providers[$image_bank_provider_id];
+    $provider = getProviderSelectInstance($providers, $image_bank_provider_id);
     $results = $provider->search($search, $per_page, $curpage);
-    }
-else
-    {
-    $provider = new class()
+    
+    // On the off chance something else went terribly wrong (ie. code bug), let user know we couldn't find the Provider
+    if ($provider instanceof NoProvider)
         {
-        public function getName()
-            {
-            return $GLOBALS['lang']['unknown'];
-            }
-        };
+        $results->setError($lang['image_banks_provider_not_found']);
+        }
     }
 
 $results_error = $results->getError();
 $results_warning = $results->getWarning();
-$totalpages  = ceil($results->total / $per_page);
+$totalpages = ceil($results->total / $per_page);
 
 include_once "{$rs_root}/include/header.php";
 ?>

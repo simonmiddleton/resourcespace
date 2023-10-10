@@ -2,6 +2,12 @@
 
 use function ImageBanks\autoloadProviders;
 
+/**
+ * Defines the maximum number of instances a Provider with multi-instance support can have.
+ * @var int
+ */
+const IMAGE_BANKS_MAX_INSTANCE_COUNT = 100;
+
 include_once dirname(__DIR__) . '/include/image_banks_functions.php';
 
 $image_banks_loaded_providers = autoloadProviders();
