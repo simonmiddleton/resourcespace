@@ -11,6 +11,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
      * @var list<ResourceSpaceProviderInstance>
      */
     private array $instances = [];
+    private int $selected_instance_id;
 
     function __construct(array $lang, string $temp_dir_path)
             {
@@ -85,5 +86,11 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
     public function getAllInstances(): array
         {
         return $this->instances;
+        }
+
+    public function selectSystemInstance(int $id): Provider
+        {
+        $this->selected_instance_id = $id;
+        return $this;
         }
     }

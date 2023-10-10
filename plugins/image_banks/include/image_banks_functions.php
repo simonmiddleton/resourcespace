@@ -176,7 +176,7 @@ function computeProviderBaseInstanceId(Provider $provider): int
 /**
  * Get a Provider (or its instance if multi-instance supported).
  *
- * @param array<Provider> $providers
+ * @param array<Provider&MultipleInstanceProviderInterface> $providers
  * @param int $selected ID for the selected Provider (or its instance)
  */
 function getProviderSelectInstance(array $providers, int $selected): Provider
@@ -188,19 +188,20 @@ function getProviderSelectInstance(array $providers, int $selected): Provider
         }
 
     // Multi-instance providers
-    // These have the IDs based on their actual provider {@see computeProviderBaseInstanceId()}
-    $provider_ids = array_filter(
-        array_map('ImageBanks\computeProviderBaseInstanceId', $providers),
-        fn(int $id) => $id > IMAGE_BANKS_MAX_INSTANCE_COUNT
-    );
-    foreach ($provider_ids as $provider_id => $base_id)
+    /** @var Provider&MultipleInstanceProviderInterface $provider */
+    foreach ($providers as $provider_id => $provider)
         {
+        if (!($provider instanceof MultipleInstanceProviderInterface))
+            {
+            continue;
+            }
+
+        $base_id = computeProviderBaseInstanceId($provider);
         $instance_id = $selected - $base_id;
         if ($instance_id >= 0 && $instance_id < IMAGE_BANKS_MAX_INSTANCE_COUNT)
             {
             $provider = $providers[$provider_id];
-            // todo: call selectSystemInstance before proceeding - to be implemented - see MultipleInstanceProviderInterface
-            return $provider;
+            return $provider->selectSystemInstance($instance_id);
             }
         }
 

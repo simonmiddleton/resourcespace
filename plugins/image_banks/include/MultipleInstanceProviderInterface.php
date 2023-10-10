@@ -13,5 +13,11 @@ interface MultipleInstanceProviderInterface
      */
     public function getAllInstances(): array;
 
-    // public function selectSystemInstance();
+    /**
+     * Activate a selected Providers' system instance so the search performed by the Provider is ran over the correct
+     * system.
+     *
+     * @param int $id Instance ID
+     */
+    public function selectSystemInstance(int $id): Provider;
     }
