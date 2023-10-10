@@ -33,7 +33,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         return [];
         }
 
-    public function buildConfigPageDefinition(array $page_def)
+    public function buildConfigPageDefinition(array $page_def): array
         {
         $page_def[] = config_add_text_input(
             'resourcespace_instances_cfg',
@@ -45,7 +45,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         return $page_def;
         }
 
-    public function runSearch($keywords, $per_page = 24, $page = 1)
+    public function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults
         {
         if($per_page < 3)
             {
@@ -62,7 +62,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             }
 
         trigger_error('[ImageBanks][ResourceSpace] to be implemented...');
-        return [];
+        return new ProviderSearchResults();
         }
 
     public function parseInstancesConfiguration(): array

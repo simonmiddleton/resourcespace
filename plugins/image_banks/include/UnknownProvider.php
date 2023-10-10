@@ -20,12 +20,12 @@ class NoProvider extends Provider
         return [];
         }
 
-    public function buildConfigPageDefinition(array $page_def)
+    public function buildConfigPageDefinition(array $page_def): array
         {
         return $page_def;
         }
 
-    public function runSearch($keywords, $per_page = 24, $page = 1)
+    public function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults
         {
         return new ProviderSearchResults();
         }

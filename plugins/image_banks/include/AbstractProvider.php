@@ -18,7 +18,21 @@ abstract class Provider
      * @return array List of failed (system) dependencies.
      */
     abstract public function checkDependencies(): array;
-    abstract public function buildConfigPageDefinition(array $page_def);
+
+    /**
+     * Add configuration needs to the image_banks' setup page
+     * @param array $page_def Setup page definitions {@see config_functions.php}
+     */
+    abstract public function buildConfigPageDefinition(array $page_def): array;
+
+    /**
+    * Search providers' database based on specified keywords
+    *
+    * @param  string   $keywords  Search keyword(s)
+    * @param  integer  $per_page  Number of results per page
+    * @param  integer  $page      Select the page number
+    */
+    abstract protected function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults;
 
     /**
     * Register configuration options required by the Provider in the GLOBAL scope
@@ -48,26 +62,11 @@ abstract class Provider
     /**
     * Search providers' database based on specified keywords
     * 
-    * @abstract
-    * 
     * @param  string   $keywords  Search keyword(s)
     * @param  integer  $per_page  Number of results per page
     * @param  integer  $page      Select the page number
-    * 
-    * @return \ImageBanks\ProviderSearchResults
     */
-    abstract protected function runSearch($keywords, $per_page = 24, $page = 1);
-
-    /**
-    * Search providers' database based on specified keywords
-    * 
-    * @param  string   $keywords  Search keyword(s)
-    * @param  integer  $per_page  Number of results per page
-    * @param  integer  $page      Select the page number
-    * 
-    * @return \ImageBanks\ProviderSearchResults
-    */
-    final public function search($keywords, $per_page = 24, $page = 1)
+    final public function search($keywords, $per_page = 24, $page = 1): ProviderSearchResults
         {
         $search_results = $this->runSearch($keywords, $per_page, $page);
 

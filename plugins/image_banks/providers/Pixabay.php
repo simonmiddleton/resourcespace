@@ -3,7 +3,7 @@ namespace ImageBanks;
 
 class Pixabay extends Provider
     {
- function __construct(array $lang, string $temp_dir_path)
+    function __construct(array $lang, string $temp_dir_path)
         {
         $this->id                = 1;
         $this->name              = "Pixabay";
@@ -23,14 +23,14 @@ class Pixabay extends Provider
         return [];
         }
 
-    public function buildConfigPageDefinition(array $page_def)
+    public function buildConfigPageDefinition(array $page_def): array
         {
         $page_def[] = \config_add_text_input('pixabay_api_key', $this->lang["image_banks_pixabay_api_key"]);
 
         return $page_def;
         }
 
-    public function runSearch($keywords, $per_page = 24, $page = 1)
+    public function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults
         {
         if($per_page < 3)
             {

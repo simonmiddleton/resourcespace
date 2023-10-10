@@ -26,7 +26,7 @@ class Shutterstock extends Provider
         return [];
         }
 
-    public function buildConfigPageDefinition(array $page_def)
+    public function buildConfigPageDefinition(array $page_def): array
         {
         $page_def[] = \config_add_text_input('shutterstock_token', $this->lang["image_banks_shutterstock_token"],false,800,true);
         $page_def[] = \config_add_text_input('shutterstock_result_limit', $this->lang["image_banks_shutterstock_result_limit"]);
@@ -34,7 +34,7 @@ class Shutterstock extends Provider
         return $page_def;
         }
 
-    public function runSearch($keywords, $per_page = 24, $page = 1)
+    public function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults
         {
         if($per_page < 3)
             {
