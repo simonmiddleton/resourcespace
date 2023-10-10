@@ -4304,17 +4304,16 @@ function update_resource_type($ref,$type)
 */
 function get_exiftool_fields($resource_type, string $option_separator = ",", bool $skip_translation = false)
     {
-    return ps_query("
+    global $FIXED_LIST_FIELD_TYPES;
+    $return = ps_query("
            SELECT f.ref,
                   f.type,
                   f.exiftool_field,
                   f.exiftool_filter,
-                  group_concat(n.name) AS options,
                   f.name,
                   f.read_only
              FROM resource_type_field AS f
         LEFT JOIN resource_type_field_resource_type rtfrt ON f.ref=rtfrt.resource_type_field
-        LEFT JOIN node AS n ON f.ref = n.resource_type_field
             WHERE length(exiftool_field) > 0
               AND (rtfrt.resource_type = ? OR f.global=1)
          GROUP BY ref
