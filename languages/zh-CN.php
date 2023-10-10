@@ -1042,7 +1042,6 @@ $lang["fieldtype-dynamic_keywords_list"]='动态关键词列表';
 $lang["fieldtype-radio_buttons"]='单选按钮';
 $lang["fieldtype-warning_message"]='警告信息';
 $lang["fieldtype-date_range"]='日期范围';
-$lang["documentation-permissions"]='请查看<b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>知识库</a></b>，以获取有关权限的更多信息。';
 $lang["property-reference"]='参考 (Cānkǎo)';
 $lang["property-name"]='名称';
 $lang["property-permissions"]='权限';

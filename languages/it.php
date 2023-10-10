@@ -582,7 +582,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Elenco dinamico delle parole chiave.';
 $lang["fieldtype-radio_buttons"]='Pulsanti di opzione.';
 $lang["fieldtype-warning_message"]='Messaggio di avviso.';
 $lang["fieldtype-date_range"]='Intervallo di date';
-$lang["documentation-permissions"]='Consulta la <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a></b> per ulteriori informazioni sulle autorizzazioni.';
 $lang["property-reference"]='Riferimento';
 $lang["property-permissions"]='Permessi.';
 $lang["property-permissions_inherit"]='Ereditare dal gruppo genitore.';

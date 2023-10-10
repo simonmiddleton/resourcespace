@@ -85,7 +85,6 @@ $lang["fieldtype-dynamic_keywords_list"]="Dynamisk nyckelordslista";
 $lang["fieldtype-dynamic_tree_in_development"]="Dynamiskt träd (under utveckling)";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="Se <a href=../../documentation/permissions_sv.txt target=_blank>hjälpfilen för behörigheter</a> om du behöver mer information.";
 $lang["property-reference"]="Referensnr";
 $lang["property-name"]="Namn";
 $lang["property-permissions"]="Behörigheter";

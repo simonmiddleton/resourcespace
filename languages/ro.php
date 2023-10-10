@@ -84,7 +84,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Listă dinamică de cuvinte cheie.';
 $lang["fieldtype-radio_buttons"]='Buton radio.';
 $lang["fieldtype-warning_message"]='Mesaj de avertizare.';
 $lang["fieldtype-date_range"]='Interval de date.';
-$lang["documentation-permissions"]='Vă rugăm să consultați <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Baza de Cunoștințe</a></b> pentru informații suplimentare despre permisiuni.';
 $lang["property-reference"]='Referință.';
 $lang["property-name"]='Nume.';
 $lang["property-permissions"]='Permisiuni.';

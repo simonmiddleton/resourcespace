@@ -786,7 +786,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Liste dynamique de mots-clés.';
 $lang["fieldtype-radio_buttons"]='Boutons radio.';
 $lang["fieldtype-warning_message"]='Message d\'avertissement.';
 $lang["fieldtype-date_range"]='Plage de dates.';
-$lang["documentation-permissions"]='Veuillez consulter la <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Base de connaissances</a></b> pour plus d\'informations sur les autorisations.';
 $lang["property-reference"]='Référence.';
 $lang["property-name"]='Nom';
 $lang["property-permissions"]='Autorisations';

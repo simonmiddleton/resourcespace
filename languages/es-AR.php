@@ -1074,7 +1074,6 @@ $lang["fieldtitle-owner"]='Propietario.';
 $lang["fieldtype-radio_buttons"]='Botones de radio.';
 $lang["fieldtype-warning_message"]='Mensaje de advertencia.';
 $lang["fieldtype-date_range"]='Rango de fechas.';
-$lang["documentation-permissions"]='Por favor, consulte la <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Base de Conocimientos</a></b> para obtener más información sobre permisos.';
 $lang["property-permissions_inherit"]='Heredar del grupo padre.';
 $lang["information-permissions"]='NOTA: Los permisos globales de la configuración también pueden estar en efecto.';
 $lang["property-resource_defaults"]='Valores predeterminados de recursos.';

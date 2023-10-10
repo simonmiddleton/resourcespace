@@ -5071,6 +5071,7 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
     ?>
     <input type="hidden" name="permission_<?php echo $base64_perm; ?>" value="<?php echo $input_value; ?>">
     <tr>
+    <td><?php if ($reverse) {?><i><?php } ?><?php echo htmlspecialchars($permission) ?><?php if ($reverse) {?></i><?php } ?></td>
         <td><?php echo $description_escaped; ?></td>
         <td>
             <input

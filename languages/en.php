@@ -88,7 +88,6 @@ $lang["fieldtype-warning_message"]="Warning message";
 $lang["fieldtype-date_range"]="Date Range";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="See the <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a></b> for further information on permissions.";
 $lang["property-reference"]="Reference";
 $lang["property-name"]="Name";
 $lang["property-permissions"]="Permissions";

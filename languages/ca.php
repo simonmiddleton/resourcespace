@@ -602,7 +602,6 @@ $lang["fieldtitle-category"]='Categoria.';
 $lang["fieldtitle-subject"]='Tema';
 $lang["fieldtitle-author"]='Autor';
 $lang["fieldtitle-owner"]='Propietari';
-$lang["documentation-permissions"]='Consulteu la <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Base de coneixements</a></b> per obtenir més informació sobre els permisos.';
 $lang["property-reference"]='Referència.';
 $lang["property-name"]='Nom.';
 $lang["property-permissions"]='Permisos.';
