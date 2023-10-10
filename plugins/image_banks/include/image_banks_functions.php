@@ -201,7 +201,7 @@ function getProviderSelectInstance(array $providers, int $selected): Provider
         if ($instance_id >= 0 && $instance_id < IMAGE_BANKS_MAX_INSTANCE_COUNT)
             {
             $provider = $providers[$provider_id];
-            return $provider->selectSystemInstance($instance_id);
+            return $provider->selectSystemInstance($selected);
             }
         }
 

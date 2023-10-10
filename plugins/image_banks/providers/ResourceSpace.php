@@ -61,8 +61,19 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             $page = 1;
             }
 
-        trigger_error('[ImageBanks][ResourceSpace] to be implemented...');
+        $this->callApi($this->instances[$this->selected_instance_id]);
+        die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
         return new ProviderSearchResults();
+        }
+
+    function callApi(ResourceSpaceProviderInstance $instance)
+        {
+        $api = $instance->toArray();
+        $query="user={$api['username']}&function=do_search&search=bike";
+        $sign = hash('sha256', $api['key'] . $query);
+        $results = json_decode(file_get_contents("{$api['baseURL']}/api/?$query&sign=$sign"), true);
+        printf('<pre>%s</pre>', print_r($results, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
+        // todo: consider the output of this function. It may occasionally fail and we'll want to let user know.
         }
 
     public function parseInstancesConfiguration(): array

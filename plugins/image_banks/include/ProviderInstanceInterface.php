@@ -23,4 +23,9 @@ interface ProviderInstanceInterface
      * Get Providers' instance (user friendly) name
      */
     public function getName(): string;
+
+    /**
+     * Convert to array
+     */
+    public function toArray(): array;
     }

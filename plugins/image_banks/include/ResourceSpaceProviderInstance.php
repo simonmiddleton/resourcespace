@@ -57,4 +57,14 @@ final class ResourceSpaceProviderInstance implements ProviderInstanceInterface
         {
         return $this->name;
         }
+
+    public function toArray(): array
+        {
+        return [
+            'baseURL' => $this->baseURL,
+            'username' => $this->username,
+            'key' => $this->key,
+            'configuration' => $this->configuration,
+        ];
+        }
     }
