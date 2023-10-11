@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ImageBanks;
 
+use RuntimeException;
+
 class ResourceSpace extends Provider implements MultipleInstanceProviderInterface
     {
     /**
@@ -61,19 +63,67 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             $page = 1;
             }
 
-        $this->callApi($this->instances[$this->selected_instance_id]);
+        try
+            {
+            /* 
+            todo: 
+            - need to finish the callAPI to allow requesting anything from RS
+            - always search for pre,thm,col (or as needed). If an instance has renamed them, have a remap in its configuration instead
+            */           
+            $api_results = $this->callApi('search_get_previews');
+            }
+        catch (RuntimeException $r)
+            {
+            $search_results = new ProviderSearchResults();
+            $search_results->setError($r->getMessage());
+            return $search_results;
+            }
+
+        foreach($api_results as $row)
+            {
+            printf('<pre>%s</pre>', print_r($row, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
+            }
         die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
         return new ProviderSearchResults();
         }
 
-    function callApi(ResourceSpaceProviderInstance $instance)
+    function callApi(string $function/* , array $data */)
         {
+        $instance = $this->instances[$this->selected_instance_id];
+        $err_msg_prefix = sprintf('%s - %s: ', $this->name, $instance->getName());
         $api = $instance->toArray();
-        $query="user={$api['username']}&function=do_search&search=bike";
+
+        // Build request & send
+        $query = sprintf('user=%s&function=%s&search=bike&getsizes=pre,thm,col', $api['username'], $function);
         $sign = hash('sha256', $api['key'] . $query);
-        $results = json_decode(file_get_contents("{$api['baseURL']}/api/?$query&sign=$sign"), true);
-        printf('<pre>%s</pre>', print_r($results, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
-        // todo: consider the output of this function. It may occasionally fail and we'll want to let user know.
+        $request = file_get_contents(
+            "{$api['baseURL']}/api/?$query&sign=$sign",
+            false,
+            stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                ],
+            ])
+        );
+        $status_code = preg_match('/\d{3}/', $http_response_header[0], $match) ? (int) $match[0] : 0;
+        $results = json_decode($request, true);
+
+        // Handle generic fails (simple string responses)
+        if ($status_code !== 200 && JSON_ERROR_NONE !== json_last_error())
+            {
+            throw new RuntimeException($err_msg_prefix . $request);
+            }
+        // Handle generic (structured) errors (usually done using ajax_functions.php)
+        else if ($status_code !== 200 && isset($results['error']['detail']))
+            {
+            throw new RuntimeException($err_msg_prefix . $results['error']['detail']);
+            }
+        else if ($status_code === 200 && JSON_ERROR_NONE !== json_last_error())
+            {
+            throw new RuntimeException("$err_msg_prefix (JSON) " . json_last_error_msg());
+            }
+
+        return $results;
         }
 
     public function parseInstancesConfiguration(): array
