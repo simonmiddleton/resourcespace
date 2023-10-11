@@ -1630,11 +1630,19 @@ function save_collection($ref, $coldata=array())
             $old_attached_users[]=$collection_owner["ref"]; # Collection Owner is implied as attached already
             }
 
+        # The cache will only be cleared if necessary
+        $cache_needs_clearing = false;
+
         ps_query("delete from user_collection where collection=?",array("i",$ref));
         
         $old_attached_groups=ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection=?",array("i",$ref));
         ps_query("delete from usergroup_collection where collection=?",array("i",$ref));
-    
+        
+        if(count($old_attached_users) > 0 || count($old_attached_groups) > 0) 
+            {
+            $cache_needs_clearing = true;    
+            }
+
         # Build a new list and insert
         $users=resolve_userlist_groups($coldata["users"]);
         $ulist=array_unique(trim_array(explode(",",$users)));
@@ -1647,16 +1655,21 @@ function save_collection($ref, $coldata=array())
                 $params[] = $ref; $params[] = $uref; 
                 }
             ps_query("insert into user_collection(collection,user) values " . trim(str_repeat('(?, ?),', count($urefs)), ','), ps_param_fill($params, 'i'));
+            $cache_needs_clearing=true;
             $new_attached_users=array_diff($urefs, $old_attached_users);
             }
 
         # log this only if a user is being added
         if($coldata["users"]!="")
             {
-            clear_query_cache('collection_access');
             collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, join(", ",$ulist));
             }
-        
+
+        if($cache_needs_clearing) 
+            {
+            clear_query_cache('collection_access');
+            }
+
         # log the removal of users / smart groups
         $was_shared_with = array();
         if (count($old_attached_users) > 0)
