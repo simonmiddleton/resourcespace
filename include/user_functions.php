@@ -3404,7 +3404,7 @@ function get_users_by_preference(string $preference, string $value) : array
 /**
  * Get the default notification workflow states for the current user. Used by setup_user() and get_user_actions() if no user preference has been set
  *
- * @return array    Array if workflow sate refs
+ * @return array    Array of workflow state references
  * 
  */
 function get_default_notify_states(): array

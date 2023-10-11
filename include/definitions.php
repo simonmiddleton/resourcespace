@@ -824,6 +824,8 @@ const VIEW_IN_BROWSER_EXTENSIONS = ['pdf', 'mp3'];
 // PHP stream wrappers that will be blocked when attempting uploads by URL via the API.
 const BLOCKED_STREAM_WRAPPERS = ['php', 'file'];
 
-
 // Separator to use when rendering date range field values
 define('DATE_RANGE_SEPARATOR'," / ");
+
+// Maximum age in hours of the actions that will be included in user action notification emails
+define ('ACTIONS_EMAIL_MAX_AGE',   168);
