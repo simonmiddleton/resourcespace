@@ -46,6 +46,7 @@ else if(!array_key_exists($image_bank_provider_id, $providers_select_list))
 if ($results->getError() === '' && $providers_select_list !== [])
     {
     $provider = getProviderSelectInstance($providers, $image_bank_provider_id);
+    $provider_name = $providers_select_list[$image_bank_provider_id] ?? $provider->getName();
     $results = $provider->search($search, $per_page, $curpage);
     
     // On the off chance something else went terribly wrong (ie. code bug), let user know we couldn't find the Provider
@@ -68,7 +69,7 @@ include_once "{$rs_root}/include/header.php";
                 <span class="Selected"><?php echo number_format($results->total); ?></span> <?php echo htmlspecialchars($lang["youfoundresults"]); ?>
             </div>
             <div class="InpageNavLeftBlock AlignLeftBlockText">
-                <span class="Selected"><?php echo htmlspecialchars($lang["image_banks_image_bank"]); ?>: </span> <?php echo htmlspecialchars($provider->getName()); ?>
+                <span class="Selected"><?php echo htmlspecialchars($lang["image_banks_image_bank"]); ?>: </span><?php echo htmlspecialchars($provider_name); ?>
             </div>
             <div class="InpageNavLeftBlock">
                 <select name="per_page" onchange="CentralSpaceLoad(this.value, true);">
