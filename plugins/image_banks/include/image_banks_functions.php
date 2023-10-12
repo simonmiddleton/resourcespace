@@ -58,7 +58,6 @@ function getProviders(array $loaded_providers): array
 
     foreach($loaded_providers as $loaded_provider)
         {
-        // TODO: check provider IDs are unique. If not, try at most 3 times until we decide not to include it.
         $provider_class = "\ImageBanks\\$loaded_provider";
 
         $temp_dir_path = get_temp_dir(false, "ImageBanks-{$loaded_provider}");
@@ -84,26 +83,31 @@ function getProviders(array $loaded_providers): array
     return [$providers, $errors];
     }
 
-function validFileSource($file, array $loaded_providers)
+/**
+ * Check that the untrusted file is a valid Providers' (or its instance) source.
+ *
+ * @param string $file Untrusted file URL
+ * @param array $loaded_providers List of Provider names
+ */
+function validFileSource(string $file, array $loaded_providers): bool
     {
-    $valid_source = false;
-
-    $providers = getProviders($loaded_providers);
-    foreach($providers as $provider)
+    [$providers, $errors] = getProviders($loaded_providers);
+    if ($errors !== [])
         {
-        $download_endpoint = $provider->getAllowedDownloadEndpoint();
-
-        if(substr($file, 0, strlen($download_endpoint)) == $download_endpoint)
-            {
-            $valid_source = true;
-
-            break;
-            }
-
-        $valid_source = false;
+        return false;
         }
 
-    return $valid_source;
+    $providers_select_list = providersCheckedAndActive($providers);
+    foreach(array_keys($providers_select_list) as $provider_id)
+        {
+        $provider = getProviderSelectInstance($providers, $provider_id);
+        $download_endpoint = $provider->getAllowedDownloadEndpoint();
+        if(substr($file, 0, strlen($download_endpoint)) == $download_endpoint)
+            {
+            return true;
+            }
+        }
+    return false;
     }
 
 /**

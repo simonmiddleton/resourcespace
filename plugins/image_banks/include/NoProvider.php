@@ -10,6 +10,7 @@ class NoProvider extends Provider
             {
             $this->id = 999;
             $this->name = $lang['unknown'];
+            $this->download_endpoint = generateSecureKey(16);
             $this->configs = [];
             $this->warning = '';
             $this->lang = $lang;

@@ -19,7 +19,6 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             {
             $this->id = 3;
             $this->name = "ResourceSpace";
-            // $this->download_endpoint = "https://yourRS.tld/api";
             $this->configs = ['resourcespace_instances_cfg' => ''];
             $this->warning = "";
             $this->lang = $lang;
@@ -214,6 +213,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
     public function selectSystemInstance(int $id): Provider
         {
         $this->selected_instance_id = $id;
+        $this->download_endpoint = ($this->getSelectedSystemInstance()->toArray())['baseURL'];
         return $this;
         }
 
