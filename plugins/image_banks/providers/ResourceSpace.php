@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ImageBanks;
 
 use RuntimeException;
+use SplFileInfo;
 
 class ResourceSpace extends Provider implements MultipleInstanceProviderInterface
     {
@@ -135,6 +136,16 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             }
         $results->total = count($api_results);
         return $results;
+        }
+
+    /** @inheritdoc */
+    public function getDownloadFileInfo(string $file): SplFileInfo
+        {
+        // todo: also cater for case when the URL points to the filestore directly (ie no hide_real_filepath)
+        parse_str(parse_url($file, PHP_URL_QUERY), $qs_params);
+        $ref = $qs_params['ref'] ?? '';
+        $ext = $qs_params['ext'] ?? '';
+        return new SplFileInfo("$ref.$ext");
         }
 
     function callApi(string $function, array $data)

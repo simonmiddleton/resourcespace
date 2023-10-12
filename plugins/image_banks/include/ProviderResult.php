@@ -27,12 +27,6 @@ class ProviderResult
         return $this->id;
         }
 
-    public function getSource()
-        {
-        return $this->provider->getName();
-        }
-
-
     public function setOriginalFileUrl($url)
         {
         $this->original_file_url = $url;

@@ -87,27 +87,12 @@ function getProviders(array $loaded_providers): array
  * Check that the untrusted file is a valid Providers' (or its instance) source.
  *
  * @param string $file Untrusted file URL
- * @param array $loaded_providers List of Provider names
+ * @param Provider $provider Image bank Provider
  */
-function validFileSource(string $file, array $loaded_providers): bool
+function validFileSource(string $file, Provider $provider): bool
     {
-    [$providers, $errors] = getProviders($loaded_providers);
-    if ($errors !== [])
-        {
-        return false;
-        }
-
-    $providers_select_list = providersCheckedAndActive($providers);
-    foreach(array_keys($providers_select_list) as $provider_id)
-        {
-        $provider = getProviderSelectInstance($providers, $provider_id);
-        $download_endpoint = $provider->getAllowedDownloadEndpoint();
-        if(substr($file, 0, strlen($download_endpoint)) == $download_endpoint)
-            {
-            return true;
-            }
-        }
-    return false;
+    $download_endpoint = $provider->getAllowedDownloadEndpoint();
+    return mb_substr($file, 0, mb_strlen($download_endpoint)) === $download_endpoint;
     }
 
 /**

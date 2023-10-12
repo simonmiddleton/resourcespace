@@ -1,6 +1,8 @@
 <?php
 namespace ImageBanks;
 
+use SplFileInfo;
+
 abstract class Provider
     {
     protected array $lang;
@@ -33,6 +35,13 @@ abstract class Provider
     * @param  integer  $page      Select the page number
     */
     abstract protected function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults;
+
+    /**
+     * Get file information for download or when creating a new resource based on a Providers' source file.
+     * 
+     * @param string $file The source file URL 
+     */
+    abstract public function getDownloadFileInfo(string $file): SplFileInfo;
 
     /**
     * Register configuration options required by the Provider in the GLOBAL scope

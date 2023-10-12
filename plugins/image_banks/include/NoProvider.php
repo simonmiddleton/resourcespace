@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ImageBanks;
 
+use SplFileInfo;
+
 class NoProvider extends Provider
     {
     function __construct(array $lang, string $temp_dir_path)
@@ -16,18 +18,28 @@ class NoProvider extends Provider
             $this->lang = $lang;
             $this->temp_dir_path = $temp_dir_path;
             }
+
+    /** @inheritdoc */
     public function checkDependencies(): array
         {
         return [];
         }
 
+    /** @inheritdoc */
     public function buildConfigPageDefinition(array $page_def): array
         {
         return $page_def;
         }
 
+    /** @inheritdoc */
     public function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults
         {
         return new ProviderSearchResults();
+        }
+
+    /** @inheritdoc */
+    public function getDownloadFileInfo(string $file): SplFileInfo
+        {
+        return new SplFileInfo('');
         }
     }
