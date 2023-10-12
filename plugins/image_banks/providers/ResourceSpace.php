@@ -92,6 +92,9 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
 
         $view_title_field = $instance_cfg['view_title_field'] ?? $GLOBALS['view_title_field'];
         $results = new ProviderSearchResults();
+
+        // todo: fix first trunk to have do_search support structured fetchrows so I can finish the paging functionality
+        printf('<pre>%s</pre>', print_r($api_results, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
         foreach($api_results as $row)
             {
             $item = (new ProviderResult($row['ref'], $this))
@@ -148,6 +151,13 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         return new SplFileInfo("$ref.$ext");
         }
 
+    /**
+     * Helper method to use ResourceSpace API
+     *
+     * @param string $function API binding function name
+     * @param array $data Request payload
+     * @return array|int|string JSON decoded data, as received from the API binding
+     */
     function callApi(string $function, array $data)
         {
         $instance = $this->getSelectedSystemInstance();
