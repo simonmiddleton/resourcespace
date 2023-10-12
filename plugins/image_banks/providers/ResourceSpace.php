@@ -26,6 +26,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             $this->temp_dir_path = $temp_dir_path;
             }
 
+    /** @inheritdoc */
     public function checkDependencies(): array
         {
         if (!function_exists('curl_version'))
@@ -35,6 +36,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         return [];
         }
 
+    /** @inheritdoc */
     public function buildConfigPageDefinition(array $page_def): array
         {
         $page_def[] = config_add_text_input(
@@ -47,6 +49,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         return $page_def;
         }
 
+    /** @inheritdoc */
     public function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults
         {
         if($per_page < 3)
@@ -65,12 +68,21 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
 
         try
             {
-            /* 
+            /*
             todo: 
-            - need to finish the callAPI to allow requesting anything from RS
-            - always search for pre,thm,col (or as needed). If an instance has renamed them, have a remap in its configuration instead
-            */           
-            $api_results = $this->callApi('search_get_previews');
+            - always search for pre,thm,col (or as needed).
+                If an instance has renamed them, have a remap in its configuration instead.
+                Do this on the other system instance.
+            */
+            $instance = $this->getSelectedSystemInstance()->toArray();
+            $instance_cfg = $instance['configuration'];
+            $api_results = $this->callApi(
+                'search_get_previews',
+                [
+                    'search' => $keywords,
+                    'getsizes' => 'pre,thm',
+                ]
+            );
             }
         catch (RuntimeException $r)
             {
@@ -79,22 +91,39 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             return $search_results;
             }
 
+        $view_title_field = $instance_cfg['view_title_field'] ?? $GLOBALS['view_title_field'];
+        $results = new ProviderSearchResults();
         foreach($api_results as $row)
             {
-            printf('<pre>%s</pre>', print_r($row, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
+            $results[] = (new ProviderResult($row['ref'], $this))
+                ->setTitle($row["field{$view_title_field}"])
+                // todo: original file
+                ->setOriginalFileUrl('originalfileurl')
+                ->setProviderUrl(generateURL($instance['baseURL'], ['r' => $row['ref']]))
+                ->setPreviewUrl($row['url_thm'])
+                ->setPreviewWidth($row['thumb_width'])
+                ->setPreviewHeight($row['thumb_height']);
             }
-        die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
-        return new ProviderSearchResults();
+        $results->total = count($api_results);
+        return $results;
         }
 
-    function callApi(string $function/* , array $data */)
+    function callApi(string $function, array $data)
         {
-        $instance = $this->instances[$this->selected_instance_id];
+        $instance = $this->getSelectedSystemInstance();
         $err_msg_prefix = sprintf('%s - %s: ', $this->name, $instance->getName());
         $api = $instance->toArray();
 
         // Build request & send
-        $query = sprintf('user=%s&function=%s&search=bike&getsizes=pre,thm,col', $api['username'], $function);
+        $query = http_build_query(
+            array_merge(
+                [
+                    'user' => $api['username'],
+                    'function' => $function,
+                ],
+                $data
+            )
+        );
         $sign = hash('sha256', $api['key'] . $query);
         $request = file_get_contents(
             "{$api['baseURL']}/api/?$query&sign=$sign",
@@ -126,6 +155,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         return $results;
         }
 
+    /** @inheritdoc */
     public function parseInstancesConfiguration(): array
         {
         $errs = [];
@@ -144,14 +174,22 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         return $errs;
         }
 
+    /** @inheritdoc */
     public function getAllInstances(): array
         {
         return $this->instances;
         }
 
+    /** @inheritdoc */
     public function selectSystemInstance(int $id): Provider
         {
         $this->selected_instance_id = $id;
         return $this;
+        }
+
+    /** @inheritdoc */
+    public function getSelectedSystemInstance(): ResourceSpaceProviderInstance
+        {
+        return $this->instances[$this->selected_instance_id];
         }
     }

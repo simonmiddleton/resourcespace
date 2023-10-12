@@ -20,4 +20,9 @@ interface MultipleInstanceProviderInterface
      * @param int $id Instance ID
      */
     public function selectSystemInstance(int $id): Provider;
+
+    /**
+     * Get a Provider instance (while working with a particular Provider)
+     */
+    public function getSelectedSystemInstance(): ProviderInstanceInterface;
     }
