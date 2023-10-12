@@ -726,6 +726,8 @@ function report_process_query_placeholders(string $query, array $placeholders): 
  */
 function render_pie_graph($id,$data,$total=NULL)
     {
+    global $home_colour_style_override,$header_link_style_override;
+
     $rt=0;
     $labels = [];
     $values = [];
@@ -757,18 +759,7 @@ function render_pie_graph($id,$data,$total=NULL)
                 }
             ]
         },
-        options: {
-            plugins: {
-                tooltip: {
-                        // enabled: false
-                    },
-                    chartAreaBorder: {
-                        borderWidth: 2,
-                        borderDash: [ 5, 5 ],
-                        borderDashOffset: 2,
-                    }
-            },
-        },
+        options: chartstyling<?php echo $id?>,
 
 
     });
@@ -808,26 +799,7 @@ function render_bar_graph(string $id, array $data)
                     }
                 ]
             },
-            options: {
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                },
-                scales: {
-                    xAxis: {
-                        type: 'time',
-                        time: {
-                            unit:'day',
-                            displayFormats :{
-                                day: 'dd-MM-YYY',
-                            }
-                        },
-                        unit: 'seconds',
-                    }
-                }
-            },
-
+            options: chartstyling<?php echo $id?>,
         }
         );
     </script>

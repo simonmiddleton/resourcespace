@@ -159,6 +159,45 @@ else
         <?php } else { ?>
         style="width:100%;height:80%;"
         <?php } ?>>
+        <?php if ($type == 'line') { ?>
+        <script>
+            const chartstyling<?php echo $id?> = {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit:'day',
+                            displayFormats :{
+                                day: 'dd-MM-YYY',
+                            }
+                        },
+                        unit: 'seconds',
+                        ticks: {color: '<?php echo $from_dash?'#FFFFFF':'default'?>',}
+                    }
+                }
+            };
+        </script>
+        <?php } else { ?>
+        <script>
+            const chartstyling<?php echo $id?> = {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: '<?php echo $from_dash?'#FFFFFF':'default'?>',
+                        }
+                    }
+                },
+            };
+        </script>
+        <?php } ?>
         <canvas id= "<?php echo $id ?>"></canvas>
         <?php
         }
