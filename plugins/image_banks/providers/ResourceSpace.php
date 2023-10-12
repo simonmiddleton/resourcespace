@@ -77,10 +77,9 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             $instance = $this->getSelectedSystemInstance()->toArray();
             $instance_cfg = $instance['configuration'];
             $api_results = $this->callApi(
-                'search_get_previews',
+                'do_search',
                 [
                     'search' => $keywords,
-                    'getsizes' => 'pre,thm',
                 ]
             );
             }
@@ -95,14 +94,45 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         $results = new ProviderSearchResults();
         foreach($api_results as $row)
             {
-            $results[] = (new ProviderResult($row['ref'], $this))
+            $item = (new ProviderResult($row['ref'], $this))
                 ->setTitle($row["field{$view_title_field}"])
-                // todo: original file
-                ->setOriginalFileUrl('originalfileurl')
-                ->setProviderUrl(generateURL($instance['baseURL'], ['r' => $row['ref']]))
-                ->setPreviewUrl($row['url_thm'])
-                ->setPreviewWidth($row['thumb_width'])
-                ->setPreviewHeight($row['thumb_height']);
+                ->setProviderUrl(generateURL($instance['baseURL'], ['r' => $row['ref']]));
+
+            try
+                {
+                $resource_sizes = $this->callApi('get_resource_all_image_sizes', ['resource' => $row['ref']]);
+                }
+            catch (RuntimeException $r)
+                {
+                $resource_sizes = [];
+                $item = $item
+                    ->setPreviewUrl(sprintf(
+                        '%s/gfx/%s',
+                        $GLOBALS['baseurl'],
+                        get_nopreview_icon($row['resource_type'], $row['file_extension'], false)
+                    ))
+                    ->setPreviewWidth(128)
+                    ->setPreviewHeight(128);
+                }
+
+            foreach ($resource_sizes as $rsize)
+                {
+                // Select the original file (if allowed), otherwise go for the next available high resolution version
+                if (in_array($rsize['size_code'], ['original', 'hpr', 'lpr']) && $item->getOriginalFileUrl() === null)
+                    {
+                    $item = $item->setOriginalFileUrl($rsize['url']);
+                    continue;
+                    }
+                else if ($rsize['size_code'] === 'thm')
+                    {
+                    $item = $item
+                        ->setPreviewUrl($rsize['url'])
+                        ->setPreviewWidth($row['thumb_width'])
+                        ->setPreviewHeight($row['thumb_height']);
+                    }
+                }
+
+            $results[] = $item;
             }
         $results->total = count($api_results);
         return $results;
