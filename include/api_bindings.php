@@ -856,7 +856,18 @@ function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, str
     
 function api_get_resource_all_image_sizes($resource)
     {
-    return get_resource_all_image_sizes($resource);
+    $sizes = get_resource_all_image_sizes($resource);
+    if($GLOBALS["hide_real_filepath"])
+        {
+        // Add a temporary key so the file can be accessed unauthenticated
+        $accesskey = generate_temp_download_key($GLOBALS["userref"],$resource);
+        if($accesskey !== "")
+            {
+            array_walk($sizes, function(&$size, $key) use ($accesskey) { $size["url"] .= "&access_key={$accesskey}";});
+            //array_map(function($size) use ($accesskey) {return $size["url"] = $size["url"] . "&access_key={$accesskey}";},$sizes);
+            }
+        } 
+    return $sizes;
     }
 
 function api_get_node_id($value, $resource_type_field)

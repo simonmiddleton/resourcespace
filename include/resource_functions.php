@@ -7464,7 +7464,10 @@ function get_resource_all_image_sizes($ref)
                     $all_image_sizes[$key]["extension"] = $size_data["extension"];
                     $all_image_sizes[$key]["multi_page"] = true;
                     $all_image_sizes[$key]["page"] = $page;
-                    $all_image_sizes[$key]["path"] = $path;
+                    if(!defined("API_CALL"))
+                        {
+                        $all_image_sizes[$key]["path"] = $path;
+                        }
                     $all_image_sizes[$key]["url"] = $url;
                     }
                 }

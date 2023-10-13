@@ -3430,9 +3430,8 @@ function get_default_notify_states(): array
  * @param int $resource     Resource ID
  * 
  * @return string           Access key - empty if not permitted
- * 
  */
-function generate_temp_download_key(int $user, int $resource) : mixed
+function generate_temp_download_key(int $user, int $resource): string
     {
     if ((($GLOBALS["userref"] != $user && !checkperm_user_edit($user))
             || get_resource_access($resource) != 0)
@@ -3442,10 +3441,16 @@ function generate_temp_download_key(int $user, int $resource) : mixed
         }
     
     $user_data = get_user($user);
+    $data =  generateSecureKey(128)
+        . ":" . $user
+        . ":" . $resource
+        . ":" .  time()
+        . ":" . hash_hmac("sha256", "user_pass_mac", $user_data['password']);
 
-    $nonce = generateSecureKey(64);
-    $data =  $nonce . ":" . $user . ":" . $resource . ":" .  time() . ":" . hash_hmac("sha256", "enc_key", $user_data['password'], true);
-    return $nonce . rsEncrypt($data, $nonce . $GLOBALS['api_scramble_key'] . $GLOBALS["scramble_key"]);
+    return rsEncrypt(
+        $data,
+        hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key'])
+    );
     }
 
 /**
@@ -3459,9 +3464,7 @@ function generate_temp_download_key(int $user, int $resource) : mixed
  */
 function validate_temp_download_key(int $ref, string $keystring) : bool
     {
-    $nonce = substr($keystring,0,64);
-    $key = substr($keystring,64);
-    $keydata = rsDecrypt($key, $nonce . $GLOBALS['api_scramble_key'] . $GLOBALS["scramble_key"]);
+    $keydata = rsDecrypt($keystring, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
     if($keydata != false)
         {
         $download_key_parts = explode(":", $keydata);
@@ -3473,7 +3476,7 @@ function validate_temp_download_key(int $ref, string $keystring) : bool
             $key_time = $download_key_parts[3];
             if($ak_userdata !== false 
                 && ((time()- $key_time) < 60*60*24) // Valid for 24 hours
-                && hash_hmac("sha256", "enc_key", $ak_userdata['password'],true) == $download_key_parts[4])
+                && hash_hmac("sha256", "user_pass_mac", $ak_userdata['password']) === $download_key_parts[4])
                 {
                 setup_user($ak_userdata);
                 return true;
