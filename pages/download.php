@@ -278,7 +278,7 @@ else
         }
     // Process metadata
     // Note: only for downloads (not previews)
-    if('' == $noattach && -1 == $alternative && $size=="")
+    if('' == $noattach && -1 == $alternative)
         {
         // Strip existing metadata only if we do not plan on writing metadata, otherwise this will be done twice
         if($exiftool_remove_existing && !$exiftool_write)
