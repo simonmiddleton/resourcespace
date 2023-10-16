@@ -869,7 +869,6 @@ function api_get_resource_all_image_sizes($resource)
         if($accesskey !== "")
             {
             array_walk($sizes, function(&$size, $key) use ($accesskey) { $size["url"] .= "&access_key={$accesskey}";});
-            //array_map(function($size) use ($accesskey) {return $size["url"] = $size["url"] . "&access_key={$accesskey}";},$sizes);
             }
         } 
     return $sizes;

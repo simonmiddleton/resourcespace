@@ -23,7 +23,7 @@ function HookEmbeddocumentViewAfterresourceactions2()
         return false;
         }
 
-    # Resolve dimensions of documnent viewer		
+    # Resolve dimensions of document viewer		
     # Set default viewer widths--subtract 2 pixels for border
     $portrait=358; //Default portrait width
     $landscape=478; //Default landscape width
