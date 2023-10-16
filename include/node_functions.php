@@ -520,6 +520,57 @@ function get_root_node_by_leaf(int $ref, int $level)
     return (int) ps_value($query, $placeholders, 0);
     }
 
+/**
+* Build a row consisting of all parents of a given leaf node
+* Example:
+* 1
+* 2
+* 2.3
+* 2.7
+* 2.8.4
+* 2.8.5
+* 2.8.6
+* 2.9
+* 3
+* Passing in node 5 will return nodes 8,2 in one row
+* 
+* @param integer $ref   Node ID of tree leaf
+* @param integer $level Node depth level (as returned by get_tree_node_level())
+* 
+* @return integer|boolean
+*/
+function get_all_parents_by_leaf(int $ref, int $level)
+    {
+    if(0 >= $level)
+        {
+        return false;
+        }
+
+    $querycolumns = array();
+    $query = " FROM node AS n{$level}";
+
+    $from_level = $level;
+    $level--;
+
+    while(0 <= $level)
+        {
+        $query .= " LEFT JOIN node AS n{$level} ON n" . ($level + 1) . ".parent = n{$level}.ref";
+        $querycolumns[] = "n{$level}.ref n{$level}ref";
+
+        if(0 === $level)
+            {
+            $query .= " WHERE n{$from_level}.ref = ?";
+            $placeholders = ['i', $ref];
+            }
+
+        $level--;
+        }
+    
+    $query = "SELECT ". implode(",",$querycolumns) . $query;
+    return ps_query($query, $placeholders);
+    }
+
+
 
 /**
 * Function used to reorder nodes based on an array with nodes in the new order

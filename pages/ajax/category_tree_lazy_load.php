@@ -31,10 +31,13 @@ foreach($selected_nodes as $selected_node)
         continue;
         }
 
-    $found_root_node = get_root_node_by_leaf($selected_node, $tree_level);
-    if($found_root_node)
+    $found_all_parents = get_all_parents_by_leaf($selected_node, $tree_level);
+    if(is_array($found_all_parents))
         {
-        $opened_nodes[] = $found_root_node;
+        foreach($found_all_parents[0] as $p_key => $p_ref)
+            {
+            $opened_nodes[] = $p_ref;
+            }
         }
     }
 
