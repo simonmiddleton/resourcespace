@@ -117,7 +117,7 @@ function get_checksum($path, $forcefull = false)
 /**
  * Download remote file to the temp filestore location.
  * 
- * @param string $url Source URL
+ * @param string $url Source URL - only HTTPS/HTTP permitted
  * @param string $key Optional key to use - to prevent conflicts when simultaneous calls use same file name 
  * 
  * @return string|bool Returns the new temp filestore location or false otherwise.
@@ -130,9 +130,10 @@ function temp_local_download_remote_file(string $url, string $key = "")
         return false;
         }
 
-    if ($key != "" && preg_match('/\W+/', $key) !== 0)
+    $urlinfo = parse_url($url);
+    if (!in_array($urlinfo["scheme"],["http","https"]) || ($key != "" && preg_match('/\W+/', $key) !== 0))
         {
-        // Block potential path traversal - allow only word characters.
+        // Only allow normal HTTP/S links and block potential path traversal - allow only word characters.
         return false;
         }
 
@@ -142,7 +143,7 @@ function temp_local_download_remote_file(string $url, string $key = "")
     $url = explode('?', $url);
     $url = reset($url);
     
-    $path_parts = pathinfo(basename($url));
+    $path_parts = pathinfo($urlinfo["path"]);
     $filename = safe_file_name($path_parts['filename'] ?? '');
     $extension = $path_parts['extension'] ?? '';
     $filename .= ($extension !== '' ? ".{$extension}" : '');
