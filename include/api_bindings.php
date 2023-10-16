@@ -311,38 +311,32 @@ function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $ex
     if ($page=="") {$page=1;}
 
     $refs = json_decode($ref, true);
-    if(is_array($refs))
+    if(!is_array($refs))
         {
-        $return = array();
-        foreach($refs as $ref)
+        $refs = [$refs];
+        }
+
+    $return = array();
+    foreach($refs as $ref)
+        {
+        $resource = get_resource_data($ref);
+        if($resource == false || !is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
             {
-            $resource = get_resource_data($ref);
-            if($resource == false || !is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
+            $return[$ref] = "";
+            continue;
+            }
+        $return[$ref] = get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
+        if($GLOBALS["hide_real_filepath"] && !$getfilepath)
+            {
+            // Add a temporary key so the file can be accessed unauthenticated
+            $accesskey = generate_temp_download_key($GLOBALS["userref"], $ref);
+            if($accesskey !== "")
                 {
-                $return[$ref] = "";
-                continue;
-                }
-            $return[$ref] = get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
-            if($GLOBALS["hide_real_filepath"])
-                {
-                // Add a temporary key so the file can be accessed unauthenticated
-                $accesskey = generate_temp_download_key($GLOBALS["userref"], $ref);
-                if($accesskey !== "")
-                    {
-                    $return[$ref] .= "&access_key={$accesskey}";
-                    }
+                $return[$ref] .= "&access_key={$accesskey}";
                 }
             }
-        return $return;
         }
-        
-    $resource = get_resource_data($ref);
-    if(!is_numeric($ref) || $resource === false || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
-        {
-        return false;
-        }
-            
-    return get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, "", $alternative, false);
+    return count($return)>1 ? $return : reset($return);
     }
     
 function api_get_resource_data($resource)
