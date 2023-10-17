@@ -60,6 +60,21 @@ var timer;
 <?php
 $page=1;
 $resources=do_search("!collection" . $ref);
+if(count($resources) == 0)
+    {
+    $all_fcs = get_all_featured_collections();
+    $refs = array_column($all_fcs, 'ref');
+    $ref_key = array_search($ref, $refs);
+    if($ref_key !== null && is_featured_collection_category($all_fcs[$ref_key]))
+        {
+        $resources = get_featured_collection_resources($all_fcs[$ref_key], ['all_fcs' => $all_fcs]);
+        $resources = get_resource_data_batch($resources);
+        }
+    }
+if(count($resources) == 0)
+    {
+    exit($lang["embedslideshow_notavailable"]);
+    }
 foreach ($resources as $resource)
     {
         
