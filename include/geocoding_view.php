@@ -227,18 +227,19 @@ if($view_panels)
     <script>
     jQuery(document).ready(function ()
         {
-        jQuery("#GeolocationData").children(".Title").attr("panel", "GeolocationData").appendTo("#Titles1");
-        removePanel = jQuery("#GeolocationData").parent().parent(".RecordBox");
-        jQuery("#GeolocationData").appendTo("#Panel1").addClass("TabPanel").hide();
+        let parent_element = jQuery('#<?php echo ($modal?'modal':'CentralSpace')?>');
+        parent_element.find("#GeolocationData").children(".Title").attr("panel", "GeolocationData").appendTo(parent_element.find("#Titles1"));
+        removePanel = parent_element.find("#GeolocationData").parent().parent(".RecordBox");
+        parent_element.find("#GeolocationData").appendTo(parent_element.find("#Panel1")).addClass("TabPanel").hide();
         removePanel.remove();
 
-        <!--Function to switch tab panels-->
+        //Function to switch tab panels
         jQuery('.ViewPanelTitles').children('.Title').click(function()
             {
-            jQuery(this).parent().parent().children('.TabPanel').hide();
-            jQuery(this).parent().children('.Title').removeClass('Selected');
-            jQuery(this).addClass('Selected');
-            jQuery('#' + jQuery(this).attr('panel')).show();
+            parent_element.find(this).parent().parent().children('.TabPanel').hide();
+            parent_element.find(this).parent().children('.Title').removeClass('Selected');
+            parent_element.find(this).addClass('Selected');
+            parent_element.find('#' + jQuery(this).attr('panel')).show();
             <?php if(isset($map_container_obj)) echo $map_container_obj??"" . ".invalidateSize(true);";?>
             });
         });
