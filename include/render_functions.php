@@ -501,7 +501,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             {
 			?><input class="<?php echo escape_quoted_data($class) ?>" type=text name="<?php echo escape_quoted_data($name) ?>" id="<?php echo escape_quoted_data($id) ?>" value="<?php echo escape_quoted_data((string)$value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo escape_quoted_data((string)$field["name"]) ?>',[<?php echo htmlspecialchars((string)$field["resource_types"]) ?>]);}"<?php } ?>><?php 
 			# Add to the clear function so clicking 'clear' clears this box.
-			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : escape_quoted_data($field["name"])) . "').value='';";
+			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : escape_quoted_data((string)$field["name"])) . "').value='';";
 		    }
         // number view - manipulate the form value (don't send these but send a compiled numrange value instead
         else if ((int)$field['field_constraint']==1)
