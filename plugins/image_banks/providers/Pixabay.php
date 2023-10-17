@@ -35,7 +35,7 @@ class Pixabay extends Provider
         }
 
     /** @inheritdoc */
-    public function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults
+    public function runSearch(string $keywords, int $per_page = 24, int $page = 1): ProviderSearchResults
         {
         if($per_page < 3)
             {

@@ -50,36 +50,21 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         }
 
     /** @inheritdoc */
-    public function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults
+    public function runSearch(string $keywords, int $per_page = 24, int $page = 1): ProviderSearchResults
         {
-        if($per_page < 3)
-            {
-            $per_page = 3;
-            }
-        else if($per_page > 200)
-            {
-            $per_page = 200;
-            }
-
-        if($page < 1)
-            {
-            $page = 1;
-            }
+        $per_page = $per_page > 0 ? $per_page : $GLOBALS['default_perpage'];
+        $page = $page > 0 ? $page : 1;
+        $offset = ($page - 1) * $per_page;
 
         try
             {
-            /*
-            todo: 
-            - always search for pre,thm,col (or as needed).
-                If an instance has renamed them, have a remap in its configuration instead.
-                Do this on the other system instance.
-            */
             $instance = $this->getSelectedSystemInstance()->toArray();
             $instance_cfg = $instance['configuration'];
             $api_results = $this->callApi(
                 'do_search',
                 [
                     'search' => $keywords,
+                    'fetchrows' => "{$offset},{$per_page}",
                 ]
             );
             }
@@ -93,9 +78,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         $view_title_field = $instance_cfg['view_title_field'] ?? $GLOBALS['view_title_field'];
         $results = new ProviderSearchResults();
 
-        // todo: fix first trunk to have do_search support structured fetchrows so I can finish the paging functionality
-        printf('<pre>%s</pre>', print_r($api_results, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
-        foreach($api_results as $row)
+        foreach($api_results['data'] as $row)
             {
             $item = (new ProviderResult($row['ref'], $this))
                 ->setTitle($row["field{$view_title_field}"])
@@ -120,6 +103,12 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
 
             foreach ($resource_sizes as $rsize)
                 {
+                /*
+                todo: 
+                - always search for pre,thm,col (or as needed).
+                    If an instance has renamed them, have a remap in its configuration instead.
+                    Do this on the other system instance.
+                */
                 // Select the original file (if allowed), otherwise go for the next available high resolution version
                 if (in_array($rsize['size_code'], ['original', 'hpr', 'lpr']) && $item->getOriginalFileUrl() === null)
                     {
@@ -137,7 +126,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
 
             $results[] = $item;
             }
-        $results->total = count($api_results);
+        $results->total = $api_results['total'];
         return $results;
         }
 

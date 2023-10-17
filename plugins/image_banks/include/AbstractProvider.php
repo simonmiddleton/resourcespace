@@ -34,7 +34,7 @@ abstract class Provider
     * @param  integer  $per_page  Number of results per page
     * @param  integer  $page      Select the page number
     */
-    abstract protected function runSearch($keywords, $per_page = 24, $page = 1): ProviderSearchResults;
+    abstract protected function runSearch(string $keywords, int $per_page = 24, int $page = 1): ProviderSearchResults;
 
     /**
      * Get file information for download or when creating a new resource based on a Providers' source file.
