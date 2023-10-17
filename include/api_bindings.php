@@ -42,7 +42,7 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
         return $no_results;
         }
     
-    $resultcount = count($results);
+    $resultcount = count($structured_fetchrows ? $results['data'] : $results);
     if($resultcount < $offset)
         {
         return $no_results;
