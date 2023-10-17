@@ -864,7 +864,9 @@ function api_get_resource_all_image_sizes($resource)
             {
             array_walk($sizes, function(&$size, $key) use ($accesskey) { $size["url"] .= "&access_key={$accesskey}";});
             }
-        } 
+        }
+    // Remove the path elements
+    array_walk($sizes, function(&$size) {unset($size["path"]);});
     return $sizes;
     }
 
