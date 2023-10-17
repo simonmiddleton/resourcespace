@@ -103,12 +103,6 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
 
             foreach ($resource_sizes as $rsize)
                 {
-                /*
-                todo: 
-                - always search for pre,thm,col (or as needed).
-                    If an instance has renamed them, have a remap in its configuration instead.
-                    Do this on the other system instance.
-                */
                 // Select the original file (if allowed), otherwise go for the next available high resolution version
                 if (in_array($rsize['size_code'], ['original', 'hpr', 'lpr']) && $item->getOriginalFileUrl() === null)
                     {
