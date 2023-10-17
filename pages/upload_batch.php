@@ -43,7 +43,7 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']) && isset($_SERVER['HTTP_UPPY_AUTH_TOKEN
         {
         $upload_session = substr($companion_sessinfo[0],3);
         $companiontoken = substr($companion_sessinfo[1],3);
-        if(strlen(trim($upload_session)) == 64 && strlen(trim($companiontoken)) == 734 && rs_validate_token($companiontoken, $upload_session))
+        if(rs_validate_token($companiontoken, $upload_session))
             {
             $tus_validated = true;
             }
