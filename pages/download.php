@@ -17,24 +17,8 @@ if($download_no_session_cache_limiter)
 
 $direct = (0 < strlen(getval('direct', '')) ? true : false);
 
-// if direct downloading without authentication is enabled, skip the authentication step entirely
-if(!($direct_download_noauth && $direct))
-    {
-    // External access support (authenticate only if no key provided, or if invalid access key provided)
-    $k = getval('k', '');
-
-    if(('' == $k || !check_access_key(getval('ref', '', true), $k)) && !(getval("slideshow",0,true) > 0))
-        {
-        include dirname(__FILE__) . '/../include/authenticate.php';
-        }
-    }
-
-    
-// Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
-$internal_share_access = internal_share_access();
-
 $ref                = getval('ref', '', true);
-$size               = getval('size', '');
+$size               = trim(getval('size', ''));
 $alternative        = getval('alternative', -1, true);
 $page               = getval('page', 1);
 $iaccept            = getval('iaccept', 'off');
@@ -47,6 +31,25 @@ $modal              = (getval("modal","")=="true");
 $tempfile           = getval("tempfile","");
 $slideshow          = getval("slideshow",0,true);
 $userfiledownload   = getval('userfile', '');
+$write_exif_data    = (getval('exif_write', '') == 'true');
+$k                  = getval('k', '');
+$download_temp_key  = trim(getval("access_key",""));
+
+// Check for temporary download access using key (e.g. from API get_resource_path) 
+$valid_key = false;
+if($ref>0 && $download_temp_key != "")
+    {
+    $valid_key = validate_temp_download_key($ref, $download_temp_key);
+    }
+
+// External access support (authenticate only if no key provided, or if invalid access key provided)
+if(!$valid_key && ('' == $k || !check_access_key(getval('ref', '', true), $k)) && !(getval("slideshow",0,true) > 0))
+    {
+    include dirname(__FILE__) . '/../include/authenticate.php';
+    }
+
+// Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
+$internal_share_access = internal_share_access();
 
 $log_download = true;
 
@@ -154,6 +157,7 @@ else
             }
         exit();
     }
+
 
     resource_type_config_override($resource_data['resource_type']);
 
@@ -270,18 +274,18 @@ else
         if($exiftool_remove_existing && !$exiftool_write)
             {
             $temp_file_stripped_metadata = createTempFile($path, '', '');
-
+    
             if($temp_file_stripped_metadata !== false && stripMetadata($temp_file_stripped_metadata))
                 {
                 $path = $temp_file_stripped_metadata;
                 }
             }
-
+    
         // writing RS metadata to files: exiftool
         if($exiftool_write)
             {
             $tmpfile = write_metadata($path, $ref);
-
+    
             if(false !== $tmpfile && file_exists($tmpfile))
                 {
                 $path = $tmpfile;

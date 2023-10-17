@@ -3399,3 +3399,70 @@ function is_anonymous_user()
     global $anonymous_login, $username;
     return isset($anonymous_login) && $username == $anonymous_login;
     }
+
+/**
+ * Generate a temporary download key for user. Used to enable temporary resource access to a file via download.php so that API can access resources after calling get_resource_path()
+ *
+ * @param int $user         User ID
+ * @param int $resource     Resource ID
+ * 
+ * @return string           Access key - empty if not permitted
+ */
+function generate_temp_download_key(int $user, int $resource): string
+    {
+    if ((($GLOBALS["userref"] != $user && !checkperm_user_edit($user))
+            || get_resource_access($resource) != 0)
+        )
+        {
+        return "";
+        }
+    
+    $user_data = get_user($user);
+    $data =  generateSecureKey(128)
+        . ":" . $user
+        . ":" . $resource
+        . ":" .  time()
+        . ":" . hash_hmac("sha256", "user_pass_mac", $user_data['password']);
+
+    return rsEncrypt(
+        $data,
+        hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key'])
+    );
+    }
+
+/**
+ * Validate the provided download key
+ *
+ * @param int           Resource ID
+ * @param $keystring    Key string - incudes a nonce prefix
+ * 
+ * @return bool
+ * 
+ */
+function validate_temp_download_key(int $ref, string $keystring) : bool
+    {
+    $keydata = rsDecrypt($keystring, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
+    if($keydata != false)
+        {
+        $download_key_parts = explode(":", $keydata);
+        // First element is the nonce
+        if($download_key_parts[2] == $ref)
+            {
+            $ak_user = $download_key_parts[1];
+            $ak_userdata = get_user($ak_user);
+            $key_time = $download_key_parts[3];
+            if($ak_userdata !== false 
+                && ((time()- $key_time) < 60*60*24) // Valid for 24 hours
+                && hash_hmac("sha256", "user_pass_mac", $ak_userdata['password']) === $download_key_parts[4])
+                {
+                setup_user($ak_userdata);
+                return true;
+                }
+            }
+        }
+    else
+        {
+        debug("Failed to decrypt temp_download_key");
+        }
+    return false;
+    }

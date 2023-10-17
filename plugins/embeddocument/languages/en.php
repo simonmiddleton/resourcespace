@@ -5,6 +5,7 @@
 #
 #
 $lang["embeddocument_embed"] = "Embed";
+$lang["embeddocument_embed_share"] = "Embed document";
 $lang["embeddocument_help"] = "Copy and paste the HTML below to embed this document on a remote website.";
 $lang["embeddocument_allow_original_download"] = "Allow the PDF variant of the resource file to be downloaded?";
 

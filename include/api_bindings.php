@@ -95,6 +95,21 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         if(is_array($results[$n]))
             {
             $results[$n] = process_resource_data_joins_values($results[$n], $get_resource_table_joins);
+            if($GLOBALS["hide_real_filepath"])
+                {
+                // Add a temporary key so the file can be accessed unauthenticated
+                $accesskey = generate_temp_download_key($GLOBALS["userref"], $results[$n]["ref"]);
+                if($accesskey !== "")
+                    {
+                    foreach($getsizes as $getsize)
+                        {
+                        if(isset($results[$n]["url_" . $getsize]))
+                            {
+                            $results[$n]["url_" . $getsize] .= "&access_key={$accesskey}";
+                            }
+                        }
+                    }
+                }            
             }
         }
     return $structured ? ["total"=> $totalcount, "data" => $results] : $results;
@@ -279,36 +294,39 @@ function api_update_resource_type($resource,$type)
     return update_resource_type($resource,$type);
     }
 
-function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $extension="jpg", $page=1, $watermarked=false, $alternative=-1)
-    {   
+function api_get_resource_path($ref, $not_used=null, $size="", $generate=true, $extension="jpg", $page=1, $watermarked=false, $alternative=-1)
+    {
     # Set defaults
     if ($alternative=="") {$alternative=-1;}
     if ($page=="") {$page=1;}
 
     $refs = json_decode($ref, true);
-    if(is_array($refs))
+    if(!is_array($refs))
         {
-        $return = array();
-        foreach($refs as $ref)
+        $refs = [$refs];
+        }
+
+    $return = array();
+    foreach($refs as $ref)
+        {
+        $resource = get_resource_data($ref);
+        if($resource == false || !is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
             {
-            $resource = get_resource_data($ref);
-            if($resource == false || !is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
-                {
-                $return[$ref] = "";
-                continue;
-                }
-            $return[$ref] = get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
+            $return[$ref] = "";
+            continue;
             }
-        return $return;
+        $return[$ref] = get_resource_path($ref, false, $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
+        if($GLOBALS["hide_real_filepath"])
+            {
+            // Add a temporary key so the file can be accessed unauthenticated
+            $accesskey = generate_temp_download_key($GLOBALS["userref"], $ref);
+            if($accesskey !== "")
+                {
+                $return[$ref] .= "&access_key={$accesskey}";
+                }
+            }
         }
-        
-    $resource = get_resource_data($ref);
-    if(!is_numeric($ref) || $resource === false || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
-        {
-        return false;
-        }
-            
-    return get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, "", $alternative, false);
+    return count($return)>1 ? $return : reset($return);
     }
     
 function api_get_resource_data($resource)
@@ -827,7 +845,19 @@ function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, str
     
 function api_get_resource_all_image_sizes($resource)
     {
-    return get_resource_all_image_sizes($resource);
+    $sizes = get_resource_all_image_sizes($resource);
+    if($GLOBALS["hide_real_filepath"])
+        {
+        // Add a temporary key so the file can be accessed unauthenticated
+        $accesskey = generate_temp_download_key($GLOBALS["userref"],$resource);
+        if($accesskey !== "")
+            {
+            array_walk($sizes, function(&$size, $key) use ($accesskey) { $size["url"] .= "&access_key={$accesskey}";});
+            }
+        }
+    // Remove the path elements
+    array_walk($sizes, function(&$size) {unset($size["path"]);});
+    return $sizes;
     }
 
 function api_get_node_id($value, $resource_type_field)
