@@ -60,6 +60,12 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
             $i++;
             }
         }
+
+    if ($structured_fetchrows)
+        {
+        $results['data'] = $resultset;
+        return $results;
+        }
     return $resultset;
     }
    
