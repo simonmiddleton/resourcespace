@@ -6,7 +6,7 @@ include_once __DIR__ . "/../../include/request_functions.php";
 
 // Save settings
 $saved_timezone = date_default_timezone_get();
-$saved_new_action_email_interval = $new_action_email_interval; // TODO is this required?
+$saved_new_action_email_interval = $new_action_email_interval;
 
 // Clean out old data
 ps_query("TRUNCATE resource");

@@ -71,6 +71,21 @@ parameters:
 			path: include/general_functions.php
 
 		-
+			message: "#^Undefined variable\\: \\$where_activity_log_statement$#"
+			count: 1
+			path: include/log_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$where_collection_log_statement$#"
+			count: 1
+			path: include/log_functions.php
+
+		-
+			message: "#^Undefined variable\\: \\$where_resource_log_statement$#"
+			count: 1
+			path: include/log_functions.php
+
+		-
 			message: "#^Undefined variable\\: \\$limit$#"
 			count: 2
 			path: include/message_functions.php

@@ -513,7 +513,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Lista dinâmica de palavras-chave.';
 $lang["fieldtype-radio_buttons"]='Botões de rádio.';
 $lang["fieldtype-warning_message"]='Mensagem de aviso.';
 $lang["fieldtype-date_range"]='Intervalo de datas.';
-$lang["documentation-permissions"]='Consulte a <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Base de Conhecimento</a></b> para obter mais informações sobre permissões.';
 $lang["property-reference"]='Referência';
 $lang["property-name"]='Nome';
 $lang["property-permissions"]='Permissões.';
@@ -970,7 +969,7 @@ $lang["confirmdeleteaccessmultimix"]='Tem certeza de que deseja excluir essas ch
 $lang["editingexternalshare"]='Editar compartilhamento externo.';
 $lang["noexternalsharing"]='Ainda não foram gerados URLs externos.';
 $lang["sharedcollectionaddwarning"]='Aviso: Esta coleção foi compartilhada com usuários externos. O recurso que você adicionou agora está disponível para esses usuários. Clique em \'compartilhar\' para gerenciar o acesso externo a esta coleção.';
-$lang["sharedcollectionaddwarningupload"]='Aviso: A coleção selecionada foi compartilhada com usuários externos. Os recursos que você enviar estarão disponíveis para esses usuários. Clique em \'compartilhar\' na barra inferior para gerenciar o acesso externo para esta coleção.';
+$lang["sharedcollectionaddwarningupload"]='A coleção selecionada foi compartilhada com usuários externos. Os recursos que você enviar estarão disponíveis para esses usuários. Clique em \'compartilhar\' na barra inferior para gerenciar o acesso externo para esta coleção.';
 $lang["confirmdeleteusercustomaccessresource"]='Você tem certeza de que deseja excluir o acesso personalizado deste usuário?';
 $lang["sharedcollectionaddblocked"]='Você não tem permissão para adicionar recursos a uma coleção que foi compartilhada com usuários externos.';
 $lang["restrictedsharecollection"]='Você tem acesso restrito a um ou mais dos recursos nesta coleção e, portanto, o compartilhamento é proibido.';

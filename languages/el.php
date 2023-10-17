@@ -693,7 +693,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Δυναμική λίστα λέξεω
 $lang["fieldtype-radio_buttons"]='Κουμπιά επιλογής (Radio buttons)';
 $lang["fieldtype-warning_message"]='Μήνυμα προειδοποίησης';
 $lang["fieldtype-date_range"]='Εύρος ημερομηνιών';
-$lang["documentation-permissions"]='Δείτε την <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Βάση Γνώσεων</a></b> για περαιτέρω πληροφορίες σχετικά με τις άδειες πρόσβασης.';
 $lang["property-reference"]='Αναφορά';
 $lang["property-name"]='Όνομα.';
 $lang["property-permissions"]='Δικαιώματα (Dikaiómata)';

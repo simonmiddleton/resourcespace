@@ -922,7 +922,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Dynamiczna lista słów kluczowych.';
 $lang["fieldtype-radio_buttons"]='Przyciski wyboru (Radio buttons)';
 $lang["fieldtype-warning_message"]='Komunikat ostrzegawczy';
 $lang["fieldtype-date_range"]='Zakres dat';
-$lang["documentation-permissions"]='Zobacz <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Bazę Wiedzy</a></b> dla dalszych informacji na temat uprawnień.';
 $lang["property-reference"]='Odniesienie';
 $lang["property-name"]='Nazwa';
 $lang["property-permissions"]='Uprawnienia.';
@@ -1338,7 +1337,7 @@ $lang["confirmdeleteaccessmulticol"]='Czy na pewno chcesz usunąć te klucze dos
 $lang["confirmdeleteaccessmultires"]='Czy na pewno chcesz usunąć te klucze dostępu? Użytkownicy, którzy otrzymali dostęp za pomocą tych kluczy, nie będą już mogli uzyskać dostępu do odpowiednich zasobów.';
 $lang["confirmdeleteaccessmultimix"]='Czy na pewno chcesz usunąć te klucze dostępu? Użytkownicy, którzy otrzymali dostęp za pomocą tych kluczy, nie będą już mogli uzyskać dostępu do odpowiednich kolekcji i zasobów.';
 $lang["editingexternalshare"]='Edycja udostępnienia zewnętrznego.';
-$lang["sharedcollectionaddwarningupload"]='Ostrzeżenie: Wybrana kolekcja została udostępniona użytkownikom zewnętrznym. Zasoby, które przesłasz, będą dostępne dla tych użytkowników. Kliknij przycisk "Udostępnij" w dolnym pasku, aby zarządzać dostępem zewnętrznym do tej kolekcji.';
+$lang["sharedcollectionaddwarningupload"]='Wybrana kolekcja została udostępniona użytkownikom zewnętrznym. Zasoby, które przesłasz, będą dostępne dla tych użytkowników. Kliknij przycisk "Udostępnij" w dolnym pasku, aby zarządzać dostępem zewnętrznym do tej kolekcji.';
 $lang["confirmdeleteusercustomaccessresource"]='Czy na pewno chcesz usunąć niestandardowy dostęp dla tego użytkownika?';
 $lang["sharedcollectionaddblocked"]='Nie masz uprawnień do dodawania zasobów do kolekcji, która została udostępniona użytkownikom zewnętrznym.';
 $lang["selectgenerateurlexternalthemecat"]='Aby utworzyć adresy URL umożliwiające dostęp użytkownikom zewnętrznym (osobom, które nie mają konta), wybierz poziom dostępu, który chcesz przyznać zasobom.';

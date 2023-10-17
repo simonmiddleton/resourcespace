@@ -87,7 +87,6 @@ $lang["fieldtype-warning_message"]="Upozornenie";
 $lang["fieldtype-date_range"]="Rozsah dátumov";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="Pozrite si <b><a href=../../documentation/permissions.txt target=_blank> súbor pomocníka k oprávneniam </a></b> pre ďalšie informácie o povoleniach.";
 $lang["property-reference"]="Referencie";
 $lang["property-name"]="Názov";
 $lang["property-permissions"]="Oprávnenia";
@@ -927,7 +926,7 @@ $lang["confirmdeleteaccessresource"]="Naozaj chcete odstrániť tento prístupov
 $lang["editingexternalshare"]="Upraviť externé zdieľanie";
 $lang["noexternalsharing"]="Zatiaľ neboli vygenerované žiadne externé adresy URL.";
 $lang["sharedcollectionaddwarning"]="Varovanie: Táto zbierka bola zdieľaná s externými používateľmi. Zdroj, ktorý ste pridali, bol sprístupnený týmto používateľom. Kliknutím na „zdieľať“ môžete spravovať externý prístup k tejto zbierke.";
-$lang["sharedcollectionaddwarningupload"]="Varovanie: Vybraná zbierka bola zdieľaná s externými používateľmi. Zdroje, ktoré odovzdáte, sa sprístupnia týmto používateľom. Ak chcete spravovať externý prístup k tejto zbierke, kliknite na položku „zdieľať“ v dolnom paneli.";
+$lang["sharedcollectionaddwarningupload"]="Vybraná zbierka bola zdieľaná s externými používateľmi. Zdroje, ktoré odovzdáte, sa sprístupnia týmto používateľom. Ak chcete spravovať externý prístup k tejto zbierke, kliknite na položku „zdieľať“ v dolnom paneli.";
 $lang["confirmdeleteusercustomaccessresource"]='Naozaj chcete odstrániť vlastný prístup pre tohto používateľa?';
 
 $lang["sharedcollectionaddblocked"]="Nemáte oprávnenie pridávať zdroje do zbierky zdieľanej s externými používateľmi.";

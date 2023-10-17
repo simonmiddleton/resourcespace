@@ -786,7 +786,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Liste dynamique de mots-clés.';
 $lang["fieldtype-radio_buttons"]='Boutons radio.';
 $lang["fieldtype-warning_message"]='Message d\'avertissement.';
 $lang["fieldtype-date_range"]='Plage de dates.';
-$lang["documentation-permissions"]='Veuillez consulter la <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Base de connaissances</a></b> pour plus d\'informations sur les autorisations.';
 $lang["property-reference"]='Référence.';
 $lang["property-name"]='Nom';
 $lang["property-permissions"]='Autorisations';
@@ -1215,7 +1214,7 @@ $lang["confirmdeleteaccessmulticol"]='Êtes-vous sûr(e) de vouloir supprimer ce
 $lang["confirmdeleteaccessmultires"]='Êtes-vous sûr(e) de vouloir supprimer ces clés d\'accès ? Les utilisateurs qui ont été autorisés à accéder aux ressources pertinentes via ces clés ne pourront plus y accéder.';
 $lang["confirmdeleteaccessmultimix"]='Êtes-vous sûr(e) de vouloir supprimer ces clés d\'accès ? Les utilisateurs qui ont été autorisés à accéder aux collections et aux ressources pertinentes via ces clés ne pourront plus y accéder.';
 $lang["editingexternalshare"]='Modification de partage externe.';
-$lang["sharedcollectionaddwarningupload"]='Attention : La collection sélectionnée a été partagée avec des utilisateurs externes. Les ressources que vous téléversez seront mises à disposition de ces utilisateurs. Cliquez sur "partager" dans la barre inférieure pour gérer l\'accès externe à cette collection.';
+$lang["sharedcollectionaddwarningupload"]='La collection sélectionnée a été partagée avec des utilisateurs externes. Les ressources que vous téléversez seront mises à disposition de ces utilisateurs. Cliquez sur "partager" dans la barre inférieure pour gérer l\'accès externe à cette collection.';
 $lang["confirmdeleteusercustomaccessresource"]='Êtes-vous sûr(e) de vouloir supprimer l\'accès personnalisé pour cet utilisateur ?';
 $lang["sharedcollectionaddblocked"]='Vous n\'êtes pas autorisé à ajouter des ressources à une collection qui a été partagée avec des utilisateurs externes.';
 $lang["restrictedsharecollection"]='Vous avez un accès restreint à une ou plusieurs ressources de cette collection et donc le partage est interdit.';

@@ -13,33 +13,39 @@
 
 function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fetchrows=-1,$sort="desc",$offset=0)
     {
-    $fetchrows = ($fetchrows >= 0 ? $fetchrows : -1);
-    $offset = (int)$offset;
+    $offset = (int) $offset;
 
-    if($offset>0 && $fetchrows!=-1)
+    // Parse fetchrows
+    $fetchrows = array_map('intval', explode(',', trim($fetchrows, ' []')));
+    $structured_fetchrows = count($fetchrows) === 2;
+    if (!$structured_fetchrows)
         {
-        $fetchrows = $fetchrows + $offset;
+        $fetch = array_pop($fetchrows);
+        $fetchrows = $fetch > 0 ? $fetch : -1;
+        if($offset > 0 && $fetchrows != -1)
+            {
+            $fetchrows = $fetchrows + $offset;
+            }
         }
-    
-    # Search capability.
-    # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
-        
+
+    $no_results = $structured_fetchrows ? ['total' => 0, 'data' => []] : [];
+
     if(!checkperm('s'))
         {
-        return array();
+        return $no_results;
         }
-        
-    $results = do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort);
 
+    # Note the subset of the available parameters. We definitely don't want to allow override of permissions or filters.
+    $results = do_search($search,$restypes,$order_by,$archive,$fetchrows,$sort);
     if (!is_array($results))
         {
-        return array();
+        return $no_results;
         }
     
     $resultcount = count($results);
     if($resultcount < $offset)
         {
-        return array();
+        return $no_results;
         }
 
     $resultset = array();
@@ -47,14 +53,13 @@ function api_do_search($search,$restypes="",$order_by="relevance",$archive=0,$fe
     $i=0;
     for($n = $offset; $n < $resultcount; $n++)
         {
-        if (is_array($results[$n]))
+        $row = $structured_fetchrows ? $results['data'][$n] : $results[$n];
+        if (is_array($row))
             {
-            $resultset[$i] = process_resource_data_joins_values($results[$n], $get_resource_table_joins);
+            $resultset[$i] = process_resource_data_joins_values($row, $get_resource_table_joins);
             $i++;
             }
         }
-    
-    $newresultcount = count($resultset);
     return $resultset;
     }
    
@@ -100,6 +105,21 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
         if(is_array($results[$n]))
             {
             $results[$n] = process_resource_data_joins_values($results[$n], $get_resource_table_joins);
+            if($GLOBALS["hide_real_filepath"])
+                {
+                // Add a temporary key so the file can be accessed unauthenticated
+                $accesskey = generate_temp_download_key($GLOBALS["userref"], $results[$n]["ref"]);
+                if($accesskey !== "")
+                    {
+                    foreach($getsizes as $getsize)
+                        {
+                        if(isset($results[$n]["url_" . $getsize]))
+                            {
+                            $results[$n]["url_" . $getsize] .= "&access_key={$accesskey}";
+                            }
+                        }
+                    }
+                }            
             }
         }
     return $structured ? ["total"=> $totalcount, "data" => $results] : $results;
@@ -284,36 +304,39 @@ function api_update_resource_type($resource,$type)
     return update_resource_type($resource,$type);
     }
 
-function api_get_resource_path($ref, $getfilepath, $size="", $generate=true, $extension="jpg", $page=1, $watermarked=false, $alternative=-1)
-    {   
+function api_get_resource_path($ref, $not_used=null, $size="", $generate=true, $extension="jpg", $page=1, $watermarked=false, $alternative=-1)
+    {
     # Set defaults
     if ($alternative=="") {$alternative=-1;}
     if ($page=="") {$page=1;}
 
     $refs = json_decode($ref, true);
-    if(is_array($refs))
+    if(!is_array($refs))
         {
-        $return = array();
-        foreach($refs as $ref)
+        $refs = [$refs];
+        }
+
+    $return = array();
+    foreach($refs as $ref)
+        {
+        $resource = get_resource_data($ref);
+        if($resource == false || !is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
             {
-            $resource = get_resource_data($ref);
-            if($resource == false || !is_numeric($ref) || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
-                {
-                $return[$ref] = "";
-                continue;
-                }
-            $return[$ref] = get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
+            $return[$ref] = "";
+            continue;
             }
-        return $return;
+        $return[$ref] = get_resource_path($ref, false, $size, $generate, $extension, -1, $page, $watermarked, '', $alternative, false);
+        if($GLOBALS["hide_real_filepath"])
+            {
+            // Add a temporary key so the file can be accessed unauthenticated
+            $accesskey = generate_temp_download_key($GLOBALS["userref"], $ref);
+            if($accesskey !== "")
+                {
+                $return[$ref] .= "&access_key={$accesskey}";
+                }
+            }
         }
-        
-    $resource = get_resource_data($ref);
-    if(!is_numeric($ref) || $resource === false || !resource_download_allowed($ref,$size,$resource["resource_type"],$alternative))
-        {
-        return false;
-        }
-            
-    return get_resource_path($ref, filter_var($getfilepath, FILTER_VALIDATE_BOOLEAN), $size, $generate, $extension, -1, $page, $watermarked, "", $alternative, false);
+    return count($return)>1 ? $return : reset($return);
     }
     
 function api_get_resource_data($resource)
@@ -823,14 +846,28 @@ function api_add_resource_nodes($resource,$nodestring)
     return add_resource_nodes_multi($resourcearr,$nodes,false,true);
     }
     
-function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, $field = 0, $log_code="")
+function api_resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, string $field = '', string $log_code = '')
     {
-    return resource_log_last_rows($minref, $days, $maxrecords, $field, $log_code);
+    $fields = explode(',', $field);
+    $log_codes = explode(',', $log_code);
+    return resource_log_last_rows($minref, $days, $maxrecords, $fields, $log_codes);
     }
     
 function api_get_resource_all_image_sizes($resource)
     {
-    return get_resource_all_image_sizes($resource);
+    $sizes = get_resource_all_image_sizes($resource);
+    if($GLOBALS["hide_real_filepath"])
+        {
+        // Add a temporary key so the file can be accessed unauthenticated
+        $accesskey = generate_temp_download_key($GLOBALS["userref"],$resource);
+        if($accesskey !== "")
+            {
+            array_walk($sizes, function(&$size, $key) use ($accesskey) { $size["url"] .= "&access_key={$accesskey}";});
+            }
+        }
+    // Remove the path elements
+    array_walk($sizes, function(&$size) {unset($size["path"]);});
+    return $sizes;
     }
 
 function api_get_node_id($value, $resource_type_field)

@@ -2494,12 +2494,23 @@ input[type="text"]#iconpicker-input {
 }
 
 /* jsTree improvements */
-.SearchSpace .jstree-default .jstree-wholerow-hovered {
+.jstree-default-dark {
+    background-color: transparent;
+}
+.jstree-default-dark .jstree-anchor {
+    text-shadow: none;
+    color: #666666;
+}
+.jstree-default-dark .jstree-wholerow {
+    border-radius: 5px;
+}
+.jstree-default-dark .jstree-wholerow-hovered {
     background: gray;
 }
-.SearchSpace .jstree-default .jstree-wholerow-clicked {
+.jstree-default-dark .jstree-wholerow-clicked {
     background: #737373;
 }
-.jstree-default .jstree-wholerow {
-    border-radius: 4px;
+.jstree-default-dark .jstree-hovered,
+.jstree-default-dark>.jstree-wholerow-ul .jstree-clicked {
+    color: white;
 }

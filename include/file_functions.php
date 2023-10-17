@@ -150,6 +150,12 @@ function temp_local_download_remote_file(string $url, string $key = "")
     if(strpos($filename,".") == false && filter_var($url_original, FILTER_VALIDATE_URL))
         {
         // $filename not valid, try and get from HTTP header
+        $urlinfo = parse_url($url);
+        if (!isset($urlinfo["scheme"]) || !in_array($urlinfo["scheme"],["http","https"]))
+            {
+            return false;
+            }
+
         $headers = get_headers($url_original,true);
         foreach($headers as $header=>$headervalue)
             {

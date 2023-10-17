@@ -1042,7 +1042,6 @@ $lang["fieldtype-dynamic_keywords_list"]='动态关键词列表';
 $lang["fieldtype-radio_buttons"]='单选按钮';
 $lang["fieldtype-warning_message"]='警告信息';
 $lang["fieldtype-date_range"]='日期范围';
-$lang["documentation-permissions"]='请查看<b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>知识库</a></b>，以获取有关权限的更多信息。';
 $lang["property-reference"]='参考 (Cānkǎo)';
 $lang["property-name"]='名称';
 $lang["property-permissions"]='权限';
@@ -1401,7 +1400,7 @@ $lang["confirmdeleteaccessmulticol"]='您确定要删除这些访问密钥吗？
 $lang["confirmdeleteaccessmultires"]='您确定要删除这些访问密钥吗？使用这些密钥获得访问权限的用户将无法再访问相关资源。';
 $lang["confirmdeleteaccessmultimix"]='您确定要删除这些访问密钥吗？使用这些密钥获得访问权限的用户将无法再访问相关的集合和资源。';
 $lang["editingexternalshare"]='编辑外部共享 (Biānjí wàibù gòngxiǎng)';
-$lang["sharedcollectionaddwarningupload"]='警告：所选集合已与外部用户共享。您上传的资源将对这些用户可用。单击底部栏中的“共享”以管理此集合的外部访问。';
+$lang["sharedcollectionaddwarningupload"]='所选集合已与外部用户共享。您上传的资源将对这些用户可用。单击底部栏中的“共享”以管理此集合的外部访问。';
 $lang["confirmdeleteusercustomaccessresource"]='您确定要删除此用户的自定义访问权限吗？';
 $lang["sharedcollectionaddblocked"]='您无权向已与外部用户共享的集合中添加资源。';
 $lang["selectgenerateurlexternalthemecat"]='创建允许外部用户（没有登录帐户的人）访问的URL，请选择您希望授予资源的访问级别。';

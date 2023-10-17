@@ -1,6 +1,6 @@
 <?php
 /**
-* Add in CSS overrides for UI elements
+* JS functions for the Browse Bar
 *
 * @package ResourceSpace
 */

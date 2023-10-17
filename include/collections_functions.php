@@ -1630,11 +1630,19 @@ function save_collection($ref, $coldata=array())
             $old_attached_users[]=$collection_owner["ref"]; # Collection Owner is implied as attached already
             }
 
+        # The cache will only be cleared if necessary
+        $cache_needs_clearing = false;
+
         ps_query("delete from user_collection where collection=?",array("i",$ref));
         
         $old_attached_groups=ps_array("SELECT usergroup value FROM usergroup_collection WHERE collection=?",array("i",$ref));
         ps_query("delete from usergroup_collection where collection=?",array("i",$ref));
-    
+        
+        if(count($old_attached_users) > 0 || count($old_attached_groups) > 0) 
+            {
+            $cache_needs_clearing = true;    
+            }
+
         # Build a new list and insert
         $users=resolve_userlist_groups($coldata["users"]);
         $ulist=array_unique(trim_array(explode(",",$users)));
@@ -1647,16 +1655,21 @@ function save_collection($ref, $coldata=array())
                 $params[] = $ref; $params[] = $uref; 
                 }
             ps_query("insert into user_collection(collection,user) values " . trim(str_repeat('(?, ?),', count($urefs)), ','), ps_param_fill($params, 'i'));
+            $cache_needs_clearing=true;
             $new_attached_users=array_diff($urefs, $old_attached_users);
             }
 
         # log this only if a user is being added
         if($coldata["users"]!="")
             {
-            clear_query_cache('collection_access');
             collection_log($ref,LOG_CODE_COLLECTION_SHARED_COLLECTION,0, join(", ",$ulist));
             }
-        
+
+        if($cache_needs_clearing) 
+            {
+            clear_query_cache('collection_access');
+            }
+
         # log the removal of users / smart groups
         $was_shared_with = array();
         if (count($old_attached_users) > 0)
@@ -2008,44 +2021,47 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         return $lang['email_error_user_list_not_valid'];
         }
 
+    # Make an array of all emails, whether internal or external
     $emails=$emails_keys['emails'];
+    # Make a corresponding array stating whether keys are necessary for the links
     $key_required=$emails_keys['key_required'];
+
+    # Make an array of internal userids which are unexpired approved with valid emails
     $internal_user_ids = $emails_keys['refs'] ?? array();
 
-    # Add the collection(s) to the user's My Collections page
-    $urefs = ps_array("SELECT ref value FROM user WHERE username IN ("  . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist, "s"));
-    if (count($urefs)>0)
+    if (count($internal_user_ids)>0)
         {
         # Delete any existing collection entries
-        ps_query("DELETE FROM user_collection WHERE collection IN (" . ps_param_insert(count($reflist)) . ") AND user IN (" . ps_param_insert(count($urefs)) . ")",array_merge(ps_param_fill($reflist,"i"),ps_param_fill($urefs,"i")));
+        ps_query("DELETE FROM user_collection WHERE collection IN (" . ps_param_insert(count($reflist)) . ") 
+                AND user IN (" . ps_param_insert(count($internal_user_ids)) . ")",array_merge(ps_param_fill($reflist,"i"),ps_param_fill($internal_user_ids,"i")));
         
         # Insert new user_collection row(s)
         #loop through the collections
         for ($nx1=0;$nx1<count($reflist);$nx1++)
             {
             #loop through the users
-            for ($nx2=0;$nx2<count($urefs);$nx2++)
+            for ($nx2=0;$nx2<count($internal_user_ids);$nx2++)
                 {
-                ps_query("INSERT INTO user_collection(collection,user,request_feedback) VALUES (?,?,?)",["i",$reflist[$nx1],"i",$urefs[$nx2],"i",$feedback ]);
+                ps_query("INSERT INTO user_collection(collection,user,request_feedback) VALUES (?,?,?)",["i",$reflist[$nx1],"i",$internal_user_ids[$nx2],"i",$feedback ]);
                 if ($add_internal_access)
                     {		
                     foreach (get_collection_resources($reflist[$nx1]) as $resource)
                         {
                         if (get_edit_access($resource))
                             {
-                            open_access_to_user($urefs[$nx2],$resource,$expires);
+                            open_access_to_user($internal_user_ids[$nx2],$resource,$expires);
                             }
                         }
                     }
                 
                 #log this
                 clear_query_cache('collection_access');
-                collection_log($reflist[$nx1], LOG_CODE_COLLECTION_SHARED_COLLECTION, 0, ps_value ("select username as value from user where ref = ?", array("i", $urefs[$nx2]), ""));
+                collection_log($reflist[$nx1], LOG_CODE_COLLECTION_SHARED_COLLECTION, 0, ps_value ("select username as value from user where ref = ?", array("i", $internal_user_ids[$nx2]), ""));
                 }
             }
         }
 
-    # Send an e-mail to each resolved user
+    # Send an e-mail to each resolved email address
 
     # htmlbreak is for composing list
     $htmlbreak="\r\n";
@@ -2232,7 +2248,8 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
             $body .= $templatevars['fromusername']." " . $externalmessage . "\n\n" . $templatevars['message']."\n\n" . $viewlinktext ."\n\n".$templatevars['list'];
 
             $emailsubject = $notifymessage->get_subject();
-            send_mail($emails[$nx1],$emailsubject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
+            $send_result=send_mail($emails[$nx1],$emailsubject,$body,$fromusername,$useremail,$template,$templatevars,$from_name,$cc);
+            if ($send_result!==true) {return $send_result;}
             }
         else
             {
@@ -2253,6 +2270,28 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         }
 
     hook("additional_email_collection","",array($colrefs,$collectionname,$fromusername,$userlist,$message,$feedback,$access,$expires,$useremail,$from_name,$cc,$themeshare,$themename,$themeurlsuffix,$template,$templatevars));
+
+    # Identify user accounts which have been skipped  
+    $candidate_users = ps_query("SELECT ref, username FROM user 
+       WHERE username IN ("  . ps_param_insert(count($ulist)) . ")", ps_param_fill($ulist, "s"));
+    $skipped_usernames=array();
+    if(count($candidate_users) != count($internal_user_ids))
+        {
+        foreach($candidate_users as $candidate_user) 
+            {
+            if(!in_array($candidate_user['ref'],$internal_user_ids))
+                {
+                $skipped_usernames[]=$candidate_user['username'];
+                }
+            }
+        }
+
+    # Report skipped accounts
+    if(count($skipped_usernames) > 0)
+        {
+        return $lang['email_error_user_list_some_skipped'].' '.implode(', ',$skipped_usernames);
+        }
+
     # Return an empty string (all OK).
     return "";
     }
@@ -6551,7 +6590,8 @@ function create_upload_link($collection,$shareoptions)
                 {
                 $body .= "<br/><br/>\n" . $passwordtext;
                 }
-            send_mail($shareoptions["emails"][$n],$subject,$body,$templatevars['from_name'],"","upload_share_email_template",$templatevars);
+            $send_result=send_mail($shareoptions["emails"][$n],$subject,$body,$templatevars['from_name'],"","upload_share_email_template",$templatevars);
+            if ($send_result!==true) {return $send_result;}
             }
         $lognotes = array();
         foreach($setcolumns as $column => $value)

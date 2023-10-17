@@ -1214,7 +1214,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Dynamisk nøkkelordliste.';
 $lang["fieldtype-radio_buttons"]='Radioknapper';
 $lang["fieldtype-warning_message"]='Advarselmelding';
 $lang["fieldtype-date_range"]='Datoområde.';
-$lang["documentation-permissions"]='Se <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a></b> for mer informasjon om tillatelser.';
 $lang["property-reference"]='Referanse';
 $lang["property-name"]='Navn';
 $lang["property-permissions"]='Tillatelser.';
@@ -1575,7 +1574,7 @@ $lang["confirmdeleteaccessmulticol"]='Er du sikker på at du ønsker å slette d
 $lang["confirmdeleteaccessmultires"]='Er du sikker på at du ønsker å slette disse tilgangsnøklene? Brukere som har fått tilgang ved hjelp av disse nøklene vil ikke lenger kunne få tilgang til relevante ressurser.';
 $lang["confirmdeleteaccessmultimix"]='Er du sikker på at du ønsker å slette disse tilgangsnøklene? Brukere som har fått tilgang ved hjelp av disse nøklene vil ikke lenger kunne få tilgang til relevante samlinger og ressurser.';
 $lang["editingexternalshare"]='Redigering av ekstern deling.';
-$lang["sharedcollectionaddwarningupload"]='Advarsel: Den valgte samlingen er delt med eksterne brukere. Ressursene du laster opp vil være tilgjengelige for disse brukerne. Klikk på \'del\' i bunnlinjen for å administrere ekstern tilgang for denne samlingen.';
+$lang["sharedcollectionaddwarningupload"]='Den valgte samlingen er delt med eksterne brukere. Ressursene du laster opp vil være tilgjengelige for disse brukerne. Klikk på \'del\' i bunnlinjen for å administrere ekstern tilgang for denne samlingen.';
 $lang["confirmdeleteusercustomaccessresource"]='Er du sikker på at du ønsker å slette tilpasset tilgang for denne brukeren?';
 $lang["sharedcollectionaddblocked"]='Du har ikke tillatelse til å legge til ressurser i en samling som er delt med eksterne brukere.';
 $lang["selectgenerateurlexternalthemecat"]='For å opprette URL-er som vil tillate tilgang for eksterne brukere (personer som ikke har en pålogging), vennligst velg tilgangsnivået du ønsker å gi til ressursene.';

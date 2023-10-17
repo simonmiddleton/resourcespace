@@ -43,7 +43,7 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']) && isset($_SERVER['HTTP_UPPY_AUTH_TOKEN
         {
         $upload_session = substr($companion_sessinfo[0],3);
         $companiontoken = substr($companion_sessinfo[1],3);
-        if(strlen(trim($upload_session)) == 64 && strlen(trim($companiontoken)) == 542 && rs_validate_token($companiontoken, $upload_session))
+        if(rs_validate_token($companiontoken, $upload_session))
             {
             $tus_validated = true;
             }
@@ -1333,7 +1333,10 @@ jQuery(document).ready(function () {
 if (is_numeric($collection_add) && count(get_collection_external_access($collection_add))>0)
     {
     # Show warning.
-    ?>alert("<?php echo $lang["sharedcollectionaddwarningupload"]?>");<?php
+    ?>styledalert(
+        "<?php echo escape_quoted_data($lang["status-warning"]) ?>",
+        "<?php echo escape_quoted_data($lang["sharedcollectionaddwarningupload"])?>"
+        );<?php
     }
 ?>
 

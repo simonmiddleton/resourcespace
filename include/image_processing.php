@@ -34,8 +34,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing, $valid_upload_paths;
 
-    $original_extension="";
-    
     hook("beforeuploadfile","",array($ref));
     hook("clearaltfiles", "", array($ref)); // optional: clear alternative files before uploading new resource
 
@@ -183,16 +181,15 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                         $uploaded_extension = $path_parts['extension'];
                         }
 
-                    if(isset($user_set_filename_path_parts['extension']) && (!isset($uploaded_extension) || $uploaded_extension == $user_set_filename_path_parts['extension']))
+                    if(
+                        isset($user_set_filename_path_parts['extension'])
+                        && (
+                            !isset($uploaded_extension)
+                            || $uploaded_extension == $user_set_filename_path_parts['extension']
+                        )
+                    )
                         {
                         $filename = $user_set_filename;
-                        }
-
-                    // If the user filename doesn't have an extension add the original one
-                    $path_parts = pathinfo($filename);
-                    if(!isset($path_parts['extension']) && isset($original_extension) && $original_extension != "") 
-                        {
-                        $filename .= '.' . $uploaded_extension;
                         }
                     }
                 }
@@ -1841,13 +1838,16 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $mpr_parts['targetpath']=$path;
                 }
             
-            # Delete any file at the target path. Unless using the previewbased option, in which case we need it.           
+            # Delete any file at the target path. Unless using the previewbased option, in which case we need it.
             if(!hook("imagepskipdel") && !$keep_for_hpr)
                 {
                 if (!$previewbased)
                     {
                     if (file_exists($path))
-                        {unlink($path);}
+                        {
+                        debug("Deleting file at path: $path");
+                        unlink($path);
+                        }
                     }
                 }
             if ($keep_for_hpr){$keep_for_hpr=false;}
@@ -1909,7 +1909,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         }
                     else
                         {
-                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . $icc_preview_options . escapeshellarg($targetprofile);
+                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . ' ' . $icc_preview_options . ' ' . escapeshellarg($targetprofile);
                         }
 
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes

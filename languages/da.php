@@ -694,7 +694,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Dynamisk liste over nøgleord.';
 $lang["fieldtype-radio_buttons"]='Radioknapper.';
 $lang["fieldtype-warning_message"]='Advarselmeddelelse';
 $lang["fieldtype-date_range"]='Datointerval';
-$lang["documentation-permissions"]='Se venligst <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Videnbasen</a></b> for yderligere information om tilladelser.';
 $lang["property-name"]='Navn';
 $lang["property-permissions"]='Tilladelser.';
 $lang["property-permissions_inherit"]='Arv fra overordnet gruppe.';
@@ -1119,7 +1118,7 @@ $lang["confirmdeleteaccessmulticol"]='Er du sikker på, at du ønsker at slette 
 $lang["confirmdeleteaccessmultires"]='Er du sikker på, at du ønsker at slette disse adgangsnøgler? Brugere, der har fået adgang ved hjælp af disse nøgler, vil ikke længere have adgang til de relevante ressourcer.';
 $lang["confirmdeleteaccessmultimix"]='Er du sikker på, at du ønsker at slette disse adgangsnøgler? Brugere, der har fået adgang ved hjælp af disse nøgler, vil ikke længere have adgang til de relevante samlinger og ressourcer.';
 $lang["editingexternalshare"]='Redigering af ekstern deling.';
-$lang["sharedcollectionaddwarningupload"]='Advarsel: Den valgte samling er blevet delt med eksterne brugere. De ressourcer, du uploader, vil være tilgængelige for disse brugere. Klik på \'del\' i bundlinjen for at administrere den eksterne adgang til denne samling.';
+$lang["sharedcollectionaddwarningupload"]='Den valgte samling er blevet delt med eksterne brugere. De ressourcer, du uploader, vil være tilgængelige for disse brugere. Klik på \'del\' i bundlinjen for at administrere den eksterne adgang til denne samling.';
 $lang["confirmdeleteusercustomaccessresource"]='Er du sikker på, at du ønsker at slette brugerdefineret adgang for denne bruger?';
 $lang["sharedcollectionaddblocked"]='Du har ikke tilladelse til at tilføje ressourcer til en samling, der er blevet delt med eksterne brugere.';
 $lang["selectgenerateurlexternalthemecat"]='For at oprette URL\'er, der vil tillade adgang til eksterne brugere (personer uden login), skal du vælge adgangsniveauet, du ønsker at tildele ressourcerne.';

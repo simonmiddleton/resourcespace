@@ -434,53 +434,54 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
         ?>
         jQuery(document).ready(function () {		
             
+            let parent_element = jQuery('#<?php echo ($modal?'modal':'CentralSpace')?>');
+
             var comments_marker='<?php echo $comments_view_panel_show_marker?>';
             var comments_resource_enable='<?php echo $comments_resource_enable?>';
             var resource_comments='<?php echo $resource_comments?>';
             
-            jQuery("#Metadata").appendTo("#Panel1");
-            jQuery("#Metadata").addClass("TabPanel");
+            parent_element.find("#Metadata").appendTo(parent_element.find("#Panel1"));
+            parent_element.find("#Metadata").addClass("TabPanel");
             
-            jQuery("#CommentsPanelHeaderRowTitle").children(".Title").attr("panel", "Comments").appendTo("#Titles1");
-            jQuery("#CommentsPanelHeaderRowTitle").remove();
-            jQuery("#CommentsPanelHeaderRowPolicyLink").css("width","300px").css("float","right");
-            removePanel=jQuery("#Comments").parents(".RecordBox");
-            jQuery("#Comments").appendTo("#Panel1").addClass("TabPanel").hide();
+            parent_element.find("#CommentsPanelHeaderRowTitle").children(".Title").attr("panel", "Comments").appendTo(parent_element.find("#Titles1"));
+            parent_element.find("#CommentsPanelHeaderRowTitle").remove();
+            parent_element.find("#CommentsPanelHeaderRowPolicyLink").css("width","300px").css("float","right");
+            removePanel=parent_element.find("#Comments").parent().parent();
+            parent_element.find("#Comments").appendTo(parent_element.find("#Panel1")).addClass("TabPanel").hide();
             removePanel.remove();
             if(comments_marker==true && comments_resource_enable==true && resource_comments>'0'){
-                jQuery("[panel='Comments']").append("&#42;");
+                parent_element.find("[panel='Comments']").append("&#42;");
             }
 
-            jQuery("#RelatedResources").children().children(".Title").attr("panel", "RelatedResources").addClass("Selected").appendTo("#Titles2");
-            removePanel=jQuery("#RelatedResources").parents(".RecordBox");
-            jQuery("#RelatedResources").appendTo("#Panel2").addClass("TabPanel");
+            parent_element.find("#RelatedResources").children().children(".Title").attr("panel", "RelatedResources").addClass("Selected").appendTo(parent_element.find("#Titles2"));
+            removePanel=parent_element.find("#RelatedResources").parent().parent();
+            parent_element.find("#RelatedResources").appendTo(parent_element.find("#Panel2")).addClass("TabPanel");
             removePanel.remove();
-            
-            jQuery("#SearchSimilar").children().children(".Title").attr("panel", "SearchSimilar").appendTo("#Titles2");
-            removePanel=jQuery("#SearchSimilar").parents(".RecordBox");
-            jQuery("#SearchSimilar").appendTo("#Panel2").addClass("TabPanel").hide();
+
+            parent_element.find("#SearchSimilar").children().children(".Title").attr("panel", "SearchSimilar").appendTo(parent_element.find("#Titles2"));
+            removePanel=parent_element.find("#SearchSimilar").parent().parent();
+            parent_element.find("#SearchSimilar").appendTo(parent_element.find("#Panel2")).addClass("TabPanel").hide();
             removePanel.remove();
             // if there are no related resources
-            if (jQuery("#RelatedResources").length==0) {
-                jQuery("#SearchSimilar").show();
-                jQuery("div[panel='SearchSimilar']").addClass("Selected"); 
+            if (parent_element.find("#RelatedResources").length==0) {
+                parent_element.find("#SearchSimilar").show();
+                parent_element.find("div[panel='SearchSimilar']").addClass("Selected"); 
             }    
             
             // if there are no collections and themes
-            if (jQuery("#resourcecollections").is(':empty')) {
-            jQuery("div[panel='CollectionsThemes']").addClass("Selected"); 
-            jQuery("#CollectionsThemes").show(); 
+            if (parent_element.find("#resourcecollections").is(':empty')) {
+                parent_element.find("div[panel='CollectionsThemes']").addClass("Selected"); 
+                parent_element.find("#CollectionsThemes").show(); 
             }
             
-            jQuery(".ViewPanelTitles").children(".Title").click(function(){
+            parent_element.find(".ViewPanelTitles").children(".Title").click(function(){
             // function to switch tab panels
-                jQuery(this).parent().parent().children(".TabPanel").hide();
-                jQuery(this).parent().children(".Title").removeClass("Selected");
-                jQuery(this).addClass("Selected");
-                jQuery("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px");
-                jQuery("#"+jQuery(this).attr("panel")).show();
+                parent_element.find(this).parent().parent().children(".TabPanel").hide();
+                parent_element.find(this).parent().children(".Title").removeClass("Selected");
+                parent_element.find(this).addClass("Selected");
+                parent_element.find("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px").show();;
                 if (jQuery(this).attr("panel")=="Comments") {
-                jQuery("#CommentsContainer").load(
+                    jQuery("#CommentsContainer").load(
                     "../pages/ajax/comments_handler.php?ref=<?php echo $ref;?>", 
                     function() {
                     if (jQuery.type(jQuery(window.location.hash)[0])!=="undefined")				
@@ -2182,24 +2183,25 @@ if ($view_resource_collections && !checkperm('b')){ ?>
 	if ($view_panels) {
 	?>
     	, function() {
-    	
-    	jQuery("#AssociatedCollections").children(".Title").attr("panel", "AssociatedCollections").addClass("Selected").appendTo("#Titles3");
-    	removePanel=jQuery("#AssociatedCollections").parents(".RecordBox");
-    	jQuery("#AssociatedCollections").appendTo("#Panel3").addClass("TabPanel");
+
+        let parent_element = jQuery('#<?php echo ($modal?'modal':'CentralSpace')?>');
+    	parent_element.find("#AssociatedCollections").children(".Title").attr("panel", "AssociatedCollections").addClass("Selected").appendTo(parent_element.find("#Titles3"));
+    	removePanel=parent_element.find("#AssociatedCollections").parent().parent();
+    	parent_element.find("#AssociatedCollections").appendTo(parent_element.find("#Panel3")).addClass("TabPanel");
     	removePanel.remove();
     	
-    	jQuery("#CollectionsThemes").children().children(".Title").attr("panel", "CollectionsThemes").appendTo("#Titles3");
-    	removePanel=jQuery("#CollectionsThemes").parents(".RecordBox");
-    	jQuery("#CollectionsThemes").appendTo("#Panel3").addClass("TabPanel").hide();
+    	parent_element.find("#CollectionsThemes").children().children(".Title").attr("panel", "CollectionsThemes").appendTo(parent_element.find("#Titles3"));
+    	removePanel=parent_element.find("#CollectionsThemes").parent().parent();
+    	parent_element.find("#CollectionsThemes").appendTo(parent_element.find("#Panel3")).addClass("TabPanel").hide();
     	removePanel.remove();
-    	if (jQuery("#Titles2").children().length==0) jQuery("#Panel2").parent().parent().remove();
-	if (jQuery("#Titles3").children().length==0) jQuery("#Panel3").parent().parent().remove();	
+    	if (parent_element.find("#Titles2").children().length==0) parent_element.find("#Panel2").parent().parent().remove();
+	    if (parent_element.find("#Titles3").children().length==0) parent_element.find("#Panel3").parent().parent().remove();	
         jQuery(".ViewPanelTitles").children(".Title").click(function(){
         // function to switch tab panels
-            jQuery(this).parent().parent().children(".TabPanel").hide();
-            jQuery(this).parent().children(".Title").removeClass("Selected");
-            jQuery(this).addClass("Selected");
-            jQuery("#"+jQuery(this).attr("panel")).show();
+            parent_element.find(this).parent().parent().children(".TabPanel").hide();
+            parent_element.find(this).parent().children(".Title").removeClass("Selected");
+            parent_element.find(this).addClass("Selected");
+            parent_element.find("#"+jQuery(this).attr("panel")).show();
         });
     	}
 	<?php
