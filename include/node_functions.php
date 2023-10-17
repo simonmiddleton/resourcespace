@@ -521,7 +521,7 @@ function get_root_node_by_leaf(int $ref, int $level)
     }
 
 /**
-* Build a row consisting of all parents of a given leaf node
+* Return a row consisting of all ancestor nodes of a given node
 * Example:
 * 1
 * 2
@@ -534,12 +534,12 @@ function get_root_node_by_leaf(int $ref, int $level)
 * 3
 * Passing in node 5 will return nodes 8,2 in one row
 * 
-* @param integer $ref   Node ID of tree leaf
+* @param integer $ref   A tree node
 * @param integer $level Node depth level (as returned by get_tree_node_level())
 * 
-* @return integer|boolean
+* @return array|boolean
 */
-function get_all_parents_by_leaf(int $ref, int $level)
+function get_all_ancestors_for_node(int $ref, int $level)
     {
     if(0 >= $level)
         {

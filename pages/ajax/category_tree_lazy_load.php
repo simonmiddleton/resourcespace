@@ -18,10 +18,10 @@ $js_tree_data   = array();
 
 $nodes = get_nodes($field, $node_ref);
 
-// Find the root nodes for any of the searched nodes
+// Find the ancestor nodes for any of the searched nodes
 // Most of the nodes will most likely be a tree leaf. 
 // This allows us to know which tree nodes we need to 
-// expand from the begining
+// expand from the beginning
 foreach($selected_nodes as $selected_node)
     {
     $tree_level = get_tree_node_level($selected_node);
@@ -31,7 +31,7 @@ foreach($selected_nodes as $selected_node)
         continue;
         }
 
-    $found_all_parents = get_all_parents_by_leaf($selected_node, $tree_level);
+    $found_all_parents = get_all_ancestors_for_node($selected_node, $tree_level);
     if(is_array($found_all_parents))
         {
         foreach($found_all_parents[0] as $p_key => $p_ref)
