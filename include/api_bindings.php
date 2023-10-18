@@ -897,6 +897,11 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
     $keep_original = filter_var($keep_original, FILTER_VALIDATE_BOOLEAN);
+    $generic_err_msg = [
+        "Status" => "FAILED",
+        "Message" => "Resource not replaced. Refer to ResourceSpace system administrator",
+    ];
+
     $duplicates=check_duplicate_checksum($file_location,false);
     if (count($duplicates)>0)
         {
@@ -919,10 +924,30 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
             // Set global otion so that this is not dependent on config
             $replace_resource_preserve_option = true;
             }
-        $success = replace_resource_file($ref, $file_location, $no_exif, $autorotate, $keep_original);
+
+        $GLOBALS["use_error_exception"] = true;
+        try
+            {
+            $success = replace_resource_file($ref, $file_location, $no_exif, $autorotate, $keep_original);
+            }
+        catch (Throwable $t)
+            {
+            debug(
+                sprintf(
+                    '[api_replace_resource_file] Failed to replace resource %s file with %s. Reason: %s',
+                    $ref,
+                    $file_location,
+                    $t->getMessage()
+                )
+            );
+            unset($GLOBALS["use_error_exception"]);
+            return $generic_err_msg;
+            }
+        unset($GLOBALS["use_error_exception"]);
+
         if (!$success)
             {
-            return array("Status" => "FAILED","Message" => "Resource not replaced. Refer to ResourceSpace system administrator");
+            return $generic_err_msg;
             }
         }
 

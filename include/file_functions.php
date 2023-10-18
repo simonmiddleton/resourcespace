@@ -147,7 +147,7 @@ function temp_local_download_remote_file(string $url, string $key = "")
     $extension = $path_parts['extension'] ?? '';
     $filename .= ($extension !== '' ? ".{$extension}" : '');
 
-    if(strpos($filename,".") == false && filter_var($url_original, FILTER_VALIDATE_URL))
+    if(strpos($filename,".") === false && filter_var($url_original, FILTER_VALIDATE_URL))
         {
         // $filename not valid, try and get from HTTP header
         $urlinfo = parse_url($url);
@@ -178,7 +178,17 @@ function temp_local_download_remote_file(string $url, string $key = "")
                     }
                 }
             }
+        
+        $extension = pathinfo(basename($filename), PATHINFO_EXTENSION);
+        $filename = safe_file_name(pathinfo(basename($filename), PATHINFO_FILENAME)) . ".{$extension}";
         }
+
+    if (is_banned_extension($extension))
+        {
+        debug('[temp_local_download_remote_file] WARN: Banned extension for ' . $filename);
+        return false;
+        }
+
     // Get temp location
     $tmp_uniq_path_id = $userref . "_" . $key . generateUserFilenameUID($userref);
     $tmp_dir = get_temp_dir(false) . "/remote_files/" . $tmp_uniq_path_id;
