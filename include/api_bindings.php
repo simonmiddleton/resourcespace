@@ -135,11 +135,14 @@ function api_get_resource_field_data($resource)
     {
     # Get all field data for a resource
     $results = get_resource_field_data($resource);
-    $resultcount= count ($results);
+    if (is_array($results))
         {
-        for($n=0;$n<$resultcount;$n++)
+        $resultcount = count($results);
             {
-            $results[$n] = array_map("i18n_get_translated",$results[$n]);
+            for($n=0;$n<$resultcount;$n++)
+                {
+                $results[$n] = array_map("i18n_get_translated",$results[$n]);
+                }
             }
         }
     return $results;
