@@ -4385,6 +4385,16 @@ function is_int_loose($var)
      }
 
 /**
+ * Helper function to check if value is a positive integer looking type.
+ * 
+ * @param int|float|string $V Value to be tested
+ */
+function is_positive_int_loose($V): bool
+    {
+    return is_int_loose($V) && $V > 0;
+    }
+
+/**
  * Does the provided $ip match the string $ip_restrict? Used for restricting user access by IP address.
  *
  * @param  string $ip
@@ -5180,14 +5190,4 @@ function set_watermark_image()
         {
         $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
         }
-    }
-
-/**
- * Helper function to check if value is a positive integer looking type.
- * 
- * @param int|float|string $V Value to be tested
- */
-function is_positive_int_loose($V): bool
-    {
-    return is_int_loose($V) && $V > 0;
     }
