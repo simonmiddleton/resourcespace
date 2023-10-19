@@ -813,7 +813,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Daftar kata kunci dinamis.';
 $lang["fieldtype-radio_buttons"]='Tombol radio.';
 $lang["fieldtype-warning_message"]='Pesan peringatan.';
 $lang["fieldtype-date_range"]='Rentang Tanggal';
-$lang["documentation-permissions"]='Lihat <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Basis Pengetahuan</a></b> untuk informasi lebih lanjut tentang izin.';
 $lang["property-reference"]='Referensi';
 $lang["property-name"]='Nama';
 $lang["property-permissions"]='Izin';

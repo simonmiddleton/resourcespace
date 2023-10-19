@@ -693,7 +693,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Dinamički popis ključnih riječi.';
 $lang["fieldtype-radio_buttons"]='Radio gumbi.';
 $lang["fieldtype-warning_message"]='Upozorenje';
 $lang["fieldtype-date_range"]='Raspon datuma.';
-$lang["documentation-permissions"]='Pogledajte <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Bazu znanja</a></b> za dodatne informacije o dozvolama.';
 $lang["property-name"]='Ime';
 $lang["property-permissions"]='Dozvole.';
 $lang["property-permissions_inherit"]='Naslijedi od nadređene grupe.';

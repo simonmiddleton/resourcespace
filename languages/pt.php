@@ -513,7 +513,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Lista dinâmica de palavras-chave.';
 $lang["fieldtype-radio_buttons"]='Botões de rádio.';
 $lang["fieldtype-warning_message"]='Mensagem de aviso.';
 $lang["fieldtype-date_range"]='Intervalo de datas.';
-$lang["documentation-permissions"]='Consulte a <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Base de Conhecimento</a></b> para obter mais informações sobre permissões.';
 $lang["property-reference"]='Referência';
 $lang["property-name"]='Nome';
 $lang["property-permissions"]='Permissões.';

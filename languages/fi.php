@@ -79,7 +79,6 @@ $lang["fieldtype-category_tree"]="Kategoriapuu";
 $lang["fieldtype-dynamic_keywords_list"]="Dynaaminen avainsanalista";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="Katso <a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a>, jossa on lisätietoa käyttöoikeuksista.";
 $lang["property-reference"]="Viittaus";
 $lang["property-name"]="Nimi";
 $lang["property-permissions"]="Käyttöoikeudet";

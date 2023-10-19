@@ -694,7 +694,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Dynamisk liste over nøgleord.';
 $lang["fieldtype-radio_buttons"]='Radioknapper.';
 $lang["fieldtype-warning_message"]='Advarselmeddelelse';
 $lang["fieldtype-date_range"]='Datointerval';
-$lang["documentation-permissions"]='Se venligst <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Videnbasen</a></b> for yderligere information om tilladelser.';
 $lang["property-name"]='Navn';
 $lang["property-permissions"]='Tilladelser.';
 $lang["property-permissions_inherit"]='Arv fra overordnet gruppe.';

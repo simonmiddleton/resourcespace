@@ -43,6 +43,11 @@ function get_resource_path(
     $includemodified = true
 )
     {
+    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
+    $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
+    $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate,
+    $baseurl, $k, $get_resource_path_extra_download_query_string_params;
+
     # returns the correct path to resource $ref of size $size ($size==empty string is original resource)
     # If one or more of the folders do not exist, and $generate=true, then they are generated
     if(!preg_match('/^[a-zA-Z0-9]+$/',(string) $extension))
@@ -66,15 +71,10 @@ function get_resource_path(
         return $override;
         }
 
-    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
-           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
-           $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate;
 
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
-    if(!$getfilepath && $hide_real_filepath && !in_array($size,array("col","thm","pre")))
+    if(!$getfilepath && $hide_real_filepath)
         {
-        global $baseurl, $k, $get_resource_path_extra_download_query_string_params;
-
         if(
             !isset($get_resource_path_extra_download_query_string_params)
             || is_null($get_resource_path_extra_download_query_string_params)
@@ -3052,7 +3052,8 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
             }
 
         $body.=$templatevars['fromusername']." ". $lang["hasemailedyouaresource"]."\n\n" . $templatevars['message']."\n\n" . $lang["clicktoviewresource"] . "\n\n" . $templatevars['url'];
-        send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
+        $send_result=send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
+        if ($send_result!==true) {return $send_result;}
 
         # log this
         resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);
@@ -3228,7 +3229,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
     # for this resource, for display in an edit / view form.
     # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
 
-    global $view_title_field, $metadata_template_resource_type, $NODE_FIELDS, $FIXED_LIST_FIELD_TYPES;
+    global $view_title_field, $metadata_template_resource_type, $NODE_FIELDS, $FIXED_LIST_FIELD_TYPES, $pagename;
 
     # Find the resource type.
     if (is_null($originalref)) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
@@ -3256,7 +3257,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
     $field_restypes = get_resource_type_field_resource_types();
     $restypesql = "";
     $restype_params = [];
-    if(!$multi)
+    if(!$multi && $pagename !== 'edit')
         {
         $restypesql = "AND (f.global=1 OR f.ref=? OR f.ref IN (SELECT resource_type_field FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type=?))";
         $restype_params[] = "i";$restype_params[] = $view_title_field;
@@ -7463,7 +7464,6 @@ function get_resource_all_image_sizes($ref)
                     $all_image_sizes[$key]["extension"] = $size_data["extension"];
                     $all_image_sizes[$key]["multi_page"] = true;
                     $all_image_sizes[$key]["page"] = $page;
-                    $all_image_sizes[$key]["path"] = $path;
                     $all_image_sizes[$key]["url"] = $url;
                     }
                 }

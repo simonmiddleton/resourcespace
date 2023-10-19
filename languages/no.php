@@ -1214,7 +1214,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Dynamisk nøkkelordliste.';
 $lang["fieldtype-radio_buttons"]='Radioknapper';
 $lang["fieldtype-warning_message"]='Advarselmelding';
 $lang["fieldtype-date_range"]='Datoområde.';
-$lang["documentation-permissions"]='Se <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a></b> for mer informasjon om tillatelser.';
 $lang["property-reference"]='Referanse';
 $lang["property-name"]='Navn';
 $lang["property-permissions"]='Tillatelser.';

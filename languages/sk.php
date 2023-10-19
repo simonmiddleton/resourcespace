@@ -87,7 +87,6 @@ $lang["fieldtype-warning_message"]="Upozornenie";
 $lang["fieldtype-date_range"]="Rozsah dátumov";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="Pozrite si <b><a href=../../documentation/permissions.txt target=_blank> súbor pomocníka k oprávneniam </a></b> pre ďalšie informácie o povoleniach.";
 $lang["property-reference"]="Referencie";
 $lang["property-name"]="Názov";
 $lang["property-permissions"]="Oprávnenia";

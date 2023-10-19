@@ -287,7 +287,7 @@ foreach ($parts as $key=>$part){
 			$file['key']=$key;
 			if (isset($part->id)){$file['id']=str_replace(">","",str_replace("<","",$part->id));}
 			$file['filename']=$part->dparameters[0]->value;
-			$file['extension']=pathinfo($file['filename'],PATHINFO_EXTENSION);
+			$file['extension']=strtolower($part->subtype);
 			$file['encoding']=$part->encoding;
 			$files[]=$file;
 			$att_count++;

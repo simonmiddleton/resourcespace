@@ -1313,6 +1313,9 @@ $imperial_measurements=false;
 # Use day-month-year format? If set to false format will be month-day-year.
 $date_d_m_y=true;
 
+# Attempt to validate dates on the edit page
+$date_validation_js = true;
+
 # What is the default resource type to use for batch upload templates?
 $default_resource_type=1;
 
@@ -2618,6 +2621,9 @@ $resource_share_filter_collections=false;
 # Option to turn off email sharing.
 $email_sharing=true;
 
+# Option to limit e-mails sent by the whole system per hour (to limit use of the system for spamming, for example)
+# $email_rate_limit=10;
+
 #Resource Share Expiry Controls
 $resource_share_expire_days=150; #Maximum number of days allowed for the share 
 $resource_share_expire_never=true; #Allow the 'Never' option.
@@ -2925,7 +2931,7 @@ $actions_modal=true;
 // actions - see $user_pref_new_action_emails. 
 //
 // *IMPORTANT* - to work correctly this requires the cron tasks (pages/tools/cron_copy_hitcount.php) to be run
-// more frequently than the interval that hss been configured for this setting. e.g. if $new_action_email_interval=1 
+// more frequently than the interval that has been configured for this setting. e.g. if $new_action_email_interval=1 
 // then cron_copy_hitcount needs to run at least once every hour.
 //
 //  - This value should be an integer. Any non-integer values will be rounded up

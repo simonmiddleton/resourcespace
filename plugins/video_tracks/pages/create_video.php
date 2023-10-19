@@ -22,6 +22,12 @@ if($access != 0)
     $message = $lang['error-permissiondenied'];
     }
 
+if(isset($error))
+    {
+    error_alert($message,false);
+    exit();
+    }
+
 $message                     = '';
 $video_tracks_output_formats ??= $video_tracks_output_formats_default;
 $video_tracks_export_folder  = get_temp_dir(false, 'video_tracks_exports');

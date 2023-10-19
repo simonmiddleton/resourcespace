@@ -65,7 +65,7 @@ for ($n=$offset;(($n<count($keywords)) && ($n<($offset+$per_page)));$n++)
             <a 
                 onClick="return CentralSpaceLoad(this,true);" 
                 href="<?php echo $edit_url?>"
-                ><?php echo '<i class="fas fa-edit"></i>&nbsp' . $lang["action-edit"]?>
+                ><?php echo '<i class="fas fa-edit"></i>&nbsp' . htmlspecialchars($lang["action-edit"])?>
             </a>
         </div>
     </td>

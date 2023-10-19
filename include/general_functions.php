@@ -109,7 +109,8 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     if($date_timestamp === false) return '';
 
     // Check whether unix timestamp is a BCE date
-    $bce_offset = ($date_timestamp < strtotime("0000-00-00")) ? 1 : 0;
+    $year_zero = PHP_INT_MIN === (int)-2147483648 ? PHP_INT_MIN : strtotime("0000-00-00");
+    $bce_offset = ($date_timestamp < $year_zero) ? 1 : 0;
     // BCE dates cannot return year in truncated form
     if($bce_offset == 1 && !$date_yyyy) return '';
 
@@ -131,6 +132,10 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         };
 
     $month_part = substr($date, $bce_offset + 5, 2);
+    if(!is_numeric($month_part))
+        {
+        return '';
+        }
     $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
         {
@@ -844,19 +849,14 @@ function allowed_type_mime($allowedtype)
  * @param  string $bcc              Optional BCC addresses
  * @param  array $files             Optional array of file paths to attach in the format [filename.txt => /path/to/file.txt]
  */
-function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array()): bool
-    {
+function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
+    { 
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $baseurl, $userfullname;
-    global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override;
+    global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override, $userref, $email_rate_limit, $lang, $useremail_rate_limit_active;
 
     if(defined("RS_TEST_MODE"))
         {
         return false;
-        }
-
-    if($always_email_copy_admin)
-        {
-        $bcc.="," . $email_notify;
         }
 
     /*
@@ -886,6 +886,40 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         }
     // Valid emails? then make it back into an RFC 2822 compliant string
     $email = implode(', ', $valid_emails);
+
+    if (isset($email_rate_limit))
+        {
+        // Limit the number of e-mails sent across the system per hour.
+        $count=ps_value("select count(*) value from mail_log where date >= DATE_SUB(now(),interval 1 hour)",[],0);
+        if (($count + count($valid_emails))>$email_rate_limit)
+            {
+            if (isset($userref) && ($useremail_rate_limit_active ?? false) == false)
+                {
+                // Rate limit not previously active, activate and warn them.
+                ps_query("update user set email_rate_limit_active=1 where ref=?",["i",$userref]);
+                message_add([$userref],$lang["email_rate_limit_active"]);
+                }
+            debug("E-mail not sent due to $email_rate_limit");
+            return $lang["email_rate_limit_active"]; // Don't send the e-mail and return the error.
+            }
+        else    
+            {
+            // It's OK to send mail, if rate limit was previously active, reset it
+            if ($useremail_rate_limit_active ?? false)
+                {
+                ps_query("update user set email_rate_limit_active=0 where ref=?",["i",$userref]);
+                // Send them a message 
+                message_add([$userref],$lang["email_rate_limit_inactive"]);
+                }
+            }
+        }
+
+    if($always_email_copy_admin)
+        {
+        $bcc.="," . $email_notify;
+        }
+
+
 
     // Validate all files to attach are valid and copy any that are URLs locally
     $attachfiles = array();
@@ -3024,7 +3058,7 @@ function user_set_usergroup($user,$usergroup)
  * 
  * Used to generate initial spider and scramble keys.
  * 
- * @param  int    $length Lenght of desired string of bytes
+ * @param  int    $length Length of desired string of bytes
  * @return string         Random character string
  */
 function generateSecureKey($length = 64)
@@ -4351,6 +4385,16 @@ function is_int_loose($var)
      }
 
 /**
+ * Helper function to check if value is a positive integer looking type.
+ * 
+ * @param int|float|string $V Value to be tested
+ */
+function is_positive_int_loose($V): bool
+    {
+    return is_int_loose($V) && $V > 0;
+    }
+
+/**
  * Does the provided $ip match the string $ip_restrict? Used for restricting user access by IP address.
  *
  * @param  string $ip
@@ -5146,14 +5190,4 @@ function set_watermark_image()
         {
         $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
         }
-    }
-
-/**
- * Helper function to check if value is a positive integer looking type.
- * 
- * @param int|float|string $V Value to be tested
- */
-function is_positive_int_loose($V): bool
-    {
-    return is_int_loose($V) && $V > 0;
     }

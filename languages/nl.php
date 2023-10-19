@@ -552,7 +552,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Dynamische trefwoordenlijst.';
 $lang["fieldtype-radio_buttons"]='Radio buttons: Keuzerondjes';
 $lang["fieldtype-warning_message"]='Waarschuwingsbericht';
 $lang["fieldtype-date_range"]='Datumreeks';
-$lang["documentation-permissions"]='Zie de <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a></b> voor verdere informatie over machtigingen.';
 $lang["property-reference"]='Referentie';
 $lang["property-name"]='Naam';
 $lang["property-permissions"]='Toestemmingen';

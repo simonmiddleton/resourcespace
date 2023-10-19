@@ -840,7 +840,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Динамический список 
 $lang["fieldtype-radio_buttons"]='Переключатели (Radio buttons)';
 $lang["fieldtype-warning_message"]='Сообщение предупреждения.';
 $lang["fieldtype-date_range"]='Диапазон дат';
-$lang["documentation-permissions"]='Смотрите <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Базу знаний</a></b> для получения дополнительной информации о правах доступа.';
 $lang["property-reference"]='Ссылка (Ssylka)';
 $lang["property-name"]='Имя';
 $lang["property-permissions"]='Разрешения.';

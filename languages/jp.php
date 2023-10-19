@@ -805,7 +805,6 @@ $lang["fieldtype-dynamic_keywords_list"]='動的キーワードリスト';
 $lang["fieldtype-radio_buttons"]='ラジオボタン';
 $lang["fieldtype-warning_message"]='警告メッセージ';
 $lang["fieldtype-date_range"]='日付範囲';
-$lang["documentation-permissions"]='権限に関する詳細情報については、<b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>ナレッジベース</a></b>を参照してください。';
 $lang["property-reference"]='参照';
 $lang["property-name"]='名前';
 $lang["property-permissions"]='権限 (Ken\'gen)';

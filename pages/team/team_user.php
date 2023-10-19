@@ -42,16 +42,16 @@ function show_team_user_filter_search(){
     <div class="BasicsBox">
         <form method="get" action="<?php echo $baseurl_short?>pages/team/team_user.php">
             <div class="Question">  
-                <label for="group"><?php echo $lang["group"]; ?></label>
+                <label for="group"><?php echo htmlspecialchars($lang["group"]); ?></label>
                 <?php if (!hook('replaceusergroups')) { ?>
                     <div class="tickset">
                         <div class="Inline">
                             <select name="group" id="group" onChange="this.form.submit();">
-                                <option value="0"<?php if ($group == 0) { echo " selected"; } ?>><?php echo $lang["all"]; ?></option>
+                                <option value="0"<?php if ($group == 0) { echo " selected"; } ?>><?php echo htmlspecialchars($lang["all"]); ?></option>
                                 <?php
                                 for($n=0;$n<count($groups);$n++){
                                     ?>
-                                    <option value="<?php echo $groups[$n]["ref"]; ?>"<?php if ($group == $groups[$n]["ref"]) { echo " selected"; } ?>><?php echo $groups[$n]["name"]; ?></option>
+                                    <option value="<?php echo (int) $groups[$n]["ref"]; ?>"<?php if ($group == $groups[$n]["ref"]) { echo " selected"; } ?>><?php echo htmlspecialchars($groups[$n]["name"]); ?></option>
                                     <?php
                                 }
                                 ?>
@@ -67,10 +67,10 @@ function show_team_user_filter_search(){
     <div class="BasicsBox">
         <form method="get" action="<?php echo $baseurl_short?>pages/team/team_user.php">
             <div class="Question">
-                <label for="find"><?php echo $lang["searchusers"]?></label>
+                <label for="find"><?php echo htmlspecialchars($lang["searchusers"])?></label>
                 <div class="tickset">
                  <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape_quoted_data($find) ?>" maxlength="100" class="shrtwidth" /></div>
-                 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" /></div>
+                 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["searchbutton"])?>&nbsp;&nbsp;" /></div>
                 </div>
                 <div class="clearerleft"> </div>
             </div>
@@ -82,7 +82,7 @@ function show_team_user_filter_search(){
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
-    <h1><?php echo $lang["manageusers"]; ?></h1>
+    <h1><?php echo htmlspecialchars($lang["manageusers"]); ?></h1>
     <?php
     // Breadcrumbs links
     if (strpos($backurl, "pages/admin/admin_group_management.php") !== false)
@@ -175,21 +175,28 @@ include "../../include/header.php";
 
     ?>
 
-    <div class="TopInpageNav"><div class="TopInpageNavLeft"><?php echo $atoz?>	<div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
+    <div class="TopInpageNav"><div class="TopInpageNavLeft"><?php echo $atoz?>	<div class="InpageNavLeftBlock"><?php echo htmlspecialchars($lang["resultsdisplay"])?>:
         <?php 
         for($n=0;$n<count($list_display_array);$n++)
             {
             if ($per_page==$list_display_array[$n])
                 {
-                ?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php
+                ?><span class="Selected"><?php echo (int) $list_display_array[$n]?></span><?php
                 }
             else
                 {
+                $url=generateURL(
+                    $baseurl_short . "pages/team/team_user.php",
+                    ["group"     => $group,
+                    "order_by"  => $order_by,
+                    "find"      =>$find],
+                    ["per_page_list"=> (int)$list_display_array[$n]]
+                );
                 ?>
                 <a
-                    href="<?php echo $url; ?>&per_page_list=<?php echo urlencode($list_display_array[$n])?>"
+                    href="<?php echo $url;?>"
                     onClick="return CentralSpaceLoad(this);"
-                    ><?php echo urlencode($list_display_array[$n])?>
+                    ><?php echo urlencode((int)$list_display_array[$n])?>
                 </a>
                 <?php
                 }
@@ -198,15 +205,22 @@ include "../../include/header.php";
 
         if ($per_page==99999)
             {
-            ?><span class="Selected"><?php echo $lang["all"]?></span><?php
+            ?><span class="Selected"><?php echo htmlspecialchars($lang["all"])?></span><?php
             }
         else
             {
+            $url=generateURL(
+                $baseurl_short . "pages/team/team_user.php",
+                ["group"     => $group,
+                "order_by"  => $order_by,
+                "find"      =>$find],
+                ["per_page_list"=> 99999]
+            );
             ?>
             <a
-                href="<?php echo $url; ?>&per_page_list=99999"
+                href="<?php echo $url; ?>"
                 onClick="return CentralSpaceLoad(this);"
-                ><?php echo $lang["all"]?>
+                ><?php echo htmlspecialchars($lang["all"])?>
             </a><?php
             } ?>
         </div></div> <?php pager(false); ?><div class="clearerleft"></div></div>
@@ -229,11 +243,11 @@ include "../../include/header.php";
             $baseurl ."/pages/team/team_user.php",
             ["offset"   =>"0",
             "group"     =>$group,
-            "order_by"  =>$orderName . ($order_by==$orderName ? '+desc' : ''),
+            "order_by"  =>$orderName . ($order_by==$orderName ? ' desc' : ''),
             "find"      =>$find]
         );
         ?><td><a href="<?php echo $column_header_url?>" onClick="return CentralSpaceLoad(this);"><?php
-                echo $lang[$labelKey] . $image ?></a></td>
+                echo htmlspecialchars($lang[$labelKey]) . $image ?></a></td>
         <?php
     }
 
@@ -253,7 +267,7 @@ include "../../include/header.php";
         addColumnHeader('last_active', 'lastactive');
         hook("additional_user_column_header");
     ?>
-    <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+    <td><div class="ListTools"><?php echo htmlspecialchars($lang["tools"])?></div></td>
     </tr>
     <?php
     // Parse $url var as this is being manipulated by the pager(). This allows us to build correct URLs later on (e.g for team_user_edit_url)
@@ -299,9 +313,9 @@ include "../../include/header.php";
         <td><?php echo nicedate($users[$n]["last_active"],true,true,true) ?></td>
         <?php hook("additional_user_column");?>
         <td><?php if (($usergroup==3) || ($users[$n]["usergroup"]!=3)) { ?><div class="ListTools">
-        <a href="<?php echo $team_user_log_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-history"></i>&nbsp;<?php echo $lang["log"]?></a>
+        <a href="<?php echo $team_user_log_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-history"></i>&nbsp;<?php echo htmlspecialchars($lang["log"])?></a>
         &nbsp;
-        <a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
+        <a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo htmlspecialchars($lang["action-edit"])?></a>
         <?php
         if($userref != $users[$n]["ref"])
             {
@@ -314,7 +328,7 @@ include "../../include/header.php";
             <a
                 href=<?php echo $message_link_url ?>
                 onClick="return CentralSpaceLoad(this,true);"
-                ><i class="fas fa-envelope"></i>&nbsp;<?php echo $lang["message"]?>
+                ><i class="fas fa-envelope"></i>&nbsp;<?php echo htmlspecialchars($lang["message"])?>
             </a>
             <?php
             }
@@ -331,7 +345,7 @@ include "../../include/header.php";
     </div>
     <div class="BottomInpageNav">
     <div class="BottomInpageNavLeft">
-    <strong><?php echo $lang["total"] . ": " . $results; ?> </strong><?php echo $lang["users"]; ?>
+    <strong><?php echo htmlspecialchars($lang["total"] . ": " . $results); ?> </strong><?php echo htmlspecialchars($lang["users"]); ?>
     </div>
 
     <?php pager(false); ?></div>
@@ -350,10 +364,10 @@ if(!hook("replace_create_user"))
         <form id="new_user_form" method="post" action="<?php echo $baseurl_short?>pages/team/team_user.php">
             <?php generateFormToken("create_new_user"); ?>
             <div class="Question">
-                <label for="newuser"><?php echo $lang["createuserwithusername"]?></label>
+                <label for="newuser"><?php echo htmlspecialchars($lang["createuserwithusername"])?></label>
                 <div class="tickset">
                  <div class="Inline"><input type=text name="newuser" id="newuser" maxlength="50" class="shrtwidth" /></div>
-                 <div class="Inline"><input name="Submit" id="create_user_button" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" /></div>
+                 <div class="Inline"><input name="Submit" id="create_user_button" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["create"])?>&nbsp;&nbsp;" /></div>
                 </div>
                 <div class="clearerleft"> </div>
             </div>
@@ -368,8 +382,8 @@ if ($user_purge)
     {
     ?>
     <div class="BasicsBox">
-    <div class="Question"><label><?php echo $lang["purgeusers"]?></label>
-    <div class="Fixed"><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl ?>/pages/team/team_user_purge.php"><?php echo LINK_CARET ?><?php echo $lang["purgeusers"]?></a></div>
+    <div class="Question"><label><?php echo htmlspecialchars($lang["purgeusers"])?></label>
+    <div class="Fixed"><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl ?>/pages/team/team_user_purge.php"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["purgeusers"])?></a></div>
     <div class="clearerleft"> </div></div>
     </div>
     <?php
@@ -378,7 +392,7 @@ if ($user_purge)
 
 <?php if (!hook("replaceusersonline")) { ?>
 <div class="BasicsBox">
-<div class="Question"><label><?php echo $lang["usersonline"]?></label>
+<div class="Question"><label><?php echo htmlspecialchars($lang["usersonline"])?></label>
 <div class="Fixed">
 <?php
 $active=get_active_users();

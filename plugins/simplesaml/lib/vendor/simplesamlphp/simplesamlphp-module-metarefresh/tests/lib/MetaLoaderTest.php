@@ -135,7 +135,17 @@ class MetaLoaderTest extends TestCase
         $this->metaloader->writeMetadataFiles($this->tmpdir);
         $this->assertFileExists($this->tmpdir . '/saml20-idp-remote.php');
 
-        @include_once($this->tmpdir . '/saml20-idp-remote.php');
+        $GLOBALS["use_error_exception"]=true;
+        try
+            {
+            include_once($this->tmpdir . '/saml20-idp-remote.php');
+            }
+        catch (throwable $e)
+            {
+            debug("MetaLoaderTest.php: " . $e->getMessage());
+            }
+        unset($GLOBALS["use_error_exception"]);
+
         $this->assertArrayHasKey('https://idp.example.com/idp/shibboleth', $metadata);
         $this->assertArraySubset(
             $this->expected,

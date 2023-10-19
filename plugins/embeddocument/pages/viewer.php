@@ -1,22 +1,20 @@
 <?php
 include "../../../include/db.php";
 
-
 # Get variables and check key is valid.
 $ref=getval("ref","");
-$key=getval("key","");
-if ($key!=md5($scramble_key . $ref)) {exit("Invalid key.");}
+$k=getval("k","");
+$downloadkey=getval("dk","");
+$ak=getval("ak",""); // nonce
+# Check key is valid
+if (!check_access_key([$ref],$k,false))
+    {
+    exit($lang["error_invalid_key"] );
+    }
 
-# Load resource data
 $resource=get_resource_data($ref);
-
-# Load watermark settings
 $use_watermark=check_use_watermark();
-
-# Work out if we're allowing download by validating the download key.
-$download=false;
-$downloadkey=getval("downloadkey","");
-if ($downloadkey === md5($scramble_key . $ref . "download")) {$download=true;}
+$download=getval("download","") != "";
 
 ?>
 <html>
@@ -37,22 +35,26 @@ if ($downloadkey === md5($scramble_key . $ref . "download")) {$download=true;}
 <li class="embeddocument_jump" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(document.getElementById('embeddocument_page_box').value,false,true);"><span><?php echo $lang["jump"]?></span></li>
 <li class="embeddocument_jump-box" <input type="text" id="embeddocument_page_box" size="1" /> / <span id="page-count">#</span> </li>
 
-<?php if ($download)
-	{ 
-	$pdf_file_path=get_resource_path($ref,true,"",false,"pdf");
-	if (file_exists($pdf_file_path))
-		{
-		$pdf_url_path=get_resource_path($ref,false,"",false,"pdf");
-		?>
-		<li class="embeddocument_download" Style="cursor: pointer;" onClick="top.location.href='<?php echo $pdf_url_path ?>';"><?php echo $lang["embeddocument_download_pdf"]?></li>
-		<?php
-		}
+<?php if ($downloadkey != "")
+	{
+    $keydata = rsDecrypt($downloadkey,$ak . $GLOBALS["scramble_key"]);
+    $arrkeydata = explode(":",$keydata);
+    if($arrkeydata[0] == $ak && $arrkeydata[1] == $k &&  $arrkeydata[2] == $ref)
+        {
+        $pdf_file_path=get_resource_path($ref,true,"",false,"pdf");
+        if (file_exists($pdf_file_path))
+            {
+            $pdf_url_path=get_resource_path($ref,false,"",false,"pdf");
+            $pdf_url_path .= "&k=" . urlencode($k);
+            ?>
+            <li class="embeddocument_download" Style="cursor: pointer;" onClick="top.location.href='<?php echo $pdf_url_path ?>';"><?php echo $lang["embeddocument_download_pdf"]?></li>
+            <?php
+            }
+        }
 	}
 ?>
 
 </ul>
-
-
 
 <script type="text/javascript">
 // Load pages
