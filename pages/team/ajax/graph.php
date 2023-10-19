@@ -178,7 +178,16 @@ else
                             }
                         },
                         unit: 'seconds',
-                        ticks: {color: '<?php echo $from_dash?'#FFFFFF':'default'?>',}
+                        ticks: {
+                            <?php if ($from_dash) { ?>
+                            display: false,
+                            <?php } else { ?>
+                            color: 'default',
+                            <?php } ?>
+                        }
+                    },
+                    y: {
+                        ticks: {color: '<?php echo $from_dash?'#FFFFFF':'default'?>',},
                     }
                 }
             };
@@ -189,16 +198,28 @@ else
                 responsive: true,
                 plugins: {
                     legend: {
+                        <?php if ($from_dash) { ?>
+                        display: false,
+                        <?php } else { ?>
                         position: 'right',
-                        labels: {
-                            color: '<?php echo $from_dash?'#FFFFFF':'default'?>',
-                        }
+                        padding: {
+                            right: 200,
+                        },
+                        <?php } ?>
                     }
                 },
             };
         </script>
         <?php } ?>
-        <canvas id= "<?php echo $id ?>"></canvas>
+        <canvas 
+            id="<?php echo $id ?>"
+            style="margin-left:auto;margin-right:auto;display:block;
+                <?php if ($from_dash) { ?>
+                width:220px;height:105px;
+                <?php } else { ?>
+                width:100%;height:80%;
+                <?php } ?>"
+        ></canvas>
         <?php
         }
 
