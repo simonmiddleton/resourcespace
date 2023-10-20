@@ -213,13 +213,12 @@ function createNewResource(event, element)
             view_page_anchor.setAttribute("href", baseurl_short + "?r=" + response.data.new_resource_ref);
             CentralSpaceLoad(view_page_anchor, true, false);
         }).fail(function(data, textStatus, jqXHR) {
-            if(data.status == 500)
+            if(data.status == 500 && typeof data.responseJSON.data.message === undefined)
                 {
                 styledalert(data.status, data.statusText);
                 return;
                 }
-
-            styledalert(data.responseJSON.error.title, data.responseJSON.error.detail);
+            styledalert(data.statusText, data.responseJSON.data.message);
         }).always(function() {
             CentralSpaceHideLoading();
         });
