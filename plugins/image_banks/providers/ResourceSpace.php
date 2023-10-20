@@ -127,10 +127,17 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
     /** @inheritdoc */
     public function getDownloadFileInfo(string $file): SplFileInfo
         {
-        // todo: also cater for case when the URL points to the filestore directly (ie no hide_real_filepath)
-        parse_str(parse_url($file, PHP_URL_QUERY), $qs_params);
-        $ref = $qs_params['ref'] ?? '';
-        $ext = $qs_params['ext'] ?? '';
+        $file_url_path = parse_url($file, PHP_URL_PATH);
+        if (basename($file_url_path) === 'download.php')
+            {
+            parse_str(parse_url($file, PHP_URL_QUERY), $qs_params);
+            $ref = $qs_params['ref'] ?? '';
+            $ext = $qs_params['ext'] ?? '';
+            }
+        else if (preg_match('/\/filestore(?:\/\d+)*\w+\/(\d+)\w+\.([a-zA-Z0-9]{1,10})/', $file_url_path, $matches))
+            {
+            [, $ref, $ext] = $matches;
+            }
         return new SplFileInfo("$ref.$ext");
         }
 
