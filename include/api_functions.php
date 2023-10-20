@@ -78,6 +78,22 @@ function execute_api_call($query,$pretty=false)
 
     global $lang;
 
+    if(defined("API_AUTHMODE_NATIVE"))
+        {
+        // Check if this is a whitelisted function for browser use (native mode bypasses $enable_remote_apis=false;)
+        if(!in_array($function,API_NATIVE_WHITELIST))
+            {
+            ajax_send_response(
+                401,
+                ['error' => [
+                    'status' => 401,
+                    'title'  => $GLOBALS['lang']['unauthorized'],
+                    'detail' => $GLOBALS['lang']['error-permissiondenied']
+                    ]]
+                );
+            }
+        }
+
     // Construct an array of the real params, setting default values as necessary
     $setparams = array();
     $n = 0;    
