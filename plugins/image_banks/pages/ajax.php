@@ -1,5 +1,7 @@
 <?php
 
+use ImageBanks\ResourceSpace;
+
 use function ImageBanks\getProviders;
 use function ImageBanks\getProviderSelectInstance;
 use function ImageBanks\providersCheckedAndActive;
@@ -18,6 +20,9 @@ if(!(checkperm("c") || checkperm("d")))
 
 $original_file_url = getval("original_file_url", "");
 $image_bank_provider_id = (int) getval("image_bank_provider_id", 0, true);
+$build_unable_to_upload_msg = fn(int $ref): array => ajax_build_message(
+    str_replace("%RESOURCE", $ref, $lang["image_banks_unable_to_upload_file"])
+);
 
 [$providers,] = getProviders($image_banks_loaded_providers);
 $providers_select_list = providersCheckedAndActive($providers);
@@ -38,10 +43,22 @@ if(!validFileSource($original_file_url, $provider))
 if($original_file_url !== "")
     {
     $file_info = $provider->getDownloadFileInfo($original_file_url);
+    if (is_banned_extension($file_info->getExtension()))
+        {
+        ajax_send_response(
+            400,
+            ajax_response_fail(
+                ajax_build_message(str_replace("%%FILETYPE%%",$uploaded_extension,$lang["error_upload_invalid_file"]))
+            )
+        );
+        }
+
     $resource_type_from_extension = get_resource_type_from_extension(
         $file_info->getExtension(),
-        $resource_type_extension_mapping,$resource_type_extension_mapping_default
+        $resource_type_extension_mapping,
+        $resource_type_extension_mapping_default
     );
+
     // Clear the user template and then copy resource from user template. This should deal with archive state permissions
     // and put the resource in active state if user has access to it
     clear_resource_data(0 - $userref);
@@ -61,18 +78,45 @@ if($original_file_url !== "")
         ajax_send_response(500, ajax_response_fail(ajax_build_message($lang["image_banks_unable_to_create_resource"])));
         }
 
+    if ($provider instanceof ResourceSpace)
+        {
+        // Download the file locally because if it's proxied via the remote pages/download.php it will end up being banned
+        $GLOBALS['use_error_exception'] = true;
+        try
+            {
+            $tmp_file_path = sprintf(
+                '%s/%s.%s',
+                get_temp_dir(false, generateUserFilenameUID($userref) . $provider->getId()),
+                safe_file_name(pathinfo($file_info->getFilename(), PATHINFO_FILENAME)),
+                $file_info->getExtension()
+            );
+            if(!copy($original_file_url, $tmp_file_path))
+                {
+                ajax_send_response(500, ajax_response_fail($build_unable_to_upload_msg($new_resource_ref)));
+                }
+            }
+        catch(Throwable $t)
+            {
+            debug(sprintf(
+                '[image_banks][pages/ajax.php] Failed to download remote file from "%s" to temp location "%s". Reason: %s',
+                $original_file_url,
+                $tmp_file_path,
+                $t->getMessage()
+            ));
+            ajax_send_response(500, ajax_response_fail($build_unable_to_upload_msg($new_resource_ref)));
+            }
+        unset($GLOBALS['use_error_exception']);
+        }
+
     // We intentionally want to extract embedded metadata from external Image Bank Provider
-    if(!upload_file_by_url($new_resource_ref, false, false, false, $original_file_url))
+    if(!upload_file_by_url($new_resource_ref, false, false, false, $tmp_file_path ?? $original_file_url))
         {
         delete_resource($new_resource_ref);
-        ajax_send_response(
-            500,
-            ajax_response_fail(
-                ajax_build_message(
-                    str_replace("%RESOURCE", $new_resource_ref, $lang["image_banks_unable_to_upload_file"])
-                )
-            )
-        );
+        if (isset($tmp_file_path) && file_exists($tmp_file_path))
+            {
+            unlink($tmp_file_path);
+            }
+        ajax_send_response(500, ajax_response_fail($build_unable_to_upload_msg($new_resource_ref)));
         }
 
     ajax_send_response(200, ajax_response_ok(['new_resource_ref' => $new_resource_ref]));
