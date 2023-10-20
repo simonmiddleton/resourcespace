@@ -354,6 +354,13 @@ function rs_password_verify(string $password, string $hash, array $data)
         {
         return true;
         }
+    else if(isset($GLOBALS["scramble_key_old"]) && $GLOBALS["migrating_scrambled"]
+        && password_verify(hash_hmac('sha256', $RS_madeup_pass, $GLOBALS['scramble_key_old']), $hash) )
+        {
+        // Force user to change password
+        ps_query("UPDATE user SET password_last_change = '1970-01-01' WHERE username = ?", array("s",$data['username']));
+        return true;
+        }
 
     return false;
     }

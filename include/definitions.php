@@ -829,3 +829,29 @@ define('DATE_RANGE_SEPARATOR'," / ");
 
 // Maximum age in hours of the actions that will be included in user action notification emails
 define ('ACTIONS_EMAIL_MAX_AGE',   168);
+
+// Array of permitted api calls that can be made using native mode authentication 
+// Only those required for browser access must be added.
+const API_NATIVE_WHITELIST = [
+    'add_resource_to_collection',
+    'collection_add_resources',
+    'collection_remove_resources',
+    'create_collection',
+    'delete_access_keys',
+    'delete_alternative_file',
+    'delete_resource',
+    'delete_tabs',
+    'get_collections_resource_count',
+    'get_dash_search_data',
+    'get_field_options',
+    'get_users',
+    'get_user_message',
+    'relate_all_resources',
+    'remove_resource_from_collection',
+    'reorder_featured_collections',
+    'reorder_tabs',
+    'save_tab',
+    'send_collection_to_admin',
+    'send_user_message',
+    'update_related_resource',
+];

@@ -132,6 +132,10 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         };
 
     $month_part = substr($date, $bce_offset + 5, 2);
+    if(!is_numeric($month_part))
+        {
+        return '';
+        }
     $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
         {
@@ -3057,9 +3061,12 @@ function user_set_usergroup($user,$usergroup)
  * @param  int    $length Length of desired string of bytes
  * @return string         Random character string
  */
-function generateSecureKey(int $length = 64): string
+function generateSecureKey($length = 64)
     {
-    return bin2hex(openssl_random_pseudo_bytes($length / 2));
+    $bytes = openssl_random_pseudo_bytes($length / 2);
+    $hex   = substr(bin2hex($bytes), 0, 64); 
+
+    return $hex;
     }
 
 /**
@@ -4378,6 +4385,16 @@ function is_int_loose($var)
      }
 
 /**
+ * Helper function to check if value is a positive integer looking type.
+ * 
+ * @param int|float|string $V Value to be tested
+ */
+function is_positive_int_loose($V): bool
+    {
+    return is_int_loose($V) && $V > 0;
+    }
+
+/**
  * Does the provided $ip match the string $ip_restrict? Used for restricting user access by IP address.
  *
  * @param  string $ip
@@ -5179,14 +5196,4 @@ function set_watermark_image()
         {
         $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
         }
-    }
-
-/**
- * Helper function to check if value is a positive integer looking type.
- * 
- * @param int|float|string $V Value to be tested
- */
-function is_positive_int_loose($V): bool
-    {
-    return is_int_loose($V) && $V > 0;
     }

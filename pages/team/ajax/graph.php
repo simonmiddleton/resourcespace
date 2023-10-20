@@ -145,7 +145,7 @@ else
     ?>
     <div style="padding:10px 15px">
     <h2 style="font-size:120%;margin:0;padding:<?php echo ($from_dash?"0":"0 0 8px 0")?>;background:none;white-space: nowrap;overflow: hidden;
-  text-overflow: ellipsis;"><?php echo $title ?></h2>
+  text-overflow: ellipsis;"><?php echo htmlspecialchars($title) ?></h2>
     <?php
     }
 ?>
@@ -485,44 +485,44 @@ if ($type=="summary")
     <table style="width:100%;" class="ReportSummary">
     <tr>
     <td
-        width="<?php echo $cellwidth ?>%"
+        width="<?php echo (int) $cellwidth ?>%"
         ><?php
             if($from_dash)
                 {
-                echo "<span style=\"display:block;\">" . $lang["report_total"] . "</span>";
+                echo "<span style=\"display:block;\">" . htmlspecialchars($lang["report_total"]) . "</span>";
                 }
             else
                 {
-                echo $lang["report_total"];
+                echo htmlspecialchars($lang["report_total"]);
                 }
         ?>
 
         <span
             class="ReportMetric"
-            ><?php echo ps_value(
+            ><?php echo htmlspecialchars(ps_value(
                 "SELECT IFNULL(format(sum(count),0),0) `value` FROM daily_stat d $join $condition",
                 $params,
                 0
-                );
+                ));
             ?>
         </span>
     </td>
     <td
-        width="<?php echo $cellwidth ?>%"
+        width="<?php echo (int) $cellwidth ?>%"
         ><?php
             if ($from_dash)
                 {
-                echo "<span style=\"display:block;\">" . $lang["report_average"] . "</span>";
+                echo "<span style=\"display:block;\">" . htmlspecialchars($lang["report_average"]) . "</span>";
                 }
             else
                 {
-                echo $lang["report_average"];
+                echo htmlspecialchars($lang["report_average"]);
                 }
         ?>
 
         <span
             class="ReportMetric"
-            ><?php echo ps_value(
+            ><?php echo htmlspecialchars(ps_value(
                 "SELECT
                     IFNULL(format(avg(c),1),0) `value`
                 FROM
@@ -535,7 +535,7 @@ if ($type=="summary")
                     GROUP BY year,month,day) intable",
                 $params,
                 0
-                );
+                ));
                 ?>
         </span>
     </td>

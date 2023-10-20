@@ -38,7 +38,15 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
 	else
 		{
 		$path = get_resource_path($ref, true, $size, false, $ext, -1, $page,$size=="scr" && checkperm("w") && $alternative==-1, '', $alternative);
-		if (file_exists($path) && (!$imagemagick_preserve_profiles || in_array($size,array("hpr","lpr")))) // We can use the existing previews unless we need to preserve the colour profiles (these are likely to have been removed from scr size and below) 
+        // We can use the existing previews unless we need to preserve the colour profiles,
+        // these are likely to have been removed from scr size and below.
+        // Alternative files not being converted can also use the existing file
+        if (file_exists($path) 
+            && (!$imagemagick_preserve_profiles 
+                || in_array($size,array("hpr","lpr")) 
+                || $alternative !== -1
+                )
+            )
 		return false;
 		}
     
