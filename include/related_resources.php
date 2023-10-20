@@ -64,11 +64,18 @@ if ($enable_related_resources)
                         
                         if($edit_access)
                             {
-                            echo "<div class=\"ResourcePanelInfo\" ><a href=\"#\" onClick=\"if(confirm('"
-                                . escape_quoted_data($lang["related_resource_confirm_delete"]) . "')){relateresources(" . (int) $ref . "," . (int) $relatedresource["ref"] . ",'remove'"
-                                . escape_quoted_data(generate_csrf_js_object('update_related_resource'))
-                                .");jQuery('#RelatedResource_" . (int) $relatedresource["ref"] . "').remove();}return false;\" >"
-                                . LINK_CARET . htmlspecialchars($lang["action-remove"]) . "</a></div>";
+                            ?>
+                            <div class="ResourcePanelInfo" >
+                                <a href="#" 
+                                    onClick="if(confirm('<?php echo escape_quoted_data($lang["related_resource_confirm_delete"])?>'))
+                                    {
+                                    relateresources(<?php echo (int) $ref . "," . (int) $relatedresource["ref"] ;?>,'remove',
+                                    <?php echo escape_quoted_data(generate_csrf_js_object('update_related_resource')); ?>);
+                                    jQuery('#RelatedResource_<?php echo (int) $relatedresource["ref"] ?>').remove();
+                                    }
+                                    return false;" >
+                                    <?php echo LINK_CARET . htmlspecialchars($lang["action-remove"]) ?></a></div>
+                            <?php
                             }?>
                         </div>
                         <?php
@@ -118,11 +125,18 @@ if ($enable_related_resources)
 										echo "<td>";
 										if($edit_access)
 											{
-											echo "<div class=\"ListTools\" ><a href=\"#\" onClick=\"if(confirm('"
-                                                . escape_quoted_data($lang["related_resource_confirm_delete"]) . "')){relateresources(" . (int) $ref . ", $related_resource_ref,'remove', "
-                                                . escape_quoted_data(generate_csrf_js_object('update_related_resource'))
-                                                . ");}return false;\">"
-                                                . LINK_CARET . htmlspecialchars($lang["action-remove"]) . "</a></div>";
+                                            ?>
+                                            <div class="ListTools" >
+                                                <a href="#" 
+                                                    onClick="if(confirm('<?php echo escape_quoted_data($lang["related_resource_confirm_delete"])?>'))
+                                                    {
+                                                    relateresources(<?php echo (int) $ref . "," . (int) $relatedresource["ref"] ;?>,'remove',
+                                                    <?php echo escape_quoted_data(generate_csrf_js_object('update_related_resource')); ?>);
+                                                    jQuery('#RelatedResource_<?php echo (int) $relatedresource["ref"] ?>').remove();
+                                                    }
+                                                    return false;" >
+                                                    <?php echo LINK_CARET . htmlspecialchars($lang["action-remove"]) ?></a></div>
+                                            <?php
 											}
 										echo "</td>";	
 										echo "</tr>";	
