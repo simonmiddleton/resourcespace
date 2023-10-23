@@ -2586,6 +2586,7 @@ $lang['userpreference_exiftool_write_metadata_label'] = 'Write embedded metadata
 $lang['userpreference_keyboard_navigation'] = 'Keyboard navigation';
 $lang['userpreference_tilenav']='Use a tile layout for the navigation menus';
 $lang['userpreference_tilenavdefault']='Use a tile layout for the navigation menus (default setting; users may change this)';
+$lang['userpreference_high_contrast_mode'] = 'Higher contrast mode';
 
 /* System Config */
 $lang['systemconfig'] = 'Configuration';

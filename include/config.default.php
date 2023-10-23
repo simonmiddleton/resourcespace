@@ -3408,3 +3408,6 @@ $use_native_input_for_date_field = false;
 
 // Option to disable all system generated emails from being sent - no notice will be given to users
 // $emails_suppress = false;
+
+# High contrast display mode to make text and UI elements easier to read. 
+$high_contrast_mode = false;
