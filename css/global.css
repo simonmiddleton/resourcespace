@@ -1871,8 +1871,7 @@ a.Enabled, a:visited.Enabled {
 #Metadata {
     background-color: #FFF;
     border-radius: 4px;
-    margin-bottom: 10px;
-    padding-bottom: 8PX;
+    padding-bottom: 8px;
 }
 
 .ReportSheet {padding:10px;}

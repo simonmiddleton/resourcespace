@@ -195,7 +195,7 @@ if (isset($high_contrast_mode) && $high_contrast_mode == true)
         box-shadow: none;
         border: 1px solid black;
     }
-    .TopInpageNavLeft select, .TopInpageNavLeft select:focus, #Metadata, .comment_form_container,
+    .TopInpageNavLeft select, .TopInpageNavLeft select:focus, .comment_form_container,
     .Listview, .user_message_text {
         border: 1px solid black;
     }
@@ -320,6 +320,42 @@ if (isset($high_contrast_mode) && $high_contrast_mode == true)
     .prevLink:hover, .nextLink:hover, .prevPageLink:hover, .nextPageLink:hover {
         background-color: black;
         color: white;
+    }
+    .NonMetadataProperties {
+        border: 1px solid black;
+        border-radius: 4px;
+    }
+    .StyledTabbedPanel {
+        border: 1px solid black;
+        padding-bottom: 8px;
+    }
+    .NonMetadataProperties + .TabbedPanel {
+        margin-top: 8px;
+        padding-bottom: 6px;
+        border-radius: 4px;
+        border: 1px solid black;
+    }
+    .lock_icon {
+        min-width: unset;
+    }
+    .InfoTable {
+        border: 1px solid black;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .InfoTable tr+tr>td {
+        border-top: 1px solid black;
+    }
+    .InfoTable td+td {
+        border-left:  1px solid black;
+    }
+    .CommentEntry {
+        border: 1px solid black;
+    }
+    div.MessageBox {
+        color: black;
+        border: 1px solid black;
+        background: white; 
     }
     
     <?php
