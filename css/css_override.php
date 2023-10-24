@@ -166,7 +166,7 @@ if (isset($high_contrast_mode) && $high_contrast_mode == true)
     .HorizontalWhiteNav a:link, .HorizontalWhiteNav a:visited, .HorizontalWhiteNav a:active,
     .BasicsBox .VerticalNav a:link, .BasicsBox .VerticalNav a:visited, .BasicsBox .VerticalNav a:active,
     .ListTitle a:link, .ListTitle a:visited, .ListTitle a:active,
-    .search-icon, .search-icon:hover, .search-icon:active {
+    .search-icon, .search-icon:hover, .search-icon:active, .jstree-default-dark .jstree-anchor {
         color: black;
     }
     a:hover, a:active {
@@ -196,7 +196,7 @@ if (isset($high_contrast_mode) && $high_contrast_mode == true)
         border: 1px solid black;
     }
     .TopInpageNavLeft select, .TopInpageNavLeft select:focus, .comment_form_container,
-    .Listview, .user_message_text {
+    .Listview, .user_message_text, .CategoryBox {
         border: 1px solid black;
     }
     #Header {
@@ -356,6 +356,44 @@ if (isset($high_contrast_mode) && $high_contrast_mode == true)
         color: black;
         border: 1px solid black;
         background: white; 
+    }
+    .jstree-default-dark .jstree-hovered {
+        color: white;
+    }
+    .jstree-default-dark .jstree-wholerow-hovered {
+        background: black;
+    }
+    .jstree-default-dark .jstree-anchor>.jstree-icon {
+        opacity: 1;
+    }
+    .ui-widget.ui-widget-content {
+        border: 1px solid black;
+    }
+    .ui-dialog .ui-dialog-title, .ui-widget-content {
+        color: black;
+    }
+    .delete-dialog .ui-dialog-titlebar, .ui-dialog-titlebar {
+        background: white;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+    #modal_dialog {
+        border-top: 1px solid black;
+        border-radius: 0;
+    }
+    .ui-dialog {
+        padding: 0;
+    }
+    .ui-widget.ui-button {
+        background: white;
+        border: 1px solid black;
+        color: black;
+        font-weight: 500;
+    }
+    .ui-widget.ui-button:hover {
+        background: black;
+        color: white;
+        text-decoration: underline;
     }
     
     <?php
