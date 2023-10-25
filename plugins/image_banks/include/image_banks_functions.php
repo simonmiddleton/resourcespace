@@ -225,6 +225,6 @@ function render_provider_search_result_link(ProviderResult $result, callable $co
         class="<?php echo escape_quoted_data($class); ?>"
         title="<?php echo escape_quoted_data($title); ?>"
         rel="noopener"
-    ><?php is_callable($content) ? $content() : $content; ?></a>
+    ><?php $content(); ?></a>
     <?php
     }
