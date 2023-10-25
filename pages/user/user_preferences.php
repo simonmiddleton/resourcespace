@@ -175,6 +175,17 @@ include "../../include/header.php";
         300,
         '',
         true);
+    $page_def[] = config_add_boolean_select(
+        'high_contrast_mode',
+        $lang['userpreference_high_contrast_mode'],
+        $enable_disable_options,
+        300,
+        '',
+        true,
+        null,
+        false,
+        '',
+        true);
     $page_def[] = config_add_html('</div>');
 
 

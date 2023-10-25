@@ -67,6 +67,7 @@ input[type="submit"], input[type="button"], button {
     padding: 6px 14px;
     vertical-align: middle;
     min-height: 28px;
+    min-width: 100px;
     margin: 3px 0;
 }
 
@@ -81,7 +82,7 @@ input[type="submit"], input[type="button"], button {
 
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .UploadButton a {
     border: 1px solid transparent;
-    background-color: #1988d7;
+    background-color: #1679c0;
     background-image: none;
     color: #fff;
     text-decoration: none;
@@ -429,7 +430,7 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ResourcePanelInfo {margin: 0;overflow:hidden;white-space:nowrap;padding:5px 5px 0 5px;text-align:justify;text-overflow: ellipsis; font-size: 13px; min-height: 19px;}
 .ResourcePanelInfo.ResourcePanelTitle {font-size: 15px; min-height: 21px;}
 .ResourcePanelCountry {margin-right: 5px;margin-left: 5px;margin-bottom: 0;float: left;clear: left;display:inline;}
-.ResourcePanelIcons {padding: 5px;text-align:right;bottom:0;right:0;} 
+.ResourcePanelIcons {padding: 5px;text-align:right;bottom:0;right:0;font-size:0;} 
 .ResourcePanelSmallIcons {padding-left: 5px;}
 .ResourcePanelTop {position: absolute; width: 100%;} 
 .ImageWrapper {height:200px;display:block;padding:0;vertical-align: middle;text-align: center;clear: right;}
@@ -453,7 +454,9 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 .ResourcePanelSmall .ResourcePanelIcons {font-size:0.8em;}
 .ResourceAlignLarge {width:365px;height:365px;text-align: center;vertical-align: middle;}
 
-.ResourcePanelIcons a, .CollectionPanelTools a  {margin-left: 3px;margin-right:2px; text-decoration:none; font-size: 16px;}
+.ResourcePanelIcons a, .CollectionPanelTools a  {text-decoration:none; font-size: 16px;}
+.ResourcePanelIcons a {padding: 5px;}
+.ResourcePanelResourceID {font-size: 15px;}
 .CollectionPanelTools .fa, .CollectionPanelTools .fas {font-size: 13px;}
 .ListTools a {float: right;margin-left: 10px;text-decoration:none;}
 .ResourcePanelIcons a:hover {text-decoration:none;}
@@ -1114,6 +1117,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     filter: unset;
     -moz-filter: unset;
     -webkit-filter: unset;
+    min-width: unset;
 }
 
 .CollectionsCompactToolsContainerDummy, .CollectionsCompactToolsContainer {display:inline-block;}
@@ -1867,8 +1871,7 @@ a.Enabled, a:visited.Enabled {
 #Metadata {
     background-color: #FFF;
     border-radius: 4px;
-    margin-bottom: 10px;
-    padding-bottom: 8PX;
+    padding-bottom: 8px;
 }
 
 .ReportSheet {padding:10px;}

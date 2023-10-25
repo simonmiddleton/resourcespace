@@ -462,7 +462,7 @@ elseif($restypes=='')
 
     if(!$basic_simple_search)
         {
-        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"&nbsp;&nbsp;".$lang['clearbutton']."&nbsp;&nbsp;\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short ."');";
+        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"".$lang['clearbutton']."\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short ."');";
 
         if($simple_search_pills_view)
             {
@@ -484,15 +484,15 @@ elseif($restypes=='')
         {
         if(!$simple_search_pills_view)
             {
-            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
+            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . $lang['clearbutton'] . '" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
             }
         else
             {
-            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="&nbsp;&nbsp;' . $lang['clearbutton'] . '&nbsp;&nbsp;" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
+            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . $lang['clearbutton'] . '" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
             }
         }
 
-    $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"&nbsp;&nbsp;". $lang['searchbutton']."&nbsp;&nbsp;\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
+    $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"". $lang['searchbutton']."\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
 
     if($responsive_ui)
         {
