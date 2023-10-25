@@ -77,14 +77,7 @@ abstract class Provider
     */
     final public function search($keywords, $per_page = 24, $page = 1): ProviderSearchResults
         {
-        $search_results = $this->runSearch($keywords, $per_page, $page);
-
-        if(!($search_results instanceof \ImageBanks\ProviderSearchResults))
-            {
-            trigger_error("Provider '{$this->getName()}' search results must be of type ProviderSearchResults");
-            }
-
-        return $search_results;
+        return $this->runSearch($keywords, $per_page, $page);
         }
 
 

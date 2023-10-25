@@ -49,7 +49,7 @@ if ($results->getError() === '' && $providers_select_list !== [])
     $provider = getProviderSelectInstance($providers, $image_bank_provider_id);
     $provider_name = $providers_select_list[$image_bank_provider_id] ?? $provider->getName();
     $results = $provider->search($search, $per_page, $curpage);
-    
+
     // On the off chance something else went terribly wrong (ie. code bug), let user know we couldn't find the Provider
     if ($provider instanceof NoProvider)
         {

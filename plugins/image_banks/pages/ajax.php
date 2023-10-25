@@ -21,7 +21,7 @@ if(!(checkperm("c") || checkperm("d")))
 $original_file_url = getval("original_file_url", "");
 $image_bank_provider_id = (int) getval("image_bank_provider_id", 0, true);
 $build_unable_to_upload_msg = fn(int $ref): array => ajax_build_message(
-    str_replace("%RESOURCE", $ref, $lang["image_banks_unable_to_upload_file"])
+    str_replace("%RESOURCE", $ref, $GLOBALS['lang']["image_banks_unable_to_upload_file"])
 );
 
 [$providers,] = getProviders($image_banks_loaded_providers);
@@ -29,13 +29,13 @@ $providers_select_list = providersCheckedAndActive($providers);
 if (!($image_bank_provider_id > 0 && array_key_exists($image_bank_provider_id, $providers_select_list)))
     {
     debug(sprintf('[image_banks][pages/ajax.php] Unable to find Provider #%s in %s', $image_bank_provider_id, json_encode($providers_select_list)));
-    ajax_send_response(400, ajax_response_fail(ajax_build_message($lang['image_banks_provider_not_found'])));
+    ajax_send_response(400, ajax_response_fail(ajax_build_message($GLOBALS['lang']['image_banks_provider_not_found'])));
     }
 $provider = getProviderSelectInstance($providers, $image_bank_provider_id);
 
 if(!validFileSource($original_file_url, $provider))
     {
-    $log_activity_note = str_replace("%FILE", $original_file_url, $lang["image_banks_bad_file_create_attempt"]);
+    $log_activity_note = str_replace("%FILE", $original_file_url, $GLOBALS['lang']["image_banks_bad_file_create_attempt"]);
     log_activity($log_activity_note, LOG_CODE_SYSTEM, null, 'user', null, null, null, null, $userref, false);
     $original_file_url = "";
     }
@@ -48,7 +48,7 @@ if($original_file_url !== "")
         ajax_send_response(
             400,
             ajax_response_fail(
-                ajax_build_message(str_replace("%%FILETYPE%%",$uploaded_extension,$lang["error_upload_invalid_file"]))
+                ajax_build_message(str_replace("%%FILETYPE%%",$uploaded_extension,$GLOBALS['lang']["error_upload_invalid_file"]))
             )
         );
         }
@@ -69,13 +69,13 @@ if($original_file_url !== "")
             $resource_type_from_extension,
             999,
             $userref,
-            $lang["image_banks_createdfromimagebanks"]
+            $GLOBALS['lang']["image_banks_createdfromimagebanks"]
         );
         }
 
     if(!$new_resource_ref)
         {
-        ajax_send_response(500, ajax_response_fail(ajax_build_message($lang["image_banks_unable_to_create_resource"])));
+        ajax_send_response(500, ajax_response_fail(ajax_build_message($GLOBALS['lang']["image_banks_unable_to_create_resource"])));
         }
 
     if ($provider instanceof ResourceSpace)
@@ -124,4 +124,4 @@ if($original_file_url !== "")
 
 
 // If by this point we still don't have a response for the request, create one now telling client this is a bad request
-ajax_send_response(400, ajax_response_fail(ajax_build_message($lang['error_generic'])));
+ajax_send_response(400, ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_generic'])));

@@ -218,9 +218,21 @@ function render_provider_search_result_link(ProviderResult $result, callable $co
         $onclick = ' onclick="ModalLoad(this.href); return false;"';
         $target = '';
         }
+
+    $href = $result->getProviderUrl();
+    if ($result->getProvider()->allowViewPage())
+        {
+        $href = generateURL(
+            "{$GLOBALS['baseurl']}/plugins/image_banks/pages/view.php",
+            [
+                'id' => $result->getId(),
+            ]
+        );
+        $onclick = ' onclick="ModalLoad(this.href); return false;"';
+        }
     ?>
     <a
-        href="<?php echo escape_quoted_data($result->getProviderUrl()); ?>"
+        href="<?php echo escape_quoted_data($href); ?>"
         <?php echo $onclick . $target; ?>
         class="<?php echo escape_quoted_data($class); ?>"
         title="<?php echo escape_quoted_data($title); ?>"
