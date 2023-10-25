@@ -6,6 +6,7 @@ use ImageBanks\ProviderSearchResults;
 use function ImageBanks\getProviders;
 use function ImageBanks\getProviderSelectInstance;
 use function ImageBanks\providersCheckedAndActive;
+use function ImageBanks\render_provider_search_result_link;
 
 $rs_root = dirname(__DIR__, 3);
 include_once "{$rs_root}/include/db.php";
@@ -132,21 +133,30 @@ if($results_error !== "")
 foreach($results as $result)
     {
     $title = $result->getTitle();
-
     $image_data = array(
         "thumb_width"  => $result->getPreviewWidth(),
         "thumb_height" => $result->getPreviewHeight(),
         "field{$view_title_field}" => $title,
     );
 
-    $title_link_text = highlightkeywords(tidy_trim(tidylist(strip_tags_and_attributes($title)), $search_results_title_trim), $search);
+    $title_link_text  = function() use ($title, $search_results_title_trim, $search)
+        {
+        echo highlightkeywords(tidy_trim(tidylist(strip_tags_and_attributes($title)), $search_results_title_trim), $search);
+        };
     ?>
     <div class="ResourcePanel ImageBanksResourcePanel">
-        <a href="<?php echo $result->getProviderUrl(); ?>" <?php if ($result->getOriginalFileUrl()=='') { ?>onclick="ModalLoad(this.href);return false;"<?php } else { ?>target="_blank"<?php } ?> class="ImageWrapper" title="<?php echo htmlspecialchars($title); ?>" rel="noopener">
-            <?php render_resource_image($image_data, $result->getPreviewUrl(), "thumbs"); ?>
-        </a>
+        <?php
+        render_provider_search_result_link(
+            $result,
+            fn() => render_resource_image($image_data, $result->getPreviewUrl(), "thumbs"),
+            [
+                'class' => ['ImageWrapper'],
+                'title' => $title,
+            ]
+        );
+        ?>
         <div class="ResourcePanelInfo">
-            <a href="<?php echo $result->getProviderUrl(); ?>" <?php if ($result->getOriginalFileUrl()=='') { ?>onclick="ModalLoad(this.href);return false;"<?php } else { ?>target="_blank"<?php } ?> title="<?php echo htmlspecialchars($title); ?>" rel="noopener"><?php echo $title_link_text; ?></a>
+            <?php render_provider_search_result_link($result, $title_link_text, ['title' => $title]); ?>
         </div>
         <div class="clearer"></div>
 

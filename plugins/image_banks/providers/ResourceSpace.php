@@ -233,4 +233,10 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         {
         return $this->instances[$this->selected_instance_id];
         }
+
+    /** @inheritdoc */
+    public function allowViewPage(): bool
+        {
+        return true;
+        }
     }

@@ -178,4 +178,10 @@ abstract class Provider
         {
         return $this->download_endpoint;
         }
+
+    /** Determine if the Provider should show the view page when clicking on the search result preview image */
+    public function allowViewPage(): bool
+        {
+        return false;
+        }
     }

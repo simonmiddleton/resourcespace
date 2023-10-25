@@ -196,3 +196,35 @@ function getProviderSelectInstance(array $providers, int $selected): Provider
 
     return new NoProvider($GLOBALS['lang'], get_temp_dir(false, 'ImageBanks-NoProvider'));
     }
+
+/**
+ * Render a Providers' search result link
+ *
+ * @param ProviderResult $result The search result we're rendering the link for
+ * @param callable $content Link content. NEVER input unsafe data!
+ * @param array $ctx External contextual info. Supported:
+ *                   - class: array
+ *                   - title: string
+ */
+function render_provider_search_result_link(ProviderResult $result, callable $content, array $ctx)
+    {
+    $class = implode(' ', array_filter($ctx['class'] ?? []));
+    $title = $ctx['title'] ?? '';
+
+    $onclick = '';
+    $target = ' target="_blank"';
+    if ($result->getOriginalFileUrl() == '')
+        {
+        $onclick = ' onclick="ModalLoad(this.href); return false;"';
+        $target = '';
+        }
+    ?>
+    <a
+        href="<?php echo escape_quoted_data($result->getProviderUrl()); ?>"
+        <?php echo $onclick . $target; ?>
+        class="<?php echo escape_quoted_data($class); ?>"
+        title="<?php echo escape_quoted_data($title); ?>"
+        rel="noopener"
+    ><?php is_callable($content) ? $content() : $content; ?></a>
+    <?php
+    }
