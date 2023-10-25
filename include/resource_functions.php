@@ -1381,7 +1381,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
     if($collection == 0 && isset($editsearch["search"]))
         {
         // Editing a result set, not a collection
-        $edititems  = do_search($editsearch["search"],$editsearch["restypes"],'resourceid',$editsearch["archive"],-1,'ASC',false,0,false,false,'',false,false, true, true);
+        $edititems  = do_search($editsearch["search"], $editsearch["restypes"],'resourceid',$editsearch["archive"], -1, 'ASC', false, 0, false, false, '', false, false, true, true, false, $editsearch["search_access"]);
         $list       = array_column($edititems,"ref");
         }
     else
