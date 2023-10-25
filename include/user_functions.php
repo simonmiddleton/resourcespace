@@ -3464,6 +3464,7 @@ function generate_temp_download_key(int $user, int $resource): string
  */
 function validate_temp_download_key(int $ref, string $keystring) : bool
     {
+    global $api_resource_path_expiry_hours;
     $keydata = rsDecrypt($keystring, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
     if($keydata != false)
         {
@@ -3475,7 +3476,7 @@ function validate_temp_download_key(int $ref, string $keystring) : bool
             $ak_userdata = get_user($ak_user);
             $key_time = $download_key_parts[3];
             if($ak_userdata !== false 
-                && ((time()- $key_time) < 60*60*24) // Valid for 24 hours
+                && ((time()- $key_time) < (60 * 60 * $api_resource_path_expiry_hours))
                 && hash_hmac("sha256", "user_pass_mac", $ak_userdata['password']) === $download_key_parts[4])
                 {
                 setup_user($ak_userdata);
