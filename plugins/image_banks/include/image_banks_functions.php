@@ -205,11 +205,13 @@ function getProviderSelectInstance(array $providers, int $selected): Provider
  * @param array $ctx External contextual info. Supported:
  *                   - class: array
  *                   - title: string
+ *                   - force_provider_url: bool
  */
 function render_provider_search_result_link(ProviderResult $result, callable $content, array $ctx)
     {
     $class = implode(' ', array_filter($ctx['class'] ?? []));
     $title = $ctx['title'] ?? '';
+    $force_provider_url = $ctx['force_provider_url'] ?? false;
 
     $onclick = '';
     $target = ' target="_blank"';
@@ -220,7 +222,7 @@ function render_provider_search_result_link(ProviderResult $result, callable $co
         }
 
     $href = $result->getProviderUrl();
-    if ($result->getProvider()->allowViewPage())
+    if (!$force_provider_url && $result->getProvider()->allowViewPage())
         {
         $href = generateURL(
             "{$GLOBALS['baseurl']}/plugins/image_banks/pages/view.php",

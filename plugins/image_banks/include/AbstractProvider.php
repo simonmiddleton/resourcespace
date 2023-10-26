@@ -177,4 +177,13 @@ abstract class Provider
         {
         return false;
         }
+
+    /**
+     * Find Image Bank record by ID.
+     * @param int|string $id Record ID
+     */
+    public function findById($id): ProviderResult
+        {
+        return new ProviderResult($id, $this);
+        }
     }

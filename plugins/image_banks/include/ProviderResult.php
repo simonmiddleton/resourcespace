@@ -10,7 +10,7 @@ class ProviderResult
     protected $original_file_url;
     protected string $provider_url;
 
-    protected string $preview_url;
+    protected $preview_url;
     protected int $preview_width;
     protected int $preview_height;
 
@@ -54,7 +54,7 @@ class ProviderResult
         }
 
     /** Preview URL getter */
-    public function getPreviewUrl(): string
+    public function getPreviewUrl(): ?string
         {
         return $this->preview_url;
         }

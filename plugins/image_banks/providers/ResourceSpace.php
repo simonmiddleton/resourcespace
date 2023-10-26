@@ -239,4 +239,70 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         {
         return true;
         }
+
+    /**
+     * @inheritdoc
+     * @param int $id Resource ref
+     */
+    public function findById($id): ProviderResult
+        {
+        try
+            {
+            $instance = $this->getSelectedSystemInstance()->toArray();
+            $instance_cfg = $instance['configuration'];
+
+            $view_title_field = $instance_cfg['view_title_field'] ?? $GLOBALS['view_title_field'];
+            $title = $this->callApi(
+                'get_data_by_field',
+                [
+                    'ref' => $id,
+                    'field' => $view_title_field
+                ]
+            );
+
+            $resource_data = $this->callApi('get_resource_data', ['resource' => $id]);
+            $preview_sizes = $this->callApi('get_resource_all_image_sizes', ['resource' => $id]);
+
+            // $resource_metadata = $this->callApi('get_resource_field_data', ['resource' => $id]);
+            }
+        catch (RuntimeException $e)
+            {
+            error_alert($e->getMessage());
+            $title ??= '';
+            $preview_sizes ??= [];
+            $resource_metadata ??= [];
+            }
+
+        $item = (new ProviderResult($id, $this))
+            ->setTitle($title)
+            ->setProviderUrl(generateURL($instance['baseURL'], ['r' => $id]));
+
+        foreach ($preview_sizes as $size)
+            {
+            // Select the original file (if allowed), otherwise go for the next available high resolution version
+            if (in_array($size['size_code'], ['original', 'hpr', 'lpr']) && $item->getOriginalFileUrl() === null)
+                {
+                $item = $item->setOriginalFileUrl($size['url']);
+                continue;
+                }
+            else if ($size['size_code'] === 'pre')
+                {
+                $item = $item->setPreviewUrl($size['url']);
+                }
+            }
+
+        if ($item->getPreviewUrl() === null)
+            {
+            $item = $item
+                ->setPreviewUrl(sprintf(
+                    '%s/gfx/%s',
+                    $GLOBALS['baseurl'],
+                    get_nopreview_icon($resource_data['resource_type'], $resource_data['file_extension'], false)
+                ))
+                ->setPreviewWidth(128)
+                ->setPreviewHeight(128);
+            }
+
+        return $item;
+        }
     }
