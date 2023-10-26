@@ -878,7 +878,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
  *
  * @param  mixed $ref   The resource ID
  * @param  mixed $details   The request details provided by the user
- * @return void|false
+ * @return void|false|string
  */
 function email_resource_request($ref,$details)
     {
