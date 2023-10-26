@@ -5197,3 +5197,233 @@ function set_watermark_image()
         $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
         }
     }
+
+/** DPI calculations */
+function compute_dpi($width, $height, &$dpi, &$dpi_unit, &$dpi_w, &$dpi_h)
+    {
+    global $lang, $imperial_measurements,$sizes,$n;
+    
+    if (isset($sizes[$n]['resolution']) && $sizes[$n]['resolution']!=0 && is_int($sizes[$n]['resolution']))
+        {
+        $dpi=$sizes[$n]['resolution'];
+        }
+    else if (!isset($dpi) || $dpi==0)
+        {
+        $dpi=300;
+        }
+
+    if (((isset($sizes[$n]['unit']) && trim(strtolower($sizes[$n]['unit']))=="inches")) || $imperial_measurements)
+        {
+        # Imperial measurements
+        $dpi_unit=$lang["inch-short"];
+        $dpi_w=round($width/$dpi,1);
+        $dpi_h=round($height/$dpi,1);
+        }
+    else
+        {
+        $dpi_unit=$lang["centimetre-short"];
+        $dpi_w=round(($width/$dpi)*2.54,1);
+        $dpi_h=round(($height/$dpi)*2.54,1);
+        }
+    }
+
+/** MP calculation */
+function compute_megapixel(int $width, int $height): float
+    {
+    return round(($width * $height) / 1000000, 2);
+    }
+
+/**
+ * Get size info as a paragraphs HTML tag
+ * @param array $size Preview size information
+ * @param array|null $originalSize Original preview size information
+ */
+function get_size_info(array $size, ?array $originalSize = null): string
+    {
+    global $lang, $ffmpeg_supported_extensions;
+    
+    $newWidth  = intval($size['width']);
+    $newHeight = intval($size['height']);
+
+    if ($originalSize != null && $size !== $originalSize)
+        {
+        // Compute actual pixel size
+        $imageWidth  = $originalSize['width'];
+        $imageHeight = $originalSize['height'];
+        if ($imageWidth > $imageHeight)
+            {
+            // landscape
+            if ($imageWidth == 0) return '<p>&ndash;</p>';
+            $newWidth = $size['width'];
+            $newHeight = round(($imageHeight * $newWidth + $imageWidth - 1) / $imageWidth);
+            }
+        else
+            {
+            // portrait or square
+            if ($imageHeight == 0) return '<p>&ndash;</p>';
+            $newHeight = $size['height'];
+            $newWidth = round(($imageWidth * $newHeight + $imageHeight - 1) / $imageHeight);
+            }
+        }
+
+    $output = "<p>$newWidth &times; $newHeight {$lang["pixels"]}";
+
+    if (!hook('replacemp'))
+        {
+        $mp = compute_megapixel($newWidth, $newHeight);
+        if ($mp >= 0)
+            {
+            $output .= " ($mp {$lang["megapixel-short"]})";
+            }
+        }
+
+    $output .= '</p>';
+
+    if (!isset($size['extension']) || !in_array(strtolower($size['extension']), $ffmpeg_supported_extensions))
+        {
+        if (!hook("replacedpi"))
+            {   
+            # Do DPI calculation only for non-videos
+            compute_dpi($newWidth, $newHeight, $dpi, $dpi_unit, $dpi_w, $dpi_h);
+            $output .= "<p>$dpi_w $dpi_unit &times; $dpi_h $dpi_unit {$lang["at-resolution"]} $dpi {$lang["ppi"]}</p>";
+            }
+        }
+
+    return $output;
+    }
+
+function add_download_column($ref, $size_info, $downloadthissize, $view_in_browser=false)
+    {
+    global $save_as, $terms_download, $order_by, $lang, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save,$download_usage;
+    if ($downloadthissize)
+        {
+        ?>
+        <td class="DownloadButton">
+            <?php
+            global $size_info_array;
+            $size_info_array = $size_info;
+            if(!hook("downloadbuttonreplace"))
+                {
+                if($terms_download || $save_as)
+                    {
+                    ?>
+                    <a id="downloadlink"
+                        <?php
+                        if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"] . "&ext=" . $size_info["extension"], $view_in_browser)))
+                            {
+                            if ($view_in_browser)
+                                {
+                                echo "href=\"" . generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"],"direct"=>1,"noattach"=>true)))) . "\"";
+                                }
+                            else
+                                {
+                                echo "href=\"" . generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
+                                }
+                            }
+
+                        if($iOS_save || $view_in_browser)
+                            {
+                            echo " target=\"_blank\"";
+                            }
+                        else
+                            {
+                            echo " onClick=\"return CentralSpaceLoad(this,true);\"";
+                            }
+                        ?>>
+                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?>
+                    </a>
+                    <?php
+                    }
+                elseif ($download_usage)
+                    // download usage form displayed - load into main window
+                    { 
+                    ?>
+                    <a id="downloadlink"
+                        <?php
+                        if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]. "&ext=" . $size_info["extension"])))
+                            {
+                            if ($view_in_browser)
+                                {
+                                echo "href=\"" . generateURL($baseurl . "/pages/download_usage.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"],"direct"=>1,"noattach"=>true)))) . "\"";
+                                }
+                            else
+                                {
+                                echo "href=\"" . generateURL($baseurl . "/pages/download_usage.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
+                                }
+                            }
+
+                        if($iOS_save || $view_in_browser)
+                            {
+                            echo " target=\"_blank\"";
+                            }
+                        else
+                            {
+                            echo " onClick=\"return CentralSpaceLoad(this,true);\"";
+                            }
+                        ?>>
+                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?>
+                    </a>
+                    <?php
+                    }
+                else
+                    {
+                    ?>
+                    <a id="downloadlink"
+                        <?php
+                        if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]. "&ext=" . $size_info["extension"], $view_in_browser)))
+                            {
+                            if ($view_in_browser)
+                                {
+                                echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . $size_info['extension'] . "&k=" . urlencode($k) . '" target="_blank"';
+                                }
+                            else
+                                {
+                                echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k) . '\'' . ')"';
+                                }
+                            }
+                        ?>>
+                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"] ?>
+                    </a>
+                    <?php
+                    }
+
+                unset($size_info_array);
+                }
+            ?>
+        </td>
+        <?php
+        }
+    else if (checkperm("q"))
+        {
+        if (!hook("resourcerequest"))
+            {
+            ?>
+            <td class="DownloadButton">
+                <?php
+                if ($request_adds_to_collection && ($k=="" || $internal_share_access) && !checkperm('b')) // We can't add to a collection if we are accessing an external share, unless we are a logged in user
+                    {
+                    if (isset($size_info["id"])) 
+                        {
+                        echo add_to_collection_link($ref,$search,"alert('" . addslashes($lang["requestaddedtocollection"]) . "');",$size_info["id"]);
+                        }
+                    else
+                        {
+                        echo add_to_collection_link($ref,$search);
+                        }
+                    }
+                else
+                    {
+                    ?><a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php
+                    }
+                echo htmlspecialchars($lang["action-request"]) ?>
+                </a>
+            </td>
+            <?php
+            }
+        }
+    else
+        {
+        # No access to this size, and the request functionality has been disabled. Show just 'restricted'.
+        ?><td class="DownloadButton DownloadDisabled"><?php echo htmlspecialchars($lang["access1"])?></td><?php
+        }
+    }
