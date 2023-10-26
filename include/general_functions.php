@@ -899,7 +899,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
                 ps_query("update user set email_rate_limit_active=1 where ref=?",["i",$userref]);
                 message_add([$userref],$lang["email_rate_limit_active"]);
                 }
-            debug("E-mail not sent due to $email_rate_limit");
+            debug("E-mail not sent due to email_rate_limit being exceeded");
             return $lang["email_rate_limit_active"]; // Don't send the e-mail and return the error.
             }
         else    
