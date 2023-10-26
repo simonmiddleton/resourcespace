@@ -198,14 +198,7 @@ else
                 responsive: true,
                 plugins: {
                     legend: {
-                        <?php if ($from_dash) { ?>
                         display: false,
-                        <?php } else { ?>
-                        position: 'right',
-                        padding: {
-                            right: 200,
-                        },
-                        <?php } ?>
                     }
                 },
             };
