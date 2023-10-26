@@ -6447,7 +6447,7 @@ function resource_type_config_override($resource_type, $only_onchange=true)
 *
 * @return void
 */
-function update_archive_status($resource, $archive, $existingstates = array(), $collection  = 0)
+function update_archive_status($resource, $archive, $existingstates = array(), $collection  = 0, $more_notes="")
     {
     if(!is_array($resource))
         {
@@ -6468,7 +6468,7 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
             continue;
             }
 
-        resource_log($resource[$n], LOG_CODE_STATUS_CHANGED, 0, '', isset($existingstates[$n]) ? $existingstates[$n] : '', $archive);
+        resource_log($resource[$n], LOG_CODE_STATUS_CHANGED, 0, $more_notes, isset($existingstates[$n]) ? $existingstates[$n] : '', $archive);
         }
 
     # Prevent any attempt to update with non-numeric archive state
