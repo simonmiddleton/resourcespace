@@ -395,6 +395,18 @@ if (isset($high_contrast_mode) && $high_contrast_mode == true)
         color: white;
         text-decoration: underline;
     }
+    /* CKEditor */
+    .ckeditorEdit .cke_chrome {
+        border: 1px solid black;
+    }
+    .ckeditorEdit .cke_top {
+        border-bottom: 1px solid black;
+        background: white;
+    }
+    .ckeditorEdit .cke_bottom {
+        border-top: 1px solid black;
+        background: white;
+    }
     
     <?php
     }
