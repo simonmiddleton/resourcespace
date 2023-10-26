@@ -267,7 +267,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             }
         catch (RuntimeException $e)
             {
-            error_alert($e->getMessage());
+            debug(sprintf('[image_banks][ResourceSpace][%s] %s', __METHOD__, $e->getMessage()));
             $title ??= '';
             $preview_sizes ??= [];
             $resource_metadata ??= [];

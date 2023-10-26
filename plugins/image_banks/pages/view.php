@@ -18,12 +18,12 @@ $id = getval('id', '');
 $providers_select_list = providersCheckedAndActive($providers);
 $image_bank_provider_id = (int) getval('image_bank_provider_id', 0, true);
 
-if($image_bank_provider_id === 0)
+if ($image_bank_provider_id === 0)
     {
     error_alert($lang['image_banks_provider_id_required'], false);
     exit();
     }
-else if(!array_key_exists($image_bank_provider_id, $providers_select_list))
+else if (!array_key_exists($image_bank_provider_id, $providers_select_list))
     {
     error_alert($lang['image_banks_provider_not_found'], false);
     exit();
@@ -42,9 +42,8 @@ $record = $provider->findById($id);
 /* 
 TODO
 ====
-- Image Bank tools with following options (same as on the search result page):
-    - Download
-    - Create new resource
+- Allow each provider to determine what will be rendered for the file information (under resource tools)
+    - RS will have more info most likely than others 
 - Provider details - this section will contain any useful metadata we can get from the API (e.g, username of the contributor with a link to their user page)
 */
 
@@ -87,10 +86,6 @@ include_once "{$rs_root}/include/header.php";
                 ?>
             </div>
 
-
-
-
-
             <div class="RecordDownload" id="RecordDownloadTabContainer">
                 <div class="TabBar" id="RecordDownloadTabButtons">
                     <div class="Tab TabSelected" id="DownloadsTabButton">
@@ -99,43 +94,55 @@ include_once "{$rs_root}/include/header.php";
                         </a>
                     </div>
                 </div>
-            </div>
-            <div class="RecordDownloadSpace" id="DownloadsTab">
-                <table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions">
-                    <tr id="ResourceDownloadOptionsHeader">
-                    </tr>
-                </table>
-            </div>
+                <div class="RecordDownloadSpace" id="DownloadsTab">
+                    <table id="ResourceDownloadOptions" cellpadding="0" cellspacing="0">
+                        <tr id="ResourceDownloadOptionsHeader">
+                            <td><?php echo htmlspecialchars($lang["fileinformation"]); ?></td>
+                            <td><?php echo htmlspecialchars($lang["filedimensions"]); ?></td>
+                            <td><?php echo htmlspecialchars($lang["filesize"]); ?></td>
+                            <td class="textcenter"><?php echo htmlspecialchars($lang["options"]); ?></td>
+                        </tr>
+                        <tr class="DownloadDBlend" id="DownloadBox0" style="pointer-events: auto;">
+                            <td class="DownloadFileName">
+                                <h2>Original JPG File</h2>
+                            </td>
+                            <td class="DownloadFileDimensions">
+                                <p>6000 × 4000 pixels (24 MP)</p>
+                                <p>50.8 cm × 33.9 cm @ 300 PPI</p>
+                            </td>
+                            <td class="DownloadFileSize">4.9&nbsp;MB</td>
 
-
-
-
-
-
-            <!-- <div class="RecordDownload" id="RecordDownload">
-                <div class="RecordDownloadSpace">
-                    <h2 id="resourcetools"><?php echo htmlspecialchars($lang["resourcetools"]); ?></h2>
-                    <table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions">
-                        <tbody>
-                            <tr>
-                                <td><?php echo htmlspecialchars($lang["fileinformation"]); ?></td>
-                                <td class="textcenter"><?php echo htmlspecialchars($lang["options"]); ?></td>
-                            </tr>
-                            <tr class="DownloadDBlend" id="DownloadBox0">
-                                <td class="DownloadFileName">
-                                    <h2><?php echo htmlspecialchars($filename); ?></h2>
-                                </td>
-                                <td class="DownloadButton">
-                                    <a id="downloadlink" href="<?php escape_quoted_data($download_link); ?>" target="_blank"><?php echo htmlspecialchars($lang["download"]); ?></a>
-                                </td>
-                            </tr>
-                        </tbody>
+                            <td class="DownloadButton">
+                                <a 
+                                    id="downloadlink"
+                                    href="<?php echo escape_quoted_data($record->getOriginalFileUrl()); ?>"
+                                    onclick="downloadImageBankFile(this);"><?php echo htmlspecialchars($lang["action-download"]); ?></a>
+                            </td>
+                        </tr>
                     </table>
+
+                    <div class="RecordTools">
+                        <ul id="ResourceToolsContainer">
+                            <li>
+                                <a href="<?php echo escape_quoted_data($record->getOriginalFileUrl()); ?>"
+                                onclick="createNewResource(event, this);">
+                                    <i class="fa fa-files-o"></i>&nbsp;<?php echo htmlspecialchars($lang["image_banks_create_new_resource"]); ?>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+
+
+
                 </div>
-                <div class="clearerleft"></div>
-            </div> -->
+            </div><!-- End of RecordDownloadTabContainer -->
+
+
         </div>
     </div>
 </div>
 <?php
+include_once dirname(__DIR__) . '/include/image_banks_javascript.php';
 include_once "{$rs_root}/include/footer.php";
