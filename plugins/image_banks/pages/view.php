@@ -36,7 +36,6 @@ if ($provider instanceof NoProvider)
     exit();
     }
 $provider_name = $providers_select_list[$image_bank_provider_id] ?? $provider->getName();
-
 $record = $provider->findById($id);
 
 /* 
@@ -46,9 +45,6 @@ TODO
     - RS will have more info most likely than others 
 - Provider details - this section will contain any useful metadata we can get from the API (e.g, username of the contributor with a link to their user page)
 */
-
-$modal = getval("modal", "") === "true";
-
 include_once "{$rs_root}/include/header.php";
 ?>
 <div class="RecordBox">
@@ -89,7 +85,7 @@ include_once "{$rs_root}/include/header.php";
             <div class="RecordDownload" id="RecordDownloadTabContainer">
                 <div class="TabBar" id="RecordDownloadTabButtons">
                     <div class="Tab TabSelected" id="DownloadsTabButton">
-                        <a href="#" onclick="selectDownloadTab('DownloadsTab',<?php echo $modal ? 'true' : 'false'; ?>);">
+                        <a role="link" aria-disabled="true">
                             <?php echo htmlspecialchars($lang["resourcetools"]); ?>
                         </a>
                     </div>
