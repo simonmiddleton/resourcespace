@@ -186,4 +186,24 @@ abstract class Provider
         {
         return new ProviderResult($id, $this);
         }
+
+    /**
+     * Retrieve non-metadata properties from Image Bank Provider for image ID.
+     * @param int|string $id Record ID
+     * @return 
+     */
+    public function getImageNonMetadataProperties($id): array
+        {
+        return [];
+        }
+
+    /**
+     * Retrieve image metadata from Image Bank Provider.
+     * @param int|string $id Record ID
+     * @return 
+     */
+    public function getImageMetadata($id): array
+        {
+        return [];
+        }
     }

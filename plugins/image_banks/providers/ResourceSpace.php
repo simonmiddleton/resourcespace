@@ -262,12 +262,10 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
 
             $resource_data = $this->callApi('get_resource_data', ['resource' => $id]);
             $preview_sizes = $this->callApi('get_resource_all_image_sizes', ['resource' => $id]);
-
-            // $resource_metadata = $this->callApi('get_resource_field_data', ['resource' => $id]);
             }
         catch (RuntimeException $e)
             {
-            debug(sprintf('[image_banks][ResourceSpace][%s] %s', __METHOD__, $e->getMessage()));
+            debug(sprintf('[image_banks][%s] %s', __METHOD__, $e->getMessage()));
             $title ??= '';
             $preview_sizes ??= [];
             $resource_metadata ??= [];
@@ -304,5 +302,65 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             }
 
         return $item;
+        }
+
+    /**
+     * @inheritdoc
+     * @param int $id Resource ref
+     */
+    public function getImageNonMetadataProperties($id): array
+        {
+        try
+            {
+            $resource_data = $this->callApi('get_resource_data', ['resource' => $id]);
+            $resource_types = array_column($this->callApi('get_resource_types', []), 'name', 'ref');
+            $users = array_column($this->callApi('get_users', []), 'fullname', 'ref');
+            }
+        catch (RuntimeException $e)
+            {
+            debug(sprintf('[image_banks][%s] %s', __METHOD__, $e->getMessage()));
+            $resource_data ??= [];
+            }
+        $props = [];
+
+        if (isset($resource_data['resource_type'], $resource_types[$resource_data['resource_type']]))
+            {
+            $props[$this->lang['property-resource_type']] = $resource_types[$resource_data['resource_type']];
+            }
+
+        if (isset($resource_data['created_by'], $users[$resource_data['created_by']]))
+            {
+            $props[$this->lang['contributedby']] = $users[$resource_data['created_by']];
+            }
+
+        return $props;
+        }
+
+    /**
+     * @inheritdoc
+     * @param int $id Resource ref
+     */
+    function getImageMetadata($id): array
+        {
+        try
+            {
+            $resource_metadata = $this->callApi('get_resource_field_data', ['resource' => $id]);
+            $meta = [];
+
+            foreach ($resource_metadata as $metadata)
+                {
+                if ($metadata['value'] !== '')
+                    {
+                    $meta[$metadata['title']] = $metadata['value'];
+                    }
+                }
+            }
+        catch (RuntimeException $e)
+            {
+            debug(sprintf('[image_banks][%s] %s', __METHOD__, $e->getMessage()));
+            $meta = [];
+            }
+
+        return $meta;
         }
     }

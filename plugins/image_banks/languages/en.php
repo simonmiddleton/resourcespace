@@ -3,6 +3,7 @@ $lang["image_banks_configuration"] = "Image Banks";
 $lang["image_banks_search_image_banks_label"] = "Search external image banks";
 $lang["image_banks_pixabay_api_key"] = "API key";
 $lang["image_banks_image_bank"] = "Image Bank";
+$lang["image_banks_image_bank_source"] = "Image Bank source";
 $lang["image_banks_create_new_resource"] = "Create new resource";
 $lang["image_banks_shutterstock_token"]="Shutterstock token (<a href='https://www.shutterstock.com/account/developers/apps' target='_blank'>generate</a>)";
 $lang["image_banks_shutterstock_result_limit"]="Result limit (max. 1000 for free accounts)";

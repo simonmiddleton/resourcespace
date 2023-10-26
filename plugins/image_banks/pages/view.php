@@ -43,7 +43,6 @@ TODO
 ====
 - Allow each provider to determine what will be rendered for the file information (under resource tools)
     - RS will have more info most likely than others 
-- Provider details - this section will contain any useful metadata we can get from the API (e.g, username of the contributor with a link to their user page)
 */
 include_once "{$rs_root}/include/header.php";
 ?>
@@ -82,9 +81,9 @@ include_once "{$rs_root}/include/header.php";
                 ?>
             </div>
 
-            <div class="RecordDownload" id="RecordDownloadTabContainer">
-                <div class="TabBar" id="RecordDownloadTabButtons">
-                    <div class="Tab TabSelected" id="DownloadsTabButton">
+            <div id="RecordDownloadTabContainer" class="RecordDownload">
+                <div id="RecordDownloadTabButtons" class="TabBar">
+                    <div id="DownloadsTabButton" class="Tab TabSelected">
                         <a role="link" aria-disabled="true">
                             <?php echo htmlspecialchars($lang["resourcetools"]); ?>
                         </a>
@@ -135,6 +134,51 @@ include_once "{$rs_root}/include/header.php";
                 </div>
             </div><!-- End of RecordDownloadTabContainer -->
 
+            <div id="Panel1" class="ViewPanel">
+                <div id="Titles1" class="ViewPanelTitles">
+                    <div class="Title Selected" panel="Metadata"><?php echo htmlspecialchars($lang['resourcedetails']); ?></div>
+                </div>
+            </div>
+
+            <div id="Metadata">
+                <div class="NonMetadataProperties">
+                    <div class="itemNarrow">
+                        <h3><?php echo htmlspecialchars($lang["image_banks_image_bank_source"]); ?></h3>
+                        <p><?php echo htmlspecialchars($provider_name); ?></p>
+                    </div>
+                    <div class="itemNarrow">
+                        <h3><?php echo htmlspecialchars($lang['resourceid']); ?></h3>
+                        <p><?php echo htmlspecialchars($id); ?></p>
+                    </div>
+                    <?php
+                    foreach ($provider->getImageNonMetadataProperties($id) as $label => $value)
+                        {
+                        printf(
+                            '<div class="itemNarrow"><h3>%s</h3><p>%s</p></div>',
+                            htmlspecialchars($label),
+                            htmlspecialchars($value),
+                        );
+                        }
+                    ?>
+                    <div class="clearerleft"></div>
+                </div><!-- End of NonMetadataProperties -->
+                <div class="TabbedPanel" id="tab0-2">
+                    <div>
+                        <?php
+                        foreach ($provider->getImageMetadata($id) as $label => $value)
+                            {
+                            printf(
+                                '<div class="itemNarrow"><h3>%s</h3><p>%s</p></div>',
+                                htmlspecialchars($label),
+                                htmlspecialchars($value),
+                            );
+                            }
+                        ?>
+                        <div class="clearerleft"></div>
+                    </div>
+                    <div class="clearerleft"></div>
+                </div>
+            </div><!-- End of Metadata -->
 
         </div>
     </div>
