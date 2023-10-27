@@ -6,6 +6,7 @@ use function ImageBanks\getProviders;
 use function ImageBanks\getProviderSelectInstance;
 use function ImageBanks\providersCheckedAndActive;
 use function ImageBanks\render_provider_search_result_link;
+use function ImageBanks\render_view_metadata_item_narrow;
 
 $rs_root = dirname(__DIR__, 3);
 include_once "{$rs_root}/include/db.php";
@@ -139,25 +140,14 @@ include_once "{$rs_root}/include/header.php";
                     <div class="Title Selected" panel="Metadata"><?php echo htmlspecialchars($lang['resourcedetails']); ?></div>
                 </div>
             </div>
-
             <div id="Metadata">
                 <div class="NonMetadataProperties">
-                    <div class="itemNarrow">
-                        <h3><?php echo htmlspecialchars($lang["image_banks_image_bank_source"]); ?></h3>
-                        <p><?php echo htmlspecialchars($provider_name); ?></p>
-                    </div>
-                    <div class="itemNarrow">
-                        <h3><?php echo htmlspecialchars($lang['resourceid']); ?></h3>
-                        <p><?php echo htmlspecialchars($id); ?></p>
-                    </div>
                     <?php
+                    echo render_view_metadata_item_narrow($lang['image_banks_image_bank_source'], $provider_name);
+                    echo render_view_metadata_item_narrow($lang['resourceid'], $id);
                     foreach ($provider->getImageNonMetadataProperties($id) as $label => $value)
                         {
-                        printf(
-                            '<div class="itemNarrow"><h3>%s</h3><p>%s</p></div>',
-                            htmlspecialchars($label),
-                            htmlspecialchars($value),
-                        );
+                        echo render_view_metadata_item_narrow($label, $value);
                         }
                     ?>
                     <div class="clearerleft"></div>
@@ -167,11 +157,7 @@ include_once "{$rs_root}/include/header.php";
                         <?php
                         foreach ($provider->getImageMetadata($id) as $label => $value)
                             {
-                            printf(
-                                '<div class="itemNarrow"><h3>%s</h3><p>%s</p></div>',
-                                htmlspecialchars($label),
-                                htmlspecialchars($value),
-                            );
+                            echo render_view_metadata_item_narrow($label, $value);
                             }
                         ?>
                         <div class="clearerleft"></div>
@@ -179,7 +165,6 @@ include_once "{$rs_root}/include/header.php";
                     <div class="clearerleft"></div>
                 </div>
             </div><!-- End of Metadata -->
-
         </div>
     </div>
 </div>

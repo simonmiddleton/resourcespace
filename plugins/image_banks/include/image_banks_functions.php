@@ -242,3 +242,13 @@ function render_provider_search_result_link(ProviderResult $result, callable $co
     ><?php $content(); ?></a>
     <?php
     }
+
+/** Render information for the remote resource (generic term) view */
+function render_view_metadata_item_narrow(string $label, string $value): string
+    {
+    return sprintf(
+        '<div class="itemNarrow"><h3>%s</h3><p>%s</p></div>',
+        htmlspecialchars($label),
+        htmlspecialchars($value),
+    );
+    }
