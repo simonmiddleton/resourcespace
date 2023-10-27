@@ -206,4 +206,15 @@ abstract class Provider
         {
         return [];
         }
+
+    /**
+     * Get table view information for rendering on the plugins' view page
+     */
+    public function getResourceDownloadOptionsTable(): array
+        {
+        return [
+            'header' => [],
+            'data' => [$this->lang['collection_download_original']]
+        ];
+        }
     }

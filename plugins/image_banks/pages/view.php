@@ -38,13 +38,9 @@ if ($provider instanceof NoProvider)
     }
 $provider_name = $providers_select_list[$image_bank_provider_id] ?? $provider->getName();
 $record = $provider->findById($id);
+$resource_download_options_table = $provider->getResourceDownloadOptionsTable();
 
-/* 
-TODO
-====
-- Allow each provider to determine what will be rendered for the file information (under resource tools)
-    - RS will have more info most likely than others 
-*/
+
 include_once "{$rs_root}/include/header.php";
 ?>
 <div class="RecordBox">
@@ -94,19 +90,32 @@ include_once "{$rs_root}/include/header.php";
                     <table id="ResourceDownloadOptions" cellpadding="0" cellspacing="0">
                         <tr id="ResourceDownloadOptionsHeader">
                             <td><?php echo htmlspecialchars($lang["fileinformation"]); ?></td>
-                            <td><?php echo htmlspecialchars($lang["filedimensions"]); ?></td>
-                            <td><?php echo htmlspecialchars($lang["filesize"]); ?></td>
+                        <?php
+                        foreach ($resource_download_options_table['header'] as $column)
+                            {
+                            ?>
+                            <td><?php echo htmlspecialchars($column); ?></td>
+                            <?php
+                            }
+                            ?>
                             <td class="textcenter"><?php echo htmlspecialchars($lang["options"]); ?></td>
                         </tr>
                         <tr class="DownloadDBlend" id="DownloadBox0" style="pointer-events: auto;">
-                            <td class="DownloadFileName">
-                                <h2>Original JPG File</h2>
-                            </td>
-                            <td class="DownloadFileDimensions">
-                                <p>6000 × 4000 pixels (24 MP)</p>
-                                <p>50.8 cm × 33.9 cm @ 300 PPI</p>
-                            </td>
-                            <td class="DownloadFileSize">4.9&nbsp;MB</td>
+                        <?php
+                        foreach ($resource_download_options_table['data'] as $i => $row_val)
+                            {
+                            if ($i === 0)
+                                {
+                                ?>
+                                <td class="DownloadFileName">
+                                    <h2><?php echo htmlspecialchars($row_val); ?></h2>
+                                </td>
+                                <?php
+                                continue;
+                                }
+                            echo strip_tags_and_attributes($row_val, ['td', 'p'], ['class']);
+                            }
+                            ?>
 
                             <td class="DownloadButton">
                                 <a 
@@ -128,10 +137,6 @@ include_once "{$rs_root}/include/header.php";
 
                         </ul>
                     </div>
-
-
-
-
                 </div>
             </div><!-- End of RecordDownloadTabContainer -->
 

@@ -337,7 +337,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
      * @inheritdoc
      * @param int $id Resource ref
      */
-    function getImageMetadata($id): array
+    public function getImageMetadata($id): array
         {
         try
             {
@@ -367,5 +367,28 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             }
 
         return $meta;
+        }
+
+    /** @inheritdoc */
+    public function getResourceDownloadOptionsTable(): array
+        {
+        $table = [
+            'header' => [
+                $this->lang['filedimensions'],
+                $this->lang['filesize'],
+            ],
+            'data' => [
+                '',
+                '',
+                '',
+            ],
+        ];
+
+        $sizes=get_image_sizes(2,false,'jpg');
+        $table['data'][0] = $sizes[1]['name'];
+        $table['data'][1] = sprintf('<td class="DownloadFileDimensions">%s</td>', get_size_info($sizes[1]));
+        $table['data'][2] = sprintf('<td class="DownloadFileSize">%s</td>', $sizes[1]['filesize']);
+        // printf('<pre>%s</pre>', print_r($sizes, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
+        return $table;
         }
     }
