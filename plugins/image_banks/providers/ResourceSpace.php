@@ -29,10 +29,6 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
     /** @inheritdoc */
     public function checkDependencies(): array
         {
-        if (!function_exists('curl_version'))
-            {
-            return [$this->lang["image_banks_error_detail_curl"]];
-            }
         return [];
         }
 
