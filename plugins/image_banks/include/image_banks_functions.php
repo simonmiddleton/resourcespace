@@ -249,6 +249,6 @@ function render_view_metadata_item_narrow(string $label, string $value): string
     return sprintf(
         '<div class="itemNarrow"><h3>%s</h3><p>%s</p></div>',
         htmlspecialchars($label),
-        htmlspecialchars($value),
+        htmlspecialchars($value)
     );
     }
