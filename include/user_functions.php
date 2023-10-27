@@ -51,6 +51,7 @@ function validate_user($user_select_sql, $getuserdata=true)
                        u.last_active,
                        timestampdiff(second, u.last_active, now()) AS idle_seconds,
                        u.email,
+                       u.email_rate_limit_active,
                        u.password,
                        u.fullname,
                        g.search_filter,
@@ -116,7 +117,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 */
 function setup_user(array $userdata)
 	{
-    global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $userpassword, $userfullname, 
+    global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $useremail_rate_limit_active, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
@@ -163,6 +164,10 @@ function setup_user(array $userdata)
     $userfullname=$userdata["fullname"];
     $userorigin=$userdata["origin"];
     $usersession = $userdata["session"];
+    if (isset($userdata["email_rate_limit_active"]))
+        {
+        $useremail_rate_limit_active=$userdata["email_rate_limit_active"];
+        }
 
     $ip_restrict_group=trim((string) $userdata["ip_restrict_group"]);
     $ip_restrict_user=trim((string) $userdata["ip_restrict_user"]);
@@ -275,17 +280,7 @@ function setup_user(array $userdata)
     get_config_option($userref,'actions_resource_review', $legacy_resource_review, true); // Deprecated option
     if(trim($user_actions_notify_states) == '' && $legacy_resource_review)
         {
-        $default_notify_states = [];
-        // Add action for users who can submit 'pending submission' resources for review
-        if(checkperm("e-2") && checkperm("e-1") && checkperm('d'))
-            {
-            $default_notify_states[] = -2;
-            }
-        if(checkperm("e-1") && checkperm("e0"))
-            {
-            // Add action for users who can make pending resources active
-            $default_notify_states[] = -1;
-            }
+        $default_notify_states = get_default_notify_states();
         $GLOBALS['actions_notify_states'] = implode(",",$default_notify_states);
         }
     elseif ($legacy_resource_review)
@@ -832,7 +827,8 @@ function save_user($ref)
 
     if($emailresetlink != '')
         {
-        email_reset_link($email, true);
+        $result=email_reset_link($email, true);
+        if ($result!==true) return $result; // Pass any error back.
         }
         
     if(getval('approved', '')!='')
@@ -917,12 +913,14 @@ function email_reset_link($email,$newuser=false)
         if($blockreset)
             {
             $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
-            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         else
             {
             $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'] . "\n\n" .  $lang["passwordnewemail"] . "\n" . $templatevars['url'];
-            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message,"","","passwordnewemailhtml",$templatevars);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         }
     else
@@ -932,15 +930,16 @@ function email_reset_link($email,$newuser=false)
         if($blockreset)
             {
             $message .=  "\n\n" . $lang["passwordresetnotpossible"] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl;
-            send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            $result=send_mail($email,$applicationname . ": " . $lang["newlogindetails"],$message);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         else
             {
             $message.="\n\n" . $lang["passwordresetemail"] . "\n\n" . $templatevars['url'];
-            send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+            $result=send_mail($email,$applicationname . ": " . $lang["resetpassword"],$message,"","","password_reset_email_html",$templatevars);
+            if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         }   
-    
     return true;
     }
 
@@ -2240,7 +2239,7 @@ function resolve_user_emails($user_list)
             && (time() > strtotime($email_details[0]['account_expires']))
         )
             {
-            debug('Email collection: ' . __FUNCTION__ . '() Username ' . $user . ' skipped as their user account has expired.');
+            debug('EMAIL: ' . __FUNCTION__ . '() Username ' . $user . ' skipped as their user account has expired.');
             continue;
             }
 
@@ -2264,7 +2263,6 @@ function resolve_user_emails($user_list)
         if($email_details[0]['approved'] != 1)
             {
             debug('EMAIL: ' . __FUNCTION__ . '() skipping e-mail "' . $email_details[0]['email'] . '" because it belongs to user account which is not approved');
-
             continue;
             }
             
@@ -2274,7 +2272,7 @@ function resolve_user_emails($user_list)
             continue;                    
             }
             
-        // Internal, approved user account - add e-mail address from user account
+        // Internal unexpired approved user account - add e-mail address from user account
         $emails_key_required['unames'][]       = $user;
         $emails_key_required['emails'][]       = $email_details[0]['email'];
         $emails_key_required['refs'][]         = $email_details[0]['ref'];
@@ -3376,4 +3374,119 @@ function is_anonymous_user()
     {
     global $anonymous_login, $username;
     return isset($anonymous_login) && $username == $anonymous_login;
+    }
+
+
+/**
+ * Retrieve all user records with the user preference specified
+ *
+ * @param  string $preference   Preference to check
+ * @param  string $value        Preference value to check for
+ * 
+ * @return array                Array of user refs with the preference set as specified
+ * 
+ * 
+ **/
+function get_users_by_preference(string $preference, string $value) : array
+    {
+    $sql = "SELECT up.user value
+              FROM user_preferences up 
+        RIGHT JOIN user u 
+                ON u.ref=up.user
+             WHERE u.approved=1
+               AND parameter = ? 
+               AND value = ?";
+    $params = ["s",$preference,"s", $value];
+
+    return ps_array($sql,$params);    
+    }
+
+/**
+ * Get the default notification workflow states for the current user. Used by setup_user() and get_user_actions() if no user preference has been set
+ *
+ * @return array    Array of workflow state references
+ * 
+ */
+function get_default_notify_states(): array
+    {
+    $default_notify_states = [];
+    // Add action for users who can submit 'pending submission' resources for review
+    if(checkperm("e-2") && checkperm("e-1") && checkperm('d'))
+        {
+        $default_notify_states[] = -2;
+        }
+    if(checkperm("e-1") && checkperm("e0"))
+        {
+        // Add action for users who can make pending resources active
+        $default_notify_states[] = -1;
+        }
+    return $default_notify_states;
+    }
+
+/**
+ * Generate a temporary download key for user. Used to enable temporary resource access to a file via download.php so that API can access resources after calling get_resource_path()
+ *
+ * @param int $user         User ID
+ * @param int $resource     Resource ID
+ * 
+ * @return string           Access key - empty if not permitted
+ */
+function generate_temp_download_key(int $user, int $resource): string
+    {
+    if ((($GLOBALS["userref"] != $user && !checkperm_user_edit($user))
+            || get_resource_access($resource) != 0)
+        )
+        {
+        return "";
+        }
+    
+    $user_data = get_user($user);
+    $data =  generateSecureKey(128)
+        . ":" . $user
+        . ":" . $resource
+        . ":" .  time()
+        . ":" . hash_hmac("sha256", "user_pass_mac", $user_data['password']);
+
+    return rsEncrypt(
+        $data,
+        hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key'])
+    );
+    }
+
+/**
+ * Validate the provided download key
+ *
+ * @param int           Resource ID
+ * @param $keystring    Key string - incudes a nonce prefix
+ * 
+ * @return bool
+ * 
+ */
+function validate_temp_download_key(int $ref, string $keystring) : bool
+    {
+    global $api_resource_path_expiry_hours;
+    $keydata = rsDecrypt($keystring, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
+    if($keydata != false)
+        {
+        $download_key_parts = explode(":", $keydata);
+        // First element is the nonce
+        if($download_key_parts[2] == $ref)
+            {
+            $ak_user = $download_key_parts[1];
+            $ak_userdata = get_user($ak_user);
+            $key_time = $download_key_parts[3];
+            if($ak_userdata !== false 
+                && ((time()- $key_time) < (60 * 60 * $api_resource_path_expiry_hours))
+                && hash_hmac("sha256", "user_pass_mac", $ak_userdata['password']) === $download_key_parts[4])
+                {
+                setup_user($ak_userdata);
+                return true;
+                }
+            }
+        }
+    else
+        {
+        debug("Failed to decrypt temp_download_key");
+        }
+    return false;
     }

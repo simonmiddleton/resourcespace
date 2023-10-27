@@ -174,10 +174,10 @@ foreach($test_2602_ucs as $uc)
         }
     }
 
-
-
 // Tear down
 unset($owner_rtf, $owner_A, $owner_SA, $owner_Others, $users_data, $users_list, $user_2602, $vars_suffixes, $all_test_users);
-unset($test_2602_ucs, $GLOBALS['owner_field'], $GLOBALS['owner_field_mappings'], $build_expected_list_of_users);
+unset($test_2602_ucs, $build_expected_list_of_users);
+$GLOBALS['owner_field'] = 0;
+$GLOBALS['owner_field_mappings'] = [];
 
 return true;

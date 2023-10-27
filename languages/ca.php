@@ -602,7 +602,6 @@ $lang["fieldtitle-category"]='Categoria.';
 $lang["fieldtitle-subject"]='Tema';
 $lang["fieldtitle-author"]='Autor';
 $lang["fieldtitle-owner"]='Propietari';
-$lang["documentation-permissions"]='Consulteu la <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Base de coneixements</a></b> per obtenir més informació sobre els permisos.';
 $lang["property-reference"]='Referència.';
 $lang["property-name"]='Nom.';
 $lang["property-permissions"]='Permisos.';
@@ -1056,7 +1055,7 @@ $lang["confirmdeleteaccessmultimix"]='Esteu segur que voleu eliminar aquestes cl
 $lang["editingexternalshare"]='Edició de compartició externa.';
 $lang["noexternalsharing"]='Encara no s\'han generat URLs externes.';
 $lang["sharedcollectionaddwarning"]='Avís: Aquesta col·lecció s\'ha compartit amb usuaris externs. El recurs que has afegit ara està disponible per a aquests usuaris. Fes clic a "compartir" per gestionar l\'accés extern per a aquesta col·lecció.';
-$lang["sharedcollectionaddwarningupload"]='Avís: La col·lecció seleccionada s\'ha compartit amb usuaris externs. Els recursos que puguis pujar estaran disponibles per a aquests usuaris. Fes clic a "compartir" a la barra inferior per gestionar l\'accés extern per a aquesta col·lecció.';
+$lang["sharedcollectionaddwarningupload"]='La col·lecció seleccionada s\'ha compartit amb usuaris externs. Els recursos que puguis pujar estaran disponibles per a aquests usuaris. Fes clic a "compartir" a la barra inferior per gestionar l\'accés extern per a aquesta col·lecció.';
 $lang["confirmdeleteusercustomaccessresource"]='Esteu segur que voleu eliminar l\'accés personalitzat per a aquest usuari?';
 $lang["sharedcollectionaddblocked"]='No teniu permisos per afegir recursos a una col·lecció que ha estat compartida amb usuaris externs.';
 $lang["restrictedsharecollection"]='Teniu accés restringit a un o més recursos d\'aquesta col·lecció i, per tant, no es permet compartir.';

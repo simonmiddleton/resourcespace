@@ -113,7 +113,7 @@ if (getval("save",false) && enforcePostRequest(false))
             }
 
     $update_sql_params = array();
-    foreach (array("name","parent","search_filter","search_filter_id","edit_filter","edit_filter_id","derestrict_filter",
+    foreach (array("name","permissions","parent","search_filter","search_filter_id","edit_filter","edit_filter_id","derestrict_filter",
                     "derestrict_filter_id","resource_defaults","config_options","welcome_message","ip_restrict","request_mode",
                     "allow_registration_selection","inherit_flags", "download_limit","download_log_days") as $column)		
 
@@ -270,7 +270,10 @@ include "../../include/header.php";
                 
             <div id ="permissions_area" <?php if(in_array("permissions",$record['inherit'])){echo "style=display:none;";} ?>>
                 <input type="button" class="stdwidth<?php echo $record['parent'] ? ' label-spacer' : ''; ?>" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo escape_quoted_data($ref . $url_params); ?>',true);" value="<?php echo htmlspecialchars($lang["launchpermissionsmanager"]); ?>"></input>                       
-                <div class="clearerleft"></div>            
+                <div class="clearerleft"></div>
+                <label></label>
+                <textarea name="permissions" class="stdwidth" rows="5" cols="50"><?php echo htmlspecialchars((string) $record['permissions']); ?></textarea>
+                <div class="clearerleft"></div>
             </div> <!-- End of permissions_area -->
         </div>
 

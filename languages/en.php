@@ -88,7 +88,6 @@ $lang["fieldtype-warning_message"]="Warning message";
 $lang["fieldtype-date_range"]="Date Range";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="See the <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a></b> for further information on permissions.";
 $lang["property-reference"]="Reference";
 $lang["property-name"]="Name";
 $lang["property-permissions"]="Permissions";
@@ -636,6 +635,7 @@ $lang["log-a"]="Change access";
 $lang["log-r"]="Reverted metadata";
 $lang["log-b"]="Created alternate";
 $lang["log-y"]="Deleted alternate";
+$lang["log-rtchange"]="Edited resource type";
 $lang["log-missinglang"]="[type] (missing lang)"; # [type] will be replaced.
 $lang['log-adminpermissionsrequired'] = 'Full admin permission required!';
 $lang['log-removedcustomuseraccess'] = 'Removed custom access for user: ';
@@ -1001,7 +1001,7 @@ $lang["confirmdeleteaccessmultimix"]="Are you sure you wish to delete these acce
 $lang["editingexternalshare"]="Editing external share";
 $lang["noexternalsharing"]="No external URLs generated yet.";
 $lang["sharedcollectionaddwarning"]="Warning: This collection has been shared with external users. The resource you have added has now been made available to these users. Click 'share' to manage the external access for this collection.";
-$lang["sharedcollectionaddwarningupload"]="Warning: The selected collection has been shared with external users. The resources you upload will be made available to these users. Click 'share' in the bottom bar to manage the external access for this collection.";
+$lang["sharedcollectionaddwarningupload"]="The selected collection has been shared with external users. The resources you upload will be made available to these users. Click 'share' in the bottom bar to manage the external access for this collection.";
 $lang["confirmdeleteusercustomaccessresource"]='Are you sure you wish to delete custom access for this user?';
 
 $lang["sharedcollectionaddblocked"]="You are not permitted to add resources to a collection that has been shared with external users.";
@@ -1016,7 +1016,8 @@ $lang["notapprovedsharetheme"]="Sharing is prohibited for at least one collectio
 $lang["notapprovedresources"]="The following resources are not active and cannot be added to a shared collection: ";
 $lang['error_generating_access_key'] = 'Could not generate an access key';
 $lang['access_key_deleted'] = "Access key '%access_key' deleted";
-$lang['email_error_user_list_not_valid'] = 'No valid emails to send to (users might not be approved)';
+$lang['email_error_user_list_not_valid'] = 'No valid notifications to send (users might not be approved)';
+$lang['email_error_user_list_some_skipped'] = 'Skipped notifications for following users (users might not be approved)';
 
 
 # New for 1.3
@@ -1958,6 +1959,7 @@ $lang["error-type-mismatch"] = "Argument '%arg' must be of type %expected-type, 
 $lang["error-request-missing-key"] = "Request missing the '%key' parameter."; # %key will be replaced with the missing POST param name required
 $lang["error-collection-unreadable"] = "Your user doesn't have read access to collection #%ref."; # %ref will be replaced with the actual collection ref
 $lang['error-unable_to_register_filter'] = "Unable to register stream filter '%FILTER_NAME'! Filtering may not work properly.";
+$lang['error-invalid_name']='Invalid name';
 
 $lang["no-options-available"]="No options available";
 $lang["header-upload-subtitle"] = "Step %number: %subtitle"; # %number, %subtitle will be replaced, e.g. Step 1: Specify Default Content For New Resources
@@ -2364,7 +2366,7 @@ $lang["all__researchrequest"]="Let our resources team find the resources you nee
 $lang["change_language__introtext"]="Please select your language below.";
 $lang['collection_download__write_metadata_on_download_label'] = 'Embed resource metadata in the downloaded file(s)? Enabling this will slow down your download.';
 $lang["collection_edit__introtext"] = "Organise and manage your work by grouping resources together. Create collections to suit your way of working.\n\n<br />\n\nAll the collections in your list appear in the 'My Collections' panel at the bottom of the screen\n\n<br /><br />";
-$lang["collection_email__introtext"]="Please complete the form below. The recipients will receive an email containing links to the collections rather than file attachments so they can choose and download the appropriate resources.";
+$lang["collection_email__introtext"]="Please complete the form below.<br />The recipients will receive an email or system message containing links to the collections rather than file attachments so they can choose and download the appropriate resources.";
 $lang["collection_email__introtextthemeshare"]="Complete the form below to e-mail the featured collections in this featured collection category. The recipients will receive an email containing links to each of the featured collections.";
 $lang["collection_manage__findpublic"]="Public collections are groups of resources made widely available by users of the system. Enter a collection ID, or all or part of a collection name or username to find public collections. Add them to your list of collections to access the resources.";
 $lang["collection_manage__introtext"]="Organise and manage your work by grouping resources together. Create 'Collections' to suit your way of working. You may want to group resources under projects that you are working on independently, share resources amongst a project team or simply keep your favourite resources together in one place. All the collections in your list appear in the 'My Collections' panel at the bottom of the screen.";
@@ -2588,6 +2590,7 @@ $lang['userpreference_exiftool_write_metadata_label'] = 'Write embedded metadata
 $lang['userpreference_keyboard_navigation'] = 'Keyboard navigation';
 $lang['userpreference_tilenav']='Use a tile layout for the navigation menus';
 $lang['userpreference_tilenavdefault']='Use a tile layout for the navigation menus (default setting; users may change this)';
+$lang['userpreference_high_contrast_mode'] = 'Higher contrast mode';
 
 /* System Config */
 $lang['systemconfig'] = 'Configuration';
@@ -2595,8 +2598,8 @@ $lang['systemconfig_customfont_label'] = 'Custom font file';
 $lang['systemconfig_invalid_extension'] = "File type not valid for this selection. Please choose from: %%EXTENSIONS%%";
 $lang['systemconfig_linkedheaderimgsrc_label'] = 'Application logo';
 $lang['systemconfig_header_favicon_label'] = 'Application favicon';
-$lang['wartermark_header'] = 'Watermark';
-$lang['wartermark_label'] = 'Watermark image - Recreate previews after changing watermark to update existing resources. Removing file will disable watermarking.';
+$lang['watermark_header'] = 'Watermark';
+$lang['watermark_label'] = 'Watermark image - Recreate previews after changing watermark to update existing resources. Removing file will disable watermarking.';
 $lang['systemconfig_description'] = 'The options on this page are system wide and can change some of the functionality available to the users. Please note that any option that is also user specific will take precedence if set.';
 $lang['systemconfig_multilingual'] = 'Multilingual';
 $lang['systemconfig_default_language_label'] = 'Default language';
@@ -2829,6 +2832,8 @@ $lang['responsive_view_full_site'] = 'View full site';
 $lang["actions_myactions"] = "Actions";
 $lang["actions_introtext"] = "You can configure the criteria for actions that appear here by changing your user preferences";
 $lang["actions_noactions"] = "You have no outstanding actions";
+$lang["actions_email_new_actions_title"] = "New actions";
+$lang["actions_email_new_actions_intro"] = "There are new actions to be completed.";
 $lang["actions_resource_review"] = "Show me editable resources in my actions list";
 $lang["actions_modal"] = "Show action links e.g. user requests, resource requests in a modal (popup) window?";
 $lang["actions_resource_review_default"] = "Show editable resources by default in action lists";
@@ -3140,3 +3145,7 @@ $lang["cleanup_invalid_nodes"]              = "Clean field data from invalid res
 $lang["cleanup_invalid_node_dry_run"]       = "Don't delete data, just return the number of rows to be deleted?";
 $lang["advancedsearch_resource_section"]    = "Resource data";
 $lang["error-reload-required"]              = "ResourceSpace has been updated. Please reload the page";
+$lang["user_pref_new_action_emails"]        = "Email me if new actions are created";
+
+$lang["email_rate_limit_active"] = "The maximum number of e-mails per hour sent by this system has been exceeded. E-mails are not currently being sent by this system.";
+$lang["email_rate_limit_inactive"] = "The e-mail limit has been lifted and e-mails are now being sent.";

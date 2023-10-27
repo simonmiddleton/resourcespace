@@ -582,7 +582,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Elenco dinamico delle parole chiave.';
 $lang["fieldtype-radio_buttons"]='Pulsanti di opzione.';
 $lang["fieldtype-warning_message"]='Messaggio di avviso.';
 $lang["fieldtype-date_range"]='Intervallo di date';
-$lang["documentation-permissions"]='Consulta la <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a></b> per ulteriori informazioni sulle autorizzazioni.';
 $lang["property-reference"]='Riferimento';
 $lang["property-permissions"]='Permessi.';
 $lang["property-permissions_inherit"]='Ereditare dal gruppo genitore.';
@@ -1025,7 +1024,7 @@ $lang["confirmdeleteaccessmultimix"]='Sei sicuro di voler eliminare queste chiav
 $lang["editingexternalshare"]='Modifica condivisione esterna.';
 $lang["noexternalsharing"]='Nessun URL esterno generato finora.';
 $lang["sharedcollectionaddwarning"]='Attenzione: questa collezione è stata condivisa con utenti esterni. La risorsa che hai aggiunto è ora disponibile per questi utenti. Clicca su \'condividi\' per gestire l\'accesso esterno per questa collezione.';
-$lang["sharedcollectionaddwarningupload"]='Attenzione: La collezione selezionata è stata condivisa con utenti esterni. Le risorse che carichi saranno disponibili anche per questi utenti. Clicca su \'condividi\' nella barra inferiore per gestire l\'accesso esterno per questa collezione.';
+$lang["sharedcollectionaddwarningupload"]='La collezione selezionata è stata condivisa con utenti esterni. Le risorse che carichi saranno disponibili anche per questi utenti. Clicca su \'condividi\' nella barra inferiore per gestire l\'accesso esterno per questa collezione.';
 $lang["confirmdeleteusercustomaccessresource"]='Sei sicuro di voler eliminare l\'accesso personalizzato per questo utente?';
 $lang["sharedcollectionaddblocked"]='Non sei autorizzato a aggiungere risorse a una collezione che è stata condivisa con utenti esterni.';
 $lang["restrictedsharecollection"]='Hai accesso limitato ad una o più risorse in questa collezione e quindi la condivisione è vietata.';

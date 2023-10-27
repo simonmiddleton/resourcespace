@@ -249,8 +249,8 @@ if(isset($videojs_resolution_selection))
 		class="video-js vjs-default-skin vjs-big-play-centered <?php if($pagename=='search'){echo "video-$display";} if($view_as_gif){echo ' vjs-gif-transparent';}?>" 
 		poster="<?php echo $thumb_raw?>"
 		<?php if($play_on_hover){ ?>
-			onmouseout="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].pause();"
-			onmouseover="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].play();"
+			onmouseout="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].pause();<?php echo ($pagename!=='search'? "jQuery('.vjs-big-play-button').show();": '');?>"
+			onmouseover="videojs_<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref ?>[0].play();<?php echo ($pagename!=='search'? "jQuery('.vjs-big-play-button').hide();": '');?>"
 		<?php } ?>
 		>
 		<?php				

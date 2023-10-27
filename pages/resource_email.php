@@ -101,7 +101,7 @@ hook("resemailmoreinfo"); ?>
 
 include "../include/user_select.php"; ?>
 <div class="clearerleft"> </div>
-<?php if ($errors!="") { ?><div class="FormError">!! <?php echo $errors?> !!</div><?php } ?>
+<?php if ($errors!="") { ?><div class="FormError">!! <?php echo htmlspecialchars($errors)?> !!</div><?php } ?>
 </div>
 <?php } ?>
 

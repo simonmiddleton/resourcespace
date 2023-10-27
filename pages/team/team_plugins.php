@@ -354,7 +354,7 @@ if($searching)
                     }
                    else
                     {$plugin_config_url = $baseurl_short . $plugin['config_url'];}
-                   echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' . $lang['options'].'</a> ';        
+                   echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' . htmlspecialchars($lang['options']).'</a> ';        
                    }
                 ?>
                     </div><!-- End of ListTools -->
@@ -449,7 +449,7 @@ if (count($inst_plugins)>0)
                 }
                else
                 {$plugin_config_url = $baseurl_short . $p['config_url'];}
-               echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' .$lang['options'].'</a> ';        
+               echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' .htmlspecialchars($lang['options']).'</a> ';        
                }
             echo '</div></td></tr>';
             } 

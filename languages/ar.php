@@ -852,7 +852,6 @@ $lang["fieldtype-dynamic_keywords_list"]='قائمة الكلمات الدالة
 $lang["fieldtype-radio_buttons"]='أزرار الراديو';
 $lang["fieldtype-warning_message"]='رسالة تحذير';
 $lang["fieldtype-date_range"]='نطاق التاريخ';
-$lang["documentation-permissions"]='يرجى الاطلاع على <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>قاعدة المعرفة</a></b> للحصول على مزيد من المعلومات حول الأذونات.';
 $lang["property-name"]='الاسم';
 $lang["property-permissions"]='الصلاحيات';
 $lang["property-permissions_inherit"]='الوراثة من المجموعة الأصلية';

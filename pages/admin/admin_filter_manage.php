@@ -26,6 +26,11 @@ $params = array(
     );
     
 $new_filter_name=getval("filter_name","");
+if (trim($new_filter_name) == '' && getval('save', false) == true)
+    {
+    error_alert($lang['error-invalid_name'], false);
+    exit();
+    }
 if ($new_filter_name!="" && enforcePostRequest(false))
     {
     $new_filter_id=save_filter(0,$new_filter_name,RS_FILTER_ALL);

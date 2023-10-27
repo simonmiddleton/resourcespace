@@ -37,6 +37,7 @@ $collection = getval('collection', 0, true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
+$search_access = getval("search_access", null, true);
 $submitted = getval("submitted", "");
 $external_upload = upload_share_active();
 $redirecturl = getval("redirecturl","");
@@ -286,13 +287,18 @@ if($editsearch)
     # Check all resources are editable
     
     # Editable_only=false (so returns resources whether editable or not)
-    $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false);
-    if (!is_array($searchitems)){$searchitems = array();}
+    $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false, false, $search_access);
+    if (!is_array($searchitems) || count($searchitems) == 0)
+        {
+        $error = $lang['searchnomatches'];
+        error_alert($error, !$modal);
+        exit();
+        }
     $all_resources_count = count($searchitems);
     $all_resource_refs=array_column($searchitems,"ref");
 
     # Editable_only=true (so returns editable resources only)
-    $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true);
+    $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true, false, $search_access);
     if (!is_array($edititems)){$edititems = array();}
     $editable_resources_count = count($edititems);
     $editable_resource_refs=array_column($edititems,"ref");
@@ -569,6 +575,7 @@ $urlparams= array(
     'editsearchresults' => ($editsearch ? "true" : ""),
     'k'                 => $k,
     'redirecturl'       => $redirecturl,
+    'search_access'     => (!is_null($search_access) ? $search_access : null),
 );
 
 check_order_by_in_table_joins($order_by);
@@ -926,6 +933,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $editsearch["search"]   = $search;
                 $editsearch["restypes"] = $restypes;
                 $editsearch["archive"]  = $archive;
+                $editsearch["search_access"] = $search_access;
                 $save_errors=save_resource_data_multi(0,$editsearch,$_POST);
 
                 // When editing a search for the COLLECTION_TYPE_SELECTION we want to close the modal and reload the page
@@ -1201,6 +1209,7 @@ jQuery(document).ready(function()
                     {
                     jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["saved"]); ?>');
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
+                    // Refresh checksums returned by the autosave update
                     if (typeof(saveresult['checksums']) !== undefined)
                         {
                         for (var i in saveresult['checksums']) 

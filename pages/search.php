@@ -1010,7 +1010,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         ?>
         <div class="InpageNavLeftBlock <?php if($iconthumbs) {echo 'icondisplay';} ?>">
         <?php 
-        if($iconthumbs)
+        if($iconthumbs && !$high_contrast_mode)
             {
             if($xlthumbs == true)
                 {

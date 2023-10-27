@@ -84,7 +84,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Listă dinamică de cuvinte cheie.';
 $lang["fieldtype-radio_buttons"]='Buton radio.';
 $lang["fieldtype-warning_message"]='Mesaj de avertizare.';
 $lang["fieldtype-date_range"]='Interval de date.';
-$lang["documentation-permissions"]='Vă rugăm să consultați <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Baza de Cunoștințe</a></b> pentru informații suplimentare despre permisiuni.';
 $lang["property-reference"]='Referință.';
 $lang["property-name"]='Nume.';
 $lang["property-permissions"]='Permisiuni.';
@@ -919,7 +918,7 @@ $lang["confirmdeleteaccessmultimix"]='Sunteți sigur că doriți să ștergeți 
 $lang["editingexternalshare"]='Editarea partajării externe.';
 $lang["noexternalsharing"]='Încă nu s-au generat URL-uri externe.';
 $lang["sharedcollectionaddwarning"]='Atenție: Această colecție a fost partajată cu utilizatori externi. Resursa pe care ați adăugat-o este acum disponibilă pentru acești utilizatori. Apăsați pe \'partajare\' pentru a gestiona accesul extern pentru această colecție.';
-$lang["sharedcollectionaddwarningupload"]='Atenție: Colectarea selectată a fost partajată cu utilizatori externi. Resursele pe care le încărcați vor fi puse la dispoziția acestor utilizatori. Apăsați pe \'partajare\' în bara de jos pentru a gestiona accesul extern pentru această colecție.';
+$lang["sharedcollectionaddwarningupload"]='Colectarea selectată a fost partajată cu utilizatori externi. Resursele pe care le încărcați vor fi puse la dispoziția acestor utilizatori. Apăsați pe \'partajare\' în bara de jos pentru a gestiona accesul extern pentru această colecție.';
 $lang["confirmdeleteusercustomaccessresource"]='Sunteți sigur că doriți să ștergeți accesul personalizat pentru acest utilizator?';
 $lang["sharedcollectionaddblocked"]='Nu aveți permisiunea de a adăuga resurse într-o colecție care a fost partajată cu utilizatori externi.';
 $lang["restrictedsharecollection"]='Aveți acces restricționat la unul sau mai multe dintre resursele din această colecție și, prin urmare, partajarea este interzisă.';

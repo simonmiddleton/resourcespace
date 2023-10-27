@@ -7,6 +7,12 @@
     "require": {
         "php": "^7.4 || ~8.2.0",
         "ext-mbstring": "*",
+        "ext-intl": "*",
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-zip": "*",
+        "ext-gd": "*",
+        "ext-mysqli": "*",
         "ext-json": "*"
     },
     "require-dev": {

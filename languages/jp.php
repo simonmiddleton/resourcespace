@@ -805,7 +805,6 @@ $lang["fieldtype-dynamic_keywords_list"]='動的キーワードリスト';
 $lang["fieldtype-radio_buttons"]='ラジオボタン';
 $lang["fieldtype-warning_message"]='警告メッセージ';
 $lang["fieldtype-date_range"]='日付範囲';
-$lang["documentation-permissions"]='権限に関する詳細情報については、<b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>ナレッジベース</a></b>を参照してください。';
 $lang["property-reference"]='参照';
 $lang["property-name"]='名前';
 $lang["property-permissions"]='権限 (Ken\'gen)';
@@ -1232,7 +1231,7 @@ $lang["confirmdeleteaccessmulticol"]='これらのアクセスキーを削除し
 $lang["confirmdeleteaccessmultires"]='これらのアクセスキーを削除してもよろしいですか？これらのキーを使用してアクセスを許可されたユーザーは、関連するリソースにアクセスできなくなります。';
 $lang["confirmdeleteaccessmultimix"]='これらのアクセスキーを削除してもよろしいですか？これらのキーを使用してアクセスを許可されたユーザーは、関連するコレクションやリソースにアクセスできなくなります。';
 $lang["editingexternalshare"]='外部共有の編集';
-$lang["sharedcollectionaddwarningupload"]='警告：選択されたコレクションは外部ユーザーと共有されています。アップロードしたリソースはこれらのユーザーに利用可能になります。このコレクションの外部アクセスを管理するには、下部バーの「共有」をクリックしてください。';
+$lang["sharedcollectionaddwarningupload"]='選択されたコレクションは外部ユーザーと共有されています。アップロードしたリソースはこれらのユーザーに利用可能になります。このコレクションの外部アクセスを管理するには、下部バーの「共有」をクリックしてください。';
 $lang["confirmdeleteusercustomaccessresource"]='このユーザーのカスタムアクセスを削除してもよろしいですか？';
 $lang["sharedcollectionaddblocked"]='外部ユーザーと共有されたコレクションにリソースを追加することは許可されていません。';
 $lang["selectgenerateurlexternal"]='外部ユーザー（ログインしていない人々）に適用されるURLを作成するには、リソースに付与するアクセスレベルを選択してください。';

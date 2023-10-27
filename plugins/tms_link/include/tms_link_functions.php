@@ -436,25 +436,29 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
  * To avoid Media Master IDs being used by multiple resources $tms_link_mediapaths_resource_reference_column can be set.
  * This will store the resource ID in the MediaMaster table when creating the new ID so that it is not used by another Resource
  *
- * @param  mixed $create    flag to create a new ID if none found
- * @param  mixed $resource  ResourceSpace resource ID
+ * @param  bool $create    flag to create a new ID if none found
+ * @param  int  $resource  ResourceSpace resource ID
  * @return bool|string      False if no ID found, otherwise the Media Master ID is returned
  */
-function tms_get_mediamasterid(bool $create=true,string $resource="")
+function tms_get_mediamasterid(bool $create=true,int $resource=NULL)
   {
   global $conn, $errormessage, $tms_link_tms_loginid,$tms_link_mediapaths_resource_reference_column ;
   // Get the latest inserted ID that we have not used
-  $tmssql = "SELECT MediaMasterID FROM MediaMaster 
-    WHERE LoginID = '$tms_link_tms_loginid' 
-      AND DisplayRendID='-1' 
-      AND PrimaryRendID='-1'";
+  $tmssql = new PreparedStatementQuery(
+    "SELECT MediaMasterID FROM MediaMaster 
+      WHERE LoginID = ? 
+        AND DisplayRendID='-1' 
+        AND PrimaryRendID='-1'",
+        ["s",$tms_link_tms_loginid]);
 
-  if ($tms_link_mediapaths_resource_reference_column != "" && $resource !="")
+  if ($tms_link_mediapaths_resource_reference_column != "" && $resource !=NULL)
     {
-      $tmssql .= "AND $tms_link_mediapaths_resource_reference_column = '$resource'";
+      $tmssql->sql .= "AND $tms_link_mediapaths_resource_reference_column = ?";
+      $tmssql->parameters = array_merge($tmssql->parameters,["i",$resource]);
     }
-
-  $mediamasterresult=odbc_exec($conn,$tmssql);
+  
+  $tmsps = odbc_prepare($conn,$tmssql->sql);
+  $mediamasterresult=odbc_exec($tmsps,$tmssql->parameters);
 
   if(!$mediamasterresult)
     {

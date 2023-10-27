@@ -878,7 +878,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
  *
  * @param  mixed $ref   The resource ID
  * @param  mixed $details   The request details provided by the user
- * @return void|false
+ * @return void|false|string
  */
 function email_resource_request($ref,$details)
     {
@@ -1042,7 +1042,8 @@ function email_resource_request($ref,$details)
     send_user_notification($notify_users,$notification_message);
     foreach($notify_emails as $notify_email)
         {
-        send_mail($notify_email,$applicationname . ": " . $lang["requestresource"] . " - $ref",$message->get_text(),$email_from,$email_from,"emailresourcerequest",$templatevars);
+        $send_result=send_mail($notify_email,$applicationname . ": " . $lang["requestresource"] . " - $ref",$message->get_text(),$email_from,$email_from,"emailresourcerequest",$templatevars);
+        if ($send_result!==true) {return $send_result;}
         }
 
     if ($request_senduserupdates)
@@ -1253,4 +1254,30 @@ function get_notification_users_by_owner_field(array $users, array $resources)
         }
 
     return $users_to_notify;
+    }
+
+
+/**
+ * Can the logged in user see the request specified?
+ *
+ * @param array $request    Array of request details
+ * 
+ * @return bool
+ * 
+ */
+function resource_request_visible(array $request) : bool
+    {
+    global $userref;
+    $show_this_request=false;
+    # Show request if the user can accept requests (permission "Rb")
+    if (checkperm("Rb") && ($request["assigned_to"]==$userref))
+        {
+        $show_this_request=true;
+        }
+    # Show request if the user can assign requests (permission "Ra")
+    if(checkperm('Ra'))
+        {
+        $show_this_request=true;
+        }
+    return $show_this_request;
     }

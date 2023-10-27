@@ -43,6 +43,11 @@ function get_resource_path(
     $includemodified = true
 )
     {
+    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
+    $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
+    $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate,
+    $baseurl, $k, $get_resource_path_extra_download_query_string_params;
+
     # returns the correct path to resource $ref of size $size ($size==empty string is original resource)
     # If one or more of the folders do not exist, and $generate=true, then they are generated
     if(!preg_match('/^[a-zA-Z0-9]+$/',(string) $extension))
@@ -66,15 +71,10 @@ function get_resource_path(
         return $override;
         }
 
-    global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
-           $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
-           $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate;
 
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
-    if(!$getfilepath && $hide_real_filepath && !in_array($size,array("col","thm","pre")))
+    if(!$getfilepath && $hide_real_filepath)
         {
-        global $baseurl, $k, $get_resource_path_extra_download_query_string_params;
-
         if(
             !isset($get_resource_path_extra_download_query_string_params)
             || is_null($get_resource_path_extra_download_query_string_params)
@@ -938,9 +938,15 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     # Set the value exactly as sent.
                     $val=getval("field_" . $fields[$n]["ref"],"");
                     $rawval = getval("field_" . $fields[$n]["ref"],"");
-                    // Check if resource field data has been changed between form being loaded and submitted
+                    # Check if resource field data has been changed between form being loaded and submitted
+                    # post_cs is the checksum of the data when it was loaded from the database
+                    # current_cs is the checksum of the data on the database now
+                    # if they are the same then there has been no intervening update and so its ok to update with our new value
+                    # if our new data yields a different checksum, then we know the new value represents a change
+                    # the new checksum for the new value of a field is stored in $new_checksums[$fields[$n]['ref']]
                     $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
                     $current_cs = md5(trim(preg_replace('/\s\s+/', ' ', (string) $fields[$n]['value'])));
+
                     if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
                         {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
@@ -1108,12 +1114,17 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     }
 
                 }
-            # Add any onchange code
-            if($fields[$n]["onchange_macro"]!="")
+
+            # Add any onchange code if new checksum for field shows that it has changed
+            if(isset($fields[$n]["onchange_macro"]) && $fields[$n]["onchange_macro"]!=="" 
+                    && $post_cs !==""
+                    && isset($new_checksums[$fields[$n]["ref"]]) 
+                    && $post_cs !== $new_checksums[$fields[$n]["ref"]])
                 {
                 $macro_resource_id=$ref;
                 eval(eval_check_signed($fields[$n]["onchange_macro"]));
                 }
+
 			} # End of if "allowed to edit field conditions"        
 		} # End of for $fields
 
@@ -1370,7 +1381,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
     if($collection == 0 && isset($editsearch["search"]))
         {
         // Editing a result set, not a collection
-        $edititems  = do_search($editsearch["search"],$editsearch["restypes"],'resourceid',$editsearch["archive"],-1,'ASC',false,0,false,false,'',false,false, true, true);
+        $edititems  = do_search($editsearch["search"], $editsearch["restypes"],'resourceid',$editsearch["archive"], -1, 'ASC', false, 0, false, false, '', false, false, true, true, false, $editsearch["search_access"]);
         $list       = array_column($edititems,"ref");
         }
     else
@@ -3041,7 +3052,8 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
             }
 
         $body.=$templatevars['fromusername']." ". $lang["hasemailedyouaresource"]."\n\n" . $templatevars['message']."\n\n" . $lang["clicktoviewresource"] . "\n\n" . $templatevars['url'];
-        send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
+        $send_result=send_mail($emails[$n],$subject,$body,$fromusername,$useremail,"emailresource",$templatevars,$from_name,$cc);
+        if ($send_result!==true) {return $send_result;}
 
         # log this
         resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);
@@ -3217,7 +3229,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
     # for this resource, for display in an edit / view form.
     # Standard field titles are translated using $lang.  Custom field titles are i18n translated.
 
-    global $view_title_field, $metadata_template_resource_type, $NODE_FIELDS, $FIXED_LIST_FIELD_TYPES;
+    global $view_title_field, $metadata_template_resource_type, $NODE_FIELDS, $FIXED_LIST_FIELD_TYPES, $pagename;
 
     # Find the resource type.
     if (is_null($originalref)) {$originalref = $ref;} # When a template has been selected, only show fields for the type of the original resource ref, not the template (which shows fields for all types)
@@ -3245,7 +3257,7 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
     $field_restypes = get_resource_type_field_resource_types();
     $restypesql = "";
     $restype_params = [];
-    if(!$multi)
+    if(!$multi && $pagename !== 'edit')
         {
         $restypesql = "AND (f.global=1 OR f.ref=? OR f.ref IN (SELECT resource_type_field FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type=?))";
         $restype_params[] = "i";$restype_params[] = $view_title_field;
@@ -3446,36 +3458,25 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
 
     global $view_title_field, $NODE_FIELDS;
 
+    $restype = $allresdata = [];
     $csvexport = isset($exportoptions["csvexport"]) ? $exportoptions["csvexport"] : false;
     $personal = isset($exportoptions["personal"]) ? $exportoptions["personal"] : false;
     $alldata = isset($exportoptions["alldata"]) ? $exportoptions["alldata"] : false;
-
-    // Category tree fields need special handling
     $nontree_field_types = array_diff($NODE_FIELDS,array(FIELD_TYPE_CATEGORY_TREE));
-
-    // Create array to store all the $resources resource_type info
-    $restype = array();
 
     // Get field_info
     $tree_fields = get_resource_type_fields("","ref","asc",'',array(FIELD_TYPE_CATEGORY_TREE));
     $field_restypes = get_resource_type_field_resource_types();
-
-    $field_info_sql = 
-    "SELECT f.ref resource_type_field,
-            f.ref AS fref,
-            f.required AS frequired, " .
-            columns_in("resource_type_field", "f") . 
-    " FROM resource_type_field f
-    WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . "))
-    ORDER BY f.order_by, f.ref";
-
-    $field_info_params = ps_param_fill($nontree_field_types,"i");
-
-    # Fetch field information first
-    $fields_info = ps_query($field_info_sql,$field_info_params);
-
-    // Create array to store data
-    $allresdata=array();
+    $fields_info = ps_query(
+        "SELECT f.ref resource_type_field,
+                f.ref AS fref,
+                f.required AS frequired, " .
+                columns_in("resource_type_field", "f") . 
+        " FROM resource_type_field f
+        WHERE (f.active=1 AND f.type IN (" . ps_param_insert(count($nontree_field_types)) . "))
+        ORDER BY f.order_by, f.ref",
+        ps_param_fill($nontree_field_types, 'i')
+    );
 
     # Build arrays of resources
     $resource_chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
@@ -3485,12 +3486,16 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
             {
             // This is an array of search results so we already have the resource types
             $restype = array_column($resource_chunk,"resource_type","ref");
-            $resourceids = array_filter(array_column($resource_chunk,"ref"),function($v){return is_int_loose($v);});
+            $resourceids = array_filter(array_column($resource_chunk,"ref"), 'is_int_loose');
             $getresources = $resource_chunk;
             }
         else
             {
-            $resource_chunk = array_filter($resource_chunk,function($v){return is_int_loose($v);});
+            $resource_chunk = array_filter($resource_chunk, 'is_int_loose');
+            if ($resource_chunk === [])
+                {
+                break;
+                }
             $resourceids = $resource_chunk;
             $allresourcedata = ps_query("SELECT ref, resource_type FROM resource WHERE ref IN (" . ps_param_insert(count($resource_chunk)) . ")", ps_param_fill($resource_chunk,"i"));
             foreach($allresourcedata as $resourcedata)
@@ -4349,12 +4354,14 @@ function get_themes_by_resource($ref)
 
 function update_resource_type($ref,$type)
     {
+    global $lang;
+    
     if (checkperm("XU" . $type))
         {
         return false;
         }
 
-
+    $old_rt = ps_value("SELECT resource_type `value` FROM resource WHERE ref = ?",["i",$ref], '');
     ps_query("UPDATE resource SET resource_type = ? WHERE ref = ?",["i",$type,"i",$ref]);
 
     # Clear data that is no longer needed (data/keywords set for other types).
@@ -4370,6 +4377,12 @@ function update_resource_type($ref,$type)
                                 )"
                 ,["i",$ref,"i",$type]);
 
+    if($type != $old_rt)
+        {
+        $rts = get_resource_types("$type,$old_rt");
+        $rts = array_column($rts, 'name', 'ref');
+        resource_log($ref, '', null, $lang["log-rtchange"], $rts[$old_rt], $rts[$type]);
+        }
     return true;
     }
 
@@ -6089,6 +6102,12 @@ function update_disk_usage_cron()
         echo " - Skipping update_disk_usage_cron  - last run: " . $lastrun . "<br/>\n";
         return false;
         }
+    if (is_process_lock("disk_usage_cron"))
+        {
+        echo " - disk_usage_cron process lock is in place. Skipping.\n";
+        return;
+        }
+    set_process_lock("disk_usage_cron");
 
     $resources=ps_array(
         "SELECT ref value
@@ -6106,6 +6125,7 @@ function update_disk_usage_cron()
 
     clear_query_cache("stats");
     set_sysvar("last_update_disk_usage_cron",date("Y-m-d H:i:s"));
+    clear_process_lock("disk_usage_cron");
     }
 
 /**
@@ -6427,7 +6447,7 @@ function resource_type_config_override($resource_type, $only_onchange=true)
 *
 * @return void
 */
-function update_archive_status($resource, $archive, $existingstates = array(), $collection  = 0)
+function update_archive_status($resource, $archive, $existingstates = array(), $collection  = 0, $more_notes="")
     {
     if(!is_array($resource))
         {
@@ -6448,7 +6468,7 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
             continue;
             }
 
-        resource_log($resource[$n], LOG_CODE_STATUS_CHANGED, 0, '', isset($existingstates[$n]) ? $existingstates[$n] : '', $archive);
+        resource_log($resource[$n], LOG_CODE_STATUS_CHANGED, 0, $more_notes, isset($existingstates[$n]) ? $existingstates[$n] : '', $archive);
         }
 
     # Prevent any attempt to update with non-numeric archive state
@@ -7444,7 +7464,6 @@ function get_resource_all_image_sizes($ref)
                     $all_image_sizes[$key]["extension"] = $size_data["extension"];
                     $all_image_sizes[$key]["multi_page"] = true;
                     $all_image_sizes[$key]["page"] = $page;
-                    $all_image_sizes[$key]["path"] = $path;
                     $all_image_sizes[$key]["url"] = $url;
                     }
                 }
@@ -7772,14 +7791,14 @@ function get_related_resources($ref)
 /**
  * Get available options for fixed list field types
  *
- * @param int   $ref
- * @param bool  $nodeinfo
- * @param bool  $skip_translation
+ * @param int   $ref                    Metadata field ref
+ * @param bool  $nodeinfo               Get full node details?
+ * @param bool  $skip_translation       Do not translate node name. Only relevant if $nodeinfo=false
  * 
- * @return array Array of 
+ * @return array Array of field options, either as a simple array or with full node details
  * 
  */
-function get_field_options(int $ref, $nodeinfo = false, bool $skip_translation = false) : array
+function get_field_options(int $ref, bool $nodeinfo = false, bool $skip_translation = false) : array
     {
     global $FIXED_LIST_FIELD_TYPES, $auto_order_checkbox,$auto_order_checkbox_case_insensitive;
     # For the field with reference $ref, return a sorted array of options. Optionally use the node IDs as array keys

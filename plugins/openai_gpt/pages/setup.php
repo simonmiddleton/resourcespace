@@ -27,7 +27,7 @@ $page_def[] = config_add_text_input("openai_gpt_temperature",$lang["openai_gpt_t
 $page_def[] = config_add_text_input("openai_gpt_max_tokens",$lang["openai_gpt_max_tokens"]);
 
 // Do the page generation ritual
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
+config_gen_setup_html($page_def, $plugin_name, null, $page_heading, $page_intro);
 include '../../../include/footer.php';

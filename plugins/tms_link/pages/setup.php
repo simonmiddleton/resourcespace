@@ -169,7 +169,7 @@ $page_def[] = config_add_hidden("tms_link_modules_saved_mappings");
 
 
 // Do the page generation ritual -- don't change this section.
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 
 if(trim($tms_link_log_directory)!="" && (getval("save","")!="" || getval("submit","")!=""))
 	{
@@ -202,5 +202,5 @@ if(isset($errortext))
 	{
 	echo "<div class=\"PageInformal\">" . $errortext . "</div>";
 	}
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_page_heading);
+config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
 include '../../../include/footer.php';

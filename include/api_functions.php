@@ -78,6 +78,22 @@ function execute_api_call($query,$pretty=false)
 
     global $lang;
 
+    if(defined("API_AUTHMODE_NATIVE"))
+        {
+        // Check if this is a whitelisted function for browser use (native mode bypasses $enable_remote_apis=false;)
+        if(!in_array($function,API_NATIVE_WHITELIST))
+            {
+            ajax_send_response(
+                401,
+                ['error' => [
+                    'status' => 401,
+                    'title'  => $GLOBALS['lang']['unauthorized'],
+                    'detail' => $GLOBALS['lang']['error-permissiondenied']
+                    ]]
+                );
+            }
+        }
+
     // Construct an array of the real params, setting default values as necessary
     $setparams = array();
     $n = 0;    
@@ -199,8 +215,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         {
 		$size = (strtolower($iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
         $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
-        $position_prefix="";
-        
+
         if(!file_exists($img_path))
             {
             continue;
@@ -209,7 +224,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
 		$position = $iiif_result["iiif_position"];
         $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
         $canvases[$position]["@type"] = "sc:Canvas";
-        $canvases[$position]["label"] = (isset($position_prefix)?$position_prefix:'') . $position;
+        $canvases[$position]["label"] = ($GLOBALS['position_prefix'] ?? '') . $position;
         
         // Get the size of the images
         $image_size = get_original_imagesize($iiif_result["ref"],$img_path);

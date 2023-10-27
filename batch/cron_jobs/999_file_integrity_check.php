@@ -1,7 +1,6 @@
 <?php
 include_once __DIR__ . "/../../include/db.php";
 
-
 if (is_process_lock("file_integrity_check")) 
     {
     echo " - File integrity process lock is in place.Skipping.\n";

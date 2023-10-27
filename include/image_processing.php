@@ -181,16 +181,15 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                         $uploaded_extension = $path_parts['extension'];
                         }
 
-                    if(isset($user_set_filename_path_parts['extension']) && (!isset($uploaded_extension) || $uploaded_extension == $user_set_filename_path_parts['extension']))
+                    if(
+                        isset($user_set_filename_path_parts['extension'])
+                        && (
+                            !isset($uploaded_extension)
+                            || $uploaded_extension == $user_set_filename_path_parts['extension']
+                        )
+                    )
                         {
                         $filename = $user_set_filename;
-                        }
-
-                    // If the user filename doesn't have an extension add the original one
-                    $path_parts = pathinfo($filename);
-                    if(!isset($path_parts['extension']) && isset($original_extension) && $original_extension != "") 
-                        {
-                        $filename .= '.' . $uploaded_extension;
                         }
                     }
                 }
@@ -613,6 +612,8 @@ function extract_exif_comment($ref,$extension="")
     global $exif_comment,$exiftool_no_process,$exiftool_resolution_calc, $disable_geocoding, $embedded_data_user_select_fields,$filename_field,$lang;
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['exiftooltag']);
 
+    $processfile['name']='';
+
     $exiftool_fullpath = get_utility_path("exiftool");
     if (($exiftool_fullpath!=false) && !in_array($extension,$exiftool_no_process))
         {
@@ -927,7 +928,7 @@ function extract_exif_comment($ref,$extension="")
                             $original_filename = '';
                             if(isset($_REQUEST['file_name'])) {
                                 $original_filename = $_REQUEST['file_name'];
-                            } elseif(isset($processfile)) {
+                            } elseif(isset($processfile['name'])) {
                                 $original_filename = $processfile['name'];
                             }
 
@@ -1837,13 +1838,16 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $mpr_parts['targetpath']=$path;
                 }
             
-            # Delete any file at the target path. Unless using the previewbased option, in which case we need it.           
+            # Delete any file at the target path. Unless using the previewbased option, in which case we need it.
             if(!hook("imagepskipdel") && !$keep_for_hpr)
                 {
                 if (!$previewbased)
                     {
                     if (file_exists($path))
-                        {unlink($path);}
+                        {
+                        debug("Deleting file at path: $path");
+                        unlink($path);
+                        }
                     }
                 }
             if ($keep_for_hpr){$keep_for_hpr=false;}
@@ -1888,7 +1892,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     // we have an extracted ICC profile, so use it as source
                     if ($icc_preview_profile != "" && $icc_preview_profile_embed)
                         {
-                        $targetprofile = ($imagemagick_mpr ? "" : "-profile ") . dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                        $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
                         }
                     else
                         {
@@ -1905,7 +1909,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         }
                     else
                         {
-                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . $icc_preview_options . escapeshellarg($targetprofile);
+                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . ' ' . $icc_preview_options . ' ' . ($targetprofile != "" ? "-profile " : "") . escapeshellarg($targetprofile);
                         }
 
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes

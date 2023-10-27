@@ -19,7 +19,7 @@ $page_def[] = config_add_single_ftype_select('embedslideshow_resourcedatatextfie
 $page_def[] = config_add_boolean_select('embedslideshow_dynamic_size', $lang['embedslideshow_dynamic_size']);
 
 // Do the page generation ritual -- don't change this section.
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_page_heading);
+config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
 include '../../../include/footer.php';
