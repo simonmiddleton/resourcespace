@@ -159,6 +159,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             array_merge(
                 [
                     'user' => $api['username'],
+                    'language' => $GLOBALS['language'] ?? $GLOBALS['defaultlanguage'],
                     'function' => $function,
                 ],
                 $data
@@ -344,11 +345,19 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         {
         try
             {
-            $resource_metadata = $this->callApi('get_resource_field_data', ['resource' => $id]);
-            $meta = [];
+            $instance = $this->getSelectedSystemInstance()->toArray();
+            $instance_cfg = $instance['configuration'];
+            $view_title_field = $instance_cfg['view_title_field'] ?? $GLOBALS['view_title_field'];
 
+            $meta = [];
+            $resource_metadata = $this->callApi('get_resource_field_data', ['resource' => $id]);
             foreach ($resource_metadata as $metadata)
                 {
+                if ($metadata['ref'] === $view_title_field)
+                    {
+                    continue;
+                    }
+
                 if ($metadata['value'] !== '')
                     {
                     $meta[$metadata['title']] = $metadata['value'];
