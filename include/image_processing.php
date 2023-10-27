@@ -1892,7 +1892,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     // we have an extracted ICC profile, so use it as source
                     if ($icc_preview_profile != "" && $icc_preview_profile_embed)
                         {
-                        $targetprofile = ($imagemagick_mpr ? "" : "-profile ") . dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                        $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
                         }
                     else
                         {
@@ -1909,7 +1909,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         }
                     else
                         {
-                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . ' ' . $icc_preview_options . ' ' . escapeshellarg($targetprofile);
+                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . ' ' . $icc_preview_options . ' ' . (!$imagemagick_mpr && $targetprofile != "" ? "-profile " : "") . escapeshellarg($targetprofile);
                         }
 
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
