@@ -38,7 +38,7 @@ if ($provider instanceof NoProvider)
     }
 $provider_name = $providers_select_list[$image_bank_provider_id] ?? $provider->getName();
 $record = $provider->findById($id);
-$resource_download_options_table = $provider->getResourceDownloadOptionsTable();
+$resource_download_options_table = $provider->getResourceDownloadOptionsTable($id);
 
 
 include_once "{$rs_root}/include/header.php";

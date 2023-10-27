@@ -369,26 +369,44 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         return $meta;
         }
 
-    /** @inheritdoc */
-    public function getResourceDownloadOptionsTable(): array
+    /**
+     * @inheritdoc
+     * @param int $id Resource ref
+     */
+    public function getResourceDownloadOptionsTable($id): array
         {
-        $table = [
-            'header' => [
-                $this->lang['filedimensions'],
-                $this->lang['filesize'],
-            ],
-            'data' => [
-                '',
-                '',
-                '',
-            ],
-        ];
+        try
+            {
+            $preview_sizes = $this->callApi('get_resource_all_image_sizes', ['resource' => $id]);
+            }
+        catch (RuntimeException $e)
+            {
+            debug(sprintf('[image_banks][%s] %s', __METHOD__, $e->getMessage()));
+            $preview_sizes ??= [];
+            }
 
-        $sizes=get_image_sizes(2,false,'jpg');
-        $table['data'][0] = $sizes[1]['name'];
-        $table['data'][1] = sprintf('<td class="DownloadFileDimensions">%s</td>', get_size_info($sizes[1]));
-        $table['data'][2] = sprintf('<td class="DownloadFileSize">%s</td>', $sizes[1]['filesize']);
-        // printf('<pre>%s</pre>', print_r($sizes, true));die('You died at line ' . __LINE__ . ' in file ' . __FILE__);
-        return $table;
+        foreach ($preview_sizes as $size)
+            {
+            if (in_array($size['size_code'], ['original', 'hpr', 'lpr']))
+                {
+                return [
+                    'header' => [
+                        $this->lang['filedimensions'],
+                        $this->lang['filesize'],
+                    ],
+                    'data' => [
+                        str_replace(
+                            '%SIZE_CODE',
+                            $size['size_code'],
+                            $this->lang['image_banks_resourcespace_file_information_description']
+                        ),
+                        sprintf('<td class="DownloadFileDimensions">%s</td>', get_size_info($size)),
+                        sprintf('<td class="DownloadFileSize">%s</td>', $size['filesize']),
+                    ],
+                ];
+                }
+            }
+
+        return parent::getResourceDownloadOptionsTable($id);
         }
     }

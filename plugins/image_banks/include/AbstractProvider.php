@@ -209,8 +209,9 @@ abstract class Provider
 
     /**
      * Get table view information for rendering on the plugins' view page
+     * @param int|string $id Record ID
      */
-    public function getResourceDownloadOptionsTable(): array
+    public function getResourceDownloadOptionsTable($id): array
         {
         return [
             'header' => [],
