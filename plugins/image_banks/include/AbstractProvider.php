@@ -190,7 +190,7 @@ abstract class Provider
     /**
      * Retrieve non-metadata properties from Image Bank Provider for image ID.
      * @param int|string $id Record ID
-     * @return 
+     * @return array<string, string> The returned key must be the user friendly name (label), the value is just that.
      */
     public function getImageNonMetadataProperties($id): array
         {
@@ -200,7 +200,7 @@ abstract class Provider
     /**
      * Retrieve image metadata from Image Bank Provider.
      * @param int|string $id Record ID
-     * @return 
+     * @return array<string, string> The returned key must be the user friendly name (label), the value is just that.
      */
     public function getImageMetadata($id): array
         {
