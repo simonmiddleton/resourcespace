@@ -4570,20 +4570,6 @@ function get_system_status()
         }
 
     // Check configured utility paths
-    $system_utilities = [
-        'im-convert' => 'imagemagick_path',
-        'im-identify' => 'imagemagick_path',
-        'im-composite' => 'imagemagick_path',
-        'im-mogrify' => 'imagemagick_path',
-        'ghostscript' => 'ghostscript_path',
-        'ffmpeg' => 'ffmpeg_path',
-        'ffprobe' => 'ffmpeg_path',
-        'exiftool' => 'exiftool_path',
-        'php' => 'php_path',
-        'python' => 'python_path',
-        'archiver' => 'archiver_path',
-        'fits' => 'fits_path',
-    ];
     $missing_utility_paths = [];
     foreach(RS_SYSTEM_UTILITIES as $sysu_name => $sysu)
         {
@@ -4600,7 +4586,7 @@ function get_system_status()
             'info' => 'Unable to get utility path',
             'affected_utilities' => array_unique(array_keys($missing_utility_paths)),
             'affected_utility_paths' => array_unique(array_values($missing_utility_paths)),
-            'severity' => 'WARNING',
+            'severity' => 'CRITICAL',
         ];
 
         return $return;
@@ -4623,7 +4609,7 @@ function get_system_status()
     // Check database encoding.
     global $mysql_db;
     $db_encoding = ps_value("SELECT default_character_set_name AS `value` FROM information_schema.SCHEMATA WHERE `schema_name` = ?;", array("s",$mysql_db), '');
-    if (strtolower($db_encoding) != 'utf8mb4')
+    if (substr(strtolower($db_encoding), 0, 4) != 'utf8')
         {
         $return['results']['database_encoding'] = [
             'status' => 'WARNING',
@@ -4683,7 +4669,7 @@ function get_system_status()
             $return['results']['filestore_file_delete'] = [
                 'status' => 'WARNING',
                 'info' => sprintf('Unable to delete file "%s". Reason: %s', $file, $t->getMessage()),
-                'severity' => 'Warning',
+                'severity' => 'WARNING',
             ];
 
             ++$warn_tests;
