@@ -4547,7 +4547,7 @@ function get_system_status()
         $return['results']['required_php_modules'] = [
             'status' => 'FAIL',
             'info' => 'Missing PHP modules: ' . implode(', ', $missing_modules),
-            'severity' => 'CRITICAL',
+            'severity' => CRITICAL,
         ];
 
         // Return now as this is considered fatal to the system. If not, later checks might crash process because of missing one of these modules.
@@ -4564,7 +4564,7 @@ function get_system_status()
         $return['results']['php_version'] = [
             'status' => 'WARNING',
             'info' => 'PHP version not supported',
-            'severity' => 'WARNING',
+            'severity' => WARNING,
         ];
         ++$warn_tests;
         }
@@ -4586,7 +4586,7 @@ function get_system_status()
             'info' => 'Unable to get utility path',
             'affected_utilities' => array_unique(array_keys($missing_utility_paths)),
             'affected_utility_paths' => array_unique(array_values($missing_utility_paths)),
-            'severity' => 'CRITICAL',
+            'severity' => CRITICAL,
         ];
 
         return $return;
@@ -4600,7 +4600,7 @@ function get_system_status()
         $return['results']['database_connection'] = [
             'status' => 'FAIL',
             'info' => 'SQL query produced unexpected result',
-            'severity' => 'CRITICAL',
+            'severity' => CRITICAL,
         ];
 
         return $return;
@@ -4614,7 +4614,7 @@ function get_system_status()
         $return['results']['database_encoding'] = [
             'status' => 'WARNING',
             'info' => 'Database encoding is not utf8mb4',
-            'severity' => 'WARNING',
+            'severity' => WARNING,
         ];
         ++$warn_tests;
         }
@@ -4625,7 +4625,7 @@ function get_system_status()
         $return['results']['filestore_writable'] = [
             'status' => 'FAIL',
             'info' => '$storagedir is not writeable',
-            'severity' => 'CRITICAL',
+            'severity' => CRITICAL,
         ];
 
         return $return;
@@ -4639,7 +4639,7 @@ function get_system_status()
         $return['results']['create_file_in_filestore'] = [
             'status' => 'FAIL',
             'info' => 'Unable to write to configured $storagedir. Folder permissions are: ' . fileperms($GLOBALS['storagedir']),
-            'severity' => 'WARNING',
+            'severity' => WARNING,
         ];
 
         return $return;
@@ -4650,7 +4650,7 @@ function get_system_status()
         $return['results']['filestore_file_exists_and_is_readable'] = [
             'status' => 'FAIL',
             'info' => 'Hash not saved or unreadable in file ' . $file,
-            'severity' => 'WARNING',
+            'severity' => WARNING,
         ];
 
         return $return;
@@ -4669,7 +4669,7 @@ function get_system_status()
             $return['results']['filestore_file_delete'] = [
                 'status' => 'WARNING',
                 'info' => sprintf('Unable to delete file "%s". Reason: %s', $file, $t->getMessage()),
-                'severity' => 'WARNING',
+                'severity' => WARNING,
             ];
 
             ++$warn_tests;
@@ -4681,7 +4681,7 @@ function get_system_status()
         $return['results']['filestore_file_check_hash'] = [
             'status' => 'FAIL',
             'info' => sprintf('Test write to disk returned a different string ("%s" vs "%s")', $hash, $check),
-            'severity' => 'WARNING',
+            'severity' => WARNING,
         ];
 
         return $return;
@@ -4695,7 +4695,7 @@ function get_system_status()
         $return['results']['filestore_indexed'] = [
             'status' => 'FAIL',
             'info' => $cfb['info'],
-            'severity' => 'CRITICAL',
+            'severity' => CRITICAL,
         ];
         return $return;
         }
@@ -4711,7 +4711,7 @@ function get_system_status()
             $return['results']['mysql_log_location'] = [
                 'status' => 'FAIL',
                 'info' => 'Invalid $mysql_log_location specified in config file',
-                'severity' => 'CRITICAL',
+                'severity' => CRITICAL,
             ];
 
             return $return;
@@ -4734,7 +4734,7 @@ function get_system_status()
 
         if($debug_log)
             {
-            $return['results']['debug_log_location']['severity'] = 'CRITICAL';
+            $return['results']['debug_log_location']['severity'] = CRITICAL;
             return $return;
             }
         else
@@ -4752,7 +4752,7 @@ function get_system_status()
         $return['results']['cron_process'] = [
             'status' => 'WARNING',
             'info' => 'Cron was executed ' . round($diff_days, 1) . ' days ago.',
-            'severity' => 'WARNING',
+            'severity' => WARNING,
         ];
         }
 
@@ -4784,7 +4784,7 @@ function get_system_status()
                 'status' => 'WARNING',
                 'info' => $percent . '% used - nearly full.',
                 'avail' => $avail, 'used' => $used, 'percent' => $percent,
-                'severity' => 'WARNING'
+                'severity' => WARNING
             ];
             ++$warn_tests;
             }
@@ -4794,7 +4794,7 @@ function get_system_status()
                 'status' => 'FAIL',
                 'info' => $percent . '% used - nearly full.',
                 'avail' => $avail, 'used' => $used, 'percent' => $percent,
-                'severity' => 'CRITICAL'
+                'severity' => CRITICAL
             ];
             return $return;
             }
@@ -4804,7 +4804,7 @@ function get_system_status()
                 'status' => 'FAIL',
                 'info' => $percent . '% used - over quota.',
                 'avail' => $avail, 'used' => $used, 'percent' => $percent,
-                'severity' => 'CRITICAL'
+                'severity' => CRITICAL
             ];
             return $return;
             }

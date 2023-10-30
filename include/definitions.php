@@ -855,3 +855,8 @@ const API_NATIVE_WHITELIST = [
     'send_user_message',
     'update_related_resource',
 ];
+
+// get_system_status() severity types
+define ('CRITICAL', 0);
+define ('WARNING', 1);
+define ('NOTICE', 2);

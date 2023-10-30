@@ -699,7 +699,7 @@ function HookSimplesamlAllExtra_checks()
         'name' => 'simplesaml_php',
         'status' => 'FAIL',
         'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'] . ' PHP',
-        'severity' => 'CRITICAL'
+        'severity' => CRITICAL
     ];
 
     $GLOBALS['use_error_exception'] = true;
@@ -721,7 +721,7 @@ function HookSimplesamlAllExtra_checks()
         'name' => 'simplesaml_config',
         'status' => 'FAIL',
         'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
-        'severity' => 'NOTICE'
+        'severity' => NOTICE
     ];
 
     $GLOBALS['use_error_exception'] = true;

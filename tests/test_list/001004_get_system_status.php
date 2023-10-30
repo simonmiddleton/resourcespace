@@ -28,7 +28,7 @@ if(isset($system_status['results']['mysql_log_location']) && !isset($system_stat
 
 $debug_log_location = '/var/some_incorrect_location';
 $system_status = get_system_status();
-if(isset($system_status['results']['debug_log_location']) && $system_status['results']['debug_log_location']['status'] !== 'WARNING')
+if(isset($system_status['results']['debug_log_location']) && $system_status['results']['debug_log_location']['status'] !== WARNING)
     {
     echo 'Bad debug_log_location as a WARN message - ';
     return false;
@@ -37,7 +37,7 @@ if(isset($system_status['results']['debug_log_location']) && $system_status['res
 $debug_log = true;
 $system_status = get_system_status();
 unset($debug_log, $debug_log_location);
-if(isset($system_status['results']['debug_log_location']) && $system_status['results']['debug_log_location']['status'] !== 'FAIL' && $system_status['results']['debug_log_location']['severity'] !== 'CRITICAL')
+if(isset($system_status['results']['debug_log_location']) && $system_status['results']['debug_log_location']['status'] !== 'FAIL' && $system_status['results']['debug_log_location']['severity'] !== CRITICAL)
     {
     echo 'Bad debug_log_location as a FAIL error - ';
     return false;
