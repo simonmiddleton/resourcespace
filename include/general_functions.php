@@ -4613,7 +4613,7 @@ function get_system_status()
         {
         $return['results']['database_encoding'] = [
             'status' => 'WARNING',
-            'info' => 'Database encoding is not utf8mb4',
+            'info' => 'Database encoding is not utf8',
             'severity' => WARNING,
         ];
         ++$warn_tests;
@@ -4754,6 +4754,7 @@ function get_system_status()
             'info' => 'Cron was executed ' . round($diff_days, 1) . ' days ago.',
             'severity' => WARNING,
         ];
+        ++$warn_tests;
         }
 
 
@@ -4761,11 +4762,22 @@ function get_system_status()
     $avail = disk_total_space($GLOBALS['storagedir']);
     $free = disk_free_space($GLOBALS['storagedir']);
     $calc = $free / $avail;
-    if($calc < 0.05)
+
+    if($calc < 0.01)
+        {
+        $return['results']['free_disk_space'] = [
+            'status' => 'FAIL',
+            'info' => 'Less than 1% disk space free.',
+            'severity' => CRITICAL
+        ];
+        return $return;
+        }
+    else if($calc < 0.05)
         {
         $return['results']['free_disk_space'] = [
             'status' => 'WARNING',
             'info' => 'Less than 5% disk space free.',
+            'severity' => WARNING
         ];
         ++$warn_tests;
         }
