@@ -7,7 +7,7 @@ function HookConditional_termsAllInitialise()
     }
 
 
-function HookConditional_termsAllExtra_warn_checks()
+function HookConditional_termsAllExtra_checks()
     {
     global $lang;
 
@@ -15,6 +15,7 @@ function HookConditional_termsAllExtra_warn_checks()
         {
         return [[
             'name' => 'conditional_terms',
+            'status' => 'WARNING',
             'info' => $lang['conditional_terms_plugin_misconfigured'],
         ]];
         }

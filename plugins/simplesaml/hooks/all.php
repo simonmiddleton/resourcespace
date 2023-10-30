@@ -690,46 +690,60 @@ function HookSimplesamlAllCheck_access_key()
     return false;
     }
 
-function HookSimplesamlAllExtra_fail_checks()
+function HookSimplesamlAllExtra_checks()
     {
+    $return = array();  // Array containing any errors / warnings found.
+
     // Check if incompatible with PHP version
-    $simplesaml_fail = [
-        'name' => 'simplesaml',
-        'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
+    $simplesaml_php_check = [
+        'name' => 'simplesaml_php',
+        'status' => 'FAIL',
+        'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'] . ' PHP',
+        'severity' => 'CRITICAL'
     ];
 
     $GLOBALS['use_error_exception'] = true;
     try
         {
-        $samlok = simplesaml_php_check();
+        if (!simplesaml_php_check())
+            {
+            $return[] = $simplesaml_php_check;
+            }
         }
     catch (Exception $e)
         {
-        return $simplesaml_fail;
+        $return[] = $simplesaml_php_check;
         }
     unset($GLOBALS['use_error_exception']);
 
-    return $samlok ? false : $simplesaml_fail;
-    }
-
-function HookSimplesamlAllExtra_warn_checks()
-    {
     // Check if SAML library needs updating (if pre-9.7 SP not using ResourceSpace config)
-    $simplesaml_warn = [
-        'name' => 'simplesaml',
+    $simplesaml_config_check = [
+        'name' => 'simplesaml_config',
+        'status' => 'FAIL',
         'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
+        'severity' => 'NOTICE'
     ];
 
     $GLOBALS['use_error_exception'] = true;
     try
         {
-        $samlok = simplesaml_config_check();
+        if (!simplesaml_config_check())
+            {
+            $return[] = $simplesaml_config_check;
+            }
         }
     catch (Exception $e)
         {
-        return array($simplesaml_warn);
+        $return[] = $simplesaml_config_check;
         }
     unset($GLOBALS['use_error_exception']);
 
-    return $samlok ? false : array($simplesaml_warn);
+    if (count($return) > 0)
+        {
+        return $return;
+        }
+    else
+        {
+        return false;
+        }
     }
