@@ -92,6 +92,7 @@ function get_resource_path(
                 'ext'         => $extension,
                 'page'        => $page,
                 'alternative' => $alternative,
+                'watermarked' => $watermarked,
                 'k'           => $k,
                 'noattach'    => 'true',
             ),
