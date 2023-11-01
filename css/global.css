@@ -1920,6 +1920,7 @@ a.Enabled, a:visited.Enabled {
     height: 30px;
     vertical-align: top;
     margin: 0;
+    min-width: unset;
 }
 
 /* jQuery UI */

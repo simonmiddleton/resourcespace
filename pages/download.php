@@ -34,6 +34,7 @@ $userfiledownload   = getval('userfile', '');
 $write_exif_data    = (getval('exif_write', '') == 'true');
 $k                  = getval('k', '');
 $download_temp_key  = trim(getval("access_key",""));
+$watermarked        = getval('watermarked', 0, true);
 
 // Check for temporary download access using key (e.g. from API get_resource_path) 
 $valid_key = false;
@@ -202,7 +203,7 @@ else
 
     // additional access check, as the resource download may be allowed, but access restriction should force watermark.  
     $access        = get_resource_access($ref);
-    $use_watermark = check_use_watermark(getval("dl_key",""),$ref);
+    $use_watermark = check_use_watermark(getval("dl_key",""),$ref) || $watermarked;
 
     // If no extension was provided, we fallback to JPG.
     if('' == $ext)

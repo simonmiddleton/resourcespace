@@ -424,9 +424,12 @@ function message_deleteselusrmsg($messages)
  
     $parameters = array("i",(int)$userref);
     $messages = json_decode($messages, true);
-    $parameters = array_merge($parameters, ps_param_fill($messages,"i"));
- 
-    ps_query("DELETE FROM user_message WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
+    if (count($messages) > 0) 
+        {
+        $parameters = array_merge($parameters, ps_param_fill($messages,"i"));
+
+        ps_query("DELETE FROM user_message WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
+        }
     }
  
 /**
