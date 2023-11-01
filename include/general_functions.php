@@ -132,10 +132,6 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         };
 
     $month_part = substr($date, $bce_offset + 5, 2);
-    if(!is_numeric($month_part))
-        {
-        return '';
-        }
     $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
         {
@@ -3061,12 +3057,9 @@ function user_set_usergroup($user,$usergroup)
  * @param  int    $length Length of desired string of bytes
  * @return string         Random character string
  */
-function generateSecureKey($length = 64)
+function generateSecureKey(int $length = 64): string
     {
-    $bytes = openssl_random_pseudo_bytes($length / 2);
-    $hex   = substr(bin2hex($bytes), 0, 64); 
-
-    return $hex;
+    return bin2hex(openssl_random_pseudo_bytes($length / 2));
     }
 
 /**
