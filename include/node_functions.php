@@ -473,54 +473,6 @@ function get_tree_node_level($ref)
 
 
 /**
-* Find node ID of the root parent when searching by one
-* of the leaves ID
-* Example:
-* 1
-* 2
-* 2.1
-* 2.2
-* 2.2.1
-* 2.2.2
-* 2.2.3
-* 2.3
-* 3
-* Searching by "2.2.1" ID will give us the ID of node "2"
-* 
-* @param integer $ref   Node ID of tree leaf
-* @param integer $level Node depth level (as returned by get_tree_node_level())
-* 
-* @return integer|boolean
-*/
-function get_root_node_by_leaf(int $ref, int $level)
-    {
-    if(0 >= $level)
-        {
-        return false;
-        }
-
-    $query = "SELECT n0.ref AS `value` FROM node AS n{$level}";
-
-    $from_level = $level;
-    $level--;
-
-    while(0 <= $level)
-        {
-        $query .= " LEFT JOIN node AS n{$level} ON n" . ($level + 1) . ".parent = n{$level}.ref";
-
-        if(0 === $level)
-            {
-            $query .= " WHERE n{$from_level}.ref = ?";
-            $placeholders = ['i', $ref];
-            }
-
-        $level--;
-        }
-
-    return (int) ps_value($query, $placeholders, 0);
-    }
-
-/**
 * Return a row consisting of all ancestor nodes of a given node
 * Example:
 * 1
