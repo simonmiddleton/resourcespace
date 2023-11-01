@@ -11,7 +11,7 @@ $setup_global_env = function() use ($original_state)
 
     // Fake (re)loading plugins on the fly so we can add one when a use case requires it
     unset($GLOBALS['hook_cache']);
-    $GLOBALS['plugins'] = $original_state['plugins'];
+    $GLOBALS['plugins'] = [];
     };
 
 $rtf_text = create_resource_type_field("Test #421 text", 0, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "test_421_text", false);
@@ -182,7 +182,12 @@ foreach($use_cases as $use_case)
         $use_case['setup']();
         }
 
-    $result = get_download_filename(...$use_case['input']);
+    $result = get_download_filename(
+        $use_case['input']['ref'],
+        $use_case['input']['size'],
+        $use_case['input']['alternative'],
+        $use_case['input']['ext']
+    );
     if($use_case['expected'] !== $result)
         {
         echo "Use case: {$use_case['name']} - ";
