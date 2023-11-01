@@ -4732,7 +4732,7 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
         return;
         }
 
-    global $pextension, $usesize, $subbed_original, $prefix_resource_id_to_filename, $prefix_filename_string,
+    global $pextension, $usesize, $subbed_original,
            $download_filename_id_only, $deletion_array, $use_zip_extension, $copy, $exiftool_write_option, $p, $size, $lang;
 
     # Only perform the copy if an original filename is set.
@@ -4786,7 +4786,7 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
 
     if(empty($filename))
         {
-        $filename=$prefix_filename_string . $ref . "_" . $size . "." . $pextension;
+        $filename = get_download_filename($ref, $size, 0, $pextension);
         }
 
     return;
