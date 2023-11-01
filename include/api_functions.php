@@ -687,7 +687,6 @@ function iiif_generate_manifest(&$iiif)
                 $iiif->response["@context"] = "http://iiif.io/api/presentation/3/context.json";
                 $iiif->response["id"] = $iiif->rooturl . $iiif->request["id"] . "/manifest";
                 $iiif->response["type"] = "Manifest";
-                $iiif->response["behavior"] = "paged";
 
                 // Descriptive metadata about the object/work
                 // The manifest data should be the same for all resources that are returned.
@@ -750,11 +749,7 @@ function iiif_generate_manifest(&$iiif)
                         }
                     }
 
-                // Sequences
                 $iiif->response["items"] = iiif_get_canvases($iiif,false);
-
-                // Add as sequences for Universal Viewer support (images not working with a v3.0 manifest at time of writing)
-                $iiif->response["sequences"] = iiif_generate_sequence($iiif);
 
                 $iiif->validrequest = true;
                 /* MANIFEST REQUEST END */
