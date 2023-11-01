@@ -4,6 +4,7 @@ command_line_only();
 
 // --- Set up
 $original_state = $GLOBALS;
+$orig_plugins = $GLOBALS['plugins'];
 $setup_global_env = function() use ($original_state)
     {
     $GLOBALS['download_filename_format'] = 'RS%resource';
@@ -199,6 +200,7 @@ foreach($use_cases as $use_case)
 
 
 // Tear down
+$GLOBALS['plugins'] = $orig_plugins;
 $GLOBALS['enable_thumbnail_creation_on_upload'] = $original_state['enable_thumbnail_creation_on_upload'];
 unset(
     $original_state,
