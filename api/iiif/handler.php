@@ -44,7 +44,7 @@ $iiif->headers = [];
 $iiif->errors=[];
 
 // Extract request details
-iiif_parse_url($iiif);
+iiif_parse_url($iiif, ($_SERVER["REQUEST_URI"] ?? ""));
 
 if ($iiif->request["api"] == "root")
 	{
@@ -61,20 +61,27 @@ if ($iiif->request["api"] == "root")
 	$iiif->response["height"] = 4000;
     $iiif->response["tiles"] = array();
     $iiif->response["tiles"][] = array("width" => $preview_tile_size, "height" => $preview_tile_size, "scaleFactors" => $preview_tile_scale_factors);
-    $iiif->response["profile"] = array("http://iiif.io/api/image/2/level0.json");
+    $iiif->response["profile"] = array("http://iiif.io/api/image/3/level0.json");
     $iiif->validrequest = true;
     }
 elseif($iiif->request["api"] == "image")
     {
-    // IMAGE REQUEST (http://iiif.io/api/image/2.1/)
-    // The IIIF Image API URI for requesting an image must conform to the following URI Template:
-    // {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
     iiif_process_image_request($iiif);
-    } // End of image API
+    } 
 elseif($iiif->request["api"] == "presentation")
-    {
-    // Presentation API
-    iiif_generate_manifest($iiif);
+    {    
+    if($iiif->request["type"] == "")
+        {
+        $iiif->errorcode=404;
+        $iiif->errors[] = "Bad request. Valid options are 'manifest', 'sequence' or 'canvas' e.g. ";
+        $iiif->errors[] = "For the manifest: " . $iiif->rooturl . $iiif->request["id"] . "/manifest";
+        $iiif->errors[] = "For a sequence : " . $iiif->rooturl . $iiif->request["id"] . "/sequence";
+        $iiif->errors[] = "For a canvas : " . $iiif->rooturl . $iiif->request["id"] . "/canvas/<identifier>";
+        }
+    else
+        {
+        iiif_process_presentation_request($iiif);
+        }
     }
 
 // Send the response 
