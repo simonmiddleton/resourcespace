@@ -253,6 +253,9 @@ else
                 }
             }
         }
+    
+    // Establish nonwatermarked path for use when returning snapshot frames
+    $nowmpath = get_resource_path($ref, true, $size, false, $ext, -1, $page, false, '', $alternative);
 
     $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
     $download_extra = hook('download_resource_extra', '', array($path));
@@ -260,7 +263,7 @@ else
     // Snapshots taken for videos? Make sure we convert to the real snapshot file
     if(1 < $ffmpeg_snapshot_frames && 0 < $snapshot_frame)
         {
-        $path = str_replace('snapshot', "snapshot_{$snapshot_frame}", $path);
+        $path = str_replace('snapshot', "snapshot_{$snapshot_frame}", $nowmpath);
         }
 
     hook('modifydownloadpath');
