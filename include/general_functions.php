@@ -132,6 +132,10 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
         };
 
     $month_part = substr($date, $bce_offset + 5, 2);
+    if(!is_numeric($month_part))
+        {
+        return '-';
+        }
     $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
         {
