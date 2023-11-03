@@ -30,7 +30,7 @@ if (!check_access_key_collection($ref,$key))
     
 # Load watermark settings
 $use_watermark=check_use_watermark();
-
+ob_start();
 ?>
 <html>
 <head>
@@ -92,7 +92,7 @@ foreach ($resources as $resource)
     $preview_path .= "&k=" . $key;
     
     # sets height and width to display 
-    if((isset($resource["thumb_width"])&&$resource["thumb_width"]<1) || (isset($resource["thumb_height"]) && $resource["thumb_height"] <1)) {continue;/*No Preview Available*/}
+    if(!isset($resource["thumb_width"]) || $resource["thumb_width"]<1 || !isset($resource["thumb_height"]) || $resource["thumb_height"] <1) {continue;/*No Preview Available*/}
     $ratio=$resource["thumb_width"]/$resource["thumb_height"];
     
     if ($ratio > $player_ratio) // Base on the width unless we have been asked to scale to specific width
@@ -130,6 +130,14 @@ foreach ($resources as $resource)
     $page++;
     }
 $maxpages=$page-1;
+
+// ratio won't be set if none of the resources in the collection have previews available. 
+if(!isset($ratio))
+    {
+    ob_end_clean();
+    exit($lang["embedslideshow_notavailable"]);
+    }
+ob_flush();
 ?>
 
 
