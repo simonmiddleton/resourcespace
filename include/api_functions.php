@@ -563,6 +563,7 @@ function iiif_parse_url(&$iiif,$url) : void
         // Presentation -  need
         // - identifier
         // - type (manifest/canvas/sequence/annotation
+        // - typeid (manifest/canvas/sequence/annotation
 
         $iiif->request["id"] = trim($xpath[0] ?? '');
         $iiif->request["type"] = trim($xpath[1] ?? '');
@@ -607,11 +608,6 @@ function iiif_process_presentation_request(&$iiif)
             iiif_get_resource_from_position($iiif,$iiif->request["typeid"]);
 
             $iiif->response = iiif_generate_canvas($iiif,$iiif->request["typeid"]);;
-            $iiif->validrequest = true;
-            }
-        elseif($iiif->request["type"] == "sequence")
-            {
-            $iiif->response = iiif_generate_sequence($iiif);
             $iiif->validrequest = true;
             }
         elseif($iiif->request["type"] == "annotationpage")
@@ -718,30 +714,6 @@ function iiif_generate_manifest(&$iiif)
     $iiif->response["items"] = iiif_get_canvases($iiif,false);
     }
 
-/**
- * Generate the sequence - TODO - update this for IIIF API v3.0
- * @param object    $iiif   The current IIIF request object generated in api/iiif/handler.php
- *
- * @return void
- *
- */
-function iiif_generate_sequence(&$iiif)
-    {
-    if($iiif->request["typeid"]=="normal")
-        {
-        $iiif->response["@context"] = "http://iiif.io/api/presentation/3/context.json";
-        $iiif->response["id"] = $iiif->rooturl . $iiif->request["id"] . "/sequence/normal";
-        $iiif->response["type"] = "sc:Sequence";
-        $arr_langdefault = i18n_get_all_translations("default");
-        foreach($arr_langdefault as $langcode=>$langdefault)
-            {
-            $iiif->response["label"][$langcode] = $langdefault;
-            }
-        $iiif->response["canvases"] = iiif_get_canvases($iiif);
-        $iiif->validrequest = true;
-        }
-    return;
-    }
 
 /**
  * Generate a canvas
@@ -777,7 +749,6 @@ function iiif_generate_canvas(object &$iiif, $position)
 
     $position = $resource["iiif_position"];
     $position_val = $resource["field" . $iiif->sequence_field] ?? get_data_by_field($resource["ref"], $iiif->sequence_field);
-    //$canvas["@context"] = "http://iiif.io/api/presentation/3/context.json";
     $canvas["id"] = $iiif->rooturl . $iiif->request["id"] . "/canvas/" . $position;
     $canvas["type"] = "Canvas";
     $canvas["label"]["none"] = [$position_prefix . $position_val];
@@ -787,13 +758,6 @@ function iiif_generate_canvas(object &$iiif, $position)
     $image_size = get_original_imagesize($resource["ref"],$img_path);
     $canvas["height"] = intval($image_size[2]);
     $canvas["width"] = intval($image_size[1]);
-
-    // "If the largest images dimensions are less than 1200 pixels on either edge, then the canvases dimensions should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
-    if($image_size[1] < 1200 || $image_size[2] < 1200)
-        {
-        $image_size[1] = $image_size[1] * 2;
-        $image_size[2] = $image_size[2] * 2;
-        }
 
     // Add image (only 1 per canvas currently supported)
     iiif_get_resource_from_position($iiif,$position);
