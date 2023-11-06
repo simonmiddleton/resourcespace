@@ -103,7 +103,8 @@ foreach($keywords as $keyword)
         }
 
     $resource_type_field = ps_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$field_shortname), 0, "schema");
-
+    $resource_type_field_type = get_resource_type_field($resource_type_field)["type"];
+    
     if(0 == $resource_type_field)
         {
         continue;
@@ -114,7 +115,7 @@ foreach($keywords as $keyword)
         // User can't search against a metadata field they don't have access to
         continue;
         }
-    $nodes = get_nodes($resource_type_field, null, true);
+    $nodes = get_nodes($resource_type_field, null, $resource_type_field_type==FIELD_TYPE_CATEGORY_TREE);
     
     // Check if multiple nodes have been specified for an OR search
     $keywords_expanded=explode(';',$specific_field_search[1]);
