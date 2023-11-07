@@ -260,11 +260,20 @@ else
     $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
     $download_extra = hook('download_resource_extra', '', array($path));
 
-    // Snapshots taken for videos? Make sure we convert to the real snapshot file
-    if(1 < $ffmpeg_snapshot_frames && 0 < $snapshot_frame)
+    // Process depending on whether snapshot frame is to be returned
+    if($snapshot_frame > 0 && $ffmpeg_snapshot_frames > 1)
         {
+        // Snapshot frame is to be returned, so adjust the path to be the actual frame requested
         $path = str_replace('snapshot', "snapshot_{$snapshot_frame}", $nowmpath);
         }
+    
+    if($snapshot_frame == 0 && $size == "pre" && $use_watermark && $ext == "mp4")
+        {
+        // Video stream preview size is to be returned and watermark is specified
+        // In this case there is no such thing as a watermarked video preview size, so use the unwatermarked path
+        $path=$nowmpath;
+        }
+
 
     hook('modifydownloadpath');
     // Hook to modify the download path.
