@@ -56,13 +56,24 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             {
             $instance = $this->getSelectedSystemInstance()->toArray();
             $instance_cfg = $instance['configuration'];
-            $api_results = $this->callApi(
-                'do_search',
-                [
-                    'search' => $keywords,
-                    'fetchrows' => "{$offset},{$per_page}",
-                ]
-            );
+
+            $cache_id = md5("{$instance['baseURL']}--{$keywords}--{$per_page}--{$page}");
+            $api_cached_results = $this->getCache($cache_id, 1);
+            if($api_cached_results)
+                {
+                $api_results = json_decode($api_cached_results, true);
+                }
+            else
+                {
+                $api_results = $this->callApi(
+                    'do_search',
+                    [
+                        'search' => $keywords,
+                        'fetchrows' => "{$offset},{$per_page}",
+                    ]
+                );
+                $this->setCache($cache_id, json_encode($api_results));
+                }
             }
         catch (RuntimeException $r)
             {
@@ -73,6 +84,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
 
         $view_title_field = $instance_cfg['view_title_field'] ?? $GLOBALS['view_title_field'];
         $results = new ProviderSearchResults();
+        $results->total = $api_results['total'];
 
         foreach($api_results['data'] as $row)
             {
@@ -82,7 +94,17 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
 
             try
                 {
-                $resource_sizes = $this->callApi('get_resource_all_image_sizes', ['resource' => $row['ref']]);
+                $cache_id = md5("{$instance['baseURL']}--get_resource_all_image_sizes--{$row['ref']}");
+                $api_cached_results = $this->getCache($cache_id, $instance_cfg['api_resource_path_expiry_hours'] ?? 10);
+                if($api_cached_results)
+                    {
+                    $resource_sizes = json_decode($api_cached_results, true);
+                    }
+                else
+                    {
+                    $resource_sizes = $this->callApi('get_resource_all_image_sizes', ['resource' => $row['ref']]);
+                    $this->setCache($cache_id, json_encode($resource_sizes));
+                    }
                 }
             catch (RuntimeException $r)
                 {
@@ -121,7 +143,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
 
             $results[] = $item;
             }
-        $results->total = $api_results['total'];
+
         return $results;
         }
 
