@@ -6,13 +6,13 @@
  * @param int|array $resources          Resource ID or array of resource IDS
  * @param array     $target_field       Target metadata field array from get_resource_type_field()
  * @param array     $values             Array of strings from the field currently being processed
- * @param string    $imageurl           If provied will use this image file instead of metadata values
+ * @param string    $file               Path to image file. If provided will use this file instead of metadata values
  * 
 * @return bool|array                    Array indicating success/failure 
  *                                      True if update successful, false if invalid field or no data returned
  * 
  */
-function openai_gpt_update_field($resources,$target_field,$values, string $imageurl="")
+function openai_gpt_update_field(mixed $resources,array $target_field,array $values, string $file=""): mixed
     {
     global $valid_ai_field_types, $FIXED_LIST_FIELD_TYPES,$language, $defaultlanguage, $openai_gpt_message_input_JSON, 
     $openai_gpt_message_output_json, $openai_gpt_message_text, $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,
@@ -33,8 +33,12 @@ function openai_gpt_update_field($resources,$target_field,$values, string $image
 
     $resources = array_filter($resources,"is_int_loose");
     $valid_response = false;
-    if(trim($imageurl) != "")
+    if(trim($file) != "")
         {
+        $file_data = file_get_contents($file);
+        $file_data_base64 = base64_encode($file_data);
+                               
+        
         $return_json = in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES);
         $outtype = $return_json ? $openai_gpt_message_output_json : $openai_gpt_message_output_text;
         $system_message = str_replace(["%%IN_TYPE%%","%%OUT_TYPE%%"],["image",$outtype],$openai_gpt_system_message);
@@ -46,12 +50,11 @@ function openai_gpt_update_field($resources,$target_field,$values, string $image
             "role"=>"user",
             "content"=> [
                 ["type" => "text", "text"=>$target_field["openai_gpt_prompt"]],
-                ["type" => "image_url", "image_url" => $imageurl],
+                ["type" => "image_url", "image_url" => "data:image/jpeg;base64, " . $file_data_base64],
                 ]
             ];
 
-        debug("openai_gpt - sending request prompt " . json_encode($messages));
-        $use_model = "gpt-4-vision-preview";
+        debug("openai_gpt - sending request prompt for image");
         }
     else
         {
@@ -105,12 +108,13 @@ function openai_gpt_update_field($resources,$target_field,$values, string $image
                 $messages[] = ["role"=>"assistant","content"=>$openai_gpt_example_text_assistant];
                 }
             $messages[] = ["role"=>"user","content"=> $target_field["openai_gpt_prompt"] . ": " . ($send_as_json ? json_encode($prompt_values) : $prompt_values[0])];
-
-            debug("openai_gpt - sending request prompt " . json_encode($messages));
-            // Can't use old model since move to chat API
-            $use_model =trim($openai_gpt_model) == "text-davinci-003" ? $openai_gpt_fallback_model : $openai_gpt_model;
             }
         }
+   
+    debug("openai_gpt - sending request prompt " . json_encode($messages));
+
+    // Can't use old model since move to chat API
+    $use_model =trim($openai_gpt_model) == "text-davinci-003" ? $openai_gpt_fallback_model : $openai_gpt_model; 
 
     $openai_response = openai_gpt_generate_completions($openai_gpt_api_key,$use_model,$messages,$openai_gpt_temperature,$openai_gpt_max_tokens);
 
@@ -119,6 +123,16 @@ function openai_gpt_update_field($resources,$target_field,$values, string $image
         debug("response from openai_gpt_generate_completions() : " . $openai_response);
         if(in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES))
             {
+            // Clean up response
+            if(substr($openai_response,0,7) == "```json")
+                {
+                debug("openai_gpt - extracting JSON text");
+                $openai_response = substr(trim($openai_response," `\""),4);
+                }
+            else
+                {
+                $openai_response = trim($openai_response," \"");
+                }
             $apivalues = json_decode(trim($openai_response),true);
             if(json_last_error() !== JSON_ERROR_NONE || !is_array($apivalues))
                 {
@@ -155,7 +169,6 @@ function openai_gpt_update_field($resources,$target_field,$values, string $image
     else
         {
         debug("openai_gpt error - empty response received from API: '" . trim($openai_response) . "'");
-        $valid_response = false;
         }
 
     $results = [];
@@ -285,33 +298,3 @@ function openai_gpt_get_dependent_fields($field)
     return $ai_gpt_input_fields;
     }
 
-/**
- * Use the image as the GPT input for a field
- *
- * @param int       $resource           Resource ID
- * @param array     $target_field       Target metadata field array from get_resource_type_field()
- * 
- * @return bool
- * 
- */
-function openai_gpt_process_image(int $resource,array $target_field): bool
-    {
-    // Don't update if not a valid field type
-    if(!in_array($target_field["type"],$GLOBALS["valid_ai_field_types"]))
-       {
-       return false;
-       }
-
-    // Get the preview file
-    $file=get_resource_path($resource,true,"pre");
-    if (!file_exists($file))
-        {
-        return false;
-        } 
-    
-    # Fetch and encode the file.
-    $data = file_get_contents($file);
-    $base64 = base64_encode($data);
-        
-
-    }

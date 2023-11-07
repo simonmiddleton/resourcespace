@@ -56,13 +56,13 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
 		    <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
             <select id="field_edit_<?php echo escape_quoted_data((string) $column); ?>" name="<?php echo escape_quoted_data((string) $column); ?>" class="stdwidth">
             <option value="" <?php if ($currentvalue == "") { echo "selected"; } ?>><?php echo $lang["select"]; ?></option>
-            <option value="-1" <?php if ($currentvalue == "-1") { echo "selected"; } ?>>Image: Preview image</option>
+            <option value="-1" <?php if ($currentvalue == "-1") { echo "selected"; } ?>><?php echo $lang["image"] . ": " . $lang["previewimage"] ?></option>
             <?php
             foreach($fields as $field)
                 {
                 if($field["ref"]!=$ref) // Don't show itself as an option
                     {?>
-                    <option value="<?php echo (int)$field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>>Field: <?php echo escape_quoted_data(i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars((string) $field["name"]))  . ")" ?></option>
+                    <option value="<?php echo (int)$field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo $lang["field"] . ": " . escape_quoted_data(i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars((string) $field["name"]))  . ")" ?></option>
                     <?php
                     }
                 }
@@ -190,7 +190,6 @@ function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_node
         }
     return $success;
     }
-
  
 /**
  *  Hook into image upload to process the image as GPT input
@@ -220,18 +219,8 @@ function HookOpenai_gptAllAfterpreviewcreation($ref, $alternative): bool
         if (!file_exists($file))
             {
             return false;
-            } 
-        
-        # Create a temporary link with a key so the file can be accessed unauthenticated
-        $imageurl = get_resource_path($ref, false, "pre");
-        $accesskey = generate_temp_download_key($GLOBALS["userref"], $ref);
-        if($accesskey !== "")
-            {
-            $imageurl .= "&access_key={$accesskey}";
             }
-
-        openai_gpt_update_field([$ref],$ai_gpt_image_field, [],$imageurl);  
+        $success = openai_gpt_update_field([$ref],$ai_gpt_image_field, [],$file);
         }
-
-    return true;
+    return $success[$ref] ?? false;
     }
