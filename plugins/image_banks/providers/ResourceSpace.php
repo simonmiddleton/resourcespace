@@ -87,6 +87,10 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             catch (RuntimeException $r)
                 {
                 $resource_sizes = [];
+                }
+
+            if ($resource_sizes === [])
+                {
                 $item = $item
                     ->setPreviewUrl(sprintf(
                         '%s/gfx/%s',
