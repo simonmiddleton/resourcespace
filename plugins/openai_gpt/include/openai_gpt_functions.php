@@ -12,7 +12,7 @@
  *                                      True if update successful, false if invalid field or no data returned
  * 
  */
-function openai_gpt_update_field(mixed $resources,array $target_field,array $values, string $file=""): mixed
+function openai_gpt_update_field($resources,array $target_field,array $values, string $file="")
     {
     global $valid_ai_field_types, $FIXED_LIST_FIELD_TYPES,$language, $defaultlanguage, $openai_gpt_message_input_JSON, 
     $openai_gpt_message_output_json, $openai_gpt_message_text, $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,
