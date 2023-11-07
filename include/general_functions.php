@@ -134,7 +134,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     $month_part = substr($date, $bce_offset + 5, 2);
     if(!is_numeric($month_part))
         {
-        return '';
+        return '-';
         }
     $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
@@ -899,7 +899,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
                 ps_query("update user set email_rate_limit_active=1 where ref=?",["i",$userref]);
                 message_add([$userref],$lang["email_rate_limit_active"]);
                 }
-            debug("E-mail not sent due to $email_rate_limit");
+            debug("E-mail not sent due to email_rate_limit being exceeded");
             return $lang["email_rate_limit_active"]; // Don't send the e-mail and return the error.
             }
         else    
@@ -3061,12 +3061,9 @@ function user_set_usergroup($user,$usergroup)
  * @param  int    $length Length of desired string of bytes
  * @return string         Random character string
  */
-function generateSecureKey($length = 64)
+function generateSecureKey(int $length = 64): string
     {
-    $bytes = openssl_random_pseudo_bytes($length / 2);
-    $hex   = substr(bin2hex($bytes), 0, 64); 
-
-    return $hex;
+    return bin2hex(openssl_random_pseudo_bytes($length / 2));
     }
 
 /**

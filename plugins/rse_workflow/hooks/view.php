@@ -51,7 +51,9 @@ function HookRse_workflowViewPageevaluation()
                        )
                     )
                     {
-                    update_archive_status($ref, $workflowaction["statusto"],$resource["archive"]);
+                    // Check whether More notes are present
+                    $more_notes_text = getval("more_workflow_action_" . $workflowaction["ref"],"");
+                    update_archive_status($ref, $workflowaction["statusto"], $resource["archive"], 0, $more_notes_text);
                     hook("rse_wf_archivechange","",array($ref,$resource["archive"],$workflowaction["statusto"]));
                                                 
                     if (checkperm("z" . $workflowaction["statusto"]))

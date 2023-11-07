@@ -37,6 +37,7 @@ $collection = getval('collection', 0, true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
 $archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
+$search_access = getval("search_access", null, true);
 $submitted = getval("submitted", "");
 $external_upload = upload_share_active();
 $redirecturl = getval("redirecturl","");
@@ -286,7 +287,7 @@ if($editsearch)
     # Check all resources are editable
     
     # Editable_only=false (so returns resources whether editable or not)
-    $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false);
+    $searchitems = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, false, false, $search_access);
     if (!is_array($searchitems) || count($searchitems) == 0)
         {
         $error = $lang['searchnomatches'];
@@ -297,7 +298,7 @@ if($editsearch)
     $all_resource_refs=array_column($searchitems,"ref");
 
     # Editable_only=true (so returns editable resources only)
-    $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true);
+    $edititems   = do_search($search, $restypes, 'resourceid', $archive, -1, $sort, false, 0, false, false, '', false, false, true, true, false, $search_access);
     if (!is_array($edititems)){$edititems = array();}
     $editable_resources_count = count($edititems);
     $editable_resource_refs=array_column($edititems,"ref");
@@ -574,6 +575,7 @@ $urlparams= array(
     'editsearchresults' => ($editsearch ? "true" : ""),
     'k'                 => $k,
     'redirecturl'       => $redirecturl,
+    'search_access'     => (!is_null($search_access) ? $search_access : null),
 );
 
 check_order_by_in_table_joins($order_by);
@@ -931,6 +933,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 $editsearch["search"]   = $search;
                 $editsearch["restypes"] = $restypes;
                 $editsearch["archive"]  = $archive;
+                $editsearch["search_access"] = $search_access;
                 $save_errors=save_resource_data_multi(0,$editsearch,$_POST);
 
                 // When editing a search for the COLLECTION_TYPE_SELECTION we want to close the modal and reload the page
@@ -2364,18 +2367,21 @@ if ($ref>0 && !$multiple)
             <div class="FloatingPreviewContainer">
             <?php
             $bbr_preview_size = $edit_large_preview ? 'pre' : 'thm';
+            $wmpath="";
+            # Establish path to watermarked verion if its rendering is a possibility
+            if (checkperm("w") && $resource["has_image"]==1) 
+                {
+                $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
+                }
             if ($resource["has_image"]==1 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
                 { ?>
                 <img id="preview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder"/>
-                <?php // check for watermarked version and show it if it exists
-                if (checkperm("w"))
-                    {
-                    $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
-                    if (file_exists($wmpath))
-                        { ?>
-                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
-                        <?php 
-                        }
+                <?php 
+                # Render watermarked version if it exists
+                if (checkperm("w") && $wmpath!="" && file_exists($wmpath))
+                    { ?>
+                    <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
+                    <?php 
                     } ?>
                 <br />
                 <?php
@@ -2401,7 +2407,8 @@ if ($ref>0 && !$multiple)
                 ?>
                 </strong>
                 <?php 
-                if (checkperm("w") && $resource["has_image"]==1 && file_exists($wmpath))
+                # Provide a toggle between watermarked and unwatermarked version if necessary
+                if (checkperm("w") && $wmpath!="" && file_exists($wmpath))
                     {?> 
                     &nbsp;&nbsp;
                     <a href="#" onclick="jQuery('#wmpreview').toggle();jQuery('#preview').toggle();if (jQuery(this).text()=='<?php echo escape_quoted_data($lang['showwatermark'])?>'){jQuery(this).text('<?php echo escape_quoted_data($lang['hidewatermark'])?>');} else {jQuery(this).text('<?php echo escape_quoted_data($lang['showwatermark'])?>');}"><?php echo htmlspecialchars($lang['showwatermark'])?></a>

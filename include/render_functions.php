@@ -4524,7 +4524,7 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
                id="edit_save_button"
                class="editsave"
                type="submit"
-               value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
+               value="<?php echo escape_quoted_data($save_btn_value); ?>" />
         <?php
         if($upload_review_mode)
             {

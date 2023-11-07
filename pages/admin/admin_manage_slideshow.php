@@ -176,6 +176,8 @@ button:disabled,
 button[disabled]{
     color: #666666;
     cursor: not-allowed;
+    background: white;
+    box-shadow: unset;
 }
 </style>
 <div class="BasicsBox">

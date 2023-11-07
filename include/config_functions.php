@@ -796,6 +796,7 @@ function config_add_single_select($config_var, $label, $choices = '', $usekeys =
  * @param boolean       $autosave  Flag to say whether the there should be an auto save message feedback through JS. Default: false
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
  * @param string        $help      Help text to display for this question
+ * @param boolean       $reload_page Reload the page after saving, useful for large CSS changes.
  */
 function config_boolean_select(
     $name,
@@ -807,7 +808,8 @@ function config_boolean_select(
     $autosave = false,
     $on_change_js = null,
     $hidden = false,
-    string $help = ''
+    string $help = '',
+    bool $reload_page = false
 )
     {
     global $lang;
@@ -842,7 +844,9 @@ function config_boolean_select(
             ?>
         <select id="<?php echo $name; ?>"
                 name="<?php echo $name; ?>"
-                <?php if($autosave) { ?> onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
+                <?php if($autosave) { ?>
+                    onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape_quoted_data($name); ?>'<?php echo $reload_page ? ", true" : ""?>);"
+                <?php } ?>
                 style="width:<?php echo $width; ?>px">
             <option value="1"<?php if($current == '1') { ?> selected<?php } ?>><?php echo $choices[1]; ?></option>
             <option value="0"<?php if($current == '0') { ?> selected<?php } ?>><?php echo $choices[0]; ?></option>
@@ -869,10 +873,11 @@ function config_boolean_select(
  *          to array('False', 'True') in the local language.
  * @param integer $width the width of the input field in pixels. Default: 420.
  * @param string $help Help text to display for this question
+ * @param boolean $reload_page Reload the page after saving.
  */
-function config_add_boolean_select($config_var, $label, $choices = '', $width = 420, $title = null, $autosave = false,$on_change_js=null, $hidden=false, string $help = '')
+function config_add_boolean_select($config_var, $label, $choices = '', $width = 420, $title = null, $autosave = false,$on_change_js=null, $hidden=false, string $help = '', bool $reload_page = false)
     {
-    return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave,$on_change_js,$hidden, $help);
+    return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave,$on_change_js,$hidden, $help, $reload_page);
     }
 	
 /**
@@ -1065,7 +1070,7 @@ function config_generate_AutoSaveConfigOption_function($post_url)
     ?>
     
     <script>
-    function AutoSaveConfigOption(option_name)
+    function AutoSaveConfigOption(option_name, reload_page = false)
         {
         jQuery('#AutoSaveStatus-' + option_name).html('<?php echo $lang["saving"]; ?>');
         jQuery('#AutoSaveStatus-' + option_name).show();
@@ -1096,6 +1101,10 @@ function config_generate_AutoSaveConfigOption_function($post_url)
                 {
                 jQuery('#AutoSaveStatus-' + option_name).html('<?php echo $lang["saved"]; ?>');
                 jQuery('#AutoSaveStatus-' + option_name).fadeOut('slow');
+                if (reload_page)
+                    {
+                    location.reload();
+                    }
                 }
             else if(response.success === false && response.message && response.message.length > 0)
                 {
@@ -1242,7 +1251,7 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'boolean_select':
-                config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
+                config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9], $def[10]);
                 break;
 
             case 'single_select':

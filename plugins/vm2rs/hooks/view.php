@@ -74,8 +74,8 @@ function Hookvm2rsViewreplacedownloadoptions()
                 <td><h2>Online Preview</h2><p>Vimeo Video</p></td>
                 <td>N/A</td>
                 <td class="DownloadButton HorizontalWhiteNav">
-                    <a href="<?php echo $baseurl_short; ?>pages/resource_request.php?ref=<?php echo urlencode($ref); ?>&k=<?php echo getval("k", ""); ?>" onClick="return CentralSpaceLoad(this,true);">
-                <?php echo $lang["action-request"] ?>
+                    <a href="<?php echo $baseurl_short; ?>pages/resource_request.php?ref=<?php echo urlencode($ref); ?>&k=<?php echo htmlspecialchars(getval("k", "")); ?>" onClick="return CentralSpaceLoad(this,true);">
+                <?php echo htmlspecialchars($lang["action-request"]) ?>
                 </td>
             </tr>
         </table>
