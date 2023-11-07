@@ -77,7 +77,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
         foreach($api_results['data'] as $row)
             {
             $item = (new ProviderResult($row['ref'], $this))
-                ->setTitle($row["field{$view_title_field}"])
+                ->setTitle((string) $row["field{$view_title_field}"])
                 ->setProviderUrl(generateURL($instance['baseURL'], ['r' => $row['ref']]));
 
             try
