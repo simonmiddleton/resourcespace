@@ -78,6 +78,10 @@ include_once "{$rs_root}/include/header.php";
                 ?>
             </div>
 
+        <?php
+        if ($record->getOriginalFileUrl() !== null)
+            {
+            ?>
             <div id="RecordDownloadTabContainer" class="RecordDownload">
                 <div id="RecordDownloadTabButtons" class="TabBar">
                     <div id="DownloadsTabButton" class="Tab TabSelected">
@@ -139,6 +143,9 @@ include_once "{$rs_root}/include/header.php";
                     </div>
                 </div>
             </div><!-- End of RecordDownloadTabContainer -->
+            <?php
+            }
+            ?>
 
             <div id="Panel1" class="ViewPanel">
                 <div id="Titles1" class="ViewPanelTitles">

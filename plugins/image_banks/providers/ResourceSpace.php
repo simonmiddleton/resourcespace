@@ -89,18 +89,6 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
                 $resource_sizes = [];
                 }
 
-            if ($resource_sizes === [])
-                {
-                $item = $item
-                    ->setPreviewUrl(sprintf(
-                        '%s/gfx/%s',
-                        $GLOBALS['baseurl'],
-                        get_nopreview_icon($row['resource_type'], $row['file_extension'], false)
-                    ))
-                    ->setPreviewWidth(128)
-                    ->setPreviewHeight(128);
-                }
-
             foreach ($resource_sizes as $rsize)
                 {
                 // Select the original file (if allowed), otherwise go for the next available high resolution version
@@ -116,6 +104,19 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
                         ->setPreviewWidth($row['thumb_width'])
                         ->setPreviewHeight($row['thumb_height']);
                     }
+                }
+
+            // When we don't have a way to get the preview information (e.g API fail, or returned nothing/too litle), use the nopreview
+            if ($item->getPreviewUrl() === null)
+                {
+                $item = $item
+                    ->setPreviewUrl(sprintf(
+                        '%s/gfx/%s',
+                        $GLOBALS['baseurl'],
+                        get_nopreview_icon($row['resource_type'], $row['file_extension'], false)
+                    ))
+                    ->setPreviewWidth(128)
+                    ->setPreviewHeight(128);
                 }
 
             $results[] = $item;
