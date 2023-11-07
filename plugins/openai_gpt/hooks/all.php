@@ -220,7 +220,7 @@ function HookOpenai_gptAllAfterpreviewcreation($ref, $alternative): bool
             {
             return false;
             }
-        $success = openai_gpt_update_field([$ref],$ai_gpt_image_field, [],$file);
+        $success = openai_gpt_update_field($ref,$ai_gpt_image_field, [],$file);
         }
     return $success[$ref] ?? false;
     }
