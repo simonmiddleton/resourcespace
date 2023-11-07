@@ -173,6 +173,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             stream_context_create([
                 'http' => [
                     'ignore_errors' => true,
+                    'user_agent' => sprintf('ResourceSpace-Plugin-ImageBanks/1.0 (%s)', $GLOBALS['baseurl']),
                 ],
             ])
         );
