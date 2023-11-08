@@ -18,8 +18,6 @@ header("Content-type: text/css");
 global $header_colour_style_override, $header_link_style_override, $home_colour_style_override, $collection_bar_background_override,
 $collection_bar_foreground_override, $button_colour_override;
 
-$browse_on = has_browsebar();
-
 # Override the header background colour
 if ((isset($header_colour_style_override) && $header_colour_style_override != ''))
     {
@@ -56,7 +54,8 @@ if ((isset($header_link_style_override) && $header_link_style_override != ''))
 if ((isset($home_colour_style_override) && $home_colour_style_override != ''))
     {
     ?>
-    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, #BrowseBar, #BrowseBarTab, #NewsPanel.BasicsBox, #remote_assist #SearchBoxPanel
+    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, #BrowseBar, #NewsPanel.BasicsBox, #remote_assist #SearchBoxPanel,
+    .SearchBarTab.SearchBarTabSelected
         {
         background: <?php echo $home_colour_style_override; ?>;
         }
@@ -100,21 +99,6 @@ if ((isset($collection_bar_foreground_override) && $collection_bar_foreground_ov
         {
         background: <?php echo $collection_bar_foreground_override; ?>;
         }
-    <?php
-    }
-
-if ($browse_on)
-    {
-    ?>
-    #CentralSpaceContainer
-        {
-        padding-left: 30px;
-        }   
-    #Footer
-        {
-        clear: both;
-        } 
-
     <?php
     }
 
@@ -188,7 +172,7 @@ if (isset($high_contrast_mode) && $high_contrast_mode == true)
     .Listview tr:last-child {
         border-bottom: 0;
     }
-    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab {
+    #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree, #BrowseBar {
         background: black;
     }
     .TopInpageNav select, .update_result_order_button, select, .sp-replacer {
