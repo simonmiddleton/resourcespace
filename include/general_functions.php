@@ -4586,7 +4586,7 @@ function get_system_status()
             'info' => 'Unable to get utility path',
             'affected_utilities' => array_unique(array_keys($missing_utility_paths)),
             'affected_utility_paths' => array_unique(array_values($missing_utility_paths)),
-            'severity' => CRITICAL,
+            'severity' => WARNING,
         ];
 
         return $return;
