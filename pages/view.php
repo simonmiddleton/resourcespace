@@ -752,8 +752,8 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                     continue;
                                     }
 
-                                // 'pre' can take precedence if system is configured so
-                                if($use_size === 'scr' && ($hide_real_filepath || $resource_view_use_pre))
+                                // Skip 'scr' in favour of 'pre' if system is configured so
+                                if($use_size === 'scr' && $resource_view_use_pre)
                                     {
                                     continue;
                                     }
