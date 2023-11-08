@@ -743,7 +743,7 @@ function compile_search_actions($top_actions)
     // If all resources are editable, display an edit all link
     if($top_actions && !$omit_edit_all)
         {
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php",$urlparams,array("editsearchresults" => "true"));
+        $data_attribute['url'] = generateURL($baseurl_short . "pages/edit.php", $urlparams, array("editsearchresults" => "true", "search_access" => $search_access));
         $options[$o]['value']='editsearchresults';
         $options[$o]['label']=$lang['edit_all_resources'];
         $options[$o]['data_attr']=$data_attribute;
