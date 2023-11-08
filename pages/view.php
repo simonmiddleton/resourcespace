@@ -734,6 +734,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 
                         else if (1 == $resource['has_image'])
                             {
+                            $imageurl="";
                             $use_watermark = check_use_watermark();
 
                             // Determine the appropriate preview size to display
