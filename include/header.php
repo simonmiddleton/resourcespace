@@ -184,12 +184,11 @@ if(isset($GLOBALS['modify_header_not_authenticated_pages']) && is_array($GLOBALS
 $browse_on = has_browsebar();
 if($browse_on)
     {
-    $browse_width   = 295;
-    $browse_show    = getval("browse_show","") == "show";
     ?>
     <script src="<?php echo $baseurl_short ?>lib/js/browsebar_js.php" type="text/javascript"></script>
     <?php
     }
+$selected_search_tab = getval("selected_search_tab","");
 ?>
 
 <script type="text/javascript">
@@ -220,8 +219,7 @@ var scrolltopElementModal='#modal'
 
 if($browse_on)
     {
-    echo "browse_width = '" . $browse_width . "';
-    browse_clicked = false;";     
+    echo "browse_clicked = false;";     
     }
 ?>
 </script>
@@ -653,10 +651,6 @@ else
 <!--Main Part of the page-->
 <?php
 
-if($browse_on && checkperm("s") === true)
-    {
-    render_browse_bar();
-    }
         
 echo '<div id="UICenter" role="main" class="ui-layout-center ' . $uicenterclass . '">';
 

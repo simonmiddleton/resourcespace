@@ -1095,7 +1095,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     }
 
 #ssearchbox {
-    margin-top:8px;
+    margin-top:0;
     padding: 4px 30px 4px 6px;
     border: none;
 }
@@ -2031,6 +2031,7 @@ select.MultiSelect:before {
 #BrowseBarContainer {
     overflow: hidden;
     white-space: nowrap;
+    padding-top: 5px;
 }
 #BrowseBar {
     text-align: left;
@@ -2043,14 +2044,14 @@ select.MultiSelect:before {
     float: left;
     overflow-x: hidden;
     overflow-y: auto;
-    min-width: 265px;
+    min-width: 272px;
 }
 .BrowseBarStructure {
     display: table-cell;
     min-width: 6px;
     font-family: "Font Awesome 5 Free", sans-serif;
     font-weight: 600;
-    padding-left: 10px;
+    padding-left: 8px;
     padding-top: 2px;
     padding-bottom: 2px;
 }
@@ -2066,33 +2067,12 @@ select.MultiSelect:before {
 .BrowseBarLink{
     display: table-cell;
     white-space: normal;
-    padding-left: 4px;
+    padding-left: 8px;
     font-size: 90%;
 }
 #BrowseBar .BrowseLine {
     border-right: 1px solid;
     width: 6px;
-}
-#BrowseBarTabContainer{
-    display: inline-block;
-    right: 0;
-    height: 100%;
-}
-#BrowseBarTab {    
-    position: relative;
-    float: right;
-    top: 130px;
-    height: 140px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    width: 30px;
-}
-.BrowseBarTabText {
-    font-size: 1.2em;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%) rotate(-90deg);
 }
 #BrowseBarContainer a:hover, .BrowseBarItem a:hover, #BrowseBarContainer a:visited, .BrowseBarItem a:visited, .row_clickable{
     text-decoration: none;
@@ -2109,10 +2089,13 @@ select.MultiSelect:before {
     background: rgba(255, 255, 255, 0.1);
     padding-top: 2px;
     padding-bottom: 2px;
+    margin-top: 10px;
+    border-radius: 4px;
 }
 
 .BrowseBarItem {
-    padding-left: 10px;
+    margin-left: 10px;
+    max-width: 262px;
 }
 
 #BrowseBarContainer .BrowseBarItem:first-child {
@@ -2140,7 +2123,7 @@ select.MultiSelect:before {
     content: "\f1b2";
 } 
 .BrowseTypeNew:after {
-    content: "\f055";
+    content: "\2b";
 }  
 a.BrowseRefresh{
     display:none;
@@ -2150,8 +2133,6 @@ a.BrowseRefresh{
     display: table-cell;
     padding-left: 5px;
 }
-.ui-layout-west{overflow-x: hidden;}
-.ui-layout-resizer-west{transform: translateX(-37px);} 
 
 .RecordPanelLarge #ResourceWorkflowActions, .RecordPanelLarge #RecordDownloadSummary {
     width: 100%;
@@ -2517,4 +2498,34 @@ input[type="text"]#iconpicker-input {
 .jstree-default-dark .jstree-hovered,
 .jstree-default-dark>.jstree-wholerow-ul .jstree-clicked {
     color: white;
+}
+
+/* Search Bar Tab styling */
+#SearchBarTabsContainer {
+    background: rgb(0 0 0 / 20%);
+}
+#SearchBarTabsContainer a {
+    display: inline-block;
+}
+.SearchBarTab {
+    padding: 10px 5px;
+    min-width: 116px;
+    display: inline-block;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: 500;
+    text-align: center;
+    color: white;
+}
+.SearchBarTab:hover {
+    background: rgba(255, 255, 255, 10%);
+}
+.SearchBarTab.SearchTab {
+    margin: 10px 3px 0 10px;
+}
+.SearchBarTab.BrowseTab {
+    margin: 10px 10px 0 3px;
+}
+.SearchBarTab.SearchBarTabSelected {
+    background: rgb(255 255 255 / 14%);
 }

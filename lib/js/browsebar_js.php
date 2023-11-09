@@ -11,33 +11,6 @@ include_once "../../include/authenticate.php";
 header("Content-type: text/javascript");
 ?>
 
-function ToggleBrowseBar(forcestate, noresize) 
-	{
-    console.debug("ToggleBrowseBar(forcestate = %o, noresize = %o)", forcestate, noresize);
-    var browseopen = (typeof browse_show === "undefined" || browse_show == 'hide') || (forcestate !== "undefined" && forcestate == 'open')
-    console.debug("browseopen = %o", browseopen);
-	if (browseopen)
-		{
-        jQuery('#BrowseBar').show();
-		if(typeof noresize === 'undefined' || noresize == false)
-            {
-            myLayout.sizePane("west", 295);
-            jQuery('#BrowseBarContent').width(browse_width-40);
-            }
-		browse_show = 'show';
-        SetCookie('browse_show', 'show');
-        ModalCentre();
-        }
-	else
-		{	
-    	jQuery('#BrowseBar').hide();
-		myLayout.sizePane("west", 30);
-		browse_show = 'hide';
-		SetCookie('browse_show', 'hide');
-		}
-    jQuery(document).trigger("resize");
-	}
-
 function renderBrowseItem(node, parent)
     {
     console.debug("Calling renderBrowseItem(node = %o, parent = %o)", node, parent);
