@@ -95,7 +95,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             try
                 {
                 $cache_id = md5("{$instance['baseURL']}--get_resource_all_image_sizes--{$row['ref']}");
-                $api_cached_results = $this->getCache($cache_id, $instance_cfg['api_resource_path_expiry_hours'] ?? 10);
+                $api_cached_results = $this->getCache($cache_id, 10);
                 if($api_cached_results)
                     {
                     $resource_sizes = json_decode($api_cached_results, true);

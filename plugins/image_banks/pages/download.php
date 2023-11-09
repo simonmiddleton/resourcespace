@@ -31,7 +31,7 @@ if(!validFileSource($file_path, $provider))
     exit();
     }
 
-debug(sprintf('[image_banks][Provider %s] Downloading file %s', $providers_select_list[$image_bank_provider_id], $file_path));
+debug(sprintf('[image_banks][Provider: %s] Downloading file %s', $providers_select_list[$image_bank_provider_id], $file_path));
 $file = file_get_contents($file_path);
 $file_size = strlen($file);
 $file_info = $provider->getDownloadFileInfo($file_path);

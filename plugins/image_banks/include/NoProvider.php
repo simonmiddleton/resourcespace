@@ -6,6 +6,9 @@ namespace ImageBanks;
 
 use SplFileInfo;
 
+/**
+ * Helper type used to indicate the absence of a (selected) Provider
+ */
 class NoProvider extends Provider
     {
     function __construct(array $lang, string $temp_dir_path)

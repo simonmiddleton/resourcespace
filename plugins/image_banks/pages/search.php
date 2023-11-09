@@ -1,7 +1,6 @@
 <?php
 
 use ImageBanks\NoProvider;
-use ImageBanks\ProviderSearchResults;
 
 use function ImageBanks\getProviders;
 use function ImageBanks\getProviderSelectInstance;
