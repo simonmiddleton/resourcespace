@@ -462,7 +462,7 @@ elseif($restypes=='')
 
     if(!$basic_simple_search)
         {
-        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"".$lang['clearbutton']."\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short ."');";
+        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"". escape_quoted_data($lang['clearbutton'])."\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short ."');";
 
         if($simple_search_pills_view)
             {
@@ -484,19 +484,19 @@ elseif($restypes=='')
         {
         if(!$simple_search_pills_view)
             {
-            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . $lang['clearbutton'] . '" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
+            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape_quoted_data($lang['clearbutton']) . '" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
             }
         else
             {
-            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . $lang['clearbutton'] . '" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
+            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape_quoted_data($lang['clearbutton']) . '" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
             }
         }
 
-    $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"". $lang['searchbutton']."\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
+    $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"". escape_quoted_data($lang['searchbutton'])."\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
 
     if($responsive_ui)
         {
-        $searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . $lang['responsive_more'] . '">';
+        $searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . escape_quoted_data($lang['responsive_more']) . '">';
         }
 
     hook('extra_search_buttons');
