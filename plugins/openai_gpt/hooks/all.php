@@ -55,13 +55,14 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
         <div class="Question" >
 		    <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
             <select id="field_edit_<?php echo escape_quoted_data((string) $column); ?>" name="<?php echo escape_quoted_data((string) $column); ?>" class="stdwidth">
-            <option value="" <?php if ($currentvalue == "") { echo " selected"; } ?>><?php echo $lang["select"]; ?></option>
+            <option value="" <?php if ($currentvalue == "") { echo "selected"; } ?>><?php echo $lang["select"]; ?></option>
+            <option value="-1" <?php if ($currentvalue == "-1") { echo "selected"; } ?>><?php echo $lang["image"] . ": " . $lang["previewimage"] ?></option>
             <?php
             foreach($fields as $field)
                 {
                 if($field["ref"]!=$ref) // Don't show itself as an option
                     {?>
-                    <option value="<?php echo (int)$field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo escape_quoted_data(i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars((string) $field["name"]))  . ")" ?></option>
+                    <option value="<?php echo (int)$field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo $lang["field"] . ": " . escape_quoted_data(i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars((string) $field["name"]))  . ")" ?></option>
                     <?php
                     }
                 }
@@ -188,4 +189,38 @@ function HookOpenai_gptAllAftersaveresourcedata($r, $all_nodes_to_add, $all_node
             }
         }
     return $success;
+    }
+ 
+/**
+ *  Hook into image upload to process the image as GPT input
+ * * 
+ * @return bool Success if field is updated
+ * 
+ */
+function HookOpenai_gptAllAfterpreviewcreation($ref, $alternative): bool
+    {    
+    debug("openai_gpt after preview creation - resource: " . $ref . ", alternative: ", $alternative);
+    if ($alternative>0)
+        {
+        return false;
+        }
+
+    // Do any fields use image as input?
+    $ai_gpt_image_fields = ps_query("SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE openai_gpt_input_field = -1");
+    foreach($ai_gpt_image_fields as $ai_gpt_image_field)
+        {
+        // Don't update if not a valid field type
+        if(!in_array($ai_gpt_image_field["type"],$GLOBALS["valid_ai_field_types"]))
+            {
+            continue;
+            }
+        // Get the preview file
+        $file=get_resource_path($ref,true,"pre");
+        if (!file_exists($file))
+            {
+            return false;
+            }
+        $success = openai_gpt_update_field($ref,$ai_gpt_image_field, [],$file);
+        }
+    return $success[$ref] ?? false;
     }
