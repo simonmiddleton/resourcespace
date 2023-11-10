@@ -752,8 +752,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                     continue;
                                     }
 
-                                // Skip 'scr' in favour of 'pre' if system is configured so
-                                if($use_size === 'scr' && $resource_view_use_pre)
+                                if($use_size === 'scr' && skip_scr_size_preview($access))
                                     {
                                     continue;
                                     }
