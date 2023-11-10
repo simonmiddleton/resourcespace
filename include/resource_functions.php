@@ -6365,7 +6365,7 @@ function generate_resource_access_key($resource,$userref,$access,$expires,$email
             's', $k,
             'i', $userref,
             'i', $access,
-            's', (($expires=="")? null : $expires),
+            's', ((!validateDatetime($expires, 'Y-m-d'))? null : $expires),
             's', $email,
             'i', $group,
             's', (($sharepwd != "" && $sharepwd != "(unchanged)") ? hash('sha256', $k . $sharepwd . $scramble_key) : null)
