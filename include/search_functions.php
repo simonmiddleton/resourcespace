@@ -70,7 +70,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         && !in_array($date_field, $hiddenfields))
         {
         $date_field_data = get_resource_type_field($date_field);
-        if (!is_array($date_field_data))
+        if (!is_array($date_field_data) || is_null($date_field_data['ref']))
             {
             debug("WARNING: Invalid \$date_field specified in config : " . $date_field);
             return $return;
