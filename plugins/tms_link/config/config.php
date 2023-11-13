@@ -18,6 +18,7 @@ $tms_link_script_failure_notify_days=3;
 
 $tms_link_log_directory="";
 $tms_link_log_expiry=7;
+$tms_link_write_to_debug_log = false;
 
 // Additional options for bidirectional syncing (ResourceSpace -> TMS)
 $tms_link_push_image=false;
