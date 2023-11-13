@@ -664,7 +664,7 @@ function ProcessFolder($folder)
                                 {
                                 $nodes_to_add = array_merge($nodes_to_add,$nodeids);
                                 }
-                            debug("BANG " . __LINE__. " adding " . implode(",",$nodes_to_add));
+
                             add_resource_nodes($r,$nodes_to_add);
                             }
                         }

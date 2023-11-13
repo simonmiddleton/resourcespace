@@ -167,12 +167,12 @@ function set_config_option($user_id, $param_name, $param_value)
  * Used by system preferences page when deleting a file to allow fallback to value (if set) in config.php instead
  * of replacing it with blank from user_preference value.
  *
- * @param  integer  $user_id      User ID. Use NULL for system wide config options.
- * @param  mixed    $param_name   Parameter name
+ * @param  int|null   $user_id      User ID. Use NULL for system wide config options.
+ * @param  string     $param_name   Parameter name
  * 
- * @return bool     True if preference was deleted else false.
+ * @return bool       True if preference was deleted else false.
  */
-function delete_config_option($user_id, string $param_name) : bool
+function delete_config_option(?int $user_id, string $param_name) : bool
     {
     if(empty($param_name))
         {
@@ -484,7 +484,7 @@ function config_text_input($name, $label, $current, $password = false, $width = 
         <input id="<?php echo $name; ?>"
                name="<?php echo $name; ?>"
                type="<?php echo $password ? 'password' : 'text'; ?>"
-               value="<?php echo escape_quoted_data($current); ?>"
+               value="<?php echo escape_quoted_data((string) $current); ?>"
                <?php if($autosave) { ?>onFocusOut="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
                style="width:<?php echo $width; ?>px" />
         <?php
@@ -543,7 +543,7 @@ function config_add_hidden_input(string $cf_var_name, string $cf_var_value = '')
 function config_file_input($name, $label, $current, $form_action, $width = 420, $valid_extensions = array(), $file_preview = false)
     {
     global $lang,$storagedir;
-    
+
     if($current !=='')
         {
         $origin_in_config = (substr($current, 0, 13) != '[storage_url]');
@@ -561,37 +561,40 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
         }
 
     ?>
-    <div class="Question" id="question_<?php echo $name; ?>">
-        <form method="POST" action="<?php echo $form_action; ?>" enctype="multipart/form-data">
-        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo $name; ?>"><?php echo $label; ?></label>
+    <div class="Question" id="question_<?php echo escape_quoted_data($name); ?>">
+        <form method="POST" action="<?php echo escape_quoted_data($form_action); ?>" enctype="multipart/form-data">
+        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo escape_quoted_data($name); ?>"><?php echo htmlspecialchars($label); ?></label>
         <div class="AutoSaveStatus">
-        <span id="AutoSaveStatus-<?php echo $name; ?>" style="display:none;"></span>
+        <span id="AutoSaveStatus-<?php echo escape_quoted_data($name); ?>" style="display:none;"></span>
         </div>
         <?php
         if($current !== '' && $pathparts[1]=="system" && !file_exists($missing_file))
-			{
-			?>
-            <span><?php echo $lang['applogo_does_not_exists']; ?></span>
-            <input type="submit" name="clear_<?php echo $name; ?>" value="<?php echo $lang["clearbutton"]; ?>">
+            {
+            ?>
+            <span><?php echo htmlspecialchars($lang['applogo_does_not_exists']); ?></span>
+            <input type="submit" name="clear_<?php echo escape_quoted_data($name); ?>" value="<?php echo escape_quoted_data($lang["clearbutton"]); ?>">
             <?php
-			}
+            }
         elseif('' === $current || !get_config_option(null, $name, $current_option) || $current_option === '')
             {
             ?>
-            <input type="file" name="<?php echo $name; ?>" style="width:<?php echo $width; ?>px">
-            <input type="submit" name="upload_<?php echo $name; ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension()"';} ?> value="<?php echo $lang['upload']; ?>">
+            <input type="file" name="<?php echo escape_quoted_data($name); ?>" style="width:<?php echo (int) $width; ?>px">
+            <input type="submit" name="upload_<?php echo escape_quoted_data($name); ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension_' . htmlspecialchars($name) . '()"';} ?> value="<?php echo escape_quoted_data($lang['upload']); ?>">
             <?php
             if (count($valid_extensions) > 0)
                 {
                 ?>
                 <script>
-                function checkValidExtension()
+                function checkValidExtension_<?php echo htmlspecialchars($name) ?>()
                     {
-                    let file_path = document.getElementsByName("<?php echo $name; ?>")[0].value;
+                    let file_path = document.getElementsByName("<?php echo escape_quoted_data($name); ?>")[0].value;
                     let ext = file_path.toLowerCase().substr(file_path.lastIndexOf(".")+1);
-                    let valid_extensions = [<?php echo '"' . implode('", "', $valid_extensions) . '"'; ?>];
+                    let valid_extensions = [<?php
+                        foreach ($valid_extensions as $extension) {
+                            echo '"' . escape_quoted_data($extension) . '",';
+                        } ?>];
                     if (file_path != "" && valid_extensions.includes(ext)) return true;
-                    alert(<?php echo '"' . str_replace('%%EXTENSIONS%%', implode(', ', $valid_extensions), $lang['systemconfig_invalid_extension']) .'"'?>);
+                    alert(<?php echo '"' . escape_quoted_data(str_replace('%%EXTENSIONS%%', implode(', ', $valid_extensions), $lang['systemconfig_invalid_extension'])) .'"'?>);
                     return false;
                     }
                 </script>
@@ -602,7 +605,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             {
             ?>
             <span><?php echo htmlspecialchars(str_replace('[storage_url]/', '', $current), ENT_QUOTES); ?></span>
-            <input type="submit" name="delete_<?php echo $name; ?>" value="<?php echo $lang['action-delete']; ?>">
+            <input type="submit" name="delete_<?php echo escape_quoted_data($name); ?>" value="<?php echo escape_quoted_data($lang['action-delete']); ?>">
             <?php
             }
             generateFormToken($name);
@@ -612,8 +615,8 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
         if ($file_preview && $current !== "")
             {
             global $baseurl; ?>
-            <div id="preview_<?php echo $name; ?>">
-            <img class="config-image-preview" src="<?php echo $baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current) . '?v=' . date("s") ?>" alt="<?php echo escape_quoted_data($lang["preview"] . ' - ' . $label) ?>">
+            <div id="preview_<?php echo escape_quoted_data($name); ?>">
+            <img class="config-image-preview" src="<?php echo escape_quoted_data($baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current)) . '?v=' . date("s") ?>" alt="<?php echo escape_quoted_data($lang["preview"] . ' - ' . $label) ?>">
             </div>
             <?php } ?>
         <div class="clearerleft"></div>
@@ -796,6 +799,7 @@ function config_add_single_select($config_var, $label, $choices = '', $usekeys =
  * @param boolean       $autosave  Flag to say whether the there should be an auto save message feedback through JS. Default: false
  *                                 Note: onChange event will call AutoSaveConfigOption([option name])
  * @param string        $help      Help text to display for this question
+ * @param boolean       $reload_page Reload the page after saving, useful for large CSS changes.
  */
 function config_boolean_select(
     $name,
@@ -807,7 +811,8 @@ function config_boolean_select(
     $autosave = false,
     $on_change_js = null,
     $hidden = false,
-    string $help = ''
+    string $help = '',
+    bool $reload_page = false
 )
     {
     global $lang;
@@ -842,7 +847,9 @@ function config_boolean_select(
             ?>
         <select id="<?php echo $name; ?>"
                 name="<?php echo $name; ?>"
-                <?php if($autosave) { ?> onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
+                <?php if($autosave) { ?>
+                    onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape_quoted_data($name); ?>'<?php echo $reload_page ? ", true" : ""?>);"
+                <?php } ?>
                 style="width:<?php echo $width; ?>px">
             <option value="1"<?php if($current == '1') { ?> selected<?php } ?>><?php echo $choices[1]; ?></option>
             <option value="0"<?php if($current == '0') { ?> selected<?php } ?>><?php echo $choices[0]; ?></option>
@@ -869,10 +876,11 @@ function config_boolean_select(
  *          to array('False', 'True') in the local language.
  * @param integer $width the width of the input field in pixels. Default: 420.
  * @param string $help Help text to display for this question
+ * @param boolean $reload_page Reload the page after saving.
  */
-function config_add_boolean_select($config_var, $label, $choices = '', $width = 420, $title = null, $autosave = false,$on_change_js=null, $hidden=false, string $help = '')
+function config_add_boolean_select($config_var, $label, $choices = '', $width = 420, $title = null, $autosave = false,$on_change_js=null, $hidden=false, string $help = '', bool $reload_page = false)
     {
-    return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave,$on_change_js,$hidden, $help);
+    return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave,$on_change_js,$hidden, $help, $reload_page);
     }
 	
 /**
@@ -1065,7 +1073,7 @@ function config_generate_AutoSaveConfigOption_function($post_url)
     ?>
     
     <script>
-    function AutoSaveConfigOption(option_name)
+    function AutoSaveConfigOption(option_name, reload_page = false)
         {
         jQuery('#AutoSaveStatus-' + option_name).html('<?php echo $lang["saving"]; ?>');
         jQuery('#AutoSaveStatus-' + option_name).show();
@@ -1096,6 +1104,10 @@ function config_generate_AutoSaveConfigOption_function($post_url)
                 {
                 jQuery('#AutoSaveStatus-' + option_name).html('<?php echo $lang["saved"]; ?>');
                 jQuery('#AutoSaveStatus-' + option_name).fadeOut('slow');
+                if (reload_page)
+                    {
+                    location.reload();
+                    }
                 }
             else if(response.success === false && response.message && response.message.length > 0)
                 {
@@ -1242,7 +1254,7 @@ function config_generate_html(array $page_def)
                 break;
 
             case 'boolean_select':
-                config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
+                config_boolean_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9], $def[10]);
                 break;
 
             case 'single_select':
@@ -1750,53 +1762,48 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
 
 function get_resource_type_field_columns()
     {
-    global $lang, $execution_lockout;
+    global $lang;
 
-    $resource_type_field_column_definitions = [
-        'active'                   => array($lang['property-field_active'],'',1,1),
-        'global'                   => array($lang['property-resource_type'],'',1,0),
-        'title'                    => array($lang['property-title'],'',0,1),
-        'type'                     => array($lang['property-field_type'],'',0,1),
-        'linked_data_field'        => array($lang['property-field_raw_edtf'],'',0,1),
-        'name'                     => array($lang['property-shorthand_name'],$lang['information-shorthand_name'],0,1),
-        'required'                 => array($lang['property-required'],'',1,1),
-        'order_by'                 => array($lang['property-order_by'],'',0,0),
-        'keywords_index'           => array($lang['property-index_this_field'],$lang["information_index_warning"] . " " . $lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1),
-        'display_field'            => array($lang['property-display_field'],'',1,1),
-        'full_width'               => array($lang['property-field_full_width'],'',1,1),
-        'advanced_search'          => array($lang['property-enable_advanced_search'],'',1,1),
-        'simple_search'            => array($lang['property-enable_simple_search'],'',1,1),        
-        'browse_bar'               => array($lang['field_show_in_browse_bar'],'',1,1),
-        'read_only'                => array($lang['property-read_only_field'], '', 1, 1),
-        'exiftool_field'           => array($lang['property-exiftool_field'],'',0,1),
-        'fits_field'               => array($lang['property-fits_field'], $lang['information-fits_field'], 0, 1),
-        'personal_data'            => array($lang['property-personal_data'],'',1,1),
-        'use_for_similar'          => array($lang['property-use_for_find_similar_searching'],'',1,1),
-        'hide_when_uploading'      => array($lang['property-hide_when_uploading'],'',1,1),
-        'hide_when_restricted'     => array($lang['property-hide_when_restricted'],'',1,1),
-        'help_text'                => array($lang['property-help_text'],'',2,1),
-        'tooltip_text'             => array($lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1),
-        'tab'                      => array($lang['property-tab_name'], '', 0, 0),
-        'partial_index'            => array($lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1),
-        'iptc_equiv'               => array($lang['property-iptc_equiv'],'',0,1),                                  
-        'display_template'         => array($lang['property-display_template'],'',2,1),
-        'display_condition'        => array($lang['property-display_condition'],$lang['information-display_condition'],2,1),
-        'regexp_filter'            => array($lang['property-regexp_filter'],$lang['information-regexp_filter'],2,1),
-        'smart_theme_name'         => array($lang['property-smart_theme_name'],'',0,1),
-        'display_as_dropdown'      => array($lang['property-display_as_dropdown'],$lang['information-display_as_dropdown'],1,1),
-        'external_user_access'     => array($lang['property-external_user_access'],'',1,1),
-        'omit_when_copying'        => array($lang['property-omit_when_copying'],'',1,1),
-        'include_in_csv_export'    => array($lang['property-include_in_csv_export'],'',1,1),
-    ];
-
-    if (!$execution_lockout)
-        {
-        // These fields can't be edited if $execution_lockout is set to prevent code execution
-        $resource_type_field_column_definitions['autocomplete_macro'] = [$lang['property-autocomplete_macro'],'',2,1];
-        $resource_type_field_column_definitions['exiftool_filter'] = [$lang['property-exiftool_filter'],'',2,1];
-        $resource_type_field_column_definitions['value_filter'] = [$lang['property-value_filter'],'',2,1];
-        $resource_type_field_column_definitions['onchange_macro'] = [$lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1];
-        }
+    $resource_type_field_column_definitions = execution_lockout_remove_resource_type_field_props([
+        'active'                   => [$lang['property-field_active'],'',1,1],
+        'global'                   => [$lang['property-resource_type'],'',1,0],
+        'title'                    => [$lang['property-title'],'',0,1],
+        'type'                     => [$lang['property-field_type'],'',0,1],
+        'linked_data_field'        => [$lang['property-field_raw_edtf'],'',0,1],
+        'name'                     => [$lang['property-shorthand_name'],$lang['information-shorthand_name'],0,1],
+        'required'                 => [$lang['property-required'],'',1,1],
+        'order_by'                 => [$lang['property-order_by'],'',0,0],
+        'keywords_index'           => [$lang['property-index_this_field'],$lang["information_index_warning"] . " " . $lang['information-if_you_enable_indexing_below_and_the_field_already_contains_data-you_will_need_to_reindex_this_field'],1,1],
+        'display_field'            => [$lang['property-display_field'],'',1,1],
+        'full_width'               => [$lang['property-field_full_width'],'',1,1],
+        'advanced_search'          => [$lang['property-enable_advanced_search'],'',1,1],
+        'simple_search'            => [$lang['property-enable_simple_search'],'',1,1],        
+        'browse_bar'               => [$lang['field_show_in_browse_bar'],'',1,1],
+        'read_only'                => [$lang['property-read_only_field'], '', 1, 1],
+        'exiftool_field'           => [$lang['property-exiftool_field'],'',0,1],
+        'fits_field'               => [$lang['property-fits_field'], $lang['information-fits_field'], 0, 1],
+        'personal_data'            => [$lang['property-personal_data'],'',1,1],
+        'use_for_similar'          => [$lang['property-use_for_find_similar_searching'],'',1,1],
+        'hide_when_uploading'      => [$lang['property-hide_when_uploading'],'',1,1],
+        'hide_when_restricted'     => [$lang['property-hide_when_restricted'],'',1,1],
+        'help_text'                => [$lang['property-help_text'],'',2,1],
+        'tooltip_text'             => [$lang['property-tooltip_text'],$lang['information-tooltip_text'],2,1],
+        'tab'                      => [$lang['property-tab_name'], '', 0, 0],
+        'partial_index'            => [$lang['property-enable_partial_indexing'],$lang['information-enable_partial_indexing'],1,1],
+        'iptc_equiv'               => [$lang['property-iptc_equiv'],'',0,1],                                  
+        'display_template'         => [$lang['property-display_template'],'',2,1],
+        'display_condition'        => [$lang['property-display_condition'],$lang['information-display_condition'],2,1],
+        'regexp_filter'            => [$lang['property-regexp_filter'],$lang['information-regexp_filter'],2,1],
+        'smart_theme_name'         => [$lang['property-smart_theme_name'],'',0,1],
+        'display_as_dropdown'      => [$lang['property-display_as_dropdown'],$lang['information-display_as_dropdown'],1,1],
+        'external_user_access'     => [$lang['property-external_user_access'],'',1,1],
+        'omit_when_copying'        => [$lang['property-omit_when_copying'],'',1,1],
+        'include_in_csv_export'    => [$lang['property-include_in_csv_export'],'',1,1],
+        'autocomplete_macro'       => [$lang['property-autocomplete_macro'],'',2,1],
+        'exiftool_filter'          => [$lang['property-exiftool_filter'],'',2,1],
+        'value_filter'             => [$lang['property-value_filter'],'',2,1],
+        'onchange_macro'           => [$lang['property-onchange_macro'],$lang['information-onchange_macro'],2,1],
+    ]);
 
     $modify_resource_type_field_definitions=hook("modifyresourcetypefieldcolumns","",array($resource_type_field_column_definitions));
     if($modify_resource_type_field_definitions!='')

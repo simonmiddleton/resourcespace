@@ -1,5 +1,5 @@
 name: openai_gpt
-title: OpenAI API GPT-3 integration
+title: OpenAI API GPT integration
 author: Montala Limited
 version: 2.0
 desc: OpenAI generated metadata. Passes configured field data to the OpenAI API and stores the returned information.

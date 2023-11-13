@@ -223,7 +223,7 @@ foreach ($page_def as $def)
 // Do the page generation ritual -- don't change this section.
 
 // Note that config_gen_setup_post() is not used as it cannot process $action_dates_extra_config array
-//$upload_status = config_gen_setup_post($page_def, $plugin_name);
+//config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, true, $plugin_page_heading);
 

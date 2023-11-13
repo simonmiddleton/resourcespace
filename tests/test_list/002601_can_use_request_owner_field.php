@@ -81,6 +81,8 @@ foreach($test_2601_ucs as $use_case)
 
 
 // Tear down
-unset($test_2601_ucs, $GLOBALS['owner_field'], $GLOBALS['owner_field_mappings']);
+unset($test_2601_ucs);
+$GLOBALS['owner_field'] = 0;
+$GLOBALS['owner_field_mappings'] = [];
 
 return true;

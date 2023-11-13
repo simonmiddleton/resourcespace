@@ -332,7 +332,7 @@ function do_search(
     //                                                                  START keywords
     //
     // *******************************************************************************
-
+    $keywords_used = [];
     if ($keysearch)
         {
         for ($n=0;$n<count($keywords);$n++)
@@ -971,7 +971,7 @@ function do_search(
                                         // Log this
                                         if($stats_logging && !$go)
                                             {
-                                            daily_stat('Keyword usage', $keyref);
+                                            $keywords_used[] = $keyref;
                                             }
                                         } // End of standard keyword match
                                     } // end if not omit
@@ -1452,6 +1452,7 @@ function do_search(
     $special_results=search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$order_by,$orig_order,$select,$sql_filter,$archive,$return_disk_usage,$return_refs_only, $returnsql);
     if ($special_results!==false)
         {
+        log_keyword_usage($keywords_used, $special_results);
         return $special_results;
         }
 
@@ -1517,6 +1518,7 @@ function do_search(
         if(is_array($fetchrows))
             {
             // Return without converting into the legacy padded array
+            log_keyword_usage($keywords_used, $result);
             return $result;
             }
         
@@ -1526,6 +1528,7 @@ function do_search(
             $result = array_map(function($val){return(["ref"=>$val["ref"]]);}, $result["data"]);
             }
         $mysql_verbatim_queries=$mysql_vq;
+        log_keyword_usage($keywords_used, $result);
         return $result;
         }
     else
@@ -1543,6 +1546,7 @@ function do_search(
     if(is_array($fetchrows))
         {
         // Return without converting into the legacy padded array
+        log_keyword_usage($keywords_used, $result);
         return $result;
         }
     $resultcount = $result["total"]  ?? 0;
@@ -1556,6 +1560,7 @@ function do_search(
             $diff-=1000000;
             }
         hook("beforereturnresults","",array($result, $archive));
+        log_keyword_usage($keywords_used, $result);
         return $result;
         }
     else

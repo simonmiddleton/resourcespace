@@ -61,12 +61,14 @@ if($action == 'delete' && $id !== '' && enforcePostRequest(false))
     {
     if(!array_key_exists($id, $tms_link_modules_mappings))
         {
+        odbc_close($conn);
         http_response_code(400);
         exit();
         }
 
     unset($tms_link_modules_mappings[$id]);
     tms_link_save_module_mappings_config($tms_link_modules_mappings);
+    odbc_close($conn);
     exit();
     }
 
@@ -267,4 +269,6 @@ include '../../../include/header.php';
     </form>
 </div>
 <?php
+
+odbc_close($conn);
 include '../../../include/footer.php';

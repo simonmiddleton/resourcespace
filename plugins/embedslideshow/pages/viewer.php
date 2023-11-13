@@ -30,7 +30,7 @@ if (!check_access_key_collection($ref,$key))
     
 # Load watermark settings
 $use_watermark=check_use_watermark();
-
+ob_start();
 ?>
 <html>
 <head>
@@ -60,6 +60,21 @@ var timer;
 <?php
 $page=1;
 $resources=do_search("!collection" . $ref);
+if(count($resources) == 0)
+    {
+    $all_fcs = get_all_featured_collections();
+    $refs = array_column($all_fcs, 'ref');
+    $ref_key = array_search($ref, $refs);
+    if($ref_key !== null && is_featured_collection_category($all_fcs[$ref_key]))
+        {
+        $resources = get_featured_collection_resources($all_fcs[$ref_key], ['all_fcs' => $all_fcs]);
+        $resources = get_resource_data_batch($resources);
+        }
+    }
+if(count($resources) == 0)
+    {
+    exit($lang["embedslideshow_notavailable"]);
+    }
 foreach ($resources as $resource)
     {
         
@@ -73,12 +88,11 @@ foreach ($resources as $resource)
         {
         # Fall back to 'pre' size
         $preview_path=get_resource_path($resource["ref"],false,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
-        }
-        
-
+        }        
+    $preview_path .= "&k=" . $key;
     
     # sets height and width to display 
-    if((isset($resource["thumb_width"])&&$resource["thumb_width"]<1) || (isset($resource["thumb_height"])&&$resource["thumb_height"] <1)) {continue;/*No Preview Available*/}
+    if(!isset($resource["thumb_width"]) || $resource["thumb_width"]<1 || !isset($resource["thumb_height"]) || $resource["thumb_height"] <1) {continue;/*No Preview Available*/}
     $ratio=$resource["thumb_width"]/$resource["thumb_height"];
     
     if ($ratio > $player_ratio) // Base on the width unless we have been asked to scale to specific width
@@ -116,6 +130,14 @@ foreach ($resources as $resource)
     $page++;
     }
 $maxpages=$page-1;
+
+// ratio won't be set if none of the resources in the collection have previews available. 
+if(!isset($ratio))
+    {
+    ob_end_clean();
+    exit($lang["embedslideshow_notavailable"]);
+    }
+ob_flush();
 ?>
 
 
@@ -152,8 +174,6 @@ $('#embedslideshow_auto').fadeTo(100,0.4);
 <li class="embedslideshow_jump-box"> <input type="text" id="embedslideshow_page_box" size="1" /> / <span id="page-count">#</span> </li>
 <?php } ?>
 </ul>
-
-
 
 <script type="text/javascript">
 

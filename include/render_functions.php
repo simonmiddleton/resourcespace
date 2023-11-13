@@ -501,7 +501,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             {
 			?><input class="<?php echo escape_quoted_data($class) ?>" type=text name="<?php echo escape_quoted_data($name) ?>" id="<?php echo escape_quoted_data($id) ?>" value="<?php echo escape_quoted_data((string)$value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo escape_quoted_data((string)$field["name"]) ?>',[<?php echo htmlspecialchars((string)$field["resource_types"]) ?>]);}"<?php } ?>><?php 
 			# Add to the clear function so clicking 'clear' clears this box.
-			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : escape_quoted_data($field["name"])) . "').value='';";
+			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : escape_quoted_data((string)$field["name"])) . "').value='';";
 		    }
         // number view - manipulate the form value (don't send these but send a compiled numrange value instead
         else if ((int)$field['field_constraint']==1)
@@ -853,7 +853,14 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 			<?php
 			# Add to clear function
 			$clear_function .= "
-                jQuery('#search_tree_{$field['ref']}').jstree(true).deselect_all();
+                jQuery('#search_tree_{$field['ref']}').jstree({
+                    'core' : {
+                        'themes' : {
+                            'name' : 'default-dark',
+                            'icons': false
+                        }
+                    }
+                }).deselect_all();
 
                 /* remove the hidden inputs */
                 var elements = document.getElementsByName('nodes_searched[{$field['ref']}][]');
@@ -3304,9 +3311,9 @@ function render_trash($type, $deletetext,$forjs=false)
 
 function render_browse_bar()
     {
-    global $lang, $browse_bar_workflow, $browse_show, $enable_themes;
-    $bb_html = '<div id="BrowseBarContainer" class="ui-layout-west" style="display:none;">';
-    $bb_html .= '<div id="BrowseBar" class="BrowseBar" ' . ($browse_show ?  '' : 'style="display:none;"') . '>';
+    global $lang, $browse_bar_workflow, $enable_themes;
+    $bb_html = '<div id="BrowseBarContainer" style="display:none;">';
+    $bb_html .= '<div id="BrowseBar" class="BrowseBar">';
     $bb_html .= '<div id="BrowseBarContent" >'; 
     
     //Browse row template
@@ -3342,16 +3349,10 @@ function render_browse_bar()
 
     $bb_html .= '</div><!-- End of BrowseBarContent -->
                 </div><!-- End of BrowseBar -->
-                    <a href="#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div id="BrowseBarTab" style="display:none;"><div class="BrowseBarTabText" >' . $lang['browse_bar_text'] . '</div></div><!-- End of BrowseBarTab --></a>
-                </div><!-- End of BrowseBarContainer -->
-                
-            ';
+                </div><!-- End of BrowseBarContainer -->';
     echo $bb_html;
     
-    $browsejsvar = $browse_show ? 'show' : 'hide';
     echo '<script>
-        var browse_show = "' . $browsejsvar . '";
-        SetCookie("browse_show", "' . $browsejsvar . '");
         b_loading = new Array();
         // Expand tree to previous state based on stored cookie
         jQuery(document).ready(function()
@@ -4506,12 +4507,18 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
             echo "<input id='edit_reset_button' name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
             }
             ?>
-        <input <?php if ($multiple) { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"<?php } ?>
+        <input 
+        <?php 
+        if ($multiple) 
+            { ?>onclick="return confirm('<?php echo $confirm_text; ?>');"
+            <?php 
+            } 
+            ?>
                name="save"
                id="edit_save_button"
                class="editsave"
                type="submit"
-               value="&nbsp;&nbsp;<?php echo $save_btn_value; ?>&nbsp;&nbsp;" />
+               value="<?php echo escape_quoted_data($save_btn_value); ?>" />
         <?php
         if($upload_review_mode)
             {
@@ -5058,6 +5065,7 @@ function DrawOption(string $permission, string $description, bool $reverse = fal
     ?>
     <input type="hidden" name="permission_<?php echo $base64_perm; ?>" value="<?php echo $input_value; ?>">
     <tr>
+    <td><?php if ($reverse) {?><i><?php } ?><?php echo htmlspecialchars($permission) ?><?php if ($reverse) {?></i><?php } ?></td>
         <td><?php echo $description_escaped; ?></td>
         <td>
             <input

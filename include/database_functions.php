@@ -1305,11 +1305,9 @@ function ps_param_insert($count)
 * When constructing prepared statements and using e.g. ref in (some list of values), assists in preparing the parameter array. 
 * 
 * @param array $array The input array, to prepare for output. Will return this array but with type entry inserted before each value.
-* @param integer $type The column type as per ps_query
-* 
-* @return array
+* @param string $type The column type as per ps_query
 */
-function ps_param_fill($array,$type)
+function ps_param_fill(array $array, string $type): array
     {
     $parameters=array();
     foreach ($array as $a)

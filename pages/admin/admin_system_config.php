@@ -31,6 +31,15 @@ $page_def[] = config_add_single_select(
     420,
     '',
     true);
+$page_def[] = config_add_text_input(
+    'download_filename_format',
+    $lang['setup-download_filename_format'] . render_help_link('resourceadmin/download_filename_format', true),
+    false,
+    420,
+    false,
+    '',
+    true
+);
 $page_def[] = config_add_html('</div>');
 
 
@@ -191,7 +200,7 @@ $page_def[] = config_add_colouroverride_input(
     '',
     null,
     true,
-    "jQuery('#SearchBox').css('background',value); jQuery('#HomeSiteText.dashtext').css('background',value); jQuery('.HomePanelIN').css('background',value); jQuery('#BrowseBar').css('background',value); jQuery('#BrowseBarTab').css('background',value);"
+    "jQuery('#SearchBox').css('background',value); jQuery('#HomeSiteText.dashtext').css('background',value); jQuery('.HomePanelIN').css('background',value); jQuery('#BrowseBar').css('background',value); jQuery('.SearchBarTab.SearchBarTabSelected').css('background', value);"
 );
 $page_def[] = config_add_colouroverride_input(
     'collection_bar_background_override',
@@ -239,10 +248,10 @@ $page_def[] = config_add_boolean_select(
 $page_def[] = config_add_html('</div>');
 
 // Watermark section
-$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['wartermark_header'] . '</h3><div id="SystemConfigWatermarkSection" class="CollapsibleSection">');
+$page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['watermark_header'] . '</h3><div id="SystemConfigWatermarkSection" class="CollapsibleSection">');
 $page_def[] = config_add_file_input(
     'watermark',
-    $lang['wartermark_label'],
+    $lang['watermark_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
     420,
     array('png'),

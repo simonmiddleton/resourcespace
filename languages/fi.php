@@ -79,7 +79,6 @@ $lang["fieldtype-category_tree"]="Kategoriapuu";
 $lang["fieldtype-dynamic_keywords_list"]="Dynaaminen avainsanalista";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="Katso <a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a>, jossa on lisätietoa käyttöoikeuksista.";
 $lang["property-reference"]="Viittaus";
 $lang["property-name"]="Nimi";
 $lang["property-permissions"]="Käyttöoikeudet";
@@ -1800,7 +1799,7 @@ $lang["confirmdeleteaccessmulticol"]='Oletko varma, että haluat poistaa nämä 
 $lang["confirmdeleteaccessmultires"]='Oletko varma, että haluat poistaa nämä käyttöavaimet? Käyttäjät, jotka ovat saaneet pääsyn näiden avainten avulla, eivät enää pääse kyseisiin resursseihin.';
 $lang["confirmdeleteaccessmultimix"]='Oletko varma, että haluat poistaa nämä käyttöavaimet? Käyttäjät, jotka ovat saaneet pääsyn näiden avainten avulla, eivät enää pääse kyseisiin kokoelmiin ja resursseihin.';
 $lang["editingexternalshare"]='Muokkaaminen ulkoista jakoa.';
-$lang["sharedcollectionaddwarningupload"]='Varoitus: Valittu kokoelma on jaettu ulkoisten käyttäjien kanssa. Lataamasi resurssit ovat saatavilla näille käyttäjille. Napsauta "Jaa" alapalkissa hallitaksesi ulkoista pääsyä tähän kokoelmaan.';
+$lang["sharedcollectionaddwarningupload"]='Valittu kokoelma on jaettu ulkoisten käyttäjien kanssa. Lataamasi resurssit ovat saatavilla näille käyttäjille. Napsauta "Jaa" alapalkissa hallitaksesi ulkoista pääsyä tähän kokoelmaan.';
 $lang["confirmdeleteusercustomaccessresource"]='Oletko varma, että haluat poistaa tämän käyttäjän mukautetun käyttöoikeuden?';
 $lang["sharedcollectionaddblocked"]='Sinulla ei ole lupaa lisätä resursseja kokoelmaan, joka on jaettu ulkoisten käyttäjien kanssa.';
 $lang["selectgenerateurlexternalthemecat"]='Jotta voit luoda URL-osoitteita, jotka mahdollistavat ulkoisten käyttäjien (käyttäjät, joilla ei ole kirjautumistietoja) pääsyn, valitse haluamasi resurssien käyttötaso.';
@@ -1815,7 +1814,7 @@ $lang["collection_download_no_tar"]='Vakiokokoelman lataus.';
 $lang["collection_download_use_tar"]='TAR-arkisto';
 $lang["collection_download_tar_info"]='TAR-tiedostot alkavat latautua välittömästi. Jos et käytä tätä vaihtoehtoa, saatat huomata, että lataus on rajoitettu.';
 $lang["collection_download_tar_started"]='TAR-tiedostot alkavat latautua pian.';
-$lang["collection_download_tar_applink"]='Etkö voi avata TAR-tiedostoja? Hanki avoimen lähdekoodin 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>täältä</a>.';
+$lang["collection_download_tar_applink"]='Etkö voi avata TAR-tiedostoja? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Hanki avoimen lähdekoodin 7-zip täältä</a>.';
 $lang["confirm_edit_all_selected_resources"]='Oletko varma, että haluat tallentaa? Tämä ylikirjoittaa valitun kentän(t) olemassa olevat arvot kaikille valituille resursseille.';
 $lang["resourcetypereordered"]='Resurssityypin järjestys muutettu.';
 $lang["resourcetypefieldreordered"]='Resurssityypin kentän järjestystä muutettu.';

@@ -693,7 +693,6 @@ $lang["fieldtype-dynamic_keywords_list"]='Δυναμική λίστα λέξεω
 $lang["fieldtype-radio_buttons"]='Κουμπιά επιλογής (Radio buttons)';
 $lang["fieldtype-warning_message"]='Μήνυμα προειδοποίησης';
 $lang["fieldtype-date_range"]='Εύρος ημερομηνιών';
-$lang["documentation-permissions"]='Δείτε την <b><a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Βάση Γνώσεων</a></b> για περαιτέρω πληροφορίες σχετικά με τις άδειες πρόσβασης.';
 $lang["property-reference"]='Αναφορά';
 $lang["property-name"]='Όνομα.';
 $lang["property-permissions"]='Δικαιώματα (Dikaiómata)';
@@ -1131,7 +1130,7 @@ $lang["collection_download_no_tar"]='Κατεβάστε το αρχείο απο
 $lang["collection_download_use_tar"]='Αρχείο TAR';
 $lang["collection_download_tar_info"]='Τα αρχεία TAR θα αρχίσουν να κατεβαίνουν αμέσως. Αν δεν χρησιμοποιήσετε αυτήν την επιλογή, μπορεί να περιοριστεί η λήψη σας.';
 $lang["collection_download_tar_started"]='Τα αρχεία TAR θα αρχίσουν να κατεβαίνουν σύντομα.';
-$lang["collection_download_tar_applink"]='Δεν μπορείτε να ανοίξετε αρχεία TAR; Λάβετε το ανοικτού κώδικα 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>εδώ</a>.';
+$lang["collection_download_tar_applink"]='Δεν μπορείτε να ανοίξετε αρχεία TAR; <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Λάβετε το ανοικτού κώδικα 7-zip εδώ</a>.';
 $lang["confirm_edit_all_selected_resources"]='Είστε σίγουροι ότι θέλετε να αποθηκεύσετε; Αυτό θα αντικαταστήσει τις υπάρχουσες τιμές για το επιλεγμένο πεδίο/πεδία για όλους τους επιλεγμένους πόρους.';
 $lang["resourcetypereordered"]='Αναδιάταξη θέσης τύπου πόρου.';
 $lang["resourcetypefieldreordered"]='Αναδιάταξη θέσης πεδίου τύπου πόρου.';

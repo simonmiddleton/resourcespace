@@ -7,7 +7,9 @@ include dirname(__FILE__) . "/../../../include/db.php";
 
 include_once dirname(__FILE__) . "/../include/tms_link_functions.php";
 
-$debug_log=false;
+// To reduce debug log file growth, debug logging is disabled by default but can be enabled within the plugin options.
+global $tms_link_write_to_debug_log;
+$debug_log = $tms_link_write_to_debug_log;
 
 ob_end_clean();
 set_time_limit($cron_job_time_limit);

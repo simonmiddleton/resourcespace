@@ -16,7 +16,7 @@ $page_def[]= config_add_single_select("sensitive_images_blur_level",$lang["sensi
 			array(4=>"1",5=>"2",6=>"3",7=>"4",8=>"5",9=>"6"));
 
 // Do the page generation ritual
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
+config_gen_setup_html($page_def, $plugin_name, null, $page_heading, $page_intro);
 include '../../../include/footer.php';

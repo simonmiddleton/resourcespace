@@ -473,33 +473,33 @@ function get_tree_node_level($ref)
 
 
 /**
-* Find node ID of the root parent when searching by one
-* of the leaves ID
+* Return a row consisting of all ancestor nodes of a given node
 * Example:
 * 1
 * 2
-* 2.1
-* 2.2
-* 2.2.1
-* 2.2.2
-* 2.2.3
 * 2.3
+* 2.7
+* 2.8.4
+* 2.8.5
+* 2.8.6
+* 2.9
 * 3
-* Searching by "2.2.1" ID will give us the ID of node "2"
+* Passing in node 5 will return nodes 8,2 in one row
 * 
-* @param integer $ref   Node ID of tree leaf
+* @param integer $ref   A tree node
 * @param integer $level Node depth level (as returned by get_tree_node_level())
 * 
-* @return integer|boolean
+* @return array|boolean
 */
-function get_root_node_by_leaf(int $ref, int $level)
+function get_all_ancestors_for_node(int $ref, int $level)
     {
     if(0 >= $level)
         {
         return false;
         }
 
-    $query = "SELECT n0.ref AS `value` FROM node AS n{$level}";
+    $querycolumns = array();
+    $query = " FROM node AS n{$level}";
 
     $from_level = $level;
     $level--;
@@ -507,6 +507,7 @@ function get_root_node_by_leaf(int $ref, int $level)
     while(0 <= $level)
         {
         $query .= " LEFT JOIN node AS n{$level} ON n" . ($level + 1) . ".parent = n{$level}.ref";
+        $querycolumns[] = "n{$level}.ref n{$level}ref";
 
         if(0 === $level)
             {
@@ -516,9 +517,11 @@ function get_root_node_by_leaf(int $ref, int $level)
 
         $level--;
         }
-
-    return (int) ps_value($query, $placeholders, 0);
+    
+    $query = "SELECT ". implode(",",$querycolumns) . $query;
+    return ps_query($query, $placeholders);
     }
+
 
 
 /**
@@ -1188,8 +1191,8 @@ function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_
     foreach($translations as $translation)
         {
         // Only index the first 500 characters
-        $translation = mb_strcut($translation,0,$node_keyword_index_chars);
-        
+        $translation = mb_substr($translation,0,$node_keyword_index_chars);
+
         $keywords = split_keywords($translation, true, $partial_index,$is_date, $is_html);
 
         add_verbatim_keywords($keywords, $translation, $node['resource_type_field']);

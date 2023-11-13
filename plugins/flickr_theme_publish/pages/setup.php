@@ -29,7 +29,7 @@ $page_def[] = config_add_boolean_select("flickr_nice_progress_metadata", $lang['
 $page_def[] = config_add_text_input("flickr_nice_progress_min_timeout",$lang['flickr_nice_progress_min_timeout']);
 
 // Do the page generation ritual
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
+config_gen_setup_html($page_def, $plugin_name, null, $page_heading, $page_intro);
 include '../../../include/footer.php';

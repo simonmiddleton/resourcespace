@@ -85,7 +85,6 @@ $lang["fieldtype-dynamic_keywords_list"]="Dynamische Stichwortliste";
 $lang["fieldtype-dynamic_tree_in_development"]="Dynamischer Baum (in Entwicklung)";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="Weitere Informationen über die Berechtigungen finden Sie in der <a href=https://www.resourcespace.com/knowledge-base/ target=_blank>Knowledge Base</a>.";
 $lang["property-reference"]="Referenz";
 $lang["property-name"]="Name";
 $lang["property-permissions"]="Berechtigungen";
@@ -784,7 +783,7 @@ $lang["confirmdeleteaccess"]="Sind Sie sicher, dass Sie diesen Zugangscode lösc
 $lang["confirmdeleteaccessresource"]="Sind Sie sicher, dass Sie diesen Zugangscode löschen wollen? Benutzer, denen Sie den Zugangscode geschickt haben, können dann nicht mehr auf die Ressource zugreifen.";
 $lang["noexternalsharing"]="Nicht an externe Benutzer weitergegeben.";
 $lang["sharedcollectionaddwarning"]="Achtung: Diese Kollektion wurde an externe Benutzer weitergegeben. Die Ressource, die Sie zur Kollektion hinzugefügt haben, ist nun auch für diese Benutzer verfügbar. Klicken Sie auf 'Weitergeben', um die Einstellungen zu verwalten.";
-$lang["sharedcollectionaddwarningupload"]="Achtung: Diese Kollektion wurde an externe Benutzer weitergegeben. Die Ressourcen, die Sie hochladen, werden auch für diese Benutzer verfügbar. Klicken Sie auf 'Weitergeben', um die Einstellungen zu verwalten.";
+$lang["sharedcollectionaddwarningupload"]="Diese Kollektion wurde an externe Benutzer weitergegeben. Die Ressourcen, die Sie hochladen, werden auch für diese Benutzer verfügbar. Klicken Sie auf 'Weitergeben', um die Einstellungen zu verwalten.";
 
 $lang["restrictedsharecollection"]="Sie haben eingeschränkten Zugriff auf eine oder mehrere Ressourcen in dieser Kollektion, daher ist die Weitergabe deaktiviert.";
 $lang["selectgenerateurlexternal"]="Um eine URL für Nutzer ohne Login zu generieren, wählen Sie bitte die Zugriffsrechte aus, die Sie für diese Ressourcen gewähren wollen.";
@@ -2111,7 +2110,7 @@ $lang["collection_download_no_tar"]='Standard Archiv-Download';
 $lang["collection_download_use_tar"]='TAR-Archiv';
 $lang["collection_download_tar_info"]='TAR-Dateien werden sofort heruntergeladen. Wenn Sie diese Option nicht verwenden, kann es sein, dass Ihr Download begrenzt ist.';
 $lang["collection_download_tar_started"]='TAR-Dateien werden in Kürze heruntergeladen.';
-$lang["collection_download_tar_applink"]='Können TAR-Dateien nicht geöffnet werden? Holen Sie sich hier die Open-Source-Software 7-Zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>herunter</a>.';
+$lang["collection_download_tar_applink"]='Können TAR-Dateien nicht geöffnet werden? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Holen Sie sich hier die Open-Source-Software 7-Zip herunter</a>.';
 $lang["confirm_edit_all_selected_resources"]='Sind Sie sicher, dass Sie speichern möchten? Dadurch werden die vorhandenen Werte für das/die ausgewählte(n) Feld(er) aller ausgewählten Ressourcen überschrieben.';
 $lang["resourcetypereordered"]='Ressourcentyp-Position neu geordnet.';
 $lang["resourcetypefieldreordered"]='Neuanordnung der Feldposition des Ressourcentyps.';

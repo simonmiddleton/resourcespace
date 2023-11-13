@@ -75,9 +75,9 @@ function Hookyt2rsViewreplacedownloadoptions()
 		echo $baseurl_short
 ?>pages/resource_request.php?ref=<?php
 		echo urlencode($ref) ?>&k=<?php
-		echo getval("k", "") ?>" onClick="return CentralSpaceLoad(this,true);">
+		echo htmlspecialchars(getval("k", "")) ?>" onClick="return CentralSpaceLoad(this,true);">
 				<?php
-		echo $lang["action-request"] ?></td>
+		echo htmlspecialchars($lang["action-request"]) ?></td>
 				</tr>
 			</table>
 <?php

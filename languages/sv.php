@@ -85,7 +85,6 @@ $lang["fieldtype-dynamic_keywords_list"]="Dynamisk nyckelordslista";
 $lang["fieldtype-dynamic_tree_in_development"]="Dynamiskt träd (under utveckling)";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="Se <a href=../../documentation/permissions_sv.txt target=_blank>hjälpfilen för behörigheter</a> om du behöver mer information.";
 $lang["property-reference"]="Referensnr";
 $lang["property-name"]="Namn";
 $lang["property-permissions"]="Behörigheter";
@@ -773,7 +772,7 @@ $lang["confirmdeleteaccess"]="Vill du ta bort den här åtkomstnyckeln? Om du v�
 $lang["confirmdeleteaccessresource"]="Vill du ta bort den här åtkomstnyckeln? Om du väljer att fortsätta kommer användare som har fått tillgång till materialet med hjälp av denna nyckel inte längre att kunna komma åt materialet.";
 $lang["noexternalsharing"]="Ingen extern delning.";
 $lang["sharedcollectionaddwarning"]="Varning! Denna samling delas med externa användare. Det material som du har lagt till har därmed gjorts tillgängligt för dessa användare. Klicka på Dela samling om du vill hantera den externa åtkomsten för denna samling.";
-$lang["sharedcollectionaddwarningupload"]="Varning! Den valda samlingen delas med externa användare. De material som du lägger till kommer därmed att göras tillgängliga för dessa användare. Klicka på Dela samling i samlingspanelen om du vill hantera den externa åtkomsten för denna samling.";
+$lang["sharedcollectionaddwarningupload"]="Den valda samlingen delas med externa användare. De material som du lägger till kommer därmed att göras tillgängliga för dessa användare. Klicka på Dela samling i samlingspanelen om du vill hantera den externa åtkomsten för denna samling.";
 $lang["restrictedsharecollection"]="Delning är inte tillåten eftersom du har begränsad åtkomst till minst ett material i den här samlingen.";
 $lang["selectgenerateurlexternal"]="Om du vill skapa en extern webbadress som fungerar för användare utan användarkonto, anger du först den åtkomstnivå som du finner lämplig.";
 $lang["selectgenerateurlexternalthemecat"]="Om du vill skapa externa webbadresser som fungerar för användare utan användarkonto, anger du först den åtkomstnivå som du finner lämplig.";
@@ -1989,7 +1988,7 @@ $lang["collection_download_no_tar"]='Standard arkivnedladdning.';
 $lang["collection_download_use_tar"]='TAR-arkiv';
 $lang["collection_download_tar_info"]='TAR-filer kommer att börja laddas ner omedelbart. Om du inte använder den här inställningen kan det hända att din nedladdning begränsas.';
 $lang["collection_download_tar_started"]='TAR-filer kommer att börja laddas ner inom kort.';
-$lang["collection_download_tar_applink"]='Kan inte öppna TAR-filer? Hämta öppen källkod 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>här</a>.';
+$lang["collection_download_tar_applink"]='Kan inte öppna TAR-filer? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Hämta öppen källkod 7-zip här</a>.';
 $lang["confirm_edit_all_selected_resources"]='Är du säker på att du vill spara? Detta kommer att skriva över befintliga värden för det/de valda fälten för alla valda resurser.';
 $lang["resourcetypereordered"]='Resurstypens position omordnad.';
 $lang["resourcetypefieldreordered"]='Områdes typfält position omordnad.';

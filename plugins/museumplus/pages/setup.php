@@ -136,13 +136,13 @@ if(get_utility_path("php") === false)
     $error = $lang['museumplus_php_utility_not_found'];
     }
 
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 if(isset($error))
     {
     render_top_page_error_style($error);
     }
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $lang['museumplus_configuration']);
+config_gen_setup_html($page_def, $plugin_name, null, $lang['museumplus_configuration']);
 ?>
 <script>
 function museumplus_edit_module_conf(id)

@@ -36,6 +36,7 @@ $page_def[] = config_add_text_input('tms_link_test_count',$lang['tms_link_test_c
 
 $page_def[] = config_add_text_input('tms_link_log_directory',$lang['tms_link_log_directory']);
 $page_def[] = config_add_text_input('tms_link_log_expiry',$lang['tms_link_log_expiry']);
+$page_def[] = config_add_boolean_select('tms_link_write_to_debug_log', $lang['tms_link_write_to_debug_log']);
 
 $page_def[] = config_add_section_header($lang['tms_link_bidirectional_options']);
 $page_def[] = config_add_boolean_select('tms_link_push_image', $lang['tms_link_push_image']);
@@ -68,7 +69,7 @@ foreach($tms_link_modules_mappings as $tms_link_module_index => $tms_link_module
     $tms_link_rs_uid_field = get_resource_type_field($tms_link_module['rs_uid_field']??"");
     if(false !== $tms_link_rs_uid_field)
         {
-        $tms_link_rs_uid_field = htmlspecialchars($tms_link_rs_uid_field['title']);
+        $tms_link_rs_uid_field = htmlspecialchars((string) $tms_link_rs_uid_field['title']);
         }
 
     $tms_link_applicable_resource_types = '';
@@ -169,7 +170,7 @@ $page_def[] = config_add_hidden("tms_link_modules_saved_mappings");
 
 
 // Do the page generation ritual -- don't change this section.
-$upload_status = config_gen_setup_post($page_def, $plugin_name);
+config_gen_setup_post($page_def, $plugin_name);
 
 if(trim($tms_link_log_directory)!="" && (getval("save","")!="" || getval("submit","")!=""))
 	{
@@ -202,5 +203,5 @@ if(isset($errortext))
 	{
 	echo "<div class=\"PageInformal\">" . $errortext . "</div>";
 	}
-config_gen_setup_html($page_def, $plugin_name, $upload_status, $plugin_page_heading);
+config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
 include '../../../include/footer.php';

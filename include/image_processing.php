@@ -181,16 +181,15 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                         $uploaded_extension = $path_parts['extension'];
                         }
 
-                    if(isset($user_set_filename_path_parts['extension']) && (!isset($uploaded_extension) || $uploaded_extension == $user_set_filename_path_parts['extension']))
+                    if(
+                        isset($user_set_filename_path_parts['extension'])
+                        && (
+                            !isset($uploaded_extension)
+                            || $uploaded_extension == $user_set_filename_path_parts['extension']
+                        )
+                    )
                         {
                         $filename = $user_set_filename;
-                        }
-
-                    // If the user filename doesn't have an extension add the original one
-                    $path_parts = pathinfo($filename);
-                    if(!isset($path_parts['extension']) && isset($original_extension) && $original_extension != "") 
-                        {
-                        $filename .= '.' . $uploaded_extension;
                         }
                     }
                 }
@@ -400,55 +399,44 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     $merged_filename = strip_extension($original_filename);
                     }
 
-                // Get title field:
-                $resource = get_resource_data($ref);
-                $read_from = get_exiftool_fields($resource['resource_type']);
-
-                for($i = 0; $i < count($read_from); $i++) 
-                    {
+                global $view_title_field;
+                $exif_fields = array_column(get_exiftool_fields($resource['resource_type']), 'ref');
+                $oldval = get_data_by_field($ref, $view_title_field);
                 
-                    if($read_from[$i]['name'] == 'title') 
+                if(strpos($oldval, $merged_filename) == FALSE && in_array($view_title_field, $exif_fields)); 
+                    {
+                    switch (strtolower($merge_filename_with_title_option)) 
                         {
-                        $oldval = get_data_by_field($ref, $read_from[$i]['ref']);
+                        case strtolower($lang['merge_filename_title_do_not_use']):
+                            // Do nothing since the user doesn't want to use this feature
+                            break;
 
-                        if(strpos($oldval, $merged_filename) !== FALSE) 
-                            {
-                            continue;
-                            }
-                    
-                        switch (strtolower($merge_filename_with_title_option)) 
-                            {
-                            case strtolower($lang['merge_filename_title_do_not_use']):
-                                // Do nothing since the user doesn't want to use this feature
-                                break;
+                        case strtolower($lang['merge_filename_title_replace']):
+                            $newval = $merged_filename;
+                            break;
 
-                            case strtolower($lang['merge_filename_title_replace']):
+                        case strtolower($lang['merge_filename_title_prefix']):
+                            $newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
+                            if($oldval == '') {
                                 $newval = $merged_filename;
-                                break;
-
-                            case strtolower($lang['merge_filename_title_prefix']):
-                                $newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
-                                if($oldval == '') {
-                                    $newval = $merged_filename;
-                                }
-                                break;
-
-                            case strtolower($lang['merge_filename_title_suffix']):
-                                $newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
-                                if($oldval == '') {
-                                    $newval = $merged_filename;
-                                }
-                                break;
-
-                            default:
-                                // Do nothing
-                                break;
                             }
+                            break;
 
-                        if(isset($newval))
-                            {
-                            update_field($ref,$read_from[$i]['ref'],$newval);
+                        case strtolower($lang['merge_filename_title_suffix']):
+                            $newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
+                            if($oldval == '') {
+                                $newval = $merged_filename;
                             }
+                            break;
+
+                        default:
+                            // Do nothing
+                            break;
+                        }
+
+                    if(isset($newval))
+                        {
+                        update_field($ref,$view_title_field,$newval);
                         }
                     }
                 }
@@ -612,6 +600,8 @@ function extract_exif_comment($ref,$extension="")
 
     global $exif_comment,$exiftool_no_process,$exiftool_resolution_calc, $disable_geocoding, $embedded_data_user_select_fields,$filename_field,$lang;
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['exiftooltag']);
+
+    $processfile['name']='';
 
     $exiftool_fullpath = get_utility_path("exiftool");
     if (($exiftool_fullpath!=false) && !in_array($extension,$exiftool_no_process))
@@ -927,7 +917,7 @@ function extract_exif_comment($ref,$extension="")
                             $original_filename = '';
                             if(isset($_REQUEST['file_name'])) {
                                 $original_filename = $_REQUEST['file_name'];
-                            } elseif(isset($processfile)) {
+                            } elseif(isset($processfile['name'])) {
                                 $original_filename = $processfile['name'];
                             }
 
@@ -1837,13 +1827,16 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $mpr_parts['targetpath']=$path;
                 }
             
-            # Delete any file at the target path. Unless using the previewbased option, in which case we need it.           
+            # Delete any file at the target path. Unless using the previewbased option, in which case we need it.
             if(!hook("imagepskipdel") && !$keep_for_hpr)
                 {
                 if (!$previewbased)
                     {
                     if (file_exists($path))
-                        {unlink($path);}
+                        {
+                        debug("Deleting file at path: $path");
+                        unlink($path);
+                        }
                     }
                 }
             if ($keep_for_hpr){$keep_for_hpr=false;}
@@ -1888,7 +1881,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     // we have an extracted ICC profile, so use it as source
                     if ($icc_preview_profile != "" && $icc_preview_profile_embed)
                         {
-                        $targetprofile = ($imagemagick_mpr ? "" : "-profile ") . dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                        $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
                         }
                     else
                         {
@@ -1905,7 +1898,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         }
                     else
                         {
-                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . $icc_preview_options . escapeshellarg($targetprofile);
+                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . ' ' . $icc_preview_options . ' ' . ($targetprofile != "" ? "-profile " : "") . escapeshellarg($targetprofile);
                         }
 
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes

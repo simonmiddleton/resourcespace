@@ -21,14 +21,36 @@ function HookAction_datesCronCron()
     # Save the resource_deletion_state because it can be manipulated during primary action processing
     $saved_resource_deletion_state = $resource_deletion_state;
 
-    $LINE_END = ('cli' == PHP_SAPI) ? PHP_EOL : "<br>";
     if(PHP_SAPI == "cli")
         {
-        echo "action_dates: Running cron tasks on ".date("Y-m-d h:i:s").$LINE_END;
+        echo "action_dates: Running cron tasks on ".date("Y-m-d h:i:s") . PHP_EOL;
         }
 
+    // Don't run more than once every 24 hours
+    $last_action_dates_cron  = get_sysvar('last_action_dates_cron', '1970-01-01');
+
+    # No need to run if already run in last 24 hours.
+    if (time()-strtotime($last_action_dates_cron) < 24*60*60)
+        {
+        if('cli' == PHP_SAPI)
+            {
+            echo " - Skipping action date cron - last run: " . $last_action_dates_cron . PHP_EOL;
+            }
+        return false;
+        }
+
+    # Store time to update last run date/time after completion
+    $this_run_start = date("Y-m-d H:i:s"); 
+
     // Check for correct day of week
-    if (!in_array(date("w"),$action_dates_weekdays)) {echo "action_dates: not correct weekday to run".$LINE_END; return true;}
+    if (!in_array(date("w"),$action_dates_weekdays))
+        {
+        if('cli' == PHP_SAPI)
+            {
+            echo "action_dates: not correct weekday to run". PHP_EOL;
+            }
+        return true;
+        }
 
     # Reset any residual userref from earlier cron tasks
     global $userref;
@@ -55,7 +77,7 @@ function HookAction_datesCronCron()
         $fieldinfo = get_resource_type_field($action_dates_restrictfield);
         if(PHP_SAPI == "cli")
             {
-            echo "action_dates: Checking restrict action field $action_dates_restrictfield.".$LINE_END;
+            echo "action_dates: Checking restrict action field $action_dates_restrictfield.".PHP_EOL;
             }
 
         $sql = "SELECT rn.resource, n.name AS value FROM resource_node rn LEFT JOIN node n ON n.ref=rn.node LEFT JOIN resource r ON r.ref=rn.resource ";
@@ -85,7 +107,7 @@ function HookAction_datesCronCron()
                     {
                     if(PHP_SAPI == "cli")
                         {
-                        echo " - Restricting resource {$ref}".$LINE_END;
+                        echo " - Restricting resource {$ref}".PHP_EOL;
                         }
                     ps_query("UPDATE resource SET access=1 WHERE ref = ?",["i",$ref]);
                     resource_log($ref,'a','',$lang['action_dates_restrict_logtext'],$existing_access,1);		
@@ -118,7 +140,7 @@ function HookAction_datesCronCron()
         $fieldinfo = get_resource_type_field($action_dates_deletefield);
         if(PHP_SAPI == "cli")
             {
-            echo "action_dates: Checking state action field $action_dates_deletefield.".$LINE_END;
+            echo "action_dates: Checking state action field $action_dates_deletefield.".PHP_EOL;
             }
       
         $validrestypes = false;
@@ -201,11 +223,11 @@ function HookAction_datesCronCron()
                     if(!$change_archive_state)
                         {
                         // Delete the resource as date has been reached
-                        echo " - Deleting resource {$ref}".$LINE_END;
+                        echo " - Deleting resource {$ref}".PHP_EOL;
                         }
                     else
                         {
-                        echo " - Moving resource {$ref} to archive state '{$resource_deletion_state}'".$LINE_END;
+                        echo " - Moving resource {$ref} to archive state '{$resource_deletion_state}'".PHP_EOL;
                         }
                     }
                 if ($action_dates_reallydelete)
@@ -350,7 +372,7 @@ function HookAction_datesCronCron()
             {
             if(PHP_SAPI == "cli")
                 {
-                echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
+                echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . PHP_EOL;
                 }
             # Note that message_add can also send an additional email
             message_add($admin_notify_users, $notification_restrict . $url_restrict['multiple'], $url_restrict['single'], 0);
@@ -380,7 +402,7 @@ function HookAction_datesCronCron()
             {
             if(PHP_SAPI == "cli")
                 {
-                echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
+                echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . PHP_EOL;
                 }
             # Note that message_add can also send an additional email
             message_add($admin_notify_users, $notification_state . $url['multiple'], $url['single'], 0);
@@ -405,7 +427,7 @@ function HookAction_datesCronCron()
             {
             if(PHP_SAPI == "cli")
                 {
-                echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . $LINE_END;
+                echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . PHP_EOL;
                 }
             # Note that message_add can also send an additional email
             message_add($admin_notify_users, $notification_restrict . $url['multiple'], $url['single'], 0);
@@ -432,7 +454,7 @@ function HookAction_datesCronCron()
             {
             if(PHP_SAPI == "cli")
                 {
-                echo "action_dates: Checking extra action dates for field " . $datefield["ref"] . "." . $LINE_END;
+                echo "action_dates: Checking extra action dates for field " . $datefield["ref"] . "." . PHP_EOL;
                 }
             $sql="SELECT 
                 rn.resource, 
@@ -469,13 +491,16 @@ function HookAction_datesCronCron()
                     {
                     if(PHP_SAPI == "cli")
                         {
-                        echo "action_dates: Moving resource {$ref} to archive state " . $lang["status" . $newstatus].$LINE_END;
+                        echo "action_dates: Moving resource {$ref} to archive state " . $lang["status" . $newstatus] . PHP_EOL;
                         }
                     update_archive_status($ref, $newstatus);
                     }
                 }
             }
         }
+
+    # Update last run date/time.
+    set_sysvar("last_action_dates_cron",$this_run_start);
     }
 
 /**

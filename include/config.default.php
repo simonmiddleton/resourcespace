@@ -1065,22 +1065,6 @@ $simple_search_pills_view = false;
 # $custom_top_nav[1]['modal']=true;
 
 
-# Use original filename when downloading a file?
-$original_filenames_when_downloading=true;
-
-# Should the download filename have the size appended to it?
-$download_filenames_without_size = false;
-
-# When $original_filenames_when_downloading, should the original filename be prefixed with the resource ID?
-# This ensures unique filenames when downloading multiple files.
-# WARNING: if switching this off, be aware that when downloading a collection as a zip file, a file with the same name as another file in the collection will overwrite that existing file. It is therefore advisiable to leave this set to 'true'.
-$prefix_resource_id_to_filename=true;
-
-# When using $prefix_resource_id_to_filename above, what string should be used prior to the resource ID?
-# This is useful to establish that a resource was downloaded from ResourceSpace and that the following number
-# is a ResourceSpace resource ID.
-$prefix_filename_string="RS";
-
 # Display a 'new' flag next to new themes (by default themes created < 2 weeks ago)
 # Note: the age take days as parameter. Anything less than that would mean that a theme becomes old after a few hours which is highly unlikely.
 $flag_new_themes     = true;
@@ -1312,6 +1296,9 @@ $imperial_measurements=false;
 
 # Use day-month-year format? If set to false format will be month-day-year.
 $date_d_m_y=true;
+
+# Attempt to validate dates on the edit page
+$date_validation_js = true;
 
 # What is the default resource type to use for batch upload templates?
 $default_resource_type=1;
@@ -2497,13 +2484,6 @@ $keyboard_scroll_jump=false;
 # How long until the Loading popup appears during an ajax request (milliseconds)
 $ajax_loading_timer=500;
 
-#Option for downloaded filename to be just <resource id>.extension, without indicating size or whether an alternative file. Will override $original_filenames_when_downloading which is set as default
-$download_filename_id_only = false;
-
-# Append the size to the filename when downloading
-# Required: $download_filename_id_only = true;
-$download_id_only_with_size = false;
-
 # Allow searching by the 'contributed by' field (this no longer actually requires indexing)?
 $index_contributed_by=false;
 
@@ -2617,6 +2597,9 @@ $resource_share_filter_collections=false;
 
 # Option to turn off email sharing.
 $email_sharing=true;
+
+# Option to limit e-mails sent by the whole system per hour (to limit use of the system for spamming, for example)
+# $email_rate_limit=10;
 
 #Resource Share Expiry Controls
 $resource_share_expire_days=150; #Maximum number of days allowed for the share 
@@ -2761,6 +2744,9 @@ $admin_resource_access_notifications=false;
 $user_pref_user_management_notifications=false;
 # User preference - user_pref_system_management_notifications (System admins only). Option to receive notifications about system events e.g. low disk space
 $user_pref_system_management_notifications=true;
+
+# User preference - user_pref_new_action_emails. Option to receive an email notifying them of all new actions in the past X hours  as defined by $new_action_email_interval. Only appears if that is set to a positive value;
+$user_pref_new_action_emails = false;
 
 # User preference - email_user_notifications. Option to receive emails instead of new style system notifications where appropriate. 
 $email_user_notifications=false;
@@ -2917,6 +2903,18 @@ $actions_approve_hide_groups=""; // Groups to exclude from notifications
 
 # Option to show action links e.g. user requests, resource requests in a modal
 $actions_modal=true;
+
+// $new_action_email_interval - if this is set to a positive value users can choose to be notifed of new 
+// actions - see $user_pref_new_action_emails. 
+//
+// *IMPORTANT* - to work correctly this requires the cron tasks (pages/tools/cron_copy_hitcount.php) to be run
+// more frequently than the interval that has been configured for this setting. e.g. if $new_action_email_interval=1 
+// then cron_copy_hitcount needs to run at least once every hour.
+//
+//  - This value should be an integer. Any non-integer values will be rounded up
+//  - The minimum accepted value for this option is 1 hour
+//  - The maximum accepted value for this option is 168 hours (1 week). For any values greater than this 168 will be used instead.
+$new_action_email_interval = 0;
 
 # Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)
 $daterange_edtf_support=false;
@@ -3093,9 +3091,6 @@ $user_purge_disable = false;
 // Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
 $inactive_user_disable_days = 0;
 
-# Option to select metadata field that will be used for downloaded filename (do not include file extension)
-#$download_filename_field=8;
-
 /*
 Ability to generate an automated title using a specific format. Allows to generate a title using a combination between the 
 resource title, its ID and file extension.
@@ -3109,11 +3104,6 @@ Example:
     $auto_generated_resource_title_format = '%title-%resource.%extension';
     $auto_generated_resource_title_format = '2018-2019P - %resource.%extension';
     $auto_generated_resource_title_format = 'Photos - %resource.%extension';
-
-To get the title as the filename on download, the following settings should be set:
-$download_filename_field = 8; # Set this to the $view_title_field value
-$prefix_filename_string = "";
-$prefix_resource_id_to_filename = false;
 */
 $auto_generated_resource_title_format = '';
 
@@ -3387,3 +3377,24 @@ IMPORTANT: enabling this will mean partial dates (e.g May 2023) are no longer su
 cleared after the next resource edit (as & when users do it).
 */
 $use_native_input_for_date_field = false;
+
+# High contrast display mode to make text and UI elements easier to read. 
+$high_contrast_mode = false;
+
+# Number of hours before the access key for a URL obtained by the API call get_resource_path() expires.
+# WARNING: This should ideally not be set to an excessively high value in order to improve system security.
+$api_resource_path_expiry_hours = 24;
+
+/* 
+Format the download file name.
+
+Available placeholders:
+- %resource -> resource ref (ID)
+- %extension -> jpg, png etc
+- %filename -> the actual original/alternative file name
+- %fieldXX -> where XX is the actual metadata field ID (technical terms: resource_type_field).
+    If the user doesn't have permission to view the field, then blank (empty string) will be used instead.
+- %size -> scr, pre etc. Note: when applicable, an underscore will be automatically prefxed
+- %alternative -> alternative ref (ID). Note: when applicable, an underscore will be automatically prefxed
+*/
+$download_filename_format = DEFAULT_DOWNLOAD_FILENAME_FORMAT;

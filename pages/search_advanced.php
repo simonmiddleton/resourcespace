@@ -626,14 +626,14 @@ $fieldglobal = [];
 foreach($fields as $field)
     {
     $fieldorders[$field["ref"]]   = $field["order_by"];
-    $fieldglobal[$field["ref"]]   = ($field["global"] == 1 || count(explode(",",$field["resource_types"])) == $rtypecount) ? 1 : 0;
+    $fieldglobal[$field["ref"]]   = ($field["global"] == 1 || count(explode(",",(string)$field["resource_types"])) == $rtypecount) ? 1 : 0;
     }
 array_multisort($fieldglobal, SORT_DESC, $fieldorders, SORT_ASC, $fields);
 
 for ($n=0;$n<count($fields);$n++)
     {
     # Show a dividing header for resource type specific fields
-    if (($fields[$n]["global"] != 1 && count(explode(",",$field["resource_types"])) != $rtypecount) && !$showndivide)
+    if (($fields[$n]["global"] != 1 && count(explode(",",(string)$field["resource_types"])) != $rtypecount) && !$showndivide)
         {
         $showndivide=true;
         ?>

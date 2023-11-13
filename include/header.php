@@ -160,14 +160,13 @@ if($simple_search_pills_view)
     }
 ?>
 
-<!-- FLOT for graphs -->
-<script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.js"></script> 
-<script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.time.js"></script> 
-<script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.pie.js"></script>
-<script language="javascript" type="text/javascript" src="<?php echo $baseurl_short; ?>lib/flot/jquery.flot.tooltip.min.js"></script>
+<!-- Chart.js for graphs -->
+<script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/chartjs-4-4-0.js"></script>
+<script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/date-fns.js"></script>
+<script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/chartjs-adapter-date-fns.js"></script>
 
 <!-- jsTree -->
-<link rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jstree/themes/default/style.min.css">
+<link rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jstree/themes/default-dark/style.min.css">
 <script src="<?php echo $baseurl_short; ?>lib/jstree/jstree.min.js"></script>
 <script src="<?php echo $baseurl_short; ?>lib/js/category_tree.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
@@ -185,12 +184,11 @@ if(isset($GLOBALS['modify_header_not_authenticated_pages']) && is_array($GLOBALS
 $browse_on = has_browsebar();
 if($browse_on)
     {
-    $browse_width   = 295;
-    $browse_show    = getval("browse_show","") == "show";
     ?>
     <script src="<?php echo $baseurl_short ?>lib/js/browsebar_js.php" type="text/javascript"></script>
     <?php
     }
+$selected_search_tab = getval("selected_search_tab","");
 ?>
 
 <script type="text/javascript">
@@ -221,8 +219,7 @@ var scrolltopElementModal='#modal'
 
 if($browse_on)
     {
-    echo "browse_width = '" . $browse_width . "';
-    browse_clicked = false;";     
+    echo "browse_clicked = false;";     
     }
 ?>
 </script>
@@ -654,10 +651,6 @@ else
 <!--Main Part of the page-->
 <?php
 
-if($browse_on && checkperm("s") === true)
-    {
-    render_browse_bar();
-    }
         
 echo '<div id="UICenter" role="main" class="ui-layout-center ' . $uicenterclass . '">';
 

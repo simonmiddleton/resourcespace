@@ -87,7 +87,6 @@ $lang["fieldtype-warning_message"]="Upozornenie";
 $lang["fieldtype-date_range"]="Rozsah dátumov";
 
 # Property labels (for the default properties)
-$lang["documentation-permissions"]="Pozrite si <b><a href=../../documentation/permissions.txt target=_blank> súbor pomocníka k oprávneniam </a></b> pre ďalšie informácie o povoleniach.";
 $lang["property-reference"]="Referencie";
 $lang["property-name"]="Názov";
 $lang["property-permissions"]="Oprávnenia";
@@ -927,7 +926,7 @@ $lang["confirmdeleteaccessresource"]="Naozaj chcete odstrániť tento prístupov
 $lang["editingexternalshare"]="Upraviť externé zdieľanie";
 $lang["noexternalsharing"]="Zatiaľ neboli vygenerované žiadne externé adresy URL.";
 $lang["sharedcollectionaddwarning"]="Varovanie: Táto zbierka bola zdieľaná s externými používateľmi. Zdroj, ktorý ste pridali, bol sprístupnený týmto používateľom. Kliknutím na „zdieľať“ môžete spravovať externý prístup k tejto zbierke.";
-$lang["sharedcollectionaddwarningupload"]="Varovanie: Vybraná zbierka bola zdieľaná s externými používateľmi. Zdroje, ktoré odovzdáte, sa sprístupnia týmto používateľom. Ak chcete spravovať externý prístup k tejto zbierke, kliknite na položku „zdieľať“ v dolnom paneli.";
+$lang["sharedcollectionaddwarningupload"]="Vybraná zbierka bola zdieľaná s externými používateľmi. Zdroje, ktoré odovzdáte, sa sprístupnia týmto používateľom. Ak chcete spravovať externý prístup k tejto zbierke, kliknite na položku „zdieľať“ v dolnom paneli.";
 $lang["confirmdeleteusercustomaccessresource"]='Naozaj chcete odstrániť vlastný prístup pre tohto používateľa?';
 
 $lang["sharedcollectionaddblocked"]="Nemáte oprávnenie pridávať zdroje do zbierky zdieľanej s externými používateľmi.";
@@ -962,7 +961,7 @@ $lang["collection_download_format"] = "Formát súboru na stiahnutie";
 $lang["collection_download_no_tar"] = "Stiahnuť ako štandardný archív";
 $lang["collection_download_use_tar"] = "Archív TAR";
 $lang["collection_download_tar_info"] = "Súbory TAR sa začnú sťahovať okamžite. Ak túto možnosť nepoužijete, môže sa stať, že vaše sťahovanie bude obmedzené.";
-$lang["collection_download_tar_applink"] = "Neviete otvoriť súbory TAR? Získajte open source archivátor 7-zip <a href='http://www.7-zip.org/download.html' target='_blank'>tu</a>";
+$lang["collection_download_tar_applink"] = "Neviete otvoriť súbory TAR? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Získajte open source archivátor 7-zip tu</a>";
 $lang["downloadsize"]="Veľkosť súboru na stiahnutie";
 $lang["existingkeywords"]="Existujúce kľúčové slová:";
 $lang["extrakeywords"]="Extra kľúčové slová";

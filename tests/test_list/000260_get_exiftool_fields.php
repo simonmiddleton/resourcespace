@@ -31,11 +31,17 @@ $use_cases = [
         'resource_types' => 2,
         'expectedcount' => count($doc_exif_fields),
     ],
+    [
+        'name' => 'Check optional node separator is applied to options',
+        'resource_types' => [1],
+        'option_separator' => NODE_NAME_STRING_SEPARATOR,
+        'options_field' => 3  # Using Country field as it has many fixed list field options.
+    ],
 ];
 
 foreach ($use_cases as $uc)
     {
-    $exif_fields = get_exiftool_fields($uc["resource_types"]);
+    $exif_fields = get_exiftool_fields($uc["resource_types"], (isset($uc['option_separator']) ? $uc['option_separator'] : ','));
     if(isset($uc['expectedcount']) && count($exif_fields) != $uc['expectedcount'])
         {    
         echo "Use case: {$uc['name']} - invalid count: " . count($exif_fields) . ", expected {$uc['expectedcount']} ";
@@ -52,6 +58,17 @@ foreach ($use_cases as $uc)
                 echo "Use case: {$uc['name']} - invalid mapping for field#{$expected_mapping[0]} {$exif_fields[$idx_field]["exiftool_field"]}, expected {$expected_mapping} ";
                 return false;
                 }
+            }
+        }
+
+    if(isset($uc['option_separator']) && isset($uc['options_field']))
+        {
+        $idx_field = array_search($uc['options_field'], array_column($exif_fields, "ref"));
+        $options = explode($uc['option_separator'], $exif_fields[$idx_field]["options"]);
+        if (count($options) === 1)
+            {
+            echo "Use case: {$uc['name']} - the custom separator was not applied. ";
+            return false;
             }
         }
     }
