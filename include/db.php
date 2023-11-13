@@ -427,7 +427,7 @@ if($facial_recognition)
 if(!$disable_geocoding) 
     {
     include_once __DIR__ . '/map_functions.php';
-    }    
+    }
 
 # Pre-load all text for this page.
 global $site_text;

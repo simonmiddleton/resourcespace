@@ -1,26 +1,29 @@
 <?php
 command_line_only();
 //include_once(__DIR__ . "/../../include/image_processing.php");
+$iiif_enabled = true;
 include_once(__DIR__ . "/../../include/api_functions.php");
 
-$iiif_enabled = true;
-
 // Set up a IIIF request object
-$iiif = new stdClass();
-$iiif->rootlevel = $baseurl_short . "iiif/";
-$iiif->rooturl = $baseurl . "/iiif/";
-$iiif->rootimageurl = $baseurl . "/iiif/image/";
-$iiif->response=[];
-$iiif->validrequest = false;
-$iiif->headers = [];
-$iiif->errors=[];
 
+$iiif_options["rootlevel"] = $baseurl_short . "iiif/";
+$iiif_options["rooturl"] = $baseurl . "/iiif/";
+$iiif_options["rootimageurl"] = $baseurl . "/iiif/image/";
+$iiif_options["identifier_field"] = create_resource_type_field("Object ID",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"objectid",true);
+$iiif_options["description_field"] = 18;
+$iiif_options["sequence_field"] = create_resource_type_field("Page",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"page");
+$iiif_options["license_field"] = create_resource_type_field("License",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"license");
+$iiif_options["title_field"] = 8;
+// $iiif_options["max_width"] =  1024;
+// $iiif_options["max_height"] = $iiif_max_height ?? 1024;
+// $iiif_options["custom_sizes"] = (bool)$iiif_custom_sizes ?? true;
+// $iiif_options["preview_tiles"] = (bool)$preview_tiles ?? true;
+// $iiif_options["preview_tile_size"] = $preview_tile_size ?? 1024;
+// $iiif_options["preview_tile_scale_factors"] = $preview_tile_scale_factors ?? [1,2,4];
+// $iiif_options["download_chunk_size"] = $download_chunk_size;
 
-$iiif->identifier_field = create_resource_type_field("Object ID",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"objectid",true);
-$iiif->description_field = 18;
-$iiif->sequence_field = create_resource_type_field("Page",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"page");
-$iiif->license_field = create_resource_type_field("License",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"license");
-$iiif->title_field = 8;
+$iiif = new IIIFRequest($iiif_options);
+
 
 // Set up some IIIF resources
 $resourcea=create_resource(1,0);
@@ -72,33 +75,32 @@ setup_user($iiif_user);
 
 // Manifest test
 $testurl = $iiif->rooturl . $objectid . "/manifest";
-iiif_parse_url($iiif, $testurl);
-iiif_get_resources($iiif);
-iiif_generate_manifest($iiif);
+$iiif->parseUrl($testurl);
+$iiif->getResources();
+$iiif->generateManifest();
 
 if(!match_values(array_column($iiif->searchresults,"ref"),$allresources))
     {
     echo "Incorrect resources returned";
     return false;
     }
+if($iiif->getresponse("label")["en"][0] != $resourceatitle)
+    {
+    echo "Incorrect label returned. Expected: '" . $resourceatitle . "', got: '" . $iiif->getresponse("label")["en"][0] . "'";
+    return false;
+    }
+if($iiif->getresponse("summary")["en"][0] != $resourceadescription)
+    {
+    echo "Incorrect summary returned. Expected: '" . $resourceadescription . "', got: '" . $iiif->getresponse("summary")["en"][0] . "'";
+    return false;
+    }
+if($iiif->getresponse("rights") != "Public domain")
+    {
+    echo "Incorrect rights attribute returned. Expected: '" . "Public domain" . "', got: '" . $iiif->getresponse("rights") . "'";
+    return false;
+    }
 
-if($iiif->response["label"]["en"][0] != $resourceatitle)
-    {
-    echo "Incorrect label returned. Expected: '" . $resourceatitle . "', got: '" . $iiif->response["label"]["en"][0] . "'";
-    return false;
-    }
-if($iiif->response["summary"]["en"][0] != $resourceadescription)
-    {
-    echo "Incorrect summary returned. Expected: '" . $resourceadescription . "', got: '" . $iiif->response["summary"]["en"][0] . "'";
-    return false;
-    }
-if($iiif->response["rights"] != "Public domain")
-    {
-    echo "Incorrect rights attribute returned. Expected: '" . "Public domain" . "', got: '" . $iiif->response["rights"] . "'";
-    return false;
-    }
-
-foreach($iiif->response["metadata"] as $metadata_item)
+foreach($iiif->getresponse("metadata") as $metadata_item)
     {
     switch ($metadata_item["label"]["en"][0])
         {
@@ -127,16 +129,16 @@ foreach($iiif->response["metadata"] as $metadata_item)
     }
 
 // Check items
-if(!isset($iiif->response["items"]) || count($iiif->response["items"]) != 1)
+if(count($iiif->getresponse("items")) != 1)
     {
     echo "Invalid items returned";
     return false;
     }
 
 $expected_image_url =  $iiif->rootimageurl . $resourcea . "/full/max/0/default.jpg";
-if(!isset($iiif->response["items"][0]["items"][0]["items"][0]["body"]["id"]) || $iiif->response["items"][0]["items"][0]["items"][0]["body"]["id"] != $expected_image_url)
+if(!isset($iiif->getresponse("items")[0]["items"][0]["items"][0]["body"]["id"]) || $iiif->getresponse("items")[0]["items"][0]["items"][0]["body"]["id"] != $expected_image_url)
     {
-    echo "Invalid Annotation image returned. Expected '" . $expected_image_url . "' , got '" . ($iiif->response["items"][0]["items"][0]["items"][0]["body"]["id"] ?? "" ). "'";
+    echo "Invalid Annotation image returned. Expected '" . $expected_image_url . "' , got '" . ($iiif->getresponse("items")[0]["items"][0]["items"][0]["body"]["id"] ?? "" ). "'";
     return false;
     }
 

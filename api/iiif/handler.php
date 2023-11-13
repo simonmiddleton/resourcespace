@@ -9,92 +9,77 @@ if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identif
     }
 
 include_once "../../include/api_functions.php";
+
+// Set up request object
+$iiif_options["rootlevel"] = $baseurl_short . "iiif/";
+$iiif_options["rooturl"] = $baseurl . "/iiif/";
+$iiif_options["rootimageurl"] = $baseurl . "/iiif/image/";
+$iiif_options["identifier_field"] = $iiif_identifier_field;
+$iiif_options["description_field"] = $iiif_description_field;
+$iiif_options["sequence_field"] = $iiif_sequence_field ?? 0;
+$iiif_options["license_field"] = (int)($iiif_license_field ?? 0);
+$iiif_options["title_field"] = $view_title_field;
+$iiif_options["max_width"] = $iiif_max_width ?? 1024;
+$iiif_options["max_height"] = $iiif_max_height ?? 1024;
+$iiif_options["custom_sizes"] = (bool)$iiif_custom_sizes ?? true;
+$iiif_options["preview_tiles"] = (bool)$preview_tiles ?? true;
+$iiif_options["preview_tile_size"] = $preview_tile_size ?? 1024;
+$iiif_options["preview_tile_scale_factors"] = $preview_tile_scale_factors ?? [1,2,4];
+$iiif_options["download_chunk_size"] = $download_chunk_size;
+
+$iiif = new IIIFRequest($iiif_options);
+
 $iiif_debug = getval("debug","")!="";
 
 $iiif_user = get_user($iiif_userid);
 if($iiif_user === false)
     {
-    iiif_error(500, ['Invalid $iiif_userid.']);
+    $iiif->triggerError(500, ['Invalid $iiif_userid.']);
     }
+
 // Creating $userdata for use in do_search()
 $userdata[0] = $iiif_user;
 setup_user($iiif_user);
 
-// Set up request object
-$iiif = new stdClass();
-$iiif->rootlevel = $baseurl_short . "iiif/";
-$iiif->rooturl = $baseurl . "/iiif/";
-$iiif->rootimageurl = $baseurl . "/iiif/image/";
-$iiif->identifier_field = (int)$iiif_identifier_field;
-$iiif->description_field = (int)$iiif_description_field;
-$iiif->sequence_field = (int)$iiif_sequence_field ?? 0;
-$iiif->license_field = (int)$iiif_license_field ?? 0;
-$iiif->title_field = $view_title_field;
-$iiif->max_width = (int)$iiif_max_width ?? 1024;
-$iiif->max_height = (int)$iiif_max_height ?? 1024;
-$iiif->custom_sizes = (bool)$iiif_custom_sizes ?? true;
-$iiif->preview_tiles = (bool)$preview_tiles ?? true;
-$iiif->preview_tile_size = (int)$preview_tile_size ?? 1024;
-$iiif->preview_tile_scale_factors = $preview_tile_scale_factors ?? [1,2,4];
-$iiif->download_chunk_size = $download_chunk_size;
-
-$iiif->response=[];
-$iiif->validrequest = false;
-$iiif->headers = [];
-$iiif->errors=[];
-
 // Extract request details
-iiif_parse_url($iiif, ($_SERVER["REQUEST_URI"] ?? ""));
+$iiif->parseUrl($_SERVER["REQUEST_URI"] ?? "");
 
-if ($iiif->request["api"] == "root")
+if ($iiif->getRequest("api") == "root")
 	{
-	# Root level request - send information file only
-	$iiif->response["@context"] = "http://iiif.io/api/presentation/2/context.json";
-  	$iiif->response["id"] = $iiif->rooturl;
-  	$iiif->response["type"] = "sc:Manifest";
-    $arr_langdefault = i18n_get_all_translations("iiif");
-    foreach($arr_langdefault as $langcode=>$langdefault)
-        {
-        $iiif->response["label"][$langcode] = [$langdefault];
-        }
-	$iiif->response["width"] = 6000;
-	$iiif->response["height"] = 4000;
-    $iiif->response["tiles"] = array();
-    $iiif->response["tiles"][] = array("width" => $preview_tile_size, "height" => $preview_tile_size, "scaleFactors" => $preview_tile_scale_factors);
-    $iiif->response["profile"] = array("http://iiif.io/api/image/3/level0.json");
-    $iiif->validrequest = true;
+    # Root level request - send information file only
+    $iif->infodoc();
     }
-elseif($iiif->request["api"] == "image")
+elseif($iiif->getRequest("api") == "image")
     {
-    iiif_process_image_request($iiif);
-    } 
-elseif($iiif->request["api"] == "presentation")
-    {    
-    if($iiif->request["type"] == "")
+    $iiif->processImageRequest();
+    }
+elseif($iiif->getRequest("api") == "presentation")
+    {
+    if($iiif->getRequest("type") == "")
         {
         $iiif->errorcode=404;
         $iiif->errors[] = "Bad request. Valid options are 'manifest', 'sequence' or 'canvas' e.g. ";
-        $iiif->errors[] = "For the manifest: " . $iiif->rooturl . $iiif->request["id"] . "/manifest";
-        $iiif->errors[] = "For a sequence : " . $iiif->rooturl . $iiif->request["id"] . "/sequence";
-        $iiif->errors[] = "For a canvas : " . $iiif->rooturl . $iiif->request["id"] . "/canvas/<identifier>";
+        $iiif->errors[] = "For the manifest: " . $iiif->rooturl . $iiif->getRequest("id") . "/manifest";
+        $iiif->errors[] = "For a sequence : " . $iiif->rooturl . $iiif->getRequest("id") . "/sequence";
+        $iiif->errors[] = "For a canvas : " . $iiif->rooturl . $iiif->getRequest("id") . "/canvas/<identifier>";
         }
     else
         {
-        iiif_process_presentation_request($iiif);
+        $iiif->processPresentationRequest();
         }
     }
 
-// Send the response 
-if($iiif->validrequest)
+// Send the response
+if($iiif->isValidRequest())
     {
     if(function_exists("http_response_code"))
         {
         http_response_code(200); # Send OK
         }
     header("Access-Control-Allow-Origin: *");
-    if(isset($iiif->response_image) && file_exists($iiif->response_image))
+    if($iiif->is_image_response())
         {
-        iiif_render_image($iiif);
+        $iiif->renderImage();
         }
     else
         {
@@ -105,18 +90,18 @@ if($iiif->validrequest)
             }
         if(defined('JSON_PRETTY_PRINT'))
             {
-            echo json_encode($iiif->response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            echo json_encode($iiif->getResponse(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             }
         else
             {
-            echo json_encode($iiif->response);
+            echo json_encode($iiif->getResponse());
             }
         }
     }
 elseif(count($iiif->errors) > 0)
     {
-    iiif_error($iiif->errorcode ?? 400,$iiif->errors);
+    $iiif->triggerError();
     }
 
-		
-	
+
+
