@@ -399,55 +399,44 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     $merged_filename = strip_extension($original_filename);
                     }
 
-                // Get title field:
-                $resource = get_resource_data($ref);
-                $read_from = get_exiftool_fields($resource['resource_type']);
-
-                for($i = 0; $i < count($read_from); $i++) 
-                    {
+                global $view_title_field;
+                $exif_fields = array_column(get_exiftool_fields($resource['resource_type']), 'ref');
+                $oldval = get_data_by_field($ref, $view_title_field);
                 
-                    if($read_from[$i]['name'] == 'title') 
+                if(strpos($oldval, $merged_filename) == FALSE && in_array($view_title_field, $exif_fields)); 
+                    {
+                    switch (strtolower($merge_filename_with_title_option)) 
                         {
-                        $oldval = get_data_by_field($ref, $read_from[$i]['ref']);
+                        case strtolower($lang['merge_filename_title_do_not_use']):
+                            // Do nothing since the user doesn't want to use this feature
+                            break;
 
-                        if(strpos($oldval, $merged_filename) !== FALSE) 
-                            {
-                            continue;
-                            }
-                    
-                        switch (strtolower($merge_filename_with_title_option)) 
-                            {
-                            case strtolower($lang['merge_filename_title_do_not_use']):
-                                // Do nothing since the user doesn't want to use this feature
-                                break;
+                        case strtolower($lang['merge_filename_title_replace']):
+                            $newval = $merged_filename;
+                            break;
 
-                            case strtolower($lang['merge_filename_title_replace']):
+                        case strtolower($lang['merge_filename_title_prefix']):
+                            $newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
+                            if($oldval == '') {
                                 $newval = $merged_filename;
-                                break;
-
-                            case strtolower($lang['merge_filename_title_prefix']):
-                                $newval = $merged_filename . $merge_filename_with_title_spacer . $oldval;
-                                if($oldval == '') {
-                                    $newval = $merged_filename;
-                                }
-                                break;
-
-                            case strtolower($lang['merge_filename_title_suffix']):
-                                $newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
-                                if($oldval == '') {
-                                    $newval = $merged_filename;
-                                }
-                                break;
-
-                            default:
-                                // Do nothing
-                                break;
                             }
+                            break;
 
-                        if(isset($newval))
-                            {
-                            update_field($ref,$read_from[$i]['ref'],$newval);
+                        case strtolower($lang['merge_filename_title_suffix']):
+                            $newval = $oldval . $merge_filename_with_title_spacer . $merged_filename;
+                            if($oldval == '') {
+                                $newval = $merged_filename;
                             }
+                            break;
+
+                        default:
+                            // Do nothing
+                            break;
+                        }
+
+                    if(isset($newval))
+                        {
+                        update_field($ref,$view_title_field,$newval);
                         }
                     }
                 }
