@@ -1,6 +1,8 @@
 <?php 
 if (!hook("renderresultthumb")) 
     {
+    $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
+
     # Establish various metrics for use in thumbnail rendering
     $resolved_title_trim=0; 
     $field_height = 24;
@@ -145,7 +147,7 @@ if (!hook("renderresultthumb"))
                     class="<?php echo ($display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper') ?>"
                     href="<?php echo $url?>"  
                     onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
-                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field])))?>"
+                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars($resource_view_title))?>"
                 >
                         <?php 
                         if($result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $image_size))
@@ -355,7 +357,8 @@ if (!hook("renderresultthumb"))
                     <input 
                         type="checkbox" 
                         id="check<?php echo htmlspecialchars($ref)?>" 
-                        class="checkselect" 
+                        class="checkselect"
+                        title="<?php echo escape_quoted_data($lang['action-select'] . " - " . $resource_view_title) ?>"
                         data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
                         aria-label="<?php echo escape_quoted_data($lang["action-select"])?>"
                         <?php echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}"); ?>

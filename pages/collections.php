@@ -813,6 +813,7 @@ else if ($basket)
 		for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)					
 			{
 			$ref=$result[$n]["ref"];
+			$resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
 			?>
 	<?php 
 	if (!hook("resourceview")) 
@@ -1130,6 +1131,7 @@ else
 		for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)					
 			{
 			$ref=$result[$n]["ref"];
+			$resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
 			?>
 	<?php 
 	if (!hook("resourceview")) 

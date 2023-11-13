@@ -35,22 +35,37 @@ function HookLightbox_previewAllAdditionalheaderjs()
 function HookLightbox_previewAllReplacefullscreenpreviewicon()
 	{
 	global $baseurl_short, $ref, $result, $n, $k, $search, $offset, $sort, $order_by, $archive,
-			$lang, $showkeypreview, $value, $view_title_field;
+		$lang, $showkeypreview, $value, $view_title_field, $resource_view_title;
 
 	$url = getPreviewURL($result[$n]);
-	if ($url === false)
+
+	if ($url === false) {
 		return false;
+	}
+
 	$showkeypreview = true;
 
 	# Replace the link to add the 'previewlink' ID
 	?>
-		<span class="IconPreview"><a class="fa fa-expand" id= "previewlink<?php echo htmlspecialchars($order_by) . $ref?>" href="<?php
-			echo $baseurl_short?>pages/preview.php?from=search&ref=<?php
-			echo urlencode($ref)?>&ext=<?php echo $result[$n]["preview_extension"]?>&search=<?php
-			echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php
-			echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php
-			echo urlencode($archive)?>&k=<?php echo urlencode($k)?>" title="<?php
-			echo $lang["fullscreenpreview"]?>"></a></span>
+	<span class="IconPreview">
+		<a class="fa fa-expand"
+			id="previewlink<?php echo htmlspecialchars($order_by) . $ref?>"
+			href="<?php generateURL(
+				$baseurl_short . 'pages/preview.php',
+				[
+					'from' => 'search',
+					'ref' => $ref,
+					'ext' => $result[$n]['preview_extension'],
+					'search' => $search,
+					'offset' => $offset,
+					'order_by' => $order_by,
+					'sort' => $sort,
+					'archive' => $archive,
+					'k' => $k
+				]) ?>"
+			title="<?php echo escape_quoted_data($lang["fullscreenpreview"] . " - " . $resource_view_title) ?>">
+		</a>
+	</span>
 			
 	<?php
 	addLightBox('#previewlink' . htmlspecialchars($order_by) . $ref, $url, $result[$n]["field".$view_title_field], htmlspecialchars($order_by));

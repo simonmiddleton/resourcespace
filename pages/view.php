@@ -1423,11 +1423,11 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                 {
                                                 if (isset($size_info["id"])) 
                                                     {
-                                                    echo add_to_collection_link($ref,$search,"alert('" . addslashes($lang["requestaddedtocollection"]) . "');",$size_info["id"]);
+                                                    echo add_to_collection_link($ref,"alert('" . addslashes($lang["requestaddedtocollection"]) . "');",$size_info["id"]);
                                                     }
                                                 else
                                                     {
-                                                    echo add_to_collection_link($ref,$search);
+                                                    echo add_to_collection_link($ref);
                                                     }
                                                 }
                                             else
@@ -1824,7 +1824,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                 ?>
                                                 <li>
                                                     <?php 
-                                                    echo add_to_collection_link($ref,$search);
+                                                    echo add_to_collection_link($ref);
                                                     echo "<i class='fa fa-fw fa-plus-circle'></i>&nbsp;" .$lang["action-addtocollection"];
                                                     ?>
                                                     </a>
@@ -1836,7 +1836,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     ?>
                                                     <li>
                                                         <?php 
-                                                        echo remove_from_collection_link($ref,$search,"","",$basket);
+                                                        echo remove_from_collection_link($ref,"","",$basket);
                                                         echo "<i class='fa fa-fw fa-minus-circle'></i>&nbsp;" .$lang["action-removefromcollection"]?>
                                                         </a>
                                                     </li>

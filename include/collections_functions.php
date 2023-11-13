@@ -3461,20 +3461,21 @@ function collection_is_research_request($collection)
  * Generates a HTML link for adding a resource to a collection
  *
  * @param  integer  $resource   ID of resource
- * @param  string   $search     Search parameters
- * @param  string   $extracode  Additonal code to be run when link is selected
+ * @param  string   $extracode  Additional code to be run when link is selected
  *                              IMPORTANT: never use untrusted data here!
  * @param  string   $size       Resource size if appropriate
  * @param  string   $class      Class to be applied to link
+ * @param  string   $view_title The title of the field, taken from $view_title_field
  * 
  * @return string
  */
-function add_to_collection_link($resource,$search="",$extracode="",$size="",$class=""): string
+function add_to_collection_link($resource, $extracode="", $size="", $class="", $view_title=""): string
     {
     $resource = (int) $resource;
     $size = escape_quoted_data($size);
     $class = escape_quoted_data($class);
-    $title = escape_quoted_data($GLOBALS['lang']["addtocurrentcollection"]);
+    $title = escape_quoted_data($GLOBALS['lang']["addtocurrentcollection"] . " - " . $view_title);
+
     return "<a class=\"addToCollection {$class}\" href=\"#\" title=\"{$title}\""
         . " onClick=\"AddResourceToCollection(event,'{$resource}','{$size}'); {$extracode} return false;\""
         . " data-resource-ref=\"{$resource}\""
@@ -3487,20 +3488,23 @@ function add_to_collection_link($resource,$search="",$extracode="",$size="",$cla
  * Render a "remove from collection" link wherever such a function is shown in the UI
  *
  * @param  integer  $resource
- * @param  string   $search
  * @param  string   $class
- * @param  string   $onclick  Additional onclick code to call before returning false.
+ * @param  string   $onclick    Additional onclick code to call before returning false.
+ * @param  bool     $basketmode Whether removing from a basket or a collection.
+ * @param  string   $view_title The title of the field, taken from $view_title_field
  * 
  */
-function remove_from_collection_link($resource,$search="",$class="", string $onclick = '', $basketmode = false): string
+function remove_from_collection_link($resource, $class="", string $onclick = '', $basketmode = false, $view_title=""): string
     {
     # Generates a HTML link for removing a resource from a collection
     # The collection is referred to as the basket when in basket mode
     global $lang, $pagename;
+
     $resource = (int) $resource;
     $class = escape_quoted_data($class);
-    $title = escape_quoted_data($basketmode ? $lang["removefrombasket"]: $lang["removefromcurrentcollection"]);
+    $title = escape_quoted_data($basketmode ? $lang["removefrombasket"]: $lang["removefromcurrentcollection"] . " - " . $view_title);
     $pagename = escape_quoted_data($pagename);
+
     return "<a class=\"removeFromCollection {$class}\" href=\"#\" title=\"{$title}\" "
         . "onClick=\"RemoveResourceFromCollection(event,'{$resource}','{$pagename}'); {$onclick} return false;\""
         . "data-resource-ref=\"{$resource}\""
