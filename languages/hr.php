@@ -1139,7 +1139,7 @@ $lang["collection_download_no_tar"]='Standardno preuzimanje arhive.';
 $lang["collection_download_use_tar"]='TAR arhiva';
 $lang["collection_download_tar_info"]='TAR datoteke će se odmah početi preuzimati. Ako ne koristite ovu opciju, možda ćete ograničiti svoje preuzimanje.';
 $lang["collection_download_tar_started"]='TAR datoteke će uskoro početi preuzimati.';
-$lang["collection_download_tar_applink"]='Ne možete otvoriti TAR datoteke? Preuzmite besplatni program otvorenog koda 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>ovdje</a>.';
+$lang["collection_download_tar_applink"]='Ne možete otvoriti TAR datoteke? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Preuzmite besplatni program otvorenog koda 7-zip ovdje</a>.';
 $lang["confirm_edit_all_selected_resources"]='Jeste li sigurni da želite spremiti? To će prebrisati postojeće vrijednosti za odabrano polje/polja za sve odabrane resurse.';
 $lang["confirmsubmitall"]='Jeste li sigurni da želite podnijeti sve na pregled? To će prebrisati postojeće vrijednosti za odabrano polje/polja za sve resurse u vašoj trenutnoj kolekciji i podnijeti ih sve na pregled.';
 $lang["confirmunsubmitall"]='Jeste li sigurni da želite poništiti sve iz postupka pregleda? To će prepisati postojeće vrijednosti za odabrana polja za sve resurse u vašoj trenutnoj kolekciji i poništiti njihovu prijavu za pregled.';

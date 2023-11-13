@@ -1988,7 +1988,7 @@ $lang["collection_download_no_tar"]='Standard arkivnedladdning.';
 $lang["collection_download_use_tar"]='TAR-arkiv';
 $lang["collection_download_tar_info"]='TAR-filer kommer att börja laddas ner omedelbart. Om du inte använder den här inställningen kan det hända att din nedladdning begränsas.';
 $lang["collection_download_tar_started"]='TAR-filer kommer att börja laddas ner inom kort.';
-$lang["collection_download_tar_applink"]='Kan inte öppna TAR-filer? Hämta öppen källkod 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>här</a>.';
+$lang["collection_download_tar_applink"]='Kan inte öppna TAR-filer? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Hämta öppen källkod 7-zip här</a>.';
 $lang["confirm_edit_all_selected_resources"]='Är du säker på att du vill spara? Detta kommer att skriva över befintliga värden för det/de valda fälten för alla valda resurser.';
 $lang["resourcetypereordered"]='Resurstypens position omordnad.';
 $lang["resourcetypefieldreordered"]='Områdes typfält position omordnad.';

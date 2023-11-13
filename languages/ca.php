@@ -1078,7 +1078,7 @@ $lang["collection_download_no_tar"]='Descàrrega d\'arxiu estàndard d\'arxiu.';
 $lang["collection_download_use_tar"]='Arxiu TAR';
 $lang["collection_download_tar_info"]='Els fitxers TAR començaran a descarregar-se immediatament. Si no utilitzeu aquesta opció, és possible que la vostra descàrrega estigui limitada.';
 $lang["collection_download_tar_started"]='Els fitxers TAR començaran a descarregar-se en breu.';
-$lang["collection_download_tar_applink"]='No es pot obrir fitxers TAR? Obtén el programari lliure 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>aquí</a>.';
+$lang["collection_download_tar_applink"]='No es pot obrir fitxers TAR? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Obtén el programari lliure 7-zip aquí</a>.';
 $lang["confirm_edit_all_selected_resources"]='Esteu segur que voleu desar? Això sobreescriurà el(s) valor(s) existent(s) del camp seleccionat per a tots els recursos seleccionats.';
 $lang["confirmsubmitall"]='Esteu segur que voleu enviar-ho tot per a revisió? Això sobreescriurà el(s) valor(s) existent(s) del camp seleccionat per a tots els recursos de la vostra col·lecció actual i els enviarà tots per a revisió.';
 $lang["confirmunsubmitall"]='Esteu segur que voleu desenviar tots els recursos del procés de revisió? Això sobreescriurà el(s) valor(s) existent(s) del camp seleccionat per a tots els recursos de la vostra col·lecció actual i els desarà tots del procés de revisió.';

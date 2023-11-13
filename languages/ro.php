@@ -951,7 +951,7 @@ $lang["collection_download_no_tar"]='Descărcare arhivă standard.';
 $lang["collection_download_use_tar"]='Arhivă TAR';
 $lang["collection_download_tar_info"]='Fișierele TAR vor începe descărcarea imediat. Dacă nu utilizați această opțiune, este posibil să întâmpinați limitări la descărcare.';
 $lang["collection_download_tar_started"]='Fișierele TAR vor începe să se descarce în curând.';
-$lang["collection_download_tar_applink"]='Nu puteți deschide fișierele TAR? Obțineți sursa deschisă 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>aici</a>.';
+$lang["collection_download_tar_applink"]='Nu puteți deschide fișierele TAR? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Obțineți sursa deschisă 7-zip aici</a>.';
 $lang["downloadsize"]='Dimensiunea descărcării.';
 $lang["existingkeywords"]='Cuvinte cheie existente:';
 $lang["extrakeywords"]='Cuvinte cheie suplimentare.';
