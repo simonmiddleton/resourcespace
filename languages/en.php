@@ -208,6 +208,7 @@ $lang["property-code"]="Code";
 $lang["property-operation"]="Operation";
 
 # Top navigation bar (also reused for page titles)
+$lang["mainmenu"] = "Main menu";
 $lang["logout"]="Log out";
 $lang["contactus"]="Contact us";
 # next line
