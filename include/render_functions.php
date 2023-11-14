@@ -1098,7 +1098,14 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     <?php
                     }
                     ?>
-                <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?> aria-label="<?php echo escape_quoted_data($lang["actions"]) ?>">
+                <select onchange="action_onchange_<?php echo escape_quoted_data($action_selection_id); ?>(this.value);"
+                    id="<?php echo escape_quoted_data($action_selection_id); ?>"
+                    <?php if(!$top_actions) { ?>
+                        class="SearchWidth"
+                    <?php } else { ?>
+                        accesskey="A"
+                    <?php } ?>
+                    aria-label="<?php echo escape_quoted_data($lang["actions"]) ?>">
             <?php } ?>
             <option class="SelectAction" selected disabled hidden value=""><?php echo htmlspecialchars($lang["actions-select"])?></option>
             <?php
