@@ -8,7 +8,7 @@ interface ProviderInstanceInterface
     {
     // Required (read-only) properties
     /**
-     * @var string $name User friendly instance name. i18l strings MUST be supported
+     * @var string $name User friendly instance name. i18n strings MUST be supported
      */
     // private string $name;
 

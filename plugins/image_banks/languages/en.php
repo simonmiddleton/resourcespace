@@ -8,7 +8,7 @@ $lang["image_banks_create_new_resource"] = "Create new resource";
 $lang["image_banks_shutterstock_token"]="Shutterstock token (<a href='https://www.shutterstock.com/account/developers/apps' target='_blank'>generate</a>)";
 $lang["image_banks_shutterstock_result_limit"]="Result limit (max. 1000 for free accounts)";
 $lang["image_banks_shutterstock_id"]="Shutterstock image ID";
-$lang["image_banks_label_resourcespace_instances_cfg"] = "Instances access (format: i18l name|baseURL|username|key|config)";
+$lang["image_banks_label_resourcespace_instances_cfg"] = "Instances access (format: i18n name|baseURL|username|key|config)";
 $lang["image_banks_resourcespace_file_information_description"] = "ResourceSpace %SIZE_CODE size";
 $lang["image_banks_label_select_providers"] = "Select active providers";
 $lang["image_banks_view_on_provider_system"] = "View on %PROVIDER system";
