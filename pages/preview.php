@@ -135,7 +135,7 @@ if (!file_exists(get_resource_path($ref,true,"scr",false,$ext,-1,$nextpage,$use_
 
 # Locate the resource
 $path = get_resource_path($ref, true, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
-if(!resource_has_access_denied_by_RT_size($resource['resource_type'], 'scr') && file_exists($path))
+if(!resource_has_access_denied_by_RT_size($resource['resource_type'], 'scr') && file_exists($path) && !skip_scr_size_preview($access))
     {
     $url = get_resource_path($ref, false, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
     }
