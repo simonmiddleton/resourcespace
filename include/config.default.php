@@ -3038,8 +3038,29 @@ $facial_recognition_face_recognizer_models_location = '';
     echo $config . "#" . md5($remote_config_key . $config);
 
  */
-# $remote_config_url="http://remote-config.mycompany.com";
-# $remote_config_key=""; # The baseurl will be hashed with this key and passed as an &sign= value.
+// $remote_config_url="http://remote-config.mycompany.com";
+// $remote_config_key=""; # The baseurl will be hashed with this key and passed as an &sign= value.
+// 
+// $remote_config_function, $remote_config_decode 
+//
+// These are optional callable to use a more secure remote configuration setup by creating a custom function e.g to access an API.
+// This will be passed two parameters:  the $remote_config_url and the host e.g. resourcespace.acmeorg.com to enable construction of the final remote config URL to be dynamic
+/*
+ * Example:
+
+ $remote_config_function = function($url,$host)
+    {
+    $remote_config_query_params["function"] = "foo"; // API function name
+    $remote_config_query_params["param1"] = "host=$host"; // query params, e.g. using $host
+    $remote_config_query_params["sign"] = [to sign request]
+    return $url . "?" . http_build_query($remote_config_query_params);
+    };
+
+$remote_config_decode = function($config)
+    {
+    return json_decode($config);
+    }
+ */
 
 // Option to allow administrators to change the value of the 'contributed by' user for a resource.
 $edit_contributed_by = false;
