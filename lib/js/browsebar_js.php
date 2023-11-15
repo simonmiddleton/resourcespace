@@ -340,6 +340,7 @@ function BrowseBarInit()
 
         drop: function(event, ui)
             {
+            // Get the dragged resource id
             dropped = jQuery(ui.draggable);
             var resource_id = dropped.attr("id");
             resource_id = resource_id.replace("ResourceShell", "");
@@ -377,7 +378,7 @@ function BrowseBarInit()
                 case 'FC':
                 case 'C':
                     cid = item_elements[item_elements.length - 1].replace('C:','');
-                    AddResourceToCollection(event,resource_id,'', cid);
+                    AddResourceToCollection(event, ui, resource_id, '', cid);
                     jQuery(this).find(".BrowseBarLink a").fadeTo(100, 0.3, function() { jQuery(this).fadeTo(500, 1.0); });
                     break;
                 default:
