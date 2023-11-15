@@ -278,7 +278,7 @@ else { ?>
 
 					jQuery('#trash_bin').hide();
 					// AddResourceToCollection includes a reload of CollectionDiv 
-					AddResourceToCollection(event, resource_id, '');
+					AddResourceToCollection(event, ui, resource_id, '');
 					}
 			});
 
