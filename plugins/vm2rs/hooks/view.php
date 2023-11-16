@@ -62,20 +62,23 @@ function Hookvm2rsViewreplacedownloadoptions()
     $vimeo_url = get_data_by_field($ref, $vm2rs_field_id);
 
     if ($vimeo_url !== "" && isValidVimeoURL($vimeo_url))
-        {
-        ?>
+        { ?>
         <table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions">
             <tr >
-                <td>File Information</td>
-                <td>File Size </td>
-                <td>Options</td>
+                <td><?php echo htmlspecialchars($lang["fileinformation"]) ?></td>
+                <td><?php echo htmlspecialchars($lang["filesize"]) ?></td>
+                <td><?php echo htmlspecialchars($lang["options"]) ?></td>
             </tr>
             <tr class="DownloadDBlend">
-                <td><h2>Online Preview</h2><p>Vimeo Video</p></td>
-                <td>N/A</td>
+                <td>
+                    <h2><?php echo htmlspecialchars($lang["vm2rs_online_preview"]) ?></h2>
+                    <p><?php echo htmlspecialchars($lang["vm2rs_youtube_video"]) ?></p>
+                </td>
+                <td><?php echo htmlspecialchars($lang["notavailableshort"]) ?></td>
                 <td class="DownloadButton HorizontalWhiteNav">
-                    <a href="<?php echo $baseurl_short; ?>pages/resource_request.php?ref=<?php echo urlencode($ref); ?>&k=<?php echo htmlspecialchars(getval("k", "")); ?>" onClick="return CentralSpaceLoad(this,true);">
-                <?php echo htmlspecialchars($lang["action-request"]) ?>
+                    <a href="<?php echo $baseurl_short; ?>pages/resource_request.php?ref=<?php echo urlencode($ref); ?>&k=<?php echo escape_quoted_data(getval("k", "")); ?>"
+                        onClick="return CentralSpaceLoad(this,true);">
+                    <?php echo htmlspecialchars($lang["action-request"]) ?>
                 </td>
             </tr>
         </table>
