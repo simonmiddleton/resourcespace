@@ -236,7 +236,8 @@ final class IIIFRequest {
         $canvases = [];
         foreach ($this->searchresults as $iiif_result)
             {
-            $size = (strtolower($iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
+                debug(print_r($iiif_result));
+            $size = (strtolower((string)$iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
             $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
             $position_prefix="";
 
@@ -513,11 +514,10 @@ final class IIIFRequest {
                 $this->response["requiredStatement"] = $reqstatements;
                 }
             }
-        if($this->rights_statement != "")
+        if(isset($this->rights_statement) && $this->rights_statement != "")
             {
             $this->response["rights_statement"] = $this->rights_statement;
-            }
-            
+            }            
 
         // Thumbnail property
         $this->response["thumbnail"] =[];

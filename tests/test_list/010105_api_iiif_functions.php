@@ -72,7 +72,6 @@ $iiif_user = get_user($iiif_userid);
 $userdata[0] = $iiif_user;
 setup_user($iiif_user);
 
-
 // Manifest test
 $testurl = $iiif->rooturl . $objectid . "/manifest";
 $iiif->parseUrl($testurl);
@@ -94,9 +93,10 @@ if($iiif->getresponse("summary")["en"][0] != $resourceadescription)
     echo "Incorrect summary returned. Expected: '" . $resourceadescription . "', got: '" . $iiif->getresponse("summary")["en"][0] . "'";
     return false;
     }
-if($iiif->getresponse("rights") != "Public domain")
+$requiredstatement = $iiif->getresponse("requiredStatement")["value"]["en"][0];
+if($requiredstatement != "Public domain")
     {
-    echo "Incorrect rights attribute returned. Expected: '" . "Public domain" . "', got: '" . $iiif->getresponse("rights") . "'";
+    echo "Incorrect rights attribute returned. Expected: '" . "Public domain" . "', got: '" . $requiredstatement . "'";
     return false;
     }
 
