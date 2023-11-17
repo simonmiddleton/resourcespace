@@ -26,6 +26,7 @@ $iiif_options["preview_tiles"] = (bool)$preview_tiles ?? true;
 $iiif_options["preview_tile_size"] = $preview_tile_size ?? 1024;
 $iiif_options["preview_tile_scale_factors"] = $preview_tile_scale_factors ?? [1,2,4];
 $iiif_options["download_chunk_size"] = $download_chunk_size;
+$iiif_options["rights_statement"] = $iiif_rights_statement ?? "";
 
 $iiif = new IIIFRequest($iiif_options);
 

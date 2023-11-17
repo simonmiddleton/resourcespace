@@ -10,9 +10,10 @@ final class IIIFRequest {
     public string   $rooturl;
     public string   $rootimageurl;
     public int      $identifier_field;
-    public string   $description_field;
+    public int      $description_field;
     public int      $sequence_field;
     public int      $license_field;
+    public string   $rights_statement;
     public int      $title_field;
     public int      $max_width;
     public int      $max_height;
@@ -63,7 +64,7 @@ final class IIIFRequest {
      * @return array
      *
      */
-    public function getResponse(string $element = "")
+    public function getResponse(string $element = ""): array
         {
         return ($element != "" && isset($this->response[$element])) ? $this->response[$element] : $this->response;
         }
@@ -122,7 +123,7 @@ final class IIIFRequest {
      * @return void
      *
      */
-    public function parseUrl($url) : void
+    public function parseUrl($url): void
         {
         $this->request = [];
 
@@ -230,7 +231,7 @@ final class IIIFRequest {
     * @return void
     *
     */
-    public function getCanvases($sequencekeys=false) : void
+    public function getCanvases($sequencekeys=false): void
         {
         $canvases = [];
         foreach ($this->searchresults as $iiif_result)
@@ -269,9 +270,9 @@ final class IIIFRequest {
     *
     * @param int $resourceid    Resource ID
 
-    * @return array
+    * @return array|bool        Thumbnail image data, false if not found
     */
-    public function getThumbnail($resourceid) : array
+    public function getThumbnail($resourceid)
         {
         $img_path = get_resource_path($resourceid,true,'thm',false);
         if(!file_exists($img_path))
@@ -317,7 +318,7 @@ final class IIIFRequest {
     *
     * @return array
     */
-    public function get_image($resource, array $size_info) : array
+    public function get_image($resource, array $size_info): array
         {
         // Quick validation of the size_info param
         if(empty($size_info) || (!isset($size_info['identifier']) && !isset($size_info['return_height_width'])))
@@ -380,7 +381,7 @@ final class IIIFRequest {
      * @return void
      *
      */
-    public function processPresentationRequest() : void
+    public function processPresentationRequest(): void
         {
         if($this->request["id"] != "" && $this->request["type"] == "")
             {
@@ -437,7 +438,7 @@ final class IIIFRequest {
      *
      * @return void
     */
-    public function generateManifest() : void
+    public function generateManifest(): void
         {
         global $lang, $defaultlanguage;
         $this->response["@context"] = "http://iiif.io/api/presentation/3/context.json";
@@ -480,15 +481,43 @@ final class IIIFRequest {
                     {
                     $this->response["summary"][$langcode] =[$langstring];
                     }
-                break;
+                break; // Only metadata from one resource is required
                 }
             }
         // Construct metadata array from resource field data
         $this->generateMetadata();
         if($this->license_field != 0)
             {
-            $this->response["rights"] = get_data_by_field($this->searchresults[0]["ref"], $this->license_field);
+            $licensevals = get_data_by_field($this->searchresults[0]["ref"], $this->license_field,false);
+            // exit(print_r($licensevals));
+            if(count($licensevals) > 0)
+                {
+                // Get all field title translations
+                $licensefield = get_resource_type_field($this->license_field);
+                $liclabel_int = i18n_get_translations($licensefield["title"]);
+                $reqstatements = ["label"=>[],"value"=>[]];
+                foreach($licensevals as $licenseval)
+                    {
+                    $licensevals_int = i18n_get_translations($licenseval["name"]);
+                    foreach($licensevals_int as $langcode=>$langstring)
+                        {
+                        if(!isset($reqstatements["label"][$langcode]))
+                            {
+                            // Translated node names may include languages that are not available for the field title
+                            $reqstatements["label"][$langcode][] = $liclabel_int[$langcode] ?? $licensefield["title"];
+                            }
+                        $reqstatements["value"][$langcode][] = $langstring;
+                        }
+                    }
+                
+                $this->response["requiredStatement"] = $reqstatements;
+                }
             }
+        if($this->rights_statement != "")
+            {
+            $this->response["rights_statement"] = $this->rights_statement;
+            }
+            
 
         // Thumbnail property
         $this->response["thumbnail"] =[];
@@ -504,7 +533,7 @@ final class IIIFRequest {
             }
 
         // Default behavior property - not currently configurable
-        $this->response["behavior"] = "individuals";
+        $this->response["behavior"] = ["individuals"];
 
         // Default viewingDirection property - not currently configurable
         $this->response["viewingDirection"] = "left-to-right";
@@ -571,7 +600,7 @@ final class IIIFRequest {
      * @return array    Array of annotation pages
      *
      */
-    public function generateAnnotationPage(int $position=0) : array
+    public function generateAnnotationPage(int $position=0): array
         {
         $annotationpage=[];
         $annotationpage["id"] = $this->rooturl . $this->request["id"] . "/annotationpage/" . $position;
@@ -586,7 +615,7 @@ final class IIIFRequest {
      *
      * @return array    Array of annotations
      */
-    public function generateAnnotation(int $position=0) : array
+    public function generateAnnotation(int $position=0): array
         {
         $annotation["id"] = $this->rooturl . $this->request["id"] . "/annotation/" . $position;
         $annotation["type"] = "Annotation";
@@ -602,7 +631,7 @@ final class IIIFRequest {
      *
      * @return void
      */
-    public function generateMetadata() : void
+    public function generateMetadata(): void
         {
         $metadata = [];
         $n=0;
@@ -695,7 +724,7 @@ final class IIIFRequest {
      * @return void
      *
      */
-    public function processImageRequest() : void
+    public function processImageRequest(): void
         {
         $this->request["getext"] = "jpg";
         if($this->request["id"] === '')
@@ -940,13 +969,13 @@ final class IIIFRequest {
                     $this->errors[] = "Invalid rotation requested. Only '0' is permitted.";
                     $this->triggerError(404);
                     }
-                if(isset($quality) && $quality != "default" && $quality != "color")
+                if(isset($this->request["quality"]) && $this->request["quality"] != "default" && $this->request["quality"] != "color")
                     {
                     // Quality. As we only support IIIF Image level 0 only a quality value of 'default' or 'color' is accepted
                     $this->errors[] = "Invalid quality requested. Only 'default' is permitted";
                     $this->triggerError(404);
                     }
-                if(isset($format) && strtolower($format) != "jpg")
+                if(isset($this->request["format"]) && strtolower($this->request["format"]) != "jpg")
                     {
                     // Format. As we only support IIIF Image level 0 only a value of 'jpg' is accepted
                     $this->errors[] = "Invalid format requested. Only 'jpg' is permitted.";
@@ -999,7 +1028,7 @@ final class IIIFRequest {
      *
      * @return void
      */
-    public function renderImage() : void
+    public function renderImage(): void
         {
         // Send the image
         $file_size   = filesize_unlimited($this->response["image"]);
@@ -1030,7 +1059,7 @@ final class IIIFRequest {
      * @return void
      *
      */
-    public function getResources() : void
+    public function getResources(): void
         {
         $iiif_field = get_resource_type_field($this->identifier_field);
         $iiif_search = $iiif_field["name"] . ":" . $this->request["id"];
@@ -1115,7 +1144,7 @@ final class IIIFRequest {
      * @return void
      *
      */
-    public function getResourceFromPosition($position) : void
+    public function getResourceFromPosition($position): void
         {
         $this->processing = [];
         foreach($this->searchresults as $iiif_result)
@@ -1140,7 +1169,7 @@ final class IIIFRequest {
      * @return array
      *
      */
-    public function generateImageService(int $resourceid) : array
+    public function generateImageService(int $resourceid): array
         {
         $service = [];
         $service["id"] = $this->rootimageurl . $resourceid;
@@ -1155,7 +1184,7 @@ final class IIIFRequest {
      * @return bool
      *
      */
-    public function isValidTileRequest() : bool
+    public function isValidTileRequest(): bool
         {
         if(($this->getwidth == $this->preview_tile_size && $this->getheight == 0) // "w,"
             || ($this->getheight == $this->preview_tile_size && $this->getwidth == 0) // ",h"

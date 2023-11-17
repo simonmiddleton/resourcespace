@@ -2968,7 +2968,7 @@ $iiif_enabled = false;
 // Field that is used to hold the IIIF summary. See https://iiif.io/api/presentation/3.0/#summary
 // $iiif_description_field = 0;
 
-// Field that contains license information about the resource. See https://iiif.io/api/presentation/3.0/#rights
+// Field that contains license information about the resource. See https://iiif.io/api/presentation/3.0/#requiredstatement
 // $iiif_license_field = 0;
 
 // Field that defines the position of a particular resource in the default sequence (only one sequence currently supported)
@@ -2976,6 +2976,10 @@ $iiif_enabled = false;
 
 // Deprecated option. The prefix that indictaes the position will now use the name of the resource type field 
 // $iiif_sequence_prefix = "View ";
+
+// Optional rights text: This value must be a valid value - see https://iiif.io/api/presentation/3.0/#rights for more information
+// $iiif_rights_statement = "http://creativecommons.org/publicdomain/mark/1.0/";
+
 //
 // $iiif_custom_sizes
 // Set to true to support Mirador/Universal viewer that requires the ability to request arbitrary sizes by 'w,', ',h' 
