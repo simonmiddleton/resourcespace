@@ -236,7 +236,6 @@ final class IIIFRequest {
         $canvases = [];
         foreach ($this->searchresults as $iiif_result)
             {
-                debug(print_r($iiif_result));
             $size = (strtolower((string)$iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
             $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
             $position_prefix="";
