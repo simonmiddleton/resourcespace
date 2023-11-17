@@ -1,6 +1,11 @@
 <?php
 include "../include/db.php";
 
+if (!$allow_account_request)
+    {
+    exit($lang["error-permissiondenied"]);
+    }
+
 $error=false;
 $error_extra="";
 $completed = false;
