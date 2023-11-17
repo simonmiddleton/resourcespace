@@ -71,4 +71,4 @@ $lang["tms_link_not_found_error_title"] = "Not found";
 $lang["tms_link_not_deleted_error_detail"] = "Unable to delete the requested module configuration.";
 $lang["tms_link_uid_field"] = "TMS %module_name %tms_uid_field";
 $lang["tms_link_confirm_delete_module_config"] = "Are you sure you would like to delete this module configuration? This action cannot be undone!";
-$lang['tms_link_write_to_debug_log'] = "Include script progress is system debug log (requires debug logging configured separately). Caution: Will cause rapid growth of debug log file.";
+$lang['tms_link_write_to_debug_log'] = "Include script progress in system debug log (requires debug logging configured separately). Caution: Will cause rapid growth of debug log file.";
