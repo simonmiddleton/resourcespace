@@ -1062,7 +1062,17 @@ final class IIIFRequest {
         {
         $iiif_field = get_resource_type_field($this->identifier_field);
         $iiif_search = $iiif_field["name"] . ":" . $this->request["id"];
-        $this->searchresults = do_search($iiif_search);
+        $results = do_search($iiif_search);
+
+        if(is_array($results))
+            {
+            $this->searchresults = $results
+            }
+        else
+            {
+            $this->errors[] = "Missing or invalid identifier";
+            $this->triggerError(404);            
+            }
 
         // Add sequence position information
         $resultcount = count($this->searchresults);
