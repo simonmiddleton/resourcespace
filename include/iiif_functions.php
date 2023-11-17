@@ -1066,7 +1066,7 @@ final class IIIFRequest {
 
         if(is_array($results))
             {
-            $this->searchresults = $results
+            $this->searchresults = $results;
             }
         else
             {
