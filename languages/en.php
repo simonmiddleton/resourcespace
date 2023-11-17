@@ -2900,7 +2900,6 @@ $lang['image_quality_40'] = "Very low";
 $lang['systemconfig_api'] = "API";
 $lang["iiif_enable_option"] = "Enable IIIF support";
 $lang["iiif_disabled"] = "IIIF is not configured";
-$lang["iiif"] = "IIIF";
 
 $lang["property-personal_data"]="May contain personal data";
 $lang["api-test-tool"]="API test tool";

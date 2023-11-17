@@ -359,6 +359,7 @@ function rs_password_verify(string $password, string $hash, array $data)
         {
         // Force user to change password
         ps_query("UPDATE user SET password_last_change = '1970-01-01' WHERE username = ?", array("s",$data['username']));
+        $GLOBALS["password_expiry"] = 0; // Just for this request, to force redirect to password change page
         return true;
         }
 

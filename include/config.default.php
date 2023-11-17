@@ -2965,21 +2965,17 @@ $iiif_enabled = false;
 // Field that is used to hold the IIIF identifier e.g. if using TMS this may be the same as the TMS object field
 // $iiif_identifier_field = 29;
 
-// Field that is used to hold the IIIF summary. See https://iiif.io/api/presentation/3.0/#summary
+// Field that is used to hold the IIIF description
 // $iiif_description_field = 0;
 
-// Field that contains license information about the resource. See https://iiif.io/api/presentation/3.0/#requiredstatement
+// Field that contains license information about the resource
 // $iiif_license_field = 0;
 
 // Field that defines the position of a particular resource in the default sequence (only one sequence currently supported)
 // $iiif_sequence_field = 1;
 
-// Deprecated option. The prefix that indictaes the position will now use the name of the resource type field 
+// Optional prefix that will be added to sequence identifier - useful if just numeric identifers are used e.g. for different views or pages 
 // $iiif_sequence_prefix = "View ";
-
-// Optional rights text: This value must be a valid value - see https://iiif.io/api/presentation/3.0/#rights for more information
-// $iiif_rights_statement = "http://creativecommons.org/publicdomain/mark/1.0/";
-
 //
 // $iiif_custom_sizes
 // Set to true to support Mirador/Universal viewer that requires the ability to request arbitrary sizes by 'w,', ',h' 
