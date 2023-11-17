@@ -55,14 +55,14 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
         <div class="Question" >
 		    <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
             <select id="field_edit_<?php echo escape_quoted_data((string) $column); ?>" name="<?php echo escape_quoted_data((string) $column); ?>" class="stdwidth">
-            <option value="" <?php if ($currentvalue == "") { echo "selected"; } ?>><?php echo $lang["select"]; ?></option>
-            <option value="-1" <?php if ($currentvalue == "-1") { echo "selected"; } ?>><?php echo $lang["image"] . ": " . $lang["previewimage"] ?></option>
+            <option value="" <?php if ($currentvalue == "") { echo "selected"; } ?>><?php echo htmlspecialchars($lang["select"]); ?></option>
+            <option value="-1" <?php if ($currentvalue == "-1") { echo "selected"; } ?>><?php echo htmlspecialchars($lang["image"] . ": " . $lang["previewimage"]) ?></option>
             <?php
             foreach($fields as $field)
                 {
                 if($field["ref"]!=$ref) // Don't show itself as an option
                     {?>
-                    <option value="<?php echo (int)$field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo $lang["field"] . ": " . escape_quoted_data(i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="")?"":htmlspecialchars((string) $field["name"]))  . ")" ?></option>
+                    <option value="<?php echo (int)$field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo htmlspecialchars($lang["field"]. ": " . i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="") ? "" : htmlspecialchars((string) $field["name"]))  . ")" ?></option>
                     <?php
                     }
                 }
