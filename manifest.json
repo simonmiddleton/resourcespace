@@ -3,75 +3,75 @@
     "name": "ResourceSpace",
     "icons": [
       {
-        "src": "/gfx/icons/icon-vector.svg",
+        "src": "./gfx/icons/icon-vector.svg",
         "type": "image/svg+xml",
         "sizes": "512x512"
       },
       {
-        "src": "/gfx/icons/icon-192.png",
+        "src": "./gfx/icons/icon-192.png",
         "type": "image/png",
         "sizes": "192x192"
       },
       {
-        "src": "/gfx/icons/icon-512.png",
+        "src": "./gfx/icons/icon-512.png",
         "type": "image/png",
         "sizes": "512x512"
       }
     ],
-    "id": "/",
-    "start_url": "/",
+    "id": "./",
+    "start_url": "./",
     "background_color": "#ffffff",
     "display": "standalone",
-    "scope": "/",
+    "scope": "./",
     "theme_color": "#ffffff",
     "shortcuts": [
       {
         "name": "Recently uploaded resources",
         "short_name": "Recent",
         "description": "View the the most recently uploaded resources.",
-        "url": "/pages/search.php?search=!last1000"
+        "url": "./pages/search.php?search=!last1000"
       },
       {
         "name": "Advanced search",
         "short_name": "Advanced search",
         "description": "The advanced search page provides access to a wider selection of metadata fields, making it possible to create very refined searches.",
-        "url": "/pages/search_advanced.php"
+        "url": "./pages/search_advanced.php"
       }
     ],
     "description": "Open source Digital Asset Management software",
     "screenshots": [
       {
-        "src": "/gfx/screenshots/screenshot_wide_1.png",
+        "src": "./gfx/screenshots/screenshot_wide_1.png",
         "type": "image/png",
         "sizes": "1440x900",
         "form_factor": "wide"
       },
       {
-        "src": "/gfx/screenshots/screenshot_wide_2.png",
+        "src": "./gfx/screenshots/screenshot_wide_2.png",
         "type": "image/png",
         "sizes": "1440x900",
         "form_factor": "wide"
       },
       {
-        "src": "/gfx/screenshots/screenshot_wide_3.png",
+        "src": "./gfx/screenshots/screenshot_wide_3.png",
         "type": "image/png",
         "sizes": "1440x900",
         "form_factor": "wide"
       },
       {
-        "src": "/gfx/screenshots/screenshot_narrow_1.png",
+        "src": "./gfx/screenshots/screenshot_narrow_1.png",
         "type": "image/png",
         "sizes": "378x744",
         "form_factor": "narrow"
       },
       {
-        "src": "/gfx/screenshots/screenshot_narrow_2.png",
+        "src": "./gfx/screenshots/screenshot_narrow_2.png",
         "type": "image/png",
         "sizes": "378x744",
         "form_factor": "narrow"
       },
       {
-        "src": "/gfx/screenshots/screenshot_narrow_3.png",
+        "src": "./gfx/screenshots/screenshot_narrow_3.png",
         "type": "image/png",
         "sizes": "378x744",
         "form_factor": "narrow"
