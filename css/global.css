@@ -242,6 +242,17 @@ select::-ms-expand
 #HeaderImg{margin:0;max-height: 40px; }
 .HorizontalNav li a {display: inline-block;zoom: 1;}
 h2#CollectionsPanelHeader {display:none;}
+.HeaderLink a {
+    border-radius: 8px;
+    padding: 0 8px;
+    font-weight: 500;
+}
+.HeaderLink a.current {
+    background: #00000012;
+}
+.HorizontalNav li.HeaderLink {
+    padding: 0;
+}
 
 .ProfileImage { vertical-align:top; width:36px; height:36px; border-radius:36px}
 
