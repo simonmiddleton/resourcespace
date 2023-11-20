@@ -2114,7 +2114,16 @@ select.MultiSelect:before {
 }
 .browse_expanded:after {
     content: "\f078";
+}
+.BrowseBarRoot .browse_expand {
+    padding: 0;
+}
+.browse_expand {
+    padding: 5px;
 } 
+.BrowseBarExpand {
+    padding-left: 4px;
+}
 
 .BrowseTypeNode:after {
     content: "\f02b";
