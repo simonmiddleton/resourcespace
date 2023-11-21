@@ -1,37 +1,63 @@
 <?php
+
+use function ImageBanks\getProviders;
+use function ImageBanks\providersCheckedAndActive;
+
+function HookImage_banksAllExtra_warn_checks()
+    {
+    $errors = [];
+    $providers = getProviders($GLOBALS['image_banks_loaded_providers']);
+    foreach($providers as $provider)
+        {
+        $provider_name = $provider->getName();
+        $dependency_check = $provider->checkDependencies();
+        if ($dependency_check !== [])
+            {
+            $errors[$provider_name] = $dependency_check;
+            }
+        }
+
+    if ($errors !== [])
+        {
+        return [[
+            'name' => 'image_banks',
+            'info' => $GLOBALS['lang']['image_banks_system_unmet_dependencies'],
+            'details' => $errors,
+        ]];
+        }
+
+    return false;
+    }
+
 function HookImage_banksAllSearchfiltertop()
     {
     global $lang, $image_banks_loaded_providers, $clear_function;
 
-    $providers = \ImageBanks\getProviders($image_banks_loaded_providers);
+    [$providers, $errors] = getProviders($image_banks_loaded_providers);
 
-    foreach($providers as $provider_id => $provider)
-        {
-        if($provider->checkDependencies() !== true)
-            {
-            unset($providers[$provider_id]);
-            }
-        }
-
-    if(count($providers) == 0)
+    if ($errors !== [])
         {
         return;
         }
 
-    $search_image_banks_text = htmlspecialchars($lang["image_banks_search_image_banks_label"]);
-    $search_image_banks_info_text = htmlspecialchars($lang["image_banks_search_image_banks_info_text"]);
-    $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
+    $providers_select_list = providersCheckedAndActive($providers);
+    if($providers_select_list === [])
+        {
+        return;
+        }
+
+    $image_bank_provider_id = (int) getval("image_bank_provider_id", 0, true);
     ?>
     <div id="SearchImageBanksItem" class="SearchItem" title="">
-        <label for="SearchImageBanks"><?php echo $search_image_banks_text; ?></label>
+        <label for="SearchImageBanks"><?php echo htmlspecialchars($lang['image_banks_search_image_banks_label']); ?></label>
         <select id="SearchImageBanks" class="SearchWidth" name="image_bank_provider_id" onchange="toggleUnwantedElementsFromSimpleSearch(jQuery(this));SimpleSearchFieldsHideOrShow(true);">
             <option value=""></option>
             <?php
-            foreach($providers as $provider)
+            foreach($providers_select_list as $provider_id => $provider)
                 {
-                $selected = ($image_bank_provider_id == $provider->getId() ? "selected" : "");
+                $selected = ($image_bank_provider_id === $provider_id ? "selected" : "");
                 ?>
-                <option value="<?php echo $provider->getId(); ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($provider->getName()); ?></option>
+                <option value="<?php echo (int) $provider_id; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($provider); ?></option>
                 <?php
                 }
                 ?>
@@ -89,7 +115,7 @@ function HookImage_banksAllAdd_folders_to_delete_from_temp(array $folders_scan_l
     {
     global $image_banks_loaded_providers;
 
-    $providers = \ImageBanks\getProviders($image_banks_loaded_providers);
+    $providers = getProviders($image_banks_loaded_providers);
 
     if(count($providers) == 0)
         {
@@ -119,7 +145,6 @@ function HookImage_banksAllClearsearchcookies()
     }
 
 function HookImage_banksAllSimplesearchfieldsarehidden()
-{
-$hib_simpleSearchFieldsAreHidden = ( getval("image_bank_provider_id",0, true) > 0 );
-return $hib_simpleSearchFieldsAreHidden;
-}  
+    {
+    return getval('image_bank_provider_id', 0, true) > 0;
+    }  

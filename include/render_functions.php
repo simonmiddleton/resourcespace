@@ -5485,7 +5485,7 @@ function render_array_in_table_cells($array)
 */
 function render_top_page_error_style(string $err_msg)
     {
-    if(trim($err_msg) == "")
+    if(trim($err_msg) === '')
         {
         return;
         }
@@ -6588,4 +6588,148 @@ function render_resource_type_selector_question(string $label, string $name, str
     echo "</select>";
     echo "<div class='clearerleft'></div>";
     echo "</div>";
+    }
+
+/**
+ * Render the Download info for the resource tool (on view page)
+ *
+ * @param int $ref Resource ref
+ * @param array $size_info Preview size information
+ * @param bool $downloadthissize Should the size be downloadable or requested?
+ * @param bool $view_in_browser Allow the size to be viewed directly in the browser
+ */
+function add_download_column($ref, $size_info, $downloadthissize, $view_in_browser=false)
+    {
+    global $save_as, $terms_download, $order_by, $lang, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save,$download_usage;
+    if ($downloadthissize)
+        {
+        ?>
+        <td class="DownloadButton">
+            <?php
+            global $size_info_array;
+            $size_info_array = $size_info;
+            if(!hook("downloadbuttonreplace"))
+                {
+                if($terms_download || $save_as)
+                    {
+                    ?>
+                    <a id="downloadlink"
+                        <?php
+                        if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"] . "&ext=" . $size_info["extension"], $view_in_browser)))
+                            {
+                            if ($view_in_browser)
+                                {
+                                echo "href=\"" . generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"],"direct"=>1,"noattach"=>true)))) . "\"";
+                                }
+                            else
+                                {
+                                echo "href=\"" . generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
+                                }
+                            }
+
+                        if($iOS_save || $view_in_browser)
+                            {
+                            echo " target=\"_blank\"";
+                            }
+                        else
+                            {
+                            echo " onClick=\"return CentralSpaceLoad(this,true);\"";
+                            }
+                        ?>>
+                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?>
+                    </a>
+                    <?php
+                    }
+                elseif ($download_usage)
+                    // download usage form displayed - load into main window
+                    { 
+                    ?>
+                    <a id="downloadlink"
+                        <?php
+                        if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]. "&ext=" . $size_info["extension"])))
+                            {
+                            if ($view_in_browser)
+                                {
+                                echo "href=\"" . generateURL($baseurl . "/pages/download_usage.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"],"direct"=>1,"noattach"=>true)))) . "\"";
+                                }
+                            else
+                                {
+                                echo "href=\"" . generateURL($baseurl . "/pages/download_usage.php",$urlparams,array("url"=> generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("size"=>$size_info["id"],"ext"=> $size_info["extension"])))) . "\"";
+                                }
+                            }
+
+                        if($iOS_save || $view_in_browser)
+                            {
+                            echo " target=\"_blank\"";
+                            }
+                        else
+                            {
+                            echo " onClick=\"return CentralSpaceLoad(this,true);\"";
+                            }
+                        ?>>
+                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?>
+                    </a>
+                    <?php
+                    }
+                else
+                    {
+                    ?>
+                    <a id="downloadlink"
+                        <?php
+                        if (!hook("downloadlink","",array("ref=" . $ref . "&k=" . $k . "&size=" . $size_info["id"]. "&ext=" . $size_info["extension"], $view_in_browser)))
+                            {
+                            if ($view_in_browser)
+                                {
+                                echo 'href="' . $baseurl . "/pages/download.php?direct=1&noattach=true&ref=" . urlencode($ref) . "&ext=" . $size_info['extension'] . "&k=" . urlencode($k) . '" target="_blank"';
+                                }
+                            else
+                                {
+                                echo 'href="#" onclick="directDownload(' . '\'' . $baseurl . '/pages/download_progress.php?ref=' . urlencode($ref) . '&size=' . $size_info['id'] . '&ext=' . $size_info['extension'] . '&k=' . urlencode($k) . '\'' . ')"';
+                                }
+                            }
+                        ?>>
+                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"] ?>
+                    </a>
+                    <?php
+                    }
+
+                unset($size_info_array);
+                }
+            ?>
+        </td>
+        <?php
+        }
+    else if (checkperm("q"))
+        {
+        if (!hook("resourcerequest"))
+            {
+            ?>
+            <td class="DownloadButton">
+                <?php
+                if ($request_adds_to_collection && ($k=="" || $internal_share_access) && !checkperm('b')) // We can't add to a collection if we are accessing an external share, unless we are a logged in user
+                    {
+                    if (isset($size_info["id"])) 
+                        {
+                        echo add_to_collection_link($ref,"alert('" . addslashes($lang["requestaddedtocollection"]) . "');",$size_info["id"]);
+                        }
+                    else
+                        {
+                        echo add_to_collection_link($ref);
+                        }
+                    }
+                else
+                    {
+                    ?><a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php
+                    }
+                echo htmlspecialchars($lang["action-request"]) ?>
+                </a>
+            </td>
+            <?php
+            }
+        }
+    else
+        {
+        # No access to this size, and the request functionality has been disabled. Show just 'restricted'.
+        ?><td class="DownloadButton DownloadDisabled"><?php echo htmlspecialchars($lang["access1"])?></td><?php
+        }
     }

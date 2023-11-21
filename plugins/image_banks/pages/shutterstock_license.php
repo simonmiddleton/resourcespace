@@ -1,5 +1,5 @@
 <?php
-$rs_root = dirname(dirname(dirname(__DIR__)));
+$rs_root = dirname(__DIR__, 3);
 include_once "{$rs_root}/include/db.php";
 include_once "{$rs_root}/include/authenticate.php";
 

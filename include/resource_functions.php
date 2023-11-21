@@ -7441,6 +7441,9 @@ function get_resource_all_image_sizes($ref)
             $all_image_sizes[$key]["extension"] = $size_data["extension"];
             $all_image_sizes[$key]["path"] = $size_data["path"];
             $all_image_sizes[$key]["url"] = $size_data["url"];
+            $all_image_sizes[$key]["width"] = $size_data["width"];
+            $all_image_sizes[$key]["height"] = $size_data["height"];
+            $all_image_sizes[$key]["filesize"] = $size_data["filesize"];
 
             // Screen size can have multi page previews so if this is one of those cases, get rest of the pages before
             // moving on to the next available size
