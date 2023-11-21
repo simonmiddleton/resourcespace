@@ -46,9 +46,9 @@ setup_user($iiif_user);
 $iiif->parseUrl($_SERVER["REQUEST_URI"] ?? "");
 
 if ($iiif->getRequest("api") == "root")
-	{
+    {
     # Root level request - send information file only
-    $iif->infodoc();
+    $iiif->infodoc();
     }
 elseif($iiif->getRequest("api") == "image")
     {

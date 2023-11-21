@@ -672,7 +672,7 @@ function lang_load_site_text(&$lang,$pagename,$language = "")
     }
 
 /**
- * Return an array of all available language strings for the given id, with the languag code as the key
+ * Return an array of all available language strings for the given id, with the language code as the key
  *
  * @param string $langid    The identifier of the lang string
  * 

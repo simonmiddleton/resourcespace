@@ -1,9 +1,17 @@
 <?php
 command_line_only();
-//include_once(__DIR__ . "/../../include/image_processing.php");
 $iiif_enabled = true;
-include_once(__DIR__ . "/../../include/api_functions.php");
 
+// Set up to prevent other tests affecting results
+ps_query("TRUNCATE resource");
+ps_query("TRUNCATE resource_node");
+ps_query("TRUNCATE resource_log");
+$baseurl_saved = $baseurl;
+$baseurl_short_saved = $baseurl_short;
+$baseurl = "https://test010105.resourcespace.com/resourcespace";
+$baseurl_short = "/resourcespace/";
+
+include_once(__DIR__ . "/../../include/api_functions.php");
 // Set up a IIIF request object
 
 $iiif_options["rootlevel"] = $baseurl_short . "iiif/";
@@ -14,16 +22,7 @@ $iiif_options["description_field"] = 18;
 $iiif_options["sequence_field"] = create_resource_type_field("Page",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"page");
 $iiif_options["license_field"] = create_resource_type_field("License",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"license");
 $iiif_options["title_field"] = 8;
-// $iiif_options["max_width"] =  1024;
-// $iiif_options["max_height"] = $iiif_max_height ?? 1024;
-// $iiif_options["custom_sizes"] = (bool)$iiif_custom_sizes ?? true;
-// $iiif_options["preview_tiles"] = (bool)$preview_tiles ?? true;
-// $iiif_options["preview_tile_size"] = $preview_tile_size ?? 1024;
-// $iiif_options["preview_tile_scale_factors"] = $preview_tile_scale_factors ?? [1,2,4];
-// $iiif_options["download_chunk_size"] = $download_chunk_size;
-
 $iiif = new IIIFRequest($iiif_options);
-
 
 // Set up some IIIF resources
 $resourcea=create_resource(1,0);
@@ -143,6 +142,9 @@ if(!isset($iiif->getresponse("items")[0]["items"][0]["items"][0]["body"]["id"]) 
     }
 
 // Tear down
+unset ($iiif);
 setup_user($original_user_data);
+$baseurl = $baseurl_saved;
+$baseurl_short = $baseurl_short_saved;
 
 return true;
