@@ -48,7 +48,7 @@ if(is_banned_extension($ext))
 $profile = getProfileFileName(getval('profile', null));
 
 $target = sprintf('%s/%s_%s.%s',
-    get_temp_dir(false, 'format_chooser'),
+    get_temp_dir(false, 'format_chooser' . $scramble_key),
     $ref,
     md5($username . date('Ymd', time()) . $scramble_key),
     $ext
