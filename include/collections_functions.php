@@ -3477,7 +3477,7 @@ function add_to_collection_link($resource, $extracode="", $size="", $class="", $
     $title = escape_quoted_data($GLOBALS['lang']["addtocurrentcollection"] . " - " . $view_title);
 
     return "<a class=\"addToCollection {$class}\" href=\"#\" title=\"{$title}\""
-        . " onClick=\"AddResourceToCollection(event,'{$resource}','{$size}'); {$extracode} return false;\""
+        . " onClick=\"AddResourceToCollection(event, {draggable: jQuery('div#ResourceShell{$resource}')},'{$resource}','{$size}'); {$extracode} return false;\""
         . " data-resource-ref=\"{$resource}\""
         . generate_csrf_data_for_api_native_authmode('add_resource_to_collection')
         . ">";
