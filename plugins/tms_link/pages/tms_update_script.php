@@ -15,8 +15,6 @@ if (!$tms_link_write_to_debug_log)
     $debug_log = false;
     }
 
-var_dump($debug_log);die();
-
 ob_end_clean();
 set_time_limit($cron_job_time_limit);
 
