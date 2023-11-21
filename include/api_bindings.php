@@ -893,7 +893,8 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
         return $assert_post;
         }
 
-    global $rse_version_block, $plugins, $usergroup,$rse_version_override_groups, $replace_resource_preserve_option;
+    global $rse_version_block, $plugins, $usergroup,$rse_version_override_groups, $replace_resource_preserve_option,
+            $valid_upload_paths;
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
     $keep_original = filter_var($keep_original, FILTER_VALIDATE_BOOLEAN);
@@ -902,11 +903,25 @@ function api_replace_resource_file($ref, $file_location, $no_exif=false, $autoro
         "Message" => "Resource not replaced. Refer to ResourceSpace system administrator",
     ];
 
+    $file_location_parts=pathinfo($file_location);
+
+    if (is_valid_upload_path($file_location_parts["dirname"], $valid_upload_paths))
+        {
+        if (is_banned_extension(pathinfo($file_location_parts["basename"], PATHINFO_EXTENSION)))
+            {
+            return array("Status" => "FAILED","Message" => "The file for resource {$ref} was not replaced. File {$file_location} is invalid.");
+            }
+        }
+    else
+        {
+        return array("Status" => "FAILED","Message" => "The file for resource {$ref} was not replaced. File location {$file_location} is invalid.");
+        }
+
     $duplicates=check_duplicate_checksum($file_location,false);
     if (count($duplicates)>0)
         {
         $duplicates_string=implode(",",$duplicates);
-        return "FAILED: The file for resource {$ref} was not replaced. Resources {$duplicates_string} already have a matching file.";
+        return array("Status" => "FAILED","Message" => "The file for resource {$ref} was not replaced. Resources {$duplicates_string} already have a matching file.");
         }
     else 
         {

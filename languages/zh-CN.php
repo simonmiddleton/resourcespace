@@ -1418,7 +1418,7 @@ $lang["collection_download_no_tar"]='标准归档下载';
 $lang["collection_download_use_tar"]='TAR归档文件';
 $lang["collection_download_tar_info"]='TAR文件将立即开始下载。如果您不使用此选项，您可能会发现您的下载受到限制。 ';
 $lang["collection_download_tar_started"]='TAR文件将很快开始下载。';
-$lang["collection_download_tar_applink"]='无法打开 TAR 文件？在此处获取开源的 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>下载链接</a>。';
+$lang["collection_download_tar_applink"]='无法打开 TAR 文件？<a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>在此处获取开源的 7-zip 下载链接</a>。';
 $lang["confirm_edit_all_selected_resources"]='您确定要保存吗？这将覆盖所选资源的所有选定字段的现有值。';
 $lang["resourcetypereordered"]='资源类型位置已重新排序';
 $lang["resourcetypefieldreordered"]='资源类型字段位置已重新排序。';

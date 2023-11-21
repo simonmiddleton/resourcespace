@@ -1136,7 +1136,7 @@ $lang["collection_download_no_tar"]='Standard arkiv download.';
 $lang["collection_download_use_tar"]='TAR-arkiv';
 $lang["collection_download_tar_info"]='TAR-filer vil begynde at downloade øjeblikkeligt. Hvis du ikke bruger denne mulighed, kan du opleve, at din download er begrænset.';
 $lang["collection_download_tar_started"]='TAR-filer vil begynde at downloade om kort tid.';
-$lang["collection_download_tar_applink"]='Kan du ikke åbne TAR-filer? Få den åbne kildekode 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>her</a>.';
+$lang["collection_download_tar_applink"]='Kan du ikke åbne TAR-filer? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Få den åbne kildekode 7-zip her</a>.';
 $lang["confirm_edit_all_selected_resources"]='Er du sikker på, at du ønsker at gemme? Dette vil overskrive de eksisterende værdier for det/de valgte felt(er) for alle de valgte ressourcer.';
 $lang["confirmsubmitall"]='Er du sikker på, at du ønsker at indsende alt til gennemgang? Dette vil overskrive de eksisterende værdier for de valgte felter for alle ressourcer i din nuværende samling og indsende dem alle til gennemgang.';
 $lang["confirmunsubmitall"]='Er du sikker på, at du ønsker at trække alle tilbage fra gennemgangsprocessen? Dette vil overskrive de eksisterende værdier for de valgte felter for alle ressourcer i din nuværende samling og trække dem alle tilbage fra gennemgangen.';

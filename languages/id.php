@@ -722,7 +722,7 @@ $lang["groupsmart"]='Kelompok (Cerdas)';
 $lang["continuetouser"]='Lanjutkan ke login pengguna.';
 $lang["unauthorized"]='Tidak sah / Tanpa izin.';
 $lang["externalselectresourceaccess"]='Jika Anda mengirim surel kepada pengguna eksternal, silakan pilih tingkat akses yang ingin Anda berikan untuk sumber daya ini.';
-$lang["collection_download_tar_applink"]='Tidak bisa membuka file TAR? Dapatkan open source 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>di sini</a>.';
+$lang["collection_download_tar_applink"]='Tidak bisa membuka file TAR? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Dapatkan open source 7-zip di sini</a>.';
 $lang["prependtext"]='Menambahkan teks di awal.';
 $lang["duplicateresources"]='Sumber daya yang diduplikasi.';
 $lang["setup-mysql_read_only_username"]='Nama pengguna MySQL hanya untuk membaca (read-only).';

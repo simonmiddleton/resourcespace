@@ -2110,7 +2110,7 @@ $lang["collection_download_no_tar"]='Standard Archiv-Download';
 $lang["collection_download_use_tar"]='TAR-Archiv';
 $lang["collection_download_tar_info"]='TAR-Dateien werden sofort heruntergeladen. Wenn Sie diese Option nicht verwenden, kann es sein, dass Ihr Download begrenzt ist.';
 $lang["collection_download_tar_started"]='TAR-Dateien werden in Kürze heruntergeladen.';
-$lang["collection_download_tar_applink"]='Können TAR-Dateien nicht geöffnet werden? Holen Sie sich hier die Open-Source-Software 7-Zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>herunter</a>.';
+$lang["collection_download_tar_applink"]='Können TAR-Dateien nicht geöffnet werden? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Holen Sie sich hier die Open-Source-Software 7-Zip herunter</a>.';
 $lang["confirm_edit_all_selected_resources"]='Sind Sie sicher, dass Sie speichern möchten? Dadurch werden die vorhandenen Werte für das/die ausgewählte(n) Feld(er) aller ausgewählten Ressourcen überschrieben.';
 $lang["resourcetypereordered"]='Ressourcentyp-Position neu geordnet.';
 $lang["resourcetypefieldreordered"]='Neuanordnung der Feldposition des Ressourcentyps.';

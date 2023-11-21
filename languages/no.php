@@ -1592,7 +1592,7 @@ $lang["collection_download_no_tar"]='Standard arkivnedlasting.';
 $lang["collection_download_use_tar"]='TAR-arkiv';
 $lang["collection_download_tar_info"]='TAR-filer vil starte nedlastingen umiddelbart. Hvis du ikke bruker denne opsjonen, kan du oppleve at nedlastingen er begrenset.';
 $lang["collection_download_tar_started"]='TAR-filer vil starte nedlasting snart.';
-$lang["collection_download_tar_applink"]='Kan ikke åpne TAR-filer? Få åpen kildekode 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>her</a>.';
+$lang["collection_download_tar_applink"]='Kan ikke åpne TAR-filer? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Få åpen kildekode 7-zip her</a>.';
 $lang["confirm_edit_all_selected_resources"]='Er du sikker på at du ønsker å lagre? Dette vil overskrive eksisterende verdi(er) for de valgte feltene for alle de valgte ressursene.';
 $lang["resourcetypereordered"]='Omorganisert ressurstype-posisjon.';
 $lang["resourcetypefieldreordered"]='Omorganisert posisjon for ressurstypefeltet.';

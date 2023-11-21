@@ -579,17 +579,20 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             {
             ?>
             <input type="file" name="<?php echo escape_quoted_data($name); ?>" style="width:<?php echo (int) $width; ?>px">
-            <input type="submit" name="upload_<?php echo escape_quoted_data($name); ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension()"';} ?> value="<?php echo escape_quoted_data($lang['upload']); ?>">
+            <input type="submit" name="upload_<?php echo escape_quoted_data($name); ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension_' . htmlspecialchars($name) . '()"';} ?> value="<?php echo escape_quoted_data($lang['upload']); ?>">
             <?php
             if (count($valid_extensions) > 0)
                 {
                 ?>
                 <script>
-                function checkValidExtension()
+                function checkValidExtension_<?php echo htmlspecialchars($name) ?>()
                     {
                     let file_path = document.getElementsByName("<?php echo escape_quoted_data($name); ?>")[0].value;
                     let ext = file_path.toLowerCase().substr(file_path.lastIndexOf(".")+1);
-                    let valid_extensions = [<?php echo '"' . escape_quoted_data(implode('", "', $valid_extensions)) . '"'; ?>];
+                    let valid_extensions = [<?php
+                        foreach ($valid_extensions as $extension) {
+                            echo '"' . escape_quoted_data($extension) . '",';
+                        } ?>];
                     if (file_path != "" && valid_extensions.includes(ext)) return true;
                     alert(<?php echo '"' . escape_quoted_data(str_replace('%%EXTENSIONS%%', implode(', ', $valid_extensions), $lang['systemconfig_invalid_extension'])) .'"'?>);
                     return false;

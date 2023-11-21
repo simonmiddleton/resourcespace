@@ -8,7 +8,9 @@ if($use_selection_collection && in_array($ref, $selection_collection_resources))
 $html_class = (empty($class) ? "" : 'class="' . implode(" ", $class) . '"');
 
 if (!hook("replacelistitem")) 
-    { ?>
+    {
+    $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
+    ?>
     <!--List Item-->
     <tr id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo $html_class; hook("listviewrowstyle");?>>
     <?php 
@@ -22,7 +24,8 @@ if (!hook("replacelistitem"))
                     <input 
                         type="checkbox" 
                         id="check<?php echo htmlspecialchars($ref)?>" 
-                        class="checkselect" 
+                        class="checkselect"
+                        title="<?php echo escape_quoted_data($lang['action-select'] . " - " . $resource_view_title) ?>"
                         data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
                         aria-label="<?php echo escape_quoted_data($lang["action-select"])?>"
                         <?php echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}"); ?>

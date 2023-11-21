@@ -258,18 +258,29 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                         $resourcedata=get_resource_data($value);
                         if(is_array($resourcedata))
                             {
-                            $thm_url= $baseurl . "/gfx/" . get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],true);
+                            $thm_path = sprintf(
+                                '%s/gfx/%s',
+                                dirname(__DIR__),
+                                get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],true)
+                            );
                             }
                         else
                             {
-                            $thm_url= $baseurl . "/gfx/no_preview/resource_type/type1.png";
+                            $thm_path = dirname(__DIR__) . "/gfx/no_preview/resource_type/type1.png";
                             }
                         }
                     else
                         {
-                        $thm_url=get_resource_path($value,false,"col",false,"",-1,1,false);
+                        $thm_path = get_resource_path($value,true,"col",false,"",-1,1,false);
                         }
-                        $output.="<td><a href=\"" . $baseurl . "/?r=" . $value .  "\" target=\"_blank\"><img src=\"" . $thm_url . "\"></a></td>\r\n";
+
+                    $output.=sprintf(
+                        "<td><a href=\"%s/?r=%s\" target=\"_blank\"><img src=\"data:image/%s;base64,%s\"></a></td>\r\n",
+                        $baseurl,
+                        $value,
+                        pathinfo($thm_path, PATHINFO_EXTENSION),
+                        base64_encode(file_get_contents($thm_path))
+                    );
                     }
                 else
                     {
@@ -346,6 +357,10 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
     
     set_process_lock("periodic_report_emails");
 
+    // Keep record of temporary CSV/ZIP files to delete after emails have been sent
+    $deletefiles = array();
+    $users = [];
+
     # Query to return all 'pending' report e-mails, i.e. where we haven't sent one before OR one is now overdue.
     $query = "
         SELECT pe.ref,
@@ -365,10 +380,6 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
          WHERE pe.last_sent IS NULL
             OR date_add(date(pe.last_sent), INTERVAL pe.email_days DAY) <= date(now());
     ";
-
-    // Keep record of temporary CSV/ZIP files to delete after emails have been sent
-    $deletefiles = array();
-
     $reports=ps_query($query);
 
     foreach ($reports as $report)

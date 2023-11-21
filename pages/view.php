@@ -734,6 +734,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 
                         else if (1 == $resource['has_image'])
                             {
+                            $imageurl="";
                             $use_watermark = check_use_watermark();
 
                             // Determine the appropriate preview size to display
@@ -751,8 +752,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                     continue;
                                     }
 
-                                // 'pre' can take precedence if system is configured so
-                                if($use_size === 'scr' && ($hide_real_filepath || $resource_view_use_pre))
+                                if($use_size === 'scr' && skip_scr_size_preview($access))
                                     {
                                     continue;
                                     }
@@ -901,7 +901,8 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                     foreach(['lpr', 'scr'] as $hrs)
                                         {
                                         $zoom_image_path = get_resource_path($ref, true, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
-                                        if(file_exists($zoom_image_path) && !resource_has_access_denied_by_RT_size($resource['resource_type'], $hrs))
+                                        $allowed_static_image_size = resource_download_allowed($ref, $hrs, $resource['resource_type']);
+                                        if(file_exists($zoom_image_path) && !resource_has_access_denied_by_RT_size($resource['resource_type'], $hrs) && $allowed_static_image_size)
                                             {
                                             $preview_url = get_resource_path($ref, false, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
 
@@ -1599,7 +1600,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                 ?>
                                                 <li>
                                                     <?php 
-                                                    echo add_to_collection_link($ref,$search);
+                                                    echo add_to_collection_link($ref);
                                                     echo "<i class='fa fa-fw fa-plus-circle'></i>&nbsp;" .$lang["action-addtocollection"];
                                                     ?>
                                                     </a>
@@ -1611,7 +1612,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     ?>
                                                     <li>
                                                         <?php 
-                                                        echo remove_from_collection_link($ref,$search,"","",$basket);
+                                                        echo remove_from_collection_link($ref,"","",$basket);
                                                         echo "<i class='fa fa-fw fa-minus-circle'></i>&nbsp;" .$lang["action-removefromcollection"]?>
                                                         </a>
                                                     </li>

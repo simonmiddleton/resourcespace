@@ -1003,7 +1003,7 @@ $lang["collection_download_no_tar"]='Download de arquivo padrão de arquivo.';
 $lang["collection_download_use_tar"]='Arquivo TAR';
 $lang["collection_download_tar_info"]='Arquivos TAR começarão a ser baixados imediatamente. Se você não usar esta opção, pode ser que seu download seja limitado.';
 $lang["collection_download_tar_started"]='Os arquivos TAR começarão a ser baixados em breve.';
-$lang["collection_download_tar_applink"]='Não consegue abrir arquivos TAR? Obtenha o 7-zip de código aberto <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>aqui</a>.';
+$lang["collection_download_tar_applink"]='Não consegue abrir arquivos TAR? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Obtenha o 7-zip de código aberto aqui</a>.';
 $lang["downloadsize"]='Tamanho do download.';
 $lang["existingkeywords"]='Palavras-chave existentes:';
 $lang["extrakeywords"]='Palavras-chave adicionais.';

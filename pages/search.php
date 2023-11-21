@@ -671,7 +671,7 @@ if($collectionsearch && collection_writeable(substr($search, 11)))
                     var collection_id = query_strings.search.substring(11);
 
                     jQuery('#trash_bin').hide();
-                    AddResourceToCollection(event, resource_id, '', collection_id);
+                    AddResourceToCollection(event, ui, resource_id, '', collection_id);
                     CentralSpaceLoad(window.location.href, true);
                 }
             });

@@ -1,9 +1,13 @@
 <?php
 include "../include/db.php";
 $k = getval("k", "");
-if($k=="" || !check_access_key(getval("ref", ""), $k))
+$ref=getval("ref","",true);
+$internal_share_access = false;
+
+if($k=="" || !check_access_key($ref, $k))
     {
     include_once "../include/authenticate.php";
+    $internal_share_access = true;
     }
 
 if(!checkperm('q'))
@@ -11,19 +15,21 @@ if(!checkperm('q'))
     exit($lang["error-permissiondenied"]);
     }
 
-$k=getval("k","");if (($k=="") || (!check_access_key(getval("ref",""),$k))) {include_once "../include/authenticate.php";}
-
-if (!checkperm('q')){exit($lang["error-permissiondenied"]);}
-
-if ($k!="" && (!isset($internal_share_access) || !$internal_share_access) && $prevent_external_requests)
-	{
-	echo "<script>window.location = '" .  $baseurl . "/login.php?error="  . (($allow_account_request)?"signin_required_request_account":"signin_required") . "'</script>";
-	exit();
-	}
+if ($k!="")
+    {
+    if ((!isset($internal_share_access) || !$internal_share_access) && $prevent_external_requests)
+        {
+        echo "<script>window.location = '" .  $baseurl . "/login.php?error="  . (($allow_account_request)?"signin_required_request_account":"signin_required") . "'</script>";
+        exit();
+        }
+    if(internal_share_access())
+        {
+        $internal_share_access = true;
+        }
+    }
 
 include "../include/request_functions.php";
 
-$ref=getval("ref","",true);
 $error = '';
 hook("addcustomrequestfields");
 
@@ -35,7 +41,7 @@ else
     {
     $user_is_anon = false;
     }
-$use_antispam = ($k !== '' || $user_is_anon);
+$use_antispam = (!$internal_share_access || $user_is_anon);
 
 # Allow alternative configuration settings for this resource type.
 $resource            = get_resource_data($ref);
@@ -114,9 +120,9 @@ if (getval("save","")!="" && enforcePostRequest(false))
         $result = false;
         $error = $lang["requiredantispam"];
         }
-	else if ($k!="" || $user_is_anon || $userrequestmode==0)
+	else if (!$internal_share_access || $user_is_anon || $userrequestmode==0)
         {
-        if (($k!="" || $user_is_anon) && (getval("fullname","")=="" || getval("email","")==""))
+        if ((!$internal_share_access || $user_is_anon) && (getval("fullname","")=="" || getval("email","")==""))
             {
             $result=false; # Required fields not completed.
             }
@@ -141,8 +147,11 @@ if (getval("save","")!="" && enforcePostRequest(false))
 		}
 	else
 		{
-        $return_url = $baseurl_short . "pages/view.php?ref=" . (int)($ref) . "&k=" . htmlspecialchars($k);
-        $doneurl = generateURL($baseurl_short . "pages/done.php",["text"=>"resource_request","resource"=>$ref,"k"=>$k,"return_url"=>$return_url]);
+        $return_url = generateURL($baseurl_short . "pages/view.php",["ref"=> (int)($ref),"k"=>$k]);
+        $doneurl = generateURL(
+            $baseurl_short . "pages/done.php",
+            ["text"=>"resource_request","resource"=>$ref,"k"=>$k,"return_url"=>$return_url]
+        );
 		?>
 		<script>
 		CentralSpaceLoad("<?php echo $doneurl ?>",true);
@@ -151,10 +160,16 @@ if (getval("save","")!="" && enforcePostRequest(false))
 		}
 	}
 include "../include/header.php";
+$back_url = generateURL(
+    $baseurl_short . "pages/view.php",
+    ["ref"=>$ref,"k"=>$k]
+    );
 ?>
 <div class="BasicsBox">
 	<p>
-		<a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo urlencode($ref); ?>&k=<?php echo urlencode($k); ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoresourceview']; ?></a>
+        <a href="<?php echo $back_url?>" onClick="return CentralSpaceLoad(this, true);"
+            ><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoresourceview']; ?>
+        </a>
 	</p>
 
   <h1><?php echo i18n_get_translated($lang["requestresource"]); ?></h1>
@@ -177,7 +192,7 @@ include "../include/header.php";
 	<div class="clearerleft"> </div>
 	</div>
 	
-	<?php if ($k!="" || $user_is_anon) { ?>
+	<?php if (!$internal_share_access || $user_is_anon) { ?>
 	<div class="Question">
 	<label><?php echo $lang["fullname"]?> <sup>*</sup></label>
 	<input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]?>">

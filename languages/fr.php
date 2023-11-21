@@ -1237,7 +1237,7 @@ $lang["collection_download_no_tar"]='Téléchargement d\'archive standard.';
 $lang["collection_download_use_tar"]='Archive TAR';
 $lang["collection_download_tar_info"]='Les fichiers TAR commenceront à être téléchargés instantanément. Si vous n\'utilisez pas cette option, vous pourriez constater que votre téléchargement est limité.';
 $lang["collection_download_tar_started"]='Les fichiers TAR vont commencer à être téléchargés sous peu.';
-$lang["collection_download_tar_applink"]='Impossible d\'ouvrir les fichiers TAR ? Obtenez le logiciel open source 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>ici</a>.';
+$lang["collection_download_tar_applink"]='Impossible d\'ouvrir les fichiers TAR ? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Obtenez le logiciel open source 7-zip ici</a>.';
 $lang["confirm_edit_all_selected_resources"]='Êtes-vous sûr(e) de vouloir enregistrer ? Cela écrasera les valeurs existantes pour le(s) champ(s) sélectionné(s) pour toutes les ressources sélectionnées.';
 $lang["confirmsubmitall"]='Êtes-vous sûr(e) de vouloir soumettre tout pour examen ? Cela écrasera les valeurs existantes pour le(s) champ(s) sélectionné(s) pour toutes les ressources de votre collection actuelle et les soumettra toutes pour examen.';
 $lang["confirmunsubmitall"]='Êtes-vous sûr(e) de vouloir annuler la soumission de tous les éléments du processus de révision ? Cela écrasera les valeurs existantes pour le(s) champ(s) sélectionné(s) pour toutes les ressources de votre collection actuelle et les retirera toutes de la révision.';

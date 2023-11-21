@@ -6365,7 +6365,7 @@ function generate_resource_access_key($resource,$userref,$access,$expires,$email
             's', $k,
             'i', $userref,
             'i', $access,
-            's', (($expires=="")? null : $expires),
+            's', ((!validateDatetime($expires, 'Y-m-d'))? null : $expires),
             's', $email,
             'i', $group,
             's', (($sharepwd != "" && $sharepwd != "(unchanged)") ? hash('sha256', $k . $sharepwd . $scramble_key) : null)
@@ -9366,4 +9366,28 @@ function apply_resource_default(int $old_resource_type, int $new_resource_type, 
             }
         set_resource_defaults($resource, $check_resource_default_fields);
         }
+    }
+
+/**
+ * Determine if the scr size should be used for previews. When $resource_view_use_pre is true the scr size shouldn't be used.
+ * Where access is restricted and restricted access users can't access the scr size, the scr size shouldn't be used.
+ *
+ * @param  int   $access   Resource access level, typically from get_resource_access()
+ * 
+ * @return  bool   True if scr size shouldn't be used else false.
+ */
+function skip_scr_size_preview(int $access) : bool
+    {
+    global $resource_view_use_pre;
+    if ($resource_view_use_pre)
+        {
+        return true;
+        }
+
+    if ($access === 1 && !image_size_restricted_access('scr'))
+        {
+        return true;
+        }
+
+    return false;
     }

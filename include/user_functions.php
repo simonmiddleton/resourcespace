@@ -1834,6 +1834,10 @@ function check_access_key($resources,$key,$checkcollection=true)
     # Has this expired?
     if ($expires!="" && strtotime($expires)<time())
         {
+        if(is_authenticated())
+            {
+            return false;
+            }
         global $lang;
         ?>
         <script type="text/javascript">

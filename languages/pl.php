@@ -1355,7 +1355,7 @@ $lang["collection_download_no_tar"]='Standardowe pobieranie archiwum.';
 $lang["collection_download_use_tar"]='Archiwum TAR';
 $lang["collection_download_tar_info"]='Pliki TAR zaczną pobierać się natychmiastowo. Jeśli nie skorzystasz z tej opcji, możesz napotkać ograniczenia w pobieraniu.';
 $lang["collection_download_tar_started"]='Pliki TAR rozpoczną pobieranie wkrótce.';
-$lang["collection_download_tar_applink"]='Nie można otworzyć plików TAR? Pobierz otwartoźródłowe 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>tutaj</a>.';
+$lang["collection_download_tar_applink"]='Nie można otworzyć plików TAR? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Pobierz otwartoźródłowe 7-zip tutaj</a>.';
 $lang["confirm_edit_all_selected_resources"]='Czy na pewno chcesz zapisać? Spowoduje to nadpisanie istniejących wartości dla wybranego pola lub pól dla wszystkich wybranych zasobów.';
 $lang["resourcetypereordered"]='Zmieniono kolejność typu zasobów.';
 $lang["resourcetypefieldreordered"]='Zmieniono kolejność pola typ zasobu.';

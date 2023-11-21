@@ -1098,7 +1098,14 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     <?php
                     }
                     ?>
-                <select onchange="action_onchange_<?php echo $action_selection_id; ?>(this.value);" id="<?php echo $action_selection_id; ?>" <?php if(!$top_actions) { echo 'class="SearchWidth"'; } ?> aria-label="<?php echo escape_quoted_data($lang["actions"]) ?>">
+                <select onchange="action_onchange_<?php echo escape_quoted_data($action_selection_id); ?>(this.value);"
+                    id="<?php echo escape_quoted_data($action_selection_id); ?>"
+                    <?php if(!$top_actions) { ?>
+                        class="SearchWidth"
+                    <?php } else { ?>
+                        accesskey="A"
+                    <?php } ?>
+                    aria-label="<?php echo escape_quoted_data($lang["actions"]) ?>">
             <?php } ?>
             <option class="SelectAction" selected disabled hidden value=""><?php echo htmlspecialchars($lang["actions-select"])?></option>
             <?php
@@ -3311,9 +3318,9 @@ function render_trash($type, $deletetext,$forjs=false)
 
 function render_browse_bar()
     {
-    global $lang, $browse_bar_workflow, $browse_show, $enable_themes;
-    $bb_html = '<div id="BrowseBarContainer" class="ui-layout-west" style="display:none;">';
-    $bb_html .= '<div id="BrowseBar" class="BrowseBar" ' . ($browse_show ?  '' : 'style="display:none;"') . '>';
+    global $lang, $browse_bar_workflow, $enable_themes;
+    $bb_html = '<div id="BrowseBarContainer" style="display:none;">';
+    $bb_html .= '<div id="BrowseBar" class="BrowseBar">';
     $bb_html .= '<div id="BrowseBarContent" >'; 
     
     //Browse row template
@@ -3349,16 +3356,10 @@ function render_browse_bar()
 
     $bb_html .= '</div><!-- End of BrowseBarContent -->
                 </div><!-- End of BrowseBar -->
-                    <a href="#" title="' . $lang['browse_bar_text'] . '" onclick="ToggleBrowseBar();" ><div id="BrowseBarTab" style="display:none;"><div class="BrowseBarTabText" >' . $lang['browse_bar_text'] . '</div></div><!-- End of BrowseBarTab --></a>
-                </div><!-- End of BrowseBarContainer -->
-                
-            ';
+                </div><!-- End of BrowseBarContainer -->';
     echo $bb_html;
     
-    $browsejsvar = $browse_show ? 'show' : 'hide';
     echo '<script>
-        var browse_show = "' . $browsejsvar . '";
-        SetCookie("browse_show", "' . $browsejsvar . '");
         b_loading = new Array();
         // Expand tree to previous state based on stored cookie
         jQuery(document).ready(function()
@@ -6709,11 +6710,11 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                     {
                     if (isset($size_info["id"])) 
                         {
-                        echo add_to_collection_link($ref,$search,"alert('" . addslashes($lang["requestaddedtocollection"]) . "');",$size_info["id"]);
+                        echo add_to_collection_link($ref,"alert('" . addslashes($lang["requestaddedtocollection"]) . "');",$size_info["id"]);
                         }
                     else
                         {
-                        echo add_to_collection_link($ref,$search);
+                        echo add_to_collection_link($ref);
                         }
                     }
                 else

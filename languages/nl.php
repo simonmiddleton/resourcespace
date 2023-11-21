@@ -1030,7 +1030,7 @@ $lang["collection_download_no_tar"]='Standaard archief download.';
 $lang["collection_download_use_tar"]='TAR-archief';
 $lang["collection_download_tar_info"]='TAR-bestanden zullen direct beginnen met downloaden. Als je deze optie niet gebruikt, kan het zijn dat je download beperkt wordt.';
 $lang["collection_download_tar_started"]='TAR-bestanden zullen binnenkort beginnen met downloaden.';
-$lang["collection_download_tar_applink"]='Kan je TAR-bestanden niet openen? Download hier de open source 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>hier</a>.';
+$lang["collection_download_tar_applink"]='Kan je TAR-bestanden niet openen? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Download hier de open source 7-zip hier</a>.';
 $lang["confirm_edit_all_selected_resources"]='Weet u zeker dat u wilt opslaan? Dit zal de bestaande waarde(n) voor het geselecteerde veld overschrijven voor alle geselecteerde resources.';
 $lang["confirmsubmitall"]='Weet u zeker dat u alles wilt indienen ter beoordeling? Dit zal de bestaande waarde(n) voor het/de geselecteerde veld(en) overschrijven voor alle bronnen in uw huidige collectie en ze allemaal ter beoordeling indienen.';
 $lang["confirmunsubmitall"]='Weet u zeker dat u alle inzendingen uit het beoordelingsproces wilt intrekken? Dit zal de bestaande waarde(n) voor het/de geselecteerde veld(en) overschrijven voor alle resources in uw huidige collectie en ze allemaal uit de beoordeling terugtrekken.';

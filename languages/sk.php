@@ -961,7 +961,7 @@ $lang["collection_download_format"] = "Formát súboru na stiahnutie";
 $lang["collection_download_no_tar"] = "Stiahnuť ako štandardný archív";
 $lang["collection_download_use_tar"] = "Archív TAR";
 $lang["collection_download_tar_info"] = "Súbory TAR sa začnú sťahovať okamžite. Ak túto možnosť nepoužijete, môže sa stať, že vaše sťahovanie bude obmedzené.";
-$lang["collection_download_tar_applink"] = "Neviete otvoriť súbory TAR? Získajte open source archivátor 7-zip <a href='http://www.7-zip.org/download.html' target='_blank'>tu</a>";
+$lang["collection_download_tar_applink"] = "Neviete otvoriť súbory TAR? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Získajte open source archivátor 7-zip tu</a>";
 $lang["downloadsize"]="Veľkosť súboru na stiahnutie";
 $lang["existingkeywords"]="Existujúce kľúčové slová:";
 $lang["extrakeywords"]="Extra kľúčové slová";

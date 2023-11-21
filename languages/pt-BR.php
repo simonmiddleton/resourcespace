@@ -1182,7 +1182,7 @@ $lang["collection_download_no_tar"]='Download de arquivo de arquivo padrão.';
 $lang["collection_download_use_tar"]='Arquivo TAR';
 $lang["collection_download_tar_info"]='Arquivos TAR começarão a ser baixados imediatamente. Se você não usar esta opção, pode ser que seu download seja limitado.';
 $lang["collection_download_tar_started"]='Arquivos TAR começarão a ser baixados em breve.';
-$lang["collection_download_tar_applink"]='Não consegue abrir arquivos TAR? Obtenha o 7-zip de código aberto <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>aqui</a>.';
+$lang["collection_download_tar_applink"]='Não consegue abrir arquivos TAR? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Obtenha o 7-zip de código aberto aqui</a>.';
 $lang["confirm_edit_all_selected_resources"]='Você tem certeza de que deseja salvar? Isso irá sobrescrever o(s) valor(es) existente(s) para o(s) campo(s) selecionado(s) para todos os recursos selecionados.';
 $lang["confirmsubmitall"]='Você tem certeza de que deseja enviar tudo para revisão? Isso irá sobrescrever o(s) valor(es) existente(s) para o(s) campo(s) selecionado(s) para todos os recursos em sua coleção atual e enviá-los todos para revisão.';
 $lang["confirmunsubmitall"]='Você tem certeza de que deseja cancelar a submissão de todos os recursos do processo de revisão? Isso irá sobrescrever o(s) valor(es) existente(s) para o(s) campo(s) selecionado(s) para todos os recursos na sua coleção atual e cancelar a submissão de todos eles da revisão.';
