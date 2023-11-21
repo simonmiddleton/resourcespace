@@ -91,21 +91,26 @@ else
     }
 
 // Override only the options that have been deprecated
-$deprecated_options = [
-    'prefix_resource_id_to_filename' => $GLOBALS['prefix_resource_id_to_filename'],
-    'prefix_filename_string' => $GLOBALS['prefix_filename_string'],
-    'original_filenames_when_downloading' => $GLOBALS['original_filenames_when_downloading'],
-    'download_filename_id_only' => $GLOBALS['download_filename_id_only'],
-    'download_id_only_with_size' => $GLOBALS['download_id_only_with_size'],
-    'download_filenames_without_size' => $GLOBALS['download_filenames_without_size'],
-];
-if (isset($GLOBALS['download_filename_field']))
+$get_global_config_options = function()
     {
-    $deprecated_options['download_filename_field'] = $GLOBALS['download_filename_field'];
-    }
+    $opts = [
+        'prefix_resource_id_to_filename' => $GLOBALS['prefix_resource_id_to_filename'],
+        'prefix_filename_string' => $GLOBALS['prefix_filename_string'],
+        'original_filenames_when_downloading' => $GLOBALS['original_filenames_when_downloading'],
+        'download_filename_id_only' => $GLOBALS['download_filename_id_only'],
+        'download_id_only_with_size' => $GLOBALS['download_id_only_with_size'],
+        'download_filenames_without_size' => $GLOBALS['download_filenames_without_size'],
+    ];
+    if (isset($GLOBALS['download_filename_field']))
+        {
+        $opts['download_filename_field'] = $GLOBALS['download_filename_field'];
+        }
+    return $opts;
+    };
+$deprecated_options = $get_global_config_options();
 
 $process_config_overrides = function(array $rows, string $what)
-    use ($lang, $build_download_filename_format, $deprecated_options): array
+    use ($lang, $build_download_filename_format, $deprecated_options, $get_global_config_options): array
     {
     $messages = [];
     foreach($rows as $row)
@@ -118,6 +123,10 @@ $process_config_overrides = function(array $rows, string $what)
             }
 
         override_rs_variables_by_eval($deprecated_options, $config_options);
+        if ($deprecated_options === $get_global_config_options()) {
+            continue;
+        }
+
         $messages[] = str_replace(
             ['%entity%', '%format%'],
             [
