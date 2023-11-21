@@ -1,7 +1,6 @@
 <?php
-include "../../include/db.php";
+include __DIR__ . "/../../include/db.php";
 command_line_only();
-
 
 // This script renumbers resources using the provided offset to shift up/down. Files are moved accordingly.
 if (!isset($argv[1])) {exit("Usage: php renumber_resources.php [offset +/-]\n");}
@@ -23,7 +22,7 @@ function migrate_files($ref, $newref, $alternative, $extension, $sizes)
     
             echo " - Size: " . $sizes[$m]["id"] . ", extension: " . $sizes[$m]["extension"] . " Snew path: " . $newpath . PHP_EOL;
             echo " - Checking old path: " . $path . PHP_EOL;
-            if (file_exists($path) && !($sizes[$m]["id"] == "" && strpos($path, $syncdir)!==false))
+            if (file_exists($path) && !($sizes[$m]["id"] == "" && ((trim($syncdir)!="") && strpos($path, $syncdir)!==false)))
                 {
                 echo " - Found file at old path : " . $path . PHP_EOL;	
                 if(!file_exists($newpath))
