@@ -83,6 +83,8 @@ if ($go!="")
 global $client,$youtube;
 list ($youtube_object, $youtubemessage) = youtube_publish_initialize();
 
+$categories="";
+
 if(!$youtube_object){$youtube_error=$lang["youtube_access_failed"] . $youtubemessage;}
 
 else
@@ -281,10 +283,12 @@ if ($youtube_username != '')
 		<label for="video_category"><?php echo $lang["youtube_publish_category"] ?></label>
 		<select name="video_category">
 		<?php
-		foreach($categories as $categoryid=>$categoryname)
-			{
-			echo "<option value='" . $categoryid . "' " . (($video_category==$categoryid)?"selected":"") . " >" . $categoryname . "</option>";
-			}
+        if(is_array($categories)) {
+            foreach($categories as $categoryid=>$categoryname)
+                {
+                echo "<option value='" . $categoryid . "' " . (($video_category==$categoryid)?"selected":"") . " >" . $categoryname . "</option>";
+                }
+        }
 			?>
 		</select>
 		</p>
