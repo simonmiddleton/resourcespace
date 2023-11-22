@@ -2368,7 +2368,7 @@ if ($ref>0 && !$multiple)
             <?php
             $bbr_preview_size = $edit_large_preview ? 'pre' : 'thm';
             $wmpath="";
-            # Establish path to watermarked verion if its rendering is a possibility
+            # Establish path to watermarked version if its rendering is a possibility
             if (checkperm("w") && $resource["has_image"]==1) 
                 {
                 $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
