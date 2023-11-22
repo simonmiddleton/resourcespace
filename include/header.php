@@ -255,7 +255,7 @@ if (!isset($custom_font) || $custom_font == '')
     }
 ?>
 <!-- Web app manifest -->
-<link rel="manifest" href="<?php echo $baseurl . $web_app_manifest_location?>">
+<link rel="manifest" href="<?php echo $baseurl . escape_quoted_data($web_app_manifest_location) ?>">
 
 <?php
 if(!$disable_geocoding)
