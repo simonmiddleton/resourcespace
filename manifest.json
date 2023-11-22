@@ -29,13 +29,15 @@
         "name": "Recently uploaded resources",
         "short_name": "Recent",
         "description": "View the the most recently uploaded resources.",
-        "url": "./pages/search.php?search=!last1000"
+        "url": "./pages/search.php?search=!last1000",
+        "icons": [{ "src": "./gfx/interface/recent_search.png", "sizes": "96x96" }]
       },
       {
         "name": "Advanced search",
         "short_name": "Advanced search",
         "description": "The advanced search page provides access to a wider selection of metadata fields, making it possible to create very refined searches.",
-        "url": "./pages/search_advanced.php"
+        "url": "./pages/search_advanced.php",
+        "icons": [{ "src": "./gfx/interface/advanced_search.png", "sizes": "96x96" }]
       }
     ],
     "description": "Open source Digital Asset Management software",
