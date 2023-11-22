@@ -7,7 +7,7 @@
  * For documentation please see: http://www.resourcespace.com/knowledge-base/api/
  *
  */
- 
+global $iiif_enabled; 
 if($iiif_enabled)
     {
     include_once dirname(__FILE__) . '/iiif_functions.php';
