@@ -2375,7 +2375,7 @@ if ($ref>0 && !$multiple)
                 }
             if ($resource["has_image"]==1 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
                 { ?>
-                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder"/>
+                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,false) . '&refreshkey=' . rand(0,1000); ?>" class="ImageBorder"/>
                 <?php 
                 # Render watermarked version if it exists
                 if (checkperm("w") && $wmpath!="" && file_exists($wmpath))
