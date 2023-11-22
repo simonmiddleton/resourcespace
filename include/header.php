@@ -254,6 +254,8 @@ if (!isset($custom_font) || $custom_font == '')
     ?><link id="global_font_link" href="<?php echo $baseurl?>/css/fonts/<?php echo $global_font ?>.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" /><?php
     }
 ?>
+<!-- Web app manifest -->
+<link rel="manifest" href="<?php echo $baseurl . escape_quoted_data($web_app_manifest_location) ?>">
 
 <?php
 if(!$disable_geocoding)

@@ -3423,3 +3423,6 @@ Available placeholders:
 - %alternative -> alternative ref (ID). Note: when applicable, an underscore will be automatically prefxed
 */
 $download_filename_format = DEFAULT_DOWNLOAD_FILENAME_FORMAT;
+
+# Location of web app manifest file
+$web_app_manifest_location = "/manifest.json";
