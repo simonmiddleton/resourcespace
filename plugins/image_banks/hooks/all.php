@@ -6,7 +6,7 @@ use function ImageBanks\providersCheckedAndActive;
 function HookImage_banksAllExtra_checks()
     {
     $errors = [];
-    $providers = getProviders($GLOBALS['image_banks_loaded_providers']);
+    [$providers] = getProviders($GLOBALS['image_banks_loaded_providers']);
     foreach($providers as $provider)
         {
         $provider_name = $provider->getName();

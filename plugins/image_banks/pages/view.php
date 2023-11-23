@@ -15,7 +15,7 @@ include_once "{$rs_root}/include/authenticate.php";
 /** @var string Remote Provider ID */
 $id = getval('id', '');
 
-[$providers,] = getProviders($image_banks_loaded_providers);
+[$providers] = getProviders($image_banks_loaded_providers);
 $providers_select_list = providersCheckedAndActive($providers);
 $image_bank_provider_id = (int) getval('image_bank_provider_id', 0, true);
 

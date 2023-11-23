@@ -28,7 +28,7 @@ $curpage = floor($offset / $per_page) + 1;
 // End of Paging functionality
 
 
-[$providers,] = getProviders($image_banks_loaded_providers);
+[$providers] = getProviders($image_banks_loaded_providers);
 $providers_select_list = providersCheckedAndActive($providers);
 
 $provider = new NoProvider($lang, get_temp_dir(false, 'ImageBanks-NoProvider'));
