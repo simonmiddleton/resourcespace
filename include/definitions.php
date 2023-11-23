@@ -479,7 +479,7 @@ const SYSTEM_REQUIRED_PHP_MODULES = [
     'intl' => 'locale_get_default',
     'json' => 'json_decode',
     'zip' => 'zip_open',
-
+    'apcu' => 'apcu_fetch',
     'dom' => 'dom_import_simplexml',
     'mysqli' => 'mysqli_init',
 ];
