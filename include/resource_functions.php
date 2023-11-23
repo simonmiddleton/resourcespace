@@ -92,6 +92,7 @@ function get_resource_path(
                 'ext'         => $extension,
                 'page'        => $page,
                 'alternative' => $alternative,
+                'watermarked' => $watermarked,
                 'k'           => $k,
                 'noattach'    => 'true',
             ),
@@ -6364,7 +6365,7 @@ function generate_resource_access_key($resource,$userref,$access,$expires,$email
             's', $k,
             'i', $userref,
             'i', $access,
-            's', (($expires=="")? null : $expires),
+            's', ((!validateDatetime($expires, 'Y-m-d'))? null : $expires),
             's', $email,
             'i', $group,
             's', (($sharepwd != "" && $sharepwd != "(unchanged)") ? hash('sha256', $k . $sharepwd . $scramble_key) : null)
@@ -7440,6 +7441,9 @@ function get_resource_all_image_sizes($ref)
             $all_image_sizes[$key]["extension"] = $size_data["extension"];
             $all_image_sizes[$key]["path"] = $size_data["path"];
             $all_image_sizes[$key]["url"] = $size_data["url"];
+            $all_image_sizes[$key]["width"] = $size_data["width"];
+            $all_image_sizes[$key]["height"] = $size_data["height"];
+            $all_image_sizes[$key]["filesize"] = $size_data["filesize"];
 
             // Screen size can have multi page previews so if this is one of those cases, get rest of the pages before
             // moving on to the next available size
@@ -8408,7 +8412,8 @@ function metadata_field_edit_access($field)
     }
 
 /**
- * Work out the filename to use when downloading the specified resource file with the given settings
+ * Work out the filename to use, based on the download_filename_format configuration option, when downloading the
+ * specified resource file with the given settings
  *
  * @param  int $ref Resource ID
  * @param  string $size size code
@@ -8416,125 +8421,86 @@ function metadata_field_edit_access($field)
  * @param  string $ext File extension
  * @return string  Filename to use
  */
-function get_download_filename($ref,$size,$alternative,$ext)
+function get_download_filename(int $ref, string $size, int $alternative, string $ext): string
     {
-    # Constructs a filename for download
-    global $original_filenames_when_downloading,$download_filenames_without_size,$download_id_only_with_size,
-    $download_filename_id_only,$download_filename_field,$prefix_resource_id_to_filename,$filename_field,
-    $prefix_filename_string, $filename,$server_charset;
+    [$size, $ext, $dff] = array_map('trim', [$size, $ext, $GLOBALS['download_filename_format']]);
+    $fallback_filename = "RS{$ref}.{$ext}";
+    $formatted_str = $dff ?: DEFAULT_DOWNLOAD_FILENAME_FORMAT;
 
-    $filename = (($download_filenames_without_size || $size == "") ? "" : "_" . $size . "") . ($alternative>0 ? "_" . $alternative : "") . "." . $ext;
+    $bind['%resource'] = $ref;
+    $bind['%extension'] = $ext;
+    $bind['%size'] = $size !== '' ? "_$size" : '';
+    $bind['%alternative'] = $alternative > 0 ? "_$alternative" : '';
 
-    if ($original_filenames_when_downloading)
+    // Get (original) filename value
+    $filename_val = get_data_by_field($ref, $GLOBALS['filename_field'], true);
+    if ($alternative > 0)
         {
-        # Use the original filename.
-        if ($alternative>0)
+        $alt_file = get_alternative_file($ref, $alternative);
+        $filename_val = $alt_file !== false ? $alt_file['name'] : '';
+        }
+    $bind['%filename'] = strip_extension(mb_basename($filename_val), true);
+
+    // Legacy: do an extra check to see if the filename has an uppercase extension that could be preserved
+    $filename_val_ext = pathinfo($filename_val, PATHINFO_EXTENSION);
+    if ($filename_val_ext !== '' && mb_strtolower($filename_val_ext) === mb_strtolower($ext))
+        {
+        $bind['%extension'] = $filename_val_ext;
+        }
+
+    // Get specific field value
+    $matching_fields = []; 
+    if (preg_match_all('/%field(\d+)/', $formatted_str, $matching_fields, PREG_SET_ORDER))
+        {
+        foreach($matching_fields as [$placeholder, $field_id])
             {
-            # Fetch from the resource_alt_files alternatives table (this is an alternative file)
-            $origfile=get_alternative_file($ref,$alternative);
-            $filename=$origfile["name"];
+            if (!metadata_field_view_access($field_id))
+                {
+                $bind[$placeholder] = '';
+                continue;
+                }
 
-            //Try to use the name that the user has set for the file and if not then default to the original filename.
-            if(strpos($filename, '.') != false && substr($filename, strrpos($filename,'.')+1) == $ext)
+            $field_data = trim(get_data_by_field($ref, $field_id, true));
+            if ($field_data !== '')
                 {
-                $origfile=$filename;
-                }
-            elseif(strpos($filename, '.') != false && substr($filename, strrpos($filename,'.')+1) != $ext)
-                {
-                $origfile=remove_extension($filename) . '.' . $ext;
-                }
-            elseif($ext != '' && strpos($filename, '.') == false)
-                {
-                $origfile=$filename . '.' . $ext;
-                }
-            else
-                {
-                $origfile=$origfile["file_name"];
-                }
-            }
-        else
-            {
-            # Fetch from field data or standard table
-            $origfile=get_data_by_field($ref,$filename_field);
-            }
-        if (strlen($origfile)>0)
-            {
-            # do an extra check to see if the original filename might have uppercase extension that can be preserved.
-            $pathparts=pathinfo($origfile);
-            if (isset($pathparts['extension'])){
-                if (strtolower($pathparts['extension'])==$ext){$ext=$pathparts['extension'];}
-            }
-
-            # Use the original filename if one has been set.
-            # Strip any path information (e.g. if the staticsync.php is used).
-            # append preview size to base name if not the original
-            if($size != '' && !$download_filenames_without_size)
-                {
-                $filename = strip_extension(mb_basename($origfile),true) . '-' . $size . '.' . $ext;
-                }
-            else
-                {
-                $filename = strip_extension(mb_basename($origfile),true) . '.' . $ext;
+                $bind[$placeholder] = $field_data;
                 }
             }
         }
 
-    elseif ($download_filename_id_only)
+    // Build the filename
+    $filename = str_replace(array_keys($bind), array_values($bind), $formatted_str);
+
+    // Allow plugins to completely overwrite it
+    $hook_downloadfilenamealt = hook('downloadfilenamealt', '', [$ref, $size, $alternative, $ext]);
+    if (is_string($hook_downloadfilenamealt) && $hook_downloadfilenamealt !== '')
         {
-        if(!hook('customdownloadidonly', '', array($ref, $ext, $alternative)))
-            {
-            $filename=$ref . "." . $ext;
-
-            if($size != '' && $download_id_only_with_size)
-                {
-                $filename = $ref . '-' . $size . '.' . $ext;
-                }
-            }
+        debug('[get_download_filename] Filename overriden by a hook');
+        $filename = $hook_downloadfilenamealt;
         }
 
-    elseif (isset($download_filename_field))
+    // Remove invalid characters
+    $filename = (string) preg_replace(
+        '/(:|\r\n|\r|\n)/',
+        '_',
+        trim(strip_tags(nl2br($filename)))
+    );
+
+    /**
+     * If required, truncate to 255 characters - {@see https://en.wikipedia.org/wiki/Comparison_of_file_systems#Limits}
+     */
+    if (mb_strlen($filename, 'UTF-8') > 255)
         {
-        $newfilename = get_data_by_field($ref, $download_filename_field);
-        if ($newfilename)
-            {
-            $filename = trim(nl2br(strip_tags($newfilename)));
-            if($size != "" && !$download_filenames_without_size)
-                {
-                $filename = mb_basename(substr($filename, 0, 200)) . '-' . $size . '.' . $ext;
-                }
-            else
-                {
-                $filename = mb_basename(substr($filename, 0, 200)) . '.' . $ext;
-                }
-            }
+        $filename = mb_strcut($filename, 0, 255, 'UTF-8');
         }
 
-    if($prefix_resource_id_to_filename)
+    if ($filename !== '')
         {
-        $filename = $ref . (substr($filename,0,1) == "." ? "" : '_') . $filename;
+        return $filename;
         }
 
-    if(isset($prefix_filename_string) && trim($prefix_filename_string) != '')
-        {
-        $filename = $prefix_filename_string . $filename;
-        }
-
-    # Remove critical characters from filename
-    $altfilename=hook("downloadfilenamealt");
-    if(!($altfilename)) $filename = preg_replace('/(:|\r\n|\r|\n)/', '_', $filename);
-    else $filename=$altfilename;
-
-    # Convert $filename to the charset used on the server.
-    if (!isset($server_charset)) {$to_charset = 'UTF-8';}
-    else
-        {
-        if ($server_charset!="") {$to_charset = $server_charset;}
-        else {$to_charset = 'UTF-8';}
-        }
-    $filename = mb_convert_encoding($filename, $to_charset, 'UTF-8');
-
-    hook("downloadfilename");
-    return $filename;
+    debug('[get_download_filename] Invalid download filename, fall back.');
+    return (string) preg_replace('/(:|\r\n|\r|\n)/', '_', strip_tags(nl2br($fallback_filename)));
     }
 
 
@@ -9400,4 +9366,28 @@ function apply_resource_default(int $old_resource_type, int $new_resource_type, 
             }
         set_resource_defaults($resource, $check_resource_default_fields);
         }
+    }
+
+/**
+ * Determine if the scr size should be used for previews. When $resource_view_use_pre is true the scr size shouldn't be used.
+ * Where access is restricted and restricted access users can't access the scr size, the scr size shouldn't be used.
+ *
+ * @param  int   $access   Resource access level, typically from get_resource_access()
+ * 
+ * @return  bool   True if scr size shouldn't be used else false.
+ */
+function skip_scr_size_preview(int $access) : bool
+    {
+    global $resource_view_use_pre;
+    if ($resource_view_use_pre)
+        {
+        return true;
+        }
+
+    if ($access === 1 && !image_size_restricted_access('scr'))
+        {
+        return true;
+        }
+
+    return false;
     }

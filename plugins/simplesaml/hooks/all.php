@@ -68,12 +68,15 @@ function HookSimplesamlAllPreheaderoutput()
     $collection_from_search=str_replace('!collection', '', $search);
     $collection_add = getval('collection_add', '');
     $c = getval('c', '');
+    $parent = getval('parent', '');
 
     $collection_from_search = is_numeric($collection_from_search) ? (int)$collection_from_search : null;
 
     $collection_add = is_numeric($collection_add) ? (int)$collection_add : null;
 
     $c = is_numeric($c) ? (int)$c : null;
+
+    $parent = is_numeric($parent) ? (int) $parent : null;
 
     $resource = is_numeric($resource) ? (int)$resource : null;
 
@@ -94,6 +97,11 @@ function HookSimplesamlAllPreheaderoutput()
             return true;
             }
         if($resource && check_access_key($resource, $k))
+            {
+            return true;
+            }
+        // External sharing of a featured collection category
+        if ($parent && check_access_key_collection($parent, $k))
             {
             return true;
             }

@@ -135,7 +135,7 @@ if (!file_exists(get_resource_path($ref,true,"scr",false,$ext,-1,$nextpage,$use_
 
 # Locate the resource
 $path = get_resource_path($ref, true, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
-if(!resource_has_access_denied_by_RT_size($resource['resource_type'], 'scr') && file_exists($path))
+if(!resource_has_access_denied_by_RT_size($resource['resource_type'], 'scr') && file_exists($path) && !skip_scr_size_preview($access))
     {
     $url = get_resource_path($ref, false, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
     }
@@ -187,8 +187,8 @@ include "../include/header.php";
 
 <?php if (!checkperm("b") && !(($userrequestmode==2 || $userrequestmode==3)) && !in_array($resource["resource_type"],$collection_block_restypes)) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<?php echo add_to_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;<?php echo $lang["action-addtocollection"]?></a><?php } ?>
-<?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref),htmlspecialchars($search))?><i aria-hidden="true" class="fa fa-minus-circle"></i>&nbsp;<?php echo $lang["action-removefromcollection"]?></a><?php }
+<?php echo add_to_collection_link(htmlspecialchars($ref))?><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;<?php echo htmlspecialchars($lang["action-addtocollection"]) ?></a><?php } ?>
+<?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref))?><i aria-hidden="true" class="fa fa-minus-circle"></i>&nbsp;<?php echo htmlspecialchars($lang["action-removefromcollection"]) ?></a><?php }
 
 if(count(canSeeAnnotationsFields()) > 0)
     {

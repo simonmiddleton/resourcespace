@@ -70,6 +70,7 @@ switch ($returntype)
             $return_items[$n]["expandable"] = "false";
             $tgtparams = array();
             $tgtparams["type"]  = "resource_type";
+            $tgtparams["noreload"] = "true";
             $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = true;
@@ -116,6 +117,7 @@ switch ($returntype)
             $tgtparams = array();
             $tgtparams["restypes"]  = "new";
             $tgtparams["type"]  = "resource_type_field";
+            $tgtparams["noreload"] = "true";
             $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = true;
@@ -177,6 +179,7 @@ switch ($returntype)
                 $tgtparams["type"]  = "node";
                 $tgtparams["field"]  = $returnid;
                 $tgtparams["parent"]  = $parent;
+                $tgtparams["noreload"] = "true";
                 $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
                 $return_items[$n]["link"] = $tgturl;
                 $return_items[$n]["modal"] = true;
@@ -236,6 +239,7 @@ switch ($returntype)
                 $tgtparams["type"]  = "node";
                 $tgtparams["field"]  = $browse_field;
                 $tgtparams["parent_nodes"]  = implode(",",$parent_nodes);
+                $tgtparams["noreload"] = "true";
                 $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
                 $return_items[$n]["link"] = $tgturl;
                 $return_items[$n]["modal"] = true;
@@ -304,10 +308,10 @@ switch ($returntype)
             {
             $is_featured_collection_category = is_featured_collection_category($fc);
             $id_part = ($is_featured_collection_category ? "FC" : "C");
-            $link = generateURL("{$baseurl_short}pages/search.php", array("search" => "!collection{$fc["ref"]}"));
+            $link = generateURL("{$baseurl_short}pages/search.php", array("search" => "!collection{$fc["ref"]}", "noreload" => "true"));
             if($is_featured_collection_category)
                 {
-                $link = generateURL("{$baseurl_short}pages/collections_featured.php", array("parent" => $fc["ref"]));
+                $link = generateURL("{$baseurl_short}pages/collections_featured.php", array("parent" => $fc["ref"], "noreload" => "true"));
                 }
 
             $item = array(
@@ -340,6 +344,7 @@ switch ($returntype)
             $return_items[$n]["expandable"] = "false";
             $tgtparams = array();
             $tgtparams["type"]  = "collection";
+            $tgtparams["noreload"] = "true";
             $tgturl = generateURL($baseurl_short . "pages/ajax/create_new.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = true;
@@ -357,7 +362,8 @@ switch ($returntype)
             $return_items[$n]["expandable"] = "false";
             
             $tgtparams = array();
-            $tgtparams["search"] = "!collection" . $mycol["ref"];                            
+            $tgtparams["search"] = "!collection" . $mycol["ref"];        
+            $tgtparams["noreload"] = "true";                    
             $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;
@@ -402,6 +408,7 @@ switch ($returntype)
             $tgtparams["search"] = "";  
             $tgtparams["restypes"] = "";  
             $tgtparams["archive"] = $showstate;                           
+            $tgtparams["noreload"] = "true";
             $tgturl = generateURL($baseurl_short . "pages/search.php", $tgtparams);
             $return_items[$n]["link"] = $tgturl;
             $return_items[$n]["modal"] = false;

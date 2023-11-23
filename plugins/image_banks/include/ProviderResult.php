@@ -4,107 +4,109 @@ namespace ImageBanks;
 class ProviderResult
     {
     private $id;
-    private $provider;
-    private $title = "";
+    private Provider $provider;
+    private string $title = "";
 
     protected $original_file_url;
-    protected $provider_url;
+    protected string $provider_url;
 
     protected $preview_url;
-    protected $preview_width;
-    protected $preview_height;
+    protected int $preview_width;
+    protected int $preview_height;
 
     public function __construct($id, Provider $provider)
         {
         $this->id = $id;
         $this->provider = $provider;
-
         return $this;
         }
 
+    /** Id getter */
     public function getId()
         {
         return $this->id;
         }
 
-    public function getSource()
+    /** Provider getter */
+    public function getProvider(): Provider
         {
-        return $this->provider->getName();
+        return $this->provider;
         }
 
-
-    public function setOriginalFileUrl($url)
+    /** Original file URL setter */
+    public function setOriginalFileUrl(string $url): self
         {
         $this->original_file_url = $url;
-
         return $this;
         }
-    public function getOriginalFileUrl()
+
+    /** Original file URL getter */
+    public function getOriginalFileUrl(): ?string
         {
         return $this->original_file_url;
         }
 
-    public function setPreviewUrl($url)
+    /** Preview URL setter */
+    public function setPreviewUrl(string $url): self
         {
         $this->preview_url = $url;
-
         return $this;
         }
-    public function getPreviewUrl()
+
+    /** Preview URL getter */
+    public function getPreviewUrl(): ?string
         {
         return $this->preview_url;
         }
 
-    public function setProviderUrl($url)
+    /** Provider URL setter */
+    public function setProviderUrl(string $url): self
         {
         $this->provider_url = $url;
-
         return $this;
         }
-    public function getProviderUrl()
+
+    /** Provider URL getter */
+    public function getProviderUrl(): string
         {
         return $this->provider_url;
         }
 
-    public function setPreviewWidth($width)
+    /** Preview width setter */
+    public function setPreviewWidth(int $width): self
         {
-        if(!is_int($width))
-            {
-            trigger_error("setPreviewWidth function only accepts integers. Argument supplied was: '{$width}'");
-            }
-
         $this->preview_width = $width;
-
         return $this;
         }
-    public function getPreviewWidth()
+
+    /** Preview width getter */
+    public function getPreviewWidth(): int
         {
         return $this->preview_width;
         }
 
-    public function setPreviewHeight($height)
+    /** Preview height setter */
+    public function setPreviewHeight(int $height): self
         {
-        if(!is_int($height))
-            {
-            trigger_error("setPreviewHeight function only accepts integers. Argument supplied was: '{$height}'");
-            }
-
         $this->preview_height = $height;
-
         return $this;
         }
-    public function getPreviewHeight()
+
+    /** Preview height getter */
+    public function getPreviewHeight(): int
         {
         return $this->preview_height;
         }
 
-    public function setTitle($title)
+    /** Title setter */
+    public function setTitle(string $title): self
         {
         $this->title = trim($title);
-
         return $this;
         }
-    public function getTitle()
+
+    /** Title getter */
+    public function getTitle(): string
         {
         return $this->title;
         }

@@ -3,6 +3,8 @@
 // Validate that usergroup download_limit functions
 command_line_only();
 
+ps_query("TRUNCATE resource");
+ps_query("TRUNCATE resource_log");
 
 // Set up group with limit
 ps_query("insert into usergroup (name, permissions) VALUES ('Limited group', 's,e-1,e-2,g,d,q,n,f*,j*,z1,z2,z3')");

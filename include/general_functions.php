@@ -134,7 +134,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     $month_part = substr($date, $bce_offset + 5, 2);
     if(!is_numeric($month_part))
         {
-        return '';
+        return '-';
         }
     $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
@@ -3061,12 +3061,9 @@ function user_set_usergroup($user,$usergroup)
  * @param  int    $length Length of desired string of bytes
  * @return string         Random character string
  */
-function generateSecureKey($length = 64)
+function generateSecureKey(int $length = 64): string
     {
-    $bytes = openssl_random_pseudo_bytes($length / 2);
-    $hex   = substr(bin2hex($bytes), 0, 64); 
-
-    return $hex;
+    return bin2hex(openssl_random_pseudo_bytes($length / 2));
     }
 
 /**
@@ -4915,6 +4912,17 @@ function get_system_status()
                 $return['results'][$check_name]['severity'] = $extra_check['severity'];
                 $return['results'][$check_name]['severity_text'] = $GLOBALS["lang"]["severity-level_" .  $extra_check['severity']];
                 }
+
+            $warn_details = $extra_warn['details'] ?? [];
+            if ($warn_details !== [])
+                {
+                $return['results'][$check_name]['details'] = $warn_details;
+                }
+
+            if ($extra_check['status'] == 'FAIL')
+                {
+                ++$fail_tests;
+                }
             }
         }
 
@@ -5242,4 +5250,98 @@ function set_watermark_image()
         {
         $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
         }
+    }
+
+/** DPI calculations */
+function compute_dpi($width, $height, &$dpi, &$dpi_unit, &$dpi_w, &$dpi_h)
+    {
+    global $lang, $imperial_measurements,$sizes,$n;
+    
+    if (isset($sizes[$n]['resolution']) && $sizes[$n]['resolution']!=0 && is_int($sizes[$n]['resolution']))
+        {
+        $dpi=$sizes[$n]['resolution'];
+        }
+    else if (!isset($dpi) || $dpi==0)
+        {
+        $dpi=300;
+        }
+
+    if (((isset($sizes[$n]['unit']) && trim(strtolower($sizes[$n]['unit']))=="inches")) || $imperial_measurements)
+        {
+        # Imperial measurements
+        $dpi_unit=$lang["inch-short"];
+        $dpi_w=round($width/$dpi,1);
+        $dpi_h=round($height/$dpi,1);
+        }
+    else
+        {
+        $dpi_unit=$lang["centimetre-short"];
+        $dpi_w=round(($width/$dpi)*2.54,1);
+        $dpi_h=round(($height/$dpi)*2.54,1);
+        }
+    }
+
+/** MP calculation */
+function compute_megapixel(int $width, int $height): float
+    {
+    return round(($width * $height) / 1000000, 2);
+    }
+
+/**
+ * Get size info as a paragraphs HTML tag
+ * @param array $size Preview size information
+ * @param array|null $originalSize Original preview size information
+ */
+function get_size_info(array $size, ?array $originalSize = null): string
+    {
+    global $lang, $ffmpeg_supported_extensions;
+    
+    $newWidth  = intval($size['width']);
+    $newHeight = intval($size['height']);
+
+    if ($originalSize != null && $size !== $originalSize)
+        {
+        // Compute actual pixel size
+        $imageWidth  = $originalSize['width'];
+        $imageHeight = $originalSize['height'];
+        if ($imageWidth > $imageHeight)
+            {
+            // landscape
+            if ($imageWidth == 0) return '<p>&ndash;</p>';
+            $newWidth = $size['width'];
+            $newHeight = round(($imageHeight * $newWidth + $imageWidth - 1) / $imageWidth);
+            }
+        else
+            {
+            // portrait or square
+            if ($imageHeight == 0) return '<p>&ndash;</p>';
+            $newHeight = $size['height'];
+            $newWidth = round(($imageWidth * $newHeight + $imageHeight - 1) / $imageHeight);
+            }
+        }
+
+    $output = "<p>$newWidth &times; $newHeight {$lang["pixels"]}";
+
+    if (!hook('replacemp'))
+        {
+        $mp = compute_megapixel($newWidth, $newHeight);
+        if ($mp >= 0)
+            {
+            $output .= " ($mp {$lang["megapixel-short"]})";
+            }
+        }
+
+    $output .= '</p>';
+
+    if (!isset($size['extension']) || !in_array(strtolower($size['extension']), $ffmpeg_supported_extensions))
+        {
+        if (!hook("replacedpi"))
+            {   
+            # Do DPI calculation only for non-videos
+            compute_dpi($newWidth, $newHeight, $dpi, $dpi_unit, $dpi_w, $dpi_h);
+            $output .= "<p>$dpi_w $dpi_unit &times; $dpi_h $dpi_unit {$lang["at-resolution"]} $dpi {$lang["ppi"]}</p>";
+            }
+        }
+
+    return $output;
     }

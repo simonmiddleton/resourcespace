@@ -113,7 +113,7 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 #SlideshowContainer #HomeSiteText.dashtext {background:transparent;border:none;color:#373737;}
 
 /* Default colours for search, dash tiles, browse bar etc */
-#SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree, #BrowseBar, #BrowseBarTab {
+#SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree {
     background: rgba(0, 0, 0, 0.51);
     color:#FFF;
 }
@@ -372,7 +372,7 @@ input:checked + .customFieldLabel, .keywordselected {
 }
 
 /* Browse bar */
-#BrowseBar a, #BrowseBarTab, #BrowseBarTab a:hover {color: #fff;}
+#BrowseBar a {color: #fff;}
 .BrowseBarText {color: #fff;}
 .BrowseBarItem.ui-droppable-hover a .BrowseBarLink{border: 2px solid #FFF;}
 

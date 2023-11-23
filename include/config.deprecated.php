@@ -214,3 +214,29 @@ $wildcard_always_applied=false;
 #
 # $zip_contents_field=18;
 $zip_contents_field_crop=1; # The number of lines to remove from the top of the zip contents output (in order to remove the filename field and other unwanted header information).
+
+# When using $prefix_resource_id_to_filename above, what string should be used prior to the resource ID?
+# This is useful to establish that a resource was downloaded from ResourceSpace and that the following number
+# is a ResourceSpace resource ID.
+$prefix_filename_string="RS";
+
+# When $original_filenames_when_downloading, should the original filename be prefixed with the resource ID?
+# This ensures unique filenames when downloading multiple files.
+# WARNING: if switching this off, be aware that when downloading a collection as a zip file, a file with the same name as another file in the collection will overwrite that existing file. It is therefore advisiable to leave this set to 'true'.
+$prefix_resource_id_to_filename=true;
+
+# Should the download filename have the size appended to it?
+$download_filenames_without_size = false;
+
+#Option for downloaded filename to be just <resource id>.extension, without indicating size or whether an alternative file. Will override $original_filenames_when_downloading which is set as default
+$download_filename_id_only = false;
+
+# Append the size to the filename when downloading
+# Required: $download_filename_id_only = true;
+$download_id_only_with_size = false;
+
+# Use original filename when downloading a file?
+$original_filenames_when_downloading=true;
+
+# Option to select metadata field that will be used for downloaded filename (do not include file extension)
+#$download_filename_field=8;

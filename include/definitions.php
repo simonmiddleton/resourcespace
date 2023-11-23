@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 25);
+define('SYSTEM_UPGRADE_LEVEL', 26);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID'))
@@ -479,7 +479,7 @@ const SYSTEM_REQUIRED_PHP_MODULES = [
     'intl' => 'locale_get_default',
     'json' => 'json_decode',
     'zip' => 'zip_open',
-    'apcu' => 'apcu_fetch',
+
     'dom' => 'dom_import_simplexml',
     'mysqli' => 'mysqli_init',
 ];
@@ -855,6 +855,8 @@ const API_NATIVE_WHITELIST = [
     'send_user_message',
     'update_related_resource',
 ];
+
+const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource_%filename%size.%extension';
 
 // get_system_status() severity types
 define ('CRITICAL', 0);

@@ -1,17 +1,18 @@
 <?php
 
 /**
- * Send the new field value to the OpenAI API in order to update the linked field 
+ * Send the new field value or image to the OpenAI API in order to update the linked field 
  *
  * @param int|array $resources          Resource ID or array of resource IDS
  * @param array     $target_field       Target metadata field array from get_resource_type_field()
  * @param array     $values             Array of strings from the field currently being processed
+ * @param string    $file               Path to image file. If provided will use this file instead of metadata values
  * 
-* @return bool|array                   Array indicating success/failure 
+* @return bool|array                    Array indicating success/failure 
  *                                      True if update successful, false if invalid field or no data returned
  * 
  */
-function openai_gpt_update_field($resources,$target_field,$values)
+function openai_gpt_update_field($resources,array $target_field,array $values, string $file="")
     {
     global $valid_ai_field_types, $FIXED_LIST_FIELD_TYPES,$language, $defaultlanguage, $openai_gpt_message_input_JSON, 
     $openai_gpt_message_output_json, $openai_gpt_message_text, $openai_gpt_processed, $openai_gpt_api_key,$openai_gpt_model,
@@ -32,107 +33,142 @@ function openai_gpt_update_field($resources,$target_field,$values)
 
     $resources = array_filter($resources,"is_int_loose");
     $valid_response = false;
-
-    // Get data to use
-    // Remove any i18n variants and use default system language
-    $prompt_values  = [];
-    $saved_language = $language;
-    $language       = $defaultlanguage;
-    
-    foreach($values as $value)
+    if(trim($file) != "")
         {
-        if(substr($value,0,1) == "~")
+        $file_data = file_get_contents($file);
+        $file_data_base64 = base64_encode($file_data);
+                               
+        
+        $return_json = in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES);
+        $outtype = $return_json ? $openai_gpt_message_output_json : $openai_gpt_message_output_text;
+        $system_message = str_replace(["%%IN_TYPE%%","%%OUT_TYPE%%"],["image",$outtype],$openai_gpt_system_message);
+       
+        $messages = [];
+        $messages[] = ["role"=>"system","content"=>$system_message];
+
+        $messages[] = [
+            "role"=>"user",
+            "content"=> [
+                ["type" => "text", "text"=>$target_field["openai_gpt_prompt"]],
+                ["type" => "image_url", "image_url" => "data:image/jpeg;base64, " . $file_data_base64],
+                ]
+            ];
+
+        debug("openai_gpt - sending request prompt for image");
+        }
+    else
+        {
+        // Get data to use
+        // Remove any i18n variants and use default system language
+        $prompt_values  = [];
+        $saved_language = $language;
+        $language       = $defaultlanguage;
+        
+        foreach($values as $value)
             {
-            $prompt_values[] = mb_strcut(i18n_get_translated($value),0,$openai_gpt_max_data_length);
+            if(substr($value,0,1) == "~")
+                {
+                $prompt_values[] = mb_strcut(i18n_get_translated($value),0,$openai_gpt_max_data_length);
+                }
+            elseif(trim($value) != "")
+                {
+                $prompt_values[] = mb_strcut($value,0,$openai_gpt_max_data_length);
+                }
             }
-        elseif(trim($value) != "")
+        $language = $saved_language;
+    
+        // Generate prompt (only if there are any strings)
+        if(count($prompt_values)==0)
             {
-            $prompt_values[] = mb_strcut($value,0,$openai_gpt_max_data_length);
+            // No nodes present, fake a valid response to clear target field
+            $newvalue = '';
+            $valid_response = true;
+            }
+        else
+            {
+            $send_as_json = count($prompt_values) > 1;
+            $return_json = in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES);
+
+            $intype = $send_as_json ? $openai_gpt_message_input_JSON : $openai_gpt_message_text; 
+            $outtype = $return_json ? $openai_gpt_message_output_json : $openai_gpt_message_output_text;
+
+            $system_message = str_replace(["%%IN_TYPE%%","%%OUT_TYPE%%"],[$intype,$outtype],$openai_gpt_system_message);
+
+            $messages = [];
+            $messages[] = ["role"=>"system","content"=>$system_message];
+            // Give a sample 
+            if(in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES))
+                {
+                $messages[] = ["role"=>"user","content"=> $openai_gpt_example_json_user];
+                $messages[] = ["role"=>"assistant","content"=>$openai_gpt_example_json_assistant];
+                }
+            else
+                {
+                $messages[] = ["role"=>"user","content"=> $openai_gpt_example_text_user];
+                $messages[] = ["role"=>"assistant","content"=>$openai_gpt_example_text_assistant];
+                }
+            $messages[] = ["role"=>"user","content"=> $target_field["openai_gpt_prompt"] . ": " . ($send_as_json ? json_encode($prompt_values) : $prompt_values[0])];
             }
         }
-    $language = $saved_language;
- 
-    // Generate prompt (only if there are any strings)
-    if(count($prompt_values)==0)
+   
+    debug("openai_gpt - sending request prompt " . json_encode($messages));
+
+    // Can't use old model since move to chat API
+    $use_model =trim($openai_gpt_model) == "text-davinci-003" ? $openai_gpt_fallback_model : $openai_gpt_model; 
+
+    $openai_response = openai_gpt_generate_completions($openai_gpt_api_key,$use_model,$messages,$openai_gpt_temperature,$openai_gpt_max_tokens);
+
+    if(trim($openai_response) != "")
         {
-        // No nodes present, fake a valid response to clear target field
-        $newvalue = '';
+        debug("response from openai_gpt_generate_completions() : " . $openai_response);
+        if(in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES))
+            {
+            // Clean up response
+            if(substr($openai_response,0,7) == "```json")
+                {
+                debug("openai_gpt - extracting JSON text");
+                $openai_response = substr(trim($openai_response," `\""),4);
+                }
+            else
+                {
+                $openai_response = trim($openai_response," \"");
+                }
+            $apivalues = json_decode(trim($openai_response),true);
+            if(json_last_error() !== JSON_ERROR_NONE || !is_array($apivalues))
+                {
+                debug("openai_gpt error - invalid JSON text response received from API: " . json_last_error_msg() . " " . trim($openai_response));
+                if(strpos($openai_response,",") != false)
+                    {
+                    // Try and split on comma
+                    $apivalues = explode(",",$openai_response);
+                    }
+                else
+                    {
+                    $apivalues = [$openai_response];
+                    }
+                }
+            // The returned array elements may be associative or contain sub arrays - convert to list of strings
+            $newstrings = [];
+            foreach($apivalues as $attribute=>&$value)
+                {
+                if(is_array($value))
+                    {
+                    $value = json_encode($value);
+                    }                
+                $newstrings[] = is_int_loose($attribute) ? $value : $attribute . " : " . $value;
+                }            
+            // update_field() will separate on NODE_NAME_STRING_SEPARATOR
+            $newvalue = implode(NODE_NAME_STRING_SEPARATOR,$newstrings);
+            }
+        else
+            {
+            $newvalue = $openai_response;
+            }
         $valid_response = true;
         }
     else
         {
-        $send_as_json = count($prompt_values) > 1;
-        $return_json = in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES);
-
-        $intype = $send_as_json ? $openai_gpt_message_input_JSON : $openai_gpt_message_text; 
-        $outtype = $return_json ? $openai_gpt_message_output_json : $openai_gpt_message_output_text;
-
-        $system_message = str_replace(["%%IN_TYPE%%","%%OUT_TYPE%%"],[$intype,$outtype],$openai_gpt_system_message);
-
-        $messages = [];
-        $messages[] = ["role"=>"system","content"=>$system_message];
-        // Give a sample 
-        if(in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES))
-            {
-            $messages[] = ["role"=>"user","content"=> $openai_gpt_example_json_user];
-            $messages[] = ["role"=>"assistant","content"=>$openai_gpt_example_json_assistant];
-            }
-        else
-            {
-            $messages[] = ["role"=>"user","content"=> $openai_gpt_example_text_user];
-            $messages[] = ["role"=>"assistant","content"=>$openai_gpt_example_text_assistant];
-            }
-        $messages[] = ["role"=>"user","content"=> $target_field["openai_gpt_prompt"] . ": " . ($send_as_json ? json_encode($prompt_values) : $prompt_values[0])];
-
-
-        debug("openai_gpt - sending request prompt " . json_encode($messages));
-        // Can't use old model since move to chat API
-        $use_model =trim($openai_gpt_model) == "text-davinci-003" ? $openai_gpt_fallback_model : $openai_gpt_model;
-        $openai_response = openai_gpt_generate_completions($openai_gpt_api_key,$use_model,$messages,$openai_gpt_temperature,$openai_gpt_max_tokens);
-
-        if(trim($openai_response) != "")
-            {
-            debug("response from openai_gpt_generate_completions() : " . $openai_response);
-            if(in_array($target_field["type"],$FIXED_LIST_FIELD_TYPES))
-                {
-                $apivalues = json_decode(trim($openai_response),true);
-                if(json_last_error() !== JSON_ERROR_NONE || !is_array($apivalues))
-                    {
-                    debug("openai_gpt error - invalid JSON text response received from API: " . json_last_error_msg() . " " . trim($openai_response));
-                    if(strpos($openai_response,",") != false)
-                        {
-                        // Try and split on comma
-                        $apivalues = explode(",",$openai_response);
-                        }
-                    else
-                        {
-                        $apivalues = [$openai_response];
-                        }
-                    }
-                // The returned array elements may be associative or contain sub arrays - convert to list of strings
-                $newstrings = [];
-                foreach($apivalues as $attribute=>&$value)
-                    {
-                    if(is_array($value))
-                        {
-                        $value = json_encode($value);
-                        }                
-                    $newstrings[] = is_int_loose($attribute) ? $value : $attribute . " : " . $value;
-                    }            
-                // update_field() will separate on NODE_NAME_STRING_SEPARATOR
-                $newvalue = implode(NODE_NAME_STRING_SEPARATOR,$newstrings);          
-                }
-            else
-                {
-                $newvalue = $openai_response;
-                }
-            $valid_response = true;
-            }
-        else
-            {           
-            debug("openai_gpt error - empty response received from API: '" . trim($openai_response) . "'");
-            $valid_response = false;
-            }
+        debug("openai_gpt error - empty response received from API: '" . trim($openai_response) . "'");
         }
 
     $results = [];
@@ -146,10 +182,8 @@ function openai_gpt_update_field($resources,$target_field,$values)
         if($valid_response)
             {
             debug("openai_gpt_update_field() - resource # " . $resource . ", target field #" . $target_field["ref"]);
-
             // Set a flag to prevent any possibility of infinite recursion within update_field()
             $openai_gpt_processed[$resource . "_" . $target_field["ref"]] = true;
-
             $result = update_field($resource,$target_field["ref"],$newvalue);
             $results[$resource] = $result;
             }
@@ -188,7 +222,6 @@ function openai_gpt_generate_completions($apiKey, $model, $messages, $temperatur
         {
         return $openai_response_cache[md5($openai_gpt_endpoint . $messagestring)];
         }
-
     // $temperature must be between 0 and 1
     $temperature = floatval($temperature);
     if($temperature>1 || $temperature<0)
@@ -264,3 +297,4 @@ function openai_gpt_get_dependent_fields($field)
     $ai_gpt_input_fields = ps_query("SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE openai_gpt_input_field = ?",["i",$field]);
     return $ai_gpt_input_fields;
     }
+

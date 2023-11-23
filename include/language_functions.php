@@ -670,3 +670,41 @@ function lang_load_site_text(&$lang,$pagename,$language = "")
              }
          }
     }
+
+/**
+ * Return an array of all available language strings for the given id, with the language code as the key
+ *
+ * @param string $langid    The identifier of the lang string
+ * 
+ * @return array
+ * 
+ */
+function i18n_get_all_translations(string $langid): array
+    {
+    global $languages, $lang;
+    $alltranslations = [];
+    foreach($languages as $langcode=>$availlanguage)
+        {
+        if ($langcode!="en")
+            {
+            if (substr($langcode, 2, 1)!='-')
+                {
+                $langcode = substr($langcode, 0, 2);
+                }
+            
+            $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                include dirname(__FILE__)."/../languages/" . safe_file_name($langcode) . ".php";
+                }
+            catch (Throwable $e)
+                {
+                debug("Unable to include language file $langcode.php");
+                }
+            $GLOBALS["use_error_exception"] = $use_error_exception_cache;
+            }
+        $alltranslations[$langcode] = $lang[$langid];
+        }
+    return $alltranslations;
+    }

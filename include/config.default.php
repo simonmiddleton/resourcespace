@@ -1065,22 +1065,6 @@ $simple_search_pills_view = false;
 # $custom_top_nav[1]['modal']=true;
 
 
-# Use original filename when downloading a file?
-$original_filenames_when_downloading=true;
-
-# Should the download filename have the size appended to it?
-$download_filenames_without_size = false;
-
-# When $original_filenames_when_downloading, should the original filename be prefixed with the resource ID?
-# This ensures unique filenames when downloading multiple files.
-# WARNING: if switching this off, be aware that when downloading a collection as a zip file, a file with the same name as another file in the collection will overwrite that existing file. It is therefore advisiable to leave this set to 'true'.
-$prefix_resource_id_to_filename=true;
-
-# When using $prefix_resource_id_to_filename above, what string should be used prior to the resource ID?
-# This is useful to establish that a resource was downloaded from ResourceSpace and that the following number
-# is a ResourceSpace resource ID.
-$prefix_filename_string="RS";
-
 # Display a 'new' flag next to new themes (by default themes created < 2 weeks ago)
 # Note: the age take days as parameter. Anything less than that would mean that a theme becomes old after a few hours which is highly unlikely.
 $flag_new_themes     = true;
@@ -2500,13 +2484,6 @@ $keyboard_scroll_jump=false;
 # How long until the Loading popup appears during an ajax request (milliseconds)
 $ajax_loading_timer=500;
 
-#Option for downloaded filename to be just <resource id>.extension, without indicating size or whether an alternative file. Will override $original_filenames_when_downloading which is set as default
-$download_filename_id_only = false;
-
-# Append the size to the filename when downloading
-# Required: $download_filename_id_only = true;
-$download_id_only_with_size = false;
-
 # Allow searching by the 'contributed by' field (this no longer actually requires indexing)?
 $index_contributed_by=false;
 
@@ -2988,17 +2965,21 @@ $iiif_enabled = false;
 // Field that is used to hold the IIIF identifier e.g. if using TMS this may be the same as the TMS object field
 // $iiif_identifier_field = 29;
 
-// Field that is used to hold the IIIF description
+// Field that is used to hold the IIIF summary. See https://iiif.io/api/presentation/3.0/#summary
 // $iiif_description_field = 0;
 
-// Field that contains license information about the resource
+// Field that contains license information about the resource. See https://iiif.io/api/presentation/3.0/#requiredstatement
 // $iiif_license_field = 0;
 
 // Field that defines the position of a particular resource in the default sequence (only one sequence currently supported)
 // $iiif_sequence_field = 1;
 
-// Optional prefix that will be added to sequence identifier - useful if just numeric identifers are used e.g. for different views or pages 
+// Deprecated option. The prefix that indictaes the position will now use the name of the resource type field 
 // $iiif_sequence_prefix = "View ";
+
+// Optional rights text: This value must be a valid value - see https://iiif.io/api/presentation/3.0/#rights for more information
+// $iiif_rights_statement = "http://creativecommons.org/publicdomain/mark/1.0/";
+
 //
 // $iiif_custom_sizes
 // Set to true to support Mirador/Universal viewer that requires the ability to request arbitrary sizes by 'w,', ',h' 
@@ -3061,8 +3042,29 @@ $facial_recognition_face_recognizer_models_location = '';
     echo $config . "#" . md5($remote_config_key . $config);
 
  */
-# $remote_config_url="http://remote-config.mycompany.com";
-# $remote_config_key=""; # The baseurl will be hashed with this key and passed as an &sign= value.
+// $remote_config_url="http://remote-config.mycompany.com";
+// $remote_config_key=""; # The baseurl will be hashed with this key and passed as an &sign= value.
+// 
+// $remote_config_function, $remote_config_decode 
+//
+// These are optional callable to use a more secure remote configuration setup by creating a custom function e.g to access an API.
+// This will be passed two parameters:  the $remote_config_url and the host e.g. resourcespace.acmeorg.com to enable construction of the final remote config URL to be dynamic
+/*
+ * Example:
+
+ $remote_config_function = function($url,$host)
+    {
+    $remote_config_query_params["function"] = "foo"; // API function name
+    $remote_config_query_params["param1"] = "host=$host"; // query params, e.g. using $host
+    $remote_config_query_params["sign"] = [to sign request]
+    return $url . "?" . http_build_query($remote_config_query_params);
+    };
+
+$remote_config_decode = function($config)
+    {
+    return json_decode($config);
+    }
+ */
 
 // Option to allow administrators to change the value of the 'contributed by' user for a resource.
 $edit_contributed_by = false;
@@ -3114,9 +3116,6 @@ $user_purge_disable = false;
 // Option to automatically disable inactive users after a set number of days (requires cron.php task to be setup)
 $inactive_user_disable_days = 0;
 
-# Option to select metadata field that will be used for downloaded filename (do not include file extension)
-#$download_filename_field=8;
-
 /*
 Ability to generate an automated title using a specific format. Allows to generate a title using a combination between the 
 resource title, its ID and file extension.
@@ -3130,11 +3129,6 @@ Example:
     $auto_generated_resource_title_format = '%title-%resource.%extension';
     $auto_generated_resource_title_format = '2018-2019P - %resource.%extension';
     $auto_generated_resource_title_format = 'Photos - %resource.%extension';
-
-To get the title as the filename on download, the following settings should be set:
-$download_filename_field = 8; # Set this to the $view_title_field value
-$prefix_filename_string = "";
-$prefix_resource_id_to_filename = false;
 */
 $auto_generated_resource_title_format = '';
 
@@ -3415,3 +3409,26 @@ $high_contrast_mode = false;
 # Number of hours before the access key for a URL obtained by the API call get_resource_path() expires.
 # WARNING: This should ideally not be set to an excessively high value in order to improve system security.
 $api_resource_path_expiry_hours = 24;
+
+/* 
+Format the download file name.
+
+Available placeholders:
+- %resource -> resource ref (ID)
+- %extension -> jpg, png etc
+- %filename -> the actual original/alternative file name
+- %fieldXX -> where XX is the actual metadata field ID (technical terms: resource_type_field).
+    If the user doesn't have permission to view the field, then blank (empty string) will be used instead.
+- %size -> scr, pre etc. Note: when applicable, an underscore will be automatically prefxed
+- %alternative -> alternative ref (ID). Note: when applicable, an underscore will be automatically prefxed
+*/
+$download_filename_format = DEFAULT_DOWNLOAD_FILENAME_FORMAT;
+
+# Location of web app manifest file
+$web_app_manifest_location = "/manifest.json";
+
+/*
+Configure the cache adaptor for the internal library TUS used for upload (Uppy).
+For production systems where APCu isn't available use "redis" instead. To install check out https://redis.io
+*/
+$vendor_tus_cache_adapter = 'file';

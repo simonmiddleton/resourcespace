@@ -205,6 +205,22 @@ $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basic
 var categoryTreeChecksArray = [];
 </script>
 <div id="SearchBox">
+    <div id="SearchBarTabsContainer">
+        <a href="#" onclick="selectSearchBarTab('search');">
+            <div class="SearchBarTab SearchTab SearchBarTabSelected">
+                <i class="fa-solid fa-fw fa-magnifying-glass"></i>
+                <?php echo htmlspecialchars($lang["searchbutton"]); ?>
+            </div>
+        </a>
+        <?php if ($browse_bar) { ?>
+            <a href="#" onclick="selectSearchBarTab('browse');" >
+                <div class="SearchBarTab BrowseTab">
+                    <i class="fa-solid fa-fw fa-list"></i>
+                    <?php echo htmlspecialchars($lang["browse_bar_text"]); ?>
+                </div>
+            </a>
+        <?php } ?>
+    </div>
 
 <?php hook("searchbarbeforeboxpanel"); ?>
 
@@ -462,7 +478,7 @@ elseif($restypes=='')
 
     if(!$basic_simple_search)
         {
-        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"".$lang['clearbutton']."\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short ."');";
+        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"". escape_quoted_data($lang['clearbutton'])."\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short ."');";
 
         if($simple_search_pills_view)
             {
@@ -484,19 +500,19 @@ elseif($restypes=='')
         {
         if(!$simple_search_pills_view)
             {
-            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . $lang['clearbutton'] . '" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
+            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape_quoted_data($lang['clearbutton']) . '" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
             }
         else
             {
-            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . $lang['clearbutton'] . '" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
+            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape_quoted_data($lang['clearbutton']) . '" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
             }
         }
 
-    $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"". $lang['searchbutton']."\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
+    $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"". escape_quoted_data($lang['searchbutton'])."\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
 
     if($responsive_ui)
         {
-        $searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . $lang['responsive_more'] . '">';
+        $searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . escape_quoted_data($lang['responsive_more']) . '">';
         }
 
     hook('extra_search_buttons');
@@ -955,6 +971,12 @@ elseif($restypes=='')
     </div>
 <?php } ?>
 
+<?php
+if($browse_bar && checkperm("s") === true)
+    {
+    render_browse_bar();
+    } ?>
+
 </div>
 <?php
 if ($simple_search_pills_view)
@@ -975,6 +997,19 @@ if ($simple_search_pills_view)
     }
 
 hook("searchbarbottom");
+
+global $selected_search_tab, $browse_on;
+if ($selected_search_tab == "browse" && $browse_on)
+    {
+    ?>
+    <script>
+        jQuery(document).ready(function ()
+            {
+            selectSearchBarTab('browse');
+            });
+    </script>
+    <?php
+    }
 
 # Restore original values that may have been affected by processsing so the search page still draws correctly with the current search.
 $restypes=$stored_restypes;

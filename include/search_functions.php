@@ -70,7 +70,7 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         && !in_array($date_field, $hiddenfields))
         {
         $date_field_data = get_resource_type_field($date_field);
-        if (!is_array($date_field_data))
+        if (!is_array($date_field_data) || is_null($date_field_data['ref']))
             {
             debug("WARNING: Invalid \$date_field specified in config : " . $date_field);
             return $return;
@@ -3348,5 +3348,32 @@ function setup_search_chunks($fetchrows, ?int &$chunk_offset, ?int &$search_chun
         {
         $chunk_offset = 0;
         $search_chunk_size = (int)$fetchrows;
+        }
+    }
+
+/**
+ * Log which keywords are used in a search 
+ * 
+ * @param array $keywords           refs of keywords used in a search
+ * @param array $search_results     result of the search
+ */
+function log_keyword_usage($keywords, $search_result)
+    {
+    if(is_array($keywords) && count($keywords) > 0)
+        {
+        if(array_key_exists('total', $search_result))
+            {
+            $count = $search_result['total'];
+            }
+        elseif(is_array($search_result))
+            {
+            $count = count($search_result);
+            }
+            
+        $log_code = (!isset($count) || $count > 0 ? 'Keyword usage' : 'Keyword usage - no results found');
+        foreach($keywords as $keyword)
+            {
+            daily_stat($log_code, $keyword);
+            }
         }
     }

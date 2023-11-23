@@ -11,33 +11,6 @@ include_once "../../include/authenticate.php";
 header("Content-type: text/javascript");
 ?>
 
-function ToggleBrowseBar(forcestate, noresize) 
-	{
-    console.debug("ToggleBrowseBar(forcestate = %o, noresize = %o)", forcestate, noresize);
-    var browseopen = (typeof browse_show === "undefined" || browse_show == 'hide') || (forcestate !== "undefined" && forcestate == 'open')
-    console.debug("browseopen = %o", browseopen);
-	if (browseopen)
-		{
-        jQuery('#BrowseBar').show();
-		if(typeof noresize === 'undefined' || noresize == false)
-            {
-            myLayout.sizePane("west", 295);
-            jQuery('#BrowseBarContent').width(browse_width-40);
-            }
-		browse_show = 'show';
-        SetCookie('browse_show', 'show');
-        ModalCentre();
-        }
-	else
-		{	
-    	jQuery('#BrowseBar').hide();
-		myLayout.sizePane("west", 30);
-		browse_show = 'hide';
-		SetCookie('browse_show', 'hide');
-		}
-    jQuery(document).trigger("resize");
-	}
-
 function renderBrowseItem(node, parent)
     {
     console.debug("Calling renderBrowseItem(node = %o, parent = %o)", node, parent);
@@ -367,6 +340,7 @@ function BrowseBarInit()
 
         drop: function(event, ui)
             {
+            // Get the dragged resource id
             dropped = jQuery(ui.draggable);
             var resource_id = dropped.attr("id");
             resource_id = resource_id.replace("ResourceShell", "");
@@ -404,7 +378,7 @@ function BrowseBarInit()
                 case 'FC':
                 case 'C':
                     cid = item_elements[item_elements.length - 1].replace('C:','');
-                    AddResourceToCollection(event,resource_id,'', cid);
+                    AddResourceToCollection(event, ui, resource_id, '', cid);
                     jQuery(this).find(".BrowseBarLink a").fadeTo(100, 0.3, function() { jQuery(this).fadeTo(500, 1.0); });
                     break;
                 default:
