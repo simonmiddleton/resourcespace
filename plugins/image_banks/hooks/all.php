@@ -3,7 +3,7 @@
 use function ImageBanks\getProviders;
 use function ImageBanks\providersCheckedAndActive;
 
-function HookImage_banksAllExtra_warn_checks()
+function HookImage_banksAllExtra_checks()
     {
     $errors = [];
     $providers = getProviders($GLOBALS['image_banks_loaded_providers']);
@@ -19,14 +19,15 @@ function HookImage_banksAllExtra_warn_checks()
 
     if ($errors !== [])
         {
-        return [[
-            'name' => 'image_banks',
+        $message['image_banks'] = [
+            'status' => 'FAIL',
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
             'info' => $GLOBALS['lang']['image_banks_system_unmet_dependencies'],
             'details' => $errors,
-        ]];
+        ];
+        return $message;
         }
-
-    return false;
     }
 
 function HookImage_banksAllSearchfiltertop()

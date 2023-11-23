@@ -479,7 +479,7 @@ const SYSTEM_REQUIRED_PHP_MODULES = [
     'intl' => 'locale_get_default',
     'json' => 'json_decode',
     'zip' => 'zip_open',
-    'apcu' => 'apcu_fetch',
+
     'dom' => 'dom_import_simplexml',
     'mysqli' => 'mysqli_init',
 ];
@@ -857,3 +857,8 @@ const API_NATIVE_WHITELIST = [
 ];
 
 const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource_%filename%size.%extension';
+
+// get_system_status() severity types
+define ('CRITICAL', 0);
+define ('WARNING', 1);
+define ('NOTICE', 2);

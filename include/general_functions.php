@@ -4510,15 +4510,16 @@ function get_system_status()
         'results' => [
             // Example of a test result
             // 'name' => [
-            //     'status' => 'OK/FAIL/WARNING',
+            //     'status' => 'OK/FAIL',
             //     'info' => 'Any relevant information',
+            //     'severity' => 'CRITICAL/WARNING/NOTICE'
+            //     'severity_text' => Text for severity using language strings e.g. $GLOBALS["lang"]["severity-level_" . CRITICAL]
             // ]
         ],
         'status' => 'FAIL',
     ];
-    $warn_tests = 0;
+    $fail_tests = 0;
     $rs_root = dirname(__DIR__);
-
 
     // Checking requirements must be done before db.php. If that's the case always stop after testing for required PHP modules
     // otherwise the function will break because of undefined global variables or functions (as expected).
@@ -4543,6 +4544,8 @@ function get_system_status()
         $return['results']['required_php_modules'] = [
             'status' => 'FAIL',
             'info' => 'Missing PHP modules: ' . implode(', ', $missing_modules),
+            'severity' => CRITICAL,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . CRITICAL],
         ];
 
         // Return now as this is considered fatal to the system. If not, later checks might crash process because of missing one of these modules.
@@ -4553,22 +4556,19 @@ function get_system_status()
         return ['results' => [], 'status' => 'OK'];
         }
 
+    // Check PHP version is supported
+    if (PHP_VERSION_ID < PHP_VERSION_SUPPORTED)
+        {
+        $return['results']['php_version'] = [
+            'status' => 'FAIL',
+            'info' => 'PHP version not supported',
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
+        ];
+        ++$fail_tests;
+        }
 
     // Check configured utility paths
-    $system_utilities = [
-        'im-convert' => 'imagemagick_path',
-        'im-identify' => 'imagemagick_path',
-        'im-composite' => 'imagemagick_path',
-        'im-mogrify' => 'imagemagick_path',
-        'ghostscript' => 'ghostscript_path',
-        'ffmpeg' => 'ffmpeg_path',
-        'ffprobe' => 'ffmpeg_path',
-        'exiftool' => 'exiftool_path',
-        'php' => 'php_path',
-        'python' => 'python_path',
-        'archiver' => 'archiver_path',
-        'fits' => 'fits_path',
-    ];
     $missing_utility_paths = [];
     foreach(RS_SYSTEM_UTILITIES as $sysu_name => $sysu)
         {
@@ -4585,6 +4585,8 @@ function get_system_status()
             'info' => 'Unable to get utility path',
             'affected_utilities' => array_unique(array_keys($missing_utility_paths)),
             'affected_utility_paths' => array_unique(array_values($missing_utility_paths)),
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
         ];
 
         return $return;
@@ -4598,11 +4600,26 @@ function get_system_status()
         $return['results']['database_connection'] = [
             'status' => 'FAIL',
             'info' => 'SQL query produced unexpected result',
+            'severity' => CRITICAL,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . CRITICAL],
         ];
 
         return $return;
         }
 
+    // Check database encoding.
+    global $mysql_db;
+    $db_encoding = ps_value("SELECT default_character_set_name AS `value` FROM information_schema.SCHEMATA WHERE `schema_name` = ?;", array("s",$mysql_db), '');
+    if (substr(strtolower($db_encoding), 0, 4) != 'utf8')
+        {
+        $return['results']['database_encoding'] = [
+            'status' => 'FAIL',
+            'info' => 'Database encoding is not utf8',
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
+        ];
+        ++$fail_tests;
+        }
 
     // Check write access to filestore
     if(!is_writable($GLOBALS['storagedir']))
@@ -4610,6 +4627,8 @@ function get_system_status()
         $return['results']['filestore_writable'] = [
             'status' => 'FAIL',
             'info' => '$storagedir is not writeable',
+            'severity' => CRITICAL,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . CRITICAL],
         ];
 
         return $return;
@@ -4623,6 +4642,8 @@ function get_system_status()
         $return['results']['create_file_in_filestore'] = [
             'status' => 'FAIL',
             'info' => 'Unable to write to configured $storagedir. Folder permissions are: ' . fileperms($GLOBALS['storagedir']),
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
         ];
 
         return $return;
@@ -4633,6 +4654,8 @@ function get_system_status()
         $return['results']['filestore_file_exists_and_is_readable'] = [
             'status' => 'FAIL',
             'info' => 'Hash not saved or unreadable in file ' . $file,
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
         ];
 
         return $return;
@@ -4649,11 +4672,13 @@ function get_system_status()
         catch (Throwable $t)
             {
             $return['results']['filestore_file_delete'] = [
-                'status' => 'WARNING',
+                'status' => 'FAIL',
                 'info' => sprintf('Unable to delete file "%s". Reason: %s', $file, $t->getMessage()),
+                'severity' => WARNING,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
             ];
 
-            ++$warn_tests;
+            ++$fail_tests;
             }
         $GLOBALS['use_error_exception'] = false;
         }
@@ -4662,6 +4687,8 @@ function get_system_status()
         $return['results']['filestore_file_check_hash'] = [
             'status' => 'FAIL',
             'info' => sprintf('Test write to disk returned a different string ("%s" vs "%s")', $hash, $check),
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
         ];
 
         return $return;
@@ -4675,6 +4702,8 @@ function get_system_status()
         $return['results']['filestore_indexed'] = [
             'status' => 'FAIL',
             'info' => $cfb['info'],
+            'severity' => CRITICAL,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . CRITICAL],
         ];
         return $return;
         }
@@ -4690,8 +4719,9 @@ function get_system_status()
             $return['results']['mysql_log_location'] = [
                 'status' => 'FAIL',
                 'info' => 'Invalid $mysql_log_location specified in config file',
+                'severity' => CRITICAL,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . CRITICAL],
             ];
-
             return $return;
             }
         }
@@ -4703,23 +4733,23 @@ function get_system_status()
     if(!is_writeable($debug_log_dir) || (file_exists($debug_log_location) && !is_writeable($debug_log_location)))
         {
         $debug_log = isset($GLOBALS['debug_log']) && $GLOBALS['debug_log'];
-        $debug_log_location_test_status = ($debug_log ? 'FAIL' : 'WARNING');
-
         $return['results']['debug_log_location'] = [
-            'status' => $debug_log_location_test_status,
+            'status' => 'FAIL',
             'info' => 'Invalid $debug_log_location specified in config file',
         ];
 
         if($debug_log)
             {
+            $return['results']['debug_log_location']['severity'] = CRITICAL;
+            $return['results']['debug_log_location']['severity_text'] = $GLOBALS["lang"]["severity-level_" . CRITICAL];
             return $return;
             }
         else
             {
-            ++$warn_tests;
+            ++$fail_tests;
             }
         }
-
+        
 
     // Check that the cron process executed within the last day (FAIL)
     $last_cron = strtotime(get_sysvar('last_cron', ''));
@@ -4727,9 +4757,12 @@ function get_system_status()
     if($diff_days > 1.5)
         {
         $return['results']['cron_process'] = [
-            'status' => 'WARNING',
+            'status' => 'FAIL',
             'info' => 'Cron was executed ' . round($diff_days, 1) . ' days ago.',
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
         ];
+        ++$fail_tests;
         }
 
 
@@ -4737,13 +4770,26 @@ function get_system_status()
     $avail = disk_total_space($GLOBALS['storagedir']);
     $free = disk_free_space($GLOBALS['storagedir']);
     $calc = $free / $avail;
-    if($calc < 0.05)
+
+    if($calc < 0.01)
         {
         $return['results']['free_disk_space'] = [
-            'status' => 'WARNING',
-            'info' => 'Less than 5% disk space free.',
+            'status' => 'FAIL',
+            'info' => 'Less than 1% disk space free.',
+            'severity' => CRITICAL,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . CRITICAL],
         ];
-        ++$warn_tests;
+        return $return;
+        }
+    else if($calc < 0.05)
+        {
+        $return['results']['free_disk_space'] = [
+            'status' => 'FAIL',
+            'info' => 'Less than 5% disk space free.',
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
+        ];
+        ++$fail_tests;
         }
 
 
@@ -4754,21 +4800,36 @@ function get_system_status()
         $used = get_total_disk_usage(); # Total usage in bytes
         $percent = ceil(((int) $used / $avail) * 100);
 
-        if($percent >= 95 && $percent <= 100)
+        if($percent >= 95 && $percent < 99)
             {
             $return['results']['quota_limit'] = [
-                'status' => 'WARNING',
+                'status' => 'FAIL',
                 'info' => $percent . '% used - nearly full.',
-                'avail' => $avail, 'used' => $used, 'percent' => $percent
+                'avail' => $avail, 'used' => $used, 'percent' => $percent,
+                'severity' => WARNING,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
             ];
-            ++$warn_tests;
+            ++$fail_tests;
             }
-        else if($percent > 100)
+        else if($percent >= 99 && $percent < 100)
+            {
+            $return['results']['quota_limit'] = [
+                'status' => 'FAIL',
+                'info' => $percent . '% used - nearly full.',
+                'avail' => $avail, 'used' => $used, 'percent' => $percent,
+                'severity' => CRITICAL,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . CRITICAL],
+            ];
+            return $return;
+            }
+        else if($percent >= 100)
             {
             $return['results']['quota_limit'] = [
                 'status' => 'FAIL',
                 'info' => $percent . '% used - over quota.',
-                'avail' => $avail, 'used' => $used, 'percent' => $percent
+                'avail' => $avail, 'used' => $used, 'percent' => $percent,
+                'severity' => CRITICAL,
+                'severity_text' => $GLOBALS["lang"]["severity-level_" . CRITICAL],
             ];
             return $return;
             }
@@ -4781,20 +4842,6 @@ function get_system_status()
             ];
             }
         }
-
-
-    // Check if plugins have their tests FAILed
-    $extra_fail_checks = hook('extra_fail_checks');
-    if($extra_fail_checks !== false && is_array($extra_fail_checks))
-        {
-        $return['results'][$extra_fail_checks['name']] = [
-            'status' => 'FAIL',
-            'info' => $extra_fail_checks['info'],
-        ];
-
-        return $return;
-        }
-
 
     // Return the version number
     $return['results']['version'] = [
@@ -4850,33 +4897,43 @@ function get_system_status()
     ];
 
     // Check if plugins have any warnings
-    $extra_warn_checks = hook('extra_warn_checks');
-    if($extra_warn_checks !== false && is_array($extra_warn_checks) )
+    $extra_checks = hook('extra_checks');
+    if($extra_checks !== false && is_array($extra_checks))
         {
-        foreach ($extra_warn_checks as $extra_warn_check)
+        foreach ($extra_checks as $check_name => $extra_check)
             {
-            $return['results'][$extra_warn_check['name']] = [
-                'status' => 'WARNING',
-                'info' => $extra_warn_check['info'],
+            $return['results'][$check_name] = [
+                'status' => $extra_check['status'],
+                'info' => $extra_check['info'],
                 ];
+            if (isset($extra_check['severity']))
+                {
+                // Severity is optional and may not be returned by some plugins
+                $return['results'][$check_name]['severity'] = $extra_check['severity'];
+                $return['results'][$check_name]['severity_text'] = $GLOBALS["lang"]["severity-level_" .  $extra_check['severity']];
+                }
 
-            $warn_details = $extra_warn_check['details'] ?? [];
+            $warn_details = $extra_warn['details'] ?? [];
             if ($warn_details !== [])
                 {
-                $return['results'][$extra_warn_check['name']]['details'] = $warn_details;
+                $return['results'][$check_name]['details'] = $warn_details;
+                }
+
+            if ($extra_check['status'] == 'FAIL')
+                {
+                ++$fail_tests;
                 }
             }
         }
 
-    if($warn_tests > 0)
+    if($fail_tests > 0)
         {
-        $return['status'] = 'WARNING';
+        $return['status'] = 'FAIL';
         }
     else
         {
         $return['status'] = 'OK';
         }
-
     return $return;
     }
 
