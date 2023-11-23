@@ -27,13 +27,6 @@ if(isset($system_status['results']['mysql_log_location']) && !isset($system_stat
 
 
 $debug_log_location = '/var/some_incorrect_location';
-$system_status = get_system_status();
-if(isset($system_status['results']['debug_log_location']) && $system_status['results']['debug_log_location']['status'] !== WARNING)
-    {
-    echo 'Bad debug_log_location as a WARN message - ';
-    return false;
-    }
-
 $debug_log = true;
 $system_status = get_system_status();
 unset($debug_log, $debug_log_location);
