@@ -13,12 +13,12 @@ function HookConditional_termsAllExtra_checks()
 
     if(!conditional_terms_config_check())
         {
-        return [[
-            'name' => 'conditional_terms',
-            'status' => 'WARNING',
+        $message['conditional_terms'] = [
+            'status' => 'FAIL',
             'info' => $lang['conditional_terms_plugin_misconfigured'],
-        ]];
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
+            ];
+        return $message;
         }
-
-    return false;
     }

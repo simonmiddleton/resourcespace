@@ -4903,17 +4903,17 @@ function get_system_status()
     $extra_checks = hook('extra_checks');
     if($extra_checks !== false && is_array($extra_checks))
         {
-        foreach ($extra_checks as $extra_check)
+        foreach ($extra_checks as $check_name => $extra_check)
             {
-            $return['results'][$extra_check['name']] = [
+            $return['results'][$check_name] = [
                 'status' => $extra_check['status'],
                 'info' => $extra_check['info'],
                 ];
             if (isset($extra_check['severity']))
                 {
                 // Severity is optional and may not be returned by some plugins
-                $return['results'][$extra_check['name']]['severity'] = $extra_check['severity'];
-                $return['results'][$extra_check['name']]['severity_text'] = $GLOBALS["lang"]["severity-level_" .  $extra_check['severity']];
+                $return['results'][$check_name]['severity'] = $extra_check['severity'];
+                $return['results'][$check_name]['severity_text'] = $GLOBALS["lang"]["severity-level_" .  $extra_check['severity']];
                 }
             }
         }

@@ -1,7 +1,7 @@
 <?php
 include_once dirname(__FILE__) . '/../include/emu_api.php';
 
-function HookEmuAllExtra_warn_checks()
+function HookEmuAllExtra_checks()
     {
     $GLOBALS['use_error_exception'] = true;
     try
@@ -10,12 +10,13 @@ function HookEmuAllExtra_warn_checks()
         }
     catch(Throwable $t)
         {
-        return [[
-            'name' => 'emu',
+        $message['emu'] = [
+            'status' => 'FAIL',
             'info' => "{$GLOBALS['lang']['emu_configuration']}: {$t->getMessage()}",
-        ]];
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
+            ];
+        return $message;
         }
     unset($GLOBALS['use_error_exception']);
-
-    return false;
     }

@@ -696,7 +696,6 @@ function HookSimplesamlAllExtra_checks()
 
     // Check if incompatible with PHP version
     $simplesaml_php_check = [
-        'name' => 'simplesaml_php',
         'status' => 'FAIL',
         'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'] . ' PHP',
         'severity' => CRITICAL,
@@ -708,18 +707,17 @@ function HookSimplesamlAllExtra_checks()
         {
         if (!simplesaml_php_check())
             {
-            $return[] = $simplesaml_php_check;
+            $return['simplesaml_php'] = $simplesaml_php_check;
             }
         }
     catch (Exception $e)
         {
-        $return[] = $simplesaml_php_check;
+        $return['simplesaml_php_exception'] = $simplesaml_php_check;
         }
     unset($GLOBALS['use_error_exception']);
 
     // Check if SAML library needs updating (if pre-9.7 SP not using ResourceSpace config)
     $simplesaml_config_check = [
-        'name' => 'simplesaml_config',
         'status' => 'FAIL',
         'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
         'severity' => NOTICE
@@ -730,21 +728,17 @@ function HookSimplesamlAllExtra_checks()
         {
         if (!simplesaml_config_check())
             {
-            $return[] = $simplesaml_config_check;
+            $return['saml_config_check'] = $simplesaml_config_check;
             }
         }
     catch (Exception $e)
         {
-        $return[] = $simplesaml_config_check;
+        $return['saml_config_exception'] = $simplesaml_config_check;
         }
     unset($GLOBALS['use_error_exception']);
 
     if (count($return) > 0)
         {
         return $return;
-        }
-    else
-        {
-        return false;
         }
     }
