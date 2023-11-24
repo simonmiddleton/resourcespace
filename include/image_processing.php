@@ -1875,7 +1875,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
                 $profile='';
-                if($icc_extraction && file_exists($iccpath) && !$icc_transform_complete && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
+                if($icc_extraction && file_exists($iccpath) && !$icc_transform_complete && !$previewbased && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
                     {
                     global $icc_preview_profile_embed;
                     // we have an extracted ICC profile, so use it as source
