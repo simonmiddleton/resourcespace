@@ -3940,21 +3940,6 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
                 $tfparams .= " -flip ";
                 break;
 
-            case 'cio':
-                // Correcting an image orientation will always be carried out before applying any other transforms so a copy
-                // shouldn't discard previous changes. End users should always start with this if the orientation is wrong anyway.
-                $tmp_path = sprintf(
-                    '%s/transform_cio_sourcepath-%s.tmp.jpg',
-                    get_temp_dir(),
-                    get_checksum($sourcepath) ?: generateSecureKey(32)
-                );
-
-                if (copy($sourcepath, $tmp_path) && AutoRotateImage($tmp_path))
-                    {
-                    $sourcepath = $tmp_path;
-                    }
-                break;
-
             default:
                 // No transform action
                 break;
