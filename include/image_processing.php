@@ -1860,7 +1860,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     
                 # EXPERIMENTAL CODE TO USE EXISTING ICC PROFILE IF PRESENT
                 global $icc_extraction, $icc_preview_profile, $icc_preview_options,$ffmpeg_supported_extensions;
-                if ($icc_extraction){
+                if ($icc_extraction && !$previewbased){
                     $iccpath = get_resource_path($ref,true,'',false,'icc',-1,1,false,"",$alternative);
                     if (!file_exists($iccpath) && !isset($iccfound) && $extension!="pdf" && !in_array($extension,$ffmpeg_supported_extensions)) {
                         // extracted profile doesn't exist. Try extracting.
