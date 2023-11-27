@@ -1559,7 +1559,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
     {
     global $regexp_slash_replace, $migrate_data, $onload_message, $lang, $baseurl;
 
-    $sync_field = (int)$postdata["sync_field"] ?? 0;
+    $sync_field = isset($postdata["sync_field"]) ? (int)$postdata["sync_field"] : 0;
     $existingfield = get_resource_type_field($ref);
     $params= $syncparams = [];
 
