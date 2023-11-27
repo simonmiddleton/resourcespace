@@ -990,7 +990,7 @@ final class IIIFRequest {
                         {
                         $imgfound = true;
                         }
-                    elseif($this->custom_sizes && $this->request["region"] == "full" && $this->request["region"] == "max")
+                    elseif($this->custom_sizes && ($this->request["region"] == "full" || $this->request["region"] == "max"))
                         {
                         if(is_process_lock('create_previews_' . $resource["ref"] . "_" . $this->request["getsize"]))
                             {
