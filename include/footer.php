@@ -464,35 +464,8 @@ if (getval("ajax","") == "")
                 <?php
                 }
 
-            if($browse_on) 
-                {
-                $browsesize = $browse_show ? $browse_width : "30";
-                echo "
-                west__closable:false,
-                west__resizable:false,
-                west__liveContentResizing: true,
-                west__resizeContentWhileDragging: true,
-                west__spacing_open: 0,
-                west__minSize:30,
-                west__size: " . $browsesize . ",
-                ";
-                }?>
+			?>
             });
-        <?php
-        if($browse_on) 
-            {?>
-            window.onload = function()
-                {
-                if(document.getElementById('BrowseBarContainer'))
-                    {
-                    myLayout.sizePane("west", <?php echo $browsesize ?>);
-                    jQuery('#BrowseBarContainer').show();
-                    jQuery('#BrowseBarTab').show();
-                    jQuery('#BrowseBarContent').width(<?php echo $browsesize ?>-30);
-                    }
-                }
-                <?php
-                }?>
         </script>
         <?php
         }
@@ -552,7 +525,7 @@ if (getval("ajax","") == "")
 		if(jQuery(window).width() <= 1100)
 			{
 			jQuery('.ResponsiveViewFullSite').css('display', 'block');
-			SetCookie("browse_show","hide");
+			SetCookie("selected_search_tab", "search");
 			}
 		else
 			{
@@ -576,19 +549,13 @@ if (getval("ajax","") == "")
 
             newwidth = jQuery( window ).width();
 
-            if(lastWindowWidth > 1100 && newwidth < 1100 && (typeof browse_show === 'undefined' || browse_show != 'hide'))
-                {
-                // Set flag to prevent recursive loop
+			if(lastWindowWidth > 1100 && newwidth < 1100)
+				{
+				// Set flag to prevent recursive loop
                 rsresize = true;
-                ToggleBrowseBar();
-                rsresize = undefined;
-                }
-            else if(lastWindowWidth < 1100 && newwidth > 1100 && typeof browse_show !== 'undefined' && browse_show == 'show')
-                {
-                rsresize = true;
-                ToggleBrowseBar('open');
-                rsresize = undefined;
-                }
+				selectSearchBarTab('search');
+				rsresize = undefined;
+				}
             else if(lastWindowWidth > 900 && newwidth < 900)
                 {
                 rsresize = true;

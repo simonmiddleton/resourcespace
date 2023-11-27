@@ -111,7 +111,15 @@ if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"
 		# Cache not present or has expired.
 		# Fetch new config and store. Set a very low timeout of 2 seconds so the config server going down does not take down the site.
 		# Attempt to fetch the remote contents but suppress errors.
-        $rc_url = $remote_config_url . "?host=" . urlencode($host) . "&sign=" . md5($remote_config_key . $host);
+        if(isset($remote_config_function) && is_callable($remote_config_function))
+            {
+            $rc_url = $remote_config_function($remote_config_url,$host);
+            }
+        else
+            {
+            $rc_url = $remote_config_url . "?host=" . urlencode($host) . "&sign=" . md5($remote_config_key . $host);
+            }
+
         $ch=curl_init();
         $checktimeout=2;
         curl_setopt($ch, CURLOPT_URL, $rc_url);
@@ -125,7 +133,12 @@ if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"
             # Fetch remote config was a success.
             # Validate the return to make sure it's an expected config file
             # The last 33 characters must be a hash and the sign of the previous characters.
+            if(isset($remote_config_decode) && is_callable($remote_config_decode))
+                {
+                $r = $remote_config_decode($r);
+                }
             $sign=substr($r,-32); # Last 32 characters is a signature
+
             $r=substr($r,0,strlen($r)-33);
 
             if ($sign === md5($remote_config_key . $r))
@@ -154,6 +167,8 @@ if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"
 
 	# Load and use the config
 	eval($remote_config);
+    // Cleanup
+    unset($remote_config_function,$remote_config_url,$remote_config_key);
 	}
 
 if($system_download_config_force_obfuscation && !defined("SYSTEM_DOWNLOAD_CONFIG_FORCE_OBFUSCATION"))
@@ -427,7 +442,7 @@ if($facial_recognition)
 if(!$disable_geocoding) 
     {
     include_once __DIR__ . '/map_functions.php';
-    }    
+    }
 
 # Pre-load all text for this page.
 global $site_text;

@@ -1,9 +1,11 @@
 <?php
+
 namespace ImageBanks;
+
+use SplFileInfo;
 
 class Shutterstock extends Provider
     {
-
     function __construct(array $lang, string $temp_dir_path)
         {
         $this->id                = 2;
@@ -17,28 +19,27 @@ class Shutterstock extends Provider
         $this->temp_dir_path = $temp_dir_path;
         }
 
-    public function checkDependencies()
+    /** @inheritdoc */
+    public function checkDependencies(): array
         {
-            if (!function_exists('curl_version'))
+        if (!function_exists('curl_version'))
             {
-            return $this->lang["image_banks_error_detail_curl"];
+            return [$this->lang["image_banks_error_detail_curl"]];
             }
-            else
-            {
-            return true;
-            }
+        return [];
         }
 
-    public function buildConfigPageDefinition(array $page_def)
+    /** @inheritdoc */
+    public function buildConfigPageDefinition(array $page_def): array
         {
-        $page_def[] = \config_add_section_header($this->name);
         $page_def[] = \config_add_text_input('shutterstock_token', $this->lang["image_banks_shutterstock_token"],false,800,true);
         $page_def[] = \config_add_text_input('shutterstock_result_limit', $this->lang["image_banks_shutterstock_result_limit"]);
 
         return $page_def;
         }
 
-    public function runSearch($keywords, $per_page = 24, $page = 1)
+    /** @inheritdoc */
+    public function runSearch(string $keywords, int $per_page = 24, int $page = 1): ProviderSearchResults
         {
         if($per_page < 3)
             {
@@ -125,6 +126,12 @@ class Shutterstock extends Provider
             }
 
         return $provider_results;
+        }
+
+    /** @inheritdoc */
+    public function getDownloadFileInfo(string $file): SplFileInfo
+        {
+        return new SplFileInfo($file);
         }
 
 

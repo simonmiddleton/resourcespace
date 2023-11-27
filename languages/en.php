@@ -208,6 +208,7 @@ $lang["property-code"]="Code";
 $lang["property-operation"]="Operation";
 
 # Top navigation bar (also reused for page titles)
+$lang["mainmenu"] = "Main menu";
 $lang["logout"]="Log out";
 $lang["contactus"]="Contact us";
 # next line
@@ -1040,7 +1041,7 @@ $lang["collection_download_no_tar"] = "Standard archive download";
 $lang["collection_download_use_tar"] = "TAR archive";
 $lang["collection_download_tar_info"] = "TAR files will start downloading instantly. If you do not use this option you may find that your download is limited.";
 $lang["collection_download_tar_started"] = "TAR files will start downloading shortly.";
-$lang["collection_download_tar_applink"] = "Can't open TAR files? Get the open source 7-zip <a href='http://www.7-zip.org/download.html' target='_blank'>here</a>";
+$lang["collection_download_tar_applink"] = "Can't open TAR files? <a href='http://www.7-zip.org/download.html' target='_blank'>Get the open source 7-zip here</a>";
 $lang["downloadsize"]="Download size";
 $lang["existingkeywords"]="Existing keywords:";
 $lang["extrakeywords"]="Extra keywords";
@@ -1269,6 +1270,7 @@ $lang["setup-spiderpassword"]="Spider password";
 $lang["setup-paths"]="Paths";
 $lang["setup-pathsdetail"]="For each path, enter the path without a trailing slash to each binary.  To disable a binary, leave the path blank.  Any auto-detected paths have already been filled in.";
 $lang["setup-applicationname"]="Application name";
+$lang["setup-download_filename_format"] = "Download file name format";
 $lang["setup-if_mysqlserver"]='The IP address or <abbr title="Fully Qualified Domain Name">FQDN</abbr> of your MySQL server installation.  If MySql is installed on the same server as your web server, use "localhost".';
 $lang["setup-if_mysqlusername"]="The username used to connect to your MySQL server.  This user must have rights to create tables in the database named below.";
 $lang["setup-if_mysqlpassword"]= $lang["setup-if_mysql_read_only_password"] = "The password for the MySQL username entered above.";
@@ -2221,6 +2223,7 @@ $lang['send_collection_to_admin_collectionname'] = 'Collection name: ';
 $lang['send_collection_to_admin_numberofresources'] = 'Number of resources: ';
 
 # User group management
+$lang['user_group'] = "user group";
 $lang['page-title_user_group_management'] = "User groups";
 $lang['page-subtitle_user_group_management'] = "Use this section to add, remove and modify user groups.";
 $lang['action-title_create_user_group_called'] = "Create user group called...";
@@ -2498,6 +2501,8 @@ $lang['upgrade_available_title'] = 'Upgrade available';
 $lang['upgrade_available_text'] = 'View version information on the ResourceSpace website';
 $lang["upgrade_in_progress"] = "Upgrade in progress";
 $lang["upgrade_script"] = "Upgrade script";
+$lang['upgrade_026_notification'] = "The upgrade has deprecated some configuration options which your %entity% is overriding.\r\n\r\nTo continue having the download filename formatted as close as possible to the old way please update its configuration override with:\r\n\$download_filename_format = '%format%';";
+$lang['upgrade_026_error_unable_to_set_config_system_wide'] = "Unable to set system wide config option 'download_filename_format' to '%format%'. Please retry manually.";
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
@@ -2586,6 +2591,7 @@ $lang['userpreference_exiftool_write_metadata_label'] = 'Write embedded metadata
 $lang['userpreference_keyboard_navigation'] = 'Keyboard navigation';
 $lang['userpreference_tilenav']='Use a tile layout for the navigation menus';
 $lang['userpreference_tilenavdefault']='Use a tile layout for the navigation menus (default setting; users may change this)';
+$lang['userpreference_high_contrast_mode'] = 'Higher contrast mode';
 
 /* System Config */
 $lang['systemconfig'] = 'Configuration';
@@ -2894,6 +2900,7 @@ $lang['image_quality_40'] = "Very low";
 $lang['systemconfig_api'] = "API";
 $lang["iiif_enable_option"] = "Enable IIIF support";
 $lang["iiif_disabled"] = "IIIF is not configured";
+$lang["iiif"] = "IIIF";
 
 $lang["property-personal_data"]="May contain personal data";
 $lang["api-test-tool"]="API test tool";
@@ -3144,3 +3151,7 @@ $lang["user_pref_new_action_emails"]        = "Email me if new actions are creat
 
 $lang["email_rate_limit_active"] = "The maximum number of e-mails per hour sent by this system has been exceeded. E-mails are not currently being sent by this system.";
 $lang["email_rate_limit_inactive"] = "The e-mail limit has been lifted and e-mails are now being sent.";
+
+$lang["severity-level_0"]                   = "Critical";
+$lang["severity-level_1"]                   = "Warning";
+$lang["severity-level_2"]                   = "Notice";

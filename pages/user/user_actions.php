@@ -180,7 +180,7 @@ else
 			{
 			$actioneditlink = $baseurl_short . "pages/edit.php";
 			$actionviewlink = $baseurl_short . "pages/view.php";
-			$actionaddlink = add_to_collection_link($all_actions[$n]["ref"],'','','','fa fa-plus-circle');
+			$actionaddlink = add_to_collection_link($all_actions[$n]["ref"],'','','fa fa-plus-circle');
 			}
 		  elseif($all_actions[$n]["type"]=="resourcerequest")
 			{

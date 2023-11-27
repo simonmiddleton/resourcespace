@@ -19,5 +19,6 @@ else
   $return["message"]    = $lang["tms_link_tms_link_success"];
   }
 
+odbc_close($conn);
 echo json_encode($return);
 exit();

@@ -1814,7 +1814,7 @@ $lang["collection_download_no_tar"]='Vakiokokoelman lataus.';
 $lang["collection_download_use_tar"]='TAR-arkisto';
 $lang["collection_download_tar_info"]='TAR-tiedostot alkavat latautua välittömästi. Jos et käytä tätä vaihtoehtoa, saatat huomata, että lataus on rajoitettu.';
 $lang["collection_download_tar_started"]='TAR-tiedostot alkavat latautua pian.';
-$lang["collection_download_tar_applink"]='Etkö voi avata TAR-tiedostoja? Hanki avoimen lähdekoodin 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>täältä</a>.';
+$lang["collection_download_tar_applink"]='Etkö voi avata TAR-tiedostoja? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Hanki avoimen lähdekoodin 7-zip täältä</a>.';
 $lang["confirm_edit_all_selected_resources"]='Oletko varma, että haluat tallentaa? Tämä ylikirjoittaa valitun kentän(t) olemassa olevat arvot kaikille valituille resursseille.';
 $lang["resourcetypereordered"]='Resurssityypin järjestys muutettu.';
 $lang["resourcetypefieldreordered"]='Resurssityypin kentän järjestystä muutettu.';

@@ -68,12 +68,15 @@ function HookSimplesamlAllPreheaderoutput()
     $collection_from_search=str_replace('!collection', '', $search);
     $collection_add = getval('collection_add', '');
     $c = getval('c', '');
+    $parent = getval('parent', '');
 
     $collection_from_search = is_numeric($collection_from_search) ? (int)$collection_from_search : null;
 
     $collection_add = is_numeric($collection_add) ? (int)$collection_add : null;
 
     $c = is_numeric($c) ? (int)$c : null;
+
+    $parent = is_numeric($parent) ? (int) $parent : null;
 
     $resource = is_numeric($resource) ? (int)$resource : null;
 
@@ -94,6 +97,11 @@ function HookSimplesamlAllPreheaderoutput()
             return true;
             }
         if($resource && check_access_key($resource, $k))
+            {
+            return true;
+            }
+        // External sharing of a featured collection category
+        if ($parent && check_access_key_collection($parent, $k))
             {
             return true;
             }
@@ -690,46 +698,55 @@ function HookSimplesamlAllCheck_access_key()
     return false;
     }
 
-function HookSimplesamlAllExtra_fail_checks()
+function HookSimplesamlAllExtra_checks()
     {
+    $return = array();  // Array containing any errors / warnings found.
+
     // Check if incompatible with PHP version
-    $simplesaml_fail = [
-        'name' => 'simplesaml',
-        'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
+    $simplesaml_php_check = [
+        'status' => 'FAIL',
+        'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'] . ' PHP',
+        'severity' => CRITICAL,
+        'severity_text' => $GLOBALS["lang"]["severity-level_" . CRITICAL],
     ];
 
     $GLOBALS['use_error_exception'] = true;
     try
         {
-        $samlok = simplesaml_php_check();
+        if (!simplesaml_php_check())
+            {
+            $return['simplesaml_php'] = $simplesaml_php_check;
+            }
         }
     catch (Exception $e)
         {
-        return $simplesaml_fail;
+        $return['simplesaml_php_exception'] = $simplesaml_php_check;
         }
     unset($GLOBALS['use_error_exception']);
 
-    return $samlok ? false : $simplesaml_fail;
-    }
-
-function HookSimplesamlAllExtra_warn_checks()
-    {
     // Check if SAML library needs updating (if pre-9.7 SP not using ResourceSpace config)
-    $simplesaml_warn = [
-        'name' => 'simplesaml',
+    $simplesaml_config_check = [
+        'status' => 'FAIL',
         'info' => $GLOBALS['lang']['simplesaml_healthcheck_error'],
+        'severity' => NOTICE
     ];
 
     $GLOBALS['use_error_exception'] = true;
     try
         {
-        $samlok = simplesaml_config_check();
+        if (!simplesaml_config_check())
+            {
+            $return['saml_config_check'] = $simplesaml_config_check;
+            }
         }
     catch (Exception $e)
         {
-        return array($simplesaml_warn);
+        $return['saml_config_exception'] = $simplesaml_config_check;
         }
     unset($GLOBALS['use_error_exception']);
 
-    return $samlok ? false : array($simplesaml_warn);
+    if (count($return) > 0)
+        {
+        return $return;
+        }
     }

@@ -594,10 +594,23 @@ function ProcessFolder($folder)
                                             if(in_array($value, array_column($fieldnodes,"name")) || ($field_info['type']==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field)))
                                                 {
                                                 // Add this to array of nodes to add
-                                                $newnode = set_node(null, $field, trim($value), null, null);
-                                                echo " - Adding node" . trim($value) . "\n";
-                                                
+
+                                                if ($field_info['type'] == FIELD_TYPE_CATEGORY_TREE)
+                                                    {
+                                                    # Use value found in category tree
+                                                    $category_tree_values = array_filter($fieldnodes, function(array $fieldnodes) use ($value) {return ($value == $fieldnodes['name']);});
+                                                    $newnode = array_values($category_tree_values)[0]['ref']; # If multiple values found (category tree "leaves") we must pick one, taking first in array i.e. lowest node ref.
+                                                    echo " - Using category tree node $newnode - $value" . "\n";
+                                                    }
+                                                else
+                                                    {
+                                                    # Add new field for dynamic keywords list
+                                                    $newnode = set_node(null, $field, trim($value), null, null);
+                                                    echo " - Adding node" . trim($value) . "\n";
+                                                    }
+
                                                 $newnodes = array($newnode);
+
                                                 if($field_info['type']==FIELD_TYPE_CATEGORY_TREE && $category_tree_add_parents) 
                                                     {
                                                     // We also need to add all parent nodes for category trees

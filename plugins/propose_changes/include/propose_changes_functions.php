@@ -63,7 +63,7 @@ function save_proposed_changes($ref)
 
 					$newval="";
 					
-					if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf",""))!=="")
+					if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf", false))!==false)
 						{
 						// We have been passed the range in EDTF format, check it is in the correct format
 						$rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
@@ -89,8 +89,8 @@ function save_proposed_changes($ref)
 						
 						foreach($date_parts as $date_part)
 							{	
-							$val = getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_year","");
-							if (intval($val)<=0) 
+							$val = getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_year",false);
+							if ($val !== false && intval($val)<=0) 
 								{
 								$val="";
 								}
@@ -117,8 +117,8 @@ function save_proposed_changes($ref)
                     }
                 else if ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
                     {
-                    $val = getval("field_{$fields[$n]['ref']}", '');
-                    if(!validateDatetime($val, 'Y-m-d'))
+                    $val = getval("field_{$fields[$n]['ref']}", false);
+                    if($val !== false && !validateDatetime($val, 'Y-m-d'))
                         {
                         $errors[$fields[$n]["ref"]] = str_replace(
                             [' %row%', '%date%', '%field%'],
@@ -132,70 +132,77 @@ function save_proposed_changes($ref)
 					{
                     $include_time = $fields[$n]['type'] === FIELD_TYPE_DATE_AND_OPTIONAL_TIME;
                     # date type, construct the value from the date/time dropdowns
-                    $val=sprintf("%04d", getval("field_" . $fields[$n]["ref"] . "-y",""));
-                    if ((int)$val<=0) 
+                    $val = getval("field_" . $fields[$n]["ref"] . "-y",false);
+                    if($val !== false)
                         {
-                        $val="";
-                        }
-                    elseif (($field=getval("field_" . $fields[$n]["ref"] . "-m",""))!="") 
-                        {
-                        $val.="-" . $field;
-                        if (($field=getval("field_" . $fields[$n]["ref"] . "-d",""))!="") 
+                        $val = sprintf("%04d",$val);
+                        if (intval($val)<=0) 
+                            {
+                            $val="";
+                            }
+                        elseif (($field=getval("field_" . $fields[$n]["ref"] . "-m",""))!="") 
                             {
                             $val.="-" . $field;
-                            if (($field=getval("field_" . $fields[$n]["ref"] . "-h",""))!="")
+                            if (($field=getval("field_" . $fields[$n]["ref"] . "-d",""))!="") 
                                 {
-                                $val.=" " . $field . ":";
-                                if (($field=getval("field_" . $fields[$n]["ref"] . "-i",""))!="") 
+                                $val.="-" . $field;
+                                if (($field=getval("field_" . $fields[$n]["ref"] . "-h",""))!="")
                                     {
-                                    $val.=$field;
-									if (($field=getval("field_" . $fields[$n]["ref"] . "-s",""))!="") 
-										{
-										$val.=$field;
-										} 
-								     elseif($include_time)
-										{
-										$val.=":00";
-										}
-                                    } 
+                                    $val.=" " . $field . ":";
+                                    if (($field=getval("field_" . $fields[$n]["ref"] . "-i",""))!="") 
+                                        {
+                                        $val.=$field;
+                                        if (($field=getval("field_" . $fields[$n]["ref"] . "-s",""))!="") 
+                                            {
+                                            $val.=$field;
+                                            } 
+                                        elseif($include_time)
+                                            {
+                                            $val.=":00";
+                                            }
+                                        } 
+                                    elseif($include_time)
+                                        {
+                                        $val.="00:00";
+                                        }
+                                    }
                                 elseif($include_time)
                                     {
-                                    $val.="00:00";
+                                    $val.=" 00:00:00";
                                     }
                                 }
-                            elseif($include_time)
+                            else 
                                 {
-                                $val.=" 00:00:00";
+                                $val.="-00" . ($include_time?" 00:00:00":"");
                                 }
                             }
-                         else 
+                        else 
                             {
-                            $val.="-00" . ($include_time?" 00:00:00":"");
+                            $val.="-00-00" . ($include_time?" 00:00:00":"");
                             }
-                        }
-                    else 
-                        {
-                        $val.="-00-00" . ($include_time?" 00:00:00":"");
                         }
                     }
 				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
 					{
 					# Construct a multilingual string from the submitted translations
-					$val=getval("field_" . $fields[$n]["ref"],"");
-					$val="~" . $language . ":" . $val;
-					reset ($languages);
-					foreach ($languages as $langkey => $langname)
-						{
-						if ($language!=$langkey)
-							{
-							$val.="~" . $langkey . ":" . getval("multilingual_" . $n . "_" . $langkey,"");
-							}
-						}
+					$val=getval("field_" . $fields[$n]["ref"], false);
+                    if($val !== false)
+                        {
+                        $val="~" . $language . ":" . $val;
+                        reset ($languages);
+                        foreach ($languages as $langkey => $langname)
+                            {
+                            if ($language!=$langkey)
+                                {
+                                $val.="~" . $langkey . ":" . getval("multilingual_" . $n . "_" . $langkey,"");
+                                }
+                            }
+                        }
 					}
 				else
 					{
 					# Set the value exactly as sent.
-					$val=getval("field_" . $fields[$n]["ref"],"");
+					$val=getval("field_" . $fields[$n]["ref"],false);
 					} 
 				# Check for regular expression match
 				if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
@@ -277,7 +284,7 @@ function save_proposed_changes($ref)
                     }
                 }
 
-            if (str_replace("\r\n", "\n", $field_value??"") !== str_replace("\r\n", "\n", unescape($val)))
+            if ($val !== false && str_replace("\r\n", "\n", $field_value??"") !== str_replace("\r\n", "\n", unescape($val)))
                     {
                     if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                         {

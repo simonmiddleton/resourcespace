@@ -1044,7 +1044,7 @@ $lang["collection_download_no_tar"]='Download archivio standard.';
 $lang["collection_download_use_tar"]='Archivio TAR';
 $lang["collection_download_tar_info"]='I file TAR inizieranno a scaricarsi immediatamente. Se non si utilizza questa opzione, potrebbe verificarsi un limite di download.';
 $lang["collection_download_tar_started"]='I file TAR inizieranno a scaricarsi a breve.';
-$lang["collection_download_tar_applink"]='Non riesci ad aprire i file TAR? Scarica il software open source 7-zip <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>qui</a>.';
+$lang["collection_download_tar_applink"]='Non riesci ad aprire i file TAR? <a href=\'http://www.7-zip.org/download.html\' target=\'_blank\'>Scarica il software open source 7-zip qui</a>.';
 $lang["confirm_edit_all_selected_resources"]='Sei sicuro di voler salvare? Ciò sovrascriverà i valori esistenti per il/i campo/i selezionato/i per tutte le risorse selezionate.';
 $lang["confirmsubmitall"]='Sei sicuro di voler inviare tutto per la revisione? Ciò sovrascriverà il/ i valore/i esistente/i per il campo selezionato per tutte le risorse nella tua collezione corrente e le invierà tutte per la revisione.';
 $lang["confirmunsubmitall"]='Sei sicuro di voler annullare la presentazione di tutti gli elementi dal processo di revisione? Ciò sovrascriverà il/ i valore/i esistente/i per il/i campo/i selezionato/i per tutte le risorse nella tua collezione corrente e annullerà la presentazione di tutte le risorse dalla revisione.';

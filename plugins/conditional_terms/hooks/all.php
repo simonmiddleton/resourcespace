@@ -7,17 +7,18 @@ function HookConditional_termsAllInitialise()
     }
 
 
-function HookConditional_termsAllExtra_warn_checks()
+function HookConditional_termsAllExtra_checks()
     {
     global $lang;
 
     if(!conditional_terms_config_check())
         {
-        return [[
-            'name' => 'conditional_terms',
+        $message['conditional_terms'] = [
+            'status' => 'FAIL',
             'info' => $lang['conditional_terms_plugin_misconfigured'],
-        ]];
+            'severity' => WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
+            ];
+        return $message;
         }
-
-    return false;
     }

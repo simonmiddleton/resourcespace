@@ -150,16 +150,71 @@ else
     }
 ?>
 
-    <?php if ($type!="summary") { ?><div id="placeholder<?php echo $type . $n ?>"
-
-    <?php if ($from_dash) { ?>
-    style="width:220px;height:105px;"
-    <?php } else { ?>
-    style="width:100%;height:80%;"
-    <?php } ?>
-
-    ></div><?php
-    }
+    <?php if ($type!="summary") { 
+        $id ="placeholder" . $type . $n; 
+        ?><!-- Start chart canvas -->
+        <div
+        <?php if ($from_dash) { ?>
+        style="width:220px;height:105px;"
+        <?php } else { ?>
+        style="width:100%;height:80%;"
+        <?php } ?>>
+        <?php if ($type == 'line') { ?>
+        <script>
+            const chartstyling<?php echo $id?> = {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit:'day',
+                            displayFormats :{
+                                day: 'dd-MM-YYY',
+                            }
+                        },
+                        unit: 'seconds',
+                        ticks: {
+                            <?php if ($from_dash) { ?>
+                            display: false,
+                            <?php } else { ?>
+                            color: 'default',
+                            <?php } ?>
+                        }
+                    },
+                    y: {
+                        ticks: {color: '<?php echo $from_dash?'#FFFFFF':'default'?>',},
+                    }
+                }
+            };
+        </script>
+        <?php } else { ?>
+        <script>
+            const chartstyling<?php echo $id?> = {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+            };
+        </script>
+        <?php } ?>
+        <canvas 
+            id="<?php echo $id ?>"
+            style="margin-left:auto;margin-right:auto;display:block;
+                <?php if ($from_dash) { ?>
+                width:220px;height:105px;
+                <?php } else { ?>
+                width:100%;height:80%;
+                <?php } ?>"
+        ></canvas>
+        <?php
+        }
 
 if ($type=="pie")
     {
@@ -179,133 +234,50 @@ if ($type=="pie")
     # Work out total so we can add an "other" block.
     $total=ps_value("select sum(count) value from daily_stat d $join $condition",$params, 0);
     if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit();}
-    ?>
-    <script type="text/javascript">
-    jQuery(function () {
-
-    jQuery.plot('#placeholder<?php echo $type . $n ?>', [
-
-                <?php
-                $rt=0;
-                foreach ($data as $row) { $rt+=$row["c"];?>{data:<?php echo $row["c"] ?>,label:"<?php echo $row["name"]  ?>"},<?php } ?>
-
-                <?php if ($total>$rt)
-                    {
-                    # The total doesn't match, some rows were truncated, add an "Other".
-                    ?>
-                    {data:<?php echo $total-$rt ?>,label:"Other",color: "#999"}
-                    <?php
-                    }
-                    ?>
-
-        ], {
-    series: {
-        pie: {
-        show: true,
-        label: {
-                show: false
-        },
-        stroke: { width: 0 }
-        }
-    }
-    ,
-    grid: {
-        hoverable: true,borderWidth:0
-    },
-    legend: {
-        show: false
-    },
-    tooltip: {
-        show: true,
-        content: '%p.0%, %s',
-        shifts: {
-            x: 20,
-            y: 0
-        }
+    
+    render_pie_graph($id,$data,$total);
     }
 
-    });
-    });
+if ($type=="piegroup")
+    {
+    # External conditions
+    # 0 = external shares are ignored
+    # 1 = external shares are combined with the user group of the sharing user
+    # 2 = external shares are reported as a separate user group
 
-    </script>
-    <?php }
-
-    if ($type=="piegroup")
+    # External mode 2 support - return the usergroup as '-1' if externally shared
+    $usergroup_resolve="d.usergroup";
+    $name_resolve="ug.name";
+    if ($external==2)
         {
-        # External conditions
-        # 0 = external shares are ignored
-        # 1 = external shares are combined with the user group of the sharing user
-        # 2 = external shares are reported as a separate user group
-
-        # External mode 2 support - return the usergroup as '-1' if externally shared
-        $usergroup_resolve="d.usergroup";
-        $name_resolve="ug.name";
-        if ($external==2)
-            {
-            $usergroup_resolve="if(d.external=0,d.usergroup,-1)";
-                $name_resolve="if(d.external=0,ug.name,'" .$lang["report_external_share"] . "')";
-            }
-        $data=ps_query("select $usergroup_resolve as usergroup,$name_resolve as `name`,sum(count) c from daily_stat d left outer join usergroup ug on d.usergroup=ug.ref $join $condition group by $usergroup_resolve, $name_resolve order by c desc",$params);
-        if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
-        ?>
-        <script type="text/javascript">
-        jQuery(function () {
-
-        jQuery.plot('#placeholder<?php echo $type . $n ?>', [
-
-                    <?php foreach ($data as $row) { ?>{data:<?php echo $row["c"] ?>,label:"<?php echo $row["name"]  ?>"},<?php } ?>
-
-            ], {
-        series: {
-            pie: {
-            show: true,
-            label: {
-                    show: false
-            },
-            stroke: { width: 0 }
-            }
+        $usergroup_resolve="if(d.external=0,d.usergroup,-1)";
+            $name_resolve="if(d.external=0,ug.name,'" .$lang["report_external_share"] . "')";
         }
-        ,
-        grid: {
-            hoverable: true
-        },
-        legend: {
-            show: false
-        },
-        tooltip: {
-            show: true,
-            content: '%p.0%, %s',
-            shifts: {
-                x: 20,
-                y: 0
-            }
-        }
-
-        });
-        });
-
-        </script>
-        <?php
-        }
+    $data=ps_query("select $usergroup_resolve as usergroup,$name_resolve as `name`,sum(count) c from daily_stat d left outer join usergroup ug on d.usergroup=ug.ref $join $condition group by $usergroup_resolve, $name_resolve order by c desc",$params);
+    if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
+    render_pie_graph($id,$data);
+    ?>
+    <?php
+    }
 
 if ($type=="pieresourcetype")
         {
     // Pie chart to break down resource activities by type
 
     $data=ps_query("
-        select
-            ret.name as res_type_name,
+        SELECT
+            ret.name as name,
             sum(count) c
-        from
+        FROM
             daily_stat d
-        join
+        JOIN
             resource res on d.object_ref=res.ref
-        join
-            resource_type ret on res.resource_type=ret.ref
+        JOIN
+            resource_type ret ON res.resource_type=ret.ref
             $join $condition
-        group by
+        GROUP BY
             ret.name
-        order by
+        ORDER BY
             c desc",$params
         );
 
@@ -313,57 +285,13 @@ if ($type=="pieresourcetype")
     if (count($data)==0)
         {
         ?>
-        <p><?php echo $lang["report_no_data"] ?></p>
+        <p class='analytics-nodata'><?php echo $lang["report_no_data"] ?></p>
         <script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script>
         <?php
         exit();
         }
 
-    ?>
-
-    <script type="text/javascript">
-        jQuery(function ()
-            {
-            jQuery.plot('#placeholder<?php echo $type . $n ?>', [
-                <?php foreach ($data as $row) { ?>{data:<?php echo $row["c"] ?>,label:"<?php echo $row["res_type_name"]  ?>"},<?php } ?>
-            ], {
-            series:
-                {
-                pie:
-                    {
-                    show: true,
-                    label:
-                        {
-                        show: false
-                        },
-                    stroke:
-                        {
-                        width: 0
-                        }
-                    }
-                },
-                grid:
-                    {
-                    hoverable: true
-                    },
-                legend:
-                    {
-                    show: false
-                    },
-                tooltip:
-                    {
-                    show: true,
-                    content: '%p.0%, %s',
-                    shifts:
-                        {
-                        x: 20,
-                        y: 0
-                        }
-                    }
-                });
-            });
-    </script>
-    <?php
+    render_pie_graph($id,$data);
     }
 
 if ($type=="line")
@@ -380,89 +308,19 @@ if ($type=="line")
     foreach ($data as $row)
         {
         if ($row["t"]>0)
-        {
-        if ($last_t!=0 && ($row["t"]-$last_t)>$day_ms)
             {
-            for ($m=$last_t+$day_ms;$m<$row["t"];$m+=$day_ms)
-            {
-            $newdata[(string)$m]=0;
+            if ($last_t!=0 && ($row["t"]-$last_t)>$day_ms)
+                {
+                for ($m=$last_t+$day_ms;$m<$row["t"];$m+=$day_ms)
+                    {
+                    $newdata[(string)$m]=0;
+                    }
+                }
+            $newdata[$row["t"]]=$row["c"];
+            $last_t=$row["t"];
             }
-            }
-        $newdata[$row["t"]]=$row["c"];
-        $last_t=$row["t"];
         }
-        }
-    ?>
-        <script type="text/javascript">
-jQuery(function () {
-
-    jQuery.plot("#placeholder<?php echo $type . $n ?>", [
-
-
-            {
-        data: [
-        <?php foreach ($newdata as $t=>$c) { ?>
-        [<?php echo $t ?>,<?php echo $c ?>],
-        <?php } ?>
-        ],
-        label: "<?php echo get_translated_activity_type($activity_type) ?>",
-        lines: { show: true  },
-        points: { show: false},
-        shadowSize: 4,
-        <?php if ($from_dash) { ?>color: "#fff"<?php } else { ?>color: "#0be"<?php } ?>
-    },
-
-    ],
-        {
-    <?php if (!$from_dash) { ?>
-        xaxis: { mode: "time", timeformat: "%Y-%m-%d", ticks: 10,  minTickSize: [1, "day"],
-        min: <?php echo strtotime($from_y . "-" . $from_m . "-" . $from_d) * 1000 ?>,
-        max: <?php echo strtotime($to_y . "-" . $to_m . "-" . $to_d) * 1000 ?>
-        },
-    <?php } else { ?>
-    xaxis: { show: false },
-    <?php } ?>
-        legend: {show: false },
-        grid: { <?php if (!$from_dash) { ?>hoverable: true, clickable: true, backgroundColor: "#fff", <?php } ?> borderWidth: <?php echo $from_dash?0:2 ?>, autoHighlight: true }
-        }
-
-    );
-    <?php if (!$from_dash) { ?>
-        jQuery("<div id='tooltip<?php echo $type . $n ?>'></div>").css({
-        position: "absolute",
-        display: "none",
-        border: "1px solid #fdd",
-        padding: "2px",
-        "background-color": "#fee",
-        opacity: 0.80
-    }).appendTo("body");
-
-    jQuery("#placeholder<?php echo $type . $n ?>").bind("plothover", function (event, pos, item) {
-
-    jQuery("#UICenter").on("scroll",function () { jQuery("#tooltip<?php echo $type . $n ?>").hide();});
-        if (item) {
-                var x = item.datapoint[0], y = item.datapoint[1].toFixed(0);
-                var d = new Date(x);
-
-                jQuery("#tooltip<?php echo $type . $n ?>").html(d.toDateString() + " = " + y)
-                        .css({top: item.pageY+5, left: item.pageX+5})
-                        .fadeIn(200);
-
-        } else {
-                jQuery("#tooltip<?php echo $type . $n ?>").hide();
-        }
-    }
-    );
-    <?php }  else  {
-
-    # Specific from dash styling
-    ?>
-    jQuery(".flot-text").css("color","#ddd");
-    <?php } ?>
-    });
-
-    </script>
-    <?php
+    render_bar_graph($id,$newdata);
     }
 
 if ($type=="summary")
@@ -558,3 +416,6 @@ if ($from_dash)
     </div>
     <?php
     }
+
+?></div>
+<!-- End chart canvas -->

@@ -1,38 +1,64 @@
 <?php
-$rs_root = dirname(dirname(dirname(__DIR__)));
+
+use ImageBanks\ResourceSpace;
+
+use function ImageBanks\getProviders;
+use function ImageBanks\getProviderSelectInstance;
+use function ImageBanks\providersCheckedAndActive;
+use function ImageBanks\validFileSource;
+
+$rs_root = dirname(__DIR__, 3);
 include_once "{$rs_root}/include/db.php";
-
 include_once "{$rs_root}/include/authenticate.php";
-
 include_once "{$rs_root}/include/image_processing.php";
+include_once "{$rs_root}/include/ajax_functions.php";
 
 if(!(checkperm("c") || checkperm("d")))
     {
-    http_response_code(401);
-    $return["error"] = array(
-        "title"  => "Unauthorized",
-        "detail" => $lang["error-permissiondenied"]);
-
-    echo json_encode($return);
-    exit();
+    ajax_unauthorized();
     }
 
-$return = array();
-
 $original_file_url = getval("original_file_url", "");
+$image_bank_provider_id = (int) getval("image_bank_provider_id", 0, true);
+$build_unable_to_upload_msg = fn(int $ref): array => ajax_build_message(
+    str_replace("%RESOURCE", $ref, $GLOBALS['lang']["image_banks_unable_to_upload_file"])
+);
 
-if(!\ImageBanks\validFileSource($original_file_url, $image_banks_loaded_providers))
+[$providers,] = getProviders($image_banks_loaded_providers);
+$providers_select_list = providersCheckedAndActive($providers);
+if (!($image_bank_provider_id > 0 && array_key_exists($image_bank_provider_id, $providers_select_list)))
     {
-    $log_activity_note = str_replace("%FILE", $original_file_url, $lang["image_banks_bad_file_create_attempt"]);
-    log_activity($log_activity_note, LOG_CODE_SYSTEM, null, 'user', null, null, null, null, $userref, false);
+    debug(sprintf('[image_banks][pages/ajax.php] Unable to find Provider #%s in %s', $image_bank_provider_id, json_encode($providers_select_list)));
+    ajax_send_response(400, ajax_response_fail(ajax_build_message($GLOBALS['lang']['image_banks_provider_not_found'])));
+    }
+$provider = getProviderSelectInstance($providers, $image_bank_provider_id);
 
+if(!validFileSource($original_file_url, $provider))
+    {
+    $log_activity_note = str_replace("%FILE", $original_file_url, $GLOBALS['lang']["image_banks_bad_file_create_attempt"]);
+    log_activity($log_activity_note, LOG_CODE_SYSTEM, null, 'user', null, null, null, null, $userref, false);
     $original_file_url = "";
     }
 
-if($original_file_url != "")
+if($original_file_url !== "")
     {
-    $resource_type_from_extension = get_resource_type_from_extension(pathinfo($original_file_url, PATHINFO_EXTENSION),
-    $resource_type_extension_mapping,$resource_type_extension_mapping_default);
+    $file_info = $provider->getDownloadFileInfo($original_file_url);
+    if (is_banned_extension($file_info->getExtension()))
+        {
+        ajax_send_response(
+            400,
+            ajax_response_fail(
+                ajax_build_message(str_replace("%%FILETYPE%%",$uploaded_extension,$GLOBALS['lang']["error_upload_invalid_file"]))
+            )
+        );
+        }
+
+    $resource_type_from_extension = get_resource_type_from_extension(
+        $file_info->getExtension(),
+        $resource_type_extension_mapping,
+        $resource_type_extension_mapping_default
+    );
+
     // Clear the user template and then copy resource from user template. This should deal with archive state permissions
     // and put the resource in active state if user has access to it
     clear_resource_data(0 - $userref);
@@ -43,52 +69,59 @@ if($original_file_url != "")
             $resource_type_from_extension,
             999,
             $userref,
-            $lang["image_banks_createdfromimagebanks"]
+            $GLOBALS['lang']["image_banks_createdfromimagebanks"]
         );
         }
 
     if(!$new_resource_ref)
         {
-        http_response_code(500);
-        $return["error"] = array(
-            "title"  => $lang["image_banks_create_new_resource"],
-            "detail" => $lang["image_banks_unable_to_create_resource"]
-        );
+        ajax_send_response(500, ajax_response_fail(ajax_build_message($GLOBALS['lang']["image_banks_unable_to_create_resource"])));
+        }
 
-        echo json_encode($return);
-        exit();
+    if ($provider instanceof ResourceSpace)
+        {
+        // Download the file locally because if it's proxied via the remote pages/download.php it will end up being banned
+        $GLOBALS['use_error_exception'] = true;
+        try
+            {
+            $tmp_file_path = sprintf(
+                '%s/%s.%s',
+                get_temp_dir(false, generateUserFilenameUID($userref) . $provider->getId()),
+                safe_file_name(pathinfo($file_info->getFilename(), PATHINFO_FILENAME)),
+                $file_info->getExtension()
+            );
+            if(!copy($original_file_url, $tmp_file_path))
+                {
+                ajax_send_response(500, ajax_response_fail($build_unable_to_upload_msg($new_resource_ref)));
+                }
+            }
+        catch(Throwable $t)
+            {
+            debug(sprintf(
+                '[image_banks][pages/ajax.php] Failed to download remote file from "%s" to temp location "%s". Reason: %s',
+                $original_file_url,
+                $tmp_file_path,
+                $t->getMessage()
+            ));
+            ajax_send_response(500, ajax_response_fail($build_unable_to_upload_msg($new_resource_ref)));
+            }
+        unset($GLOBALS['use_error_exception']);
         }
 
     // We intentionally want to extract embedded metadata from external Image Bank Provider
-    if(!upload_file_by_url($new_resource_ref, false, false, false, $original_file_url))
+    if(!upload_file_by_url($new_resource_ref, false, false, false, $tmp_file_path ?? $original_file_url))
         {
-        http_response_code(500);
-        $return["error"] = array(
-            "title"  => $lang["image_banks_create_new_resource"],
-            "detail" => str_replace("%RESOURCE", $new_resource_ref, $lang["image_banks_unable_to_upload_file"])
-        );
-
-        echo json_encode($return);
-        exit();
+        delete_resource($new_resource_ref);
+        if (isset($tmp_file_path) && file_exists($tmp_file_path))
+            {
+            unlink($tmp_file_path);
+            }
+        ajax_send_response(500, ajax_response_fail($build_unable_to_upload_msg($new_resource_ref)));
         }
 
-    http_response_code(200);
-    $return["data"] = array(
-        "new_resource_ref" => $new_resource_ref,
-    );
-    echo json_encode($return);
-    exit();
+    ajax_send_response(200, ajax_response_ok(['new_resource_ref' => $new_resource_ref]));
     }
 
 
 // If by this point we still don't have a response for the request, create one now telling client this is a bad request
-if(0 === count($return))
-    {
-    http_response_code(400);
-    $return["error"] = array(
-        "title"  => $lang["image_banks_bad_request_title"],
-        "detail" => str_replace("%FILE", __FILE__, $lang["image_banks_bad_request_detail"]));
-    }
-
-echo json_encode($return);
-exit();
+ajax_send_response(400, ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_generic'])));
