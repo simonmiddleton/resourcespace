@@ -446,7 +446,10 @@ function message_selectedseen($messages)
     $messages = json_decode($messages, true);
     $parameters = array_merge($parameters, ps_param_fill($messages,"i"));
  
-    ps_query("UPDATE user_message SET seen = '1' WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
+    if (is_array($messages) && count($messages)>0)
+        {
+        ps_query("UPDATE user_message SET seen = '1' WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
+        }
     }
  
 /**
@@ -463,7 +466,10 @@ function message_selectedunseen($messages)
     $messages = json_decode($messages, true);
     $parameters = array_merge($parameters, ps_param_fill($messages,"i"));
  
-    ps_query("UPDATE user_message SET seen = '0' WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
+    if (is_array($messages) && count($messages)>0)
+        {
+        ps_query("UPDATE user_message SET seen = '0' WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
+        }
     }
  
 /**
