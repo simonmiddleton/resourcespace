@@ -1729,6 +1729,12 @@ function resolve_users($users)
  */
 function check_access_key($resources,$key,$checkcollection=true)
     {
+
+    if(trim($key) == '')
+        {
+        return false;
+        }
+        
     if(!is_array($resources))
         {
         $resources = array($resources);

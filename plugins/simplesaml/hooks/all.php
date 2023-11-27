@@ -687,7 +687,7 @@ function HookSimplesamlAllCheck_access_key()
 
         $validate_user = validate_user($user_select_sql);
 
-        if(is_array($validate_user[0]) && !empty($validate_user[0]))
+        if(is_array($validate_user) && is_array($validate_user[0]) && !empty($validate_user[0]))
             {
             setup_user($validate_user[0]);
             $is_authenticated = true;
