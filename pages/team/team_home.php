@@ -48,7 +48,7 @@ include "../../include/header.php";
 	<?php if (checkperm("c")) { 
 		if ($overquota)
 			{
-			?><li style="width: 95%; height: auto;"><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo $lang["manageresources"]?> : <strong><?php echo $lang["manageresources-overquota"]?></strong></li><?php
+			?><li class="overquota"><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo $lang["manageresources"]?> : <strong><?php echo $lang["manageresources-overquota"]?></strong></li><?php
 			}
 		else
 			{

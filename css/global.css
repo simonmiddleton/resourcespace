@@ -2281,10 +2281,12 @@ a.BrowseRefresh{
 .TileNav a:hover {text-decoration:none;}
 .TileNav .fa {font-size:48px;padding-bottom:10px;}
 .TileNav .Pill {position:absolute; top:0; right:25px;border-radius:10px;font-size:115%;}
+.TileNav .overquota {width: 95% !important; height: auto !important;}
 /* Additional CSS to show list views correctly on top menus. */
 .TileReflow br {display:none;}
 .TileReflow .fa {display:inline-block; min-width:26px;}
 .TileReflow a:hover {text-decoration:none;}
+.TileReflow .overquota {width: auto !important; height: auto !important;}
 
 .titlediv h1 {float :left;}
 .sharelink:before {
