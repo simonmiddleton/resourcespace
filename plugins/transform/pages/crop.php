@@ -154,6 +154,17 @@ if(!file_exists($org))
         }
     }
 
+// Check if preview is same aspect ratio as original
+$predims = getimagesize($previewsourcepath);
+$preratio = round($predims[0]/$predims[1],1);
+$origratio = round($origwidth/$origheight,1);
+if($preratio !== $origratio)
+    {
+    // The preview source file has been altered relative to the original. Use the original
+    // instead because the final transform will use the original and any transformations will otherwise be incorrect
+    $org = $previewsourcepath = $originalpath;
+    }
+
 // Get the actions that have been requested
 $imgactions = array();
 // Transformations must be carried out in the order the user performed them
