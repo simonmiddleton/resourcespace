@@ -1496,7 +1496,7 @@ function api_create_resource_type_field(string $name, string $resource_types, in
      * Expose {@see get_featured_collections} to the API
      * @param int $parent The feature collection parent's ref. Use 0 for obtaining the root ones.
      */
-    function api_get_featured_collections(int $parent): array
+    function api_get_featured_collections($parent): array
         {
-        return get_featured_collections($parent, []);
+        return is_int_loose($parent) ? get_featured_collections($parent, []) : [];
         }
