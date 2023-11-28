@@ -7,7 +7,7 @@
 
 global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace, $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution,
 $pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params, $qlpreview_path,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,
-$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif;
+$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif,$resource_view_use_pre;
 
 resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews'] . ":\n");
 
@@ -1014,7 +1014,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
     for ($n=1;$n<=$pdf_pages;$n++)
         {
         # Set up target file
-        $size="";if ($n>1) {$size="scr";} # Use screen size for other pages.
+        $size="";if ($n>1) {$resource_view_use_pre?$size="pre":$size="scr";}
         $target=get_resource_path($ref,true,$size,false,"jpg",-1,$n,false,"",$alternative); 
         if (file_exists($target)) {unlink($target);}
 

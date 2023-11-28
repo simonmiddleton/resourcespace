@@ -491,6 +491,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 # Also try the watermarked version.
                 $path=get_resource_path($ref,true,"scr",false,"jpg",-1,$n,true);
                 if (file_exists($path)) {unlink($path);}
+                # Remove preview page.
+                $path=get_resource_path($ref,true,"pre",false,"jpg",-1,$n,false);
+                if (file_exists($path)) {unlink($path);}
+                # Also try the watermarked version.
+                $path=get_resource_path($ref,true,"pre",false,"jpg",-1,$n,true);
+                if (file_exists($path)) {unlink($path);}
                 }
         
             # Remove any video preview (except if the actual resource is in the preview format).
