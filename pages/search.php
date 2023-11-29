@@ -1073,7 +1073,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 {
                 if($display == 'map')
                     { ?>
-                    <span class="fas fa-map" style="font-size:23px;"></span><?php
+                    <span class="fas fa-map"></span><?php
                     }
                 else
                     { ?>
@@ -1087,7 +1087,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                         echo "return " . ($modal ? 'Modal' : 'CentralSpace') . "Load(this);";
                         }
                     ?>">
-                    <span class="far fa-map" style="font-size:23px;"></span>
+                    <span class="far fa-map"></span>
                     </a>
                     <?php
                     }
