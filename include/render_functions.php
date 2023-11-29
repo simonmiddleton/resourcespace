@@ -6601,6 +6601,7 @@ function render_resource_type_selector_question(string $label, string $name, str
 function add_download_column($ref, $size_info, $downloadthissize, $view_in_browser=false)
     {
     global $save_as, $terms_download, $order_by, $lang, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save,$download_usage;
+    $view_in_browser_msg = $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"];
     if ($downloadthissize)
         {
         ?>
@@ -6636,7 +6637,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                             echo " onClick=\"return CentralSpaceLoad(this,true);\"";
                             }
                         ?>>
-                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?>
+                        <?php echo htmlspecialchars($view_in_browser_msg); ?>
                     </a>
                     <?php
                     }
@@ -6667,7 +6668,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                             echo " onClick=\"return CentralSpaceLoad(this,true);\"";
                             }
                         ?>>
-                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?>
+                        <?php echo htmlspecialchars($view_in_browser_msg); ?>
                     </a>
                     <?php
                     }
@@ -6688,7 +6689,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                                 }
                             }
                         ?>>
-                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"] ?>
+                        <?php echo htmlspecialchars($view_in_browser_msg); ?>
                     </a>
                     <?php
                     }
