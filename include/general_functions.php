@@ -3941,9 +3941,12 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
 
         if(!file_exists($debug_log_location))
             {
-            // Set the permissions if we can to prevent browser access (will not work on Windows)
             $f=fopen($debug_log_location,"a");
-            chmod($debug_log_location,0222);
+            if(strpos($debug_log_location,$GLOBALS['storagedir']) !== false)
+                {
+                // Probably in a browseable location. Set the permissions if we can to prevent browser access (will not work on Windows)
+                chmod($debug_log_location,0222);
+                }
             }
         else
             {
