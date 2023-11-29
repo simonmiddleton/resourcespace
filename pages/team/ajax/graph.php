@@ -127,13 +127,13 @@ if (!$from_dash)
         $title.=" ".$lang["report-graph-by-" . $type];
         }
     ?>
-    <h2><?php echo $title ?>
+    <h2><?php echo htmlspecialchars($title) ?>
 
     <?php
     # Add to dash tile function
     $graph_params="activity_type=" . urlencode($activity_type) . "&groups=" . urlencode($groups) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . getval("period","") . "&period_days=" . getval("period_days",""). "&collection=" . $collection . "&external=" . $external . "&type=" . urlencode($type) . "&resource_type=" . $resource_type . "&from_dash=true";
     ?>
-    &nbsp;&nbsp;<a style="white-space:nowrap;" class="ReportAddToDash" href="<?php echo $baseurl_short ?>pages/dash_tile.php?create=true&title=<?php echo urlencode($title) ?>&nostyleoptions=true&link=<?php echo urlencode("pages/team/team_analytics_edit.php?ref=" . $report)?>&url=<?php echo urlencode("pages/team/ajax/graph.php?tltype=conf&tlstyle=analytics&" . $graph_params) ?>" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-plus-square"></i>&nbsp;<?php echo  $lang["report_add_to_dash"] ?></a>
+    &nbsp;&nbsp;<a style="white-space:nowrap;" class="ReportAddToDash" href="<?php echo $baseurl_short ?>pages/dash_tile.php?create=true&title=<?php echo urlencode($title) ?>&nostyleoptions=true&link=<?php echo urlencode("pages/team/team_analytics_edit.php?ref=" . $report)?>&url=<?php echo urlencode("pages/team/ajax/graph.php?tltype=conf&tlstyle=analytics&" . $graph_params) ?>" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-plus-square"></i>&nbsp;<?php echo  htmlspecialchars($lang["report_add_to_dash"]) ?></a>
     </h2>
     <?php
     }
@@ -161,7 +161,7 @@ else
         <?php } ?>>
         <?php if ($type == 'line') { ?>
         <script>
-            const chartstyling<?php echo $id?> = {
+            const chartstyling<?php echo escape_quoted_data($id)?> = {
                 responsive: true,
                 plugins: {
                     legend: {
@@ -194,7 +194,7 @@ else
         </script>
         <?php } else { ?>
         <script>
-            const chartstyling<?php echo $id?> = {
+            const chartstyling<?php echo escape_quoted_data($id)?> = {
                 responsive: true,
                 plugins: {
                     legend: {
@@ -205,7 +205,7 @@ else
         </script>
         <?php } ?>
         <canvas 
-            id="<?php echo $id ?>"
+            id="<?php echo escape_quoted_data($id) ?>"
             style="margin-left:auto;margin-right:auto;display:block;
                 <?php if ($from_dash) { ?>
                 width:220px;height:105px;
@@ -233,7 +233,7 @@ if ($type=="pie")
 
     # Work out total so we can add an "other" block.
     $total=ps_value("select sum(count) value from daily_stat d $join $condition",$params, 0);
-    if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit();}
+    if (count($data)==0) { ?><p><?php echo htmlspecialchars($lang["report_no_data"]) ?></p><script>jQuery("#placeholder<?php echo escape_quoted_data($type . $n) ?>").hide();</script><?php exit();}
     
     render_pie_graph($id,$data,$total);
     }
@@ -254,7 +254,7 @@ if ($type=="piegroup")
             $name_resolve="if(d.external=0,ug.name,'" .$lang["report_external_share"] . "')";
         }
     $data=ps_query("select $usergroup_resolve as usergroup,$name_resolve as `name`,sum(count) c from daily_stat d left outer join usergroup ug on d.usergroup=ug.ref $join $condition group by $usergroup_resolve, $name_resolve order by c desc",$params);
-    if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
+    if (count($data)==0) { ?><p><?php echo htmlspecialchars($lang["report_no_data"]) ?></p><script>jQuery("#placeholder<?php echo escape_quoted_data($type . $n) ?>").hide();</script><?php exit(); }
     render_pie_graph($id,$data);
     ?>
     <?php
@@ -285,8 +285,8 @@ if ($type=="pieresourcetype")
     if (count($data)==0)
         {
         ?>
-        <p class='analytics-nodata'><?php echo $lang["report_no_data"] ?></p>
-        <script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script>
+        <p class='analytics-nodata'><?php echo htmlspecialchars($lang["report_no_data"]) ?></p>
+        <script>jQuery("#placeholder<?php echo escape_quoted_data($type . $n) ?>").hide();</script>
         <?php
         exit();
         }
@@ -297,7 +297,7 @@ if ($type=="pieresourcetype")
 if ($type=="line")
     {
     $data=ps_query("select unix_timestamp(concat(year,'-',month,'-',day))*1000 t,sum(count) c from daily_stat d $join $condition group by year,month,day order by t",$params);
-    if (count($data)==0) { ?><p><?php echo $lang["report_no_data"] ?></p><script>jQuery("#placeholder<?php echo $type . $n ?>").hide();</script><?php exit(); }
+    if (count($data)==0) { ?><p><?php echo htmlspecialchars($lang["report_no_data"]) ?></p><script>jQuery("#placeholder<?php echo htmlspecialchars($type . $n) ?>").hide();</script><?php exit(); }
 
     # Find zero days and fill in the gaps
 
