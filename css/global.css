@@ -430,7 +430,7 @@ input[type="number"].NumberSearchWidth {width:80px; margin: 0 10px;}
 #SearchBarContainer {height: 100%; float: right;}
 #SearchBox {float: right; width: 295px;text-align:left; height: inherit; overflow-x: hidden;}
 #SearchBoxPanel {width: inherit;}
-#ResearchBoxPanel {width: 100%;margin-top: 15px;}
+#ResearchBoxPanel {width: 100%;}
 #SearchBox .PopupCategoryTree {display: none; text-align: left; z-index: 999; padding: 5px; background: none; overflow-x: scroll;}
 .PoweredByPanel {font-style: italic; margin: 0 15px 15px 15px; font-size: 13px;}
 .PoweredByPanel img {max-width: 215px; margin-top: 8px;}
