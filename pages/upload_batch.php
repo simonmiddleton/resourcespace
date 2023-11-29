@@ -56,7 +56,7 @@ $upload_session = $currentsession != "" ? $currentsession : generateSecureKey(64
 rs_setcookie("upload_session",$upload_session);
 $targetDir = get_temp_dir() . DIRECTORY_SEPARATOR . "tus" . DIRECTORY_SEPARATOR . "upload_" . hash("SHA256",$upload_session .   $scramble_key);
 // Use PHP APCU cache if available as more robust, unless on Windows as too many errors reported
-$cachestore = (function_exists('apcu_fetch') && !$config_windows) ? "apcu" : "file";
+$cachestore = (function_exists('apcu_fetch') && !$config_windows) ? "apcu" : $vendor_tus_cache_adapter;
 $overquota  = overquota();
 
 // The collection_add parameter can have the following values:-

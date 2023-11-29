@@ -3403,3 +3403,9 @@ $use_native_input_for_date_field = false;
 # Number of hours before the access key for a URL obtained by the API call get_resource_path() expires.
 # WARNING: This should ideally not be set to an excessively high value in order to improve system security.
 $api_resource_path_expiry_hours = 24;
+
+/*
+Configure the cache adaptor for the internal library TUS used for upload (Uppy).
+For production systems where APCu isn't available use "redis" instead. To install check out https://redis.io
+*/
+$vendor_tus_cache_adapter = 'file';
