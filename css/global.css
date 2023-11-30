@@ -2556,3 +2556,7 @@ input[type="text"]#iconpicker-input {
 .SearchBarTab.SearchBarTabSelected {
     background: rgb(255 255 255 / 14%);
 }
+
+#LoginError {
+    outline: none;
+}
