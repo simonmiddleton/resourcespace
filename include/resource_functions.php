@@ -71,6 +71,26 @@ function get_resource_path(
         return $override;
         }
 
+    $refresh_key='';
+    // Determine v value early so that it can also be used when $hide_real_filepath is enabled
+    if (!$getfilepath && $includemodified)
+        {
+        if ($file_modified=="")
+            {
+            # Work out the value from the file on disk
+            $disk_path=get_resource_path($ref,true,$size,false,$extension,$scramble,$page,$watermarked,'',$alternative,false);
+            if (file_exists($disk_path))
+                {
+                $refresh_key = urlencode(filemtime($disk_path));
+                }
+            }
+        else
+            {
+            # Use the provided value
+            $refresh_key .= urlencode($file_modified);
+            }
+        }
+
 
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
     if(!$getfilepath && $hide_real_filepath)
@@ -95,8 +115,9 @@ function get_resource_path(
                 'watermarked' => $watermarked,
                 'k'           => $k,
                 'noattach'    => 'true',
+                'v'           => $refresh_key,
             ),
-            $get_resource_path_extra_download_query_string_params);
+            $get_resource_path_extra_download_query_string_params) . $refresh_key;
         }
 
     if ($size=="")
@@ -300,23 +321,9 @@ function get_resource_path(
         $file.='.icc';
         }
 
-    # Append modified date/time to the URL so the cached copy is not used if the file is changed.
-    if (!$getfilepath && $includemodified)
+    if(trim($refresh_key) != '')
         {
-        if ($file_modified=="")
-            {
-            # Work out the value from the file on disk
-            $disk_path=get_resource_path($ref,true,$size,false,$extension,$scramble,$page,$watermarked,'',$alternative,false);
-            if (file_exists($disk_path))
-                {
-                $file .= "?v=" . urlencode(filemtime($disk_path));
-                }
-            }
-        else
-            {
-            # Use the provided value
-            $file .= "?v=" . urlencode($file_modified);
-            }
+        $file .= "?v={$refresh_key}";
         }
 
     if (($scramble && isset($migrating_scrambled) && $migrating_scrambled) || ($filestore_migrate && $filestore_evenspread))
