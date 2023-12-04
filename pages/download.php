@@ -40,7 +40,7 @@ $watermarked        = getval('watermarked', 0, true);
 $valid_key = false;
 if($ref>0 && $download_temp_key != "")
     {
-    $valid_key = validate_temp_download_key($ref, $download_temp_key);
+    $valid_key = validate_temp_download_key($ref, $download_temp_key, $size);
     }
 
 // External access support (authenticate only if no key provided, or if invalid access key provided)
