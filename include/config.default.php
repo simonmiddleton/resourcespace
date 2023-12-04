@@ -99,7 +99,7 @@ $query_cache_enabled = true;
 $query_cache_expires_minutes=30;
 
 # The level of PHP error reporting to use. By default, hide warnings.
-$config_error_reporting=E_ALL & ~E_WARNING & ~E_NOTICE;
+$config_error_reporting=E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED;
 
 # Enable work-arounds required when installed on Microsoft Windows systems
 $config_windows=false;
