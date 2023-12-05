@@ -3,8 +3,8 @@ include "../../../include/db.php";
 
 include "../../../include/authenticate.php";
 
-$ref      = getval('ref', '');
-$resource = getval('resource', '');
+$ref      = getval('ref', 0, true);
+$resource = getval('resource', 0, true);
 
 # Set default values for the creation of a new record
 $new_record = true;
@@ -17,7 +17,7 @@ $usage_data = array(
 );
 
 # Fetch usage data
-if (trim($ref) != '')
+if (trim($ref) != 0)
     {
     $usage_data = ps_query("SELECT * FROM resource_usage WHERE ref = ?", array("i",$ref));
 
@@ -76,15 +76,15 @@ include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
     <p>
-        <a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo $resource; ?>" onClick="return CentralSpaceLoad(this, true);">&lt;&nbsp;<?php echo $lang['backtoresourceview']; ?></a>
+        <a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo htmlspecialchars($resource); ?>" onClick="return CentralSpaceLoad(this, true);">&lt;&nbsp;<?php echo $lang['backtoresourceview']; ?></a>
     </p>
     <h1><?php echo ($new_record ? $lang['new_usage'] : $lang['edit_usage']); ?></h1>
 
     <form method="post" action="<?php echo $baseurl_short?>plugins/resource_usage/pages/edit.php" onSubmit="return CentralSpacePost(this, true);">
         <?php generateFormToken("resource_usage_editForm"); ?>
         <input type=hidden name="submitted" value="true">
-        <input type=hidden name="ref" value="<?php echo $ref; ?>">
-        <input type=hidden name="resource" value="<?php echo $resource; ?>">
+        <input type=hidden name="ref" value="<?php echo escape_quoted_data($ref); ?>">
+        <input type=hidden name="resource" value="<?php echo escape_quoted_data($resource); ?>">
 
     <div class="Question">
         <label><?php echo $lang['usage_ref']; ?></label>
