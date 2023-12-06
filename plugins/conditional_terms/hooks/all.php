@@ -16,8 +16,8 @@ function HookConditional_termsAllExtra_checks()
         $message['conditional_terms'] = [
             'status' => 'FAIL',
             'info' => $lang['conditional_terms_plugin_misconfigured'],
-            'severity' => WARNING,
-            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
+            'severity' => SEVERITY_WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
             ];
         return $message;
         }

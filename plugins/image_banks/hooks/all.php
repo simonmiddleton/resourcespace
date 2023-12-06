@@ -21,8 +21,8 @@ function HookImage_banksAllExtra_checks()
         {
         $message['image_banks'] = [
             'status' => 'FAIL',
-            'severity' => WARNING,
-            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
+            'severity' => SEVERITY_WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
             'info' => $GLOBALS['lang']['image_banks_system_unmet_dependencies'],
             'details' => $errors,
         ];
