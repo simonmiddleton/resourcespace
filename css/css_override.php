@@ -394,3 +394,13 @@ if (isset($high_contrast_mode) && $high_contrast_mode == true)
     
     <?php
     }
+
+// Simple Search pills using jQuery tag editor
+if ($simple_search_pills_view) { ?>
+    .search-icon, .search-icon:hover, .search-icon:active {
+        background-color: #ffffff00;
+        margin-top: -36px;
+        margin-left: 221px;
+    }
+<?php
+}
