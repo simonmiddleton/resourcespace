@@ -71,6 +71,10 @@ input[type="submit"], input[type="button"], button {
     margin: 3px 0;
 }
 
+input[type="file"] {
+    border-radius: 0;
+}
+
 .TopInpageNavLeft select, .TopInpageNavLeft select:focus {
     border: none;
 }
