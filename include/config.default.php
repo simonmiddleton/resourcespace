@@ -3085,6 +3085,8 @@ $upload_alternatives_suffix = '';
 
 // Set this to true if changing the scramble key. If switching from a non-null key set the $scramble_key_old variable
 // Run pages/tools/xfer_scrambled.php to move the files, but any omitted should be detected by get_resource_path() if this is set.
+// Note that users should be instructed to change their passwords while this is enabled as the old password hashes will not work once 
+// this has been disabled.
 $migrating_scrambled = false;
 // $scramble_key_old = "";
 
