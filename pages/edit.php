@@ -1716,6 +1716,8 @@ if ($ref < 0 && !$upload_review_mode)
     }
 
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
+$edit_valid_fields = get_resource_type_fields($resource['resource_type']);
+$edit_valid_fields = array_column($edit_valid_fields,"ref");
 
 # Only include fields whose resource type is global or is present in the resource(s) being edited
 if ($multiple) 
@@ -1964,7 +1966,10 @@ foreach($fields as $n => $field)
         }
 
     node_field_options_override($field);
-    display_field($n, $field, $newtab, $modal);
+    if(in_array($field['resource_type_field'], $edit_valid_fields))
+        {
+        display_field($n, $field, $newtab, $modal); 
+        }
     }
 
     if ($tabs_on_edit && $tabcount>0)
