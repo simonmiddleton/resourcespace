@@ -463,7 +463,7 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             // Translates the report name.
             $report["name"] = lang_or_i18n_get_translated($report["name"], "report-");
 
-            $search_params = (trim($report['search_params']) !== '' ? json_decode($report['search_params'], true) : []);
+            $search_params = (trim($report['search_params']??"") !== '' ? json_decode($report['search_params'], true) : []);
 
             $static_report = true; // If no dynamic search results are included then the same report results can be used for all  recipients
 
