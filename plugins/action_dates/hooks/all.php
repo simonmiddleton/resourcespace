@@ -146,7 +146,7 @@ function HookAction_datesCronCron()
         $validrestypes = false;
         if($fieldinfo["global"] == 0)
             {
-            $validrestypes = ps_query("SELECT resource_type FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$action_dates_deletefield]);
+            $validrestypes = ps_array("SELECT resource_type value FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$action_dates_deletefield]);
             }
         if($action_dates_reallydelete)
             {
@@ -162,10 +162,10 @@ function HookAction_datesCronCron()
             $sql_params=array_merge($sql_params,array("i",$action_dates_deletefield));
 
             // Filter resource types that shouldn't have access to the field
-            if(is_array($validrestypes[0]))
+            if(is_array($validrestypes))
                 {
-                $sql .= " AND r.resource_type IN (" . ps_param_insert(count($validrestypes[0])) .") ";
-                $sql_params = array_merge($sql_params,ps_param_fill($validrestypes[0],"i"));
+                $sql .= " AND r.resource_type IN (" . ps_param_insert(count($validrestypes)) .") ";
+                $sql_params = array_merge($sql_params,ps_param_fill($validrestypes,"i"));
                 }
             $candidate_resources = ps_query($sql,$sql_params);
             }
@@ -192,10 +192,10 @@ function HookAction_datesCronCron()
             $sql_params = array_merge($sql_params,["i",$resource_deletion_state,"i",$action_dates_new_state]);
 
             // Filter resource types that shouldn't have access to the field
-            if(is_array($validrestypes[0]))
+            if(is_array($validrestypes))
                 {
-                $sql .= " AND r.resource_type IN (" . ps_param_insert(count($validrestypes[0])) .") ";
-                $sql_params = array_merge($sql_params,ps_param_fill($validrestypes[0],"i"));
+                $sql .= " AND r.resource_type IN (" . ps_param_insert(count($validrestypes)) .") ";
+                $sql_params = array_merge($sql_params,ps_param_fill($validrestypes,"i"));
                 }
             $candidate_resources = ps_query($sql,$sql_params);
 
@@ -446,7 +446,7 @@ function HookAction_datesCronCron()
         $validrestypes = false;
         if($datefield["global"] == 0)
             {
-            $validrestypes = ps_query("SELECT resource_type FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$field]);
+            $validrestypes = ps_array("SELECT resource_type value FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$field]);
             }
 
         $newstatus = $action_dates_extra_config_setting["status"];
