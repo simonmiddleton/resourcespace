@@ -114,11 +114,8 @@ function HookImage_banksAllSearchfiltertop()
 
 function HookImage_banksAllAdd_folders_to_delete_from_temp(array $folders_scan_list)
     {
-    global $image_banks_loaded_providers;
-
-    $providers = getProviders($image_banks_loaded_providers);
-
-    if(count($providers) == 0)
+    [$providers] = getProviders($GLOBALS['image_banks_loaded_providers']);
+    if(count($providers) === 0)
         {
         return false;
         }
