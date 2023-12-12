@@ -5323,14 +5323,22 @@ function get_size_info(array $size, ?array $originalSize = null): string
             }
         }
 
-    $output = "<p>$newWidth &times; $newHeight {$lang["pixels"]}";
+    $output = sprintf('
+        <p>%s &times; %s %s',
+        htmlspecialchars($newWidth),
+        htmlspecialchars($newHeight),
+        htmlspecialchars($lang['pixels']),
+    );
 
     if (!hook('replacemp'))
         {
         $mp = compute_megapixel($newWidth, $newHeight);
         if ($mp >= 0)
             {
-            $output .= " ($mp {$lang["megapixel-short"]})";
+            $output .= sprintf(' (%s %s)',
+                htmlspecialchars($mp),
+                htmlspecialchars($lang['megapixel-short']),
+            );
             }
         }
 
@@ -5342,7 +5350,15 @@ function get_size_info(array $size, ?array $originalSize = null): string
             {   
             # Do DPI calculation only for non-videos
             compute_dpi($newWidth, $newHeight, $dpi, $dpi_unit, $dpi_w, $dpi_h);
-            $output .= "<p>$dpi_w $dpi_unit &times; $dpi_h $dpi_unit {$lang["at-resolution"]} $dpi {$lang["ppi"]}</p>";
+            $output .= sprintf(
+                '<p>%1$s %2$s &times; %3$s %2$s %4$s %5$s %6$s</p>',
+                htmlspecialchars($dpi_w),
+                htmlspecialchars($dpi_unit),
+                htmlspecialchars($dpi_h),
+                htmlspecialchars($lang['at-resolution']),
+                htmlspecialchars($dpi),
+                htmlspecialchars($lang['ppi']),
+            );
             }
         }
 
