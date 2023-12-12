@@ -4629,7 +4629,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
     $modal = (isset($context["modal"]) && is_bool($context["modal"]) ? $context["modal"] : false);
 
     $featured_collection_categories = get_featured_collection_categories($parent, array());
-    if(empty($featured_collection_categories))
+    if(empty($featured_collection_categories) && $depth>0)
         {
         return;
         }
