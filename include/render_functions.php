@@ -6715,7 +6715,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                     {
                     if (isset($size_info["id"])) 
                         {
-                        echo add_to_collection_link($ref,"alert('" . addslashes($lang["requestaddedtocollection"]) . "');",$size_info["id"]);
+                        echo add_to_collection_link($ref,"alert('" . escape_quoted_data($lang["requestaddedtocollection"]) . "');",$size_info["id"]);
                         }
                     else
                         {
