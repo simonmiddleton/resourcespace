@@ -30,6 +30,7 @@ $lang["image_banks_error_detail_curl"] = "php-curl package is not installed";
 $lang["image_banks_error_generic_parse"] = "Unable to parse providers' configuration (for multi-instance)";
 $lang["image_banks_error_resourcespace_invalid_instance_cfg"] = "Invalid configuration format for '%PROVIDER' (provider) instance";
 $lang["image_banks_error_bad_url_scheme"] = "Invalid URL scheme found for '%PROVIDER' (provider) instance";
+$lang["image_banks_error_unexpected_response"] = "Sorry, received an unexpected response from the provider. Please contact your system administrator for further investigation (see debug log).";
 
 // Logs
 $lang["image_banks_local_download_attempt"] = "User tried to download '%FILE' using the ImageBank plugin by pointing to a system which is not part of allowed providers";

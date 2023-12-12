@@ -911,65 +911,83 @@ elseif($restypes=='')
     <?php } ?> <!-- END of Searchbarreplace hook -->
     </div>
     <?php } ?> <!-- END of Searchbarremove hook -->
+
+    <?php if ($show_anonymous_login_panel && isset($anonymous_login) && (isset($username)) && ($username==$anonymous_login)) {
+    # For anonymous access, display the login panel ?>
+        <div id="LoginBoxPanel" class="LoginBoxPanel">
+            <div class="SearchSpace">
+                <h2><?php echo htmlspecialchars($lang["login"]) ?></h2>
+                <form id="anonymous_login_form" method="post" action="<?php echo $baseurl?>/login.php">
+                    <div class="SearchItem">
+                        <?php echo htmlspecialchars($lang["username"]) ?>
+                        <br/>
+                        <input type="text" name="username" id="name" class="SearchWidth" />
+                    </div>
+                    <div class="SearchItem">
+                        <?php echo htmlspecialchars($lang["password"]) ?>
+                        <br/>
+                        <input type="password" name="password" id="password" class="SearchWidth" />
+                    </div>
+                    <div class="SearchItem">
+                        <input name="Submit" type="submit" value="<?php echo escape_quoted_data($lang["login"]) ?>" />
+                    </div>
+                </form>
+                <?php if ($allow_account_request) { ?>
+                    <p>
+                        <br/>
+                        <a href="<?php echo $baseurl_short?>pages/user_request.php">
+                            <?php echo LINK_CARET . htmlspecialchars($lang["nopassword"]) ?>
+                        </a>
+                    </p>
+                <?php }
+                if ($allow_password_reset) { ?>
+                    <p>
+                        <a href="<?php echo $baseurl_short?>pages/user_password.php">
+                            <?php echo LINK_CARET . htmlspecialchars($lang["forgottenpassword"]) ?>
+                        </a>
+                    </p>
+                <?php } ?>
+                <br/>
+                <?php hook("loginformlink") ?>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if (($research_request) && (!isset($k) || $k=="") && (checkperm("q"))) { ?>
+        <?php if (!hook("replaceresearchrequestbox")) { ?>
+            <div id="ResearchBoxPanel">
+                <div class="SearchSpace">
+                <?php if (!hook("replaceresearchrequestboxcontent"))  { ?>
+                    <h2><?php echo htmlspecialchars($lang["researchrequest"]) ?></h2>
+                    <p><?php echo htmlspecialchars(text("researchrequest")) ?></p>
+                    <div class="HorizontalWhiteNav">
+                        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/research_request.php">
+                            <?php echo LINK_CARET . htmlspecialchars($lang["researchrequestservice"]) ?>
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <?php } /* end replaceresearchrequestboxcontent */ ?>
+            </div>
+        <?php } /* end replaceresearchrequestbox */ ?>
+    <?php } ?>
+
+    <?php if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title-black.svg')) { ?>
+        <div class="PoweredByPanel">
+            <a href="https://www.resourcespace.com" target="_blank">
+                <span><?php echo htmlspecialchars($lang["powered_by"]) ; ?></span>
+                <img src="<?php echo $baseurl ?>/gfx/titles/title-white.svg" alt="<?php echo escape_quoted_data($lang['powered_by_resourcespace']); ?>">
+            </a>
+        </div>
+    <?php } ?>
+
     </div>
     
 <?php } ?>  
     
-    <?php if ($show_anonymous_login_panel && isset($anonymous_login) && (isset($username)) && ($username==$anonymous_login))
-    {
-    # For anonymous access, display the login panel
-    ?>
-    <br /><div id="LoginBoxPanel" class="LoginBoxPanel" >
-    <div class="SearchSpace">
-
-      <h2><?php echo htmlspecialchars($lang["login"]) ?></h2>
-
-    <form id="anonymous_login_form" method="post" action="<?php echo $baseurl?>/login.php">
-        <div class="SearchItem"><?php echo htmlspecialchars($lang["username"]) ?><br/><input type="text" name="username" id="name" class="SearchWidth" /></div>
-        <div class="SearchItem"><?php echo htmlspecialchars($lang["password"]) ?><br/><input type="password" name="password" id="password" class="SearchWidth" /></div>
-        <div class="SearchItem">
-            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["login"]) ?>&nbsp;&nbsp;" />
-        </div>
-    </form>
-    <p><br/><?php
-    if ($allow_account_request) { ?><a href="<?php echo $baseurl_short?>pages/user_request.php"><?php echo LINK_CARET . $lang["nopassword"]?> </a></p><?php }
-    if ($allow_password_reset){?><p><a href="<?php echo $baseurl_short?>pages/user_password.php"><?php echo LINK_CARET . $lang["forgottenpassword"]?></a><?php }?>
-    <br/><?php hook("loginformlink") ?>
-    </p>
-    </div>
- 
-    </div>
-    
-    <?php
-    }
-?>
 <?php hook("addsearchbarpanel");?>  
-    
-    <?php if (($research_request) && (!isset($k) || $k=="") && (checkperm("q"))) { ?>
-    <?php if (!hook("replaceresearchrequestbox")) { ?>
-    <div id="ResearchBoxPanel">
-    <div class="SearchSpace">
-    <?php if (!hook("replaceresearchrequestboxcontent"))  { ?>
-    <h2><?php echo htmlspecialchars($lang["researchrequest"]) ?></h2>
-    <p><?php echo text("researchrequest")?></p>
-    <div class="HorizontalWhiteNav"><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/research_request.php"><?php echo LINK_CARET . htmlspecialchars($lang["researchrequestservice"]) ?></a></div>
-    </div><br />
-    <?php } /* end replaceresearchrequestboxcontent */ ?>
-    </div>
-    
-    <?php } /* end replaceresearchrequestbox */ ?>
-    <?php } ?>
 
 <?php hook("searchbarbottomtoolbar"); ?>
-
-<?php if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title-black.svg')) { ?>
-    <div class="PoweredByPanel">
-        <a href="https://www.resourcespace.com" target="_blank">
-            <span><?php echo htmlspecialchars($lang["powered_by"]) ; ?></span>
-            <img src="<?php echo $baseurl ?>/gfx/titles/title-white.svg" alt="<?php  echo escape_quoted_data($lang['powered_by_resourcespace']); ?>">
-        </a>
-    </div>
-<?php } ?>
 
 <?php
 if($browse_bar && checkperm("s") === true)

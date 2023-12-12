@@ -591,9 +591,9 @@ function setLanguage()
             $language="";
             }
 	    }
-	if (isset($_GET["language"]) && array_key_exists($_GET["language"],$languages)) {return $_GET["language"];}	
-	if (isset($_POST["language"]) && array_key_exists($_POST["language"],$languages)) {return $_POST["language"];}
-	if (isset($_COOKIE["language"]) && array_key_exists($_COOKIE["language"],$languages)) {return $_COOKIE["language"];}
+    if (isset($_GET["language"]) && array_key_exists((string)$_GET["language"],$languages)) {return $_GET["language"];}	
+    if (isset($_POST["language"]) && array_key_exists((string)$_POST["language"],$languages)) {return $_POST["language"];}
+    if (isset($_COOKIE["language"]) && array_key_exists((string)$_COOKIE["language"],$languages)) {return $_COOKIE["language"];}
 
 	if(!$disable_languages && $browser_language && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
@@ -681,9 +681,11 @@ function lang_load_site_text(&$lang,$pagename,$language = "")
  */
 function i18n_get_all_translations(string $langid): array
     {
-    global $languages, $lang;
+    global $lang;
+    global $homeanim_folder, $applicationname, $storagedir; // These are currently referenced by some lang files
+    $savedlang = $lang;
     $alltranslations = [];
-    foreach($languages as $langcode=>$availlanguage)
+    foreach($GLOBALS["languages"] as $langcode=>$availlanguage)
         {
         if ($langcode!="en")
             {
@@ -698,13 +700,15 @@ function i18n_get_all_translations(string $langid): array
                 {
                 include dirname(__FILE__)."/../languages/" . safe_file_name($langcode) . ".php";
                 }
-            catch (Throwable $e)
+            catch (Exception $e)
                 {
-                debug("Unable to include language file $langcode.php");
+                debug("Unable to include language file $langcode.php" . $e->getMessage());
                 }
             $GLOBALS["use_error_exception"] = $use_error_exception_cache;
             }
-        $alltranslations[$langcode] = $lang[$langid];
+        $alltranslations[$langcode] =$lang[$langid];
         }
+    // Revert to original
+    $lang = $savedlang;
     return $alltranslations;
     }

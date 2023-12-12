@@ -1337,7 +1337,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         // Attach the negated user reference special collection
         $validcollections[] = (0 - $userref);
             
-        if(in_array($collection, $validcollections) || featured_collection_check_access_control($collection) || $ignore_collection_access)
+        if(in_array($collection, $validcollections) || (in_array($collection, array_column(get_all_featured_collections(), 'ref')) && featured_collection_check_access_control($collection)) || $ignore_collection_access)
             {
             if(!collection_readable($collection))
                 {

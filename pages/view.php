@@ -658,11 +658,13 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                     {
                     if (!hook("renderinnerresourcepreview"))
                         {
+                        # Esatblish whether its ok to use original as the preview instead of the "pre" size
+                        $sizeforpreview= ($video_preview_original) ? "" : "pre"; 
                         # Try to find a preview file.
                         $video_preview_file = get_resource_path(
                             $ref,
                             true,
-                            'pre',
+                            $sizeforpreview,
                             false,
                             ((1 == $video_preview_hls_support || 2 == $video_preview_hls_support) && !($ffmpeg_preview_gif && $resource["file_extension"] == 'gif')) ? 'm3u8' : $ffmpeg_preview_extension
                         );

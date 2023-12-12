@@ -221,7 +221,7 @@ include "../../../include/header.php";
 	    	<td><input id="rootpass" name="rootpass" type="password" value="<?php if (isset($ldapauth['rootpass'])) { echo escape_quoted_data($ldapauth['rootpass']); } ?>" size="30" /></td>
 	    </tr>
 	   	<tr id="taddomain">
-	   		<th><label for="addomian"><?php echo htmlspecialchars($lang['posixldapauth_ad_domain']) ?></label></th>
+	   		<th><label for="addomain"><?php echo htmlspecialchars($lang['posixldapauth_ad_domain']) ?></label></th>
 	   		<td><input id="addomain"  name="addomain" type="text" value="<?php if (isset($ldapauth['addomain'])) { echo escape_quoted_data($ldapauth['addomain']); }?>" size="30" /></td>
 	   	</tr>
 	   	<tr id="tadusesingledomain">

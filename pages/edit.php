@@ -1716,6 +1716,8 @@ if ($ref < 0 && !$upload_review_mode)
     }
 
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
+$edit_valid_fields = get_resource_type_fields($resource['resource_type']);
+$edit_valid_fields = array_column($edit_valid_fields,"ref");
 
 # Only include fields whose resource type is global or is present in the resource(s) being edited
 if ($multiple) 
@@ -1964,7 +1966,10 @@ foreach($fields as $n => $field)
         }
 
     node_field_options_override($field);
-    display_field($n, $field, $newtab, $modal);
+    if(in_array($field['resource_type_field'], $edit_valid_fields))
+        {
+        display_field($n, $field, $newtab, $modal); 
+        }
     }
 
     if ($tabs_on_edit && $tabcount>0)
@@ -2375,7 +2380,7 @@ if ($ref>0 && !$multiple)
                 }
             if ($resource["has_image"]==1 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
                 { ?>
-                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,false) . '&refreshkey=' . rand(0,1000); ?>" class="ImageBorder"/>
+                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,false); ?>" class="ImageBorder"/>
                 <?php 
                 # Render watermarked version if it exists
                 if (checkperm("w") && $wmpath!="" && file_exists($wmpath))

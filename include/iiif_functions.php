@@ -272,7 +272,7 @@ final class IIIFRequest {
 
     * @return array|bool        Thumbnail image data, false if not found
     */
-    public function getThumbnail($resourceid)
+    public function getThumbnail(int $resourceid)
         {
         $img_path = get_resource_path($resourceid,true,'thm',false);
         if(!file_exists($img_path))
@@ -318,7 +318,7 @@ final class IIIFRequest {
     *
     * @return array
     */
-    public function get_image($resource, array $size_info): array
+    public function get_image(int $resource, array $size_info): array
         {
         // Quick validation of the size_info param
         if(empty($size_info) || (!isset($size_info['identifier']) && !isset($size_info['return_height_width'])))
@@ -489,7 +489,6 @@ final class IIIFRequest {
         if($this->license_field != 0)
             {
             $licensevals = get_data_by_field($this->searchresults[0]["ref"], $this->license_field,false);
-            // exit(print_r($licensevals));
             if(count($licensevals) > 0)
                 {
                 // Get all field title translations

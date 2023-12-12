@@ -148,7 +148,7 @@ $page_def[] = config_add_file_input(
     'custom_font',
     $lang['systemconfig_customfont_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
-    420,
+    316,
     array('woff2', 'woff', 'ttf', 'otf')
 );
 
@@ -156,13 +156,13 @@ $page_def[] = config_add_file_input(
     'linkedheaderimgsrc',
     $lang['systemconfig_linkedheaderimgsrc_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
-    420
+    316
 );
 $page_def[] = config_add_file_input(
     'header_favicon',
     $lang['systemconfig_header_favicon_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
-    420
+    316
 );
 
 $page_def[] = config_add_single_select(
@@ -253,7 +253,7 @@ $page_def[] = config_add_file_input(
     'watermark',
     $lang['watermark_label'],
     $baseurl . '/pages/admin/admin_system_config.php',
-    420,
+    316,
     array('png'),
     true
 );
@@ -381,8 +381,8 @@ $page_def[] = config_add_html('</div>');
 // Actions section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['actions'] . '</h3><div id="SystemConfigActionsSection" class="CollapsibleSection">');
 $page_def[] = config_add_boolean_select('actions_enable', $lang['actions-enable'], $enable_disable_options, 420, '', true);
-$page_def[] = config_add_boolean_select('actions_resource_requests', $lang['actions_resource_requests_default'], $enable_disable_options, 300, '', true);
-$page_def[] = config_add_boolean_select('actions_account_requests', $lang['actions_account_requests_default'], $enable_disable_options, 300, '', true);
+$page_def[] = config_add_boolean_select('actions_resource_requests', $lang['actions_resource_requests_default'], $enable_disable_options, 420, '', true);
+$page_def[] = config_add_boolean_select('actions_account_requests', $lang['actions_account_requests_default'], $enable_disable_options, 420, '', true);
 	
 $page_def[] = config_add_html('</div>');
 

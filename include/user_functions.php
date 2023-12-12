@@ -3436,24 +3436,24 @@ function get_default_notify_states(): array
 /**
  * Generate a temporary download key for user. Used to enable temporary resource access to a file via download.php so that API can access resources after calling get_resource_path()
  *
- * @param int $user         User ID
- * @param int $resource     Resource ID
+ * @param int     $user         User ID
+ * @param int     $resource     Resource ID
+ * @param string  $size         Download size to access.
  * 
  * @return string           Access key - empty if not permitted
  */
-function generate_temp_download_key(int $user, int $resource): string
+function generate_temp_download_key(int $user, int $resource, string $size): string
     {
-    if ((($GLOBALS["userref"] != $user && !checkperm_user_edit($user))
-            || get_resource_access($resource) != 0)
-        )
+    if (!in_array($size, array('col', 'thm', 'pre')) && (($GLOBALS["userref"] != $user && !checkperm_user_edit($user)) || get_resource_access($resource) != 0))
         {
         return "";
         }
-    
+
     $user_data = get_user($user);
     $data =  generateSecureKey(128)
         . ":" . $user
         . ":" . $resource
+        . ":" . $size
         . ":" .  time()
         . ":" . hash_hmac("sha256", "user_pass_mac", $user_data['password']);
 
@@ -3466,13 +3466,14 @@ function generate_temp_download_key(int $user, int $resource): string
 /**
  * Validate the provided download key
  *
- * @param int           Resource ID
- * @param $keystring    Key string - incudes a nonce prefix
+ * @param int     $ref          Resource ID
+ * @param string  $keystring    Key string - includes a nonce prefix
+ * @param string  $size         Download size to access. 
  * 
  * @return bool
  * 
  */
-function validate_temp_download_key(int $ref, string $keystring) : bool
+function validate_temp_download_key(int $ref, string $keystring, string $size) : bool
     {
     global $api_resource_path_expiry_hours;
     $keydata = rsDecrypt($keystring, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
@@ -3480,14 +3481,14 @@ function validate_temp_download_key(int $ref, string $keystring) : bool
         {
         $download_key_parts = explode(":", $keydata);
         // First element is the nonce
-        if($download_key_parts[2] == $ref)
+        if($download_key_parts[2] == $ref && $download_key_parts[3] == $size)
             {
             $ak_user = $download_key_parts[1];
             $ak_userdata = get_user($ak_user);
-            $key_time = $download_key_parts[3];
+            $key_time = $download_key_parts[4];
             if($ak_userdata !== false 
                 && ((time()- $key_time) < (60 * 60 * $api_resource_path_expiry_hours))
-                && hash_hmac("sha256", "user_pass_mac", $ak_userdata['password']) === $download_key_parts[4])
+                && hash_hmac("sha256", "user_pass_mac", $ak_userdata['password']) === $download_key_parts[5])
                 {
                 setup_user($ak_userdata);
                 return true;

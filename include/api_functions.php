@@ -87,14 +87,7 @@ function execute_api_call($query,$pretty=false)
         // Check if this is a whitelisted function for browser use (native mode bypasses $enable_remote_apis=false;)
         if(!in_array($function,API_NATIVE_WHITELIST))
             {
-            ajax_send_response(
-                401,
-                ['error' => [
-                    'status' => 401,
-                    'title'  => $GLOBALS['lang']['unauthorized'],
-                    'detail' => $GLOBALS['lang']['error-permissiondenied']
-                    ]]
-                );
+            ajax_unauthorized();
             }
         }
 

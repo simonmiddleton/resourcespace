@@ -13,8 +13,8 @@ function HookEmuAllExtra_checks()
         $message['emu'] = [
             'status' => 'FAIL',
             'info' => "{$GLOBALS['lang']['emu_configuration']}: {$t->getMessage()}",
-            'severity' => WARNING,
-            'severity_text' => $GLOBALS["lang"]["severity-level_" . WARNING],
+            'severity' => SEVERITY_WARNING,
+            'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
             ];
         return $message;
         }

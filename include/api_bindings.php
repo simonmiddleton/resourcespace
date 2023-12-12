@@ -114,18 +114,18 @@ function api_search_get_previews($search,$restypes="",$order_by="relevance",$arc
             if($GLOBALS["hide_real_filepath"])
                 {
                 // Add a temporary key so the file can be accessed unauthenticated
-                $accesskey = generate_temp_download_key($GLOBALS["userref"], $results[$n]["ref"]);
-                if($accesskey !== "")
+                foreach($getsizes as $getsize)
                     {
-                    foreach($getsizes as $getsize)
+                    if(isset($results[$n]["url_" . $getsize]))
                         {
-                        if(isset($results[$n]["url_" . $getsize]))
+                        $accesskey = generate_temp_download_key($GLOBALS["userref"], $results[$n]["ref"], $getsize);
+                        if ($accesskey !== '')
                             {
                             $results[$n]["url_" . $getsize] .= "&access_key={$accesskey}";
                             }
                         }
                     }
-                }            
+                }
             }
         }
     return $structured ? ["total"=> $totalcount, "data" => $results] : $results;
@@ -338,7 +338,7 @@ function api_get_resource_path($ref, $not_used=null, $size="", $generate=true, $
         if($GLOBALS["hide_real_filepath"])
             {
             // Add a temporary key so the file can be accessed unauthenticated
-            $accesskey = generate_temp_download_key($GLOBALS["userref"], $ref);
+            $accesskey = generate_temp_download_key($GLOBALS["userref"], $ref, $size);
             if($accesskey !== "")
                 {
                 $return[$ref] .= "&access_key={$accesskey}";
@@ -868,10 +868,22 @@ function api_get_resource_all_image_sizes($resource)
     if($GLOBALS["hide_real_filepath"])
         {
         // Add a temporary key so the file can be accessed unauthenticated
-        $accesskey = generate_temp_download_key($GLOBALS["userref"],$resource);
-        if($accesskey !== "")
+        for ($n = 0; $n < count($sizes); $n++)
             {
-            array_walk($sizes, function(&$size, $key) use ($accesskey) { $size["url"] .= "&access_key={$accesskey}";});
+            if ($sizes[$n]['size_code'] == 'original')
+                {
+                $size_id = '';
+                }
+            else
+                {
+                $size_id = $sizes[$n]['size_code'];
+                }
+
+            $accesskey = generate_temp_download_key($GLOBALS["userref"],$resource, $size_id);
+            if($accesskey !== "")
+                {
+                $sizes[$n]["url"] .= "&access_key={$accesskey}";
+                }
             }
         }
     // Remove the path elements

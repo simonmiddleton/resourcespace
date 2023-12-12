@@ -4297,6 +4297,10 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             {
             $value = nl2br(htmlspecialchars($value));
             }
+        elseif($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value != strip_tags($value))
+            {
+            $value = strip_tags_and_attributes($value, ['a']);
+            }
 
 		$modified_value = hook('display_field_modified_value', '', array($field));
         if($modified_value)
@@ -6601,6 +6605,7 @@ function render_resource_type_selector_question(string $label, string $name, str
 function add_download_column($ref, $size_info, $downloadthissize, $view_in_browser=false)
     {
     global $save_as, $terms_download, $order_by, $lang, $baseurl, $k, $search, $request_adds_to_collection, $offset, $archive, $sort, $internal_share_access, $urlparams, $resource, $iOS_save,$download_usage;
+    $view_in_browser_msg = $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"];
     if ($downloadthissize)
         {
         ?>
@@ -6636,7 +6641,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                             echo " onClick=\"return CentralSpaceLoad(this,true);\"";
                             }
                         ?>>
-                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?>
+                        <?php echo htmlspecialchars($view_in_browser_msg); ?>
                     </a>
                     <?php
                     }
@@ -6667,7 +6672,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                             echo " onClick=\"return CentralSpaceLoad(this,true);\"";
                             }
                         ?>>
-                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"]?>
+                        <?php echo htmlspecialchars($view_in_browser_msg); ?>
                     </a>
                     <?php
                     }
@@ -6688,7 +6693,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                                 }
                             }
                         ?>>
-                        <?php echo $view_in_browser ? $lang["view_in_browser"] : $lang["action-download"] ?>
+                        <?php echo htmlspecialchars($view_in_browser_msg); ?>
                     </a>
                     <?php
                     }

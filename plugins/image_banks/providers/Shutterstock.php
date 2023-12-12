@@ -81,8 +81,12 @@ class Shutterstock extends Provider
 
         $provider_results = new ProviderSearchResults();
 
-        // More cleanly handle an unexpected result.
-        if (!isset($search_results["data"])) {echo "<h1>Sorry, your query could not be completed.</h1><pre>Provider said: " . json_encode($search_results,JSON_PRETTY_PRINT) . "</pre>";exit();}
+        if (!isset($search_results["data"]))
+            {
+            $provider_results->setError($this->lang['image_banks_error_unexpected_response']);
+            debug(sprintf('[image_banks][%s] Unexpected response: %s', __METHOD__, json_encode($search_results)));
+            return $provider_results;
+            }
 
         foreach($search_results["data"] as $result)
             {

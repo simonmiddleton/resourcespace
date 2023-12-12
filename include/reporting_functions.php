@@ -463,7 +463,7 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
             // Translates the report name.
             $report["name"] = lang_or_i18n_get_translated($report["name"], "report-");
 
-            $search_params = (trim($report['search_params']) !== '' ? json_decode($report['search_params'], true) : []);
+            $search_params = (trim($report['search_params']??"") !== '' ? json_decode($report['search_params'], true) : []);
 
             $static_report = true; // If no dynamic search results are included then the same report results can be used for all  recipients
 
@@ -770,17 +770,17 @@ function render_pie_graph($id,$data,$total=NULL)
     // Setup Styling
 
 
-    new Chart(document.getElementById('<?php echo $id ?>'), {
+    new Chart(document.getElementById('<?php echo htmlspecialchars($id) ?>'), {
         type: 'pie',
         data: {
-            labels: ['<?php echo implode("', '",$labels) ?>'],
+            labels: ['<?php echo htmlspecialchars(implode("', '",$labels)) ?>'],
                 datasets: [
                         {
-                    data: [<?php echo implode(", ",$values) ?>]
+                    data: [<?php echo htmlspecialchars(implode(", ",$values)) ?>]
                 }
             ]
         },
-        options: chartstyling<?php echo $id?>,
+        options: chartstyling<?php echo htmlspecialchars($id)?>,
 
 
     });
@@ -810,17 +810,17 @@ function render_bar_graph(string $id, array $data)
     ?>
     <script type="text/javascript">
         new Chart(
-            document.getElementById('<?php echo $id ?>'),
+            document.getElementById('<?php echo htmlspecialchars($id) ?>'),
             {
             type: 'line',
             data: {
                 datasets: [
                     {
-                        data: [<?php echo $values ?>]
+                        data: [<?php echo htmlspecialchars($values) ?>]
                     }
                 ]
             },
-            options: chartstyling<?php echo $id?>,
+            options: chartstyling<?php echo htmlspecialchars($id)?>,
         }
         );
     </script>

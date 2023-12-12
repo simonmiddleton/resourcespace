@@ -30,7 +30,7 @@ $debug_log_location = '/var/some_incorrect_location';
 $debug_log = true;
 $system_status = get_system_status();
 unset($debug_log, $debug_log_location);
-if(isset($system_status['results']['debug_log_location']) && $system_status['results']['debug_log_location']['status'] !== 'FAIL' && $system_status['results']['debug_log_location']['severity'] !== CRITICAL)
+if(isset($system_status['results']['debug_log_location']) && $system_status['results']['debug_log_location']['status'] !== 'FAIL' && $system_status['results']['debug_log_location']['severity'] !== SEVERITY_CRITICAL)
     {
     echo 'Bad debug_log_location as a FAIL error - ';
     return false;

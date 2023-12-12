@@ -8,7 +8,7 @@ include_once "../languages/en.php"; # Because this may not be included automatic
 
 # Get variables and check key is valid.
 $ref        = getval('ref', '');
-$key        = getval('k', '');
+$k          = getval('k', '');
 $size       = getval('size', 'pre');
 $transition = (int)getval('transition', 4, true);
 $showtext   = getval('showtext', '0');
@@ -23,7 +23,7 @@ $player_height = $player_height - 48;
 $player_ratio = $player_width / $player_height;
     
 # Check key is valid
-if (!check_access_key_collection($ref,$key))
+if (!check_access_key_collection($ref,$k))
     {
     exit($lang["embedslideshow_notavailable"]);
     }
@@ -89,7 +89,7 @@ foreach ($resources as $resource)
         # Fall back to 'pre' size
         $preview_path=get_resource_path($resource["ref"],false,"pre",false,$resource["preview_extension"],-1,1,$use_watermark);
         }        
-    $preview_path .= "&k=" . $key;
+    $preview_path .= "&k=" . $k;
     
     # sets height and width to display 
     if(!isset($resource["thumb_width"]) || $resource["thumb_width"]<1 || !isset($resource["thumb_height"]) || $resource["thumb_height"] <1) {continue;/*No Preview Available*/}
