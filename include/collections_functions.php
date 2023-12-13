@@ -5458,7 +5458,7 @@ function get_user_selection_collection($user)
         $params[] = $rs_session;
         }
 
-    return ps_value("SELECT ref AS `value` FROM collection WHERE `user` = ? AND `type` = ? {$session_id_sql} ORDER BY ref ASC", $params, null);
+    return ps_value("SELECT ref AS `value` FROM collection WHERE `user` = ? AND `type` = ? {$session_id_sql} ORDER BY ref ASC", $params, null, 'user_selection_collection');
     }
 
 
