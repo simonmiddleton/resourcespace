@@ -130,7 +130,7 @@ function mplus_get_response_xml(array $result)
     {
     $xml = new DOMDocument('1.0', 'UTF-8');
 
-    if($result['headers']['content-type'][0] == 'application/xml')
+    if($result['headers']['content-type'][0]??"" == 'application/xml')
         {
         $xml->loadXML($result['result']);
         }
