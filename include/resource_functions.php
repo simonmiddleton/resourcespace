@@ -117,7 +117,7 @@ function get_resource_path(
                 'noattach'    => 'true',
                 'v'           => $refresh_key,
             ),
-            $get_resource_path_extra_download_query_string_params) . $refresh_key;
+            $get_resource_path_extra_download_query_string_params);
         }
 
     if ($size=="")
