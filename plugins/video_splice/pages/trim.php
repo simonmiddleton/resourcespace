@@ -175,7 +175,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         create_previews($newref,false,$ffmpeg_preview_extension);
         
         # Restore default value of $ffmpeg_preview_seconds
-        $ffmpeg_preview_seconds = $ffmpeg_local_preview_seconds;
+        $ffmpeg_preview_seconds = $ffmpeg_local_preview_seconds??$ffmpeg_preview_seconds;
 
         if ($collection_add == "yes")
             {
@@ -281,7 +281,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         $trimmed_resources_alt[] = $alt_ref;
         }
         # Restore default value of $ffmpeg_preview_seconds
-        $ffmpeg_preview_seconds = $ffmpeg_local_preview_seconds;
+        $ffmpeg_preview_seconds = $ffmpeg_local_preview_seconds??$ffmpeg_preview_seconds;
     }
 ?>
 
