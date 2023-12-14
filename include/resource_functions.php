@@ -8861,7 +8861,7 @@ function update_resource_lock($ref,$lockaction,$newlockuser=null,$accesschecked 
         {
         $resource_data  = get_resource_data($ref);
         $lockeduser     =  $resource_data["lock_user"];
-        $edit_access    = get_edit_access($ref,false,$resource_data);
+        $edit_access    = get_edit_access($ref,$resource_data["archive"],false,$resource_data);
         if(!checkperm("a")
             &&
             $lockeduser != $userref
