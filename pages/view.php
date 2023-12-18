@@ -658,7 +658,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                     {
                     if (!hook("renderinnerresourcepreview"))
                         {
-                        # Esatblish whether its ok to use original as the preview instead of the "pre" size
+                        # Establish whether it's ok to use original as the preview instead of the "pre" size
                         $sizeforpreview= ($video_preview_original) ? "" : "pre"; 
                         # Try to find a preview file.
                         $video_preview_file = get_resource_path(
