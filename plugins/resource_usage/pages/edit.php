@@ -76,7 +76,7 @@ include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
     <p>
-        <a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo htmlspecialchars($resource); ?>" onClick="return CentralSpaceLoad(this, true);">&lt;&nbsp;<?php echo $lang['backtoresourceview']; ?></a>
+        <a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo htmlspecialchars($resource); ?>" onClick="return CentralSpaceLoad(this, true);">&lt;&nbsp;<?php echo htmlspecialchars($lang['backtoresourceview']); ?></a>
     </p>
     <h1><?php echo ($new_record ? $lang['new_usage'] : $lang['edit_usage']); ?></h1>
 
