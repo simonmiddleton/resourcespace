@@ -996,8 +996,18 @@ final class IIIFRequest {
                             $this->errors[] = "Requested image is not currently available";
                             $this->triggerError(503);
                             }
-                        $imgfound = @create_previews($this->request["id"],false,"jpg",false,true,-1,true,false,false,array($this->request["getsize"]));
-                        clear_process_lock('create_previews_' . $resource["ref"] . "_" . $this->request["getsize"]);
+                        $GLOBALS["use_error_exception"] = true;
+                        try
+                            {
+                            $imgfound = create_previews($this->request["id"],false,"jpg",false,true,-1,true,false,false,array($this->request["getsize"]));
+                            clear_process_lock('create_previews_' . $resource["ref"] . "_" . $this->request["getsize"]);
+                            }
+                        catch (Exception $e)
+                            {
+                            debug("IIIF error: " . $e->getMessage());
+                            $imgfound = false;
+                            }
+                        unset($GLOBALS["use_error_exception"]);
                         }
                     if($imgfound)
                         {
