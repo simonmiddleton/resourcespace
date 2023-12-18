@@ -1330,7 +1330,15 @@ jQuery(document).ready(function () {
             upRedirBlock = true;
             }
         });
-    }); // End of Uppy JS code
+
+        <?php
+        if(isset($uppy_additional_text))
+            {?>
+            companiontext = '<?php echo strip_tags_and_attributes($uppy_additional_text,["a"],["href","target"]); ?>';
+            jQuery(".uppy-Dashboard-AddFiles-info").after(companiontext);
+        <?php
+        }?>
+    }); // End of jQuery(document).ready(function)
 
 <?php
 # If adding to a collection that has been externally shared, show a warning.

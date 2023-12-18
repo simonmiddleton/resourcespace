@@ -3383,6 +3383,9 @@ $uploader_plugins = [];
 
 // The valid Companion server URL
 $uppy_companion_url = "";
+// Optional additional text to display on Uppy panel e.g. a link to the terms page for the companion server
+$uppy_additional_text = "Click <a href='https://companion.resourcespace.com/' target='_blank'>here</a> for Companion server usage terms";
+
 
 # Array of URLs from which files can be uploaded using the create resource and upload file by URL APIs.
 # URL should be given as the hostname only e.g. $api_upload_urls = array('resourcespace.com', 'localhost');
