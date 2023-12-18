@@ -3416,7 +3416,7 @@ $high_contrast_mode = false;
 $api_resource_path_expiry_hours = 24;
 
 /* 
-Format the download file name.
+Format the download file name. This should be configured from the System Configuration page as any changes made in config.php will be overriden by that.
 
 Available placeholders:
 - %resource -> resource ref (ID)
