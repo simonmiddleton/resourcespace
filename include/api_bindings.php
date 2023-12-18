@@ -1402,3 +1402,12 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert): array
     http_response_code(500);
     return ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_upload_failed']));
     }
+
+    /**
+     * Expose {@see get_featured_collections} to the API
+     * @param int $parent The feature collection parent's ref. Use 0 for obtaining the root ones.
+     */
+    function api_get_featured_collections($parent): array
+        {
+        return is_int_loose($parent) ? get_featured_collections($parent, []) : [];
+        }
