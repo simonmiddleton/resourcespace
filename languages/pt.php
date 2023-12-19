@@ -134,7 +134,7 @@ $lang["editresearchrequests"]="Editar solicitações de material";
 $lang["savedsearch"]="Salvar Busca";
 $lang["mustspecifyoneusername"]="Você deve especificar pelo menos um usuário";
 $lang["couldnotmatchallusernames"]="Nomes não batem";
-$lang["emailcollectionmessage"]="lhe enviou uma coleção de $applicationname a qual foi adicionada a sua página de coleções."; # suffixed to user name e.g. "Fred has e-mailed you a collection.."
+$lang["emailcollectionmessage"]="lhe enviou uma coleção de %applicationname% a qual foi adicionada a sua página de coleções."; # suffixed to user name e.g. "Fred has e-mailed you a collection.."
 $lang["clicklinkviewcollection"]="Clique no link abaixo para visualizar a coleção.";
  
 # Resource create / edit / view
@@ -702,7 +702,7 @@ $lang["research"]='Pesquisa.';
 $lang["collectionprivate_attachedusermessage"]='%user% adicionou você à sua coleção \'%colname%\'.';
 $lang["nomessage"]='Nenhuma mensagem.';
 $lang["nomessages"]='Nenhuma mensagem.';
-$lang["emailcollectionmessageexternal"]='Enviou-lhe por e-mail uma coleção de recursos do ResourceSpace.';
+$lang["emailcollectionmessageexternal"]='Enviou-lhe por e-mail uma coleção de recursos do %applicationname%.';
 $lang["zippedcollectiontextfile"]='Incluir arquivo de texto com dados de recurso/coleção.';
 $lang["archivesettings"]='Configurações de arquivo.';
 $lang["archive-zip"]='ZIP (abreviação de "Zona de Integridade de Privacidade") - é um formato de arquivo compactado que é comumente usado para reduzir o tamanho de arquivos grandes e facilitar o compartilhamento de arquivos pela internet.';

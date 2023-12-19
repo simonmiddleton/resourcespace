@@ -134,7 +134,7 @@ $lang["editresearchrequests"]="Edita richieste di ricerca";
 $lang["savedsearch"]="Ricerca salvata";
 $lang["mustspecifyoneusername"]="Devi specificare almeno un utente";
 $lang["couldnotmatchallusernames"]="Non trovo alcuni degli utenti";
-$lang["emailcollectionmessage"]="ti ha inviato una collezione di risorse da $applicationname che e' stata aggiunta alla lista delle tue collezioni."; # suffixed to user name e.g. "Fred has e-mailed you a collection.."
+$lang["emailcollectionmessage"]="ti ha inviato una collezione di risorse da %applicationname% che e' stata aggiunta alla lista delle tue collezioni."; # suffixed to user name e.g. "Fred has e-mailed you a collection.."
 $lang["clicklinkviewcollection"]="Clicca il link sotto per vedere la collezione.";
  
 # Resource create / edit / view
@@ -767,7 +767,7 @@ $lang["research"]='Ricerca.';
 $lang["collectionprivate_attachedusermessage"]='%user% ti ha aggiunto alla loro collezione \'%colname%\'.';
 $lang["nomessage"]='Nessun messaggio.';
 $lang["nomessages"]='Nessun messaggio.';
-$lang["emailcollectionmessageexternal"]='ti ha inviato via e-mail una collezione di risorse da ResourceSpace.';
+$lang["emailcollectionmessageexternal"]='ti ha inviato via e-mail una collezione di risorse da %applicationname%.';
 $lang["zippedcollectiontextfile"]='Includi file di testo con i dati della risorsa/collezione.';
 $lang["archivesettings"]='Impostazioni di archiviazione.';
 $lang["archive-zip"]='ZIP';

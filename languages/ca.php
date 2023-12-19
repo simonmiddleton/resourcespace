@@ -129,7 +129,7 @@ $lang["editresearchrequests"]="Editar peticions de material";
 $lang["savedsearch"]="Cerca guardada";
 $lang["mustspecifyoneusername"]="Has d'especificar un usuari com a mínim";
 $lang["couldnotmatchallusernames"]="No s'ha pogut trobar tots els noms d'usuaris";
-$lang["emailcollectionmessage"]="t'ha enviat una col·lecció de materials de $applicationname i s'ha afegit a la teva secció 'Les meves col·leccions'."; # suffixed to user name e.g. "Fred has e-mailed you a collection.."
+$lang["emailcollectionmessage"]="t'ha enviat una col·lecció de materials de %applicationname% i s'ha afegit a la teva secció 'Les meves col·leccions'."; # suffixed to user name e.g. "Fred has e-mailed you a collection.."
 $lang["clicklinkviewcollection"]="Clica l'enllaç de sota per veure la col·lecció.";
 
 # Resource create / edit / view
@@ -793,7 +793,7 @@ $lang["research"]='Investigació.';
 $lang["collectionprivate_attachedusermessage"]='%user% t\'ha afegit a la seva col·lecció \'%colname%\'.';
 $lang["nomessage"]='Cap missatge.';
 $lang["nomessages"]='Cap missatge.';
-$lang["emailcollectionmessageexternal"]='t\'ha enviat per correu electrònic una col·lecció de recursos des de ResourceSpace.';
+$lang["emailcollectionmessageexternal"]='t\'ha enviat per correu electrònic una col·lecció de recursos des de %applicationname%.';
 $lang["zippedcollectiontextfile"]='Inclou fitxer de text amb les dades del recurs/col·lecció.';
 $lang["archivesettings"]='Configuració d\'arxiu.';
 $lang["download-of-collections-not-enabled"]='La descàrrega de col·leccions no està habilitada.';

@@ -1199,8 +1199,19 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                     {
                     // Get lang variables (ex. [lang_mycollections])
                     global $lang;
-                    $setvalues[$placeholder] = $lang[substr($placeholder,5)];
-                    }           
+                    switch(substr($placeholder,5))
+                        {
+                        case "emailcollectionmessageexternal":
+                            $setvalues[$placeholder] = str_replace('%applicationname%', $applicationname, $lang["emailcollectionmessageexternal"]);
+                            break;
+                        case "emailcollectionmessage":
+                            $setvalues[$placeholder] = str_replace('%applicationname%', $applicationname, $lang["emailcollectionmessage"]);
+                            break;
+                        default:
+                            $setvalues[$placeholder] = $lang[substr($placeholder,5)];
+                            break;
+                        }
+                    }
                 else if (substr($placeholder,0,5)=="text_")
                     {
                     // Get text string (legacy)

@@ -166,7 +166,20 @@ class ResourceSpaceUserNotification
             if(substr($text,0,5) == "lang_")
                 {
                 $langkey = substr($text,5);
-                $text = $lang[$langkey];
+                switch($langkey)
+                    {
+                    case "emailcollectionmessageexternal":
+                        global $applicationname;
+                        $text = str_replace('%applicationname%', $applicationname, $lang["emailcollectionmessageexternal"]);
+                        break;
+                    case "emailcollectionmessage":
+                        global $applicationname;
+                        $text = str_replace('%applicationname%', $applicationname, $lang["emailcollectionmessage"]);
+                        break;
+                    default:
+                        $text = $lang[$langkey];
+                        break;
+                    }
                 }
             if(substr($text,0,5) == "i18n_")
                 {

@@ -2101,7 +2101,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 
     if ($fromusername==""){$fromusername=$applicationname;}
 
-    $externalmessage = $lang["emailcollectionmessageexternal"];
+    $externalmessage = str_replace('%applicationname%', $applicationname, $lang["emailcollectionmessageexternal"]);
     $internalmessage = "lang_emailcollectionmessage";
 
     $viewlinktext="lang_clicklinkviewcollection";

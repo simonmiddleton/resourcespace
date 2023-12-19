@@ -134,7 +134,7 @@ $lang["editresearchrequests"]="Bewerk onderzoekaanvraag";
 $lang["savedsearch"]="Bewaarde zoekopdrachten";
 $lang["mustspecifyoneusername"]="Ten minste een gebruikersnaam opgaven";
 $lang["couldnotmatchallusernames"]="Kon niet alle gebruikersnamen vinden";
-$lang["emailcollectionmessage"]="heeft u een collectie materialen gezonden vanuit $applicationname, deze collectie is toegevoegd aan uw collecties pagina"; # suffixed to user name e.g. "Fred has e-mailed you a collection.."
+$lang["emailcollectionmessage"]="heeft u een collectie materialen gezonden vanuit %applicationname%, deze collectie is toegevoegd aan uw collecties pagina"; # suffixed to user name e.g. "Fred has e-mailed you a collection.."
 $lang["clicklinkviewcollection"]="Klik op de link hieronder om de collectie weer te geven.";
  
 # Resource create / edit / view
@@ -741,7 +741,7 @@ $lang["research"]='Onderzoek';
 $lang["collectionprivate_attachedusermessage"]='%user% heeft je toegevoegd aan hun collectie \'%colname%\'.';
 $lang["nomessage"]='Geen bericht.';
 $lang["nomessages"]='Geen berichten.';
-$lang["emailcollectionmessageexternal"]='Heeft u een verzameling van bronnen van ResourceSpace per e-mail gestuurd.';
+$lang["emailcollectionmessageexternal"]='Heeft u een verzameling van bronnen van %applicationname% per e-mail gestuurd.';
 $lang["zippedcollectiontextfile"]='Inclusief tekstbestand met gegevens van bron/collectie.';
 $lang["archivesettings"]='Archiefinstellingen';
 $lang["archive-zip"]='ZIP';
