@@ -682,7 +682,6 @@ function lang_load_site_text(&$lang,$pagename,$language = "")
 function i18n_get_all_translations(string $langid): array
     {
     global $lang;
-    global $homeanim_folder, $applicationname, $storagedir; // These are currently referenced by some lang files
     $savedlang = $lang;
     $alltranslations = [];
     foreach($GLOBALS["languages"] as $langcode=>$availlanguage)
