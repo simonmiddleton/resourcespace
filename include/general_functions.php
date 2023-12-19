@@ -909,8 +909,9 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
             if ($useremail_rate_limit_active ?? false)
                 {
                 ps_query("update user set email_rate_limit_active=0 where ref=?",["i",$userref]);
-                // Send them a message 
-                message_add([$userref],$lang["email_rate_limit_inactive"]);
+                // Send them a message
+                // MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL to prevent sending email via message_add() as this will cause loop.
+                message_add([$userref],$lang["email_rate_limit_inactive"], '', null, MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL);
                 }
             }
         }
