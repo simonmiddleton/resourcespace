@@ -367,8 +367,8 @@ $lang["selectcollection"]="Välj samling";
 $lang["total"]="Totalt";
 $lang["ownedbyyou"]="ägda av dig";
 $lang["edit_theme_category"]="Redigera temakategori";
-$lang["emailthemecollectionmessageexternal"]="har skickat samlingar med material från $applicationname till dig per e-post.";
-$lang["emailthememessage"]="har skickat ett urval av teman från $applicationname till dig per e-post. Dessa teman har lagts till i Mina samlingar.";
+$lang["emailthemecollectionmessageexternal"]="har skickat samlingar med material från %applicationname% till dig per e-post.";
+$lang["emailthememessage"]="har skickat ett urval av teman från %applicationname% till dig per e-post. Dessa teman har lagts till i Mina samlingar.";
 $lang["clicklinkviewthemes"]="Klicka på länken nedan om du vill visa temana.";
 $lang["clicklinkviewcollections"]="Klicka på länkarna nedan om du vill visa samlingarna.";
 

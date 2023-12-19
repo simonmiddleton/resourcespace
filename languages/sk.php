@@ -440,8 +440,8 @@ $lang["total"]="Celkom";
 $lang["lastmatching"]="Posledná zhoda";
 $lang["ownedbyyou"]="Vami vlastnené";
 $lang["edit_theme_category"]="Upravte kategóriu odporúčanej zbierky";
-$lang["emailthemecollectionmessageexternal"]="Vám poslal e-mailom zbierky zdrojov z $applicationname."; 
-$lang["emailthememessage"]="Vám poslal e-mailom výber odporúčaných zbierok z $applicationname, ktoré boli pridané na Vašu stránku \"Moje zbierky\".";
+$lang["emailthemecollectionmessageexternal"]="Vám poslal e-mailom zbierky zdrojov z %applicationname%."; 
+$lang["emailthememessage"]="Vám poslal e-mailom výber odporúčaných zbierok z %applicationname%, ktoré boli pridané na Vašu stránku \"Moje zbierky\".";
 $lang["clicklinkviewthemes"]="Kliknutím na odkaz nižšie zobrazíte vybrané zbierky.";
 $lang["clicklinkviewcollections"]="Kliknutím na odkazy nižšie zobrazíte zbierky.";
 

@@ -176,6 +176,10 @@ class ResourceSpaceUserNotification
                         global $applicationname;
                         $text = str_replace('%applicationname%', $applicationname, $lang["emailcollectionmessage"]);
                         break;
+                    case "emailthememessage":
+                        global $applicationname;
+                        $text = str_replace('%applicationname%', $applicationname, $lang["emailthememessage"]);
+                        break;
                     default:
                         $text = $lang[$langkey];
                         break;

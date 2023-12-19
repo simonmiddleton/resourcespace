@@ -371,8 +371,8 @@ $lang["selectcollection"]="Kollektion auswählen";
 $lang["total"]="Gesamt";
 $lang["ownedbyyou"]="von Ihnen erstellt";
 $lang["edit_theme_category"]="Themenkategorie bearbeiten";
-$lang["emailthemecollectionmessageexternal"]="hat Ihnen mehrere Ressourcen-Kollektionen aus $applicationname geschickt."; 
-$lang["emailthememessage"]="hat Ihnen eine Auswahl an Themen aus $applicationname geschickt, die zu der Seite 'Meine Kollektionen' hinzugefügt wurden.";
+$lang["emailthemecollectionmessageexternal"]="hat Ihnen mehrere Ressourcen-Kollektionen aus %applicationname% geschickt."; 
+$lang["emailthememessage"]="hat Ihnen eine Auswahl an Themen aus %applicationname% geschickt, die zu der Seite 'Meine Kollektionen' hinzugefügt wurden.";
 $lang["clicklinkviewthemes"]="Klicken Sie den untenstehenden Link an, um die Themen anzusehen.";
 $lang["clicklinkviewcollections"]="Klicken Sie den untenstehenden Link an, um die Kollektionen anzusehen.";
 

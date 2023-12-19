@@ -2107,7 +2107,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
     $viewlinktext="lang_clicklinkviewcollection";
     if ($themeshare) // Change the text if sharing a theme category
         {
-        $externalmessage    = $lang["emailthemecollectionmessageexternal"];
+        $externalmessage    = str_replace('%applicationname%', $applicationname, $lang["emailthemecollectionmessageexternal"]);
         $internalmessage    = "lang_emailthememessage";
         $viewlinktext       = "lang_clicklinkviewcollections";
         }
