@@ -5,6 +5,38 @@ include $museumplus_rs_root . 'include/db.php';
 include_once $museumplus_rs_root . 'include/resource_functions.php';
 include_once $museumplus_rs_root . 'include/log_functions.php';
 
+$help_text = <<<'HELP'
+NAME
+    museumplus_script - MuseumPlus admin
+
+SYNOPSIS
+    php /path/to/plugins/museumplus/pages/museumplus_script.php [OPTIONS]
+
+DESCRIPTION
+    A tool to help administrators manage resources associated with MuseumPlus records.
+
+OPTIONS SUMMARY
+
+    -c, --clear-lock        Clear the lock after a failed run
+    --filter                Filter the resources that should be processed. Available options:
+                            * new_and_changed_associations - this will process resources that have just been assocciated 
+                                with a module or that had their association changed since the last time they've been validated.
+                            * byref - this will take as argument a list of resource IDs. See examples.
+    -h, --help              Display this help text and exit.
+    --revalidate            This will (force) revalidate, even when the association is already determined to be valid.
+
+EXAMPLES
+    # Run script as a fallback (to catch any resources that for some reason haven't triggered an ad-hoc sync)
+    php plugins/museumplus/pages/museumplus_script.php
+
+    # Revalidate resource IDs 121 and 234 
+    php plugins/museumplus/pages/museumplus_script.php --revalidate --filter byref:121,234
+
+    # Revalidate resources that have changed since the last time they've been validated 
+    php plugins/museumplus/pages/museumplus_script.php --revalidate --filter new_and_changed_associations
+
+
+HELP;
 logScript('[museumplus] Initiating MuseumPlus script process...');
 $mplus_script_start_time = microtime(true);
 set_time_limit($cron_job_time_limit);
@@ -82,10 +114,9 @@ foreach(getopt($mplus_short_options, $mplus_long_options) as $option_name => $op
     {
     if(in_array($option_name, array('h', 'help')))
         {
-        logScript('[museumplus] To clear the lock after a failed run, pass either the "-c" -or- "--clear-lock" option.', $mplus_log_file);
-        logScript('[museumplus] To filter the resources that should be processed, use the "--filter" option and use the "new_and_changed_associations" filter. This will process resources that have just been assocciated with a module or that had their association changed since the last time they\'ve been validated.', $mplus_log_file);
-        logScript('[museumplus] To force a re-validation, use the "--revalidate" flag. This will revalidate even when the association is already determined to be valid.', $mplus_log_file);
-        exit();
+        ob_clean();
+        echo $help_text;
+        exit(0);
         }
 
     if(in_array($option_name, array('c', 'clear-lock')))
@@ -107,8 +138,20 @@ foreach(getopt($mplus_short_options, $mplus_long_options) as $option_name => $op
     if($option_name === 'filter')
         {
         $raw_options = (is_array($option_value) ? $option_value : [$option_value]);
-        $raw_filter = array_flip($raw_options);
-        array_walk($raw_filter, function(&$v, $i) { $v = null; }); # convert to the correct struct of a "flag" filter
+        foreach ($raw_options as $filter_name_with_args)
+            {
+            // Filter takes args (e.g --filter byref:102,201 WHERE 102 and 201 are the IDs)
+            if (mb_strpos($filter_name_with_args, ':', 0, 'UTF-8'))
+                {
+                [$filter_name, $filter_args] = explode(':', $filter_name_with_args);
+                $raw_filter[$filter_name] = explode(',', $filter_args);
+                continue;
+                }
+
+            // Simple filters (e.g --filter new_and_changed_associations)
+            $raw_filter[$filter_name_with_args] = null;
+            }
+
         $filter = mplus_validate_resource_association_filters($raw_filter);
         logScript('[museumplus] Additional valid filters: ' . implode(', ', array_keys($filter)), $mplus_log_file);
         }
