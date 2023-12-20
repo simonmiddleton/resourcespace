@@ -1670,7 +1670,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
                 $val = str_replace('\\', $regexp_slash_replace, $val);   
                 }
         
-            if($column == "type" && $val != $existingfield["type"] && (bool)($postdata["migrate_data"]) ?? false)
+            if($column == "type" && $val != $existingfield["type"] && (bool)($postdata["migrate_data"] ?? false))
                 {
                 // Need to migrate field data
                 $migrate_data = true;				
