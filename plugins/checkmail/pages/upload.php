@@ -18,7 +18,9 @@ include "../../../include/header.php";
 
 if ($userinfo['email']==""){error_alert($lang['pleasesetupemailaddress']);}
 
-$message=str_replace("[fromaddress]",$userinfo['email'],$lang['uploadviaemail-intro']);
+global $applicationname;
+$message = str_replace('%applicationname%', $applicationname, $lang["uploadviaemail-intro"]);
+$message=str_replace("[fromaddress]",$userinfo['email'], $message);
 $message=str_replace("[toaddress]",$checkmail_email,$message);
 
 $subjectfield = ps_value("select title value from resource_type_field where ref = ?", array("i",$checkmail_subject_field), "", "schema");

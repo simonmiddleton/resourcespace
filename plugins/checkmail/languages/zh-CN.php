@@ -31,7 +31,7 @@ $lang["checkmail_mail_skipped"]='跳过的电子邮件 (Tiào guò de diànzǐ y
 $lang["checkmail_allow_users_based_on_permission_label"]='用户是否应该根据权限被允许上传？';
 $lang["addresourcesviaemail"]='通过电子邮件添加';
 $lang["uploadviaemail"]='通过电子邮件添加';
-$lang["uploadviaemail-intro"]='通过电子邮件上传，请附上您的文件并将电子邮件发送至<b><a href=\'mailto:[toaddress]\'>[toaddress]</a></b>。</p> <p>请务必从<b>[fromaddress]</b>发送，否则将被忽略。</p><p>请注意，电子邮件主题中的任何内容都将进入ResourceSpace中的[subjectfield]字段。</p><p>还请注意，电子邮件正文中的任何内容都将进入ResourceSpace中的[bodyfield]字段。</p> <p>多个文件将被分组到一个集合中。您的资源将默认为访问级别<b>\'[access]\'</b>和归档状态<b>\'[archive]\'</b>。</p><p>[confirmation]</p>';
+$lang["uploadviaemail-intro"]='通过电子邮件上传，请附上您的文件并将电子邮件发送至<b><a href=\'mailto:[toaddress]\'>[toaddress]</a></b>。</p> <p>请务必从<b>[fromaddress]</b>发送，否则将被忽略。</p><p>请注意，电子邮件主题中的任何内容都将进入%applicationname%中的[subjectfield]字段。</p><p>还请注意，电子邮件正文中的任何内容都将进入%applicationname%中的[bodyfield]字段。</p> <p>多个文件将被分组到一个集合中。您的资源将默认为访问级别<b>\'[access]\'</b>和归档状态<b>\'[archive]\'</b>。</p><p>[confirmation]</p>';
 $lang["checkmail_confirmation_message"]='当您的电子邮件成功处理后，您将收到一封确认电子邮件。如果您的电子邮件由于某种原因（例如从错误的地址发送）被程序自动跳过，则管理员将收到通知，以便处理需要关注的电子邮件。';
 $lang["yourresourcehasbeenuploaded"]='您的资源已上传。';
 $lang["yourresourceshavebeenuploaded"]='您的资源已上传。';
