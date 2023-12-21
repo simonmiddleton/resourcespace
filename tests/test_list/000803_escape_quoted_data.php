@@ -24,5 +24,11 @@ foreach($use_cases as $use_case_name => $input)
         }
     }
 
+// We want to show invalid characters to be able to detect encoding issues!
+if (escape_quoted_data("invalid -\x80- char") !== "invalid -\u{FFFD}- char")
+    {
+    echo "Use case: Invalid character (\x80) - ";
+    return false;
+    }
 
 return true;

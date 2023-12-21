@@ -5884,7 +5884,7 @@ function render_fixed_text_question($label, $text)
  */
 function escape_quoted_data(string $unsafe)
     {
-    return htmlspecialchars($unsafe, ENT_QUOTES);
+    return htmlspecialchars($unsafe, ENT_QUOTES | ENT_SUBSTITUTE);
     }
 
 
