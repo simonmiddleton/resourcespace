@@ -80,7 +80,7 @@ if(isset($saved_text))
         <input type="hidden" name="saveform" value="true">
         <input type="hidden" name="ref" value="<?php echo $ref; ?>">
         <p align="right">
-            <input type="submit" name="copy" value="<?php echo escape_quoted_data($lang['copy']) ; ?>" style="width:100px;">
+            <input type="submit" name="copy" value="<?php echo escape($lang['copy']) ; ?>" style="width:100px;">
         </p>
     </form>
 

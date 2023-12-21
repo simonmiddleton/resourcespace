@@ -254,7 +254,7 @@ for ($n=0;$n<count($fields);$n++)
             $fieldrestypes = explode(",",(string)$fields[$n]["resource_types"]);
             $restypestring = implode(", ",array_intersect_key($arr_restypes, array_flip($fieldrestypes)));
             }?>
-        <td title="<?php echo escape_quoted_data($restypestring); ?>">
+        <td title="<?php echo escape($restypestring); ?>">
             <?php echo htmlspecialchars(tidy_trim($restypestring,30)); ?>
         </td>
     <?php if (!hook('replacetabnamecolumn')) {
@@ -304,7 +304,7 @@ for ($n=0;$n<count($fields);$n++)
     <div class="Question">
             <label for="find"><?php echo $lang["find"]?></label>
             <div class="tickset">
-             <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape_quoted_data($find)?>" maxlength="100" class="shrtwidth" /></div>
+             <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape($find)?>" maxlength="100" class="shrtwidth" /></div>
              <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" /></div>
             <?php
             if ($find!="")

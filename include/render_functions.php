@@ -32,7 +32,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     // set this to zero since this does not apply to collections
     if (!isset($field['field_constraint'])){$field['field_constraint']=0;}
       
-    $name="field_" . ($forsearchbar ? escape_quoted_data($field["name"]) : $field["ref"]);
+    $name="field_" . ($forsearchbar ? escape($field["name"]) : $field["ref"]);
     $id="field_" . $field["ref"];
 
     # An array of conditions spanning all governed fields and all governing fields
@@ -469,7 +469,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         ?>" id="question_<?php echo $n ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
         if (strlen((string) $field["tooltip_text"])>=1)
             {
-            echo "title=\"" . escape_quoted_data(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";
+            echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";
             }
         ?>>
         <label><?php echo htmlspecialchars(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?></label>
@@ -479,7 +479,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         {
         hook("modifysearchfieldtitle");
         ?>
-        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"] ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . escape_quoted_data(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><label for="simplesearch_<?php echo $field["ref"] ?>"><?php echo htmlspecialchars(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?></label><br/>
+        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"] ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><label for="simplesearch_<?php echo $field["ref"] ?>"><?php echo htmlspecialchars(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?></label><br/>
         
         <?php
         #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
@@ -499,9 +499,9 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         # Dynamic keyword list behaviour replaced with regular input field under these circumstances
         if ((int)$field['field_constraint']==0)
             {
-			?><input class="<?php echo escape_quoted_data($class) ?>" type=text name="<?php echo escape_quoted_data($name) ?>" id="<?php echo escape_quoted_data($id) ?>" value="<?php echo escape_quoted_data((string)$value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo escape_quoted_data((string)$field["name"]) ?>',[<?php echo htmlspecialchars((string)$field["resource_types"]) ?>]);}"<?php } ?>><?php 
+			?><input class="<?php echo escape($class) ?>" type=text name="<?php echo escape($name) ?>" id="<?php echo escape($id) ?>" value="<?php echo escape((string)$value)?>" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } if(!$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } if($forsearchbar){?>onKeyUp="if('' != jQuery(this).val()){FilterBasicSearchOptions('<?php echo escape((string)$field["name"]) ?>',[<?php echo htmlspecialchars((string)$field["resource_types"]) ?>]);}"<?php } ?>><?php 
 			# Add to the clear function so clicking 'clear' clears this box.
-			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : escape_quoted_data((string)$field["name"])) . "').value='';";
+			$clear_function.="document.getElementById('field_" . ($forsearchbar? $field["ref"] : escape((string)$field["name"])) . "').value='';";
 		    }
         // number view - manipulate the form value (don't send these but send a compiled numrange value instead
         else if ((int)$field['field_constraint']==1)
@@ -510,8 +510,8 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 			$minmax=explode('|',str_replace("numrange","",$value));
 			($minmax[0]=='')?$minvalue='':$minvalue=str_replace("neg","-",$minmax[0]);
 			(isset($minmax[1]))?$maxvalue=str_replace("neg","-",$minmax[1]):$maxvalue='';
-            echo htmlspecialchars($lang["from"]); ?><input id="<?php echo escape_quoted_data($name) ?>_min" onChange="jQuery('#<?php echo escape_quoted_data($name) ?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo escape_quoted_data($name) ?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo escape_quoted_data($minvalue)?>"><?php echo htmlspecialchars($lang["to"]); ?><input id="<?php echo escape_quoted_data($name) ?>_max" onChange="jQuery('#<?php echo escape_quoted_data($name) ?>').val('numrange'+jQuery('#<?php echo escape_quoted_data($name) ?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo escape_quoted_data($maxvalue)?>">
-			<input id="<?php echo escape_quoted_data($name) ?>" name="<?php echo escape_quoted_data($name) ?>" type="hidden" value="<?php echo escape_quoted_data($value) ?>">
+            echo htmlspecialchars($lang["from"]); ?><input id="<?php echo escape($name) ?>_min" onChange="jQuery('#<?php echo escape($name) ?>').val('numrange'+jQuery(this).val().replace('-','neg')+'|'+jQuery('#<?php echo escape($name) ?>_max').val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo escape($minvalue)?>"><?php echo htmlspecialchars($lang["to"]); ?><input id="<?php echo escape($name) ?>_max" onChange="jQuery('#<?php echo escape($name) ?>').val('numrange'+jQuery('#<?php echo escape($name) ?>_min').val().replace('-','neg')+'|'+jQuery(this).val().replace('-','neg'));" class="NumberSearchWidth" type="number" value="<?php echo escape($maxvalue)?>">
+			<input id="<?php echo escape($name) ?>" name="<?php echo escape($name) ?>" type="hidden" value="<?php echo escape($value) ?>">
 		    <?php 
 			# Add to the clear function so clicking 'clear' clears this box.
 			 $clear_function.="document.getElementById('".$name."_max').value='';";
@@ -528,7 +528,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 				
 				jQuery(document).ready(function () { 
 				
-					jQuery("#field_<?php echo escape_quoted_data($field["ref"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo escape_quoted_data($field["name"]) ?>&fieldref=<?php echo escape_quoted_data($field["ref"]) ?>"} );
+					jQuery("#field_<?php echo escape($field["ref"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo escape($field["name"]) ?>&fieldref=<?php echo escape($field["ref"]) ?>"} );
 					})
 				
 				</script>
@@ -575,9 +575,9 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 # Show as a dropdown box
                 $name = "nodes_searched[{$field['ref']}]";
                 ?>
-                <select class="<?php echo escape_quoted_data($class) ?>" name="<?php echo escape_quoted_data($name) ?>" id="<?php echo escape_quoted_data($id) ?>"
+                <select class="<?php echo escape($class) ?>" name="<?php echo escape($name) ?>" id="<?php echo escape($id) ?>"
                     <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
-                          if($forsearchbar){ ?>onChange="FilterBasicSearchOptions('<?php echo escape_quoted_data($field["name"]) ?>',<?php echo htmlspecialchars(($field["global"] == 1 ? "[0]" : "[" . escape_quoted_data((string)$field["resource_types"]) . "]")) ?>);" <?php } ?>>
+                          if($forsearchbar){ ?>onChange="FilterBasicSearchOptions('<?php echo escape($field["name"]) ?>',<?php echo htmlspecialchars(($field["global"] == 1 ? "[0]" : "[" . escape((string)$field["resource_types"]) . "]")) ?>);" <?php } ?>>
                     <option value=""></option>
                 <?php
                 foreach($field['nodes'] as $node)
@@ -585,7 +585,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     if('' != trim($node['name']))
                         {
                         ?>
-                        <option value="<?php echo escape_quoted_data(trim($node['ref'])); ?>" <?php if (0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) { ?>selected<?php } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
+                        <option value="<?php echo escape(trim($node['ref'])); ?>" <?php if (0 < count($searched_nodes) && in_array($node['ref'], $searched_nodes)) { ?>selected<?php } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
                         <?php
                         }
                     }
@@ -807,7 +807,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 {
                     jQuery('#SearchBox').on('categoryTreeChanged', function(e,node)
                     {
-                        FilterBasicSearchOptions('<?php echo escape_quoted_data($field["name"]) ?>',[<?php echo htmlspecialchars((string)$field["resource_types"]) ?>]);
+                        FilterBasicSearchOptions('<?php echo escape($field["name"]) ?>',[<?php echo htmlspecialchars((string)$field["resource_types"]) ?>]);
                     });
                 });
             </script>
@@ -831,7 +831,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 $status_box_elements .= "<span id=\"nodes_searched_{$field['ref']}_statusbox_option_{$n_details['ref']}\">{$n_details['name']}</span><br />";
                 }
             ?>
-			<div id="field_<?php echo escape_quoted_data($field['name']); ?>">
+			<div id="field_<?php echo escape($field['name']); ?>">
     			<div id="nodes_searched_<?php echo $field['ref']; ?>_statusbox" class="MiniCategoryBox">
                     <?php echo $status_box_elements; ?>
                 </div> 
@@ -933,7 +933,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     $modal  = ('true' == getval('modal', ''));
     $sort = (in_array(mb_strtoupper($sort), array("ASC", "DESC")) ? mb_strtoupper($sort) : "DESC");
     ?>
-    <select id="sort_order_selection" onChange="UpdateResultOrder();" aria-label="<?php echo escape_quoted_data($lang["sortorder"]) ?>">
+    <select id="sort_order_selection" onChange="UpdateResultOrder();" aria-label="<?php echo escape($lang["sortorder"]) ?>">
     
     <?php
     $options = '';
@@ -984,7 +984,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     ?>
     </select>
     &nbsp;
-    <a href="#" class="update_result_order_button" onClick="UpdateResultOrder(true);" aria-label="<?php echo escape_quoted_data($sort === "ASC" ? $lang['sortorder-asc'] : $lang['sortorder-desc']) ?>">
+    <a href="#" class="update_result_order_button" onClick="UpdateResultOrder(true);" aria-label="<?php echo escape($sort === "ASC" ? $lang['sortorder-asc'] : $lang['sortorder-desc']) ?>">
         <i id="sort_selection_toggle" class="fa fa-sort-amount-<?php echo mb_strtolower($sort); ?>"></i>
     </a>
 
@@ -1098,14 +1098,14 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     <?php
                     }
                     ?>
-                <select onchange="action_onchange_<?php echo escape_quoted_data($action_selection_id); ?>(this.value);"
-                    id="<?php echo escape_quoted_data($action_selection_id); ?>"
+                <select onchange="action_onchange_<?php echo escape($action_selection_id); ?>(this.value);"
+                    id="<?php echo escape($action_selection_id); ?>"
                     <?php if(!$top_actions) { ?>
                         class="SearchWidth"
                     <?php } else { ?>
                         accesskey="A"
                     <?php } ?>
-                    aria-label="<?php echo escape_quoted_data($lang["actions"]) ?>">
+                    aria-label="<?php echo escape($lang["actions"]) ?>">
             <?php } ?>
             <option class="SelectAction" selected disabled hidden value=""><?php echo htmlspecialchars($lang["actions-select"])?></option>
             <?php
@@ -1207,7 +1207,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         {
                         $options .= "</optgroup>\n";
                         }
-                    $options .= "<optgroup label='" . escape_quoted_data($lang["collection_actiontype_" . $actions_array[$a]['category']]) . "'>\n";
+                    $options .= "<optgroup label='" . escape($lang["collection_actiontype_" . $actions_array[$a]['category']]) . "'>\n";
                     }
 
 				if(!isset($actions_array[$a]['data_attr']))
@@ -1261,7 +1261,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     break;
 
                 case 'remove_collection':
-                    if(confirm("<?php echo escape_quoted_data($lang['removecollectionareyousure']); ?>")) {
+                    if(confirm("<?php echo escape($lang['removecollectionareyousure']); ?>")) {
                         // most likely will need to be done the same way as delete_collection
                         var post_data = {
                             ajax: true,
@@ -1279,7 +1279,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     break;
 
                 case 'purge_collection':
-                    if(confirm('<?php echo escape_quoted_data($lang["purgecollectionareyousure"]); ?>'))
+                    if(confirm('<?php echo escape($lang["purgecollectionareyousure"]); ?>'))
                         {
                         document.getElementById('collectionpurge').value='".urlencode($collections[$n]["ref"])."';
                         document.getElementById('collectionform').submit();
@@ -1294,7 +1294,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         data: {<?php echo generateAjaxToken("relate_resources"); ?>},
                         success: function(data) {
                             if (data.trim() == "SUCCESS") {
-                                styledalert('<?php echo escape_quoted_data($lang["complete"])?>', '<?php echo escape_quoted_data($lang['relateallresources_confirmation'])?>');
+                                styledalert('<?php echo escape($lang["complete"])?>', '<?php echo escape($lang['relateallresources_confirmation'])?>');
                             }
                         },
                         error: function (err) {
@@ -1311,7 +1311,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                         data: {<?php echo generateAjaxToken("unrelate_resources"); ?>},
                         success: function(data) {
                             if (data.trim() == "SUCCESS") {
-                                styledalert('<?php echo escape_quoted_data($lang["complete"])?>', '<?php echo escape_quoted_data($lang['unrelateallresources_confirmation'])?>');
+                                styledalert('<?php echo escape($lang["complete"])?>', '<?php echo escape($lang['unrelateallresources_confirmation'])?>');
                             }
                         },
                         error: function (err) {
@@ -1334,7 +1334,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     }
                 ?>
                 case 'delete_collection':
-                    if(confirm('<?php echo escape_quoted_data($lang["collectiondeleteconfirm"]); ?>')) {
+                    if(confirm('<?php echo escape($lang["collectiondeleteconfirm"]); ?>')) {
                         var post_data = {
                             ajax: true,
                             dropdown_actions: true,
@@ -1402,7 +1402,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                     break;
 
                 case 'empty_collection':
-                    if(!confirm('<?php echo escape_quoted_data($lang["emptycollectionareyousure"]); ?>'))
+                    if(!confirm('<?php echo escape($lang["emptycollectionareyousure"]); ?>'))
                         {
                         break;
                         }
@@ -1422,7 +1422,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                 global $delete_requires_password;
                 ?>
                 case 'delete_all_in_collection':
-                    if(confirm('<?php echo escape_quoted_data($lang["deleteallsure"]); ?>'))
+                    if(confirm('<?php echo escape($lang["deleteallsure"]); ?>'))
                         {<?php
                         if ($delete_requires_password)
                             {
@@ -1603,10 +1603,10 @@ function render_text_question($label, $input, $additionaltext="", $numeric=false
 		<label><?php echo $label; ?></label>
 		<?php
         printf('<input name="%s" id="%s_input" type="%s" value="%s"%s/>',
-            escape_quoted_data($input),
-            escape_quoted_data($input),
+            escape($input),
+            escape($input),
             $numeric ? "number" : "text",
-            escape_quoted_data((string) $current),
+            escape((string) $current),
             $extra
         );
 			
@@ -1671,14 +1671,14 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
 
     $extra .= " {$onchange}";
 	?>
-	<div class="<?php echo escape_quoted_data(implode(" ", $div_class)); ?>">
+	<div class="<?php echo escape(implode(" ", $div_class)); ?>">
 		<label><?php echo htmlspecialchars($label); ?></label>
-		<select  name="<?php echo escape_quoted_data($inputname); ?>" class="<?php echo escape_quoted_data($input_class); ?>" id="<?php echo escape_quoted_data($inputname); ?>" <?php echo $extra; ?>>
+		<select  name="<?php echo escape($inputname); ?>" class="<?php echo escape($input_class); ?>" id="<?php echo escape($inputname); ?>" <?php echo $extra; ?>>
 		<?php
 		foreach ($options as $optionvalue=>$optiontext)
 			{
 			?>
-			<option value="<?php echo escape_quoted_data(trim((string)$optionvalue))?>" <?php if (trim((string)$optionvalue)==trim((string)$current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim((string)$optiontext))?></option>
+			<option value="<?php echo escape(trim((string)$optionvalue))?>" <?php if (trim((string)$optionvalue)==trim((string)$current)) {?>selected<?php } ?>><?php echo htmlspecialchars(trim((string)$optiontext))?></option>
 			<?php
 			}
 		?>
@@ -1786,7 +1786,7 @@ function display_multilingual_text_field($n, $field, $translations)
   {
   global $language, $languages, $lang;
   ?>
-  <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape_quoted_data($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape_quoted_data($lang["hidetranslations"])?>';} return false;"><?php echo htmlspecialchars($lang["showtranslations"])?></a></p>
+  <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape($lang["hidetranslations"])?>';} return false;"><?php echo htmlspecialchars($lang["showtranslations"])?></a></p>
   <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
      <?php
      reset($languages);
@@ -1803,7 +1803,7 @@ function display_multilingual_text_field($n, $field, $translations)
             if ($field["type"]==0)
             {
               ?>
-              <td><input type="text" class="stdwidth" name="multilingual_<?php echo $n?>_<?php echo $langkey?>" value="<?php echo escape_quoted_data($transval)?>"></td>
+              <td><input type="text" class="stdwidth" name="multilingual_<?php echo $n?>_<?php echo $langkey?>" value="<?php echo escape($transval)?>"></td>
               <?php
            }
            else
@@ -1947,7 +1947,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
       # Multiple items, a toggle checkbox appears which activates the question
       ?>
       <div class="Question edit_multi_checkbox">
-        <input name="editthis_<?php echo escape_quoted_data($name) ?>"
+        <input name="editthis_<?php echo escape($name) ?>"
                id="editthis_<?php echo $n?>"
                type="checkbox"
                value="yes"
@@ -2080,7 +2080,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         $labelname .= '-d';
         }
         ?>
-     <label for="<?php echo escape_quoted_data($labelname)?>" <?php if($field['type']==FIELD_TYPE_DATE_RANGE) {echo " class='daterangelabel'";} ?> >
+     <label for="<?php echo escape($labelname)?>" <?php if($field['type']==FIELD_TYPE_DATE_RANGE) {echo " class='daterangelabel'";} ?> >
      <?php 
      if (!$multiple) 
         {
@@ -2380,7 +2380,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         if($date_d_m_y)
             {  
             ?>
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_start_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
             <select name="<?php echo $name?>_start_day"
              <?php
             if ($forsearch && $autoupdate) 
@@ -2397,7 +2397,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 }
               ?>
             </select>
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_start_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
             <select name="<?php echo $name?>_start_month"
                 <?php 
                 if ($forsearch && $autoupdate) 
@@ -2418,7 +2418,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         else
             { 
             ?>		
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_start_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
             <select name="<?php echo $name?>_start_month"
                 <?php 
                 if ($forsearch && $autoupdate) 
@@ -2434,7 +2434,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     ?><option <?php if ($d==$found_start_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php  echo htmlspecialchars($lang["months"][$d-1])  ?></option><?php
                     }?>
             </select>
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_start_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_start_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
             <select name="<?php echo $name?>_start_day"
               <?php 
                 if ($forsearch && $autoupdate) 
@@ -2455,8 +2455,8 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             }
         if($forsearch)
             {?>
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
-            <select name="<?php echo escape_quoted_data($name) ?>_start_year"
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
+            <select name="<?php echo escape($name) ?>_start_year"
                 <?php 
                 if ($forsearch && $autoupdate) 
                         { ?>onChange="UpdateResultCount();"<?php }
@@ -2476,8 +2476,8 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             }
         else
             {?>
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
-            <input size="5" name="<?php echo escape_quoted_data($name) ?>_start_year" id="<?php echo escape_quoted_data($name) ?>_start_year" type="text" value="<?php echo $found_start_year ?>"
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
+            <input size="5" name="<?php echo escape($name) ?>_start_year" id="<?php echo escape($name) ?>_start_year" type="text" value="<?php echo $found_start_year ?>"
                 <?php 
                 if ($forsearch && $autoupdate)
                     { ?>onChange="UpdateResultCount();"<?php }
@@ -2502,7 +2502,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         if($date_d_m_y)
             {
             ?>
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_end_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
             <select name="<?php echo $name?>_end_day"
               <?php 
                 if ($forsearch && $autoupdate) 
@@ -2518,7 +2518,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     ?><option <?php if ($d==$found_end_day) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
                     }?>
             </select>
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_end_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
             <select name="<?php echo $name?>_end_month"
                 <?php 
                 if ($forsearch && $autoupdate) 
@@ -2539,7 +2539,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         else
             {
             ?>
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_end_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_month"><?php echo htmlspecialchars($lang["month"]); ?></label>
             <select name="<?php echo $name?>_end_month" <?php 
                 if (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } 
@@ -2554,7 +2554,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     ?><option <?php if ($d==$found_end_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo htmlspecialchars($lang["months"][$d-1]) ?></option><?php
                     }?>
             </select>
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_end_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_day"><?php echo htmlspecialchars($lang["day"]); ?></label>
             <select name="<?php echo $name?>_end_day"
               <?php 
                 if ($forsearch && $autoupdate) 
@@ -2575,7 +2575,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             }
         if($forsearch)
             {?>
-            <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
+            <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
             <select name="<?php echo $name?>_end_year" 
             <?php 
             if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
@@ -2596,8 +2596,8 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 }
             else
                 {?>
-                <label class="accessibility-hidden" for="<?php echo escape_quoted_data($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
-                <input size="5" name="<?php echo escape_quoted_data($name) ?>_end_year" id="<?php echo escape_quoted_data($name) ?>_end_year" type="text" value="<?php echo $found_end_year ?>"
+                <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_year"><?php echo htmlspecialchars($lang["year"]); ?></label>
+                <input size="5" name="<?php echo escape($name) ?>_end_year" id="<?php echo escape($name) ?>_end_year" type="text" value="<?php echo $found_end_year ?>"
                     <?php 
                     
                     if ($forsearch && $autoupdate)
@@ -2619,9 +2619,9 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             });
             //Check the value of the date after the change
             jQuery('[name^=<?php echo $name;?>_start]').on('change', function(){
-                let day   = jQuery('[name=<?php echo escape_quoted_data($name); ?>_start_day]').val().trim();
-                let month = jQuery('[name=<?php echo escape_quoted_data($name); ?>_start_month]').val().trim();
-                let year  = jQuery('[name=<?php echo escape_quoted_data($name); ?>_start_year]').val().trim(); 
+                let day   = jQuery('[name=<?php echo escape($name); ?>_start_day]').val().trim();
+                let month = jQuery('[name=<?php echo escape($name); ?>_start_month]').val().trim();
+                let year  = jQuery('[name=<?php echo escape($name); ?>_start_year]').val().trim(); 
                 if (year != "" && !jQuery.isNumeric(year))
                     {
                     styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
@@ -2641,9 +2641,9 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             })
             //Same again but for the end of the date range
             jQuery('[name^=<?php echo $name;?>_end]').on('change', function(){
-                let day   = jQuery('[name=<?php echo escape_quoted_data($name); ?>_end_day]').val().trim();
-                let month = jQuery('[name=<?php echo escape_quoted_data($name); ?>_end_month]').val().trim();
-                let year  = jQuery('[name=<?php echo escape_quoted_data($name); ?>_end_year]').val().trim();
+                let day   = jQuery('[name=<?php echo escape($name); ?>_end_day]').val().trim();
+                let month = jQuery('[name=<?php echo escape($name); ?>_end_month]').val().trim();
+                let year  = jQuery('[name=<?php echo escape($name); ?>_end_year]').val().trim();
                 if (year != "" && !jQuery.isNumeric(year))
                     {
                     styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
@@ -2727,7 +2727,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                 }
                 
             if ($anchor)
-                { ?><a href="<?php echo escape_quoted_data($links[$i]['href']); ?>"
+                { ?><a href="<?php echo escape($links[$i]['href']); ?>"
                 
                 <?php if (isset($links[$i]["menu"]) && $links[$i]["menu"]) { ?>
                     onclick="ModalClose();return ModalLoad(this, true, true, 'right');"
@@ -2845,7 +2845,7 @@ function renderLockButton($name, $locked_fields=array())
     {
     global $lang;
     ?>
-    <button type="submit" class="lock_icon" id="lock_icon_<?php echo escape_quoted_data($name) ; ?>" onClick="toggleFieldLock('<?php echo escape_quoted_data($name) ; ?>');return false;" title="<?php echo escape_quoted_data($lang['lock-tooltip']); ?>">
+    <button type="submit" class="lock_icon" id="lock_icon_<?php echo escape($name) ; ?>" onClick="toggleFieldLock('<?php echo escape($name) ; ?>');return false;" title="<?php echo escape($lang['lock-tooltip']); ?>">
         <i aria-hidden="true" class="fa <?php if(in_array($name,$locked_fields)){echo "fa-lock";} else {echo "fa-unlock";} ?> fa-fw"></i>
     </button>
     <?php    
@@ -2890,7 +2890,7 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
     ?>">
     <img border="0" width="<?php echo $width ?>" height="<?php echo $height ?>"
     src="<?php echo $img_url ?>" 
-    alt="<?php echo str_replace(array("\"","'"),"",escape_quoted_data(i18n_get_translated(strip_tags(strip_tags_and_attributes($imagedata["field".$view_title_field] ?? ""))))); ?>"
+    alt="<?php echo str_replace(array("\"","'"),"",escape(i18n_get_translated(strip_tags(strip_tags_and_attributes($imagedata["field".$view_title_field] ?? ""))))); ?>"
     /></div>
     <?php
     }
@@ -3123,8 +3123,8 @@ function render_field_selector_question($label, $name, $ftypes, $class = "stdwid
     $fields = ps_query("SELECT " . columns_in("resource_type_field") . " from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", $parameters, "schema");
 
     echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
-    echo "<label for='" . escape_quoted_data($name) . "' >" . htmlspecialchars($label) . "</label>";
-    echo "<select name='" . escape_quoted_data($name) . "' id='" . escape_quoted_data($name) . "' class='" . $class . "'>";
+    echo "<label for='" . escape($name) . "' >" . htmlspecialchars($label) . "</label>";
+    echo "<select name='" . escape($name) . "' id='" . escape($name) . "' class='" . $class . "'>";
     echo "<option value='' selected >" . $lang["select"] . "</option>";
     foreach($fields as $field)
         {
@@ -3436,7 +3436,7 @@ function render_help_link($page='',$return_string=false)
 */
 function render_question_div($id, callable $render_content)
     {
-    $id = (trim($id) !== "" ? 'id="' . escape_quoted_data(trim($id)) . '"' : "");
+    $id = (trim($id) !== "" ? 'id="' . escape(trim($id)) . '"' : "");
     ?>
     <div <?php echo $id; ?> class="Question">
         <?php $render_content(); ?>
@@ -3531,7 +3531,7 @@ function render_custom_fields(array $cfs)
                            id="<?php echo $field_id; ?>"
                            class="stdwidth"
                            name="<?php echo $field_name; ?>"
-                           value="<?php echo escape_quoted_data($field_value); ?>">
+                           value="<?php echo escape($field_value); ?>">
                     <?php
                     break;
                 }
@@ -3746,7 +3746,7 @@ function render_user_collection_select($name = "collection", $collections=array(
         $collections = get_user_collections($userref);   
         }
     
-    echo "<select name=\"" . $name . "\" id=\"" . $name . "\" " . ($onchangejs != "" ? (" onchange=\"" . escape_quoted_data($onchangejs) . "\"") : "") . ($classes != "" ? (" class=\"" . escape_quoted_data($classes) . "\"") : "")  . ">";
+    echo "<select name=\"" . $name . "\" id=\"" . $name . "\" " . ($onchangejs != "" ? (" onchange=\"" . escape($onchangejs) . "\"") : "") . ($classes != "" ? (" class=\"" . escape($classes) . "\"") : "")  . ">";
     echo "<option value=\"0\">" . $lang["select"] . "</option>";
     for ($n=0;$n<count($collections);$n++)
         {
@@ -4450,7 +4450,7 @@ function render_resource_lock_link($ref,$lockuser,$editaccess)
         }
     else
         {
-        echo "<div  class='ResourceLocked' title='" .  escape_quoted_data($lock_details) . "' >" . $lang["status_locked"] . "</div>";
+        echo "<div  class='ResourceLocked' title='" .  escape($lock_details) . "' >" . $lang["status_locked"] . "</div>";
         }
 
     echo "<a id='lock_details_link' href='#' " . ($resource_locked ? "" : "style='display:none;'") . " onclick='if(resource_lock_status){styledalert(\"" . $lang["status_locked"] . "\",lockmessage[" . $ref . "]);}'>&nbsp;<i class='fas fa-info-circle'></i></a> </li>";
@@ -4469,18 +4469,18 @@ function EditNav()
     <?php
     if(!$disablenavlinks && !$upload_review_mode)
         {?>
-        <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>" title="<?php echo escape_quoted_data($lang["previous"]); ?>"></a>
+        <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>" title="<?php echo escape($lang["previous"]); ?>"></a>
    
         <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams, array("go"=>"previous")); ?>"><?php echo htmlspecialchars($lang["viewallresults"])?></a>
    
-        <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>" title="<?php echo escape_quoted_data($lang["next"]); ?>"></a>
+        <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>" title="<?php echo escape($lang["next"]); ?>"></a>
    
         <?php
         }
     if ($modal)
         { ?>
-        &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this);" title="<?php echo escape_quoted_data($lang["maximise"]); ?>"></a>
-        &nbsp;<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();" title="<?php echo escape_quoted_data($lang["close"]); ?>"></a>
+        &nbsp;&nbsp;<a class="maxLink fa fa-expand" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this);" title="<?php echo escape($lang["maximise"]); ?>"></a>
+        &nbsp;<a href="#"  class="closeLink fa fa-times" onClick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
         <?php
         } ?>
     </div></div><?php
@@ -4529,11 +4529,11 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
                id="edit_save_button"
                class="editsave"
                type="submit"
-               value="<?php echo escape_quoted_data($save_btn_value); ?>" />
+               value="<?php echo escape($save_btn_value); ?>" />
         <?php
         if($upload_review_mode)
             {
-            ?>&nbsp;<input id="edit_save_auto_button" name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["save_and_auto"]) ?>&nbsp;&nbsp;" />
+            ?>&nbsp;<input id="edit_save_auto_button" name="save_auto_next" <?php if(count($locked_fields) == 0){echo "style=\"display:none;\"";} ?>class="editsave save_auto_next" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save_and_auto"]) ?>&nbsp;&nbsp;" />
             <?php
             }
 
@@ -4573,7 +4573,7 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
 	if(!hook('replace_display_size_option','',array($sizeID, $sizeName, $fordropdown))){
     	if ($fordropdown)
 			{
-			?><option value="<?php echo escape_quoted_data($sizeID) ?>"><?php
+			?><option value="<?php echo escape($sizeID) ?>"><?php
 			echo $sizeName;
 			}
     	if(isset($available_sizes[$sizeID]))
@@ -5347,7 +5347,7 @@ function render_table($tabledata)
         }
     foreach($tabledata["headers"] as $header=>$headerdetails)
         {
-        echo "<th " . ($headerdetails["name"]==$lang["tools"] ? "class='ListTools'" : "") . (isset($headerdetails["width"]) ? ("style='width:" . escape_quoted_data($headerdetails["width"]) . "'") : "") . ">";
+        echo "<th " . ($headerdetails["name"]==$lang["tools"] ? "class='ListTools'" : "") . (isset($headerdetails["width"]) ? ("style='width:" . escape($headerdetails["width"]) . "'") : "") . ">";
         if($headerdetails["sortable"])
             {
             $revsort = ($tabledata["sort"]=="ASC") ? "DESC" : "ASC";
@@ -5377,16 +5377,16 @@ function render_table($tabledata)
         {
         foreach($tabledata["data"] as $rowdata)
             {
-            $rowid = isset($rowdata["rowid"]) ? " id='" . escape_quoted_data($rowdata["rowid"])  . "'" : "";
+            $rowid = isset($rowdata["rowid"]) ? " id='" . escape($rowdata["rowid"])  . "'" : "";
             if(isset($rowdata["rowlink"]))
                 {
-                $rowid .=  " class='row_clickable' data-link='" . escape_quoted_data($rowdata["rowlink"]) . "'";
+                $rowid .=  " class='row_clickable' data-link='" . escape($rowdata["rowlink"]) . "'";
                 }
             echo "<tr" . $rowid . ">";
 
             if(isset($rowdata['alerticon']))
                 {
-                echo "<td><i class='" . escape_quoted_data($rowdata['alerticon']) . "'></i></td>";
+                echo "<td><i class='" . escape($rowdata['alerticon']) . "'></i></td>";
                 }
             elseif($alertcolumn)
                 {
@@ -5403,7 +5403,7 @@ function render_table($tabledata)
                         echo "<div class='ListTools'>";
                         foreach($rowdata["tools"] as $toolitem)
                             {
-                            echo "<a aria-hidden='true' href='" . escape_quoted_data($toolitem["url"]) . "' class=\"" . escape_quoted_data($toolitem['url:class'] ?? '') . "\" onclick='";
+                            echo "<a aria-hidden='true' href='" . escape($toolitem["url"]) . "' class=\"" . escape($toolitem['url:class'] ?? '') . "\" onclick='";
                             if(isset($toolitem["onclick"]))
                                 {
                                 echo htmlspecialchars($toolitem["onclick"]);
@@ -5412,7 +5412,7 @@ function render_table($tabledata)
                                 {
                                 echo "return " . ($toolitem["modal"] ? "Modal" : "return CentralSpace") . "Load(this,true);";
                                 }
-                            echo "' title='" . escape_quoted_data($toolitem["text"]) . "'><i class='" . escape_quoted_data($toolitem["icon"]) . "'></i>&nbsp;" . htmlspecialchars($toolitem["text"]) . "</a>";
+                            echo "' title='" . escape($toolitem["text"]) . "'><i class='" . escape($toolitem["icon"]) . "'></i>&nbsp;" . htmlspecialchars($toolitem["text"]) . "</a>";
                             }
                         echo "</div>";
                         }
@@ -5520,10 +5520,10 @@ function render_question_form_helper(string $txt, string $id, array $ctx)
     $ctx_style = (isset($ctx['style']) && is_string($ctx['style']) ? $ctx['style'] : ''); # Use a class if possible!
 
 
-    $class = escape_quoted_data(join(' ', array_merge(array('FormHelp'), $ctx_class)));
-    $style = (trim($ctx_style) !== '' ? sprintf(' style="%s"', escape_quoted_data($ctx_style)) : '');
+    $class = escape(join(' ', array_merge(array('FormHelp'), $ctx_class)));
+    $style = (trim($ctx_style) !== '' ? sprintf(' style="%s"', escape($ctx_style)) : '');
     ?>
-    <div id="help_<?php echo escape_quoted_data($id); ?>" class="<?php echo $class; ?>"<?php echo $style; ?>>
+    <div id="help_<?php echo escape($id); ?>" class="<?php echo $class; ?>"<?php echo $style; ?>>
         <div class="FormHelpInner"><?php echo htmlspecialchars($txt); ?></div>
     </div>
     <?php
@@ -5540,7 +5540,7 @@ function render_question_form_helper(string $txt, string $id, array $ctx)
 function render_hidden_input(string $name, string $value)
     {
     ?>
-    <input type="hidden" name="<?php echo escape_quoted_data($name); ?>" value="<?php echo escape_quoted_data($value); ?>">
+    <input type="hidden" name="<?php echo escape($name); ?>" value="<?php echo escape($value); ?>">
     <?php
     return;
     }
@@ -5712,9 +5712,9 @@ function render_radio_buttons_question($label, $inputname, $options = array(), $
                     ?>
                     <td width="10" valign="middle">
                         <input type="radio"
-                            id="radio_<?php echo escape_quoted_data($optionvalue); ?>"
+                            id="radio_<?php echo escape($optionvalue); ?>"
                             name="<?php echo $inputname; ?>"
-                            value="<?php echo escape_quoted_data($optionvalue); ?>"
+                            value="<?php echo escape($optionvalue); ?>"
                         <?php
                         if($current == $optionvalue)
                                 {
@@ -5725,7 +5725,7 @@ function render_radio_buttons_question($label, $inputname, $options = array(), $
                     </td>
                     <td align="left" valign="middle">
                         <label class="customFieldLabel"
-                            for="radio_<?php echo escape_quoted_data($optionvalue); ?>"
+                            for="radio_<?php echo escape($optionvalue); ?>"
                             ><?php echo htmlspecialchars($optiontext); ?></label>
                     </td>
                     <?php 
@@ -5775,11 +5775,11 @@ function render_message($message="")
         $pimage = get_profile_image($message["owner"]);
         if($pimage == "")
             {
-            $msgdata[] = "<i title='" . escape_quoted_data($sendername) . "' aria-hidden='true' class='fa fa-user fa-fw fa-lg ProfileImage'></i>";  // %%PROFILEIMAGE%%
+            $msgdata[] = "<i title='" . escape($sendername) . "' aria-hidden='true' class='fa fa-user fa-fw fa-lg ProfileImage'></i>";  // %%PROFILEIMAGE%%
             }
         else
             {
-            $msgdata[] = "<img title='" . escape_quoted_data($sendername) . "' alt='" . escape_quoted_data($sendername) . "' class='ProfileImage' src='" . $pimage . "'>";  // %%PROFILEIMAGE%%
+            $msgdata[] = "<img title='" . escape($sendername) . "' alt='" . escape($sendername) . "' class='ProfileImage' src='" . $pimage . "'>";  // %%PROFILEIMAGE%%
             }  
         $msgdata[] = htmlspecialchars($message["message"]);  // %%MESSAGE%%     
         }
@@ -5878,11 +5878,11 @@ function render_fixed_text_question($label, $text)
 
 
 /**
- * Output encoding for HTML & JS within a quoted context when unsafe input is rendered inside it
+ * Output encoding for HTML context when unsafe input is rendered inside it
  * 
  * @return string
  */
-function escape_quoted_data(string $unsafe)
+function escape(string $unsafe): string
     {
     return htmlspecialchars($unsafe, ENT_QUOTES | ENT_SUBSTITUTE);
     }
@@ -5911,18 +5911,18 @@ function render_fa_icon_selector(string $label="",string $name="icon",string $cu
         <label><?php echo htmlspecialchars($label) ?></label>
         <?php $blank_icon = ($current == "" || !in_array($current, $font_awesome_icons)); ?>
         <div id="iconpicker-question">
-            <input name="<?php echo escape_quoted_data($name) ?>" type="text" id="iconpicker-input" value="<?php echo escape_quoted_data($current)?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : escape_quoted_data($current)?>" id="iconpicker-button-fa"></i></span>
+            <input name="<?php echo escape($name) ?>" type="text" id="iconpicker-input" value="<?php echo escape($current)?>" /><span id="iconpicker-button"><i class="fa-fw <?php echo $blank_icon ? 'fas fa-chevron-down' : escape($current)?>" id="iconpicker-button-fa"></i></span>
         </div>
         <div id="iconpicker-container">
             <div class="iconpicker-title">
-                <input type="text" id="iconpicker-filter" placeholder="<?php echo escape_quoted_data($lang['icon_picker_placeholder']) ?>" onkeyup="filterIcons()">
+                <input type="text" id="iconpicker-filter" placeholder="<?php echo escape($lang['icon_picker_placeholder']) ?>" onkeyup="filterIcons()">
             </div>
             <div class="iconpicker-content">
                 <?php foreach ($font_awesome_icons as $icon_name)
                     {
                     ?>
-                    <div class="iconpicker-content-icon" data-icon="<?php echo escape_quoted_data(trim($icon_name)) ?>" title="<?php echo escape_quoted_data(trim($icon_name)) ?>">
-                        <i class="fa-fw <?php echo escape_quoted_data(trim($icon_name)) ?>"></i>
+                    <div class="iconpicker-content-icon" data-icon="<?php echo escape(trim($icon_name)) ?>" title="<?php echo escape(trim($icon_name)) ?>">
+                        <i class="fa-fw <?php echo escape(trim($icon_name)) ?>"></i>
                     </div>
                     <?php
                     } ?>
@@ -6326,8 +6326,8 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                     <tr>
                         <td>
                             <input type="checkbox"
-                                name="field_restype_select_<?php echo escape_quoted_data($resource_type); ?>"
-                                id="field_restype_select_<?php echo escape_quoted_data($resource_type); ?>" 
+                                name="field_restype_select_<?php echo escape($resource_type); ?>"
+                                id="field_restype_select_<?php echo escape($resource_type); ?>" 
                                 class="field_restype_select"
                                 value="1"
                                 <?php if($currentvalue == 1) { ?> disabled="true"<?php } ?>
@@ -6361,8 +6361,8 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
             // Sort  so that the display order makes some sense
             //natsort($field_types);
             ?>
-                <select id="field_edit_<?php echo escape_quoted_data((string) $propertyname); ?>"
-                        name="<?php echo escape_quoted_data((string) $propertyname); ?>"
+                <select id="field_edit_<?php echo escape((string) $propertyname); ?>"
+                        name="<?php echo escape((string) $propertyname); ?>"
                         class="stdwidth"
                         onchange="
                                 <?php if(!$newfield)
@@ -6372,7 +6372,7 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                                     {
                                     jQuery('input[name=\'keywords_index\']')[0].checked = true;
 
-                                    if(confirm('<?php echo escape_quoted_data($lang["admin_resource_type_field_migrate_data_prompt"]) ?>'))
+                                    if(confirm('<?php echo escape($lang["admin_resource_type_field_migrate_data_prompt"]) ?>'))
                                         {
                                         jQuery('#migrate_data').val('yes');
                                         }
@@ -6386,7 +6386,7 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                                     
                                     else if ((jQuery.inArray(newval,text_fields) > -1) && (jQuery.inArray(current_type,fixed_list_fields) > -1)) 
                                 {
-                                    if(confirm('<?php echo escape_quoted_data($lang["admin_resource_type_field_cannot_migrate_data_prompt"]) ?>'))
+                                    if(confirm('<?php echo escape($lang["admin_resource_type_field_cannot_migrate_data_prompt"]) ?>'))
                                         {
                                             this.form.submit(); 
                                         } else {
@@ -6457,14 +6457,14 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                 // The linked_data_field column is is only used for date range fields at present			
                 // Used to store the raw EDTF string submitted
                 ?>
-                <input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo escape_quoted_data((string) $currentvalue)?>">
+                <input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo escape((string) $currentvalue)?>">
                 <?php
                 }
             }
         else if($propertyname === 'tab')
             {
             ?>
-            <select class="stdwidth" name="<?php echo escape_quoted_data($propertyname); ?>">
+            <select class="stdwidth" name="<?php echo escape($propertyname); ?>">
             <?php
             foreach(get_tab_name_options() as $tab_ref => $tab_name)
                 {
@@ -6481,24 +6481,24 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
 			{
 			if ($propertyname=="advanced_search" && $system_date_field)
                 {
-                ?><input id="field_edit_<?php echo escape_quoted_data((string) $propertyname); ?>" name="<?php echo escape_quoted_data((string) $propertyname); ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
+                ?><input id="field_edit_<?php echo escape((string) $propertyname); ?>" name="<?php echo escape((string) $propertyname); ?>" type="checkbox" value="1" checked="checked" onclick="return false;"><?php
                 $helptext=$lang["property-system_date_help_text"];
                 }
             else
                 {
-                ?><input id="field_edit_<?php echo escape_quoted_data((string) $propertyname); ?>" name="<?php echo escape_quoted_data((string) $propertyname); ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
+                ?><input id="field_edit_<?php echo escape((string) $propertyname); ?>" name="<?php echo escape((string) $propertyname); ?>" type="checkbox" value="1" <?php if ($currentvalue==1) { ?> checked="checked"<?php } ?>><?php
                 }
 			}
 		elseif($type==2)
 			{
 			?>
-			<textarea class="stdwidth" rows="5" id="field_edit_<?php echo escape_quoted_data((string) $propertyname); ?>" name="<?php echo escape_quoted_data((string) $propertyname); ?>"><?php echo htmlspecialchars((string) $currentvalue)?></textarea>
+			<textarea class="stdwidth" rows="5" id="field_edit_<?php echo escape((string) $propertyname); ?>" name="<?php echo escape((string) $propertyname); ?>"><?php echo htmlspecialchars((string) $currentvalue)?></textarea>
 			<?php
 			}
 		else
 			{
 			?>
-			<input id="field_edit_<?php echo escape_quoted_data((string) $propertyname); ?>" name="<?php echo escape_quoted_data((string) $propertyname); ?>" type="text" class="stdwidth" value="<?php echo escape_quoted_data((string) $currentvalue)?>">
+			<input id="field_edit_<?php echo escape((string) $propertyname); ?>" name="<?php echo escape((string) $propertyname); ?>" type="text" class="stdwidth" value="<?php echo escape((string) $currentvalue)?>">
 			<?php
 			}
 
@@ -6532,7 +6532,7 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
             jQuery.get(
                 baseurl + "/pages/admin/ajax/validate_rtf_shortname.php",
                 {
-                ref: "<?php echo escape_quoted_data($ref); ?>",
+                ref: "<?php echo escape($ref); ?>",
                 new_shortname: event.target.value
                 },
                 function (response)
@@ -6580,9 +6580,9 @@ function render_resource_type_selector_question(string $label, string $name, str
     global $lang;
     $resource_types = get_resource_types('',true,false,true);
 
-    echo "<div class='Question' id='" . escape_quoted_data($name) . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
-    echo "<label for='" . escape_quoted_data($name) . "' >" . htmlspecialchars($label) . "</label>";
-    echo "<select name='" . escape_quoted_data($name) . "' id='" . escape_quoted_data($name) . "' class='" . $class . "'>";
+    echo "<div class='Question' id='" . escape($name) . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
+    echo "<label for='" . escape($name) . "' >" . htmlspecialchars($label) . "</label>";
+    echo "<select name='" . escape($name) . "' id='" . escape($name) . "' class='" . $class . "'>";
     echo "<option value='' selected >" . htmlspecialchars($lang["select"]) . "</option>";
     foreach($resource_types as $resource_type)
         {
@@ -6715,7 +6715,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
                     {
                     if (isset($size_info["id"])) 
                         {
-                        echo add_to_collection_link($ref,"alert('" . escape_quoted_data($lang["requestaddedtocollection"]) . "');",$size_info["id"]);
+                        echo add_to_collection_link($ref,"alert('" . escape($lang["requestaddedtocollection"]) . "');",$size_info["id"]);
                         }
                     else
                         {

@@ -67,10 +67,10 @@ if ($enable_related_resources)
                             ?>
                             <div class="ResourcePanelInfo" >
                                 <a href="#" 
-                                    onClick="if(confirm('<?php echo escape_quoted_data($lang["related_resource_confirm_delete"])?>'))
+                                    onClick="if(confirm('<?php echo escape($lang["related_resource_confirm_delete"])?>'))
                                     {
                                     relateresources(<?php echo (int) $ref . "," . (int) $relatedresource["ref"] ;?>,'remove',
-                                    <?php echo escape_quoted_data(generate_csrf_js_object('update_related_resource')); ?>);
+                                    <?php echo escape(generate_csrf_js_object('update_related_resource')); ?>);
                                     jQuery('#RelatedResource_<?php echo (int) $relatedresource["ref"] ?>').remove();
                                     }
                                     return false;" >
@@ -128,10 +128,10 @@ if ($enable_related_resources)
                                             ?>
                                             <div class="ListTools" >
                                                 <a href="#" 
-                                                    onClick="if(confirm('<?php echo escape_quoted_data($lang["related_resource_confirm_delete"])?>'))
+                                                    onClick="if(confirm('<?php echo escape($lang["related_resource_confirm_delete"])?>'))
                                                     {
                                                     relateresources(<?php echo (int) $ref . "," . (int) $relatedresource["ref"] ;?>,'remove',
-                                                    <?php echo escape_quoted_data(generate_csrf_js_object('update_related_resource')); ?>);
+                                                    <?php echo escape(generate_csrf_js_object('update_related_resource')); ?>);
                                                     jQuery('#RelatedResource_<?php echo (int) $relatedresource["ref"] ?>').remove();
                                                     }
                                                     return false;" >

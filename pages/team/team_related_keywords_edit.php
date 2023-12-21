@@ -37,7 +37,7 @@ include "../../include/header.php";
 
 <form method=post id="mainform" action="<?php echo $baseurl_short?>pages/team/team_related_keywords_edit.php">
     <?php generateFormToken("mainform"); ?>
-<input type="hidden" name="keyword" value="<?php echo escape_quoted_data($keyword)?>">
+<input type="hidden" name="keyword" value="<?php echo escape($keyword)?>">
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["keyword"])?></label><div class="Fixed"><?php echo htmlspecialchars($keyword)?></div><div class="clearerleft"> </div></div>
 

@@ -70,7 +70,7 @@ $script_last_ran_content = sprintf(
 </div>
 <div class=\"clearerleft\"></div>",
 htmlspecialchars($lang['museumplus_last_run_date']),
-escape_quoted_data($museumplus_script_last_ran)
+escape($museumplus_script_last_ran)
 );
 
 $page_def[] = config_add_html($script_last_ran_content);

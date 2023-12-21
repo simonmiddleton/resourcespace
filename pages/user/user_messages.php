@@ -220,7 +220,7 @@ include "../../include/header.php";
                     <td><input type="checkbox" class="message-checkbox" data-message="<?php echo (int)$messages[$n]['ref'];?>" id="message-checkbox-<?php echo (int)$messages[$n]['ref'];?>"></td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["created"],true, false, true); ?></td>
                     <td class="<?php echo $unread_css; ?>"><?php echo htmlspecialchars((string)$messages[$n]["owner"]); ?></td>
-                    <td class="SingleLine<?php echo $unread_css; ?>"><?php echo escape_quoted_data((isset($user['fullname']) && trim($user['fullname']) != "") ? $user['fullname'] : $user['username']); ?></td>
+                    <td class="SingleLine<?php echo $unread_css; ?>"><?php echo escape((isset($user['fullname']) && trim($user['fullname']) != "") ? $user['fullname'] : $user['username']); ?></td>
                     <?php if ($messages_actions_usergroup) { ?>
                         <td class="<?php echo $unread_css; ?>"><?php echo $user['groupname']; ?></td>
                     <?php } ?>
@@ -242,7 +242,7 @@ include "../../include/header.php";
 
                             if ($messages[$n]["url"]!="")
                                 { ?>
-                                <a href="<?php echo escape_quoted_data($messages[$n]["url"]); ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . htmlspecialchars($lang["link"]); ?></a>
+                                <a href="<?php echo escape($messages[$n]["url"]); ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . htmlspecialchars($lang["link"]); ?></a>
                                 <?php
                                 } ?> 
                         </div>

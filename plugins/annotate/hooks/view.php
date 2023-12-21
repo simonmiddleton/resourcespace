@@ -93,7 +93,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
             ?>
             <div id="wrapper" class="annotate-view-wrapper">
                 <div>
-                <img id="toAnnotate" onload="annotate(<?php echo (int) $ref?>,'<?php echo escape_quoted_data($k)?>','<?php echo escape_quoted_data($w)?>','<?php echo escape_quoted_data($h)?>',<?php echo escape_quoted_data(getval("annotate_toggle",true))?>, 1, <?php echo escape_quoted_data($modal); ?>);" src="<?php echo escape_quoted_data($imageurl)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
+                <img id="toAnnotate" onload="annotate(<?php echo (int) $ref?>,'<?php echo escape($k)?>','<?php echo escape($w)?>','<?php echo escape($h)?>',<?php echo escape(getval("annotate_toggle",true))?>, 1, <?php echo escape($modal); ?>);" src="<?php echo escape($imageurl)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
                 </div>
 
                 <div class="annotate-view-preview-links" >
@@ -110,7 +110,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
                     "k"         => $k
                     ); ?>
                     
-                    <a class="enterLink" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams); ?>" title="<?php echo escape_quoted_data($lang["fullscreenpreview"])?>"><?php echo LINK_CARET . escape_quoted_data($lang["fullscreenpreview"])?></a>
+                    <a class="enterLink" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams); ?>" title="<?php echo escape($lang["fullscreenpreview"])?>"><?php echo LINK_CARET . escape($lang["fullscreenpreview"])?></a>
                 <?php
 
                 if($annotate_pdf_output)
@@ -154,10 +154,10 @@ function HookAnnotateViewpreviewlinkbar()
             <?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
             ?>
             <td class="DownloadButton">
-                <a class="enterLink previewsize-<?php echo escape_quoted_data($data_viewsize); ?>" 
+                <a class="enterLink previewsize-<?php echo escape($data_viewsize); ?>" 
                     id="previewlink"
-                    data-viewsize="<?php echo escape_quoted_data($data_viewsize); ?>"
-                    data-viewsizeurl="<?php echo escape_quoted_data($data_viewsizeurl); ?>"  
+                    data-viewsize="<?php echo escape($data_viewsize); ?>"
+                    data-viewsizeurl="<?php echo escape($data_viewsizeurl); ?>"  
                     href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>">
                     <?php echo $lang["action-view"]?>
                 </a>

@@ -39,8 +39,8 @@ $usertoimage    = get_profile_image($msgto)
 msgto = <?php echo $msgto; ?>;
 
 defaultimghtml =  jQuery("<i />", {
-    title           : '<?php echo escape_quoted_data($userfullname); ?>',
-    alt             : '<?php echo escape_quoted_data($userfullname); ?>',
+    title           : '<?php echo escape($userfullname); ?>',
+    alt             : '<?php echo escape($userfullname); ?>',
     'class'         : 'fa fa-user fa-lg fa-fw ProfileImage',
     'aria-hidden'   : true
     });
@@ -50,10 +50,10 @@ if($userimage != "")
     {
     ?>
     userimghtml =  jQuery("<img />", {
-        title   : '<?php echo escape_quoted_data($userfullname); ?>',
-        alt     : '<?php echo escape_quoted_data($userfullname); ?>',
+        title   : '<?php echo escape($userfullname); ?>',
+        alt     : '<?php echo escape($userfullname); ?>',
         'class' : 'ProfileImage',
-        src     : '<?php echo escape_quoted_data($userimage); ?>'
+        src     : '<?php echo escape($userimage); ?>'
         });
     <?php
     }
@@ -66,10 +66,10 @@ if($usertoimage != "")
     {
     ?>
     usertoimghtml =  jQuery("<img />", {
-        title   : '<?php echo escape_quoted_data($userfullname); ?>',
-        alt     : '<?php echo escape_quoted_data($userfullname); ?>',
+        title   : '<?php echo escape($userfullname); ?>',
+        alt     : '<?php echo escape($userfullname); ?>',
         'class' : 'ProfileImage',
-        src     : '<?php echo escape_quoted_data($usertoimage); ?>'
+        src     : '<?php echo escape($usertoimage); ?>'
         });
     <?php
     }

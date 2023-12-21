@@ -103,8 +103,8 @@ foreach($tab_records['data'] as $tab_record)
     $tab_record['name'] = sprintf(
         '<span>%s</span><input name="tab_name_inline_edit_%s" type="text" class="DisplayNone" value="%s">',
         htmlspecialchars(i18n_get_translated($tab_record['name'])),
-        escape_quoted_data($tab_record['ref']),
-        escape_quoted_data($tab_record['name'])
+        escape($tab_record['ref']),
+        escape($tab_record['name'])
     );
     $tab_record['usage'] = sprintf(
         '%s %s, %s %s',
@@ -217,7 +217,7 @@ jQuery(function() {
 function delete_tabs(el, refs)
     {
     console.debug('Called delete_tabs(refs = %o)', refs);
-    if(confirm('<?php echo escape_quoted_data($lang["confirm-deletion"]); ?>'))
+    if(confirm('<?php echo escape($lang["confirm-deletion"]); ?>'))
         {
         api('delete_tabs', {'refs': refs}, function(successful)
             {
@@ -228,7 +228,7 @@ function delete_tabs(el, refs)
                 }
             else
                 {
-                styledalert("<?php echo escape_quoted_data($lang["error"]); ?>", "<?php echo escape_quoted_data($lang["error-failed-to-delete"]); ?>");
+                styledalert("<?php echo escape($lang["error"]); ?>", "<?php echo escape($lang["error-failed-to-delete"]); ?>");
                 }
             },
         <?php echo generate_csrf_js_object('delete_tabs'); ?>
@@ -275,7 +275,7 @@ function update_tab(el, ref, action)
                     }
                 else
                     {
-                    styledalert("<?php echo escape_quoted_data($lang["error"]); ?>", response.data.message);
+                    styledalert("<?php echo escape($lang["error"]); ?>", response.data.message);
                     }
             },
             <?php echo generate_csrf_js_object('save_tab'); ?>

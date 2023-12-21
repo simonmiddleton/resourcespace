@@ -212,7 +212,7 @@ if (!hook("renderresultthumb"))
             $workflow_html = "<div class='ResourcePanelInfo WorkflowState'>";
             // Add icon
             $icon = $workflowicons[$result[$n]['archive']] ?? (WORKFLOW_DEFAULT_ICONS[$result[$n]['archive']] ?? WORKFLOW_DEFAULT_ICON);
-            $workflow_html .= "<i class='" . escape_quoted_data($icon) . "'></i>&nbsp;";
+            $workflow_html .= "<i class='" . escape($icon) . "'></i>&nbsp;";
             // Add text for workflow state
             $workflow_html .= isset($lang["status" . $result[$n]['archive']]) ? (htmlspecialchars($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']);
             $workflow_html .= "</div>";
@@ -358,9 +358,9 @@ if (!hook("renderresultthumb"))
                         type="checkbox" 
                         id="check<?php echo htmlspecialchars($ref)?>" 
                         class="checkselect"
-                        title="<?php echo escape_quoted_data($lang['action-select'] . " - " . $resource_view_title) ?>"
+                        title="<?php echo escape($lang['action-select'] . " - " . $resource_view_title) ?>"
                         data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
-                        aria-label="<?php echo escape_quoted_data($lang["action-select"])?>"
+                        aria-label="<?php echo escape($lang["action-select"])?>"
                         <?php echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}"); ?>
                         <?php 
                         if (in_array($ref, $selection_collection_resources))

@@ -265,7 +265,7 @@ if ($go!="")
             {
             ?>
             <script type="text/javascript">
-            alert("<?php echo escape_quoted_data($lang["resourcenotinresults"]) ?>");
+            alert("<?php echo escape($lang["resourcenotinresults"]) ?>");
             </script>
             <?php
             }
@@ -777,7 +777,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     $redirectparams["promptsubmit"] = 'true';
                                     }
                                 
-                                $url = $redirecturl != "" ? escape_quoted_data($redirecturl) : generateURL($baseurl . "/pages/search.php",$redirectparams);
+                                $url = $redirecturl != "" ? escape($redirecturl) : generateURL($baseurl . "/pages/search.php",$redirectparams);
                                 }
                             ?>
                             <script>CentralSpaceLoad('<?php echo $url; // The $url var has been generated or escaped above ?>',true);</script>
@@ -902,12 +902,12 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
             <script>
             jQuery("#modal_dialog").html("<?php echo $cfmsg; ?>");
             jQuery("#modal_dialog").dialog({
-                title:'<?php echo escape_quoted_data($lang["save-conflict-title"]) ?>',
+                title:'<?php echo escape($lang["save-conflict-title"]) ?>',
                 modal: true,
                 width: 400,
                 resizable: false,
                 buttons: {
-                    "<?php echo escape_quoted_data($lang['save']) ?>": function()
+                    "<?php echo escape($lang['save']) ?>": function()
                         {
                         jQuery('#ignoreconflict').val("true");
                         CentralSpacePost(document.getElementById('mainform'),true);
@@ -1195,7 +1195,7 @@ jQuery(document).ready(function()
             return false;
             }
 
-        jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["saving"]); ?>');
+        jQuery('#AutoSaveStatus' + field).html('<?php echo escape($lang["saving"]); ?>');
         jQuery('#AutoSaveStatus' + field).show();
         
         formdata = jQuery('#mainform').serialize();
@@ -1207,7 +1207,7 @@ jQuery(document).ready(function()
                 saveresult=JSON.parse(data);
                 if (saveresult['result']=="SAVED")
                     {
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["saved"]); ?>');
+                    jQuery('#AutoSaveStatus' + field).html('<?php echo escape($lang["saved"]); ?>');
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     // Refresh checksums returned by the autosave update
                     if (typeof(saveresult['checksums']) !== undefined)
@@ -1236,15 +1236,15 @@ jQuery(document).ready(function()
                             saveerrors += saveresult['errors'][i] + "<br />";
                             }
                         }
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["save-error"]) ?>');
+                    jQuery('#AutoSaveStatus' + field).html('<?php echo escape($lang["save-error"]) ?>');
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-                    styledalert('<?php echo escape_quoted_data($lang["error"]) ?>',saveerrors);
+                    styledalert('<?php echo escape($lang["error"]) ?>',saveerrors);
                     }
                 })
                 .fail(function(response) {
-                    jQuery('#AutoSaveStatus' + field).html('<?php echo escape_quoted_data($lang["save-error"]) ?>');
+                    jQuery('#AutoSaveStatus' + field).html('<?php echo escape($lang["save-error"]) ?>');
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
-                    styledalert('<?php echo escape_quoted_data($lang["error"]) ?>',response.responseText);
+                    styledalert('<?php echo escape($lang["error"]) ?>',response.responseText);
                     });
 	}
 <?php } ?>
@@ -1437,7 +1437,7 @@ hook("editbefresmetadata"); ?>
             ?>
 
             <select name="resource_type" id="resourcetype" class="stdwidth" 
-                    onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo escape_quoted_data($lang["editresourcetypewarning"]); ?>')){ add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>);<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
+                    onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo escape($lang["editresourcetypewarning"]); ?>')){ add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>);<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
             <?php
             $types                = get_resource_types();
             $shown_resource_types = array();
@@ -1520,7 +1520,7 @@ hook("editbefresmetadata"); ?>
         <h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo htmlspecialchars($lang["resourcetype"]) ?></h2>
         <div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="ResourceTypeSection<?php if ($ref==-1) echo "Upload"; ?>">
         <div class="Question">
-            <input name="editresourcetype" id="editresourcetype" type="checkbox" value="yes" onClick="var q=document.getElementById('editresourcetype_question');if (this.checked) {q.style.display='block';alert('<?php echo escape_quoted_data($lang["editallresourcetypewarning"]) ?>');} else {q.style.display='none';}">
+            <input name="editresourcetype" id="editresourcetype" type="checkbox" value="yes" onClick="var q=document.getElementById('editresourcetype_question');if (this.checked) {q.style.display='block';alert('<?php echo escape($lang["editallresourcetypewarning"]) ?>');} else {q.style.display='none';}">
             &nbsp;
             <label for="editresourcetype"><?php echo htmlspecialchars($lang["resourcetype"]) ?></label>
         </div>
@@ -1592,11 +1592,11 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
         <script>
         function MetadataTemplateOptionChanged(value)
             {
-            $confirm_message = "<?php echo escape_quoted_data($lang['usemetadatatemplatesure'])?>";
+            $confirm_message = "<?php echo escape($lang['usemetadatatemplatesure'])?>";
             $resetform = false;
             if(value == '')
                 {
-                $confirm_message = "<?php echo escape_quoted_data($lang['removemetadatatemplatesure']) ?>";
+                $confirm_message = "<?php echo escape($lang['removemetadatatemplatesure']) ?>";
                 $resetform = true;
                 }
 
@@ -1806,8 +1806,8 @@ if ($display_any_fields && $enable_copy_data_from && !$upload_review_mode)
     <label for="copyfrom"><?php echo htmlspecialchars($lang["batchcopyfrom"])?></label>
     <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
     <input type= "hidden" name="modal" id="modalcopyfrom" value="<?php echo ($modal?"true":"false") ?>">
-    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo escape_quoted_data($lang["copy"])?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true,<?php echo $modal ?>);">
-    <input type="submit" name="save" value="<?php echo escape_quoted_data($lang['save']); ?>">
+    <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo escape($lang["copy"])?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true,<?php echo $modal ?>);">
+    <input type="submit" name="save" value="<?php echo escape($lang['save']); ?>">
     <div class="clearerleft"> </div>
  </div><!-- end of question_copyfrom -->
  <?php
@@ -2122,7 +2122,7 @@ else
 			{
 			echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $access_stored_value . "'>";
 			}?>
-        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape_quoted_data($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
+        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
                     if($ea0)    //0 - open
                     {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo htmlspecialchars($lang["access" . $n])?></option><?php }
@@ -2416,7 +2416,7 @@ if ($ref>0 && !$multiple)
                 if (checkperm("w") && $wmpath!="" && file_exists($wmpath))
                     {?> 
                     &nbsp;&nbsp;
-                    <a href="#" onclick="jQuery('#wmpreview').toggle();jQuery('#preview').toggle();if (jQuery(this).text()=='<?php echo escape_quoted_data($lang['showwatermark'])?>'){jQuery(this).text('<?php echo escape_quoted_data($lang['hidewatermark'])?>');} else {jQuery(this).text('<?php echo escape_quoted_data($lang['showwatermark'])?>');}"><?php echo htmlspecialchars($lang['showwatermark'])?></a>
+                    <a href="#" onclick="jQuery('#wmpreview').toggle();jQuery('#preview').toggle();if (jQuery(this).text()=='<?php echo escape($lang['showwatermark'])?>'){jQuery(this).text('<?php echo escape($lang['hidewatermark'])?>');} else {jQuery(this).text('<?php echo escape($lang['showwatermark'])?>');}"><?php echo htmlspecialchars($lang['showwatermark'])?></a>
                     <?php 
                     }?>
                 <br />
@@ -2496,7 +2496,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
         {
         error_fields[0].scrollIntoView();
         }
-    styledalert('<?php echo escape_quoted_data($lang["error"])?>','<?php echo implode("<br />",$save_errors); ?>',450);
+    styledalert('<?php echo escape($lang["error"])?>','<?php echo implode("<br />",$save_errors); ?>',450);
     </script>
     <?php
     }

@@ -262,9 +262,9 @@ include "../include/header.php";
 		<?php generateFormToken("find"); ?>
         <div class="Question">
 			<div class="tickset">
-			 <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape_quoted_data(unescape($find)); ?>" maxlength="100" class="shrtwidth" /></div>
-			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["searchbutton"])?>&nbsp;&nbsp;" /></div>
-			 <div class="Inline"><input name="Clear" type="button" onclick="document.getElementById('find').value='';submit();" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["clearbutton"])?>&nbsp;&nbsp;" /></div>
+			 <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape(unescape($find)); ?>" maxlength="100" class="shrtwidth" /></div>
+			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"])?>&nbsp;&nbsp;" /></div>
+			 <div class="Inline"><input name="Clear" type="button" onclick="document.getElementById('find').value='';submit();" value="&nbsp;&nbsp;<?php echo escape($lang["clearbutton"])?>&nbsp;&nbsp;" /></div>
 			</div>
 			<div class="clearerleft"> </div>
 		</div>
@@ -353,7 +353,7 @@ function delete_collections()
 		}
 	if (to_delete != "")
 	    {
-		if (confirm('<?php echo escape_quoted_data($lang["delete_multiple_collections"]) ?>'))
+		if (confirm('<?php echo escape($lang["delete_multiple_collections"]) ?>'))
 		    {
 			var post_data = 
 			    {
@@ -395,7 +395,7 @@ function delete_collections()
                 collection_ending=null;
             } else {
                 if (!collection_starting) {
-                    styledalert('<?php echo escape_quoted_data($lang["range_no_start_header"]); ?>', '<?php echo escape_quoted_data($lang["range_no_start"]); ?>');
+                    styledalert('<?php echo escape($lang["range_no_start_header"]); ?>', '<?php echo escape($lang["range_no_start"]); ?>');
                     if(jQuery(input).prop("checked")) {
                         this.removeAttribute("checked");
                         } 
@@ -497,14 +497,14 @@ function promptBeforePaging()
 
 	if (document.getElementById("collection_delete").style.visibility == "visible")
 	    {
-		$proceed = confirm('<?php echo escape_quoted_data($lang["page_collections_message"]) ?>');
+		$proceed = confirm('<?php echo escape($lang["page_collections_message"]) ?>');
 	    return $proceed;
 		}
     }
 
 </script>
 
-<a id="collection_delete" style="visibility:hidden; margin-left:10px" title = "<?php echo escape_quoted_data($lang["delete_all_selected"]) ?>" onClick="delete_collections()"><i aria-hidden="true" class="fa fa-fw fa-trash"></i></a>
+<a id="collection_delete" style="visibility:hidden; margin-left:10px" title = "<?php echo escape($lang["delete_all_selected"]) ?>" onClick="delete_collections()"><i aria-hidden="true" class="fa fa-fw fa-trash"></i></a>
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_manage.php">
 <?php generateFormToken("collectionform"); ?>
 <input type=hidden name="delete" id="collectiondelete" value="">
@@ -641,7 +641,7 @@ echo " " . ($mycollcount==1 ? $lang["owned_by_you-1"] : str_replace("%mynumber",
 				<label for="newcollection"><?php echo htmlspecialchars($lang["collectionname"])?></label>
 				<div class="tickset">
 				 <div class="Inline"><input type=text name="name" id="newcollection" value="" maxlength="100" class="shrtwidth"></div>
-				 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["create"])?>&nbsp;&nbsp;" /></div>
+				 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"])?>&nbsp;&nbsp;" /></div>
 				</div>
 			<div class="clearerleft"> </div>
 			</div>

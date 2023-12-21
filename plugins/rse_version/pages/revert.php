@@ -204,7 +204,7 @@ include __DIR__ . "/../../../include/header.php";
 ?>
 
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo escape_quoted_data($resource) ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"] ?></a></p>
+<p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo escape($resource) ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"] ?></a></p>
 
 <?php if (isset($error)) { ?><div class="PageInfoMessage"><?php echo htmlspecialchars($error) ?></div><?php } ?>
 

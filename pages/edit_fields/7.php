@@ -63,7 +63,7 @@ foreach($selected_nodes as $node)
 
 foreach($valid_nodes as $node)
     {
-    $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"" . escape_quoted_data($name) . "\" value=\"{$node["ref"]}\">";
+    $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"" . escape($name) . "\" value=\"{$node["ref"]}\">";
 
     // Show previously selected options on the status box
     if(!(isset($treeonly) && true == $treeonly))

@@ -53,7 +53,7 @@ function HookRse_versionEditEdit_all_after_findreplace($field,$n)
     ?>
     <div class="Question" id="revert_<?php echo (int) $n?>" style="display:none;border-top:none;">
     <label>&nbsp;</label>
-    <input type="text" name="revert_<?php echo (int) $field["ref"]?>" class="stdwidth" value="<?php echo escape_quoted_data($initial_revert_to_date); ?>" />
+    <input type="text" name="revert_<?php echo (int) $field["ref"]?>" class="stdwidth" value="<?php echo escape($initial_revert_to_date); ?>" />
     </div>
     <?php
     }

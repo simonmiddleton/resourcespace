@@ -69,8 +69,8 @@ function show_team_user_filter_search(){
             <div class="Question">
                 <label for="find"><?php echo htmlspecialchars($lang["searchusers"])?></label>
                 <div class="tickset">
-                 <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape_quoted_data($find) ?>" maxlength="100" class="shrtwidth" /></div>
-                 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["searchbutton"])?>&nbsp;&nbsp;" /></div>
+                 <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape($find) ?>" maxlength="100" class="shrtwidth" /></div>
+                 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"])?>&nbsp;&nbsp;" /></div>
                 </div>
                 <div class="clearerleft"> </div>
             </div>
@@ -367,7 +367,7 @@ if(!hook("replace_create_user"))
                 <label for="newuser"><?php echo htmlspecialchars($lang["createuserwithusername"])?></label>
                 <div class="tickset">
                  <div class="Inline"><input type=text name="newuser" id="newuser" maxlength="50" class="shrtwidth" /></div>
-                 <div class="Inline"><input name="Submit" id="create_user_button" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["create"])?>&nbsp;&nbsp;" /></div>
+                 <div class="Inline"><input name="Submit" id="create_user_button" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"])?>&nbsp;&nbsp;" /></div>
                 </div>
                 <div class="clearerleft"> </div>
             </div>

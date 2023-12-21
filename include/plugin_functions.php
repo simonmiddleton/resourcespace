@@ -1018,15 +1018,15 @@ function config_multi_rtype_select($name, $label, $current, $width=300)
     $rtypes=get_resource_types();
     ?>
     <div class="Question">
-        <label for="<?php echo escape_quoted_data($name) ?>" title="<?php echo escape_quoted_data(str_replace('%cvn', $name, $lang['plugins-configvar'])) ?>"><?php echo htmlspecialchars($label) ?></label>
-        <fieldset id="<?php echo escape_quoted_data($name) ?>" class="MultiRTypeSelect">
+        <label for="<?php echo escape($name) ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])) ?>"><?php echo htmlspecialchars($label) ?></label>
+        <fieldset id="<?php echo escape($name) ?>" class="MultiRTypeSelect">
             <?php foreach($rtypes as $rtype) { ?>
                 <input type="checkbox"
-                    value="<?php echo escape_quoted_data($rtype['ref']) ?>"
-                    name="<?php echo escape_quoted_data($name) ?>[]"
-                    id="<?php echo escape_quoted_data($name . $rtype['ref']) ?>"
+                    value="<?php echo escape($rtype['ref']) ?>"
+                    name="<?php echo escape($name) ?>[]"
+                    id="<?php echo escape($name . $rtype['ref']) ?>"
                     <?php echo (in_array($rtype['ref'],$current) ? ' checked="checked"' : '') ?>>
-                <label for="<?php echo escape_quoted_data($name . $rtype['ref']) ?>"><?php echo htmlspecialchars(lang_or_i18n_get_translated($rtype['name'],'resourcetype-')) ?></label>
+                <label for="<?php echo escape($name . $rtype['ref']) ?>"><?php echo htmlspecialchars(lang_or_i18n_get_translated($rtype['name'],'resourcetype-')) ?></label>
                 <br />
             <?php } ?>
         </fieldset>
@@ -1064,16 +1064,16 @@ function config_multi_archive_select($name, $label, $current, $choices, $width=3
     global $lang;
     ?>
     <div class="Question">
-        <label for="<?php echo escape_quoted_data($name)?>" title="<?php echo escape_quoted_data(str_replace('%cvn', $name, $lang['plugins-configvar']))?>"><?php echo htmlspecialchars($label)?></label>
-        <fieldset id="<?php echo escape_quoted_data($name)?>" class="MultiRTypeSelect">
+        <label for="<?php echo escape($name)?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar']))?>"><?php echo htmlspecialchars($label)?></label>
+        <fieldset id="<?php echo escape($name)?>" class="MultiRTypeSelect">
             <?php foreach($choices as $statekey => $statename) { ?>
-                <span id="archivestate<?php echo escape_quoted_data($statekey) ?>">
+                <span id="archivestate<?php echo escape($statekey) ?>">
                     <input type="checkbox"
-                        value="<?php echo escape_quoted_data($statekey) ?>"
-                        name="<?php echo escape_quoted_data($name) . '[]' ?>"
-                        id="<?php echo escape_quoted_data($name . $statekey) ?>" 
+                        value="<?php echo escape($statekey) ?>"
+                        name="<?php echo escape($name) . '[]' ?>"
+                        id="<?php echo escape($name . $statekey) ?>" 
                         <?php echo (isset($current) && $current!='' && in_array($statekey,$current) ? ' checked="checked"' : '') ?>>
-                    <label for="<?php echo escape_quoted_data($name . $statekey) ?>"><?php echo htmlspecialchars($statename) ?></label>
+                    <label for="<?php echo escape($name . $statekey) ?>"><?php echo htmlspecialchars($statename) ?></label>
                     <br />
                 </span>
             <?php } ?>

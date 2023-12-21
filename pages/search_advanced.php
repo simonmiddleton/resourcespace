@@ -101,9 +101,9 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
                 }
 
 		<?php if ($count==0) { ?>
-			populate_view_buttons("<?php echo escape_quoted_data($lang["nomatchingresults"])  ?>");
+			populate_view_buttons("<?php echo escape($lang["nomatchingresults"])  ?>");
 		<?php } else { ?>
-			populate_view_buttons("<?php echo escape_quoted_data($lang["view"] . " " . number_format($count) . " " . $lang["matchingresults"]) ?>");
+			populate_view_buttons("<?php echo escape($lang["view"] . " " . number_format($count) . " " . $lang["matchingresults"]) ?>");
 		<?php } ?>
 		</script>
 		</html>
@@ -545,7 +545,7 @@ if (!hook('advsearchallfields')) { ?>
 <input type="hidden" id="hiddenfields" name="hiddenfields" value="">
 
 <div class="Question">
-<label for="allfields"><?php echo htmlspecialchars($lang["allfields"]) ?></label><input class="SearchWidth" type=text name="allfields" id="allfields" value="<?php echo escape_quoted_data($allwords)?>" onChange="UpdateResultCount();">
+<label for="allfields"><?php echo htmlspecialchars($lang["allfields"]) ?></label><input class="SearchWidth" type=text name="allfields" id="allfields" value="<?php echo escape($allwords)?>" onChange="UpdateResultCount();">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>
@@ -565,7 +565,7 @@ if (!hook('advsearchallfields')) { ?>
 <?php if (!hook('advsearchresid')) { ?>
 <!-- Search for resource ID(s) -->
 <div class="Question">
-<label for="resourceids"><?php echo htmlspecialchars($lang["resourceids"]) ?></label><input class="SearchWidth" type=text name="resourceids" id="resourceids" value="<?php echo escape_quoted_data(getval("resourceids","")) ?>" onChange="UpdateResultCount();">
+<label for="resourceids"><?php echo htmlspecialchars($lang["resourceids"]) ?></label><input class="SearchWidth" type=text name="resourceids" id="resourceids" value="<?php echo escape(getval("resourceids","")) ?>" onChange="UpdateResultCount();">
 <div class="clearerleft"> </div>
 </div>
 <?php }
@@ -681,7 +681,7 @@ for ($n=0;$n<count($fields);$n++)
 
     <!-- Full text search (uses built in MySQL indexing) -->
     <div class="Question">
-        <label for="<?php echo FULLTEXT_SEARCH_PREFIX; ?>"><?php echo htmlspecialchars($lang["search_full_text"]); ?></label><input class="SearchWidth" type=text name="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" id="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" value="<?php echo escape_quoted_data($full_text_search); ?>" onChange="UpdateResultCount();">
+        <label for="<?php echo FULLTEXT_SEARCH_PREFIX; ?>"><?php echo htmlspecialchars($lang["search_full_text"]); ?></label><input class="SearchWidth" type=text name="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" id="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" value="<?php echo escape($full_text_search); ?>" onChange="UpdateResultCount();">
         <div class="clearerleft"> </div>
     </div>
 
@@ -734,7 +734,7 @@ if($advanced_search_archive_select)
         }
     else
         {?>
-        <input type="hidden" name="archive" value="<?php echo escape_quoted_data($archive)?>">
+        <input type="hidden" name="archive" value="<?php echo escape($archive)?>">
         <?php
         }
 

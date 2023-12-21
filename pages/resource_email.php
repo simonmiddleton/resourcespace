@@ -73,7 +73,7 @@ include "../include/header.php";
 <p><?php echo text("introtext");render_help_link("user/sharing-resources");?></p>
 
 <form method=post id="resourceform" action="<?php echo $baseurl_short?>pages/resource_email.php?search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>">
-<input type=hidden name=ref value="<?php echo escape_quoted_data($ref)?>">
+<input type=hidden name=ref value="<?php echo escape($ref)?>">
 <?php generateFormToken("resourceform"); ?>
 <div class="Question">
 <label><?php echo htmlspecialchars($lang["resourcetitle"])?></label><div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resource["field".$view_title_field]))?></div>
@@ -164,7 +164,7 @@ if(!$user_select_internal)
 
 <?php if(!hook("replaceemailsubmitbutton")){?>
 <div class="QuestionSubmit">		
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["emailresourcetitle"])?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["emailresourcetitle"])?>&nbsp;&nbsp;" />
 </div>
 <?php } // end replaceemailsubmitbutton ?>
 

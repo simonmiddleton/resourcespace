@@ -380,11 +380,11 @@
             {
                 url=decodeURIComponent(url);
                 url=DOMPurify.sanitize(url);
-                url="<a class='message_link' href='" + url + "'><?php echo escape_quoted_data($lang['link']); ?></a>";
+                url="<a class='message_link' href='" + url + "'><?php echo escape($lang['link']); ?></a>";
             }
         if (typeof owner==="undefined" || owner=='')
             {
-            owner = '<?php echo escape_quoted_data($applicationname); ?>';
+            owner = '<?php echo escape($applicationname); ?>';
             }
 
         jQuery("#modal_dialog").html("<div class='MessageText'>" + nl2br(DOMPurify.sanitize(message)) + "</div>" + url);

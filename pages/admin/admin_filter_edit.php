@@ -287,7 +287,7 @@ include "../../include/header.php";
                 </div>
                         
                 <div class="QuestionSubmit">
-                    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["save"]);?>&nbsp;&nbsp;" onClick="return CentralSpacePost(this.form,true);">
+                    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]);?>&nbsp;&nbsp;" onClick="return CentralSpacePost(this.form,true);">
                 </div>
 
 
@@ -337,7 +337,7 @@ jQuery(document).ready(function(){
             error_message += errors[i] + "<br />";
             }
         console.log(error_message);
-        styledalert("<?php echo escape_quoted_data($lang['error']); ?>", error_message);
+        styledalert("<?php echo escape($lang['error']); ?>", error_message);
         }
 })
 </script>

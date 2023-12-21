@@ -53,7 +53,7 @@ include "../../include/header.php";
 </div>
 
 <div class="QuestionSubmit">		
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["exportdata"])?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["exportdata"])?>&nbsp;&nbsp;" />
 </div>
 </form>
 

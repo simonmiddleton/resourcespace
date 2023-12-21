@@ -232,9 +232,9 @@ include "../include/header.php";
 ?>
 	<div class="BasicsBox"> 	
 	<form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref)?>">
-	<input type="hidden" name="ref" id="ref" value="<?php echo escape_quoted_data($ref) ?>">
+	<input type="hidden" name="ref" id="ref" value="<?php echo escape($ref) ?>">
 	<input type="hidden" name="deleteaccess" id="deleteaccess" value="">
-	<input type="hidden" name="editaccess" id="editaccess" value="<?php echo escape_quoted_data($editaccess)?>">
+	<input type="hidden" name="editaccess" id="editaccess" value="<?php echo escape($editaccess)?>">
 	<input type="hidden" name="editexpiration" id="editexpiration" value="">
 	<input type="hidden" name="editaccesslevel" id="editaccesslevel" value="">
 	<input type="hidden" name="editgroup" id="editgroup" value="">
@@ -362,12 +362,12 @@ include "../include/header.php";
 			<?php 
 			if ($editing  && !$editexternalurl)
 				{?>
-				<input name="editexternalurl" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["save"])?>&nbsp;&nbsp;" />
+				<input name="editexternalurl" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"])?>&nbsp;&nbsp;" />
 				<?php
 				}
 			else
 				{?>
-				<input name="generateurl" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["generateexternalurl"])?>&nbsp;&nbsp;" />
+				<input name="generateurl" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["generateexternalurl"])?>&nbsp;&nbsp;" />
 				<?php 
 				}
 				?>
@@ -503,7 +503,7 @@ include "../include/header.php";
                     ));
                 ?>                
 				<td><div class="ListTools">
-				<a href="#" onClick="if (confirm('<?php echo escape_quoted_data($lang["confirmdeleteaccess"])?>')) {document.getElementById('deleteaccess').value='<?php echo escape_quoted_data($keys[$n]["access_key"]) ?>';document.getElementById('collectionform').submit(); return false;}"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-delete"])?></a>
+				<a href="#" onClick="if (confirm('<?php echo escape($lang["confirmdeleteaccess"])?>')) {document.getElementById('deleteaccess').value='<?php echo escape($keys[$n]["access_key"]) ?>';document.getElementById('collectionform').submit(); return false;}"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-delete"])?></a>
 				<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-edit"])?></a>
 				</div></td>
 				</tr>

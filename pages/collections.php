@@ -299,11 +299,11 @@ else { ?>
 							jQuery(this)
 								.closest(".ui-dialog")
 								.find(".ui-dialog-title")
-								.html("<?php echo escape_quoted_data($lang["trash_bin_delete_dialog_title"]) . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name') + ")");
+								.html("<?php echo escape($lang["trash_bin_delete_dialog_title"]) . "<br>(" . $lang["from"]; ?> " + jQuery(this).data('collection_name') + ")");
 						},
 						buttons: {
 							// Confirm removal of this resource from the resolved collection
-							"<?php echo escape_quoted_data($lang['yes']); ?>": function() {
+							"<?php echo escape($lang['yes']); ?>": function() {
 								var class_of_drag=jQuery(this).data('class_of_drag');
 								var resource_id = jQuery(this).data("resource_id");
 								var collection_id=jQuery(this).data('collection_id');
@@ -325,7 +325,7 @@ else { ?>
 								jQuery(this).dialog('close');
 							},
 							// Cancel resource removal
-							"<?php echo escape_quoted_data($lang['no']); ?>": function() {
+							"<?php echo escape($lang['no']); ?>": function() {
 								var class_of_drag=jQuery(this).data('class_of_drag');
 								var resource_id = jQuery(this).data("resource_id");
 								var collection_id=jQuery(this).data('collection_id');
@@ -501,7 +501,7 @@ if ($add!="")
         if(!$allowadd)
             {			
             ?>
-            <script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>", "<?php echo escape_quoted_data($lang["sharedcollectionaddblocked"])?>");</script>
+            <script language="Javascript">styledalert("<?php echo escape($lang['error'])?>", "<?php echo escape($lang["sharedcollectionaddblocked"])?>");</script>
             <?php
             }
         }
@@ -525,7 +525,7 @@ if ($add!="")
             #add to current collection		
             if ($usercollection == -$userref || $to_collection == -$userref || add_resource_to_collection($add,($to_collection === '') ? $usercollection : $to_collection,false,getval("size",""))==false)
                 { ?>
-                <script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>","<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
+                <script language="Javascript">styledalert("<?php echo escape($lang['error'])?>","<?php echo escape($lang["cantmodifycollection"])?>");</script><?php
                 }
             else
                 {		
@@ -538,13 +538,13 @@ if ($add!="")
         # Show warning?
         if (isset($collection_share_warning) && $collection_share_warning)
             {
-            ?><script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['status-warning'])?>", "<?php echo escape_quoted_data($lang["sharedcollectionaddwarning"])?>");</script><?php
+            ?><script language="Javascript">styledalert("<?php echo escape($lang['status-warning'])?>", "<?php echo escape($lang["sharedcollectionaddwarning"])?>");</script><?php
             }
         }
     else
         {
         ?>
-        <script language="Javascript">alert("<?php echo escape_quoted_data($lang["error-permissiondenied"])?>");</script>
+        <script language="Javascript">alert("<?php echo escape($lang["error-permissiondenied"])?>");</script>
         <?php
         }
     }
@@ -570,7 +570,7 @@ if ($remove!="")
         #remove from current collection
         if (remove_resource_from_collection($remove, ($from_collection === '') ? $usercollection : $from_collection) == false)
             {
-            ?><script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>","<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
+            ?><script language="Javascript">styledalert("<?php echo escape($lang['error'])?>","<?php echo escape($lang["cantmodifycollection"])?>");</script><?php
             }
         else
             {
@@ -595,7 +595,7 @@ if ($addsearch!=-1)
 
     if ($usercollection == -$userref || !collection_writeable($usercollection))
         { ?>
-        <script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>","<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
+        <script language="Javascript">styledalert("<?php echo escape($lang['error'])?>","<?php echo escape($lang["cantmodifycollection"])?>");</script><?php
         }
     else
         {
@@ -605,7 +605,7 @@ if ($addsearch!=-1)
             {
             // If collection has been shared externally users with this permission can't add resources
             ?>
-            <script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>", "<?php echo escape_quoted_data($lang["sharedcollectionaddblocked"])?>");</script>
+            <script language="Javascript">styledalert("<?php echo escape($lang['error'])?>", "<?php echo escape($lang["sharedcollectionaddblocked"])?>");</script>
             <?php
             }
         else
@@ -648,7 +648,7 @@ if ($addsearch!=-1)
                         $warningtext .= $lang["notapprovedresources"] . implode(", ",$resourcesnotadded);
                         }
 
-                    ?><script language="Javascript">styledalert("<?php echo escape_quoted_data($lang["status-warning"]); ?>","<?php echo $warningtext; ?>",600);</script><?php
+                    ?><script language="Javascript">styledalert("<?php echo escape($lang["status-warning"]); ?>","<?php echo $warningtext; ?>",600);</script><?php
                     }
                 # Log this
                 daily_stat("Add saved search items to collection",0);
@@ -663,7 +663,7 @@ if ($removesearch!="")
 	{
     if (!collection_writeable($usercollection))
         { ?>
-        <script language="Javascript">styledalert("<?php echo escape_quoted_data($lang['error'])?>", "<?php echo escape_quoted_data($lang["cantmodifycollection"])?>");</script><?php
+        <script language="Javascript">styledalert("<?php echo escape($lang['error'])?>", "<?php echo escape($lang["cantmodifycollection"])?>");</script><?php
         }
     else
         {
@@ -796,7 +796,7 @@ else if ($basket)
 	
 	</p>
 
-	<p style="padding-bottom:10px;"><input type="submit" name="buy" value="&nbsp;&nbsp;&nbsp;<?php echo escape_quoted_data($lang["buynow"]) ?>&nbsp;&nbsp;&nbsp;" /></p>
+	<p style="padding-bottom:10px;"><input type="submit" name="buy" value="&nbsp;&nbsp;&nbsp;<?php echo escape($lang["buynow"]) ?>&nbsp;&nbsp;&nbsp;" /></p>
 	<?php 
 	} ?>
     <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["hidethumbnails"])?></a>
@@ -999,7 +999,7 @@ else
             <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#entername').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
                 <div style="padding:0;margin:0;"><?php echo htmlspecialchars($lang["currentcollection"])?>: 
                     <br />
-                    <select name="collection" id="collection" aria-label="<?php echo escape_quoted_data($lang["collections"]) ?>"
+                    <select name="collection" id="collection" aria-label="<?php echo escape($lang["collections"]) ?>"
 
 					onchange="if(document.getElementById('collection').value=='new') {
 								document.getElementById('entername').style.display='block';
@@ -1059,7 +1059,7 @@ else
                         }?>
                     </select>
                     <br /><small><?php echo $count_result . " "; if ($count_result==1){echo htmlspecialchars($lang["item"]);} else {echo htmlspecialchars($lang["items"]);} ?></small>
-                    <input type=text id="entername" name="entername" style="display:none;" placeholder="<?php echo escape_quoted_data($lang['entercollectionname'])?>" class="SearchWidth">
+                    <input type=text id="entername" name="entername" style="display:none;" placeholder="<?php echo escape($lang['entercollectionname'])?>" class="SearchWidth">
                 </div>			
             </form>
 
@@ -1379,7 +1379,7 @@ if (count($addarray)>0 && $addarray[0]!="")
 	 			  id="colselect2" 
 	 			  onsubmit="newcolname=encodeURIComponent(jQuery('#entername2').val());CollectionDivLoad('<?php echo $baseurl_short; ?>pages/collections.php?thumbs=hide&collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k); ?>&search=<?php echo urlencode($search)?>&entername='+newcolname);return false;">
 				<div class="MinSearchItem" id="MinColDrop">
-					<input type=text id="entername2" name="entername" placeholder="<?php echo escape_quoted_data($lang['entercollectionname']); ?>" style="display:inline;display:none;" class="SearchWidthExp">
+					<input type=text id="entername2" name="entername" placeholder="<?php echo escape($lang['entercollectionname']); ?>" style="display:inline;display:none;" class="SearchWidthExp">
 				</div>
 				<script>jQuery('#collection').clone().attr('id','collection2').attr('onChange',"if(document.getElementById('collection2').value=='new'){document.getElementById('entername2').style.display='inline';document.getElementById('entername2').focus();return false;}<?php if (!checkperm('b')){ ?>ChangeCollection(jQuery(this).val(),'<?php echo urlencode($k) ?>','<?php echo urlencode($usercollection) ?>','<?php echo $change_col_url ?>');<?php } else { ?>document.getElementById('colselect2').submit();<?php } ?>").prependTo('#MinColDrop');</script>
 	  		</form>

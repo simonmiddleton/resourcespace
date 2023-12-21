@@ -1,5 +1,5 @@
 <?php if (!hook("replaceheadernav2")) { ?>
-    <nav aria-label="<?php echo escape_quoted_data($lang['mainmenu']) ?>">
+    <nav aria-label="<?php echo escape($lang['mainmenu']) ?>">
         <ul id="HeaderLinksContainer">
             <?php if (!hook("replacehomelinknav")) { ?>
                 <?php if (!$use_theme_as_home && !$use_recent_as_home) { ?>

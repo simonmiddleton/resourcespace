@@ -269,7 +269,7 @@ include "../../include/header.php";
                 }?>
                 
             <div id ="permissions_area" <?php if(in_array("permissions",$record['inherit'])){echo "style=display:none;";} ?>>
-                <input type="button" class="stdwidth<?php echo $record['parent'] ? ' label-spacer' : ''; ?>" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo escape_quoted_data($ref . $url_params); ?>',true);" value="<?php echo htmlspecialchars($lang["launchpermissionsmanager"]); ?>"></input>                       
+                <input type="button" class="stdwidth<?php echo $record['parent'] ? ' label-spacer' : ''; ?>" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo escape($ref . $url_params); ?>',true);" value="<?php echo htmlspecialchars($lang["launchpermissionsmanager"]); ?>"></input>                       
                 <div class="clearerleft"></div>
                 <label></label>
                 <textarea name="permissions" class="stdwidth" rows="5" cols="50"><?php echo htmlspecialchars((string) $record['permissions']); ?></textarea>
@@ -488,7 +488,7 @@ include "../../include/header.php";
 
         if(<?php echo $language_specific_results; ?> > 0 && jQuery('#delete_user_group').is(':checked'))
             {
-            alert("<?php echo escape_quoted_data($alert_message); ?>");
+            alert("<?php echo escape($alert_message); ?>");
             }
     });
 </script>

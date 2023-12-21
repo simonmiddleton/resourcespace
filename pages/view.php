@@ -80,7 +80,7 @@ if ($go!="")
             {
             ?>
             <script type="text/javascript">
-            alert('<?php echo escape_quoted_data($lang["resourcenotinresults"]) ?>');
+            alert('<?php echo escape($lang["resourcenotinresults"]) ?>');
             </script>
             <?php
             }
@@ -290,7 +290,7 @@ if($resource_contact_link && ($k=="" || $internal_share_access))
 								document.getElementById('messagetext').focus();
 								},
 						error: function(XMLHttpRequest, textStatus, errorThrown) {
-							alert('<?php echo escape_quoted_data($lang["error"]) ?>\n' + textStatus);
+							alert('<?php echo escape($lang["error"]) ?>\n' + textStatus);
 							}
 						});
 				}
@@ -398,14 +398,14 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                 jQuery('#lock_link_' + resource).toggleClass("ResourceUnlocked");
                 if(lockstatus==1)
                     {               
-                    jQuery('#lock_link_' + resource).html('&nbsp;<?php echo escape_quoted_data($lang["action_unlock"]) ;?>');
-                    jQuery('#lock_link_' + resource).attr("title","<?php echo escape_quoted_data($lang["status_locked_self"]); ?>");
-                    lockmessage[resource] = '<?php echo escape_quoted_data($lang["status_locked_self"]); ?>';
+                    jQuery('#lock_link_' + resource).html('&nbsp;<?php echo escape($lang["action_unlock"]) ;?>');
+                    jQuery('#lock_link_' + resource).attr("title","<?php echo escape($lang["status_locked_self"]); ?>");
+                    lockmessage[resource] = '<?php echo escape($lang["status_locked_self"]); ?>';
                     jQuery('#lock_details_link').show();
                     }
                 else
                     {
-                    jQuery('#lock_link_' + resource).html('&nbsp;<?php echo escape_quoted_data($lang["action_lock"]) ;?>');
+                    jQuery('#lock_link_' + resource).html('&nbsp;<?php echo escape($lang["action_lock"]) ;?>');
                     lockmessage[resource] = '';
                     jQuery('#lock_details_link').hide();
                     // Timeout added as title resists removal if cursor is hovering as it is removed
@@ -418,11 +418,11 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                 console.log(xhr);
                 if(typeof xhr.responseJSON.message !== undefined)
                     {
-                    styledalert('<?php echo escape_quoted_data($lang["error"]); ?>',xhr.responseJSON.message);
+                    styledalert('<?php echo escape($lang["error"]); ?>',xhr.responseJSON.message);
                     }
                 else
                     {
-                    styledalert('<?php echo escape_quoted_data($lang["error"]); ?>',xhr.statusText);
+                    styledalert('<?php echo escape($lang["error"]); ?>',xhr.statusText);
                     }
                 }
             });
@@ -525,7 +525,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                         <a class="prevLink fa fa-arrow-left"
                             href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>"
                             onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);"
-                            title="<?php echo escape_quoted_data($lang["previousresult"])?>">
+                            title="<?php echo escape($lang["previousresult"])?>">
                         </a>
 
                         <?php 
@@ -534,7 +534,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                             <a class="upLink"
                                 href="<?php echo generateURL($baseurl . "/pages/search.php",$urlparams,array("go"=>"up","place"=>$ref)) ?>"
                                 onClick="return CentralSpaceLoad(this);">
-                                <?php echo escape_quoted_data($lang["viewallresults"])?>
+                                <?php echo escape($lang["viewallresults"])?>
                             </a>
                             <?php 
                             } ?>
@@ -542,7 +542,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                         <a class="nextLink fa fa-arrow-right"
                             href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"next")) . "&amp;" .  hook("nextpreviousextraurl") ?>"
                             onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);"
-                            title="<?php echo escape_quoted_data($lang["nextresult"])?>">
+                            title="<?php echo escape($lang["nextresult"])?>">
                         </a>
 
                         <?php
@@ -551,9 +551,9 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                             <a href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams) ?>"
                                 onClick="return CentralSpaceLoad(this, true);"
                                 class="maxLink fa fa-expand"
-                                title="<?php echo escape_quoted_data($lang["maximise"])?>">
+                                title="<?php echo escape($lang["maximise"])?>">
                             </a>
-                            <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape_quoted_data($lang["close"]) ?>"></a>
+                            <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]) ?>"></a>
                             <?php
                             } ?>
                     </div>
@@ -570,11 +570,11 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 generateURL($baseurl . "/pages/view.php",$urlparams) ?>"
                                 onClick="return CentralSpaceLoad(this);"
                                 class="maxLink fa fa-expand"
-                                title="<?php echo escape_quoted_data($lang["maximise"])?>">
+                                title="<?php echo escape($lang["maximise"])?>">
                             </a>
 		                    <?php
                             } ?>
-		                <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape_quoted_data($lang["close"]) ?>"></a>
+		                <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]) ?>"></a>
 	                </div>
 	                <?php
                     } ?>
@@ -779,7 +779,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                     <a id="previewimagelink"
                                         class="enterLink"
                                         href="<?php echo $previewimagelink; ?>"
-                                        title="<?php echo escape_quoted_data($lang["fullscreenpreview"]); ?>"
+                                        title="<?php echo escape($lang["fullscreenpreview"]); ?>"
                                         style="position:relative;"
                                         onclick="<?php echo $previewimagelink_onclick; ?>">
                                 <?php
@@ -795,7 +795,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 <img id="previewimage"
                                     class="Picture"
                                     src="<?php echo $imageurl; ?>" 
-                                    alt="<?php echo escape_quoted_data($lang['fullscreenpreview']); ?>" 
+                                    alt="<?php echo escape($lang['fullscreenpreview']); ?>" 
                                     onload="jQuery('.DownloadDBlend').css('pointer-events','auto')"
                                     GALLERYIMG="no"
                                 <?php
@@ -945,7 +945,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                             return false;
                                             }
 
-                                        styledalert('<?php echo escape_quoted_data($lang['not_allowed']); ?>', '<?php echo escape_quoted_data($lang['error_multiple_preview_tools']); ?>');
+                                        styledalert('<?php echo escape($lang['not_allowed']); ?>', '<?php echo escape($lang['error_multiple_preview_tools']); ?>');
                                         return true;
                                         }
 
@@ -1666,7 +1666,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                         $urlparams['refreshcollection']='true';
                                                         $redirect_url = generateURL($baseurl_short . "pages/done.php",$urlparams);
                                                         ?> <a id='delete_link_" . $ref . "' href='#' onclick="
-                                                        if (confirm('<?php echo escape_quoted_data($lang['filedeleteconfirm']) ?>'))
+                                                        if (confirm('<?php echo escape($lang['filedeleteconfirm']) ?>'))
                                                             {
                                                             api(
                                                                 'delete_resource',
@@ -1674,7 +1674,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                                 function(response){
                                                                     ModalLoad('<?php echo $redirect_url ?>',true);
                                                                 },
-                                                                <?php echo escape_quoted_data(generate_csrf_js_object('delete_resource')); ?>
+                                                                <?php echo escape(generate_csrf_js_object('delete_resource')); ?>
                                                             );
                                                             }
                                                         " ><i class='fa fa-fw fa-trash'></i>&nbsp;<?php echo $deletetext ?></a>
@@ -2137,13 +2137,13 @@ if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access
             <div class="SearchSimilar">
                 <input 
                     type=checkbox 
-                    id="<?php echo escape_quoted_data($context . "similar_search_" . $keywords[$n] . "_" . $n)  ?>" 
-                    name="keyword_<?php echo escape_quoted_data($keywords[$n])?>" 
+                    id="<?php echo escape($context . "similar_search_" . $keywords[$n] . "_" . $n)  ?>" 
+                    name="keyword_<?php echo escape($keywords[$n])?>" 
                     value="yes"
-                    onClick="<?php echo escape_quoted_data($context) ?>UpdateFSResultCount();">
+                    onClick="<?php echo escape($context) ?>UpdateFSResultCount();">
                     <label 
                         class="customFieldLabel" 
-                        for="<?php echo escape_quoted_data($context . "similar_search_" . $keywords[$n] . "_" . $n)?>">
+                        for="<?php echo escape($context . "similar_search_" . $keywords[$n] . "_" . $n)?>">
                         <?php echo htmlspecialchars(i18n_get_translated($keywords[$n]))?>
                     </label>
                 </div>
@@ -2152,7 +2152,7 @@ if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access
         ?>
         <div class="clearerleft"> </div>
         <br />
-        <input name="search" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["searchbutton"])?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
+        <input name="search" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"])?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
         <iframe src="<?php echo $baseurl ?>/pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
         </form>
         <?php

@@ -10,7 +10,7 @@ if (!hook("iconedit") && (checkperm("e" . $result[$n]["archive"]) || ($edit_acce
         <a class="fa fa-pencil"
             href="<?php echo str_replace("view.php", "edit.php", $url) ?>"  
             onClick="return <?php echo ($resource_view_modal ? "Modal" : "CentralSpace") ?>Load(this, true);" 
-            title="<?php echo escape_quoted_data($lang["action-editmetadata"] . " - " . $resource_view_title) ?>">
+            title="<?php echo escape($lang["action-editmetadata"] . " - " . $resource_view_title) ?>">
         </a><?php
     }
 } ?>	
@@ -28,7 +28,7 @@ if ($k == "" || $internal_share_access) {
                     'collection' => trim(substr($search, 11))
                 ]) ?>"
             onClick="return ModalLoad(this,true);" 
-            title="<?php echo escape_quoted_data($lang["addorviewcomments"] . " - " . $resource_view_title) ?>">
+            title="<?php echo escape($lang["addorviewcomments"] . " - " . $resource_view_title) ?>">
         </a>
         </span><?php 
     } 
@@ -55,7 +55,7 @@ if (!hook("replacefullscreenpreviewicon")) {
                     'archive' => $archive,
                     'k' => $k
                 ]) ?>"
-            title="<?php echo escape_quoted_data($lang["fullscreenpreview"] . " - " . $resource_view_title) ?>">
+            title="<?php echo escape($lang["fullscreenpreview"] . " - " . $resource_view_title) ?>">
         </a><?php 
     }
 } /* end hook replacefullscreenpreviewicon */?>
@@ -77,7 +77,7 @@ if (!hook("iconemail")) {
                     'k' => $k
                 ]) ?>"
             onClick="return CentralSpaceLoad(this,true);"  
-            title="<?php echo escape_quoted_data($lang["share-resource"] . " - " . $resource_view_title) ?>">
+            title="<?php echo escape($lang["share-resource"] . " - " . $resource_view_title) ?>">
         </a>
         <?php 
     }

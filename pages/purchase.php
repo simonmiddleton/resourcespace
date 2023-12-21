@@ -110,7 +110,7 @@ if (getval("submit","")=="")
 		?>
 	
 	<?php if ($showbuy) { ?>
-		<p><input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;<?php echo escape_quoted_data($lang["buynow"])?>&nbsp;&nbsp;&nbsp;"></p>
+		<p><input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;<?php echo escape($lang["buynow"])?>&nbsp;&nbsp;&nbsp;"></p>
 	<?php } ?>
 	</form>
 	</div>
@@ -207,7 +207,7 @@ else
 			<input type="hidden" name="custom" value="<?php echo urlencode($userref." ".$usercollection); ?>">
 			<input type="hidden" name="charset" value="utf-8">
 			<?php echo $paypal ?>
-			<p><input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;<?php echo escape_quoted_data($lang["proceedtocheckout"])?>&nbsp;&nbsp;&nbsp;"></p>
+			<p><input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;<?php echo escape($lang["proceedtocheckout"])?>&nbsp;&nbsp;&nbsp;"></p>
 			</form>
 			<?php
 			}
@@ -218,9 +218,9 @@ else
 		{
 		# Invoice payment.
 		?>
-		<form method="post" action="<?php echo $baseurl_short?>pages/purchase.php" onsubmit="return confirm('<?php echo escape_quoted_data($lang["areyousurepayaccount"]) ?>');">
+		<form method="post" action="<?php echo $baseurl_short?>pages/purchase.php" onsubmit="return confirm('<?php echo escape($lang["areyousurepayaccount"]) ?>');">
             <?php generateFormToken("purchaseonaccount_form"); ?>
-		<p><input type="submit" name="purchaseonaccount"  value="&nbsp;&nbsp;&nbsp;<?php echo escape_quoted_data($lang["purchaseonaccount"])?>&nbsp;&nbsp;&nbsp;"></p>
+		<p><input type="submit" name="purchaseonaccount"  value="&nbsp;&nbsp;&nbsp;<?php echo escape($lang["purchaseonaccount"])?>&nbsp;&nbsp;&nbsp;"></p>
 	
 		</form>
 		<?php

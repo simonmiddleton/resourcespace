@@ -168,7 +168,7 @@ if($modal)
 generateFormToken("team_user_edit");
 ?>
 <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
-<input type=hidden name=backurl value="<?php echo escape_quoted_data(getval("backurl", $baseurl_short . "pages/team/team_user.php?nc=" . time()))?>">
+<input type=hidden name=backurl value="<?php echo escape(getval("backurl", $baseurl_short . "pages/team/team_user.php?nc=" . time()))?>">
 <input type=hidden name="save" value="save" /><!-- to capture default action -->
 
 
@@ -176,7 +176,7 @@ generateFormToken("team_user_edit");
 if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user["login_last_try"]) > (time() - ($max_login_attempts_wait_minutes * 60))))
  {?>
 	<div class="Question"><label><strong><?php echo htmlspecialchars($lang["accountlockedstatus"])?></strong></label>
-		<input class="medcomplementwidth" type=submit name="unlock" value="<?php echo escape_quoted_data($lang["accountunlock"])?>" onclick="jQuery('#unlockuser').val('true');"/>
+		<input class="medcomplementwidth" type=submit name="unlock" value="<?php echo escape($lang["accountunlock"])?>" onclick="jQuery('#unlockuser').val('true');"/>
 		<input id="unlockuser" type=hidden name="unlock" value="" />
 	</div>
 
@@ -186,9 +186,9 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <div class="Question" ><label><?php echo htmlspecialchars($lang["username"])?></label><input id="user_edit_username" name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
 
 <?php if (!hook("password", "", array($user))) { ?>
-<div class="Question"><label><?php echo htmlspecialchars($lang["password"])?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo escape_quoted_data($lang["hidden"]); ?>" autocomplete="new-password">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo escape_quoted_data($lang["suggest"])?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo htmlspecialchars($lang["password"])?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo escape($lang["hidden"]); ?>" autocomplete="new-password">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo escape($lang["suggest"])?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
 <?php } else { ?>
-<div><input name="password" id="password" type="hidden" value="<?php echo escape_quoted_data($lang["hidden"]);?>" /></div>
+<div><input name="password" id="password" type="hidden" value="<?php echo escape($lang["hidden"]);?>" /></div>
 <?php } ?>
 
 <?php if (!hook("replacefullname")){?>
@@ -229,7 +229,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
         value="<?php echo form_value_display($user,"email") ?>"
         <?php if($user["email_invalid"]??false)
             {
-            echo "title='" . escape_quoted_data($lang["emailmarkedinvalid"]) . "'";
+            echo "title='" . escape($lang["emailmarkedinvalid"]) . "'";
             }
         ?>>
     <div class="clearerleft"> </div>
@@ -427,7 +427,7 @@ function confirm_delete_user(el)
         return true;
         }
 
-    return confirm('<?php echo escape_quoted_data($lang['team_user__confirm-deletion']); ?>');
+    return confirm('<?php echo escape($lang['team_user__confirm-deletion']); ?>');
     }
 </script>
 <?php		

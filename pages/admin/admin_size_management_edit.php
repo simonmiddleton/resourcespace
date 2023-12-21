@@ -165,7 +165,7 @@ include "../../include/header.php";
 		?>
 
 		<div class="QuestionSubmit">
-			<input name="buttonsave" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["save"]); ?>&nbsp;&nbsp;">
+			<input name="buttonsave" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;">
 		</div>
 
 	</div>

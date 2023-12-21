@@ -56,7 +56,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 ?>
 
 <p id="EditNewsBack">
-    <a href="news_edit.php?offset=<?php echo $offset?>&findtext=<?php echo escape_quoted_data($findtext)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["news_manage"]?></a>
+    <a href="news_edit.php?offset=<?php echo $offset?>&findtext=<?php echo escape($findtext)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["news_manage"]?></a>
 </p>
 
 <div class="BasicsBox">

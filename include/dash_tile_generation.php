@@ -91,8 +91,8 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
         {
 	?>
         <div class="featuredcollectionselector HomePanel DashTile DashTileDraggable allUsers" 
-            tile="<?php echo escape_quoted_data($tile["ref"])?>" 
-            id="<?php echo str_replace("contents_","",escape_quoted_data($tile_id));?>" >
+            tile="<?php echo escape($tile["ref"])?>" 
+            id="<?php echo str_replace("contents_","",escape($tile_id));?>" >
             <div id="<?php echo $tile_id?>" class="HomePanelThemes HomePanelDynamicDash HomePanelIN">
     <?php 
         }?>

@@ -234,10 +234,10 @@ function render_provider_search_result_link(ProviderResult $result, callable $co
         }
     ?>
     <a
-        href="<?php echo escape_quoted_data($href); ?>"
+        href="<?php echo escape($href); ?>"
         <?php echo $onclick . $target; ?>
-        class="<?php echo escape_quoted_data($class); ?>"
-        title="<?php echo escape_quoted_data($title); ?>"
+        class="<?php echo escape($class); ?>"
+        title="<?php echo escape($title); ?>"
         rel="noopener"
     ><?php $content(); ?></a>
     <?php

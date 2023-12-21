@@ -55,7 +55,7 @@ jQuery(document).ready(function()
     if($backurl=="")
         {?>
         <p>
-            <a href="<?php echo escape_quoted_data($backurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["back"]) ?></a>
+            <a href="<?php echo escape($backurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["back"]) ?></a>
         </p>
         <?php
         }
@@ -80,7 +80,7 @@ jQuery(document).ready(function()
 	</div>
     <div class="Question" >
 		<input type="hidden" id="submitinput" name="submit" value="">
-		<input type="submit" name="submit" value="<?php echo escape_quoted_data($lang["action-submit-button-label"]) ?>" onclick="document.getElementById('submitinput').value='true';">
+		<input type="submit" name="submit" value="<?php echo escape($lang["action-submit-button-label"]) ?>" onclick="document.getElementById('submitinput').value='true';">
         <div class="clearerleft"> </div>
 	</div>
     

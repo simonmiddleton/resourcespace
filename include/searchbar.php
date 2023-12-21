@@ -242,9 +242,9 @@ var categoryTreeChecksArray = [];
     if(!hook("replacesearchbox"))
         {
         ?>
-        <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo escape_quoted_data(stripslashes(@$quicksearch))?>" placeholder="<?php echo escape_quoted_data($lang["searchbutton"]); ?>" aria-label="<?php echo escape_quoted_data($lang["simplesearch"]); ?>">
+        <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo escape(stripslashes(@$quicksearch))?>" placeholder="<?php echo escape($lang["searchbutton"]); ?>" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
         <input id="ssearchhiddenfields" name="ssearchhiddenfields" type="hidden" value="<?php echo $ssearchhiddenfields; ?>">
-        <button class="fas fa-search search-icon" type="submit" alt="<?php echo escape_quoted_data($lang['searchbutton']); ?>" title="<?php echo escape_quoted_data($lang['searchbutton']); ?>"></button>
+        <button class="fas fa-search search-icon" type="submit" alt="<?php echo escape($lang['searchbutton']); ?>" title="<?php echo escape($lang['searchbutton']); ?>"></button>
         <script>
         <?php
         $autocomplete_src = '';
@@ -478,7 +478,7 @@ elseif($restypes=='')
 
     if(!$basic_simple_search)
         {
-        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"". escape_quoted_data($lang['clearbutton'])."\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short ."');";
+        $searchbuttons .= "<input name=\"Clear\" id=\"clearbutton\" class=\"searchbutton\" type=\"button\" value=\"". escape($lang['clearbutton'])."\" onClick=\"unsetCookie('search_form_submit','" . $baseurl_short ."');";
 
         if($simple_search_pills_view)
             {
@@ -500,19 +500,19 @@ elseif($restypes=='')
         {
         if(!$simple_search_pills_view)
             {
-            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape_quoted_data($lang['clearbutton']) . '" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
+            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape($lang['clearbutton']) . '" onClick=" document.getElementById(\'ssearchbox\').value=\'\';"/>';
             }
         else
             {
-            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape_quoted_data($lang['clearbutton']) . '" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
+            $searchbuttons .= '<input name="Clear" id="clearbutton" class="searchbutton" type="button" value="' . escape($lang['clearbutton']) . '" onClick="removeSearchTagInputPills(jQuery(\'#ssearchbox\'));" />';
             }
         }
 
-    $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"". escape_quoted_data($lang['searchbutton'])."\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
+    $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"". escape($lang['searchbutton'])."\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
 
     if($responsive_ui)
         {
-        $searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . escape_quoted_data($lang['responsive_more']) . '">';
+        $searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . escape($lang['responsive_more']) . '">';
         }
 
     hook('extra_search_buttons');
@@ -835,7 +835,7 @@ elseif($restypes=='')
                 ?>  
     
                  <?php echo htmlspecialchars($lang["bydate"]) ?><br />
-    <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php  echo escape_quoted_data($lang['year']);?>" aria-label="<?php echo escape_quoted_data($lang['year']) ?>">
+    <select id="basicyear" name="basicyear" class="SearchWidthHalf" title="<?php  echo escape($lang['year']);?>" aria-label="<?php echo escape($lang['year']) ?>">
               <option selected="selected" value=""><?php echo htmlspecialchars($lang["anyyear"]) ?></option>
               <?php
               
@@ -850,7 +850,7 @@ elseif($restypes=='')
     
             <?php if ($searchbyday) { ?><br /><?php } ?>
     
-            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php  echo escape_quoted_data($lang['month']);?>" aria-label="<?php echo escape_quoted_data($lang['month']) ?>">
+            <select id="basicmonth" name="basicmonth" class="SearchWidthHalf SearchWidthRight" title="<?php  echo escape($lang['month']);?>" aria-label="<?php echo escape($lang['month']) ?>">
               <option selected="selected" value=""><?php echo htmlspecialchars($lang["anymonth"]) ?></option>
               <?php
               for ($n=1;$n<=12;$n++)
@@ -860,7 +860,7 @@ elseif($restypes=='')
                     }
               ?>
     
-            </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidthHalf" title="<?php  echo escape_quoted_data($lang['day']);?>">
+            </select><?php if ($searchbyday) { ?><select id="basicday" name="basicday" class="SearchWidthHalf" title="<?php  echo escape($lang['day']);?>">
               <option selected="selected" value=""><?php echo htmlspecialchars($lang["anyday"]) ?></option>
               <?php
               for ($n=1;$n<=31;$n++)
@@ -929,7 +929,7 @@ elseif($restypes=='')
                         <input type="password" name="password" id="password" class="SearchWidth" />
                     </div>
                     <div class="SearchItem">
-                        <input name="Submit" type="submit" value="<?php echo escape_quoted_data($lang["login"]) ?>" />
+                        <input name="Submit" type="submit" value="<?php echo escape($lang["login"]) ?>" />
                     </div>
                 </form>
                 <?php if ($allow_account_request) { ?>
@@ -976,7 +976,7 @@ elseif($restypes=='')
         <div class="PoweredByPanel">
             <a href="https://www.resourcespace.com" target="_blank">
                 <span><?php echo htmlspecialchars($lang["powered_by"]) ; ?></span>
-                <img src="<?php echo $baseurl ?>/gfx/titles/title-white.svg" alt="<?php echo escape_quoted_data($lang['powered_by_resourcespace']); ?>">
+                <img src="<?php echo $baseurl ?>/gfx/titles/title-white.svg" alt="<?php echo escape($lang['powered_by_resourcespace']); ?>">
             </a>
         </div>
     <?php } ?>

@@ -3479,9 +3479,9 @@ function collection_is_research_request($collection)
 function add_to_collection_link($resource, $extracode="", $size="", $class="", $view_title=""): string
     {
     $resource = (int) $resource;
-    $size = escape_quoted_data($size);
-    $class = escape_quoted_data($class);
-    $title = escape_quoted_data($GLOBALS['lang']["addtocurrentcollection"] . " - " . $view_title);
+    $size = escape($size);
+    $class = escape($class);
+    $title = escape($GLOBALS['lang']["addtocurrentcollection"] . " - " . $view_title);
 
     return "<a class=\"addToCollection {$class}\" href=\"#\" title=\"{$title}\""
         . " onClick=\"AddResourceToCollection(event, {draggable: jQuery('div#ResourceShell{$resource}')},'{$resource}','{$size}'); {$extracode} return false;\""
@@ -3508,9 +3508,9 @@ function remove_from_collection_link($resource, $class="", string $onclick = '',
     global $lang, $pagename;
 
     $resource = (int) $resource;
-    $class = escape_quoted_data($class);
-    $title = escape_quoted_data($basketmode ? $lang["removefrombasket"]: $lang["removefromcurrentcollection"] . " - " . $view_title);
-    $pagename = escape_quoted_data($pagename);
+    $class = escape($class);
+    $title = escape($basketmode ? $lang["removefrombasket"]: $lang["removefromcurrentcollection"] . " - " . $view_title);
+    $pagename = escape($pagename);
 
     return "<a class=\"removeFromCollection {$class}\" href=\"#\" title=\"{$title}\" "
         . "onClick=\"RemoveResourceFromCollection(event,'{$resource}','{$pagename}'); {$onclick} return false;\""

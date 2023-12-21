@@ -113,9 +113,9 @@ function addColumnHeader($orderName, $labelKey)
 
 ?>		<td>
 			<a href="<?php echo $baseurl ?>/pages/admin/admin_group_management.php?<?php
-				if ($find!="") { ?>&find=<?php echo escape_quoted_data($find); }
-				if ($filter_by_parent!="") { ?>&filterbyparent=<?php echo escape_quoted_data($filter_by_parent); }
-				if ($filter_by_permissions!="") { ?>&filterbypermissions=<?php echo escape_quoted_data($filter_by_permissions); }
+				if ($find!="") { ?>&find=<?php echo escape($find); }
+				if ($filter_by_parent!="") { ?>&filterbyparent=<?php echo escape($filter_by_parent); }
+				if ($filter_by_permissions!="") { ?>&filterbypermissions=<?php echo escape($filter_by_permissions); }
 			?>&orderby=<?php echo $orderName . ($order_by==$orderName ? '+desc' : ''); ?>"
 			onClick="return CentralSpaceLoad(this);"><?php echo $lang[$labelKey] . $image ?></a>
 		</td>
@@ -225,7 +225,7 @@ function addColumnHeader($orderName, $labelKey)
 
 		<div class="Question">
 			<label for="find"><?php echo $lang["property-search_filter"] ?></label>
-			<input name="find" type="text" class="medwidth" value="<?php echo escape_quoted_data($find); ?>">
+			<input name="find" type="text" class="medwidth" value="<?php echo escape($find); ?>">
 			<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;">
 			<div class="clearerleft"></div>
 		</div>
@@ -263,7 +263,7 @@ foreach	($groups as $group)
 
 		<div class="Question">
 			<label for="filterbypermissions"><?php echo $lang["action-title_filter_by_permissions"]; ?></label>
-			<input name="filterbypermissions" type="text" class="medwidth" value="<?php echo escape_quoted_data($filter_by_permissions); ?>">
+			<input name="filterbypermissions" type="text" class="medwidth" value="<?php echo escape($filter_by_permissions); ?>">
 			<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-title_apply"]; ?>&nbsp;&nbsp;">
 			<div class="clearerleft"></div>
 		</div>

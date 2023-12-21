@@ -118,7 +118,7 @@ if($editing && !$editexternalurl)
             if($modal)
                 {
                 ?>
-                <a href="#" class="closeLink fa fa-times" onclick="ModalClose();" title="<?php echo escape_quoted_data($lang["close"]); ?>"></a>
+                <a href="#" class="closeLink fa fa-times" onclick="ModalClose();" title="<?php echo escape($lang["close"]); ?>"></a>
                 <?php
                 }
                 ?>
@@ -412,14 +412,14 @@ if($editing && !$editexternalurl)
             </div>
 			<script type="text/javascript">
 			    function resourceShareDeleteShare(access_key) {
-			        if (confirm('<?php echo escape_quoted_data($lang["confirmdeleteaccessresource"]) ?>')) {
+			        if (confirm('<?php echo escape($lang["confirmdeleteaccessresource"]) ?>')) {
 			            document.getElementById('deleteaccess').value = access_key;
                         <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('resourceshareform'),true);
 			        }
 			        return false;
 			    }
 				function resourceShareDeleteUserCustomAccess(user) {
-			        if (confirm('<?php echo escape_quoted_data($lang["confirmdeleteusercustomaccessresource"]) ?>')) {
+			        if (confirm('<?php echo escape($lang["confirmdeleteusercustomaccessresource"]) ?>')) {
 			            document.getElementById('deleteusercustomaccess').value = 'yes';
 						document.getElementById('user').value = user;
 			            document.getElementById('resourceshareform').submit(); 

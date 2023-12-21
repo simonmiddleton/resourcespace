@@ -233,13 +233,13 @@ renderBreadcrumbs($links_trail);
 
 <form id="SearchSystemPages" method="post" onSubmit="return CentralSpacePost(this);">
     <?php generateFormToken("plugin_search"); ?>
-    <input type="text" name="find" id="pluginsearch" value="<?php echo escape_quoted_data($find); ?>">
-    <input type="submit" name="searching" value="<?php echo escape_quoted_data($lang["searchbutton"]); ?>">
+    <input type="text" name="find" id="pluginsearch" value="<?php echo escape($find); ?>">
+    <input type="submit" name="searching" value="<?php echo escape($lang["searchbutton"]); ?>">
 <?php
 if($searching)
     {
     ?>
-    <input type="button" name="clear_search" value="<?php echo escape_quoted_data($lang["clearbutton"]); ?>" onClick="jQuery('#pluginsearch').val('');CentralSpacePost(document.getElementById('SearchSystemPages'));">
+    <input type="button" name="clear_search" value="<?php echo escape($lang["clearbutton"]); ?>" onClick="jQuery('#pluginsearch').val('');CentralSpacePost(document.getElementById('SearchSystemPages'));">
     <?php
     }
     ?>

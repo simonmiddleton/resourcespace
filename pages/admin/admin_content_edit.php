@@ -111,8 +111,8 @@ if($html_validation !== true && $html_validation !== '')
 
     <form method="post" id="mainform" action="<?php echo $baseurl_short; ?>pages/admin/admin_content_edit.php?page=<?php echo urlencode($page);?>&name=<?php echo urlencode($name);?>&editlanguage=<?php echo urlencode($editlanguage);?>&editgroup=<?php echo urlencode($editgroup);?>&findpage=<?php echo urlencode($findpage)?>&findname=<?php echo urlencode($findname)?>&findtext=<?php echo urlencode($findtext)?>&offset=<?php echo urlencode($offset)?>">
         <?php generateFormToken("mainform"); ?>
-        <input type=hidden name=page value="<?php echo escape_quoted_data($page)?>">
-        <input type=hidden name=name value="<?php echo escape_quoted_data($name)?>">
+        <input type=hidden name=page value="<?php echo escape($page)?>">
+        <input type=hidden name=name value="<?php echo escape($name)?>">
         <input type=hidden name=copyme id="copyme" value="">
         <input type=hidden name=langswitch id="langswitch" value="">
         <input type=hidden name=groupswitch id="groupswitch" value="">

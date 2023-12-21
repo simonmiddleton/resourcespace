@@ -347,7 +347,7 @@ function propose_changes_display_multilingual_text_field($n, $field, $translatio
     {
     global $language, $languages, $lang;
     ?>
-    <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape_quoted_data($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape_quoted_data($lang["hidetranslations"])?>';} return false;"><?php echo htmlspecialchars($lang["showtranslations"]) ?></a></p>
+    <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape($lang["hidetranslations"])?>';} return false;"><?php echo htmlspecialchars($lang["showtranslations"]) ?></a></p>
     <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
     <?php
     reset($languages);
@@ -452,7 +452,7 @@ function propose_changes_display_field($n, $field)
             {
             ?>
             <div class="propose_change_button" id="propose_change_button_<?php echo $field["ref"] ?>">
-            <input type="submit" value="<?php echo escape_quoted_data($lang["propose_changes_buttontext"]) ?>" onClick="ShowProposeChanges(<?php echo $field["ref"] ?>);return false;" />
+            <input type="submit" value="<?php echo escape($lang["propose_changes_buttontext"]) ?>" onClick="ShowProposeChanges(<?php echo $field["ref"] ?>);return false;" />
             </div>
             <?php
             }?>

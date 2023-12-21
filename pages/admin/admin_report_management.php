@@ -84,7 +84,7 @@ function addColumnHeader($orderName, $labelKey)
 
     ?><td>
     <a href="<?php echo $baseurl ?>/pages/admin/admin_report_management.php?<?php
-    if ($find!="") { ?>&find=<?php echo escape_quoted_data($find); }
+    if ($find!="") { ?>&find=<?php echo escape($find); }
     ?>&orderby=<?php echo $orderName . ($order_by==$orderName ? '+desc' : ''); ?>"
        onClick="return CentralSpaceLoad(this);"><?php echo $lang[$labelKey] . $image ?></a>
     </td>
@@ -151,7 +151,7 @@ function addColumnHeader($orderName, $labelKey)
         <?php generateFormToken("admin_report_management_find"); ?>
         <div class="Question">
             <label for="find"><?php echo $lang["property-search_filter"] ?></label>
-            <input name="find" type="text" class="medwidth" value="<?php echo escape_quoted_data($find); ?>">
+            <input name="find" type="text" class="medwidth" value="<?php echo escape($find); ?>">
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;">
             <div class="clearerleft"></div>
         </div>
@@ -190,7 +190,7 @@ function addColumnHeader($orderName, $labelKey)
             }
         if ($find)
             {
-            ?><input type="hidden" name="find" value="<?php echo escape_quoted_data($find); ?>">
+            ?><input type="hidden" name="find" value="<?php echo escape($find); ?>">
             <?php
             }
         ?>

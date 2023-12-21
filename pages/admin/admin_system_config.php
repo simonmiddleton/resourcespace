@@ -101,7 +101,7 @@ $SystemConfigDebugForUser_class = $system_config_debug_log_interim === $lang['sy
     ? ''
     : 'DisplayNone';
 ?>
-<div id="SystemConfigDebugForUser" class="Question <?php echo escape_quoted_data($SystemConfigDebugForUser_class); ?>">
+<div id="SystemConfigDebugForUser" class="Question <?php echo escape($SystemConfigDebugForUser_class); ?>">
     <label></label>
     <?php include dirname(__DIR__, 2) . "/include/user_select.php"; ?> 
     <div class="clearerleft"></div>
@@ -637,13 +637,13 @@ include '../../include/header.php';
     <form id="SearchSystemPages" class="inline_config_search" method="post" onSubmit="return CentralSpacePost(this);">
         <?php generateFormToken("system_config_search"); ?>
         <div>
-        <input type="text" name="find" id="configsearch" value="<?php echo escape_quoted_data($find); ?>">
-        <input type="submit" name="searching" value="<?php echo escape_quoted_data($lang["searchbutton"]); ?>">
+        <input type="text" name="find" id="configsearch" value="<?php echo escape($find); ?>">
+        <input type="submit" name="searching" value="<?php echo escape($lang["searchbutton"]); ?>">
         <?php
         if($searching)
             {
             ?>
-            <input type="button" name="clear_search" value="<?php echo escape_quoted_data($lang["clearbutton"]); ?>" onClick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
+            <input type="button" name="clear_search" value="<?php echo escape($lang["clearbutton"]); ?>" onClick="jQuery('#configsearch').val(''); jQuery('#only_modified').prop('checked', false); CentralSpacePost(document.getElementById('SearchSystemPages'));">
             <?php
             }
         ?>
@@ -689,12 +689,12 @@ include '../../include/header.php';
         {
         let value = jQuery(el).val();
         let options_to_show_duration = <?php echo json_encode([
-            escape_quoted_data($lang['systemconsoleonallusers']),
-            escape_quoted_data($lang['systemconfig_debug_log_on_specific_user']),
+            escape($lang['systemconsoleonallusers']),
+            escape($lang['systemconfig_debug_log_on_specific_user']),
         ]);?>;
 
         // Display the user selection (if applicable)
-        if (value === '<?php echo escape_quoted_data($lang['systemconfig_debug_log_on_specific_user']); ?>') {
+        if (value === '<?php echo escape($lang['systemconfig_debug_log_on_specific_user']); ?>') {
             jQuery('#SystemConfigDebugForUser').removeClass('DisplayNone');
         } else {
             jQuery('#SystemConfigDebugForUser').addClass('DisplayNone');
@@ -708,7 +708,7 @@ include '../../include/header.php';
             jQuery('#question_system_config_debug_log_duration').addClass('DisplayNone');
         }
 
-        if (value === '<?php echo escape_quoted_data($lang['off']); ?>') {
+        if (value === '<?php echo escape($lang['off']); ?>') {
             create_debug_log_override(-1, -1);
         }
         return;
@@ -790,7 +790,7 @@ include '../../include/header.php';
     function debug_log_override_timer_done()
         {
         console.debug('debug_log_override_timer_done');
-        let option_off = '<?php echo escape_quoted_data($lang['off']); ?>';
+        let option_off = '<?php echo escape($lang['off']); ?>';
         let system_config_debug_log_interim = jQuery('#system_config_debug_log_interim');
 
         system_config_debug_log_interim.removeData('timer_started');

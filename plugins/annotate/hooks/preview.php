@@ -85,7 +85,7 @@ $h = $sizes[1];
     } ?>
 <div>
 		<td>
-            <img id="toAnnotate" onload="annotate(<?php echo (int)$ref?>,'<?php echo escape_quoted_data($k)?>','<?php echo escape_quoted_data($w)?>','<?php echo escape_quoted_data($h)?>',<?php echo escape_quoted_data(getval("annotate_toggle",true))?>,<?php echo (int) getval('page', 1); ?>);" src="<?php echo escape_quoted_data($url)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
+            <img id="toAnnotate" onload="annotate(<?php echo (int)$ref?>,'<?php echo escape($k)?>','<?php echo escape($w)?>','<?php echo escape($h)?>',<?php echo escape(getval("annotate_toggle",true))?>,<?php echo (int) getval('page', 1); ?>);" src="<?php echo escape($url)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
         </td>
     <?php
     if($nextpage != -1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>

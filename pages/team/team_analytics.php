@@ -106,10 +106,10 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
              <div class="Inline">
             <input
                 type=text
-                placeholder="<?php echo escape_quoted_data($lang['searchbytext'])?>"
+                placeholder="<?php echo escape($lang['searchbytext'])?>"
                 name="findtext"
                 id="findtext"
-                value="<?php echo escape_quoted_data($findtext)?>"
+                value="<?php echo escape($findtext)?>"
                 maxlength="100"
                 class="shrtwidth"
             />

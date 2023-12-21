@@ -183,8 +183,8 @@ function loadIt() {
     <div id="configform" >
 
         <form method=post name="annotateform" id="annotateform" action="<?php echo $baseurl_short?>plugins/annotate/pages/annotate_pdf_gen.php" >
-        <input type=hidden name="ref" value="<?php echo escape_quoted_data($ref)?>">
-        <input type=hidden name="annotateid" value="<?php echo escape_quoted_data($annotateid)?>">
+        <input type=hidden name="ref" value="<?php echo escape($ref)?>">
+        <input type=hidden name="annotateid" value="<?php echo escape($annotateid)?>">
         <?php
         generateFormToken("annotateform");
         if ($is_collection){?>
@@ -215,8 +215,8 @@ function loadIt() {
         <?php if ($annotate_debug){?><div name="error" id="error"></div><?php } ?>
         <?php if ($annotate_debug){?><div name="error2" id="error2"></div><?php } ?>
         <div class="QuestionSubmit">	
-        <input name="preview" type="button" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["preview"])?>&nbsp;&nbsp;" onClick="jQuery().annotate('preview');	"/>
-        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["create"])?>&nbsp;&nbsp;" />
+        <input name="preview" type="button" value="&nbsp;&nbsp;<?php echo escape($lang["preview"])?>&nbsp;&nbsp;" onClick="jQuery().annotate('preview');	"/>
+        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"])?>&nbsp;&nbsp;" />
         </div>
         </form>
 

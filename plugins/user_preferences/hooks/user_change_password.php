@@ -69,7 +69,7 @@ function HookUser_preferencesuser_change_passwordAdditionaluserpreferences()
 	?>
 	<div class="Question">
 	<label for="username"><?php echo $lang["username"]?></label>
-	<input type="text" class="stdwidth" name="username" id="username" value="<?php echo escape_quoted_data($username) ?>"/>
+	<input type="text" class="stdwidth" name="username" id="username" value="<?php echo escape($username) ?>"/>
 	<div class="clearerleft"> </div>
 	<?php if (isset($errorUsername)) { ?><div class="FormError">!! <?php echo $errorUsername ?> !!</div><?php } ?>
 	</div>
@@ -82,7 +82,7 @@ function HookUser_preferencesuser_change_passwordAdditionaluserpreferences()
 	?>
 	<div class="Question">
 	<label for="email"><?php echo $lang["email"]?></label>
-	<input type="text" class="stdwidth" name="email" id="email" value="<?php echo escape_quoted_data($useremail) ?>"/>
+	<input type="text" class="stdwidth" name="email" id="email" value="<?php echo escape($useremail) ?>"/>
 	<div class="clearerleft"> </div>
 	<?php if (isset($errorEmail)) { ?><div class="FormError">!! <?php echo $errorEmail ?> !!</div><?php } ?>
 	</div>
@@ -95,7 +95,7 @@ function HookUser_preferencesuser_change_passwordAdditionaluserpreferences()
 	?>
 	<div class="Question">
 	<label for="fullname"><?php echo $lang["fullname"]?></label>
-	<input type="text" class="stdwidth" name="fullname" id="fullname" value="<?php echo escape_quoted_data($userfullname) ?>"/>
+	<input type="text" class="stdwidth" name="fullname" id="fullname" value="<?php echo escape($userfullname) ?>"/>
 	<div class="clearerleft"> </div>
 	<?php if (isset($errorFullname)) { ?><div class="FormError">!! <?php echo $errorFullname ?> !!</div><?php } ?>
 	</div>

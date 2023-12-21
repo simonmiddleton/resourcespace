@@ -77,7 +77,7 @@ function Hookyt2rsViewreplacedownloadoptions()
 				</td>
 				<td>N/A</td>
 				<td class="DownloadButton HorizontalWhiteNav">
-					<a href="<?php echo $baseurl_short ?>pages/resource_request.php?ref=<?php echo urlencode($ref) ?>&k=<?php echo escape_quoted_data(getval("k", "")) ?>"
+					<a href="<?php echo $baseurl_short ?>pages/resource_request.php?ref=<?php echo urlencode($ref) ?>&k=<?php echo escape(getval("k", "")) ?>"
 						onClick="return CentralSpaceLoad(this,true);">
 					<?php echo htmlspecialchars($lang["action-request"]) ?>
 				</td>

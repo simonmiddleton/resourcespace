@@ -1092,9 +1092,9 @@ jQuery(document).ready(function () {
         locale: {
                 strings: {
                     uploadComplete: '<?php echo htmlspecialchars($lang["upload_complete_processing"]); ?>',
-                    browseFiles: '<?php echo escape_quoted_data($lang["upload_browse"]) ?>',
-                    uploadXFiles: '<?php echo escape_quoted_data($lang["upload_start"]) ?>',
-                    dropPasteFiles: '<?php echo escape_quoted_data($lang["upload_droparea_text"]) ?>',
+                    browseFiles: '<?php echo escape($lang["upload_browse"]) ?>',
+                    uploadXFiles: '<?php echo escape($lang["upload_start"]) ?>',
+                    dropPasteFiles: '<?php echo escape($lang["upload_droparea_text"]) ?>',
                 },
             },
 
@@ -1113,7 +1113,7 @@ jQuery(document).ready(function () {
                 ?>
                 if (res_type == "")
                     {
-                    styledalert("<?php echo escape_quoted_data($lang["error"])?>", "<?php echo escape_quoted_data($lang["requiredfield_resource_type"])?>", 450);
+                    styledalert("<?php echo escape($lang["error"])?>", "<?php echo escape($lang["requiredfield_resource_type"])?>", 450);
                     return false;
                     }
                 <?php
@@ -1275,11 +1275,11 @@ jQuery(document).ready(function () {
             }
         if(errmessage.indexOf('410') !== -1)
             {
-            errmessage += ' <?php echo escape_quoted_data($lang["error_suggest_apcu"]); ?>';
+            errmessage += ' <?php echo escape($lang["error_suggest_apcu"]); ?>';
             }
         else if(errmessage == "")
             {
-            errmessage += ' <?php echo escape_quoted_data($lang["upload_error_unknown"]); ?>';
+            errmessage += ' <?php echo escape($lang["upload_error_unknown"]); ?>';
             }
         <?php
         // Automatically retry any errors that may be caused by TUS file cache
@@ -1323,7 +1323,7 @@ jQuery(document).ready(function () {
             {
             // Add error to log if not already done
             errorslogged[file.id] = errmessage;          
-            jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". '" + file.name + "' <?php echo escape_quoted_data($lang["error"])?>:" + errmessage);
+            jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". '" + file.name + "' <?php echo escape($lang["error"])?>:" + errmessage);
             }
         else
             {
@@ -1346,8 +1346,8 @@ if (is_numeric($collection_add) && count(get_collection_external_access($collect
     {
     # Show warning.
     ?>styledalert(
-        "<?php echo escape_quoted_data($lang["status-warning"]) ?>",
-        "<?php echo escape_quoted_data($lang["sharedcollectionaddwarningupload"])?>"
+        "<?php echo escape($lang["status-warning"]) ?>",
+        "<?php echo escape($lang["sharedcollectionaddwarningupload"])?>"
         );<?php
     }
 ?>
@@ -1413,7 +1413,7 @@ function processFile(file, forcepost)
                 else
                     {
                     processerrors.push(filename);
-                    jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". '" + file.name + "': <?php echo escape_quoted_data($lang['error']) . ": " . $lang['error_upload_resource_not_found']; ?>");
+                    jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". '" + file.name + "': <?php echo escape($lang['error']) . ": " . $lang['error_upload_resource_not_found']; ?>");
                     upRedirBlock = true;
                     return false;
                     }
@@ -1484,7 +1484,7 @@ function processFile(file, forcepost)
                 uploadresponse = new Object();
                 uploadresponse.status =false;
                 uploadresponse.error = '';
-                uploadresponse.message = file.name + ': <?php echo escape_quoted_data($lang['upload_error_unknown']) ; ?> ' + data;
+                uploadresponse.message = file.name + ': <?php echo escape($lang['upload_error_unknown']) ; ?> ' + data;
                 }
 
             if (uploadresponse.status != true)
@@ -1493,7 +1493,7 @@ function processFile(file, forcepost)
                 upRedirBlock = true;
                 if(uploadresponse.error==108)
                     {
-                    message = '<?php echo escape_quoted_data($lang['error-duplicatesfound'])?>';
+                    message = '<?php echo escape($lang['error-duplicatesfound'])?>';
                     jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + file.name + "&nbsp;" + uploadresponse.message);
                     if(!logopened)
                         {
@@ -1504,7 +1504,7 @@ function processFile(file, forcepost)
                 else if(uploadresponse.error==109)
                     {
                     message = uploadresponse.message +  ' ' + uploadresponse.id;
-                    styledalert('<?php echo escape_quoted_data($lang["error"]) ?> ' + uploadresponse.error, message);
+                    styledalert('<?php echo escape($lang["error"]) ?> ' + uploadresponse.error, message);
                     jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + message);
                     if(!logopened)
                         {
@@ -1514,7 +1514,7 @@ function processFile(file, forcepost)
                     }
                 else
                     {
-                    styledalert('<?php echo escape_quoted_data($lang["error"])?> ' + uploadresponse.error, uploadresponse.message);
+                    styledalert('<?php echo escape($lang["error"])?> ' + uploadresponse.error, uploadresponse.message);
                     jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + uploadresponse.message + " [" + uploadresponse.error + "]");
                     }
 
@@ -1576,7 +1576,7 @@ function processFile(file, forcepost)
                 }
             console.log("Error:  " + error);
             jQuery("#upload_log").append("\r\nLocal time: " + rsGetLocalDatetime() + ". " + file.name + ": " + error);
-            styledalert('<?php echo escape_quoted_data($lang["error"])?> ', error);
+            styledalert('<?php echo escape($lang["error"])?> ', error);
             upRedirBlock = true;
 
             if(processerrors.indexOf(file.id) === -1)
@@ -1752,7 +1752,7 @@ function postUploadActions()
 
         jQuery("#modal_dialog").html(completedlang);
         jQuery("#modal_dialog").dialog({
-            title:'<?php echo escape_quoted_data($lang["error"]); ?>',
+            title:'<?php echo escape($lang["error"]); ?>',
             modal: true,
             width: 400,
             resizable: false,
@@ -1980,7 +1980,7 @@ hook('plupload_before_status');
 
 <!-- Continue button, hidden unless errors are encountered so that user can view log before continuing -->
 <div class="BasicsBox" >
-    <input name="continue" id="upload_continue" type="button" style="display: none;" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang['continue']); ?>&nbsp;&nbsp;"
+    <input name="continue" id="upload_continue" type="button" style="display: none;" value="&nbsp;&nbsp;<?php echo escape($lang['continue']); ?>&nbsp;&nbsp;"
         onclick="return CentralSpaceLoad('<?php echo $redirecturl?>',true);">
 </div>
 <?php

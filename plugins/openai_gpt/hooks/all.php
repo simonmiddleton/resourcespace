@@ -54,7 +54,7 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
         ?>
         <div class="Question" >
 		    <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
-            <select id="field_edit_<?php echo escape_quoted_data((string) $column); ?>" name="<?php echo escape_quoted_data((string) $column); ?>" class="stdwidth">
+            <select id="field_edit_<?php echo escape((string) $column); ?>" name="<?php echo escape((string) $column); ?>" class="stdwidth">
             <option value="" <?php if ($currentvalue == "") { echo "selected"; } ?>><?php echo htmlspecialchars($lang["select"]); ?></option>
             <option value="-1" <?php if ($currentvalue == "-1") { echo "selected"; } ?>><?php echo htmlspecialchars($lang["image"] . ": " . $lang["previewimage"]) ?></option>
             <?php

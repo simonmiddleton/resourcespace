@@ -196,8 +196,8 @@ include "../../../include/header.php";
 	<p><a href="posixldapauth_manual.pdf" target="_blank">Click here for the Manual</a></p>
       <p><label for="enable"><?php echo htmlspecialchars($lang['posixldapauth_enabled']) ?></label><input type="checkbox" name="enable" id="enable" accesskey="e" tabindex="1" <?php echo $enabled ?> /></p>
 
-      <p><label for="ldapserver"><?php echo htmlspecialchars($lang['posixldapauth_ldap_server']) ?></label><input id="ldapserver" name="ldapserver" type="text" value="<?php echo escape_quoted_data($ldapauth['ldapserver']); ?>" size="30" />
-      <label for="port">:</label><input name="port" id="port" type="text" value="<?php echo escape_quoted_data($ldapauth['port']); ?>" size="6" /></p>
+      <p><label for="ldapserver"><?php echo htmlspecialchars($lang['posixldapauth_ldap_server']) ?></label><input id="ldapserver" name="ldapserver" type="text" value="<?php echo escape($ldapauth['ldapserver']); ?>" size="30" />
+      <label for="port">:</label><input name="port" id="port" type="text" value="<?php echo escape($ldapauth['port']); ?>" size="6" /></p>
 		
       <fieldset>
         <legend><?php echo htmlspecialchars($lang['posixldapauth_ldap_information']) ?></legend>
@@ -214,15 +214,15 @@ include "../../../include/header.php";
 	  
 	    <tr id="trootdn">
 	    	<th><label id='lrootdn' for="rootdn"><?php echo htmlspecialchars($lang['posixldapauth_ad_admin']) ?></label></th>
-	    	<td><input id="rootdn" name="rootdn" type="text" value="<?php if (isset($ldapauth['rootdn'])) { echo escape_quoted_data($ldapauth['rootdn']); }?>" size="30" /></td>
+	    	<td><input id="rootdn" name="rootdn" type="text" value="<?php if (isset($ldapauth['rootdn'])) { echo escape($ldapauth['rootdn']); }?>" size="30" /></td>
 	    </tr>
 	    <tr id="trootpass">
 	    	<th><label for="rootpass"><?php echo htmlspecialchars($lang['posixldapauth_ad_password']) ?></label></th>
-	    	<td><input id="rootpass" name="rootpass" type="password" value="<?php if (isset($ldapauth['rootpass'])) { echo escape_quoted_data($ldapauth['rootpass']); } ?>" size="30" /></td>
+	    	<td><input id="rootpass" name="rootpass" type="password" value="<?php if (isset($ldapauth['rootpass'])) { echo escape($ldapauth['rootpass']); } ?>" size="30" /></td>
 	    </tr>
 	   	<tr id="taddomain">
 	   		<th><label for="addomain"><?php echo htmlspecialchars($lang['posixldapauth_ad_domain']) ?></label></th>
-	   		<td><input id="addomain"  name="addomain" type="text" value="<?php if (isset($ldapauth['addomain'])) { echo escape_quoted_data($ldapauth['addomain']); }?>" size="30" /></td>
+	   		<td><input id="addomain"  name="addomain" type="text" value="<?php if (isset($ldapauth['addomain'])) { echo escape($ldapauth['addomain']); }?>" size="30" /></td>
 	   	</tr>
 	   	<tr id="tadusesingledomain">
 	   		<th><label for="adusesingledomain"><?php echo "Use Single Domain" ?></label></th>
@@ -233,19 +233,19 @@ include "../../../include/header.php";
 	   	
 	   	<tr id="tbasedn">
 	    	<th><label for="basedn"><?php echo htmlspecialchars($lang['posixldapauth_base_dn']) ?></label></th>
-	    	<td><input id="basedn" name="basedn" type="text" value="<?php echo escape_quoted_data($ldapauth['basedn']); ?>" size="50" /></td>
+	    	<td><input id="basedn" name="basedn" type="text" value="<?php echo escape($ldapauth['basedn']); ?>" size="50" /></td>
 	    </tr>
 	    <tr id="tldapusercontainer">
 	    	<th><label for="ldapusercontainer"><?php echo htmlspecialchars($lang['posixldapauth_user_container']) ?></label></th>
-	    	<td><input id="ldapusercontainer" name="ldapusercontainer" type="text" value="<?php echo escape_quoted_data($ldapauth['ldapusercontainer']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_this_is_added_to_base_dn']) ?></td>
+	    	<td><input id="ldapusercontainer" name="ldapusercontainer" type="text" value="<?php echo escape($ldapauth['ldapusercontainer']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_this_is_added_to_base_dn']) ?></td>
 	    </tr>
 	       <tr id="tldapgroupcontainer">
 	    	<th><label for="ldapgroupcontainer"><?php echo htmlspecialchars($lang['posixldapauth_group_container']) ?></label></th>
-	    	<td><input id="ldapgroupcontainer" name="ldapgroupcontainer" type="text" value="<?php echo escape_quoted_data($ldapauth['ldapgroupcontainer']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_leave_blank_for_default_osx_server_mapping']) ?></td>
+	    	<td><input id="ldapgroupcontainer" name="ldapgroupcontainer" type="text" value="<?php echo escape($ldapauth['ldapgroupcontainer']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_leave_blank_for_default_osx_server_mapping']) ?></td>
 	    </tr>
 	    <tr id="tldapmemberfield">
 	    	<th><label for="ldapmemberfield"><?php echo htmlspecialchars($lang['posixldapauth_member_field']) ?></label></th>
-	    	<td><input id="ldapmemberfield" name="ldapmemberfield" type="text" value="<?php echo escape_quoted_data($ldapauth['ldapmemberfield']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_use_to_overide_group_containers_member_field']) ?></td>
+	    	<td><input id="ldapmemberfield" name="ldapmemberfield" type="text" value="<?php echo escape($ldapauth['ldapmemberfield']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_use_to_overide_group_containers_member_field']) ?></td>
 	    </tr>
 	    <tr>
 	  		<th><label for="ldaptype"><?php echo htmlspecialchars($lang['posixldapauth_member_field_type']) ?></label></th>
@@ -260,7 +260,7 @@ include "../../../include/header.php";
 	  	</tr>
 	    <tr id="tloginfield">
 	    	<th><label for="loginfield"><?php echo htmlspecialchars($lang['posixldapauth_login_field']) ?></label></th>
-	    	<td><input id="loginfield" name="loginfield" type="text" value="<?php echo escape_quoted_data($ldapauth['loginfield']); ?>" size="30" /></td>
+	    	<td><input id="loginfield" name="loginfield" type="text" value="<?php echo escape($ldapauth['loginfield']); ?>" size="30" /></td>
 	    </tr>
 	    <tr>
 	    	<th><label for="testConn"><?php echo htmlspecialchars($lang['posixldapauth_test_connection']) ?></label></th>
@@ -273,7 +273,7 @@ include "../../../include/header.php";
 	  <table>
             <tr>
             	<th><label for="usersuffix"><?php echo htmlspecialchars($lang['posixldapauth_user_suffix']) ?></label></th>
-            	<td><input name="usersuffix" type="text" value="<?php echo escape_quoted_data($ldapauth['usersuffix']); ?>" size="30" /></td>
+            	<td><input name="usersuffix" type="text" value="<?php echo escape($ldapauth['usersuffix']); ?>" size="30" /></td>
             </tr>
             <tr>
             	<th><label for="createusers"><?php echo htmlspecialchars($lang['posixldapauth_create_users']) ?></label></th>
@@ -386,15 +386,15 @@ include "../../../include/header.php";
         }
         ?>
         
-   		<input id="lang_status_error" name="lang_status_error" type="hidden" value="<?php echo escape_quoted_data($lang['posixldapauth_status_error_in']); ?>" size="30" />
-        <input id="lang_server_error" name="lang_server_erro" type="hidden" value="<?php echo escape_quoted_data($lang['posixldapauth_server_error']); ?>" size="30" />
-        <input id="lang_passed" name="lang_passed" type="hidden" value="<?php echo escape_quoted_data($lang['posixldapauth_passed']); ?>" size="30" />
-        <input id="lang_could_not_connect" name="lang_could_not_connect" type="hidden" value="<?php echo escape_quoted_data($lang['posixldapauth_could_not_connect_to_ldap_server']); ?>" size="30" />
-        <input id="lang_could_not_bind" name="lang_could_not_bind" type="hidden" value="<?php echo escape_quoted_data($lang['posixldapauth_passed']); ?>" size="30" />
-        <input id="lang_test_passed" name="lang_test_passed" type="hidden" value="<?php echo escape_quoted_data($lang['posixldapauth_tests_passed_save_settings_and_set_group_mapping']) ; ?>" size="30" />
-        <input id="lang_test_failed" name="lang_test_failed" type="hidden" value="<?php echo escape_quoted_data($lang['posixldapauth_tests_failed_check_settings_and_test_again']); ?>" size="30" />
+   		<input id="lang_status_error" name="lang_status_error" type="hidden" value="<?php echo escape($lang['posixldapauth_status_error_in']); ?>" size="30" />
+        <input id="lang_server_error" name="lang_server_erro" type="hidden" value="<?php echo escape($lang['posixldapauth_server_error']); ?>" size="30" />
+        <input id="lang_passed" name="lang_passed" type="hidden" value="<?php echo escape($lang['posixldapauth_passed']); ?>" size="30" />
+        <input id="lang_could_not_connect" name="lang_could_not_connect" type="hidden" value="<?php echo escape($lang['posixldapauth_could_not_connect_to_ldap_server']); ?>" size="30" />
+        <input id="lang_could_not_bind" name="lang_could_not_bind" type="hidden" value="<?php echo escape($lang['posixldapauth_passed']); ?>" size="30" />
+        <input id="lang_test_passed" name="lang_test_passed" type="hidden" value="<?php echo escape($lang['posixldapauth_tests_passed_save_settings_and_set_group_mapping']) ; ?>" size="30" />
+        <input id="lang_test_failed" name="lang_test_failed" type="hidden" value="<?php echo escape($lang['posixldapauth_tests_failed_check_settings_and_test_again']); ?>" size="30" />
         
-        <input type="submit" name="submit" value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["save"]); ?>&nbsp;&nbsp;"/>
+        <input type="submit" name="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;"/>
 		
     </form>
   </div>	

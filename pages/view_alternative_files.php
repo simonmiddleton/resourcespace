@@ -89,7 +89,7 @@ if ($alt_access)
             </script>
         <?php
             } ?>
-		<td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?> rowspan="<?php echo escape_quoted_data((string)$rowspan);?>">
+		<td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?> rowspan="<?php echo escape((string)$rowspan);?>">
 		<?php
         if(!hook("renderaltthumb","",[$n,$altfiles[$n]]))
             {
@@ -105,7 +105,7 @@ if ($alt_access)
         <div>
 		</td>
         <?php hook('view_altfiles_table', '', array($altfiles[$n])); ?>
-		<td class="DownloadFileSize" rowspan="<?php echo escape_quoted_data((string)$rowspan);?>"><?php echo escape_quoted_data(str_replace('&nbsp;', ' ',formatfilesize($altfiles[$n]["file_size"])))?></td>
+		<td class="DownloadFileSize" rowspan="<?php echo escape((string)$rowspan);?>"><?php echo escape(str_replace('&nbsp;', ' ',formatfilesize($altfiles[$n]["file_size"])))?></td>
 		
 		<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
 		?>

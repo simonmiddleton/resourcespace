@@ -1623,15 +1623,15 @@ function pager($break=true,$scrolltotop=true,$options=array())
     if(!hook("replace_pager")){
         unset($url_params["offset"]);
         if ($totalpages!=0 && $totalpages!=1){?>     
-            <span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo escape_quoted_data($lang["previous"]) ?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"prev","offset"=> ($offset-$per_page)));?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
+            <span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo escape($lang["previous"]) ?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"prev","offset"=> ($offset-$per_page)));?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
 
             <div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo htmlspecialchars($lang["jumptopage"]) ?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"page")); ?>&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}">
             &nbsp;<a aria-hidden="true" class="fa fa-times-circle" href="#" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='inline';"></a></div>
-            <a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo escape_quoted_data($lang["jumptopage"]) ?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo htmlspecialchars($lang["page"]) ?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo htmlspecialchars($lang["of"]) ?>&nbsp;<?php echo $totalpages?></a>
+            <a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo escape($lang["jumptopage"]) ?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo htmlspecialchars($lang["page"]) ?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo htmlspecialchars($lang["of"]) ?>&nbsp;<?php echo $totalpages?></a>
             &nbsp;&nbsp;<?php
             if ($curpage<$totalpages)
                 {
-                ?><a class="nextPageLink" title="<?php echo escape_quoted_data($lang["next"]) ?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"next","offset"=> ($offset+$per_page)));?>" <?php if(!hook("replacepageronclick_next")){?>onClick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php
+                ?><a class="nextPageLink" title="<?php echo escape($lang["next"]) ?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"next","offset"=> ($offset+$per_page)));?>" <?php if(!hook("replacepageronclick_next")){?>onClick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php
                 }?><i aria-hidden="true" class="fa fa-arrow-right"></i>
             <?php if ($curpage<$totalpages) { ?></a><?php } hook("custompagerstyleend"); ?>
             </span>
@@ -2251,7 +2251,7 @@ function error_alert($error, $back = true, $code = 403)
         jQuery(document).ready(function()
             {
             ModalClose();
-            styledalert('" . $lang["error"] . "', '" . escape_quoted_data($error) . "');
+            styledalert('" . $lang["error"] . "', '" . escape($error) . "');
             " . ($back ? "window.setTimeout(function(){history.go(-1);},2000);" : "") ."
             });
         </script>";
@@ -3210,7 +3210,7 @@ function generate_csrf_js_object(string $name): string
 function generate_csrf_data_for_api_native_authmode(string $fct_name): string
     {
     return $GLOBALS['CSRF_enabled']
-        ? sprintf(' data-api-native-csrf="%s"', escape_quoted_data(generate_csrf_js_object($fct_name)))
+        ? sprintf(' data-api-native-csrf="%s"', escape(generate_csrf_js_object($fct_name)))
         : '';
     }
 

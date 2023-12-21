@@ -213,8 +213,8 @@ else if($delete_requires_password && $delete_all)
     <p><?php text("introtext");?></p>
     <form method="post" action="<?php echo $form_action;?>">
     <input type=hidden name=ref value="<?php echo $ref ?>">
-    <input type=hidden name=name value="<?php echo escape_quoted_data($name) ?>">
-    <input type=hidden name=public value="<?php echo escape_quoted_data($public) ?>">
+    <input type=hidden name=name value="<?php echo escape($name) ?>">
+    <input type=hidden name=public value="<?php echo escape($public) ?>">
     <input type=hidden name=deleteall value="on">
     <?php generateFormToken("delete_resource"); ?>
 
@@ -292,7 +292,7 @@ else
     ?>
     <div class="Question">
         <label for="name"><?php echo htmlspecialchars($lang["smart_collection_result_limit"]); ?></label>
-        <input type=text class="stdwidth" name="result_limit" id="result_limit" value="<?php echo escape_quoted_data((string) $result_limit); ?>" />
+        <input type=text class="stdwidth" name="result_limit" id="result_limit" value="<?php echo escape((string) $result_limit); ?>" />
         <div class="clearerleft"> </div>
     </div>
     <?php 

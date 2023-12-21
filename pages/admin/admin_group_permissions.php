@@ -154,13 +154,13 @@ renderBreadcrumbs($links_trail);
 	if ($offset) 
 		{
         ?>
-        <input type="hidden" name="offset" value="<?php echo escape_quoted_data($offset); ?>">
+        <input type="hidden" name="offset" value="<?php echo escape($offset); ?>">
         <?php
         }
 	if ($order_by) 
 		{
         ?>
-        <input type="hidden" name="order_by" value="<?php echo escape_quoted_data($order_by); ?>">
+        <input type="hidden" name="order_by" value="<?php echo escape($order_by); ?>">
         <?php
         }
         ?>
@@ -419,7 +419,7 @@ $custom_permissions = join(",", array_diff($permissions, $permissions_done));
                 class="stdwidth"
                 rows="3"
                 cols="50"
-                data-custom_permissions_copy="<?php echo escape_quoted_data($custom_permissions);  ?>"
+                data-custom_permissions_copy="<?php echo escape($custom_permissions);  ?>"
             ><?php echo htmlspecialchars($custom_permissions); ?></textarea>			
 			<div class="clearerleft"></div>
 		</div>
@@ -429,7 +429,7 @@ $custom_permissions = join(",", array_diff($permissions, $permissions_done));
                 name="save"
                 type="button"
                 onclick="SaveCustomPermissions();"
-                value="&nbsp;&nbsp;<?php echo escape_quoted_data($lang["save"]); ?>&nbsp;&nbsp;">
+                value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;">
 		</div>
 
 	</form>	
@@ -506,7 +506,7 @@ function SavePermissions(perms, formsubmit)
             if(typeof data.responseJSON === 'undefined')
                 {
                 console.debug('data = %o', data);
-                styledalert('', "<?php echo escape_quoted_data($lang['error_generic']); ?>");
+                styledalert('', "<?php echo escape($lang['error_generic']); ?>");
                 return;
                 }
 

@@ -250,7 +250,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
                 ?>
                 <tr id="node_<?php echo $new_record_ref; ?>">
                     <td>
-                        <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $new_record_ref; ?>" value="<?php echo escape_quoted_data($new_option_name); ?>" onblur="this.value=this.value.trim()" >
+                        <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $new_record_ref; ?>" value="<?php echo escape($new_option_name); ?>" onblur="this.value=this.value.trim()" >
                     </td>
                     <td align="left">0</td>
                     
@@ -500,12 +500,12 @@ if($ajax)
         {
         ?>
         <form id="FilterNodeOptions" class="FormFilter" method="GET" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php">
-            <input type="hidden" name="field" value="<?php echo escape_quoted_data($field); ?>">
+            <input type="hidden" name="field" value="<?php echo escape($field); ?>">
             <fieldset>
                 <legend><?php echo htmlspecialchars($lang['filter_label']); ?></legend>
                 <div class="FilterItemContainer">
                     <label><?php echo htmlspecialchars($lang['name']); ?></label>
-                    <input type="text" name="filter_by_name" value="<?php echo escape_quoted_data($filter_by_name); ?>">
+                    <input type="text" name="filter_by_name" value="<?php echo escape($filter_by_name); ?>">
                 </div>
                 <button type="submit"><?php echo htmlspecialchars($lang['filterbutton']); ?></button>
                 <button class="ClearButton" type="submit" onCLick="ClearFilterForm('FilterNodeOptions'); return false;"><?php echo htmlspecialchars($lang['clearbutton']); ?></button>
@@ -565,7 +565,7 @@ if($ajax)
             ?>
             <tr id="node_<?php echo $node['ref']; ?>">
                 <td>
-                    <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $node['ref']; ?>" value="<?php echo escape_quoted_data($node['name']); ?>" onblur="this.value=this.value.trim()" >
+                    <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $node['ref']; ?>" value="<?php echo escape($node['name']); ?>" onblur="this.value=this.value.trim()" >
                 </td>
                 <td align="left">
                     <?php echo $node['use_count'] ?>
@@ -673,7 +673,7 @@ if($field_data['type'] == 7 && !($tree_nodes==""))
     <?php
     foreach($all_nodes as $node)
         {
-        ?><option value="<?php echo escape_quoted_data($node['ref'])?>" id="master_node_<?php echo escape_quoted_data($node['ref'])?>"><?php echo htmlspecialchars($node['name'])?></option><?php
+        ?><option value="<?php echo escape($node['ref'])?>" id="master_node_<?php echo escape($node['ref'])?>"><?php echo htmlspecialchars($node['name'])?></option><?php
         }
     ?>
     </select>
@@ -1147,7 +1147,7 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
             <label for="import_nodes"><?php echo htmlspecialchars($lang['import']); ?></label>
             <?php generateFormToken("import_nodes_form"); ?>
             <input type="file" name="import_nodes">
-            <input type="submit" name="upload_import_nodes" value="<?php echo escape_quoted_data($lang['import']); ?>">
+            <input type="submit" name="upload_import_nodes" value="<?php echo escape($lang['import']); ?>">
         </form>
         <div class="clearerleft"></div>
     </div>

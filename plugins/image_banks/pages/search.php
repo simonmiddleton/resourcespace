@@ -161,17 +161,17 @@ foreach($results as $result)
 
         <?php if ($result->getOriginalFileUrl()!="") { ?>
         <div class="ResourcePanelIcons">
-            <a href="<?php echo escape_quoted_data($result->getOriginalFileUrl()); ?>"
+            <a href="<?php echo escape($result->getOriginalFileUrl()); ?>"
                class="fa fa-download"
                title="Download resource"
-               data-id="<?php echo escape_quoted_data($result->getId()); ?>"
+               data-id="<?php echo escape($result->getId()); ?>"
                onclick="downloadImageBankFile(this);"></a>
 
         <?php
         if(checkperm("c") || checkperm("d"))
             {
             ?>
-            <a href="<?php echo escape_quoted_data($result->getOriginalFileUrl()); ?>"
+            <a href="<?php echo escape($result->getOriginalFileUrl()); ?>"
                class="fa fa-files-o"
                title="<?php echo htmlspecialchars($lang["image_banks_create_new_resource"]); ?>"
                onclick="createNewResource(event, this);"></a>

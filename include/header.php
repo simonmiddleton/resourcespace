@@ -195,22 +195,22 @@ $selected_search_tab = getval("selected_search_tab","");
 var baseurl_short="<?php echo $baseurl_short?>";
 var baseurl="<?php echo $baseurl?>";
 var pagename="<?php echo $pagename?>";
-var errorpageload = "<h1><?php echo escape_quoted_data($lang["error"]) ?></h1><p><?php echo escape_quoted_data(str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"]))) ?></p>";
-var errortext = "<?php echo escape_quoted_data($lang["error"]) ?>";
+var errorpageload = "<h1><?php echo escape($lang["error"]) ?></h1><p><?php echo escape(str_replace(array("\r","\n"),'',nl2br($lang["error-pageload"]))) ?></p>";
+var errortext = "<?php echo escape($lang["error"]) ?>";
 var applicationname = "<?php echo $applicationname?>";
 var branch_limit=false;
 var branch_limit_field = new Array();
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
 var TileNav = <?php echo ($tilenav?"true":"false") ?>;
-var errornotloggedin = '<?php echo escape_quoted_data($lang["error_not_logged_in"]) ?>';
-var login = '<?php echo escape_quoted_data($lang["login"]) ?>';
+var errornotloggedin = '<?php echo escape($lang["error_not_logged_in"]) ?>';
+var login = '<?php echo escape($lang["login"]) ?>';
 <?php
 if (!hook("replacetrashbin", "", array("js" => true)))
     {
     echo "global_trash_html += '" . render_trash("trash","", true) . "';\n";
     }
 ?>
-oktext="<?php echo escape_quoted_data($lang["ok"]) ?>";
+oktext="<?php echo escape($lang["ok"]) ?>";
 var scrolltopElementCentral='.ui-layout-center';
 var scrolltopElementContainer='.ui-layout-container';
 var scrolltopElementCollection='.ui-layout-south';
@@ -243,7 +243,7 @@ $extrafooterhtml="";
 <!-- Colour stylesheet -->
 <link href="<?php echo $baseurl?>/css/colour.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!-- Override stylesheet -->
-<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo escape_quoted_data($k); ?>&css_reload_key=<?php echo $css_reload_key?>&noauth=<?php echo $noauth_page; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
+<link href="<?php echo $baseurl?>/css/css_override.php?k=<?php echo escape($k); ?>&css_reload_key=<?php echo $css_reload_key?>&noauth=<?php echo $noauth_page; ?>" rel="stylesheet" type="text/css" media="screen,projection,print" />
 <!--- FontAwesome for icons-->
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/all.min.css?css_reload_key=<?php echo $css_reload_key?>">
 <link rel="stylesheet" href="<?php echo $baseurl?>/lib/fontawesome/css/v4-shims.min.css?css_reload_key=<?php echo $css_reload_key?>">
@@ -255,7 +255,7 @@ if (!isset($custom_font) || $custom_font == '')
     }
 ?>
 <!-- Web app manifest -->
-<link rel="manifest" href="<?php echo $baseurl . escape_quoted_data($web_app_manifest_location) ?>">
+<link rel="manifest" href="<?php echo $baseurl . escape($web_app_manifest_location) ?>">
 
 <?php
 if(!$disable_geocoding)
@@ -487,7 +487,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
                     {
                     ?>
                     <li>
-                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo escape_quoted_data($lang['myaccount']); ?>" title="<?php echo escape_quoted_data($lang['myaccount']); ?>">
+                        <a href="<?php echo $baseurl; ?>/pages/user/user_home.php" onClick="ModalClose(); return ModalLoad(this, true, true, 'right');" alt="<?php echo escape($lang['myaccount']); ?>" title="<?php echo escape($lang['myaccount']); ?>">
                         <?php
                         if (isset($header_include_username) && $header_include_username)
                             {
@@ -529,7 +529,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
             
                 <!-- Admin menu link -->
                 <?php if (checkperm("t"))
-                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape_quoted_data($lang['teamcentre']); ?>" title="<?php echo escape_quoted_data($lang['teamcentre']); ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
+                    { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
                     <?php 
                         if (!$actions_on && (checkperm("R")||checkperm("r")))
                             {

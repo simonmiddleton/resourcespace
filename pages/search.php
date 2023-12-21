@@ -871,15 +871,15 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
     ?>
     <script>    
     jQuery(document).ready(function() {
-        jQuery("#modal_dialog").html('<?php echo escape_quoted_data($lang["submit_dialog_text"]); ?>');
+        jQuery("#modal_dialog").html('<?php echo escape($lang["submit_dialog_text"]); ?>');
         jQuery("#modal_dialog").dialog({
-                                    title:'<?php echo escape_quoted_data($lang["submit_review_prompt"]); ?>',
+                                    title:'<?php echo escape($lang["submit_review_prompt"]); ?>',
                                     modal: true,
                                     width: 400,
                                     resizable: false,
                                     dialogClass: 'no-close',
                                     buttons: {
-                                        "<?php echo escape_quoted_data($lang['action_submit_review']) ?>": function() {
+                                        "<?php echo escape($lang['action_submit_review']) ?>": function() {
                                                 jQuery.ajax({
                                                     type: "POST",
                                                     dataType: "json",
@@ -913,13 +913,13 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                                             ?>
                                                             },
                                                     error: function(response) {
-                                                        styledalert('<?php echo escape_quoted_data($lang["error"]); ?>',response['responseJSON']['message']);
+                                                        styledalert('<?php echo escape($lang["error"]); ?>',response['responseJSON']['message']);
                                                         }
                                                     });
                                                 
                                                 
                                             },    
-                                        "<?php echo escape_quoted_data($lang['action_continue_editing']) ?>": function() { 
+                                        "<?php echo escape($lang['action_continue_editing']) ?>": function() { 
                                                 jQuery(this).dialog('close');
                                                 <?php 
                                                 if (is_int_loose($collection_add))
@@ -1022,7 +1022,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 else
                     {
                     ?>
-                    <a id="xlthumbs_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")); ?>" title='<?php echo escape_quoted_data($lang["xlthumbstitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                    <a id="xlthumbs_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"xlthumbs")); ?>" title='<?php echo escape($lang["xlthumbstitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                         <span class="xlthumbsicon"></span>
                     </a>
                     <?php
@@ -1035,7 +1035,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             else
                 {
                 ?>
-                <a id="thumbs_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")); ?>" title='<?php echo escape_quoted_data($lang["largethumbstitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                <a id="thumbs_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"thumbs")); ?>" title='<?php echo escape($lang["largethumbstitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                     <span class="largethumbsicon"></span>
                 </a>
                 <?php
@@ -1047,7 +1047,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             else
                 {
                 ?>
-                <a id="strip_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")); ?>" title='<?php echo escape_quoted_data($lang["striptitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                <a id="strip_view_link" href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"strip")); ?>" title='<?php echo escape($lang["striptitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                     <span class="stripicon"></span>
                 </a>
                 <?php
@@ -1062,7 +1062,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 else
                     {
                     ?>
-                    <a id="list_view_link"  href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo escape_quoted_data($lang["listtitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                    <a id="list_view_link"  href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo escape($lang["listtitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
                         <span class="smalllisticon"></span>
                     </a>
                     <?php
@@ -1204,7 +1204,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             {
             ?>
             <div class="InpageNavLeftBlock">
-                <select id="resultsdisplay" style="width:auto" name="resultsdisplay" aria-label="<?php echo escape_quoted_data($lang["resultsdisplay"]) ?>" onchange="<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this.value,true);">
+                <select id="resultsdisplay" style="width:auto" name="resultsdisplay" aria-label="<?php echo escape($lang["resultsdisplay"]) ?>" onchange="<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this.value,true);">
             <?php
             $results_display_array_count = count($results_display_array);
             for($n = 0; $n < $results_display_array_count; $n++)
@@ -1618,7 +1618,7 @@ hook("endofsearchpage");
 if($display != 'map')
     { ?>
     <script>
-    place     = '<?php echo escape_quoted_data(getval("place", "")); ?>';
+    place     = '<?php echo escape(getval("place", "")); ?>';
     display   = '<?php echo $display; ?>';
 
     jQuery(document).ready(function()
@@ -1698,7 +1698,7 @@ if($use_selection_collection)
                 resource_ending=null;
             } else {
                 if (!resource_starting) {
-                    styledalert('<?php echo escape_quoted_data($lang["range_no_start_header"]); ?>', '<?php echo escape_quoted_data($lang["range_no_start"]); ?>');
+                    styledalert('<?php echo escape($lang["range_no_start_header"]); ?>', '<?php echo escape($lang["range_no_start"]); ?>');
                     if(jQuery(input).prop("checked")) {
                         this.removeAttribute("checked");
                         } 

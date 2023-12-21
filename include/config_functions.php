@@ -484,7 +484,7 @@ function config_text_input($name, $label, $current, $password = false, $width = 
         <input id="<?php echo $name; ?>"
                name="<?php echo $name; ?>"
                type="<?php echo $password ? 'password' : 'text'; ?>"
-               value="<?php echo escape_quoted_data((string) $current); ?>"
+               value="<?php echo escape((string) $current); ?>"
                <?php if($autosave) { ?>onFocusOut="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>
                style="width:<?php echo $width; ?>px" />
         <?php
@@ -561,25 +561,25 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
         }
 
     ?>
-    <div class="Question" id="question_<?php echo escape_quoted_data($name); ?>">
-        <form method="POST" action="<?php echo escape_quoted_data($form_action); ?>" enctype="multipart/form-data">
-        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo escape_quoted_data($name); ?>"><?php echo htmlspecialchars($label); ?></label>
+    <div class="Question" id="question_<?php echo escape($name); ?>">
+        <form method="POST" action="<?php echo escape($form_action); ?>" enctype="multipart/form-data">
+        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo escape($name); ?>"><?php echo htmlspecialchars($label); ?></label>
         <div class="AutoSaveStatus">
-        <span id="AutoSaveStatus-<?php echo escape_quoted_data($name); ?>" style="display:none;"></span>
+        <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
         </div>
         <?php
         if($current !== '' && $pathparts[1]=="system" && !file_exists($missing_file))
             {
             ?>
             <span><?php echo htmlspecialchars($lang['applogo_does_not_exists']); ?></span>
-            <input type="submit" name="clear_<?php echo escape_quoted_data($name); ?>" value="<?php echo escape_quoted_data($lang["clearbutton"]); ?>">
+            <input type="submit" name="clear_<?php echo escape($name); ?>" value="<?php echo escape($lang["clearbutton"]); ?>">
             <?php
             }
         elseif('' === $current || !get_config_option(null, $name, $current_option) || $current_option === '')
             {
             ?>
-            <input type="file" name="<?php echo escape_quoted_data($name); ?>" style="width:<?php echo (int) $width; ?>px">
-            <input type="submit" name="upload_<?php echo escape_quoted_data($name); ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension_' . htmlspecialchars($name) . '()"';} ?> value="<?php echo escape_quoted_data($lang['upload']); ?>">
+            <input type="file" name="<?php echo escape($name); ?>" style="width:<?php echo (int) $width; ?>px">
+            <input type="submit" name="upload_<?php echo escape($name); ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension_' . htmlspecialchars($name) . '()"';} ?> value="<?php echo escape($lang['upload']); ?>">
             <?php
             if (count($valid_extensions) > 0)
                 {
@@ -587,14 +587,14 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
                 <script>
                 function checkValidExtension_<?php echo htmlspecialchars($name) ?>()
                     {
-                    let file_path = document.getElementsByName("<?php echo escape_quoted_data($name); ?>")[0].value;
+                    let file_path = document.getElementsByName("<?php echo escape($name); ?>")[0].value;
                     let ext = file_path.toLowerCase().substr(file_path.lastIndexOf(".")+1);
                     let valid_extensions = [<?php
                         foreach ($valid_extensions as $extension) {
-                            echo '"' . escape_quoted_data($extension) . '",';
+                            echo '"' . escape($extension) . '",';
                         } ?>];
                     if (file_path != "" && valid_extensions.includes(ext)) return true;
-                    alert(<?php echo '"' . escape_quoted_data(str_replace('%%EXTENSIONS%%', implode(', ', $valid_extensions), $lang['systemconfig_invalid_extension'])) .'"'?>);
+                    alert(<?php echo '"' . escape(str_replace('%%EXTENSIONS%%', implode(', ', $valid_extensions), $lang['systemconfig_invalid_extension'])) .'"'?>);
                     return false;
                     }
                 </script>
@@ -605,7 +605,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             {
             ?>
             <span><?php echo htmlspecialchars(str_replace('[storage_url]/', '', $current), ENT_QUOTES); ?></span>
-            <input type="submit" name="delete_<?php echo escape_quoted_data($name); ?>" value="<?php echo escape_quoted_data($lang['action-delete']); ?>">
+            <input type="submit" name="delete_<?php echo escape($name); ?>" value="<?php echo escape($lang['action-delete']); ?>">
             <?php
             }
             generateFormToken($name);
@@ -615,8 +615,8 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
         if ($file_preview && $current !== "")
             {
             global $baseurl; ?>
-            <div id="preview_<?php echo escape_quoted_data($name); ?>">
-            <img class="config-image-preview" src="<?php echo escape_quoted_data($baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current)) . '?v=' . date("s") ?>" alt="<?php echo escape_quoted_data($lang["preview"] . ' - ' . $label) ?>">
+            <div id="preview_<?php echo escape($name); ?>">
+            <img class="config-image-preview" src="<?php echo escape($baseurl . '/filestore/' . str_replace('[storage_url]/', '', $current)) . '?v=' . date("s") ?>" alt="<?php echo escape($lang["preview"] . ' - ' . $label) ?>">
             </div>
             <?php } ?>
         <div class="clearerleft"></div>
@@ -668,7 +668,7 @@ function config_colouroverride_input($name, $label, $current, $default, $title=n
             }
             " style="float: left;" />
         <div id="container_<?php echo $name; ?>"<?php if (!$checked) { ?>style="display: none;" <?php } ?>>
-            <input id="<?php echo $name; ?>" name="<?php echo $name; ?>" type="text" value="<?php echo escape_quoted_data($current); ?>" onchange="<?php
+            <input id="<?php echo $name; ?>" name="<?php echo $name; ?>" type="text" value="<?php echo escape($current); ?>" onchange="<?php
             if ($autosave)
                 {
                 ?>AutoSaveConfigOption('<?php echo $name; ?>');<?php
@@ -832,7 +832,7 @@ function config_boolean_select(
     
     $html_question_id = "question_{$name}";
     ?>
-    <div class="Question" id="<?php echo escape_quoted_data($html_question_id); ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
+    <div class="Question" id="<?php echo escape($html_question_id); ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
         <label for="<?php echo $name; ?>" title="<?php echo $title; ?>"><?php echo $label; ?></label>
 
         <?php
@@ -848,7 +848,7 @@ function config_boolean_select(
         <select id="<?php echo $name; ?>"
                 name="<?php echo $name; ?>"
                 <?php if($autosave) { ?>
-                    onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape_quoted_data($name); ?>'<?php echo $reload_page ? ", true" : ""?>);"
+                    onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo escape($name); ?>'<?php echo $reload_page ? ", true" : ""?>);"
                 <?php } ?>
                 style="width:<?php echo $width; ?>px">
             <option value="1"<?php if($current == '1') { ?> selected<?php } ?>><?php echo $choices[1]; ?></option>
@@ -912,7 +912,7 @@ function config_checkbox_select($name, $label, $current, $choices, $usekeys=true
 	$wrap = 0;
 	?>
 	<div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
-	<label for="<?php echo escape_quoted_data($name)?>" ><?php echo htmlspecialchars($label)?></label>
+	<label for="<?php echo escape($name)?>" ><?php echo htmlspecialchars($label)?></label>
 		<?php
         if($autosave)
             {
@@ -1111,11 +1111,11 @@ function config_generate_AutoSaveConfigOption_function($post_url)
                 }
             else if(response.success === false && response.message && response.message.length > 0)
                 {
-                jQuery('#AutoSaveStatus-' + option_name).html("<?php echo escape_quoted_data($lang['save-error']); ?> " + response.message);
+                jQuery('#AutoSaveStatus-' + option_name).html("<?php echo escape($lang['save-error']); ?> " + response.message);
                 }
             else
                 {
-                jQuery('#AutoSaveStatus-' + option_name).html("<?php echo escape_quoted_data($lang['save-error']); ?>");
+                jQuery('#AutoSaveStatus-' + option_name).html("<?php echo escape($lang['save-error']); ?>");
                 }
 
         }, 'json');

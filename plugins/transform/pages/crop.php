@@ -708,7 +708,7 @@ renderBreadcrumbs($links_trail);
                 var curCoords = jcrop_api.tellSelect();
                 if(curCoords.w === 0 && curCoords.h === 0)
                     {
-                    styledalert('<?php echo escape_quoted_data($lang['error']) ?>','<?php echo escape_quoted_data($lang['error_crop_invalid']) ?>');
+                    styledalert('<?php echo escape($lang['error']) ?>','<?php echo escape($lang['error_crop_invalid']) ?>');
                     return false;
                     }
                 }
@@ -1113,9 +1113,9 @@ renderBreadcrumbs($links_trail);
                 <td>
                     <a
                         href="#"
-                        onclick="<?php echo escape_quoted_data($imagetool["action"]); ?>"
-                        title="<?php echo escape_quoted_data($imagetool["name"]); ?>">
-                        <span class="<?php echo escape_quoted_data($imagetool["icon"]); ?>"></span>
+                        onclick="<?php echo escape($imagetool["action"]); ?>"
+                        title="<?php echo escape($imagetool["name"]); ?>">
+                        <span class="<?php echo escape($imagetool["icon"]); ?>"></span>
                     </a>
                 </td>
             </tr>
