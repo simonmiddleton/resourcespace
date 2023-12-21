@@ -1,6 +1,5 @@
 <?php 
 include "../include/db.php";
-
 include "../include/authenticate.php";
 if (checkperm("b"))
     {exit("Permission denied");}

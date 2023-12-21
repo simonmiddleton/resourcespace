@@ -928,9 +928,14 @@ function delete_collection($collection)
 
     collection_log($ref,LOG_CODE_COLLECTION_DELETED_COLLECTION,0, $collection["name"] . " (" . $lang["owner"] . ":" . $collection["username"] . ")");
 
-    if($type == COLLECTION_TYPE_FEATURED)
+    if($type === COLLECTION_TYPE_FEATURED)
         {
         clear_query_cache("featured_collections");
+        }
+    else
+        {
+        /** {@see create_collection()} */
+        clear_query_cache("collection_access{$collection['user']}");
         }
 	}
 	
