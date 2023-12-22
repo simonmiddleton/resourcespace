@@ -1078,7 +1078,7 @@ jQuery(document).ready(function () {
                 }
             else
                 {
-                echo "maxNumberOfFiles: '" . ($upload_max_number_files??"null") . "',";
+                echo "maxNumberOfFiles: '" . (set_maxNumberOfFiles()) . "',";
                 }
             if (isset($allowedmime))
                 {
