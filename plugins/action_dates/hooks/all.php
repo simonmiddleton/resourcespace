@@ -124,7 +124,7 @@ function HookAction_datesCronCron()
         $validrestypes = false;
         if($fieldinfo["global"] == 0)
             {
-            $validrestypes = ps_query("SELECT resource_type FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$action_dates_deletefield]);
+            $validrestypes = ps_array("SELECT resource_type value FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$action_dates_deletefield]);
             }
         if($action_dates_reallydelete)
             {
@@ -419,7 +419,7 @@ function HookAction_datesCronCron()
         $validrestypes = false;
         if($datefield["global"] == 0)
             {
-            $validrestypes = ps_query("SELECT resource_type FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$field]);
+            $validrestypes = ps_array("SELECT resource_type value FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$field]);
             }
 
         $newstatus = $action_dates_extra_config_setting["status"];
