@@ -1582,13 +1582,18 @@ function delete_resource_nodes_multi($resources=array(),$nodes=array())
     {
     if(!is_array($nodes))
         {$nodes=array($nodes);}
-    
-    $chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
-    foreach($chunks as $chunk)
+
+    $resource_chunks = array_chunk($resources, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    $node_chunks = array_chunk($nodes, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+
+    foreach ($resource_chunks as $resource_chunk)
         {
-        $sql = "DELETE FROM resource_node WHERE resource in (" . ps_param_insert(count($chunk)) . ") AND node in (" . ps_param_insert(count($nodes)) . ")";
-        $params = array_merge(ps_param_fill($chunk, "i"), ps_param_fill($nodes, "i"));
-        ps_query($sql, $params);
+        foreach ($node_chunks as $node_chunk)
+            {
+            $sql = "DELETE FROM resource_node WHERE resource in (" . ps_param_insert(count($resource_chunk)) . ") AND node in (" . ps_param_insert(count($node_chunk)) . ")";
+            $params = array_merge(ps_param_fill($resource_chunk, "i"), ps_param_fill($node_chunk, "i"));
+            ps_query($sql, $params);
+            }
         }
     }
 
