@@ -199,7 +199,7 @@ if($confirm_delete)
     ?>
     <input name="confirmdelete" id="confirmdelete" type="hidden" value="">
     <div class="textcenter">
-	<input name="delete" type="button" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="jQuery('#field_edit_delete').val('yes');jQuery('#confirmdelete').val('yes');this.form.submit();" />
+	<input name="delete" type="button" value="<?php echo escape($lang["action-delete"])?>" onClick="jQuery('#field_edit_delete').val('yes');jQuery('#confirmdelete').val('yes');this.form.submit();" />
 	<input type="button" class="button" onClick="CentralSpaceLoad('<?php generateURL($baseurl_short . "/pages/admin/admin_resource_type_field_edit.php",$url_params,array("ref"=>"")); ?>',true);return false;" value="&nbsp;&nbsp;<?php echo $lang["cancel"] ?>&nbsp;&nbsp;" >
     </div>
      <?php	
@@ -236,7 +236,7 @@ else
     <input name="migrate_data" id="migrate_data" type="hidden" value="">
 
 	<?php if ($fielddata["active"]==0) { ?>
-    <input name="delete" type="button" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" onClick="if(confirm('<?php echo $lang["confirm-deletion"] ?>')){jQuery('#field_edit_delete').val('yes');this.form.submit();}else{jQuery('#delete').val('');}" />
+    <input name="delete" type="button" value="<?php echo escape($lang["action-delete"])?>" onClick="if(confirm('<?php echo escape($lang["confirm-deletion"]) ?>')){jQuery('#field_edit_delete').val('yes');this.form.submit();}else{jQuery('#delete').val('');}" />
 	<?php } ?>
 	
     </div>
