@@ -1716,8 +1716,7 @@ if ($ref < 0 && !$upload_review_mode)
     }
 
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
-$edit_valid_fields = get_resource_type_fields($resource['resource_type']);
-$edit_valid_fields = array_column($edit_valid_fields,"ref");
+$edit_valid_fields = array_column(get_resource_type_fields($resource['resource_type']), 'ref');
 
 # Only include fields whose resource type is global or is present in the resource(s) being edited
 if ($multiple) 
