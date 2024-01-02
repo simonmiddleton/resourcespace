@@ -1413,16 +1413,29 @@ function config_register_core_field_refs(string $source, array $refs)
  */
 function override_rs_variables_by_eval(array $variables, string $code)
     {
-    $temp_variables = $variables;
-
-    extract($temp_variables, EXTR_REFS | EXTR_SKIP);
-    eval(eval_check_signed($code));
-
-    foreach($temp_variables as $temp_variable_name => $temp_variable_val)
+    global $configs_overwritten;
+    // Remove all previous overwrides that have been set
+    if(is_array($configs_overwritten) && count($configs_overwritten) != 0)
         {
-        $GLOBALS[$temp_variable_name] = $temp_variable_val;
+        foreach($configs_overwritten as $option => $value)
+            {
+            $variables[$option] = $value;
+            }
         }
 
+    $temp_variables = $variables;
+    extract($temp_variables, EXTR_REFS | EXTR_SKIP);
+    eval(eval_check_signed($code));
+    $temp_array = [];
+    foreach($temp_variables as $temp_variable_name => $temp_variable_val)
+        {
+        if($variables[$temp_variable_name] !== $temp_variable_val)
+            {
+            $temp_array[$temp_variable_name] = $GLOBALS[$temp_variable_name];
+            }
+        $GLOBALS[$temp_variable_name] = $temp_variable_val;
+        }
+    $configs_overwritten = $temp_array;
     return;
     }
 
