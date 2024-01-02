@@ -8472,12 +8472,16 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
                 {
                 $bind[$placeholder] = $field_data;
                 }
+            else
+                {
+                // No data, just remove placeholder
+                $bind[$placeholder] = "";
+                }
             }
         }
 
     // Build the filename
     $filename = str_replace(array_keys($bind), array_values($bind), $formatted_str);
-
     // Allow plugins to completely overwrite it
     $hook_downloadfilenamealt = hook('downloadfilenamealt', '', [$ref, $size, $alternative, $ext]);
     if (is_string($hook_downloadfilenamealt) && $hook_downloadfilenamealt !== '')
