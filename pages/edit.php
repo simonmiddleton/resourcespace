@@ -2378,8 +2378,17 @@ if ($ref>0 && !$multiple)
                 $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
                 }
             if ($resource["has_image"]==1 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
-                { ?>
-                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,false); ?>" class="ImageBorder"/>
+                {
+                $path_to_preview = get_resource_path($ref, false, $bbr_preview_size, false, $resource["preview_extension"], -1, 1, false);
+                if ($upload_review_mode && $hide_real_filepath)
+                    {
+                    // Add key to override access checks in download.php.
+                    // User is in the process of editing the files they've just uploaded so preview should always be displayed.
+                    $temp_access_key = generate_temp_download_key($userref, $ref, $bbr_preview_size);
+                    $path_to_preview .= '&override_key=' . $temp_access_key;
+                    }
+                ?>
+                <img id="preview" align="top" src="<?php echo $path_to_preview; ?>" class="ImageBorder"/>
                 <?php 
                 # Render watermarked version if it exists
                 if (checkperm("w") && $wmpath!="" && file_exists($wmpath))

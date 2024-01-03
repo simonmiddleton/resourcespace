@@ -3460,18 +3460,29 @@ function generate_temp_download_key(int $user, int $resource, string $size): str
     }
 
 /**
- * Validate the provided download key
+ * Validate the provided download key to authenticate a download or override an access check.
  *
- * @param int     $ref          Resource ID
- * @param string  $keystring    Key string - includes a nonce prefix
- * @param string  $size         Download size to access. 
+ * @param int     $ref              Resource ID
+ * @param string  $keystring        Key string - includes a nonce prefix
+ * @param string  $size             Download size to access.
+ * @param int     $expire_seconds   Optional parameter to set specified expiry time in seconds. Use 0 to set system default.
+ * @param bool    $setup_user       Set to false where there is no need to initialise the user.
  * 
  * @return bool
  * 
  */
-function validate_temp_download_key(int $ref, string $keystring, string $size) : bool
+function validate_temp_download_key(int $ref, string $keystring, string $size, int $expire_seconds = 0, bool $setup_user = true) : bool
     {
-    global $api_resource_path_expiry_hours;
+    if ($expire_seconds < 1)
+        {
+        global $api_resource_path_expiry_hours;
+        $expiry_time_limit = 60 * 60 * $api_resource_path_expiry_hours;
+        }
+    else
+        {
+        $expiry_time_limit = $expire_seconds;
+        }
+
     $keydata = rsDecrypt($keystring, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
     if($keydata != false)
         {
@@ -3483,10 +3494,10 @@ function validate_temp_download_key(int $ref, string $keystring, string $size) :
             $ak_userdata = get_user($ak_user);
             $key_time = $download_key_parts[4];
             if($ak_userdata !== false 
-                && ((time()- $key_time) < (60 * 60 * $api_resource_path_expiry_hours))
+                && ((time()- $key_time) < $expiry_time_limit)
                 && hash_hmac("sha256", "user_pass_mac", $ak_userdata['password']) === $download_key_parts[5])
                 {
-                setup_user($ak_userdata);
+                if ($setup_user) { setup_user($ak_userdata); }
                 return true;
                 }
             }

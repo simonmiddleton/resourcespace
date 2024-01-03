@@ -35,6 +35,7 @@ $write_exif_data    = (getval('exif_write', '') == 'true');
 $k                  = getval('k', '');
 $download_temp_key  = trim(getval("access_key",""));
 $watermarked        = getval('watermarked', 0, true);
+$override_temp_key  = trim(getval("override_key",""));
 
 // Check for temporary download access using key (e.g. from API get_resource_path) 
 $valid_key = false;
@@ -84,6 +85,14 @@ if ($download_usage && $checktermsusage)
 if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     {
     $ext='jpg';
+    }
+
+$override_key = false;
+if($ref > 0 && $override_temp_key != "")
+    {
+    // Check if the download should be allowed. Permissions have already been considered elsewhere.
+    // Used to display edit page resource preview image after upload where search filter has not yet been set.
+    $override_key = validate_temp_download_key($ref, $override_temp_key, $size, 2, false);
     }
 
 // Is this a user specific download?
@@ -173,7 +182,7 @@ else
 
     resource_type_config_override($resource_data['resource_type']);
 
-    if($direct_download_noauth && $direct)
+    if(($direct_download_noauth && $direct) || $override_key)
         {
         // if this is a direct download and direct downloads w/o authentication are enabled, allow regardless of permissions
         $allowed = true;
