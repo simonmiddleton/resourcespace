@@ -132,7 +132,8 @@ if($unsubscribe != '')
 	{
 	if('yes' == getval('unsubscription_confirmed', '') && enforcePostRequest(getval("ajax", false)))
 		{
-		unsubscribe_user_from_periodic_report($userref, $unsubscribe);
+        $unsubscribe_user = getval("unsubscribe_user",$userref,true);
+        unsubscribe_user_from_periodic_report($unsubscribe_user, $unsubscribe);
 		?>
 		<div class="BasicsBox">
 			<h1><?php echo $lang["unsubscribed"]?></h1>

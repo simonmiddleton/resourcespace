@@ -526,7 +526,11 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
                 $output = str_replace("%%REPORTTITLE%%", $title, $lang["report_periodic_email_report_attached"]);
                 }
 
-            $unsubscribe_link = "<br />" . $lang["unsubscribereport"] . "<br /><a href=\"" . $baseurl . "/?ur=" . $report["ref"] . "\" target=\"_blank\">" . $baseurl . "/?ur=" . $report["ref"] . "</a>";
+            $unsubscribe_url = generateURL($baseurl,["ur"=>$report["ref"],"u"=>$user["ref"]]);
+            $unsubscribe_link = sprintf(
+                "<br />%s<br /><a href=\"%s\" target=\"_blank\">%s</a>",
+                $lang["unsubscribereport"],$unsubscribe_url,$unsubscribe_url
+            );
 
             if ($echo_out)
                 {

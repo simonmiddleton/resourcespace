@@ -78,9 +78,10 @@ if (getval("q","")!="")
 if (getval('ur', '') != '')
     {
     # quick redirect to periodic report unsubscriptions.
-    $ur = getval('ur', '');
+    $ur = getval('ur', '',true);
+    $unsubscribe_user = getval('user', '',true);
 
-    $topurl = 'pages/team/team_report.php?unsubscribe=' . $ur;
+    $topurl = 'pages/team/team_report.php?unsubscribe=' . $ur . ($unsubscribe_user!==''?'&user='.$unsubscribe_user:'');
     }
 
 if(getval('dr', '') != '')
