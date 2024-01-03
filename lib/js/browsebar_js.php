@@ -100,9 +100,9 @@ function toggleBrowseElements(browse_id, reload, useraction)
 
     if(useraction)
         {
-        browse_clicked=true;    
+        browse_clicked=true;
         }
-    
+
     if(typeof b_loading === 'undefined')
         {
         b_loading = new Array();
@@ -120,6 +120,12 @@ function toggleBrowseElements(browse_id, reload, useraction)
         browse_toload = new Array();
         }
 
+    if(typeof browse_reloaded === 'undefined' || useraction)
+        {
+        // Used to ensure we don't get into an endless loop of loading parents and looking for non-existent child elements
+        browse_reloaded = new Array();
+        }
+
     var curel = jQuery(".BrowseBarItem[data-browse-id='" + browse_id + "']");
 
     if(!curel.length)
@@ -128,7 +134,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
         var item_elements = browse_id.split('-');
         item_elements.pop();
         if (item_elements.length  < 1)
-            {            
+            {
             // This is the root node and is not present, give up
             browse_clicked = false;
             curel.stop(true, false);
@@ -137,7 +143,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
             
         var parentitem = item_elements.join('-');
         
-        //Add this id so that it is loaded after the parent has completed
+        // Add this id so that it is loaded after the parent has completed
         if(typeof browsepostload[parentitem] === "undefined")
             {
             browsepostload[parentitem] = new Array();
@@ -277,8 +283,12 @@ function toggleBrowseElements(browse_id, reload, useraction)
 
             browsepostload[browse_id].forEach(function (childitem)
                 {
-                console.debug("Finished loading %o, loading child item %o", browse_id, childitem);
-                toggleBrowseElements(childitem, true);
+                if(!browse_reloaded.includes(childitem))
+                    {
+                    console.debug("Finished loading %o, loading child item %o", browse_id, childitem);
+                    toggleBrowseElements(childitem, true);
+                    browse_reloaded.push(childitem); 
+                    }
                 });
                 
             if(browse_toload.length == 0)
@@ -310,6 +320,7 @@ function toggleBrowseElements(browse_id, reload, useraction)
                 }
             });
 
+    browse_reloaded.push(browse_id);
     return true;
     }
 
