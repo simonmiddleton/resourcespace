@@ -1213,18 +1213,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 return $currency_symbol . " " . number_format($price,2);
                                 }
 
-                            function make_download_preview_link($ref, $size, $label)
-                                {
-                                global $direct_link_previews_filestore, $baseurl;
-
-                                if ($direct_link_previews_filestore)
-                                    $direct_link="" . get_resource_path($ref,false,$size['id'],false,$size['extension']);
-                                else
-                                    $direct_link=$baseurl."/pages/download.php?direct=1&amp;ref=$ref&amp;size=" . $size['id'] . "&amp;ext=" . $size['extension'];
-
-                                return "<a href='$direct_link' target='dl_window_$ref'>$label</a>";
-                                }
-
                             $basket=$userrequestmode==2 || $userrequestmode==3;
 
                             # Look for a viewer to handle the right hand panel. If not, display the standard photo download / file download boxes.
@@ -1273,11 +1261,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                 if (!empty($newHeadline))
                                                     {
                                                     $headline=$newHeadline;
-                                                    }
-
-                                                if ($direct_link_previews && $downloadthissize)
-                                                    {
-                                                    $headline=make_download_preview_link($ref, $sizes[$n],$headline);
                                                     }
 
 		                                        if ($hide_restricted_download_sizes && !$downloadthissize && !checkperm("q"))

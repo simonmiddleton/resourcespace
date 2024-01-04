@@ -7,15 +7,10 @@ include_once dirname(__FILE__) . '/../include/db.php';
 include_once dirname(__FILE__) . '/../include/resource_functions.php';
 include_once dirname(__FILE__) . '/../include/image_processing.php';
 ob_end_clean(); 
-
-$k="";
-
 if($download_no_session_cache_limiter)
     {
     session_cache_limiter(false);
     }
-
-$direct = (0 < strlen(getval('direct', '')) ? true : false);
 
 $ref                = getval('ref', '', true);
 $size               = trim(getval('size', ''));
@@ -36,6 +31,7 @@ $k                  = getval('k', '');
 $download_temp_key  = trim(getval("access_key",""));
 $watermarked        = getval('watermarked', 0, true);
 $override_temp_key  = trim(getval("override_key",""));
+$noattach           = getval('noattach','') != '';
 
 // Check for temporary download access using key (e.g. from API get_resource_path) 
 $valid_key = false;
@@ -52,10 +48,7 @@ if(!$valid_key && ('' == $k || !check_access_key(getval('ref', '', true), $k)) &
     
 // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
 $internal_share_access = internal_share_access();
-
 $log_download = true;
-
-global $exiftool_write;
 
 // Ensure terms have been accepted and usage has been supplied when required. Not for slideshow files etc.
 $checktermsusage =  !in_array($size, $sizes_always_allowed)
@@ -98,7 +91,8 @@ if($ref > 0 && $override_temp_key != "")
 // Is this a user specific download?
 if('' != $userfiledownload)
     {
-    $noattach       = '';
+    $noattach       = false;
+    $log_download   = false;
     // Provide a way of overriding $exiftool_write = false depending on download source e.g. from format chooser
     if ($exiftool_write && $write_exif_data)
         {
@@ -130,11 +124,13 @@ if('' != $userfiledownload)
 elseif($slideshow != 0)
     {
     $noattach       = true;
+    $log_download   = false;
     $path           = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . $homeanim_folder . DIRECTORY_SEPARATOR . getval("slideshow",0,true) . ".jpg";
     }
 elseif($tempfile != "")
     {
     $noattach       = true;
+    $log_download   = false;
     $exiftool_write = false;
     $filedetails    = explode('_', $tempfile);
     if(count($filedetails) >= 3)
@@ -164,7 +160,8 @@ elseif($tempfile != "")
 else
     {
     $resource_data = get_resource_data($ref);
-    if (!is_array($resource_data)){
+    if (!is_array($resource_data))
+        {
         $error = $lang["resourcenotfound"];
         if(getval("ajax","") != "")
             {
@@ -177,23 +174,14 @@ else
             include "../include/footer.php";
             }
         exit();
-    }
-
+        }
 
     resource_type_config_override($resource_data['resource_type']);
-
-    if(($direct_download_noauth && $direct) || $override_key)
-        {
-        // if this is a direct download and direct downloads w/o authentication are enabled, allow regardless of permissions
-        $allowed = true;
-        }
-    else
-        {
-        // Permissions check
-        $allowed = resource_download_allowed($ref, $size, $resource_data['resource_type'], $alternative);
-        debug("PAGES/DOWNLOAD.PHP: \$allowed = " . ($allowed == true ? 'TRUE' : 'FALSE'));
-        }
-
+   
+    // Check permissions
+    $allowed = $override_key ? true : resource_download_allowed($ref, $size, $resource_data['resource_type'], $alternative);
+    debug("PAGES/DOWNLOAD.PHP: \$allowed = " . ($allowed == true ? 'TRUE' : 'FALSE'));
+   
     if(!$allowed || $ref <= 0)
         {
         $error = $lang['error-permissiondenied'];
@@ -213,24 +201,20 @@ else
     // additional access check, as the resource download may be allowed, but access restriction should force watermark.  
     $access        = get_resource_access($ref);
     $use_watermark = check_use_watermark(getval("dl_key",""),$ref) || $watermarked;
-
     // If no extension was provided, we fallback to JPG.
     if('' == $ext)
         {
         $ext = 'jpg';
         }
 
-    $noattach = getval('noattach','');
-
     // Where we are getting mp3 preview for videojs, clear size as we want to get the auto generated mp3 file rather than a custom size.
     if ($size == 'videojs' && $ext == 'mp3')
         {
         $size="";
         }
-
-    // Provide a tile region if enabled and requested for the main resource.
-    if($preview_tiles && $allowed && $size == '' && getval('tile_region', 0, true) == 1)
+    elseif($preview_tiles && $allowed && $size == '' && getval('tile_region', 0, true) == 1)
         {
+        // Provide a tile region if enabled and requested for the main resource.
         $tile_scale = (int) getval('tile_scale', 1, true);
         $tile_row = (int) getval('tile_row', 0, true);
         $tile_col = (int) getval('tile_col', 0, true);
@@ -239,9 +223,9 @@ else
         $image_size = get_original_imagesize($ref,$fullpath, "jpg");
         if($image_size === false)
             {
-            debug("PAGES/DOWNLOAD.PHP: File does not exist!");        
-            header('HTTP/1.0 404 Not Found');
-            exit();
+            debug("PAGES/DOWNLOAD.PHP: File does not exist!");  
+            http_response_code(404);
+            exit($lang['downloadfile_nofile']);
             }
         else
             {
@@ -283,7 +267,6 @@ else
         $path=$nowmpath;
         }
 
-
     hook('modifydownloadpath');
     // Hook to modify the download path.
     $path_modified = hook('modifydownloadpath2', '', array($download_extra));
@@ -292,15 +275,26 @@ else
         $path = $path_modified;
         }
         
-    if(!file_exists($path) && '' != $noattach)
+    if(!file_exists($path) && $noattach)
         {
         # Return icon for file (for previews)
-        $info = get_resource_data($ref);
-        $path = '../gfx/' . get_nopreview_icon($info['resource_type'], $ext, 'thm');
+        $path = '../gfx/' . get_nopreview_icon($resource_data['resource_type'], $ext, 'thm');
         }
+
+    // Override the noattach request if file is not valid for display in browser
+    if($noattach && !allow_in_browser($path))
+        {
+        $noattach = false;
+        if(!($size == "" && $resource_data["file_extension"] == $ext))
+            {
+            // Do not log downloads for thdses unless accessing original resource files
+            $log_download = false;
+            }
+        }
+
     // Process metadata
     // Note: only for downloads (not previews)
-    if('' == $noattach && -1 == $alternative)
+    if(!$noattach && -1 == $alternative)
         {
         // Strip existing metadata only if we do not plan on writing metadata, otherwise this will be done twice
         if($exiftool_remove_existing && !$exiftool_write)
@@ -311,13 +305,11 @@ else
                 {
                 $path = $temp_file_stripped_metadata;
                 }
-            }
-    
+            }    
         // writing RS metadata to files: exiftool
         if($exiftool_write)
             {
-            $tmpfile = write_metadata($path, $ref);
-    
+            $tmpfile = write_metadata($path, $ref);    
             if(false !== $tmpfile && file_exists($tmpfile))
                 {
                 $path = $tmpfile;
@@ -327,14 +319,11 @@ else
     }
 
 debug("PAGES/DOWNLOAD.PHP: Preparing to download/ stream file '{$path}'");
-
-// File does not exist
 if(!file_exists($path))
     {
     debug("PAGES/DOWNLOAD.PHP: File does not exist!");
-
-    header('HTTP/1.0 404 Not Found');
-    exit();
+    http_response_code(404);
+    exit($lang['downloadfile_nofile']);
     }
 
 hook('modifydownloadfile'); 
@@ -344,57 +333,51 @@ $file_handle = fopen($path, 'rb');
 
 debug("PAGES/DOWNLOAD.PHP: \$file_size = {$file_size}");
 
-// File could not be opened
 if(!$file_handle)
     {
+    // File could not be opened
     debug("PAGES/DOWNLOAD.PHP: File could not be opened!");
-
-    header('HTTP/1.0 500 Internal Server Error');
+    http_response_code(500);
     exit();
     }
 
-// Log this activity (download only, not preview)
-if('' == $noattach && $log_download)
+if(!$noattach)
     {
-    daily_stat('Resource download', $ref);
+    // Compute a file name for the download.
+    if(!isset($filename) || $filename == "" || $alternative != -1)
+        {
+        $filename = get_download_filename($ref, $size, $alternative, $ext);       
+        }
+    }
 
+if($log_download)
+    {
+    // Log this activity (download only, not preview)
+    daily_stat('Resource download', $ref);
     $email_add_to_log = ($email != "") ? ' Downloaded by ' . $email: "";
     resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, '', '', $usage, ($alternative != -1 ? $alternative : $size));
-
+    
     hook('moredlactions');
 
-    // update hit count if tracking downloads only
+    // Update hit count if tracking downloads only
     if($resource_hit_count_on_downloads)
         {
         // greatest() is used so the value is taken from the hit_count column in the event that new_hit_count
         // is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
         ps_query("UPDATE resource SET new_hit_count = greatest(hit_count, new_hit_count) + 1 WHERE ref = ?", ['i', $ref]);
         }
-    
-    // We compute a file name for the download.
-    if(!isset($filename) || $filename == "" || $alternative != -1)
-        {
-        $filename = get_download_filename($ref, $size, $alternative, $ext);
-        }
     }
 
 // Set appropriate headers for attachment or streamed file
-if(!$direct && isset($filename))
+if(isset($filename))
     {
     header("Content-Disposition: attachment; filename=\"{$filename}\"");
-
     debug("PAGES/DOWNLOAD.PHP: Set header for attachment file");
     }
 else
-    {
-    if(!allow_in_browser($path))
-        {
-        error_alert($lang['error-permissiondenied'],true);
-        exit();
-        }
+    {   
     header('Content-Disposition: inline;');
     header('Content-Transfer-Encoding: binary');
-
     debug("PAGES/DOWNLOAD.PHP: Set header for streamed file");
     }
 
@@ -494,7 +477,7 @@ if(!hook('replacefileoutput'))
 
 // Deleting Exiftool temp File:
 // Note: Only for downloads (not previews)
-if('' == $noattach && -1 == $alternative && $exiftool_write && file_exists($tmpfile))
+if(!$noattach && -1 == $alternative && $exiftool_write && file_exists($tmpfile))
     {
     delete_exif_tmpfile($tmpfile);
     }

@@ -15,7 +15,7 @@ function show_table_headers($showprice)
 
 function HookFormat_chooserViewReplacedownloadoptions()
     {
-    global $resource, $ref, $counter, $headline, $lang, $download_multisize, $showprice, $save_as, $direct_link_previews, 
+    global $resource, $ref, $counter, $headline, $lang, $download_multisize, $showprice, $save_as, 
            $hide_restricted_download_sizes, $format_chooser_output_formats, $baseurl_short, $search, $offset, $k, 
            $order_by, $sort, $archive, $baseurl, $urlparams, $terms_download,$download_usage;
 
@@ -70,11 +70,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
 		$originalSize = $sizes[$n];
 
-		$headline = $lang['collection_download_original'];
-        if ($direct_link_previews && $downloadthissize)
-            {
-            $headline = make_download_preview_link($ref, $sizes[$n], $headline);
-            }
+		$headline = $lang['collection_download_original'];      
         if ($hide_restricted_download_sizes && !$downloadthissize && !checkperm("q"))
             {
             continue;

@@ -8505,6 +8505,13 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
         $filename = mb_strcut($filename, 0, 255, 'UTF-8');
         }
 
+    // Extra check that the generated filename extension matches the requested extension e.g. if using $filename_field value previews it may have the extension of the original resource file, rather than jpg or the field data was too long and the extension has been removed by truncation.
+    $filename_parts = pathinfo($filename);
+    if(!isset($filename_parts["extension"]) || strtolower($filename_parts["extension"]) != strtolower($ext))
+        {
+        $filename = mb_strcut($filename_parts["basename"], 0, (254-strlen($ext)), 'UTF-8') . "." . $ext;
+        }
+         
     if ($filename !== '')
         {
         return $filename;

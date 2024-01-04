@@ -31,17 +31,6 @@ $default_customaccess=2;
 # $default_home_page="search.php?search=example";
 $default_home_page="home.php";
 
-# add direct link to original file for each image size
-$direct_link_previews = false;
-
-# SECURITY WARNING: The next two options will  effectively allow anyone
-# to download any resource without logging in. Be careful!!!!
-// allow direct resource downloads without authentication
-$direct_download_noauth = false;
-// make preview direct links go directly to filestore rather than through download.php
-// (note that filestore must be served through the web server for this to work.)
-$direct_link_previews_filestore = false;
-
 # Multi-lingual support for e-mails. Try switching this to true if e-mail links aren't working and ASCII characters alone are required (e.g. in the US).
 $disable_quoted_printable_enc=false;
 
