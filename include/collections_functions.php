@@ -5444,10 +5444,12 @@ function get_user_selection_collection($user)
 		{		
 		// We need to set a collection session_id for the anonymous user. Get session ID to create collection with this set
 		$rs_session=get_rs_session_id(true);
+        $cache = '';
 		}
 	else
 		{	
 		$rs_session="";
+        $cache = 'user_selection_collection' . $user;
         }
 
     $params = [
@@ -5463,7 +5465,7 @@ function get_user_selection_collection($user)
         $params[] = $rs_session;
         }
 
-    return ps_value("SELECT ref AS `value` FROM collection WHERE `user` = ? AND `type` = ? {$session_id_sql} ORDER BY ref ASC", $params, null, 'user_selection_collection');
+    return ps_value("SELECT ref AS `value` FROM collection WHERE `user` = ? AND `type` = ? {$session_id_sql} ORDER BY ref ASC", $params, null, $cache);
     }
 
 
