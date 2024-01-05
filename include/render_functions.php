@@ -2818,7 +2818,7 @@ function renderSocialMediaShareLinksForUrl($url)
         {
         ?>
         <!-- Twitter -->
-        <a target="_blank" href="https://twitter.com/?status=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-twitter-square" aria-hidden="true"></i></a>
+        <a target="_blank" href="https://twitter.com/intent/tweet?url=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-twitter-square" aria-hidden="true"></i></a>
         <?php
         }
 
