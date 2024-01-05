@@ -1344,6 +1344,7 @@ a.HomePanel:hover {
 }
 
 div.video-js {margin:auto;}
+.video-js button {min-width: unset;}
 .video-thumbs .vjs-control-bar {font-size:7px;}
 .video-thumbs .vjs-control-bar .vjs-live-controls {display:none;}
 
