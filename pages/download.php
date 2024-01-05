@@ -281,13 +281,16 @@ else
         $path = '../gfx/' . get_nopreview_icon($resource_data['resource_type'], $ext, 'thm');
         }
 
-    // Override the noattach request if file is not valid for display in browser
-    if($noattach && !allow_in_browser($path))
+    if($noattach)
         {
-        $noattach = false;
+        if(!allow_in_browser($path))
+            {
+            // Override the noattach request if file is not valid for display in browser
+            $noattach = false;
+            }
         if(!($size == "" && $resource_data["file_extension"] == $ext))
             {
-            // Do not log downloads for thdses unless accessing original resource files
+            // Do not log downloads for these unless accessing original resource files
             $log_download = false;
             }
         }
