@@ -1217,13 +1217,13 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $direction=((strpos($order_by,"DESC")===false)?"ASC":"DESC");
             $order_by="r2.ref " . $direction;
             }
-        
+
         # add date field, if access allowed, for use in $order_by
         if(metadata_field_view_access($date_field) && strpos($select, "field" . $date_field) === false )
             {
             $select .= ", field{$date_field} ";
             }
-        
+
         # Extract the number of records to produce
         $last=explode(",",$search);
         $last=str_replace("!last","",$last[0]);
@@ -1232,19 +1232,19 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         if (is_int_loose($last))
             {
             $last=(int)$last;
-            } 
+            }
         else
             {
             $last=1000;
             $search="!last1000";
             }
-        
+
         # Fix the ORDER BY for this query (special case due to inner query)
         $order_by=str_replace("r.rating","rating",$order_by);
         $sql->sql = $sql_prefix . "SELECT DISTINCT *,r2.total_hit_count score FROM (SELECT $select FROM resource r " . $sql_join->sql . " WHERE " . $sql_filter->sql . " ORDER BY ref DESC LIMIT $last ) r2 ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
-   
+
     // View Resources With No Downloads
     elseif (substr($search,0,12)=="!nodownloads") 
         {
@@ -1252,7 +1252,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $sql->sql = $sql_prefix . "SELECT r.hit_count score, $select FROM resource r " . $sql_join->sql . "  WHERE " . $sql_filter->sql . " AND r.ref NOT IN (SELECT DISTINCT object_ref FROM daily_stat WHERE activity_type='Resource download') GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
-    
+
     // Duplicate Resources (based on file_checksum)
     elseif (substr($search,0,11)=="!duplicates") 
         {
@@ -1261,16 +1261,16 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $ref=str_replace("!duplicates","",$ref[0]);
         $ref=explode(",",$ref); // just get the number
         $ref=$ref[0];
-        if ($ref!="") 
+        if ($ref!="")
             {
             # Find duplicates of a given resource
-            if (is_int_loose($ref)) 
+            if (is_int_loose($ref))
                 {
                 $sql->sql="SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . "
                     WHERE " . $sql_filter->sql . " AND file_checksum <> '' AND file_checksum IS NOT NULL 
                                       AND file_checksum = (SELECT file_checksum FROM resource WHERE ref=$ref AND (file_checksum <> '' AND file_checksum IS NOT NULL) ) 
                     ORDER BY file_checksum, ref";   
-                $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters); 
+                $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
                 }
             else
                 {
@@ -1285,7 +1285,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
             }
         }
-    
+
     # View Collection
     elseif (substr($search, 0, 11) == '!collection')
         {
@@ -1293,7 +1293,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         $colcustperm = $sql_join;
         $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
-             
+
         # Special case if a key has been provided.
         if($k != '')
             {
@@ -1307,48 +1307,51 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $collection = explode(',', $collection); // just get the number
         $collection = (int)$collection[0];
 
-        # Check access
-        $validcollections = [];
-        if(upload_share_active() !== false)
+        if(!checkperm('a'))
             {
-            $validcollections = get_session_collections(get_rs_session_id(), $userref);
-            }
-        else
-            {
-            $user_collections = array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
-            $public_collections = array_column(search_public_collections('', 'name', 'ASC', true, false), 'ref');
-            # include collections of requested resources
-            $request_collections = array();
-            if (checkperm("R"))
+            # Check access
+            $validcollections = [];
+            if(upload_share_active() !== false)
                 {
-                include_once('request_functions.php');
-                $request_collections = array_column(get_requests(), 'collection');
+                $validcollections = get_session_collections(get_rs_session_id(), $userref);
                 }
-            # include collections of research resources
-            $research_collections = array();
-            if (checkperm("r"))
+            else
                 {
-                include_once('research_functions.php');
-                $research_collections = array_column(get_research_requests(), 'collection');
+                $user_collections = array_column(get_user_collections($userref,"","name","ASC",-1,false), "ref");
+                $public_collections = array_column(search_public_collections('', 'name', 'ASC', true, false), 'ref');
+                # include collections of requested resources
+                $request_collections = array();
+                if (checkperm("R"))
+                    {
+                    include_once('request_functions.php');
+                    $request_collections = array_column(get_requests(), 'collection');
+                    }
+                # include collections of research resources
+                $research_collections = array();
+                if (checkperm("r"))
+                    {
+                    include_once('research_functions.php');
+                    $research_collections = array_column(get_research_requests(), 'collection');
+                    }
+                $validcollections = array_unique(array_merge($user_collections, array($USER_SELECTION_COLLECTION), $public_collections, $request_collections, $research_collections));
                 }
-            $validcollections = array_unique(array_merge($user_collections, array($USER_SELECTION_COLLECTION), $public_collections, $request_collections, $research_collections));
+
+            // Attach the negated user reference special collection
+            $validcollections[] = (0 - $userref);
+
+            if(in_array($collection, $validcollections) || (in_array($collection, array_column(get_all_featured_collections(), 'ref')) && featured_collection_check_access_control($collection)) || $ignore_collection_access)
+                {
+                if(!collection_readable($collection))
+                    {
+                    return array();
+                    }
+                }
+            elseif($k == "" || upload_share_active() !== false)
+                {
+                return [];
+                }
             }
 
-        // Attach the negated user reference special collection
-        $validcollections[] = (0 - $userref);
-            
-        if(in_array($collection, $validcollections) || (in_array($collection, array_column(get_all_featured_collections(), 'ref')) && featured_collection_check_access_control($collection)) || $ignore_collection_access)
-            {
-            if(!collection_readable($collection))
-                {
-                return array();
-                }
-            }
-        elseif($k == "" || upload_share_active() !== false)
-            {
-            return [];
-            }
-        
         if($allow_smart_collections)
             {
             global $smartsearch_ref_cache;
