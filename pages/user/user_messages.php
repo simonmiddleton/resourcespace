@@ -218,7 +218,7 @@ include "../../include/header.php";
                 ?>
                 <tr>
                     <td><input type="checkbox" class="message-checkbox" data-message="<?php echo (int)$messages[$n]['ref'];?>" id="message-checkbox-<?php echo (int)$messages[$n]['ref'];?>"></td>
-                    <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["created"],true, false, true); ?></td>
+                    <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["created"],true, true, true); ?></td>
                     <td class="<?php echo $unread_css; ?>"><?php echo htmlspecialchars((string)$messages[$n]["owner"]); ?></td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo escape((isset($user['fullname']) && trim($user['fullname']) != "") ? $user['fullname'] : $user['username']); ?></td>
                     <?php if ($messages_actions_usergroup) { ?>
