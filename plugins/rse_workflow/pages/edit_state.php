@@ -125,7 +125,7 @@ include '../../../include/header.php';
 ?>
 
 <div class="BasicsBox">
-<h1><?php echo $lang["rse_workflow_edit_state"]; ?></h1> 
+<h1><?php echo $lang["rse_workflow_edit_state"]; render_help_link("plugins/workflow");?></h1> 
 <?php
 $links_trail = array(
     array(
@@ -201,11 +201,13 @@ else if ($saved)
         for ($n=0;$n<count($groups);$n++)
                 {
                 ?>
-                <option value="<?php echo $groups[$n]["ref"]?>" <?php if ($workflowstate["notify_group"]==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]?></option>   
+                <option value="<?php echo $groups[$n]["ref"]?>" <?php if ($workflowstate["notify_group"]==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]?></option>
                 <?php
-                }
-        ?>
+                }?>
         </select>
+        <div class="FormHelp" >
+            <div class="FormHelpInner"><?php echo $lang["rse_workflow_state_notify_help"]; ?></div>
+        </div>
         <div class="clearerleft"> </div></div>
 
         <div class="Question" id="more_notes_question">

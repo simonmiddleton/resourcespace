@@ -48,7 +48,8 @@ $lang["rse_workflow_err_missing_wfstate"] = "Missing workflow state";
 $lang["rse_workflow_affected_resources"] = "Affected resources: %count";
 $lang["rse_workflow_confirm_resources_moved_to_state"] = "Successfully moved all affected resources to '%wf_name' workflow state.";
 
-$lang["rse_workflow_state_notify_group"]="When resources enter this state, notify user group:";
+$lang["rse_workflow_state_notify_group"]="When resources enter this state, create actions for this user group:";
+$lang["rse_workflow_state_notify_help"]="Users will see resources in this state appearing as actions, rather than receiving simple notifications";
 
 $lang["rse_workflow_state_notify_message"]="There are new resources in the workflow state: ";
 
