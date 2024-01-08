@@ -59,7 +59,7 @@ $resource_jpg_file_alt_ref = add_alternative_file(
 
 function HookTestframeworkAllDownloadfilenamealt()
     {
-    return 'Hook download filename';
+    return 'Hook download filename.jpg';
     }
 // --- End of Set up
 
@@ -88,7 +88,7 @@ $use_cases = [
         'name' => 'Format with %resource placeholder',
         'setup' => fn() => $GLOBALS['download_filename_format'] = 'RS%resource',
         'input' => ['ref' => $resource_jpg_file, 'size' => '', 'alternative' => 0, 'ext' => 'jpg'],
-        'expected' => "RS{$resource_jpg_file}",
+        'expected' => "RS{$resource_jpg_file}.jpg",
     ],
     [
         'name' => 'Format with %resource and %extension placeholders',
@@ -161,7 +161,7 @@ $use_cases = [
             $GLOBALS['download_filename_format'] = "%field{$rtf_text}";
             },
         'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
-        'expected' => str_repeat('X', 255),
+        'expected' => str_repeat('X', 251) . ".mp4",
     ],
     [
         'name' => 'Enforce access control for %fieldXX placeholder',
