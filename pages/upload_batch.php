@@ -86,6 +86,11 @@ $is_upload_share_active = (upload_share_active() !== false);
 if($is_upload_share_active && $terms_upload && !check_upload_terms($collection_add,$k))
         {
         error_alert($lang["mustaccept"],false);
+        ?>
+        <script>
+            window.setTimeout(function(){window.location.assign('<?php echo $baseurl . "?c=" . escape($collection_add) . "&k=" . escape($k); ?>');},1000);            
+        </script>
+        <?php
         exit();
         }
 // Disable CSRF when someone is accessing an external upload share
