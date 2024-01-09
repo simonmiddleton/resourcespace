@@ -72,25 +72,15 @@ $use_mysqli_ssl = false;
 #######################################
 #######################################
 
-
 $baseurl="http://my.site/resourcespace"; # The 'base' web address for this installation. Note: no trailing slash
 $email_from=""; # Where system e-mails appear to come from. Written to config.php by setup.php
 $email_notify=""; # Where resource/research/user requests are sent. Written to config.php by setup.php
 $email_notify_usergroups=array(); # Use of email_notify is deprecated as system notifications are now sent to the appropriate users based on permissions and user preferences. This variable can be set to an array of usergroup references and will take precedence.
 
-
 # Scramble resource paths? If this is a public installation then this is a very wise idea.
 # Set the scramble key to be a hard-to-guess string (similar to a password).
 # To disable, set to the empty string ("").
 $scramble_key="abcdef123";
-
-# If you agree to send occasional statistics to Montala, leave this set to 'yes'.
-# The following two numeric metrics alone will be sent every 7 days:
-# - Number of resources
-# - Number of users
-# The information will only be used to provide totals on the Montala site, e.g 
-# global number of installations, users and resources.
-$send_statistics=true;
 
 # Enable database query cache (for better performance). Production environments should have this enabled.
 $query_cache_enabled = true;

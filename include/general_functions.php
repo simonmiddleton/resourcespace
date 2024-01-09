@@ -1643,41 +1643,6 @@ function pager($break=true,$scrolltotop=true,$options=array())
 
 
 /**
- * If configured, send two metrics to Montala to get an idea of general software usage.
- *
- * @return void
- */
-function send_statistics()
-    {
-    $last_sent_stats  = get_sysvar('last_sent_stats', '1970-01-01');
-
-    # No need to send stats if already sent in last week.
-    if (time()-strtotime($last_sent_stats) < 7*24*60*60)
-        {
-        return false;
-        }
-
-    # Gather stats
-    $total_users = ps_value("select count(*) value from user", array(), 0);
-    $total_resources = ps_value("select count(*) value from resource", array(), 0);
-
-    # Send stats
-    $GLOBALS["use_error_exception"] = true;
-    try
-        {
-        file("https://www.montala.com/rs_stats.php?users=" . $total_users . "&resources=" . $total_resources);
-        }
-    catch (Exception $e)
-        {
-        debug("send_statistics(): " . $e->getMessage());
-        }
-    unset($GLOBALS["use_error_exception"]);
-    
-    # Update last sent date/time.
-    set_sysvar("last_sent_stats",date("Y-m-d H:i:s")); 
-    }
-
-/**
  * Remove the extension part of a filename
  *
  * @param  mixed $strName   The filename

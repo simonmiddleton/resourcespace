@@ -6,13 +6,9 @@
  * @subpackage Pages_Team
  */
 include "../../include/db.php";
-
 include "../../include/authenticate.php";if (!checkperm("t")) {exit ("Permission denied.");}
 
-if ($send_statistics) {send_statistics();}
-
 $overquota=overquota();
-
 
 # Work out free space / usage for display
 if (!file_exists($storagedir)) {mkdir($storagedir,0777);}
