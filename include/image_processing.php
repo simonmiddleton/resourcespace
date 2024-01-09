@@ -1904,7 +1904,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         }
                     else
                         {
-                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . ' ' . $icc_preview_options . ' ' . ($targetprofile != "" ? "-profile " : "") . escapeshellarg($targetprofile);
+                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . ' ' . $icc_preview_options . ' ' . ($targetprofile != "" ? "-profile " . escapeshellarg($targetprofile) : "");
                         }
 
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
