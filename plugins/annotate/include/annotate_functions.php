@@ -1,4 +1,5 @@
 <?php
+include_once(dirname(__FILE__) . '/../../../lib/html2pdf/vendor/tecnickcom/tcpdf/tcpdf.php');
 
 class MYPDF extends TCPDF {
 		
@@ -77,7 +78,6 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 	$date= date("m-d-Y h:i a");
 	
 	include_once(dirname(__FILE__) . '/../../../include/image_processing.php');
-	include_once(dirname(__FILE__) . '/../../../lib/html2pdf/vendor/tecnickcom/tcpdf/tcpdf.php');
 
 	$pdfstoragepath=get_annotate_file_path($ref,true,"pdf");
 	$jpgstoragepath=get_annotate_file_path($ref,true,"jpg");
