@@ -1553,11 +1553,15 @@ function do_search(
     if ($resultcount>0 & count($result["data"]) > 0)
         {
         $result = $result['data'];
-        $diff = $resultcount - count($result);
-        while($diff > 0)
+        if($search_chunk_size !== -1)
             {
-            $result = array_merge($result, array_fill(0,($diff<1000000?$diff:1000000),0));
-            $diff-=1000000;
+            // Only perform legacy padding of results if not all rows have been requested or total may be incorrect
+            $diff = $resultcount - count($result);
+            while($diff > 0)
+                {
+                $result = array_merge($result, array_fill(0,($diff<1000000?$diff:1000000),0));
+                $diff-=1000000;
+                }
             }
         hook("beforereturnresults","",array($result, $archive));
         log_keyword_usage($keywords_used, $result);
