@@ -8,11 +8,12 @@ if (!checkperm("a"))
 	exit ("Permission denied.");
 	}
 
-$filterorder    = getval("filterorder","ref");
-$filtersort     = getval("filtersort", "ASC");
-$revsort        = ($filtersort == "ASC") ? "DESC" : "ASC";
-$filterfind     = getval("filterfind","");
-$copy_from      = getval('copy_from', false);
+$filterorder        = getval("filterorder","ref");
+$filtersort         = getval("filtersort", "ASC");
+$revsort            = ($filtersort == "ASC") ? "DESC" : "ASC";
+$filterfind         = getval("filterfind","");
+$copy_from          = getval('copy_from', 0,true);
+$new_filter_name    = getval("filter_name","");
 
 $filters = get_filters($filterorder,$filtersort,$filterfind);
 
@@ -24,27 +25,25 @@ $params = array(
     "filtersort"    => $filtersort, 
     "filterorder"   => $filterorder
     );
-    
-$new_filter_name=getval("filter_name","");
-if (trim($new_filter_name) == '' && getval('save', false) == true)
-    {
-    error_alert($lang['error-invalid_name'], false);
-    exit();
-    }
-if ($new_filter_name!="" && enforcePostRequest(false))
-    {
-    $new_filter_id=save_filter(0,$new_filter_name,RS_FILTER_ALL);
-    clear_query_cache("schema");
-    redirect($baseurl_short."pages/admin/admin_filter_edit.php?filter=" . $new_filter_id);
-    }
-if ($copy_from !== false)
+
+if ($copy_from > 0)
     {
     $new_filter_id  = copy_filter($copy_from);
     $filter_details = get_filter($new_filter_id);
     save_filter($new_filter_id, $filter_details['name'] . ' ('.$lang['copy'].')', $filter_details['filter_condition']);
     redirect($baseurl_short."pages/admin/admin_filter_edit.php?filter=" . $new_filter_id);
     }
-   
+elseif (trim($new_filter_name) == '' && getval('save', '') == 'true')
+    {
+    error_alert($lang['error-invalid_name'], false);
+    exit();
+    }
+elseif ($new_filter_name != "" && enforcePostRequest(false))
+    {
+    $new_filter_id=save_filter(0,$new_filter_name,RS_FILTER_ALL);
+    clear_query_cache("schema");
+    redirect($baseurl_short."pages/admin/admin_filter_edit.php?filter=" . $new_filter_id);
+    }   
 
 include "../../include/header.php";
 
