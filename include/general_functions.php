@@ -2214,27 +2214,25 @@ function error_alert($error, $back = true, $code = 403)
 
     ?>
     <script type='text/javascript'>
-       document.addEventListener("DOMContentLoaded",function () {
-            if(typeof ModalClose === 'function')
-                    {
-                    ModalClose();
-                    }
-            if (typeof styledalert === 'function')
+        if(typeof ModalClose === 'function')
                 {
-                styledalert('<?php echo escape($lang["error"]) ?>', '<?php echo escape($error) ?>');
+                ModalClose();
                 }
-            else
-                {
-                alert('<?php echo escape($error) ?>');
-                }            
+        if (typeof styledalert === 'function')
+            {
+            styledalert('<?php echo escape($lang["error"]) ?>', '<?php echo escape($error) ?>');
+            }
+        else
+            {
+            alert('<?php echo escape($error) ?>');
+            }
+        <?php
+        if ($back)
+            {
+            ?>
+            window.setTimeout(function(){history.go(-1);},2000);
             <?php
-            if ($back)
-                {
-                ?>
-                window.setTimeout(function(){history.go(-1);},2000);
-                <?php
-                }?>
-            });
+            }?>
         </script>
     <?php
     if($back)
