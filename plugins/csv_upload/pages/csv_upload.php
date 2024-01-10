@@ -655,8 +655,9 @@ switch($csvstep)
         set_time_limit(0);
         $meta=meta_get_map();
         $messages=array();
-        $prelog_file = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . md5($csv_set_options["csvchecksum"]) . $scramble_key) . ".log";
-        $prelog_url = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"]) . ".log&filename=csv_upload_" . date("Ymd-H:i",time());
+        $log_time = date("Ymd-H:i:s",time());
+        $prelog_file = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . md5($csv_set_options["csvchecksum"] . $log_time) . $scramble_key) . ".log";
+        $prelog_url = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"] . $log_time) . ".log&filename=csv_upload_" . $log_time;
         $csv_set_options["log_file"] = $prelog_file;
         $valid_csv = csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options);
         if($offline_limit)
@@ -760,8 +761,9 @@ switch($csvstep)
             $messages=array();
             // Processing immediately. Ensure connection does not get dropped
             set_time_limit(0);
-            $log_file = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . md5($csv_set_options["csvchecksum"]) . $scramble_key) . ".log";
-            $log_url = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"]) . ".log&filename=csv_upload_" . date("Ymd-H:i",time());
+            $log_time = date("Ymd-H:i:s",time());
+            $log_file = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . md5($csv_set_options["csvchecksum"] . $log_time) . $scramble_key) . ".log";
+            $log_url = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"] . $log_time) . ".log&filename=csv_upload_" . $log_time;
             $csv_set_options["log_file"] = $log_file;
             csv_upload_process($csvfile,$meta,$resource_types,$messages,$csv_set_options,0,true);
             }

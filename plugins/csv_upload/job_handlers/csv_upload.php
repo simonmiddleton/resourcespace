@@ -33,9 +33,10 @@ foreach($restypearr as $restype)
     {
     $resource_types[$restype["ref"]] = $restype;
     }
-    
-$logfile = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . md5($csv_set_options["csvchecksum"]) . $scramble_key) . ".log";
-$logurl = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"]) . ".log&filename=csv_upload_" . date("Ymd-H:i",time());
+
+$log_time = date("Ymd-H:i:s",time());
+$logfile = get_temp_dir(false,'user_downloads') . "/" . $userref . "_" . md5($username . md5($csv_set_options["csvchecksum"] . $log_time) . $scramble_key) . ".log";
+$logurl = $baseurl . "/pages/download.php?userfile=" . $userref . "_" . md5($csv_set_options["csvchecksum"] . $log_time) . ".log&filename=csv_upload_" . $log_time;
 $csv_set_options["log_file"] = $logfile;
 $csv_process_steps = [
     'validate' => ['max_error_count' => 100, 'processcsv' => false],
