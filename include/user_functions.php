@@ -3454,9 +3454,8 @@ function generate_temp_download_key(int $user, int $resource, string $size): str
         . ":" .  time()
         . ":" . hash_hmac("sha256", "user_pass_mac", $user_data['password']);
 
-    return rsEncrypt(
-        $data,
-        hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key'])
+    return base64_encode(
+        rsEncrypt($data, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']))
     );
     }
 
@@ -3484,7 +3483,7 @@ function validate_temp_download_key(int $ref, string $keystring, string $size, i
         $expiry_time_limit = $expire_seconds;
         }
 
-    $keydata = rsDecrypt($keystring, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
+    $keydata = rsDecrypt(base64_decode($keystring), hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
     if($keydata != false)
         {
         $download_key_parts = explode(":", $keydata);
