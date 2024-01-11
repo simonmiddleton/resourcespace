@@ -12,17 +12,22 @@ $disable_tabs = true;
 $system_tabs = get_tab_name_options();
 $tabs_fields_assoc = [];
 
+// Do not show related resources in tabs for the pushed metadata
+$show_tab_resources = !(isset($GLOBALS["showing_pushed_metadata"]) && $GLOBALS["showing_pushed_metadata"]);
 $configured_resource_type_tabs = [];
-if(isset($related_type_show_with_data) && !empty($related_type_show_with_data) && ($related_type_upload_link || count(get_related_resources($ref)) > 0))
+if($show_tab_resources)
     {
-    $configured_resource_type_tabs = ps_array(
-        "SELECT DISTINCT t.ref AS `value`
-            FROM resource_type AS rt
-        INNER JOIN tab AS t ON t.ref = rt.tab
-            WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ") AND rt.ref <> ?;",
-        array_merge(ps_param_fill($related_type_show_with_data, 'i'), ['i', $resource['resource_type']]),
-        'schema'
-    );
+    if(isset($related_type_show_with_data) && !empty($related_type_show_with_data) && ($related_type_upload_link || count(get_related_resources($ref)) > 0))
+        {
+        $configured_resource_type_tabs = ps_array(
+            "SELECT DISTINCT t.ref AS `value`
+                FROM resource_type AS rt
+            INNER JOIN tab AS t ON t.ref = rt.tab
+                WHERE rt.ref IN(" . ps_param_insert(count($related_type_show_with_data)) . ") AND rt.ref <> ?;",
+            array_merge(ps_param_fill($related_type_show_with_data, 'i'), ['i', $resource['resource_type']]),
+            'schema'
+        );
+        }
     }
 
 // Clean the tabs by removing the ones that would end up being empty
@@ -276,8 +281,13 @@ if(empty($fields_tab_names))
                 }
             }
         }
+    // Close TabbedPanel - it is now opened before the $fields_tab_names loop even if no real tabs exist
+    ?>
+    </div>
+    </div> <!-- END of TabbedPanel -->
+    <?php
     }
-?><?php hook("extrafields2");?>
+hook("extrafields2");?>
 <div class="clearerleft"></div>
 <?php if(!isset($related_type_show_with_data)) { echo $extra; } ?>
 <div class="clearerleft"></div>
