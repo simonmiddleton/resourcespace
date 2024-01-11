@@ -646,7 +646,7 @@ if ($processupload)
             // For upload_then_edit mode ONLY, set the resource type based on the extension. User
             // can later change this at the edit stage
             // IMPORTANT: Change resource type only if user has access to it
-            if($upload_then_edit && !$resource_type_force_selection) 
+            if($upload_then_edit && !$resource_type_force_selection && !$upload_here)
                 {
                 $resource_type_from_extension = get_resource_type_from_extension(
                     pathinfo($upfilepath, PATHINFO_EXTENSION),

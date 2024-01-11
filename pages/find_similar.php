@@ -39,11 +39,11 @@ if (getval("countonly","")!="")
 	<html>
 	<script language="Javascript">
 	<?php if ($count>0) {# $count--; 	?>
-	parent.document.getElementById("<?php echo $context ?>dosearch").value="<?php echo $lang["view"]?> <?php echo number_format($count)?> <?php echo ($count==1)?$lang["similarresource"]:$lang["similarresources"]?>";
-	parent.document.getElementById("<?php echo $context ?>dosearch").disabled=false;
+	parent.document.getElementById("<?php echo escape($context) ?>dosearch").value="<?php echo escape($lang["view"]) ?> <?php echo number_format($count)?> <?php echo ($count==1)? escape($lang["similarresource"]):escape($lang["similarresources"])?>";
+	parent.document.getElementById("<?php echo escape($context) ?>dosearch").disabled=false;
 	<?php } else { ?>
-	parent.document.getElementById("<?php echo $context ?>dosearch").disabled=true;
-	parent.document.getElementById("<?php echo $context ?>dosearch").value="<?php echo $lang["nosimilarresources"]?>";
+	parent.document.getElementById("<?php echo escape($context) ?>dosearch").disabled=true;
+	parent.document.getElementById("<?php echo escape($context) ?>dosearch").value="<?php echo escape($lang["nosimilarresources"]) ?>";
 	<?php } ?>
 	</script>
 	</html>
