@@ -5041,7 +5041,7 @@ function delete_alternative_file($resource,$ref)
             unlink($path);
         }
 
-        hook('delete alternative_jpg_extra', '', array($path));
+        hook('delete_alternative_jpg_extra', '', array($path));
 
         // in some cases, a mp3 original is generated for non-mp3 files like WAVs. Delete if it exists.
         $path=get_resource_path($resource, true,'', true, 'mp3', -1, 1, false, "", $ref);
