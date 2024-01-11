@@ -96,16 +96,6 @@ parameters:
 			path: include/render_functions.php
 
 		-
-			message: "#^Call to static method compare\\(\\) on an unknown class Diff\\.$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
-			message: "#^Call to static method toString\\(\\) on an unknown class Diff\\.$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$access_key$#"
 			count: 1
 			path: include/resource_functions.php
@@ -181,16 +171,6 @@ parameters:
 			path: pages/tools/staticsync.php
 
 		-
-			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"
-			count: 1
-			path: pages/upload_batch.php
-
-		-
-			message: "#^Instantiated class TusPhp\\\\Tus\\\\Server not found\\.$#"
-			count: 1
-			path: pages/upload_batch.php
-
-		-
 			message: "#^Undefined variable\\: \\$original_download_name$#"
 			count: 1
 			path: plugins/adobe_link/hooks/view.php
@@ -214,11 +194,6 @@ parameters:
 			message: "#^Undefined variable\\: \\$resource$#"
 			count: 1
 			path: plugins/flickr_theme_publish/inc/flickr_functions.php
-
-		-
-			message: "#^Call to static method set\\(\\) on an unknown class TusPhp\\\\Config\\.$#"
-			count: 1
-			path: plugins/vimeo_publish/include/vimeo_publish_functions.php
 
 		-
 			message: "#^Caught class Google_ServiceException not found\\.$#"
