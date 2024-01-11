@@ -6,10 +6,6 @@ parameters:
 			path: include/collections_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$search_title$#"
-			count: 1
-			path: include/collections_functions.php
-		-
 			message: "#^Undefined variable\\: \\$share_collection$#"
 			count: 2
 			path: include/collections_functions.php
@@ -45,19 +41,10 @@ parameters:
 			path: include/database_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$attachments$#"
-			count: 1
-			path: include/general_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$confirm_page_change$#"
 			count: 2
 			path: include/general_functions.php
 
-		-
-			message: "#^Undefined variable\\: \\$images$#"
-			count: 1
-			path: include/general_functions.php
 		-
 			message: "#^Undefined variable\\: \\$lang$#"
 			count: 1
@@ -180,11 +167,6 @@ parameters:
 
 		-
 			message: "#^Undefined variable\\: \\$lang$#"
-			count: 2
-			path: include/user_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$lang$#"
 			count: 1
 			path: pages/setup.php
 
@@ -212,11 +194,6 @@ parameters:
 			message: "#^Undefined variable\\: \\$original_download_name$#"
 			count: 1
 			path: plugins/adobe_link/hooks/view.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$notes\\.$#"
-			count: 1
-			path: plugins/annotate/include/annotate_functions.php
 
 		-
 			message: "#^Undefined variable\\: \\$_MIME_TYPES$#"
