@@ -8828,6 +8828,10 @@ function get_resource_table_joins(){
         $view_title_field,
         $date_field)
     );
+    if(isset($GLOBALS["related_pushed_order_by"]) && is_int_loose($GLOBALS["related_pushed_order_by"]))
+        {
+        $joins[] = $GLOBALS["related_pushed_order_by"];
+        }
     $additional_joins=hook("additionaljoins");
     if ($additional_joins) $joins=array_merge($joins,$additional_joins);
     $joins=array_unique($joins);
