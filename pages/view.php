@@ -1869,8 +1869,8 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
     $fields_all     = isset($all_field_data[$ref]) ? $all_field_data[$ref] : get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
     $access         = get_resource_access($resource);
     ?>
-    <div class="RecordBox">
-        <div class="RecordPanel">
+    <div class="RecordBox PushedRecordBox">
+        <div class="RecordPanel PushedRecordPanel">
             <div class="backtoresults">&gt;<a href="view.php?ref=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["view"]) ?></a>
         </div>
         <div class="Title"><?php echo i18n_get_translated($resource["resource_type_name"]) . " : " . $resource["field" . $view_title_field] ?></div>
