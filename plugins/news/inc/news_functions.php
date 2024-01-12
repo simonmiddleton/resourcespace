@@ -90,4 +90,3 @@ function update_news($ref,$date,$title,$body)
 	# Updates the news item with reference $ref
 	ps_query("update news set title= ?, body= ?, date= ? where ref= ?", ['s', $title, 's', $body, 's', $date, 'i', $ref]);
 	}
-?>

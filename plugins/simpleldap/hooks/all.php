@@ -235,4 +235,4 @@ function HookSimpleldapAllExternalauth($uname, $pword){
 
 }
 		
-?>
+

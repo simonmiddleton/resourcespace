@@ -14,4 +14,3 @@ function HookDiscount_codePurchase_callbackPayment_complete ()
 	# Insert used discount code row
 	ps_query("INSERT INTO discount_code_used (code, user) VALUES (?, ?)", array("s", $code, "i", $user));
 	}
-?>

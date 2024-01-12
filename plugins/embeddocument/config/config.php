@@ -1,1 +1,3 @@
-<?php $embeddocument_resourcetype='2'; ?>
+<?php
+
+$embeddocument_resourcetype = '2';

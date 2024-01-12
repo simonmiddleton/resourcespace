@@ -22,4 +22,4 @@ function HookTrack_field_historyViewValue_mod_after_highlight($field,$value){
 	}
 
 }
-?>
+

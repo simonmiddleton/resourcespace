@@ -136,4 +136,4 @@ function AddArticle($title, $link, $description, $optional = '')
     }
   }
 }
-?>
+

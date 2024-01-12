@@ -60,4 +60,3 @@ if ($result != $expected_output )
 
 return true;
 
-?>

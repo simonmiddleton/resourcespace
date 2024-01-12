@@ -49,4 +49,3 @@ $ldapauth['memFieldType'] = 0;
 
 
 
-?>

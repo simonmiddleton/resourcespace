@@ -22,4 +22,4 @@ include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, null, $page_heading);
 include '../../../include/footer.php';
 
-?>
+

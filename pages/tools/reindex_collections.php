@@ -23,4 +23,4 @@ for ($n=0;$n<count($collections);$n++)
 
 		echo "Done $ref (" . ($n+1) . "/" . count($collections) . ") - $words words<br />\n";
 	}
-?>
+

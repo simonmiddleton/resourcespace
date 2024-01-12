@@ -61,4 +61,4 @@ foreach ($topurge as $ref){
 
 echo "\n\nComplete. $purgecount resources purged.\n\n";
 
-?>
+
