@@ -111,11 +111,6 @@ parameters:
 			path: include/resource_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$lastmodified$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$share_collection$#"
 			count: 3
 			path: include/resource_functions.php
