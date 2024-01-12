@@ -38,7 +38,7 @@ function runFitsForFile($file_path)
     if(trim($return) != "")
         {
         return new SimpleXMLElement($return);
-        };
+        }
     return false;
     }
 

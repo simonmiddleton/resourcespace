@@ -668,7 +668,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     {
                     $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
                     continue;
-                    };
+                    }
 
                 debug("save_resource_data(): Current nodes for resource " . $ref . ": " . implode(",",$current_field_nodes));
 
@@ -902,7 +902,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
                         continue;
-                        };
+                        }
 
                     $new_checksums[$fields[$n]['ref']] = md5($val);
                     $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
@@ -936,7 +936,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
                         continue;
-                        };
+                        }
 
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
                     $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
@@ -959,7 +959,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
                         continue;
-                        };
+                        }
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
                     $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
@@ -7181,7 +7181,7 @@ function get_last_resource_edit_array($resources = array())
         }
 
     $chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
-    foreach($chunks as $chunk);
+    foreach($chunks as $chunk)
         {
         $rows  = ps_query(
             "SELECT r.ref, r.modified 

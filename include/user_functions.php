@@ -1580,7 +1580,7 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
             # Search for corresponding $lang indices.
             $default_group = false;
             $langindices = array_keys($lang, $translated_groupname);
-            if (count($langindices)>0);
+            if (count($langindices)>0)
                 { 
                 foreach ($langindices as $langindex)
                     {

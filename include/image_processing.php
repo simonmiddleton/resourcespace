@@ -403,7 +403,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $exif_fields = array_column(get_exiftool_fields($resource['resource_type']), 'ref');
                 $oldval = get_data_by_field($ref, $view_title_field);
                 
-                if(strpos($oldval, $merged_filename) == FALSE && in_array($view_title_field, $exif_fields)); 
+                if(strpos($oldval, $merged_filename) == FALSE && in_array($view_title_field, $exif_fields))
                     {
                     switch (strtolower($merge_filename_with_title_option)) 
                         {
@@ -2737,7 +2737,7 @@ function AltImageRotate($src_img, $angle) {
             }
             break;
         default: $rotate = $src_img;
-    };
+    }
     return $rotate;
 }
 
@@ -3247,7 +3247,7 @@ function extract_icc($infile, $ref='') {
 
    if ( preg_match("/no color profile is available/",$cmdout) || !file_exists($outfile) ||filesize_unlimited($outfile) == 0){
    // the icc profile extraction failed. So delete file.
-   if (file_exists($outfile)){ unlink ($outfile); };
+   if (file_exists($outfile)){ unlink ($outfile); }
    return false;
    }
 

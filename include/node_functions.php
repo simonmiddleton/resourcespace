@@ -2188,7 +2188,7 @@ function get_cattree_node_strings($nodesordered, $strings_are_paths=true) {
 function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource, $children) {
     return array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name, 
                 'parent' => $parent, 'order_by' => $order_by, 'resource' => $resource, 'children' => $children);
-};
+}
   
 
 /**

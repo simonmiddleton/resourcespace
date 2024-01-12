@@ -78,7 +78,7 @@ function match_values( $arraya , $arrayb )
  */
 function test_generate_random_ID(int $size): string {
     return bin2hex(random_bytes($size));
-};
+}
 
 
 $mysql_db = "rs_test_db";

@@ -448,7 +448,7 @@ switch($csvstep)
                 <div class="Question">
                     <label for="csv_update_col"><?php echo $lang["csv_upload_update_existing_collection"] ?></label>
                     <input id="csv_update_col" name="csv_update_col" type=hidden value="<?php echo $csv_set_options["csv_update_col"]; ?>">
-                    <input type="checkbox" name="csv_update_col_select" onchange="if(this.checked) { jQuery('#csv_update_col_id_select').show(); jQuery('#csv_update_col').val('1');} else { jQuery('#csv_update_col_id_select').hide(); jQuery('#csv_update_col').val('0'); }" <?php if($csv_set_options["csv_update_col"]){echo " checked"; }; ?>>	
+                    <input type="checkbox" name="csv_update_col_select" onchange="if(this.checked) { jQuery('#csv_update_col_id_select').show(); jQuery('#csv_update_col').val('1');} else { jQuery('#csv_update_col_id_select').hide(); jQuery('#csv_update_col').val('0'); }" <?php if($csv_set_options["csv_update_col"]){echo " checked"; } ?>>	
                     
                     <div class="clearerleft"> </div>
                     

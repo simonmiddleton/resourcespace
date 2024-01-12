@@ -113,7 +113,7 @@ if ($ldapauth['enable'])
 	$ldapConf['adusesingledomain'] = $ldapauth['adusesingledomain'];
 	
 	$objLDAP = new ldapAuth($ldapConf);
-	if ($ldap_debug) { $objLDAP->ldap_debug = true; };
+	if ($ldap_debug) { $objLDAP->ldap_debug = true; }
 	
 	if ($objLDAP->connect())
 	{

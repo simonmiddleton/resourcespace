@@ -408,7 +408,7 @@ final class IIIFRequest {
                 {
                 $this->getResourceFromPosition($this->request["typeid"]);
 
-                $this->response = $this->generateCanvas($this->request["typeid"]);;
+                $this->response = $this->generateCanvas($this->request["typeid"]);
                 $this->validrequest = true;
                 }
             elseif($this->request["type"] == "annotationpage")

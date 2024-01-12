@@ -78,7 +78,7 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 		}
 		
 		$objLdapAuth = new ldapAuth($ldapConf);	
-		if ($ldap_debug) { $objLdapAuth->ldap_debug = true; };
+		if ($ldap_debug) { $objLdapAuth->ldap_debug = true; }
 		
 		// connect to the ldap
 		if ($objLdapAuth->connect())

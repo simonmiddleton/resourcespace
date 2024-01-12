@@ -129,7 +129,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     if($y == "")
         {
         return "-";
-        };
+        }
 
     $month_part = substr($date, $bce_offset + 5, 2);
     if(!is_numeric($month_part))

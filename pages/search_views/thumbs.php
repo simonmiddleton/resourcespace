@@ -53,11 +53,11 @@ if (!hook("renderresultthumb"))
         { 
         $thumbs_displayed_fields_height += $resource_id_height;
         $br = '<br />';
-        };
+        }
     if($thumbs_display_archive_state)
         { 
         $thumbs_displayed_fields_height += $workflow_state_height;
-        }; 
+        }
 
     $class = array();
     if($use_selection_collection && in_array($ref, $selection_collection_resources))

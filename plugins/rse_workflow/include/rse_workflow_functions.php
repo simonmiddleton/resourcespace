@@ -15,7 +15,7 @@ if (!function_exists("rse_workflow_get_actions")){
 if (!function_exists("rse_workflow_save_action")){
     function rse_workflow_save_action($ref="")
             {
-            if($ref==""){$ref=getval("ref","");};
+            if($ref==""){$ref=getval("ref","");}
             $fromstate=getval("actionfrom","");
             $tostate=getval("actionto","");
             $name=getval("actionname","");

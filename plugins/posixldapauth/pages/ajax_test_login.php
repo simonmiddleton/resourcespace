@@ -68,7 +68,7 @@ if (isset($_GET['lang_test_failed']))
 //global $lang;
 
 $objLDAP = new ldapAuth($ldapConf);
-if ($ldap_debug) { $objLDAP->ldap_debug = true; };
+if ($ldap_debug) { $objLDAP->ldap_debug = true; }
 
 $returnMessage = array();
 $errmsg = false;
