@@ -4299,7 +4299,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             }
         elseif($field["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR && $value != strip_tags($value))
             {
-            $value = strip_tags_and_attributes($value, ['a']);
+            $value = strip_tags_and_attributes($value, ['a'], ['href', 'target']);
             }
 
 		$modified_value = hook('display_field_modified_value', '', array($field));
