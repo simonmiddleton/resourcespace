@@ -1142,8 +1142,21 @@ jQuery(document).ready(function () {
                         },
                         <?php echo generate_csrf_js_object('create_collection'); ?>
                     );
+
+                    function delay_upload_start(milliseconds)
+                        {
+                        let start = Date.now()
+                        const finish = start + milliseconds;
+                        while (start < finish)
+                            {
+                            start = Date.now();
+                            }
+                        }
+                    // Delay for api collection creation before starting file uploads.
+                    delay_upload_start(1000);
                     }
                 }
+
              // Encode the file names
             const updatedFiles = {}
             Object.keys(files).forEach(fileid => {
