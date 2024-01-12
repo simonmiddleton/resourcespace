@@ -3155,3 +3155,5 @@ $lang["email_rate_limit_inactive"] = "The e-mail limit has been lifted and e-mai
 $lang["severity-level_0"]                   = "Critical";
 $lang["severity-level_1"]                   = "Warning";
 $lang["severity-level_2"]                   = "Notice";
+$lang["pull_images"]                        = "Pull images";
+$lang["pull_images_text"]                   = "Use images from related resources if none available";

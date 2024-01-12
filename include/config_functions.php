@@ -1533,7 +1533,6 @@ function create_resource_type($name)
 function save_resource_type(int $ref, array $savedata)
     {
     global $execution_lockout;
-
     $restypes = get_resource_types("",true,false,true);
     $restype_refs = array_column($restypes,"ref");
     if(!checkperm('a') || !in_array($ref,$restype_refs))
@@ -1547,7 +1546,7 @@ function save_resource_type(int $ref, array $savedata)
     foreach($savedata as $savecol=>$saveval)
         {
         debug("checking for column " . $savecol . " in " . json_encode(($restype_refs),true));
-        if($saveval == $restypes[$ref][$savecol])
+        if($saveval === $restypes[$ref][$savecol])
             {
             // Unchanged value, skip
             continue;
@@ -1564,6 +1563,7 @@ function save_resource_type(int $ref, array $savedata)
             case "push_metadata":
             case "tab":
             case "colour":
+            case "pull_images":
                 $setcolumns[] = $savecol;
                 $setparams[] = "i";
                 $setparams[] = $saveval;

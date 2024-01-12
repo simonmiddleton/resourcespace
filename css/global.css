@@ -590,7 +590,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
     display : block;
     position: absolute;
     width   : auto;
-    border-top: 1px solid #474747;
+    border-top: 1px solid #666666;
     }
 .RecordPanel {padding: 15px 20px 15px 20px;}
 .backtoresults {float: right;margin: 0.4em 0 0 0.25em;}
