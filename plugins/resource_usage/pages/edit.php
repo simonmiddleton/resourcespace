@@ -17,7 +17,7 @@ $usage_data = array(
 );
 
 # Fetch usage data
-if ($ref !== 0)
+if ($ref > 0)
     {
     $usage_data = ps_query("SELECT * FROM resource_usage WHERE ref = ?", array("i",$ref));
 
