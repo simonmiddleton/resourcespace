@@ -46,9 +46,14 @@ function get_resource_path(
     global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
     $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
     $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate,
-    $baseurl, $k, $get_resource_path_extra_download_query_string_params;
+    $baseurl, $k, $get_resource_path_extra_download_query_string_params, $resource_path_pull_cache;
 
-    # returns the correct path to resource $ref of size $size ($size==empty string is original resource)
+    if(isset($resource_path_pull_cache[$ref]) && strtolower((string)$extension) == 'jpg')
+        {
+        $ref = $resource_path_pull_cache[$ref];
+        }
+
+    # Returns the correct path to resource $ref of size $size ($size==empty string is original resource)
     # If one or more of the folders do not exist, and $generate=true, then they are generated
     if(!preg_match('/^[a-zA-Z0-9]+$/',(string) $extension))
         {
@@ -104,7 +109,7 @@ function get_resource_path(
             $get_resource_path_extra_download_query_string_params = array();
             }
 
-        return generateURL(
+        $url = generateURL(
             "{$baseurl}/pages/download.php",
             array(
                 'ref'         => $ref,
@@ -118,6 +123,8 @@ function get_resource_path(
                 'v'           => $refresh_key,
             ),
             $get_resource_path_extra_download_query_string_params);
+
+        return $url;
         }
 
     if ($size=="")
@@ -155,7 +162,8 @@ function get_resource_path(
             else
                 {
                 global $baseurl_short, $k;
-                return $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}";
+                $url =  $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}";
+                return  $url;
                 }
             }
         }
@@ -371,6 +379,25 @@ function get_resource_path(
             $migrating_scrambled = true;
             }
         }
+
+    if(!file_exists($file)
+        && !$getfilepath
+        && $alternative==-1
+        // && $size != ""
+        && !$generate
+        && $GLOBALS["hide_real_filepath"]
+        && !defined("GETRESOURCEPATHNORECURSE" . $ref)
+        )
+        {
+        $resdata = get_resource_data($ref);
+        $pullresource = related_resource_pull($resdata);
+        if($pullresource !== false)
+            {
+            define("GETRESOURCEPATHNORECURSE" . $ref,true);
+            $file = get_resource_path($pullresource["ref"],$getfilepath,$size,false,$extension,$scramble,$page,$watermarked,$file_modified,-1,$includemodified,true);
+            }
+        }
+
     return $file;
     }
 
@@ -9412,4 +9439,120 @@ function skip_scr_size_preview(int $access) : bool
         }
 
     return false;
+    }
+
+
+/**
+ * Get a related resource to pull images from
+ *
+ * @param array $resource   Array of resource data from do_search()
+ * 
+ * @return array|bool $resdata    Array of alternative resource data to use, or false if not configured or no resource image found
+ * 
+ */
+function related_resource_pull(array $resource)
+    {
+    global $resource_path_pull_cache;
+    $related = false;
+
+    if(isset($resource_path_pull_cache[$resource["ref"]]))
+        {
+        return $resource_path_pull_cache[$resource["ref"]];
+        }
+
+    $restypes = get_resource_types('',false,true,true);
+    $pull_images = array_column($restypes,"pull_images","ref")[$resource['resource_type']];
+    if((int)$pull_images === 1 )
+        {
+        $relatedpull = do_search("!related" . $resource["ref"]);
+        debug("Looking for a related resource with image");
+        if(is_array($relatedpull))
+            {
+            foreach($relatedpull as $related)
+                {
+                if($related["has_image"] === 1)
+                    {
+                    $relatedpath = get_resource_path($related["ref"],true,"pre",false,"jpg",true,1,false);
+                    if(file_exists($relatedpath))
+                        {
+                        $resource_path_pull_cache[$resource["ref"]] = $related;
+                        break;
+                        }
+                    }
+                }
+            }
+        }
+    return $related;
+    }
+
+/**
+ * Get URL for thumbnail preview of current resource
+ *
+ * @param array $resource   Array of resource data from do_search()
+ * @param string $display   Current search display mode
+ * @param bool $watermark   Watermark required? 
+ * 
+ * @return array            Array with 'url', 'width' and 'height' elements 
+ * 
+ */
+function get_resource_thumbnail(array $resource,string $display,bool $watermark)
+    {
+    $thumbnail["url"] = "";
+    if(isset($resource['thm_url']))
+        {
+        // Option to override thumbnail image in search results, e.g. by plugin using process_search_results hook
+        $thumbnail["url"] = $resource['thm_url'];
+        }
+    else
+        {
+        if((int)$resource['has_image']===0)
+            {
+            // If configured, try and use a preview from a related resource
+            $pullresource = related_resource_pull($resource);
+            if($pullresource !== false)
+                {
+                $resource = $pullresource;
+                }
+            }
+
+        // Work out image to use.
+        $thumbnail["url"] = "";
+        if($watermark !== '')
+            {
+            $use_watermark=check_use_watermark();
+            }
+        else
+            {
+            $use_watermark=false;   
+            }
+
+        $usesize = $display == "xlthumbs" ? ($GLOBALS['retina_mode'] ? "scr" : "pre") : ($GLOBALS['retina_mode'] ? "pre" : "thm");
+        $arrsizes = array_unique([$usesize,"pre","thm"]);
+
+        foreach($arrsizes as $size)
+            {
+            // Check that file actually exists
+            $thm_file = get_resource_path(
+                $resource['ref'],
+                true,
+                $size,
+                false,
+                $resource['preview_extension'],
+                true,
+                1,
+                $use_watermark,
+                $resource['file_modified']
+            );
+
+            if(file_exists($thm_file))
+                {
+                $thumbnail["url"]=get_resource_path($resource['ref'],false,$usesize ,false,$resource['preview_extension'],true,1,$use_watermark,$resource['file_modified']);
+                break;
+                }
+            }
+        }
+
+    $thumbnail["height"] = $resource["thumb_height"];
+    $thumbnail["width"] = $resource["thumb_width"];
+    return $thumbnail;
     }

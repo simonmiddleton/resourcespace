@@ -248,9 +248,9 @@ else
         }
     
     // Establish nonwatermarked path for use when returning snapshot frames
-    $nowmpath = get_resource_path($ref, true, $size, false, $ext, -1, $page, false, '', $alternative);
+    $nowmpath = get_resource_path($ref, true, $size, false, $ext, -1, $page, false, '', $alternative,true,true);
 
-    $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
+    $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative,true,true);
     $download_extra = hook('download_resource_extra', '', array($path));
 
     // Process depending on whether snapshot frame is to be returned
