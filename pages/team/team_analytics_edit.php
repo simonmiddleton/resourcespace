@@ -93,21 +93,25 @@ if ($print)
     {
     ?><html><head>
         <style>
-        .pie {transform: scale(0.45);transform-origin: 0 0;}
-        .line {transform: scale(0.35);transform-origin: 0 0;}
         a,.CollapsibleSectionHead {display:none;}
         </style>
 
     <link href="<?php echo $baseurl ?>/css/global.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
     <link href="<?php echo $baseurl ?>/css/colour.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
 
-    <script src="<?php echo $baseurl ?>/lib/js/jquery-3.6.0.min.js?css_reload_key=152"></script>
-    <script src="<?php echo $baseurl ?>/lib/js/jquery-ui-1.12.1.min.js?css_reload_key=152" type="text/javascript"></script>
-    <!-- FLOT for graphs -->
-    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.js"></script> 
-    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.time.js"></script> 
-    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.pie.js"></script>
-    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.tooltip.min.js"></script>
+    <!-- Load jQuery and jQueryUI -->
+    <script src="<?php echo $baseurl . $jquery_path; ?>?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+    <script src="<?php echo $baseurl. $jquery_ui_path?>?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
+    <script src="<?php echo $baseurl; ?>/lib/js/jquery.layout.js?css_reload_key=<?php echo $css_reload_key?>"></script>
+    <link type="text/css" href="<?php echo $baseurl?>/css/smoothness/jquery-ui.min.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
+    <script src="<?php echo $baseurl?>/lib/js/jquery.ui.touch-punch.min.js"></script>
+    <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.tshift.min.js"></script>
+    <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery-periodical-updater.js"></script>
+
+    <!-- Chart.js for graphs -->
+    <script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/chartjs-4-4-0.js"></script>
+    <script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/date-fns.js"></script>
+    <script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/chartjs-adapter-date-fns.js"></script>
 
     </head><body onload="window.setTimeout('window.print();',3000);"><?php
     }
@@ -256,13 +260,6 @@ for ($n=0;$n<count($list);$n++)
 </tr></table>
 <div class="clearerleft"> </div>
 </div>
-
-
-
-
-
-
-
 
 
 <div class="QuestionSubmit">
