@@ -3895,15 +3895,22 @@ function copy_resource($from,$resource_type=-1,$origin='')
     # copy joined fields to the resource column
     $joins=get_resource_table_joins();
 
-    // Filter the joined fields so we only have the ones relevant to this resource type
-    $query = 'SELECT rtf.ref AS value
-                    FROM resource_type_field AS rtf
-            INNER JOIN resource AS r ON (rtf.global=0 AND rtf.ref NOT IN (SELECT resource_type_field FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type=r.resource_type))
-                    WHERE r.ref = ?;';
-
-    $irrelevant_rtype_fields = ps_array($query,["i",$from]);
-    $irrelevant_rtype_fields = array_values(array_intersect($joins, $irrelevant_rtype_fields));
-    $filtered_joins = array_values(array_diff($joins, $irrelevant_rtype_fields));
+    # Filtering data join columns to only copy those relevant to the new resource.
+    if ($resource_type == -1)
+        {
+        # New resource will be of the same resource type so get fields valid for the source resource type
+        $query = 'SELECT rtf.ref AS value FROM resource_type_field AS rtf
+            INNER JOIN resource AS r ON (rtf.global = 1 OR rtf.ref IN (SELECT resource_type_field FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type = r.resource_type))
+            WHERE r.ref = ?;';
+        $relevant_rtype_fields = ps_array($query, ["i", $from]);
+        }
+    else
+        {
+        # New resource has a different resource type so only copy fields relevant to the new resource type
+        $query = 'SELECT ref AS value FROM resource_type_field WHERE global = 1 OR ref IN (SELECT resource_type_field FROM resource_type_field_resource_type WHERE resource_type = ?);';
+        $relevant_rtype_fields = ps_array($query, ["i", $resource_type]);
+        }
+    $filtered_joins = array_values(array_intersect($joins, $relevant_rtype_fields));
     $joins_sql = empty($filtered_joins) ? '' : ',' . implode(',', array_map(prefix_value('field'), $filtered_joins));
 
     $archive=ps_value("SELECT archive value FROM resource WHERE ref = ?",["i",$from],0);
@@ -3942,7 +3949,7 @@ function copy_resource($from,$resource_type=-1,$origin='')
         }
 
     # Copy Metadata
-    copyAllDataToResource($from,$to);
+    copy_resource_nodes($from, $to);
 
     # Copy relationships
     copyRelatedResources($from, $to);
