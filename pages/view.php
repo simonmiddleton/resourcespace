@@ -1860,8 +1860,11 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
     $reset_access       = $access;
     $reset_fields_all   = $fields_all;
 
-    $ref            = $resource["ref"];
-
+    $ref                = $resource["ref"];
+    if(!array_key_exists('hit_count', $resource))
+        {
+        $resource['hit_count'] = $resource['score'];
+        }
     // Ensure that this pushed resource honours any resource type overrides
     resource_type_config_override($resource["resource_type"]);
 
