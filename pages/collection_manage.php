@@ -477,7 +477,7 @@ function delete_collections()
             });
 
         // Load collection actions when dropdown is clicked
-        jQuery('.collectionactions').on("focus", function(e){
+        jQuery('.collectionactions').on("mouseover", function(e){
             var el = jQuery(this);
             if(el.attr('data-actions-populating') != '0')
                 {
