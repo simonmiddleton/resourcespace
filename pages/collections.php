@@ -393,7 +393,7 @@ else { ?>
 							}
 						else
 							{
-							RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id);
+							RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id, <?php echo htmlspecialchars(generate_csrf_js_object('remove_resource_from_collection'), ENT_NOQUOTES); ?>);
 							// Remove resource from search results if this is not a collection search	
 							if(is_special_search('!collection', 11))
 								{
