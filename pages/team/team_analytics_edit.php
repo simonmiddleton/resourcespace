@@ -283,8 +283,25 @@ for ($n=0;$n<count($types);$n++)
 	{
         if (($activity_type=="" || $activity_type==$types[$n]) && ($collection=="" || in_array($types[$n],$resource_activity_types)))
             {
-            $graph_params="report=" . $ref . "&n=" . $n . "&activity_type=" . urlencode($types[$n]) . "&groups=" . urlencode(join(",",$groups)) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . $period . "&period_days=" . $period_days . "&collection=" . $collection  . "&resource_type=" . $resource_type . "&external=" . $external;
-            
+            $graph_params=array(
+                "report"        => $ref,
+                "n"             => $n,
+                "activity_type" => $types[$n],
+                "groups"        => join(",",$groups),
+                "from-y"        => $from_y,
+                "from-m"        => $from_m,
+                "from-d"        => $from_d,
+                "to-y"          => $to_y,
+                "to-m"          => $to_m,
+                "to-d"          => $to_d,
+                "period"        => $period,
+                "period_days"   => $period_days,
+                "collection"    => $collection,
+                "resource_type" => $resource_type,
+                "external"      => $external,
+                "print"         => $print??0
+            );
+
             # Show the object breakdown for certain types only.
             $show_breakdown=false;
             $show_pieresourcetype=false;
@@ -346,11 +363,11 @@ for ($n=0;$n<count($types);$n++)
             <?php if ($activity_type=="") { ?></div><hr style="clear:both;" /><div style="page-break-inside: avoid;"><?php } ?>
             <script>
             jQuery(function () {
-            <?php if ($show_breakdown) { ?>jQuery('#pie<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=pie&<?php echo $graph_params ?>");<?php } ?>
-            <?php if ($show_piegroup) { ?>jQuery('#piegroup<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=piegroup&<?php echo $graph_params ?>");<?php } ?>
-            <?php if ($show_pieresourcetype) { ?>jQuery('#pieresourcetype<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=pieresourcetype&<?php echo $graph_params ?>");<?php } ?>
-            <?php if ($show_line) { ?>jQuery('#line<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=line&<?php echo $graph_params ?>");<?php } ?>
-            <?php if ($show_summary) { ?>jQuery('#summary<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=summary&<?php echo $graph_params ?>");<?php } ?>
+            <?php if ($show_breakdown)          { ?>jQuery('#pie<?php echo $n ?>').load("<?php echo generateURL($baseurl_short . "pages/team/ajax/graph.php",$graph_params,["type"=>"pie"])?>");<?php } ?>
+            <?php if ($show_piegroup)           { ?>jQuery('#piegroup<?php echo $n ?>').load("<?php echo generateURL($baseurl_short . "pages/team/ajax/graph.php",$graph_params,["type"=>"piegroup"])?>");<?php } ?>
+            <?php if ($show_pieresourcetype)    { ?>jQuery('#pieresourcetype<?php echo $n ?>').load("<?php echo generateURL($baseurl_short . "pages/team/ajax/graph.php",$graph_params,["type"=>"pieresourcetype"])?>");<?php } ?>
+            <?php if ($show_line)               { ?>jQuery('#line<?php echo $n ?>').load("<?php echo  generateURL($baseurl_short . "pages/team/ajax/graph.php",$graph_params,["type"=>"line"])?>");<?php } ?>
+            <?php if ($show_summary)            { ?>jQuery('#summary<?php echo $n ?>').load("<?php echo generateURL($baseurl_short . "pages/team/ajax/graph.php",$graph_params,["type"=>"summary"]) ?>");<?php } ?>
             
             });
             </script>

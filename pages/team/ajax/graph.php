@@ -48,6 +48,7 @@ $external=getval("external","0");
 $n=getval("n","");
 $type=getval("type","");
 $from_dash=getval("from_dash","")!="";
+$print=(bool) getval("print",false);
 
 # Rendering a tile? Set "n" or the graph sequence number to the tile number, so all graph IDs are unique on the dash page.
 $tile=getval("tile","");
@@ -156,6 +157,8 @@ else
         <div
         <?php if ($from_dash) { ?>
         style="width:220px;height:105px;"
+        <?php } else if ($print) { ?>
+        style="width:50%;height:40%;"
         <?php } else { ?>
         style="width:100%;height:80%;"
         <?php } ?>>
