@@ -913,9 +913,9 @@ function do_search(
                                         $nodatafieldinfo = get_resource_type_field($nodatafield);
                                         if ($nodatafieldinfo["global"] != 1)
                                             {
-                                            $nodatarestypes = explode(",",$nodatafieldinfo["resource_types"]);
+                                            $nodatarestypes = explode(",",(string)$nodatafieldinfo["resource_types"]);
                                             $restypesql->sql = " AND r[union_index].resource_type IN (" . ps_param_insert(count($nodatarestypes)) . ") ";
-                                            $restypesql->parameters = ps_param_fill("i",$nodatarestypes);
+                                            $restypesql->parameters = ps_param_fill($nodatarestypes,"i");
                                             }
 
                                         // Check that nodes are empty

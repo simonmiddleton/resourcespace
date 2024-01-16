@@ -362,7 +362,7 @@ if ($search_titles)
             {
             $fieldref=intval(trim(substr($search,8)));        
             $fieldinfo=get_resource_type_field($fieldref);
-            $fdisplayname = trim($fieldinfo["title"]) != "" ? $fieldinfo["title"] : $fieldinfo["ref"];
+            $fdisplayname = trim((string)$fieldinfo["title"]) != "" ? $fieldinfo["title"] : $fieldref;
             $title_string = $lang["search_title_hasdata"] . " " . $fdisplayname;
             }
         elseif (substr($search,0,6)=="!empty")
