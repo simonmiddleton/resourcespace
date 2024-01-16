@@ -207,7 +207,7 @@ class NorwegianStemmer
     */
     private static function count($string) {
         // split into characters (not bytes, like explode() or str_split() would)
-        $characters = preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY);
+        $characters = preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY)??[];
         // count what's left
         return count($characters);
     }
