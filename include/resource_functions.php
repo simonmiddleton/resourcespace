@@ -349,6 +349,12 @@ function get_resource_path(
             $scramble_key_saved = $scramble_key;
             $scramble_key = isset($scramble_key_old) ? $scramble_key_old : "";
             }
+
+        if ($icc)
+            {
+            $extension = 'icc';
+            }
+
         $oldfilepath=get_resource_path($ref,true,$size,false,$extension,true,$page,false,'',$alternative);
         if (file_exists($oldfilepath))
             {
