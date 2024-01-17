@@ -16,7 +16,8 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "phpstan/phpstan": "^1.8"
+        "phpstan/phpstan": "^1.8",
+        "rector/rector": "^0.18.13"
     },
     "suggest": {
         "ext-apcu": "Needed to improve upload performance."
