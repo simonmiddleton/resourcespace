@@ -5570,7 +5570,7 @@ function get_edit_access($resource, int $status=-999, array &$resourcedata = [])
         $resourcedata=get_resource_data($resource);
         }
 
-    if($resourcedata === [])
+    if($resourcedata === [] || $resourcedata === false)
         {
         return false;
         }
