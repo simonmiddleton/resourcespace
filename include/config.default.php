@@ -1609,9 +1609,6 @@ $upload_chunk_size='5mb';
 # This is the maximum number of concurrent file uploads allowed. Set to 1 to force single thread.
 $upload_concurrent_limit=5;
 
-# This is the maximum number of files that can be added to the uploader. Unset or set to 'null' to remove limit.
-# $upload_max_number_files='null';
-
 # Resource deletion state
 # When resources are deleted, the variable below can be set to move the resources into an alternative state instead of removing the resource and its files from the system entirely.
 # 
