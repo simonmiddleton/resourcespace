@@ -47,7 +47,8 @@ return static function (RectorConfig $rectorConfig): void {
 
     /*
     IMPORTANT: Rector will change tabs to spaces. Unfortunately this will mean that many times it will change
-    indentation in places where you might not want to.
+    indentation in places where you might not want to. This should be a "problem" until we update the entire code base
+    to only use spaces. Until then just be aware of it :).
 
     Common refactoring examples:
 
