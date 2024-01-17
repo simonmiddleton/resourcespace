@@ -5546,25 +5546,31 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
     }
 
 
-function get_edit_access($resource, $status=-999, &$resourcedata="")
+/**
+ * Check if current user has edit access to a resource. Checks the edit permissions (e0, e-1 etc.) and also the group
+ * edit filter which filters edit access based on resource metadata.
+ *
+ * @param int $resource Resource ID
+ * @param int $status Archive status ID. Use -999 to use the one from resourcedata argument
+ * @param array $resourcedata
+ */
+function get_edit_access($resource, int $status=-999, array &$resourcedata = []): bool
     {
-    # For the provided resource and metadata, does the current user have edit access to this resource?
-    # Checks the edit permissions (e0, e-1 etc.) and also the group edit filter which filters edit access based on resource metadata.
-
     global $userref,$usergroup, $usereditfilter,$edit_access_for_contributor,
     $userpermissions, $lang, $baseurl, $userdata, $edit_only_own_contributions;
-    $plugincustomeditaccess = hook('customediteaccess','',array($resource,$status,$resourcedata));
 
+    $plugincustomeditaccess = hook('customediteaccess','',array($resource,$status,$resourcedata));
     if($plugincustomeditaccess)
         {
         return ('false' === $plugincustomeditaccess ? false : true);
         }
 
-    if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data may not be passed
+    if ($resourcedata === [])
         {
         $resourcedata=get_resource_data($resource);
         }
-    if(!is_array($resourcedata) || count($resourcedata) == 0)
+
+    if($resourcedata === [])
         {
         return false;
         }
