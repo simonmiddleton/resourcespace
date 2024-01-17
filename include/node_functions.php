@@ -2071,6 +2071,18 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
 
     $nodeentries = ps_query($sql_query, array("i", (int) $resource, "i", (int) $treefield));
 
+    # Any node that doesn't have a parent in the nodes supplied becomes a parent in this context as its real parent might not have been selected.
+    # For example, when viewing options set when $category_tree_add_parents=false
+    # Needed for sorting below to ensure the container "ROOT" has child items to return.
+    $selected_nodes = array_column($nodeentries, 'ref');
+    for ($n=0; $n < count($nodeentries); $n++)
+        {
+        if ($nodeentries[$n]['parent'] !== 0 && !in_array($nodeentries[$n]['parent'], $selected_nodes))
+            {
+            $nodeentries[$n]['parent'] = 0;
+            }
+        }
+
     # Category trees have no container root, so create one to carry all top level category tree nodes which don't have a parent
     $rootnode = cattree_node_creator(0, 0, "ROOT", null, 0, null, array());
 
