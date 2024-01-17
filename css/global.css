@@ -48,7 +48,7 @@ input.defaultbutton {position: absolute; left: -100%; width: 0; height: 0;}
 /* Form elements */
 input, textarea, button, select, .RecordPanel .RecordDownloadSpace .DownloadDBlend a, .sp-replacer, .toolbox{
     font-size: 0.875rem;
-    border-radius: 6px;
+    border-radius: 5px;
 }
 
 input[type="text"], input[type="password"], input[type="url"],input[type="email"], input[type="number"], input[type="date"], textarea, select {
@@ -1073,7 +1073,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     background-color: white;
     padding: 4px 4px 4px 5px;
     box-shadow: 0 1px 3px 1px rgb(0 0 0 / 10%);
-    border-radius: 6px;
+    border-radius: 5px;
     }
 
 .icondisplay .fa-map {
@@ -1090,7 +1090,7 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     background-color: white;
     padding: 6px 8px 5px 8px;
     vertical-align: middle;
-    border-radius: 6px;
+    border-radius: 5px;
     box-shadow: 0 1px 3px 1px rgb(0 0 0 / 10%);
 }
 
@@ -2171,7 +2171,7 @@ a.BrowseRefresh{
 
 .UploadButton a
     {
-    border-radius:6px;
+    border-radius:5px;
     padding:0 10px 0 10px;
     opacity:0.9 !important;
     margin-right:10px;
@@ -2459,7 +2459,7 @@ input[type="text"]#iconpicker-input {
 
 /* jQuery tagEditor */
 .SearchSpace .tag-editor{
-    border-radius: 6px;
+    border-radius: 5px;
     min-height: 28px;
     width: 250px;
     display: inline-block;
@@ -2562,4 +2562,9 @@ input[type="text"]#iconpicker-input {
 
 #LoginError {
     outline: none;
+}
+
+/* Leaflet Maps */
+.leaflet-touch .leaflet-control-geocoder-icon {
+    min-width: unset; 
 }
