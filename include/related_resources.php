@@ -171,5 +171,4 @@ if ($enable_related_resources)
 			$relatedtypes_shown[]=$rtype;
 			}
 		}
-	}
-?>
+    }
