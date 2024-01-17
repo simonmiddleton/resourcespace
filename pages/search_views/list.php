@@ -116,17 +116,17 @@ if (!hook("replacelistitem"))
                                 <a href="<?php echo $url?>" 
                                     onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);"
                                 >
-                            <?php 
+<?php 
                             } //end link conditional
                         echo highlightkeywords(htmlspecialchars(tidy_trim(TidyList(i18n_get_translated($value)),$results_title_trim)),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
                         if ($x==0)
                             { // add link to first item only ?>
                             </a>
-                            <?php 
+<?php 
                             } //end link conditional ?>
                         </div>
                     </td>
-                <?php } 
+<?php } 
                 } //end replace list title
             }
         

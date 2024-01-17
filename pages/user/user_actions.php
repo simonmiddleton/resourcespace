@@ -175,7 +175,7 @@ else
 			$actionviewlink = '';  
 			$actionaddlink = '';  
 			}
-		  
+
 		  if($all_actions[$n]["type"]=="resourcereview")
 			{
 			$actioneditlink = $baseurl_short . "pages/edit.php";
@@ -190,10 +190,10 @@ else
 			{
 			$actioneditlink = $baseurl_short  . "pages/team/team_user_edit.php";
 			} 
-		  
+
 		  $linkparams["ref"] = $all_actions[$n]["ref"];
 		  $linkparams["disablenav"]="true";
-		  
+
 		  $editlink=($actioneditlink=='')?'':generateURL($actioneditlink,$linkparams);
 		  $viewlink=($actionviewlink=='')?'':generateURL($actionviewlink,$linkparams);
 		  ?>

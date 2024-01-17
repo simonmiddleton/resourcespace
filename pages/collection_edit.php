@@ -307,7 +307,7 @@ else
             ?>
             <input type="hidden" id="public" name="public" value="0">
             <div class="Fixed"><?php echo $lang["mycollection_notpublic"] ?></div>
-            <?php 
+<?php 
             } 
         else 
             { ?>
@@ -338,13 +338,13 @@ else
             <div class="Question">
                 <label for="users"><?php echo $lang["attachedusers"]?></label>
                 <?php $userstring=htmlspecialchars($collection["users"]);
-                
+
                 if($userstring!='')
                     {
                     $userstring.=",";
                     }
                 $userstring.=htmlspecialchars($collection["groups"]);
-                    
+
                 include "../include/user_select.php"; ?>
                 <div class="clearerleft"> </div>
             </div>
@@ -443,14 +443,14 @@ else
         <input type="checkbox" id="allow_changes" name="allow_changes" <?php if ($collection["allow_changes"]==1) { ?>checked<?php } ?>>
         <div class="clearerleft"> </div>
         </div>
-        <?php 
+<?php 
         } 
     else 
         { 
         # allow changes by default
         ?>
         <input type=hidden id="allow_changes" name="allow_changes" value="checked">
-        <?php 
+<?php 
         }
     
     hook('additionalfields2');

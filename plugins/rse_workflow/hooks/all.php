@@ -37,7 +37,7 @@ function HookRse_workflowAllInitialise()
 function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $existingstates)
     {
     global  $baseurl, $lang, $userref, $wfstates, $applicationname, $use_phpmailer;
-    
+
     $rse_workflow_from="";
     if (isset($wfstates[$archive]["rse_workflow_email_from"]) && $wfstates[$archive]["rse_workflow_email_from"]!="")
         {
@@ -50,13 +50,13 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
     // The field 'more_workflow_action' is a hidden field which carries input text on the action specific form
     // A textarea named 'more_for_workflow_action' is effectively bound to and copies any keyboard input to 'more_workflow_action' 
     $message = $lang["rse_workflow_state_notify_message"] . $lang["status" . $archive];
-    
+
     if(getval('more_workflow_action_' . $workflowaction,'') != '')
         {
         $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
         $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
         }
-        
+
     if(count($resource) > 200)
         {
         // Too many resources to link to directly
@@ -66,11 +66,11 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
         {
         $linkurl = $baseurl . "/pages/search.php?search=!list" . implode(":",$resource);
         }
-    
-  
-    
+
+
+
     $maillinkurl = (($use_phpmailer) ? "<a href=\"$linkurl\">$linkurl</a>" : $linkurl); // Convert to anchor link if using html mails
-      
+
     /***** NOTIFY GROUP SUPPORT IS NOW HANDLED BY ACTIONS *****/    
 
     /*****NOTIFY CONTRIBUTOR*****/
@@ -89,7 +89,7 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
                     debug("No valid contributor listed for resource " . $resourceref);
                     continue;
                     }
-                    
+
                 if(!isset($cntrb_arr[$contuser["ref"]]))
                     {
                     // This contributor needs to be added to the array of users to notify

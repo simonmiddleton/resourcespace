@@ -118,7 +118,7 @@ if (getval("save","")!="")
             $account_email_exists_notify = user_email_exists($user_email);
             $success=email_user_request();
             }
-			
+
         if ($success!==true)
             {
             $error=$success;
@@ -142,13 +142,13 @@ include "../include/login_background.php";
 <?php
 if (!hook("replacemain"))
     { /* BEGIN hook Replacemain */ 
-    
+
     $name = getval("name","");
     $name = is_array($name) ? "" : htmlspecialchars($name);
-    
+
     $email = getval("email","");
     $email = is_array($email) ? "" : htmlspecialchars($email);
-    
+
     ?>
     <div class="Question">
     <label for="name"><?php echo $lang["yourname"]?> <sup>*</sup></label>
@@ -168,19 +168,19 @@ if (!hook("replacemain"))
 if (isset($custom_registration_fields))
 	{
 	$custom=explode(",",$custom_registration_fields);
-	
+
 	if (isset($custom_registration_required))
 	{
 		$required=explode(",",$custom_registration_required);
 		}
-	
+
 	for ($n=0;$n<count($custom);$n++)
 		{
 		$type=1;
-		
+
 		# Support different question types for the custom fields.
 		if (isset($custom_registration_types[$custom[$n]])) {$type=$custom_registration_types[$custom[$n]];}
-		
+
 		if ($type==4)
 			{
 			# HTML type - just output the HTML.
@@ -203,16 +203,16 @@ if (isset($custom_registration_fields))
 				}
 				 ?>
 			</label>
-			
+
 			<?php if ($type==1) {  # Normal text box
 			?>
 			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
-			<?php } ?>
+<?php } ?>
 
 			<?php if ($type==2) { # Large text box 
 			?>
 			<textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
-			<?php } ?>
+<?php } ?>
 
 			<?php if ($type==3) { # Drop down box
 			?>
@@ -225,8 +225,8 @@ if (isset($custom_registration_fields))
 				}
 			?>
 			</select>
-			<?php } ?>
-			
+<?php } ?>
+
 			<?php if ($type==5) { # checkbox
 				?>
 				<div class="stdwidth">			
@@ -258,14 +258,14 @@ if (isset($custom_registration_fields))
 									<label for="<?php echo $option_field_name; ?>" class="InnerLabel"><?php echo $option_label;?></label>												
 								</td>
 							</tr>
-							<?php					
+<?php					
 							}			
 						?>				
 						</tbody>
 					</table>
 				</div>			
-			<?php } ?>
-			
+<?php } ?>
+
 			<div class="clearerleft"> </div>
 			</div>
 			<?php
@@ -299,8 +299,8 @@ $groups=get_registration_selectable_usergroups();
 <?php if (!hook("replaceuserrequestcomment")){ 
     $userrequestcomment = getval("userrequestcomment","");
     $userrequestcomment = is_array($userrequestcomment) ? "" : htmlspecialchars($userrequestcomment);
-    
-    
+
+
     ?>
 <div class="Question">
 <label for="userrequestcomment"><?php echo $lang["userrequestcomment"]?></label>

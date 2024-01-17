@@ -37,7 +37,7 @@ $urlparams= array(
 # Fetch resource data.
 $resource=get_resource_data($ref);
 
-$editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
+$editaccess = get_edit_access($ref,$resource["archive"],$resource);
 
 # Not allowed to edit this resource?
 if (!($editaccess || checkperm('A')) && $ref>0) {exit ("Permission denied.");}

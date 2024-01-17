@@ -118,7 +118,7 @@ if(!hook('customchkboxes', '', array($field)))
                     ?>
                 </table>
             </fieldset>
-            <?php
+<?php
             }
         }
     else
@@ -172,7 +172,7 @@ if(!hook('customchkboxes', '', array($field)))
             </tr>
         </table>
 		</fieldset>
-        <?php
+<?php
         }
 
         if($field['field_constraint'])

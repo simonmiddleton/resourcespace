@@ -114,7 +114,7 @@ function HookResourceConnectSearchReplacesearchresults()
 
 function HookResourceConnectSearchThumblistextras()
     {
-        
+
     global $baseurl_short, $baseurl, $result, $n, $lang, $url, $usercollection;
 
     $resource = $result[$n]; // record for resource
@@ -131,14 +131,14 @@ function HookResourceConnectSearchThumblistextras()
     ?>
     <!-- Full screen preview -->
     <a class="fa fa-expand" id="previewlinkcollection<?php echo $ref ?>" href="<?php echo $pre_url ?>" title="Full screen preview" data-title="<?php echo $lang["fullscreenpreview"] ?>" data-lightbox="lightboxcollection"></a>
-    
+
     <!-- Share resource -->
     <a class="fa fa-share-alt"
                                 href="<?php echo $baseurl_short?>plugins/resourceconnect/pages/resource_share.php?url=<?php echo urlencode($url) ?>"  
                                 onClick="return CentralSpaceLoad(this,true);"  
                                 title="<?php echo $lang["share-resource"]?>"
                         ></a>
-    
+
     <!-- Remove from collection -->
     <a class="removeFromCollection fa fa-minus-circle" href="<?php echo generateURL("$baseurl/pages/collections.php", ['resourceconnect_remove_ref' => $ref, 'resourceconnect_remove' => $source_ref, 'resourceconnect_remove_col' => $usercollection, 'nc' => time()]); ?>" onClick="return CollectionDivLoad(this,false);"> </a>
     <?php
@@ -158,7 +158,7 @@ function HookResourceConnectSearchThumblistextras()
     );
     ?>
     <a class="addToCollection fa fa-plus-circle DisplayNone" href="<?php echo $add_url; ?>" onClick="return CollectionDivLoad(this,false);"> </a>
-    <?php
+<?php
     } 
 
 

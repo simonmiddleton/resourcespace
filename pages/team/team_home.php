@@ -54,7 +54,7 @@ include "../../include/header.php";
 				  # If a modal, open in the same modal
 				  ?>
 				  onClick="return ModalLoad(this,true,true,'right');"
-				  <?php
+<?php
 				  }
 				else
 				  { ?>
@@ -144,7 +144,7 @@ include "../../include/header.php";
 	  # If a modal, open in the same modal
 	  ?>
 	  onClick="return ModalLoad(this,true,true,'right');"
-	  <?php
+<?php
 	  }
 	else
 	  { ?>

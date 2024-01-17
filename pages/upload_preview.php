@@ -10,7 +10,7 @@ $status="";
 $error = false;
 $resource=get_resource_data($ref);
 # Not allowed to edit this resource?
-if (!get_edit_access($ref,$resource["archive"],false,$resource)) {
+if (!get_edit_access($ref,$resource["archive"],$resource)) {
 		$error=$lang['error-permissiondenied'];
 		error_alert($error);
 		exit();

@@ -218,7 +218,7 @@ function HookAdobe_linkViewOrigdownloadlink()
 	# Adds a special link to the download button.
 	global $userref, $usergroup, $lang, $ref, $access, $resource, $k, $size_info, $baseurl, $urlparams, $path, $direct_download, $alternative;
 	global $adobe_link_document_extensions, $adobe_link_asset_extensions, $lang, $edit_access, $adb_ext;
-    
+
     if(!isset($_SERVER['HTTP_USER_AGENT']) 
         ||
         !in_array($_SERVER['HTTP_USER_AGENT'],array("InDesign-DAMConnect","PhotoShop-DAMConnect"))
@@ -237,10 +237,10 @@ function HookAdobe_linkViewOrigdownloadlink()
     $extraparams["ext"] = $resource['file_extension'];
     $adb_tmp_key = adobe_link_genkey($userref,$ref);
     $extraparams["adb_key"] = $userref . ":" . $adb_tmp_key;
-    
+
     $path = generateURL($baseurl . "/pages/download.php", $urlparams, $extraparams);
     $adobefilename = get_download_filename($ref,'',-1,$resource['file_extension']);    
-    
+
     $adobelink = "<a href='" . $path . "'";
     $adobelink .= "data-attribute-path='" . htmlspecialchars($path) . "' ";
     $adobelink .= "data-attribute-ref='" . htmlspecialchars($ref) . "' ";

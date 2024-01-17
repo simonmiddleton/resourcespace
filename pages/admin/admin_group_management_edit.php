@@ -48,7 +48,7 @@ if (!ps_value("select ref as value from usergroup where ref = ?", array("i", $re
 $dependant_user_count = ps_value("select count(*) as value from user where usergroup = ?", array("i", $ref), 0);
 $dependant_groups = ps_value("select count(*) as value from usergroup where parent = ?", array("i", $ref), 0);
 $has_dependants = $dependant_user_count + $dependant_groups > 0;
-    
+
 if (!$has_dependants && getval("deleteme",false) && enforcePostRequest(false))
     {
     ps_query("delete from usergroup where ref = ?", array("i", $ref));
@@ -60,7 +60,7 @@ if (!$has_dependants && getval("deleteme",false) && enforcePostRequest(false))
     redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");       // return to the user group management page
     exit;
     }
-    
+
 if (getval("save",false) && enforcePostRequest(false))
     {
     $error = false;
@@ -70,7 +70,7 @@ if (getval("save",false) && enforcePostRequest(false))
         {
         $logo_extension = ps_value("select group_specific_logo as value from usergroup where ref = ?", array("i", $ref), false);
         $logo_filename="{$logo_dir}/group{$ref}.{$logo_extension}";
-        
+
         if ($logo_extension && file_exists($logo_filename) && unlink($logo_filename))
             {
             $logo_extension="";
@@ -92,7 +92,7 @@ if (getval("save",false) && enforcePostRequest(false))
             $logo_pathinfo=pathinfo($_FILES['grouplogo']['name']);
             $logo_extension=$logo_pathinfo['extension'];
             $logo_filename="{$logo_dir}/group{$ref}.{$logo_extension}";
-            
+
             if(!in_array(strtolower($logo_extension), array("jpg","jpeg","gif","svg","png")))
                 {
                 //trigger_error('You are not allowed to upload "' . $logo_extension . '" files to the system!');
@@ -185,7 +185,7 @@ $record = get_usergroup($ref);
 function dump_config_default_options()
     {   
     global $baseurl_short;
-    
+
     $config_defaults = file_get_contents("../../include/config.default.php");
     $config_defaults = preg_replace("/\<\?php|\?\>/s","",$config_defaults);     // remove php open and close tags
     $config_defaults = preg_replace("/\/\*.*?\*\//s","",$config_defaults);      // remove multi-line comments
@@ -198,14 +198,14 @@ function dump_config_default_options()
         $matches[1][$i]=preg_replace('/\n\s+/s',"\n",$matches[1][$i]);      // white space at the start of new lines
         $matches[1][$i]=preg_replace('/^\s*/s','',$matches[1][$i]);     // leading white space
         $matches[1][$i]=preg_replace('/\s*$/s','',$matches[1][$i]);     // trailing white space
-        
+
         $matches[3][$i]=preg_replace('/\#|(\/\/)/s','',$matches[3][$i]);        // hashes and double forward slash comments
         $matches[3][$i]=preg_replace('/\n\s+/s',"\n",$matches[3][$i]);      // white space at the start of new lines
         $matches[3][$i]=preg_replace('/^\s*/s','',$matches[3][$i]);     // leading white space
         $matches[3][$i]=preg_replace('/\s*$/s','',$matches[3][$i]);     // trailing white space     
-        
+
         if ($matches[1][$i]!="" && $matches[3][$i]!="") $matches[1][$i].="\n";
-            
+
         echo "<option value=\"" . nl2br (htmlentities ($matches[1][$i] . $matches[3][$i],ENT_COMPAT)) . "\">" . htmlentities ($matches[2][$i]) . "</option>\n";
         }
     }
@@ -259,7 +259,7 @@ include "../../include/header.php";
 
         <div class="Question">
             <label for="permissions"><?php echo $lang["property-permissions"]; ?></label>
-            
+
             <?php if ($record['parent'])
                 {?>
                 <label><?php echo $lang["property-permissions_inherit"] ?></label>
@@ -267,7 +267,7 @@ include "../../include/header.php";
                 <div class="clearerleft"></div> 
                 <?php
                 }?>
-                
+
             <div id ="permissions_area" <?php if(in_array("permissions",$record['inherit'])){echo "style=display:none;";} ?>>
                 <input type="button" class="stdwidth<?php echo $record['parent'] ? ' label-spacer' : ''; ?>" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo escape($ref . $url_params); ?>',true);" value="<?php echo htmlspecialchars($lang["launchpermissionsmanager"]); ?>"></input>                       
                 <div class="clearerleft"></div>
@@ -288,7 +288,7 @@ include "../../include/header.php";
                     if ($group['ref']==$ref) continue;      // not allowed to be the parent of itself
 
                     ?>              <option <?php if ($record['parent']==$group['ref']) { ?> selected="true" <?php } ?>value="<?php echo $group['ref']; ?>"><?php echo $group['name']; ?></option>
-                <?php
+<?php
                 }
                 ?>          </select>
             <div class="clearerleft"></div>
@@ -374,7 +374,7 @@ include "../../include/header.php";
         <?php if (!$execution_lockout) { ?>
         <div class="Question">
             <label for="config_options"><?php echo $lang["property-override_config_options"]; ?></label>
-            
+
             <?php if ($record['parent'])
                 {?>
                 <label><?php echo $lang["property-config_inherit"] ?></label>
@@ -382,7 +382,7 @@ include "../../include/header.php";
                 <div class="clearerleft"></div> 
                 <?php
                 }?>
-            
+
             <div id ="config_area" <?php if(in_array("config_options",$record['inherit'])){echo "style=display:none;";} ?>> 
                 <textarea name="config_options" id="configOptionsBox" class="stdwidth<?php echo $record['parent'] ? ' label-spacer' : ''; ?>" rows="12" cols="50" ><?php echo $record['config_options']; ?></textarea>
                 <div class="clearerleft"></div>
@@ -468,7 +468,7 @@ include "../../include/header.php";
                 <div class="FormHelpInner"><?php echo $lang["fieldhelp-tick_to_delete_group"]; ?></div>
             </div>
         </div>
-        
+
         <div class="QuestionSubmit">
             <input name="buttonsave" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;">
         </div>

@@ -381,7 +381,7 @@ if($userref != $ref)
     <div class="Question"><label><?php echo htmlspecialchars($lang["new_message"])?></label>
     <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["message"])?></a></div>
     <div class="clearerleft"> </div></div>
-    <?php
+<?php
     }  
 hook("usertool")?>
 

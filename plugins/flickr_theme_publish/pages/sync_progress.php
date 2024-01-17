@@ -50,7 +50,7 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 				<img id="image_processing" src="">
 			</div>
 		</div>
-	<?php }
+<?php }
 			
 	if($flickr_nice_progress_metadata){?>
 		<div id="image_metadata">

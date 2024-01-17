@@ -1,14 +1,14 @@
 <?php
 
 if ((substr($search,0,11)!="!collection")&&($collections!="")&&is_array($collections)) {
-	
+
 $shownresults=false;
 for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)));$n++)
 	{
 	$resources=do_search("!collection".$collections[$n]['ref'],"","relevance","",5);	
 	$hook_result=hook("process_search_results","",array("result"=>$resources,"search"=>"!collection".$collections[$n]['ref']));
 	if ($hook_result!==false) {$resources=$hook_result;}
-	
+
 	$pub_url="search.php?search=" . urlencode("!collection" . $collections[$n]["ref"]);
 	if ($display=="thumbs" || $display=="xlthumbs")
 		{
@@ -16,10 +16,10 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
 		?>
 
 		<div class="ResourcePanel">
-	
+
 		<div class="ImageWrapper" style="position: relative;height:150px;">
 		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo htmlspecialchars(str_replace(array("\"","'"),"",i18n_get_collection_name($collections[$n]))) ?>">
-		
+
 		<?php 
 		$images=0;
 		for ($m=0;$m<count($resources) && $images<=4;$m++)
@@ -66,8 +66,8 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
 		<?php hook("searchiconpublic");?>
 		<div class="clearer"></div>
 		</div><!-- End of ResourcePanel -->
-    <?php } 
-    
+<?php } 
+
 	if ($display=="list")
 		{
 		?>
@@ -90,7 +90,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
 		for ($x=0;$x<count($df)-1;$x++){
 			?><td>-</td><?php
 			}
-				
+
 		?>
 		<?php if ($id_column){?><td><?php echo $collections[$n]['ref']?></td><?php } ?>
 		<?php if ($resource_type_column){?><td><?php echo $collection_tag?></td><?php } ?>
@@ -104,7 +104,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
 		<?php } ?>
 		</tr>
 	<?php } ?>		
-	
+
 <?php } 
 
 if (($display=="thumbs" || $display=="xlthumbs") && $shownresults)

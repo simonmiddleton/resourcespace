@@ -248,7 +248,7 @@ if ($request !== false)
                     # Option is out of range, but show it anyway.
                     ?>
                     <option value="<?php echo $request["expires"] ?>" selected><?php echo nicedate(date("Y-m-d",strtotime($request["expires"])),false,true)?></option>
-                    <?php
+<?php
                     }
                 ?>
             </select>

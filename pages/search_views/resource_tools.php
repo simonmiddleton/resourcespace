@@ -14,7 +14,7 @@ if (!hook("iconedit") && (checkperm("e" . $result[$n]["archive"]) || ($edit_acce
         </a><?php
     }
 } ?>	
-          
+
 <!-- Collection comment icon -->
 <?php 
 if ($k == "" || $internal_share_access) {
@@ -35,7 +35,7 @@ if ($k == "" || $internal_share_access) {
 }
 hook("largesearchicon");
 ?>
-   
+
 <!-- Preview icon -->
 <?php 
 if (!hook("replacefullscreenpreviewicon")) {
@@ -82,7 +82,7 @@ if (!hook("iconemail")) {
         <?php 
     }
 } ?>
-        
+
 <!-- Remove from collection icon -->
 <?php 
 $basket = $userrequestmode == 2 || $userrequestmode == 3;
@@ -102,7 +102,7 @@ if (!checkperm('b') && ($k == '' || $internal_share_access)) {
     echo remove_from_collection_link($ref, implode(' ', array_merge(['fa'], $col_link_class)), $onclick, $basket, $resource_view_title) . '</a>';
     }
 ?>
-        
+
 <!-- Add to collection icon -->
 <?php
 if (!hook('iconcollect') && $pagename!="collections") {

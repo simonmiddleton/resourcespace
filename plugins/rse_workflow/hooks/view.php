@@ -33,7 +33,7 @@ function HookRse_workflowViewPageevaluation()
 			else
 				{
                 $validstates = explode(',', $workflowaction['statusfrom']);
-                $edit_access = get_edit_access($ref,$resource['archive'], '', $resource);
+                $edit_access = get_edit_access($ref,$resource['archive'], $resource);
     
                 if('' != $k || ($resource["lock_user"] > 0 && $resource["lock_user"] != $userref))
                     {

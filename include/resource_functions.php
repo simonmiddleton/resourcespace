@@ -1007,13 +1007,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         }
                     }
                 }
-                
+
             // Populate empty field with the default if necessary
             if($field_has_default_for_user && strlen((string) $val)==0) {
                 $val=$field_default_value;
                 $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
             }
-        
+
             if( $fields[$n]['required'] == 1
                 && check_display_condition($n, $fields[$n], $fields, false)
                 && (
@@ -1106,7 +1106,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         {
                         $new_node_values[] = $use_node;
                         }
-                    
+
                     // Add to array for logging
                     if (!is_null($use_node))
                         {
@@ -1404,7 +1404,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
     foreach($list as $listresource)
         {
         $resource_data[$listresource]  = get_resource_data($listresource, true);
-        if(!get_edit_access($listresource,$resource_data[$listresource]["archive"], $resource_data[$listresource]))
+        if(!get_edit_access($listresource,$resource_data[$listresource]["archive"]))
             {
             $noeditaccess[] = $listresource;
             }
@@ -1563,7 +1563,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         {
                         continue;
                         }
-            
+
                     $resource_add_nodes = [];
                     $valid_hook_nodes = false;
                     $log_node_names = [];
@@ -1632,7 +1632,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             'from'  => $current_field_nodes,
                             'to'    => $resource_add_nodes,
                             ];
-                            
+
                         if(in_array($fields[$n]['ref'], $joins))
                             { 
                             // Build new value to add to resource table:
@@ -1651,7 +1651,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_params[$ref][]="s";
                             $resource_update_params[$ref][] = truncate_join_field_value(implode($GLOBALS['field_column_string_separator'], $new_nodes_val));
                             }
-                        
+
                         $updated_resources[$ref][$fields[$n]['ref']] = $new_nodes_val; // To pass to hook
                         }
                     }
@@ -1664,7 +1664,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
                     // Work out what all the new nodes for this resource  will be while maintaining their order
                     $new_nodes = array_filter($nodes_by_ref,function($node) use ($nodes_to_add){return in_array($node["ref"],$nodes_to_add);});
-                   
+
                     $log_node_updates[$ref][] = [
                         'from'  => $current_field_nodes,
                         'to'    => $nodes_to_add,
@@ -1838,7 +1838,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                     if(count($added_nodes)>0 || count($removed_nodes)>0)
                         {
                         $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);
-                        
+
                         $log_node_updates[$ref][] = [
                             'from'  => $current_field_nodes,
                             'to'    => $daterangenodes,
@@ -1850,7 +1850,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
                             $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$newval;
                             }
-                        
+
                         $updated_resources[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
                         }
                     }
@@ -2017,7 +2017,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
                 # Possibility to hook in and alter the value - additional mode support
                 $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$existing,$postvals,&$errors));
-               
+
                 if($hookval !== false )
                     {
                     if(!is_string($hookval))
@@ -3083,7 +3083,7 @@ function delete_resource($ref)
                 (
                 checkperm("D")
                 ||
-                !get_edit_access($ref,$resource["archive"], false,$resource)
+                !get_edit_access($ref,$resource["archive"],$resource)
                 ||
                 (isset($userref) && $resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
                 )
@@ -5308,7 +5308,7 @@ function get_resource_access($resource)
             }
         }
 
-	if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],false,$resourcedata) && !$prevent_open_access_on_edit_for_active)
+	if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],$resourcedata) && !$prevent_open_access_on_edit_for_active)
 		{
 		# If access is restricted and user has edit access, grant open access.
 		$access = 0;
@@ -5546,7 +5546,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
     }
 
 
-function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="")
+function get_edit_access($resource, $status=-999, &$resourcedata="")
     {
     # For the provided resource and metadata, does the current user have edit access to this resource?
     # Checks the edit permissions (e0, e-1 etc.) and also the group edit filter which filters edit access based on resource metadata.
@@ -6814,7 +6814,7 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
     # Permission check isn't required if copying data from the user's upload template as with edit then upload mode.
     if ($from != 0 - $userref)
         {
-        if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+        if(!get_edit_access($to,$resourcedata["archive"],$resourcedata))
             {
             return false;
             }
@@ -7357,7 +7357,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
     debug("replace_resource_file(ref=" . $ref . ", file_location=" . $file_location . ", no_exif=" . ($no_exif ? "TRUE" : "FALSE") . " , keep_original=" . ($keep_original ? "TRUE" : "FALSE"));
 
     $resource = get_resource_data($ref);
-    if (!get_edit_access($ref,$resource["archive"],false,$resource)
+    if (!get_edit_access($ref,$resource["archive"],$resource)
         ||
         ($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
         )
@@ -8879,7 +8879,7 @@ function update_resource_lock($ref,$lockaction,$newlockuser=null,$accesschecked 
         {
         $resource_data  = get_resource_data($ref);
         $lockeduser     =  $resource_data["lock_user"];
-        $edit_access    = get_edit_access($ref,$resource_data["archive"],false,$resource_data);
+        $edit_access    = get_edit_access($ref,$resource_data["archive"],$resource_data);
         if(!checkperm("a")
             &&
             $lockeduser != $userref

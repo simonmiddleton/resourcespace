@@ -963,7 +963,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
     // Process an alternative file
     global $staticsync_alternative_file_text, $syncdir, $lang, $staticsync_ingest, $alternative_file_previews,
     $done, $filename_field, $view_title_field, $staticsync_title_includes_path, $staticsync_alt_suffixes, $staticsync_alt_suffix_array;
-	
+
     $shortpath = str_replace($syncdir . '/', '', $alternativefile);
 	if(!isset($done[$shortpath]))
 		{
@@ -973,7 +973,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
             {
             return false;
             }
-        
+
         if(isset($staticsync_alternative_file_text) && strpos($alternativefile,$staticsync_alternative_file_text) !== false)
 		    {
             $altfilenameparts = explode($staticsync_alternative_file_text,$alt_parts['filename']);
@@ -995,7 +995,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
                     }
                 }
             }
-        
+
 		if($ref=="")
 			{
 			// We need to find which resource this alternative file relates to
@@ -1012,19 +1012,19 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
 					}
 				}
 			}
-        
+
         if($ref=="")
             {
             //Primary resource file may have been ingested on a previous run - try to locate it
             $ingested = ps_array("SELECT resource value FROM resource_node LEFT JOIN node n ON n.ref=rn.node WHERE n.resource_type_field = ? AND value LIKE ?",["i",$filename_field,"s",$altbasename . "%"]);
-            
+
             if(count($ingested) < 1)
                 {
                 echo " - No primary resource found for " . $alternativefile . ". Skipping file" . PHP_EOL;
                 debug("staticsync - No primary resource found for " . $alternativefile . ". Skipping file");
                 return false;
                 }
-            
+
             if(count($ingested) == 1)
                 {
                 echo " - Found matching resource: " . $ingested[0] . PHP_EOL;
@@ -1059,9 +1059,9 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
                     }
                 }
             }
-         
+
         echo " - Processing alternative file - '" . $alternativefile . "' for resource #" . $ref . PHP_EOL;
-		
+
 		if($alternative=="")
 			{
             // Create a new alternative file
@@ -1072,7 +1072,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
 
 			$alt["ref"] = add_alternative_file($ref, $alt["name"], $alt["altdescription"], $alternativefile, $alt["extension"], $alt["file_size"]);
             $alternative = $alt["ref"];
-			
+
 			echo " - Created a new alternative file - '" . $alt["ref"] . "' for resource #" . $ref . PHP_EOL;
             debug("Staticsync - Created a new alternative file - '" . $alt["ref"] . "' for resource #" . $ref);
 			$alt["path"] = get_resource_path($ref, true, '', false, $alt["extension"], -1, 1, false, '',  $alt["ref"]);

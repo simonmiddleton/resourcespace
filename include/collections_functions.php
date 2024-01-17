@@ -2768,7 +2768,7 @@ function allow_multi_edit($collection,$collectionid = 0)
         for ($n=0;$n<count($collection);$n++)
             {
             $resource = $collection[$n];
-            if (!get_edit_access($collection[$n]["ref"],$collection[$n]["archive"],false,$collection[$n]))
+            if (!get_edit_access($collection[$n]["ref"],$collection[$n]["archive"],$collection[$n]))
                 {
                 return false;
                 }

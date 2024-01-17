@@ -916,8 +916,8 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                                         styledalert('<?php echo escape($lang["error"]); ?>',response['responseJSON']['message']);
                                                         }
                                                     });
-                                                
-                                                
+
+
                                             },    
                                         "<?php echo escape($lang['action_continue_editing']) ?>": function() { 
                                                 jQuery(this).dialog('close');
@@ -936,7 +936,7 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
                                 });
     });
     </script>
-    <?php
+<?php
     }
 
 # Hook to replace all search results (used by ResourceConnect plugin, allows search mechanism to be entirely replaced)
@@ -1387,7 +1387,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
           ?>
           </div>
         </div>
-        <?php
+<?php
         }
 
     $list_displayed = false;

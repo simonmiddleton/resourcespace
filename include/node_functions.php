@@ -1327,7 +1327,7 @@ function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, 
             return false;
             }
         
-        $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
+        $access = get_edit_access($resourceid,$resourcedata["archive"],$resourcedata);
         if(!$access)
             {return false;}
 
@@ -1389,7 +1389,7 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
         foreach($resources as $resourceid)
             {
             $resourcedata = get_resource_data($resourceid);
-            $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
+            $access = get_edit_access($resourceid,$resourcedata["archive"],$resourcedata);
             if(!$access)
                 {return false;}
             

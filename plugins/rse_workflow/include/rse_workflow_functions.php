@@ -186,7 +186,7 @@ function rse_workflow_validate_action(array $action, array $resource)
     // if action is validated for a list of resources (3k+) that we had to iterate over
     if(!isset($resource["edit_access"]))
         {
-        $edit_access = ($resource["access"] == 0 && get_edit_access($resource["ref"], $resource["archive"], false, $resource));
+        $edit_access = ($resource["access"] == 0 && get_edit_access($resource["ref"], $resource["archive"], $resource));
         }
     else
         {

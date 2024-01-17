@@ -119,7 +119,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 		<td class="DownloadFileSizePicker"><select id="size"><?php
         $sizes = get_all_image_sizes();
         $restrictedsizes = array();
-        
+
 		# Filter out all sizes that are larger than our image size, but not the closest one
 		for ($n = 0; $n < count($sizes); $n++)
 			{
@@ -172,7 +172,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
                 }
             ?><option value="<?php echo $n ?>"><?php echo $name ?></option><?php
             }
-            
+
 		?></select><p id="sizeInfo"></p></td><?php
 		if ($showprice)
 			{
@@ -234,10 +234,10 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     jQuery("a#convertDownload").text("<?php echo $lang["action-request"]?>");
                     return;
                     }
-                
+
                 jQuery("a#convertDownload").text("<?php echo $lang["action-download"]?>");
 
-            
+
 				var profile = jQuery('select#profile').find(":selected").val();
 				if (profile)
 					profile = "&profile=" + profile;
@@ -249,13 +249,13 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     basePage += profile;
                     basePage += "&size=" + sizeInfo[index]["id"];
 
-                
+
                 var terms_download = <?php echo ($terms_download ? "true" : "false"); ?>;
                 if(terms_download)
                     {
                     var terms_url = "<?php echo generateURL("{$baseurl}/pages/terms.php", $urlparams); ?>";
                         terms_url += "&url=" + encodeURIComponent(basePage);
-                    
+
                     jQuery("a#convertDownload").attr("href", terms_url);
                     return;
 					}
@@ -270,7 +270,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
                         jQuery("a#convertDownload").attr("href", usage_url);
                 	return;	
 					}	
-	
+
                 jQuery("a#convertDownload").attr("href", "#");
                 jQuery("a#convertDownload").attr("onclick", "directDownload('" + basePage + "')");
 

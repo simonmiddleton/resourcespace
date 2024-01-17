@@ -254,7 +254,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
         return false;    
         }
     
-    $editaccess = get_edit_access($resource,$resourcedata['archive'],false,$resourcedata);
+    $editaccess = get_edit_access($resource,$resourcedata['archive'],$resourcedata);
     
     if(!is_numeric($field))
         {

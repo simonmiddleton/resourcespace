@@ -3,9 +3,9 @@
 function HookLicensemanagerViewCustompanels()
 	{
 	global $lang,$baseurl_short,$ref,$edit_access,$k;
-	
+
 	if($k!=""){return false;}
-	
+
 	# Check if it's necessary to upgrade the database structure
 	include dirname(__FILE__) . "/../upgrade/upgrade.php";
 
@@ -30,7 +30,7 @@ function HookLicensemanagerViewCustompanels()
         ?>    
     <p><a href="<?php echo $new_license_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS . $lang["new_license"] ?></a></p>	
     <?php } ?>
-   
+
 	<?php if (count($licenses)>0) { ?>
 		<div class="Listview">
 		<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
@@ -45,9 +45,9 @@ function HookLicensemanagerViewCustompanels()
 		<?php if ($edit_access || checkperm("lm")) { ?>
 		<td><div class="ListTools"><?php echo $lang["tools"] ?></div></td>
 		<?php } ?>
-		
+
 		</tr>
-	
+
 		<?php
 		foreach ($licenses as $license)
 			{
@@ -69,26 +69,26 @@ function HookLicensemanagerViewCustompanels()
 			</td>
 			<td><?php echo $license["description"] ?></td>
 			<td><?php echo ($license["expires"]==""?$lang["no_expiry_date"]:nicedate($license["expires"])) ?></td>
-		
+
 			<?php if ($edit_access || checkperm("lm")) { ?>
 			<td><div class="ListTools">
 			<a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=<?php echo $license["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
 			<a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/unlink.php?ref=<?php echo $license["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-unlink"]?></a>
 			</div></td>
 			<?php } ?>
-						
+
 			</tr>
 			<?php
 			}
 		?>
-		
+
 		</table>
 		</div>
 	<?php } ?>
 
-    
+
     </div>
-    
+
     </div>
     <?php
 	return false; # Allow further custom panels

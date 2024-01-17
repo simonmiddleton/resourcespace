@@ -141,11 +141,11 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	$add_internal_access=(getval("grant_internal_access","")!="");
 	$feedback=getval("request_feedback","");	if ($feedback=="") {$feedback=false;} else {$feedback=true;}
 	$list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
-	
+
 	$use_user_email=getval("use_user_email",false);
 	if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
 	if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches email
-	
+
 	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
 
     $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename, "?parent=" . $collection["ref"],$list_recipients,$add_internal_access,$group, $sharepwd);
@@ -218,12 +218,12 @@ else
 		if (!$themeshare) { 
 			echo i18n_get_collection_name($collection);
 		} else { ##  this select copied from collections.php 
-			
+
 			?>		
 			<select name="collection" multiple size="10" class="stdwidth MultiSelect" style="height:100%;" 
 				onchange="document.getElementById('ref').value = getSelected(this); " >
 			<?php
-			
+
 			$list=get_user_collections($userref);
 			$found=false;
 			for ($n=0;$n<count($list);$n++)
@@ -242,7 +242,7 @@ else
 					<?php
 					}
 				}
-			
+
 			?>
 			</select> <?php } ?>
 			</div>
@@ -293,7 +293,7 @@ if(!$internal_share_only)
         );
 	render_share_options($shareoptions);
 	}
-	
+
 	hook("collectionemailafterexternal");
 	?>
 

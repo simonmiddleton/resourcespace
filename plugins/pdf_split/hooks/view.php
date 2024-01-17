@@ -8,7 +8,7 @@ function HookPdf_splitViewAfterresourceactions()
 	?>
 	<li><a href="../plugins/pdf_split/pages/pdf_split.php?ref=<?php echo $ref ?>"><?php echo "<i class='fa fa-scissors'></i>&nbsp;" .$lang["splitpdf"]?></a></li>
 	<?php
-		
+
 	return false; # Allow other plugins to also use this hook.
 	}
 

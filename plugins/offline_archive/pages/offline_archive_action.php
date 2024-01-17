@@ -54,7 +54,7 @@ else
 				$origfilepath=get_resource_path($ref,true,"",false,$extension);
 				$destinationdir=$offline_archive_archivepath . "/" . $archivecode;
 				}
-			
+
 			echo "archive file - copying from :-\n   " . $origfilepath . "\nto\n   " . $destinationdir . "\n";
 			echo "creating " . $destinationdir . " if does not exist\n";
 			$filename=basename($origfilepath);
@@ -70,7 +70,7 @@ else
 				//ok to delete existing file
 				echo "Successfully copied resource id #" . $ref. ". Deleting original file.\n";
 				unlink($origfilepath);
-				
+
 				// Add archive code to resource metadata
 				update_field($ref,$offline_archive_archivefield,$archivecode);
 				ps_query("UPDATE resource SET archive='2' WHERE ref= ?", ['i', $ref]);
@@ -80,16 +80,16 @@ else
 				{
 				// Copy failed - generate warning
 				$archive_errors[]="Failed to copy resource id #" . $ref . ". Failed to copy to destination: " . $destinationdir;
-				
+
 				}
-			
+
 			}
-			
+
 		foreach ($archive_errors as $archive_error)
 			{
 			echo $archive_error;
 			}
-			
+
 		ps_query("UPDATE offline_archive SET archive_status=2 WHERE archive_code= ?", ['s', $archivecode]);
 		} // Finish archive
 	} // End of archive section

@@ -14,6 +14,6 @@ function HookVimeo_publishViewAfterresourceactions()
         <li>
             <a href="<?php echo $baseurl?>/plugins/vimeo_publish/pages/vimeo_api.php?resource=<?php echo $ref; ?>" ><?php echo "<i class='fa fa-share-alt'></i>&nbsp;" . $lang['vimeo_publish_resource_tool_link']; ?></a>
         </li>
-        <?php
+<?php
         }
     }

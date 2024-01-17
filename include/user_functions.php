@@ -3076,7 +3076,7 @@ function get_languages_notify_users(array $languages = array())
             {
             include $lang_file;
             }
-        
+
         $language_strings_all[$language] = $lang; // append $lang array 
         }     
 

@@ -80,7 +80,7 @@ foreach ($delete_collections as $delete)
 
 	    # Get count of collections
 	    $c=get_user_collections($userref);
-	
+
 	    # If the user has just deleted the collection they were using, select a new collection
 	    if ($usercollection==$delete && count($c)>0)
 		    {
@@ -96,7 +96,7 @@ foreach ($delete_collections as $delete)
 		    $usercollection=create_collection ($userref,"Default Collection");
 	    	set_user_collection($userref,$usercollection);
 	    	}
-        
+
 		# To update the page only when all collections have been deleted, remove from the array those already processed.
         $id_col_deleted = array_search($delete,$delete_collections);
 	    if ($id_col_deleted !== false)
@@ -112,7 +112,7 @@ foreach ($delete_collections as $delete)
 		    	'k'                      => getval('k', ''),
 		    	'nc'                     => time()
 		    );
-		
+
 		    echo json_encode($response);
 		    exit();
 		    }
@@ -131,17 +131,17 @@ if ($remove!="" && enforcePostRequest(false))
 	{
 	# Remove someone else's collection from your My Collections
 	remove_collection($userref,$remove);
-	
+
 	# Get count of collections
 	$c=get_user_collections($userref);
-	
+
 	# If the user has just removed the collection they were using, select a new collection
 	if ($usercollection==$remove && count($c)>0) {
 		# Select the first collection in the dropdown box.
 		$usercollection=$c[0]["ref"];
 		set_user_collection($userref,$usercollection);
 	}
-	
+
 	refresh_collection_frame();
 	}
 
@@ -152,7 +152,7 @@ if ($add!="" && enforcePostRequest(false))
 	add_collection($userref,$add);
 	set_user_collection($userref,$add);
 	refresh_collection_frame();
-	
+
    	# Log this
 	daily_stat("Add public collection",$userref);
 	}
@@ -167,10 +167,10 @@ if ($reload!="")
 $purge=getval("purge","");
 $deleteall=getval("deleteall","");
 if(($purge != "" || $deleteall != "") && enforcePostRequest(false)) {
-	
+
 	if ($purge!=""){$deletecollection=$purge;}
 	if ($deleteall!=""){$deletecollection=$deleteall;}
-		
+
 	# Delete all resources in collection
 	if (!checkperm("D")) {
 		$resources=do_search("!collection" . $deletecollection);
@@ -181,20 +181,20 @@ if(($purge != "" || $deleteall != "") && enforcePostRequest(false)) {
 			}
 		}
 	}
-	
+
 	if ($purge!=""){
 		# Delete collection
 		delete_collection($purge);
 		# Get count of collections
 		$c=get_user_collections($userref);
-		
+
 		# If the user has just deleted the collection they were using, select a new collection
 		if ($usercollection==$purge && count($c)>0) {
 			# Select the first collection in the dropdown box.
 			$usercollection=$c[0]["ref"];
 			set_user_collection($userref,$usercollection);
 		}
-	
+
 		# User has deleted their last collection? add a new one.
 		if (count($c)==0) {
 			# No collections to select. Create them a new collection.
@@ -207,10 +207,10 @@ if(($purge != "" || $deleteall != "") && enforcePostRequest(false)) {
 
 $deleteempty=getval("deleteempty","");
 if ($deleteempty!="" && enforcePostRequest(false)) {
-		
+
 	$collections=get_user_collections($userref);
 	$deleted_usercoll = false;
-		
+
 	for ($n = 0; $n < count($collections); $n++) {
 		// if count is zero and not Default Collection and collection is owned by user:
 		if ($collections[$n]['count'] == 0 && $collections[$n]['cant_delete'] != 1 && $collections[$n]['user']==$userref) {
@@ -219,26 +219,26 @@ if ($deleteempty!="" && enforcePostRequest(false)) {
 				$deleted_usercoll = true;
 			}
 		}
-				
+
 	}
-		
+
 	# Get count of collections
 	$c=get_user_collections($userref);
-		
+
 	# If the user has just deleted the collection they were using, select a new collection
 	if ($deleted_usercoll && count($c)>0) {
 		# Select the first collection in the dropdown box.
 		$usercollection=$c[0]["ref"];
 		set_user_collection($userref,$usercollection);
 	}
-	
+
 	# User has deleted their last collection? add a new one.
 	if (count($c)==0) {
 		# No collections to select. Create them a new collection.
 		$usercollection=create_collection ($userref,"Default Collection");
 		set_user_collection($userref,$usercollection);
 	}
-	
+
 	refresh_collection_frame($usercollection);
 }
 
@@ -371,7 +371,7 @@ function delete_collections()
                     }
                 }, 'json');    
             }
-			
+
 		}
 	}
 
@@ -449,7 +449,7 @@ function delete_collections()
                         }
                     }
                 }
-                
+
 				collection_selections.forEach(function (collection)
                     {
                     if(res_list.includes(collection.box_collection))
@@ -648,7 +648,7 @@ echo " " . ($mycollcount==1 ? $lang["owned_by_you-1"] : str_replace("%mynumber",
 		</form>
 	</div>
 <?php } ?>
- 
+
 <!--Find a collection-->
 <?php if (!$public_collections_header_only && $enable_public_collections && !hook('replacecollectionmanagepublic')){?>
 <div class="BasicsBox">

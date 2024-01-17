@@ -65,7 +65,7 @@ function UserRatingSet(userref,ref,rating)
         <?php echo generateAjaxToken('UserRatingSet'); ?>
         }
     );
-			
+
 	document.getElementById('RatingCount').style.visibility='hidden';
 	if (rating==0)
 		{

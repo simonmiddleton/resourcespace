@@ -143,7 +143,7 @@ if ($enable_related_resources)
 										$related_resources_shown++;
 										}
 									}
-	
+
 								if($related_type_upload_link && $edit_access)
 									{
                                     if($upload_then_edit)
@@ -164,7 +164,7 @@ if ($enable_related_resources)
 					<?php
 					} ?>
 				</div><!-- end of RelatedResourceData -->
-				<?php
+<?php
 				}
 			
 			// We have displayed these, don't show them again later

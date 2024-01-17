@@ -138,7 +138,7 @@ include "../include/header.php";
                 <div class="clearerleft"> </div>
                 <?php if (isset($error_email)) { ?><div class="FormError"><?php echo $lang["setup-emailerr"]?></div><?php } ?>
             </div>
-        <?php } ?>
+<?php } ?>
 
         <div class="Question" id="contacttelephone">
             <label for="contact"><?php echo $lang["contacttelephone"]?></label>

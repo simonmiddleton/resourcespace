@@ -33,7 +33,7 @@ if (getval("submit","")=="")
 	<div class="BasicsBox"> 
 	  <h1><?php echo htmlspecialchars($lang["buynow"])?></h1>
 	  <p><?php echo htmlspecialchars($lang["buynowintro"])?></p>
-	   
+
 	<form method="post" action="<?php echo $baseurl_short?>pages/purchase.php">
         <?php generateFormToken("buynow"); ?>
 	<table class="InfoTable">
@@ -67,7 +67,7 @@ if (getval("submit","")=="")
 				$id=$size["id"];
 				$showbuy=true;
 				if ($id=="") {$id="hpr";}
-							
+
 				if (array_key_exists($id,$pricing))
 					{
 					$price=$pricing[$id];
@@ -76,15 +76,15 @@ if (getval("submit","")=="")
 					{
 					$price=999; # Error.
 					}
-				
+
 				# Pricing adjustment hook (for discounts or other price adjustments plugin).
 				$priceadjust=hook("adjust_item_price","",array($price,$resource["ref"],$size["id"]));
 				if ($priceadjust!==false)
 					{
 					$price=$priceadjust;
 					}
-		
-				
+
+
 				?>
 				<option value="<?php echo $size["id"] ?>"  <?php if ($size["id"]==$resource["purchase_size"]) { ?>selected<?php } ?>><?php echo $name . " - " . $currency_symbol . " " . number_format($price,2)  ?></option>
 				<?php
@@ -99,22 +99,22 @@ if (getval("submit","")=="")
 	</table>
 	<p>&nbsp;</p>
 	<?php hook("purchase_extra_options"); 
-	
+
 	// If we are anonymous, give the user an option to add an emailk address so they can receive confirmation of order
 	if((isset($anonymous_login) && ($username==$anonymous_login)) && isset($rs_session) && $anonymous_user_session_collection)
 		{
 		echo "<br />" . $lang["purchase_email_address"] . "<br />";
 		echo "<br /><input type=\"text\" name=\"email_confirmation\" ></input><br /><br />";
-		
+
 		}
 		?>
-	
+
 	<?php if ($showbuy) { ?>
 		<p><input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;<?php echo escape($lang["buynow"])?>&nbsp;&nbsp;&nbsp;"></p>
 	<?php } ?>
 	</form>
 	</div>
-	<?php
+<?php
 	}
 else
     {
@@ -182,7 +182,7 @@ else
 		# Display discount (always for now)
 		?>	
 		<tr><td><?php echo htmlspecialchars($lang["discountsapplied"]) ?></td><td align="right"><?php echo $currency_symbol . " " . number_format($totalprice_ex_discount-$totalprice,2) ?></td></tr>
-		<?php
+<?php
 		}
 	?>
 			
@@ -221,9 +221,9 @@ else
 		<form method="post" action="<?php echo $baseurl_short?>pages/purchase.php" onsubmit="return confirm('<?php echo escape($lang["areyousurepayaccount"]) ?>');">
             <?php generateFormToken("purchaseonaccount_form"); ?>
 		<p><input type="submit" name="purchaseonaccount"  value="&nbsp;&nbsp;&nbsp;<?php echo escape($lang["purchaseonaccount"])?>&nbsp;&nbsp;&nbsp;"></p>
-	
+
 		</form>
-		<?php
+<?php
 		}
 	?>
 	</div>
