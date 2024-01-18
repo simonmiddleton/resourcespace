@@ -1843,7 +1843,8 @@ function save_collection($ref, $coldata=array())
                 }
             }
         }
-
+    global $userref;
+    clear_query_cache('collection_access' . $userref);
     refresh_collection_frame();
     }
 
