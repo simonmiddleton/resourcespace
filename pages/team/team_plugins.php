@@ -70,7 +70,7 @@ function legacy_check(&$i_plugin, $key)
         }
     }
 
-for ($n=0;$n<count($inst_plugins)-1;$n++)
+for ($n=0;$n<count($inst_plugins);$n++)
     {
     # Check if group access is permitted by YAML file. Needed because plugin may have been enabled before this development)
     $plugin_yaml_path = get_plugin_path($inst_plugins[$n]["name"])."/".$inst_plugins[$n]["name"].".yaml";
