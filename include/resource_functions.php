@@ -3881,7 +3881,7 @@ function get_resource_ref_range($lower,$higher)
 *  rather than simply copied from the $from resource.
 *
 * @param  int    $from            ID of resource
-* @param  mixed  $resource_type   ID of resource type
+* @param  int    $resource_type   ID of resource type
 * @param  string $origin          Origin of resource when uploading, leave blank if not an upload
 *
 * @return boolean|integer
@@ -3902,7 +3902,7 @@ function copy_resource($from,$resource_type=-1,$origin='')
     $joins=get_resource_table_joins();
 
     # Filtering data join columns to only copy those relevant to the new resource.
-    if ($resource_type == -1)
+    if ($resource_type === -1)
         {
         # New resource will be of the same resource type so get fields valid for the source resource type
         $query = 'SELECT rtf.ref AS value FROM resource_type_field AS rtf
@@ -3937,7 +3937,7 @@ function copy_resource($from,$resource_type=-1,$origin='')
         }
 
     $sql = ''; $params = [];
-    if($resource_type == -1){$sql = 'resource_type';}
+    if($resource_type === -1){$sql = 'resource_type';}
     else{$sql = '?'; $params = ['i', $resource_type];}
 
     # First copy the resources row
