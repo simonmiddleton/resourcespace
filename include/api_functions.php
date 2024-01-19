@@ -314,3 +314,20 @@ function assert_content_type(string $expected, string $received_raw): array
     return ajax_response_fail([]);
     }
 
+/**
+ * Return a summary of daily statistics 
+ *
+ * @param  int $days The number of days - note max 365 days as only the current and previous year's data is accessed.
+ */
+function api_get_daily_stat_summary(int $days=30)
+    {
+    if (!checkperm("a")) {return false;} // Admin only
+    return ps_query("SELECT activity_type,sum(count) `count`
+        FROM daily_stat  
+        WHERE 
+            (`year`=year(NOW()) OR `year`=year(NOW())-1)
+        AND
+            concat(`year`,'-',`month`,'-',`day`,'-')>date_sub(NOW(), interval ? DAY)
+        GROUP BY activity_type
+            ",["i",$days]);
+    }
