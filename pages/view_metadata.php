@@ -283,6 +283,7 @@ if(empty($fields_tab_names))
         }
     // Close TabbedPanel - it is now opened before the $fields_tab_names loop even if no real tabs exist
     ?>
+    <div class="clearerleft"> </div>
     </div>
     </div> <!-- END of TabbedPanel -->
     <?php
