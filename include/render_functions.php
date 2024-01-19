@@ -2899,25 +2899,27 @@ function render_resource_image($imagedata, $img_url, $display="thumbs")
 /**
  * Calculations width, height and margin-top property for resource image to display in ResourcePanel
  * 
- * @param   array   $imagedata
- * @param   string  $img_url
- * @param   string  $display
+ * @param array{'thumb_width': positive-int, 'thumb_height': positive-int} $imagedata
+ * @param string $img_url
+ * @param string $display
  * 
- * @return  array   array($width, $height, $margin);
+ * @return  array Returns a tuple of width, height and margin
  */
-
-
-function calculate_image_display($imagedata, $img_url, $display="thumbs")
+function calculate_image_display(array $imagedata, string $img_url, string $display="thumbs"): array
     {
-    if('' != $imagedata['thumb_width'] && 0 != $imagedata['thumb_width'] && '' != $imagedata['thumb_height'])
+    if(
+        '' != $imagedata['thumb_width']
+        && '' != $imagedata['thumb_height']
+        && $imagedata['thumb_width'] > 0
+        && $imagedata['thumb_height'] > 0
+    )
         {
         $ratio = $imagedata["thumb_width"] / $imagedata["thumb_height"];   
         }
     else
         {
-        // use php function getimagesize()
-        $size = ($img_url != "") ? getimagesize($img_url) : "";
-        $ratio = (isset($size[0]))? $size[0] / $size[1] : 1;
+        $size = $img_url != "" ? getimagesize($img_url) : [];
+        $ratio = isset($size[0]) ? $size[0] / $size[1] : 1;
         }
     
     switch($display)
@@ -2925,27 +2927,27 @@ function calculate_image_display($imagedata, $img_url, $display="thumbs")
         case "xlthumbs":
             $defaultwidth = 320;
             $defaultheight = 320;
-        break;
+            break;
 
         case "thumbs":
             $defaultwidth = 200;
             $defaultheight = 200;
-        break;        
+            break;        
         
         case "collection":
             $defaultwidth = 75;
             $defaultheight = 75;
-        break;
+            break;
 
         case "list":
             $defaultwidth = 40;
             $defaultheight = 40;
-        break;
+            break;
 
         default:
             $defaultwidth = 75;
             $defaultheight = 75;
-        break;        
+            break;        
         }
 
     if ($ratio > 1)
