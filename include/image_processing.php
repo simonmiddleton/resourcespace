@@ -573,7 +573,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         $jobadded=job_queue_add("upload_processing", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);             
         }
     
-    hook("uploadfilesuccess", "", array( "resourceId" => $ref ) );
+    hook("uploadfilesuccess", "", array( "resource_ref" => $ref ) );
     
     # Update disk usage
     update_disk_usage($ref);
