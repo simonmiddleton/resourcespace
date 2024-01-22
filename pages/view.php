@@ -743,7 +743,12 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 }
                             elseif($resource['has_image'] === 1)
                                 {
-                                render_resource_view_image($resource, $access);
+                                render_resource_view_image($resource,[
+                                    "access"=>$access,
+                                    "edit_access"=>$edit_access,
+                                    "previewcaption"=>$previewcaption ?? [],
+                                    ]
+                                    );
                                 }
                             else
                                 {
@@ -751,7 +756,13 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 $pullresource = related_resource_pull($resource);
                                 if($pullresource !== false)
                                     {
-                                    render_resource_view_image($pullresource, $pullresource["access"]);
+                                    $pull_access = get_resource_access($pullresource);
+                                    render_resource_view_image($pullresource,[
+                                        "access"=>$pull_access,
+                                        "edit_access"=>0, // No ability to modify e.g. annotations
+                                        "previewcaption"=>$previewcaption ?? [],
+                                        ]
+                                        );
                                     }
                                 else
                                     {?>
@@ -1796,7 +1807,7 @@ if($annotate_enabled)
     <?php
 	}
 
-if($GLOBALS["image_preview_zoom_lib_required"])
+if($GLOBALS["image_preview_zoom"])
     {
     ?>
     <script src="<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/openseadragon.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>

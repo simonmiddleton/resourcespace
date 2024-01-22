@@ -15,18 +15,18 @@ $find=getval("find","");
 $order_by=getval("orderby","width");
 
 // Construct the search query.
-$sql="select ref, id, internal, width, height, name from preview_size";
+$sql="SELECT ref, id, internal, width, height, name FROM preview_size";
 $params=array();
 if ($find!="")
 	{
-	$sql.=" where id like ? or name like ? or width like ? or height like ?";
+	$sql.=" WHERE id LIKE ? OR name LIKE ? OR width LIKE ? OR height LIKE ?";
 	$params[]="s";$params[]="%{$find}%";
 	$params[]="s";$params[]="%{$find}%";
 	$params[]="s";$params[]="%{$find}%";
 	$params[]="s";$params[]="%{$find}%";
 	}
 $order_by=in_array($order_by,array("width","height","id","name"))?$order_by:"width"; // Force $order_by to something we expect so it's SQL safe.
-$sql.=" order by {$order_by}";
+$sql.=" ORDER BY {$order_by}";
 
 $sizes=ps_query($sql,$params);
 
