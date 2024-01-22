@@ -229,3 +229,8 @@ $original_filenames_when_downloading=true;
 
 # Option to select metadata field that will be used for downloaded filename (do not include file extension)
 #$download_filename_field=8;
+
+# Encode preview asynchronous?
+# REQUIRES: $php_path
+# Deprecated as there are now much better options for offline video processing
+$ffmpeg_preview_async=false;

@@ -582,10 +582,6 @@ $ffmpeg_preview_force = true;
 # on internal network and want to see HQ video. Setting this config will override $download_usage=true; for the purpose of displaying the video preview.
 $video_preview_original=false;
 
-# Encode preview asynchronous?
-# REQUIRES: $php_path
-$ffmpeg_preview_async=false;
-
 # Find out and obey the Pixel Aspect Ratio
 $ffmpeg_get_par=false;
 
