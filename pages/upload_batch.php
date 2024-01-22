@@ -1081,6 +1081,10 @@ jQuery(document).ready(function () {
                 {
                 echo "maxNumberOfFiles: '1',";
                 }
+            else
+                {
+                echo "maxNumberOfFiles: null,";
+                }
             if (isset($allowedmime))
                 {
                 // Specify what files can be browsed for
