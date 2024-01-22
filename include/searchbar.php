@@ -91,7 +91,10 @@ for ($n=0;$n<count($keywords);$n++)
                 {
                 $set_fields[$s[0]] = $s[1];
                 $i = $n + 1;
-                while ($i < count($keywords) && strpos($keywords[$i], ":") === false)
+                while ($i < count($keywords) 
+                    && strpos($keywords[$i], ":") === false 
+                    && strpos($keywords[$i], NODE_TOKEN_PREFIX) === false
+                )
                     {
                     $set_fields[$s[0]] .= " " . $keywords[$i];
                     $i++;
