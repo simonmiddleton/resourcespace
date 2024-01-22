@@ -4940,6 +4940,10 @@ function collection_download_process_data_only_types(array $result, $id, $collec
         if(in_array($result[$n]['resource_type'], $data_only_resource_types))
             {
             $template_path = get_pdf_template_path($result[$n]['resource_type']);
+            if ($template_path === false)
+                {
+                continue;
+                }
             $pdf_filename = 'RS_' . $result[$n]['ref'] . '_data_only.pdf';
             $pdf_file_path = get_temp_dir(false, $id) . '/' . $pdf_filename;
 

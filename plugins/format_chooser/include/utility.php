@@ -27,8 +27,7 @@ function getDefaultOutputFormat($inputFormat = null)
 function supportsInputFormat($inputFormat)
 	{
 	global $format_chooser_input_formats;
-	$inputFormat = strtoupper($inputFormat);
-
+    $inputFormat = strtoupper((string) $inputFormat);
 	return in_array($inputFormat, $format_chooser_input_formats);
 	}
 

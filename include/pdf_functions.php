@@ -15,20 +15,23 @@ function get_pdf_template_path($resource_type, $template_name = '')
 
     if(!array_key_exists($resource_type, $pdf_resource_type_templates))
         {
-        trigger_error('There are no PDF templates set for resource type "' . $resource_type . '"');
+        debug('There are no PDF templates set for resource type "' . $resource_type . '"');
+        return false;
         }
     
     $templates     = $pdf_resource_type_templates[$resource_type];
 
     if(array_key_exists($resource_type, $pdf_resource_type_templates) && empty($templates))
         {
-        trigger_error('There are no PDF templates set for resource type "' . $resource_type . '"');
-        }      
+        debug('There are no PDF templates set for resource type "' . $resource_type . '"');
+        return false;
+        }
 
     // Client code wants a specific template name but there isn't one
     if('' !== $template_name && !in_array($template_name, $templates))
         {
-        trigger_error('PDF template "' . $template_name . '" could not be found in $pdf_resource_type_templates');
+        debug('PDF template "' . $template_name . '" could not be found in $pdf_resource_type_templates');
+        return false;
         }
 
     // Client code wants a specific template name
