@@ -2303,7 +2303,7 @@ if ($multiple && !$disable_geocoding)
             return +(Math.round(num + "e+6") + "e-6");
         }
 
-        <!--Place a marker on the map when clicked-->
+        // Place a marker on the map when clicked
         var resourceMarker = [];
         currentZoom = map3.getZoom();
         map3.on('click', function(e) {
@@ -2312,7 +2312,7 @@ if ($multiple && !$disable_geocoding)
             currentZoom = map3.getZoom();
             console.log(geoLat, geoLong, currentZoom);
 
-            <!--Clear existing marker when locating a new marker as we only want one marker for the resource-->
+            // Clear existing marker when locating a new marker as we only want one marker for the resource
             if (resourceMarker != undefined) {
                 map3.removeLayer(resourceMarker);
             };
@@ -2320,7 +2320,7 @@ if ($multiple && !$disable_geocoding)
             document.getElementById('location').value=georound(geoLat) + ', ' + georound(geoLong);
             document.getElementById('mapzoom').value=currentZoom;
 
-            <!--Add a marker to show where you clicked on the map last and center the map on the marker-->
+            // Add a marker to show where you clicked on the map last and center the map on the marker
             resourceMarker = L.marker([geoLat, geoLong], {
                 title: georound(geoLat) + ", " + georound(geoLong) + " (WGS84)"
             }).addTo(map3);
