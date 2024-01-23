@@ -358,7 +358,7 @@ if (!hook("renderresultthumb"))
                         type="checkbox" 
                         id="check<?php echo htmlspecialchars($ref)?>" 
                         class="checkselect"
-                        title="<?php echo escape($lang['action-select'] . " - " . $resource_view_title) ?>"
+                        title="<?php echo escape($lang['action-select'] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>"
                         data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
                         aria-label="<?php echo escape($lang["action-select"])?>"
                         <?php echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}"); ?>
