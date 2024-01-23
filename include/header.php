@@ -651,9 +651,14 @@ else
     }
 ?>
 <!--Main Part of the page-->
-<?php
 
-        
+<!-- Global Trash Bin -->
+<?php if (!hook("replacetrashbin"))
+    {
+    render_trash("trash", "");
+    } ?>
+
+<?php
 echo '<div id="UICenter" role="main" class="ui-layout-center ' . $uicenterclass . '">';
 
 hook('afteruicenter');
