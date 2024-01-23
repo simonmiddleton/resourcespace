@@ -2291,7 +2291,7 @@ if ($multiple && !$disable_geocoding)
     <div id="editmaplocation_map" style="display:none; width: 99%; margin-top:0px; margin-bottom:0px; height:300px; border:1px solid black; float:none; overflow: hidden;">
 
     <script>
-        <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
+        // Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js
         <?php set_geo_map_centerview(); ?>
         var map3 = new L.map('editmaplocation_map').setView(mapcenterview,mapdefaultzoom);
         var defaultLayer = new L.tileLayer.provider('<?php echo $map_default;?>', {
