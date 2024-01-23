@@ -5388,7 +5388,7 @@ function render_table($tabledata)
 
             if(isset($rowdata['alerticon']))
                 {
-                echo "<td><i class='" . escape($rowdata['alerticon']) . "'></i></td>";
+                echo "<td><i class='" . escape($rowdata['alerticon']) . "' title = '" . escape($rowdata['alerticontitle'] ?? "") . "'></i></td>";
                 }
             elseif($alertcolumn)
                 {
@@ -5421,7 +5421,7 @@ function render_table($tabledata)
                     else
                         {
                         echo (isset($headerdetails["html"]) && (bool)$headerdetails["html"]) 
-                                ? strip_tags_and_attributes($rowdata[$header], array("a","input"), array("href", "target", "type", "class", "onclick", 'name', 'value')) 
+                                ? strip_tags_and_attributes($rowdata[$header], array("a","input"), array("href", "target", "type", "class", "onclick", 'name', 'value', 'title')) 
                                 : htmlspecialchars($rowdata[$header]);
                         }
                     echo "</td>";
