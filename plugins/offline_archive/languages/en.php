@@ -24,7 +24,7 @@ $lang['offline_archive_input_resources']="Please enter resource ids to restore, 
 $lang['offline_archive_input_collection']="Please enter collection id to restore";
 
 $lang['offline_archive_name']="Archive prefix";
-$lang['offline_archive_createnew']="Commit to archive";
+$lang['offline_archive_createnew']="Create new archive job";
 $lang['offline_archive_archive_created']="Archive successfully created";
 $lang['offline_archive_archive_ref']="Archive reference";
 $lang['offline_archive_archive_date']="Archive date";

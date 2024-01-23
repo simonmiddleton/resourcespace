@@ -1,7 +1,7 @@
 <?php
 
 include '../../../include/db.php';
-include '../../../include/authenticate.php'; 
+include '../../../include/authenticate.php';
 
 $ref=getval("ref","",true);
 $error=false;
@@ -26,16 +26,16 @@ if (getval("save","")!="")
     $htmlbreak="";
     global $use_phpmailer;
     if ($use_phpmailer){$htmlbreak="<br><br>";}
-        
-    $templatevars['details']=stripslashes($details);
+
+    $templatevars['details']=$details;
     if ($templatevars['details']!=""){$adddetails=$lang["offline_archive_request_restore_reason"] . ": " . newlines($templatevars['details'])."\n\n";} else {return false;}
-        
+
 
     $message=$lang["username"] . ": " . $username . " (" . $useremail . ")\n".$adddetails . $lang["clicktoviewresource"] . "\n\n". $templatevars['url'];
 
     $userconfirmmessage = $lang["offline_archive_requestsenttext"];
-    $result=send_mail($email_notify,$applicationname . ": " . $lang["offline_archive_request_email_subject"] . " - $ref",$message,$useremail,$useremail);	
-    resource_log($ref,"",0,$lang['offline_archive_resource_log_restore_request'],"","");	
+    $result=send_mail($email_notify,$applicationname . ": " . $lang["offline_archive_request_email_subject"] . " - $ref",$message,$useremail,$useremail);
+    resource_log($ref,"",0,$lang['offline_archive_resource_log_restore_request'],"","");
     if ($result===false)
         {
         $error=$lang["requiredfields"];
@@ -48,40 +48,43 @@ include "../../../include/header.php";
 <?php
 if (isset($userconfirmmessage))
 	{
-	echo "<div class=\"FormError\">" . $userconfirmmessage . "</div>";
+	echo "<div class=\"FormError\">" . escape($userconfirmmessage) . "</div>";
 	}
 
 ?>
 
-<div class="BasicsBox"> 
-  
-  <h1><?php echo $lang["offline_archive_request_restore"]?></h1>
-  <p><?php echo $lang["offline_archive_request_restore_text"]?></p>
-  
-    <form method="post" name="request_restore_form" id="request_restore_form" action="<?php echo $baseurl ?>/plugins/offline_archive/pages/restore_request.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>">  
+<div class="BasicsBox">
+
+  <h1><?php echo escape($lang["offline_archive_request_restore"]); ?></h1>
+  <p><?php echo escape($lang["offline_archive_request_restore_text"]); ?></p>
+
+    <form method="post" name="request_restore_form" id="request_restore_form" action="<?php echo $baseurl ?>/plugins/offline_archive/pages/restore_request.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>">
     <?php generateFormToken("request_restore_form"); ?>
-    <input type=hidden name=ref value="<?php echo htmlspecialchars($ref)?>">
+    <input type=hidden name=ref value="<?php echo escape($ref)?>">
 
     <div class="Question">
-        <label><?php echo $lang["resourceid"]?></label>
-        <div class="Fixed"><?php echo htmlspecialchars($ref)?></div>
+        <label><?php echo escape($lang["resourceid"]) ?></label>
+        <div class="Fixed"><?php echo escape($ref)?></div>
         <div class="clearerleft"> </div>
     </div>
 
 
     <div class="Question">
-        <label for="request"><?php echo $lang["offline_archive_request_restore_reason"]?> <sup>*</sup></label>
-        <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo htmlspecialchars(getval("request","")) ?></textarea>
+        <label for="request"><?php echo escape($lang["offline_archive_request_restore_reason"]); ?> <sup>*</sup></label>
+        <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo escape(getval("request","")) ?></textarea>
         <div class="clearerleft"> </div>
     </div>
 
     <div class="QuestionSubmit">
-        <?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><?php } ?>		
-        <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo htmlspecialchars($ref)?>';"/>&nbsp;
-        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["offline_archive_request_restore"]?>&nbsp;&nbsp;" />
+        <?php if ($error)
+            {?>
+            <div class="FormError"><?php echo escape($error) ?></div><?php
+            } ?>
+        <input name="cancel" type="button" value="<?php echo escape($lang["cancel"]); ?>" onclick="document.location='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo escape($ref)?>';"/>
+        <input name="save" type="submit" value="<?php echo escape($lang["offline_archive_request_restore"]); ?>" />
         </div>
     </form>
-	
+
 </div>
 </div>
 
