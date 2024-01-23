@@ -211,7 +211,7 @@ function rse_workflow_validate_action(array $action, array $resource)
 * 
 * @return array
 */
-function rse_workflow_compile_actions(array $url_params)
+function rse_workflow_compile_actions(array $url_params): array
     {
     // Validate actions without going through all resources to not impact performance on huge sets
     $valid_actions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), true);
