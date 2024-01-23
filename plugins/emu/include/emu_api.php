@@ -28,8 +28,7 @@ class EMuAPI
     protected $terms;
     protected $columns = array();
 
-    // Constants
-    private $_MIME_TYPES = array('application', 'audio', 'image', 'text', 'video');
+    private const MIME_TYPES = ['application', 'audio', 'image', 'text', 'video'];
 
 
     /**
@@ -274,7 +273,7 @@ class EMuAPI
             return false;
             }
 
-        return in_array($mime, $_MIME_TYPES);
+        return in_array($mime, EMuAPI::MIME_TYPES);
         }
 
 
