@@ -17,7 +17,8 @@
     },
     "require-dev": {
         "phpstan/phpstan": "^1.8",
-        "rector/rector": "^0.18.13"
+        "rector/rector": "^0.18.13",
+        "roave/security-advisories": "dev-latest"
     },
     "suggest": {
         "ext-apcu": "Needed to improve upload performance."
