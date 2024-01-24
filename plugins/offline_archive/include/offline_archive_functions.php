@@ -5,14 +5,7 @@
  *
  * @param bool $showoutput  Display progress?
  *
- * @return bool|string  TRUE if ok, failure text if any errors encountered
- *
- */
-/**
- * [Description for offline_archive_run_jobs]
- *
- *
- * @return [type]
+ * @return bool|array  TRUE if ok, array of messages if any errors encountered
  *
  */
 function offline_archive_run_jobs($showoutput = false)
@@ -25,7 +18,6 @@ function offline_archive_run_jobs($showoutput = false)
 
     $archive_errors = [];
     $restore_errors = [];
-    $job_code_field = get_resource_type_field($GLOBALS["offline_archive_archivefield"]);
     if($showoutput)
         {
         echo " - Checking for pending archive jobs..\n";
@@ -106,7 +98,7 @@ function offline_archive_run_jobs($showoutput = false)
                         echo " - Successfully copied resource id #" . $ref. ". Deleting original file.\n";
                         }
                     // OK to delete existing file
-                    unlink($origfilepath);
+                    try_unlink($origfilepath);
 
                     // Add archive code to resource metadata
                     update_field($ref,$GLOBALS["offline_archive_archivefield"],$archivecode);
