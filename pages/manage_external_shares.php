@@ -200,6 +200,7 @@ for($n=0;$n<$sharecount;$n++)
             {
             $expiredshares++;
             $tableshare["alerticon"] = "fas fa-exclamation-triangle";
+            $tableshare["alerticontitle"] = $lang["share_expired_icon_title"];
             }
 
         $tableshare["upload"] = (bool)$shares[$n]["upload"] ? $lang["share_type_upload"] : $lang["share_type_view"];

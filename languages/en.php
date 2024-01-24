@@ -3124,6 +3124,7 @@ $lang["log_column"]                         = "Log data";
 $lang["log_value"]                          = "Value";
 $lang['error_slideshow_invalid']            = "Invalid sequence number. Please enter a numeric value";
 $lang['error-file-permissions']             = "Unable to perform file operation. Please check file permissions on %%PATH%%";
+$lang["share_expired_icon_title"]           = "Expired";
 
 $lang["new_message"]                        ="New message";
 $lang["message_recipients"]                 = "Recipient(s)";
