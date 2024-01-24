@@ -221,7 +221,7 @@ if ($alternative != "-1")
         "sort"        =>  $sort,
         "archive"     =>  $archive,
         "thumbs"      =>  $thumbs_show);
-        
+
          ?>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
          <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, isset($alt_previous)?array("alternative"=>$alt_previous):"");?>" title="<?php echo $lang["previousresult"]?>"></a>

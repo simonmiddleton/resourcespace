@@ -1077,7 +1077,7 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
         jQuery('.node_parent_chosen_selector').trigger("chosen:updated");
         });
     <?php
-    
+
     if($expand_nodes != "")
         {
         echo "jQuery(document).ready(function(){";

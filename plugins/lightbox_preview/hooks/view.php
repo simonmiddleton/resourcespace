@@ -125,5 +125,5 @@ function HookLightbox_previewViewAftersearchimg()
         });
     </script>
 
-    <?php
+<?php
     }

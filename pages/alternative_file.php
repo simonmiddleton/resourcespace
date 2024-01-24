@@ -35,7 +35,7 @@ if($resourcedata["lock_user"] > 0 && $resourcedata["lock_user"] != $userref)
 resource_type_config_override($resourcedata["resource_type"]);
 
 # Not allowed to edit this resource?
-if ((!get_edit_access($resource, $resourcedata["archive"],false,$resourcedata) || checkperm('A')) && $resource>0) {exit ("Permission denied.");}
+if ((!get_edit_access($resource, $resourcedata["archive"],$resourcedata) || checkperm('A')) && $resource>0) {exit ("Permission denied.");}
 
 hook("pageevaluation");
 

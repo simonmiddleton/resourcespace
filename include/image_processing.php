@@ -2930,7 +2930,7 @@ function extract_text($ref,$extension,$path="")
        if ($extension=="docx"||$extension=="xlsx")
         {   
         $path=escapeshellarg($path);
-        
+
          # DOCX files are zip files and the content is in word/document.xml.
                # We extract this then remove tags.
                switch($extension){
@@ -2944,7 +2944,7 @@ function extract_text($ref,$extension,$path="")
                    $text=run_command($cmd);
                    break;
                }
-               
+
         # Remove tags, but add newlines as appropriate (without this, separate text blocks are joined together with no spaces).
         $text=str_replace("<","\n<",$text);
         $text=trim(strip_tags($text));
@@ -2955,7 +2955,7 @@ function extract_text($ref,$extension,$path="")
     if ($extension=="odt"||$extension=="ods"||$extension=="odp")
         {   
         $path=escapeshellarg($path);
-        
+
         # ODT files are zip files and the content is in content.xml.
         # We extract this then remove tags.
         $cmd="unzip -p $path \"content.xml\"";

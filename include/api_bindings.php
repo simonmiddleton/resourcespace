@@ -254,7 +254,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
         return false;    
         }
     
-    $editaccess = get_edit_access($resource,$resourcedata['archive'],false,$resourcedata);
+    $editaccess = get_edit_access($resource,$resourcedata['archive'],$resourcedata);
     
     if(!is_numeric($field))
         {
@@ -1504,11 +1504,16 @@ function api_create_resource_type_field(string $name, string $resource_types, in
         : ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_fail_save']));
     }
 
-    /**
-     * Expose {@see get_featured_collections} to the API
-     * @param int $parent The feature collection parent's ref. Use 0 for obtaining the root ones.
-     */
-    function api_get_featured_collections($parent): array
-        {
-        return is_int_loose($parent) ? get_featured_collections($parent, []) : [];
-        }
+/**
+ * Expose {@see get_featured_collections} to the API
+ * @param int $parent The feature collection parent's ref. Use 0 for obtaining the root ones.
+ */
+function api_get_featured_collections($parent): array
+    {
+    return is_int_loose($parent) ? get_featured_collections($parent, []) : [];
+    }
+
+function api_get_edit_access(int $resource): bool
+    {
+    return get_edit_access($resource);
+    }

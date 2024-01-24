@@ -286,7 +286,7 @@ if(empty($fields_tab_names))
     <div class="clearerleft"> </div>
     </div>
     </div> <!-- END of TabbedPanel -->
-    <?php
+<?php
     }
 hook("extrafields2");?>
 <div class="clearerleft"></div>

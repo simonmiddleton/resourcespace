@@ -25,15 +25,15 @@ jQuery(document).ready(function() {
         var modCtrl=e.ctrlKey;
         var modMeta=e.metaKey;
         var modOn=(modAlt || modShift || modCtrl || modMeta);
-        
+
          switch (e.which) 
          {
-			 
+
 		    <?php hook ("addhotkeys"); //this comes first so overriding the below is possible ?>
             // left arrow
             case <?php echo $keyboard_navigation_prev; ?>: if ((jQuery('.prevLink').length > 0)<?php if ($pagename=="view") { ?>&&(jQuery("#fancybox-content").html()=='')<?php } ?>) {jQuery('.prevLink').click();break;}
               if (<?php if ($keyboard_navigation_pages_use_alt) echo "modAlt&&"; ?>(jQuery('.prevPageLink').length > 0)) jQuery('.prevPageLink').click();
-              
+
                      <?php 
                      if (($pagename=="preview_all") && $keyboard_scroll_jump) { ?>
                      currentX=jQuery(window).scrollLeft();
@@ -88,7 +88,7 @@ jQuery(document).ready(function() {
 					//console.log("active="+vidActive);
 					videoPlayPause(vidActive);
 					break;
-					
+
 				case <?php echo $keyboard_navigation_video_search_forwards?>:
 					//console.log("forward button pressed");
 					//console.log("Player is "+vidActive);
@@ -109,7 +109,7 @@ jQuery(document).ready(function() {
 					break;
 				<?php } ?>
          }
-         
+
      }
  });
 });

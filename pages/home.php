@@ -74,7 +74,7 @@ if (!hook("replaceslideshow"))
             ?>
             var big_slideshow_timer = 0;
             RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$slideshow_files[$randomimage]["ref"]}"; ?>','<?php echo (isset($slideshow_files[$randomimage]["link"])) ? $slideshow_files[$randomimage]["link"] : "" ?>',1);
-            <?php
+<?php
             }
         else
             {
@@ -118,20 +118,20 @@ if (!hook("replaceslideshow"))
             echo "images.push(" .  $slideshow_file_info["ref"] . ");\n";
             }
         ?>
-    
+
         var cur_photo=1;
         var last_photo=0;
         var next_photo=1;
-    
+
         flip=1;
-    
+
         var image1=0;
         var image2=0;
-    
+
         function nextPhoto()
             {
             if (!document.getElementById('image1')) {return false;} /* Photo slideshow no longer available (AJAX page move) */
-            
+
               if (cur_photo==num_photos-1) {next_photo=0;} else {next_photo=cur_photo+1;}
               image1 = document.getElementById("image1");
               image2 = document.getElementById("photoholder");
@@ -151,12 +151,12 @@ if (!hook("replaceslideshow"))
                 window.setTimeout("image2.style.backgroundImage='url(' + baseurl_short + 'pages/download.php?slideshow=' + images[next_photo] +')';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
                 flip=0;
                 }	  	
-             
+
               last_photo=cur_photo;
               cur_photo=next_photo;
               timers.push(window.setTimeout("nextPhoto()", 1000 * photo_delay));
             }
-    
+
         jQuery(document).ready( function ()
             { 
             /* Clear all old timers */
@@ -164,7 +164,7 @@ if (!hook("replaceslideshow"))
             timers.push(window.setTimeout("nextPhoto()", 1000 * photo_delay));
             }
             );
-            
+
         </script><?php 
         }
     if($slideshow_big) 
@@ -340,7 +340,7 @@ if (!hook("replaceslideshow"))
 					<h2> <?php echo i18n_get_translated($custom_home_panels[$n]["title"]) ?></h2>
 					<span><?php echo i18n_get_translated($custom_home_panels[$n]["text"]) ?></span>
 					</div> 
-					
+
 					</a>
 					<?php
 					} // end hook 'panelperm'

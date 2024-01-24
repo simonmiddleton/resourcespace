@@ -642,7 +642,7 @@ switch($csvstep)
                 </div>    
             </form>
             </div>
-            <?php
+<?php
             }
         else
             {

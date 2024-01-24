@@ -487,14 +487,14 @@ function do_search(
                                 {
                                 $sql_join->sql .=" JOIN resource_node rnd" . $c . " ON rnd" . $c . ".resource=r.ref JOIN node dn" . $c . " ON dn" . $c . ".ref=rnd" . $c . ".node AND dn" . $c . ".resource_type_field = ?";
                                 array_push($sql_join->parameters,"i",$datefield);
-                                
+
                                 $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "dn" . $c . ".name like ?";
                                 array_push($sql_filter->parameters,"s",$val . "%");
                                 }
 
-                                    
+
                             // Find where the searched value is LIKE the range values
-                           
+
                             }
                         elseif(in_array($kw[0],array("basicday","basicmonth","basicyear")))
                             {
@@ -714,10 +714,10 @@ function do_search(
                                                 {
                                                 continue;
                                                 }
-    
+
                                             $alternative_keywords[] = $alternative_keyword_keyref;
                                             }
-    
+
                                         if(count($alternative_keywords) > 0)
                                             {           
                                             // Multiple alternative keywords
@@ -741,7 +741,7 @@ function do_search(
                                         if ($contains_separators === true)
                                             {
                                             $keyword_split = split_keywords($keyword);
-                                            
+
                                             if($field_short_name_specified)
                                                 {
                                                 $keyword_split = array_map(prefix_value($fieldname.":"),$keyword_split);

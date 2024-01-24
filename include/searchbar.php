@@ -361,10 +361,10 @@ $simpleSearchFieldsAreHidden = hook("simplesearchfieldsarehidden");
 
 if (!$basic_simple_search && !$hide_search_resource_types)
     {
-    
+
     # More than 5 types? Always display the 'select all' option.
     if (count($types)>5) {$searchbar_selectall=true;}
-    
+
     ?>
     <input type="hidden" name="resetrestypes" value="yes">
     <div id="searchbarrt" <?php hook("searchbarrtdiv");?> <?php if ($simpleSearchFieldsAreHidden) { echo 'style="display:none;"'; } ?> >
@@ -398,12 +398,12 @@ if (!$basic_simple_search && !$hide_search_resource_types)
     $rt=explode(",",@$restypes);
     $clear_function = "SetCookie('search','');SetCookie('restypes','');SetCookie('ssearchhiddenfields','');SetCookie('saved_offset','');SetCookie('saved_archive','');";
     hook('clearsearchcookies');
-    
+
     # Render resource type checkbox inputs
     for ($n=0;$n<count($types);$n++)
     {
     if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
-    
+
     $tickBoxClass="tick";
     $inputBoxClass="tickbox";
     $resetTickAllCall="";
@@ -954,7 +954,7 @@ elseif($restypes=='')
                 <?php hook("loginformlink") ?>
             </div>
         </div>
-    <?php } ?>
+<?php } ?>
 
     <?php if (($research_request) && (!isset($k) || $k=="") && (checkperm("q"))) { ?>
         <?php if (!hook("replaceresearchrequestbox")) { ?>
@@ -972,8 +972,8 @@ elseif($restypes=='')
                 <br />
                 <?php } /* end replaceresearchrequestboxcontent */ ?>
             </div>
-        <?php } /* end replaceresearchrequestbox */ ?>
-    <?php } ?>
+<?php } /* end replaceresearchrequestbox */ ?>
+<?php } ?>
 
     <?php if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title-black.svg')) { ?>
         <div class="PoweredByPanel">

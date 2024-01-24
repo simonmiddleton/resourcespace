@@ -145,7 +145,7 @@ if ($errors!="")
 	<label for="email"><?php echo htmlspecialchars($lang["youremailaddress"]); ?> *</label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo escape(getval("email","")) ?>">
 	<div class="clearerleft"> </div>
 	</div>
-	<?php
+<?php
 	}
 ?>
 

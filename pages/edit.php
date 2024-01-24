@@ -441,7 +441,7 @@ if ($ref<0 && !(checkperm("c") || checkperm("d")))
     }
 
 # Check edit permission.
-if (!get_edit_access($ref,$resource["archive"],false,$resource))
+if (!get_edit_access($ref,$resource["archive"],$resource))
     {
     # The user is not allowed to edit this resource or the resource doesn't exist.
     
@@ -776,7 +776,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     {
                                     $redirectparams["promptsubmit"] = 'true';
                                     }
-                                
+
                                 $url = $redirecturl != "" ? escape($redirecturl) : generateURL($baseurl . "/pages/search.php",$redirectparams);
                                 }
                             ?>
@@ -1543,7 +1543,7 @@ hook("editbefresmetadata"); ?>
             </select>
             <div class="clearerleft"></div>
         </div>
-        <?php
+<?php
         }
     } # end hook("replaceedittype")
 
@@ -2405,7 +2405,7 @@ if ($ref>0 && !$multiple)
                 ?>
                 <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
                 <br />
-                <?php
+<?php
                 }
             if ($resource["file_extension"]!="") 
                 { ?>           

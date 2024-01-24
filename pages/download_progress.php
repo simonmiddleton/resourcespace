@@ -53,13 +53,13 @@ if (!$save_as)
     <h2>&nbsp;<h2> 
     <h1><?php echo $lang["downloadresource"]?></h1>
     <p style="font-weight:bold;"><?php echo LINK_CARET ?><a href="<?php echo htmlspecialchars($url); ?>"><?php echo $lang["rightclicktodownload"]?></a></p>
-	<?php } else { 
+<?php } else { 
 	# Any other browser - standard 'your download will start shortly' text.
 	?>
 	<h2>&nbsp;<h2>
     <h1><?php echo $lang["downloadinprogress"]?></h1>
     <p><?php echo text("introtext")?></p>
-	<?php } 
+<?php } 
 	$offset= getval("saved_offset",getval("offset",0,true));
 	$order_by= getval("saved_order_by",getval("order_by",""));
 	$sort= getval("saved_sort",getval("sort",""));

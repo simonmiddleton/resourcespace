@@ -23,7 +23,7 @@ $pattern_source = "/^(.*)\/pages/"; // regex patter to match remote resourceconn
 /* check that a match exists in url for both the ref and the source  */
 if (preg_match($pattern_ref, $url) == 1 && preg_match($pattern_source, $url) == 1)
     { 
-    
+
     /** 
      * both ref and source patterns have been matched in url, 
      * now check if existing entry exists in table for this resource  
@@ -56,7 +56,7 @@ if ($entry_exists == 0)
         's', $url,
         's', $title
     ];
-    
+
     if(isset($ref)){$params[]='i'; $params[]=explode('=', $ref)[1];}
     ps_query("INSERT INTO resourceconnect_collection_resources (collection,thumb,large_thumb,xl_thumb,url,title".((isset($ref))?',source_ref':'').") VALUES (". ps_param_insert(count($params)/2) .")", $params);
     }

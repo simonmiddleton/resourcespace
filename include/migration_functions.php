@@ -198,7 +198,7 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
                 {                       
                 $nodeid = $all_valid_nodes[$nodeidx]["ref"];
                 $logtext .=  "FILTER MIGRATION: --- field option (node) exists, node id #: " . $all_valid_nodes[$nodeidx]["ref"] . "\n";
-                
+
                 $nodeinsert[] = "(?, ?, ?)";
                 $nodeinsertparams = array_merge($nodeinsertparams, array("i", $new_filter_rule, "i", $nodeid, "i", $node_condition));
                 if($allowpartialmigration){$rulevalid = true;} // Atleast one rule is valid so the filter can be created
@@ -358,7 +358,7 @@ function mix_text(?string $string, bool $recurse=true): string
                     $i--;
                     }
                 }
-          
+
             if($i >= $mbytelength || $oldchar == "")
                 {
                 $newstring .=  substr(str_shuffle($lowervowels . $lowercons), 0,1);   

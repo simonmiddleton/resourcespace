@@ -538,7 +538,7 @@ function propose_changes_display_field($n, $field)
         # For certain field types that have no obvious focus, the help always appears.
         ?>
         <div class="FormHelp" style="<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?>display:none;<?php } else { ?>clear:left;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(htmlspecialchars(i18n_get_translated($field["help_text"]))))?></div></div>
-        <?php
+<?php
         }
 
     # If enabled, include code to produce extra fields to allow multilingual free text to be entered.

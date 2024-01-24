@@ -185,8 +185,8 @@ if (!file_exists($path))
     
 <?php if ($vertical=="v"){
 	if (!hook("replacepreviewalltitle")){ ?><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $result[$x]['ref']?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>">&nbsp;<?php echo i18n_get_translated($result[$x]['field'.$view_title_field])?></a><?php } /* end hook replacepreviewalltitle */?></tr><tr>
-		
-	<?php } else { ?>
+
+<?php } else { ?>
 	<td style="padding:10px;">
 <?php } ?>
 	
@@ -242,7 +242,7 @@ if (maxheight><?php echo $imageheight?>){
 				});
 			});
 		</script>
-		<?php } ?>
+<?php } ?>
 <?php if ($vertical=="v"){?><tr><?php } else  { ?></td> <?php } ?>
 <?php } ?>
 </tr>

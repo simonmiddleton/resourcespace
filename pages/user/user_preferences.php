@@ -260,12 +260,12 @@ include "../../include/header.php";
             $actionrestypes[$rtype["ref"]]=$rtype["name"];
             }
 		$page_def[] = config_add_checkbox_select('actions_resource_types_hide',$lang['actions_resource_types_hide'],$actionrestypes,true,300,1,true,null);
-		
+
 		$page_def[] = config_add_boolean_select('actions_modal', $lang['actions_modal'], $enable_disable_options, 300, '', true);
-		
+
 		$page_def[] = "AFTER_ACTIONS_MARKER"; // Added so that hook add_user_preference_page_def can locate this position in array
 		$page_def[] = config_add_html('</div>');
-		
+
 		// End of actions section
 		}
 		

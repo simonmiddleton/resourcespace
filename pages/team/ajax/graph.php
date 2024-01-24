@@ -339,7 +339,7 @@ if ($type=="summary")
         .ReportSummary td {padding:0;display:block;width:45%;border:none;color:inherit;}
         .ReportMetric {font-size:200%;padding-left:5px;color:inherit;background:none;}
         </style>
-        <?php
+<?php
         }
 
     ?>

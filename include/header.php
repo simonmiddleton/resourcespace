@@ -296,7 +296,7 @@ if(!$disable_geocoding)
     <!--Leaflet NavBar v1.0.1 plugin files-->
     <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.css"/>
     <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-NavBar-1.0.1/src/Leaflet.NavBar.min.js"></script>
-        
+
     <!--Leaflet Omnivore v0.3.1 plugin file-->
     <?php if ($map_kml)
         { ?>
@@ -318,7 +318,7 @@ if(!$disable_geocoding)
     <link rel="stylesheet" href="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/src/css/leaflet-shades.css"/>
     <script src="<?php echo $baseurl?>/lib/leaflet_plugins/leaflet-shades-1.0.2/leaflet-shades.js"></script>
 
-    <?php
+<?php
     }
 echo get_plugin_css();
 // after loading these tags we change the class on them so a new set can be added before they are removed (preventing flickering of overridden theme)
@@ -327,7 +327,7 @@ echo get_plugin_css();
 <?php
 
 hook("headblock");
- 
+
 endif; # !hook("customhtmlheader") 
 ?>
 </head>
@@ -388,7 +388,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
         <div id="HeaderResponsive">
         <?php
         }
-        
+
     hook('responsiveheader');
 
     if(!hook('replace_header_text_logo'))
@@ -482,7 +482,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
                         <a href="<?php echo $topuploadurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo htmlspecialchars($lang["upload"]); ?></a>
                     </li><?php
                     }
-            
+
                 if(!hook('replaceheaderfullnamelink'))
                     {
                     ?>
@@ -526,7 +526,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
                     }
                     ?>
                 </li>
-            
+
                 <!-- Admin menu link -->
                 <?php if (checkperm("t"))
                     { ?><li><a href="<?php echo $baseurl?>/pages/team/team_home.php" onClick="ModalClose();return ModalLoad(this,true,true,'right');" alt="<?php echo escape($lang['teamcentre']); ?>" title="<?php echo escape($lang['teamcentre']); ?>"><i aria-hidden="true" class="fa fa-lg fa-bars fa-fw"></i>
@@ -545,9 +545,9 @@ if ($pagename!="preview" && $pagename!="preview_all")
                     </a></li><?php
                     } ?>
                 <!-- End of Admin link -->
-                
+
                 <?php hook("addtoplinks"); ?>
-                
+
                 </ul>
                 <?php
                 } /* end replaceheadernav1 */
@@ -573,7 +573,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
         # Empty Header?>
         <div id="HeaderNav1" class="HorizontalNav ">&nbsp;</div>
         <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav">&nbsp;</div>
-        <?php 
+<?php 
         }
     }
 hook("headerbottom"); ?>
@@ -597,7 +597,7 @@ if($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["H
     {
     array_push($omit_searchbar_pages, 'terms');
     }
- 
+
 # if config set to display search form in header or (usergroup search permission omitted and anonymous login panel not to be displayed, then do not show simple search bar    
 if (checkperm("s") || (is_anonymous_user() && $show_anonymous_login_panel))
     {
@@ -617,7 +617,7 @@ if (checkperm("s") || (is_anonymous_user() && $show_anonymous_login_panel))
         <div id="SearchBarContainer" class="ui-layout-east" >
         <?php
         include dirname(__FILE__)."/searchbar.php";
-        
+
         ?>
         </div>
         <?php

@@ -183,12 +183,12 @@ if (isset($custom_request_fields))
 			<?php if ($type==1) {  # Normal text box
 			?>
 			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo escape(getval("custom" . $n,""))?>">
-			<?php } ?>
+<?php } ?>
 
 			<?php if ($type==2) { # Large text box 
 			?>
 			<textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
-			<?php } ?>
+<?php } ?>
 
 			<?php if ($type==3) { # Drop down box
 			?>
@@ -202,7 +202,7 @@ if (isset($custom_request_fields))
 				}
 			?>
 			</select>
-			<?php } ?>
+<?php } ?>
 			
 			<div class="clearerleft"> </div>
 			</div>

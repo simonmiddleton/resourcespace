@@ -28,7 +28,7 @@ if ($delete!="" && enforcePostRequest(getval("ajax", false)))
 
 	# Get count of collections
 	$c=get_user_collections($userref);
-	
+
 	# If the user has just deleted the collection they were using, select a new collection
 	if ($usercollection==$delete && count($c)>0)
 		{
@@ -53,17 +53,17 @@ if ($remove!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# Remove someone else's collection from your My Collections
 	remove_collection($userref,$remove);
-	
+
 	# Get count of collections
 	$c=get_user_collections($userref);
-	
+
 	# If the user has just removed the collection they were using, select a new collection
 	if ($usercollection==$remove && count($c)>0) {
 		# Select the first collection in the dropdown box.
 		$usercollection=$c[0]["ref"];
 		set_user_collection($userref,$usercollection);
 		}
-	
+
 	refresh_collection_frame();
 	}
 
@@ -95,7 +95,7 @@ $jumpcount=1;
 $url=$baseurl_short."pages/my_purchases.php?paging=true&col_order_by=".$col_order_by."&sort=".$sort."&find=".urlencode($find)."";
 
 	?>
-  
+
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/my_purchases.php">
 <?php generateFormToken("collectionform"); ?>
 <input type=hidden name="delete" id="collectiondelete" value="">
@@ -152,13 +152,13 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
 	<td>	
         <div class="ListTools">
 		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>"><?php echo LINK_CARET ?><?php echo $lang["viewall"]?></a>
-	
+
 	<?php if ($contact_sheet==true) { ?>
     &nbsp;<a href="<?php echo $baseurl_short?>pages/contactsheet_settings.php?ref=<?php echo $collections[$n]["ref"]?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET ?><?php echo $lang["contactsheet"]?></a>
 	<?php } ?>
 
 	<?php hook("addcustomtool"); ?>
-	
+
 	</td>
 	</tr><?php
 }

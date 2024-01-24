@@ -92,7 +92,7 @@ if(getval("restype_delete", "") != "" && enforcePostRequest(false))
             $dependentfields = [];
             }
         }
-    
+
     if(count($affectedresources)>0)
         {
         // User needs to confirm a new resource type
@@ -175,7 +175,7 @@ if($actions_required)
         <input type="hidden" name="prereq_action" value="move_affected_rtfs">
         <?php
         }
-    
+
     echo htmlspecialchars($lang["resource_type_delete_select_new"]) ;
     ?>
     </div>
@@ -220,7 +220,7 @@ else
 	<div class="Fixed"><?php echo  $restypedata["ref"] ?></div>
 	<div class="clearerleft"> </div>
     </div>
-    
+
     <div class="Question">
 	<label><?php echo htmlspecialchars($lang["property-name"]) ?></label>
 	<input name="name" type="text" class="stdwidth" value="<?php echo escape((string)$restypedata["name"])?>" />
@@ -230,18 +230,18 @@ else
     <?php
     render_fa_icon_selector($lang["property-icon"],"icon",($restypedata['icon'] ?? ""));
     ?>
-    
+
     <div class="Question">
 	<label><?php echo htmlspecialchars($lang["property-allowed_extensions"]) ?></label>
 	<input name="allowed_extensions" type="text" class="stdwidth" value="<?php echo escape((string)$restypedata["allowed_extensions"])?>" />
-	
+
 	<div class="FormHelp" style="padding:0;clear:left;" >
 	    <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-allowed_extensions"])  ?>
 	    </div>
 	</div>    
 	<div class="clearerleft"> </div>    
     </div>
-    
+
     <?php if (!$execution_lockout) { ?>
     <div class="Question">
 	<label><?php echo htmlspecialchars($lang["property-override_config_options"])  ?></label>
@@ -260,7 +260,7 @@ else
     ksort($MARKER_COLORS);
     render_dropdown_question($lang['resource_type_marker_colour'],"colour",$MARKER_COLORS,$restypedata["colour"],'',array("input_class"=>"stdwidth"));
     ?>
-    
+
         <div class="Question">
     <label><?php echo htmlspecialchars($lang["property-push_metadata"]) ?></label>
     <input name="push_metadata" type="checkbox" value="yes" <?php if ($restypedata["push_metadata"]==1) { echo "checked"; } ?> />
@@ -270,7 +270,7 @@ else
     </div>
     <div class="clearerleft"> </div>
     </div>
-    
+
     <div class="QuestionSubmit">		
     <input name="save" type="submit" value="&nbsp;&nbsp;<?php  echo escape($lang["save"])?>&nbsp;&nbsp;" onClick="jQuery('#restype_save').val('yes');this.form.submit();return false;"/>
     <input name="delete" type="submit" value="&nbsp;&nbsp;<?php  echo escape($lang["action-delete"])?>&nbsp;&nbsp;" onClick="if(confirm('<?php  echo escape($lang["confirm-deletion"]) ?>')){jQuery('#restype_delete').val('yes');this.form.submit()}else{jQuery('#restype_delete').val('');}return false;"/>

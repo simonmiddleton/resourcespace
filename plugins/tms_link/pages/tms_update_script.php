@@ -132,7 +132,7 @@ foreach(tms_link_get_modules_mappings() as $module)
     $tmscount += $current_tms_count;
 
     $tmspointer = 0;
-    
+
     if(!$tms_link_test_mode || !is_numeric($tms_link_test_count))
         {
         $tms_link_test_count = 999999999;
@@ -220,7 +220,7 @@ foreach(tms_link_get_modules_mappings() as $module)
                     {
                     fwrite($logfile, $logmessage);
                     }
-                
+
                 $updatedok = false;
 
                 // Update fields if necessary
@@ -238,7 +238,7 @@ foreach(tms_link_get_modules_mappings() as $module)
                             {
                             $newval = str_replace('&nbsp;', ' ', $tmsresult[$tms_link_column_name]);
                             }
-                            
+
                         if ($existingval!== $newval)
                             {
                             if(!$tms_link_test_mode)

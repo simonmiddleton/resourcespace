@@ -518,7 +518,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                     # Only pre-render the title if using a "standard" tile and therefore we know the H2 will be in the target data.
                     ?>
                     <h2 class="title"><?php echo htmlspecialchars($tile["title"]);?></h2>
-                    <?php 
+<?php 
                     }
                     ?>
                 <p>Loading...</p>
@@ -705,7 +705,7 @@ function get_managed_dash()
                     # Only pre-render the title if using a "standard" tile and therefore we know the H2 will be in the target data.
                     ?>
                     <h2 class="title"><?php echo htmlspecialchars($tile["title"]);?></h2>
-                    <?php 
+<?php 
                     } ?>
                 <p>Loading...</p>
                 <script>

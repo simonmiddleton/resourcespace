@@ -208,9 +208,9 @@ if($access == 2)
         }
     exit();
 	}
-		
+
 hook("afterpermissionscheck");
-		
+
 # Establish if this is a metadata template resource, so we can switch off certain unnecessary features
 $is_template=(isset($metadata_template_resource_type) && $resource["resource_type"]==$metadata_template_resource_type);
 
@@ -275,13 +275,13 @@ if($resource_contact_link && ($k=="" || $internal_share_access))
 		{?>
 		<script>
 		function showContactBox(){
-				
+
 				if(jQuery('#contactadminbox').length)
 					{
 					jQuery('#contactadminbox').slideDown();
 					return false;
 					}
-				
+
 				jQuery.ajax({
 						type: "GET",
 						url: baseurl_short+"pages/ajax/contactadmin.php?ref="+<?php echo $ref ?>+"&insert=true&ajax=true",
@@ -297,7 +297,7 @@ if($resource_contact_link && ($k=="" || $internal_share_access))
 		</script>
 		<?php
 		}
-		
+
 hook("pageevaluation");
 
 # Load resource field data
@@ -322,7 +322,7 @@ if (!$fields_all || !$fields)
     }
 
 # Load edit access level (checking edit permissions - e0,e-1 etc. and also the group 'edit filter')
-$edit_access = get_edit_access($ref,$resource["archive"],$fields,$resource);
+$edit_access = get_edit_access($ref,$resource["archive"],$resource);
 
 # Check if resource is locked
 $resource_locked = (int)$resource["lock_user"] > 0;
@@ -433,16 +433,16 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
         {
         ?>
         jQuery(document).ready(function () {		
-            
+
             let parent_element = jQuery('#<?php echo ($modal?'modal':'CentralSpace')?>');
 
             var comments_marker='<?php echo $comments_view_panel_show_marker?>';
             var comments_resource_enable='<?php echo $comments_resource_enable?>';
             var resource_comments='<?php echo $resource_comments?>';
-            
+
             parent_element.find("#Metadata").appendTo(parent_element.find("#Panel1"));
             parent_element.find("#Metadata").addClass("TabPanel");
-            
+
             parent_element.find("#CommentsPanelHeaderRowTitle").children(".Title").attr("panel", "Comments").appendTo(parent_element.find("#Titles1"));
             parent_element.find("#CommentsPanelHeaderRowTitle").remove();
             parent_element.find("#CommentsPanelHeaderRowPolicyLink").css("width","300px").css("float","right");
@@ -467,13 +467,13 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                 parent_element.find("#SearchSimilar").show();
                 parent_element.find("div[panel='SearchSimilar']").addClass("Selected"); 
             }    
-            
+
             // if there are no collections and themes
             if (parent_element.find("#resourcecollections").is(':empty')) {
                 parent_element.find("div[panel='CollectionsThemes']").addClass("Selected"); 
                 parent_element.find("#CollectionsThemes").show(); 
             }
-            
+
             parent_element.find(".ViewPanelTitles").children(".Title").click(function(){
             // function to switch tab panels
                 parent_element.find(this).parent().parent().children(".TabPanel").hide();
@@ -600,7 +600,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                         ?><span class="DeletedResourceTitle"><?php echo htmlspecialchars($lang["status3"])?>:</span>&nbsp;<?php
                         break;
                         }
-	
+
                     #If additional archive states are set, put them next to the field used as title
                     if ( isset($additional_archive_states) && count($additional_archive_states)!=0)
                         {
@@ -618,7 +618,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                     ?>
                     &nbsp;
                 </h1>
-            <?php
+<?php
             } /* End of renderinnerresourceheader hook */ ?>
         </div>
 
@@ -817,7 +817,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 }
 
                             hook('aftersearchimg', '', array($ref)); ?>
-                            
+
                             </a>
 
                             <?php
@@ -832,7 +832,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 }
 
                             hook('previewextras'); ?>
-                            
+
                             </div>
 
                             <?php
@@ -1062,7 +1062,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                             </script>
                                             <?php
                                             }
-			
+
                                         if($image_preview_zoom)
                                             {
                                             $image_preview_zoom_lib_required = true;
@@ -1164,13 +1164,13 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                             </div>
                             <?php
                             }
-                        
+
                         } /* End of renderinnerresourcepreview hook */ 
                     } /* End of replacerenderinnerresourcepreview hook */ 
 
                 $disable_flag = hook('disable_flag_for_renderbeforerecorddownload');
                 hook("renderbeforerecorddownload", '', array($disable_flag));
-                
+
                 if (!hook("renderresourcedownloadspace"))
                     { ?>
                     <div class="RecordDownload" id="RecordDownloadTabContainer">
@@ -1247,7 +1247,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                 # so the request box does not appear.
                                                 $fulldownload=false;
                                                 if ($sizes[$n]["id"]=="") {$fulldownload=true;}
-                                                
+
                                                 $counter++;
 
                                                 # Should we allow this download?
@@ -1335,7 +1335,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                                 </a>
                                                             </td>
                                                         </tr>
-                                                        <?php
+<?php
                                                         }
                                                     }
 		                                        }
@@ -1356,7 +1356,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                             <h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2>
                                                         </td>
                                                         <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
-                                                
+
                                                         <?php
                                                         $size_info = array('id' => '', 'extension' => $resource['file_extension']);
                                                         $downloadthissize=resource_download_allowed($ref,'',$resource["resource_type"]);
@@ -1506,7 +1506,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                             </tr>
                                             <?php
                                             }
-	
+
                                         if ($flv_preview_downloadable && isset($video_preview_file) && file_exists($video_preview_file) && resource_download_allowed($ref,"pre",$resource["resource_type"]))
                                             {
                                             # Allow the video preview to be downloaded.
@@ -1542,7 +1542,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                         } ?>
                                                     </td>
                                             </tr>
-                                            <?php
+<?php
                                             }
 
                                         hook('additionalresourcetools2', '', array($resource, $access));
@@ -1561,7 +1561,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                     <?php
                                     # ----------------------------- Resource Actions -------------------------------------
                                     hook ("resourceactions");
-                                    
+
                                     if ($k=="" || $internal_share_access)
                                         {
                                         if (!hook("replaceresourceactions"))
@@ -1783,7 +1783,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 
                                         hook("afterresourceactions", "", array($ref));
                                         hook("afterresourceactions2");
-                                        
+
                                         } /* End if ($k!="")*/ 
 
                                     hook("resourceactions_anonymous");
@@ -1791,7 +1791,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 </ul><!-- End of ResourceToolsContainer -->
                             </div>
                         </div><!-- End of RecordDownloadSpace -->
-                            
+
                         <?php
                         if ($download_summary)
                             {
@@ -1812,7 +1812,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                         ?>
                     </div><!-- End of RecordDownload -->
 
-                    <?php
+<?php
                     } /* End of renderresourcedownloadspace hook */
                 } /* End of renderinnerresourceview hook */
 
@@ -1839,7 +1839,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
  ----------------------------------
  Show "pushed" metadata - from related resources with push_metadata set on the resource type. Metadata for those resources
  appears here in the same style.
- 
+
  */
 $pushed=do_search("!relatedpushed" . $ref);
 
@@ -1915,9 +1915,9 @@ if ($view_panels)
                     <div id="Titles3" class="ViewPanelTitles"></div>
                 </div>
             </div>
-    
+
         </div>
-        <?php
+<?php
         }
     }
 
@@ -1957,7 +1957,7 @@ if ($view_resource_collections && !checkperm('b')){ ?>
     	removePanel=parent_element.find("#AssociatedCollections").parent().parent();
     	parent_element.find("#AssociatedCollections").appendTo(parent_element.find("#Panel3")).addClass("TabPanel");
     	removePanel.remove();
-    	
+
     	parent_element.find("#CollectionsThemes").children().children(".Title").attr("panel", "CollectionsThemes").appendTo(parent_element.find("#Titles3"));
     	removePanel=parent_element.find("#CollectionsThemes").parent().parent();
     	parent_element.find("#CollectionsThemes").appendTo(parent_element.find("#Panel3")).addClass("TabPanel").hide();
@@ -2043,7 +2043,7 @@ if($enable_related_resources)
         "edit_access" => $edit_access,         
         "urlparams" => $urlparams,        
         ];
-        
+
     display_related_resources($relatedcontext);
     }
 if ($show_related_themes==true )
@@ -2147,7 +2147,7 @@ if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access
         </form>
         <?php
         }
-        
+
     else
         {
         echo htmlspecialchars($lang["nosimilarresources"]);	

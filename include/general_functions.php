@@ -2351,7 +2351,7 @@ function draw_performance_footer()
     </table>
     </div>
     </div>
-    <?php
+<?php
     }
     }
 

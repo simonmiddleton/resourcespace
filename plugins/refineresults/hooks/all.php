@@ -16,11 +16,11 @@ function HookRefineresultsSearchBeforesearchresults()
     if (is_array($collections)) $results+=count($collections);
     #if ($k!="" || $results==0) {return false;}
     #if ($results==0||$results==1) {return false;}
-    
+
     # External sharing search support. Clear search drops back to the collection only search.
     $default_search="";
     if ($k!="") {$s=explode(" ",$search);$default_search=$s[0];}
-    
+
     # dropping back to a special search seems like appropriate behavior in general.
     if ($k=="" && substr($search,0,1)=="!") {
         $s=explode(" ",$search);
@@ -29,7 +29,7 @@ function HookRefineresultsSearchBeforesearchresults()
             $default_search=$s[0];
         #}
     }
-    
+
 
     #if (substr($search,0,1)=="!") {return false;} # Only work for normal (non 'special') searches
     ?>

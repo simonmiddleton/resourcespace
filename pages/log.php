@@ -50,7 +50,7 @@ $go=getval("search_go","");
 if ($go!="")
 	{
 	$origref=$ref; # Store the reference of the resource before we move, in case we need to revert this.
-	
+
 	# Re-run the search and locate the next and previous records.
 	$modified_result_set=hook("modifypagingresult"); 
 	if ($modified_result_set){

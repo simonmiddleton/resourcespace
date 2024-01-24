@@ -317,9 +317,9 @@ function check_view_display_condition($fields,$n,$fields_all)
 						}
 					if (!$displayconditioncheck) {$displaycondition=false;}					
 					}
-					
+
 				} # see if next field needs to be checked
-							
+
 			$condref++;
 			} # check next condition	
 		

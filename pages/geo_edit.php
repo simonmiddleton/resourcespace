@@ -39,7 +39,7 @@ if ($resource == false)
     }
 
 // Check if the user is allowed to edit this resource.
-if (!get_edit_access($ref, $resource['archive'], false, $resource))
+if (!get_edit_access($ref, $resource['archive'], $resource))
     {
     exit($lang['error-permissiondenied']);
     }

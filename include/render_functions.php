@@ -20,7 +20,7 @@
 function render_search_field($field,$fields,$value="",$autoupdate=false,$class="stdwidth",$forsearchbar=false,$limit_keywords=array(), $searched_nodes = array(), $reset="",$simpleSearchFieldsAreHidden=false)
     {
     node_field_options_override($field);
-	
+
 	global $auto_order_checkbox, $auto_order_checkbox_case_insensitive, $lang, $category_tree_open, $minyear, $daterange_search, $searchbyday, $is_search, $values, $n, $simple_search_show_dynamic_as_dropdown, $clear_function, $simple_search_display_condition, $autocomplete_search, $baseurl, $fields, $baseurl_short, $extrafooterhtml,$FIXED_LIST_FIELD_TYPES, $maxyear_extends_current;
 
     # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering the search field  
@@ -31,13 +31,13 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 
     // set this to zero since this does not apply to collections
     if (!isset($field['field_constraint'])){$field['field_constraint']=0;}
-      
+
     $name="field_" . ($forsearchbar ? escape($field["name"]) : $field["ref"]);
     $id="field_" . $field["ref"];
 
     # An array of conditions spanning all governed fields and all governing fields
     $scriptconditions=array();
-        
+
     # Assume the field being rendered should be displayed
     $displaycondition=true;
 
@@ -58,7 +58,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             # Assume that the current test does not need to be checked
             $displayconditioncheck=false;
             $s=explode("=",$condition);
-            
+
             # Process each field to see if it is being referenced in the current test
             if (!is_array($fields))
                 {
@@ -71,17 +71,17 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     {
                     # The field being processed is a governing field whose value(s) control whether the field being rendered is to be visible or hidden
                     $display_condition_js_prepend=($forsearchbar ? "#simplesearch_".$fields[$cf]["ref"]." " : "");
-                    
+
                     # The script conditions array contains an entry for each governing field
                     $scriptconditions[$condref]["field"]               = $fields[$cf]["ref"];  # governing field
                     $scriptconditions[$condref]["governedfield"]       = $field["ref"];  # governed field
-                    
+
                     $scriptconditions[$condref]["name"]                = $fields[$cf]["name"];
                     $scriptconditions[$condref]['type']                = $fields[$cf]['type'];
                     $scriptconditions[$condref]['display_as_dropdown'] = $fields[$cf]['display_as_dropdown'];
                     # Get the node references of the governing field
 					$scriptconditionnodes = get_nodes($fields[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$cf]['type'] ? true : false));
-                    
+
                     $checkvalues=$s[1];
                     # Prepare an array of values present in the test
                     $validvalues=explode("|",strtoupper($checkvalues));
@@ -100,7 +100,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 						if(0 != count($found_validvalue))
 							{
 							$scriptconditions[$condref]['valid'][] = (string)$found_validvalue['ref'];
-                            
+
                             # Is the node present in search result list of nodes
                             if(in_array($found_validvalue['ref'],$searched_nodes))
                                 {
@@ -109,14 +109,14 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                 }
                             }
                         }
-				
+
                     # Suppress this field if none of the nodes (of the values) in the test match the searched nodes array
                     if (!$displayconditioncheck)
                         {
                         $displaycondition=false; # Do not render field
                         }
 
-					
+
 				// Certain fixed list types allow for multiple nodes to be passed at the same time
 
                 // Generate a javascript function specific to the field being rendered
@@ -188,7 +188,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 									});
 								});
 							</script>
-							<?php
+<?php
                             }
 
 							// Move on to the next field now
@@ -197,7 +197,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                         else
                             {
                             # Otherwise FIELD_TYPE_CHECK_BOX_LIST or FIELD_TYPE_DROP_DOWN_LIST or FIELD_TYPE_RADIO_BUTTONS
-                            
+
                             # Simple search will always display these types as dropdowns
                             if ($forsearchbar) {
                                 $checkname       = "nodes_searched[{$fields[$cf]['ref']}]";
@@ -246,7 +246,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 								});
 							});
 						</script>
-						<?php
+<?php
 						}
 					}
                 } # see if next field needs to be checked
@@ -268,7 +268,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             // Get current display state for governed field ("block" or "none")
             field<?php echo $field['ref']; ?>status    = jQuery(idname<?php echo $field['ref']; ?>).css('display');
 			newfield<?php echo $field['ref']; ?>status = 'none';
-           
+
             // Assume visible by default
             field<?php echo $field['ref']; ?>visibility = true;
 
@@ -317,7 +317,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 if (in_array($scriptcondition['type'], array(FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)) ) {
                     $jquery_condition_selector = "input[name=\"{$checkname}[]\"]";
                 }
-                
+
                 # Prepare selector for a checkbox list or a radio button or a dropdown list
                 if (in_array($scriptcondition['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_RADIO_BUTTONS, FIELD_TYPE_DROP_DOWN_LIST))) {
 
@@ -381,7 +381,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     {
                     fieldsToHideOnClear = new Array();
                     }
-    
+
                 // If the governed field is enabled then set it to display
                 if(field<?php echo $field['ref']; ?>visibility)
                     {
@@ -412,7 +412,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                         console.log("SLIDETOGGLE FIELD <?php echo $field['ref']; ?>");
                         jQuery(idname<?php echo $field['ref']; ?>).clearQueue();
                         });
-                    
+
                     // Adjust the border accordingly
                     if(jQuery(idname<?php echo $field['ref']; ?>).css('display') == 'block')
                         {
@@ -480,7 +480,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         hook("modifysearchfieldtitle");
         ?>
         <div class="SearchItem" id="simplesearch_<?php echo $field["ref"] ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><label for="simplesearch_<?php echo $field["ref"] ?>"><?php echo htmlspecialchars(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?></label><br/>
-        
+
         <?php
         #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
 		if(hook("modifyfieldtype")){$fields[$n]["type"]=hook("modifyfieldtype")-1;}
@@ -518,25 +518,25 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 			 $clear_function.="document.getElementById('".$name."_min').value='';";
 			 $clear_function.="document.getElementById('".$name."').value='';";
 		    }
-		
 
-        
+
+
         if ($forsearchbar && $autocomplete_search) { 
 				# Auto-complete search functionality
 				?></div>
 				<script type="text/javascript">
-				
+
 				jQuery(document).ready(function () { 
-				
+
 					jQuery("#field_<?php echo escape($field["ref"])?>").autocomplete( { source: "<?php echo $baseurl?>/pages/ajax/autocomplete_search.php?field=<?php echo escape($field["name"]) ?>&fieldref=<?php echo escape($field["ref"]) ?>"} );
 					})
-				
+
 				</script>
 				<div class="SearchItem">
-			<?php }
-            
+<?php }
+
         break;
-    
+
         case FIELD_TYPE_CHECK_BOX_LIST: 
         case FIELD_TYPE_DROP_DOWN_LIST:
         case ($forsearchbar && $field["type"]==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && $simple_search_show_dynamic_as_dropdown):
@@ -546,7 +546,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 
             # -------- Show a check list or dropdown for dropdowns and check lists?
             # By default show a checkbox list for both (for multiple selections this enabled OR functionality)
-            
+
             $setnames  = trim_array(explode(";",cleanse_string($value,true)));
             # Translate all options
             $adjusted_dropdownoptions=hook("adjustdropdownoptions");
@@ -657,7 +657,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                     ?>
                             </tbody>
                         </table>
-                        <?php
+<?php
                         }
                     }
                 else
@@ -695,13 +695,13 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                         ?>
                         </tr>
                     </table>
-                    <?php
+<?php
                     }
-                    
+
                 }
             }
         break;
-        
+
         case FIELD_TYPE_DATE_AND_OPTIONAL_TIME:
         case FIELD_TYPE_EXPIRY_DATE: 
         case FIELD_TYPE_DATE: 
@@ -732,9 +732,9 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 }
               ?>
             </select>
-            
+
             <?php if ($forsearchbar && $searchbyday) { ?><br /><?php } ?>
-            
+
             <select name="<?php echo $name?>_month" id="<?php echo $id?>_month" class="SearchWidth<?php if ($forsearchbar){ echo "Half SearchWidthRight";} ?>" style="width:120px;" <?php if ($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>
               <option value=""><?php echo htmlspecialchars($lang["anymonth"])?></option>
               <?php
@@ -745,7 +745,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 }
               ?>
             </select>
-            
+
             <?php if (!$forsearchbar || ($forsearchbar && $searchbyday)) 
             	{ 
             	?>
@@ -774,9 +774,9 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 					}
 				}
             }
-                    
+
         break;
-        
+
         case FIELD_TYPE_CATEGORY_TREE:
         global $category_tree_add_parents, $category_tree_search_use_and;
 
@@ -838,7 +838,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 <a href="#"
                    onClick="
                         jQuery('#cattree_<?php echo $field['name']; ?>').slideToggle();
-                        
+
                         return false;"><?php echo htmlspecialchars($lang['showhidetree']); ?></a>
                         <div id="cattree_<?php echo $field['name']; ?>" class="RecordPanel PopupCategoryTree">
                     <?php
@@ -848,7 +848,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     $category_tree_open = $original_category_tree_open;
                     ?>
                 </div>
-                
+
             </div>
 			<?php
 			# Add to clear function
@@ -883,7 +883,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             include __DIR__ . "/../pages/edit_fields/7.php";
             }
         break;
-        
+
         case FIELD_TYPE_DYNAMIC_KEYWORDS_LIST:
             include __DIR__ . '/../pages/edit_fields/9.php';
         break;      
@@ -903,7 +903,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 
                 $clear_function .= "document.getElementsByName('{$name}')[0].selectedIndex = -1;";
                 }
-            
+
             include __DIR__ . '/../pages/edit_fields/12.php';
             // need to adjust the field's name value
             ?>
@@ -917,7 +917,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     <div class="clearerleft"> </div>
     </div>
     <!-- ************************************************ -->
-    <?php
+<?php
     } # End of render_search_field
 
 /**
@@ -1957,7 +1957,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
             <div class="clearerleft"></div>
         </div>
         <!-- End of edit_multi_checkbox -->
-      <?php
+<?php
       }
 
   if ($multiple && !hook("replace_edit_all_mode_select","",array($field["ref"])))
@@ -2004,7 +2004,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
             // Prepending text doesn't work wih multilingual fields
             ?>
             <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["prependtext"])?></option>
-            <?php
+<?php
             }
         }
       if((in_array($field['type'], $TEXT_FIELD_TYPES) && !$multilingual_text_fields) || in_array($field['type'], [FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST]))
@@ -2012,7 +2012,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields onl.
         ?>
         <option value="AP"<?php if(getval("modeselect_" . $field["ref"],"")=="AP"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["appendtext"])?></option>
-        <?php
+<?php
         }
       if(in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))))
         {
@@ -2022,7 +2022,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
             # And it only applies if the field is optional
             ?> 
         <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["removetext"])?></option>
-        <?php
+<?php
             }
         }
         hook ("edit_all_extra_modes","",[$field]);
@@ -2238,7 +2238,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         # For certain field types that have no obvious focus, the help always appears
        ?>
        <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,3,4,6,7,10,12,14)) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"])))?></div></div>
-       <?php
+<?php
      }
 
     # If enabled, include code to produce extra fields to allow multilingual free text to be entered.
@@ -2369,7 +2369,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
 		// Use EDTF format for date input
 		?>		
 		<input class="<?php echo $forsearch?"SearchWidth":"stdwidth"; ?>"  name="<?php echo $name?>_edtf" id="<?php echo $name?>_edtf" type="text" value="<?php echo ($startvalue!=""|$endvalue!="")?$startvalue . "/" . $endvalue:""; ?>" style="display:none;" disabled <?php if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearch && !$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } else if (!$forsearch  && $edit_autosave){?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
-		<?php
+<?php
 		}?>
     <!--  date range search start -->   		
     <!--- start date -->	
@@ -3081,7 +3081,7 @@ function render_share_options($shareopts=array())
             </select>
             <div class="clearerleft"> </div>
         </div>
-        <?php 
+<?php 
         }
     else if(!checkperm("x") && !empty($allowed_external_share_groups) && in_array($usergroup, $allowed_external_share_groups))
         {
@@ -4053,7 +4053,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
                 field<?php echo $field['ref']; ?>valuefound = false;
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
-                
+
                 <?php
                 ############################
                 ### Field type specific
@@ -4093,7 +4093,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     {
                     field<?php echo $field['ref']; ?>visibility = false;
                     }
-                <?php
+<?php
                 }
                 ?>
 
@@ -4919,7 +4919,7 @@ function render_featured_collection(array $ctx, array $fc)
     $html_contents_class = array("FeaturedSimpleTileContents");
     $html_contents_icon = (isset($ctx["icon"]) && trim($ctx["icon"]) != "" ? $ctx["icon"] : ICON_CUBE);
     $fc_display_name = strip_prefix_chars(i18n_get_collection_name($fc),"*");
-            
+
     $html_contents_h2 = $html_contents_icon . $fc_display_name;
     $html_contents_h2_style = array();
     if(!$is_smart_featured_collection && $flag_new_themes && (time() - strtotime((string)$fc["created"])) < (60 * 60 * 24 * $flag_new_themes_age))
@@ -4932,7 +4932,7 @@ function render_featured_collection(array $ctx, array $fc)
         $html_contents_h2_style[] = "max-width: unset;";
 
         $action_selection_id = "themes_action_selection{$fc["ref"]}_bottom_{$fc["ref"]}";
-        
+
         if($show_resources_count && !$is_smart_featured_collection)
             {
             $html_contents_h2 .= sprintf(
@@ -6011,9 +6011,9 @@ function display_related_resources($context)
     $relatedtypes_shown         =  $context["relatedtypes_shown"] ?? [];
     $edit_access                =  $context["edit_access"] ?? false;
     $urlparams                  =  $context["urlparams"] ?? ["ref"=>$ref];    
-    
+
     global $baseurl, $baseurl_short, $lang, $view_title_field, $sort_relations_by_filetype, $related_resources_title_trim, $sort_relations_by_restype, $metadata_template_title_field, $metadata_template_resource_type;
-    
+
     $allrestypes = get_resource_types();
     if($ref==0 || count(array_diff(array_column($allrestypes,"ref"),$relatedtypes_shown)) == 0) 
         {
@@ -6224,7 +6224,7 @@ function display_related_resources($context)
         </div><!-- End of RelatedResources -->
     </div><!-- End of RecordPanel -->
     </div><!-- End of RecordBox -->
-    <?php
+<?php
     }
 
 /**
@@ -6354,12 +6354,12 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                 }
             }
             </script>
-            <?php
+<?php
             }
         elseif($propertyname=="type")
             {
             global $field_types;
-            
+
             // Sort  so that the display order makes some sense
             //natsort($field_types);
             ?>
@@ -6385,7 +6385,7 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
 
                                     this.form.submit();
                                     }
-                                    
+
                                     else if ((jQuery.inArray(newval,text_fields) > -1) && (jQuery.inArray(current_type,fixed_list_fields) > -1)) 
                                 {
                                     if(confirm('<?php echo escape($lang["admin_resource_type_field_cannot_migrate_data_prompt"]) ?>'))
@@ -6460,7 +6460,7 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                 // Used to store the raw EDTF string submitted
                 ?>
                 <input id="linked_data_field" name="linked_data_field" type="text" class="stdwidth" value="<?php echo escape((string) $currentvalue)?>">
-                <?php
+<?php
                 }
             }
         else if($propertyname === 'tab')

@@ -223,7 +223,7 @@ if(!$performancetest)
             });
         asort($tests);
         }
-        
+
     $plugin_tests = array_filter($plugin_tests); # Remove empty sub arrays
     }
 if (!empty($plugin_tests))

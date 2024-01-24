@@ -55,7 +55,7 @@ if ($save !== '' && $copy_from === '' && enforcePostRequest(getval('ajax', '') =
         {
         ajax_unauthorized();
         }
-    
+
     $permissions = trim_array(explode(',', (string) $group['permissions']));
     $permissions_to_add = $permissions_to_remove = [];
 
@@ -97,7 +97,7 @@ if ($save !== '' && $copy_from === '' && enforcePostRequest(getval('ajax', '') =
 
     log_activity(null, LOG_CODE_EDITED, $perms_csv, 'usergroup', 'permissions', $ref, null, null, null, true);
     ps_query("UPDATE usergroup SET permissions = ? WHERE ref = ?", ["s",$perms_csv, "i",$ref]);
-    
+
     ajax_send_response(200, ajax_response_ok_no_data());
 	}
 else if ($save !== '' && $copy_from !== '' && enforcePostRequest(getval('ajax', '') == 'true'))
@@ -141,7 +141,7 @@ renderBreadcrumbs($links_trail);
     <form method="post" id="copypermissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="return CentralSpacePost(this,true);">	
         <?php generateFormToken("permissions"); ?>
         <input type="hidden" name="save" value="1">
-        
+
         <div class="BasicsBox">
             <label><?php echo $lang["copypermissions"];?></label>
             <input type="text" name="copyfrom">
@@ -184,7 +184,7 @@ foreach ($additional_archive_states as $additional_archive_state)
 	{
 	DrawOption("z" . $additional_archive_state, $lang["hide_view_access_to_workflow_state"] . " '" . (isset($lang["status" . $additional_archive_state])?$lang["status" . $additional_archive_state]:$additional_archive_state) . "'", false);
 	}
-	
+
 DrawOption("g", $lang["restrict_access_to_all_available_resources"], true);
 
 // Permission for restricting access to resources per workflow state
@@ -270,13 +270,13 @@ foreach ($rtypes as $rtype)
 	{
 	DrawOption("XU" . $rtype["ref"], $lang["restricted_upload_for_resource_of_type"] . " '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'", false);
 	}
-	
+
 # ------------ Edit access to resource types (in any archive state to which the group has access)
 foreach ($rtypes as $rtype)
 	{
 	DrawOption("ert" . $rtype["ref"], $lang["force_edit_resource_type"] ." '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'");
     }
-    
+
 foreach ($rtypes as $rtype)
     {
     DrawOption("XE" . $rtype["ref"], $lang["deny_edit_resource_type"] ." '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'");
@@ -411,7 +411,7 @@ hook("additionalperms");
 $custom_permissions = join(",", array_diff($permissions, $permissions_done));
 ?>			</table>
 		</div>  <!-- end of Listview -->
-		
+
 		<div class="Question">
 			<label for="other"><?php echo $lang["custompermissions"]; ?></label>
 			<textarea
@@ -423,7 +423,7 @@ $custom_permissions = join(",", array_diff($permissions, $permissions_done));
             ><?php echo htmlspecialchars($custom_permissions); ?></textarea>			
 			<div class="clearerleft"></div>
 		</div>
-		
+
 		<div class="QuestionSubmit">		
 			<input 
                 name="save"

@@ -281,7 +281,7 @@ foreach($report_options as $report_opt)
 		if (this.checked)
 			{
 			document.getElementById('EmailSetup').style.display='block';
-			
+
 			// Copy reporting period to e-mail period
 			if (document.getElementById('period').value==0)
 				{
@@ -378,7 +378,7 @@ function update_view_as_search_results_btn(el)
         else if(period == -1)
             {
             data_range = jQuery('#DateRange');
-            
+
             // e.g for period date range: p-1fyXXXXfmXXfdXXtyXXXXtmXXtdXX
             report_period_data += 'fy' + data_range.find('input[name="from-y"]').val();
             report_period_data += 'fm' + data_range.find('select[name="from-m"] option:selected').val();

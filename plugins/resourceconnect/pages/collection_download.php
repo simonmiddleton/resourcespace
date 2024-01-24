@@ -89,17 +89,17 @@ if ($submitted != "")
 			if (((file_exists($p) && $access==0) || 
 				(file_exists($p) && $access==1 && 
 					(image_size_restricted_access($size) || ($usesize='' && $restricted_full_download))) 
-					
+
 					) && resource_download_allowed($ref,$usesize,$result[$n]['resource_type']))
 				{
-				
+
 				$used_resources[]=$ref;
 				# when writing metadata, we take an extra security measure by copying the files to tmp
 				$tmpfile=write_metadata($p,$ref);
 				if($tmpfile!==false && file_exists($tmpfile)){$p=$tmpfile;}		
-	
+
 				# if the tmpfile is made, from here on we are working with that. 
-				
+
 				# If using original filenames when downloading, copy the file to new location so the name is included.
 				if ($original_filenames_when_downloading)	
 					{
@@ -114,7 +114,7 @@ if ($submitted != "")
 						# The system needs to replace the extension to change it to jpg if necessary, but if the original file
 						# is being downloaded, and it originally used a different case, then it should not come from the file_extension, 
 						# but rather from the original filename itself.
-						
+
 						# do an extra check to see if the original filename might have uppercase extension that can be preserved.	
 						# also, set extension to "" if the original filename didn't have an extension (exiftool identification of filetypes)
 						$pathparts=pathinfo($filename);
@@ -126,7 +126,7 @@ if ($submitted != "")
 						$filename=$basename_minus_extension.$append.".".$pextension;
 
 						if ($prefix_resource_id_to_filename) {$filename=$prefix_filename_string . $ref . "_" . $filename;}
-						
+
 						$fs=explode("/",$filename);$filename=$fs[count($fs)-1];
 
                         # Convert $filename to the charset used on the server.
@@ -144,12 +144,12 @@ if ($submitted != "")
 
 						# Add the temporary file to the post-archiving deletion list.
 						$deletion_array[]=$newpath;
-						
+
 						# Set p so now we are working with this new file
 						$p=$newpath;
 						}
 					}
-				
+
 				#Add resource data/collection_resource data to text file
 				if (($zipped_collection_textfile==true)&&($includetext=="true")){ 
 					if ($size==""){$sizetext="";}else{$sizetext="-".$size;}
@@ -168,21 +168,21 @@ if ($submitted != "")
 					$text.= "-----------------------------------------------------------------\r\n\r\n";	
 					}
 				}
-				
+
 				$path.=$p . "\r\n";	
-				
+
 				# build an array of paths so we can clean up any exiftool-modified files.
-				
+
 				if($tmpfile!==false && file_exists($tmpfile)){$deletion_array[]=$tmpfile;}
 				daily_stat("Resource download",$ref);
 				resource_log($ref,'d',0);
-				
+
 				# update hit count if tracking downloads only
 				if ($resource_hit_count_on_downloads) { 
 				# greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
 				ps_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref=?",array("i",$ref));
 				} 
-				
+
 				}
 			}
 		}
@@ -195,10 +195,10 @@ if ($submitted != "")
 		$url=$xt_resource["url"];		
 		$url=str_replace("view.php","download.php",$url);
 		$url.="&size=" . $size;
-		
+
 		$tmp_file=get_temp_dir() . "/XT_" . $collection . "_" . $xt_resource["ref"] . ".jpg";
 		file_put_contents($tmp_file,file_get_contents($url));
-		
+
 		$deletion_array[]=$tmp_file; # Add to deletion array for post-download cleanup
 		$path.=$tmp_file . "\r\n";	# Add to download path
 		}

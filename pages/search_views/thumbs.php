@@ -23,7 +23,7 @@ if (!hook("renderresultthumb"))
         }
 
     $thumbs_displayed_fields_height = $resource_panel_height + ($field_height * (count($thumbs_display_fields))) + 2;
-    
+
     # Add space for number of annotations
     if($annotate_enabled || (isset($annotate_enabled_adjust_size_all) && $annotate_enabled_adjust_size_all == true))
         {
@@ -48,7 +48,7 @@ if (!hook("renderresultthumb"))
         }
 
     hook('thumbs_resourceshell_height');
-    
+
     if($display_resource_id_in_thumbnail)
         { 
         $thumbs_displayed_fields_height += $resource_id_height;
@@ -136,7 +136,7 @@ if (!hook("renderresultthumb"))
                 }
 
             $thm_url=get_resource_path($ref,false,$image_size ,false,$result[$n]['preview_extension'],true,1,$use_watermark,$result[$n]['file_modified']);
-                
+
             if(isset($result[$n]['thm_url']))
                 {
                 $thm_url = $result[$n]['thm_url'];
@@ -194,7 +194,7 @@ if (!hook("renderresultthumb"))
                    hook("aftersearchimg","",array($result[$n], $thm_url, $display))
                    ?>
                 </a>
-            <?php 
+<?php 
             } ?> 
         <!-- END HOOK Renderimagethumb-->
 
@@ -256,7 +256,7 @@ if (!hook("renderresultthumb"))
             {
             if(!in_array($df[$x]['ref'],$thumbs_display_fields))
                 {continue;}
-            
+
             #value filter plugin -tbd   
             $value=@$result[$n]['field'.$df[$x]['ref']];
             $plugin="../plugins/value_filter_" . $df[$x]['name'] . ".php";
@@ -290,7 +290,7 @@ if (!hook("renderresultthumb"))
                                 href="<?php echo $url?>"  
                                 onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
                             >
-                            <?php 
+<?php 
                             } //end link
                         echo format_display_field($value);
                         if ($show_extension_in_search) 
@@ -300,12 +300,12 @@ if (!hook("renderresultthumb"))
                         if ($x==0)
                             { // add link if necessary ?>
                             </a>
-                            <?php 
+<?php 
                             } //end link?> 
                         &nbsp;
                         </div>
                     </div>
-                    <?php 
+<?php 
                     } /* end hook replaceresourcepanelinfo */ ?>
                 <?php 
                 // normal behavior
@@ -324,18 +324,18 @@ if (!hook("renderresultthumb"))
                                 href="<?php echo $url?>"  
                                 onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
                             >
-                            <?php 
+<?php 
                             } //end link
                         echo highlightkeywords(htmlspecialchars(tidy_trim(TidyList(i18n_get_translated($value)),$resolved_title_trim)),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
                         if ($x==0)
                             { // add link if necessary ?>
                             </a>
-                            <?php 
+<?php 
                             } //end link ?>
                         &nbsp;
                     </div>
                     <div class="clearer"></div>
-                    <?php 
+<?php 
                     }
                 } /* end hook replaceresourcepanelinfonormal */
                 hook("processthumbsfields");
@@ -394,7 +394,7 @@ if (!hook("renderresultthumb"))
 
     </div>
 </div>
-    <?php 
+<?php 
     } # end hook renderresultthumb
 
 

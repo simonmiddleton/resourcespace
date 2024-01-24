@@ -51,7 +51,7 @@ if(!is_array($resource))
     error_alert($lang['error-pageload'],false);
     exit();
     }
-$editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
+$editaccess = get_edit_access($ref,$resource["archive"],$resource);
 
 // not allowed to edit this resource?
 if (!($editaccess || !checkperm("A")) && $ref>0) {exit ("Permission denied.");}
@@ -109,7 +109,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
     if(strpos($ffmpeg_fullpath, 'avconv') == true){$use_avconv = true;}
 
     // create new resource
-    if ($upload_type == "new" && get_edit_access($resource['ref'],$resource["archive"], false,$resource) && (checkperm("d") || checkperm("c")))
+    if ($upload_type == "new" && get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c")))
         {
         // create a new resource.
         $newref=copy_resource($ref,-1,$lang["video_splice_createdfromvideosplice"]);
@@ -361,7 +361,7 @@ if(isset($resource["field".$view_title_field]))
                 include dirname (__FILE__, 4) . "/pages/video_player.php";
                 ?>
             </div>
-            <?php
+<?php
             }
         ?>
         </div>
@@ -454,7 +454,7 @@ if(isset($resource["field".$view_title_field]))
                 ?>
                 <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
                 <br />
-                <?php
+<?php
                 }
             if ($resource["file_extension"]!="")
                 { ?>
@@ -481,7 +481,7 @@ if(isset($resource["field".$view_title_field]))
             <label><?php echo $lang["video-trim_upload-type"]?></label>
             <select name="upload_type" id="uploadtype" class="stdwidth" onChange="var q=document.getElementById('question_collectionadd');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
             <?php if(!checkperm("A")){?><option value="alt"><?php echo $lang["addalternativefile"]?></option><?php }?>
-            <?php if(get_edit_access($resource['ref'],$resource["archive"], false,$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo $lang["createnewresource"]?></option><?php }?>
+            <?php if(get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo $lang["createnewresource"]?></option><?php }?>
             </select>
             <div class="clearerleft"> </div>
         </div>

@@ -30,12 +30,12 @@ if (!$valid)
 	# ------------------- Notification not yet received. Show a please wait message. -----------------------
 	?>
     <p><?php echo $lang["waitingforpaymentauthorisation"] ?></p>
-	   
+
 	<form method="get" action="<?php echo $baseurl_short?>pages/purchase_download.php">
 	<input type="submit" name="reload" value="&nbsp;&nbsp;&nbsp;<?php echo $lang["reload"] ?>&nbsp;&nbsp;&nbsp;">
 	<input type="hidden" name="collection" value="<?php echo $usercollection ?>">
 	</form>
-	<?php
+<?php
 	}
 else
 	{
@@ -77,10 +77,10 @@ else
 		</tr>
 	<?php } ?>
 	</table>
-	
+
 	</div>
 	</div>
-	<?php
+<?php
 	}
 ?>
 </div>
