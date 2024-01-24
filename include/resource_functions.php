@@ -7211,7 +7211,7 @@ function get_last_resource_edit_array($resources = array())
         );
         if (!isset($lastmodified) || $rows[0]["modified"]>$lastmodified["modified"]){$lastmodified=$rows[0];}
         }
-    $lastuserdetails = ps_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource = ? AND rl.type='e'",array("i",$lastmodified["ref"]));
+    $lastuserdetails = ps_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource = ? AND rl.type='e' ORDER BY rl.date DESC",array("i",$lastmodified["ref"]));
     if(count($lastuserdetails) == 0)
         {
         return false;
@@ -7219,7 +7219,7 @@ function get_last_resource_edit_array($resources = array())
 
     $timestamp = max($lastuserdetails[0]["date"],$lastmodified["modified"]);
 
-    $lastusername = (trim($lastuserdetails[0]["fullname"]) != "") ? $lastuserdetails[0]["fullname"] : $lastuserdetails[0]["username"];
+    $lastusername = (trim((string)$lastuserdetails[0]["fullname"]) != "") ? $lastuserdetails[0]["fullname"] : $lastuserdetails[0]["username"];
     return array("ref" => $lastmodified["ref"],"time" => $timestamp, "user" => $lastusername);
     }
 
