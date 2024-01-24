@@ -828,7 +828,10 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                     }
 
                 // Show previously searched options on the status box
-                $status_box_elements .= "<span id=\"nodes_searched_{$field['ref']}_statusbox_option_{$n_details['ref']}\">{$n_details['name']}</span><br />";
+                $status_box_elements .= "
+                <div id=\"tree_{$field['ref']}_selected_{$n_details['ref']}\" class=\"tree_{$field['ref']}_options_status\">
+                    <span id=\"nodes_searched_{$field['ref']}_statusbox_option_{$n_details['ref']}\">{$n_details['name']}</span><br />
+                </div>";
                 }
             ?>
 			<div id="field_<?php echo escape($field['name']); ?>">
