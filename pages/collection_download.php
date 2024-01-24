@@ -516,7 +516,7 @@ if ($submitted != "")
     if('' == $path)
         {
         update_zip_progress_file('nothing_to_download');
-        exit($lang['nothing_to_download']);
+        exit(escape($lang['nothing_to_download']));
         }
 
     collection_download_process_summary_notes(
@@ -677,21 +677,21 @@ function ajax_download(download_offline, tar)
                  if (remoteData.indexOf("file")!=-1){
                             var numfiles=remoteData.replace("file ","");
                             if (numfiles==1){
-                                var message=numfiles+' <?php echo $lang['fileaddedtozip']?>';
+                                var message=numfiles+' <?php echo escape($lang['fileaddedtozip'])?>';
                             } else { 
-                                var message=numfiles+' <?php echo $lang['filesaddedtozip']?>';
+                                var message=numfiles+' <?php echo escape($lang['filesaddedtozip'])?>';
                             }    
                             var status=(numfiles/<?php echo count($result)?>*100)+"%";
                             console.log(status);
                             document.getElementById('progress2').innerHTML=message;
                         }
                         else if (remoteData=="complete"){ 
-                            document.getElementById('progress2').innerHTML="<?php echo $lang['zipcomplete']?>";
+                            document.getElementById('progress2').innerHTML="<?php echo escape($lang['zipcomplete'])?>";
                             document.getElementById('progress').style.display="none";
                             progress.stop();
                         }
                         else if (remoteData=="nothing_to_download"){
-                            document.getElementById('progress2').innerHTML="<?php echo $lang['nothing_to_download']?>";
+                            document.getElementById('progress2').innerHTML="<?php echo escape($lang['nothing_to_download'])?>";
                             document.getElementById('progress').style.display="none";
                             progress.stop();
                         }
