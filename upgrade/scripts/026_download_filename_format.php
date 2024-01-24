@@ -122,7 +122,8 @@ $process_config_overrides = function(array $rows, string $what)
             continue;
             }
 
-        override_rs_variables_by_eval($deprecated_options, $config_options);
+        override_rs_variables_by_eval($GLOBALS, $config_options);
+
         if ($deprecated_options === $get_global_config_options()) {
             continue;
         }
