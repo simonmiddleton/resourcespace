@@ -2291,7 +2291,7 @@ if ($multiple && !$disable_geocoding)
     <div id="editmaplocation_map" style="display:none; width: 99%; margin-top:0px; margin-bottom:0px; height:300px; border:1px solid black; float:none; overflow: hidden;">
 
     <script>
-        <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
+        // Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js
         <?php set_geo_map_centerview(); ?>
         var map3 = new L.map('editmaplocation_map').setView(mapcenterview,mapdefaultzoom);
         var defaultLayer = new L.tileLayer.provider('<?php echo $map_default;?>', {
@@ -2303,7 +2303,7 @@ if ($multiple && !$disable_geocoding)
             return +(Math.round(num + "e+6") + "e-6");
         }
 
-        <!--Place a marker on the map when clicked-->
+        // Place a marker on the map when clicked
         var resourceMarker = [];
         currentZoom = map3.getZoom();
         map3.on('click', function(e) {
@@ -2312,7 +2312,7 @@ if ($multiple && !$disable_geocoding)
             currentZoom = map3.getZoom();
             console.log(geoLat, geoLong, currentZoom);
 
-            <!--Clear existing marker when locating a new marker as we only want one marker for the resource-->
+            // Clear existing marker when locating a new marker as we only want one marker for the resource
             if (resourceMarker != undefined) {
                 map3.removeLayer(resourceMarker);
             };
@@ -2320,7 +2320,7 @@ if ($multiple && !$disable_geocoding)
             document.getElementById('location').value=georound(geoLat) + ', ' + georound(geoLong);
             document.getElementById('mapzoom').value=currentZoom;
 
-            <!--Add a marker to show where you clicked on the map last and center the map on the marker-->
+            // Add a marker to show where you clicked on the map last and center the map on the marker
             resourceMarker = L.marker([geoLat, geoLong], {
                 title: georound(geoLat) + ", " + georound(geoLong) + " (WGS84)"
             }).addTo(map3);

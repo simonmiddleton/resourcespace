@@ -31,12 +31,6 @@ if (getval("ajax","") == "" && !hook("replace_footer"))
     <!-- Use aria-live assertive for high priority changes in the content: -->
     <span role="status" aria-live="assertive" class="ui-helper-hidden-accessible"></span>
 
-    <!-- Global Trash Bin -->
-    <?php if (!hook("replacetrashbin")) 
-    	{
-    	render_trash("trash", "");
-    	} ?>
-
     <div class="clearerleft"></div>
 
     <div class="clearer"></div>

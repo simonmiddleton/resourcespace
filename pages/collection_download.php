@@ -513,8 +513,9 @@ if ($submitted != "")
         {
         collection_download_process_data_only_types($result, $id, $collection_download_tar, $usertempdir, $zip, $path, $deletion_array);
         }
-    else if('' == $path)
+    if('' == $path)
         {
+        update_zip_progress_file('nothing_to_download');
         exit($lang['nothing_to_download']);
         }
 
@@ -685,10 +686,15 @@ function ajax_download(download_offline, tar)
                             document.getElementById('progress2').innerHTML=message;
                         }
                         else if (remoteData=="complete"){ 
-                           document.getElementById('progress2').innerHTML="<?php echo $lang['zipcomplete']?>";
-                           document.getElementById('progress').style.display="none";
-                           progress.stop();    
-                        }  
+                            document.getElementById('progress2').innerHTML="<?php echo $lang['zipcomplete']?>";
+                            document.getElementById('progress').style.display="none";
+                            progress.stop();
+                        }
+                        else if (remoteData=="nothing_to_download"){
+                            document.getElementById('progress2').innerHTML="<?php echo $lang['nothing_to_download']?>";
+                            document.getElementById('progress').style.display="none";
+                            progress.stop();
+                        }
                         else {
                             // fix zip message or allow any
                             console.log(remoteData);

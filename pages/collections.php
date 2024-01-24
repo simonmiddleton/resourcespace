@@ -15,7 +15,7 @@ $archive         = getval('archive', '');
 $daylimit        = getval('daylimit', '');
 $offset          = getval('offset', '');
 $resources_count = getval('resources_count', '');
-$collection      = getval('collection', '');
+$collection      = getval('collection', '', true);
 $entername       = getval('entername', '');
 $res_access      = getval('access','');
 
@@ -955,14 +955,12 @@ elseif (($k != "" && !$internal_share_access))
         if ($min_access==0) {
             # Ability to download only if minimum access allows it
             if ($download_usage && ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0)) { ?>
-                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>
-                    &url=<?php echo urlencode("pages/download_usage.php?collection=" .  $usercollection . "&k=" . $k)?>">
+                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'collection'=>$usercollection, 'url'=>'pages/download_usage.php?collection='.$usercollection.'&k='.$k]);?>">
                     <?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a><br />
             <?php 
             } else if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) { ?>
-                <a href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&collection=<?php echo $usercollection ?>
-                    &url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>
-                    " onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a><br />
+                <a href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'collection'=>$usercollection, 'url'=>'pages/collection_download.php?collection='.$usercollection.'&k='.$k]);?>" 
+					onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a><br />
             <?php 
             }
         }
@@ -1326,7 +1324,7 @@ if (count($addarray)>0 && $addarray[0]!="")
             {
             if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result) > 0)
                 {?>
-                <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k) ?>&url=<?php echo urlencode("pages/collection_download.php?collection=" .  $usercollection . "&k=" . $k)?>"><?php echo htmlspecialchars($lang["action-download"])?></a></li>
+                <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'url'=>'pages/collection_download.php?collection='.$usercollection.'&k='.$k])?>"><?php echo htmlspecialchars($lang["action-download"])?></a></li>
                 <?php
                 }
             if ($feedback)

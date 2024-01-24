@@ -73,29 +73,11 @@ else{
 ?>
 <script>
 
-    if(validated_fields == undefined)
-        {
-        var validated_fields = ["question_<?php echo (int)$n?>"];
-        }
-    else
-        {
-        validated_fields.push('question_<?php echo (int)$n?>');
-        }
-
-    if(lastFocus == undefined)
-        {
-        var lastFocus = '';
-        jQuery(document).ready(function(){
-            jQuery(document).on('focus', '.Question', function(event){
-                let question = jQuery(event.target).parent();
-                if(jQuery(question).attr('id') != jQuery(lastFocus).parent().attr('id') && validated_fields.includes(jQuery(lastFocus).parent().attr('id')))
-                    {
-                    validate_date_field(jQuery(lastFocus).attr('id').split('-')[0]);
-                    }
-                lastFocus = event.target;
-            })
+    jQuery(document).ready(function(){
+        jQuery('[id^=<?php echo escape($name); ?>-]').on('change', function(event){
+            validate_date_field(event.target.id.split('-')[0]);
         })
-        }  
+    })
     	
     <?php 
     if($date_validation_js)
@@ -160,7 +142,7 @@ else{
                     {
                     if(!day_numeric && month_numeric)
                         {  
-                        date_is_valid=false; // Prevent month only
+                        date_is_valid=true; // Allow month only
                         }
                     }
                 }

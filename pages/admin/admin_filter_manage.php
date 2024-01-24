@@ -26,14 +26,14 @@ $params = array(
     "filterorder"   => $filterorder
     );
 
-if ($copy_from > 0)
+if ($copy_from > 0 && enforcePostRequest(false))
     {
     $new_filter_id  = copy_filter($copy_from);
     $filter_details = get_filter($new_filter_id);
     save_filter($new_filter_id, $filter_details['name'] . ' ('.$lang['copy'].')', $filter_details['filter_condition']);
     redirect($baseurl_short."pages/admin/admin_filter_edit.php?filter=" . $new_filter_id);
     }
-elseif (trim($new_filter_name) == '' && getval('save', '') == 'true')
+elseif (trim($new_filter_name) == '' && getval('save', '') == 'true' && enforcePostRequest(false))
     {
     error_alert($lang['error-invalid_name'], false);
     exit();

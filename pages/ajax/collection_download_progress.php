@@ -26,5 +26,8 @@ else if ($content=="zipping"){
 		} 
 	}
 
+else if ($content=="nothing_to_download"){
+    echo 'nothing_to_download';
+}
 else {
 	ob_start();echo $content;ob_flush();exit();} // echo whatever the script has placed here.

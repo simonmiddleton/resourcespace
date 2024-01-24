@@ -1,197 +1,197 @@
 <?php
-/*
-include_once "../include/config.default.php";
-if (file_exists("../include/config.php")){
-	include_once("../include/config.php");
-}
-*/
-include_once "../../../include/db.php";
 
-include_once "../../../include/authenticate.php";
-include_once "../../../include/image_processing.php";
+include_once __DIR__ . "/../../../include/db.php";
+include_once __DIR__ . "/../../../include/authenticate.php";
+include_once __DIR__ . "/../../../include/image_processing.php";
 
-include_once "../include/transform_functions.php";
-
-include "../../../include/header.php";
-
-?><div class="BasicsBox"><?php
-// verify that the requested CollectionID is numeric.
-$collection = getval('collection','');
-if (!is_numeric($collection)){ echo "Error: non numeric collection ID."; exit; }
-
-$doit = getval('doit',0);
-
-if ($doit == 0){
-	// user has not confirmed operation. So make them do that first
-
-	echo "<h1>" . $lang['batchtransform'] . "</h1>";
-	echo "<p>". $lang['batchtransform-introtext'] . "</p>";
-?>
-
-
-	<form name='batchtransform' action='<?php echo $baseurl_short?>plugins/transform/pages/collection_transform.php' >
-	<input type='hidden' name='doit' value='1' />
-	<input type='hidden' name='collection' value='<?php echo $collection ?>' />
-	
-	<?php echo $lang['rotation']; ?>:<br />
-	<select name='rotation'>
-		<option value='90'><?php echo $lang['rotation90']; ?></option>
-		<option value='180'><?php echo $lang['rotation180']; ?></option>
-		<option value='270'><?php echo $lang['rotation270']; ?></option>
-	</select>
-	<br /><br />
-	<input onclick="this.style.display='none';jQuery('#pleasewait').html('<?php echo $lang['pleasewait']?>');" type="submit" value="<?php echo htmlspecialchars($lang['transform']) ?>" />
-	<div id="pleasewait"></div>
-	</form>
-	</div>
-
-<?php	
-
-	include "../../../include/footer.php";
-
-	exit;
-}
-
-
-
-
-
-// get parameters. For now, only rotation is supported
-$rotation = getval('rotation',0);
-if (!is_numeric($rotation) || $rotation > 360){
-	$rotation = 0; // only allow numeric values
-}
-
+if(!$cropper_transform_original)
+    {
+    exit(escape($lang['error-permissiondenied']));
+    }
 
 # Locate imagemagick.
-if (!isset($imagemagick_path)){
-	echo $lang['error-crop-imagemagick-not-configured'];
-	exit;
-}
-$basecommand = get_utility_path("im-convert");
-if ($basecommand==false) {exit("Could not find ImageMagick 'convert' utility.");}
-
-$successcount = 0;
-$failcount = 0;
-
-
-// retrieve a list of all resources in the collection:
-$resources = ps_array("SELECT resource value from collection_resource where collection = ?",array("i",$collection));
-if (count($resources) == 0){
-	echo $lang['no_resources_found'];
-} else {
-	echo "<h2>" . str_replace("%col", $collection, $lang['batch_transforming_collection']) . "</h2>\n";
-	flush();
-	foreach($resources as $resource){
-		echo "<div class='Question'><h4>$resource</h4>";
-		flush();
-		$edit_access=get_edit_access($resource);
-		if (!$edit_access){
-			echo " " . $lang['not-transformed'];
-			$failcount++;
-		} else {
-
-			$orig_ext = ps_value("SELECT file_extension value from resource where ref = ?",array("i",$resource),'');
-			$new_ext = $orig_ext; // eventually we'll allow them to change the format. But for now, always the same.	
-
-			$path = get_resource_path($resource,true,'',false,$new_ext);
-			// strategy = we will transform to new path, check file, then replace the original.
-			$newpath = $path."_btr.$new_ext";
-
-			$command = $basecommand .  " \"$path\"[0]";
-
-			$command .= " -flatten "; // make sure we're only operating on first layer; fixes embedded preview weirdness
-
-			if ($rotation > 0){
-				$command .= " -rotate $rotation ";
-			}
-			$command .= " \"$newpath\"";
-			$shell_result = run_command($command);
-			if (file_exists($newpath) && filesize_unlimited($newpath) > 0){
-				// success!
-				if (!rename($newpath,$path)){
-					echo " " . str_replace("%res", $resource, $lang['error-unable-to-rename']) . "<br />\n";
-					$failcount++;
-				} else {
-					create_previews($resource,false,$new_ext);
-
-
-					// get final pixel dimensions of resulting file
-					$newfilesize = filesize_unlimited($path);
-					$newfiledimensions = getimagesize($path);
-					$newfilewidth = $newfiledimensions[0];
-					$newfileheight = $newfiledimensions[1];
-					
-					# delete existing resource_dimensions
-					ps_query("DELETE from resource_dimensions where resource=?",array("i",$resource));
-					
-					# insert new dimensions
-					$parameters=array("i",$resource, "i",$newfilewidth, "i",$newfileheight, "i",(int)$newfilesize);
-					ps_query("INSERT into resource_dimensions (resource, width, height, file_size) 
-						values (?, ?, ?, ?)", $parameters);
-
-					resource_log($resource,'t','','batch transform');
-					echo "<img src='" . get_resource_path($resource,false,"thm",false,'jpg',-1,1) . "' /><br />\n";
-					echo " " . $lang['success'] . "<br />\n";
-					$successcount++;
-				}
-				
-			} else {
-				echo " " . str_replace("%res", $resource, $lang['error-transform-failed']) . "<br />\n";
-				$failcount++;
-			}
-		}?></div><?php 
-			flush();
-	}
-	?><script>CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?nowarn=true&nc=' . time() ?>");</script><?php
-}
-
-
-if ($successcount > 0){
-	collection_log($collection,'b',''," ($successcount)");
-}
-
-echo "<div class='Question'><h3>" . $lang['transform_summary'] . "</h3>\n";
-$qty_total = count($resources);
-switch ($qty_total)
+if (!isset($imagemagick_path))
     {
-    case 1:
-        echo $lang['resources_in_collection-1'];
-        break;
-    default:
-        echo str_replace("%qty", $qty_total, $lang['resources_in_collection-2']);
-        break;
+    echo escape($lang['error-crop-imagemagick-not-configured']);
+    exit;
     }
-echo "<br />";
-switch ($successcount)
-    {
-    case 0:
-        echo $lang['resources_transformed_successfully-0'];
-        break;
-    case 1:
-        echo $lang['resources_transformed_successfully-1'];
-        break;
-    default:
-        echo str_replace("%qty", $successcount, $lang['resources_transformed_successfully-2']);
-        break;
-    }
-echo "<br />";
-switch ($failcount)
-    {
-    case 0:
-        break;
-    case 1:
-        echo $lang['errors-1'];
-        break;
-    default:
-        echo str_replace("%qty", $failcount, $lang['errors-2']);
-        break;
-    }
-?></div></div>
 
+// Verify that the requested collection is valid
+$collection = getval('collection',0,true);
+$usercollections=get_user_collections($userref);
+$errormessages = [];
+
+if (!in_array($collection,array_column($usercollections,"ref")))
+    {
+    exit(escape( $lang["error-collectionnotfound"]));
+    }
+
+// Retrieve a list of all resources in the collection:
+$resources = get_collection_resources($collection);
+if (count($resources) == 0)
+    {
+    $errormessages[] = $lang['no_resources_found'];
+    }
+
+$doit = getval('doit',0,true) != 0;
+if ($doit && enforcePostRequest(TRUE) && count($resources) > 0)
+    {
+    $rotation = getval('rotation',0,true) % 360;
+    $tfactions = ["r" . $rotation]; // Single rotation only enabled
+
+    $successcount = 0;
+    $failcount = 0;
+
+    $batchtempdir = get_temp_dir(false,'') . "/transform_batch/";
+    if(!is_dir($batchtempdir))
+        {
+        // If it does not exist, create it.
+        mkdir($batchtempdir, 0777);
+        }
+
+    foreach($resources as $resource)
+        {
+        $edit_access=get_edit_access($resource);
+        if (!$edit_access)
+            {
+            $errormessages[] = $lang["resourceid"] . " " . $resource . ": " . $lang["error-permissiondenied"];
+            $failcount++;
+            continue;
+            }
+        else
+            {
+            $resdata = get_resource_data($resource);
+            if(!in_array(strtoupper($resdata["file_extension"]),$cropper_formatarray))
+                {
+                $failcount++;
+                $errormessages[] = $lang["resourceid"] . " " . $resource . ": " . str_replace("%EXTENSION",strtoupper($resdata["file_extension"]),$lang["filetypenotsupported"]);
+                continue;
+                }
+            $origpath = get_resource_path($resource, true,'',false,$resdata["file_extension"]);
+            $crop_temp_file = $batchtempdir . $resource . "_" . md5($resource . $userref . date("Ymd",time()) . $scramble_key) . "." . $resdata["file_extension"];
+
+            // Perform the actual transformation to create the new preview source
+            $generated = transform_file($origpath,$crop_temp_file, ["tfactions"=>$tfactions]);
+
+            if($generated)
+                {
+                debug("Saving original file and renaming " . $crop_temp_file . " to " . $origpath);
+                save_original_file_as_alternative($resource);
+                $copied = rename($crop_temp_file,$origpath);
+                if($copied)
+                    {
+                    debug("Renamed " . $crop_temp_file . " to " . $origpath);
+                    create_previews($resource,false,$resdata["file_extension"]);
+                    }
+                $successcount++;
+                }
+            else
+                {
+                $errormessages[] = $lang["resourceid"] . " " . $resource . ": " . $lang['not-transformed'];
+                $failcount++;
+                }
+            }
+        }
+
+    if ($successcount > 0)
+        {
+        collection_log($collection,'b',''," ($successcount)");
+        }
+
+    $qty_total = count($resources);
+    switch ($qty_total)
+        {
+        case 1:
+            $messages[] =  $lang['resources_in_collection-1'];
+            break;
+        default:
+            $messages[] =  str_replace("%qty", $qty_total, $lang['resources_in_collection-2']);
+            break;
+        }
+    switch ($successcount)
+        {
+        case 0:
+            $messages[] =  $lang['resources_transformed_successfully-0'];
+            break;
+        case 1:
+            $messages[] =  $lang['resources_transformed_successfully-1'];
+            break;
+        default:
+            $messages[] =  str_replace("%qty", $successcount, $lang['resources_transformed_successfully-2']);
+            break;
+        }
+    switch ($failcount)
+        {
+        case 0:
+            break;
+        case 1:
+            $messages[] =  $lang['errors-1'];
+            break;
+        default:
+            $messages[] =  str_replace("%qty", $failcount, $lang['errors-2']);
+            break;
+        }
+    exit(json_encode(array_merge($messages,$errormessages)));
+    }
+
+include __DIR__ . "/../../../include/header.php";
+?>
+
+<script>
+    function batch_rotate(collection,rotation)
+        {
+        CentralSpaceShowProcessing();
+        jQuery.ajax({
+            type: 'POST',
+            url: '<?php echo $baseurl_short; ?>plugins/transform/pages/collection_transform.php',
+            data: {
+                ajax : true,
+                collection : collection,
+                rotation : rotation,
+                doit : 1,
+                <?php echo generateAjaxToken("processTileChange"); ?>
+                },
+            })
+        .done(function(data, textStatus, jqXHR )
+            {
+            CentralSpaceHideProcessing();
+            CollectionDivLoad(baseurl_short + 'pages/collections.php');
+            response = jqXHR.responseText;
+            if(isJson(response))
+                {
+                response = JSON.parse(response).join("<br/>");
+                }
+            jQuery('#batch_transform_log').html(response).show();
+            })
+        .fail(function(jqXHR, textStatus, errorThrown)
+            {
+            let response = typeof jqXHR.responseJSON.data.message !== 'undefined'
+                ? jqXHR.responseJSON.data.message
+                : textStatus;
+            styledalert('<?php echo escape($lang['error']); ?>',errorThrown + response);
+            });
+        }
+</script>
+<div class="BasicsBox">
+    <h1><?php echo escape($lang['batchtransform']); ?></h1>
+    <p><strong><?php echo escape($lang['batchtransform-introtext']); ?></strong></p>
+    <form name='batchtransform' onsubmit='batch_rotate(<?php echo (int) $collection ?>,jQuery("#rotation").val());return false;' action='<?php echo $baseurl_short?>plugins/transform/pages/collection_transform.php' >
+        <input type='hidden' name='doit' value='1' />
+        <input type='hidden' name='collection' value='<?php echo (int) $collection ?>' />
+        <?php generateFormToken("batchtransform"); ?>
+
+        <?php echo escape($lang['rotation']); ?>:<br />
+        <select id='rotation' name='rotation'>
+            <option value='90'><?php echo escape($lang['rotation90']); ?></option>
+            <option value='180'><?php echo escape($lang['rotation180']); ?></option>
+            <option value='270'><?php echo escape($lang['rotation270']); ?></option>
+        </select>
+        <br /><br />
+        <input type="submit" value="<?php echo escape($lang['transform']) ?>" />
+    </form>
+</div>
+<div class="MessageBox" style="display:none;" id="batch_transform_log"></div>
 
 
 <?php
 include "../../../include/footer.php";
-
-?>

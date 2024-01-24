@@ -7,7 +7,7 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php';
 if (!checkperm('a'))
     {
-    exit ($lang['error-permissiondenied']);
+    exit (escape($lang['error-permissiondenied']));
     }
 
 $plugin_name = 'offline_archive';
@@ -15,7 +15,7 @@ if(!in_array($plugin_name, $plugins))
 	{
     plugin_activate_for_setup($plugin_name);
     }
-    
+
 $plugin_page_heading = $lang['offline_archive_configuration'];
 
 $page_def[] = config_add_single_ftype_select('offline_archive_archivefield',$lang['offline_archive_archivefield']);

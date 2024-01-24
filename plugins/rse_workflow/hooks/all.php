@@ -166,6 +166,37 @@ function HookRse_workflowAllRender_actions_add_collection_option($top_actions, a
     return array_merge($options, $wf_actions_options);
     }
 
+function HookRse_workflowAllRender_search_actions_add_option(array $options, array $urlparams)
+    {
+    global $internal_share_access;
+
+    // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
+        }
+
+    $k = trim((isset($urlparams["k"]) ? $urlparams["k"] : ""));
+
+    if($k != "" && $internal_share_access === false)
+        {
+        return false;
+        }
+
+    $wf_actions_options = rse_workflow_compile_actions($urlparams);
+
+    // Append to the current allow list of render_actions_filter (for the selection collection)
+    $current_render_actions_filter = $GLOBALS['render_actions_filter'] ?? fn($action) => true;
+    $GLOBALS['render_actions_filter'] = function($action) use ($current_render_actions_filter, $wf_actions_options)
+        {
+        return $current_render_actions_filter($action)
+            || in_array($action['value'], array_column($wf_actions_options, 'value'));
+        };
+
+    return array_merge($options, $wf_actions_options);
+    }
+
 function HookRse_workflowAllRender_actions_add_option_js_case($action_selection_id)
     {
     ?>

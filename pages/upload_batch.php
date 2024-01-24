@@ -1083,7 +1083,7 @@ jQuery(document).ready(function () {
                 }
             else
                 {
-                echo "maxNumberOfFiles: '" . (set_maxNumberOfFiles()) . "',";
+                echo "maxNumberOfFiles: null,";
                 }
             if (isset($allowedmime))
                 {

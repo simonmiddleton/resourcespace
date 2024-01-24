@@ -1843,7 +1843,8 @@ function save_collection($ref, $coldata=array())
                 }
             }
         }
-
+    global $userref;
+    clear_query_cache('collection_access' . $userref);
     refresh_collection_frame();
     }
 
@@ -3481,7 +3482,7 @@ function add_to_collection_link($resource, $extracode="", $size="", $class="", $
     $resource = (int) $resource;
     $size = escape($size);
     $class = escape($class);
-    $title = escape($GLOBALS['lang']["addtocurrentcollection"] . " - " . $view_title);
+    $title = escape($GLOBALS['lang']["addtocurrentcollection"] . (($view_title != "") ? " - " . $view_title : ""));
 
     return "<a class=\"addToCollection {$class}\" href=\"#\" title=\"{$title}\""
         . " onClick=\"AddResourceToCollection(event, {draggable: jQuery('div#ResourceShell{$resource}')},'{$resource}','{$size}'); {$extracode} return false;\""
@@ -3509,8 +3510,12 @@ function remove_from_collection_link($resource, $class="", string $onclick = '',
 
     $resource = (int) $resource;
     $class = escape($class);
-    $title = escape($basketmode ? $lang["removefrombasket"]: $lang["removefromcurrentcollection"] . " - " . $view_title);
     $pagename = escape($pagename);
+    $title = escape($basketmode ? $lang["removefrombasket"] : $lang["removefromcurrentcollection"]);
+
+    if ($view_title != "") {
+        $title .= " - " . $view_title;
+    }
 
     return "<a class=\"removeFromCollection {$class}\" href=\"#\" title=\"{$title}\" "
         . "onClick=\"RemoveResourceFromCollection(event,'{$resource}','{$pagename}'); {$onclick} return false;\""
@@ -4939,6 +4944,10 @@ function collection_download_process_data_only_types(array $result, $id, $collec
         if(in_array($result[$n]['resource_type'], $data_only_resource_types))
             {
             $template_path = get_pdf_template_path($result[$n]['resource_type']);
+            if ($template_path === false)
+                {
+                continue;
+                }
             $pdf_filename = 'RS_' . $result[$n]['ref'] . '_data_only.pdf';
             $pdf_file_path = get_temp_dir(false, $id) . '/' . $pdf_filename;
 

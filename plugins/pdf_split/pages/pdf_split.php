@@ -5,16 +5,30 @@ include_once '../../../include/image_processing.php';
 
 $ref=getval("ref","");
 
-# Count pages in this file
-$page=0;
-while(true)
-	{
-	$page++;
-	$size="";if ($page>1) {$size="scr";} # Use screen size for other pages.
-	$target=get_resource_path($ref,true,$size,false,"jpg",-1,$page,false,"",false); 
-	if (!file_exists($target)) {break;}
-	}
+# Decide which size we are looking for
+$size=$resource_view_use_pre?"pre":"scr";
 
+# Original file path
+$file=get_resource_path($ref,true,"",true,"pdf");
+
+# Extract PDF file information
+$pdfinfocommand = "pdfinfo " . escapeshellarg($file);
+$pdfinfo = shell_exec($pdfinfocommand);
+
+# Split into information line array
+$pdfinfoarray = explode("\n", $pdfinfo);
+
+# Extract the number of pages
+$pdfpagesvaluepair = preg_grep("/\bPages\b.+/", $pdfinfoarray);
+sort($pdfpagesvaluepair);
+
+$page=0;
+if(count($pdfpagesvaluepair) > 0) {
+    $pdfpages = explode(":", $pdfpagesvaluepair[0]);
+    if(count($pdfpages) === 2) {
+        $page = trim($pdfpages[1]);
+    }
+}
 
 # Split action
 if (getval("method","")!="" && enforcePostRequest(false))
@@ -76,11 +90,8 @@ if (getval("method","")!="" && enforcePostRequest(false))
 	redirect("pages/view.php?ref=" . $ref);	
 	}
 
-
-
-
-
 include "../../../include/header.php";
+   
 ?>
 
 <div class="BasicsBox">

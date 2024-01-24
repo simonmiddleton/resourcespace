@@ -165,11 +165,15 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
  * Redirect to the provided URL using a HTTP header Location directive. Exits after redirect
  *
  * @param  string $url  URL to redirect to
- * @return void
+ * @return never
  */
-function redirect($url)
+function redirect(string $url)
 	{
 	global $baseurl,$baseurl_short;
+
+    // Header may not contain NUL bytes
+    $url = str_replace("\0", '', $url);
+
 	if (getval("ajax","")!="")
 		{
 		# When redirecting from an AJAX loaded page, forward the AJAX parameter automatically so headers and footers are removed.	
@@ -5316,8 +5320,8 @@ function get_size_info(array $size, ?array $originalSize = null): string
             }
         }
 
-    $output = sprintf('
-        <p>%s &times; %s %s',
+    $output = sprintf(
+        '<p>%s &times; %s %s',
         htmlspecialchars($newWidth),
         htmlspecialchars($newHeight),
         htmlspecialchars($lang['pixels']),

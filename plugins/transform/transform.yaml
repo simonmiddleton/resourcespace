@@ -1,6 +1,6 @@
 name    : transform
-title   : Transform
-author  : David Dwiggins
+title   : Image Tools (transform)
+author  : David Dwiggins/Montala Limited
 version : 1.4
 desc    : Enables creation of cropped and scaled alternative images (jCrop w/Mobile support)
 icon    : fa fa-crop-alt

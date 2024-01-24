@@ -1827,7 +1827,3 @@ function get_resource_type_field_columns()
     return $resource_type_field_column_definitions;
     }
 
-function set_maxNumberOfFiles()
-    {
-    return is_int_loose($GLOBALS['upload_max_number_files']??"")?$GLOBALS['upload_max_number_files']:'null';
-    }

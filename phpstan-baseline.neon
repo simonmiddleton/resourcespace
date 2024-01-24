@@ -171,11 +171,6 @@ parameters:
 			path: plugins/adobe_link/hooks/view.php
 
 		-
-			message: "#^Undefined variable\\: \\$_MIME_TYPES$#"
-			count: 1
-			path: plugins/emu/include/emu_api.php
-
-		-
 			message: "#^Undefined variable\\: \\$date$#"
 			count: 1
 			path: plugins/feedback/include/feedback_functions.php

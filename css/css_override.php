@@ -175,6 +175,11 @@ if (isset($high_contrast_mode) && $high_contrast_mode == true)
     #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree, #BrowseBar {
         background: black;
     }
+    .SearchBarTab.SearchBarTabSelected {
+        background: white;
+        color: black;
+        border-radius: 8px;
+    }
     .TopInpageNav select, .update_result_order_button, select, .sp-replacer {
         box-shadow: none;
         border: 1px solid black;

@@ -49,7 +49,7 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
             $path = get_resource_path($ref,true,$sizes[$m]["id"],false,$sizes[$m]["extension"],true,$page,false,'',$alternative);
             echo " - Size: " . $sizes[$m]["id"] . ", extension: " . $sizes[$m]["extension"] . " Snew path: " . $newpath . PHP_EOL;
             echo " - Checking old path: " . $path . PHP_EOL;
-            if (file_exists($path) && !($sizes[$m]["id"] == "" && strpos($path, $syncdir)!==false))
+            if (file_exists($path) && !($sizes[$m]["id"] == "" && ($syncdir != "" && strpos($path, $syncdir) !== false)))
                 {
                 echo " - Found file at old path : " . $path . PHP_EOL;	
                 if(!file_exists($newpath))
