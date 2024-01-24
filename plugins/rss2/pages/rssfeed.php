@@ -17,7 +17,7 @@ class RSSFeed
     $this->link = $link;
     $this->description = $description;
 
-    if( is_array($optional) and count($optional) ){
+    if (is_array($optional) && count($optional)) {
       $this->optional = $optional;
     }
   }
@@ -47,7 +47,7 @@ function AddArticle($title, $link, $description, $optional = '')
 
     // aggiunge le coppie chiave valore opzionali
     // all'articolo appena inserito
-    if( is_array($optional) and count($optional) )
+    if (is_array($optional) && count($optional))
         {
         --$i;
         foreach($optional as $k=>$v)
@@ -77,7 +77,7 @@ function AddArticle($title, $link, $description, $optional = '')
         '<atom:link href="'.$baseurl.'/plugins/rss2/pages/rssfilter.php?'.$parameters.'" rel="self" type="application/rss+xml" />';
 
     // Channel optionals
-    if( is_array($this->optional) and count($this->optional) )
+    if (is_array($this->optional) && count($this->optional))
     {
       foreach($this->optional as $k => $v) {
         $out .= "<$k>$v</$k>\n";
@@ -85,7 +85,7 @@ function AddArticle($title, $link, $description, $optional = '')
     }
 
     // Image
-    if( $this->image['title'] and $this->image['url'] and $this->image['link'] )
+    if ($this->image['title'] && $this->image['url'] && $this->image['link'])
     {
       $out .= "<image>\n" .
       "<title>" . $this->image['title'] . "</title>\n" .
@@ -96,7 +96,7 @@ function AddArticle($title, $link, $description, $optional = '')
         $out .= "<description>" . $this->image['description'] . "</description>\n";
       }
 
-      if( $this->image['w'] and $this->image['h'] ) {
+      if ($this->image['w'] && $this->image['h']) {
         $out .= "<width>" . $this->image['w'] . "</width>\n" .
             "<height>" . $this->image['h'] . "</height>\n";
       }
@@ -104,7 +104,7 @@ function AddArticle($title, $link, $description, $optional = '')
     }
 
     // per ogni item stampa tutte le coppie chiave valore
-    for( $i = 0, $c = count($this->Articles); $i < $c; $i++ )
+    for ($i = 0, $c = count($this->Articles); $i < $c; $i++)
         {
         $out .= "<item>\n";
         foreach($this -> Articles[$i] as $k=>$v)
@@ -119,7 +119,7 @@ function AddArticle($title, $link, $description, $optional = '')
     $out .= "</channel>\n</rss>";
 
     // True output
-    if( !$save or !$path ){
+    if (!$save || !$path ) {
       header("Content-type: application/xml");
       echo trim($out);
       return true;

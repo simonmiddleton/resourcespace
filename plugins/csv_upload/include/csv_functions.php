@@ -670,7 +670,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                         continue 3;
                         }
                     }
-                elseif(in_array($field_type, $DATE_FIELD_TYPES) and $field_type != FIELD_TYPE_DATE_RANGE)
+                elseif (in_array($field_type, $DATE_FIELD_TYPES) && $field_type != FIELD_TYPE_DATE_RANGE)
                     {
                     // Validate date field excluding date range field  - $DATE_FIELD_TYPES global var in definitions.php
                     // This is a valid date if empty string returned

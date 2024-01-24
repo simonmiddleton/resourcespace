@@ -202,7 +202,7 @@ foreach($resources as $resource) // For each resources
 			ps_query("update resource set preview_attempts = 5 where ref = ?", array("i", $ref));
 			}
 
-		elseif ($resource['preview_attempts']<5 and $resource['file_extension']!="") 
+		elseif ($resource['preview_attempts'] < 5 && $resource['file_extension'] != "") 
 			{
 			if(!empty($resource['file_path'])){$ingested=false;}
 			else{$ingested=true;}

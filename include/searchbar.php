@@ -877,7 +877,7 @@ elseif($restypes=='')
                 }               
                 ?>
     
-    <?php if (isset($resourceid_simple_search) and $resourceid_simple_search){ ?>
+    <?php if (isset($resourceid_simple_search) && $resourceid_simple_search) { ?>
              <div class="SearchItem"><?php echo htmlspecialchars($lang["resourceid"]) ?><br />
              <input id="searchresourceid" name="searchresourceid" type="text" class="SearchWidth" value="" />
              </div>

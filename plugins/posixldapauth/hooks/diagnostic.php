@@ -3,7 +3,7 @@ include_once "ldap_class.php";
 include_once "diag_config.php";
 
 //date_default_timezone_set();
-if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
+if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get"))
 @date_default_timezone_set(@date_default_timezone_get());
 echo " ================================================== \r\n";
 echo " Ldap plugin diagnostic test: run on " . date('l jS \of F Y h:i:s A'). "\r\n";

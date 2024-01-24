@@ -124,7 +124,9 @@ if ($height % 2) {$height++;}
 
 /* Plugin hook to modify the output W & H before running ffmpeg. Better way to return both W and H at the same is appreciated.  */
 $tmp = hook("ffmpegbeforeexec", "", array($ffmpeg_fullpath, $file));
-if (is_array($tmp) and $tmp) {list($width, $height) = $tmp;}
+if (is_array($tmp) && $tmp) {
+    list($width, $height) = $tmp;
+}
 
 if (hook("replacetranscode","",array($file,$targetfile,$ffmpeg_global_options,$ffmpeg_preview_options,$width,$height)))
 	{
