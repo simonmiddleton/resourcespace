@@ -2075,7 +2075,7 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
     # For example, when viewing options set when $category_tree_add_parents=false
     # Needed for sorting below to ensure the container "ROOT" has child items to return.
     $selected_nodes = array_column($nodeentries, 'ref');
-    for ($n=0; $n < count($nodeentries); $n++)
+    for ($n=0; $n < count($nodeentries); ++$n)
         {
         if ($nodeentries[$n]['parent'] !== 0 && !in_array($nodeentries[$n]['parent'], $selected_nodes))
             {
