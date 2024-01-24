@@ -393,11 +393,14 @@ function api_get_alternative_files($resource,$order_by="",$sort="",$type="")
     global $alt_files_visible_when_restricted;
     $access = get_resource_access($resource);
 
-    if($access == RESOURCE_ACCESS_INVALID_REQUEST)
-        {return false;}
+    if ($access == RESOURCE_ACCESS_INVALID_REQUEST) {
+        return false;
+    }
 
-    if(($access!=0 && !($access==1 && $alt_files_visible_when_restricted)))
-        {return false;}
+    if ($access !=0 && !($access == 1 && $alt_files_visible_when_restricted)) {
+        return false;
+    }
+
     return get_alternative_files($resource,$order_by,$sort,$type);
     }
     
@@ -414,7 +417,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         return $assert_post;
         }
 
-    if((0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
+    if (0 < $resource && (!(get_edit_access($resource) || checkperm('A'))))
         {
         return false;
         }

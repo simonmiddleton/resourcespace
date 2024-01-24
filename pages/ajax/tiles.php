@@ -81,7 +81,7 @@ while((     !is_file($file)
                     }
                 }
             }
-        if(($provider != "" && isset($geo_tile_urls[$provider])))
+        if ($provider != "" && isset($geo_tile_urls[$provider]))
             {
             $url        = $geo_tile_urls[$provider]["url"];
             $subdomains = isset($geo_tile_urls[$provider]["subdomains"]) ? $geo_tile_urls[$provider]["subdomains"] : "#";

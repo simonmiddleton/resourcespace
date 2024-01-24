@@ -379,7 +379,7 @@ function process_config_options($user_id = null)
             $param_value = $config_option['value'];
 
             // Prepare the value since everything is stored as a string
-            if((is_numeric($param_value) && '' !== $param_value))
+            if (is_numeric($param_value) && '' !== $param_value)
                 {
                 $param_value = (int) $param_value;
                 }

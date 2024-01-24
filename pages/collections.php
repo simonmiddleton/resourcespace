@@ -938,7 +938,7 @@ else if ($basket)
 <?php
 	} # End of basket mode
 
-elseif (($k != "" && !$internal_share_access))
+elseif ($k != "" && !$internal_share_access)
 	{
 	# ------------- Anonymous access, slightly different display ------------------
 	$tempcol=$cinfo;
@@ -1312,7 +1312,7 @@ if (count($addarray)>0 && $addarray[0]!="")
 <?php	
 
 		} // end of Basket Mode
-	elseif (($k != "" && !$internal_share_access))
+	elseif ($k != "" && !$internal_share_access)
 		{
 		# Anonymous access, slightly different display
 		$tempcol=$cinfo;

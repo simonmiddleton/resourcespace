@@ -527,7 +527,7 @@ function prepareTags(array $dirty_tags)
             continue;
             }
 
-        if((!isset($dirty_tag['name']) || '' == $dirty_tag['name']))
+        if (!isset($dirty_tag['name']) || '' == $dirty_tag['name'])
             {
             continue;
             }

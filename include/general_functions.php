@@ -5266,7 +5266,7 @@ function compute_dpi($width, $height, &$dpi, &$dpi_unit, &$dpi_w, &$dpi_h)
         $dpi=300;
         }
 
-    if (((isset($sizes[$n]['unit']) && trim(strtolower($sizes[$n]['unit']))=="inches")) || $imperial_measurements)
+    if ((isset($sizes[$n]['unit']) && trim(strtolower($sizes[$n]['unit']))=="inches") || $imperial_measurements)
         {
         # Imperial measurements
         $dpi_unit=$lang["inch-short"];

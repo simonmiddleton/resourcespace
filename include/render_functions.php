@@ -4866,7 +4866,7 @@ function render_featured_collections(array $ctx, array $items)
             }
             
         // Don't show the tools for external shares
-        if((trim($k) != ""))
+        if (trim($k) != "")
             {
             $render_ctx["tools"] = array();
             }

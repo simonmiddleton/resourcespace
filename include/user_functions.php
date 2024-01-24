@@ -1281,7 +1281,7 @@ function get_active_users()
     $approver_groups = get_approver_usergroups($usergroup);
     $sql = "where logged_in = 1 and unix_timestamp(now()) - unix_timestamp(last_active) < (3600*2)";
     $sql_params = array();
-    if ((checkperm("U") || count($approver_groups) > 0))
+    if (checkperm("U") || count($approver_groups) > 0)
         {
         if (count($approver_groups) > 0)
             {
@@ -2700,7 +2700,7 @@ function checkPermission_dashuser()
 function checkPermission_dashmanage()
 	{
 	global $managed_home_dash;
-	return (!checkPermission_anonymoususer()) && ((!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin())));
+	return (!checkPermission_anonymoususer()) && (!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()));
     }
     
 /**

@@ -182,18 +182,15 @@ final class IIIFRequest {
             // Check the request parameters
             elseif($this->request["region"] != "info.json")
                 {
-                if(($this->request["size"] == ""
-                        ||
-                        !is_int_loose($this->request["rotation"])
-                        ||
-                        $this->request["filename"] != "default.jpg"
-                        )
-                    )
-                    {
+                if (
+                    $this->request["size"] == ""
+                    || !is_int_loose($this->request["rotation"])
+                    || $this->request["filename"] != "default.jpg"
+                ) {
                     // Not request for image information document and no sizes specified
                     $this->errors[] = "Invalid image request format.";
                     $this->triggerError(400);
-                    }
+                }
 
                 $formatparts = explode(".",$this->request["filename"]);
                 if(count($formatparts) != 2)

@@ -2845,7 +2845,7 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryr
                 {
                 continue;
                 }
-            if(((int)$fieldglobals[$field] == 0 && !in_array($restype,$restype_mappings[$field])))
+            if ((int)$fieldglobals[$field] == 0 && !in_array($restype,$restype_mappings[$field]))
                 {
                 $remove_fields[] = $field;
                 }

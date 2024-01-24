@@ -15,63 +15,43 @@ if((is_array($k) || trim($k) === '') && getval('noauth','') != true)
 
 header("Content-type: text/css");
 
-global $header_colour_style_override, $header_link_style_override, $home_colour_style_override, $collection_bar_background_override,
-$collection_bar_foreground_override, $button_colour_override;
+global $header_colour_style_override, $header_link_style_override, $home_colour_style_override,
+$collection_bar_background_override, $collection_bar_foreground_override, $button_colour_override;
 
 # Override the header background colour
-if ((isset($header_colour_style_override) && $header_colour_style_override != ''))
-    {
-    ?>
-    #Header, #OverFlowLinks, #LoginHeader
-        {
+if (isset($header_colour_style_override) && $header_colour_style_override != '') { ?>
+    #Header, #OverFlowLinks, #LoginHeader {
         background: <?php echo $header_colour_style_override; ?>;
-        }
-    <?php
-    }
+    } <?php
+}
 
 # Override the header link colour
-if ((isset($header_link_style_override) && $header_link_style_override != ''))
-    {
-    ?>
-
-    #HeaderNav1, #HeaderNav1 li a, #HeaderNav2 li a, #HiddenLinks li.HeaderLink a
-        {
+if (isset($header_link_style_override) && $header_link_style_override != '') { ?>
+    #HeaderNav1, #HeaderNav1 li a, #HeaderNav2 li a, #HiddenLinks li.HeaderLink a {
         color: <?php echo $header_link_style_override; ?>;
-        }
-    #HeaderNav2 li
-        {
-        border-color: <?php echo $header_link_style_override; ?>;
-        }
-    #HeaderNav1 li.UploadButton a 
-        {
-        color: #FFFFFF;
-        }
-    
-    <?php
     }
+    #HeaderNav2 li {
+        border-color: <?php echo $header_link_style_override; ?>;
+    }
+    #HeaderNav1 li.UploadButton a {
+        color: #FFFFFF;
+    } <?php
+}
 
 # Override home UI elements colour (intro text, dash tiles, simple search)
-if ((isset($home_colour_style_override) && $home_colour_style_override != ''))
-    {
-    ?>
+if (isset($home_colour_style_override) && $home_colour_style_override != '') { ?>
     #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, #BrowseBar, #NewsPanel.BasicsBox, #remote_assist #SearchBoxPanel,
-    .SearchBarTab.SearchBarTabSelected
-        {
+    .SearchBarTab.SearchBarTabSelected {
         background: <?php echo $home_colour_style_override; ?>;
-        }
-    <?php
-    }
+    } <?php
+}
 
 # Override the collection bar background colour
-if ((isset($collection_bar_background_override) && $collection_bar_background_override != ''))
-    {
-    ?>
-    .CollectBack
-        {
+if (isset($collection_bar_background_override) && $collection_bar_background_override != '') { ?>
+    .CollectBack {
         background: <?php echo $collection_bar_background_override; ?>;
-        }
-    <?php
-    }
+    } <?php
+}
 
 /**
  * Override the collection bar foreground colour
@@ -80,32 +60,22 @@ if ((isset($collection_bar_background_override) && $collection_bar_background_ov
  * Firefox/Windows does not recognise rgb() colour properties for optgroup element
  * */
 
-if ((isset($collection_bar_foreground_override) && $collection_bar_foreground_override != ''))
-    {
-    ?>
-    .CollectionPanelShell, #CollectionDiv select
-        {
+if (isset($collection_bar_foreground_override) && $collection_bar_foreground_override != '') { ?>
+    .CollectionPanelShell, #CollectionDiv select {
         background-color: <?php echo $collection_bar_foreground_override; ?>;
-        }    
-    
-    #CollectionDiv option, #CollectionDiv optgroup 
-        {
+    }
+    #CollectionDiv option, #CollectionDiv optgroup {
         font-style:normal;
         background-color: #474747;
         color: #fff;
-        }    
-
-    .ui-layout-resizer
-        {
-        background: <?php echo $collection_bar_foreground_override; ?>;
-        }
-    <?php
     }
+    .ui-layout-resizer {
+        background: <?php echo $collection_bar_foreground_override; ?>;
+    } <?php
+}
 
 // Override the button colour
-if ((isset($button_colour_override) && $button_colour_override != ''))
-    {
-    ?>
+if (isset($button_colour_override) && $button_colour_override != '') { ?>
     button,
     input[type=submit],
     input[type=button],
@@ -118,28 +88,28 @@ if ((isset($button_colour_override) && $button_colour_override != ''))
     .uppy-DashboardContent-back, .uppy-DashboardContent-back:focus,
     .uppy-DashboardContent-addMore, .uppy-DashboardContent-addMore:focus {
         background-color: <?php echo $button_colour_override; ?>;
-    }
-    <?php
-    }
+    } <?php
+}
 
 // Apply user uploaded custom font
-if (isset($custom_font) && $custom_font != '')
-    {
+if (isset($custom_font) && $custom_font != '') {
     $custom_font_url = str_replace('[storage_url]', $storageurl, $custom_font);
     ?>
     @font-face {
-    font-family: "custom_font";
-    src: url("<?php echo $custom_font_url; ?>");
+        font-family: "custom_font";
+        src: url("<?php echo $custom_font_url; ?>");
     }
-    h1,h2,h3,h4,h5,h6,.Title {font-family: custom_font, Arial, Helvetica, sans-serif;}
-    .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button,.ui-widget, body, input, textarea, select, button {font-family: custom_font, Arial, Helvetica, sans-serif;}
-    <?php
+    h1,h2,h3,h4,h5,h6,.Title {
+        font-family: custom_font, Arial, Helvetica, sans-serif;
     }
+    .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button,.ui-widget, body, input, textarea,
+    select, button {
+        font-family: custom_font, Arial, Helvetica, sans-serif;
+    } <?php
+}
 
 // Higher contrast mode changes
-if (isset($high_contrast_mode) && $high_contrast_mode == true)
-    {
-    ?>
+if (isset($high_contrast_mode) && $high_contrast_mode == true) { ?>
     body, html {
         background: white;
         color: black;
@@ -395,10 +365,8 @@ if (isset($high_contrast_mode) && $high_contrast_mode == true)
     .ckeditorEdit .cke_bottom {
         border-top: 1px solid black;
         background: white;
-    }
-    
-    <?php
-    }
+    } <?php
+}
 
 // Simple Search pills using jQuery tag editor
 if ($simple_search_pills_view) { ?>
@@ -406,6 +374,5 @@ if ($simple_search_pills_view) { ?>
         background-color: #ffffff00;
         margin-top: -36px;
         margin-left: 221px;
-    }
-<?php
+    } <?php
 }

@@ -1579,7 +1579,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                 }
 
                                             if (!hook("replaceaddtocollection") && !checkperm("b")
-                                                && !(($userrequestmode==2 || $userrequestmode==3))
+                                                && !($userrequestmode==2 || $userrequestmode==3)
                                                 && !in_array($resource["resource_type"],$collection_block_restypes)) 
                                                 { 
                                                 ?>
@@ -1630,7 +1630,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     }
                                                 echo "</li>";
 
-                                                if ((!checkperm("D") || hook('check_single_delete')))
+                                                if (!checkperm("D") || hook('check_single_delete'))
                                                     {
                                                     $deletetext = (isset($resource_deletion_state) && $resource["archive"] == $resource_deletion_state) ? $lang["action-delete_permanently"] : $lang["action-delete"];
                                                     echo "<li>";
