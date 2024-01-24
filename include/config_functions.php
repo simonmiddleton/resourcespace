@@ -1424,7 +1424,6 @@ function override_rs_variables_by_eval(array $variables, string $code)
         }
 
     $temp_variables = $variables;
-    extract($GLOBALS, EXTR_REFS | EXTR_SKIP);
     extract($temp_variables, EXTR_REFS | EXTR_SKIP);
     eval(eval_check_signed($code));
     $temp_array = [];
