@@ -171,16 +171,6 @@ parameters:
 			path: plugins/adobe_link/hooks/view.php
 
 		-
-			message: "#^Undefined variable\\: \\$date$#"
-			count: 1
-			path: plugins/feedback/include/feedback_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$user$#"
-			count: 1
-			path: plugins/feedback/include/feedback_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$resource$#"
 			count: 1
 			path: plugins/flickr_theme_publish/inc/flickr_functions.php
