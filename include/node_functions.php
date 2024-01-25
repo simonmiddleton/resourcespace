@@ -2605,7 +2605,7 @@ function check_delete_nodes($nodes)
 *
 * @param  integer  $field  Field ID
 *  
-* @return bool  
+* @return void  
 */
 function remove_field_keywords($field)
     {

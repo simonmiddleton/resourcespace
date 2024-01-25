@@ -4711,7 +4711,7 @@ function GetThemesFromRequest($levels)
  * @param  object         $zip
  * @param  string         $zipfile
  * 
- * @return string
+ * @return void
  */
 function collection_download_get_archive_file($archiver, $settings_id, $usertempdir, $collection, $size, &$zip, &$zipfile)
     {
