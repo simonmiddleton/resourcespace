@@ -146,8 +146,6 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 								});
 							</script>
 							<?php
-							// Move on to the next field now
-							continue;
 							}
 						else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $fields[$cf]['type'])
 							{
@@ -190,9 +188,6 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 							</script>
 <?php
                             }
-
-							// Move on to the next field now
-							continue;
 							}
                         else
                             {
@@ -1019,7 +1014,6 @@ function render_sort_order(array $order_fields,$default_sort_order)
         }
     </script>
     <?php
-    return;
     }
 
 /**
@@ -1524,7 +1518,6 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
         </div>
         <?php
         }
-    return;
     }
 
 
@@ -1579,8 +1572,6 @@ function render_user_group_checkbox_select($name, array $current = array(), $sty
         </tbody>
     </table>
     <?php
-
-    return;
     }
 
 /**
@@ -1689,7 +1680,6 @@ function render_dropdown_question($label, $inputname, $options = array(), $curre
         <div class="clearerleft"></div>
     </div>
     <?php
-    return;
     }
 
 /**
@@ -1761,8 +1751,6 @@ function render_access_key_tr(array $record)
         </td>
     </tr>
     <?php
-
-    return;
     }
 
 # The functions is_field_displayed, display_multilingual_text_field and display_field below moved from edit.php
@@ -2748,8 +2736,6 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
         </div>
     </div>
     <?php
-
-    return;
     }
 
 
@@ -2793,7 +2779,6 @@ function render_new_featured_collection_cta(string $url, array $ctx)
         </a>
     </div>
     <?php
-    return;
     }
 
 /**
@@ -2832,8 +2817,6 @@ function renderSocialMediaShareLinksForUrl($url)
         <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-linkedin-square" aria-hidden="true"></i></a>
         <?php
         }
-
-    return;
     }
     
 /**
@@ -3158,7 +3141,6 @@ function render_filter_bar_button($text, $attr, $icon)
         <button type="button" <?php echo $attr; ?>><?php echo $icon . htmlspecialchars($text); ?></button>
     </div>
     <?php
-    return;
     }
 
 
@@ -3287,8 +3269,6 @@ function render_upload_here_button(array $search_params, $return_params_only = f
     $attributes = "onclick=\"CentralSpaceLoad('{$upload_here_url}');\"";
 
     render_filter_bar_button($GLOBALS['lang']['upload_here'], $attributes, UPLOAD_ICON);
-
-    return;
     }
 
 /**
@@ -3426,7 +3406,7 @@ function render_help_link($page='',$return_string=false)
     $help_link_html .=      '<i aria-hidden="true" class="fa fa-fw fa-question-circle"></i>';
     $help_link_html .=      '</a>';
 
-    if ($return_string===false) {echo $help_link_html;return;}
+    if ($return_string===false) {echo $help_link_html;}
     else {return $help_link_html;}
     }
 
@@ -3448,7 +3428,6 @@ function render_question_div($id, callable $render_content)
         <div class="clearerleft"></div>
     </div>
     <?php
-    return;
     }
 
 
@@ -3647,8 +3626,6 @@ function render_edit_selected_btn()
     $attributes .= " onclick=\"ModalLoad('{$batch_edit_url}', true);\"";
 
     render_filter_bar_button($lang["edit_selected"], $attributes, ICON_EDIT);
-
-    return;
     }
 
 
@@ -3667,8 +3644,6 @@ function render_clear_selected_btn()
     $attributes .= " data-csrf-token=\"" . generateCSRFToken($usersession, "clear_selected_btn_{$USER_SELECTION_COLLECTION}") . "\"";
 
     render_filter_bar_button($lang["clear_selected"], $attributes, ICON_REMOVE);
-
-    return;
     }
 
 
@@ -3737,8 +3712,6 @@ function render_selected_collection_actions()
     $search = $orig_search;
     $result = $orig_result;
     $resources_count = $orig_resources_count;
-
-    return;
     }
 
 
@@ -4692,7 +4665,6 @@ function render_featured_collection_category_selector(int $parent, array $contex
 
     $context["depth"] = ++$depth;
     render_featured_collection_category_selector($next_level_parent, $context);
-    return;
     }
 
 
@@ -4873,8 +4845,6 @@ function render_featured_collections(array $ctx, array $items)
 
         render_featured_collection($render_ctx, $fc);
         }
-
-    return;
     }
 
 
@@ -5040,7 +5010,6 @@ function render_featured_collection(array $ctx, array $fc)
         ?>
     </div><!-- End of FeaturedSimpleTile_<?php echo $fc["ref"]; ?>-->
     <?php
-    return;
     }
 
 
@@ -5168,8 +5137,6 @@ function render_featured_collections_category_permissions(array $ctx)
             $path_depth = $current_depth;
             }
         }
-
-    return;
     }
 
 /**
@@ -5500,7 +5467,6 @@ function render_top_page_error_style(string $err_msg)
         }
 
     ?><div class="PageInformal"><?php echo htmlspecialchars($err_msg); ?></div><?php
-    return;
     }
 
 
@@ -5532,7 +5498,6 @@ function render_question_form_helper(string $txt, string $id, array $ctx)
         <div class="FormHelpInner"><?php echo htmlspecialchars($txt); ?></div>
     </div>
     <?php
-    return;
     }
 
 
@@ -5547,7 +5512,6 @@ function render_hidden_input(string $name, string $value)
     ?>
     <input type="hidden" name="<?php echo escape($name); ?>" value="<?php echo escape($value); ?>">
     <?php
-    return;
     }
 
 
@@ -5742,7 +5706,6 @@ function render_radio_buttons_question($label, $inputname, $options = array(), $
         <div class="clearerleft"></div>
     </div>
     <?php
-    return;
     }
 /**
  * Render a user message for use in conversation view

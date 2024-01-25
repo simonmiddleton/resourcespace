@@ -6509,7 +6509,6 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
     hook('after_update_archive_status', '', array($resource, $archive,$existingstates));
     // Send notifications
     debug("update_archive_status - resources=(" . implode(",",$resource) . "), archive: " . $archive . ", existingstates:(" . implode(",",$existingstates) . "), collection: " . $collection);
-    return;
     }
 
 

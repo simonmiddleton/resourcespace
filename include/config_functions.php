@@ -387,8 +387,6 @@ function process_config_options($user_id = null)
             $GLOBALS[$config_option['parameter']] = $param_value;
             }
         }
-
-    return;
     }
 
 
@@ -1399,8 +1397,6 @@ function config_register_core_field_refs(string $source, array $refs)
             $core_field_refs[$source][] = $ref;
             }
         }
-
-    return;
     }
 
 /**
@@ -1436,7 +1432,6 @@ function override_rs_variables_by_eval(array $variables, string $code)
         $GLOBALS[$temp_variable_name] = $temp_variable_val;
         }
     $configs_overwritten = $temp_array;
-    return;
     }
 
 

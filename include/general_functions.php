@@ -2933,8 +2933,6 @@ function move_array_element(array &$array, $from_index, $to_index)
     {
     $out = array_splice($array, $from_index, 1);
     array_splice($array, $to_index, 0, $out);
-
-    return;
     }
 
 /**
@@ -3146,7 +3144,6 @@ function generateFormToken($form_id)
     ?>
     <input type="hidden" name="<?php echo $CSRF_token_identifier; ?>" value="<?php echo $token; ?>">
     <?php
-    return;
     }
 
 

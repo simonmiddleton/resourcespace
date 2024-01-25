@@ -222,7 +222,6 @@ foreach(array_chunk($mplus_resources, 1000) as $mplus_resource_refs)
                     {
                     logScript('[museumplus] No change to the "module name - MpID" combination for resource #' . $r_ref, $mplus_log_file);
                     unset($ramcs[$r_ref]);
-                    continue;
                     }
                 }
             }

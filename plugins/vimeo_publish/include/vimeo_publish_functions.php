@@ -21,8 +21,6 @@ function init_vimeo_api($client_id, $client_secret, $redirect_uri)
         }
 
     get_access_token($client_id, $client_secret, $redirect_uri);
-
-    return;
     }
 
 
@@ -119,8 +117,6 @@ function delete_vimeo_token($user_ref=0)
         $vimeo_publish_config["vimeo_publish_system_token"] = '';            
         set_plugin_config("vimeo_publish",$vimeo_publish_config);
         }
-
-    return;
     }
 
 

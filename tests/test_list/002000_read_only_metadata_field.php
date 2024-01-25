@@ -28,8 +28,6 @@ function teardown_002000($tmpfile)
         }
 
     ps_query("UPDATE resource_type_field SET `read_only` = 0 WHERE ref IN (10, 52)");
-
-    return;
     }
 
 

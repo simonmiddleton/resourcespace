@@ -54,6 +54,4 @@ function HookImage_banksSearchSearchaftersearchcookie()
             )
         )
     );
-
-    return;
     }

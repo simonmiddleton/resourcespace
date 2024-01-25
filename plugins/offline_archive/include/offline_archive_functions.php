@@ -246,14 +246,12 @@ function offline_archive_run_jobs($showoutput = false)
                     {
                     // Failed to find archive file, on to next
                     $restore_errors[]="Failed to find archive file at " . $archivefile . "\n";
-                    continue;
                     }
                 }
             else
                 {
                 // Failed to find archive folder, on to next
                 $restore_errors[]="Failed to find archive at " . $archivepath . "\nPlease ensure correct archive folder/tape/disk is present";
-                continue;
                 }
             }
         }

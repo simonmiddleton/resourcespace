@@ -95,7 +95,6 @@ else
 		if (!$login)
 			{
 			debug("LDAP bind failed: " . $searchdn);
-			continue;
 			}
 		else
 			{

@@ -65,11 +65,7 @@ function simpleldap_authenticate($username,$password)
                 $login=false;
                 }
             unset($GLOBALS["use_error_exception"]);
-            if (!$login)
-                {
-                continue;
-                }
-             else
+            if ($login)
                 {
                 $userdomain=$binddomain;
                 break;
@@ -103,7 +99,6 @@ function simpleldap_authenticate($username,$password)
             if (!$login)
                 {
                 debug("LDAP bind failed: " . $binddn);
-                continue;
                 }
             else
                 {

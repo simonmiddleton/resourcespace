@@ -184,8 +184,6 @@ function db_set_connection_mode(string $name)
         {
         $GLOBALS['db_connection_mode'] = $name;
         }
-
-    return;
     }
 
 
@@ -217,8 +215,6 @@ function db_clear_connection_mode()
         {
         unset($GLOBALS['db_connection_mode']);
         }
-
-    return;
     }
 
 
@@ -301,7 +297,6 @@ function sql_connect()
         }
 
     db_clear_connection_mode();
-    return;
     }
 
 /**
@@ -1370,8 +1365,6 @@ function sql_reorder_records(string $table, array $refs)
          );
         ps_query($sql, array_merge($cases_params, ps_param_fill($refs, 'i')));
         }
-
-    return;
     }
 
 

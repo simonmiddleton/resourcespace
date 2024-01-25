@@ -56,7 +56,6 @@ if ($doit && enforcePostRequest(TRUE) && count($resources) > 0)
             {
             $errormessages[] = $lang["resourceid"] . " " . $resource . ": " . $lang["error-permissiondenied"];
             $failcount++;
-            continue;
             }
         else
             {

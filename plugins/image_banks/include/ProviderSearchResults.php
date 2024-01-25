@@ -33,8 +33,6 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
             }
 
         $this->results[$offset] = $value;
-
-        return;
         }
 
     /**
@@ -74,8 +72,6 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     public function offsetUnset($offset) : void
         {
         unset($this->results[$offset]);
-
-        return;
         }
 
     /**
@@ -106,8 +102,6 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     public function next() : void
         {
         ++$this->position;
-
-        return;
         }
 
     /**
@@ -118,8 +112,6 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     public function rewind() : void
         {
         $this->position = 0;
-
-        return;
         }
 
     /**
@@ -148,7 +140,6 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     public function setError(string $message): void
         {
         $this->error = trim($message);
-        return;
         }
 
     /**
@@ -167,7 +158,6 @@ class ProviderSearchResults implements \ArrayAccess, \Iterator, \Countable
     public function setWarning(string $message): void
         {
         $this->warning = trim($message);
-        return;
         }
 
     /**

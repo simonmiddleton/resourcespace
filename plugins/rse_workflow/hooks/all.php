@@ -205,7 +205,6 @@ function HookRse_workflowAllRender_actions_add_option_js_case($action_selection_
         ModalLoad(option_url, true, true);
         break;
     <?php
-    return;
     }
 
 

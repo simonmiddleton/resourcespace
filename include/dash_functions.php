@@ -853,8 +853,6 @@ function build_usergroup_dash($user_group, $user_id = 0, $newtileid="")
             $starting_order += 10;
             }
         }
-
-    return;
     }
 
 function get_tile_user_groups($tile_id)
@@ -1616,8 +1614,6 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         ?>
     <div class="clearerleft"></div>
     <?php
-
-    return;
     }
 
 function get_tile_custom_style($buildstring)
@@ -1704,8 +1700,6 @@ function render_upgrade_available_tile($user)
         </div>
     </a>
     <?php
-
-    return;
     }
 
 function generate_dash_tile_toolbar(array $tile, $tile_id)
@@ -2091,7 +2085,6 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
         });
     </script>
     <?php
-    return;
     }
 
 /**

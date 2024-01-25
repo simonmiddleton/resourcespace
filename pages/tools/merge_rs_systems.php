@@ -762,7 +762,6 @@ if($import && isset($folder_path))
             logScript("Found direct 1:1 mapping to '{$dest_usergroups[$spec_cfg_value]}' (ID #{$spec_cfg_value})... Skipping");
             $processed_usergroups[] = $src_ug["ref"];
             fwrite($progress_fh, "\$processed_usergroups[] = {$src_ug["ref"]};" . PHP_EOL);
-            continue;
             }
         else if(is_array($spec_cfg_value))
             {

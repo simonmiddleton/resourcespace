@@ -99,8 +99,6 @@ function logScript($message, $file = null)
         {
         fwrite($file, "{$date_time} {$message}" . PHP_EOL);
         }
-
-    return;
     }
  
 /**

@@ -46,7 +46,6 @@ function render_revert_state_form()
         </form>
     </div>
     <?php
-    return;
     }
 
 
@@ -62,8 +61,6 @@ function process_revert_state_form()
     $ref        = (int) getval("ref", 0, true);
 
     revert_collection_state($collection, $ref);
-
-    return;
     }
 
 
@@ -131,6 +128,4 @@ function revert_collection_state($collection, $ref)
         }
 
     redirect("{$baseurl}/pages/collection_log.php?ref={$collection}");
-
-    return;
     }

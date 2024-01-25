@@ -248,6 +248,4 @@ function mplus_sync(array $ramc)
         {
         return $errors;
         }
-
-    return;
     }

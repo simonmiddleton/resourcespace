@@ -500,7 +500,6 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
         }
 
 	generate_dash_tile_toolbar($tile,$tile_id);
-    return;
     }
 
 
@@ -574,7 +573,6 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
         }
 
 	generate_dash_tile_toolbar($tile,$tile_id);
-    return;
     }
 
 
@@ -604,5 +602,4 @@ function tile_featured_collection_blank($tile, $tile_id)
         }
 
 	generate_dash_tile_toolbar($tile,$tile_id);
-    return;
     }

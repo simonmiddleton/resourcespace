@@ -56,8 +56,6 @@ function HookTms_linkAllInitialise()
     set_plugin_config('tms_link', $tms_link_config);
 
     set_sysvar(TMS_LINK_MODULES_MIGRATED, 1);
-
-    return;
     }
 
 

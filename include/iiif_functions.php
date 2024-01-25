@@ -217,7 +217,6 @@ final class IIIFRequest {
             $this->request["type"] = trim($xpath[1] ?? '');
             $this->request["typeid"] = trim($xpath[2] ?? '');
             }
-        return;
         }
 
     /**
@@ -426,7 +425,6 @@ final class IIIFRequest {
             $this->errorcode=404;
             $this->errors[] = "Invalid identifier: " . $this->request["id"];
             }
-        return;
         }
 
 

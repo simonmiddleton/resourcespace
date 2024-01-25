@@ -194,8 +194,6 @@ function delete_node($ref)
     ps_query("DELETE FROM node WHERE ref = ?",array("i",$ref));
 
     remove_all_node_keyword_mappings($ref);
-
-    return;
     }
 
 
@@ -214,8 +212,6 @@ function delete_nodes_for_resource_type_field($ref)
         }
 
     ps_query("DELETE FROM node WHERE resource_type_field = ?",array("i",$ref));
-
-    return;
     }
 
 
@@ -554,8 +550,6 @@ function reorder_node(array $nodes_new_order)
 
     ps_query($query,$parameters);
     clear_query_cache("schema");
-
-    return;
     }
 
 /**
@@ -710,7 +704,6 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
     </table>
 
     <?php
-    return;
     }
 
 
@@ -1097,7 +1090,6 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
     ps_query("DELETE FROM node_keyword WHERE node = ? AND keyword = ? $position_sql",$parameters);
     
     ps_query("UPDATE keyword SET hit_count = hit_count - 1 WHERE ref = ?",array("i",$keyword_ref));
-    return;
     }
 
 
@@ -1111,7 +1103,6 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
 function remove_all_node_keyword_mappings($node)
     {
     ps_query("DELETE FROM node_keyword WHERE node = ?",array("i",$node));
-    return;
     }
 
 /**
@@ -1141,8 +1132,6 @@ function check_node_indexed(array $node, $partial_index = false)
     // (re-)index node
     remove_all_node_keyword_mappings($node['ref']);
     add_node_keyword_mappings($node, $partial_index);
-
-    return;
     }
 
 
@@ -1684,8 +1673,6 @@ function copy_resource_nodes($resourcefrom, $resourceto)
     ", array_merge(array("i", $resourceto, "i", $resourcefrom), $omit_fields_sql_params));
 
     log_node_changes($resourceto,$nodes_to_add,array());
-
-    return;
     }
     
     
@@ -2623,7 +2610,6 @@ function check_delete_nodes($nodes)
 function remove_field_keywords($field)
     {
     ps_query("DELETE nk FROM node_keyword nk LEFT JOIN node n ON n.ref=nk.node WHERE n.resource_type_field = ?", ["i",$field]);
-    return;
     }
 
 /**
@@ -2762,7 +2748,6 @@ function add_sql_node_language(&$sql_select,&$sql_params,string $alias = "node")
                     END))
         ELSE TRIM(" . $alias . ".name)
         END AS translated_name";
-    return;
     }
 
 /**

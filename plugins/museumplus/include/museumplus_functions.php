@@ -221,8 +221,6 @@ function mplus_save_module_config(array $cf)
         {
         set_plugin_config('museumplus', $mplus_config);
         }
-
-    return;
     }
 
 
@@ -768,8 +766,6 @@ function mplus_log_event(string $msg, array $ctx = array(), string $lvl = 'info'
         $params = ["s",sql_truncate_text_val(mb_strtolower($lvl), 10),"s",sql_truncate_text_val($msg, 255),"s",$json_encoded_ctx];
         ps_query($q,$params);
         }
-
-    return;
     }
 
 

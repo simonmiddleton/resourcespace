@@ -869,8 +869,6 @@ function tms_link_save_module_mappings_config($value)
     $tms_link_config['tms_link_modules_saved_mappings'] = base64_encode(serialize($value));
 
     set_plugin_config('tms_link', $tms_link_config);
-
-    return;
     }
 
 

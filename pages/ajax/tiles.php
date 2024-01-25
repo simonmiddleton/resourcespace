@@ -138,7 +138,6 @@ while((     !is_file($file)
         {
         debug('$geo_leaflet_sources is not configured');
         $gettile = false;
-        continue;
         }
     }
 

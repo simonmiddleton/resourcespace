@@ -129,11 +129,7 @@ if ($on_upload || (isset($ref) && $ref<0))
 
                 for ($n=0;$n<count($temp_list);$n++)
                     {
-                    if ( $temp_list[$n]['user']!=$userref && $temp_list[$n]['allow_changes'] == 0)
-                        {
-                        continue;
-                        }
-                    else
+                    if (!($temp_list[$n]['user']!=$userref && $temp_list[$n]['allow_changes'] == 0))
                         {
                         array_push($list,$temp_list[$n]);
                         }

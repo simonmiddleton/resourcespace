@@ -4669,8 +4669,6 @@ function new_featured_collection_form(int $parent)
         </form>
     </div>
     <?php
-
-    return;
 	}
     
 
@@ -4694,11 +4692,7 @@ function GetThemesFromRequest($levels)
             }
         // Legacy inconsistency when naming themes params. Sometimes the root theme was also named theme1. We check if theme 
         // is found, but if not, we just go to theme1 rather than break.
-        else if($themeindex == 0 && $themename == "")
-            {
-            continue;
-            }
-        else
+        elseif(!($themeindex == 0 && $themename == ""))
             {
             break;    
             }
@@ -4737,8 +4731,6 @@ function collection_download_get_archive_file($archiver, $settings_id, $usertemp
         {
         $zipfile = $usertempdir . "/".$lang["collectionidprefix"] . $collection . "-" . $size . ".zip";
         }
-
-    return;
     }
 
 function collection_download_use_original_filenames_when_downloading(&$filename, $ref, $collection_download_tar, &$filenames,$id='')
@@ -4804,8 +4796,6 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
         {
         $filename = get_download_filename($ref, $size, 0, $pextension);
         }
-
-    return;
     }
 
 /**
@@ -4868,8 +4858,6 @@ function collection_download_process_text_file($ref, $collection, $filename)
                 }
             }
         }
-
-    return;
     }
 
 
@@ -4899,8 +4887,6 @@ function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref
         # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
         ps_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref=?",array("i",$ref));
         }
-
-    return;
     }
 
 /**

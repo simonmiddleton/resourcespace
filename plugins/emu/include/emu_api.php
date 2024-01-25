@@ -48,8 +48,6 @@ class EMuAPI
         // IMPORTANT: connecting now will throw an exception if connection is refused. Calling code should deal with it
         // as appropriate for the context
         $this->session->connect();
-
-        return;
         }
 
 
@@ -85,8 +83,6 @@ class EMuAPI
     public function setTerms(IMuTerms $terms)
         {
         $this->terms = $terms;
-
-        return;
         }
 
 
@@ -133,8 +129,6 @@ class EMuAPI
         {
         $this->columns[] = 'irn';
         $this->module->addFetchSet('object_fields', $this->columns);
-
-        return;
         }
 
 
@@ -153,8 +147,6 @@ class EMuAPI
             {
             $this->module->addFetchSet('object_fields', $this->columns);
             }
-
-        return;
         }
 
 
