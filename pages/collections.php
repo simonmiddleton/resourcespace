@@ -15,7 +15,7 @@ $archive         = getval('archive', '');
 $daylimit        = getval('daylimit', '');
 $offset          = getval('offset', '');
 $resources_count = getval('resources_count', '');
-$collection      = getval('collection', '', true);
+$collection      = getval('collection', '');
 $entername       = getval('entername', '');
 $res_access      = getval('access','');
 
