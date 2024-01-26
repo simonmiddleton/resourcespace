@@ -1,4 +1,6 @@
 <?php
+include dirname(__FILE__) . "/../api/api_bindings.php";
+include dirname(__FILE__) . "/../include/consent_functions.php";
 
 function HookConsentmanagerAllExport_add_tables()
     {

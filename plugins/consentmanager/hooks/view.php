@@ -1,12 +1,12 @@
 <?php
-
+include dirname(__FILE__) . "/../include/consent_functions.php";
 function HookConsentmanagerViewCustompanels()
 	{
 	global $lang,$baseurl_short,$ref,$edit_access,$k,$consent_usage_mediums;
 
 	if($k!=""){return false;}
 
-	$consents=ps_query("select consent.* from consent join resource_consent on consent.ref=resource_consent.consent where resource_consent.resource= ? order by ref", ['i', $ref]);
+	$consents=consentmanager_get_consents($ref);
 	?>
     <div class="RecordBox">
     <div class="RecordPanel">
