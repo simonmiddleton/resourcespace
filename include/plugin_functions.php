@@ -1474,7 +1474,11 @@ function register_plugin($plugin)
 	# Support an 'all' hook
 	$hookpath=$pluginpath . "/hooks/all.php";
 	if (file_exists($hookpath)) {include_once $hookpath;}
-	
+
+  	# Support standard location for API bindings
+	$api_bindings_path=$pluginpath . "/api/api_bindings.php";
+	if (file_exists($api_bindings_path)) {include_once $api_bindings_path;}
+
 	return true;	
 	}
 
