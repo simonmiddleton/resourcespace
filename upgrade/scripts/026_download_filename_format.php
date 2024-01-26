@@ -1,4 +1,5 @@
 <?php
+include dirname(__DIR__, 2) . '/include/db.php';
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Start download_filename_format configuration upgrade...');
 
 /*
@@ -91,7 +92,7 @@ else
     }
 
 // Override only the options that have been deprecated
-$get_global_config_options = function()
+$get_global_config_options = function(bool $include_optional): array
     {
     $opts = [
         'prefix_resource_id_to_filename' => $GLOBALS['prefix_resource_id_to_filename'],
@@ -101,18 +102,102 @@ $get_global_config_options = function()
         'download_id_only_with_size' => $GLOBALS['download_id_only_with_size'],
         'download_filenames_without_size' => $GLOBALS['download_filenames_without_size'],
     ];
+
     if (isset($GLOBALS['download_filename_field']))
         {
         $opts['download_filename_field'] = $GLOBALS['download_filename_field'];
         }
+    elseif ($include_optional)
+        {
+        $opts['download_filename_field'] = 'unset';
+
+        // Required so override_rs_variables_by_eval() can override undefined globals
+        $GLOBALS['download_filename_field'] = 'unset';
+        }
+
     return $opts;
     };
-$deprecated_options = $get_global_config_options();
+$deprecated_options = $get_global_config_options(true);
+$reset_global_values_to = function(array $vars)
+    {
+    foreach($vars as $name => $value)
+        {
+        $GLOBALS[$name] = $value;
+        }
+    };
+$get_var_value_from_code = function(array $find, string $code)
+    {
+    if (!eval_check_signed($code))
+        {
+        return [];
+        }
+
+    $tokens = token_get_all("<?php {$code}");
+    $matches = [];
+    $current = [
+        'token' => null,
+        'value' => [],
+        'assign' => false,
+    ];
+
+    foreach ($tokens as $token)
+        {
+        $is_token = is_array($token);
+        $token_id = $is_token ? $token[0] : $token;
+        $assigning = $current['assign'] && $current['token'] !== null;
+
+        // Debug
+        /* if ($is_token)
+            {
+            printf('%sLine %s: %s (%s)', PHP_EOL, $token[2], token_name($token[0]), $token[1]);
+            }
+        else
+            {
+            printf('%sCharacter (%s)', PHP_EOL, $token);
+            } */
+
+        if (T_VARIABLE == $token_id && isset($find[mb_strcut($token[1], 1)]))
+            {
+            $current['token'] = $token;
+            }
+        elseif ($current['token'] !== null && '=' === $token_id)
+            {
+            $current['assign'] = true;
+            $current['value'][] = $token;
+            }
+        elseif ($assigning && ';' === $token_id)
+            {
+            $current['value'][] = $token;
+            $matches[] = $current['token'][1] . implode('', $current['value']);
+            $current = [
+                'token' => null,
+                'value' => [],
+                'assign' => false,
+            ];
+            }
+        elseif ($assigning)
+            {
+            $current['value'][] = $is_token ? $token[1] : $token;
+            }
+        }
+
+    return $matches;
+    };
+$sign_code = fn(string $code) => "//SIG" . sign_code($code) . "\n" . $code;
 
 $process_config_overrides = function(array $rows, string $what)
-    use ($lang, $build_download_filename_format, $deprecated_options, $get_global_config_options): array
+    use (
+        $lang,
+        $build_download_filename_format,
+        $deprecated_options,
+        $get_global_config_options,
+        $get_var_value_from_code,
+        $sign_code,
+        $reset_global_values_to
+    ): array
     {
     $messages = [];
+    $init_deprecated_options = $deprecated_options;
     foreach($rows as $row)
         {
         set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, sprintf("%s: %s", ucfirst($what), $row['name']));
@@ -122,11 +207,50 @@ $process_config_overrides = function(array $rows, string $what)
             continue;
             }
 
-        override_rs_variables_by_eval($GLOBALS, $config_options);
+        $reset_global_values_to($init_deprecated_options);
+        $deprecated_options = $init_deprecated_options;
+        $matches = $get_var_value_from_code($deprecated_options, $config_options);
 
-        if ($deprecated_options === $get_global_config_options()) {
+        // Try overriding global variables based on the matched deprecated config options
+        $GLOBALS['use_error_exception'] = true;
+        try
+            {
+            // Auto signing $matches because a variable assignment from an already signed code is considered safe 
+            override_rs_variables_by_eval($GLOBALS, $sign_code(implode(PHP_EOL, $matches)));
+            }
+        catch (Throwable $th)
+            {
+            unset($GLOBALS['use_error_exception']);
+            $err_msg = str_replace(
+                ['%entity%', '%error%'],
+                [
+                    sprintf('%s (%s)', $row['name'], mb_strtolower($what)),
+                    $th->getMessage()
+                ],
+                $lang['upgrade_026_error_unable_to_process_deprecated_config_options']
+            );
+            debug(sprintf('[upgrade][%s] %s', __FILE__, $err_msg));
+            logScript($err_msg);
+            $messages[] = $err_msg;
+            continue;
+            }
+        unset($GLOBALS['use_error_exception']);
+
+        $current_global_vars = $get_global_config_options(false);
+
+        if ($deprecated_options === $current_global_vars) {
             continue;
         }
+
+        // Remove made up value - @see $get_global_config_options definition
+        if (
+            isset($current_global_vars['download_filename_field'])
+            && $current_global_vars['download_filename_field'] === 'unset'
+        )
+            {
+            unset($GLOBALS['download_filename_field'], $deprecated_options['download_filename_field']);
+            // unset($GLOBALS['download_filename_field']);
+            }
 
         $messages[] = str_replace(
             ['%entity%', '%format%'],

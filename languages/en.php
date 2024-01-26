@@ -2503,6 +2503,7 @@ $lang["upgrade_in_progress"] = "Upgrade in progress";
 $lang["upgrade_script"] = "Upgrade script";
 $lang['upgrade_026_notification'] = "The upgrade has deprecated some configuration options which your %entity% is overriding.\r\n\r\nTo continue having the download filename formatted as close as possible to the old way please update its configuration override with:\r\n\$download_filename_format = '%format%';";
 $lang['upgrade_026_error_unable_to_set_config_system_wide'] = "Unable to set system wide config option 'download_filename_format' to '%format%'. Please retry manually.";
+$lang['upgrade_026_error_unable_to_process_deprecated_config_options'] = "Unable to process deprecated config options for %entity%. Please retry manually. Reason:-\r\n\r\n%error%";
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
