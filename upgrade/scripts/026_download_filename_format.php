@@ -248,7 +248,6 @@ $process_config_overrides = function(array $rows, string $what)
         )
             {
             unset($GLOBALS['download_filename_field'], $deprecated_options['download_filename_field']);
-            // unset($GLOBALS['download_filename_field']);
             }
 
         $messages[] = str_replace(
