@@ -6761,7 +6761,7 @@ function render_resource_view_image(array $resource, array $context)
     $edit_access = $context["edit_access"] ?? 0;
     $previewcaption = $context["previewcaption"] ?? [];
 
-    // Determine the appropriate preview sizes to look for. Access will be checked by get_resource_preview()
+    // Set the preview sizes to look for. Access will be checked by get_resource_preview()
     // Retina mode uses 'scr' size
     $viewsizes = ($GLOBALS["retina_mode"] || !$GLOBALS["resource_view_use_pre"]) ? ["scr"]: [];
     $viewsizes[] = "pre";

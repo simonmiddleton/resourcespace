@@ -5591,7 +5591,7 @@ function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="
     if ($status==-999) # Archive status may not be passed
         {$status=$resourcedata["archive"];}
 
-    if ($resource==0-$userref) {return true;} # Can always edit their own user template.
+    if ($resource == 0-(int)$userref) {return true;} # Can always edit their own user template.
 
     # If $edit_access_for_contributor is true in config then users can always edit their own resources.
     if ($edit_access_for_contributor && $userref==$resourcedata["created_by"]) {return true;}

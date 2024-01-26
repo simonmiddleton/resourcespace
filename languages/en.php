@@ -3157,3 +3157,5 @@ $lang["severity-level_1"]                   = "Warning";
 $lang["severity-level_2"]                   = "Notice";
 $lang["pull_images"]                        = "Pull images";
 $lang["pull_images_text"]                   = "Use images from related resources if none available";
+
+$lang["system_user_default"]                = "SYSTEM";

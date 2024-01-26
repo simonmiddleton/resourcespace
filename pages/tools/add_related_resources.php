@@ -19,7 +19,7 @@ function show_script_help()
         -c --csv [path to CSV file]
                            Full path to CSV file
 
-        -d --dryrun      
+        -d --dryrun
                            Only show commands that will be run" . PHP_EOL;
     exit(1);
     }
@@ -34,13 +34,11 @@ $cli_long_options  = array(
 $cli_short_options = "c:d";
 
 $options = getopt($cli_short_options, $cli_long_options);
-
 foreach($options as $option_name => $option_value)
     {
-    //echo $option_name . " = '" . $option_value . "'\n";
     if($option_name=='help')
         {
-            show_script_help();
+        show_script_help();
         }
     if($option_name==='csv' || $option_name==="c")
         {
@@ -58,14 +56,15 @@ if($csv_path === "")
     }
 
 echo PHP_EOL . "Processing CV file: '" . $csv_path . "'" . PHP_EOL;
-echo "\$dryrun = " . ($dryrun ? "TRUE" : "FALSE") . PHP_EOL . PHP_EOL;
+echo "Dry run :     " . ($dryrun ? "TRUE" : "FALSE") . PHP_EOL . PHP_EOL;
 
 if(!file_exists($csv_path))
     {
     exit("ERROR: Could not read CSV file. Check file permissions" . PHP_EOL);
     }
 
-ob_start(null,4096);
+// ob_start();
+setup_command_line_user();
 
 $csvfile = fopen($csv_path,"r");
 
@@ -80,7 +79,7 @@ while (($line=fgetcsv($csvfile)) !== false)
             $errors[] = "Incorrect number of columns(" . count($line) . ") found on line " . $curline . " (should be 2)";
             continue;
             }
-        
+
         $resource = (int)$line[0];
         $related = $line[1];
 
@@ -90,17 +89,19 @@ while (($line=fgetcsv($csvfile)) !== false)
             $errors[] = "Invalid resource ID: " . $resource . " specified on line " . $curline;
             continue;
             }
-        $torelate = explode(",",$related);        
-        $success = update_related_resource($resource,$torelate,true);        
+        $torelate = explode(",",$related);
+        $torelate = array_filter($torelate,"is_int_loose");
+        $success = update_related_resource($resource,$torelate,true);
         if($success)
             {
-            echo " - Updated resource " . $resource . ". Related to resources: " . $related . PHP_EOL;
-            ++$completed;            
+            echo " - Updated resource " . $resource . ". Added related resources: " . implode(",",$torelate) . PHP_EOL;
+            ++$completed;
             }
         else
             {
             $errors[] = "Failed to update resource " . $resource .". Possible invalid related resource ID specified in line " . $curline;
-            }       
+            }
+        ob_flush();
         }
 
 echo PHP_EOL . "Finished. Successfully updated " . $completed . " resources.". PHP_EOL;
