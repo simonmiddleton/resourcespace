@@ -1,5 +1,4 @@
 <?php
-include dirname(__DIR__, 2) . '/include/db.php';
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Start download_filename_format configuration upgrade...');
 
 /*
