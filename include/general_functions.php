@@ -3322,21 +3322,9 @@ function is_resourcespace_upgrade_available()
         return false;
         }
 
-    if($product_version_data['major'] != $cvn_data['major'] && $product_version_data['major'] < $cvn_data['major'])
-        {
-        return true;
-        }
-    else if(
-        $product_version_data['major'] == $cvn_data['major']
-        && $product_version_data['minor'] != $cvn_data['minor']
-        && $product_version_data['minor'] < $cvn_data['minor'])
-        {
-        return true;
-        }
-    else if(
-        $product_version_data['major'] < $cvn_data['major']
-        && $product_version_data['minor'] != $cvn_data['minor']
-        && $product_version_data['minor'] < $cvn_data['minor'])
+    if (($product_version_data['major'] < $cvn_data['major'])
+        || ($product_version_data['major'] == $cvn_data['major'] && $product_version_data['minor'] < $cvn_data['minor'])
+    )
         {
         return true;
         }

@@ -2918,11 +2918,6 @@ function calculate_image_display(array $imagedata, string $img_url, string $disp
         case "thumbs":
             $defaultwidth = 200;
             $defaultheight = 200;
-            break;        
-        
-        case "collection":
-            $defaultwidth = 75;
-            $defaultheight = 75;
             break;
 
         case "list":
@@ -2933,7 +2928,7 @@ function calculate_image_display(array $imagedata, string $img_url, string $disp
         default:
             $defaultwidth = 75;
             $defaultheight = 75;
-            break;        
+            break;
         }
 
     if ($ratio > 1)

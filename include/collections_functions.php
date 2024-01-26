@@ -5596,14 +5596,16 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
     global $CACHE_FC_PERMS_FILTER_SQL;
     $CACHE_FC_PERMS_FILTER_SQL = (!is_null($CACHE_FC_PERMS_FILTER_SQL) && is_array($CACHE_FC_PERMS_FILTER_SQL) ? $CACHE_FC_PERMS_FILTER_SQL : array());
     $cache_id = md5("{$prefix}-{$column}");
-    if(isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && is_string($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && $returnstring)
+    if ((isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) 
+            && is_string($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) 
+            && $returnstring)
+        || (isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) 
+            && is_array($CACHE_FC_PERMS_FILTER_SQL[$cache_id]))
+    )
         {
         return $CACHE_FC_PERMS_FILTER_SQL[$cache_id];
         }
-    elseif(isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && is_array($CACHE_FC_PERMS_FILTER_SQL[$cache_id]))
-        {
-        return $CACHE_FC_PERMS_FILTER_SQL[$cache_id];
-        }
+
     // $prefix & $column are used to generate the right SQL (e.g AND ref IN(list of IDs)). If developer/code, passes empty strings,
     // that's not this functions' responsibility. We could error here but the code will error anyway because of the bad SQL so
     // we might as well fix the problem at its root (ie. where we call this function with bad input arguments).

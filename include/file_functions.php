@@ -162,17 +162,12 @@ function temp_local_download_remote_file(string $url, string $key = "")
             if(strtolower($header) == "content-disposition")
                 {
                 // Check for double quotes first (e.g. attachment; filename="O'Malley's Bar.pdf")
-                if(preg_match('/.*filename=[\"]([^\"]+)/', $headervalue, $matches))
-                    {
-                    $filename = $matches[1];
-                    }
-                // Check for single quotes (e.g. attachment; filename='Space Travel.jpg')
-                elseif(preg_match('/.*filename=[\']([^\']+)/', $headervalue, $matches))
-                    {
-                    $filename = $matches[1];
-                    }
-                // Get file name up to first space
-                else if(preg_match("/.*filename=([^ ]+)/", $headervalue, $matches))
+                // OR Check for single quotes (e.g. attachment; filename='Space Travel.jpg')
+                // OR Get file name up to first space
+                if(preg_match('/.*filename=[\"]([^\"]+)/', $headervalue, $matches)
+                    || preg_match('/.*filename=[\']([^\']+)/', $headervalue, $matches)
+                    || preg_match("/.*filename=([^ ]+)/", $headervalue, $matches)
+                )
                     {
                     $filename = $matches[1];
                     }

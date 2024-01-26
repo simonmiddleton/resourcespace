@@ -26,12 +26,12 @@ rs_setcookie("access", $access, 0, "{$baseurl_short}pages/", "", false, false);
 $edit_autosave=false;
 
 if (getval("submitted","")=="yes" && getval("resetform","")=="")
-	{
-	$restypes="";
-	reset($_POST);
+    {
+    $restypes="";
+    reset($_POST);
     foreach ($_POST as $key=>$value)
-		{
-		if (substr($key,0,12)=="resourcetype")
+        {
+        if (substr($key,0,12)=="resourcetype")
             {
             if ($restypes != "")
                 {
@@ -40,29 +40,29 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
             $restypes .= substr($key,12);
             }
 
-		if ($key == "hiddenfields")
-		    {
-		    $hiddenfields=$value;
-		    }
-		}
-	rs_setcookie('restypes', $restypes,0,"","",false,false);
+        if ($key == "hiddenfields")
+            {
+            $hiddenfields=$value;
+            }
+        }
+    rs_setcookie('restypes', $restypes,0,"","",false,false);
 
     if ($hide_search_resource_types)
         {
         $restypes = '';
         }
 
-	# advanced search - build a search query and redirect
-	$fields=array_merge(get_advanced_search_fields(false, $hiddenfields ),get_advanced_search_collection_fields(false, $hiddenfields ));
+    # advanced search - build a search query and redirect
+    $fields=array_merge(get_advanced_search_fields(false, $hiddenfields ),get_advanced_search_collection_fields(false, $hiddenfields ));
 
-	# Build a search query from the search form
-	$search=search_form_to_search_query($fields);
-	$search=refine_searchstring($search);
-	hook("moresearchcriteria");
+    # Build a search query from the search form
+    $search=search_form_to_search_query($fields);
+    $search=refine_searchstring($search);
+    hook("moresearchcriteria");
 
-	if (getval("countonly","")!="")
-		{
-		# Only show the results (this will appear in an iframe)
+    if (getval("countonly","")!="")
+        {
+        # Only show the results (this will appear in an iframe)
         if (substr($restypes,0,19) != "FeaturedCollections")
             {
             $result=do_search($search,$restypes,"relevance",$archive,[0,0],"",false,DEPRECATED_STARSEARCH, false, false, "", false,false, true, false, false, $access);
@@ -82,9 +82,9 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
             $count=0;
             }
 
-		?>
-		<html>
-		<script type="text/javascript">
+        ?>
+        <html>
+        <script type="text/javascript">
             function populate_view_buttons(content)
                 {
                 var inputs = parent.document.getElementsByClassName('dosearch');
@@ -100,20 +100,20 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
                 var updatingcount = false;
                 }
 
-		<?php if ($count==0) { ?>
-			populate_view_buttons("<?php echo escape($lang["nomatchingresults"])  ?>");
-		<?php } else { ?>
-			populate_view_buttons("<?php echo escape($lang["view"] . " " . number_format($count) . " " . $lang["matchingresults"]) ?>");
-		<?php } ?>
-		</script>
-		</html>
-		<?php
-		exit();
-		}
-	else
-		{
-		# Log this
-		daily_stat("Advanced search",$userref);
+        <?php if ($count==0) { ?>
+            populate_view_buttons("<?php echo escape($lang["nomatchingresults"])  ?>");
+        <?php } else { ?>
+            populate_view_buttons("<?php echo escape($lang["view"] . " " . number_format($count) . " " . $lang["matchingresults"]) ?>");
+        <?php } ?>
+        </script>
+        </html>
+        <?php
+        exit();
+        }
+    else
+        {
+        # Log this
+        daily_stat("Advanced search",$userref);
 
         redirect(
             generateURL(
@@ -126,8 +126,8 @@ if (getval("submitted","")=="yes" && getval("resetform","")=="")
                 )
             )
         );
-		}
-	}
+        }
+    }
 
 
 
@@ -248,12 +248,12 @@ var resTypes=Array();
 
 $types=get_resource_types();
 for ($n=0;$n<count($types);$n++)
-	{
+    {
     if(!in_array( $types[$n]["ref"],$hide_resource_types))
         {
         echo "resTypes[" .  $n  . "]=" . $types[$n]["ref"] . ";";
         }
-	}
+    }
 ?>
 
 function advSearchShowHideSection(name,show) {
@@ -493,51 +493,48 @@ if($search_includes_resources && !hook("advsearchrestypes") && !$hide_search_res
  <div class="Question">
  <label><?php echo htmlspecialchars($lang["search-mode"]) ?></label><?php
 
- $wrap=0;
+$wrap=0;
 
- $checked=false;
- if(!empty($selectedtypes[0]) && in_array("Global",$selectedtypes))
- 	{
-	$checked=true;
-	}
-elseif(in_array("Global",$restypes) && empty($selectedtypes[0]))
-	{
-	$checked=true;
-	}
- ?><table><tr>
- <td valign=middle><input type=checkbox class="SearchTypeCheckbox" id="SearchGlobal" name="resourcetypeGlobal" value="yes" <?php if ($checked) { ?>checked<?php }?>></td><td valign=middle><?php echo htmlspecialchars($lang["resources-all-types"]) ; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
- $hiddentypes=Array();
- for ($n=0;$n<count($types);$n++)
-	{
-	if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
-	$wrap++;if ($wrap>4) {$wrap=1;?></tr><tr><?php }
-	$checked=false;
-	if(!empty($selectedtypes[0]) && (in_array("Global",$selectedtypes) || in_array($types[$n]["ref"],$selectedtypes)))
-		{
-		$checked=true;
-		}
-	elseif((in_array("Global",$restypes) || in_array($types[$n]["ref"],$restypes)) && empty($selectedtypes[0]))
-		{
-		$checked=true;
-		}
+$checked=false;
 
-	?><td valign=middle><input type=checkbox class="SearchTypeCheckbox SearchTypeItemCheckbox" name="resourcetype<?php echo $types[$n]["ref"]?>" value="yes" <?php if ($checked) {?>checked<?php } else $hiddentypes[]=$types[$n]["ref"]; ?>></td><td valign=middle><?php echo htmlspecialchars($types[$n]["name"])?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
-	}
- ?>
- <?php if ($search_includes_themes)
-	 {
- ?></tr><tr><td>&nbsp;</td>
- </tr>
- <tr>
- <td valign=middle><input type=checkbox id="SearchFeaturedCollectionsCheckbox" class="SearchTypeCheckbox" name="resourcetypeFeaturedCollections" value="yes" <?php if (in_array("FeaturedCollections",$restypes)) { ?>checked<?php }?>></td><td valign=middle><?php print $lang["themes"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
- <?php
-	 }
- ?>
- </tr></table>
- <div class="clearerleft"> </div>
- </div>
- <?php
- }
+if ((!empty($selectedtypes[0]) && in_array("Global",$selectedtypes))
+    || (in_array("Global",$restypes) && empty($selectedtypes[0])))
+    {
+    $checked=true;
+    }
+
+?><table><tr>
+<td valign=middle><input type=checkbox class="SearchTypeCheckbox" id="SearchGlobal" name="resourcetypeGlobal" value="yes" <?php if ($checked) { ?>checked<?php }?>></td><td valign=middle><?php echo htmlspecialchars($lang["resources-all-types"]) ; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
+$hiddentypes=Array();
+for ($n=0;$n<count($types);$n++)
+    {
+    if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
+    $wrap++;if ($wrap>4) {$wrap=1;?></tr><tr><?php }
+    $checked=false;
+
+    if ((!empty($selectedtypes[0]) && (in_array("Global",$selectedtypes) || in_array($types[$n]["ref"],$selectedtypes)))
+        || (in_array("Global",$restypes) || in_array($types[$n]["ref"],$restypes)) && empty($selectedtypes[0]))
+        {
+        $checked=true;
+        }
+
+    ?><td valign=middle><input type=checkbox class="SearchTypeCheckbox SearchTypeItemCheckbox" name="resourcetype<?php echo $types[$n]["ref"]?>" value="yes" <?php if ($checked) {?>checked<?php } else $hiddentypes[]=$types[$n]["ref"]; ?>></td><td valign=middle><?php echo htmlspecialchars($types[$n]["name"])?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
+    }
+?>
+<?php if ($search_includes_themes)
+    {
+?></tr><tr><td>&nbsp;</td>
+</tr>
+<tr>
+<td valign=middle><input type=checkbox id="SearchFeaturedCollectionsCheckbox" class="SearchTypeCheckbox" name="resourcetypeFeaturedCollections" value="yes" <?php if (in_array("FeaturedCollections",$restypes)) { ?>checked<?php }?>></td><td valign=middle><?php print $lang["themes"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<?php
+    }
+?>
+</tr></table>
+<div class="clearerleft"> </div>
+</div>
+<?php
+}
 
 
 if (!hook('advsearchallfields')) { ?>
@@ -551,15 +548,15 @@ if (!hook('advsearchallfields')) { ?>
 <?php } ?>
 <h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchGlobalSectionHead"
 <?php if (in_array("FeaturedCollections",$selectedtypes))
-		{?>
-		style="display: none;"
+        {?>
+        style="display: none;"
 <?php 	} ?>>
 <?php echo htmlspecialchars($lang["resourcetype-global_fields"]) ; ?>
 </h1>
 <div class="AdvancedSection" id="AdvancedSearchGlobalSection"
 <?php if (in_array("FeaturedCollections",$selectedtypes))
-		{?>
-		style="display: none;"
+        {?>
+        style="display: none;"
 <?php 	} ?>>
 
 <?php if (!hook('advsearchresid')) { ?>
@@ -571,42 +568,42 @@ if (!hook('advsearchallfields')) { ?>
 <?php }
 if (!hook('advsearchdate')) {
 if (!$daterange_search)
-	{
-	?>
-	<div class="Question"><label><?php echo htmlspecialchars($lang["bydate"]) ?></label>
-	<select name="basicyear" class="SearchWidth" style="width:120px;" onChange="UpdateResultCount();">
-	  <option value=""><?php echo htmlspecialchars($lang["anyyear"]) ?></option>
-	  <?php
-	  $y=date("Y");
-	  $y += $maxyear_extends_current;
+    {
+    ?>
+    <div class="Question"><label><?php echo htmlspecialchars($lang["bydate"]) ?></label>
+    <select name="basicyear" class="SearchWidth" style="width:120px;" onChange="UpdateResultCount();">
+      <option value=""><?php echo htmlspecialchars($lang["anyyear"]) ?></option>
+      <?php
+      $y=date("Y");
+      $y += $maxyear_extends_current;
       for ($n=$y;$n>=$minyear;$n--)
         {
-		?><option <?php if ($n==$found_year) { ?>selected<?php } ?>><?php echo $n?></option><?php
-		}
-	  ?>
-	</select>
-	<select name="basicmonth" class="SearchWidth" style="width:120px;" onChange="UpdateResultCount();">
-	  <option value=""><?php echo htmlspecialchars($lang["anymonth"]) ?></option>
-	  <?php
-	  for ($n=1;$n<=12;$n++)
-		{
-		$m=str_pad($n,2,"0",STR_PAD_LEFT);
-		?><option <?php if ($n==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo htmlspecialchars($lang["months"][$n-1]) ?></option><?php
-		}
-	  ?>
-	</select>
-	<select name="basicday" class="SearchWidth" style="width:120px;" onChange="UpdateResultCount();">
-	  <option value=""><?php echo htmlspecialchars($lang["anyday"]) ?></option>
-	  <?php
-	  for ($n=1;$n<=31;$n++)
-		{
-		$m=str_pad($n,2,"0",STR_PAD_LEFT);
-		?><option <?php if ($n==$found_day) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
-		}
-	  ?>
-	</select>
-	<div class="clearerleft"> </div>
-	</div>
+        ?><option <?php if ($n==$found_year) { ?>selected<?php } ?>><?php echo $n?></option><?php
+        }
+      ?>
+    </select>
+    <select name="basicmonth" class="SearchWidth" style="width:120px;" onChange="UpdateResultCount();">
+      <option value=""><?php echo htmlspecialchars($lang["anymonth"]) ?></option>
+      <?php
+      for ($n=1;$n<=12;$n++)
+        {
+        $m=str_pad($n,2,"0",STR_PAD_LEFT);
+        ?><option <?php if ($n==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo htmlspecialchars($lang["months"][$n-1]) ?></option><?php
+        }
+      ?>
+    </select>
+    <select name="basicday" class="SearchWidth" style="width:120px;" onChange="UpdateResultCount();">
+      <option value=""><?php echo htmlspecialchars($lang["anyday"]) ?></option>
+      <?php
+      for ($n=1;$n<=31;$n++)
+        {
+        $m=str_pad($n,2,"0",STR_PAD_LEFT);
+        ?><option <?php if ($n==$found_day) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $m?></option><?php
+        }
+      ?>
+    </select>
+    <div class="clearerleft"> </div>
+    </div>
 <?php }} ?>
 
 
@@ -637,7 +634,7 @@ for ($n=0;$n<count($fields);$n++)
         {
         $showndivide=true;
         ?>
-		</div>
+        </div>
             <h1 class="AdvancedSectionHead CollapsibleSectionHead"  id="AdvancedSearchRestypeSectionHead"
                 <?php
                 if(in_array("Global", $restypes))
@@ -657,20 +654,20 @@ for ($n=0;$n<count($fields);$n++)
                 }
                 ?>
         >
-		<?php
-		}
+        <?php
+        }
 
-	# Work out a default value
-	if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
-	# Clearbutton means resetform
-	$resetform=getval("resetform","");
-	if ($resetform != "")
-		{
-		$value="";
-		}
-	# Render this field
+    # Work out a default value
+    if (array_key_exists($fields[$n]["name"],$values)) {$value=$values[$fields[$n]["name"]];} else {$value="";}
+    # Clearbutton means resetform
+    $resetform=getval("resetform","");
+    if ($resetform != "")
+        {
+        $value="";
+        }
+    # Render this field
     render_search_field($fields[$n], $fields, $value, true, 'SearchWidth', false, array(), $searched_nodes, $resetform);
-	}
+    }
 ?>
 </div>
 
@@ -842,19 +839,19 @@ render_advanced_search_buttons();
 </div> <!-- BasicsBox -->
 <?php
 if($archive!==0){
-	?>
-	<script>
-	jQuery(document).ready(function()
-	  {
-	  jQuery("input").keypress(function(event) {
-		   if (event.which == 13) {
-			   event.preventDefault();
-			   jQuery("#advancedform").submit();
-		   }
-	  });
-	  });
-	</script>
-	<?php
+    ?>
+    <script>
+    jQuery(document).ready(function()
+      {
+      jQuery("input").keypress(function(event) {
+           if (event.which == 13) {
+               event.preventDefault();
+               jQuery("#advancedform").submit();
+           }
+      });
+      });
+    </script>
+    <?php
 }
 
 include "../include/footer.php";

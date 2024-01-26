@@ -113,7 +113,7 @@ save_collection($fc_11, $fc_data);
 $fcs = get_featured_collections($fc_1, []);
 if(empty($fcs))
     {
-    echo 'UC: Set featured collection - ';
+    echo 'UC: Set featured collection, get_featured_collections() returned empty array - ';
     return false;
     }
 else if(!(
