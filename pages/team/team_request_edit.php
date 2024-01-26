@@ -116,7 +116,7 @@ if ($request !== false)
 
         <div class="Question">
             <label><?php echo $lang["comments"]?></label>
-            <div class="Fixed"><?php echo htmlspecialchars(nl2br($request["comments"]))?></div>
+            <div class="Fixed"><?php echo strip_tags(nl2br($request["comments"]),'<br>')?></div>
             <div class="clearerleft"></div>
         </div>
 
