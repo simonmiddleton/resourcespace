@@ -58,7 +58,7 @@ if (!hook("replacelistitem"))
 
                 if($result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'col'))
                     {
-                    render_resource_image($result[$n],$thm_url,"list");
+                    render_search_image($result[$n],$thm_url,"list");
                     }
                 else
                     {
