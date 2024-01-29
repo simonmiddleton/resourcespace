@@ -3179,7 +3179,7 @@ function generateAjaxToken($form_id)
 function generate_csrf_js_object(string $name): string
     {
     return $GLOBALS['CSRF_enabled']
-        ? json_encode([$GLOBALS['CSRF_token_identifier'] => generateCSRFToken($GLOBALS['usersession'], $name)])
+        ? json_encode([$GLOBALS['CSRF_token_identifier'] => generateCSRFToken($GLOBALS['usersession'] ?? null, $name)])
         : '{}';
     }
 
