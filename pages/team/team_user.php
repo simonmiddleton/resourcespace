@@ -214,7 +214,7 @@ include "../../include/header.php";
                 ["group"     => $group,
                 "order_by"  => $order_by,
                 "find"      =>$find],
-                ["per_page_list"=> 99999]
+                ["per_page_list"=>$per_page]
             );
             ?>
             <a
