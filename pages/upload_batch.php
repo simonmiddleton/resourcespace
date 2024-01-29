@@ -146,7 +146,7 @@ if($tusupload && $tus_validated)
 
 include_once "../include/image_processing.php";
 
-$resource_type                          = getval('resource_type', '');
+$resource_type                          = getval('resource_type', ''); # Int representing resource type or string, see get_search_default_restypes()
 $collectionname                         = getval('entercolname', '');
 $search                                 = getval('search', '');
 $offset                                 = getval('offset', '', true);
@@ -646,7 +646,7 @@ if ($processupload)
             // For upload_then_edit mode ONLY, set the resource type based on the extension. User
             // can later change this at the edit stage
             // IMPORTANT: Change resource type only if user has access to it
-            if($upload_then_edit && !$resource_type_force_selection && !$upload_here)
+            if($upload_then_edit && !$resource_type_force_selection && (!$upload_here || !is_numeric($resource_type)))
                 {
                 $resource_type_from_extension = get_resource_type_from_extension(
                     pathinfo($upfilepath, PATHINFO_EXTENSION),
@@ -683,7 +683,7 @@ if ($processupload)
             if(!$ref)
                 {
                 $result["status"] = false;
-                $result["message"] = "Failed to create resource with given resource type: ' . $resource_type . '";
+                $result["message"] = "Failed to create resource with given resource type: $resource_type";
                 $result["error"] = 125;
                 $result["id"] = htmlspecialchars($ref);
                 $result["collection"] = htmlspecialchars($collection_add);
