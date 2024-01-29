@@ -15,4 +15,4 @@ copy_hitcount_to_live();
 $data=get_resource_data($resourcehit,false); # Fetch without caching.
 
 # Should be a hit count of two now.
-return ($data["hit_count"]==2);
+return $data["hit_count"] == 2;

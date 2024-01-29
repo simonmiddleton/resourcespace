@@ -1399,7 +1399,7 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
     global $email_from,$lang,$applicationname;
     
     # Attempt to resolve all users in the string $userlist to user references.
-    if (trim($userlist)=="") {return ($lang["mustspecifyoneuser"]);}
+    if (trim($userlist)=="") {return $lang["mustspecifyoneuser"];}
     $userlist=resolve_userlist_groups($userlist);
     $ulist=trim_array(explode(",",$userlist));
 
@@ -2220,7 +2220,7 @@ function remove_access_to_user($user,$resource)
  */
 function user_email_exists($email)
     {
-    return (ps_value("SELECT COUNT(*) value FROM user WHERE email LIKE ?", ["s", trim(strtolower($email))], 0) > 0);
+    return ps_value("SELECT COUNT(*) value FROM user WHERE email LIKE ?", ["s", trim(strtolower($email))], 0) > 0;
     }
 
 /**
@@ -2369,7 +2369,7 @@ function get_rs_session_id($create=false)
             {
             rs_setcookie("rs_session",$existing_session, 7, "", "", substr($baseurl,0,5)=="https", true); // extend the life of the cookie
             }
-        return($existing_session);
+        return $existing_session;
         }
     if ($create) 
         {
@@ -2675,7 +2675,7 @@ function checkPermission_anonymoususer()
  */
 function checkPermission_dashadmin()	
 	{
-	return ((checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h")));
+	return (checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h"));
     }
     
 
@@ -2780,7 +2780,7 @@ function checkperm_user_edit($user)
 	$validgroups = ps_array($sql, $sql_params);
 	
 	// Return true if the target user we are checking is in one of the valid groups
-	return (in_array($editusergroup, $validgroups));
+	return in_array($editusergroup, $validgroups);
 	}
 
 
@@ -2792,7 +2792,7 @@ function checkperm_user_edit($user)
 function internal_share_access()
     {
     global $k, $external_share_view_as_internal;
-    return ($k != "" && $external_share_view_as_internal && is_authenticated());
+    return $k != "" && $external_share_view_as_internal && is_authenticated();
     }
 
 /**

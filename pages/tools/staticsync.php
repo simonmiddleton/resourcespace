@@ -331,7 +331,7 @@ function ProcessFolder($folder)
                 continue;
                 }
 
-            if ($count > $staticsync_max_files) { return(true); }
+            if ($count > $staticsync_max_files) { return true; }
 
             # Already exists or deleted/archived in which case we won't proceed?
             if (!isset($done[$shortpath]))
@@ -598,7 +598,7 @@ function ProcessFolder($folder)
                                                 if ($field_info['type'] == FIELD_TYPE_CATEGORY_TREE)
                                                     {
                                                     # Use value found in category tree
-                                                    $category_tree_values = array_filter($fieldnodes, function(array $fieldnodes) use ($value) {return ($value == $fieldnodes['name']);});
+                                                    $category_tree_values = array_filter($fieldnodes, function(array $fieldnodes) use ($value) {return $value == $fieldnodes['name'];});
                                                     $newnode = array_values($category_tree_values)[0]['ref']; # If multiple values found (category tree "leaves") we must pick one, taking first in array i.e. lowest node ref.
                                                     echo " - Using category tree node $newnode - $value" . "\n";
                                                     }

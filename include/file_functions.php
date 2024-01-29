@@ -251,12 +251,11 @@ function is_banned_extension($extension)
     {
     global $banned_extensions;    
 
-    return (in_array(strtolower($extension), array_map('strtolower', $banned_extensions)) ||
+    return in_array(strtolower($extension), array_map('strtolower', $banned_extensions)) ||
         strlen($extension) > 10 ||
         $extension == "." ||
         $extension == "" ||
-        $extension == '"'
-        );
+        $extension == '"';
     }
 
 /**

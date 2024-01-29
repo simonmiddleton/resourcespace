@@ -1170,7 +1170,7 @@ function api_save_collection(int $ref, array $coldata)
         }
     
     $fct_return = save_collection($ref, $coldata);
-    return (is_null($fct_return) ? true : $fct_return);
+    return is_null($fct_return) ? true : $fct_return;
     }
 
 function api_get_collection(int $ref)

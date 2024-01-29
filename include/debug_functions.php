@@ -106,7 +106,7 @@ function debug_stringify($value)
     {
     if(is_bool($value))
         {
-        return ($value ? 'true' : 'false');
+        return $value ? 'true' : 'false';
         }
 
     return trim(preg_replace('/\s+/m', ' ', print_r($value, true)));

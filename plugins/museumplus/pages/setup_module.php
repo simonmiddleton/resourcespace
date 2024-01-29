@@ -55,7 +55,7 @@ if(getval('save', '') !== '' && enforcePostRequest(false))
         $id = $new_id;
         }
 
-    $field_mappings = array_filter($field_mappings, function($v) { return ($v['field_name'] != '' && $v['rs_field'] > 0); });
+    $field_mappings = array_filter($field_mappings, function($v) { return $v['field_name'] != '' && $v['rs_field'] > 0; });
 
     $museumplus_modules_config[$id] = array(
         'module_name'   => $module_name,

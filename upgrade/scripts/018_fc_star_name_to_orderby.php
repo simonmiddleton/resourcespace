@@ -27,7 +27,7 @@ $old_fc_sort = function(array $a, array $b) use ($descthemesorder)
         return strnatcasecmp($a["name"],$b["name"]);
         }
 
-    return ($a["has_resources"] < $b["has_resources"] ? -1 : 1);
+    return $a["has_resources"] < $b["has_resources"] ? -1 : 1;
     };
 
 $starred_fcs_parents = array_unique(array_column($fcs_w_stars, 'parent'));

@@ -1525,7 +1525,7 @@ function do_search(
         $resultcount = $result["total"]  ?? 0;
         if ($resultcount>0 & count($result["data"]) > 0)
             {
-            $result = array_map(function($val){return(["ref"=>$val["ref"]]);}, $result["data"]);
+            $result = array_map(function($val){return ["ref"=>$val["ref"]];}, $result["data"]);
             }
         $mysql_verbatim_queries=$mysql_vq;
         log_keyword_usage($keywords_used, $result);

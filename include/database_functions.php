@@ -108,7 +108,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         $exception = new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
         // Remove the actual errorhandler from the stack trace. This will remove other global data which otherwise could leak sensitive information
         $backtrace = json_encode(
-            array_filter($exception->getTrace(), function(array $val) { return ($val["function"] !== "errorhandler"); }),
+            array_filter($exception->getTrace(), function(array $val) { return $val["function"] !== "errorhandler"; }),
             JSON_PRETTY_PRINT);
 
         // Prepare the post data.
@@ -1281,7 +1281,7 @@ function sql_truncate_text_val(string $v, int $len)
         $truncated_sql_val = mb_strcut($v, 0, $len);
         }
 
-    return (isset($truncated_sql_val) ? $truncated_sql_val : $v);
+    return isset($truncated_sql_val) ? $truncated_sql_val : $v;
     }
 
 /**

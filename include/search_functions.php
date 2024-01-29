@@ -1822,13 +1822,13 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     // This needs to include archive and created_by columns too as often used to work out permission to edit collection
                     $result["data"] = array_map(function($val)
                         {
-                        return([
+                        return [
                             "ref"           =>$val["ref"],
                             "resource_type" =>$val["resource_type"],
                             "archive"       =>$val["archive"],
                             "created_by"    =>$val["created_by"],
                             "access"        =>$val["access"],
-                                ]);
+                                ];
                             }, $result["data"]
                         );
                     }
@@ -1913,7 +1913,7 @@ function rebuild_specific_field_search_from_node(array $node)
 
     // Note: at the moment there is no need to return a specific field search by multiple options
     // Example: country:keyword1;keyword2
-    return ((strpos($node['name']," ")===false)?$field_shortname . ":" . i18n_get_translated($node['name']):"\"" . $field_shortname . ":" . i18n_get_translated($node['name']) . "\"");
+    return (strpos($node['name']," ")===false)?$field_shortname . ":" . i18n_get_translated($node['name']):"\"" . $field_shortname . ":" . i18n_get_translated($node['name']) . "\"";
     }
 
 
@@ -2120,7 +2120,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
         $s=explode("-",$search);
         if (count($s)>=3)
             {
-            return (array($s[0],$s[0] . "-" . $s[1],$search));
+            return array($s[0],$s[0] . "-" . $s[1],$search);
             }
         else if (is_array($search))
             {

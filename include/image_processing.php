@@ -2502,7 +2502,7 @@ function get_colour_key($image)
     asort($table);reset($table);$colkey="";
     foreach ($table as $key=>$value) {$colkey.=$key;}
     $colkey=substr(strrev($colkey),0,5);
-    return($colkey);
+    return $colkey;
     }
 
 function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alternative=-1, $resource_ext = "")
@@ -3544,7 +3544,7 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     
     $dimensions = array($w, $h);
 
-    return($dimensions);
+    return $dimensions;
     }
 
 /**

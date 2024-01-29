@@ -180,7 +180,7 @@ function HookResourceconnectAllGenerateurl($url)
     
     # Trim off the short base URL if it's been set, use $baseurl instead
     if (substr($url,0,strlen($baseurl_short))==$baseurl_short) {$url=substr($url,strlen($baseurl_short));$url=$baseurl . "/" . $url;}
-    return ($url);
+    return $url;
     }
 
 

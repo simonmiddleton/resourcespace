@@ -5113,7 +5113,7 @@ function render_featured_collections_category_permissions(array $ctx)
             debug(sprintf("render_featured_collections_category_permissions: For perm ID '%s': carry = %s; root_node = %s; allow_render = %s", $perm_id, json_encode($carry), json_encode($root_node), json_encode($allow_render)));
 
             // FALSE if at least one featured collection category parent is forbidden
-            return (!is_bool($carry) ? $allow_render : $carry && $allow_render);
+            return !is_bool($carry) ? $allow_render : $carry && $allow_render;
             }, null);
         debug("render_featured_collections_category_permissions: render_subcategories = " . json_encode($render_subcategories));
         debug("render_featured_collections_category_permissions: ");

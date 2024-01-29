@@ -57,7 +57,7 @@ function HookResourceconnectViewNextpreviousextraurl()
 	# Forward the resourceconnect source.
 
 	global $baseurl;
-	return ("resourceconnect_source=" .$baseurl);
+	return "resourceconnect_source=" . $baseurl;
 	}
 	
 function HookResourceconnectViewPreviewextraurl()
@@ -67,7 +67,7 @@ function HookResourceconnectViewPreviewextraurl()
 	# Forward the resourceconnect source.
 
 	global $baseurl;
-	return ("resourceconnect_source=" .$baseurl . "\" target='_blank' empty=\"");
+	return "resourceconnect_source=" . $baseurl . "\" target='_blank' empty=\"";
 	}
 
 

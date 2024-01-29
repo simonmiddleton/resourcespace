@@ -2946,7 +2946,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
     # remove any line breaks that may have been entered
     $userlist=str_replace("\\r\\n",",",$userlist);
 
-	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
+	if (trim($userlist)=="") {return $lang["mustspecifyoneusername"];}
 	$userlist=resolve_userlist_groups($userlist);
 	if(strpos($userlist,$lang["groupsmart"] . ": ")!==false)
 		{
@@ -4581,7 +4581,7 @@ function write_metadata($path, $ref, $uniqid="")
 
         $metadata_all=get_resource_field_data($ref, false,true,NULL,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
         $read_only_fields = array_column(array_filter($metadata_all, function($value) {
-            return ((bool) $value['read_only'] == true);
+            return (bool) $value['read_only'] == true;
         }), 'ref');
 
         $write_to=array();
@@ -5537,7 +5537,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         else
             {
             # Return the restricted access setting for this resource type.
-            return (ps_value("select allow_restricted value from preview_size where id = ?", array("s", $size), 0) == 1);
+            return ps_value("SELECT allow_restricted value FROM preview_size WHERE id = ?", array("s", $size), 0) == 1;
             }
         }
 
@@ -5568,7 +5568,7 @@ function get_edit_access($resource, int $status=-999, array &$resourcedata = [])
     $plugincustomeditaccess = hook('customediteaccess','',array($resource,$status,$resourcedata));
     if($plugincustomeditaccess)
         {
-        return ('false' === $plugincustomeditaccess ? false : true);
+        return 'false' === $plugincustomeditaccess ? false : true;
         }
 
     if ($resourcedata === [])
@@ -6776,14 +6776,14 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
         }
     while (true === $snapshot_found);
 
-    return (!$count_only ? $snapshots_found : count($snapshots_found));
+    return !$count_only ? $snapshots_found : count($snapshots_found);
     }
 
 function resource_file_readonly($ref)
     {
     # Even if the user has edit access to a resource, the main file may be read only.
     global $fstemplate_alt_threshold;
-    return ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold);
+    return $fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold;
     }
 
 function delete_resource_custom_user_access($resource,$user)
@@ -6796,7 +6796,7 @@ function get_video_info($file)
     $ffprobe_fullpath = get_utility_path("ffprobe");
     $ffprobe_output=run_command($ffprobe_fullpath . " -v 0 " . escapeshellarg($file) . " -show_streams -of json");
     $ffprobe_array=json_decode($ffprobe_output, true);
-    return ($ffprobe_array);
+    return $ffprobe_array;
     }
 
 
@@ -8593,7 +8593,7 @@ function canSeePreviewTools()
 
     $visible_annotate_fields = canSeeAnnotationsFields();
 
-    return (count($visible_annotate_fields) > 0 || $image_preview_zoom);
+    return count($visible_annotate_fields) > 0 || $image_preview_zoom;
     }
 
 /**
@@ -8723,9 +8723,9 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
 */
 function metadata_field_view_access($field)
     {
-    return (
+    return 
         (PHP_SAPI == 'cli' && !defined("RS_TEST_MODE"))
-        || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
+        || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field));
     }
 
 

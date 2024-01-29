@@ -200,7 +200,7 @@ function rse_workflow_validate_action(array $action, array $resource)
     // able to move the resource to a different state.
     $checkperm_wf = checkperm("wf{$action['ref']}");
 
-    return ($resource_in_valid_state && ($check_edit_access || $checkperm_wf));
+    return $resource_in_valid_state && ($check_edit_access || $checkperm_wf);
     }
 
 

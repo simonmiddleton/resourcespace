@@ -8,4 +8,4 @@ $key1=resolve_keyword("Test",false);
 $key2=resolve_keyword("Unknown",true);
 
 # Everything as expected?
-return (is_numeric($key1) && is_numeric($key2) && $key1!=$key2);
+return is_numeric($key1) && is_numeric($key2) && $key1 != $key2;

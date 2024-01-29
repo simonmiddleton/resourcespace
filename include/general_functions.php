@@ -15,13 +15,19 @@
  * @return string
  */
 function getval($val,$default,$force_numeric=false)
-    {
+{
     # return a value from POST, GET or COOKIE (in that order), or $default if none set
-    if (array_key_exists($val,$_POST)) {return ($force_numeric && !is_numeric($_POST[$val])?$default:$_POST[$val]);}
-    if (array_key_exists($val,$_GET)) {return ($force_numeric && !is_numeric($_GET[$val])?$default:$_GET[$val]);}
-    if (array_key_exists($val,$_COOKIE)) {return ($force_numeric && !is_numeric($_COOKIE[$val])?$default:$_COOKIE[$val]);}
-    return $default;
+    if (array_key_exists($val,$_POST)) {
+        return $force_numeric && !is_numeric($_POST[$val]) ? $default : $_POST[$val];
     }
+    if (array_key_exists($val,$_GET)) {
+        return $force_numeric && !is_numeric($_GET[$val]) ? $default : $_GET[$val];
+    }
+    if (array_key_exists($val,$_COOKIE)) {
+        return $force_numeric && !is_numeric($_COOKIE[$val])?$default:$_COOKIE[$val];
+    }
+    return $default;
+}
 
 /**
  * Escape a value prior to using it in SQL.
@@ -317,7 +323,7 @@ function average_length($array)
         {
         $total+=strlen(i18n_get_translated($array[$n]));
         }
-    return ($total/count($array));
+    return $total/count($array);
     }
 
 
@@ -2943,7 +2949,7 @@ function move_array_element(array &$array, $from_index, $to_index)
  */
 function emptyiszero($value)
     {
-    return ($value !== null && $value !== false && trim($value) !== '');
+    return $value !== null && $value !== false && trim($value) !== '';
     }
 
 
@@ -3342,7 +3348,7 @@ function is_resourcespace_upgrade_available()
  */
 function get_recent_users($days)
     {
-    return (ps_value("select count(*) value from user where datediff(now(), last_active) <= ?", array("i", $days), 0));
+    return ps_value("SELECT count(*) value FROM user WHERE datediff(now(), last_active) <= ?", array("i", $days), 0);
     }
 
 
@@ -3609,7 +3615,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 				}
 			}
 
-		return (isset($GLOBALS['hook_return_value']) ? $GLOBALS['hook_return_value'] : false);
+		return isset($GLOBALS['hook_return_value']) ? $GLOBALS['hook_return_value'] : false;
 		}
 
 	# we have not encountered this hook and page combination before so go add it

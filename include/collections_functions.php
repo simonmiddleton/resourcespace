@@ -1996,7 +1996,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 	if ($useremail==""){$useremail=$email_from;}
 	if ($group==""){$group=$usergroup;}
 	
-	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
+	if (trim($userlist)=="") {return $lang["mustspecifyoneusername"];}
 	$userlist=resolve_userlist_groups($userlist);
 	
 	if(strpos($userlist,$lang["groupsmart"] . ": ")!==false){
@@ -3461,7 +3461,7 @@ function copy_collection($copied,$current,$remove_existing=false)
  */
 function collection_is_research_request($collection)
 	{
-	return (ps_value("select count(*) value from research_request where collection=?",array("i",$collection),0)>0);
+	return ps_value("SELECT count(*) value FROM research_request WHERE collection=?", array("i", $collection), 0) > 0;
 	}
 
 
@@ -3724,7 +3724,7 @@ function collection_min_access($collection)
 		$minextaccess = ps_value("SELECT max(access) value FROM external_access_keys WHERE resource IN (" . ps_param_insert(count($result)) . ") AND access_key = ? AND (expires IS NULL OR expires > NOW())", $params, -1);
         if($minextaccess != -1 && (!$internal_share_access || ($internal_share_access && ($minextaccess < $minaccess))))
             {
-            return ($minextaccess);
+            return $minextaccess;
             }
 		}
     
@@ -5800,7 +5800,7 @@ function is_featured_collection_category(array $fc)
         return false;
         }
 
-    return ($fc["type"] == COLLECTION_TYPE_FEATURED && $fc["has_resources"] == 0);
+    return $fc["type"] == COLLECTION_TYPE_FEATURED && $fc["has_resources"] == 0;
     }
 
 /**
@@ -5825,7 +5825,7 @@ function is_featured_collection_category_by_children(int $c_ref)
          GROUP BY c.ref
            HAVING count(DISTINCT cc.ref) > 0",array("s",COLLECTION_TYPE_FEATURED,"i",$c_ref),0);
 
-    return ($found_ref > 0);
+    return $found_ref > 0;
     }
 
 /**
@@ -5852,7 +5852,7 @@ function validate_collection_parent($c)
             }
         }
 
-    return (is_null($collection["parent"]) ? null : (int) $collection["parent"]);
+    return is_null($collection["parent"]) ? null : (int) $collection["parent"];
     }
 
 /**
@@ -5980,7 +5980,7 @@ function get_featured_collection_ref_by_name(string $name, $parent)
         }
     $ref = ps_value($sql,$params,null,"featured_collections");
 
-    return (is_null($ref) ? null : (int) $ref);
+    return is_null($ref) ? null : (int) $ref;
     }
 
 
@@ -6104,7 +6104,7 @@ function allow_featured_collection_share(array $c)
         $fc_allow_share = allow_collection_share($c);
 
         // FALSE if at least one collection has no share access (consistent with the check for normal collections when checking resources)
-        return (!is_bool($carry) ? $fc_allow_share : $carry && $fc_allow_share);
+        return !is_bool($carry) ? $fc_allow_share : $carry && $fc_allow_share;
         }, null);
     }
 
@@ -6144,7 +6144,7 @@ function filter_featured_collections_by_root(array $fcs, int $c_ref, array $ctx 
         {
         $branch_path = get_featured_collection_category_branch_by_leaf($ref, $all_fcs);
         $branch_path_str = array_reduce($branch_path, $branch_path_fct, "");
-        return (substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str);
+        return substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str;
         });
 
     $CACHE_FCS_BY_ROOT[$cache_id][$c_ref] = $collections;
@@ -6229,7 +6229,7 @@ function can_delete_featured_collection(int $ref)
     
     $params=array("s",COLLECTION_TYPE_FEATURED,"i",$ref);
 
-    return (ps_value($sql, $params, 0) > 0);
+    return ps_value($sql, $params, 0) > 0;
     }
 
 
@@ -6469,10 +6469,9 @@ function can_edit_upload_share($collection,$uploadkey)
         }
     $share_details = get_external_shares(array("share_collection"=>$collection,"share_type"=>1, "access_key"=>$uploadkey));
     $details = isset($share_details[0]) ? $share_details[0] : array();
-    return ((isset($details["user"]) && $details["user"] == $userref)
-        || 
-      (checkperm("ex") && array_key_exists("expires", $details) && empty($details["expires"]))
-    );
+    return
+        (isset($details["user"]) && $details["user"] == $userref)
+        || (checkperm("ex") && array_key_exists("expires", $details) && empty($details["expires"]));
     }
 
 /**

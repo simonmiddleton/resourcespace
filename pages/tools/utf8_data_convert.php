@@ -15,7 +15,7 @@ function checkEncoding($string, $string_encoding)
 
     $ts = $string_encoding == 'UTF-32' ? 'UTF-8' : $string_encoding;
 
-    return ($string === mb_convert_encoding(mb_convert_encoding($string, $fs, $ts), $ts, $fs));
+    return $string === mb_convert_encoding(mb_convert_encoding($string, $fs, $ts), $ts, $fs);
     }
 
 

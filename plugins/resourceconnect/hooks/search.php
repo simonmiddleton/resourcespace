@@ -205,19 +205,19 @@ function HookResourceConnectSearchProcess_search_results($result,$search)
 function HookResourceConnectSearchReplaceresourcetools()
     {
     global $ref;
-    return ($ref<0);
+    return $ref < 0;
     }
     
 function HookResourceConnectSearchReplaceresourcetoolssmall()
     {
     global $ref;
-    return ($ref<0);
+    return $ref < 0;
     }
     
 function HookResourceConnectSearchReplaceresourcetoolsxl()
     {
     global $ref;
-    return ($ref<0);
+    return $ref < 0;
     }
     
     

@@ -13,4 +13,4 @@ create_previews(1);
 $sizes=get_image_sizes(1);
 
 # If preview creation worked there will now be a screen size also, so two sizes.
-return (count($sizes)>1);
+return count($sizes) > 1;

@@ -131,7 +131,7 @@ function get_plugin_yaml($path, $validate=true)
 
     if(!(file_exists($path) && is_readable($path)))
         {
-        return ($validate ? false : $plugin_yaml);
+        return $validate ? false : $plugin_yaml;
         }
     $yaml_file_ptr = fopen($path, 'r');
 
@@ -1452,11 +1452,11 @@ function get_plugin_path($plugin,$url=false)
     
     # Standard location    
     $pluginpath=dirname(__FILE__) . "/../plugins/" . $plugin;
-    if (file_exists($pluginpath)) {return ($url?$baseurl_short . "plugins/" . $plugin:$pluginpath);}
+    if (file_exists($pluginpath)) {return $url ? $baseurl_short . "plugins/" . $plugin : $pluginpath;}
 
     # Filestore location
     $pluginpath=$storagedir . "/plugins/" . $plugin;
-    if (file_exists($pluginpath)) {return ($url?$storageurl . "/plugins/" . $plugin:$pluginpath);}
+    if (file_exists($pluginpath)) {return $url ? $storageurl . "/plugins/" . $plugin : $pluginpath;}
     }
     
 function register_plugin($plugin)

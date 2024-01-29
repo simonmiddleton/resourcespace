@@ -257,7 +257,7 @@ function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref"
 		($get_all ? " " : " AND message.expires > NOW()") .
 		($get_all ? " " : " AND user_message.seen='0'") .
 		" ORDER BY " . $sql_order_by . " " . $sort, array("i",$user));
-	return(count($messages) > 0);
+	return count($messages) > 0;
 	}
 
 /**

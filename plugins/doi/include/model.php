@@ -86,7 +86,7 @@
 	 * @return boolean          TRUE, if not (nearly) empty, otherwise FALSE.
 	 */
 	function doi_has_content($value) {
-		return (isset($value) && $value && !empty($value) && ($value !== '') && ($value !== ','));
+		return isset($value) && $value && !empty($value) && ($value !== '') && ($value !== ',');
 	}
 
 	/**
@@ -826,7 +826,7 @@ XML;
 	 * @return string
 	 */
 	function doi_get_msg($code, &$msgs, $default_msg = '') {
-		return (array_key_exists($code, $msgs) ? $msgs[$code] : $default_msg);
+		return array_key_exists($code, $msgs) ? $msgs[$code] : $default_msg;
 	}
 
 	function doi_log_uname_error() {
