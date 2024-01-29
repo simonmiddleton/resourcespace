@@ -2548,10 +2548,10 @@ input[type="text"]#iconpicker-input {
     background: rgba(255, 255, 255, 10%);
 }
 .SearchBarTab.SearchTab {
-    margin: 10px 3px 0 10px;
+    margin: 10px 2px 0 10px;
 }
 .SearchBarTab.BrowseTab {
-    margin: 10px 10px 0 3px;
+    margin: 10px 10px 0 2px;
 }
 .SearchBarTab.SearchBarTabSelected {
     background: rgb(255 255 255 / 14%);
