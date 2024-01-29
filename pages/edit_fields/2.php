@@ -28,12 +28,12 @@ if(!hook('customchkboxes', '', array($field)))
     $l = average_length($node_options);
     switch($l)
         {
-        case($l > 25): $cols = 1; break;   
-        case($l > 15): $cols = 2; break;   # 50
-        case($l > 9):  $cols = 3; break;   # 45
-        case($l > 6):  $cols = 4; break;   # 36
-        case($l > 4):  $cols = 5; break;   # 30
-        case($l > 2):  $cols = 7; break;   # 28
+        case $l > 25: $cols = 1; break;   
+        case $l > 15: $cols = 2; break;   # 50
+        case $l > 9:  $cols = 3; break;   # 45
+        case $l > 6:  $cols = 4; break;   # 36
+        case $l > 4:  $cols = 5; break;   # 30
+        case $l > 2:  $cols = 7; break;   # 28
         default:       $cols = 8;           
         }
 
