@@ -1806,7 +1806,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         else
             {
-            $count_sql = clone($sql);
+            $count_sql = clone $sql;
             $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
             $result = sql_limit_with_total_count($sql, $search_chunk_size, $chunk_offset, $b_cache_count, $count_sql);
             if(is_array($fetchrows))

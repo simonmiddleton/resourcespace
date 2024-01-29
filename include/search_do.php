@@ -1511,7 +1511,7 @@ function do_search(
             {
             return $results_sql;
             }
-        $count_sql = clone($results_sql);
+        $count_sql = clone $results_sql;
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
         $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
         
@@ -1538,7 +1538,7 @@ function do_search(
             {
             return $results_sql;
             }
-        $count_sql = clone($results_sql);
+        $count_sql = clone $results_sql;
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
         $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
         }
