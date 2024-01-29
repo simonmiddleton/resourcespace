@@ -1,7 +1,7 @@
 <?php
 command_line_only();
 
-include_once(dirname(__FILE__) . "/../../include/image_processing.php");
+include_once dirname(__FILE__) . "/../../include/image_processing.php";
 
 # Copy the default slideshow image to the location of the first resource
 copy(dirname(__FILE__) . '/../../gfx/homeanim/1.jpg', get_resource_path(1,true));

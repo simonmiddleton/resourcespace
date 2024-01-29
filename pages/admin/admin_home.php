@@ -1,7 +1,7 @@
 <?php
-include ("../../include/db.php");
-include ("../../include/authenticate.php");if (!checkperm("a")){exit ("Permission denied.");}
-include ("../../include/header.php");
+include "../../include/db.php";
+include "../../include/authenticate.php";if (!checkperm("a")){exit ("Permission denied.");}
+include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
   <h1><?php echo $lang["systemsetup"]?></h1>
@@ -76,4 +76,4 @@ hook("customadminfunction");
 	</div>
 </div> <!-- End of BasicsBox -->
 <?php
-include("../../include/footer.php");
+include "../../include/footer.php";

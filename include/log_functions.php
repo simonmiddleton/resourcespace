@@ -25,7 +25,7 @@ function log_activity($note=null, $log_code=LOG_CODE_UNSPECIFIED, $value_new=nul
 
 	if(!function_exists('log_diff'))
 		{
-		include_once(__DIR__ . '/resource_functions.php');
+		include_once __DIR__ . '/resource_functions.php';
 		}
 
 	if (is_null($user))

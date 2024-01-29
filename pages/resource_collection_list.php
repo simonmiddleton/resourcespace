@@ -4,7 +4,7 @@ include "../include/db.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $k=getval("k","");if ($k!=""){die();} 
-include("../include/authenticate.php");
+include "../include/authenticate.php";
 
 $ref=getval("ref","",true);
 $collections=get_resource_collections($ref);

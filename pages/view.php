@@ -1938,7 +1938,7 @@ if (!$disable_geocoding)
 
 if ($comments_resource_enable && ($k=="" || $internal_share_access))
     {
-    include_once ("../include/comment_resources.php");
+    include_once "../include/comment_resources.php";
     }
 
 hook("w2pspawn");

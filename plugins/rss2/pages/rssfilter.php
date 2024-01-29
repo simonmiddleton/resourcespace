@@ -1,13 +1,13 @@
 <?php
-include(dirname(__FILE__)."/../../../include/db.php");
-include_once(dirname(__FILE__)."/../../../include/image_processing.php");
+include dirname(__FILE__)."/../../../include/db.php";
+include_once dirname(__FILE__)."/../../../include/image_processing.php";
 
 if(!function_exists("get_api_key"))
 	{
-	include(dirname(__FILE__)."/../../../include/api_functions.php");
+	include dirname(__FILE__)."/../../../include/api_functions.php";
 	}
 
-include(dirname(__FILE__)."/rssfeed.php");
+include dirname(__FILE__)."/rssfeed.php";
 
 # Get parameters
 $user=base64_decode(getval("user",""));

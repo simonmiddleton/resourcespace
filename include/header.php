@@ -229,7 +229,7 @@ if($browse_on)
 
 <?php if ($keyboard_navigation)
     {
-    include (dirname(__FILE__) . "/keyboard_navigation.php");
+    include dirname(__FILE__) . "/keyboard_navigation.php";
     }
 hook("additionalheaderjs");?>
 
@@ -561,7 +561,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
         <?php
         if(!($pagename == "terms" && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"login") !== false && $terms_login))
             {
-            include (dirname(__FILE__) . "/header_links.php");
+            include dirname(__FILE__) . "/header_links.php";
             }
         ?>
         </div> 

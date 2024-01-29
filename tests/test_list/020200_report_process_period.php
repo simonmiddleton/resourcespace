@@ -1,7 +1,7 @@
 <?php command_line_only();
 
 // --- Set up
-include_once(dirname(__DIR__, 2) . '/include/reporting_functions.php');
+include_once dirname(__DIR__, 2) . '/include/reporting_functions.php';
 $reporting_periods_default = [3, 5, 7];
 
 

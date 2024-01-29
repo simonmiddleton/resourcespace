@@ -609,7 +609,7 @@ if ($allow_reorder && $display!="list")
         }
     }
 
-include ("../include/search_title_processing.php");
+include "../include/search_title_processing.php";
 
 # Special case: numeric searches (resource ID) and one result: redirect immediately to the resource view.
 if ((($config_search_for_number && is_numeric($search)) || $searchresourceid > 0) && is_array($result) && count($result)==1)

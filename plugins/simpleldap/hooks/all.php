@@ -1,6 +1,6 @@
 <?php
 
-include_once(dirname(__FILE__) . "/../include/simpleldap_functions.php");
+include_once dirname(__FILE__) . "/../include/simpleldap_functions.php";
 
 function HookSimpleldapAllExternalauth($uname, $pword){
 	if (!function_exists('ldap_connect'))

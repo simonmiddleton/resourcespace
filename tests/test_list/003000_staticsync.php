@@ -120,7 +120,7 @@ $argc=0;
 ob_flush();
 ob_start();
 $staticsync_suppress_output=true;
-include (dirname(__FILE__) . "/../../pages/tools/staticsync.php");
+include dirname(__FILE__) . "/../../pages/tools/staticsync.php";
 ob_end_clean();
 
 // Test A: check the file has gone

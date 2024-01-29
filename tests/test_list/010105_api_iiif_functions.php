@@ -11,7 +11,7 @@ $baseurl_short_saved = $baseurl_short;
 $baseurl = "https://test010105.resourcespace.com/resourcespace";
 $baseurl_short = "/resourcespace/";
 
-include_once(__DIR__ . "/../../include/api_functions.php");
+include_once __DIR__ . "/../../include/api_functions.php";
 // Set up a IIIF request object
 
 $iiif_options["rootlevel"] = $baseurl_short . "iiif/";

@@ -1,7 +1,7 @@
 <?php
 
-include_once (dirname(__FILE__)."/../../../include/metadata_functions.php");
-include_once (dirname(__FILE__)."/../../../include/definitions.php");
+include_once dirname(__FILE__)."/../../../include/metadata_functions.php";
+include_once dirname(__FILE__)."/../../../include/definitions.php";
 
 /**
  * Process the uploaded CSV

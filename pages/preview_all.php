@@ -105,7 +105,7 @@ if (substr($search,0,11)=="!collection")
 
 
 $display="";
-include ("../include/search_title_processing.php");
+include "../include/search_title_processing.php";
 
 
 ?>

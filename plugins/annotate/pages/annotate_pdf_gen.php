@@ -1,9 +1,9 @@
 <?php
 
 // this program creates a new PDF document with annotations
-include('../../../include/db.php');
+include '../../../include/db.php';
 include_once "../include/annotate_functions.php";
-include('../../../include/authenticate.php');
+include '../../../include/authenticate.php';
 
 global $plugins;
 if (!in_array("annotate",$plugins))

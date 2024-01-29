@@ -1,7 +1,7 @@
 <?php
 
-include_once('../../include/db.php');
-include_once('../../include/authenticate.php');
+include_once '../../include/db.php';
+include_once '../../include/authenticate.php';
 
 if ($simple_search_reset_after_search)
 	{
@@ -29,7 +29,7 @@ else
 
 $initial_tags = explode(',', $quicksearch);
 
-include_once('../../include/searchbar.php');
+include_once '../../include/searchbar.php';
 ?>
 <script type="text/javascript">
       jQuery(document).ready(function() { 

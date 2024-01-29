@@ -2544,7 +2544,7 @@ function get_search_title($searchstring)
     if (isset($searchvars["search"])){$search=$searchvars["search"];}else{$search="";}
     if (isset($searchvars["restypes"])){$restypes=$searchvars["restypes"];}else{$restypes="";}
 
-    include(dirname(__FILE__)."/search_title_processing.php");
+    include dirname(__FILE__)."/search_title_processing.php";
 
     if ($restypes!="")
         { 

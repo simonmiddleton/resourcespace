@@ -1,7 +1,7 @@
 <?php
 
-include_once (dirname(__FILE__)."/../include/meta_functions.php");
-include_once (dirname(__FILE__)."/../include/csv_functions.php");
+include_once dirname(__FILE__) . "/../include/meta_functions.php";
+include_once dirname(__FILE__) . "/../include/csv_functions.php";
 
 global $userref,$username,$scramble_key,$baseurl,$csvfile,$meta,$resource_types, $messages, $csv_set_options;
 

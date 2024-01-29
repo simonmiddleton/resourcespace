@@ -818,7 +818,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
                 else 
                     {
                         debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...');
-                    include (dirname(__FILE__)."/ffmpeg_processing.php");
+                    include dirname(__FILE__)."/ffmpeg_processing.php";
                     }
             }
         }

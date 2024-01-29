@@ -1425,7 +1425,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         global $no_preview_extensions;
         if (isset($imagemagick_path) && !in_array(strtolower($extension),$no_preview_extensions))
             {
-            include(dirname(__FILE__)."/preview_preprocessing.php");
+            include dirname(__FILE__)."/preview_preprocessing.php";
             }
         }
         

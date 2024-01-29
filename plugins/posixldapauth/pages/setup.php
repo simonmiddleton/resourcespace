@@ -105,7 +105,7 @@ if ($ldapauth['enable'])
   if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Auth is enabled "); }
   $enabled = "checked";
   // we get a list of groups from the LDAP;
-  include_once ("../hooks/ldap_class.php");
+  include_once "../hooks/ldap_class.php";
   $ldapConf['host'] = $ldapauth['ldapserver'];
 	$ldapConf['basedn'] = $ldapauth['basedn'];
 	$ldapConf['port'] = $ldapauth['port'];

@@ -9,7 +9,7 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 	include_once dirname(__FILE__) . "/../config/config.default.php";
 	if (file_exists(dirname(__FILE__) . "/../config/config.php"))
 	{
-        	include_once(dirname(__FILE__) . "/../config/config.php");
+        	include_once dirname(__FILE__) . "/../config/config.php";
 	}
 	include_once dirname(__FILE__) . "/ldap_class.php";
 	global $username;

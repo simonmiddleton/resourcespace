@@ -1315,14 +1315,14 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 $request_collections = array();
                 if (checkperm("R"))
                     {
-                    include_once('request_functions.php');
+                    include_once 'request_functions.php';
                     $request_collections = array_column(get_requests(), 'collection');
                     }
                 # include collections of research resources
                 $research_collections = array();
                 if (checkperm("r"))
                     {
-                    include_once('research_functions.php');
+                    include_once 'research_functions.php';
                     $research_collections = array_column(get_research_requests(), 'collection');
                     }
                 $validcollections = array_unique(array_merge($user_collections, array($USER_SELECTION_COLLECTION), $public_collections, $request_collections, $research_collections));

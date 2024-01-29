@@ -1124,9 +1124,9 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     {
     # Include footer
     global $header_colour_style_override, $mime_type_by_extension, $email_from;
-    include_once(__DIR__ . '/../lib/PHPMailer/PHPMailer.php');
-    include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
-    include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
+    include_once __DIR__ . '/../lib/PHPMailer/PHPMailer.php';
+    include_once __DIR__ . '/../lib/PHPMailer/Exception.php';
+    include_once __DIR__ . '/../lib/PHPMailer/SMTP.php';
 
     if (check_email_invalid($email)){return false;}
     
@@ -2219,7 +2219,7 @@ function error_alert($error, $back = true, $code = 403)
 
     if($back)
         {
-        include(dirname(__FILE__)."/header.php");
+        include dirname(__FILE__)."/header.php";
         }
 
     ?>
@@ -2247,7 +2247,7 @@ function error_alert($error, $back = true, $code = 403)
     <?php
     if($back)
         {
-        include(dirname(__FILE__)."/footer.php");
+        include dirname(__FILE__)."/footer.php";
         }
     }
 

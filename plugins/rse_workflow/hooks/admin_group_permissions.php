@@ -1,7 +1,7 @@
 <?php
 function HookRse_workflowAdmin_group_permissionsAdditionalperms()
     {
-    include_once (dirname(__file__) . "/../include/rse_workflow_functions.php");
+    include_once dirname(__file__) . "/../include/rse_workflow_functions.php";
     global $lang;    
     # ------------ Edit access to workflow actions
     $workflowactions = rse_workflow_get_actions();

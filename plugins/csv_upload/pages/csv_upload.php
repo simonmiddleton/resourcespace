@@ -5,10 +5,9 @@
  */
 
 include dirname(__FILE__)."/../../../include/db.php";
-
 include dirname(__FILE__)."/../../../include/authenticate.php";
-include_once (dirname(__FILE__)."/../include/meta_functions.php");
-include_once (dirname(__FILE__)."/../include/csv_functions.php");
+include_once dirname(__FILE__)."/../include/meta_functions.php";
+include_once dirname(__FILE__)."/../include/csv_functions.php";
 	
 $fd="user_{$userref}_uploaded_meta";			// file descriptor for uploaded file
 $allfields              = get_resource_type_fields("","title");

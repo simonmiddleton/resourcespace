@@ -1,9 +1,7 @@
 <?php
 command_line_only();
 
-
-include_once(__DIR__ . "/../../include/image_processing.php");
-
+include_once __DIR__ . "/../../include/image_processing.php";
 
 $tileresource = create_resource(1, 0);
 $resource_path = get_resource_path($tileresource, true, '');

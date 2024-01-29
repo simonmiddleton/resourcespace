@@ -2,7 +2,7 @@
 command_line_only();
 
 $webroot = dirname(dirname(__DIR__));
-include_once("{$webroot}/include/image_processing.php");
+include_once "{$webroot}/include/image_processing.php";
 
 // ExifTool can be missing which is considered OK for test purposes
 if(get_utility_path("exiftool") === false)

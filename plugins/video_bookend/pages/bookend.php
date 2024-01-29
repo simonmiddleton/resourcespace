@@ -4,9 +4,9 @@ ob_start();
 
 $nocache = true;
 
-include_once("../../../include/db.php");
-include_once("../../../include/authenticate.php");
-include_once("../../../include/image_processing.php");
+include_once "../../../include/db.php";
+include_once "../../../include/authenticate.php";
+include_once "../../../include/image_processing.php";
 
 $ref             = getval("ref", 0, true);
 $alternatives    = get_alternative_files($ref);
@@ -140,7 +140,7 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
 
 # Display page
 
-include("../../../include/header.php");
+include "../../../include/header.php";
 
 if(isset($error))
     {

@@ -58,7 +58,7 @@ if($function != "login")
     if($authmode == "native")
         {
         define('API_AUTHMODE_NATIVE', true);
-        include(__DIR__ . "/../include/authenticate.php");
+        include __DIR__ . "/../include/authenticate.php";
         }
     else
         {
