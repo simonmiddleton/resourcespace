@@ -379,18 +379,6 @@ final class IIIFRequest {
      */
     public function processPresentationRequest(): void
         {
-        if($this->request["id"] != "" && $this->request["type"] == "")
-            {
-            // Redirect to manifest
-            $redirurl = $this->rooturl . $this->request["id"] . "/manifest";
-            if(function_exists("http_response_code"))
-                {
-                http_response_code(303); # Send error status
-                }
-            header ("Location: " . $redirurl);
-            exit();
-            }
-
         $this->getResources();
 
         if(is_array($this->searchresults) && count($this->searchresults)>0)
