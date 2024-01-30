@@ -76,7 +76,7 @@ function generate_pdf($html_template_path, $filename, array $bind_placeholders =
         {
         trigger_error('html2pdf class file is missing. Please make sure you have it under lib folder!');
         }
-    require_once($html2pdf_path);
+    require_once $html2pdf_path;
 
     // Do we have a physical HTML template
     if(!file_exists($html_template_path))

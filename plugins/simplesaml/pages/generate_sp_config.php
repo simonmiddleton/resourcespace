@@ -120,7 +120,7 @@ if(getval('sp_submit', '') !== '' && enforcePostRequest(false))
 
     if($metadata_xml != "")
         {
-        require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
+        require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
         \SimpleSAML\Utils\XML::checkSAMLMessage($metadata_xml, 'saml-meta');
         $entities = \SimpleSAML\Metadata\SAMLParser::parseDescriptorsString($metadata_xml);
 
