@@ -16,7 +16,6 @@ function HookRse_workflowViewPageevaluation()
     global $userref;
     # Retrieve list of existing defined actions 
     $workflowactions = rse_workflow_get_actions();
-    //$validactions=array();
       
     foreach ($workflowactions as $workflowaction)
         {

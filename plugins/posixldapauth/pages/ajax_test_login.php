@@ -62,11 +62,6 @@ if (isset($_GET['lang_test_failed']))
 		$lang['lang_test_failed'] = 'Tests failed, please check your settings and test again.';
 	}
 
-
-//if (isset($_GET[''])) { $lang[''] = $_GET['']; }
-
-//global $lang;
-
 $objLDAP = new ldapAuth($ldapConf);
 if ($ldap_debug) { $objLDAP->ldap_debug = true; }
 

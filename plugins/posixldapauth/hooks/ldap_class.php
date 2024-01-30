@@ -22,7 +22,7 @@ class ldapAuth
 	/**
 	* @var string Search Result
 	*/
-	public $r;				// Search Result;
+	public $r;				// Search Result
 	/**
 	* @var string User Name
 	*/
@@ -34,7 +34,7 @@ class ldapAuth
 	/**
 	* @var string unique RDN
 	*/
-	public $ldaprdn;		// rdn;
+	public $ldaprdn;		// rdn
 	
 	public $ldap_debug;
 	
@@ -44,7 +44,6 @@ class ldapAuth
 	*/
 	function __construct($ldapconfig)
 	{
-		//include ("config.php");
 		$this->ldapconfig = $ldapconfig;
 	}
 	
@@ -134,8 +133,6 @@ class ldapAuth
                     
                     // removed to specify user principal name as this might be more reliable. April 2014
                     $filter="(samaccountname=" . ldap_escape($usercn, "", LDAP_ESCAPE_FILTER) . ")";
-                    
-                    //$filter="(userprincipalname=".$username.")";
                     $attributes=array("dn","cn");
                     
                     // search from the base dn down for the user:
@@ -279,7 +276,6 @@ class ldapAuth
 		} else {
 			$gid = "(cn=" . $groupName . ")";
 		}	
-		//error_log(  __FILE__ . " " . __METHOD__ . " " . __LINE__ ." - memFieldType: ".$memFieldType);
 		
 		// check to see what type of directory we are using, and set parameters accordingly.
 		// $memField $ userField allow us to reference different variables in this class.

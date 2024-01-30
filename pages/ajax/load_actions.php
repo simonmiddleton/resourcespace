@@ -27,13 +27,8 @@ switch ($type)
         $offset = getval("offset", null, true);
         $fetchrows = (!is_null($per_page) || !is_null($offset) ? $per_page + $offset : -1);
         $sort = getval("sort", "desc");
-        // $access_override = false;
-        // $ignore_filters = false;
-        // $return_disk_usage = false;
         $recent_search_daylimit = getval("recent_search_daylimit", "");
         $go = getval("go", "");
-        // $stats_logging = true;
-        // $return_refs_only = false;
         $editable_only = getval("foredit","")=="true";
 
         $result = do_search(

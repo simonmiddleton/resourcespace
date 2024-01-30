@@ -311,7 +311,6 @@ function ProcessFolder($folder)
                     {
                     $altsfxlen = mb_strlen($altsfx);
                     $checksfx = substr($filename,-$altsfxlen) == $altsfx;
-                    // $ss_nametocheck = substr($file,0,strlen($file)-strlen($extension)-1);
                     if($checksfx == $altsfx)
                         {
                         echo " - Adding to \$alternativefiles array " . $file . "\n";

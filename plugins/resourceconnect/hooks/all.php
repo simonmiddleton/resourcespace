@@ -66,7 +66,7 @@ function HookResourceConnectAllInitialise()
         # Not yet set, default to this site
         $resourceconnect_selected=$resourceconnect_this;
         }
-#   setcookie("resourceconnect_selected",$resourceconnect_selected);
+
     setcookie("resourceconnect_selected",$resourceconnect_selected,0,"/",'',false,true);
     
     // Language string manipulation to warn on certain pages if necessary, e.g. where collection actions will not include remote assets
@@ -252,17 +252,6 @@ function HookResourceconnectAllUserdisplay($log)
     return true;
     }  
 
-/*
-function HookResourceConnectAllAdvancedsearchlink()
-    {
-    global $resourceconnect_selected,$resourceconnect_this;
-    if (!checkperm("resourceconnect")) {return false;}
-
-    # Hide 'advanced search' link when current affiliate not selected.
-    return ($resourceconnect_selected!=$resourceconnect_this);
-        
-    }
-*/
 function HookResourceConnectAllAftersearchimg($resource, $img_url="")
     {
         

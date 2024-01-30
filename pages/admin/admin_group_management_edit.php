@@ -95,7 +95,6 @@ if (getval("save",false) && enforcePostRequest(false))
 
             if(!in_array(strtolower($logo_extension), array("jpg","jpeg","gif","svg","png")))
                 {
-                //trigger_error('You are not allowed to upload "' . $logo_extension . '" files to the system!');
                 $error = true;
                 $onload_message= array("title" => $lang["error"],"text" => str_replace('%EXTENSIONS',"JPG, GIF, SVG, PNG",$lang["allowedextensions-extensions"]));
                 }

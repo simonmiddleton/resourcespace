@@ -307,7 +307,6 @@ if ($type=="line")
     $day_ms=(60*60*24*1000); # One day in milliseconds.
     $last_t=(strtotime($from_y . "-" . $from_m . "-" . $from_d) * 1000) -$day_ms;
     $newdata=array();
-    #$last_t=0;
     foreach ($data as $row)
         {
         if ($row["t"]>0)

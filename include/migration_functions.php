@@ -341,7 +341,6 @@ function mix_text(?string $string, bool $recurse=true): string
         for($i=0;$i<$mbytelength;$i++)
             {
             $oldchar = mb_substr($string,$i,1);
-            //debug("Converting character #$i '" . $oldchar . "'"); 
 
             if($i > 3 && strpos($noreplace,$oldchar) === false)
                 {
@@ -394,14 +393,12 @@ function mix_text(?string $string, bool $recurse=true): string
                     {
                     $newchar = substr(str_shuffle($noreplace), 0,1);
                     }
-                //debug("New random character: $newchar");
                 $newstring .= $newchar;        
                 }                         
             else
                 {
                 $newchar = random_char();
                 $newstring .= $newchar;   
-                //debug("New random character: " . $newchar);
                 } // End of multibyte conversion
             }
         }

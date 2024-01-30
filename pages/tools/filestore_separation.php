@@ -89,7 +89,6 @@ function filestore_relocate($from,$to){
 	}
 	if(!copy($otherpath,$filepath)){
 		echo "Failed to copy file...skipping<br/>";
-		//continue;
 	}
 	else{
 		echo "Copy complete!<br/>";

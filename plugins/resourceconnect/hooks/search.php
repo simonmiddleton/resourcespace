@@ -1,20 +1,5 @@
 <?php
 
-/*
-function HookResourceConnectSearchBeforesearchresults2()
-    {
-    global $lang,$search,$k,$archive,$resourceconnect_link_name,$search,$language;
-    if ($k!="") {return false;} # Do not enable for external sharing
-    if (substr($search,0,1)=="!") {return false;} # Only work for normal (non 'special') searches
-    if ($search=="") {return false;} # Don't work for blank searches.
-    
-    if (!checkperm("resourceconnect")) {return false;}
-    ?>
-    <div class="SearchOptionNav"><a href="../plugins/resourceconnect/pages/search.php?search=<?php echo urlencode($search) ?>&language_set=<?php echo $language ?>">&gt;&nbsp;<?php echo i18n_get_translated($resourceconnect_link_name) ?></a></div>
-    <?php
-    }
-*/
-
 function HookResourceConnectSearchReplacesearchresults()
     {
     global $lang,$language,$resourceconnect_affiliates,$baseurl,$resourceconnect_selected,$search,$resourceconnect_this,$resourceconnect_treat_local_system_as_affiliate,$resourceconnect_pagesize;

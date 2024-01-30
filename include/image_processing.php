@@ -1900,7 +1900,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $mpr_parts['sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? escapeshellarg($iccpath) : ''). " " . $icc_preview_options;
                         $mpr_parts['strip_target']=($icc_preview_profile_embed ? false : true);
                         $mpr_parts['targetprofile']=escapeshellarg($targetprofile);
-                        //$mpr_parts['colorspace']='';
                         }
                     else
                         {
@@ -2282,8 +2281,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             // convert to the target profile now. the source profile will only contain $icc_preview_options and needs to be included here as well
                             $command.=($command_parts[$p]['wm_sourceprofile']!='' ? " " . $command_parts[$p]['wm_sourceprofile'] : "") . (isset($command_parts[$p]['wm_targetprofile']) && $command_parts[$p]['wm_targetprofile']!='' ? " -profile " . $command_parts[$p]['wm_targetprofile'] : "" ) . ($mpr_metadata_profiles!=='' ? " +profile \"" . $mpr_metadata_profiles . ",*\"" : "");
                             $mpr_icc_transform_complete=true;
-                            //$force_mpr_write=true;
-                            //$skip_source_and_target_profiles=true;
                             }
                         $TILESIZE=($command_parts[$p]['th']<$command_parts[$p]['tw'] ? $command_parts[$p]['th'] : $command_parts[$p]['tw']);
                         $TILESIZE=$TILESIZE/3;

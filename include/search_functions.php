@@ -260,14 +260,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 $value=getval($name,"");
                 if ($value!=="")
                     {
-                    /*
-                    $vs=split_keywords($value);
-                    for ($m=0;$m<count($vs);$m++)
-                        {
-                        if ($search!="") {$search.=", ";}
-                        $search.=$fields[$n]["name"] . ":" . strtolower($vs[$m]);
-                        }
-                    */
                     if ($search!="") {$search.=", ";}
                     $search.= ((strpos($value," ")===false)?$fields[$n]["name"] . ":" . $value:"\"" . $fields[$n]["name"] . ":" .substr($value,1,-1) . "\"");
                     }
@@ -275,7 +267,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             else
                 {
                 # Process checkbox list
-                //$options=trim_array(explode(",",$fields[$n]["options"]));
                 $options=array();
                 node_field_options_override($options,$fields[$n]['ref']);
                 $p="";
@@ -508,7 +499,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 if ($key[0]=='!' && strlen($value) > 0)
                     {
                     $search=$key . $value . ',' . $search;
-                    //break;
                     }
                 }
             }
@@ -1775,7 +1765,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     . ' GROUP BY r.ref ORDER BY ' . $order_by
                     . $sql_suffix;
                 $sql->parameters = array_merge($sql_join->parameters, $sql_filter->parameters);
-                // printf('<br>$sql = %s', print_r($sql, true));
                 debug("[search_special] SQL = " . json_encode($sql));
                 }
             else

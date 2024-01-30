@@ -2,7 +2,6 @@
 include_once "ldap_class.php";
 include_once "diag_config.php";
 
-//date_default_timezone_set();
 if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get"))
 @date_default_timezone_set(@date_default_timezone_get());
 echo " ================================================== \r\n";
@@ -17,8 +16,6 @@ echo "\r\n";
 $ldapConf['host']   = $ldapauth['ldapserver'];
 $ldapConf['port']   = $ldapauth['port'];
 $ldapConf['basedn'] = $ldapauth['basedn'];
-
-//global $lang;
 
 $objLDAP = new ldapAuth($ldapConf);
 $objLDAP->ldap_debug = true;

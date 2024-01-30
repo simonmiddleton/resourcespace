@@ -124,7 +124,6 @@ function sigchld_handler($signal)
  */
 function sigint_handler()
   {
-  //unlink($lock_directory . "/update_daemon.lock");
   die("[SIGINT] exiting.\n");
   }
 

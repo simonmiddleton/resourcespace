@@ -55,11 +55,7 @@ if (strpos($search,"!")===false) {setcookie("search",$search,0,'','',false,true)
 $offset=getval("offset",0,true);if (strpos($search,"!")===false) {setcookie("saved_offset",$offset,0,'','',false,true);}
 if ((!is_numeric($offset)) || ($offset<0)) {$offset=0;}
 
-######## CAMILLO
-#$order_by=getval("order_by","relevance");if (strpos($search,"!")===false) {setcookie("saved_order_by",$order_by);}
 $order_by=getval("order_by","date");if (strpos($search,"!")===false) {setcookie("saved_order_by",$order_by,0,'','',false,true);}
-######## CAMILLO
-
 $display=getval("display","thumbs");setcookie("display",$display,0,'','',false,true);
 $per_page=getval("per_page",12);setcookie("per_page",$per_page,0,'','',false,true);
 $archive=getval("archive",0);if (strpos($search,"!")===false) {setcookie("saved_archive",$archive,0,'','',false,true);}
@@ -98,12 +94,10 @@ if (strpos($search,"!")!==false) {$restypes = "";}
 
 $result = do_search($search, $restypes, "relevance", $archive, 100, "desc", false, DEPRECATED_STARSEARCH);
 
-
 # Create a title for the feed
 $searchstring = "search=$search&restypes=$restypes&archive=$archive";
 if (substr($search,0,11)=="!collection"){$collection=substr($search,11);$collection=explode(" ",$collection);$collection=$collection[0];$collectiondata=get_collection($collection);}
 $feed_title = xmlentities($applicationname ." - " .get_search_title($searchstring));
-
 
 $r = new RSSFeed($feed_title, $baseurl, xmlentities(str_replace("%search%", $searchstring, $lang["filtered_resource_update_for"])));
 
@@ -129,8 +123,6 @@ foreach ($rss_fields as $display_field)
 		}
 	}
 $n=0;	
-
-//$r->AddImage($title, $url, $link, $description = '')
 
 # loop and display the results
 if (is_array($result)){
@@ -199,16 +191,10 @@ for ($n=0;$n<count($result);$n++)
 	$description = "<![CDATA[<img src='$imgurl' align='left' height='75'  border='0' />]]>". $add_desc;
 	
 	$val["pubDate"] = $pubdate;
-	//$val["Category"] = $category;
 	$val["guid"] = $ref;
 
-
-	//	function AddArticle($title, $link, $description, $author, $optional = '')
-	//	$r->AddArticle($category." - ".substr($title,0,20)."...", $url, $title, "", $val);
 	$r->AddArticle($title, $url, $description,$val);	
 	}
-
-//Header("content-type: text/xml");
 
 $r->Output();		
 }

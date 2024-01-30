@@ -34,9 +34,6 @@
 <li>It must be marked {status}, that is, having its state set to <strong>{status}</strong>.</li>
 <li>Then, only an <strong>admin</strong> is allowed to initiate the registration process.</li>
 HTML;
-//
-//	$lang['doi_setup_perms_needed'] = 'necessary user permissions for registration';
-//	$lang['doi_setup_field_shortname'] = 'plugin\'s shortname';
 
 	$lang['doi_setup_general_config'] = 'General Configuration';
 	$lang['doi_setup_pref_fields_header'] = 'Preferred search fields for metadata construction';
@@ -44,14 +41,10 @@ HTML;
 	$lang['doi_setup_username'] = 'DataCite username';
 	$lang['doi_setup_password'] = 'DataCite password';
 
-//	$lang['doi_pref_creator_fields'] = 'Look for \'<a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">Creator</a>\' in:<br>(In case no value could be found, the uploader is used as the creator.)';
-//	$lang['doi_pref_title_fields'] = 'Look for \'<a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">Title</a>\' in:<br>(In case no value could be found, an error message will pop up, and the resource is not going to be registered.)';
 	$lang['doi_pref_publicationYear_fields'] = 'Look for <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=10">PublicationYear</a> in:<br>(In case no value could be found, the year of registration will be used.)';
 
 	$lang['doi_pref_creator_fields'] = 'Look for <a style="font-style: italic" target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">Creator</a> in:';
 	$lang['doi_pref_title_fields'] = 'Look for <a style="font-style: italic" target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">Title</a> in:';
-//	$lang['doi_pref_publicationYear_fields'] = 'Look for \'<a style="font-style: italic" target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=10">PublicationYear</a>\' in:';
-
 
 	# see: https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=38
 	$lang['doi_datacite_unknown_info_codes'] = [

@@ -106,8 +106,6 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 	$resource=get_resource_data($ref,false);
     }
 
-// $geo_lat = getval('new_lat', $resource["geo_lat"]);
-// $geo_long = getval('new_long',  $resource["geo_long"]);
 $zoom = getval('new_zoom',  $resource["mapzoom"]);
 
 echo $valid_coords == false ? "<p class='FormIncorrect'>" . $lang['location-validation-error']  . "</p>" : "";

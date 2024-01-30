@@ -5,7 +5,6 @@ $lang['cookies_notification_use_cookies_message'] = 'This web application uses c
 $lang['cookies_notification_accept'] = 'Accept';
 $lang['cookies_notification_do_not_accept'] = 'Do not accept';
 $lang['cookies_notification_allow_using_site_on_no_feedback_label'] = "Allow users to continue using ResourceSpace even if they didn't select one of the options?";
-// $lang['cookies_notification_'] = '';
 
 $lang['cookies_notification_cookies_use_title'] = 'Cookies use';
 $lang['cookies_notification_cookies_use_error_msg'] = 'You have decided to not allow Cookies to be used by ResourceSpace. We had to log you out as ResourceSpace requires cookies in order to work properly.';

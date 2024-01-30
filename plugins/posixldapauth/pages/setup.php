@@ -99,7 +99,6 @@ if (isset($_POST["submit"])) {
 	}
 }
 
-//$ldapauth['ldaptype'] = 1;
 if ($ldapauth['enable'])
 {
   if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Auth is enabled "); }

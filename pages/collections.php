@@ -630,7 +630,6 @@ if ($addsearch!=-1)
                         {
                         // There are resource types blocked due to $collection_block_restypes
                         $warningtext = $lang["collection_restype_blocked"] . "<br /><br />";
-                        //$restypes=get_resource_types(implode(",",$collection_block_restypes));
                         $blocked_types=get_resource_types(implode(",",$resourcesnotadded["blockedtypes"]));
                         foreach($blocked_types as $blocked_type)
                             {

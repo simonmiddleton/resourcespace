@@ -599,8 +599,6 @@ if ($submitted != "")
 		}
 		
 	# Remove archive.
-	//unlink($zipfile);
-	//unlink($progress_file);
 	if ($use_zip_extension)
 		{
         try {

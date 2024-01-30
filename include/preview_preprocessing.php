@@ -897,7 +897,6 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             $output=run_command($nfcommand);
             if (file_exists($eps_target))
             {
-            #  create_previews_using_im($ref,false,'miff',$previewonly);
             $extension = 'miff';
             }
             }

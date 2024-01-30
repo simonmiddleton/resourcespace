@@ -56,7 +56,6 @@ if (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag",""
 		} 
 
 
-	//$config['simpleldap'] = $simpleldap;
 	if (getval("submit","")!="" || getval("save","")!="")
 		{
 		set_plugin_config("simpleldap",array("simpleldap"=>$simpleldap));

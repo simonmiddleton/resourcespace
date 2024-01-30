@@ -40,7 +40,7 @@ EXAMPLES
 
 // CLI options check
 $options = getopt($offline_job_short_options, $offline_job_cli_long_options);
-//exit(print_r($options));
+
 foreach($options as $option_name => $option_value)
     {
     if(in_array($option_name, ['h', 'help']))

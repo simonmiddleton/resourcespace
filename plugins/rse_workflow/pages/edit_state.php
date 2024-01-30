@@ -51,7 +51,6 @@ else
     if($code=="" || in_array($code,$additional_archive_states) || ($code>-3 && $code <4) || !isset($workflowstates[$code]))
         {
         $fixedstate=true;
-        //$errortext=$lang["rse_workflow_state_not_editable"];
         }
     $workflowstate=$workflowstates[$code];
     }

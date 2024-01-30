@@ -39,7 +39,6 @@ $page_def[] = config_add_text_input('image_text_default_text',$lang['image_text_
 $page_def[] = config_add_single_select('image_text_font',$lang['image_text_font'], array_filter($imfonts), false);
 $page_def[] = config_add_single_select('image_text_position', $lang['image_text_position'], $lang['image_text_position_list']);
 $page_def[] = config_add_single_select('image_text_banner_position', $lang['image_text_banner_position'],  $lang['image_text_banner_position_list']);
-//$page_def[] = config_add_text_input('image_text_font',$lang['image_text_font']);
 
 $page_def[] = config_add_text_input('image_text_height_proportion',$lang['image_text_height_proportion']);
 $page_def[] = config_add_text_input('image_text_max_height',$lang['image_text_max_height']);

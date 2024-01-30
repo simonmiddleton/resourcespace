@@ -35,18 +35,11 @@
 <li>Die Registrierung kann dann nur von einem <strong>Administrator</strong> des Projekts durchgeführt werden.</li>
 HTML;
 
-//	$lang['doi_setup_perms_needed'] = 'Benötigte Zugriffsrechte';
-//	$lang['doi_setup_field_shortname'] = 'Für das Plugin verwendeter Kurzname';
-
 	$lang['doi_setup_username'] = 'DataCite-Username';
 	$lang['doi_setup_password'] = 'DataCite-Passwort';
 
 	$lang['doi_setup_general_config'] = 'Generelle Konfiguration';
 	$lang['doi_setup_pref_fields_header'] = 'Bevorzugte Suchfelder für die Zusammenstellung der Metadaten';
-
-//	$lang['doi_pref_creator_fields'] = 'Suche für \'<a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">Creator</a>\' in:<br>(Falls dort kein Wert gefunden wird, wird die UploaderIn als Creator verwendet.)';
-//	$lang['doi_pref_title_fields'] = 'Suche für \'<a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">Title</a>\' in: <br>(Falls dort kein Wert gefunden wird, erscheint eine Fehlermeldung und die Ressource wird nichr registriert.)';
-//	$lang['doi_pref_publicationYear_fields'] = 'Suche für \'<a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=10">PublicationYear</a>\' in:<br>(Falls dort kein Wert gefunden wird, wird das Upload-Jahr verwendet.)';
 
 	$lang['doi_pref_creator_fields'] = 'Suche für <a style="font-style: italic" target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">Creator</a> in:';
 	$lang['doi_pref_title_fields'] = 'Suche für <a style="font-style: italic" target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">Title</a> in:';

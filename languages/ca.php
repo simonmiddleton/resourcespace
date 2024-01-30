@@ -38,7 +38,7 @@ $lang["gotoadvancedsearch"]="Anar a cerca avançada";
 $lang["viewnewmaterial"]="Veure material nou";
 $lang["researchrequestservice"]="Servei de petició de materials";
 
-# Admin ;
+# Admin
 $lang["manageresources"]="Gestionar materials";
 $lang["overquota"]="S'ha excedit l'espai en disc; no es poden afegir més materials.";
 $lang["managearchiveresources"]="Gestionar arxiu de materials";
@@ -380,7 +380,7 @@ $lang["format"]="Format";
 # Lists
 $lang["months"]=array("Gener","Febrer","Març","Abril","Maig","Juny","Juliol","Agost","Setembre","Octubre","Novembre","Desembre");
 
-# Statistics;
+# Statistics
 $lang["stat-addpubliccollection"]="Afegir col·lecció pública";
 $lang["stat-addresourcetocollection"]="Afegir materials a la col·lecció";
 $lang["stat-addsavedsearchtocollection"]="Afegir la cerca desada a la col·lecció";

@@ -8,7 +8,6 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 
-//exit(($simplesaml_rsconfig ? "TRUE" : "FALSE"));
 $plugin_name = 'simplesaml';
 if(!in_array($plugin_name, $plugins))
 	{plugin_activate_for_setup($plugin_name);}
@@ -38,7 +37,6 @@ if(isset($simplesamlconfig["config"]))
     {
     foreach($simplesamlconfig["config"] as $configopt=>$configvalue)
         {
-        //$spconfig[$configopt] = "\$simplesamlconfig[\"config\"][\"" . $configopt . "\"] = '" . htmlspecialchars($configvalue) . "';";
         $saml_settings[$configopt] = $configopt;
         }
     }

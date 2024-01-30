@@ -207,7 +207,6 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
   ?>
   <option value="restore"><?php echo $lang["recreatepreviews"]?></option>
 
-  <?php /*hook("moretweakingopt");*/?>
 </select>
 <div class="clearerleft"> </div>
 </div>

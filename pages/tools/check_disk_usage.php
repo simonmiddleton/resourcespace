@@ -157,7 +157,6 @@ else
 					if($disk_quota_notification_user>0)
 						{
 						$notify_users[]=array("ref" => $disk_quota_notification_user, "email" => $disk_quota_notification_email);
-						//$admin_notify_users[]=$disk_quota_notification_user;	
 						}
 					else
 						{

@@ -29,7 +29,6 @@ function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
             if($count>0)
                 {
                 $previewresource=$resources[0];
-                //exit(print_r($previewresource));
                 $defaultpreview=false;
                 $previewpath=get_resource_path($previewresource["ref"],true,"pre",false, "jpg", -1, 1, false);
                 if (file_exists($previewpath))

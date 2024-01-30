@@ -14,8 +14,6 @@ function HookRefineresultsSearchBeforesearchresults()
     $results=0;
     if (is_array($result)) $results=count($result);
     if (is_array($collections)) $results+=count($collections);
-    #if ($k!="" || $results==0) {return false;}
-    #if ($results==0||$results==1) {return false;}
 
     # External sharing search support. Clear search drops back to the collection only search.
     $default_search="";

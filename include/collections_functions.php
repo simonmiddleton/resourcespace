@@ -3173,7 +3173,6 @@ function swap_collection_order($resource1,$resource2,$collection)
 	if (!is_numeric($resource1) || !is_numeric($resource2) || !is_numeric($collection)){
 		exit ("Error: invalid input to swap collection function.");
 	}
-	//exit ("Swapping " . $resource1 . " for " . $resource2);
 	
 	$query = "select resource,date_added,sortorder  from collection_resource where collection=? and resource in (?,?)  order by sortorder asc, date_added desc";
 	$existingorder = ps_query($query,array("i",$collection,"i",$resource1,"i",$resource2));
@@ -5146,8 +5145,6 @@ function collection_download_process_command_to_file($use_zip_extension, $collec
     {
     global $config_windows, $cmdfile;
 
-
-    //update_progress_file("writing zip command");  
     if (!$use_zip_extension && !$collection_download_tar)
         {
         $cmdfile = get_temp_dir(false,$id) . "/zipcmd" . $collection . "-" . $size . ".txt";
@@ -6997,7 +6994,7 @@ function update_smart_collection(int $smartsearch_ref)
         $startTime = microtime(true);
         global $smartsearch_accessoverride;
         $results=do_search($smartsearch['search'], $smartsearch['restypes'], "relevance", $smartsearch['archive'],$result_limit,"desc",$smartsearch_accessoverride,$smartsearch['starsearch'],false,false,"",false,true,false,false,false,null,true);
-        //$startTime = microtime(true); 
+
         # results is a list of the current search without any restrictions
         # we need to compare against the current collection contents to minimize inserts and deletions
         $current_contents=ps_array("select resource value from collection_resource where collection= ?", ['i', $collection]);

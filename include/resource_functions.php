@@ -179,7 +179,6 @@ function get_resource_path(
     if ($extension=="") {$extension="jpg";}
 
     $folder="";
-    #if (!file_exists(dirname(__FILE__) . $folder)) {mkdir(dirname(__FILE__) . $folder,0777);}
 
     # Original separation support
     if($originals_separate_storage)

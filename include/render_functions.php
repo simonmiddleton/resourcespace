@@ -481,8 +481,6 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 		if(hook("modifyfieldtype")){$fields[$n]["type"]=hook("modifyfieldtype")-1;}
         }
 
-    //hook("rendersearchhtml", "", array($field, $class, $value, $autoupdate));
-
     # Generate markup for field
     switch ($field["type"]) {
         case FIELD_TYPE_TEXT_BOX_SINGLE_LINE:
@@ -3357,7 +3355,6 @@ function render_browse_bar()
 */    
 function generate_browse_bar_item($id, $text)
 	{
-	//global $browse_bar_elements;
     $html = '<div class="BrowseBarItem BrowseRowOuter BrowseBarRoot" data-browse-id="' . $id . '" data-browse-parent="root" data-browse-loaded="0" data-browse-status="closed" data-browse-level="0" >';
     $html .= '<div class="BrowseRowInner" >';
 	

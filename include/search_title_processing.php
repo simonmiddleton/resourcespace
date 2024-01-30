@@ -230,8 +230,7 @@ if ($search_titles)
         if (count($searched_resource_types_names_array)>0 && count($searched_collection_types_names_array)==0)
             {
             # Only (one or more) resource types are selected
-            	$searchtitle=$lang["all"]." ".implode($lang["resourcetypes_separator"]." ",$searched_resource_types_names_array);
-            //$searchtitle = str_replace_formatted_placeholder("%resourcetypes%", $searched_resource_types_names_array, $lang["resourcetypes-no_collections"], false, $lang["resourcetypes_separator"]);
+            $searchtitle=$lang["all"]." ".implode($lang["resourcetypes_separator"]." ",$searched_resource_types_names_array);
             }
         elseif (count($searched_resource_types_names_array)==0 && count($searched_collection_types_names_array)>0)
             {

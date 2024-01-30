@@ -207,7 +207,6 @@ foreach(array_chunk($mplus_resources, 1000) as $mplus_resource_refs)
     logScript(sprintf('[museumplus] Started processing batch #%s - %s resources', ++$batch_no, count($mplus_resource_refs)), $mplus_log_file);
     logScript('[museumplus] Resources to check for associated module configuration: ' . implode(',', $mplus_resource_refs), $mplus_log_file);
     $ramcs = mplus_get_associated_module_conf($mplus_resource_refs, true);
-    // logScript('[museumplus] Resources with associated module configuration: ' . implode(',', array_keys($ramcs)), $mplus_log_file);
 
     if(array_key_exists('new_and_changed_associations', $filter))
         {
@@ -226,7 +225,7 @@ foreach(array_chunk($mplus_resources, 1000) as $mplus_resource_refs)
                 }
             }
         }
-    // logScript('[museumplus] Resources ready to be processed: ' . implode(',', array_keys($ramcs)), $mplus_log_file);
+
     logScript('[museumplus] Total resources ready to be processed: ' . count(array_keys($ramcs)), $mplus_log_file);
 
     logScript('[museumplus] Attempting to clear metadata (if configured)...', $mplus_log_file);

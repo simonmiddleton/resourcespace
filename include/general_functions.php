@@ -279,7 +279,6 @@ function tidylist($list)
     $list=explode(",",$list);
     if (trim($list[0])=="") {array_shift($list);} # remove initial comma used to identify item is a list
     $op=join(", ",trim_array($list));
-    #if (strpos($op,".")!==false) {$op=str_replace(", ","<br/>",$op);}
     return $op;
     }
 

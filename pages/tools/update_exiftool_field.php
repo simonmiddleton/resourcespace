@@ -40,7 +40,6 @@ else
     $shortopts = "f:c:b:o";
     $longopts = array("fieldrefs:","blanks::","col::","overwrite");
     $clargs = getopt($shortopts,$longopts);
-    //exit(print_r($clargs));
     
     if (!isset($clargs["fieldrefs"]) && !isset($clargs["f"]))
         {

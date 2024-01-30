@@ -163,8 +163,6 @@ if ($max!=-1) {$text.=$lang["mostinaday"] . " = " . number_format($max) . "\n" .
 else {$text=$lang["nodata"];}
 
 imagettftext($graph,9,0,5,$height-$margin+40,$col,$font,$text);
-#imagettftext($graph,9,0,5,12,$col,$font,$lang["max"] . "=" . number_format($max));
-
 
 if ($month=="")
 	{
