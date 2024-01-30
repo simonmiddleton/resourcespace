@@ -664,7 +664,7 @@ function get_user($ref)
 * 
 * @param string $ref ID of the user
 * 
-* @return boolean|string
+* @return mixed boolean|string True if successful or a descriptive string if there's an issue
 */
 function save_user($ref)
     {
@@ -685,7 +685,7 @@ function save_user($ref)
 
         log_activity("{$current_user_data['username']} ({$ref})", LOG_CODE_DELETED, null, 'user', null, $ref);
 
-        return true;
+        return true; # Successful deletion
         }
     else
         {
@@ -707,7 +707,7 @@ function save_user($ref)
         $c = ps_value("SELECT count(*) value FROM user WHERE ref <> ? AND (username = ? OR email = ?)", array("i", $ref, "s", $username, "s", $email), 0);
         if($c > 0 && $email != '')
             {
-            return false;
+            return $lang["useralreadyexists"]; # An account with that e-mail or username already exists, changes not saved
             }
 
         // Password checks:
@@ -720,7 +720,7 @@ function save_user($ref)
             $message = check_password($password);
             if($message !== true)
                 {
-                return $message;
+                return $message; # Returns an error message
                 }
             }
 
@@ -825,7 +825,10 @@ function save_user($ref)
     if($emailresetlink != '')
         {
         $result=email_reset_link($email, true);
-        if ($result!==true) return $result; // Pass any error back.
+        if ($result!==true) 
+            {    
+            return $result; # Returns an error message
+            }
         }
         
     if(getval('approved', '')!='')
@@ -834,7 +837,7 @@ function save_user($ref)
         message_remove_related(USER_REQUEST,$ref);
         }
 
-    return true;
+    return true; # Successful save
     }
 
 
@@ -867,18 +870,21 @@ function email_reset_link($email,$newuser=false)
     {
     debug("password_reset - checking for email: " . $email);
     # Send a link to reset password
-    global $password_brute_force_delay, $scramble_key;
+    global $password_brute_force_delay, $scramble_key, $lang;
 
     if($email == '')
         {
-        return false;
+        return $lang["accountnoemail-reset-not-emailed"]; # Password reset link was not sent because the account has expired;
         }
 
-    $details = ps_query("SELECT ref, username, usergroup, origin FROM user WHERE email LIKE ? AND approved = 1 AND (account_expires IS NULL OR account_expires > now());", array("s", $email));
+    # The reset link is sent after the principal user update has completed
+    # It will only be sent if (after the user update) there is an approved and unexpired user with the specified email address
+    $details = ps_query("SELECT ref, username, usergroup, origin FROM user WHERE email LIKE ? AND approved = 1 AND (account_expires IS NULL OR account_expires > now());", 
+                array("s", $email));
     sleep($password_brute_force_delay);
     if(count($details) == 0)
         {
-        return false;
+        return $lang["accountexpired-reset-not-emailed"]; # Password reset link was not sent because the account has expired
         }
     $details = $details[0];
 
@@ -937,7 +943,7 @@ function email_reset_link($email,$newuser=false)
             if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         }   
-    return true;
+    return true; # Email reset link successful
     }
 
 /**

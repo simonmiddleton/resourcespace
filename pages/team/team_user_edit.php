@@ -36,11 +36,9 @@ elseif (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# Save user data
 	$result=save_user($ref);
-	if ($result===false)
-		{
-		$error=$lang["useralreadyexists"];
-		}
-	elseif ($result!==true)
+    # Result can be === True which means save_user was successful and (if requested) the email password reset link was successful
+    # Otherwise it will be a string with an error message describing the reason for failure to save/email
+    if ($result!==true)
 		{
 		$error=$result;
 		}
