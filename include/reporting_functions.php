@@ -311,6 +311,10 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
 */
 function create_periodic_email($user, $report, $period, $email_days, array $user_groups, array $search_params)
     {
+    if ($email_days < 1)
+        {
+        $email_days = 1; # Minimum email frequency is daily.
+        }
     # Delete any matching rows for this report/period.
     $query = "DELETE FROM report_periodic_emails
               WHERE user = ?
@@ -378,7 +382,7 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
           JOIN user u ON pe.user = u.ref
           JOIN report r ON pe.report = r.ref
          WHERE pe.last_sent IS NULL
-            OR date_add(date(pe.last_sent), INTERVAL pe.email_days DAY) <= date(now());
+            OR (date_add(date(pe.last_sent), INTERVAL pe.email_days DAY) <= date(now()) AND pe.email_days > 0);
     ";
     $reports=ps_query($query);
 
