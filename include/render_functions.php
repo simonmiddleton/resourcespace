@@ -1863,7 +1863,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
     else
         {
         $selected_nodes = $all_selected_nodes;
-        if (in_array($field["type"], $DATE_FIELD_TYPES))
+        if (in_array($field["type"], $DATE_FIELD_TYPES) && !$GLOBALS['use_native_input_for_date_field'])
             {
             $submitted_val = sanitize_date_field_input($field["ref"], false);
             }
