@@ -1892,7 +1892,12 @@ function display_field($n, $field, $newtab=false,$modal=false)
     if (array_key_exists($language,$translations)) {$value=$translations[$language];} else {$value="";}
     }
 
-  if ($multiple && ((getval("copyfrom","") == "" && getval('metadatatemplate', '') == "") || str_replace(array(" ",","),"",$value)=="")) {$value="";} # Blank the value for multi-edits  unless copying data from resource.
+  if ($multiple && 
+    ( (getval("copyfrom","") == "" && getval('metadatatemplate', '') == "") 
+      || str_replace(array(" ",","),"",(string)$value)=="") ) 
+        {
+        $value="";
+        } # Blank the value for multi-edits unless copying data from resource
 
   if ($field["global"] == 0 && $lastglobal && $collapsible_sections)
     {
