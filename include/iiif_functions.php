@@ -234,7 +234,6 @@ final class IIIFRequest {
             {
             $size = (strtolower((string)$iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
             $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
-            $position_prefix="";
 
             if(!file_exists($img_path))
                 {
@@ -1246,7 +1245,7 @@ final class IIIFRequest {
 */
 function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     {
-    global $rooturl,$rootimageurl;	
+    global $rooturl,$iiif_sequence_field;	
 			
     $canvases = array();
     foreach ($iiif_results as $iiif_result)
@@ -1260,16 +1259,20 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
             }
 			
 		$position = $iiif_result["iiif_position"];
+        $position_field = get_resource_type_field($iiif_sequence_field);
+        $position_prefix = $position_field["name"] ?? "";
+
         $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
         $canvases[$position]["@type"] = "sc:Canvas";
-        $canvases[$position]["label"] = (isset($position_prefix)?$position_prefix:'') . $position;
+        $canvases[$position]["label"] = $position_prefix . $position;
         
         // Get the size of the images
         $image_size = get_original_imagesize($iiif_result["ref"],$img_path);
         $canvases[$position]["height"] = intval($image_size[2]);
         $canvases[$position]["width"] = intval($image_size[1]);
 				
-		// "If the largest image�s dimensions are less than 1200 pixels on either edge, then the canvas�s dimensions should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
+		// "If the largest image's dimensions are less than 1200 pixels on either edge, then the canvas dimensions 
+        // should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
 		if($image_size[1] < 1200 || $image_size[2] < 1200)
 			{
 			$image_size[1] = $image_size[1] * 2;
