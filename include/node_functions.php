@@ -662,13 +662,13 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
                 $i--;
                 ?>
                 <td class="backline" width="10">
-                    <img width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
+                    <img alt="" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
                 </td>
                 <?php
                 }
                 ?>
                 <td class="backline" width="10">
-                    <img width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
+                    <img alt="" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
                 </td>
                 <td>
                     <input type="text" name="new_option_name" form="new_node_<?php echo $parent; ?>_option" value="">
@@ -837,13 +837,13 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                 $i--;
                 ?>
                 <td class="backline" width="10">
-                    <img width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
+                    <img alt="" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
                 </td>
                 <?php
                 }
                 ?>
                 <td class="backline" width="10">
-                    <img id="node_<?php echo $ref; ?>_toggle_button" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/<?php echo $spacer_filename; ?>" onclick="<?php echo $onClick; ?>">
+                    <img alt="" id="node_<?php echo (int) $ref; ?>_toggle_button" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/<?php echo $spacer_filename; ?>" onclick="<?php echo $onClick; ?>">
                 </td>
                 <td>
                     <input type="text" name="option_name" form="option_<?php echo $ref; ?>" value="<?php echo $name; ?>">

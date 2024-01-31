@@ -308,6 +308,7 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
                 <a onClick="return CentralSpaceLoad(this);" href="<?php echo ((getval("from","")=="search")?$baseurl_short."pages/search.php?":$baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&")?>search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>">
                     <img id="PreviewImageLarge"
                          class="Picture"
+                         alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
                          src="<?php echo $url; ?>"
                          <?php
                          if(count(canSeeAnnotationsFields()) > 0)

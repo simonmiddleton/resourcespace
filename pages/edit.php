@@ -2389,12 +2389,14 @@ if ($ref>0 && !$multiple)
                     $path_to_preview .= '&override_key=' . $temp_access_key;
                     }
                 ?>
-                <img id="preview" align="top" src="<?php echo $path_to_preview; ?>" class="ImageBorder"/>
+                <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? "")); ?>"
+                id="preview" align="top" src="<?php echo $path_to_preview; ?>" class="ImageBorder"/>
                 <?php 
                 # Render watermarked version if it exists
                 if (checkperm("w") && $wmpath!="" && file_exists($wmpath))
                     { ?>
-                    <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
+                    <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? "")); ?>"
+                    style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
                     <?php 
                     } ?>
                 <br />
@@ -2404,7 +2406,8 @@ if ($ref>0 && !$multiple)
                 {
                 # Show the no-preview icon
                 ?>
-                <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
+                <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? "")); ?>"
+                src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
                 <br />
 <?php
                 }

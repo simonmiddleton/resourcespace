@@ -156,7 +156,7 @@ if($alternative_file_resource_preview)
     if(file_exists(get_resource_path($resource['ref'], true, 'col', false)))
         {
         ?>
-        <img src="<?php echo get_resource_path($resource['ref'], false, 'col', false); ?>"/>
+        <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? "")); ?>" src="<?php echo get_resource_path($resource['ref'], false, 'col', false); ?>"/>
         <?php
         } 
     }

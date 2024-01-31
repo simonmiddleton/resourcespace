@@ -224,7 +224,8 @@ include "../../../include/header.php";
                             }
 
                 ?>
-                <img src="<?php echo $img ?>" id="splice_<?php echo $video_data["ref"] ?>" class="splice_item">
+                <img alt="<?php echo escape(i18n_get_translated($video_data['field'.$view_title_field] ?? ""));?>"
+                 src="<?php echo $img ?>" id="splice_<?php echo $video_data["ref"] ?>" class="splice_item">
                 <?php } ?>
                 </div>
             </div>

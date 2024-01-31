@@ -102,7 +102,7 @@ else
         {
         create_previews($resourceinfo[0]["resource"],false,($previewbased?"jpg":$resourceinfo[0]["file_extension"]),false,$previewbased,$ref);
         ?>
-        <img src="<?php echo get_resource_path($resourceinfo[0]["resource"],false,"pre",false,"jpg",-1,1,false,"",$ref)?>">
+        <img alt="" src="<?php echo get_resource_path($resourceinfo[0]["resource"],false,"pre",false,"jpg",-1,1,false,"",$ref)?>">
         <?php
         }
     else

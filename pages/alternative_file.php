@@ -150,7 +150,10 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
     $previews_exist=true;
     $fileurl = get_resource_path($resource, false, 'thm', true, 'jpg', true, 1, false, date('Y-m-d H:i:s'), $ref);
     ?>
-    <div class="Question" style="border:0px;"><img id="preview" align="top" src="<?php echo $fileurl; ?>" class="ImageBorder" style="margin-right:10px;"/><br /><br /><div class="clearerleft"> </div></div>
+    <div class="Question" style="border:0px;">
+        <img alt="<?php echo escape(i18n_get_translated($file['name'] ?? "")); ?>"
+        id="preview" align="top" src="<?php echo $fileurl; ?>" class="ImageBorder" style="margin-right:10px;"/><br /><br /><div class="clearerleft"> </div>
+    </div>
     <?php
     }
     ?>

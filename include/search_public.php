@@ -40,7 +40,8 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
             $images++;
             $space=10+($images-1)*18;
             ?>
-            <img style="position: absolute; top:<?php echo $space ?>px;left:<?php echo $space ?>px" src="<?php echo $previewpath?>" <?php if ($border){?>class="ImageBorder"<?php } ?>>
+            <img alt="<?php echo escape(i18n_get_translated(($resources[$m]["field".$view_title_field] ?? ""))); ?>"
+			style="position: absolute; top:<?php echo $space ?>px;left:<?php echo $space ?>px" src="<?php echo $previewpath?>" <?php if ($border){?>class="ImageBorder"<?php } ?>>
             <?php				
 			}
 		?>

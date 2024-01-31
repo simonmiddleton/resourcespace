@@ -497,7 +497,7 @@ if($contact_sheet_previews == true)
     {
     ?>
     <div style="float:left;padding:0px -50px 15px 0;height:<?php echo htmlspecialchars($height) ?>px;margin-top:-15px;margin-right:-50px">
-        <img id="previewimage" name="previewimage" src=""/>
+        <img alt="" id="previewimage" name="previewimage" src=""/>
     </div>
     <?php
     }

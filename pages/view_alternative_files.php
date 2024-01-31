@@ -95,8 +95,27 @@ if ($alt_access)
             {
             if ($alt_thm!="")
                 {
+				$url = generateURL(
+					$baseurl_short . 'pages/preview.php',
+					[
+						'ref' 			=> $ref,
+						'alternative' 	=> $altfiles[$n]['ref'],
+						'k' 			=> $k,
+						'search' 		=> $search,
+						'offset' 		=> $offset,
+						'order_by' 		=> $order_by,
+						'sort' 			=> $sort,
+						'archive' 		=> $archive
+					]
+				) . '&' . hook("previewextraurl");
                 ?>
-                <div class="AlternativeFileImage <?php echo $css_PointerEventsNone; ?>" ><a href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]["ref"]?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php echo hook("previewextraurl") ?>"><img src="<?php echo $alt_thm?>" class="AltThumb"></a></div><?php
+                <div class="AlternativeFileImage <?php echo $css_PointerEventsNone; ?>" >
+					<a href="<?php echo $url ?>">
+						<img alt="<?php echo escape(i18n_get_translated($altfiles[$n]['name'] ?? ""));?>"
+						src="<?php echo $alt_thm?>" class="AltThumb">
+					</a>
+				</div>
+				<?php
                 }
             }        
         ?>

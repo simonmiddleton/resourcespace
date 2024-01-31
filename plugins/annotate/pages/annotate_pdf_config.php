@@ -225,7 +225,7 @@ function loadIt() {
 
 <div class="BasicsBox" style="float:left;">
     <div id="previewdiv" style="float:left;padding:0px -50px 15px 0;height:425px;margin-right:-50px">
-        <img id="previewimage" name="previewimage" src=''/>
+        <img alt="" id="previewimage" name="previewimage" src=''/>
     </div>
 </div>
 

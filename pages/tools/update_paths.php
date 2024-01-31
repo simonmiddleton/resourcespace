@@ -24,7 +24,7 @@ if (count($resourceinfo)>0)
 		get_resource_path($ref,true,$id,false);
 		}
 	?>
-	<img src="<?php echo get_resource_path($ref,false,"pre",false)?>">
+	<img alt="" src="<?php echo get_resource_path($ref,false,"pre",false)?>">
 	<?php
 	}
 else

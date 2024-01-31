@@ -47,7 +47,7 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 		?>
 		<div id="image_preview_container" style="width:<?php echo $width?>px;height:<?php echo $height?>px;">
 			<div id="image_preview">
-				<img id="image_processing" src="">
+				<img alt="" id="image_processing" src="">
 			</div>
 		</div>
 <?php }

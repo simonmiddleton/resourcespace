@@ -102,7 +102,8 @@ function HookLightbox_previewViewRenderaltthumb(int $n,array $altfile)
             urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo
             urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php
             echo hook("previewextraurl") ?>">
-        <img src="<?php echo $alt_thm; ?>" class="AltThumb">
+        <img alt="<?php echo escape(i18n_get_translated($altfile['name'] ?? ""));?>"
+        src="<?php echo $alt_thm; ?>" class="AltThumb">
     </a>
     <?php
     addLightBox('#altlink_' . $n, $url, $altfile['name'], "alt");

@@ -847,7 +847,7 @@ else if ($basket)
                     }
 				else
 						{?>
-						<img border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" />
+						<img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>" border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" />
 						<?php
 						}
 						hook("aftersearchimg","",array($result[$n]))?>
@@ -1107,7 +1107,7 @@ else
 			<!--Resource Panel-->
 			<div id="ResourceShell<?php echo $searches[$n]['ref']; ?>" class="CollectionPanelShell" data-saved-search="yes">
 			<table border="0" class="CollectionResourceAlign"><tr><td>
-			<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><img border=0 width=56 height=75 src="<?php echo $iconurl?>"/></a></td>
+			<a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><img alt="" border=0 width=56 height=75 src="<?php echo $iconurl?>"/></a></td>
 			</tr></table>
 			<?php if(!hook('replacesavedsearchtitle')){?>
 			<div class="CollectionPanelInfo">
@@ -1164,7 +1164,8 @@ else
                     }
 				else
 						{?>
-						<img border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" />
+						<img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
+						border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" />
 						<?php
 						}
 						hook("aftersearchimg","",array($result[$n]))?>
@@ -1248,7 +1249,7 @@ if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_view
 	<div class="CollectionPanelShell">
 		<table border="0" class="CollectionResourceAlign">
 			<tr>
-				<td><img/></td>
+				<td><img alt=""/></td>
 			</tr>
 		</table>
 		<div class="CollectionPanelInfo">

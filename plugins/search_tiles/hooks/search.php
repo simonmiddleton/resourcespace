@@ -10,6 +10,8 @@ function HookSearch_tilesSearchReplacedisplayselector($search="",$collections=""
 
 function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
     {
+    global $view_title_field;
+    
     if ((substr($search,0,11)!="!collection")&&($collections!="")&&is_array($collections))
         {
         global $baseurl_short, $search_tiles_collection_count;
@@ -36,6 +38,7 @@ function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
                     $previewpath=get_resource_path($previewresource["ref"],false,"pre",false, "jpg", -1, 1, false);
                     ?>
                     <img 
+                        alt="<?php echo escape(i18n_get_translated($previewresource['field'.$view_title_field] ?? ""));?>"
                         src="<?php echo $previewpath ?>" 
                         <?php 
                         if($defaultpreview)

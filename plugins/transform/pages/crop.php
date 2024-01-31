@@ -557,7 +557,7 @@ renderBreadcrumbs($links_trail);
     <div id='cropimgdiv' onmouseover='unfocus_widths();' >
         
         <div id='crop_imgholder'>
-            <img src="<?php echo $crop_pre_url?>" id='cropimage' />
+            <img alt="" src="<?php echo $crop_pre_url?>" id='cropimage' />
         </div>
     </div>
     <?php

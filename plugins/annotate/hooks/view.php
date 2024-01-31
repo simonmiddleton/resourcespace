@@ -4,7 +4,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
     global $baseurl_short, $ajax, $ref, $ffmpeg_preview_extension, $resource, $k,
            $search, $offset, $order_by, $sort, $archive, $lang, $download_multisize,
            $baseurl, $annotate_ext_exclude, $annotate_rt_exclude, $annotate_public_view,
-           $annotate_pdf_output, $ffmpeg_audio_extensions;
+           $annotate_pdf_output, $ffmpeg_audio_extensions, $view_title_field;
 
     if(in_array($resource['file_extension'], $annotate_ext_exclude))
         {
@@ -89,11 +89,14 @@ function HookAnnotateViewRenderinnerresourcepreview()
                 $multipage_document = true;
                 }
 
+            $resource_data = get_resource_data($resource);
+            
             $modal = (getval("modal", "") == "true" ? "true" : "false");
             ?>
             <div id="wrapper" class="annotate-view-wrapper">
                 <div>
-                <img id="toAnnotate" onload="annotate(<?php echo (int) $ref?>,'<?php echo escape($k)?>','<?php echo escape($w)?>','<?php echo escape($h)?>',<?php echo escape(getval("annotate_toggle",true))?>, 1, <?php echo escape($modal); ?>);" src="<?php echo escape($imageurl)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
+                <img alt="<?php echo escape(i18n_get_translated($resource_data['field'.$view_title_field] ?? ""));?>"
+                 id="toAnnotate" onload="annotate(<?php echo (int) $ref?>,'<?php echo escape($k)?>','<?php echo escape($w)?>','<?php echo escape($h)?>',<?php echo escape(getval("annotate_toggle",true))?>, 1, <?php echo escape($modal); ?>);" src="<?php echo escape($imageurl)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
                 </div>
 
                 <div class="annotate-view-preview-links" >

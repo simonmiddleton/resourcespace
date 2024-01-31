@@ -393,7 +393,7 @@ h2#dbaseconfig{  min-height: 32px;}
 <div id="setup-container">
 <div id="Header" style="height: 40px;">
     <div class="HeaderImgLink">
-    	<img src="../gfx/titles/title-black.svg" id="HeaderImg" />
+    	<img alt="" src="../gfx/titles/title-black.svg" id="HeaderImg" />
     </div>
     <div id="HeaderNav1" class="HorizontalNav "><ul></ul></div>
 	<div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav"><ul></ul></div> 
@@ -1391,7 +1391,7 @@ else
 				</div>
 			</p>
 			<p class="configsection">
-				<h2><?php echo $lang["setup-generalsettings"];?><img id="admin_test" class="starthidden ajloadicon" src="../gfx/ajax-loader.gif"/></h2>
+				<h2><?php echo $lang["setup-generalsettings"];?><img alt="" id="admin_test" class="starthidden ajloadicon" src="../gfx/ajax-loader.gif"/></h2>
 				<div class="configitem">
 					<label for="applicationname"><?php echo $lang["setup-applicationname"];?></label><input id="applicationname" type="text" name="applicationname" value="<?php echo htmlspecialchars($applicationname);?>"/><a class="iflink" href="#if-applicationname">?</a>
 					<p class="iteminfo" id="if-applicationname"><?php echo $lang["setup-if_applicationname"];?></p>
