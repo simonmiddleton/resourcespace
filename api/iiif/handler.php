@@ -1,6 +1,6 @@
 <?php
 $suppress_headers = true;
-include "../../include/db.php";
+include_once "../../include/db.php";
 include_once "../../include/image_processing.php";
 
 if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identifier_field) || !isset($iiif_userid) || !is_numeric($iiif_userid) || !isset($iiif_description_field))
@@ -9,6 +9,13 @@ if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identif
     }
 
 include_once "../../include/api_functions.php";
+
+if($iiif_version === "2")
+    {
+    // Older version of the standard. Needed if clients don't support v3.0 - see https://iiif.io/api/presentation/3.0/change-log/
+    include __DIR__ . "/handler2.php";
+    exit();
+    }
 
 // Set up request object
 $iiif_options["rootlevel"] = $baseurl_short . "iiif/";

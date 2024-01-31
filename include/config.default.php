@@ -2945,6 +2945,9 @@ $annotate_fields = array();
 // If set to true a URL rewrite rule or similar must be configured on the web server for any paths under the <base_url>/iiif path
 $iiif_enabled = false;
 
+// IIIF version. Optionally can be set to "3.0" if supported by clients - see https://iiif.io/api/presentation/3.0/
+$iiif_version = "2";
+
 // User ID to use for IIIF. This user should be granted access only to those resources that are to be published via IIIF using permissions and search filter
 // $iiif_userid = 0;
 
