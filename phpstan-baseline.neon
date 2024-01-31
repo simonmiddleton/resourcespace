@@ -179,8 +179,3 @@ parameters:
 			message: "#^Caught class Google_ServiceException not found\\.$#"
 			count: 5
 			path: plugins/youtube_publish/include/youtube_functions.php
-
-		-
-			message: "#^Function reorder_collections not found\\.$#"
-			count: 1
-			path: upgrade/scripts/018_fc_star_name_to_orderby.php
