@@ -70,8 +70,9 @@ foreach($nodes_in_sequence as $node)
     // Strip line breaks because there shouldn't be any within dynamic keywords
     $i18n_node_name = preg_replace('/[\r\n]+/', '', $i18n_node_name);
 
-    // When editing multiple resources, we don't want to preselect any fixed list values; the user must make the necessary selections
-    if(!$multiple)
+    // Normally, when editing multiple resources, we don't want to preselect any fixed list values; the user must make the necessary selections
+    // However, when using copyfrom and editing multiple resources, then preselection does occur
+    if(!$multiple || ($multiple && $copyfrom != ''))
         {
         $add_searched_nodes_function_call .= "addKeyword_{$js_keywords_suffix}('{$node['ref']}', '{$i18n_node_name}');";
         }
