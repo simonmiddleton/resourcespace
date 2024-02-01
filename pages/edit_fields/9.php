@@ -153,6 +153,19 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
 
 function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
     {
+    <?php
+    if((int)$field["required"] === 1)
+        {?>        
+        // Prevent removal of final keyword if field is required
+        keycount = jQuery("[name^=nodes\\[<?php echo $field["ref"]; ?>\\]]").length;
+        if(keycount == 1 && user_action)
+            {
+            styledalert('<?php echo $lang['requiredfield']; ?>','<?php echo i18n_get_translated($field['title']); ?>');
+            return false;
+            }
+        <?php
+        }?>
+
     // Save existing keywords array    
     var saved_Keywords = Keywords_<?php echo $js_keywords_suffix; ?>;
 
