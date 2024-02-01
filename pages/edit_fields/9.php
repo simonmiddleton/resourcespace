@@ -157,10 +157,10 @@ function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
     if((int)$field["required"] === 1)
         {?>        
         // Prevent removal of final keyword if field is required
-        keycount = jQuery("[name^=nodes\\[<?php echo $field["ref"]; ?>\\]]").length;
+        keycount = jQuery("[name^=nodes\\[<?php echo (int) $field["ref"]; ?>\\]]").length;
         if(keycount == 1 && user_action)
             {
-            styledalert('<?php echo $lang['requiredfield']; ?>','<?php echo i18n_get_translated($field['title']); ?>');
+            styledalert('<?php echo escape($lang['requiredfield']); ?>','<?php echo escape(i18n_get_translated($field['title'])); ?>');
             return false;
             }
         <?php
