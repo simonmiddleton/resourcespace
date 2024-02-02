@@ -146,7 +146,7 @@ foreach($refs as $ref){
 		echo "Other path:$otherpath<br/>";
 		if(file_exists($otherpath)){
 			// let's move it to where it belongs. start by trimming the filename off the path
-			$wait=filestore_relocate($otherpath,$filepath);
+			filestore_relocate($otherpath,$filepath);
 		}
 		else{
 			echo "No original file found!<br/>";
@@ -248,7 +248,7 @@ foreach($refs as $ref){
 					echo "Preview ".$preview." not found in proper location<br/>";
 					if(file_exists($preview_otherpath)){
 						echo "Moving $preview...";
-						$wait=filestore_relocate($preview_otherpath,$preview_filepath);
+						filestore_relocate($preview_otherpath,$preview_filepath);
 					}
 					else{
 						echo "Preview not found!<br/>";

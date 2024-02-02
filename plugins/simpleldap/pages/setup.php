@@ -259,27 +259,28 @@ if (!function_exists('ldap_connect'))
 <form id="form1" name="form1" enctype= "multipart/form-data" method="post" action="<?php echo get_plugin_path("simpleldap",true) . "/pages/setup.php";?>">
 <?php
 generateFormToken("simpleldap_setup");
-echo config_single_select("ldaptype", $lang['simpleldap_ldaptype'], $simpleldap['ldaptype'], array(1=>"Active Directory",2=>"Oracle Directory"));
-echo config_boolean_field(
+config_single_select("ldaptype", $lang['simpleldap_ldaptype'], $simpleldap['ldaptype'], array(1=>"Active Directory",2=>"Oracle Directory"));
+config_boolean_field(
 	'LDAPTLS_REQCERT_never',
 	$lang['simpleldap_LDAPTLS_REQCERT_never_label'],
 	$simpleldap['LDAPTLS_REQCERT_never']);
-echo config_text_field("ldapserver",$lang['ldapserver'],$simpleldap['ldapserver'],60);
-echo config_text_field("ldap_encoding", $lang['ldap_encoding'], $simpleldap['ldap_encoding'], 60);?>
-<?php echo config_text_field("domain",$lang['domain'],$simpleldap['domain'],60);?>
-<?php echo config_text_field("emailsuffix",$lang['emailsuffix'],$simpleldap['emailsuffix'],60);?>
-<?php echo config_text_field("email_attribute",$lang['email_attribute'],$simpleldap['email_attribute'],60);?>
-<?php echo config_text_field("phone_attribute",$lang['phone_attribute'],$simpleldap['phone_attribute'],60);?>
-<?php echo config_text_field("port",$lang['port'],$simpleldap['port'],5);?>
-<?php echo config_text_field("basedn",$lang['basedn'],$simpleldap['basedn'],60);?>
-<?php echo config_text_field("loginfield",$lang['loginfield'],$simpleldap['loginfield'],30);?>
-<?php echo config_text_field("usersuffix",$lang['usersuffix'],$simpleldap['usersuffix'],30);?>
-<?php echo config_text_field("ldapgroupfield",$lang['groupfield'],$simpleldap['ldapgroupfield'],30);?>
-<?php echo config_boolean_field("createusers",$lang['createusers'],$simpleldap['createusers']);?>
-<?php echo config_boolean_field("create_new_match_email",$lang['simpleldap_create_new_match_email'],$simpleldap['create_new_match_email']);?>
-<?php echo config_boolean_field("allow_duplicate_email",$lang['simpleldap_allow_duplicate_email'],$simpleldap['allow_duplicate_email']);?>
-<?php echo config_boolean_field("update_group",$lang['simpleldap_update_group'],$simpleldap['update_group']);?>
-<?php echo config_text_field("notification_email",$lang['simpleldap_notification_email'],$simpleldap['notification_email'],60);?>
+config_text_field("ldapserver",$lang['ldapserver'],$simpleldap['ldapserver'],60);
+config_text_field("ldap_encoding", $lang['ldap_encoding'], $simpleldap['ldap_encoding'], 60);
+config_text_field("domain",$lang['domain'],$simpleldap['domain'],60);
+config_text_field("emailsuffix",$lang['emailsuffix'],$simpleldap['emailsuffix'],60);
+config_text_field("email_attribute",$lang['email_attribute'],$simpleldap['email_attribute'],60);
+config_text_field("phone_attribute",$lang['phone_attribute'],$simpleldap['phone_attribute'],60);
+config_text_field("port",$lang['port'],$simpleldap['port'],5);
+config_text_field("basedn",$lang['basedn'],$simpleldap['basedn'],60);
+config_text_field("loginfield",$lang['loginfield'],$simpleldap['loginfield'],30);
+config_text_field("usersuffix",$lang['usersuffix'],$simpleldap['usersuffix'],30);
+config_text_field("ldapgroupfield",$lang['groupfield'],$simpleldap['ldapgroupfield'],30);
+config_boolean_field("createusers",$lang['createusers'],$simpleldap['createusers']);
+config_boolean_field("create_new_match_email",$lang['simpleldap_create_new_match_email'],$simpleldap['create_new_match_email']);
+config_boolean_field("allow_duplicate_email",$lang['simpleldap_allow_duplicate_email'],$simpleldap['allow_duplicate_email']);
+config_boolean_field("update_group",$lang['simpleldap_update_group'],$simpleldap['update_group']);
+config_text_field("notification_email",$lang['simpleldap_notification_email'],$simpleldap['notification_email'],60);
+?>
 
 <div class="Question">
 	<label for="fallbackusergroup"><?php echo $lang['fallbackusergroup']; ?></label>
