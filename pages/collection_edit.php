@@ -228,7 +228,6 @@ else if($delete_requires_password && $delete_all)
     <label for="password"><?php echo $lang["yourpassword"]?></label>
     <input type=password class="shrtwidth" name="password" id="password" />
     <div class="clearerleft"> </div>
-    <?php if (trim((string)$error)!="") { ?><div class="FormError"><?php echo htmlspecialchars($error) ?></div><?php } ?>
     </div>
 
     <div class="QuestionSubmit">
