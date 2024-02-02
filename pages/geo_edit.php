@@ -108,7 +108,10 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 
 $zoom = getval('new_zoom',  $resource["mapzoom"]);
 
-echo $valid_coords == false ? "<p class='FormIncorrect'>" . $lang['location-validation-error']  . "</p>" : "";
+if ($valid_coords == false && getval('geo-loc','') != '')
+    {
+    echo "<p class='FormIncorrect'>" . $lang['location-validation-error']  . "</p>";
+    }
 ?>
 
 <div class="RecordBox">
