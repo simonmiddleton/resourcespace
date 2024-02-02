@@ -2,9 +2,6 @@
    height:auto;
    line-height: 2.5em;
 }
-#CentralSpace a, #Header a, #Footer a {
-   font-size:1em;
-}
 input[type=checkbox] {
    -ms-transform: scale(1); /* IE */
    -moz-transform: scale(1); /* FF */

@@ -86,9 +86,6 @@ body {
         margin-left:3%;
         margin-right:3%;
     }
-    #CentralSpace a, #Header a, #Footer a {
-        font-size:1em;
-    }
     #CentralSpace a.HomePanel {
         font-size:1em;
     }
@@ -114,7 +111,7 @@ body {
         -moz-transform: scale(1.5); /* FF */
         -webkit-transform: scale(1.5); /* Safari and Chrome */
         -o-transform: scale(1.5); /* Opera */
-        height:auto;
+        height: 18px;
     }
     input[type="radio"] {
         height:auto;
@@ -753,9 +750,6 @@ body {
     }
  }
 @media(max-width:1100px) {
-    .ResourcePanelIcons {
-        display: none;
-    }
     .BottomInpageKey {
         display:none;
     }
@@ -796,7 +790,7 @@ body {
     }
 }
 @media(max-width:650px) {
-    .TopInpageNav {
+.TopInpageNav {
         text-align:center;
     }
     .TopInpageNavLeft {
