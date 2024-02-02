@@ -379,7 +379,7 @@ if(isset($filename))
     }
 else
     {   
-    header('Content-Disposition: inline;');
+    header("Content-Disposition: inline; filename=\"download.{$ext}\"");
     header('Content-Transfer-Encoding: binary');
     debug("PAGES/DOWNLOAD.PHP: Set header for streamed file");
     }
