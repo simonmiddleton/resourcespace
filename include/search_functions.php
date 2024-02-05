@@ -1501,7 +1501,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         // Don't filter if user is searching for their own resources and $open_access_for_contributor=true;
         global $open_access_for_contributor;
-        if($open_access_for_contributor && $userref == $cuser)
+        if(!($open_access_for_contributor && $userref == $cuser))
             {
             $sql_filter->sql = "archive IN (" . ps_param_insert(count($archive)) . ")";
             $sql_filter->parameters = ps_param_fill($archive, "i");
