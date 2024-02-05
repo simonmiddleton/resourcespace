@@ -5943,14 +5943,21 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
 
     $fields = ps_query(
         "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
-          FROM resource_type_field rtf
-          LEFT JOIN resource_type rt ON rt.ref = ?
-          WHERE length(rtf.autocomplete_macro) > 0
-          AND (
-              (rtf.global=0 AND rt.ref IN (SELECT resource_type FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type_field=rtf.ref))
-               OR (rtf.global=1)
-              ) $sql_set_field", array_merge(array("i", $resource_type), $sql_set_field_params), "schema");
-
+            FROM resource_type_field rtf
+            LEFT JOIN resource_type rt ON rt.ref = ?
+            WHERE length(rtf.autocomplete_macro) > 0
+                AND (((rtf.global=0 OR rtf.global IS NULL) 
+                        AND rt.ref IN (
+                            SELECT resource_type 
+                                FROM resource_type_field_resource_type rtjoin 
+                                WHERE rtjoin.resource_type_field=rtf.ref
+                                ))
+                    OR (rtf.global=1)
+                    ) $sql_set_field",
+        array_merge(array("i", $resource_type), $sql_set_field_params),
+        "schema"
+    );
+    
     $fields_updated = array();
 
     foreach($fields as $field)
