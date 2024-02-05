@@ -249,7 +249,7 @@ foreach($extensions_required as $module=> $required_fn)
         <td colspan="2">php-<?php echo $module ?></td>
         <td><b><?php 
         if (function_exists($required_fn)){echo $lang['status-ok'];}
-        else {echo ($lang['server_' . $module . '_check_fail']??$lang['status-fail']);}?></b></td>
+        else {echo escape($lang['server_' . $module . '_check_fail'] ?? $lang['status-fail']);}?></b></td>
     </tr>
     <?php
     }
@@ -258,7 +258,7 @@ hook("addinstallationcheck");
 
 ?>
 <tr>
-<td><?php echo $lang["phpextensions"] ?></td>
+<td><?php echo escape($lang["phpextensions"]); ?></td>
 <?php $extensions=get_loaded_extensions();sort($extensions);?>
 <td><?php echo implode(" ",$extensions); ?></td>
 <td></td>

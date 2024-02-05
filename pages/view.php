@@ -434,7 +434,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
         ?>
         jQuery(document).ready(function () {		
 
-            let parent_element = jQuery('#<?php echo ($modal?'modal':'CentralSpace')?>');
+            let parent_element = jQuery('#<?php echo $modal ? 'modal' : 'CentralSpace'; ?>');
 
             var comments_marker='<?php echo $comments_view_panel_show_marker?>';
             var comments_resource_enable='<?php echo $comments_resource_enable?>';
@@ -524,7 +524,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                     <div class="backtoresults">
                         <a class="prevLink fa fa-arrow-left"
                             href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>"
-                            onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);"
+                            onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this);"
                             title="<?php echo escape($lang["previousresult"])?>">
                         </a>
 
@@ -541,7 +541,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 
                         <a class="nextLink fa fa-arrow-right"
                             href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"next")) . "&amp;" .  hook("nextpreviousextraurl") ?>"
-                            onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this);"
+                            onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this);"
                             title="<?php echo escape($lang["nextresult"])?>">
                         </a>
 
@@ -1952,7 +1952,7 @@ if ($view_resource_collections && !checkperm('b')){ ?>
 	?>
     	, function() {
 
-        let parent_element = jQuery('#<?php echo ($modal?'modal':'CentralSpace')?>');
+        let parent_element = jQuery('#<?php echo $modal ? 'modal' : 'CentralSpace'; ?>');
     	parent_element.find("#AssociatedCollections").children(".Title").attr("panel", "AssociatedCollections").addClass("Selected").appendTo(parent_element.find("#Titles3"));
     	removePanel=parent_element.find("#AssociatedCollections").parent().parent();
     	parent_element.find("#AssociatedCollections").appendTo(parent_element.find("#Panel3")).addClass("TabPanel");

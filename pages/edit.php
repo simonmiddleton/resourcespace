@@ -1280,10 +1280,10 @@ else
       id="mainform"
       onsubmit="
         preventautosave = true;
-        return <?php echo ($modal ? 'Modal' : 'CentralSpace'); ?>Post(this, true);
+        return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Post(this, true);
       ">
     <?php generateFormToken("mainform"); ?>
-    <input type="hidden" name="upload_review_mode" value="<?php echo ($upload_review_mode?"true":"")?>" />
+    <input type="hidden" name="upload_review_mode" value="<?php echo $upload_review_mode?"true":""?>" />
     <div class="BasicsBox BasicsBoxEdit">
     <div class="BasicsBoxLeft">
         <input type="hidden" name="submitted" value="true">
@@ -1351,7 +1351,7 @@ else
         { ?>
         <div class="Question" id="question_imagecorrection">
             <label><?php echo htmlspecialchars($lang["imagecorrection"])?><br/><?php echo htmlspecialchars($lang["previewthumbonly"])?></label>
-            <select class="stdwidth" name="tweak" id="tweak" onchange="add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>); <?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);">
+            <select class="stdwidth" name="tweak" id="tweak" onchange="add_hidden_modal_input('mainform', <?php echo $modal ? "true" : "false"; ?>); <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('mainform'),true);">
             <option value=""><?php echo htmlspecialchars($lang["select"])?></option>
             <?php if ($resource["has_image"]==1)
                 {
@@ -1437,7 +1437,7 @@ hook("editbefresmetadata"); ?>
             ?>
 
             <select name="resource_type" id="resourcetype" class="stdwidth" 
-                    onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo escape($lang["editresourcetypewarning"]); ?>')){ add_hidden_modal_input('mainform', <?php echo ($modal ? "true" : "false"); ?>);<?php } ?><?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
+                    onChange="<?php if ($ref>0) { ?>if (confirm('<?php echo escape($lang["editresourcetypewarning"]); ?>')){ add_hidden_modal_input('mainform', <?php echo $modal ? "true" : "false"; ?>);<?php } ?><?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('mainform'),true);<?php if ($ref>0) { ?>}else {return}<?php } ?>">
             <?php
             $types                = get_resource_types();
             $shown_resource_types = array();
@@ -1805,7 +1805,7 @@ if ($display_any_fields && $enable_copy_data_from && !$upload_review_mode)
  <div class="Question" id="question_copyfrom">
     <label for="copyfrom"><?php echo htmlspecialchars($lang["batchcopyfrom"])?></label>
     <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
-    <input type= "hidden" name="modal" id="modalcopyfrom" value="<?php echo ($modal?"true":"false") ?>">
+    <input type= "hidden" name="modal" id="modalcopyfrom" value="<?php echo $modal ? "true" : "false"; ?>">
     <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo escape($lang["copy"])?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true,<?php echo $modal ?>);">
     <input type="submit" name="save" value="<?php echo escape($lang['save']); ?>">
     <div class="clearerleft"> </div>
@@ -2044,7 +2044,7 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
     ?>
       <div class="Question <?php if($upload_review_mode && in_array("archive",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
          <label for="status">
-         <?php echo ($multiple ? "" : $lang["status"]);
+         <?php echo $multiple ? "" : $lang["status"];
          if ($upload_review_mode)
             {
             renderLockButton('archive', $locked_fields);
@@ -2222,7 +2222,7 @@ else
             $relatedref = ($upload_review_mode && in_array("related_resources",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
             $related = get_related_resources($relatedref);
 
-            echo ((getval("resetform","")!="")?"":join(", ", $related));
+            echo getval("resetform","") != "" ? "" : join(", ", $related);
             }
         ?></textarea>
 

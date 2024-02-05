@@ -993,7 +993,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
 
         if (toggle_order)
             {
-            var selected_sort_option='<?php echo ($sort=='ASC'?'DESC':'ASC'); ?>';
+            var selected_sort_option='<?php echo $sort == 'ASC' ? 'DESC' : 'ASC'; ?>';
             }
         else
             {
@@ -1437,7 +1437,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                                 submitted: true,
                                 ref: '<?php echo $collection_data["ref"]; ?>',
                                 name: <?php echo json_encode($collection_data["name"]); ?>,
-                                public: '<?php echo ($collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0); ?>',
+                                public: '<?php echo $collection_data["type"] == COLLECTION_TYPE_PUBLIC ? 1 : 0; ?>',
                                 deleteall: 'on',
                                 <?php echo generateAjaxToken("delete_all_in_collection"); ?>
                             };
@@ -1533,7 +1533,7 @@ function render_user_group_multi_select($name, array $current = array(), $size =
     foreach(get_usergroups() as $usergroup)
         {
         ?>
-        <option value="<?php echo $usergroup['ref']; ?>"<?php echo (in_array($usergroup['ref'], $current) ? ' selected' : ''); ?>><?php echo $usergroup['name']; ?></option>
+        <option value="<?php echo (int) $usergroup['ref']; ?>"<?php echo in_array($usergroup['ref'], $current) ? ' selected' : ''; ?>><?php echo escape($usergroup['name']); ?></option>
         <?php
         }
         ?>
@@ -4444,11 +4444,11 @@ function EditNav()
     <?php
     if(!$disablenavlinks && !$upload_review_mode)
         {?>
-        <a class="prevLink fa fa-arrow-left" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>" title="<?php echo escape($lang["previous"]); ?>"></a>
+        <a class="prevLink fa fa-arrow-left" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"previous")); ?>" title="<?php echo escape($lang["previous"]); ?>"></a>
    
         <a class="upLink" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php",$urlparams, array("go"=>"previous")); ?>"><?php echo htmlspecialchars($lang["viewallresults"])?></a>
    
-        <a class="nextLink fa fa-arrow-right" onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>" title="<?php echo escape($lang["next"]); ?>"></a>
+        <a class="nextLink fa fa-arrow-right" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/edit.php",$urlparams, array("go"=>"next")); ?>" title="<?php echo escape($lang["next"]); ?>"></a>
    
         <?php
         }
@@ -4619,7 +4619,7 @@ function render_featured_collection_category_selector(int $parent, array $contex
         ?>
         <select id="<?php echo $html_selector_name; ?>" class="stdwidth" name="<?php echo $html_selector_name; ?>"
                 onchange="featured_collection_category_select_onchange(this, document.getElementById('collectionform'));
-                <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('collectionform'));">                
+                <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('collectionform'));">                
             <option value="0"><?php echo htmlspecialchars($lang["select"]); ?></option>
         <?php
         // Allow user to move FC category to the root. Because we don't expose the collection type to the user, this will
@@ -5437,7 +5437,7 @@ function render_array_in_table_cells($array)
             }
         elseif(is_bool($value))
             {
-            echo ($value ? "TRUE" : "FALSE");
+            echo $value ? "TRUE" : "FALSE";
             }
         else
             {

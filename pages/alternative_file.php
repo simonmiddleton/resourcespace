@@ -111,7 +111,7 @@ $backtoalternativefileurl = generateURL("{$baseurl_short}pages/alternative_file.
 ?>
 <div class="BasicsBox">
 <p>
-<a onClick="return <?php echo ($context!="Modal"?"CentralSpace":"Modal")?>Load(this,true);" 
+<a onClick="return <?php echo $context != "Modal" ? "CentralSpace" : "Modal"; ?>Load(this,true);" 
     href="<?php echo $backtoalternativefilesurl?>">
     <?php echo LINK_CARET_BACK;
     echo $lang["backtomanagealternativefiles"];?>
@@ -124,7 +124,7 @@ $backtoalternativefileurl = generateURL("{$baseurl_short}pages/alternative_file.
     method="post"
     class="form"
     id="fileform"
-    onsubmit="return <?php echo ($context="Modal" ? "Modal" : "CentralSpace"); ?>Post(this, true);" action="<?php echo $backtoalternativefileurl?>">
+    onsubmit="return <?php echo $context = "Modal" ? "Modal" : "CentralSpace"; ?>Post(this, true);" action="<?php echo $backtoalternativefileurl?>">
 <?php
 if($modal)
     {

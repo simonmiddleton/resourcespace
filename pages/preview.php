@@ -305,7 +305,7 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
             {
             ?>
             <td>
-                <a onClick="return CentralSpaceLoad(this);" href="<?php echo ((getval("from","")=="search")?$baseurl_short."pages/search.php?":$baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&")?>search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>">
+                <a onClick="return CentralSpaceLoad(this);" href="<?php echo getval("from","") == "search" ? $baseurl_short."pages/search.php?" : $baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&"; ?>search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>">
                     <img id="PreviewImageLarge"
                          class="Picture"
                          alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
@@ -394,7 +394,7 @@ if(count(canSeeAnnotationsFields()) > 0)
                 resource            : <?php echo (int) $ref; ?>,
                 read_only           : false,
                 // First page of a document is exactly the same as the preview
-                page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>,
+                page                : <?php echo 1 >= $page ? 0 : (int) $page; ?>,
                 // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                 csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
                 <?php echo generateAjaxToken('RSTagging'); ?>

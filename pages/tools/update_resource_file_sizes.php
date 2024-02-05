@@ -23,7 +23,7 @@ foreach($resources as $resource){
 	    $filesize=filesize_unlimited($resource_path);
 		
 		ps_query("update resource_dimensions set file_size= ? where resource= ?", ['i', $filesize, 'i', $resource['ref']]);
-		echo ("Ref: ".$resource['ref']." - ".$resource['field'.$view_title_field]." - updating resource_dimensions file_size column - ".formatfilesize($filesize)); 
+		echo "Ref: ".$resource['ref']." - ".$resource['field'.$view_title_field]." - updating resource_dimensions file_size column - ".formatfilesize($filesize); 
 	    echo "<br />";
    
    }
@@ -36,14 +36,14 @@ foreach($resources as $resource){
 			   // allow to re-run script without re-copying files
 			   $filesize=filesize_unlimited($alt_path);
 			   ps_query("update resource_alt_files set file_size= ? where resource= ? and ref= ?", ['i', $filesize, 'i', $resource['ref'], 'i', $alt['ref']]);
-		       echo ("&nbsp;&nbsp;&nbsp;&nbsp;ALT - ".$alt['file_name']." - updating alt file size - ".formatfilesize($filesize)); 
+		       echo "&nbsp;&nbsp;&nbsp;&nbsp;ALT - ".$alt['file_name']." - updating alt file size - ".formatfilesize($filesize); 
 	           echo "<br />";
 	       }   
 	  }
 	} 
 
   update_disk_usage($resource['ref']); 
-  echo ("updating disk usage"); 
+  echo "updating disk usage"; 
   echo "<br />"; echo "<br />";
   flush();ob_flush();
  }

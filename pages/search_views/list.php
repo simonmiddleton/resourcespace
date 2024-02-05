@@ -47,7 +47,7 @@ if (!hook("replacelistitem"))
         $watermark = check_use_watermark($ref);
         ?>
         <td width="40px">
-            <a href="<?php echo $url?>" onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);">
+            <a href="<?php echo $url?>" onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);">
                 <?php
                 $thm_url = get_resource_path($ref, false, 'col', false, $result[$n]['preview_extension'], true, 1, $watermark, $result[$n]['file_modified']);
 
@@ -114,7 +114,7 @@ if (!hook("replacelistitem"))
                             { // add link to first item only ?>
                             <div class="ListTitle">
                                 <a href="<?php echo $url?>" 
-                                    onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);"
+                                    onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"
                                 >
 <?php 
                             } //end link conditional

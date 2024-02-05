@@ -92,7 +92,7 @@ else
 ?>
 
 <div class="backtoresults">
-<a onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateurl($baseurl_short . "pages/request_log.php",$urlparams, array("go"=>"previous")) . htmlspecialchars($extraparams) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["previousresult"]?></a>
+<a onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo generateurl($baseurl_short . "pages/request_log.php",$urlparams, array("go"=>"previous")) . htmlspecialchars($extraparams) ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["previousresult"])?></a>
 <?php 
 hook("viewallresults");
 if ($k=="" && !$modal) { ?>
@@ -100,7 +100,7 @@ if ($k=="" && !$modal) { ?>
 <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/search.php",$urlparams); ?>"><?php echo $lang["viewallresults"]?></a>
 <?php } ?>
 |
-<a onClick="return <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo generateurl($baseurl_short . "pages/request_log.php",$urlparams, array("go"=>"next")) . htmlspecialchars($extraparams) ?>"><?php echo $lang["nextresult"]?>&nbsp;&gt;</a>
+<a onClick="return <?php echo $modal ? "Modal" : "CentralSpace" ?>Load(this,true);" href="<?php echo generateurl($baseurl_short . "pages/request_log.php",$urlparams, array("go"=>"next")) . htmlspecialchars($extraparams) ?>"><?php echo escape($lang["nextresult"])?>&nbsp;&gt;</a>
 </div>
 
 <h1><?php echo $lang["requestlog"] . " : " . $lang["resourceid"] . " " .  $ref;render_help_link("resourceadmin/user-resource-requests");?></h1>

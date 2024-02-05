@@ -68,7 +68,7 @@ foreach ($resourceconnect_affiliates as $affiliate)
 			{
 			offset_<?php echo $counter ?>+=distance;
 			if (offset_<?php echo $counter ?><0) {offset_<?php echo $counter ?>=0;}
-			new Ajax.Updater ('resourceconnect_container_<?php echo $counter ?>','ajax_request.php?search=<?php echo urlencode($search) ?>&pagesize=<?php echo $page_size ?>&affiliate=<?php echo ($affiliate_selected!=""?$affiliate_selected:$counter) ?>&offset=' + offset_<?php echo $counter ?>);
+			new Ajax.Updater ('resourceconnect_container_<?php echo $counter ?>','ajax_request.php?search=<?php echo urlencode($search) ?>&pagesize=<?php echo $page_size ?>&affiliate=<?php echo escape($affiliate_selected != "" ? $affiliate_selected : $counter); ?>&offset=' + offset_<?php echo $counter ?>);
 			}
 	
 		Repage_<?php echo $counter ?>(0);

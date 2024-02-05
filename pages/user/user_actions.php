@@ -139,7 +139,7 @@ else
 
 
 <div class="BasicsBox">
-  <div class="Listview" id="<?php echo ($modal?"Modal":"CentralSpace") ?>_resource_actions">
+  <div class="Listview" id="<?php echo $modal ? "Modal" : "CentralSpace"; ?>_resource_actions">
 	  <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 		  <tr class="ListviewTitleStyle">
 			  <td><?php if ($order_by=="date"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"date")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($lang["date"]); ?></a></td>

@@ -14,7 +14,7 @@ function unistr_to_ords($str, $encoding = 'UTF-8'){
         $val = unpack("N",$s2);            
         $ords.= $val[1];                
     }        
-    return($ords);
+    return $ords;
 }
 
 function getEncodingOrder()

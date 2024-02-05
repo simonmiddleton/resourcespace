@@ -837,7 +837,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     }
 ?>
 
-<script>var tar = <?php echo ($collection_download_tar_option ? 'true' : 'false'); ?>;</script>
+<script>var tar = <?php echo $collection_download_tar_option ? 'true' : 'false'; ?>;</script>
 <div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
 	<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
 	<div class="tickset">
@@ -863,8 +863,8 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 	<label for="download"> </label>
 	<input type="submit"
-           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, tar); return false;"
-           value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
+           onclick="ajax_download(<?php echo $offline_job_queue ? 'true' : 'false'; ?>, tar); return false;"
+           value="&nbsp;&nbsp;<?php echo escape($lang["action-download"]); ?>&nbsp;&nbsp;" />
 	
 	<div class="clearerleft"> </div>
 </div>

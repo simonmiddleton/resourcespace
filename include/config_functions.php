@@ -1047,7 +1047,7 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
         ?>
     <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px"
     <?php if($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>>
-    <option value="" <?php echo (($current=="")?' selected':'') ?>><?php echo $lang["select"]; ?></option>
+    <option value="" <?php echo $current == "" ? ' selected' : '' ?>><?php echo escape($lang["select"]); ?></option>
 <?php
     foreach($fields as $field)
         {

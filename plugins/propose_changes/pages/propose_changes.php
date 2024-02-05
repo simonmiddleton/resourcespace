@@ -323,7 +323,7 @@ $searchparams = get_search_params();
 if(!$modal)
     {
     ?>
-    <p><a href="<?php echo generateurl($baseurl . "/pages/view.php",$searchparams,["ref" => $ref]); ?>" onClick="return  <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <p><a href="<?php echo generateurl($baseurl . "/pages/view.php",$searchparams,["ref" => $ref]); ?>" onClick="return  <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
     <?php
     }
     ?>
@@ -376,13 +376,13 @@ if(!$editaccess)
         {
         ?>
         <div class="Question" id="ProposeChangesUsers">
-        <form id="propose_changes_select_user_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+        <form id="propose_changes_select_user_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
             <?php generateFormToken("propose_changes_select_user_form"); ?>
             <label><?php echo $lang["propose_changes_view_user"]; ?></label>
             <?php
             if(count($userproposals) > 1)
                 {?>
-                <select class="stdwidth" name="proposeuser" id="proposeuser" onchange="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('propose_changes_select_user_form'),false);">
+                <select class="stdwidth" name="proposeuser" id="proposeuser" onchange="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('propose_changes_select_user_form'),false);">
                 <?php 
                 foreach ($userproposals as $userproposal)
                     {
@@ -426,7 +426,7 @@ if(!$editaccess)
         {
         ?>
         
-    <form id="propose_changes_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>"  onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+    <form id="propose_changes_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>"  onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
     <?php generateFormToken("propose_changes_form"); ?>
     <h2 id="ProposeChangesHead"><?php echo $lang["propose_changes_proposed_changes"] ?></h2><?php
         ?><div id="ProposeChangesSection">

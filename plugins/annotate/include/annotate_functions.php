@@ -230,7 +230,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 		{
 		if (file_exists($jpgstoragepath)){unlink($jpgstoragepath);}
 		if (file_exists($pdfstoragepath)){unlink($pdfstoragepath);}
-		echo ($pdf->GetPage()); // for paging
+		echo $pdf->GetPage(); // for paging
 		$pdf->Output($pdfstoragepath,'F');
 		# Set up  
 		putenv("MAGICK_HOME=" . $imagemagick_path); 

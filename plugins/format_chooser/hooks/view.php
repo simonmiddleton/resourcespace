@@ -250,7 +250,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     basePage += "&size=" + sizeInfo[index]["id"];
 
 
-                var terms_download = <?php echo ($terms_download ? "true" : "false"); ?>;
+                var terms_download = <?php echo $terms_download ? "true" : "false"; ?>;
                 if(terms_download)
                     {
                     var terms_url = "<?php echo generateURL("{$baseurl}/pages/terms.php", $urlparams); ?>";
@@ -260,7 +260,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     return;
 					}
 
-				var download_usage = <?php echo ($download_usage ? "true" : "false"); ?>;
+				var download_usage = <?php echo $download_usage ? "true" : "false"; ?>;
 				if (download_usage)
 					{
                     var usage_url = "<?php echo generateURL("{$baseurl}/pages/download_usage.php", $urlparams); ?>";

@@ -227,7 +227,7 @@ if($view_panels)
     <script>
     jQuery(document).ready(function ()
         {
-        let parent_element = jQuery('#<?php echo ($modal?'modal':'CentralSpace')?>');
+        let parent_element = jQuery('#<?php echo $modal?'modal':'CentralSpace' ?>');
         parent_element.find("#GeolocationData").children(".Title").attr("panel", "GeolocationData").appendTo(parent_element.find("#Titles1"));
         removePanel = parent_element.find("#GeolocationData").parent().parent(".RecordBox");
         parent_element.find("#GeolocationData").appendTo(parent_element.find("#Panel1")).addClass("TabPanel").hide();

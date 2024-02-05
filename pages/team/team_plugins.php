@@ -246,7 +246,7 @@ if($searching)
 </form>
 
 <p><?php echo $lang["plugins-headertext"]; render_help_link('systemadmin/managing_plugins');?></p>
-<h2 class="pageline"><?php echo (!$searching ? $lang['plugins-installedheader'] : $lang['plugins-search-results-header']); ?></h2>
+<h2 class="pageline"><?php echo escape(!$searching ? $lang['plugins-installedheader'] : $lang['plugins-search-results-header']); ?></h2>
 <?php hook("before_active_plugin_list");
 if($searching)
     {
@@ -419,7 +419,7 @@ if (count($inst_plugins)>0)
                }
             echo '<tr>';
             echo '<td><i class="plugin-icon ' . $p['icon'] . '"></td>';
-            echo ($p['title'] != '' ? "<td>{$p['title']}</td>" : "<td>{$p['name']}</td>");
+            echo $p['title'] != '' ? "<td>" . escape($p['title']). "</td>" : "<td>" .escape($p['name']) . "</td>";
             echo "<td>{$p['descrip']}</td><td>{$p['author']}</td><td>".$formatted_inst_version."</td>";
             hook('additional_plugin_column_data');
             echo '<td><div class="ListTools">';

@@ -107,7 +107,7 @@ foreach ($resources as $resource)
         $width = floor($height* $ratio);
         }		
     ?>
-    <a class="embedslideshow_preview_inner" id="embedslideshow_preview<?php echo $page ?>" style="display:none;" href="#" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(<?php echo ($page + 1) ?>,false,false);return false;">
+    <a class="embedslideshow_preview_inner" id="embedslideshow_preview<?php echo $page ?>" style="display:none;" href="#" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(<?php echo $page + 1 ?>,false,false);return false;">
         <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
         border="0" width=<?php echo $width ?> height=<?php echo $height; ?> src="<?php echo $preview_path ?>">
     </a>
@@ -214,7 +214,7 @@ function embedslideshow_ShowPage(page_set,from_auto,jump)
     jQuery('#embedslideshow_previewtext' + embedslideshow_page).fadeIn(embedslideshow_fadetime);
 
       
-    if (embedslideshow_auto) {timer = setTimeout("embedslideshow_ShowPage(embedslideshow_page+1,true,false);",<?php echo ($transition==0?4000:$transition * 1000) ?>);} else {clearTimeout(timer);}
+    if (embedslideshow_auto) {timer = setTimeout("embedslideshow_ShowPage(embedslideshow_page+1,true,false);",<?php echo $transition == 0 ? 4000 : $transition * 1000; ?>);} else {clearTimeout(timer);}
     
     if(jQuery('#embedslideshow_page_box'))
         {

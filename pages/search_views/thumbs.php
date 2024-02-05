@@ -69,7 +69,7 @@ if (!hook("renderresultthumb"))
     ?>
 
     <!--Resource Panel -->    
-    <div class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo ($display == 'xlthumbs' ? 'ResourcePanelLarge' : '') ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
+    <div class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo $display == 'xlthumbs' ? 'ResourcePanelLarge' : ''; ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
     style="height: <?php echo (int)$thumbs_displayed_fields_height; ?>px;"
     <?php hook('renderadditionalthumbattributes', '', [$result[$n]]);?>
     >
@@ -144,9 +144,9 @@ if (!hook("renderresultthumb"))
 
                 ?>
                 <a
-                    class="<?php echo ($display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper') ?>"
+                    class="<?php echo $display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper'; ?>"
                     href="<?php echo $url?>"  
-                    onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
+                    onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" 
                     title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars($resource_view_title))?>"
                 >
                         <?php 
@@ -187,7 +187,7 @@ if (!hook("renderresultthumb"))
                         <img 
                             border=0 
                             alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-                            src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="margin-top:<?php echo ($display == "xlthumbs" ? "90px" : "35px")?>;"
+                            src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="margin-top:<?php echo $display == "xlthumbs" ? "90px" : "35px"?>;"
 
                         />
                         <?php 
@@ -289,7 +289,7 @@ if (!hook("renderresultthumb"))
                             { // add link if necessary ?>
                             <a 
                                 href="<?php echo $url?>"  
-                                onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
+                                onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" 
                             >
 <?php 
                             } //end link
@@ -323,7 +323,7 @@ if (!hook("renderresultthumb"))
                             { // add link if necessary ?>
                             <a 
                                 href="<?php echo $url?>"  
-                                onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" 
+                                onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" 
                             >
 <?php 
                             } //end link

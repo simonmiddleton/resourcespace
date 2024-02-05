@@ -1025,7 +1025,7 @@ function config_multi_rtype_select($name, $label, $current, $width=300)
                     value="<?php echo escape($rtype['ref']) ?>"
                     name="<?php echo escape($name) ?>[]"
                     id="<?php echo escape($name . $rtype['ref']) ?>"
-                    <?php echo (in_array($rtype['ref'],$current) ? ' checked="checked"' : '') ?>>
+                    <?php echo in_array($rtype['ref'],$current) ? ' checked="checked"' : '' ?>>
                 <label for="<?php echo escape($name . $rtype['ref']) ?>"><?php echo htmlspecialchars(lang_or_i18n_get_translated($rtype['name'],'resourcetype-')) ?></label>
                 <br />
             <?php } ?>
@@ -1072,7 +1072,7 @@ function config_multi_archive_select($name, $label, $current, $choices, $width=3
                         value="<?php echo escape($statekey) ?>"
                         name="<?php echo escape($name) . '[]' ?>"
                         id="<?php echo escape($name . $statekey) ?>" 
-                        <?php echo (isset($current) && $current!='' && in_array($statekey,$current) ? ' checked="checked"' : '') ?>>
+                        <?php echo isset($current) && $current != '' && in_array($statekey,$current) ? ' checked="checked"' : '' ?>>
                     <label for="<?php echo escape($name . $statekey) ?>"><?php echo htmlspecialchars($statename) ?></label>
                     <br />
                 </span>

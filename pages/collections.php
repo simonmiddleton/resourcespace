@@ -175,7 +175,7 @@ if ($allow_reorder)
 			    if ((ref==null)&&(results!== null)&&
                     ('<?php echo urlencode("!collection" . $usercollection); ?>' === results[1]
                     ||
-                    '<?php echo ("!collection" . $usercollection); ?>' === results[1])
+                    '<?php echo "!collection" . $usercollection; ?>' === results[1])
 
                     ) CentralSpaceLoad('<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection); ?>',true);
 			  }
@@ -831,7 +831,7 @@ else if ($basket)
         $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
 		$use_watermark=check_use_watermark();?>
 		<table border="0" class="CollectionResourceAlign"><tr><td>
-				<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
+				<a style="position:relative;" onclick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
                 <?php
                 $colimg_preview_size = $retina_mode ? 'thm' : 'col';
                 if(
@@ -873,7 +873,7 @@ else if ($basket)
 		}
 		?>	
 		<?php if (!hook("replacecolresourcetitle")){?>
-		<div class="CollectionPanelInfo"><a onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?></a>&nbsp;</div>
+		<div class="CollectionPanelInfo"><a onclick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?></a>&nbsp;</div>
 		<?php } ?>
 
 		<?php if ($k!="" && $feedback) { # Allow feedback for external access key users
@@ -1148,7 +1148,7 @@ else
         $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
 		$use_watermark=check_use_watermark();?>
 		<table border="0" class="CollectionResourceAlign"><tr><td>
-				<a style="position:relative;" onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
+				<a style="position:relative;" onclick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
                 <?php
                 $colimg_preview_size = $retina_mode ? 'thm' : 'col';
                 if(
@@ -1191,7 +1191,7 @@ else
 		}
 		?>	
 		<?php if (!hook("replacecolresourcetitle")){?>
-		<div class="CollectionPanelInfo"><a onclick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?></a>&nbsp;</div>
+		<div class="CollectionPanelInfo"><a onclick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?></a>&nbsp;</div>
 		<?php } ?>
 
 		<?php if ($k!="" && $feedback) { # Allow feedback for external access key users

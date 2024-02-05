@@ -56,7 +56,7 @@ function HookLicensemanagerViewCustompanels()
 			?>
 			<tr>
 			<td><?php echo $license["ref"] ?></td>
-			<td><?php echo ($license["outbound"]?$lang["outbound"]:$lang["inbound"]) ?></td>
+			<td><?php echo escape($license["outbound"] ? $lang["outbound"] : $lang["inbound"]); ?></td>
 			<td><?php echo $license["holder"] ?></td>
 			<td><?php
 				foreach ($license_usage_mediums as $medium)
@@ -68,7 +68,7 @@ function HookLicensemanagerViewCustompanels()
 				?>
 			</td>
 			<td><?php echo $license["description"] ?></td>
-			<td><?php echo ($license["expires"]==""?$lang["no_expiry_date"]:nicedate($license["expires"])) ?></td>
+			<td><?php echo escape($license["expires"] == "" ? $lang["no_expiry_date"] : nicedate($license["expires"])); ?></td>
 
 			<?php if ($edit_access || checkperm("lm")) { ?>
 			<td><div class="ListTools">

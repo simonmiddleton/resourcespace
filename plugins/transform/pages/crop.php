@@ -548,7 +548,7 @@ renderBreadcrumbs($links_trail);
       }
   else
       {
-      echo ($saveaction == "original" ? $lang['transformblurb-original'] : $lang['transformblurb']);
+      echo escape($saveaction == "original" ? $lang['transformblurb-original'] : $lang['transformblurb']);
       }?>
 </p>
 

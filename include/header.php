@@ -201,7 +201,7 @@ var applicationname = "<?php echo $applicationname?>";
 var branch_limit=false;
 var branch_limit_field = new Array();
 var global_trash_html = '<!-- Global Trash Bin (added through CentralSpaceLoad) -->';
-var TileNav = <?php echo ($tilenav?"true":"false") ?>;
+var TileNav = <?php echo $tilenav ? "true" : "false" ?>;
 var errornotloggedin = '<?php echo escape($lang["error_not_logged_in"]) ?>';
 var login = '<?php echo escape($lang["login"]) ?>';
 <?php
@@ -377,7 +377,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
     ?>
     <div id="Header" class="<?php
             echo in_array($pagename, $not_authenticated_pages) ? ' LoginHeader ' : ' ui-layout-north ';
-            echo ((isset($slimheader_darken) && $slimheader_darken) ? 'slimheader_darken' : '');
+            echo isset($slimheader_darken) && $slimheader_darken ? 'slimheader_darken' : '';
             echo " " . $header_size;
     ?>">
 

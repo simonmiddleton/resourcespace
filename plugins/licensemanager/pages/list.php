@@ -102,7 +102,7 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
 	<tr>
     <td>
             <?php echo $license["ref"] ?></td>
-			<td><?php echo ($license["outbound"]?$lang["outbound"]:$lang["inbound"]) ?></td>
+			<td><?php echo escape($license["outbound"] ? $lang["outbound"] : $lang["inbound"]); ?></td>
 			<td><?php echo $license["holder"] ?></td>
 			<td><?php
 				foreach ($license_usage_mediums as $medium)
@@ -114,7 +114,7 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
 				?>
 			</td>
 			<td><?php echo $license["description"] ?></td>
-			<td><?php echo ($license["expires"]==""?$lang["no_expiry_date"]:nicedate($license["expires"])) ?></td>
+			<td><?php echo escape($license["expires"] == "" ? $lang["no_expiry_date"] : nicedate($license["expires"])); ?></td>
 		
 			<td><div class="ListTools">
 			<a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>

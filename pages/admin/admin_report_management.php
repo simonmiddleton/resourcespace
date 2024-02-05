@@ -120,7 +120,7 @@ function addColumnHeader($orderName, $labelKey)
                 <td>
                     <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["name"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE); ?></a>
                 </td>
-                <td><?php echo ($support_non_correlated_sql ? $lang['yes'] : $lang['no']); ?></td>
+                <td><?php echo escape($support_non_correlated_sql ? $lang['yes'] : $lang['no']); ?></td>
                 <td>
                     <div class="ListView ListTools" align="right">
                         <?php

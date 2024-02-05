@@ -249,9 +249,9 @@ else if($delete_requires_password && $delete_all)
 <?php }
 else
 {?>
-<h1><?php echo $lang["editcollection"]; render_help_link("user/edit-collection"); ?></h1>
+<h1><?php echo escape($lang["editcollection"]); render_help_link("user/edit-collection"); ?></h1>
 <p><?php echo text("introtext"); ?></p>
-<form method=post id="collectionform" action="<?php echo $form_action; ?>" onsubmit="return <?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(this, false);">
+<form method=post id="collectionform" action="<?php echo $form_action; ?>" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this, false);">
     <?php generateFormToken("collectionform"); ?>
     <input type="hidden" name="modal" value="<?php echo $modal ? "true" : "false" ?>">
     <input type="hidden" name="redirection_endpoint" id="redirection_endpoint" value="<?php echo urlencode($redirection_endpoint); ?>">
@@ -259,7 +259,7 @@ else
     <input type=hidden name="submitted" value="true">
     <input type=hidden name="update_parent" value="false">
     <div class="Question">
-        <label for="name"><?php echo $lang["name"]?></label>
+        <label for="name"><?php echo escape($lang["name"])?></label>
         <input type=text class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($collection["name"]) ?>" maxlength="100" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>>
         <div class="clearerleft"> </div>
     </div>
@@ -310,12 +310,12 @@ else
             } 
         else 
             { ?>
-            <select id="public" name="public" class="stdwidth" onchange="document.getElementById('redirect').value='';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">
-                <option value="0" <?php if ($collection["public"]!=1) {?>selected<?php } ?>><?php echo $lang["private"]?></option>
+            <select id="public" name="public" class="stdwidth" onchange="document.getElementById('redirect').value='';<?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('collectionform'));">
+                <option value="0" <?php if ($collection["public"]!=1) {?>selected<?php } ?>><?php echo escape($lang["private"])?></option>
                 <?php 
                 if ($collection["cant_delete"]!=1 && ($enable_public_collections || checkperm("h"))) 
                     { ?>
-                    <option value="1" <?php if ($collection["public"]==1) {?>selected<?php } ?>><?php echo $lang["public"]?></option>
+                    <option value="1" <?php if ($collection["public"]==1) {?>selected<?php } ?>><?php echo escape($lang["public"])?></option>
                     <?php 
                     } ?>
             </select>
@@ -402,7 +402,7 @@ else
         ?>
         <div class="Question">
         <label for="allow_changes"><?php echo $lang["theme_home_promote"]?></label>
-        <input type="checkbox" id="home_page_publish" name="home_page_publish" value="1" <?php if ($collection["home_page_publish"]==1) { ?>checked<?php } ?> onClick="document.getElementById('redirect').value='';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">
+        <input type="checkbox" id="home_page_publish" name="home_page_publish" value="1" <?php if ($collection["home_page_publish"]==1) { ?>checked<?php } ?> onClick="document.getElementById('redirect').value='';<?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('collectionform'));">
         <div class="clearerleft"> </div>
         </div>
         <?php

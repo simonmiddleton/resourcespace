@@ -64,7 +64,7 @@ foreach($found_files as $index => $file)
         {
         $log = PHP_EOL . "Warning - could not create a new slideshow record for {$file}" . PHP_EOL;
         set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, $log);
-        echo ($cli ? $log : nl2br(str_pad($log, 4096)));
+        echo $cli ? $log : nl2br(str_pad($log, 4096));
         ob_flush();
         flush();
 
@@ -73,7 +73,7 @@ foreach($found_files as $index => $file)
 
     $log = PHP_EOL . "Created a new slideshow record (ID #{$new_slideshow_image}) based on {$file}" . PHP_EOL;
     set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, $log);
-    echo ($cli ? $log : nl2br(str_pad($log, 4096)));
+    echo $cli ? $log : nl2br(str_pad($log, 4096));
     ob_flush();
     flush();
     }

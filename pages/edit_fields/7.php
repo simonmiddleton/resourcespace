@@ -247,8 +247,8 @@ echo $hidden_input_elements;
     4. Selection of a parent node will have no effect on any sub nodes
     */
     var jquery_tree_by_id             = jQuery('#<?php echo $tree_id; ?>');
-    var category_tree_add_parents     = <?php echo ($category_tree_add_parents ? 'true' : 'false'); ?>;
-    var category_tree_remove_children = <?php echo ($category_tree_remove_children ? 'true' : 'false'); ?>;
+    var category_tree_add_parents     = <?php echo $category_tree_add_parents ? 'true' : 'false'; ?>;
+    var category_tree_remove_children = <?php echo $category_tree_remove_children ? 'true' : 'false'; ?>;
 
     var category_tree_clear = false;
 

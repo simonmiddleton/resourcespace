@@ -402,7 +402,7 @@ if(isset($resource["field".$view_title_field]))
           action="<?php echo $form_action; ?>"
           id="trimform"
           onsubmit="
-            return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(this, true);">
+            return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this, true);">
             <?php generateFormToken("trimform"); ?>
             <div class="Question" id="video_trim_tool">
             <label><?php echo $lang["video-trim"]?></label>

@@ -78,7 +78,7 @@ include "../../../include/header.php";
     <p>
         <a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo htmlspecialchars($resource); ?>" onClick="return CentralSpaceLoad(this, true);">&lt;&nbsp;<?php echo htmlspecialchars($lang['backtoresourceview']); ?></a>
     </p>
-    <h1><?php echo ($new_record ? $lang['new_usage'] : $lang['edit_usage']); ?></h1>
+    <h1><?php echo escape($new_record ? $lang['new_usage'] : $lang['edit_usage']); ?></h1>
 
     <form method="post" action="<?php echo $baseurl_short?>plugins/resource_usage/pages/edit.php" onSubmit="return CentralSpacePost(this, true);">
         <?php generateFormToken("resource_usage_editForm"); ?>
@@ -88,7 +88,7 @@ include "../../../include/header.php";
 
     <div class="Question">
         <label><?php echo $lang['usage_ref']; ?></label>
-        <div class="Fixed"><?php echo ($new_record ? $lang['usage_id_new'] : htmlspecialchars($ref)); ?></div>
+        <div class="Fixed"><?php echo escape($new_record ? $lang['usage_id_new'] : $ref); ?></div>
         <div class="clearerleft"></div>
     </div>
 

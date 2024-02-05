@@ -690,13 +690,13 @@ function get_managed_dash()
                 }
                 ?>
             href="<?php echo $link?>" <?php echo $newtab ? "target='_blank'" : "";?>
-            onClick="<?php echo (!$newtab ? 'return ' . (($help_modal && strpos($link,'pages/help.php')!==false)?'ModalLoad(this,true);':'CentralSpaceLoad(this,true);') : ''); ?>"
+            onClick="<?php echo !$newtab ? 'return ' . ($help_modal && strpos($link,'pages/help.php') !== false ? 'ModalLoad(this,true);' : 'CentralSpaceLoad(this,true);') : ''; ?>"
 
             <?php
             # Check if tile is set to double width
             $tlsize = (isset($buildstring['tlsize']) ? $buildstring['tlsize'] : '');
             ?>
-            class="HomePanel DashTile DashTileDraggable <?php echo ('double' == $tlsize ? 'DoubleWidthDashTile' : ''); ?>" 
+            class="HomePanel DashTile DashTileDraggable <?php echo 'double' == $tlsize ? 'DoubleWidthDashTile' : ''; ?>" 
             id="tile<?php echo escape($tile["tile"]);?>"
         >
             <div id="contents_tile<?php echo escape($tile["tile"]);?>" class="HomePanelIN HomePanelDynamicDash" style="<?php echo $tile_custom_style; ?>">
@@ -1194,7 +1194,7 @@ function get_user_dash($user)
             ?>
             href="<?php echo parse_dashtile_link($link)?>" <?php echo $newtab ? "target='_blank'" : "";?> 
             onClick="if(dragging){dragging=false;return false;}<?php if ($tile["link"] != "") {echo $newtab? "": "return " . ($help_modal && strpos($link,"pages/help.php")!==false?"ModalLoad(this,true);":"CentralSpaceLoad(this,true);");} else {echo "return false;";}?>" 
-            class="HomePanel DashTile DashTileDraggable <?php echo ($tile['all_users']==1)? 'allUsers':'';?> <?php echo ('double' == $tlsize ? 'DoubleWidthDashTile' : ''); ?>"
+            class="HomePanel DashTile DashTileDraggable <?php echo $tile['all_users'] == 1 ? 'allUsers' : '';?> <?php echo 'double' == $tlsize ? 'DoubleWidthDashTile' : ''; ?>"
             tile="<?php echo $tile['tile']; ?>"
             id="user_tile<?php echo escape($tile["user_tile"]);?>"
         >
@@ -1742,7 +1742,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
             var usertileidname = "#<?php echo escape(substr($tile_id, 9)); ?>";
             var dashtileactionsid = "#DashTileActions_" + usertileid;
             var deletetileid = ".dash-delete_" + usertileid;
-            var editlink = "<?php echo (isset($tile["url"])?$tile["url"]:"") ; ?>";
+            var editlink = "<?php echo isset($tile["url"]) ? $tile["url"] : ""; ?>";
             var tilehref; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
             var tileonclick; //Used to switch off and on tile link to stop issue clicking on tool bar but opening tile link
     

@@ -148,7 +148,7 @@ else
         <a target="blank" href="team_analytics_edit.php?ref=<?php echo $ref ?>&print=true"><i class="fa fa-print"></i> <?php echo $lang["print_report"] ?></a>
     </p>
 
-<h1 id="ReportHeader" class="CollapsibleSectionHead <?php if ($ref=="") { ?>expanded<?php } else { ?>collapsed<?php } ?>"><?php echo ($ref==""?$lang["new_report"]:$lang["edit_report"]);render_help_link('resourceadmin/analytics'); ?></h1>
+<h1 id="ReportHeader" class="CollapsibleSectionHead <?php if ($ref=="") { ?>expanded<?php } else { ?>collapsed<?php } ?>"><?php echo escape($ref == "" ? $lang["new_report"] : $lang["edit_report"]);render_help_link('resourceadmin/analytics'); ?></h1>
 
 <div class="CollapsibleSection" id="ReportForm" <?php if ($ref!="") { ?>style="display:none;"<?php } ?>>
 <form method="post" id="mainform" onsubmit="return CentralSpacePost(this);" >

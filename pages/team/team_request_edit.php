@@ -63,7 +63,7 @@ include "../../include/header.php";
     <?php
     if(!$modal)
         {?>
-        <p><a href="<?php echo ($backurl!=""?$backurl:$baseurl_short ."pages/team/team_request.php");?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $backurl!=""?$lang["back"]:$lang["managerequestsorders"]; ?></a></p>
+        <p><a href="<?php echo $backurl != "" ? $backurl : $baseurl_short ."pages/team/team_request.php";?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $backurl!=""?$lang["back"]:$lang["managerequestsorders"]; ?></a></p>
         <?php
         }
         ?>
@@ -86,7 +86,7 @@ if ($request !== false)
         {
         ?>
         
-    <form method="post" action="<?php echo $baseurl_short?>pages/team/team_request_edit.php" onSubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+    <form method="post" action="<?php echo $baseurl_short?>pages/team/team_request_edit.php" onSubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
     <?php
     generateFormToken("team_request_edit");
 

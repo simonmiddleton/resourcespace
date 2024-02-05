@@ -9,7 +9,7 @@ if (!hook("iconedit") && (checkperm("e" . $result[$n]["archive"]) || ($edit_acce
     if ($allow_share && ($k=="" || $internal_share_access)) { ?>
         <a class="fa fa-pencil"
             href="<?php echo str_replace("view.php", "edit.php", $url) ?>"  
-            onClick="return <?php echo ($resource_view_modal ? "Modal" : "CentralSpace") ?>Load(this, true);" 
+            onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this, true);" 
             title="<?php echo escape($lang["action-editmetadata"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
         </a><?php
     }

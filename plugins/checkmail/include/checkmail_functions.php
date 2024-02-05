@@ -27,7 +27,7 @@ function skip_mail($imap,$current_message,$note,$mail=false)
     // display note, and clear process lock.
     global $lang,$applicationname, $imap, $current_message, $baseurl;
 
-    echo($note."\r\n");
+    echo $note."\r\n";
 
     if ($current_message!="")
         {	

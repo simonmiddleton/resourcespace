@@ -105,7 +105,7 @@ for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
 				echo $translated_mediums;
 				?>
 			</td>
-			<td><?php echo ($consent["expires"]==""?$lang["no_expiry_date"]:nicedate($consent["expires"])) ?></td>
+			<td><?php echo escape($consent["expires"] == "" ? $lang["no_expiry_date"] : nicedate($consent["expires"])); ?></td>
 		
 			<td><div class="ListTools">
 			<a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>

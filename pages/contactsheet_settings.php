@@ -87,7 +87,7 @@ include '../include/header.php';
 # Check access
 if(!collection_readable($collection))
     {
-    echo($lang["no_access_to_collection"]);
+    echo escape($lang["no_access_to_collection"]);
     echo "</div></div>";
     include "../include/footer.php";
     exit();
@@ -304,7 +304,7 @@ if($contactsheet_use_field_templates)
 			for($t=0;$t<$t_count;$t++)
 				{
 				?>
-				<option value="<?php echo $t; ?>"<?php echo ($field_template==$t ? 'selected' : ''); ?>><?php echo $contactsheet_field_template[$t]['name']; ?></option>
+				<option value="<?php echo $t; ?>"<?php echo $field_template == $t ? 'selected' : ''; ?>><?php echo escape($contactsheet_field_template[$t]['name']); ?></option>
 				<?php
 				}
 			?>
@@ -352,7 +352,7 @@ if($contactsheet_use_field_templates)
     ?>
 
     <div class="Question">
-        <label><?php echo ($contactsheet_use_field_templates ? $lang['contact_sheet_field_template_fields'] : $lang['contact_sheet_select_fields']); ?></label>
+        <label><?php echo escape($contactsheet_use_field_templates ? $lang['contact_sheet_field_template_fields'] : $lang['contact_sheet_select_fields']); ?></label>
         <?php
         if($contactsheet_use_field_templates)
 			{

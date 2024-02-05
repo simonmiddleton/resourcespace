@@ -2351,7 +2351,7 @@ function draw_performance_footer()
     </table>
     <table class="InfoTable" style="float: right;margin-right: 10px;display:none;" id="querylog<?php echo $performance_footer_id?>">
     <?php foreach ($querylog as $query=>$details) { ?>
-    <tr><td><?php echo($query) ?></td></tr>
+    <tr><td><?php echo escape($query); ?></td></tr>
     <?php } ?>
     </table>
     </div>

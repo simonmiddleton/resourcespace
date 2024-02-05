@@ -61,7 +61,7 @@ function HookConsentmanagerViewCustompanels()
 				echo $translated_mediums;
 				?>
 			</td>
-			<td><?php echo ($consent["expires"]==""?$lang["no_expiry_date"]:nicedate($consent["expires"])) ?></td>
+			<td><?php echo escape($consent["expires"] == "" ? $lang["no_expiry_date"] : nicedate($consent["expires"])); ?></td>
 
 			<?php if ($edit_access || checkperm("cm")) { ?>
 			<td><div class="ListTools">

@@ -189,7 +189,7 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
                 $tabOnClick="SelectMetaTab(".$ref.",".$tabcount.",false);";
                 }
             ?>
-			<div id="<?php echo ($modal ? "Modal" : "")?>tabswitch<?php echo $tabcount.'-'.$ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
+			<div id="<?php echo $modal ? "Modal" : ""; ?>tabswitch<?php echo $tabcount.'-'.$ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
                 <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo htmlspecialchars($tab_name); ?></a>
 			</div>
             <?php 
@@ -252,7 +252,7 @@ foreach($fields_tab_names as $tab_ref => $tabname)
     if($tabcount != count($fields_tab_names))
         {
         ?>
-        <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>">
+        <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo $modal ? "Modal" : ""; ?>tab<?php echo $tabcount.'-'.$ref?>">
         <!-- START of NEXT TabbedPanel -->
         <div class="clearerleft"> </div>
         <div>

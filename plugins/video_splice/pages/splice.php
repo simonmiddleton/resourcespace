@@ -209,7 +209,7 @@ include "../../../include/header.php";
     <div class="RecordPanel RecordPanelLarge">
         <div class="RecordResource">
             <div id="splice_scroll">
-                <div id="splice_reel" style="overflow: hidden; height: 200px !important; width:<?php echo ((count($videos)+2) * 180);?>px">
+                <div id="splice_reel" style="overflow: hidden; height: 200px !important; width:<?php echo (count($videos)+2) * 180;?>px">
                 <?php
 
                     foreach ($videos_data as $video_data)

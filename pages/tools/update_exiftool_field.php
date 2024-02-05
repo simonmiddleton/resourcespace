@@ -181,18 +181,18 @@ foreach ($fieldrefs as $fieldref)
                             $invalid_date = str_replace("%field%", $name, $invalid_date);
                             $invalid_date = str_replace("%row% ", "", $invalid_date);
 
-                            echo ("-Exiftool " . $invalid_date . PHP_EOL . PHP_EOL);   
+                            echo "-Exiftool " . $invalid_date . PHP_EOL . PHP_EOL;   
                             continue;
                             }
                         }
 
                     update_field($ref,$fieldref,$value);
-                    echo ("-Exiftool found \"" . $value . "\" embedded in the -" . $exiftool_tag . " tag and applied it to Resource " . $ref . " Field " . $fieldref . PHP_EOL . PHP_EOL); 
+                    echo "-Exiftool found \"" . $value . "\" embedded in the -" . $exiftool_tag . " tag and applied it to Resource " . $ref . " Field " . $fieldref . PHP_EOL . PHP_EOL; 
                     }
                 else 
                     {
                     update_field($ref,$fieldref,$value);
-                    echo ("-Exiftool found no value embedded in the " . implode(", ", $exiftool_tags) . " tag/s and applied \"\" to Resource " . $ref . " Field " . $fieldref . PHP_EOL);
+                    echo "-Exiftool found no value embedded in the " . implode(", ", $exiftool_tags) . " tag/s and applied \"\" to Resource " . $ref . " Field " . $fieldref . PHP_EOL;
                     }
                 }
             else
@@ -208,17 +208,17 @@ foreach ($fieldrefs as $fieldref)
                             $invalid_date = str_replace("%field%", $name, $invalid_date);
                             $invalid_date = str_replace("%row% ", "", $invalid_date);
 
-                            echo ("-Exiftool " . $invalid_date . PHP_EOL . PHP_EOL);   
+                            echo "-Exiftool " . $invalid_date . PHP_EOL . PHP_EOL;   
                             continue;
                             }
                         }
 
                     update_field($ref,$fieldref,$value);
-                    echo ("-Exiftool found \"" . $value . "\" embedded in the -" . $exiftool_tag . " tag and applied it to Resource " . $ref . " Field " . $fieldref . PHP_EOL . PHP_EOL);   
+                    echo "-Exiftool found \"" . $value . "\" embedded in the -" . $exiftool_tag . " tag and applied it to Resource " . $ref . " Field " . $fieldref . PHP_EOL . PHP_EOL;   
                     }
                 else 
                     {
-                    echo ("-Exiftool found no value embedded in the " . implode(", ", $exiftool_tags) . " tag/s and has made no changes for Resource " . $ref . PHP_EOL);
+                    echo "-Exiftool found no value embedded in the " . implode(", ", $exiftool_tags) . " tag/s and has made no changes for Resource " . $ref . PHP_EOL;
                     }
                 }
             }

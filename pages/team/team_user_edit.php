@@ -154,7 +154,7 @@ renderBreadcrumbs($links_trail);
 <?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 <?php if (isset($message)) { ?><div class="PageInfoMessage"><?php echo $message?></div><?php } ?>
 
-<form method=post action="<?php echo $baseurl_short?>pages/team/team_user_edit.php" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+<form method=post action="<?php echo $baseurl_short?>pages/team/team_user_edit.php" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
 <?php 
 if($modal)
 	{
@@ -301,7 +301,7 @@ if (!hook("replacecomments"))
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["origin"]); ?></label>
-<div class="Fixed"><?php echo (($user["origin"]!="")?(isset($lang["origin_" . $user["origin"]])?$lang["origin_" . $user["origin"]]:$user["origin"]):$applicationname) ?></div>
+<div class="Fixed"><?php echo escape($user["origin"]!="" ? (isset($lang["origin_" . $user["origin"]]) ? $lang["origin_" . $user["origin"]]:$user["origin"]) : $applicationname); ?></div>
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["lastactive"])?></label>

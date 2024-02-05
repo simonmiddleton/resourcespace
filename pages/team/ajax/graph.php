@@ -145,7 +145,7 @@ else
     $title= getval("tltitle",ps_value("select title value from dash_tile where ref=?",array("i",$tile), ""));
     ?>
     <div style="padding:10px 15px">
-    <h2 style="font-size:120%;margin:0;padding:<?php echo ($from_dash?"0":"0 0 8px 0")?>;background:none;white-space: nowrap;overflow: hidden;
+    <h2 style="font-size:120%;margin:0;padding:<?php echo $from_dash ? "0" : "0 0 8px 0"; ?>;background:none;white-space: nowrap;overflow: hidden;
   text-overflow: ellipsis;"><?php echo htmlspecialchars($title) ?></h2>
     <?php
     }

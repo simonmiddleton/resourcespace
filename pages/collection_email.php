@@ -205,8 +205,8 @@ if($themeshare)
     {
     ?>
     <div class="Question">
-        <label for="subthemes"><?php echo $lang["share_theme_category_subcategories"]; ?></label>
-        <input type="checkbox" id="subthemes" name="subthemes" value="true" <?php echo ($subthemes ? "checked" : ""); ?>>
+        <label for="subthemes"><?php echo escape($lang["share_theme_category_subcategories"]); ?></label>
+        <input type="checkbox" id="subthemes" name="subthemes" value="true" <?php echo $subthemes ? "checked" : ""; ?>>
         <div class="clearerleft"></div>
     </div>
     <?php

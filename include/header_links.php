@@ -5,7 +5,7 @@
                 <?php if (!$use_theme_as_home && !$use_recent_as_home) { ?>
                     <li class="HeaderLink">
                         <a href="<?php echo $baseurl?>/pages/<?php echo $default_home_page?>" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo ($default_home_page=="home.php"?DASH_ICON . $lang["dash"]:HOME_ICON . $lang["home"]) ?>
+                            <?php echo escape($default_home_page == "home.php" ? DASH_ICON . $lang["dash"] : HOME_ICON . $lang["home"]); ?>
                         </a>
                     </li>
                 <?php } ?>

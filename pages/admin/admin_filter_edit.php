@@ -327,7 +327,7 @@ function deleteFilterRule(rule)
     }
 
 jQuery(document).ready(function(){
-    let errors = <?php echo (isset($errors)?json_encode($errors):'""');?>;
+    let errors = <?php echo isset($errors) ? json_encode($errors) : '""';?>;
     if(errors.length > 0)
         {
         error_message = '';
