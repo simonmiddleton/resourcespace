@@ -50,7 +50,7 @@ function get_resource_path(
 
     if(isset($resource_path_pull_cache[$ref]) && strtolower((string)$extension) == 'jpg')
         {
-        $ref = $resource_path_pull_cache[$ref];
+        $ref = $resource_path_pull_cache[$ref]["ref"];
         }
 
     # Returns the correct path to resource $ref of size $size ($size==empty string is original resource)
@@ -95,7 +95,6 @@ function get_resource_path(
             $refresh_key .= urlencode($file_modified);
             }
         }
-
 
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
     if(!$getfilepath && $hide_real_filepath)
@@ -180,14 +179,12 @@ function get_resource_path(
             {
             $skey = $fstemplate_alt_scramblekey;
             }
-
         $scramblepath = substr(md5("{$ref}_{$skey}"), 0, 15);
         }
 
     if ($extension=="") {$extension="jpg";}
 
     $folder="";
-    #if (!file_exists(dirname(__FILE__) . $folder)) {mkdir(dirname(__FILE__) . $folder,0777);}
 
     # Original separation support
     if($originals_separate_storage)
@@ -198,7 +195,7 @@ function get_resource_path(
             $alt_data=ps_query('select ref,resource,name,description,file_name,file_extension,file_size,creation_date,unoconv,alt_type,page_count from resource_alt_files where ref=?',array("i",$alternative));
             if(!empty($alt_data))
                 {
-                // determin if this file was created from $ffmpeg_alternatives
+                // Determine if this file was created from $ffmpeg_alternatives
                 $ffmpeg_alt=alt_is_ffmpeg_alternative($alt_data[0]);
                 if($ffmpeg_alt)
                     {
@@ -383,9 +380,7 @@ function get_resource_path(
     if(!file_exists($file)
         && !$getfilepath
         && $alternative==-1
-        // && $size != ""
         && !$generate
-        && $GLOBALS["hide_real_filepath"]
         && !defined("GETRESOURCEPATHNORECURSE" . $ref)
         )
         {
@@ -394,6 +389,11 @@ function get_resource_path(
         if($pullresource !== false)
             {
             define("GETRESOURCEPATHNORECURSE" . $ref,true);
+            if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"]))
+                {
+                // If a JPG then no 'hpr' will be available
+                $size = "";
+                }
             $file = get_resource_path($pullresource["ref"],$getfilepath,$size,false,$extension,$scramble,$page,$watermarked,$file_modified,-1,$includemodified,true);
             }
         }
@@ -544,7 +544,7 @@ function create_resource($resource_type,$archive=999,$user=-1,$origin='')
         return false;
         }
 
-    $alltypes=get_resource_types("",false,false,true);
+    $alltypes=get_resource_types("",false,false,false);
     if(!in_array($resource_type,array_column($alltypes,"ref")))
         {
         return false;
@@ -9422,7 +9422,7 @@ function apply_resource_default(int $old_resource_type, int $new_resource_type, 
  * Where access is restricted and restricted access users can't access the scr size, the scr size shouldn't be used.
  *
  * @param  int   $access   Resource access level, typically from get_resource_access()
- * 
+ *
  * @return  bool   True if scr size shouldn't be used else false.
  */
 function skip_scr_size_preview(int $access) : bool
@@ -9446,29 +9446,29 @@ function skip_scr_size_preview(int $access) : bool
  * Get a related resource to pull images from
  *
  * @param array $resource   Array of resource data from do_search()
- * 
+ *
  * @return array|bool $resdata    Array of alternative resource data to use, or false if not configured or no resource image found
- * 
+ *
  */
 function related_resource_pull(array $resource)
     {
     global $resource_path_pull_cache;
     $related = false;
 
-    if(isset($resource_path_pull_cache[$resource["ref"]]))
+    if (isset($resource_path_pull_cache[$resource["ref"]]))
         {
         return $resource_path_pull_cache[$resource["ref"]];
         }
 
     $restypes = get_resource_types('',false,true,true);
     $pull_images = array_column($restypes,"pull_images","ref")[$resource['resource_type']];
-    if((int)$pull_images === 1 )
+    if ((int)$pull_images === 1 )
         {
         $relatedpull = do_search("!related" . $resource["ref"]);
         debug("Looking for a related resource with image");
-        if(is_array($relatedpull))
+        if (is_array($relatedpull))
             {
-            foreach($relatedpull as $related)
+            foreach ($relatedpull as $related)
                 {
                 if($related["has_image"] === 1)
                     {
@@ -9493,9 +9493,9 @@ function related_resource_pull(array $resource)
  * @param int       $access     Resource access
  * @param array     $sizes      Array of size IDs to look through, in order of size. If not provied will use all sizes
  * @param bool      $watermark  Look for watermarked versions?
- * 
+ *
  * @return string | bool        URL, or false if no image is found
- * 
+ *
  */
 function get_resource_preview(array $resource,array $sizes = [], int $access = -1, bool $watermark = false)
     {
@@ -9505,7 +9505,7 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
         }
 
     $preview["url"] = "";
-    if(isset($resource['thm_url']))
+    if (isset($resource['thm_url']))
         {
         // Option to override thumbnail image in search results, e.g. by plugin using process_search_results hook
         $preview["url"] = $resource['thm_url'];
@@ -9514,7 +9514,7 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
         }
     else
         {
-        if((int)$resource['has_image']===0)
+        if((int)$resource['has_image'] === 0)
             {
             // If configured, try and use a preview from a related resource
             $pullresource = related_resource_pull($resource);
@@ -9524,7 +9524,7 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
                 }
             }
 
-        if($access==-1)
+        if($access == -1)
             {
             $access = get_resource_access($resource);
             }
@@ -9532,11 +9532,11 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
         // Work out image to use.
         if($watermark !== '')
             {
-            $use_watermark=check_use_watermark();
+            $use_watermark = check_use_watermark();
             }
         else
             {
-            $use_watermark=false;   
+            $use_watermark = false;
             }
 
         foreach($sizes as $size)

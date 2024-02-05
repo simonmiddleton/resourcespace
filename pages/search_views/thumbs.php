@@ -135,7 +135,7 @@ if (!hook("renderresultthumb"))
                         }
                     ).mouseout(function(event)
                         {
-                        jQuery(this).attr('src', "<?php echo $thm_url; ?>");
+                        jQuery(this).attr('src', "<?php echo $thumbnail["url"]; ?>");
                         }
                     );
                     </script>

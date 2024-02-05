@@ -1517,6 +1517,10 @@ function create_resource_type($name)
     ps_query("INSERT INTO resource_type (name) VALUES (?) ",array("s",$name));
     $newid = sql_insert_id();
     clear_query_cache("schema");
+    if(isset($GLOBALS["restype_cache"]))
+        {
+        unset($GLOBALS["restype_cache"]);
+        }
     return $newid;
     }
 
@@ -1553,7 +1557,7 @@ function save_resource_type(int $ref, array $savedata)
             }
         switch($savecol)
             {
-            case "name":               
+            case "name":
                 $setcolumns[] = "name";
                 $setparams[] = "s";
                 $setparams[] = mb_strcut($saveval, 0, 100);
@@ -1570,7 +1574,7 @@ function save_resource_type(int $ref, array $savedata)
                 break;
 
             case "config_options":
-                if (!$execution_lockout) 
+                if (!$execution_lockout)
                     {
                     // Not allowed to save PHP if execution_lockout set.
                     $setcolumns[] = $savecol;
@@ -1584,8 +1588,8 @@ function save_resource_type(int $ref, array $savedata)
                 $setparams[] = "s";
                 $setparams[] = $saveval;
                 break;
-                
-            case "icon":            
+
+            case "icon":
                 $setcolumns[] = $savecol;
                 $setparams[] = "s";
                 $setparams[] = mb_strcut($saveval, 0, 120);
@@ -1600,10 +1604,10 @@ function save_resource_type(int $ref, array $savedata)
         {
         return false;
         }
-    
+
     $setparams[] = "i";
     $setparams[] = $ref;
-    
+
     ps_query(
         "UPDATE resource_type
             SET " . implode("=?,",$setcolumns) . "=?
