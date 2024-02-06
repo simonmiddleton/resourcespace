@@ -504,3 +504,13 @@ function log_search_event(string $search, array $resource_types, array $archive_
     $q = "INSERT INTO search_log (search_string, resource_types, archive_states, `user`, result_count) VALUES (?,?,?,?,?)";
     return ps_query($q,$parameters);
     }
+
+/**
+ * Generate a fingerprint which could then be used as a trace ID for event correlation purposes.
+ * 
+ * @param array $components Data making up our fingerprint.
+ */
+function generate_trace_id(array $components): string
+    {
+    return md5(implode('--', $components));
+    }

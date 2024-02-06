@@ -10,6 +10,7 @@ $modal=(getval("modal","")=="true");
 // -----------------------  Tab calculation -----------------
 $disable_tabs = true;
 $system_tabs = get_tab_name_options();
+debug(sprintf('$system_tabs = %s', json_encode($system_tabs)));
 $tabs_fields_assoc = [];
 
 // Do not show related resources in tabs for the pushed metadata
@@ -88,6 +89,7 @@ else if(isset($tabs_fields_assoc[0]) && count($tabs_fields_assoc[0]) > 0)
     }
 $fields_tab_names = array_intersect_key($system_tabs, $tabs_fields_assoc);
 $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));if($modified_view_tabs!=='' && is_array($modified_view_tabs)){$fields_tab_names=$modified_view_tabs;}
+debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
 // -----------------------  END: Tab calculation -----------------
 ?>
 
@@ -219,6 +221,7 @@ foreach($fields_tab_names as $tab_ref => $tabname)
     for($i = 0; $i < count($fields); $i++)
         {
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
+        debug(sprintf('Field #%s has $displaycondition = %s', $fields[$i]['ref'], json_encode($displaycondition)));
         if($fields[$i]["global"] == 1 || in_array($resource['resource_type'],$arr_fieldrestypes[$fields[$i]['ref']]) || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
             {
             if($displaycondition && $tab_ref == $fields[$i]['tab'])

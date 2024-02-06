@@ -210,10 +210,12 @@ if($access == 2)
 	}
 
 hook("afterpermissionscheck");
+debug(sprintf('Viewing resource #%s (access: %s)', $resource['ref'], $access));
 
 # Establish if this is a metadata template resource, so we can switch off certain unnecessary features
 $is_template=(isset($metadata_template_resource_type) && $resource["resource_type"]==$metadata_template_resource_type);
 
+debug(sprintf('$is_template = %s', json_encode($is_template)));
 $title_field=$view_title_field; 
 # If this is a metadata template and we're using field data, change title_field to the metadata template title field
 if (isset($metadata_template_resource_type) && ($resource["resource_type"]==$metadata_template_resource_type))
@@ -309,10 +311,12 @@ if(isset($related_type_show_with_data)) {
 
 // Get all fields without checking permissions (for later dependency checking)
 $fields_all=get_resource_field_data($ref,$multi_fields,FALSE,NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
+debug(sprintf('$fields_all = %s', json_encode(array_column($fields_all, 'ref'))));
 
 # Load field data
 $fields=get_resource_field_data($ref,$multi_fields,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
 $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($modified_view_fields){$fields=$modified_view_fields;}
+debug(sprintf('$fields = %s', json_encode(array_column($fields, 'ref'))));
 
 # If no fields were found advise of configuration issue and exit.
 if (!$fields_all || !$fields)
@@ -326,6 +330,7 @@ $edit_access = get_edit_access($ref,$resource["archive"],$resource);
 
 # Check if resource is locked
 $resource_locked = (int)$resource["lock_user"] > 0;
+debug(sprintf('$resource_locked = %s', json_encode($resource_locked)));
 $unlock_option = checkperm("a") || ($userref == $resource["lock_user"] && $userref != $anonymous_login);
 $lock_details = get_resource_lock_message($resource["lock_user"]);
 
@@ -517,6 +522,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                     'k'					=> $k,
                     'curpos'			=> $curpos
                 );
+                debug(sprintf('$urlparams = %s', http_build_query($urlparams)));
 
                 # Check if actually coming from a search, but not if a numeric search and config_search_for_number is set or if this is a direct request e.g. ?r=1234.
                 if (!hook("replaceviewnav") && isset($_GET["search"]) && !($config_search_for_number && is_numeric($usearch)) && !($k != "" && strpos($search,"!collection") === false))
@@ -1842,6 +1848,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 
  */
 $pushed=do_search("!relatedpushed" . $ref);
+debug(sprintf('$pushed = %s', json_encode(array_column($pushed, 'ref'))));
 
 // Get metadata for all related resources to save multiple db queries
 $pushedfielddata = get_resource_field_data_batch(array_column($pushed,"ref"),true,($k != "" && !$internal_share_access));

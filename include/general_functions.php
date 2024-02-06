@@ -3949,10 +3949,12 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
     $extendedtext = "";	
     if(isset($debug_extended_info) && $debug_extended_info && function_exists("debug_backtrace"))
         {
+        $trace_id = isset($GLOBALS['debug_trace_id']) ? "[traceID {$GLOBALS['debug_trace_id']}]" : '';
         $backtrace = debug_backtrace(0);
         $btc = count($backtrace);
-        $callingfunctions = array();
-        $page = "";
+        $callingfunctions = array(); 
+        $page = $backtrace[$btc - 1]['file'] ?? pagename();
+        $debug_line = $backtrace[0]['line'] ?? 0;
         for($n=$btc;$n>0;$n--)
             {
             if($page == "" && isset($backtrace[$n]["file"]))
@@ -3968,11 +3970,12 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
                     }
                 else
                     {
-                    $callingfunctions[] = $backtrace[$n]["function"];
+                    $callingfunctions[] = "{$backtrace[$n]["function"]}:{$backtrace[$n]['line']}";
                     }
                 }
             }
-        $extendedtext .= "[" . $page . "] " . (count($callingfunctions)>0 ? "(" . implode("->",$callingfunctions)  . ") " : " ");
+        $extendedtext .= "{$trace_id}[" . $page . "] "
+            . (count($callingfunctions)>0 ? "(" . implode("->",$callingfunctions)  . "::{$debug_line}) " : "(::{$debug_line}) ");
         }
 
     fwrite($f,date("Y-m-d H:i:s") . " " . $extendedtext . $text . "\n");

@@ -1811,13 +1811,12 @@ function display_multilingual_text_field($n, $field, $translations)
 
 function display_field($n, $field, $newtab=false,$modal=false)
   {
+  debug_function_call(__FUNCTION__, [$n, $field['ref'], $newtab, $modal]);
+
   global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastglobal,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
   $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $DATE_FIELD_TYPES, $upload_review_mode, $check_edit_checksums, $locked_fields, $lastedited, $copyfrom, $fields;
-
-  // debug_function_call() not used here because $field with numerous node options is unsuitable for debug log
-  debug("display_field()" . "n = " . $n . ", field ref=" . $field["ref"] . ", modal=" . ($modal ? "TRUE" : "FALSE"));
 
   // Set $is_search to false in case page request is not an ajax load and $is_search hs been set from the searchbar
   $is_search=false;
@@ -1883,6 +1882,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
     {
     #Check if field has a display condition set and render the client side check display condition functions
     $displaycondition = check_display_condition($n, $field, $fields, true);
+    debug(sprintf('$displaycondition = %s', json_encode($displaycondition)));
     }
 
   if ($multilingual_text_fields)
@@ -1896,8 +1896,9 @@ function display_field($n, $field, $newtab=false,$modal=false)
     ( (getval("copyfrom","") == "" && getval('metadatatemplate', '') == "") 
       || str_replace(array(" ",","),"",(string)$value)=="") ) 
         {
+        debug('Blank the value for multi-edits unless copying data from resource');
         $value="";
-        } # Blank the value for multi-edits unless copying data from resource
+        }
 
   if ($field["global"] == 0 && $lastglobal && $collapsible_sections)
     {
@@ -2044,8 +2045,9 @@ function display_field($n, $field, $newtab=false,$modal=false)
       <div class="Question <?php if($upload_review_mode && in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n?>" <?php
       if (($multiple && !$field_save_error) || !$displaycondition || $newtab)
         {?>style="border-top:none;<?php 
-        if (($multiple && $value=="") || !$displaycondition) # Hide this
+        if (($multiple && $value=="") || !$displaycondition)
         {
+        debug('Hide this');
         ?>
         display:none;
         <?php
@@ -2151,6 +2153,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
             $selected_nodes = array_unique(array_merge($selected_nodes,get_resource_nodes($use, $field['ref'])));
             }
 
+        debug(sprintf('$selected_nodes = %s', json_encode($selected_nodes)));
+
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
             $name = "nodes[{$field['ref']}]";
@@ -2178,6 +2182,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
                 unset($node_data);
                 }
             sort($field_nodes);
+            debug(sprintf('$field_nodes = %s', json_encode($field_nodes)));
             if(!$multiple && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
                 {
                 echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
@@ -2196,6 +2201,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
 					}
 				}
 			sort($field_nodes);			
+            debug(sprintf('$field_nodes = %s', json_encode($field_nodes)));
 			echo "<input id='field_" . (int) $field['ref']  . "_checksum' name='" . "field_" . (int) $field['ref']  . "_checksum' type='hidden' value='" . md5(implode(",",$field_nodes)) . "'>";
 			}
 		elseif(!$multiple && !$blank_edit_template && getval("copyfrom","")=="" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
@@ -4147,8 +4153,9 @@ function display_upload_options()
     }
     
 
-function display_field_data($field,$valueonly=false,$fixedwidth=452)
-	{		
+function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
+	{
+    debug_function_call(__FUNCTION__, [$field['ref'], $valueonly, $fixedwidth]);
 	global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $force_display_template_orderby;
 
 	$value=$field["value"];
@@ -4157,6 +4164,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
     if($modified_field)
         {
 		$field=$modified_field;
+        debug(sprintf('$field #%s was modified by beforeviewdisplayfielddata_processing hook', $field['ref']));
 	    }
 
     $warningtext="";
@@ -4165,6 +4173,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
     # Handle expiry date warning messages
 	if (!$valueonly && $field["type"] == FIELD_TYPE_EXPIRY_DATE && $value != "" && $value <= date("Y-m-d H:i") && $show_expiry_warning) 
 		{
+        debug('Handle expiry date warning messages');
         $title = htmlspecialchars($lang["warningexpired"]);
         $warningtext = htmlspecialchars($lang["warningexpiredtext"]);
         $dismisstext = LINK_CARET . htmlspecialchars($lang["warningexpiredok"]);
@@ -4183,6 +4192,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	# Handle general warning messages
 	if (!$valueonly && $field["type"] == FIELD_TYPE_WARNING_MESSAGE && trim((string)$value) != "") 
 		{
+        debug('Handle general warning messages');
         $warningtext = $value;
         $dismisstext = LINK_CARET . htmlspecialchars($lang["warningexpiredok"]);
         $dismisslink = "<p id=\"WarningOK_{$field['ref']}\">
@@ -4199,6 +4209,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 	
     if ($field['value_filter']!="")
         {
+        debug('Calling value_filter...');
         eval(eval_check_signed($field['value_filter']));
         }
     else if ($field["type"]==FIELD_TYPE_DATE_AND_OPTIONAL_TIME && strpos((string)$value,":")!=false)
@@ -4225,13 +4236,16 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
             }
     
 	if (($value!="") && ($value!=",") && ($field["display_field"]==1) && ($access==0 || ($access==1 && !$field["hide_when_restricted"])))
-		{			
+		{
+        debug('Field can display...');
 		if (!$valueonly)
 			{
+            debug('Showing title');
             $title=htmlspecialchars(str_replace("Keywords - ","",$field["title"]));
             }
         else
             {
+            debug('Blanking title');
             $title="";
             }
 
@@ -4239,6 +4253,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
     # Optimised to use the value as is if there are no "~" characters present in the value
     if(strpos($value,"~") !== false) 
         {
+        debug('value formatting due to ~ character...');
         # The field value may be a list of comma separated language encoded values, so process the nodes
         $field_nodes_in_value=explode(",",$field["nodes"]);
         if(count($field_nodes_in_value) == 1)  
@@ -4281,6 +4296,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         if($modified_value)
             {		
 			$value = $modified_value['value'];
+            debug('field value modified by display_field_modified_value hook');
 		    }
 
         # Final stages of rendering
@@ -4288,6 +4304,7 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
         # Include display template when necessary
 		if (!$valueonly && trim($field["display_template"] ?? "")!="")
 			{
+            debug('Include display_template');
             $value_for_url=$value;
 			# Highlight keywords
 			$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
@@ -4329,11 +4346,13 @@ function display_field_data($field,$valueonly=false,$fixedwidth=452)
 
             $extra   .= $template;
 			}
-		else # No display template
+		else
 			{
+            debug('No display template');
 			# There is a value in this field, but we also need to check again for a current-language value after the i18n_get_translated() function was called, to avoid drawing empty fields
             if ($value!="")
                 {
+                debug('Draw this field normally...');
                 # Draw this field normally. - value has already been sanitized by htmlspecialchars
 				# Highlight keywords
 				$value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);

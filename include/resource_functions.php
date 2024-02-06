@@ -6437,6 +6437,7 @@ function delete_resource_access_key($resource,$access_key)
 
 function resource_type_config_override($resource_type, $only_onchange=true)
     {
+    debug_function_call(__FUNCTION__, func_get_args());
     # Pull in the necessary config for a given resource type
     # As this could be called many times, e.g. during search result display
     # By default (only_onchange) only execute the override if the passed resourcetype is different from the previous
@@ -6877,9 +6878,8 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
 */
 function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
     {
+    debug_function_call(__FUNCTION__, [$resource['ref'], $locked_fields, $lastedited, $save]);
     global $custom_access;
-
-    debug("copy_locked_data resource " . $resource["ref"] . " lastedited: " . $lastedited);
 
     // Get details of the last resource edited and use these for this resource if field is 'locked'
     $lastresource = get_resource_data($lastedited,false);

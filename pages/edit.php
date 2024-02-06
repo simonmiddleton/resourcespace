@@ -13,9 +13,7 @@ include_once "../include/image_processing.php";
 $ref=getval("ref","",true);
 if(getval("create","")!="" && $ref==0 && $userref>0){$ref=0-$userref;} // Saves manual link creation having to work out user template ref
 $use=$ref;
-
-
-debug("EDIT POST VARIABLE COUNT=".count($_POST));
+debug(sprintf('$use = %s', $use));
 
 
 # Fetch search details (for next/back browsing and forwarding of search params)
@@ -90,6 +88,7 @@ $uploadparams["autorotate"] = $autorotate;
 $uploadparams["entercolname"] = getval("entercolname","");
 $uploadparams["k"] = $k;
 $uploadparams["redirecturl"] = $redirecturl;
+debug(sprintf('$uploadparams = %s', http_build_query($uploadparams)));
 
 # Upload review mode will be true if we are coming from upload_batch and then editing (config $upload_then_edit)
 #   or if it's a special collection search where the collection is the negated user reference meaning its resources are to be edited 
@@ -97,6 +96,10 @@ $upload_review_mode=(getval("upload_review_mode","")!="" || $search=="!collectio
 $lastedited = getval('lastedited',0,true);
 $locked_fields = (!$resetform && getval("lockedfields","") != "") ? trim_array(explode(",",getval("lockedfields",""))) : array();
 $save_auto_next = getval("save_auto_next","") != "";
+
+debug(sprintf('$lastedited = %s', $lastedited));
+debug(sprintf('$upload_review_mode = %s', json_encode($upload_review_mode)));
+debug(sprintf('$locked_fields = %s', json_encode($locked_fields)));
 
 if ($upload_review_mode)
     {
@@ -141,6 +144,7 @@ if ($upload_review_mode)
         {
         $ref=$review_collection_contents[0]["ref"];
         $use=$ref;
+        debug(sprintf('$use = %s', $use));
         }
     else 
         {
@@ -270,16 +274,17 @@ if ($go!="")
             <?php
             }
         $use = $ref;
+        debug(sprintf('$use = %s', $use));
         }
    }
 $editsearch = getval("editsearchresults","") != "";
 $edit_selection_collection_resources = ($editsearch && $collection == $USER_SELECTION_COLLECTION);
 if($editsearch)
     {
-    debug("edit.php: editing multiple items...");
-    debug("edit.php: \$search = {$search}");
-    debug("edit.php: \$collection = {$collection}");
-    debug("edit.php: \$editsearch = " . ($editsearch ? 'true' : 'false'));
+    debug("editing multiple items...");
+    debug("\$search = {$search}");
+    debug("\$collection = {$collection}");
+    debug("\$editsearch = " . json_encode($editsearch));
 
     $multiple = true;
     $edit_autosave = false; # Do not allow auto saving for batch editing.
@@ -337,6 +342,7 @@ if($editsearch)
     # This is a multiple item edit (even if there is only one item in the list), so use the first resource as the template
     $ref = array_values($items)[0];
     $use = $ref;
+    debug(sprintf('$use = %s', $use));
     }
 else
     {
@@ -345,11 +351,11 @@ else
 
 # Fetch resource data.
 $resource=get_resource_data($ref);
-
 if ($resource === false)
     {
     exit(htmlspecialchars($lang["resourcenotfound"]));
     }
+debug(sprintf('Fetched resource data for #%s', $resource['ref']));
 
 $metadatatemplate = getval('metadatatemplate',0,true);
     
@@ -363,6 +369,7 @@ if($ref < 0 && $resource_type_force_selection)
   {
   $resource_type = "";
   $resource["resource_type"] = "";
+  debug('Force resource type selection');
   }
 
 // Create metadata resource record without uploading a file e.g. template, text only resource.
@@ -373,6 +380,7 @@ $noupload = getval("noupload","") != "" || in_array($resource['resource_type'], 
 
 # Allow to specify resource type from url for new resources
 $resource_type=getval("resource_type","");
+debug(sprintf('$resource_type = %s', json_encode($resource_type)));
 if ($ref<0 && !$create_record_only && $resource_type != "" && $resource_type!=$resource["resource_type"] && !checkperm("XU{$resource_type}"))     // only if new resource specified and user has permission for that resource type
     {
     update_resource_type($ref,intval($resource_type));
@@ -499,6 +507,7 @@ if (getval("regenexif","")!="" && enforcePostRequest($ajax))
 
 # Establish if this is a metadata template resource, so we can switch off certain unnecessary features
 $is_template=(isset($metadata_template_resource_type) && $resource["resource_type"]==$metadata_template_resource_type);
+debug(sprintf('$is_template = %s', json_encode($is_template)));
 
 # If config option $blank_edit_template is set and form has not yet been submitted, blank the form for user edit templates.
 if(0 > $ref && $blank_edit_template && '' == getval('submitted', ''))
@@ -606,12 +615,14 @@ if(($embedded_data_user_select && getval("exif_option","")=="custom") || isset($
 
 if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted","")!="" && !$resetform && getval("copyfrom","")==""))
     {
+    debug('Perform save...');
     hook("editbeforesave"); 
 	if(!$multiple)
         {
         $save_errors = process_edit_form($ref, $resource);
         if (($save_errors === true || $is_template) && getval("tweak","")=="")
             {
+            debug('No save errors found');
             if ($ref > 0 && getval("save","") != "" && enforcePostRequest($ajax))
                 {
                 if ($upload_review_mode)
@@ -635,7 +646,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                             
                     if($save_auto_next)
                         {
-                        // Process all remaining resources in the collection
+                        debug('Process all remaining resources in the collection');
                         $autosave_errors = false; 
                         $lastedited = $ref;
                         $restypearr = get_resource_types();
@@ -802,7 +813,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 }
             else
                 {
-                // Upload template
+                debug('Upload template');
                 if (getval("save","")!="")
                     {
                     # Save button pressed? Move to next step.
@@ -891,7 +902,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
         }
     else    
         {
-		// Save multiple resources
+        debug('Save multiple resources');
         // Check if any of the resources have been edited since between the form being loaded and submitted				
         $form_lastedit = getval("last_resource_edit",date("Y-m-d H:i:s"));
         if($last_resource_edit !== false && ($form_lastedit < $last_resource_edit["time"] && getval("ignoreconflict","") == ""))
@@ -929,6 +940,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 
             if($editsearch)
                 {
+                debug('Edit search - save resource data multi...');
                 $editsearch = array();
                 $editsearch["search"]   = $search;
                 $editsearch["restypes"] = $restypes;
@@ -985,6 +997,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 }
             else
                 {
+                debug('Save resource data multi');
                 $save_errors=save_resource_data_multi($collection, [],$_POST);
                 if(!is_array($save_errors) && !hook("redirectaftermultisave"))
                     {
@@ -1000,6 +1013,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
 if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($ajax))
    {
    $tweak=getval("tweak","");
+   debug(sprintf('$tweak = %s', json_encode($tweak)));
    switch($tweak)
       {
       case "rotateclock":
@@ -1554,6 +1568,7 @@ if (!empty($shown_resource_types) && !in_array($uploadparams["resource_type"],$s
     update_resource_type($ref,intval($resource_type));
     $resource["resource_type"] = $resource_type;
     $uploadparams["resource_type"] = $resource_type;
+    debug(sprintf('$resource_type = %s', $resource_type));
     }
 
 // Flag used for rendering a new section when switching from global to resource type specific fields
@@ -1561,7 +1576,7 @@ $lastglobal = false;
 
 if(isset($metadata_template_resource_type) && isset($metadata_template_title_field) && $metadata_template_title_field !== false && !$multiple && ($ref < 0 || $upload_review_mode))
     {
-    // Show metadata templates here
+    debug('Show metadata templates'); 
     $templates = get_metadata_templates();
     $first_option_conditions = $metadatatemplate == 0;
     ?>
@@ -1690,6 +1705,7 @@ if (getval("copyfrom","")!="")
   # Copy from function
   $copyfrom=getval("copyfrom","");
   $copyfrom_access=get_resource_access($copyfrom);
+  debug(sprintf('Copy from #%s (access: %s)', $copyfrom, $copyfrom_access));
 
   # Check access level
   if ($copyfrom_access!=2) # Do not allow confidential resources (or at least, confidential to that user) to be copied from
@@ -1705,6 +1721,7 @@ if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type) 
     $use             = $metadatatemplate;
     $original_fields = get_resource_field_data($ref, $multiple, true, NULL, '', $tabs_on_edit);
     $original_nodes  = get_resource_nodes($ref);
+    debug(sprintf('$use = %s', $use));
     copyAllDataToResource($use, $ref);
     }
 
@@ -1718,12 +1735,15 @@ if ($ref < 0 && !$upload_review_mode)
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
 $resource = get_resource_data($ref, false); # By this point the resource type might've been changed
 $edit_valid_fields = array_column(get_resource_type_fields($resource['resource_type']), 'ref');
+debug(sprintf('$fields = %s', json_encode(array_column($fields, 'ref'))));
+debug(sprintf('$edit_valid_fields = %s', json_encode($edit_valid_fields)));
 
 # Only include fields whose resource type is global or is present in the resource(s) being edited
 if ($multiple) 
     {
     $edit_valid_fields = get_resource_type_fields($items_resource_types);
     $edit_valid_fields = array_column($edit_valid_fields,"ref");
+    debug(sprintf('$edit_valid_fields = %s', json_encode($edit_valid_fields)));
     $fields_to_include = array();
     foreach ($fields as $field_candidate) 
         {
@@ -1736,15 +1756,17 @@ if ($multiple)
     }
 
 $all_selected_nodes = get_resource_nodes($use);
+debug(sprintf('$all_selected_nodes = %s', json_encode($all_selected_nodes)));
 
 if($upload_here)
     {
     $all_selected_nodes = get_upload_here_selected_nodes($search, $all_selected_nodes);
+    debug(sprintf('$all_selected_nodes = %s', json_encode($all_selected_nodes)));
     }
 
 if ($upload_review_mode && count($locked_fields) > 0 && $lastedited > 0)
     {
-    // Update $fields and all_selected_nodes with details of the last resource edited for locked fields
+    debug('Update $fields and all_selected_nodes with details of the last resource edited for locked fields');
     // $fields and $all_selected_nodes are passed by reference and so changed by this
     copy_locked_fields($ref,$fields,$all_selected_nodes,$locked_fields,$lastedited);
     }
@@ -1781,6 +1803,7 @@ if (($ref < 0 || $upload_review_mode)
             }
         }
     $fields=$newfields;
+    debug(sprintf('$fields = %s', json_encode(array_column($fields, 'ref'))));
     }
 
 $required_fields_exempt=array(); # new array to contain required fields that have not met the display condition
@@ -1850,6 +1873,7 @@ $modalTrueFalse = ($modal ? "true" : "false");
 
 if($tabs_on_edit)
     {
+    debug(sprintf('$tabs_on_edit = %s', json_encode($tabs_on_edit)));
     // -----------------------  Tab calculation -----------------
     $system_tabs = get_tab_name_options();
     $tabs_fields_assoc = [];
@@ -1891,6 +1915,7 @@ if($tabs_on_edit)
         $fields_tab_ordered = array_merge($fields_tab_ordered, $subset_fields_data);
         }
     $fields = $fields_tab_ordered;
+    debug(sprintf('$fields = %s', json_encode(array_column($fields, 'ref'))));
     // -----------------------  END: Tab calculation -----------------
 
     #  -----------------------------  Draw tabs ---------------------------
@@ -1898,6 +1923,7 @@ if($tabs_on_edit)
     $tabtophtml = '';
     foreach($tab_names as $tab_name)
         {
+        debug(sprintf('Drawing tab: %s', $tab_name));
         if($tabcount === 0)
             {
             $tabtophtml .= '<div id="BasicsBoxTabs" class="BasicsBox"><div class="TabBar">';
@@ -1944,10 +1970,13 @@ foreach($fields as $n => $field)
         continue;
         }
 
+    debug(sprintf('Drawing field #%s', $field['ref']));
+
     // Draw a new tab panel?
     $newtab = $tabs_on_edit && $field['tab'] !== $last_tab_drawn;  
     if($newtab)
         {
+        debug(sprintf('Finish drawing tab #%s', $last_tab_drawn));
         $new_TabbedPanel_id = sprintf('%stab%s-%s', $modal ? 'Modal' : '', $tabcount, (int) $ref);
         ?>
         <div class="clearerleft"></div>
