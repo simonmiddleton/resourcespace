@@ -3970,7 +3970,8 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
                     }
                 else
                     {
-                    $callingfunctions[] = "{$backtrace[$n]["function"]}:{$backtrace[$n]['line']}";
+                    $trace_line = isset($backtrace[$n]['line']) ? ":{$backtrace[$n]['line']}" : '';
+                    $callingfunctions[] = $backtrace[$n]["function"] . $trace_line;
                     }
                 }
             }
