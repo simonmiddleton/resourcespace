@@ -3489,7 +3489,9 @@ function validate_temp_download_key(int $ref, string $keystring, string $size, i
         $expiry_time_limit = $expire_seconds;
         }
 
-    $keydata = rsDecrypt(base64_decode($keystring), hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
+    $decoded_keystring = mb_strpos($keystring, '@@', 0, 'UTF-8') !== false ? $keystring : base64_decode($keystring);
+    $keydata = rsDecrypt($decoded_keystring, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
+
     if($keydata != false)
         {
         $download_key_parts = explode(":", $keydata);
