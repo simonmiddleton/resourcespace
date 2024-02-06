@@ -176,7 +176,9 @@ if($download && $data_only)
 
     if(!generate_pdf($pdf_template_path, $PDF_filename, $placeholders))
         {
-        trigger_error('ResourceSpace could not generate PDF for data only type!');
+        $GLOBALs["onload_message"]=array(
+            'title'=>'Warning',
+            'message'=>'ResourceSpace could not generate PDF for data only type!');
         }
     }
 

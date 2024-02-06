@@ -119,4 +119,4 @@ $ldapauth['createusers'] = false;
 $ldapauth['ldapgroupfield'] = 'memberUid';
 
 }
-?>
+

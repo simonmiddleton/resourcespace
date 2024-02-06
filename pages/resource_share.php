@@ -200,7 +200,7 @@ if($editing && !$editexternalurl)
                     {
                     if ($email_sharing) 
                         { ?>
-                        <li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onclick="return <?php echo ($modal?'ModalLoad':'CentralSpaceLoad');?>(this, true);"><?php echo $lang["emailresourcetitle"]?></a></li> 
+                        <li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onclick="return <?php echo $modal ? 'ModalLoad' : 'CentralSpaceLoad';?>(this, true);"><?php echo escape($lang["emailresourcetitle"])?></a></li> 
                         <?php 
                         }
                     }
@@ -232,16 +232,16 @@ if($editing && !$editexternalurl)
                             <?php
                             if ($editing  && !$editexternalurl)
                                 { ?>
-                                <input name="editexternalurl" type="button" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;"
+                                <input name="editexternalurl" type="button" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;"
                                 onclick="
-                                document.getElementById('editexternalurl').value = '<?php echo $lang["save"]; ?>';
-                                return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('resourceshareform'), true);">
+                                document.getElementById('editexternalurl').value = '<?php echo escape($lang["save"]); ?>';
+                                return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resourceshareform'), true);">
                                 <?php
                                 }
                             else
                                 { ?>
                                 <input name="generateurl" type="button" value="&nbsp;&nbsp;<?php echo $lang["generateexternalurl"]?>&nbsp;&nbsp;"
-                                onclick="document.getElementById('generateurl').value = '<?php echo $lang["save"]; ?>';return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('resourceshareform'), true);">
+                                onclick="document.getElementById('generateurl').value = '<?php echo escape($lang["save"]); ?>';return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resourceshareform'), true);">
                                 <?php 
                                 }
                             ?>
@@ -414,7 +414,7 @@ if($editing && !$editexternalurl)
 			    function resourceShareDeleteShare(access_key) {
 			        if (confirm('<?php echo escape($lang["confirmdeleteaccessresource"]) ?>')) {
 			            document.getElementById('deleteaccess').value = access_key;
-                        <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(document.getElementById('resourceshareform'),true);
+                        <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resourceshareform'),true);
 			        }
 			        return false;
 			    }

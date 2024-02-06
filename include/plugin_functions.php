@@ -131,7 +131,7 @@ function get_plugin_yaml($path, $validate=true)
 
     if(!(file_exists($path) && is_readable($path)))
         {
-        return ($validate ? false : $plugin_yaml);
+        return $validate ? false : $plugin_yaml;
         }
     $yaml_file_ptr = fopen($path, 'r');
 
@@ -1025,7 +1025,7 @@ function config_multi_rtype_select($name, $label, $current, $width=300)
                     value="<?php echo escape($rtype['ref']) ?>"
                     name="<?php echo escape($name) ?>[]"
                     id="<?php echo escape($name . $rtype['ref']) ?>"
-                    <?php echo (in_array($rtype['ref'],$current) ? ' checked="checked"' : '') ?>>
+                    <?php echo in_array($rtype['ref'],$current) ? ' checked="checked"' : '' ?>>
                 <label for="<?php echo escape($name . $rtype['ref']) ?>"><?php echo htmlspecialchars(lang_or_i18n_get_translated($rtype['name'],'resourcetype-')) ?></label>
                 <br />
             <?php } ?>
@@ -1072,7 +1072,7 @@ function config_multi_archive_select($name, $label, $current, $choices, $width=3
                         value="<?php echo escape($statekey) ?>"
                         name="<?php echo escape($name) . '[]' ?>"
                         id="<?php echo escape($name . $statekey) ?>" 
-                        <?php echo (isset($current) && $current!='' && in_array($statekey,$current) ? ' checked="checked"' : '') ?>>
+                        <?php echo isset($current) && $current != '' && in_array($statekey,$current) ? ' checked="checked"' : '' ?>>
                     <label for="<?php echo escape($name . $statekey) ?>"><?php echo htmlspecialchars($statename) ?></label>
                     <br />
                 </span>
@@ -1452,11 +1452,11 @@ function get_plugin_path($plugin,$url=false)
     
     # Standard location    
     $pluginpath=dirname(__FILE__) . "/../plugins/" . $plugin;
-    if (file_exists($pluginpath)) {return ($url?$baseurl_short . "plugins/" . $plugin:$pluginpath);}
+    if (file_exists($pluginpath)) {return $url ? $baseurl_short . "plugins/" . $plugin : $pluginpath;}
 
     # Filestore location
     $pluginpath=$storagedir . "/plugins/" . $plugin;
-    if (file_exists($pluginpath)) {return ($url?$storageurl . "/plugins/" . $plugin:$pluginpath);}
+    if (file_exists($pluginpath)) {return $url ? $storageurl . "/plugins/" . $plugin : $pluginpath;}
     }
     
 function register_plugin($plugin)
@@ -1474,7 +1474,11 @@ function register_plugin($plugin)
 	# Support an 'all' hook
 	$hookpath=$pluginpath . "/hooks/all.php";
 	if (file_exists($hookpath)) {include_once $hookpath;}
-	
+
+  	# Support standard location for API bindings
+	$api_bindings_path=$pluginpath . "/api/api_bindings.php";
+	if (file_exists($api_bindings_path)) {include_once $api_bindings_path;}
+
 	return true;	
 	}
 

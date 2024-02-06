@@ -60,7 +60,7 @@ while(!feof($handle))
                 {
                 break;
                 } //If file ends, break loop
-            
+
         }
         fclose($newfile);
 

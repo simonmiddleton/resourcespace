@@ -69,7 +69,7 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
 	</div>
 	</td>
 	</tr>
-	<?php
+<?php
 	}
 ?>
 

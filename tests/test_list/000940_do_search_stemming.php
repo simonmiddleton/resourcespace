@@ -43,5 +43,3 @@ if(count($results) != $dancecount + 1 || !isset($results[0]['ref']) || $results[
     }
 
 $stemming=false;
-
-return;

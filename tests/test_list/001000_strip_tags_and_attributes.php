@@ -160,8 +160,6 @@ foreach($use_cases as $use_case)
     if ($processed !== $use_case['expected'])
         {
         echo "Use case: {$use_case['name']} - ";
-        // printf('%s html = %s',  PHP_EOL, $html);
-        // printf('%s processed = %s',  PHP_EOL, $processed);
         return false;
         }
     }

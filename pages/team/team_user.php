@@ -118,7 +118,7 @@ include "../../include/header.php";
 
     renderBreadcrumbs($links_trail);
     ?>
-    
+
     <p class="PageIntrotext"><?php echo text("introtext");render_help_link('systemadmin/creating-users');?></p>
 
     <?php if (isset($error)) { ?>
@@ -214,7 +214,7 @@ include "../../include/header.php";
                 ["group"     => $group,
                 "order_by"  => $order_by,
                 "find"      =>$find],
-                ["per_page_list"=> 99999]
+                ["per_page_list"=>$per_page]
             );
             ?>
             <a
@@ -377,7 +377,7 @@ if(!hook("replace_create_user"))
     }
 
     hook('render_options_to_create_users');
-    
+
 if ($user_purge)
     {
     ?>

@@ -20,4 +20,4 @@ else
     echo "FAIL - $result \n";
     }
 echo "</pre>";
-?>
+

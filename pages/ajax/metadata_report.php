@@ -73,7 +73,9 @@ else
             $results_simulated[$i]["tag"] = trim(strtolower($tag_value[1]));
             $results_simulated[$i]["value"] = trim($tag_value[2]);
             $tagprops = "";
-            if((in_array($results_simulated[$i]["tag"], $writable_tags_array) && $file_writability)) {$tagprops.= "w";}
+            if (in_array($results_simulated[$i]["tag"], $writable_tags_array) && $file_writability) {
+                $tagprops.= "w";
+            }
             if ($tagprops!="") {$results_simulated[$i]["tagprops"] = "($tagprops)";} else {$results_simulated[$i]["tagprops"] = "";}
             $i++;
             }
@@ -121,7 +123,9 @@ else
             $tag = trim(strtolower($tag_value[1]));
             $value = trim($tag_value[2]);
             $tagprops = "";
-            if((in_array($tag, $writable_tags_array) && $file_writability)) {$tagprops.= "w";}
+            if (in_array($tag, $writable_tags_array) && $file_writability) {
+                $tagprops.= "w";
+            }
             if ($tagprops!="") {$tagprops = "($tagprops)";}
             $RS_field_ref='';
             $RS_field_name='';

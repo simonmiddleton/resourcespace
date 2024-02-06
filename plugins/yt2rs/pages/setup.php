@@ -26,4 +26,4 @@ include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
 include '../../../include/footer.php';
 
-?>
+

@@ -22,12 +22,9 @@ if($collection === false)
     exit();
     }
 
-if(!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED)))
-    {
-    error_alert($lang["error-permissiondenied"], true, 403);
-    exit();
-    }
-else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
+if ((!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYPE_PUBLIC, COLLECTION_TYPE_FEATURED)))
+    || ($collection["type"] == COLLECTION_TYPE_FEATURED 
+        && !featured_collection_check_access_control((int) $collection["ref"])))
     {
     error_alert($lang["error-permissiondenied"], true, 403);
     exit();

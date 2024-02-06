@@ -155,8 +155,6 @@ function emu_script_log($message, $log_file_pointer = null)
         {
         fwrite($log_file_pointer, $message);
         }
-
-    return;
     }
 
 

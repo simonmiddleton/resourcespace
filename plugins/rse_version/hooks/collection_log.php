@@ -7,7 +7,6 @@ function HookRse_versionCollection_logLog_extra_columns_header()
         <div class="ListTools"><?php echo $lang["tools"]; ?></div>
     </td>
     <?php
-    return;
     }
 
 
@@ -38,7 +37,6 @@ function HookRse_versionCollection_logLog_extra_columns_row($log, array $collect
         </div>
     </td>
     <?php
-    return;
     }
 
 

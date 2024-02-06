@@ -403,7 +403,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $exif_fields = array_column(get_exiftool_fields($resource['resource_type']), 'ref');
                 $oldval = get_data_by_field($ref, $view_title_field);
                 
-                if(strpos($oldval, $merged_filename) == FALSE && in_array($view_title_field, $exif_fields)); 
+                if(strpos($oldval, $merged_filename) == FALSE && in_array($view_title_field, $exif_fields))
                     {
                     switch (strtolower($merge_filename_with_title_option)) 
                         {
@@ -573,7 +573,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         $jobadded=job_queue_add("upload_processing", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);             
         }
     
-    hook("uploadfilesuccess", "", array( "resourceId" => $ref ) );
+    hook("uploadfilesuccess", "", array( "resource_ref" => $ref ) );
     
     # Update disk usage
     update_disk_usage($ref);
@@ -1425,7 +1425,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         global $no_preview_extensions;
         if (isset($imagemagick_path) && !in_array(strtolower($extension),$no_preview_extensions))
             {
-            include(dirname(__FILE__)."/preview_preprocessing.php");
+            include dirname(__FILE__)."/preview_preprocessing.php";
             }
         }
         
@@ -1900,7 +1900,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $mpr_parts['sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? escapeshellarg($iccpath) : ''). " " . $icc_preview_options;
                         $mpr_parts['strip_target']=($icc_preview_profile_embed ? false : true);
                         $mpr_parts['targetprofile']=escapeshellarg($targetprofile);
-                        //$mpr_parts['colorspace']='';
                         }
                     else
                         {
@@ -2282,8 +2281,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             // convert to the target profile now. the source profile will only contain $icc_preview_options and needs to be included here as well
                             $command.=($command_parts[$p]['wm_sourceprofile']!='' ? " " . $command_parts[$p]['wm_sourceprofile'] : "") . (isset($command_parts[$p]['wm_targetprofile']) && $command_parts[$p]['wm_targetprofile']!='' ? " -profile " . $command_parts[$p]['wm_targetprofile'] : "" ) . ($mpr_metadata_profiles!=='' ? " +profile \"" . $mpr_metadata_profiles . ",*\"" : "");
                             $mpr_icc_transform_complete=true;
-                            //$force_mpr_write=true;
-                            //$skip_source_and_target_profiles=true;
                             }
                         $TILESIZE=($command_parts[$p]['th']<$command_parts[$p]['tw'] ? $command_parts[$p]['th'] : $command_parts[$p]['tw']);
                         $TILESIZE=$TILESIZE/3;
@@ -2502,7 +2499,7 @@ function get_colour_key($image)
     asort($table);reset($table);$colkey="";
     foreach ($table as $key=>$value) {$colkey.=$key;}
     $colkey=substr(strrev($colkey),0,5);
-    return($colkey);
+    return $colkey;
     }
 
 function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alternative=-1, $resource_ext = "")
@@ -2737,7 +2734,7 @@ function AltImageRotate($src_img, $angle) {
             }
             break;
         default: $rotate = $src_img;
-    };
+    }
     return $rotate;
 }
 
@@ -2930,7 +2927,7 @@ function extract_text($ref,$extension,$path="")
        if ($extension=="docx"||$extension=="xlsx")
         {   
         $path=escapeshellarg($path);
-        
+
          # DOCX files are zip files and the content is in word/document.xml.
                # We extract this then remove tags.
                switch($extension){
@@ -2944,7 +2941,7 @@ function extract_text($ref,$extension,$path="")
                    $text=run_command($cmd);
                    break;
                }
-               
+
         # Remove tags, but add newlines as appropriate (without this, separate text blocks are joined together with no spaces).
         $text=str_replace("<","\n<",$text);
         $text=trim(strip_tags($text));
@@ -2955,7 +2952,7 @@ function extract_text($ref,$extension,$path="")
     if ($extension=="odt"||$extension=="ods"||$extension=="odp")
         {   
         $path=escapeshellarg($path);
-        
+
         # ODT files are zip files and the content is in content.xml.
         # We extract this then remove tags.
         $cmd="unzip -p $path \"content.xml\"";
@@ -3247,7 +3244,7 @@ function extract_icc($infile, $ref='') {
 
    if ( preg_match("/no color profile is available/",$cmdout) || !file_exists($outfile) ||filesize_unlimited($outfile) == 0){
    // the icc profile extraction failed. So delete file.
-   if (file_exists($outfile)){ unlink ($outfile); };
+   if (file_exists($outfile)){ unlink ($outfile); }
    return false;
    }
 
@@ -3544,7 +3541,7 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     
     $dimensions = array($w, $h);
 
-    return($dimensions);
+    return $dimensions;
     }
 
 /**

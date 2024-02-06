@@ -67,20 +67,20 @@ foreach ($duplicate_node_values as $duplicate_node_id => $duplicate_value)
         $add_node = add_resource_nodes($ref,array($replacement_node_id),false,false);
         if ($add_node)
             {
-            echo('<i>' . '-  Removed node ' . $duplicate_node_id . ' from resource ' . $ref . '</i><br>');
+            echo '<i>' . '-  Removed node ' . $duplicate_node_id . ' from resource ' . $ref . '</i><br>';
             delete_resource_nodes($ref,$duplicate_node_id,false);
             }
         else
             {
             # An error occurred trying to remove a node from a resource. We cannot remove that node completely to avoid loss of data.
-            echo('ERROR: Node ' . $duplicate_node_id . ' (\'' . $duplicate_value . '\') could not be deleted from resource ' . $ref. ' Manually removed it from the resource and then re-run this script.' . '<br>');
+            echo 'ERROR: Node ' . $duplicate_node_id . ' (\'' . escape($duplicate_value) . '\') could not be deleted from resource ' . $ref. ' Manually removed it from the resource and then re-run this script.' . '<br>';
             $block_duplicate_node_deletion = true;
             }
         }
 
     if (!$block_duplicate_node_deletion)
         {
-        echo('Removed node ' . $duplicate_node_id . ' (\'' . $duplicate_value . '\') Now using node ID ' . $replacement_node_id . '<br><br>');
+        echo 'Removed node ' . $duplicate_node_id . ' (\'' . escape($duplicate_value) . '\') Now using node ID ' . $replacement_node_id . '<br><br>';
         delete_node($duplicate_node_id);
         }
     }

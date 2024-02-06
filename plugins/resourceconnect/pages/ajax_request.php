@@ -58,4 +58,4 @@ echo file_get_contents($abaseurl . "/plugins/resourceconnect/pages/remote_result
                        "&offset=" . $offset . "&sign=" . urlencode($sign) . "&language_set="  . urlencode($language) . "&affiliatename=" . urlencode(getval("affiliatename","")) . "&restypes=" . urlencode($restypes) . "&resourceconnect_source=" . urlencode($baseurl));
 
 
-?>
+

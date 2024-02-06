@@ -18,7 +18,7 @@ $results=do_search(getval("search",""),getval("restypes",""),"relevance",getval(
 $disk_usage=$results[0]["total_disk_usage"];
 $count=$results[0]["total_resources"];
 
-include ("../include/header.php");
+include "../include/header.php";
 
 ?>
 <div class="BasicsBox">
@@ -44,4 +44,4 @@ if ($intro!="") { ?><p><?php echo $intro ?></p><?php }
 <?php
 
 
-include ("../include/footer.php");
+include "../include/footer.php";

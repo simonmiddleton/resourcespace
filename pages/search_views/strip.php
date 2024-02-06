@@ -30,7 +30,7 @@ if(isset($result[$n]['thm_url']))
         id="ResourceStrip<?php echo $ref ?>"
         class="ImageStripLink"
         href="<?php echo $url; ?>"  
-        onClick="return <?php echo ($resource_view_modal ? 'Modal' : 'CentralSpace'); ?>Load(this, true);" 
+        onClick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this, true);" 
         title=""
         ><?php 
         if($result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'pre'))
@@ -42,7 +42,8 @@ if(isset($result[$n]['thm_url']))
             /><?php }
             else 
                 { ?><img class="ImageStrip" 
-                    border=0 
+                    border=0
+                    alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
                     src="<?php echo $baseurl_short; ?>gfx/<?php echo get_nopreview_icon($result[$n]['resource_type'], $result[$n]['file_extension'], false); ?>" 
 
                 /><?php 

@@ -47,7 +47,7 @@ function simplesaml_authenticate()
         }
     if(!isset($as))
         {
-        require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
+        require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
         $spname = get_saml_sp_name();
         debug("simplesaml: Using SP name '{$spname}'");
         $as = new SimpleSAML\Auth\Simple($spname);
@@ -66,7 +66,7 @@ function simplesaml_getattributes()
     global $as;
     if(!isset($as))
         {
-        require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
+        require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
         $spname = get_saml_sp_name();
         $as = new SimpleSAML\Auth\Simple($spname);
         }
@@ -90,7 +90,7 @@ function simplesaml_signout()
         }
 	if(!isset($as))
 		{
-		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');        
+		require_once simplesaml_get_lib_path() . '/lib/_autoload.php';        
         $spname = get_saml_sp_name();
         $as = new SimpleSAML\Auth\Simple($spname);
 		}
@@ -121,7 +121,7 @@ function simplesaml_is_authenticated()
 
     if(!isset($as))
 		{
-		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');     
+		require_once simplesaml_get_lib_path() . '/lib/_autoload.php';     
         $spname = get_saml_sp_name();
         $as = new SimpleSAML\Auth\Simple($spname);
 		}
@@ -143,7 +143,7 @@ function simplesaml_getauthdata($value)
 	global $as;
 	if(!isset($as))
 		{
-		require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');       
+		require_once simplesaml_get_lib_path() . '/lib/_autoload.php';       
         $spname = get_saml_sp_name();
         $as = new SimpleSAML\Auth\Simple($spname);
         }
@@ -228,7 +228,7 @@ function simplesaml_config_check()
         debug("simplesaml: plugin not configured.");
         return false;
         }
-    require_once(simplesaml_get_lib_path() . '/lib/_autoload.php');
+    require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
 	$config = \SimpleSAML\Configuration::getInstance();
     $version = $config->getVersion();
 

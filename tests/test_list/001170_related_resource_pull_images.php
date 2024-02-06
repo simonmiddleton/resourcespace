@@ -9,10 +9,6 @@ $enable_thumbnail_creation_on_upload_saved = $enable_thumbnail_creation_on_uploa
 $resource_deletion_state_saved = $GLOBALS["resource_deletion_state"] ?? null;
 $userref = new_user("user001170");
 
-$debug_log=true;
-$debug_log_location = "/var/log/resourcespace/debug_dev.log";
-$debug_extended_info = true;
-
 // Create resources
 $col_data_type = create_resource_type("Collection data");
 $col_image_type = create_resource_type("Collection images");

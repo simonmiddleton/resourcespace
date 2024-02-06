@@ -145,7 +145,7 @@ foreach($use_cases as $use_case)
     $result = get_config_option($uci_user_id, $uci_name, $returned_config_option_value, $uci_default);
 
     // debugging - uncomment when needed
-    /*$padding = 45;
+    /* $padding = 45;
     $js_result = str_pad(json_encode($result), $padding);
     $js_returned_config_option_value = str_pad(json_encode($returned_config_option_value), $padding);
     $js_return = json_encode($use_case['expected']['return']);
@@ -159,7 +159,8 @@ Name         | Actual                                        | Expected
 fct return   | $js_result | $js_return
 config value | $js_returned_config_option_value | $js_value
 =========================================================================================================
-EOL;*/
+
+EOL; */
 
     // Clean up the environment. Prevent follow-up cases from failing because a use case modified it heavily.
     if(isset($use_case['cleanup']))

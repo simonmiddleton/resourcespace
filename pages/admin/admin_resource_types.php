@@ -35,7 +35,7 @@ foreach($resource_types as &$resource_type)
 // Sort resource types
 if(isset($resource_types[0][$restype_order_by]))
     {
-    usort($resource_types, function ($a, $b) use ($restype_order_by, $restype_sort) {return ($restype_sort == "asc" ? $a[$restype_order_by] <=> $b[$restype_order_by] : $b[$restype_order_by] <=> $a[$restype_order_by]);});
+    usort($resource_types, function ($a, $b) use ($restype_order_by, $restype_sort) {return $restype_sort == "asc" ? $a[$restype_order_by] <=> $b[$restype_order_by] : $b[$restype_order_by] <=> $a[$restype_order_by];});
     }
 
 include "../../include/header.php";

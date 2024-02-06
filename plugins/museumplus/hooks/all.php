@@ -76,8 +76,6 @@ function HookMuseumplusAllInitialise()
 
     // Mark as core any plugin config option that relies on a metadata field to prevent them from being deleted if the plugin is in use.
     config_register_core_field_refs('museumplus', $core_fields);
-
-    return;
     }
 
 
@@ -133,7 +131,6 @@ function HookMuseumplusAllAftersaveresourcedata($R)
             if(isset($computed_md5s[$r_ref], $resources_md5s[$r_ref]) && $computed_md5s[$r_ref] === $resources_md5s[$r_ref])
                 {
                 unset($ramcs[$r_ref]);
-                continue;
                 }
             }
         }
@@ -184,14 +181,10 @@ function HookMuseumplusAllHandleuserref()
             'link' => "{$baseurl}/pages/search.php?search=%21mplus_invalid_assoc",
         ];
         $custom_top_nav[] = $mplus_top_nav;
-        return;
         }
-
-    return;
     }
 
 function HookMuseumplusAllAfternewresource($to)
     {
     HookMuseumplusAllAftersaveresourcedata($to);
-    return;
     }

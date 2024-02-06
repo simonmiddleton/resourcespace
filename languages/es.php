@@ -40,7 +40,7 @@ $lang["allcollectionssearchbar"]="Todas las colecciones";
 $lang["geographicsearch"]="Búsqueda Geográfica";
 
 
-# Admin ;
+# Admin
 $lang["manageresources"]="Gestionar materiales";
 $lang["overquota"]="Se ha excedido el espacio en disco; no se pueden añadir materiales.";
 $lang["managearchiveresources"]="Gestionar archivo de materiales";
@@ -390,7 +390,7 @@ $lang["format"]="Formato";
 # Lists
 $lang["months"]=array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
-# Statistics;
+# Statistics
 $lang["stat-addpubliccollection"]="Añadir colección pública";
 $lang["stat-addresourcetocollection"]="Añadir materiales a la colección";
 $lang["stat-addsavedsearchtocollection"]="Añadir la búsqueda guardada a la colección";

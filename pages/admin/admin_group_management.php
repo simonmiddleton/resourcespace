@@ -15,7 +15,7 @@ $find = getval("find","");
 $filter_by_parent = getval("filterbyparent", "");
 $filter_by_permissions = getval("filterbypermissions","");
 
-$sql_permision_filter_params = array();
+$sql_permission_filter_params = array();
 
 if ($filter_by_permissions != "")
 	{
@@ -26,19 +26,20 @@ if ($filter_by_permissions != "")
 			{
 			continue;
 			}
-		if (isset ($sql_permision_filter))
+		if (isset ($sql_permission_filter))
 			{
-			$sql_permision_filter.=" and ";
+			$sql_permission_filter.=" and 
+            ";
 			}
 		else
 			{
-			$sql_permision_filter="(";
+			$sql_permission_filter="(";
 			}
-		$permission = preg_replace('(\W+)','\\\\\\\$0',$permission);		// we need to pass two "\" before the escaped char for regex to take it literally (doubled here as ps_query() will convert most of them)
-		$sql_permision_filter .= "(cast(usergroup.permissions AS BINARY) regexp binary ? OR (find_in_set('permissions',usergroup.inherit_flags) AND cast(parentusergroup.permissions AS BINARY) regexp binary ?))";
-		$sql_permision_filter_params = array("s", "^{$permission}|,{$permission},|,{$permission}$|^{$permission}$", "s", "^{$permission}|,{$permission},|,{$permission}$|^{$permission}$",);
+        # The filter will include usergroups with this permission either at the usergroup level or (if permissions are inherited) at the parent usergroup level
+		$sql_permission_filter .= " ( FIND_IN_SET(binary ?,usergroup.permissions) OR ( FIND_IN_SET('permissions', usergroup.inherit_flags) AND FIND_IN_SET(binary ?,parentusergroup.permissions) ) ) ";
+		$sql_permission_filter_params = array_merge($sql_permission_filter_params, array("s",$permission, "s",$permission));
 		}
-	$sql_permision_filter .= ")";
+	$sql_permission_filter .= ")";
 	}
 
 $offset = getval("offset",0,true);
@@ -59,8 +60,8 @@ if ($filter_by_parent != "")
     }
 if ($filter_by_permissions != "")
     {
-    $sql_where .= " and $sql_permision_filter";
-    $sql_params = array_merge($sql_params, $sql_permision_filter_params);
+    $sql_where .= " and $sql_permission_filter";
+    $sql_params = array_merge($sql_params, $sql_permission_filter_params);
     }
 
 $offset = getval("offset",0,true);

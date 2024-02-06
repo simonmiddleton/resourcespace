@@ -77,7 +77,7 @@ if($pagename=="search" || $pagename=="view")
 					"bigPlayButton":false
 						}
 					}
-			<?php } ?> 
+<?php } ?> 
 		}'
 		preload="<?php echo $preload?>"
 		width="<?php echo $width?>" 

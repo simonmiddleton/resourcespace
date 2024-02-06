@@ -64,8 +64,6 @@ abstract class Provider
 
             $GLOBALS[$config] = $value;
             }
-
-        return ;
         }
 
     /**
@@ -153,8 +151,6 @@ abstract class Provider
 
         fwrite($fh, $value);
         fclose($fh);
-
-        return;
         }
 
     public function getId()

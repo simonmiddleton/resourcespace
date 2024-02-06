@@ -464,15 +464,18 @@ function HookAction_datesCronCron()
                 LEFT JOIN node n ON n.ref=rn.node
             WHERE r.ref > 0 
                 AND n.resource_type_field = ?
-                AND r.archive<> ? 
-                AND r.archive<> ?   
-                ";
+                AND r.archive<> ?";
             
             $sql_params=array(
                 "i",$field,
-                "i",$resource_deletion_state,
                 "i",$newstatus,
             );
+
+            if(!is_null($resource_deletion_state))
+                {
+                $sql .= " AND r.archive <> ?";
+                $sql_params[] = "i"; $sql_params[] = $resource_deletion_state;
+                }
 
             // Filter resource types that shouldn't have access to the field
             if(is_array($validrestypes))

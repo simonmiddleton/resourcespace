@@ -10,6 +10,7 @@ $modal=(getval("modal","")=="true");
 // -----------------------  Tab calculation -----------------
 $disable_tabs = true;
 $system_tabs = get_tab_name_options();
+debug(sprintf('$system_tabs = %s', json_encode($system_tabs)));
 $tabs_fields_assoc = [];
 
 // Do not show related resources in tabs for the pushed metadata
@@ -88,6 +89,7 @@ else if(isset($tabs_fields_assoc[0]) && count($tabs_fields_assoc[0]) > 0)
     }
 $fields_tab_names = array_intersect_key($system_tabs, $tabs_fields_assoc);
 $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));if($modified_view_tabs!=='' && is_array($modified_view_tabs)){$fields_tab_names=$modified_view_tabs;}
+debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
 // -----------------------  END: Tab calculation -----------------
 ?>
 
@@ -188,7 +190,7 @@ $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));i
                 $tabOnClick="SelectMetaTab(".$ref.",".$tabcount.",false);";
                 }
             ?>
-            <div id="<?php echo ($modal ? "Modal" : "")?>tabswitch<?php echo $tabcount.'-'.$ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
+            <div id="<?php echo $modal ? "Modal" : ""; ?>tabswitch<?php echo $tabcount.'-'.$ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
                 <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo htmlspecialchars($tab_name); ?></a>
             </div>
             <?php 
@@ -218,6 +220,7 @@ $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));i
             for($i = 0; $i < count($fields); $i++)
                 {
                 $displaycondition = check_view_display_condition($fields, $i, $fields_all);
+                debug(sprintf('Field #%s has $displaycondition = %s', $fields[$i]['ref'], json_encode($displaycondition)));
                 if($fields[$i]["global"] == 1 || in_array($resource['resource_type'],$arr_fieldrestypes[$fields[$i]['ref']]) || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
                     {
                     if($displaycondition && $tab_ref == $fields[$i]['tab'])
@@ -252,7 +255,7 @@ $modified_view_tabs=hook("modified_view_tabs","view",array($fields_tab_names));i
     if($tabcount != count($fields_tab_names))
         {
         ?>
-        <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo ($modal ? "Modal" : "")?>tab<?php echo $tabcount.'-'.$ref?>">
+        <div class="TabbedPanel StyledTabbedPanel <?php echo $tabModalityClass?>" style="display:none;" id="<?php echo $modal ? "Modal" : ""; ?>tab<?php echo $tabcount.'-'.$ref?>">
         <!-- START of NEXT TabbedPanel -->
         <div class="clearerleft"> </div>
         <div>
@@ -283,9 +286,10 @@ if(empty($fields_tab_names))
         }
     // Close TabbedPanel - it is now opened before the $fields_tab_names loop even if no real tabs exist
     ?>
+    <div class="clearerleft"> </div>
     </div>
     </div> <!-- END of TabbedPanel -->
-    <?php
+<?php
     }
 hook("extrafields2");?>
 <div class="clearerleft"></div>

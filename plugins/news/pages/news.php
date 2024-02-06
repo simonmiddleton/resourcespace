@@ -32,14 +32,14 @@ if ((getval("edit","")!="") && (checkperm("o")))
 	redirect("plugins/news/pages/news_content_edit.php?ref=".$ref);
 	}
 		
-if ((getval("previous","")!=""))
+if (getval("previous", "") != "")
 	{
 	$ref=getval("ref","",true);
 	$ref--;
 	redirect("plugins/news/pages/news.php?ref=".$ref);
 	}
 
-if ((getval("next","")!=""))
+if (getval("next", "") != "")
 	{
 	$ref=getval("ref","",true);
 	$ref++;
@@ -59,7 +59,7 @@ if (!$newsdisplay)
 	$debugtext.= " no news found";	
 	while (!$newsdisplay)
 		{
-		if ((getval("next","")!=""))	
+		if (getval("next", "") != "")	
 			{
 			$ref++;
 			if ($ref>$maxref)
@@ -104,7 +104,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 <div class="BasicsBox" id ="NewsDisplayBox"> 
 	<h1><?php echo htmlspecialchars($newsdisplay[0]["title"]);?></h1>
 	<hr>
-	<div id="NewsBodyDisplay" ><p><?php echo ($newsdisplay[0]["body"]);?></p> </div>
+	<div id="NewsBodyDisplay" ><p><?php echo escape($newsdisplay[0]["body"]);?></p> </div>
 	<h2><?php echo $newsdisplay[0]["date"];?></h2>
 </div>
 

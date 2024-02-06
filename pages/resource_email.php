@@ -40,13 +40,13 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	$group=getval("usergroup","");
     $sharepwd = getval('sharepassword', '');
 	$list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
-	
+
 	$use_user_email=getval("use_user_email",false);
 	if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
 	if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches system name
-	
+
 	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
-	
+
     // Email single resource
     $errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$minaccess,$group);
     if ($errors=="")
@@ -66,7 +66,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<p><a onClick="return <?php echo ($modal?'ModalLoad':'CentralSpaceLoad');?>(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoshareresource"]); ?></a></p>
+<p><a onClick="return <?php echo $modal ? 'ModalLoad' : 'CentralSpaceLoad';?>(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoshareresource"]); ?></a></p>
 
 <h1><?php echo htmlspecialchars($lang["emailresourcetitle"])?></h1>
 
@@ -115,7 +115,7 @@ include "../include/user_select.php"; ?>
 <?php if($minaccess==0 && !hook("replaceemailopenaccess"))
 	{
 	$resourcedata=get_resource_data($ref,true);
-	if(get_edit_access($ref,$resource['archive'],false,$resource))
+	if(get_edit_access($ref,$resource['archive'],$resource))
 		{?>
 		<div class="Question">
 		<label for="grant_internal_access"><?php echo htmlspecialchars($lang["internal_share_grant_access"]) ?></label>

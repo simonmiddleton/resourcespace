@@ -36,11 +36,9 @@ elseif (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 	{
 	# Save user data
 	$result=save_user($ref);
-	if ($result===false)
-		{
-		$error=$lang["useralreadyexists"];
-		}
-	elseif ($result!==true)
+    # Result can be === True which means save_user was successful and (if requested) the email password reset link was successful
+    # Otherwise it will be a string with an error message describing the reason for failure to save/email
+    if ($result!==true)
 		{
 		$error=$result;
 		}
@@ -156,7 +154,7 @@ renderBreadcrumbs($links_trail);
 <?php if (isset($error)) { ?><div class="FormError">!! <?php echo $error?> !!</div><?php } ?>
 <?php if (isset($message)) { ?><div class="PageInfoMessage"><?php echo $message?></div><?php } ?>
 
-<form method=post action="<?php echo $baseurl_short?>pages/team/team_user_edit.php" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+<form method=post action="<?php echo $baseurl_short?>pages/team/team_user_edit.php" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
 <?php 
 if($modal)
 	{
@@ -303,7 +301,7 @@ if (!hook("replacecomments"))
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["origin"]); ?></label>
-<div class="Fixed"><?php echo (($user["origin"]!="")?(isset($lang["origin_" . $user["origin"]])?$lang["origin_" . $user["origin"]]:$user["origin"]):$applicationname) ?></div>
+<div class="Fixed"><?php echo escape($user["origin"]!="" ? (isset($lang["origin_" . $user["origin"]]) ? $lang["origin_" . $user["origin"]]:$user["origin"]) : $applicationname); ?></div>
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["lastactive"])?></label>
@@ -381,7 +379,7 @@ if($userref != $ref)
     <div class="Question"><label><?php echo htmlspecialchars($lang["new_message"])?></label>
     <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["message"])?></a></div>
     <div class="clearerleft"> </div></div>
-    <?php
+<?php
     }  
 hook("usertool")?>
 

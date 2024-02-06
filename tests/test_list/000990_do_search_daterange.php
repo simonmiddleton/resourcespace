@@ -40,5 +40,3 @@ if(count($results) !=  2 || !in_array($resourcea, array_column($results,"ref")) 
     echo "ERROR - SUBTEST C\n";
     return false;
     }
-
-return;

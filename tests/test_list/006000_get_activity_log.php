@@ -1,7 +1,7 @@
 <?php
 
 command_line_only();
-include_once(dirname(__DIR__, 2) . '/include/log_functions.php');
+include_once dirname(__DIR__, 2) . '/include/log_functions.php';
 global $userref;
 $placeholderref = $userref;
 

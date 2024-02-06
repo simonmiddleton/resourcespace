@@ -354,6 +354,12 @@ function get_resource_path(
             $scramble_key_saved = $scramble_key;
             $scramble_key = isset($scramble_key_old) ? $scramble_key_old : "";
             }
+
+        if ($icc)
+            {
+            $extension = 'icc';
+            }
+
         $oldfilepath=get_resource_path($ref,true,$size,false,$extension,true,$page,false,'',$alternative);
         if (file_exists($oldfilepath))
             {
@@ -695,7 +701,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     {
                     $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
                     continue;
-                    };
+                    }
 
                 debug("save_resource_data(): Current nodes for resource " . $ref . ": " . implode(",",$current_field_nodes));
 
@@ -929,7 +935,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
                         continue;
-                        };
+                        }
 
                     $new_checksums[$fields[$n]['ref']] = md5($val);
                     $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
@@ -963,7 +969,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
                         continue;
-                        };
+                        }
 
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
                     $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
@@ -986,7 +992,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         {
                         $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
                         continue;
-                        };
+                        }
                     $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
                     $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
@@ -1034,13 +1040,13 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         }
                     }
                 }
-                
+
             // Populate empty field with the default if necessary
             if($field_has_default_for_user && strlen((string) $val)==0) {
                 $val=$field_default_value;
                 $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
             }
-        
+
             if( $fields[$n]['required'] == 1
                 && check_display_condition($n, $fields[$n], $fields, false)
                 && (
@@ -1133,7 +1139,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         {
                         $new_node_values[] = $use_node;
                         }
-                    
+
                     // Add to array for logging
                     if (!is_null($use_node))
                         {
@@ -1431,7 +1437,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
     foreach($list as $listresource)
         {
         $resource_data[$listresource]  = get_resource_data($listresource, true);
-        if(!get_edit_access($listresource,$resource_data[$listresource]["archive"], $resource_data[$listresource]))
+        if(!get_edit_access($listresource,$resource_data[$listresource]["archive"]))
             {
             $noeditaccess[] = $listresource;
             }
@@ -1590,7 +1596,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                         {
                         continue;
                         }
-            
+
                     $resource_add_nodes = [];
                     $valid_hook_nodes = false;
                     $log_node_names = [];
@@ -1659,7 +1665,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             'from'  => $current_field_nodes,
                             'to'    => $resource_add_nodes,
                             ];
-                            
+
                         if(in_array($fields[$n]['ref'], $joins))
                             { 
                             // Build new value to add to resource table:
@@ -1678,7 +1684,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_params[$ref][]="s";
                             $resource_update_params[$ref][] = truncate_join_field_value(implode($GLOBALS['field_column_string_separator'], $new_nodes_val));
                             }
-                        
+
                         $updated_resources[$ref][$fields[$n]['ref']] = $new_nodes_val; // To pass to hook
                         }
                     }
@@ -1691,7 +1697,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
                     // Work out what all the new nodes for this resource  will be while maintaining their order
                     $new_nodes = array_filter($nodes_by_ref,function($node) use ($nodes_to_add){return in_array($node["ref"],$nodes_to_add);});
-                   
+
                     $log_node_updates[$ref][] = [
                         'from'  => $current_field_nodes,
                         'to'    => $nodes_to_add,
@@ -1865,7 +1871,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                     if(count($added_nodes)>0 || count($removed_nodes)>0)
                         {
                         $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);
-                        
+
                         $log_node_updates[$ref][] = [
                             'from'  => $current_field_nodes,
                             'to'    => $daterangenodes,
@@ -1877,7 +1883,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             $resource_update_sql_arr[$ref][] = "field" . (int)$fields[$n]["ref"] . " = ?";
                             $resource_update_params[$ref][]="s";$resource_update_params[$ref][]=$newval;
                             }
-                        
+
                         $updated_resources[$ref][$fields[$n]['ref']][] = $newval; // To pass to hook
                         }
                     }
@@ -2044,7 +2050,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
                 # Possibility to hook in and alter the value - additional mode support
                 $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$existing,$postvals,&$errors));
-               
+
                 if($hookval !== false )
                     {
                     if(!is_string($hookval))
@@ -2967,7 +2973,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
     # remove any line breaks that may have been entered
     $userlist=str_replace("\\r\\n",",",$userlist);
 
-	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
+	if (trim($userlist)=="") {return $lang["mustspecifyoneusername"];}
 	$userlist=resolve_userlist_groups($userlist);
 	if(strpos($userlist,$lang["groupsmart"] . ": ")!==false)
 		{
@@ -3110,7 +3116,7 @@ function delete_resource($ref)
                 (
                 checkperm("D")
                 ||
-                !get_edit_access($ref,$resource["archive"], false,$resource)
+                !get_edit_access($ref,$resource["archive"],$resource)
                 ||
                 (isset($userref) && $resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
                 )
@@ -3902,7 +3908,7 @@ function get_resource_ref_range($lower,$higher)
 *  rather than simply copied from the $from resource.
 *
 * @param  int    $from            ID of resource
-* @param  mixed  $resource_type   ID of resource type
+* @param  int    $resource_type   ID of resource type
 * @param  string $origin          Origin of resource when uploading, leave blank if not an upload
 *
 * @return boolean|integer
@@ -3922,15 +3928,22 @@ function copy_resource($from,$resource_type=-1,$origin='')
     # copy joined fields to the resource column
     $joins=get_resource_table_joins();
 
-    // Filter the joined fields so we only have the ones relevant to this resource type
-    $query = 'SELECT rtf.ref AS value
-                    FROM resource_type_field AS rtf
-            INNER JOIN resource AS r ON (rtf.global=0 AND rtf.ref NOT IN (SELECT resource_type_field FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type=r.resource_type))
-                    WHERE r.ref = ?;';
-
-    $irrelevant_rtype_fields = ps_array($query,["i",$from]);
-    $irrelevant_rtype_fields = array_values(array_intersect($joins, $irrelevant_rtype_fields));
-    $filtered_joins = array_values(array_diff($joins, $irrelevant_rtype_fields));
+    # Filtering data join columns to only copy those relevant to the new resource.
+    if ($resource_type === -1)
+        {
+        # New resource will be of the same resource type so get fields valid for the source resource type
+        $query = 'SELECT rtf.ref AS value FROM resource_type_field AS rtf
+            INNER JOIN resource AS r ON (rtf.global = 1 OR rtf.ref IN (SELECT resource_type_field FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type = r.resource_type))
+            WHERE r.ref = ?;';
+        $relevant_rtype_fields = ps_array($query, ["i", $from]);
+        }
+    else
+        {
+        # New resource has a different resource type so only copy fields relevant to the new resource type
+        $query = 'SELECT ref AS value FROM resource_type_field WHERE global = 1 OR ref IN (SELECT resource_type_field FROM resource_type_field_resource_type WHERE resource_type = ?);';
+        $relevant_rtype_fields = ps_array($query, ["i", $resource_type]);
+        }
+    $filtered_joins = array_values(array_intersect($joins, $relevant_rtype_fields));
     $joins_sql = empty($filtered_joins) ? '' : ',' . implode(',', array_map(prefix_value('field'), $filtered_joins));
 
     $archive=ps_value("SELECT archive value FROM resource WHERE ref = ?",["i",$from],0);
@@ -3951,7 +3964,7 @@ function copy_resource($from,$resource_type=-1,$origin='')
         }
 
     $sql = ''; $params = [];
-    if($resource_type == -1){$sql = 'resource_type';}
+    if($resource_type === -1){$sql = 'resource_type';}
     else{$sql = '?'; $params = ['i', $resource_type];}
 
     # First copy the resources row
@@ -3969,7 +3982,7 @@ function copy_resource($from,$resource_type=-1,$origin='')
         }
 
     # Copy Metadata
-    copyAllDataToResource($from,$to);
+    copy_resource_nodes($from, $to);
 
     # Copy relationships
     copyRelatedResources($from, $to);
@@ -4595,7 +4608,7 @@ function write_metadata($path, $ref, $uniqid="")
 
         $metadata_all=get_resource_field_data($ref, false,true,NULL,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
         $read_only_fields = array_column(array_filter($metadata_all, function($value) {
-            return ((bool) $value['read_only'] == true);
+            return (bool) $value['read_only'] == true;
         }), 'ref');
 
         $write_to=array();
@@ -5328,7 +5341,7 @@ function get_resource_access($resource)
             }
         }
 
-	if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],false,$resourcedata) && !$prevent_open_access_on_edit_for_active)
+	if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],$resourcedata) && !$prevent_open_access_on_edit_for_active)
 		{
 		# If access is restricted and user has edit access, grant open access.
 		$access = 0;
@@ -5551,7 +5564,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         else
             {
             # Return the restricted access setting for this resource type.
-            return (ps_value("SELECT allow_restricted value FROM preview_size WHERE id = ?", array("s", $size), 0, "schema") == 1);
+            return ps_value("SELECT allow_restricted value FROM preview_size WHERE id = ?", array("s", $size), 0, "schema") == 1;
             }
         }
 
@@ -5566,25 +5579,31 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
     }
 
 
-function get_edit_access($resource,$status=-999,$metadata=false,&$resourcedata="")
+/**
+ * Check if current user has edit access to a resource. Checks the edit permissions (e0, e-1 etc.) and also the group
+ * edit filter which filters edit access based on resource metadata.
+ *
+ * @param int $resource Resource ID
+ * @param int $status Archive status ID. Use -999 to use the one from resourcedata argument
+ * @param array $resourcedata
+ */
+function get_edit_access($resource, int $status=-999, array &$resourcedata = []): bool
     {
-    # For the provided resource and metadata, does the current user have edit access to this resource?
-    # Checks the edit permissions (e0, e-1 etc.) and also the group edit filter which filters edit access based on resource metadata.
-
     global $userref,$usergroup, $usereditfilter,$edit_access_for_contributor,
     $userpermissions, $lang, $baseurl, $userdata, $edit_only_own_contributions;
-    $plugincustomeditaccess = hook('customediteaccess','',array($resource,$status,$resourcedata));
 
+    $plugincustomeditaccess = hook('customediteaccess','',array($resource,$status,$resourcedata));
     if($plugincustomeditaccess)
         {
-        return ('false' === $plugincustomeditaccess ? false : true);
+        return 'false' === $plugincustomeditaccess ? false : true;
         }
 
-    if (!is_array($resourcedata) || !isset($resourcedata['resource_type'])) # Resource data may not be passed
+    if ($resourcedata === [])
         {
         $resourcedata=get_resource_data($resource);
         }
-    if(!is_array($resourcedata) || count($resourcedata) == 0)
+
+    if($resourcedata === [] || $resourcedata === false)
         {
         return false;
         }
@@ -5952,14 +5971,21 @@ function autocomplete_blank_fields($resource, $force_run, $return_changes = fals
 
     $fields = ps_query(
         "SELECT rtf.ref, rtf.type, rtf.autocomplete_macro
-          FROM resource_type_field rtf
-          LEFT JOIN resource_type rt ON rt.ref = ?
-          WHERE length(rtf.autocomplete_macro) > 0
-          AND (
-              (rtf.global=0 AND rt.ref IN (SELECT resource_type FROM resource_type_field_resource_type rtjoin WHERE rtjoin.resource_type_field=rtf.ref))
-               OR (rtf.global=1)
-              ) $sql_set_field", array_merge(array("i", $resource_type), $sql_set_field_params), "schema");
-
+            FROM resource_type_field rtf
+            LEFT JOIN resource_type rt ON rt.ref = ?
+            WHERE length(rtf.autocomplete_macro) > 0
+                AND (((rtf.global=0 OR rtf.global IS NULL) 
+                        AND rt.ref IN (
+                            SELECT resource_type 
+                                FROM resource_type_field_resource_type rtjoin 
+                                WHERE rtjoin.resource_type_field=rtf.ref
+                                ))
+                    OR (rtf.global=1)
+                    ) $sql_set_field",
+        array_merge(array("i", $resource_type), $sql_set_field_params),
+        "schema"
+    );
+    
     $fields_updated = array();
 
     foreach($fields as $field)
@@ -6439,6 +6465,7 @@ function delete_resource_access_key($resource,$access_key)
 
 function resource_type_config_override($resource_type, $only_onchange=true)
     {
+    debug_function_call(__FUNCTION__, func_get_args());
     # Pull in the necessary config for a given resource type
     # As this could be called many times, e.g. during search result display
     # By default (only_onchange) only execute the override if the passed resourcetype is different from the previous
@@ -6517,7 +6544,6 @@ function update_archive_status($resource, $archive, $existingstates = array(), $
     hook('after_update_archive_status', '', array($resource, $archive,$existingstates));
     // Send notifications
     debug("update_archive_status - resources=(" . implode(",",$resource) . "), archive: " . $archive . ", existingstates:(" . implode(",",$existingstates) . "), collection: " . $collection);
-    return;
     }
 
 
@@ -6785,14 +6811,14 @@ function get_video_snapshots($resource_id, $file_path = false, $count_only = fal
         }
     while (true === $snapshot_found);
 
-    return (!$count_only ? $snapshots_found : count($snapshots_found));
+    return !$count_only ? $snapshots_found : count($snapshots_found);
     }
 
 function resource_file_readonly($ref)
     {
     # Even if the user has edit access to a resource, the main file may be read only.
     global $fstemplate_alt_threshold;
-    return ($fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold);
+    return $fstemplate_alt_threshold>0 && $ref<$fstemplate_alt_threshold;
     }
 
 function delete_resource_custom_user_access($resource,$user)
@@ -6805,7 +6831,7 @@ function get_video_info($file)
     $ffprobe_fullpath = get_utility_path("ffprobe");
     $ffprobe_output=run_command($ffprobe_fullpath . " -v 0 " . escapeshellarg($file) . " -show_streams -of json");
     $ffprobe_array=json_decode($ffprobe_output, true);
-    return ($ffprobe_array);
+    return $ffprobe_array;
     }
 
 
@@ -6834,7 +6860,7 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
     # Permission check isn't required if copying data from the user's upload template as with edit then upload mode.
     if ($from != 0 - $userref)
         {
-        if(!get_edit_access($to,$resourcedata["archive"],false,$resourcedata))
+        if(!get_edit_access($to,$resourcedata["archive"],$resourcedata))
             {
             return false;
             }
@@ -6880,9 +6906,8 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
 */
 function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
     {
+    debug_function_call(__FUNCTION__, [$resource['ref'], $locked_fields, $lastedited, $save]);
     global $custom_access;
-
-    debug("copy_locked_data resource " . $resource["ref"] . " lastedited: " . $lastedited);
 
     // Get details of the last resource edited and use these for this resource if field is 'locked'
     $lastresource = get_resource_data($lastedited,false);
@@ -7208,7 +7233,7 @@ function get_last_resource_edit_array($resources = array())
         }
 
     $chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
-    foreach($chunks as $chunk);
+    foreach($chunks as $chunk)
         {
         $rows  = ps_query(
             "SELECT r.ref, r.modified 
@@ -7219,7 +7244,7 @@ function get_last_resource_edit_array($resources = array())
         );
         if (!isset($lastmodified) || $rows[0]["modified"]>$lastmodified["modified"]){$lastmodified=$rows[0];}
         }
-    $lastuserdetails = ps_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource = ? AND rl.type='e'",array("i",$lastmodified["ref"]));
+    $lastuserdetails = ps_query("SELECT u.username, u.fullname, rl.date FROM resource_log rl LEFT JOIN user u on u.ref=rl.user WHERE rl.resource = ? AND rl.type='e' ORDER BY rl.date DESC",array("i",$lastmodified["ref"]));
     if(count($lastuserdetails) == 0)
         {
         return false;
@@ -7227,7 +7252,7 @@ function get_last_resource_edit_array($resources = array())
 
     $timestamp = max($lastuserdetails[0]["date"],$lastmodified["modified"]);
 
-    $lastusername = (trim($lastuserdetails[0]["fullname"]) != "") ? $lastuserdetails[0]["fullname"] : $lastuserdetails[0]["username"];
+    $lastusername = (trim((string)$lastuserdetails[0]["fullname"]) != "") ? $lastuserdetails[0]["fullname"] : $lastuserdetails[0]["username"];
     return array("ref" => $lastmodified["ref"],"time" => $timestamp, "user" => $lastusername);
     }
 
@@ -7377,7 +7402,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
     debug("replace_resource_file(ref=" . $ref . ", file_location=" . $file_location . ", no_exif=" . ($no_exif ? "TRUE" : "FALSE") . " , keep_original=" . ($keep_original ? "TRUE" : "FALSE"));
 
     $resource = get_resource_data($ref);
-    if (!get_edit_access($ref,$resource["archive"],false,$resource)
+    if (!get_edit_access($ref,$resource["archive"],$resource)
         ||
         ($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
         )
@@ -8237,6 +8262,7 @@ function get_indexed_resource_type_fields()
 */
 function get_resource_type_fields($restypes="", $field_order_by="ref", $field_sort="asc", $find="", $fieldtypes = array(), $include_inactive=false)
     {
+    debug_function_call(__FUNCTION__, func_get_args());
     if ($field_order_by != "ref")
         {
         // Default order by is not being used so check order by columns supplied are valid for the table
@@ -8602,7 +8628,7 @@ function canSeePreviewTools()
 
     $visible_annotate_fields = canSeeAnnotationsFields();
 
-    return (count($visible_annotate_fields) > 0 || $image_preview_zoom);
+    return count($visible_annotate_fields) > 0 || $image_preview_zoom;
     }
 
 /**
@@ -8732,9 +8758,9 @@ function create_resource_type_field($name, $restype = 0, $type = FIELD_TYPE_TEXT
 */
 function metadata_field_view_access($field)
     {
-    return (
+    return 
         (PHP_SAPI == 'cli' && !defined("RS_TEST_MODE"))
-        || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field)));
+        || ((checkperm("f*") || checkperm("f" . $field)) && !checkperm("f-" . $field));
     }
 
 
@@ -8903,7 +8929,7 @@ function update_resource_lock($ref,$lockaction,$newlockuser=null,$accesschecked 
         {
         $resource_data  = get_resource_data($ref);
         $lockeduser     =  $resource_data["lock_user"];
-        $edit_access    = get_edit_access($ref,$resource_data["archive"],false,$resource_data);
+        $edit_access    = get_edit_access($ref,$resource_data["archive"],$resource_data);
         if(!checkperm("a")
             &&
             $lockeduser != $userref

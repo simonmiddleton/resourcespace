@@ -21,7 +21,7 @@ function HookAnnotatePreviewPreviewimage2 (){
 global $ajax,$ext,$baseurl,$ref,$k,$search,$offset,$order_by,$sort,$archive,$lang,
        $download_multisize,$baseurl_short,$url,$path,$path_orig,$annotate_ext_exclude,
        $annotate_rt_exclude,$annotate_public_view,$annotate_pdf_output,$nextpage,
-       $previouspage, $alternative;
+       $previouspage, $alternative, $view_title_field;
     
 $resource=get_resource_data($ref);
 
@@ -85,7 +85,8 @@ $h = $sizes[1];
     } ?>
 <div>
 		<td>
-            <img id="toAnnotate" onload="annotate(<?php echo (int)$ref?>,'<?php echo escape($k)?>','<?php echo escape($w)?>','<?php echo escape($h)?>',<?php echo escape(getval("annotate_toggle",true))?>,<?php echo (int) getval('page', 1); ?>);" src="<?php echo escape($url)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
+            <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
+            alt="" id="toAnnotate" onload="annotate(<?php echo (int)$ref?>,'<?php echo escape($k)?>','<?php echo escape($w)?>','<?php echo escape($h)?>',<?php echo escape(getval("annotate_toggle",true))?>,<?php echo (int) getval('page', 1); ?>);" src="<?php echo escape($url)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
         </td>
     <?php
     if($nextpage != -1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>

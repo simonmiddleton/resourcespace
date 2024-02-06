@@ -74,7 +74,7 @@ if (!hook("replaceslideshow"))
             ?>
             var big_slideshow_timer = 0;
             RegisterSlideshowImage('<?php echo "{$baseurl_short}pages/download.php?slideshow={$slideshow_files[$randomimage]["ref"]}"; ?>','<?php echo (isset($slideshow_files[$randomimage]["link"])) ? $slideshow_files[$randomimage]["link"] : "" ?>',1);
-            <?php
+<?php
             }
         else
             {
@@ -118,20 +118,20 @@ if (!hook("replaceslideshow"))
             echo "images.push(" .  $slideshow_file_info["ref"] . ");\n";
             }
         ?>
-    
+
         var cur_photo=1;
         var last_photo=0;
         var next_photo=1;
-    
+
         flip=1;
-    
+
         var image1=0;
         var image2=0;
-    
+
         function nextPhoto()
             {
             if (!document.getElementById('image1')) {return false;} /* Photo slideshow no longer available (AJAX page move) */
-            
+
               if (cur_photo==num_photos-1) {next_photo=0;} else {next_photo=cur_photo+1;}
               image1 = document.getElementById("image1");
               image2 = document.getElementById("photoholder");
@@ -151,12 +151,12 @@ if (!hook("replaceslideshow"))
                 window.setTimeout("image2.style.backgroundImage='url(' + baseurl_short + 'pages/download.php?slideshow=' + images[next_photo] +')';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
                 flip=0;
                 }	  	
-             
+
               last_photo=cur_photo;
               cur_photo=next_photo;
               timers.push(window.setTimeout("nextPhoto()", 1000 * photo_delay));
             }
-    
+
         jQuery(document).ready( function ()
             { 
             /* Clear all old timers */
@@ -164,7 +164,7 @@ if (!hook("replaceslideshow"))
             timers.push(window.setTimeout("nextPhoto()", 1000 * photo_delay));
             }
             );
-            
+
         </script><?php 
         }
     if($slideshow_big) 
@@ -215,7 +215,7 @@ if (!hook("replaceslideshow"))
 			?>
 			background-image:url('<?php echo  "{$baseurl}/pages/download.php?slideshow=" . $slideshow_files[0]["ref"]; ?>');">
 			
-			<img src='<?php echo "{$baseurl}/pages/download.php?slideshow=" . ($homeimages>1?$slideshow_files[1]["ref"]:$slideshow_files[0]["ref"]); ?>' alt='' id='image1' style="display:none;<?php
+			<img alt="" src='<?php echo "{$baseurl}/pages/download.php?slideshow=" . ($homeimages>1?$slideshow_files[1]["ref"]:$slideshow_files[0]["ref"]); ?>' alt='' id='image1' style="display:none;<?php
 			if (isset($home_slideshow_width)){
 				echo"width:" .  $home_slideshow_width ."px; ";
 				}
@@ -340,7 +340,7 @@ if (!hook("replaceslideshow"))
 					<h2> <?php echo i18n_get_translated($custom_home_panels[$n]["title"]) ?></h2>
 					<span><?php echo i18n_get_translated($custom_home_panels[$n]["text"]) ?></span>
 					</div> 
-					
+
 					</a>
 					<?php
 					} // end hook 'panelperm'
@@ -400,10 +400,12 @@ if (!hook("replaceslideshow"))
 					}
 				$tile_height=180;
 				$tile_width=250;
+				$resource_data=get_resource_data($home_collection["home_page_image"]);
 				?>
 				<a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $home_collection["ref"] ?>" onClick="return CentralSpaceLoad(this,true);" class="HomePanel HomePanelPromoted">
 					<div id="HomePanelPromoted<?php echo $home_collection["ref"] ?>" class="HomePanelIN HomePanelPromotedIN" style="padding: 0;overflow: hidden;position: relative;height: 100%;width: 100%;min-height: 180px;">
-							<img 
+							<img
+							    alt="<?php echo escape(i18n_get_translated($resource_data['field'.$view_title_field] ?? "")); ?>"
 								src="<?php echo $home_col_image ?>" 
 								<?php 
 								if($defaultpreview)

@@ -108,8 +108,6 @@ function HookImage_banksAllSearchfiltertop()
     </div>
     <?php
     $clear_function .= 'jQuery("#SearchImageBanks").val([\'\']); search_show=true; toggleUnwantedElementsFromSimpleSearch(jQuery("#SearchImageBanks"));';
-
-    return;
     }
 
 function HookImage_banksAllAdd_folders_to_delete_from_temp(array $folders_scan_list)

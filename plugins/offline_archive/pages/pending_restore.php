@@ -2,14 +2,14 @@
 
 include '../../../include/db.php';
 include '../../../include/authenticate.php';
-if (!checkperm('i')) 
+if (!checkperm('i'))
     {
-    exit ($lang['error-permissiondenied']);
+    exit (escape($lang['error-permissiondenied']));
     }
 
 // Handle removed resources
 $removeref=getval("remove",0,true);
-if($removeref > 0 && is_numeric($removeref))	
+if($removeref > 0 && is_numeric($removeref))
 	{
 	ps_query("UPDATE resource SET pending_restore=0 WHERE ref = ?", ['i', $removeref]);
 	resource_log($removeref,"",0,$lang['offline_archive_resource_log_restore_removed'],"","");
@@ -27,59 +27,48 @@ include '../../../include/header.php';
 
 if (isset($resulttext))
 	{
-	echo "<div class=\"projectSaveStatus\">" . $resulttext . "</div>";
+	echo "<div class=\"projectSaveStatus\">" . escape($resulttext) . "</div>";
 	}
 ?>
 <div>
-<a href="<?php echo $baseurl ?>/plugins/offline_archive/pages/administer_archive.php" onClick="return CentralSpaceLoad(this,true);" ><?php echo  LINK_CARET . $lang["offline_archive_administer_archive"] ?></a>
+<a href="<?php echo $baseurl ?>/plugins/offline_archive/pages/administer_archive.php" onClick="return CentralSpaceLoad(this,true);" ><?php echo  LINK_CARET . escape($lang["offline_archive_administer_archive"]); ?></a>
 </div>
 
 
 <p>
-<h1><?php echo $lang["offline_archive_restore_pending"] ?></h1>
+<h1><?php echo escape($lang["offline_archive_restore_pending"]); ?></h1>
 </p>
 
 <form id="cancel_restore_form" name="form1" method="post" action="<?php echo $baseurl ?>/plugins/offline_archive/pages/pending_restore.php">
 <input type="hidden" name="remove" id="remove" value="">
 <div class="Listview">
-	<table id="offline_archive_table" class="ListviewStyle offline_archive_table" border="0" cellspacing="0" cellpadding="0">
-		<?php 
-		echo '<tr class="ListviewTitleStyle">';
-		echo '<td style="width:150px">';
-		echo $lang['property-reference'];
-		echo '</td><td>';
-		echo $lang['property-title'];
-		echo '</td><td>';	
-		echo $lang['offline_archive_archive_ref'];
-		echo '</td>';
-		echo '</td><td>';
-		echo "</tr>";	
-			
-		foreach ($pendingrestores as $pendingrestore)
-			{
-			$ref=$pendingrestore['ref'];
-			$archivecode = get_data_by_field($ref,$offline_archive_archivefield);
-			echo '<tr>
-			<td onclick="window.location=\'' . $baseurl . '/?r=' . $ref . '\';">
-			' . $ref . '</td>
-			<td onclick="window.location=\'' . $baseurl . '/?r=' . $ref . '\';">';
-			echo $pendingrestore[$title_field];
-			echo '</td>
-			<td onclick="window.location=\'' . $baseurl . '/?r=' . $ref . '\';">';
-			echo $archivecode;
-			echo '</td>
-				<td>';
-			echo '<a href="#" onClick="jQuery(\'#remove\').val(\'' . $ref . '\');if(confirm(\'' . $lang["offline_archive_cancel_confirm"] . '\')){CentralSpacePost(document.getElementById(\'cancel_restore_form\'),true);};return false;">&gt;&nbsp;' . $lang["offline_archive_cancel_restore"] . '&nbsp;&nbsp;</a>'; 
-			echo '</td>';	
-			echo '</tr>';					
-			}
-		
-	
-		?>
-	</table>
+    <table id="offline_archive_table" class="ListviewStyle offline_archive_table" border="0" cellspacing="0" cellpadding="0">
+        <tr class="ListviewTitleStyle">
+            <td style="width:150px"><?php echo  escape($lang['property-reference']); ?></td>
+            <td><?php echo escape($lang['property-title']); ?></td>
+            <td><?php echo escape($lang['offline_archive_archive_ref']); ?></td>
+            <td><?php echo escape($lang["tools"]); ?><td>
+        </tr>
+        <?php
+        foreach ($pendingrestores as $pendingrestore)
+            {
+            $ref=$pendingrestore['ref'];
+            $archivecode = get_data_by_field($ref,$offline_archive_archivefield);
+            $tdlink = "<a href='"  . generateURL($baseurl_short . "?r=" . $ref) . "' onclick='return ModalLoad(this,true)'>%%TEXT%%</a>";
+            ?>
+            <tr>
+                <td><?php echo str_replace("%%TEXT%%", (int)$ref,$tdlink);?></td>
+                <td><?php echo str_replace("%%TEXT%%",escape($pendingrestore[$title_field]),$tdlink);?></td>
+                <td><?php echo escape($archivecode);?></td>
+                <td><a href="#" onClick="if(confirm('<?php escape($lang["offline_archive_cancel_confirm"]); ?>')){CentralSpacePost(document.getElementById('cancel_restore_form'),true);};jQuery('#remove').val('<?php echo (int)$ref ?>');return false;"><?php echo LINK_CARET . escape($lang["offline_archive_cancel_restore"]); ?></a></td>
+            </tr>
+            <?php
+            }
+        ?>
+    </table>
 </div>
 
-</form>	
+</form>
 </div>
 <?php
 include '../../../include/footer.php';

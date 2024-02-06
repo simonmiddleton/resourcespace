@@ -1843,7 +1843,8 @@ function save_collection($ref, $coldata=array())
                 }
             }
         }
-
+    global $userref;
+    clear_query_cache('collection_access' . $userref);
     refresh_collection_frame();
     }
 
@@ -1995,7 +1996,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
 	if ($useremail==""){$useremail=$email_from;}
 	if ($group==""){$group=$usergroup;}
 	
-	if (trim($userlist)=="") {return ($lang["mustspecifyoneusername"]);}
+	if (trim($userlist)=="") {return $lang["mustspecifyoneusername"];}
 	$userlist=resolve_userlist_groups($userlist);
 	
 	if(strpos($userlist,$lang["groupsmart"] . ": ")!==false){
@@ -2543,7 +2544,7 @@ function get_search_title($searchstring)
     if (isset($searchvars["search"])){$search=$searchvars["search"];}else{$search="";}
     if (isset($searchvars["restypes"])){$restypes=$searchvars["restypes"];}else{$restypes="";}
 
-    include(dirname(__FILE__)."/search_title_processing.php");
+    include dirname(__FILE__)."/search_title_processing.php";
 
     if ($restypes!="")
         { 
@@ -2768,7 +2769,7 @@ function allow_multi_edit($collection,$collectionid = 0)
         for ($n=0;$n<count($collection);$n++)
             {
             $resource = $collection[$n];
-            if (!get_edit_access($collection[$n]["ref"],$collection[$n]["archive"],false,$collection[$n]))
+            if (!get_edit_access($collection[$n]["ref"],$collection[$n]["archive"],$collection[$n]))
                 {
                 return false;
                 }
@@ -3172,7 +3173,6 @@ function swap_collection_order($resource1,$resource2,$collection)
 	if (!is_numeric($resource1) || !is_numeric($resource2) || !is_numeric($collection)){
 		exit ("Error: invalid input to swap collection function.");
 	}
-	//exit ("Swapping " . $resource1 . " for " . $resource2);
 	
 	$query = "select resource,date_added,sortorder  from collection_resource where collection=? and resource in (?,?)  order by sortorder asc, date_added desc";
 	$existingorder = ps_query($query,array("i",$collection,"i",$resource1,"i",$resource2));
@@ -3460,7 +3460,7 @@ function copy_collection($copied,$current,$remove_existing=false)
  */
 function collection_is_research_request($collection)
 	{
-	return (ps_value("select count(*) value from research_request where collection=?",array("i",$collection),0)>0);
+	return ps_value("SELECT count(*) value FROM research_request WHERE collection=?", array("i", $collection), 0) > 0;
 	}
 
 
@@ -3481,7 +3481,7 @@ function add_to_collection_link($resource, $extracode="", $size="", $class="", $
     $resource = (int) $resource;
     $size = escape($size);
     $class = escape($class);
-    $title = escape($GLOBALS['lang']["addtocurrentcollection"] . " - " . $view_title);
+    $title = escape($GLOBALS['lang']["addtocurrentcollection"] . (($view_title != "") ? " - " . $view_title : ""));
 
     return "<a class=\"addToCollection {$class}\" href=\"#\" title=\"{$title}\""
         . " onClick=\"AddResourceToCollection(event, {draggable: jQuery('div#ResourceShell{$resource}')},'{$resource}','{$size}'); {$extracode} return false;\""
@@ -3509,8 +3509,12 @@ function remove_from_collection_link($resource, $class="", string $onclick = '',
 
     $resource = (int) $resource;
     $class = escape($class);
-    $title = escape($basketmode ? $lang["removefrombasket"]: $lang["removefromcurrentcollection"] . " - " . $view_title);
     $pagename = escape($pagename);
+    $title = escape($basketmode ? $lang["removefrombasket"] : $lang["removefromcurrentcollection"]);
+
+    if ($view_title != "") {
+        $title .= " - " . $view_title;
+    }
 
     return "<a class=\"removeFromCollection {$class}\" href=\"#\" title=\"{$title}\" "
         . "onClick=\"RemoveResourceFromCollection(event,'{$resource}','{$pagename}'); {$onclick} return false;\""
@@ -3719,7 +3723,7 @@ function collection_min_access($collection)
 		$minextaccess = ps_value("SELECT max(access) value FROM external_access_keys WHERE resource IN (" . ps_param_insert(count($result)) . ") AND access_key = ? AND (expires IS NULL OR expires > NOW())", $params, -1);
         if($minextaccess != -1 && (!$internal_share_access || ($internal_share_access && ($minextaccess < $minaccess))))
             {
-            return ($minextaccess);
+            return $minextaccess;
             }
 		}
     
@@ -4664,8 +4668,6 @@ function new_featured_collection_form(int $parent)
         </form>
     </div>
     <?php
-
-    return;
 	}
     
 
@@ -4689,11 +4691,7 @@ function GetThemesFromRequest($levels)
             }
         // Legacy inconsistency when naming themes params. Sometimes the root theme was also named theme1. We check if theme 
         // is found, but if not, we just go to theme1 rather than break.
-        else if($themeindex == 0 && $themename == "")
-            {
-            continue;
-            }
-        else
+        elseif(!($themeindex == 0 && $themename == ""))
             {
             break;    
             }
@@ -4712,7 +4710,7 @@ function GetThemesFromRequest($levels)
  * @param  object         $zip
  * @param  string         $zipfile
  * 
- * @return string
+ * @return void
  */
 function collection_download_get_archive_file($archiver, $settings_id, $usertempdir, $collection, $size, &$zip, &$zipfile)
     {
@@ -4732,8 +4730,6 @@ function collection_download_get_archive_file($archiver, $settings_id, $usertemp
         {
         $zipfile = $usertempdir . "/".$lang["collectionidprefix"] . $collection . "-" . $size . ".zip";
         }
-
-    return;
     }
 
 function collection_download_use_original_filenames_when_downloading(&$filename, $ref, $collection_download_tar, &$filenames,$id='')
@@ -4799,8 +4795,6 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
         {
         $filename = get_download_filename($ref, $size, 0, $pextension);
         }
-
-    return;
     }
 
 /**
@@ -4863,8 +4857,6 @@ function collection_download_process_text_file($ref, $collection, $filename)
                 }
             }
         }
-
-    return;
     }
 
 
@@ -4894,8 +4886,6 @@ function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref
         # greatest() is used so the value is taken from the hit_count column in the event that new_hit_count is zero to support installations that did not previously have a new_hit_count column (i.e. upgrade compatability).
         ps_query("update resource set new_hit_count=greatest(hit_count,new_hit_count)+1 where ref=?",array("i",$ref));
         }
-
-    return;
     }
 
 /**
@@ -4939,6 +4929,10 @@ function collection_download_process_data_only_types(array $result, $id, $collec
         if(in_array($result[$n]['resource_type'], $data_only_resource_types))
             {
             $template_path = get_pdf_template_path($result[$n]['resource_type']);
+            if ($template_path === false)
+                {
+                continue;
+                }
             $pdf_filename = 'RS_' . $result[$n]['ref'] . '_data_only.pdf';
             $pdf_file_path = get_temp_dir(false, $id) . '/' . $pdf_filename;
 
@@ -5151,8 +5145,6 @@ function collection_download_process_command_to_file($use_zip_extension, $collec
     {
     global $config_windows, $cmdfile;
 
-
-    //update_progress_file("writing zip command");  
     if (!$use_zip_extension && !$collection_download_tar)
         {
         $cmdfile = get_temp_dir(false,$id) . "/zipcmd" . $collection . "-" . $size . ".txt";
@@ -5601,14 +5593,16 @@ function featured_collections_permissions_filter_sql(string $prefix, string $col
     global $CACHE_FC_PERMS_FILTER_SQL;
     $CACHE_FC_PERMS_FILTER_SQL = (!is_null($CACHE_FC_PERMS_FILTER_SQL) && is_array($CACHE_FC_PERMS_FILTER_SQL) ? $CACHE_FC_PERMS_FILTER_SQL : array());
     $cache_id = md5("{$prefix}-{$column}");
-    if(isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && is_string($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && $returnstring)
+    if ((isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) 
+            && is_string($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) 
+            && $returnstring)
+        || (isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) 
+            && is_array($CACHE_FC_PERMS_FILTER_SQL[$cache_id]))
+    )
         {
         return $CACHE_FC_PERMS_FILTER_SQL[$cache_id];
         }
-    elseif(isset($CACHE_FC_PERMS_FILTER_SQL[$cache_id]) && is_array($CACHE_FC_PERMS_FILTER_SQL[$cache_id]))
-        {
-        return $CACHE_FC_PERMS_FILTER_SQL[$cache_id];
-        }
+
     // $prefix & $column are used to generate the right SQL (e.g AND ref IN(list of IDs)). If developer/code, passes empty strings,
     // that's not this functions' responsibility. We could error here but the code will error anyway because of the bad SQL so
     // we might as well fix the problem at its root (ie. where we call this function with bad input arguments).
@@ -5803,7 +5797,7 @@ function is_featured_collection_category(array $fc)
         return false;
         }
 
-    return ($fc["type"] == COLLECTION_TYPE_FEATURED && $fc["has_resources"] == 0);
+    return $fc["type"] == COLLECTION_TYPE_FEATURED && $fc["has_resources"] == 0;
     }
 
 /**
@@ -5828,7 +5822,7 @@ function is_featured_collection_category_by_children(int $c_ref)
          GROUP BY c.ref
            HAVING count(DISTINCT cc.ref) > 0",array("s",COLLECTION_TYPE_FEATURED,"i",$c_ref),0);
 
-    return ($found_ref > 0);
+    return $found_ref > 0;
     }
 
 /**
@@ -5855,7 +5849,7 @@ function validate_collection_parent($c)
             }
         }
 
-    return (is_null($collection["parent"]) ? null : (int) $collection["parent"]);
+    return is_null($collection["parent"]) ? null : (int) $collection["parent"];
     }
 
 /**
@@ -5983,7 +5977,7 @@ function get_featured_collection_ref_by_name(string $name, $parent)
         }
     $ref = ps_value($sql,$params,null,"featured_collections");
 
-    return (is_null($ref) ? null : (int) $ref);
+    return is_null($ref) ? null : (int) $ref;
     }
 
 
@@ -6107,7 +6101,7 @@ function allow_featured_collection_share(array $c)
         $fc_allow_share = allow_collection_share($c);
 
         // FALSE if at least one collection has no share access (consistent with the check for normal collections when checking resources)
-        return (!is_bool($carry) ? $fc_allow_share : $carry && $fc_allow_share);
+        return !is_bool($carry) ? $fc_allow_share : $carry && $fc_allow_share;
         }, null);
     }
 
@@ -6147,7 +6141,7 @@ function filter_featured_collections_by_root(array $fcs, int $c_ref, array $ctx 
         {
         $branch_path = get_featured_collection_category_branch_by_leaf($ref, $all_fcs);
         $branch_path_str = array_reduce($branch_path, $branch_path_fct, "");
-        return (substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str);
+        return substr($branch_path_str, 0, strlen($category_branch_path_str)) == $category_branch_path_str;
         });
 
     $CACHE_FCS_BY_ROOT[$cache_id][$c_ref] = $collections;
@@ -6232,7 +6226,7 @@ function can_delete_featured_collection(int $ref)
     
     $params=array("s",COLLECTION_TYPE_FEATURED,"i",$ref);
 
-    return (ps_value($sql, $params, 0) > 0);
+    return ps_value($sql, $params, 0) > 0;
     }
 
 
@@ -6472,10 +6466,9 @@ function can_edit_upload_share($collection,$uploadkey)
         }
     $share_details = get_external_shares(array("share_collection"=>$collection,"share_type"=>1, "access_key"=>$uploadkey));
     $details = isset($share_details[0]) ? $share_details[0] : array();
-    return ((isset($details["user"]) && $details["user"] == $userref)
-        || 
-      (checkperm("ex") && array_key_exists("expires", $details) && empty($details["expires"]))
-    );
+    return
+        (isset($details["user"]) && $details["user"] == $userref)
+        || (checkperm("ex") && array_key_exists("expires", $details) && empty($details["expires"]));
     }
 
 /**
@@ -7001,7 +6994,7 @@ function update_smart_collection(int $smartsearch_ref)
         $startTime = microtime(true);
         global $smartsearch_accessoverride;
         $results=do_search($smartsearch['search'], $smartsearch['restypes'], "relevance", $smartsearch['archive'],$result_limit,"desc",$smartsearch_accessoverride,$smartsearch['starsearch'],false,false,"",false,true,false,false,false,null,true);
-        //$startTime = microtime(true); 
+
         # results is a list of the current search without any restrictions
         # we need to compare against the current collection contents to minimize inserts and deletions
         $current_contents=ps_array("select resource value from collection_resource where collection= ?", ['i', $collection]);

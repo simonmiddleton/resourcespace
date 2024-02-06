@@ -64,7 +64,7 @@ switch ($newtype)
 ?>
 
 <div class="BasicsBox" id="create_new">
-    <form action="<?php echo $targeturl; ?>" onsubmit="<?php echo (isset($customformaction) ? $customformaction : "return CentralSpacePost(this,true);"); ?>" >
+    <form action="<?php echo $targeturl; ?>" onsubmit="<?php echo isset($customformaction) ? $customformaction : "return CentralSpacePost(this,true);"; ?>" >
 	<div class="Question">
 		<label><?php echo $newtext; ?></label>
         <?php generateFormToken($csrf_code); 

@@ -554,10 +554,10 @@ if('' != $tile_type && $tile_type !== "conf")
     ?>
     <!-- Dash tile size selector -->
     <div class="Question">
-        <label for="tlsize"><?php echo $lang['size']; ?></label>
+        <label for="tlsize"><?php echo escape($lang['size']); ?></label>
         <select id="DashTileSize" class="stdwidth" name="tlsize" onchange="updateDashTilePreview();">
-            <option value=""><?php echo $lang['single_width']; ?></option>
-            <option value="double"<?php echo ('double' === $tlsize ? ' selected' : ''); ?>><?php echo $lang['double_width']; ?></option>
+            <option value=""><?php echo escape($lang['single_width']); ?></option>
+            <option value="double"<?php echo 'double' === $tlsize ? ' selected' : ''; ?>><?php echo escape($lang['double_width']); ?></option>
         </select>
         <div class="clearerleft"></div>
     </div>

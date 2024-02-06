@@ -35,7 +35,7 @@ if($resourcedata["lock_user"] > 0 && $resourcedata["lock_user"] != $userref)
 resource_type_config_override($resourcedata["resource_type"]);
 
 # Not allowed to edit this resource?
-if ((!get_edit_access($resource, $resourcedata["archive"],false,$resourcedata) || checkperm('A')) && $resource>0) {exit ("Permission denied.");}
+if ((!get_edit_access($resource, $resourcedata["archive"],$resourcedata) || checkperm('A')) && $resource>0) {exit ("Permission denied.");}
 
 hook("pageevaluation");
 
@@ -111,7 +111,7 @@ $backtoalternativefileurl = generateURL("{$baseurl_short}pages/alternative_file.
 ?>
 <div class="BasicsBox">
 <p>
-<a onClick="return <?php echo ($context!="Modal"?"CentralSpace":"Modal")?>Load(this,true);" 
+<a onClick="return <?php echo $context != "Modal" ? "CentralSpace" : "Modal"; ?>Load(this,true);" 
     href="<?php echo $backtoalternativefilesurl?>">
     <?php echo LINK_CARET_BACK;
     echo $lang["backtomanagealternativefiles"];?>
@@ -124,7 +124,7 @@ $backtoalternativefileurl = generateURL("{$baseurl_short}pages/alternative_file.
     method="post"
     class="form"
     id="fileform"
-    onsubmit="return <?php echo ($context="Modal" ? "Modal" : "CentralSpace"); ?>Post(this, true);" action="<?php echo $backtoalternativefileurl?>">
+    onsubmit="return <?php echo $context = "Modal" ? "Modal" : "CentralSpace"; ?>Post(this, true);" action="<?php echo $backtoalternativefileurl?>">
 <?php
 if($modal)
     {
@@ -150,7 +150,10 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
     $previews_exist=true;
     $fileurl = get_resource_path($resource, false, 'thm', true, 'jpg', true, 1, false, date('Y-m-d H:i:s'), $ref);
     ?>
-    <div class="Question" style="border:0px;"><img id="preview" align="top" src="<?php echo $fileurl; ?>" class="ImageBorder" style="margin-right:10px;"/><br /><br /><div class="clearerleft"> </div></div>
+    <div class="Question" style="border:0px;">
+        <img alt="<?php echo escape(i18n_get_translated($file['name'] ?? "")); ?>"
+        id="preview" align="top" src="<?php echo $fileurl; ?>" class="ImageBorder" style="margin-right:10px;"/><br /><br /><div class="clearerleft"> </div>
+    </div>
     <?php
     }
     ?>
@@ -207,7 +210,6 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
   ?>
   <option value="restore"><?php echo $lang["recreatepreviews"]?></option>
 
-  <?php /*hook("moretweakingopt");*/?>
 </select>
 <div class="clearerleft"> </div>
 </div>

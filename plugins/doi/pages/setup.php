@@ -100,15 +100,6 @@ HTML;
 	# "... If that date cannot be determined, use the date of registration..."
 	# $page_def[] = config_add_single_select($pref_field . '_default', $lang['doi_setup_default'], $lang['doi_datacite_unknown_info_codes'], true);
 
-//	global $doi_pref_creator_fields, $doi_pref_title_fields, $doi_pref_publicationYear_fields, $doi_pref_creator_fields, $doi_pref_title_fields, $doi_pref_publicationYear_fields;
-//	doi_debug($doi_pref_creator_fields, 'w');
-//	doi_debug($doi_pref_creator_fields, 'a');
-//	doi_debug($doi_pref_title_fields, 'a');
-//	doi_debug($doi_pref_title_fields, 'a');
-//	doi_debug($doi_pref_publicationYear_fields, 'a');
-//	doi_debug($doi_pref_publicationYear_fields, 'a');
-//	doi_debug_globals();
-
 	$page_def[] = config_add_section_header('DataCite Credentials');
 	$page_def[] = config_add_text_input('doi_username', $lang['doi_setup_username']);
 	$page_def[] = config_add_text_input('doi_password', $lang['doi_setup_password'], TRUE);

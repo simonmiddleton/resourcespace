@@ -379,7 +379,7 @@ function process_config_options($user_id = null)
             $param_value = $config_option['value'];
 
             // Prepare the value since everything is stored as a string
-            if((is_numeric($param_value) && '' !== $param_value))
+            if (is_numeric($param_value) && '' !== $param_value)
                 {
                 $param_value = (int) $param_value;
                 }
@@ -387,8 +387,6 @@ function process_config_options($user_id = null)
             $GLOBALS[$config_option['parameter']] = $param_value;
             }
         }
-
-    return;
     }
 
 
@@ -1049,7 +1047,7 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
         ?>
     <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px"
     <?php if($autosave) { ?> onChange="AutoSaveConfigOption('<?php echo $name; ?>');"<?php } ?>>
-    <option value="" <?php echo (($current=="")?' selected':'') ?>><?php echo $lang["select"]; ?></option>
+    <option value="" <?php echo $current == "" ? ' selected' : '' ?>><?php echo escape($lang["select"]); ?></option>
 <?php
     foreach($fields as $field)
         {
@@ -1399,8 +1397,6 @@ function config_register_core_field_refs(string $source, array $refs)
             $core_field_refs[$source][] = $ref;
             }
         }
-
-    return;
     }
 
 /**
@@ -1436,7 +1432,6 @@ function override_rs_variables_by_eval(array $variables, string $code)
         $GLOBALS[$temp_variable_name] = $temp_variable_val;
         }
     $configs_overwritten = $temp_array;
-    return;
     }
 
 
@@ -1831,7 +1826,3 @@ function get_resource_type_field_columns()
     return $resource_type_field_column_definitions;
     }
 
-function set_maxNumberOfFiles()
-    {
-    return is_int_loose($GLOBALS['upload_max_number_files']??"")?$GLOBALS['upload_max_number_files']:'null';
-    }

@@ -2,7 +2,7 @@
 command_line_only();
 
 $webroot = dirname(__DIR__, 2);
-include_once("{$webroot}/include/request_functions.php");
+include_once "{$webroot}/include/request_functions.php";
 
 
 $missing_id_prop = array(

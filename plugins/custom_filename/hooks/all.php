@@ -26,6 +26,4 @@ function HookCustom_filenameAllUploadfilesuccess($resource_ref)
             debug("CUSTOM_FILENAME: {$error}");
             }
         }
-
-    return;
     }

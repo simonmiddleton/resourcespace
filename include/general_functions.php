@@ -15,13 +15,19 @@
  * @return string
  */
 function getval($val,$default,$force_numeric=false)
-    {
+{
     # return a value from POST, GET or COOKIE (in that order), or $default if none set
-    if (array_key_exists($val,$_POST)) {return ($force_numeric && !is_numeric($_POST[$val])?$default:$_POST[$val]);}
-    if (array_key_exists($val,$_GET)) {return ($force_numeric && !is_numeric($_GET[$val])?$default:$_GET[$val]);}
-    if (array_key_exists($val,$_COOKIE)) {return ($force_numeric && !is_numeric($_COOKIE[$val])?$default:$_COOKIE[$val]);}
-    return $default;
+    if (array_key_exists($val,$_POST)) {
+        return $force_numeric && !is_numeric($_POST[$val]) ? $default : $_POST[$val];
     }
+    if (array_key_exists($val,$_GET)) {
+        return $force_numeric && !is_numeric($_GET[$val]) ? $default : $_GET[$val];
+    }
+    if (array_key_exists($val,$_COOKIE)) {
+        return $force_numeric && !is_numeric($_COOKIE[$val])?$default:$_COOKIE[$val];
+    }
+    return $default;
+}
 
 /**
  * Escape a value prior to using it in SQL.
@@ -129,7 +135,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     if($y == "")
         {
         return "-";
-        };
+        }
 
     $month_part = substr($date, $bce_offset + 5, 2);
     if(!is_numeric($month_part))
@@ -165,11 +171,15 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
  * Redirect to the provided URL using a HTTP header Location directive. Exits after redirect
  *
  * @param  string $url  URL to redirect to
- * @return void
+ * @return never
  */
-function redirect($url)
+function redirect(string $url)
 	{
 	global $baseurl,$baseurl_short;
+
+    // Header may not contain NUL bytes
+    $url = str_replace("\0", '', $url);
+
 	if (getval("ajax","")!="")
 		{
 		# When redirecting from an AJAX loaded page, forward the AJAX parameter automatically so headers and footers are removed.	
@@ -269,7 +279,6 @@ function tidylist($list)
     $list=explode(",",$list);
     if (trim($list[0])=="") {array_shift($list);} # remove initial comma used to identify item is a list
     $op=join(", ",trim_array($list));
-    #if (strpos($op,".")!==false) {$op=str_replace(", ","<br/>",$op);}
     return $op;
     }
 
@@ -313,7 +322,7 @@ function average_length($array)
         {
         $total+=strlen(i18n_get_translated($array[$n]));
         }
-    return ($total/count($array));
+    return $total/count($array);
     }
 
 
@@ -1114,9 +1123,9 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
     {
     # Include footer
     global $header_colour_style_override, $mime_type_by_extension, $email_from;
-    include_once(__DIR__ . '/../lib/PHPMailer/PHPMailer.php');
-    include_once(__DIR__ . '/../lib/PHPMailer/Exception.php');
-    include_once(__DIR__ . '/../lib/PHPMailer/SMTP.php');
+    include_once __DIR__ . '/../lib/PHPMailer/PHPMailer.php';
+    include_once __DIR__ . '/../lib/PHPMailer/Exception.php';
+    include_once __DIR__ . '/../lib/PHPMailer/SMTP.php';
 
     if (check_email_invalid($email)){return false;}
     
@@ -2209,7 +2218,7 @@ function error_alert($error, $back = true, $code = 403)
 
     if($back)
         {
-        include(dirname(__FILE__)."/header.php");
+        include dirname(__FILE__)."/header.php";
         }
 
     ?>
@@ -2237,7 +2246,7 @@ function error_alert($error, $back = true, $code = 403)
     <?php
     if($back)
         {
-        include(dirname(__FILE__)."/footer.php");
+        include dirname(__FILE__)."/footer.php";
         }
     }
 
@@ -2342,12 +2351,12 @@ function draw_performance_footer()
     </table>
     <table class="InfoTable" style="float: right;margin-right: 10px;display:none;" id="querylog<?php echo $performance_footer_id?>">
     <?php foreach ($querylog as $query=>$details) { ?>
-    <tr><td><?php echo($query) ?></td></tr>
+    <tr><td><?php echo escape($query); ?></td></tr>
     <?php } ?>
     </table>
     </div>
     </div>
-    <?php
+<?php
     }
     }
 
@@ -2929,8 +2938,6 @@ function move_array_element(array &$array, $from_index, $to_index)
     {
     $out = array_splice($array, $from_index, 1);
     array_splice($array, $to_index, 0, $out);
-
-    return;
     }
 
 /**
@@ -2941,7 +2948,7 @@ function move_array_element(array &$array, $from_index, $to_index)
  */
 function emptyiszero($value)
     {
-    return ($value !== null && $value !== false && trim($value) !== '');
+    return $value !== null && $value !== false && trim($value) !== '';
     }
 
 
@@ -3142,7 +3149,6 @@ function generateFormToken($form_id)
     ?>
     <input type="hidden" name="<?php echo $CSRF_token_identifier; ?>" value="<?php echo $token; ?>">
     <?php
-    return;
     }
 
 
@@ -3178,7 +3184,7 @@ function generateAjaxToken($form_id)
 function generate_csrf_js_object(string $name): string
     {
     return $GLOBALS['CSRF_enabled']
-        ? json_encode([$GLOBALS['CSRF_token_identifier'] => generateCSRFToken($GLOBALS['usersession'], $name)])
+        ? json_encode([$GLOBALS['CSRF_token_identifier'] => generateCSRFToken($GLOBALS['usersession'] ?? null, $name)])
         : '{}';
     }
 
@@ -3321,21 +3327,9 @@ function is_resourcespace_upgrade_available()
         return false;
         }
 
-    if($product_version_data['major'] != $cvn_data['major'] && $product_version_data['major'] < $cvn_data['major'])
-        {
-        return true;
-        }
-    else if(
-        $product_version_data['major'] == $cvn_data['major']
-        && $product_version_data['minor'] != $cvn_data['minor']
-        && $product_version_data['minor'] < $cvn_data['minor'])
-        {
-        return true;
-        }
-    else if(
-        $product_version_data['major'] < $cvn_data['major']
-        && $product_version_data['minor'] != $cvn_data['minor']
-        && $product_version_data['minor'] < $cvn_data['minor'])
+    if (($product_version_data['major'] < $cvn_data['major'])
+        || ($product_version_data['major'] == $cvn_data['major'] && $product_version_data['minor'] < $cvn_data['minor'])
+    )
         {
         return true;
         }
@@ -3353,7 +3347,7 @@ function is_resourcespace_upgrade_available()
  */
 function get_recent_users($days)
     {
-    return (ps_value("select count(*) value from user where datediff(now(), last_active) <= ?", array("i", $days), 0));
+    return ps_value("SELECT count(*) value FROM user WHERE datediff(now(), last_active) <= ?", array("i", $days), 0);
     }
 
 
@@ -3620,7 +3614,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 				}
 			}
 
-		return (isset($GLOBALS['hook_return_value']) ? $GLOBALS['hook_return_value'] : false);
+		return isset($GLOBALS['hook_return_value']) ? $GLOBALS['hook_return_value'] : false;
 		}
 
 	# we have not encountered this hook and page combination before so go add it
@@ -3955,10 +3949,12 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
     $extendedtext = "";	
     if(isset($debug_extended_info) && $debug_extended_info && function_exists("debug_backtrace"))
         {
+        $trace_id = isset($GLOBALS['debug_trace_id']) ? "[traceID {$GLOBALS['debug_trace_id']}]" : '';
         $backtrace = debug_backtrace(0);
         $btc = count($backtrace);
-        $callingfunctions = array();
-        $page = "";
+        $callingfunctions = array(); 
+        $page = $backtrace[$btc - 1]['file'] ?? pagename();
+        $debug_line = $backtrace[0]['line'] ?? 0;
         for($n=$btc;$n>0;$n--)
             {
             if($page == "" && isset($backtrace[$n]["file"]))
@@ -3974,11 +3970,12 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
                     }
                 else
                     {
-                    $callingfunctions[] = $backtrace[$n]["function"];
+                    $callingfunctions[] = "{$backtrace[$n]["function"]}:{$backtrace[$n]['line']}";
                     }
                 }
             }
-        $extendedtext .= "[" . $page . "] " . (count($callingfunctions)>0 ? "(" . implode("->",$callingfunctions)  . ") " : " ");
+        $extendedtext .= "{$trace_id}[" . $page . "] "
+            . (count($callingfunctions)>0 ? "(" . implode("->",$callingfunctions)  . "::{$debug_line}) " : "(::{$debug_line}) ");
         }
 
     fwrite($f,date("Y-m-d H:i:s") . " " . $extendedtext . $text . "\n");
@@ -5262,7 +5259,7 @@ function compute_dpi($width, $height, &$dpi, &$dpi_unit, &$dpi_w, &$dpi_h)
         $dpi=300;
         }
 
-    if (((isset($sizes[$n]['unit']) && trim(strtolower($sizes[$n]['unit']))=="inches")) || $imperial_measurements)
+    if ((isset($sizes[$n]['unit']) && trim(strtolower($sizes[$n]['unit']))=="inches") || $imperial_measurements)
         {
         # Imperial measurements
         $dpi_unit=$lang["inch-short"];
@@ -5316,8 +5313,8 @@ function get_size_info(array $size, ?array $originalSize = null): string
             }
         }
 
-    $output = sprintf('
-        <p>%s &times; %s %s',
+    $output = sprintf(
+        '<p>%s &times; %s %s',
         htmlspecialchars($newWidth),
         htmlspecialchars($newHeight),
         htmlspecialchars($lang['pixels']),

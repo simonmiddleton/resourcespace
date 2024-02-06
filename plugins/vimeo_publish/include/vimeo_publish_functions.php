@@ -3,8 +3,9 @@ if(!file_exists(__DIR__ . '/../lib/vimeo.php/autoload.php'))
     {
     exit($lang['vimeo_publish_no_vimeoAPI_files']);
     }
-require_once(__DIR__ . '/../lib/vimeo.php/autoload.php');
-require_once(__DIR__ . '/../../../lib/tus/vendor/autoload.php');
+    
+require_once __DIR__ . '/../lib/vimeo.php/autoload.php';
+require_once __DIR__ . '/../../../lib/tus/vendor/autoload.php';
 
 use Vimeo\Vimeo;
 use Vimeo\Exceptions\VimeoUploadException;
@@ -21,8 +22,6 @@ function init_vimeo_api($client_id, $client_secret, $redirect_uri)
         }
 
     get_access_token($client_id, $client_secret, $redirect_uri);
-
-    return;
     }
 
 
@@ -119,8 +118,6 @@ function delete_vimeo_token($user_ref=0)
         $vimeo_publish_config["vimeo_publish_system_token"] = '';            
         set_plugin_config("vimeo_publish",$vimeo_publish_config);
         }
-
-    return;
     }
 
 

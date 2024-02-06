@@ -412,14 +412,14 @@ function do_search(
                                 {
                                 $sql_join->sql .=" JOIN resource_node rnd" . $c . " ON rnd" . $c . ".resource=r.ref JOIN node dn" . $c . " ON dn" . $c . ".ref=rnd" . $c . ".node AND dn" . $c . ".resource_type_field = ?";
                                 array_push($sql_join->parameters,"i",$datefield);
-                                
+
                                 $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "dn" . $c . ".name like ?";
                                 array_push($sql_filter->parameters,"s",$val . "%");
                                 }
 
-                                    
+
                             // Find where the searched value is LIKE the range values
-                           
+
                             }
                         elseif(in_array($kw[0],array("basicday","basicmonth","basicyear")))
                             {
@@ -639,10 +639,10 @@ function do_search(
                                                 {
                                                 continue;
                                                 }
-    
+
                                             $alternative_keywords[] = $alternative_keyword_keyref;
                                             }
-    
+
                                         if(count($alternative_keywords) > 0)
                                             {           
                                             // Multiple alternative keywords
@@ -666,7 +666,7 @@ function do_search(
                                         if ($contains_separators === true)
                                             {
                                             $keyword_split = split_keywords($keyword);
-                                            
+
                                             if($field_short_name_specified)
                                                 {
                                                 $keyword_split = array_map(prefix_value($fieldname.":"),$keyword_split);
@@ -838,9 +838,9 @@ function do_search(
                                         $nodatafieldinfo = get_resource_type_field($nodatafield);
                                         if ($nodatafieldinfo["global"] != 1)
                                             {
-                                            $nodatarestypes = explode(",",$nodatafieldinfo["resource_types"]);
+                                            $nodatarestypes = explode(",",(string)$nodatafieldinfo["resource_types"]);
                                             $restypesql->sql = " AND r[union_index].resource_type IN (" . ps_param_insert(count($nodatarestypes)) . ") ";
-                                            $restypesql->parameters = ps_param_fill("i",$nodatarestypes);
+                                            $restypesql->parameters = ps_param_fill($nodatarestypes,"i");
                                             }
 
                                         // Check that nodes are empty
@@ -1436,7 +1436,7 @@ function do_search(
             {
             return $results_sql;
             }
-        $count_sql = clone($results_sql);
+        $count_sql = clone $results_sql;
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
         $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
         
@@ -1450,7 +1450,7 @@ function do_search(
         $resultcount = $result["total"]  ?? 0;
         if ($resultcount>0 & count($result["data"]) > 0)
             {
-            $result = array_map(function($val){return(["ref"=>$val["ref"]]);}, $result["data"]);
+            $result = array_map(function($val){return ["ref"=>$val["ref"]];}, $result["data"]);
             }
         $mysql_verbatim_queries=$mysql_vq;
         log_keyword_usage($keywords_used, $result);
@@ -1463,7 +1463,7 @@ function do_search(
             {
             return $results_sql;
             }
-        $count_sql = clone($results_sql);
+        $count_sql = clone $results_sql;
         $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
         $result = sql_limit_with_total_count($results_sql, $search_chunk_size, $chunk_offset, true, $count_sql);
         }

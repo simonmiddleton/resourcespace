@@ -70,8 +70,9 @@ foreach($nodes_in_sequence as $node)
     // Strip line breaks because there shouldn't be any within dynamic keywords
     $i18n_node_name = preg_replace('/[\r\n]+/', '', $i18n_node_name);
 
-    // When editing multiple resources, we don't want to preselect any fixed list values; the user must make the necessary selections
-    if(!$multiple)
+    // Normally, when editing multiple resources, we don't want to preselect any fixed list values; the user must make the necessary selections
+    // However, when using copyfrom and editing multiple resources, then preselection does occur
+    if(!$multiple || ($multiple && $copyfrom != ''))
         {
         $add_searched_nodes_function_call .= "addKeyword_{$js_keywords_suffix}('{$node['ref']}', '{$i18n_node_name}');";
         }
@@ -152,6 +153,19 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
 
 function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
     {
+    <?php
+    if((int)$field["required"] === 1)
+        {?>        
+        // Prevent removal of final keyword if field is required
+        keycount = jQuery("[name^=nodes\\[<?php echo (int) $field["ref"]; ?>\\]]").length;
+        if(keycount == 1 && user_action)
+            {
+            styledalert('<?php echo escape($lang['requiredfield']); ?>','<?php echo escape(i18n_get_translated($field['title'])); ?>');
+            return false;
+            }
+        <?php
+        }?>
+
     // Save existing keywords array    
     var saved_Keywords = Keywords_<?php echo $js_keywords_suffix; ?>;
 

@@ -168,8 +168,8 @@ if (!$valid && !isset($system_login))
     {
     debug("[authenticate.php] User not valid!");
 	$_SERVER['REQUEST_URI'] = ( isset($_SERVER['REQUEST_URI']) ?
-	$_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'] . (( isset($_SERVER
-	['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '')));
+	$_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'] . ( isset($_SERVER
+	['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : ''));
     $path = $_SERVER["REQUEST_URI"];
     debug("[authenticate.php] path = $path");
     
@@ -357,6 +357,23 @@ if(!$disable_geocoding)
     }
 
 hook('handleuserref','',array($userref));
+
+// Set a trace ID which can be used to correlate events within this request (requires $debug_extended_info)
+$trace_id_components = [
+    getmypid(),
+    $_SERVER['REQUEST_TIME_FLOAT'],
+    $GLOBALS['pagename'], # already set in db.php
+    http_build_query($_GET),
+    $GLOBALS['userref'],
+];
+$GLOBALS['debug_trace_id'] = generate_trace_id($trace_id_components);
+debug(sprintf(
+    'User %s (ID %s) set its debug_trace_id to "%s" (components: %s)',
+    $GLOBALS['username'],
+    $GLOBALS['userref'],
+    $GLOBALS['debug_trace_id'],
+    json_encode($trace_id_components)
+));
 
 $is_authenticated=true;
 

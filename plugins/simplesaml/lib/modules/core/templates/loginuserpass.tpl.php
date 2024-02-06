@@ -67,7 +67,7 @@ if ($this->data['errorcode'] !== null) {
                            name="remember_username" value="Yes" />
                     <small><?php echo $this->t('{login:remember_username}'); ?></small>
                 </td>
-            <?php
+<?php
             }
             ?>
             </tr>
@@ -84,7 +84,7 @@ if ($this->data['errorcode'] !== null) {
                     <small><?php echo $this->t('{login:remember_username}'); ?></small>
                 </td>
             </tr>
-            <?php
+<?php
             }
             ?>
             <tr>
@@ -100,7 +100,7 @@ if ($this->data['errorcode'] !== null) {
                         name="remember_me" value="Yes" />
                     <small><?php echo $this->t('{login:remember_me}'); ?></small>
                 </td>
-            <?php
+<?php
             }
             ?>
             </tr>
@@ -117,7 +117,7 @@ if ($this->data['errorcode'] !== null) {
                     <small><?php echo $this->t('{login:remember_me}'); ?></small>
                 </td>
             </tr>
-            <?php
+<?php
             }
             ?>
             <?php

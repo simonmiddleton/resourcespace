@@ -197,7 +197,7 @@ if (!hook("replaceloginform"))
     <form id="loginform" method="post" action="<?php echo $baseurl_short?>login.php" <?php if (!$login_autocomplete) { ?>autocomplete="off"<?php } ?><?php if($modal){?>onsubmit="return ModalPost(this,true,true);" <?php } ?>>
         <input type="hidden" name="langupdate" id="langupdate" value="">  
         <input type="hidden" name="url" value="<?php echo htmlspecialchars($url)?>">
-        <input type="hidden" name="modal" value="<?php echo ($modal=="true"?"true":"") ?>">
+        <input type="hidden" name="modal" value="<?php echo $modal == "true" ? "true" : ""; ?>">
 
         <?php $header_img_src = get_header_image(); ?>
         <div id="LoginHeader">

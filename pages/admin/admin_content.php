@@ -70,14 +70,14 @@ $jumpcount=1;
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td width="10%"><?php echo $lang["page"]?></td>
-<td width="25%"><?php echo $lang["name"]?></td>
+<td width="10%"><?php echo escape($lang["page"]); ?></td>
+<td width="25%"><?php echo escape($lang["name"]); ?></td>
 <?php if ($extended) { ?>
-<td width="10%"><?php echo $lang["language"]?></td>
-<td width="10%"><?php echo $lang["group"]?></td>
+<td width="10%"><?php echo escape($lang["language"]); ?></td>
+<td width="10%"><?php echo escape($lang["group"]); ?></td>
 <?php } ?>
-<td width="<?php echo ($extended?"40":"55") ?>%"><?php echo $lang["text"]?></td>
-<td width="10%"><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+<td width="<?php echo $extended ? "40" : "55"; ?>%"><?php echo escape($lang["text"])?></td>
+<td width="10%"><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
 </tr>
 
 <?php

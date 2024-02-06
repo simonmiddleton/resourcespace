@@ -91,6 +91,4 @@ function HookVideo_tracksViewAdditionalresourcetools2($resource, $access)
         </td>
     </tr>
     <?php
-
-    return;
     }

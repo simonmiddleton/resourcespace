@@ -72,7 +72,7 @@ function HookMeta_appendAllAddtouploadurl()
 	global $found_meta_append_field_ref;
 	if ($found_meta_append_field_ref)
 		{
-		return ("&metaappend=" . $found_meta_append_field_ref);		// pass on to uploader via URL
+		return "&metaappend=" . $found_meta_append_field_ref;		// pass on to uploader via URL
 		}
 	}
 	

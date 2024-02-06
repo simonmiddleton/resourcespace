@@ -1,6 +1,6 @@
 <?php
 $suppress_headers = true;
-include "../../include/db.php";
+include_once "../../include/db.php";
 include_once "../../include/image_processing.php";
 
 if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identifier_field) || !isset($iiif_userid) || !is_numeric($iiif_userid) || !isset($iiif_description_field))
@@ -9,6 +9,13 @@ if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identif
     }
 
 include_once "../../include/api_functions.php";
+
+if($iiif_version === "2")
+    {
+    // Older version of the standard. Needed if clients don't support v3.0 - see https://iiif.io/api/presentation/3.0/change-log/
+    include __DIR__ . "/handler2.php";
+    exit();
+    }
 
 // Set up request object
 $iiif_options["rootlevel"] = $baseurl_short . "iiif/";
@@ -26,7 +33,7 @@ $iiif_options["preview_tiles"] = (bool)$preview_tiles ?? true;
 $iiif_options["preview_tile_size"] = $preview_tile_size ?? 1024;
 $iiif_options["preview_tile_scale_factors"] = $preview_tile_scale_factors ?? [1,2,4];
 $iiif_options["download_chunk_size"] = $download_chunk_size;
-$iiif_options["rights_statement"] = $iiif_rights_statement ?? "";
+$iiif_options["rights"] = $iiif_rights_statement ?? "";
 
 $iiif = new IIIFRequest($iiif_options);
 
@@ -56,18 +63,15 @@ elseif($iiif->getRequest("api") == "image")
     }
 elseif($iiif->getRequest("api") == "presentation")
     {
-    if($iiif->getRequest("type") == "")
-        {
-        $iiif->errorcode=404;
-        $iiif->errors[] = "Bad request. Valid options are 'manifest', 'sequence' or 'canvas' e.g. ";
-        $iiif->errors[] = "For the manifest: " . $iiif->rooturl . $iiif->getRequest("id") . "/manifest";
-        $iiif->errors[] = "For a sequence : " . $iiif->rooturl . $iiif->getRequest("id") . "/sequence";
-        $iiif->errors[] = "For a canvas : " . $iiif->rooturl . $iiif->getRequest("id") . "/canvas/<identifier>";
-        }
-    else
-        {
-        $iiif->processPresentationRequest();
-        }
+    $iiif->processPresentationRequest();
+    }
+else
+    {
+    $iiif->errorcode=404;
+    $iiif->errors[] = "Bad request. Valid options are 'manifest', 'sequence' or 'canvas' e.g. ";
+    $iiif->errors[] = "For the manifest: " . $iiif->rooturl . $iiif->getRequest("id") . "/manifest";
+    $iiif->errors[] = "For a sequence : " . $iiif->rooturl . $iiif->getRequest("id") . "/sequence";
+    $iiif->errors[] = "For a canvas : " . $iiif->rooturl . $iiif->getRequest("id") . "/canvas/<identifier>";
     }
 
 // Send the response
@@ -78,6 +82,7 @@ if($iiif->isValidRequest())
         http_response_code(200); # Send OK
         }
     header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: Accept");
     if($iiif->is_image_response())
         {
         $iiif->renderImage();

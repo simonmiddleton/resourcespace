@@ -39,7 +39,7 @@ if ($resource == false)
     }
 
 // Check if the user is allowed to edit this resource.
-if (!get_edit_access($ref, $resource['archive'], false, $resource))
+if (!get_edit_access($ref, $resource['archive'], $resource))
     {
     exit($lang['error-permissiondenied']);
     }
@@ -106,11 +106,12 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 	$resource=get_resource_data($ref,false);
     }
 
-// $geo_lat = getval('new_lat', $resource["geo_lat"]);
-// $geo_long = getval('new_long',  $resource["geo_long"]);
 $zoom = getval('new_zoom',  $resource["mapzoom"]);
 
-echo $valid_coords == false ? "<p class='FormIncorrect'>" . $lang['location-validation-error']  . "</p>" : "";
+if ($valid_coords == false && getval('geo-loc','') != '')
+    {
+    echo "<p class='FormIncorrect'>" . $lang['location-validation-error']  . "</p>";
+    }
 ?>
 
 <div class="RecordBox">

@@ -4,9 +4,9 @@ ob_start();
 
 $nocache = true;
 
-include_once("../../../include/db.php");
-include_once("../../../include/authenticate.php");
-include_once("../../../include/image_processing.php");
+include_once "../../../include/db.php";
+include_once "../../../include/authenticate.php";
+include_once "../../../include/image_processing.php";
 
 $ref             = getval("ref", 0, true);
 $alternatives    = get_alternative_files($ref);
@@ -50,7 +50,7 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
             # By 2" for width and height is needed for YUV 4:2:0 chroma subsampled outputs
             # $shell_exec_cmd .= " -pix_fmt yuv420p -c:a mp3";
 
-            if($extension == 'jpg' or $extension == 'png')
+            if ($extension == 'jpg' || $extension == 'png')
                 {
                 $shell_exec_cmd  = $ffmpeg_fullpath . " -y -loop 1 -i " . escapeshellarg($image);
                 $shell_exec_cmd .= " -t " . escapeshellarg($video_bookend_seconds) . " ";
@@ -140,7 +140,7 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
 
 # Display page
 
-include("../../../include/header.php");
+include "../../../include/header.php";
 
 if(isset($error))
     {

@@ -260,14 +260,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 $value=getval($name,"");
                 if ($value!=="")
                     {
-                    /*
-                    $vs=split_keywords($value);
-                    for ($m=0;$m<count($vs);$m++)
-                        {
-                        if ($search!="") {$search.=", ";}
-                        $search.=$fields[$n]["name"] . ":" . strtolower($vs[$m]);
-                        }
-                    */
                     if ($search!="") {$search.=", ";}
                     $search.= ((strpos($value," ")===false)?$fields[$n]["name"] . ":" . $value:"\"" . $fields[$n]["name"] . ":" .substr($value,1,-1) . "\"");
                     }
@@ -275,7 +267,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
             else
                 {
                 # Process checkbox list
-                //$options=trim_array(explode(",",$fields[$n]["options"]));
                 $options=array();
                 node_field_options_override($options,$fields[$n]['ref']);
                 $p="";
@@ -508,7 +499,6 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 if ($key[0]=='!' && strlen($value) > 0)
                     {
                     $search=$key . $value . ',' . $search;
-                    //break;
                     }
                 }
             }
@@ -1292,14 +1282,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         global $userref,$ignore_collection_access;
 
         $colcustperm = $sql_join;
-        $colcustfilter = $sql_filter; // to avoid allowing this sql_filter to be modified by the $access_override search in the smart collection update below!!!
-
-        # Special case if a key has been provided.
-        if($k != '')
-            {
-            $sql_filter->sql = 'r.ref > 0';
-            $sql_filter->parameters = [];
-            }
 
         # Extract the collection number
         $collection = explode(' ', $search);
@@ -1323,14 +1305,14 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 $request_collections = array();
                 if (checkperm("R"))
                     {
-                    include_once('request_functions.php');
+                    include_once 'request_functions.php';
                     $request_collections = array_column(get_requests(), 'collection');
                     }
                 # include collections of research resources
                 $research_collections = array();
                 if (checkperm("r"))
                     {
-                    include_once('research_functions.php');
+                    include_once 'research_functions.php';
                     $research_collections = array_column(get_research_requests(), 'collection');
                     }
                 $validcollections = array_unique(array_merge($user_collections, array($USER_SELECTION_COLLECTION), $public_collections, $request_collections, $research_collections));
@@ -1379,8 +1361,8 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 }   
             }
 
-        $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $colcustfilter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
-        $sql->parameters = array_merge($colcustperm->parameters,["i",$collection],$colcustfilter->parameters);
+        $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        $sql->parameters = array_merge($colcustperm->parameters,["i",$collection],$sql_filter->parameters);
         $collectionsearchsql=hook('modifycollectionsearchsql','',array($sql));
 
         if($collectionsearchsql)
@@ -1526,7 +1508,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         // Don't filter if user is searching for their own resources and $open_access_for_contributor=true;
         global $open_access_for_contributor;
-        if($open_access_for_contributor && $userref == $cuser)
+        if(!($open_access_for_contributor && $userref == $cuser))
             {
             $sql_filter->sql = "archive IN (" . ps_param_insert(count($archive)) . ")";
             $sql_filter->parameters = ps_param_fill($archive, "i");
@@ -1790,7 +1772,6 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     . ' GROUP BY r.ref ORDER BY ' . $order_by
                     . $sql_suffix;
                 $sql->parameters = array_merge($sql_join->parameters, $sql_filter->parameters);
-                // printf('<br>$sql = %s', print_r($sql, true));
                 debug("[search_special] SQL = " . json_encode($sql));
                 }
             else
@@ -1821,7 +1802,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
             }
         else
             {
-            $count_sql = clone($sql);
+            $count_sql = clone $sql;
             $count_sql->sql = str_replace("ORDER BY " . $order_by,"",$count_sql->sql);
             $result = sql_limit_with_total_count($sql, $search_chunk_size, $chunk_offset, $b_cache_count, $count_sql);
             if(is_array($fetchrows))
@@ -1837,13 +1818,13 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                     // This needs to include archive and created_by columns too as often used to work out permission to edit collection
                     $result["data"] = array_map(function($val)
                         {
-                        return([
+                        return [
                             "ref"           =>$val["ref"],
                             "resource_type" =>$val["resource_type"],
                             "archive"       =>$val["archive"],
                             "created_by"    =>$val["created_by"],
                             "access"        =>$val["access"],
-                                ]);
+                                ];
                             }, $result["data"]
                         );
                     }
@@ -1928,7 +1909,7 @@ function rebuild_specific_field_search_from_node(array $node)
 
     // Note: at the moment there is no need to return a specific field search by multiple options
     // Example: country:keyword1;keyword2
-    return ((strpos($node['name']," ")===false)?$field_shortname . ":" . i18n_get_translated($node['name']):"\"" . $field_shortname . ":" . i18n_get_translated($node['name']) . "\"");
+    return (strpos($node['name']," ")===false)?$field_shortname . ":" . i18n_get_translated($node['name']):"\"" . $field_shortname . ":" . i18n_get_translated($node['name']) . "\"";
     }
 
 
@@ -2135,7 +2116,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
         $s=explode("-",$search);
         if (count($s)>=3)
             {
-            return (array($s[0],$s[0] . "-" . $s[1],$search));
+            return array($s[0],$s[0] . "-" . $s[1],$search);
             }
         else if (is_array($search))
             {

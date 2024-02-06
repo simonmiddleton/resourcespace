@@ -51,7 +51,7 @@ if(!is_array($resource))
     error_alert($lang['error-pageload'],false);
     exit();
     }
-$editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
+$editaccess = get_edit_access($ref,$resource["archive"],$resource);
 
 // not allowed to edit this resource?
 if (!($editaccess || !checkperm("A")) && $ref>0) {exit ("Permission denied.");}
@@ -109,7 +109,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
     if(strpos($ffmpeg_fullpath, 'avconv') == true){$use_avconv = true;}
 
     // create new resource
-    if ($upload_type == "new" && get_edit_access($resource['ref'],$resource["archive"], false,$resource) && (checkperm("d") || checkperm("c")))
+    if ($upload_type == "new" && get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c")))
         {
         // create a new resource.
         $newref=copy_resource($ref,-1,$lang["video_splice_createdfromvideosplice"]);
@@ -361,7 +361,7 @@ if(isset($resource["field".$view_title_field]))
                 include dirname (__FILE__, 4) . "/pages/video_player.php";
                 ?>
             </div>
-            <?php
+<?php
             }
         ?>
         </div>
@@ -402,7 +402,7 @@ if(isset($resource["field".$view_title_field]))
           action="<?php echo $form_action; ?>"
           id="trimform"
           onsubmit="
-            return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Post(this, true);">
+            return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this, true);">
             <?php generateFormToken("trimform"); ?>
             <div class="Question" id="video_trim_tool">
             <label><?php echo $lang["video-trim"]?></label>
@@ -434,14 +434,16 @@ if(isset($resource["field".$view_title_field]))
             <?php
             if ($resource["has_image"]==1)
                 { ?>
-                <img id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; max-width: 40vw;"/>
+                <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
+                id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; max-width: 40vw;"/>
                 <?php // check for watermarked version and show it if it exists
                 if (checkperm("w"))
                     {
                     $wmpath=get_resource_path($ref,true,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true);
                     if (file_exists($wmpath))
                         { ?>
-                        <img style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
+                        <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
+                         style="display:none;" id="wmpreview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,true)?>" class="ImageBorder"/>
                         <?php
                         }
                     } ?>
@@ -452,9 +454,10 @@ if(isset($resource["field".$view_title_field]))
                 {
                 // Show the no-preview icon
                 ?>
-                <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
+                <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
+                 src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
                 <br />
-                <?php
+<?php
                 }
             if ($resource["file_extension"]!="")
                 { ?>
@@ -481,7 +484,7 @@ if(isset($resource["field".$view_title_field]))
             <label><?php echo $lang["video-trim_upload-type"]?></label>
             <select name="upload_type" id="uploadtype" class="stdwidth" onChange="var q=document.getElementById('question_collectionadd');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
             <?php if(!checkperm("A")){?><option value="alt"><?php echo $lang["addalternativefile"]?></option><?php }?>
-            <?php if(get_edit_access($resource['ref'],$resource["archive"], false,$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo $lang["createnewresource"]?></option><?php }?>
+            <?php if(get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo $lang["createnewresource"]?></option><?php }?>
             </select>
             <div class="clearerleft"> </div>
         </div>

@@ -429,7 +429,7 @@ include "../include/header.php";
 		<h2><?php echo htmlspecialchars($lang["internalusersharing"])?></h2>
 		<div class="Question">
 		<label for="users"><?php echo htmlspecialchars($lang["attachedusers"])?></label>
-		<div class="Fixed"><?php echo (($collection["users"]=="")?$lang["noattachedusers"]:htmlspecialchars($collection["users"])); ?><br /><br />
+		<div class="Fixed"><?php echo escape($collection["users"] == "" ? $lang["noattachedusers"] : $collection["users"]); ?><br /><br />
 		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_edit.php?ref=<?php echo urlencode($ref); ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-edit"]);?></a>
 		</div>
 		<div class="clearerleft"> </div>

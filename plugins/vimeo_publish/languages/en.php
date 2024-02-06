@@ -19,7 +19,6 @@ $lang['vimeo_publish_publish_as_user'] = 'You will be publishing to Vimeo as: ';
 $lang['vimeo_publish_delete_token']    = 'Use a different Vimeo account (ensure you are logged out of this Vimeo account first)';
 $lang['vimeo_publish_button_text']     = 'Publish';
 $lang['vimeo_publish_legal_warning']   = 'By clicking \'OK\' you certify that you own all rights to the content or that you are authorized by the owner to make the content publicly available on Vimeo and that it otherwise complies with the Vimeo\'s Terms of Service located at https://vimeo.com/terms';
-// $lang[''] = '';
 
 // Vimeo API instructions:
 $lang['vimeo_api_instructions_condition_1'] = 'You will need to register ResourceSpace as an app with Vimeo and get an OAuth client ID and Secret';

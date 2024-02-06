@@ -209,7 +209,7 @@ include "../../../include/header.php";
     <div class="RecordPanel RecordPanelLarge">
         <div class="RecordResource">
             <div id="splice_scroll">
-                <div id="splice_reel" style="overflow: hidden; height: 200px !important; width:<?php echo ((count($videos)+2) * 180);?>px">
+                <div id="splice_reel" style="overflow: hidden; height: 200px !important; width:<?php echo (count($videos)+2) * 180;?>px">
                 <?php
 
                     foreach ($videos_data as $video_data)
@@ -224,7 +224,8 @@ include "../../../include/header.php";
                             }
 
                 ?>
-                <img src="<?php echo $img ?>" id="splice_<?php echo $video_data["ref"] ?>" class="splice_item">
+                <img alt="<?php echo escape(i18n_get_translated($video_data['field'.$view_title_field] ?? ""));?>"
+                 src="<?php echo $img ?>" id="splice_<?php echo $video_data["ref"] ?>" class="splice_item">
                 <?php } ?>
                 </div>
             </div>

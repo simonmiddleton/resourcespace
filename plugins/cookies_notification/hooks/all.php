@@ -36,8 +36,6 @@ function HookCookies_notificationAllHandleuserref()
         rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', true);
         redirect("{$baseurl}/login.php?logout=true&cookies_use=true");
         }
-
-    return;
     }
 
 
@@ -120,8 +118,6 @@ function HookCookies_notificationAllAfteruicenter()
         </script>
         <?php
         }
-
-    return;
     }
 
 function HookCookies_notificationLoginPostlogout()
@@ -135,15 +131,10 @@ function HookCookies_notificationLoginPostlogout()
         {
         redirect($baseurl);
         }
-
-    return;
     }
 
 function HookCookies_notificationAllRemoveuseridcookie()
     {
     global $baseurl;
- 
     rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', true);
- 
-    return;
     }

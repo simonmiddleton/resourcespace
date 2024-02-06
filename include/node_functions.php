@@ -194,8 +194,6 @@ function delete_node($ref)
     ps_query("DELETE FROM node WHERE ref = ?",array("i",$ref));
 
     remove_all_node_keyword_mappings($ref);
-
-    return;
     }
 
 
@@ -214,8 +212,6 @@ function delete_nodes_for_resource_type_field($ref)
         }
 
     ps_query("DELETE FROM node WHERE resource_type_field = ?",array("i",$ref));
-
-    return;
     }
 
 
@@ -554,8 +550,6 @@ function reorder_node(array $nodes_new_order)
 
     ps_query($query,$parameters);
     clear_query_cache("schema");
-
-    return;
     }
 
 /**
@@ -668,13 +662,13 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
                 $i--;
                 ?>
                 <td class="backline" width="10">
-                    <img width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
+                    <img alt="" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
                 </td>
                 <?php
                 }
                 ?>
                 <td class="backline" width="10">
-                    <img width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
+                    <img alt="" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
                 </td>
                 <td>
                     <input type="text" name="new_option_name" form="new_node_<?php echo $parent; ?>_option" value="">
@@ -710,7 +704,6 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
     </table>
 
     <?php
-    return;
     }
 
 
@@ -844,13 +837,13 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                 $i--;
                 ?>
                 <td class="backline" width="10">
-                    <img width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
+                    <img alt="" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/sp.gif">
                 </td>
                 <?php
                 }
                 ?>
                 <td class="backline" width="10">
-                    <img id="node_<?php echo $ref; ?>_toggle_button" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/<?php echo $spacer_filename; ?>" onclick="<?php echo $onClick; ?>">
+                    <img alt="" id="node_<?php echo (int) $ref; ?>_toggle_button" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/<?php echo $spacer_filename; ?>" onclick="<?php echo $onClick; ?>">
                 </td>
                 <td>
                     <input type="text" name="option_name" form="option_<?php echo $ref; ?>" value="<?php echo $name; ?>">
@@ -1097,7 +1090,6 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
     ps_query("DELETE FROM node_keyword WHERE node = ? AND keyword = ? $position_sql",$parameters);
     
     ps_query("UPDATE keyword SET hit_count = hit_count - 1 WHERE ref = ?",array("i",$keyword_ref));
-    return;
     }
 
 
@@ -1111,7 +1103,6 @@ function remove_node_keyword($node, $keyword, $position, $normalized = false)
 function remove_all_node_keyword_mappings($node)
     {
     ps_query("DELETE FROM node_keyword WHERE node = ?",array("i",$node));
-    return;
     }
 
 /**
@@ -1141,8 +1132,6 @@ function check_node_indexed(array $node, $partial_index = false)
     // (re-)index node
     remove_all_node_keyword_mappings($node['ref']);
     add_node_keyword_mappings($node, $partial_index);
-
-    return;
     }
 
 
@@ -1327,7 +1316,7 @@ function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, 
             return false;
             }
         
-        $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
+        $access = get_edit_access($resourceid,$resourcedata["archive"],$resourcedata);
         if(!$access)
             {return false;}
 
@@ -1389,7 +1378,7 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
         foreach($resources as $resourceid)
             {
             $resourcedata = get_resource_data($resourceid);
-            $access = get_edit_access($resourceid,$resourcedata["archive"],false,$resourcedata);
+            $access = get_edit_access($resourceid,$resourcedata["archive"],$resourcedata);
             if(!$access)
                 {return false;}
             
@@ -1684,8 +1673,6 @@ function copy_resource_nodes($resourcefrom, $resourceto)
     ", array_merge(array("i", $resourceto, "i", $resourcefrom), $omit_fields_sql_params));
 
     log_node_changes($resourceto,$nodes_to_add,array());
-
-    return;
     }
     
     
@@ -2071,6 +2058,18 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
 
     $nodeentries = ps_query($sql_query, array("i", (int) $resource, "i", (int) $treefield));
 
+    # Any node that doesn't have a parent in the nodes supplied becomes a parent in this context as its real parent might not have been selected.
+    # For example, when viewing options set when $category_tree_add_parents=false
+    # Needed for sorting below to ensure the container "ROOT" has child items to return.
+    $selected_nodes = array_column($nodeentries, 'ref');
+    for ($n=0; $n < count($nodeentries); ++$n)
+        {
+        if ($nodeentries[$n]['parent'] !== 0 && !in_array($nodeentries[$n]['parent'], $selected_nodes))
+            {
+            $nodeentries[$n]['parent'] = 0;
+            }
+        }
+
     # Category trees have no container root, so create one to carry all top level category tree nodes which don't have a parent
     $rootnode = cattree_node_creator(0, 0, "ROOT", null, 0, null, array());
 
@@ -2188,7 +2187,7 @@ function get_cattree_node_strings($nodesordered, $strings_are_paths=true) {
 function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource, $children) {
     return array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name, 
                 'parent' => $parent, 'order_by' => $order_by, 'resource' => $resource, 'children' => $children);
-};
+}
   
 
 /**
@@ -2606,12 +2605,11 @@ function check_delete_nodes($nodes)
 *
 * @param  integer  $field  Field ID
 *  
-* @return bool  
+* @return void  
 */
 function remove_field_keywords($field)
     {
     ps_query("DELETE nk FROM node_keyword nk LEFT JOIN node n ON n.ref=nk.node WHERE n.resource_type_field = ?", ["i",$field]);
-    return;
     }
 
 /**
@@ -2750,7 +2748,6 @@ function add_sql_node_language(&$sql_select,&$sql_params,string $alias = "node")
                     END))
         ELSE TRIM(" . $alias . ".name)
         END AS translated_name";
-    return;
     }
 
 /**
@@ -2833,7 +2830,7 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryr
                 {
                 continue;
                 }
-            if(((int)$fieldglobals[$field] == 0 && !in_array($restype,$restype_mappings[$field])))
+            if ((int)$fieldglobals[$field] == 0 && !in_array($restype,$restype_mappings[$field]))
                 {
                 $remove_fields[] = $field;
                 }

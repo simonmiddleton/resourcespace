@@ -228,7 +228,6 @@ else if($delete_requires_password && $delete_all)
     <label for="password"><?php echo $lang["yourpassword"]?></label>
     <input type=password class="shrtwidth" name="password" id="password" />
     <div class="clearerleft"> </div>
-    <?php if (trim((string)$error)!="") { ?><div class="FormError"><?php echo htmlspecialchars($error) ?></div><?php } ?>
     </div>
 
     <div class="QuestionSubmit">
@@ -250,9 +249,9 @@ else if($delete_requires_password && $delete_all)
 <?php }
 else
 {?>
-<h1><?php echo $lang["editcollection"]; render_help_link("user/edit-collection"); ?></h1>
+<h1><?php echo escape($lang["editcollection"]); render_help_link("user/edit-collection"); ?></h1>
 <p><?php echo text("introtext"); ?></p>
-<form method=post id="collectionform" action="<?php echo $form_action; ?>" onsubmit="return <?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(this, false);">
+<form method=post id="collectionform" action="<?php echo $form_action; ?>" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this, false);">
     <?php generateFormToken("collectionform"); ?>
     <input type="hidden" name="modal" value="<?php echo $modal ? "true" : "false" ?>">
     <input type="hidden" name="redirection_endpoint" id="redirection_endpoint" value="<?php echo urlencode($redirection_endpoint); ?>">
@@ -260,7 +259,7 @@ else
     <input type=hidden name="submitted" value="true">
     <input type=hidden name="update_parent" value="false">
     <div class="Question">
-        <label for="name"><?php echo $lang["name"]?></label>
+        <label for="name"><?php echo escape($lang["name"])?></label>
         <input type=text class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($collection["name"]) ?>" maxlength="100" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>>
         <div class="clearerleft"> </div>
     </div>
@@ -307,16 +306,16 @@ else
             ?>
             <input type="hidden" id="public" name="public" value="0">
             <div class="Fixed"><?php echo $lang["mycollection_notpublic"] ?></div>
-            <?php 
+<?php 
             } 
         else 
             { ?>
-            <select id="public" name="public" class="stdwidth" onchange="document.getElementById('redirect').value='';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">
-                <option value="0" <?php if ($collection["public"]!=1) {?>selected<?php } ?>><?php echo $lang["private"]?></option>
+            <select id="public" name="public" class="stdwidth" onchange="document.getElementById('redirect').value='';<?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('collectionform'));">
+                <option value="0" <?php if ($collection["public"]!=1) {?>selected<?php } ?>><?php echo escape($lang["private"])?></option>
                 <?php 
                 if ($collection["cant_delete"]!=1 && ($enable_public_collections || checkperm("h"))) 
                     { ?>
-                    <option value="1" <?php if ($collection["public"]==1) {?>selected<?php } ?>><?php echo $lang["public"]?></option>
+                    <option value="1" <?php if ($collection["public"]==1) {?>selected<?php } ?>><?php echo escape($lang["public"])?></option>
                     <?php 
                     } ?>
             </select>
@@ -338,13 +337,13 @@ else
             <div class="Question">
                 <label for="users"><?php echo $lang["attachedusers"]?></label>
                 <?php $userstring=htmlspecialchars($collection["users"]);
-                
+
                 if($userstring!='')
                     {
                     $userstring.=",";
                     }
                 $userstring.=htmlspecialchars($collection["groups"]);
-                    
+
                 include "../include/user_select.php"; ?>
                 <div class="clearerleft"> </div>
             </div>
@@ -403,7 +402,7 @@ else
         ?>
         <div class="Question">
         <label for="allow_changes"><?php echo $lang["theme_home_promote"]?></label>
-        <input type="checkbox" id="home_page_publish" name="home_page_publish" value="1" <?php if ($collection["home_page_publish"]==1) { ?>checked<?php } ?> onClick="document.getElementById('redirect').value='';<?php echo ($modal ? "Modal" : "CentralSpace") ?>Post(document.getElementById('collectionform'));">
+        <input type="checkbox" id="home_page_publish" name="home_page_publish" value="1" <?php if ($collection["home_page_publish"]==1) { ?>checked<?php } ?> onClick="document.getElementById('redirect').value='';<?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('collectionform'));">
         <div class="clearerleft"> </div>
         </div>
         <?php
@@ -443,14 +442,14 @@ else
         <input type="checkbox" id="allow_changes" name="allow_changes" <?php if ($collection["allow_changes"]==1) { ?>checked<?php } ?>>
         <div class="clearerleft"> </div>
         </div>
-        <?php 
+<?php 
         } 
     else 
         { 
         # allow changes by default
         ?>
         <input type=hidden id="allow_changes" name="allow_changes" value="checked">
-        <?php 
+<?php 
         }
     
     hook('additionalfields2');

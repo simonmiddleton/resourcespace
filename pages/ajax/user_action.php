@@ -1,6 +1,6 @@
 <?php
-include_once('../../include/db.php');
-include_once('../../include/authenticate.php');
+include_once '../../include/db.php';
+include_once '../../include/authenticate.php';
 
 // Generic endpoint that can be used for ajax calls
 $action = getval('action','');
@@ -50,7 +50,7 @@ switch ($action)
             $return['message'] = $lang["error_invalid_input"] ;
             break;
             }
-        $edit_access = get_edit_access($resource,$resource_data["archive"],false,$resource_data);
+        $edit_access = get_edit_access($resource,$resource_data["archive"],$resource_data);
         $lockuser =  $resource_data["lock_user"];
 
         if($lockaction && $lockuser > 0 && $lockuser != $userref)

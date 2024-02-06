@@ -582,10 +582,6 @@ $ffmpeg_preview_force = true;
 # on internal network and want to see HQ video. Setting this config will override $download_usage=true; for the purpose of displaying the video preview.
 $video_preview_original=false;
 
-# Encode preview asynchronous?
-# REQUIRES: $php_path
-$ffmpeg_preview_async=false;
-
 # Find out and obey the Pixel Aspect Ratio
 $ffmpeg_get_par=false;
 
@@ -1608,9 +1604,6 @@ $upload_chunk_size='5mb';
 
 # This is the maximum number of concurrent file uploads allowed. Set to 1 to force single thread.
 $upload_concurrent_limit=5;
-
-# This is the maximum number of files that can be added to the uploader. Unset or set to 'null' to remove limit.
-# $upload_max_number_files='null';
 
 # Resource deletion state
 # When resources are deleted, the variable below can be set to move the resources into an alternative state instead of removing the resource and its files from the system entirely.
@@ -2951,6 +2944,9 @@ $annotate_fields = array();
 // Enable IIIF interface. See http://iiif.io for information on the IIIF standard
 // If set to true a URL rewrite rule or similar must be configured on the web server for any paths under the <base_url>/iiif path
 $iiif_enabled = false;
+
+// IIIF version. Optionally can be set to "3.0" if supported by clients - see https://iiif.io/api/presentation/3.0/
+$iiif_version = "2";
 
 // User ID to use for IIIF. This user should be granted access only to those resources that are to be published via IIIF using permissions and search filter
 // $iiif_userid = 0;

@@ -21,7 +21,7 @@ if($sysvars["upgrade_system_level"] < 2)
                 {
                 ps_query("DELETE FROM resource_keyword WHERE resource_type_field = ? LIMIT 1000", array("i", $fixed_field));
                 $c = $c - 1000;
-                echo (" -- " . $c . " rows remaining to delete" . $LINE_END);
+                echo " -- " . $c . " rows remaining to delete" . $LINE_END;
                 }
             }
             

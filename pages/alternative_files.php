@@ -37,7 +37,7 @@ $urlparams= array(
 # Fetch resource data.
 $resource=get_resource_data($ref);
 
-$editaccess = get_edit_access($ref,$resource["archive"], false,$resource);
+$editaccess = get_edit_access($ref,$resource["archive"],$resource);
 
 # Not allowed to edit this resource?
 if (!($editaccess || checkperm('A')) && $ref>0) {exit ("Permission denied.");}
@@ -156,7 +156,7 @@ if($alternative_file_resource_preview)
     if(file_exists(get_resource_path($resource['ref'], true, 'col', false)))
         {
         ?>
-        <img src="<?php echo get_resource_path($resource['ref'], false, 'col', false); ?>"/>
+        <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? "")); ?>" src="<?php echo get_resource_path($resource['ref'], false, 'col', false); ?>"/>
         <?php
         } 
     }
@@ -200,7 +200,7 @@ for ($n=0;$n<count($files);$n++)
 	<td><?php echo htmlspecialchars($files[$n]["name"])?></td>	
 	<td><?php echo htmlspecialchars($files[$n]["description"])?>&nbsp;</td>
     <?php hook('alternativefileslist2', '', array($ref, $files[$n])); ?>
-	<td><?php echo ($files[$n]["file_extension"]==""?$lang["notuploaded"]:htmlspecialchars(str_replace_formatted_placeholder("%extension", $files[$n]["file_extension"], $lang["cell-fileoftype"]))); ?></td>	
+	<td><?php echo escape($files[$n]["file_extension"] == "" ? $lang["notuploaded"] : str_replace_formatted_placeholder("%extension", $files[$n]["file_extension"], $lang["cell-fileoftype"])); ?></td>	
 	<td><?php echo formatfilesize($files[$n]["file_size"])?></td>	
 	<td><?php echo nicedate($files[$n]["creation_date"],true)?></td>
 	<?php if(count($alt_types) > 1){ ?><td><?php echo $files[$n]["alt_type"] ?></td><?php } ?>
@@ -226,16 +226,16 @@ for ($n=0;$n<count($files);$n++)
                         }
                     else
                         {
-                        styledalert('<?php echo $lang['error'] ?>','<?php echo $lang['altfiledeletefail']?>');
+                        styledalert('<?php echo escape($lang['error']) ?>','<?php echo escape($lang['altfiledeletefail'])?>');
                         }
                     },
                 <?php echo escape(generate_csrf_js_object('delete_alternative_file')); ?>
             );
             }
         return false;
-    "><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>
+    "><?php echo LINK_CARET ?><?php echo escape($lang["action-delete"])?></a>
 
-	&nbsp;<a onclick="return <?php echo ($modal ? "Modal" : "CentralSpace"); ?>Load(this, true);" href="<?php echo generateurl($baseurl . "/pages/alternative_file.php",$urlparams,array("ref"=>$files[$n]["ref"])); ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
+	&nbsp;<a onclick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this, true);" href="<?php echo generateurl($baseurl . "/pages/alternative_file.php",$urlparams,array("ref"=>$files[$n]["ref"])); ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
 
     <?php if($editaccess && (file_exists(get_resource_path($ref , true, '', true, 'jpg', true, 1, false, '', $files[$n]["ref"], true)) || file_exists(get_resource_path($ref , true, 'hpr', true, 'jpg', true, 1, false, '', $files[$n]["ref"], true))))
         {

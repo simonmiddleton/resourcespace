@@ -299,7 +299,7 @@ if(0 < $count_data_only_types)
     {
     collection_download_process_data_only_types($collection_resources, $id, false, $usertempdir, $zip, $path, $deletion_array);
     }
-else if('' == $path)
+if('' == $path)
     {
     job_queue_update($jobref, $job_data, STATUS_ERROR);
 

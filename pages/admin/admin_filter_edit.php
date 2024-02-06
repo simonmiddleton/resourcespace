@@ -262,8 +262,7 @@ include "../../include/header.php";
                                         $ruletext[] = $rulefield["fieldname"] . " " . $lang["filter_is_not_in"] . " ('" . implode("'&nbsp;" . $lang["filter_or"] . "&nbsp;'", $rulefield["values_off"]) . "')";
                                         }
                                     }
-                                    
-                                //exit(print_r($ruleinfo));
+                                
                                 $rule_edit_url = generateURL($baseurl . "/pages/admin/ajax/admin_filter_rule_edit.php",array("ref"=>$ruleid,"filter"=>$filterid));
                                 echo "<tr><td><div class='keywordselected tag_inline' id='filter_rule_" . $ruleid . "'> <a href={$rule_edit_url} onclick ='return ModalLoad(this,true);'>" . implode("&nbsp;" . $lang["filter_or"] . "&nbsp;",$ruletext) . "</a><a href='#' onclick ='deleteFilterRule(" . $ruleid . ");return false;'>[<i class='fa fa-remove'></i>]</a></input></td></tr>";
                                 }
@@ -328,7 +327,7 @@ function deleteFilterRule(rule)
     }
 
 jQuery(document).ready(function(){
-    let errors = <?php echo (isset($errors)?json_encode($errors):'""');?>;
+    let errors = <?php echo isset($errors) ? json_encode($errors) : '""';?>;
     if(errors.length > 0)
         {
         error_message = '';

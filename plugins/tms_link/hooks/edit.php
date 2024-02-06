@@ -156,8 +156,6 @@ function HookTms_linkEditSaveextraresourcedata($list)
         $tms_link_import = true;
         $tmsupdatelist = $list;
         }
-
-	return;		
 	}	
 	
 function HookTms_linkEditAftersaveresourcedata()
@@ -206,6 +204,4 @@ function HookTms_linkEditAftersaveresourcedata()
                 }
             }
         }
-
-    return;
 	}

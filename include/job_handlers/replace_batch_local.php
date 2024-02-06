@@ -104,7 +104,6 @@ foreach($foldercontents as $objectindex => $object)
             {
             // No resource found with the same filename
             $errors[] = "Failed to find matching file for: " .  $filename;
-            continue;
             }
         else
             {
@@ -133,7 +132,6 @@ foreach($foldercontents as $objectindex => $object)
                     else
                         {
                         $errors[] = "Failed to copy file from : " .  $filepath;
-                        continue;
                         }
                     }
                 // Attempt to delete

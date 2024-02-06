@@ -254,7 +254,7 @@ function api_update_field($resource,$field,$value,$nodevalues=false)
         return false;    
         }
     
-    $editaccess = get_edit_access($resource,$resourcedata['archive'],false,$resourcedata);
+    $editaccess = get_edit_access($resource,$resourcedata['archive'],$resourcedata);
     
     if(!is_numeric($field))
         {
@@ -299,7 +299,7 @@ function api_copy_resource($from,$resource_type=-1)
 
 function api_get_resource_log($resource, $fetchrows=-1)
     {
-    return get_resource_log($resource, $fetchrows)["data"];
+    return get_resource_log($resource, $fetchrows)["data"]??[];
     }
 
 function api_update_resource_type($resource,$type)
@@ -393,11 +393,14 @@ function api_get_alternative_files($resource,$order_by="",$sort="",$type="")
     global $alt_files_visible_when_restricted;
     $access = get_resource_access($resource);
 
-    if($access == RESOURCE_ACCESS_INVALID_REQUEST)
-        {return false;}
+    if ($access == RESOURCE_ACCESS_INVALID_REQUEST) {
+        return false;
+    }
 
-    if(($access!=0 && !($access==1 && $alt_files_visible_when_restricted)))
-        {return false;}
+    if ($access !=0 && !($access == 1 && $alt_files_visible_when_restricted)) {
+        return false;
+    }
+
     return get_alternative_files($resource,$order_by,$sort,$type);
     }
     
@@ -414,7 +417,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         return $assert_post;
         }
 
-    if((0 < $resource && (!(get_edit_access($resource) || checkperm('A')))))
+    if (0 < $resource && (!(get_edit_access($resource) || checkperm('A'))))
         {
         return false;
         }
@@ -1167,7 +1170,7 @@ function api_save_collection(int $ref, array $coldata)
         }
     
     $fct_return = save_collection($ref, $coldata);
-    return (is_null($fct_return) ? true : $fct_return);
+    return is_null($fct_return) ? true : $fct_return;
     }
 
 function api_get_collection(int $ref)
@@ -1504,11 +1507,16 @@ function api_create_resource_type_field(string $name, string $resource_types, in
         : ajax_response_fail(ajax_build_message($GLOBALS['lang']['error_fail_save']));
     }
 
-    /**
-     * Expose {@see get_featured_collections} to the API
-     * @param int $parent The feature collection parent's ref. Use 0 for obtaining the root ones.
-     */
-    function api_get_featured_collections($parent): array
-        {
-        return is_int_loose($parent) ? get_featured_collections($parent, []) : [];
-        }
+/**
+ * Expose {@see get_featured_collections} to the API
+ * @param int $parent The feature collection parent's ref. Use 0 for obtaining the root ones.
+ */
+function api_get_featured_collections($parent): array
+    {
+    return is_int_loose($parent) ? get_featured_collections($parent, []) : [];
+    }
+
+function api_get_edit_access(int $resource): bool
+    {
+    return get_edit_access($resource);
+    }

@@ -818,7 +818,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
                 else 
                     {
                         debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...');
-                    include (dirname(__FILE__)."/ffmpeg_processing.php");
+                    include dirname(__FILE__)."/ffmpeg_processing.php";
                     }
             }
         }
@@ -897,7 +897,6 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             $output=run_command($nfcommand);
             if (file_exists($eps_target))
             {
-            #  create_previews_using_im($ref,false,'miff',$previewonly);
             $extension = 'miff';
             }
             }

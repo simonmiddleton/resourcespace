@@ -72,7 +72,7 @@ if (getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false))
 			}
 	
 		# Create a new periodic e-mail report
-		create_periodic_email($userref, $report, $period, getval('email_days', ''), $user_group_selection, $search_params);
+		create_periodic_email($userref, $report, $period, getval('email_days', 1, true), $user_group_selection, $search_params);
 		?>
 		<script type="text/javascript">
 		alert("<?php echo $lang["newemailreportcreated"] ?>");
@@ -281,7 +281,7 @@ foreach($report_options as $report_opt)
 		if (this.checked)
 			{
 			document.getElementById('EmailSetup').style.display='block';
-			
+
 			// Copy reporting period to e-mail period
 			if (document.getElementById('period').value==0)
 				{
@@ -378,7 +378,7 @@ function update_view_as_search_results_btn(el)
         else if(period == -1)
             {
             data_range = jQuery('#DateRange');
-            
+
             // e.g for period date range: p-1fyXXXXfmXXfdXXtyXXXXtmXXtdXX
             report_period_data += 'fy' + data_range.find('input[name="from-y"]').val();
             report_period_data += 'fm' + data_range.find('select[name="from-m"] option:selected').val();

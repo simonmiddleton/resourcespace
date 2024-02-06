@@ -1,1 +1,3 @@
-<?php $embedvideo_resourcetype='3'; ?>
+<?php
+
+$embedvideo_resourcetype = '3';

@@ -9,7 +9,7 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 	include_once dirname(__FILE__) . "/../config/config.default.php";
 	if (file_exists(dirname(__FILE__) . "/../config/config.php"))
 	{
-        	include_once(dirname(__FILE__) . "/../config/config.php");
+        	include_once dirname(__FILE__) . "/../config/config.php";
 	}
 	include_once dirname(__FILE__) . "/ldap_class.php";
 	global $username;
@@ -78,7 +78,7 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
 		}
 		
 		$objLdapAuth = new ldapAuth($ldapConf);	
-		if ($ldap_debug) { $objLdapAuth->ldap_debug = true; };
+		if ($ldap_debug) { $objLdapAuth->ldap_debug = true; }
 		
 		// connect to the ldap
 		if ($objLdapAuth->connect())

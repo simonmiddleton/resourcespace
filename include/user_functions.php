@@ -664,7 +664,7 @@ function get_user($ref)
 * 
 * @param string $ref ID of the user
 * 
-* @return boolean|string
+* @return mixed boolean|string True if successful or a descriptive string if there's an issue
 */
 function save_user($ref)
     {
@@ -685,7 +685,7 @@ function save_user($ref)
 
         log_activity("{$current_user_data['username']} ({$ref})", LOG_CODE_DELETED, null, 'user', null, $ref);
 
-        return true;
+        return true; # Successful deletion
         }
     else
         {
@@ -707,7 +707,7 @@ function save_user($ref)
         $c = ps_value("SELECT count(*) value FROM user WHERE ref <> ? AND (username = ? OR email = ?)", array("i", $ref, "s", $username, "s", $email), 0);
         if($c > 0 && $email != '')
             {
-            return false;
+            return $lang["useralreadyexists"]; # An account with that e-mail or username already exists, changes not saved
             }
 
         // Password checks:
@@ -720,7 +720,7 @@ function save_user($ref)
             $message = check_password($password);
             if($message !== true)
                 {
-                return $message;
+                return $message; # Returns an error message
                 }
             }
 
@@ -825,7 +825,10 @@ function save_user($ref)
     if($emailresetlink != '')
         {
         $result=email_reset_link($email, true);
-        if ($result!==true) return $result; // Pass any error back.
+        if ($result!==true) 
+            {    
+            return $result; # Returns an error message
+            }
         }
         
     if(getval('approved', '')!='')
@@ -834,7 +837,7 @@ function save_user($ref)
         message_remove_related(USER_REQUEST,$ref);
         }
 
-    return true;
+    return true; # Successful save
     }
 
 
@@ -867,18 +870,21 @@ function email_reset_link($email,$newuser=false)
     {
     debug("password_reset - checking for email: " . $email);
     # Send a link to reset password
-    global $password_brute_force_delay, $scramble_key;
+    global $password_brute_force_delay, $scramble_key, $lang;
 
     if($email == '')
         {
-        return false;
+        return $lang["accountnoemail-reset-not-emailed"]; # Password reset link was not sent because the account has expired;
         }
 
-    $details = ps_query("SELECT ref, username, usergroup, origin FROM user WHERE email LIKE ? AND approved = 1 AND (account_expires IS NULL OR account_expires > now());", array("s", $email));
+    # The reset link is sent after the principal user update has completed
+    # It will only be sent if (after the user update) there is an approved and unexpired user with the specified email address
+    $details = ps_query("SELECT ref, username, usergroup, origin FROM user WHERE email LIKE ? AND approved = 1 AND (account_expires IS NULL OR account_expires > now());", 
+                array("s", $email));
     sleep($password_brute_force_delay);
     if(count($details) == 0)
         {
-        return false;
+        return $lang["accountexpired-reset-not-emailed"]; # Password reset link was not sent because the account has expired
         }
     $details = $details[0];
 
@@ -937,7 +943,7 @@ function email_reset_link($email,$newuser=false)
             if ($result!==true) {return $result;} // Pass any e-mail errors back
             }
         }   
-    return true;
+    return true; # Email reset link successful
     }
 
 /**
@@ -1281,7 +1287,7 @@ function get_active_users()
     $approver_groups = get_approver_usergroups($usergroup);
     $sql = "where logged_in = 1 and unix_timestamp(now()) - unix_timestamp(last_active) < (3600*2)";
     $sql_params = array();
-    if ((checkperm("U") || count($approver_groups) > 0))
+    if (checkperm("U") || count($approver_groups) > 0)
         {
         if (count($approver_groups) > 0)
             {
@@ -1399,7 +1405,7 @@ function bulk_mail($userlist,$subject,$text,$html=false,$message_type=MESSAGE_EN
     global $email_from,$lang,$applicationname;
     
     # Attempt to resolve all users in the string $userlist to user references.
-    if (trim($userlist)=="") {return ($lang["mustspecifyoneuser"]);}
+    if (trim($userlist)=="") {return $lang["mustspecifyoneuser"];}
     $userlist=resolve_userlist_groups($userlist);
     $ulist=trim_array(explode(",",$userlist));
 
@@ -1580,7 +1586,7 @@ function resolve_userlist_groups_smart($userlist,$return_usernames=false)
             # Search for corresponding $lang indices.
             $default_group = false;
             $langindices = array_keys($lang, $translated_groupname);
-            if (count($langindices)>0);
+            if (count($langindices)>0)
                 { 
                 foreach ($langindices as $langindex)
                     {
@@ -2220,7 +2226,7 @@ function remove_access_to_user($user,$resource)
  */
 function user_email_exists($email)
     {
-    return (ps_value("SELECT COUNT(*) value FROM user WHERE email LIKE ?", ["s", trim(strtolower($email))], 0) > 0);
+    return ps_value("SELECT COUNT(*) value FROM user WHERE email LIKE ?", ["s", trim(strtolower($email))], 0) > 0;
     }
 
 /**
@@ -2369,7 +2375,7 @@ function get_rs_session_id($create=false)
             {
             rs_setcookie("rs_session",$existing_session, 7, "", "", substr($baseurl,0,5)=="https", true); // extend the life of the cookie
             }
-        return($existing_session);
+        return $existing_session;
         }
     if ($create) 
         {
@@ -2675,7 +2681,7 @@ function checkPermission_anonymoususer()
  */
 function checkPermission_dashadmin()	
 	{
-	return ((checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h")));
+	return (checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h"));
     }
     
 
@@ -2700,7 +2706,7 @@ function checkPermission_dashuser()
 function checkPermission_dashmanage()
 	{
 	global $managed_home_dash;
-	return (!checkPermission_anonymoususer()) && ((!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin())));
+	return (!checkPermission_anonymoususer()) && (!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()));
     }
     
 /**
@@ -2780,7 +2786,7 @@ function checkperm_user_edit($user)
 	$validgroups = ps_array($sql, $sql_params);
 	
 	// Return true if the target user we are checking is in one of the valid groups
-	return (in_array($editusergroup, $validgroups));
+	return in_array($editusergroup, $validgroups);
 	}
 
 
@@ -2792,7 +2798,7 @@ function checkperm_user_edit($user)
 function internal_share_access()
     {
     global $k, $external_share_view_as_internal;
-    return ($k != "" && $external_share_view_as_internal && is_authenticated());
+    return $k != "" && $external_share_view_as_internal && is_authenticated();
     }
 
 /**
@@ -3076,7 +3082,7 @@ function get_languages_notify_users(array $languages = array())
             {
             include $lang_file;
             }
-        
+
         $language_strings_all[$language] = $lang; // append $lang array 
         }     
 
@@ -3483,7 +3489,9 @@ function validate_temp_download_key(int $ref, string $keystring, string $size, i
         $expiry_time_limit = $expire_seconds;
         }
 
-    $keydata = rsDecrypt(base64_decode($keystring), hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
+    $decoded_keystring = mb_strpos($keystring, '@@', 0, 'UTF-8') !== false ? $keystring : base64_decode($keystring);
+    $keydata = rsDecrypt($decoded_keystring, hash_hmac('sha512', 'dld_key', $GLOBALS['api_scramble_key'] . $GLOBALS['scramble_key']));
+
     if($keydata != false)
         {
         $download_key_parts = explode(":", $keydata);

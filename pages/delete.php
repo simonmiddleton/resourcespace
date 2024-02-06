@@ -4,7 +4,7 @@ include "../include/authenticate.php";
 
 $ref=getval("ref","",true);
 
-if (checkperm('D') and !hook('check_single_delete')){
+if (checkperm('D') && !hook('check_single_delete')) {
 	include "../include/header.php";
 	echo "Error: Resource deletion is disabled.";
 	exit;
@@ -42,7 +42,7 @@ $urlparams= array(
 );
 
 # Not allowed to edit this resource? They shouldn't have been able to get here.
-if (!get_edit_access($ref,$resource["archive"],false,$resource)) {exit ("Permission denied.");}
+if (!get_edit_access($ref,$resource["archive"],$resource)) {exit ("Permission denied.");}
 
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {

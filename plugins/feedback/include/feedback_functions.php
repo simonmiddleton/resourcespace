@@ -60,29 +60,30 @@ function get_feedback_results_file($dir, $basename, $create_new_file = true)
  */
 function save_feedback_data(array $data)
     {
-    if(is_array($data))
+    ['date' => $date, 'user' => $user] = array_intersect_key($data, ['user' => null, 'date' => date('Y-m-d')]);
+    unset($data['user'], $data['date']);
+
+    $offset = ps_value('SELECT MIN(id) `value` FROM feedback_fields WHERE version = (SELECT MAX(version) FROM feedback_fields) ORDER BY VERSION DESC LIMIT 1', array(), '1');
+    $n      = 0;
+    foreach($data as $datum)
         {
-        $offset = ps_value('SELECT MIN(id) `value` FROM feedback_fields WHERE version = (SELECT MAX(version) FROM feedback_fields) ORDER BY VERSION DESC LIMIT 1', array(), '1');
-        $n      = 0;
-        foreach($data as $key => $datum)
+        $type = ps_value('SELECT type AS value FROM feedback_fields WHERE id = ?',array("i",$offset+$n),'');
+        while($type == 4)
             {
-            if($key == 'user' || $key == 'date')
-                {
-                $$key = $datum;
-                }
-            else
-                {
-                $type = ps_value('SELECT type AS value FROM feedback_fields WHERE id = ?',array("i",$offset+$n),'');
-                while($type == 4)
-                    {
-                    $n++;
-                    # This is to skip fields that are marked as lables so that the question ids match up correctly 
-                    $type = ps_value('SELECT type AS value FROM feedback_fields WHERE id = ?', array("i",$offset+$n), '');
-                    }
-                ps_query('INSERT INTO feedback_data (field_id, value, date, user) VALUES(?, ?, ?, ?)', ['i', $offset+$n, 's', $datum, 's', $date, 's', $user]);
-                $n++;
-                }
+            $n++;
+            # This is to skip fields that are marked as lables so that the question ids match up correctly 
+            $type = ps_value('SELECT type AS value FROM feedback_fields WHERE id = ?', array("i",$offset+$n), '');
             }
+        ps_query(
+            'INSERT INTO feedback_data (field_id, value, date, user) VALUES(?, ?, ?, ?)',
+            [
+                'i',$offset+$n,
+                's',$datum,
+                's',$date,
+                's',$user
+            ]
+        );
+        $n++;
         }
     }
 

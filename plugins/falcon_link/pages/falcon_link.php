@@ -97,8 +97,7 @@ if ($saveform)
         $success = falcon_link_archive($resources);  // If ok, update resource with Falcon Content Pool ref
         // Redirect to resource view/collection search page with message to advise of success
         if($success["success"])
-            {
-            //$onload_message = array("title" => $lang["falcon_link_archived"],"text" => $lang["falcon_link_archived_success"]);            
+            {        
             $message = $lang["falcon_link_archived_success"];
 			}
 			
@@ -110,7 +109,6 @@ if ($saveform)
     
 	if(count($success["errors"]) > 0)
 		{
-		//$onload_message = array("title" => $lang["error"],"text" => $lang["falcon_link_error_falcon_api"] . ":-<br />" . implode("<br />" , $success["errors"]));
 		$errormessages[] = implode("<br />" , $success["errors"]);
 		}
     }

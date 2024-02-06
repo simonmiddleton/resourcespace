@@ -65,11 +65,7 @@ function simpleldap_authenticate($username,$password)
                 $login=false;
                 }
             unset($GLOBALS["use_error_exception"]);
-            if (!$login)
-                {
-                continue;
-                }
-             else
+            if ($login)
                 {
                 $userdomain=$binddomain;
                 break;
@@ -103,7 +99,6 @@ function simpleldap_authenticate($username,$password)
             if (!$login)
                 {
                 debug("LDAP bind failed: " . $binddn);
-                continue;
                 }
             else
                 {
@@ -316,5 +311,5 @@ function simpleldap_to_utf8($str)
 
     $converted_str = iconv($simpleldap['ldap_encoding'], "UTF-8", $str);
 
-    return ($converted_str !== false ? $converted_str : $str);
+    return $converted_str !== false ? $converted_str : $str;
     }

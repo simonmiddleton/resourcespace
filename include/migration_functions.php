@@ -198,7 +198,7 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
                 {                       
                 $nodeid = $all_valid_nodes[$nodeidx]["ref"];
                 $logtext .=  "FILTER MIGRATION: --- field option (node) exists, node id #: " . $all_valid_nodes[$nodeidx]["ref"] . "\n";
-                
+
                 $nodeinsert[] = "(?, ?, ?)";
                 $nodeinsertparams = array_merge($nodeinsertparams, array("i", $new_filter_rule, "i", $nodeid, "i", $node_condition));
                 if($allowpartialmigration){$rulevalid = true;} // Atleast one rule is valid so the filter can be created
@@ -341,7 +341,6 @@ function mix_text(?string $string, bool $recurse=true): string
         for($i=0;$i<$mbytelength;$i++)
             {
             $oldchar = mb_substr($string,$i,1);
-            //debug("Converting character #$i '" . $oldchar . "'"); 
 
             if($i > 3 && strpos($noreplace,$oldchar) === false)
                 {
@@ -358,7 +357,7 @@ function mix_text(?string $string, bool $recurse=true): string
                     $i--;
                     }
                 }
-          
+
             if($i >= $mbytelength || $oldchar == "")
                 {
                 $newstring .=  substr(str_shuffle($lowervowels . $lowercons), 0,1);   
@@ -394,14 +393,12 @@ function mix_text(?string $string, bool $recurse=true): string
                     {
                     $newchar = substr(str_shuffle($noreplace), 0,1);
                     }
-                //debug("New random character: $newchar");
                 $newstring .= $newchar;        
                 }                         
             else
                 {
                 $newchar = random_char();
                 $newstring .= $newchar;   
-                //debug("New random character: " . $newchar);
                 } // End of multibyte conversion
             }
         }

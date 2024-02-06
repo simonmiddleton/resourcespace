@@ -228,7 +228,7 @@ include "../../include/header.php";
                         <a href="#Header" onclick="show_message(<?php echo (int)$messages[$n]['message_id'] ?>)"><?php echo $message; ?></a>
                     </td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["expires"]); ?></td>
-                    <td class="<?php echo $unread_css; ?>"><?php echo ($messages[$n]["seen"]==0 ? '<i class="fas fa-envelope"></i>' : '<i class="far fa-envelope-open"></i>'); ?></td>
+                    <td class="<?php echo $unread_css; ?>"><?php echo $messages[$n]["seen"] == 0 ? '<i class="fas fa-envelope"></i>' : '<i class="far fa-envelope-open"></i>'; ?></td>
                     <td>
                         <div class="ListTools">
                             <?php

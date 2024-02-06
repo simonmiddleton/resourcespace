@@ -45,10 +45,4 @@ include "../../../include/header.php";
 
 echo $html;
 
-/*
-?>
-<a href="<?php echo str_replace("view.php","download.php",$url) ?>">Download test</a>
-<?php
-*/
-
 include_once "../../../include/footer.php";

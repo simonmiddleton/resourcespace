@@ -710,6 +710,8 @@ $lang["password"]="Password";
 $lang["login"]="Log in";
 $lang["loginincorrect"]="Sorry, your login details were incorrect.<br /><br />If you have forgotten your password,<br />use the link below to request a new one.";
 $lang["accountexpired"]="Your account has expired. Please contact the resources team.";
+$lang["accountnoemail-reset-not-emailed"]="Password reset link was not sent because the account has no email address";
+$lang["accountexpired-reset-not-emailed"]="Password reset link was not sent because the account has expired";
 $lang["useralreadyexists"]="An account with that e-mail or username already exists, changes not saved";
 $lang["useremailalreadyexists"]="An account with that e-mail already exists.";
 $lang["ticktoemail"]="E-mail this user their username and new password";
@@ -2503,6 +2505,7 @@ $lang["upgrade_in_progress"] = "Upgrade in progress";
 $lang["upgrade_script"] = "Upgrade script";
 $lang['upgrade_026_notification'] = "The upgrade has deprecated some configuration options which your %entity% is overriding.\r\n\r\nTo continue having the download filename formatted as close as possible to the old way please update its configuration override with:\r\n\$download_filename_format = '%format%';";
 $lang['upgrade_026_error_unable_to_set_config_system_wide'] = "Unable to set system wide config option 'download_filename_format' to '%format%'. Please retry manually.";
+$lang['upgrade_026_error_unable_to_process_deprecated_config_options'] = "Unable to process deprecated config options for %entity%. Please retry manually. Reason:-\r\n\r\n%error%";
 
 /* User group dash tiles */
 $lang['manage_user_group_dash_tiles']  = 'Manage user group dash tiles';
@@ -2928,6 +2931,11 @@ $lang["oj-batch-replace-local-success-text"] = "Batch replace has successfully r
 $lang["oj-batch-replace-local-failure-text"] = "Batch replace failed. Please check logs for errors";
 $lang["oj-creation-failure-text"]            = "An error occurred. Failed to create offline job";
 $lang["oj-creation-success"]                 = "Offline job %%JOBNUMBER%% created. You will be notified when it has completed";
+$lang["job_priority_immediate"] = "Urgent job";
+$lang["job_priority_user"] = "User job";
+$lang["job_priority_system"] = "System job";
+$lang["job_priority_completed"] = "Job completed";
+$lang["job_status_error"] = "An error occurred";
 /* End of offline jobs */
 
 $lang["email_auto_digest_inactive"] = "This is a summary of your unread messages";
@@ -3119,6 +3127,7 @@ $lang["log_column"]                         = "Log data";
 $lang["log_value"]                          = "Value";
 $lang['error_slideshow_invalid']            = "Invalid sequence number. Please enter a numeric value";
 $lang['error-file-permissions']             = "Unable to perform file operation. Please check file permissions on %%PATH%%";
+$lang["share_expired_icon_title"]           = "Expired";
 
 $lang["new_message"]                        ="New message";
 $lang["message_recipients"]                 = "Recipient(s)";

@@ -47,7 +47,7 @@ if (!hook("replacelistitem"))
         $watermark = check_use_watermark($ref);
         ?>
         <td width="40px">
-            <a href="<?php echo $url?>" onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);">
+            <a href="<?php echo $url?>" onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);">
                 <?php
                 $thm_url = get_resource_path($ref, false, 'col', false, $result[$n]['preview_extension'], true, 1, $watermark, $result[$n]['file_modified']);
 
@@ -63,7 +63,7 @@ if (!hook("replacelistitem"))
                 else
                     {
                     ?>
-                    <img border=0 
+                    <img border=0 alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
                         src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="margin-top:0; height: 40px;"/>
                     <?php 
                     }
@@ -114,19 +114,19 @@ if (!hook("replacelistitem"))
                             { // add link to first item only ?>
                             <div class="ListTitle">
                                 <a href="<?php echo $url?>" 
-                                    onClick="return <?php echo ($resource_view_modal?"Modal":"CentralSpace") ?>Load(this,true);"
+                                    onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"
                                 >
-                            <?php 
+<?php 
                             } //end link conditional
                         echo highlightkeywords(htmlspecialchars(tidy_trim(TidyList(i18n_get_translated($value)),$results_title_trim)),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
                         if ($x==0)
                             { // add link to first item only ?>
                             </a>
-                            <?php 
+<?php 
                             } //end link conditional ?>
                         </div>
                     </td>
-                <?php } 
+<?php } 
                 } //end replace list title
             }
         

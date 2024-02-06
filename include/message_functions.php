@@ -257,7 +257,7 @@ function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref"
 		($get_all ? " " : " AND message.expires > NOW()") .
 		($get_all ? " " : " AND user_message.seen='0'") .
 		" ORDER BY " . $sql_order_by . " " . $sort, array("i",$user));
-	return(count($messages) > 0);
+	return count($messages) > 0;
 	}
 
 /**
@@ -705,8 +705,8 @@ function message_send_unread_emails()
 				$message .= "<th>" . $lang["property-reference"] . "</th>";
 				$message .= "<th>" . $lang["description"] . "</th>";
 				$message .= "<th>" . $lang["type"] . "</th></tr>";
-				
-				
+
+
 				foreach($user_actions as $user_action)
 					{
 					$actionlinks=hook("actioneditlink",'',array($user_action));
@@ -720,7 +720,7 @@ function message_send_unread_emails()
 					  $actioneditlink = '';
 					  $actionviewlink = '';  
 					  }
-					
+
 					if($user_action["type"]=="resourcereview")
 					  {
 					  $actioneditlink = $baseurl . "/pages/edit.php";
@@ -734,7 +734,7 @@ function message_send_unread_emails()
 					  {
 					  $actioneditlink = $baseurl . "/pages/team/team_user_edit.php";
 					  } 
-					
+
 					$linkparams["ref"] = $user_action["ref"];                            
 					$editlink=($actioneditlink=='')?'':generateURL($actioneditlink,$linkparams);
 					$viewlink=($actionviewlink=='')?'':generateURL($actionviewlink,$linkparams);

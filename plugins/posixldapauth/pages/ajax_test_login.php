@@ -3,7 +3,7 @@ include '../../../include/db.php';
 include "../../../include/authenticate.php";
 
  // we get a list of groups from the LDAP;
- include_once ("../hooks/ldap_class.php");
+ include_once "../hooks/ldap_class.php";
 
 /* Set the following debug flag to true for more debugging information
 */
@@ -62,13 +62,8 @@ if (isset($_GET['lang_test_failed']))
 		$lang['lang_test_failed'] = 'Tests failed, please check your settings and test again.';
 	}
 
-
-//if (isset($_GET[''])) { $lang[''] = $_GET['']; }
-
-//global $lang;
-
 $objLDAP = new ldapAuth($ldapConf);
-if ($ldap_debug) { $objLDAP->ldap_debug = true; };
+if ($ldap_debug) { $objLDAP->ldap_debug = true; }
 
 $returnMessage = array();
 $errmsg = false;
@@ -127,4 +122,3 @@ if ($status)
 print_r($returnMessage);
 
 
-?>

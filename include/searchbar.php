@@ -91,7 +91,10 @@ for ($n=0;$n<count($keywords);$n++)
                 {
                 $set_fields[$s[0]] = $s[1];
                 $i = $n + 1;
-                while ($i < count($keywords) && strpos($keywords[$i], ":") === false)
+                while ($i < count($keywords) 
+                    && strpos($keywords[$i], ":") === false 
+                    && strpos($keywords[$i], NODE_TOKEN_PREFIX) === false
+                )
                     {
                     $set_fields[$s[0]] .= " " . $keywords[$i];
                     $i++;
@@ -358,10 +361,10 @@ $simpleSearchFieldsAreHidden = hook("simplesearchfieldsarehidden");
 
 if (!$basic_simple_search && !$hide_search_resource_types)
     {
-    
+
     # More than 5 types? Always display the 'select all' option.
     if (count($types)>5) {$searchbar_selectall=true;}
-    
+
     ?>
     <input type="hidden" name="resetrestypes" value="yes">
     <div id="searchbarrt" <?php hook("searchbarrtdiv");?> <?php if ($simpleSearchFieldsAreHidden) { echo 'style="display:none;"'; } ?> >
@@ -395,12 +398,12 @@ if (!$basic_simple_search && !$hide_search_resource_types)
     $rt=explode(",",@$restypes);
     $clear_function = "SetCookie('search','');SetCookie('restypes','');SetCookie('ssearchhiddenfields','');SetCookie('saved_offset','');SetCookie('saved_archive','');";
     hook('clearsearchcookies');
-    
+
     # Render resource type checkbox inputs
     for ($n=0;$n<count($types);$n++)
     {
     if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
-    
+
     $tickBoxClass="tick";
     $inputBoxClass="tickbox";
     $resetTickAllCall="";
@@ -874,7 +877,7 @@ elseif($restypes=='')
                 }               
                 ?>
     
-    <?php if (isset($resourceid_simple_search) and $resourceid_simple_search){ ?>
+    <?php if (isset($resourceid_simple_search) && $resourceid_simple_search) { ?>
              <div class="SearchItem"><?php echo htmlspecialchars($lang["resourceid"]) ?><br />
              <input id="searchresourceid" name="searchresourceid" type="text" class="SearchWidth" value="" />
              </div>
@@ -951,7 +954,7 @@ elseif($restypes=='')
                 <?php hook("loginformlink") ?>
             </div>
         </div>
-    <?php } ?>
+<?php } ?>
 
     <?php if (($research_request) && (!isset($k) || $k=="") && (checkperm("q"))) { ?>
         <?php if (!hook("replaceresearchrequestbox")) { ?>
@@ -969,8 +972,8 @@ elseif($restypes=='')
                 <br />
                 <?php } /* end replaceresearchrequestboxcontent */ ?>
             </div>
-        <?php } /* end replaceresearchrequestbox */ ?>
-    <?php } ?>
+<?php } /* end replaceresearchrequestbox */ ?>
+<?php } ?>
 
     <?php if ($show_powered_by_logo && (get_header_image() != $baseurl . '/gfx/titles/title-black.svg')) { ?>
         <div class="PoweredByPanel">

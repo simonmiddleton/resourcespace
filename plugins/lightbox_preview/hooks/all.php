@@ -63,10 +63,10 @@ function HookLightbox_previewAllReplacefullscreenpreviewicon()
 					'archive' => $archive,
 					'k' => $k
 				]) ?>"
-			title="<?php echo escape($lang["fullscreenpreview"] . " - " . $resource_view_title) ?>">
+			title="<?php echo escape($lang["fullscreenpreview"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
 		</a>
 	</span>
-			
+
 	<?php
 	addLightBox('#previewlink' . htmlspecialchars($order_by) . $ref, $url, $result[$n]["field".$view_title_field], htmlspecialchars($order_by));
 	return true;

@@ -323,7 +323,7 @@ $searchparams = get_search_params();
 if(!$modal)
     {
     ?>
-    <p><a href="<?php echo generateurl($baseurl . "/pages/view.php",$searchparams,["ref" => $ref]); ?>" onClick="return  <?php echo ($modal?"Modal":"CentralSpace") ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <p><a href="<?php echo generateurl($baseurl . "/pages/view.php",$searchparams,["ref" => $ref]); ?>" onClick="return  <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
     <?php
     }
     ?>
@@ -351,15 +351,17 @@ if(!$editaccess)
     <?php
     if ($resource["has_image"]==1)
         {
-        ?><img src="<?php echo get_resource_path($ref,false,"thm",false,$resource["preview_extension"],-1,1,checkperm("w"))?>" class="ImageBorder" style="margin-right:10px;"/>
+        ?><img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
+        src="<?php echo get_resource_path($ref,false,"thm",false,$resource["preview_extension"],-1,1,checkperm("w"))?>" class="ImageBorder" style="margin-right:10px;"/>
         <?php
         }
     else
         {
         # Show the no-preview icon
         ?>
-        <img src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
-        <?php
+        <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
+        src="<?php echo $baseurl_short ?>gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],true)?>" />
+<?php
         }
     ?>
 
@@ -374,13 +376,13 @@ if(!$editaccess)
         {
         ?>
         <div class="Question" id="ProposeChangesUsers">
-        <form id="propose_changes_select_user_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>" onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+        <form id="propose_changes_select_user_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
             <?php generateFormToken("propose_changes_select_user_form"); ?>
             <label><?php echo $lang["propose_changes_view_user"]; ?></label>
             <?php
             if(count($userproposals) > 1)
                 {?>
-                <select class="stdwidth" name="proposeuser" id="proposeuser" onchange="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(document.getElementById('propose_changes_select_user_form'),false);">
+                <select class="stdwidth" name="proposeuser" id="proposeuser" onchange="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('propose_changes_select_user_form'),false);">
                 <?php 
                 foreach ($userproposals as $userproposal)
                     {
@@ -424,7 +426,7 @@ if(!$editaccess)
         {
         ?>
         
-    <form id="propose_changes_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>"  onsubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+    <form id="propose_changes_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>"  onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
     <?php generateFormToken("propose_changes_form"); ?>
     <h2 id="ProposeChangesHead"><?php echo $lang["propose_changes_proposed_changes"] ?></h2><?php
         ?><div id="ProposeChangesSection">

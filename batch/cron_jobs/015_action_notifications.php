@@ -158,5 +158,4 @@ foreach($recentactions as $notifyuser=>$user_actions)
     }
 
 # Update last run date/time.
-set_sysvar("last_action_notification_emails",$this_run_start); 
-return;
+set_sysvar("last_action_notification_emails",$this_run_start);

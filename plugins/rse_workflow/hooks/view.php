@@ -2,7 +2,7 @@
 
 function HookRse_workflowViewPageevaluation()
     {
-    include_once (dirname(__file__) . "/../include/rse_workflow_functions.php");
+    include_once dirname(__file__) . "/../include/rse_workflow_functions.php";
     global $lang;
     global $ref;
     global $resource;
@@ -16,7 +16,6 @@ function HookRse_workflowViewPageevaluation()
     global $userref;
     # Retrieve list of existing defined actions 
     $workflowactions = rse_workflow_get_actions();
-    //$validactions=array();
       
     foreach ($workflowactions as $workflowaction)
         {
@@ -33,7 +32,7 @@ function HookRse_workflowViewPageevaluation()
 			else
 				{
                 $validstates = explode(',', $workflowaction['statusfrom']);
-                $edit_access = get_edit_access($ref,$resource['archive'], '', $resource);
+                $edit_access = get_edit_access($ref,$resource['archive'], $resource);
     
                 if('' != $k || ($resource["lock_user"] > 0 && $resource["lock_user"] != $userref))
                     {
@@ -86,7 +85,7 @@ function HookRse_workflowViewPageevaluation()
 
 function HookRse_workflowViewAdditionaldownloadtabs()
     {
-    include_once (dirname(__file__) . "/../include/rse_workflow_functions.php");
+    include_once dirname(__file__) . "/../include/rse_workflow_functions.php";
 
     global $lang, $ref, $resource, $baseurl_short, $search, $offset, $order_by, $archive, $sort, $edit_access, $curpos,
            $userref, $k, $internal_share_access,$modal;

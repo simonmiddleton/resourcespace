@@ -513,9 +513,10 @@ if ($submitted != "")
         {
         collection_download_process_data_only_types($result, $id, $collection_download_tar, $usertempdir, $zip, $path, $deletion_array);
         }
-    else if('' == $path)
+    if('' == $path)
         {
-        exit($lang['nothing_to_download']);
+        update_zip_progress_file('nothing_to_download');
+        exit(escape($lang['nothing_to_download']));
         }
 
     collection_download_process_summary_notes(
@@ -598,8 +599,6 @@ if ($submitted != "")
 		}
 		
 	# Remove archive.
-	//unlink($zipfile);
-	//unlink($progress_file);
 	if ($use_zip_extension)
 		{
         try {
@@ -676,19 +675,24 @@ function ajax_download(download_offline, tar)
                  if (remoteData.indexOf("file")!=-1){
                             var numfiles=remoteData.replace("file ","");
                             if (numfiles==1){
-                                var message=numfiles+' <?php echo $lang['fileaddedtozip']?>';
+                                var message=numfiles+' <?php echo escape($lang['fileaddedtozip'])?>';
                             } else { 
-                                var message=numfiles+' <?php echo $lang['filesaddedtozip']?>';
+                                var message=numfiles+' <?php echo escape($lang['filesaddedtozip'])?>';
                             }    
                             var status=(numfiles/<?php echo count($result)?>*100)+"%";
                             console.log(status);
                             document.getElementById('progress2').innerHTML=message;
                         }
                         else if (remoteData=="complete"){ 
-                           document.getElementById('progress2').innerHTML="<?php echo $lang['zipcomplete']?>";
-                           document.getElementById('progress').style.display="none";
-                           progress.stop();    
-                        }  
+                            document.getElementById('progress2').innerHTML="<?php echo escape($lang['zipcomplete'])?>";
+                            document.getElementById('progress').style.display="none";
+                            progress.stop();
+                        }
+                        else if (remoteData=="nothing_to_download"){
+                            document.getElementById('progress2').innerHTML="<?php echo escape($lang['nothing_to_download'])?>";
+                            document.getElementById('progress').style.display="none";
+                            progress.stop();
+                        }
                         else {
                             // fix zip message or allow any
                             console.log(remoteData);
@@ -833,7 +837,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     }
 ?>
 
-<script>var tar = <?php echo ($collection_download_tar_option ? 'true' : 'false'); ?>;</script>
+<script>var tar = <?php echo $collection_download_tar_option ? 'true' : 'false'; ?>;</script>
 <div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
 	<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
 	<div class="tickset">
@@ -859,8 +863,8 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
 	<label for="download"> </label>
 	<input type="submit"
-           onclick="ajax_download(<?php echo ($offline_job_queue ? 'true' : 'false'); ?>, tar); return false;"
-           value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
+           onclick="ajax_download(<?php echo $offline_job_queue ? 'true' : 'false'; ?>, tar); return false;"
+           value="&nbsp;&nbsp;<?php echo escape($lang["action-download"]); ?>&nbsp;&nbsp;" />
 	
 	<div class="clearerleft"> </div>
 </div>

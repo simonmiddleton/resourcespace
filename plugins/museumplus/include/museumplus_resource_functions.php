@@ -59,8 +59,6 @@ function mplus_resource_mark_validation_failed(array $resources)
     ps_query($query, $params);
 
     mplus_log_event('Validation failed!', [ 'resources' => $valid_refs], 'error');
-
-    return;
     }
 
 
@@ -132,8 +130,6 @@ function mplus_resource_update_association(array $resources, array $md5s)
     ps_query($q, $params);
 
     mplus_log_event('Updated resource module association!', [ 'qvals' => $qvals], 'info');
-
-    return;
     }
 
 
@@ -198,8 +194,6 @@ function mplus_resource_clear_metadata(array $refs)
         }
 
     mplus_log_event('Cleared metadata field values', ['refs' => $refs, 'resource_type_fields' => $resource_type_fields]);
-
-    return;
     }
 
 

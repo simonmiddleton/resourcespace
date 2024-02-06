@@ -122,7 +122,6 @@ function HookOpenai_gptAllUpdate_field($resource, $field, $value, $existing, $fi
             $source_values[] = $value;
             }
 
-        // $source_field = get_resource_field_data($resource,$targetfield);
         if(!in_array($targetfield["type"],$valid_ai_field_types) || count($source_values) == 0)
             {
             return false;

@@ -15,7 +15,7 @@ if (!function_exists("rse_workflow_get_actions")){
 if (!function_exists("rse_workflow_save_action")){
     function rse_workflow_save_action($ref="")
             {
-            if($ref==""){$ref=getval("ref","");};
+            if($ref==""){$ref=getval("ref","");}
             $fromstate=getval("actionfrom","");
             $tostate=getval("actionto","");
             $name=getval("actionname","");
@@ -186,7 +186,7 @@ function rse_workflow_validate_action(array $action, array $resource)
     // if action is validated for a list of resources (3k+) that we had to iterate over
     if(!isset($resource["edit_access"]))
         {
-        $edit_access = ($resource["access"] == 0 && get_edit_access($resource["ref"], $resource["archive"], false, $resource));
+        $edit_access = ($resource["access"] == 0 && get_edit_access($resource["ref"], $resource["archive"], $resource));
         }
     else
         {
@@ -200,7 +200,7 @@ function rse_workflow_validate_action(array $action, array $resource)
     // able to move the resource to a different state.
     $checkperm_wf = checkperm("wf{$action['ref']}");
 
-    return ($resource_in_valid_state && ($check_edit_access || $checkperm_wf));
+    return $resource_in_valid_state && ($check_edit_access || $checkperm_wf);
     }
 
 
@@ -211,7 +211,7 @@ function rse_workflow_validate_action(array $action, array $resource)
 * 
 * @return array
 */
-function rse_workflow_compile_actions(array $url_params)
+function rse_workflow_compile_actions(array $url_params): array
     {
     // Validate actions without going through all resources to not impact performance on huge sets
     $valid_actions = rse_workflow_get_valid_actions(rse_workflow_get_actions(), true);

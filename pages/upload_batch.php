@@ -146,7 +146,7 @@ if($tusupload && $tus_validated)
 
 include_once "../include/image_processing.php";
 
-$resource_type                          = getval('resource_type', '');
+$resource_type                          = getval('resource_type', ''); # Int representing resource type or string, see get_search_default_restypes()
 $collectionname                         = getval('entercolname', '');
 $search                                 = getval('search', '');
 $offset                                 = getval('offset', '', true);
@@ -646,7 +646,7 @@ if ($processupload)
             // For upload_then_edit mode ONLY, set the resource type based on the extension. User
             // can later change this at the edit stage
             // IMPORTANT: Change resource type only if user has access to it
-            if($upload_then_edit && !$resource_type_force_selection && !$upload_here)
+            if($upload_then_edit && !$resource_type_force_selection && (!$upload_here || !is_int_loose($resource_type)))
                 {
                 $resource_type_from_extension = get_resource_type_from_extension(
                     pathinfo($upfilepath, PATHINFO_EXTENSION),
@@ -683,7 +683,7 @@ if ($processupload)
             if(!$ref)
                 {
                 $result["status"] = false;
-                $result["message"] = "Failed to create resource with given resource type: ' . $resource_type . '";
+                $result["message"] = "Failed to create resource with given resource type: $resource_type";
                 $result["error"] = 125;
                 $result["id"] = htmlspecialchars($ref);
                 $result["collection"] = htmlspecialchars($collection_add);
@@ -1083,7 +1083,7 @@ jQuery(document).ready(function () {
                 }
             else
                 {
-                echo "maxNumberOfFiles: '" . (set_maxNumberOfFiles()) . "',";
+                echo "maxNumberOfFiles: null,";
                 }
             if (isset($allowedmime))
                 {
@@ -1121,7 +1121,7 @@ jQuery(document).ready(function () {
                     styledalert("<?php echo escape($lang["error"])?>", "<?php echo escape($lang["requiredfield_resource_type"])?>", 450);
                     return false;
                     }
-                <?php
+<?php
                 }
             ?>
 
@@ -1142,8 +1142,21 @@ jQuery(document).ready(function () {
                         },
                         <?php echo generate_csrf_js_object('create_collection'); ?>
                     );
+
+                    function delay_upload_start(milliseconds)
+                        {
+                        let start = Date.now()
+                        const finish = start + milliseconds;
+                        while (start < finish)
+                            {
+                            start = Date.now();
+                            }
+                        }
+                    // Delay for api collection creation before starting file uploads.
+                    delay_upload_start(1000);
                     }
                 }
+
              // Encode the file names
             const updatedFiles = {}
             Object.keys(files).forEach(fileid => {
@@ -1181,7 +1194,7 @@ jQuery(document).ready(function () {
             ?>
             rs_k: '<?php echo htmlspecialchars($k) ?>',
             rs_collection_add: '<?php echo (int)$collection_add ?>',
-            <?php
+<?php
             }?>
         });
         
@@ -1640,7 +1653,7 @@ function postUploadActions()
                 allowcollectionreload = false;
                 CollectionDivLoad("<?php echo $baseurl . '/pages/collections.php?nowarn=true&nc=' . time() ?>");
                 }
-            <?php
+<?php
             }
         else
             {?>
@@ -1826,7 +1839,8 @@ if ($alternative!="")
         $imgpath=get_resource_path($resource['ref'],true,"col",false);
         if (file_exists($imgpath))
             {?>
-            <img src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/>
+            <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
+            src="<?php echo get_resource_path($resource['ref'],false,"col",false);?>"/>
             <?php
             }
         }

@@ -48,6 +48,7 @@ $external=getval("external","0");
 $n=getval("n","");
 $type=getval("type","");
 $from_dash=getval("from_dash","")!="";
+$print=(bool) getval("print",false);
 
 # Rendering a tile? Set "n" or the graph sequence number to the tile number, so all graph IDs are unique on the dash page.
 $tile=getval("tile","");
@@ -144,7 +145,7 @@ else
     $title= getval("tltitle",ps_value("select title value from dash_tile where ref=?",array("i",$tile), ""));
     ?>
     <div style="padding:10px 15px">
-    <h2 style="font-size:120%;margin:0;padding:<?php echo ($from_dash?"0":"0 0 8px 0")?>;background:none;white-space: nowrap;overflow: hidden;
+    <h2 style="font-size:120%;margin:0;padding:<?php echo $from_dash ? "0" : "0 0 8px 0"; ?>;background:none;white-space: nowrap;overflow: hidden;
   text-overflow: ellipsis;"><?php echo htmlspecialchars($title) ?></h2>
     <?php
     }
@@ -156,6 +157,8 @@ else
         <div
         <?php if ($from_dash) { ?>
         style="width:220px;height:105px;"
+        <?php } else if ($print) { ?>
+        style="width:50%;height:40%;"
         <?php } else { ?>
         style="width:100%;height:80%;"
         <?php } ?>>
@@ -304,7 +307,6 @@ if ($type=="line")
     $day_ms=(60*60*24*1000); # One day in milliseconds.
     $last_t=(strtotime($from_y . "-" . $from_m . "-" . $from_d) * 1000) -$day_ms;
     $newdata=array();
-    #$last_t=0;
     foreach ($data as $row)
         {
         if ($row["t"]>0)
@@ -336,7 +338,7 @@ if ($type=="summary")
         .ReportSummary td {padding:0;display:block;width:45%;border:none;color:inherit;}
         .ReportMetric {font-size:200%;padding-left:5px;color:inherit;background:none;}
         </style>
-        <?php
+<?php
         }
 
     ?>

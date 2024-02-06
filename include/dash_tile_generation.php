@@ -392,7 +392,7 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
 
 function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_height, $promoted_image)
     {
-    global $baseurl_short, $lang;
+    global $baseurl_short, $lang, $view_title_field;
 
     if($promoted_image > 0)
         {
@@ -429,7 +429,7 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
             $no_preview    = true;
             }
         ?>
-        <img 
+        <img alt="<?php echo escape(i18n_get_translated(($promoted_image_data["field".$view_title_field] ?? ""))); ?>"
             src="<?php echo $preview_path; ?>" 
             <?php 
             if($no_preview)
@@ -500,13 +500,12 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
         }
 
 	generate_dash_tile_toolbar($tile,$tile_id);
-    return;
     }
 
 
 function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_height,$promoted_image)
     {
-    global $baseurl_short, $lang;
+    global $baseurl_short, $lang, $view_title_field;
 
     $link_parts = explode('?', $tile['link']);
     parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);
@@ -546,7 +545,8 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
             $gap   = $tile_working_space / min(count($resources), 4);
             $space = $i * $gap;
             ?>
-            <img style="position: absolute; top: 10px; left:<?php echo $space * 1.5; ?>px; height: 100%;<?php if($shadow) { ?>box-shadow: 0 0 25px #000;<?php } ?>;transform: rotate(<?php echo 20 - ($i * 12); ?>deg);" src="<?php echo $preview_path; ?>">
+            <img alt="<?php echo escape(i18n_get_translated(($resource["field".$view_title_field] ?? ""))); ?>"
+             style="position: absolute; top: 10px; left:<?php echo $space * 1.5; ?>px; height: 100%;<?php if($shadow) { ?>box-shadow: 0 0 25px #000;<?php } ?>;transform: rotate(<?php echo 20 - ($i * 12); ?>deg);" src="<?php echo $preview_path; ?>">
             <?php
             $i++;
             }
@@ -574,7 +574,6 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
         }
 
 	generate_dash_tile_toolbar($tile,$tile_id);
-    return;
     }
 
 
@@ -604,5 +603,4 @@ function tile_featured_collection_blank($tile, $tile_id)
         }
 
 	generate_dash_tile_toolbar($tile,$tile_id);
-    return;
     }

@@ -40,7 +40,13 @@ if(!$ignoregroups)
             $users=get_users($groups[$n]["ref"]);
             $ulist="";
 
-            for ($m=0;$m<count($users);$m++) {if ($ulist!="") {$ulist.=", ";};$ulist.=$users[$m]["username"];}
+            for ($m = 0; $m < count($users); $m++) {
+                if ($ulist != "") {
+                    $ulist .= ", ";
+                }
+                $ulist .= $users[$m]["username"];
+            }
+            
             if ($ulist!="")
                 {
                 if (!$first) { ?>, <?php }
@@ -71,7 +77,13 @@ if(!$ignoregroups)
             $users=get_users($groups[$n]["ref"]);
             $ulist="";
 
-            for ($m=0;$m<count($users);$m++) {if ($ulist!="") {$ulist.=", ";};$ulist.=$users[$m]["username"];}
+            for ($m = 0; $m < count($users); $m++) {
+                if ($ulist != "") {
+                    $ulist .= ", ";
+                }
+                $ulist .= $users[$m]["username"];
+            }
+
             if ($ulist!="")
                 {
                 if (!$first) { ?>, <?php }

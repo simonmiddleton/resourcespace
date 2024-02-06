@@ -95,8 +95,27 @@ if ($alt_access)
             {
             if ($alt_thm!="")
                 {
+				$url = generateURL(
+					$baseurl_short . 'pages/preview.php',
+					[
+						'ref' 			=> $ref,
+						'alternative' 	=> $altfiles[$n]['ref'],
+						'k' 			=> $k,
+						'search' 		=> $search,
+						'offset' 		=> $offset,
+						'order_by' 		=> $order_by,
+						'sort' 			=> $sort,
+						'archive' 		=> $archive
+					]
+				) . '&' . hook("previewextraurl");
                 ?>
-                <div class="AlternativeFileImage <?php echo $css_PointerEventsNone; ?>" ><a href="<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref)?>&alternative=<?php echo $altfiles[$n]["ref"]?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&<?php echo hook("previewextraurl") ?>"><img src="<?php echo $alt_thm?>" class="AltThumb"></a></div><?php
+                <div class="AlternativeFileImage <?php echo $css_PointerEventsNone; ?>" >
+					<a href="<?php echo $url ?>">
+						<img alt="<?php echo escape(i18n_get_translated($altfiles[$n]['name'] ?? ""));?>"
+						src="<?php echo $alt_thm?>" class="AltThumb">
+					</a>
+				</div>
+				<?php
                 }
             }        
         ?>
@@ -106,10 +125,10 @@ if ($alt_access)
 		</td>
         <?php hook('view_altfiles_table', '', array($altfiles[$n])); ?>
 		<td class="DownloadFileSize" rowspan="<?php echo escape((string)$rowspan);?>"><?php echo escape(str_replace('&nbsp;', ' ',formatfilesize($altfiles[$n]["file_size"])))?></td>
-		
+
 		<?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
 		?>
-		
+
 		<?php if ($access==0 && resource_download_allowed($ref,"",$resource["resource_type"],$altfiles[$n]["ref"])){?>
 		<td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
 		<?php 		
@@ -167,7 +186,7 @@ if ($alt_access)
             <tr class="DownloadDBlend">
             <?php
             $preview_url = generateURL($baseurl . "/pages/download.php", ["ref" => $ref, "ext" => $altfiles[$n]["file_extension"], "alternative" => $altfiles[$n]["ref"], "noattach" => "true", 'k' => $k]);
-            
+
             if($terms_download)
                 {
                 $preview_url = generateURL($baseurl . "/pages/terms.php", ['ref'=>$ref, 'url'=>$preview_url, 'alternative'=>$altfiles[$n]['ref'], 'k' => $k]);
@@ -182,7 +201,7 @@ if ($alt_access)
             <?php
             }    
         ?>
-		<?php	
+<?php	
 		}
         hook("morealtdownload");
 	}

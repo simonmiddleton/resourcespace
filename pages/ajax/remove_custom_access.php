@@ -9,7 +9,7 @@ $type = getval('type','');
 $resource_data = get_resource_data($resource);
 
 // User should have edit access to this resource!
-if(!get_edit_access($resource, $resource_data['archive'], false, $resource_data)) {
+if(!get_edit_access($resource, $resource_data['archive'], $resource_data)) {
 	exit ('Permission denied.');
 }
 

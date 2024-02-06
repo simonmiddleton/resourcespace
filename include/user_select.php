@@ -17,7 +17,7 @@ if(isset($user_select_internal) && $user_select_internal)
 	{?>
 	<tr>
 		<td>
-			<input type="text" class="stdwidth" value="<?php echo $lang["starttypingusername"]?>" id="<?php echo $autocomplete_user_scope; ?>autocomplete" name="autocomplete_parameter" onFocus="if(this.value == '<?php echo $lang['starttypingusername']; ?>') {this.value = ''}" onBlur="if(this.value == '') {this.value = '<?php echo $lang['starttypingusername']; ?>';}" />
+			<input type="text" onpaste="return false;" class="stdwidth" value="<?php echo $lang["starttypingusername"]?>" id="<?php echo $autocomplete_user_scope; ?>autocomplete" name="autocomplete_parameter" onFocus="if(this.value == '<?php echo $lang['starttypingusername']; ?>') {this.value = ''}" onBlur="if(this.value == '') {this.value = '<?php echo $lang['starttypingusername']; ?>';}" />
 		</td>			
 	</tr>
 	<?php
@@ -26,7 +26,7 @@ else
 	{?>
 	<tr>
 		<td>
-			<input type="text" class="medwidth" value="<?php echo $lang["starttypingusername"]?>" id="<?php echo $autocomplete_user_scope; ?>autocomplete" name="autocomplete_parameter" onFocus="if(this.value == '<?php echo $lang['starttypingusername']; ?>') {this.value = ''}" onBlur="if(this.value == '') {this.value = '<?php echo $lang['starttypingusername']; ?>';}" />
+			<input type="text" onpaste="return false;" class="medwidth" value="<?php echo $lang["starttypingusername"]?>" id="<?php echo $autocomplete_user_scope; ?>autocomplete" name="autocomplete_parameter" onFocus="if(this.value == '<?php echo $lang['starttypingusername']; ?>') {this.value = ''}" onBlur="if(this.value == '') {this.value = '<?php echo $lang['starttypingusername']; ?>';}" />
 		</td>
 		<td>
 			<input id="<?php echo $autocomplete_user_scope; ?>adduserbutton" type=button value="+" class="medcomplementwidth" onClick="<?php echo $autocomplete_user_scope; ?>addUser();" />

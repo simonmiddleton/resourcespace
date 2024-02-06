@@ -42,4 +42,4 @@ function HookAuto_loginAllInitialise()
 	return true;
 	}
 
-?>
+

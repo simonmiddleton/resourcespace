@@ -4,7 +4,7 @@ include '../../../include/db.php';
 include '../../../include/authenticate.php';
 if (!checkperm('i'))
     {
-    exit ($lang['error-permissiondenied']);
+    exit (escape($lang['error-permissiondenied']));
     }
 
 $resources=getval("resources","");
@@ -33,9 +33,9 @@ if($valid==true)
     $resourcedetails=ps_query("SELECT ref, $title_field, file_size FROM resource WHERE ref IN (". ps_param_insert(count($restoreresources)) . ")", ps_param_fill($restoreresources, 'i'));
 
     // Handle entered resources
-    if(getval("restore_confirm","")!="")
+    if(getval("restore_confirm","")!="" && enforcePostRequest(false))
         {
-        ps_query("update resource set pending_restore=1 where ref in (". ps_param_insert(count($restoreresources)). ") and archive=2", ps_param_fill($restoreresources, 'i'));
+        ps_query("UPDATE resource SET pending_restore=1 WHERE ref IN (". ps_param_insert(count($restoreresources)). ") and archive=2", ps_param_fill($restoreresources, 'i'));
         foreach($resourcedetails as $resourcedetail)
             {resource_log($resourcedetail["ref"],"",0,$lang['offline_archive_resource_log_restore_set'],"","");}
         $resulttext=$lang["offline_archive_resources_restore_confirmed"];
@@ -50,16 +50,16 @@ include '../../../include/header.php';
 <?php
 if (isset($resulttext))
     {
-    echo "<div class=\"offlinearchiveSaveStatus\">" . $resulttext . "</div>";
+    echo "<div class=\"offlinearchiveSaveStatus\">" . escape($resulttext) . "</div>";
     }
 ?>
 <div>
-<a href="<?php echo $baseurl ?>/plugins/offline_archive/pages/administer_archive.php" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET . $lang["offline_archive_administer_archive"] ?></a>
+<a href="<?php echo $baseurl ?>/plugins/offline_archive/pages/administer_archive.php" onClick="return CentralSpaceLoad(this,true);" ><?php echo LINK_CARET . escape($lang["offline_archive_administer_archive"]) ?></a>
 </div>
 
 
 <p>
-<h1><?php echo $lang["offline_archive_resource_restore"] ?></h1>
+<h1><?php echo escape($lang["offline_archive_resource_restore"]) ?></h1>
 </p>
 
 <?php if($resources!="" && $valid==true)
@@ -72,11 +72,11 @@ if (isset($resulttext))
                 echo '<tr class="ListviewTitleStyle">';
                 echo '<td style="width:150px"></td>';
                 echo '<td style="width:150px">';
-                echo $lang['property-reference'];
+                echo escape($lang['property-reference']);
                 echo '</td><td>';
-                echo $lang['property-title'];
+                echo escape($lang['property-title']);
                 echo '</td><td>';	
-                echo $lang['offline_archive_archive_ref'];
+                echo escape($lang['offline_archive_archive_ref']);
                 echo '</td>';
                 echo "</tr>";	
                     
@@ -86,17 +86,17 @@ if (isset($resulttext))
                     $thumbpath=get_resource_path($ref,false,"col",false,"jpg");
                     $archivecode = get_data_by_field($ref,$offline_archive_archivefield);
                     if($archivecode!=""){$codes[]=$archivecode;}
-                    echo '<tr onclick="window.location=\'' . $baseurl . '/?r=' . $ref . '\';">
+                    echo '<tr onclick="window.location=\'' . $baseurl . '/?r=' . (int)$ref . '\';">
                     <td>
                     <img src="' . $thumbpath . '">
                     </td>
                     <td>
                     ' . $ref . '</td>
                     <td>';
-                    echo $resourcedetail[$title_field];
+                    echo escape($resourcedetail[$title_field]);
                     echo '</td>
                     <td>';
-                    echo $archivecode;
+                    echo escape($archivecode);
                     echo '</tr>';					
                     }
                 
@@ -112,18 +112,18 @@ if (isset($resulttext))
     <?php generateFormToken("resource_restore_form"); ?>
     <?php if($resources=="")
         {
-        echo "<div><p>" . $lang['offline_archive_input_text'] . "</p></div>";
+        echo "<div><p>" . escape($lang['offline_archive_input_text']) . "</p></div>";
         ?>
         <div class="Question">		
-            <label for="resources"><?php echo $lang['offline_archive_input_resources'] ?></label>
+            <label for="resources"><?php echo escape($lang['offline_archive_input_resources']) ?></label>
             <input class="stdwidth" name="resources" id="resources" type="text" >	
         </div>
         <div class="Question">		
-            <label for="collection"><?php echo $lang['offline_archive_input_collection'] ?></label>
+            <label for="collection"><?php echo escape($lang['offline_archive_input_collection']) ?></label>
             <input class="stdwidth" name="collection" id="collection" type="text" >	
         </div>
         <div class="QuestionSubmit">	
-            <input name="restore" id="restore" type="submit" value="&nbsp;&nbsp;<?php echo $lang["offline_archive_restore_resources"]; ?>&nbsp;&nbsp;">
+            <input name="restore" id="restore" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["offline_archive_restore_resources"]); ?>&nbsp;&nbsp;">
         </div>
 
         <?php
@@ -131,9 +131,9 @@ if (isset($resulttext))
     else
         {
         ?>
-        <input name="resources" type="hidden" value="<?php echo $resources ?>">
+        <input name="resources" type="hidden" value="<?php echo escape($resources) ?>">
         <div class="QuestionSubmit">	
-            <input name="restore_confirm" id="restore_confirm" type="submit" value="&nbsp;&nbsp;<?php echo $lang["offline_archive_restore_confirm"]; ?>&nbsp;&nbsp;">
+            <input name="restore_confirm" id="restore_confirm" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["offline_archive_restore_confirm"]); ?>&nbsp;&nbsp;">
         </div>
         <?php
         }

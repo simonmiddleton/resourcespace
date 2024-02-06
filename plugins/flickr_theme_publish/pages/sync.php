@@ -97,10 +97,10 @@ else
 
 	<p><?php echo $lang["publish_new_help"] ?></p>		
 	<?php if($flickr_nice_progress){
-		?><input <?php if ($unpublished==0) { ?>disabled<?php } ?> type="button" name="publish_new" id="publish_new" onclick="flickr_open_nice_progress('<?php echo $theme?>','new')" value="<?php echo ($unpublished==1 ? $lang["publish_new-1"] : str_replace("?",$unpublished,$lang["publish_new-2"])); ?>"><?php
+		?><input <?php if ($unpublished==0) { ?>disabled<?php } ?> type="button" name="publish_new" id="publish_new" onclick="flickr_open_nice_progress('<?php echo $theme?>','new')" value="<?php echo escape($unpublished == 1 ? $lang["publish_new-1"] : str_replace("?",$unpublished,$lang["publish_new-2"])); ?>"><?php
 	}
 	else{
-		?><input <?php if ($unpublished==0) { ?>disabled<?php } ?> type="submit" name="publish_new" id="publish_new" value="<?php echo ($unpublished==1 ? $lang["publish_new-1"] : str_replace("?",$unpublished,$lang["publish_new-2"])); ?>"><?php
+		?><input <?php if ($unpublished==0) { ?>disabled<?php } ?> type="submit" name="publish_new" id="publish_new" value="<?php echo escape($unpublished==1 ? $lang["publish_new-1"] : str_replace("?",$unpublished,$lang["publish_new-2"])); ?>"><?php
 	}?>
 
 

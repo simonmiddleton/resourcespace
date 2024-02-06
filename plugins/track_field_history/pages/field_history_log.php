@@ -29,7 +29,7 @@ $url        = generateurl($baseurl_short . 'pages/view.php', $get_params );
     <a href="<?php echo $url; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<?php echo LINK_CARET_BACK ?>' . $lang['backtoresourceview']; ?></a>
 </p>
 <div class="BasicsBox">
-    <h1><?php echo str_replace('%fieldtitle%', $field_title, $lang['track_field_history_field_history_page_title']); ?></h1>
+    <h1><?php echo escape(str_replace('%fieldtitle%', $field_title, $lang['track_field_history_field_history_page_title'])); ?></h1>
     <div class="clearerleft"></div>
     <div class="Listview">
         <table id="track_field_history_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">

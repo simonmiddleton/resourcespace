@@ -86,7 +86,7 @@
 	 * @return boolean          TRUE, if not (nearly) empty, otherwise FALSE.
 	 */
 	function doi_has_content($value) {
-		return (isset($value) && $value && !empty($value) && ($value !== '') && ($value !== ','));
+		return isset($value) && $value && !empty($value) && ($value !== '') && ($value !== ',');
 	}
 
 	/**
@@ -230,7 +230,6 @@
 						$date_created = date('c', strtotime($value));
 						$dates['created'] = $date_created;
 						$dateType['created'] = 'Created';
-//						$publicationYear = date('Y', strtotime($date_created));
 						break;
 				}
 			}
@@ -262,27 +261,8 @@
 
 					case 'caption':
 					case 'title':
-//						if (!in_array($value, $titles)) {
-//							$titles[] = $value;
-//						}
-//						break;
-
 					case 'credit':
-//						if (!in_array($value, $creators)) {
-//							$creators[] = $value; # TODO: name format
-//						}
-//						break;
-
-//					case 'date':
-//						if (doi_has_content($value)) {
-////							$date = date('Y', strtotime(htmlspecialchars_decode($value)));
-////							if(!isset($publicationYear) || strcmp($publicationYear, $date) > 0)
-////								$publicationYear = date('Y', strtotime(htmlspecialchars_decode($value)));
-//						}
-//						break;
-
 					# additional Metadata by name
-
 					case $doi_field_shortname:
 						break;
 
@@ -316,8 +296,6 @@
 						break;
 
 					case 'person':
-//						if (!in_array($value, $creators))
-//							$creators[] = $value;
 						break;
 
 					case 'usageterms':
@@ -468,10 +446,6 @@ XML;
 		# $dom->save('/tmp/doi_test_xml.xml'); # testing..
 		$xml = $dom->saveXML();
 
-//		$file = fopen('/tmp/doi_test_xml.xml', 'w');
-//		fwrite($file, $xml);
-//		fclose($file);
-
 		return [
 			'doi'   => $identifier,
 			'url'   => doi_make_resource_url($ref),
@@ -491,7 +465,6 @@ XML;
 		global $baseurl;
 
 		return str_replace('rs-test', 'rs', "$baseurl/pages/view.php?ref=$ref");
-//		return "$baseurl/pages/view.php?ref=$ref";
 	}
 
 	# Datacite Metadata-Store connection functions ###########################################################################################
@@ -766,7 +739,6 @@ XML;
 	function doi_post_xml($xml, $enable_log = TRUE, $use_testmode = FALSE) {
 		global $doi_username, $doi_password, $doi_log_code;
 
-//		$op = "Metadata API - POST";
 		$op = "DOI: metadata-XML reg. @ DataCite";
 
 		# username must not contain colon, because it divides username and password in HTTP Basic authentication!
@@ -826,7 +798,7 @@ XML;
 	 * @return string
 	 */
 	function doi_get_msg($code, &$msgs, $default_msg = '') {
-		return (array_key_exists($code, $msgs) ? $msgs[$code] : $default_msg);
+		return array_key_exists($code, $msgs) ? $msgs[$code] : $default_msg;
 	}
 
 	function doi_log_uname_error() {
@@ -867,7 +839,6 @@ XML;
 		global $doi_current_ref;
 
 		if ($doi_current_ref !== -1) {
-//		    log_activity($log_msg, $LOG_CODE, null, 'resource', 'ref', $doi_current_ref, NULL, '', NULL, NULL);
 			resource_log($doi_current_ref, $LOG_CODE, 0, $log_msg);
 		}
 		else {

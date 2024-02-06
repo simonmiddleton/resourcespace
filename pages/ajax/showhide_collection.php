@@ -18,4 +18,3 @@ if(getval("action","")=="hidecollection")
 	
 exit("no action specified");
 
-?>

@@ -1,7 +1,7 @@
 <?php
 
-include_once (dirname(__FILE__)."/../../../include/metadata_functions.php");
-include_once (dirname(__FILE__)."/../../../include/definitions.php");
+include_once dirname(__FILE__)."/../../../include/metadata_functions.php";
+include_once dirname(__FILE__)."/../../../include/definitions.php";
 
 /**
  * Process the uploaded CSV
@@ -481,7 +481,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 {
                 $logtext = " - " . ($processcsv ? "Updating" : "Update") . " resource type for resource id #" . $resource_id . " to " . $resource_type_set;
                 csv_upload_log($logfile,$logtext);
-            //    array_push ($messages,$logtext);
                 if($processcsv)
                     {
                     update_resource_type($resource_id,$resource_type_set);
@@ -512,7 +511,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 {
                 $cell_count++;
 
-                //array_push($messages, "skipping column  " . $column_id . " as it does not apply to this resource type");
                 continue;
                 }
 
@@ -670,7 +668,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                         continue 3;
                         }
                     }
-                elseif(in_array($field_type, $DATE_FIELD_TYPES) and $field_type != FIELD_TYPE_DATE_RANGE)
+                elseif (in_array($field_type, $DATE_FIELD_TYPES) && $field_type != FIELD_TYPE_DATE_RANGE)
                     {
                     // Validate date field excluding date range field  - $DATE_FIELD_TYPES global var in definitions.php
                     // This is a valid date if empty string returned
@@ -704,7 +702,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     {
                     $logtext = " - Updated field '" . $fieldid . "' (" . $field_def['title'] . ") with value '" . $cell_value . "'";
                     csv_upload_log($logfile,$logtext);
-                //    array_push ($messages,$logtext);
+
                     if($field_def['type']==FIELD_TYPE_DATE_RANGE)
                         {
                         # each value will be a node so we end up with a pair of nodes to represent the start and end dates
@@ -830,7 +828,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     {
                     $logtext = ($processcsv ? "Updating" : "Update") . " resource " . $resource_id . ", field '" . $field_name . "' with value '" . $cell_value . "'";
                     csv_upload_log($logfile,$logtext);
-                 //   array_push ($messages,$logtext);
                     }
                 } // End of foreach resourcerefs
             }

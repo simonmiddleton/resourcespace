@@ -248,7 +248,6 @@ else
         
         <!-- Preview icon -->
         <?php
-        #$url = getPreviewURL($result);
         $url = $baseurl . "/pages/preview.php?ref=" . $result["ref"] . "&k=" . substr(md5($access_key . $ref),0,10) . "&resourceconnect_source=1";
     if ($url!==false)
                 { ?>

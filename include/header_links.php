@@ -5,7 +5,7 @@
                 <?php if (!$use_theme_as_home && !$use_recent_as_home) { ?>
                     <li class="HeaderLink">
                         <a href="<?php echo $baseurl?>/pages/<?php echo $default_home_page?>" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo ($default_home_page=="home.php"?DASH_ICON . $lang["dash"]:HOME_ICON . $lang["home"]) ?>
+                            <?php echo $default_home_page == "home.php" ? DASH_ICON . escape($lang["dash"]) : HOME_ICON . escape($lang["home"]); ?>
                         </a>
                     </li>
                 <?php } ?>
@@ -29,7 +29,7 @@
                             <i aria-hidden="true" class="fa fa-fw fa-search"></i>
                             <?php echo $lang["searchresults"]?>
                         </a>
-                    <?php } else { ?>
+<?php } else { ?>
                     <a class="SearchResultsDisabled">
                         <i aria-hidden="true" class="fa fa-fw fa-search"></i>
                         <?php echo $lang["searchresults"]?>
@@ -118,7 +118,7 @@
                     </li>
                 <?php } ?>
             <?php } ?>
-                    
+
             <?php 
             /* ------------ Customisable top navigation ------------------- */
             if(isset($custom_top_nav))
@@ -159,7 +159,7 @@
                         <?php
                     }
                 } ?>
-                    
+
             <?php if ($help_link) { ?>
                 <li class="HeaderLink">
                     <a href="<?php echo $baseurl?>/pages/help.php" onClick="return <?php if (!$help_modal) { ?>CentralSpaceLoad(this,true);<?php } else { ?>ModalLoad(this,true);<?php } ?>">

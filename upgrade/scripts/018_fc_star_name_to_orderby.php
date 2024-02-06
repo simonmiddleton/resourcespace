@@ -27,7 +27,7 @@ $old_fc_sort = function(array $a, array $b) use ($descthemesorder)
         return strnatcasecmp($a["name"],$b["name"]);
         }
 
-    return ($a["has_resources"] < $b["has_resources"] ? -1 : 1);
+    return $a["has_resources"] < $b["has_resources"] ? -1 : 1;
     };
 
 $starred_fcs_parents = array_unique(array_column($fcs_w_stars, 'parent'));
@@ -35,7 +35,7 @@ foreach($starred_fcs_parents as $fc_parent)
     {
     $fcs = get_featured_collections((int) $fc_parent, ['access_control' => false]);
     usort($fcs, $old_fc_sort);
-    reorder_collections(array_column($fcs, 'ref'));
+    sql_reorder_records('collection', array_column($fcs, 'ref'));
     }
 
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, "Finished migrating featured collections names that contain asterisks to use order_by column instead!");

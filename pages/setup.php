@@ -393,7 +393,7 @@ h2#dbaseconfig{  min-height: 32px;}
 <div id="setup-container">
 <div id="Header" style="height: 40px;">
     <div class="HeaderImgLink">
-    	<img src="../gfx/titles/title-black.svg" id="HeaderImg" />
+    	<img alt="" src="../gfx/titles/title-black.svg" id="HeaderImg" />
     </div>
     <div id="HeaderNav1" class="HorizontalNav "><ul></ul></div>
 	<div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav"><ul></ul></div> 
@@ -1068,7 +1068,7 @@ else
 						$pass = true;
 						}
 				?>
-				<p class="<?php echo ($pass==true?'':'failure'); ?>"><?php echo str_replace("?", "PHP", $lang["softwareversion"]) . ": " . $phpversion . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+				<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "PHP", $lang["softwareversion"]) . ": " . $phpversion . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
 				<p><?php echo str_replace("%phpinifile", php_ini_loaded_file(), $lang["php-config-file"]); ?></p>
 				<?php
 					if(function_exists('gd_info'))
@@ -1090,7 +1090,7 @@ else
 						$continue = false;
 						}
 				?>
-				<p class="<?php echo ($pass==true?'':'failure'); ?>"><?php echo str_replace("?", "GD", $lang["softwareversion"]) . ": " . $version . ($pass!=true?'<br />':' ') . "(" . $result . ")"; ?></p>
+				<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "GD", $lang["softwareversion"]) . ": " . $version . ($pass!=true?'<br />':' ') . "(" . $result . ")"; ?></p>
 				<?php
 					$memory_limit=ini_get("memory_limit");
 					if (ResolveKB($memory_limit)<(200*1024))
@@ -1104,7 +1104,7 @@ else
 						$pass = true;
 						}
 				?>
-				<p class="<?php echo ($pass==true?'':'failure'); ?>"><?php echo str_replace("?", "memory_limit", $lang["phpinivalue"]) . ": " . $memory_limit . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+				<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "memory_limit", $lang["phpinivalue"]) . ": " . $memory_limit . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
 				<?php
 					$post_max_size = ini_get("post_max_size");
 					if (ResolveKB($post_max_size)<(100*1024))
@@ -1118,7 +1118,7 @@ else
 						$pass = true;
 						}
 				?>
-				<p class="<?php echo ($pass==true?'':'failure'); ?>"><?php echo str_replace("?", "post_max_size", $lang["phpinivalue"]) . ": " . $post_max_size . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+				<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "post_max_size", $lang["phpinivalue"]) . ": " . $post_max_size . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
 				<?php
 					$upload_max_filesize = ini_get("upload_max_filesize");
 					if (ResolveKB($upload_max_filesize)<(100*1024))
@@ -1132,7 +1132,7 @@ else
 						$pass = true;
 						}
 				?>
-				<p class="<?php echo ($pass==true?'':'failure'); ?>"><?php echo str_replace("?", "upload_max_filesize", $lang["phpinivalue"]) . ": " . $upload_max_filesize . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+				<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "upload_max_filesize", $lang["phpinivalue"]) . ": " . $upload_max_filesize . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
 				<?php
 					$success = is_writable('../include');
 					if ($success===false)
@@ -1147,7 +1147,7 @@ else
 						$pass = true;
 						}
 				?>
-					<p class="<?php echo ($pass==true?'':'failure');?>"><?php echo $lang["setup-checkconfigwrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+					<p class="<?php echo $pass == true ? '' : 'failure';?>"><?php echo $lang["setup-checkconfigwrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
 				<?php
 					if (!file_exists($storagedir))
                         {
@@ -1172,7 +1172,7 @@ else
                         $pass = true;
                         }
 				?>
-					<p class="<?php echo ($pass==true?'':'failure'); ?>"><?php echo $lang["setup-checkstoragewrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+					<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo $lang["setup-checkstoragewrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
 			</div>
 			<h1><?php echo $lang["setup-welcome"];?></h1>
 			<p><?php echo $lang["setup-introtext"];?></p>
@@ -1391,7 +1391,7 @@ else
 				</div>
 			</p>
 			<p class="configsection">
-				<h2><?php echo $lang["setup-generalsettings"];?><img id="admin_test" class="starthidden ajloadicon" src="../gfx/ajax-loader.gif"/></h2>
+				<h2><?php echo $lang["setup-generalsettings"];?><img alt="" id="admin_test" class="starthidden ajloadicon" src="../gfx/ajax-loader.gif"/></h2>
 				<div class="configitem">
 					<label for="applicationname"><?php echo $lang["setup-applicationname"];?></label><input id="applicationname" type="text" name="applicationname" value="<?php echo htmlspecialchars($applicationname);?>"/><a class="iflink" href="#if-applicationname">?</a>
 					<p class="iteminfo" id="if-applicationname"><?php echo $lang["setup-if_applicationname"];?></p>

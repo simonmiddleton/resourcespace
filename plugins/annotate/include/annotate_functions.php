@@ -1,5 +1,5 @@
 <?php
-include_once(dirname(__FILE__) . '/../../../lib/html2pdf/vendor/tecnickcom/tcpdf/tcpdf.php');
+include_once dirname(__FILE__) . '/../../../lib/html2pdf/vendor/tecnickcom/tcpdf/tcpdf.php';
 
 class MYPDF extends TCPDF {
 		
@@ -47,11 +47,7 @@ function clear_annotate_temp($ref,$annotateid)
 
     if (file_exists($jpg_path)){unlink($jpg_path);}
     if (file_exists($pdf_path)){unlink($pdf_path);}
-    }
-  
-// $crop_pre_file = get_temp_dir(false,'') . "/transform_" . $ref . "_" . md5($username . date(time()) . $scramble_key) . ".jpg";
-// $crop_pre_url = $baseurl . "/pages/download.php?tempfile=transform_" . $ref . "_" . date(time()) . ".jpg";
-    
+    }  
 
 function get_annotate_file_path($ref,$getfilepath,$extension)
     {
@@ -77,7 +73,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 	global $contact_sheet_preview_size,$annotate_pdf_output_only_annotated,$lang,$userfullname,$view_title_field,$baseurl,$imagemagick_path,$imagemagick_colorspace,$ghostscript_path,$previewpage,$storagedir,$storageurl,$annotate_font,$access,$k;
 	$date= date("m-d-Y h:i a");
 	
-	include_once(dirname(__FILE__) . '/../../../include/image_processing.php');
+	include_once dirname(__FILE__) . '/../../../include/image_processing.php';
 
 	$pdfstoragepath=get_annotate_file_path($ref,true,"pdf");
 	$jpgstoragepath=get_annotate_file_path($ref,true,"jpg");
@@ -200,9 +196,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 					$pdf->Rect(((($width-1)/2)-($imagewidth-1)/2)+$note_x,$note_y+1,.1,.1,'DF',$style1,array(255,255,0));					
 					$ypos=$pdf->GetY();			
 					$pdf->Text(((($width-1)/2)-($imagewidth-1)/2)+$note_x-.01,$note_y+.99,$m,false,false,true,0,0,'L');
-					
-					//$pdf->SetLineStyle($style2);
-					//$pdf->Rect(((($width-1)/2)-($imagewidth-1)/2)+$note_x,$note_y+1,$note_width,$note_height);					
+								
 					$pdf->SetY($ypos);
 					$note_user=get_user($note['user']);
 					$pdf->SetLineStyle($style);
@@ -236,7 +230,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
 		{
 		if (file_exists($jpgstoragepath)){unlink($jpgstoragepath);}
 		if (file_exists($pdfstoragepath)){unlink($pdfstoragepath);}
-		echo ($pdf->GetPage()); // for paging
+		echo $pdf->GetPage(); // for paging
 		$pdf->Output($pdfstoragepath,'F');
 		# Set up  
 		putenv("MAGICK_HOME=" . $imagemagick_path); 

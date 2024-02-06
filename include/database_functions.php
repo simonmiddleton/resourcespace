@@ -108,7 +108,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         $exception = new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
         // Remove the actual errorhandler from the stack trace. This will remove other global data which otherwise could leak sensitive information
         $backtrace = json_encode(
-            array_filter($exception->getTrace(), function(array $val) { return ($val["function"] !== "errorhandler"); }),
+            array_filter($exception->getTrace(), function(array $val) { return $val["function"] !== "errorhandler"; }),
             JSON_PRETTY_PRINT);
 
         // Prepare the post data.
@@ -184,8 +184,6 @@ function db_set_connection_mode(string $name)
         {
         $GLOBALS['db_connection_mode'] = $name;
         }
-
-    return;
     }
 
 
@@ -217,8 +215,6 @@ function db_clear_connection_mode()
         {
         unset($GLOBALS['db_connection_mode']);
         }
-
-    return;
     }
 
 
@@ -301,7 +297,6 @@ function sql_connect()
         }
 
     db_clear_connection_mode();
-    return;
     }
 
 /**
@@ -1246,7 +1241,7 @@ function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, in
     $limit = sql_limit($offset, $rows);
     $data = ps_query("{$query->sql} {$limit}", $query->parameters);
     $total_query = is_a($countquery,"PreparedStatementQuery") ? $countquery : $query;
-    $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$total_query->sql}) AS count_select", $total_query->parameters, 0, ($cachecount && $cache_search_count) ? "searchcount" : "");
+    $total = (int) ps_value("SELECT COUNT(*) AS `value` FROM ({$total_query->sql}) AS count_select", $total_query->parameters, 0, ($cachecount && $cache_search_count) ? "schema" : "");
     $datacount = count($data);
 
     // Check if cached total will cause errors
@@ -1286,7 +1281,7 @@ function sql_truncate_text_val(string $v, int $len)
         $truncated_sql_val = mb_strcut($v, 0, $len);
         }
 
-    return (isset($truncated_sql_val) ? $truncated_sql_val : $v);
+    return isset($truncated_sql_val) ? $truncated_sql_val : $v;
     }
 
 /**
@@ -1370,8 +1365,6 @@ function sql_reorder_records(string $table, array $refs)
          );
         ps_query($sql, array_merge($cases_params, ps_param_fill($refs, 'i')));
         }
-
-    return;
     }
 
 

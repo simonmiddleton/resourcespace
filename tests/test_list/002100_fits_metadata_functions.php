@@ -1,7 +1,7 @@
 <?php
 command_line_only();
 
-include_once(__DIR__ . '/../../include/metadata_functions.php');
+include_once __DIR__ . '/../../include/metadata_functions.php';
 
 // ExifTool is required by FITS
 if(get_utility_path("exiftool") === false)

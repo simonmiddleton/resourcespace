@@ -16,6 +16,9 @@ parameters:
 
     scanDirectories:
       - lib/html2pdf/
+      - lib/Diff/
+      - lib/PHPMailer/
+      - lib/tus/
 
     excludePaths:
         analyse:

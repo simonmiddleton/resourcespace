@@ -251,7 +251,7 @@ if ($youtube_username != '')
 	<?php echo "<p>" . str_replace("%youtube_username%", "<strong>" . $youtube_username . "</strong>", $lang["youtube_publishloggedinas"]) . "</p>";
 	echo "<p><a href=\"" . $baseurl . "/plugins/youtube_publish/pages/youtube_upload.php?resource=" . $ref . "&deletetokens=true" . "\">&gt; " . $lang["youtube_publish_change_login"] . "</a></p>";?>
 	</div>
-	<?php ;}?>
+	<?php } ?>
 
 <form action="<?php echo $baseurl ?>/plugins/youtube_publish/pages/youtube_upload.php?resource=<?php echo $ref ?>" method="post">
     <?php generateFormToken("youtube_upload"); ?>

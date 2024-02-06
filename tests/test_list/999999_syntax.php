@@ -10,7 +10,7 @@ $TestPage = function($page) {
  
     # Run PHP in lint mode against the file.
     $result=exec("cd " . escapeshellarg(dirname($page)). ";" . $php_path . "/php -l " . escapeshellarg(basename($page)) );
-    return (strpos($result,"No syntax errors")!==false);
+    return strpos($result,"No syntax errors") !== false;
 };
  
 $exclude_paths = array(

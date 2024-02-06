@@ -37,7 +37,7 @@ function HookRse_workflowAllInitialise()
 function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $existingstates)
     {
     global  $baseurl, $lang, $userref, $wfstates, $applicationname, $use_phpmailer;
-    
+
     $rse_workflow_from="";
     if (isset($wfstates[$archive]["rse_workflow_email_from"]) && $wfstates[$archive]["rse_workflow_email_from"]!="")
         {
@@ -50,13 +50,13 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
     // The field 'more_workflow_action' is a hidden field which carries input text on the action specific form
     // A textarea named 'more_for_workflow_action' is effectively bound to and copies any keyboard input to 'more_workflow_action' 
     $message = $lang["rse_workflow_state_notify_message"] . $lang["status" . $archive];
-    
+
     if(getval('more_workflow_action_' . $workflowaction,'') != '')
         {
         $message .= "\n\n" . $lang["rse_workflow_more_notes_title"];
         $message .= "\n\n" . getval('more_workflow_action_' . $workflowaction, '');
         }
-        
+
     if(count($resource) > 200)
         {
         // Too many resources to link to directly
@@ -66,11 +66,11 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
         {
         $linkurl = $baseurl . "/pages/search.php?search=!list" . implode(":",$resource);
         }
-    
-  
-    
+
+
+
     $maillinkurl = (($use_phpmailer) ? "<a href=\"$linkurl\">$linkurl</a>" : $linkurl); // Convert to anchor link if using html mails
-      
+
     /***** NOTIFY GROUP SUPPORT IS NOW HANDLED BY ACTIONS *****/    
 
     /*****NOTIFY CONTRIBUTOR*****/
@@ -89,7 +89,7 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
                     debug("No valid contributor listed for resource " . $resourceref);
                     continue;
                     }
-                    
+
                 if(!isset($cntrb_arr[$contuser["ref"]]))
                     {
                     // This contributor needs to be added to the array of users to notify
@@ -131,7 +131,7 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
             if($wfstates[$archive]["rse_workflow_bcc_admin"]==1)
                 {
                 debug("processing bcc notifications");
-                $bccmessage = clone($message);
+                $bccmessage = clone $message;
                 $bccmessage->set_text("lang_user");                
                 $bccmessage->append_text(": " . $cntrb_detail["username"] . " (#" . $cntrb_user . ")<br/>");
                 $bccmessage->append_text_multi($message->get_text(true));
@@ -166,6 +166,37 @@ function HookRse_workflowAllRender_actions_add_collection_option($top_actions, a
     return array_merge($options, $wf_actions_options);
     }
 
+function HookRse_workflowAllRender_search_actions_add_option(array $options, array $urlparams)
+    {
+    global $internal_share_access;
+
+    // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
+    if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
+        {
+        // @see hook() for an explanation about the hook_return_value global
+        $options = $GLOBALS["hook_return_value"];
+        }
+
+    $k = trim((isset($urlparams["k"]) ? $urlparams["k"] : ""));
+
+    if($k != "" && $internal_share_access === false)
+        {
+        return false;
+        }
+
+    $wf_actions_options = rse_workflow_compile_actions($urlparams);
+
+    // Append to the current allow list of render_actions_filter (for the selection collection)
+    $current_render_actions_filter = $GLOBALS['render_actions_filter'] ?? fn($action) => true;
+    $GLOBALS['render_actions_filter'] = function($action) use ($current_render_actions_filter, $wf_actions_options)
+        {
+        return $current_render_actions_filter($action)
+            || in_array($action['value'], array_column($wf_actions_options, 'value'));
+        };
+
+    return array_merge($options, $wf_actions_options);
+    }
+
 function HookRse_workflowAllRender_actions_add_option_js_case($action_selection_id)
     {
     ?>
@@ -174,7 +205,6 @@ function HookRse_workflowAllRender_actions_add_option_js_case($action_selection_
         ModalLoad(option_url, true, true);
         break;
     <?php
-    return;
     }
 
 

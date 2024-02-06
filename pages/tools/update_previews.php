@@ -49,7 +49,7 @@ if ($collectionid == false){
     if (!(is_numeric($ref) && $ref > 0)) $ref = 1;
     if (update_previews($ref)){
     	?>
-    	<img src="<?php echo get_resource_path($ref,false,"pre",false)?>">
+    	<img alt="" src="<?php echo get_resource_path($ref,false,"pre",false)?>">
     	<?php
     	}
     else
@@ -84,7 +84,7 @@ else {
     }
     if (update_previews($ref)){
         ?>
-        <img src="<?php echo get_resource_path($ref,false,"pre",false)?>">
+        <img alt="" src="<?php echo get_resource_path($ref,false,"pre",false)?>">
         <?php 
     }
     if (isset($collection[$key+1])){

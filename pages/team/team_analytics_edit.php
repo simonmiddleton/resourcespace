@@ -93,21 +93,25 @@ if ($print)
     {
     ?><html><head>
         <style>
-        .pie {transform: scale(0.45);transform-origin: 0 0;}
-        .line {transform: scale(0.35);transform-origin: 0 0;}
         a,.CollapsibleSectionHead {display:none;}
         </style>
 
     <link href="<?php echo $baseurl ?>/css/global.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
     <link href="<?php echo $baseurl ?>/css/colour.css" rel="stylesheet" type="text/css" media="screen,projection,print" />
 
-    <script src="<?php echo $baseurl ?>/lib/js/jquery-3.6.0.min.js?css_reload_key=152"></script>
-    <script src="<?php echo $baseurl ?>/lib/js/jquery-ui-1.12.1.min.js?css_reload_key=152" type="text/javascript"></script>
-    <!-- FLOT for graphs -->
-    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.js"></script> 
-    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.time.js"></script> 
-    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.pie.js"></script>
-    <script language="javascript" type="text/javascript" src="<?php echo $baseurl ?>/lib/flot/jquery.flot.tooltip.min.js"></script>
+    <!-- Load jQuery and jQueryUI -->
+    <script src="<?php echo $baseurl . $jquery_path; ?>?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+    <script src="<?php echo $baseurl. $jquery_ui_path?>?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
+    <script src="<?php echo $baseurl; ?>/lib/js/jquery.layout.js?css_reload_key=<?php echo $css_reload_key?>"></script>
+    <link type="text/css" href="<?php echo $baseurl?>/css/smoothness/jquery-ui.min.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
+    <script src="<?php echo $baseurl?>/lib/js/jquery.ui.touch-punch.min.js"></script>
+    <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.tshift.min.js"></script>
+    <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery-periodical-updater.js"></script>
+
+    <!-- Chart.js for graphs -->
+    <script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/chartjs-4-4-0.js"></script>
+    <script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/date-fns.js"></script>
+    <script language="javascript" type="module" src="<?php echo $baseurl_short; ?>lib/js/chartjs-adapter-date-fns.js"></script>
 
     </head><body onload="window.setTimeout('window.print();',3000);"><?php
     }
@@ -144,7 +148,7 @@ else
         <a target="blank" href="team_analytics_edit.php?ref=<?php echo $ref ?>&print=true"><i class="fa fa-print"></i> <?php echo $lang["print_report"] ?></a>
     </p>
 
-<h1 id="ReportHeader" class="CollapsibleSectionHead <?php if ($ref=="") { ?>expanded<?php } else { ?>collapsed<?php } ?>"><?php echo ($ref==""?$lang["new_report"]:$lang["edit_report"]);render_help_link('resourceadmin/analytics'); ?></h1>
+<h1 id="ReportHeader" class="CollapsibleSectionHead <?php if ($ref=="") { ?>expanded<?php } else { ?>collapsed<?php } ?>"><?php echo escape($ref == "" ? $lang["new_report"] : $lang["edit_report"]);render_help_link('resourceadmin/analytics'); ?></h1>
 
 <div class="CollapsibleSection" id="ReportForm" <?php if ($ref!="") { ?>style="display:none;"<?php } ?>>
 <form method="post" id="mainform" onsubmit="return CentralSpacePost(this);" >
@@ -258,13 +262,6 @@ for ($n=0;$n<count($list);$n++)
 </div>
 
 
-
-
-
-
-
-
-
 <div class="QuestionSubmit">
     <input type="hidden" name="save" value="save report">	
 <input name="update" type="submit" value="&nbsp;&nbsp;<?php echo $lang["update_report"]?>&nbsp;&nbsp;" />
@@ -286,8 +283,25 @@ for ($n=0;$n<count($types);$n++)
 	{
         if (($activity_type=="" || $activity_type==$types[$n]) && ($collection=="" || in_array($types[$n],$resource_activity_types)))
             {
-            $graph_params="report=" . $ref . "&n=" . $n . "&activity_type=" . urlencode($types[$n]) . "&groups=" . urlencode(join(",",$groups)) . "&from-y=" . $from_y . "&from-m=" . $from_m ."&from-d=" . $from_d . "&to-y=" . $to_y . "&to-m=" . $to_m ."&to-d=" . $to_d . "&period=" . $period . "&period_days=" . $period_days . "&collection=" . $collection  . "&resource_type=" . $resource_type . "&external=" . $external;
-            
+            $graph_params=array(
+                "report"        => $ref,
+                "n"             => $n,
+                "activity_type" => $types[$n],
+                "groups"        => join(",",$groups),
+                "from-y"        => $from_y,
+                "from-m"        => $from_m,
+                "from-d"        => $from_d,
+                "to-y"          => $to_y,
+                "to-m"          => $to_m,
+                "to-d"          => $to_d,
+                "period"        => $period,
+                "period_days"   => $period_days,
+                "collection"    => $collection,
+                "resource_type" => $resource_type,
+                "external"      => $external,
+                "print"         => $print??0
+            );
+
             # Show the object breakdown for certain types only.
             $show_breakdown=false;
             $show_pieresourcetype=false;
@@ -349,11 +363,11 @@ for ($n=0;$n<count($types);$n++)
             <?php if ($activity_type=="") { ?></div><hr style="clear:both;" /><div style="page-break-inside: avoid;"><?php } ?>
             <script>
             jQuery(function () {
-            <?php if ($show_breakdown) { ?>jQuery('#pie<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=pie&<?php echo $graph_params ?>");<?php } ?>
-            <?php if ($show_piegroup) { ?>jQuery('#piegroup<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=piegroup&<?php echo $graph_params ?>");<?php } ?>
-            <?php if ($show_pieresourcetype) { ?>jQuery('#pieresourcetype<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=pieresourcetype&<?php echo $graph_params ?>");<?php } ?>
-            <?php if ($show_line) { ?>jQuery('#line<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=line&<?php echo $graph_params ?>");<?php } ?>
-            <?php if ($show_summary) { ?>jQuery('#summary<?php echo $n ?>').load("<?php echo $baseurl_short ?>pages/team/ajax/graph.php?type=summary&<?php echo $graph_params ?>");<?php } ?>
+            <?php if ($show_breakdown)          { ?>jQuery('#pie<?php echo $n ?>').load("<?php echo generateURL($baseurl_short . "pages/team/ajax/graph.php",$graph_params,["type"=>"pie"])?>");<?php } ?>
+            <?php if ($show_piegroup)           { ?>jQuery('#piegroup<?php echo $n ?>').load("<?php echo generateURL($baseurl_short . "pages/team/ajax/graph.php",$graph_params,["type"=>"piegroup"])?>");<?php } ?>
+            <?php if ($show_pieresourcetype)    { ?>jQuery('#pieresourcetype<?php echo $n ?>').load("<?php echo generateURL($baseurl_short . "pages/team/ajax/graph.php",$graph_params,["type"=>"pieresourcetype"])?>");<?php } ?>
+            <?php if ($show_line)               { ?>jQuery('#line<?php echo $n ?>').load("<?php echo  generateURL($baseurl_short . "pages/team/ajax/graph.php",$graph_params,["type"=>"line"])?>");<?php } ?>
+            <?php if ($show_summary)            { ?>jQuery('#summary<?php echo $n ?>').load("<?php echo generateURL($baseurl_short . "pages/team/ajax/graph.php",$graph_params,["type"=>"summary"]) ?>");<?php } ?>
             
             });
             </script>

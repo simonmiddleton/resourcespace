@@ -136,7 +136,7 @@ foreach($new_system_version_files as $new_system_version=>$files)
             }
         try
             {
-            include_once(__DIR__ . '/scripts/' . $file);
+            include_once __DIR__ . '/scripts/' . $file;
             $message = 'version ' . $new_system_version . ' upgrade script: ' . $file . ' completed OK.';
             log_activity($message, LOG_CODE_SYSTEM, $new_system_version, 'sysvars', 'version', null, null, null, null, false);
             }

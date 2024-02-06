@@ -385,7 +385,7 @@ function email_collection_request($ref,$details,$external_email): bool
     $templatevars["requestreason"]=$message->get_text();
 
     // Create notification message
-    $notification_message = clone($message);
+    $notification_message = clone $message;
     $notification_message->set_subject($applicationname . ": ");
     $notification_message->append_subject("lang_requestcollection");
     $notification_message->append_subject(" - "  . $ref);
@@ -441,7 +441,7 @@ function email_collection_request($ref,$details,$external_email): bool
         send_mail($notify_email,$applicationname . ": " . $lang["requestcollection"] . " - $ref",$message->get_text(),$email_from,$email_from,"emailcollectionrequest",$templatevars);
         }
 
-    $userconfirmmessage = clone($message);
+    $userconfirmmessage = clone $message;
     $userconfirmmessage->set_subject($applicationname . ": ");
     $userconfirmmessage->append_subject(" - "  . $ref);
     $userconfirmmessage->prepend_text("<br /><br />");
@@ -999,7 +999,7 @@ function email_resource_request($ref,$details)
         $message->append_text(": " . $templatevars["formtelephone"] . "<br />");
         }
 
-    $notification_message = clone($message);
+    $notification_message = clone $message;
     $notification_message->set_subject($applicationname . ": ");
     $notification_message->append_subject("lang_requestresource");
     $notification_message->append_subject(" - "  . $ref);
@@ -1048,7 +1048,7 @@ function email_resource_request($ref,$details)
 
     if ($request_senduserupdates)
         {
-        $userconfirmmessage = clone($message);
+        $userconfirmmessage = clone $message;
         $userconfirmmessage->set_subject($applicationname . ": ");
         $userconfirmmessage->append_subject(" - "  . $ref);
         $userconfirmmessage->prepend_text("<br /><br />");

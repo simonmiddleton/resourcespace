@@ -196,7 +196,7 @@ include "../include/header.php";
 <?php } /*end hook replacepreviewbacktoview*/ ?>
 <?php if ($k=="") { ?>
 
-<?php if (!checkperm("b") && !(($userrequestmode==2 || $userrequestmode==3)) && !in_array($resource["resource_type"],$collection_block_restypes)) { ?>
+<?php if (!checkperm("b") && !($userrequestmode==2 || $userrequestmode==3) && !in_array($resource["resource_type"],$collection_block_restypes)) { ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php echo add_to_collection_link(htmlspecialchars($ref))?><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;<?php echo htmlspecialchars($lang["action-addtocollection"]) ?></a><?php } ?>
 <?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref))?><i aria-hidden="true" class="fa fa-minus-circle"></i>&nbsp;<?php echo htmlspecialchars($lang["action-removefromcollection"]) ?></a><?php }
@@ -232,7 +232,7 @@ if ($alternative != "-1")
         "sort"        =>  $sort,
         "archive"     =>  $archive,
         "thumbs"      =>  $thumbs_show);
-        
+
          ?>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
          <a class="prevLink fa fa-arrow-left" onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $defaultparams, isset($alt_previous)?array("alternative"=>$alt_previous):"");?>" title="<?php echo $lang["previousresult"]?>"></a>
@@ -316,9 +316,10 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
             {
             ?>
             <td>
-                <a onClick="return CentralSpaceLoad(this);" href="<?php echo ((getval("from","")=="search")?$baseurl_short."pages/search.php?":$baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&")?>search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>">
+                <a onClick="return CentralSpaceLoad(this);" href="<?php echo getval("from","") == "search" ? $baseurl_short."pages/search.php?" : $baseurl_short."pages/view.php?ref=" . urlencode($ref) . "&"; ?>search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>">
                     <img id="PreviewImageLarge"
                          class="Picture"
+                         alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
                          src="<?php echo $url; ?>"
                          <?php
                          if(count(canSeeAnnotationsFields()) > 0)
@@ -404,7 +405,7 @@ if(count(canSeeAnnotationsFields()) > 0)
                 resource            : <?php echo (int) $ref; ?>,
                 read_only           : false,
                 // First page of a document is exactly the same as the preview
-                page                : <?php echo (1 >= $page ? 0 : (int) $page); ?>,
+                page                : <?php echo 1 >= $page ? 0 : (int) $page; ?>,
                 // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                 csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
                 <?php echo generateAjaxToken('RSTagging'); ?>

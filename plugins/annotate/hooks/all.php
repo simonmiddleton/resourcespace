@@ -8,7 +8,7 @@ function HookAnnotateAllInitialise()
 
 function HookAnnotateAllModifyselect()
     {
-    return (" ,r.annotation_count ");
+    return " ,r.annotation_count ";
     }
 
 function HookAnnotateAllRemoveannotations()

@@ -38,7 +38,7 @@ include "../../include/header.php";
     ?><p><?php echo text("introtext");render_help_link('resourceadmin/quick-start-guide');?></p><?php 
     }?>
   
-	<div class="<?php echo ($tilenav?"TileNav":"VerticalNav TileReflow") ?>">
+	<div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
 	<ul>
 	
 	<?php if (checkperm("c")) { 
@@ -54,7 +54,7 @@ include "../../include/header.php";
 				  # If a modal, open in the same modal
 				  ?>
 				  onClick="return ModalLoad(this,true,true,'right');"
-				  <?php
+<?php
 				  }
 				else
 				  { ?>
@@ -144,7 +144,7 @@ include "../../include/header.php";
 	  # If a modal, open in the same modal
 	  ?>
 	  onClick="return ModalLoad(this,true,true,'right');"
-	  <?php
+<?php
 	  }
 	else
 	  { ?>

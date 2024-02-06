@@ -1,6 +1,6 @@
 <?php
-include_once('../../include/db.php');
-include_once('../../include/authenticate.php');
+include_once '../../include/db.php';
+include_once '../../include/authenticate.php';
 
 // Browse bar action endpoint
 $action = getval('action','');

@@ -63,7 +63,7 @@ include "../../include/header.php";
     <?php
     if(!$modal)
         {?>
-        <p><a href="<?php echo ($backurl!=""?$backurl:$baseurl_short ."pages/team/team_request.php");?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $backurl!=""?$lang["back"]:$lang["managerequestsorders"]; ?></a></p>
+        <p><a href="<?php echo $backurl != "" ? $backurl : $baseurl_short ."pages/team/team_request.php";?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $backurl!=""?$lang["back"]:$lang["managerequestsorders"]; ?></a></p>
         <?php
         }
         ?>
@@ -86,7 +86,7 @@ if ($request !== false)
         {
         ?>
         
-    <form method="post" action="<?php echo $baseurl_short?>pages/team/team_request_edit.php" onSubmit="return <?php echo ($modal?"Modal":"CentralSpace") ?>Post(this,true);">
+    <form method="post" action="<?php echo $baseurl_short?>pages/team/team_request_edit.php" onSubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
     <?php
     generateFormToken("team_request_edit");
 
@@ -116,7 +116,7 @@ if ($request !== false)
 
         <div class="Question">
             <label><?php echo $lang["comments"]?></label>
-            <div class="Fixed"><?php echo htmlspecialchars(nl2br($request["comments"]))?></div>
+            <div class="Fixed"><?php echo strip_tags(nl2br($request["comments"]),'<br>')?></div>
             <div class="clearerleft"></div>
         </div>
 
@@ -248,7 +248,7 @@ if ($request !== false)
                     # Option is out of range, but show it anyway.
                     ?>
                     <option value="<?php echo $request["expires"] ?>" selected><?php echo nicedate(date("Y-m-d",strtotime($request["expires"])),false,true)?></option>
-                    <?php
+<?php
                     }
                 ?>
             </select>

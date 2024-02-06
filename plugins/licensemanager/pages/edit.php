@@ -188,7 +188,7 @@ include "../../../include/header.php";
 <?php } ?>
 
 
-<h1><?php echo ($ref=="new"?$lang["new_license"]:$lang["edit_license"]) ?></h1>
+<h1><?php echo escape($ref == "new" ? $lang["new_license"] : $lang["edit_license"]); ?></h1>
 
 <form method="post" action="<?php echo $baseurl_short?>plugins/licensemanager/pages/edit.php" enctype="multipart/form-data">
 <input type=hidden name="submitted" value="true">
@@ -196,7 +196,7 @@ include "../../../include/header.php";
 <input type=hidden name="resource" value="<?php echo $resource?>">
 <?php generateFormToken("licensemanager_edit"); ?>
 
-<div class="Question"><label><?php echo $lang["license_id"]?></label><div class="Fixed"><?php echo ($ref=="new"?$lang["licensemanager_new"]:htmlspecialchars($ref))?></div>
+<div class="Question"><label><?php echo $lang["license_id"]?></label><div class="Fixed"><?php echo escape($ref == "new" ? $lang["licensemanager_new"] : $ref); ?></div>
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["type"]?></label>

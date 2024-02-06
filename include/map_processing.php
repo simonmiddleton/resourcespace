@@ -14,19 +14,19 @@ if($geo_leaflet_maps_sources)
     <!-- Define Leaflet default basemap attribution-->
     <?php switch ($map_default)
         {
-        case ('OpenStreetMap.Mapnik' || 'OpenStreetMap.DE' || 'OpenStreetMap.BZH' || 'OpenStreetMap.HOT' || 'MtbMap' || 'HikeBike.HikeBike'):
+        case 'OpenStreetMap.Mapnik' || 'OpenStreetMap.DE' || 'OpenStreetMap.BZH' || 'OpenStreetMap.HOT' || 'MtbMap' || 'HikeBike.HikeBike':
             ?> var default_attribute = osm_attribute; <?php
             break;
 
-        case ('OpenStreetMap.France'):
+        case 'OpenStreetMap.France':
             ?> var default_attribute = osm_fr_attribute; <?php
             break;
 
-        case ('OpenTopoMap'):
+        case 'OpenTopoMap':
             ?> var default_attribute = osm_otm_attribute; <?php
             break;
 
-        case ('OpenMapSurfer.Roads'):
+        case 'OpenMapSurfer.Roads':
             ?> var default_attribute = oms_attribute; <?php
             break;
 

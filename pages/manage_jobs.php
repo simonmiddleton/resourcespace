@@ -136,28 +136,33 @@ for($n=0;$n<$jobcount;$n++)
                 {
                 case JOB_PRIORITY_IMMEDIATE:
                     $priorityicon = "fas fa-fw fa-bolt";
+                    $prioritytitle = $lang["job_priority_immediate"];
                 break;
                 
                 case JOB_PRIORITY_USER:
                     $priorityicon = "fa fa-fw fa-arrow-circle-up";
+                    $prioritytitle = $lang["job_priority_user"];
                 break;
                 
                 case JOB_PRIORITY_SYSTEM:
                     $priorityicon = "fa fa-fw fa-arrow-circle-right";
+                    $prioritytitle = $lang["job_priority_system"];
                 break;
                 
                 case JOB_PRIORITY_COMPLETED:
                 default:
                 $priorityicon = "fa fa-fw fa-arrow-circle-down";
+                $prioritytitle = $lang["job_priority_completed"];
                 break;
                 }
-            $tablejob["priority"] = "<span class='" . $priorityicon . "'></span>";
+            $tablejob["priority"] = "<span class='" . $priorityicon . "' title='" . $prioritytitle ."'></span>";
             }
         $tablejob["status"] = isset($lang["job_status_" . $jobs[$n]["status"]]) ? $lang["job_status_" . $jobs[$n]["status"]] : $jobs[$n]["status"];
         $tablejob["start_date"] = nicedate($jobs[$n]["start_date"],true,true,true); 
         if($jobs[$n]["status"] == STATUS_ERROR || (!in_array($jobs[$n]["status"],array(STATUS_COMPLETE,STATUS_INPROGRESS)) && $jobs[$n]["start_date"] < date("Y-m-d H:i:s",time()-24*60*60)))
             {
             $tablejob["alerticon"] = "fas fa-exclamation-triangle";
+            $tablejob["alerticontitle"] = $lang["job_status_error"];
             }
 
         

@@ -117,7 +117,6 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
                 if (in_array($rsize['size_code'], ['original', 'hpr', 'lpr']) && $item->getOriginalFileUrl() === null)
                     {
                     $item = $item->setOriginalFileUrl($rsize['url']);
-                    continue;
                     }
                 else if ($rsize['size_code'] === 'thm')
                     {
@@ -306,7 +305,6 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             if (in_array($size['size_code'], ['original', 'hpr', 'lpr']) && $item->getOriginalFileUrl() === null)
                 {
                 $item = $item->setOriginalFileUrl($size['url']);
-                continue;
                 }
             else if ($size['size_code'] === 'pre')
                 {

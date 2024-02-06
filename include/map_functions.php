@@ -236,7 +236,7 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
             attribution: stamen_attribute
         }); ";
 
-    echo $stamen;
+    return $stamen;
     }
 
 function leaflet_hydda_basemaps() // Hydda basemaps.
@@ -260,7 +260,7 @@ function leaflet_hydda_basemaps() // Hydda basemaps.
             attribution: hydda_attribute
         }); ";
 
-    echo $hydda;
+    return $hydda;
     }
 
 function leaflet_nasa_basemaps() // NASA basemaps.
@@ -297,7 +297,7 @@ function leaflet_nasa_basemaps() // NASA basemaps.
             attribution: nasa_attribute
         }); ";
 
-    echo $nasa;
+    return $nasa;
     }
 
 function leaflet_usgs_basemaps() // U.S. Geological Survey The National Map basemaps.
@@ -325,7 +325,7 @@ function leaflet_usgs_basemaps() // U.S. Geological Survey The National Map base
             attribution: usgstnm_attribute
         }); ";
     
-    echo $usgs_tnm;
+    return $usgs_tnm;
     }
 
 function leaflet_thunderforest_basemaps() // Thunderforest basemaps.
@@ -399,7 +399,7 @@ function leaflet_thunderforest_basemaps() // Thunderforest basemaps.
             attribution: tf_attribute
         }); ";
 
-    echo $tf;
+    return $tf;
     }
 
 function leaflet_mapbox_basemaps() // Mapbox basemaps.
@@ -415,7 +415,7 @@ function leaflet_mapbox_basemaps() // Mapbox basemaps.
             attribution: '<?php echo $map_mapboxattribution?>'
         }); ";
 
-    echo $mapbox;
+    return $mapbox;
     }
 
 // Determine the map zoom from the geolocation coordinates numeric precision.
