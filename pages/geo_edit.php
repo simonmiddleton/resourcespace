@@ -110,7 +110,7 @@ $zoom = getval('new_zoom',  $resource["mapzoom"]);
 
 if ($valid_coords == false && getval('geo-loc','') != '')
     {
-    echo "<p class='FormIncorrect'>" . $lang['location-validation-error']  . "</p>";
+    echo "<p class='FormIncorrect'>" . escape($lang['location-validation-error'])  . "</p>";
     }
 ?>
 
