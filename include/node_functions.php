@@ -1598,6 +1598,16 @@ function delete_all_resource_nodes($resourceid)
     ps_query("DELETE FROM resource_node WHERE resource = ?",array("i",$resourceid));  
     }
 
+/**
+ * Delete all resource node relationships for the given node.
+ *
+ * @param integer  $node   The node ID to remove from all resources.
+ * @return void
+ */
+function delete_node_resources(int $node)
+    {
+    ps_query("DELETE FROM resource_node WHERE node = ?", array("i", $node));
+    }
 
 /**
 * Copy resource nodes from one resource to another. Only applies for active metadata fields.
@@ -2543,6 +2553,14 @@ function delete_unused_non_fixed_list_nodes(int $resource_type_field)
 function remove_invalid_node_keyword_mappings()
     {
     ps_query('DELETE nk FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.ref IS NULL');
+    }
+
+/**
+ * Delete invalid resource_node associations. Note, by invalid, it's meant where the node is missing.
+ */
+function remove_invalid_resource_node_mappings()
+    {
+    ps_query('DELETE rn FROM resource_node AS rn LEFT JOIN node AS n ON n.ref = rn.node WHERE n.ref IS NULL');
     }
 
 /**
