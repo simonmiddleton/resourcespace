@@ -12,7 +12,6 @@ $userref = new_user("user001170");
 // Create resources
 $col_data_type = create_resource_type("Collection data");
 $col_image_type = create_resource_type("Collection images");
-// unset($GLOBALS["restype_cache"]);
 $imgresource = create_resource($col_image_type,0);
 $noimgresource = create_resource($col_data_type,0);
 
