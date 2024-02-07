@@ -178,18 +178,15 @@ function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $
 */
 function get_activity_log($search, $offset, $rows, array $where_statements, $table, $table_reference, $count = false)
     {
-    foreach($where_statements as $ws_table => $where_statement)
-        {
-        $where_var = "where_{$ws_table}_statement";
-
-        # Create named where statement variable
-        $$where_var = $where_statement;
-        }
+    $where_activity_log_statement = $where_statements['activity_log'];
+    $where_resource_log_statement = $where_statements['resource_log'];
+    $where_collection_log_statement = $where_statements['collection_log'];
 
     $log_codes = array_values(LOG_CODE_get_all());
     $col_when_statements = $res_when_statements = "";
     $col_when_parameters = $res_when_parameters = [];
     $res_log_codes_processed = [];
+
     foreach($log_codes as $log_code)
         {
         $log_code_description = "";
