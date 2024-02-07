@@ -114,8 +114,3 @@ parameters:
 			message: "#^Undefined variable\\: \\$resource$#"
 			count: 1
 			path: plugins/flickr_theme_publish/inc/flickr_functions.php
-
-		-
-			message: "#^Caught class Google_ServiceException not found\\.$#"
-			count: 5
-			path: plugins/youtube_publish/include/youtube_functions.php
