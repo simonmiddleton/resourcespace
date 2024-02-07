@@ -2200,13 +2200,9 @@ function run_external($command)
  */
 function error_alert($error, $back = true, $code = 403)
     {
-    foreach($GLOBALS as $key => $value)
-        {
-        $$key=$value;
-        }
-
     http_response_code($code);
 
+    extract($GLOBALS, EXTR_SKIP);
     if($back)
         {
         include dirname(__FILE__)."/header.php";
