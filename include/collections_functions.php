@@ -6763,23 +6763,10 @@ function purge_expired_shares($filteropts)
     {
     global $userref;
 
-    $validfilterops = array(
-        "share_group",
-        "share_user",
-        "share_type",
-        "share_collection",
-    );
-    foreach($validfilterops as $validfilterop)
-        {
-        if(isset($filteropts[$validfilterop]))
-            {
-            $$validfilterop = $filteropts[$validfilterop];
-            }
-        else
-            {
-            $$validfilterop = NULL;
-            }
-        }
+    $share_group = $filteropts['share_group'] ?? null;
+    $share_user = $filteropts['share_user'] ?? null;
+    $share_type = $filteropts['share_type'] ?? null;
+    $share_collection = $filteropts['share_collection'] ?? null;
    
     $conditions = array();
     $params = [];

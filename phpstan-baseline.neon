@@ -1,26 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Undefined variable\\: \\$share_collection$#"
-			count: 2
-			path: include/collections_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_group$#"
-			count: 1
-			path: include/collections_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_type$#"
-			count: 2
-			path: include/collections_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_user$#"
-			count: 4
-			path: include/collections_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$error$#"
 			count: 1
 			path: include/database_functions.php
