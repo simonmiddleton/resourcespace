@@ -311,7 +311,7 @@ if(isset($related_type_show_with_data)) {
 
 // Get all fields without checking permissions (for later dependency checking)
 $fields_all=get_resource_field_data($ref,$multi_fields,FALSE,NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
-debug(sprintf('$fields_all = %s', json_encode(array_column($fields_all, 'ref'))));
+debug(sprintf('$fields_all = %s', json_encode(array_column(is_array($fields_all) ? $fields_all : [], 'ref'))));
 
 # Load field data
 $fields=get_resource_field_data($ref,$multi_fields,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
