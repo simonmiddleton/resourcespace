@@ -12,6 +12,7 @@ final class IIIFRequest {
     public int      $identifier_field;
     public int      $description_field;
     public int      $sequence_field;
+    public string   $iiif_sequence_prefix;
     public int      $license_field;
     public string   $rights_statement;
     public int      $title_field;
@@ -546,19 +547,32 @@ final class IIIFRequest {
             $this->errors[] = "Invalid canvas requested";
             $this->triggerError(404);
             }
-        $position_prefix = "";
         $position_field=get_resource_type_field($this->sequence_field);
-        if($position_field !== false)
-            {
-            $position_prefix = $position_field["name"] . " ";
-            }
-
         $position = $resource["iiif_position"];
+        $position_prefix = "";
+        if (isset($this->iiif_sequence_prefix))
+            {
+            $position_prefix  = $this->iiif_sequence_prefix === "" ? $position_field["title"] . " " : $this->iiif_sequence_prefix;
+            }
         $position_val = $resource["field" . $this->sequence_field] ?? get_data_by_field($resource["ref"], $this->sequence_field);
         $canvas["id"] = $this->rooturl . $this->request["id"] . "/canvas/" . $position;
         $canvas["type"] = "Canvas";
-        $canvas["label"]["none"] = [$position_prefix . $position_val];
-
+        $canvas["label"] = [];
+        $arr_18n_pos_labels = i18n_get_translations($position_val);
+        $arr_18n_pos_prefixes = i18n_get_translations($position_prefix);
+        if(count($arr_18n_pos_prefixes) > 1 || count($arr_18n_pos_labels) > 1)
+            {
+            foreach(array_unique(array_merge(array_keys($arr_18n_pos_prefixes),array_keys($arr_18n_pos_labels))) as $langcode)
+                {                    
+                $prefix =  $arr_18n_pos_prefixes[$langcode] ?? ($arr_18n_pos_prefixes[$GLOBALS["defaultlanguage"]] ?? reset($arr_18n_pos_prefixes));
+                $labelvalue =  $arr_18n_pos_labels[$langcode] ?? ($arr_18n_pos_labels[$GLOBALS["defaultlanguage"]] ?? reset($arr_18n_pos_labels));
+                $canvas["label"][$langcode] = $prefix . $labelvalue;
+                }
+            }
+        else
+            {
+            $canvas["label"]["none"] = $position_prefix . $position_val;    
+            }
 
         // Get the size of the images
         $image_size = get_original_imagesize($resource["ref"],$img_path);
@@ -643,9 +657,8 @@ final class IIIFRequest {
                     $node_langs_avail = [];
                     $i18n_names = i18n_get_translations($resnode["name"]);
                     // Set default in case no translation available for any languages
-                    $defaultnodename = $i18n_names[$GLOBALS["defaultlanguage"]];
+                    $defaultnodename = $i18n_names[$GLOBALS["defaultlanguage"]] ?? reset($i18n_names);
                     $arr_lang_default[] =  $defaultnodename;
-
                     foreach($i18n_names as $langcode=>$langstring)
                         {
                         $node_langs_avail[] = $langcode;
@@ -1253,14 +1266,18 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
 		$size = (strtolower($iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
         $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
 
-        if(!file_exists($img_path))
+        if (!file_exists($img_path))
             {
             continue;
             }
 			
 		$position = $iiif_result["iiif_position"];
         $position_field = get_resource_type_field($iiif_sequence_field);
-        $position_prefix = $position_field["name"] ?? "";
+        $position_prefix = "";
+        if (isset($GLOBALS["iiif_sequence_prefix"]))
+            {
+            $position_prefix  = $GLOBALS["iiif_sequence_prefix"] === "" ? $position_field["title"] . " " : $GLOBALS["iiif_sequence_prefix"];
+            }
 
         $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
         $canvases[$position]["@type"] = "sc:Canvas";

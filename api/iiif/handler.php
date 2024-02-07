@@ -24,16 +24,20 @@ $iiif_options["rootimageurl"] = $baseurl . "/iiif/image/";
 $iiif_options["identifier_field"] = $iiif_identifier_field;
 $iiif_options["description_field"] = $iiif_description_field;
 $iiif_options["sequence_field"] = $iiif_sequence_field ?? 0;
-$iiif_options["license_field"] = (int)($iiif_license_field ?? 0);
+$iiif_options["license_field"] = (int) ($iiif_license_field ?? 0);
 $iiif_options["title_field"] = $view_title_field;
 $iiif_options["max_width"] = $iiif_max_width ?? 1024;
 $iiif_options["max_height"] = $iiif_max_height ?? 1024;
-$iiif_options["custom_sizes"] = (bool)$iiif_custom_sizes ?? true;
-$iiif_options["preview_tiles"] = (bool)$preview_tiles ?? true;
+$iiif_options["custom_sizes"] = (bool) $iiif_custom_sizes ?? true;
+$iiif_options["preview_tiles"] = (bool) $preview_tiles ?? true;
 $iiif_options["preview_tile_size"] = $preview_tile_size ?? 1024;
 $iiif_options["preview_tile_scale_factors"] = $preview_tile_scale_factors ?? [1,2,4];
 $iiif_options["download_chunk_size"] = $download_chunk_size;
 $iiif_options["rights"] = $iiif_rights_statement ?? "";
+if(isset($iiif_sequence_prefix))
+    {
+    $iiif_options["iiif_sequence_prefix"] = $iiif_sequence_prefix;
+    }
 
 $iiif = new IIIFRequest($iiif_options);
 

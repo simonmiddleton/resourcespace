@@ -2963,7 +2963,8 @@ $iiif_version = "2";
 // Field that defines the position of a particular resource in the default sequence (only one sequence currently supported)
 // $iiif_sequence_field = 1;
 
-// Deprecated option. The prefix that indictaes the position will now use the name of the resource type field 
+// Optional prefix that will be added to sequence identifier - useful if just numeric identifers are used e.g. for different views or pages. 
+// If this is enabled but set to an empty string the prefix will be the title of the resource type field 
 // $iiif_sequence_prefix = "View ";
 
 // Optional rights text: This value must be a valid value - see https://iiif.io/api/presentation/3.0/#rights for more information
