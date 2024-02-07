@@ -202,8 +202,8 @@ function i18n_get_translations($value)
     $return=array();
     for ($n=1;$n<count($s);$n++)
     {
-    $e=explode(":",$s[$n]);
-    if (count($e)==2) {$return[$e[0]]=$e[1];}
+    $e=explode(":",$s[$n],2);
+    if (count($e) == 2 && strlen($e[0]) > 1 ) {$return[$e[0]]=$e[1];}
     }
     return $return;
     }
