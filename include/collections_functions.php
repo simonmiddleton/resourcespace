@@ -3836,20 +3836,12 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
 	{
     global $usergroup, $scramble_key, $lang;
     
-    $extraopts = array("collection", "upload");
-    foreach($extraopts as $extraopt)
-        {
-        if(isset($shareopts[$extraopt]))
-            {
-            $$extraopt = $shareopts[$extraopt];
-            }
-        }
     if ($key=="")
         {
         return false;
         }
 
-    if(!isset($upload) || !$upload)
+    if(!isset($shareopts['upload']) || !$shareopts['upload'])
         {
         // Only relevant for non-upload shares
         if ($group=="" || !checkperm("x"))
@@ -3863,7 +3855,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
         "access"    => (int)$access,
         "usergroup" => (int)$group,
         );
-    if(isset($upload) && $upload){$setvals['upload'] = 1;}
+    if(isset($shareopts['upload']) && $shareopts['upload']){$setvals['upload'] = 1;}
     if($expires!="") 
         {
         $expires = date_format(date_create($expires), 'Y-m-d') . ' 23:59:59';
@@ -3887,10 +3879,10 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
     $setsql .= ', date = now()';
     $params = array_merge($params, ['s', $key]);
     $condition = '';
-    if(isset($collection))
+    if(isset($shareopts['collection']))
         {
         $condition = ' AND collection = ?';
-        $params = array_merge($params, ['i', $collection]);
+        $params = array_merge($params, ['i', $shareopts['collection']]);
         }
 
 	ps_query("UPDATE external_access_keys
@@ -3898,7 +3890,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
                 WHERE access_key= ?" . $condition
                 , $params);
     hook("edit_collection_external_access","",array($key,$access,$expires,$group,$sharepwd, $shareopts));
-    if(isset($collection))
+    if(isset($shareopts['collection']))
         {
         $lognotes = array("access_key" => $key);
         foreach($setvals as $column => $value)
@@ -3912,7 +3904,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
                 $lognotes[] = $column . "=" .  $value;
                 }
             }
-        collection_log($collection,LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE,NULL,"(" . implode(",",$lognotes) . ")");
+        collection_log($shareopts['collection'],LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE,NULL,"(" . implode(",",$lognotes) . ")");
         }    
        
 	return true;
@@ -6671,10 +6663,11 @@ function upload_share_setup(string $key,$shareopts = array())
             {
             return false;
             }
-        $$rqdopt = (int)$shareopts[$rqdopt];
         }
+    $collection = (int) $shareopts['collection'];
+    $usergroup = (int) $shareopts['usergroup'];
 
-    emulate_user($user, $usergroup);
+    emulate_user((int) $shareopts['user'], $usergroup);
     $upload_share_active = upload_share_active();
     $rs_session = get_rs_session_id(true);
     $upload_then_edit = true;
