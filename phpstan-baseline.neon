@@ -4,8 +4,3 @@ parameters:
 			message: "#^Undefined variable\\: \\$error$#"
 			count: 1
 			path: include/database_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$lang$#"
-			count: 1
-			path: pages/setup.php

@@ -116,7 +116,12 @@ function set_language($defaultlanguage)
     global $languages;
     global $storagedir, $applicationname, $homeanim_folder; # Used in the language files.
     $defaultlanguage = safe_file_name($defaultlanguage);
-    if (file_exists("../languages/en.php")) {include "../languages/en.php";}
+
+    if (file_exists("../languages/en.php")) {
+        include "../languages/en.php";
+        /** @var array $lang */
+    }
+
     if ($defaultlanguage==''){ 
         //See if we can auto-detect the most likely language.  The user can override this.
         if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
@@ -128,8 +133,8 @@ function set_language($defaultlanguage)
     }
     if ($defaultlanguage!='en'){
         if (file_exists("../languages/".$defaultlanguage.".php")){
-
             include "../languages/".$defaultlanguage.".php";
+            /** @var array $lang */
         }
     }
     return $lang;
