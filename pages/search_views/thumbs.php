@@ -112,7 +112,7 @@ if (!hook("renderresultthumb"))
             if($result[$n]['has_image'] == 1)
                 {
                 // Use standard preview image
-                render_search_image($result[$n],$thumbnail["url"],$display);
+                render_resource_image($result[$n],$thumbnail["url"],$display);
                 // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
                 // when user hovers over the preview thumbnail
                 if(1 < $ffmpeg_snapshot_frames && (in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) || ($result[$n]['file_extension'] == 'gif' && $ffmpeg_preview_gif)) && 0 < get_video_snapshots($ref, false, true))
@@ -152,7 +152,7 @@ if (!hook("renderresultthumb"))
                     // Preview image dimensions aren't linked to the size data stored for the current resource
                     $result[$n]["thumb_height"] = $thumbnail["height"];
                     $result[$n]["thumb_width"]  = $thumbnail["width"];
-                    render_search_image($result[$n],$thumbnail["url"],$display);
+                    render_resource_image($result[$n],$thumbnail["url"],$display);
                     }
                 else
                     {

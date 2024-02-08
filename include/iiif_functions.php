@@ -250,7 +250,6 @@ final class IIIFRequest {
                     }
                 }
             $position = $iiif_result["iiif_position"];
-            echo "Position : ". $position . PHP_EOL;
             $canvas = $this->generateCanvas($position);
             if($canvas)
                 {

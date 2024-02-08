@@ -2855,7 +2855,7 @@ function renderLockButton($name, $locked_fields=array())
 * 
 * @return void
 */
-function render_search_image($resource, $img_url, $display="thumbs")
+function render_resource_image($resource, $img_url, $display="thumbs")
     {
     global $view_title_field;
     
@@ -3762,7 +3762,7 @@ function render_csrf_data_attributes($ident)
 * @param boolean $render_js Set to TRUE to render the client side code for checking display conditions or FALSE otherwise
 * 
 * 
-* @return boolean Returns TRUE if no display condition or if field shoud be displayed or FALSE if field should not be displayed.
+* @return boolean Returns TRUE if no display condition or if field should be displayed or FALSE if field should not be displayed.
 */
 function check_display_condition($n, array $field, array $fields, $render_js)
     {
@@ -6721,7 +6721,7 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
  *                              "edit_access" - Resource edit access 
  *                              "previewcaption" - Caption field data for preview image
  * 
- * @return bool
+ * @return void
  * 
  */
 function render_resource_view_image(array $resource, array $context)
@@ -6971,7 +6971,7 @@ function render_resource_view_image(array $resource, array $context)
                                     annotations_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/annotations.php',
                                     facial_recognition_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/facial_recognition.php',
                                     resource: <?php echo (int) $resource["ref"]; ?>,
-                                    facial_recognition_tag_field: <?php echo $facial_recognition_tag_field; ?>,
+                                    facial_recognition_tag_field: <?php echo $GLOBALS["facial_recognition_tag_field"]; ?>,
                                     // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                                     fr_csrf_identifier: '<?php echo $GLOBALS["CSRF_token_identifier"]; ?>',
                                     <?php echo generateAjaxToken('RSFaceRecognition'); ?>
