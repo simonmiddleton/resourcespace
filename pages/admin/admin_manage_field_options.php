@@ -867,7 +867,7 @@ function SaveNode(ref)
 
 function DeleteNode(ref)
     {
-    var confirmation = confirm('Are you sure you wish to DELETE this field option?');
+    var confirmation = confirm('<?php echo escape($lang['confirm_delete_field_value']); ?>');
     if(!confirmation)
         {
         return false;

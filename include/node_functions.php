@@ -157,7 +157,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         {
         if (in_array($resource_type_field_data['type'], $FIXED_LIST_FIELD_TYPES))
             {
-            log_activity("Set metadata field option for field {$resource_type_field}", LOG_CODE_CREATED, $name, 'node', 'name');
+            log_activity("Set metadata field option for field {$resource_type_field}", LOG_CODE_CREATED, $name, 'node', 'name', $new_ref, null, '');
             }
 
         // Handle node indexing for new nodes
@@ -178,7 +178,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
 
 
 /**
-* Delete node
+* Delete node. This will fully delete a node and remove any association between the deleted node and resources / keywords.
 *
 * @param  integer  $ref  ID of the node
 *
@@ -191,8 +191,19 @@ function delete_node($ref)
         return;
         }
 
-    ps_query("DELETE FROM node WHERE ref = ?",array("i",$ref));
+    $returned_node = array();
+    get_node($ref, $returned_node, false);
+    $resource_type_field = $returned_node['resource_type_field'];
+    $field_data = get_resource_type_field($resource_type_field);
 
+    global $FIXED_LIST_FIELD_TYPES;
+    if (in_array($field_data['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        log_activity("Delete metadata field option for field {$resource_type_field}", LOG_CODE_DELETED, null, 'node', 'name', $ref, null, $returned_node['name']);
+        }
+
+    ps_query("DELETE FROM node WHERE ref = ?",array("i",$ref));
+    delete_node_resources($ref);
     remove_all_node_keyword_mappings($ref);
     }
 
