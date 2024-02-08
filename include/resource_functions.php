@@ -5810,9 +5810,12 @@ function get_metadata_templates()
 
 function get_resource_collections($ref)
     {
-    global $userref, $anonymous_user, $username;
-    if (checkperm('b') || (isset($anonymous_login) && $username==$anonymous_login))
-        {return array();}
+    global $userref;
+    if (checkperm('b') || is_anonymous_user())
+        {
+        return array();
+        }
+
     # Returns a list of collections that a resource is used in for the $view_resource_collections option
     $sql="";
 

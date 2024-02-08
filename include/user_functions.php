@@ -3379,11 +3379,8 @@ function get_users_by_permission(array $permissions)
 
 /**
  * Determine whether user is anonymous user
- *
- * @return bool
- * 
  */
-function is_anonymous_user()
+function is_anonymous_user(): bool
     {
     global $anonymous_login, $username;
     return isset($anonymous_login) && $username == $anonymous_login;

@@ -6,11 +6,6 @@ parameters:
 			path: include/database_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$anonymous_login$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
 			message: "#^Function GetStem not found\\.$#"
 			count: 1
 			path: include/search_do.php
