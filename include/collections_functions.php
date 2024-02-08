@@ -3410,7 +3410,7 @@ function send_collection_feedback($collection,$comment)
     // Always send a mail for the feedback whatever the user preference, since the  feedback may be very long so can then refer to the CC'd email
     if (filter_var($cc, FILTER_VALIDATE_EMAIL))
         {
-        send_mail($user["email"],$applicationname . ": " . $lang["collectionfeedback"] . " - " . $cinfo["name"],$body,"","","",NULL,"",$cc);
+        send_mail($user["email"],$applicationname . ": " . $lang["collectionfeedback"] . " - " . $cinfo["name"],$body,"","","",null,"",$cc);
         }
     else
         {
@@ -3646,7 +3646,7 @@ function get_collection_log($collection, $fetchrows = -1)
         array("i",$collection)
     );
 
-    $log = sql_limit_with_total_count($log_query,$fetchrows,0,false,NULL);
+    $log = sql_limit_with_total_count($log_query,$fetchrows,0,false,null);
 
     return $log;
     }
@@ -3863,7 +3863,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
         }
     else
         {
-        $setvals["expires"] = NULL;
+        $setvals["expires"] = null;
         }
     if($sharepwd != "(unchanged)")
         {
@@ -3904,7 +3904,7 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
                 $lognotes[] = $column . "=" .  $value;
                 }
             }
-        collection_log($shareopts['collection'],LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE,NULL,"(" . implode(",",$lognotes) . ")");
+        collection_log($shareopts['collection'],LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE,null,"(" . implode(",",$lognotes) . ")");
         }    
        
     return true;
@@ -4812,7 +4812,7 @@ function collection_download_process_text_file($ref, $collection, $filename)
         else
             {
             // External shares should take into account fields that are not meant to show in that case
-            $fields = get_resource_field_data($ref, false, true, NULL, true);
+            $fields = get_resource_field_data($ref, false, true, null, true);
             }
         $commentdata=get_collection_resource_comment($ref,$collection);
         $fields_count = count($fields);
@@ -4933,7 +4933,7 @@ function collection_download_process_data_only_types(array $result, $id, $collec
                 'resource_type_name' => get_resource_type_name($result[$n]['resource_type'])
             );
 
-            $metadata = get_resource_field_data($result[$n]['ref'], false, true, NULL, '' != $k);
+            $metadata = get_resource_field_data($result[$n]['ref'], false, true, null, '' != $k);
 
             foreach($metadata as $metadata_field)
                 {
@@ -6603,7 +6603,7 @@ function create_upload_link($collection,$shareoptions)
                 $lognotes[] = $column . "=" .  $value;
                 }
             }
-        collection_log($collection,LOG_CODE_COLLECTION_SHARED_UPLOAD,NULL,(isset($shareoptions["emails"][$n]) ? $shareoptions["emails"][$n] : "") . "(" . implode(",",$lognotes) . ")");
+        collection_log($collection,LOG_CODE_COLLECTION_SHARED_UPLOAD,null,(isset($shareoptions["emails"][$n]) ? $shareoptions["emails"][$n] : "") . "(" . implode(",",$lognotes) . ")");
         }
 
     return $newshares;    

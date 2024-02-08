@@ -184,7 +184,7 @@ function migrate_filter($filtertext,$allowpartialmigration=false)
                 continue;
                 }
 
-            $field_nodes = get_nodes($field_ref, NULL, (FIELD_TYPE_CATEGORY_TREE == $field_type ? true : false));
+            $field_nodes = get_nodes($field_ref, null, (FIELD_TYPE_CATEGORY_TREE == $field_type ? true : false));
             $all_valid_nodes = array_merge($all_valid_nodes,$field_nodes);
             }
             

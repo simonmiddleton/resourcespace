@@ -37,13 +37,13 @@ if (substr($text,0,strlen($username))!=$username)
 if ($curnode > 0 && get_nodes_use_count([$curnode]) == 1)
     {
     // Reuse same node
-    $savenode = set_node($curnode,$annotate_resource_type_field,$text,NULL,0);
+    $savenode = set_node($curnode,$annotate_resource_type_field,$text,null,0);
     }
 else
     {
     // Remove node from resource and create new node
     delete_resource_nodes($ref,[$curnode]);
-    $savenode = set_node(NULL,$annotate_resource_type_field,$text,NULL,0);
+    $savenode = set_node(null,$annotate_resource_type_field,$text,null,0);
     add_resource_nodes($ref,[$savenode], true, true);
     }
 

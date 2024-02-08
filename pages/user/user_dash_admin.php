@@ -10,7 +10,7 @@ if(!hook("replace_dash_admin_permission_relocate")){
     if(!($home_dash && checkPermission_dashmanage()))
         {header("location: ".$baseurl_short."pages/user/user_home.php");exit;}
     }
-if(getval("quicksave",FALSE) && enforcePostRequest(false))
+if(getval("quicksave",false) && enforcePostRequest(false))
     {
     $tile = getval("tile","");
     #If a valid tile value supplied
@@ -41,7 +41,7 @@ if(getval("quicksave",FALSE) && enforcePostRequest(false))
     exit("Save Failed");
     }
 
-if(getval("submit",FALSE) && enforcePostRequest(false))
+if(getval("submit",false) && enforcePostRequest(false))
     {
     $tiles = getval("tiles","");
     if(empty($tiles))

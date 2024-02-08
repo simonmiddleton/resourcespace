@@ -23,9 +23,9 @@ $genrefield = create_resource_type_field("Genre",0,FIELD_TYPE_CHECK_BOX_LIST,"ge
 $fruitfield = create_resource_type_field("Fruit",0,FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "fruit");
 
 // Add new nodes to fields
-$comedynode = set_node(NULL, $genrefield, "Comedy",'',1000);
-$actionnode = set_node(NULL, $genrefield, "Action",'',1000);
-$horrornode = set_node(NULL, $genrefield, "Horror",'',1000);
+$comedynode = set_node(null, $genrefield, "Comedy",'',1000);
+$actionnode = set_node(null, $genrefield, "Action",'',1000);
+$horrornode = set_node(null, $genrefield, "Horror",'',1000);
 
 // Add nodes to resource a
 add_resource_nodes($resourcea,array($comedynode, $actionnode));

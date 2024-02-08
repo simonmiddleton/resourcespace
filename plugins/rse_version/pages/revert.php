@@ -61,7 +61,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         // 4) Name translated
         $nodes_available_keys = [];
         $cattree = $log['resource_type_field_type'] == FIELD_TYPE_CATEGORY_TREE;
-        $nodes_available_full = get_nodes($log['resource_type_field'],NULL,$cattree);
+        $nodes_available_full = get_nodes($log['resource_type_field'],null,$cattree);
         $nodes_by_ref = [];
         foreach($nodes_available_full as $node_details)
             {
@@ -144,7 +144,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
                 $resource_field_data       = get_resource_field_data($resource);
                 $resource_field_data_index = array_search($field, array_column($resource_field_data, 'ref'));
 
-                $truncated_value = NULL;
+                $truncated_value = null;
                 if(
                     $resource_field_data_index !== false
                     && trim((string) $resource_field_data[$resource_field_data_index]["value"]) != ""

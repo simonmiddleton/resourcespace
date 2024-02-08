@@ -109,7 +109,7 @@ $ldapauth['newusergroup'][2]['rsgroup'] = '5';
 if (!isset($use_plugin_manager) || !$use_plugin_manager){
  
 $ldapauth['ldapserver'] = 'localhost';
-$ldapauth['port'] = NULL;
+$ldapauth['port'] = null;
 $ldapauth['rootdn']= 'CN=administrator,CN=users,DC=mydomain,DC=net';
 $ldapauth['rootpass']= 'password';
 $ldapauth['basedn']= 'CN=users,DC=mydomain,DC=net';

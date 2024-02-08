@@ -25,9 +25,9 @@ $technicalfield = create_resource_type_field("Technical data",0,FIELD_TYPE_TEXT_
 ps_query("UPDATE resource_type_field SET include_in_csv_export=0 WHERE ref = ?",["i",$technicalfield]);
 
 // Add new nodes to person field
-$pricenode = set_node(NULL, $personfield, "Vincent Price",'',1000);
-$cushingnode = set_node(NULL, $personfield, "Peter Cushing",'',1000);
-$leenode = set_node(NULL, $personfield, "Christopher Lee",'',1000);
+$pricenode = set_node(null, $personfield, "Vincent Price",'',1000);
+$cushingnode = set_node(null, $personfield, "Peter Cushing",'',1000);
+$leenode = set_node(null, $personfield, "Christopher Lee",'',1000);
 
 // Add nodes to resource a
 add_resource_nodes($resourcea,array($pricenode, $cushingnode));

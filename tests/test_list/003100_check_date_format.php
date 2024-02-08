@@ -175,7 +175,7 @@ if($valid_date_output==="")
     }
 
 // Case 18: If passed NULL should return NOT empty
-$date_input = NULL;
+$date_input = null;
 $valid_date_output = check_date_format($date_input);
 
 if($valid_date_output==="")

@@ -32,7 +32,7 @@ if(!is_array($results) || !in_array($resourcea,array_column($results,"ref")))
     
 // Now test using nodes
 $resourceb=create_resource(1,0);
-$quotenode = set_node(NULL, 3, $quotedata,'',1000);
+$quotenode = set_node(null, 3, $quotedata,'',1000);
 
 // Add node to resource b
 add_resource_nodes($resourceb,array($quotenode));

@@ -60,7 +60,7 @@
                     $meta['url'] = trim(htmlspecialchars_decode(getval('doi_url', '')));
                     $meta['xml'] = trim(htmlspecialchars_decode(getval('doi_xml', '')));
 
-                    $reconstructed_meta = NULL;
+                    $reconstructed_meta = null;
 
                     foreach ($meta as $key => $value) {
                         if ($value == '') {
@@ -137,7 +137,7 @@
             }
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -162,7 +162,7 @@
                 $url = '';
                 $xml = '';
 
-                if ($doi && !doi_is_ours($doi)) return TRUE;
+                if ($doi && !doi_is_ours($doi)) return true;
 
                 $meta = doi_construct_metadata($resource, $fields);
                 $doi = $meta['doi'];
@@ -242,6 +242,6 @@ HTML;
             }
         }
 
-        return TRUE;
+        return true;
     }
 

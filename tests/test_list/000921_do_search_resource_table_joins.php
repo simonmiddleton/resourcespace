@@ -6,7 +6,7 @@ $web_root = dirname(dirname(__DIR__));
 
 $resource = create_resource(1, 0);
 update_field($resource, 8, "Title field8");
-$uk_country = set_node(NULL, 3, 'United Kingdom', '', '');
+$uk_country = set_node(null, 3, 'United Kingdom', '', '');
 add_resource_nodes($resource, array($uk_country));
 
 update_fieldx(3);

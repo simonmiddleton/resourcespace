@@ -10,7 +10,7 @@ $resourceb=create_resource(1,0);
 $resourcec=create_resource(1,0);
 
 // Add new node to field, use dummy countries in case dbstruct changes and avoid possible stems
-$trdpqtskcnode = set_node(NULL, 3, "trdpqtskc",'',1000);
+$trdpqtskcnode = set_node(null, 3, "trdpqtskc",'',1000);
 // Add trdpqtskc node to resource a
 add_resource_nodes($resourcea,array($trdpqtskcnode));
 

@@ -80,7 +80,7 @@ if(getval("submit","") != "")
     $deletenodes = [];
 
     // Get existing nodes
-    $existing_nodes = get_nodes($migrate_field, NULL, TRUE);
+    $existing_nodes = get_nodes($migrate_field, null, true);
 
     while($migrated < $total && ($maxrows == 0 || $migrated < $maxrows))
         {
@@ -134,7 +134,7 @@ if(getval("submit","") != "")
                     {
                     if(!$dryrun)
                         {
-                        $newnode = set_node(NULL, $migrate_field, $newvalue, NULL, '');
+                        $newnode = set_node(null, $migrate_field, $newvalue, null, '');
                         $newnodecounter = count($existing_nodes);
                         $logtext .= " - New option added for '" . htmlspecialchars($newvalue) . "' - ref: " . $newnode . PHP_EOL;
                         $nodes_to_add[] = $newnode;

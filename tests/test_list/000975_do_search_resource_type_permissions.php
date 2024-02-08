@@ -30,7 +30,7 @@ update_field($resourced,'title','test_000975_D');
 update_field($resourcee,'title','test_000975_E');
 
 // Set dummy nodes
-$dummynode = set_node(NULL,73,'test000975','',1000);
+$dummynode = set_node(null,73,'test000975','',1000);
 add_resource_nodes($resourcea,array($dummynode));
 add_resource_nodes($resourceb,array($dummynode));
 add_resource_nodes($resourcec,array($dummynode));

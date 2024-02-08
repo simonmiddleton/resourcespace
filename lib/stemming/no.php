@@ -262,8 +262,8 @@ class NorwegianStemmer
     */
     private static function m($str)
     {
-        $c = self::$regex_consonant;
-        $v = self::$regex_vowel;
+        $c = self::$regex_non_vowels;
+        $v = self::$regex_vowels;
 
         $str = preg_replace("#^$c+#", '', $str);
         $str = preg_replace("#$v+$#", '', $str);

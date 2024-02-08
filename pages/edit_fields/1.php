@@ -8,27 +8,27 @@ $show_merge_options = $merge_filename_with_title && $field['ref'] == $view_title
 
 if($show_merge_options)
     {
-    $do_not_use = FALSE;
-    $replace = FALSE;
-    $prefix = FALSE;
-    $suffix = FALSE;
+    $do_not_use = false;
+    $replace = false;
+    $prefix = false;
+    $suffix = false;
 
     // Choose option to be used as default
     switch ('merge_filename_title_' . $merge_filename_with_title_default) {
         case 'merge_filename_title_do_not_use':
-            $do_not_use = TRUE;
+            $do_not_use = true;
             break;
         case 'merge_filename_title_replace':
-            $replace = TRUE;
+            $replace = true;
             break;
         case 'merge_filename_title_prefix':
-            $prefix = TRUE;
+            $prefix = true;
             break;
         case 'merge_filename_title_suffix':
-            $suffix = TRUE;
+            $suffix = true;
             break;
         default:
-            $do_not_use = TRUE;
+            $do_not_use = true;
     }
 ?>
 <div id="merge_filename_title_container">

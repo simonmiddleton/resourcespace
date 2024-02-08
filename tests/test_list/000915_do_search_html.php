@@ -36,7 +36,7 @@ if(!is_array($results) || !in_array($resourcea,array_column($results,"ref")))
     
 // Now use nodes
 $resourceb=create_resource(1,0);
-$htmlnode = set_node(NULL, 3, $htmldata,'',1000);
+$htmlnode = set_node(null, 3, $htmldata,'',1000);
 
 // Add node to resource b
 add_resource_nodes($resourceb,array($htmlnode));

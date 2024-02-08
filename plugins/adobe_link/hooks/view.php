@@ -260,7 +260,7 @@ function HookAdobe_linkViewOrigdownloadlink()
     // Show the link
     ?>
     <tr class="DownloadDBlend">
-    <td class="DownloadFileName"><h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2></td>
+    <td class="DownloadFileName"><h2><?php echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2></td>
     <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
     <td class="DownloadButton">
     <?php echo $adobelink; 

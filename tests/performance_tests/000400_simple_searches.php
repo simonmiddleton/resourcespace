@@ -25,7 +25,7 @@ for($n=0;$n<$nodecount;$n++)
     shuffle($shortnodewords);
     $nodelength=mt_rand(1,5);
     $nodename = implode(" ",array_slice($shortnodewords,0,$nodelength));
-    $shortnodeids[] = set_node(NULL,8,$nodename,NULL,0);
+    $shortnodeids[] = set_node(null,8,$nodename,null,0);
     }
 
 // Create long nodes
@@ -36,7 +36,7 @@ for($n=0;$n<$nodecount;$n++)
     shuffle($longnodewords);
     $nodelength=mt_rand(100,250);
     $nodename = implode(" ",array_slice($longnodewords,0,$nodelength));
-    $longnodeids[] = set_node(NULL,8,$nodename,NULL,0);
+    $longnodeids[] = set_node(null,8,$nodename,null,0);
     }
 
 // Create resources 

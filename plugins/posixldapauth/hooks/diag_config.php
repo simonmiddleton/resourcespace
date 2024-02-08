@@ -1,6 +1,6 @@
 <?php
 $ldapauth['ldapserver'] = '10.177.177.20';
-$ldapauth['port'] = NULL;
+$ldapauth['port'] = null;
 // ldap auth type, 0 = Open Directory or open ldap, 1 = Active Directory
 $ldapauth['type'] = 1;
 
@@ -25,20 +25,20 @@ $ldapauth['basedn']= 'dc=example,dc=com';
 $ldapauth['usercontainer'] = "cn=users";
 
 // container for groups, leave as null to use default cn=groups, basedn
-$ldapauth['groupcontainer'] = NULL;
+$ldapauth['groupcontainer'] = null;
 
 /* login field overide, leave aas null for default
     Defaults are:
     ldap = uid
     ad = samaccountname
 */
-$ldapauth['loginfield'] = NULL;
+$ldapauth['loginfield'] = null;
 
 /* group field override to search within ldap groups for members, defaults are:
     ldap = memberuid
     ad = member
 */
-$ldapauth['ldapgroupfield'] = NULL;
+$ldapauth['ldapgroupfield'] = null;
 
 /* field type overide to search within groups:
     0 = Default for directory type.

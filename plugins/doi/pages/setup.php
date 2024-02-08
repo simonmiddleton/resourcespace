@@ -102,7 +102,7 @@ HTML;
 
     $page_def[] = config_add_section_header('DataCite Credentials');
     $page_def[] = config_add_text_input('doi_username', $lang['doi_setup_username']);
-    $page_def[] = config_add_text_input('doi_password', $lang['doi_setup_password'], TRUE);
+    $page_def[] = config_add_text_input('doi_password', $lang['doi_setup_password'], true);
 
     // Do the page generation ritual -- don't change this section.
     config_gen_setup_post($page_def, $plugin_name);
@@ -141,8 +141,8 @@ XML;
 
         # format xml using DOMDocument class
         $dom = new DOMDocument('1.0', 'utf-8');
-        $dom->preserveWhiteSpace = FALSE;
-        $dom->formatOutput = TRUE;
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
         $dom->loadXML($xml);
         $xml = $dom->saveXML();
 
@@ -153,11 +153,11 @@ XML;
         $doi_current_ref = -1; // TEST-case
 
         # check if there is test xml metadata in DataCite's MDS already
-        $fetched_xml = (bool)doi_get_xml($doi, FALSE, FALSE);
+        $fetched_xml = (bool)doi_get_xml($doi, false, false);
 
         # use testmode for xml upload accordingly
-        $success['xml'] = doi_post_xml($xml, TRUE, $fetched_xml);
-        $success['url'] = doi_post_url($doi, $url, TRUE, TRUE);
+        $success['xml'] = doi_post_xml($xml, true, $fetched_xml);
+        $success['url'] = doi_post_url($doi, $url, true, true);
         $success['doi'] = $success['url'] && $success['xml'];
 
         global $lang;

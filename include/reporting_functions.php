@@ -443,7 +443,7 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
                 WHERE periodic_email_id = ?',
                 ["i",$report['ref']]);
 
-        $reportcache = NULL;
+        $reportcache = null;
         foreach($users as $user)
             {
             if(in_array($user["ref"],$unsubscribed) || in_array($user["ref"],$sentousers))
@@ -753,7 +753,7 @@ function report_process_query_placeholders(string $query, array $placeholders): 
  *                              a string can be used to denote the total value to pad the data to
  * @return void
  */
-function render_pie_graph($id,$data,$total=NULL)
+function render_pie_graph($id,$data,$total=null)
     {
     global $home_colour_style_override,$header_link_style_override;
 

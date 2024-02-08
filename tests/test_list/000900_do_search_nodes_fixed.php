@@ -12,9 +12,9 @@ debug("Resource B: " . $resourceb );
 debug("Resource C: " . $resourcec);
 
 // Add new nodes to field
-$joeynode = set_node(NULL, 73, "Joey",'',1000);
-$johnnynode = set_node(NULL, 73, "Johnny",'',1000);
-$deedeenode = set_node(NULL, 73, "Dee Dee",'',1000);
+$joeynode = set_node(null, 73, "Joey",'',1000);
+$johnnynode = set_node(null, 73, "Johnny",'',1000);
+$deedeenode = set_node(null, 73, "Dee Dee",'',1000);
 debug("node1: " . $joeynode . "\n");
 debug("node2: " . $johnnynode . "\n");
 debug("node3: " . $deedeenode . "\n");
@@ -77,12 +77,12 @@ if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$reso
 debug("Successfully searched for resources with quoted node string");
 
 // Add a node containing stop words and check nothing was indexed.
-$stop_list_check_node = set_node(NULL, 73, join(" ",$noadd),'',1000);
+$stop_list_check_node = set_node(null, 73, join(" ",$noadd),'',1000);
 if (ps_value("select count(*) value from node_keyword where node=?",array("i",$stop_list_check_node),0)>0) {echo "Kewords were indexed that are in the stop list.";print_r(ps_array("select keyword value from keyword where ref in (select keyword from node_keyword where node=?)",array("i",$stop_list_check_node),0));return false;}
 
 // Check that searches work with $resource_field_verbatim_keyword_regex
 global $resource_field_verbatim_keyword_regex;
-$resource_field_verbatim_keyword_regex_cache = $resource_field_verbatim_keyword_regex??NULL;
+$resource_field_verbatim_keyword_regex_cache = $resource_field_verbatim_keyword_regex??null;
 $resource_field_verbatim_keyword_regex = [51 => "/.+/"];
 
 // search for 'Johnny' AND 'Dee Dee' (should be just resource a)
@@ -94,7 +94,7 @@ if(!is_array($results) || count($results)!=1 || !isset($results[0]['ref']) || $r
     }
 debug("Successfully searched for resources with two nodes");
 
-if($resource_field_verbatim_keyword_regex_cache == NULL){unset($resource_field_verbatim_keyword_regex);}
+if($resource_field_verbatim_keyword_regex_cache == null){unset($resource_field_verbatim_keyword_regex);}
 else {$resource_field_verbatim_keyword_regex = $resource_field_verbatim_keyword_regex_cache;}
 
 // Check that using update_field to add nodes to resource returns false

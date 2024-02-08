@@ -82,7 +82,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
         resource_log(
             $ref,
             LOG_CODE_TRANSFORMED,
-            NULL,
+            null,
             "Edited Location",
             $resource["geo_lat"] . ", " . $resource["geo_long"],
             $lat . ", " . $lng
@@ -96,7 +96,7 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
         resource_log(
             $ref,
             LOG_CODE_TRANSFORMED,
-            NULL,
+            null,
             "Removed Location",
             $resource["geo_lat"] . ", " . $resource["geo_long"],
             ""

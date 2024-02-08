@@ -1022,12 +1022,12 @@ function CheckDBStruct($path,$verbose=false)
                             // the pages/tools/dbstruct_create.php script.
                             if($row[$n] === '')
                                 {
-                                $sql_params[] = NULL;
+                                $sql_params[] = null;
                                 }
                             // Legacy? I couldn't find any dbstruct/data_*.txt file containing '' for a column value
                             else if($row[$n] == "''")
                                 {
-                                $sql_params[] = NULL;
+                                $sql_params[] = null;
                                 }
                             else
                                 {
@@ -1235,7 +1235,7 @@ function sql_limit($offset, $rows)
  *               - total: int - count of total found records (before paging)
  *               - data: array - paged result set 
  */
-function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, int $offset,bool $cachecount=false, ?PreparedStatementQuery $countquery = NULL)
+function sql_limit_with_total_count(PreparedStatementQuery $query, int $rows, int $offset,bool $cachecount=false, ?PreparedStatementQuery $countquery = null)
     {
     global $cache_search_count;
     $limit = sql_limit($offset, $rows);

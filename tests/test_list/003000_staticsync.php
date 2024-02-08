@@ -60,7 +60,7 @@ $staticsync_extension_mapping[2]=array("txt");
 file_put_contents($test_path . "testtextsync.txt","TEST");
 
 // Required for test F
-$sync_tree_field= create_resource_type_field("Sync tree", 0, FIELD_TYPE_CATEGORY_TREE, "synctree",TRUE);
+$sync_tree_field= create_resource_type_field("Sync tree", 0, FIELD_TYPE_CATEGORY_TREE, "synctree",true);
 $staticsync_mapped_category_tree = $sync_tree_field;
 
 // Required for Test G and H
@@ -70,7 +70,7 @@ if (!file_exists($projectspath))
     mkdir($projectspath,0777,true);
     }
 file_put_contents($projectspath . "projecta.txt","TEST");
-$project_field = create_resource_type_field("Sync Project", 0, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "syncproject",TRUE);
+$project_field = create_resource_type_field("Sync Project", 0, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "syncproject",true);
 
 $staticsync_mapfolders[]=array
     (

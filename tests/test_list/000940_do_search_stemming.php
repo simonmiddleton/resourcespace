@@ -9,8 +9,8 @@ $resourcea=create_resource(1,0);
 $resourceb=create_resource(1,0);
 
 // Add new nodes to field, doesn't matter that it is the country field
-$foxesnode = set_node(NULL, 3, "foxes",'',1000);
-$dancingnode = set_node(NULL, 3, "dancing",'',1000);
+$foxesnode = set_node(null, 3, "foxes",'',1000);
+$dancingnode = set_node(null, 3, "dancing",'',1000);
 
 // Get baseline to compare in case pre-existing data changes
 $pre_search_fox = do_search('fox');

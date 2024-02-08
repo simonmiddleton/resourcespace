@@ -10,7 +10,7 @@ $resourcea=create_resource(1,0);
 $resourceb=create_resource(1,0);
 
 // Add new node to field, use dummy countries in case dbstruct changes and avoid possible stems
-$rggweqvdfrnode = set_node(NULL, 3, "rggweqvdfr",'',1000);
+$rggweqvdfrnode = set_node(null, 3, "rggweqvdfr",'',1000);
 
 // Add trdpqtskc node to resource a
 add_resource_nodes($resourcea,array($rggweqvdfrnode));
@@ -28,7 +28,7 @@ if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$reso
 
 // SUBTEST B
 // Now create a new node with the related keyword and add it to resource b
-$fdgrefgfrnode = set_node(NULL, 3, "fdgrefgfr",'',1000);
+$fdgrefgfrnode = set_node(null, 3, "fdgrefgfr",'',1000);
 add_resource_nodes($resourceb,array($fdgrefgfrnode));
 
 // Do search for first keyword 'rggweqvdfr' (should return both resources a and  b)

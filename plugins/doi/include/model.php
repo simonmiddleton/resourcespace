@@ -75,7 +75,7 @@
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -97,12 +97,12 @@
      * @return null|string The human readable version of the license if possible, otherwise null.
      */
     function doi_deduct_rights($rights_URI) {
-        if (filter_var($rights_URI, FILTER_VALIDATE_URL, 0) !== FALSE) {
+        if (filter_var($rights_URI, FILTER_VALIDATE_URL, 0) !== false) {
             $uri_parts = explode('/', $rights_URI);
             if (count($uri_parts) > 3) {
 
                 # CREATIVE COMMONS
-                if (stripos($uri_parts[2], 'creativecommons.org') !== FALSE) {
+                if (stripos($uri_parts[2], 'creativecommons.org') !== false) {
 
                     # http://creativecommons.org/licenses/by/3.0/ -> Creative Commons Attribution (CC BY 3.0)
                     # license parts:
@@ -146,7 +146,7 @@
             }
         }
 
-        return NULL;
+        return null;
     }
 
     /**
@@ -182,7 +182,7 @@
         $dateType = [];
         $rights = '';
         $rightsURI = '';
-        $use_rightsURI = FALSE;
+        $use_rightsURI = false;
         $descriptions = [];
         $descriptionType = [];
 
@@ -288,7 +288,7 @@
                         break;
 
                     case 'licenseurl':
-                        if (filter_var($value, FILTER_VALIDATE_URL) !== FALSE) {
+                        if (filter_var($value, FILTER_VALIDATE_URL) !== false) {
                             if (!$rightsURI) {
                                 $rightsURI = $value;
                             }
@@ -332,7 +332,7 @@
             $deducted = doi_deduct_rights($rightsURI);
             if ($deducted) {
                 $rights = $deducted;
-                $use_rightsURI = TRUE;
+                $use_rightsURI = true;
             }
         }
 
@@ -440,8 +440,8 @@ XML;
 
         # use DOMDocument class for formatted xml output (line breaks, tabs..)
         $dom = new DOMDocument('1.0', 'utf-8');
-        $dom->preserveWhiteSpace = FALSE;
-        $dom->formatOutput = TRUE;
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
         $dom->loadXML($sxe_resource->asXML());
         # $dom->save('/tmp/doi_test_xml.xml'); # testing..
         $xml = $dom->saveXML();
@@ -482,16 +482,16 @@ XML;
      *
      * @return string The currently associated URL, NULL if an error occurred.
      */
-    function doi_get_url($doi, $enable_log = TRUE, $use_testmode = FALSE) {
+    function doi_get_url($doi, $enable_log = true, $use_testmode = false) {
         global $doi_username, $doi_password, $doi_log_code;
 
         $op = "DOI: get URL from DataCite";
 
         # username must not contain colon, because it divides username and password in HTTP Basic authentication!
-        if (strpos($doi_username, ':') !== FALSE) {
+        if (strpos($doi_username, ':') !== false) {
             doi_log_uname_error();
 
-            return NULL;
+            return null;
         }
 
         $host = "https://mds.datacite.org/doi/$doi" . ($use_testmode ? '?testMode=true' : '');
@@ -530,11 +530,11 @@ XML;
 
         # Datacite's MDS returns a status message here in an error case. As we already took care of such message at logging,
         # we want a Url to be returned, or otherwise an empty string.
-        if (filter_var($response, FILTER_VALIDATE_URL) !== FALSE) {
+        if (filter_var($response, FILTER_VALIDATE_URL) !== false) {
             return $response;
         }
         else {
-            return NULL;
+            return null;
         }
     }
 
@@ -545,16 +545,16 @@ XML;
      *
      * @return array An array of DOIs as strings, NULL if an error occurred.
      */
-    function doi_get_all_dois($enable_log = FALSE, $use_testmode = FALSE) {
+    function doi_get_all_dois($enable_log = false, $use_testmode = false) {
         global $doi_username, $doi_password, $doi_log_code;
 
         $op = "DOI: get all DOIs from DataCite";
 
         # username must not contain colon, because it divides username and password in HTTP Basic authentication!
-        if (strpos($doi_username, ':') !== FALSE) {
+        if (strpos($doi_username, ':') !== false) {
             doi_log_uname_error();
 
-            return NULL;
+            return null;
         }
 
         $host = "https://mds.datacite.org/doi" . ($use_testmode ? '?testMode=true' : '');
@@ -591,7 +591,7 @@ XML;
             return $urls;
         }
         else {
-            return NULL;
+            return null;
         }
     }
 
@@ -603,16 +603,16 @@ XML;
      *
      * @return bool TRUE, if request succeeded, otherwise false.
      */
-    function doi_post_url($doi, $url, $enable_log = TRUE, $use_testmode = FALSE) {
+    function doi_post_url($doi, $url, $enable_log = true, $use_testmode = false) {
         global $doi_username, $doi_password, $doi_log_code;
 
         $op = "DOI: URL reg. @ DataCite";
 
         # username must not contain colon, because it divides username and password in HTTP Basic authentication!
-        if (strpos($doi_username, ':') !== FALSE) {
+        if (strpos($doi_username, ':') !== false) {
             doi_log_uname_error();
 
-            return FALSE;
+            return false;
         }
 
         $host = "https://mds.datacite.org/doi" . ($use_testmode ? '?testMode=true' : '');
@@ -672,16 +672,16 @@ XML;
      *
      * @return string The metadata as XML-formatted string.
      */
-    function doi_get_xml($doi, $enable_log = FALSE, $use_testmode = FALSE) {
+    function doi_get_xml($doi, $enable_log = false, $use_testmode = false) {
         global $doi_username, $doi_password, $doi_log_code;
 
         $op = "DOI: get metadata-XML from DataCite";
 
         # username must not contain colon, because it divides username and password in HTTP Basic authentication!
-        if (strpos($doi_username, ':') !== FALSE) {
+        if (strpos($doi_username, ':') !== false) {
             doi_log_uname_error();
 
-            return NULL;
+            return null;
         }
 
         $host = "https://mds.datacite.org/metadata/$doi" . ($use_testmode ? '?testMode=true' : '');
@@ -723,7 +723,7 @@ XML;
         curl_close($ch);
 
         if ($err) {
-            return NULL;
+            return null;
         }
 
         return str_replace('\r\n', '\n', $response);
@@ -736,16 +736,16 @@ XML;
      *
      * @return bool TRUE if succeeded, otherwise false.
      */
-    function doi_post_xml($xml, $enable_log = TRUE, $use_testmode = FALSE) {
+    function doi_post_xml($xml, $enable_log = true, $use_testmode = false) {
         global $doi_username, $doi_password, $doi_log_code;
 
         $op = "DOI: metadata-XML reg. @ DataCite";
 
         # username must not contain colon, because it divides username and password in HTTP Basic authentication!
-        if (strpos($doi_username, ':') !== FALSE) {
+        if (strpos($doi_username, ':') !== false) {
             doi_log_uname_error();
 
-            return FALSE;
+            return false;
         }
 
         $host = "https://mds.datacite.org/metadata" . ($use_testmode ? '?testMode=true' : '');
@@ -815,9 +815,9 @@ XML;
         }
     }
 
-    function doi_log($msg, $LOG_CODE = NULL, $op = 'DOI: ', $http_code = NULL, $err = FALSE) {
+    function doi_log($msg, $LOG_CODE = null, $op = 'DOI: ', $http_code = null, $err = false) {
 
-        if ($http_code === NULL) {
+        if ($http_code === null) {
             $http_code = '';
         }
         else {
@@ -849,10 +849,10 @@ XML;
 
     function doi_debug_globals() {
         foreach($GLOBALS as $key => $value) {
-            if(is_string($key) && stripos($key, "doi") !== FALSE) {
-                doi_debug("$key", 'a', FALSE);
+            if(is_string($key) && stripos($key, "doi") !== false) {
+                doi_debug("$key", 'a', false);
                 doi_debug($value, 'a');
-                doi_debug("\n", 'a', TRUE);
+                doi_debug("\n", 'a', true);
             }
         }
     }
@@ -860,7 +860,7 @@ XML;
     function doi_debug($var, $mode = 'w', $print = false) {
 
         $cache = ob_get_contents();
-        $buffer_was_active = ($cache !== FALSE);
+        $buffer_was_active = ($cache !== false);
         if ($buffer_was_active) {
             ob_end_clean();
         }

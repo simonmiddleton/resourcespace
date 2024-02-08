@@ -1091,7 +1091,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $expiry_field_edited=true;
                     }
 
-                $use_node = NULL;
+                $use_node = null;
                 if(trim((string) $fields[$n]["nodes"]) != "")
                     {
                     // Remove any existing node IDs for this non-fixed list field (there should only be one) unless used by other resources.
@@ -1826,7 +1826,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             {
                             $valid_hook_nodes = true;
                             debug(" - Found valid previous date '" . $oldnodename . "'");
-                            $resource_add_nodes[] = set_node(NULL,$fields[$n]['ref'],$oldnodename,NULL,10);
+                            $resource_add_nodes[] = set_node(null,$fields[$n]['ref'],$oldnodename,null,10);
                             $log_node_names[] = $oldnodename;
                             }
                         else
@@ -1939,7 +1939,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 {
                 $ref            = $list[$m];
                 $value_changed  = false;
-                $use_node = NULL;
+                $use_node = null;
 
                 // Reset nodes to add/remove as may differ for each resource
                 $nodes_to_add       = [];
@@ -2924,13 +2924,13 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         if ($curnode > 0 && get_nodes_use_count([$curnode]) == 1)
             {
             // Reuse same node
-            $savenode = set_node($curnode,$field,$value,NULL,0);
+            $savenode = set_node($curnode,$field,$value,null,0);
             }
         else
             {
             // Remove node from resource and create new node
             delete_resource_nodes($resource,[$curnode],false);
-            $savenode = set_node(NULL,$field,$value,NULL,0);
+            $savenode = set_node(null,$field,$value,null,0);
             add_resource_nodes($resource,[$savenode], true, false);
             }
         }
@@ -3264,7 +3264,7 @@ function get_resource_type_field($field)
  * 
  * @return array|boolean
  */
-function get_resource_field_data($ref, $multi = false, $use_permissions = true, $originalref = NULL, $external_access = false, $ord_by = false, $forcsv = false, $translate_value = true)
+function get_resource_field_data($ref, $multi = false, $use_permissions = true, $originalref = null, $external_access = false, $ord_by = false, $forcsv = false, $translate_value = true)
     {
     # Returns field data and field properties (resource_type_field and resource_data tables)
     # for this resource, for display in an edit / view form.
@@ -4606,7 +4606,7 @@ function write_metadata($path, $ref, $uniqid="")
             debug("[write_metadata()][ref={$ref}] Removing existing metadata. Command: ". json_encode($command));
             }
 
-        $metadata_all=get_resource_field_data($ref, false,true,NULL,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
+        $metadata_all=get_resource_field_data($ref, false,true,null,getval("k","")!=""); // Using get_resource_field_data means we honour field permissions
         $read_only_fields = array_column(array_filter($metadata_all, function($value) {
             return (bool) $value['read_only'] == true;
         }), 'ref');
@@ -5394,7 +5394,7 @@ function get_resource_access($resource)
         # Apply filters by searching for the resource, utilising the existing filter matching in do_search to avoid duplication of logic.
 
         $search_all_workflow_states_cache = $search_all_workflow_states;
-        $search_all_workflow_states = TRUE;
+        $search_all_workflow_states = true;
         $results=do_search("!resource" . $ref);
         $search_all_workflow_states = $search_all_workflow_states_cache;
         if (count($results)==0) {return 2;} # Not found in results, so deny
@@ -5838,9 +5838,12 @@ function get_metadata_templates()
 
 function get_resource_collections($ref)
     {
-    global $userref, $anonymous_user, $username;
-    if (checkperm('b') || (isset($anonymous_login) && $username==$anonymous_login))
-        {return array();}
+    global $userref;
+    if (checkperm('b') || is_anonymous_user())
+        {
+        return array();
+        }
+
     # Returns a list of collections that a resource is used in for the $view_resource_collections option
     $sql="";
 
@@ -6582,7 +6585,7 @@ function delete_resources_in_collection($collection)
     // Note: when resource_deletion_state is null it will always stop here
     if(empty($resources))
         {
-        return TRUE;
+        return true;
         }
 
     // Delete (ie. move to resource_deletion_state set in config):
@@ -6598,7 +6601,7 @@ function delete_resources_in_collection($collection)
 
         }
 
-    return TRUE;
+    return true;
     }
 
 /**
@@ -7007,7 +7010,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
             if(in_array($fieldtype, $FIXED_LIST_FIELD_TYPES))
                 {
                 // Replace nodes for this field
-                $field_nodes = get_nodes($locked_field, NULL, $fieldtype == FIELD_TYPE_CATEGORY_TREE);
+                $field_nodes = get_nodes($locked_field, null, $fieldtype == FIELD_TYPE_CATEGORY_TREE);
                 $field_node_refs = array_column($field_nodes,"ref");
                 $stripped_nodes = array_diff ($all_selected_nodes, $field_node_refs);
                 $locked_nodes = get_resource_nodes($lastedited, $locked_field);
@@ -7049,7 +7052,7 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
                 debug(" - checking field values for last resource " . $lastedited . " field id: " . $locked_field);
                 if(!isset($last_fields))
                     {
-                    $last_fields = get_resource_field_data($lastedited,!hook("customgetresourceperms"),NULL,"",$tabs_on_edit);
+                    $last_fields = get_resource_field_data($lastedited,!hook("customgetresourceperms"),null,"",$tabs_on_edit);
                     }
 
                 $addkey = array_search($locked_field, array_column($last_fields, 'ref'));
@@ -8997,28 +9000,15 @@ function get_external_shares(array $filteropts)
     {
     global $userref;
 
-    $validfilterops = array(
-        "share_group",
-        "share_user",
-        "share_order_by",
-        "share_sort",
-        "share_type",
-        "share_collection",
-        "share_resource",
-        "access_key",
-        "ignore_permissions",
-    );
-    foreach($validfilterops as $validfilterop)
-        {
-        if(isset($filteropts[$validfilterop]))
-            {
-            $$validfilterop = $filteropts[$validfilterop];
-            }
-        else
-            {
-            $$validfilterop = NULL;
-            }
-        }
+    $share_group = $filteropts['share_group'] ?? null;
+    $share_user = $filteropts['share_user'] ?? null;
+    $share_order_by = $filteropts['share_order_by'] ?? null;
+    $share_sort = $filteropts['share_sort'] ?? null;
+    $share_type = $filteropts['share_type'] ?? null;
+    $share_collection = $filteropts['share_collection'] ?? null;
+    $share_resource = $filteropts['share_resource'] ?? null;
+    $access_key = $filteropts['access_key'] ?? null;
+    $ignore_permissions = $filteropts['ignore_permissions'] ?? null;
 
     $valid_orderby = array("collection","user", "sharedas", "expires", "date", "email", "lastused", "access_key", "upload");
     if(!in_array($share_order_by, $valid_orderby))

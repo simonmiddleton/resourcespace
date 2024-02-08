@@ -65,7 +65,7 @@ else
         
     $fieldrefs = isset($clargs["fieldrefs"]) ? explode(",",$clargs["fieldrefs"]) : explode(",",$clargs["f"]);
     $collectionid = (isset($clargs["col"]) && is_numeric($clargs["col"])) ? $clargs["col"] : ((isset($clargs["c"]) && is_numeric($clargs["c"])) ? $clargs["c"] : 0);
-    $blanks = ((isset($clargs["blanks"]) && strtolower($clargs["blanks"])=="false") || isset($clargs["b"]) && strtolower($clargs["b"])=="false") ? FALSE : TRUE; 
+    $blanks = ((isset($clargs["blanks"]) && strtolower($clargs["blanks"])=="false") || isset($clargs["b"]) && strtolower($clargs["b"])=="false") ? false : true; 
     $overwrite = isset($clargs["overwrite"]) || isset($clargs["o"]); 
     }    
 

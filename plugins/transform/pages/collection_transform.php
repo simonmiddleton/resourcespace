@@ -34,7 +34,7 @@ if (count($resources) == 0)
     }
 
 $doit = getval('doit',0,true) != 0;
-if ($doit && enforcePostRequest(TRUE) && count($resources) > 0)
+if ($doit && enforcePostRequest(true) && count($resources) > 0)
     {
     $rotation = getval('rotation',0,true) % 360;
     $tfactions = ["r" . $rotation]; // Single rotation only enabled

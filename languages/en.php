@@ -2714,6 +2714,7 @@ $lang["mysql_throughput"]="MySQL throughput";
 $lang["cpu_benchmark"]="CPU benchmark";
 $lang["disk_write_speed"]="Disk write speed";
 $lang["manage_metadata_text"]="Use this page to modify the field options available. This will automatically update any existing selected resource options";
+$lang['confirm_delete_field_value'] = 'Are you sure you wish to DELETE this field option? This will permanently remove the value from all resources it is applied to.';
 
 /* Manage slideshows */
 $lang["manage_slideshow"] = "Slideshow";

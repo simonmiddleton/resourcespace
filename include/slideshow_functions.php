@@ -10,7 +10,7 @@
 *
 * @return boolean|integer  Returns ID of the slideshow image(new/ updated), FALSE otherwise
 */
-function set_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured_collections_show = 1, $login_show = 0)
+function set_slideshow($ref, $resource_ref = null, $homepage_show = 1, $featured_collections_show = 1, $login_show = 0)
     {
     if(
         (!is_null($ref) && !is_numeric($ref))
@@ -22,8 +22,8 @@ function set_slideshow($ref, $resource_ref = NULL, $homepage_show = 1, $featured
         return false;
         }
 
-    $ref = ((int) $ref > 0 ? $ref : NULL);
-    $resource_ref = ((int) $resource_ref > 0 ? $resource_ref : NULL);
+    $ref = ((int) $ref > 0 ? $ref : null);
+    $resource_ref = ((int) $resource_ref > 0 ? $resource_ref : null);
 
     $query = "
         INSERT INTO slideshow (ref, resource_ref, homepage_show, featured_collections_show, login_show)

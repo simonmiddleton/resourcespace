@@ -99,7 +99,7 @@ switch ($returntype)
                 }
             }
        
-        $return_data["success"] = TRUE;
+        $return_data["success"] = true;
         $return_data["items"] = $return_items;
     break;
     
@@ -144,7 +144,7 @@ switch ($returntype)
                 }
             }
        
-        $return_data["success"] = TRUE;
+        $return_data["success"] = true;
         $return_data["items"] = $return_items;
     break;
     
@@ -156,7 +156,7 @@ switch ($returntype)
             }
         else
             {
-            $parent = NULL;
+            $parent = null;
             }
 
         if(metadata_field_view_access($returnid))
@@ -212,7 +212,7 @@ switch ($returntype)
                 $n++;
                 }
 
-            $return_data["success"] = TRUE;
+            $return_data["success"] = true;
             $return_data["items"] = $return_items;
             }
     break;
@@ -270,7 +270,7 @@ switch ($returntype)
                 $n++;
                 }
 
-            $return_data["success"] = TRUE;
+            $return_data["success"] = true;
             $return_data["items"] = $return_items;
             }
     break;
@@ -372,7 +372,7 @@ switch ($returntype)
             }
         
 
-        $return_data["success"] = TRUE;
+        $return_data["success"] = true;
         $return_data["items"] = $return_items;
     break;
     
@@ -419,13 +419,13 @@ switch ($returntype)
             $n++;
             }
 
-        $return_data["success"] = TRUE;
+        $return_data["success"] = true;
         $return_data["items"] = $return_items;
     break;
     
     default:
         // TODO Return an error
-        $return_data["success"] = FALSE;
+        $return_data["success"] = false;
         $return_data["message"] = "ERROR";
     break;
       

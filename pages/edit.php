@@ -131,7 +131,7 @@ if ($upload_review_mode)
     # Start reviewing at the first resource. Need to search all worflow states and remove filters as no data has been set yet
     $search_all_workflow_states_cache = $search_all_workflow_states;
     $usersearchfilter_cache = $usersearchfilter;
-    $search_all_workflow_states = TRUE;
+    $search_all_workflow_states = true;
     $check_edit_checksums = false;
     $usersearchfilter = "";
     $upload_review_collection_order_by = ($upload_review_mode_review_by_resourceid ? 'resourceid' : $default_collection_sort);
@@ -411,7 +411,7 @@ if ($resetform)
     }
 else
     {
-    $setarchivestate = getval('status', $default_setarchivestate, TRUE);
+    $setarchivestate = getval('status', $default_setarchivestate, true);
     }
 // Validate this is permitted
 $setarchivestate = get_default_archive_state($setarchivestate);
@@ -672,7 +672,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                 }
                                 
                             // Load resource metadata
-                            $fields=get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,"",$tabs_on_edit);
+                            $fields=get_resource_field_data($ref,false,!hook("customgetresourceperms"),null,"",$tabs_on_edit);
                             $all_selected_nodes = get_resource_nodes($ref);
                             
                             // Update resource data with locked resource data from last edited resource
@@ -1711,7 +1711,7 @@ if (getval("copyfrom","")!="")
   if ($copyfrom_access!=2) # Do not allow confidential resources (or at least, confidential to that user) to be copied from
     {
     $use=$copyfrom;
-    $original_fields=get_resource_field_data($ref,$multiple,true,NULL,"",$tabs_on_edit);
+    $original_fields=get_resource_field_data($ref,$multiple,true,null,"",$tabs_on_edit);
     $original_nodes = get_resource_nodes($ref);
     }
   }
@@ -1719,7 +1719,7 @@ if (getval("copyfrom","")!="")
 if(($ref < 0 || $upload_review_mode) && isset($metadata_template_resource_type)  && !$multiple && $metadatatemplate != 0)
     {
     $use             = $metadatatemplate;
-    $original_fields = get_resource_field_data($ref, $multiple, true, NULL, '', $tabs_on_edit);
+    $original_fields = get_resource_field_data($ref, $multiple, true, null, '', $tabs_on_edit);
     $original_nodes  = get_resource_nodes($ref);
     debug(sprintf('$use = %s', $use));
     copyAllDataToResource($use, $ref);

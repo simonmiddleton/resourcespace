@@ -9,9 +9,9 @@ $resourceb=create_resource(1,0);
 $resourcec=create_resource(1,0);
 
 // Add new nodes to field, use dummy countries in case dbstruct changes
-$summerlandnode = set_node(NULL, 3, "Summerland",'',1000);
-$winterlandnode = set_node(NULL, 3, "Winterland",'',1000);
-$springlandnode = set_node(NULL, 3, "Springland",'',1000);
+$summerlandnode = set_node(null, 3, "Summerland",'',1000);
+$winterlandnode = set_node(null, 3, "Winterland",'',1000);
+$springlandnode = set_node(null, 3, "Springland",'',1000);
 
 // Add both  nodes to resource a
 add_resource_nodes($resourcea,array($summerlandnode, $winterlandnode));

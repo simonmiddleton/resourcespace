@@ -492,10 +492,10 @@ function log_search_event(string $search, array $resource_types, array $archive_
     $archive_states = array_filter($archive_states, 'is_int_loose');
 
     $parameters=array();
-    $parameters[]="s";$parameters[]=($search === '' ? NULL : $search);
-    $parameters[]="s";$parameters[]=(empty($resource_types) ? NULL : implode(', ', $resource_types));
-    $parameters[]="s";$parameters[]=(empty($archive_states) ? NULL : implode(', ', $archive_states));
-    $parameters[]="i";$parameters[]=(is_null($userref) ? NULL : (int)$userref);
+    $parameters[]="s";$parameters[]=($search === '' ? null : $search);
+    $parameters[]="s";$parameters[]=(empty($resource_types) ? null : implode(', ', $resource_types));
+    $parameters[]="s";$parameters[]=(empty($archive_states) ? null : implode(', ', $archive_states));
+    $parameters[]="i";$parameters[]=(is_null($userref) ? null : (int)$userref);
     $parameters[]="i";$parameters[]=(is_int_loose($result_count) ? (int)$result_count : 0);
 
     $q = "INSERT INTO search_log (search_string, resource_types, archive_states, `user`, result_count) VALUES (?,?,?,?,?)";

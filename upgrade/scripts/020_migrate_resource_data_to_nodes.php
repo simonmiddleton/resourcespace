@@ -180,7 +180,7 @@ if($annotate_enabled)
             {
             // No node set, create a new one
             logScript("Migrating annotation for resource  " . $annotation["ref"] . ", note: " . $annotation["note"]);
-            $node = set_node(NULL,$annotate_field,$annotation["note"],NULL,10);
+            $node = set_node(null,$annotate_field,$annotation["note"],null,10);
             ps_query("UPDATE annotate_notes SET node = ? WHERE ref= ?",["i",$node,"i",$annotation["ref"]]);
             // Add nodes so will be searchable
             add_resource_nodes($annotation["ref"],[$node], true,true);

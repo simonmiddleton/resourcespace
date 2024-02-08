@@ -38,7 +38,7 @@ if(substr($order_by, 0, 5) == 'field')
     }
 
 $sort               = getval('sort', $default_sort_direction);
-$metadata           = get_resource_field_data($ref, false, true, NULL, getval('k', '') != ''); 
+$metadata           = get_resource_field_data($ref, false, true, null, getval('k', '') != ''); 
 $filename           = $ref;
 $download           = getval('download', '') != '';
 $download_file_type = getval('fileType_option', '');
