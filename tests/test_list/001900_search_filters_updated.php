@@ -80,10 +80,10 @@ save_filter_rule(0, $newfilter, $rules);
 $usersearchfilter = $newfilter;
 $results=do_search('');  // this should return 1 asset:  b
 if(count($results) != 1 || !isset($results[0]['ref'])
-	||
+    ||
     !match_values(array_column($results,'ref'),array($resourceb))
-	)
-	{
+    )
+    {
     echo "SUBTEST A";
     return false;
     }
@@ -109,10 +109,10 @@ save_filter_rule(0, $newfilter, $rules);
 $usersearchfilter = $newfilter;
 $results=do_search('');  // this should return 3 assets:  b, c and d
 if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref'])
-	||
+    ||
     !match_values(array_column($results,'ref'),array($resourceb, $resourcec, $resourced))
-	)
-	{
+    )
+    {
     echo "SUBTEST B";
     return false;
     }

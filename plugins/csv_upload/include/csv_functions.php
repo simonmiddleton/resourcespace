@@ -83,7 +83,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             
         }
 
-	# ----- start of header row checks -----
+    # ----- start of header row checks -----
     if($csv_set_options["add_to_collection"] > 0)
         {
         global $usercollection;
@@ -120,7 +120,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         continue;
         }
 
-    $field_type 	= $allfields[$fieldid]['type'];
+    $field_type     = $allfields[$fieldid]['type'];
 
     if ($field_type == FIELD_TYPE_CATEGORY_TREE)
         {
@@ -181,7 +181,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     while ((($line=fgetcsv($file))!==false) && ($error_count<$max_error_count || $max_error_count==0))
         {
         $line_count++;
-        if (count($line) != count($headers))	// check that the current row has the correct number of columns
+        if (count($line) != count($headers))    // check that the current row has the correct number of columns
             {
             $logtext = "Error: Incorrect number of columns(" . count($line) . ") found on line " . $line_count . " (should be " . count($headers) . ")";
             csv_upload_log($logfile,$logtext);
@@ -229,7 +229,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 $logtext = "Warning: Invalid resource type (" . $line[$csv_set_options["resource_type_column"]] . ") specified in line " . $line_count;
                 csv_upload_log($logfile,$logtext);
                 array_push ($messages,$logtext);
-			    $error_count++;
+                $error_count++;
                 $resource_type_set = $csv_set_options["resource_type_default"];
                 }
 
@@ -472,7 +472,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
         csv_upload_log($logfile,$logtext);
         array_push ($messages,$logtext);
         
-		$cell_count=-1;
+        $cell_count=-1;
 
         // Update resource type if required
         if($csv_set_options["update_existing"] && $resource_type_set != 0)
@@ -489,8 +489,8 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             }
 
         // Now process the actual data, looping through each column field
-		foreach ($headers as $column_id => $field_name)	
-			{
+        foreach ($headers as $column_id => $field_name) 
+            {
             // Skip columns already processed as special columns e.g. resource type, id etc.
             // or if not included in mappings
             // or if field not applicable to resource type
@@ -517,9 +517,9 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
             $fieldid        = $csv_set_options["fieldmapping"][$column_id];
             $field_def      = $allfields[$fieldid];
-			$field_name     = $field_def['name'];
-            $field_type 	= $field_def['type'];
-            $required 		= $field_def['required'];
+            $field_name     = $field_def['name'];
+            $field_type     = $field_def['type'];
+            $required       = $field_def['required'];
 
             if ($field_type == FIELD_TYPE_CATEGORY_TREE)
                 {
@@ -544,7 +544,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 $currentoptions = $allfields[$fieldid]["current_options"];
                 }
 
-                $cell_value=trim($line[$column_id]);		// important! we trim values, as options may contain a space after the comma
+                $cell_value=trim($line[$column_id]);        // important! we trim values, as options may contain a space after the comma
 
             // Raise error if it's a required field and has an empty or null value
             if (in_array($cell_value,  array(null,"") ))
@@ -750,7 +750,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
                         $nodes_to_add = array_diff($daterangenodes, $current_field_nodes);
                         $nodes_to_remove = array_diff($current_field_nodes,$daterangenodes);
-						}
+                        }
                         elseif (in_array($field_type, $FIXED_LIST_FIELD_TYPES))
                         {
 
@@ -781,7 +781,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                                 }
                             }
                         $nodes_to_add = array_diff($setnodes, $current_field_nodes);
-						$nodes_to_remove = array_diff($current_field_nodes,$setnodes);
+                        $nodes_to_remove = array_diff($current_field_nodes,$setnodes);
                         }
                     else
                         {
@@ -832,7 +832,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 } // End of foreach resourcerefs
             }
             ob_flush();
-            }	// end of loop through column fields
+            }   // end of loop through column fields
 
         if ($processcsv && $csv_set_options["update_existing"] && isset($resource_id))
             {

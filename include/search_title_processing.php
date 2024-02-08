@@ -37,7 +37,7 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
                 {
                 $refinements[$n] = substr_replace($refinements[$n],": ",$semi_pos,strlen(":;"));
                 }
-		
+        
             $search_title_element=str_replace(";"," OR ",$refinements[$n]);
             $search_title_element=search_title_node_processing($search_title_element);
             if ($n!=0 || !$archive_standard)
@@ -53,7 +53,7 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
                 if ($x!=$n && substr($refinements[$x+1],0)!="-")
                     {
                     $searchcrumbs.=",";
-                    }		
+                    }       
                 }
 
             if (!$search_titles_shortnames)
@@ -327,7 +327,7 @@ if ($search_titles)
             {
             $cuser=substr($search,14);
             $cuser=explode(",",$cuser);
-            $cuser=$cuser[0];	
+            $cuser=$cuser[0];   
 
             if ($cuser==$userref)
                 {
@@ -396,9 +396,9 @@ if ($search_titles)
             }
         $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars(implode(", ",$title_strings)) . '</a>' . htmlspecialchars($searchcrumbs) . '</div></div> ';
         }
-	
-	hook("addspecialsearchtitle");
-	}
+    
+    hook("addspecialsearchtitle");
+    }
 
 hook('add_search_title_links');
 

@@ -6,7 +6,7 @@ include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permis
 // Specify the name of this plugin, the heading to display for the page
 $plugin_name = 'video_splice';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 $page_heading = $lang['videospliceconfiguration'];
 
 

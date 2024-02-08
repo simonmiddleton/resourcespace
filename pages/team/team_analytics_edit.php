@@ -45,23 +45,23 @@ $external=getval("external","");
 
 
 if ($groupselect=="select" && isset($_POST["groups"]) && is_array($_POST["groups"]))
-	{
-	$groups=@$_POST["groups"];
-	}
+    {
+    $groups=@$_POST["groups"];
+    }
 else
-	{
-	$groups=array();
+    {
+    $groups=array();
         $groupselect="viewall";
-	}
+    }
 
 if (isset($_POST["graph_types"]))
         {
-	$graph_types=$_POST["graph_types"];
-	}
+    $graph_types=$_POST["graph_types"];
+    }
 else
-	{
-	$graph_types=array();
-	}
+    {
+    $graph_types=array();
+    }
 
 # Save report
 if (getval("name", "") != "" && getval("save", "") != "" && enforcePostRequest(getval("ajax", false)))
@@ -167,11 +167,11 @@ else
 <option value=""><?php echo $lang["all_activity"] ?></option>
 <?php $types=get_stats_activity_types(); 
 for ($n=0;$n<count($types);$n++)
-	{ 
-	if (!isset($lang["stat-" . strtolower(str_replace(" ","",$types[$n]))])){$lang["stat-" . strtolower(str_replace(" ","",$types[$n]))]=str_replace("[type]",$types[$n],$lang["log-missinglang"]);}	
-		
-	?><option <?php if ($activity_type==$types[$n]) { ?>selected<?php } ?> value="<?php echo $types[$n]?>"><?php echo $lang["stat-" . strtolower(str_replace(" ","",$types[$n]))]?></option><?php
-	}
+    { 
+    if (!isset($lang["stat-" . strtolower(str_replace(" ","",$types[$n]))])){$lang["stat-" . strtolower(str_replace(" ","",$types[$n]))]=str_replace("[type]",$types[$n],$lang["log-missinglang"]);}    
+        
+    ?><option <?php if ($activity_type==$types[$n]) { ?>selected<?php } ?> value="<?php echo $types[$n]?>"><?php echo $lang["stat-" . strtolower(str_replace(" ","",$types[$n]))]?></option><?php
+    }
 ?>
 </select>
 <div class="clearerleft"> </div>
@@ -263,7 +263,7 @@ for ($n=0;$n<count($list);$n++)
 
 
 <div class="QuestionSubmit">
-    <input type="hidden" name="save" value="save report">	
+    <input type="hidden" name="save" value="save report">   
 <input name="update" type="submit" value="&nbsp;&nbsp;<?php echo $lang["update_report"]?>&nbsp;&nbsp;" />
 <input name="save" type="submit" onClick="if (document.getElementById('report_name').value=='') {alert('<?php echo addslashes($lang["report_please_enter_name"]) ?>');}" value="&nbsp;&nbsp;<?php echo $lang["save_report"]?>&nbsp;&nbsp;" />
 </div>
@@ -280,7 +280,7 @@ for ($n=0;$n<count($list);$n++)
 $types=get_stats_activity_types();
 $counter=0;
 for ($n=0;$n<count($types);$n++)
-	{
+    {
         if (($activity_type=="" || $activity_type==$types[$n]) && ($collection=="" || in_array($types[$n],$resource_activity_types)))
             {
             $graph_params=array(
@@ -382,7 +382,7 @@ if ($counter==0) {echo "<p>" . $lang["report_no_matching_activity_types"] . "</p
 </div>
 
 <script>
-	registerCollapsibleSections();
+    registerCollapsibleSections();
 </script>
 
 </div>

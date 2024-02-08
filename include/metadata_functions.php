@@ -274,44 +274,44 @@ function check_date_parts($parts)
         }
     }
 
-function check_view_display_condition($fields,$n,$fields_all)		
-	{
-	#Check if field has a display condition set
-	$displaycondition=true;
-	if ($fields[$n]["display_condition"]!="")
-		{
-		$fieldstocheck=array(); #' Set up array to use in jQuery script function
-		$s=explode(";",$fields[$n]["display_condition"]);
-		$condref=0;
-		foreach ($s as $condition) # Check each condition
-			{
-			$displayconditioncheck=false;
-			$s=explode("=",$condition);
-			for ($cf=0;$cf<count($fields_all);$cf++) # Check each field to see if needs to be checked
-				{
-				if ($s[0]==$fields_all[$cf]["name"]) # this field needs to be checked
-					{					
-					$checkvalues = $s[1];
-					$validvalues = explode("|",$checkvalues);
-					$validvalues = array_map("i18n_get_translated",$validvalues);
-					$validvalues = array_map("strtoupper",$validvalues);
-					$v = trim_array(explode(",",$fields_all[$cf]["value"] ?? ""));
-					$v = array_map("i18n_get_translated",$v);
-					$v = array_map("strtoupper",$v);
-					foreach ($validvalues as $validvalue)
-						{
-						if (in_array($validvalue,$v)) {$displayconditioncheck=true;} # this is  a valid value						
-						}
-					if (!$displayconditioncheck) {$displaycondition=false;}					
-					}
+function check_view_display_condition($fields,$n,$fields_all)       
+    {
+    #Check if field has a display condition set
+    $displaycondition=true;
+    if ($fields[$n]["display_condition"]!="")
+        {
+        $fieldstocheck=array(); #' Set up array to use in jQuery script function
+        $s=explode(";",$fields[$n]["display_condition"]);
+        $condref=0;
+        foreach ($s as $condition) # Check each condition
+            {
+            $displayconditioncheck=false;
+            $s=explode("=",$condition);
+            for ($cf=0;$cf<count($fields_all);$cf++) # Check each field to see if needs to be checked
+                {
+                if ($s[0]==$fields_all[$cf]["name"]) # this field needs to be checked
+                    {                   
+                    $checkvalues = $s[1];
+                    $validvalues = explode("|",$checkvalues);
+                    $validvalues = array_map("i18n_get_translated",$validvalues);
+                    $validvalues = array_map("strtoupper",$validvalues);
+                    $v = trim_array(explode(",",$fields_all[$cf]["value"] ?? ""));
+                    $v = array_map("i18n_get_translated",$v);
+                    $v = array_map("strtoupper",$v);
+                    foreach ($validvalues as $validvalue)
+                        {
+                        if (in_array($validvalue,$v)) {$displayconditioncheck=true;} # this is  a valid value                       
+                        }
+                    if (!$displayconditioncheck) {$displaycondition=false;}                 
+                    }
 
-				} # see if next field needs to be checked
+                } # see if next field needs to be checked
 
-			$condref++;
-			} # check next condition	
-		
-		}
-	return $displaycondition;
+            $condref++;
+            } # check next condition    
+        
+        }
+    return $displaycondition;
     }
     
 

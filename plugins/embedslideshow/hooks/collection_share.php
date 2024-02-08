@@ -17,7 +17,7 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
         ?>
         <p><?php echo $lang["embedslideshow_action_description"] ?></p>
                 
-        <div class="Question">		
+        <div class="Question">      
         <label><?php echo $lang["embedslideshow_size"] ?></label>
         <select name="size" class="stdwidth">
         <?php
@@ -35,9 +35,9 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
         ?>
         </select>
         <div class="clearerleft"></div>
-        </div>		
+        </div>      
 
-        <div class="Question">		
+        <div class="Question">      
         <label><?php echo $lang["embedslideshow_transitiontime"] ?></label>
         <select name="transition" class="stdwidth">
         <option value="0"><?php echo $lang["embedslideshow_notransition"] ?></option>
@@ -46,23 +46,23 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
         <?php } ?>
         </select>
         <div class="clearerleft"></div>
-        </div>	
+        </div>  
 
-        <div class="Question">		
+        <div class="Question">      
         <label><?php echo $lang["embedslideshow_maximise_option"] ?></label>
         <input type="checkbox" value="1" name="maximise" <?php if (isset($_POST["maximise"]) && $_POST["maximise"]=="1") { ?>checked<?php } ?>>
         <div class="clearerleft"></div>
-        </div>	
+        </div>  
 
         <?php 
         global $embedslideshow_textfield;
         if($embedslideshow_textfield) 
             {?>
-            <div class="Question">		
+            <div class="Question">      
             <label><?php echo $lang['embedslideshow_textfield'] ?></label>
             <input type="checkbox" value="1" name="showtext" <?php if (isset($_POST["showtext"]) && $_POST["showtext"]=="1") { ?>checked<?php } ?>>
             <div class="clearerleft"></div>
-            </div>	<?php 
+            </div>  <?php 
             } ?>
 
         <div class="QuestionSubmit" style="padding-top:0;margin-top:0;">
@@ -83,7 +83,7 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
             if ($size["id"]==getval("size","")) {break;}
             }
         
-        # Slideshow size is max of height/width so that all images will fit within the slideshow area (for default installs height/width is the same anyway though)	
+        # Slideshow size is max of height/width so that all images will fit within the slideshow area (for default installs height/width is the same anyway though) 
         $width=max($size["width"],$size["height"]);
         $height=$width;
 
@@ -187,13 +187,13 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
             );
             }
         ?>
-        <div class="Question">		
+        <div class="Question">      
         <label><?php echo $lang["slideshowhtml"] ?></label>
         <textarea style="width:535px;height:120px;"><?php echo htmlspecialchars($embed); ?></textarea>
         <div class="clearerleft"></div>
         </div>
 
-        <div class="Question">		
+        <div class="Question">      
         <label><?php echo $lang["embedslideshow_directlink"] ?></label>
         <?php
         $embedslideshow_src_url = generateURL(
@@ -211,7 +211,7 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
         <div class="clearerleft"></div>
         </div>
                 
-        <div class="Question">		
+        <div class="Question">      
         <label><?php echo $lang["slideshowpreview"] ?></label>
             <div class="Fixed">
             <?php echo $embed ?>

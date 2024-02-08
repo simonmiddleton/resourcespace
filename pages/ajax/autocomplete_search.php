@@ -21,19 +21,19 @@ array_pop($s);$otherwords=join(" ",$s);
 ?>[<?php
 
 if (strlen($last)>=2) # Activate when last entered keyword >=3 chars long
-	{
-	?>
-	<?php
-	$keywords=get_suggested_keywords($last,$ref);
-	for ($n=0;$n<count($keywords);$n++)
-		{
-		if ($n>0) {echo ", ";}
-		?>
-		"<?php echo (($otherwords!="")?htmlspecialchars($otherwords) . " ":"") . htmlspecialchars($keywords[$n]) ?>"
-		<?php
-		}
-	?>
-	<?php
-	}
+    {
+    ?>
+    <?php
+    $keywords=get_suggested_keywords($last,$ref);
+    for ($n=0;$n<count($keywords);$n++)
+        {
+        if ($n>0) {echo ", ";}
+        ?>
+        "<?php echo (($otherwords!="")?htmlspecialchars($otherwords) . " ":"") . htmlspecialchars($keywords[$n]) ?>"
+        <?php
+        }
+    ?>
+    <?php
+    }
 ?>
 ]

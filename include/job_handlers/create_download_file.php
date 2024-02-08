@@ -13,13 +13,13 @@ $job_data["url"] - [optional] URL to send to the user
 
 If a file is to be created for only a specific user to download you can create a random string e.g. $randomstring and set the path and url for the job as below:-
 
-	$job_data["outputfile"] = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randomstring . $scramble_key) . ".<file extension here>";
-	$job_data["url"]=$baseurl . "/pages/download.php?userfile=" . $ref . "_" . $randomstring . ".<file extension here>;
-	
+    $job_data["outputfile"] = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randomstring . $scramble_key) . ".<file extension here>";
+    $job_data["url"]=$baseurl . "/pages/download.php?userfile=" . $ref . "_" . $randomstring . ".<file extension here>;
+    
 */
 
 include_once dirname(__FILE__) . "/../image_processing.php";
-				
+                
 global $config_windows,$baseurl, $baseurl_short, $offline_job_prefixes;
 $jobsuccess = false;
 $job_cmd_ok = false;
@@ -77,15 +77,15 @@ if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|`)/i", $shell_exec_cmd))
     if(isset($deletebat) && file_exists($shell_exec_cmd))
         {
         unlink($shell_exec_cmd);
-        }		
+        }       
     }
     
 if(!$jobsuccess)
-	{
-	// Job failed, update job queue
-	job_queue_update($jobref,$job_data,STATUS_ERROR);
+    {
+    // Job failed, update job queue
+    job_queue_update($jobref,$job_data,STATUS_ERROR);
     $message=$job_failure_text!=""?$job_failure_text:$lang["download_file_creation_failed"]  . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";
     $url=$baseurl_short . "?r=" . $job_data["resource"];
     message_add($job["user"],$message,$url,0);
-	}
-		
+    }
+        

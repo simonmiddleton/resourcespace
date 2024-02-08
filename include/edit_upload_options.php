@@ -1,21 +1,21 @@
 <?php
 $on_upload = ($pagename ==  "upload_batch");
-if(!hook("replaceuploadoptions")):	
+if(!hook("replaceuploadoptions")):  
 if ($on_upload || (isset($ref) && $ref<0))
-	{
-	if($show_status_and_access_on_upload && !$on_upload){?></div><!-- end of previous collapsing section --> <?php }
-	if($tabs_on_edit && !$on_upload)
-		{
-		?><h1><?php  echo htmlspecialchars($lang["upload-options"])  ?></h1>
-		<div id="UploadOptionsSection">
-		<?php
-		}
-	elseif(!$on_upload)
-		{		
-		?><h2 class="CollapsibleSectionHead"><?php  echo htmlspecialchars($lang["upload-options"])  ?></h2>
-		<div class="CollapsibleSection" id="UploadOptionsSection">
-		<?php
-		}
+    {
+    if($show_status_and_access_on_upload && !$on_upload){?></div><!-- end of previous collapsing section --> <?php }
+    if($tabs_on_edit && !$on_upload)
+        {
+        ?><h1><?php  echo htmlspecialchars($lang["upload-options"])  ?></h1>
+        <div id="UploadOptionsSection">
+        <?php
+        }
+    elseif(!$on_upload)
+        {       
+        ?><h2 class="CollapsibleSectionHead"><?php  echo htmlspecialchars($lang["upload-options"])  ?></h2>
+        <div class="CollapsibleSection" id="UploadOptionsSection">
+        <?php
+        }
 
     if($on_upload && $upload_then_edit && $resource_type_force_selection)
         {
@@ -61,9 +61,9 @@ if ($on_upload || (isset($ref) && $ref<0))
         <?php
         }
 
-	if($on_upload || !$embedded_data_user_select)
-	    {
-	    if ($metadata_read)
+    if($on_upload || !$embedded_data_user_select)
+        {
+        if ($metadata_read)
             {
             // Show option to prevent extraction of exif data
             ?>
@@ -74,21 +74,21 @@ if ($on_upload || (isset($ref) && $ref<0))
 <?php
             }
         elseif ($no_metadata_read_default) 
-		    {
+            {
             // Confusing, set the value to null so that metadata will be extracted
             ?>
             <input type=hidden id="no_exif" name="no_exif" value="">
 <?php
             } 
-	     else
+         else
             {
             // Set the value to no so that metadata will be extracted
             ?>
             <input type=hidden id="no_exif" name="no_exif" value="no">
 <?php
             } 
-	    }
-	if($enable_related_resources && $relate_on_upload && ($on_upload || ($ref<0 && !$multiple)) && !$external_upload) # When uploading
+        }
+    if($enable_related_resources && $relate_on_upload && ($on_upload || ($ref<0 && !$multiple)) && !$external_upload) # When uploading
         {
         ?>
         <div class="Question" id="question_related">
@@ -98,7 +98,7 @@ if ($on_upload || (isset($ref) && $ref<0))
         </div><?php
         }
 
-	if (getval("single","")=="" || $on_upload)
+    if (getval("single","")=="" || $on_upload)
         {
         $non_col_options=0;
         # Add Resource Batch: specify default content - also ask which collection to add the resource to.
@@ -154,7 +154,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                         if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="Default Collection" && $list[$n]['user']==$userref))
                             { if ($list[$n]["ref"]==$usercollection) {$currentfound=true;} 
                             ?>
-                            <option value="<?php echo $list[$n]["ref"]?>" <?php if ($list[$n]['ref']==$collection_add) {?> 	selected<?php } ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
+                            <option value="<?php echo $list[$n]["ref"]?>" <?php if ($list[$n]['ref']==$collection_add) {?>  selected<?php } ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
                             <?php
                             }
                         }
@@ -200,9 +200,9 @@ if ($on_upload || (isset($ref) && $ref<0))
             </script>
             <?php
             } // end enable_add_collection_on_upload
-		}
-	hook("extrauploadoptions");
-	}
+        }
+    hook("extrauploadoptions");
+    }
 
 if($on_upload)
     {

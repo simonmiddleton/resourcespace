@@ -221,7 +221,7 @@ if(
             $resulttext=$lang["changessaved"];
             }
         }
-	else
+    else
         {
         // No edit access, save the proposed changes
         $save_errors=save_proposed_changes($ref);
@@ -472,11 +472,11 @@ if(!$editaccess)
             metadata_field_view_access($proposefields[$n]["ref"])
             )
             )
-            {	
+            {   
             $fieldcount++;
             propose_changes_display_field($n, $proposefields[$n]);
             }
-        }	
+        }   
 
     // Let admin know there are no proposed changes anymore for this resources
     // Can happen when another admin already reviewed the changes.
@@ -557,7 +557,7 @@ function UpdateProposals(checkbox, fieldref)
         {
         jQuery('#field_' + fieldref).prop('disabled',false); 
         jQuery('#propose_change_' + fieldref).prop('disabled',false);
-        checkprefix="input[id^=" + fieldref + "_]";		
+        checkprefix="input[id^=" + fieldref + "_]";     
         jQuery(checkprefix).prop('disabled',false); // Enable checkboxes
         }
     else

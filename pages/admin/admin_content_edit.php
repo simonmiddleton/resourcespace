@@ -54,7 +54,7 @@ if(($save != '') && getval('langswitch', '') == '' && $html_validation === true 
             {
             redirect($baseurl_short . "pages/admin/admin_content_edit.php?page=". urlencode($page) . "&name=" . urlencode($name) . "&offset=" . urlencode($offset) . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) );
             }
-        }	
+        }   
     if(getval('returntolist', '') != '')
         {
         redirect($baseurl_short . "pages/admin/admin_content.php?nc=" . time() . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) . "&offset=" . urlencode($offset) );
@@ -88,15 +88,15 @@ $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
         'href'  => $baseurl_short . "pages/admin/admin_home.php",
-		'menu' =>  true
+        'menu' =>  true
     ),
     array(
         'title' => $lang["managecontent"],
-		'href'  => $baseurl_short . "pages/admin/admin_content.php?nc=" . time() . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) . "&offset=" . urlencode($offset)
+        'href'  => $baseurl_short . "pages/admin/admin_content.php?nc=" . time() . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) . "&offset=" . urlencode($offset)
     ),
-	array(
+    array(
         'title' => $lang["editcontent"]
-	)
+    )
 );
 
 renderBreadcrumbs($links_trail);
@@ -254,7 +254,7 @@ if($html_validation !== true && $html_validation !== '')
                 <div class="clearerleft"></div>
             </div>
         <?php 
-		}
+        }
 
         # add ability to delete custom page/name entries
         if($custom == 1 && $page != 'help')
@@ -311,5 +311,5 @@ jQuery('#checkhtml').click(function(e) {
     e.preventDefault();
 });
 </script>
-<?php		
+<?php	  
 include "../../include/footer.php";

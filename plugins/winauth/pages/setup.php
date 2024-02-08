@@ -8,9 +8,9 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 
 $plugin_name = 'winauth';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 $plugin_page_heading = $lang['winauth_title'];
-	
+    
 
 $page_def[] = config_add_html($lang['winauth_info']);
 $page_def[] = config_add_boolean_select('winauth_enable',$lang['winauth_enable']);

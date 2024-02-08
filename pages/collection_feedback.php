@@ -23,27 +23,27 @@ if (count($comments)==0 && $feedback_resource_select==false) {$errors=$lang["fee
 
 $comment="";
 if (getval("save","")!="" && enforcePostRequest(false))
-	{
-	# Save comment
-	$comment=trim(getval("comment",""));
-	$saveerrors=send_collection_feedback($collection,$comment);	
-	if(is_array($saveerrors))
-		{
-		foreach($saveerrors as $saveerror)
-			{
-			if($errors=="")
-				{$errors = $saveerror;}
-			else
-				{$errors.="<br /><br /> " . $saveerror;}
-			}
-		}
-	else
-		{
-		# Stay on this page for external access users (no access to search)
-		refresh_collection_frame();
-		$done=true;
-		}
-	}
+    {
+    # Save comment
+    $comment=trim(getval("comment",""));
+    $saveerrors=send_collection_feedback($collection,$comment); 
+    if(is_array($saveerrors))
+        {
+        foreach($saveerrors as $saveerror)
+            {
+            if($errors=="")
+                {$errors = $saveerror;}
+            else
+                {$errors.="<br /><br /> " . $saveerror;}
+            }
+        }
+    else
+        {
+        # Stay on this page for external access users (no access to search)
+        refresh_collection_frame();
+        $done=true;
+        }
+    }
 
 $headerinsert.="<script src=\"../lib/lightbox/js/lightbox.min.js\" type=\"text/javascript\"></script>";
 $headerinsert.="<link type=\"text/css\" href=\"../lib/lightbox/css/lightbox.min.css?css_reload_key=" . $css_reload_key . "\" rel=\"stylesheet\">";
@@ -53,9 +53,9 @@ $headerinsert.="<link type=\"text/css\" href=\"../lib/lightbox/css/lightbox.min.
 include "../include/header.php";
 
 if ($errors!="")
-	{
-	echo "<script>alert('" .  str_replace(array("<br />","<br/>","<br />"),"\\n\\n",$errors) . "');</script>";
-	}
+    {
+    echo "<script>alert('" .  str_replace(array("<br />","<br/>","<br />"),"\\n\\n",$errors) . "');</script>";
+    }
 ?>
 
 
@@ -71,73 +71,73 @@ if ($errors!="")
 
 <p><a class="downloadcollection" href="<?php echo $baseurl_short?>pages/collection_download.php?collection=<?php echo urlencode($collection)?>&k=<?php echo urlencode($k)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["download_collection"])?></a></p>
 <?php if ($feedback_resource_select)
-	{
-	?><h2><?php echo htmlspecialchars($lang["selectedresources"])?>:</h2><?php
-	# Show thumbnails and allow the user to select resources.
-	$result=do_search("!collection" . $collection,"","resourceid",0,-1,"desc");
-	for ($n=0;$n<count($result);$n++)
-		{
-		$ref=$result[$n]["ref"];
-		$access=get_resource_access($ref);
-		$use_watermark=check_use_watermark();
-		
-		$title=$ref . " : " . htmlspecialchars(tidy_trim (i18n_get_translated ($result[$n]["field".$view_title_field]),60));
-		if (isset($collection_feedback_display_field)) {
-			$displaytitle=htmlspecialchars(get_data_by_field($ref,$collection_feedback_display_field));
-			}
-		else {$displaytitle=$title;}
-		?>
-		<!--Resource Panel-->
-		<div class="ResourcePanelShell" id="ResourceShell<?php echo urlencode($ref)?>">
-		<div class="ResourcePanel">
-		
-		<table border="0" class="ResourceAlign<?php if (in_array($result[$n]["resource_type"],$videotypes)) { ?> IconVideo<?php } ?>"><tr><td>
-		
-		<?php if ($result[$n]["has_image"]==1) {
-			$path=get_resource_path($ref,true,"scr",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
-			if (file_exists($path))
-				{
-				# Use 'scr' path
-				$path=get_resource_path ($ref, false,"scr",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
-				}
-			else if (!file_exists($path))
-				{
-				# Attempt original file if jpeg
-				$path=get_resource_path ($ref, false,"",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
-				}
-		
-		?>
-		<a class="lightbox-feedback" href="<?php echo escape($path)?>" title="<?php echo escape($displaytitle) ?>">
-			<img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-			width="<?php echo (int) $result[$n]["thumb_width"]?>" height="<?php echo (int) $result[$n]["thumb_height"]?>" src="<?php echo escape(get_resource_path($ref,false,"thm",false,$result[$n]["preview_extension"],-1,1,(checkperm("w") || ($k!="" && $watermark !== "")) && $access==1,$result[$n]["file_modified"]))?>" class="ImageBorder">
-		</a>
-		<?php 
-			} 
-		else 
-			{ 
-			?>		
-			<img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-			 border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>"/>
-			<?php 
-			} 
-		?>
+    {
+    ?><h2><?php echo htmlspecialchars($lang["selectedresources"])?>:</h2><?php
+    # Show thumbnails and allow the user to select resources.
+    $result=do_search("!collection" . $collection,"","resourceid",0,-1,"desc");
+    for ($n=0;$n<count($result);$n++)
+        {
+        $ref=$result[$n]["ref"];
+        $access=get_resource_access($ref);
+        $use_watermark=check_use_watermark();
+        
+        $title=$ref . " : " . htmlspecialchars(tidy_trim (i18n_get_translated ($result[$n]["field".$view_title_field]),60));
+        if (isset($collection_feedback_display_field)) {
+            $displaytitle=htmlspecialchars(get_data_by_field($ref,$collection_feedback_display_field));
+            }
+        else {$displaytitle=$title;}
+        ?>
+        <!--Resource Panel-->
+        <div class="ResourcePanelShell" id="ResourceShell<?php echo urlencode($ref)?>">
+        <div class="ResourcePanel">
+        
+        <table border="0" class="ResourceAlign<?php if (in_array($result[$n]["resource_type"],$videotypes)) { ?> IconVideo<?php } ?>"><tr><td>
+        
+        <?php if ($result[$n]["has_image"]==1) {
+            $path=get_resource_path($ref,true,"scr",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
+            if (file_exists($path))
+                {
+                # Use 'scr' path
+                $path=get_resource_path ($ref, false,"scr",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
+                }
+            else if (!file_exists($path))
+                {
+                # Attempt original file if jpeg
+                $path=get_resource_path ($ref, false,"",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
+                }
+        
+        ?>
+        <a class="lightbox-feedback" href="<?php echo escape($path)?>" title="<?php echo escape($displaytitle) ?>">
+            <img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
+            width="<?php echo (int) $result[$n]["thumb_width"]?>" height="<?php echo (int) $result[$n]["thumb_height"]?>" src="<?php echo escape(get_resource_path($ref,false,"thm",false,$result[$n]["preview_extension"],-1,1,(checkperm("w") || ($k!="" && $watermark !== "")) && $access==1,$result[$n]["file_modified"]))?>" class="ImageBorder">
+        </a>
+        <?php 
+            } 
+        else 
+            { 
+            ?>      
+            <img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
+             border=0 src="../gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>"/>
+            <?php 
+            } 
+        ?>
 
-		
-		</td>
-		</tr></table>
-		<span class="ResourceSelect"><input type="checkbox" name="select_<?php echo urlencode($ref) ?>" value="yes"></span>
+        
+        </td>
+        </tr></table>
+        <span class="ResourceSelect"><input type="checkbox" name="select_<?php echo urlencode($ref) ?>" value="yes"></span>
 
-		<div class="ResourcePanelInfo"><?php echo htmlspecialchars($displaytitle) ?>&nbsp;</div>
-			
-		<div class="clearer"> </div>
-		</div>
-		
-		</div>
-		
-		<?php
-		}
-	?><div class="clearer"> </div> <?php
-	}
+        <div class="ResourcePanelInfo"><?php echo htmlspecialchars($displaytitle) ?>&nbsp;</div>
+            
+        <div class="clearer"> </div>
+        </div>
+        
+        </div>
+        
+        <?php
+        }
+    ?><div class="clearer"> </div> <?php
+    }
 ?>
 
 <div class="Question">
@@ -147,30 +147,30 @@ if ($errors!="")
 </div>
 
 <?php if (!isset($userfullname))
-	{
-	# For external users, ask for their name/e-mail in case this has been passed to several users.
-	?>
-	<div class="Question">
-	<label for="name"><?php echo htmlspecialchars($lang["yourname"])?></label><input type="text" class="stdwidth" name="name" id="name" value="<?php echo escape(getval("name","")) ?>">
-	<div class="clearerleft"> </div>
-	</div>
-	<div class="Question">
-	<label for="email"><?php echo htmlspecialchars($lang["youremailaddress"]); ?> *</label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo escape(getval("email","")) ?>">
-	<div class="clearerleft"> </div>
-	</div>
+    {
+    # For external users, ask for their name/e-mail in case this has been passed to several users.
+    ?>
+    <div class="Question">
+    <label for="name"><?php echo htmlspecialchars($lang["yourname"])?></label><input type="text" class="stdwidth" name="name" id="name" value="<?php echo escape(getval("name","")) ?>">
+    <div class="clearerleft"> </div>
+    </div>
+    <div class="Question">
+    <label for="email"><?php echo htmlspecialchars($lang["youremailaddress"]); ?> *</label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo escape(getval("email","")) ?>">
+    <div class="clearerleft"> </div>
+    </div>
 <?php
-	}
+    }
 ?>
 
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["send"])?>&nbsp;&nbsp;" />
 </div>
 </form>
 <?php } ?>
 </div>
 <?php if ($feedback_resource_select)
-	{
-	addLightBox('.lightbox-feedback');
-	}
+    {
+    addLightBox('.lightbox-feedback');
+    }
 include "../include/footer.php";
 ?>

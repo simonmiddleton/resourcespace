@@ -6,7 +6,7 @@ function HookWinauthAllPreheaderoutput()
     {
     global $winauth_enable,$allow_password_change, $delete_requires_password;
    
-	if ($winauth_enable && isset($_COOKIE["winauth_user"]))
+    if ($winauth_enable && isset($_COOKIE["winauth_user"]))
         {
         // Disable password change and requirement to re-enter password
         $allow_password_change=false;

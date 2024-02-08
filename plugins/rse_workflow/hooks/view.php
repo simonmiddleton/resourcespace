@@ -24,13 +24,13 @@ function HookRse_workflowViewPageevaluation()
             // Check if resource status has already been changed between form being loaded and submitted
             $resource_status_check_name = "resource_status_check_" . $workflowaction["ref"];
             $resource_status_check = getval($resource_status_check_name,"");
-			if($resource_status_check != "" && $resource_status_check != $resource["archive"])
-				{
-				$errors["status"] = $lang["status"] . ': ' . $lang["save-conflict-error"];
-				echo "<div class=\"PageInformal\">" . $lang["error"] . ": " . $lang["status"] . " - " . $lang["save-conflict-error"] . "</div>";
-				}
-			else
-				{
+            if($resource_status_check != "" && $resource_status_check != $resource["archive"])
+                {
+                $errors["status"] = $lang["status"] . ': ' . $lang["save-conflict-error"];
+                echo "<div class=\"PageInformal\">" . $lang["error"] . ": " . $lang["status"] . " - " . $lang["save-conflict-error"] . "</div>";
+                }
+            else
+                {
                 $validstates = explode(',', $workflowaction['statusfrom']);
                 $edit_access = get_edit_access($ref,$resource['archive'], $resource);
     
@@ -158,9 +158,9 @@ function HookRse_workflowViewAdditionaldownloadtabs()
              <tr class="DownloadDBlend">
                 <td><?php echo i18n_get_translated($validaction["text"]); if($show_more_link) { ?><a href="#" id="more_link_<?php echo $validaction["ref"]; ?>" onClick="open_notes(<?php echo $validaction["ref"]; ?>);" style="float: right;"><?php echo $lang['rse_workflow_link_open']; ?></a><?php } ?></td>
                 <td>
-					<form action="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&curpos=<?php echo urlencode($curpos)?>&workflowaction=<?php echo urlencode($validaction["ref"])?>" 
+                    <form action="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&curpos=<?php echo urlencode($curpos)?>&workflowaction=<?php echo urlencode($validaction["ref"])?>" 
                           id="resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>">
-					<input id='resource_status_checksum_<?php echo $validaction["ref"] ?>' name='resource_status_check_<?php echo $validaction["ref"] ?>' type='hidden' value='<?php echo $resource["archive"]; ?>'>
+                    <input id='resource_status_checksum_<?php echo $validaction["ref"] ?>' name='resource_status_check_<?php echo $validaction["ref"] ?>' type='hidden' value='<?php echo $resource["archive"]; ?>'>
                     <?php
                 if(isset($modal) && $modal=="true")
                     {
@@ -169,15 +169,15 @@ function HookRse_workflowViewAdditionaldownloadtabs()
                     <?php
                     }
                     ?>
-					<input type="hidden" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] ?>" value="true" >
-					<input type="hidden" name="more_workflow_action_<?php echo $validaction["ref"] ?>" id="more_workflow_action_<?php echo $validaction["ref"] ?>" value="" >       
-					<input type="submit" name="rse_workflow_action_submit_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_submit_<?php echo $validaction["ref"]?>" value="&nbsp;<?php echo i18n_get_translated($validaction["buttontext"]) ?>&nbsp;" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>'), true);" >
-					<?php
+                    <input type="hidden" name="rse_workflow_action_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_<?php echo $validaction["ref"] ?>" value="true" >
+                    <input type="hidden" name="more_workflow_action_<?php echo $validaction["ref"] ?>" id="more_workflow_action_<?php echo $validaction["ref"] ?>" value="" >       
+                    <input type="submit" name="rse_workflow_action_submit_<?php echo $validaction["ref"] ?>" id="rse_workflow_action_submit_<?php echo $validaction["ref"]?>" value="&nbsp;<?php echo i18n_get_translated($validaction["buttontext"]) ?>&nbsp;" onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>'), true);" >
+                    <?php
                     generateFormToken("resource_{$ref}_workflowaction{$validaction['ref']}");
                     hook("rse_wf_formend","",array($resource["archive"],$validaction["statusto"]));
                     ?>
-				</form>
-				</td>
+                </form>
+                </td>
             </tr>                               
             
             

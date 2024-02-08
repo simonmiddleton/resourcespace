@@ -149,7 +149,14 @@ if($submitdashtile && enforcePostRequest(false))
 
         if($promoted_image)
             {
-            $buildurl = str_replace("promimg=".$buildstring["promimg"],"promimg=".$promoted_image,$buildurl);
+            if (isset($buildstring["promimg"]))
+                {
+                $buildurl = str_replace("promimg=".$buildstring["promimg"],"promimg=".$promoted_image,$buildurl);
+                }
+            else
+                {
+                $buildurl .= "&promimg=" . $promoted_image;
+                }
             }
 
         if(isset($buildstring['tlsize']))
@@ -611,7 +618,7 @@ if('' != $tile_type && $tile_type !== "conf")
         }
 
     // Show promoted resource selector
-    if($promoted_resource && allowPromotedResources($tile_type) && !hook('replace_promoted_resource_selector'))
+    if(($promoted_resource || 'fcthm' == $tile_type) && allowPromotedResources($tile_type) && !hook('replace_promoted_resource_selector'))
         {
         $resources = array();
 
@@ -655,6 +662,9 @@ if('' != $tile_type && $tile_type !== "conf")
                 $promoted_resource = (!empty($promoted_resource) ? $promoted_resource[0]["ref"] : 0);
                 }
             }
+
+        if (count($resources) > 0)
+            {
             ?>
         <div class="Question" id="promotedresource">
             <label for="promoted_image"><?php echo $lang['dashtileimage']; ?></label>
@@ -697,6 +707,7 @@ if('' != $tile_type && $tile_type !== "conf")
             });
         </script>
         <?php
+            }
         }
     hook('beforedashtileadmin');
     if(checkPermission_dashadmin())
@@ -796,7 +807,7 @@ if('' != $tile_type && $tile_type !== "conf")
             }
         <?php
         if($tile_type=="srch")
-            {?>	
+            {?> 
             var count = jQuery("#resource_count").is(':checked');
             if(count)
                 {count=1;}

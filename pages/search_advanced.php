@@ -550,14 +550,14 @@ if (!hook('advsearchallfields')) { ?>
 <?php if (in_array("FeaturedCollections",$selectedtypes))
         {?>
         style="display: none;"
-<?php 	} ?>>
+<?php   } ?>>
 <?php echo htmlspecialchars($lang["resourcetype-global_fields"]) ; ?>
 </h1>
 <div class="AdvancedSection" id="AdvancedSearchGlobalSection"
 <?php if (in_array("FeaturedCollections",$selectedtypes))
         {?>
         style="display: none;"
-<?php 	} ?>>
+<?php   } ?>>
 
 <?php if (!hook('advsearchresid')) { ?>
 <!-- Search for resource ID(s) -->

@@ -1,7 +1,7 @@
 <?php
 function HookTms_linkEditEditbeforesectionhead()
-	{
-	global $lang,$baseurl,$tms_link_object_id_field, $ref,$resource,$tms_confirm_upload,$tms_link_resource_types;
+    {
+    global $lang,$baseurl,$tms_link_object_id_field, $ref,$resource,$tms_confirm_upload,$tms_link_resource_types;
 
     if($ref > 0)
         {
@@ -24,12 +24,12 @@ function HookTms_linkEditEditbeforesectionhead()
             $lang["tms_link_uid_field"]);
         $input_identifier = "field_{$module_uid}_{$module['rs_uid_field']}";
         ?>
-		<div class="Question">
-			<label for="<?php echo $input_identifier; ?>"><?php echo $field_label; ?></label>
-			<input id="<?php echo $input_identifier; ?>" name="<?php echo $input_identifier; ?>" type="text" value="<?php echo htmlspecialchars(get_data_by_field($ref, $module['rs_uid_field'])); ?>">
-			<div class="clearerleft"></div>
-		</div>
-		<?php
+        <div class="Question">
+            <label for="<?php echo $input_identifier; ?>"><?php echo $field_label; ?></label>
+            <input id="<?php echo $input_identifier; ?>" name="<?php echo $input_identifier; ?>" type="text" value="<?php echo htmlspecialchars(get_data_by_field($ref, $module['rs_uid_field'])); ?>">
+            <div class="clearerleft"></div>
+        </div>
+        <?php
         }
 
     if(!empty($resource_type_allowed) && isset($tms_confirm_upload) && $tms_confirm_upload)
@@ -42,11 +42,11 @@ function HookTms_linkEditEditbeforesectionhead()
         </div>
         <?php
         }
-	}
-	
+    }
+    
 function HookTMS_linkEditEdithidefield($field)
-	{
-	global $tms_link_object_id_field,$ref,$resource,$tms_link_resource_types;
+    {
+    global $tms_link_object_id_field,$ref,$resource,$tms_link_resource_types;
 
     $field_ref_ok = false;
     $resource_type_allowed = false;
@@ -71,12 +71,12 @@ function HookTMS_linkEditEdithidefield($field)
         }
 
     return false;
-	}
+    }
 
 
 function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
-	{
-	global $ref,$val,$tms_link_object_id_field,$resource,$tms_link_resource_types,$lang;
+    {
+    global $ref,$val,$tms_link_object_id_field,$resource,$tms_link_resource_types,$lang;
 
     if(!tms_link_is_rs_uid_field($fieldsitem['ref']))
         {
@@ -92,17 +92,17 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
 
         $input_identifier = ($ref < 0) ? "field_{$module_uid}_{$module['rs_uid_field']}" : "field_{$module['rs_uid_field']}";
         $tms_form_post_id = getval($input_identifier, 0, true);
-		if($tms_form_post_id == 0)
-			{
-			continue;
-			}
+        if($tms_form_post_id == 0)
+            {
+            continue;
+            }
 
-		$tms_object_id = intval($tms_form_post_id);
+        $tms_object_id = intval($tms_form_post_id);
         
         global $tmsdata;
-		$tmsdata = tms_link_get_tms_data('', $tms_object_id, '', $module['module_name']);
+        $tmsdata = tms_link_get_tms_data('', $tms_object_id, '', $module['module_name']);
 
-		// Make sure we actually do save this data, even if we return an error
+        // Make sure we actually do save this data, even if we return an error
         $result_update_field = update_field($ref, $module['rs_uid_field'], $tms_object_id);
         if ($result_update_field !== true)
             {
@@ -110,31 +110,31 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
             }
         
         if(!is_array($tmsdata) && $ref < 0)
-			{
-			// We can't get any data from TMS for this new resource. Need to show warning if user has not already accepted this
-			if(getval("tms_confirm_upload","")=="")
-				{
-				global $tms_confirm_upload, $lang;
-				$tms_confirm_upload=true;
-				$error=$lang["tms_link_upload_nodata"] . $tms_form_post_id . " " . $lang["tms_link_confirm_upload_nodata"];
+            {
+            // We can't get any data from TMS for this new resource. Need to show warning if user has not already accepted this
+            if(getval("tms_confirm_upload","")=="")
+                {
+                global $tms_confirm_upload, $lang;
+                $tms_confirm_upload=true;
+                $error=$lang["tms_link_upload_nodata"] . $tms_form_post_id . " " . $lang["tms_link_confirm_upload_nodata"];
 
-				return $error;						
-				}
-			}
-		else
-			{
-			global $tms_link_import;
+                return $error;                      
+                }
+            }
+        else
+            {
+            global $tms_link_import;
 
-			$tms_link_import=true;
-			}
+            $tms_link_import=true;
+            }
         }
 
     return false;
-	}
-	
+    }
+    
 function HookTms_linkEditSaveextraresourcedata($list)
-	{
-	// Multi edit - set flag to update TMS data if necessary
+    {
+    // Multi edit - set flag to update TMS data if necessary
     foreach(tms_link_get_modules_mappings() as $module)
         {
         $tms_object_id = getval("field_{$module['rs_uid_field']}", 0, true);
@@ -156,10 +156,10 @@ function HookTms_linkEditSaveextraresourcedata($list)
         $tms_link_import = true;
         $tmsupdatelist = $list;
         }
-	}	
-	
+    }   
+    
 function HookTms_linkEditAftersaveresourcedata()
-	{
+    {
     global $tms_link_import;
 
     if(isset($tms_link_import) && !$tms_link_import)
@@ -204,4 +204,4 @@ function HookTms_linkEditAftersaveresourcedata()
                 }
             }
         }
-	}
+    }

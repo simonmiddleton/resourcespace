@@ -91,7 +91,7 @@ if ($go!="")
 
     # Check access permissions for this new resource, if an external user.
     if ($k!="" && !$internal_share_access && !check_access_key($ref, $k)) {$ref = $origref;} # Cancel the move.
-	}
+    }
 
 hook("chgffmpegpreviewext", "", array($ref));
 
@@ -189,12 +189,12 @@ hook("beforepermissionscheck");
 
 # check permissions
 if($access == 2) 
-	{
-	if(isset($anonymous_login) && isset($username) && $username==$anonymous_login)
-		{
+    {
+    if(isset($anonymous_login) && isset($username) && $username==$anonymous_login)
+        {
         redirect('login.php');
         exit();
-		}
+        }
     $error = $lang['error-permissiondenied'];
     if(getval("ajax","") != "")
         {
@@ -207,7 +207,7 @@ if($access == 2)
         include "../include/footer.php";
         }
     exit();
-	}
+    }
 
 hook("afterpermissionscheck");
 debug(sprintf('Viewing resource #%s (access: %s)', $resource['ref'], $access));
@@ -219,18 +219,18 @@ debug(sprintf('$is_template = %s', json_encode($is_template)));
 $title_field=$view_title_field; 
 # If this is a metadata template and we're using field data, change title_field to the metadata template title field
 if (isset($metadata_template_resource_type) && ($resource["resource_type"]==$metadata_template_resource_type))
-	{
-	if (isset($metadata_template_title_field)){
-		$title_field=$metadata_template_title_field;
-		}
-	else {$default_to_standard_title=true;}	
-	}
+    {
+    if (isset($metadata_template_title_field)){
+        $title_field=$metadata_template_title_field;
+        }
+    else {$default_to_standard_title=true;} 
+    }
 
 # If requested, refresh the collection frame (for redirects from saves)
 if (getval("refreshcollectionframe","")!="")
-	{
-	refresh_collection_frame();
-	}
+    {
+    refresh_collection_frame();
+    }
 
 # Update the hitcounts for the search nodes (if search specified)
 # (important we fetch directly from $_GET and not from a cookie
@@ -248,19 +248,19 @@ if ($log_resource_views) {resource_log($ref,'v',0);}
 # downloading a file from iOS should open a new window/tab to prevent a download loop
 $iOS_save=false;
 if (isset($_SERVER['HTTP_USER_AGENT']))
-	{
-	$iOS_save=((stripos($_SERVER['HTTP_USER_AGENT'],"iPod")!==false || stripos($_SERVER['HTTP_USER_AGENT'],"iPhone")!==false || stripos($_SERVER['HTTP_USER_AGENT'],"iPad")!==false) ? true : false);
-	}
+    {
+    $iOS_save=((stripos($_SERVER['HTTP_USER_AGENT'],"iPod")!==false || stripos($_SERVER['HTTP_USER_AGENT'],"iPhone")!==false || stripos($_SERVER['HTTP_USER_AGENT'],"iPad")!==false) ? true : false);
+    }
 
 # Show the header/sidebar
 include "../include/header.php";
 
 if ($metadata_report && isset($exiftool_path))
-	{
-	?>
-	<script src="<?php echo $baseurl ?>/lib/js/metadata_report.js?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
-	<?php
-	}
+    {
+    ?>
+    <script src="<?php echo $baseurl ?>/lib/js/metadata_report.js?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
+    <?php
+    }
 
 if(!$save_as)
     {
@@ -274,31 +274,31 @@ if(!$save_as)
     }
 
 if($resource_contact_link && ($k=="" || $internal_share_access))
-		{?>
-		<script>
-		function showContactBox(){
+        {?>
+        <script>
+        function showContactBox(){
 
-				if(jQuery('#contactadminbox').length)
-					{
-					jQuery('#contactadminbox').slideDown();
-					return false;
-					}
+                if(jQuery('#contactadminbox').length)
+                    {
+                    jQuery('#contactadminbox').slideDown();
+                    return false;
+                    }
 
-				jQuery.ajax({
-						type: "GET",
-						url: baseurl_short+"pages/ajax/contactadmin.php?ref="+<?php echo $ref ?>+"&insert=true&ajax=true",
-						success: function(html){
-								jQuery('#RecordDownload li:last-child').after(html);
-								document.getElementById('messagetext').focus();
-								},
-						error: function(XMLHttpRequest, textStatus, errorThrown) {
-							alert('<?php echo escape($lang["error"]) ?>\n' + textStatus);
-							}
-						});
-				}
-		</script>
-		<?php
-		}
+                jQuery.ajax({
+                        type: "GET",
+                        url: baseurl_short+"pages/ajax/contactadmin.php?ref="+<?php echo $ref ?>+"&insert=true&ajax=true",
+                        success: function(html){
+                                jQuery('#RecordDownload li:last-child').after(html);
+                                document.getElementById('messagetext').focus();
+                                },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert('<?php echo escape($lang["error"]) ?>\n' + textStatus);
+                            }
+                        });
+                }
+        </script>
+        <?php
+        }
 
 hook("pageevaluation");
 
@@ -306,17 +306,17 @@ hook("pageevaluation");
 $multi_fields = FALSE;
 # Related resources with tabs need all fields (even the ones from other resource types):
 if(isset($related_type_show_with_data)) {
-	$multi_fields = TRUE;
+    $multi_fields = TRUE;
 }
 
 // Get all fields without checking permissions (for later dependency checking)
 $fields_all=get_resource_field_data($ref,$multi_fields,FALSE,NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
-debug(sprintf('$fields_all = %s', json_encode(array_column($fields_all, 'ref'))));
+debug(sprintf('$fields_all = %s', json_encode(array_column(is_array($fields_all) ? $fields_all : [], 'ref'))));
 
 # Load field data
 $fields=get_resource_field_data($ref,$multi_fields,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
 $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($modified_view_fields){$fields=$modified_view_fields;}
-debug(sprintf('$fields = %s', json_encode(array_column($fields, 'ref'))));
+debug(sprintf('$fields = %s', json_encode(array_column(is_array($fields) ? $fields : [], 'ref'))));
 
 # If no fields were found advise of configuration issue and exit.
 if (!$fields_all || !$fields)
@@ -338,25 +338,25 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
 //Check if we want to use a specified field as a caption below the preview
 if(isset($display_field_below_preview) && is_int($display_field_below_preview))
-	{
-	$df=0;
-	foreach ($fields as $field)
-		{
-		if($field["fref"]==$display_field_below_preview)
-			{
-			$displaycondition=check_view_display_condition($fields,$df,$fields_all);
-			if($displaycondition)
-				{
-				$previewcaption=$fields[$df];
-				// Remove from the array so we don't display it twice
-				unset($fields[$df]);
-				//Reorder array 
-				$fields=array_values($fields);				
-				}
-			}
-		$df++;			
-		}
-	}
+    {
+    $df=0;
+    foreach ($fields as $field)
+        {
+        if($field["fref"]==$display_field_below_preview)
+            {
+            $displaycondition=check_view_display_condition($fields,$df,$fields_all);
+            if($displaycondition)
+                {
+                $previewcaption=$fields[$df];
+                // Remove from the array so we don't display it twice
+                unset($fields[$df]);
+                //Reorder array 
+                $fields=array_values($fields);              
+                }
+            }
+        $df++;          
+        }
+    }
 
 // Add custom CSS for external users: 
 if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
@@ -437,7 +437,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
     if ($view_panels)
         {
         ?>
-        jQuery(document).ready(function () {		
+        jQuery(document).ready(function () {        
 
             let parent_element = jQuery('#<?php echo $modal ? 'modal' : 'CentralSpace'; ?>');
 
@@ -489,10 +489,10 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                     jQuery("#CommentsContainer").load(
                     "../pages/ajax/comments_handler.php?ref=<?php echo $ref;?>", 
                     function() {
-                    if (jQuery.type(jQuery(window.location.hash)[0])!=="undefined")				
+                    if (jQuery.type(jQuery(window.location.hash)[0])!=="undefined")             
                         jQuery(window.location.hash)[0].scrollIntoView();
-                    }						
-                );	
+                    }                       
+                );  
                 }
             });
         });
@@ -509,18 +509,18 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
             if (!hook("renderinnerresourceheader"))
                 {
                 $urlparams= array(
-                    'ref'				=> $ref,
-                    'search'			=> $search,
-                    'order_by'			=> $order_by,
-                    'offset'			=> $offset,
-                    'restypes'			=> $restypes,
-                    'archive'			=> $archive,
-                    'per_page'			=> $per_page,
+                    'ref'               => $ref,
+                    'search'            => $search,
+                    'order_by'          => $order_by,
+                    'offset'            => $offset,
+                    'restypes'          => $restypes,
+                    'archive'           => $archive,
+                    'per_page'          => $per_page,
                     'default_sort_direction' => $default_sort_direction,
-                    'sort'				=> $sort,
-                    'context'			=> $context,
-                    'k'					=> $k,
-                    'curpos'			=> $curpos
+                    'sort'              => $sort,
+                    'context'           => $context,
+                    'k'                 => $k,
+                    'curpos'            => $curpos
                 );
                 debug(sprintf('$urlparams = %s', http_build_query($urlparams)));
 
@@ -567,22 +567,22 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                     }
 
                 else if($modal)
-	                { ?>
-	                <div class="backtoresults">
-		                <?php
+                    { ?>
+                    <div class="backtoresults">
+                        <?php
                         if (!hook("replacemaxlink"))
                             { ?>
-		                    <a href="<?php echo
+                            <a href="<?php echo
                                 generateURL($baseurl . "/pages/view.php",$urlparams) ?>"
                                 onClick="return CentralSpaceLoad(this);"
                                 class="maxLink fa fa-expand"
                                 title="<?php echo escape($lang["maximise"])?>">
                             </a>
-		                    <?php
+                            <?php
                             } ?>
-		                <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]) ?>"></a>
-	                </div>
-	                <?php
+                        <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]) ?>"></a>
+                    </div>
+                    <?php
                     } ?>
 
                 <h1><?php
@@ -677,7 +677,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                 || ($ffmpeg_preview_gif && strtolower((string)$resource["file_extension"]) === 'gif'))
                                 && 
                                 !(isset($resource['is_transcoding']) && $resource['is_transcoding'] !== 0)
-                                )                                
+                                )
                                 {
                                 // Video preview START
                                 # Establish whether it's ok to use original as the preview instead of the "pre" size
@@ -894,9 +894,9 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     $headline=$newHeadline;
                                                     }
 
-		                                        if ($hide_restricted_download_sizes && !$downloadthissize && !checkperm("q"))
+                                                if ($hide_restricted_download_sizes && !$downloadthissize && !checkperm("q"))
                                                     {
-			                                        continue;
+                                                    continue;
                                                     }
 
                                                 if (!hook("replacedownloadspacetableheaders"))
@@ -915,7 +915,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     } # end hook("replacedownloadspacetableheaders")?>
 
                                                 <tr class="DownloadDBlend" id="DownloadBox<?php echo $n?>">
-		                                            <td class="DownloadFileName"><h2><?php echo $headline?></h2><?php
+                                                    <td class="DownloadFileName"><h2><?php echo $headline?></h2><?php
                                                         echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';
 
                                                         if (is_numeric($sizes[$n]["width"]))
@@ -933,8 +933,8 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                         <?php
                                                         } ?>
 
-		                                            <?php add_download_column($ref, $sizes[$n], $downloadthissize); ?>
-		                                        </tr>
+                                                    <?php add_download_column($ref, $sizes[$n], $downloadthissize); ?>
+                                                </tr>
 
                                                 <?php
                                                 if (!hook("previewlinkbar"))
@@ -969,8 +969,8 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
 <?php
                                                         }
                                                     }
-		                                        }
-	                                        }
+                                                }
+                                            }
                                         elseif (strlen((string) $resource["file_extension"])>0 && !($access==1 && $restricted_full_download==false))
                                             {
                                             # Files without multiple download sizes (i.e. no alternative previews generated).
@@ -1161,7 +1161,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                         { ?>
                                                         <a href="<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>">
                                                             <?php echo htmlspecialchars($lang["action-download"])?>
-                                                        </a>				
+                                                        </a>                
                                                         <?php
                                                         }
                                                     else
@@ -1199,7 +1199,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                             {
                                             hook("resourceactionstitle");
 
-                                            if ($resource_contact_link)	
+                                            if ($resource_contact_link) 
                                                 { ?>
                                                 <li>
                                                     <a href="<?php echo $baseurl ?>/pages/ajax/contactadmin.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="showContactBox();return false;" >
@@ -1374,7 +1374,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     }
                                                 }
 
-                                            if ($metadata_download && (checkperm('f*') || $can_see_fields_individually))	
+                                            if ($metadata_download && (checkperm('f*') || $can_see_fields_individually))    
                                                 { ?>
                                                 <li>
                                                     <a href="<?php echo generateurl($baseurl . "/pages/metadata_download.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
@@ -1480,9 +1480,9 @@ $pushedfielddata = get_resource_field_data_batch(array_column($pushed,"ref"),tru
 $allpushedfielddata = get_resource_field_data_batch(array_column($pushed,"ref"),false, ($k != "" && !$internal_share_access));
 
 foreach ($pushed as $pushed_resource)
-	{
-	RenderPushedMetadata($pushed_resource, $pushedfielddata, $allpushedfielddata);
-	}
+    {
+    RenderPushedMetadata($pushed_resource, $pushedfielddata, $allpushedfielddata);
+    }
 
 function RenderPushedMetadata($resource, $field_data, $all_field_data)
     {
@@ -1576,26 +1576,26 @@ if ($comments_resource_enable && ($k=="" || $internal_share_access))
 hook("w2pspawn");
 // include collections listing
 if ($view_resource_collections && !checkperm('b')){ ?>
-	<div id="resourcecollections"></div>
-	<script type="text/javascript">
-	jQuery("#resourcecollections").load('<?php echo $baseurl ?>/pages/resource_collection_list.php?ref=<?php echo urlencode($ref)?>&k=<?php echo urlencode($k)?>'
-	<?php
-	if ($view_panels) {
-	?>
-    	, function() {
+    <div id="resourcecollections"></div>
+    <script type="text/javascript">
+    jQuery("#resourcecollections").load('<?php echo $baseurl ?>/pages/resource_collection_list.php?ref=<?php echo urlencode($ref)?>&k=<?php echo urlencode($k)?>'
+    <?php
+    if ($view_panels) {
+    ?>
+        , function() {
 
         let parent_element = jQuery('#<?php echo $modal ? 'modal' : 'CentralSpace'; ?>');
-    	parent_element.find("#AssociatedCollections").children(".Title").attr("panel", "AssociatedCollections").addClass("Selected").appendTo(parent_element.find("#Titles3"));
-    	removePanel=parent_element.find("#AssociatedCollections").parent().parent();
-    	parent_element.find("#AssociatedCollections").appendTo(parent_element.find("#Panel3")).addClass("TabPanel");
-    	removePanel.remove();
+        parent_element.find("#AssociatedCollections").children(".Title").attr("panel", "AssociatedCollections").addClass("Selected").appendTo(parent_element.find("#Titles3"));
+        removePanel=parent_element.find("#AssociatedCollections").parent().parent();
+        parent_element.find("#AssociatedCollections").appendTo(parent_element.find("#Panel3")).addClass("TabPanel");
+        removePanel.remove();
 
-    	parent_element.find("#CollectionsThemes").children().children(".Title").attr("panel", "CollectionsThemes").appendTo(parent_element.find("#Titles3"));
-    	removePanel=parent_element.find("#CollectionsThemes").parent().parent();
-    	parent_element.find("#CollectionsThemes").appendTo(parent_element.find("#Panel3")).addClass("TabPanel").hide();
-    	removePanel.remove();
-    	if (parent_element.find("#Titles2").children().length==0) parent_element.find("#Panel2").parent().parent().remove();
-	    if (parent_element.find("#Titles3").children().length==0) parent_element.find("#Panel3").parent().parent().remove();	
+        parent_element.find("#CollectionsThemes").children().children(".Title").attr("panel", "CollectionsThemes").appendTo(parent_element.find("#Titles3"));
+        removePanel=parent_element.find("#CollectionsThemes").parent().parent();
+        parent_element.find("#CollectionsThemes").appendTo(parent_element.find("#Panel3")).addClass("TabPanel").hide();
+        removePanel.remove();
+        if (parent_element.find("#Titles2").children().length==0) parent_element.find("#Panel2").parent().parent().remove();
+        if (parent_element.find("#Titles3").children().length==0) parent_element.find("#Panel3").parent().parent().remove();    
         jQuery(".ViewPanelTitles").children(".Title").click(function(){
         // function to switch tab panels
             parent_element.find(this).parent().parent().children(".TabPanel").hide();
@@ -1603,12 +1603,12 @@ if ($view_resource_collections && !checkperm('b')){ ?>
             parent_element.find(this).addClass("Selected");
             parent_element.find("#"+jQuery(this).attr("panel")).show();
         });
-    	}
-	<?php
-	}
-	?>); 
-	</script>
-	<?php }
+        }
+    <?php
+    }
+    ?>); 
+    </script>
+    <?php }
 
 if ($metadata_report && isset($exiftool_path) && ($k=="" || $internal_share_access))
     {
@@ -1782,7 +1782,7 @@ if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access
 
     else
         {
-        echo htmlspecialchars($lang["nosimilarresources"]);	
+        echo htmlspecialchars($lang["nosimilarresources"]); 
         }
         ?>
 
@@ -1816,7 +1816,7 @@ if($annotate_enabled)
         ?>
     <!-- End of Annotorious -->
     <?php
-	}
+    }
 
 if($GLOBALS["image_preview_zoom"])
     {
@@ -1824,7 +1824,7 @@ if($GLOBALS["image_preview_zoom"])
     <script src="<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/openseadragon.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
     <?php
     }
-	?>
+    ?>
 
 <script>
     jQuery('document').ready(function(){

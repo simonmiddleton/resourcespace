@@ -34,10 +34,10 @@ add_resource_nodes($resourceb,array($fdgrefgfrnode));
 // Do search for first keyword 'rggweqvdfr' (should return both resources a and  b)
 $results=do_search('rggweqvdfr');
 if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref'])
-	||
+    ||
     !match_values(array_column($results,'ref'),array($resourcea, $resourceb))
-	)
-	{
+    )
+    {
     echo "ERROR - SUBTEST B\n";
     return false;
     }
@@ -59,9 +59,9 @@ if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $re
 // Do search for 'rggweqvdfr' again - should still return resources a and b 
 $results = do_search('rggweqvdfr');
 if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref'])
-	||
+    ||
     !match_values(array_column($results,'ref'),array($resourcea, $resourceb))
-	)
+    )
     {
     echo "ERROR - SUBTEST D\n";
     return false;

@@ -12,7 +12,7 @@ include "../include/header.php";
 
 ?>
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["managecollectionslink"]?></a></p>	
+<p><a href="<?php echo $baseurl_short?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["managecollectionslink"]?></a></p>  
 <h1><?php echo $lang["shared_collections"];render_help_link("user/sharing-resources");?></h1>
 <?php
 
@@ -27,113 +27,113 @@ $url=$baseurl_short."pages/view_shares.php?coluser=" . $userref;
 ?><div class="TopInpageNav"><?php pager(false); ?></div><?php
 
 for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
-	{	
-	?>
-	<div class="RecordBox">
-	<div class="RecordPanel">
-		<div class="RecordHeader">
-			<table>
-			<tr>
-				<td style="margin:0px;padding:0px;">
-					<h1 class="shared_collection_title"><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collections[$n]['ref']?>" onclick="return CentralSpaceLoad(this);" ><?php echo i18n_get_collection_name($collections[$n]);  ?></a></h1>
-				</td>
-			</tr>
-			</table>
-		
-			<div class="clearerright"> </div>
-		</div><!-- End of RecordHeader --> 
-		<div class="Listview" style="margin-top:10px;margin-bottom:5px;clear:left;">
-			<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
-				<tr class="ListviewBoxedTitleStyle">
-					<td width="15%">
-					<?php echo $lang["sharedwith"]; ?>
-					</td>
-					<td width="15%">
-					<?php echo  $lang["access"] ?>
-					</td>
-					<td width="40%">
-					<?php echo $lang["fieldtitle-notes"] ?>
-					</td>
-					<td width="30%"><div class="ListTools"><?php echo $lang["tools"]?></div></td>
-				</tr>
-			<?php
-			// Display row for each share/attached user
-			$colref=$collections[$n]["ref"];
-			
-			// Check for external shares
-			$extshares=ps_query("SELECT access, expires 
+    {   
+    ?>
+    <div class="RecordBox">
+    <div class="RecordPanel">
+        <div class="RecordHeader">
+            <table>
+            <tr>
+                <td style="margin:0px;padding:0px;">
+                    <h1 class="shared_collection_title"><a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $collections[$n]['ref']?>" onclick="return CentralSpaceLoad(this);" ><?php echo i18n_get_collection_name($collections[$n]);  ?></a></h1>
+                </td>
+            </tr>
+            </table>
+        
+            <div class="clearerright"> </div>
+        </div><!-- End of RecordHeader --> 
+        <div class="Listview" style="margin-top:10px;margin-bottom:5px;clear:left;">
+            <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+                <tr class="ListviewBoxedTitleStyle">
+                    <td width="15%">
+                    <?php echo $lang["sharedwith"]; ?>
+                    </td>
+                    <td width="15%">
+                    <?php echo  $lang["access"] ?>
+                    </td>
+                    <td width="40%">
+                    <?php echo $lang["fieldtitle-notes"] ?>
+                    </td>
+                    <td width="30%"><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+                </tr>
+            <?php
+            // Display row for each share/attached user
+            $colref=$collections[$n]["ref"];
+            
+            // Check for external shares
+            $extshares=ps_query("SELECT access, expires 
 								   FROM external_access_keys 
 								  WHERE collection=? and (expires is null or expires>now()) group by collection", array("i",$colref));
-			
-			if(count($extshares)!=0)
-				{			
-				foreach($extshares as $extshare)
-					{
-					echo "<tr>";
-					echo "<td>" . "External " . "</td>";
-					echo "<td>" . (($extshare["access"]==0)?$lang["access0"]:$lang["access1"]) . "</td>";
-					echo "<td>" .  str_replace("%date%",(($extshare["expires"]!="")?nicedate($extshare["expires"]):$lang["never"]),$lang["expires-date"]) . "</td>";
-					echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_share.php?ref=" . $collections[$n]["ref"] . "\"><?php echo LINK_CARET ?>" . $lang["action-edit"] . "</a></div></td>";
-					echo "</tr>";
-					}					
-				}
-				
-			// Check for attached users
-			$colusers=ps_query("SELECT u.fullname, u.username 
+            
+            if(count($extshares)!=0)
+                {           
+                foreach($extshares as $extshare)
+                    {
+                    echo "<tr>";
+                    echo "<td>" . "External " . "</td>";
+                    echo "<td>" . (($extshare["access"]==0)?$lang["access0"]:$lang["access1"]) . "</td>";
+                    echo "<td>" .  str_replace("%date%",(($extshare["expires"]!="")?nicedate($extshare["expires"]):$lang["never"]),$lang["expires-date"]) . "</td>";
+                    echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_share.php?ref=" . $collections[$n]["ref"] . "\"><?php echo LINK_CARET ?>" . $lang["action-edit"] . "</a></div></td>";
+                    echo "</tr>";
+                    }                   
+                }
+                
+            // Check for attached users
+            $colusers=ps_query("SELECT u.fullname, u.username 
 						          FROM user_collection uc LEFT JOIN user u on u.ref=uc.user and user<>? 
 								 WHERE uc.collection=?",array("i",$userref, "i",$colref));
-			
-			if(count($colusers)!=0)
-				{
-				echo "<tr>";
-				echo "<td>" . $lang["users"] . "</td>";
-				echo "<td>" . (($collections[$n]["allow_changes"]==0)?$lang["view"]:$lang["addremove"]) . "</td>";
-				echo "<td>" . $lang["users"] . ":<br />";
-				foreach($colusers as $coluser)
-					{
-					echo (($coluser["fullname"]!="")?$coluser["fullname"]:$coluser["username"]) . "<br />";											
-					}
-				echo "</td>";
-				echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_edit.php?ref=" . $collections[$n]["ref"] . "\"><?php echo LINK_CARET ?>" . $lang["action-edit"] . "</a></div></td>";
-				echo "</tr>";
-				}
-				
+            
+            if(count($colusers)!=0)
+                {
+                echo "<tr>";
+                echo "<td>" . $lang["users"] . "</td>";
+                echo "<td>" . (($collections[$n]["allow_changes"]==0)?$lang["view"]:$lang["addremove"]) . "</td>";
+                echo "<td>" . $lang["users"] . ":<br />";
+                foreach($colusers as $coluser)
+                    {
+                    echo (($coluser["fullname"]!="")?$coluser["fullname"]:$coluser["username"]) . "<br />";                                         
+                    }
+                echo "</td>";
+                echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_edit.php?ref=" . $collections[$n]["ref"] . "\"><?php echo LINK_CARET ?>" . $lang["action-edit"] . "</a></div></td>";
+                echo "</tr>";
+                }
+                
             if(in_array($collections[$n]["type"], $COLLECTION_PUBLIC_TYPES))
-				{
-				if ($collections[$n]["type"] == COLLECTION_TYPE_FEATURED)
-					{
-					echo "<tr>";
-					echo "<td>" . $lang["theme"] . "</td>";
-					echo "<td>" . (($collections[$n]["allow_changes"]==0)?$lang["view"]:$lang["addremove"])  . "</td>";
-					echo "<td>" . $lang["notavailableshort"] . "</td>";
-					echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_edit.php?ref=" . $collections[$n]["ref"] . "\"><?php echo LINK_CARET ?>" . $lang["action-edit"] . "</a></div></td>";
-					echo "</tr>";
-					}
-				else
-					{
-					echo "<tr>";
-					echo "<td>" . $lang["public"] . "</td>";
-					echo "<td>" . (($collections[$n]["allow_changes"]==0)?$lang["view"]:$lang["addremove"])  . "</td>";
-					echo "<td>" . $lang["notavailableshort"] . "</td>";
-					echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_edit.php?ref=" . $collections[$n]["ref"] . "\"><?php echo LINK_CARET ?>" . $lang["action-edit"] . "</a></div></td>";
-					echo "</tr>";			
-					}
-				}
-				?>
-		
-			</table>
-		</div><!-- End of Listview --> 
-		<div class="PanelShadow"> </div>
-	</div> <!-- End of RecordPanel -->
-	</div> <!--  End of RecordBox -->
-	<?php
-	}
-	?>	
+                {
+                if ($collections[$n]["type"] == COLLECTION_TYPE_FEATURED)
+                    {
+                    echo "<tr>";
+                    echo "<td>" . $lang["theme"] . "</td>";
+                    echo "<td>" . (($collections[$n]["allow_changes"]==0)?$lang["view"]:$lang["addremove"])  . "</td>";
+                    echo "<td>" . $lang["notavailableshort"] . "</td>";
+                    echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_edit.php?ref=" . $collections[$n]["ref"] . "\"><?php echo LINK_CARET ?>" . $lang["action-edit"] . "</a></div></td>";
+                    echo "</tr>";
+                    }
+                else
+                    {
+                    echo "<tr>";
+                    echo "<td>" . $lang["public"] . "</td>";
+                    echo "<td>" . (($collections[$n]["allow_changes"]==0)?$lang["view"]:$lang["addremove"])  . "</td>";
+                    echo "<td>" . $lang["notavailableshort"] . "</td>";
+                    echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_edit.php?ref=" . $collections[$n]["ref"] . "\"><?php echo LINK_CARET ?>" . $lang["action-edit"] . "</a></div></td>";
+                    echo "</tr>";           
+                    }
+                }
+                ?>
+        
+            </table>
+        </div><!-- End of Listview --> 
+        <div class="PanelShadow"> </div>
+    </div> <!-- End of RecordPanel -->
+    </div> <!--  End of RecordBox -->
+    <?php
+    }
+    ?>  
 
 
 <div class="BottomInpageNav"><?php pager(false); ?></div>
 
 </div><!--  End of BasicsBox -->
-<?php		
+<?php	  
 include "../include/footer.php";
 ?>

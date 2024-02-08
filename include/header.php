@@ -3,10 +3,10 @@ hook ("preheaderoutput");
  
 $k=getval("k","");
 if(!isset($internal_share_access))
-	{
-	// Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
+    {
+    // Set a flag for logged in users if $external_share_view_as_internal is set and logged on user is accessing an external share
     $internal_share_access = internal_share_access();
-	}
+    }
 
 $logout=getval("logout","");
 $loginas=getval("loginas","");
@@ -50,7 +50,7 @@ $noauth_page = in_array(
     ));
 
 ?><!DOCTYPE html>
-<html lang="<?php echo $language ?>">	
+<html lang="<?php echo $language ?>">   
 
 <!--
 
@@ -126,7 +126,7 @@ if ($contact_sheet)
     } ?>
 
 <script type="text/javascript">
-	ajaxLoadingTimer=<?php echo $ajax_loading_timer;?>;
+    ajaxLoadingTimer=<?php echo $ajax_loading_timer;?>;
 </script>
 <?php
 global $enable_ckeditor;
@@ -146,7 +146,7 @@ if ($enable_ckeditor){?>
 if ($keyboard_navigation_video_search || $keyboard_navigation_video_view || $keyboard_navigation_video_preview)
     {
     ?>
-	<script type="text/javascript" src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?<?php echo $css_reload_key?>"></script>
+    <script type="text/javascript" src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?<?php echo $css_reload_key?>"></script>
     <?php
     }
 
@@ -341,11 +341,11 @@ endif; # !hook("customhtmlheader")
 <!-- Loading graphic -->
 <?php
 if(!hook("customloadinggraphic"))
-	{
-	?>
-	<div id="LoadingBox"><i aria-hidden="true" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
-	<?php
-	}
+    {
+    ?>
+    <div id="LoadingBox"><i aria-hidden="true" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
+    <?php
+    }
 
 hook("bodystart"); ?>
 
@@ -611,7 +611,7 @@ if (checkperm("s") || (is_anonymous_user() && $show_anonymous_login_panel))
     $modified_omit_searchbar_pages = hook('modifyomitsearchbarpages');
     if ($modified_omit_searchbar_pages){$omit_searchbar_pages=$modified_omit_searchbar_pages;}
 
-    if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") ) 	
+    if (!in_array($pagename,$omit_searchbar_pages) && ($loginterms==false) && ($k == '' || $internal_share_access) && !hook("replace_searchbarcontainer") )     
         {
         ?>
         <div id="SearchBarContainer" class="ui-layout-east" >
@@ -720,7 +720,7 @@ window.onresize=function()
 </script>
 <?php
 // Non-ajax specific hook 
-hook("start_centralspace");	
+hook("start_centralspace"); 
 
 if ($k!="" && !$internal_share_access) { ?>
 <style>

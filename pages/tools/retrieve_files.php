@@ -43,7 +43,7 @@ elseif(isset($argv[1]) && strtolower($argv[1]) == "resource" && isset($argv[2]) 
     $min = $argv[2];
     if(isset($argv[3]) && is_numeric($argv[3]))
         {
-	    if($argv[3] < $min)
+        if($argv[3] < $min)
             { 
             $min = $argv[3];
             $max = $argv[2];

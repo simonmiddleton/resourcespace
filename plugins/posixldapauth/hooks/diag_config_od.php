@@ -8,8 +8,8 @@ $ldapauth['type'] = 0;
 $ldapauth['rootdn']= 'uid=diradmin,cn=users,dc=example,dc=com';
 
 /* name of the directory administrator
-	ad = username@domain
-	ldap = username
+    ad = username@domain
+    ldap = username
 */
 $ldapauth['rootname'] = "admin";
 // password
@@ -19,8 +19,8 @@ $ldapauth['rootpass']= 'pass';
 $ldapauth['basedn']= 'dc=example,dc=com';
 
 /* user container
-	This should be something like 
-		cn=users
+    This should be something like 
+        cn=users
 */
 $ldapauth['usercontainer'] = "cn=users";
 
@@ -28,22 +28,22 @@ $ldapauth['usercontainer'] = "cn=users";
 $ldapauth['groupcontainer'] = "cn=groups, dc=example,dc=com";
 
 /* login field overide, leave aas null for default
-	Defaults are:
-	ldap = uid
-	ad = samaccountname
+    Defaults are:
+    ldap = uid
+    ad = samaccountname
 */
 $ldapauth['loginfield'] = "uid";
 
 /* group field override to search within ldap groups for members, defaults are:
-	ldap = memberuid
-	ad = member
+    ldap = memberuid
+    ad = member
 */
 $ldapauth['ldapgroupfield'] = "memberuid";
 
 /* field type overide to search within groups:
-	0 = Default for directory type.
-	1 = User Name
-	2 = RDN
+    0 = Default for directory type.
+    1 = User Name
+    2 = RDN
 */
 $ldapauth['memFieldType'] = 1;
 

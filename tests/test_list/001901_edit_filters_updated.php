@@ -83,7 +83,7 @@ $accessc = get_edit_access($resourcec);
 $accessd = get_edit_access($resourced);
 $accesse = get_edit_access($resourcee);
 if(!$accessa || !$accessb || $accessc || $accessd || $accesse)
-	{
+    {
     echo "SUBTEST B";
     return false;
     }    
@@ -97,10 +97,10 @@ test_edit_filter_id_update($editor,$testeditgroup,$migrateresult);
 
 $results = do_search('','','',0,-1,'desc',false,0,false,false,'',false,false,false,true);
 if(count($results) != 1 || !isset($results[0]['ref'])
-	||
+    ||
     !match_values(array_column($results,'ref'),array($resourceb))
-	)
-	{
+    )
+    {
     echo "SUBTEST C";
     return false;
     }
@@ -112,7 +112,7 @@ $accessc = get_edit_access($resourcec);
 $accessd = get_edit_access($resourced);
 $accesse = get_edit_access($resourcee);
 if($accessa || !$accessb || $accessc || $accessd || $accesse)
-	{
+    {
     echo "SUBTEST D";
     return false;
     }

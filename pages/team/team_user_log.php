@@ -32,17 +32,17 @@ $jumpcount=1;
 <?php if (!hook("replaceuserlogheader")){?><h1><?php echo $lang["userlog"] . ": " . $userdata["fullname"]?></h1><?php } ?>
 <div class="TopInpageNav">
 <div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
-	<?php 
-	for($n=0;$n<count($list_display_array);$n++){?>
-	<?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=<?php echo $list_display_array[$n]?>"><?php echo $list_display_array[$n]?></a><?php } ?>&nbsp;|
-	<?php } ?>
-	<?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=99999"><?php echo $lang["all"]?></a><?php } ?>
-	</div> <?php pager(false); ?></div>
+    <?php 
+    for($n=0;$n<count($list_display_array);$n++){?>
+    <?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=<?php echo $list_display_array[$n]?>"><?php echo $list_display_array[$n]?></a><?php } ?>&nbsp;|
+    <?php } ?>
+    <?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=99999"><?php echo $lang["all"]?></a><?php } ?>
+    </div> <?php pager(false); ?></div>
 
 
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
-<!--Title row-->	
+<!--Title row-->    
 <tr class="ListviewTitleStyle">
 <td><?php echo $lang["date"]?></td>
 <?php hook("user_log_before_userid");?>
@@ -56,30 +56,30 @@ $jumpcount=1;
 <?php
 
 for ($n=$offset;(($n<count($log))&& ($n<($offset+$per_page)));$n++)
-	{
-	if (!isset($lang["log-".$log[$n]["type"]])){$lang["log-".$log[$n]["type"]]="";}	
-	?>
-	<!--List Item-->
-	<tr>
-	<td><?php echo nicedate($log[$n]["date"],true,true)?></td>
-	<?php hook("user_log_before_userid_data")?>
+    {
+    if (!isset($lang["log-".$log[$n]["type"]])){$lang["log-".$log[$n]["type"]]="";} 
+    ?>
+    <!--List Item-->
+    <tr>
+    <td><?php echo nicedate($log[$n]["date"],true,true)?></td>
+    <?php hook("user_log_before_userid_data")?>
        <td><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $log[$n]["resourceid"]?>'><?php echo $log[$n]["resourceid"]?></a></td>
-	<td><?php if(!hook("replaceuserlogtitlelink")) {?><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $log[$n]["resourceid"]?>'><?php if(!hook("replaceuserlogtitle")) {echo i18n_get_translated($log[$n]["resourcetitle"]);}?></a><?php } ?></td>
-	
-	<td><?php echo $lang["log-" . $log[$n]["type"]];
+    <td><?php if(!hook("replaceuserlogtitlelink")) {?><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $log[$n]["resourceid"]?>'><?php if(!hook("replaceuserlogtitle")) {echo i18n_get_translated($log[$n]["resourcetitle"]);}?></a><?php } ?></td>
+    
+    <td><?php echo $lang["log-" . $log[$n]["type"]];
 
-	# For emailed items, append email address from the 'notes' column
-	if ($log[$n]["type"]=="E") { echo " " . $log[$n]["notes"]; }
-	
-	# For purchases, append size and price
-	if ($log[$n]["type"]=="p") {echo " (" . ($log[$n]["purchase_size"]==""?$lang["collection_download_original"]:$log[$n]["purchase_size"]) . ", " . $currency_symbol . number_format($log[$n]["purchase_price"],2) . ")";}
+    # For emailed items, append email address from the 'notes' column
+    if ($log[$n]["type"]=="E") { echo " " . $log[$n]["notes"]; }
+    
+    # For purchases, append size and price
+    if ($log[$n]["type"]=="p") {echo " (" . ($log[$n]["purchase_size"]==""?$lang["collection_download_original"]:$log[$n]["purchase_size"]) . ", " . $currency_symbol . number_format($log[$n]["purchase_price"],2) . ")";}
 
-	?></td>
-	<td><?php echo $log[$n]["title"] ?></td>
-	<?php hook("adduserlogcolumn");?>
-	</tr>
-	<?php
-	}
+    ?></td>
+    <td><?php echo $log[$n]["title"] ?></td>
+    <?php hook("adduserlogcolumn");?>
+    </tr>
+    <?php
+    }
 ?>
 </table>
 </div> <!-- End of Listview -->

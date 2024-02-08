@@ -13,7 +13,7 @@ if (!hook("iconedit") && (checkperm("e" . $result[$n]["archive"]) || ($edit_acce
             title="<?php echo escape($lang["action-editmetadata"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
         </a><?php
     }
-} ?>	
+} ?>    
 
 <!-- Collection comment icon -->
 <?php 

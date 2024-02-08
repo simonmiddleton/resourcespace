@@ -20,10 +20,10 @@ if($backurl=="")
     
 $newtype=getval("newtype","");
 if ($newtype!="" && enforcePostRequest(false))
-	{
-	$new = create_resource_type($newtype);
+    {
+    $new = create_resource_type($newtype);
     redirect($baseurl_short."pages/admin/admin_resource_type_edit.php?ref=" . $new);
-	}
+    }
 
 $resource_types=get_resource_types();
 
@@ -62,24 +62,24 @@ function addColumnHeader($orderName, $labelKey)
         <?php
 
         }
-?>	
+?>  
 
 <div class="BasicsBox">
 <h1><?php echo htmlspecialchars($lang["resource_types_manage"]); ?></h1>
 <?php
-	$links_trail = array(
-	    array(
-	        'title' => $lang["systemsetup"],
-	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
-			'menu' =>  true
-	    ),
-	    array(
-	        'title' => $lang["resource_types_manage"],
-			'help'  => "resourceadmin/resource-types"
-	    )
-	);
+    $links_trail = array(
+        array(
+            'title' => $lang["systemsetup"],
+            'href'  => $baseurl_short . "pages/admin/admin_home.php",
+            'menu' =>  true
+        ),
+        array(
+            'title' => $lang["resource_types_manage"],
+            'help'  => "resourceadmin/resource-types"
+        )
+    );
 
-	renderBreadcrumbs($links_trail);
+    renderBreadcrumbs($links_trail);
 ?>
   
   <?php
@@ -123,7 +123,7 @@ for ($n=0;$n<count($resource_types);$n++)
     <tr class="resource_type_row" id="restype_sort_<?php echo $resource_types[$n]["ref"];?>" >
         <td>
             <?php echo $resource_types[$n]["ref"];?>
-        </td>	
+        </td>   
         <td>
             <div class="ListTitle">
                     <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
@@ -154,7 +154,7 @@ for ($n=0;$n<count($resource_types);$n++)
                 <?php 
                 if($restype_order_by=="order_by")
                         {
-                        ?>		
+                        ?>      
                         <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($resource_types)-1){ ?> disabled <?php } ?>><?php echo LINK_CARET . htmlspecialchars($lang['action-move-down']) ?></a>
                         <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><?php echo LINK_CARET . htmlspecialchars($lang['action-move-up'])?></a>
                         <?php
@@ -260,8 +260,8 @@ function enableRestypesort(){
                 helper: fixHelperModified
                 
             }).disableSelection();
-	}
-	
+    }
+    
 enableRestypesort();
 
 jQuery(".moveuplink").click(function(e) {
@@ -284,7 +284,7 @@ jQuery(".movedownlink").click(function(e) {
         var idsInOrder = jQuery('#resource_type_table_body').sortable("toArray");
         ReorderResourceTypes(idsInOrder);
     });
-	
+    
 </script>
 
 <?php

@@ -26,7 +26,7 @@ $origfilename=get_data_by_field($job_data["resource"],$filename_field);
 $randstring=md5(rand() . microtime());
 
 $newaltfile=add_alternative_file($job_data["resource"],$job_data["alt_name"],$job_data["alt_description"],str_replace("." . $resource["file_extension"],"." . $job_data["alt_extension"],$origfilename),$job_data["alt_extension"]);
-$targetfile=get_resource_path($job_data["resource"],true,"",false, $job_data["alt_extension"],-1,1,false,"",$newaltfile);				
+$targetfile=get_resource_path($job_data["resource"],true,"",false, $job_data["alt_extension"],-1,1,false,"",$newaltfile);               
 $shell_exec_cmd = str_replace("%%TARGETFILE%%",escapeshellarg($targetfile),$job_data["command"]);
 
 // Check we are using a whitelisted command path to create file     
@@ -77,11 +77,11 @@ if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|`)/i", $shell_exec_cmd))
     if(isset($deletebat) && file_exists($shell_exec_cmd))
         {
         unlink($shell_exec_cmd);
-        }		
+        }       
     }
     
 if(!$jobsuccess)
-	{
+    {
     // Job failed, upate job queue
     job_queue_update($jobref,$job_data,STATUS_ERROR);
     $message = ($job_success_text!="")?$job_success_text:$lang["alternative_file_creation_failed"] . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";

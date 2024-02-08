@@ -7,7 +7,7 @@ include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permis
 $plugin_name = 'rse_version';
 $plugin_page_heading = $lang['rse_version_configuration'];
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
  
 $page_def[] = config_add_multi_group_select('rse_version_override_groups',$lang['rse_version_override_groups']);
 

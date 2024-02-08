@@ -21,21 +21,21 @@ function VrViewUseVR($resource)
         
     if($vr_view_projection_field != 0)
         {
-		$fieldtype = get_resource_type_field($vr_view_projection_field);
-		if(in_array($fieldtype['type'],$NODE_FIELDS))
-			{
-			$resnodes = get_resource_nodes($resource["ref"], $vr_view_projection_field, true);
-			$resvals = array_column($resnodes,"name");
-			}
-		else
-			{
-			$resdata = get_data_by_field($resource["ref"],$vr_view_projection_field);
-			$resvals = explode(",",$resdata);
-			}
-		
+        $fieldtype = get_resource_type_field($vr_view_projection_field);
+        if(in_array($fieldtype['type'],$NODE_FIELDS))
+            {
+            $resnodes = get_resource_nodes($resource["ref"], $vr_view_projection_field, true);
+            $resvals = array_column($resnodes,"name");
+            }
+        else
+            {
+            $resdata = get_data_by_field($resource["ref"],$vr_view_projection_field);
+            $resvals = explode(",",$resdata);
+            }
+        
         if(!in_array($vr_view_projection_value, $resvals))
             {
-			// Not a valid VR image
+            // Not a valid VR image
             return false;
             }
         }
@@ -51,24 +51,24 @@ function VrViewRenderPlayer($ref,$source, $isvideo = false,$width=852, $height=6
     {
     global $vr_view_projection_field, $vr_view_projection_value, $vr_view_stereo_field, $vr_view_stereo_value;
     global $vr_view_yaw_only_field, $vr_view_yaw_only_value, $vr_view_autopan, $vr_view_vr_mode_off;
-	global $NODE_FIELDS;
-	
+    global $NODE_FIELDS;
+    
     // Check for stereo value 
     $stereo = false;
     if($vr_view_stereo_field !=0 )
-        {	
-		$stereofieldtype = get_resource_type_field($vr_view_stereo_field);
-		if(in_array($stereofieldtype['type'],$NODE_FIELDS))
-			{
-			$resnodes = get_resource_nodes($ref, $vr_view_stereo_field, true);
-			$resvals = array_column($resnodes,"name");
-			}
-		else
-			{
-			$resdata = get_data_by_field($ref,$vr_view_stereo_field);
-			$resvals = explode(",",$resdata);
-			}
-		
+        {   
+        $stereofieldtype = get_resource_type_field($vr_view_stereo_field);
+        if(in_array($stereofieldtype['type'],$NODE_FIELDS))
+            {
+            $resnodes = get_resource_nodes($ref, $vr_view_stereo_field, true);
+            $resvals = array_column($resnodes,"name");
+            }
+        else
+            {
+            $resdata = get_data_by_field($ref,$vr_view_stereo_field);
+            $resvals = explode(",",$resdata);
+            }
+        
         if(in_array($vr_view_stereo_value, $resvals))
             {
             $stereo = true;
@@ -77,29 +77,29 @@ function VrViewRenderPlayer($ref,$source, $isvideo = false,$width=852, $height=6
         
     // Check for yaw only  value
     $yaw_only = false;
-	if($vr_view_yaw_only_field !=0 )
-        {	
-		$stereofieldtype = get_resource_type_field($vr_view_yaw_only_field);
-		if(in_array($stereofieldtype['type'],$NODE_FIELDS))
-			{
-			$resnodes = get_resource_nodes($ref, $vr_view_yaw_only_field, true);
-			$resvals = array_column($resnodes,"name");
-			}
-		else
-			{
-			$resdata = get_data_by_field($ref,$vr_view_yaw_only_field);
-			$resvals = explode(",",$resdata);
-			}
-		
+    if($vr_view_yaw_only_field !=0 )
+        {   
+        $stereofieldtype = get_resource_type_field($vr_view_yaw_only_field);
+        if(in_array($stereofieldtype['type'],$NODE_FIELDS))
+            {
+            $resnodes = get_resource_nodes($ref, $vr_view_yaw_only_field, true);
+            $resvals = array_column($resnodes,"name");
+            }
+        else
+            {
+            $resdata = get_data_by_field($ref,$vr_view_yaw_only_field);
+            $resvals = explode(",",$resdata);
+            }
+        
         if(in_array($vr_view_yaw_only_value, $resvals))
             {
             $yaw_only = true;
             }
         }
         
-	?>
+    ?>
     <div id="<?php echo $parentdivid; ?>">
-		<div id="<?php echo htmlspecialchars($scope); ?>vrview" style="width:<?php echo htmlspecialchars($width); ?>px;margin:auto;"></div>
+        <div id="<?php echo htmlspecialchars($scope); ?>vrview" style="width:<?php echo htmlspecialchars($width); ?>px;margin:auto;"></div>
     </div>
     <script>
         jQuery(document).ready(function ()
@@ -116,7 +116,7 @@ function VrViewRenderPlayer($ref,$source, $isvideo = false,$width=852, $height=6
                 is_debug:false
           });
         });
-	</script>
-	<?php
+    </script>
+    <?php
     return true;
-	}
+    }

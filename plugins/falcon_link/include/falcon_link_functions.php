@@ -3,14 +3,14 @@
 /**
  * Publish resources in the array to falcon.io
  *  
- * @param  array    			$resources Array of resources to publish. Must include named "ref" key with resource ID as value as per search results
- * @param  string    			$template_text Text to use for template description. If not passed will use value from configured $falcon_link_text_field 
- * @param  string    			$template_tags Comma separated list of tags to add to Falcon template. If not passed will use values from configured $falcon_link_tag_fields 
+ * @param  array                $resources Array of resources to publish. Must include named "ref" key with resource ID as value as per search results
+ * @param  string               $template_text Text to use for template description. If not passed will use value from configured $falcon_link_text_field 
+ * @param  string               $template_tags Comma separated list of tags to add to Falcon template. If not passed will use values from configured $falcon_link_tag_fields 
  * 
- * @return array         		"success" => Overall outcome of publish action
+ * @return array                "success" => Overall outcome of publish action
  *                              "errors"  => Array of error messages
  *                              "results" => Array of resource IDs and associated status messages
- */	
+ */ 
 function falcon_link_publish($resources,$template_text,$template_tags)
     {
     global $lang, $userref, $username, $baseurl_short, $baseurl, $hide_real_filepath;
@@ -33,10 +33,10 @@ function falcon_link_publish($resources,$template_text,$template_tags)
         
         // Check if already published
         $falconid = get_data_by_field($ref,$falcon_link_id_field);
-	    if(trim($falconid) != "")
-		    {
+        if(trim($falconid) != "")
+            {
             debug("falcon_link: falcon_link_publish - resource already published. Resource:" . $ref . ", Falcon id: " . $falconid);
-		    $published[$ref] = $falconid;
+            $published[$ref] = $falconid;
             $skip[] = $ref;
             continue;
             }
@@ -70,7 +70,7 @@ function falcon_link_publish($resources,$template_text,$template_tags)
             for ($n=0;$n<count($metadata);$n++)
                 {
                 $name=$metadata[$n]["name"];
-                $value=$metadata[$n]["value"];			
+                $value=$metadata[$n]["value"];          
                 if ($name!="")
                     {
                     $match=filter_match($falcon_link_filter,$name,$value);
@@ -192,12 +192,12 @@ function falcon_link_publish($resources,$template_text,$template_tags)
 /**
  * Archive resources in falcon.io
  *  
- * @param  array    			$resources Array of resources to archive. Must include named "ref" key with resource ID as value as per search results
+ * @param  array                $resources Array of resources to archive. Must include named "ref" key with resource ID as value as per search results
  * 
- * @return array         		"success" => Overall outcome of archive action
+ * @return array                "success" => Overall outcome of archive action
  *                              "errors"  => Array of error messages
  *                              "results" => Array of resource IDs and associated status messages
- */	    
+ */     
 function falcon_link_archive($resources)
     {
     global $lang, $userref, $username, $baseurl_short, $baseurl, $hide_real_filepath, $falcon_link_share_user;
@@ -220,8 +220,8 @@ function falcon_link_archive($resources)
         
         // Check that file has been published, if not record the fact to report back
         if(trim($falconid) == "")
-		    {
-		    debug("falcon_link: falcon_link_publish - resource has not been published . Resource:" . $ref);
+            {
+            debug("falcon_link: falcon_link_publish - resource has not been published . Resource:" . $ref);
             $result["results"][$ref] = $lang["falcon_link_resource_not_published"];
             continue;
             }

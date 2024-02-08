@@ -9,7 +9,7 @@ $collection=trim(str_replace("!collection","",getval("collection","")));
 $unlink=(getval("unlink","")!=""); # Unlink mode
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
-	{
+    {
     $resources=get_collection_resources($collection);
     $ref=getval("ref", 0, true);
     if($ref <= 0)
@@ -40,9 +40,9 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
         resource_log($resource,"","",$lang[($unlink?"un":"") . "linklicense"] . " " . $ref);
         }
 
-	redirect($redirect_url);
-	}
-		
+    redirect($redirect_url);
+    }
+        
 include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
@@ -63,12 +63,12 @@ include "../../../include/header.php";
 </select>
 <div class="clearerleft"> </div></div>
 
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="batch" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>
 
-<?php		
+<?php	  
 include "../../../include/footer.php";
 ?>

@@ -39,12 +39,12 @@ $pagetime_start = explode(' ', $pagetime_start);
 $pagetime_start = $pagetime_start[1] + $pagetime_start[0];
 
 if ((!isset($suppress_headers) || !$suppress_headers) && !isset($nocache))
-	{
-	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
-	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");  // always modified
-	header("Cache-Control: no-store, no-cache, must-revalidate");
-	header("Cache-Control: post-check=0, pre-check=0", false);
-	}
+    {
+    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
+    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");  // always modified
+    header("Cache-Control: no-store, no-cache, must-revalidate");
+    header("Cache-Control: post-check=0, pre-check=0", false);
+    }
 
 set_error_handler("errorhandler");
 
@@ -80,37 +80,37 @@ debug('[db.php] isset($remote_config_url) = ' . json_encode(isset($remote_config
 debug('[db.php] isset($_SERVER["HTTP_HOST"]) = ' . json_encode(isset($_SERVER["HTTP_HOST"])));
 debug('[db.php] getenv("RESOURCESPACE_URL") != "") = ' . json_encode(getenv("RESOURCESPACE_URL") != ""));
 if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"]) || getenv("RESOURCESPACE_URL") != ""))
-	{
+    {
     debug("[db.php] \$remote_config_url = {$remote_config_url}");
-	sql_connect(); # Connect a little earlier
-	if(isset($_SERVER['HTTP_HOST']))
-		{
-		$host=$_SERVER['HTTP_HOST'];                   
-		}
-	else
-		{
-		// If running scripts from command line the host will not be available and will need to be set as an environment variable
-		// e.g. export RESOURCESPACE_URL="www.yourresourcespacedomain.com";cd /var/www/pages/tools; php update_checksums.php
-		$host=getenv("RESOURCESPACE_URL");
-		}
-	$hostmd=md5($host);
+    sql_connect(); # Connect a little earlier
+    if(isset($_SERVER['HTTP_HOST']))
+        {
+        $host=$_SERVER['HTTP_HOST'];                   
+        }
+    else
+        {
+        // If running scripts from command line the host will not be available and will need to be set as an environment variable
+        // e.g. export RESOURCESPACE_URL="www.yourresourcespacedomain.com";cd /var/www/pages/tools; php update_checksums.php
+        $host=getenv("RESOURCESPACE_URL");
+        }
+    $hostmd=md5($host);
     debug("[db.php] \$host = {$host}");
     debug("[db.php] \$hostmd = {$hostmd}");
 
-	# Look for configuration for this host (supports multiple hosts)
-	$remote_config_sysvar="remote-config-" . $hostmd; # 46 chars (column is 50)
-	$remote_config=get_sysvar($remote_config_sysvar);
+    # Look for configuration for this host (supports multiple hosts)
+    $remote_config_sysvar="remote-config-" . $hostmd; # 46 chars (column is 50)
+    $remote_config=get_sysvar($remote_config_sysvar);
     $remote_config_expiry = get_sysvar("remote_config-exp" .  $hostmd,0);
-	if ($remote_config!==false && $remote_config_expiry>time() && !isset($_GET["reload_remote_config"]))
-		{
-		# Local cache exists and has not expired. Use this copy.
+    if ($remote_config!==false && $remote_config_expiry>time() && !isset($_GET["reload_remote_config"]))
+        {
+        # Local cache exists and has not expired. Use this copy.
         debug("[db.php] Using local cached version of remote config. \$remote_config_expiry = {$remote_config_expiry}");
-		}
-	elseif(function_exists('curl_init'))
-		{
-		# Cache not present or has expired.
-		# Fetch new config and store. Set a very low timeout of 2 seconds so the config server going down does not take down the site.
-		# Attempt to fetch the remote contents but suppress errors.
+        }
+    elseif(function_exists('curl_init'))
+        {
+        # Cache not present or has expired.
+        # Fetch new config and store. Set a very low timeout of 2 seconds so the config server going down does not take down the site.
+        # Attempt to fetch the remote contents but suppress errors.
         if(isset($remote_config_function) && is_callable($remote_config_function))
             {
             $rc_url = $remote_config_function($remote_config_url,$host);
@@ -152,24 +152,24 @@ if (isset($remote_config_url, $remote_config_key) && (isset($_SERVER["HTTP_HOST"
                 # Do nothing; proceed with old config and try again later.
                 debug('[db.php][warn] Failed to authenticate the signature of the remote config');
                 }
-			}
-		else
-			{
-			# The attempt to fetch the remote configuration failed.
-			# Do nothing; the cached copy will be used and we will try again later.
+            }
+        else
+            {
+            # The attempt to fetch the remote configuration failed.
+            # Do nothing; the cached copy will be used and we will try again later.
             $errortext = curl_strerror(curl_errno($ch));
             debug("[db.php][warn] Remote config check failed from '"  . $remote_config_url . "' : " . $errortext . " : " . $r);
             }
         curl_close($ch);
 
-		set_sysvar("remote_config-exp" .  $hostmd,time()+(60*10)); # Load again (or try again if failed) in ten minutes
-		}
+        set_sysvar("remote_config-exp" .  $hostmd,time()+(60*10)); # Load again (or try again if failed) in ten minutes
+        }
 
-	# Load and use the config
-	eval($remote_config);
+    # Load and use the config
+    eval($remote_config);
     // Cleanup
     unset($remote_config_function,$remote_config_url,$remote_config_key);
-	}
+    }
 
 if($system_download_config_force_obfuscation && !defined("SYSTEM_DOWNLOAD_CONFIG_FORCE_OBFUSCATION"))
     {
@@ -195,7 +195,7 @@ if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
     }
 
 if($system_down_redirect && getval('show', '') === '') {
-	redirect($baseurl . '/pages/system_down.php?show=true');
+    redirect($baseurl . '/pages/system_down.php?show=true');
 }
 
 # Set time limit
@@ -304,9 +304,9 @@ $pagename=safe_file_name(str_replace(".php","",pagename()));
 
 // Allow plugins to set $language from config as we cannot run hooks at this point
 if(!isset($language))
-	{
-	$language = setLanguage();
-	}
+    {
+    $language = setLanguage();
+    }
 
 # Fix due to rename of US English language file
 if (isset($language) && $language=="us") {$language="en-US";}
@@ -314,7 +314,7 @@ if (isset($language) && $language=="us") {$language="en-US";}
 # Always include the english pack (in case items have not yet been translated)
 include dirname(__FILE__)."/../languages/en.php";
 if ($language!="en")
-	{
+    {
     if (substr($language, 2, 1)!='-')
         {
         $language = substr($language, 0, 2);
@@ -331,22 +331,22 @@ if ($language!="en")
         debug("Unable to include language file $language.php");
         }
     $GLOBALS["use_error_exception"] = $use_error_exception_cache;
-	}
+    }
 
 # Register all plugins
 for ($n=0;$n<count($plugins);$n++)
-	{
+    {
     if (!isset($plugins[$n])) { continue; }
-	register_plugin($plugins[$n]);
-	hook("afterregisterplugin");
-	}
+    register_plugin($plugins[$n]);
+    hook("afterregisterplugin");
+    }
 
 # Register their languages in reverse order
 for ($n=count($plugins)-1;$n>=0;$n--)
-	{
+    {
     if (!isset($plugins[$n])) { continue; }
-	register_plugin_language($plugins[$n]);
-	}
+    register_plugin_language($plugins[$n]);
+    }
 
 global $suppress_headers;
 # Set character set.
@@ -447,7 +447,7 @@ if(!$disable_geocoding)
 # Pre-load all text for this page.
 global $site_text;
 lang_load_site_text($lang,$pagename,$language);
-	
+    
 # Blank the header insert
 $headerinsert="";
 

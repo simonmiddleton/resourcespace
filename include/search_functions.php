@@ -1508,7 +1508,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
 
         // Don't filter if user is searching for their own resources and $open_access_for_contributor=true;
         global $open_access_for_contributor;
-        if(!($open_access_for_contributor && $userref == $cuser))
+        if($open_access_for_contributor && $userref == $cuser)
             {
             $sql_filter->sql = "archive IN (" . ps_param_insert(count($archive)) . ")";
             $sql_filter->parameters = ps_param_fill($archive, "i");
@@ -3143,29 +3143,29 @@ function get_search_default_restypes()
         {
         $defaultrestypes[] = "Collections";
         if($search_includes_themes){$defaultrestypes[] = "FeaturedCollections";}
-        }	
+        }   
     return $defaultrestypes;
     }
-	
+    
 function get_selectedtypes()
     {
     global $search_includes_resources, $default_advanced_search_mode;
 
-	# The restypes cookie is populated with $default_res_type at login and maintained thereafter
-	# The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere
-	$restypes=getval("restypes","");
+    # The restypes cookie is populated with $default_res_type at login and maintained thereafter
+    # The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere
+    $restypes=getval("restypes","");
     $advanced_search_section = getval("advanced_search_section", "");
-	
-	# If advanced_search_section is absent then load it from restypes
-	if (getval("submitted","")=="") 
-		{
-		if (!isset($advanced_search_section))
-			{
-			$advanced_search_section = $restypes;
-			}
-		}
+    
+    # If advanced_search_section is absent then load it from restypes
+    if (getval("submitted","")=="") 
+        {
+        if (!isset($advanced_search_section))
+            {
+            $advanced_search_section = $restypes;
+            }
+        }
 
-	# If clearbutton pressed then the selected types are reset based on configuration settings
+    # If clearbutton pressed then the selected types are reset based on configuration settings
     if(getval('resetform', '') != '')
         {
         if (isset($default_advanced_search_mode)) 

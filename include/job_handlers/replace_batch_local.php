@@ -87,9 +87,9 @@ foreach($foldercontents as $objectindex => $object)
                     {
                     extract_exif_comment($valid_resource,$extension);
                     }
-                create_previews($valid_resource, false, $extension);						
+                create_previews($valid_resource, false, $extension);                        
                 if($notify_on_resource_change_days != 0)
-                    {				
+                    {               
                     notify_resource_change($valid_resource);
                     }
                 $replaced[] = $valid_resource;
@@ -122,9 +122,9 @@ foreach($foldercontents as $objectindex => $object)
                             {
                             extract_exif_comment($valid_resource,$extension);
                             }
-                        create_previews($valid_resource, false, $extension);						
+                        create_previews($valid_resource, false, $extension);                        
                         if($notify_on_resource_change_days != 0)
-                            {				
+                            {               
                             notify_resource_change($valid_resource);
                             }
                         $replaced[] = $valid_resource;
@@ -161,9 +161,9 @@ foreach($foldercontents as $objectindex => $object)
                     {
                     extract_exif_comment($targetresource,$extension);
                     }
-                create_previews($targetresource, false, $extension);						
+                create_previews($targetresource, false, $extension);                        
                 if($notify_on_resource_change_days != 0)
-                    {				
+                    {               
                     notify_resource_change($targetresource);
                     }
                 $replaced[] = $targetresource;

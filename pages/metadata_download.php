@@ -66,24 +66,24 @@ $urlparams = array(
 
 // Process text file download
 if ($download && $download_file_type == 'text')
-	{
-	header("Content-type: application/octet-stream");
-	header("Content-disposition: attachment; filename=" . $lang["metadata"]."_". $filename . ".txt");
+    {
+    header("Content-type: application/octet-stream");
+    header("Content-disposition: attachment; filename=" . $lang["metadata"]."_". $filename . ".txt");
 
-	foreach ($metadata as $metadata_entry) // Go through each entry
-		{
-		if (!empty($metadata_entry['value']))
-			{
-			// This is the field title - the function got this by joining to the resource_type_field in the sql query
-			echo $metadata_entry['title'] . ': ';
-			// This is the value for the field from the resource_data table
-			echo tidylist(i18n_get_translated($metadata_entry['value'])) . "\r\n";
-			}
-		}
+    foreach ($metadata as $metadata_entry) // Go through each entry
+        {
+        if (!empty($metadata_entry['value']))
+            {
+            // This is the field title - the function got this by joining to the resource_type_field in the sql query
+            echo $metadata_entry['title'] . ': ';
+            // This is the value for the field from the resource_data table
+            echo tidylist(i18n_get_translated($metadata_entry['value'])) . "\r\n";
+            }
+        }
 
-	ob_flush();
-	exit();
-	}
+    ob_flush();
+    exit();
+    }
 
 // Process PDF file download
 if($download && $download_file_type === 'pdf') {
@@ -91,60 +91,60 @@ if($download && $download_file_type === 'pdf') {
     $PDF_filename = $lang['metadata'] .'_' . $filename . '.pdf';
     $content = '';
     ?>
-	<!-- Start structure of PDF file in HTML -->
-	<page backtop="25mm" backbottom="10mm" backleft="5mm" backright="5mm">
-		<page_header>
-			<table cellspacing="0" style="width: 95%;margin-left:15px;">
-		        <tr>
-		            <td style="width: 75%;"><h1><?php echo $applicationname; ?></h1></td>
-		            <td style="width: 25%;" align=right>
-		                <img style="height: 50px; max-width: 100%" src="<?php echo $logo_src_path; ?>" alt="Logo" >
-		            </td>
-		        </tr>
-		    </table>
-		</page_header>
-		<page_footer>
-			<table style="width: 100%;">
-				<tr>
-					<td style="text-align: left; width: 33%"><?php echo $PDF_filename; ?></td>
-					<td style="text-align: center; width: 34%">page [[page_cu]]/[[page_nb]]</td>
-					<td style="text-align: right; width: 33%"><?php echo date('d/m/Y'); ?></td>
-				</tr>
-			</table>
-		</page_footer>
-		<!-- Real content starts here -->
-		<h2><?php echo $lang['metadata-pdf-title'] . ' ' . $ref; ?></h2>
-		<table style="width: 90%;" align="center" cellspacing="15">
-			<tbody>
-			<?php
-			foreach ($metadata as $metadata_entry)
-			{
-			$metadatavalue=trim(tidylist(i18n_get_translated($metadata_entry['value'])));
-			if(!empty($metadatavalue))
-				{
-				?>
-					<tr>
-						<td valign="top" style="text-align: left;"><b><?php echo $metadata_entry['title']; ?></b></td>
-						<td style="width: 2%;"></td>
-						<td style="width: 70%; text-align: left;"><?php echo $metadatavalue; ?></td>
-					</tr>
-				<?php
-				}
-			}
-			?>
-			</tbody>
-		</table>
+    <!-- Start structure of PDF file in HTML -->
+    <page backtop="25mm" backbottom="10mm" backleft="5mm" backright="5mm">
+        <page_header>
+            <table cellspacing="0" style="width: 95%;margin-left:15px;">
+                <tr>
+                    <td style="width: 75%;"><h1><?php echo $applicationname; ?></h1></td>
+                    <td style="width: 25%;" align=right>
+                        <img style="height: 50px; max-width: 100%" src="<?php echo $logo_src_path; ?>" alt="Logo" >
+                    </td>
+                </tr>
+            </table>
+        </page_header>
+        <page_footer>
+            <table style="width: 100%;">
+                <tr>
+                    <td style="text-align: left; width: 33%"><?php echo $PDF_filename; ?></td>
+                    <td style="text-align: center; width: 34%">page [[page_cu]]/[[page_nb]]</td>
+                    <td style="text-align: right; width: 33%"><?php echo date('d/m/Y'); ?></td>
+                </tr>
+            </table>
+        </page_footer>
+        <!-- Real content starts here -->
+        <h2><?php echo $lang['metadata-pdf-title'] . ' ' . $ref; ?></h2>
+        <table style="width: 90%;" align="center" cellspacing="15">
+            <tbody>
+            <?php
+            foreach ($metadata as $metadata_entry)
+            {
+            $metadatavalue=trim(tidylist(i18n_get_translated($metadata_entry['value'])));
+            if(!empty($metadatavalue))
+                {
+                ?>
+                    <tr>
+                        <td valign="top" style="text-align: left;"><b><?php echo $metadata_entry['title']; ?></b></td>
+                        <td style="width: 2%;"></td>
+                        <td style="width: 70%; text-align: left;"><?php echo $metadatavalue; ?></td>
+                    </tr>
+                <?php
+                }
+            }
+            ?>
+            </tbody>
+        </table>
 
 
-	</page>
-	<!-- End of structure of PDF file in HTML -->
-	<?php
+    </page>
+    <!-- End of structure of PDF file in HTML -->
+    <?php
 
-	$content = ob_get_clean();
+    $content = ob_get_clean();
 
-	$html2pdf = new Html2Pdf('P', 'A4', $language);
-	$html2pdf->WriteHTML($content);
-	$html2pdf->Output($PDF_filename);
+    $html2pdf = new Html2Pdf('P', 'A4', $language);
+    $html2pdf->WriteHTML($content);
+    $html2pdf->Output($PDF_filename);
 }
 
 /*
@@ -186,7 +186,7 @@ include "../include/header.php";
 ?>
 
 <body>
-	<div class="BasicsBox">
+    <div class="BasicsBox">
     <?php
     if (getval("context",false) == 'Modal'){$previous_page_modal = true;}
     else {$previous_page_modal = false;}
@@ -204,29 +204,29 @@ include "../include/header.php";
         }
      
         ?>
-	<h1><?php echo $lang["downloadingmetadata"]?></h1>
+    <h1><?php echo $lang["downloadingmetadata"]?></h1>
 
-	<p><?php echo $lang["file-contains-metadata"];render_help_link("user/resource-tools");?></p>
+    <p><?php echo $lang["file-contains-metadata"];render_help_link("user/resource-tools");?></p>
 
-	<form id="metadataDownloadForm" name="metadataDownloadForm" method=post action="<?php echo $baseurl_short; ?>pages/metadata_download.php" >
-		<?php generateFormToken("metadataDownloadForm"); ?>
+    <form id="metadataDownloadForm" name="metadataDownloadForm" method=post action="<?php echo $baseurl_short; ?>pages/metadata_download.php" >
+        <?php generateFormToken("metadataDownloadForm"); ?>
         <input name="ref" type="hidden" value="<?php echo $ref; ?>">
-		<div class="Question" id="fileType">
-			<label for="fileType_option">Download file type</label>
-			<select id="fileType_option" class="stdwidth" name="fileType_option">
-				<option value="">Please select...</option>
-				<option value="text">Text</option>
-				<option value="pdf">PDF</option>
-			</select>
-			<div class="clearerleft"></div>
-		</div>
+        <div class="Question" id="fileType">
+            <label for="fileType_option">Download file type</label>
+            <select id="fileType_option" class="stdwidth" name="fileType_option">
+                <option value="">Please select...</option>
+                <option value="text">Text</option>
+                <option value="pdf">PDF</option>
+            </select>
+            <div class="clearerleft"></div>
+        </div>
 
-		<div class="QuestionSubmit">
-			<input name="download" type="submit" value="<?php echo $lang['download']; ?>" />
-		</div>
-	</form>
+        <div class="QuestionSubmit">
+            <input name="download" type="submit" value="<?php echo $lang['download']; ?>" />
+        </div>
+    </form>
 
-	</div>
+    </div>
 </body>
 
 <?php

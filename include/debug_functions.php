@@ -1,43 +1,43 @@
 <?php
 
-	function check_debug_log_override()
-		{
-		global $debug_log_override, $userref;
+    function check_debug_log_override()
+        {
+        global $debug_log_override, $userref;
 
-		if (isset($debug_log_override) || !isset($userref))
-			{
-			return;
-			}
+        if (isset($debug_log_override) || !isset($userref))
+            {
+            return;
+            }
 
-		$debug_log_override = false;
+        $debug_log_override = false;
 
-		$debug_user = get_sysvar('debug_override_user','');
-		$debug_expires = get_sysvar('debug_override_expires','');
+        $debug_user = get_sysvar('debug_override_user','');
+        $debug_expires = get_sysvar('debug_override_expires','');
 
-		if ($debug_user == "" || $debug_expires == "")
-			{
-			return;
-			}
+        if ($debug_user == "" || $debug_expires == "")
+            {
+            return;
+            }
 
-		if ($debug_expires < time())
-			{
-			ps_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'",array());
-			return;
-			}
+        if ($debug_expires < time())
+            {
+            ps_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'",array());
+            return;
+            }
 
-		if ($debug_user == -1 || $debug_user == $userref)
-			{
-			$debug_log_override = true;
-			}
-		}
+        if ($debug_user == -1 || $debug_user == $userref)
+            {
+            $debug_log_override = true;
+            }
+        }
 
-	function create_debug_log_override($debug_user = -1, $debug_expires = 60)
-		{
-		ps_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'",array());
-		$debug_expires += time();
-		ps_query("INSERT INTO sysvars VALUES ('debug_override_user',?), ('debug_override_expires',?)",
+    function create_debug_log_override($debug_user = -1, $debug_expires = 60)
+        {
+        ps_query("DELETE FROM sysvars WHERE name='debug_override_user' OR name='debug_override_expires'",array());
+        $debug_expires += time();
+        ps_query("INSERT INTO sysvars VALUES ('debug_override_user',?), ('debug_override_expires',?)",
         array("s",$debug_user,"s",$debug_expires));
-		}
+        }
 
 
 /**

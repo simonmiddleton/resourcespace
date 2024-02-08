@@ -8,8 +8,8 @@ include dirname(__FILE__)."/../../../include/db.php";
 include dirname(__FILE__)."/../../../include/authenticate.php";
 include_once dirname(__FILE__)."/../include/meta_functions.php";
 include_once dirname(__FILE__)."/../include/csv_functions.php";
-	
-$fd="user_{$userref}_uploaded_meta";			// file descriptor for uploaded file
+    
+$fd="user_{$userref}_uploaded_meta";            // file descriptor for uploaded file
 $allfields              = get_resource_type_fields("","title");
 $csv_set_options = array();
 $csv_saved_options = getval("saved_csv_options","");
@@ -97,7 +97,7 @@ if(isset($_FILES[$fd]) && $_FILES[$fd]['error'] == 0)
     {
     if(check_valid_file_extension($_FILES[$fd],array("csv")))
         {
-        // We have a valid CSV, get a checksum and save it to a temporary location for processing	
+        // We have a valid CSV, get a checksum and save it to a temporary location for processing   
         // Needs whole file checksum
         $csvchecksum = get_checksum($_FILES[$fd]['tmp_name'], true);
         $csv_set_options["csvchecksum"] = $csvchecksum;
@@ -135,11 +135,11 @@ include dirname(__FILE__)."/../../../include/header.php";
 
 <?php
 if (!checkperm("c"))
-	{	
-	echo "<div class=\"BasicsBox\">" . $lang['csv_upload_error_no_permission'] . "</div>";	
-	include dirname(__FILE__)."/../../../include/footer.php";
-	return;
-	}
+    {   
+    echo "<div class=\"BasicsBox\">" . $lang['csv_upload_error_no_permission'] . "</div>";  
+    include dirname(__FILE__)."/../../../include/footer.php";
+    return;
+    }
 ?>
 
 <div class="BasicsBox">
@@ -235,12 +235,12 @@ switch($csvstep)
         ?>
         <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_form" method="post" enctype="multipart/form-data" >
             <?php generateFormToken("upload_csv_form"); ?>
-            <input type="hidden" id="csvstepmain" name="csvstep" value="2" > 			
+            <input type="hidden" id="csvstepmain" name="csvstep" value="2" >            
             <div class="Question">
                 <label for="<?php echo $fd; ?>"><?php echo $lang['csv_upload_file'] ?></label>
-                <input type="file" id="<?php echo $fd; ?>" name="<?php echo $fd; ?>" onchange="if(this.value==null || this.value=='') { jQuery('.file_selected').hide(); } else { jQuery('.file_selected').show(); } ">	
+                <input type="file" id="<?php echo $fd; ?>" name="<?php echo $fd; ?>" onchange="if(this.value==null || this.value=='') { jQuery('.file_selected').hide(); } else { jQuery('.file_selected').show(); } "> 
                 <div class="clearerleft"> </div>
-            </div>	
+            </div>  
             
             <div class="file_selected Question" style="display: none;">
                 <input id="update_existing" name="update_existing" type=hidden value="0">
@@ -262,7 +262,7 @@ switch($csvstep)
             <h2><?php echo $lang["csv_upload_mapping config"]; ?></h2>
             <form action="<?php echo $_SERVER["SCRIPT_NAME"]; ?>" id="upload_csv_config_form" method="post" enctype="multipart/form-data" >
                 <?php generateFormToken("upload_csv_config_form"); ?>
-                <input type="hidden" id="csvstepconfig" name="csvstep" value="1" > 			
+                <input type="hidden" id="csvstepconfig" name="csvstep" value="1" >          
 
 
                 <?php
@@ -279,9 +279,9 @@ switch($csvstep)
                     {?>
                     <div class="Question">
                         <label for="csv_config"><?php echo $lang['csv_upload_upload_config'] ?></label>
-                        <input type="file" id="csv_config" name="csv_config" onchange="if(this.value==null || this.value=='') { jQuery('.config_selected').hide(); } else { jQuery('.config_selected').show(); } ">	
+                        <input type="file" id="csv_config" name="csv_config" onchange="if(this.value==null || this.value=='') { jQuery('.config_selected').hide(); } else { jQuery('.config_selected').show(); } "> 
                         <div class="clearerleft"> </div>
-                    </div>	
+                    </div>  
                     
                     <div class="config_selected Question" style="display: none;">
                         <label for="submit" class="config_selected" style="display: none;"></label>
@@ -318,7 +318,7 @@ switch($csvstep)
                 <input type="hidden" id="csvstep" name="csvstep" value="3" > 
                 <div class="Question">
                     <label for="add_to_collection"><?php echo $lang['csv_upload_add_to_collection'] ?></label>
-                    <input type="checkbox" id="add_to_collection" name="add_to_collection" value="1"<?php if($csv_set_options["add_to_collection"] != ""){echo " checked ";}?>>	
+                    <input type="checkbox" id="add_to_collection" name="add_to_collection" value="1"<?php if($csv_set_options["add_to_collection"] != ""){echo " checked ";}?>> 
                     <div class="clearerleft"> </div>
                 </div>
 
@@ -447,7 +447,7 @@ switch($csvstep)
                 <div class="Question">
                     <label for="csv_update_col"><?php echo $lang["csv_upload_update_existing_collection"] ?></label>
                     <input id="csv_update_col" name="csv_update_col" type=hidden value="<?php echo $csv_set_options["csv_update_col"]; ?>">
-                    <input type="checkbox" name="csv_update_col_select" onchange="if(this.checked) { jQuery('#csv_update_col_id_select').show(); jQuery('#csv_update_col').val('1');} else { jQuery('#csv_update_col_id_select').hide(); jQuery('#csv_update_col').val('0'); }" <?php if($csv_set_options["csv_update_col"]){echo " checked"; } ?>>	
+                    <input type="checkbox" name="csv_update_col_select" onchange="if(this.checked) { jQuery('#csv_update_col_id_select').show(); jQuery('#csv_update_col').val('1');} else { jQuery('#csv_update_col_id_select').hide(); jQuery('#csv_update_col').val('0'); }" <?php if($csv_set_options["csv_update_col"]){echo " checked"; } ?>> 
                     
                     <div class="clearerleft"> </div>
                     
@@ -807,7 +807,7 @@ switch($csvstep)
                 {
                 CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php');
                 ShowThumbs();
-                });			
+                });         
             </script>
             <?php
             }
@@ -815,7 +815,7 @@ switch($csvstep)
         break;
     default:
     break;
-	}
+    }
 
 
 ?>

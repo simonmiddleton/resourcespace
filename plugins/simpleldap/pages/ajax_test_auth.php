@@ -22,7 +22,7 @@ $simpleldap['LDAPTLS_REQCERT_never'] = getval('LDAPTLS_REQCERT_never', 0,true) !
 $escaped_ldapuser = (function_exists('ldap_escape')) ? ldap_escape($simpleldap['ldapuser'], '', LDAP_ESCAPE_DN) : $simpleldap['ldapuser'];
 
 // Test we can connect to domain
-$bindsuccess=false;	
+$bindsuccess=false; 
 
 if($simpleldap['LDAPTLS_REQCERT_never'])
     {
@@ -42,7 +42,7 @@ ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, 2);
 ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
 
 if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1) 
-	{
+    {
     if(strpos($escaped_ldapuser, $userdomain) !== false)
         {
         $binduserstring = $escaped_ldapuser;
@@ -52,7 +52,7 @@ if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1)
         $binduserstring = "{$escaped_ldapuser}@{$userdomain}";
         }
 
-	debug("LDAP - Attempting to bind to AD server as : " . $binduserstring);
+    debug("LDAP - Attempting to bind to AD server as : " . $binduserstring);
     $GLOBALS["use_error_exception"] = true;
     try 
         {
@@ -64,23 +64,23 @@ if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1)
         $login=false;
         }
     unset($GLOBALS["use_error_exception"]);
-	if ($login)
-		{
-		debug("LDAP - Success binding to AD server as : " . $binduserstring);
-		$bindsuccess=true;
-		}
-	else
-		{
-		debug("LDAP - Failed binding to AD server as : " . $binduserstring);
-		}
-	}
+    if ($login)
+        {
+        debug("LDAP - Success binding to AD server as : " . $binduserstring);
+        $bindsuccess=true;
+        }
+    else
+        {
+        debug("LDAP - Failed binding to AD server as : " . $binduserstring);
+        }
+    }
 else
-	{
-	$searchdns=explode(";",$simpleldap['basedn']);
-	foreach($searchdns as $searchdn)
-		{
-		$binduserstring = $simpleldap['loginfield'] . "=" . $escaped_ldapuser . "," . $searchdn;
-		debug("LDAP - Attempting to bind to AD server as : " . $binduserstring);
+    {
+    $searchdns=explode(";",$simpleldap['basedn']);
+    foreach($searchdns as $searchdn)
+        {
+        $binduserstring = $simpleldap['loginfield'] . "=" . $escaped_ldapuser . "," . $searchdn;
+        debug("LDAP - Attempting to bind to AD server as : " . $binduserstring);
         $GLOBALS["use_error_exception"] = true;
         try 
             {
@@ -92,17 +92,17 @@ else
             $login=false;
             }
         unset($GLOBALS["use_error_exception"]);
-		if (!$login)
-			{
-			debug("LDAP bind failed: " . $searchdn);
-			}
-		else
-			{
-			$bindsuccess=true;
-			break;
-			}
-		}
-	}			
+        if (!$login)
+            {
+            debug("LDAP bind failed: " . $searchdn);
+            }
+        else
+            {
+            $bindsuccess=true;
+            break;
+            }
+        }
+    }           
 
 ldap_get_option($ds, LDAP_OPT_ERROR_STRING, $last_ldap_error);
 $response['bindsuccess'] = $bindsuccess ? $lang['status-ok'] : "{$lang['status-fail']} - " . ldap_error($ds) . " ( {$last_ldap_error} )";
@@ -113,23 +113,23 @@ $userdetails=simpleldap_authenticate($simpleldap['ldapuser'],$simpleldap['ldappa
 unset($GLOBALS["use_error_exception"]);
 
 if($userdetails)
-	{
-	$response['success'] = true;
-	$response['message'] = $lang["status-ok"];
-	$response['domain'] = $userdetails['domain'];
-	$response['binduser'] = $userdetails['binduser'];
-	$response['username'] = $userdetails['username'];
-	$response['displayname'] = $userdetails['displayname'];
-	$response['group'] = $userdetails['group'];
-	$response['email'] = $userdetails['email'];
-	$response['phone'] = $userdetails['phone'];
-	$response['memberof'] = $userdetails['memberof'];
-	}
+    {
+    $response['success'] = true;
+    $response['message'] = $lang["status-ok"];
+    $response['domain'] = $userdetails['domain'];
+    $response['binduser'] = $userdetails['binduser'];
+    $response['username'] = $userdetails['username'];
+    $response['displayname'] = $userdetails['displayname'];
+    $response['group'] = $userdetails['group'];
+    $response['email'] = $userdetails['email'];
+    $response['phone'] = $userdetails['phone'];
+    $response['memberof'] = $userdetails['memberof'];
+    }
 else
-	{
-	$response['success'] = false;
-	$response['message'] = $lang["status-fail"];
-	}
+    {
+    $response['success'] = false;
+    $response['message'] = $lang["status-fail"];
+    }
 
 $response['complete'] = true;
 

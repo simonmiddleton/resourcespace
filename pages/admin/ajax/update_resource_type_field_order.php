@@ -5,9 +5,9 @@ include dirname(__FILE__) . "/../../../include/db.php";
 include dirname(__FILE__) . "/../../../include/authenticate.php";
 
 if (!checkperm("a"))
-	{
-	exit ("Permission denied.");
-	}
+    {
+    exit ("Permission denied.");
+    }
 
 
 
@@ -21,4 +21,4 @@ if ($reorder)
         update_resource_type_field_order($neworder);
         exit("SUCCESS");
         }
-	
+    

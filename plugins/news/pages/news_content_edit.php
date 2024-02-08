@@ -43,13 +43,13 @@ $body=getval("body",0);
 if (getval("ref","")=="new"){$createnews=true;} else {$news=get_news($ref,"",""); $createnews=false;}
 
 if (!isset($error[0]) && getval("save","")!=""  && enforcePostRequest(false))
-	{
-	# Save news
-	If ($createnews) {add_news($date,$title,$body);}
-	else {update_news($ref,$date,$title,$body);}
-	redirect("plugins/news/pages/news_edit.php?findtext=".$findtext."&offset=".$offset);
-	}
-	
+    {
+    # Save news
+    If ($createnews) {add_news($date,$title,$body);}
+    else {update_news($ref,$date,$title,$body);}
+    redirect("plugins/news/pages/news_edit.php?findtext=".$findtext."&offset=".$offset);
+    }
+    
 # Fetch news data
 $news=get_news($ref,"","");
 include dirname(__FILE__)."/../../../include/header.php";
@@ -102,5 +102,5 @@ include dirname(__FILE__)."/../../../include/header.php";
     </form>
 </div>
 
-<?php		
+<?php	  
 include dirname(__FILE__)."/../../../include/footer.php";

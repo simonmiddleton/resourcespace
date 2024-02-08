@@ -28,25 +28,25 @@ $groups=get_usergroups();
 
 # Save group activation options
 if (getval("save", "") != "" && enforcePostRequest(false))
-	{
-	$access="";
-	if (getval("access","")=="some")
-		{
-		foreach ($groups as $group)
-			{
-			if (getval("group_" . $group["ref"],"")!="")
-				{
-				if ($access!="") {$access.=",";}
-				$access.=$group["ref"];
-				}
-			}
-		}
-	# Update database
-	log_activity(null,LOG_CODE_EDITED,$access,'plugins','enabled_groups',$plugin,'name');
-	ps_query("update plugins set enabled_groups= ? where name= ?", ['s', $access, 's', $plugin],"");
-	clear_query_cache("plugins");
-	redirect("pages/team/team_plugins.php");
-	}
+    {
+    $access="";
+    if (getval("access","")=="some")
+        {
+        foreach ($groups as $group)
+            {
+            if (getval("group_" . $group["ref"],"")!="")
+                {
+                if ($access!="") {$access.=",";}
+                $access.=$group["ref"];
+                }
+            }
+        }
+    # Update database
+    log_activity(null,LOG_CODE_EDITED,$access,'plugins','enabled_groups',$plugin,'name');
+    ps_query("update plugins set enabled_groups= ? where name= ?", ['s', $access, 's', $plugin],"");
+    clear_query_cache("plugins");
+    redirect("pages/team/team_plugins.php");
+    }
 
 include "../../include/header.php";
 $s=explode(",",$access);
@@ -58,7 +58,7 @@ $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
         'href'  => $baseurl_short . "pages/admin/admin_home.php",
-		'menu' =>  true
+        'menu' =>  true
     ),
     array(
         'title' => $lang["pluginmanager"],

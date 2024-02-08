@@ -21,12 +21,12 @@ $sort=getval("sort","");
 # Parse and replace nodes.
 $k=(split_keywords($search,false, false, false, false, true));$search="";
 foreach ($k as $kw)
-	{
-	if (substr($kw,0,2)=="@@")
-		{
-		# Node, resolve to string
-		$n=substr($kw,2);
-		$node=array();get_node($n,$node);$name=$node["name"];
+    {
+    if (substr($kw,0,2)=="@@")
+        {
+        # Node, resolve to string
+        $n=substr($kw,2);
+        $node=array();get_node($n,$node);$name=$node["name"];
         
         if (in_array($node["resource_type_field"],$resourceconnect_bind_fields))
             {
@@ -39,13 +39,13 @@ foreach ($k as $kw)
             # Strip back to plain text and match on any field.             
             $search.=' "' . i18n_get_translated($name) . '"';
             }
-		}
-	else
-		{
-		# Not a node, add as is
-		$search.=" " . $kw;
-		}
-	}
+        }
+    else
+        {
+        # Not a node, add as is
+        $search.=" " . $kw;
+        }
+    }
 $search=trim($search);
 
 

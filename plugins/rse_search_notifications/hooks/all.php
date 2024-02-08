@@ -56,7 +56,7 @@ function HookRse_search_notificationsAllRender_search_actions_add_option($option
     }
 
 function HookRse_search_notificationsAllRender_actions_add_collection_option($top_actions,array $options)
-	{
+    {
     if($top_actions)
         {
         return;
@@ -69,5 +69,5 @@ function HookRse_search_notificationsAllRender_actions_add_collection_option($to
         $options = $GLOBALS["hook_return_value"];
         }
 
-	return HookRse_search_notificationsAllRender_search_actions_add_option($options);
-	}
+    return HookRse_search_notificationsAllRender_search_actions_add_option($options);
+    }

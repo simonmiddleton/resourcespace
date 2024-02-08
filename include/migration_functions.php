@@ -3,32 +3,32 @@
 
 // function to automatically migrate options lists to nodes
 function migrate_resource_type_field_check(&$resource_type_field)
-	{
+    {
 
-	if (
+    if (
         !isset($resource_type_field['options']) ||
         is_null($resource_type_field['options']) ||
-		$resource_type_field['options']=='' ||
+        $resource_type_field['options']=='' ||
         ($resource_type_field['type'] == 7 && preg_match('/^' . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE . '/',$resource_type_field['options'])) ||
         preg_match('/^' . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX . '/',$resource_type_field['options'])
-	)
-		{
-		return;  // get out of here as there is nothing to do
-		}
+    )
+        {
+        return;  // get out of here as there is nothing to do
+        }
 
     // Delete all nodes for this resource type field
     // This is to prevent systems that migrated to have old values that have been removed from a default field
     // example: Country field
     delete_nodes_for_resource_type_field($resource_type_field['ref']);
 
-	if ($resource_type_field['type'] == 7)		// category tree
-		{
+    if ($resource_type_field['type'] == 7)      // category tree
+        {
         migrate_category_tree_to_nodes($resource_type_field['ref'],$resource_type_field['options']);
 
         // important!  this signifies that this field has been migrated by prefixing with -1,,MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
         ps_query("UPDATE `resource_type_field` SET `options` = CONCAT('" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX_CATEGORY_TREE . "', options) WHERE `ref` = ?", array("i", $resource_type_field['ref']));
 
-		}
+        }
     elseif ($resource_type_field['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)
         {
         $options = preg_split('/\s*,\s*/',$resource_type_field['options']);
@@ -43,8 +43,8 @@ function migrate_resource_type_field_check(&$resource_type_field)
         // Note as the dynamic keyword fields can reach the database column length limit this no longer appends the old 'options' text - the migration script will pick up any missing options later from existing resource_data values
         ps_query("UPDATE `resource_type_field` SET `options` = '" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX . "' WHERE `ref` = ?", array("i", $resource_type_field['ref']));
         }
-	else		// general comma separated fields
-		{
+    else        // general comma separated fields
+        {
         $options = preg_split('/\s*,\s*/',$resource_type_field['options']);
         $order=10;
         foreach ($options as $option)
@@ -55,10 +55,10 @@ function migrate_resource_type_field_check(&$resource_type_field)
 
         // important!  this signifies that this field has been migrated by prefixing with MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX
         ps_query("UPDATE `resource_type_field` SET `options` = CONCAT('" . MIGRATION_FIELD_OPTIONS_DEPRECATED_PREFIX . "',',',options) WHERE `ref` = ?", array("i", $resource_type_field['ref']));
-		}
+        }
     
     clear_query_cache("schema");
-	}
+    }
 
 function migrate_category_tree_to_nodes($resource_type_field_ref,$category_tree_options)
     {

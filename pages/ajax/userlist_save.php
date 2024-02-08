@@ -11,8 +11,8 @@ $userlistname=getval("userlistname","");
 $delete=getval("delete","");
 
 if ($delete!=""){
-	$userlistref=getval("userlistref","",true);
-	ps_query("delete from user_userlist where ref= ?", ['i', $userlistref]);
+    $userlistref=getval("userlistref","",true);
+    ps_query("delete from user_userlist where ref= ?", ['i', $userlistref]);
 }
 
 if ($userstring!="" && $userstring!=$lang['typeauserlistname'] && $userlistname!=""){

@@ -7,8 +7,8 @@ function HookAction_datesAllInitialise()
     }
 
 function HookAction_datesCronCron()
-	{
-	global $lang, $action_dates_restrictfield,$action_dates_deletefield, $resource_deletion_state,
+    {
+    global $lang, $action_dates_restrictfield,$action_dates_deletefield, $resource_deletion_state,
            $action_dates_reallydelete, $action_dates_email_admin_days, $email_notify, $email_from,
            $applicationname, $action_dates_new_state, $action_dates_remove_from_collection,
            $action_dates_extra_config, $DATE_FIELD_TYPES, $action_dates_email_for_state,
@@ -61,7 +61,7 @@ function HookAction_datesCronCron()
         $eligible_states = $action_dates_eligible_states;
     }
 
-	$allowable_fields=ps_array("SELECT ref AS value FROM resource_type_field WHERE type in (" . ps_param_insert(count($validfieldtypes)) . ")" , ps_param_fill($validfieldtypes,"i"),"schema");
+    $allowable_fields=ps_array("SELECT ref AS value FROM resource_type_field WHERE type in (" . ps_param_insert(count($validfieldtypes)) . ")" , ps_param_fill($validfieldtypes,"i"),"schema");
     $email_state_refs    = array();   # List of refs which are due to undergo state change (including full deletion) in n days 
     $email_state_days    = array();   # List of days due to undergo state change (including full deletion) in n days 
     $email_restrict_refs = array();   # List of refs which are due to be restricted in n days
@@ -72,8 +72,8 @@ function HookAction_datesCronCron()
 
     # Process resource access restriction if a restriction date has been configured
     # The restriction date will be processed if it is full date or a partial date because either will yield viable timestamps
-	if(in_array($action_dates_restrictfield, $allowable_fields))
-		{
+    if(in_array($action_dates_restrictfield, $allowable_fields))
+        {
         $fieldinfo = get_resource_type_field($action_dates_restrictfield);
         if(PHP_SAPI == "cli")
             {
@@ -99,7 +99,7 @@ function HookAction_datesCronCron()
             $restrict_date_target = date_create($resource["value"]);   # Value of the restrict date from metadata
             
             # Candidate restriction date reached or passed 
-            if ($action_date_current >= $restrict_date_target)		
+            if ($action_date_current >= $restrict_date_target)      
                 {
                 # Restrict access to the resource
                 $existing_access=ps_value("SELECT access AS value FROM resource WHERE ref = ?",["i",$ref],"");
@@ -110,7 +110,7 @@ function HookAction_datesCronCron()
                         echo " - Restricting resource {$ref}".PHP_EOL;
                         }
                     ps_query("UPDATE resource SET access=1 WHERE ref = ?",["i",$ref]);
-                    resource_log($ref,'a','',$lang['action_dates_restrict_logtext'],$existing_access,1);		
+                    resource_log($ref,'a','',$lang['action_dates_restrict_logtext'],$existing_access,1);        
                     }
                 }
             else
@@ -121,19 +121,19 @@ function HookAction_datesCronCron()
                     $restrict_interval = date_diff($action_date_current, $restrict_date_target);
                     $days_before_restrict = (int) $restrict_interval->format('%R%a');
                     # Check due number of days within range for notification
-                    if ($days_before_restrict <= $action_dates_email_admin_days)		
-                        {  			
+                    if ($days_before_restrict <= $action_dates_email_admin_days)        
+                        {           
                         $email_restrict_refs[]=$ref;
-                        $email_restrict_days[]=$days_before_restrict;		
+                        $email_restrict_days[]=$days_before_restrict;       
                         }
                     }
                 }
-			}
+            }
         }
     
     # Process resource deletion or statechange if designated date has been configured
     # The designated date will be processed if it is a valid date field
-	if(in_array($action_dates_deletefield, $allowable_fields))
+    if(in_array($action_dates_deletefield, $allowable_fields))
         {
         $change_archive_state = false;
 
@@ -262,10 +262,10 @@ function HookAction_datesCronCron()
                     {
                     $action_interval = date_diff($action_date_current, $action_date_target);
                     $days_before_action = (int) $action_interval->format('%R%a');
-                    if ($days_before_action <= $action_dates_email_admin_days)		
-                        {  			
-                        $email_state_refs[]=$ref;	
-                        $email_state_days[]=$days_before_action;		
+                    if ($days_before_action <= $action_dates_email_admin_days)      
+                        {           
+                        $email_state_refs[]=$ref;   
+                        $email_state_days[]=$days_before_action;        
                         }
                     }
                 }
@@ -318,14 +318,14 @@ function HookAction_datesCronCron()
 
     foreach($notify_users as $notify_user)
         {
-        get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message);	
+        get_config_option($notify_user['ref'],'user_pref_resource_notifications', $send_message);   
         if($send_message==false){ continue; } # If this user doesn't want notifications they won't get any messages or emails
 
         # Notification is required; it will either be sent as an email only or as a message with a possible additional email
         get_config_option($notify_user['ref'],'email_user_notifications', $send_email);    
         if($send_email && $notify_user["email"]!="")
             {
-            $admin_notify_emails[] = $notify_user['email'];				
+            $admin_notify_emails[] = $notify_user['email'];             
             }        
         else
             {
@@ -489,7 +489,7 @@ function HookAction_datesCronCron()
             foreach ($additional_resources as $resource)
                 {
                 $ref=$resource["resource"];
-			
+            
                 if (time()>=strtotime($resource["value"]))
                     {
                     if(PHP_SAPI == "cli")
@@ -567,6 +567,6 @@ function build_actiondates_urls(array $resource_refs)
 
 // This is required if cron task is run via pages/tools/cron_copy_hitcount.php
 function HookAction_datesCron_copy_hitcountCron()
-	{
+    {
     HookAction_datesCronCron();
     }

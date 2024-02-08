@@ -24,7 +24,7 @@ function HookVr_viewPreviewFullpreviewresultnav()
    
 function HookVr_viewPreviewcustomflvplay()
     {
-	global $ref, $resource, $baseurl, $access, $use_vr_view;
+    global $ref, $resource, $baseurl, $access, $use_vr_view;
     global $vr_view_restypes, $vr_view_metadata, $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $vr_view_orig_video;
     
     if(!$use_vr_view || $access !=0)
@@ -51,7 +51,7 @@ function HookVr_viewPreviewcustomflvplay()
     
     $sourcefile = get_resource_path($ref,true,$preview_size,false,$preview_ext);
     
-	if(file_exists($sourcefile))
+    if(file_exists($sourcefile))
         {
         // Get dimensions
         list($prewidth, $preheight) = @getimagesize($sourcefile);
@@ -76,7 +76,7 @@ function HookVr_viewPreviewcustomflvplay()
 
 function HookVr_viewPreviewReplacepreviewimage()
     {
-	global $ref, $resource, $baseurl, $access, $use_vr_view;
+    global $ref, $resource, $baseurl, $access, $use_vr_view;
     global $vr_view_restypes, $vr_view_metadata, $vr_view_orig_image, $vr_view_orig_video;
     
     $context = (getval("modal","") != "") ? "Modal" : "CentralSpace";
@@ -101,8 +101,8 @@ function HookVr_viewPreviewReplacepreviewimage()
     $saved_hide_real_filepath = $hide_real_filepath;
     $hide_real_filepath = false;  
     
-	$sourcefile = get_resource_path($ref,true,$preview_size,false,$preview_ext);
-	if(file_exists($sourcefile))
+    $sourcefile = get_resource_path($ref,true,$preview_size,false,$preview_ext);
+    if(file_exists($sourcefile))
         {
         $sourcepath=get_resource_path($ref,false,$preview_size,false,$preview_ext);
         // Show the player
@@ -115,4 +115,4 @@ function HookVr_viewPreviewReplacepreviewimage()
         }
             
     return false;
-	}
+    }

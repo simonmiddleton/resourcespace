@@ -47,9 +47,9 @@ include "../../../include/header.php";
 <div class="BasicsBox">
 <?php
 if (isset($userconfirmmessage))
-	{
-	echo "<div class=\"FormError\">" . escape($userconfirmmessage) . "</div>";
-	}
+    {
+    echo "<div class=\"FormError\">" . escape($userconfirmmessage) . "</div>";
+    }
 
 ?>
 

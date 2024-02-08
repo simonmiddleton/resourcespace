@@ -5,7 +5,7 @@ include "../../../include/authenticate.php"; if (!checkperm("a")) {exit ("Permis
 $plugin_page_heading = 'License Manager';
 $plugin_name = 'licensemanager';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 
 $page_def[] = config_add_text_list_input(
     'license_usage_mediums',

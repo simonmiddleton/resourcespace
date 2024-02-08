@@ -77,7 +77,7 @@ $openaccessd = get_resource_access($resourced) == 0;
 $openaccesse = get_resource_access($resourcee) == 0;
 $openaccessf = get_resource_access($resourcef) == 0;
 if($openaccessa || !$openaccessb || $openaccessc || $openaccessd || $openaccesse || $openaccessf)
-	{
+    {
     echo "SUBTEST B";
     return false;
     }

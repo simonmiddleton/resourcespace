@@ -9,9 +9,9 @@ include_once "../../include/image_processing.php";
 
 $sapi_type = php_sapi_name();
 if (substr($sapi_type, 0, 3) != 'cli')
-	{
-	include "../../include/authenticate.php";
-	if (!checkperm("a")) {exit("Permission denied");}
+    {
+    include "../../include/authenticate.php";
+    if (!checkperm("a")) {exit("Permission denied");}
     header("Content-type: text/plain");
     set_time_limit(0);
     # ex. pages/tools/update_exiftool_field.php?fieldrefs=75,3&blanks=true
@@ -34,9 +34,9 @@ if (substr($sapi_type, 0, 3) != 'cli')
     $fieldrefs = explode(",",$fieldrefs);
     $collectionid = getval("col", 0, true);
     $overwrite = getval("overwrite","") != "";  // If true and field already has value it will overwrite the existing value
-	}
+    }
 else
-	{
+    {
     $shortopts = "f:c:b:o";
     $longopts = array("fieldrefs:","blanks::","col::","overwrite");
     $clargs = getopt($shortopts,$longopts);
@@ -115,7 +115,7 @@ foreach ($fieldrefs as $fieldref)
     else
         {
         $rd= ps_query("SELECT ref,file_extension FROM resource $join WHERE resource_type IN(" . ps_param_insert(count($restypes)) . ") $conditionand ORDER BY ref", array_merge(ps_param_fill($restypes,"i"), $params));
-        }	
+        }   
     $exiftool_tags=explode(",",$exiftool_tag);
     for ($n=0;$n<count($rd);$n++)
         {

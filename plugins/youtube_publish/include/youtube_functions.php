@@ -62,7 +62,7 @@ function youtube_publish_initialize()
         {
         $client->setAccessToken(json_encode(array("access_token"=>$access_token)));
         }
-    catch (Google_ServiceException $e)
+    catch (Google_Service_Exception $e)
         {
         $errortext = sprintf('<p>A service error occurred: <code>%s</code></p>',
         htmlspecialchars($e->getMessage()));
@@ -79,7 +79,7 @@ function youtube_publish_initialize()
             {
             $client->refreshToken($refresh_token);
             }
-        catch (Google_ServiceException $e)
+        catch (Google_Service_Exception $e)
             {
             delete_youtube_tokens();
             get_youtube_authorization_code();
@@ -108,7 +108,7 @@ function youtube_publish_initialize()
         $youtube_username = $listResponse[0]['snippet']['title'];
         ps_query("UPDATE user SET youtube_username = ? WHERE ref = ?", array("s", $youtube_username, "i", $userref));
         }
-    catch (Google_ServiceException $e)
+    catch (Google_Service_Exception $e)
         {
         $errortext = sprintf('<p>A service error occurred: <code>%s</code></p>',
         htmlspecialchars($e->getMessage()));
@@ -225,7 +225,7 @@ function upload_video()
 
         return array(true,$youtube_new_url);
         }
-    catch (Google_ServiceException $e)
+    catch (Google_Service_Exception $e)
         {
         $htmlBody = sprintf('<p>A service error occurred: <code>%s</code></p>',
         htmlspecialchars($e->getMessage()));
@@ -254,7 +254,7 @@ function youtube_upload_get_categories()
                 'regionCode' => 'GB',
             ));
         }
-    catch (Google_ServiceException $e)
+    catch (Google_Service_Exception $e)
         {
         $errortext = sprintf('<p>A service error occurred: <code>%s</code></p>',
         htmlspecialchars($e->getMessage()));

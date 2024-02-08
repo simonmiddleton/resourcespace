@@ -17,7 +17,7 @@ $cmd_db_pass    = $mysql_password === '' ? '' : '-p' . escapeshellarg($mysql_pas
 if(!$system_download_config)
     {
     // Not permitted but shouldn't ever occur. Update job queue
-	job_queue_update($jobref,$job_data,STATUS_ERROR);
+    job_queue_update($jobref,$job_data,STATUS_ERROR);
     $message=$lang["exportfailed"] . " - " . str_replace("%%CONFIG_OPTION%%","\$system_download_config",$lang["error_check_config"]);
     message_add($job["user"],$message,"",0);
     exit();
@@ -133,9 +133,9 @@ if(!isset($joberror))
     }
 
 if(!$jobsuccess)
-	{
-	// Job failed, update job queue
-	job_queue_update($jobref,$job_data,STATUS_ERROR);
+    {
+    // Job failed, update job queue
+    job_queue_update($jobref,$job_data,STATUS_ERROR);
     $message=$lang["exportfailed"];
     message_add($job["user"],$message,"",0);
     }

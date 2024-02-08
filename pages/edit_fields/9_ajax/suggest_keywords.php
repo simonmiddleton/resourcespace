@@ -35,27 +35,27 @@ foreach($fielddata['nodes'] as $node)
     $trans = i18n_get_translated($node['name']);
     
     if($dynamic_keyword_suggest_contains)
-		{
-		if('' != $trans && (!isset($dynamic_keyword_suggest_contains_characters) || $dynamic_keyword_suggest_contains_characters <= strlen($keyword)) && strpos(strtolower($trans), strtolower($keyword)) !== false)
-			{
-			if(strtolower($trans) == strtolower($keyword))
-				{
-				$exactmatch = true;
-				}
-			$results[] = array(
-					'label' => $trans,
-					'value' => $node['ref']
-				);
-			}
-		}
-	else
-		{
-		if('' != $trans && substr(strtolower($trans), 0, strlen($keyword)) == strtolower($keyword))
-			{
-			if(strtolower($trans) == strtolower($keyword))
-				{
-				$exactmatch = true;
-				}
+        {
+        if('' != $trans && (!isset($dynamic_keyword_suggest_contains_characters) || $dynamic_keyword_suggest_contains_characters <= strlen($keyword)) && strpos(strtolower($trans), strtolower($keyword)) !== false)
+            {
+            if(strtolower($trans) == strtolower($keyword))
+                {
+                $exactmatch = true;
+                }
+            $results[] = array(
+                    'label' => $trans,
+                    'value' => $node['ref']
+                );
+            }
+        }
+    else
+        {
+        if('' != $trans && substr(strtolower($trans), 0, strlen($keyword)) == strtolower($keyword))
+            {
+            if(strtolower($trans) == strtolower($keyword))
+                {
+                $exactmatch = true;
+                }
 
             $results[] = array(
                     'label' => $trans,

@@ -40,8 +40,8 @@ if("{$baseurl_short}pages/search.php" === $backurl_path)
 
 # Execute report.
 if ($report!="" && (getval("createemail","")==""))
-	{
-	$download=getval("download","")!="";
+    {
+    $download=getval("download","")!="";
     list($from_y, $from_m, $from_d, $to_y, $to_m, $to_d) = array_values(report_process_period([
             'period' => $period,
             'period_days' => getval('period_days', ''),
@@ -52,123 +52,123 @@ if ($report!="" && (getval("createemail","")==""))
             'to-m' => getval('to-m', ''),
             'to-d' => getval('to-d', ''),
         ]));
-	$output=do_report($report, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d, $download, false, false, $search_params);
-	}
+    $output=do_report($report, $from_y, $from_m, $from_d, $to_y, $to_m, $to_d, $download, false, false, $search_params);
+    }
 
-include "../../include/header.php";	
+include "../../include/header.php"; 
 
 if (getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false)))
-	{
-	if ($report!="") 
-		{
-		$report_receiver      = getval('report_receiver', '');
-		$user_group_selection = array();
-	
-		switch($report_receiver)
-			{
-			case 'specific_user_groups':
-				$user_group_selection = getval('user_group_selection', array());
-				break;
-			}
-	
-		# Create a new periodic e-mail report
-		create_periodic_email($userref, $report, $period, getval('email_days', 1, true), $user_group_selection, $search_params);
-		?>
-		<script type="text/javascript">
-		alert("<?php echo $lang["newemailreportcreated"] ?>");
-		</script>
-		<?php
-	
-		}
-	else 
-		{
-		?>
-		<script type="text/javascript">
-		alert("<?php echo $lang["report-select-required"] ?>");
-		</script>
-		<?php
-		}
-	}
+    {
+    if ($report!="") 
+        {
+        $report_receiver      = getval('report_receiver', '');
+        $user_group_selection = array();
+    
+        switch($report_receiver)
+            {
+            case 'specific_user_groups':
+                $user_group_selection = getval('user_group_selection', array());
+                break;
+            }
+    
+        # Create a new periodic e-mail report
+        create_periodic_email($userref, $report, $period, getval('email_days', 1, true), $user_group_selection, $search_params);
+        ?>
+        <script type="text/javascript">
+        alert("<?php echo $lang["newemailreportcreated"] ?>");
+        </script>
+        <?php
+    
+        }
+    else 
+        {
+        ?>
+        <script type="text/javascript">
+        alert("<?php echo $lang["report-select-required"] ?>");
+        </script>
+        <?php
+        }
+    }
 
 $delete = getval('delete', '');
 if($delete != '')
-	{
-	if('yes' == getval('delete_confirmed', '') && enforcePostRequest(getval("ajax", false)))
-		{
-		delete_periodic_report($delete);
-		?>
-		<div class="BasicsBox">
-			<h1><?php echo $lang['deleted']?></h1>
-			<p><?php echo $lang['report_periodic_email_deletion_confirmed']?></p>
-		</div>
-		<?php
-		}
-	else
-		{
-		?>
-		<div class="BasicsBox">
-			<h2><?php echo $lang['report_periodic_email_delete_title']; ?></h2>
-			<form method="post" action="<?php echo $baseurl_short; ?>pages/team/team_report.php?delete=<?php echo urlencode($delete); ?>">
+    {
+    if('yes' == getval('delete_confirmed', '') && enforcePostRequest(getval("ajax", false)))
+        {
+        delete_periodic_report($delete);
+        ?>
+        <div class="BasicsBox">
+            <h1><?php echo $lang['deleted']?></h1>
+            <p><?php echo $lang['report_periodic_email_deletion_confirmed']?></p>
+        </div>
+        <?php
+        }
+    else
+        {
+        ?>
+        <div class="BasicsBox">
+            <h2><?php echo $lang['report_periodic_email_delete_title']; ?></h2>
+            <form method="post" action="<?php echo $baseurl_short; ?>pages/team/team_report.php?delete=<?php echo urlencode($delete); ?>">
                 <?php generateFormToken("delete_periodic_report"); ?>
-				<div class="Question">
-					<label for="delete_confirmed"><?php echo $lang['report_periodic_email_delete_confirmation']; ?></label>
-					<input id="delete_confirmed" type="checkbox" name="delete_confirmed" value="yes" />
-					<div class="clearerleft"></div>
-				</div>
-				<div class="QuestionSubmit">
-					<input name="save" type="submit" value="<?php echo $lang['comments_submit-button-label']; ?>" />
-				</div>
-			</form>
-		</div>
-		<?php
-		}
+                <div class="Question">
+                    <label for="delete_confirmed"><?php echo $lang['report_periodic_email_delete_confirmation']; ?></label>
+                    <input id="delete_confirmed" type="checkbox" name="delete_confirmed" value="yes" />
+                    <div class="clearerleft"></div>
+                </div>
+                <div class="QuestionSubmit">
+                    <input name="save" type="submit" value="<?php echo $lang['comments_submit-button-label']; ?>" />
+                </div>
+            </form>
+        </div>
+        <?php
+        }
 
-	include '../../include/footer.php';
-	exit();
-	}
-	
+    include '../../include/footer.php';
+    exit();
+    }
+    
 $unsubscribe = getval('unsubscribe', '');
 if($unsubscribe != '')
-	{
-	if('yes' == getval('unsubscription_confirmed', '') && enforcePostRequest(getval("ajax", false)))
-		{
+    {
+    if('yes' == getval('unsubscription_confirmed', '') && enforcePostRequest(getval("ajax", false)))
+        {
         $unsubscribe_user = getval("unsubscribe_user",$userref,true);
         unsubscribe_user_from_periodic_report($unsubscribe_user, $unsubscribe);
-		?>
-		<div class="BasicsBox">
-			<h1><?php echo $lang["unsubscribed"]?></h1>
-			<p><?php echo $lang["youhaveunsubscribedreport"]?></p>
-		</div>
-		<?php
-		}
-	else
-		{
-		?>
-		<div class="BasicsBox">
-			<h2><?php echo $lang['report_periodic_email_unsubscribe_title']; ?></h2>
-			<form method="post" action="<?php echo $baseurl_short; ?>pages/team/team_report.php?unsubscribe=<?php echo urlencode($unsubscribe); ?>">
+        ?>
+        <div class="BasicsBox">
+            <h1><?php echo $lang["unsubscribed"]?></h1>
+            <p><?php echo $lang["youhaveunsubscribedreport"]?></p>
+        </div>
+        <?php
+        }
+    else
+        {
+        ?>
+        <div class="BasicsBox">
+            <h2><?php echo $lang['report_periodic_email_unsubscribe_title']; ?></h2>
+            <form method="post" action="<?php echo $baseurl_short; ?>pages/team/team_report.php?unsubscribe=<?php echo urlencode($unsubscribe); ?>">
                 <?php generateFormToken("unsubscribe_user_from_periodic_report"); ?>
-				<div class="Question">
-					<label for="unsubscription_confirmed"><?php echo $lang['report_periodic_email_unsubscribe_confirmation']; ?></label>
-					<input id="unsubscription_confirmed" type="checkbox" name="unsubscription_confirmed" value="yes" />
-					<div class="clearerleft"></div>
-				</div>
-				<div class="QuestionSubmit">
-					<input name="save" type="submit" value="<?php echo $lang['comments_submit-button-label']; ?>" />
-				</div>
-			</form>
-		</div>
-		<?php
-		}
-	}
+                <div class="Question">
+                    <label for="unsubscription_confirmed"><?php echo $lang['report_periodic_email_unsubscribe_confirmation']; ?></label>
+                    <input id="unsubscription_confirmed" type="checkbox" name="unsubscription_confirmed" value="yes" />
+                    <div class="clearerleft"></div>
+                </div>
+                <div class="QuestionSubmit">
+                    <input name="save" type="submit" value="<?php echo $lang['comments_submit-button-label']; ?>" />
+                </div>
+            </form>
+        </div>
+        <?php
+        }
+    }
 else
-	{
-	# Normal behaviour.
+    {
+    # Normal behaviour.
     ?>
 <div class="BasicsBox">
     <h1><?php echo $lang['viewreports']; ?></h1>
-	<?php
-	if($run_report_on_search_results)
+    <?php
+    if($run_report_on_search_results)
         {
         $links_trail = [
             [
@@ -178,33 +178,33 @@ else
         ];
         }
     else if (mb_strpos($backurl, "pages/admin/admin_report_management.php") !== false)
-	    {
-	    // Arrived from Manage reports page
-	    $links_trail = array(
-	        array(
-	            'title' => $lang["systemsetup"],
-	        	'href'  => $baseurl_short . "pages/admin/admin_home.php",
-				'menu' =>  true
-	        ),
-	        array(
-	            'title' => $lang["page-title_report_management"],
-	            'href'  => $baseurl_short . "pages/admin/admin_report_management.php"
-	        )
-	    );
-	    }
-	else
-		{
-		$links_trail = array(
-	        array(
-	            'title' => $lang["teamcentre"],
+        {
+        // Arrived from Manage reports page
+        $links_trail = array(
+            array(
+                'title' => $lang["systemsetup"],
+                'href'  => $baseurl_short . "pages/admin/admin_home.php",
+                'menu' =>  true
+            ),
+            array(
+                'title' => $lang["page-title_report_management"],
+                'href'  => $baseurl_short . "pages/admin/admin_report_management.php"
+            )
+        );
+        }
+    else
+        {
+        $links_trail = array(
+            array(
+                'title' => $lang["teamcentre"],
                 'href'  => $baseurl_short . "pages/team/team_home.php",
-				'menu' =>  true
-	        )
-		);
-		}
+                'menu' =>  true
+            )
+        );
+        }
 
-	$links_trail[] = ['title' => $lang['viewreports']];
-	renderBreadcrumbs($links_trail);
+    $links_trail[] = ['title' => $lang['viewreports']];
+    renderBreadcrumbs($links_trail);
 
     $reports = get_reports();
     $report_options = [];
@@ -220,8 +220,8 @@ else
     $report_options[] = $report_opt;
     }
     $error = (empty($report_options) ? $lang['report_error_no_reports_supporting_search_results'] : '');
-	?>
- 	<p><?php echo text("introtext");render_help_link('resourceadmin/reports-and-statistics');?></p>
+    ?>
+    <p><?php echo text("introtext");render_help_link('resourceadmin/reports-and-statistics');?></p>
 <?php render_top_page_error_style($error); ?>
 <form method="post" action="<?php echo $baseurl ?>/pages/team/team_report.php" onSubmit="if (!do_download) {return CentralSpacePost(this);}">
     <?php generateFormToken("team_report"); ?>
@@ -257,7 +257,7 @@ foreach($report_options as $report_opt)
         ($report_opt['ref'] == $report ? ' selected' : ''),
         htmlspecialchars($report_opt['name']));
     }
-	?>
+    ?>
 </select>
 <div class="clearerleft"> </div>
 </div>
@@ -275,72 +275,72 @@ foreach($report_options as $report_opt)
 
 <!-- E-mail Me function -->
 <div id="EmailMe" <?php if ($period_init==-1) { ?>style="display:none;"<?php } ?>>
-	<div class="Question">
-		<label for="email"><?php echo $lang['emailperiodically']; ?></label>
-		<input type="checkbox" onClick="
-		if (this.checked)
-			{
-			document.getElementById('EmailSetup').style.display='block';
+    <div class="Question">
+        <label for="email"><?php echo $lang['emailperiodically']; ?></label>
+        <input type="checkbox" onClick="
+        if (this.checked)
+            {
+            document.getElementById('EmailSetup').style.display='block';
 
-			// Copy reporting period to e-mail period
-			if (document.getElementById('period').value==0)
-				{
-				// Copy from specific day box
-				document.getElementById('email_days').value=document.getElementById('period_days').value;
-				}
-			else
-				{
-				document.getElementById('email_days').value=document.getElementById('period').value;		
-				}
-			}
-		else
-			{
-			document.getElementById('EmailSetup').style.display='none';
-			}
-			">
-		<div class="clearerleft"></div>
-	</div>
+            // Copy reporting period to e-mail period
+            if (document.getElementById('period').value==0)
+                {
+                // Copy from specific day box
+                document.getElementById('email_days').value=document.getElementById('period_days').value;
+                }
+            else
+                {
+                document.getElementById('email_days').value=document.getElementById('period').value;        
+                }
+            }
+        else
+            {
+            document.getElementById('EmailSetup').style.display='none';
+            }
+            ">
+        <div class="clearerleft"></div>
+    </div>
 
-	<div id="EmailSetup" style="display:none;">
-		<!-- E-mail Period select -->
-		<div class="Question">
-			<div class="Fixed" style="width: 400px;">
-			<?php
-			$textbox="<input type=\"text\" id=\"email_days\" name=\"email_days\" size=\"4\" value=\"7\">";
-			echo str_replace("?",$textbox,$lang["emaileveryndays"]);
-			?>
-	       <br />
-	       <br />
-	       <label for="report_for_me_only">
-				<input id="report_for_me_only" type="radio" name="report_receiver" value="user_only" onClick="document.getElementById('user_group_selection').style.display = 'none';" checked /> <?php echo $lang['report_periodic_email_option_me']; ?>
-	       </label>
-	       <?php
-			if (checkperm('m'))
-				{
-				?>
-				<br />
-				<label for="selected_user_groups">
-					<input id="selected_user_groups" type="radio" name="report_receiver" value="specific_user_groups" onClick="document.getElementById('user_group_selection').style.display = 'block';" /> <?php echo $lang['report_periodic_email_option_selected_user_groups']; ?>
-				</label>
-				<?php
-				render_user_group_multi_select('user_group_selection', array(), 10, 'display: none;');
-				}
-			?>
-			<div class="clearerleft"></div>
-			<br />
-			<input name="createemail" type="submit" onClick="do_download=true;" value="<?php echo htmlspecialchars($lang["create"]); ?>" />
-			</div>
-			<div class="clearerleft"></div>
-		</div>
-		<!-- End of E-mail Period Select -->
-	</div><!-- End of EmailSetup -->
+    <div id="EmailSetup" style="display:none;">
+        <!-- E-mail Period select -->
+        <div class="Question">
+            <div class="Fixed" style="width: 400px;">
+            <?php
+            $textbox="<input type=\"text\" id=\"email_days\" name=\"email_days\" size=\"4\" value=\"7\">";
+            echo str_replace("?",$textbox,$lang["emaileveryndays"]);
+            ?>
+           <br />
+           <br />
+           <label for="report_for_me_only">
+                <input id="report_for_me_only" type="radio" name="report_receiver" value="user_only" onClick="document.getElementById('user_group_selection').style.display = 'none';" checked /> <?php echo $lang['report_periodic_email_option_me']; ?>
+           </label>
+           <?php
+            if (checkperm('m'))
+                {
+                ?>
+                <br />
+                <label for="selected_user_groups">
+                    <input id="selected_user_groups" type="radio" name="report_receiver" value="specific_user_groups" onClick="document.getElementById('user_group_selection').style.display = 'block';" /> <?php echo $lang['report_periodic_email_option_selected_user_groups']; ?>
+                </label>
+                <?php
+                render_user_group_multi_select('user_group_selection', array(), 10, 'display: none;');
+                }
+            ?>
+            <div class="clearerleft"></div>
+            <br />
+            <input name="createemail" type="submit" onClick="do_download=true;" value="<?php echo htmlspecialchars($lang["create"]); ?>" />
+            </div>
+            <div class="clearerleft"></div>
+        </div>
+        <!-- End of E-mail Period Select -->
+    </div><!-- End of EmailSetup -->
 </div>
 <!-- End of E-mail Me function -->
 <?php hook('customreportform', '', array($report)); ?>
     <script language="text/javascript">
     var do_download=false;
     </script>
-    <div class="QuestionSubmit" id="SubmitBlock">		
+    <div class="QuestionSubmit" id="SubmitBlock">       
         <input name="save" type="submit" onClick="do_download=false;" value="<?php echo htmlspecialchars($lang["viewreport"]); ?>" />
         <input name="download" type="submit" onClick="do_download=true;" value="<?php echo htmlspecialchars($lang["downloadreport"]); ?>" />
         <input name="view_as_search_results"

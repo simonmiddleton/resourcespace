@@ -21,8 +21,8 @@ include __DIR__ . "/../../include/db.php"; ob_end_clean(); // Discard output buf
 include __DIR__ . "/../../include/image_processing.php";
 
 if(ini_get('max_execution_time') < 1800 || $php_time_limit < 1800) {
-	echo "Script maximum execution time should be set to at least 1800 seconds! Edit the config.php file and set \$php_time_limit.";
-	exit;
+    echo "Script maximum execution time should be set to at least 1800 seconds! Edit the config.php file and set \$php_time_limit.";
+    exit;
 }
 
 // restore the default system error handler
@@ -54,9 +54,9 @@ $topurge = ps_array("select ref as value from resource where archive = '3'",arra
 $purgecount = 0;
 
 foreach ($topurge as $ref){
-	echo "Purging $ref\n";
-	delete_resource($ref);
-	$purgecount++;
+    echo "Purging $ref\n";
+    delete_resource($ref);
+    $purgecount++;
 }
 
 echo "\n\nComplete. $purgecount resources purged.\n\n";

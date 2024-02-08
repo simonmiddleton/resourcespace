@@ -23,42 +23,42 @@ $approval_state_text = array(0 => $lang["notapproved"],1 => $lang["approved"], 2
 
 
 if (getval("unlock","")!="" && enforcePostRequest(getval("ajax", false)))
-	{
-	# reset user lock
-	ps_query("update user set login_tries='0' where ref= ?", ['i', $ref]);
-	}
+    {
+    # reset user lock
+    ps_query("update user set login_tries='0' where ref= ?", ['i', $ref]);
+    }
 elseif(getval("suggest","")!="")
-	{
-	echo make_password();
-	exit();
-	}
+    {
+    echo make_password();
+    exit();
+    }
 elseif (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
-	{
-	# Save user data
-	$result=save_user($ref);
+    {
+    # Save user data
+    $result=save_user($ref);
     # Result can be === True which means save_user was successful and (if requested) the email password reset link was successful
     # Otherwise it will be a string with an error message describing the reason for failure to save/email
     if ($result!==true)
-		{
-		$error=$result;
-		}
-	else
-		{
-		hook('aftersaveuser');
-		if (getval("save","")!="" && !$modal)
-			{
-			redirect ($backurl!=""?$backurl:$baseurl_short ."pages/team/team_user.php?nc=" . time());
-			exit();
-			}
-		if (getval("save","")!="" && $modal)
-			{
-			# close Modal and return to action list
-			echo "<script>ModalClose()</script>";
-			exit();
-			}	
-		
-		}
-	}
+        {
+        $error=$result;
+        }
+    else
+        {
+        hook('aftersaveuser');
+        if (getval("save","")!="" && !$modal)
+            {
+            redirect ($backurl!=""?$backurl:$baseurl_short ."pages/team/team_user.php?nc=" . time());
+            exit();
+            }
+        if (getval("save","")!="" && $modal)
+            {
+            # close Modal and return to action list
+            echo "<script>ModalClose()</script>";
+            exit();
+            }   
+        
+        }
+    }
 
 # Fetch user data
 $user=get_user($ref);
@@ -85,7 +85,7 @@ if (($user["usergroup"]==3) && ($usergroup!=3))
     }
 
 if (!checkperm_user_edit($user))
-	{
+    {
     error_alert($lang["error-permissiondenied"],true);
     exit();
     }
@@ -135,7 +135,7 @@ $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
         'href'  => $baseurl_short . "pages/team/team_home.php",
-		'menu' =>  true
+        'menu' =>  true
     ),
     array(
         'title' => $lang["manageusers"],
@@ -157,11 +157,11 @@ renderBreadcrumbs($links_trail);
 <form method=post action="<?php echo $baseurl_short?>pages/team/team_user_edit.php" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
 <?php 
 if($modal)
-	{
-	?>
-	<input type=hidden name="modal" value="true">
-	<?php
-	}
+    {
+    ?>
+    <input type=hidden name="modal" value="true">
+    <?php
+    }
 
 generateFormToken("team_user_edit");
 ?>
@@ -173,12 +173,12 @@ generateFormToken("team_user_edit");
 <?php
 if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user["login_last_try"]) > (time() - ($max_login_attempts_wait_minutes * 60))))
  {?>
-	<div class="Question"><label><strong><?php echo htmlspecialchars($lang["accountlockedstatus"])?></strong></label>
-		<input class="medcomplementwidth" type=submit name="unlock" value="<?php echo escape($lang["accountunlock"])?>" onclick="jQuery('#unlockuser').val('true');"/>
-		<input id="unlockuser" type=hidden name="unlock" value="" />
-	</div>
+    <div class="Question"><label><strong><?php echo htmlspecialchars($lang["accountlockedstatus"])?></strong></label>
+        <input class="medcomplementwidth" type=submit name="unlock" value="<?php echo escape($lang["accountunlock"])?>" onclick="jQuery('#unlockuser').val('true');"/>
+        <input id="unlockuser" type=hidden name="unlock" value="" />
+    </div>
 
-	<div class="clearerleft"> </div>
+    <div class="clearerleft"> </div>
 <?php } ?>
 
 <div class="Question" ><label><?php echo htmlspecialchars($lang["username"])?></label><input id="user_edit_username" name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
@@ -197,20 +197,20 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <?php if (!hook("replaceusergroups")) { ?>
 <select class="stdwidth" name="usergroup">
 <?php
-	$groups=get_usergroups(true);
-	for ($n=0;$n<count($groups);$n++)
-		{
-		if (($groups[$n]["ref"]==3) && ($usergroup!=3))
-			{
-			#Do not show
-			}
-		else
-			{
-			?>
-			<option value="<?php echo $groups[$n]["ref"]?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]?></option>	
-			<?php
-			}
-		}
+    $groups=get_usergroups(true);
+    for ($n=0;$n<count($groups);$n++)
+        {
+        if (($groups[$n]["ref"]==3) && ($usergroup!=3))
+            {
+            #Do not show
+            }
+        else
+            {
+            ?>
+            <option value="<?php echo $groups[$n]["ref"]?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]?></option>   
+            <?php
+            }
+        }
 ?>
 </select>
 <?php } ?>
@@ -281,7 +281,7 @@ $filters[] = array("ref" => -1, "name" => $lang["disabled"]);
     <select id="user_edit_search_filter" name="search_filter_o_id" class="stdwidth">
         <?php
         echo "<option value='0' >" . $lang["filter_none"] . "</option>";
-        foreach	($search_filters as $search_filter)
+        foreach ($search_filters as $search_filter)
             {
             echo "<option value='" . $search_filter['ref'] . "' " . ($user['search_filter_o_id'] == $search_filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($search_filter['name']) . "</option>";
             }?>
@@ -412,7 +412,7 @@ if ($user["approved"]==1 && !hook("loginasuser"))
 
 
 
-<div class="QuestionSubmit">			
+<div class="QuestionSubmit">            
 <input name="save" type="submit" id="user_edit_save" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["save"])?>&nbsp;&nbsp;" />
 </div>
 </form>
@@ -428,5 +428,5 @@ function confirm_delete_user(el)
     return confirm('<?php echo escape($lang['team_user__confirm-deletion']); ?>');
     }
 </script>
-<?php		
+<?php	  
 include "../../include/footer.php";

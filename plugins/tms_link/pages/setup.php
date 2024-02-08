@@ -173,35 +173,35 @@ $page_def[] = config_add_hidden("tms_link_modules_saved_mappings");
 config_gen_setup_post($page_def, $plugin_name);
 
 if(trim($tms_link_log_directory)!="" && (getval("save","")!="" || getval("submit","")!=""))
-	{
-	if (!is_dir($tms_link_log_directory))
-		{
-		@mkdir($tms_link_log_directory, 0755, true);
-		if (!is_dir($tms_link_log_directory))
-			{
-			$errortext = 'Invalid log directory: ' . htmlspecialchars($tms_link_log_directory);
-			}
-		}
-	else
-		{
-		$logfilepath=$tms_link_log_directory . DIRECTORY_SEPARATOR . "tms_import_log_test.log";
-		$logfile=@fopen($logfilepath,'a');
-		if(!file_exists($logfilepath))
-			{
-			$errortext = 'Unable to create log file in directory: ' . htmlspecialchars($tms_link_log_directory);			
-			}
-		else
-			{
-			fclose($logfile);
-			unlink($logfilepath);
-			}
-		}
-	}
+    {
+    if (!is_dir($tms_link_log_directory))
+        {
+        @mkdir($tms_link_log_directory, 0755, true);
+        if (!is_dir($tms_link_log_directory))
+            {
+            $errortext = 'Invalid log directory: ' . htmlspecialchars($tms_link_log_directory);
+            }
+        }
+    else
+        {
+        $logfilepath=$tms_link_log_directory . DIRECTORY_SEPARATOR . "tms_import_log_test.log";
+        $logfile=@fopen($logfilepath,'a');
+        if(!file_exists($logfilepath))
+            {
+            $errortext = 'Unable to create log file in directory: ' . htmlspecialchars($tms_link_log_directory);            
+            }
+        else
+            {
+            fclose($logfile);
+            unlink($logfilepath);
+            }
+        }
+    }
 
 include '../../../include/header.php';
 if(isset($errortext))
-	{
-	echo "<div class=\"PageInformal\">" . $errortext . "</div>";
-	}
+    {
+    echo "<div class=\"PageInformal\">" . $errortext . "</div>";
+    }
 config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
 include '../../../include/footer.php';

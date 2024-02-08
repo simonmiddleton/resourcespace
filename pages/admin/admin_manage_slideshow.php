@@ -187,7 +187,7 @@ button[disabled]{
         array(
             'title' => $lang["systemsetup"],
             'href'  => $baseurl_short . "pages/admin/admin_home.php",
-		    'menu' =>  true
+            'menu' =>  true
         ),
         array(
             'title' => $lang["manage_slideshow"]

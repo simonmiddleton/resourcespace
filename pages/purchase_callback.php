@@ -18,10 +18,10 @@ foreach ($raw_ipn_array as $raw_entry) {
 # Now construct a request consisting of a copy of the IPN message prefixed with 'cmd=_notify-validate'
 $req = 'cmd=_notify-validate';
 foreach ($ipnPost as $key => $value)
-		{
-		$value = urlencode($value); 
-		$req .= "&$key=$value";
-		}
+        {
+        $value = urlencode($value); 
+        $req .= "&$key=$value";
+        }
 
 debug("PAYPAL CALLBACK START");
 
@@ -39,54 +39,54 @@ $fp = fsockopen ("ssl://".$paypal_url_parts['host'], 443, $errno, $errstr, 30);
 
 # Process the validation response from PayPal
 if (!$fp)
-	{ // HTTP ERROR
-	
-	debug("PAYPAL CALLBACK HTTP ERROR=".$errno." - ".$errstr);
-	
-	echo "HTTP error.";
-	}
+    { // HTTP ERROR
+    
+    debug("PAYPAL CALLBACK HTTP ERROR=".$errno." - ".$errstr);
+    
+    echo "HTTP error.";
+    }
 else
-	{
+    {
 
-	debug("PAYPAL CALLBACK NO HTTP ERROR");
+    debug("PAYPAL CALLBACK NO HTTP ERROR");
 
 
-	// NO HTTP ERROR
-	fputs ($fp, $header . $req);
-	while (!feof($fp))
-		{
-		$res = fgets ($fp, 1024);		
+    // NO HTTP ERROR
+    fputs ($fp, $header . $req);
+    while (!feof($fp))
+        {
+        $res = fgets ($fp, 1024);       
 
-		debug("PAYPAL CALLBACK RESPONSE=".$res);
+        debug("PAYPAL CALLBACK RESPONSE=".$res);
 
-		if (strcmp(trim($res), "VERIFIED") == 0)
-			{
-			echo "Verified.";
-			
-			$emailconfirmation=getval("emailconfirmation","");
+        if (strcmp(trim($res), "VERIFIED") == 0)
+            {
+            echo "Verified.";
+            
+            $emailconfirmation=getval("emailconfirmation","");
 
-			# Note that terms basket and collection are interchangeable in this context
+            # Note that terms basket and collection are interchangeable in this context
 
-			# At this point the custom passthrough variable contains a user reference and collection reference separated by a space
-			# This collection is the basket which contains the resources just purchased
-			$paypalcustom_variable=getval("custom","");
-			$paypalcustom_array=explode(" ",urldecode($paypalcustom_variable));
-			$paypalcustom_userref=$paypalcustom_array[0];
-			$paypalcustom_basket=$paypalcustom_array[1];
+            # At this point the custom passthrough variable contains a user reference and collection reference separated by a space
+            # This collection is the basket which contains the resources just purchased
+            $paypalcustom_variable=getval("custom","");
+            $paypalcustom_array=explode(" ",urldecode($paypalcustom_variable));
+            $paypalcustom_userref=$paypalcustom_array[0];
+            $paypalcustom_basket=$paypalcustom_array[1];
 
-			# Mark the payment flags for each resource in the basket as 'paid' and rename it to datetime stamp
-			payment_set_complete($paypalcustom_basket);
+            # Mark the payment flags for each resource in the basket as 'paid' and rename it to datetime stamp
+            payment_set_complete($paypalcustom_basket);
 
-			# Setup a new user collection which will be the new empty basket 
-			$newcollection=create_collection($paypalcustom_userref,"Default Collection",0,1); # Make not deletable
-			set_user_collection($paypalcustom_userref,$newcollection);
+            # Setup a new user collection which will be the new empty basket 
+            $newcollection=create_collection($paypalcustom_userref,"Default Collection",0,1); # Make not deletable
+            set_user_collection($paypalcustom_userref,$newcollection);
 
-			hook("payment_complete");
-			} 
-		else
-			{
-			echo "Not verified";
-			}
-		}
-	}
+            hook("payment_complete");
+            } 
+        else
+            {
+            echo "Not verified";
+            }
+        }
+    }
 

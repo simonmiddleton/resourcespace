@@ -2,14 +2,14 @@
 $download_summary=download_summary($ref);
 $total=0;
 foreach ($download_summary as $usage)
-	{ 
-	if (array_key_exists($usage["usageoption"],$download_usage_options))
-		{
-		$total+=$usage["c"];
-		} else if ($usage['usageoption'] == '-1') {
-			$total+=$usage['c'];
-		}
-	}
+    { 
+    if (array_key_exists($usage["usageoption"],$download_usage_options))
+        {
+        $total+=$usage["c"];
+        } else if ($usage['usageoption'] == '-1') {
+            $total+=$usage['c'];
+        }
+    }
 
 $rl_url = "{$baseurl}/pages/log.php";
 $rl_params = array(
@@ -34,27 +34,27 @@ $rl_params_override = array(
 </tr>
 <tr class="DownloadDBlend" >
 <td><?php echo $lang["usagetotalno"] ?></td>
-<td width="20%"><?php echo $total ?></th>		
+<td width="20%"><?php echo $total ?></th>       
 </tr>
 </table>
-<?php if($total>0 && $download_usage && $usage['usageoption'] != '-1')	{ ?>
+<?php if($total>0 && $download_usage && $usage['usageoption'] != '-1')  { ?>
 <table cellpadding="0" cellspacing="0">
 <tr><td colspan=2><?php echo $lang["usagebreakdown"] ?></td></tr>
 <?php foreach ($download_summary as $usage)
-	{ 
-	if (array_key_exists($usage["usageoption"],$download_usage_options))
-		{
+    { 
+    if (array_key_exists($usage["usageoption"],$download_usage_options))
+        {
         $rl_params_override["filter_by_usageoption"] = $usage["usageoption"];
-		?>
-		<tr>
-		<td>
+        ?>
+        <tr>
+        <td>
             <a href="<?php echo generateURL($rl_url, $rl_params, $rl_params_override); ?>" onclick="return ModalLoad(this, true);"><?php echo LINK_CARET . htmlspecialchars(i18n_get_translated($download_usage_options[$usage["usageoption"]])); ?></a>
         </td>
-		<td width="20%"><?php echo $usage["c"]?></th>		
-		</tr>
-		<?php
-		}
-	}
+        <td width="20%"><?php echo $usage["c"]?></th>       
+        </tr>
+        <?php
+        }
+    }
 ?>
 </table>
 <?php } ?>

@@ -48,7 +48,7 @@ include "../../include/header.php";
 <div class="BasicsBox">
     
 <div class="RecordHeader">
-<div class="backtoresults">	
+<div class="backtoresults"> 
     <?php if($modal)
         {
         ?>
@@ -71,12 +71,12 @@ include "../../include/header.php";
 </div>
 <?php
 if (isset($resulttext))
-	{
-	echo "<div class=\"PageInformal \">" . $resulttext . "</div>";
-	}
+    {
+    echo "<div class=\"PageInformal \">" . $resulttext . "</div>";
+    }
 
 if ($request !== false)
-	{
+    {
     $show_this_request=resource_request_visible($request);    
     if (!$show_this_request)
         {
@@ -280,7 +280,7 @@ if ($request !== false)
 
     <?php       
     }
-	}?>
+    }?>
 </div> <!-- .BasicsBox -->
 <?php
 include "../../include/footer.php";

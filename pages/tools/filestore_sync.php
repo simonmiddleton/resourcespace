@@ -19,7 +19,7 @@ function ShowFilesInFolderRecursive ($path)
         if ($object->isDir())
             {
             ShowFilesInFolderRecursive($path . DIRECTORY_SEPARATOR . $objectname);
-            }				
+            }               
         else
             {
             if (substr($objectname,-4)!=".php") // Don't attempt to get PHP as will just execute on the remote server

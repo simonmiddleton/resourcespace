@@ -3,17 +3,17 @@ include "../include/db.php";
 include "../include/authenticate.php";
 
 
-$collection_url	= getval("collection","");
-$find			= getval('find', '');
-$offset 		= getval("offset",0,true);
-$order_by 		= getval("order_by","");
-$sort 			= getval("sort","");
-$search 		= getval("search","");
-$ref			= getval("ref", 0, true);
+$collection_url = getval("collection","");
+$find           = getval('find', '');
+$offset         = getval("offset",0,true);
+$order_by       = getval("order_by","");
+$sort           = getval("sort","");
+$search         = getval("search","");
+$ref            = getval("ref", 0, true);
 
 // Share options
 $expires        = getval("expires","");
-$access         = getval("access",-1, true);	
+$access         = getval("access",-1, true);    
 $group          = getval("usergroup",0,true);
 $sharepwd       = getval('sharepassword', '');
 
@@ -133,35 +133,35 @@ $ref = ($themeshare ? join(",", array_merge(array($collection["ref"]), $collecti
 
 $errors="";
 if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
-	{
-	# Email / share collection
-	# Build a new list and insert
-	$users=getval("users","");
-	$message=getval("message","");
-	$add_internal_access=(getval("grant_internal_access","")!="");
-	$feedback=getval("request_feedback","");	if ($feedback=="") {$feedback=false;} else {$feedback=true;}
-	$list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
+    {
+    # Email / share collection
+    # Build a new list and insert
+    $users=getval("users","");
+    $message=getval("message","");
+    $add_internal_access=(getval("grant_internal_access","")!="");
+    $feedback=getval("request_feedback","");    if ($feedback=="") {$feedback=false;} else {$feedback=true;}
+    $list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
 
-	$use_user_email=getval("use_user_email",false);
-	if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
-	if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches email
+    $use_user_email=getval("use_user_email",false);
+    if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
+    if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches email
 
-	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
+    if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
 
     $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename, "?parent=" . $collection["ref"],$list_recipients,$add_internal_access,$group, $sharepwd);
-	if ($errors=="")
-		{
-		# Log this	
-		// fix for bomb on multiple collections, daily stat object ref must be a single number.
-		$crefs=explode(",",$ref);
-		foreach ($crefs as $cref){		
-			daily_stat("E-mailed collection",$cref);
-		}
-		if (!hook("replacecollectionemailredirect")){
-			redirect($baseurl_short."pages/done.php?text=collection_email");
-			}
-		}
-	}
+    if ($errors=="")
+        {
+        # Log this  
+        // fix for bomb on multiple collections, daily stat object ref must be a single number.
+        $crefs=explode(",",$ref);
+        foreach ($crefs as $cref){      
+            daily_stat("E-mailed collection",$cref);
+        }
+        if (!hook("replacecollectionemailredirect")){
+            redirect($baseurl_short."pages/done.php?text=collection_email");
+            }
+        }
+    }
 
 include "../include/header.php";
 ?>
@@ -170,18 +170,18 @@ include "../include/header.php";
 
 <?php
 
-	$link_array = array(
-		"ref"			=>	$collection["ref"],
-		"search"		=>	$search,
-		"offset"		=>	$offset,
-		"order_by"		=>	$order_by,
-		"sort"			=>	$sort,
-		"collection"	=>	$collection_url,
-		"find"			=>	$find,
-		"k"				=>	$k
-	);
+    $link_array = array(
+        "ref"           =>  $collection["ref"],
+        "search"        =>  $search,
+        "offset"        =>  $offset,
+        "order_by"      =>  $order_by,
+        "sort"          =>  $sort,
+        "collection"    =>  $collection_url,
+        "find"          =>  $find,
+        "k"             =>  $k
+    );
 
-	$link_back = generateURL($baseurl . "/pages/collection_share.php", $link_array);
+    $link_back = generateURL($baseurl . "/pages/collection_share.php", $link_array);
 
 ?>
 
@@ -189,9 +189,9 @@ include "../include/header.php";
 
 <p><?php 
 if ($themeshare && text("introtextthemeshare")!="")
-	{echo text("introtextthemeshare");}
+    {echo text("introtextthemeshare");}
 else 
-	{echo text("introtext");}
+    {echo text("introtext");}
 render_help_link("user/sharing-resources");?>
 </p>
 
@@ -212,43 +212,43 @@ if($themeshare)
     <?php
     }
 else
-	{?>	
-	<div class="Question">
-	<label><?php if ($themeshare) {echo $lang["themes"];} else {echo $lang["collectionname"];}?></label><div class="Fixed"><?php 
-		if (!$themeshare) { 
-			echo i18n_get_collection_name($collection);
-		} else { ##  this select copied from collections.php 
+    {?> 
+    <div class="Question">
+    <label><?php if ($themeshare) {echo $lang["themes"];} else {echo $lang["collectionname"];}?></label><div class="Fixed"><?php 
+        if (!$themeshare) { 
+            echo i18n_get_collection_name($collection);
+        } else { ##  this select copied from collections.php 
 
-			?>		
-			<select name="collection" multiple size="10" class="stdwidth MultiSelect" style="height:100%;" 
-				onchange="document.getElementById('ref').value = getSelected(this); " >
-			<?php
+            ?>      
+            <select name="collection" multiple size="10" class="stdwidth MultiSelect" style="height:100%;" 
+                onchange="document.getElementById('ref').value = getSelected(this); " >
+            <?php
 
-			$list=get_user_collections($userref);
-			$found=false;
-			for ($n=0;$n<count($list);$n++)
-				{?>	
-				<option value="<?php echo $list[$n]["ref"]?>" <?php if ($ref==$list[$n]["ref"]) {?> 	selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
-				<?php 
-				}
-			if ($found==false)
-				{
-				# Add this one at the end, it can't be found
-				$notfound=get_collection($ref);
-				if ($notfound!==false)
-					{
-					?>
-					<option value="<?php echo urlencode($ref) ?>" selected><?php echo $notfound["name"]?></option>
-					<?php
-					}
-				}
+            $list=get_user_collections($userref);
+            $found=false;
+            for ($n=0;$n<count($list);$n++)
+                {?> 
+                <option value="<?php echo $list[$n]["ref"]?>" <?php if ($ref==$list[$n]["ref"]) {?>     selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
+                <?php 
+                }
+            if ($found==false)
+                {
+                # Add this one at the end, it can't be found
+                $notfound=get_collection($ref);
+                if ($notfound!==false)
+                    {
+                    ?>
+                    <option value="<?php echo urlencode($ref) ?>" selected><?php echo $notfound["name"]?></option>
+                    <?php
+                    }
+                }
 
-			?>
-			</select> <?php } ?>
-			</div>
-			<div class="clearerleft"> </div>
-			</div>
-	<?php }?>
+            ?>
+            </select> <?php } ?>
+            </div>
+            <div class="clearerleft"> </div>
+            </div>
+    <?php }?>
 <div class="Question">
 <label for="message"><?php echo $lang["message"]?></label><textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
 <div class="clearerleft"> </div>
@@ -275,27 +275,27 @@ else
 <?php
 $allow_edit=allow_multi_edit($ref);
 if($allow_edit)
-	{ ?>
-	<div class="Question">
-	<label for="grant_internal_access"><?php echo $lang["internal_share_grant_access"] ?></label>
-	<input type=checkbox id="grant_internal_access" name="grant_internal_access" onClick="if(this.checked){jQuery('#question_internal_access').slideDown();}else{jQuery('#question_internal_access').slideUp()};">
-	<div class="clearerleft"> </div>
-	</div>	
-	<?php } ?>
+    { ?>
+    <div class="Question">
+    <label for="grant_internal_access"><?php echo $lang["internal_share_grant_access"] ?></label>
+    <input type=checkbox id="grant_internal_access" name="grant_internal_access" onClick="if(this.checked){jQuery('#question_internal_access').slideDown();}else{jQuery('#question_internal_access').slideUp()};">
+    <div class="clearerleft"> </div>
+    </div>  
+    <?php } ?>
 <?php
 if(!$internal_share_only)
-	{
+    {
     $shareoptions = array(
         "password"          => $sharepwd != "",
         "editaccesslevel"   => $access,
         "editexpiration"    => $expires,
         "editgroup"         => $group,
         );
-	render_share_options($shareoptions);
-	}
+    render_share_options($shareoptions);
+    }
 
-	hook("collectionemailafterexternal");
-	?>
+    hook("collectionemailafterexternal");
+    ?>
 
 <?php if ($collection["user"]==$userref) { # Collection owner can request feedback.
 ?>

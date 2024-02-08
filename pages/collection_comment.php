@@ -26,23 +26,23 @@ $rating=$commentdata["rating"];
 if (!collection_readable($collection)) {exit("Access denied.");}
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
-	{
-	# Save comment
-	$comment=trim(getval("comment",""));
-	$rating=trim(getval("rating",""));
-	# Clear cache for immediate display of thumbnail change.
-	clear_query_cache("themeimage");
-	save_collection_resource_comment($ref,$collection,$comment,$rating);
-	if ($k=="")
-		{
-		redirect ($baseurl_short."pages/search.php?refreshcollectionframe=true&search=!collection" . $collection);
-		}
-	else
-		{
-		# Stay on this page for external access users (no access to search)
-		refresh_collection_frame();
-		}
-	}
+    {
+    # Save comment
+    $comment=trim(getval("comment",""));
+    $rating=trim(getval("rating",""));
+    # Clear cache for immediate display of thumbnail change.
+    clear_query_cache("themeimage");
+    save_collection_resource_comment($ref,$collection,$comment,$rating);
+    if ($k=="")
+        {
+        redirect ($baseurl_short."pages/search.php?refreshcollectionframe=true&search=!collection" . $collection);
+        }
+    else
+        {
+        # Stay on this page for external access users (no access to search)
+        refresh_collection_frame();
+        }
+    }
 
 
 include "../include/header.php";
@@ -94,7 +94,7 @@ if($cinfo["type"] == COLLECTION_TYPE_FEATURED && checkperm("h"))
     <?php
     }
     ?>
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
 </div>
 </form>
@@ -103,6 +103,6 @@ if($cinfo["type"] == COLLECTION_TYPE_FEATURED && checkperm("h"))
 
 </div>
 
-<?php		
+<?php	  
 include "../include/footer.php";
 

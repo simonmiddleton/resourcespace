@@ -299,8 +299,8 @@ function get_plugin_config($name){
         }
     else
         {
-    	return unserialize(base64_decode($configs['config']));
-    	}
+        return unserialize(base64_decode($configs['config']));
+        }
 }
 
 /**
@@ -322,7 +322,7 @@ function get_plugin_config($name){
  */
 function set_plugin_config($plugin_name, $config)
     {
-	global $db, $mysql_charset;
+    global $db, $mysql_charset;
     $config = config_clean($config);
     $config_ser_bin =  base64_encode(serialize($config));
     $config_ser_json = config_json_encode($config);
@@ -433,7 +433,7 @@ function config_gen_setup_post($page_def,$plugin_name)
                     {
                     case 'html':
                         $omit = true;
-                        break;	
+                        break;  
                     case 'section_header':
                         $omit = true;
                         break;
@@ -569,7 +569,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
                 break;
             case 'multi_user_select':
                 config_multi_user_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
-                break;			
+                break;          
             case 'single_ftype_select':
                 config_single_ftype_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5],$def[6]);
                 break;
@@ -591,10 +591,10 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
             case 'single_group_select':
                 config_single_group_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
                 break;
-    	    case 'multi_group_select':
+            case 'multi_group_select':
                 config_multi_group_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3]);
                 break;
-	    	case 'checkbox_select':
+            case 'checkbox_select':
                 config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
             case 'multi_archive_select':
@@ -624,9 +624,9 @@ function config_section_header($title, $description)
     {
 ?>
    <div class="Question">
-	<br /><h2><?php echo $title?></h2>
-	<?php if ($description!=""){?>
-		<p><?php echo $description?></p>
+    <br /><h2><?php echo $title?></h2>
+    <?php if ($description!=""){?>
+        <p><?php echo $description?></p>
     <?php } ?>
     <div class="clearerleft"></div>
   </div>
@@ -790,7 +790,7 @@ function config_multi_user_select($name, $label, $current=array(), $width=300)
   
 <?php
     }
-	
+    
 
 
 /**
@@ -805,7 +805,7 @@ function config_add_multi_user_select($config_var, $label, $width=300)
     {
     return array('multi_user_select', $config_var, $label, $width);
     }
-	
+    
 /**
  * Generate an html single-select block for selecting from among RS user groups.
  *
@@ -826,7 +826,7 @@ function config_single_group_select($name, $label, $current=array(), $width=300)
     foreach ($usergroups as $usergroup)
         {
         echo '    <option value="' . $usergroup['ref'] . '"' . (($usergroup['ref']==$current)?' selected':'') . '>' . $usergroup['name'] . '</option>';
-		}
+        }
 ?>
     </select>
     <div class="clearerleft"></div>
@@ -834,7 +834,7 @@ function config_single_group_select($name, $label, $current=array(), $width=300)
   
 <?php
     }
-	
+    
 /**
  * Return a data structure that will instruct the configuration page generator functions to
  * add a single RS group select configuration variable to the setup page.
@@ -847,7 +847,7 @@ function config_add_single_group_select($config_var, $label, $width=300)
     {
     return array('single_group_select', $config_var, $label, $width);
     }
-	
+    
 /**
  * Generate an html multi-select block for selecting from among RS user groups.
  *
@@ -879,7 +879,7 @@ function config_multi_group_select($name, $label, $current=array(), $width=300)
   
 <?php
     }
-	
+    
 /**
  * Return a data structure that will instruct the configuration page generator functions to
  * add a multiple RS user select configuration variable to the setup page.
@@ -909,10 +909,10 @@ function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$
     {
     global $lang;
     if($rtype===false){
-    	$fields = get_resource_type_fields("","order_by");
+        $fields = get_resource_type_fields("","order_by");
     }
     else{
-    	$fields = get_resource_type_fields($rtype,"order_by");
+        $fields = get_resource_type_fields($rtype,"order_by");
     }
     $all_resource_types = get_resource_types();
     $resource_types = array_column($all_resource_types,"name","ref");
@@ -1305,18 +1305,18 @@ function config_custom_select($name, $label, $available, $value)
 
 function get_plugin_css()
     {
-	global $plugins,$baseurl,$language,$css_reload_key;
+    global $plugins,$baseurl,$language,$css_reload_key;
 
-	$plugincss="";
-	for ($n=count($plugins)-1;$n>=0;$n--)
-	{
+    $plugincss="";
+    for ($n=count($plugins)-1;$n>=0;$n--)
+    {
     if (!isset($plugins[$n])) { continue; }
-	$csspath=get_plugin_path($plugins[$n]) . "/css/style.css";
-	if (file_exists($csspath))
-		{
-		$plugincss.='<link href="'.get_plugin_path($plugins[$n],true).'/css/style.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />
+    $csspath=get_plugin_path($plugins[$n]) . "/css/style.css";
+    if (file_exists($csspath))
+        {
+        $plugincss.='<link href="'.get_plugin_path($plugins[$n],true).'/css/style.css?css_reload_key='.$css_reload_key.'" rel="stylesheet" type="text/css" media="screen,projection,print" class="plugincss" />
 		';
-		}	
+        }   
 
         # Allow language specific CSS files
         $csspath=get_plugin_path($plugins[$n]) . "/css/style-" . $language . ".css";
@@ -1329,7 +1329,7 @@ function get_plugin_css()
         $plugincss.=hook('moreplugincss','',array($plugins, $n));
             
         }
-	return $plugincss;
+    return $plugincss;
     }
 /*
 Activate language and configuration for plugins for use on setup page if plugin is not enabled for user group
@@ -1337,16 +1337,16 @@ Activate language and configuration for plugins for use on setup page if plugin 
 @param string $plugin_name the name of the plugin to activate
 */
 function plugin_activate_for_setup($plugin_name)
-	{	
-	// Add language file
-	register_plugin_language($plugin_name);
-	
-	// Include <plugin>/hooks/all.php case functions are included here
-	$pluginpath=get_plugin_path($plugin_name);
-	$hookpath=$pluginpath . "/hooks/all.php";
-    if (file_exists($hookpath)) {include_once $hookpath;}	
+    {   
+    // Add language file
+    register_plugin_language($plugin_name);
+    
+    // Include <plugin>/hooks/all.php case functions are included here
+    $pluginpath=get_plugin_path($plugin_name);
+    $hookpath=$pluginpath . "/hooks/all.php";
+    if (file_exists($hookpath)) {include_once $hookpath;}   
 
-    // Include plugin configuration	for displaying on Options page
+    // Include plugin configuration for displaying on Options page
     $active_plugin = ps_query("SELECT `name`, enabled_groups, config, config_json FROM plugins WHERE `name` = ? AND inst_version >= 0 order by priority", array("s", $plugin_name));
     if (empty($active_plugin))
         {
@@ -1355,11 +1355,11 @@ function plugin_activate_for_setup($plugin_name)
         else
         {
         include_plugin_config($plugin_name, $active_plugin[0]['config'], $active_plugin[0]['config_json']);
-        }   	
-	return true;
-	}
+        }       
+    return true;
+    }
 
-	
+    
 
 function include_plugin_config($plugin_name,$config="",$config_json="")
     {
@@ -1387,22 +1387,22 @@ function include_plugin_config($plugin_name,$config="",$config_json="")
                 }
             }
         }
-	elseif ($config != "")
-		{
-		$config=unserialize(base64_decode($config));
-		foreach($config as $key=>$value)
-			$$key = $value;
-		}
+    elseif ($config != "")
+        {
+        $config=unserialize(base64_decode($config));
+        foreach($config as $key=>$value)
+            $$key = $value;
+        }
 
-	# Copy config variables to global scope.
+    # Copy config variables to global scope.
     unset($plugin_name, $config, $config_json, $configpath);
-	$vars = get_defined_vars();
-	foreach ($vars as $name=>$value)
-		{
-		global $$name;
-		$$name = $value;
-		}
-	}
+    $vars = get_defined_vars();
+    foreach ($vars as $name=>$value)
+        {
+        global $$name;
+        $$name = $value;
+        }
+    }
 
 function register_plugin_language($plugin)
     {
@@ -1460,27 +1460,27 @@ function get_plugin_path($plugin,$url=false)
     }
     
 function register_plugin($plugin)
-	{
-	global $plugins,$language,$pagename,$lang,$applicationname;
+    {
+    global $plugins,$language,$pagename,$lang,$applicationname;
 
-	# Also include plugin hook file for this page.
-	if ($pagename=="collections_frameless_loader"){$pagename="collections";}
-	
-	$pluginpath=get_plugin_path($plugin);
-	    
-	$hookpath=$pluginpath . "/hooks/" . $pagename . ".php";
-	if (file_exists($hookpath)) {include_once $hookpath;}
-	
-	# Support an 'all' hook
-	$hookpath=$pluginpath . "/hooks/all.php";
-	if (file_exists($hookpath)) {include_once $hookpath;}
+    # Also include plugin hook file for this page.
+    if ($pagename=="collections_frameless_loader"){$pagename="collections";}
+    
+    $pluginpath=get_plugin_path($plugin);
+        
+    $hookpath=$pluginpath . "/hooks/" . $pagename . ".php";
+    if (file_exists($hookpath)) {include_once $hookpath;}
+    
+    # Support an 'all' hook
+    $hookpath=$pluginpath . "/hooks/all.php";
+    if (file_exists($hookpath)) {include_once $hookpath;}
 
-  	# Support standard location for API bindings
-	$api_bindings_path=$pluginpath . "/api/api_bindings.php";
-	if (file_exists($api_bindings_path)) {include_once $api_bindings_path;}
+    # Support standard location for API bindings
+    $api_bindings_path=$pluginpath . "/api/api_bindings.php";
+    if (file_exists($api_bindings_path)) {include_once $api_bindings_path;}
 
-	return true;	
-	}
+    return true;    
+    }
 
 /**
 * Encode complex plugin configuration (e.g mappings defined by users on plugins' setup page)

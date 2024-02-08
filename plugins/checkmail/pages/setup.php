@@ -7,16 +7,16 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'checkmail';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 $page_heading = $lang['checkmail_configuration'];
 $last_checkmail = ps_value("select value from sysvars where name = 'last_checkmail'", array(), ""); 
 $now = ps_value("select now() value", array(), "");
 if (!extension_loaded("imap")){$page_intro=$lang['checkmail_install_php_imap_extension']."<br /><br />";}
 else if ($last_checkmail==""){
-	$page_intro = $lang['checkmail_cronhelp']."<br /><br />";
+    $page_intro = $lang['checkmail_cronhelp']."<br /><br />";
 } else {
-	$page_intro=str_replace("[lastcheck]",nicedate($last_checkmail,true),$lang['checkmail_lastcheck']."<br /><br />");
-	$timediff=strtotime($now)-strtotime($last_checkmail);if ($timediff>300){$page_intro.=$lang['checkmail_cronjobprob'];}
+    $page_intro=str_replace("[lastcheck]",nicedate($last_checkmail,true),$lang['checkmail_lastcheck']."<br /><br />");
+    $timediff=strtotime($now)-strtotime($last_checkmail);if ($timediff>300){$page_intro.=$lang['checkmail_cronjobprob'];}
 }
 
 $checkmail_users_label = $lang['checkmail_users'];
@@ -49,17 +49,17 @@ $page_def[]= config_add_section_header($lang['checkmail_extension_mapping'],$lan
 $page_def[]= config_add_single_rtype_select("checkmail_default_resource_type", $lang['checkmail_default_resource_type']);
 $resource_types=get_resource_types();
 foreach ($resource_types as $resource_type){
-	$safe_varname="resourcetype".$resource_type['ref'];
-	if (!isset($$safe_varname)){
-		$$safe_varname=$resource_type['allowed_extensions'];
-		if ($$safe_varname==""){
-			$page_def[]= config_add_text_input($safe_varname,$resource_type['name']);
-		} else {
-			$page_def[]= config_add_text_input($safe_varname,$resource_type['name']." ".$lang['checkmail_resource_type_population']);
-		}
-	} else {
-		$page_def[]= config_add_text_input($safe_varname,$resource_type['name']);
-	}
+    $safe_varname="resourcetype".$resource_type['ref'];
+    if (!isset($$safe_varname)){
+        $$safe_varname=$resource_type['allowed_extensions'];
+        if ($$safe_varname==""){
+            $page_def[]= config_add_text_input($safe_varname,$resource_type['name']);
+        } else {
+            $page_def[]= config_add_text_input($safe_varname,$resource_type['name']." ".$lang['checkmail_resource_type_population']);
+        }
+    } else {
+        $page_def[]= config_add_text_input($safe_varname,$resource_type['name']);
+    }
 }
 
 // Do the page generation ritual
@@ -72,15 +72,15 @@ include '../../../include/footer.php';
 <script>
 // Attach change handler to checkmail allow permission question so that user list label can be dynamically set
 jQuery("#checkmail_allow_users_based_on_permission").on("change", function() {
-	var chkPermLabel = jQuery("label[for='checkmail_users']");
-	if (this.value == 0) 
-		{
-		chkPermLabel[0].textContent="<?php echo $lang['checkmail_users']?>";
-		} 
-	else 
-		{
-		chkPermLabel[0].textContent="<?php echo $lang['checkmail_blocked_users_label']?>";
-		}
+    var chkPermLabel = jQuery("label[for='checkmail_users']");
+    if (this.value == 0) 
+        {
+        chkPermLabel[0].textContent="<?php echo $lang['checkmail_users']?>";
+        } 
+    else 
+        {
+        chkPermLabel[0].textContent="<?php echo $lang['checkmail_blocked_users_label']?>";
+        }
 });
 </script>
 

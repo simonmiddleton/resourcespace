@@ -51,6 +51,9 @@ echo number_format(sql_affected_rows()) . " orphaned resource related rows delet
 ps_query("DELETE FROM user_collection WHERE user NOT IN (SELECT ref FROM user) OR collection NOT IN (SELECT ref FROM collection)");
 echo number_format(sql_affected_rows()) . " orphaned user-collection relationships deleted." . $newline;
 
+remove_invalid_resource_node_mappings();
+echo number_format(sql_affected_rows()) . " orphaned resource-node relationships deleted." . $newline;
+
 remove_invalid_node_keyword_mappings();
 echo number_format(sql_affected_rows()) . " orphaned node-keyword relationships deleted." . $newline;
 

@@ -3,42 +3,42 @@
 if (!defined("RUNNING_ASYNC")) {define("RUNNING_ASYNC", !isset($ffmpeg_preview));}
 
 if (!RUNNING_ASYNC)
-	{
-	global $qtfaststart_path, $qtfaststart_extensions;
-	}
+    {
+    global $qtfaststart_path, $qtfaststart_extensions;
+    }
 else
-	{
+    {
     if(!isset($_SERVER['HTTP_HOST']) && isset($_SERVER['argv'][8]))
         {
         $_SERVER['HTTP_HOST'] = $_SERVER['argv'][8];
         }
 
-	require dirname(__FILE__)."/db.php";
-	
-	if (empty($_SERVER['argv'][1]) || $scramble_key!==$_SERVER['argv'][1]) {exit("Incorrect scramble_key");}
-	
-	if (empty($_SERVER['argv'][2])) {exit("Ref param missing");}
-	$ref=$_SERVER['argv'][2];
-	
-	if (empty($_SERVER['argv'][3])) {exit("File param missing");}
-	$file=$_SERVER['argv'][3];
-	
-	if (empty($_SERVER['argv'][4])) {exit("Target param missing");}
-	$target=$_SERVER['argv'][4];
-	
-	if (!isset($_SERVER['argv'][5])) {exit("Previewonly param missing");}
-	$previewonly=$_SERVER['argv'][5];
-	
-	if (!isset($_SERVER['argv'][6])) {exit("Snapshottime param missing");}
-	$snapshottime=$_SERVER['argv'][6];
+    require dirname(__FILE__)."/db.php";
+    
+    if (empty($_SERVER['argv'][1]) || $scramble_key!==$_SERVER['argv'][1]) {exit("Incorrect scramble_key");}
+    
+    if (empty($_SERVER['argv'][2])) {exit("Ref param missing");}
+    $ref=$_SERVER['argv'][2];
+    
+    if (empty($_SERVER['argv'][3])) {exit("File param missing");}
+    $file=$_SERVER['argv'][3];
+    
+    if (empty($_SERVER['argv'][4])) {exit("Target param missing");}
+    $target=$_SERVER['argv'][4];
+    
+    if (!isset($_SERVER['argv'][5])) {exit("Previewonly param missing");}
+    $previewonly=$_SERVER['argv'][5];
+    
+    if (!isset($_SERVER['argv'][6])) {exit("Snapshottime param missing");}
+    $snapshottime=$_SERVER['argv'][6];
 
-	if (!isset($_SERVER['argv'][7])) {exit("Alternative param missing");}
-	$alternative=$_SERVER['argv'][7];
+    if (!isset($_SERVER['argv'][7])) {exit("Alternative param missing");}
+    $alternative=$_SERVER['argv'][7];
 
-	debug ("Starting ffmpeg_processing.php async with parameters: ref=$ref, file=$file, target=$target, previewonly=$previewonly, snapshottime=$snapshottime, alternative=$alternative",$ref);
+    debug ("Starting ffmpeg_processing.php async with parameters: ref=$ref, file=$file, target=$target, previewonly=$previewonly, snapshottime=$snapshottime, alternative=$alternative",$ref);
 
-	ps_query("UPDATE resource SET is_transcoding = 1 WHERE ref = ?", array("i", $ref));
-	}
+    ps_query("UPDATE resource SET is_transcoding = 1 WHERE ref = ?", array("i", $ref));
+    }
 
 if(!is_numeric($ref))
     {
@@ -97,27 +97,27 @@ if ($ffmpeg_get_par)
     }
 
 if($height<$ffmpeg_preview_min_height)
-	{
-	$height=$ffmpeg_preview_min_height;
-	}
+    {
+    $height=$ffmpeg_preview_min_height;
+    }
 
 if($width<$ffmpeg_preview_min_width)
-	{
-	$width=$ffmpeg_preview_min_width;
-	}
+    {
+    $width=$ffmpeg_preview_min_width;
+    }
 
 if($height>$ffmpeg_preview_max_height)
-	{
-	$width=ceil($width*($ffmpeg_preview_max_height/$height));
-	$height=$ffmpeg_preview_max_height;
-	}
-	
+    {
+    $width=ceil($width*($ffmpeg_preview_max_height/$height));
+    $height=$ffmpeg_preview_max_height;
+    }
+    
 if($width>$ffmpeg_preview_max_width)
-	{
-	$height=ceil($height*($ffmpeg_preview_max_width/$width));
-	$width=$ffmpeg_preview_max_width;
-	}
-	
+    {
+    $height=ceil($height*($ffmpeg_preview_max_width/$width));
+    $width=$ffmpeg_preview_max_width;
+    }
+    
 # Frame size must be a multiple of two
 if ($width % 2){$width++;}
 if ($height % 2) {$height++;}
@@ -129,9 +129,9 @@ if (is_array($tmp) && $tmp) {
 }
 
 if (hook("replacetranscode","",array($file,$targetfile,$ffmpeg_global_options,$ffmpeg_preview_options,$width,$height)))
-	{
-	exit(); // Do not proceed, replacetranscode hook intends to avoid everything below
-	}
+    {
+    exit(); // Do not proceed, replacetranscode hook intends to avoid everything below
+    }
 
 if ($extension == 'gif')
     {
@@ -145,7 +145,7 @@ if($video_preview_hls_support!=0)
     {
     // Start the content for the main m3u8 file
     $hlscontent="#EXTM3U\n";
-    $hlscontent="#EXT-X-VERSION:3\n";		
+    $hlscontent="#EXT-X-VERSION:3\n";       
 
     $n=1;
     // Generate the separate video chunks for HTTP Live streaming support
@@ -212,7 +212,7 @@ if($video_preview_hls_support!=0)
           {
           // Get codec profile and level to add to CODECS element for stream in M3U8 file. Set to profile:high, level:5.1  if not worked out so that a high bitrate stream is not used in error
           $ffprobe_array=get_video_info($hlsfile);
-          $hls_codec_info["profile"]=(isset($ffprobe_array["streams"][0]["profile"]) && isset($h264_profiles[$ffprobe_array["streams"][0]["profile"]]))?$h264_profiles[$ffprobe_array["streams"][0]["profile"]]:"58A0";				  
+          $hls_codec_info["profile"]=(isset($ffprobe_array["streams"][0]["profile"]) && isset($h264_profiles[$ffprobe_array["streams"][0]["profile"]]))?$h264_profiles[$ffprobe_array["streams"][0]["profile"]]:"58A0";               
           $hls_codec_info["level"]="1e";
           }
         // Set stream info, allowing for overhead of bitrate (this is why it is not 1024)
@@ -309,8 +309,8 @@ if (!file_exists($targetfile))
 
 if (isset($qtfaststart_path) && file_exists($qtfaststart_path . "/qt-faststart") && in_array($ffmpeg_preview_extension, $qtfaststart_extensions))
     {
-	$targetfiletmp=$targetfile.".tmp";
-	rename($targetfile, $targetfiletmp);
+    $targetfiletmp=$targetfile.".tmp";
+    rename($targetfile, $targetfiletmp);
     $shell_exec_cmd=$qtfaststart_path . "/qt-faststart " . escapeshellarg($targetfiletmp) . " " . escapeshellarg($targetfile);
     $output=run_command($shell_exec_cmd);
     unlink($targetfiletmp);
@@ -319,48 +319,48 @@ if (isset($qtfaststart_path) && file_exists($qtfaststart_path . "/qt-faststart")
 # Handle alternative files.
 global $ffmpeg_alternatives;
 if (isset($ffmpeg_alternatives))
-	{
-	$ffmpeg_alt_previews=array();
-	for($n=0;$n<count($ffmpeg_alternatives);$n++)
-		{
-		$generate=true;
-		if (isset($ffmpeg_alternatives[$n]["lines_min"]))
-			{
-			# If this alternative size is larger than the source, do not generate.
-			if ($ffmpeg_alternatives[$n]["lines_min"]>=$sourceheight)
-				{
-				$generate=false;
-				}
-			
-			}
+    {
+    $ffmpeg_alt_previews=array();
+    for($n=0;$n<count($ffmpeg_alternatives);$n++)
+        {
+        $generate=true;
+        if (isset($ffmpeg_alternatives[$n]["lines_min"]))
+            {
+            # If this alternative size is larger than the source, do not generate.
+            if ($ffmpeg_alternatives[$n]["lines_min"]>=$sourceheight)
+                {
+                $generate=false;
+                }
+            
+            }
 
         $tmp = hook("preventgeneratealt", "", array($file));
         if ($tmp===true) {$generate = false;}
 
-		if ($generate) # OK to generate this alternative?
-			{
+        if ($generate) # OK to generate this alternative?
+            {
 
-			if(!hook("removepreviousalts", "", array($ffmpeg_alternatives, $file, $n))):
+            if(!hook("removepreviousalts", "", array($ffmpeg_alternatives, $file, $n))):
 
-			# Remove any existing alternative file(s) with this name.
-			$existing = ps_query("select ref from resource_alt_files where resource = ? and name = ?", array("i", $ref, "s", $ffmpeg_alternatives[$n]["name"]));
-			for ($m=0;$m<count($existing);$m++)
-				{
-				delete_alternative_file($ref,$existing[$m]["ref"]);
-				}
-			
-			endif;
+            # Remove any existing alternative file(s) with this name.
+            $existing = ps_query("select ref from resource_alt_files where resource = ? and name = ?", array("i", $ref, "s", $ffmpeg_alternatives[$n]["name"]));
+            for ($m=0;$m<count($existing);$m++)
+                {
+                delete_alternative_file($ref,$existing[$m]["ref"]);
+                }
+            
+            endif;
 
-			$alt_type = '';
-			if(isset($ffmpeg_alternatives[$n]['alt_type'])) {
-				$alt_type = $ffmpeg_alternatives[$n]["alt_type"];
-			}
+            $alt_type = '';
+            if(isset($ffmpeg_alternatives[$n]['alt_type'])) {
+                $alt_type = $ffmpeg_alternatives[$n]["alt_type"];
+            }
 
-			# Create the alternative file.
-			$aref=add_alternative_file($ref,$ffmpeg_alternatives[$n]["name"],'', '', '', 0, $alt_type);
-			$apath=get_resource_path($ref,true,"",true,$ffmpeg_alternatives[$n]["extension"],-1,1,false,"",$aref);
-			
-			# Process the video 
+            # Create the alternative file.
+            $aref=add_alternative_file($ref,$ffmpeg_alternatives[$n]["name"],'', '', '', 0, $alt_type);
+            $apath=get_resource_path($ref,true,"",true,$ffmpeg_alternatives[$n]["extension"],-1,1,false,"",$aref);
+            
+            # Process the video 
             $shell_exec_cmd = $ffmpeg_fullpath . "  $ffmpeg_global_options -y -i " . escapeshellarg($file) . " " . $ffmpeg_alternatives[$n]["params"] . " " . escapeshellarg($apath);
 
             $tmp = hook("ffmpegmodaltparams", "", array($shell_exec_cmd, $ffmpeg_fullpath, $file, $n, $aref));
@@ -368,27 +368,27 @@ if (isset($ffmpeg_alternatives))
             
             $output = run_command($shell_exec_cmd);  
 
-	    if(isset($qtfaststart_path))
-			{
-			if($qtfaststart_path && file_exists($qtfaststart_path . "/qt-faststart") && in_array($ffmpeg_alternatives[$n]["extension"], $qtfaststart_extensions) ){
-				$apathtmp=$apath.".tmp";
-				rename($apath, $apathtmp);
+        if(isset($qtfaststart_path))
+            {
+            if($qtfaststart_path && file_exists($qtfaststart_path . "/qt-faststart") && in_array($ffmpeg_alternatives[$n]["extension"], $qtfaststart_extensions) ){
+                $apathtmp=$apath.".tmp";
+                rename($apath, $apathtmp);
                 $shell_exec_cmd=$qtfaststart_path . "/qt-faststart " . escapeshellarg($apathtmp) . " " . escapeshellarg($apath)." 2>&1";
                 $output=run_command($shell_exec_cmd);
-				unlink($apathtmp);
-				}
-			}
-			if (file_exists($apath))
-				{
-				# Update the database with the new file details.
-				$file_size = filesize_unlimited($apath);	
-				ps_query("update resource_alt_files set file_name = ?, file_extension = ?, file_size = ?, creation_date = now() where ref = ?", 
-					array("s", $ffmpeg_alternatives[$n]["filename"] . "." . $ffmpeg_alternatives[$n]["extension"], "s", $ffmpeg_alternatives[$n]["extension"], "i", $file_size, "i", $aref));
-				// add this filename to be added to resource.ffmpeg_alt_previews
-				if (isset($ffmpeg_alternatives[$n]['alt_preview']) && $ffmpeg_alternatives[$n]['alt_preview']==true){
-					$ffmpeg_alt_previews[]=basename($apath);
-					}
-				}
+                unlink($apathtmp);
+                }
+            }
+            if (file_exists($apath))
+                {
+                # Update the database with the new file details.
+                $file_size = filesize_unlimited($apath);    
+                ps_query("update resource_alt_files set file_name = ?, file_extension = ?, file_size = ?, creation_date = now() where ref = ?", 
+                    array("s", $ffmpeg_alternatives[$n]["filename"] . "." . $ffmpeg_alternatives[$n]["extension"], "s", $ffmpeg_alternatives[$n]["extension"], "i", $file_size, "i", $aref));
+                // add this filename to be added to resource.ffmpeg_alt_previews
+                if (isset($ffmpeg_alternatives[$n]['alt_preview']) && $ffmpeg_alternatives[$n]['alt_preview']==true){
+                    $ffmpeg_alt_previews[]=basename($apath);
+                    }
+                }
             else 
                 {
                 # Remove the alternative file entries with this name as ffmpeg has failed to create file.
@@ -399,13 +399,13 @@ if (isset($ffmpeg_alternatives))
                     }
                 }
 
-				if(!file_exists($apath) && file_exists($targetfile) && RUNNING_ASYNC) {
-					debug('FFmpeg alternative failed: ' . $shell_exec_cmd);
-					# Change flag as the preview was created and that is the most important of them all
-					ps_query("UPDATE resource SET is_transcoding = 0 WHERE ref = ?", array("i", $ref));
-				}
-			}
-	}
+                if(!file_exists($apath) && file_exists($targetfile) && RUNNING_ASYNC) {
+                    debug('FFmpeg alternative failed: ' . $shell_exec_cmd);
+                    # Change flag as the preview was created and that is the most important of them all
+                    ps_query("UPDATE resource SET is_transcoding = 0 WHERE ref = ?", array("i", $ref));
+                }
+            }
+    }
 }
 
 if(isset($deletefiles))
@@ -417,12 +417,12 @@ if(isset($deletefiles))
     }
 
 if (RUNNING_ASYNC)
-	{
-	ps_query("UPDATE resource SET is_transcoding = 0 WHERE ref = ?", array("i", $ref));
-	
-	if ($previewonly)
-		{
-		unlink($file);
-		}
-	}
+    {
+    ps_query("UPDATE resource SET is_transcoding = 0 WHERE ref = ?", array("i", $ref));
+    
+    if ($previewonly)
+        {
+        unlink($file);
+        }
+    }
 

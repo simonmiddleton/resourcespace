@@ -53,7 +53,7 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
         $fields = get_resource_type_fields();
         ?>
         <div class="Question" >
-		    <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
+            <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
             <select id="field_edit_<?php echo escape((string) $column); ?>" name="<?php echo escape((string) $column); ?>" class="stdwidth">
             <option value="" <?php if ($currentvalue == "") { echo "selected"; } ?>><?php echo htmlspecialchars($lang["select"]); ?></option>
             <option value="-1" <?php if ($currentvalue == "-1") { echo "selected"; } ?>><?php echo htmlspecialchars($lang["image"] . ": " . $lang["previewimage"]) ?></option>
@@ -66,7 +66,7 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
                     <?php
                     }
                 }
-            ?>				
+            ?>              
             </select>
         </div>
         <?php
@@ -76,9 +76,9 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
         {
         ?>
         <div class="Question" >
-		    <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
+            <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
             <textarea class="stdwidth" rows="3" id="field_edit_<?php echo htmlspecialchars((string) $column_detail[0]); ?>" name="<?php echo htmlspecialchars((string) $column); ?>"><?php echo htmlspecialchars((string) $currentvalue)?></textarea>
-        </div>		
+        </div>      
         <?php
         return true;
         }

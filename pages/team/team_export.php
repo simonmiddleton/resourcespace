@@ -13,27 +13,27 @@ set_time_limit(0);
 $type=getval("type","");
 
 if ($type!="" && enforcePostRequest(false))
-	{
-	if ($type=="sql") { $param="";$extension="sql";}
-	if ($type=="xml") { $param="--xml";$extension="xml";}
+    {
+    if ($type=="sql") { $param="";$extension="sql";}
+    if ($type=="xml") { $param="--xml";$extension="xml";}
 
-	# Check for mysqldump at configured location
-	$path=$mysql_bin_path . "/mysqldump";
-	if (!file_exists($path)) {$path.=".exe";} # Try windows.
-	if (!file_exists($path)) {exit("Error: mysqldump not found at '$mysql_bin_path' - please check config.php");}
-	
-	# Add options to ignore index tables, which are very large and are easily regenerated (using tools/reindex.php)
-	$param.=" --ignore-table=$mysql_db.resource_keyword --ignore-table=$mysql_db.keyword";
-	
-	# Send them the export.
-	header("Content-type: application/octet-stream");
-	header("Content-disposition: attachment; filename=".$mysql_db."_" . date("d_M_Y_h-iA") . "." . $extension . "");
-	passthru('"' . $path . '" -h ' . $mysql_server . ' -u ' . $mysql_username . ($mysql_password == '' ? '' : ' -p' . $mysql_password) . ' ' . $param . ' ' . $mysql_db);
+    # Check for mysqldump at configured location
+    $path=$mysql_bin_path . "/mysqldump";
+    if (!file_exists($path)) {$path.=".exe";} # Try windows.
+    if (!file_exists($path)) {exit("Error: mysqldump not found at '$mysql_bin_path' - please check config.php");}
+    
+    # Add options to ignore index tables, which are very large and are easily regenerated (using tools/reindex.php)
+    $param.=" --ignore-table=$mysql_db.resource_keyword --ignore-table=$mysql_db.keyword";
+    
+    # Send them the export.
+    header("Content-type: application/octet-stream");
+    header("Content-disposition: attachment; filename=".$mysql_db."_" . date("d_M_Y_h-iA") . "." . $extension . "");
+    passthru('"' . $path . '" -h ' . $mysql_server . ' -u ' . $mysql_username . ($mysql_password == '' ? '' : ' -p' . $mysql_password) . ' ' . $param . ' ' . $mysql_db);
 
-	log_activity($lang["exportdata"],LOG_CODE_SYSTEM);
+    log_activity($lang["exportdata"],LOG_CODE_SYSTEM);
 
-	exit();
-	}
+    exit();
+    }
 include "../../include/header.php";
 ?>
 
@@ -52,7 +52,7 @@ include "../../include/header.php";
 <div class="clearerleft"> </div>
 </div>
 
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["exportdata"])?>&nbsp;&nbsp;" />
 </div>
 </form>

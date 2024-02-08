@@ -29,29 +29,29 @@ $user_select_internal=checkperm("noex") ||  intval($user_dl_limit) > 0;
 
 $errors="";
 if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
-	{
-	// Build a new list and insert
-	$users=getval("users","");
-	$message=getval("message","");
-	$access=getval("access","");
-	$add_internal_access=(getval("grant_internal_access","")!="");
-	if (hook("modifyresourceaccess")){$access=hook("modifyresourceaccess");}
-	$expires=getval("expires","");
-	$group=getval("usergroup","");
+    {
+    // Build a new list and insert
+    $users=getval("users","");
+    $message=getval("message","");
+    $access=getval("access","");
+    $add_internal_access=(getval("grant_internal_access","")!="");
+    if (hook("modifyresourceaccess")){$access=hook("modifyresourceaccess");}
+    $expires=getval("expires","");
+    $group=getval("usergroup","");
     $sharepwd = getval('sharepassword', '');
-	$list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
+    $list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
 
-	$use_user_email=getval("use_user_email",false);
-	if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
-	if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches system name
+    $use_user_email=getval("use_user_email",false);
+    if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
+    if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches system name
 
-	if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
+    if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
 
     // Email single resource
     $errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$minaccess,$group);
     if ($errors=="")
         {
-        // Log this			
+        // Log this         
         daily_stat("E-mailed resource",$ref);
         if (!hook("replaceresourceemailredirect"))
             {
@@ -61,7 +61,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
             redirect(generateURL($baseurl_short . "pages/done.php",$params));
             }
         }
-	}
+    }
 
 include "../include/header.php";
 ?>
@@ -93,11 +93,11 @@ hook("resemailmoreinfo"); ?>
 
 <?php if(!hook("replaceemailtousers")){?>
 <div class="Question">
-	<label for="users">
-	<?php echo ($user_select_internal)?$lang["emailtousers_internal"]:$lang["emailtousers"]; ?>
-	</label>
+    <label for="users">
+    <?php echo ($user_select_internal)?$lang["emailtousers_internal"]:$lang["emailtousers"]; ?>
+    </label>
 
-	<?php
+    <?php
 
 include "../include/user_select.php"; ?>
 <div class="clearerleft"> </div>
@@ -113,24 +113,24 @@ include "../include/user_select.php"; ?>
 <?php } ?>
 
 <?php if($minaccess==0 && !hook("replaceemailopenaccess"))
-	{
-	$resourcedata=get_resource_data($ref,true);
-	if(get_edit_access($ref,$resource['archive'],$resource))
-		{?>
-		<div class="Question">
-		<label for="grant_internal_access"><?php echo htmlspecialchars($lang["internal_share_grant_access"]) ?></label>
-		<input type=checkbox id="grant_internal_access" name="grant_internal_access" onClick="if(this.checked){jQuery('#question_internal_access').slideDown();}else{jQuery('#question_internal_access').slideUp()};">
-		<div class="clearerleft"> </div>
-		</div>
-		<?php
-		}
-	}?>
+    {
+    $resourcedata=get_resource_data($ref,true);
+    if(get_edit_access($ref,$resource['archive'],$resource))
+        {?>
+        <div class="Question">
+        <label for="grant_internal_access"><?php echo htmlspecialchars($lang["internal_share_grant_access"]) ?></label>
+        <input type=checkbox id="grant_internal_access" name="grant_internal_access" onClick="if(this.checked){jQuery('#question_internal_access').slideDown();}else{jQuery('#question_internal_access').slideUp()};">
+        <div class="clearerleft"> </div>
+        </div>
+        <?php
+        }
+    }?>
 
 
 <?php 
 
 if(!$user_select_internal)
-	{
+    {
     ?>
     <h2 class="CollapsibleSectionHead collapsed"><?php echo htmlspecialchars($lang['external_shares_options']);?></h2>
     <div class="CollapsibleSection" id="ExternalShareOptionsSection">
@@ -139,7 +139,7 @@ if(!$user_select_internal)
     render_share_options();
     ?></div><?php    
     }
-	?>
+    ?>
 
 <?php hook("resourceemailafterexternal");?>
 
@@ -163,7 +163,7 @@ if(!$user_select_internal)
 <?php hook("additionalemailfield");?>
 
 <?php if(!hook("replaceemailsubmitbutton")){?>
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["emailresourcetitle"])?>&nbsp;&nbsp;" />
 </div>
 <?php } // end replaceemailsubmitbutton ?>
@@ -176,6 +176,6 @@ jQuery('document').ready(function()
     registerCollapsibleSections(true)
     });
 </script>
-<?php		
+<?php	  
 include "../include/footer.php";
 ?>

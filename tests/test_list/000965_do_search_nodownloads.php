@@ -18,10 +18,10 @@ $resourceb = create_resource(1,0);
 // Do standard !nodownloads search 
 $results = do_search("!nodownloads");
 if(count($results) != 2 || !isset($results[0]['ref']) || !isset($results[1]['ref'])
-	||
+    ||
     !match_values(array_column($results,'ref'),array($resourcea, $resourceb))
-	)
-	{
+    )
+    {
     echo "SUBTEST A - ";
     return false;
     }
@@ -36,10 +36,10 @@ add_resource_nodes($resourcec, array($new_country));
 
 $results = do_search("!nodownloads " . NODE_TOKEN_PREFIX . $new_country);
 if(count($results) != 2 || !isset($results[0]['ref']) || !isset($results[1]['ref'])
-	||
+    ||
     !match_values(array_column($results,'ref'),array($resourceb, $resourcec))
-	)
-	{
+    )
+    {
     echo "SUBTEST B - ";
     return false;
     }

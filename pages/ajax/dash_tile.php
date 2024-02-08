@@ -14,20 +14,20 @@ global $userref,$baseurl_short;
 /* Tile */
 $rawtile=getval("tile",null,TRUE);
 if(isset($rawtile) && !empty($rawtile))
-	{
-	if(!is_numeric($rawtile)){exit($lang["invaliddashtile"]);}
-	$tile=get_tile($rawtile);
-	if(!$tile){exit($lang["nodashtilefound"]);}
-	}
+    {
+    if(!is_numeric($rawtile)){exit($lang["invaliddashtile"]);}
+    $tile=get_tile($rawtile);
+    if(!$tile){exit($lang["nodashtilefound"]);}
+    }
 
 /* User Tile */
 $user_rawtile=getval("user_tile",null,TRUE);
 if(isset($user_rawtile) && !empty($user_rawtile))
-	{
-	if(!is_numeric($user_rawtile)){exit($lang["invaliddashtile"]);}
-	$usertile=get_user_tile($user_rawtile,$userref);
-	if(!$usertile){exit($lang["nodashtilefound"]);}
-	}
+    {
+    if(!is_numeric($user_rawtile)){exit($lang["invaliddashtile"]);}
+    $usertile=get_user_tile($user_rawtile,$userref);
+    if(!$usertile){exit($lang["nodashtilefound"]);}
+    }
 
 /* 
  * Reorder Tile
@@ -71,55 +71,55 @@ if(!empty($index) && isset($tile) && !isset($usertile) && '' != $selected_user_g
     log_activity($lang['dashtile'], LOG_CODE_REORDERED, $index, 'usergroup_dash_tile', 'default_order_by', $usergroup_tile['dash_tile']);
 
     exit("Tile {$usergroup_tile['dash_tile']} at index: {$index}");
-	}
+    }
 
 // Re-order default dash tiles
 if(!empty($index) && isset($tile) && !isset($usertile) && '' == $selected_user_group && enforcePostRequest(true))
-	{
-	if($index > $tile["default_order_by"])
-		{$index+=5;}
-	else 
-		{$index-=5;}
-	update_default_dash_tile_order($tile["ref"],$index);
-	reorder_default_dash();
-	echo "Tile ".$tile["ref"]." at index: ".($index);
-	log_activity($lang["dashtile"],LOG_CODE_REORDERED,$index,'dash_tile','default_order_by',$tile["ref"]);
-	exit();
-	}
+    {
+    if($index > $tile["default_order_by"])
+        {$index+=5;}
+    else 
+        {$index-=5;}
+    update_default_dash_tile_order($tile["ref"],$index);
+    reorder_default_dash();
+    echo "Tile ".$tile["ref"]." at index: ".($index);
+    log_activity($lang["dashtile"],LOG_CODE_REORDERED,$index,'dash_tile','default_order_by',$tile["ref"]);
+    exit();
+    }
 
 /* 
  * Delete Tile 
  */
 $delete=getval("delete",false);
 if($delete && isset($usertile) && enforcePostRequest(true))
-	{
-	if(!checkPermission_dashmanage()){exit($lang["error-permissiondenied"]);}
-	delete_user_dash_tile($usertile["ref"],$userref);
-	reorder_user_dash($userref);
-	echo "Deleted U".$usertile['ref'];
-	exit();
-	}
+    {
+    if(!checkPermission_dashmanage()){exit($lang["error-permissiondenied"]);}
+    delete_user_dash_tile($usertile["ref"],$userref);
+    reorder_user_dash($userref);
+    echo "Deleted U".$usertile['ref'];
+    exit();
+    }
 if($delete && isset($tile) && !isset($usertile) && enforcePostRequest(true))
-	{
-	if(!checkPermission_dashcreate()){exit($lang["error-permissiondenied"]);}
+    {
+    if(!checkPermission_dashcreate()){exit($lang["error-permissiondenied"]);}
 
-	#Check config tiles for permanent deletion
-	$force = false;
-	$search_string = explode('?',$tile["url"]);
-	parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
-	if($search_string["tltype"]=="conf")
-		{$force = !checkTileConfig($tile,$search_string["tlstyle"]);}
+    #Check config tiles for permanent deletion
+    $force = false;
+    $search_string = explode('?',$tile["url"]);
+    parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
+    if($search_string["tltype"]=="conf")
+        {$force = !checkTileConfig($tile,$search_string["tlstyle"]);}
 
-	delete_dash_tile($tile["ref"],true,$force);
+    delete_dash_tile($tile["ref"],true,$force);
     log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["ref"]);
-	reorder_default_dash();
-	echo "Deleted ".$tile['ref'];
-	exit();
-	}
+    reorder_default_dash();
+    echo "Deleted ".$tile['ref'];
+    exit();
+    }
 
 if (!isset($usertile) && !isset($tile))
     {
-	exit($lang["nodashtilefound"]);
+    exit($lang["nodashtilefound"]);
     }
 
 /* 

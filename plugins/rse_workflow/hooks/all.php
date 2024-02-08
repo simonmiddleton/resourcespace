@@ -1,8 +1,8 @@
 <?php
 function HookRse_workflowAllInitialise()
      {
-	 include_once dirname(__FILE__)."/../include/rse_workflow_functions.php";
-	 include_once dirname(__FILE__)."/../../../include/language_functions.php";
+     include_once dirname(__FILE__)."/../include/rse_workflow_functions.php";
+     include_once dirname(__FILE__)."/../../../include/language_functions.php";
      # Deny access to specific pages if RSE_KEY is not enabled and a valid key is not found.
      global $lang, $additional_archive_states, $fixed_archive_states, $wfstates, $searchstates, $workflowicons;
     
@@ -10,11 +10,11 @@ function HookRse_workflowAllInitialise()
     $searchstates = array();
     $wfstates=rse_workflow_get_archive_states();
     
-	foreach($wfstates as $wfstateref=>$wfstate)
-		{
-		if (!$wfstate['fixed'])
-			{
-			$additional_archive_states[]=$wfstateref;
+    foreach($wfstates as $wfstateref=>$wfstate)
+        {
+        if (!$wfstate['fixed'])
+            {
+            $additional_archive_states[]=$wfstateref;
             }
         else
             {
@@ -30,8 +30,8 @@ function HookRse_workflowAllInitialise()
             {
             $workflowicons[$wfstateref] = trim($wfstate['icon']);
             }
-		}
-    natsort($additional_archive_states);		 
+        }
+    natsort($additional_archive_states);         
     }
     
 function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $existingstates)
@@ -213,7 +213,7 @@ function HookRse_workflowAllAfter_setup_user()
     // Replaces notify group messaging - now replaced by actions
     global $userref, $usergroup;
     
-    get_config_option($userref,'user_pref_resource_notifications', $addwfactions);		  
+    get_config_option($userref,'user_pref_resource_notifications', $addwfactions);        
     if($addwfactions==false)
         {
         // No notifications were sent so actions shouldn't appear either

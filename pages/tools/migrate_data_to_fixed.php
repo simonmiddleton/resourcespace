@@ -57,7 +57,7 @@ if(getval("submit","") != "")
         }
 
  
-	$migrated = 0;
+    $migrated = 0;
     $lastcompletion = 0;
     $completion = 0;
     $now = date(time());
@@ -73,9 +73,9 @@ if(getval("submit","") != "")
     $chunksize = 1000;    
     $nodeinfo = ps_query("SELECT MAX(ref) maxref, MIN(ref) minref, count(*) count FROM node WHERE resource_type_field = ?",array("i",$migrate_field), 0);
 
-	$total = $nodeinfo[0]["count"];
-	$minref = $nodeinfo[0]["minref"];
-	$maxref = $nodeinfo[0]["maxref"];
+    $total = $nodeinfo[0]["count"];
+    $minref = $nodeinfo[0]["minref"];
+    $maxref = $nodeinfo[0]["maxref"];
     $newnoderef = $maxref+1;
     $deletenodes = [];
 
@@ -237,60 +237,60 @@ include_once "../../include/header.php";
 
 ?>
 <div class="BasicsBox">
-	<p>    
-	<a href="<?php echo $backurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a>
-	</p>
-	<h1><?php echo $lang["admin_resource_type_field_migrate_data"] ?></h1>
+    <p>    
+    <a href="<?php echo $backurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a>
+    </p>
+    <h1><?php echo $lang["admin_resource_type_field_migrate_data"] ?></h1>
 
-	<form method="post" class="FormWide" action="<?php echo $baseurl_short ?>pages/tools/migrate_data_to_fixed.php" onsubmit="if(jQuery('#splitchar').val()==''){styledalert('<?php echo htmlspecialchars($lang["admin_resource_type_field_no_action"]); ?>');return false;};start_task(this);return false;">
+    <form method="post" class="FormWide" action="<?php echo $baseurl_short ?>pages/tools/migrate_data_to_fixed.php" onsubmit="if(jQuery('#splitchar').val()==''){styledalert('<?php echo htmlspecialchars($lang["admin_resource_type_field_no_action"]); ?>');return false;};start_task(this);return false;">
      <?php generateFormToken("migrate_data_to_fixed"); ?>
     <?php
     render_field_selector_question($lang["field"],"field",[],"medwidth",false,$migrate_field);
     ?>
-	<div class="Question" >
-		<label for="splitchar" ><?php echo $lang["admin_resource_type_field_migrate_separator"] ?></label>
-		<input class="medwidth" type="text" id="splitchar" name="splitchar" value=",">
-        <div class="clearerleft"> </div>
-	</div>
     <div class="Question" >
-		<label for="maxrows" ><?php echo $lang["max"] . " " . $lang["resources"]?></label>
-		<input class="medwidth" type="text" name="maxrows" value="">
+        <label for="splitchar" ><?php echo $lang["admin_resource_type_field_migrate_separator"] ?></label>
+        <input class="medwidth" type="text" id="splitchar" name="splitchar" value=",">
         <div class="clearerleft"> </div>
-	</div>
-	<div class="Question" >
-		<label for="dryrun" ><?php echo $lang["admin_resource_type_field_migrate_dry_run"] ?></label>
-		<input class="medwidth" type="checkbox" name="dryrun" value="true">
-        <div class="clearerleft"> </div>
-	</div>
-	<div class="Question" >
-		<label for="deletedata" ><?php echo $lang["admin_resource_type_field_migrate_delete_data"] ?></label>
-		<input class="medwidth" type="checkbox" name="deletedata" value="true">
-        <div class="clearerleft"> </div>
-	</div>
+    </div>
     <div class="Question" >
-		<label for="progress"><?php echo $lang["progress"] ?></label>
-		<div class="Fixed" id="progress" >0%</div>
+        <label for="maxrows" ><?php echo $lang["max"] . " " . $lang["resources"]?></label>
+        <input class="medwidth" type="text" name="maxrows" value="">
         <div class="clearerleft"> </div>
-	</div>
+    </div>
     <div class="Question" >
-		<label for="progress_log"><?php echo $lang["status"] ?></label>
+        <label for="dryrun" ><?php echo $lang["admin_resource_type_field_migrate_dry_run"] ?></label>
+        <input class="medwidth" type="checkbox" name="dryrun" value="true">
+        <div class="clearerleft"> </div>
+    </div>
+    <div class="Question" >
+        <label for="deletedata" ><?php echo $lang["admin_resource_type_field_migrate_delete_data"] ?></label>
+        <input class="medwidth" type="checkbox" name="deletedata" value="true">
+        <div class="clearerleft"> </div>
+    </div>
+    <div class="Question" >
+        <label for="progress"><?php echo $lang["progress"] ?></label>
+        <div class="Fixed" id="progress" >0%</div>
+        <div class="clearerleft"> </div>
+    </div>
+    <div class="Question" >
+        <label for="progress_log"><?php echo $lang["status"] ?></label>
         <div class="Fixed medwidth" id="progress_log" ></div>
         <div class="clearerleft"> </div>
-	</div>
+    </div>
     <div class="Question" >
-		<label for="view_log"><?php echo $lang["log"] ?></label>
+        <label for="view_log"><?php echo $lang["log"] ?></label>
         <div class="Fixed medwidth" id="view_log" ><a style="display:none;" id="log_url" href="#" target="_blank"><?php echo $lang["action-log"] ?></a></div>
         <div class="clearerleft"> </div>
-	</div>
+    </div>
     <div class="Question" >
-		<input type="hidden" id="submitinput" name="submit" value="">
-		<input type="submit" name="submit" value="<?php echo $lang["action-submit-button-label"] ?>"" onclick="document.getElementById('submitinput').value='true';">
+        <input type="hidden" id="submitinput" name="submit" value="">
+        <input type="submit" name="submit" value="<?php echo $lang["action-submit-button-label"] ?>"" onclick="document.getElementById('submitinput').value='true';">
         <div class="clearerleft"> </div>
-	</div>
+    </div>
     
-	<div class="clearerleft"> </div>
+    <div class="clearerleft"> </div>
     
-	</form>
+    </form>
     <script>
         function start_task(form)
         <?php        

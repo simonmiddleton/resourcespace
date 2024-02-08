@@ -54,7 +54,7 @@ $adminadata = get_user($admina);
 setup_user($adminadata);
 $result = get_users_by_permission([$testperm]);
 if(!is_array($result) || !match_values(array_column($result,'ref'),array($admina, $childa)))
-	{
+    {
     echo "ERROR - SUBTEST A\n";
     return false;
     }
@@ -64,7 +64,7 @@ $adminbdata = get_user($adminb);
 setup_user($adminbdata);
 $result = get_users_by_permission([$testperm]);
 if(!is_array($result) || !match_values(array_column($result,'ref'),[$admina, $adminb, $childa]))
-	{
+    {
     echo "ERROR - SUBTEST C\n";
     return false;
     }
@@ -72,7 +72,7 @@ if(!is_array($result) || !match_values(array_column($result,'ref'),[$admina, $ad
 // Test D Get all users with a set of permissions, no restriction
 $result = get_users_by_permission([$testperm,"u","U","t","s"]);
 if(!is_array($result) || !match_values(array_column($result,'ref'),[$admina]))
-	{
+    {
     echo "ERROR - SUBTEST D\n";
     return false;
     }
@@ -82,7 +82,7 @@ $childadata = get_user($childa);
 setup_user($childadata);
 $result = get_users_by_permission([$testperm]);
 if(!empty($result))
-	{
+    {
     echo "ERROR - SUBTEST E\n";
     return false;
     }

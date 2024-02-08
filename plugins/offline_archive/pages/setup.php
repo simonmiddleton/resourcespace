@@ -12,7 +12,7 @@ if (!checkperm('a'))
 
 $plugin_name = 'offline_archive';
 if(!in_array($plugin_name, $plugins))
-	{
+    {
     plugin_activate_for_setup($plugin_name);
     }
 

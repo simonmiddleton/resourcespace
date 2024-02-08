@@ -35,7 +35,7 @@ $curpage=floor($offset/$per_page)+1;
 $url="team_related_keywords.php?find=" . urlencode($find);
 $jumpcount=1;
 
-?><div class="TopInpageNav"><?php pager();	?></div>
+?><div class="TopInpageNav"><?php pager();  ?></div>
 
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">

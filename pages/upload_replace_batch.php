@@ -98,7 +98,7 @@ if (isset($info_text))
         {
         ?>
         <option value="<?php echo $metadatafield["ref"] ?>" <?php if($metadatafield["ref"] == $filename_field){ echo " selected";} ?>>
-        <?php echo i18n_get_translated($metadatafield["title"]) ?>	
+        <?php echo i18n_get_translated($metadatafield["title"]) ?>  
         </option>    
         <?php
         }

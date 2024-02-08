@@ -62,11 +62,11 @@ function create_new_db($db_name)
 
 // Used to check that search results return the expected resources
 function match_values( $arraya , $arrayb ) 
-	{ 
+    { 
     sort( $arraya ); 
     sort( $arrayb ); 
-	return $arraya == $arrayb; 
-	} 
+    return $arraya == $arrayb; 
+    } 
 
 /**
  * Generate a random alpha-numeric UID to use during testing. Helpful to prevent errors when running with 
@@ -228,21 +228,21 @@ if(!$performancetest)
     }
 if (!empty($plugin_tests))
     {
-    $tests = array_merge($core_tests, $plugin_tests);	
+    $tests = array_merge($core_tests, $plugin_tests);   
     }
 else
     {
-    $tests = $core_tests;	
-    }		
+    $tests = $core_tests;   
+    }       
 
 # Run tests
 echo "-----\n";ob_flush();
 foreach ($tests as $key => $test_stack)
     {
-	foreach ($test_stack as $test)
-	    {
+    foreach ($test_stack as $test)
+        {
         # ------------- RUN THE TEST ------------------------------------------------
-		echo "Running test " . str_pad($test,65," ") . " ";ob_flush();
+        echo "Running test " . str_pad($test,65," ") . " ";ob_flush();
         try
             {
             $result = include $key . '/'. $test;
@@ -253,27 +253,27 @@ foreach ($tests as $key => $test_stack)
             $result=false;
             }
         # -------------- Did it work? -----------------------------------------------
-		if ($result===false)
-		    {
-			echo "FAIL\n";ob_flush();
-			if (isset($email_test_fails_to))
-			    {
-				$svnrevision=trim(shell_exec("svnversion .")); 
-				send_mail($email_test_fails_to,"Test $test has failed as of r" . $svnrevision,"Hi,\n\nAs of revision " . $svnrevision. " the test '" . $test . "' is failing.\n\nThis e-mail was sent from the installation at $baseurl.");
-				}
-			if ($key=="test_list")
-				{
-				exit();	# If a core test fails cancel all other tests
-				}
-			else
-				{
-				break;	# If a plugin test fails abort tests for this plugin but continue
-				}					
-			}
-		echo "OK\n";ob_flush();
-		}
-	echo "-----\n";ob_flush();
-	}
+        if ($result===false)
+            {
+            echo "FAIL\n";ob_flush();
+            if (isset($email_test_fails_to))
+                {
+                $svnrevision=trim(shell_exec("svnversion .")); 
+                send_mail($email_test_fails_to,"Test $test has failed as of r" . $svnrevision,"Hi,\n\nAs of revision " . $svnrevision. " the test '" . $test . "' is failing.\n\nThis e-mail was sent from the installation at $baseurl.");
+                }
+            if ($key=="test_list")
+                {
+                exit(); # If a core test fails cancel all other tests
+                }
+            else
+                {
+                break;  # If a plugin test fails abort tests for this plugin but continue
+                }                   
+            }
+        echo "OK\n";ob_flush();
+        }
+    echo "-----\n";ob_flush();
+    }
 echo "All tests complete.\n";
 
 if(array_search('noteardown',$argv)===false)

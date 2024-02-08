@@ -11,18 +11,18 @@ include "../../include/authenticate.php"; if (!$user_purge || !checkperm("u")) {
 
 $months=getval("months","");
 if ($months!="")
-	{
-	if (!is_numeric($months) || $months<0) {$error=$lang["pleaseenteravalidnumber"];}
-	else
-		{
-		$condition="(created IS NULL OR created<date_sub(now(), interval {$months} month)) AND 
+    {
+    if (!is_numeric($months) || $months<0) {$error=$lang["pleaseenteravalidnumber"];}
+    else
+        {
+        $condition="(created IS NULL OR created<date_sub(now(), interval {$months} month)) AND 
 						  (last_active IS NULL OR last_active<date_sub(now(), interval {$months} month))";
-		$count=ps_value("SELECT count(*) value FROM user WHERE $condition", [], 0);
-		}
-	}
-	
+        $count=ps_value("SELECT count(*) value FROM user WHERE $condition", [], 0);
+        }
+    }
+    
 if (isset($condition) && getval("purge2","")!="" && enforcePostRequest(false))
-	{
+    {
     if($user_purge_disable)
         {
         ps_query("UPDATE user SET approved=2 WHERE $condition AND approved=1");    
@@ -31,8 +31,8 @@ if (isset($condition) && getval("purge2","")!="" && enforcePostRequest(false))
         {
         ps_query("DELETE FROM user WHERE $condition");
         }
-	redirect("pages/team/team_user.php");
-	}
+    redirect("pages/team/team_user.php");
+    }
 
 include "../../include/header.php";
 
@@ -45,7 +45,7 @@ $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
         'href'  => $baseurl_short . "pages/team/team_home.php",
-		'menu' =>  true
+        'menu' =>  true
     ),
     array(
         'title' => $lang["manageusers"],
@@ -80,23 +80,23 @@ if(isset($count) && $count==0)
 </p>
 <?php $users=ps_query("select " . columns_in("user") . " from user where $condition"); ?>
 <table class="InfoTable">
-	<tr>
-		<td><strong><?php echo $lang["username"] ?></strong></td>
-		<td><strong><?php echo $lang["fullname"] ?></strong></td>
-		<td><strong><?php echo $lang["email"] ?></strong></td>
-		<td><strong><?php echo $lang["created"] ?></strong></td>
-		<td><strong><?php echo $lang["lastactive"] ?></strong></td>
-	</tr>
+    <tr>
+        <td><strong><?php echo $lang["username"] ?></strong></td>
+        <td><strong><?php echo $lang["fullname"] ?></strong></td>
+        <td><strong><?php echo $lang["email"] ?></strong></td>
+        <td><strong><?php echo $lang["created"] ?></strong></td>
+        <td><strong><?php echo $lang["lastactive"] ?></strong></td>
+    </tr>
 <?php foreach ($users as $user) 
-	{
-	?><tr>
-		<td><?php echo $user["username"] ?></td>
-		<td><?php echo $user["fullname"] ?></td>
-		<td><?php echo $user["email"] ?></td>
-		<td><?php echo nicedate($user["created"]) ?></td>
-		<td><?php echo nicedate($user["last_active"]) ?></td>
-	</tr><?php
-	}
+    {
+    ?><tr>
+        <td><?php echo $user["username"] ?></td>
+        <td><?php echo $user["fullname"] ?></td>
+        <td><?php echo $user["email"] ?></td>
+        <td><?php echo nicedate($user["created"]) ?></td>
+        <td><?php echo nicedate($user["last_active"]) ?></td>
+    </tr><?php
+    }
 ?>
 </table>
 
@@ -113,6 +113,6 @@ if(isset($count) && $count==0)
 </form>
 </div>
 
-<?php		
+<?php	  
 include "../../include/footer.php";
 ?>

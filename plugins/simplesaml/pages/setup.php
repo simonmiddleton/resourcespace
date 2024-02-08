@@ -9,61 +9,61 @@ include_once dirname(__FILE__) . '/../include/simplesaml_functions.php';
 
 $plugin_name = 'simplesaml';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
-	
+    {plugin_activate_for_setup($plugin_name);}
+    
 if ((getval('submit','') != '' || getval('save','') != '') && enforcePostRequest(false))
-	{
-	$simplesaml['simplesaml_site_block'] = getval('simplesaml_site_block','');
-	$simplesaml['simplesaml_login'] = getval('simplesaml_login','');
-	$simplesaml['simplesaml_allow_public_shares'] = getval('simplesaml_allow_public_shares','');
-	$simplesaml['simplesaml_allowedpaths'] = explode(",",getval('simplesaml_allowedpaths',''));
-	$simplesaml['simplesaml_allow_standard_login'] = getval('simplesaml_allow_standard_login','');
-	$simplesaml['simplesaml_prefer_standard_login'] = getval('simplesaml_prefer_standard_login','');
-	$simplesaml['simplesaml_sp'] = getval('simplesaml_sp','');
-	
-	$simplesaml['simplesaml_username_attribute'] = getval('simplesaml_username_attribute','');
-	$simplesaml['simplesaml_fullname_attribute'] = getval('simplesaml_fullname_attribute','');
-	$simplesaml['simplesaml_email_attribute'] = getval('simplesaml_email_attribute','');
-	$simplesaml['simplesaml_group_attribute'] = getval('simplesaml_group_attribute','');	
-	$simplesaml['simplesaml_fallback_group'] = getval('simplesaml_fallback_group','');
-	$simplesaml['simplesaml_update_group'] = getval('simplesaml_update_group','');
-	$simplesaml['simplesaml_create_new_match_email'] = getval('simplesaml_create_new_match_email','');
-	$simplesaml['simplesaml_allow_duplicate_email'] = getval('simplesaml_allow_duplicate_email','');
-	$simplesaml['simplesaml_multiple_email_notify'] = getval('simplesaml_multiple_email_notify','');
-	$simplesaml['simplesaml_fullname_separator'] = getval('simplesaml_fullname_separator','');
-	$simplesaml['simplesaml_username_separator'] = getval('simplesaml_username_separator','');
+    {
+    $simplesaml['simplesaml_site_block'] = getval('simplesaml_site_block','');
+    $simplesaml['simplesaml_login'] = getval('simplesaml_login','');
+    $simplesaml['simplesaml_allow_public_shares'] = getval('simplesaml_allow_public_shares','');
+    $simplesaml['simplesaml_allowedpaths'] = explode(",",getval('simplesaml_allowedpaths',''));
+    $simplesaml['simplesaml_allow_standard_login'] = getval('simplesaml_allow_standard_login','');
+    $simplesaml['simplesaml_prefer_standard_login'] = getval('simplesaml_prefer_standard_login','');
+    $simplesaml['simplesaml_sp'] = getval('simplesaml_sp','');
+    
+    $simplesaml['simplesaml_username_attribute'] = getval('simplesaml_username_attribute','');
+    $simplesaml['simplesaml_fullname_attribute'] = getval('simplesaml_fullname_attribute','');
+    $simplesaml['simplesaml_email_attribute'] = getval('simplesaml_email_attribute','');
+    $simplesaml['simplesaml_group_attribute'] = getval('simplesaml_group_attribute','');    
+    $simplesaml['simplesaml_fallback_group'] = getval('simplesaml_fallback_group','');
+    $simplesaml['simplesaml_update_group'] = getval('simplesaml_update_group','');
+    $simplesaml['simplesaml_create_new_match_email'] = getval('simplesaml_create_new_match_email','');
+    $simplesaml['simplesaml_allow_duplicate_email'] = getval('simplesaml_allow_duplicate_email','');
+    $simplesaml['simplesaml_multiple_email_notify'] = getval('simplesaml_multiple_email_notify','');
+    $simplesaml['simplesaml_fullname_separator'] = getval('simplesaml_fullname_separator','');
+    $simplesaml['simplesaml_username_separator'] = getval('simplesaml_username_separator','');
     $simplesaml['simplesaml_custom_attributes'] = getval('simplesaml_custom_attributes', '');
     $simplesaml['simplesaml_lib_path'] = getval('simplesaml_lib_path', '');
     $simplesaml['simplesaml_authorisation_claim_name'] = getval('simplesaml_authorisation_claim_name', '');
     $simplesaml['simplesaml_authorisation_claim_value'] = getval('simplesaml_authorisation_claim_value', '');
     $simplesaml['simplesaml_rsconfig'] = getval('simplesaml_rsconfig','');
-	
-	$samlgroups = $_REQUEST['samlgroup'];
-	$rsgroups = $_REQUEST['rsgroup'];
-	$priority = $_REQUEST['priority'];
+    
+    $samlgroups = $_REQUEST['samlgroup'];
+    $rsgroups = $_REQUEST['rsgroup'];
+    $priority = $_REQUEST['priority'];
 
-	if (count($samlgroups) > 0){	
-		$simplesaml_groupmap=array();	
-		$mappingcount=0;
-		}
-	
-	for ($i=0; $i < count($samlgroups); $i++)
-		{
-		if ($samlgroups[$i] <> '' && $rsgroups[$i] <> '' && is_numeric($rsgroups[$i]))
-			{
-			$simplesaml_groupmap[$mappingcount]=array();
-			$simplesaml_groupmap[$mappingcount]["samlgroup"]=$samlgroups[$i];
-			$simplesaml_groupmap[$mappingcount]["rsgroup"]=$rsgroups[$i];
-			if(isset($priority[$i])){$simplesaml_groupmap[$mappingcount]["priority"]=$priority[$i];}
-			$mappingcount++;
-			}			
-		}
-	
-	$simplesaml["simplesaml_groupmap"]=$simplesaml_groupmap;
-	set_plugin_config("simplesaml",$simplesaml);
-	include_plugin_config($plugin_name,base64_encode(serialize($simplesaml)));
-	if (getval('submit','')!=''){redirect('pages/team/team_plugins.php');}
-	}	
+    if (count($samlgroups) > 0){    
+        $simplesaml_groupmap=array();   
+        $mappingcount=0;
+        }
+    
+    for ($i=0; $i < count($samlgroups); $i++)
+        {
+        if ($samlgroups[$i] <> '' && $rsgroups[$i] <> '' && is_numeric($rsgroups[$i]))
+            {
+            $simplesaml_groupmap[$mappingcount]=array();
+            $simplesaml_groupmap[$mappingcount]["samlgroup"]=$samlgroups[$i];
+            $simplesaml_groupmap[$mappingcount]["rsgroup"]=$rsgroups[$i];
+            if(isset($priority[$i])){$simplesaml_groupmap[$mappingcount]["priority"]=$priority[$i];}
+            $mappingcount++;
+            }           
+        }
+    
+    $simplesaml["simplesaml_groupmap"]=$simplesaml_groupmap;
+    set_plugin_config("simplesaml",$simplesaml);
+    include_plugin_config($plugin_name,base64_encode(serialize($simplesaml)));
+    if (getval('submit','')!=''){redirect('pages/team/team_plugins.php');}
+    }   
 
 
 global $baseurl;
@@ -79,12 +79,12 @@ foreach (array(
     'simplesaml_multiple_email_notify',
     'simplesaml_rsconfig'
     ) as $thefield)
-	{
-	if (!isset($simplesaml[$thefield]))
-		{
-		$simplesaml[$thefield] = '';
-		}
-	}
+    {
+    if (!isset($simplesaml[$thefield]))
+        {
+        $simplesaml[$thefield] = '';
+        }
+    }
 
 $links_trail = array(
     array(
@@ -232,7 +232,7 @@ config_text_input("simplesaml_group_attribute",$lang['simplesaml_group_attribute
 
 $rsgroupoption=array();
 foreach($rsgroups as $rsgroup)
-	{$rsgroupoption[$rsgroup["ref"]]=$rsgroup["name"];}
+    {$rsgroupoption[$rsgroup["ref"]]=$rsgroup["name"];}
 
 config_single_select("simplesaml_fallback_group",$lang['simplesaml_fallback_group'],$simplesaml_fallback_group,$rsgroupoption, true);
 config_text_input('simplesaml_custom_attributes', $lang['simplesaml_custom_attributes'], $simplesaml_custom_attributes);
@@ -250,30 +250,30 @@ config_text_input('simplesaml_custom_attributes', $lang['simplesaml_custom_attri
 </tr>
 
 <?php
-	for($i = 0; $i < count($simplesaml_groupmap)+1; $i++){
-		if ($i >= count($simplesaml_groupmap)){
-			$thegroup = array();
-			$thegroup['samlgroup'] = '';
-			$thegroup['rsgroup'] = '';
-			$thegroup['priority'] = '';
-			$rowid = 'groupmapmodel';
-		} else {
-			$thegroup = $simplesaml_groupmap[$i];
-			$rowid = "row$i";
-		}
+    for($i = 0; $i < count($simplesaml_groupmap)+1; $i++){
+        if ($i >= count($simplesaml_groupmap)){
+            $thegroup = array();
+            $thegroup['samlgroup'] = '';
+            $thegroup['rsgroup'] = '';
+            $thegroup['priority'] = '';
+            $rowid = 'groupmapmodel';
+        } else {
+            $thegroup = $simplesaml_groupmap[$i];
+            $rowid = "row$i";
+        }
 ?>
 <tr id='<?php echo $rowid; ?>'>
    <td><input type='text' name='samlgroup[]' value='<?php echo $thegroup['samlgroup']; ?>' /></td>
    <td><select name='rsgroup[]'><option value=''></option>
-	<?php 	
-		foreach ($rsgroups as $rsgroup){
-			echo  "<option value='" . $rsgroup['ref'] . "'";
-			if ($thegroup['rsgroup'] == $rsgroup['ref']){
-				echo " selected";
-			}
-			echo ">". $rsgroup['name'] . "</option>\n";
-		} 
- 	?></select>
+    <?php   
+        foreach ($rsgroups as $rsgroup){
+            echo  "<option value='" . $rsgroup['ref'] . "'";
+            if ($thegroup['rsgroup'] == $rsgroup['ref']){
+                echo " selected";
+            }
+            echo ">". $rsgroup['name'] . "</option>\n";
+        } 
+    ?></select>
     </td>
     <td><input type='text' name='priority[]' value='<?php echo $thegroup['priority']; ?>' /></td>
 </tr>
@@ -290,7 +290,7 @@ config_text_input('simplesaml_custom_attributes', $lang['simplesaml_custom_attri
 </div><div class="clearerleft"></div>
 
 </form>
-</div>	
+</div>  
 
 <script language="javascript">
         function addGroupMapRow() {

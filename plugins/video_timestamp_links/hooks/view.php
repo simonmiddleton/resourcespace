@@ -20,7 +20,7 @@ function HookVideo_timestamp_linksViewFooterbottom()
             this.innerHTML=newtext;
             });   
         }
-	},1000);
+    },1000);
 
     function VideoJumpTo(timestamp)
         {
@@ -32,7 +32,7 @@ function HookVideo_timestamp_linksViewFooterbottom()
         var video=jQuery(".videojscontent video")[0];
         video.currentTime=ts;video.play();
 
-	document.getElementById('previewimagewrapper').scrollIntoView();
+    document.getElementById('previewimagewrapper').scrollIntoView();
 
         }
     </script>

@@ -118,13 +118,13 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     document.getElementById('<?php echo $name; ?>_selected').innerHTML = html;
     
     if("<?php echo $field['field_constraint']?>"==1 && keyword_count>=1 && (pagename!='search_advanced' || '<?php echo var_export($dynamic_keyword_and, true) ?>'==='true'))
-    	{
-    	document.getElementById('<?php echo $name; ?>_selector').disabled = true;
-    	}
+        {
+        document.getElementById('<?php echo $name; ?>_selector').disabled = true;
+        }
     else
-    	{
-    	document.getElementById('<?php echo $name; ?>_selector').disabled = false;
-    	}
+        {
+        document.getElementById('<?php echo $name; ?>_selector').disabled = false;
+        }
 
     // Update the result counter, if the function is available (e.g. on Advanced Search).
     if(typeof(UpdateResultCount) == 'function' && user_action)
@@ -147,7 +147,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     // Trigger an event so we can chain actions once we've changed a dynamic keyword
     jQuery('[name="<?php echo $hidden_input_elements_name; ?>[<?php echo $field["ref"]; ?>][]"]').each(function(index, element)
         {
-       	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: element.value}]);
+        jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: element.value}]);
         });
     }
 
@@ -184,7 +184,7 @@ function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
     updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action);
 
     // Trigger an event so we can chain actions once we've changed a dynamic keyword
-	jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: node_id}]);
+    jQuery('#CentralSpace').trigger('dynamicKeywordChanged',[{node: node_id}]);
     }
 
 function addKeyword_<?php echo $js_keywords_suffix; ?>(node_id, keyword)

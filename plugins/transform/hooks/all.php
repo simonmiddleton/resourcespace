@@ -12,7 +12,7 @@ function HookTransformAllAdditionalheaderjs()
 
 function HookTransformAllRender_actions_add_collection_option($top_actions,$options,$collection_data, array $urlparams)
     {
-	global $cropper_transform_original, $cropper_enable_batch,$count_result,$lang, $baseurl, $userref, $internal_share_access;
+    global $cropper_transform_original, $cropper_enable_batch,$count_result,$lang, $baseurl, $userref, $internal_share_access;
     
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))

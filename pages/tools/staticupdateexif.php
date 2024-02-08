@@ -14,11 +14,11 @@ echo "Updating EXIF/IPTC...";
 
 $rd = ps_query("SELECT ref, file_extension FROM resource WHERE has_image = 1");
 for ($n=0;$n<count($rd);$n++)
-	{
-	$ref=$rd[$n]['ref'];
-	echo "." . $ref;
-	extract_exif_comment($rd[$n]['ref'],$rd[$n]['file_extension']);
-	}
+    {
+    $ref=$rd[$n]['ref'];
+    echo "." . $ref;
+    extract_exif_comment($rd[$n]['ref'],$rd[$n]['file_extension']);
+    }
 echo "...done.";
 
 

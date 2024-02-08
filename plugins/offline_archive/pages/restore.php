@@ -20,13 +20,13 @@ if($resources!="")
 elseif($collection!="")
     {
     $restoreresources=get_collection_resources($collection);
-    $resources=implode(",",$restoreresources);	
+    $resources=implode(",",$restoreresources);  
     }
 else
     {
     $valid=false;
     }
-	
+    
 if($valid==true)
     {
     $title_field="field".$view_title_field;
@@ -75,10 +75,10 @@ if (isset($resulttext))
                 echo escape($lang['property-reference']);
                 echo '</td><td>';
                 echo escape($lang['property-title']);
-                echo '</td><td>';	
+                echo '</td><td>';   
                 echo escape($lang['offline_archive_archive_ref']);
                 echo '</td>';
-                echo "</tr>";	
+                echo "</tr>";   
                     
                 foreach ($resourcedetails as $resourcedetail)
                     {
@@ -97,7 +97,7 @@ if (isset($resulttext))
                     echo '</td>
                     <td>';
                     echo escape($archivecode);
-                    echo '</tr>';					
+                    echo '</tr>';                   
                     }
                 
             
@@ -114,15 +114,15 @@ if (isset($resulttext))
         {
         echo "<div><p>" . escape($lang['offline_archive_input_text']) . "</p></div>";
         ?>
-        <div class="Question">		
+        <div class="Question">      
             <label for="resources"><?php echo escape($lang['offline_archive_input_resources']) ?></label>
-            <input class="stdwidth" name="resources" id="resources" type="text" >	
+            <input class="stdwidth" name="resources" id="resources" type="text" >   
         </div>
-        <div class="Question">		
+        <div class="Question">      
             <label for="collection"><?php echo escape($lang['offline_archive_input_collection']) ?></label>
-            <input class="stdwidth" name="collection" id="collection" type="text" >	
+            <input class="stdwidth" name="collection" id="collection" type="text" > 
         </div>
-        <div class="QuestionSubmit">	
+        <div class="QuestionSubmit">    
             <input name="restore" id="restore" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["offline_archive_restore_resources"]); ?>&nbsp;&nbsp;">
         </div>
 
@@ -132,7 +132,7 @@ if (isset($resulttext))
         {
         ?>
         <input name="resources" type="hidden" value="<?php echo escape($resources) ?>">
-        <div class="QuestionSubmit">	
+        <div class="QuestionSubmit">    
             <input name="restore_confirm" id="restore_confirm" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["offline_archive_restore_confirm"]); ?>&nbsp;&nbsp;">
         </div>
         <?php

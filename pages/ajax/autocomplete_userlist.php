@@ -12,11 +12,11 @@ $first=true;
 <?php
 $users=get_users(0,$find);
 for ($n=0;$n<count($userlists) && $n<=20;$n++)
-	{
-	if (!$first) { ?>, <?php }
-			$first=false;
+    {
+    if (!$first) { ?>, <?php }
+            $first=false;
     ?>{
        "value": "<?php echo $userlists[$n]['userlist_name']?>"}<?php	
-	}
+    }
 ?>
 ]

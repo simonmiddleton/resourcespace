@@ -13,20 +13,20 @@ $plugin_page_heading = $lang['search_notifications_config_heading'];
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 $page_def[] = config_add_single_select(
-	'search_notification_max_thumbnails',
-	$lang['search_notifications_config_thumbnail_count'],
-	array(1,2,3,4,5,6,7,8,9),
-	false,
-	50,
-	null,
-	true
+    'search_notification_max_thumbnails',
+    $lang['search_notifications_config_thumbnail_count'],
+    array(1,2,3,4,5,6,7,8,9),
+    false,
+    50,
+    null,
+    true
 );
 
 $page_def[] = config_add_boolean_select(
-	'only_show_changes',
-	$lang['search_notifications_config_only_changes'],
-	'',
-	75
+    'only_show_changes',
+    $lang['search_notifications_config_only_changes'],
+    '',
+    75
 );
 
 // Do the page generation ritual -- don't change this section.

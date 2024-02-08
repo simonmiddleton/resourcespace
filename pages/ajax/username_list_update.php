@@ -13,8 +13,8 @@ $userstring=implode(", ",$userstring);
 
 $groups=resolve_userlist_groups_smart($userstring);
 if($groups!="")
-	{
-	$userstring.=",".$groups;
-	}
+    {
+    $userstring.=",".$groups;
+    }
 
 echo $userstring;

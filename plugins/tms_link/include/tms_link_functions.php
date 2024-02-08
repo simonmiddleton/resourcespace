@@ -43,8 +43,8 @@ function tms_convert_value($value, $key, array $module)
     $tms_rs_mapping_index = array_search($key, array_column($module['tms_rs_mappings'], 'tms_column'));
     if($tms_rs_mapping_index !== false)
         {
-	$mappings=$module['tms_rs_mappings'];
-	$mappings=array_values($mappings);
+    $mappings=$module['tms_rs_mappings'];
+    $mappings=array_values($mappings);
         if(strtoupper($mappings[$tms_rs_mapping_index]["encoding"]) != "UTF-8")
             {
             return mb_convert_encoding((string) $value, 'UTF-8', $mappings[$tms_rs_mapping_index]['encoding']);
@@ -297,7 +297,7 @@ function tms_add_mediaxref($mediamasterid,$tms_object_id,$create=true)
     {
     $tmssql="INSERT INTO MediaXRefs (MediaMasterID, ID, TableID, Rank, PrimaryDisplay, LoginID) values ('" . $mediamasterid . "', '" . $tms_object_id  . "', 108, 1, 0, '" . $tms_link_tms_loginid. "')";
     debug("tms_link: SQL - " . $tmssql);
-	$tms_update_mediaxrefs=odbc_exec($conn,$tmssql);
+    $tms_update_mediaxrefs=odbc_exec($conn,$tmssql);
     if(!$tms_update_mediaxrefs)
       {
       $errormessage=odbc_errormsg();
@@ -375,7 +375,7 @@ function tms_link_create_tms_thumbnail($resource, $alternative=-1)
             }
 
         // Check if mediafile already exists
-        $existingmediafile=tms_check_thumb($pathid,$preview_path,$tmsrelfilepath);	  
+        $existingmediafile=tms_check_thumb($pathid,$preview_path,$tmsrelfilepath);    
         if($existingmediafile!==false)
             {
             // Update MediaRenditions with new thumbnail and return as everything else stays the same
@@ -825,29 +825,29 @@ function tms_show_data($table,$columns,$utf16_columns,$conditionsql,$limit=10)
   }
   
 function tms_link_check_preview($ref, $alternative=-1)
-	{
-	global $tms_link_push_image,$tms_link_push_condition;
-	if(!$tms_link_push_image){return false;}
-	
-	$metadata=get_resource_field_data($ref,false,false);
-	
-	$matchedfilter=false;
-	for ($n=0;$n<count($metadata);$n++)
-		{
-		$name=$metadata[$n]["name"];
-		$value=$metadata[$n]["value"];			
-		if ($name!="")
-			{
-			$match=filter_match($tms_link_push_condition,$name,$value);
-			if ($match==1) {$matchedfilter=false;break;} 
-			if ($match==2) {$matchedfilter=true;} 
-			}
-		}
-	if(!$matchedfilter){return false;}
-	
-	// Push condition has matched, add the preview image to TMS
-	tms_link_create_tms_thumbnail($ref, $alternative);
-	}
+    {
+    global $tms_link_push_image,$tms_link_push_condition;
+    if(!$tms_link_push_image){return false;}
+    
+    $metadata=get_resource_field_data($ref,false,false);
+    
+    $matchedfilter=false;
+    for ($n=0;$n<count($metadata);$n++)
+        {
+        $name=$metadata[$n]["name"];
+        $value=$metadata[$n]["value"];          
+        if ($name!="")
+            {
+            $match=filter_match($tms_link_push_condition,$name,$value);
+            if ($match==1) {$matchedfilter=false;break;} 
+            if ($match==2) {$matchedfilter=true;} 
+            }
+        }
+    if(!$matchedfilter){return false;}
+    
+    // Push condition has matched, add the preview image to TMS
+    tms_link_create_tms_thumbnail($ref, $alternative);
+    }
 
 /**
 * Save plugins' module saved mappings configuration on an ad-hoc basis

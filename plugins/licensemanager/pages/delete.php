@@ -20,13 +20,13 @@ $url_params = array(
 $redirect_url = generateURL($baseurl_short . "/plugins/licensemanager/pages/list.php",$url_params);
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
-	{
-	ps_query("delete from license where ref= ?", ['i', $ref]);
-	ps_query("delete from resource_license where license= ?", ['i', $ref]);
+    {
+    ps_query("delete from license where ref= ?", ['i', $ref]);
+    ps_query("delete from resource_license where license= ?", ['i', $ref]);
 
-	redirect($redirect_url);
-	}
-		
+    redirect($redirect_url);
+    }
+        
 include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
@@ -43,12 +43,12 @@ include "../../../include/header.php";
 <div class="clearerleft"> </div></div>
 
 
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>
 
-<?php		
+<?php	  
 include "../../../include/footer.php";
 ?>

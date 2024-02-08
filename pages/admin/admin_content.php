@@ -44,7 +44,7 @@ $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
         'href'  => $baseurl_short . "pages/admin/admin_home.php",
-		'menu' =>  true
+        'menu' =>  true
     ),
     array(
         'title' => $lang["managecontent"],
@@ -82,51 +82,51 @@ $jumpcount=1;
 
 <?php
 for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
-	{
-	$url=$baseurl_short . "pages/admin/admin_content_edit.php?page=" . urlencode($text[$n]["page"]) . "&name=" . urlencode($text[$n]["name"]) . "&editlanguage=" . urlencode($text[$n]["language"]) . "&editgroup=" . (is_null($text[$n]["group"]) ? "" : urlencode($text[$n]["group"])) . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) . "&offset=" . urlencode($offset);
-	?>
-	<tr>
-	<td><div class="ListTitle"><a href="<?php echo $url ?>"><?php echo highlightkeywords(($text[$n]["page"]==""||$text[$n]["page"]=="all"?$lang["all"]:$text[$n]["page"]),htmlspecialchars($findpage),true);?></a></div></td>
-	
-	<td><div class="ListTitle"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($text[$n]["name"],htmlspecialchars($findname),true)?></a></div></td>
-	
-	<?php if ($extended) {
-	# Extended view. Show the language and group when searching, as these variants are expanded out when searching.
-	
-	# Resolve the user group name.
-	$group_resolved=$lang["deleted"];
-	if ($text[$n]["group"]=="")
-	  {
-	  $group_resolved=$lang["all"];
-	  }
-	else
-	  {
-	  # resolve
-	  foreach ($groups as $group)
-	    {
-	    if ($group["ref"]==$text[$n]["group"]) {$group_resolved=$group["name"];}
-	    }
-	  }
-	?>
-	<td><?php echo $text[$n]["language"] ?></td>
-	<td><?php echo $group_resolved ?></td>
-	<?php } ?>
-	
-	<td><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords(tidy_trim(htmlspecialchars($text[$n]["text"]),100), htmlspecialchars($findtext), true, '', 1, STR_HIGHLIGHT_SIMPLE & STR_HIGHLIGHT_STRIPLINKS); ?></a></td>
-	
-	<td><div class="ListTools"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a></div></td>
-	</tr>
-	<?php
-	}
+    {
+    $url=$baseurl_short . "pages/admin/admin_content_edit.php?page=" . urlencode($text[$n]["page"]) . "&name=" . urlencode($text[$n]["name"]) . "&editlanguage=" . urlencode($text[$n]["language"]) . "&editgroup=" . (is_null($text[$n]["group"]) ? "" : urlencode($text[$n]["group"])) . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) . "&offset=" . urlencode($offset);
+    ?>
+    <tr>
+    <td><div class="ListTitle"><a href="<?php echo $url ?>"><?php echo highlightkeywords(($text[$n]["page"]==""||$text[$n]["page"]=="all"?$lang["all"]:$text[$n]["page"]),htmlspecialchars($findpage),true);?></a></div></td>
+    
+    <td><div class="ListTitle"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($text[$n]["name"],htmlspecialchars($findname),true)?></a></div></td>
+    
+    <?php if ($extended) {
+    # Extended view. Show the language and group when searching, as these variants are expanded out when searching.
+    
+    # Resolve the user group name.
+    $group_resolved=$lang["deleted"];
+    if ($text[$n]["group"]=="")
+      {
+      $group_resolved=$lang["all"];
+      }
+    else
+      {
+      # resolve
+      foreach ($groups as $group)
+        {
+        if ($group["ref"]==$text[$n]["group"]) {$group_resolved=$group["name"];}
+        }
+      }
+    ?>
+    <td><?php echo $text[$n]["language"] ?></td>
+    <td><?php echo $group_resolved ?></td>
+    <?php } ?>
+    
+    <td><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords(tidy_trim(htmlspecialchars($text[$n]["text"]),100), htmlspecialchars($findtext), true, '', 1, STR_HIGHLIGHT_SIMPLE & STR_HIGHLIGHT_STRIPLINKS); ?></a></td>
+    
+    <td><div class="ListTools"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a></div></td>
+    </tr>
+    <?php
+    }
 ?>
 
 </table>
 </div>
 <div class="BottomInpageNav">
-	<?php
-	$url = $baseurl_short . 'pages/admin/admin_content.php?findpage=' . urlencode($findpage) . '&findname=' . urlencode($findname) . '&findtext=' . urlencode($findtext);
-	pager(false);
-	?>
+    <?php
+    $url = $baseurl_short . 'pages/admin/admin_content.php?findpage=' . urlencode($findpage) . '&findname=' . urlencode($findname) . '&findtext=' . urlencode($findtext);
+    pager(false);
+    ?>
 </div>
 </div>
 
@@ -134,41 +134,41 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_content.php" onsubmit="return CentralSpacePost(this);">
         <?php generateFormToken("admin_content_find"); ?>
-    	<div class="Question">
-			<label for="find"><?php echo $lang["searchcontent"]?><br/><?php echo $lang["searchcontenteg"]?></label>
-			<div class="tickset">
-			 <div class="Inline"><input type=text placeholder="<?php echo $lang['searchbypage']?>" name="findpage" id="findpage" value="<?php echo escape($findpage)?>" maxlength="100" class="shrtwidth" />
-			
-			<input type=text placeholder="<?php echo $lang['searchbyname']?>" name="findname" id="findname" value="<?php echo escape($findname)?>" maxlength="100" class="shrtwidth" />
-		
-			<input type=text placeholder="<?php echo $lang['searchbytext']?>" name="findtext" id="findtext" value="<?php echo escape($findtext)?>" maxlength="100" class="shrtwidth" />
-			
-			<input type="button" value="<?php echo $lang['clearall']?>" onClick="jQuery('#findtext').val('');jQuery('#findpage').val('');jQuery('#findname').val('');form.submit();" />
-			<input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />
-			 
-			</div>
-			</div>
-			<div class="clearerleft"> 
-			</div>
-		</div>
-	</form>
+        <div class="Question">
+            <label for="find"><?php echo $lang["searchcontent"]?><br/><?php echo $lang["searchcontenteg"]?></label>
+            <div class="tickset">
+             <div class="Inline"><input type=text placeholder="<?php echo $lang['searchbypage']?>" name="findpage" id="findpage" value="<?php echo escape($findpage)?>" maxlength="100" class="shrtwidth" />
+            
+            <input type=text placeholder="<?php echo $lang['searchbyname']?>" name="findname" id="findname" value="<?php echo escape($findname)?>" maxlength="100" class="shrtwidth" />
+        
+            <input type=text placeholder="<?php echo $lang['searchbytext']?>" name="findtext" id="findtext" value="<?php echo escape($findtext)?>" maxlength="100" class="shrtwidth" />
+            
+            <input type="button" value="<?php echo $lang['clearall']?>" onClick="jQuery('#findtext').val('');jQuery('#findpage').val('');jQuery('#findname').val('');form.submit();" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />
+             
+            </div>
+            </div>
+            <div class="clearerleft"> 
+            </div>
+        </div>
+    </form>
 </div>
 
 <?php if ($site_text_custom_create){?>
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_content.php">
-	<input type="hidden" name="custom" value="1"/>
-		<?php generateFormToken("admin_content_new"); ?>
+    <input type="hidden" name="custom" value="1"/>
+        <?php generateFormToken("admin_content_new"); ?>
         <div class="Question">
-			<label for="find"><?php echo $lang["addnewcontent"]?></label>
-			<div class="tickset">
-			 <div class="Inline"><input type=text name="page" id="page" maxlength="50" class="shrtwidth" /></div>
-			 <div class="Inline"><input type=text name="name" id="name" maxlength="50" class="shrtwidth" /></div>
-			 <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" /></div>
-			</div>
-			<div class="clearerleft"> </div>
-		</div>
-	</form>
+            <label for="find"><?php echo $lang["addnewcontent"]?></label>
+            <div class="tickset">
+             <div class="Inline"><input type=text name="page" id="page" maxlength="50" class="shrtwidth" /></div>
+             <div class="Inline"><input type=text name="name" id="name" maxlength="50" class="shrtwidth" /></div>
+             <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]?>&nbsp;&nbsp;" /></div>
+            </div>
+            <div class="clearerleft"> </div>
+        </div>
+    </form>
 </div>
 <?php } ?>
 

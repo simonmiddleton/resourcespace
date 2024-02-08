@@ -462,7 +462,7 @@ if (!get_edit_access($ref,$resource["archive"],$resource))
                   'order_by' => $order_by,
                   'offset' => $offset,
                   'restypes' => $restypes,
-                  'archive'	=> $archive,
+                  'archive' => $archive,
                   'default_sort_direction' => $default_sort_direction,
                   'sort' => $sort,
                   'k' => $k
@@ -539,7 +539,7 @@ if ($ref<0 && isset($disk_quota_limit_size_warning_noupload))
         $free=$avail-$used;
         }
     else
-        {		
+        {       
         $avail=disk_total_space($storagedir);
         $free=disk_free_space($storagedir);
         $used=$avail-$free;
@@ -569,14 +569,14 @@ if($ref < 0)
     }
 
 $urlparams= array(
-	'ref'				=> $ref,
-    'search'			=> $search,
-    'order_by'			=> $order_by,
-    'offset'			=> $offset,
-    'restypes'			=> $restypes,
-    'archive'			=> $archive,
+    'ref'               => $ref,
+    'search'            => $search,
+    'order_by'          => $order_by,
+    'offset'            => $offset,
+    'restypes'          => $restypes,
+    'archive'           => $archive,
     'default_sort_direction' => $default_sort_direction,
-    'sort'				=> $sort,
+    'sort'              => $sort,
     'uploader'          => $uploader,
     'single'            => ($single ? "true" : ""),
     'collection'        => $collection,
@@ -617,7 +617,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
     {
     debug('Perform save...');
     hook("editbeforesave"); 
-	if(!$multiple)
+    if(!$multiple)
         {
         $save_errors = process_edit_form($ref, $resource);
         if (($save_errors === true || $is_template) && getval("tweak","")=="")
@@ -903,7 +903,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
     else    
         {
         debug('Save multiple resources');
-        // Check if any of the resources have been edited since between the form being loaded and submitted				
+        // Check if any of the resources have been edited since between the form being loaded and submitted             
         $form_lastedit = getval("last_resource_edit",date("Y-m-d H:i:s"));
         if($last_resource_edit !== false && ($form_lastedit < $last_resource_edit["time"] && getval("ignoreconflict","") == ""))
             {
@@ -1006,8 +1006,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                 }
                 
             }
-		$show_error=true;
-		}
+        $show_error=true;
+        }
     }
     
 if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($ajax))
@@ -1029,7 +1029,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
          tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
          break;
       case "restore":
-		delete_previews($resource);
+        delete_previews($resource);
         ps_query("update resource set has_image=0, preview_attempts=0 WHERE ref= ?", ['i', $ref]);
         if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
         (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
@@ -1120,15 +1120,15 @@ jQuery(document).ready(function()
 
                   function(data)
                   {
-				  saveresult=JSON.parse(data)
-				  if (saveresult['result']=="SAVED")
-					{
+                  saveresult=JSON.parse(data)
+                  if (saveresult['result']=="SAVED")
+                    {
                     jQuery('.AutoSaveStatus').html('<?php echo urlencode($lang["saved"]) ?>');
                     jQuery('.AutoSaveStatus').fadeOut('slow');
-					if (typeof(saveresult['checksums']) !== undefined)
-						{
-						for (var i in saveresult['checksums']) 
-							{
+                    if (typeof(saveresult['checksums']) !== undefined)
+                        {
+                        for (var i in saveresult['checksums']) 
+                            {
                             if (jQuery.isNumeric(i))
                               {
                               jQuery("#field_" + i + "_checksum").val(saveresult['checksums'][i]);
@@ -1137,24 +1137,24 @@ jQuery(document).ready(function()
                               {
                               jQuery('#' + i + '_checksum').val(saveresult['checksums'][i]);
                               }
-							}
-						}
-					}
-				  else
-					{
-					saveerrors = '<?php echo urlencode($lang["error_generic"]); ?>';
-					if (typeof(saveresult['errors']) !== undefined)
-						{
-						saveerrors = "";
-						for (var i in saveresult['errors']) 
-							{
-							saveerrors += saveresult['errors'][i] + "<br />";
-							}
-						}
-					jQuery('.AutoSaveStatus').html('<?php echo urlencode($lang["save-error"]) ?>');
-					jQuery('.AutoSaveStatus').fadeOut('slow');
-					styledalert('<?php echo urlencode($lang["error"]) ?>',saveerrors,450);
-					}
+                            }
+                        }
+                    }
+                  else
+                    {
+                    saveerrors = '<?php echo urlencode($lang["error_generic"]); ?>';
+                    if (typeof(saveresult['errors']) !== undefined)
+                        {
+                        saveerrors = "";
+                        for (var i in saveresult['errors']) 
+                            {
+                            saveerrors += saveresult['errors'][i] + "<br />";
+                            }
+                        }
+                    jQuery('.AutoSaveStatus').html('<?php echo urlencode($lang["save-error"]) ?>');
+                    jQuery('.AutoSaveStatus').fadeOut('slow');
+                    styledalert('<?php echo urlencode($lang["error"]) ?>',saveerrors,450);
+                    }
                });
             }
             return false;
@@ -1237,7 +1237,7 @@ jQuery(document).ready(function()
                                  jQuery('#' + i + '_checksum').val(saveresult['checksums'][i]);
                                  }
                             }
-                        }					
+                        }                   
                     }
                 else
                     {   
@@ -1260,7 +1260,7 @@ jQuery(document).ready(function()
                     jQuery('#AutoSaveStatus' + field).fadeOut('slow');
                     styledalert('<?php echo escape($lang["error"]) ?>',response.responseText);
                     });
-	}
+    }
 <?php } ?>
 </script>
 
@@ -1836,11 +1836,11 @@ if ($display_any_fields && $enable_copy_data_from && !$upload_review_mode)
  <?php
 }
 if($multiple)// this is closing a div that can be omitted via hook("replaceedittype")
-	{
-	?>
-	</div><!-- end collapsible ResourceTypeSection -->
-	<?php
-	}
+    {
+    ?>
+    </div><!-- end collapsible ResourceTypeSection -->
+    <?php
+    }
 hook('editbeforesectionhead');
 
 global $collapsible_sections;
@@ -2086,10 +2086,10 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
             <div class="AutoSaveStatus" id="AutoSaveStatusStatus" style="display:none;"></div>
             <?php
             } 
-		 if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums)
-			{
-			echo "<input id='status_checksum' name='status_checksum' type='hidden' value='" . $setarchivestate . "'>";
-			}?>
+         if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums)
+            {
+            echo "<input id='status_checksum' name='status_checksum' type='hidden' value='" . $setarchivestate . "'>";
+            }?>
          <select class="stdwidth" name="status" id="status" <?php if ($edit_autosave) {?>onChange="AutoSave('Status');"<?php } ?>><?php
          for ($n=-2;$n<=3;$n++)
             {
@@ -2148,9 +2148,9 @@ else
       if(($ea0 && $resource["access"]==0) || ($ea1 && $resource["access"]==1) || ($ea2 && $resource["access"]==2) || ($ea3 && $resource["access"]==3))
       {
         if(!$multiple && getval("copyfrom","")=="" && $check_edit_checksums)
-			{
-			echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $access_stored_value . "'>";
-			}?>
+            {
+            echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $access_stored_value . "'>";
+            }?>
         <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
                     if($ea0)    //0 - open
@@ -2265,7 +2265,7 @@ else
       {
       $sharing_userlists = false;
       $single_user_select_field_id = "created_by";
-	  $autocomplete_user_scope = "created_by";
+      $autocomplete_user_scope = "created_by";
       $single_user_select_field_value = $resource["created_by"];
       if ($edit_autosave) {$single_user_select_field_onchange = "AutoSave('created_by');"; }
       if ($multiple) { ?><div class="Question"><input name="editthis_created_by" id="editthis_created_by" value="yes" type="checkbox" onClick="var q=document.getElementById('question_created_by');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_created_by>"><?php echo htmlspecialchars($lang["contributedby"]) ?></label></div><?php } ?>
@@ -2548,7 +2548,7 @@ hook("autolivejs");
 <script>
 jQuery('document').ready(function()
     {
-	/* Call SelectTab upon page load to select first tab*/
+    /* Call SelectTab upon page load to select first tab*/
     SelectMetaTab(<?php echo $ref.",0,".$modalTrueFalse ?>);
     registerCollapsibleSections(true);
 

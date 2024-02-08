@@ -166,7 +166,7 @@ if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"team_user
     $links_trail[] = array(
         'title' => $lang["teamcentre"],
         'href'  => $baseurl_short . "pages/team/team_home.php",
-		'menu' =>  true
+        'menu' =>  true
         );
     $links_trail[] = array(
         'title' => $lang["manageusers"],
@@ -252,11 +252,11 @@ renderBreadcrumbs($links_trail);
     <div class="Question"><label><?php echo $lang["message"]?></label>
         <textarea id="messagetext" name="messagetext" class="stdwidth Inline required" rows=5 cols=50></textarea>
         <div class="clearerleft"> </div></div>
-    <div class="QuestionSubmit">		
+    <div class="QuestionSubmit">        
     <input name="send" type="submit" value="&nbsp;&nbsp;<?php echo $lang["send"]?>&nbsp;&nbsp;" onclick="sendMessage();return false;"/>
     </div>
     </form>
 </div>
 
-<?php		
+<?php	  
 include "../../include/footer.php";

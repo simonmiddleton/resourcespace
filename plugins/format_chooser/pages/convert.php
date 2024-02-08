@@ -32,11 +32,11 @@ if(!$allowed || $ref <= 0)
     }
 
 if ($width == 0 && $height == 0)
-	{
-	$format = getImageFormat($size);
-	$width = (int)$format['width'];
-	$height = (int)$format['height'];
-	}
+    {
+    $format = getImageFormat($size);
+    $width = (int)$format['width'];
+    $height = (int)$format['height'];
+    }
 
 $ext = getval('ext', getDefaultOutputFormat());
 if(is_banned_extension($ext))

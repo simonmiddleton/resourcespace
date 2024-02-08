@@ -7,21 +7,21 @@ $dy="";
 $dm=$dd=$dh=$di=-1;
 
 if(!$blank_date_upload_template || $ref>0 || '' != getval('submitted', '')) {
-	
+    
 if ($value!="")
-	{
+    {
     #fetch the date parts from the value
     $sd=explode(" ",$value);
     if (count($sd)>=2)
-    	{
-    	# Attempt to extract hours and minutes from second part.
-    	$st=explode(":",$sd[1]);
-    	if (count($st)>=2)
-    		{
-    		$dh=intval($st[0]);
-    		$di=intval($st[1]);
-    		} 
-    	}
+        {
+        # Attempt to extract hours and minutes from second part.
+        $st=explode(":",$sd[1]);
+        if (count($st)>=2)
+            {
+            $dh=intval($st[0]);
+            $di=intval($st[1]);
+            } 
+        }
     # Extract date parts taking account of BCE dates which have a leading -
     $value=$sd[0];
     $sd=explode("-",$value);    
@@ -78,7 +78,7 @@ else{
             validate_date_field(event.target.id.split('-')[0]);
         })
     })
-    	
+        
     <?php 
     if($date_validation_js)
         {

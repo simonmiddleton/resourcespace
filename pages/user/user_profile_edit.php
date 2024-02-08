@@ -100,7 +100,7 @@ function checkFileType(image_supplied)
   <?php
 if ($profile_image != "")
     {
-		?>
+        ?>
   </p></p>
   <div class="Question">
   <label><?php echo $lang["current_profile"] ?></label>

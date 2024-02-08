@@ -13,18 +13,18 @@ $title = $current["title"];
 
 # Perform copy
 if (getval("saveform","")!="" && $ref > 0 && enforcePostRequest(false))
-	{
+    {
     $allcolumns = columns_in("resource_type_field",null,null,true);
-	$allcolumns = array_diff($allcolumns,["name"]);
-	$insert = array_diff($allcolumns,["ref","name"]);
+    $allcolumns = array_diff($allcolumns,["name"]);
+    $insert = array_diff($allcolumns,["ref","name"]);
 
     // Create new short name 
     $allcolumns[] = "name";
     $newname = $current["name"] . "copy";
 
-	ps_query("INSERT INTO resource_type_field (" . implode(",",$allcolumns) . ") SELECT NULL, " . implode(",",$insert)	. ",? FROM resource_type_field WHERE ref = ?",["s",$newname,"i",$ref]);
+    ps_query("INSERT INTO resource_type_field (" . implode(",",$allcolumns) . ") SELECT NULL, " . implode(",",$insert)  . ",? FROM resource_type_field WHERE ref = ?",["s",$newname,"i",$ref]);
 
-	$copied = sql_insert_id();
+    $copied = sql_insert_id();
 
     // Copy any field mappings
     ps_query("INSERT INTO resource_type_field_resource_type (resource_type_field,resource_type) SELECT ?,resource_type FROM resource_type_field_resource_type WHERE resource_type_field = ?",["i",$copied,"i",$ref]);
@@ -32,9 +32,9 @@ if (getval("saveform","")!="" && $ref > 0 && enforcePostRequest(false))
     // Copy nodes if resource type is a fixed list type:
     copy_resource_type_field_nodes($ref, $copied);
 
-	log_activity(null, LOG_CODE_COPIED, "{$lang['copy_of']} {$ref}", 'resource_type_field', '', $copied);
-	redirect($baseurl_short . "pages/admin/admin_resource_type_field_edit.php?ref=" . $copied);
-	}
+    log_activity(null, LOG_CODE_COPIED, "{$lang['copy_of']} {$ref}", 'resource_type_field', '', $copied);
+    redirect($baseurl_short . "pages/admin/admin_resource_type_field_edit.php?ref=" . $copied);
+    }
         
 if ($copied!='')
     {
@@ -50,7 +50,7 @@ $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
         'href'  => $baseurl_short . "pages/admin/admin_home.php",
-		'menu' =>  true
+        'menu' =>  true
     ),
     array(
         'title' => $lang["admin_resource_type_fields"],

@@ -1,99 +1,9 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Undefined variable\\: \\$collection$#"
-			count: 4
-			path: include/collections_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_collection$#"
-			count: 2
-			path: include/collections_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_group$#"
-			count: 1
-			path: include/collections_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_type$#"
-			count: 2
-			path: include/collections_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_user$#"
-			count: 4
-			path: include/collections_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$upload$#"
-			count: 2
-			path: include/collections_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$user$#"
-			count: 1
-			path: include/collections_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$error$#"
 			count: 1
 			path: include/database_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$confirm_page_change$#"
-			count: 2
-			path: include/general_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$lang$#"
-			count: 1
-			path: include/general_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$result$#"
-			count: 1
-			path: include/general_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$where_activity_log_statement$#"
-			count: 1
-			path: include/log_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$where_collection_log_statement$#"
-			count: 1
-			path: include/log_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$where_resource_log_statement$#"
-			count: 1
-			path: include/log_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$limit$#"
-			count: 2
-			path: include/message_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$msgfind$#"
-			count: 2
-			path: include/message_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$sort_desc$#"
-			count: 1
-			path: include/message_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$editexpiration$#"
-			count: 1
-			path: include/render_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$password$#"
-			count: 1
-			path: include/render_functions.php
 
 		-
 			message: "#^Undefined variable\\: \\$access_key$#"
@@ -174,8 +84,3 @@ parameters:
 			message: "#^Undefined variable\\: \\$resource$#"
 			count: 1
 			path: plugins/flickr_theme_publish/inc/flickr_functions.php
-
-		-
-			message: "#^Caught class Google_ServiceException not found\\.$#"
-			count: 5
-			path: plugins/youtube_publish/include/youtube_functions.php

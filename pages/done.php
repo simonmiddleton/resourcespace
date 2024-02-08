@@ -8,9 +8,9 @@ if ((getval("user","")!="" || isset($anonymous_login) || hook('provideusercreden
     }
 
 if (getval("refreshcollection","")!="")
-	{
-	refresh_collection_frame();
-	}
+    {
+    refresh_collection_frame();
+    }
 
 # fetch the current search 
 $search=getval("search","");

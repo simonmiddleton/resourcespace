@@ -15,32 +15,32 @@ $ref=getval("ref",1);
 $ps=ps_query("select * from preview_size"); // select * fine here as no parameters
 $resourceinfo=ps_query("select ref,file_extension from resource where ref= ?", ['i', $ref]);
 if (count($resourceinfo)>0)
-	{
-	$extension = $resourceinfo[0]['file_extension'];
-	get_resource_path($ref,true,"",false,$extension);
-	for ($n=0;$n<count($ps);$n++)
-		{
-		$id=$ps[$n]["id"];
-		get_resource_path($ref,true,$id,false);
-		}
-	?>
-	<img alt="" src="<?php echo get_resource_path($ref,false,"pre",false)?>">
-	<?php
-	}
+    {
+    $extension = $resourceinfo[0]['file_extension'];
+    get_resource_path($ref,true,"",false,$extension);
+    for ($n=0;$n<count($ps);$n++)
+        {
+        $id=$ps[$n]["id"];
+        get_resource_path($ref,true,$id,false);
+        }
+    ?>
+    <img alt="" src="<?php echo get_resource_path($ref,false,"pre",false)?>">
+    <?php
+    }
 else
-	{
-	echo "Skipping $ref";
-	}
+    {
+    echo "Skipping $ref";
+    }
 
 if ($ref<$max && getval("only","")=="")
-	{
-	?>
-	<meta http-equiv="refresh" content="0;url=<?php echo $baseurl?>/pages/tools/update_paths.php?ref=<?php echo $ref+1?>"/>
-	<?php
-	}
+    {
+    ?>
+    <meta http-equiv="refresh" content="0;url=<?php echo $baseurl?>/pages/tools/update_paths.php?ref=<?php echo $ref+1?>"/>
+    <?php
+    }
 else
-	{
-	?>
-	Done.	
-	<?php
-	}
+    {
+    ?>
+    Done.   
+    <?php
+    }

@@ -7,7 +7,7 @@ function HookVideo_spliceAllInitialise()
     }
 
 function HookVideo_spliceAllRender_actions_add_collection_option($top_actions, array $options){
-	global $collection,$count_result,$lang,$pagename,$baseurl_short;
+    global $collection,$count_result,$lang,$pagename,$baseurl_short;
  
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
@@ -16,8 +16,8 @@ function HookVideo_spliceAllRender_actions_add_collection_option($top_actions, a
         $options = $GLOBALS["hook_return_value"];
         }
 
-	if ($pagename=="collections" && $count_result!=0)
-		{
+    if ($pagename=="collections" && $count_result!=0)
+        {
         $option = array(
             "value" => "video_splice",
             "label" => $lang["action-splice"],
@@ -29,6 +29,6 @@ function HookVideo_spliceAllRender_actions_add_collection_option($top_actions, a
 
         $options[] = $option;
 
-		return $options;
-	}
+        return $options;
+    }
 }

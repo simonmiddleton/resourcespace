@@ -287,7 +287,7 @@ else
     <?php 
     if ($collection["savedsearch"]!="") 
     { 
-    $result_limit=ps_value("select result_limit value from collection_savedsearch where collection= ?", ['i', $ref],"");	
+    $result_limit=ps_value("select result_limit value from collection_savedsearch where collection= ?", ['i', $ref],"");    
     ?>
     <div class="Question">
         <label for="name"><?php echo htmlspecialchars($lang["smart_collection_result_limit"]); ?></label>
@@ -428,7 +428,7 @@ else
             ?>
             </select>
             <div class="clearerleft"> </div>
-            </div>		
+            </div>      
             <?php hook("morehomepagepublishoptions");
             }
         }
@@ -460,7 +460,7 @@ else
         include "plugins/collection_edit.php";
         }
     ?>
-    <div class="QuestionSubmit">		
+    <div class="QuestionSubmit">        
         <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
     </div>
 </form>

@@ -17,7 +17,7 @@ include_once "{$rs_root}/include/header.php";
 <div class="RecordHeader">
 
 <div class="backtoresults">
-		<a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]) ?>"></a>
+        <a href="#" onclick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]) ?>"></a>
 </div>
 
 <h1><?php echo htmlspecialchars(getval("description","")) ?></h1>
@@ -42,7 +42,7 @@ include_once "{$rs_root}/include/header.php";
         <td class="DownloadFileName"><h2><?php echo htmlspecialchars($lang["image_banks_shutterstock_id"] . " " . $id) ?></h2></td>
         <td class="DownloadButton">
         <a id="downloadlink" target="_blank" href="https://www.shutterstock.com/image-photo/<?php echo escape($id) ?>"><?php echo htmlspecialchars($lang["download"]) ?></a>
-    	</td>
+        </td>
     </tr>
     </tbody></table>
 

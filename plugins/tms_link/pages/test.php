@@ -31,14 +31,14 @@ include "../../../include/header.php";
     <table style="border=1;">
 <?php
 foreach($tmsdata as $key=>$value)
-	{
+    {
     ?>
-	<tr> 
-	<td><strong><?php echo htmlspecialchars($key); ?></strong></td>
-	<td><?php echo htmlspecialchars($value); ?></td>
-	</tr>
+    <tr> 
+    <td><strong><?php echo htmlspecialchars($key); ?></strong></td>
+    <td><?php echo htmlspecialchars($value); ?></td>
+    </tr>
     <?php
-	}
+    }
     ?>
     </table>
 </div>

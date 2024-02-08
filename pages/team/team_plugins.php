@@ -205,7 +205,7 @@ include "../../include/header.php"; ?>
          });
          $('a.p-purge').click(function() {
          actionPost('purge', $(this).attr('href'));
-         return false;						  
+         return false;                        
          });
          $('a.p-delete').click(function() {
          actionPost('delete', $(this).attr('href'));
@@ -222,7 +222,7 @@ $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
         'href'  => $baseurl_short . "pages/admin/admin_home.php",
-		'menu' =>  true
+        'menu' =>  true
     ),
     array(
         'title' => $lang["pluginmanager"]

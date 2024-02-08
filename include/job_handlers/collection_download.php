@@ -116,8 +116,8 @@ for($n = 0; $n < count($collection_resources); $n++)
         }
 
     # Check for the availability of each size and load it to the available_sizes array
-	foreach ($sizes as $sizeinfo)
-		{
+    foreach ($sizes as $sizeinfo)
+        {
         if(in_array($resource_data['file_extension'], $ffmpeg_supported_extensions))
             {
             $size_id=$sizeinfo['id'];
@@ -156,7 +156,7 @@ for($n = 0; $n < count($collection_resources); $n++)
                     $available_sizes[$size_id][]=$ref;
                 }
             }
-		}     
+        }     
 
     // Check which size to use
     if($size=="largest")

@@ -1598,6 +1598,16 @@ function delete_all_resource_nodes($resourceid)
     ps_query("DELETE FROM resource_node WHERE resource = ?",array("i",$resourceid));  
     }
 
+/**
+ * Delete all resource node relationships for the given node.
+ *
+ * @param integer  $node   The node ID to remove from all resources.
+ * @return void
+ */
+function delete_node_resources(int $node)
+    {
+    ps_query("DELETE FROM resource_node WHERE node = ?", array("i", $node));
+    }
 
 /**
 * Copy resource nodes from one resource to another. Only applies for active metadata fields.
@@ -1997,17 +2007,17 @@ function node_orderby_comparator($n1, $n2)
  */
 
 function get_node_elements(array $node_values, array $nodes, $field_label)
-	{    
-	if(isset($nodes[0]))
-		{
-		foreach ($nodes as $node)
-			{
-			if (isset($node["name"])) array_push($node_values, $node[$field_label]) ;      
-			$node_values =  (isset($node["children"])) ? get_node_elements($node_values, $node["children"], $field_label)  :  get_node_elements($node_values, $node, $field_label); 
-			}
-		}
-	return $node_values;
-	}
+    {    
+    if(isset($nodes[0]))
+        {
+        foreach ($nodes as $node)
+            {
+            if (isset($node["name"])) array_push($node_values, $node[$field_label]) ;      
+            $node_values =  (isset($node["children"])) ? get_node_elements($node_values, $node["children"], $field_label)  :  get_node_elements($node_values, $node, $field_label); 
+            }
+        }
+    return $node_values;
+    }
 
 /**
  * This function returns a multidimensional array with hierarchy that reflects category tree field hierarchy, using parent and order_by fields
@@ -2020,23 +2030,23 @@ function get_node_elements(array $node_values, array $nodes, $field_label)
  */
 
 function get_node_tree($parentId = "", array $nodes = array())
-	{
-	$tree = array();
-	foreach ($nodes as $node) 
-		{
-		if($node["parent"] == $parentId)
-			{
-        	$children = get_node_tree($node["ref"] , $nodes);
-			if ($children)
-				{
+    {
+    $tree = array();
+    foreach ($nodes as $node) 
+        {
+        if($node["parent"] == $parentId)
+            {
+            $children = get_node_tree($node["ref"] , $nodes);
+            if ($children)
+                {
                 uasort($children,"node_orderby_comparator"); 
                 $node["children"] = $children;
-            	}
+                }
             $tree[] = $node;
-        	}
-    	}
+            }
+        }
     return $tree;
-	}
+    }
 
 /**
  * This function returns an array of category tree nodes in the hierarchical sequence defined in manage options
@@ -2543,6 +2553,14 @@ function delete_unused_non_fixed_list_nodes(int $resource_type_field)
 function remove_invalid_node_keyword_mappings()
     {
     ps_query('DELETE nk FROM node_keyword AS nk LEFT JOIN node AS n ON n.ref = nk.node WHERE n.ref IS NULL');
+    }
+
+/**
+ * Delete invalid resource_node associations. Note, by invalid, it's meant where the node is missing.
+ */
+function remove_invalid_resource_node_mappings()
+    {
+    ps_query('DELETE rn FROM resource_node AS rn LEFT JOIN node AS n ON n.ref = rn.node WHERE n.ref IS NULL');
     }
 
 /**

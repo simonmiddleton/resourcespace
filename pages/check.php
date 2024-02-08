@@ -87,24 +87,24 @@ $encoding_output = "{$mysqlversion}&ensp;&ensp;{$encoding_str} {$db_encoding_str
 
 # Check GD installed
 if (function_exists("gd_info"))
-	{
-	$gdinfo=gd_info();
-	if (is_array($gdinfo))
-		{
-		$version=$gdinfo["GD Version"];
-		$result=$lang["status-ok"];
-		}
-	else
-		{
-		$version=$lang["status-notinstalled"];
-		$result=$lang["status-fail"];
-		}
-	}
+    {
+    $gdinfo=gd_info();
+    if (is_array($gdinfo))
+        {
+        $version=$gdinfo["GD Version"];
+        $result=$lang["status-ok"];
+        }
+    else
+        {
+        $version=$lang["status-notinstalled"];
+        $result=$lang["status-fail"];
+        }
+    }
 else
-	{
-	$version=$lang["status-notinstalled"];
-	$result=$lang["status-fail"];
-	}
+    {
+    $version=$lang["status-notinstalled"];
+    $result=$lang["status-fail"];
+    }
 ?><tr><td><?php echo str_replace("?", "GD", $lang["softwareversion"]); ?></td><td><?php echo $version?></td><td><b><?php echo $result?></b></td></tr><?php
 
 # Check ini values for memory_limit, post_max_size, upload_max_filesize
@@ -160,9 +160,9 @@ if($debug_log)
 
 # Check if we are running 32 bit PHP. If so, no large file support.
 if (!php_is_64bit()){
-	$result = $lang['large_file_warning_32_bit'];
+    $result = $lang['large_file_warning_32_bit'];
 } else {
-	$result=$lang["status-ok"];
+    $result=$lang["status-ok"];
 }
 ?><tr><td colspan='2'><?php echo $lang['large_file_support_64_bit']; ?></td><td><b><?php echo $result?></b></td></tr><?php
 
@@ -181,14 +181,14 @@ foreach(RS_SYSTEM_UTILITIES as $sysu_name => $sysu)
 
 # Check Exif extension
 if (function_exists('exif_read_data')) 
-	{
-	$result=$lang["status-ok"];
-	}
+    {
+    $result=$lang["status-ok"];
+    }
 else
-	{
-	$version=$lang["status-notinstalled"];
-	$result=$lang["status-fail"];
-	}
+    {
+    $version=$lang["status-notinstalled"];
+    $result=$lang["status-fail"];
+    }
 ?><tr><td colspan="2"><?php echo $lang["exif_extension"]?></td><td><b><?php echo $result?></b></td></tr><?php
 
 # Check archiver
@@ -367,19 +367,19 @@ function get_utility_version(string $utilityname)
     }
 
 function php_is_64bit() {
-	$int = "9223372036854775807";
-	$int = intval($int);
-	if ($int == 9223372036854775807) {
-  	/* 64bit */
-  	return true;
-	}
-	elseif ($int == 2147483647) {
-	  /* 32bit */
-	  return false;
-	}
-	else {
-	  /* error */
-	  return "error";
-	} 
+    $int = "9223372036854775807";
+    $int = intval($int);
+    if ($int == 9223372036854775807) {
+    /* 64bit */
+    return true;
+    }
+    elseif ($int == 2147483647) {
+      /* 32bit */
+      return false;
+    }
+    else {
+      /* error */
+      return "error";
+    } 
 
 }

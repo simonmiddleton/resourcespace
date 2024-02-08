@@ -73,7 +73,7 @@ function simplesaml_getattributes()
     $as->requireAuth();
     $attributes = $as->getAttributes();
     return $attributes;
-    }	
+    }   
 
 /**
  * Sign out of SAML SP
@@ -81,34 +81,34 @@ function simplesaml_getattributes()
  * @return void
  */
 function simplesaml_signout()
-	{
-	global $baseurl, $as;
-	if(simplesaml_is_configured() == false)
+    {
+    global $baseurl, $as;
+    if(simplesaml_is_configured() == false)
         {
         debug("simplesaml: plugin not configured.");
         return false;
         }
-	if(!isset($as))
-		{
-		require_once simplesaml_get_lib_path() . '/lib/_autoload.php';        
+    if(!isset($as))
+        {
+        require_once simplesaml_get_lib_path() . '/lib/_autoload.php';        
         $spname = get_saml_sp_name();
         $as = new SimpleSAML\Auth\Simple($spname);
-		}
-	if($as->isAuthenticated())
-		{
-		$as->logout($baseurl . "/login.php"); 
-		}	
-	}
-	
+        }
+    if($as->isAuthenticated())
+        {
+        $as->logout($baseurl . "/login.php"); 
+        }   
+    }
+    
 /**
  * Check if user has been authenticated by SimpleSAMLPHP
  *
  * @return boolean
  */
 function simplesaml_is_authenticated()
-	{
-	global $as,$simplesaml_authenticated;
-	if(simplesaml_is_configured() == false)
+    {
+    global $as,$simplesaml_authenticated;
+    if(simplesaml_is_configured() == false)
         {
         debug("simplesaml: plugin not configured.");
         return false;
@@ -120,37 +120,37 @@ function simplesaml_is_authenticated()
         }
 
     if(!isset($as))
-		{
-		require_once simplesaml_get_lib_path() . '/lib/_autoload.php';     
+        {
+        require_once simplesaml_get_lib_path() . '/lib/_autoload.php';     
         $spname = get_saml_sp_name();
         $as = new SimpleSAML\Auth\Simple($spname);
-		}
-	if(isset($as) && $as->isAuthenticated())
-		{
+        }
+    if(isset($as) && $as->isAuthenticated())
+        {
         $simplesaml_authenticated = true;
-		return true;
-		}
-	return false;	
-	}
+        return true;
+        }
+    return false;   
+    }
 
 function simplesaml_getauthdata($value)
-	{
+    {
     if(simplesaml_is_configured() == false)
         {
         debug("simplesaml: plugin not configured.");
         return false;
         }
-	global $as;
-	if(!isset($as))
-		{
-		require_once simplesaml_get_lib_path() . '/lib/_autoload.php';       
+    global $as;
+    if(!isset($as))
+        {
+        require_once simplesaml_get_lib_path() . '/lib/_autoload.php';       
         $spname = get_saml_sp_name();
         $as = new SimpleSAML\Auth\Simple($spname);
         }
-	$as->requireAuth();
-	$authdata = $as->getAuthData($value)->getValue();
-	return $authdata;
-	}
+    $as->requireAuth();
+    $authdata = $as->getAuthData($value)->getValue();
+    return $authdata;
+    }
 
 /**
  * Notify of a new SAML user with an email address that is already in use by an existing user
@@ -187,7 +187,7 @@ function simplesaml_duplicate_notify($username, $group, $email, $email_matches, 
         $emailmessage .= $lang["simplesaml_usercreated"] . ": <a href=\"" . $messageurl . "\">" . $username . "</a><br />";   
         }
     
-    $notify_users = ps_query("SELECT ref, email FROM user WHERE email=?",array("s",$simplesaml_multiple_email_notify));				
+    $notify_users = ps_query("SELECT ref, email FROM user WHERE email=?",array("s",$simplesaml_multiple_email_notify));             
     $message_users=array();
     foreach($notify_users as $notify_user)
         {
@@ -220,16 +220,16 @@ function simplesaml_duplicate_notify($username, $group, $email, $email_matches, 
  * @return boolean
  */
 function simplesaml_config_check()
-	{
+    {
     global $simplesaml_version, $lang;
     
-	if(simplesaml_is_configured() == false)
+    if(simplesaml_is_configured() == false)
         {
         debug("simplesaml: plugin not configured.");
         return false;
         }
     require_once simplesaml_get_lib_path() . '/lib/_autoload.php';
-	$config = \SimpleSAML\Configuration::getInstance();
+    $config = \SimpleSAML\Configuration::getInstance();
     $version = $config->getVersion();
 
     if($version != $simplesaml_version)
@@ -270,7 +270,7 @@ function simplesaml_php_check()
  * @return boolean
  */
 function simplesaml_is_configured()
-	{
+    {
     global $simplesamlconfig, $simplesaml_rsconfig;
     if(($simplesaml_rsconfig && !isset($simplesamlconfig))
          ||
@@ -299,7 +299,7 @@ function simplesaml_is_configured()
  * @return array      Array containing paths to private key (.pem) and certificate (.crt) files
  */
 function simplesaml_generate_keypair($dn)
-	{
+    {
     global $storagedir;
     // Generate key pair
     $privkey = openssl_pkey_new(array(
@@ -321,7 +321,7 @@ function simplesaml_generate_keypair($dn)
         'privatekey' => $pempath,
         'certificate' => $crtpath
         );
-	}
+    }
 
 /**
  * Get the name of the saml sp to use

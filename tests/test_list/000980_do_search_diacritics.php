@@ -34,38 +34,38 @@ $results=do_search('Boxkämpfer');  // this should return asset A
 if(count($results)!=1
     ||
    !match_values(array_column($results,'ref'),array($resourcea))
-  )	{ return false; }
+  ) { return false; }
   
 $results=do_search('Boxkampfer');  // this should also return asset A
 if(count($results)!=1
     ||
    !match_values(array_column($results,'ref'),array($resourcea))
-  )	{ return false; }
+  ) { return false; }
   
  $results=do_search('Größeren');  // this should return asset B
 if(count($results)!=1
     ||
    !match_values(array_column($results,'ref'),array($resourceb))
-  )	{ return false; }
+  ) { return false; }
   
 $results=do_search('groseren');  // this should return asset B
 if(count($results)!=1
     ||
    !match_values(array_column($results,'ref'),array($resourceb))
-  )	{ return false; }
+  ) { return false; }
   
   
 $results=do_search('Heizölrückstoßabdämpfung');  // this should return asset C
 if(count($results)!=1
     ||
    !match_values(array_column($results,'ref'),array($resourcec))
-  )	{ return false; }   
+  ) { return false; }   
 
   $results=do_search('わかよたれそつねならむ');  // this should return asset C
 if(count($results)!=1
     ||
    !match_values(array_column($results,'ref'),array($resourcee))
-  )	{ return false; }  
+  ) { return false; }  
   
   
 return true;

@@ -26,7 +26,7 @@ $obfuscate = ($system_download_config_force_obfuscation || getval("obfuscate",""
 $separatesql = getval("separatesql","") !== "";
 
 if (!isset($error) && $export!="" && enforcePostRequest(false))
-	{
+    {
     $exporttables = get_export_tables($exportcollection);
 
     // Create offline job

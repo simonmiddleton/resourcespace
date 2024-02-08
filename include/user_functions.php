@@ -12,8 +12,8 @@ include_once __DIR__ . '/login_functions.php';
 * $user_select_sql example u.session=$variable. 
 * Joins to usergroup table as g  which can be used in criteria
 *
-* @param	object	$user_select_sql		PreparedStatementQuery instance - to validate user usually session hash or key
-* @param 	boolean	$getuserdata			default true. Return user data as required by authenticate.php
+* @param    object  $user_select_sql        PreparedStatementQuery instance - to validate user usually session hash or key
+* @param    boolean $getuserdata            default true. Return user data as required by authenticate.php
 * 
 * @return boolean|array
 */
@@ -116,7 +116,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 * @return boolean           success/failure flag - used for example to prevent certain users from making API calls
 */
 function setup_user(array $userdata)
-	{
+    {
     global $userpermissions, $usergroup, $usergroupname, $usergroupparent, $useremail, $useremail_rate_limit_active, $userpassword, $userfullname, 
            $ip_restrict_group, $ip_restrict_user, $rs_session, $global_permissions, $userref, $username, $useracceptedterms,
            $anonymous_user_session_collection, $global_permissions_mask, $user_preferences, $userrequestmode,
@@ -124,40 +124,40 @@ function setup_user(array $userdata)
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection,
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
            $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION;
-		
-	# Hook to modify user permissions
-	if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
+        
+    # Hook to modify user permissions
+    if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
 
     $userref           = $userdata['ref'];
     $username          = $userdata['username'];
     $useracceptedterms = $userdata['accepted_terms'];
-	
-	# Create userpermissions array for checkperm() function
-	$userpermissions=array_diff(
+    
+    # Create userpermissions array for checkperm() function
+    $userpermissions=array_diff(
         array_merge(
             explode(",",trim($global_permissions??"")),
             explode(",",trim($userdata["permissions"]??""))
         ),
         explode(",",trim($global_permissions_mask??""))
     ); 
-	$userpermissions=array_values($userpermissions);# Resequence array as the above array_diff() causes out of step keys.
-	
-	$actions_on=$actions_enable;
-	# Enable actions functionality if based on user permissions
-	if(!$actions_enable && count($actions_permissions)>0)
-		{
-		foreach($actions_permissions as $actions_permission)
-			{
-			if(in_array($actions_permission,$userpermissions))
+    $userpermissions=array_values($userpermissions);# Resequence array as the above array_diff() causes out of step keys.
+    
+    $actions_on=$actions_enable;
+    # Enable actions functionality if based on user permissions
+    if(!$actions_enable && count($actions_permissions)>0)
+        {
+        foreach($actions_permissions as $actions_permission)
+            {
+            if(in_array($actions_permission,$userpermissions))
                 {
                 $actions_on=true;
                 break;
                 }
-			}
-		}
-	
-	$usergroup=$userdata["usergroup"];
-	$usergroupname=$userdata["groupname"];
+            }
+        }
+    
+    $usergroup=$userdata["usergroup"];
+    $usergroupname=$userdata["groupname"];
     $usergroupparent=$userdata["parent"];
     $useremail=$userdata["email"];
     $userpassword=$userdata["password"];
@@ -2679,9 +2679,9 @@ function checkPermission_anonymoususer()
  *
  * @return boolean
  */
-function checkPermission_dashadmin()	
-	{
-	return (checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h"));
+function checkPermission_dashadmin()    
+    {
+    return (checkperm("h") && !checkperm("hdta")) || (checkperm("dta") && !checkperm("h"));
     }
     
 
@@ -2691,9 +2691,9 @@ function checkPermission_dashadmin()
  * @return boolean
  */
 function checkPermission_dashuser()
-	{
-	return !checkperm("dtu");
-	}
+    {
+    return !checkperm("dtu");
+    }
 
 /**
  * Can the user manage their dash?
@@ -2704,9 +2704,9 @@ function checkPermission_dashuser()
  * @return boolean
  */
 function checkPermission_dashmanage()
-	{
-	global $managed_home_dash;
-	return (!checkPermission_anonymoususer()) && (!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()));
+    {
+    global $managed_home_dash;
+    return (!checkPermission_anonymoususer()) && (!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin()));
     }
     
 /**
@@ -2718,17 +2718,17 @@ function checkPermission_dashmanage()
  * @return boolean
  */
 function checkPermission_dashcreate()
-	{
-	global $managed_home_dash, $system_read_only;
-	return !checkPermission_anonymoususer() 
+    {
+    global $managed_home_dash, $system_read_only;
+    return !checkPermission_anonymoususer() 
             && 
             !$system_read_only
             &&
-				(
-					(!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin())) 
-				||
-					($managed_home_dash && checkPermission_dashadmin())
-				);
+                (
+                    (!$managed_home_dash && (checkPermission_dashuser() || checkPermission_dashadmin())) 
+                ||
+                    ($managed_home_dash && checkPermission_dashadmin())
+                );
     }
 
 
@@ -2754,25 +2754,25 @@ function checkperm($perm)
  * @return boolean
  */
 function checkperm_user_edit($user)
-	{
-	if (!checkperm('u'))    // does not have edit user permission
-		{
-		return false;
-		}
-	if (!is_array($user))		// allow for passing of user array or user ref to this function.
-		{
-		$user=get_user($user);
-		}
-	$editusergroup=$user['usergroup'];
+    {
+    if (!checkperm('u'))    // does not have edit user permission
+        {
+        return false;
+        }
+    if (!is_array($user))       // allow for passing of user array or user ref to this function.
+        {
+        $user=get_user($user);
+        }
+    $editusergroup=$user['usergroup'];
     global $usergroup;
     $approver_groups = get_approver_usergroups($usergroup);
 
-	if ((!checkperm('U') && count($approver_groups) == 0) || $editusergroup == '')    // no user editing restriction, or is not defined so return true
-		{
-		return true;
-		}
+    if ((!checkperm('U') && count($approver_groups) == 0) || $editusergroup == '')    // no user editing restriction, or is not defined so return true
+        {
+        return true;
+        }
 
-	// Get all the groups that the logged in user can manage 
+    // Get all the groups that the logged in user can manage 
     $sql = "SELECT `ref` AS  'value' FROM `usergroup` WHERE ";
     $sql_params = array();
     if (count($approver_groups) > 0)
@@ -2783,11 +2783,11 @@ function checkperm_user_edit($user)
     $sql .= "`ref` = ? OR FIND_IN_SET(?, parent)";
     $sql_params = array_merge($sql_params, array("i", $usergroup, "i", $usergroup));
 
-	$validgroups = ps_array($sql, $sql_params);
-	
-	// Return true if the target user we are checking is in one of the valid groups
-	return in_array($editusergroup, $validgroups);
-	}
+    $validgroups = ps_array($sql, $sql_params);
+    
+    // Return true if the target user we are checking is in one of the valid groups
+    return in_array($editusergroup, $validgroups);
+    }
 
 
 /**
@@ -2920,7 +2920,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
     if ($image_path != "" && file_exists($image_path))
         {
         # Work out the extension.
-	    $extension = explode(".",$image_path);
+        $extension = explode(".",$image_path);
         $extension = trim(strtolower($extension[count($extension)-1]));
         if ($extension != 'jpg' && $extension != 'jpeg')
             {

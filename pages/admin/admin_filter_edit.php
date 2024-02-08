@@ -5,9 +5,9 @@ include "../../include/authenticate.php";
 $filterid = getval("filter",0,true);
 
 if (!checkperm("a"))
-	{
-	exit ("Permission denied.");
-	}
+    {
+    exit ("Permission denied.");
+    }
 
 $backurl = getval("backurl","");
 if($backurl == "")
@@ -199,7 +199,7 @@ include "../../include/header.php";
                 array(
                     'title' => $lang["systemsetup"],
                     'href'  => $baseurl_short . "pages/admin/admin_home.php",
-		            'menu' =>  true
+                    'menu' =>  true
                 ),
                 array(
                     'title' => $lang["filter_manage"],

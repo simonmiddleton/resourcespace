@@ -17,39 +17,39 @@ $offline_job_queue=false;
 $ignoremaxsize=false;
 $noimage=false;
 if ($argc >= 2)
-	{
-	$validargs=false;
-	if ( in_array($argv[1], array('--help', '-help', '-h', '-?')) )
-		{
-		echo "To clear the lock after a failed run, ";
-  		echo "pass in '-clearlock'\n";
-		echo "To ignore the maximum preview size configured ($preview_generate_max_file_size), ";
-  		echo "pass in '-ignoremaxsize'.\n";
-  		exit("Bye!");
-		}
-	if (in_array('-ignoremaxsize',$argv) )
-		{
-		$ignoremaxsize=true;
-		$validargs=true;
-		}
-	if (in_array('-noimage',$argv) )
-		{
-		$noimage=true; # 
-		$validargs=true;
-		}
-	if (in_array('-clearlock',$argv))
-		{
-		if ( is_process_lock("create_previews") )
-			{
-			clear_process_lock("create_previews");
-			}
-		$validargs=true;
-		}
-	if(!$validargs)
-		{
-		exit("Unknown argv: " . $argv[1]);
-		}
-	} 
+    {
+    $validargs=false;
+    if ( in_array($argv[1], array('--help', '-help', '-h', '-?')) )
+        {
+        echo "To clear the lock after a failed run, ";
+        echo "pass in '-clearlock'\n";
+        echo "To ignore the maximum preview size configured ($preview_generate_max_file_size), ";
+        echo "pass in '-ignoremaxsize'.\n";
+        exit("Bye!");
+        }
+    if (in_array('-ignoremaxsize',$argv) )
+        {
+        $ignoremaxsize=true;
+        $validargs=true;
+        }
+    if (in_array('-noimage',$argv) )
+        {
+        $noimage=true; # 
+        $validargs=true;
+        }
+    if (in_array('-clearlock',$argv))
+        {
+        if ( is_process_lock("create_previews") )
+            {
+            clear_process_lock("create_previews");
+            }
+        $validargs=true;
+        }
+    if(!$validargs)
+        {
+        exit("Unknown argv: " . $argv[1]);
+        }
+    } 
 
 
 # Check for a process lock
@@ -130,10 +130,10 @@ function sigint_handler()
 
 // We define the functions to use for signal handling.
 if ($multiprocess)
-	{
-	pcntl_signal(SIGALRM, 'sigalrm_handler');
-	pcntl_signal(SIGCHLD, 'sigchld_handler');
-	}
+    {
+    pcntl_signal(SIGALRM, 'sigalrm_handler');
+    pcntl_signal(SIGCHLD, 'sigchld_handler');
+    }
 
 
 // We fetch the list of resources to process.
@@ -149,14 +149,14 @@ foreach($resources as $resource) // For each resources
 
   // We wait for a fork emplacement to be freed.
   if ($multiprocess)
-	{
-	  	while(count($children) >= $max_forks)
-	    {
-	    // We clean children list.
-	    reap_children();
-	    sleep(1);
-	    }
-	}
+    {
+        while(count($children) >= $max_forks)
+        {
+        // We clean children list.
+        reap_children();
+        sleep(1);
+        }
+    }
 
   if (!$multiprocess || count($children) < $max_forks) // Test if we can create a new fork.
     {
@@ -175,10 +175,10 @@ foreach($resources as $resource) // For each resources
     else
       {
       if ($multiprocess)
-      	{
-	      pcntl_signal(SIGCHLD, SIG_IGN);
-	      pcntl_signal(SIGINT, SIG_DFL);
-	    }
+        {
+          pcntl_signal(SIGCHLD, SIG_IGN);
+          pcntl_signal(SIGINT, SIG_DFL);
+        }
 
       // Processing resource.
       echo sprintf("Processing resource id " . $resource['ref'] . " - preview attempt #" . $resource['preview_attempts'] . "\n");
@@ -188,53 +188,53 @@ foreach($resources as $resource) // For each resources
       // For each fork, we need a new connection to database.
       sql_connect();
 
-		# Below added to catch an issue with previews failing when large video files were taking a long time to copy to StaticSync location
-		echo "Created at: " . $resource['creation_date'] . "\nTime now: " . date("Y-m-d H:i:s") . "\n";
-		$resourceage = time() - strtotime($resource['creation_date']);		
-		if ($resource['preview_attempts']>3 && $resourceage<1000){echo "Just added so may not have finished copying, resetting attempts \n"; ps_query("UPDATE resource SET preview_attempts = 0 WHERE ref = ?", array("i", $resource['ref'])); continue;} 
+        # Below added to catch an issue with previews failing when large video files were taking a long time to copy to StaticSync location
+        echo "Created at: " . $resource['creation_date'] . "\nTime now: " . date("Y-m-d H:i:s") . "\n";
+        $resourceage = time() - strtotime($resource['creation_date']);      
+        if ($resource['preview_attempts']>3 && $resourceage<1000){echo "Just added so may not have finished copying, resetting attempts \n"; ps_query("UPDATE resource SET preview_attempts = 0 WHERE ref = ?", array("i", $resource['ref'])); continue;} 
 
-		#check whether resource already has mp3 preview in which case we set preview_attempts to 5
-		if ($resource['file_extension']!="mp3" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")))	
-			{
-			$ref=$resource['ref'];
-			echo "Resource already has mp3 preview\n";
-			ps_query("update resource set preview_attempts = 5 where ref = ?", array("i", $ref));
-			}
+        #check whether resource already has mp3 preview in which case we set preview_attempts to 5
+        if ($resource['file_extension']!="mp3" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")))  
+            {
+            $ref=$resource['ref'];
+            echo "Resource already has mp3 preview\n";
+            ps_query("update resource set preview_attempts = 5 where ref = ?", array("i", $ref));
+            }
 
-		elseif ($resource['preview_attempts'] < 5 && $resource['file_extension'] != "") 
-			{
-			if(!empty($resource['file_path'])){$ingested=false;}
-			else{$ingested=true;}
+        elseif ($resource['preview_attempts'] < 5 && $resource['file_extension'] != "") 
+            {
+            if(!empty($resource['file_path'])){$ingested=false;}
+            else{$ingested=true;}
 
-			# Increment the preview count.
-			ps_query("update resource set preview_attempts = ifnull(preview_attempts, 1) + 1 where ref = ?", array("i", $resource['ref']));
+            # Increment the preview count.
+            ps_query("update resource set preview_attempts = ifnull(preview_attempts, 1) + 1 where ref = ?", array("i", $resource['ref']));
 
-			$success=create_previews($resource['ref'], false, $resource['file_extension'],false,false,-1,$ignoremaxsize,$ingested);
-			hook('after_batch_create_preview');
-			$success_sting=($success==true ? "successfully" : "with error" );
-			echo sprintf("Processed resource %d %s in %01.2f seconds.\n", $resource['ref'], $success_sting, microtime(true) - $start_time);
-			}
+            $success=create_previews($resource['ref'], false, $resource['file_extension'],false,false,-1,$ignoremaxsize,$ingested);
+            hook('after_batch_create_preview');
+            $success_sting=($success==true ? "successfully" : "with error" );
+            echo sprintf("Processed resource %d %s in %01.2f seconds.\n", $resource['ref'], $success_sting, microtime(true) - $start_time);
+            }
 
-	  if ($multiprocess)
-	  	{
-	      // We exit in order to avoid fork bombing.
-	      exit(0);
-	    }
+      if ($multiprocess)
+        {
+          // We exit in order to avoid fork bombing.
+          exit(0);
+        }
       }
     } // Test if we can create a new fork
   } // For each resources
 
 // We wait for all forks to exit.
 if ($multiprocess)
-	{
-	while(count($children))
-	  {
-	  // We clean children list.
-	  reap_children();
-	  sleep(1);
-	  }
-	}
-	
+    {
+    while(count($children))
+      {
+      // We clean children list.
+      reap_children();
+      sleep(1);
+      }
+    }
+    
 echo sprintf("Completed in %01.2f seconds.\n", microtime(true) - $global_start_time);
 
 clear_process_lock("create_previews");

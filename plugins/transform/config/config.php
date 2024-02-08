@@ -18,13 +18,13 @@ $cropper_quality_select = false;
 $cropper_srgb_option = false;
 $cropper_preset_sizes = array(
     "Facebook"  => array(
-        "Profile Photo"	            => "180x180",
+        "Profile Photo"             => "180x180",
         "Cover Photo"               => "820x312",
         "Shared Image (Timeline)"   => "1200x630",
         "Shared Image (Newsfeed)"   => "1200x630", 
         "Shared Link (Timeline)"    => "1200x628",
         "Shared Link (Newsfeed)"    => "1200x628",
-        "Event Image"           	=> "1920x1080",
+        "Event Image"               => "1920x1080",
         ), 
     "Twitter"  => array(
         "Profile Photo" => "400x400",

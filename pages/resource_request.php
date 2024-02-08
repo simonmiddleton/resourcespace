@@ -93,17 +93,17 @@ if(isset($user_dl_limit) && intval($user_dl_limit) > 0)
 // Get any metadata fields we may want to show to the user on this page
 // Currently only title is showing
 foreach($resource_field_data as $resource_field)
-	{
-	if($view_title_field != $resource_field['ref'])
-		{
-		continue;
-		}
+    {
+    if($view_title_field != $resource_field['ref'])
+        {
+        continue;
+        }
 
-	$resource_title = $resource_field['value'];
-	}
+    $resource_title = $resource_field['value'];
+    }
 
 if (getval("save","")!="" && enforcePostRequest(false))
-	{
+    {
     $antispamcode = getval('antispamcode', '');
     $antispam = getval('antispam', '');
     $antispamtime = getval('antispamtime', 0);
@@ -120,7 +120,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
         $result = false;
         $error = $lang["requiredantispam"];
         }
-	else if (!$internal_share_access || $user_is_anon || $userrequestmode==0)
+    else if (!$internal_share_access || $user_is_anon || $userrequestmode==0)
         {
         if ((!$internal_share_access || $user_is_anon) && (getval("fullname","")=="" || getval("email","")==""))
             {
@@ -133,7 +133,7 @@ if (getval("save","")!="" && enforcePostRequest(false))
             endif;
             }
         }
-	else
+    else
         {
         # Request mode 1 : "Managed" mode via Manage Requests / Orders
         $tmp = hook("manresourcerequest"); if($tmp): $result = $tmp; else:
@@ -141,24 +141,24 @@ if (getval("save","")!="" && enforcePostRequest(false))
         endif;
         }
 
-	if ($result===false)
-		{
-		$error = ($error ?: $lang["requiredfields-general"]);
-		}
-	else
-		{
+    if ($result===false)
+        {
+        $error = ($error ?: $lang["requiredfields-general"]);
+        }
+    else
+        {
         $return_url = generateURL($baseurl_short . "pages/view.php",["ref"=> (int)($ref),"k"=>$k]);
         $doneurl = generateURL(
             $baseurl_short . "pages/done.php",
             ["text"=>"resource_request","resource"=>$ref,"k"=>$k,"return_url"=>$return_url]
         );
-		?>
-		<script>
-		CentralSpaceLoad("<?php echo $doneurl ?>",true);
-		</script>
-		<?php
-		}
-	}
+        ?>
+        <script>
+        CentralSpaceLoad("<?php echo $doneurl ?>",true);
+        </script>
+        <?php
+        }
+    }
 include "../include/header.php";
 $back_url = generateURL(
     $baseurl_short . "pages/view.php",
@@ -166,100 +166,100 @@ $back_url = generateURL(
     );
 ?>
 <div class="BasicsBox">
-	<p>
+    <p>
         <a href="<?php echo $back_url?>" onClick="return CentralSpaceLoad(this, true);"
             ><?php echo LINK_CARET_BACK ?><?php echo $lang['backtoresourceview']; ?>
         </a>
-	</p>
+    </p>
 
   <h1><?php echo i18n_get_translated($lang["requestresource"]); ?></h1>
   <p><?php echo text("introtext");render_help_link("resourceadmin/user-resource-requests")?></p>
     <?php render_top_page_error_style($error); ?>
-	<form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php" onsubmit="return CentralSpacePost(this,true);">
+    <form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php" onsubmit="return CentralSpacePost(this,true);">
         <?php generateFormToken("resource_request"); ?>
-	<input type="hidden" name="k" value="<?php echo htmlspecialchars($k); ?>">
-	<input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref)?>">
-	
-	<div class="Question">
-	<label><?php echo $lang["resourceid"]?></label>
-	<div class="Fixed"><?php echo htmlspecialchars($ref)?></div>
-	<div class="clearerleft"> </div>
-	</div>
-	
-	<div class="Question">
-	<label><?php echo $lang['resourcetitle']; ?></label>
-	<div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resource_title)); ?></div>
-	<div class="clearerleft"> </div>
-	</div>
-	
-	<?php if (!$internal_share_access || $user_is_anon) { ?>
-	<div class="Question">
-	<label><?php echo $lang["fullname"]?> <sup>*</sup></label>
-	<input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]?>">
-	<input name="fullname" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getval("fullname","")) ?>">
-	<div class="clearerleft"> </div>
-	</div>
-	
-	<div class="Question">
-	<label><?php echo $lang["emailaddress"]?> <sup>*</sup></label>
-	<input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]?>">
-	<input name="email" type="email" class="stdwidth" value="<?php echo htmlspecialchars(getval("email","")) ?>">
-	<div class="clearerleft"> </div>
-	</div>
+    <input type="hidden" name="k" value="<?php echo htmlspecialchars($k); ?>">
+    <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref)?>">
+    
+    <div class="Question">
+    <label><?php echo $lang["resourceid"]?></label>
+    <div class="Fixed"><?php echo htmlspecialchars($ref)?></div>
+    <div class="clearerleft"> </div>
+    </div>
+    
+    <div class="Question">
+    <label><?php echo $lang['resourcetitle']; ?></label>
+    <div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resource_title)); ?></div>
+    <div class="clearerleft"> </div>
+    </div>
+    
+    <?php if (!$internal_share_access || $user_is_anon) { ?>
+    <div class="Question">
+    <label><?php echo $lang["fullname"]?> <sup>*</sup></label>
+    <input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]?>">
+    <input name="fullname" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getval("fullname","")) ?>">
+    <div class="clearerleft"> </div>
+    </div>
+    
+    <div class="Question">
+    <label><?php echo $lang["emailaddress"]?> <sup>*</sup></label>
+    <input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]?>">
+    <input name="email" type="email" class="stdwidth" value="<?php echo htmlspecialchars(getval("email","")) ?>">
+    <div class="clearerleft"> </div>
+    </div>
 
-	<div class="Question">
-	<label><?php echo $lang["contacttelephone"]?></label>
-	<input type="hidden" name="contact_label" value="<?php echo $lang["contacttelephone"]?>">
-	<input name="contact" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getval("contact","")) ?>">
-	<div class="clearerleft"> </div>
-	</div>
-	<?php } ?>
+    <div class="Question">
+    <label><?php echo $lang["contacttelephone"]?></label>
+    <input type="hidden" name="contact_label" value="<?php echo $lang["contacttelephone"]?>">
+    <input name="contact" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getval("contact","")) ?>">
+    <div class="clearerleft"> </div>
+    </div>
+    <?php } ?>
 
-	<div class="Question">
-	<label for="request"><?php echo $lang["requestreason"]?> <?php if ($resource_request_reason_required) { ?><sup>*</sup><?php } ?></label>
-	<textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo htmlspecialchars(getval("request","")) ?></textarea>
-	<div class="clearerleft"> </div>
-	</div>
+    <div class="Question">
+    <label for="request"><?php echo $lang["requestreason"]?> <?php if ($resource_request_reason_required) { ?><sup>*</sup><?php } ?></label>
+    <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo htmlspecialchars(getval("request","")) ?></textarea>
+    <div class="clearerleft"> </div>
+    </div>
 
 <?php # Add custom fields 
 if (isset($custom_request_fields))
-	{
-	$custom=explode(",",$custom_request_fields);
-	$required=explode(",",$custom_request_required);
-	
-	for ($n=0;$n<count($custom);$n++)
-		{
-		$type=1;
-		
-		# Support different question types for the custom fields.
-		if (isset($custom_request_types[$custom[$n]])) {$type=$custom_request_types[$custom[$n]];}
-		
-		if ($type==4)
-			{
-			# HTML type - just output the HTML.
-			echo $custom_request_html[$custom[$n]];
-			}
-		else
-			{
-			?>
-			<div class="Question">
-			<label for="custom<?php echo $n?>"><?php echo htmlspecialchars(i18n_get_translated($custom[$n]))?>
-			<?php if (in_array($custom[$n],$required)) { ?><sup>*</sup><?php } ?>
-			</label>
-			
-			<?php if ($type==1) {  # Normal text box
-			?>
-			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
+    {
+    $custom=explode(",",$custom_request_fields);
+    $required=explode(",",$custom_request_required);
+    
+    for ($n=0;$n<count($custom);$n++)
+        {
+        $type=1;
+        
+        # Support different question types for the custom fields.
+        if (isset($custom_request_types[$custom[$n]])) {$type=$custom_request_types[$custom[$n]];}
+        
+        if ($type==4)
+            {
+            # HTML type - just output the HTML.
+            echo $custom_request_html[$custom[$n]];
+            }
+        else
+            {
+            ?>
+            <div class="Question">
+            <label for="custom<?php echo $n?>"><?php echo htmlspecialchars(i18n_get_translated($custom[$n]))?>
+            <?php if (in_array($custom[$n],$required)) { ?><sup>*</sup><?php } ?>
+            </label>
+            
+            <?php if ($type==1) {  # Normal text box
+            ?>
+            <input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
 <?php } ?>
 
-			<?php if ($type==2) { # Large text box 
-			?>
-			<textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
+            <?php if ($type==2) { # Large text box 
+            ?>
+            <textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
 <?php } ?>
 
-			<?php if ($type==3) { # Drop down box
-			?>
-			<select name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth">
+            <?php if ($type==3) { # Drop down box
+            ?>
+            <select name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth">
             <?php 
             $index = $custom[$n];
            if (isset($custom_request_options[$index]))
@@ -272,16 +272,16 @@ if (isset($custom_request_fields))
                     <?php
                     }
                }
-			?>
-			</select>
+            ?>
+            </select>
 <?php } ?>
-			
-			<div class="clearerleft"> </div>
-			</div>
-			<?php
-			}
-		}
-	}
+            
+            <div class="clearerleft"> </div>
+            </div>
+            <?php
+            }
+        }
+    }
 
 if($use_antispam)
     {
@@ -290,12 +290,12 @@ if($use_antispam)
 
 hook("resource_request_form_bottom");
 ?>
-	<div class="QuestionSubmit">		
-	<input name="save" value="true" type="hidden" />
-	<input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo htmlspecialchars($ref)?>';"/>&nbsp;
-	<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo i18n_get_translated($lang["requestresource"])?>&nbsp;&nbsp;" />
-	</div>
-	</form>
+    <div class="QuestionSubmit">        
+    <input name="save" value="true" type="hidden" />
+    <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo htmlspecialchars($ref)?>';"/>&nbsp;
+    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo i18n_get_translated($lang["requestresource"])?>&nbsp;&nbsp;" />
+    </div>
+    </form>
 </div>
 <?php
 include "../include/footer.php";
