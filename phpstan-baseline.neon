@@ -6,53 +6,8 @@ parameters:
 			path: include/database_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$access_key$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$anonymous_login$#"
 			count: 1
-			path: include/resource_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$ignore_permissions$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_collection$#"
-			count: 3
-			path: include/resource_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_group$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_order_by$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_resource$#"
-			count: 2
-			path: include/resource_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_sort$#"
-			count: 1
-			path: include/resource_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_type$#"
-			count: 2
-			path: include/resource_functions.php
-
-		-
-			message: "#^Undefined variable\\: \\$share_user$#"
-			count: 4
 			path: include/resource_functions.php
 
 		-

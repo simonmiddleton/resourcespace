@@ -8965,28 +8965,15 @@ function get_external_shares(array $filteropts)
     {
     global $userref;
 
-    $validfilterops = array(
-        "share_group",
-        "share_user",
-        "share_order_by",
-        "share_sort",
-        "share_type",
-        "share_collection",
-        "share_resource",
-        "access_key",
-        "ignore_permissions",
-    );
-    foreach($validfilterops as $validfilterop)
-        {
-        if(isset($filteropts[$validfilterop]))
-            {
-            $$validfilterop = $filteropts[$validfilterop];
-            }
-        else
-            {
-            $$validfilterop = NULL;
-            }
-        }
+    $share_group = $filteropts['share_group'] ?? null;
+    $share_user = $filteropts['share_user'] ?? null;
+    $share_order_by = $filteropts['share_order_by'] ?? null;
+    $share_sort = $filteropts['share_sort'] ?? null;
+    $share_type = $filteropts['share_type'] ?? null;
+    $share_collection = $filteropts['share_collection'] ?? null;
+    $share_resource = $filteropts['share_resource'] ?? null;
+    $access_key = $filteropts['access_key'] ?? null;
+    $ignore_permissions = $filteropts['ignore_permissions'] ?? null;
 
     $valid_orderby = array("collection","user", "sharedas", "expires", "date", "email", "lastused", "access_key", "upload");
     if(!in_array($share_order_by, $valid_orderby))
