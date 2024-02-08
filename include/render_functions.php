@@ -2977,23 +2977,12 @@ function calculate_image_display(array $imagedata, string $img_url, string $disp
 function render_share_options($shareopts=array())
     {
     global $lang, $usergroup, $resource_share_expire_never, $resource_share_expire_days,$minaccess,$allowed_external_share_groups;
-    $validshareops = array(
-        "password",
-        "editaccesslevel",
-        "editexpiration",
-        "editgroup",
-        );
-    foreach($validshareops as $validshareop)
-        {
-        if(isset($shareopts[$validshareop]))
-            {
-            $$validshareop = $shareopts[$validshareop];
-            }
-        else
-            {
-            $$validshareop = getval($validshareop,'');
-            }
-        }
+
+    $password = $shareopts['password'] ?? getval('password', '');
+    $editaccesslevel = $shareopts['editaccesslevel'] ?? getval('editaccesslevel', '');
+    $editexpiration = $shareopts['editexpiration'] ?? getval('editexpiration', '');
+    $editgroup = $shareopts['editgroup'] ?? getval('editgroup', '');
+
     if(!hook('replaceemailaccessselector'))
         {?>
         <div class="Question" id="question_access">
