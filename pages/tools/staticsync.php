@@ -1084,8 +1084,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
                 $result=copy($alternativefile,$alt["path"]); // Copy alternative file instead of rename so that permissions of filestore will be used
                 if ($result===false)
                     {
-                    # The copy failed. 
-                    debug(" - ERROR: Staticsync failed to copy alternative file from: " .  $altpath . "/" . $altfile);
+                    debug(" - ERROR: Staticsync failed to copy alternative file from: {$alternativefile}");
                     return false;
                     }
                 $use_error_exception_cache = $GLOBALS["use_error_exception"] ?? false;
