@@ -1825,17 +1825,17 @@ function is_process_lock($name)
     # Since the get_temp_dir() method does this checking, omit: if(!is_dir($storagedir . "/tmp")){mkdir($storagedir . "/tmp",0777);}
     if(!is_dir(get_temp_dir() . "/process_locks")){mkdir(get_temp_dir() . "/process_locks",0777);}
 
-    # No lock file? return false
-    if (!file_exists(get_temp_dir() . "/process_locks/" . $name)) {return false;}
-    if (!is_readable(get_temp_dir() . "/process_locks/" . $name)) {return true;} // Lock exists and cannot read it so must assume it's still valid
+    $file = get_temp_dir() . "/process_locks/" . $name;
+    if (!file_exists($file)) {return false;}
+    if (!is_readable($file)) {return true;} // Lock exists and cannot read it so must assume it's still valid
 
     $GLOBALS["use_error_exception"] = true;
     try {
-        $time=trim(file_get_contents(get_temp_dir() . "/process_locks/" . $name));
+        $time=trim(file_get_contents($file));
         if ((time() - (int) $time)>$process_locks_max_seconds) {return false;} # Lock has expired
         }
     catch (Exception $e) {
-        debug("is_process_lock: Attempt to get file contents '$result' failed. Reason: {$e->getMessage()}");
+        debug("is_process_lock: Attempt to get file contents '$file' failed. Reason: {$e->getMessage()}");
         }
     unset($GLOBALS["use_error_exception"]);
 

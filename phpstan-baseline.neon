@@ -6,11 +6,6 @@ parameters:
 			path: include/database_functions.php
 
 		-
-			message: "#^Undefined variable\\: \\$result$#"
-			count: 1
-			path: include/general_functions.php
-
-		-
 			message: "#^Undefined variable\\: \\$limit$#"
 			count: 2
 			path: include/message_functions.php
