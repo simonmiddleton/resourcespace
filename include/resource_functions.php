@@ -9554,7 +9554,7 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
             {
             $use_watermark = false;
             }
-
+        $validimage = false;
         foreach($sizes as $size)
             {
             if(resource_has_access_denied_by_RT_size($resource['resource_type'], $size))
@@ -9579,10 +9579,14 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
                 $preview["path"] = $img_file;
                 $preview["url"] = get_resource_path($resource['ref'],false,$size ,false,$resource['preview_extension'],true,1,$use_watermark,$resource['file_modified']);
                 list($preview["width"], $preview["height"]) = getimagesize($img_file);
+                $validimage = true;
                 break;
                 }
             }
         }
-
+    if(!$validimage)
+        {
+        return false;
+        }
     return $preview;
     }
