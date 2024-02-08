@@ -95,7 +95,7 @@ function sync_flickr($search,$new_only=false,$photoset=0,$photoset_name="",$priv
                         {
                         $flickr_alt_image_size="";
                         }
-                    $im=get_resource_path($resource,true,$flickr_alt_image_size,false);
+                    $im=get_resource_path($result['ref'],true,$flickr_alt_image_size,false);
                     if(file_exists($im))
                         {
                         break;

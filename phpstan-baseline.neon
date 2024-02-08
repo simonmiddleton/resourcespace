@@ -79,8 +79,3 @@ parameters:
 			message: "#^Undefined variable\\: \\$original_download_name$#"
 			count: 1
 			path: plugins/adobe_link/hooks/view.php
-
-		-
-			message: "#^Undefined variable\\: \\$resource$#"
-			count: 1
-			path: plugins/flickr_theme_publish/inc/flickr_functions.php
