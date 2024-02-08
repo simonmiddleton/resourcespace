@@ -24,7 +24,7 @@ $breadcrumbs = array(
     ),
     array(
         'title' => $lang['museumplus_configuration'],
-        'href'  => $baseurl . $plugin_yaml['config_url']
+        'href'  => $baseurl . '/' . $plugin_yaml['config_url']
     ),
     array(
         'title' => $lang['museumplus_module_setup'],
