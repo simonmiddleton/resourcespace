@@ -874,33 +874,21 @@ function message_getrefs($user)
  * @param  array    $filteropts Array of extra options to filter and sort messages returned
  *                              "msgfind"    - (string) Text to find
  *                              "sort_desc"  - (bool) Sort by message ID in descending order? False = Ascending
- *                              "msglimit"   - (int) Maximum number of messages to return
+ *                              "limit"      - (int) Maximum number of messages to return
  * 
  * @return array   Array of messages
  */
-function message_get_conversation(int $user, $msgusers = array(),$filteropts = array())
+function message_get_conversation(int $user, $msgusers = array(),$filteropts = array()): array
     {
     array_map("is_int_loose",$msgusers);
     if(count($msgusers) == 0 || !is_int_loose($user))
         {
         return array();
         }
-    $validfilterops = array(
-        "msgfind",
-        "sort_desc",
-        "limit",
-    );
-    foreach($validfilterops as $validfilterop)
-        {
-        if(isset($filteropts[$validfilterop]))
-            {
-            $$validfilterop = $filteropts[$validfilterop];
-            }
-        else
-            {
-            $$validfilterop = NULL;
-            }
-        }
+
+    $msgfind = $filteropts['msgfind'] ?? '';
+    $sort_desc = $filteropts['sort_desc'] ?? false;
+    $limit = $filteropts['limit'] ?? 0;
 
     # Build array of sql query parameters
     $parameters = ps_param_fill($msgusers,"i");
@@ -910,7 +898,7 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
         {
         $parameters = array_merge($parameters, array("s", $msgfind));
         }
-    if ($limit != "")
+    if ($limit > 0)
         {
         $parameters = array_merge($parameters, array("i", (int)$limit));
         }
@@ -930,7 +918,7 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
            .  ($msgfind != "" ? (" AND message.message LIKE ?") : " " )
            . " AND type & '" . MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE . "'"
            . " ORDER BY user_message.ref " . ($sort_desc ? "DESC" : "ASC")
-           . ($limit != "" ? " LIMIT ?" : "");
+           . ($limit > 0 ? " LIMIT ?" : "");
     
     $messages = ps_query($msgquery, $parameters);
     
