@@ -24,3 +24,6 @@ parameters:
     excludePaths:
         analyse:
             - plugins/*/lib/*
+
+    earlyTerminatingFunctionCalls:
+        - errorhandler

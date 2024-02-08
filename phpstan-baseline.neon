@@ -1,6 +1,2 @@
 parameters:
 	ignoreErrors:
-		-
-			message: "#^Undefined variable\\: \\$error$#"
-			count: 1
-			path: include/database_functions.php
