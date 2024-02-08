@@ -37,11 +37,11 @@ $resource_setvals = [
     3=>"2",
     1=>"3",
 ];
-
+$nodes = [];
 foreach($resource_setvals as $resource=>$value)
     {
-    ${"page" . $value}  = set_node(NULL, $relatedorderfield, $value,'',1000);
-    add_resource_nodes($test943_resources[$resource],[${"page" . $value}]);
+    $nodes[$value] = set_node(NULL, $relatedorderfield, $value,'',1000);
+    add_resource_nodes($test943_resources[$resource],[$nodes[$value]]);
     update_resource_field_column($test943_resources[$resource],$relatedorderfield,(string)$value);
     }
 
