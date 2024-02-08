@@ -29,8 +29,3 @@ parameters:
 			message: "#^Undefined variable\\: \\$altpath$#"
 			count: 1
 			path: pages/tools/staticsync.php
-
-		-
-			message: "#^Undefined variable\\: \\$original_download_name$#"
-			count: 1
-			path: plugins/adobe_link/hooks/view.php
