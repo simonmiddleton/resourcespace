@@ -383,7 +383,7 @@ $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . 
 $page_def[] = config_add_boolean_select('actions_enable', $lang['actions-enable'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('actions_resource_requests', $lang['actions_resource_requests_default'], $enable_disable_options, 420, '', true);
 $page_def[] = config_add_boolean_select('actions_account_requests', $lang['actions_account_requests_default'], $enable_disable_options, 420, '', true);
-	
+    
 $page_def[] = config_add_html('</div>');
 
 // Metadata section
@@ -655,19 +655,19 @@ include '../../include/header.php';
     </form>
 
     <?php
-	$links_trail = array(
-	    array(
-	        'title' => $lang["systemsetup"],
-	        'href'  => $baseurl_short . "pages/admin/admin_home.php",
+    $links_trail = array(
+        array(
+            'title' => $lang["systemsetup"],
+            'href'  => $baseurl_short . "pages/admin/admin_home.php",
             'menu' =>  true
-	    ),
-	    array(
-	        'title' => $lang["systemconfig"],
-	    )
-	);
+        ),
+        array(
+            'title' => $lang["systemconfig"],
+        )
+    );
 
-	renderBreadcrumbs($links_trail);
-	?>
+    renderBreadcrumbs($links_trail);
+    ?>
 
     <p><?php echo $lang['systemconfig_description']; ?></p>
     <div class="CollapsibleSections">

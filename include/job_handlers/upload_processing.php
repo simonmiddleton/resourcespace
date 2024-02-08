@@ -34,7 +34,7 @@ $status=false;
 
 // Process a resource upload
 if($resource!==false && is_null($alternative))
-	{
+    {
     if($upload_file_by_url != "")
         {
         $status = upload_file_by_url(
@@ -48,13 +48,13 @@ if($resource!==false && is_null($alternative))
         {
         $status=upload_file($job_data["resource"], !$job_data["extract"], $job_data["revert"], $job_data["autorotate"] ,"", true);
         }
-	
-	# update the archive status
-	if(isset($job_data['archive']) && $job_data['archive'] !== '')
-		{
-		update_archive_status($job_data["resource"], $job_data["archive"]);
-		}
-	}
+    
+    # update the archive status
+    if(isset($job_data['archive']) && $job_data['archive'] !== '')
+        {
+        update_archive_status($job_data["resource"], $job_data["archive"]);
+        }
+    }
 // Process a resource alternative upload
 else if($resource !== false && !is_null($alternative) && $alternative > 0 && $extension != "")
     {

@@ -136,11 +136,11 @@ if(isset($download_usage_prevent_options))
 
 <?php if ($download_usage_email){ ?>
     <div class="Question">
-	    <label><?php echo $lang["emailaddress"]?></label>
-	    <input name="email" type="text" class="stdwidth" value="<?php echo htmlspecialchars($email) ?>">
+        <label><?php echo $lang["emailaddress"]?></label>
+        <input name="email" type="text" class="stdwidth" value="<?php echo htmlspecialchars($email) ?>">
         <span class="error"><?php echo isset($error['email']) ? $error["email"] : "" ?></span>
-	    <div class="clearerleft"> </div>
-	</div>
+        <div class="clearerleft"> </div>
+    </div>
 <?php } ?>
    
         <?php  if(!$remove_usage_textbox && !$usage_textbox_below)  {  echo html_usagecomments($usagecomment,$error);   }   ?>

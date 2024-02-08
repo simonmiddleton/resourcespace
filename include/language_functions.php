@@ -42,9 +42,9 @@ function i18n_get_translated($text)
     $text ??= ''; 
         
     global $language,$defaultlanguage;
-	$asdefaultlanguage=$defaultlanguage;
-	if (!isset($asdefaultlanguage))
-		$asdefaultlanguage='en';
+    $asdefaultlanguage=$defaultlanguage;
+    if (!isset($asdefaultlanguage))
+        $asdefaultlanguage='en';
     
     # Split
     $s=explode("~",$text);
@@ -61,7 +61,7 @@ function i18n_get_translated($text)
         
         # Support both 2 character and 5 character language codes (for example en, en-US).
         $p=strpos($s[$n],':');
-		$textLanguage=substr($s[$n],0,$p);
+        $textLanguage=substr($s[$n],0,$p);
         if (strtolower($textLanguage) == strtolower($language)) {return substr($s[$n],$p+1);}
         
         if (strtolower($textLanguage) == strtolower($asdefaultlanguage) || $p==0 || $n==1) {$default=substr($s[$n],$p+1);}
@@ -106,32 +106,32 @@ function i18n_get_collection_name($mixedcollection, $index="name")
 
     # Check if it is a Upload YYMMDDHHMMSS
     $upload_date = preg_replace('/(^Upload)\s(\d{12})$/', '$2', $name_untranslated, -1, $translated);
-	if ($translated!=1)
-		$upload_date = preg_replace('/(^Upload)\s(\d{14})$/', '$2', $name_untranslated, -1, $translated);
+    if ($translated!=1)
+        $upload_date = preg_replace('/(^Upload)\s(\d{14})$/', '$2', $name_untranslated, -1, $translated);
     if ($translated==1)
-		{
-		# Translate date into MySQL ISO format to be able to use nicedate()
-		if (strlen($upload_date)==14)
-			{
-			$year = substr($upload_date, 0, 4);
-			$upload_date=substr($upload_date, 2);
-			}
-		else
-			{
-			$year = substr($upload_date, 0, 2);
-			if ((int)$year > (int)date('y'))
-				$year = ((int)substr(date('Y'), 0, 2)-1) . $year;
-			else
-				$year = substr(date('Y'), 0, 2) . $year;
-			}
-		$month = substr($upload_date, 2, 2);
-		$day = substr($upload_date, 4, 2);
-		$hour = substr($upload_date, 6, 2);
-		$minute = substr($upload_date, 8, 2);
-		$second = substr($upload_date, 10, 2);
-		$date = nicedate("$year-$month-$day $hour:$minute:$second", true);
-		return htmlspecialchars($lang['upload'] . ' ' . $date);
-		}
+        {
+        # Translate date into MySQL ISO format to be able to use nicedate()
+        if (strlen($upload_date)==14)
+            {
+            $year = substr($upload_date, 0, 4);
+            $upload_date=substr($upload_date, 2);
+            }
+        else
+            {
+            $year = substr($upload_date, 0, 2);
+            if ((int)$year > (int)date('y'))
+                $year = ((int)substr(date('Y'), 0, 2)-1) . $year;
+            else
+                $year = substr(date('Y'), 0, 2) . $year;
+            }
+        $month = substr($upload_date, 2, 2);
+        $day = substr($upload_date, 4, 2);
+        $hour = substr($upload_date, 6, 2);
+        $minute = substr($upload_date, 8, 2);
+        $second = substr($upload_date, 10, 2);
+        $date = nicedate("$year-$month-$day $hour:$minute:$second", true);
+        return htmlspecialchars($lang['upload'] . ' ' . $date);
+        }
 
     # Check if it is a Research Request
     if(substr($name_untranslated, 0, 9) == "Research:")
@@ -151,12 +151,12 @@ function i18n_get_collection_name($mixedcollection, $index="name")
  */
 function i18n_get_indexable($text)
     {
-	// Make sure keywords don't get squashed together, then trim
-	$text=str_replace(array("<br />","<br>","\\r","\\n","&nbsp;")," ",$text);
-	$text=trim($text);
-	
+    // Make sure keywords don't get squashed together, then trim
+    $text=str_replace(array("<br />","<br>","\\r","\\n","&nbsp;")," ",$text);
+    $text=trim($text);
+    
     $text=preg_replace('/~(.*?):/',',',$text);// remove i18n strings, which shouldn't be in the keywords
-		
+        
     # For multiple keywords, parse each keyword.
     if (substr($text,0,1)!="," && (strpos($text,",")!==false) && (strpos($text,"~")!==false)) {
         $s=explode(",",$text);
@@ -316,7 +316,7 @@ function ucfirstletter($string)
  * @return void
  */
 function ucfirstletter_callback($matches){
-	return ucfirst($matches[0]);
+    return ucfirst($matches[0]);
 }
 
 
@@ -327,19 +327,19 @@ function ucfirstletter_callback($matches){
  * @return string
  */
 function normalize_keyword($keyword)
-	{
-	global $normalize_keywords, $keywords_remove_diacritics;
-	if($normalize_keywords && function_exists('normalizer_normalize'))
-		{
-		$keyword=normalizer_normalize($keyword);
-		}
-		
-	if($keywords_remove_diacritics)
-		{
-		$keyword=remove_accents($keyword);
-		}
-	return $keyword;
-	}
+    {
+    global $normalize_keywords, $keywords_remove_diacritics;
+    if($normalize_keywords && function_exists('normalizer_normalize'))
+        {
+        $keyword=normalizer_normalize($keyword);
+        }
+        
+    if($keywords_remove_diacritics)
+        {
+        $keyword=remove_accents($keyword);
+        }
+    return $keyword;
+    }
 
 
 /**
@@ -430,7 +430,7 @@ function remove_accents($string) {
         chr(197).chr(138) => 'n', chr(197).chr(139) => 'N',
         chr(197).chr(140) => 'O', chr(197).chr(141) => 'o',
         chr(197).chr(142) => 'O', chr(197).chr(143) => 'o',
-        chr(197).chr(144) => 'O', chr(197).chr(145) => 'o',		
+        chr(197).chr(144) => 'O', chr(197).chr(145) => 'o',     
         chr(197).chr(146) => 'OE',chr(197).chr(147) => 'oe',
         chr(197).chr(148) => 'R',chr(197).chr(149) => 'r',
         chr(197).chr(150) => 'R',chr(197).chr(151) => 'r',
@@ -492,22 +492,22 @@ function remove_accents($string) {
  * @return boolean True if it's possibly UTF8
  */
 function seems_utf8($str) {
-	$length = strlen($str);
-	for ($i=0; $i < $length; $i++) {
-		$c = ord($str[$i]);
-		if ($c < 0x80) $n = 0; # 0bbbbbbb
-		elseif (($c & 0xE0) == 0xC0) $n=1; # 110bbbbb
-		elseif (($c & 0xF0) == 0xE0) $n=2; # 1110bbbb
-		elseif (($c & 0xF8) == 0xF0) $n=3; # 11110bbb
-		elseif (($c & 0xFC) == 0xF8) $n=4; # 111110bb
-		elseif (($c & 0xFE) == 0xFC) $n=5; # 1111110b
-		else return false; # Does not match any model
-		for ($j=0; $j<$n; $j++) { # n bytes matching 10bbbbbb follow ?
-			if ((++$i == $length) || ((ord($str[$i]) & 0xC0) != 0x80))
-				return false;
-		}
-	}
-	return true;
+    $length = strlen($str);
+    for ($i=0; $i < $length; $i++) {
+        $c = ord($str[$i]);
+        if ($c < 0x80) $n = 0; # 0bbbbbbb
+        elseif (($c & 0xE0) == 0xC0) $n=1; # 110bbbbb
+        elseif (($c & 0xF0) == 0xE0) $n=2; # 1110bbbb
+        elseif (($c & 0xF8) == 0xF0) $n=3; # 11110bbb
+        elseif (($c & 0xFC) == 0xF8) $n=4; # 111110bb
+        elseif (($c & 0xFE) == 0xFC) $n=5; # 1111110b
+        else return false; # Does not match any model
+        for ($j=0; $j<$n; $j++) { # n bytes matching 10bbbbbb follow ?
+            if ((++$i == $length) || ((ord($str[$i]) & 0xC0) != 0x80))
+                return false;
+        }
+    }
+    return true;
 }
 
 
@@ -520,51 +520,51 @@ function seems_utf8($str) {
  * @return string The language string the user may prefer
  */
 function http_get_preferred_language($strict_mode=false)
-	{
-	global $languages;
+    {
+    global $languages;
 
-	if (empty($_SERVER['HTTP_ACCEPT_LANGUAGE']))
-		return null;
+    if (empty($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+        return null;
 
-	$accepted_languages=preg_split('/,\s*/',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-	$current_lang=false;
-	$current_quality=0;
-	$language_map = array();
-	foreach ($languages as $key => $value)
-		$language_map[strtolower($key)] = $key;
+    $accepted_languages=preg_split('/,\s*/',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    $current_lang=false;
+    $current_quality=0;
+    $language_map = array();
+    foreach ($languages as $key => $value)
+        $language_map[strtolower($key)] = $key;
 
-	foreach ($accepted_languages as $accepted_language)
-		{
-		$res=preg_match('/^([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;\s*q=(0(?:\.[0-9]{1,3})?|1(?:\.0{1,3})?))?$/i',$accepted_language,$matches);
-		if (!$res)
-			continue;
+    foreach ($accepted_languages as $accepted_language)
+        {
+        $res=preg_match('/^([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;\s*q=(0(?:\.[0-9]{1,3})?|1(?:\.0{1,3})?))?$/i',$accepted_language,$matches);
+        if (!$res)
+            continue;
 
-		$lang_code=explode('-',$matches[1]);
+        $lang_code=explode('-',$matches[1]);
 
-		// Use specified quality, if any
-		if (isset($matches[2]))
-			$lang_quality=(float)$matches[2];
-		else
-			$lang_quality=1.0;
+        // Use specified quality, if any
+        if (isset($matches[2]))
+            $lang_quality=(float)$matches[2];
+        else
+            $lang_quality=1.0;
 
-		while (count($lang_code))
-			{
-			$short=strtolower(join('-', $lang_code));
-			if (array_key_exists($short, $language_map) && $lang_quality > $current_quality)
-				{
-				$current_lang=$language_map[$short];
-				$current_quality=$lang_quality;
-				}
+        while (count($lang_code))
+            {
+            $short=strtolower(join('-', $lang_code));
+            if (array_key_exists($short, $language_map) && $lang_quality > $current_quality)
+                {
+                $current_lang=$language_map[$short];
+                $current_quality=$lang_quality;
+                }
 
-			if ($strict_mode)
-				break;
+            if ($strict_mode)
+                break;
 
-			array_pop($lang_code);
-			}
-		}
+            array_pop($lang_code);
+            }
+        }
 
         return $current_lang;
-	}
+    }
 
 /**
  * Set the user's current language based on get/post/cookie values as appropriate.
@@ -572,37 +572,37 @@ function http_get_preferred_language($strict_mode=false)
  * @return string The language string set
  */
 function setLanguage()
-	{
-	global $browser_language,$disable_languages,$defaultlanguage,$languages,$baseurl_short;
-	$language="";
-	if (isset($_GET["language_set"]))
-	    {
-	    $language=$_GET["language_set"];
-	    if(array_key_exists($language,$languages)) 
-			{
-		    # Cannot use the general.php: rs_setcookie() here since general may not have been included.
+    {
+    global $browser_language,$disable_languages,$defaultlanguage,$languages,$baseurl_short;
+    $language="";
+    if (isset($_GET["language_set"]))
+        {
+        $language=$_GET["language_set"];
+        if(array_key_exists($language,$languages)) 
+            {
+            # Cannot use the general.php: rs_setcookie() here since general may not have been included.
             # Set new cookie
             setcookie("language", $language, time() + (3600*24*1000));
-            setcookie("language", $language, time() + (3600*24*1000), $baseurl_short . "pages/", '', false, true);		    
-		    return $language;
-		    }
-		else
+            setcookie("language", $language, time() + (3600*24*1000), $baseurl_short . "pages/", '', false, true);          
+            return $language;
+            }
+        else
             {
             $language="";
             }
-	    }
-    if (isset($_GET["language"]) && array_key_exists((string)$_GET["language"],$languages)) {return $_GET["language"];}	
+        }
+    if (isset($_GET["language"]) && array_key_exists((string)$_GET["language"],$languages)) {return $_GET["language"];} 
     if (isset($_POST["language"]) && array_key_exists((string)$_POST["language"],$languages)) {return $_POST["language"];}
     if (isset($_COOKIE["language"]) && array_key_exists((string)$_COOKIE["language"],$languages)) {return $_COOKIE["language"];}
 
-	if(!$disable_languages && $browser_language && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
-		{
-		$language = http_get_preferred_language();
-		if(!empty($language) && array_key_exists($language,$languages)){return $language;}
-		} 
-	if(($disable_languages || $language ==="") && isset($defaultlanguage)) {return $defaultlanguage;}
-	# Final case.
-	return 'en';
+    if(!$disable_languages && $browser_language && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+        {
+        $language = http_get_preferred_language();
+        if(!empty($language) && array_key_exists($language,$languages)){return $language;}
+        } 
+    if(($disable_languages || $language ==="") && isset($defaultlanguage)) {return $defaultlanguage;}
+    # Final case.
+    return 'en';
     }
 
 

@@ -10,19 +10,19 @@ include "../include/header.php";
   <h1><?php echo $lang["mycontributions"]?></h1>
   <p><?php echo text("introtext");render_help_link("user/uploading");?></p>
 
-	<div class="VerticalNav">
-	<ul>
+    <div class="VerticalNav">
+    <ul>
 
-	<li><i class="fa fa-fw fa-upload"></i> <a onClick="return CentralSpaceLoad(this,true);"
-	<?php
-				#We need to point to the right upload sequence based on $upload_then_edit
-				if ($upload_then_edit==1){?>
-						href="<?php echo $baseurl_short?>pages/upload_batch.php">
-				<?php }
-				else {?>
-						href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo urlencode($userref) ?>&uploader=batch"><?php 
-				}?>
-	<?php echo $lang["addresourcebatchbrowser"];?></a>
+    <li><i class="fa fa-fw fa-upload"></i> <a onClick="return CentralSpaceLoad(this,true);"
+    <?php
+                #We need to point to the right upload sequence based on $upload_then_edit
+                if ($upload_then_edit==1){?>
+                        href="<?php echo $baseurl_short?>pages/upload_batch.php">
+                <?php }
+                else {?>
+                        href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo urlencode($userref) ?>&uploader=batch"><?php 
+                }?>
+    <?php echo $lang["addresourcebatchbrowser"];?></a>
     </li>
 <?php
 foreach(get_workflow_states() as $workflow_state)
@@ -48,9 +48,9 @@ foreach(get_workflow_states() as $workflow_state)
 
     hook('custommycontributionlink');
     ?>
-	</ul>
-	</div>
-	
+    </ul>
+    </div>
+    
   </div>
 <?php
 include "../include/footer.php";

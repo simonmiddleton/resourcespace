@@ -73,7 +73,7 @@ else
     $editing = false; 
     }
 
-$collectiondata	= get_collection($share_collection);
+$collectiondata = get_collection($share_collection);
 
 // Get existing shares for this collection
 $cursharefltr = array(
@@ -161,8 +161,8 @@ $page_header = $editing ? $lang["title-upload-link-edit"] . ":  " . $uploadkey :
 include "../include/header.php";
 
 ?>
-<div class="BasicsBox"> 	
-	<?php
+<div class="BasicsBox">     
+    <?php
 
         ?>
         <h1><?php echo $page_header; render_help_link("user/sharing-upload");?></h1>
@@ -213,7 +213,7 @@ include "../include/header.php";
 
             if($editing)
                 {?>
-                <div class="QuestionSubmit">		
+                <div class="QuestionSubmit">        
                     <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo $lang["save"] ;}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
                 </div><?php
                 }
@@ -233,7 +233,7 @@ include "../include/header.php";
                         <div class="clearerleft"> </div>
                     </div>
                 </div>
-                <div class="QuestionSubmit">		
+                <div class="QuestionSubmit">        
                     <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo $lang["button-upload-link-create"] ;}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
                 </div><?php
                 }

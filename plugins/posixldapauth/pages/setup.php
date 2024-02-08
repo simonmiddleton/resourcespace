@@ -5,8 +5,8 @@ include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ($lang['
 
 $plugin_name = 'posixldapauth';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
-	
+    {plugin_activate_for_setup($plugin_name);}
+    
 $usergroups = ps_query("SELECT ref,name FROM usergroup",array());
 /* Set the following debug flag to true for more debugging information
 */
@@ -19,84 +19,84 @@ if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." 
 // The following submit check doesn't seem to work reliably IIS servers
 //if (getval("submit","")!="") {
 if (isset($_POST["submit"])) {
-	if ($ldap_debug) { 
-		error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Submit detected"); 
-		if ($dump_to_file) {
-			error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Dumping POST array to file "); 
-			file_put_contents('post_array.txt', print_r($_POST, true));
-		}
-	}
-	$ldapauth=array();
-	$ldapauth['enable'] = isset($_POST['enable']);
+    if ($ldap_debug) { 
+        error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Submit detected"); 
+        if ($dump_to_file) {
+            error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Dumping POST array to file "); 
+            file_put_contents('post_array.txt', print_r($_POST, true));
+        }
+    }
+    $ldapauth=array();
+    $ldapauth['enable'] = isset($_POST['enable']);
     $ldapauth['ldapserver'] = $_POST['ldapserver'];
-	$ldapauth['port'] = $_POST['port'];
-	$ldapauth['basedn']= $_POST['basedn'];
-	$ldapauth['loginfield'] = $_POST['loginfield'];
-	$ldapauth['usersuffix'] = $_POST['usersuffix'];
-	$ldapauth['createusers'] = isset($_POST['createusers']);
-	$ldapauth['groupbased'] = isset($_POST['groupbased']);
-	$ldapauth['newusergroup'] = $_POST['newusergroup'];
-	$ldapauth['ldapusercontainer'] = $_POST['ldapusercontainer'];
-	$ldapauth['ldaptype'] = $_POST['ldaptype'];
-	$ldapauth['rootdn'] = $_POST['rootdn'];
-	$ldapauth['rootpass'] = $_POST['rootpass'];
-	$ldapauth['addomain'] = $_POST['addomain'];
-	$ldapauth['ldapgroupcontainer'] = $_POST['ldapgroupcontainer'];
-	$ldapauth['ldapmemberfield'] = $_POST['ldapmemberfield'];
-	$ldapauth['ldapmemberfieldtype'] = $_POST['ldapmemberfieldtype'];
-	$ldapauth['adusesingledomain'] = (isset($_POST['adusesingledomain']));
+    $ldapauth['port'] = $_POST['port'];
+    $ldapauth['basedn']= $_POST['basedn'];
+    $ldapauth['loginfield'] = $_POST['loginfield'];
+    $ldapauth['usersuffix'] = $_POST['usersuffix'];
+    $ldapauth['createusers'] = isset($_POST['createusers']);
+    $ldapauth['groupbased'] = isset($_POST['groupbased']);
+    $ldapauth['newusergroup'] = $_POST['newusergroup'];
+    $ldapauth['ldapusercontainer'] = $_POST['ldapusercontainer'];
+    $ldapauth['ldaptype'] = $_POST['ldaptype'];
+    $ldapauth['rootdn'] = $_POST['rootdn'];
+    $ldapauth['rootpass'] = $_POST['rootpass'];
+    $ldapauth['addomain'] = $_POST['addomain'];
+    $ldapauth['ldapgroupcontainer'] = $_POST['ldapgroupcontainer'];
+    $ldapauth['ldapmemberfield'] = $_POST['ldapmemberfield'];
+    $ldapauth['ldapmemberfieldtype'] = $_POST['ldapmemberfieldtype'];
+    $ldapauth['adusesingledomain'] = (isset($_POST['adusesingledomain']));
 
-	if (isset($_POST['ldapGroupName']))
-	{
-		$ldapGroupCount = count($_POST['ldapGroupName']);
-		if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." LDAP GROUP NAMES found, ".$ldapGroupCount." Groups "); }
-		
-		for ($ti= 0; $ti < $ldapGroupCount; $ti++)
-		{
-			$grpName = $_POST['ldapGroupName'][$ti];
-			$ldapauth['groupmap'][$grpName]['rsGroup'] = $_POST['ldapmaptors'][$grpName];
-			$ldapauth['groupmap'][$grpName]['enabled'] = isset($_POST['ldapGroupEnable'][$grpName]);
-		}
-	}
-		
-	set_plugin_config("posixldapauth", $ldapauth);
+    if (isset($_POST['ldapGroupName']))
+    {
+        $ldapGroupCount = count($_POST['ldapGroupName']);
+        if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." LDAP GROUP NAMES found, ".$ldapGroupCount." Groups "); }
+        
+        for ($ti= 0; $ti < $ldapGroupCount; $ti++)
+        {
+            $grpName = $_POST['ldapGroupName'][$ti];
+            $ldapauth['groupmap'][$grpName]['rsGroup'] = $_POST['ldapmaptors'][$grpName];
+            $ldapauth['groupmap'][$grpName]['enabled'] = isset($_POST['ldapGroupEnable'][$grpName]);
+        }
+    }
+        
+    set_plugin_config("posixldapauth", $ldapauth);
 
 } else {
-	if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Submit not Detected, attempting to load config from DB "); }
-	$ldapauth = get_plugin_config("posixldapauth");
-	if ($ldapauth == null){
-		if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." LDAP config is Null, setting defaults "); }
-	    $ldapauth['enable'] = false;
-	    $ldapauth['ldapserver'] = 'localhost';
-	    $ldapauth['port'] = '389';
-	    $ldapauth['basedn']= 'dc=mydomain,dc=net';
-	    $ldapauth['loginfield'] = 'uid';
-	    $ldapauth['usersuffix'] = '';
-	    $ldapauth['createusers'] = true;
-	    $ldapauth['groupbased'] = false;
-	    $ldapauth['newusergroup'] = '2';
-	    $ldapauth['ldapusercontainer'] = 'cn=users';
-	    $ldapauth['ldaptype'] = 0;
-		$ldapauth['rootdn'] ="admin@example.com";
-		$ldapauth['rootpass'] = "";
-		$ldapauth['addomain'] = "example.com";
-		$ldapauth['adusesingledomain'] = false;
-	}
-	if (!isset($ldapauth['ldapgroupcontainer']))
-	{
-		if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Group Conatiner not set, setting to blank "); }
-		$ldapauth['ldapgroupcontainer'] = "";	
-	}
-	if (!isset($ldapauth['ldapmemberfield']))
-	{
-		if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Member Field not set, setting to blank "); }
-		$ldapauth['ldapmemberfield'] = "";	
-	}
-	if (!isset($ldapauth['ldapmemberfieldtype']))
-	{
-		if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Member Field Type not set, setting to 0 "); }
-		$ldapauth['ldapmemberfieldtype'] = 0;	
-	}
+    if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Submit not Detected, attempting to load config from DB "); }
+    $ldapauth = get_plugin_config("posixldapauth");
+    if ($ldapauth == null){
+        if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." LDAP config is Null, setting defaults "); }
+        $ldapauth['enable'] = false;
+        $ldapauth['ldapserver'] = 'localhost';
+        $ldapauth['port'] = '389';
+        $ldapauth['basedn']= 'dc=mydomain,dc=net';
+        $ldapauth['loginfield'] = 'uid';
+        $ldapauth['usersuffix'] = '';
+        $ldapauth['createusers'] = true;
+        $ldapauth['groupbased'] = false;
+        $ldapauth['newusergroup'] = '2';
+        $ldapauth['ldapusercontainer'] = 'cn=users';
+        $ldapauth['ldaptype'] = 0;
+        $ldapauth['rootdn'] ="admin@example.com";
+        $ldapauth['rootpass'] = "";
+        $ldapauth['addomain'] = "example.com";
+        $ldapauth['adusesingledomain'] = false;
+    }
+    if (!isset($ldapauth['ldapgroupcontainer']))
+    {
+        if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Group Conatiner not set, setting to blank "); }
+        $ldapauth['ldapgroupcontainer'] = "";   
+    }
+    if (!isset($ldapauth['ldapmemberfield']))
+    {
+        if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Member Field not set, setting to blank "); }
+        $ldapauth['ldapmemberfield'] = "";  
+    }
+    if (!isset($ldapauth['ldapmemberfieldtype']))
+    {
+        if ($ldap_debug) { error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." Member Field Type not set, setting to 0 "); }
+        $ldapauth['ldapmemberfieldtype'] = 0;   
+    }
 }
 
 if ($ldapauth['enable'])
@@ -106,47 +106,47 @@ if ($ldapauth['enable'])
   // we get a list of groups from the LDAP;
   include_once "../hooks/ldap_class.php";
   $ldapConf['host'] = $ldapauth['ldapserver'];
-	$ldapConf['basedn'] = $ldapauth['basedn'];
-	$ldapConf['port'] = $ldapauth['port'];
-	$ldapConf['addomain'] = $ldapauth['addomain'];
-	$ldapConf['adusesingledomain'] = $ldapauth['adusesingledomain'];
-	
-	$objLDAP = new ldapAuth($ldapConf);
-	if ($ldap_debug) { $objLDAP->ldap_debug = true; }
-	
-	if ($objLDAP->connect())
-	{
-		// we need to check for the kind of LDAP we are talking to here!
-		if ($ldapauth['ldaptype'] == 1 )
-		{
-			// we need to bind!
-			if (!$objLDAP->auth($ldapauth['rootdn'],$ldapauth['rootpass'],1,$ldapauth['addomain'],$ldapauth['adusesingledomain']))
-			{
-				$errmsg["auth"] = $lang['posixldapauth_could_not_bind_to_ad_check_credentials'];
-			}	
-		}
-		
-		if (!isset ($errmsg))
-		{
-			// get the groups
-			error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." GOT TO THE GROUP SELECT ");
-			$ldapGroupList = $objLDAP->listGroups($ldapauth['ldaptype'],$ldapauth['ldapgroupcontainer']);
-			if (is_array($ldapGroupList)) {
-				$ldapGroupsFound = true;
-			} else { 
-				$ldapGroupsFound = false;
-			}
-		}
-		
-				
-	} else {
-		echo htmlspecialchars($lang['posixldapauth_connection_to_ldap_server_failed']);	
-	}
+    $ldapConf['basedn'] = $ldapauth['basedn'];
+    $ldapConf['port'] = $ldapauth['port'];
+    $ldapConf['addomain'] = $ldapauth['addomain'];
+    $ldapConf['adusesingledomain'] = $ldapauth['adusesingledomain'];
+    
+    $objLDAP = new ldapAuth($ldapConf);
+    if ($ldap_debug) { $objLDAP->ldap_debug = true; }
+    
+    if ($objLDAP->connect())
+    {
+        // we need to check for the kind of LDAP we are talking to here!
+        if ($ldapauth['ldaptype'] == 1 )
+        {
+            // we need to bind!
+            if (!$objLDAP->auth($ldapauth['rootdn'],$ldapauth['rootpass'],1,$ldapauth['addomain'],$ldapauth['adusesingledomain']))
+            {
+                $errmsg["auth"] = $lang['posixldapauth_could_not_bind_to_ad_check_credentials'];
+            }   
+        }
+        
+        if (!isset ($errmsg))
+        {
+            // get the groups
+            error_log(   __FILE__ . " " . __METHOD__ . " " . __LINE__ ." GOT TO THE GROUP SELECT ");
+            $ldapGroupList = $objLDAP->listGroups($ldapauth['ldaptype'],$ldapauth['ldapgroupcontainer']);
+            if (is_array($ldapGroupList)) {
+                $ldapGroupsFound = true;
+            } else { 
+                $ldapGroupsFound = false;
+            }
+        }
+        
+                
+    } else {
+        echo htmlspecialchars($lang['posixldapauth_connection_to_ldap_server_failed']); 
+    }
 
 }  
 else
 { 
-	 $enabled = "";
+     $enabled = "";
 }
 if ($ldapauth['createusers'])
   $createusers = "checked";
@@ -180,7 +180,7 @@ include "../../../include/header.php";
 
 ?>
 <script type="text/javascript">
-	
+    
 </script>
 <div class="BasicsBox"> 
 
@@ -192,113 +192,113 @@ include "../../../include/header.php";
 
     <form id="form1" name="form1" method="post" action="">
         <?php generateFormToken("form1"); ?>
-	<p><a href="posixldapauth_manual.pdf" target="_blank">Click here for the Manual</a></p>
+    <p><a href="posixldapauth_manual.pdf" target="_blank">Click here for the Manual</a></p>
       <p><label for="enable"><?php echo htmlspecialchars($lang['posixldapauth_enabled']) ?></label><input type="checkbox" name="enable" id="enable" accesskey="e" tabindex="1" <?php echo $enabled ?> /></p>
 
       <p><label for="ldapserver"><?php echo htmlspecialchars($lang['posixldapauth_ldap_server']) ?></label><input id="ldapserver" name="ldapserver" type="text" value="<?php echo escape($ldapauth['ldapserver']); ?>" size="30" />
       <label for="port">:</label><input name="port" id="port" type="text" value="<?php echo escape($ldapauth['port']); ?>" size="6" /></p>
-		
+        
       <fieldset>
         <legend><?php echo htmlspecialchars($lang['posixldapauth_ldap_information']) ?></legend>
-	  <table id='tableldaptype'>
-	  	<tr>
-	  		<th><label for="ldaptype"><?php echo htmlspecialchars($lang['posixldapauth_ldap_type']) ?></label></th>
-	  		<td>
-	  			<select id='ldaptype' name='ldaptype' style="width:150px" onclick='ldapsetDisplayFields()'>
-	  			<option value=0 <?php if($ldapauth['ldaptype'] == 0) {echo "selected"; } ?> ><?php echo htmlspecialchars($lang['posixldapauth_open_directory']) ?></option>
-	  			<option value=1 <?php if($ldapauth['ldaptype'] == 1) {echo "selected"; } ?> ><?php echo htmlspecialchars($lang['posixldapauth_active_directory']) ?></option>
-	  			</select>
-	  		</td>
-	  	</tr>
-	  
-	    <tr id="trootdn">
-	    	<th><label id='lrootdn' for="rootdn"><?php echo htmlspecialchars($lang['posixldapauth_ad_admin']) ?></label></th>
-	    	<td><input id="rootdn" name="rootdn" type="text" value="<?php if (isset($ldapauth['rootdn'])) { echo escape($ldapauth['rootdn']); }?>" size="30" /></td>
-	    </tr>
-	    <tr id="trootpass">
-	    	<th><label for="rootpass"><?php echo htmlspecialchars($lang['posixldapauth_ad_password']) ?></label></th>
-	    	<td><input id="rootpass" name="rootpass" type="password" value="<?php if (isset($ldapauth['rootpass'])) { echo escape($ldapauth['rootpass']); } ?>" size="30" /></td>
-	    </tr>
-	   	<tr id="taddomain">
-	   		<th><label for="addomain"><?php echo htmlspecialchars($lang['posixldapauth_ad_domain']) ?></label></th>
-	   		<td><input id="addomain"  name="addomain" type="text" value="<?php if (isset($ldapauth['addomain'])) { echo escape($ldapauth['addomain']); }?>" size="30" /></td>
-	   	</tr>
-	   	<tr id="tadusesingledomain">
-	   		<th><label for="adusesingledomain"><?php echo "Use Single Domain" ?></label></th>
-	   		<td>
-	   		<input  id="adusesingledomain"  name="adusesingledomain" type="checkbox" <?php  echo $adusesingledomain; ?> /></td>
-	   	</tr>
-	   	
-	   	
-	   	<tr id="tbasedn">
-	    	<th><label for="basedn"><?php echo htmlspecialchars($lang['posixldapauth_base_dn']) ?></label></th>
-	    	<td><input id="basedn" name="basedn" type="text" value="<?php echo escape($ldapauth['basedn']); ?>" size="50" /></td>
-	    </tr>
-	    <tr id="tldapusercontainer">
-	    	<th><label for="ldapusercontainer"><?php echo htmlspecialchars($lang['posixldapauth_user_container']) ?></label></th>
-	    	<td><input id="ldapusercontainer" name="ldapusercontainer" type="text" value="<?php echo escape($ldapauth['ldapusercontainer']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_this_is_added_to_base_dn']) ?></td>
-	    </tr>
-	       <tr id="tldapgroupcontainer">
-	    	<th><label for="ldapgroupcontainer"><?php echo htmlspecialchars($lang['posixldapauth_group_container']) ?></label></th>
-	    	<td><input id="ldapgroupcontainer" name="ldapgroupcontainer" type="text" value="<?php echo escape($ldapauth['ldapgroupcontainer']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_leave_blank_for_default_osx_server_mapping']) ?></td>
-	    </tr>
-	    <tr id="tldapmemberfield">
-	    	<th><label for="ldapmemberfield"><?php echo htmlspecialchars($lang['posixldapauth_member_field']) ?></label></th>
-	    	<td><input id="ldapmemberfield" name="ldapmemberfield" type="text" value="<?php echo escape($ldapauth['ldapmemberfield']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_use_to_overide_group_containers_member_field']) ?></td>
-	    </tr>
-	    <tr>
-	  		<th><label for="ldaptype"><?php echo htmlspecialchars($lang['posixldapauth_member_field_type']) ?></label></th>
-	  		<td>
-	  			<select id='ldapmemberfieldtype' name='ldapmemberfieldtype' style="width:150px">
-	  			<option value=0 <?php if($ldapauth['ldapmemberfieldtype'] == 0) {echo "selected"; } ?> ><?php echo htmlspecialchars($lang['posixldapauth_default']) ?></option>
-	  			<option value=1 <?php if($ldapauth['ldapmemberfieldtype'] == 1) {echo "selected"; } ?> ><?php echo htmlspecialchars($lang['posixldapauth_user_name']) ?></option>
-	  			<option value=2 <?php if($ldapauth['ldapmemberfieldtype'] == 2) {echo "selected"; } ?> ><?php echo htmlspecialchars($lang['posixldapauth_rdn']) ?></option>
-	  			</select> 
-	  			<?php echo htmlspecialchars($lang['posixldapauth_use_to_change_content_of_group_member_field']) ?>
-	  		</td>
-	  	</tr>
-	    <tr id="tloginfield">
-	    	<th><label for="loginfield"><?php echo htmlspecialchars($lang['posixldapauth_login_field']) ?></label></th>
-	    	<td><input id="loginfield" name="loginfield" type="text" value="<?php echo escape($ldapauth['loginfield']); ?>" size="30" /></td>
-	    </tr>
-	    <tr>
-	    	<th><label for="testConn"><?php echo htmlspecialchars($lang['posixldapauth_test_connection']) ?></label></th>
-	    	<td><button name="testConn" type="button" onclick="testLdapConn()">&nbsp;&nbsp;<?php echo htmlspecialchars($lang['posixldapauth_test']) ?>&nbsp;&nbsp;</button></td>
-	    </tr>
-	  </table>
-	</fieldset>
+      <table id='tableldaptype'>
+        <tr>
+            <th><label for="ldaptype"><?php echo htmlspecialchars($lang['posixldapauth_ldap_type']) ?></label></th>
+            <td>
+                <select id='ldaptype' name='ldaptype' style="width:150px" onclick='ldapsetDisplayFields()'>
+                <option value=0 <?php if($ldapauth['ldaptype'] == 0) {echo "selected"; } ?> ><?php echo htmlspecialchars($lang['posixldapauth_open_directory']) ?></option>
+                <option value=1 <?php if($ldapauth['ldaptype'] == 1) {echo "selected"; } ?> ><?php echo htmlspecialchars($lang['posixldapauth_active_directory']) ?></option>
+                </select>
+            </td>
+        </tr>
+      
+        <tr id="trootdn">
+            <th><label id='lrootdn' for="rootdn"><?php echo htmlspecialchars($lang['posixldapauth_ad_admin']) ?></label></th>
+            <td><input id="rootdn" name="rootdn" type="text" value="<?php if (isset($ldapauth['rootdn'])) { echo escape($ldapauth['rootdn']); }?>" size="30" /></td>
+        </tr>
+        <tr id="trootpass">
+            <th><label for="rootpass"><?php echo htmlspecialchars($lang['posixldapauth_ad_password']) ?></label></th>
+            <td><input id="rootpass" name="rootpass" type="password" value="<?php if (isset($ldapauth['rootpass'])) { echo escape($ldapauth['rootpass']); } ?>" size="30" /></td>
+        </tr>
+        <tr id="taddomain">
+            <th><label for="addomain"><?php echo htmlspecialchars($lang['posixldapauth_ad_domain']) ?></label></th>
+            <td><input id="addomain"  name="addomain" type="text" value="<?php if (isset($ldapauth['addomain'])) { echo escape($ldapauth['addomain']); }?>" size="30" /></td>
+        </tr>
+        <tr id="tadusesingledomain">
+            <th><label for="adusesingledomain"><?php echo "Use Single Domain" ?></label></th>
+            <td>
+            <input  id="adusesingledomain"  name="adusesingledomain" type="checkbox" <?php  echo $adusesingledomain; ?> /></td>
+        </tr>
+        
+        
+        <tr id="tbasedn">
+            <th><label for="basedn"><?php echo htmlspecialchars($lang['posixldapauth_base_dn']) ?></label></th>
+            <td><input id="basedn" name="basedn" type="text" value="<?php echo escape($ldapauth['basedn']); ?>" size="50" /></td>
+        </tr>
+        <tr id="tldapusercontainer">
+            <th><label for="ldapusercontainer"><?php echo htmlspecialchars($lang['posixldapauth_user_container']) ?></label></th>
+            <td><input id="ldapusercontainer" name="ldapusercontainer" type="text" value="<?php echo escape($ldapauth['ldapusercontainer']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_this_is_added_to_base_dn']) ?></td>
+        </tr>
+           <tr id="tldapgroupcontainer">
+            <th><label for="ldapgroupcontainer"><?php echo htmlspecialchars($lang['posixldapauth_group_container']) ?></label></th>
+            <td><input id="ldapgroupcontainer" name="ldapgroupcontainer" type="text" value="<?php echo escape($ldapauth['ldapgroupcontainer']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_leave_blank_for_default_osx_server_mapping']) ?></td>
+        </tr>
+        <tr id="tldapmemberfield">
+            <th><label for="ldapmemberfield"><?php echo htmlspecialchars($lang['posixldapauth_member_field']) ?></label></th>
+            <td><input id="ldapmemberfield" name="ldapmemberfield" type="text" value="<?php echo escape($ldapauth['ldapmemberfield']); ?>" size="30" /><?php echo " " . htmlspecialchars($lang['posixldapauth_use_to_overide_group_containers_member_field']) ?></td>
+        </tr>
+        <tr>
+            <th><label for="ldaptype"><?php echo htmlspecialchars($lang['posixldapauth_member_field_type']) ?></label></th>
+            <td>
+                <select id='ldapmemberfieldtype' name='ldapmemberfieldtype' style="width:150px">
+                <option value=0 <?php if($ldapauth['ldapmemberfieldtype'] == 0) {echo "selected"; } ?> ><?php echo htmlspecialchars($lang['posixldapauth_default']) ?></option>
+                <option value=1 <?php if($ldapauth['ldapmemberfieldtype'] == 1) {echo "selected"; } ?> ><?php echo htmlspecialchars($lang['posixldapauth_user_name']) ?></option>
+                <option value=2 <?php if($ldapauth['ldapmemberfieldtype'] == 2) {echo "selected"; } ?> ><?php echo htmlspecialchars($lang['posixldapauth_rdn']) ?></option>
+                </select> 
+                <?php echo htmlspecialchars($lang['posixldapauth_use_to_change_content_of_group_member_field']) ?>
+            </td>
+        </tr>
+        <tr id="tloginfield">
+            <th><label for="loginfield"><?php echo htmlspecialchars($lang['posixldapauth_login_field']) ?></label></th>
+            <td><input id="loginfield" name="loginfield" type="text" value="<?php echo escape($ldapauth['loginfield']); ?>" size="30" /></td>
+        </tr>
+        <tr>
+            <th><label for="testConn"><?php echo htmlspecialchars($lang['posixldapauth_test_connection']) ?></label></th>
+            <td><button name="testConn" type="button" onclick="testLdapConn()">&nbsp;&nbsp;<?php echo htmlspecialchars($lang['posixldapauth_test']) ?>&nbsp;&nbsp;</button></td>
+        </tr>
+      </table>
+    </fieldset>
 
-	<fieldset><legend><?php echo htmlspecialchars($lang['posixldapauth_resourcespace_configuration']) ?></legend>
-	  <table>
+    <fieldset><legend><?php echo htmlspecialchars($lang['posixldapauth_resourcespace_configuration']) ?></legend>
+      <table>
             <tr>
-            	<th><label for="usersuffix"><?php echo htmlspecialchars($lang['posixldapauth_user_suffix']) ?></label></th>
-            	<td><input name="usersuffix" type="text" value="<?php echo escape($ldapauth['usersuffix']); ?>" size="30" /></td>
+                <th><label for="usersuffix"><?php echo htmlspecialchars($lang['posixldapauth_user_suffix']) ?></label></th>
+                <td><input name="usersuffix" type="text" value="<?php echo escape($ldapauth['usersuffix']); ?>" size="30" /></td>
             </tr>
             <tr>
-            	<th><label for="createusers"><?php echo htmlspecialchars($lang['posixldapauth_create_users']) ?></label></th>
-            	<td><input name="createusers" type="checkbox" <?php echo $createusers; ?> /></td>
+                <th><label for="createusers"><?php echo htmlspecialchars($lang['posixldapauth_create_users']) ?></label></th>
+                <td><input name="createusers" type="checkbox" <?php echo $createusers; ?> /></td>
             </tr>
             <tbody id="ldapconf-cu">
-             	<tr><th><label for="groupbased"><?php echo htmlspecialchars($lang['posixldapauth_group_based_user_creation']) ?></label></th><td><input name="groupbased" type="checkbox" <?php echo $groupbased; ?> /></td></tr>
+                <tr><th><label for="groupbased"><?php echo htmlspecialchars($lang['posixldapauth_group_based_user_creation']) ?></label></th><td><input name="groupbased" type="checkbox" <?php echo $groupbased; ?> /></td></tr>
               <tbody id="group-false">
                 <tr><th><label for="newusergroup"><?php echo htmlspecialchars($lang['posixldapauth_new_user_group']) ?></label></th>
-        	  <td>
+              <td>
                     <select name="newusergroup" style="width:300px">
-        	      <?php
-        	      
-        		foreach ($usergroups as $usergroup){
-			  $ref = $usergroup['ref'];
-        		  echo '<option value="'.$ref.'"';
-			  if ($ref == $ldapauth['newusergroup'])
+                  <?php
+                  
+                foreach ($usergroups as $usergroup){
+              $ref = $usergroup['ref'];
+                  echo '<option value="'.$ref.'"';
+              if ($ref == $ldapauth['newusergroup'])
                             echo "selected";
 
-			  echo '>' . lang_or_i18n_get_translated($usergroup['name'], "usergroup-") . '</option>';
-        		}
-        		
+              echo '>' . lang_or_i18n_get_translated($usergroup['name'], "usergroup-") . '</option>';
+                }
+                
                       ?>
-		    </select>
+            </select>
                   </td>
-		</tr>
+        </tr>
               </tbody>
             </tbody>
           </table>
@@ -306,86 +306,86 @@ include "../../../include/header.php";
         <?php
         if ($enabled && !isset($errmsg))
         {
-	     		
-	     
-	        echo '<fieldset><legend>' . htmlspecialchars($lang['posixldapauth_group_mapping']) . '</legend>';
-	        
-	        // Check to see if we found any groups!
-	        if ($ldapGroupsFound)
-	        {
-	        	
-		        // here we display the group mapping for the LDAP user groups:
-		        echo "<table>";
-		        // header row
-		        echo '<tr><th>' . htmlspecialchars($lang['posixldapauth_group_name']) . '</th>';
-		        echo '<th>' . htmlspecialchars($lang['posixldapauth_map_to']) . '</th>';
-		        echo '<th>' . htmlspecialchars($lang['posixldapauth_enable_group']) . '</th>';
-		        echo "</tr>";
-		        
-		        // now display each group
-		        $tmpx = count($ldapGroupList);	
-				for ($i=0; $i < $tmpx; $i++) 
-				{
-					echo "<tr>";
-					echo '<td><input name="ldapGroupName[]" type="text" value="'. $ldapGroupList[$i]['cn'] . '" size="30" readonly="readonly"></td>';
-					echo "<td>";
-					$lGroupName = $ldapGroupList[$i]['cn'];
-					// create the usergroup list
-					echo '<select name="ldapmaptors['.$lGroupName.']">';
-		     		foreach ($usergroups as $usergroup)
-		     		{
-				 		$ref = $usergroup['ref'];
-	        		  	echo '<option value="'.$ref.'"';
-	        		  	// check mapping;
-	        		  	if (isset($ldapauth['groupmap'][$lGroupName]['rsGroup']))
-	        		  	{
-					  		if ($ref == $ldapauth['groupmap'][$lGroupName]['rsGroup'])
-		                    {
-		                          echo "selected";
-		                    }
-	        		  	}
-				  		echo '>' . lang_or_i18n_get_translated($usergroup['name'], "usergroup-") . '</option>';	
-	        		}
-	        		echo "</select>";
-					echo "</td>";
-					echo "<td>";
-					echo '<input name="ldapGroupEnable['.$lGroupName.']" type="checkbox" ';
-					// check to see if the enabled exists and if it has a value!
-					if (isset($ldapauth['groupmap'][$lGroupName]['enabled']))
-					{
-						if( $ldapauth['groupmap'][$lGroupName]['enabled']) 
-						{
-							echo "checked";	
-						}
-					}
-					echo ' />'; 
-					echo "</td>\r\n";
-					echo "</tr>\r\n";
-				}
-		        
-		        
-		        echo "</table>";
-		       
-	        } else {
-	        	
-	        	echo "<p>" . $ldapGroupList ."</p>"; 	
-	        }
-	        
-	         
-	        echo "</fieldset>";
+                
+         
+            echo '<fieldset><legend>' . htmlspecialchars($lang['posixldapauth_group_mapping']) . '</legend>';
+            
+            // Check to see if we found any groups!
+            if ($ldapGroupsFound)
+            {
+                
+                // here we display the group mapping for the LDAP user groups:
+                echo "<table>";
+                // header row
+                echo '<tr><th>' . htmlspecialchars($lang['posixldapauth_group_name']) . '</th>';
+                echo '<th>' . htmlspecialchars($lang['posixldapauth_map_to']) . '</th>';
+                echo '<th>' . htmlspecialchars($lang['posixldapauth_enable_group']) . '</th>';
+                echo "</tr>";
+                
+                // now display each group
+                $tmpx = count($ldapGroupList);  
+                for ($i=0; $i < $tmpx; $i++) 
+                {
+                    echo "<tr>";
+                    echo '<td><input name="ldapGroupName[]" type="text" value="'. $ldapGroupList[$i]['cn'] . '" size="30" readonly="readonly"></td>';
+                    echo "<td>";
+                    $lGroupName = $ldapGroupList[$i]['cn'];
+                    // create the usergroup list
+                    echo '<select name="ldapmaptors['.$lGroupName.']">';
+                    foreach ($usergroups as $usergroup)
+                    {
+                        $ref = $usergroup['ref'];
+                        echo '<option value="'.$ref.'"';
+                        // check mapping;
+                        if (isset($ldapauth['groupmap'][$lGroupName]['rsGroup']))
+                        {
+                            if ($ref == $ldapauth['groupmap'][$lGroupName]['rsGroup'])
+                            {
+                                  echo "selected";
+                            }
+                        }
+                        echo '>' . lang_or_i18n_get_translated($usergroup['name'], "usergroup-") . '</option>'; 
+                    }
+                    echo "</select>";
+                    echo "</td>";
+                    echo "<td>";
+                    echo '<input name="ldapGroupEnable['.$lGroupName.']" type="checkbox" ';
+                    // check to see if the enabled exists and if it has a value!
+                    if (isset($ldapauth['groupmap'][$lGroupName]['enabled']))
+                    {
+                        if( $ldapauth['groupmap'][$lGroupName]['enabled']) 
+                        {
+                            echo "checked"; 
+                        }
+                    }
+                    echo ' />'; 
+                    echo "</td>\r\n";
+                    echo "</tr>\r\n";
+                }
+                
+                
+                echo "</table>";
+               
+            } else {
+                
+                echo "<p>" . $ldapGroupList ."</p>";    
+            }
+            
+             
+            echo "</fieldset>";
         } else {
-        	
-        	if (isset($errmsg))
-        	{
-        		foreach ($errmsg as $msg)
-        		{
-        			echo str_replace("%msg%", $msg, htmlspecialchars($lang['posixldapauth_error-msg'])) . " <br>";
-        		}	
-        	}
+            
+            if (isset($errmsg))
+            {
+                foreach ($errmsg as $msg)
+                {
+                    echo str_replace("%msg%", $msg, htmlspecialchars($lang['posixldapauth_error-msg'])) . " <br>";
+                }   
+            }
         }
         ?>
         
-   		<input id="lang_status_error" name="lang_status_error" type="hidden" value="<?php echo escape($lang['posixldapauth_status_error_in']); ?>" size="30" />
+        <input id="lang_status_error" name="lang_status_error" type="hidden" value="<?php echo escape($lang['posixldapauth_status_error_in']); ?>" size="30" />
         <input id="lang_server_error" name="lang_server_erro" type="hidden" value="<?php echo escape($lang['posixldapauth_server_error']); ?>" size="30" />
         <input id="lang_passed" name="lang_passed" type="hidden" value="<?php echo escape($lang['posixldapauth_passed']); ?>" size="30" />
         <input id="lang_could_not_connect" name="lang_could_not_connect" type="hidden" value="<?php echo escape($lang['posixldapauth_could_not_connect_to_ldap_server']); ?>" size="30" />
@@ -394,12 +394,12 @@ include "../../../include/header.php";
         <input id="lang_test_failed" name="lang_test_failed" type="hidden" value="<?php echo escape($lang['posixldapauth_tests_failed_check_settings_and_test_again']); ?>" size="30" />
         
         <input type="submit" name="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;"/>
-		
+        
     </form>
-  </div>	
+  </div>    
 <script type="text/javascript">
-	ldapsetDisplayFields();
-	</script>
+    ldapsetDisplayFields();
+    </script>
 <?php
 
 include "../../../include/footer.php";

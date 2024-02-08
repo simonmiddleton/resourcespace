@@ -17,7 +17,7 @@ update_related_resource($resourcea,array($resourceb,$resourcec));
 $related = get_related_resources($resourcea);
 
 if(count($related) != 2 || !match_values($related,array($resourceb, $resourcec)))
-	{
+    {
     echo "SUBTEST A - ";
     return false;
     }
@@ -27,7 +27,7 @@ update_related_resource($resourcea,array($resourced));
 $related = get_related_resources($resourcea);
 
 if(count($related) != 3 || !match_values($related,array($resourceb, $resourcec, $resourced)))
-	{
+    {
     echo "SUBTEST B - ";
     return false;
     }
@@ -37,7 +37,7 @@ update_related_resource($resourcec,array($resourcea), false);
 $related = get_related_resources($resourcea);
 
 if(count($related) != 2 || !match_values($related,array($resourceb, $resourced)))
-	{
+    {
     echo "SUBTEST C - ";
     return false;
     }
@@ -48,7 +48,7 @@ $userpermissions = array("s","e0,e-1,e-2,z3");
 $success = update_related_resource($resourcea,$resourcec);
 $related = get_related_resources($resourcea);
 if($success || in_array($resourcec,$related))
-	{
+    {
     echo "SUBTEST D - ";
     return false;
     }

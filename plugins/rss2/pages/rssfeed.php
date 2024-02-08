@@ -62,14 +62,14 @@ function AddArticle($title, $link, $description, $optional = '')
     $out = '<?xml version="1.0" encoding="UTF-8" ?>' . "\n" . 
         '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' . "\n" . 
         '<channel>' . "\n";
-   	global $rss_ttl,$baseurl;
-   	$parameters=array();
-   	foreach ($_GET as $key=>$value){
-		$parameters[$key]=$value;
-	}
-	$parameters=http_build_query($parameters,'','&amp;');
-	global $baseurl;
-	
+    global $rss_ttl,$baseurl;
+    $parameters=array();
+    foreach ($_GET as $key=>$value){
+        $parameters[$key]=$value;
+    }
+    $parameters=http_build_query($parameters,'','&amp;');
+    global $baseurl;
+    
     $out .= "<title>$this->title</title>\n" .
         "<link>$this->link</link>\n" .
         "<description>$this->description</description>\n".

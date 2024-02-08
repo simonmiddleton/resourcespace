@@ -265,7 +265,7 @@ if ($saveaction != '' && enforcePostRequest(false))
         }
     else if (!$cropperestricted)
         {
-        $verb = $lang['cropped'];	
+        $verb = $lang['cropped'];   
 
         $imgactions["crop"]        = true;
         // Get jCrop selection info
@@ -495,8 +495,8 @@ if ($resource["has_image"]==1)
     }
 else
     {
-	echo $lang['noimagefound'];
-	exit;
+    echo $lang['noimagefound'];
+    exit;
     }
 
 include "../../../include/header.php";
@@ -561,7 +561,7 @@ renderBreadcrumbs($links_trail);
         </div>
     </div>
     <?php
-		
+        
     if(!$cropperestricted)
         {
         ?>
@@ -1040,7 +1040,7 @@ renderBreadcrumbs($links_trail);
         </script>
         <?php
         }
-        ?>	
+        ?>  
 
     <?php
     // Set up available actions 

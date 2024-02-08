@@ -51,7 +51,7 @@ jQuery(document).ready(function()
     });
 </script>
 <div class="BasicsBox">
-	<?php 
+    <?php 
     if($backurl=="")
         {?>
         <p>
@@ -64,29 +64,29 @@ jQuery(document).ready(function()
         render_top_page_error_style($result);
         }    
     ?>
-	<h1><?php echo htmlspecialchars($lang["cleanup_invalid_nodes"]) ?></h1>
+    <h1><?php echo htmlspecialchars($lang["cleanup_invalid_nodes"]) ?></h1>
 
-	<form method="post" class="FormWide" action="<?php echo $baseurl_short ?>pages/tools/cleanup_invalid_nodes.php" onsubmit="return CentralSpacePost(this,true);">
+    <form method="post" class="FormWide" action="<?php echo $baseurl_short ?>pages/tools/cleanup_invalid_nodes.php" onsubmit="return CentralSpacePost(this,true);">
      <?php generateFormToken("cleanup_invalid_nodes"); ?>
     <?php
     render_dropdown_question($lang["field"], "cleanupfield", array_column($validfields,"title","ref"),$cleanupfield,'',["input_class"=>"medwidth"]);    
     
     render_resource_type_selector_question($lang["property-resource_type"], "cleanuprestype","medwidth",false,$cleanuprestype[0] ?? 0);
     ?>
-	<div class="Question" >
-		<label for="dryrun" ><?php echo htmlspecialchars($lang["admin_resource_type_field_migrate_dry_run"]) ?></label>
-		<input type="checkbox" name="dryrun" value="true" <?php if($dryrun){echo" checked";} ?>>
-        <div class="clearerleft"> </div>
-	</div>
     <div class="Question" >
-		<input type="hidden" id="submitinput" name="submit" value="">
-		<input type="submit" name="submit" value="<?php echo escape($lang["action-submit-button-label"]) ?>" onclick="document.getElementById('submitinput').value='true';">
+        <label for="dryrun" ><?php echo htmlspecialchars($lang["admin_resource_type_field_migrate_dry_run"]) ?></label>
+        <input type="checkbox" name="dryrun" value="true" <?php if($dryrun){echo" checked";} ?>>
         <div class="clearerleft"> </div>
-	</div>
+    </div>
+    <div class="Question" >
+        <input type="hidden" id="submitinput" name="submit" value="">
+        <input type="submit" name="submit" value="<?php echo escape($lang["action-submit-button-label"]) ?>" onclick="document.getElementById('submitinput').value='true';">
+        <div class="clearerleft"> </div>
+    </div>
     
-	<div class="clearerleft"> </div>
+    <div class="clearerleft"> </div>
     
-	</form>
+    </form>
         
 </div>
 <?php

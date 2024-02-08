@@ -2,7 +2,7 @@
 
 function HookFeedbackAllToptoolbaradder()
     {
-    global $target,$baseurl,$lang;	
+    global $target,$baseurl,$lang;  
     ?>
     <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/plugins/feedback/pages/feedback.php"><?php echo $lang["feedback_user_survey"]?></a></li>
     <?php

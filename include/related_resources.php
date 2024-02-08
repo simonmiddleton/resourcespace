@@ -95,36 +95,36 @@ if ($enable_related_resources)
                     echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $uploadurl  . "\" onclick=\"return CentralSpaceLoad(this, true);\">" . LINK_CARET . htmlspecialchars($lang["upload"]) . "</a>";
                     }
                 }
-			else
-				{
-				// Standard table view
-				?>
-				<div class="clearerleft"></div>
-				<div class="item" id="RelatedResourceData">
-				<?php
-				if(in_array($rtype, $related_restypes) || ($related_type_upload_link && $edit_access))
-					{
-					?>
-					<div class="Listview ListviewTight" >
-						<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
-						<tbody>
-							<tr class="ListviewTitleStyle">
-								<td><h3><?php echo htmlspecialchars($restypename); ?></h3></td>		
-								<td><div class="ListTools"></div></td>                                    
-							</tr>
-							<?php
-								foreach($relatedresources as $relatedresource)
-									{
+            else
+                {
+                // Standard table view
+                ?>
+                <div class="clearerleft"></div>
+                <div class="item" id="RelatedResourceData">
+                <?php
+                if(in_array($rtype, $related_restypes) || ($related_type_upload_link && $edit_access))
+                    {
+                    ?>
+                    <div class="Listview ListviewTight" >
+                        <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+                        <tbody>
+                            <tr class="ListviewTitleStyle">
+                                <td><h3><?php echo htmlspecialchars($restypename); ?></h3></td>     
+                                <td><div class="ListTools"></div></td>                                    
+                            </tr>
+                            <?php
+                                foreach($relatedresources as $relatedresource)
+                                    {
                                     $related_resource_ref = (int) $relatedresource['ref'];
 
-									if($relatedresource['resource_type'] == $rtype)
-										{
-										$relatedtitle = (string) $relatedresource["field{$view_title_field}"];
-										echo "<tr id=\"relatedresource{$related_resource_ref}\" class=\"RelatedResourceRow\">";
-										echo "<td class=\"link\"><a href=\"{$baseurl_short}pages/view.php?ref={$related_resource_ref}\"  onClick=\"return ModalLoad(this,true);\" >" . htmlspecialchars($relatedtitle) . "</a></td>";
-										echo "<td>";
-										if($edit_access)
-											{
+                                    if($relatedresource['resource_type'] == $rtype)
+                                        {
+                                        $relatedtitle = (string) $relatedresource["field{$view_title_field}"];
+                                        echo "<tr id=\"relatedresource{$related_resource_ref}\" class=\"RelatedResourceRow\">";
+                                        echo "<td class=\"link\"><a href=\"{$baseurl_short}pages/view.php?ref={$related_resource_ref}\"  onClick=\"return ModalLoad(this,true);\" >" . htmlspecialchars($relatedtitle) . "</a></td>";
+                                        echo "<td>";
+                                        if($edit_access)
+                                            {
                                             ?>
                                             <div class="ListTools" >
                                                 <a href="#" 
@@ -137,15 +137,15 @@ if ($enable_related_resources)
                                                     return false;" >
                                                     <?php echo LINK_CARET . htmlspecialchars($lang["action-remove"]) ?></a></div>
                                             <?php
-											}
-										echo "</td>";	
-										echo "</tr>";	
-										$related_resources_shown++;
-										}
-									}
+                                            }
+                                        echo "</td>";   
+                                        echo "</tr>";   
+                                        $related_resources_shown++;
+                                        }
+                                    }
 
-								if($related_type_upload_link && $edit_access)
-									{
+                                if($related_type_upload_link && $edit_access)
+                                    {
                                     if($upload_then_edit)
                                         {
                                         $uploadurl = generateURL($baseurl . "/pages/upload_batch.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams)],["relateto"=>$ref]);
@@ -155,21 +155,21 @@ if ($enable_related_resources)
                                         $uploadurl = generateURL($baseurl . "/pages/edit.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams) . "#RelatedResources","ref"=>-$userref],["relateto"=>$ref]);
                                         }
 
-									echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $uploadurl . "\">" . LINK_CARET . htmlspecialchars($lang["upload"]) . "</a></div></td>";
-									}
-							?>
-						</tbody>
-						</table>
-					</div>
-					<?php
-					} ?>
-				</div><!-- end of RelatedResourceData -->
+                                    echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $uploadurl . "\">" . LINK_CARET . htmlspecialchars($lang["upload"]) . "</a></div></td>";
+                                    }
+                            ?>
+                        </tbody>
+                        </table>
+                    </div>
+                    <?php
+                    } ?>
+                </div><!-- end of RelatedResourceData -->
 <?php
-				}
-			
-			// We have displayed these, don't show them again later
-			$relatedtypes_shown[]=$rtype;
-			}
-		}
-	}
+                }
+            
+            // We have displayed these, don't show them again later
+            $relatedtypes_shown[]=$rtype;
+            }
+        }
+    }
 ?>

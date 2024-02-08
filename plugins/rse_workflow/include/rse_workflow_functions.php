@@ -126,7 +126,7 @@ if (!function_exists("rse_workflow_get_archive_states")){
     
 if (!function_exists("rse_workflow_delete_state")){
     function rse_workflow_delete_state($state,$newstate)
-        {		
+        {       
         ps_query("UPDATE resource SET archive = ? WHERE archive = ?",array("i",$newstate,"i",$state));
         ps_query("DELETE FROM archive_states WHERE code = ?",array("s",$state));
         clear_query_cache("workflow");

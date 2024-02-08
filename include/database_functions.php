@@ -127,9 +127,9 @@ function errorhandler($errno, $errstr, $errfile, $errline)
 
         // Create a stream context with a low timeout.
         $ctx = stream_context_create(array('http' => array('method' => 'POST', 'timeout' => 2, 'header'=> "Content-type: application/x-www-form-urlencoded\r\nContent-Length: " . strlen($postdata),'content' => $postdata)));
-		
+        
         // Attempt to POST but suppress errors; we don't want any errors here and the attempt must be aborted quickly.
-		echo @file_get_contents($log_error_messages_url,0,$ctx);
+        echo @file_get_contents($log_error_messages_url,0,$ctx);
         }
 
     // Optionally e-mail errors to a configured address
@@ -307,25 +307,25 @@ function sql_connect()
 * @return boolean Returns TRUE on success or FALSE on failure.
 */
 function db_begin_transaction($name)
-	{
-	global $db;
+    {
+    global $db;
 
     if(!is_string($name))
         {
         $name = null;
         }
 
-	if(function_exists('mysqli_begin_transaction'))
-		{
+    if(function_exists('mysqli_begin_transaction'))
+        {
         db_set_connection_mode('read_write');
         $GLOBALS['sql_transaction_in_progress'] = true;
 
         debug("SQL: begin transaction '{$name}'");
-		return mysqli_begin_transaction($db["read_write"], 0, $name);
-		}
+        return mysqli_begin_transaction($db["read_write"], 0, $name);
+        }
 
     return false;
-	}
+    }
 
 
 /**
@@ -336,25 +336,25 @@ function db_begin_transaction($name)
 * @return boolean Returns TRUE on success or FALSE on failure.
 */
 function db_end_transaction($name)
-	{
-	global $db;
+    {
+    global $db;
 
     if(!is_string($name))
         {
         $name = null;
         }
 
-	if(function_exists('mysqli_commit'))
-		{
+    if(function_exists('mysqli_commit'))
+        {
         unset($GLOBALS['sql_transaction_in_progress']);
         db_clear_connection_mode();
 
         debug("SQL: commit transaction '{$name}'");
-		return mysqli_commit($db["read_write"], 0, $name);
-		}
+        return mysqli_commit($db["read_write"], 0, $name);
+        }
 
     return false;
-	}
+    }
 
 /**
 * Tell the database to rollback the current transaction.
@@ -364,35 +364,35 @@ function db_end_transaction($name)
 * @return boolean Returns TRUE on success or FALSE on failure.
 */
 function db_rollback_transaction($name)
-	{
-	global $db;
+    {
+    global $db;
 
     if(!is_string($name))
         {
         $name = null;
         }
 
-	if(function_exists('mysqli_rollback'))
-		{
+    if(function_exists('mysqli_rollback'))
+        {
         unset($GLOBALS['sql_transaction_in_progress']);
         db_clear_connection_mode();
 
         debug("SQL: rollback transaction '{$name}'");
-		return mysqli_rollback($db["read_write"], 0, $name);
-		}
+        return mysqli_rollback($db["read_write"], 0, $name);
+        }
 
     return false;
-	}        
+    }        
 
 /**
  * Execute a prepared statement and return the results as an array.
  * 
- * @param  string $sql						The SQL to execute
- * @param  string $parameters				An array of parameters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s","This is the first SQL parameter and is a string","d","This is the second parameter which is a double")
- * @param  string $cache						Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
- * @param  integer $fetchrows					set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
- * @param  boolean $dbstruct					Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
- * @param  integer $logthis					No longer used
+ * @param  string $sql                      The SQL to execute
+ * @param  string $parameters               An array of parameters used in the SQL in the order: type, value, type, value... and so on. Types are as follows: i - integer, d - double, s - string, b - BLOB. Example: array("s","This is the first SQL parameter and is a string","d","This is the second parameter which is a double")
+ * @param  string $cache                        Disk based caching - cache the results on disk, if a cache group is specified. The group allows selected parts of the cache to be cleared by certain operations, for example clearing all cached site content whenever site text is edited.
+ * @param  integer $fetchrows                   set we don't have to loop through all the returned rows. We just fetch $fetchrows row but pad the array to the full result set size with empty values.
+ * @param  boolean $dbstruct                    Set to false to prevent the dbstruct being checked on an error - only set by operations doing exactly that to prevent an infinite loop
+ * @param  integer $logthis                 No longer used
  * @param  boolean $reconnect
  * @param  mixed $fetch_specific_columns
  * @return array
@@ -402,7 +402,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
     global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
     $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_enabled,
     $query_cache_already_completed_this_time,$prepared_statement_cache;
-	
+    
     // Check cache for this query
     $cache_write=false;
     $serialised_query=$sql . ":" . serialize($parameters); // Serialised query needed to differentiate between different queries.
@@ -609,24 +609,24 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
         }
 
     if ($config_show_performance_footer){
-    	# Stats
-   		# Log performance data		
-		global $querytime,$querylog;
-		
-		$time_total=(microtime(true) - $time_start);
-		if (isset($querylog[$sql]))
-			{
-			$querylog[$sql]['dupe']=$querylog[$sql]['dupe']+1;
-			$querylog[$sql]['time']=$querylog[$sql]['time']+$time_total;
-			}
-		else
-			{
-			$querylog[$sql]['dupe']=1;
-			$querylog[$sql]['time']=$time_total;
-			}	
-		$querytime += $time_total;
-	}
-	
+        # Stats
+        # Log performance data      
+        global $querytime,$querylog;
+        
+        $time_total=(microtime(true) - $time_start);
+        if (isset($querylog[$sql]))
+            {
+            $querylog[$sql]['dupe']=$querylog[$sql]['dupe']+1;
+            $querylog[$sql]['time']=$querylog[$sql]['time']+$time_total;
+            }
+        else
+            {
+            $querylog[$sql]['dupe']=1;
+            $querylog[$sql]['time']=$time_total;
+            }   
+        $querytime += $time_total;
+    }
+    
     $return_rows=array();
     if ($error!="")
         {
@@ -636,11 +636,11 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
 
         if ($error=="Server shutdown in progress")
             {
-            echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";        	
+            echo "<span class=error>Sorry, but this query would return too many results. Please try refining your query by adding addition keywords or search parameters.<!--$sql--></span>";           
             }
         elseif (substr($error,0,15)=="Too many tables")
             {
-            echo "<span class=error>Sorry, but this query contained too many keywords. Please try refining your query by removing any surplus keywords or search parameters.<!--$sql--></span>";        	
+            echo "<span class=error>Sorry, but this query contained too many keywords. Please try refining your query by removing any surplus keywords or search parameters.<!--$sql--></span>";            
             }
         elseif (strpos($error,"has gone away")!==false && $reconnect)
             {
@@ -682,7 +682,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
         }
     elseif ($result === true)
         {
-		return array();		// no result set, (query was insert, update etc.) - simply return empty array.
+        return array();     // no result set, (query was insert, update etc.) - simply return empty array.
         }
 
     if($cache_write)
@@ -723,8 +723,8 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
     COMMENTED - this should no longer be needed; it was added for search results however in that situation a separate count() query
     should be executed first.
 
-	# If we haven't returned all the rows ($fetchrows isn't -1) then we need to fill the array so the count
-	# is still correct (even though these rows won't be shown).
+    # If we haven't returned all the rows ($fetchrows isn't -1) then we need to fill the array so the count
+    # is still correct (even though these rows won't be shown).
     if(count($result) < $query_returned_row_count)
         {
         // array_pad has a hardcoded limit of 1,692,439 elements. If we need to pad the results more than that, we do it in
@@ -788,19 +788,19 @@ function ps_value($query, $parameters, $default, $cache="")
 * @return array
 */
 function ps_array($query,$parameters=array(),$cache="")
-	{
-	$return = array();
+    {
+    $return = array();
 
     db_set_connection_mode("read_only");
     $result = ps_query($query, $parameters, $cache, -1, true, 0, true, false);
 
     for($n = 0; $n < count($result); $n++)
-    	{
-    	$return[] = $result[$n]["value"];
-    	}
+        {
+        $return[] = $result[$n]["value"];
+        }
 
     return $return;
-	}
+    }
 
 
 /**
@@ -809,20 +809,20 @@ function ps_array($query,$parameters=array(),$cache="")
  * @return integer
  */
 function sql_insert_id()
-	{
+    {
     global $db;
     return mysqli_insert_id($db["read_write"]);
-	}
+    }
 
-	
+    
 /**
  * Returns the location of the query cache files
  *
  * @return string
  */
 function get_query_cache_location()
-	{
-	global $storagedir,$tempdir;
+    {
+    global $storagedir,$tempdir;
     if(!is_null($tempdir))
         {
         return $tempdir . "/querycache";
@@ -831,9 +831,9 @@ function get_query_cache_location()
         {
         return $storagedir . "/tmp/querycache";
         }
-	}
+    }
 
-	
+    
 /**
  * Clear all cached queries for cache group $cache
  * 
@@ -876,7 +876,7 @@ function clear_query_cache($cache)
  * @return void
  */
 function check_db_structs($verbose=false)
-	{
+    {
     global $lang;
     // Ensure two processes are not being executed at the same time (e.g. during an upgrade)
     if(is_process_lock('database_update_in_progress'))
@@ -890,15 +890,15 @@ function check_db_structs($verbose=false)
     CheckDBStruct("dbstruct",$verbose);
     
     // Check the structure of all active plugins.
-	global $plugins;
-	for ($n=0;$n<count($plugins);$n++)
-		{
-		CheckDBStruct("plugins/" . $plugins[$n] . "/dbstruct");
-		}
+    global $plugins;
+    for ($n=0;$n<count($plugins);$n++)
+        {
+        CheckDBStruct("plugins/" . $plugins[$n] . "/dbstruct");
+        }
     hook("checkdbstruct");
     
     clear_process_lock('database_update_in_progress');
-	}
+    }
 
 /**
  * Check the database structure against the text files stored in $path.
@@ -917,7 +917,7 @@ function CheckDBStruct($path,$verbose=false)
         $path=dirname(__FILE__) . "/../" . $path; # Make sure this works when called from non-root files..
         if (!file_exists($path)) {return false;}
         }
-	
+    
     # Tables first.
     # Load existing tables list
     $ts = ps_query("show tables", [], '', -1, false);
@@ -1059,7 +1059,7 @@ function CheckDBStruct($path,$verbose=false)
                     $joins=get_resource_table_joins();
                     for ($m=0;$m<count($joins);$m++)
                         {
-                        # Look for this column in the existing columns.	
+                        # Look for this column in the existing columns. 
                         $found=false;
 
                         for ($n=0;$n<count($existing);$n++)
@@ -1093,7 +1093,7 @@ function CheckDBStruct($path,$verbose=false)
                                     { 
                                     $found=true;
                                     $existingcoltype=strtoupper($existing[$n]["Type"]);
-                                    $basecoltype=strtoupper(str_replace("§",",",$col[1]));									
+                                    $basecoltype=strtoupper(str_replace("§",",",$col[1]));                                  
                                     # Check the column is of the correct type
                                     preg_match('/\s*(\w+)\s*\((\d+)\)/i',$basecoltype,$matchbase);
                                     preg_match('/\s*(\w+)\s*\((\d+)\)/i',$existingcoltype,$matchexisting);
@@ -1132,7 +1132,7 @@ function CheckDBStruct($path,$verbose=false)
                                 if ($col[3]=="PRI") {$sql.=" primary key";}
                                 if ($col[5]=="auto_increment") {$sql.=" auto_increment ";}
                                 ps_query($sql, [], '', -1, false);
-                                }	
+                                }   
                             }
                         }
                     }

@@ -11,7 +11,7 @@ function HookStencilvgViewAfterresourceactions (){
         }
  
     if ($access==0 && strtoupper($resource['file_extension'])=="SVG")
-	{
+    {
         $urlparams = array(
             "ref"       =>  $ref,
             "search"    =>  $search,

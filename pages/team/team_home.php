@@ -14,19 +14,19 @@ $overquota=overquota();
 if (!file_exists($storagedir)) {mkdir($storagedir,0777);}
 
 if (isset($disksize)) # Use disk quota rather than real disk size
-	{
-	$avail=$disksize * 1000 * 1000 * 1000;
-	$used=get_total_disk_usage();
-	$free=$avail-$used;
-	}
+    {
+    $avail=$disksize * 1000 * 1000 * 1000;
+    $used=get_total_disk_usage();
+    $free=$avail-$used;
+    }
 else
-	{		
-	$avail=disk_total_space($storagedir);
-	$free=disk_free_space($storagedir);
-	$used=$avail-$free;
-	}
+    {       
+    $avail=disk_total_space($storagedir);
+    $free=disk_free_space($storagedir);
+    $used=$avail-$free;
+    }
 if ($free<0) {$free=0;}
-		
+        
 include "../../include/header.php";
 ?>
 
@@ -38,48 +38,48 @@ include "../../include/header.php";
     ?><p><?php echo text("introtext");render_help_link('resourceadmin/quick-start-guide');?></p><?php 
     }?>
   
-	<div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
-	<ul>
-	
-	<?php if (checkperm("c")) { 
-		if ($overquota)
-			{
-			?><li class="overquota"><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo htmlspecialchars($lang["manageresources"])?> : <strong><?php echo htmlspecialchars($lang["manageresources-overquota"])?></strong></li><?php
-			}
-		else
-			{
-			?><li><a href="<?php echo $baseurl_short?>pages/team/team_resource.php"
-				<?php if (getval("modal","")!="")
-				  {
-				  # If a modal, open in the same modal
-				  ?>
-				  onClick="return ModalLoad(this,true,true,'right');"
+    <div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
+    <ul>
+    
+    <?php if (checkperm("c")) { 
+        if ($overquota)
+            {
+            ?><li class="overquota"><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo htmlspecialchars($lang["manageresources"])?> : <strong><?php echo htmlspecialchars($lang["manageresources-overquota"])?></strong></li><?php
+            }
+        else
+            {
+            ?><li><a href="<?php echo $baseurl_short?>pages/team/team_resource.php"
+                <?php if (getval("modal","")!="")
+                  {
+                  # If a modal, open in the same modal
+                  ?>
+                  onClick="return ModalLoad(this,true,true,'right');"
 <?php
-				  }
-				else
-				  { ?>
-				  onClick="return CentralSpaceLoad(this,true);"
-				  <?php
-				  }
-				?>
-			
-			><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo $lang["manageresources"]?></a></li><?php
-			}
- 		}
- 	?>
-				
-	<?php if (checkperm("R")) { ?><li><a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i><br /><?php echo $lang["managerequestsorders"]?>
+                  }
+                else
+                  { ?>
+                  onClick="return CentralSpaceLoad(this,true);"
+                  <?php
+                  }
+                ?>
+            
+            ><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo $lang["manageresources"]?></a></li><?php
+            }
+        }
+    ?>
+                
+    <?php if (checkperm("R")) { ?><li><a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i><br /><?php echo $lang["managerequestsorders"]?>
         <?php
         $condition = "";$params=array();
         if (checkperm("Rb")) {$condition = "and assigned_to=?";$params[]="i";$params[]=$userref;} # Only show pending for this user?
         $pending = ps_value("select count(*) value from request where status = 0 $condition",$params,0);
         if ($pending>0)
-		  {
-		  ?>
-		  &nbsp;<span class="Pill"><?php echo $pending ?></span>
-		  <?php
-		  }
-		?>
+          {
+          ?>
+          &nbsp;<span class="Pill"><?php echo $pending ?></span>
+          <?php
+          }
+        ?>
         </a>
     </li><?php } ?>
 
@@ -130,37 +130,37 @@ include "../../include/header.php";
     
     <li><a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-table"></i><br /><?php echo $lang["viewreports"]?></a></li>
 
-   	<?php hook("customteamfunction")?>
-	
-	<?php
-	# Get failed job count
-	$pending = count(job_queue_get_jobs("",STATUS_ERROR, 0));
-	# Include a link to the System Setup area for those with the appropriate permissions.
-	if (checkperm("a")) { ?>
+    <?php hook("customteamfunction")?>
+    
+    <?php
+    # Get failed job count
+    $pending = count(job_queue_get_jobs("",STATUS_ERROR, 0));
+    # Include a link to the System Setup area for those with the appropriate permissions.
+    if (checkperm("a")) { ?>
 
-	<li><a href="<?php echo $baseurl_short?>pages/admin/admin_home.php"
-	<?php if (getval("modal","")!="")
-	  {
-	  # If a modal, open in the same modal
-	  ?>
-	  onClick="return ModalLoad(this,true,true,'right');"
+    <li><a href="<?php echo $baseurl_short?>pages/admin/admin_home.php"
+    <?php if (getval("modal","")!="")
+      {
+      # If a modal, open in the same modal
+      ?>
+      onClick="return ModalLoad(this,true,true,'right');"
 <?php
-	  }
-	else
-	  { ?>
-	  onClick="return CentralSpaceLoad(this,true);"
-	  <?php
-	  }
-	?>
-	><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["systemsetup"]?></a>
-	<br><span class="Pill <?php echo ($pending == 0)? 'DisplayNone' : '' ?>"><?php echo $pending;?></span>
-	</li>
-	<?php hook("customteamfunctionadmin")?>
-	<?php } ?>
+      }
+    else
+      { ?>
+      onClick="return CentralSpaceLoad(this,true);"
+      <?php
+      }
+    ?>
+    ><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["systemsetup"]?></a>
+    <br><span class="Pill <?php echo ($pending == 0)? 'DisplayNone' : '' ?>"><?php echo $pending;?></span>
+    </li>
+    <?php hook("customteamfunctionadmin")?>
+    <?php } ?>
 
-	</ul>
-	</div>
-	
+    </ul>
+    </div>
+    
 <p class="clearerleft"><i aria-hidden="true" class="fa fa-fw fa-hdd-o"></i> <?php echo $lang["diskusage"]?>: <b><?php echo round(($avail?$used/$avail:0)*100,0)?>%</b>
 &nbsp;&nbsp;&nbsp;<span class="sub"><?php echo formatfilesize($used)?> / <?php echo formatfilesize($avail)?></span>
 </p>

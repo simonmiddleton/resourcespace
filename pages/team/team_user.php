@@ -146,9 +146,9 @@ include "../../include/header.php";
         $users      = sql_limit_with_total_count($users_sql,$per_page,$offset);
         $results    = $users["total"];
         }
-    $users  	= $users["data"];
-    $totalpages	=ceil($results/$per_page);
-    $curpage	=floor($offset/$per_page)+1;
+    $users      = $users["data"];
+    $totalpages =ceil($results/$per_page);
+    $curpage    =floor($offset/$per_page)+1;
 
     $url=generateURL(
         $baseurl_short . "pages/team/team_user.php",
@@ -175,7 +175,7 @@ include "../../include/header.php";
 
     ?>
 
-    <div class="TopInpageNav"><div class="TopInpageNavLeft"><?php echo $atoz?>	<div class="InpageNavLeftBlock"><?php echo htmlspecialchars($lang["resultsdisplay"])?>:
+    <div class="TopInpageNav"><div class="TopInpageNavLeft"><?php echo $atoz?>  <div class="InpageNavLeftBlock"><?php echo htmlspecialchars($lang["resultsdisplay"])?>:
         <?php 
         for($n=0;$n<count($list_display_array);$n++)
             {
@@ -398,6 +398,6 @@ if ($user_purge)
 $active=get_active_users();
 for ($n=0;$n<count($active);$n++) {if($n>0) {echo", ";}echo "<b><a href='" . $baseurl . "/pages/team/team_user_edit.php?ref=" . $active[$n]["ref"] . "&backurl=" . urlencode($url . "&offset=" . $offset) . "' onClick='return CentralSpaceLoad(this,true);'>" . htmlspecialchars($active[$n]["username"]) . "</a></b> (" . $active[$n]["t"] . ")";}
 ?>
-</div><div class="clearerleft"> </div></div></div>	
+</div><div class="clearerleft"> </div></div></div>  
 <?php } // end hook("replaceusersonline")
 include "../../include/footer.php";

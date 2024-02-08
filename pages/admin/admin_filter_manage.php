@@ -4,9 +4,9 @@ include "../../include/db.php";
 include "../../include/authenticate.php";
 
 if (!checkperm("a"))
-	{
-	exit ("Permission denied.");
-	}
+    {
+    exit ("Permission denied.");
+    }
 
 $filterorder        = getval("filterorder","ref");
 $filtersort         = getval("filtersort", "ASC");
@@ -69,7 +69,7 @@ include "../../include/header.php";
 
             renderBreadcrumbs($links_trail);
             ?>
-            	
+                
             <div class="Listview">
             <table id="filter_list_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
             <tbody>

@@ -43,7 +43,7 @@ include "../../include/header.php";
 
 <div class="Question"><label><?php echo htmlspecialchars($lang["relatedkeywords"])?></label><textarea name="related" class="stdwidth" rows=5 cols=50><?php echo htmlspecialchars($related)?></textarea><div class="clearerleft"></div></div>
 
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["save"])?>&nbsp;&nbsp;" />
 </div>
 </form>

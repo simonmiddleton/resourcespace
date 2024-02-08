@@ -45,7 +45,7 @@ include "../../include/header.php";
 
             $messages=array();
             // If no messages get out of here with a message
-            if (!message_get($messages,$userref,true,$sort,$msg_order_by))		
+            if (!message_get($messages,$userref,true,$sort,$msg_order_by))      
                 {
                 ?>
                 </ul>
@@ -65,7 +65,7 @@ include "../../include/header.php";
             $unread = false;
 
             // If there are unread messages show option to mark all as read
-            foreach ($messages as $message)		
+            foreach ($messages as $message)     
                 {
                 if ($message['seen']==0)
                     {

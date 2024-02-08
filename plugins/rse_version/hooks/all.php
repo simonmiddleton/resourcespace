@@ -13,9 +13,9 @@ function HookRse_VersionAllBeforeremoveexistingfile($ref)
     $old_extension=ps_value("SELECT file_extension value from resource where ref=?",array("i",$ref),"");
 
     if ($old_extension!="")
-    	{
-    	$old_path=get_resource_path($ref,true,"",true,$old_extension);
-    	if (file_exists($old_path))
+        {
+        $old_path=get_resource_path($ref,true,"",true,$old_extension);
+        if (file_exists($old_path))
             {
             $alt_file=add_alternative_file($ref,'','','',$old_extension,0,'');
             $new_path = get_resource_path($ref, true, '', true, $old_extension, -1, 1, false, "", $alt_file);
@@ -34,7 +34,7 @@ function HookRse_VersionAllBeforeremoveexistingfile($ref)
             global $previous_file_alt_ref;
             $previous_file_alt_ref=$alt_file;
             }
-    	}
+        }
     }
 
     

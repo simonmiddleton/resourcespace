@@ -3,7 +3,7 @@
 function HookRefineresultsSearchSearch_header_after_actions()
     {
   global $baseurl_short, $lang, $k, $search, $parameters_string, $result, $collections;
-	
+    
     $results = 0;
     if(is_array($result))
         {
@@ -22,7 +22,7 @@ function HookRefineresultsSearchSearch_header_after_actions()
         $s = explode(' ', $search);
         $default_search = str_replace(',','',$s[0]);
         }
-	
+    
     // Search within these results option
     if ($results > 0)
         {

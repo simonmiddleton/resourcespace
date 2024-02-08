@@ -4,9 +4,9 @@ include "../../include/authenticate.php";
 include "../../include/ajax_functions.php";
 
 if (!checkperm("a"))
-	{
-	exit ("Permission denied.");
-	}
+    {
+    exit ("Permission denied.");
+    }
 
 $ref=getval("ref","");
 $offset=getval("offset",0,true);
@@ -44,7 +44,7 @@ if ($filter_by_permissions)
 $admin_group_permissions_url = generateURL("{$baseurl_short}pages/admin/admin_group_permissions.php", $url_params);
 
 if ($save !== '' && $copy_from === '' && enforcePostRequest(getval('ajax', '') == 'true'))
-	{
+    {
     $group = get_usergroup($ref);
     if (
         $group !== false
@@ -99,7 +99,7 @@ if ($save !== '' && $copy_from === '' && enforcePostRequest(getval('ajax', '') =
     ps_query("UPDATE usergroup SET permissions = ? WHERE ref = ?", ["s",$perms_csv, "i",$ref]);
 
     ajax_send_response(200, ajax_response_ok_no_data());
-	}
+    }
 else if ($save !== '' && $copy_from !== '' && enforcePostRequest(getval('ajax', '') == 'true'))
     {
     copy_usergroup_permissions($copy_from,$ref);
@@ -108,7 +108,7 @@ else if ($save !== '' && $copy_from !== '' && enforcePostRequest(getval('ajax', 
 $group=get_usergroup($ref);
 if(isset($group['inherit']) && is_array($group['inherit']) && in_array("permissions",$group['inherit'])){exit($lang["error-permissiondenied"]);}
 $permissions=trim_array(explode(",",(string)$group["permissions"]));
-$permissions_done=array();	
+$permissions_done=array();  
 
 include "../../include/header.php";
 ?>
@@ -119,7 +119,7 @@ $links_trail = array(
     array(
         'title' => $lang["systemsetup"],
         'href'  => $baseurl_short . "pages/admin/admin_home.php",
-		'menu' =>  true
+        'menu' =>  true
     ),
     array(
         'title' => $lang["page-title_user_group_management"],
@@ -129,16 +129,16 @@ $links_trail = array(
         'title' => $lang["page-title_user_group_management_edit"],
         'href'  => generateURL("{$baseurl_short}pages/admin/admin_group_management_edit.php", $url_params),
     ),
-	array(
-		'title' => $lang["page-title_user_group_permissions_edit"] . " - " . htmlspecialchars($group["name"])
-	)
+    array(
+        'title' => $lang["page-title_user_group_permissions_edit"] . " - " . htmlspecialchars($group["name"])
+    )
 );
 
 renderBreadcrumbs($links_trail);
 ?>
-	<p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>	
+    <p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>   
     <?php if(getval("submitted", false) == true){?><div class="PageInformal"><?php echo htmlspecialchars($lang['changessaved']);?></div><?php }?>
-    <form method="post" id="copypermissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="return CentralSpacePost(this,true);">	
+    <form method="post" id="copypermissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="return CentralSpacePost(this,true);">   
         <?php generateFormToken("permissions"); ?>
         <input type="hidden" name="save" value="1">
 
@@ -149,26 +149,26 @@ renderBreadcrumbs($links_trail);
         </div>
     </form>
 
-    <form method="post" id="permissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="event.preventDefault();">	
+    <form method="post" id="permissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="event.preventDefault();">   
     <?php
-	if ($offset) 
-		{
+    if ($offset) 
+        {
         ?>
         <input type="hidden" name="offset" value="<?php echo escape($offset); ?>">
         <?php
         }
-	if ($order_by) 
-		{
+    if ($order_by) 
+        {
         ?>
         <input type="hidden" name="order_by" value="<?php echo escape($order_by); ?>">
         <?php
         }
         ?>
         <div class="Listview">
-			<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
-				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader"><?php echo htmlspecialchars($lang["searching_and_access"]) ?></td>
-				</tr>
+            <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+                <tr class="ListviewTitleStyle">
+                    <td colspan=3 class="permheader"><?php echo htmlspecialchars($lang["searching_and_access"]) ?></td>
+                </tr>
 <?php
 DrawOption("s", $lang["searchcapability"]);
 DrawOption("v", $lang["access_to_restricted_and_confidential_resources"], false);
@@ -176,14 +176,14 @@ DrawOption("v", $lang["access_to_restricted_and_confidential_resources"], false)
 # ------------ View access to workflow states
 
 for ($n=-2;$n<=3;$n++)
-	{
-	DrawOption("z" . $n, $lang["hide_view_access_to_workflow_state"] . " '" . $lang["status" . $n] . "'", false);
-	}
+    {
+    DrawOption("z" . $n, $lang["hide_view_access_to_workflow_state"] . " '" . $lang["status" . $n] . "'", false);
+    }
 
 foreach ($additional_archive_states as $additional_archive_state)
-	{
-	DrawOption("z" . $additional_archive_state, $lang["hide_view_access_to_workflow_state"] . " '" . (isset($lang["status" . $additional_archive_state])?$lang["status" . $additional_archive_state]:$additional_archive_state) . "'", false);
-	}
+    {
+    DrawOption("z" . $additional_archive_state, $lang["hide_view_access_to_workflow_state"] . " '" . (isset($lang["status" . $additional_archive_state])?$lang["status" . $additional_archive_state]:$additional_archive_state) . "'", false);
+    }
 
 DrawOption("g", $lang["restrict_access_to_all_available_resources"], true);
 
@@ -201,53 +201,53 @@ foreach($workflow_states as $workflow_state_number)
 DrawOption("q", $lang["can_make_resource_requests"], false);
 DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
-?>				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader"><?php echo $lang["metadatafields"] ?></td>
-				</tr>
+?>              <tr class="ListviewTitleStyle">
+                    <td colspan=3 class="permheader"><?php echo $lang["metadatafields"] ?></td>
+                </tr>
 <?php
 
 # ------------ View access to fields
 DrawOption("f*", $lang["can_see_all_fields"], false, true);
 $fields=ps_query("select " . columns_in("resource_type_field") . " from resource_type_field order by active desc,order_by", array(), "schema");
 foreach ($fields as $field)
-	{
-	if (!in_array("f*",$permissions))
-		{
-		# Render disabled fields with strikethrough
-		$fieldprefix="";$fieldsuffix="";
-		if ($field["active"]==0) {$fieldprefix="<span class=FieldDisabled>";$fieldsuffix="</span>";}
+    {
+    if (!in_array("f*",$permissions))
+        {
+        # Render disabled fields with strikethrough
+        $fieldprefix="";$fieldsuffix="";
+        if ($field["active"]==0) {$fieldprefix="<span class=FieldDisabled>";$fieldsuffix="</span>";}
 
-		DrawOption("f" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_see_field"] . " '" . $fieldprefix . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . $fieldsuffix . "'" . (($field["name"]=="")?"":"<em> (" . htmlspecialchars($field["name"]) . ")</em>"));
-		}
-	else
-		{
-		# Add it to the 'done' list so it is discarded.
-		$permissions_done[]="f" . $field["ref"];
-		}
-	}
+        DrawOption("f" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_see_field"] . " '" . $fieldprefix . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . $fieldsuffix . "'" . (($field["name"]=="")?"":"<em> (" . htmlspecialchars($field["name"]) . ")</em>"));
+        }
+    else
+        {
+        # Add it to the 'done' list so it is discarded.
+        $permissions_done[]="f" . $field["ref"];
+        }
+    }
 
 DrawOption("F*", $lang["can_edit_all_fields"], true, true);
 $fields=ps_query("select " . columns_in("resource_type_field") . " from resource_type_field order by active desc,order_by", array(), "schema");
 foreach ($fields as $field)
-	{
-	if (in_array("F*",$permissions))	
-		{
-		# Render disabled fields with strikethrough
-		$fieldprefix="";$fieldsuffix="";
-		if ($field["active"]==0) {$fieldprefix="<span class=FieldDisabled>";$fieldsuffix="</span>";}
+    {
+    if (in_array("F*",$permissions))    
+        {
+        # Render disabled fields with strikethrough
+        $fieldprefix="";$fieldsuffix="";
+        if ($field["active"]==0) {$fieldprefix="<span class=FieldDisabled>";$fieldsuffix="</span>";}
 
-		DrawOption("F-" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_edit_field"] . " '" . $fieldprefix . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . $fieldsuffix . "'"  . (($field["name"]=="")?"":"<em> (" . htmlspecialchars($field["name"]) . ")</em>"), false);
-		}
-	else
-		{
-		# Add it to the 'done' list so it is discarded.
-		$permissions_done[]="F-" . $field["ref"];
-		}
-	}
+        DrawOption("F-" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_edit_field"] . " '" . $fieldprefix . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . $fieldsuffix . "'"  . (($field["name"]=="")?"":"<em> (" . htmlspecialchars($field["name"]) . ")</em>"), false);
+        }
+    else
+        {
+        # Add it to the 'done' list so it is discarded.
+        $permissions_done[]="F-" . $field["ref"];
+        }
+    }
 
-?>				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader"><?php echo $lang["resourcetypes"] ?></td>
-				</tr>
+?>              <tr class="ListviewTitleStyle">
+                    <td colspan=3 class="permheader"><?php echo $lang["resourcetypes"] ?></td>
+                </tr>
 <?php
 
 # ------------ View access to resource types
@@ -255,26 +255,26 @@ foreach ($fields as $field)
 # If the user can edit their own permissions they can access any resource type by editing the special permissons anyway
 $rtypes=get_all_resource_types();
 foreach ($rtypes as $rtype)
-	{
-	DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-")),$lang["can_see_resource_type"]), true);
-	}
+    {
+    DrawOption("T" . $rtype["ref"], str_replace(array("%TYPE"),array(lang_or_i18n_get_translated($rtype["name"], "resourcetype-")),$lang["can_see_resource_type"]), true);
+    }
 
 # ------------ Restricted access to resource types
 foreach ($rtypes as $rtype)
-	{
-	DrawOption("X" . $rtype["ref"], $lang["restricted_access_only_to_resource_type"] . " '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'", false);
-	}
+    {
+    DrawOption("X" . $rtype["ref"], $lang["restricted_access_only_to_resource_type"] . " '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'", false);
+    }
 
 # ------------ Restricted upload for resource of type
 foreach ($rtypes as $rtype)
-	{
-	DrawOption("XU" . $rtype["ref"], $lang["restricted_upload_for_resource_of_type"] . " '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'", false);
-	}
+    {
+    DrawOption("XU" . $rtype["ref"], $lang["restricted_upload_for_resource_of_type"] . " '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'", false);
+    }
 
 # ------------ Edit access to resource types (in any archive state to which the group has access)
 foreach ($rtypes as $rtype)
-	{
-	DrawOption("ert" . $rtype["ref"], $lang["force_edit_resource_type"] ." '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'");
+    {
+    DrawOption("ert" . $rtype["ref"], $lang["force_edit_resource_type"] ." '" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'");
     }
 
 foreach ($rtypes as $rtype)
@@ -284,30 +284,30 @@ foreach ($rtypes as $rtype)
 
 DrawOption("XE", $lang["deny_edit_all_resource_types"],false, true);
 # ------------ Allow edit access to specified resource types
-if (in_array("XE",$permissions))	
-		{
+if (in_array("XE",$permissions))    
+        {
         foreach ($rtypes as $rtype)
             {
             DrawOption("XE-" . $rtype["ref"], str_replace("%%RESOURCETYPE%%","'" . lang_or_i18n_get_translated($rtype["name"], "resourcetype-") . "'",$lang["can_edit_resource_type"]));
             }
         }
 
-?>				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader"><?php echo $lang["resource_creation_and_management"] ?></td>
-				</tr>
+?>              <tr class="ListviewTitleStyle">
+                    <td colspan=3 class="permheader"><?php echo $lang["resource_creation_and_management"] ?></td>
+                </tr>
 <?php
 
 
 
 # ------------ Edit access to workflow states
 for ($n=-2;$n<=3;$n++)
-	{
-	DrawOption("e" . $n, $lang["edit_access_to_workflow_state"] . " '" . $lang["status" . $n] . "'", false);
-	}
+    {
+    DrawOption("e" . $n, $lang["edit_access_to_workflow_state"] . " '" . $lang["status" . $n] . "'", false);
+    }
 foreach ($additional_archive_states as $additional_archive_state)
-	{
-	DrawOption("e" . $additional_archive_state, $lang["edit_access_to_workflow_state"] . " '" . (isset($lang["status" . $additional_archive_state])?$lang["status" . $additional_archive_state]:$additional_archive_state) . "'", false);
-	}
+    {
+    DrawOption("e" . $additional_archive_state, $lang["edit_access_to_workflow_state"] . " '" . (isset($lang["status" . $additional_archive_state])?$lang["status" . $additional_archive_state]:$additional_archive_state) . "'", false);
+    }
 for ($n=0;$n<=($custom_access?3:2);$n++)
     {
     DrawOption("ea" . $n,  str_replace(array("%STATE"),array($lang["access" . $n]),$lang["edit_access_to_access"]), true);
@@ -321,23 +321,23 @@ DrawOption("D", $lang["can_delete_resources"], true);
 DrawOption("i", $lang["can_manage_archive_resources"]);
 DrawOption('A', $lang["can_manage_alternative_files"], true);
 ?>
-	<tr class="ListviewTitleStyle">
-		<td colspan=3 class="permheader"><?php echo htmlspecialchars($lang["themes_and_collections"]); ?></td>
-	</tr>
+    <tr class="ListviewTitleStyle">
+        <td colspan=3 class="permheader"><?php echo htmlspecialchars($lang["themes_and_collections"]); ?></td>
+    </tr>
 <?php
 
 DrawOption("b", $lang["enable_bottom_collection_bar"], true);
 DrawOption("h", $lang["can_publish_collections_as_themes"],false,true);
 DrawOption("exup", $lang["permission_share_upload_link"],false,true);
 if(in_array('h', $permissions))
-	{
-	DrawOption('hdta', $lang['manage_all_dash_h'], true, false);
-	DrawOption('hdt_ug', $lang['manage_user_group_dash_tiles'], false, false);
-	}
+    {
+    DrawOption('hdta', $lang['manage_all_dash_h'], true, false);
+    DrawOption('hdt_ug', $lang['manage_user_group_dash_tiles'], false, false);
+    }
 else
-	{
-	DrawOption('dta', $lang['manage_all_dash_perm'], false, false);
-	}
+    {
+    DrawOption('dta', $lang['manage_all_dash_perm'], false, false);
+    }
 DrawOption("dtu",$lang["manage_own_dash"],true,false);
 
 # ------------ Access to featured collection categories
@@ -362,42 +362,42 @@ DrawOption("J", $lang["display_only_resources_within_accessible_themes"]);
 
 # ---------- End of Dash Tiles
 
-?>				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader"><?php echo $lang["administration"] ?></td>
-				</tr>
+?>              <tr class="ListviewTitleStyle">
+                    <td colspan=3 class="permheader"><?php echo $lang["administration"] ?></td>
+                </tr>
 <?php
 
 DrawOption("t", $lang["can_access_team_centre"], false, true);
 if (in_array("t",$permissions))
-	{
-	# Admin options	
-	DrawOption("r", $lang["can_manage_research_requests"]);
-	DrawOption("R", $lang["can_manage_resource_requests"], false, true);
-	if (in_array("R",$permissions))	
-		{
-		DrawOption("Ra", $lang["can_assign_resource_requests"]);
-		DrawOption("Rb", $lang["can_be_assigned_resource_requests"]);
-		}
-	DrawOption("o", $lang["can_manage_content"]);
-	DrawOption("m", $lang["can_bulk-mail_users"]);
-	DrawOption("u", $lang["can_manage_users"]);
-	DrawOption("k", $lang["can_manage_keywords"]);
-	DrawOption("a", $lang["can_access_system_setup"],false,true);
-	}
+    {
+    # Admin options 
+    DrawOption("r", $lang["can_manage_research_requests"]);
+    DrawOption("R", $lang["can_manage_resource_requests"], false, true);
+    if (in_array("R",$permissions)) 
+        {
+        DrawOption("Ra", $lang["can_assign_resource_requests"]);
+        DrawOption("Rb", $lang["can_be_assigned_resource_requests"]);
+        }
+    DrawOption("o", $lang["can_manage_content"]);
+    DrawOption("m", $lang["can_bulk-mail_users"]);
+    DrawOption("u", $lang["can_manage_users"]);
+    DrawOption("k", $lang["can_manage_keywords"]);
+    DrawOption("a", $lang["can_access_system_setup"],false,true);
+    }
 else
-	{
-	$permissions_done[]="r";
-	$permissions_done[]="R";
-	$permissions_done[]="o";
-	$permissions_done[]="m";
-	$permissions_done[]="u";
-	$permissions_done[]="k";
-	$permissions_done[]="a";	
-	}
+    {
+    $permissions_done[]="r";
+    $permissions_done[]="R";
+    $permissions_done[]="o";
+    $permissions_done[]="m";
+    $permissions_done[]="u";
+    $permissions_done[]="k";
+    $permissions_done[]="a";    
+    }
 DrawOption('ex', $lang['permission_manage_external_shares']);
-?>				<tr class="ListviewTitleStyle">
-					<td colspan=3 class="permheader"><?php echo $lang["other"] ?></td>
-				</tr>
+?>              <tr class="ListviewTitleStyle">
+                    <td colspan=3 class="permheader"><?php echo $lang["other"] ?></td>
+                </tr>
 <?php
 DrawOption("p", $lang["can_change_own_password"], true);
 DrawOption("U", $lang["can_manage_users_in_children_groups"]);
@@ -409,30 +409,30 @@ DrawOption("nolock", $lang["permission_nolock"]);
 
 hook("additionalperms");
 $custom_permissions = join(",", array_diff($permissions, $permissions_done));
-?>			</table>
-		</div>  <!-- end of Listview -->
+?>          </table>
+        </div>  <!-- end of Listview -->
 
-		<div class="Question">
-			<label for="other"><?php echo $lang["custompermissions"]; ?></label>
-			<textarea
+        <div class="Question">
+            <label for="other"><?php echo $lang["custompermissions"]; ?></label>
+            <textarea
                 name="other"
                 class="stdwidth"
                 rows="3"
                 cols="50"
                 data-custom_permissions_copy="<?php echo escape($custom_permissions);  ?>"
-            ><?php echo htmlspecialchars($custom_permissions); ?></textarea>			
-			<div class="clearerleft"></div>
-		</div>
+            ><?php echo htmlspecialchars($custom_permissions); ?></textarea>            
+            <div class="clearerleft"></div>
+        </div>
 
-		<div class="QuestionSubmit">		
-			<input 
+        <div class="QuestionSubmit">        
+            <input 
                 name="save"
                 type="button"
                 onclick="SaveCustomPermissions();"
                 value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;">
-		</div>
+        </div>
 
-	</form>	
+    </form> 
 </div>  <!-- end of BasicsBox -->
 <script>
 /**
@@ -576,6 +576,6 @@ function ProcessDisabledPermissions(perms)
     });
     return perms;
     }
-</script>	
+</script>   
 <?php
 include "../../include/footer.php";

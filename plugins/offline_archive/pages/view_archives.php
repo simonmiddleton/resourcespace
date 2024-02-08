@@ -21,26 +21,26 @@ include '../../../include/header.php';
 <p><h1><?php echo escape($lang["offline_archive_view_completed"]) ?></h1><p>
 
 <div class="Listview">
-	<table id="offline_archive_table" class="ListviewStyle offline_archive_table" border="0" cellspacing="0" cellpadding="0">
-		<tr class="ListviewTitleStyle">
-		    <td style="width:150px"><?php echo escape($lang['offline_archive_archive_ref']); ?></td>
-			<td><?php echo escape($lang['offline_archive_archive_status']); ?></td>
-			<td><?php echo escape($lang['offline_archive_archive_date']); ?></td>
-			<td><?php echo escape($lang['offline_archive_view_associated']); ?></td>
-		</tr>
+    <table id="offline_archive_table" class="ListviewStyle offline_archive_table" border="0" cellspacing="0" cellpadding="0">
+        <tr class="ListviewTitleStyle">
+            <td style="width:150px"><?php echo escape($lang['offline_archive_archive_ref']); ?></td>
+            <td><?php echo escape($lang['offline_archive_archive_status']); ?></td>
+            <td><?php echo escape($lang['offline_archive_archive_date']); ?></td>
+            <td><?php echo escape($lang['offline_archive_view_associated']); ?></td>
+        </tr>
         <?php
-		foreach ($completedarchives as $completedarchive)
-			{?>
-			<tr>
+        foreach ($completedarchives as $completedarchive)
+            {?>
+            <tr>
                 <td><?php echo escape($completedarchive['archive_code']); ?></td>
                 <td><?php echo escape($lang["offline_archive_statustype"][$completedarchive['archive_status']]); ?></td>
                 <td><?php echo $completedarchive['archive_date']; ?></td>
                 <td><?php echo '<a href="' . $baseurl . '/pages/search.php?search=' . urlencode($offline_archive_fieldshort) . '%3A' . urlencode($completedarchive['archive_code']) . '&archive=2" onClick="return CentralSpaceLoad(this,true);">' . LINK_CARET .  escape($lang["offline_archive_view_associated"]) . '&nbsp;&nbsp;</a>'; ?></td>
-			</tr>
+            </tr>
             <?php
-			}
-		?>
-	</table>
+            }
+        ?>
+    </table>
 </div>
 </div>
 <?php

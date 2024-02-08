@@ -1,6 +1,6 @@
 <?php
 function HookAnnotatePreviewReplacepreviewbacktoview(){
-	global $baseurl,$lang,$ref,$search,$offset,$order_by,$sort,$archive,$k;
+    global $baseurl,$lang,$ref,$search,$offset,$order_by,$sort,$archive,$k;
     
     $urlparams = array(
         "annotate"  => (getval("annotate","") == "true" ? "true" : ""),
@@ -31,9 +31,9 @@ if (!($k=="") && !$annotate_public_view){return false;}
 
 if (!file_exists($path) && !file_exists($path_orig)){return false;}
 if (!file_exists($path)){
-	$sizes = getimagesize($path_orig);}
+    $sizes = getimagesize($path_orig);}
 else{
-	$sizes = getimagesize($path);
+    $sizes = getimagesize($path);
 }
 
 $w = $sizes[0];
@@ -45,7 +45,7 @@ $h = $sizes[1];
     button_ok = "<?php echo preg_replace("/\r?\n/", "\\n", addslashes($lang["ok"])) ?>";
     button_cancel = "<?php echo preg_replace("/\r?\n/", "\\n", addslashes($lang["cancel"])) ?>";
     button_delete = "<?php echo preg_replace("/\r?\n/", "\\n", addslashes($lang["action-delete"])) ?>";
-    button_add = "&gt&nbsp;<?php echo preg_replace("/\r?\n/", "\\n", addslashes($lang["action-add_note"])) ?>";		
+    button_add = "&gt&nbsp;<?php echo preg_replace("/\r?\n/", "\\n", addslashes($lang["action-add_note"])) ?>";     
     button_toggle = "&gt;&nbsp;<?php echo preg_replace("/\r?\n/", "\\n", addslashes($lang["action-toggle-on"])) ?>";
     button_toggle_off = "&gt;&nbsp;<?php echo preg_replace("/\r?\n/", "\\n", addslashes($lang["action-toggle-off"])) ?>";
     error_saving = "<?php echo preg_replace("/\r?\n/", "\\n", addslashes($lang["error-saving"])) ?>";
@@ -84,7 +84,7 @@ $h = $sizes[1];
     <?php
     } ?>
 <div>
-		<td>
+        <td>
             <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
             alt="" id="toAnnotate" onload="annotate(<?php echo (int)$ref?>,'<?php echo escape($k)?>','<?php echo escape($w)?>','<?php echo escape($h)?>',<?php echo escape(getval("annotate_toggle",true))?>,<?php echo (int) getval('page', 1); ?>);" src="<?php echo escape($url)?>" id="previewimage" class="Picture" GALLERYIMG="no" style="display:block;"   />
         </td>
@@ -95,14 +95,14 @@ $h = $sizes[1];
         </td>
     <?php 
     } ?>
-	</div>
+    </div>
 
 <div style="padding-top:5px;">
 
      <?php if ($annotate_pdf_output){?>
      &nbsp;&nbsp;<a style="display:inline;float:right;margin-right:10px;" href="<?php echo generateURL($baseurl. '/plugins/annotate/pages/annotate_pdf_config.php?', $urlparams, ['ext' => $resource["preview_extension"]])?>" >&gt;&nbsp;<?php echo htmlspecialchars($lang["pdfwithnotes"])?></a> &nbsp;&nbsp;
      <?php } ?>
-     	</div>
+        </div>
     </tr></table>
 </div>
 
@@ -110,7 +110,7 @@ $h = $sizes[1];
      
      <?php
 
-return true;	
+return true;    
 }
 
 

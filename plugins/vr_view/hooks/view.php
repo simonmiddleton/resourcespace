@@ -1,35 +1,35 @@
 <?php
 function HookVr_viewViewaftergetresourcedataview($ref,$resource)
     {
-	// Disable annotations if we are in VR View mode
+    // Disable annotations if we are in VR View mode
     global $annotate_enabled;
-	if(!is_array($resource))
-		{
-		return false;
-		}
-		
+    if(!is_array($resource))
+        {
+        return false;
+        }
+        
     $use_vr_view = VrViewUseVR($resource);
     if($use_vr_view)
         {
         $annotate_enabled = false; 
         }
-		
-	return false;
+        
+    return false;
     }
-	
+    
 function HookVr_viewViewReplacepreviewlink()
     {
-	global $resource, $baseurl_short, $urlparams, $modal, $lang, $plugins;
+    global $resource, $baseurl_short, $urlparams, $modal, $lang, $plugins;
     $use_vr_view = VrViewUseVR($resource);
     
-	if(!$use_vr_view)
+    if(!$use_vr_view)
         {
         return false;
         }
 
-	// Disable lightbox plugin as this will change the preview link
-	$plugins = array_diff($plugins,array("lightbox_preview"));
-	$plugins = array_values($plugins); 
+    // Disable lightbox plugin as this will change the preview link
+    $plugins = array_diff($plugins,array("lightbox_preview"));
+    $plugins = array_values($plugins); 
     ?>
     <div id="previewimagewrapper">
         <a id="previewimagelink"
@@ -38,7 +38,7 @@ function HookVr_viewViewReplacepreviewlink()
            title="<?php echo $lang["fullscreenpreview"]; ?>"
            style="position:relative;"
            onclick="return ModalLoad(this,false,true,top);">
-	<?php
+    <?php
     return true;
     }
 

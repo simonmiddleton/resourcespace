@@ -44,7 +44,7 @@ foreach($resource_type_fields as $resource_type_field)
     {
     $resource_data_entries=ps_query("SELECT `resource`,`value` FROM `resource_data` WHERE  resource_type_field= ?", ['i', $resource_type_field['ref']]);
     $datarowcount=count($resource_data_entries);
-	$out = PHP_EOL . "Updating resource_node values for resource_type_field {$resource_type_field['ref']}:{$resource_type_field['name']}" . 
+    $out = PHP_EOL . "Updating resource_node values for resource_type_field {$resource_type_field['ref']}:{$resource_type_field['name']}" . 
         " (" . $datarowcount . " rows found)" . PHP_EOL;
     
     set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT,$out);    
@@ -58,8 +58,8 @@ foreach($resource_type_fields as $resource_type_field)
         }
     ob_flush();flush();
     
-	$limit=floor($datarowcount/100);
-	$n=0;
+    $limit=floor($datarowcount/100);
+    $n=0;
     $fieldnodes=get_nodes($resource_type_field['ref']);
     foreach($resource_data_entries as $resource_data_entry)
             {
@@ -93,22 +93,22 @@ foreach($resource_type_fields as $resource_type_field)
                     {
                     add_resource_nodes($resourceid,$nodes_to_add);
                     }
-			if($n>$limit)
-				{
-				if($cli)
-					{
-					echo "+";
-					}
-				else
-					{
-					echo str_pad("+",4096);
-					}
-				ob_flush();flush();
-				$n=0;
-				}
-			$n++;
+            if($n>$limit)
+                {
+                if($cli)
+                    {
+                    echo "+";
+                    }
+                else
+                    {
+                    echo str_pad("+",4096);
+                    }
+                ob_flush();flush();
+                $n=0;
+                }
+            $n++;
             }
-	set_sysvar("resource_node_check_field",$resource_type_field['ref']);
+    set_sysvar("resource_node_check_field",$resource_type_field['ref']);
     }
 
 

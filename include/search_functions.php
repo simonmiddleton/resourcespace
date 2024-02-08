@@ -3136,29 +3136,29 @@ function get_search_default_restypes()
         {
         $defaultrestypes[] = "Collections";
         if($search_includes_themes){$defaultrestypes[] = "FeaturedCollections";}
-        }	
+        }   
     return $defaultrestypes;
     }
-	
+    
 function get_selectedtypes()
     {
     global $search_includes_resources, $default_advanced_search_mode;
 
-	# The restypes cookie is populated with $default_res_type at login and maintained thereafter
-	# The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere
-	$restypes=getval("restypes","");
+    # The restypes cookie is populated with $default_res_type at login and maintained thereafter
+    # The advanced_search_section cookie is for the advanced search page and is not referenced elsewhere
+    $restypes=getval("restypes","");
     $advanced_search_section = getval("advanced_search_section", "");
-	
-	# If advanced_search_section is absent then load it from restypes
-	if (getval("submitted","")=="") 
-		{
-		if (!isset($advanced_search_section))
-			{
-			$advanced_search_section = $restypes;
-			}
-		}
+    
+    # If advanced_search_section is absent then load it from restypes
+    if (getval("submitted","")=="") 
+        {
+        if (!isset($advanced_search_section))
+            {
+            $advanced_search_section = $restypes;
+            }
+        }
 
-	# If clearbutton pressed then the selected types are reset based on configuration settings
+    # If clearbutton pressed then the selected types are reset based on configuration settings
     if(getval('resetform', '') != '')
         {
         if (isset($default_advanced_search_mode)) 

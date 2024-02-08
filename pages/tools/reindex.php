@@ -8,20 +8,20 @@
 include "../../include/db.php";
 
 if (!(PHP_SAPI == 'cli'))
-	{
-	include "../../include/authenticate.php";
-	if (!checkperm("a")) {exit("Permission denied");}
-	$indexfield = getval('field', 0, true);
-	}
+    {
+    include "../../include/authenticate.php";
+    if (!checkperm("a")) {exit("Permission denied");}
+    $indexfield = getval('field', 0, true);
+    }
 elseif(isset($argv[1]) && is_int_loose($argv[1]))
-	{
+    {
     $indexfield= $argv[1];
     if (isset($argv[2]) && $argv[2]=="nodebug")
         {
         $debug_log=false; // This will hobble performance 
         }
-	}
-	
+    }
+    
 // Disable sql_logging
 $mysql_log_transactions=false;
 

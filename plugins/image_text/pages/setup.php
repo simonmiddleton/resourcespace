@@ -9,7 +9,7 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'image_text';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 $plugin_page_heading = $lang['image_text_configuration'];
     
 $identify_fullpath = get_utility_path("im-identify");
@@ -22,9 +22,9 @@ $identoutput=run_command($identcommand);
 $imfonts=explode("\n", $identoutput);
 $imfontcount=count($imfonts);
 for($n=0;$n<$imfontcount;$n++)
-	{
-	$imfonts[$n]=trim_spaces(str_replace("Font: ","",$imfonts[$n]));
-	}
+    {
+    $imfonts[$n]=trim_spaces(str_replace("Font: ","",$imfonts[$n]));
+    }
 natsort($imfonts);
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.

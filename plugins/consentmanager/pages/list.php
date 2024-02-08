@@ -13,10 +13,10 @@ $findtext=getval("findtext","");
 
 $delete=getval("delete","");
 if ($delete!="" && enforcePostRequest(false))
-	{
-	# Delete consent
-	ps_query("delete from consent where ref= ?", ['i', $delete]);
-	}
+    {
+    # Delete consent
+    ps_query("delete from consent where ref= ?", ['i', $delete]);
+    }
 
 
 
@@ -38,7 +38,7 @@ $url_params = array(
         array(
             'title' => !$is_admin ? htmlspecialchars($lang["home"]) : htmlspecialchars($lang["teamcentre"]),
             'href'  => $baseurl_short . (!$is_admin ? "pages/home.php" : "pages/team/team_home.php"),
-			'menu'  => !$is_admin ? false : true
+            'menu'  => !$is_admin ? false : true
         ),
         array(
             'title' => $lang["manageconsents"]
@@ -58,7 +58,7 @@ if ($findtext!="")
     {
     $sql="where name like ?";
     $params = ['s', "%$findtext%"];
-	}
+    }
 
 $consents= ps_query("select ". columns_in('consent', null, 'consentmanager') ." from consent $sql order by ref", $params);
 
@@ -86,34 +86,34 @@ $jumpcount=1;
 
 <?php
 for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
-	{
+    {
     $consent=$consents[$n];
     $consent_usage_mediums = trim_array(explode(", ", $consent["consent_usage"]));
     $translated_mediums = "";
     $url_params['ref'] = $consent["ref"];
-	?>
-	<tr>
+    ?>
+    <tr>
     <td>
             <?php echo $consent["ref"] ?></td>
-			<td><?php echo $consent["name"] ?></td>
-			<td><?php
-				foreach ($consent_usage_mediums as $medium)
-					{
-					$translated_mediums = $translated_mediums . lang_or_i18n_get_translated($medium, "consent_usage-") . ", ";
-					}
-				$translated_mediums = substr($translated_mediums, 0, -2); # Remove the last ", "
-				echo $translated_mediums;
-				?>
-			</td>
-			<td><?php echo escape($consent["expires"] == "" ? $lang["no_expiry_date"] : nicedate($consent["expires"])); ?></td>
-		
-			<td><div class="ListTools">
-			<a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
-			<a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?></a>
-			</div></td>
-	</tr>
-	<?php
-	}
+            <td><?php echo $consent["name"] ?></td>
+            <td><?php
+                foreach ($consent_usage_mediums as $medium)
+                    {
+                    $translated_mediums = $translated_mediums . lang_or_i18n_get_translated($medium, "consent_usage-") . ", ";
+                    }
+                $translated_mediums = substr($translated_mediums, 0, -2); # Remove the last ", "
+                echo $translated_mediums;
+                ?>
+            </td>
+            <td><?php echo escape($consent["expires"] == "" ? $lang["no_expiry_date"] : nicedate($consent["expires"])); ?></td>
+        
+            <td><div class="ListTools">
+            <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
+            <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?></a>
+            </div></td>
+    </tr>
+    <?php
+    }
 ?>
 
 </table>
@@ -122,20 +122,20 @@ for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
 
 
 
-		<div class="Question">
-			<label for="find"><?php echo $lang["consentsearch"]?><br/></label>
-			<div class="tickset">
-			 <div class="Inline">			
-			<input type=text placeholder="<?php echo $lang['searchbytext']?>" name="findtext" id="findtext" value="<?php echo $findtext?>" maxlength="100" class="shrtwidth" />
-			
-			<input type="button" value="<?php echo $lang['clearbutton']?>" onClick="$('findtext').value='';CentralSpacePost(document.getElementById('consentlist'));return false;" />
-			<input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />
-			 
-			</div>
-			</div>
-			<div class="clearerleft"> 
-			</div>
-		</div>
+        <div class="Question">
+            <label for="find"><?php echo $lang["consentsearch"]?><br/></label>
+            <div class="tickset">
+             <div class="Inline">           
+            <input type=text placeholder="<?php echo $lang['searchbytext']?>" name="findtext" id="findtext" value="<?php echo $findtext?>" maxlength="100" class="shrtwidth" />
+            
+            <input type="button" value="<?php echo $lang['clearbutton']?>" onClick="$('findtext').value='';CentralSpacePost(document.getElementById('consentlist'));return false;" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />
+             
+            </div>
+            </div>
+            <div class="clearerleft"> 
+            </div>
+        </div>
 
 </form>
 <?php

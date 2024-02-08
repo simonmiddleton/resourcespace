@@ -9,7 +9,7 @@ include '../../../include/header.php';
 
 $plugin_name = 'rse_workflow';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 
 ?>
 

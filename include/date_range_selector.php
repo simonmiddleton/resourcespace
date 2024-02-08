@@ -6,20 +6,20 @@ if (this.value==0) {document.getElementById('SpecificDays').style.display='block
 if (this.value!=-1) {document.getElementById('EmailMe').style.display='block';} else {document.getElementById('EmailMe').style.display='none';}
 // Copy reporting period to e-mail period
 if (document.getElementById('period').value==0)
-	{
-	// Copy from specific day box
-	document.getElementById('email_days').value=document.getElementById('period_days').value;
-	}
+    {
+    // Copy from specific day box
+    document.getElementById('email_days').value=document.getElementById('period_days').value;
+    }
 else
-	{
-	document.getElementById('email_days').value=document.getElementById('period').value;		
-	}
+    {
+    document.getElementById('email_days').value=document.getElementById('period').value;        
+    }
 ">
 <?php
 foreach ($reporting_periods_default as $period_default)
-	{
-	?><option value="<?php echo $period_default?>" <?php if ($period_init==$period_default) { ?>selected<?php } ?>><?php echo str_replace("?",$period_default,$lang["lastndays"])?></option><?php
-	}
+    {
+    ?><option value="<?php echo $period_default?>" <?php if ($period_init==$period_default) { ?>selected<?php } ?>><?php echo str_replace("?",$period_default,$lang["lastndays"])?></option><?php
+    }
 ?>
 <option value="0" <?php if ($period_init==0) { ?>selected<?php } ?>><?php echo $lang["specificdays"]?></option>
 <option value="-1" <?php if ($period_init==-1) { ?>selected<?php } ?>><?php echo $lang["specificdaterange"]?></option>

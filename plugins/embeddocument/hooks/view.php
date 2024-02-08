@@ -1,10 +1,10 @@
 <?php
 
 function HookEmbeddocumentViewAfterresourceactions2()
-	{
-	global $embeddocument_resourcetype,$resource,$ref,$baseurl,$lang,$access;
-	
-	if ($resource["resource_type"]!=$embeddocument_resourcetype
+    {
+    global $embeddocument_resourcetype,$resource,$ref,$baseurl,$lang,$access;
+    
+    if ($resource["resource_type"]!=$embeddocument_resourcetype
         || !$GLOBALS["allow_share"]
         || checkperm("noex")
         || get_resource_access($resource) != 0
@@ -14,16 +14,16 @@ function HookEmbeddocumentViewAfterresourceactions2()
         return false;
         }
 
-    # filter out resources without previews 	
+    # filter out resources without previews     
     $thumbwidth=$resource["thumb_width"];
     $thumbheight=$resource["thumb_height"];
-    if ($thumbwidth==0)	
+    if ($thumbwidth==0) 
         {
         // The resource has no preview.
         return false;
         }
 
-    # Resolve dimensions of document viewer		
+    # Resolve dimensions of document viewer     
     # Set default viewer widths--subtract 2 pixels for border
     $portrait=358; //Default portrait width
     $landscape=478; //Default landscape width
@@ -99,7 +99,7 @@ function HookEmbeddocumentViewAfterresourceactions2()
             }
         else
             {
-            document.getElementById('embeddocument').style.display='block';	
+            document.getElementById('embeddocument').style.display='block'; 
             document.getElementById('embeddocument_download').style.display='none';
             }
         "><?php echo htmlspecialchars($lang["embeddocument_allow_original_download"]) ?></p>
@@ -108,6 +108,6 @@ function HookEmbeddocumentViewAfterresourceactions2()
 
     <textarea id="embeddocument" style="width:335px;height:120px;display:none;"><?php echo htmlspecialchars($embed); ?></textarea>
 <textarea id="embeddocument_download" style="width:335px;height:120px;display:none;"><?php echo htmlspecialchars(str_replace($viewer_url,$download_url,$embed)); ?></textarea>
-	<?php
-	return true;
-	}
+    <?php
+    return true;
+    }

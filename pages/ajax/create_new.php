@@ -65,16 +65,16 @@ switch ($newtype)
 
 <div class="BasicsBox" id="create_new">
     <form action="<?php echo $targeturl; ?>" onsubmit="<?php echo isset($customformaction) ? $customformaction : "return CentralSpacePost(this,true);"; ?>" >
-	<div class="Question">
-		<label><?php echo $newtext; ?></label>
+    <div class="Question">
+        <label><?php echo $newtext; ?></label>
         <?php generateFormToken($csrf_code); 
         foreach($extraparams as $extraparam => $extravalue)
             {
             echo "<input type=hidden name='" . $extraparam  .  "' value='" . $extravalue . "'>";
             }
         ?>
-		<input type="text" class="medwidth" name="<?php echo $newparam ?>" id="<?php echo $newparam ?>" value="">
-		<div class="clearerleft"> </div>
+        <input type="text" class="medwidth" name="<?php echo $newparam ?>" id="<?php echo $newparam ?>" value="">
+        <div class="clearerleft"> </div>
     </div>
     
     <?php if ($newtype=="resource_type_field") { ?>
@@ -94,10 +94,10 @@ switch ($newtype)
          </div>
     <?php } ?>
 
-	<div class="Question">
-		<input type="submit" class="medcomplementwidth" value="<?php echo $lang["save"]?>" />
-		<input type="submit" class="medcomplementwidth" value="<?php echo $lang["cancel"]?>" onclick="ModalClose();" />
-		<div class="clearerleft"> </div>
-	</div>
+    <div class="Question">
+        <input type="submit" class="medcomplementwidth" value="<?php echo $lang["save"]?>" />
+        <input type="submit" class="medcomplementwidth" value="<?php echo $lang["cancel"]?>" onclick="ModalClose();" />
+        <div class="clearerleft"> </div>
+    </div>
     </form>
 </div>

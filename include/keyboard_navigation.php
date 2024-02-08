@@ -29,7 +29,7 @@ jQuery(document).ready(function() {
          switch (e.which) 
          {
 
-		    <?php hook ("addhotkeys"); //this comes first so overriding the below is possible ?>
+            <?php hook ("addhotkeys"); //this comes first so overriding the below is possible ?>
             // left arrow
             case <?php echo $keyboard_navigation_prev; ?>: if ((jQuery('.prevLink').length > 0)<?php if ($pagename=="view") { ?>&&(jQuery("#fancybox-content").html()=='')<?php } ?>) {jQuery('.prevLink').click();break;}
               if (<?php if ($keyboard_navigation_pages_use_alt) echo "modAlt&&"; ?>(jQuery('.prevPageLink').length > 0)) jQuery('.prevPageLink').click();
@@ -78,36 +78,36 @@ jQuery(document).ready(function() {
             case <?php echo $keyboard_navigation_view_all; ?>: if(!modOn){CentralSpaceLoad('<?php echo $baseurl;?>/pages/search.php?search=!collection'+document.getElementById("currentusercollection").innerHTML+'&k='+share,true)};
                      break;
             <?php if(($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || (($pagename=='preview' || $pagename=='preview_all') && $keyboard_navigation_video_preview)){?>
-				case <?php echo $keyboard_navigation_video_search_play_pause?>:
-					<?php if($pagename=='view' || $pagename=='preview'){ ?>
-						vidActive=document.getElementById('introvideo<?php echo $ref?>');
-					<?php } 
-					else{ ?>
-						vidActive=document.getElementById('introvideo'+vidActiveRef);
-					<?php } ?>
-					//console.log("active="+vidActive);
-					videoPlayPause(vidActive);
-					break;
+                case <?php echo $keyboard_navigation_video_search_play_pause?>:
+                    <?php if($pagename=='view' || $pagename=='preview'){ ?>
+                        vidActive=document.getElementById('introvideo<?php echo $ref?>');
+                    <?php } 
+                    else{ ?>
+                        vidActive=document.getElementById('introvideo'+vidActiveRef);
+                    <?php } ?>
+                    //console.log("active="+vidActive);
+                    videoPlayPause(vidActive);
+                    break;
 
-				case <?php echo $keyboard_navigation_video_search_forwards?>:
-					//console.log("forward button pressed");
-					//console.log("Player is "+vidActive);
-					// clear
-					clearInterval(intervalRewind);
-					// get current playback rate
-					curPlayback=vidActive.playbackRate();
-					//console.log("Current playback rate is "+curPlayback);
-					if(playback=='forward'){
-						newPlayback=curPlayback+1;
-					}
-					else{
-						newPlayback=1;
-					}
-					playback='forward';
-					//console.log("New playback rate is "+newPlayback);
-					vidActive.playbackRate(newPlayback);
-					break;
-				<?php } ?>
+                case <?php echo $keyboard_navigation_video_search_forwards?>:
+                    //console.log("forward button pressed");
+                    //console.log("Player is "+vidActive);
+                    // clear
+                    clearInterval(intervalRewind);
+                    // get current playback rate
+                    curPlayback=vidActive.playbackRate();
+                    //console.log("Current playback rate is "+curPlayback);
+                    if(playback=='forward'){
+                        newPlayback=curPlayback+1;
+                    }
+                    else{
+                        newPlayback=1;
+                    }
+                    playback='forward';
+                    //console.log("New playback rate is "+newPlayback);
+                    vidActive.playbackRate(newPlayback);
+                    break;
+                <?php } ?>
          }
 
      }

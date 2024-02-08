@@ -51,10 +51,10 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
     {
     global $scramble_key, $scramble_key_old, $migratedfiles, $filestore_evenspread, $syncdir, $filestore_migrate, $migrating_scrambled;
     echo "Checking Resource ID: " . $ref . ", alternative: " . $alternative . PHP_EOL;
-	$resource_data=get_resource_data($ref);
+    $resource_data=get_resource_data($ref);
     $pagecount=get_page_count($resource_data,$alternative);
     for($page=1;$page<=$pagecount;$page++)
-		{
+        {
         for ($m=0;$m<count($sizes);$m++)
             {
             // Get the new path for each file
@@ -76,7 +76,7 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
             echo " - Checking old path: " . $path . PHP_EOL;
             if (file_exists($path) && !($sizes[$m]["id"] == "" && $syncdir != "" && strpos($path, $syncdir) !== false))
                 {
-                echo " - Found file at old path : " . $path . PHP_EOL;	
+                echo " - Found file at old path : " . $path . PHP_EOL;  
                 if(!file_exists($newpath))
                     {
                     echo " - Moving resource file for resource #" . $ref  . " - old path= " . $path  . ", new path=" . $newpath . PHP_EOL;
@@ -128,11 +128,11 @@ $resources=ps_query("SELECT ref,file_extension FROM resource WHERE ref>0 ORDER B
 $migratedfiles = 0;
 $totalresources = count($resources);
 for ($n=0;$n<$totalresources;$n++)
-	{
-	$ref=$resources[$n]["ref"];
-	$extension=$resources[$n]["file_extension"];
-	if ($extension=="") {$extension="jpg";}
-	$sizes=get_image_sizes($ref,true,$extension,false);
+    {
+    $ref=$resources[$n]["ref"];
+    $extension=$resources[$n]["file_extension"];
+    if ($extension=="") {$extension="jpg";}
+    $sizes=get_image_sizes($ref,true,$extension,false);
     
     // Add in original resource files, jpg preview, ffmpeg previews and other non-size files
     $sizes[] = array("id" => "", "extension" => $extension);

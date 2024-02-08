@@ -204,18 +204,18 @@ if ($resource_type_force_selection && $resource_type != "" && checkperm("XU" . $
 // Resource types that can't be added to collections must be avoided for edit then upload mode to display the edit page for metadata entry.
 $all_resource_types = get_resource_types();
 if($resource_type == "" && !$resource_type_force_selection)
-	{
-	foreach($all_resource_types as $restype)
-		{
-		if (!checkperm("XU" . $restype["ref"]) && !in_array($restype["ref"],$collection_block_restypes))
-			{
-			$resource_type = $restype["ref"];
-			break;
-			}
-		}
+    {
+    foreach($all_resource_types as $restype)
+        {
+        if (!checkperm("XU" . $restype["ref"]) && !in_array($restype["ref"],$collection_block_restypes))
+            {
+            $resource_type = $restype["ref"];
+            break;
+            }
+        }
     // It is possible for there to be no 'unrestricted for upload' resource types
     // which means that the resource type used for the upload will be blank
-	}
+    }
 
 # Load the configuration for the selected resource type. Allows for alternative notification addresses, etc.
 resource_type_config_override($resource_type);
@@ -223,18 +223,18 @@ resource_type_config_override($resource_type);
 $hidden_collection = false;
 # Create a new collection?
 if($collection_add == "new" && ($processupload  || !$upload_then_edit))
-	{
-	# The user has chosen Create New Collection from the dropdown.
-	if ($collectionname=="")
+    {
+    # The user has chosen Create New Collection from the dropdown.
+    if ($collectionname=="")
         {
         $collectionname = "Upload " . offset_user_local_timezone(date('YmdHis'), 'YmdHis'); # Do not translate this string, the collection name is translated when displayed!
         $hidden_collection = true;
         }
-	$collection_add=create_collection($userref,$collectionname);
-	if (getval("public",'0') == 1)
-		{
-		collection_set_public($collection_add);
-		}
+    $collection_add=create_collection($userref,$collectionname);
+    if (getval("public",'0') == 1)
+        {
+        collection_set_public($collection_add);
+        }
     if ($hidden_collection)
         {
         show_hide_collection($collection_add, false, $userref);
@@ -243,7 +243,7 @@ if($collection_add == "new" && ($processupload  || !$upload_then_edit))
         {
         set_user_collection($userref,$collection_add);
         }
-	}
+    }
 
 if($external_upload)
     {
@@ -293,9 +293,9 @@ elseif ($upload_then_edit && $replace == "" && $replace_resource == "")
             'redirecturl' => $redirecturl,
         ));
 
-	# Clear the user template
-	clear_resource_data(0-$userref);
-	}
+    # Clear the user template
+    clear_resource_data(0-$userref);
+    }
 
 # If uploading alternative file, redirect to the resource rather than search results.
 if($alternative != "")
@@ -306,9 +306,9 @@ if($alternative != "")
 
 $modify_redirecturl=hook('modify_redirecturl');
 if($modify_redirecturl!==false)
-	{
-	$redirecturl=$modify_redirecturl;
-	}
+    {
+    $redirecturl=$modify_redirecturl;
+    }
 
 if($collection_add=='undefined')
     {
@@ -351,7 +351,7 @@ $uploadparams= array(
     'archive'                                => $archive,
     'relateto'                               => getval('relateto', ''),
     'filename_field'                         => getval('filename_field', ''),
-	'keep_original'	                         => $replace_resource_preserve_option && $replace_resource_preserve_default,
+    'keep_original'                          => $replace_resource_preserve_option && $replace_resource_preserve_default,
     'replace_resource_original_alt_filename' => $replace_resource_original_alt_filename,
     'single'                                 => ($single ? "true" : ""),
     'status'                                 => $setarchivestate,
@@ -519,7 +519,7 @@ if ($processupload)
         die(json_encode($result));
         }
 
-	hook('additional_plupload_checks');
+    hook('additional_plupload_checks');
 
     if($allowed_extensions != "")
         {

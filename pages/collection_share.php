@@ -3,16 +3,16 @@ include "../include/db.php";
 include "../include/authenticate.php";
 
 
-$collection_url	= getval('collection', '', true);
-$col_order_by	= getval('col_order_by', '', true);
-$find			= getval('find', '', true);
-$offset			= getval('offset', '', true);
-$order_by		= getval('order_by', '', true);
-$ref			= getval('ref', '', true);
-$restypes		= getval('restypes', '', true);
-$search			= getval('search', '', true);
-$sort			= getval('sort', '', true);
-$user_group		= getval('usergroup', '', true);
+$collection_url = getval('collection', '', true);
+$col_order_by   = getval('col_order_by', '', true);
+$find           = getval('find', '', true);
+$offset         = getval('offset', '', true);
+$order_by       = getval('order_by', '', true);
+$ref            = getval('ref', '', true);
+$restypes       = getval('restypes', '', true);
+$search         = getval('search', '', true);
+$sort           = getval('sort', '', true);
+$user_group     = getval('usergroup', '', true);
 $backurl        = getval('backurl', '');
 
 // Check if editing existing external share
@@ -37,14 +37,14 @@ if($editing)
         exit();        
         }
     $expires        = getval("expires",$shareinfo["expires"]);
-    $access         = getval("access",$shareinfo["access"], true);	
+    $access         = getval("access",$shareinfo["access"], true);  
     $group          = getval("usergroup",$shareinfo["usergroup"],true);
     $sharepwd       = getval('sharepassword', ($shareinfo["password_hash"] != "" ? "true" : ""));
     }
 else
     {
     $expires        = getval("expires","");
-    $access         = getval("access",-1, true);	
+    $access         = getval("access",-1, true);    
     $group          = getval("usergroup",0,true);
     $sharepwd       = getval('sharepassword', '');
     }
@@ -173,7 +173,7 @@ if (!$collection_allow_empty_share && $resource_count == 0)
     $show_error=true;
     $error=$lang["cannotshareemptycollection"];
     }
-	
+    
 #Check if any resources are not active
 $collectionstates = (isset($collectionstates) ? $collectionstates : is_collection_approved($ref));
 if (!$collection_allow_not_approved_share && $collectionstates==false) {
@@ -181,13 +181,13 @@ if (!$collection_allow_not_approved_share && $collectionstates==false) {
         $error=$lang["notapprovedsharecollection"];
         }
 if(is_array($collectionstates) && (count($collectionstates)>1 || !in_array(0,$collectionstates)))
-	{
-	$warningtext=$lang["collection_share_status_warning"];
-	foreach($collectionstates as $collectionstate)
-		{
-		$warningtext.="<br />" . $lang["status" . $collectionstate];
-		}
-	}
+    {
+    $warningtext=$lang["collection_share_status_warning"];
+    foreach($collectionstates as $collectionstate)
+        {
+        $warningtext.="<br />" . $lang["status" . $collectionstate];
+        }
+    }
 
 // If a plugin needs to fake having more resources, calculate how many are external to ResourceSpace to allow sharing 
 // collections when external resources are in that collection.
@@ -208,10 +208,10 @@ if(!$restricted_share && $minaccess >= RESOURCE_ACCESS_RESTRICTED || $resource_c
 
 # Should those that have been granted open access to an otherwise restricted resource be able to share the resource? - as part of a collection
 if(!$allow_custom_access_share && isset($customgroupaccess) && isset($customuseraccess)  && ($customgroupaccess || $customuseraccess))
-	{ 
-	$show_error=true;
-	$error=$lang["customaccesspreventshare"];
-	}
+    { 
+    $show_error=true;
+    $error=$lang["customaccesspreventshare"];
+    }
 
 # Process deletion of access keys
 if($deleteaccess && !isset($show_error) && enforcePostRequest(getval("ajax", false)))
@@ -230,14 +230,14 @@ include "../include/header.php";
     </script><?php
     exit();}
 ?>
-	<div class="BasicsBox"> 	
-	<form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref)?>">
-	<input type="hidden" name="ref" id="ref" value="<?php echo escape($ref) ?>">
-	<input type="hidden" name="deleteaccess" id="deleteaccess" value="">
-	<input type="hidden" name="editaccess" id="editaccess" value="<?php echo escape($editaccess)?>">
-	<input type="hidden" name="editexpiration" id="editexpiration" value="">
-	<input type="hidden" name="editaccesslevel" id="editaccesslevel" value="">
-	<input type="hidden" name="editgroup" id="editgroup" value="">
+    <div class="BasicsBox">     
+    <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref)?>">
+    <input type="hidden" name="ref" id="ref" value="<?php echo escape($ref) ?>">
+    <input type="hidden" name="deleteaccess" id="deleteaccess" value="">
+    <input type="hidden" name="editaccess" id="editaccess" value="<?php echo escape($editaccess)?>">
+    <input type="hidden" name="editexpiration" id="editexpiration" value="">
+    <input type="hidden" name="editaccesslevel" id="editaccesslevel" value="">
+    <input type="hidden" name="editgroup" id="editgroup" value="">
     <?php generateFormToken("collectionform");
 
     $page_header = $lang["sharecollection"];
@@ -271,43 +271,43 @@ include "../include/header.php";
         ?><h1><?php echo $page_header; render_help_link("user/sharing-resources");?></h1><?php
         }
 
-	if(isset($warningtext))
-		{
-		echo "<div class='PageInformal'>" . $warningtext . "</div>";
-		}
+    if(isset($warningtext))
+        {
+        echo "<div class='PageInformal'>" . $warningtext . "</div>";
+        }
 
     if($collection["type"] == COLLECTION_TYPE_FEATURED && is_featured_collection_category($collection))
         {
         echo "<p>" . htmlspecialchars($lang["share_fc_warning"]) . "</p>";
         }
     ?>
-	<div class="VerticalNav">
-	<ul>
-	<?php
-	
+    <div class="VerticalNav">
+    <ul>
+    <?php
+    
     # Flag to prevent duplicate rendering of the "generateinternalurl" text and associated input field
     $generateinternalurl_rendered=false;
 
     if(!$editing || $editexternalurl)
-		{?>
-		<?php if ($email_sharing) { ?><li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_email.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&collection=<?php echo urlencode($collection_url); ?>&restypes=<?php echo urlencode($restypes); ?>&order_by=<?php echo urlencode($order_by); ?>&col_order_by=<?php echo urlencode($col_order_by); ?>&sort=<?php echo urlencode($sort); ?>&offset=<?php echo urlencode($offset); ?>&find=<?php echo urlencode($find); ?>&k=<?php echo urlencode($k); ?>"><?php echo htmlspecialchars($lang["emailcollectiontitle"])?></a></li><?php } ?>
+        {?>
+        <?php if ($email_sharing) { ?><li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_email.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&collection=<?php echo urlencode($collection_url); ?>&restypes=<?php echo urlencode($restypes); ?>&order_by=<?php echo urlencode($order_by); ?>&col_order_by=<?php echo urlencode($col_order_by); ?>&sort=<?php echo urlencode($sort); ?>&offset=<?php echo urlencode($offset); ?>&find=<?php echo urlencode($find); ?>&k=<?php echo urlencode($k); ?>"><?php echo htmlspecialchars($lang["emailcollectiontitle"])?></a></li><?php } ?>
 
-		<?php
-		# Share as a dash tile.
-		global $home_dash,$anonymous_login,$username;
+        <?php
+        # Share as a dash tile.
+        global $home_dash,$anonymous_login,$username;
 
-		if($home_dash && checkPermission_dashcreate() && !hook('replace_share_dash_create'))
-			{?>
-			<li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short;?>pages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=!collection<?php echo $ref?>&order_by=relevance&sort=DESC"  onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["createnewdashtile"]);?></a></li>
-			<?php
-		}
-		?>
-		
-		<?php 
-		if(!$internal_share_only)
-			{ ?>
-			<li><i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref) ?>&generateurl=true"><?php echo htmlspecialchars($lang["generateurl"])?></a></li> <?php 
-			} 
+        if($home_dash && checkPermission_dashcreate() && !hook('replace_share_dash_create'))
+            {?>
+            <li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short;?>pages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=!collection<?php echo $ref?>&order_by=relevance&sort=DESC"  onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["createnewdashtile"]);?></a></li>
+            <?php
+        }
+        ?>
+        
+        <?php 
+        if(!$internal_share_only)
+            { ?>
+            <li><i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref) ?>&generateurl=true"><?php echo htmlspecialchars($lang["generateurl"])?></a></li> <?php 
+            } 
 
         if($hide_internal_sharing_url==false 
             && ($collection["type"] == COLLECTION_TYPE_FEATURED
@@ -321,12 +321,12 @@ include "../include/header.php";
                 $generateinternalurl_rendered=true;
                 }?>
 
-		<?php hook("extra_share_options");
-		}
-	if (!$internal_share_only && ($editing || $generateurl))
-		{
+        <?php hook("extra_share_options");
+        }
+    if (!$internal_share_only && ($editing || $generateurl))
+        {
         if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl) && $collection["public"]==1 || $ignore_collection_access)
-			{
+            {
             # Only render "generateinternalurl" text and associated input field if it hasn't already been rendered
             if(!$generateinternalurl_rendered) 
                 {?>
@@ -335,14 +335,14 @@ include "../include/header.php";
                 <?php
                 $generateinternalurl_rendered=true;
                 }?>
-			<?php
-			}
-			
-		if ($access==-1 || ($editing && !$editexternalurl))
-			{
-			?>
-			<p><?php if (!$editing || $editexternalurl){echo htmlspecialchars($lang["selectgenerateurlexternal"]);} ?></p>
-			<?php
+            <?php
+            }
+            
+        if ($access==-1 || ($editing && !$editexternalurl))
+            {
+            ?>
+            <p><?php if (!$editing || $editexternalurl){echo htmlspecialchars($lang["selectgenerateurlexternal"]);} ?></p>
+            <?php
             if($editing)
                 {
                 echo "<div class='Question'><label>" . $lang["collectionname"]  . "</label><div class='Fixed'>" . i18n_get_collection_name($collection) . "</div><div class='clearerleft'></div></div>";
@@ -356,24 +356,24 @@ include "../include/header.php";
 
             render_share_options($shareoptions);
             
-			hook("additionalcollectionshare");?>
-			
-			<div class="QuestionSubmit">
-			<?php 
-			if ($editing  && !$editexternalurl)
-				{?>
-				<input name="editexternalurl" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"])?>&nbsp;&nbsp;" />
-				<?php
-				}
-			else
-				{?>
-				<input name="generateurl" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["generateexternalurl"])?>&nbsp;&nbsp;" />
-				<?php 
-				}
-				?>
-			</div>
-			<?php
-			}
+            hook("additionalcollectionshare");?>
+            
+            <div class="QuestionSubmit">
+            <?php 
+            if ($editing  && !$editexternalurl)
+                {?>
+                <input name="editexternalurl" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"])?>&nbsp;&nbsp;" />
+                <?php
+                }
+            else
+                {?>
+                <input name="generateurl" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["generateexternalurl"])?>&nbsp;&nbsp;" />
+                <?php 
+                }
+                ?>
+            </div>
+            <?php
+            }
         else if($editaccess == "" && !($editing && $editexternalurl))
             {
             // Access has been selected. Generate a new URL.
@@ -406,13 +406,13 @@ include "../include/header.php";
                 }
             }
 
-		# Process editing of external share
-		if ($editexternalurl)
-			{
-			$editsuccess=edit_collection_external_access($editaccess,$access,$expires,getval("usergroup",""),$sharepwd);
-			if($editsuccess){echo "<span style='font-weight:bold;'>".$lang['changessaved']." - <em>".$editaccess."</em>";}
-			}
-		}
+        # Process editing of external share
+        if ($editexternalurl)
+            {
+            $editsuccess=edit_collection_external_access($editaccess,$access,$expires,getval("usergroup",""),$sharepwd);
+            if($editsuccess){echo "<span style='font-weight:bold;'>".$lang['changessaved']." - <em>".$editaccess."</em>";}
+            }
+        }
 
 
 ?>
@@ -421,80 +421,80 @@ include "../include/header.php";
 </div>
 
 <?php if (collection_writeable($ref)||
-	(isset($collection['savedsearch']) && $collection['savedsearch']!=null && ($userref==$collection["user"] || checkperm("h"))))
-	{
-	if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl))
-		{
-		?>
-		<h2><?php echo htmlspecialchars($lang["internalusersharing"])?></h2>
-		<div class="Question">
-		<label for="users"><?php echo htmlspecialchars($lang["attachedusers"])?></label>
-		<div class="Fixed"><?php echo escape($collection["users"] == "" ? $lang["noattachedusers"] : $collection["users"]); ?><br /><br />
-		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_edit.php?ref=<?php echo urlencode($ref); ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-edit"]);?></a>
-		</div>
-		<div class="clearerleft"> </div>
-		</div>
-		
-		<p>&nbsp;</p>
-		<?php
-		}
-	if(!$internal_share_only)
-		{?>
-		<h2><?php echo htmlspecialchars($lang["externalusersharing"])?></h2>
+    (isset($collection['savedsearch']) && $collection['savedsearch']!=null && ($userref==$collection["user"] || checkperm("h"))))
+    {
+    if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl))
+        {
+        ?>
+        <h2><?php echo htmlspecialchars($lang["internalusersharing"])?></h2>
+        <div class="Question">
+        <label for="users"><?php echo htmlspecialchars($lang["attachedusers"])?></label>
+        <div class="Fixed"><?php echo escape($collection["users"] == "" ? $lang["noattachedusers"] : $collection["users"]); ?><br /><br />
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_edit.php?ref=<?php echo urlencode($ref); ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-edit"]);?></a>
+        </div>
+        <div class="clearerleft"> </div>
+        </div>
+        
+        <p>&nbsp;</p>
+        <?php
+        }
+    if(!$internal_share_only)
+        {?>
+        <h2><?php echo htmlspecialchars($lang["externalusersharing"])?></h2>
 
-		<?php
+        <?php
         $keys=get_external_shares(array("share_collection"=>$ref));
-		if (count($keys)==0)
-			{
-			?>
-			<p><?php echo htmlspecialchars($lang["noexternalsharing"]) ?></p>
-			<?php
-			}
-		else
-			{
-			?>
-			<div class="Listview">
-			<table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
-			<tr class="ListviewTitleStyle">
-			<td><?php echo htmlspecialchars($lang["accesskey"]);?></td>
-			<td><?php echo htmlspecialchars($lang["sharedby"]);?></td>
-			<td><?php echo htmlspecialchars($lang["sharedwith"]);?></td>
-			<td><?php echo htmlspecialchars($lang["lastupdated"]);?></td>
-			<td><?php echo htmlspecialchars($lang["lastused"]);?></td>
-			<td><?php echo htmlspecialchars($lang["expires"]);?></td>
-			<td><?php echo htmlspecialchars($lang["access"]);?></td>
-			<?php
-			global $social_media_links;
-			if (!empty($social_media_links))
-				{
-				?>
-				<td><?php echo htmlspecialchars($lang['social_media']); ?></td>
-				<?php
-				}
-			?>
-			<?php hook("additionalcolexternalshareheader");?>
-			<td><div class="ListTools"><?php echo htmlspecialchars($lang["tools"])?></div></td>
-			</tr>
-			<?php
-			for ($n=0;$n<count($keys);$n++)
-				{
-				?>
-				<tr>
-				<td><div class="ListTitle"><a target="_blank" href="<?php echo $baseurl . "?c=" . urlencode($ref) . "&k=" . urlencode($keys[$n]["access_key"]) ?>"><?php echo htmlspecialchars($keys[$n]["access_key"]) ?></a></div></td>
-				<td><?php echo htmlspecialchars(resolve_users($keys[$n]["user"])??"")?></td>
-				<td><?php echo htmlspecialchars($keys[$n]["email"]??"") ?></td>
-				<td><?php echo htmlspecialchars(nicedate($keys[$n]["date"],true, true, true)??"");	?></td>
-				<td><?php echo htmlspecialchars(nicedate($keys[$n]["lastused"],true, true, true)??""); ?></td>
-				<td><?php echo htmlspecialchars(($keys[$n]["expires"]=="")?$lang["never"]:nicedate($keys[$n]["expires"],false)??"") ?></td>
-				<td><?php echo htmlspecialchars(($keys[$n]["access"]==-1)?"":$lang["access" . $keys[$n]["access"]]??""); ?></td>
-				<?php
-				if (!empty($social_media_links))
-					{
-					?>
-            		<td><?php renderSocialMediaShareLinksForUrl(generateURL($baseurl, array('c' => $ref, 'k' => $keys[$n]['access_key']))); ?></td>
-					<?php
-					}
-				?>
+        if (count($keys)==0)
+            {
+            ?>
+            <p><?php echo htmlspecialchars($lang["noexternalsharing"]) ?></p>
+            <?php
+            }
+        else
+            {
+            ?>
+            <div class="Listview">
+            <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
+            <tr class="ListviewTitleStyle">
+            <td><?php echo htmlspecialchars($lang["accesskey"]);?></td>
+            <td><?php echo htmlspecialchars($lang["sharedby"]);?></td>
+            <td><?php echo htmlspecialchars($lang["sharedwith"]);?></td>
+            <td><?php echo htmlspecialchars($lang["lastupdated"]);?></td>
+            <td><?php echo htmlspecialchars($lang["lastused"]);?></td>
+            <td><?php echo htmlspecialchars($lang["expires"]);?></td>
+            <td><?php echo htmlspecialchars($lang["access"]);?></td>
+            <?php
+            global $social_media_links;
+            if (!empty($social_media_links))
+                {
+                ?>
+                <td><?php echo htmlspecialchars($lang['social_media']); ?></td>
+                <?php
+                }
+            ?>
+            <?php hook("additionalcolexternalshareheader");?>
+            <td><div class="ListTools"><?php echo htmlspecialchars($lang["tools"])?></div></td>
+            </tr>
+            <?php
+            for ($n=0;$n<count($keys);$n++)
+                {
+                ?>
+                <tr>
+                <td><div class="ListTitle"><a target="_blank" href="<?php echo $baseurl . "?c=" . urlencode($ref) . "&k=" . urlencode($keys[$n]["access_key"]) ?>"><?php echo htmlspecialchars($keys[$n]["access_key"]) ?></a></div></td>
+                <td><?php echo htmlspecialchars(resolve_users($keys[$n]["user"])??"")?></td>
+                <td><?php echo htmlspecialchars($keys[$n]["email"]??"") ?></td>
+                <td><?php echo htmlspecialchars(nicedate($keys[$n]["date"],true, true, true)??"");  ?></td>
+                <td><?php echo htmlspecialchars(nicedate($keys[$n]["lastused"],true, true, true)??""); ?></td>
+                <td><?php echo htmlspecialchars(($keys[$n]["expires"]=="")?$lang["never"]:nicedate($keys[$n]["expires"],false)??"") ?></td>
+                <td><?php echo htmlspecialchars(($keys[$n]["access"]==-1)?"":$lang["access" . $keys[$n]["access"]]??""); ?></td>
+                <?php
+                if (!empty($social_media_links))
+                    {
+                    ?>
+                    <td><?php renderSocialMediaShareLinksForUrl(generateURL($baseurl, array('c' => $ref, 'k' => $keys[$n]['access_key']))); ?></td>
+                    <?php
+                    }
+                ?>
                 <?php hook("additionalcolexternalsharerecord");
                 $editlink = generateurl($baseurl . "/pages/collection_share.php", 
                     array(
@@ -502,23 +502,23 @@ include "../include/header.php";
                         "editaccess"        => $keys[$n]["access_key"],
                     ));
                 ?>                
-				<td><div class="ListTools">
-				<a href="#" onClick="if (confirm('<?php echo escape($lang["confirmdeleteaccess"])?>')) {document.getElementById('deleteaccess').value='<?php echo escape($keys[$n]["access_key"]) ?>';document.getElementById('collectionform').submit(); return false;}"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-delete"])?></a>
-				<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-edit"])?></a>
-				</div></td>
-				</tr>
-				<?php
-				}
-			?>
-			</table>
-			</div>
-			<?php
-			}
-		?>
-		
-		<?php
-		}
-	}
+                <td><div class="ListTools">
+                <a href="#" onClick="if (confirm('<?php echo escape($lang["confirmdeleteaccess"])?>')) {document.getElementById('deleteaccess').value='<?php echo escape($keys[$n]["access_key"]) ?>';document.getElementById('collectionform').submit(); return false;}"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-delete"])?></a>
+                <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-edit"])?></a>
+                </div></td>
+                </tr>
+                <?php
+                }
+            ?>
+            </table>
+            </div>
+            <?php
+            }
+        ?>
+        
+        <?php
+        }
+    }
 ?>
 
 </form>

@@ -48,22 +48,22 @@ if (getval("save","")!="")
             $custom_field_value = getval("custom" . $n,"");
             $custom_field_sub_value_list = "";
 
-            for ($i=1; $i<=1000; $i++)		# check if there are sub values, i.e. custom<n>_<n> form fields, for example a bunch of checkboxes if custom type is set to "5"
+            for ($i=1; $i<=1000; $i++)      # check if there are sub values, i.e. custom<n>_<n> form fields, for example a bunch of checkboxes if custom type is set to "5"
                 {
                 $custom_field_sub_value = getval("custom" . $n . "_" . $i, "");
                 if ($custom_field_sub_value == "") continue;
-                $custom_field_sub_value_list .= ($custom_field_sub_value_list == "" ? "" : ", ") . $custom_field_sub_value;		# we have found a sub value so append to the list
+                $custom_field_sub_value_list .= ($custom_field_sub_value_list == "" ? "" : ", ") . $custom_field_sub_value;     # we have found a sub value so append to the list
                 }
 
-            if ($custom_field_sub_value_list != "")		# we found sub values
+            if ($custom_field_sub_value_list != "")     # we found sub values
                 {
-                $customContents.=i18n_get_translated($custom[$n]) . ": " . i18n_get_translated($custom_field_sub_value_list) . "\n\n";		# append with list of all sub values found
+                $customContents.=i18n_get_translated($custom[$n]) . ": " . i18n_get_translated($custom_field_sub_value_list) . "\n\n";      # append with list of all sub values found
                 }
-            elseif ($custom_field_value != "")		# if no sub values found then treat as normal field
+            elseif ($custom_field_value != "")      # if no sub values found then treat as normal field
                 {
-                $customContents.=i18n_get_translated($custom[$n]) . ": " . i18n_get_translated($custom_field_value) . "\n\n";		# there is a value so append it
+                $customContents.=i18n_get_translated($custom[$n]) . ": " . i18n_get_translated($custom_field_value) . "\n\n";       # there is a value so append it
                 }
-            elseif (isset($required) && in_array($custom[$n],$required))		# if the field was mandatory and a value or sub value(s) not set then we return false
+            elseif (isset($required) && in_array($custom[$n],$required))        # if the field was mandatory and a value or sub value(s) not set then we return false
                 {
                 $missingFields[] = $custom[$n];
                 }
@@ -128,7 +128,7 @@ if (getval("save","")!="")
             $completed = true;  
             }
         }
-	}
+    }
 include "../include/header.php";
 
 include "../include/login_background.php";
@@ -166,112 +166,112 @@ if (!hook("replacemain"))
 
 # Add custom fields 
 if (isset($custom_registration_fields))
-	{
-	$custom=explode(",",$custom_registration_fields);
+    {
+    $custom=explode(",",$custom_registration_fields);
 
-	if (isset($custom_registration_required))
-	{
-		$required=explode(",",$custom_registration_required);
-		}
+    if (isset($custom_registration_required))
+    {
+        $required=explode(",",$custom_registration_required);
+        }
 
-	for ($n=0;$n<count($custom);$n++)
-		{
-		$type=1;
+    for ($n=0;$n<count($custom);$n++)
+        {
+        $type=1;
 
-		# Support different question types for the custom fields.
-		if (isset($custom_registration_types[$custom[$n]])) {$type=$custom_registration_types[$custom[$n]];}
+        # Support different question types for the custom fields.
+        if (isset($custom_registration_types[$custom[$n]])) {$type=$custom_registration_types[$custom[$n]];}
 
-		if ($type==4)
-			{
-			# HTML type - just output the HTML.
-			$html = $custom_registration_html[$custom[$n]];
-			if (is_string($html))
-				echo $html;
-			else if (isset($html[$language]))
-				echo $html[$language];
-			else if (isset($html[$defaultlanguage]))
-				echo $html[$defaultlanguage];
-			}
-		else
-			{
-			?>
-			<div class="Question" id="Question<?php echo $n?>">
-			<label for="custom<?php echo $n?>"><?php echo htmlspecialchars(i18n_get_translated($custom[$n]))?>
-			<?php if (isset($required))
-			{
-				if (in_array($custom[$n],$required)) { ?><sup>*</sup><?php }
-				}
-				 ?>
-			</label>
+        if ($type==4)
+            {
+            # HTML type - just output the HTML.
+            $html = $custom_registration_html[$custom[$n]];
+            if (is_string($html))
+                echo $html;
+            else if (isset($html[$language]))
+                echo $html[$language];
+            else if (isset($html[$defaultlanguage]))
+                echo $html[$defaultlanguage];
+            }
+        else
+            {
+            ?>
+            <div class="Question" id="Question<?php echo $n?>">
+            <label for="custom<?php echo $n?>"><?php echo htmlspecialchars(i18n_get_translated($custom[$n]))?>
+            <?php if (isset($required))
+            {
+                if (in_array($custom[$n],$required)) { ?><sup>*</sup><?php }
+                }
+                 ?>
+            </label>
 
-			<?php if ($type==1) {  # Normal text box
-			?>
-			<input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
+            <?php if ($type==1) {  # Normal text box
+            ?>
+            <input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
 <?php } ?>
 
-			<?php if ($type==2) { # Large text box 
-			?>
-			<textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
+            <?php if ($type==2) { # Large text box 
+            ?>
+            <textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
 <?php } ?>
 
-			<?php if ($type==3) { # Drop down box
-			?>
-			<select name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth">
-			<?php foreach ($custom_registration_options[$custom[$n]] as $option)
-				{
-				?>
-				<option><?php echo htmlspecialchars(i18n_get_translated($option));?></option>
-				<?php
-				}
-			?>
-			</select>
+            <?php if ($type==3) { # Drop down box
+            ?>
+            <select name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth">
+            <?php foreach ($custom_registration_options[$custom[$n]] as $option)
+                {
+                ?>
+                <option><?php echo htmlspecialchars(i18n_get_translated($option));?></option>
+                <?php
+                }
+            ?>
+            </select>
 <?php } ?>
 
-			<?php if ($type==5) { # checkbox
-				?>
-				<div class="stdwidth">			
-					<table>
-						<tbody>
-						<?php								
-						$i=0;
-						foreach ($custom_registration_options[$custom[$n]] as $option)		# display each checkbox
-							{
-							$i++;
-							$option_exploded = explode (":",$option);
-							if (count($option_exploded) == 2)		# there are two fields, the first indicates if checked by default, the second is the name
-								{
-								$option_checked = ($option_exploded[0] == "1");
-								$option_label = htmlspecialchars(i18n_get_translated(trim($option_exploded[1])));
-								}
-							else		# there are not two fields so treat the whole string as the name and set to unchecked
-								{
-								$option_checked = false;
-								$option_label = htmlspecialchars(i18n_get_translated(trim($option)));
-								}
-							$option_field_name = "custom" . $n . "_" . $i;		# same format as all custom fields, but with a _<n> indicating sub field number
-							?>
-							<tr>
-								<td>
-									<input name="<?php echo $option_field_name; ?>" id="<?php echo $option_field_name; ?>" type="checkbox" <?php if ($option_checked) { ?> checked="checked"<?php } ?> value="<?php echo $option_label; ?>"></input>
-								</td>
-								<td>
-									<label for="<?php echo $option_field_name; ?>" class="InnerLabel"><?php echo $option_label;?></label>												
-								</td>
-							</tr>
-<?php					
-							}			
-						?>				
-						</tbody>
-					</table>
-				</div>			
+            <?php if ($type==5) { # checkbox
+                ?>
+                <div class="stdwidth">          
+                    <table>
+                        <tbody>
+                        <?php	                          
+                        $i=0;
+                        foreach ($custom_registration_options[$custom[$n]] as $option)      # display each checkbox
+                            {
+                            $i++;
+                            $option_exploded = explode (":",$option);
+                            if (count($option_exploded) == 2)       # there are two fields, the first indicates if checked by default, the second is the name
+                                {
+                                $option_checked = ($option_exploded[0] == "1");
+                                $option_label = htmlspecialchars(i18n_get_translated(trim($option_exploded[1])));
+                                }
+                            else        # there are not two fields so treat the whole string as the name and set to unchecked
+                                {
+                                $option_checked = false;
+                                $option_label = htmlspecialchars(i18n_get_translated(trim($option)));
+                                }
+                            $option_field_name = "custom" . $n . "_" . $i;      # same format as all custom fields, but with a _<n> indicating sub field number
+                            ?>
+                            <tr>
+                                <td>
+                                    <input name="<?php echo $option_field_name; ?>" id="<?php echo $option_field_name; ?>" type="checkbox" <?php if ($option_checked) { ?> checked="checked"<?php } ?> value="<?php echo $option_label; ?>"></input>
+                                </td>
+                                <td>
+                                    <label for="<?php echo $option_field_name; ?>" class="InnerLabel"><?php echo $option_label;?></label>                                               
+                                </td>
+                            </tr>
+<?php	              
+                            }           
+                        ?>              
+                        </tbody>
+                    </table>
+                </div>          
 <?php } ?>
 
-			<div class="clearerleft"> </div>
-			</div>
-			<?php
-			}
-		}
-	}
+            <div class="clearerleft"> </div>
+            </div>
+            <?php
+            }
+        }
+    }
 ?>
 
 <?php if (!hook("replacegroupselect")) { /* BEGIN hook Replacegroupselect */ ?>
@@ -284,15 +284,15 @@ $groups=get_registration_selectable_usergroups();
 <select name="usergroup" id="usergroup" class="stdwidth">
 <option value></option>
 <?php for ($n=0;$n<count($groups);$n++)
-	{
-	?>
-	<option value="<?php echo $groups[$n]["ref"] ?>" <?php if($groups[$n]["ref"] == getval("usergroup", 0, true)){echo " selected";} ?>><?php echo htmlspecialchars($groups[$n]["name"]) ?></option>
-	<?php
-	}
+    {
+    ?>
+    <option value="<?php echo $groups[$n]["ref"] ?>" <?php if($groups[$n]["ref"] == getval("usergroup", 0, true)){echo " selected";} ?>><?php echo htmlspecialchars($groups[$n]["name"]) ?></option>
+    <?php
+    }
 ?>
 </select>
 <div class="clearerleft"> </div>
-</div>	
+</div>  
 <?php } ?>
 <?php } /* END hook Replacegroupselect */ ?>
 
@@ -306,7 +306,7 @@ $groups=get_registration_selectable_usergroups();
 <label for="userrequestcomment"><?php echo $lang["userrequestcomment"]?></label>
 <textarea name="userrequestcomment" id="userrequestcomment" class="stdwidth"><?php echo $userrequestcomment ?></textarea>
 <div class="clearerleft"> </div>
-</div>	
+</div>  
 <?php } /* END hook replaceuserrequestcomment */
 
 hook("userrequestadditional");
@@ -324,9 +324,9 @@ if($user_registration_opt_in)
     }
 
 if(!hook("replaceantispam"))
-	{
+    {
     render_antispam_question();
-	}
+    }
 ?>
 <script>
 <?php
@@ -345,7 +345,7 @@ function submitForm()
     }
 </script>
 
-<div class="QuestionSubmit UserRequestSubmit">		
+<div class="QuestionSubmit UserRequestSubmit">      
 <input name='save' value='yes' type='hidden'>
 <input name="user_save" id="user_submit" onclick="submitForm()" type="button" value="&nbsp;&nbsp;<?php echo $lang["requestuserlogin"]?>&nbsp;&nbsp;" />
 </div>
@@ -353,11 +353,11 @@ function submitForm()
 
 <?php
 if(!hook("replace_user_request_required_key"))
-	{
-	?>
-	<p><sup>*</sup> <?php echo $lang["requiredfield"] ?></p>
-	<?php
-	}
+    {
+    ?>
+    <p><sup>*</sup> <?php echo $lang["requiredfield"] ?></p>
+    <?php
+    }
 ?>
 <div> <!-- end of login_box -->
 <?php

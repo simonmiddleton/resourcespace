@@ -8,7 +8,7 @@ function HookSimplesamlAllPreheaderoutput()
         return false;
         }
 
-	global $simplesaml_site_block, $simplesaml_allow_public_shares, $simplesaml_allowedpaths, $simplesaml_login, $simplesaml_allow_standard_login,
+    global $simplesaml_site_block, $simplesaml_allow_public_shares, $simplesaml_allowedpaths, $simplesaml_login, $simplesaml_allow_standard_login,
     $anonymous_login, $pagename, $baseurl;
 
     if($simplesaml_login && simplesaml_is_authenticated())
@@ -54,14 +54,14 @@ function HookSimplesamlAllPreheaderoutput()
         $show_anonymous_login_panel = false;
         }
 
-	// If not blocking site completely and allowing standard logins but not on login page, do nothing and return
-	if (!$simplesaml_site_block && $simplesaml_allow_standard_login)
+    // If not blocking site completely and allowing standard logins but not on login page, do nothing and return
+    if (!$simplesaml_site_block && $simplesaml_allow_standard_login)
         {
         debug("simplesaml: standard user login - no action required");
         return true;
         }
 
-	// Check for exclusions
+    // Check for exclusions
     $k = getval('k', '');
     $resource = getval('ref', '');
     $search = getval('search', '');
@@ -121,16 +121,16 @@ function HookSimplesamlAllPreheaderoutput()
             continue;
             }
 
-		$samlexempturl=strpos($url,$simplesaml_allowedpath);
-		if ($samlexempturl!==false && $samlexempturl==0)
-			{
-			return true;
-			}
-		}
+        $samlexempturl=strpos($url,$simplesaml_allowedpath);
+        if ($samlexempturl!==false && $samlexempturl==0)
+            {
+            return true;
+            }
+        }
 
-	$as=simplesaml_authenticate();
-	return true;
-	}
+    $as=simplesaml_authenticate();
+    return true;
+    }
 
 
 function HookSimplesamlAllProvideusercredentials()
@@ -140,7 +140,7 @@ function HookSimplesamlAllProvideusercredentials()
             return false;
             }
 
-		global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
+        global $pagename, $simplesaml_allow_standard_login, $simplesaml_prefer_standard_login, $baseurl, $path, $default_res_types, $scramble_key,
         $simplesaml_username_suffix, $simplesaml_username_attribute, $simplesaml_fullname_attribute, $simplesaml_email_attribute, $simplesaml_group_attribute,
         $simplesaml_fallback_group, $simplesaml_groupmap, $user_select_sql, $session_hash,$simplesaml_fullname_separator,$simplesaml_username_separator,
         $simplesaml_custom_attributes,$lang,$simplesaml_login, $simplesaml_site_block, $anonymous_login,$allow_password_change, $simplesaml_create_new_match_email,
@@ -190,11 +190,11 @@ function HookSimplesamlAllProvideusercredentials()
             return true;
             }
 
-		// Return false if not already authenticated and local login option is preferred
-		if(!simplesaml_is_authenticated() && $simplesaml_allow_standard_login  && $simplesaml_prefer_standard_login && getval("usesso","")=="" )
-			{
+        // Return false if not already authenticated and local login option is preferred
+        if(!simplesaml_is_authenticated() && $simplesaml_allow_standard_login  && $simplesaml_prefer_standard_login && getval("usesso","")=="" )
+            {
             return false;
-			}
+            }
 
         if(!simplesaml_is_authenticated())
             {
@@ -213,7 +213,7 @@ function HookSimplesamlAllProvideusercredentials()
                 ?>
                 <script>
                 top.location.href="<?php echo str_replace(array("modal=true","ajax=true"),"",$reload_url); ?>";
-                </script>	
+                </script>   
                 <?php    
                 exit();
                 }
@@ -221,7 +221,7 @@ function HookSimplesamlAllProvideusercredentials()
             simplesaml_authenticate();
             }
 
-		$attributes = simplesaml_getattributes();
+        $attributes = simplesaml_getattributes();
 
         // Construct username        
         $username = "";
@@ -289,13 +289,13 @@ function HookSimplesamlAllProvideusercredentials()
             }
 
         if(strpos($simplesaml_fullname_attribute,",")!==false) // Do we have to join two fields together?
-		    {
-		    $fullname_attributes=explode(",",$simplesaml_fullname_attribute);
-		    }
-		else // Previous version used semi-colons
-		    {
-	        $fullname_attributes=explode(";",$simplesaml_fullname_attribute);
-		    }
+            {
+            $fullname_attributes=explode(",",$simplesaml_fullname_attribute);
+            }
+        else // Previous version used semi-colons
+            {
+            $fullname_attributes=explode(";",$simplesaml_fullname_attribute);
+            }
 
         $displayname ="";
         foreach ($fullname_attributes as $fullname_attribute)
@@ -310,10 +310,10 @@ function HookSimplesamlAllProvideusercredentials()
             $displayname.=  $attributes[$fullname_attribute][0];
             }
 
-		$displayname=trim($displayname);
-		debug("simplesaml: constructed fullname : "  . $displayname);
+        $displayname=trim($displayname);
+        debug("simplesaml: constructed fullname : "  . $displayname);
 
-		if(isset($attributes[$simplesaml_email_attribute][0]))
+        if(isset($attributes[$simplesaml_email_attribute][0]))
             {
             $email = $attributes[$simplesaml_email_attribute][0];
             }
@@ -354,7 +354,7 @@ function HookSimplesamlAllProvideusercredentials()
                 }
             }
 
-		debug ("simplesaml - got user details username=" . $username . ", email: " . (isset($email)?$email:"(not received)"));
+        debug ("simplesaml - got user details username=" . $username . ", email: " . (isset($email)?$email:"(not received)"));
 
         if(!isset($email))
             {
@@ -362,24 +362,24 @@ function HookSimplesamlAllProvideusercredentials()
             $email = "";
             }
 
-		// figure out group
-		$group = $simplesaml_fallback_group;
-		$currentpriority=0;
-		if (count($simplesaml_groupmap)>0)
+        // figure out group
+        $group = $simplesaml_fallback_group;
+        $currentpriority=0;
+        if (count($simplesaml_groupmap)>0)
             {
-			for ($i = 0; $i < count($simplesaml_groupmap); $i++)
-				{
-				for($g = 0; $g < count($groups); $g++)
-					{
-					if (($groups[$g] == $simplesaml_groupmap[$i]['samlgroup']) && is_numeric($simplesaml_groupmap[$i]['rsgroup']) && $simplesaml_groupmap[$i]['priority']>$currentpriority)
-						{
-						$group = $simplesaml_groupmap[$i]['rsgroup'];
-						$currentpriority=$simplesaml_groupmap[$i]['priority'];
+            for ($i = 0; $i < count($simplesaml_groupmap); $i++)
+                {
+                for($g = 0; $g < count($groups); $g++)
+                    {
+                    if (($groups[$g] == $simplesaml_groupmap[$i]['samlgroup']) && is_numeric($simplesaml_groupmap[$i]['rsgroup']) && $simplesaml_groupmap[$i]['priority']>$currentpriority)
+                        {
+                        $group = $simplesaml_groupmap[$i]['rsgroup'];
+                        $currentpriority=$simplesaml_groupmap[$i]['priority'];
                         debug("simplesaml  - found mapping for SAML group: " . $groups[$g] . ", group #" . $simplesaml_groupmap[$i]['rsgroup'] . ". priority :"  . $simplesaml_groupmap[$i]['priority']);
-						}
-					}
-				}
-			}
+                        }
+                    }
+                }
+            }
         debug("simplesaml  - using RS group #" . $group);
 
         // If custom attributes need to be recorded against a user record, do it now
@@ -401,23 +401,23 @@ function HookSimplesamlAllProvideusercredentials()
             }
 
         if ($userid <= 0)
-			{
+            {
             // User authenticated, but does not exist
             // First see if there is a matching account
-            $email_matches=ps_query("SELECT ref, username, fullname, origin FROM user WHERE email=?",array("s",$email));				
+            $email_matches=ps_query("SELECT ref, username, fullname, origin FROM user WHERE email=?",array("s",$email));                
 
             if(count($email_matches)>0 && trim($email) != "")
-				{
-				if(count($email_matches)==1 && $simplesaml_create_new_match_email)
-					{
+                {
+                if(count($email_matches)==1 && $simplesaml_create_new_match_email)
+                    {
                     // We want adopt this matching account - update the username and details to match the new login credentials
                     debug("simplesaml - user authenticated with matching email for existing user . " . $email . ", updating user account '" . $email_matches[0]["username"] . "' (id #" .$email_matches[0]["ref"] . ") to new username " . $username);
                     $userid = $email_matches[0]["ref"];
                     $origin = $email_matches[0]["origin"];
-					$comment = $lang["simplesaml_usermatchcomment"]; 
+                    $comment = $lang["simplesaml_usermatchcomment"]; 
                     $update_hash = true;
                     }
-				else
+                else
                     {
                     if(!$simplesaml_allow_duplicate_email)
                         {
@@ -472,9 +472,9 @@ function HookSimplesamlAllProvideusercredentials()
             }
             
         if ($userid > 0)
-			{
-			// Update user info
-			global $simplesaml_update_group, $session_autologout;
+            {
+            // Update user info
+            global $simplesaml_update_group, $session_autologout;
             $hash_update = "";
             $sql = "UPDATE user SET origin='simplesaml', username=?,";
             $params=array("s",$username);
@@ -502,11 +502,11 @@ function HookSimplesamlAllProvideusercredentials()
 
                 log_activity($comment, LOG_CODE_UNSPECIFIED, 'simplesaml', 'user', 'origin', $userid, null, (isset($origin) ? $origin : null), $userid);
                 }
-			if($simplesaml_update_group || (isset($currentuser[0]["usergroup"]) && $currentuser[0]["usergroup"] == ""))
-				{
-				$sql .= ", usergroup = ?";
+            if($simplesaml_update_group || (isset($currentuser[0]["usergroup"]) && $currentuser[0]["usergroup"] == ""))
+                {
+                $sql .= ", usergroup = ?";
                 $params[]="i";$params[]=$group;
-				}
+                }
             if(0 < count($custom_attributes))
                 {
                 $custom_attributes = json_encode($custom_attributes);
@@ -514,9 +514,9 @@ function HookSimplesamlAllProvideusercredentials()
                 $params[]="s";$params[]=$custom_attributes;
                 }
 
-			$sql .= " WHERE ref = ?";
+            $sql .= " WHERE ref = ?";
             $params[]="i";$params[]=$userid;
-			ps_query($sql,$params);
+            ps_query($sql,$params);
 
             $user_select_sql = new PreparedStatementQuery();
             $user_select_sql->sql = "u.username = ?";
@@ -524,9 +524,9 @@ function HookSimplesamlAllProvideusercredentials()
             
             $allow_password_change = false;
             $session_autologout = false;
-			return true;
-			}
-		return false;
+            return true;
+            }
+        return false;
         }
 
 function HookSimplesamlAllLoginformlink()
@@ -570,10 +570,10 @@ function HookSimplesamlLoginPostlogout()
             {
             return false;
             }
-		global $simplesaml_login;
+        global $simplesaml_login;
 
-		if($simplesaml_login && simplesaml_is_authenticated())
-			{
+        if($simplesaml_login && simplesaml_is_authenticated())
+            {
             simplesaml_signout();
             }
         }
@@ -584,12 +584,12 @@ function HookSimplesamlLoginPostlogout2()
             {
             return false;
             }
-		global $baseurl,$simplesaml_login;
-		if (getval("logout","")!="" && $simplesaml_login && simplesaml_is_authenticated())
-			{
-			simplesaml_signout();
-			header('Location: '.$baseurl);
-			}
+        global $baseurl,$simplesaml_login;
+        if (getval("logout","")!="" && $simplesaml_login && simplesaml_is_authenticated())
+            {
+            simplesaml_signout();
+            header('Location: '.$baseurl);
+            }
         }
 
 

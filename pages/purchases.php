@@ -22,57 +22,57 @@ $name=getval("name","");
 
 $delete=getval("delete","");
 if ($delete!="" && enforcePostRequest(getval("ajax", false)))
-	{
-	# Delete collection
-	delete_collection($delete);
+    {
+    # Delete collection
+    delete_collection($delete);
 
-	# Get count of collections
-	$c=get_user_collections($userref);
+    # Get count of collections
+    $c=get_user_collections($userref);
 
-	# If the user has just deleted the collection they were using, select a new collection
-	if ($usercollection==$delete && count($c)>0)
-		{
-		# Select the first collection in the dropdown box.
-		$usercollection=$c[0]["ref"];
-		set_user_collection($userref,$usercollection);
-		}
+    # If the user has just deleted the collection they were using, select a new collection
+    if ($usercollection==$delete && count($c)>0)
+        {
+        # Select the first collection in the dropdown box.
+        $usercollection=$c[0]["ref"];
+        set_user_collection($userref,$usercollection);
+        }
 
-	# User has deleted their last collection? add a new one.
-	if (count($c)==0)
-		{
-		# No collections to select. Create them a new collection.
-		$usercollection=create_collection ($userref,"Default Collection");
-		set_user_collection($userref,$usercollection);
-		}
+    # User has deleted their last collection? add a new one.
+    if (count($c)==0)
+        {
+        # No collections to select. Create them a new collection.
+        $usercollection=create_collection ($userref,"Default Collection");
+        set_user_collection($userref,$usercollection);
+        }
 
-	refresh_collection_frame($usercollection);
-	}
+    refresh_collection_frame($usercollection);
+    }
 
 $remove=getval("remove","");
 if ($remove!="" && enforcePostRequest(getval("ajax", false)))
-	{
-	# Remove someone else's collection from your My Collections
-	remove_collection($userref,$remove);
+    {
+    # Remove someone else's collection from your My Collections
+    remove_collection($userref,$remove);
 
-	# Get count of collections
-	$c=get_user_collections($userref);
+    # Get count of collections
+    $c=get_user_collections($userref);
 
-	# If the user has just removed the collection they were using, select a new collection
-	if ($usercollection==$remove && count($c)>0) {
-		# Select the first collection in the dropdown box.
-		$usercollection=$c[0]["ref"];
-		set_user_collection($userref,$usercollection);
-		}
+    # If the user has just removed the collection they were using, select a new collection
+    if ($usercollection==$remove && count($c)>0) {
+        # Select the first collection in the dropdown box.
+        $usercollection=$c[0]["ref"];
+        set_user_collection($userref,$usercollection);
+        }
 
-	refresh_collection_frame();
-	}
+    refresh_collection_frame();
+    }
 
 $reload=getval("reload","");
 if ($reload!="")
-	{
-	# Refresh the collection frame (just edited a collection)
-	refresh_collection_frame();
-	}
+    {
+    # Refresh the collection frame (just edited a collection)
+    refresh_collection_frame();
+    }
 
 
 include "../include/header.php";
@@ -94,7 +94,7 @@ $jumpcount=1;
 
 $url=$baseurl_short."pages/my_purchases.php?paging=true&col_order_by=".$col_order_by."&sort=".$sort."&find=".urlencode($find)."";
 
-	?>
+    ?>
 
 <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/my_purchases.php">
 <?php generateFormToken("collectionform"); ?>
@@ -109,11 +109,11 @@ $url=$baseurl_short."pages/my_purchases.php?paging=true&col_order_by=".$col_orde
 $mycollcount = 0;
 $othcollcount = 0;
 for($i=0;$i<count($collections);$i++){
-	if ($collections[$i]['user'] == $userref){
-		$mycollcount++;
-	} else {
-		$othcollcount++;
-	}
+    if ($collections[$i]['user'] == $userref){
+        $mycollcount++;
+    } else {
+        $othcollcount++;
+    }
 }
 
 $collcount = count($collections);
@@ -138,32 +138,32 @@ echo $collcount==1 ? $lang["total-collections-1"] : str_replace("%number", $coll
 <?php
 
 for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
-	{
+    {
     $colusername=$collections[$n]['fullname'];
 
-	?><tr <?php hook("collectionlistrowstyle");?>>
-	<td><div class="ListTitle">
-		<a <?php if ($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this);"><?php echo highlightkeywords(i18n_get_collection_name($collections[$n]),$find)?></a></div></td>
-	<td><?php echo highlightkeywords($collections[$n]["ref"],$find)?></td>
-	<td><?php echo nicedate($collections[$n]["created"],true)?></td>
-	<td><?php echo $collections[$n]["count"]?></td>
+    ?><tr <?php hook("collectionlistrowstyle");?>>
+    <td><div class="ListTitle">
+        <a <?php if ($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this);"><?php echo highlightkeywords(i18n_get_collection_name($collections[$n]),$find)?></a></div></td>
+    <td><?php echo highlightkeywords($collections[$n]["ref"],$find)?></td>
+    <td><?php echo nicedate($collections[$n]["created"],true)?></td>
+    <td><?php echo $collections[$n]["count"]?></td>
 
 <?php hook("beforecollectiontoolscolumn");?>
-	<td>	
+    <td>    
         <div class="ListTools">
-		<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>"><?php echo LINK_CARET ?><?php echo $lang["viewall"]?></a>
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>"><?php echo LINK_CARET ?><?php echo $lang["viewall"]?></a>
 
-	<?php if ($contact_sheet==true) { ?>
+    <?php if ($contact_sheet==true) { ?>
     &nbsp;<a href="<?php echo $baseurl_short?>pages/contactsheet_settings.php?ref=<?php echo $collections[$n]["ref"]?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET ?><?php echo $lang["contactsheet"]?></a>
-	<?php } ?>
+    <?php } ?>
 
-	<?php hook("addcustomtool"); ?>
+    <?php hook("addcustomtool"); ?>
 
-	</td>
-	</tr><?php
+    </td>
+    </tr><?php
 }
 
-	?>
+    ?>
 
 </table>
 </div>
@@ -173,6 +173,6 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
 </div>
 
 
-<?php		
+<?php	  
 include "../include/footer.php";
 ?>

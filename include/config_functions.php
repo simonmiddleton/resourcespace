@@ -144,7 +144,7 @@ function set_config_option($user_id, $param_name, $param_value)
         $query = "UPDATE user_preferences SET `value` = ? WHERE ". $user_query ." AND parameter = ?";
         $params[] = "s"; $params[] = $param_name;
 
-        if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
+        if (is_null($user_id))      // only log activity for system changes, i.e. when user not specified
             {
             log_activity(null, LOG_CODE_EDITED, $param_value, 'user_preferences', 'value', "parameter='" . $param_name . "'", null, $current_param_value);
             }
@@ -195,7 +195,7 @@ function delete_config_option(?int $user_id, string $param_name) : bool
         $query = "DELETE FROM user_preferences WHERE ". $user_query ." AND parameter = ?";
         $params[] = "s"; $params[] = $param_name;
 
-        if (is_null($user_id))		// only log activity for system changes, i.e. when user not specified
+        if (is_null($user_id))      // only log activity for system changes, i.e. when user not specified
             {
             log_activity(null, LOG_CODE_DELETED, null, 'user_preferences', 'value', "parameter='" . $param_name . "'", null, $current_param_value);
             }
@@ -289,14 +289,14 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
     return true;
     }
 
-	
+    
 /**
 * Get all user refs with a specific configuration option set from database
 * 
-* @param  string  $option         	Parameter name
-* @param  string  $value         	Parameter value
+* @param  string  $option           Parameter name
+* @param  string  $value            Parameter value
 *
-* @return array 					Array of user  references
+* @return array                     Array of user  references
 */
 function get_config_option_users($option,$value)
     {
@@ -880,7 +880,7 @@ function config_add_boolean_select($config_var, $label, $choices = '', $width = 
     {
     return array('boolean_select', $config_var, $label, $choices, $width, $title, $autosave,$on_change_js,$hidden, $help, $reload_page);
     }
-	
+    
 /**
  * Generate an html checkbox options block
  *
@@ -907,11 +907,11 @@ function config_checkbox_select($name, $label, $current, $choices, $usekeys=true
         {
         $currentvalues = [];
         }
-	$wrap = 0;
-	?>
-	<div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
-	<label for="<?php echo escape($name)?>" ><?php echo htmlspecialchars($label)?></label>
-		<?php
+    $wrap = 0;
+    ?>
+    <div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
+    <label for="<?php echo escape($name)?>" ><?php echo htmlspecialchars($label)?></label>
+        <?php
         if($autosave)
             {
             ?>
@@ -926,8 +926,8 @@ function config_checkbox_select($name, $label, $current, $choices, $usekeys=true
             <tr>
         <?php
         foreach($choices as $key => $choice)
-			{
-			$value=$usekeys?$key:$choice;
+            {
+            $value=$usekeys?$key:$choice;
             $wrap++;
             if($wrap > $columns)
                 {
@@ -943,14 +943,14 @@ function config_checkbox_select($name, $label, $current, $choices, $usekeys=true
                        name="<?php echo $name; ?>"
                        value="<?php echo $value; ?>"
                     <?php
-					if($autosave) { ?> onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo $name; ?>');"<?php }
+                    if($autosave) { ?> onChange="<?php echo $on_change_js; ?>AutoSaveConfigOption('<?php echo $name; ?>');"<?php }
                     if(in_array($value, $currentvalues))
                         {
                         ?>
                         checked
                         <?php
                         }?>
-					>
+                    >
             </td>
             <td><?php echo htmlspecialchars(i18n_get_translated($choice)); ?>&nbsp;</td>
             <?php
@@ -1017,19 +1017,19 @@ function config_add_single_ftype_select($config_var, $label, $width=300, $rtype=
 function config_single_ftype_select($name, $label, $current, $width=300, $rtype=false, $ftypes=array(), $autosave = false)
     {
     global $lang;
-	$fieldtypefilter="";
+    $fieldtypefilter="";
     $params = [];
-	if(count($ftypes)>0)
-		{
-		$fieldtypefilter = " type in (". ps_param_insert(count($ftypes)) .")";
+    if(count($ftypes)>0)
+        {
+        $fieldtypefilter = " type in (". ps_param_insert(count($ftypes)) .")";
         $params = ps_param_fill($ftypes, 'i');
-		}
-		
+        }
+        
     if($rtype===false){
-    	$fields= ps_query('select ' . columns_in("resource_type_field") . ' from resource_type_field ' .  (($fieldtypefilter=="")?'':' where ' . $fieldtypefilter) . ' order by title, name', $params, "schema");
+        $fields= ps_query('select ' . columns_in("resource_type_field") . ' from resource_type_field ' .  (($fieldtypefilter=="")?'':' where ' . $fieldtypefilter) . ' order by title, name', $params, "schema");
     }
     else{
-    	$fields= ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where resource_type= ? " .  (($fieldtypefilter=="")?"":" and " . $fieldtypefilter) . "order by title, name", array_merge(['i', $rtype], $params),"schema");
+        $fields= ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where resource_type= ? " .  (($fieldtypefilter=="")?"":" and " . $fieldtypefilter) . "order by title, name", array_merge(['i', $rtype], $params),"schema");
     }
 ?>
   <div class="Question">
@@ -1168,18 +1168,18 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
             }
         // CLEAR
         if(getval('clear_' . $config_name, '') !== '' && enforcePostRequest(false))
-			{
-			if(get_config_option(null, $config_name, $missing_file))
+            {
+            if(get_config_option(null, $config_name, $missing_file))
                 {
-				$missing_file = str_replace('[storage_url]' . '/' . $file_location, $file_server_location, $missing_file);
-				 if(!file_exists($missing_file))
-					{
-					set_config_option(null, $config_name, '');
+                $missing_file = str_replace('[storage_url]' . '/' . $file_location, $file_server_location, $missing_file);
+                 if(!file_exists($missing_file))
+                    {
+                    set_config_option(null, $config_name, '');
 
-					$redirect = true;
-					}
-				}
-			}
+                    $redirect = true;
+                    }
+                }
+            }
 
         // UPLOAD
         if(getval('upload_' . $config_name, '') !== '' && enforcePostRequest(false))
@@ -1258,8 +1258,8 @@ function config_generate_html(array $page_def)
             case 'single_select':
                 config_single_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
-			
-			 case 'checkbox_select':
+            
+             case 'checkbox_select':
                 config_checkbox_select($def[1], $def[2], $GLOBALS[$def[1]], $def[3], $def[4], $def[5], $def[6], $def[7], $def[8], $def[9]);
                 break;
 
@@ -1660,7 +1660,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
         $resource_type_array[$resource_type["ref"]]=$resource_type["name"];
         }
     $valid_columns = columns_in("resource_type_field",null,null,true);
-    foreach ($columns as $column=>$column_detail)		
+    foreach ($columns as $column=>$column_detail)       
         {
         if(!in_array($column,$valid_columns))
             {
@@ -1669,7 +1669,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
         if ($column_detail[2]==1)
             {
             $val= (int)(bool)($postdata[$column] ?? 0);
-            }		
+            }       
         else
             {
             $val=trim($postdata[$column] ?? "");
@@ -1681,7 +1681,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
             if($column == "type" && $val != $existingfield["type"] && (bool)($postdata["migrate_data"] ?? false))
                 {
                 // Need to migrate field data
-                $migrate_data = true;				
+                $migrate_data = true;               
                 }
             
             // Set shortname if not already set or invalid
@@ -1702,7 +1702,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
         else
             {
             $sql="UPDATE resource_type_field SET ";
-            }		
+            }       
         
         $sql.="{$column}=";
         if ($val=="")

@@ -39,20 +39,20 @@ $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 
 
 if ($order_by=="relevance" && $k=="" && (($userref==$cinfo["user"]) || ($cinfo["allow_changes"]==1) || (checkperm("h"))))
-	{
-	$allow_reorder=true;
-	}
+    {
+    $allow_reorder=true;
+    }
 if ($allow_reorder)
-	{
-	
-	# Also check for the parameter and reorder as necessary.
-	$reorder=getval("reorder","");
-	if ($reorder!="")
-		{
-		$r=explode("-",$reorder);
-		swap_collection_order($r[0],$r[1],$usercollection);
-		}
-	}	
+    {
+    
+    # Also check for the parameter and reorder as necessary.
+    $reorder=getval("reorder","");
+    if ($reorder!="")
+        {
+        $r=explode("-",$reorder);
+        swap_collection_order($r[0],$r[1],$usercollection);
+        }
+    }   
 
 $border=true;
 
@@ -84,23 +84,23 @@ if ($hook_result!==false) {$result=$hook_result;}
 include "../include/header.php";
 
 if (substr($search,0,11)=="!collection")
-	{
-	$collection=substr($search,11);
-	$collection=explode(",",$collection);
-	$collection=$collection[0];
-	$collectiondata=get_collection($collection);
-	if (!$collectiondata || !is_array($collectiondata)){?>
-		<script>alert('<?php echo $lang["error-collectionnotfound"];?>');document.location='<?php echo $baseurl_short?>pages/home.php'</script>
-	<?php } 
-	if ($allow_reorder)
-		{
-	# Check to see if this user can edit (and therefore reorder) this resource
-		if (($userref==$collectiondata["user"]) || ($collectiondata["allow_changes"]==1) || (checkperm("h")))
-			{
-			$allow_reorder=true;
-			}
-		}
-	}
+    {
+    $collection=substr($search,11);
+    $collection=explode(",",$collection);
+    $collection=$collection[0];
+    $collectiondata=get_collection($collection);
+    if (!$collectiondata || !is_array($collectiondata)){?>
+        <script>alert('<?php echo $lang["error-collectionnotfound"];?>');document.location='<?php echo $baseurl_short?>pages/home.php'</script>
+    <?php } 
+    if ($allow_reorder)
+        {
+    # Check to see if this user can edit (and therefore reorder) this resource
+        if (($userref==$collectiondata["user"]) || ($collectiondata["allow_changes"]==1) || (checkperm("h")))
+            {
+            $allow_reorder=true;
+            }
+        }
+    }
 
 
 
@@ -136,84 +136,84 @@ $access=get_resource_access($result[$x]);
 
 // get mp3 paths if necessary and set $use_mp3_player switch
 if (!(isset($result[$x]['is_transcoding']) && $result[$x]['is_transcoding']==1) && (in_array($result[$x]["file_extension"],$ffmpeg_audio_extensions) || $result[$x]["file_extension"]=="mp3") && $mp3_player){
-		$use_mp3_player=true;
-	}
-	else {
-		$use_mp3_player=false;
-	}
-if ($use_mp3_player){	
-	$mp3realpath=get_resource_path($ref,true,"",false,"mp3");
-	if (file_exists($mp3realpath)){
-		$mp3path=get_resource_path($ref,false,"",false,"mp3");
-	}
+        $use_mp3_player=true;
+    }
+    else {
+        $use_mp3_player=false;
+    }
+if ($use_mp3_player){   
+    $mp3realpath=get_resource_path($ref,true,"",false,"mp3");
+    if (file_exists($mp3realpath)){
+        $mp3path=get_resource_path($ref,false,"",false,"mp3");
+    }
 }
 
 # check permissions (error message is not pretty but they shouldn't ever arrive at this page unless entering a URL manually)
 if ($access==2) 
-		{
-		exit("Confidential resource.");
-		}
+        {
+        exit("Confidential resource.");
+        }
 
 # Locate the resource
 $path="";
 $url="";
-	if ($access==1&&(checkperm('w')|| ($k != "" && $watermark !== ""))){$watermark=true;} else {$watermark=false;}
+    if ($access==1&&(checkperm('w')|| ($k != "" && $watermark !== ""))){$watermark=true;} else {$watermark=false;}
 $path=get_resource_path($ref,true,"scr",false,$ext,-1,$page,$watermark,$result[$x]["file_modified"],$alternative,false);
 
 if (file_exists($path) && resource_download_allowed($result[$x],"scr",$resource_data["resource_type"]))
-	{
-	$url=get_resource_path($ref,false,"scr",false,$ext,-1,$page,$watermark,$result[$x]["file_modified"],$alternative,false);
-	}
+    {
+    $url=get_resource_path($ref,false,"scr",false,$ext,-1,$page,$watermark,$result[$x]["file_modified"],$alternative,false);
+    }
 else
-	{
-	$path=get_resource_path($ref,true,"pre",false,$ext,-1,$page,$watermark,$result[$x]["file_modified"],$alternative,false);
-	if (file_exists($path))
-		{
-		$url=get_resource_path($ref,false,"pre",false,$ext,-1,$page,$watermark,$result[$x]["file_modified"],$alternative,false);
-		}
-	 }	
+    {
+    $path=get_resource_path($ref,true,"pre",false,$ext,-1,$page,$watermark,$result[$x]["file_modified"],$alternative,false);
+    if (file_exists($path))
+        {
+        $url=get_resource_path($ref,false,"pre",false,$ext,-1,$page,$watermark,$result[$x]["file_modified"],$alternative,false);
+        }
+     }  
 if (!file_exists($path))
-	{
-	$info=get_resource_data($ref);
-	$url="../gfx/" . get_nopreview_icon($info["resource_type"],$info["file_extension"],false);
-	$path=$url;
-	$border=false;
-	}
+    {
+    $info=get_resource_data($ref);
+    $url="../gfx/" . get_nopreview_icon($info["resource_type"],$info["file_extension"],false);
+    $path=$url;
+    $border=false;
+    }
 
-	
+    
 ?>
     
 <?php if ($vertical=="v"){
-	if (!hook("replacepreviewalltitle")){ ?><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $result[$x]['ref']?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>">&nbsp;<?php echo i18n_get_translated($result[$x]['field'.$view_title_field])?></a><?php } /* end hook replacepreviewalltitle */?></tr><tr>
+    if (!hook("replacepreviewalltitle")){ ?><a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $result[$x]['ref']?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>">&nbsp;<?php echo i18n_get_translated($result[$x]['field'.$view_title_field])?></a><?php } /* end hook replacepreviewalltitle */?></tr><tr>
 
 <?php } else { ?>
-	<td style="padding:10px;">
+    <td style="padding:10px;">
 <?php } ?>
-	
-	<div class="ResourceShel_" id="ResourceShel_<?php echo htmlspecialchars($ref)?>">
-	<?php if ($vertical=="h"){?>&nbsp;<?php if (!hook("replacepreviewalltitle")){ ?><a id="resourcetitlelink<?php echo $result[$x]['ref']?>" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $result[$x]['ref']?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>"><?php echo i18n_get_translated($result[$x]['field'.$view_title_field])?></a><?php } /* end hook replacepreviewalltitle */?><br/><?php } ?>
-	<?php 
-	
-	$imageinfo = getimageSize( $path ); 
-	$imageheight=$imageinfo[1];
-	$modifiedurl=hook('previewallmodifyurl');
-	if ($modifiedurl){$url=$modifiedurl['url'];$imageheight=$modifiedurl['scr_height'];$border=true;}
-	
-	?>
+    
+    <div class="ResourceShel_" id="ResourceShel_<?php echo htmlspecialchars($ref)?>">
+    <?php if ($vertical=="h"){?>&nbsp;<?php if (!hook("replacepreviewalltitle")){ ?><a id="resourcetitlelink<?php echo $result[$x]['ref']?>" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $result[$x]['ref']?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>"><?php echo i18n_get_translated($result[$x]['field'.$view_title_field])?></a><?php } /* end hook replacepreviewalltitle */?><br/><?php } ?>
+    <?php 
+    
+    $imageinfo = getimageSize( $path ); 
+    $imageheight=$imageinfo[1];
+    $modifiedurl=hook('previewallmodifyurl');
+    if ($modifiedurl){$url=$modifiedurl['url'];$imageheight=$modifiedurl['scr_height'];$border=true;}
+    
+    ?>
     <?php $video_preview_file=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension);
 if (!file_exists($video_preview_file)) {$video_preview_file=get_resource_path($ref,true,"",false,$ffmpeg_preview_extension);}
 if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && file_exists($video_preview_file) && (strpos(strtolower($video_preview_file),".".$ffmpeg_preview_extension)!==false))
-	{
-	# Include the video player if a preview file exists for this resource.
-	$download_multisize=false;
+    {
+    # Include the video player if a preview file exists for this resource.
+    $download_multisize=false;
     if(!hook("customflvplay")) // Note - legacy hook name - we no longer play FLV files.
         {
         include "video_player.php";?><br /><br /><?php
         }
     } 
-	elseif ($use_mp3_player && file_exists($mp3realpath) && hook("custommp3player")){
-		// leave preview to the custom mp3 player
-		}	
+    elseif ($use_mp3_player && file_exists($mp3realpath) && hook("custommp3player")){
+        // leave preview to the custom mp3 player
+        }   
     else { ?>
 <?php if (!$allow_reorder){?><a id="resourcelink<?php echo $ref?>" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $result[$x]['ref']?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>"><?php } //end if !reorder?><img class="Picture<?php if (!$border){?>Doc<?php } ?>" id="image<?php echo htmlspecialchars($ref)?>" imageheight="<?php echo $imageheight?>" src="<?php echo $url?>" alt="" style="height:<?php echo $height?>px;" /><?php if (!$allow_reorder){?></a><?php } //end if !reorder?><br/><br/>
 <?php } ?>
@@ -223,25 +223,25 @@ if (isset($collections_compact_style) && ($collections_compact_style)){$heightmo
 var maxheight=window.innerHeight-<?php echo $heightmod?>;
 if (isNaN(maxheight)){maxheight=document.documentElement.clientHeight-<?php echo $heightmod?>;}
 if (maxheight><?php echo $imageheight?>){
-	
-	document.getElementById('image<?php echo htmlspecialchars($ref)?>').style.height='<?php echo $imageheight?>px';}
-	else { document.getElementById('image<?php echo htmlspecialchars($ref)?>').style.height=maxheight+'px';} </script>
+    
+    document.getElementById('image<?php echo htmlspecialchars($ref)?>').style.height='<?php echo $imageheight?>px';}
+    else { document.getElementById('image<?php echo htmlspecialchars($ref)?>').style.height=maxheight+'px';} </script>
 </div></div>
 <?php if ($allow_reorder) { 
-		# Javascript drag/drop enabling.
-		?>
-		<script type="text/javascript">
-			jQuery(document).ready(function() {
-				jQuery('#ResourceShel_<?php echo htmlspecialchars($ref)?>').draggable({ handle: ".ResourceShel_", revert: true });
-				jQuery('#ResourceShel_<?php echo htmlspecialchars($ref)?>').droppable({
-					accept: ".ResourceShel_",
-					hoverclass: 'ReorderHover',
-					drop: function(event, ui) {
-						ReorderResources(ui.draggable.attr("id").substring(13),<?php echo htmlspecialchars($ref)?>,1);
-					}
-				});
-			});
-		</script>
+        # Javascript drag/drop enabling.
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                jQuery('#ResourceShel_<?php echo htmlspecialchars($ref)?>').draggable({ handle: ".ResourceShel_", revert: true });
+                jQuery('#ResourceShel_<?php echo htmlspecialchars($ref)?>').droppable({
+                    accept: ".ResourceShel_",
+                    hoverclass: 'ReorderHover',
+                    drop: function(event, ui) {
+                        ReorderResources(ui.draggable.attr("id").substring(13),<?php echo htmlspecialchars($ref)?>,1);
+                    }
+                });
+            });
+        </script>
 <?php } ?>
 <?php if ($vertical=="v"){?><tr><?php } else  { ?></td> <?php } ?>
 <?php } ?>
@@ -250,13 +250,13 @@ if (maxheight><?php echo $imageheight?>){
 
 <script type="text/javascript">
 
-	CollectionDivLoad("<?php echo $baseurl ?>/pages/collections.php?ref=<?php echo urlencode($collection) ?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>&thumbs=hide");
-	window.onresize=function(event){
-	var maxheight=window.innerHeight-<?php echo $heightmod?>;
+    CollectionDivLoad("<?php echo $baseurl ?>/pages/collections.php?ref=<?php echo urlencode($collection) ?>&search=<?php echo urlencode($search)?>&order_by=<?php echo urlencode($order_by)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>&sort=<?php echo urlencode($sort)?>&thumbs=hide");
+    window.onresize=function(event){
+    var maxheight=window.innerHeight-<?php echo $heightmod?>;
     if (isNaN(maxheight)){maxheight=document.documentElement.clientHeight-<?php echo $heightmod?>;}
-	jQuery('.Picture').each(function () {
-		if (maxheight> jQuery(this).attr("imageheight").replace(/px,*\)*/g,"")){jQuery(this).height(jQuery(this).attr("imageheight")+'px'); }
-		else { jQuery(this).height(maxheight+'px');} } );}
+    jQuery('.Picture').each(function () {
+        if (maxheight> jQuery(this).attr("imageheight").replace(/px,*\)*/g,"")){jQuery(this).height(jQuery(this).attr("imageheight")+'px'); }
+        else { jQuery(this).height(maxheight+'px');} } );}
 </script>
 </form>
 <?php

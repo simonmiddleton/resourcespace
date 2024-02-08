@@ -7,9 +7,9 @@ $ruleid = getval("ref","");
 $filterid = getval("filter",0,true);
 
 if (!checkperm("a") || !(((string)(int)$ruleid == (string)$ruleid) || $ruleid == "new"))
-	{
-	exit($lang["error-permissiondenied"]);
-	}
+    {
+    exit($lang["error-permissiondenied"]);
+    }
 
 if($ruleid != "new")
     {

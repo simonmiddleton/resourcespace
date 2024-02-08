@@ -6,7 +6,7 @@ if($watermark !== '')
     }
 else
     {
-    $use_watermark = false;	
+    $use_watermark = false; 
     }
 
 $thm_url = get_resource_path(

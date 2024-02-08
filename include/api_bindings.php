@@ -303,7 +303,7 @@ function api_get_resource_log($resource, $fetchrows=-1)
     }
 
 function api_update_resource_type($resource,$type)
-	{
+    {
     $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
@@ -490,7 +490,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
     }
 
 function api_delete_access_keys($access_keys, $resources, $collections)
-	{
+    {
     $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
@@ -520,7 +520,7 @@ function api_delete_access_keys($access_keys, $resources, $collections)
     }
 
 function api_delete_alternative_file($resource,$ref)
-	{
+    {
     $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {
@@ -531,7 +531,7 @@ function api_delete_alternative_file($resource,$ref)
         {
         return false;
         }
-	return delete_alternative_file($resource,$ref);
+    return delete_alternative_file($resource,$ref);
     }
 
 function api_upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_path="")
@@ -641,7 +641,7 @@ function api_get_nodes($ref, $parent=null, $recursive=false, $offset=null, $rows
     }
     
 function api_get_user_collections()
-	{
+    {
     global $userref;
     if (checkperm("b"))
         {
@@ -715,7 +715,7 @@ function api_collection_remove_resources($collection='',$resources='',$removeall
     }
     
 function api_create_collection($name,$forupload=false)
-	{
+    {
     $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
     if (!empty($assert_post))
         {

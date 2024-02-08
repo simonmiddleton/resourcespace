@@ -32,8 +32,8 @@ function update_previews($ref){
     global $previewbased;
     $resourceinfo=ps_query("select " . columns_in("resource") . " from resource where ref=?",array("i",$ref));
     if (count($resourceinfo)>0 && !hook("replaceupdatepreview", '', array($ref, $resourceinfo[0]))){
-    	if(!empty($resourceinfo[0]['file_path'])){$ingested=false;}
-    	else{$ingested=true;}
+        if(!empty($resourceinfo[0]['file_path'])){$ingested=false;}
+        else{$ingested=true;}
         create_previews($ref, false,($previewbased?"jpg":$resourceinfo[0]["file_extension"]),false, $previewbased,-1,false,$ingested);
         hook("afterupdatepreview","",array($ref));
         return true;
@@ -48,26 +48,26 @@ $previewbased=getval("previewbased",false);
 if ($collectionid == false){
     if (!(is_numeric($ref) && $ref > 0)) $ref = 1;
     if (update_previews($ref)){
-    	?>
-    	<img alt="" src="<?php echo get_resource_path($ref,false,"pre",false)?>">
-    	<?php
-    	}
+        ?>
+        <img alt="" src="<?php echo get_resource_path($ref,false,"pre",false)?>">
+        <?php
+        }
     else
-    	{
-    	echo "Skipping $ref";
-    	}
+        {
+        echo "Skipping $ref";
+        }
     if ($ref<$max && getval("only","")=="")
-    	{
-    	?>
-    	<meta http-equiv="refresh" content="0;url=<?php echo $baseurl?>/pages/tools/update_previews.php?ref=<?php echo $ref+1?>&previewbased=<?php echo $previewbased?>"/>
-    	<?php
-    	}
+        {
+        ?>
+        <meta http-equiv="refresh" content="0;url=<?php echo $baseurl?>/pages/tools/update_previews.php?ref=<?php echo $ref+1?>&previewbased=<?php echo $previewbased?>"/>
+        <?php
+        }
     else
-    	{
-    	?>
-    	Done.	
-    	<?php
-    	}
+        {
+        ?>
+        Done.   
+        <?php
+        }
 }
 else {
     $collection = get_collection_resources($collectionid);
@@ -101,4 +101,4 @@ else {
     
 }
 
-	
+    

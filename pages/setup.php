@@ -113,38 +113,38 @@ function url_exists($url)
 
 function set_language($defaultlanguage)
 {
-	global $languages;
-	global $storagedir, $applicationname, $homeanim_folder; # Used in the language files.
-	$defaultlanguage = safe_file_name($defaultlanguage);
-	if (file_exists("../languages/en.php")) {include "../languages/en.php";}
-	if ($defaultlanguage==''){ 
-		//See if we can auto-detect the most likely language.  The user can override this.
-		if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
-			$httplanguage = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-			if(array_key_exists($httplanguage[0],$languages)){
-				$defaultlanguage = $httplanguage[0];
-			}
-		}
-	}
-	if ($defaultlanguage!='en'){
-		if (file_exists("../languages/".$defaultlanguage.".php")){
+    global $languages;
+    global $storagedir, $applicationname, $homeanim_folder; # Used in the language files.
+    $defaultlanguage = safe_file_name($defaultlanguage);
+    if (file_exists("../languages/en.php")) {include "../languages/en.php";}
+    if ($defaultlanguage==''){ 
+        //See if we can auto-detect the most likely language.  The user can override this.
+        if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+            $httplanguage = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            if(array_key_exists($httplanguage[0],$languages)){
+                $defaultlanguage = $httplanguage[0];
+            }
+        }
+    }
+    if ($defaultlanguage!='en'){
+        if (file_exists("../languages/".$defaultlanguage.".php")){
 
-			include "../languages/".$defaultlanguage.".php";
-		}
-	}
-	return $lang;
+            include "../languages/".$defaultlanguage.".php";
+        }
+    }
+    return $lang;
 }
 
 
 //Development Mode:  Set to true to change the config.php check to devel.config.php and output to devel.config.php instead.  Also displays the config file output in a div at the bottom of the page.
 $develmode = false;
 if ($develmode)
-	$outputfile = '../include/devel.config.php';
+    $outputfile = '../include/devel.config.php';
 else
-	$outputfile = '../include/config.php';
+    $outputfile = '../include/config.php';
 
 // Define some vars to prevent warnings (quick fix)
-$configstoragelocations=false;	
+$configstoragelocations=false;  
 $storageurl="";
 $storagedir=""; # This variable is used in the language files.
 
@@ -196,38 +196,38 @@ $('#tabs div.tabs').hide();
 $('#tabs div:first').show();
 $('#tabs ul li:first').addClass('active');
 $('#tabs ul li a').click(function(){
-	$('#tabs ul li').removeClass('active'); 
-	$(this).parent().addClass('active'); 
-	var currentTab = $(this).attr('href');
-	$("#tabs div.tabs:visible").slideUp("slow",function(){
-		$(currentTab).slideDown("slow"); 
-	});
-	return false;		
+    $('#tabs ul li').removeClass('active'); 
+    $(this).parent().addClass('active'); 
+    var currentTab = $(this).attr('href');
+    $("#tabs div.tabs:visible").slideUp("slow",function(){
+        $(currentTab).slideDown("slow"); 
+    });
+    return false;       
 });
 $('#configstoragelocations').each(function(){
-	if (this.checked != true){
-		$('#storageurl').prop("disabled",true);
-		$('#storagedir').prop("disabled",true);
-	}
-	else {
-		$('#remstorageoptions').show();
-	}
+    if (this.checked != true){
+        $('#storageurl').prop("disabled",true);
+        $('#storagedir').prop("disabled",true);
+    }
+    else {
+        $('#remstorageoptions').show();
+    }
 });
 $('#configstoragelocations').click(function(){
-	if (this.checked == true) {
-		$('#storageurl').removeAttr("disabled");
-		$('#storagedir').removeAttr('disabled');
-		$('#remstorageoptions').slideDown("slow");
-	}
-	else{
-		$('#storageurl').prop("disabled",true);
-		$('#storagedir').prop("disabled",true);
-		$('#remstorageoptions').slideUp("slow");
-	}
+    if (this.checked == true) {
+        $('#storageurl').removeAttr("disabled");
+        $('#storagedir').removeAttr('disabled');
+        $('#remstorageoptions').slideDown("slow");
+    }
+    else{
+        $('#storageurl').prop("disabled",true);
+        $('#storagedir').prop("disabled",true);
+        $('#remstorageoptions').slideUp("slow");
+    }
 });
 $('p.iteminfo').click(function(){
-	$('p.iteminfo').hide("slow");
-	});
+    $('p.iteminfo').hide("slow");
+    });
 
 
 $('.mysqlconn').keyup(function(event)
@@ -266,11 +266,11 @@ $('#admin_password').keyup(function() {
     });
 });
 
-$('a.iflink	').click(function(){
-	$('p.iteminfo').hide("slow");
-	var currentItemInfo = $(this).attr('href');
-	$(currentItemInfo).show("fast");
-	return false;
+$('a.iflink ').click(function(){
+    $('p.iteminfo').hide("slow");
+    var currentItemInfo = $(this).attr('href');
+    $(currentItemInfo).show("fast");
+    return false;
 });
 $('#mysqlserver').keyup();
 });
@@ -353,7 +353,7 @@ function test_db(targetEl)
  #intro {  margin-bottom: 40px; font-size:100%; background: #F7F7F7; text-align: left; padding: 40px; }
 #introbottom { padding: 10px; clear: both; text-align:center;}
 #preconfig {  float: right;background: #F1F1F1; padding: 25px;border-radius: 10px;box-shadow: #d7d7d7 1px 1px 9px;}
-#preconfig h2 { border-bottom: 1px solid #ccc;	width: 100%;}
+#preconfig h2 { border-bottom: 1px solid #ccc;  width: 100%;}
 #preconfig p { font-size:110%; padding:0; margin:0; margin-top: 5px;}
 #preconfig p.failure{ color: #f00; font-weight: bold; }
 #structural_plugins {margin-bottom: 40px;font-size: 100%;background: #F7F7F7;text-align: left;padding: 20px;}
@@ -393,29 +393,29 @@ h2#dbaseconfig{  min-height: 32px;}
 <div id="setup-container">
 <div id="Header" style="height: 40px;">
     <div class="HeaderImgLink">
-    	<img alt="" src="../gfx/titles/title-black.svg" id="HeaderImg" />
+        <img alt="" src="../gfx/titles/title-black.svg" id="HeaderImg" />
     </div>
     <div id="HeaderNav1" class="HorizontalNav "><ul></ul></div>
-	<div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav"><ul></ul></div> 
-	<div class="clearer"></div>
+    <div id="HeaderNav2" class="HorizontalNav HorizontalWhiteNav"><ul></ul></div> 
+    <div class="clearer"></div>
 </div>
 <?php
-	//Check if config file already exists and die with an error if it does.
-	if (file_exists($outputfile))
-	{
-	?>
-	<div id="errorheader"><?php echo $lang["setup-alreadyconfigured"];?></div> 
-	</body>
-	</html>
-	<?php
-	die(0);
-	}
-	if (!(isset($_REQUEST['submit']))){ //No Form Submission, lets setup some defaults
-		if (!isset($storagedir) | $storagedir=="")
-			{
-			$storagedir = dirname(__FILE__)."/../filestore";
-			$lang = set_language($defaultlanguage); # Updates $lang with $storagedir which is used in some strings.
-			}
+    //Check if config file already exists and die with an error if it does.
+    if (file_exists($outputfile))
+    {
+    ?>
+    <div id="errorheader"><?php echo $lang["setup-alreadyconfigured"];?></div> 
+    </body>
+    </html>
+    <?php
+    die(0);
+    }
+    if (!(isset($_REQUEST['submit']))){ //No Form Submission, lets setup some defaults
+        if (!isset($storagedir) | $storagedir=="")
+            {
+            $storagedir = dirname(__FILE__)."/../filestore";
+            $lang = set_language($defaultlanguage); # Updates $lang with $storagedir which is used in some strings.
+            }
         if (isset($_SERVER['HTTP_HOST']))
             {
             # Set HTTPS URL if necessary
@@ -429,53 +429,53 @@ h2#dbaseconfig{  min-height: 32px;}
             }
 
                 // Setup search paths (Currently only Linux/Mac OS X)
-		$os=php_uname('s');
-		if($os=='Linux' || $os=="Darwin"){
-			$search_paths[]='/usr/bin';
-			$search_paths[]='/sw/bin';
-			$search_paths[]='/usr/share/bin';
-			$search_paths[]='/usr/local/bin';
-			$search_paths[]='/opt/local/bin';
-		}
-		//Check if we're on windows and set config_windows if we are.
-		elseif(stristr($os,'windows'))
-		    {
-			$config_windows = true;
-		    }
-		if (isset($search_paths))
-		    {
-		    $imagemagick_path = "";
-		    $ghostscript_path = "";
-		    $ffmpeg_path = "";
-		    $exiftool_path = "";
-		    $antiword_path = "";
-		    $pdftotext_path = "";
-			foreach($search_paths as $path)
-			    {
-				if (file_exists($path.'/convert'))
-					$imagemagick_path = $path;
-				if (file_exists($path.'/gs'))
-					$ghostscript_path = $path;
-				if (file_exists($path.'/ffmpeg') || file_exists($path.'/avconv'))
-					$ffmpeg_path = $path;
-				if (file_exists($path.'/exiftool'))
-					$exiftool_path = $path;
-				if (file_exists($path.'/antiword'))
-					$antiword_path= $path;
-				if (file_exists($path.'/pdftotext'))
-					$pdftotext_path = $path;
-			    }
-			}
-		else
-		    {
+        $os=php_uname('s');
+        if($os=='Linux' || $os=="Darwin"){
+            $search_paths[]='/usr/bin';
+            $search_paths[]='/sw/bin';
+            $search_paths[]='/usr/share/bin';
+            $search_paths[]='/usr/local/bin';
+            $search_paths[]='/opt/local/bin';
+        }
+        //Check if we're on windows and set config_windows if we are.
+        elseif(stristr($os,'windows'))
+            {
+            $config_windows = true;
+            }
+        if (isset($search_paths))
+            {
             $imagemagick_path = "";
-			$ghostscript_path = "";
-			$ffmpeg_path      = "";
-			$exiftool_path    = "";
-			$antiword_path    = "";
-			$pdftotext_path   = "";		
-            $mysql_bin_path	  = "";
-			}
+            $ghostscript_path = "";
+            $ffmpeg_path = "";
+            $exiftool_path = "";
+            $antiword_path = "";
+            $pdftotext_path = "";
+            foreach($search_paths as $path)
+                {
+                if (file_exists($path.'/convert'))
+                    $imagemagick_path = $path;
+                if (file_exists($path.'/gs'))
+                    $ghostscript_path = $path;
+                if (file_exists($path.'/ffmpeg') || file_exists($path.'/avconv'))
+                    $ffmpeg_path = $path;
+                if (file_exists($path.'/exiftool'))
+                    $exiftool_path = $path;
+                if (file_exists($path.'/antiword'))
+                    $antiword_path= $path;
+                if (file_exists($path.'/pdftotext'))
+                    $pdftotext_path = $path;
+                }
+            }
+        else
+            {
+            $imagemagick_path = "";
+            $ghostscript_path = "";
+            $ffmpeg_path      = "";
+            $exiftool_path    = "";
+            $antiword_path    = "";
+            $pdftotext_path   = "";     
+            $mysql_bin_path   = "";
+            }
 
         $admin_fullname = 'Admin user';
         $admin_email    = '';
@@ -492,30 +492,30 @@ h2#dbaseconfig{  min-height: 32px;}
                 "mysql_password" => "",
             )
         );
-	}
-	else { //Form was submitted, lets do it!
-		//Generate config.php Header
-		//Note: The opening php tag is missing and is added when the file is written.
-		//This allows the config to be displayed in the bottom div when in development mode.
-		$config_windows = get_post_bool('config_windows');
-		$exe_ext = $config_windows==true?'.exe':'';
-		$config_output="";
-		$config_output .= "###############################\r\n";
-		$config_output .= "## ResourceSpace\r\n";
-		$config_output .= "## Local Configuration Script\r\n";
-		$config_output .= "###############################\r\n\r\n";
-		$config_output .= "# All custom settings should be entered in this file.\r\n";  
-		$config_output .= "# Options may be copied from config.default.php and configured here.\r\n\r\n";
-		
-		// Structural plugin
+    }
+    else { //Form was submitted, lets do it!
+        //Generate config.php Header
+        //Note: The opening php tag is missing and is added when the file is written.
+        //This allows the config to be displayed in the bottom div when in development mode.
+        $config_windows = get_post_bool('config_windows');
+        $exe_ext = $config_windows==true?'.exe':'';
+        $config_output="";
+        $config_output .= "###############################\r\n";
+        $config_output .= "## ResourceSpace\r\n";
+        $config_output .= "## Local Configuration Script\r\n";
+        $config_output .= "###############################\r\n\r\n";
+        $config_output .= "# All custom settings should be entered in this file.\r\n";  
+        $config_output .= "# Options may be copied from config.default.php and configured here.\r\n\r\n";
+        
+        // Structural plugin
         $structural_plugin = get_post('structureplugin');
         if(!empty($structural_plugin))
-        	{
-        	$config_output.= "\r\n# Initial Structural Plugin used: ".$structural_plugin."\r\n\r\n\r\n";
-        	}
+            {
+            $config_output.= "\r\n# Initial Structural Plugin used: ".$structural_plugin."\r\n\r\n\r\n";
+            }
 
-		//Grab MySQL settings
-		$mysql_server = get_post('mysql_server');
+        //Grab MySQL settings
+        $mysql_server = get_post('mysql_server');
         $mysql_db = get_post('mysql_db');
 
         $db_connection_modes = array(
@@ -541,7 +541,7 @@ h2#dbaseconfig{  min-height: 32px;}
                 }
 
             // Check connection
-    		$mysqli_connection = mysqli_connect($mysql_server, $mysql_username, $mysql_password);
+            $mysqli_connection = mysqli_connect($mysql_server, $mysql_username, $mysql_password);
             if($mysqli_connection === false)
                 {
                 switch(mysqli_errno($mysqli_connection))
@@ -586,11 +586,11 @@ h2#dbaseconfig{  min-height: 32px;}
                     }
                 }
 
-    		if (isset($errors))
-    			{
-    			$errors['database'] = mysqli_error($mysqli_connection);
+            if (isset($errors))
+                {
+                $errors['database'] = mysqli_error($mysqli_connection);
                 break;
-    			}
+                }
 
             $config_var_username = ($db_connection_mode == "read_only" ? "read_only_db_username" : "mysql_username");
             $config_var_password = ($db_connection_mode == "read_only" ? "read_only_db_password" : "mysql_password");
@@ -608,8 +608,8 @@ h2#dbaseconfig{  min-height: 32px;}
             $config_output .= "\r\n";
             }
 
-		//Check MySQL bin path (not required)
-		$mysql_bin_path = sslash(get_post('mysql_bin_path'));
+        //Check MySQL bin path (not required)
+        $mysql_bin_path = sslash(get_post('mysql_bin_path'));
         if ((isset($mysql_bin_path)) && ($mysql_bin_path!=''))
             {
             if (stripos($mysql_bin_path . '/mysqldump' . $exe_ext, 'phar://') !== false)
@@ -620,39 +620,39 @@ h2#dbaseconfig{  min-height: 32px;}
                 $config_output .="\$mysql_bin_path = '$mysql_bin_path';\r\n\r\n";
             }
 
-		//Check baseurl (required)
-		$baseurl = sslash(get_post('baseurl'));
-		# In certain PHP versions there is a bug in filter_var using FILTER_VALIDATE_URL causing correct URLs containing a hyphen to fail.
-		if (filter_var("http://www.filter-test.com", FILTER_VALIDATE_URL))
-			{
-			# The filter is working.
-			$filterresult = filter_var($baseurl, FILTER_VALIDATE_URL);
-			}
-		else
-			{
-			# The filter is not working, use the hostname of the $baseurl and replace the problematic characters.
-			$testbaseurl = str_replace(
-				parse_url($baseurl,PHP_URL_HOST),
-				str_replace(
-					array("_", "-"),
-					array("^", "x"), # _ is not allowed for hostname, - is allowed
-					parse_url($baseurl,PHP_URL_HOST)),
-				$baseurl);
-			$filterresult = filter_var($testbaseurl, FILTER_VALIDATE_URL);
-			}
-		if ((isset($baseurl)) && ($baseurl!='') && ($baseurl!='http://my.site/resourcespace') && ($filterresult)){
-			//Check that the base url seems correct by attempting to fetch the license file
-			if (url_exists($baseurl.'/license.txt')){
-				$config_output .= "# Base URL of the installation\r\n";
-				$config_output .= "\$baseurl = '$baseurl';\r\n\r\n";
-			}
-			else { //Under certain circumstances this test may fail, but the URL is still correct, so warn the user.
-				$warnings['baseurlverify']= true;
-			}
-		}
-		else {
-			$errors['baseurl'] = true;
-		}
+        //Check baseurl (required)
+        $baseurl = sslash(get_post('baseurl'));
+        # In certain PHP versions there is a bug in filter_var using FILTER_VALIDATE_URL causing correct URLs containing a hyphen to fail.
+        if (filter_var("http://www.filter-test.com", FILTER_VALIDATE_URL))
+            {
+            # The filter is working.
+            $filterresult = filter_var($baseurl, FILTER_VALIDATE_URL);
+            }
+        else
+            {
+            # The filter is not working, use the hostname of the $baseurl and replace the problematic characters.
+            $testbaseurl = str_replace(
+                parse_url($baseurl,PHP_URL_HOST),
+                str_replace(
+                    array("_", "-"),
+                    array("^", "x"), # _ is not allowed for hostname, - is allowed
+                    parse_url($baseurl,PHP_URL_HOST)),
+                $baseurl);
+            $filterresult = filter_var($testbaseurl, FILTER_VALIDATE_URL);
+            }
+        if ((isset($baseurl)) && ($baseurl!='') && ($baseurl!='http://my.site/resourcespace') && ($filterresult)){
+            //Check that the base url seems correct by attempting to fetch the license file
+            if (url_exists($baseurl.'/license.txt')){
+                $config_output .= "# Base URL of the installation\r\n";
+                $config_output .= "\$baseurl = '$baseurl';\r\n\r\n";
+            }
+            else { //Under certain circumstances this test may fail, but the URL is still correct, so warn the user.
+                $warnings['baseurlverify']= true;
+            }
+        }
+        else {
+            $errors['baseurl'] = true;
+        }
 
         $admin_fullname = get_post('admin_fullname');
         $admin_email    = get_post('admin_email');
@@ -687,10 +687,10 @@ h2#dbaseconfig{  min-height: 32px;}
             $errors['admin_password'] = $password_validation_result;
             }
 
-		//Verify email addresses are valid
+        //Verify email addresses are valid
 
 
-		$email_from = get_post('email_from');
+        $email_from = get_post('email_from');
         if('' != $email_from)
             {
             if(filter_var($email_from, FILTER_VALIDATE_EMAIL))
@@ -714,15 +714,15 @@ h2#dbaseconfig{  min-height: 32px;}
         $config_output .= "\$spider_password = '" . generateSecureKey(64) . "';\r\n";
         $config_output .= "\$scramble_key = '{$scramble_key}';\r\n";
         $config_output .= "\$api_scramble_key = '" . generateSecureKey(64) . "';\r\n\r\n";
-		
-		$config_output .= "# Paths\r\n";
-		//Verify paths actually point to a useable binary
-		$imagemagick_path = sslash(get_post('imagemagick_path'));
-		$ghostscript_path = sslash(get_post('ghostscript_path'));
-		$ffmpeg_path = sslash(get_post('ffmpeg_path'));
-		$exiftool_path = sslash(get_post('exiftool_path'));
-		$antiword_path = sslash(get_post('antiword_path'));
-		$pdftotext_path = sslash(get_post('pdftotext_path'));
+        
+        $config_output .= "# Paths\r\n";
+        //Verify paths actually point to a useable binary
+        $imagemagick_path = sslash(get_post('imagemagick_path'));
+        $ghostscript_path = sslash(get_post('ghostscript_path'));
+        $ffmpeg_path = sslash(get_post('ffmpeg_path'));
+        $exiftool_path = sslash(get_post('exiftool_path'));
+        $antiword_path = sslash(get_post('antiword_path'));
+        $pdftotext_path = sslash(get_post('pdftotext_path'));
         if ($imagemagick_path!='')
             {
             if (stripos($imagemagick_path . '/convert' . $exe_ext, 'phar://') !== false)
@@ -784,38 +784,38 @@ h2#dbaseconfig{  min-height: 32px;}
             $applicationname = get_post('applicationname');
             $config_output .= "\$applicationname = '$applicationname';\r\n";
             }
-	
-		if ($config_windows)
-			$config_output .= "\$config_windows = true;\r\n";
-		if ($defaultlanguage!='en')
-			$config_output .= "\$defaultlanguage = '$defaultlanguage';\r\n";
-		
-			$storagedir = dirname(__FILE__)."/../filestore";
-			$configstoragelocations = false;
+    
+        if ($config_windows)
+            $config_output .= "\$config_windows = true;\r\n";
+        if ($defaultlanguage!='en')
+            $config_output .= "\$defaultlanguage = '$defaultlanguage';\r\n";
+        
+            $storagedir = dirname(__FILE__)."/../filestore";
+            $configstoragelocations = false;
 
-		$use_smtp=get_post('use_smtp');
-		if($use_smtp)
-			{
-			$smtp_secure= get_post('smtp_secure');
-			$smtp_host= get_post('smtp_host');
-			$smtp_port= get_post('smtp_port');
-			$smtp_auth= get_post('smtp_auth');
-			$smtp_username= get_post('smtp_username');
-			$smtp_password= get_post('smtp_password');
-			$config_output .= "#SMTP settings\r\n";
-			$config_output .= "\$use_smtp = true;\r\n";
-			$config_output .= "\$use_phpmailer = true;\r\n";
-			$config_output .= "\$smtp_secure = '$smtp_secure';\r\n";
-			$config_output .= "\$smtp_host = '$smtp_host';\r\n";
-			$config_output .= "\$smtp_port = $smtp_port;\r\n";
-			if($smtp_auth)
-				{
-				$config_output .= "\$smtp_auth = true;\r\n";
-				$config_output .= "\$smtp_username = '$smtp_username';\r\n";
-				$config_output .= "\$smtp_password = '$smtp_password';\r\n";
-				}
-			$config_output .= " \r\n";
-			}
+        $use_smtp=get_post('use_smtp');
+        if($use_smtp)
+            {
+            $smtp_secure= get_post('smtp_secure');
+            $smtp_host= get_post('smtp_host');
+            $smtp_port= get_post('smtp_port');
+            $smtp_auth= get_post('smtp_auth');
+            $smtp_username= get_post('smtp_username');
+            $smtp_password= get_post('smtp_password');
+            $config_output .= "#SMTP settings\r\n";
+            $config_output .= "\$use_smtp = true;\r\n";
+            $config_output .= "\$use_phpmailer = true;\r\n";
+            $config_output .= "\$smtp_secure = '$smtp_secure';\r\n";
+            $config_output .= "\$smtp_host = '$smtp_host';\r\n";
+            $config_output .= "\$smtp_port = $smtp_port;\r\n";
+            if($smtp_auth)
+                {
+                $config_output .= "\$smtp_auth = true;\r\n";
+                $config_output .= "\$smtp_username = '$smtp_username';\r\n";
+                $config_output .= "\$smtp_password = '$smtp_password';\r\n";
+                }
+            $config_output .= " \r\n";
+            }
 
         // Scramble slideshow folder path
         $homeanim_folder_name = "slideshow";
@@ -831,22 +831,22 @@ h2#dbaseconfig{  min-height: 32px;}
 
         # Append defaults for new systems.
         $config_output.=file_get_contents(dirname(__FILE__) . "/../include/config.new_installs.php");
-	}
+    }
 ?>
 <?php //Output Section
 
 if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
-	{
-	//Form submission was a success.  Output the config file and refrain from redisplaying the form.
-	$fhandle = fopen($outputfile, 'w') or die ("Error opening output file.  (This should never happen, we should have caught this before we got here)");
-	fwrite($fhandle, "<?php\r\n".$config_output); //NOTE: php opening tag is prepended to the output.
-	fclose($fhandle);
+    {
+    //Form submission was a success.  Output the config file and refrain from redisplaying the form.
+    $fhandle = fopen($outputfile, 'w') or die ("Error opening output file.  (This should never happen, we should have caught this before we got here)");
+    fwrite($fhandle, "<?php\r\n".$config_output); //NOTE: php opening tag is prepended to the output.
+    fclose($fhandle);
 
     // Check database structure now
     $suppress_headers = true;
-	include_once '../include/db.php';
-	$show_detailed_errors=true; // Always show detailed errors during setup process.
-	check_db_structs();
+    include_once '../include/db.php';
+    $show_detailed_errors=true; // Always show detailed errors during setup process.
+    check_db_structs();
 
     // set the current upgrade level to current one specified in definitions.php
     if(false == get_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL))
@@ -854,87 +854,87 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
         set_sysvar(SYSVAR_CURRENT_UPGRADE_LEVEL, SYSTEM_UPGRADE_LEVEL);
         }
 
-	if(!empty($structural_plugin) && !$develmode)
-		{
-		$suppress_headers=true;
-		include_once "../include/db.php";
-		//BUILD Data from plugin
-		global $mysql_db, $resource_field_column_limit;
-	
-		# Check for path
-		$path="../plugins/".$structural_plugin."/dbstruct/";
+    if(!empty($structural_plugin) && !$develmode)
+        {
+        $suppress_headers=true;
+        include_once "../include/db.php";
+        //BUILD Data from plugin
+        global $mysql_db, $resource_field_column_limit;
+    
+        # Check for path
+        $path="../plugins/".$structural_plugin."/dbstruct/";
         if(realpath($path) === false || !is_dir($path))
             {
             return trigger_error("Attempted path traversal, path was: '{$path}'");
             }
-		
-		# Tables first.
-		# Load existing tables list
-		$ts = ps_query("show tables", array(), false, -1, false);
-		$tables=array();
-		for ($n=0;$n<count($ts);$n++)
-			{
-			$tables[]=$ts[$n]["Tables_in_" . $mysql_db];
-			}
-		$dh=opendir($path);
-		while (($file = readdir($dh)) !== false)
-			{
-			if (substr($file,0,5)=="data_")
-				{
-				$table=str_replace(".txt","",substr($file,5));
-				ps_query("TRUNCATE $table", array());
-				# Add initial data
-				$data=$file;
-				if (file_exists($path . "/" . $data))
-					{
-					$f=fopen($path . "/" . $data,"r");
-					while (($row = fgetcsv($f,5000)) !== false)
-						{
-						for ($n=0; $n<count($row); $n++)
-							{
-							if ($row[$n] == "''") {$row[$n] = null;}
-							}
-						ps_query("insert into $table values (" . ps_param_insert(count($row)) . ")", array(ps_param_fill($row, "s")), false, -1, false);
-						}
-					}
+        
+        # Tables first.
+        # Load existing tables list
+        $ts = ps_query("show tables", array(), false, -1, false);
+        $tables=array();
+        for ($n=0;$n<count($ts);$n++)
+            {
+            $tables[]=$ts[$n]["Tables_in_" . $mysql_db];
+            }
+        $dh=opendir($path);
+        while (($file = readdir($dh)) !== false)
+            {
+            if (substr($file,0,5)=="data_")
+                {
+                $table=str_replace(".txt","",substr($file,5));
+                ps_query("TRUNCATE $table", array());
+                # Add initial data
+                $data=$file;
+                if (file_exists($path . "/" . $data))
+                    {
+                    $f=fopen($path . "/" . $data,"r");
+                    while (($row = fgetcsv($f,5000)) !== false)
+                        {
+                        for ($n=0; $n<count($row); $n++)
+                            {
+                            if ($row[$n] == "''") {$row[$n] = null;}
+                            }
+                        ps_query("insert into $table values (" . ps_param_insert(count($row)) . ")", array(ps_param_fill($row, "s")), false, -1, false);
+                        }
+                    }
 
-				# Check all indices exist
-				# Load existing indexes
-				$existing = ps_query("show index from $table", array(), false, -1, false);
-						
-				$file=str_replace("data_","index_",$file);
-				if (file_exists($path . "/" . $file))
-					{
-					$done=array(); # List of indices already processed.
-					$f=fopen($path . "/" . $file,"r");
-					while (($col = fgetcsv($f,5000)) !== false)
-						{
-						# Look for this index in the existing indices.
-						$found=false;
-						for ($n=0;$n<count($existing);$n++)
-							{
-							if ($existing[$n]["Key_name"]==$col[2]) {$found=true;}
-							}
-						if (!$found && !in_array($col[2],$done))
-							{
-							# Add this index.
-							
-							# Fetch list of columns for this index
-							$cols=array();
-							$f2=fopen($path . "/" . $file,"r");
-							while (($col2 = fgetcsv($f2,5000)) !== false)
-								{
-								if ($col2[2]==$col[2]) {$cols[]=$col2[4];}
-								}
-							$sql="create index " . $col[2] . " on $table (" . join(",",$cols) . ")";
-							ps_query($sql,array(),false,-1,false);
-							$done[]=$col[2];
-							}
-						}
-					}
-				}
-			}
-		}
+                # Check all indices exist
+                # Load existing indexes
+                $existing = ps_query("show index from $table", array(), false, -1, false);
+                        
+                $file=str_replace("data_","index_",$file);
+                if (file_exists($path . "/" . $file))
+                    {
+                    $done=array(); # List of indices already processed.
+                    $f=fopen($path . "/" . $file,"r");
+                    while (($col = fgetcsv($f,5000)) !== false)
+                        {
+                        # Look for this index in the existing indices.
+                        $found=false;
+                        for ($n=0;$n<count($existing);$n++)
+                            {
+                            if ($existing[$n]["Key_name"]==$col[2]) {$found=true;}
+                            }
+                        if (!$found && !in_array($col[2],$done))
+                            {
+                            # Add this index.
+                            
+                            # Fetch list of columns for this index
+                            $cols=array();
+                            $f2=fopen($path . "/" . $file,"r");
+                            while (($col2 = fgetcsv($f2,5000)) !== false)
+                                {
+                                if ($col2[2]==$col[2]) {$cols[]=$col2[4];}
+                                }
+                            $sql="create index " . $col[2] . " on $table (" . join(",",$cols) . ")";
+                            ps_query($sql,array(),false,-1,false);
+                            $done[]=$col[2];
+                            }
+                        }
+                    }
+                }
+            }
+        }
     // Sign all field specific php code (macros, value filter etc.) included with the default metadata fields.
     resign_all_code(false, false);
 
@@ -1028,128 +1028,128 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
     ps_query($sql_query, $sql_query_params);
 
     ?>
-	<div id="intro">
-		<h1><?php echo $lang["setup-successheader"]; ?></h1>
-		<p><?php echo $lang["setup-successdetails"]; ?></p>
-		<p><?php echo $lang["setup-successnextsteps"]; ?></p>
-		<ul>
-			<li><?php echo $lang["setup-successremovewrite"]; ?></li>
-			<li><?php echo $lang["setup-visitwiki"]; ?></li>
-			<li><a href="<?php echo $baseurl;?>/login.php"><?php echo $lang["setup-login_to"] . " " . $applicationname; ?></a>
-				<ul>
-					<li><?php echo $lang["username"] . ': ' . $admin_username; ?></li>
-					<li><?php echo $lang["password"] . ': ' . $admin_password; ?></li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-	<?php
-	}
+    <div id="intro">
+        <h1><?php echo $lang["setup-successheader"]; ?></h1>
+        <p><?php echo $lang["setup-successdetails"]; ?></p>
+        <p><?php echo $lang["setup-successnextsteps"]; ?></p>
+        <ul>
+            <li><?php echo $lang["setup-successremovewrite"]; ?></li>
+            <li><?php echo $lang["setup-visitwiki"]; ?></li>
+            <li><a href="<?php echo $baseurl;?>/login.php"><?php echo $lang["setup-login_to"] . " " . $applicationname; ?></a>
+                <ul>
+                    <li><?php echo $lang["username"] . ': ' . $admin_username; ?></li>
+                    <li><?php echo $lang["password"] . ': ' . $admin_password; ?></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <?php
+    }
 else
 {
 ?>
 <form action="setup.php" method="POST">
 <?php echo $config_windows==true?'<input type="hidden" name="config_windows" value="true"/>':'' ?>
-	<div id="intro">
-			<div id="preconfig">
-				<h2><?php echo $lang["installationcheck"]; ?></h2>
-				<?php 
-					$continue = true;
-					$phpversion = PHP_VERSION;
-					if(version_compare($phpversion, '5.3.0', '<='))
-						{
-						$result   = $lang["status-fail"] . ": " . str_replace('?', '5.3.0', $lang['shouldbeversion']);
-						$pass     = false;
-						$continue = false;
-						} 
-					else
-						{
-						$result = $lang["status-ok"];
-						$pass = true;
-						}
-				?>
-				<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "PHP", $lang["softwareversion"]) . ": " . $phpversion . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
-				<p><?php echo str_replace("%phpinifile", php_ini_loaded_file(), $lang["php-config-file"]); ?></p>
-				<?php
-					if(function_exists('gd_info'))
+    <div id="intro">
+            <div id="preconfig">
+                <h2><?php echo $lang["installationcheck"]; ?></h2>
+                <?php 
+                    $continue = true;
+                    $phpversion = PHP_VERSION;
+                    if(version_compare($phpversion, '5.3.0', '<='))
                         {
-						$gdinfo = gd_info();
-
-    					if (is_array($gdinfo))
-    						{
-    						$version = $gdinfo["GD Version"];
-    						$result = $lang["status-ok"];
-    						$pass = true;
-    						}
+                        $result   = $lang["status-fail"] . ": " . str_replace('?', '5.3.0', $lang['shouldbeversion']);
+                        $pass     = false;
+                        $continue = false;
+                        } 
+                    else
+                        {
+                        $result = $lang["status-ok"];
+                        $pass = true;
                         }
-					else
-						{
-						$version = $lang["status-notinstalled"];
-						$result = $lang["status-fail"];
-						$pass = false;
-						$continue = false;
-						}
-				?>
-				<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "GD", $lang["softwareversion"]) . ": " . $version . ($pass!=true?'<br />':' ') . "(" . $result . ")"; ?></p>
-				<?php
-					$memory_limit=ini_get("memory_limit");
-					if (ResolveKB($memory_limit)<(200*1024))
-						{
-						$result = $lang["status-warning"] . ": " . str_replace("?", "200M", $lang["shouldbeormore"]);
-						$pass = false;
-						}
-					else
-						{
-						$result = $lang["status-ok"];
-						$pass = true;
-						}
-				?>
-				<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "memory_limit", $lang["phpinivalue"]) . ": " . $memory_limit . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
-				<?php
-					$post_max_size = ini_get("post_max_size");
-					if (ResolveKB($post_max_size)<(100*1024))
-						{
-						$result = $lang["status-warning"] . ": " . str_replace("?", "100M", $lang["shouldbeormore"]);
-						$pass = false;
-						}
-					else
-						{
-						$result = $lang["status-ok"];
-						$pass = true;
-						}
-				?>
-				<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "post_max_size", $lang["phpinivalue"]) . ": " . $post_max_size . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
-				<?php
-					$upload_max_filesize = ini_get("upload_max_filesize");
-					if (ResolveKB($upload_max_filesize)<(100*1024))
-						{
-						$result = $lang["status-warning"] . ": " . str_replace("?", "100M", $lang["shouldbeormore"]);
-						$pass = false;
-						}
-					else
-						{
-						$result = $lang["status-ok"];
-						$pass = true;
-						}
-				?>
-				<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "upload_max_filesize", $lang["phpinivalue"]) . ": " . $upload_max_filesize . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
-				<?php
-					$success = is_writable('../include');
-					if ($success===false)
-						{
-						$result = $lang["status-fail"] . ": " . $lang["setup-include_not_writable"];
-						$pass = false;
-						$continue = false;
-						}	
-					else
-						{
-						$result = $lang["status-ok"];
-						$pass = true;
-						}
-				?>
-					<p class="<?php echo $pass == true ? '' : 'failure';?>"><?php echo $lang["setup-checkconfigwrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
-				<?php
-					if (!file_exists($storagedir))
+                ?>
+                <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "PHP", $lang["softwareversion"]) . ": " . $phpversion . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+                <p><?php echo str_replace("%phpinifile", php_ini_loaded_file(), $lang["php-config-file"]); ?></p>
+                <?php
+                    if(function_exists('gd_info'))
+                        {
+                        $gdinfo = gd_info();
+
+                        if (is_array($gdinfo))
+                            {
+                            $version = $gdinfo["GD Version"];
+                            $result = $lang["status-ok"];
+                            $pass = true;
+                            }
+                        }
+                    else
+                        {
+                        $version = $lang["status-notinstalled"];
+                        $result = $lang["status-fail"];
+                        $pass = false;
+                        $continue = false;
+                        }
+                ?>
+                <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "GD", $lang["softwareversion"]) . ": " . $version . ($pass!=true?'<br />':' ') . "(" . $result . ")"; ?></p>
+                <?php
+                    $memory_limit=ini_get("memory_limit");
+                    if (ResolveKB($memory_limit)<(200*1024))
+                        {
+                        $result = $lang["status-warning"] . ": " . str_replace("?", "200M", $lang["shouldbeormore"]);
+                        $pass = false;
+                        }
+                    else
+                        {
+                        $result = $lang["status-ok"];
+                        $pass = true;
+                        }
+                ?>
+                <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "memory_limit", $lang["phpinivalue"]) . ": " . $memory_limit . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+                <?php
+                    $post_max_size = ini_get("post_max_size");
+                    if (ResolveKB($post_max_size)<(100*1024))
+                        {
+                        $result = $lang["status-warning"] . ": " . str_replace("?", "100M", $lang["shouldbeormore"]);
+                        $pass = false;
+                        }
+                    else
+                        {
+                        $result = $lang["status-ok"];
+                        $pass = true;
+                        }
+                ?>
+                <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "post_max_size", $lang["phpinivalue"]) . ": " . $post_max_size . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+                <?php
+                    $upload_max_filesize = ini_get("upload_max_filesize");
+                    if (ResolveKB($upload_max_filesize)<(100*1024))
+                        {
+                        $result = $lang["status-warning"] . ": " . str_replace("?", "100M", $lang["shouldbeormore"]);
+                        $pass = false;
+                        }
+                    else
+                        {
+                        $result = $lang["status-ok"];
+                        $pass = true;
+                        }
+                ?>
+                <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo str_replace("?", "upload_max_filesize", $lang["phpinivalue"]) . ": " . $upload_max_filesize . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+                <?php
+                    $success = is_writable('../include');
+                    if ($success===false)
+                        {
+                        $result = $lang["status-fail"] . ": " . $lang["setup-include_not_writable"];
+                        $pass = false;
+                        $continue = false;
+                        }   
+                    else
+                        {
+                        $result = $lang["status-ok"];
+                        $pass = true;
+                        }
+                ?>
+                    <p class="<?php echo $pass == true ? '' : 'failure';?>"><?php echo $lang["setup-checkconfigwrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+                <?php
+                    if (!file_exists($storagedir))
                         {
                         try
                             {
@@ -1171,41 +1171,41 @@ else
                         $result = $lang["status-ok"];
                         $pass = true;
                         }
-				?>
-					<p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo $lang["setup-checkstoragewrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
-			</div>
-			<h1><?php echo $lang["setup-welcome"];?></h1>
-			<p><?php echo $lang["setup-introtext"];?></p>
-			<p><?php echo $lang["setup-visitwiki"];?></p>
-			<div class="language" style="clear: none;text-align: left;padding: 0px;">
-					<label for="defaultlanguage"><?php echo $lang["language"];?>:</label><select id="defaultlanguage" name="defaultlanguage">
-						<?php
-							foreach($languages as $code => $text){
-								echo "<option value=\"$code\"";
-								if ($code == $defaultlanguage)
-									echo ' selected';
-								echo ">$text</option>";
-							}
-						?>
-					</select>
-					<input type="submit" id="changelanguage" name="changelanguage" value="<?php echo $lang["action-changelanguage"]; ?>"/>
-				</div>
-			<div id="introbottom">
-			<?php if ($continue===false) { ?>
-			<strong><?php echo $lang["setup-checkerrors"];?></strong>
-			<?php } else { ?>
-			<script type="text/javascript">
-			$(document).ready(function(){
-				$('#tabs').show();
-			});
-			</script>
-			<?php } ?>
-			</div>
-	</div>
-	<?php
-	include "../include/plugin_functions.php";
-	$plugins_dir = dirname(__FILE__)."/../plugins/";
-	# Build an array of available plugins.
+                ?>
+                    <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo $lang["setup-checkstoragewrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+            </div>
+            <h1><?php echo $lang["setup-welcome"];?></h1>
+            <p><?php echo $lang["setup-introtext"];?></p>
+            <p><?php echo $lang["setup-visitwiki"];?></p>
+            <div class="language" style="clear: none;text-align: left;padding: 0px;">
+                    <label for="defaultlanguage"><?php echo $lang["language"];?>:</label><select id="defaultlanguage" name="defaultlanguage">
+                        <?php
+                            foreach($languages as $code => $text){
+                                echo "<option value=\"$code\"";
+                                if ($code == $defaultlanguage)
+                                    echo ' selected';
+                                echo ">$text</option>";
+                            }
+                        ?>
+                    </select>
+                    <input type="submit" id="changelanguage" name="changelanguage" value="<?php echo $lang["action-changelanguage"]; ?>"/>
+                </div>
+            <div id="introbottom">
+            <?php if ($continue===false) { ?>
+            <strong><?php echo $lang["setup-checkerrors"];?></strong>
+            <?php } else { ?>
+            <script type="text/javascript">
+            $(document).ready(function(){
+                $('#tabs').show();
+            });
+            </script>
+            <?php } ?>
+            </div>
+    </div>
+    <?php
+    include "../include/plugin_functions.php";
+    $plugins_dir = dirname(__FILE__)."/../plugins/";
+    # Build an array of available plugins.
     $dirh = opendir($plugins_dir);
     $plugins_avail = array();
 
@@ -1249,90 +1249,90 @@ else
                     include $langpath . safe_file_name($defaultlanguage) . ".php";
                     }
                 }
-	      	}
-	   }
-	closedir($dirh);
-	if(!empty($plugins_avail))
-		{
-		ksort ($plugins_avail);
-		?>
-		<div id="structural_plugins">
-			<h2><?php echo $lang["setup-structuralplugins"]; ?></h2>
-			<?php
-			$default= (isset($structural_plugin) && !empty($structural_plugin)) ? $structural_plugin : "general_structure";
-			foreach($plugins_avail as $plugin)
-				{ ?>
-				<div class="templateitem">
-					<input 
-						class="structurepluginradio" 
-						type="radio" 
-						id="structureplugin-<?php echo $plugin["name"]; ?>" 
-						name="structureplugin" 
-						<?php
-						if($plugin["name"]==$default){echo "checked";}
-						?>
-						value="<?php echo $plugin["name"];?>"
-					/>
-					<label for="structureplugin-<?php echo $plugin["name"]; ?>"><?php echo ucfirst(preg_replace("/(_|-)/"," ",$plugin["name"]));?></label>
-					<span class="desc">
-						<?php 
-						echo $plugin["setup_desc"];
-						if(substr($plugin["setup_desc"], -1)!="."){echo ".";}
-						if(isset($plugin["info_url"]) && !empty($plugin["info_url"]))
-						{ ?>
-						<a 
-							class="moreinfo" 
-							target="_blank" 
-							href="<?php echo $plugin["info_url"]?>"
-						>
-							<?php echo $lang["more-information"]."..."; ?>
-						</a>
-						<?php
-						} ?>
-					</span>					
-					<div style="clear:both;"></div>		
-				</div>
-				<?php
-				} ?>
-			<div style="clear:both;"></div>
-		</div>
-		<?php
-		}
-	?>
-	
-	<?php if (isset($errors)){ ?>	
-		<div id="errorheader"><?php echo $lang["setup-errorheader"];?></div>
-	<?php } ?>	
-	<?php if (isset($warnings)){ ?>	
-		<div id="warnheader"><?php echo $lang["setup-warnheader"];?></div>
-	<?php } ?>	
-	<div class="settings">
-				<h2 id="dbaseconfig"><?php echo $lang["setup-dbaseconfig"];?><i class="starthidden ajloadicon fa fa-spinner fa-spin" id="al-testconn"></i></h2>
-				<?php if(isset($errors['database'])){?>
-					<div class="erroritem"><?php echo $lang["setup-mysqlerror"];?>
-						<?php 
-						if(isset($errors['databaseversion'])) 
-							{echo $lang["setup-mysqlerrorversion"];}
-						if(isset($errors['databaseserver']))
-							{echo $lang["setup-mysqlerrorserver"];} 
-						if(isset($errors['databaselogin']))
-							{echo $lang["setup-mysqlerrorlogin"];}
-						if(isset($errors['databasedb']))
-							{echo $lang["setup-mysqlerrordbase"];}
-						if(isset($errors['databaseperms']))
-							{echo $lang["setup-mysqlerrorperms"];} 
-						?>
-						
-						<p><?php echo $errors['database'];?></p>
-					</div>
-				<?php } ?>
-						
-				<div class="configitem">
-					<label for="mysqlserver"><?php echo $lang["setup-mysqlserver"];?></label><input class="mysqlconn" type="text" required id="mysqlserver" name="mysql_server" value="<?php echo htmlspecialchars($mysql_server);?>"/><strong>*</strong><a class="iflink" href="#if-mysql-server">?</a>
-					<p class="iteminfo" id="if-mysql-server"><?php echo $lang["setup-if_mysqlserver"];?></p>
-				</div>
-				<div class="configitem">
-					<label for="mysqlusername"><?php echo $lang["setup-mysqlusername"]; ?></label>
+            }
+       }
+    closedir($dirh);
+    if(!empty($plugins_avail))
+        {
+        ksort ($plugins_avail);
+        ?>
+        <div id="structural_plugins">
+            <h2><?php echo $lang["setup-structuralplugins"]; ?></h2>
+            <?php
+            $default= (isset($structural_plugin) && !empty($structural_plugin)) ? $structural_plugin : "general_structure";
+            foreach($plugins_avail as $plugin)
+                { ?>
+                <div class="templateitem">
+                    <input 
+                        class="structurepluginradio" 
+                        type="radio" 
+                        id="structureplugin-<?php echo $plugin["name"]; ?>" 
+                        name="structureplugin" 
+                        <?php
+                        if($plugin["name"]==$default){echo "checked";}
+                        ?>
+                        value="<?php echo $plugin["name"];?>"
+                    />
+                    <label for="structureplugin-<?php echo $plugin["name"]; ?>"><?php echo ucfirst(preg_replace("/(_|-)/"," ",$plugin["name"]));?></label>
+                    <span class="desc">
+                        <?php 
+                        echo $plugin["setup_desc"];
+                        if(substr($plugin["setup_desc"], -1)!="."){echo ".";}
+                        if(isset($plugin["info_url"]) && !empty($plugin["info_url"]))
+                        { ?>
+                        <a 
+                            class="moreinfo" 
+                            target="_blank" 
+                            href="<?php echo $plugin["info_url"]?>"
+                        >
+                            <?php echo $lang["more-information"]."..."; ?>
+                        </a>
+                        <?php
+                        } ?>
+                    </span>                 
+                    <div style="clear:both;"></div>     
+                </div>
+                <?php
+                } ?>
+            <div style="clear:both;"></div>
+        </div>
+        <?php
+        }
+    ?>
+    
+    <?php if (isset($errors)){ ?>   
+        <div id="errorheader"><?php echo $lang["setup-errorheader"];?></div>
+    <?php } ?>  
+    <?php if (isset($warnings)){ ?> 
+        <div id="warnheader"><?php echo $lang["setup-warnheader"];?></div>
+    <?php } ?>  
+    <div class="settings">
+                <h2 id="dbaseconfig"><?php echo $lang["setup-dbaseconfig"];?><i class="starthidden ajloadicon fa fa-spinner fa-spin" id="al-testconn"></i></h2>
+                <?php if(isset($errors['database'])){?>
+                    <div class="erroritem"><?php echo $lang["setup-mysqlerror"];?>
+                        <?php 
+                        if(isset($errors['databaseversion'])) 
+                            {echo $lang["setup-mysqlerrorversion"];}
+                        if(isset($errors['databaseserver']))
+                            {echo $lang["setup-mysqlerrorserver"];} 
+                        if(isset($errors['databaselogin']))
+                            {echo $lang["setup-mysqlerrorlogin"];}
+                        if(isset($errors['databasedb']))
+                            {echo $lang["setup-mysqlerrordbase"];}
+                        if(isset($errors['databaseperms']))
+                            {echo $lang["setup-mysqlerrorperms"];} 
+                        ?>
+                        
+                        <p><?php echo $errors['database'];?></p>
+                    </div>
+                <?php } ?>
+                        
+                <div class="configitem">
+                    <label for="mysqlserver"><?php echo $lang["setup-mysqlserver"];?></label><input class="mysqlconn" type="text" required id="mysqlserver" name="mysql_server" value="<?php echo htmlspecialchars($mysql_server);?>"/><strong>*</strong><a class="iflink" href="#if-mysql-server">?</a>
+                    <p class="iteminfo" id="if-mysql-server"><?php echo $lang["setup-if_mysqlserver"];?></p>
+                </div>
+                <div class="configitem">
+                    <label for="mysqlusername"><?php echo $lang["setup-mysqlusername"]; ?></label>
                     <input class="mysqlconn"
                            type="text"
                            required
@@ -1342,10 +1342,10 @@ else
                            data-connection_mode="read_write"/>
                     <strong>*</strong>
                     <a class="iflink" href="#if-mysql-username">?</a>
-					<p class="iteminfo" id="if-mysql-username"><?php echo $lang["setup-if_mysqlusername"];?></p>		
-				</div>
-				<div class="configitem">
-					<label for="mysqlpassword"><?php echo $lang["setup-mysqlpassword"];?></label>
+                    <p class="iteminfo" id="if-mysql-username"><?php echo $lang["setup-if_mysqlusername"];?></p>        
+                </div>
+                <div class="configitem">
+                    <label for="mysqlpassword"><?php echo $lang["setup-mysqlpassword"];?></label>
                     <input class="mysqlconn"
                            type="password"
                            id="mysqlpassword"
@@ -1353,8 +1353,8 @@ else
                            value="<?php echo htmlspecialchars($db_connection_modes["read_write"]["mysql_password"]); ?>"
                            data-connection_mode="read_write"/>
                     <a class="iflink" href="#if-mysql-password">?</a>
-					<p class="iteminfo" id="if-mysql-password"><?php echo $lang["setup-if_mysqlpassword"];?></p>
-				</div>
+                    <p class="iteminfo" id="if-mysql-password"><?php echo $lang["setup-if_mysqlpassword"];?></p>
+                </div>
                 <div class="configitem">
                     <label for="mysql_read_only_username"><?php echo $lang["setup-mysql_read_only_username"]; ?></label>
                     <input id="mysql_read_only_username"
@@ -1377,35 +1377,35 @@ else
                     <a class="iflink" href="#if-mysql-read-only-password">?</a>
                     <p class="iteminfo" id="if-mysql-read-only-password"><?php echo $lang["setup-if_mysql_read_only_password"]; ?></p>
                 </div>
-				<div class="configitem">
-					<label for="mysqldb"><?php echo $lang["setup-mysqldb"];?></label><input id="mysqldb" class="mysqlconn" type="text" required name="mysql_db" value="<?php echo htmlspecialchars($mysql_db);?>"/><a class="iflink" href="#if-mysql-db">?</a>
-					<p class="iteminfo" id="if-mysql-db"><?php echo $lang["setup-if_mysqldb"];?></p>
-				</div>
-				
-				<div class="configitem">
-					<?php if(isset($errors['mysqlbinpath'])){?>
-						<div class="erroritem"><?php echo $lang["setup-err_mysqlbinpath"];?></div>
-					<?php } ?>
-					<label for="mysqlbinpath"><?php echo $lang["setup-mysqlbinpath"];?></label><input id="mysqlbinpath" type="text" name="mysql_bin_path" value="<?php echo htmlspecialchars($mysql_bin_path);?>"/><a class="iflink" href="#if-mysql-bin-path">?</a>
-					<p class="iteminfo" id="if-mysql-bin-path"><?php echo $lang["setup-if_mysqlbinpath"];?></p>
-				</div>
-			</p>
-			<p class="configsection">
-				<h2><?php echo $lang["setup-generalsettings"];?><img alt="" id="admin_test" class="starthidden ajloadicon" src="../gfx/ajax-loader.gif"/></h2>
-				<div class="configitem">
-					<label for="applicationname"><?php echo $lang["setup-applicationname"];?></label><input id="applicationname" type="text" name="applicationname" value="<?php echo htmlspecialchars($applicationname);?>"/><a class="iflink" href="#if-applicationname">?</a>
-					<p class="iteminfo" id="if-applicationname"><?php echo $lang["setup-if_applicationname"];?></p>
-				</div>
-				<div class="configitem">
-					<?php if(isset($errors['baseurl'])){?>
-						<div class="erroritem"><?php echo $lang["setup-err_baseurl"];?></div>
-					<?php } ?>
-					<?php if(isset($warnings['baseurlverify'])){?>
-						<div class="warnitem"><?php echo $lang["setup-err_baseurlverify"];?></div>
-					<?php } ?>
-					<label for="baseurl"><?php echo $lang["setup-baseurl"];?></label><input id="baseurl" type="url" name="baseurl" required value="<?php echo htmlspecialchars($baseurl);?>"/><strong>*</strong><a class="iflink" href="#if-baseurl">?</a>
-					<p class="iteminfo" id="if-baseurl"><?php echo $lang["setup-if_baseurl"];?></p>
-				</div>
+                <div class="configitem">
+                    <label for="mysqldb"><?php echo $lang["setup-mysqldb"];?></label><input id="mysqldb" class="mysqlconn" type="text" required name="mysql_db" value="<?php echo htmlspecialchars($mysql_db);?>"/><a class="iflink" href="#if-mysql-db">?</a>
+                    <p class="iteminfo" id="if-mysql-db"><?php echo $lang["setup-if_mysqldb"];?></p>
+                </div>
+                
+                <div class="configitem">
+                    <?php if(isset($errors['mysqlbinpath'])){?>
+                        <div class="erroritem"><?php echo $lang["setup-err_mysqlbinpath"];?></div>
+                    <?php } ?>
+                    <label for="mysqlbinpath"><?php echo $lang["setup-mysqlbinpath"];?></label><input id="mysqlbinpath" type="text" name="mysql_bin_path" value="<?php echo htmlspecialchars($mysql_bin_path);?>"/><a class="iflink" href="#if-mysql-bin-path">?</a>
+                    <p class="iteminfo" id="if-mysql-bin-path"><?php echo $lang["setup-if_mysqlbinpath"];?></p>
+                </div>
+            </p>
+            <p class="configsection">
+                <h2><?php echo $lang["setup-generalsettings"];?><img alt="" id="admin_test" class="starthidden ajloadicon" src="../gfx/ajax-loader.gif"/></h2>
+                <div class="configitem">
+                    <label for="applicationname"><?php echo $lang["setup-applicationname"];?></label><input id="applicationname" type="text" name="applicationname" value="<?php echo htmlspecialchars($applicationname);?>"/><a class="iflink" href="#if-applicationname">?</a>
+                    <p class="iteminfo" id="if-applicationname"><?php echo $lang["setup-if_applicationname"];?></p>
+                </div>
+                <div class="configitem">
+                    <?php if(isset($errors['baseurl'])){?>
+                        <div class="erroritem"><?php echo $lang["setup-err_baseurl"];?></div>
+                    <?php } ?>
+                    <?php if(isset($warnings['baseurlverify'])){?>
+                        <div class="warnitem"><?php echo $lang["setup-err_baseurlverify"];?></div>
+                    <?php } ?>
+                    <label for="baseurl"><?php echo $lang["setup-baseurl"];?></label><input id="baseurl" type="url" name="baseurl" required value="<?php echo htmlspecialchars($baseurl);?>"/><strong>*</strong><a class="iflink" href="#if-baseurl">?</a>
+                    <p class="iteminfo" id="if-baseurl"><?php echo $lang["setup-if_baseurl"];?></p>
+                </div>
                 <div class="configitem">
                     <?php
                 if(isset($errors['admin_fullname']))
@@ -1441,7 +1441,7 @@ else
                     <input id="admin_password" class="admin_credentials" type="password" name="admin_password" required value="<?php echo htmlspecialchars($admin_password); ?>"/><strong>*</strong><a class="iflink" href="#if-admin-password">?</a>
                     <p id="if-admin-password" class="iteminfo"><?php echo $lang['setup-if_admin_password']; ?></p>
                 </div>
-				<div class="configitem">
+                <div class="configitem">
                 <?php
                 if(isset($errors['email_from']))
                     {
@@ -1450,52 +1450,52 @@ else
                     <?php
                     }
                     ?>
-					<label for="emailfrom"><?php echo $lang["setup-emailfrom"];?></label><input id="emailfrom" type="email" required name="email_from" value="<?php echo htmlspecialchars($email_from);?>"/><strong>*</strong><a class="iflink" href="#if-emailfrom">?</a>
-					<p id="if-emailfrom" class="iteminfo"><?php echo $lang["setup-if_emailfrom"];?></p>
-				</div>
+                    <label for="emailfrom"><?php echo $lang["setup-emailfrom"];?></label><input id="emailfrom" type="email" required name="email_from" value="<?php echo htmlspecialchars($email_from);?>"/><strong>*</strong><a class="iflink" href="#if-emailfrom">?</a>
+                    <p id="if-emailfrom" class="iteminfo"><?php echo $lang["setup-if_emailfrom"];?></p>
+                </div>
 
-			</p>
-			<p class="configsection">
-				<h2><?php echo $lang["setup-paths"];?></h2>
-				<p><?php echo $lang["setup-pathsdetail"];?></p>
-				<div class="configitem">
-					<?php if(isset($errors['imagemagick_path'])){?>
-						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'convert'.</div>
-					<?php } ?>
-					<label for="imagemagickpath"><?php echo str_replace("%bin", "ImageMagick/GraphicsMagick", $lang["setup-binpath"]) . ":"; ?></label><input id="imagemagickpath" type="text" name="imagemagick_path" value="<?php echo htmlspecialchars($imagemagick_path); ?>"/>
-				</div>
-				<div class="configitem">
-					<?php if(isset($errors['ghostscript_path'])){?>
-						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'gs'.</div>
-					<?php } ?>
-					<label for="ghostscriptpath"><?php echo str_replace("%bin", "Ghostscript", $lang["setup-binpath"]) . ":"; ?></label><input id="ghostscriptpath" type="text" name="ghostscript_path" value="<?php echo htmlspecialchars($ghostscript_path); ?>"/>
-				</div>
-				<div class="configitem">
-					<?php if(isset($errors['ffmpeg_path'])){?>
-						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'ffmpeg'.</div>
-					<?php } ?>
-					<label for="ffmpegpath"><?php echo str_replace("%bin", "FFMpeg/libav", $lang["setup-binpath"]) . ":"; ?></label><input id="ffmpegpath" type="text" name="ffmpeg_path" value="<?php echo htmlspecialchars($ffmpeg_path); ?>"/>
-				</div>
-				<div class="configitem">
-					<?php if(isset($errors['exiftool_path'])){?>
-						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'exiftool'.</div>
-					<?php } ?>
-					<label for="exiftoolpath"><?php echo str_replace("%bin", "Exiftool", $lang["setup-binpath"]) . ":"; ?></label><input id="exiftoolpath" type="text" name="exiftool_path" value="<?php echo htmlspecialchars($exiftool_path); ?>"/>
-				</div>
-				<div class="configitem">
-				<?php if(isset($errors['antiword_path'])){?>
-						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'AntiWord'.</div>
-					<?php } ?>
-					<label for="antiwordpath"><?php echo str_replace("%bin", "AntiWord", $lang["setup-binpath"]) . ":"; ?></label><input id="antiwordpath" type="text" name="antiword_path" value="<?php echo htmlspecialchars($antiword_path); ?>"/>
-				</div>
-				
-				<div class="configitem">
-					<?php if(isset($errors['pdftotext_path'])){?>
-						<div class="erroritem"><?php echo $lang["setup-err_path"];?> 'pdftotext'.</div>
-					<?php } ?>
-					<label for="pdftotextpath"><?php echo str_replace("%bin", "PDFtotext", $lang["setup-binpath"]) . ":"; ?></label><input id="pdftotextpath" type="text" name="pdftotext_path" value="<?php echo htmlspecialchars($pdftotext_path); ?>"/>
-				</div>
-			</p>
+            </p>
+            <p class="configsection">
+                <h2><?php echo $lang["setup-paths"];?></h2>
+                <p><?php echo $lang["setup-pathsdetail"];?></p>
+                <div class="configitem">
+                    <?php if(isset($errors['imagemagick_path'])){?>
+                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'convert'.</div>
+                    <?php } ?>
+                    <label for="imagemagickpath"><?php echo str_replace("%bin", "ImageMagick/GraphicsMagick", $lang["setup-binpath"]) . ":"; ?></label><input id="imagemagickpath" type="text" name="imagemagick_path" value="<?php echo htmlspecialchars($imagemagick_path); ?>"/>
+                </div>
+                <div class="configitem">
+                    <?php if(isset($errors['ghostscript_path'])){?>
+                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'gs'.</div>
+                    <?php } ?>
+                    <label for="ghostscriptpath"><?php echo str_replace("%bin", "Ghostscript", $lang["setup-binpath"]) . ":"; ?></label><input id="ghostscriptpath" type="text" name="ghostscript_path" value="<?php echo htmlspecialchars($ghostscript_path); ?>"/>
+                </div>
+                <div class="configitem">
+                    <?php if(isset($errors['ffmpeg_path'])){?>
+                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'ffmpeg'.</div>
+                    <?php } ?>
+                    <label for="ffmpegpath"><?php echo str_replace("%bin", "FFMpeg/libav", $lang["setup-binpath"]) . ":"; ?></label><input id="ffmpegpath" type="text" name="ffmpeg_path" value="<?php echo htmlspecialchars($ffmpeg_path); ?>"/>
+                </div>
+                <div class="configitem">
+                    <?php if(isset($errors['exiftool_path'])){?>
+                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'exiftool'.</div>
+                    <?php } ?>
+                    <label for="exiftoolpath"><?php echo str_replace("%bin", "Exiftool", $lang["setup-binpath"]) . ":"; ?></label><input id="exiftoolpath" type="text" name="exiftool_path" value="<?php echo htmlspecialchars($exiftool_path); ?>"/>
+                </div>
+                <div class="configitem">
+                <?php if(isset($errors['antiword_path'])){?>
+                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'AntiWord'.</div>
+                    <?php } ?>
+                    <label for="antiwordpath"><?php echo str_replace("%bin", "AntiWord", $lang["setup-binpath"]) . ":"; ?></label><input id="antiwordpath" type="text" name="antiword_path" value="<?php echo htmlspecialchars($antiword_path); ?>"/>
+                </div>
+                
+                <div class="configitem">
+                    <?php if(isset($errors['pdftotext_path'])){?>
+                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'pdftotext'.</div>
+                    <?php } ?>
+                    <label for="pdftotextpath"><?php echo str_replace("%bin", "PDFtotext", $lang["setup-binpath"]) . ":"; ?></label><input id="pdftotextpath" type="text" name="pdftotext_path" value="<?php echo htmlspecialchars($pdftotext_path); ?>"/>
+                </div>
+            </p>
 
 
             <h2><?php echo $lang["setup-smtp-settings"]; ?></h2>
@@ -1559,8 +1559,8 @@ else
                     </div>
                 </div>
             </div>
-		<input type="submit" id="submit" name="submit" value="<?php echo $lang["setup-begin_installation"];?>"/>
-	</div>
+        <input type="submit" id="submit" name="submit" value="<?php echo $lang["setup-begin_installation"];?>"/>
+    </div>
 </form>
 <script>
     jQuery("#use_smtp").click(function()
@@ -1598,13 +1598,13 @@ else
 </script>
 <?php }
 if (($develmode)&& isset($config_output))
-	{ ?>
-	<div id="configoutput">
-		<h1><?php echo $lang["setup-configuration_file_output"] . ":"; ?></h1>
-		<pre><?php echo htmlspecialchars($config_output); ?></pre>
-	</div>
-	<?php 
-	} ?>
+    { ?>
+    <div id="configoutput">
+        <h1><?php echo $lang["setup-configuration_file_output"] . ":"; ?></h1>
+        <pre><?php echo htmlspecialchars($config_output); ?></pre>
+    </div>
+    <?php 
+    } ?>
 </div>
 </body>
 </html>

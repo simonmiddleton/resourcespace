@@ -37,7 +37,7 @@ if($sort != 'ASC' && $sort != 'DESC') {$sort = $default_sort_direction;}
 
 # Get alternative files and configure next and previous buttons relative to the current file
 if($alternative != "-1")
-	{
+    {
         $alt_order_by="";$alt_sort="";
         if ($alt_types_organize)
             {
@@ -45,8 +45,8 @@ if($alternative != "-1")
                 $alt_sort="asc";
             }
         $altfiles=get_alternative_files($ref,$alt_order_by,$alt_sort);
-        for ($n=0;$n<count($altfiles);$n++)			
-			{	
+        for ($n=0;$n<count($altfiles);$n++)         
+            {   
                 if ($altfiles[$n]["ref"] == $alternative)
                 {
                     if ($n == count($altfiles) - 1)
@@ -74,30 +74,30 @@ if($alternative != "-1")
 # next / previous resource browsing
 $go=getval("go","");
 if ($go!="")
-	{
+    {
     $origref = $ref; # Store the reference of the resource before we move, in case we need to revert this.
 
-	# Re-run the search and locate the next and previous records.
-	$modified_result_set=hook("modifypagingresult"); 
-	if ($modified_result_set){
-		$result=$modified_result_set;
-	} else {
-		$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,"",false,true,true);
-	}
-	if (is_array($result))
-		{
-		# Locate this resource
-		$pos=-1;
-		for ($n=0;$n<count($result);$n++)
-			{
-			if ($result[$n]["ref"]==$ref) {$pos=$n;}
-			}
-		if ($pos!=-1)
-			{
-			if (($go=="previous") && ($pos>0)) {$ref=$result[$pos-1]["ref"];}
-			if (($go=="next") && ($pos<($n-1))) {$ref=$result[$pos+1]["ref"];if (($pos+1)>=($offset+72)) {$offset=$pos+1;}} # move to next page if we've advanced far enough
-			}
-		}
+    # Re-run the search and locate the next and previous records.
+    $modified_result_set=hook("modifypagingresult"); 
+    if ($modified_result_set){
+        $result=$modified_result_set;
+    } else {
+        $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,"",false,true,true);
+    }
+    if (is_array($result))
+        {
+        # Locate this resource
+        $pos=-1;
+        for ($n=0;$n<count($result);$n++)
+            {
+            if ($result[$n]["ref"]==$ref) {$pos=$n;}
+            }
+        if ($pos!=-1)
+            {
+            if (($go=="previous") && ($pos>0)) {$ref=$result[$pos-1]["ref"];}
+            if (($go=="next") && ($pos<($n-1))) {$ref=$result[$pos+1]["ref"];if (($pos+1)>=($offset+72)) {$offset=$pos+1;}} # move to next page if we've advanced far enough
+            }
+        }
 
     # Option to replace the key via a plugin (used by resourceconnect plugin).
     $newkey = hook("nextpreviewregeneratekey");
@@ -105,7 +105,7 @@ if ($go!="")
 
     # Check access permissions for this new resource, if an external user.
     if ($k!="" && !check_access_key($ref, $k)) {$ref = $origref;} # Cancel the move.
-	}
+    }
 
 
 $resource=get_resource_data($ref);
@@ -164,16 +164,16 @@ $resource = get_resource_data($ref);
 
 // get mp3 paths if necessary and set $use_mp3_player switch
 if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && (in_array($resource["file_extension"],$ffmpeg_audio_extensions) || $resource["file_extension"]=="mp3") && $mp3_player){
-		$use_mp3_player=true;
-	}
-	else {
-		$use_mp3_player=false;
-	}
-if ($use_mp3_player){	
-	$mp3realpath=get_resource_path($ref,true,"",false,"mp3");
-	if (file_exists($mp3realpath)){
-		$mp3path=get_resource_path($ref,false,"",false,"mp3");
-	}
+        $use_mp3_player=true;
+    }
+    else {
+        $use_mp3_player=false;
+    }
+if ($use_mp3_player){   
+    $mp3realpath=get_resource_path($ref,true,"",false,"mp3");
+    if (file_exists($mp3realpath)){
+        $mp3path=get_resource_path($ref,false,"",false,"mp3");
+    }
 }
 
 include "../include/header.php";
@@ -250,21 +250,21 @@ else
 <?php
 
 if (!hook("replacepreviewpager")){
-	if (($nextpage!=-1 || $previouspage!=-1) && $nextpage!=-0){
-	    $pagecount = get_page_count($resource,$alternative);
-	    if ($pagecount!=null && $pagecount!=-2){
-	    ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $lang['page'];?>: <select class="ListDropdown" style="width:auto" onChange="CentralSpaceLoad('<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>&ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&page='+this.value);"><?php 
-	    for ($n=1;$n<$pagecount+1;$n++)
-	    	{
-	        if ($n<=$pdf_pages)
-	        	{
-	            ?><option value="<?php echo $n?>" <?php if ($page==$n){?>selected<?php } ?>><?php echo $n?><?php
-	            }
-	        }
-	    if ($pagecount>$pdf_pages){?><option value="1">...<?php } ?>
-	    </select><?php
-		}
-	}
+    if (($nextpage!=-1 || $previouspage!=-1) && $nextpage!=-0){
+        $pagecount = get_page_count($resource,$alternative);
+        if ($pagecount!=null && $pagecount!=-2){
+        ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $lang['page'];?>: <select class="ListDropdown" style="width:auto" onChange="CentralSpaceLoad('<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>&ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&page='+this.value);"><?php 
+        for ($n=1;$n<$pagecount+1;$n++)
+            {
+            if ($n<=$pdf_pages)
+                {
+                ?><option value="<?php echo $n?>" <?php if ($page==$n){?>selected<?php } ?>><?php echo $n?><?php
+                }
+            }
+        if ($pagecount>$pdf_pages){?><option value="1">...<?php } ?>
+        </select><?php
+        }
+    }
 }
 ?>
 
@@ -288,17 +288,17 @@ if (!file_exists($video_preview_file) || $block_video_playback)
     $block_video_playback = resource_has_access_denied_by_RT_size($resource['resource_type'], '');
     }
 if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && file_exists($video_preview_file) && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre') && !$block_video_playback && (strpos(strtolower($video_preview_file),".".$ffmpeg_preview_extension)!==false))
-	{
-	# Include the video player if a video preview exists for this resource.
-	$download_multisize=false;
+    {
+    # Include the video player if a video preview exists for this resource.
+    $download_multisize=false;
     if(!hook("customflvplay")) // Note - legacy hook name, FLV files no longer used
         {
         include "video_player.php";
         }
     }
-	elseif ($use_mp3_player && file_exists($mp3realpath) && hook("custommp3player")){
-		// leave player to place image
-		}	
+    elseif ($use_mp3_player && file_exists($mp3realpath) && hook("custommp3player")){
+        // leave player to place image
+        }   
     else
         {
         if(!hook('replacepreviewimage'))
@@ -335,22 +335,22 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && f
 <?php } // end hook previewimage
 
 if(!IsModal())
-	{
-	?>
-	<script>
-	// Don't need space for Simple Search box
-	jQuery('#CentralSpaceContainer').width('94%');
-	</script>
-	<?php
-	}
-	
+    {
+    ?>
+    <script>
+    // Don't need space for Simple Search box
+    jQuery('#CentralSpaceContainer').width('94%');
+    </script>
+    <?php
+    }
+    
 if ($show_resource_title_in_titlebar){
-	$title =  htmlspecialchars(i18n_get_translated(get_data_by_field($ref,$view_title_field)));
-	if (strlen($title) > 0){
-		echo "<script language='javascript'>\n";
-		echo "document.title = \"$applicationname - $title\";\n";
-		echo "</script>";
-	}
+    $title =  htmlspecialchars(i18n_get_translated(get_data_by_field($ref,$view_title_field)));
+    if (strlen($title) > 0){
+        echo "<script language='javascript'>\n";
+        echo "document.title = \"$applicationname - $title\";\n";
+        echo "</script>";
+    }
 }
 
 if(count(canSeeAnnotationsFields()) > 0)

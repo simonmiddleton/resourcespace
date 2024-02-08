@@ -32,7 +32,7 @@ if(!is_array($tmsdata))
     <table style="border=1;">
 <?php
 foreach($tmsdata as $module_name => $module_tms_data)
-	{
+    {
     ?>
     <tr colspan="2"><strong><?php echo htmlspecialchars($module_name); ?></strong></tr>
     <?php
@@ -45,7 +45,7 @@ foreach($tmsdata as $module_name => $module_tms_data)
         </tr>
         <?php
         }
-	}
+    }
     ?>
     </table>
 </div>

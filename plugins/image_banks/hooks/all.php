@@ -85,14 +85,14 @@ function HookImage_banksAllSearchfiltertop()
                 if(typeof search_show == 'undefined' || search_show)
                     {
                     siblings.each(function()
-						{
+                        {
                         searchfield_id = this.id.substring(13);
                         // If the field is not in the fieldsToHideOnClear array, then show it 
                         if( (typeof fieldsToHideOnClear == "undefined") || (typeof fieldsToHideOnClear == "object" && !fieldsToHideOnClear.includes(searchfield_id)) )
                             {
                             jQuery(this).show();
                             }
-						});
+                        });
                     }
                 return;
                 }

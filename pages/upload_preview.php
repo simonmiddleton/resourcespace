@@ -11,9 +11,9 @@ $error = false;
 $resource=get_resource_data($ref);
 # Not allowed to edit this resource?
 if (!get_edit_access($ref,$resource["archive"],$resource)) {
-		$error=$lang['error-permissiondenied'];
-		error_alert($error);
-		exit();
+        $error=$lang['error-permissiondenied'];
+        error_alert($error);
+        exit();
         }
         
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
@@ -44,15 +44,15 @@ $curpos=getval("curpos","");
 $go=getval("go","");
 
 $urlparams= array(
-    'ref'				        => $ref,
-    'search'			        => $search,
-    'order_by'			        => $order_by,
-    'offset'			        => $offset,
-    'restypes'			        => $restypes,
-    'archive'			        => $archive,
+    'ref'                       => $ref,
+    'search'                    => $search,
+    'order_by'                  => $order_by,
+    'offset'                    => $offset,
+    'restypes'                  => $restypes,
+    'archive'                   => $archive,
     'default_sort_direction'    => $default_sort_direction,
-    'sort'				        => $sort,
-    'curpos'			        => $curpos,
+    'sort'                      => $sort,
+    'curpos'                    => $curpos,
     'refreshcollectionframe'    => 'true'
 );
 
@@ -60,7 +60,7 @@ $urlparams= array(
 #handle posts
 if (array_key_exists("userfile",$_FILES) && enforcePostRequest(false))
     {
-	$status=upload_preview($ref);
+    $status=upload_preview($ref);
     if($status !== false)
         {
         redirect(generateurl($baseurl . "/pages/view.php", $urlparams));
@@ -88,10 +88,10 @@ include "../include/header.php";
 <script language="JavaScript">
 // Check allowed extensions:
 function check(filename) {
-	var allowedExtensions='jpg,jpeg';
-	var ext = filename.substr(filename.lastIndexOf('.'));
-	ext =ext.substr(1).toLowerCase();
-	if (allowedExtensions.indexOf(ext)==-1){ return false;} else {return true;}
+    var allowedExtensions='jpg,jpeg';
+    var ext = filename.substr(filename.lastIndexOf('.'));
+    ext =ext.substr(1).toLowerCase();
+    if (allowedExtensions.indexOf(ext)==-1){ return false;} else {return true;}
 }
 </script>
 <form method="post" class="form" enctype="multipart/form-data" action="upload_preview.php">
@@ -106,7 +106,7 @@ function check(filename) {
 <div class="clearerleft"> </div>
 </div>
 
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="save" type="submit" onclick="if (!check(this.form.userfile.value)){document.getElementById('invalid').style.display='block';return false;}else {document.getElementById('invalid').style.display='none';}" value="&nbsp;&nbsp;<?php echo $lang["upload_file"]?>&nbsp;&nbsp;" />
 </div>
 

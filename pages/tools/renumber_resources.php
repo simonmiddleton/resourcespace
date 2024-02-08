@@ -10,10 +10,10 @@ function migrate_files($ref, $newref, $alternative, $extension, $sizes)
     {
     global $scramble_key, $scramble_key_old, $migratedfiles, $filestore_evenspread, $syncdir;
     echo "Checking Resource ID: " . $ref . ", alternative: " . $alternative . PHP_EOL;
-	$resource_data=get_resource_data($ref);
+    $resource_data=get_resource_data($ref);
     $pagecount=get_page_count($resource_data,$alternative);
     for($page=1;$page<=$pagecount;$page++)
-		{
+        {
         for ($m=0;$m<count($sizes);$m++)
             {
             // Get the new path for each file
@@ -24,7 +24,7 @@ function migrate_files($ref, $newref, $alternative, $extension, $sizes)
             echo " - Checking old path: " . $path . PHP_EOL;
             if (file_exists($path) && !($sizes[$m]["id"] == "" && ((trim($syncdir)!="") && strpos($path, $syncdir)!==false)))
                 {
-                echo " - Found file at old path : " . $path . PHP_EOL;	
+                echo " - Found file at old path : " . $path . PHP_EOL;  
                 if(!file_exists($newpath))
                     {
                     echo " - Moving resource file for resource #" . $ref  . " - old path= " . $path  . ", new path=" . $newpath . PHP_EOL;
@@ -58,11 +58,11 @@ $resources=ps_query("SELECT ref,file_extension FROM resource WHERE ref>0 ORDER B
 $migratedfiles = 0;
 $totalresources = count($resources);
 for ($n=0;$n<$totalresources;$n++)
-	{
-	$ref=$resources[$n]["ref"];
+    {
+    $ref=$resources[$n]["ref"];
     $newref=$ref+$offset;
-	$extension=$resources[$n]["file_extension"];
-	if ($extension=="") {$extension="jpg";}
+    $extension=$resources[$n]["file_extension"];
+    if ($extension=="") {$extension="jpg";}
 
     $sizes=get_image_sizes($ref,true,$extension,false);
     

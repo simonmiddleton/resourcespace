@@ -53,14 +53,14 @@ hook("pageevaluation");
 
 # Handle deleting a file
 if (getval("filedelete","")!="" && enforcePostRequest(getval("ajax", false)))
-	{
-	$filedelete=explode(',',getval('filedelete',''));
-	foreach ($filedelete as $filedel){
-		if (is_numeric($filedel) && $filedel!='on'){// safety checks
-			delete_alternative_file($ref,$filedel);
-		}
-	}
-	}
+    {
+    $filedelete=explode(',',getval('filedelete',''));
+    foreach ($filedelete as $filedel){
+        if (is_numeric($filedel) && $filedel!='on'){// safety checks
+            delete_alternative_file($ref,$filedel);
+        }
+    }
+    }
 
 $alt_order_by="";$alt_sort="";
 if ($alt_types_organize){$alt_order_by="alt_type";$alt_sort="asc";} 
@@ -70,7 +70,7 @@ include "../include/header.php";
 ?>
 <script type="text/javascript">
 function clickDelete(){
-	var files = [];
+    var files = [];
     var errors = 0;
     jQuery('#altlistitems input:checked').not("#toggleall").each(function() {
             files.push(this.value);
@@ -174,9 +174,9 @@ if(isset($resource['field'.$view_title_field]))
 <input type=hidden name="filedelete" id="filedelete" value="">
 <?php generateFormToken("fileform"); ?>
 <div class="Listview"  id="altlistitems">
-	
+    
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
-<!--Title row-->	
+<!--Title row-->    
 <tr class="ListviewTitleStyle">
 <td><?php if (count($files)>0){?><input type="checkbox" class="checkbox" onclick="toggleAll();" id="toggleall" /><?php } ?></td>
 <td><?php echo $lang["name"]?></td>
@@ -192,21 +192,21 @@ if(isset($resource['field'.$view_title_field]))
 <?php
 hook("alt_files_before_list");
 for ($n=0;$n<count($files);$n++)
-	{
-	?>
-	<!--List Item-->
-	<tr <?php if($files[$n]["ref"]==$alt){echo "class='Highlight' ";} ?> id='altlistrow<?php echo $files[$n]['ref']?>'>
-	<td><input type="checkbox" class="checkbox" name="altcheckbox[]" value="<?php echo $files[$n]["ref"];?>" /></td>
-	<td><?php echo htmlspecialchars($files[$n]["name"])?></td>	
-	<td><?php echo htmlspecialchars($files[$n]["description"])?>&nbsp;</td>
+    {
+    ?>
+    <!--List Item-->
+    <tr <?php if($files[$n]["ref"]==$alt){echo "class='Highlight' ";} ?> id='altlistrow<?php echo $files[$n]['ref']?>'>
+    <td><input type="checkbox" class="checkbox" name="altcheckbox[]" value="<?php echo $files[$n]["ref"];?>" /></td>
+    <td><?php echo htmlspecialchars($files[$n]["name"])?></td>  
+    <td><?php echo htmlspecialchars($files[$n]["description"])?>&nbsp;</td>
     <?php hook('alternativefileslist2', '', array($ref, $files[$n])); ?>
-	<td><?php echo escape($files[$n]["file_extension"] == "" ? $lang["notuploaded"] : str_replace_formatted_placeholder("%extension", $files[$n]["file_extension"], $lang["cell-fileoftype"])); ?></td>	
-	<td><?php echo formatfilesize($files[$n]["file_size"])?></td>	
-	<td><?php echo nicedate($files[$n]["creation_date"],true)?></td>
-	<?php if(count($alt_types) > 1){ ?><td><?php echo $files[$n]["alt_type"] ?></td><?php } ?>
-	<td><div class="ListTools">
-	
-	<a href="#" onclick="
+    <td><?php echo escape($files[$n]["file_extension"] == "" ? $lang["notuploaded"] : str_replace_formatted_placeholder("%extension", $files[$n]["file_extension"], $lang["cell-fileoftype"])); ?></td> 
+    <td><?php echo formatfilesize($files[$n]["file_size"])?></td>   
+    <td><?php echo nicedate($files[$n]["creation_date"],true)?></td>
+    <?php if(count($alt_types) > 1){ ?><td><?php echo $files[$n]["alt_type"] ?></td><?php } ?>
+    <td><div class="ListTools">
+    
+    <a href="#" onclick="
         if (confirm('<?php echo $lang['filedeleteconfirm']?>'))
             {
             postdata = {
@@ -235,7 +235,7 @@ for ($n=0;$n<count($files);$n++)
         return false;
     "><?php echo LINK_CARET ?><?php echo escape($lang["action-delete"])?></a>
 
-	&nbsp;<a onclick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this, true);" href="<?php echo generateurl($baseurl . "/pages/alternative_file.php",$urlparams,array("ref"=>$files[$n]["ref"])); ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
+    &nbsp;<a onclick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this, true);" href="<?php echo generateurl($baseurl . "/pages/alternative_file.php",$urlparams,array("ref"=>$files[$n]["ref"])); ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
 
     <?php if($editaccess && (file_exists(get_resource_path($ref , true, '', true, 'jpg', true, 1, false, '', $files[$n]["ref"], true)) || file_exists(get_resource_path($ref , true, 'hpr', true, 'jpg', true, 1, false, '', $files[$n]["ref"], true))))
         {
@@ -243,16 +243,16 @@ for ($n=0;$n<count($files);$n++)
         } 
     
     hook("refreshinfo"); ?>
-	</td>
-	
-	</tr>
-	<?php
-	}
+    </td>
+    
+    </tr>
+    <?php
+    }
 ?>
 </table>
 </div>
 <p>
-	<a onclick="return CentralSpaceLoad(this, true);" href="<?php echo generateurl($baseurl . "/pages/upload_batch.php",$urlparams,array('alternative'=>$ref)); ?>"><?php echo LINK_CARET ?><?php echo $lang["alternativebatchupload"] ?></a>
+    <a onclick="return CentralSpaceLoad(this, true);" href="<?php echo generateurl($baseurl . "/pages/upload_batch.php",$urlparams,array('alternative'=>$ref)); ?>"><?php echo LINK_CARET ?><?php echo $lang["alternativebatchupload"] ?></a>
 </p>
 </form>
 
@@ -266,9 +266,9 @@ for ($n=0;$n<count($files);$n++)
 <script type="text/javascript">
 jQuery('#altlistitems').tshift(); // make the select all checkbox work
 jQuery('#altlistitems input[type=checkbox]').click(function(){   
-	if(jQuery(this).not(':checked').length) { // clear checkall
-		jQuery("#toggleall").prop("checked",false);
-	} 
+    if(jQuery(this).not(':checked').length) { // clear checkall
+        jQuery("#toggleall").prop("checked",false);
+    } 
 }); 
 
 </script>

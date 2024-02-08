@@ -14,15 +14,15 @@ if ($rating=="") {$rating=0;}
 if ($rating_count=="") {$rating_count=0;}
 // for 'remove rating' tool, determine if user has a rating for this resource
 if ($user_rating_only_once) {
-	$ratings=array();
-	$ratings=ps_query("select user,rating from user_rating where ref=?",array("i",$ref));
-	$current="";
-	for ($n=0;$n<count($ratings);$n++) {
-		if ($ratings[$n]['user']==$userref) {
-			$current=$ratings[$n]['rating'];
-		}
-	}
-	$removeratingvis = ($current!="") ? "inline" : "none";
+    $ratings=array();
+    $ratings=ps_query("select user,rating from user_rating where ref=?",array("i",$ref));
+    $current="";
+    for ($n=0;$n<count($ratings);$n++) {
+        if ($ratings[$n]['user']==$userref) {
+            $current=$ratings[$n]['rating'];
+        }
+    }
+    $removeratingvis = ($current!="") ? "inline" : "none";
 }
 if(!hook("replaceuser_ratingbr")){
 ?>
@@ -33,28 +33,28 @@ if(!hook("replaceuser_ratingbr")){
 var UserRatingDone=false;
 
 function UserRatingDisplay(rating,hiclass)
-	{
-	if (UserRatingDone) {return false;}
-	for (var n=1;n<=5;n++)
-		{
-		jQuery('#RatingStar'+n).removeClass('StarEmpty');
-		jQuery('#RatingStar'+n).removeClass('StarCurrent');
-		jQuery('#RatingStar'+n).removeClass('StarSelect');
-		if (n<=rating)
-			{
-			jQuery('#RatingStar'+n).addClass(hiclass);
-			}
-		else
-			{
-			jQuery('#RatingStar'+n).addClass('StarEmpty');
-			}
-		}
-	}
+    {
+    if (UserRatingDone) {return false;}
+    for (var n=1;n<=5;n++)
+        {
+        jQuery('#RatingStar'+n).removeClass('StarEmpty');
+        jQuery('#RatingStar'+n).removeClass('StarCurrent');
+        jQuery('#RatingStar'+n).removeClass('StarSelect');
+        if (n<=rating)
+            {
+            jQuery('#RatingStar'+n).addClass(hiclass);
+            }
+        else
+            {
+            jQuery('#RatingStar'+n).addClass('StarEmpty');
+            }
+        }
+    }
 
 function UserRatingSet(userref,ref,rating)
-	{
-	jQuery('#RatingStarLink'+rating).blur(); // removes the white focus box around the star.
-	if (UserRatingDone) {return false;}
+    {
+    jQuery('#RatingStarLink'+rating).blur(); // removes the white focus box around the star.
+    if (UserRatingDone) {return false;}
 
     jQuery.post(
         baseurl_short + "pages/ajax/user_rating_save.php",
@@ -66,21 +66,21 @@ function UserRatingSet(userref,ref,rating)
         }
     );
 
-	document.getElementById('RatingCount').style.visibility='hidden';
-	if (rating==0)
-		{
-		UserRatingDone=false;
-		UserRatingDisplay(0,'StarSelect');
-		UserRatingDone=true;
-		document.getElementById('UserRatingMessage').innerHTML="<?php echo escape($lang["ratingremoved"])?>";
-		document.getElementById('RatingStarLink0').style.display = 'none';
-		}
-	else
-		{
-		UserRatingDone=true;
-		document.getElementById('UserRatingMessage').innerHTML="<?php echo escape($lang["ratingthankyou"])?>";		
-		}
-	}
+    document.getElementById('RatingCount').style.visibility='hidden';
+    if (rating==0)
+        {
+        UserRatingDone=false;
+        UserRatingDisplay(0,'StarSelect');
+        UserRatingDone=true;
+        document.getElementById('UserRatingMessage').innerHTML="<?php echo escape($lang["ratingremoved"])?>";
+        document.getElementById('RatingStarLink0').style.display = 'none';
+        }
+    else
+        {
+        UserRatingDone=true;
+        document.getElementById('UserRatingMessage').innerHTML="<?php echo escape($lang["ratingthankyou"])?>";      
+        }
+    }
 
 
 </script>
@@ -93,10 +93,10 @@ function UserRatingSet(userref,ref,rating)
 <div class="RatingStarsContainer">
 <?php if ($user_rating_only_once) {?><a href="#" onClick="UserRatingSet(<?php echo $userref?>,<?php echo htmlspecialchars($ref) ?>,0);return false;" title="<?php echo escape($lang["ratingremovehover"])?>" style="display:<?php echo $removeratingvis;?>"><span id="RatingStarLink0">X&nbsp;&nbsp;</span></a><?php }?>
 <?php for ($n=1;$n<=5;$n++)
-	{
-	?><a href="#" onMouseOver="UserRatingDisplay(<?php echo $n?>,'StarSelect');" onClick="UserRatingSet(<?php echo $userref?>,<?php echo htmlspecialchars($ref) ?>,<?php echo $n?>);return false;" id="RatingStarLink<?php echo $n?>"><span id="RatingStar<?php echo $n?>" class="Star<?php echo $n <= $rating ? "Current" : "Empty"; ?>"><img alt="" src="<?php echo $baseurl?>/gfx/interface/sp.gif" width="15" height="15"></span></a><?php
-	#&#9733;
-	}
+    {
+    ?><a href="#" onMouseOver="UserRatingDisplay(<?php echo $n?>,'StarSelect');" onClick="UserRatingSet(<?php echo $userref?>,<?php echo htmlspecialchars($ref) ?>,<?php echo $n?>);return false;" id="RatingStarLink<?php echo $n?>"><span id="RatingStar<?php echo $n?>" class="Star<?php echo $n <= $rating ? "Current" : "Empty"; ?>"><img alt="" src="<?php echo $baseurl?>/gfx/interface/sp.gif" width="15" height="15"></span></a><?php
+    #&#9733;
+    }
 ?>
 </div>
 <div class="RatingCount" id="RatingCount"><?php if ($user_rating_stats && $user_rating_only_once){?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/user_ratings.php?ref=<?php echo $ref?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by) ?>&amp;sort=<?php echo urlencode($sort) ?>&amp;archive=<?php echo urlencode($archive) ?>"><?php } ?><?php echo urlencode($rating_count) ?> <?php echo $rating_count == 1 ? escape($lang["rating_lowercase"]) : escape($lang["ratings"]); ?><?php if ($user_rating_stats && $user_rating_only_once){?></a><?php }?></div>

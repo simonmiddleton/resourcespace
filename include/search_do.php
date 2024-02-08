@@ -167,7 +167,7 @@ function do_search(
             }
         }
 
-	$archive=explode(",",$archive); // Allows for searching in more than one archive state
+    $archive=explode(",",$archive); // Allows for searching in more than one archive state
 
     hook("modifyorderarray");
 
@@ -468,7 +468,7 @@ function do_search(
                             $datefieldinfo_cache[$fieldname]=$datefieldinfo;
                             }
 
-						if (count($datefieldinfo) && substr($keystring,0,5)!="range")
+                        if (count($datefieldinfo) && substr($keystring,0,5)!="range")
                             {
                             $c++;
                             $datefieldinfo=$datefieldinfo[0];
@@ -602,7 +602,7 @@ function do_search(
                         $sql_join->sql .=" JOIN resource_node rrn" . $c . " ON rrn" . $c . ".resource=r.ref LEFT JOIN node rnn" . $c . " ON rnn" . $c . ".ref=rrn" . $c . ".node AND rnn" . $c . ".resource_type_field = ?";
 
                         array_push($sql_join->parameters,"i",$rangefield);
-						$keywordprocessed=true;
+                        $keywordprocessed=true;
                         }
                     // Convert legacy fixed list field search to new format for nodes (@@NodeID)
                     else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
@@ -984,7 +984,7 @@ function do_search(
             if ($quoted_string && !$quoted_field_match)
                 {
                 $quotedfieldid="";
-				// This keyword is a quoted string, split into keywords but don't preserve quotes this time
+                // This keyword is a quoted string, split into keywords but don't preserve quotes this time
                  if ($field_short_name_specified && isset($fieldinfo['ref']))
                     {
                     // We have already parsed the keyword when looking for a node, get string and then filter on this field
@@ -995,28 +995,28 @@ function do_search(
                     {
                     $quotedkeywords=split_keywords(substr($keyword,1,-1));
                     }
-				$omit = false;
+                $omit = false;
                 if (substr($keyword, 0, 1) == "-")
-					{
-					$omit = true;
-					$keyword = substr($keyword, 1);
-					}
+                    {
+                    $omit = true;
+                    $keyword = substr($keyword, 1);
+                    }
 
                 $qk=1; // Set the counter to the first keyword
                 $last_key_offset=1;
                 $fixedunion = new PreparedStatementQuery();
                 $fixedunioncondition = new PreparedStatementQuery();
-				foreach($quotedkeywords as $quotedkeyword)
-					{
-					global $noadd, $wildcard_always_applied;
-					if (in_array($quotedkeyword, $noadd)) # skip common words that are excluded from indexing
-						{
-						# Support skipped keywords - if the last keyword was skipped (listed in $noadd), increase the allowed position from the previous keyword. Useful for quoted searches that contain $noadd words, e.g. "black and white" where "and" is a skipped keyword.
-						++$last_key_offset;
-						}
-					else
-						{
-						$keyref = resolve_keyword($quotedkeyword, false,true,false); # Resolve keyword.
+                foreach($quotedkeywords as $quotedkeyword)
+                    {
+                    global $noadd, $wildcard_always_applied;
+                    if (in_array($quotedkeyword, $noadd)) # skip common words that are excluded from indexing
+                        {
+                        # Support skipped keywords - if the last keyword was skipped (listed in $noadd), increase the allowed position from the previous keyword. Useful for quoted searches that contain $noadd words, e.g. "black and white" where "and" is a skipped keyword.
+                        ++$last_key_offset;
+                        }
+                    else
+                        {
+                        $keyref = resolve_keyword($quotedkeyword, false,true,false); # Resolve keyword.
                         if ($keyref === false)
                             {
                             # make a new keyword
@@ -1269,7 +1269,7 @@ function do_search(
         }
 
     if ($editable_only)
-		{
+        {
         if(strlen(trim($usereditfilter??"")) > 0
             && !is_numeric($usereditfilter)
             && trim($userdata[0]["edit_filter"]) != ""

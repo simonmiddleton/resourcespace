@@ -9,7 +9,7 @@ if (!checkperm("a")) {exit("Access denied");} # Should never arrive at this page
 
 
 if (getval("submitted","")!="")
-	{
+    {
     // Allow longer to execute
     set_time_limit(60*60*2);
 
@@ -42,9 +42,9 @@ if (getval("submitted","")!="")
     // Back to login screen
     sleep (5); // Wait for any background DB creation to finish.
     redirect("/login.php");
-	}
+    }
 
-		
+        
 include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
@@ -58,12 +58,12 @@ include "../../../include/header.php";
 <input type=hidden name="submitted" value="true">
 
 <div class="QuestionSubmit">
-<label for="buttons"><?php echo $lang["proceed"] ?></label>			
+<label for="buttons"><?php echo $lang["proceed"] ?></label>         
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["system_reset_delete_all"]?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>
 
-<?php		
+<?php	  
 include "../../../include/footer.php";
 ?>

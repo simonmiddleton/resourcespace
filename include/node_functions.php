@@ -2007,17 +2007,17 @@ function node_orderby_comparator($n1, $n2)
  */
 
 function get_node_elements(array $node_values, array $nodes, $field_label)
-	{    
-	if(isset($nodes[0]))
-		{
-		foreach ($nodes as $node)
-			{
-			if (isset($node["name"])) array_push($node_values, $node[$field_label]) ;      
-			$node_values =  (isset($node["children"])) ? get_node_elements($node_values, $node["children"], $field_label)  :  get_node_elements($node_values, $node, $field_label); 
-			}
-		}
-	return $node_values;
-	}
+    {    
+    if(isset($nodes[0]))
+        {
+        foreach ($nodes as $node)
+            {
+            if (isset($node["name"])) array_push($node_values, $node[$field_label]) ;      
+            $node_values =  (isset($node["children"])) ? get_node_elements($node_values, $node["children"], $field_label)  :  get_node_elements($node_values, $node, $field_label); 
+            }
+        }
+    return $node_values;
+    }
 
 /**
  * This function returns a multidimensional array with hierarchy that reflects category tree field hierarchy, using parent and order_by fields
@@ -2030,23 +2030,23 @@ function get_node_elements(array $node_values, array $nodes, $field_label)
  */
 
 function get_node_tree($parentId = "", array $nodes = array())
-	{
-	$tree = array();
-	foreach ($nodes as $node) 
-		{
-		if($node["parent"] == $parentId)
-			{
-        	$children = get_node_tree($node["ref"] , $nodes);
-			if ($children)
-				{
+    {
+    $tree = array();
+    foreach ($nodes as $node) 
+        {
+        if($node["parent"] == $parentId)
+            {
+            $children = get_node_tree($node["ref"] , $nodes);
+            if ($children)
+                {
                 uasort($children,"node_orderby_comparator"); 
                 $node["children"] = $children;
-            	}
+                }
             $tree[] = $node;
-        	}
-    	}
+            }
+        }
     return $tree;
-	}
+    }
 
 /**
  * This function returns an array of category tree nodes in the hierarchical sequence defined in manage options

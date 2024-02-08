@@ -14,25 +14,25 @@ $introtext=text("introtext");
   <p><?php echo $introtext ?></p>
   <?php } ?>
   
-	<div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
-	<ul>
-	
+    <div class="<?php echo $tilenav ? "TileNav" : "VerticalNav TileReflow"; ?>">
+    <ul>
+    
     <li><a id="profile_link" href="<?php echo $baseurl_short?>pages/user/user_profile_edit.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-user-circle"></i><br /><?php echo $lang["profile"]?></a></li>
-	
-	<?php if ($allow_password_change && !checkperm("p") && $userorigin=="") { ?>
+    
+    <?php if ($allow_password_change && !checkperm("p") && $userorigin=="") { ?>
         <li><a href="<?php echo $baseurl_short?>pages/user/user_change_password.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-key"></i><br /><?php echo $lang["password"]?></a></li>
         <?php } ?>
-	
-	<?php
-      	if ($disable_languages==false && $show_language_chooser)
-			{?>
-			<li><a id="language_link" href="<?php echo $baseurl_short?>pages/change_language.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-language"></i><br /><?php echo $lang["languageselection"]?></a></li>
-			<?php
-			} ?>
-		
-		<?php if (!(!checkperm("d")&&!(checkperm('c') && checkperm('e0')))) { ?>
-		<li><a id="contribute_link" href="<?php echo $baseurl_short?>pages/contribute.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-user-plus"></i><br /><?php echo $lang["mycontributions"]?></a></li>
-		<?php 
+    
+    <?php
+        if ($disable_languages==false && $show_language_chooser)
+            {?>
+            <li><a id="language_link" href="<?php echo $baseurl_short?>pages/change_language.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-language"></i><br /><?php echo $lang["languageselection"]?></a></li>
+            <?php
+            } ?>
+        
+        <?php if (!(!checkperm("d")&&!(checkperm('c') && checkperm('e0')))) { ?>
+        <li><a id="contribute_link" href="<?php echo $baseurl_short?>pages/contribute.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-user-plus"></i><br /><?php echo $lang["mycontributions"]?></a></li>
+        <?php 
         }
 
         if(!checkperm('b'))
@@ -79,32 +79,32 @@ $introtext=text("introtext");
             echo "</li>";
             }
             
-		if($home_dash && checkPermission_dashmanage())
-			{ ?>
-			<li><a id='user_dash_edit_link'href="<?php echo $baseurl_short?>pages/user/user_dash_admin.php"	onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-grip"></i><br /><?php echo $lang["dash"];?></a></li>
-			<?php
-			}
-		if($user_preferences)
-			{ ?>
-			<li>
-			    <a id='user_preferences_link' href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["userpreferences"];?></a>
-			</li>
-			<?php
-			} ?>
+        if($home_dash && checkPermission_dashmanage())
+            { ?>
+            <li><a id='user_dash_edit_link'href="<?php echo $baseurl_short?>pages/user/user_dash_admin.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-grip"></i><br /><?php echo $lang["dash"];?></a></li>
+            <?php
+            }
+        if($user_preferences)
+            { ?>
+            <li>
+                <a id='user_preferences_link' href="<?php echo $baseurl_short?>pages/user/user_preferences.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["userpreferences"];?></a>
+            </li>
+            <?php
+            } ?>
 
-		<?php
-			hook('user_home_additional_links');
-	
-		# Log out
-		if(!isset($password_reset_mode) || !$password_reset_mode)
-		{?>
-		<li><a href="<?php echo $baseurl?>/login.php?logout=true&amp;nc=<?php echo time()?>"><i aria-hidden="true" class="fa fa-sign-out fa-fw"></i><br /><?php echo $lang["logout"]?></a></li>
-		<?php
-		}
-	  ?>
-		
-	</ul>
-	</div>
+        <?php
+            hook('user_home_additional_links');
+    
+        # Log out
+        if(!isset($password_reset_mode) || !$password_reset_mode)
+        {?>
+        <li><a href="<?php echo $baseurl?>/login.php?logout=true&amp;nc=<?php echo time()?>"><i aria-hidden="true" class="fa fa-sign-out fa-fw"></i><br /><?php echo $lang["logout"]?></a></li>
+        <?php
+        }
+      ?>
+        
+    </ul>
+    </div>
 
 </div>
 

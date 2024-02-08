@@ -178,9 +178,9 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
     {
     ?>
     <div class="Title"><?php echo htmlspecialchars($lang['metadata']); ?></div>
-	<div class="TabBar">
-	<?php
-		foreach ($fields_tab_names as $tab_name) {
+    <div class="TabBar">
+    <?php
+        foreach ($fields_tab_names as $tab_name) {
             $class_TabSelected = $tabcount == 0 ? ' TabSelected' : '';
             if ($modal) 
                 {
@@ -191,14 +191,14 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
                 $tabOnClick="SelectMetaTab(".$ref.",".$tabcount.",false);";
                 }
             ?>
-			<div id="<?php echo $modal ? "Modal" : ""; ?>tabswitch<?php echo $tabcount.'-'.$ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
+            <div id="<?php echo $modal ? "Modal" : ""; ?>tabswitch<?php echo $tabcount.'-'.$ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
                 <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo htmlspecialchars($tab_name); ?></a>
-			</div>
+            </div>
             <?php 
-			$tabcount++;
-		}
+            $tabcount++;
+        }
         ?>
-	</div> <!-- end of TabBar -->
+    </div> <!-- end of TabBar -->
     <?php
     }
 

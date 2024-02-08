@@ -26,7 +26,7 @@ $download=getval("download","") != "";
 <div class="embeddocument_player">
 <div class="embeddocument_preview" id="embeddocument_preview"> </div>
 
-<ul class="embeddocument_controls_standard">	
+<ul class="embeddocument_controls_standard">    
 <li class="embeddocument_begn" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(1,false,false);"<span>|<</span></li>
 <li class="embeddocument_prev" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(embeddocument_page-1,false,false);"><span><</span></li>
 <li class="embeddocument_auto" Style="cursor: pointer;" onClick="embeddocument_auto=!embeddocument_auto;if (embeddocument_auto) {embeddocument_ShowPage(embeddocument_page,false,false_<?php echo $ref ?>);} else {clearTimeout(timer);}"<span>||</span></li>
@@ -36,7 +36,7 @@ $download=getval("download","") != "";
 <li class="embeddocument_jump-box" <input type="text" id="embeddocument_page_box" size="1" /> / <span id="page-count">#</span> </li>
 
 <?php if ($downloadkey != "")
-	{
+    {
     $keydata = rsDecrypt($downloadkey,$ak . $GLOBALS["scramble_key"]);
     $arrkeydata = explode(":",$keydata);
     if($arrkeydata[0] == $ak && $arrkeydata[1] == $k &&  $arrkeydata[2] == $ref)
@@ -51,7 +51,7 @@ $download=getval("download","") != "";
             <?php
             }
         }
-	}
+    }
 ?>
 
 </ul>
@@ -65,50 +65,50 @@ var timer;
 <?php
 $page=1;
 while (true)
-	{
-	$file_path=get_resource_path($ref,true,"scr",false,$resource["preview_extension"],-1,$page,$use_watermark); 
-	$preview_path=get_resource_path($ref,false,"scr",false,$resource["preview_extension"],-1,$page,$use_watermark);
+    {
+    $file_path=get_resource_path($ref,true,"scr",false,$resource["preview_extension"],-1,$page,$use_watermark); 
+    $preview_path=get_resource_path($ref,false,"scr",false,$resource["preview_extension"],-1,$page,$use_watermark);
 
-	# No more pages? End the loop.
-	if (!file_exists($file_path)) {break;}
-	
-	# sets height and width to display 
-	$ratio=$resource["thumb_width"]/$resource["thumb_height"];
-	$width=getval("width",0,true);
-	$height= $width > 0 ? floor($width / $ratio): 0;
-	
-	?>
-	embeddocument_pages[<?php echo $page ?>]='<a href="#" onClick="embeddocument_ShowPage(<?php echo $page + 1 ?>,false,false);"><img border="0" width=<?php echo $width ?> height=<?php echo $height ?> src="<?php echo $preview_path ?>"></a>';
-	<?php
+    # No more pages? End the loop.
+    if (!file_exists($file_path)) {break;}
+    
+    # sets height and width to display 
+    $ratio=$resource["thumb_width"]/$resource["thumb_height"];
+    $width=getval("width",0,true);
+    $height= $width > 0 ? floor($width / $ratio): 0;
+    
+    ?>
+    embeddocument_pages[<?php echo $page ?>]='<a href="#" onClick="embeddocument_ShowPage(<?php echo $page + 1 ?>,false,false);"><img border="0" width=<?php echo $width ?> height=<?php echo $height ?> src="<?php echo $preview_path ?>"></a>';
+    <?php
 
-	$page++;
-	}
+    $page++;
+    }
 ?>
 
 function embeddocument_ShowPage(page_set,from_auto,jump)
-	{
-	if (!embeddocument_auto && from_auto) {return false;} // Auto switched off but timer still running. Terminate.
-	
-	if (embeddocument_page==page_set && jump) {alert("<?php echo $lang["embeddocument_alreadyonpage"]?>");return false;}
-	
-	embeddocument_page=page_set;
-	if (embeddocument_page>(embeddocument_pages.length-1)) {embeddocument_page=embeddocument_pages.length-1;} // back to first page
-	if (embeddocument_page<1) {embeddocument_page=1;} // to last page
-	
-	document.getElementById("embeddocument_preview").innerHTML=embeddocument_pages[embeddocument_page];
-	
-	if (embeddocument_auto) {timer = setTimeout("embeddocument_ShowPage(embeddocument_page+1,true,false);",4000);} else {clearTimeout(timer);}
-	
-	document.getElementById('embeddocument_page_box').value=embeddocument_page;
-	}
+    {
+    if (!embeddocument_auto && from_auto) {return false;} // Auto switched off but timer still running. Terminate.
+    
+    if (embeddocument_page==page_set && jump) {alert("<?php echo $lang["embeddocument_alreadyonpage"]?>");return false;}
+    
+    embeddocument_page=page_set;
+    if (embeddocument_page>(embeddocument_pages.length-1)) {embeddocument_page=embeddocument_pages.length-1;} // back to first page
+    if (embeddocument_page<1) {embeddocument_page=1;} // to last page
+    
+    document.getElementById("embeddocument_preview").innerHTML=embeddocument_pages[embeddocument_page];
+    
+    if (embeddocument_auto) {timer = setTimeout("embeddocument_ShowPage(embeddocument_page+1,true,false);",4000);} else {clearTimeout(timer);}
+    
+    document.getElementById('embeddocument_page_box').value=embeddocument_page;
+    }
 
 
 embeddocument_ShowPage(1,false,false);
 
 // publishes total page count after forward slash next to actual page
 function totalPages(){
-	var pagecount=embeddocument_pages.length-1
-	document.getElementById('page-count').innerHTML = pagecount;
+    var pagecount=embeddocument_pages.length-1
+    document.getElementById('page-count').innerHTML = pagecount;
 }
 totalPages();
 

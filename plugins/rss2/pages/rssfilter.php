@@ -3,9 +3,9 @@ include dirname(__FILE__)."/../../../include/db.php";
 include_once dirname(__FILE__)."/../../../include/image_processing.php";
 
 if(!function_exists("get_api_key"))
-	{
-	include dirname(__FILE__)."/../../../include/api_functions.php";
-	}
+    {
+    include dirname(__FILE__)."/../../../include/api_functions.php";
+    }
 
 include dirname(__FILE__)."/rssfeed.php";
 
@@ -24,20 +24,20 @@ $query = urldecode(http_build_query($params));
 
 # Authenticate based on the provided signature.
 if (!check_api_key($user,$query,$sign))
-	{
-	header("HTTP/1.0 403 Forbidden.");
-	echo "HTTP/1.0 403 Forbidden.";
-	exit;
-	}
-	
+    {
+    header("HTTP/1.0 403 Forbidden.");
+    echo "HTTP/1.0 403 Forbidden.";
+    exit;
+    }
+    
 function xmlentities($text)
-	{
-	return htmlentities($text, ENT_XML1);
-	}
+    {
+    return htmlentities($text, ENT_XML1);
+    }
 
 # Log them in.
 setup_user(get_user(get_user_by_username($user)));
-	
+    
 $search=getval("search","");
 
 # Append extra search parameters
@@ -63,29 +63,29 @@ $jumpcount=0;
 
 # fetch resource types from query string and generate a resource types cookie
 if (getval("resetrestypes","")=="")
-	{
-	$restypes=getval("restypes","");
-	}
+    {
+    $restypes=getval("restypes","");
+    }
 else
-	{
-	$restypes="";
-	reset($_GET);foreach ($_GET as $key=>$value)
-		{
-		if (substr($key,0,8)=="resource") {if ($restypes!="") {$restypes.=",";} $restypes.=substr($key,8);}
-		}
-	setcookie("restypes",$restypes,0,'','',false,true);
-	
-	# This is a new search, log this activity
-	if ($archive==2) {daily_stat("Archive search",0);} else {daily_stat("Search",0);}
-	}
-	
+    {
+    $restypes="";
+    reset($_GET);foreach ($_GET as $key=>$value)
+        {
+        if (substr($key,0,8)=="resource") {if ($restypes!="") {$restypes.=",";} $restypes.=substr($key,8);}
+        }
+    setcookie("restypes",$restypes,0,'','',false,true);
+    
+    # This is a new search, log this activity
+    if ($archive==2) {daily_stat("Archive search",0);} else {daily_stat("Search",0);}
+    }
+    
 # If returning to an old search, restore the page/order by
 if (!array_key_exists("search",$_GET))
-	{
-	$offset=getval("saved_offset",0);setcookie("saved_offset",$offset,0,'','',false,true);
-	$order_by=getval("saved_order_by","relevance");setcookie("saved_order_by",$order_by,0,'','',false,true);
-	$archive=getval("saved_archive",0);setcookie("saved_archive",$archive,0,'','',false,true);
-	}
+    {
+    $offset=getval("saved_offset",0);setcookie("saved_offset",$offset,0,'','',false,true);
+    $order_by=getval("saved_order_by","relevance");setcookie("saved_order_by",$order_by,0,'','',false,true);
+    $archive=getval("saved_archive",0);setcookie("saved_archive",$archive,0,'','',false,true);
+    }
 
 $refs = array();
 
@@ -106,29 +106,29 @@ $all_field_info=get_fields_for_search_display($rss_fields);
 
 $n=0;
 foreach ($rss_fields as $display_field)
-	{
-	# Find field in selected list
-	for ($m=0;$m<count($all_field_info);$m++)
-		{
-		if ($all_field_info[$m]["ref"]==$display_field)
-			{
-			$field_info=$all_field_info[$m];
-			$df[$n]['ref']=$display_field;
-			$df[$n]['name']=$field_info['name'];
-			$df[$n]['title']=$field_info['title'];
-			$df[$n]['type']=$field_info['type'];
-			$df[$n]['value_filter']=$field_info['value_filter'];
-			$n++;
-			}
-		}
-	}
-$n=0;	
+    {
+    # Find field in selected list
+    for ($m=0;$m<count($all_field_info);$m++)
+        {
+        if ($all_field_info[$m]["ref"]==$display_field)
+            {
+            $field_info=$all_field_info[$m];
+            $df[$n]['ref']=$display_field;
+            $df[$n]['name']=$field_info['name'];
+            $df[$n]['title']=$field_info['title'];
+            $df[$n]['type']=$field_info['type'];
+            $df[$n]['value_filter']=$field_info['value_filter'];
+            $n++;
+            }
+        }
+    }
+$n=0;   
 
 # loop and display the results
 if (is_array($result)){
     
-for ($n=0;$n<count($result);$n++)			
-	{
+for ($n=0;$n<count($result);$n++)           
+    {
 
     # if result item does not contain resource information continue
     if ($result[$n] == 0)
@@ -136,10 +136,10 @@ for ($n=0;$n<count($result);$n++)
         continue;
         }
 
-	$ref=$result[$n]["ref"];
-	$title=xmlentities(i18n_get_translated($result[$n]["field".$view_title_field]));
-	$creation_date=$result[$n]["creation_date"];
-	
+    $ref=$result[$n]["ref"];
+    $title=xmlentities(i18n_get_translated($result[$n]["field".$view_title_field]));
+    $creation_date=$result[$n]["creation_date"];
+    
     $year = (int)substr($creation_date, 0, 4);
     $month = (int)substr($creation_date, 5, 2);
     $day = (int)substr($creation_date, 8, 2);
@@ -147,58 +147,58 @@ for ($n=0;$n<count($result);$n++)
     $min = (int)substr($creation_date, 14, 2);
     $sec = (int)substr($creation_date, 17, 2);
     $pubdate = date('D, d M Y H:i:s +0100', mktime($hour, $min, $sec, $month, $day, $year));
-		
-	$url = $baseurl."/pages/view.php?ref=".$ref;
-	
-	$imgurl="";
-	$imgurl=get_resource_path($result[$n]['ref'],true,"col",false);
-	if ($result[$n]['has_image']!=1){ $imgurl=$baseurl."/gfx/".get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true);} 
-	else{$imgurl=get_resource_path($result[$n]['ref'],false,"col",false);}
-	$add_desc="";
-	foreach ($rss_fields as $rssfield)
-		{
-		if (is_array($result[$n]))
-			{	
-			if (isset($result[$n]['field'.$rssfield])){	
-				$value=i18n_get_translated($result[$n]['field'.$rssfield]);
-			} else {
-				$value=i18n_get_translated(get_data_by_field($result[$n]['ref'],$rssfield));
-			}
-			if ($value!="" && $value!=","){
-				// allow for value filters
-				for ($x=0;$x<count($df);$x++)
-					{
-					if ($df[$x]['ref']==$rssfield)
-						{
-						$plugin="../../value_filter_" . $df[$x]['name'] . ".php";
-						if ($df[$x]['value_filter']!=""){
-							eval(eval_check_signed($df[$x]['value_filter']));
-						}
-						else if (file_exists($plugin)) {include $plugin;}
-						else if ($df[$x]["type"]==4 || $df[$x]["type"]==6 || $df[$x]["type"]==10) { 
-							$value=NiceDate($value,true,false);
-						}	
-						if ($rss_show_field_titles){$add_desc.=$df[$x]['title'].": ";}	
-					}	
-							
-				}
-					
-				$add_desc.=xmlentities(strip_tags($value))."<![CDATA[<br/>]]>";
-			}
-		}
-	}
-	
-	$description = "<![CDATA[<img src='$imgurl' align='left' height='75'  border='0' />]]>". $add_desc;
-	
-	$val["pubDate"] = $pubdate;
-	$val["guid"] = $ref;
+        
+    $url = $baseurl."/pages/view.php?ref=".$ref;
+    
+    $imgurl="";
+    $imgurl=get_resource_path($result[$n]['ref'],true,"col",false);
+    if ($result[$n]['has_image']!=1){ $imgurl=$baseurl."/gfx/".get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true);} 
+    else{$imgurl=get_resource_path($result[$n]['ref'],false,"col",false);}
+    $add_desc="";
+    foreach ($rss_fields as $rssfield)
+        {
+        if (is_array($result[$n]))
+            {   
+            if (isset($result[$n]['field'.$rssfield])){ 
+                $value=i18n_get_translated($result[$n]['field'.$rssfield]);
+            } else {
+                $value=i18n_get_translated(get_data_by_field($result[$n]['ref'],$rssfield));
+            }
+            if ($value!="" && $value!=","){
+                // allow for value filters
+                for ($x=0;$x<count($df);$x++)
+                    {
+                    if ($df[$x]['ref']==$rssfield)
+                        {
+                        $plugin="../../value_filter_" . $df[$x]['name'] . ".php";
+                        if ($df[$x]['value_filter']!=""){
+                            eval(eval_check_signed($df[$x]['value_filter']));
+                        }
+                        else if (file_exists($plugin)) {include $plugin;}
+                        else if ($df[$x]["type"]==4 || $df[$x]["type"]==6 || $df[$x]["type"]==10) { 
+                            $value=NiceDate($value,true,false);
+                        }   
+                        if ($rss_show_field_titles){$add_desc.=$df[$x]['title'].": ";}  
+                    }   
+                            
+                }
+                    
+                $add_desc.=xmlentities(strip_tags($value))."<![CDATA[<br/>]]>";
+            }
+        }
+    }
+    
+    $description = "<![CDATA[<img src='$imgurl' align='left' height='75'  border='0' />]]>". $add_desc;
+    
+    $val["pubDate"] = $pubdate;
+    $val["guid"] = $ref;
 
-	$r->AddArticle($title, $url, $description,$val);	
-	}
+    $r->AddArticle($title, $url, $description,$val);    
+    }
 
-$r->Output();		
+$r->Output();       
 }
 else { 
-	$r->Output(); // empty
-}	
+    $r->Output(); // empty
+}   
 

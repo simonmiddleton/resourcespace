@@ -40,7 +40,7 @@ if (is_array($resource))
             if ($ratings[$n]['user']==$users[$x]['ref']){
                 $username=$users[$x]['fullname']." (".$users[$x]['username'].")";
             }
-        }	
+        }   
         ?>
 
     <tr><td><?php echo htmlspecialchars($username)?></td>

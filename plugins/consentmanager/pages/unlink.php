@@ -23,14 +23,14 @@ $url_params = array(
 $redirect_url = generateURL($baseurl_short . "/pages/view.php",$url_params);
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
-	{
+    {
     ps_query("delete from resource_consent where consent= ? and resource= ?", ['i', $ref, 'i', $resource]);
-	
-	resource_log($resource,"","",$lang["unlink_consent"] . " " . $ref);
-	
-	redirect($redirect_url);
-	}
-		
+    
+    resource_log($resource,"","",$lang["unlink_consent"] . " " . $ref);
+    
+    redirect($redirect_url);
+    }
+        
 include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
@@ -50,12 +50,12 @@ include "../../../include/header.php";
 <div class="clearerleft"> </div></div>
 
 
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="unlink" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-unlink"]?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>
 
-<?php		
+<?php	  
 include "../../../include/footer.php";
 ?>

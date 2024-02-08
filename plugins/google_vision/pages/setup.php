@@ -7,7 +7,7 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'google_vision';
 if (!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 $page_heading = $lang['google_vision_api'];
 $page_intro = "<p>" . $lang['google_vision_help'] . "</p>";
 

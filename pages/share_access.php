@@ -35,25 +35,25 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox">
     
-	<form method="post" action="<?php echo $baseurl_short ?>pages/share_access.php" >
-	<?php generateFormToken("share_access"); ?>
+    <form method="post" action="<?php echo $baseurl_short ?>pages/share_access.php" >
+    <?php generateFormToken("share_access"); ?>
     <input type=hidden name="collection" value="<?php echo htmlspecialchars($collection)?>">
     <input type=hidden name="resource" value="<?php echo htmlspecialchars($resource)?>">
     <input type=hidden name="k" value="<?php echo htmlspecialchars($k)?>">
     <input type=hidden name="return_url" value="<?php echo htmlspecialchars($return_url)?>">
-	
-	<div class="Question">
-	<label><?php echo $lang["share-enter-password"] ?></label>
-	<input name="share_password" id="share_password" type="password" class="stdwidth" />
-	<div class="clearerleft"> </div>
-	</div>
-	
-	<div class="QuestionSubmit">
+    
+    <div class="Question">
+    <label><?php echo $lang["share-enter-password"] ?></label>
+    <input name="share_password" id="share_password" type="password" class="stdwidth" />
+    <div class="clearerleft"> </div>
+    </div>
+    
+    <div class="QuestionSubmit">
     <input type=hidden name="submit" value=true">
-	<input name="submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["proceed"]?>&nbsp;&nbsp;" />
-	</div>
-	</form>
-	
+    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["proceed"]?>&nbsp;&nbsp;" />
+    </div>
+    </form>
+    
 </div>
 
 <?php

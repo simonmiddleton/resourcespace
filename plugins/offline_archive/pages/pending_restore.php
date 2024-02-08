@@ -10,11 +10,11 @@ if (!checkperm('i'))
 // Handle removed resources
 $removeref=getval("remove",0,true);
 if($removeref > 0 && is_numeric($removeref))
-	{
-	ps_query("UPDATE resource SET pending_restore=0 WHERE ref = ?", ['i', $removeref]);
-	resource_log($removeref,"",0,$lang['offline_archive_resource_log_restore_removed'],"","");
-	$resulttext=$lang["offline_archive_resources_restore_cancel_confirmed"];
-	}
+    {
+    ps_query("UPDATE resource SET pending_restore=0 WHERE ref = ?", ['i', $removeref]);
+    resource_log($removeref,"",0,$lang['offline_archive_resource_log_restore_removed'],"","");
+    $resulttext=$lang["offline_archive_resources_restore_cancel_confirmed"];
+    }
 
 $title_field = "field".$view_title_field;
 $pendingrestores=ps_query("SELECT ref, $title_field, file_size FROM resource WHERE pending_restore='1'");
@@ -26,9 +26,9 @@ include '../../../include/header.php';
 <?php
 
 if (isset($resulttext))
-	{
-	echo "<div class=\"projectSaveStatus\">" . escape($resulttext) . "</div>";
-	}
+    {
+    echo "<div class=\"projectSaveStatus\">" . escape($resulttext) . "</div>";
+    }
 ?>
 <div>
 <a href="<?php echo $baseurl ?>/plugins/offline_archive/pages/administer_archive.php" onClick="return CentralSpaceLoad(this,true);" ><?php echo  LINK_CARET . escape($lang["offline_archive_administer_archive"]); ?></a>

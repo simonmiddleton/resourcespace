@@ -2,7 +2,7 @@
 
 /**
  * Replace download links with code to support importing resources into Adobe CC
- */	
+ */ 
 function HookAdobe_linkViewBefore_footer_always()
     {
     global $lang, $resource, $userref;
@@ -48,7 +48,7 @@ function HookAdobe_linkViewBefore_footer_always()
                 'assetId' : objData.asset_id,
                 'versionId' : objData.version_id,
                 'documentName' : objData.document_name,
-                'url' : objData.url	
+                'url' : objData.url 
         });
         
         objMessage.count = objMessage.items.length;
@@ -92,7 +92,7 @@ function HookAdobe_linkViewBefore_footer_always()
         objMessage.items = [];
         objMessage.items.push({
                 'width' : objData.width,
-                'height' : objData.height						
+                'height' : objData.height                       
         });
         
         objMessage.count = objMessage.items.length;
@@ -147,7 +147,7 @@ function HookAdobe_linkViewBefore_footer_always()
     }
     
 function HookAdobe_linkViewDownloadbuttonreplace()
-	{
+    {
     global $userref, $baseurl, $urlparams, $ref, $resource, $size_info_array, $lang, $adobe_link_asset_extensions;
     global $adobe_link_document_extensions, $edit_access, $CSRF_token_identifier, $usersession; 
         
@@ -211,13 +211,13 @@ function HookAdobe_linkViewDownloadbuttonreplace()
         }
 
     return true;
-	}
-	
+    }
+    
 function HookAdobe_linkViewOrigdownloadlink()
-	{
-	# Adds a special link to the download button.
-	global $userref, $usergroup, $lang, $ref, $access, $resource, $k, $size_info, $baseurl, $urlparams, $path, $direct_download, $alternative;
-	global $adobe_link_document_extensions, $adobe_link_asset_extensions, $lang, $edit_access, $adb_ext;
+    {
+    # Adds a special link to the download button.
+    global $userref, $usergroup, $lang, $ref, $access, $resource, $k, $size_info, $baseurl, $urlparams, $path, $direct_download, $alternative;
+    global $adobe_link_document_extensions, $adobe_link_asset_extensions, $lang, $edit_access, $adb_ext;
 
     if(!isset($_SERVER['HTTP_USER_AGENT']) 
         ||
@@ -286,10 +286,10 @@ function HookAdobe_linkViewOrigdownloadlink()
     </tr>
     <?php
     return true;
-	}
+    }
 
 function HookAdobe_linkViewReplacepreviewlink()
-	{
+    {
     global $previewimagelink;
     $previewimagelink .= "?reload=" . uniqid();
     }

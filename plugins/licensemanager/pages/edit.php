@@ -70,7 +70,7 @@ if (getval("submitted","")!="")
                 's', getval('description',''),
                 's', $expires
             ]
-        );	
+        );  
         $ref=sql_insert_id();
         $file_path=get_license_file_path($ref); // get updated path
 
@@ -91,7 +91,7 @@ if (getval("submitted","")!="")
         }
     else
         {
-        # Existing record	
+        # Existing record   
         ps_query(
             "update license set outbound= ?,holder= ?, license_usage= ?,description= ?,expires= ? where ref= ?",
             [
@@ -161,7 +161,7 @@ if ($ref=="new")
     # Set default values for the creation of a new record.
     $license=array(
         "outbound"=>1,
-        "holder"=>"",		
+        "holder"=>"",       
         "license_usage"=>"",
         "description"=>"",
         "expires"=>"",
@@ -311,12 +311,12 @@ foreach ($license_usage_mediums as $medium)
 </div>
 
 
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>
 
-<?php		
+<?php	  
 include "../../../include/footer.php";
 ?>

@@ -14,10 +14,10 @@ echo "<div class='Listview'>";
 echo "<table style='border=1;'>";
 echo "<tr>"; 
     echo "<td><strong>{$lang["tms_link_resource_id"]}</strong></td>";
-	echo "<td><strong>{$lang["tms_link_module"]}</strong></td>";
-	echo "<td><strong>" . $lang["tms_link_object_id"] . "</strong></td>";	
-	echo "<td><strong>" . $lang["tms_link_checksum"] . "</td>";	
-	echo "</tr>";
+    echo "<td><strong>{$lang["tms_link_module"]}</strong></td>";
+    echo "<td><strong>" . $lang["tms_link_object_id"] . "</strong></td>";   
+    echo "<td><strong>" . $lang["tms_link_checksum"] . "</td>"; 
+    echo "</tr>";
 
 
 $tmscount = 0;
@@ -58,6 +58,6 @@ if($tmscount == 0)
     }
 ?>
     </table>
-</div>	
+</div>  
 <?php
 include "../../../include/footer.php";

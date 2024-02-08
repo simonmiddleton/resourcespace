@@ -85,8 +85,8 @@ if(!$is_search)
 <div class="Fixed">
 <?php
 if(!(isset($treeonly) && true == $treeonly))
-	{
-	?>
+    {
+    ?>
     <div id="<?php echo $status_box_id; ?>" class="CategoryBox">
         <div id="<?php echo $tree_id; ?>_statusbox_begin" style="display:none;"></div>
         <div id="<?php echo $tree_id; ?>_statusbox_platform" style="display:none;"></div>
@@ -274,14 +274,14 @@ if(!$is_search)
     ?>
     // When a node is deselected and remove children is enabled, then automatically deselect the children if present 
     jquery_tree_by_id.on('deselect_node.jstree', function (event, data)
-        {		
+        {       
         var thisJstree = jQuery(this);
 
         if(thisJstree.jstree('is_leaf', data.node.id)) { 
             // console.log("NODE "+data.node.id+" DESELECTED LEAF - NO CHILDREN - NO FURTHER ACTION");
             return; 
         }
-	
+    
         if(category_tree_remove_children || category_tree_clear)
             {
             if(thisJstree.jstree('is_parent', data.node.id)) { 
@@ -304,8 +304,8 @@ if(!$is_search)
         
 
     <?php
-    }	
-    ?>				
+    }   
+    ?>              
 
     // Reflect node selections onto the status box and hidden inputs 
     jquery_tree_by_id.on('select_node.jstree', function (event, data)

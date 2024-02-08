@@ -10,7 +10,7 @@ global $baseurl;
 // Specify the name of this plugin and the heading to display for the page.
 $plugin_name = 'conditional_terms';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 $plugin_page_heading = $lang['conditional_terms_title'];
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.

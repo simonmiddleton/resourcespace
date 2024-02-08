@@ -10,7 +10,7 @@ include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['
 // Specify the name of this plugin, the heading to display for the page.
 $plugin_name = 'transform';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 $page_heading = $lang['transform_configuration'];
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.

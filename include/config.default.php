@@ -277,7 +277,7 @@ $minyear=1980; # The year of the earliest resource record, used for the date sel
 # Files should be numbered sequentially, and will be auto-counted.
 $homeanim_folder="gfx/homeanim/gfx";
 
-# Set different size for slideshow images (value  in pixels). This is honoured by transform plugin so still allows easy replacement of images. 	
+# Set different size for slideshow images (value  in pixels). This is honoured by transform plugin so still allows easy replacement of images.  
 # Can be used as config override in conjunction with $homeanim_folder as above (for large images you may also want to set $home_themeheaders to false).
 # $home_slideshow_width=517;
 # $home_slideshow_height=350;
@@ -864,9 +864,9 @@ $disabled_plugins_message = "";
 # The usernames are the same rules for just a single anonymous account but you must match them against the full domain $Baseurl that they will be using.
 # Note that collections will be shared among all anonymous users for each domain - it's therefore usually best to turn off all collections functionality for the anonymous user.
 /* $anonymous_login = array(
-		"http://example.com" => "guest",
-		"http://test.com" => "guest2"
-		); */
+        "http://example.com" => "guest",
+        "http://test.com" => "guest2"
+        ); */
 
 # Alternative anonymous login mode. Automatically create a separate user for each anonymous session and log them in.
 # EXPERIMENTAL - use with caution!
@@ -1072,7 +1072,7 @@ $file_checksums_offline = true;
 # $file_integrity_verify_window - set server time window that the file integrity check script can run in.
 # This can be resource intensive when checking checksums for a large number of resources.
 # Examples: -
-# $file_integrity_verify_window = array(22,6);	# # between 10PM and 6AM (first hour is later than second so time must be after first OR before second)
+# $file_integrity_verify_window = array(22,6);  # # between 10PM and 6AM (first hour is later than second so time must be after first OR before second)
 # $file_integrity_verify_window = array(18,0);  # between 6PM and 12AM (midnight)
 $file_integrity_verify_window = array(0,0);     # Off by default
 
@@ -1089,9 +1089,9 @@ $custom_access=true;
 # How are numeric searches handled?
 #
 # If true:
-# 		If the search keyword is numeric then the resource with the matching ID will be shown
+#       If the search keyword is numeric then the resource with the matching ID will be shown
 # If false:
-#		The search for the number provided will be performed as with any keyword. However, if a resource with a matching ID number if found then this will be shown first.
+#       The search for the number provided will be performed as with any keyword. However, if a resource with a matching ID number if found then this will be shown first.
 $config_search_for_number=false;
 
 # Display the download as a 'save as' link instead of redirecting the browser to the download (which sometimes causes a security warning).
@@ -1319,8 +1319,8 @@ $enable_public_collections=true;
 # You can also set that particular fields are displayed in different ways as follows:
 # $custom_registration_types["Department"]=1;
 # Types are as follows:
-# 	1: Normal text box (default)
-# 	2: Large text box
+#   1: Normal text box (default)
+#   2: Large text box
 #   3: Drop down box (set options using $custom_registration_options["Field Name"]=array("Option 1","Option 2","Option 3");
 #   4: HTML block, e.g. help text paragraph (set HTML using $custom_registration_html["Field Name"]="<b>Some HTML</b>";
 #      Optionally, you can add the language to this, ie. $custom_registration_html["Field Name"]["en"]=...
@@ -1346,8 +1346,8 @@ $registration_group_select=false;
 # You can also set that particular fields are displayed in different ways as follows:
 # $custom_request_types["Department"]=1;
 # Types are as follows:
-# 	1: Normal text box (default)
-# 	2: Large text box
+#   1: Normal text box (default)
+#   2: Large text box
 #   3: Drop down box (set options using $custom_request_options["Field Name"]=array("Option 1","Option 2","Option 3");
 #   4: HTML block, e.g. help text paragraph (set HTML usign $custom_request_html="<b>Some HTML</b>";
 
@@ -1457,7 +1457,7 @@ $config_separators=array("/","_",".",";","-","(",")","'","\"","\\", "?", '’', 
 # Resource field verbatim keyword regex
 # Using the index value of [resource field], specifies regex criteria for adding verbatim strings to keywords.
 # It solves the problem, for example, indexing an entire "nnn.nnn.nnn" string value when '.' are used in $config_separators.
-# $resource_field_verbatim_keyword_regex[1] = '/\d+\.\d+\w\d+\.\d+/';		// this example would add 994.1a9.93 to indexed keywords for field 1.  This can be found using quoted search.
+# $resource_field_verbatim_keyword_regex[1] = '/\d+\.\d+\w\d+\.\d+/';       // this example would add 994.1a9.93 to indexed keywords for field 1.  This can be found using quoted search.
 
 # Global permissions
 # Permissions that will be prefixed to all user group permissions
@@ -1533,10 +1533,10 @@ $partial_index_min_word_length=3;
 $thumbs_display_fields=array(8); # ** SEE NOTE (1)
 # array of defined thumbs_display_fields to apply CSS modifications to (via $search_results_title_wordwrap, $search_results_title_height, $search_results_title_trim)
 $thumbs_display_extended_fields=array();
-	# $search_result_title_height=26;
-	$search_results_title_trim=30;
-	$search_results_title_wordwrap=100; // Force breaking up of very large titles so they wrap to multiple lines (useful when using multi line titles with $search_result_title_height). By default this is set very high so that breaking doesn't occur. If you use titles that have large unbroken words (e.g. filenames with no spaces) then it may be useful to set this value to something lower, e.g. 20
-	
+    # $search_result_title_height=26;
+    $search_results_title_trim=30;
+    $search_results_title_wordwrap=100; // Force breaking up of very large titles so they wrap to multiple lines (useful when using multi line titles with $search_result_title_height). By default this is set very high so that breaking doesn't occur. If you use titles that have large unbroken words (e.g. filenames with no spaces) then it may be useful to set this value to something lower, e.g. 20
+    
 # Enable extra large thumbnails option for search screen
 $xlthumbs=false;
 
@@ -1612,11 +1612,11 @@ $upload_concurrent_limit=5;
 #
 # Possible options are:
 #
-# -2	User Contributed Pending Submission (not useful unless deleting user-contributed resources)
-# -1	User Contributed Pending Review (not useful unless deleting user-contributed resources) 
-# 1		Waiting to be archived
-# 2 	Archived
-# 3		Deleted (recommended)
+# -2    User Contributed Pending Submission (not useful unless deleting user-contributed resources)
+# -1    User Contributed Pending Review (not useful unless deleting user-contributed resources) 
+# 1     Waiting to be archived
+# 2     Archived
+# 3     Deleted (recommended)
 $resource_deletion_state=3;
 
 # Does deleting resources require password entry? (single resource delete)
@@ -1630,38 +1630,38 @@ $process_locks_max_seconds=60*60*4; # 4 hours default.
 # Mostly video files.
 # @see http://en.wikipedia.org/wiki/List_of_file_formats#Video
 $ffmpeg_supported_extensions = array(
-		'aaf',
-		'3gp',
-		'asf',
-		'avchd',
-		'avi',
-		'cam',
-		'dat',
-		'dsh',
-		'flv',
-		'm1v',
-		'm2v',
-		'mkv',
-		'wrap',
-		'mov',
-		'mpeg',
-		'mpg',
-		'mpe',
-		'mp4',
-		'mxf',
-		'nsv',
-		'ogm',
-		'ogv',
-		'rm',
-		'ram',
-		'svi',
-		'smi',
-		'webm',
-		'wmv',
-		'divx',
-		'xvid',
-		'm4v',
-	);
+        'aaf',
+        '3gp',
+        'asf',
+        'avchd',
+        'avi',
+        'cam',
+        'dat',
+        'dsh',
+        'flv',
+        'm1v',
+        'm2v',
+        'mkv',
+        'wrap',
+        'mov',
+        'mpeg',
+        'mpg',
+        'mpe',
+        'mp4',
+        'mxf',
+        'nsv',
+        'ogm',
+        'ogv',
+        'rm',
+        'ram',
+        'svi',
+        'smi',
+        'webm',
+        'wmv',
+        'divx',
+        'xvid',
+        'm4v',
+    );
 
 # A list of extensions which will be ported to mp3 format for preview.
 # Note that if an mp3 file is uploaded, the original mp3 file will be used for preview.
@@ -1681,7 +1681,7 @@ $ffmpeg_audio_extensions = array(
     'gsm',
     'weba',
     );
-	
+    
 # The audio settings for mp3 previews
 $ffmpeg_audio_params = "-acodec libmp3lame -ab 64k -ac 1"; # Default to 64Kbps mono
 
@@ -1947,40 +1947,40 @@ $staticsync_ignore_deletion_states = array(2, 3);
 # Hence meaningful metadata can be specified by placing the resource files at suitable positions within the static
 # folder hierarchy.
 # Use the line below as an example. Repeat this for every mapping you wish to set up
-#	$staticsync_mapfolders[]=array
-#		(
-#		"match"=>"/projects/",
-#		"field"=>10,
-#		"level"=>2
-#		);
+#   $staticsync_mapfolders[]=array
+#       (
+#       "match"=>"/projects/",
+#       "field"=>10,
+#       "level"=>2
+#       );
 #
 # You can also now enter "access" in "field" to set the access level for the resource. The value must match the name of the access level
 # in the default local language. Note that custom access levels are not supported. For example, the mapping below would set anything in 
 # the projects/restricted folder to have a "Restricted" access level.
-#	$staticsync_mapfolders[]=array
-#		(
-#		"match"=>"/projects/restricted",
-#		"field"=>"access",
-#		"level"=>2
-#		);
+#   $staticsync_mapfolders[]=array
+#       (
+#       "match"=>"/projects/restricted",
+#       "field"=>"access",
+#       "level"=>2
+#       );
 #
 # You can enter "archive" in "field" to set the archive state for the resource. You must include "archive" to the array and its value must match either a default level or a custom archive level. The mapped folder level does not need to match the name of the archive level. Note that this will override $staticsync_defaultstate. For example, the mapping below would set anything in the restricted folder to have an "Archived" archive level.
 #   $staticsync_mapfolders[]=array
-#		(
-#		"match"=>"/projects/restricted",
-#		"field"=>"archive",
-#		"level"=>2,
-#		"archive"=>2
-#		);
+#       (
+#       "match"=>"/projects/restricted",
+#       "field"=>"archive",
+#       "level"=>2,
+#       "archive"=>2
+#       );
 #
 # If "field" is set to "resource_type" the folder can be used to set the state for the resource. The folder names must
 # be the same case as the resource type name.
-#	$staticsync_mapfolders[]=array
-#		(
-#		"match"=>"/projects/",
-#		"field"=>"resource_type",
-#		"level"=>2
-#		);
+#   $staticsync_mapfolders[]=array
+#       (
+#       "match"=>"/projects/",
+#       "field"=>"resource_type",
+#       "level"=>2
+#       );
 
 #
 # ALTERNATIVE FILES
@@ -2048,9 +2048,9 @@ $advanced_search_buttons_top=false;
 # - single_upload            : Enable / disable "Add Single Resource"
 # - in_browser_upload        : Enable / disable "Add Resource Batch - In Browser"
 $upload_methods = array(
-		'single_upload' => true,
-		'in_browser_upload' => true
-	);
+        'single_upload' => true,
+        'in_browser_upload' => true
+    );
 
 # Hide links to other uploader
 $hide_uploadertryother = false;
@@ -2496,15 +2496,15 @@ $default_advanced_search_mode="Global";
 
 
 # Settings for commenting on resources
-$comments_resource_enable=true;				# allow users to make comments on resources
-$comments_flat_view=false;						# by default, show in a threaded (indented view)
-$comments_responses_max_level=10 ;				# maximum number of nested comments / threads
-$comments_max_characters=2000;					# maximum number of characters for a comment
-$comments_email_notification_address="";		# email address to use for flagged comment notifications
-$comments_show_anonymous_email_address=false;	# by default keep anonymous commenter's email address private
+$comments_resource_enable=true;             # allow users to make comments on resources
+$comments_flat_view=false;                      # by default, show in a threaded (indented view)
+$comments_responses_max_level=10 ;              # maximum number of nested comments / threads
+$comments_max_characters=2000;                  # maximum number of characters for a comment
+$comments_email_notification_address="";        # email address to use for flagged comment notifications
+$comments_show_anonymous_email_address=false;   # by default keep anonymous commenter's email address private
 $comments_policy_enable=false;                  # show a Comments Policy link to the site text comments_policy
-$comments_policy_external_url="";				# if specified, will popup a new window fulfilled by URL (when clicking on "comment policy" link)
-$comments_view_panel_show_marker=true;			# show an asterisk by the comment view panel title if comments exist
+$comments_policy_external_url="";               # if specified, will popup a new window fulfilled by URL (when clicking on "comment policy" link)
+$comments_view_panel_show_marker=true;          # show an asterisk by the comment view panel title if comments exist
 
 # show the login panel for anonymous users
 $show_anonymous_login_panel=true;
@@ -3128,10 +3128,10 @@ $auto_generated_resource_title_format = '';
 // This will not alter the stored metadata value but provides an option to strip from it given file extensions. 
 // It is recommended that metadata containing file extensions is not used in a filename to avoid the administration of this option.
 // $download_filename_strip_extensions = array(
-//  	'jpg',
-//   	'jpeg',
-//   	'tif',
-//   	'png');
+//      'jpg',
+//      'jpeg',
+//      'tif',
+//      'png');
 
 // List of extensions for which ResourceSpace should only generate the internal preview sizes.
 $non_image_types = array();

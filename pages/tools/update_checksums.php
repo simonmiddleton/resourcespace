@@ -42,8 +42,8 @@ else
     }
 
 for($n = 0; $n < count($resources); $n++)
-	{
-	if(generate_file_checksum($resources[$n]["ref"], $resources[$n]["file_extension"], true))
+    {
+    if(generate_file_checksum($resources[$n]["ref"], $resources[$n]["file_extension"], true))
         {
         echo "Key for " . $resources[$n]["ref"] . " generated<br />\n";
         }

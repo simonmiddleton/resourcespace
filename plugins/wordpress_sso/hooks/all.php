@@ -22,7 +22,7 @@ function HookWordpress_ssoAllProvideusercredentials()
         // Don't escape this yet as the hash is calculated by Wordpress without it
         $wordpress_user=getval("wordpress_sso_user",""); 
         if ($wordpress_user=="")
-            {				
+            {               
             # No wordpress_sso cookie or querystring parameter, redirect back for the first time to wordpress path to initiate wordpress login - step 1 (find username)
             debug("wordpress_sso - nothing in query string, redirecting to server, step 1");
             wordpress_sso_redirect(false,false);
@@ -69,7 +69,7 @@ function HookWordpress_ssoAllProvideusercredentials()
                         }
                     }
                 debug("wordpress_sso - Found user matching: " . $username);
-                // Check that current request 		
+                // Check that current request       
                 if ($currentrequest!=$requestid || $requestid=="") // This request is either not set or does not match the last one created, was saved before redirect so go back to WordPress (step 2)
                 {
                 if ($requestid!=""){debug("wordpress_sso - failed to match request ID. Current user request:  " . $currentrequest . " Received request ID: " . $requestid);}  
@@ -99,13 +99,13 @@ function HookWordpress_ssoAllProvideusercredentials()
         if (count($s)==2)
             {
             $username=$s[0];
-            if ($username=="")					
+            if ($username=="")                  
                 {wordpress_sso_fail();}
             debug("wordpress_sso - wordpress_sso cookie has username");
-            $hash=$s[1];	
+            $hash=$s[1];    
             $today = date("Ymd");
             if ($hash !== md5($baseurl . $wordpress_sso_secret . $username . $today))
-                {		
+                {       
                 // Invalid hash. Redirect to Wordpress to reauthenticate.
                 debug("wordpress_sso - wordpress_sso cookie has invalid hash");
                 wordpress_sso_redirect(false,false);
@@ -147,11 +147,11 @@ function HookWordpress_ssoAllProvideusercredentials()
 
 function HookWordpress_ssoLoginLoginformlink()
         {
-		// Add a link to login.php, which is still used if $wordpress_sso_allow_standard_login is set to true
-		global $wordpress_sso_url,$lang;
+        // Add a link to login.php, which is still used if $wordpress_sso_allow_standard_login is set to true
+        global $wordpress_sso_url,$lang;
         ?>
-		<a href="<?php echo $wordpress_sso_url . "?rsauth=true&url=%2F\">" . '<i class="fab fa-fw fa-wordpress-simple"></i>&nbsp;'  . $lang["wordpress_sso_use_wp_login"];?></a><br/>
-		<?php
+        <a href="<?php echo $wordpress_sso_url . "?rsauth=true&url=%2F\">" . '<i class="fab fa-fw fa-wordpress-simple"></i>&nbsp;'  . $lang["wordpress_sso_use_wp_login"];?></a><br/>
+        <?php
         }
 
 function HookWordpress_ssoLoginInitialise()

@@ -28,24 +28,24 @@ $collection_download_tar=true;
 
 // Has tar been disabled or is it not available
 if($collection_download_tar_size==0 || $config_windows || $tardisabled)
-	{
-	$collection_download_tar=false;
-	}
+    {
+    $collection_download_tar=false;
+    }
 else
-	{
-	if(!$collection_download_tar_option)
-		{
-		// Set tar as default above certain collection size
-		$results=do_search("!collection" . $collection,"","relevance","",-1,"",false,0,false,true,"");
-		if (empty($results)) {exit($lang["nothing_to_download"]);}
-		$disk_usage=$results[0]["total_disk_usage"];
-		if($disk_usage >= $collection_download_tar_size*1024*1024)
-			{
-			$collection_download_tar_option=true;
-			}
-		}
-	}
-	
+    {
+    if(!$collection_download_tar_option)
+        {
+        // Set tar as default above certain collection size
+        $results=do_search("!collection" . $collection,"","relevance","",-1,"",false,0,false,true,"");
+        if (empty($results)) {exit($lang["nothing_to_download"]);}
+        $disk_usage=$results[0]["total_disk_usage"];
+        if($disk_usage >= $collection_download_tar_size*1024*1024)
+            {
+            $collection_download_tar_option=true;
+            }
+        }
+    }
+    
 $settings_id=(isset($collection_download_settings) && count($collection_download_settings)>1)?getval("settings",""):0;
 $uniqid=getval("id",uniqid("Col" . $collection));
 
@@ -90,24 +90,24 @@ $count_data_only_types = 0;
 
 #build the available sizes array
 for ($n=0;$n<count($result);$n++)
-	{
-	$ref=$result[$n]["ref"];
-	# Load access level (0,1,2) for this resource
-	$access=get_resource_access($result[$n]);
+    {
+    $ref=$result[$n]["ref"];
+    # Load access level (0,1,2) for this resource
+    $access=get_resource_access($result[$n]);
     
     # Get all possible sizes for this resource. If largest available has been requested then include internal or user could end up with no file depite being able to see the preview
-	$sizes=get_all_image_sizes($size=="largest",$access>=1);
+    $sizes=get_all_image_sizes($size=="largest",$access>=1);
 
-	#check availability of original file 
+    #check availability of original file 
     $p=get_resource_path($ref,true,"",false,$result[$n]["file_extension"]);
-	if (file_exists($p) && (($access==0) || ($access==1 && $restricted_full_download)) && resource_download_allowed($ref,'',$result[$n]['resource_type']))
-		{
+    if (file_exists($p) && (($access==0) || ($access==1 && $restricted_full_download)) && resource_download_allowed($ref,'',$result[$n]['resource_type']))
+        {
         $available_sizes['original'][]=$ref;
-		}
+        }
 
-	# check for the availability of each size and load it to the available_sizes array
-	foreach ($sizes as $sizeinfo)
-		{
+    # check for the availability of each size and load it to the available_sizes array
+    foreach ($sizes as $sizeinfo)
+        {
         if(in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions))
             {
             $size_id=$sizeinfo['id'];
@@ -176,28 +176,28 @@ if(isset($user_dl_limit) && intval($user_dl_limit) > 0)
     }
 
 if(0 == count($available_sizes) && 0 === $count_data_only_types)
-	{
-	?>
-	<script type="text/javascript">
-    	alert('<?php echo $lang["nodownloadcollection"];?>');
+    {
+    ?>
+    <script type="text/javascript">
+        alert('<?php echo $lang["nodownloadcollection"];?>');
         history.go(-1);
-    	</script>
-	<?php
-    	exit();
-	}
+        </script>
+    <?php
+        exit();
+    }
 
 $used_resources=array();
 $subbed_original_resources = array();
 if ($submitted != "")
-	{
-	if($exiftool_write && !$force_exiftool_write_metadata && !$collection_download_tar)
-		{
-		$exiftool_write_option = false;
-		if('yes' == getval('write_metadata_on_download', ''))
-			{
-			$exiftool_write_option = true;
-			}
-		}
+    {
+    if($exiftool_write && !$force_exiftool_write_metadata && !$collection_download_tar)
+        {
+        $exiftool_write_option = false;
+        if('yes' == getval('write_metadata_on_download', ''))
+            {
+            $exiftool_write_option = true;
+            }
+        }
 
     if(!$collection_download_tar && $offline_job_queue)
         {
@@ -243,10 +243,10 @@ if ($submitted != "")
         exit();
         }
 
-	# Estimate the total volume of files to zip
-	$totalsize=0;
-	for ($n=0;$n<count($result);$n++)
-		{
+    # Estimate the total volume of files to zip
+    $totalsize=0;
+    for ($n=0;$n<count($result);$n++)
+        {
         $ref = $result[$n]['ref'];
         $usesize = null;
         if($size=="largest")
@@ -278,77 +278,77 @@ if ($submitted != "")
             
 
         $pextension = get_extension($result[$n], $usesize);
-		
-		# Find file to use
-		$f=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
-		if (!file_exists($f))
-			{
-			# Selected size doesn't exist, use original file
-			$f=get_resource_path($ref,true,'',false,$result[$n]['file_extension'],-1,1,$use_watermark);
-			}
-		if (file_exists($f))
-			{
-			$totalsize+=filesize_unlimited($f);
-			}
-		}
+        
+        # Find file to use
+        $f=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
+        if (!file_exists($f))
+            {
+            # Selected size doesn't exist, use original file
+            $f=get_resource_path($ref,true,'',false,$result[$n]['file_extension'],-1,1,$use_watermark);
+            }
+        if (file_exists($f))
+            {
+            $totalsize+=filesize_unlimited($f);
+            }
+        }
         $result = array_values($result);
-	if ($totalsize>$collection_download_max_size  && !$collection_download_tar)
-		{
-		?>
-		<script>
-		alert("<?php echo $lang["collection_download_too_large"] ?>");
-		history.go(-1);
-		</script>
-		<?php
-		exit();
-		}
-	
+    if ($totalsize>$collection_download_max_size  && !$collection_download_tar)
+        {
+        ?>
+        <script>
+        alert("<?php echo $lang["collection_download_too_large"] ?>");
+        history.go(-1);
+        </script>
+        <?php
+        exit();
+        }
+    
     $id=getval("id","");
     if(!ctype_alnum($id)){exit($lang["error"]);}
-	// Get a temporary directory for this download - $id should be unique
-	$usertempdir=get_temp_dir(false,"rs_" . $userref . "_" . $id);
-	
-	// Clean up old user temp directories if they exist
-	$tempdirbase=get_temp_dir(false);	
-	$tempfoldercontents = new DirectoryIterator($tempdirbase);
-	$folderstodelete=array();
-	$delindex=0;
-	foreach($tempfoldercontents as $objectindex => $object)
-		{
-		$tmpfilename = $object->getFilename();
-		if ($object->isDir())
-			{
-			if((substr($tmpfilename,0,strlen("rs_" . $userref . "_"))=="rs_" . $userref . "_"  || substr($tmpfilename,0,3)== "Col") && time()-$object->getMTime()>24*60*60) 
-			   {
-			   debug ("Collection download - found old temp directory: " . $tmpfilename .  "  age (minutes): " . (time()-$object->getMTime())/60);
-			   // This directory belongs to the user and is older than a day, delete it
-			   $folderstodelete[]=$tempdirbase . DIRECTORY_SEPARATOR . $tmpfilename;				
-			   }
-			}
-		elseif($purge_temp_folder_age!=0 && time()-$object->getMTime()>$purge_temp_folder_age*24*60*60)
-			{
-			unlink($tempdirbase . DIRECTORY_SEPARATOR . $tmpfilename); 				
-			}
-		
-		}
-	foreach ($folderstodelete as $foldertodelete)
-		{
-		debug ("Collection download - deleting directory " . $foldertodelete);
-		@rcRmdir($foldertodelete);
-		}
-	$progress_file=$usertempdir . "/progress_file.txt";
-	
-	# Define the archive file.
-	if(!$collection_download_tar)
-		{
-		collection_download_get_archive_file($archiver, $settings_id, $usertempdir, $collection, $size, $zip, $zipfile);
-		}
+    // Get a temporary directory for this download - $id should be unique
+    $usertempdir=get_temp_dir(false,"rs_" . $userref . "_" . $id);
+    
+    // Clean up old user temp directories if they exist
+    $tempdirbase=get_temp_dir(false);   
+    $tempfoldercontents = new DirectoryIterator($tempdirbase);
+    $folderstodelete=array();
+    $delindex=0;
+    foreach($tempfoldercontents as $objectindex => $object)
+        {
+        $tmpfilename = $object->getFilename();
+        if ($object->isDir())
+            {
+            if((substr($tmpfilename,0,strlen("rs_" . $userref . "_"))=="rs_" . $userref . "_"  || substr($tmpfilename,0,3)== "Col") && time()-$object->getMTime()>24*60*60) 
+               {
+               debug ("Collection download - found old temp directory: " . $tmpfilename .  "  age (minutes): " . (time()-$object->getMTime())/60);
+               // This directory belongs to the user and is older than a day, delete it
+               $folderstodelete[]=$tempdirbase . DIRECTORY_SEPARATOR . $tmpfilename;                
+               }
+            }
+        elseif($purge_temp_folder_age!=0 && time()-$object->getMTime()>$purge_temp_folder_age*24*60*60)
+            {
+            unlink($tempdirbase . DIRECTORY_SEPARATOR . $tmpfilename);              
+            }
+        
+        }
+    foreach ($folderstodelete as $foldertodelete)
+        {
+        debug ("Collection download - deleting directory " . $foldertodelete);
+        @rcRmdir($foldertodelete);
+        }
+    $progress_file=$usertempdir . "/progress_file.txt";
+    
+    # Define the archive file.
+    if(!$collection_download_tar)
+        {
+        collection_download_get_archive_file($archiver, $settings_id, $usertempdir, $collection, $size, $zip, $zipfile);
+        }
 
-	$path="";
-	$deletion_array=array();
-	// set up an array to store the filenames as they are found (to analyze dupes)
-	$filenames=array();	
-	
+    $path="";
+    $deletion_array=array();
+    // set up an array to store the filenames as they are found (to analyze dupes)
+    $filenames=array(); 
+    
     # Build a list of files to download
     for ($n=0;$n<count($result);$n++)
         {
@@ -361,7 +361,7 @@ if ($submitted != "")
 
         # Only download resources with proper access level
         if ($access==0 || $access==1)
-            {			
+            {           
             if($size=="largest")
                 {
                 foreach($available_sizes as $available_size => $resources)
@@ -403,68 +403,68 @@ if ($submitted != "")
                 $p=get_resource_path($ref,true,$usesize,false,$pextension,-1,1,$use_watermark);
                 }
 
-			# Determine whether target exists
-			$subbed_original = false;
+            # Determine whether target exists
+            $subbed_original = false;
             $target_exists = file_exists($p);
             
-			$replaced_file = false;
+            $replaced_file = false;
 
-			$new_file = hook('replacedownloadfile', '', array($result[$n], $usesize, $pextension, $target_exists));
-			if (!empty($new_file) && $p != $new_file)
-				{
-				$p = $new_file;
-				$deletion_array[] = $p;
-				$replaced_file = true;
-				$target_exists = file_exists($p);
-				}
-			else if (!$target_exists && $useoriginal == 'yes'
-					&& resource_download_allowed($ref,'',$result[$n]['resource_type']))
-				{
-				// this size doesn't exist, so we'll try using the original instead
-				$p=get_resource_path($ref,true,'',false,$result[$n]['file_extension'],-1,1,$use_watermark);
-				$pextension = $result[$n]['file_extension'];
-				$subbed_original_resources[] = $ref;
-				$subbed_original = true;
-				$target_exists = file_exists($p);
-				}
+            $new_file = hook('replacedownloadfile', '', array($result[$n], $usesize, $pextension, $target_exists));
+            if (!empty($new_file) && $p != $new_file)
+                {
+                $p = $new_file;
+                $deletion_array[] = $p;
+                $replaced_file = true;
+                $target_exists = file_exists($p);
+                }
+            else if (!$target_exists && $useoriginal == 'yes'
+                    && resource_download_allowed($ref,'',$result[$n]['resource_type']))
+                {
+                // this size doesn't exist, so we'll try using the original instead
+                $p=get_resource_path($ref,true,'',false,$result[$n]['file_extension'],-1,1,$use_watermark);
+                $pextension = $result[$n]['file_extension'];
+                $subbed_original_resources[] = $ref;
+                $subbed_original = true;
+                $target_exists = file_exists($p);
+                }
 
-			# Process the file if it exists, and (if restricted access) that the user has access to the requested size
-			if ((($target_exists && $access==0) ||
-				($target_exists && $access==1 &&
-					(image_size_restricted_access($size) || ($usesize=='' && $restricted_full_download))) 
-					) && resource_download_allowed($ref,$usesize,$result[$n]['resource_type']))
-				{
-				$used_resources[]=$ref;
-				$tmpfile = false;
-				if($exiftool_write_option)
-					{
-					# when writing metadata, we take an extra security measure by copying the files to tmp
-					$tmpfile = write_metadata($p, $ref, $id); // copies file
-	
-					if($tmpfile!==false && file_exists($tmpfile))
-						{
-						$p=$tmpfile; // file already in tmp, just rename it
-						}
-					else if (!$replaced_file)
-						{
-						$copy=true; // copy the file from filestore rather than renaming
-						}
-					}
+            # Process the file if it exists, and (if restricted access) that the user has access to the requested size
+            if ((($target_exists && $access==0) ||
+                ($target_exists && $access==1 &&
+                    (image_size_restricted_access($size) || ($usesize=='' && $restricted_full_download))) 
+                    ) && resource_download_allowed($ref,$usesize,$result[$n]['resource_type']))
+                {
+                $used_resources[]=$ref;
+                $tmpfile = false;
+                if($exiftool_write_option)
+                    {
+                    # when writing metadata, we take an extra security measure by copying the files to tmp
+                    $tmpfile = write_metadata($p, $ref, $id); // copies file
+    
+                    if($tmpfile!==false && file_exists($tmpfile))
+                        {
+                        $p=$tmpfile; // file already in tmp, just rename it
+                        }
+                    else if (!$replaced_file)
+                        {
+                        $copy=true; // copy the file from filestore rather than renaming
+                        }
+                    }
 
-				# if the tmpfile is made, from here on we are working with that. 
-				
-				# If using original filenames when downloading, copy the file to new location so the name is included.
-				$filename=get_download_filename($ref,$usesize,0,$pextension);
-				collection_download_use_original_filenames_when_downloading($filename, $ref, $collection_download_tar, $filenames,$id);
+                # if the tmpfile is made, from here on we are working with that. 
+                
+                # If using original filenames when downloading, copy the file to new location so the name is included.
+                $filename=get_download_filename($ref,$usesize,0,$pextension);
+                collection_download_use_original_filenames_when_downloading($filename, $ref, $collection_download_tar, $filenames,$id);
 
                 if (hook("downloadfilenamealt")) $filename=hook("downloadfilenamealt");
 
                 collection_download_process_text_file($ref, $collection, $filename);
 
-				hook('modifydownloadfile');
-								
-				$path.=$p . "\r\n";	
-				
+                hook('modifydownloadfile');
+                                
+                $path.=$p . "\r\n"; 
+                
                 if($collection_download_tar)
                     {
                     $ln_link_name = $usertempdir . DIRECTORY_SEPARATOR . $filename;
@@ -493,21 +493,21 @@ if ($submitted != "")
                     debug("collection_download adding symlink: {$p} - {$ln_link_name}");
                     @symlink($p, $ln_link_name);
                     }
-				elseif ($use_zip_extension)
-					{
-					$zip->addFile($p,$filename);
-					update_zip_progress_file("file ".$zip->numFiles);
-					}
-				else
-					{
-					update_zip_progress_file("file ".$n);
-					}
+                elseif ($use_zip_extension)
+                    {
+                    $zip->addFile($p,$filename);
+                    update_zip_progress_file("file ".$zip->numFiles);
+                    }
+                else
+                    {
+                    update_zip_progress_file("file ".$n);
+                    }
 
                 collection_download_log_resource_ready($tmpfile, $deletion_array, $ref, $usesize);
-				}
-			}
+                }
+            }
 
-		}
+        }
     // Collection contains data_only resource types
     if(0 < $count_data_only_types)
         {
@@ -549,17 +549,17 @@ if ($submitted != "")
             $deletion_array);
         }
 
-	collection_download_process_command_to_file($use_zip_extension, $collection_download_tar, $id, $collection, $size, $path);
+    collection_download_process_command_to_file($use_zip_extension, $collection_download_tar, $id, $collection, $size, $path);
 
-	if($collection_download_tar)
-		{$suffix = '.tar';}
-	elseif ($archiver)
-		$suffix = '.' . $collection_download_settings[$settings_id]['extension'];
-	else
-		$suffix = '.zip';
+    if($collection_download_tar)
+        {$suffix = '.tar';}
+    elseif ($archiver)
+        $suffix = '.' . $collection_download_settings[$settings_id]['extension'];
+    else
+        $suffix = '.zip';
 
-	collection_download_process_collection_download_name($filename, $collection, $size, $suffix, $collectiondata);
-		
+    collection_download_process_collection_download_name($filename, $collection, $size, $suffix, $collectiondata);
+        
     $completed = collection_download_process_archive_command($collection_download_tar, $zip, $filename, $usertempdir, $archiver, $settings_id, $zipfile);
 
     if ($completed)
@@ -574,33 +574,33 @@ if ($submitted != "")
     # Get the file size of the archive.
     $filesize = @filesize_unlimited($zipfile);
 
-	header("Content-Disposition: attachment; filename=" . $filename);
+    header("Content-Disposition: attachment; filename=" . $filename);
     if ($archiver) {header("Content-Type: " . $collection_download_settings[$settings_id]["mime"]);}
     else {
-	header("Content-Type: application/zip");}
-	if ($use_zip_extension){header("Content-Transfer-Encoding: binary");}
-	header("Content-Length: " . $filesize);
+    header("Content-Type: application/zip");}
+    if ($use_zip_extension){header("Content-Transfer-Encoding: binary");}
+    header("Content-Length: " . $filesize);
 
-	ignore_user_abort(true); // collection download has a problem with leaving junk files when this script is aborted client side. This seems to fix that by letting the process run its course.
-	set_time_limit(0);
+    ignore_user_abort(true); // collection download has a problem with leaving junk files when this script is aborted client side. This seems to fix that by letting the process run its course.
+    set_time_limit(0);
 
-	if (!hook("replacefileoutput"))
-		{
-		# New method
-		$sent = 0;
-		$handle = fopen($zipfile, "r");
-	
-		// Now we need to loop through the file and echo out chunks of file data
-		while($sent < $filesize)
-			{
-			echo fread($handle, $download_chunk_size);
-			$sent += $download_chunk_size;
-			}
-		}
-		
-	# Remove archive.
-	if ($use_zip_extension)
-		{
+    if (!hook("replacefileoutput"))
+        {
+        # New method
+        $sent = 0;
+        $handle = fopen($zipfile, "r");
+    
+        // Now we need to loop through the file and echo out chunks of file data
+        while($sent < $filesize)
+            {
+            echo fread($handle, $download_chunk_size);
+            $sent += $download_chunk_size;
+            }
+        }
+        
+    # Remove archive.
+    if ($use_zip_extension)
+        {
         try {
             rmdir(get_temp_dir(false,$id));
             }
@@ -622,7 +622,7 @@ include "../include/header.php";
     $urlparams = array(
         "search"      =>  "!collection".$collection,
         "k"           =>  $k);
-	?><p><a href="<?php echo generateURL($baseurl_short."pages/search.php",$urlparams); ?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo htmlspecialchars($lang['back'])?></a></p><?php
+    ?><p><a href="<?php echo generateURL($baseurl_short."pages/search.php",$urlparams); ?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo htmlspecialchars($lang['back'])?></a></p><?php
 }?>
 
 <h1><?php echo $lang["downloadzip"]?></h1>
@@ -634,7 +634,7 @@ hook('collectiondownloadintro');
 <script>
 
 function ajax_download(download_offline, tar)
-	{
+    {
     console.debug('ajax_download(download_offline = %o, tar = %o)', download_offline, tar);
     var ifrm = document.getElementById('downloadiframe');
     ifrm.src = "<?php echo $baseurl_short?>pages/collection_download.php?submitted=true&"+jQuery('#myform').serialize();
@@ -646,18 +646,18 @@ function ajax_download(download_offline, tar)
         return false;
         }
 
-	document.getElementById('downloadbuttondiv').style.display='none';	
-	document.getElementById('progress').innerHTML="<br /><br /><?php echo $lang['collectiondownloadinprogress'];?>";
-	document.getElementById('progress3').style.display='none';
-	document.getElementById('progressdiv').style.display='block';
+    document.getElementById('downloadbuttondiv').style.display='none';  
+    document.getElementById('progress').innerHTML="<br /><br /><?php echo $lang['collectiondownloadinprogress'];?>";
+    document.getElementById('progress3').style.display='none';
+    document.getElementById('progressdiv').style.display='block';
 
-	// Disable form controls -- this needs to happen after serializing the form or else they are ignored
-	jQuery('#downloadsize').prop('disabled', true);
-	jQuery('#use_original').prop('disabled', true);
-	jQuery('#text').prop('disabled', true);
-	jQuery('#archivesettings').prop('disabled', true);
+    // Disable form controls -- this needs to happen after serializing the form or else they are ignored
+    jQuery('#downloadsize').prop('disabled', true);
+    jQuery('#use_original').prop('disabled', true);
+    jQuery('#text').prop('disabled', true);
+    jQuery('#archivesettings').prop('disabled', true);
 
-	if(tar)
+    if(tar)
         {
         document.getElementById('progress2').innerHTML="<?php echo $lang['collection_download_tar_started']?>";
         document.getElementById('progress').style.display="none";
@@ -701,11 +701,11 @@ function ajax_download(download_offline, tar)
              
             });
         }
-	}
+    }
 
 </script>
 
-	<form id='myform' action="<?php echo $baseurl_short?>pages/collection_download.php?id=<?php echo urlencode($uniqid) ?>&submitted=true" method=post>
+    <form id='myform' action="<?php echo $baseurl_short?>pages/collection_download.php?id=<?php echo urlencode($uniqid) ?>&submitted=true" method=post>
         <?php generateFormToken("myform"); ?>
 <input type=hidden name="collection" value="<?php echo htmlspecialchars($collection) ?>">
 <input type=hidden name="usage" value="<?php echo htmlspecialchars($usage); ?>">
@@ -713,15 +713,15 @@ function ajax_download(download_offline, tar)
 <input type=hidden name="k" value="<?php echo htmlspecialchars($k) ?>">
 
 
-	<input type=hidden name="id" value="<?php echo htmlspecialchars($uniqid) ?>">
-	<iframe id="downloadiframe" style="display:none;"></iframe>
+    <input type=hidden name="id" value="<?php echo htmlspecialchars($uniqid) ?>">
+    <iframe id="downloadiframe" style="display:none;"></iframe>
 
 
 <?php 
 hook("collectiondownloadmessage");
 
 if (!hook('replacesizeoptions'))
-	{
+    {
     if($count_data_only_types !== count($result))
         {
         ?>
@@ -729,38 +729,38 @@ if (!hook('replacesizeoptions'))
         <label for="downloadsize"><?php echo $lang["downloadsize"]?></label>
         <div class="tickset">
     <?php
-	$maxaccess=collection_max_access($collection);
-	$sizes=get_all_image_sizes(false,$maxaccess>=1);
+    $maxaccess=collection_max_access($collection);
+    $sizes=get_all_image_sizes(false,$maxaccess>=1);
 
-	$available_sizes=array_reverse($available_sizes,true);
+    $available_sizes=array_reverse($available_sizes,true);
 
-	# analyze available sizes and present options
+    # analyze available sizes and present options
 ?><select name="size" class="stdwidth" id="downloadsize"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>><?php
 
 
 if (array_key_exists('original',$available_sizes))
-	display_size_option('original', $lang['original'], true);
-	display_size_option('largest', $lang['imagesize-largest'], true);
+    display_size_option('original', $lang['original'], true);
+    display_size_option('largest', $lang['imagesize-largest'], true);
 
 foreach ($available_sizes as $key=>$value)
-	{
+    {
     foreach($sizes as $size)
-		{
-		if ($size['id']==$key)
-			{
-			display_size_option($key, $size['name'], true);
-			break;
-			}
-		}
+        {
+        if ($size['id']==$key)
+            {
+            display_size_option($key, $size['name'], true);
+            break;
+            }
+        }
     }
 ?></select>
 
 <div class="clearerleft"> </div></div>
 <div class="clearerleft"> </div></div><?php
-	   }
+       }
     }
 if (!hook('replaceuseoriginal'))
-	{
+    {
     if($count_data_only_types !== count($result))
         {
         ?>
@@ -771,7 +771,7 @@ if (!hook('replaceuseoriginal'))
         ?></label><input type=checkbox id="use_original" name="use_original" value="yes" >
         <div class="clearerleft"> </div></div>
         <?php
-	   }
+       }
     }
 
 if ($zipped_collection_textfile=="true") { 
@@ -781,14 +781,14 @@ if ($zipped_collection_textfile=="true") {
 <label for="text"><?php echo $lang["zippedcollectiontextfile"]?></label>
 <select name="text" class="shrtwidth" id="text"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>>
 <?php if($zipped_collection_textfile_default_no){
-	?><option value="false"><?php echo $lang["no"]?></option>
-	<option value="true"><?php echo $lang["yes"]?></option><?php
+    ?><option value="false"><?php echo $lang["no"]?></option>
+    <option value="true"><?php echo $lang["yes"]?></option><?php
 }
 else{
-	?><option value="true"><?php echo $lang["yes"]?></option>
-	<option value="false"><?php echo $lang["no"]?></option><?php
+    ?><option value="true"><?php echo $lang["yes"]?></option>
+    <option value="false"><?php echo $lang["no"]?></option><?php
 }
-?>	
+?>  
 </select>
 <div class="clearerleft"></div>
 </div>
@@ -817,9 +817,9 @@ if(!hook('replacecsvfile'))
     { ?>
 <!-- Add CSV file with the metadata of all the resources found in this colleciton -->
 <div class="Question">
-	<label for="include_csv_file"><?php echo $lang['csvAddMetadataCSVToArchive']; ?></label>
-	<input type="checkbox" id="include_csv_file" name="include_csv_file" value="yes">
-	<div class="clearerleft"></div>
+    <label for="include_csv_file"><?php echo $lang['csvAddMetadataCSVToArchive']; ?></label>
+    <input type="checkbox" id="include_csv_file" name="include_csv_file" value="yes">
+    <div class="clearerleft"></div>
 </div>
 <?php
 }
@@ -831,7 +831,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     <div class="Question" id="exiftool_question" <?php if($collection_download_tar_option){echo "style=\"display:none;\"";} ?>>
         <label for="write_metadata_on_download"><?php echo $lang['collection_download__write_metadata_on_download_label']; ?></label>
         <input type="checkbox" id="write_metadata_on_download" name="write_metadata_on_download" value="yes" >
-		<div class="clearerleft"></div>
+        <div class="clearerleft"></div>
     </div>
     <?php
     }
@@ -839,34 +839,34 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 
 <script>var tar = <?php echo $collection_download_tar_option ? 'true' : 'false'; ?>;</script>
 <div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
-	<label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
-	<div class="tickset">
-	<select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){tar=false;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{tar=true;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
+    <label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
+    <div class="tickset">
+    <select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){tar=false;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{tar=true;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
         <?php if(!hook('collectiondownloadfileformats'))
             { ?>
-		   <option value="off"><?php echo $lang["collection_download_no_tar"]; ?></option>
-		   <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option><?php
+           <option value="off"><?php echo $lang["collection_download_no_tar"]; ?></option>
+           <option value="on" <?php if($collection_download_tar_option) {echo "selected";} ?> ><?php echo$lang["collection_download_use_tar"]; ?></option><?php
             } ?>   
-	</select>
-	
-	<div class="clearerleft"></div></div><br />
-	<div class="clearerleft"></div>
-	<label for="tarinfo"></label>
+    </select>
+    
+    <div class="clearerleft"></div></div><br />
+    <div class="clearerleft"></div>
+    <label for="tarinfo"></label>
     <?php if(!hook('collectiondownloadformhelp'))
         { ?>
-	<div class="FormHelpInner tickset"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div><?php
+    <div class="FormHelpInner tickset"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div><?php
         } ?>
-	
-	<div class="clearerleft"></div>
+    
+    <div class="clearerleft"></div>
 </div>
-	
+    
 <div class="QuestionSubmit" id="downloadbuttondiv"> 
-	<label for="download"> </label>
-	<input type="submit"
+    <label for="download"> </label>
+    <input type="submit"
            onclick="ajax_download(<?php echo $offline_job_queue ? 'true' : 'false'; ?>, tar); return false;"
            value="&nbsp;&nbsp;<?php echo escape($lang["action-download"]); ?>&nbsp;&nbsp;" />
-	
-	<div class="clearerleft"> </div>
+    
+    <div class="clearerleft"> </div>
 </div>
 
 <div id="progress"></div>

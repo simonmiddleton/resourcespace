@@ -5,7 +5,7 @@ include "../../../include/authenticate.php"; if (!checkperm("a")) {exit ("Permis
 $plugin_page_heading = 'Consent Manager';
 $plugin_name = 'consentmanager';
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 
 $page_def[] = config_add_text_list_input(
     'consent_usage_mediums',

@@ -1,7 +1,7 @@
 <?php
 
 function save_proposed_changes($ref)
-	{
+    {
     global $userref, $auto_order_checkbox,$multilingual_text_fields,$languages,$language, $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES;
 
     if(!is_numeric($ref))
@@ -10,9 +10,9 @@ function save_proposed_changes($ref)
         }
         
     # Loop through the field data and save (if necessary)
-	$errors        = array();
-	$fields        = get_resource_field_data($ref, false);
-	$resource_data = get_resource_data($ref);
+    $errors        = array();
+    $fields        = get_resource_field_data($ref, false);
+    $resource_data = get_resource_data($ref);
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/ removed
@@ -53,67 +53,67 @@ function save_proposed_changes($ref)
                         $new_nodes[] = $node['ref'];
                         }
                     }
-                }				
-		else
-				{
-				if($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
-					{
-					# date range type
-					# each value will be a node so we end up with a pair of nodes to represent the start and end dates
+                }               
+        else
+                {
+                if($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
+                    {
+                    # date range type
+                    # each value will be a node so we end up with a pair of nodes to represent the start and end dates
 
-					$newval="";
-					
-					if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf", false))!==false)
-						{
-						// We have been passed the range in EDTF format, check it is in the correct format
-						$rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
-						if(!preg_match($rangeregex,$date_edtf,$matches))
-							{
-							$errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
-							continue;
-							}
-						$rangedates = explode("/",$date_edtf);
-						$rangestart=str_pad($rangedates[0],  10, "-00");
-						$rangeendparts=explode("-",$rangedates[1]);
+                    $newval="";
+                    
+                    if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf", false))!==false)
+                        {
+                        // We have been passed the range in EDTF format, check it is in the correct format
+                        $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
+                        if(!preg_match($rangeregex,$date_edtf,$matches))
+                            {
+                            $errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
+                            continue;
+                            }
+                        $rangedates = explode("/",$date_edtf);
+                        $rangestart=str_pad($rangedates[0],  10, "-00");
+                        $rangeendparts=explode("-",$rangedates[1]);
                         $rangeendyear=$rangeendparts[0];
                         $rangeendmonth=isset($rangeendparts[1])?$rangeendparts[1]:12;
                         $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
-						$rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
+                        $rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
                         
-						$val = $rangestart . ", " . $rangeend;
-						}
-					else
-						{
-						// Range has been passed via normal inputs, construct the value from the date/time dropdowns
-						$date_parts=array("start","end");
-						
-						foreach($date_parts as $date_part)
-							{	
-							$val = getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_year",false);
-							if ($val !== false && intval($val)<=0) 
-								{
-								$val="";
-								}
-							elseif (($field=getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_month",""))!="") 
-								{
-								$val.="-" . $field;
-								if (($field=getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_day",""))!="") 
-									{
-									$val.="-" . $field;
-									}
-								 else 
-									{
-									$val.="-00";
-									}
-								}
-							else 
-								{
-								$val.="-00-00";
-								}
-							$newval.= ($newval!=""?", ":"") . $val;
-							}
-						}
-						$val=$newval;
+                        $val = $rangestart . ", " . $rangeend;
+                        }
+                    else
+                        {
+                        // Range has been passed via normal inputs, construct the value from the date/time dropdowns
+                        $date_parts=array("start","end");
+                        
+                        foreach($date_parts as $date_part)
+                            {   
+                            $val = getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_year",false);
+                            if ($val !== false && intval($val)<=0) 
+                                {
+                                $val="";
+                                }
+                            elseif (($field=getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_month",""))!="") 
+                                {
+                                $val.="-" . $field;
+                                if (($field=getval("field_" . $fields[$n]["ref"] . "_" . $date_part . "_day",""))!="") 
+                                    {
+                                    $val.="-" . $field;
+                                    }
+                                 else 
+                                    {
+                                    $val.="-00";
+                                    }
+                                }
+                            else 
+                                {
+                                $val.="-00-00";
+                                }
+                            $newval.= ($newval!=""?", ":"") . $val;
+                            }
+                        }
+                        $val=$newval;
                     }
                 else if ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
                     {
@@ -128,8 +128,8 @@ function save_proposed_changes($ref)
                         continue;
                         }
                     }
-				elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
-					{
+                elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
+                    {
                     $include_time = $fields[$n]['type'] === FIELD_TYPE_DATE_AND_OPTIONAL_TIME;
                     # date type, construct the value from the date/time dropdowns
                     $val = getval("field_" . $fields[$n]["ref"] . "-y",false);
@@ -182,10 +182,10 @@ function save_proposed_changes($ref)
                             }
                         }
                     }
-				elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
-					{
-					# Construct a multilingual string from the submitted translations
-					$val=getval("field_" . $fields[$n]["ref"], false);
+                elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
+                    {
+                    # Construct a multilingual string from the submitted translations
+                    $val=getval("field_" . $fields[$n]["ref"], false);
                     if($val !== false)
                         {
                         $val="~" . $language . ":" . $val;
@@ -198,60 +198,60 @@ function save_proposed_changes($ref)
                                 }
                             }
                         }
-					}
-				else
-					{
-					# Set the value exactly as sent.
-					$val=getval("field_" . $fields[$n]["ref"],false);
-					} 
-				# Check for regular expression match
-				if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
-					{
+                    }
+                else
+                    {
+                    # Set the value exactly as sent.
+                    $val=getval("field_" . $fields[$n]["ref"],false);
+                    } 
+                # Check for regular expression match
+                if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+                    {
                     global $regexp_slash_replace;
-					if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
-						{
-						global $lang;
-						debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . ". Value passed: " . $val);
-						if (getval("autosave","")!="")
-							{
-							exit();
-							}
-						$errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
-						continue;
-						}
-					}
-				$modified_val=hook("modifiedsavedfieldvalue",'',array($fields,$n,$val));
-				if(!empty($modified_val)){$val=$modified_val;}
-				
-				$error=hook("additionalvalcheck", "all", array($fields, $fields[$n]));
-				if ($error) 
-					{
-					global $lang;
-					if (getval("autosave","")!="")
-						{
-						exit($error);
-						}
-					$errors[$fields[$n]["ref"]]=$error;
-					continue;
-					}
-				}
-					
-				# Check for regular expression match
-				if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
-						{
+                    if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
+                        {
+                        global $lang;
+                        debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . ". Value passed: " . $val);
+                        if (getval("autosave","")!="")
+                            {
+                            exit();
+                            }
+                        $errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
+                        continue;
+                        }
+                    }
+                $modified_val=hook("modifiedsavedfieldvalue",'',array($fields,$n,$val));
+                if(!empty($modified_val)){$val=$modified_val;}
+                
+                $error=hook("additionalvalcheck", "all", array($fields, $fields[$n]));
+                if ($error) 
+                    {
+                    global $lang;
+                    if (getval("autosave","")!="")
+                        {
+                        exit($error);
+                        }
+                    $errors[$fields[$n]["ref"]]=$error;
+                    continue;
+                    }
+                }
+                    
+                # Check for regular expression match
+                if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
+                        {
                         global $regexp_slash_replace;
-						if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
-								{
-								global $lang;
-								debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . ". Value passed: " . $val);
-								if (getval("autosave","")!="")
-										{
-										exit();
-										}
-								$errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
-								continue;
-								}
-						}
+                        if(preg_match("#^" . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . "$#",$val,$matches)<=0)
+                                {
+                                global $lang;
+                                debug($lang["information-regexp_fail"] . ": -" . "reg exp: " . str_replace($regexp_slash_replace, '\\', $fields[$n]["regexp_filter"]) . ". Value passed: " . $val);
+                                if (getval("autosave","")!="")
+                                        {
+                                        exit();
+                                        }
+                                $errors[$fields[$n]["ref"]]=$lang["information-regexp_fail"] . " : " . $val;
+                                continue;
+                                }
+                        }
             $error=hook("additionalvalcheck", "all", array($fields, $fields[$n]));
             if ($error) 
                 {
@@ -331,7 +331,7 @@ function get_proposed_changes($ref, $userid)
     }
         
 function delete_proposed_changes($ref, $userid="")
-	{
+    {
     $query = "DELETE FROM propose_changes_data WHERE resource = ?";
     $parameters=array("i",$ref);
     if ($userid!="")
@@ -440,7 +440,7 @@ function propose_changes_display_field($n, $field)
     $realvalue = $value; // Store this in case it gets changed by view processing
     if ($value!="")
             {
-            # Draw this field normally.			
+            # Draw this field normally.         
             ?><div class="propose_changes_current ProposeChangesCurrent"><?php display_field_data($field,true); ?></div><?php
             }                        
         else

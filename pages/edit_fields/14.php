@@ -20,4 +20,4 @@ if (getval("resetform","") == "true" || getval("copyfrom","") != "")
     }
 
 render_date_range_field($name,$value,false,false,$field,$reset);
-	 
+     

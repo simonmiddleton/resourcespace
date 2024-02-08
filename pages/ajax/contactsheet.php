@@ -33,15 +33,15 @@ $previewpage       = getval('previewpage', 1, true);
 $includeheader     = getval('includeheader', '');
 $addlink           = getval('addlink', '');
 $addlogo           = getval('addlogo', '');
-$addfieldname	   = getval('addfieldname','');
+$addfieldname      = getval('addfieldname','');
 $force_watermark   = getval('force_watermark','');
 $field_value_limit = getval('field_value_limit', 0, true);
 
 if($force_watermark==='true'){
-	$force_watermark=true;
+    $force_watermark=true;
 }
 elseif($force_watermark==='false'){
-	$force_watermark=false;
+    $force_watermark=false;
 }
 
 // Check access
@@ -73,32 +73,32 @@ if(is_numeric($order_by))
 $results = do_search("!collection{$collection}", '', $order_by, 0, -1, $sort);
 
 if($contactsheet_use_field_templates && !isset($contactsheet_field_template))
-	{
-	$contactsheet_use_field_templates=false;
-	}
-	
+    {
+    $contactsheet_use_field_templates=false;
+    }
+    
 if($contactsheet_use_field_templates)
-	{
-	$field_template = getval('field_template', 0, true);
-	$getfields = $contactsheet_field_template[$field_template]['fields'];
-	}
+    {
+    $field_template = getval('field_template', 0, true);
+    $getfields = $contactsheet_field_template[$field_template]['fields'];
+    }
 else
-	{
-	switch($sheetstyle)
-		{
-		case 'thumbnails':
-			$getfields = $config_sheetthumb_fields;
-			break;
+    {
+    switch($sheetstyle)
+        {
+        case 'thumbnails':
+            $getfields = $config_sheetthumb_fields;
+            break;
 
-		case 'list':
-			$getfields = $config_sheetlist_fields;
-			break;
+        case 'list':
+            $getfields = $config_sheetlist_fields;
+            break;
 
-		case 'single':
-			$getfields = $config_sheetsingle_fields;
-			break;
-		}
-	}
+        case 'single':
+            $getfields = $config_sheetsingle_fields;
+            break;
+        }
+    }
 
 // If user has specified which fields to show, then respect it
 if('' != $selected_contact_sheet_fields && '' != $selected_contact_sheet_fields[0])
@@ -113,18 +113,18 @@ foreach($getfields as $field_id)
     }
 
 $pdf_template_path = get_template_path("{$sheetstyle}.php", 'contact_sheet');
-$filename_uid	= generateUserFilenameUID($userref);
-$PDF_filename	= get_temp_dir(false,'') . "/contactsheet_" . $collection . "_" . md5($username . $filename_uid . $scramble_key) . ".pdf";
+$filename_uid   = generateUserFilenameUID($userref);
+$PDF_filename   = get_temp_dir(false,'') . "/contactsheet_" . $collection . "_" . md5($username . $filename_uid . $scramble_key) . ".pdf";
 
 $placeholders      = array(
-    'date'                          			=> nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy),
-    'titlefontsize'                 			=> $titlefontsize,
-    'refnumberfontsize'             			=> $refnumberfontsize,
-    'title'                         			=> $title,
-    'columns'                       			=> $columns,
-    'config_sheetthumb_include_ref' 			=> $config_sheetthumb_include_ref,
-    'contact_sheet_metadata_under_thumbnail'	=> $contact_sheet_metadata_under_thumbnail,
-    'contact_sheet_include_applicationname'		=> $contact_sheet_include_applicationname
+    'date'                                      => nicedate(date('Y-m-d H:i:s'), $contact_sheet_date_include_time, $contact_sheet_date_wordy),
+    'titlefontsize'                             => $titlefontsize,
+    'refnumberfontsize'                         => $refnumberfontsize,
+    'title'                                     => $title,
+    'columns'                                   => $columns,
+    'config_sheetthumb_include_ref'             => $config_sheetthumb_include_ref,
+    'contact_sheet_metadata_under_thumbnail'    => $contact_sheet_metadata_under_thumbnail,
+    'contact_sheet_include_applicationname'     => $contact_sheet_include_applicationname
 );
 
 if($contactsheet_header)
@@ -300,8 +300,8 @@ catch(Html2PdfException $e)
 
     debug('CONTACT-SHEET:' . $contactsheetmessage);
     debug('CONTACT-SHEET:' . $e->getTraceAsString());
-	
-	// Starting point
+    
+    // Starting point
     if($field_value_limit === 0)
         {
         $field_value_limit = 1100;
@@ -312,11 +312,11 @@ catch(Html2PdfException $e)
         'field_value_limit' => $field_value_limit - 100,
     );
 
-	if(strpos($contactsheetmessage,"does not fit on only one page") !== false)
-		{
-		$parameters["error"] = "contactsheet_data_toolong";
-		}
-	
+    if(strpos($contactsheetmessage,"does not fit on only one page") !== false)
+        {
+        $parameters["error"] = "contactsheet_data_toolong";
+        }
+    
     redirect(generateURL("{$baseurl}/pages/contactsheet_settings.php", $parameters));
 
     echo $formatter->getHtmlMessage();
@@ -327,13 +327,13 @@ catch(Html2PdfException $e)
 // Make AJAX preview
 if ($preview && isset($imagemagick_path)) 
     {
-	$contact_sheet_rip= get_temp_dir(false,'') . "/contactsheetrip_" . $collection . "_" . md5($username . $filename_uid . $scramble_key) . ".jpg";
+    $contact_sheet_rip= get_temp_dir(false,'') . "/contactsheetrip_" . $collection . "_" . md5($username . $filename_uid . $scramble_key) . ".jpg";
     if(file_exists($contact_sheet_rip))
         {
         unlink($contact_sheet_rip);
         }
 
-	$contact_sheet_preview_img= get_temp_dir(false,'') . "/contactsheet_" . $collection . "_" . md5($username . $filename_uid . $scramble_key) . ".jpg";
+    $contact_sheet_preview_img= get_temp_dir(false,'') . "/contactsheet_" . $collection . "_" . md5($username . $filename_uid . $scramble_key) . ".jpg";
     if(file_exists($contact_sheet_preview_img))
         {
         unlink($contact_sheet_preview_img);
@@ -376,7 +376,7 @@ if($contact_sheet_resource && enforcePostRequest(getval("ajax", false)))
     update_field($new_resource, $filename_field, "{$new_resource}.pdf");
 
     // Relate all resources in collection to the new contact sheet resource
-    relate_to_collection($new_resource, $collection);	
+    relate_to_collection($new_resource, $collection);   
 
     ps_query("UPDATE resource SET file_extension = 'pdf' WHERE ref = ?",array("i",$new_resource));
 

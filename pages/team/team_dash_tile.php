@@ -32,7 +32,7 @@ $links_trail = array(
     array(
         'title' => $lang["teamcentre"],
         'href'  => $baseurl_short . "pages/team/team_home.php",
-		'menu' =>  true
+        'menu' =>  true
     ),
     array(
         'title' => $show_usergroups_dash ? $lang['manage_user_group_dash_tiles'] . ' - ' . $user_groups[$selected_user_group] : $lang["manage_all_dash"],
@@ -63,20 +63,20 @@ if(!$show_usergroups_dash)
    
     if($show_usergroups_dash)
         { ?>
-	<div id="HomePanelContainer" class="manage-all-user-tiles">
-	<?php
+    <div id="HomePanelContainer" class="manage-all-user-tiles">
+    <?php
         get_default_dash($selected_user_group);
         }
     else
         {
-	?>
+    ?>
         <p><?php echo $lang['manage_all_user_dash_tiles_note']; ?></p>
-	<div id="HomePanelContainer" class="manage-all-user-tiles">
+    <div id="HomePanelContainer" class="manage-all-user-tiles">
         <?php
         get_default_dash(null, true);
         }
-	?>
-	</div>
+    ?>
+    </div>
 </div>
 <?php
 include "../../include/footer.php";

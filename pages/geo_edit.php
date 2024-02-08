@@ -68,17 +68,17 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
 
 
     if ( count($s)==2  && $valid_coords == true) 
-		{    
+        {    
         $mapzoom=getval('map-zoom','');        
-		if ($mapzoom>=2 && $mapzoom<=21)
-			{
-    			ps_query("update resource set geo_lat= ?,geo_long= ?,mapzoom= ? where ref= ?", ['d', $s[0], 'd', $s[1], 'i', $mapzoom, 'i', $ref]);    
-			}
-		else
-			{
-    			ps_query("update resource set geo_lat= ?,geo_long= ?,mapzoom=null where ref=?", ['d', $s[0], 'd', $s[1],'i', $ref]);    
-			}
-		hook("savelocationextras");
+        if ($mapzoom>=2 && $mapzoom<=21)
+            {
+                ps_query("update resource set geo_lat= ?,geo_long= ?,mapzoom= ? where ref= ?", ['d', $s[0], 'd', $s[1], 'i', $mapzoom, 'i', $ref]);    
+            }
+        else
+            {
+                ps_query("update resource set geo_lat= ?,geo_long= ?,mapzoom=null where ref=?", ['d', $s[0], 'd', $s[1],'i', $ref]);    
+            }
+        hook("savelocationextras");
         resource_log(
             $ref,
             LOG_CODE_TRANSFORMED,
@@ -87,12 +87,12 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
             $resource["geo_lat"] . ", " . $resource["geo_long"],
             $lat . ", " . $lng
         );
-		}
-	elseif (getval('geo-loc','')=='') 
-		{
-		# Blank geo-location
-		ps_query("update resource set geo_lat=null,geo_long=null,mapzoom=null where ref= ?", ['i', $ref]);
-		hook("removelocationextras");
+        }
+    elseif (getval('geo-loc','')=='') 
+        {
+        # Blank geo-location
+        ps_query("update resource set geo_lat=null,geo_long=null,mapzoom=null where ref= ?", ['i', $ref]);
+        hook("removelocationextras");
         resource_log(
             $ref,
             LOG_CODE_TRANSFORMED,
@@ -101,9 +101,9 @@ if (isset($_POST['submit']) && enforcePostRequest(false))
             $resource["geo_lat"] . ", " . $resource["geo_long"],
             ""
         );
-		}
-	# Reload resource data
-	$resource=get_resource_data($ref,false);
+        }
+    # Reload resource data
+    $resource=get_resource_data($ref,false);
     }
 
 $zoom = getval('new_zoom',  $resource["mapzoom"]);

@@ -4,10 +4,10 @@ include "../../include/db.php";
 include "../../include/authenticate.php";
 
 if (!checkperm_user_edit($userref))
-	{
-	redirect($baseurl_short ."login.php?error=error-permissions-login&url={$baseurl_short}pages/admin/admin_system_log.php");
-	exit;
-	}
+    {
+    redirect($baseurl_short ."login.php?error=error-permissions-login&url={$baseurl_short}pages/admin/admin_system_log.php");
+    exit;
+    }
 
 $log_search = getval("log_search", "");
 $backurl = getval("backurl", "");

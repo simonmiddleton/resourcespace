@@ -7,10 +7,10 @@ $search=getval("search","");
 $resourceconnect_source=getval("resourceconnect_source","");
 
 $resourceconnect_this=0;
-for ($n=0;$n<count($resourceconnect_affiliates);$n++)			
-	{
-	if ($resourceconnect_affiliates[$n]["baseurl"]==$resourceconnect_source) {$resourceconnect_this=$n;break;}
-	}
+for ($n=0;$n<count($resourceconnect_affiliates);$n++)           
+    {
+    if ($resourceconnect_affiliates[$n]["baseurl"]==$resourceconnect_source) {$resourceconnect_this=$n;break;}
+    }
 redirect("pages/search.php?search=" . urlencode($search) . "&resourceconnect_selected=" . $resourceconnect_this);
 
 exit();
@@ -23,10 +23,10 @@ $page_size=$resourceconnect_pagesize;
 
 # Show only one affiliate?
 if ($affiliate_selected!="")
-	{
-	$resourceconnect_affiliates=array($resourceconnect_affiliates[$affiliate_selected]);
-	$page_size=$resourceconnect_pagesize_expanded;
-	}
+    {
+    $resourceconnect_affiliates=array($resourceconnect_affiliates[$affiliate_selected]);
+    $page_size=$resourceconnect_pagesize_expanded;
+    }
 
 
 ?>
@@ -36,47 +36,47 @@ if ($affiliate_selected!="")
 
 $counter=0;
 foreach ($resourceconnect_affiliates as $affiliate)
-	{
+    {
 
-	if ($affiliate["baseurl"]!=$baseurl) # Do not search self.
-		{
-		?>
-		<div class="RecordBox"> 
-		<div class="RecordPanel" style="margin-bottom:0;padding-bottom:0;">  
-		
-		<div class="backtoresults">
-		<a href="#" onClick="Repage_<?php echo $counter ?>(-<?php echo $page_size ?>);return false;">&lt;&nbsp;<?php echo $lang["previous"]?></a>
-		|
-		<?php if ($affiliate_selected=="") { ?>
-		<a href="search.php?search=<?php echo urlencode($search) ?>&affiliate=<?php echo $counter ?>"><?php echo $lang["viewall"]?></a>
-		|
-		<?php } ?>
-		<a href="#" onClick="Repage_<?php echo $counter ?>(<?php echo $page_size ?>);return false;"><?php echo $lang["next"]?>&nbsp;&gt;</a>
-		</div>
-		
-		<h1><?php echo i18n_get_translated($affiliate["name"]) ?></h1>
-		<div id="resourceconnect_container_<?php echo $counter ?>"><p><?php echo $lang["pleasewait"] ?></p></div>
-		<div class="clearerleft"></div>
+    if ($affiliate["baseurl"]!=$baseurl) # Do not search self.
+        {
+        ?>
+        <div class="RecordBox"> 
+        <div class="RecordPanel" style="margin-bottom:0;padding-bottom:0;">  
+        
+        <div class="backtoresults">
+        <a href="#" onClick="Repage_<?php echo $counter ?>(-<?php echo $page_size ?>);return false;">&lt;&nbsp;<?php echo $lang["previous"]?></a>
+        |
+        <?php if ($affiliate_selected=="") { ?>
+        <a href="search.php?search=<?php echo urlencode($search) ?>&affiliate=<?php echo $counter ?>"><?php echo $lang["viewall"]?></a>
+        |
+        <?php } ?>
+        <a href="#" onClick="Repage_<?php echo $counter ?>(<?php echo $page_size ?>);return false;"><?php echo $lang["next"]?>&nbsp;&gt;</a>
+        </div>
+        
+        <h1><?php echo i18n_get_translated($affiliate["name"]) ?></h1>
+        <div id="resourceconnect_container_<?php echo $counter ?>"><p><?php echo $lang["pleasewait"] ?></p></div>
+        <div class="clearerleft"></div>
 
-		</div>
-		</div>
-	
-		<script>
-		// Repage / pager function
-		var offset_<?php echo $counter ?>=0;
-		function Repage_<?php echo $counter ?>(distance)
-			{
-			offset_<?php echo $counter ?>+=distance;
-			if (offset_<?php echo $counter ?><0) {offset_<?php echo $counter ?>=0;}
-			new Ajax.Updater ('resourceconnect_container_<?php echo $counter ?>','ajax_request.php?search=<?php echo urlencode($search) ?>&pagesize=<?php echo $page_size ?>&affiliate=<?php echo escape($affiliate_selected != "" ? $affiliate_selected : $counter); ?>&offset=' + offset_<?php echo $counter ?>);
-			}
-	
-		Repage_<?php echo $counter ?>(0);
-		</script>
-		<?php
-		}
-	$counter++;
-	}
+        </div>
+        </div>
+    
+        <script>
+        // Repage / pager function
+        var offset_<?php echo $counter ?>=0;
+        function Repage_<?php echo $counter ?>(distance)
+            {
+            offset_<?php echo $counter ?>+=distance;
+            if (offset_<?php echo $counter ?><0) {offset_<?php echo $counter ?>=0;}
+            new Ajax.Updater ('resourceconnect_container_<?php echo $counter ?>','ajax_request.php?search=<?php echo urlencode($search) ?>&pagesize=<?php echo $page_size ?>&affiliate=<?php echo escape($affiliate_selected != "" ? $affiliate_selected : $counter); ?>&offset=' + offset_<?php echo $counter ?>);
+            }
+    
+        Repage_<?php echo $counter ?>(0);
+        </script>
+        <?php
+        }
+    $counter++;
+    }
 ?>
 
 <?php

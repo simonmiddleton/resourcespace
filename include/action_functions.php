@@ -33,7 +33,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
     if((!$filtered || 'resourcereview'==$type) && trim($actions_notify_states) != "")
         {
         $search_all_workflow_states = false;
-        $default_display	= $list_display_fields;
+        $default_display    = $list_display_fields;
 
         if(is_int_loose($view_title_field))
             {
@@ -112,7 +112,7 @@ function get_user_actions($countonly=false,$type="",$order_by="date",$sort="DESC
 function get_editable_resource_sql()
     {
     global $actions_notify_states, $actions_resource_types_hide, $default_display, $list_display_fields, $search_all_workflow_states;
-    $default_display	= $list_display_fields;
+    $default_display    = $list_display_fields;
     $search_all_workflow_states = false;
     $rtypes=get_resource_types();
     $searchable_restypes=implode(",",array_diff(array_column($rtypes,"ref"),explode(",",$actions_resource_types_hide)));

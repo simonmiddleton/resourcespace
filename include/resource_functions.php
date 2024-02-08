@@ -981,12 +981,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         continue;
                         }
                     }
-				$modified_val=hook("modifiedsavedfieldvalue",'',array($fields,$n,$val));
-				if(!empty($modified_val))
-					{
-					$val=$modified_val;
-					$new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
-					}
+                $modified_val=hook("modifiedsavedfieldvalue",'',array($fields,$n,$val));
+                if(!empty($modified_val))
+                    {
+                    $val=$modified_val;
+                    $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $val)));
+                    }
 
                 $error = hook("additionalvalcheck", "all", array($fields, $fields[$n]));
                 if($error)
@@ -1138,8 +1138,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 eval(eval_check_signed($fields[$n]["onchange_macro"]));
                 }
 
-			} # End of if "allowed to edit field conditions"        
-		} # End of for $fields
+            } # End of if "allowed to edit field conditions"        
+        } # End of for $fields
 
     // When editing a resource, prevent applying the change to the resource if there are any errors
     if(count($errors) > 0 && $ref > 0)
@@ -1226,23 +1226,23 @@ function save_resource_data($ref,$multi,$autosave_field="")
         }
 
     # Expiry field(s) edited? Reset the notification flag so that warnings are sent again when the date is reached.
-	if ($expiry_field_edited)
+    if ($expiry_field_edited)
         {
         $resource_update_sql[] = "expiry_notification_sent='0'";
         }
 
     if (!hook('forbidsavearchive', '', array($errors)))
-		{
-		# Also update archive status and access level
-		$oldaccess=$resource_data['access'];
-		$access=getval("access",$oldaccess,true);
+        {
+        # Also update archive status and access level
+        $oldaccess=$resource_data['access'];
+        $access=getval("access",$oldaccess,true);
 
-		$oldarchive=$resource_data['archive'];
-		$setarchivestate=getval("status",$oldarchive,true);
-		if($setarchivestate!=$oldarchive && !checkperm("e" . $setarchivestate)) // don't allow change if user has no permission to change archive state
-			{
-			$setarchivestate=$oldarchive;
-			}
+        $oldarchive=$resource_data['archive'];
+        $setarchivestate=getval("status",$oldarchive,true);
+        if($setarchivestate!=$oldarchive && !checkperm("e" . $setarchivestate)) // don't allow change if user has no permission to change archive state
+            {
+            $setarchivestate=$oldarchive;
+            }
 
         // Only if changed
         if(($autosave_field=="" || $autosave_field=="Status") && $setarchivestate != $oldarchive)
@@ -1260,9 +1260,9 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     update_archive_status($ref,$setarchivestate,array($oldarchive));
                     }
 
-				$new_checksums["status"] = $setarchivestate;
+                $new_checksums["status"] = $setarchivestate;
                 }
-			}
+            }
 
         if(($autosave_field=="" || $autosave_field=="Access") && $access != $oldaccess)
             {
@@ -1446,10 +1446,10 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             }
         }
 
-	$ref                 = $list[0];
-	$fields              = get_resource_field_data($ref,true);
+    $ref                 = $list[0];
+    $fields              = get_resource_field_data($ref,true);
     $field_restypes = get_resource_type_field_resource_types();
-	$expiry_field_edited = false;
+    $expiry_field_edited = false;
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/ removed
@@ -2296,14 +2296,14 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             }
         }
 
-	# Also update archive status
-	if (($postvals["editthis_status"] ?? "") != "")
-		{
-		$notifyrefs=array();
-		$usernotifyrefs=array();
-		for ($m=0;$m<count($list);$m++)
-			{
-			$ref=$list[$m];
+    # Also update archive status
+    if (($postvals["editthis_status"] ?? "") != "")
+        {
+        $notifyrefs=array();
+        $usernotifyrefs=array();
+        for ($m=0;$m<count($list);$m++)
+            {
+            $ref=$list[$m];
 
             if (!hook('forbidsavearchive', '', array($errors)))
                 {
@@ -2335,8 +2335,8 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
         {
         if (count($list)>0)
             {
-			ps_query("UPDATE resource SET expiry_notification_sent=0 WHERE ref IN (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
-			}
+            ps_query("UPDATE resource SET expiry_notification_sent=0 WHERE ref IN (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
+            }
 
         $successfully_edited_resources = array_merge($successfully_edited_resources,$list);
         }
@@ -2361,16 +2361,16 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
         }
 
     # Also update access level
-	if (($postvals["editthis_access"] ?? "") != "")
-		{
-		for ($m=0;$m<count($list);$m++)
-			{
-			$ref=$list[$m];
-			$access = (int)$postvals["access"] ?? 0;
-			$oldaccess=ps_value("SELECT access value FROM resource WHERE ref=?",array("i",$ref),"");
-			if ($access!=$oldaccess)
-				{
-				ps_query("UPDATE resource SET access=? WHERE ref=?",array("i",$access,"i",$ref));
+    if (($postvals["editthis_access"] ?? "") != "")
+        {
+        for ($m=0;$m<count($list);$m++)
+            {
+            $ref=$list[$m];
+            $access = (int)$postvals["access"] ?? 0;
+            $oldaccess=ps_value("SELECT access value FROM resource WHERE ref=?",array("i",$ref),"");
+            if ($access!=$oldaccess)
+                {
+                ps_query("UPDATE resource SET access=? WHERE ref=?",array("i",$access,"i",$ref));
                 if ($oldaccess==3)
                     {
                     # Moving out of custom access - delete custom usergroup access.
@@ -2934,40 +2934,40 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     }
 
 function email_resource($resource,$resourcename,$fromusername,$userlist,$message,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$list_recipients=false, $open_internal_access=false, $useraccess=2,$group="")
-	{
+    {
     # Attempt to resolve all users in the string $userlist to user references.
 
-	global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup;
+    global $baseurl,$email_from,$applicationname,$lang,$userref,$usergroup;
 
-	if ($useremail==""){$useremail=$email_from;}
-	if ($group=="") {$group=$usergroup;}
+    if ($useremail==""){$useremail=$email_from;}
+    if ($group=="") {$group=$usergroup;}
 
     # remove any line breaks that may have been entered
     $userlist=str_replace("\\r\\n",",",$userlist);
 
-	if (trim($userlist)=="") {return $lang["mustspecifyoneusername"];}
-	$userlist=resolve_userlist_groups($userlist);
-	if(strpos($userlist,$lang["groupsmart"] . ": ")!==false)
-		{
-		$userlist_with_groups=$userlist;
-		$groups_users=resolve_userlist_groups_smart($userlist,true);
-		if($groups_users!='')
-			{
-			if($userlist!="")
-				{
-				$userlist=remove_groups_smart_from_userlist($userlist);
-				if($userlist!="")
-					{
-					$userlist.=",";
-					}
-				}
-			$userlist.=$groups_users;
-			}
-		}
+    if (trim($userlist)=="") {return $lang["mustspecifyoneusername"];}
+    $userlist=resolve_userlist_groups($userlist);
+    if(strpos($userlist,$lang["groupsmart"] . ": ")!==false)
+        {
+        $userlist_with_groups=$userlist;
+        $groups_users=resolve_userlist_groups_smart($userlist,true);
+        if($groups_users!='')
+            {
+            if($userlist!="")
+                {
+                $userlist=remove_groups_smart_from_userlist($userlist);
+                if($userlist!="")
+                    {
+                    $userlist.=",";
+                    }
+                }
+            $userlist.=$groups_users;
+            }
+        }
 
-	$ulist=trim_array(explode(",",$userlist));
-	$ulist=array_filter($ulist);
-	$ulist=array_values($ulist);
+    $ulist=trim_array(explode(",",$userlist));
+    $ulist=array_filter($ulist);
+    $ulist=array_values($ulist);
 
     $ulist=trim_array(explode(",",$userlist));
     $ulist=array_filter($ulist);
@@ -3077,12 +3077,12 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
     }
 
 function delete_resource($ref)
-	{
+    {
     global $userref;
-	# Delete the resource, all related entries in tables and all files on disk
-	$resource = get_resource_data($ref);
+    # Delete the resource, all related entries in tables and all files on disk
+    $resource = get_resource_data($ref);
 
-	if (!$resource
+    if (!$resource
         ||
             (
                 (
@@ -3100,7 +3100,7 @@ function delete_resource($ref)
         )
         {return false;}
 
-	$current_state=$resource['archive'];
+    $current_state=$resource['archive'];
 
     global $resource_deletion_state, $staticsync_allow_syncdir_deletion, $storagedir;
     if (isset($resource_deletion_state) && $current_state!=$resource_deletion_state) # Really delete if already in the 'deleted' state.
@@ -3132,57 +3132,57 @@ function delete_resource($ref)
     if (resource_file_readonly($ref)) {return false;}
 
 
-	# Is transcoding
-	if ($resource['is_transcoding']==1) {return false;} # Can't delete when transcoding
+    # Is transcoding
+    if ($resource['is_transcoding']==1) {return false;} # Can't delete when transcoding
 
-	# Delete files first
-	$extensions = array();
-	$extensions[]=$resource['file_extension']?$resource['file_extension']:"jpg";
-	$extensions[]=$resource['preview_extension']?$resource['preview_extension']:"jpg";
-	$extensions[]=$GLOBALS['ffmpeg_preview_extension'];
-	$extensions[]='icc'; // also remove any extracted icc profiles
-	$extensions=array_unique($extensions);
+    # Delete files first
+    $extensions = array();
+    $extensions[]=$resource['file_extension']?$resource['file_extension']:"jpg";
+    $extensions[]=$resource['preview_extension']?$resource['preview_extension']:"jpg";
+    $extensions[]=$GLOBALS['ffmpeg_preview_extension'];
+    $extensions[]='icc'; // also remove any extracted icc profiles
+    $extensions=array_unique($extensions);
 
-	foreach ($extensions as $extension)
-		{
-		$sizes=get_image_sizes($ref,true,$extension);
-		foreach ($sizes as $size)
-			{
-			if (file_exists($size['path']) && ($staticsync_allow_syncdir_deletion || false !== strpos ($size['path'],$storagedir))) // Only delete if file is in filestore
-				{
+    foreach ($extensions as $extension)
+        {
+        $sizes=get_image_sizes($ref,true,$extension);
+        foreach ($sizes as $size)
+            {
+            if (file_exists($size['path']) && ($staticsync_allow_syncdir_deletion || false !== strpos ($size['path'],$storagedir))) // Only delete if file is in filestore
+                {
                 $pathtofile = realpath($size['path']); // avoid passing relative path to unlink function to prevent error on removal of file.
                 unlink($pathtofile);
                 }
-			}
-		}
+            }
+        }
 
     hook('delete_resource_extra', '', array($resource));
 
-	# Delete any alternative files
-	$alternatives=get_alternative_files($ref);
-	for ($n=0;$n<count($alternatives);$n++)
-		{
-		delete_alternative_file($ref,$alternatives[$n]['ref']);
-		}
+    # Delete any alternative files
+    $alternatives=get_alternative_files($ref);
+    for ($n=0;$n<count($alternatives);$n++)
+        {
+        delete_alternative_file($ref,$alternatives[$n]['ref']);
+        }
 
 
-	//attempt to remove directory
-	$resource_path = get_resource_path($ref, true, "pre", true);
+    //attempt to remove directory
+    $resource_path = get_resource_path($ref, true, "pre", true);
 
-	$dirpath = dirname($resource_path);
+    $dirpath = dirname($resource_path);
     hook('delete_resource_path_extra', '', array($dirpath));
-	@rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
+    @rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
 
-	hook("beforedeleteresourcefromdb","",array($ref));
+    hook("beforedeleteresourcefromdb","",array($ref));
 
-	# Delete all database entries
+    # Delete all database entries
     clear_resource_data($ref);
     resource_log($ref,LOG_CODE_DELETED_PERMANENTLY,'');
-	ps_query("delete from resource where ref=?",array("i",$ref));
+    ps_query("delete from resource where ref=?",array("i",$ref));
     ps_query("delete from collection_resource where resource=?",array("i",$ref));
     ps_query("delete from resource_custom_access where resource=?",array("i",$ref));
     ps_query("delete from external_access_keys where resource=?",array("i",$ref));
-	ps_query("delete from resource_alt_files where resource=?",array("i",$ref));
+    ps_query("delete from resource_alt_files where resource=?",array("i",$ref));
     ps_query(
         "    DELETE an
                FROM annotation_node AS an
@@ -3190,12 +3190,12 @@ function delete_resource($ref)
               WHERE a.resource = ?",array("i",$ref)
     );
     ps_query("DELETE FROM annotation WHERE resource = ?",array("i",$ref));
-	hook("afterdeleteresource");
+    hook("afterdeleteresource");
     
     clear_query_cache("stats");
 
-	return true;
-	}
+    return true;
+    }
 
 
 /**
@@ -3834,8 +3834,8 @@ function get_resource_top_keywords($resource,$count)
 function clear_resource_data($resource)
     {
     # Clears stored data for a resource.
-	ps_query("DELETE FROM resource_dimensions WHERE resource = ?", ["i",$resource]);
-	ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?", ["i",$resource,"i",$resource]);
+    ps_query("DELETE FROM resource_dimensions WHERE resource = ?", ["i",$resource]);
+    ps_query("DELETE FROM resource_related WHERE resource = ? OR related = ?", ["i",$resource,"i",$resource]);
     delete_all_resource_nodes($resource);
 
     // Clear all 'joined' fields
@@ -3867,9 +3867,9 @@ function get_max_resource_ref()
  * @return array
  */
 function get_resource_ref_range($lower,$higher)
-	{
-	return ps_array("select ref value from resource where ref>=? and ref<=? and archive=0 order by ref",array("i",$lower,"i",$higher),0);
-	}
+    {
+    return ps_array("select ref value from resource where ref>=? and ref<=? and archive=0 order by ref",array("i",$lower,"i",$higher),0);
+    }
 
 /**
 *  Create a new resource, copying all data from the resource with reference $from.
@@ -3959,8 +3959,8 @@ function copy_resource($from,$resource_type=-1,$origin='')
     # Copy relationships
     copyRelatedResources($from, $to);
 
-	# Copy access
-	ps_query("insert into resource_custom_access(resource,usergroup,access) select ?,usergroup,access from resource_custom_access where resource=?",array("i",$to,"i",$from));
+    # Copy access
+    ps_query("insert into resource_custom_access(resource,usergroup,access) select ?,usergroup,access from resource_custom_access where resource=?",array("i",$to,"i",$from));
 
     // Set any resource defaults
     // Expected behaviour: set resource defaults only on upload and when
@@ -4075,10 +4075,10 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         return false;
         }
 
-	if ($fromvalue===$tovalue)
-		{
+    if ($fromvalue===$tovalue)
+        {
         $diff="";
-		}
+        }
     else
         {
         switch ($type)
@@ -4110,14 +4110,14 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         $diff = mb_strcut($diff, 0, 10000);
         }
 
-	$modifiedlogtype=hook("modifylogtype","",array($type));
-	if ($modifiedlogtype)
+    $modifiedlogtype=hook("modifylogtype","",array($type));
+    if ($modifiedlogtype)
         {
         $type = $modifiedlogtype;
         }
 
-	$modifiedlognotes=hook("modifylognotes","",array($notes,$type,$resource));
-	if($modifiedlognotes)
+    $modifiedlognotes=hook("modifylognotes","",array($notes,$type,$resource));
+    if($modifiedlognotes)
         {
         $notes = $modifiedlognotes;
         }
@@ -4148,7 +4148,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         $resource_log_previous_ref = $log_ref;
         return $log_ref;
         }
-	}
+    }
 
 /**
  * Get resource log records. The standard field titles are translated using $lang. Custom field titles are i18n translated.
@@ -4233,11 +4233,11 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
     }
 
 function get_resource_type_name($type)
-	{
-	global $lang;
-	if ($type==999) {return $lang["archive"];}
-	return lang_or_i18n_get_translated(ps_value("SELECT name value FROM resource_type WHERE ref=?",array("i",$type), "schema"),"resourcetype-");
-	}
+    {
+    global $lang;
+    if ($type==999) {return $lang["archive"];}
+    return lang_or_i18n_get_translated(ps_value("SELECT name value FROM resource_type WHERE ref=?",array("i",$type), "schema"),"resourcetype-");
+    }
 
 function get_resource_custom_access($resource)
     {
@@ -4290,16 +4290,16 @@ function get_resource_custom_access_users_usergroups($resource)
 
 
 function save_resource_custom_access($resource)
-	{
-	$groups=get_resource_custom_access($resource);
-	ps_query("delete from resource_custom_access where resource=? and usergroup is not null",array("i",$resource));
-	for ($n=0;$n<count($groups);$n++)
-		{
-		$usergroup=$groups[$n]["ref"];
-		$access=getval("custom_" . $usergroup,0);
-		ps_query("insert into resource_custom_access(resource,usergroup,access) values (?,?,?)", array("i",$resource,"i",$usergroup,"i",$access));
-		}
-	}
+    {
+    $groups=get_resource_custom_access($resource);
+    ps_query("delete from resource_custom_access where resource=? and usergroup is not null",array("i",$resource));
+    for ($n=0;$n<count($groups);$n++)
+        {
+        $usergroup=$groups[$n]["ref"];
+        $access=getval("custom_" . $usergroup,0);
+        ps_query("insert into resource_custom_access(resource,usergroup,access) values (?,?,?)", array("i",$resource,"i",$usergroup,"i",$access));
+        }
+    }
 
 /**
  * Lookup custom access value for a resource
@@ -4533,22 +4533,22 @@ function stripMetadata($file_path)
     }
 
 function write_metadata($path, $ref, $uniqid="")
-	{
+    {
     debug_function_call('write_metadata', func_get_args());
-	// copys the file to tmp and runs exiftool on it
-	// uniqid tells the tmp file to be placed in an isolated folder within tmp
-	global $exiftool_remove_existing, $storagedir, $exiftool_write, $exiftool_write_option, $exiftool_no_process, $mysql_charset, $exiftool_write_omit_utf8_conversion;
+    // copys the file to tmp and runs exiftool on it
+    // uniqid tells the tmp file to be placed in an isolated folder within tmp
+    global $exiftool_remove_existing, $storagedir, $exiftool_write, $exiftool_write_option, $exiftool_no_process, $mysql_charset, $exiftool_write_omit_utf8_conversion;
 
     # Fetch file extension and resource type.
-	$resource_data=get_resource_data($ref);
-	$extension=$resource_data["file_extension"];
-	$resource_type=$resource_data["resource_type"];
+    $resource_data=get_resource_data($ref);
+    $extension=$resource_data["file_extension"];
+    $resource_type=$resource_data["resource_type"];
 
-	$exiftool_fullpath = get_utility_path("exiftool");
+    $exiftool_fullpath = get_utility_path("exiftool");
 
     # Check if an attempt to write the metadata shall be performed.
-	if(false != $exiftool_fullpath && $exiftool_write && $exiftool_write_option && !in_array($extension, $exiftool_no_process))
-		{
+    if(false != $exiftool_fullpath && $exiftool_write && $exiftool_write_option && !in_array($extension, $exiftool_no_process))
+        {
         debug("[write_metadata()][ref={$ref}] Attempting to write metadata...");
         // Trust Exiftool's list of writable formats
         $writable_formats = run_command("{$exiftool_fullpath} -listwf");
@@ -4560,8 +4560,8 @@ function write_metadata($path, $ref, $uniqid="")
             return false;
             }
 
-		$tmpfile = createTempFile($path, $uniqid, '');
-		if($tmpfile === false)
+        $tmpfile = createTempFile($path, $uniqid, '');
+        if($tmpfile === false)
             {
             debug("[write_metadata()][ref={$ref}] Unable to create temp file!");
             return false;
@@ -4571,7 +4571,7 @@ function write_metadata($path, $ref, $uniqid="")
         # Argument -overwrite_original: Now that we have already copied the original file, we can use exiftool's overwrite_original on the tmpfile.
         # Argument -E: Escape values for HTML. Used for handling foreign characters in shells not using UTF-8.
         # Arguments -EXIF:all= -XMP:all= -IPTC:all=: Remove the metadata in the tag groups EXIF, XMP and IPTC.
-		$command = $exiftool_fullpath . " -m -overwrite_original -E ";
+        $command = $exiftool_fullpath . " -m -overwrite_original -E ";
         if($exiftool_remove_existing)
             {
             $command = stripMetadata(null) . ' ';
@@ -4595,7 +4595,7 @@ function write_metadata($path, $ref, $uniqid="")
         $writtenfields=array(); // Need to check if we are writing to an embedded field from more than one RS field, in which case subsequent values need to be appended, not replaced
 
         for($i = 0; $i<count($write_to); $i++) # Loop through all the found fields.
-	    {
+        {
             $fieldtype = $write_to[$i]['type'];
             $writevalue = $write_to[$i]['value']??"";
             # Formatting and cleaning of the value to be written - depending on the RS field type.
@@ -4738,7 +4738,7 @@ function delete_exif_tmpfile($tmpfile)
 function update_resource($r, $path, $type, $title, $ingest=false, $createPreviews=true, $extension='',$after_upload_processing=false)
     {
     # Update the resource with the file at the given path
-	# Note that the file will be used at it's present location and will not be copied.
+    # Note that the file will be used at it's present location and will not be copied.
     global $syncdir, $staticsync_prefer_embedded_title, $view_title_field, $filename_field, $upload_then_process, $offline_job_queue, $lang,
         $extracted_text_field, $offline_job_queue, $offline_job_in_progress, $autorotate_ingest, $enable_thumbnail_creation_on_upload,
         $userref, $lang, $upload_then_process_holding_state,$unoconv_extensions;
@@ -4748,16 +4748,16 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         $upload_then_process=false;
         }
 
-	# Work out extension based on path
-	if($extension=='')
-		{
-		$extension=pathinfo($path, PATHINFO_EXTENSION);
-		}
+    # Work out extension based on path
+    if($extension=='')
+        {
+        $extension=pathinfo($path, PATHINFO_EXTENSION);
+        }
 
     if($extension!=='')
-    	{
-    	$extension=trim(strtolower($extension));
-		}
+        {
+        $extension=trim(strtolower($extension));
+        }
 
     if(!$upload_then_process || !$after_upload_processing)
         {
@@ -4835,10 +4835,10 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
 
     if(!$upload_then_process || $after_upload_processing)
         {
-	    # generate title and extract embedded metadata
-	    # order depends on which title should be the default (embedded or generated)
-	    if ($staticsync_prefer_embedded_title)
-		    {
+        # generate title and extract embedded metadata
+        # order depends on which title should be the default (embedded or generated)
+        if ($staticsync_prefer_embedded_title)
+            {
             if ($view_title_field!==$filename_field)
                 {
                 update_field($r,$view_title_field,$title);
@@ -4926,13 +4926,13 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
             $jobadded=job_queue_add("update_resource", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);
             }
 
-	hook('after_update_resource', '', array("resourceId" => $r ));
-	# Pass back the newly created resource ID.
-	return $r;
-	}
+    hook('after_update_resource', '', array("resourceId" => $r ));
+    # Pass back the newly created resource ID.
+    return $r;
+    }
 
 function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, $extension='')
-	{
+    {
     global $syncdir,$lang;
     // Import the resource at the given path
     // This is used by staticsync.php and Camillo's SOAP API
@@ -4957,18 +4957,18 @@ function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, 
     }
 
 function get_alternative_files($resource,$order_by="",$sort="",$type="")
-	{
-	# Returns a list of alternative files for the given resource
-	if ($order_by!="" && $sort!=""
+    {
+    # Returns a list of alternative files for the given resource
+    if ($order_by!="" && $sort!=""
         && in_array(strtoupper($order_by),array("ALT_TYPE"))
         && in_array(strtoupper($sort),array("ASC","DESC")) )
         {
-		$ordersort=$order_by." ".$sort.",";
-	    }
+        $ordersort=$order_by." ".$sort.",";
+        }
     else
         {
-		$ordersort="";
-	    }
+        $ordersort="";
+        }
 
     # The following hook now returns a query object
     $extrasql=hook("get_alternative_files_extra_sql","",array($resource));
@@ -4992,8 +4992,8 @@ function get_alternative_files($resource,$order_by="",$sort="",$type="")
 
     $alt_files_parameters=array_merge(array("i",$resource), $extrasql->parameters);
 
-	return ps_query($alt_files_sql,$alt_files_parameters);
-	}
+    return ps_query($alt_files_sql,$alt_files_parameters);
+    }
 
 /**
 * Add alternative file
@@ -5009,13 +5009,13 @@ function get_alternative_files($resource,$order_by="",$sort="",$type="")
 * @return integer
 */
 function add_alternative_file($resource,$name,$description="",$file_name="",$file_extension="",$file_size=0,$alt_type='')
-	{
+    {
     debug_function_call("add_alternative_file", func_get_args());
 
     $name = trim_filename($name);
     $file_name = trim_filename($file_name);
 
-	ps_query("INSERT INTO resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) VALUES (?, ?,now(), ?, ?, ?, ?, ?)",
+    ps_query("INSERT INTO resource_alt_files(resource,name,creation_date,description,file_name,file_extension,file_size,alt_type) VALUES (?, ?,now(), ?, ?, ?, ?, ?)",
         [
         'i', $resource,
         's', $name,
@@ -5026,25 +5026,25 @@ function add_alternative_file($resource,$name,$description="",$file_name="",$fil
         's', $alt_type
         ]
     );
-	return sql_insert_id();
-	}
+    return sql_insert_id();
+    }
 
 function delete_alternative_file($resource,$ref)
-	{
-	# Delete any uploaded file.
-	$info=get_alternative_file($resource,$ref);
-	$path=get_resource_path($resource, true, "", true, $info["file_extension"], -1, 1, false, "", $ref);
+    {
+    # Delete any uploaded file.
+    $info=get_alternative_file($resource,$ref);
+    $path=get_resource_path($resource, true, "", true, $info["file_extension"], -1, 1, false, "", $ref);
     hook('delete_alternative_file_extra', '', array($path));
-	if (file_exists($path)) {unlink($path);}
+    if (file_exists($path)) {unlink($path);}
 
         // run through all possible extensions/sizes
-	$extensions = array();
-	$extensions[]=$info['file_extension']?$info['file_extension']:"jpg";
-	$extensions[]=isset($info['preview_extension'])?$info['preview_extension']:"jpg";
-	$extensions[]=$GLOBALS['ffmpeg_preview_extension'];
+    $extensions = array();
+    $extensions[]=$info['file_extension']?$info['file_extension']:"jpg";
+    $extensions[]=isset($info['preview_extension'])?$info['preview_extension']:"jpg";
+    $extensions[]=$GLOBALS['ffmpeg_preview_extension'];
         $extensions[]='jpg'; // always look for jpegs, just in case
-	$extensions[]='icc'; // always look for extracted icc profiles
-	$extensions=array_unique($extensions);
+    $extensions[]='icc'; // always look for extracted icc profiles
+    $extensions=array_unique($extensions);
         $sizes = ps_array('select id value from preview_size',array());
 
         // in some cases, a jpeg original is generated for non-jpeg files like PDFs. Delete if it exists.
@@ -5078,29 +5078,29 @@ function delete_alternative_file($resource,$ref)
         }
         hook('delete_alternative_mp3_extra', '', array($path));
 
-	# Delete the database row
-	ps_query("delete from resource_alt_files where resource=? and ref=?", array("i",$resource,"i",$ref));
+    # Delete the database row
+    ps_query("delete from resource_alt_files where resource=? and ref=?", array("i",$resource,"i",$ref));
 
-	# Log the deletion
-	resource_log($resource,LOG_CODE_DELETED_ALTERNATIVE,'');
+    # Log the deletion
+    resource_log($resource,LOG_CODE_DELETED_ALTERNATIVE,'');
 
-	# Update disk usage
-	update_disk_usage($resource);
+    # Update disk usage
+    update_disk_usage($resource);
     clear_query_cache("stats");
 
     return true;
-	}
+    }
 
 function get_alternative_file($resource,$ref)
-	{
-	# Returns the row for the requested alternative file
-	$return=ps_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource=? and ref=?",array("i",$resource,"i",$ref));
-	if (count($return)==0) {return false;} else {return $return[0];}
-	}
+    {
+    # Returns the row for the requested alternative file
+    $return=ps_query("select ref,name,description,file_name,file_extension,file_size,creation_date,alt_type from resource_alt_files where resource=? and ref=?",array("i",$resource,"i",$ref));
+    if (count($return)==0) {return false;} else {return $return[0];}
+    }
 
 function save_alternative_file($resource,$ref)
-	{
-	# Saves the 'alternative file' edit form back to the database
+    {
+    # Saves the 'alternative file' edit form back to the database
     $name           = getval("name","");
     $description    = getval("description","");
     $alt_type       = getval("alt_type","");
@@ -5109,73 +5109,73 @@ function save_alternative_file($resource,$ref)
     }
 
 function user_rating_save($userref,$ref,$rating)
-	{
-	# Save a user rating for a given resource
-	$resource=get_resource_data($ref);
+    {
+    # Save a user rating for a given resource
+    $resource=get_resource_data($ref);
 
-	# Recalculate the averate rating
-	$total=$resource["user_rating_total"]; if ($total=="") {$total=0;}
-	$count=$resource["user_rating_count"]; if ($count=="") {$count=0;}
+    # Recalculate the averate rating
+    $total=$resource["user_rating_total"]; if ($total=="") {$total=0;}
+    $count=$resource["user_rating_count"]; if ($count=="") {$count=0;}
 
-	# modify behavior to allow only one current rating per user (which can be re-edited)
-	global $user_rating_only_once;
-	if ($user_rating_only_once)
+    # modify behavior to allow only one current rating per user (which can be re-edited)
+    global $user_rating_only_once;
+    if ($user_rating_only_once)
         {
-		$ratings=ps_query("select user,rating from user_rating where ref=?",array("i",$ref));
+        $ratings=ps_query("select user,rating from user_rating where ref=?",array("i",$ref));
 
-		#Calculate ratings total and get current rating for user if available
-		$total=0;
-		$current="";
-		for ($n=0;$n<count($ratings);$n++){
-			$total+=$ratings[$n]['rating'];
+        #Calculate ratings total and get current rating for user if available
+        $total=0;
+        $current="";
+        for ($n=0;$n<count($ratings);$n++){
+            $total+=$ratings[$n]['rating'];
 
-			if ($ratings[$n]['user']==$userref){
-				$current=$ratings[$n]['rating'];
-				}
-			}
-		# Calculate Count
-		$count=count($ratings);
+            if ($ratings[$n]['user']==$userref){
+                $current=$ratings[$n]['rating'];
+                }
+            }
+        # Calculate Count
+        $count=count($ratings);
 
-		# if user has a current rating, subtract the old rating and add the new one.
-		if ($current!=""){
-			$total=$total-$current+$rating;
-			if ($rating == 0) {  //rating remove feature
-				ps_query("delete from user_rating where user=? and ref=?",array("i",$userref,"i",$ref));
-				$count--;
-			} else {
-				ps_query("update user_rating set rating=? where user=? and ref=?",array("i",$rating,"i",$userref,"i",$ref));
-			}
-		}
+        # if user has a current rating, subtract the old rating and add the new one.
+        if ($current!=""){
+            $total=$total-$current+$rating;
+            if ($rating == 0) {  //rating remove feature
+                ps_query("delete from user_rating where user=? and ref=?",array("i",$userref,"i",$ref));
+                $count--;
+            } else {
+                ps_query("update user_rating set rating=? where user=? and ref=?",array("i",$rating,"i",$userref,"i",$ref));
+            }
+        }
 
-		# if user does not have a current rating, add it
-		else
+        # if user does not have a current rating, add it
+        else
             {
-			if ($rating != 0)
+            if ($rating != 0)
                 { // rating remove feature
-				$total=$total+$rating;
-				$count++;
-				ps_query("insert into user_rating (user,ref,rating) values (?,?,?)",array("i",$userref,"i",$ref,"i",$rating));
-			    }
-		    }
-    	}
-	else
+                $total=$total+$rating;
+                $count++;
+                ps_query("insert into user_rating (user,ref,rating) values (?,?,?)",array("i",$userref,"i",$ref,"i",$rating));
+                }
+            }
+        }
+    else
         {
-		# If not using $user_rating_only_once, Increment the total and count
-		$total+=$rating;
-		$count++;
-	    }
+        # If not using $user_rating_only_once, Increment the total and count
+        $total+=$rating;
+        $count++;
+        }
 
-	if ($count==0){
-		# avoid division by zero
-		$average=$total;
-	} else {
-	# work out a new average.
-	$average=ceil($total/$count);
-	}
+    if ($count==0){
+        # avoid division by zero
+        $average=$total;
+    } else {
+    # work out a new average.
+    $average=ceil($total/$count);
+    }
 
-	# Save to the database
-	ps_query("UPDATE resource SET user_rating = ?, user_rating_total = ?, user_rating_count = ? WHERE ref = ?", array("d", $average, "i", $total, "i", $count, "i", $ref));
-	}
+    # Save to the database
+    ps_query("UPDATE resource SET user_rating = ?, user_rating_total = ?, user_rating_count = ? WHERE ref = ?", array("d", $average, "i", $total, "i", $count, "i", $ref));
+    }
 
 /**
 *  A standard field title is translated using $lang.  A custom field title is i18n translated.
@@ -5205,84 +5205,84 @@ function get_field($field)
     }
 
 function get_keyword_from_option($option)
-	{
-	# For the given field option, return the keyword that will be indexed.
-	$keywords=split_keywords("," . $option);
+    {
+    # For the given field option, return the keyword that will be indexed.
+    $keywords=split_keywords("," . $option);
 
-	global $stemming;
-	if($stemming && function_exists('GetStem')) {
-		$keywords[1] = GetStem($keywords[1]);
-	}
+    global $stemming;
+    if($stemming && function_exists('GetStem')) {
+        $keywords[1] = GetStem($keywords[1]);
+    }
 
-	return $keywords[1];
-	}
+    return $keywords[1];
+    }
 
 function get_resource_access($resource)
-	{
+    {
     global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref,
         $prevent_open_access_on_edit_for_active, $open_access_for_contributor,
         $userref,$usergroup, $usersearchfilter, $search_all_workflow_states,
         $userderestrictfilter, $userdata, $custom_access;
-	# $resource may be a resource_data array from a search, in which case, many of the permissions checks are already done.
+    # $resource may be a resource_data array from a search, in which case, many of the permissions checks are already done.
 
-	# Returns the access that the currently logged-in user has to $resource.
-	# Return values:
-	# 0 = Full Access (download all sizes)
-	# 1 = Restricted Access (download only those sizes that are set to allow restricted downloads)
-	# 2 = Confidential (no access)
+    # Returns the access that the currently logged-in user has to $resource.
+    # Return values:
+    # 0 = Full Access (download all sizes)
+    # 1 = Restricted Access (download only those sizes that are set to allow restricted downloads)
+    # 2 = Confidential (no access)
 
-	# Load the 'global' access level set on the resource
-	# In the case of a search, resource type and global,group and user access are passed through to this point, to avoid multiple unnecessary get_resource_data queries.
-	# passthru signifies that this is the case, so that blank values in group or user access mean that there is no data to be found, so don't check again .
-	$passthru="no";
+    # Load the 'global' access level set on the resource
+    # In the case of a search, resource type and global,group and user access are passed through to this point, to avoid multiple unnecessary get_resource_data queries.
+    # passthru signifies that this is the case, so that blank values in group or user access mean that there is no data to be found, so don't check again .
+    $passthru="no";
 
-	// get_resource_data doesn't contain permissions, so fix for the case that such an array could be passed into this function unintentionally.
-	if (is_array($resource) && !isset($resource['group_access']) && !isset($resource['user_access'])){$resource=$resource['ref'];}
+    // get_resource_data doesn't contain permissions, so fix for the case that such an array could be passed into this function unintentionally.
+    if (is_array($resource) && !isset($resource['group_access']) && !isset($resource['user_access'])){$resource=$resource['ref'];}
 
-	if (!is_array($resource))
+    if (!is_array($resource))
         {
         $resourcedata=get_resource_data($resource,true);
         if(!$resourcedata)
             { return RESOURCE_ACCESS_INVALID_REQUEST; }
         }
-	else
+    else
         {
         $resourcedata=$resource;
         $passthru="yes";
         }
 
-	$ref=$resourcedata['ref'];
-	$access=$resourcedata["access"];
-	$resource_type=$resourcedata['resource_type'];
+    $ref=$resourcedata['ref'];
+    $access=$resourcedata["access"];
+    $resource_type=$resourcedata['resource_type'];
 
-	// Set a couple of flags now that we can check later on if we need to check whether sharing is permitted based on whether access has been specifically granted to user/group
+    // Set a couple of flags now that we can check later on if we need to check whether sharing is permitted based on whether access has been specifically granted to user/group
     $customgroupaccess=false;
-	$customuseraccess=false;
+    $customuseraccess=false;
 
-	if('' != $k)
-		{
+    if('' != $k)
+        {
 
-		# External access - check how this was shared.
-		$extaccess = ps_value("SELECT access `value` FROM external_access_keys WHERE resource = ? AND access_key = ? AND (expires IS NULL OR expires > NOW())", array("i",$ref,"s",$k), -1);
+        # External access - check how this was shared.
+        $extaccess = ps_value("SELECT access `value` FROM external_access_keys WHERE resource = ? AND access_key = ? AND (expires IS NULL OR expires > NOW())", array("i",$ref,"s",$k), -1);
 
-		if(-1 != $extaccess && (!$internal_share_access || ($internal_share_access && $extaccess < $access)))
+        if(-1 != $extaccess && (!$internal_share_access || ($internal_share_access && $extaccess < $access)))
             {
             return (int) $extaccess;
             }
-		}
+        }
 
-	if (checkperm("z" . $resourcedata['archive']) && !($uploader_view_override && $resourcedata['created_by'] == $userref))
-		{
-		// User has no access to this archive state
-		return 2;
-		}
+    if (checkperm("z" . $resourcedata['archive']) && !($uploader_view_override && $resourcedata['created_by'] == $userref))
+        {
+        // User has no access to this archive state
+        return 2;
+        }
 
-	if (checkperm("v"))
-		{
-		# Permission to access all resources
-		# Always return 0
-		return 0;
-		}
+    if (checkperm("v"))
+        {
+        # Permission to access all resources
+        # Always return 0
+        return 0;
+        }
 
     if ($access == 3)
         {
@@ -5313,23 +5313,23 @@ function get_resource_access($resource)
             }
         }
 
-	if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],$resourcedata) && !$prevent_open_access_on_edit_for_active)
-		{
-		# If access is restricted and user has edit access, grant open access.
-		$access = 0;
-		}
+    if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],$resourcedata) && !$prevent_open_access_on_edit_for_active)
+        {
+        # If access is restricted and user has edit access, grant open access.
+        $access = 0;
+        }
 
-	if ($open_access_for_contributor && $resourcedata['created_by'] == $userref)
-		{
-		# If user has contributed resource, grant open access and ignore any further filters.
-		return 0;
-		}
+    if ($open_access_for_contributor && $resourcedata['created_by'] == $userref)
+        {
+        # If user has contributed resource, grant open access and ignore any further filters.
+        return 0;
+        }
 
-	# Check for user-specific and group-specific access (overrides any other restriction)
+    # Check for user-specific and group-specific access (overrides any other restriction)
 
-	// We need to check for custom access either when access is set to be custom or
-	// when the user group has restricted access to all resource types or specific resource types
-	// are restricted
+    // We need to check for custom access either when access is set to be custom or
+    // when the user group has restricted access to all resource types or specific resource types
+    // are restricted
     if ($access!=0 || !checkperm('g') || checkperm('X' . $resource_type) || checkperm("rws{$resourcedata['archive']}"))
         {
         if ($passthru=="no")
@@ -5354,15 +5354,15 @@ function get_resource_access($resource)
         return (int) $groupspecific;
         }
 
-	if (checkperm('T'.$resource_type))
-		{
-		// this resource type is always confidential/hidden for this user group
-		return 2;
-		}
-
-	if (trim($usersearchfilter??"")!="")
+    if (checkperm('T'.$resource_type))
         {
-		# A search filter has been set. Perform filter processing to establish if the user can view this resource.
+        // this resource type is always confidential/hidden for this user group
+        return 2;
+        }
+
+    if (trim($usersearchfilter??"")!="")
+        {
+        # A search filter has been set. Perform filter processing to establish if the user can view this resource.
         # Apply filters by searching for the resource, utilising the existing filter matching in do_search to avoid duplication of logic.
 
         $search_all_workflow_states_cache = $search_all_workflow_states;
@@ -5388,9 +5388,9 @@ function get_resource_access($resource)
         $access = 1;
         }
 
-	// Check for a derestrict filter, this allows exceptions for users without the 'g' permission who normally have restricted accesss to all available resources)
-	if ($access==1 && !checkperm("g") && !checkperm("rws{$resourcedata['archive']}") && !checkperm('X'.$resource_type) && trim((string) $userderestrictfilter) != "")
-		{
+    // Check for a derestrict filter, this allows exceptions for users without the 'g' permission who normally have restricted accesss to all available resources)
+    if ($access==1 && !checkperm("g") && !checkperm("rws{$resourcedata['archive']}") && !checkperm('X'.$resource_type) && trim((string) $userderestrictfilter) != "")
+        {
         if( strlen(trim((string) $userderestrictfilter)) > 0
             && !is_numeric($userderestrictfilter)
             && trim((string) $userdata[0]["derestrict_filter"]) != ""
@@ -5428,28 +5428,28 @@ function get_resource_access($resource)
             }        
         }
 
-	return (int) $access;
-	}
+    return (int) $access;
+    }
 
 
 function get_custom_access_user($resource,$user)
-	{
-	return ps_value("select access value from resource_custom_access where resource=? and user=? and (user_expires is null or user_expires>now())",array("i",$resource,"i",$user),false);
-	}
+    {
+    return ps_value("select access value from resource_custom_access where resource=? and user=? and (user_expires is null or user_expires>now())",array("i",$resource,"i",$user),false);
+    }
 
 function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sharepwd="")
-	{
-	global $userref,$usergroup, $scramble_key;
-	if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
-	if ($key==""){return false;}
+    {
+    global $userref,$usergroup, $scramble_key;
+    if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
+    if ($key==""){return false;}
     if ($sharepwd != "(unchanged)")
         {
         $sql = "password_hash= ?,";
         $params = ['s', (($sharepwd == "") ? "" : hash('sha256', $key . $sharepwd . $scramble_key))];
         }
         else{$sql = "";$params=[];}
-	# Update the expiration and acccess
-	ps_query("UPDATE external_access_keys SET {$sql} access= ?, expires= ?,date=NOW(),usergroup= ? WHERE access_key = ?",
+    # Update the expiration and acccess
+    ps_query("UPDATE external_access_keys SET {$sql} access= ?, expires= ?,date=NOW(),usergroup= ? WHERE access_key = ?",
         array_merge($params, [
         'i', $access,
         's', (($expires=="")?null: $expires),
@@ -5459,7 +5459,7 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
     );
     hook('edit_resource_external_access','',array($key,$access,$expires,$group));
     return true;
-	}
+    }
 
 /**
  * For the given resource and size, can the current user download it?
@@ -5474,23 +5474,23 @@ function edit_resource_external_access($key,$access=-1,$expires="",$group="",$sh
  * @return boolean
  */
 function resource_download_allowed($resource,$size,$resource_type,$alternative=-1)
-	{
-	global $userref, $usergroup, $user_dl_limit, $user_dl_days, $noattach, $sizes_always_allowed;
+    {
+    global $userref, $usergroup, $user_dl_limit, $user_dl_days, $noattach, $sizes_always_allowed;
 
-	$access=get_resource_access($resource);
+    $access=get_resource_access($resource);
 
     if(resource_has_access_denied_by_RT_size($resource_type, $size))
         {
         return false;
         }
 
-	if (checkperm('X' . $resource_type . "_" . $size) && $alternative==-1)
-		{
-		# Block access to this resource type / size? Not if an alternative file
-		# Only if no specific user access override (i.e. they have successfully requested this size).
-		$usercustomaccess = get_custom_access_user($resource,$userref);
-		$usergroupcustomaccess = get_custom_access($resource,$usergroup);
-		if (($usercustomaccess === false || !($usercustomaccess === 0)) && ($usergroupcustomaccess === false || !($usergroupcustomaccess === 0))) {return false;}
+    if (checkperm('X' . $resource_type . "_" . $size) && $alternative==-1)
+        {
+        # Block access to this resource type / size? Not if an alternative file
+        # Only if no specific user access override (i.e. they have successfully requested this size).
+        $usercustomaccess = get_custom_access_user($resource,$userref);
+        $usergroupcustomaccess = get_custom_access($resource,$usergroup);
+        if (($usercustomaccess === false || !($usercustomaccess === 0)) && ($usergroupcustomaccess === false || !($usergroupcustomaccess === 0))) {return false;}
         }
 
     if(($size == "" || $size == "hpr" || getval("noattach","") == "")  && intval($user_dl_limit) > 0)
@@ -5502,19 +5502,19 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
             }
         }
 
-	# Full access
-	if ($access==0)
-		{
-		return true;
-		}
+    # Full access
+    if ($access==0)
+        {
+        return true;
+        }
 
-	# Special case for purchased downloads.
-	global $userref;
-	if (isset($userref))
-		{
-		$complete=ps_value("select cr.purchase_complete value from collection_resource cr join collection c on cr.collection=c.ref where c.user=? and cr.resource=? and cr.purchase_size=?",array("i",$userref,"i",$resource,"s",$size), 0);
-		if ($complete==1) {return true;}
-		}
+    # Special case for purchased downloads.
+    global $userref;
+    if (isset($userref))
+        {
+        $complete=ps_value("select cr.purchase_complete value from collection_resource cr join collection c on cr.collection=c.ref where c.user=? and cr.resource=? and cr.purchase_size=?",array("i",$userref,"i",$resource,"s",$size), 0);
+        if ($complete==1) {return true;}
+        }
 
     # Restricted
     if(1 == $access)
@@ -5694,36 +5694,36 @@ function get_edit_access($resource, int $status=-999, array &$resourcedata = [])
 * @return int
 */
 function filter_match($filter,$name,$value)
-	{
+    {
     $s=explode(";",$filter);
-	foreach ($s as $condition)
-		{
-		$s=explode("=",$condition);
-		# Support for "NOT" matching. Return results only where the specified value or values are NOT set.
-		$checkname=$s[0];$filter_not=false;
-		if (substr($checkname,-1)=="!")
-			{
-			$filter_not=true;
-			$checkname=substr($checkname,0,-1);# Strip off the exclamation mark.
-			}
-		if ($checkname==$name)
-			{
-			$checkvalues=$s[1];
+    foreach ($s as $condition)
+        {
+        $s=explode("=",$condition);
+        # Support for "NOT" matching. Return results only where the specified value or values are NOT set.
+        $checkname=$s[0];$filter_not=false;
+        if (substr($checkname,-1)=="!")
+            {
+            $filter_not=true;
+            $checkname=substr($checkname,0,-1);# Strip off the exclamation mark.
+            }
+        if ($checkname==$name)
+            {
+            $checkvalues=$s[1];
 
-			$s=explode("|",strtoupper($checkvalues));
-			$v=trim_array(explode(",",strtoupper($value??"")));
-			foreach ($s as $checkvalue)
-				{
-				if (in_array($checkvalue,$v))
-					{
-					return $filter_not ? 1 : 2;
-					}
-				}
-			return $filter_not ? 2 : 1;
-			}
-		}
-	return 0;
-	}
+            $s=explode("|",strtoupper($checkvalues));
+            $v=trim_array(explode(",",strtoupper($value??"")));
+            foreach ($s as $checkvalue)
+                {
+                if (in_array($checkvalue,$v))
+                    {
+                    return $filter_not ? 1 : 2;
+                    }
+                }
+            return $filter_not ? 2 : 1;
+            }
+        }
+    return 0;
+    }
 
 /**
 * Check changes made to a metadata field and create a nice user friendly summary
@@ -5802,31 +5802,31 @@ function log_diff($fromvalue, $tovalue)
 
 
 function get_metadata_templates()
-	{
-	# Returns a list of all metadata templates; i.e. resources that have been set to the resource type specified via '$metadata_template_resource_type'.
-	global $metadata_template_resource_type,$metadata_template_title_field;
-	return ps_query("select ref,field$metadata_template_title_field from resource where ref>0 and resource_type= ? order by field$metadata_template_title_field", ['i', $metadata_template_resource_type]);
-	}
+    {
+    # Returns a list of all metadata templates; i.e. resources that have been set to the resource type specified via '$metadata_template_resource_type'.
+    global $metadata_template_resource_type,$metadata_template_title_field;
+    return ps_query("select ref,field$metadata_template_title_field from resource where ref>0 and resource_type= ? order by field$metadata_template_title_field", ['i', $metadata_template_resource_type]);
+    }
 
 function get_resource_collections($ref)
-	{
-	global $userref, $anonymous_user, $username;
-	if (checkperm('b') || (isset($anonymous_login) && $username==$anonymous_login))
-		{return array();}
-	# Returns a list of collections that a resource is used in for the $view_resource_collections option
-	$sql="";
+    {
+    global $userref, $anonymous_user, $username;
+    if (checkperm('b') || (isset($anonymous_login) && $username==$anonymous_login))
+        {return array();}
+    # Returns a list of collections that a resource is used in for the $view_resource_collections option
+    $sql="";
 
     # Include themes in my collections?
     # Only filter out themes if $themes_in_my_collections is set to false in config.php
-   	global $themes_in_my_collections;
-   	if (!$themes_in_my_collections)
-   		{
-   		if ($sql!="") {$sql.=" and ";}
-   		$sql.="(length(c.theme)=0 or c.theme is null) ";
-   		}
-	if ($sql!="") {$sql="where " . $sql;}
+    global $themes_in_my_collections;
+    if (!$themes_in_my_collections)
+        {
+        if ($sql!="") {$sql.=" and ";}
+        $sql.="(length(c.theme)=0 or c.theme is null) ";
+        }
+    if ($sql!="") {$sql="where " . $sql;}
 
-	$return=ps_query ("select * from
+    $return=ps_query ("select * from
 	(select c.*,u.username,u.fullname,count(r.resource) count from user u join collection c on u.ref=c.user and c.user=? left outer join collection_resource r on c.ref=r.collection group by c.ref
 	union
 	select c.*,u.username,u.fullname,count(r.resource) count from user_collection uc join collection c on uc.collection=c.ref and uc.user=? and c.user<>? left outer join collection_resource r on c.ref=r.collection left join user u on c.user=u.ref group by c.ref) clist where clist.ref in (select collection from collection_resource cr where cr.resource=?)",array(
@@ -5836,14 +5836,14 @@ function get_resource_collections($ref)
         "i",$ref
         ));
 
-	return $return;
-	}
+    return $return;
+    }
 
 function download_summary($resource)
-	{
-	# Returns a summary of downloads by usage type
-	return ps_query("select usageoption,count(*) c from resource_log where resource=? and type='D' group by usageoption order by usageoption",array("i",$resource));
-	}
+    {
+    # Returns a summary of downloads by usage type
+    return ps_query("select usageoption,count(*) c from resource_log where resource=? and type='D' group by usageoption order by usageoption",array("i",$resource));
+    }
 
 /*
 * Check if watermark is required.
@@ -5856,7 +5856,7 @@ function download_summary($resource)
 function check_use_watermark($download_key = "", $resource="")
     {
     debug_function_call("check_use_watermark", func_get_args());
-	# This function checks whether or not to use watermarks
+    # This function checks whether or not to use watermarks
     # Note that access status must be available prior to calls to this function
 
     global $access,$k,$watermark,$watermark_open,$pagename,$watermark_open_search, $terms_download;
@@ -5869,7 +5869,7 @@ function check_use_watermark($download_key = "", $resource="")
 
     $blockwatermark = hook("blockwatermark");
     if($blockwatermark)
-	{
+    {
         return false;
         }
 
@@ -6031,22 +6031,22 @@ function get_page_count($resource,$alternative=-1)
         }
     if (!empty($pagecount)) { return $pagecount; }
     # or, populate this column with exiftool or image magick (for installations with many pdfs already
-	# previewed and indexed, this allows pagecount updates on the fly when needed):
+    # previewed and indexed, this allows pagecount updates on the fly when needed):
     # use exiftool.
-	if ($resource['file_extension']=="pdf" && $alternative==-1)
-		{
-		$file=get_resource_path($ref,true,"",false,"pdf");
-		}
-	else if ($alternative==-1)
-		{
-		# some unoconv files are not pdfs but this needs to use the auto-alt file
-		$alt_ref=ps_value("select ref value from resource_alt_files where resource=? and unoconv=1",array("i",$ref), "");
-		$file=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alt_ref);
-		}
-	else
-		{
-		$file=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alternative);
-		}
+    if ($resource['file_extension']=="pdf" && $alternative==-1)
+        {
+        $file=get_resource_path($ref,true,"",false,"pdf");
+        }
+    else if ($alternative==-1)
+        {
+        # some unoconv files are not pdfs but this needs to use the auto-alt file
+        $alt_ref=ps_value("select ref value from resource_alt_files where resource=? and unoconv=1",array("i",$ref), "");
+        $file=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alt_ref);
+        }
+    else
+        {
+        $file=get_resource_path($ref,true,"",false,"pdf",-1,1,false,"",$alternative);
+        }
 
     if (file_exists($file))
         {
@@ -6077,46 +6077,46 @@ function get_page_count($resource,$alternative=-1)
         $pages = 1;
         }
 
-	if ($alternative!=-1)
-		{
-		ps_query("update resource_alt_files set page_count=? where ref=?",array("i",$pages,"i",$alternative));
-		}
-	else
-		{
-		ps_query("update resource_dimensions set page_count=? where resource=?",array("i",$pages,"i",$ref));
-		}
-	return $pages;
-	}
+    if ($alternative!=-1)
+        {
+        ps_query("update resource_alt_files set page_count=? where ref=?",array("i",$pages,"i",$alternative));
+        }
+    else
+        {
+        ps_query("update resource_dimensions set page_count=? where resource=?",array("i",$pages,"i",$ref));
+        }
+    return $pages;
+    }
 
 
 function update_disk_usage($resource)
-	{
-	# we're also going to record the size of the primary resource here before we do the entire folder
-	$ext = ps_value("SELECT file_extension value FROM resource where ref = ? AND file_path IS NULL",array("i",$resource), 'jpg');
-	$path = get_resource_path($resource,true,'',false,$ext);
-	if (file_exists($path)){
-		$rsize = filesize_unlimited($path);
-	} else {
-		$rsize = 0;
-	}
+    {
+    # we're also going to record the size of the primary resource here before we do the entire folder
+    $ext = ps_value("SELECT file_extension value FROM resource where ref = ? AND file_path IS NULL",array("i",$resource), 'jpg');
+    $path = get_resource_path($resource,true,'',false,$ext);
+    if (file_exists($path)){
+        $rsize = filesize_unlimited($path);
+    } else {
+        $rsize = 0;
+    }
 
-	# Scan the appropriate filestore folder and update the disk usage fields on the resource table. Use the thm size so that we don't get a Staticsync location
-	$dir=dirname(get_resource_path($resource,true,"thm",false));
-	if (!file_exists($dir)) {return false;} # Folder does not yet exist.
-	$d = dir($dir);
-	$total=0;
-	while ($f = $d->read())
-		{
-		if ($f!=".." && $f!=".")
-			{
+    # Scan the appropriate filestore folder and update the disk usage fields on the resource table. Use the thm size so that we don't get a Staticsync location
+    $dir=dirname(get_resource_path($resource,true,"thm",false));
+    if (!file_exists($dir)) {return false;} # Folder does not yet exist.
+    $d = dir($dir);
+    $total=0;
+    while ($f = $d->read())
+        {
+        if ($f!=".." && $f!=".")
+            {
             $s=(int) filesize_unlimited($dir . "/" .$f);
-			$total+=$s;
-			}
-		}
-	ps_query("update resource set disk_usage=?,disk_usage_last_updated=now(),file_size=? where ref=?",array("i",$total,"i",$rsize,"i",$resource));
+            $total+=$s;
+            }
+        }
+    ps_query("update resource set disk_usage=?,disk_usage_last_updated=now(),file_size=? where ref=?",array("i",$total,"i",$rsize,"i",$resource));
 
-	return true;
-	}
+    return true;
+    }
 
 /**
  * Update disk usage for all resources that have not yet been updated or have not been updated in the past 30 days.
@@ -6173,22 +6173,22 @@ function get_total_disk_usage()
     }
 
 function overquota()
-	{
-	# Return true if the system is over quota
-	global $disksize;
-	if (isset($disksize))
-		{
-		# Disk quota functionality. Calculate the usage by the $storagedir folder only rather than the whole disk.
-		# Unix only due to reliance on 'du' command
+    {
+    # Return true if the system is over quota
+    global $disksize;
+    if (isset($disksize))
+        {
+        # Disk quota functionality. Calculate the usage by the $storagedir folder only rather than the whole disk.
+        # Unix only due to reliance on 'du' command
 
-		$avail=$disksize * 1000 * 1000 * 1000;
-		$used=get_total_disk_usage();
+        $avail=$disksize * 1000 * 1000 * 1000;
+        $used=get_total_disk_usage();
 
-		$free=$avail-$used;
-		if ($free<=0) {return true;}
-		}
-	return false;
-	}
+        $free=$avail-$used;
+        if ($free<=0) {return true;}
+        }
+    return false;
+    }
 
 /**
  * Get size of specified image file
@@ -6201,10 +6201,10 @@ function overquota()
  * @return array|bool           Fil size info. Returns false if not available
  */
 function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfile=false)
-	{
-	$fileinfo=array();
-	if($ref=="" || $path==""){return false;}
-	global $imagemagick_path, $imagemagick_calculate_sizes;
+    {
+    $fileinfo=array();
+    if($ref=="" || $path==""){return false;}
+    global $imagemagick_path, $imagemagick_calculate_sizes;
 
     if(!file_exists($path))
         {
@@ -6256,10 +6256,10 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
         return $fileinfo;
         }
 
-	$filesize=filesize_unlimited($file);
+    $filesize=filesize_unlimited($file);
 
-	# imagemagick_calculate_sizes is normally turned off
-	if (isset($imagemagick_path) && $imagemagick_calculate_sizes)
+    # imagemagick_calculate_sizes is normally turned off
+    if (isset($imagemagick_path) && $imagemagick_calculate_sizes)
         {
         # Use ImageMagick to calculate the size
         $prefix = '';
@@ -6357,9 +6357,9 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
                     }
                 }
             else
-			    {
+                {
 
-			    # Size cannot be calculated.
+                # Size cannot be calculated.
                 $sw="?";$sh="?";
                 if(!$o_size)
                     {
@@ -6378,7 +6378,7 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
     $fileinfo[1]=$sw;
     $fileinfo[2]=$sh;
     return $fileinfo;
-	}
+    }
 
 function generate_resource_access_key($resource,$userref,$access,$expires,$email,$group="",$sharepwd="")
         {
@@ -6389,9 +6389,9 @@ function generate_resource_access_key($resource,$userref,$access,$expires,$email
             }
 
         global $userref,$usergroup, $scramble_key;
-		if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
+        if ($group=="" || !checkperm("x")) {$group=$usergroup;} # Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
         $k=substr(md5(time()),0,10);
-		ps_query("insert into external_access_keys(resource,access_key,user,access,expires,email,date,usergroup,password_hash) values (?, ?, ?, ?, ?, ?,now(), ?, ?);",
+        ps_query("insert into external_access_keys(resource,access_key,user,access,expires,email,date,usergroup,password_hash) values (?, ?, ?, ?, ?, ?,now(), ?, ?);",
             [
             'i', $resource,
             's', $k,
@@ -6403,13 +6403,13 @@ function generate_resource_access_key($resource,$userref,$access,$expires,$email
             's', (($sharepwd != "" && $sharepwd != "(unchanged)") ? hash('sha256', $k . $sharepwd . $scramble_key) : null)
             ]
         );
-		hook("generate_resource_access_key","",array($resource,$k,$userref,$email,$access,$expires,$group));
+        hook("generate_resource_access_key","",array($resource,$k,$userref,$email,$access,$expires,$group));
         return $k;
         }
 
 function get_resource_external_access($resource)
-	{
-	# Return all external access given to a resource
+    {
+    # Return all external access given to a resource
     # Users, emails and dates could be multiple for a given access key, an in this case they are returned comma-separated.
     global $userref;
 
@@ -6425,7 +6425,7 @@ function get_resource_external_access($resource)
         }
 
     return ps_query("select access_key,group_concat(DISTINCT user ORDER BY user SEPARATOR ', ') users,group_concat(DISTINCT email ORDER BY email SEPARATOR ', ') emails,max(date) maxdate,max(lastused) lastused,access,expires,collection,usergroup, password_hash from external_access_keys where resource=? $condition group by access_key,access,expires,collection,usergroup order by maxdate",$params);
-	}
+    }
 
 
 function delete_resource_access_key($resource,$access_key)
@@ -6523,8 +6523,8 @@ function delete_resources_in_collection($collection)
     {
     global $resource_deletion_state,$userref,$lang;
 
-	// Always find all resources in deleted state and delete them permanently:
-	// Note: when resource_deletion_state is null it will find all resources in collection and delete them permanently
+    // Always find all resources in deleted state and delete them permanently:
+    // Note: when resource_deletion_state is null it will find all resources in collection and delete them permanently
     $query = "SELECT ref AS value FROM resource INNER JOIN collection_resource ON collection_resource.resource = resource.ref AND collection_resource.collection = ?";
     $params=array("i",$collection);
 
@@ -6534,28 +6534,28 @@ function delete_resources_in_collection($collection)
         $params[] = "i";$params[] = $resource_deletion_state;
         }
 
-	$resources_in_deleted_state = ps_array($query,$params);
+    $resources_in_deleted_state = ps_array($query,$params);
 
-	if(!empty($resources_in_deleted_state))
+    if(!empty($resources_in_deleted_state))
         {
-		foreach ($resources_in_deleted_state as $resource_in_deleted_state)
+        foreach ($resources_in_deleted_state as $resource_in_deleted_state)
             {
-			delete_resource($resource_in_deleted_state);
+            delete_resource($resource_in_deleted_state);
             collection_log($collection,'D', '', 'Resource ' . $resource_in_deleted_state . ' deleted permanently.');
-		    }
-	    }
+            }
+        }
 
-	// Create a comma separated list of all resources remaining in this collection:
-	$resources = ps_query("SELECT cr.resource, r.archive FROM collection_resource cr LEFT JOIN resource r on r.ref=cr.resource WHERE cr.collection = ?",["i",$collection]);
-	$r_refs = array_column($resources,"resource");
+    // Create a comma separated list of all resources remaining in this collection:
+    $resources = ps_query("SELECT cr.resource, r.archive FROM collection_resource cr LEFT JOIN resource r on r.ref=cr.resource WHERE cr.collection = ?",["i",$collection]);
+    $r_refs = array_column($resources,"resource");
     $r_states = array_column($resources,"archive");
 
-	// If all resources had their state the same as resource_deletion_state, stop here:
-	// Note: when resource_deletion_state is null it will always stop here
-	if(empty($resources))
+    // If all resources had their state the same as resource_deletion_state, stop here:
+    // Note: when resource_deletion_state is null it will always stop here
+    if(empty($resources))
         {
-		return TRUE;
-	    }
+        return TRUE;
+        }
 
     // Delete (ie. move to resource_deletion_state set in config):
     if(isset($resource_deletion_state))
@@ -6570,7 +6570,7 @@ function delete_resources_in_collection($collection)
 
         }
 
-	return TRUE;
+    return TRUE;
     }
 
 /**
@@ -6583,7 +6583,7 @@ function delete_resources_in_collection($collection)
  * @return boolean
  */
 function update_related_resource($ref,$related,$add=true)
-	{
+    {
     if (!is_int_loose($ref) || (!is_int_loose($related) && !is_array($related)))
         {
         return false;
@@ -6620,7 +6620,7 @@ function update_related_resource($ref,$related,$add=true)
         }
 
     // This params array can be used for both SELECT and DELETE
-	$relatedparams = array_merge(["i",$ref],ps_param_fill($related,"i"),ps_param_fill($related,"i"),["i",$ref]);
+    $relatedparams = array_merge(["i",$ref],ps_param_fill($related,"i"),ps_param_fill($related,"i"),["i",$ref]);
 
     $query = "SELECT resource, related FROM resource_related  WHERE (resource = ? AND related IN (" . ps_param_insert(count($related)) . "))
       OR (resource IN (" . ps_param_insert(count($related)) . ") AND related = ?)";
@@ -6633,12 +6633,12 @@ function update_related_resource($ref,$related,$add=true)
         ));
 
     if(count($currentlyrelated_arr) > 0 && !$add)
-		{
-		// Relationships exist and we want to remove
+        {
+        // Relationships exist and we want to remove
         $query = "DELETE FROM resource_related  WHERE (resource = ? AND related IN (" . ps_param_insert(count($related)) . "))
         OR (resource IN (" . ps_param_insert(count($related)) . ") AND related = ?)";
         ps_query($query,$relatedparams);
-		}
+        }
     else if($add)
         {
         $newrelated = array();
@@ -6656,9 +6656,9 @@ function update_related_resource($ref,$related,$add=true)
                                    implode("'),('" . $ref . "','",$newrelated) .
                                    "')");
             }
-		}
-	return true;
-	}
+        }
+    return true;
+    }
 
 /**
  * Check if sharing of resource is permitted
@@ -6669,21 +6669,21 @@ function update_related_resource($ref,$related,$add=true)
  * @return boolean
  */
 function can_share_resource($ref, $access="")
-	{
-	global $allow_share, $restricted_share, $customgroupaccess,$customuseraccess, $allow_custom_access_share;
-	if($access=="" || !isset($customgroupaccess)){$access=get_resource_access($ref);}
+    {
+    global $allow_share, $restricted_share, $customgroupaccess,$customuseraccess, $allow_custom_access_share;
+    if($access=="" || !isset($customgroupaccess)){$access=get_resource_access($ref);}
 
-	if(!$allow_share || $access==2 || ($access==1 && !$restricted_share))
-		{return false;} // return false asap
+    if(!$allow_share || $access==2 || ($access==1 && !$restricted_share))
+        {return false;} // return false asap
 
-	if ($restricted_share){return true;} // If sharing of restricted resources is permitted we should allow sharing whether access is open or restricted
+    if ($restricted_share){return true;} // If sharing of restricted resources is permitted we should allow sharing whether access is open or restricted
 
-	// User is not permitted to share if open access has been specifically granted for an otherwise restrcited resource to the user/group.
-	if(!$allow_custom_access_share && ($customgroupaccess || $customuseraccess)){return false;}
+    // User is not permitted to share if open access has been specifically granted for an otherwise restrcited resource to the user/group.
+    if(!$allow_custom_access_share && ($customgroupaccess || $customuseraccess)){return false;}
 
-	// Must have open access and sharing is permitted
-	return true;
-	}
+    // Must have open access and sharing is permitted
+    return true;
+    }
 
 /**
 * Delete all usergroup specific access to resource $ref
@@ -6921,10 +6921,10 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
                         {
                         # Copy custom access
                         ps_query("insert into resource_custom_access (resource,usergroup,user,access) select ?, usergroup,user,access from resource_custom_access where resource = ?",array("i",$resource["ref"],"i",$lastresource["ref"]));
-		                }
-				resource_log($resource["ref"],LOG_CODE_ACCESS_CHANGED,0,"",$resource["access"],$newaccess);
-				}
-			}
+                        }
+                resource_log($resource["ref"],LOG_CODE_ACCESS_CHANGED,0,"",$resource["access"],$newaccess);
+                }
+            }
         $resource["access"] = $newaccess;
         }
 
@@ -7058,18 +7058,18 @@ function copy_locked_fields($ref, &$fields,&$all_selected_nodes,$locked_fields,$
 */
 function copyRelatedResources($from, $to)
     {
-	ps_query("insert into resource_related(resource,related) SELECT ?,related FROM resource_related WHERE resource=? AND related <> ?",array("i",$to,"i",$from,"i",$to));
+    ps_query("insert into resource_related(resource,related) SELECT ?,related FROM resource_related WHERE resource=? AND related <> ?",array("i",$to,"i",$from,"i",$to));
     }
 
 
 function process_edit_form($ref, $resource)
-	{
+    {
     global $multiple, $lang, $embedded_data_user_select, $embedded_data_user_select_fields, $data_only_resource_types,
     $check_edit_checksums, $uploadparams, $resource_type_force_selection, $relate_on_upload, $enable_related_resources,
     $is_template, $upload_collection_name_required, $upload_review_mode, $userref, $userref, $collection_add, $baseurl_short,
     $no_exif, $autorotate;
 
-	# save data
+    # save data
     # When auto saving, pass forward the field so only this is saved.
     $autosave_field=getval("autosave_field","");
 
@@ -7139,7 +7139,7 @@ function process_edit_form($ref, $resource)
 /*
 * Update the modified column in the resource table
 *
-* @param integer $resource   	Resource to be updated
+* @param integer $resource      Resource to be updated
 *
 * @return void
 */
@@ -7201,7 +7201,7 @@ function get_last_resource_edit_array($resources = array())
     $plugin_last_resource_edit = hook('override_last_resource_edit_array');
     if($plugin_last_resource_edit === true)
         {
-    	return false;
+        return false;
         }
 
     $chunks = array_chunk($resources,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
@@ -8315,7 +8315,7 @@ function get_resource_type_fields($restypes="", $field_order_by="ref", $field_so
         {        
         $conditions[] = " rtf.type IN(". ps_param_insert(count($newfieldtypes)) .")";
         $params = array_merge($params, ps_param_fill($newfieldtypes, 'i'));
-		}
+        }
     
     $conditionstring = count($conditions) > 0 ? (" WHERE " . implode(" AND ",$conditions) . " ") : "";
 
@@ -9135,25 +9135,25 @@ function relate_all_resources(array $related = [])
  * @return void
  */
 function update_resource_type_field_order($neworder)
-	{
-	global $lang;
-	if (!is_array($neworder)) {
-		exit ("Error: invalid input to update_resource_type_field_order function.");
-	}
+    {
+    global $lang;
+    if (!is_array($neworder)) {
+        exit ("Error: invalid input to update_resource_type_field_order function.");
+    }
 
-	$updatesql= "update resource_type_field set order_by=(case ref ";
-	$counter = 10;$params=array();
-	foreach ($neworder as $restype){
-		$updatesql.= "when ? then ? ";
+    $updatesql= "update resource_type_field set order_by=(case ref ";
+    $counter = 10;$params=array();
+    foreach ($neworder as $restype){
+        $updatesql.= "when ? then ? ";
         $params[]="i";$params[]=$restype;
         $params[]="i";$params[]=$counter;
         $counter = $counter + 10;
-	}
-	$updatesql.= "else order_by END)";
-	ps_query($updatesql,$params);
-	clear_query_cache("schema");
-	log_activity($lang['resourcetypefieldreordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type_field','order_by');
-	}
+    }
+    $updatesql.= "else order_by END)";
+    ps_query($updatesql,$params);
+    clear_query_cache("schema");
+    log_activity($lang['resourcetypefieldreordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type_field','order_by');
+    }
 
 /**
  * Apply a new order to resource types
@@ -9163,27 +9163,27 @@ function update_resource_type_field_order($neworder)
  * @return void
  */
 function update_resource_type_order($neworder)
-	{
-	global $lang;
-	if (!is_array($neworder)) {
-		exit ("Error: invalid input to update_resource_type_field_order function.");
-	}
+    {
+    global $lang;
+    if (!is_array($neworder)) {
+        exit ("Error: invalid input to update_resource_type_field_order function.");
+    }
 
-	$updatesql= "update resource_type set order_by=(case ref ";
-	$counter = 10;
+    $updatesql= "update resource_type set order_by=(case ref ";
+    $counter = 10;
     $params=array();
 
-	foreach ($neworder as $restype){
-		$updatesql.= "when ? then ? ";
+    foreach ($neworder as $restype){
+        $updatesql.= "when ? then ? ";
         $params[]="i";$params[]=$restype;
         $params[]="i";$params[]=$counter;
-		$counter = $counter + 10;
-	}
-	$updatesql.= "else order_by END)";
-	ps_query($updatesql,$params);
-	clear_query_cache("schema");
-	log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
-	}
+        $counter = $counter + 10;
+    }
+    $updatesql.= "else order_by END)";
+    ps_query($updatesql,$params);
+    clear_query_cache("schema");
+    log_activity($lang['resourcetypereordered'],LOG_CODE_REORDERED,implode(', ',$neworder),'resource_type','order_by');
+    }
 
 /**
  * Check if file can be rendered in browser via download.php

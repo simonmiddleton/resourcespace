@@ -8,9 +8,9 @@ $ref = getval("ref",0,true);
 if(checkperm("b") || !collection_writeable($ref))
     {
     http_response_code(403);
-	$error = $lang["error-permissiondenied"];
+    $error = $lang["error-permissiondenied"];
     error_alert($error, false);
-	exit();
+    exit();
     }
 
 # Fetch collection data
@@ -26,7 +26,7 @@ if ($collection === false || (count($list) <= 1 && in_array($ref,array_column($l
     }
 
 if (getval("submitted","")!="" && enforcePostRequest(false))
-	{
+    {
     $copyfrom = getval("collection_copy_from",0,true);
     if($copyfrom > 0 && collection_readable($copyfrom))
         {
@@ -43,15 +43,15 @@ include "../include/header.php";
 <p><?php echo text("introtext")?></p>
 <form method=post id="collection_copy_form" action="<?php echo $baseurl_short?>pages/collection_copy_resources.php">
     <?php generateFormToken("collection_copy_form"); ?>
-	<input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
-	<input type=hidden name="submitted" value="true">
-	<div class="Question">
-		<label for="name"><?php echo $lang["collection"]?></label>
-		<div class="Fixed"><?php echo htmlspecialchars(i18n_get_collection_name($collection, $index="name")); ?></div >
-		<div class="clearerleft"> </div>
-	</div>
+    <input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
+    <input type=hidden name="submitted" value="true">
     <div class="Question">
-	    <label for='collection_copy_from' id='label_collection'><?php echo $lang["copyfromcollection"]; ?></label>
+        <label for="name"><?php echo $lang["collection"]?></label>
+        <div class="Fixed"><?php echo htmlspecialchars(i18n_get_collection_name($collection, $index="name")); ?></div >
+        <div class="clearerleft"> </div>
+    </div>
+    <div class="Question">
+        <label for='collection_copy_from' id='label_collection'><?php echo $lang["copyfromcollection"]; ?></label>
         <select name='collection_copy_from' id='collection_copy_from'>
     
         <?php
@@ -70,13 +70,13 @@ include "../include/header.php";
             }
             ?>
         </select>
-	</div>
+    </div>
 
-	<div class="QuestionSubmit">		
-		<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["copy"]?>&nbsp;&nbsp;" />
-	</div>
+    <div class="QuestionSubmit">        
+        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["copy"]?>&nbsp;&nbsp;" />
+    </div>
 </form>
 </div>
 
-<?php		
+<?php	  
 include "../include/footer.php";

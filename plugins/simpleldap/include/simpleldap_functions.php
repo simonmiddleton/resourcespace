@@ -117,10 +117,10 @@ function simpleldap_authenticate($username,$password)
     $email_attribute = mb_strtolower($simpleldap['email_attribute']);
     $phone_attribute = mb_strtolower($simpleldap['phone_attribute']);
 
-	$ldapgroupfield=$simpleldap['ldapgroupfield'];
-	$attributes = array("displayname",$ldapgroupfield,$email_attribute,$phone_attribute);
-	$loginfield=$simpleldap['loginfield'];
-	$filter = "(&(objectClass=person)(". $loginfield . "=" . ldap_escape($ldap_username,'',LDAP_ESCAPE_FILTER) . "))";
+    $ldapgroupfield=$simpleldap['ldapgroupfield'];
+    $attributes = array("displayname",$ldapgroupfield,$email_attribute,$phone_attribute);
+    $loginfield=$simpleldap['loginfield'];
+    $filter = "(&(objectClass=person)(". $loginfield . "=" . ldap_escape($ldap_username,'',LDAP_ESCAPE_FILTER) . "))";
 
     $searchdns=explode(";",$simpleldap['basedn']);
     $dn=array();
@@ -184,7 +184,7 @@ function simpleldap_authenticate($username,$password)
 
     $result = ldap_search($ldapconnections, $dn, $filter, $attributes);
     $search = null;
-	foreach ($result as $value) 
+    foreach ($result as $value) 
         {
         debug("LDAP - found " . ldap_count_entries($ds,$value) . " entries");
         if(ldap_count_entries($ds,$value)>0)
@@ -212,14 +212,14 @@ function simpleldap_authenticate($username,$password)
         else
             {
             $displayname = '';
-		    }
+            }
 
         $department = '';
         debug("LDAP - checking for group attribute - " . $ldapgroupfield);
 
         $usermemberof=array();
 
-		if (isset($entries[0][$ldapgroupfield]) && count($entries[0][$ldapgroupfield]) > 0)
+        if (isset($entries[0][$ldapgroupfield]) && count($entries[0][$ldapgroupfield]) > 0)
             {
             debug("LDAP - found group attribute - checking against configured mappings");
             $usermemberofgroups=$entries[0][$ldapgroupfield];
@@ -239,7 +239,7 @@ function simpleldap_authenticate($username,$password)
                     {
                     $department=$deptname;
                     $usermemberof[]=$deptname;
-                    }				
+                    }               
                 }
             // Go through all mappings and add any unknown groups to the list of mappings so that it can be easily used (LDAP group names can be hard to remember)
             foreach ($usermemberofgroups as $usermemberofgroup)
@@ -266,7 +266,7 @@ function simpleldap_authenticate($username,$password)
             {
             $email = $username . '@' . $simpleldap['emailsuffix'];
             }
-			
+            
         //Extract phone info
         if (isset($entries[0][$phone_attribute]) && count($entries[0][$phone_attribute]) > 0)
             {
@@ -276,8 +276,8 @@ function simpleldap_authenticate($username,$password)
             {
             $phone = 'Unknown';
             }
-				
-		
+                
+        
         $return['domain'] = $userdomain;
         $return['username'] = $username;
         $return['binduser'] = $binduserstring;
@@ -289,7 +289,7 @@ function simpleldap_authenticate($username,$password)
         return $return;
         }
 
-	ldap_unbind($ds);
+    ldap_unbind($ds);
     }
 
 

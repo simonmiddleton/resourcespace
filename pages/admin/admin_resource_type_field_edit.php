@@ -33,33 +33,33 @@ if($backurl=="")
     $backurl = generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params);
     }
 else
-	{
-	$back_url_params=parse_url($backurl, PHP_URL_QUERY);
-	# the first parameter of the back url is needed here but isn't captured
-	$back_url_params=explode('&', $back_url_params);
-	
-	foreach($back_url_params as $param)
-		{
-		$param_parts=explode('=', $param);
-		switch($param_parts[0])
-			{
-			case 'restypefilter':
-				$restypefilter=$param_parts[1];
-				break;
-			case 'field_order_by':
-				$field_order_by=$param_parts[1];
-				break;
-			case 'field_sort':
-				$field_sort=$param_parts[1];
-				break;
-			case 'find':
-				$find=$param_parts[1];
-				break;
-			}
-		}
-	
-	}
-	
+    {
+    $back_url_params=parse_url($backurl, PHP_URL_QUERY);
+    # the first parameter of the back url is needed here but isn't captured
+    $back_url_params=explode('&', $back_url_params);
+    
+    foreach($back_url_params as $param)
+        {
+        $param_parts=explode('=', $param);
+        switch($param_parts[0])
+            {
+            case 'restypefilter':
+                $restypefilter=$param_parts[1];
+                break;
+            case 'field_order_by':
+                $field_order_by=$param_parts[1];
+                break;
+            case 'field_sort':
+                $field_sort=$param_parts[1];
+                break;
+            case 'find':
+                $find=$param_parts[1];
+                break;
+            }
+        }
+    
+    }
+    
 
 $url=generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php",$url_params);
 
@@ -79,13 +79,13 @@ $fieldcolumns = get_resource_type_field_columns();
 $type_change = false;
 
 if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false))
-	{
+    {
     $return = save_resource_type_field($ref,$fieldcolumns,$_POST);
-	}
+    }
 
-$confirm_delete=false;	
+$confirm_delete=false;  
 if (getval("delete","")!="" && enforcePostRequest($ajax))
-	{
+    {
     $confirmdelete=getval("confirmdelete","");
     # Check for resources of this  type
     $affected_resources=ps_array("SELECT resource value FROM resource_node rn LEFT JOIN node n ON n.ref = rn.node WHERE n.resource_type_field = ?",["i",$ref]);
@@ -128,15 +128,15 @@ if (getval("delete","")!="" && enforcePostRequest($ajax))
             }        
         }
     else
-        {	    
+        {       
         // User needs to confirm deletion as data will be lost
         $error_text=str_replace("%%AFFECTEDRESOURCES%%",$affected_resources_count,$lang["admin_delete_field_confirm"]);
         $error_text.="<br /><a target=\"_blank\" href=\"" . $baseurl  . "/pages/search.php?search=!hasdata" . $ref . "\">" . $lang["show_resources"] . "</a>";
         
         $confirm_delete=true;
         }
-	}
-	
+    }
+    
 # Fetch  data
 $allfields=get_resource_type_fields();
 $fielddata=get_resource_type_field($ref);
@@ -150,14 +150,14 @@ var text_fields       = [<?php echo implode(",",$TEXT_FIELD_TYPES) ?>];
 var current_type      = <?php echo '' != $fielddata['type'] ? $fielddata['type'] : 0; ?>;
 
 <?php if (isset($migrate_data))
-	{
-	?>
-	jQuery(document).ready(function()
-		{
-		window.location.href = '<?php echo $baseurl ?>/pages/tools/migrate_data_to_fixed.php?field=<?php echo $ref ?>';
-		});
-	<?php
-	}
+    {
+    ?>
+    jQuery(document).ready(function()
+        {
+        window.location.href = '<?php echo $baseurl ?>/pages/tools/migrate_data_to_fixed.php?field=<?php echo $ref ?>';
+        });
+    <?php
+    }
 ?>
 </script>
 <div class="BasicsBox">
@@ -199,8 +199,8 @@ if($confirm_delete)
     ?>
     <input name="confirmdelete" id="confirmdelete" type="hidden" value="">
     <div class="textcenter">
-	<input name="delete" type="button" value="<?php echo escape($lang["action-delete"])?>" onClick="jQuery('#field_edit_delete').val('yes');jQuery('#confirmdelete').val('yes');this.form.submit();" />
-	<input type="button" class="button" onClick="CentralSpaceLoad('<?php generateURL($baseurl_short . "/pages/admin/admin_resource_type_field_edit.php",$url_params,array("ref"=>"")); ?>',true);return false;" value="&nbsp;&nbsp;<?php echo $lang["cancel"] ?>&nbsp;&nbsp;" >
+    <input name="delete" type="button" value="<?php echo escape($lang["action-delete"])?>" onClick="jQuery('#field_edit_delete').val('yes');jQuery('#confirmdelete').val('yes');this.form.submit();" />
+    <input type="button" class="button" onClick="CentralSpaceLoad('<?php generateURL($baseurl_short . "/pages/admin/admin_resource_type_field_edit.php",$url_params,array("ref"=>"")); ?>',true);return false;" value="&nbsp;&nbsp;<?php echo $lang["cancel"] ?>&nbsp;&nbsp;" >
     </div>
      <?php	
     }
@@ -214,14 +214,14 @@ else
     
     <?php
     $system_date_field = $ref==$date_field?true:false;
-    foreach ($fieldcolumns as $column=>$column_detail)		
+    foreach ($fieldcolumns as $column=>$column_detail)      
         {
         if(!hook("admin_field_replace_question","admin_resource_type_field_edit",[$ref,$column,$column_detail, $fielddata]))
             {
             if ($column=="partial_index") // Start the hidden advanced section here
                 {?>
                 <h2 id="showhiddenfields" class="CollapsibleSectionHead collapsed" ><?php echo $lang["admin_advanced_field_properties"] ?></h2>
-                <div class="CollapsibleSection" id="admin_hidden_field_properties" >	 
+                <div class="CollapsibleSection" id="admin_hidden_field_properties" >     
                 <?php
                 }
             admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],$fielddata["type"],$system_date_field);
@@ -230,15 +230,15 @@ else
     ?>
     </div><!-- End of hidden advanced section -->    
     
-    <div class="QuestionSubmit">	
+    <div class="QuestionSubmit">    
     <input name="save" type="submit" value="&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;&nbsp;&nbsp;" />&nbsp;&nbsp;
     <input type="button" class="button" onClick="CentralSpaceLoad('<?php echo $baseurl . "/pages/admin/admin_copy_field.php?ref=" . $ref . "&backurl=" . $url ?>',true);return false;" value="&nbsp;&nbsp;<?php echo $lang["copy-field"] ?>&nbsp;&nbsp;" >
     <input name="migrate_data" id="migrate_data" type="hidden" value="">
 
-	<?php if ($fielddata["active"]==0) { ?>
+    <?php if ($fielddata["active"]==0) { ?>
     <input name="delete" type="button" value="<?php echo escape($lang["action-delete"])?>" onClick="if(confirm('<?php echo escape($lang["confirm-deletion"]) ?>')){jQuery('#field_edit_delete').val('yes');this.form.submit();}else{jQuery('#delete').val('');}" />
-	<?php } ?>
-	
+    <?php } ?>
+    
     </div>
     <?php
     }?>

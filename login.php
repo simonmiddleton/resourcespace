@@ -16,12 +16,12 @@ if ($modifiedurl){$url=$modifiedurl;}
 $modal=getval("modal","");
 
 if ($modal || getval("ajax","")!="")
-	{
-	# add the capslock lib because there's no header
-	?>
-	<script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script>
-	<?php
-	}
+    {
+    # add the capslock lib because there's no header
+    ?>
+    <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script>
+    <?php
+    }
         
 # process log in
 $error=getval("error","");
@@ -55,8 +55,8 @@ if($case_insensitive_username)
 $ulockouts=ps_value("select count(*) value from user where username = ? and login_tries >= ? and date_add(login_last_try, interval ? minute) > now()", array("s", $username, "i", $max_login_attempts_per_username, "i", $max_login_attempts_wait_minutes), 0);
 
 if ($lockouts>0 || $ulockouts>0)
-	{
-	$error=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
+    {
+    $error=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
     if ($ulockouts>0){$log_message='Account locked';}
     else {$log_message = 'IP address locked';}
     $userref = get_user_by_username($username);
@@ -70,7 +70,7 @@ if ($lockouts>0 || $ulockouts>0)
         NULL,                               # Ref Column Override
         NULL,                               # Value Old
         ($userref!="" ? $userref : NULL));  # User
-	}
+    }
 
 # Process the submitted login
 elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
@@ -78,9 +78,9 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
     debug("[login.php] Process the submitting login details...");
 
     $password = trim(getval("password",""));
-	$result = perform_login();
-	if ($result['valid'])
-		{
+    $result = perform_login();
+    if ($result['valid'])
+        {
         debug("[login.php] Performed login - valid result");
 
         set_login_cookies($result["ref"],$session_hash,$language, $user_preferences);
@@ -89,9 +89,9 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
         $login_lang = getval("user_local_timezone", "");        
         rs_setcookie('user_local_timezone', $login_lang, 365);
 
-		# If the redirect URL is the collection frame, do not redirect to this as this will cause
-		# the collection frame to appear full screen.
-		if (strpos($url,"pages/collections.php")!==false) {$url="index.php";}
+        # If the redirect URL is the collection frame, do not redirect to this as this will cause
+        # the collection frame to appear full screen.
+        if (strpos($url,"pages/collections.php")!==false) {$url="index.php";}
 
         $accepted = ps_value("SELECT accepted_terms value FROM user WHERE ref = ?", array("i", (int)$result['ref']), 0);
         if(0 == $accepted && $terms_login && !checkperm('p'))
@@ -103,24 +103,24 @@ elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
             }
         debug("[login.php] Redirecting to $redirect_url");
             
-		if(!$modal)
-			{
-			redirect($redirect_url);
-			}
-		else
-			{
-			?>
-			<script type="text/javascript">
-				CentralSpaceLoad('<?php echo $baseurl."/".$redirect_url?>',true);
-			</script>
-			<?php
-			}
+        if(!$modal)
+            {
+            redirect($redirect_url);
+            }
+        else
+            {
+            ?>
+            <script type="text/javascript">
+                CentralSpaceLoad('<?php echo $baseurl."/".$redirect_url?>',true);
+            </script>
+            <?php
+            }
         }
     else
         {
         sleep($password_brute_force_delay);
         
-		$error=$result['error'];
+        $error=$result['error'];
         hook("dispcreateacct");
         }
     }
@@ -167,14 +167,14 @@ if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
     rs_setcookie('restypes', '', 0, $baseurl_short . 'pages');
 
     unset($username);
-	
-	hook("postlogout");
+    
+    hook("postlogout");
     
     if (isset($anonymous_login))
-    	{
-    	# If the system is set up with anonymous access, redirect to the home page after logging out.
-    	redirect("pages/".$default_home_page);
-    	}
+        {
+        # If the system is set up with anonymous access, redirect to the home page after logging out.
+        redirect("pages/".$default_home_page);
+        }
     }
 
 hook("postlogout2");
@@ -190,7 +190,7 @@ if (getval("langupdate","") != "")
 include "include/header.php";
 
 include "include/login_background.php";
-	
+    
 if (!hook("replaceloginform"))
     {
     ?>
@@ -228,7 +228,7 @@ if (!hook("replaceloginform"))
             <div class="clearerleft"> </div>
         </div>
 
-        <?php if ($disable_languages==false) { ?>	
+        <?php if ($disable_languages==false) { ?>   
             <div class="Question HalfWidth">
                 <label for="language"><?php echo $lang["language"]?></label>
                 <select id="language" class="stdwidth" name="language" onBlur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
@@ -303,7 +303,7 @@ if (!hook("replaceloginform"))
         <?php } ?>
         </p>
 
-	</form>
+    </form>
 
     <script type="text/javascript">
     // Default the focus to the username box

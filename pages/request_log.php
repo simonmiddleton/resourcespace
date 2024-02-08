@@ -31,13 +31,13 @@ else {$previous_page_modal = false;}
 # next / previous resource browsing
 $go=getval("go","");
 if ($go!="")
-	{
-	$origref=$ref; # Store the reference of the resource before we move, in case we need to revert this.
-	
-	# Re-run the search and locate the next and previous records.
-	$result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH);
-	if (is_array($result))
-		{
+    {
+    $origref=$ref; # Store the reference of the resource before we move, in case we need to revert this.
+    
+    # Re-run the search and locate the next and previous records.
+    $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH);
+    if (is_array($result))
+        {
         # Locate this resource
         $pos=-1;
         for ($n=0;$n<count($result);$n++)
@@ -62,16 +62,16 @@ if ($go!="")
             </script>
             <?php
             }
-		}
+        }
     # Check access permissions for this new resource, if an external user.
-	$newkey=hook("nextpreviewregeneratekey");
-	if (is_string($newkey)) {$k=$newkey;}
-	if ($k!="" && !check_access_key($ref,$k)) {$ref=$origref;} # cancel the move.
+    $newkey=hook("nextpreviewregeneratekey");
+    if (is_string($newkey)) {$k=$newkey;}
+    if ($k!="" && !check_access_key($ref,$k)) {$ref=$origref;} # cancel the move.
 
     $urlparams["curpos"] = $curpos;
     $urlparams["ref"] = $ref;
     $urlparams["offset"] = $offset;
-	}
+    }
 $extraparams = hook("nextpreviousextraurl");
 
 include "../include/header.php";
@@ -109,7 +109,7 @@ if ($k=="" && !$modal) { ?>
 
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
-<!--Title row-->	
+<!--Title row-->    
 <tr class="ListviewTitleStyle">
 <td width="5%"><?php echo $lang["date"]?></td>
 <td width="5%"><?php echo $lang["requestorderid"]?></td>
@@ -126,30 +126,30 @@ $log=ps_query("SELECT rq.created date, rq.ref ref, u.fullname username, rq.comme
         WHERE cr.resource=?",array("i",$ref));
 
 for ($n=0;$n<count($log);$n++)
-	{
-	?>
-	<!--List Item-->
-	<tr>
-	<td nowrap><?php echo nicedate($log[$n]["date"],true,true)?></td>
-	<td nowrap><?php echo $log[$n]["ref"] ?></td>
-	<td nowrap><?php echo $log[$n]["username"] ?></td>
-	<td><?php echo htmlspecialchars($log[$n]["comments"]) ?></td>
-	<td nowrap><?php
-	switch ($log[$n]["status"])
-		{
-		Case 0: echo $lang["resourcerequeststatus0"];break;
-		Case 1: echo $lang["resourcerequeststatus1"];break;
-		Case 2: echo $lang["resourcerequeststatus2"];break;
-		}
-	?>
-	</td>
-	<td><?php echo $log[$n]["reasonapproved"] ?></td>
-	<td><?php echo $log[$n]["reason"] ?></td>
-	
-	
-	</tr>
-	<?php
-	}
+    {
+    ?>
+    <!--List Item-->
+    <tr>
+    <td nowrap><?php echo nicedate($log[$n]["date"],true,true)?></td>
+    <td nowrap><?php echo $log[$n]["ref"] ?></td>
+    <td nowrap><?php echo $log[$n]["username"] ?></td>
+    <td><?php echo htmlspecialchars($log[$n]["comments"]) ?></td>
+    <td nowrap><?php
+    switch ($log[$n]["status"])
+        {
+        Case 0: echo $lang["resourcerequeststatus0"];break;
+        Case 1: echo $lang["resourcerequeststatus1"];break;
+        Case 2: echo $lang["resourcerequeststatus2"];break;
+        }
+    ?>
+    </td>
+    <td><?php echo $log[$n]["reasonapproved"] ?></td>
+    <td><?php echo $log[$n]["reason"] ?></td>
+    
+    
+    </tr>
+    <?php
+    }
 ?>
 </table>
 </div>

@@ -30,7 +30,7 @@ function skip_mail($imap,$current_message,$note,$mail=false)
     echo $note."\r\n";
 
     if ($current_message!="")
-        {	
+        {   
         imap_setflag_full($imap, "$current_message", "\\Seen \\Flagged");
         echo "Marked message as seen. It will be omitted on the next run.\r\n\r\n";
         }

@@ -4,11 +4,11 @@ include_once '../../include/db.php';
 include_once '../../include/authenticate.php';
 
 if ($simple_search_reset_after_search)
-	{
-	$restypes="";
-	$search="";
-	$quicksearch="";
-	}
+    {
+    $restypes="";
+    $search="";
+    $quicksearch="";
+    }
 else 
     {
         # pull values from cookies if necessary, for non-search pages where this info hasn't been submitted
@@ -17,7 +17,7 @@ else
                 $restypes = isset($_COOKIE['restypes']) ? $_COOKIE['restypes'] : "";
                 }
 
-	if(!isset($search) || strpos($search, '!') !== false)
+    if(!isset($search) || strpos($search, '!') !== false)
         {
         $quicksearch = (isset($_COOKIE['search']) ? $_COOKIE['search'] : '') ;
         }

@@ -31,42 +31,42 @@ $scriptlastran=ps_value("select value from sysvars where name='last_tms_import'"
 $tms_link_script_failure_notify_seconds=intval($tms_link_script_failure_notify_days)*60*60*24;
 
 if($scriptlastran=="" || time()>=(strtotime($scriptlastran)+$tms_link_script_failure_notify_seconds))
-	{
-	$tmsfailedsubject=(($tms_link_test_mode)?"TESTING MODE ":"") . "TMS Import script - WARNING";
-	send_mail($email_notify,$tmsfailedsubject,"WARNING: The TMS Import Script has not completed since "  . (($scriptlastran!="")?date("l F jS Y @ H:i:s",strtotime($scriptlastran)):$lang["status-never"]) . PHP_EOL . " You can safely ignore this warning only if you subsequently receive notification of a successful script completion.",$email_from);
-	}
+    {
+    $tmsfailedsubject=(($tms_link_test_mode)?"TESTING MODE ":"") . "TMS Import script - WARNING";
+    send_mail($email_notify,$tmsfailedsubject,"WARNING: The TMS Import Script has not completed since "  . (($scriptlastran!="")?date("l F jS Y @ H:i:s",strtotime($scriptlastran)):$lang["status-never"]) . PHP_EOL . " You can safely ignore this warning only if you subsequently receive notification of a successful script completion.",$email_from);
+    }
 
 
 if ($argc == 2)
-	{
-	if ( in_array($argv[1], array('--help', '-help', '-h', '-?')) )
-		{
-		echo "To clear the lock after a failed run, ";
-  		echo "pass in '--clearlock', '-clearlock', '-c' or '--c'." . PHP_EOL;
-  		exit("Bye!");
-  		}
-	else if ( in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')) )
-		{
-		if ( is_process_lock("tms_link") )
-			{
-			clear_process_lock("tms_link");
-			}
-		}
-	else
-		{
-		exit("Unknown argv: " . $argv[1]);
-		}
-	} 
+    {
+    if ( in_array($argv[1], array('--help', '-help', '-h', '-?')) )
+        {
+        echo "To clear the lock after a failed run, ";
+        echo "pass in '--clearlock', '-clearlock', '-c' or '--c'." . PHP_EOL;
+        exit("Bye!");
+        }
+    else if ( in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')) )
+        {
+        if ( is_process_lock("tms_link") )
+            {
+            clear_process_lock("tms_link");
+            }
+        }
+    else
+        {
+        exit("Unknown argv: " . $argv[1]);
+        }
+    } 
 
 # Check for a process lock
 if (is_process_lock("tms_link")) 
-	{
-	echo 'TMS script lock is in place. Deferring.' . PHP_EOL;
-	echo 'To clear the lock after a failed run use --clearlock flag.' . PHP_EOL;
-	$tmsfailedsubject=(($tms_link_test_mode)?"TESTING MODE ":"") . "TMS Import script - FAILED";
-	send_mail($email_notify,$tmsfailedsubject,"The TMS script failed to run because a process lock was in place. This indicates that the previous run did not complete. If you need to clear the lock after a failed run, run the script as follows:-" . PHP_EOL . PHP_EOL . " php tms_update_script.php --clearlock" . PHP_EOL ,$email_from);
-	exit();
-	}
+    {
+    echo 'TMS script lock is in place. Deferring.' . PHP_EOL;
+    echo 'To clear the lock after a failed run use --clearlock flag.' . PHP_EOL;
+    $tmsfailedsubject=(($tms_link_test_mode)?"TESTING MODE ":"") . "TMS Import script - FAILED";
+    send_mail($email_notify,$tmsfailedsubject,"The TMS script failed to run because a process lock was in place. This indicates that the previous run did not complete. If you need to clear the lock after a failed run, run the script as follows:-" . PHP_EOL . PHP_EOL . " php tms_update_script.php --clearlock" . PHP_EOL ,$email_from);
+    exit();
+    }
 set_process_lock("tms_link");
 
 // Record the start time
@@ -300,57 +300,57 @@ $logtext  = "";
 $logtext .= PHP_EOL . sprintf("TMS Script completed in %01.2f seconds.\n", microtime(true) - $tms_script_start_time) . PHP_EOL;
 
 if($tmscount==0)
-	{
-	$tmsstatustext="Completed with errors";
-	if($tms_log)
+    {
+    $tmsstatustext="Completed with errors";
+    if($tms_log)
         {
         fwrite($logfile,$tmsstatustext);
         }
 
-	$logtext.="No Resources found with TMS IDs. Please check the tms_link plugin configuration.";	
-	if($tms_log)
+    $logtext.="No Resources found with TMS IDs. Please check the tms_link plugin configuration.";   
+    if($tms_log)
         {
         fwrite($logfile,"No Resources found with TMS IDs. Please check the tms_link plugin configuration.");
         }
-	}
+    }
 else
-	{
-	$logtext.="Processed " . $tmscount .  " resource(s) with TMS Object IDs." . PHP_EOL . PHP_EOL;
-	$tmsupdated = count($tms_updated_array);
-	$logtext.="Successfully updated " . $tmsupdated .  " resource(s)." . PHP_EOL . PHP_EOL;
-	if($tmsupdated>0)
-		{
+    {
+    $logtext.="Processed " . $tmscount .  " resource(s) with TMS Object IDs." . PHP_EOL . PHP_EOL;
+    $tmsupdated = count($tms_updated_array);
+    $logtext.="Successfully updated " . $tmsupdated .  " resource(s)." . PHP_EOL . PHP_EOL;
+    if($tmsupdated>0)
+        {
         $logtext .= " Resource ID : TMS ObjectID" . PHP_EOL;
         }
 
-	foreach($tms_updated_array as $success_ref=>$success_tmsid)
-		{
-		$logtext .=  " " . str_pad($success_ref,12) . ": " . $success_tmsid . PHP_EOL;
-		}
+    foreach($tms_updated_array as $success_ref=>$success_tmsid)
+        {
+        $logtext .=  " " . str_pad($success_ref,12) . ": " . $success_tmsid . PHP_EOL;
+        }
 
-	if(count($tmserrors)!=0)
-		{
-		$tmsstatustext= PHP_EOL . "Completed with errors" . PHP_EOL;
-		$logtext.= PHP_EOL . "Failed to update " . count($tmserrors) .  " resource(s)" . PHP_EOL;
-		
-		$logtext .= PHP_EOL . "Error summary: -" . PHP_EOL; 
-		$logtext .= " Resource ID : Error" . PHP_EOL;
+    if(count($tmserrors)!=0)
+        {
+        $tmsstatustext= PHP_EOL . "Completed with errors" . PHP_EOL;
+        $logtext.= PHP_EOL . "Failed to update " . count($tmserrors) .  " resource(s)" . PHP_EOL;
+        
+        $logtext .= PHP_EOL . "Error summary: -" . PHP_EOL; 
+        $logtext .= " Resource ID : Error" . PHP_EOL;
 
         foreach($tmserrors as $errorresource=>$tmserror)
-			{
-			$logtext .= " " . str_pad($errorresource,12) . ": " . $tmserror . PHP_EOL;		
-			}
-		}	
-	else
-		{
-		$tmsstatustext="Success!";
-		}
-	
-	if($tms_log)
+            {
+            $logtext .= " " . str_pad($errorresource,12) . ": " . $tmserror . PHP_EOL;      
+            }
+        }   
+    else
+        {
+        $tmsstatustext="Success!";
+        }
+    
+    if($tms_log)
         {
         fwrite($logfile,$tmsstatustext);
         }
-	}
+    }
 
 $tmssubject = ($tms_link_test_mode ? "TESTING MODE - " : "") . "TMS Import script - " . $tmsstatustext;
 send_mail($email_notify, $tmssubject, $logtext, $email_from);

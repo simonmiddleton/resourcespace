@@ -7,12 +7,12 @@ $codes=build_codes();
 # Find country field
 $country_field=ps_query("select ref,type from resource_type_field where name='country'", array(), "schema");
 if (count($country_field) == 0 || $country_field[0]["ref"] == "") 
-	{
+    {
     if('cli' == PHP_SAPI)
         {
         echo " - Country field not found. Must have a field with shorthand name set to 'country'." . PHP_EOL;
         }
-	} 
+    } 
 else
     {
     $country_ref = $country_field[0]["ref"];
@@ -103,7 +103,7 @@ if ($found)
     foreach ($coords as $coord) # Each coord is country code, latitude, longitude
         {
         $s=explode(",",$coord); 
-        if ($s[0]==trim($code))	
+        if ($s[0]==trim($code)) 
             {
             $latlong[0] = $s[1];
             $latlong[1] = $s[2];

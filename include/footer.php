@@ -2,21 +2,21 @@
 hook("before_footer_always");
 
 if(getval("loginmodal",""))
-	{
-	$login_url=$baseurl."/login.php?url=".urlencode(getval("url",""))."&api=".urlencode(getval("api",""))."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""))."&logout=".urlencode(getval("logout",true));
-	?><script>
-		jQuery(document).ready(function(){
-			ModalLoad('<?php echo $login_url?>',true);
-		});
-	</script>
-	<?php
-	}
+    {
+    $login_url=$baseurl."/login.php?url=".urlencode(getval("url",""))."&api=".urlencode(getval("api",""))."&error=".urlencode(getval("error",""))."&auto=".urlencode(getval("auto",""))."&nocookies=".urlencode(getval("nocookies",""))."&logout=".urlencode(getval("logout",true));
+    ?><script>
+        jQuery(document).ready(function(){
+            ModalLoad('<?php echo $login_url?>',true);
+        });
+    </script>
+    <?php
+    }
 
 # Complete rendering of footer controlled elements and closure divs on full page load (ie. ajax is "")
 # This rendering is bypassed when dynamically loading content into CentralSpace (ajax is "true")
 if (getval("ajax","") == "" && !hook("replace_footer")) 
-	{ 
-	hook("beforefooter");
+    { 
+    hook("beforefooter");
     if(!in_array($pagename,["login","user_password"]))
         {
         ?>
@@ -53,11 +53,11 @@ if (getval("ajax","") == "" && !hook("replace_footer"))
             }
 
         if (!hook("replace_footernavrightbottom"))
-        	{
+            {
             ?>
             <div id="FooterNavRightBottom"><?php echo text("footer")?></div>
             <?php
-        	}
+            }
         ?>
         <div class="clearer"></div>
         </div>
@@ -90,9 +90,9 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
 
     // clear resource or search title for pages that don't apply:
     if (!in_array($pagename,array_merge($general_title_pages,$search_title_pages,$resource_title_pages)) && (empty($additional_title_pages) || !in_array($pagename,$additional_title_pages))){
-		echo "<script language='javascript'>\n";
-		echo "document.title = \"$applicationname\";\n";
-		echo "</script>";
+        echo "<script language='javascript'>\n";
+        echo "document.title = \"$applicationname\";\n";
+        echo "</script>";
     }
     // place resource titles
     else if (in_array($pagename,$resource_title_pages) && !isset($_GET['collection']) && !isset($_GET['java'])) /* for edit page */{
@@ -132,119 +132,119 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
       // place page titles
     else if (in_array($pagename,$general_title_pages)){ 
 
-		if (isset($lang[$pagename])){
-			$pagetitle=$lang[$pagename];
-		} 
-		else if (isset($lang['action-'.$pagename])){
-			$pagetitle=$lang["action-".$pagename];
-			if (getval("java","")!=""){$pagetitle=$lang['upload']." ".$pagetitle;}
-		}
-		else if (isset($lang[str_replace("_","",$pagename)])){
-			$pagetitle=$lang[str_replace("_","",$pagename)];
-		}
-		else if ($pagename=="admin_content"){
-			$pagetitle=$lang['managecontent'];
-		}
-		else if ($pagename=="collection_public"){
-			$pagetitle=$lang["publiccollections"];
-		}
-		else if ($pagename=="collection_manage"){
-			$pagetitle=$lang["mycollections"];
-		}
-		else if ($pagename=="team_home"){
-			$pagetitle=$lang["teamcentre"];
-		}
-		else if ($pagename=="help"){
-			$pagetitle=$lang["helpandadvice"];
-		}
-		else if (strpos($pagename,"upload")!==false){
-			$pagetitle=$lang["upload"];
-		}
-		else if ($pagename=="contact"){
-			$pagetitle=$lang["contactus"];
-		}
-		else if ($pagename=="geo_search"){
-			$pagetitle=$lang["geographicsearch"];
-		}
-		else if ($pagename=="search_advanced"){
-			$pagetitle=$lang["advancedsearch"];
-			if (getval("archive","")==2){$pagetitle.=" - ".$lang['archiveonlysearch'];}
-		}	
-		else if ($pagename=="about"){
-			$pagetitle=$lang["aboutus"];
-		}	
-		else if ($pagename=="contribute"){
-			$pagetitle=$lang["mycontributions"];
-		}	
-		else if ($pagename=="user_preferences"){
-			$pagetitle=$lang["user-preferences"];
-		}	
-		else if ($pagename=="requests"){
-			$pagetitle=$lang["myrequests"];
-		}	
-		else if ($pagename=="team_resource"){
-			$pagetitle=$lang["manageresources"];
-		}	
-		else if ($pagename=="team_archive"){
-			$pagetitle=$lang["managearchiveresources"];
-		}	
-		else if($pagename=="view_shares"){
-			$pagetitle=$lang["shared_collections"];
-		}	
-		else if($pagename=="team_user"){
-			$pagetitle=$lang["manageusers"];
-		}
-		else if($pagename=="team_request"){
-			$pagetitle=$lang["managerequestsorders"];
-		}
-		else if($pagename=="team_research"){
-			$pagetitle=$lang["manageresearchrequests"];
-		}
-		else if($pagename=="team_plugins"){
-			$pagetitle=$lang["pluginmanager"];
-		}
-		else if($pagename=="team_mail"){
-			$pagetitle=$lang["sendbulkmail"];
-		}
-		else if($pagename=="team_export"){
-			$pagetitle=$lang["exportdata"];
-		}
-		else if($pagename=="team_stats"){
-			$pagetitle=$lang["viewstatistics"];
-		}
-		else if($pagename=="team_report"){
-			$pagetitle=$lang["viewreports"];
-		}
-		else if($pagename=="check"){
-			$pagetitle=$lang["installationcheck"];
-		}
-		else if($pagename=="index"){
-			$pagetitle=$lang["systemsetup"];
-		}
-		else if($pagename=="team_user_log"){
-			global $userdata;
-			$pagetitle=$lang["userlog"] . ": " . $userdata["fullname"];
-		}
-		else if($pagename=="team_user_edit"){
-			global $userdata,$display_useredit_ref;
-			$pagetitle=$lang["edituser"];
-			if($display_useredit_ref){
-				$pagetitle.=" ".$ref;
-			}
-		}
-		else if($pagename=="admin_content_edit"){
-			$pagetitle=$lang["editcontent"];
-		}
-		else if($pagename=="team_request_edit"){
-			$pagetitle=$lang["editrequestorder"];
-		}
-		else if($pagename=="team_research_edit"){
-			$pagetitle=$lang["editresearchrequest"];
-		}
-		else {
-			$pagetitle="";
-		}
-		if (strlen($pagetitle)!=0){$pagetitle="- $pagetitle";} 
+        if (isset($lang[$pagename])){
+            $pagetitle=$lang[$pagename];
+        } 
+        else if (isset($lang['action-'.$pagename])){
+            $pagetitle=$lang["action-".$pagename];
+            if (getval("java","")!=""){$pagetitle=$lang['upload']." ".$pagetitle;}
+        }
+        else if (isset($lang[str_replace("_","",$pagename)])){
+            $pagetitle=$lang[str_replace("_","",$pagename)];
+        }
+        else if ($pagename=="admin_content"){
+            $pagetitle=$lang['managecontent'];
+        }
+        else if ($pagename=="collection_public"){
+            $pagetitle=$lang["publiccollections"];
+        }
+        else if ($pagename=="collection_manage"){
+            $pagetitle=$lang["mycollections"];
+        }
+        else if ($pagename=="team_home"){
+            $pagetitle=$lang["teamcentre"];
+        }
+        else if ($pagename=="help"){
+            $pagetitle=$lang["helpandadvice"];
+        }
+        else if (strpos($pagename,"upload")!==false){
+            $pagetitle=$lang["upload"];
+        }
+        else if ($pagename=="contact"){
+            $pagetitle=$lang["contactus"];
+        }
+        else if ($pagename=="geo_search"){
+            $pagetitle=$lang["geographicsearch"];
+        }
+        else if ($pagename=="search_advanced"){
+            $pagetitle=$lang["advancedsearch"];
+            if (getval("archive","")==2){$pagetitle.=" - ".$lang['archiveonlysearch'];}
+        }   
+        else if ($pagename=="about"){
+            $pagetitle=$lang["aboutus"];
+        }   
+        else if ($pagename=="contribute"){
+            $pagetitle=$lang["mycontributions"];
+        }   
+        else if ($pagename=="user_preferences"){
+            $pagetitle=$lang["user-preferences"];
+        }   
+        else if ($pagename=="requests"){
+            $pagetitle=$lang["myrequests"];
+        }   
+        else if ($pagename=="team_resource"){
+            $pagetitle=$lang["manageresources"];
+        }   
+        else if ($pagename=="team_archive"){
+            $pagetitle=$lang["managearchiveresources"];
+        }   
+        else if($pagename=="view_shares"){
+            $pagetitle=$lang["shared_collections"];
+        }   
+        else if($pagename=="team_user"){
+            $pagetitle=$lang["manageusers"];
+        }
+        else if($pagename=="team_request"){
+            $pagetitle=$lang["managerequestsorders"];
+        }
+        else if($pagename=="team_research"){
+            $pagetitle=$lang["manageresearchrequests"];
+        }
+        else if($pagename=="team_plugins"){
+            $pagetitle=$lang["pluginmanager"];
+        }
+        else if($pagename=="team_mail"){
+            $pagetitle=$lang["sendbulkmail"];
+        }
+        else if($pagename=="team_export"){
+            $pagetitle=$lang["exportdata"];
+        }
+        else if($pagename=="team_stats"){
+            $pagetitle=$lang["viewstatistics"];
+        }
+        else if($pagename=="team_report"){
+            $pagetitle=$lang["viewreports"];
+        }
+        else if($pagename=="check"){
+            $pagetitle=$lang["installationcheck"];
+        }
+        else if($pagename=="index"){
+            $pagetitle=$lang["systemsetup"];
+        }
+        else if($pagename=="team_user_log"){
+            global $userdata;
+            $pagetitle=$lang["userlog"] . ": " . $userdata["fullname"];
+        }
+        else if($pagename=="team_user_edit"){
+            global $userdata,$display_useredit_ref;
+            $pagetitle=$lang["edituser"];
+            if($display_useredit_ref){
+                $pagetitle.=" ".$ref;
+            }
+        }
+        else if($pagename=="admin_content_edit"){
+            $pagetitle=$lang["editcontent"];
+        }
+        else if($pagename=="team_request_edit"){
+            $pagetitle=$lang["editrequestorder"];
+        }
+        else if($pagename=="team_research_edit"){
+            $pagetitle=$lang["editresearchrequest"];
+        }
+        else {
+            $pagetitle="";
+        }
+        if (strlen($pagetitle)!=0){$pagetitle="- $pagetitle";} 
         echo "<script language='javascript'>\n";
         echo "document.title = \"$applicationname $pagetitle\";\n";
         echo "</script>";
@@ -253,118 +253,118 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
 }   
 
 if(isset($onload_message["text"]))
-	{?>
-	<script>
-	jQuery(document).ready(function()
-		{
-		styledalert(<?php echo (isset($onload_message["title"]) ? json_encode($onload_message["title"]) : "''") . "," . json_encode($onload_message["text"]) ;?>);
-		});
-	</script>
-	<?php
-	}
+    {?>
+    <script>
+    jQuery(document).ready(function()
+        {
+        styledalert(<?php echo (isset($onload_message["title"]) ? json_encode($onload_message["title"]) : "''") . "," . json_encode($onload_message["text"]) ;?>);
+        });
+    </script>
+    <?php
+    }
 if (getval("ajax","") == "")
-	{
-	// don't show closing tags if we're in ajax mode
-	echo "<!--CollectionDiv-->";
-	$omit_collectiondiv_load_pages=array("login","user_request","user_password","index","preview_all");
+    {
+    // don't show closing tags if we're in ajax mode
+    echo "<!--CollectionDiv-->";
+    $omit_collectiondiv_load_pages=array("login","user_request","user_password","index","preview_all");
 
-	$more_omit_collectiondiv_load_pages=hook("more_omit_collectiondiv_load_pages");
-	if(is_array($more_omit_collectiondiv_load_pages))
-		{
-		$omit_collectiondiv_load_pages=array_merge($omit_collectiondiv_load_pages,$more_omit_collectiondiv_load_pages);
-		}
-	?></div>
+    $more_omit_collectiondiv_load_pages=hook("more_omit_collectiondiv_load_pages");
+    if(is_array($more_omit_collectiondiv_load_pages))
+        {
+        $omit_collectiondiv_load_pages=array_merge($omit_collectiondiv_load_pages,$more_omit_collectiondiv_load_pages);
+        }
+    ?></div>
 
-	<?php # Work out the current collection (if any) from the search string if external access
+    <?php # Work out the current collection (if any) from the search string if external access
 
-	if (isset($k) && $k!="" && isset($search) && !isset($usercollection))
-		{
-		if (substr($search,0,11)=="!collection")
-			{
-			// Search may include extra terms after a space so need to make sure we extract only the ID
-			$searchparts = explode(" ",substr($search,11));
-			$usercollection = trim($searchparts[0]);
-			}
-		}
-	?>
-	<script>
-	<?php
-	if (!isset($usercollection))
-		{?>
-		usercollection='';
-		<?php
-		}
-	else
-		{?>
-		usercollection='<?php echo htmlspecialchars($usercollection) ?>';
-		<?php
-		} ?>
-	</script><?php 
-	if (!hook("replacecdivrender"))
-		{
+    if (isset($k) && $k!="" && isset($search) && !isset($usercollection))
+        {
+        if (substr($search,0,11)=="!collection")
+            {
+            // Search may include extra terms after a space so need to make sure we extract only the ID
+            $searchparts = explode(" ",substr($search,11));
+            $usercollection = trim($searchparts[0]);
+            }
+        }
+    ?>
+    <script>
+    <?php
+    if (!isset($usercollection))
+        {?>
+        usercollection='';
+        <?php
+        }
+    else
+        {?>
+        usercollection='<?php echo htmlspecialchars($usercollection) ?>';
+        <?php
+        } ?>
+    </script><?php 
+    if (!hook("replacecdivrender"))
+        {
         $col_on = !in_array($pagename,$omit_collectiondiv_load_pages) && !checkperm("b") && isset($usercollection);
-		if ($col_on) 
-			{
-			// Footer requires restypes as a string because it is urlencoding them
-			if(isset($restypes) && is_array($restypes))
-				{
-				$restypes = implode(',', $restypes);
-				}
-				?>
-			<div id="CollectionDiv" class="CollectBack AjaxCollect ui-layout-south"></div>
+        if ($col_on) 
+            {
+            // Footer requires restypes as a string because it is urlencoding them
+            if(isset($restypes) && is_array($restypes))
+                {
+                $restypes = implode(',', $restypes);
+                }
+                ?>
+            <div id="CollectionDiv" class="CollectBack AjaxCollect ui-layout-south"></div>
 
-			<script type="text/javascript">
-			var collection_frame_height=<?php echo $collection_frame_height?>;
-			var thumbs="<?php echo htmlspecialchars($thumbs); ?>";									
-			function ShowThumbs()
-				{
-				myLayout.sizePane("south", collection_frame_height);
-				jQuery('.ui-layout-south').animate({scrollTop:0}, 'fast');
-				jQuery('#CollectionMinDiv').hide();
-				jQuery('#CollectionMaxDiv').show();
-				SetCookie('thumbs',"show",1000);
-				ModalCentre();
-				if(typeof chosenCollection !== 'undefined' && chosenCollection)
-					{
-					jQuery('#CollectionMaxDiv select').chosen({disable_search_threshold:chosenCollectionThreshold});
-					}
-				}
-			function HideThumbs()
-				{
-				myLayout.sizePane("south", 40);
-				jQuery('.ui-layout-south').animate({scrollTop:0}, 'fast');			
-				jQuery('#CollectionMinDiv').show();
-				jQuery('#CollectionMaxDiv').hide();
-				SetCookie('thumbs',"hide",1000);
-				ModalCentre();
+            <script type="text/javascript">
+            var collection_frame_height=<?php echo $collection_frame_height?>;
+            var thumbs="<?php echo htmlspecialchars($thumbs); ?>";                                  
+            function ShowThumbs()
+                {
+                myLayout.sizePane("south", collection_frame_height);
+                jQuery('.ui-layout-south').animate({scrollTop:0}, 'fast');
+                jQuery('#CollectionMinDiv').hide();
+                jQuery('#CollectionMaxDiv').show();
+                SetCookie('thumbs',"show",1000);
+                ModalCentre();
+                if(typeof chosenCollection !== 'undefined' && chosenCollection)
+                    {
+                    jQuery('#CollectionMaxDiv select').chosen({disable_search_threshold:chosenCollectionThreshold});
+                    }
+                }
+            function HideThumbs()
+                {
+                myLayout.sizePane("south", 40);
+                jQuery('.ui-layout-south').animate({scrollTop:0}, 'fast');          
+                jQuery('#CollectionMinDiv').show();
+                jQuery('#CollectionMaxDiv').hide();
+                SetCookie('thumbs',"hide",1000);
+                ModalCentre();
 
-				if(typeof chosenCollection !== 'undefined' && chosenCollection)
-					{
-					jQuery('#CollectionMinDiv select').chosen({disable_search_threshold:chosenCollectionThreshold});
-					}
-				}
-			function ToggleThumbs()
-				{
-				thumbs = getCookie("thumbs");
-				if (thumbs=="show")
-					{
-				HideThumbs();
-					}
-				else
-					{ 
-					ShowThumbs();
-					}
-				}
-			function InitThumbs()
-				{
-				if(thumbs!="hide")
-					{
-					ShowThumbs();
-					}
-				else if(thumbs=="hide")
-					{
-					HideThumbs();
-					}
+                if(typeof chosenCollection !== 'undefined' && chosenCollection)
+                    {
+                    jQuery('#CollectionMinDiv select').chosen({disable_search_threshold:chosenCollectionThreshold});
+                    }
+                }
+            function ToggleThumbs()
+                {
+                thumbs = getCookie("thumbs");
+                if (thumbs=="show")
+                    {
+                HideThumbs();
+                    }
+                else
+                    { 
+                    ShowThumbs();
+                    }
+                }
+            function InitThumbs()
+                {
+                if(thumbs!="hide")
+                    {
+                    ShowThumbs();
+                    }
+                else if(thumbs=="hide")
+                    {
+                    HideThumbs();
+                    }
                 }
 
             jQuery(document).ready(function()
@@ -373,8 +373,8 @@ if (getval("ajax","") == "")
                 InitThumbs();
                 });
 
-			</script>
-			<?php
+            </script>
+            <?php
             } // end omit_collectiondiv_load_pages 
         else
             {
@@ -456,18 +456,18 @@ if (getval("ajax","") == "")
                 <?php
                 }
 
-			?>
+            ?>
             });
         </script>
         <?php
         }
 
-	if($responsive_ui && !hook("responsive_footer"))
-		{
-		?>
-		<!-- Responsive -->
-		<script src="<?php echo $baseurl_short; ?>lib/js/responsive.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
-		<script>
+    if($responsive_ui && !hook("responsive_footer"))
+        {
+        ?>
+        <!-- Responsive -->
+        <script src="<?php echo $baseurl_short; ?>lib/js/responsive.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+        <script>
         function toggleSimpleSearch()
             {
             if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
@@ -488,51 +488,51 @@ if (getval("ajax","") == "")
                 }
             }
 
-		/* Responsive Stylesheet inclusion based upon viewing device */
-		if(document.createStyleSheet)
-			{
-			document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
-			}
-		else
-			{
-			jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
-			}
+        /* Responsive Stylesheet inclusion based upon viewing device */
+        if(document.createStyleSheet)
+            {
+            document.createStyleSheet('<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>');
+            }
+        else
+            {
+            jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl ;?>/css/responsive/slim-style.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+            }
 
-		if(!is_touch_device() && jQuery(window).width() <= 1280)
-			{
-			if(document.createStyleSheet)
-				{
-				document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>');
-				}
-			else
-				{
-				jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
-				}
-			}
+        if(!is_touch_device() && jQuery(window).width() <= 1280)
+            {
+            if(document.createStyleSheet)
+                {
+                document.createStyleSheet('<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>');
+                }
+            else
+                {
+                jQuery("head").append("<link rel='stylesheet' href='<?php echo $baseurl; ?>/css/responsive/slim-non-touch.css?rcsskey=<?php echo $css_reload_key; ?>' type='text/css' media='screen' />");
+                }
+            }
 
-		var responsive_show = "<?php echo $lang['responsive_collectiontogglehide'];?>";
-		var responsive_hide;
-		var responsive_newpage = true;
+        var responsive_show = "<?php echo $lang['responsive_collectiontogglehide'];?>";
+        var responsive_hide;
+        var responsive_newpage = true;
 
-		if(jQuery(window).width() <= 1100)
-			{
-			jQuery('.ResponsiveViewFullSite').css('display', 'block');
-			SetCookie("selected_search_tab", "search");
-			}
-		else
-			{
-			jQuery('.ResponsiveViewFullSite').css('display', 'none');
-			}
+        if(jQuery(window).width() <= 1100)
+            {
+            jQuery('.ResponsiveViewFullSite').css('display', 'block');
+            SetCookie("selected_search_tab", "search");
+            }
+        else
+            {
+            jQuery('.ResponsiveViewFullSite').css('display', 'none');
+            }
 
-		if(jQuery(window).width()<=700)
-			{
-			touchScroll("UICenter");
-			}
+        if(jQuery(window).width()<=700)
+            {
+            touchScroll("UICenter");
+            }
 
         var lastWindowWidth = jQuery(window).width();
 
-		jQuery(window).resize(function()
-			{
+        jQuery(window).resize(function()
+            {
             // Check if already resizing
             if(typeof rsresize !== 'undefined')
                 {
@@ -541,13 +541,13 @@ if (getval("ajax","") == "")
 
             newwidth = jQuery( window ).width();
 
-			if(lastWindowWidth > 1100 && newwidth < 1100)
-				{
-				// Set flag to prevent recursive loop
+            if(lastWindowWidth > 1100 && newwidth < 1100)
+                {
+                // Set flag to prevent recursive loop
                 rsresize = true;
-				selectSearchBarTab('search');
-				rsresize = undefined;
-				}
+                selectSearchBarTab('search');
+                rsresize = undefined;
+                }
             else if(lastWindowWidth > 900 && newwidth < 900)
                 {
                 rsresize = true;
@@ -567,135 +567,135 @@ if (getval("ajax","") == "")
             lastWindowWidth = newwidth;            
             });
 
-		jQuery("#HeaderNav1Click").click(function(event)
-			{
-			event.preventDefault();
-			if(jQuery(this).hasClass("RSelectedButton"))
-				{
-				jQuery(this).removeClass("RSelectedButton");
-				jQuery("#HeaderNav1").slideUp(0);
-				jQuery("#Header").removeClass("HeaderMenu");
-				}
-			else
-				{
-				jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
-				jQuery("#HeaderNav2").slideUp(80);				
-				jQuery("#Header").addClass("HeaderMenu");				
-				jQuery(this).addClass("RSelectedButton");
-				jQuery("#HeaderNav1").slideDown(80);
-				}
-			if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
-				{
-				toggleSimpleSearch();
-				}      
-			});
+        jQuery("#HeaderNav1Click").click(function(event)
+            {
+            event.preventDefault();
+            if(jQuery(this).hasClass("RSelectedButton"))
+                {
+                jQuery(this).removeClass("RSelectedButton");
+                jQuery("#HeaderNav1").slideUp(0);
+                jQuery("#Header").removeClass("HeaderMenu");
+                }
+            else
+                {
+                jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
+                jQuery("#HeaderNav2").slideUp(80);              
+                jQuery("#Header").addClass("HeaderMenu");               
+                jQuery(this).addClass("RSelectedButton");
+                jQuery("#HeaderNav1").slideDown(80);
+                }
+            if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
+                {
+                toggleSimpleSearch();
+                }      
+            });
 
-		jQuery("#HeaderNav2Click").click(function(event)
-			{
-			event.preventDefault();
-			if(jQuery(this).hasClass("RSelectedButton"))
-				{
-				jQuery(this).removeClass("RSelectedButton");
-				jQuery("#HeaderNav2").slideUp(0);
-				jQuery("#Header").removeClass("HeaderMenu");
+        jQuery("#HeaderNav2Click").click(function(event)
+            {
+            event.preventDefault();
+            if(jQuery(this).hasClass("RSelectedButton"))
+                {
+                jQuery(this).removeClass("RSelectedButton");
+                jQuery("#HeaderNav2").slideUp(0);
+                jQuery("#Header").removeClass("HeaderMenu");
 
-				}
-			else
-				{
-				jQuery("#Header").addClass("HeaderMenu");
-				jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
-				jQuery("#HeaderNav1").slideUp(80);
-				jQuery(this).addClass("RSelectedButton");
-				jQuery("#HeaderNav2").slideDown(80);
-				} 
-			if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
-				{
-				toggleSimpleSearch();
-				}  
-			});
+                }
+            else
+                {
+                jQuery("#Header").addClass("HeaderMenu");
+                jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
+                jQuery("#HeaderNav1").slideUp(80);
+                jQuery(this).addClass("RSelectedButton");
+                jQuery("#HeaderNav2").slideDown(80);
+                } 
+            if(jQuery("#searchspace").hasClass("ResponsiveSimpleSearch"))
+                {
+                toggleSimpleSearch();
+                }  
+            });
 
-		jQuery("#HeaderNav2").on("click","a",function()
-			{
-			if(jQuery(window).width() <= 1200)
-				{
-				jQuery("#HeaderNav2").slideUp(0);
-				jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
-				}
-			});
-		jQuery("#HeaderNav1").on("click","a",function()
-			{
-			if(jQuery(window).width() <= 1200)
-				{
-				jQuery("#HeaderNav1").slideUp(00);
-				jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
-				}
-			});
-		jQuery("#SearchBarContainer").on("click","#Rssearchexpand",toggleSimpleSearch);
+        jQuery("#HeaderNav2").on("click","a",function()
+            {
+            if(jQuery(window).width() <= 1200)
+                {
+                jQuery("#HeaderNav2").slideUp(0);
+                jQuery("#HeaderNav2Click").removeClass("RSelectedButton");
+                }
+            });
+        jQuery("#HeaderNav1").on("click","a",function()
+            {
+            if(jQuery(window).width() <= 1200)
+                {
+                jQuery("#HeaderNav1").slideUp(00);
+                jQuery("#HeaderNav1Click").removeClass("RSelectedButton");
+                }
+            });
+        jQuery("#SearchBarContainer").on("click","#Rssearchexpand",toggleSimpleSearch);
 
-		if(jQuery(window).width() <= 700 && jQuery(".ListviewStyle").length && is_touch_device())
-			{
-			jQuery("td:last-child,th:last-child").hide();
-			}
-		</script>
-		<!-- end of Responsive -->
-		<?php
-		} /* end of if $responsive_ui*/
+        if(jQuery(window).width() <= 700 && jQuery(".ListviewStyle").length && is_touch_device())
+            {
+            jQuery("td:last-child,th:last-child").hide();
+            }
+        </script>
+        <!-- end of Responsive -->
+        <?php
+        } /* end of if $responsive_ui*/
 
-	hook('afteruilayout');
-	?>
-	<!-- Start of modal support -->
-	<div id="modal_overlay" onClick="ModalClose();"></div>
-	<div id="modal_outer">
-	<div id="modal" tabindex="0">
-	</div>
-	</div>
-	<div id="modal_dialog" style="display:none;"></div>
-	<script type="text/javascript">
-	jQuery(window).bind('resize.modal', ModalCentre);
-	</script>
-	<!-- End of modal support -->
+    hook('afteruilayout');
+    ?>
+    <!-- Start of modal support -->
+    <div id="modal_overlay" onClick="ModalClose();"></div>
+    <div id="modal_outer">
+    <div id="modal" tabindex="0">
+    </div>
+    </div>
+    <div id="modal_dialog" style="display:none;"></div>
+    <script type="text/javascript">
+    jQuery(window).bind('resize.modal', ModalCentre);
+    </script>
+    <!-- End of modal support -->
 
-	<script>
+    <script>
 
-	try
-		{
-		top.history.replaceState(document.title+'&&&'+jQuery('#CentralSpace').html(), applicationname);
-		}
-	catch(e){console.log(e);
-	}
+    try
+        {
+        top.history.replaceState(document.title+'&&&'+jQuery('#CentralSpace').html(), applicationname);
+        }
+    catch(e){console.log(e);
+    }
 
-	</script>
+    </script>
 
-	<script>
+    <script>
 
-		/* Destroy tagEditor if below breakpoint window size (doesn't work in responsize mode */
+        /* Destroy tagEditor if below breakpoint window size (doesn't work in responsize mode */
 
-		window_width = jQuery(window).width();
-		window_width_breakpoint = 1100;
-		simple_search_pills_view = <?php if($simple_search_pills_view) { echo "true"; } else { echo "false"; } ?>;
+        window_width = jQuery(window).width();
+        window_width_breakpoint = 1100;
+        simple_search_pills_view = <?php if($simple_search_pills_view) { echo "true"; } else { echo "false"; } ?>;
 
-		/* Page load */
+        /* Page load */
 
-		if(window_width <= window_width_breakpoint && simple_search_pills_view == true)
-			{
-			jQuery('#ssearchbox').tagEditor('destroy');
-			}
+        if(window_width <= window_width_breakpoint && simple_search_pills_view == true)
+            {
+            jQuery('#ssearchbox').tagEditor('destroy');
+            }
 
-		/* Page resized to below breakpoint */
+        /* Page resized to below breakpoint */
 
-		jQuery(window).resize(function() 
-			{
-			window_width = jQuery(window).width();
-			if(window_width <= window_width_breakpoint && simple_search_pills_view == true)
-				{
-				jQuery('#ssearchbox').tagEditor('destroy');
-				}
-			});
+        jQuery(window).resize(function() 
+            {
+            window_width = jQuery(window).width();
+            if(window_width <= window_width_breakpoint && simple_search_pills_view == true)
+                {
+                jQuery('#ssearchbox').tagEditor('destroy');
+                }
+            });
 
-	</script>
+    </script>
 
-	</body>
-	</html><?php
-	} // end if !ajax
-	
-	
+    </body>
+    </html><?php
+    } // end if !ajax
+    
+    

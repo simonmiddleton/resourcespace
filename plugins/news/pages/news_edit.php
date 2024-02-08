@@ -17,15 +17,15 @@ $findtext=getval("findtext","");
 
 $delete=getval("delete","");
 if ($delete!="" && enforcePostRequest(false))
-	{
-	# Delete news
-	delete_news($delete);
-	}
+    {
+    # Delete news
+    delete_news($delete);
+    }
 
 if (getval("create","")!="")
-	{
-	redirect("plugins/news/pages/news_content_edit.php?ref=new");
-	}
+    {
+    redirect("plugins/news/pages/news_content_edit.php?ref=new");
+    }
 
 include dirname(__FILE__)."/../../../include/header.php";
 
@@ -48,13 +48,13 @@ $jumpcount=1;
 ?>
 
 <div class="BasicsBox">
-	<form method="post">
-        <?php generateFormToken("news_add"); ?>	
-		<input name="create" type="submit" value="<?php echo $lang["news_add"]?>"/>
-	</form>
+    <form method="post">
+        <?php generateFormToken("news_add"); ?> 
+        <input name="create" type="submit" value="<?php echo $lang["news_add"]?>"/>
+    </form>
 </div>
 
-<div class="TopInpageNav"><?php pager();	?></div>
+<div class="TopInpageNav"><?php pager();    ?></div>
 
 
 <form method=post id="newsform">
@@ -73,24 +73,24 @@ $jumpcount=1;
 
 <?php
 for ($n=$offset;(($n<count($news)) && ($n<($offset+$per_page)));$n++)
-	{
-	?>
-	<tr>
-	<td><div class="ListTitle"><?php echo highlightkeywords($news[$n]["date"],htmlspecialchars($findtext),true);?></div></td>
-	
-	<td><div class="ListTitle"><?php echo "<a href=\"" . $baseurl . "/plugins/news/pages/news.php?ref=" . $news[$n]["ref"] . "\">" . highlightkeywords($news[$n]["title"],htmlspecialchars($findtext),true);?></a></div></td>
-	
-	<td><?php echo highlightkeywords(tidy_trim(htmlspecialchars($news[$n]["body"]),100),$findtext,true)?></td>
-	
-	<td>
-	<div class="ListTools">
-		<a href="news_content_edit.php?ref=<?php echo $news[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . escape($findtext))?>"><?php echo LINK_CARET . $lang["action-edit"]?> </a>
-		<a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('newsdelete').value='<?php echo $news[$n]["ref"]?>';document.getElementById('newsform').submit();} return false;"><?php echo LINK_CARET . $lang["action-delete"]?></a>
-		</div>
-	</td>
-	</tr>
-	<?php
-	}
+    {
+    ?>
+    <tr>
+    <td><div class="ListTitle"><?php echo highlightkeywords($news[$n]["date"],htmlspecialchars($findtext),true);?></div></td>
+    
+    <td><div class="ListTitle"><?php echo "<a href=\"" . $baseurl . "/plugins/news/pages/news.php?ref=" . $news[$n]["ref"] . "\">" . highlightkeywords($news[$n]["title"],htmlspecialchars($findtext),true);?></a></div></td>
+    
+    <td><?php echo highlightkeywords(tidy_trim(htmlspecialchars($news[$n]["body"]),100),$findtext,true)?></td>
+    
+    <td>
+    <div class="ListTools">
+        <a href="news_content_edit.php?ref=<?php echo $news[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . escape($findtext))?>"><?php echo LINK_CARET . $lang["action-edit"]?> </a>
+        <a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('newsdelete').value='<?php echo $news[$n]["ref"]?>';document.getElementById('newsform').submit();} return false;"><?php echo LINK_CARET . $lang["action-delete"]?></a>
+        </div>
+    </td>
+    </tr>
+    <?php
+    }
 ?>
 
 </table>
@@ -99,23 +99,23 @@ for ($n=$offset;(($n<count($news)) && ($n<($offset+$per_page)));$n++)
 </div>
 
 <div class="BasicsBox">
-	<form method="post">
+    <form method="post">
         <?php generateFormToken("news_search"); ?>
-		<div class="Question">
-			<label for="find"><?php echo $lang["news_search"]?><br/></label>
-			<div class="tickset">
-			 <div class="Inline">			
-			<input type=text placeholder="<?php echo $lang['searchbytext']?>" name="findtext" id="findtext" value="<?php echo escape($findtext)?>" maxlength="100" class="shrtwidth" />
-			
-			<input type="button" value="<?php echo $lang['clearbutton']?>" onClick="$('findtext').value='';form.submit();" />
-			<input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />
-			 
-			</div>
-			</div>
-			<div class="clearerleft"> 
-			</div>
-		</div>
-	</form>
+        <div class="Question">
+            <label for="find"><?php echo $lang["news_search"]?><br/></label>
+            <div class="tickset">
+             <div class="Inline">           
+            <input type=text placeholder="<?php echo $lang['searchbytext']?>" name="findtext" id="findtext" value="<?php echo escape($findtext)?>" maxlength="100" class="shrtwidth" />
+            
+            <input type="button" value="<?php echo $lang['clearbutton']?>" onClick="$('findtext').value='';form.submit();" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />
+             
+            </div>
+            </div>
+            <div class="clearerleft"> 
+            </div>
+        </div>
+    </form>
 </div>
 
 

@@ -69,10 +69,10 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
     debug("google_vision: \$result = " . print_r($result, true));
     
     if(isset($result['error']))
-    	{
-    	debug('google vision error: ' . $result['error']['code'] . ': ' . $result['error']['message']);
-    	return false;
-    	}
+        {
+        debug('google vision error: ' . $result['error']['code'] . ': ' . $result['error']['message']);
+        return false;
+        }
         
     $nodes=array();
     $title="";

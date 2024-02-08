@@ -12,15 +12,15 @@ $resource=get_resource_data($job_data["r"]);
 $status=false;
 
 if($resource!==false)
-	{
-	$status=update_resource($job_data["r"], $resource['file_path'], $resource['resource_type'], $job_data["title"], $job_data["ingest"], $job_data["createPreviews"], $resource['file_extension'], true);
-	
-	# update the archive status
-	if(isset($job_data['archive']) && $job_data['archive'] !== '')
-		{
-		update_archive_status($job_data["resource"], $job_data["archive"]);
-		}
-	}
+    {
+    $status=update_resource($job_data["r"], $resource['file_path'], $resource['resource_type'], $job_data["title"], $job_data["ingest"], $job_data["createPreviews"], $resource['file_extension'], true);
+    
+    # update the archive status
+    if(isset($job_data['archive']) && $job_data['archive'] !== '')
+        {
+        update_archive_status($job_data["resource"], $job_data["archive"]);
+        }
+    }
 
 $url = isset($job_data['r']) ? $baseurl_short . "?r=" . $job_data['r']: '';
 

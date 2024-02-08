@@ -65,10 +65,10 @@ function copyReport(ref)
     {
     frm = document.forms["copy_report"];
     frm.ref.value=ref;
-    frm.submit();	
+    frm.submit();   
     }
     </script>
-<!-- end code for copy report link -->	
+<!-- end code for copy report link -->  
 
 <?php
 function addColumnHeader($orderName, $labelKey)
@@ -142,9 +142,9 @@ function addColumnHeader($orderName, $labelKey)
             </tr>
 <?php
             }
-?>		</table>
+?>      </table>
     </div>
-</div>		<!-- end of BasicsBox -->
+</div>      <!-- end of BasicsBox -->
 
 <div class="BasicsBox">
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_report_management.php" onSubmit="return CentralSpacePost(this,false);">
@@ -158,13 +158,13 @@ function addColumnHeader($orderName, $labelKey)
 <?php
     if ($find!="")
         {
-?>		<div class="QuestionSubmit">
+?>      <div class="QuestionSubmit">
             <input name="buttonsave" type="button" onclick="CentralSpaceLoad('admin_report_management.php',false);"
                    value="&nbsp;&nbsp;<?php echo $lang["clearbutton"]; ?>&nbsp;&nbsp;">
         </div>
 <?php
         }
-?>	</form>
+?>  </form>
 </div>
 
 <div class="BasicsBox">

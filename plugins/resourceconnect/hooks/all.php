@@ -297,9 +297,9 @@ function HookResourceconnectAllGetResourcesToCheck($collection)
 
 
 function HookResourceconnectAllCountresult($collection,$count)
-	{
-	return $count+ps_value("select count(*) value from resourceconnect_collection_resources where collection=?",array("i",$collection),0);
-	}
+    {
+    return $count+ps_value("select count(*) value from resourceconnect_collection_resources where collection=?",array("i",$collection),0);
+    }
 
 function HookResourceConnectAllgetRemoteResources($collection)
     {

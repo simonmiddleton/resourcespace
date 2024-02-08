@@ -85,29 +85,29 @@ $NODE_FIELDS = array_merge($FIXED_LIST_FIELD_TYPES, [FIELD_TYPE_DATE_RANGE], NON
 
 // codes used for log entries (including resource, collection and activity logs)
 
-define ('LOG_CODE_ACCESS_CHANGED',		'a');
-define ('LOG_CODE_ALTERNATIVE_CREATED',	'b');
-define ('LOG_CODE_CREATED',				'c');
-define ('LOG_CODE_COPIED',				'C');
-define ('LOG_CODE_DOWNLOADED',			'd');
-define ('LOG_CODE_EDITED',				'e');
-define ('LOG_CODE_EMAILED',				'E');
-define ('LOG_CODE_LOGGED_IN',			'l');
-define ('LOG_CODE_MULTI_EDITED',		'm');
-define ('LOG_CODE_NODE_REVERT',			'N');
+define ('LOG_CODE_ACCESS_CHANGED',      'a');
+define ('LOG_CODE_ALTERNATIVE_CREATED', 'b');
+define ('LOG_CODE_CREATED',             'c');
+define ('LOG_CODE_COPIED',              'C');
+define ('LOG_CODE_DOWNLOADED',          'd');
+define ('LOG_CODE_EDITED',              'e');
+define ('LOG_CODE_EMAILED',             'E');
+define ('LOG_CODE_LOGGED_IN',           'l');
+define ('LOG_CODE_MULTI_EDITED',        'm');
+define ('LOG_CODE_NODE_REVERT',         'N');
 define ('LOG_CODE_CREATED_BY_CHANGED',  'o');
-define ('LOG_CODE_USER_OPT_IN',	        'O');
-define ('LOG_CODE_PAID',				'p');
-define ('LOG_CODE_REVERTED_REUPLOADED',	'r');
+define ('LOG_CODE_USER_OPT_IN',         'O');
+define ('LOG_CODE_PAID',                'p');
+define ('LOG_CODE_REVERTED_REUPLOADED', 'r');
 define ('LOG_CODE_REPLACED',            'f');
-define ('LOG_CODE_REORDERED',			'R');
-define ('LOG_CODE_STATUS_CHANGED',		's');
-define ('LOG_CODE_SYSTEM',				'S');
-define ('LOG_CODE_TRANSFORMED',			't');
-define ('LOG_CODE_UPLOADED',			'u');
-define ('LOG_CODE_UNSPECIFIED',			'U');
-define ('LOG_CODE_VIEWED',				'v');
-define ('LOG_CODE_DELETED',				'x');
+define ('LOG_CODE_REORDERED',           'R');
+define ('LOG_CODE_STATUS_CHANGED',      's');
+define ('LOG_CODE_SYSTEM',              'S');
+define ('LOG_CODE_TRANSFORMED',         't');
+define ('LOG_CODE_UPLOADED',            'u');
+define ('LOG_CODE_UNSPECIFIED',         'U');
+define ('LOG_CODE_VIEWED',              'v');
+define ('LOG_CODE_DELETED',             'x');
 define ('LOG_CODE_DELETED_PERMANENTLY', 'xx');
 define ('LOG_CODE_DELETED_ALTERNATIVE', 'y');
 define ('LOG_CODE_ENABLED',             '+');
@@ -117,22 +117,22 @@ define ('LOG_CODE_UNLOCKED',            'Y');
 define ('LOG_CODE_DELETED_ACCESS_KEY',  'XK');
 define ('LOG_CODE_FAILED_LOGIN_ATTEMPT','Xl');
 define ('LOG_CODE_EXTERNAL_UPLOAD',     'EUP');
-define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',				'r');
-define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',		'R');
-define ('LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES',		'D');
-define ('LOG_CODE_COLLECTION_DELETED_RESOURCE',		        'd');
-define ('LOG_CODE_COLLECTION_ADDED_RESOURCE',				'a');
-define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_COPIED',		'c');
-define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_COMMENT',		'm');
-define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_RATING', 		'*');
-define ('LOG_CODE_COLLECTION_SHARED_COLLECTION',			'S');
-define ('LOG_CODE_COLLECTION_EMAILED_COLLECTION',			'E');
-define ('LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH',			's');
-define ('LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION',	'T');
-define ('LOG_CODE_COLLECTION_STOPPED_RESOURCE_ACCESS',		't');
-define ('LOG_CODE_COLLECTION_DELETED_COLLECTION',			'X');
-define ('LOG_CODE_COLLECTION_BATCH_TRANSFORMED',			'b');
-define ('LOG_CODE_COLLECTION_ACCESS_CHANGED',				'A');
+define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',             'r');
+define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',        'R');
+define ('LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES',        'D');
+define ('LOG_CODE_COLLECTION_DELETED_RESOURCE',             'd');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE',               'a');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_COPIED',        'c');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_COMMENT',       'm');
+define ('LOG_CODE_COLLECTION_ADDED_RESOURCE_RATING',        '*');
+define ('LOG_CODE_COLLECTION_SHARED_COLLECTION',            'S');
+define ('LOG_CODE_COLLECTION_EMAILED_COLLECTION',           'E');
+define ('LOG_CODE_COLLECTION_SHARED_RESOURCE_WITH',         's');
+define ('LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION',   'T');
+define ('LOG_CODE_COLLECTION_STOPPED_RESOURCE_ACCESS',      't');
+define ('LOG_CODE_COLLECTION_DELETED_COLLECTION',           'X');
+define ('LOG_CODE_COLLECTION_BATCH_TRANSFORMED',            'b');
+define ('LOG_CODE_COLLECTION_ACCESS_CHANGED',               'A');
 define ('LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED',        'Z');
 define ('LOG_CODE_COLLECTION_SHARED_UPLOAD',                'SEU');
 define ('LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE',            'EEU');
@@ -140,22 +140,22 @@ define ('LOG_CODE_COLLECTION_EDIT_UPLOAD_SHARE',            'EEU');
 
 // validates LOG_CODE is legal
 function LOG_CODE_validate($log_code)
-	{
-	return in_array($log_code,LOG_CODE_get_all());
-	}
+    {
+    return in_array($log_code,LOG_CODE_get_all());
+    }
 
 // returns all allowable LOG_CODEs
 function LOG_CODE_get_all()
-	{
-	return definitions_get_by_prefix('LOG_CODE');
-	}
+    {
+    return definitions_get_by_prefix('LOG_CODE');
+    }
 
 // ------------------------- SYSTEM NOTIFICATION TYPES -------------------------
-define ('MANAGED_REQUEST',		1);
-define ('COLLECTION_REQUEST',	2);
-define ('USER_REQUEST',			3);
-define ('SUBMITTED_RESOURCE',	4);
-define ('SUBMITTED_COLLECTION',	5);
+define ('MANAGED_REQUEST',      1);
+define ('COLLECTION_REQUEST',   2);
+define ('USER_REQUEST',         3);
+define ('SUBMITTED_RESOURCE',   4);
+define ('SUBMITTED_COLLECTION', 5);
 
 // Advanced search mappings. Used to translate field names to !properties special search codes
 $advanced_search_properties=array("media_heightmin"=>"hmin",
@@ -169,19 +169,19 @@ $advanced_search_properties=array("media_heightmin"=>"hmin",
                                   "properties_contributor"=>"cu",
                                   "properties_orientation" => "orientation"
                                   );
-							  
+                              
 
 // ------------------------- JOB STATUS / GENERIC STATUS CODES -------------------------
-define ('STATUS_DISABLED',				0);
-define ('STATUS_ACTIVE',				1);
-define ('STATUS_COMPLETE',				2);	
-define ('STATUS_INPROGRESS',            3);	
-define ('STATUS_ERROR',					5);
+define ('STATUS_DISABLED',              0);
+define ('STATUS_ACTIVE',                1);
+define ('STATUS_COMPLETE',              2); 
+define ('STATUS_INPROGRESS',            3); 
+define ('STATUS_ERROR',                 5);
 
 // ------------------------- JOB PRIORITY CODES -------------------------
 define ('JOB_PRIORITY_IMMEDIATE',   0);
-define ('JOB_PRIORITY_USER',		1);
-define ('JOB_PRIORITY_SYSTEM',		2);
+define ('JOB_PRIORITY_USER',        1);
+define ('JOB_PRIORITY_SYSTEM',      2);
 define ('JOB_PRIORITY_COMPLETED',   9);
 
 // -------------------- General definitions --------------------
@@ -225,9 +225,9 @@ define('FACIAL_RECOGNITION_PREPARED_IMAGE_EXT', 'pgm');
 
 
 // ------------------------- FILTER (SEARCH, EDIT) LOGICAL OPERATORS -------------------------
-define ('RS_FILTER_ALL', 		1);
-define ('RS_FILTER_NONE',		2);
-define ('RS_FILTER_ANY',		3);
+define ('RS_FILTER_ALL',        1);
+define ('RS_FILTER_NONE',       2);
+define ('RS_FILTER_ANY',        3);
 
 // Related node operators
 define ('RS_FILTER_NODE_NOT_IN',   0);
@@ -398,7 +398,7 @@ DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE",4);
 DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_2",8);
 DEFINE ("MESSAGE_ENUM_NOTIFICATION_TYPE_RESERVED_3",16);
 
-DEFINE ("MESSAGE_DEFAULT_TTL_SECONDS",60 * 60 * 24 * 7);		// 7 days
+DEFINE ("MESSAGE_DEFAULT_TTL_SECONDS",60 * 60 * 24 * 7);        // 7 days
 
 
 // ----------------------------------------------
@@ -449,7 +449,7 @@ $offline_job_prefixes = array("ffmpeg","im-convert","im-mogrify","ghostscript","
 
 # Regular expression defining e-mail format
 # Currently exclusively used for comments functionality - checking of valid (anonymous) email addresses entered in JS and in back-end PHP
-$regex_email = "[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}";	
+$regex_email = "[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}";    
 
 // LEAFLET MAPS - AVAILABLE COLOURS
 $MARKER_COLORS = array(

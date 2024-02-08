@@ -380,33 +380,33 @@ function resolve_pdf_language(){
     $supported_lang_files = scandir(__DIR__ . '/../lib/html2pdf/src/locale');
     $supported_langs      = array();
 
-	foreach($supported_lang_files as $file)
-		{
-		$sl=pathinfo($file, PATHINFO_FILENAME);
-		if(!in_array($sl, array("",".","..")))
-			{
-			$supported_langs[]=$sl;
-			}
-		}
-	if(in_array($language, $supported_langs))
-		{
-		return $language;
-		}
-	else
-		{
-		switch($language)
-			{
-			case "es-AR":
-				return "es";
-				break;
-			case "pt-BR":
-				return "pt";
-				break;
-			default:
-				// this includes en-US
-				return $asdefaultlanguage;
-			}
-		}
+    foreach($supported_lang_files as $file)
+        {
+        $sl=pathinfo($file, PATHINFO_FILENAME);
+        if(!in_array($sl, array("",".","..")))
+            {
+            $supported_langs[]=$sl;
+            }
+        }
+    if(in_array($language, $supported_langs))
+        {
+        return $language;
+        }
+    else
+        {
+        switch($language)
+            {
+            case "es-AR":
+                return "es";
+                break;
+            case "pt-BR":
+                return "pt";
+                break;
+            default:
+                // this includes en-US
+                return $asdefaultlanguage;
+            }
+        }
 }
 
 

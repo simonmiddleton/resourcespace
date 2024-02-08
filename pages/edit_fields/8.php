@@ -6,7 +6,7 @@
 <br />
 <textarea class="stdwidth" rows=10 cols=80 name="<?php echo $name?>" id="<?php echo ((isset($modal) && $modal)?"Modal_":"CentralSpace_") . $name?>" <?php echo $help_js; ?>
 ><?php if($value == strip_tags($value)){
-	$value=nl2br($value);
+    $value=nl2br($value);
 }
 echo htmlspecialchars(strip_tags_and_attributes($value,array("a"),array("href","target")))?></textarea>
 </div>
@@ -49,13 +49,13 @@ var editor = CKEDITOR.instances['<?php echo ((isset($modal) && $modal)?"Modal_":
 # Add an event handler to auto save this field if changed.
 if ($edit_autosave) {?>
 editor.on('blur',function(e) 
-	{
-	if(this.checkDirty())
-		{
-		this.updateElement();
-		AutoSave('<?php echo $field["ref"]?>');
-		}
-	});
+    {
+    if(this.checkDirty())
+        {
+        this.updateElement();
+        AutoSave('<?php echo $field["ref"]?>');
+        }
+    });
 
 <?php } ?>
 

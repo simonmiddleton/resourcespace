@@ -16,11 +16,11 @@ echo "<pre>";
 
 $collections=ps_query("select * from collection order by ref");
 for ($n=0;$n<count($collections);$n++)
-	{
-		$ref=$collections[$n]["ref"];
+    {
+        $ref=$collections[$n]["ref"];
 
-		$words = index_collection($ref);
+        $words = index_collection($ref);
 
-		echo "Done $ref (" . ($n+1) . "/" . count($collections) . ") - $words words<br />\n";
-	}
+        echo "Done $ref (" . ($n+1) . "/" . count($collections) . ") - $words words<br />\n";
+    }
 

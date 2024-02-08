@@ -807,7 +807,7 @@ if('' != $tile_type && $tile_type !== "conf")
             }
         <?php
         if($tile_type=="srch")
-            {?>	
+            {?> 
             var count = jQuery("#resource_count").is(':checked');
             if(count)
                 {count=1;}

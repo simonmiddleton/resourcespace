@@ -7,7 +7,7 @@ include "../../../include/authenticate.php"; if (!checkperm("u")) {exit ("Permis
 $plugin_name = 'vr_view';
 $plugin_page_heading = $lang['vr_view_configuration'];
 if(!in_array($plugin_name, $plugins))
-	{plugin_activate_for_setup($plugin_name);}
+    {plugin_activate_for_setup($plugin_name);}
 
 $page_def[] = config_add_boolean_select('vr_view_google_hosted',$lang['vr_view_google_hosted']);
 $page_def[] = config_add_text_input('vr_view_js_url', $lang['vr_view_js_url']);

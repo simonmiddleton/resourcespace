@@ -81,7 +81,7 @@ foreach ($resources as $resource)
     $file_path=get_resource_path($resource["ref"],true,$size,false,$resource["preview_extension"],-1,1,$use_watermark);
     if (file_exists($file_path))
         {
-        $preview_path=get_resource_path($resource["ref"],false,$size,false,$resource["preview_extension"],-1,1,$use_watermark);		
+        $preview_path=get_resource_path($resource["ref"],false,$size,false,$resource["preview_extension"],-1,1,$use_watermark);     
         }
     else
     
@@ -105,7 +105,7 @@ foreach ($resources as $resource)
         {
         $height = $player_height;
         $width = floor($height* $ratio);
-        }		
+        }       
     ?>
     <a class="embedslideshow_preview_inner" id="embedslideshow_preview<?php echo $page ?>" style="display:none;" href="#" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(<?php echo $page + 1 ?>,false,false);return false;">
         <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
@@ -121,7 +121,7 @@ foreach ($resources as $resource)
             ?>
             <span class="embedslideshow_text" id="embedslideshow_previewtext<?php echo $page ?>"><?php echo $resource_data;?></span>
             <?php
-            }		
+            }       
         } ?>
     <script type="text/javascript">
     embedslideshow_x_offsets[<?php echo $page ?>]=<?php echo ($ratio < $player_ratio)?(ceil(($player_width-$width)/2)+4):0; ?>;
@@ -144,7 +144,7 @@ ob_flush();
 
 </div>
 
-<ul class="embedslideshow_controls_standard">	
+<ul class="embedslideshow_controls_standard">   
 
 <?php if ($width>100) { ?>
 <li class="embedslideshow_begn" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(1,false,false);return false;"><i class="fas fa-step-backward"></i></li>

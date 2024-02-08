@@ -336,7 +336,7 @@ function job_queue_run_job($job, $clear_process_lock)
             register_plugin($group_plugin['name']);
             register_plugin_language($group_plugin['name']);
             $offline_plugins[]=$group_plugin['name'];
-            }	
+            }   
 
         foreach($offline_plugins as $plugin)
             {

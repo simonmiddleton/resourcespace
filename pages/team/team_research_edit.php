@@ -14,11 +14,11 @@ include_once "../../include/request_functions.php";
 $ref=getval("ref","",true);
 
 if (getval("submitted", "") != "" && enforcePostRequest(false))
-	{
-	# Save research request data
-	save_research_request($ref);
-	redirect ($baseurl_short."pages/team/team_research.php?reload=true&nc=" . time());
-	}
+    {
+    # Save research request data
+    save_research_request($ref);
+    redirect ($baseurl_short."pages/team/team_research.php?reload=true&nc=" . time());
+    }
 
 # Fetch research request data
 $research=get_research_request($ref);
@@ -26,7 +26,7 @@ if (!$research)
     {
     exit("The supplied research request reference is not valid.");
     }
-	
+    
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
@@ -64,10 +64,10 @@ include "../../include/header.php";
 <div class="clearerleft"> </div></div>
 
 <?php if (!hook("replaceresearcheditresourcetypes")){?>
-	<div class="Question"><label><?php echo htmlspecialchars($lang["resourcetypes"])?></label><div class="Fixed">
-	<?php $first=true;$set=explode(", ",$research["resource_types"]);$types=get_resource_types();for ($n=0;$n<count($types);$n++) {if (in_array($types[$n]["ref"],$set)) {if (!$first) {echo ", ";}echo htmlspecialchars($types[$n]["name"]);$first=false;}} ?>
-	</div>
-	<div class="clearerleft"> </div></div>
+    <div class="Question"><label><?php echo htmlspecialchars($lang["resourcetypes"])?></label><div class="Fixed">
+    <?php $first=true;$set=explode(", ",$research["resource_types"]);$types=get_resource_types();for ($n=0;$n<count($types);$n++) {if (in_array($types[$n]["ref"],$set)) {if (!$first) {echo ", ";}echo htmlspecialchars($types[$n]["name"]);$first=false;}} ?>
+    </div>
+    <div class="clearerleft"> </div></div>
 <?php } ?>
 
 <?php if (!hook("replaceresearcheditnoresources")){?>
@@ -105,11 +105,11 @@ array_walk($rr_cfields, function($field, $i)
 <select class="shrtwidth" name="assigned_to"><option value="0"><?php echo htmlspecialchars($lang["requeststatus0"])?></option>
 <?php $users=get_users_with_permission("r");
 for ($n=0;$n<count($users);$n++)
-	{
-	?>
-	<option value="<?php echo $users[$n]["ref"]?>" <?php if ($research["assigned_to"]==$users[$n]["ref"]) {?>selected<?php } ?>><?php echo htmlspecialchars($users[$n]["username"])?></option>	
-	<?php
-	}
+    {
+    ?>
+    <option value="<?php echo $users[$n]["ref"]?>" <?php if ($research["assigned_to"]==$users[$n]["ref"]) {?>selected<?php } ?>><?php echo htmlspecialchars($users[$n]["username"])?></option>  
+    <?php
+    }
 ?>
 </select>
 <div class="clearerleft"> </div></div>
@@ -133,10 +133,10 @@ for ($n=0;$n<count($users);$n++)
 
 <?php hook('research_request_extra_fields'); ?>
 
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="savexxx" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["save"])?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>
-<?php		
+<?php	  
 include "../../include/footer.php";

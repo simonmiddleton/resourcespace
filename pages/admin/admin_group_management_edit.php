@@ -114,7 +114,7 @@ if (getval("save",false) && enforcePostRequest(false))
     $update_sql_params = array();
     foreach (array("name","permissions","parent","search_filter","search_filter_id","edit_filter","edit_filter_id","derestrict_filter",
                     "derestrict_filter_id","resource_defaults","config_options","welcome_message","ip_restrict","request_mode",
-                    "allow_registration_selection","inherit_flags", "download_limit","download_log_days") as $column)		
+                    "allow_registration_selection","inherit_flags", "download_limit","download_log_days") as $column)       
 
         {
         if ($execution_lockout && $column=="config_options")
@@ -170,13 +170,13 @@ if (getval("save",false) && enforcePostRequest(false))
     $update_sql_params = array_merge($update_sql_params, array("i", $ref));
     ps_query($sql, $update_sql_params);
 
-	hook("usergroup_edit_add_form_save","",array($ref));
-	if(!$error)
-		{
-		redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");		// return to the user group management page
-		exit;
-		}
-	}
+    hook("usergroup_edit_add_form_save","",array($ref));
+    if(!$error)
+        {
+        redirect("{$baseurl_short}pages/admin/admin_group_management.php?{$url_params}");       // return to the user group management page
+        exit;
+        }
+    }
 
 $record = get_usergroup($ref);
 
@@ -220,7 +220,7 @@ include "../../include/header.php";
             array(
                 'title' => $lang["systemsetup"],
                 'href'  => $baseurl_short . "pages/admin/admin_home.php",
-		        'menu' =>  true
+                'menu' =>  true
             ),
             array(
                 'title' => $lang["page-title_user_group_management"],
@@ -314,7 +314,7 @@ include "../../include/header.php";
             <select name="search_filter_id" class="stdwidth">
                 <?php
                 echo "<option value='0' >" . ($record['search_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
-                foreach	($filters as $filter)
+                foreach ($filters as $filter)
                     {
                     echo "<option value='" . $filter['ref'] . "' " . ($record['search_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
                     }
@@ -327,7 +327,7 @@ include "../../include/header.php";
             <select name="edit_filter_id" class="stdwidth">
                 <?php
                 echo "<option value='0' >" . ($record['edit_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
-                foreach	($filters as $filter)
+                foreach ($filters as $filter)
                     {
                     echo "<option value='" . $filter['ref'] . "' " . ($record['edit_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
                     }
@@ -340,7 +340,7 @@ include "../../include/header.php";
             <select name="derestrict_filter_id" class="stdwidth">
                 <?php
                 echo "<option value='0' >" . ($record['derestrict_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
-                foreach	($filters as $filter)
+                foreach ($filters as $filter)
                     {
                     echo "<option value='" . $filter['ref'] . "' " . ($record['derestrict_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
                     }

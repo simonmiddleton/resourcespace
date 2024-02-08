@@ -6,7 +6,7 @@
  * @return array Containing the login details ('valid' determines whether or not the login succeeded).
  */
 function perform_login($loginuser="",$loginpass="")
-	{
+    {
     global $scramble_key, $lang, $max_login_attempts_wait_minutes, $max_login_attempts_per_ip, $max_login_attempts_per_username,
     $username, $password, $password_hash, $session_hash, $usergroup;
 
@@ -71,7 +71,7 @@ function perform_login($loginuser="",$loginpass="")
 
     $ip = get_ip();
 
-	# This may change the $username, $password, and $password_hash
+    # This may change the $username, $password, and $password_hash
     $externalresult=hook("externalauth","",array($username, $password)); #Attempt external auth if configured
     if($externalresult)
         {
@@ -99,12 +99,12 @@ function perform_login($loginuser="",$loginpass="")
             return $result;
             }
 
-		if ($expires!="" && $expires!="0000-00-00 00:00:00" && strtotime($expires)<=time())
-			{
-			$result['error']=$lang["accountexpired"];
+        if ($expires!="" && $expires!="0000-00-00 00:00:00" && strtotime($expires)<=time())
+            {
+            $result['error']=$lang["accountexpired"];
             log_activity('Account Expired',LOG_CODE_FAILED_LOGIN_ATTEMPT,$ip,"user","last_ip",$userref,NULL,NULL,$user_ref);
-			return $result;
-			}
+            return $result;
+            }
 
         $session_hash = generate_session_hash($password_hash);
 
@@ -115,7 +115,7 @@ function perform_login($loginuser="",$loginpass="")
 
         
         $language = getval("language", "");
-		ps_query("
+        ps_query("
             UPDATE user
                SET session=?,
                    last_active = NOW(),
@@ -138,53 +138,53 @@ function perform_login($loginuser="",$loginpass="")
         return $result;
         }
 
-	# Invalid login
-	if(isset($externalresult["error"])){$result['error']=$externalresult["error"];} // We may have been given a better error to display
+    # Invalid login
+    if(isset($externalresult["error"])){$result['error']=$externalresult["error"];} // We may have been given a better error to display
         else {$result['error']=$lang["loginincorrect"];}
 
   hook("loginincorrect");
 
-	# Add / increment a lockout value for this IP
-	$lockouts=ps_value("select count(*) value from ip_lockout where ip=? and tries<?",array("s",$ip,"i",$max_login_attempts_per_ip),"");
+    # Add / increment a lockout value for this IP
+    $lockouts=ps_value("select count(*) value from ip_lockout where ip=? and tries<?",array("s",$ip,"i",$max_login_attempts_per_ip),"");
 
-	if ($lockouts>0)
-		{
-		# Existing row with room to move
-		$tries=ps_value("select tries value from ip_lockout where ip=?",array("s",$ip),0);
-		$tries++;
-		if ($tries==$max_login_attempts_per_ip)
-			{
-			# Show locked out message.
-			$result['error']=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
+    if ($lockouts>0)
+        {
+        # Existing row with room to move
+        $tries=ps_value("select tries value from ip_lockout where ip=?",array("s",$ip),0);
+        $tries++;
+        if ($tries==$max_login_attempts_per_ip)
+            {
+            # Show locked out message.
+            $result['error']=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
             $log_message = 'Max login attempts from IP exceeded - IP: ' . $ip;
             log_activity($log_message, LOG_CODE_FAILED_LOGIN_ATTEMPT, $tries, 'ip_lockout', 'ip', $ip, 'ip');
-			}
-		# Increment
-		ps_query("update ip_lockout set last_try=now(),tries=tries+1 where ip=?",array("s",$ip));
-		}
-	else
-		{
-		# New row
-		ps_query("delete from ip_lockout where ip=?",array("s",$ip));
-		ps_query("insert into ip_lockout (ip,tries,last_try) values (?,1,now())",array("s",$ip));
-		}
+            }
+        # Increment
+        ps_query("update ip_lockout set last_try=now(),tries=tries+1 where ip=?",array("s",$ip));
+        }
+    else
+        {
+        # New row
+        ps_query("delete from ip_lockout where ip=?",array("s",$ip));
+        ps_query("insert into ip_lockout (ip,tries,last_try) values (?,1,now())",array("s",$ip));
+        }
 
-	# Increment a lockout value for any matching username.
-	$ulocks=ps_query("select ref,login_tries,login_last_try from user where username=?",array("s",$username));
-	if (count($ulocks)>0)
-		{
-		$tries=$ulocks[0]["login_tries"];
-		if ($tries=="") {$tries=1;} else {$tries++;}
-		if ($tries>$max_login_attempts_per_username) {$tries=1;}
-		if ($tries==$max_login_attempts_per_username)
-			{
-			# Show locked out message.
-			$result['error']=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
+    # Increment a lockout value for any matching username.
+    $ulocks=ps_query("select ref,login_tries,login_last_try from user where username=?",array("s",$username));
+    if (count($ulocks)>0)
+        {
+        $tries=$ulocks[0]["login_tries"];
+        if ($tries=="") {$tries=1;} else {$tries++;}
+        if ($tries>$max_login_attempts_per_username) {$tries=1;}
+        if ($tries==$max_login_attempts_per_username)
+            {
+            # Show locked out message.
+            $result['error']=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
             $log_message = 'Max login attempts exceeded';
             log_activity($log_message,LOG_CODE_FAILED_LOGIN_ATTEMPT,$ip,'user','ref',($user_ref != false ? $user_ref : NULL),NULL,NULL,($user_ref != false ? $user_ref : NULL));
-			}
-		ps_query("update user set login_tries=?,login_last_try=now() where username=?",array("i",$tries,"s",$username));
-		}
+            }
+        ps_query("update user set login_tries=?,login_last_try=now() where username=?",array("i",$tries,"s",$username));
+        }
     
     if($valid !== true && !isset($log_message))
         {
@@ -209,37 +209,37 @@ function perform_login($loginuser="",$loginpass="")
         );
         }
     
-	return $result;
-	}
+    return $result;
+    }
 
-	
+    
 function generate_session_hash($password_hash)
-	{
-	# Generates a unique session hash
-	global $randomised_session_hash,$scramble_key;
-	
-	if ($randomised_session_hash)
-		{
-		# Completely randomised session hashes. May be more secure, but allows only one user at a time.
-		while (true)
-			{
-			$session=md5(rand() . microtime());
-			if (ps_value("select count(*) value from user where session=?",array("s",$session),0)==0) {return $session;} # Return a unique hash only.
-			}
-		}
-	else
-		{
-		# Session hash is based on the password hash and the date, so there is one new session hash each day. Allows two users to use the same login.
-		$suffix="";
-		while (true)
-			{
-			$session=md5($scramble_key . $password_hash . date("Ymd") . $suffix);
-			if (ps_value("select count(*) value from user where session=? and password<>?",array("s",$session,"s",$password_hash),0)==0) {return $session;} # Return a unique hash only.
-			$suffix.="."; # Extremely unlikely case that this was not a unique session (hash collision) - alter the string slightly and try again.
-			}
-		}	
-		
-	}
+    {
+    # Generates a unique session hash
+    global $randomised_session_hash,$scramble_key;
+    
+    if ($randomised_session_hash)
+        {
+        # Completely randomised session hashes. May be more secure, but allows only one user at a time.
+        while (true)
+            {
+            $session=md5(rand() . microtime());
+            if (ps_value("select count(*) value from user where session=?",array("s",$session),0)==0) {return $session;} # Return a unique hash only.
+            }
+        }
+    else
+        {
+        # Session hash is based on the password hash and the date, so there is one new session hash each day. Allows two users to use the same login.
+        $suffix="";
+        while (true)
+            {
+            $session=md5($scramble_key . $password_hash . date("Ymd") . $suffix);
+            if (ps_value("select count(*) value from user where session=? and password<>?",array("s",$session,"s",$password_hash),0)==0) {return $session;} # Return a unique hash only.
+            $suffix.="."; # Extremely unlikely case that this was not a unique session (hash collision) - alter the string slightly and try again.
+            }
+        }   
+        
+    }
 
 /**
 * Set login cookies
@@ -276,7 +276,7 @@ function set_login_cookies($user, $session_hash, $language = "", $user_preferenc
     rs_setcookie("user", "", 0, $baseurl_short . "pages/admin");
     rs_setcookie("user", "", 0, $baseurl_short . "pages/ajax");
 
-    # Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.)	
+    # Set user cookie, setting secure only flag if a HTTPS site, and also setting the HTTPOnly flag so this cookie cannot be probed by scripts (mitigating potential XSS vuln.) 
     rs_setcookie("user", $session_hash, $expires, $baseurl_short, "", substr($baseurl,0,5)=="https", true);
 
     # Set default resource types

@@ -92,13 +92,13 @@ $notification_users = get_notification_users();
 $total_processed=1;
 $out = "The system has been upgraded. Please wait whilst the necessary upgrade tasks are completed." . PHP_EOL;
 if ($cli)
-	{
-	echo $out;
-	}
+    {
+    echo $out;
+    }
 else
-	{
-	echo nl2br(str_pad($out,4096));
-	}
+    {
+    echo nl2br(str_pad($out,4096));
+    }
 ob_flush();flush();
 
 foreach($new_system_version_files as $new_system_version=>$files)
@@ -106,12 +106,12 @@ foreach($new_system_version_files as $new_system_version=>$files)
     $out="Performing upgrade tasks for system version: {$new_system_version}" . PHP_EOL;
     if ($cli)
         {
-	echo $out;
+    echo $out;
         }
     else
-	{
-	echo nl2br(str_pad($out,4096));
-	}
+    {
+    echo nl2br(str_pad($out,4096));
+    }
     ob_flush();flush();
 
     foreach ($files as $file)
@@ -121,13 +121,13 @@ foreach($new_system_version_files as $new_system_version=>$files)
         round (($total_processed / $total_upgrade_files) * 100,2) . "%) {$file}" . PHP_EOL;
         set_sysvar(SYSVAR_UPGRADE_PROGRESS_OVERALL,$upgrade_progress_overall);
         if ($cli)
-		{
-		echo $upgrade_progress_overall;
-		}
-	else
-		{
-		echo nl2br(str_pad($upgrade_progress_overall,4096));
-		}
+        {
+        echo $upgrade_progress_overall;
+        }
+    else
+        {
+        echo nl2br(str_pad($upgrade_progress_overall,4096));
+        }
         ob_flush();flush();
 
         if(!is_process_lock(PROCESS_LOCK_UPGRADE_IN_PROGRESS))
@@ -166,12 +166,12 @@ $message = 'Successfully upgraded to system version: ' . $new_system_version . '
 log_activity($message, LOG_CODE_SYSTEM, $new_system_version, 'sysvars', 'version', null, null, $current_system_upgrade_level, null, false);
             
 if($cli)
-    	{
-    	echo "Upgrade complete" . PHP_EOL;
-    	}
+        {
+        echo "Upgrade complete" . PHP_EOL;
+        }
 else
-	{
-	echo PHP_EOL . "Upgrade complete. Please wait for redirect<br />
+    {
+    echo PHP_EOL . "Upgrade complete. Please wait for redirect<br />
 	<script src=\"" . $baseurl . "/lib/js/jquery-3.6.0.min.js?css_reload_key=" . $css_reload_key . "\"></script>
 	<script>
 	jQuery(document).ready(function () {
@@ -180,5 +180,5 @@ else
 			}, 5000);
 		});
 	</script>";
-	exit();
-	}
+    exit();
+    }

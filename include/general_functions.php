@@ -60,10 +60,10 @@ function escape_check($text)
     $text=str_replace("\\n","{bs}n",$text);
     $text=str_replace("\\r","{bs}r",$text);
 
-	if (!$GLOBALS['mysql_verbatim_queries'])
-		{
-		$text=str_replace("\\","",$text);
-		}
+    if (!$GLOBALS['mysql_verbatim_queries'])
+        {
+        $text=str_replace("\\","",$text);
+        }
 
     $text=str_replace("{bs}'","\\'",$text);            
     $text=str_replace("{bs}n","\\n",$text);            
@@ -73,8 +73,8 @@ function escape_check($text)
     }
 
 /**
- * For comparing escape_checked strings against mysql content because	
- * just doing $text=str_replace("\\","",$text);	does not undo escape_check
+ * For comparing escape_checked strings against mysql content because   
+ * just doing $text=str_replace("\\","",$text); does not undo escape_check
  *
  * @param  mixed $text
  * @return string
@@ -174,44 +174,44 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
  * @return never
  */
 function redirect(string $url)
-	{
-	global $baseurl,$baseurl_short;
+    {
+    global $baseurl,$baseurl_short;
 
     // Header may not contain NUL bytes
     $url = str_replace("\0", '', $url);
 
-	if (getval("ajax","")!="")
-		{
-		# When redirecting from an AJAX loaded page, forward the AJAX parameter automatically so headers and footers are removed.	
-		if (strpos($url,"?")!==false)
-			{
-			$url.="&ajax=true";
-			}
-		else
-			{
-			$url.="?ajax=true";
-			}
-		}
+    if (getval("ajax","")!="")
+        {
+        # When redirecting from an AJAX loaded page, forward the AJAX parameter automatically so headers and footers are removed.   
+        if (strpos($url,"?")!==false)
+            {
+            $url.="&ajax=true";
+            }
+        else
+            {
+            $url.="?ajax=true";
+            }
+        }
 
-	if (substr($url,0,1)=="/")
-		{
-		# redirect to an absolute URL
-		header ("Location: " . str_replace('/[\\\/]/D',"",$baseurl) . str_replace($baseurl_short,"/",$url));
-		}
-	else
-		{	
-		if(strpos($url,$baseurl)===0)
-			{
-			// Base url has already been added
-			header ("Location: " . $url);	
-			exit();
-			}
+    if (substr($url,0,1)=="/")
+        {
+        # redirect to an absolute URL
+        header ("Location: " . str_replace('/[\\\/]/D',"",$baseurl) . str_replace($baseurl_short,"/",$url));
+        }
+    else
+        {   
+        if(strpos($url,$baseurl)===0)
+            {
+            // Base url has already been added
+            header ("Location: " . $url);   
+            exit();
+            }
 
-		# redirect to a relative URL
-		header ("Location: " . $baseurl . "/" . $url);
-		}
-	exit();
-	}
+        # redirect to a relative URL
+        header ("Location: " . $baseurl . "/" . $url);
+        }
+    exit();
+    }
 
 
 
@@ -3502,8 +3502,8 @@ function set_sysvar($name,$value=null)
  */
 function get_sysvar($name, $default=false)
     {
-	// Check the global array.
-	global $sysvars;
+    // Check the global array.
+    global $sysvars;
     if (isset($sysvars) && array_key_exists($name,$sysvars))
         {
         return $sysvars[$name];
@@ -3525,123 +3525,123 @@ function get_sysvar($name, $default=false)
  * @return mixed
  */
 function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
-	{
-	global $hook_cache;
-	if($pagename == '')
-		{
-		global $pagename;
-		}
+    {
+    global $hook_cache;
+    if($pagename == '')
+        {
+        global $pagename;
+        }
 
-	# the index name for the $hook_cache
-	$hook_cache_index = $name . "|" . $pagename;
+    # the index name for the $hook_cache
+    $hook_cache_index = $name . "|" . $pagename;
 
-	# we have already processed this hook name and page combination before so return from cache
-	if (isset($hook_cache[$hook_cache_index]))
-		{
-		# increment stats
-		global $hook_cache_hits;
-		$hook_cache_hits++;
+    # we have already processed this hook name and page combination before so return from cache
+    if (isset($hook_cache[$hook_cache_index]))
+        {
+        # increment stats
+        global $hook_cache_hits;
+        $hook_cache_hits++;
 
-		unset($GLOBALS['hook_return_value']);
-		$empty_global_return_value=true;
-		// we use $GLOBALS['hook_return_value'] so that hooks can directly modify the overall return value
+        unset($GLOBALS['hook_return_value']);
+        $empty_global_return_value=true;
+        // we use $GLOBALS['hook_return_value'] so that hooks can directly modify the overall return value
         // $GLOBALS["hook_return_value"] will be unset by new calls to hook() -  when using $GLOBALS["hook_return_value"] make sure 
         // the value is used or stored locally before calling hook() or functions using hook().
 
-		foreach ($hook_cache[$hook_cache_index] as $function)
-			{
-			$function_return_value = call_user_func_array($function, $params);
+        foreach ($hook_cache[$hook_cache_index] as $function)
+            {
+            $function_return_value = call_user_func_array($function, $params);
 
-			if ($function_return_value === null)
-				{
-				continue;	// the function did not return a value so skip to next hook call
-				}
+            if ($function_return_value === null)
+                {
+                continue;   // the function did not return a value so skip to next hook call
+                }
 
-			if (!$last_hook_value_wins && !$empty_global_return_value &&
-				isset($GLOBALS['hook_return_value']) &&
-				(gettype($GLOBALS['hook_return_value']) == gettype($function_return_value)) &&
-				(is_array($function_return_value) || is_string($function_return_value) || is_bool($function_return_value)))
-				{
-				if (is_array($function_return_value))
-					{
-					// We merge the cached result with the new result from the plugin and remove any duplicates
-					// Note: in custom plugins developers should work with the full array (ie. superset) rather than just a sub-set of the array.
-					//       If your plugin needs to know if the array has been modified previously by other plugins use the global variable "hook_return_value"
-					$numeric_key=false;
-					foreach($GLOBALS['hook_return_value'] as $key=> $value){
-						if(is_numeric($key)){
-							$numeric_key=true;
-						}
-						else{
-							$numeric_key=false;
-						}
-						break;
-					}
-					if($numeric_key){
-						$merged_arrays = array_merge($GLOBALS['hook_return_value'], $function_return_value);
-						$GLOBALS['hook_return_value'] = array_intersect_key($merged_arrays,array_unique(array_column($merged_arrays,'value'),SORT_REGULAR));
-					}
-					else{
-						$GLOBALS['hook_return_value'] = array_unique(array_merge_recursive($GLOBALS['hook_return_value'], $function_return_value), SORT_REGULAR);
-					}
-					}
-				elseif (is_string($function_return_value))
-					{
-					$GLOBALS['hook_return_value'] .= $function_return_value;		// appends string
-					}
-				elseif (is_bool($function_return_value))
-					{
-					$GLOBALS['hook_return_value'] = $GLOBALS['hook_return_value'] || $function_return_value;		// boolean OR
-					}
-				}
-			else
-				{
-				$GLOBALS['hook_return_value'] = $function_return_value;
-				$empty_global_return_value=false;
-				}
-			}
+            if (!$last_hook_value_wins && !$empty_global_return_value &&
+                isset($GLOBALS['hook_return_value']) &&
+                (gettype($GLOBALS['hook_return_value']) == gettype($function_return_value)) &&
+                (is_array($function_return_value) || is_string($function_return_value) || is_bool($function_return_value)))
+                {
+                if (is_array($function_return_value))
+                    {
+                    // We merge the cached result with the new result from the plugin and remove any duplicates
+                    // Note: in custom plugins developers should work with the full array (ie. superset) rather than just a sub-set of the array.
+                    //       If your plugin needs to know if the array has been modified previously by other plugins use the global variable "hook_return_value"
+                    $numeric_key=false;
+                    foreach($GLOBALS['hook_return_value'] as $key=> $value){
+                        if(is_numeric($key)){
+                            $numeric_key=true;
+                        }
+                        else{
+                            $numeric_key=false;
+                        }
+                        break;
+                    }
+                    if($numeric_key){
+                        $merged_arrays = array_merge($GLOBALS['hook_return_value'], $function_return_value);
+                        $GLOBALS['hook_return_value'] = array_intersect_key($merged_arrays,array_unique(array_column($merged_arrays,'value'),SORT_REGULAR));
+                    }
+                    else{
+                        $GLOBALS['hook_return_value'] = array_unique(array_merge_recursive($GLOBALS['hook_return_value'], $function_return_value), SORT_REGULAR);
+                    }
+                    }
+                elseif (is_string($function_return_value))
+                    {
+                    $GLOBALS['hook_return_value'] .= $function_return_value;        // appends string
+                    }
+                elseif (is_bool($function_return_value))
+                    {
+                    $GLOBALS['hook_return_value'] = $GLOBALS['hook_return_value'] || $function_return_value;        // boolean OR
+                    }
+                }
+            else
+                {
+                $GLOBALS['hook_return_value'] = $function_return_value;
+                $empty_global_return_value=false;
+                }
+            }
 
-		return isset($GLOBALS['hook_return_value']) ? $GLOBALS['hook_return_value'] : false;
-		}
+        return isset($GLOBALS['hook_return_value']) ? $GLOBALS['hook_return_value'] : false;
+        }
 
-	# we have not encountered this hook and page combination before so go add it
-	global $plugins;
+    # we have not encountered this hook and page combination before so go add it
+    global $plugins;
 
-	# this will hold all of the functions to call when hitting this hook name and page combination
-	$function_list = array();
+    # this will hold all of the functions to call when hitting this hook name and page combination
+    $function_list = array();
 
-	for ($n=0;$n<count($plugins);$n++)
-		{	
-		# "All" hooks
-        $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . "All" . ucfirst((string) $name) : "";	
+    for ($n=0;$n<count($plugins);$n++)
+        {   
+        # "All" hooks
+        $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . "All" . ucfirst((string) $name) : "";    
 
-		if (function_exists($function)) 
-			{			
-			$function_list[]=$function;
-			}
-		else 
-			{
-			# Specific hook	
+        if (function_exists($function)) 
+            {           
+            $function_list[]=$function;
+            }
+        else 
+            {
+            # Specific hook 
             $function= isset($plugins[$n]) ? "Hook" . ucfirst((string) $plugins[$n]) . ucfirst((string) $pagename) . ucfirst((string) $name) : "";
-			if (function_exists($function)) 
-				{
-				$function_list[]=$function;
-				}
-			}
-		}	
+            if (function_exists($function)) 
+                {
+                $function_list[]=$function;
+                }
+            }
+        }   
 
     // Support a global, non-plugin format of hook function that can be defined in config overrides.
-    $function= "GlobalHook" . ucfirst((string) $name);	
+    $function= "GlobalHook" . ucfirst((string) $name);  
     if (function_exists($function)) 
-        {			
+        {           
         $function_list[]=$function;
         }
 
-	# add the function list to cache
-	$hook_cache[$hook_cache_index] = $function_list;
+    # add the function list to cache
+    $hook_cache[$hook_cache_index] = $function_list;
 
-	# do a callback to run the function(s) - this will not cause an infinite loop as we have just added to cache for execution.
-	return hook($name, $pagename, $params, $last_hook_value_wins);
+    # do a callback to run the function(s) - this will not cause an infinite loop as we have just added to cache for execution.
+    return hook($name, $pagename, $params, $last_hook_value_wins);
     }
 
 
@@ -3657,7 +3657,7 @@ function hook($name,$pagename="",$params=array(),$last_hook_value_wins=false)
 */
 function strip_tags_and_attributes($html, array $tags = array(), array $attributes = array())
     {
-	global $permitted_html_tags, $permitted_html_attributes;
+    global $permitted_html_tags, $permitted_html_attributes;
 
     if(!is_string($html) || 0 === strlen($html))
         {
@@ -3933,7 +3933,7 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
         }
     unset($GLOBALS["use_error_exception"]);
 
-    $extendedtext = "";	
+    $extendedtext = ""; 
     if(isset($debug_extended_info) && $debug_extended_info && function_exists("debug_backtrace"))
         {
         $trace_id = isset($GLOBALS['debug_trace_id']) ? "[traceID {$GLOBALS['debug_trace_id']}]" : '';
@@ -3996,7 +3996,7 @@ function rcRmdir ($path,$ignore=array())
             if ($object->isDir() && $object->isWritable())
                 {
                 $success = rcRmdir($path . DIRECTORY_SEPARATOR . $objectname,$ignore);
-                }				
+                }               
             else
                 {
                 $success = try_unlink($path . DIRECTORY_SEPARATOR . $objectname);
@@ -4076,12 +4076,12 @@ function daily_stat($activity_type,$object_ref)
  * @return string
  */
 function pagename()
-	{
-	$name=safe_file_name(getval('pagename', ''));
-	if (!empty($name))
-		return $name;
-	$url=str_replace("\\","/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
-	$urlparts=explode("/",$url);
+    {
+    $name=safe_file_name(getval('pagename', ''));
+    if (!empty($name))
+        return $name;
+    $url=str_replace("\\","/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
+    $urlparts=explode("/",$url);
     $url=$urlparts[count($urlparts)-1];
     return $url;
     }
@@ -4093,19 +4093,19 @@ function pagename()
  * @return string
  */
 function text($name)
-	{
-	global $pagename,$lang;
+    {
+    global $pagename,$lang;
 
-	$key=$pagename . "__" . $name;	
+    $key=$pagename . "__" . $name;  
     if (array_key_exists($key,$lang))
         {return $lang[$key];}
     else if(array_key_exists("all__" . $name,$lang))
         {return $lang["all__" . $name];}
     else if(array_key_exists($name,$lang))
-        {return $lang[$name];}	
+        {return $lang[$name];}  
 
-	return "";
-	}
+    return "";
+    }
 
 /**
  * Gets a list of site text sections, used for a multi-page help area.
@@ -4113,14 +4113,14 @@ function text($name)
  * @param  mixed $page
  */
 function get_section_list($page): array
-	{
+    {
 
     global $usergroup;
 
 
     return ps_array("select distinct name value from site_text where page = ? and name <> 'introtext' and (specific_to_group IS NULL or specific_to_group = ?) order by name", array("s", $page, "i", $usergroup));
 
-	}
+    }
 /**
  * Returns a more friendly user agent string based on the passed user agent. Used in the user area to establish browsers used.
  *
@@ -4147,17 +4147,17 @@ function resolve_user_agent($agent)
                     "msie 9."=>"IE9",
                     "msie 10."=>"IE10",
                     "trident/7.0"=>"IE11",
-		    "msie"=>"IE",
-		    "trident"=>"IE",
+            "msie"=>"IE",
+            "trident"=>"IE",
                     "netscape"=>"Netscape",
                     "mozilla"=>"Mozilla"
                     #catch all for mozilla references not specified above
                     );
     $osmatches=array(
                     "iphone"=>"iPhone",
-					"nt 10.0"=>"Windows 10",
-					"nt 6.3"=>"Windows 8.1",
-					"nt 6.2"=>"Windows 8",
+                    "nt 10.0"=>"Windows 10",
+                    "nt 6.3"=>"Windows 8.1",
+                    "nt 6.2"=>"Windows 8",
                     "nt 6.1"=>"Windows 7",
                     "nt 6.0"=>"Vista",
                     "nt 5.2"=>"WS2003",
@@ -4188,21 +4188,21 @@ function resolve_user_agent($agent)
  * @return string
  */
 function get_ip()
-	{
-	global $ip_forwarded_for;
+    {
+    global $ip_forwarded_for;
 
-	if ($ip_forwarded_for)
-		{
-		if (isset($_SERVER) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {return $_SERVER["HTTP_X_FORWARDED_FOR"];}
-		}
+    if ($ip_forwarded_for)
+        {
+        if (isset($_SERVER) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {return $_SERVER["HTTP_X_FORWARDED_FOR"];}
+        }
 
-	# Returns the IP address for the current user.
-	if (array_key_exists("REMOTE_ADDR",$_SERVER)) {return $_SERVER["REMOTE_ADDR"];}
+    # Returns the IP address for the current user.
+    if (array_key_exists("REMOTE_ADDR",$_SERVER)) {return $_SERVER["REMOTE_ADDR"];}
 
 
-	# Can't find an IP address.
-	return "???";
-	}
+    # Can't find an IP address.
+    return "???";
+    }
 
 
 /**
@@ -4382,7 +4382,7 @@ function is_positive_int_loose($V): bool
 function ip_matches($ip, $ip_restrict)
 {
 global $system_login;
-if ($system_login){return true;}	
+if ($system_login){return true;}    
 
 if (substr($ip_restrict, 0, 1)=='!')
     return @preg_match('/'.substr($ip_restrict, 1).'/su', $ip);

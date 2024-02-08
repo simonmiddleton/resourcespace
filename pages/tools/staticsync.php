@@ -98,17 +98,17 @@ $restypes = get_resource_types();
 
 if (isset($numeric_alt_suffixes) && $numeric_alt_suffixes > 0)
     {
-	// Add numeric suffixes to $staticsync_alt_suffix_array to support additional suffixes
-	$newsuffixarray = array();
+    // Add numeric suffixes to $staticsync_alt_suffix_array to support additional suffixes
+    $newsuffixarray = array();
     foreach ($staticsync_alt_suffix_array as $suffix => $description)
         {
         $newsuffixarray[$suffix] = $description;
         for ($i = 1; $i < $numeric_alt_suffixes; $i++)
             {
             $newsuffixarray[$suffix . $i] = $description . " (" . $i . ")";
-		    }
-	    }
-	$staticsync_alt_suffix_array = $newsuffixarray;
+            }
+        }
+    $staticsync_alt_suffix_array = $newsuffixarray;
     }
 
 // Add all the synced alternative files to the list of completed
@@ -146,7 +146,7 @@ function touch_category_tree_level($path_parts)
 
     $parent_search = '';
     $nodename      = '';
-	$order_by =10;
+    $order_by =10;
     $treenodes = array();
     for ($n=0;$n<count($path_parts);$n++)
         {
@@ -157,29 +157,29 @@ function touch_category_tree_level($path_parts)
         $found = false;
         foreach($tree as $treenode)
             {
-			if($treenode["parent"]==$parent_search)
+            if($treenode["parent"]==$parent_search)
                 {
-        		if ($treenode["name"]==$nodename)
-					{
-					# A match!
-					echo " - FOUND" . PHP_EOL;
-					$found = true;
+                if ($treenode["name"]==$nodename)
+                    {
+                    # A match!
+                    echo " - FOUND" . PHP_EOL;
+                    $found = true;
                     $treenodes[]=$treenode["ref"];
-					$parent_search = $treenode["ref"]; # Search for this as the parent node on the pass for the next level.
-					}
-				else
-					{
-					if($order_by<=$treenode["order_by"])
-						{$order_by=$order_by+10;}
-					}
-                }			
+                    $parent_search = $treenode["ref"]; # Search for this as the parent node on the pass for the next level.
+                    }
+                else
+                    {
+                    if($order_by<=$treenode["order_by"])
+                        {$order_by=$order_by+10;}
+                    }
+                }           
             }
         if (!$found)
             {
             echo " - NOT FOUND. Updating tree field" .PHP_EOL;
             # Add this node
             $newnode=set_node(NULL, $staticsync_mapped_category_tree, $nodename, $parent_search, $order_by);
-       	    $tree[]=array("ref"=>$newnode,"parent"=>$parent_search,"name"=>$nodename,"order_by"=>$order_by);
+            $tree[]=array("ref"=>$newnode,"parent"=>$parent_search,"name"=>$nodename,"order_by"=>$order_by);
             $parent_search = $newnode; # Search for this as the parent node on the pass for the next level.
             $treenodes[]=$newnode;
             clear_query_cache("schema");
@@ -320,8 +320,8 @@ function ProcessFolder($folder)
                     }
                 }
 
-			$modified_extension = hook('staticsync_modify_extension', 'staticsync', array($fullpath, $shortpath, $extension));
-			if ($modified_extension !== false) { $extension = $modified_extension; }
+            $modified_extension = hook('staticsync_modify_extension', 'staticsync', array($fullpath, $shortpath, $extension));
+            if ($modified_extension !== false) { $extension = $modified_extension; }
 
             global $banned_extensions, $file_checksums, $file_upload_block_duplicates, $file_checksums_50k;
             # Check to see if extension is banned, do not add if it is banned
@@ -682,9 +682,9 @@ function ProcessFolder($folder)
                         }
                         
                     if(isset($staticsync_filepath_to_field))
-						{
-						update_field($r,$staticsync_filepath_to_field,$shortpath);
-						}
+                        {
+                        update_field($r,$staticsync_filepath_to_field,$shortpath);
+                        }
 
                     # Update resource table
                     $setvals = array();
@@ -770,13 +770,13 @@ function ProcessFolder($folder)
                                 }
                             }
                         }
-					elseif(isset($staticsync_alternative_file_text))
-						{
-						$basefilename=str_ireplace(".$extension", '', $file);
+                    elseif(isset($staticsync_alternative_file_text))
+                        {
+                        $basefilename=str_ireplace(".$extension", '', $file);
                         $altfilematch = "/{$basefilename}{$staticsync_alternative_file_text}(.*)\.(.*)/";
 
-						echo " - Searching for alternative files for base file: " . $basefilename , PHP_EOL; 
-						echo " - Checking " . $altfilematch . PHP_EOL;
+                        echo " - Searching for alternative files for base file: " . $basefilename , PHP_EOL; 
+                        echo " - Checking " . $altfilematch . PHP_EOL;
 
                         $folder_files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($folder));
                         $altfiles = new RegexIterator($folder_files, $altfilematch, RecursiveRegexIterator::MATCH);
@@ -964,8 +964,8 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
     $done, $filename_field, $view_title_field, $staticsync_title_includes_path, $staticsync_alt_suffixes, $staticsync_alt_suffix_array;
 
     $shortpath = str_replace($syncdir . '/', '', $alternativefile);
-	if(!isset($done[$shortpath]))
-		{
+    if(!isset($done[$shortpath]))
+        {
         $alt_parts=pathinfo($alternativefile);
 
         if (substr($alt_parts['filename'],0,1) == ".")
@@ -974,7 +974,7 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
             }
 
         if(isset($staticsync_alternative_file_text) && strpos($alternativefile,$staticsync_alternative_file_text) !== false)
-		    {
+            {
             $altfilenameparts = explode($staticsync_alternative_file_text,$alt_parts['filename']);
             $altbasename=$altfilenameparts[0];
             $altdesc = $altfilenameparts[1];
@@ -995,22 +995,22 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
                 }
             }
 
-		if($ref=="")
-			{
-			// We need to find which resource this alternative file relates to
-			echo " - Searching for primary resource related to " . $alternativefile . "  in " . $alt_parts['dirname'] . '/' . $altbasename . "." .  PHP_EOL;
-			foreach($done as $syncedfile=>$synceddetails)
-				{
+        if($ref=="")
+            {
+            // We need to find which resource this alternative file relates to
+            echo " - Searching for primary resource related to " . $alternativefile . "  in " . $alt_parts['dirname'] . '/' . $altbasename . "." .  PHP_EOL;
+            foreach($done as $syncedfile=>$synceddetails)
+                {
                 $syncedfile_parts=pathinfo($syncedfile);
                 if(strpos($syncdir . '/' . $syncedfile,$alt_parts['dirname'] . '/' . $altbasename . ".")!==false
                 || (isset($altsfx) && $syncdir . '/' . $syncedfile_parts["filename"] . $altsfx . "." . $syncedfile_parts["extension"] ==  $alternativefile))
-					{
-					// This synced file has the same base name as the resource
-					$ref= $synceddetails["ref"];
-					break;
-					}
-				}
-			}
+                    {
+                    // This synced file has the same base name as the resource
+                    $ref= $synceddetails["ref"];
+                    break;
+                    }
+                }
+            }
 
         if($ref=="")
             {
@@ -1061,26 +1061,26 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
 
         echo " - Processing alternative file - '" . $alternativefile . "' for resource #" . $ref . PHP_EOL;
 
-		if($alternative=="")
-			{
+        if($alternative=="")
+            {
             // Create a new alternative file
             $alt["file_size"]   = filesize_unlimited($alternativefile);
             $alt["extension"] = $alt_parts["extension"];                            
             $alt["altdescription"]  = $altdesc;
             $alt["name"]            = $altname;            
 
-			$alt["ref"] = add_alternative_file($ref, $alt["name"], $alt["altdescription"], $alternativefile, $alt["extension"], $alt["file_size"]);
+            $alt["ref"] = add_alternative_file($ref, $alt["name"], $alt["altdescription"], $alternativefile, $alt["extension"], $alt["file_size"]);
             $alternative = $alt["ref"];
 
-			echo " - Created a new alternative file - '" . $alt["ref"] . "' for resource #" . $ref . PHP_EOL;
+            echo " - Created a new alternative file - '" . $alt["ref"] . "' for resource #" . $ref . PHP_EOL;
             debug("Staticsync - Created a new alternative file - '" . $alt["ref"] . "' for resource #" . $ref);
-			$alt["path"] = get_resource_path($ref, true, '', false, $alt["extension"], -1, 1, false, '',  $alt["ref"]);
-			echo " - Alternative file path - " . $alt["path"] . PHP_EOL;
+            $alt["path"] = get_resource_path($ref, true, '', false, $alt["extension"], -1, 1, false, '',  $alt["ref"]);
+            echo " - Alternative file path - " . $alt["path"] . PHP_EOL;
             debug("Staticsync - alternative file path - " . $alt["path"]);
-			$alt["basefilename"] = $altbasename;
-			if($staticsync_ingest)
-				{
-				echo " - Moving file to " . $alt["path"] . PHP_EOL;
+            $alt["basefilename"] = $altbasename;
+            if($staticsync_ingest)
+                {
+                echo " - Moving file to " . $alt["path"] . PHP_EOL;
                 $result=copy($alternativefile,$alt["path"]); // Copy alternative file instead of rename so that permissions of filestore will be used
                 if ($result===false)
                     {
@@ -1109,25 +1109,25 @@ function staticsync_process_alt($alternativefile, $ref="", $alternative="")
                     return false;
                     }               
                 $GLOBALS["use_error_exception"] = $use_error_exception_cache;
-				}
-			if ($alternative_file_previews)
-				{create_previews($ref,false,$alt["extension"],false,false,$alt["ref"],false, $staticsync_ingest);}
-			hook("staticsync_after_alt", '',array($ref,$alt));
-			echo " - Added alternative file ref:"  . $alt["ref"] . ", name: " . $alt["name"] . ". " . "(" . $alt["altdescription"] . ") Size: " . $alt["file_size"] . PHP_EOL;
+                }
+            if ($alternative_file_previews)
+                {create_previews($ref,false,$alt["extension"],false,false,$alt["ref"],false, $staticsync_ingest);}
+            hook("staticsync_after_alt", '',array($ref,$alt));
+            echo " - Added alternative file ref:"  . $alt["ref"] . ", name: " . $alt["name"] . ". " . "(" . $alt["altdescription"] . ") Size: " . $alt["file_size"] . PHP_EOL;
             debug("Staticsync - added alternative file ref:"  . $alt["ref"] . ", name: " . $alt["name"] . ". " . "(" . $alt["altdescription"] . ") Size: " . $alt["file_size"]);
             $done[$shortpath]["processed"]=true;
-			}  
-		}
+            }  
+        }
     elseif($alternative!="" && $alternative_file_previews)
         {
         // An existing alternative file has changed, update previews if required
         debug("Alternative file changed, recreating previews");
-		create_previews($ref, false,  pathinfo($alternativefile, PATHINFO_EXTENSION), false, false, $alternative, false, $staticsync_ingest);
+        create_previews($ref, false,  pathinfo($alternativefile, PATHINFO_EXTENSION), false, false, $alternative, false, $staticsync_ingest);
         ps_query("UPDATE resource_alt_files SET creation_date=NOW() WHERE ref= ?", ['i', $alternative]); 
         $done[$shortpath]["processed"]=true;           
-        }	
-	echo " - Completed path : " . $shortpath . PHP_EOL;
-	$done[$shortpath]["ref"]=$ref;
+        }   
+    echo " - Completed path : " . $shortpath . PHP_EOL;
+    $done[$shortpath]["ref"]=$ref;
     $done[$shortpath]["alternative"]=$alternative;
     set_process_lock("staticsync"); // Update the lock so we know it is still processing resources
     }
@@ -1212,36 +1212,36 @@ if (!$staticsync_ingest)
          
         if ($fp!="" && !file_exists($fp))
             {
-			// Additional check - make sure the archive state hasn't changed since the start of the script
-			$cas = ps_value("SELECT archive value FROM resource where ref = ?",['i', $rf['ref']], 0);
-			if(isset($staticsync_ignore_deletion_states) && !in_array($cas,$staticsync_ignore_deletion_states))
-				{
-				if(!isset($rf["alternative"]))
-					{
-					echo " - File no longer exists: " . $rf["ref"] . " " . $fp . PHP_EOL;
-					# Set to archived, unless state hasn't changed since script started.
-					if (isset($staticsync_deleted_state))
-						{
-						ps_query("UPDATE resource SET archive= ? WHERE ref= ?", ['i', $staticsync_deleted_state, 'i', $rf['ref']]);
-						}
-					else
-						{
-						delete_resource($rf["ref"]);
-						}
-					if(isset($resource_deletion_state) && $staticsync_deleted_state==$resource_deletion_state)
-						{
-						// Only remove from collections if we are really deleting this. Some configurations may have a separate state or synced resources may be temporarily absent
-						ps_query("DELETE FROM collection_resource WHERE resource= ?", ['i', $rf['ref']]);
-						}
-					# Log this
-					resource_log($rf['ref'],LOG_CODE_STATUS_CHANGED,'','',$rf["archive"],$staticsync_deleted_state);
-					} 
-				else
-					{
-					echo " - Alternative file no longer exists: resource " . $rf["ref"] . " alt:" . $rf["alternative"] . " " . $fp . PHP_EOL;
-					ps_query("DELETE FROM resource_alt_files WHERE ref= ?", ['i', $rf['alternative']]);
-					}
-				}
+            // Additional check - make sure the archive state hasn't changed since the start of the script
+            $cas = ps_value("SELECT archive value FROM resource where ref = ?",['i', $rf['ref']], 0);
+            if(isset($staticsync_ignore_deletion_states) && !in_array($cas,$staticsync_ignore_deletion_states))
+                {
+                if(!isset($rf["alternative"]))
+                    {
+                    echo " - File no longer exists: " . $rf["ref"] . " " . $fp . PHP_EOL;
+                    # Set to archived, unless state hasn't changed since script started.
+                    if (isset($staticsync_deleted_state))
+                        {
+                        ps_query("UPDATE resource SET archive= ? WHERE ref= ?", ['i', $staticsync_deleted_state, 'i', $rf['ref']]);
+                        }
+                    else
+                        {
+                        delete_resource($rf["ref"]);
+                        }
+                    if(isset($resource_deletion_state) && $staticsync_deleted_state==$resource_deletion_state)
+                        {
+                        // Only remove from collections if we are really deleting this. Some configurations may have a separate state or synced resources may be temporarily absent
+                        ps_query("DELETE FROM collection_resource WHERE resource= ?", ['i', $rf['ref']]);
+                        }
+                    # Log this
+                    resource_log($rf['ref'],LOG_CODE_STATUS_CHANGED,'','',$rf["archive"],$staticsync_deleted_state);
+                    } 
+                else
+                    {
+                    echo " - Alternative file no longer exists: resource " . $rf["ref"] . " alt:" . $rf["alternative"] . " " . $fp . PHP_EOL;
+                    ps_query("DELETE FROM resource_alt_files WHERE ref= ?", ['i', $rf['alternative']]);
+                    }
+                }
             }
         }
 

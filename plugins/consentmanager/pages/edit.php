@@ -71,7 +71,7 @@ if (getval("submitted","")!="")
                 's', $expires
             ]
             
-        );	
+        );  
         $ref=sql_insert_id();
         $file_path=get_consent_file_path($ref); // get updated path
 
@@ -92,7 +92,7 @@ if (getval("submitted","")!="")
         }
     else
         {
-        # Existing record	
+        # Existing record   
         ps_query(
             "update consent set name= ?,email= ?, telephone= ?,consent_usage= ?,notes= ?,expires= ? where ref= ?",
             [
@@ -162,7 +162,7 @@ if ($ref=="new")
     {
     # Set default values for the creation of a new record.
     $consent=array(
-        "name"=>"",		
+        "name"=>"",     
         "email"=>"",
         "telephone"=>"",
         "consent_usage"=>"",
@@ -299,12 +299,12 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
         <?php
         
         if($consent["file"]!="")
-			{
-			?>
+            {
+            ?>
             <span><i class="fa fa-file"></i> <a href="download.php?resource=<?php echo $resource ?>&ref=<?php echo $ref ?>"><?php echo $consent['file']; ?></a></span>
             &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo $lang["clearbutton"]; ?>" onclick="return confirm('<?php echo $lang["confirmdeleteconsentfile"] ?>');">
             <?php
-			}
+            }
         else
             {
             ?>
@@ -318,12 +318,12 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
 
 
 
-<div class="QuestionSubmit">		
+<div class="QuestionSubmit">        
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>
 
-<?php		
+<?php	  
 include "../../../include/footer.php";
 ?>

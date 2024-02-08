@@ -32,14 +32,14 @@ if (count($collections)!=0){
 <?php
 
 for ($n=0;$n<count($collections);$n++)
-	{	
-	?><tr <?php hook("collectionlistrowstyle");?>>
-	<td><div class="ListTitle">
+    {   
+    ?><tr <?php hook("collectionlistrowstyle");?>>
+    <td><div class="ListTitle">
     <a onClick="return CentralSpaceLoad(this,true);" <?php if($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>"><?php echo i18n_get_collection_name($collections[$n])?></a></div></td>
-	<td><?php echo htmlspecialchars($collections[$n]["fullname"])?></td>
-	<td><?php echo $collections[$n]["ref"]?></td>
-	<td><?php echo nicedate($collections[$n]["created"],true)?></td>
-	<td><?php echo $collections[$n]["count"]?></td>
+    <td><?php echo htmlspecialchars($collections[$n]["fullname"])?></td>
+    <td><?php echo $collections[$n]["ref"]?></td>
+    <td><?php echo nicedate($collections[$n]["created"],true)?></td>
+    <td><?php echo $collections[$n]["count"]?></td>
     <td><?php
     switch($collections[$n]["type"])
         {
@@ -58,14 +58,14 @@ for ($n=0;$n<count($collections);$n++)
         }
     ?></td>
 <?php hook('beforecollectiontoolscolumn'); ?>
-	<td>
-		<div class="ListTools">
-		<?php
-		hook('render_resource_collection_list_list_tools', '', array($collections[$n]));
-		render_actions($collections[$n], false, false);
-		?>
-		</div>
-	</td>
+    <td>
+        <div class="ListTools">
+        <?php
+        hook('render_resource_collection_list_list_tools', '', array($collections[$n]));
+        render_actions($collections[$n], false, false);
+        ?>
+        </div>
+    </td>
 </tr>
 <?php
 }

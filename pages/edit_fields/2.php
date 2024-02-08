@@ -13,9 +13,9 @@ if(!hook('customchkboxes', '', array($field)))
         $selected_nodes = array();
 
         if(isset($searched_nodes) && is_array($searched_nodes))
-			{
-			$selected_nodes = $searched_nodes;
-			}
+            {
+            $selected_nodes = $searched_nodes;
+            }
         }
 
     $node_options = array();
@@ -125,7 +125,7 @@ if(!hook('customchkboxes', '', array($field)))
         {
         # ---------------- Horizontal Ordering ---------------------             
         ?>
-		<fieldset class="customFieldset" name="<?php echo $field['title']; ?>">
+        <fieldset class="customFieldset" name="<?php echo $field['title']; ?>">
         <legend class="accessibility-hidden"><?php echo $field['title']; ?></legend>
         <table cellpadding="3" cellspacing="0">
             <tr>
@@ -147,7 +147,7 @@ if(!hook('customchkboxes', '', array($field)))
                        name="<?php echo $name; ?>"
                        class="nodes_input_checkbox"
                        value="<?php echo $node['ref']; ?>"
-					   id="nodes_<?php echo $node['ref']; ?>"
+                       id="nodes_<?php echo $node['ref']; ?>"
                     <?php
                     // When editing multiple resources, we don't want to check any options; the user must make the necessary selections
                     if(!$multiple
@@ -171,7 +171,7 @@ if(!hook('customchkboxes', '', array($field)))
             ?>
             </tr>
         </table>
-		</fieldset>
+        </fieldset>
 <?php
         }
 
