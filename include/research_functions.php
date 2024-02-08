@@ -29,7 +29,7 @@ function send_research_request(array $rr_cfields)
     $rr_deadline = getval("deadline","");
     if($rr_deadline=="")
         {
-        $rr_deadline=NULL;
+        $rr_deadline=null;
         }
     $rr_contact = mb_strcut(getval("contact",""),0,100);
     $rr_email = mb_strcut(getval("email",""),0,200);
@@ -40,7 +40,7 @@ function send_research_request(array $rr_cfields)
     $rr_noresources = getval("noresources","");
     if($rr_noresources=="")
         {
-        $rr_noresources=NULL;
+        $rr_noresources=null;
         }
     $rr_shape = mb_strcut(getval("shape",""),0,50);
 

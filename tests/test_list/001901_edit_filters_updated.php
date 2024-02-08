@@ -50,10 +50,10 @@ $editdepartmentfield = create_resource_type_field("Edit Department",0,FIELD_TYPE
 $colourfield = create_resource_type_field("Colour",0,FIELD_TYPE_DROP_DOWN_LIST,"colour");
 
 // Add new nodes to fields
-$salesnode  = set_node(NULL, $editdepartmentfield, "Sales",'',1000);
-$itnode     = set_node(NULL, $editdepartmentfield, "IT",'',1000);
-$rednode    = set_node(NULL, $colourfield, "Red",'',1000);
-$bluenode   = set_node(NULL, $colourfield, "Blue",'',1000);
+$salesnode  = set_node(null, $editdepartmentfield, "Sales",'',1000);
+$itnode     = set_node(null, $editdepartmentfield, "IT",'',1000);
+$rednode    = set_node(null, $colourfield, "Red",'',1000);
+$bluenode   = set_node(null, $colourfield, "Blue",'',1000);
 
 add_resource_nodes($resourcea,array($salesnode, $rednode));
 add_resource_nodes($resourceb,array($salesnode, $itnode, $rednode));

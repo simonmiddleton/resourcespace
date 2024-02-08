@@ -303,18 +303,18 @@ if($resource_contact_link && ($k=="" || $internal_share_access))
 hook("pageevaluation");
 
 # Load resource field data
-$multi_fields = FALSE;
+$multi_fields = false;
 # Related resources with tabs need all fields (even the ones from other resource types):
 if(isset($related_type_show_with_data)) {
-    $multi_fields = TRUE;
+    $multi_fields = true;
 }
 
 // Get all fields without checking permissions (for later dependency checking)
-$fields_all=get_resource_field_data($ref,$multi_fields,FALSE,NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
+$fields_all=get_resource_field_data($ref,$multi_fields,false,null,($k!="" && !$internal_share_access),$use_order_by_tab_view);
 debug(sprintf('$fields_all = %s', json_encode(array_column(is_array($fields_all) ? $fields_all : [], 'ref'))));
 
 # Load field data
-$fields=get_resource_field_data($ref,$multi_fields,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),$use_order_by_tab_view);
+$fields=get_resource_field_data($ref,$multi_fields,!hook("customgetresourceperms"),null,($k!="" && !$internal_share_access),$use_order_by_tab_view);
 $modified_view_fields=hook("modified_view_fields","",array($ref,$fields));if($modified_view_fields){$fields=$modified_view_fields;}
 debug(sprintf('$fields = %s', json_encode(array_column(is_array($fields) ? $fields : [], 'ref'))));
 
@@ -1875,8 +1875,8 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
     // Ensure that this pushed resource honours any resource type overrides
     resource_type_config_override($resource["resource_type"]);
 
-    $fields         = get_resource_field_data($ref,true,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
-    $fields_all     = isset($all_field_data[$ref]) ? $all_field_data[$ref] : get_resource_field_data($ref,false,!hook("customgetresourceperms"),NULL,($k!="" && !$internal_share_access),false);
+    $fields         = get_resource_field_data($ref,true,!hook("customgetresourceperms"),null,($k!="" && !$internal_share_access),false);
+    $fields_all     = isset($all_field_data[$ref]) ? $all_field_data[$ref] : get_resource_field_data($ref,false,!hook("customgetresourceperms"),null,($k!="" && !$internal_share_access),false);
     $access         = get_resource_access($resource);
     ?>
     <div class="RecordBox">

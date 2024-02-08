@@ -38,7 +38,7 @@ foreach($found_files as $index => $file)
         }
 
     // Check if slideshow image is linked to a resource
-    $resource_ref = NULL;
+    $resource_ref = null;
     $filename = pathinfo($file, PATHINFO_FILENAME);
     $txt_file = "{$filename}.txt";
     $txt_file_path = "{$homeanim_folder_path}/{$txt_file}";

@@ -95,7 +95,7 @@ else
             $image_size = get_original_imagesize($resourceid,$img_path, "jpg");
             $imageWidth = (int) $image_size[1];
             $imageHeight = (int) $image_size[2];
-            $portrait = ($imageHeight >= $imageWidth) ? TRUE : FALSE;
+            $portrait = ($imageHeight >= $imageWidth) ? true : false;
 
             // Get all available sizes
             $sizes = get_image_sizes($resourceid,true,"jpg",false);

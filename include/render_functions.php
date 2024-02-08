@@ -1928,12 +1928,12 @@ function display_field($n, $field, $newtab=false,$modal=false)
         }
 
     /****************************** Errors on saving ***************************************/
-    $field_save_error = FALSE;
+    $field_save_error = false;
     if (isset($show_error) && isset($save_errors))
       {
       if(array_key_exists($field['ref'], $save_errors))
         {
-        $field_save_error = TRUE;
+        $field_save_error = true;
         }
       }
      
@@ -2191,7 +2191,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
             }
         elseif($field['type']==FIELD_TYPE_DATE_RANGE && !$blank_edit_template && getval("copyfrom","") == "" && getval('metadatatemplate', '') == "" && $check_edit_checksums)
             {
-            $field['nodes'] = get_nodes($field['ref'], NULL, FALSE);
+            $field['nodes'] = get_nodes($field['ref'], null, false);
             $field_nodes = array();
             foreach($selected_nodes as $selected_node)
                 {
@@ -2310,7 +2310,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         // Get the start/end date from the string
         $startpos   = strpos($value,"start");
         $endpos     = strpos($value,"end");
-        $startvalue = $startpos !== false ? substr($value,$startpos+5,($endpos ? ($endpos - ($startpos + 5)) : NULL)) : "";
+        $startvalue = $startpos !== false ? substr($value,$startpos+5,($endpos ? ($endpos - ($startpos + 5)) : null)) : "";
         $endvalue   = $endpos !== false ? substr($value,strpos($value,"end")+3,10) : "";
         }
     else

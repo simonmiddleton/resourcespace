@@ -1,6 +1,6 @@
 <?php
 $ldapauth['ldapserver'] = '10.177.177.19';
-$ldapauth['port'] = NULL;
+$ldapauth['port'] = null;
 // ldap auth type, 0 = Open Directory or open ldap, 1 = Active Directory
 $ldapauth['type'] = 0;
 

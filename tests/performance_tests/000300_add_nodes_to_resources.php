@@ -21,7 +21,7 @@ for($n=0;$n<$nodecount;$n++)
     shuffle($words);
     $nodelength=mt_rand(1,25);
     $nodename = implode(" ",array_slice($words,0,$nodelength));
-    $nodeids[] = set_node(NULL,8,$nodename,NULL,0);
+    $nodeids[] = set_node(null,8,$nodename,null,0);
     }
 
 // Create resources

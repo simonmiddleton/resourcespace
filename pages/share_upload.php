@@ -53,7 +53,7 @@ if($uploadkey != "")
     $editing        = $uploadkey != "" && $editable;
     $exsharepwd       = isset($shareinfo["password_hash"]) && $shareinfo["password_hash"] != "" ? "password_placeholder" : "";
     $exshareusergroup = isset($shareinfo["usergroup"]) ? $shareinfo["usergroup"] : $usergroup;
-    $exshareexpires   = isset($shareinfo["expires"]) ? $shareinfo["expires"] : NULL; 
+    $exshareexpires   = isset($shareinfo["expires"]) ? $shareinfo["expires"] : null; 
     if(!isset($validsharegroups[$exshareusergroup]))
         {
         $cursharegroup = get_usergroup($exshareusergroup);

@@ -16,7 +16,7 @@ function HookCookies_notificationAllHandleuserref()
         }
 
     // Update cookie use option first
-    $accepted_cookies_use = getval('accepted_cookies_use', NULL, true);
+    $accepted_cookies_use = getval('accepted_cookies_use', null, true);
     if(!is_null($accepted_cookies_use))
         {
         rs_setcookie('accepted_cookies_use', $accepted_cookies_use, 365, '', '', substr($baseurl, 0, 5) == 'https', true);
@@ -43,7 +43,7 @@ function HookCookies_notificationAllAfteruicenter()
     {
     global $baseurl, $lang, $is_authenticated;
 
-    $accepted_cookies_use = getval('accepted_cookies_use', NULL, true);
+    $accepted_cookies_use = getval('accepted_cookies_use', null, true);
 
     // Don't show if user accepted the use of cookies
     if(!is_null($accepted_cookies_use) && (int) $accepted_cookies_use === 1)

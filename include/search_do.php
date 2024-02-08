@@ -369,7 +369,7 @@ function do_search(
 
                 $sql_keyword_union[] = $freetextunion;
                 $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";
-                $sql_keyword_union_or[]=FALSE;
+                $sql_keyword_union_or[]=false;
                 $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
                 continue;
                 }
@@ -532,12 +532,12 @@ function do_search(
                             $c++;
                             $rangefield=$datefieldinfo[0]["ref"];
                             $rangestring=substr($keystring,5);
-                            if (strpos($rangestring,"start")!==FALSE )
+                            if (strpos($rangestring,"start")!==false )
                                 {
                                 $rangestartpos=strpos($rangestring,"start")+5;
                                 $rangestart=str_replace(" ","-",substr($rangestring,$rangestartpos,strpos($rangestring,"end")?strpos($rangestring,"end")-$rangestartpos:10));
                                 }
-                            if (strpos($keystring,"end")!==FALSE )
+                            if (strpos($keystring,"end")!==false )
                                 {
                                 $rangeend=str_replace(" ","-",$rangestring);
                                 $rangeend=substr($rangeend,strpos($rangeend,"end")+3,10) . " 23:59:59";
@@ -932,7 +932,7 @@ function do_search(
                                         $sql_keyword_union[] = $union;
                                         $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
                                         $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found`";
-                                        $sql_keyword_union_or[]= FALSE;
+                                        $sql_keyword_union_or[]= false;
                                         }
                                     else  // we are dealing with a standard keyword match
                                         {
@@ -1087,7 +1087,7 @@ function do_search(
                         $addunion->parameters = array_merge($fixedunion->parameters,$fixedunioncondition->parameters);
                         $sql_keyword_union[] = $addunion;
                         $sql_keyword_union_aggregation[] = "BIT_OR(`keyword_[union_index]_found`) AS `keyword_[union_index]_found` ";
-                        $sql_keyword_union_or[]=FALSE;
+                        $sql_keyword_union_or[]=false;
                         $sql_keyword_union_criteria[] = "`h`.`keyword_[union_index]_found`";
                         }
                     }

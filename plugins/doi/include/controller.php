@@ -45,10 +45,10 @@
 
         # Check preconfigured permissions
         for ($n = 0; $n < count($doi_perms_needed); ++$n) {
-            if(!checkperm($doi_perms_needed[$n])) return FALSE;
+            if(!checkperm($doi_perms_needed[$n])) return false;
         }
 
-        return TRUE;
+        return true;
     }
 
     /**

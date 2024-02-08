@@ -109,12 +109,12 @@ echo" - Collections : " . implode(",",$collections) . "\n";
 
 if(!$overwrite)
     {
-    $arr_allresources = do_search('!hasdata' . $input_field,'','',implode(",",$allstates),-1,'desc',true,NULL,true,false,'',false,false,true);
+    $arr_allresources = do_search('!hasdata' . $input_field,'','',implode(",",$allstates),-1,'desc',true,null,true,false,'',false,false,true);
     }
 else
     {
     // Need to process all resources, including those with no data in the source field
-    $arr_allresources = do_search('','','',implode(",",$allstates),-1,'desc',true,NULL,true,false,'',false,false,true);
+    $arr_allresources = do_search('','','',implode(",",$allstates),-1,'desc',true,null,true,false,'',false,false,true);
     }
 
 if(empty($collections))
@@ -135,7 +135,7 @@ else
 if(!$overwrite)
     {
     // Remove resources with data in the target field
-    $arr_existingdata = do_search("!hasdata" . $targetfield,'','',implode(",",$allstates),-1,'desc',true,NULL,true,false,'',false,false,true);
+    $arr_existingdata = do_search("!hasdata" . $targetfield,'','',implode(",",$allstates),-1,'desc',true,null,true,false,'',false,false,true);
     $arr_toprocess = array_diff($arr_toprocess,array_column($arr_existingdata,"ref"));
     }
 

@@ -145,7 +145,7 @@ function HookRse_versionEditSave_resource_data_multi_set_archive_state($resource
                 FROM resource_log
                WHERE resource = ? AND `type` = 's' AND previous_value IS NOT NULL AND `date` >= ?
             ORDER BY ref ASC
-            LIMIT 1;",$parameters,NULL);
+            LIMIT 1;",$parameters,null);
 
     if(!is_null($archive_status_at_date) && trim($archive_status_at_date) !== "" && is_numeric($archive_status_at_date))
         {

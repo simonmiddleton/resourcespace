@@ -244,7 +244,7 @@ if (is_numeric($user['search_filter_o_id']) && $user['search_filter_o_id'] > 0)
     $search_filter_migrated = true;
     $search_filter_set      = true;
     }
-else if ($user['search_filter_override'] != "" && ($user['search_filter_o_id'] == 0 || $user['search_filter_o_id'] == NULL))
+else if ($user['search_filter_override'] != "" && ($user['search_filter_o_id'] == 0 || $user['search_filter_o_id'] == null))
     {
     // Filter requires migration
     $search_filter_migrated = false;

@@ -12,7 +12,7 @@ include "../../include/dash_functions.php";
 
 global $userref,$baseurl_short;
 /* Tile */
-$rawtile=getval("tile",null,TRUE);
+$rawtile=getval("tile",null,true);
 if(isset($rawtile) && !empty($rawtile))
     {
     if(!is_numeric($rawtile)){exit($lang["invaliddashtile"]);}
@@ -21,7 +21,7 @@ if(isset($rawtile) && !empty($rawtile))
     }
 
 /* User Tile */
-$user_rawtile=getval("user_tile",null,TRUE);
+$user_rawtile=getval("user_tile",null,true);
 if(isset($user_rawtile) && !empty($user_rawtile))
     {
     if(!is_numeric($user_rawtile)){exit($lang["invaliddashtile"]);}
@@ -111,7 +111,7 @@ if($delete && isset($tile) && !isset($usertile) && enforcePostRequest(true))
         {$force = !checkTileConfig($tile,$search_string["tlstyle"]);}
 
     delete_dash_tile($tile["ref"],true,$force);
-    log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["ref"]);
+    log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',null,$tile["ref"]);
     reorder_default_dash();
     echo "Deleted ".$tile['ref'];
     exit();

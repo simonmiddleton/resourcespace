@@ -13,12 +13,12 @@ debug("Resource B: " . $resourceb );
 debug("Resource C: " . $resourcec);
 
 // Add new nodes to field
-$zebranode = set_node(NULL, 73, "zebra",'',1000);
-$giraffenode = set_node(NULL, 73, "giraffe",'',1000);
-$capybaranode = set_node(NULL, 73, "capybara",'',1000);
-$mammalnode = set_node(NULL, 73, "mammal",'',1000);
-$threeblindmicenode = set_node(NULL, 73, "three blind mice",'',1000);
-$firstthirdsecondnode = set_node(NULL, 73, "first third second lovely",'',1000);
+$zebranode = set_node(null, 73, "zebra",'',1000);
+$giraffenode = set_node(null, 73, "giraffe",'',1000);
+$capybaranode = set_node(null, 73, "capybara",'',1000);
+$mammalnode = set_node(null, 73, "mammal",'',1000);
+$threeblindmicenode = set_node(null, 73, "three blind mice",'',1000);
+$firstthirdsecondnode = set_node(null, 73, "first third second lovely",'',1000);
 debug("node1: " . $zebranode . "\n");
 debug("node2: " . $giraffenode . "\n");
 debug("node3: " . $capybaranode . "\n");

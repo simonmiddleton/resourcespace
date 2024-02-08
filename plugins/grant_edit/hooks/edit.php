@@ -13,7 +13,7 @@ function HookGrant_editEditeditbeforeheader()
         {
         if($grant_edit_action=="delete")
             {
-            $remove_user=getval("remove_user","",TRUE);
+            $remove_user=getval("remove_user","",true);
             if($remove_user!="")
                 {
                 ps_query("delete from grant_edit where resource = ? and user = ?", array("i",$ref,"i",$remove_user));
@@ -47,7 +47,7 @@ function HookGrant_editEditeditbeforeheader()
                     foreach ($urefs as $uref)
                         {
                         $insertvalue[] = "(? ,? ,?)";
-                        $expiry = ($grant_edit_expiry == "") ? NULL : $grant_edit_expiry;
+                        $expiry = ($grant_edit_expiry == "") ? null : $grant_edit_expiry;
                         $parameters = array_merge($parameters, array("i",$collection_resource,"i",$uref,"s",$expiry));
                         }
                     ps_query("delete from grant_edit where resource = ? and user in (" . ps_param_insert(count($urefs)) . ")", array_merge(array("i",$collection_resource), ps_param_fill($urefs,"i")));
@@ -63,7 +63,7 @@ function HookGrant_editEditeditbeforeheader()
                 foreach ($urefs as $uref)
                     {
                     $insertvalue[] = "(? ,? ,?)";
-                    $expiry = ($grant_edit_expiry == "") ? NULL : $grant_edit_expiry;
+                    $expiry = ($grant_edit_expiry == "") ? null : $grant_edit_expiry;
                     $parameters = array_merge($parameters, array("i",$ref,"i",$uref,"s",$expiry));
                     }
                 ps_query("delete from grant_edit where resource = ? and user in (" . ps_param_insert(count($urefs)) . ")", array_merge(array("i",$ref), ps_param_fill($urefs,"i")));

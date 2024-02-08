@@ -18,7 +18,7 @@ $content=file_get_contents($progress_file);
 ob_start();
 echo $content;
 //if($content==$lang["done"]){
-if (strpos($content,$lang["done"]) !== FALSE){
+if (strpos($content,$lang["done"]) !== false){
     unlink($progress_file);
     rmdir($progress_folder);
 }

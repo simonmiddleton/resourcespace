@@ -157,5 +157,5 @@
             }
         }
 
-        return TRUE;
+        return true;
     }

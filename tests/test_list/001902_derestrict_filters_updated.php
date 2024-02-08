@@ -50,12 +50,12 @@ $regionfield = create_resource_type_field("Region",0,FIELD_TYPE_CHECK_BOX_LIST,"
 $classificationfield = create_resource_type_field("Classification",0,FIELD_TYPE_DROP_DOWN_LIST,"classification");
 
 // Add new nodes to fields
-$emeanode       = set_node(NULL, $regionfield, "EMEA",'',1000);
-$apacnode       = set_node(NULL, $regionfield, "APAC",'',1000);
-$americasnode   = set_node(NULL, $regionfield, "Americas",'',1000);
-$sensitivenode  = set_node(NULL, $classificationfield, "Sensitive",'',1000);
-$opennode       = set_node(NULL, $classificationfield, "Open",'',1000);
-$topsecretnode  = set_node(NULL, $classificationfield, "Top Secret",'',1000);
+$emeanode       = set_node(null, $regionfield, "EMEA",'',1000);
+$apacnode       = set_node(null, $regionfield, "APAC",'',1000);
+$americasnode   = set_node(null, $regionfield, "Americas",'',1000);
+$sensitivenode  = set_node(null, $classificationfield, "Sensitive",'',1000);
+$opennode       = set_node(null, $classificationfield, "Open",'',1000);
+$topsecretnode  = set_node(null, $classificationfield, "Top Secret",'',1000);
 
 add_resource_nodes($resourcea,array($emeanode, $sensitivenode));
 add_resource_nodes($resourceb,array($emeanode, $opennode));

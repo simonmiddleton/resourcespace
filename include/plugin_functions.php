@@ -219,7 +219,7 @@ function config_json_encode($config)
             }
         else
             {
-            return NULL; // Give up; beyond our capabilities
+            return null; // Give up; beyond our capabilities
             }
         $output .= ', ';
         }

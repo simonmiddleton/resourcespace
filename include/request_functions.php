@@ -461,7 +461,7 @@ function email_collection_request($ref,$details,$external_email): bool
     # - We can only send an email to the email address provided on the external request 
     if (!isset($userref) && filter_var($external_email, FILTER_VALIDATE_EMAIL))
         {
-        send_mail($external_email,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage->get_text(),$email_from,NULL,"emailusercollectionrequest",$templatevars);
+        send_mail($external_email,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage->get_text(),$email_from,null,"emailusercollectionrequest",$templatevars);
         }
 
     # Increment the request counter for each resource in the requested collection

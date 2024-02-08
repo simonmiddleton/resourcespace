@@ -16,7 +16,7 @@ while (($row = fgetcsv($f,5000)) !== false)
 
     for ($n=0;$n<count($row);$n++)
         {
-        if ($row[$n]=="''") {$row[$n]=NULL;}
+        if ($row[$n]=="''") {$row[$n]=null;}
         }
     if (in_array($ref,array(22,23,24)))
         {

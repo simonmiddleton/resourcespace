@@ -16,7 +16,7 @@
  * @param  int    $priority
  * @return string|integer ID of newly created job or error text
  */
-function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_text="", $failure_text="", $job_code="",$priority=NULL)
+function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_text="", $failure_text="", $job_code="",$priority=null)
     {
     global $lang, $userref;
     if($time==""){$time=date('Y-m-d H:i:s');}
@@ -55,7 +55,7 @@ function job_queue_add($type="",$job_data=array(),$user="",$time="", $success_te
  * @param  string $newtime
  * @return void
  */
-function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="", $priority=NULL)
+function job_queue_update($ref,$job_data=array(),$newstatus="", $newtime="", $priority=null)
     {
     $update_sql = array();
     $parameters = array();

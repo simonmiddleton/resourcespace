@@ -31,11 +31,11 @@ $resourcec=create_resource(2,0);
 
 $objectid = "10105";
 
-$test_object = set_node(NULL, $iiif->identifier_field, $objectid,'',1);
-$page1_id = set_node(NULL, $iiif->sequence_field, "1",'',1);
-$page2_id = set_node(NULL, $iiif->sequence_field, "2",'',2);
-$page3_id = set_node(NULL, $iiif->sequence_field, "3",'',3);
-$license_id = set_node(NULL, $iiif->license_field, "Public domain",'',1);
+$test_object = set_node(null, $iiif->identifier_field, $objectid,'',1);
+$page1_id = set_node(null, $iiif->sequence_field, "1",'',1);
+$page2_id = set_node(null, $iiif->sequence_field, "2",'',2);
+$page3_id = set_node(null, $iiif->sequence_field, "3",'',3);
+$license_id = set_node(null, $iiif->license_field, "Public domain",'',1);
 
 add_resource_nodes($resourcea,array($test_object,$page1_id,$license_id));
 add_resource_nodes($resourceb,array($test_object,$page2_id,$license_id));

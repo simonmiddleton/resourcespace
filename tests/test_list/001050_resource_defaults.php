@@ -8,8 +8,8 @@ $savedpermissions   = $userpermissions;
 
 // Add a new fixed list field 
 $riverfield = create_resource_type_field("River",0,FIELD_TYPE_CHECK_BOX_LIST,"river");
-$nilenode = set_node(NULL, $riverfield, "Nile",'',1000);
-$amazonnode = set_node(NULL, $riverfield, "Amazon",'',1000);
+$nilenode = set_node(null, $riverfield, "Nile",'',1000);
+$amazonnode = set_node(null, $riverfield, "Amazon",'',1000);
 
 // Add a new free text field
 $boatnamefield = create_resource_type_field("Boat name",0,FIELD_TYPE_TEXT_BOX_SINGLE_LINE,"boatname");

@@ -1041,7 +1041,7 @@ function auto_create_user_account($hash="")
         "s",$customContents . (trim($comment) != "" ? "\n" . $comment : ""),
         "i",($approve ? 1 : 0),
         "s",$language,
-        "s",($hash != "" ? $hash : NULL),
+        "s",($hash != "" ? $hash : null),
         ];
 
     ps_query("INSERT INTO user (username,password,fullname,email,usergroup,comments,approved,lang,unique_hash) VALUES (?,?,?,?,?,?,?,?,?)",$newparams);
@@ -1191,7 +1191,7 @@ function email_user_request()
         $user_registration_opt_in_message .= $lang["user_registration_opt_in_message"];
         }
     $requestedgroup = getval("usergroup",0,true);
-    $approval_notify_users = get_notification_users("USER_ADMIN",$requestedgroup !=0 ? $requestedgroup : NULL);
+    $approval_notify_users = get_notification_users("USER_ADMIN",$requestedgroup !=0 ? $requestedgroup : null);
     $message = new ResourceSpaceUserNotification;
     $message->set_subject($applicationname . ": ");
     $message->append_subject("lang_requestuserlogin");
@@ -2436,7 +2436,7 @@ function get_rs_session_id($create=false)
  * 
  * @return array
  */
-function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = NULL)
+function get_notification_users($userpermission = "SYSTEM_ADMIN", $usergroup = null)
     {    
     global $notification_users_cache, $email_notify_usergroups;
 

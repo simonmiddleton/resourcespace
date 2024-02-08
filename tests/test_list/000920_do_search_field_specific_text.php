@@ -26,7 +26,7 @@ if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']
 
 
 // Create and add a node with same name to resource b 
-$launchnode = set_node(NULL, 74, "launch",'',1000);
+$launchnode = set_node(null, 74, "launch",'',1000);
 add_resource_nodes($resourceb,array($launchnode));
 
 // This shouldn't be return resource b

@@ -38,7 +38,7 @@ update_field($resourcee,'title','test_000985_E');
 
 // Set dummy nodes
 $test985field = create_resource_type_field("Test 985",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"testnineeightfive",1);
-$dummynode = set_node(NULL,$test985field,'test000985','',1000);
+$dummynode = set_node(null,$test985field,'test000985','',1000);
 add_resource_nodes($resourcea,array($dummynode));
 add_resource_nodes($resourceb,array($dummynode));
 add_resource_nodes($resourcec,array($dummynode));

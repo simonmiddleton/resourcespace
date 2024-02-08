@@ -104,9 +104,9 @@ function comments_submit()
     $resource_ref =  getval("resource_ref", 0,true);
 
     $sql_values_prepend = array(
-        "i", ($parent_ref == 0 ? NULL : (int)$parent_ref),
-        "i", ($collection_ref == 0 ? NULL : (int)$collection_ref),
-        "i", ($resource_ref == 0 ? NULL : (int)$resource_ref)
+        "i", ($parent_ref == 0 ? null : (int)$parent_ref),
+        "i", ($collection_ref == 0 ? null : (int)$collection_ref),
+        "i", ($resource_ref == 0 ? null : (int)$resource_ref)
     );
 
     $sql_values = array_merge($sql_values_prepend, $sql_values, array("s",$body));

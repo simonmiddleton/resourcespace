@@ -9,8 +9,8 @@ $resourceb=create_resource(1,0);
 $resourcec=create_resource(1,0);
 
 // Add new nodes to field, use dummy countries in case dbstruct changes
-$sambalandnode = set_node(NULL, 3, "Sambaland",'',1000);
-$superlandnode = set_node(NULL, 3, "Superland",'',1000);
+$sambalandnode = set_node(null, 3, "Sambaland",'',1000);
+$superlandnode = set_node(null, 3, "Superland",'',1000);
 
 // Add sambalandnode node to resource a
 add_resource_nodes($resourcea,array($sambalandnode));
@@ -42,7 +42,7 @@ if(is_array($results)) {return false;}
 // Add text to caption field for resources a and b and a node to resource c
 update_field($resourcea,8,"Supercilious");
 update_field($resourceb,8,"Samuel Taylor Coleridge");
-$sambucalandnode = set_node(NULL, 3, "Sambucaland",'',1000);
+$sambucalandnode = set_node(null, 3, "Sambucaland",'',1000);
 add_resource_nodes($resourcec,array($sambucalandnode));
 
 // Do search for 'sam* super*' again(should return resources a, b and c)

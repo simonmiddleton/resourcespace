@@ -213,7 +213,7 @@ if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
 // [Toggle tree node]
 if('true' === $ajax && 'true' === getval('draw_tree_node_table', '') && 7 == $field_data['type'])
     {
-    $nodes         = get_nodes($field, $node_ref, FALSE, NULL, NULL, '', true);
+    $nodes         = get_nodes($field, $node_ref, false, null, null, '', true);
     $nodes_counter = count($nodes);
     $i             = 0;
     $node_index    = 0;
@@ -239,7 +239,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
     $new_option_order_by = get_node_order_by($field, 7 == $field_data['type'], $new_option_parent);
     $new_node_index      = $new_option_order_by/10;
 
-    $new_record_ref = set_node(NULL, $field, $new_option_name, $new_option_parent, $new_option_order_by);
+    $new_record_ref = set_node(null, $field, $new_option_name, $new_option_parent, $new_option_order_by);
     clear_query_cache("schema");
     if(getval("reload","") == "")
         {
@@ -633,7 +633,7 @@ if($ajax)
             
             <?php
             }
-        render_new_node_record($new_node_record_form_action, FALSE);
+        render_new_node_record($new_node_record_form_action, false);
         ?>
             </tbody>
             <?php
@@ -666,7 +666,7 @@ if($ajax)
 $tree_nodes = get_nodes($field,null,false,null,null,'',true,'',true);
 if($field_data['type'] == 7 && !($tree_nodes==""))
     {
-    $all_nodes = get_nodes($field, NULL, TRUE, NULL, NULL, '', TRUE);
+    $all_nodes = get_nodes($field, null, true, null, null, '', true);
 
     ?>
     <select id="node_master_list" class="DisplayNone">
@@ -700,7 +700,7 @@ if($field_data['type'] == 7 && !($tree_nodes==""))
 // Render a new node record form when we don't have any node set in the database
 if($field_data['type'] == 7 && !$tree_nodes)
     {
-    render_new_node_record($new_node_record_form_action, TRUE);
+    render_new_node_record($new_node_record_form_action, true);
     ?>
     <script>
     jQuery('.node_parent_chosen_selector').chosen({});

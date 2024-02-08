@@ -761,7 +761,7 @@ final class IIIFRequest {
             $image_size = get_original_imagesize($this->request["id"],$img_path, "jpg");
             $this->imagewidth = (int) $image_size[1];
             $this->imageheight = (int) $image_size[2];
-            $portrait = ($this->imageheight >= $this->imagewidth) ? TRUE : FALSE;
+            $portrait = ($this->imageheight >= $this->imagewidth) ? true : false;
 
             // Get all available sizes
             $sizes = get_image_sizes($this->request["id"],true,"jpg",false);

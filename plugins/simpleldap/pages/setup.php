@@ -49,7 +49,7 @@ if (getval("submit","")!="" || getval("save","")!="" || getval("testConnflag",""
                 [
                 's', $ldapgroups[$i],
                 'i', $rsgroups[$i],
-                'i', (($priority[$i]!="")? $priority[$i] : NULL)
+                'i', (($priority[$i]!="")? $priority[$i] : null)
                 ]    
             );      
             }

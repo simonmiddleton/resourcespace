@@ -21,7 +21,7 @@ $message =false;
 /* 
  * Process Submitted Tile 
  */
-$submitdashtile=getval("submitdashtile",FALSE);
+$submitdashtile=getval("submitdashtile",false);
 if($submitdashtile && enforcePostRequest(false))
     {
     $buildurl = getval("url","");
@@ -82,7 +82,7 @@ if($submitdashtile && enforcePostRequest(false))
     $text=getval("freetext","");
     $default_order_by=getval("default_order_by","UNSET");
     $reload_interval=getval("reload_interval_secs","");
-    $resource_count=getval("resource_count",FALSE);
+    $resource_count=getval("resource_count",false);
 
     $link=str_replace("&amp;","&",getval("link",""));
     if(strpos($link,$baseurl_short)===0) 
@@ -94,7 +94,7 @@ if($submitdashtile && enforcePostRequest(false))
 
 
     #Check for update rather than new
-    $updatetile = getval("editdashtile",FALSE);
+    $updatetile = getval("editdashtile",false);
     if($updatetile && is_numeric($updatetile))
         {
         $tile = get_tile($updatetile);
@@ -104,8 +104,8 @@ if($submitdashtile && enforcePostRequest(false))
         $buildstring['tltype'] = $buildstring['tltype'] ?? 'ftxt';
 
         #Change of tilestyle?
-        $tile_style     = getval('tlstyle', FALSE);
-        $promoted_image = getval('promoted_image', FALSE);
+        $tile_style     = getval('tlstyle', false);
+        $promoted_image = getval('promoted_image', false);
         $tlstylecolour  = urlencode(getval('tlstylecolour', ''));
 
         if($tile_style)
@@ -330,19 +330,19 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
 /* 
  * Tile Form Entry
  */
-$create=getval("create",FALSE);
-$edit=getval("edit",FALSE);
+$create=getval("create",false);
+$edit=getval("edit",false);
 $validpage = false;
 if($create)
     {
     $tile_type                    = getval("tltype","");
     $tile_style                   = getval('tlstyle', "");
-    $tile_nostyle                 = getval("nostyleoptions",FALSE);
-    $allusers                     = getval("all_users",FALSE);
+    $tile_nostyle                 = getval("nostyleoptions",false);
+    $allusers                     = getval("all_users",false);
     $url                          = getval("url","");
-    $modifylink                   = getval("modifylink",FALSE);
-    $freetext                     = getval("freetext",FALSE);
-    $notitle                      = getval("notitle",FALSE);
+    $modifylink                   = getval("modifylink",false);
+    $freetext                     = getval("freetext",false);
+    $notitle                      = getval("notitle",false);
     $link                         = getval("link","");
     $title                        = getval("title","");
     $current_specific_user_groups = (isset($specific_user_groups) ? $specific_user_groups : array());
@@ -365,7 +365,7 @@ if($create)
         $daylimit=getval("daylimit","");
         $restypes=getval("restypes","");
         $title=getval("title","");
-        $resource_count=getval("resource_count",0,TRUE);
+        $resource_count=getval("resource_count",0,true);
 
         unset($tile_style);
 
@@ -433,7 +433,7 @@ else if($edit)
         if(isset($buildstring["tltype"]))
             {
             $tile_type=$buildstring["tltype"];
-            $tile_nostyle = isset($buildstring["tlstyle"]) && $tile_type!="conf" ? FALSE : TRUE;
+            $tile_nostyle = isset($buildstring["tlstyle"]) && $tile_type!="conf" ? false : true;
             $tile_style=$buildstring["tlstyle"];
 
             $tile_style_colour = '';
@@ -463,13 +463,13 @@ else if($edit)
             $freetext = false;
             }
         
-        $promoted_resource=isset($buildstring["promimg"])? $buildstring["promimg"] : FALSE;
+        $promoted_resource=isset($buildstring["promimg"])? $buildstring["promimg"] : false;
 
         $tlsize = (isset($buildstring['tlsize']) && 'double' === $buildstring['tlsize'] ? $buildstring['tlsize'] : '');
 
-        $modifylink = ($tile_type=="ftxt") ? TRUE: FALSE;
+        $modifylink = ($tile_type=="ftxt") ? true: false;
         
-        $notitle = isset($buildstring["nottitle"])? TRUE : FALSE;
+        $notitle = isset($buildstring["nottitle"])? true : false;
 
         $pagetitle = $lang["editdashtile"];
         $formextra = '<input type="hidden" name="submitdashtile" value="true" />';
@@ -825,7 +825,7 @@ if('' != $tile_type && $tile_type !== "conf")
             }
 
         #Preview URL
-        if (empty($url) || strpos($url,"pages/ajax/dash_tile.php")!==FALSE)
+        if (empty($url) || strpos($url,"pages/ajax/dash_tile.php")!==false)
             {$previewurl=$baseurl_short."pages/ajax/dash_tile_preview.php";}
         else
             {$previewurl=$baseurl_short.$url;}

@@ -38,7 +38,7 @@ function existing_dash_tile(string $url="", string $link="", string $title="", s
 function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default_order_by,$resource_count,$text="",$delete=1, array $specific_user_groups = array())
     {
     
-    $rebuild_order=TRUE;
+    $rebuild_order=true;
 
     # Validate Parameters
     if(empty($reload_interval) || !is_numeric($reload_interval))
@@ -50,7 +50,7 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
     if(!is_numeric($default_order_by))
         {
         $default_order_by=append_default_position();
-        $rebuild_order=FALSE;
+        $rebuild_order=false;
         }
     $resource_count = $resource_count?1:0;
 
@@ -59,7 +59,7 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
     if($existing_tile_ref > 0)
         {
         $tile=$existing_tile_ref;
-        $rebuild_order=FALSE;
+        $rebuild_order=false;
         }
     else
         {
@@ -187,7 +187,7 @@ function update_dash_tile($tile,$url,$link,$title,$reload_interval,$all_users,$t
  * @$tile, the dash_tile.ref number of the tile to be deleted
  * @$cascade, whether this delete should remove the tile from all users.
  */
-function delete_dash_tile($tile,$cascade=TRUE,$force=FALSE)
+function delete_dash_tile($tile,$cascade=true,$force=false)
     {
     #Force Delete ignores the allow_delete flag (This allows removal of config tiles)
     $allow_delete = $force? "":"AND allow_delete=1";
@@ -340,7 +340,7 @@ function cleanup_dash_tiles()
 
     foreach ($tiles as $tile)
         {
-        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["ref"]);
+        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',null,$tile["ref"]);
         }
     }
 
@@ -356,7 +356,7 @@ function checkTileConfig($tile,$tile_style)
     switch($tile_style)
         {
         case "thmsl":   global $home_themeheaders; return $home_themeheaders;
-        case "custm":   global $custom_home_panels; return isset($custom_home_panels)? checkConfigCustomHomePanels($tile,$tile_style) : FALSE;
+        case "custm":   global $custom_home_panels; return isset($custom_home_panels)? checkConfigCustomHomePanels($tile,$tile_style) : false;
         }
     }
 
@@ -367,12 +367,12 @@ function checkTileConfig($tile,$tile_style)
 function checkConfigCustomHomePanels($tile,$tile_style)
     {
     global $custom_home_panels;
-    $tile_config_set = FALSE;
+    $tile_config_set = false;
     for ($n=0;$n<count($custom_home_panels);$n++)
             {
             if(existing_tile($tile["title"],$tile["all_users"],$tile["url"],$tile["link"],$tile["reload_interval_secs"],$tile["resource_count"],$tile["txt"]))
                 {
-                $tile_config_set = TRUE;
+                $tile_config_set = true;
                 }
             }
     return $tile_config_set;
@@ -908,13 +908,13 @@ function get_usergroup_available_tiles($user_group_id, $tile = '')
  * Affects the user_dash_tile table, tile must be the ref of a record from dash_tile
  *
  */
-function add_user_dash_tile($user,$tile,$order_by,$reorder=TRUE)
+function add_user_dash_tile($user,$tile,$order_by,$reorder=true)
     {
     if(!is_numeric($user)||!is_numeric($tile)){return false;}
     if(!is_numeric($order_by))
         {
         $order_by=append_user_position($user);
-        $reorder=FALSE;
+        $reorder=false;
         }
         
     ps_query("INSERT INTO user_dash_tile (user,dash_tile,order_by) VALUES (?, ?, ?)  ON DUPLICATE KEY UPDATE order_by= ?", ['i', $user, 'i', $tile, 'i', $order_by, 'i', $order_by]);
@@ -979,7 +979,7 @@ function delete_user_dash_tile($usertile,$user)
         {
         $tile = get_tile($row["dash_tile"]);
         delete_dash_tile($row["dash_tile"]);
-        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,($tile["title"]??""),'dash_tile',NULL,$row["dash_tile"]);
+        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,($tile["title"]??""),'dash_tile',null,$row["dash_tile"]);
         }
     }
 
@@ -1001,7 +1001,7 @@ function empty_user_dash($user,$purge=true)
             if($existing[0]["count"]<1)
                 {
                 delete_dash_tile($tile["dash_tile"]);
-                log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["dash_tile"]);
+                log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',null,$tile["dash_tile"]);
                 }
             }
         }   

@@ -64,12 +64,12 @@ if ($lockouts>0 || $ulockouts>0)
         $log_message,                       # Note
         LOG_CODE_FAILED_LOGIN_ATTEMPT,      # Log Code
         $ip,                                # Value New
-        ($userref!="" ? "user"    : NULL),  # Remote Table
-        ($userref!="" ? "last_ip" : NULL),  # Remote Column
-        ($userref!="" ? $userref  : NULL),  # Remote Ref
-        NULL,                               # Ref Column Override
-        NULL,                               # Value Old
-        ($userref!="" ? $userref : NULL));  # User
+        ($userref!="" ? "user"    : null),  # Remote Table
+        ($userref!="" ? "last_ip" : null),  # Remote Column
+        ($userref!="" ? $userref  : null),  # Remote Ref
+        null,                               # Ref Column Override
+        null,                               # Value Old
+        ($userref!="" ? $userref : null));  # User
     }
 
 # Process the submitted login

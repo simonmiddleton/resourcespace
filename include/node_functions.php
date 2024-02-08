@@ -28,7 +28,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     // Blank parent fixup to NULL; non-blank parent fixup to integer
     if(!is_null($parent))
         {
-        if ($parent == ""){$parent=NULL;}
+        if ($parent == ""){$parent=null;}
         else {$parent = (int) $parent;}
         }
 
@@ -131,12 +131,12 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
                 );
 
         // Handle node indexing for existing nodes
-        remove_node_keyword_mappings(array('ref' => $current_node['ref'], 'resource_type_field' => $current_node['resource_type_field'], 'name' => $current_node['name']), NULL);
+        remove_node_keyword_mappings(array('ref' => $current_node['ref'], 'resource_type_field' => $current_node['resource_type_field'], 'name' => $current_node['name']), null);
         if($resource_type_field_data["keywords_index"] == 1)
             {
             $is_date = in_array($resource_type_field_data['type'],[FIELD_TYPE_DATE_AND_OPTIONAL_TIME,FIELD_TYPE_EXPIRY_DATE,FIELD_TYPE_DATE,FIELD_TYPE_DATE_RANGE]);
             $is_html = ($resource_type_field_data["type"] == FIELD_TYPE_TEXT_BOX_FORMATTED_AND_CKEDITOR);
-            add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL, $is_date, $is_html);
+            add_node_keyword_mappings(array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name), null, $is_date, $is_html);
             }
         }
 
@@ -163,7 +163,7 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by)
         // Handle node indexing for new nodes
         if($resource_type_field_data["keywords_index"] == 1)
             {
-            add_node_keyword_mappings(array('ref' => $new_ref, 'resource_type_field' => $resource_type_field, 'name' => $name), NULL);
+            add_node_keyword_mappings(array('ref' => $new_ref, 'resource_type_field' => $resource_type_field, 'name' => $name), null);
             }
         $return = $new_ref;
         }
@@ -281,7 +281,7 @@ function get_node($ref, array &$returned_node, $cache = true)
 * 
 * @return array
 */
-function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $offset = NULL, $rows = NULL, $name = '', 
+function get_nodes($resource_type_field, $parent = null, $recursive = false, $offset = null, $rows = null, $name = '', 
     $use_count = false, $order_by_translated_name = false)
     {
     global $FIXED_LIST_FIELD_TYPES;
@@ -294,7 +294,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         
     if(!is_null($parent))
         {
-        if ($parent == ""){$parent=NULL;}
+        if ($parent == ""){$parent=null;}
         else {$parent = (int) $parent;}
         }
 
@@ -375,7 +375,7 @@ function get_nodes($resource_type_field, $parent = NULL, $recursive = FALSE, $of
         {
         foreach($nodes as $node)
             {
-            foreach(get_nodes($resource_type_field, $node['ref'], TRUE) as $sub_node)
+            foreach(get_nodes($resource_type_field, $node['ref'], true) as $sub_node)
                 {
                 array_push($nodes, $sub_node);
                 }
@@ -727,14 +727,14 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
 *
 * @return integer  $order_by  
 */
-function get_node_order_by($resource_type_field, $is_tree = FALSE, $parent = NULL)
+function get_node_order_by($resource_type_field, $is_tree = false, $parent = null)
     {
     $order_by = 10;
 
     // Blank parent fixup to NULL; non-blank parent fixup to integer
     if(!is_null($parent))
         {
-        if ($parent == ""){$parent=NULL;}
+        if ($parent == ""){$parent=null;}
         else {$parent = (int) $parent;}
         }
         
@@ -826,7 +826,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
             }
         else
             {
-            $all_nodes = $node_tree_data = get_nodes($resource_type_field, NULL, TRUE, NULL, NULL, '', TRUE);
+            $all_nodes = $node_tree_data = get_nodes($resource_type_field, null, true, null, null, '', true);
             }
         $resource_type_field_last = $resource_type_field;    
         }
@@ -931,7 +931,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
             {
             $parent = 0;
             }
-        render_new_node_record('/pages/admin/admin_manage_field_options.php?field=' . $resource_type_field, TRUE, $parent, $node_depth_level, $all_nodes);
+        render_new_node_record('/pages/admin/admin_manage_field_options.php?field=' . $resource_type_field, true, $parent, $node_depth_level, $all_nodes);
         }
 
     return true;
@@ -1183,7 +1183,7 @@ function add_node_keyword_mappings(array $node, $partial_index = false,bool $is_
         {
         $translations[] = $node['name'];
         }
-    $in_transaction = $GLOBALS['sql_transaction_in_progress'] ?? FALSE;
+    $in_transaction = $GLOBALS['sql_transaction_in_progress'] ?? false;
     if(!$in_transaction)
         {
         db_begin_transaction("add_node_keyword_mappings");
@@ -2817,7 +2817,7 @@ function migrate_fixed_to_text(int $resource_type_field, int $resource, bool $ca
         }
 
     delete_resource_nodes($resource, array_column($current_nodes, 'ref'), false);
-    $savenode = set_node(NULL, $resource_type_field, $new_value, NULL, 0);
+    $savenode = set_node(null, $resource_type_field, $new_value, null, 0);
     return add_resource_nodes($resource, [$savenode], true, false);
     }
 

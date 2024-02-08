@@ -403,7 +403,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $exif_fields = array_column(get_exiftool_fields($resource['resource_type']), 'ref');
                 $oldval = get_data_by_field($ref, $view_title_field);
                 
-                if(strpos($oldval, $merged_filename) == FALSE && in_array($view_title_field, $exif_fields))
+                if(strpos($oldval, $merged_filename) == false && in_array($view_title_field, $exif_fields))
                     {
                     switch (strtolower($merge_filename_with_title_option)) 
                         {
@@ -863,7 +863,7 @@ function extract_exif_comment($ref,$extension="")
                             }
 
                             $oldval = get_data_by_field($ref, $read_from[$i]['ref']);
-                            if($value=="" || strpos($oldval, $value) !== FALSE) {
+                            if($value=="" || strpos($oldval, $value) !== false) {
                                 continue;
                             }
                             
@@ -934,7 +934,7 @@ function extract_exif_comment($ref,$extension="")
                             }
 
                             $oldval = get_data_by_field($ref, $read_from[$i]['ref']);
-                            if($value == "" || strpos($oldval, $value) !== FALSE) {
+                            if($value == "" || strpos($oldval, $value) !== false) {
                                 continue;
                             }
                             
@@ -994,7 +994,7 @@ function extract_exif_comment($ref,$extension="")
                         $amended_filename = $uploadedfilename;
                     }
 
-                    if(strpos($amended_filename, $extension) === FALSE) {
+                    if(strpos($amended_filename, $extension) === false) {
                         $amended_filename .= '.' . $extension;
                     }
 
@@ -3529,7 +3529,7 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
         // we really need dimensions here, so fallback to php's method
         if (is_readable($file) && filesize_unlimited($file) > 0 && !in_array($extension,config_merge_non_image_types()))
             {
-            list($w,$h) = try_getimagesize($file)?:[NULL,NULL];
+            list($w,$h) = try_getimagesize($file)?:[null,null];
             }
         else
             {

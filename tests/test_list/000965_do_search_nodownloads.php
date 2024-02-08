@@ -29,7 +29,7 @@ if(count($results) != 2 || !isset($results[0]['ref']) || !isset($results[1]['ref
 // SUBTEST B
 // Do !nodownloads search with extra field search
 $resourcec = create_resource(1,0);
-$new_country = set_node(NULL, 3, 'Atlantis', '', '');
+$new_country = set_node(null, 3, 'Atlantis', '', '');
 
 add_resource_nodes($resourceb, array($new_country));
 add_resource_nodes($resourcec, array($new_country));

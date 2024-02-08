@@ -213,7 +213,7 @@ $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
 $tabname                        = '';
 $tabcount                       = 0;
 $extra                          = '';
-$show_default_related_resources = TRUE;
+$show_default_related_resources = true;
 
 // Process each tab which has fields attached to a defined tab name or the Default tab
 foreach($fields_tab_names as $tab_ref => $tabname)

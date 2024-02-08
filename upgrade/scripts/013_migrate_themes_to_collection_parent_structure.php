@@ -60,7 +60,7 @@ foreach($featured_collections as $collection)
     ps_query("UPDATE collection SET `type` = ?, parent = ?, thumbnail_selection_method = ? WHERE ref = ?", 
         [
         'i', COLLECTION_TYPE_FEATURED, 
-        'i', (is_null($parent)?NULL:$parent), 
+        'i', (is_null($parent)?null:$parent), 
         'i', $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["most_popular_image"], 
         'i', $collection["ref"]
         ]

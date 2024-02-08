@@ -4,19 +4,19 @@ command_line_only();
 
 $use_cases = array(
     array(
-        'offset'          => NULL,
-        'rows'            => NULL,
+        'offset'          => null,
+        'rows'            => null,
         'expected_output' => ''
     ),
     array(
-        'offset'          => NULL,
+        'offset'          => null,
         'rows'            => 15,
         'expected_output' => 'LIMIT 15'
     ),
     // You cannot offset without limiting number of rows
     array(
         'offset'          => 15,
-        'rows'            => NULL,
+        'rows'            => null,
         'expected_output' => ''
     ),
     array(

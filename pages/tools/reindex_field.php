@@ -54,7 +54,7 @@ if (PHP_SAPI == 'cli' || (getval("submit","")!="" && enforcePostRequest(false)))
     $offset = 0;
     do
         {
-        $nodes = get_nodes($field, NULL, (FIELD_TYPE_CATEGORY_TREE == $fieldinfo['type']), $offset, $chunk_size);
+        $nodes = get_nodes($field, null, (FIELD_TYPE_CATEGORY_TREE == $fieldinfo['type']), $offset, $chunk_size);
         foreach($nodes as $node)
             {
             // Populate node_keyword table

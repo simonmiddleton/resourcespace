@@ -1044,7 +1044,7 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
             $userlanguages[$userdetails['lang']]["message_users"][]=$userdetails["ref"];
             }
         }
-    $url = $notifymessage->url ?? NULL;
+    $url = $notifymessage->url ?? null;
     $headerimghtml = "";
     if(!isset($notifymessage->template))
         {
@@ -1100,8 +1100,8 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
         $messagetext = $notifymessage->get_text();
         if (count($notifications["message_users"])>0)
             {
-            $activitytype = $notifymessage->eventdata["type"] ?? NULL;
-            $relatedactivity = $notifymessage->eventdata["ref"] ?? NULL;
+            $activitytype = $notifymessage->eventdata["type"] ?? null;
+            $relatedactivity = $notifymessage->eventdata["ref"] ?? null;
             foreach($notifications["message_users"] as $notifyuser)
                 {
                 $results["messages"][] = ["user"=>$notifyuser,"message"=>$messagetext,"url"=>$url];

@@ -636,7 +636,7 @@ function save_site_text($page,$name,$language,$group)
 
     if(!is_int_loose($group))
         {
-        $group = NULL;
+        $group = null;
         }
     $text = getval("text","");
     if($newcustom)
@@ -2088,7 +2088,7 @@ function run_command($command, $geterrors = false, array $params = array())
             $descriptorspec[2] = array("pipe", "w"); // stderr is a pipe that the child will write to
             }
         }
-    $process = @proc_open($command, $descriptorspec, $pipe, NULL, NULL, array('bypass_shell' => true));
+    $process = @proc_open($command, $descriptorspec, $pipe, null, null, array('bypass_shell' => true));
 
     if (!is_resource($process)) { return ''; }
 
@@ -2161,8 +2161,8 @@ function run_external($command)
             break;
             }
 
-        $write = NULL;
-        $except = NULL;
+        $write = null;
+        $except = null;
         $ready = stream_select($read, $write, $except, 2);
 
         if ($ready === false)
@@ -4942,7 +4942,7 @@ function try_unlink($deletefile)
     return $deleted;
     }
 
-function try_getimagesize(string $filename, &$image_info = NULL)
+function try_getimagesize(string $filename, &$image_info = null)
     {
     $GLOBALS["use_error_exception"] = true;
     try

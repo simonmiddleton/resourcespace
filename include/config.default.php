@@ -2629,15 +2629,15 @@ $hide_resource_types = array();
 
 # Ability (when uploading new resources) to include a user selectable option to use the embedded filename to generate the title
 # Note: you can set a default option by using one of the following values: do_not_use, replace, prefix, suffix
-$merge_filename_with_title = FALSE;
+$merge_filename_with_title = false;
 $merge_filename_with_title_default = 'do_not_use';
 
 # Add collection link to email when user submits a collection of resources for review (upload stage only)
 # Note: this will send a collection containing only the newly uploaded resources. Not used when uploading to external shares.
-$send_collection_to_admin = FALSE;
+$send_collection_to_admin = false;
 
 # Set to true if you want to share internally a collection which is not private
-$ignore_collection_access = FALSE;
+$ignore_collection_access = false;
 
 # Show group filter and user search at top of team_user.php
 $team_user_filter_top=false;

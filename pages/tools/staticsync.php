@@ -136,7 +136,7 @@ if (isset($staticsync_mapped_category_tree))
     {
     $treefield=get_resource_type_field($staticsync_mapped_category_tree);
     migrate_resource_type_field_check($treefield);
-    $tree = get_nodes($staticsync_mapped_category_tree,'',TRUE);
+    $tree = get_nodes($staticsync_mapped_category_tree,'',true);
     }
 
 function touch_category_tree_level($path_parts)
@@ -178,7 +178,7 @@ function touch_category_tree_level($path_parts)
             {
             echo " - NOT FOUND. Updating tree field" .PHP_EOL;
             # Add this node
-            $newnode=set_node(NULL, $staticsync_mapped_category_tree, $nodename, $parent_search, $order_by);
+            $newnode=set_node(null, $staticsync_mapped_category_tree, $nodename, $parent_search, $order_by);
             $tree[]=array("ref"=>$newnode,"parent"=>$parent_search,"name"=>$nodename,"order_by"=>$order_by);
             $parent_search = $newnode; # Search for this as the parent node on the pass for the next level.
             $treenodes[]=$newnode;
@@ -588,7 +588,7 @@ function ProcessFolder($folder)
                                         $field_info=get_resource_type_field($field);
                                         if(in_array($field_info['type'], $FIXED_LIST_FIELD_TYPES))
                                             {
-                                            $fieldnodes = get_nodes($field, NULL, $field_info['type'] == FIELD_TYPE_CATEGORY_TREE);
+                                            $fieldnodes = get_nodes($field, null, $field_info['type'] == FIELD_TYPE_CATEGORY_TREE);
 
                                             if(in_array($value, array_column($fieldnodes,"name")) || ($field_info['type']==FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field)))
                                                 {

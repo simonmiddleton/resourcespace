@@ -20,7 +20,7 @@ if($selected_user_group == 0)
     $show_usergroups_dash = false;
     }
 
-if(getval("quicksave",FALSE))
+if(getval("quicksave",false))
     {
     $tile = getval("tile","");
     $revokeallusers = getval("revokeallusers","false") != "false";
@@ -61,7 +61,7 @@ if(getval("quicksave",FALSE))
                         $force = !checkTileConfig($tile, $search_string["tlstyle"]);
                         }
                         delete_dash_tile($tile["ref"], true, $force);
-                        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',NULL,$tile["ref"]);
+                        log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',null,$tile["ref"]);
                     }
                 reorder_default_dash();
                 $dtiles_available = get_alluser_available_tiles();

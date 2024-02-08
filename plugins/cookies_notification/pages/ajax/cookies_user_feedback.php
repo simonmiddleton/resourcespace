@@ -3,7 +3,7 @@ include dirname(__DIR__) . '/../../../include/db.php';
 include dirname(__DIR__) . '/../../../include/authenticate.php';
 
 
-$accepted_cookies_use = getval('accepted_cookies_use', NULL, true);
+$accepted_cookies_use = getval('accepted_cookies_use', null, true);
 $return               = array();
 
 if(!is_null($accepted_cookies_use))

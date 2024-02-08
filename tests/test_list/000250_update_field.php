@@ -40,12 +40,12 @@ if(!$logok)
 $field_title = 'Tree field ABC';
 $tree_field_abc = create_resource_type_field($field_title, 1, FIELD_TYPE_CATEGORY_TREE, 'treefieldabc', false);
 
-$fruitnode = set_node(NULL, $tree_field_abc, "Fruit",0,10);
-$applenode = set_node(NULL, $tree_field_abc, "Apple",$fruitnode,20);
-$pearnode = set_node(NULL, $tree_field_abc, "Pear",$fruitnode,30);
-$vegnode = set_node(NULL, $tree_field_abc, "Vegetable",0,40);
-$broccnode = set_node(NULL, $tree_field_abc, "Broccolli",$vegnode,50);
-$carrotnode = set_node(NULL, $tree_field_abc, "Carrot",$vegnode,60);
+$fruitnode = set_node(null, $tree_field_abc, "Fruit",0,10);
+$applenode = set_node(null, $tree_field_abc, "Apple",$fruitnode,20);
+$pearnode = set_node(null, $tree_field_abc, "Pear",$fruitnode,30);
+$vegnode = set_node(null, $tree_field_abc, "Vegetable",0,40);
+$broccnode = set_node(null, $tree_field_abc, "Broccolli",$vegnode,50);
+$carrotnode = set_node(null, $tree_field_abc, "Carrot",$vegnode,60);
 
 $update_errors = [];
 $set_values = ["Apple","Fruit"];
