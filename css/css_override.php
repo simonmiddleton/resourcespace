@@ -1,4 +1,5 @@
 <?php
+
 /**
 * Add in CSS overrides for UI elements
 *
@@ -8,10 +9,9 @@
 include_once "../include/db.php";
 
 $k = getval('k', '');
-if((is_array($k) || trim($k) === '') && getval('noauth','') != true) 
-    {
+if ((is_array($k) || trim($k) === '') && getval('noauth', '') != true) {
     include '../include/authenticate.php';
-    }
+}
 
 header("Content-type: text/css");
 
@@ -55,8 +55,8 @@ if (isset($collection_bar_background_override) && $collection_bar_background_ove
 
 /**
  * Override the collection bar foreground colour
- * 
- * optgroup and option background-color set to #474747 for consistency across platforms as 
+ *
+ * optgroup and option background-color set to #474747 for consistency across platforms as
  * Firefox/Windows does not recognise rgb() colour properties for optgroup element
  * */
 
