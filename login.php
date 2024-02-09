@@ -3,150 +3,145 @@ include "include/db.php";
 include_once "include/login_functions.php";
 
 debug("[login.php] Reached login page...");
-$url=getval("url","index.php");
+$url = getval("url", "index.php");
 
-if (is_array($url))
-    {
+if (is_array($url)) {
     $url = 'index.php';
-    }
+}
 
-$modifiedurl=hook("modifyloginurl","",array($url));
-if ($modifiedurl){$url=$modifiedurl;}
+$modifiedurl = hook("modifyloginurl", "", array($url));
+if ($modifiedurl) {
+    $url = $modifiedurl;
+}
 
-$modal=getval("modal","");
+$modal = getval("modal", "");
 
-if ($modal || getval("ajax","")!="")
-    {
+if ($modal || getval("ajax", "") != "") {
     # add the capslock lib because there's no header
     ?>
     <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script>
     <?php
-    }
-        
+}
+
 # process log in
-$error=getval("error","");
-$error=isset($lang[$error]) ? $lang[$error] : "";
+$error = getval("error", "");
+$error = isset($lang[$error]) ? $lang[$error] : "";
 
 # Auto logged out? Set error message.
-if (getval("auto","")!="") {$error=str_replace("30",$session_length,$lang["sessionexpired"]);}
+if (getval("auto", "") != "") {
+    $error = str_replace("30", $session_length, $lang["sessionexpired"]);
+}
 
 # Display a no-cookies message
-if (getval("nocookies","")!="" && getval("cookiecheck","")=="") {$error=$lang["nocookies"];}
+if (getval("nocookies", "") != "" && getval("cookiecheck", "") == "") {
+    $error = $lang["nocookies"];
+}
 
 if (!hook("replaceauth")) {
 # First check that this IP address has not been locked out due to excessive attempts.
-$ip=get_ip();
-$lockouts=ps_value("select count(*) value from ip_lockout where ip = ? and tries >= ? and date_add(last_try, interval ? minute) > now()", array("s", $ip, "i", $max_login_attempts_per_ip, "i", $max_login_attempts_wait_minutes), 0);
+    $ip = get_ip();
+    $lockouts = ps_value("select count(*) value from ip_lockout where ip = ? and tries >= ? and date_add(last_try, interval ? minute) > now()", array("s", $ip, "i", $max_login_attempts_per_ip, "i", $max_login_attempts_wait_minutes), 0);
 
-$username = getval("username","");
-if (is_array($username))
-    {
-    debug("[login.php] redirect to login because username is array");
-    redirect($baseurl . "/login.php");
+    $username = getval("username", "");
+    if (is_array($username)) {
+        debug("[login.php] redirect to login because username is array");
+        redirect($baseurl . "/login.php");
     }
 
-$username=trim($username);
-if($case_insensitive_username)
-    {
-    $username = ps_value("select username value from user where lower(username) = lower(?)", array("s", $username), $username);       
+    $username = trim($username);
+    if ($case_insensitive_username) {
+        $username = ps_value("select username value from user where lower(username) = lower(?)", array("s", $username), $username);
     }
-    
+
 # Also check that the username provided has not been locked out due to excessive login attempts.
-$ulockouts=ps_value("select count(*) value from user where username = ? and login_tries >= ? and date_add(login_last_try, interval ? minute) > now()", array("s", $username, "i", $max_login_attempts_per_username, "i", $max_login_attempts_wait_minutes), 0);
+    $ulockouts = ps_value("select count(*) value from user where username = ? and login_tries >= ? and date_add(login_last_try, interval ? minute) > now()", array("s", $username, "i", $max_login_attempts_per_username, "i", $max_login_attempts_wait_minutes), 0);
 
-if ($lockouts>0 || $ulockouts>0)
-    {
-    $error=str_replace("?",$max_login_attempts_wait_minutes,$lang["max_login_attempts_exceeded"]);
-    if ($ulockouts>0){$log_message='Account locked';}
-    else {$log_message = 'IP address locked';}
-    $userref = get_user_by_username($username);
-    log_activity(
-        $log_message,                       # Note
-        LOG_CODE_FAILED_LOGIN_ATTEMPT,      # Log Code
-        $ip,                                # Value New
-        ($userref!="" ? "user"    : null),  # Remote Table
-        ($userref!="" ? "last_ip" : null),  # Remote Column
-        ($userref!="" ? $userref  : null),  # Remote Ref
-        null,                               # Ref Column Override
-        null,                               # Value Old
-        ($userref!="" ? $userref : null));  # User
+    if ($lockouts > 0 || $ulockouts > 0) {
+        $error = str_replace("?", $max_login_attempts_wait_minutes, $lang["max_login_attempts_exceeded"]);
+        if ($ulockouts > 0) {
+            $log_message = 'Account locked';
+        } else {
+            $log_message = 'IP address locked';
+        }
+        $userref = get_user_by_username($username);
+        log_activity(
+            $log_message,                       # Note
+            LOG_CODE_FAILED_LOGIN_ATTEMPT,      # Log Code
+            $ip,                                # Value New
+            ($userref != "" ? "user"    : null),  # Remote Table
+            ($userref != "" ? "last_ip" : null),  # Remote Column
+            ($userref != "" ? $userref  : null),  # Remote Ref
+            null,                               # Ref Column Override
+            null,                               # Value Old
+            ($userref != "" ? $userref : null)  # User
+        );
     }
 
 # Process the submitted login
-elseif (array_key_exists("username",$_POST) && getval("langupdate","")=="")
-    {
-    debug("[login.php] Process the submitting login details...");
+    elseif (array_key_exists("username", $_POST) && getval("langupdate", "") == "") {
+        debug("[login.php] Process the submitting login details...");
 
-    $password = trim(getval("password",""));
-    $result = perform_login();
-    if ($result['valid'])
-        {
-        debug("[login.php] Performed login - valid result");
+        $password = trim(getval("password", ""));
+        $result = perform_login();
+        if ($result['valid']) {
+            debug("[login.php] Performed login - valid result");
 
-        set_login_cookies($result["ref"],$session_hash,$language, $user_preferences);
+            set_login_cookies($result["ref"], $session_hash, $language, $user_preferences);
 
-        # Set 'user_local_timezone' in cookie like 'user preferences page' does
-        $login_lang = getval("user_local_timezone", "");        
-        rs_setcookie('user_local_timezone', $login_lang, 365);
+            # Set 'user_local_timezone' in cookie like 'user preferences page' does
+            $login_lang = getval("user_local_timezone", "");
+            rs_setcookie('user_local_timezone', $login_lang, 365);
 
-        # If the redirect URL is the collection frame, do not redirect to this as this will cause
-        # the collection frame to appear full screen.
-        if (strpos($url,"pages/collections.php")!==false) {$url="index.php";}
-
-        $accepted = ps_value("SELECT accepted_terms value FROM user WHERE ref = ?", array("i", (int)$result['ref']), 0);
-        if(0 == $accepted && $terms_login && !checkperm('p'))
-            {
-            $redirect_url='pages/terms.php?url=' . urlencode($url);
+            # If the redirect URL is the collection frame, do not redirect to this as this will cause
+            # the collection frame to appear full screen.
+            if (strpos($url, "pages/collections.php") !== false) {
+                $url = "index.php";
             }
-        else{
-            $redirect_url=$url;
+
+            $accepted = ps_value("SELECT accepted_terms value FROM user WHERE ref = ?", array("i", (int)$result['ref']), 0);
+            if (0 == $accepted && $terms_login && !checkperm('p')) {
+                $redirect_url = 'pages/terms.php?url=' . urlencode($url);
+            } else {
+                $redirect_url = $url;
             }
-        debug("[login.php] Redirecting to $redirect_url");
-            
-        if(!$modal)
-            {
-            redirect($redirect_url);
-            }
-        else
-            {
-            ?>
+            debug("[login.php] Redirecting to $redirect_url");
+
+            if (!$modal) {
+                redirect($redirect_url);
+            } else {
+                ?>
             <script type="text/javascript">
-                CentralSpaceLoad('<?php echo $baseurl."/".$redirect_url?>',true);
+                CentralSpaceLoad('<?php echo $baseurl . "/" . $redirect_url?>',true);
             </script>
-            <?php
+                <?php
             }
-        }
-    else
-        {
-        sleep($password_brute_force_delay);
-        
-        $error=$result['error'];
-        hook("dispcreateacct");
+        } else {
+            sleep($password_brute_force_delay);
+
+            $error = $result['error'];
+            hook("dispcreateacct");
         }
     }
 }
 
-if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
-    {
+if (getval("logout", "") != "" && array_key_exists("user", $_COOKIE)) {
     debug("[login.php] Logging user out...");
 
     $session = $_COOKIE["user"];
 
     // Check CSRF Token
     $csrf_token = getval($CSRF_token_identifier, "");
-    if($_SERVER["REQUEST_METHOD"] === "POST" && !isValidCSRFToken($csrf_token, $session))
-        {
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && !isValidCSRFToken($csrf_token, $session)) {
         http_response_code(400);
         debug("WARNING: CSRF verification failed!");
         trigger_error($lang["error-csrf-verification-failed"]);
-        }
+    }
 
     // Clear out special "COLLECTION_TYPE_SELECTION" collection
     $user_selection_collection = get_user_selection_collection(ps_value("SELECT ref AS `value` FROM user WHERE session = ?", array("s", $session), null));
-    if(!is_null($user_selection_collection) && count(get_collection_resources($user_selection_collection)) > 0)
-        {
+    if (!is_null($user_selection_collection) && count(get_collection_resources($user_selection_collection)) > 0) {
         remove_all_resources_from_collection($user_selection_collection);
-        }
+    }
 
     ps_query("UPDATE user SET logged_in = 0, session = NULL, csrf_token = NULL WHERE session = ?", array("s", $session));
     hook("removeuseridcookie");
@@ -159,7 +154,7 @@ if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
     rs_setcookie('saved_offset', '');
     rs_setcookie('saved_archive', '');
     rs_setcookie('restypes', '');
-    
+
     // Blank cookies under /pages as well
     rs_setcookie('search', '', 0, $baseurl_short . 'pages');
     rs_setcookie('saved_offset', '', 0, $baseurl_short . 'pages');
@@ -167,34 +162,35 @@ if(getval("logout", "") != "" && array_key_exists("user", $_COOKIE))
     rs_setcookie('restypes', '', 0, $baseurl_short . 'pages');
 
     unset($username);
-    
+
     hook("postlogout");
-    
-    if (isset($anonymous_login))
-        {
+
+    if (isset($anonymous_login)) {
         # If the system is set up with anonymous access, redirect to the home page after logging out.
-        redirect("pages/".$default_home_page);
-        }
+        redirect("pages/" . $default_home_page);
     }
+}
 
 hook("postlogout2");
 
-if (getval("langupdate","") != "")
-    {
+if (getval("langupdate", "") != "") {
     # Update language while remaining on this page.
     rs_setcookie("language", $language, 1000); # Only used if not global cookies
     rs_setcookie("language", $language, 1000, $baseurl_short . "pages/");
     redirect("login.php");
-    }
+}
 
 include "include/header.php";
 
 include "include/login_background.php";
-    
-if (!hook("replaceloginform"))
-    {
+
+if (!hook("replaceloginform")) {
     ?>
-    <form id="loginform" method="post" action="<?php echo $baseurl_short?>login.php" <?php if (!$login_autocomplete) { ?>autocomplete="off"<?php } ?><?php if($modal){?>onsubmit="return ModalPost(this,true,true);" <?php } ?>>
+    <form id="loginform" method="post" action="<?php echo $baseurl_short?>login.php" <?php if (!$login_autocomplete) {
+        ?>autocomplete="off"<?php
+                                               } ?><?php if ($modal) {
+    ?>onsubmit="return ModalPost(this,true,true);" <?php
+                                               } ?>>
         <input type="hidden" name="langupdate" id="langupdate" value="">  
         <input type="hidden" name="url" value="<?php echo htmlspecialchars($url)?>">
         <input type="hidden" name="modal" value="<?php echo $modal == "true" ? "true" : ""; ?>">
@@ -210,30 +206,40 @@ if (!hook("replaceloginform"))
             <?php hook("loginformlink") ?> 
         </p>
 
-        <?php if ($error!="") { ?>
+        <?php if ($error != "") { ?>
             <div class="FormIncorrect" id="LoginError" tabindex="-1"><?php echo $error?></div>
             <script>window.onload = function() { document.getElementById("LoginError").focus(); }</script>
         <?php }?>
 
         <div class="Question">
             <label for="username"><?php echo $lang["username"]?> </label>
-            <input type="text" name="username" id="username" class="stdwidth" <?php if (!$login_autocomplete) { ?>autocomplete="off"<?php } ?> value="<?php echo htmlspecialchars(getval("username","")) ?>" <?php if ($error!="") { ?>aria-describedby="LoginError"<?php } ?>/>
+            <input type="text" name="username" id="username" class="stdwidth" <?php if (!$login_autocomplete) {
+                ?>autocomplete="off"<?php
+                                                                              } ?> value="<?php echo htmlspecialchars(getval("username", "")) ?>" <?php if ($error != "") {
+    ?>aria-describedby="LoginError"<?php
+                                                                              } ?>/>
             <div class="clearerleft"> </div>
         </div>
         
         <div class="Question">
             <label for="password"><?php echo $lang["password"]?> </label>
-            <input type="password" name="password" id="password" class="stdwidth" <?php if (!$login_autocomplete) { ?>autocomplete="off"<?php } ?> <?php if ($error!="") { ?>aria-describedby="LoginError"<?php } ?>/>
+            <input type="password" name="password" id="password" class="stdwidth" <?php if (!$login_autocomplete) {
+                ?>autocomplete="off"<?php
+                                                                                  } ?> <?php if ($error != "") {
+    ?>aria-describedby="LoginError"<?php
+                                                                                  } ?>/>
              <div id="capswarning"><?php echo $lang["caps-lock-on"]; ?></div>
             <div class="clearerleft"> </div>
         </div>
 
-        <?php if ($disable_languages==false) { ?>   
+        <?php if ($disable_languages == false) { ?>   
             <div class="Question HalfWidth">
                 <label for="language"><?php echo $lang["language"]?></label>
                 <select id="language" class="stdwidth" name="language" onBlur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
-                <?php reset ($languages); foreach ($languages as $key=>$value) { ?>
-                    <option value="<?php echo $key?>" <?php if ($language==$key) { ?>selected<?php } ?>><?php echo $value?></option>
+                <?php reset($languages); foreach ($languages as $key => $value) { ?>
+                    <option value="<?php echo $key?>" <?php if ($language == $key) {
+                        ?>selected<?php
+                                   } ?>><?php echo $value?></option>
                 <?php } ?>
                 </select>
                 <div class="clearerleft"> </div>
@@ -247,33 +253,28 @@ if (!hook("replaceloginform"))
 
             $user_local_timezone = getval('user_local_timezone', '');
 
-            foreach(timezone_identifiers_list() as $timezone)
-                {
-                if($user_local_timezone == $timezone)
-                    {
+            foreach (timezone_identifiers_list() as $timezone) {
+                if ($user_local_timezone == $timezone) {
                     ?>
                     <option value="<?php echo $timezone; ?>" selected><?php echo $timezone; ?></option>
                     <?php
-                    }
-                else
-                    {
+                } else {
                     ?>
                     <option value="<?php echo $timezone; ?>"><?php echo $timezone; ?></option>
                     <?php
-                    }                
                 }
-            
+            }
+
             ?>
             </select>
             <script>
             jQuery(document).ready(function() {
                 var user_local_tz = detect_local_timezone();
-                <?php 
+                <?php
 
-                if(!isset($user_local_timezone) || $user_local_timezone == '') 
-                    {
+                if (!isset($user_local_timezone) || $user_local_timezone == '') {
                     ?>jQuery('#user_local_tz').val(user_local_tz);<?php
-                    }
+                }
 
                 ?>
             });
@@ -363,7 +364,7 @@ if (!hook("replaceloginform"))
     </script>
 
     <?php
-    }
+}
 
 hook('afterlogin');
 
