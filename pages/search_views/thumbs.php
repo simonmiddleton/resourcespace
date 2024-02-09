@@ -164,7 +164,7 @@ if (!hook("renderresultthumb"))
                     }
                 }
           
-            hook("aftersearchimg","",array($result[$n], $thumbnail["url"], $display))
+            hook("aftersearchimg","",array($result[$n], $thumbnail["url"] ?? "", $display))
             ?>
             </a>
 <?php 
