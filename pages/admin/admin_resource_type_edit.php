@@ -273,17 +273,7 @@ else
 
     config_boolean_select("pull_images",$lang["pull_images"],(int)$restypedata["pull_images"],'',420,null,false,null,false,$lang["pull_images_text"]);    
     ?>
-
-
-    <div class="Question">
-        <label><?php echo htmlspecialchars($lang["property-push_metadata"]) ?></label>
-        <input name="push_metadata" type="checkbox" value="yes" <?php if ($restypedata["push_metadata"]==1) { echo "checked"; } ?> />
-        <div class="FormHelp" style="padding:0;clear:left;" >
-            <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-push_metadata"])  ?></div>
-        </div>
-        <div class="clearerleft"> </div>
-    </div>
-    <div class="QuestionSubmit">        
+       
     <div class="QuestionSubmit">		
     <input name="save" type="submit" value="&nbsp;&nbsp;<?php  echo escape($lang["save"])?>&nbsp;&nbsp;" onClick="jQuery('#restype_save').val('yes');this.form.submit();return false;"/>
     <input name="delete" type="submit" value="&nbsp;&nbsp;<?php  echo escape($lang["action-delete"])?>&nbsp;&nbsp;" onClick="if(confirm('<?php  echo escape($lang["confirm-deletion"]) ?>')){jQuery('#restype_delete').val('yes');this.form.submit()}else{jQuery('#restype_delete').val('');}return false;"/>

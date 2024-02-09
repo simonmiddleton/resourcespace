@@ -9470,7 +9470,6 @@ function related_resource_pull(array $resource)
     {
     global $resource_path_pull_cache;
     $related = false;
-
     if (isset($resource_path_pull_cache[$resource["ref"]]))
         {
         return $resource_path_pull_cache[$resource["ref"]];
@@ -9478,7 +9477,7 @@ function related_resource_pull(array $resource)
 
     $restypes = get_resource_types('',false,true,true);
     $pull_images = array_column($restypes,"pull_images","ref")[$resource['resource_type']];
-    if ((int)$pull_images === 1 )
+    if ((int)$pull_images === 1)
         {
         $relatedpull = do_search("!related" . $resource["ref"]);
         debug("Looking for a related resource with image");
@@ -9492,6 +9491,7 @@ function related_resource_pull(array $resource)
                     if(file_exists($relatedpath))
                         {
                         $resource_path_pull_cache[$resource["ref"]] = $related;
+                        debug("Found related resource with image: " . $related["ref"]);
                         break;
                         }
                     }

@@ -108,10 +108,16 @@ if (!hook("renderresultthumb"))
             $usesize = $display == "xlthumbs" ? ($GLOBALS['retina_mode'] ? "scr" : "pre") : ($GLOBALS['retina_mode'] ? "pre" : "thm");
             $arrsizes = array_unique([$usesize,"pre","thm"]);
 
-            $thumbnail = get_resource_preview($result[$n],$arrsizes,$access,$watermark); 
-            if($result[$n]['has_image'] == 1)
+            $thumbnail = get_resource_preview($result[$n],$arrsizes,$access,$watermark);
+            if($thumbnail !== false)
                 {
                 // Use standard preview image
+                if($result[$n]["thumb_height"] !== $thumbnail["height"] || $result[$n]["thumb_width"] !== $thumbnail["width"])
+                    {                    
+                    // Preview image dimensions differ from the size data stored for the current resource
+                    $result[$n]["thumb_height"] = $thumbnail["height"];
+                    $result[$n]["thumb_width"]  = $thumbnail["width"];
+                    }
                 render_resource_image($result[$n],$thumbnail["url"],$display);
                 // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
                 // when user hovers over the preview thumbnail
@@ -144,24 +150,11 @@ if (!hook("renderresultthumb"))
                 }
             else
                 {
-                // No preview. If configured, try and use a preview from a related resource
-                $pullresource = related_resource_pull($result[$n]);
-                if($pullresource !== false)
-                    {
-                    $thumbnail = get_resource_preview($pullresource,["thm"],$access,$watermark);
-                    // Preview image dimensions aren't linked to the size data stored for the current resource
-                    $result[$n]["thumb_height"] = $thumbnail["height"];
-                    $result[$n]["thumb_width"]  = $thumbnail["width"];
-                    render_resource_image($result[$n],$thumbnail["url"],$display);
-                    }
-                else
-                    {
-                    ?>
-                    <img border=0 
-                        src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" 
-                        style="margin-top:<?php echo $display == "xlthumbs" ? "90px" : "35px"; ?>;"/>
-                    <?php 
-                    }
+                ?>
+                <img border=0 
+                    src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" 
+                    style="margin-top:<?php echo $display == "xlthumbs" ? "90px" : "35px"; ?>;"/>
+                <?php 
                 }
           
             hook("aftersearchimg","",array($result[$n], $thumbnail["url"] ?? "", $display))
