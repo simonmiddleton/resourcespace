@@ -2,7 +2,7 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 0
+    level: 1
     paths:
         - api
         - batch
@@ -27,3 +27,6 @@ parameters:
 
     earlyTerminatingFunctionCalls:
         - errorhandler
+
+    ignoreErrors:
+        - '#^Variable \$[a-zA-Z0-9_]+ might not be defined\.$#'
