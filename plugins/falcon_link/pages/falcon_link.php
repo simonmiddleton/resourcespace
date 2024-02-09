@@ -224,7 +224,7 @@ if(!$saveform)
             }?>
         
         <div class="QuestionSubmit">            
-            <input type="hidden" id="falcon_action" name="falcon_action" value="<?php echo $action ?>">
+            <input type="hidden" id="falcon_action" name="falcon_action" value="<?php echo escape($action); ?>">
         <?php   
         if(($action == "publish" || $collection != 0) && ($publishedresources + $nopublish < $rescount))
             {?>

@@ -36,15 +36,15 @@ include "../../../include/header.php";
 
 <form method="post" action="<?php echo $baseurl_short?>plugins/licensemanager/pages/delete.php" onSubmit="return CentralSpacePost(this,true);">
 <input type=hidden name="submitted" value="true">
-<input type=hidden name="ref" value="<?php echo $ref?>">
+<input type=hidden name="ref" value="<?php echo escape($ref); ?>">
 <?php generateFormToken("licensemanager_delete"); ?>
 
-<div class="Question"><label><?php echo $lang["license_id"]?></label><div class="Fixed"><?php echo htmlspecialchars($ref)?></div>
+<div class="Question"><label><?php echo escape($lang["license_id"]); ?></label><div class="Fixed"><?php echo htmlspecialchars($ref)?></div>
 <div class="clearerleft"> </div></div>
 
 
 <div class="QuestionSubmit">        
-<input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]?>&nbsp;&nbsp;" />
+<input name="delete" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["action-delete"]); ?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>
