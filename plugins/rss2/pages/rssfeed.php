@@ -2,14 +2,14 @@
 
 class RSSFeed
 {
-  var $Articles = array();
+  public $Articles = array();
 
   // Channel info
-  var $title = '';
-  var $link = '';
-  var $description = '';
-  var $optional = array();
-  var $image = array('url' => '', 'title' => '', 'link' => '', 'description' => '', 'w' => 0, 'h' => 0);
+  public $title = '';
+  public $link = '';
+  public $description = '';
+  public $optional = array();
+  public $image = array('url' => '', 'title' => '', 'link' => '', 'description' => '', 'w' => 0, 'h' => 0);
 
   public function __construct($title, $link, $description, $optional = '')
   {
