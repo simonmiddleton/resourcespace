@@ -349,16 +349,13 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             }
         }   
     
-    # Store extension in the database and update file modified time.
-    if ($revert)
-        {
-        $has_image="";
-        }
-    else 
-        {
-        $has_image=",has_image=0";
-        }
-    ps_query("UPDATE resource SET file_extension= ?,preview_extension='jpg',file_modified=NOW() $has_image WHERE ref= ?", ['s', $extension, 'i', $ref]);
+    // Store extension in the database and update file modified time.
+    // Reset 'has_image' if $revert == false
+    $set = $revert ? [] : ["has_image=?"];
+    $setparams = $revert ? [] : ["i",RESOURCE_PREVIEWS_NONE];
+    $set = array_merge($set,["file_extension= ?","preview_extension='jpg'","file_modified=NOW()"]);
+    $setparams = array_merge($setparams,['s', $extension, 'i', $ref]);
+    ps_query("UPDATE resource SET " . implode(",",$set). " WHERE ref= ?", $setparams);
     
     if(!$upload_then_process || $after_upload_processing)
         {
@@ -523,28 +520,36 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $checksum_required = false;
                 }
 
-            if ($enable_thumbnail_creation_on_upload)
-                { 
-                create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
-                }
-            else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
+            if(create_core_previews($ref, $extension, false))
                 {
-                $create_previews_job_data = array(
-                    'resource' => $ref,
-                    'thumbonly' => false,
-                    'extension' => $extension
-                );
-                $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
-                $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
-
-                job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+                
                 }
             else
                 {
-                # Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
-                delete_previews($ref);
-                ps_query("UPDATE resource SET has_image=0 WHERE ref= ?", ['i', $ref]);
+                if ($enable_thumbnail_creation_on_upload)
+                    {
+                    create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
+                    }
+                else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
+                    {
+                    $create_previews_job_data = array(
+                        'resource' => $ref,
+                        'thumbonly' => false,
+                        'extension' => $extension
+                    );
+                    $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
+                    $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
+    
+                    job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+                    }
+                else
+                    {
+                    # Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
+                    delete_previews($ref);
+                    ps_query("UPDATE resource SET has_image = ? WHERE ref= ?", ['i',RESOURCE_PREVIEWS_NONE,'i', $ref]);
+                    }
                 }
+           
             }
     
         # Update file dimensions
@@ -1179,7 +1184,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     if (!$previewonly)
         {
         // make sure the extension is the same as the original so checksums aren't done for previews
-        $o_ext=ps_value("select file_extension value from resource where ref=?",array("i",$ref),"");
+        $o_ext=ps_value("SELECT file_extension value FROM resource WHERE ref=?",["i",$ref],"");
         if($extension==$o_ext && $checksum_required)
             {
             debug("create_previews - generate checksum for $ref");
@@ -1187,7 +1192,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             }
         }
     # first reset preview tweaks to 0
-    ps_query("update resource set preview_tweaks = '0|1' where ref = ?", ['i', $ref]);
+    ps_query("UPDATE resource SET preview_tweaks = '0|1' WHERE ref = ?", ['i', $ref]);
 
     // for compatibility with transform plugin, remove any
         // transform previews for this resource when regenerating previews
@@ -1206,7 +1211,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     # Make sure the file exists, if not update preview_attempts so that we don't keep trying to generate a preview
     if (!file_exists($file)) 
         {
-        ps_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref= ?", ['i', $ref]);
+        ps_query("UPDATE resource SET preview_attempts=IFNULL(preview_attempts,0) + 1 WHERE ref= ?", ['i', $ref]);
         return false;
         }
     
@@ -1336,21 +1341,32 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             # Only create previews where the target size IS LESS THAN OR EQUAL TO the source size.
             # Set thumbonly=true to (re)generate thumbnails only.
 
-            $sizes="";
-            if ($thumbonly) {$sizes=" where id='thm' or id='col'";}
-            if ($previewonly) {$sizes=" where id='thm' or id='col' or id='pre' or id='scr'";}
-            $params=[];
-            if (count($onlysizes) > 0 )
+            # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
+            if ((list($sw,$sh) = try_getimagesize($file))===false)
+                {
+                return false;
+                }
+        
+            $sizes = "";
+            $params = [];
+            if ($thumbonly)
+                {
+                $onlysizes=['thm','col'];
+                }
+            elseif ($previewonly)
+                {
+                $sizes = ['thm','col','pre','scr'];
+                }
+            elseif (count($onlysizes) > 0)
                 {
                 $onlysizes = array_filter($onlysizes,function($v){return ctype_lower($v);});
-                $sizes=" where id in (". ps_param_insert(count($onlysizes)) .")";
-                $params= ps_param_fill($onlysizes, 's');   
+                $sizes = ps_param_insert(count($onlysizes));
+                $params = ps_param_fill($onlysizes, 's');   
                 }
-
-            # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
-            if ((list($sw,$sh) = try_getimagesize($file))===false) {return false;}
-        
-            $ps=ps_query("select " . columns_in("preview_size") . " from preview_size $sizes", $params);
+            $ps=ps_query(
+                "SELECT " . columns_in("preview_size") . " FROM preview_size WHERE id IN (" . implode(",",$sizes) . ")",
+                $params
+                );
             for ($n=0;$n<count($ps);$n++)
                 {
                 # fetch target width and height
@@ -1414,7 +1430,8 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             # flag database so a thumbnail appears on the site
             if ($alternative==-1) # not for alternatives
                 {
-                ps_query("UPDATE resource SET has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i', $ref]);
+                $has_image = count($sizes) > 0 ? RESOURCE_PREVIEWS_MINIMAL : RESOURCE_PREVIEWS_ALL;
+                ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
                 }
             }
         }
@@ -1454,7 +1471,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
     if (isset($imagemagick_path))
         {
-
         # ----------------------------------------
         # Use ImageMagick to perform the resize
         # ----------------------------------------
@@ -1473,32 +1489,24 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $origfile = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
             }
 
-        # If $onlysizes set, don't remove other preview sizes.
-        $unlink_size = fn($check_size) => count($onlysizes) == 0 || (count($onlysizes) > 0 && in_array($check_size, $onlysizes));
+        // Function to check if $onlysizes is set, and if so don't remove other preview sizes.
+        $f_unlink_size = fn($check_size) => count($onlysizes) == 0 || (count($onlysizes) > 0 && in_array($check_size, $onlysizes));
 
-        $hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);
-        if (file_exists($hpr_path) && !$previewbased && $unlink_size('hpr'))
-            {
-            unlink($hpr_path);
+        $removesizes = ["hpr","lpr","scr"];
+        $filestounlink = [];
+        $allpresizes = [];
+        foreach($removesizes as $removesize) {
+            if(!$previewbased && $f_unlink_size($removesize)) {
+                $filestounlink[] = $allpresizes[$removesize] = get_resource_path($ref,true,$removesize,false,"jpg",-1,1,false,"",$alternative);
+                // Add watermarked path
+                $filestounlink[]=get_resource_path($ref,true,$removesize,false,"jpg",-1,1,true,"",$alternative);
             }
-
-        $lpr_path=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",$alternative);
-        if (file_exists($lpr_path) && !$previewbased && $unlink_size('lpr'))
-            {
-            unlink($lpr_path);
+        }
+        foreach($filestounlink as $file){
+            if (file_exists($file)){
+                try_unlink($file);
             }
-
-        $scr_path=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"",$alternative);
-        if (file_exists($scr_path) && !$previewbased && $unlink_size('scr'))
-            {
-            unlink($scr_path);
-            }
-
-        $scr_wm_path=get_resource_path($ref,true,"scr",false,"jpg",-1,1,true,"",$alternative);
-        if (file_exists($scr_wm_path) && !$previewbased && $unlink_size('scr'))
-            {
-            unlink($scr_wm_path);
-            }
+        };
 
         $prefix = '';
         # Camera RAW images need prefix
@@ -1537,107 +1545,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $o_width  = $sw;
             $o_height = $sh;
             }
-
-        if($lean_preview_generation)
-            {
-            $all_sizes=false;
-            if(!$thumbonly && !$previewonly)
-                {
-                // seperate width and height
-                $all_sizes=true;
-                }
-            }
         
-        $sizes="";
-        $params = [];
-        $lookup_sizes = true;
-        if ($thumbonly)
-            {
-            $sizes=" WHERE id='thm' or id='col'";
-            }
-        elseif ($previewonly)
-            {
-            $sizes=" WHERE id='thm' or id='col' or id='pre' or id='scr'";
-            }
-        elseif (is_array($onlysizes) && count($onlysizes) > 0 )
-            {
-            $sizefilter = array_filter($onlysizes,function($v){return ctype_lower($v);});
-            if (count($sizefilter) > 0)
-                {
-                $sizes = " WHERE id IN (" . ps_param_insert(count($sizefilter)) . ")";
-                $params = ps_param_fill($sizefilter, 's');
-                }
-            else
-                {
-                // No valid sizes supplied in $onlysizes. Don't return all sizes from the db instead.
-                $lookup_sizes = false;
-                $ps = array();
-                }
-            $all_sizes= false;
-            }
-        
-        if ($lookup_sizes)
-            {
-            $ps = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size $sizes ORDER BY width DESC, height DESC", $params);
-            }
-
-        if($lean_preview_generation && $all_sizes)
-            {
-            $force_make=array("pre","thm","col");
-            if($extension!="jpg" || $extension!="jpeg"){
-                array_push($force_make,"hpr","scr");
-            }
-            $count=count($ps)-1;
-            $oversized=0;
-            for($s=$count;$s>0;$s--)
-                {
-                if(!in_array($ps[$s]['id'],$force_make) && !in_array($ps[$s]['id'],$always_make_previews) && (isset($o_width) && isset($o_height) && $ps[$s]['width']>$o_width && $ps[$s]['height']>$o_height) && !$previews_allow_enlarge)
-                    {
-                    $oversized++;
-                    }
-                if($oversized>0)
-                    {
-                    unset($ps[$s]);
-                    }
-                }
-            $ps = array_values($ps);
-            }
-            
-        if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes)
-            && !in_array($extension, config_merge_non_image_types())
-            )
-            {
-            // Ensure that scales are in order
-            natsort($preview_tile_scale_factors);
-
-            debug("create_previews - adding tiles to generate list: source width: " . $sw . " source height: " . $sh);
-            foreach($preview_tile_scale_factors as $scale)
-                {
-                foreach(compute_tiles_at_scale_factor($scale, $sw, $sh) as $tile)
-                    {
-                    $tile['width'] = floor($tile['w'] / $scale);
-                    $tile['height'] = floor($tile['h'] / $scale);
-                    $tile['type'] = 'tile';
-                    $tile['internal'] = 1;
-                    $tile['allow_preview'] = 0;
-
-                    $ps[] = $tile;
-                    }
-                }
-            }
-        
-        if(count($onlysizes) == 1 && substr($onlysizes[0],0,8) == "resized_")
-            {
-            $o = count($ps);
-            $size_req = explode("_",substr($onlysizes[0],8));
-            $customx = $size_req[0];
-            $customy = $size_req[1];
-    
-            debug("create_previews - creating custom size width: " . $customx . " height: " . $customy);
-            $ps[$o]['id'] = $onlysizes[0]; 
-            $ps[$o]['width'] = $customx;
-            $ps[$o]["height"] = $customy;
-            }
+        $ps = get_sizes_to_generate($extension,$thumbonly,$previewonly,$onlysizes);
             
         # Locate imagemagick.
         $convert_fullpath = get_utility_path("im-convert");
@@ -1673,7 +1582,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             # If preview_preprocessing indicates the intermediate jpg should be kept as the hpr image, do that. 
             if ($keep_for_hpr && $ps[$n]['id']=="hpr")
                 {
-                rename($file,$hpr_path); // $keep_for_hpr is switched to false below
+                rename($file,$allpresizes["hpr"]); // $keep_for_hpr is switched to false below
                 $override_size = true; // Prevent using original file when hpr size is smaller than pre size - always create pre size.
                 }
             
@@ -1692,19 +1601,19 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 if (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")
                     {
                     // Alway use original or HPR size as source
-                    $file=file_exists($hpr_path) ? $hpr_path : $origfile;
+                    $file=file_exists($allpresizes["hpr"]) ? $allpresizes["hpr"] : $origfile;
                     if($file == $origfile)
                         {
                         $using_original = true;
                         $icc_transform_complete = false;
                         }
                     }
-                elseif ($file!=$hpr_path)
+                elseif ($file != $allpresizes["hpr"])
                     {
                     # Get a source file with dimensions sufficient to create the required size. Unusually wide
                     # or tall images can mean that the height/width of the larger sizes is less than the required
                     # target height/width
-                    foreach(array($scr_path,$lpr_path,$hpr_path,$origfile) as $pre_source)
+                    foreach(array_values(array_merge($allpresizes,[$origfile])) as $pre_source)
                         {
                         if(file_exists($pre_source))
                             {
@@ -2131,7 +2040,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             }
                         }
                     $command_parts[]=$mpr_parts;
-                    } 
+                    }
                 }
             
             }
@@ -2321,7 +2230,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             {
             extract_mean_colour($target,$ref);
             # flag database so a thumbnail appears on the site
-            ps_query("UPDATE resource SET has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$ref]);
+            $has_image = count($sizes) > 0 ? RESOURCE_PREVIEWS_MINIMAL : RESOURCE_PREVIEWS_ALL;
+            ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$has_image,"i",$ref]);
             }
         else
             {
@@ -4125,3 +4035,121 @@ function remove_video_previews(int $resource) : void
                 }
             }
     }
+
+/**
+ * Check if only the core preview sizes are required and call create_previews() to generate only these sizes if so
+ *
+ * @param int $ref                  Resource ID
+ * @param string $extension         File extension
+ * @param bool $ingested            Has resource been ingested into RS (only false for staticsynced resources not in filestore)
+ * 
+ * @return bool                     True if minimal previews have been generated
+ * 
+ */
+function create_core_previews(int $ref, string $extension, bool $ingested)
+    {
+    $resource_data = !empty($resource_data) ? $resource_data : get_resource_data($ref);
+
+    if($GLOBALS["offline_job_queue"]
+        || $GLOBALS["enable_thumbnail_creation_on_upload"]
+        || $GLOBALS["preview_generate_max_file_size"] 
+        )
+        {
+        create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
+        return true; 
+        }
+    return false;
+    }
+
+
+function get_sizes_to_generate($extension,$thumbonly,$previewonly,$onlysizes)
+    {
+    $getsizes = [];
+    $params = [];
+    if ($thumbonly)
+        {
+        $getsizes=['thm','col'];
+        }
+    elseif ($previewonly)
+        {
+        $getsizes = ['thm','col','pre','scr'];
+        }
+    elseif (count($onlysizes) > 0)
+        {
+        $onlysizes = array_filter($onlysizes,function($v){return ctype_lower($v);});
+        $validsizecount = count($onlysizes);
+        if($validsizecount === 0)
+            {
+            return false;
+            }
+        $getsizes = ps_param_insert($validsizecount);
+        $params = ps_param_fill($onlysizes, 's');   
+        }
+
+    $condition = count($getsizes) > 0 ? " WHERE id IN (" . implode(",",$sizes) . ")" : "";
+    $ps=ps_query(
+        "SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition,
+        $params
+        );
+
+    if($GLOBALS["lean_preview_generation"] && count($getsizes) == 0)
+        {
+        $force_make=array("pre","thm","col");
+        if($extension!="jpg" || $extension!="jpeg"){
+            array_push($force_make,"hpr","scr");
+        }
+        $count=count($ps)-1;
+        $oversized=0;
+        for($s=$count;$s>0;$s--)
+            {
+            if(!in_array($ps[$s]['id'],$force_make) && !in_array($ps[$s]['id'],$always_make_previews) && (isset($o_width) && isset($o_height) && $ps[$s]['width']>$o_width && $ps[$s]['height']>$o_height) && !$previews_allow_enlarge)
+                {
+                $oversized++;
+                }
+            if($oversized>0)
+                {
+                unset($ps[$s]);
+                }
+            }
+        $ps = array_values($ps);
+        }
+
+
+        
+    if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes)
+        && !in_array($extension, config_merge_non_image_types())
+        )
+        {
+        // Ensure that scales are in order
+        natsort($preview_tile_scale_factors);
+
+        debug("create_previews - adding tiles to generate list: source width: " . $sw . " source height: " . $sh);
+        foreach($preview_tile_scale_factors as $scale)
+            {
+            foreach(compute_tiles_at_scale_factor($scale, $sw, $sh) as $tile)
+                {
+                $tile['width'] = floor($tile['w'] / $scale);
+                $tile['height'] = floor($tile['h'] / $scale);
+                $tile['type'] = 'tile';
+                $tile['internal'] = 1;
+                $tile['allow_preview'] = 0;
+
+                $ps[] = $tile;
+                }
+            }
+        }
+    
+    if(count($onlysizes) == 1 && substr($onlysizes[0],0,8) == "resized_")
+        {
+        $o = count($ps);
+        $size_req = explode("_",substr($onlysizes[0],8));
+        $customx = $size_req[0];
+        $customy = $size_req[1];
+
+        debug("create_previews - creating custom size width: " . $customx . " height: " . $customy);
+        $ps[$o]['id'] = $onlysizes[0]; 
+        $ps[$o]['width'] = $customx;
+        $ps[$o]["height"] = $customy;
+        }
+    }
+            

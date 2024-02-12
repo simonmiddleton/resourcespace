@@ -150,7 +150,7 @@ if (!hook("renderresultthumb"))
                     title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars($resource_view_title))?>"
                 >
                         <?php 
-                        if((int) $result[$n]['has_image'] > 0 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $image_size))
+                        if((int) $result[$n]['has_image'] !== RESOURCE_PREVIEWS_NONE && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $image_size))
                         {
                         render_resource_image($result[$n],$thm_url,$display);
                         // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
