@@ -4219,8 +4219,20 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
     
         if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
             {
-            $treenodes = get_cattree_nodes_ordered($field["ref"], $ref, false); # True means get all nodes; False means get selected nodes
-            $treenodenames = get_cattree_node_strings($treenodes, true); # True means names are paths to nodes; False means names are node names
+            $parentnode = NULL;
+            $recursive = TRUE;
+            $treenodes = get_nodes($field["ref"], $parentnode, $recursive);
+            $detailed=FALSE; # Just get the nodes
+            $node_sort=FALSE; # Do not sort the nodes
+            $resource_nodes=get_resource_nodes($ref, $field["ref"], $detailed, $node_sort);
+            $treenodenames = array();
+            foreach ($treenodes as $treenode)
+                {
+                if(in_array($treenode["ref"],$resource_nodes)) 
+                    {
+                    $treenodenames[]=$treenode["path"];
+                    }
+                }
             $value = implode(", ",$treenodenames);        
             }
     
