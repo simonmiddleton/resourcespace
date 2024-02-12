@@ -54,7 +54,7 @@ foreach($users_data as $user_details)
     $_POST['usergroup'] = $user_details[2];
     $_POST['password'] = 'test_2602';
     $_POST['approved'] = "1";
-    if(!save_user($user_2602))
+    if(save_user($user_2602)!==true)
         {
         echo 'Setting up the test: users - ';
         return false;
