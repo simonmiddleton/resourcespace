@@ -75,11 +75,8 @@ if (!hook("replaceauth")) {
             null,                               # Value Old
             ($userref != "" ? $userref : null)  # User
         );
-    }
-
-# Process the submitted login
-    elseif (array_key_exists("username", $_POST) && getval("langupdate", "") == "") {
-        debug("[login.php] Process the submitting login details...");
+    } elseif (array_key_exists("username", $_POST) && getval("langupdate", "") == "") {
+        debug("[login.php] Process the submitted login details...");
 
         $password = trim(getval("password", ""));
         $result = perform_login();
