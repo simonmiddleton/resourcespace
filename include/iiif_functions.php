@@ -566,12 +566,12 @@ final class IIIFRequest {
                 {                    
                 $prefix =  $arr_18n_pos_prefixes[$langcode] ?? ($arr_18n_pos_prefixes[$GLOBALS["defaultlanguage"]] ?? reset($arr_18n_pos_prefixes));
                 $labelvalue =  $arr_18n_pos_labels[$langcode] ?? ($arr_18n_pos_labels[$GLOBALS["defaultlanguage"]] ?? reset($arr_18n_pos_labels));
-                $canvas["label"][$langcode] = $prefix . $labelvalue;
+                $canvas["label"][$langcode] = [$prefix . $labelvalue];
                 }
             }
         else
             {
-            $canvas["label"]["none"] = $position_prefix . $position_val;    
+            $canvas["label"]["none"] = [$position_prefix . $position_val];    
             }
 
         // Get the size of the images
@@ -690,12 +690,12 @@ final class IIIFRequest {
                 }
             elseif(trim((string) $iiif_data_row["value"]) !== "")
                 {
-            $metadata[$n] = [];
-            $metadata[$n]["label"] = [];
+                $metadata[$n] = [];
+                $metadata[$n]["label"] = [];
                 $i18n_titles = i18n_get_translations($iiif_data_row["title"]);
                 foreach($i18n_titles as $langcode=>$langstring)
                     {
-                $metadata[$n]["label"][$langcode] =[$langstring];
+                    $metadata[$n]["label"][$langcode] = [$langstring];
                     }
             $metadata[$n]["value"]=[];
                 $i18n_titles = i18n_get_translations($iiif_data_row["value"]);
