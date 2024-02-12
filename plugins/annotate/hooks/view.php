@@ -33,7 +33,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
         return false;
         }
 
-    if(1 == $resource['has_image'])
+    if((int) $resource['has_image'] > 0)
         {
         ?>
         <script>

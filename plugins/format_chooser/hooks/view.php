@@ -25,7 +25,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
     $inputFormat = $resource['file_extension'];
     $origpath = get_resource_path($ref,true,'',false,$resource['file_extension']);
 
-    if ($resource["has_image"] != 1
+    if ((int) $resource["has_image"] > 0
         || !$download_multisize
         || $save_as
         || !supportsInputFormat($inputFormat)

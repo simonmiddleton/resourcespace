@@ -6044,7 +6044,7 @@ function display_related_resources($context)
                             <table border="0" class="CollectionResourceAlign">
                                 <tr><td>
                                         <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
-                                        if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], 'col'))
+                                        if ((int) $arr_related[$n]["has_image"] !== 0 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], 'col'))
                                             { 
                                             ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" class="CollectImageBorder"/><?php
                                             }
@@ -6102,7 +6102,7 @@ function display_related_resources($context)
                             <table border="0" class="CollectionResourceAlign">
                                 <tr><td>
                                 <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
-                                if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], 'col'))
+                                if ((int) $arr_related[$n]["has_image"] !== 0 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], 'col'))
                                     { 
                                     ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" class="CollectImageBorder"/><?php 
                                     }
@@ -6153,7 +6153,7 @@ function display_related_resources($context)
                         <tr>
                             <td>
                                 <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
-                                if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], "col"))
+                                if ((int) $arr_related[$n]["has_image"] !== 0 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], "col"))
                                     {
                                     ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" /><?php
                                     }

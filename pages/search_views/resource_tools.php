@@ -39,7 +39,7 @@ hook("largesearchicon");
 <!-- Preview icon -->
 <?php 
 if (!hook("replacefullscreenpreviewicon")) {
-    if ($result[$n]["has_image"]==1) { ?>
+    if ((int) $result[$n]["has_image"] > 0) { ?>
         <a class="fa fa-expand"
             onClick="return CentralSpaceLoad(this,true);"
             href="<?php echo generateURL(

@@ -1039,7 +1039,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
          break;
       case "restore":
         delete_previews($resource);
-        ps_query("update resource set has_image=0, preview_attempts=0 WHERE ref= ?", ['i', $ref]);
+        ps_query("UPDATE resource SET has_image=0, preview_attempts=0 WHERE ref= ?", ['i', $ref]);
         if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
         (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
             {
@@ -1066,7 +1066,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
             }
         else
             {
-            ps_query("update resource set preview_attempts=0, has_image=0 where ref= ?", ['i', $ref]);
+            ps_query("UPDATE resource set preview_attempts=0, has_image=0 where ref= ?", ['i', $ref]);
             $onload_message["text"] = $lang["recreatepreviews_pending"];
             }
         break;
@@ -1376,7 +1376,7 @@ else
             <label><?php echo htmlspecialchars($lang["imagecorrection"])?><br/><?php echo htmlspecialchars($lang["previewthumbonly"])?></label>
             <select class="stdwidth" name="tweak" id="tweak" onchange="add_hidden_modal_input('mainform', <?php echo $modal ? "true" : "false"; ?>); <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('mainform'),true);">
             <option value=""><?php echo htmlspecialchars($lang["select"])?></option>
-            <?php if ($resource["has_image"]==1)
+            <?php if ((int) $resource["has_image"] > 0)
                 {
                 # On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.
                 # A local configuration setting allows this to be rectified
@@ -2412,11 +2412,11 @@ if ($ref>0 && !$multiple)
             $bbr_preview_size = $edit_large_preview ? 'pre' : 'thm';
             $wmpath="";
             # Establish path to watermarked version if its rendering is a possibility
-            if (checkperm("w") && $resource["has_image"]==1) 
+            if (checkperm("w") && (int) $resource["has_image"] > 0) 
                 {
                 $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
                 }
-            if ($resource["has_image"]==1 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
+            if ((int) $resource["has_image"] > 0 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
                 {
                 $path_to_preview = get_resource_path($ref, false, $bbr_preview_size, false, $resource["preview_extension"], -1, 1, false);
                 if ($upload_review_mode && $hide_real_filepath)

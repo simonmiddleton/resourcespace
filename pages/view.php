@@ -139,7 +139,7 @@ else
     {
     if (isset($resource_view_large_orientation) && $resource_view_large_orientation == true)
         {
-        if ($resource["has_image"] == 1 && ($resource["thumb_height"] >= $resource["thumb_width"]))
+        if ((int) $resource["has_image"] > 0 && ($resource["thumb_height"] >= $resource["thumb_width"]))
             {
             # Portrait or square image
             $use_larger_layout = false;
@@ -740,7 +740,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                             <?php
                             }   
 
-                        else if (1 == $resource['has_image'])
+                        else if ((int) $resource['has_image'] > 0)
                             {
                             $imageurl="";
                             $use_watermark = check_use_watermark();
@@ -1241,7 +1241,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                         $table_headers_drawn=false;
                                         $nodownloads=false;$counter=0;$fulldownload=false;
                                         hook("additionalresourcetools");
-                                        if ($resource["has_image"]==1 && $download_multisize)
+                                        if ((int) $resource["has_image"] > 0 && $download_multisize)
                                             {
                                             # Restricted access? Show the request link.
 
@@ -1428,7 +1428,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                             ?></td><td class="DownloadFileDimensions"><?php
                                                             }
 
-                                                        if ($resource["has_image"]==1)
+                                                        if ((int) $resource["has_image"] > 0)
                                                             {
                                                             $sizes=get_image_sizes($ref,false,$resource["file_extension"]);
                                                             $original_size = '';

@@ -12,7 +12,7 @@ set_time_limit(60*60*40);
 
 echo "Updating EXIF/IPTC...";
 
-$rd = ps_query("SELECT ref, file_extension FROM resource WHERE has_image = 1");
+$rd = ps_query("SELECT ref, file_extension FROM resource WHERE has_image > 0");
 for ($n=0;$n<count($rd);$n++)
     {
     $ref=$rd[$n]['ref'];

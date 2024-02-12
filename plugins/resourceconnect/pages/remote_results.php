@@ -181,7 +181,7 @@ else
         $add_url.="&url=" . urlencode(str_replace("&search","&source_search",$url)); # Move the search so it doesn't get set, and therefore the nav is hidden when viewing the resource
         $add_url.="&back=" . urlencode($baseurl . "/pages/view.php?" . $_SERVER["QUERY_STRING"]);
         # Add image 
-        if ($result["has_image"]==1)
+        if ((int) $result["has_image"] > 0)
             { 
             $add_url.="&thumb=" . urlencode(get_resource_path($ref,false,"col",false,"jpg"));
             $add_url.="&large_thumb=" . urlencode(get_resource_path($ref,false,"thm",false,"jpg"));
@@ -200,7 +200,7 @@ else
     
         <a class="ImageWrapper" href="<?php echo $link_url?>" title="<?php echo $title ?>" onClick="return CentralSpaceLoad(this,true,true);">
         
-        <?php if ($result["has_image"]==1) {
+        <?php if ((int) $result["has_image"] > 0) {
             
             $img_url = get_resource_path($ref,false,"thm",false,$result["preview_extension"],-1,1,false,$result["file_modified"]);
             

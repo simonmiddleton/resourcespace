@@ -543,7 +543,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 {
                 # Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
                 delete_previews($ref);
-                ps_query("update resource set has_image=0 where ref= ?", ['i', $ref]);
+                ps_query("UPDATE resource SET has_image=0 WHERE ref= ?", ['i', $ref]);
                 }
             }
     
@@ -1407,14 +1407,14 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                     # If the source is smaller than the pre/thm/col, we still need these sizes; just copy the file
                     copy($file,get_resource_path($ref,true,$id,false,$extension,-1,1,false,"",$alternative));
                     if ($id=="thm") {
-                        ps_query("update resource set thumb_width= ?,thumb_height= ? where ref= ?", ['i', $sw, 'i', $sh, 'i', $ref]);
+                        ps_query("UPDATE resource SET thumb_width= ?,thumb_height= ? WHERE ref= ?", ['i', $sw, 'i', $sh, 'i', $ref]);
                         }
                     }
                 }
             # flag database so a thumbnail appears on the site
             if ($alternative==-1) # not for alternatives
                 {
-                ps_query("update resource set has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=now() where ref= ?", ['i', $ref]);
+                ps_query("UPDATE resource SET has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i', $ref]);
                 }
             }
         }
