@@ -641,14 +641,14 @@ elseif($restypes=='')
                         }
                     foreach($invalidrestypes as $invalidrestype)
                         {
-                        $hideconditions[] = "jQuery('#TickBox" . (int) $invalidrestype . "').prop('checked')";
+                        $hideconditions[] = " || jQuery('#TickBox" . (int) $invalidrestype . "').prop('checked')";
                         }
                     foreach (array_diff(array_column($types,"ref"),$hide_resource_types) as $displayedrestype)
                         {
                         // Check to field if no resource types are selected
                         $notypeconditions[] = "jQuery('#TickBox" . (int) $displayedrestype . "').prop('checked') == false";
                         }
-                    $hidecondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $hideconditions) . " || (" . implode(" && ", $notypeconditions) . ")) {";
+                    $hidecondition = " if ((" .  implode(" && ", $showconditions) . ") " . implode("", $hideconditions) . " || (" . implode(" && ", $notypeconditions) . ")) {";
                     echo "// Start of hide field code\n" . $hidecondition;?>
                         // Process unchecked element
                         ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"] ?>';
@@ -755,9 +755,9 @@ elseif($restypes=='')
                 }
             foreach($invalidrestypes as $invalidrestype)
                 {
-                $resetconditions[] = "jQuery('#TickBox" . (int) $invalidrestype . "').prop('checked')";
+                $resetconditions[] = " || jQuery('#TickBox" . (int) $invalidrestype . "').prop('checked')";
                 }
-            $resetcondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $resetconditions) . ") {";
+            $resetcondition = " if ((" .  implode(" && ", $showconditions) . ")" . implode("", $resetconditions) . ") {";
             }
         echo "// Start of reset field code\n" . $resetcondition;
         # Duplicate fields are skipped
