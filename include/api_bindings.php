@@ -1521,13 +1521,12 @@ function api_get_edit_access(int $resource): bool
     return get_edit_access($resource);
     }
 
-function api_toggle_active_state_for_nodes($refs): bool
+function api_toggle_active_state_for_nodes(array $refs): bool
     {
     $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
-    if (!empty($assert_post))
-        {
+    if (!empty($assert_post)) {
         return $assert_post;
-        }
+    }
 
     if (checkperm('k')) {
         toggle_active_state_for_nodes($refs);
