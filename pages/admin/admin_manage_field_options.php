@@ -245,7 +245,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
         {
         if(isset($new_record_ref) && !(trim($new_record_ref)==""))
             {
-            if(7 != $field_data['type'] && (trim($new_option_parent)==""))
+            if(FIELD_TYPE_CATEGORY_TREE != $field_data['type'] && (trim($new_option_parent)==""))
                 {
                 ?>
                 <tr id="node_<?php echo $new_record_ref; ?>">
@@ -492,11 +492,10 @@ if($ajax)
 
     renderBreadcrumbs($links_trail);
 ?>
-
     <p><?php echo htmlspecialchars($lang['manage_metadata_text']); render_help_link("resourceadmin/modifying-field-options");?></p>
     <div id="AdminManageMetadataFieldOptions" class="ListView">
     <?php
-    if(7 != $field_data['type'])
+    if(FIELD_TYPE_CATEGORY_TREE != $field_data['type'])
         {
         ?>
         <form id="FilterNodeOptions" class="FormFilter" method="GET" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php">
@@ -512,7 +511,6 @@ if($ajax)
             </fieldset>
         </form>
         <!-- Pager -->
-
         <div class="TopInpageNav">
             <div class="TopInpageNavRight">
             <?php
@@ -530,7 +528,7 @@ if($ajax)
         <?php
         // When editing a category tree we won't show the table headers since the data
         // will move to the right every time we go one level deep
-        if(7 != $field_data['type'])
+        if(FIELD_TYPE_CATEGORY_TREE != $field_data['type'])
             {
             ?>
             <thead>
@@ -642,7 +640,7 @@ if($ajax)
         </table>
         </div>
     <?php
-    if(7 != $field_data['type'])
+    if(FIELD_TYPE_CATEGORY_TREE != $field_data['type'])
         {
         ?>
         <div class="BottomInpageNav">
