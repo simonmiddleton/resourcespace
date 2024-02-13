@@ -548,6 +548,7 @@ $lang["modified"]="Modified";
 $lang["jumptopage"]="Page";
 $lang["jump"]="Jump";
 $lang["titleandcountry"]="Title / country";
+$lang["title"]="Title";
 $lang["torefineyourresults"]="To refine your results, try";
 $lang["verybestresources"]="The very best resources";
 $lang["addtocurrentcollection"]="Add to current collection";
