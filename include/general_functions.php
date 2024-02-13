@@ -5351,7 +5351,7 @@ function get_size_info(array $size, ?array $originalSize = null): string
  * @return bool 
  * 
  */
-function is_jpeg_extension($extension)
+function is_jpeg_extension(string $extension)
     {
-    return in_array(strtolower($extension),["jpg","jpeg"]);
+    return in_array(strtolower((string) $extension),["jpg","jpeg"]);
     }

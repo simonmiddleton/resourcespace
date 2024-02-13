@@ -574,7 +574,7 @@ final class IIIFRequest {
                 $useimage = $pullresource;
                 }
             }
-        $size = is_jpeg_extension($useimage["file_extension"]) ? "" : "hpr";
+        $size = is_jpeg_extension((string) $useimage["file_extension"]) ? "" : "hpr";
         $img_path = get_resource_path($useimage["ref"],true,$size,false);
         if(!file_exists($img_path))
             {
@@ -1295,7 +1295,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     $canvases = array();
     foreach ($iiif_results as $iiif_result)
         {
-        $size = (strtolower($iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
+        $size = (strtolower((string) $iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
         $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
 
         if (!file_exists($img_path))
