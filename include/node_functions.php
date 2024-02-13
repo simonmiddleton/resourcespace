@@ -2884,3 +2884,26 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryr
         }
     return $deletedrows > 0 ? ((!$dryrun ? "Deleted " : "Found ") . $deletedrows . " row(s)") :  "No rows found";
     }
+
+/**
+ * Toggle a nodes' active state
+ * @param list<int>
+ */
+function toggle_active_state_for_nodes(array $refs): void
+    {
+    $refs_chunked = db_chunk_id_list($refs);
+
+    db_begin_transaction('toggle_node_active_state');
+
+    foreach($refs_chunked as $refs_chunk) {
+        ps_query(
+            sprintf(
+                'UPDATE node SET `active` = IF(`active` = 1, 0, 1) WHERE `ref` IN (%s)',
+                ps_param_insert(count($refs_chunk))
+            ),
+            ps_param_fill($refs_chunk, 'i')
+        );
+    }
+
+    db_end_transaction('toggle_node_active_state');
+    }
