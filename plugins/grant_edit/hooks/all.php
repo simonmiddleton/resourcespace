@@ -24,3 +24,14 @@ function HookGrant_editAllExport_add_tables()
     {
     return array("grant_edit"=>array());
     }
+
+function HookGrant_editAllModifyDefaultStatusMode()
+    {
+    global $resource;
+    
+    if(is_array($resource) && array_key_exists('archive', $resource))
+        {
+        return $resource['archive'];
+        }
+    return false;
+    }
