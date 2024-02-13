@@ -6,8 +6,7 @@
 #
 
 global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace, $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution,
-$pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params, $qlpreview_path,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,
-$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif,$resource_view_use_pre;
+$pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params, $qlpreview_path,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif,$resource_view_use_pre;
 
 resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews'] . ":\n");
 
@@ -35,19 +34,6 @@ if ($ffmpeg_preview_gif) {$ffmpeg_supported_extensions[] = 'gif';}
 
 # Set up ImageMagick
 putenv("MAGICK_HOME=" . $imagemagick_path);
-
-$snapshotcheck=false;
-if (in_array($extension, $ffmpeg_supported_extensions)){
-    $snapshotcheck=file_exists(get_resource_path($ref,true,"pre",false,'jpg',-1,1,false,""));
-    if ($snapshotcheck){ps_query("update resource set has_image=1 where ref=?",array("i",$ref));}
-}
-
-if ($alternative==-1 && !($snapshotcheck && in_array($extension, $ffmpeg_supported_extensions) && $ffmpeg_no_new_snapshots))
-    {
-    # Reset the 'has thumbnail image' status in case previewing fails with this new file. 
-    ps_query("update resource set has_image=0 where ref=?",array("i",$ref)); 
-    }
-
 
 # Set up target file
 if(!hook("previewpskipdel")):
@@ -665,17 +651,7 @@ global $ffmpeg_preview,$ffmpeg_preview_seconds,$ffmpeg_preview_extension,$ffmpeg
 
 debug('FFMPEG-VIDEO: ####################################################################');
 debug('FFMPEG-VIDEO: Start trying FFMPeg for video files -- resource ID ' . $ref);
-
-// If a snapshot has already been created and $ffmpeg_no_new_snapshots, never revert the snapshot (this is usually a custom preview)
-if(false != $ffmpeg_fullpath && $snapshotcheck && in_array($extension, $ffmpeg_supported_extensions) && $ffmpeg_no_new_snapshots)
-    {
-    debug('FFMPEG-VIDEO: Create a preview for this video by going straight to ffmpeg_processing.php');
-
-    $target = get_resource_path($ref, true, 'pre', false, 'jpg', -1, 1, false, '');
-    
-    include dirname(__FILE__) . '/ffmpeg_processing.php';
-    }
-else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpeg_supported_extensions))
+if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpeg_supported_extensions))
     {
     debug('FFMPEG-VIDEO: Start process for creating previews...');
     

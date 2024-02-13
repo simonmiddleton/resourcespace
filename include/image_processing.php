@@ -1493,18 +1493,19 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         $f_unlink_size = fn($check_size) => count($onlysizes) == 0 || (count($onlysizes) > 0 && in_array($check_size, $onlysizes));
 
         $removesizes = ["hpr","lpr","scr"];
-        $filestounlink = [];
         $allpresizes = [];
+        $filestounlink = [];
         foreach($removesizes as $removesize) {
+            $allpresizes[$removesize] = get_resource_path($ref,true,$removesize,false,"jpg",-1,1,false,"",$alternative);
             if(!$previewbased && $f_unlink_size($removesize)) {
-                $filestounlink[] = $allpresizes[$removesize] = get_resource_path($ref,true,$removesize,false,"jpg",-1,1,false,"",$alternative);
+                $filestounlink[] = $allpresizes[$removesize];
                 // Add watermarked path
                 $filestounlink[]=get_resource_path($ref,true,$removesize,false,"jpg",-1,1,true,"",$alternative);
             }
         }
-        foreach($filestounlink as $file){
-            if (file_exists($file)){
-                try_unlink($file);
+        foreach($filestounlink as $filetounlink){
+            if (file_exists($filetounlink)){
+                try_unlink($filetounlink);
             }
         };
 
@@ -1546,8 +1547,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $o_height = $sh;
             }
         
-        $ps = get_sizes_to_generate($extension,$thumbonly,$previewonly,$onlysizes);
-            
+        $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
+        $generateall = $thumbonly || $previewonly || count($onlysizes) > 0;
         # Locate imagemagick.
         $convert_fullpath = get_utility_path("im-convert");
         if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
@@ -1767,7 +1768,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             # Always make preview sizes for smaller file sizes.
             #
             # Always make pre/thm/col sizes regardless of source image size.
-            if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && $watermark !== '') || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
+            if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && $watermark !== '') || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$GLOBALS["always_make_previews"]) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
                 {           
                 # Debug
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',"Generating preview size " . $ps[$n]["id"]); // log the size being created but not the path
@@ -2230,7 +2231,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             {
             extract_mean_colour($target,$ref);
             # flag database so a thumbnail appears on the site
-            $has_image = count($sizes) > 0 ? RESOURCE_PREVIEWS_MINIMAL : RESOURCE_PREVIEWS_ALL;
+            $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
             ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$has_image,"i",$ref]);
             }
         else
@@ -4050,9 +4051,10 @@ function create_core_previews(int $ref, string $extension, bool $ingested)
     {
     $resource_data = !empty($resource_data) ? $resource_data : get_resource_data($ref);
 
+    //TODO correct the logic here
     if($GLOBALS["offline_job_queue"]
-        || $GLOBALS["enable_thumbnail_creation_on_upload"]
-        || $GLOBALS["preview_generate_max_file_size"] 
+        || $GLOBALS["enable_thumbnail_creation_on_upload"]==false
+        || (isset($GLOBALS["preview_generate_max_file_size"]) && is_int_loose($GLOBALS["preview_generate_max_file_size"]))
         )
         {
         create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
@@ -4062,8 +4064,26 @@ function create_core_previews(int $ref, string $extension, bool $ingested)
     }
 
 
-function get_sizes_to_generate($extension,$thumbonly,$previewonly,$onlysizes)
+/**
+ * Get an array of preview size IDs to generate
+ *
+ * @param string $extension         File extension ('hpr' is only required for non-JPG images)
+ * @param array $dimensions         Image source dimensions in format [width,height]
+ * @param bool $thumbonly           Generate 'thm' and 'col' only 
+ * @param bool $previewonly         Generate 'scr', 'pre', 'thm' and 'col' only 
+ * @param array $onlysizes          Array of requested size IDs to generate
+ * 
+ * @return array
+ * 
+ */
+function get_sizes_to_generate(string $extension,array $dimensions, bool $thumbonly=false,bool $previewonly = false,array $onlysizes = [])
     {
+    $sw = (int) ($dimensions[0] ?? 0);
+    $sh = (int) ($dimensions[1] ?? 0);
+
+    if($sw==0 || $sh ==0) {
+        return false;
+    }
     $getsizes = [];
     $params = [];
     if ($thumbonly)
@@ -4082,41 +4102,39 @@ function get_sizes_to_generate($extension,$thumbonly,$previewonly,$onlysizes)
             {
             return false;
             }
-        $getsizes = ps_param_insert($validsizecount);
+        $getsizes = array_fill(0,count($onlysizes),"?");
         $params = ps_param_fill($onlysizes, 's');   
         }
 
-    $condition = count($getsizes) > 0 ? " WHERE id IN (" . implode(",",$sizes) . ")" : "";
+    $condition = count($getsizes) > 0 ? " WHERE id IN (" . implode(",",$getsizes) . ")" : "";
     $ps=ps_query(
         "SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition,
         $params
         );
 
-    if($GLOBALS["lean_preview_generation"] && count($getsizes) == 0)
-        {
-        $force_make=array("pre","thm","col");
-        if($extension!="jpg" || $extension!="jpeg"){
+    if($GLOBALS["lean_preview_generation"] && count($getsizes) == 0) {
+        $force_make = array("pre","thm","col");
+        if($extension != "jpg" || $extension != "jpeg"){
             array_push($force_make,"hpr","scr");
         }
-        $count=count($ps)-1;
-        $oversized=0;
-        for($s=$count;$s>0;$s--)
-            {
-            if(!in_array($ps[$s]['id'],$force_make) && !in_array($ps[$s]['id'],$always_make_previews) && (isset($o_width) && isset($o_height) && $ps[$s]['width']>$o_width && $ps[$s]['height']>$o_height) && !$previews_allow_enlarge)
-                {
+        $count = count($ps)-1;
+        $oversized = 0;
+        for ($s = $count;$s>0;$s--) {
+            if (!in_array($ps[$s]['id'],$force_make)
+                && !in_array($ps[$s]['id'],$GLOBALS["always_make_previews"])
+                && (isset($o_width) && isset($o_height) && $ps[$s]['width']>$o_width && $ps[$s]['height']>$o_height)
+                && !$GLOBALS["previews_allow_enlarge"]) {
                 $oversized++;
-                }
-            if($oversized>0)
-                {
-                unset($ps[$s]);
-                }
             }
-        $ps = array_values($ps);
+            if($oversized>0) {
+                unset($ps[$s]);
+            }
         }
-
+        $ps = array_values($ps);
+    }
 
         
-    if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes)
+    if((count($ps) > 0  && $GLOBALS["preview_tiles"] && $GLOBALS["preview_tiles_create_auto"]) || in_array("tiles",$onlysizes)
         && !in_array($extension, config_merge_non_image_types())
         )
         {
@@ -4151,5 +4169,6 @@ function get_sizes_to_generate($extension,$thumbonly,$previewonly,$onlysizes)
         $ps[$o]['width'] = $customx;
         $ps[$o]["height"] = $customy;
         }
+    return $ps;
     }
             

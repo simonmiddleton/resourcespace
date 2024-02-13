@@ -165,7 +165,7 @@ if($export_collections && isset($input_fh) && isset($file_h))
                 $thumb = "{$baseurl}/gfx/" . get_nopreview_icon($resource_data["resource_type"], $resource_data["file_extension"], true);
                 $large_thumb = "{$baseurl}/gfx/" . get_nopreview_icon($resource_data["resource_type"], $resource_data["file_extension"], false);
                 $xl_thumb = "{$baseurl}/gfx/" . get_nopreview_icon($resource_data["resource_type"], $resource_data["file_extension"], false);
-                if((int) $resource["has_image"] > 0)
+                if((int) $resource["has_image"] != RESOURCE_PREVIEWS_NONE0)
                     {
                     $thumb = get_resource_path($resource_ref, false, "col", false, "jpg");
                     $large_thumb = get_resource_path($resource_ref, false, "thm", false, "jpg");

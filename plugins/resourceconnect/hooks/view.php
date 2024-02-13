@@ -92,7 +92,7 @@ function HookResourceconnectViewResourceactions_anonymous()
     $url.="&back=" . urlencode($baseurl . "/pages/view.php?" . $_SERVER["QUERY_STRING"]);
     
     # Add images
-    if ((int) $resource["has_image"] > 0)
+    if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE0)
         { 
         $url.="&thumb=" . urlencode(get_resource_path($ref,false,"col",false,"jpg"));
         $url.="&large_thumb=" . urlencode(get_resource_path($ref,false,"thm",false,"jpg"));

@@ -214,7 +214,7 @@ include "../../../include/header.php";
 
                     foreach ($videos_data as $video_data)
                         {
-                        if ((int) $video_data["has_image"] > 0)
+                        if ((int) $video_data["has_image"] !== RESOURCE_PREVIEWS_NONE)
                             {
                             $img = get_resource_path($video_data["ref"], false, "thm", false, $video_data["preview_extension"], -1, 1, false, $video_data["file_modified"]);
                             }
