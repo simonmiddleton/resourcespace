@@ -38,6 +38,9 @@ if(!$ajax)
     }
 
 $new_node_record_form_action = '/pages/admin/admin_manage_field_options.php?field=' . $field;
+$activation_action_label_for = fn(array $node): string => (bool) $node['active']
+    ? $lang['userpreference_disable_option']
+    : $lang['userpreference_enable_option'];
 
 
 // Process form requests
@@ -613,13 +616,14 @@ if($ajax)
                                 </button>
                                 <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'moveup'); return false;"><?php echo htmlspecialchars($lang['action-move-up']); ?></button>
                                 <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'movedown'); return false;"><?php echo htmlspecialchars($lang['action-move-down']); ?></button>
-                                </td>
+                            </td>
                             <?php
                             }
                             ?>
                         <!-- Action buttons -->
                         <td>
                             <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo htmlspecialchars($lang['save']); ?></button>
+                            <button type="submit" onclick="ToggleNodeActivation(<?php echo $node['ref']; ?>); return false;"><?php echo escape($activation_action_label_for($node)); ?></button>
                             <button type="submit" onclick="DeleteNode(<?php echo $node['ref']; ?>); return false;"><?php echo htmlspecialchars($lang['action-delete']); ?></button>
                         </td>
                             
@@ -893,6 +897,43 @@ function DeleteNode(ref)
         <?php
         }
         ?>
+
+    return true;
+    }
+
+function ToggleNodeActivation(ref)
+    {
+    // console.debug('var = %o', var);
+    console.debug('Calling ToggleNodeActivation(ref = %o)', ref);
+
+    // todo: determine confirmation msg based on node active state
+    /* if (!confirm('<?php echo escape($lang['confirm-disable_node']); ?>')) {
+        return false;
+    } */
+
+    let node          = jQuery('#node_' + ref);
+    let node_children = jQuery('#node_' + ref + '_children');
+    let option_name   = node.find('input[name=option_name]').val();
+    let option_parent = node.find('select[name=option_parent]').val();
+    console.debug('node = %o', node);
+    console.debug('node_children = %o', node_children);
+    console.debug('option_name = %o', option_name);
+    console.debug('option_parent = %o', option_parent);
+
+    api(
+        'toggle_active_state_for_nodes',
+        {'refs': JSON.stringify([ref])},
+        function(successful) {
+            if (successful) {
+                console.debug('API - successful = %o', successful);
+                jQuery(node.find('input[name=option_name]')).css('text-decoration', 'line-through');
+            } else {
+                console.debug('API failed');
+            }
+        },
+        <?php echo generate_csrf_js_object('toggle_active_state_for_nodes'); ?>
+    );
+
 
     return true;
     }
