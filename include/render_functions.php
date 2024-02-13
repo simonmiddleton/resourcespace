@@ -6015,7 +6015,7 @@ function display_related_resources($context)
             foreach($related_file_extensions as $rext)
                 {
                 ?>
-                <h4><?php echo htmlspecialchars($rext); ?></h4>
+                <h4><?php echo htmlspecialchars((string) $rext); ?></h4>
                 <?php
                 # loop and display the results by file extension
                 for ($n=0;$n<count($arr_related);$n++)          
@@ -6044,9 +6044,10 @@ function display_related_resources($context)
                             <table border="0" class="CollectionResourceAlign">
                                 <tr><td>
                                         <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
-                                        if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], 'col'))
-                                            { 
-                                            ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" class="CollectImageBorder"/><?php
+                                        $thumbnail = get_resource_preview($arr_related[$n],["col"],$access,$use_watermark);
+                                        if($thumbnail !== false)
+                                            {
+                                            render_resource_image($arr_related[$n], $thumbnail["url"], "collection");
                                             }
                                         else
                                             { ?><img border=0 src="../gfx/<?php echo get_nopreview_icon($arr_related[$n]["resource_type"],$arr_related[$n]["file_extension"],true)?>"/><?php
@@ -6102,9 +6103,10 @@ function display_related_resources($context)
                             <table border="0" class="CollectionResourceAlign">
                                 <tr><td>
                                 <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
-                                if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], 'col'))
-                                    { 
-                                    ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" class="CollectImageBorder"/><?php 
+                                $thumbnail = get_resource_preview($arr_related[$n],["col"],$access,$use_watermark);
+                                if($thumbnail !== false)
+                                    {
+                                    render_resource_image($arr_related[$n], $thumbnail["url"], "collection");
                                     }
                                 else
                                     { 
@@ -6153,9 +6155,10 @@ function display_related_resources($context)
                         <tr>
                             <td>
                                 <a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo (int) $rref?>&search=<?php echo urlencode("!related" . $ref)?>" onClick="return CentralSpaceLoad(this,true);"><?php
-                                if ($arr_related[$n]["has_image"]==1 && !resource_has_access_denied_by_RT_size($arr_related[$n]['resource_type'], "col"))
+                                $thumbnail = get_resource_preview($arr_related[$n],["col"],$access,$use_watermark);
+                                if($thumbnail !== false)
                                     {
-                                    ?><img border=0 src="<?php echo get_resource_path($rref,false,"col",false,$arr_related[$n]["preview_extension"],-1,1,$use_watermark,$arr_related[$n]["file_modified"])?>" /><?php
+                                    render_resource_image($arr_related[$n], $thumbnail["url"], "collection");
                                     }
                                 else
                                     {

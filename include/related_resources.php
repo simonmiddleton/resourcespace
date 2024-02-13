@@ -30,9 +30,6 @@ if ($enable_related_resources)
 
             // Show only related resource types that match this tab:
             $resource_type_tab_ref = ps_value('SELECT tab AS value FROM resource_type WHERE ref = ?', ['i', $rtype], '', 'schema');
-
-            debug("BANG " . print_r($rtype,true));
-            debug("BANG " . print_r($resource_type_tab_ref,true));
             if($tab_ref !== $resource_type_tab_ref)
                 {
                 continue;
