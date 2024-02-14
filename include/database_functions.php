@@ -403,7 +403,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
     $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_enabled,
     $query_cache_already_completed_this_time,$prepared_statement_cache;
     
-    $error = '';
+    $error = null;
 
     // Check cache for this query
     $cache_write=false;
@@ -546,7 +546,11 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                 }
             $GLOBALS["use_error_exception"] = $use_error_exception_cache;
 
-            $error = $error ?? mysqli_stmt_error($prepared_statement_cache[$sql]);
+            }
+
+        if ($error=="")
+            {
+            // Results section
 
             // Buffering of result set
             $prepared_statement_cache[$sql]->store_result();
