@@ -2898,10 +2898,15 @@ function toggle_active_state_for_nodes(array $refs): void
     foreach($refs_chunked as $refs_chunk) {
         ps_query(
             sprintf(
-                'UPDATE node SET `active` = IF(`active` = 1, 0, 1) WHERE `ref` IN (%s)',
-                ps_param_insert(count($refs_chunk))
+                   'UPDATE node AS n
+                INNER JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
+                       SET n.`active` = IF(n.`active` = 1, 0, 1)
+                     WHERE n.`ref` IN (%s)
+                       AND rtf.`type` IN (%s)',
+                ps_param_insert(count($refs_chunk)),
+                ps_param_insert(count($GLOBALS['FIXED_LIST_FIELD_TYPES']))
             ),
-            ps_param_fill($refs_chunk, 'i')
+            array_merge(ps_param_fill($refs_chunk, 'i'), ps_param_fill($GLOBALS['FIXED_LIST_FIELD_TYPES'], 'i'))
         );
     }
 
