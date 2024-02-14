@@ -4015,19 +4015,17 @@ function copy_resource($from,$resource_type=-1,$origin='')
  * @param   mixed      $fromvalue - original value (int or string)         -- resource_log.previous_value
  * @param   mixed      $tovalue - new value (int or string)
  * @param   int        $usage                                              -- resource_log.usageoption
- * @param   string     $purchase_size                                      -- resource_log.purchase_size
- * @param   float      $purchase_price                                     -- resource_log.purchase_price
  *
  * @return int (or false)
  */
 
-function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0.00)
+function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1)
     {
     global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
 
     // Param type checks
-    $param_str = array($type,$notes,$purchase_size);
-    $param_num = array($resource,$usage,$purchase_price);
+    $param_str = array($type,$notes);
+    $param_num = array($resource,$usage);
 
     foreach($param_str as $par)
         {
@@ -4049,20 +4047,6 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
     // https://dev.mysql.com/doc/refman/8.0/en/integer-types.html
     $options_db_int = [ 'options' => [ 'min_range' => -2147483648,   'max_range' => 2147483647] ];
     if (!filter_var($usage, FILTER_VALIDATE_INT, $options_db_int) && $usage != 0)
-        {
-        return false;
-        }
-
-    // check that purchase_price is valid for decimal 10,2 field
-    $options_db_purchase_price = [ 'options' => [  'regexp' => "/^[0-9]{0,10}\.?[0-9]{0,2}$/"   ]  ];
-    if (filter_var($purchase_price, FILTER_VALIDATE_REGEXP, $options_db_purchase_price) == "")
-        {
-        return false;
-        }
-
-    // check that purchase_size is valid for varchar(10) field
-    $options_db_purchase_size = [ 'options' => [ 'regexp' => "/^[\w\W]{0,10}$/"]  ];
-    if ($purchase_size != "" && filter_var($purchase_size, FILTER_VALIDATE_REGEXP, $options_db_purchase_size) == "" )
         {
         return false;
         }
@@ -4129,7 +4113,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         }
     else
         {
-        ps_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `purchase_size`,`purchase_price`, `access_key`, `previous_value`) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)",
+        ps_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `access_key`, `previous_value`) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
             'i', (($userref != "") ? $userref : null),
             'i', $resource,
@@ -4138,8 +4122,6 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
             's', $notes,
             's', $diff,
             'i', $usage,
-            's', $purchase_size,
-            'i', $purchase_price,
             's', ((isset($k) && !$internal_share_access) ? mb_strcut($k, 0, 50): null),
             's', $fromvalue
             ]
@@ -4199,10 +4181,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
                         r.notes,
                         r.diff,
                         r.usageoption,
-                        r.purchase_price,
-                        r.purchase_size,
                         r.previous_value,
-                        ps.name AS size,
                         r.access_key,
                         ekeys_u.fullname AS shared_by {$extrafields->sql}
                    FROM resource_log AS r
@@ -4210,7 +4189,6 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         LEFT OUTER JOIN resource_type_field AS f ON f.ref = r.resource_type_field
         LEFT OUTER JOIN external_access_keys AS ekeys ON r.access_key = ekeys.access_key AND r.resource = ekeys.resource
         LEFT OUTER JOIN user AS ekeys_u ON ekeys.user = ekeys_u.ref
-              LEFT JOIN preview_size AS ps ON r.purchase_size = ps.id
         LEFT OUTER JOIN resource_type_field AS rtf ON r.resource_type_field = rtf.ref
                         {$sql_filter}
                GROUP BY r.ref
@@ -5506,14 +5484,6 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
     if ($access==0)
         {
         return true;
-        }
-
-    # Special case for purchased downloads.
-    global $userref;
-    if (isset($userref))
-        {
-        $complete=ps_value("select cr.purchase_complete value from collection_resource cr join collection c on cr.collection=c.ref where c.user=? and cr.resource=? and cr.purchase_size=?",array("i",$userref,"i",$resource,"s",$size), 0);
-        if ($complete==1) {return true;}
         }
 
     # Restricted
@@ -8127,90 +8097,6 @@ function get_nopreview_icon($resource_type, $extension, $col_size)
     # Fall back to the 'no preview' icon used for type 1.
     return "no_preview/resource_type/type1" . $col . ".png";
     }
-
-function purchase_set_size($collection,$resource,$size,$price)
-    {
-    // Set the selected size for an item in a collection. This is used later on when the items are downloaded.
-    ps_query("update collection_resource set purchase_size=?,purchase_price=? where collection=? and resource=?", array("s",$size,"d",$price,"i",$collection,"i",$resource));
-    return true;
-    }
-
-/**
- * Update ecommerce user's basket to indicate it has been purchased after PayPal callback (invoice users will pactually ay later with manual invoicing)
- *
- * @param  int $collection
- * @param  string $emailconfirmation - LEGACY MUNUSED
- * @return boolean
- */
-function payment_set_complete($collection)
-    {
-    global $applicationname,$baseurl,$userref,$username,$admin_resource_access_notifications,$userfullname,$lang,$currency_symbol;
-    // Mark items in the collection as paid so they can be downloaded.
-    ps_query("UPDATE collection_resource SET purchase_complete=1 WHERE collection=?",["i",$collection]);
-
-    // For each resource, add an entry to the log to show it has been purchased.
-    $resources=ps_query("SELECT * FROM collection_resource WHERE collection=?",array("i",$collection));
-
-    // Construct summary, separating lang entries from fixed text
-    $summaryparts = [];
-    $summaryparts[] = "<style>.InfoTable td {padding:5px;}</style><table border=\"1\" class=\"InfoTable\"><tr><td><strong>";
-    $summaryparts[] = "lang_property-reference";
-    $summaryparts[] = "</strong></td><td><strong>";
-    $summaryparts[] = "lang_size";
-    $summaryparts[] = "</strong></td><td><strong>";
-    $summaryparts[] = "lang_price";
-    $summaryparts[] = "</strong></td></tr>";
-
-    foreach ($resources as $resource)
-        {
-        $purchasesize=$resource["purchase_size"];
-        if ($purchasesize=="")
-            {
-            $purchasesize=$lang["original"];
-            }
-        resource_log($resource["resource"],LOG_CODE_PAID,0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
-
-        $summaryparts[] = "<tr><td>" . $resource["resource"] . "</td><td>";
-        $summaryparts[] = ($purchasesize=="" ? "lang_original" : $purchasesize);
-        $summaryparts[] = "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>";
-        }
-    $summaryparts[] = "</table>";
-
-    // Construct message components
-    $notify_users=get_notification_users("RESOURCE_ACCESS");
-    $notifymessage = new ResourceSpaceUserNotification();
-    $notifymessage->set_text("lang_purchase_complete_email_admin_body");
-    $notifymessage->append_text("<br/><br/>");
-    $notifymessage->append_text("lang_username");
-    $notifymessage->append_text(": " . $username . " (" . $userfullname . ")<br/><br/>");
-    foreach($summaryparts as $summarypart)
-        {
-        $notifymessage->append_text($summarypart);
-        }
-    $notifymessage->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications]];
-    $notifymessage->set_subject("lang_purchase_complete_email_admin");
-    $notifymessage->url = $baseurl . "/?c=" . $collection;
-    send_user_notification($notify_users,$notifymessage);
-
-    // Send email to user (not a notification as may need to be kept for reference)
-    $userconfirmmessage = new ResourceSpaceUserNotification();
-    $userconfirmmessage->set_text("lang_purchase_complete_email_user_body");
-    $userconfirmmessage->append_text("<br/><br/>");
-    foreach($summaryparts as $summarypart)
-        {
-        $userconfirmmessage->append_text($summarypart);
-        }
-    $userconfirmmessage->set_subject("lang_purchase_complete_email_user");
-    $userconfirmmessage->url = $baseurl . "/?c=" . $collection;
-
-    send_user_notification([$userref],$userconfirmmessage,true);
-
-    // Rename so that can be viewed on my purchases page
-    ps_query("UPDATE collection SET name = ? WHERE ref = ?",["s",date("Y-m-d H:i"),"i",$collection]);
-
-    return true;
-    }
-
 
 /**
  * Get references of resource type fields that are indexed

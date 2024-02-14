@@ -247,25 +247,6 @@ function setup_user(array $userdata)
             }
         }
 
-    # Some alternative language choices for basket mode / e-commerce
-    if ($userrequestmode==2 || $userrequestmode==3)
-        {
-        $lang["addtocollection"]=$lang["addtobasket"];
-        $lang["action-addtocollection"]=$lang["addtobasket"];
-        $lang["addtocurrentcollection"]=$lang["addtobasket"];
-        $lang["requestaddedtocollection"]=$lang["buyitemaddedtocollection"];
-        $lang["action-request"]=$lang["addtobasket"];
-        $lang["managemycollections"]=$lang["viewpurchases"];
-        $lang["mycollection"]=$lang["yourbasket"];
-        $lang["action-removefromcollection"]=$lang["removefrombasket"];
-        $lang["total-collections-0"] = $lang["total-orders-0"];
-        $lang["total-collections-1"] = $lang["total-orders-1"];
-        $lang["total-collections-2"] = $lang["total-orders-2"];
-        
-        # The request button (renamed "Buy" by the line above) should always add the item to the current collection.
-        $request_adds_to_collection=true;
-        }        
-
     # Apply config override options
     $config_options=trim((string) $userdata["config_options"]);
     override_rs_variables_by_eval($GLOBALS, $config_options);
@@ -1467,7 +1448,7 @@ function get_user_log($user, $fetchrows=-1)
     {
     global $view_title_field;
     # Executes query.
-    $r = ps_query("select r.ref resourceid, r.field" . (int) $view_title_field . " resourcetitle, l.date, l.type, f.title, l.purchase_size, l.purchase_price, l.notes, l.diff from resource_log l left outer join resource r on l.resource = r.ref left outer join resource_type_field f on f.ref = l.resource_type_field where l.user = ? order by l.date desc", array("i", $user), '', $fetchrows);
+    $r = ps_query("select r.ref resourceid, r.field" . (int) $view_title_field . " resourcetitle, l.date, l.type, f.title, l.notes, l.diff from resource_log l left outer join resource r on l.resource = r.ref left outer join resource_type_field f on f.ref = l.resource_type_field where l.user = ? order by l.date desc", array("i", $user), '', $fetchrows);
 
     # Translates field titles in the newly created array.
     $return = array();

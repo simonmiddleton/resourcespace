@@ -152,8 +152,6 @@ function HookAnnotateViewpreviewlinkbar()
                 <p><?php echo htmlspecialchars($preview_with_sizename); ?></p>
             </td>
             <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
-            <?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
-            ?>
             <td class="DownloadButton">
                 <a class="enterLink previewsize-<?php echo escape($data_viewsize); ?>" 
                     id="previewlink"

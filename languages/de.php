@@ -9,8 +9,6 @@ $lang["usergroup-super_admin"]="Super Admin";
 $lang["usergroup-archivists"]="Archiv";
 $lang["usergroup-restricted_user_-_requests_emailed"]="Eingeschränkte Benutzer - Anfragen per E-Mail";
 $lang["usergroup-restricted_user_-_requests_managed"]="Eingeschränkte Benutzer - Anfragen verwaltet";
-$lang["usergroup-restricted_user_-_payment_immediate"]="Eingeschränkte Benutzer - Bezahlung sofort";
-$lang["usergroup-restricted_user_-_payment_invoice"]="Eingeschränkte Benutzer - Bezahlung auf Rechnung";
 
 # Resource type names (for the default resource types)
 $lang["resourcetype-photo"]="Foto";
@@ -1112,8 +1110,6 @@ $lang["cannotshareemptythemecategory"]="Diese Themenkategorie enthält keine The
  $lang["requestall"]="Alle anfordern";
  $lang["requesttype-email_only"]=$lang["resourcerequesttype0"]="Nur E-Mail";
  $lang["requesttype-managed"]=$lang["resourcerequesttype1"]="Verwaltete Anfrage";
- $lang["requesttype-payment_-_immediate"]=$lang["resourcerequesttype2"]="Zahlung – sofort";
- $lang["requesttype-payment_-_invoice"]=$lang["resourcerequesttype3"]="Zahlung – auf Rechnung";
 
 $lang["requestsent"]="Ihre Ressourcenanfrage wurde zur Freigabe eingereicht ";
 $lang["requestsenttext"]="Ihre Ressourcenanfrage wurde zur Freigabe eingereicht und wird in Kürze bearbeitet.";
@@ -1259,37 +1255,9 @@ $lang["markers"] = "Markierungen";
 
  $lang["requestaddedtocollection"]="Diese Ressource wurde zu Ihrer aktuellen Kollektion hinzugefügt. Sie können die Ressourcen in Ihrer Kollektion mit dem Link \'Alle anfordern\' anfordern.";
 
-# E-commerce text
- $lang["buynow"]="Jetzt kaufen";
- $lang["yourbasket"]="Ihr Warenkorb";
- $lang["addtobasket"]="Zum Warenkorb hinzufügen";
- $lang["yourbasketisempty"]="Ihr Warenkorb ist leer.";
- $lang["yourbasketcontains-1"]="Ihre Warenkorb enthält 1 Objekt.";
- $lang["yourbasketcontains-2"]="Ihre Warenkorb enthält %qty Objekte."; # %qty will be replaced, e.g. Your basket contains 3 items.
- $lang["buy"]="Kaufen";
- $lang["buyitemaddedtocollection"]="Diese Ressource wurde zu Ihrem Warenkorb hinzugefügt. Sie können alle Ressourcen im Warenkorb mit dem Link \'Jetzt kaufen\' erwerben.";
- $lang["buynowintro"]="Bitte wählen Sie die Größen aus, die Sie benötigen.";
  $lang["nodownloadsavailable"]="Für diese Ressource gibt es leider keine Downloads.";
- $lang["proceedtocheckout"]="Weiter zur Kasse";
- $lang["totalprice"]="Gesamtpreis";
- $lang["price"]="Preis";
- $lang["waitingforpaymentauthorisation"]="Wir haben leider noch keine Zahlungsbestätigung erhalten. Bitte warten Sie einen Augenblick und klicken Sie dann 'Aktualisieren'.";
  $lang["reload"]="Aktualisieren";
- $lang["downloadpurchaseitems"]="Gekaufte Ressourcen herunterladen";
- $lang["downloadpurchaseitemsnow"]="Bitte benutzen Sie die untenstehenden Links, um Ihre gekauften Ressourcen jetzt herunterzuladen.<br><br>Verlassen Sie diese Seite nicht, bis Sie alle Ressourcen heruntergeladen haben.";
  $lang["alternatetype"]="Alternative Art";
- $lang["viewpurchases"]="Meine Einkäufe";
- $lang["viewpurchasesintro"]="Bitte nutzen Sie die untenstehenden Links, um auf Ihre gekaufte Ressourcen zuzugreifen.";
- $lang["orderdate"]="Kaufdatum";
- $lang["removefrombasket"]="Aus dem Warenkorb entfernen";
- $lang["total-orders-0"] = "<strong>Gesamt: 0</strong> Bestellungen";
- $lang["total-orders-1"] = "<strong>Gesamt: 1</strong> Bestellung";
- $lang["total-orders-2"] = "<strong>Gesamt: %number</strong> Bestellungen"; # %number will be replaced, e.g. Total: 5 Orders
- $lang["purchase_complete_email_admin"] = "Kaufbenachrichtigung";
- $lang["purchase_complete_email_admin_body"] = "Die folgende Bestellung wurde erfolgreich ausgeführt.";
- $lang["purchase_complete_email_user"] = "Kaufbestätigung";
- $lang["purchase_complete_email_user_body"] = "Vielen Dank für Ihren Einkauf. Bitte nutzen Sie den untenstehenden Link, um auf Ihre gekauften Objekte zuzugreifen.";
-
 
  $lang["subcategories"]="Unterkategorien";
  $lang["subcategory"]="Unterkategorie";
@@ -1347,13 +1315,6 @@ $lang["columnheader-last_seen"]="Zuletzt gesehen";
  $lang["youhaveunsubscribedreport"]="Sie wurden von dieser regelmäßigen E-Mail abgemeldet.";
  $lang["sendingreportto"]="Sende Bericht an";
  $lang["reportempty"]="Keine passenden Daten für den ausgewählen Bericht und Zeitraum gefunden.";
-
- $lang["purchaseonaccount"]="Zum Konto hinzufügen";
- $lang["areyousurepayaccount"]="Sind Sie sicher, dass Sie diesen Einkauf zu Ihrem Konto hinzufügen wollen?";
- $lang["accountholderpayment"]="Zahlung Kontoinhaber";
- $lang["subtotal"]="Zwischensumme";
- $lang["discountsapplied"]="Angewendete Rabatte";
- $lang["log-p"]="Gekaufte Ressource";
  $lang["viauser"]="durch Benutzer";
  $lang["close"]="Schließen";
 
@@ -2245,7 +2206,6 @@ $lang["usemetadatatemplatesure"]='Sind Sie sicher, dass Sie diese Metadatenvorla
 $lang["removemetadatatemplatesure"]='Sind Sie sicher, dass Sie diese Metadatenvorlage entfernen möchten? Dadurch werden die aktuellen Daten gelöscht, die eingegeben wurden.';
 $lang["success"]='Erfolg';
 $lang["metadata-report-fits_section"]='FITS-Tags zugeordnet.';
-$lang["purchase_email_address"]='Bitte geben Sie eine gültige E-Mail-Adresse ein, wenn Sie eine Bestätigung Ihres Kaufs erhalten möchten.';
 $lang["user_pref_autorotate"]='Automatisch Bilder bei Upload drehen?';
 $lang["run_report_on_search_results"]='Bericht über diese Ergebnisse ausführen.';
 $lang["report_error_no_reports_supporting_search_results"]='Es gibt keine Berichte, die auf Suchergebnissen ausgeführt werden können.';
@@ -2480,7 +2440,6 @@ $lang["tile_pend"]='Ausstehend.';
 $lang["plugin_category_general"]='Allgemein';
 $lang["plugin_category_advanced"]='Fortgeschritten';
 $lang["plugin_category_design"]='Gestaltung';
-$lang["plugin_category_ecommerce"]='E-Commerce.';
 $lang["plugin_integrations"]='Integrationen';
 $lang["system_down_title"]='Achtung!';
 $lang["system_down_message"]='Das System ist wegen Wartungsarbeiten nicht verfügbar. Vielen Dank für Ihre Geduld.';

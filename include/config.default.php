@@ -1870,19 +1870,6 @@ $resource_field_column_limit=200;
 # $resource_created_by_filter=array();
 
 
-#
-# ------------------------ eCommerce Settings -----------------------------
-#
-# Pricing information for the e-commerce / basket request mode.
-# Pricing is size based, so that the user can select the download size they require.
-$pricing["scr"]=10;
-$pricing["lpr"]=20;
-$pricing["hpr"]=30; # (hpr is usually the original file download)
-$currency_symbol="&pound;";
-$payment_address="payment.address@goes.here"; // you must enable Instant Payment Notifications in your Paypal Account Settings.
-$payment_currency="GBP";
-$paypal_url="https://www.paypal.com/cgi-bin/webscr";
-
 # Ability to set a field which will store 'Portrait' or 'Landscape' depending on image dimensions
 # $portrait_landscape_field=1;
 

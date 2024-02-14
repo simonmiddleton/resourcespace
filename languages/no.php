@@ -9,8 +9,6 @@ $lang["usergroup-super_admin"]="Superadministratorer";
 $lang["usergroup-archivists"]="Arkivarer";
 $lang["usergroup-restricted_user_-_requests_emailed"]="Begrenset bruker - Forespørsel sendt med e-post";
 $lang["usergroup-restricted_user_-_requests_managed"]="Begrenset bruker - Requests Managed";
-$lang["usergroup-restricted_user_-_payment_immediate"]="Begrenset bruker - Umiddelbar betaling";
-$lang["usergroup-restricted_user_-_payment_invoice"]="Begrenset bruker - Faktura";
 
 # Resource type names (for the default resource types)
 $lang["resourcetype-photo"]="Foto";
@@ -888,8 +886,6 @@ $lang["cannotshareemptycollection"]="Dette lysbordet er tomt og kan ikke deles."
 $lang["requestall"]="Forespørr alle";
 $lang["resourcerequesttype0"]="Kun e-post";
 $lang["resourcerequesttype1"]="Behandlet bestilling";
-$lang["resourcerequesttype2"]="Betaling - Nå";
-$lang["resourcerequesttype3"]="Betaling - Faktura";
 
 $lang["requestapprovedmail"]="Din forespørsel har blitt godkjent. Klikk på lenken nedenfor for å se gjennom og laste ned materialet.";
 $lang["requestdeclinedmail"]="Beklager, din forespørsel etter materialet i lysbordet nedenfor har blitt avslått.";
@@ -1008,26 +1004,9 @@ $lang["closethiswindow"]="Lukk vinduet";
 
 $lang["requestaddedtocollection"]="Dette materialet har blitt lagt til det aktive lysbordet. Du kan bestille filene i lysbordet ditt ved å klikke på \'Bestill alle\' i lysbord-bjelken nedenfor.";
 
-# E-commerce text
-$lang["buynow"]="Kjøp nå";
-$lang["yourbasket"]="Din handlekurv";
-$lang["addtobasket"]="Legg til handlekurv";
-$lang["yourbasketcontains"]="Din handlekurv inneholder ? varer.";
-$lang["yourbasketisempty"]="Handlekurven er tom.";
-$lang["buy"]="Kjøp";
-$lang["buyitemaddedtocollection"]="Dette materialet har blitt lagt til handlekurven. Du kan kjøpe alt materialet i kurven ved å klikke på \'Kjøp nå\' nedenfor.";
-$lang["buynowintro"]="Vennligst velg størrelsene du trenger.";
 $lang["nodownloadsavailable"]="Beklager, det finnes ingen tilgjengelige nedlastinger for dette materialet.";
-$lang["proceedtocheckout"]="Fortsett til utsjekking";
-$lang["totalprice"]="Totalpris";
-$lang["price"]="Pris";
-$lang["waitingforpaymentauthorisation"]="Beklager, vi har enda ikke mottatt betalingsbekreftelsen. Vennligst vent et øyeblikk før du klikker på 'Oppdater' nedenfor.";
 $lang["reload"]="Oppdater";
-$lang["downloadpurchaseitems"]="Last ned kjøpt materiale";
-$lang["downloadpurchaseitemsnow"]="Vennligst bruk lenkene nedenfor til å laste ned kjøpt materiale umiddelbart.<br><br>Ikke naviger vekk fra siden før du er ferdig med å laste ned materialet.";
 $lang["alternatetype"]="Alternativ type";
-$lang["viewpurchases"]="Tidligere kjøp";
-
 
 $lang["subcategories"]="Underkategorier";
 $lang["back"]="Tilbake";
@@ -1083,13 +1062,6 @@ $lang["unsubscribed"]="Abonnementet er avsluttet";
 $lang["youhaveunsubscribedreport"]="Ditt abonnement på denne periodiske e-postrapporten har blitt avsluttet.";
 $lang["sendingreportto"]="Send rapporten til";
 $lang["reportempty"]="Ingen korresponderende data ble funnet for valgt rapport og tidsrom.";
-
-$lang["purchaseonaccount"]="Legg til konto";
-$lang["areyousurepayaccount"]="Er du sikker på at du vil legge dette kjøpet til denne kontoen?";
-$lang["accountholderpayment"]="Betaling fra kontoeier";
-$lang["subtotal"]="Subtotal";
-$lang["discountsapplied"]="Rabatter lagt inn";
-$lang["log-p"]="Kjøpt materiale";
 $lang["viauser"]="via bruker";
 $lang["close"]="Lukk";
 
@@ -1679,8 +1651,6 @@ $lang["list_file_extension"]='Utvidelse.';
 $lang["cannotshareemptythemecategory"]='Denne utvalgte samling kategorien inneholder ingen utvalgte samlinger og kan ikke deles.';
 $lang["requesttype-email_only"]='Kun e-post.';
 $lang["requesttype-managed"]='Administrert forespørsel.';
-$lang["requesttype-payment_-_immediate"]='Betaling - umiddelbar';
-$lang["requesttype-payment_-_invoice"]='Betaling - faktura';
 $lang["requestsent"]='Din forespørsel om ressurs er sendt inn for godkjenning.';
 $lang["requestsenttext"]='Din forespørsel om ressurs er sendt inn for godkjenning og vil bli sett på snart.';
 $lang["requestupdated"]='Din ressursforespørsel har blitt oppdatert.';
@@ -1779,18 +1749,6 @@ $lang["dosavedsearch"]='Vennligst oversett: Lagret søk';
 $lang["allresourcessearchbar"]='Alle ressurser.';
 $lang["allcollectionssearchbar"]='Alle samlinger.';
 $lang["continuetoresults"]='Fortsett til resultater.';
-$lang["yourbasketcontains-1"]='Din handlekurv inneholder 1 element.';
-$lang["yourbasketcontains-2"]='Din handlekurv inneholder %qty elementer.';
-$lang["viewpurchasesintro"]='For å få tilgang til tidligere kjøpte ressurser, vennligst bruk lenkene nedenfor.';
-$lang["orderdate"]='Bestillingsdato';
-$lang["removefrombasket"]='Fjern fra handlekurv.';
-$lang["total-orders-0"]='Totalt: 0 bestillinger.';
-$lang["total-orders-1"]='Totalt: 1 ordre.';
-$lang["purchase_complete_email_admin"]='Varsel om kjøp.';
-$lang["purchase_complete_email_admin_body"]='Den følgende kjøpet er fullført.';
-$lang["purchase_complete_email_user"]='Bekreftelse på kjøp.';
-$lang["purchase_complete_email_user_body"]='Takk for kjøpet ditt. Vennligst bruk lenken nedenfor for å få tilgang til de kjøpte elementene dine.';
-$lang["purchase_email_address"]='Vennligst skriv inn en gyldig e-postadresse hvis du ønsker å motta bekreftelse på ditt kjøp.';
 $lang["subcategory"]='Underkategori';
 $lang["user_pref_autorotate"]='Automatisk rotering av bilder ved opplasting?';
 $lang["run_report_on_search_results"]='Kjør rapport på disse resultatene.';
@@ -2364,7 +2322,6 @@ $lang["tile_pend"]='Venter';
 $lang["plugin_category_general"]='Generell.';
 $lang["plugin_category_advanced"]='Avansert';
 $lang["plugin_category_design"]='Design: Design';
-$lang["plugin_category_ecommerce"]='E-handel.';
 $lang["plugin_integrations"]='Integrasjoner.';
 $lang["system_down_title"]='Oppmerksomhet!';
 $lang["system_down_message"]='Systemet er nede for vedlikehold. Takk for din tålmodighet.';

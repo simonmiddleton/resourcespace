@@ -469,8 +469,8 @@ function add_resource_to_collection(
             {
             ps_query('DELETE FROM collection_resource WHERE collection = ? AND resource = ?', ['i', $collection, 'i', $resource]);
             ps_query(
-                'INSERT INTO collection_resource(collection, resource, purchase_size, sortorder) VALUES (?, ?, ?, ?)',
-                ['i', $collection, 'i', $resource, 's', $size ?: null, 'i', $sort_order ?: null]
+                'INSERT INTO collection_resource(collection, resource, sortorder) VALUES (?, ?, ?)',
+                ['i', $collection, 'i', $resource, 'i', $sort_order ?: null]
             );
             }
         
@@ -501,10 +501,9 @@ function add_resource_to_collection(
  * @param  integer $resource
  * @param  integer $collection
  * @param  boolean $smartadd
- * @param  string $size
  * @return boolean | string
  */
-function remove_resource_from_collection($resource,$collection,$smartadd=false,$size="")
+function remove_resource_from_collection($resource,$collection,$smartadd=false)
     {
     global $lang;
 
@@ -517,7 +516,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
         {   
         hook("Removefromcollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
         
-        if(!hook("removefromcollectionsql", "", array( $resource,$collection, $size)))
+        if(!hook("removefromcollectionsql", "", array( $resource,$collection)))
             {
             $delparams = ["i",$resource,"i",$collection];
             ps_query("DELETE FROM collection_resource WHERE resource = ? AND collection = ?",$delparams);
@@ -3497,20 +3496,19 @@ function add_to_collection_link($resource, $extracode="", $size="", $class="", $
  * @param  integer  $resource
  * @param  string   $class
  * @param  string   $onclick    Additional onclick code to call before returning false.
- * @param  bool     $basketmode Whether removing from a basket or a collection.
+ * @param  bool     $notused    No longer used
  * @param  string   $view_title The title of the field, taken from $view_title_field
  * 
  */
-function remove_from_collection_link($resource, $class="", string $onclick = '', $basketmode = false, $view_title=""): string
+function remove_from_collection_link($resource, $class="", string $onclick = '', $notused = false, $view_title=""): string
     {
     # Generates a HTML link for removing a resource from a collection
-    # The collection is referred to as the basket when in basket mode
     global $lang, $pagename;
 
     $resource = (int) $resource;
     $class = escape($class);
     $pagename = escape($pagename);
-    $title = escape($basketmode ? $lang["removefrombasket"] : $lang["removefromcurrentcollection"]);
+    $title = escape($lang["removefromcurrentcollection"]);
 
     if ($view_title != "") {
         $title .= " - " . $view_title;

@@ -145,19 +145,6 @@ if(!checkperm('v') && !$bypass_permission_check)
                                 $value = nl2br(format_string_more_link(htmlspecialchars(wordwrap($difftext,75,"\n",true))));
                                 $cleanval = false;
                             break;
-
-                            case "purchase_price":
-                                if ($log_entry["type"]!=LOG_CODE_PAID)
-                                    {
-                                    // Not relevant
-                                    continue 2;
-                                    }
-                                else
-                                    {
-                                    $name = $lang["price"];
-                                    $value .= " (" . ($log_entry["purchase_size"] == "" ? $lang["collection_download_original"] : $log_entry["purchase_size"]) . ", " . $currency_symbol . number_format($log_entry["purchase_price"],2) . ")";
-                                    }
-                            break;
                             
                             case "size":
                                 $name = $lang["size"];
@@ -191,7 +178,6 @@ if(!checkperm('v') && !$bypass_permission_check)
                             break;
 
                             case "ref":
-                            case "purchase_size":  // Already converted to 'size'
                             case "title": // Used to store resource_type_field name
                             case "revert_enabled": 
                             case "previous_value": 

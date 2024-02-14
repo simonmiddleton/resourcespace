@@ -1361,7 +1361,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 }   
             }
 
-        $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($colcustperm->parameters,["i",$collection],$sql_filter->parameters);
         $collectionsearchsql=hook('modifycollectionsearchsql','',array($sql));
 

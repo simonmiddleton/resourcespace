@@ -9,8 +9,6 @@ $lang["usergroup-super_admin"]="Super administrátor";
 $lang["usergroup-archivists"]="Archivári";
 $lang["usergroup-restricted_user_-_requests_emailed"]="Obmedzený používateľ - žiadosti zaslané e-mailom";
 $lang["usergroup-restricted_user_-_requests_managed"]="Obmedzený používateľ - žiadosti boli spravované";
-$lang["usergroup-restricted_user_-_payment_immediate"]="Obmedzený používateľ - okamžitá platba";
-$lang["usergroup-restricted_user_-_payment_invoice"]="Obmedzený používateľ - faktúra za platbu";
 
 # Resource type names (for the default resource types)
 $lang["resourcetype-photo"]="Fotografia";
@@ -1312,8 +1310,6 @@ $lang["cannotshareemptythemecategory"]="Táto kategória odporúčaných zbierok
 $lang["requestall"]="Vyžiadať si všetky";
 $lang["requesttype-email_only"]=$lang["resourcerequesttype0"]="Iba e-mailom";
 $lang["requesttype-managed"]=$lang["resourcerequesttype1"]="Spravovaná žiadosť";
-$lang["requesttype-payment_-_immediate"]=$lang["resourcerequesttype2"]="Platba - okamžitá";
-$lang["requesttype-payment_-_invoice"]=$lang["resourcerequesttype3"]="Platba - na faktúru";
 
 $lang["requestsent"]="Vaša žiadosť o zdroje bola odoslaná na schválenie";
 $lang["requestsenttext"]="Vaša žiadosť o zdroje bola odoslaná na schválenie a čoskoro bude posúdená.";
@@ -1466,38 +1462,7 @@ $lang["popupblocked"]="Vyskakovacie okno bolo zablokované Vaším prehliadačom
 $lang["closethiswindow"]="Zatvorte toto okno";
 
 $lang["requestaddedtocollection"]="Tento zdroj bol pridaný do vašej aktuálnej zbierky. Položky vo svojej zbierke môžete vyžiadať kliknutím na \'Vyžiadať všetky\' na paneli zbierky s výberom nižšie.";
-
-# E-commerce text
-$lang["buynow"]="Kúpiť teraz";
-$lang["yourbasket"]="Váš košík";
-$lang["addtobasket"]="Pridať do košíka";
-$lang["yourbasketisempty"]="Váš košík je prázdny.";
-$lang["yourbasketcontains-1"]="Váš košík obsahuje 1 položku.";
-$lang["yourbasketcontains-2"]="Váš košík obsahuje %qty položiek."; # %qty will be replaced, e.g. Your basket contains 3 items.
-$lang["buy"]="Kúpiť";
-$lang["buyitemaddedtocollection"]="Tento zdroj bol pridaný do Vášho košíka. Všetky položky v košíku môžete zakúpiť kliknutím na tlačidlo „Kúpiť teraz“, nižsie.";
-$lang["buynowintro"]="Vyberte požadované veľkosti.";
-$lang["nodownloadsavailable"]="Ľutujeme, pre tento zdroj nie sú k dispozícii žiadne súbory na stiahnutie.";
-$lang["proceedtocheckout"]="Pokračujte k pokladni";
-$lang["totalprice"]="Celková cena";
-$lang["price"]="Cena";
-$lang["waitingforpaymentauthorisation"]="Ľutujeme, ešte sme nedostali autorizáciu platby. Počkajte chvíľu, potom nižšie kliknite na tlačidlo „Obnoviť“, nižšie.";
-$lang["downloadpurchaseitems"]="Stiahnite si zakúpené položky";
-$lang["downloadpurchaseitemsnow"]="Ak chcete okamžite stiahnuť svoje zakúpené položky, použite odkazy nižšie. <br><br>Neodchádzajte z tejto stránky, kým si nestiahnete všetky položky.";
 $lang["alternatetype"]="Alternatívny typ";
-$lang["viewpurchases"]="Moje nákupy";
-$lang["viewpurchasesintro"]="Ak chcete získať prístup k v minulosti zakúpeným zdrojom, použite odkazy nižšie.";
-$lang["orderdate"]="Dátum objednávky";
-$lang["removefrombasket"]="Odobrať z košíka";
-$lang["total-orders-0"] = "<strong> Celkom: 0 </strong> objednávok";
-$lang["total-orders-1"] = "<strong> Celkom: 1 </strong> objednávka";
-$lang["total-orders-2"] = "<strong> Celkový počet objednávok: <strong>%number</strong>"; # %number will be replaced, e.g. Total: 5 Orders
-$lang["purchase_complete_email_admin"] = "Oznámenia o kúpe";
-$lang["purchase_complete_email_admin_body"] = "Nasledujúci nákup bol dokončený.";
-$lang["purchase_complete_email_user"] = "Potvrdenie nákupu";
-$lang["purchase_complete_email_user_body"] = "Ďakujeme Vám za nákup. Na prístup k zakúpeným položkám použite odkaz nižšie.";
-$lang["purchase_email_address"] = "Ak chcete získať potvrdenie o nákupe, zadajte platnú e-mailovú adresu";
-
 
 $lang["subcategories"]="Podkategórie";
 $lang["subcategory"]="Podkategória";
@@ -1565,13 +1530,6 @@ $lang["unsubscribed"]="Odhlásený";
 $lang["youhaveunsubscribedreport"]="Boli ste odhlásený z odoberania tohto prehľadu.";
 $lang["sendingreportto"]="Odosielam správu pre";
 $lang["reportempty"]="Pre vybratý prehľad a obdobie sa nenašli žiadne zodpovedajúce údaje.";
-
-$lang["purchaseonaccount"]="Pridať do účtu";
-$lang["areyousurepayaccount"]="Naozaj chcete pridať tento nákup do Vášho účtu?";
-$lang["accountholderpayment"]="Na úhradu";
-$lang["subtotal"]="Medzisúčet";
-$lang["discountsapplied"]="Zľava";
-$lang["log-p"]="Zakúpené zdroje";
 $lang["viauser"]="prostredníctvom používateľa";
 $lang["close"]="Zavrieť";
 
@@ -2288,7 +2246,6 @@ $lang["plugin_category_general"]="Všeobecné";
 $lang["plugin_category_api"]="API";
 $lang["plugin_category_advanced"]="Pokročilé";
 $lang["plugin_category_design"]="Dizajn";
-$lang["plugin_category_ecommerce"]="E-commerce";
 $lang["plugin_category_sharing"]="Zdieľanie obsahu";
 /* * End - Plugin Category Strings * */
 

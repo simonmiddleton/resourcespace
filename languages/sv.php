@@ -9,8 +9,6 @@ $lang["usergroup-super_admin"]="Systemadministratör";
 $lang["usergroup-archivists"]="Arkivarier";
 $lang["usergroup-restricted_user_-_requests_emailed"]="Begränsade – begäranden: e-post";
 $lang["usergroup-restricted_user_-_requests_managed"]="Begränsade – begäranden: hanterade";
-$lang["usergroup-restricted_user_-_payment_immediate"]="Begränsade – direktbetalning";
-$lang["usergroup-restricted_user_-_payment_invoice"]="Begränsade – fakturabetalning";
 
 # Resource type names (for the default resource types)
 $lang["resourcetype-photo"]="Fotografi";
@@ -1097,8 +1095,6 @@ $lang["cannotshareemptythemecategory"]="Denna temakategori innehåller inga tema
 $lang["requestall"]="Begär alla";
 $lang["requesttype-email_only"]=$lang["resourcerequesttype0"]="E-post";
 $lang["requesttype-managed"]=$lang["resourcerequesttype1"]="Hanterad";
-$lang["requesttype-payment_-_immediate"]=$lang["resourcerequesttype2"]="Direktbetalning";
-$lang["requesttype-payment_-_invoice"]=$lang["resourcerequesttype3"]="Fakturabetalning";
 
 $lang["requestsent"]="Din materialbegäran har skickats ";
 $lang["requestsenttext"]="Din materialbegäran har skickats och kommer att behandlas inom kort.";
@@ -1249,38 +1245,6 @@ $lang["closethiswindow"]="Stäng fönstret";
 
 $lang["requestaddedtocollection"]="Detta material har lagts till i den aktuella samlingen. Du kan begära alla poster i samlingen genom att klicka på Begär alla i panelen Mina samlingar i nederkant av skärmen.";
 
-# E-commerce text
-$lang["buynow"]="Köp nu";
-$lang["yourbasket"]="Din varukorg";
-$lang["addtobasket"]="Lägg i varukorg";
-$lang["yourbasketisempty"]="Din varukorg är tom.";
-$lang["yourbasketcontains-1"]="Din varukorg innehåller 1 artikel.";
-$lang["yourbasketcontains-2"]="Din varukorg innehåller %qty artiklar."; # %qty will be replaced, e.g. Your basket contains 3 items.
-$lang["buy"]="Köp";
-$lang["buyitemaddedtocollection"]="Detta material har lagts i din varukorg. Du kan köpa alla artiklar i din varukorg genom att klicka på Köp nu.";
-$lang["buynowintro"]="Välj de storlekar du önskar.";
-$lang["nodownloadsavailable"]="Det finns inga hämtningar tillgängliga för detta material.";
-$lang["proceedtocheckout"]="Gå till kassan";
-$lang["totalprice"]="Totalsumma";
-$lang["price"]="Pris";
-$lang["waitingforpaymentauthorisation"]="Vi har ännu inte fått betalningsuppdraget. Vänta en kort stund och klicka sedan på <b>Läs&nbsp;om</b>.";
-$lang["reload"]="Läs om";
-$lang["downloadpurchaseitems"]="Hämta köpta artiklar";
-$lang["downloadpurchaseitemsnow"]="Använd länkarna nedan för att hämta dina köpta artiklar direkt.<br><br>Lämna inte den här sidan innan du har hämtat alla artiklar.";
-$lang["alternatetype"]="Alternativ typ";
-$lang["viewpurchases"]="Mina köp";
-$lang["viewpurchasesintro"]="Använd länkarna nedan för att nå tidigare köpta material.";
-$lang["orderdate"]="Beställningsdatum";
-$lang["removefrombasket"]="Avlägsna från varukorg";
-$lang["total-orders-0"] = "<strong>Totalt: 0</strong> beställningar";
-$lang["total-orders-1"] = "<strong>Totalt: 1</strong> beställning";
-$lang["total-orders-2"] = "<strong>Totalt: %number</strong> beställningar"; # %number will be replaced, e.g. Total: 5 Orders
-$lang["purchase_complete_email_admin"] = "Meddelande om köp";
-$lang["purchase_complete_email_admin_body"] = "Följande köp har genomförts.";
-$lang["purchase_complete_email_user"] = "Bekräftelse av köp";
-$lang["purchase_complete_email_user_body"] = "Tack för ditt köp! Använd länkarna nedan för att nå dina köpta artiklar.";
-
-
 $lang["subcategories"]="Underkategorier";
 $lang["subcategory"]="Underkategori";
 $lang["back"]="Tillbaka";
@@ -1337,13 +1301,6 @@ $lang["unsubscribed"]="Prenumerationen avbruten";
 $lang["youhaveunsubscribedreport"]="Du har avbrutit prenumerationen på det periodiskt återkommande e-postutskicket med rapporter.";
 $lang["sendingreportto"]="Skickar rapporten till";
 $lang["reportempty"]="Ingen matchande data hittades för vald rapport och period.";
-
-$lang["purchaseonaccount"]="Debitera konto";
-$lang["areyousurepayaccount"]="Vill du debitera ditt konto med detta köp?";
-$lang["accountholderpayment"]="Kontobetalning";
-$lang["subtotal"]="Delsumma";
-$lang["discountsapplied"]="Avdragna rabatter";
-$lang["log-p"]="Köpte material";
 $lang["viauser"]="via användare";
 $lang["close"]="Stäng";
 
@@ -2130,7 +2087,6 @@ $lang["usemetadatatemplatesure"]='Är du säker på att du vill tillämpa den h�
 $lang["removemetadatatemplatesure"]='Är du säker på att du vill ta bort denna metadata-mall? Detta kommer att rensa den nuvarande datan som har matats in.';
 $lang["success"]='Framgång.';
 $lang["metadata-report-fits_section"]='Mappade FITS-taggar.';
-$lang["purchase_email_address"]='Vänligen ange en giltig e-postadress om du vill ta emot bekräftelse på ditt köp.';
 $lang["user_pref_autorotate"]='Automatisk rotation av bilder vid uppladdning?';
 $lang["run_report_on_search_results"]='Kör rapport på dessa resultat.';
 $lang["report_error_no_reports_supporting_search_results"]='Det finns inga rapporter som stödjer att köras på sökresultat.';
@@ -2447,7 +2403,6 @@ $lang["tile_pend"]='Väntande.';
 $lang["plugin_category_general"]='Allmänt.';
 $lang["plugin_category_advanced"]='Avancerad.';
 $lang["plugin_category_design"]='Design: Design';
-$lang["plugin_category_ecommerce"]='E-handel.';
 $lang["plugin_integrations"]='Integreringar.';
 $lang["system_down_title"]='Observera!';
 $lang["system_down_message"]='Systemet är nere för underhåll. Tack för ditt tålamod.';

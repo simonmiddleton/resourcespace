@@ -51,18 +51,7 @@ if(!isset($thumbs))
         }
     }
 
-# Basket mode? - this is for the e-commerce user request modes.
-if (isset($userrequestmode) && ($userrequestmode==2 || $userrequestmode==3))
-    {
-    # Enable basket
-    $basket=true;   
-    }
-else
-    {
-    $basket=false;
-    }
-
-# ------------ Change the collection, if a collection ID has been provided ----------------
+    # ------------ Change the collection, if a collection ID has been provided ----------------
 if ($collection!="" && $collection!="undefined")
     {
     hook("prechangecollection");
@@ -730,34 +719,6 @@ $count_result = count($result);
 $hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
 $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
 
-# E-commerce functionality. Work out total price so that they've already selected a suitable size.
-$totalprice=0;
-if (isset($userrequestmode) && ($userrequestmode==2 || $userrequestmode==3))
-    {
-    foreach ($result as $resource)
-        {
-        # For each resource in the collection, fetch the price (set in config.php, or config override for group specific pricing)
-        $id=(isset($resource["purchase_size"])) ? $resource["purchase_size"] : "";
-        if ($id=="") {$id="hpr";} # Treat original size as "hpr".
-        if (array_key_exists($id,$pricing))
-            {
-            $price=$pricing[$id];
-
-            # Pricing adjustment hook (for discounts or other price adjustments plugin).
-            $priceadjust=hook("adjust_item_price","",array($price,$resource["ref"],$id));
-            if ($priceadjust!==false)
-                {
-                $price=$priceadjust;
-                }
-
-            $totalprice+=$price;
-            }
-        else
-            {
-            $totalprice+=999; # Error.
-            }
-        }
-    }
 ?><div>
 <script>
     var collection_resources = <?php echo json_encode(array_column($result,'ref'));?>; 
@@ -771,172 +732,6 @@ if (hook("replacecollectionsmax", "", array($k!="")))
     {
     # ------------------------ Hook defined view ----------------------------------
     }
-else if ($basket)
-    {
-    # ------------------------ Basket Mode ----------------------------------------
-    ?>
-    <div id="CollectionMenu">
-    <h2><?php echo htmlspecialchars($lang["yourbasket"]) ?></h2>
-    <form action="<?php echo $baseurl_short?>pages/purchase.php">
-
-    <?php 
-    if ($count_result==0) 
-    { ?>
-    <p><?php echo htmlspecialchars($lang["yourbasketisempty"]) ?></p><br /><br /><br />
-    <?php 
-    } 
-    else 
-    { ?>
-    <p><?php if ($count_result==1) {echo htmlspecialchars($lang["yourbasketcontains-1"]);} else {echo str_replace("%qty",$count_result,$lang["yourbasketcontains-2"]);} ?>
-
-    <?php  
-    # If they have already selected the size, we can show a total price here.
-    ?><br/><?php echo htmlspecialchars($lang["totalprice"]) ?>: <?php echo $currency_symbol . " " . number_format($totalprice,2) ?>
-
-    </p>
-
-    <p style="padding-bottom:10px;"><input type="submit" name="buy" value="&nbsp;&nbsp;&nbsp;<?php echo escape($lang["buynow"]) ?>&nbsp;&nbsp;&nbsp;" /></p>
-<?php 
-    } ?>
-    <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["hidethumbnails"])?></a>
-    <a href="<?php echo $baseurl_short?>pages/purchases.php" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["viewpurchases"])?></a>
-    </form>
-    </div>
-    <div id="CollectionSpace" class="CollectionSpace">
-    <?php
-
-    # Display thumbnails for basket mode
-    if ($count_result>0) 
-        {
-        # Loop through resources for thumbnails
-        for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)                  
-            {
-            $ref=$result[$n]["ref"];
-            $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
-            ?>
-    <?php 
-    if (!hook("resourceview")) 
-        { ?>
-        <!--Resource Panel-->
-        <div class="CollectionPanelShell ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
-        <?php if (in_array($ref,$addarray)) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
-
-        <?php if (!hook("rendercollectionthumb")){?>
-        <?php
-        if (isset($result[$n]["access"]) && $result[$n]["access"]==0 && !checkperm("g") && !$internal_share_access)
-            {
-            # Resource access is open but user does not have the 'g' permission. Set access to restricted. If they have been granted specific access this will be added next
-            $result[$n]["access"]=1; 
-            }
-        $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
-        $use_watermark=check_use_watermark();?>
-        <table border="0" class="CollectionResourceAlign"><tr><td>
-                <a style="position:relative;" onclick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
-                <?php
-                $colimg_preview_size = $retina_mode ? 'thm' : 'col';
-                if(
-                    $result[$n]['has_image'] == 1
-                    && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $colimg_preview_size)
-                    && file_exists(get_resource_path($ref, true, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
-                )
-                    {
-                    $colimgpath = get_resource_path($ref, false, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
-                    ?>
-                    <img class="CollectionPanelThumb" border=0 src="<?php echo $colimgpath; ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
-                    <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> /><?php
-                    }
-                else
-                        {?>
-                        <img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>" border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" />
-                        <?php
-                        }
-                        hook("aftersearchimg","",array($result[$n]))?>
-                        </a></td>
-        </tr></table>
-        <?php } /* end hook rendercollectionthumb */?>
-
-        <?php 
-
-        $title=$result[$n]["field".$view_title_field];  
-        $title_field=$view_title_field;
-        if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
-            {
-            if ($result[$n]['resource_type']==$metadata_template_resource_type)
-                {
-                $title=$result[$n]["field".$metadata_template_title_field];
-                $title_field=$metadata_template_title_field;
-                }   
-            }   
-        $field_type=ps_value("select type value from resource_type_field where ref=?",array("i",$title_field),"", "schema");
-        if($field_type==8){
-            $title=str_replace("&nbsp;"," ",$title);
-        }
-        ?>  
-        <?php if (!hook("replacecolresourcetitle")){?>
-        <div class="CollectionPanelInfo"><a onclick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?></a>&nbsp;</div>
-        <?php } ?>
-
-        <?php if ($k!="" && $feedback) { # Allow feedback for external access key users
-        ?>
-        <div class="CollectionPanelInfo">
-        <span>  <a aria-hidden="true" class="fa fa-comment"onclick="return ModalLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref) ?>&collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"/></span>       
-        </div>
-<?php } ?>
-
-        <?php hook('before_collectionpaneltools'); ?>
-
-        <?php if ($k=="" || $internal_share_access) 
-        { ?>
-        <div class="CollectionPanelTools">
-
-        <?php if (!isset($cinfo['savedsearch'])||(isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null))
-        { // add 'remove' link only if this is not a smart collection 
-        ?>
-
-        <?php
-        $rating = '';
-        if(isset($rating_field))
-            {
-            $rating = "field{$rating_field}";
-            }
-
-            $url = $baseurl_short."pages/view.php?ref=" . $ref . "&amp;search=" . urlencode('!collection' . $usercollection) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=". urlencode($sort) . "&amp;offset=" . urlencode($offset) . "&amp;archive=" . urlencode($archive) . "&amp;k=" . urlencode($k) . "&amp;curpos=" . urlencode($n) . '&amp;restypes=' . urlencode($restypes);
-
-        # Include standard search views    
-        include "search_views/resource_tools.php";  
-
-        } # End of remove link condition 
-        ?>
-        </div>
-<?php 
-        } # End of k="" condition 
-        ?>
-        </div>
-<?php
-        } # End of ResourceView hook
-
-    } # End of loop through basket mode thumbnails
-
-    ?>
-    <div class="clearerleft"></div>
-<?php
-    } # End of display thumbnails for basket mode
-
-    if (count($addarray)>0 && $addarray[0]!="")
-    {
-    # Animate the new item
-    ?>
-    <script type="text/javascript">
-    jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0]) ?>").slideDown('fast');
-    </script>
-<?php      
-    }
-    ?>
-    </div>
-
-<?php
-    } # End of basket mode
-
 elseif ($k != "" && !$internal_share_access)
     {
     # ------------- Anonymous access, slightly different display ------------------
@@ -1285,33 +1080,7 @@ if (count($addarray)>0 && $addarray[0]!="")
         {
         # ------------------------ Hook defined view ----------------------------------
         }
-    else if ($basket)
-        {
-        # ------------------------ Basket Mode ----------------------------------------
-        ?>
-        <div id="CollectionMinTitle"><h2><?php echo htmlspecialchars($lang["yourbasket"]) ?></h2></div>
-        <div id="CollectionMinRightNav" class="CollectionBasket">
-        <form action="<?php echo $baseurl_short?>pages/purchase.php">
-        <ul>
 
-        <?php if ($count_result==0) { ?>
-        <li><?php echo htmlspecialchars($lang["yourbasketisempty"]) ?></li>
-        <?php } else { 
-
-        # If they have already selected the size, we can show a total price here.
-        ?><li><?php echo htmlspecialchars($lang["totalprice"]) ?>: <?php echo $currency_symbol . " " . number_format($totalprice,2) ?></li>
-        <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $usercollection)?>"><?php echo htmlspecialchars($lang["viewall"])?></a></li>
-        <li><input type="submit" name="buy" value="&nbsp;&nbsp;&nbsp;<?php echo htmlspecialchars($lang["buynow"]) ?>&nbsp;&nbsp;&nbsp;" /></li>
-<?php }
-        ?><li><a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang["showthumbnails"])?></a></li>
-        <li><a href="<?php echo $baseurl_short?>pages/purchases.php" onclick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["viewpurchases"])?></a></li>
-        </ul>
-        </form>
-
-        </div>
-<?php	
-
-        } // end of Basket Mode
     elseif ($k != "" && !$internal_share_access)
         {
         # Anonymous access, slightly different display

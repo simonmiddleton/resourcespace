@@ -9,8 +9,6 @@ $lang["usergroup-super_admin"]="Superylläpitäjä";
 $lang["usergroup-archivists"]="Arkistonhoitajat";
 $lang["usergroup-restricted_user_-_requests_emailed"]="Rajoitettu käyttäjä - pyynnöt sähköpostilla";
 $lang["usergroup-restricted_user_-_requests_managed"]="Rajoitettu käyttäjä - pyynnöt hallittu";
-$lang["usergroup-restricted_user_-_payment_immediate"]="Rajoitettu käyttäjä - maksu välittömästi";
-$lang["usergroup-restricted_user_-_payment_invoice"]="Rajoitettu käyttäjä - maksu laskutettu";
 
 # Resource type names (for the default resource types)
 $lang["resourcetype-photo"]="Valokuva";
@@ -1048,8 +1046,6 @@ $lang["cannotshareemptythemecategory"]="Tämä teemakategoria ei sisällä teemo
 $lang["requestall"]="Pyydä kaikkia";
 $lang["requesttype-email_only"]=$lang["resourcerequesttype0"]="Vain sähköposti";
 $lang["requesttype-managed"]=$lang["resourcerequesttype1"]="Hallittu pyyntö";
-$lang["requesttype-payment_-_immediate"]=$lang["resourcerequesttype2"]="Maksu - välitön";
-$lang["requesttype-payment_-_invoice"]=$lang["resourcerequesttype3"]="Maksu - laskutus";
 
 $lang["requestsent"]="Resurssipyyntösi on lähetetty hyväksyttäväksi ";
 $lang["requestsenttext"]="Resurssipyyntösi on lähetetty hyväksyttäväksi ja se käsitellään pian.";
@@ -1185,41 +1181,6 @@ $lang["closethiswindow"]="Sulje tämä ikkuna";
 
 $lang["requestaddedtocollection"]="Tämä resurssi on liitetty nykyiseen kokoelmaasi. Voit pyytää kokoelmassasi olevia kohteita napsauttamalla \'Pyydä kaikkia\' kokoelmapalkissa alla.";
 
-# E-commerce text
-$lang["buynow"]="Osta nyt";
-$lang["yourbasket"]="Ostoskorisi";
-$lang["addtobasket"]="Lisää ostoskoriin";
-$lang["yourbasketisempty"]="Ostoskorisi on tyhjä.";
-$lang["yourbasketcontains-1"]="Ostoskorissasi on 1 kohde.";
-$lang["yourbasketcontains-2"]="Ostoskorissasi on %qty kohdetta."; # %qty will be replaced, e.g. Your basket contains 3 items.
-$lang["buy"]="Buy";
-$lang["buyitemaddedtocollection"]="Tämä resurssi on lisätty ostoskoriisi. Voit ostaa kaikki kohteet ostoskorissasi napsauttamalla \'Osta nyt\' alla.";
-$lang["buynowintro"]="Ole hyvä ja valitse tarpeelliset koot.";
-$lang["nodownloadsavailable"]="Valitettavasti tälle resurssille ei ole tarjolla latauksia.";
-$lang["proceedtocheckout"]="Mene kassalle";
-$lang["totalprice"]="Kokonaishinta";
-$lang["price"]="Hinta";
-$lang["waitingforpaymentauthorisation"]="Valitettavasti emme vielä ole saaneet vahvistusta maksulle. Odota muutama hetki ja napsauta 'Lataa uudelleen' alla.";
-$lang["reload"]="Lataa uudelleen";
-$lang["downloadpurchaseitems"]="Lataa ostetut kohteet";
-$lang["downloadpurchaseitemsnow"]="Ole hyvä ja käytä linkkejä alla ladataksesi ostamasi kohteet välittömästi.<br><br>Älä siirry pois tältä sivulta ennen kuin olet ladannut kaikki kohteet.";
-$lang["alternatetype"]="Vaihtoehtoinen tyyppi";
-$lang["viewpurchases"]="Ostokseni";
-$lang["viewpurchasesintro"]="Päästäksesi aiemmin ostettuihin resursseihin, napsauta linkkejä alla.";
-$lang["orderdate"]="Tilauspäivämäärä";
-$lang["removefrombasket"]="Poista ostoskorista";
-$lang["total-orders-0"] = "<strong>Kokonaismäärä: 0</strong> tilausta";
-$lang["total-orders-1"] = "<strong>Kokonaismäärä: 1</strong> tilaus";
-$lang["total-orders-2"] = "<strong>Kokonaismäärä: %number</strong> tilausta"; # %number will be replaced, e.g. Total: 5 Orders
-$lang["purchase_complete_email_admin"] = "Ilmoitus ostoksesta";
-$lang["purchase_complete_email_admin_body"] = "Seuraava ostos on toteutettu.";
-$lang["purchase_complete_email_user"] = "Ostoksen vahvistus";
-$lang["purchase_complete_email_user_body"] = "Kiitos ostoksestasi. Ole hyvä ja käytä linkkejä alla saadaksesi ostamasi kohteet.";
-
-$lang["subcategories"]="Alikategoriat";
-$lang["subcategory"]="Alikategoria";
-$lang["back"]="Takaisin";
-
 $lang["pleasewait"]="Ole hyvä ja odota...";
 
 $lang["autorotate"]="Kierrätä kuvia automaattisesti?";
@@ -1272,13 +1233,6 @@ $lang["unsubscribed"]="Tilaus peruutettu";
 $lang["youhaveunsubscribedreport"]="Säännöllisen raportin sähköposti on peruutettu.";
 $lang["sendingreportto"]="Lähetetään raportti käyttäjälle";
 $lang["reportempty"]="Sopivaa tietoa ei löytynyt valitulle raportille ja ajanjaksolle.";
-
-$lang["purchaseonaccount"]="Lisää tiliin";
-$lang["areyousurepayaccount"]="Tahdotko varmasti lisätä tämän ostoksen tilillesi?";
-$lang["accountholderpayment"]="Tilin omistajan maksu";
-$lang["subtotal"]="Välisumma";
-$lang["discountsapplied"]="Alennukset";
-$lang["log-p"]="Ostettu resurssi";
 $lang["viauser"]="käyttäjältä";
 $lang["close"]="Sulje";
 
@@ -1965,7 +1919,6 @@ $lang["usagecomments"]='Käyttö.';
 $lang["allresourcessearchbar"]='Kaikki resurssit.';
 $lang["allcollectionssearchbar"]='Kaikki kokoelmat.';
 $lang["continuetoresults"]='Jatka tuloksiin';
-$lang["purchase_email_address"]='Ole hyvä ja syötä kelvollinen sähköpostiosoite, jos haluat vastaanottaa vahvistuksen ostoksestasi.';
 $lang["run_report_on_search_results"]='Suorita raportti näistä tuloksista.';
 $lang["report_error_no_reports_supporting_search_results"]='Ei ole raportteja, jotka tukevat suorittamista hakutuloksissa.';
 $lang["report_delete_periodic_email_link"]='Poistaaksesi tämän raportin, klikkaa alla olevaa linkkiä:';
@@ -2408,7 +2361,6 @@ $lang["tile_pend"]='Odottaa.';
 $lang["plugin_category_general"]='Yleinen';
 $lang["plugin_category_advanced"]='Edistynyt';
 $lang["plugin_category_design"]='Suunnittelu';
-$lang["plugin_category_ecommerce"]='Verkkokauppa';
 $lang["plugin_integrations"]='Integraatiot.';
 $lang["system_down_title"]='Huomio!';
 $lang["system_down_message"]='Järjestelmä on huoltotauolla. Kiitos kärsivällisyydestäsi.';

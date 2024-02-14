@@ -1201,26 +1201,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                         </div>
                         <div class="RecordDownloadSpace" id="DownloadsTab">
                             <?php
-                            # Get display price for basket request modes
-                            function get_display_price($ref, $size)
-                                {
-                                global $pricing, $currency_symbol;
-
-                                $price_id=$size["id"];
-                                if ($price_id=="") { $price_id="hpr"; }
-
-                                $price=999; # If price cannot be found
-                                if (array_key_exists($price_id,$pricing)) { $price=$pricing[$price_id]; }
-
-                                # Pricing adjustment hook (for discounts or other price adjustments plugin).
-                                $priceadjust=hook("adjust_item_price","",array($price,$ref,$size["id"]));
-                                if ($priceadjust!==false) { $price=$priceadjust; }
-
-                                return $currency_symbol . " " . number_format($price,2);
-                                }
-
-                            $basket=$userrequestmode==2 || $userrequestmode==3;
-
                             # Look for a viewer to handle the right hand panel. If not, display the standard photo download / file download boxes.
                             if (file_exists("../viewers/type" . $resource["resource_type"] . ".php"))
                                 {
@@ -1281,7 +1261,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                         <td><?php echo htmlspecialchars($lang["fileinformation"])?></td>
                                                         <?php echo $use_larger_layout ? "<td>" . $lang["filedimensions"] . "</td>" : ''; ?>
                                                         <td><?php echo htmlspecialchars($lang["filesize"])?></td>
-                                                        <?php if ($basket) { ?><td><?php echo htmlspecialchars($lang["price"]) ?></td><?php } ?>
                                                         <td class="textcenter"><?php echo htmlspecialchars($lang["options"])?></td>
                                                         </tr>
                                                         <?php
@@ -1300,14 +1279,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                             ?>
                                                     </td>
                                                     <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
-
-                                                    <?php
-                                                    if ($basket)
-                                                        { ?>
-                                                        <td><?php echo get_display_price($ref, $sizes[$n]) ?></td>
-                                                        <?php
-                                                        } ?>
-
                                                     <?php add_download_column($ref, $sizes[$n], $downloadthissize); ?>
                                                 </tr>
 
@@ -1329,8 +1300,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                                 <p><?php echo $preview_with_sizename; ?></p>
                                                             </td>
                                                             <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
-                                                            <?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
-                                                            ?>
                                                             <td class="DownloadButton">
                                                                 <a class="enterLink previewsizelink previewsize-<?php echo $data_viewsize; ?>" 
                                                                     id="previewlink"
@@ -1603,7 +1572,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     ?>
                                                     <li>
                                                         <?php 
-                                                        echo remove_from_collection_link($ref,"","",$basket);
+                                                        echo remove_from_collection_link($ref,"","",0);
                                                         echo "<i class='fa fa-fw fa-minus-circle'></i>&nbsp;" .$lang["action-removefromcollection"]?>
                                                         </a>
                                                     </li>
