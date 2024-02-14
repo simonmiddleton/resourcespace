@@ -97,7 +97,6 @@ define ('LOG_CODE_MULTI_EDITED',        'm');
 define ('LOG_CODE_NODE_REVERT',         'N');
 define ('LOG_CODE_CREATED_BY_CHANGED',  'o');
 define ('LOG_CODE_USER_OPT_IN',         'O');
-define ('LOG_CODE_PAID',                'p');
 define ('LOG_CODE_REVERTED_REUPLOADED', 'r');
 define ('LOG_CODE_REPLACED',            'f');
 define ('LOG_CODE_REORDERED',           'R');

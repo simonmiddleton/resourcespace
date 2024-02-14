@@ -1370,7 +1370,7 @@ $lang["ticktoapproveuser"]="You must set the status to approved if you wish to e
 
 $lang["managerequestsorders"]="Requests";
 $lang["editrequestorder"]="Edit request";
-$lang["requestorderid"]="Request / order ID";
+$lang["requestorderid"]="Request ID";
 $lang["viewrequesturl"]="To view this request, click the link below:";
 $lang["requestreason"]="Reason for request";
 

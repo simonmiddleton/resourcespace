@@ -1554,7 +1554,6 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                 }
 
                                             if (!hook("replaceaddtocollection") && !checkperm("b")
-                                                && !($userrequestmode==2 || $userrequestmode==3)
                                                 && !in_array($resource["resource_type"],$collection_block_restypes)) 
                                                 { 
                                                 ?>

@@ -83,7 +83,7 @@ if(!checkperm('v') && !$bypass_permission_check)
                             break;
 
                             case "resource_type_field":
-                                if (in_array($log_entry["type"], array(LOG_CODE_DOWNLOADED,LOG_CODE_PAID)))
+                                if (in_array($log_entry["type"], array(LOG_CODE_DOWNLOADED)))
                                     {
                                     // Not relevant
                                     continue 2;
@@ -111,7 +111,7 @@ if(!checkperm('v') && !$bypass_permission_check)
                             break;
 
                             case "diff":
-                                if (in_array($log_entry["type"], array(LOG_CODE_DOWNLOADED,LOG_CODE_PAID)))
+                                if (in_array($log_entry["type"], array(LOG_CODE_DOWNLOADED)))
                                     {
                                     // Not relevant, skip
                                     continue 2;
@@ -148,7 +148,7 @@ if(!checkperm('v') && !$bypass_permission_check)
                             
                             case "size":
                                 $name = $lang["size"];
-                                if (!in_array($log_entry["type"], array(LOG_CODE_DOWNLOADED,LOG_CODE_PAID)))
+                                if (!in_array($log_entry["type"], array(LOG_CODE_DOWNLOADED)))
                                     {
                                     // Not relevant
                                     continue 2;
