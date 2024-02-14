@@ -131,18 +131,7 @@ if (!hook("replacelistitem"))
             }
         
         hook("searchbeforeratingfield");
-        
-        if ($id_column)
-            { ?>
-            <td <?php hook("listviewcolumnstyle");?> >
-                <?php 
-                $plugin_column_id = hook("listviewcolumnid",'',array($result, $n));
-                echo $plugin_column_id !== false ? $plugin_column_id : $result[$n]["ref"];             
-                ?>
-            </td>
-            <?php
-            }
-        
+
         if ($resource_type_column)
             { ?>
             <td <?php hook("listviewcolumnstyle");?>>

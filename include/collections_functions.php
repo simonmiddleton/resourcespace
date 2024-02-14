@@ -2404,8 +2404,6 @@ function generate_collection_access_key($collection,$feedback=0,$email="",$acces
             );
             $created_sub_fc_access_key = true;
             }
-
-        hook("generate_collection_access_key", "", array($collection, $k, $userref, $feedback, $email, $access, $expires, $group, $sharepwd));
         }
 
     if($is_featured_collection_category && $created_sub_fc_access_key)
@@ -3447,8 +3445,6 @@ function copy_collection($copied,$current,$remove_existing=false)
         # Use correct function so external sharing is honoured.
         add_resource_to_collection($col_resource['resource'],$current,true,"",$col_resource['resource_type'], null, null, '', $col_resource['sortorder']);
         }
-    
-    hook('aftercopycollection','',array($copied,$current));
     }
 
 /**

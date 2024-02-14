@@ -24,7 +24,7 @@ $thm_url = get_resource_path(
 if(isset($result[$n]['thm_url']))
     {
     $thm_url = $result[$n]['thm_url'];
-    } # Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
+    } # Option to override thumbnail image in results
     ?>
     <a
         id="ResourceStrip<?php echo $ref ?>"
