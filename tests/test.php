@@ -16,8 +16,10 @@ include_once "../include/test_functions.php";
 include_once "../include/image_processing.php";
 
 $suppress_headers=true;
-define ("RS_TEST_MODE",1);
 $argv=preg_replace('/^(-|--|\/)/','',$argv);    // remove leading /, -- or -
+
+define("RS_TEST_MODE",1);
+define('RS_TEST_DEBUG', array_search('debug', $argv) !== false);
 
 if(array_search('?',$argv)!==false || array_search('help',$argv)!==false)
     {
@@ -28,6 +30,7 @@ Command line paramaters:
 -nosetup        Do not setup the database, connect user in current state
 -noteardown     Do not drop the database once tests have completed
 -performance    Test performance
+-debug          Print out test logs
 -help or -?     This help information
 [n]...          Specific test number(s) to run
 <?php

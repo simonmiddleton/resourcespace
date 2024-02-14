@@ -261,7 +261,6 @@ else
                                                         
                             if(!in_array($scale,$preview_tile_scale_factors))
                                 {
-                                    exit("HERE" . $scale);
                                 $errors[] = "Invalid tile size requested";
                                 iiif_error(501,$errors); 
                                 }
@@ -416,8 +415,8 @@ else
                         }
                     else
                         {
-                        $errorcode = "404";
                         $errors[] = "No image available for this identifier";
+                        iiif_error(404,$errors);               
                         }
                     }
                 }
@@ -453,18 +452,18 @@ else
             {
             if(!isset($xpath[1]))
                 {
-                $errorcode=404;
                 $errors[] = "Bad request. Valid options are 'manifest', 'sequence' or 'canvas' e.g. ";
                 $errors[] = "For the manifest: " . $rooturl . $xpath[0] . "/manifest";
                 $errors[] = "For a sequence : " . $rooturl . $xpath[0] . "/sequence";
                 $errors[] = "For a canvas : " . $rooturl . $xpath[0] . "/canvas/<identifier>";
+                iiif_error(404,$errors);
                 }
             else
                 {
                 if(!is_array($iiif_results) || count($iiif_results) == 0)
                     {
-                    $errorcode=404;
                     $errors[] = "Invalid identifier: " . $identifier;
+                    iiif_error(404,$errors);
                     }
                 else
                     {
@@ -744,8 +743,8 @@ else
                             }
                         else
                             {
-                            $errorcode=404;
                             $errors[] = "Invalid annotation identifier: " . $identifier;
+                            iiif_error(404,$errors);
                             }
                         }
                     }
@@ -753,8 +752,8 @@ else
             } // End of valid $identifier check based on search results
         else
             {
-            $errorcode=404;
             $errors[] = "Invalid identifier: " . $identifier;
+            iiif_error(404,$errors);
             }
         }
 
