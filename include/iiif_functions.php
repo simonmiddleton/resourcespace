@@ -599,12 +599,12 @@ final class IIIFRequest {
                 {                    
                 $prefix =  $arr_18n_pos_prefixes[$langcode] ?? ($arr_18n_pos_prefixes[$GLOBALS["defaultlanguage"]] ?? reset($arr_18n_pos_prefixes));
                 $labelvalue =  $arr_18n_pos_labels[$langcode] ?? ($arr_18n_pos_labels[$GLOBALS["defaultlanguage"]] ?? reset($arr_18n_pos_labels));
-                $canvas["label"][$langcode] = $prefix . $labelvalue;
+                $canvas["label"][$langcode] = [$prefix . $labelvalue];
                 }
             }
         else
             {
-            $canvas["label"]["none"] = $position_prefix . $position_val;    
+            $canvas["label"]["none"] = [$position_prefix . $position_val];    
             }
 
         // Get the size of the images
@@ -723,12 +723,12 @@ final class IIIFRequest {
                 }
             elseif(trim((string) $iiif_data_row["value"]) !== "")
                 {
-            $metadata[$n] = [];
-            $metadata[$n]["label"] = [];
+                $metadata[$n] = [];
+                $metadata[$n]["label"] = [];
                 $i18n_titles = i18n_get_translations($iiif_data_row["title"]);
                 foreach($i18n_titles as $langcode=>$langstring)
                     {
-                $metadata[$n]["label"][$langcode] =[$langstring];
+                    $metadata[$n]["label"][$langcode] = [$langstring];
                     }
             $metadata[$n]["value"]=[];
                 $i18n_titles = i18n_get_translations($iiif_data_row["value"]);
@@ -1295,12 +1295,22 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     $canvases = array();
     foreach ($iiif_results as $iiif_result)
         {
-        $size = (strtolower((string) $iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
-        $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
-
-        if (!file_exists($img_path))
+        $useimage = $iiif_result;
+        if ((int)$iiif_result['has_image'] === 0)
             {
-            continue;
+            // If configured, try and use a preview from a related resource
+            debug("No image for IIIF request - check for related resources");
+            $pullresource = related_resource_pull($iiif_result);
+            if($pullresource !== false)
+                {
+                $useimage = $pullresource;
+                }
+            }
+        $size = is_jpeg_extension((string) $useimage["file_extension"]) ? "" : "hpr";
+        $img_path = get_resource_path($useimage["ref"],true,$size,false);
+        if(!file_exists($img_path))
+            {
+            return;
             }
             
         $position = $iiif_result["iiif_position"];
@@ -1316,7 +1326,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         $canvases[$position]["label"] = $position_prefix . $position;
         
         // Get the size of the images
-        $image_size = get_original_imagesize($iiif_result["ref"],$img_path);
+        $image_size = get_original_imagesize($useimage["ref"],$img_path);
         $canvases[$position]["height"] = intval($image_size[2]);
         $canvases[$position]["width"] = intval($image_size[1]);
                 
@@ -1328,7 +1338,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
             $image_size[2] = $image_size[2] * 2;
             }
         
-        $canvases[$position]["thumbnail"] = iiif_get_thumbnail($iiif_result["ref"]);
+        $canvases[$position]["thumbnail"] = iiif_get_thumbnail($useimage["ref"]);
         
         // Add image (only 1 per canvas currently supported)
         $canvases[$position]["images"] = array();
@@ -1336,7 +1346,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
             'identifier' => $size,
             'return_height_width' => false,
         );
-        $canvases[$position]["images"][] = iiif_get_image($identifier, $iiif_result["ref"], $position, $size_info);
+        $canvases[$position]["images"][] = iiif_get_image($identifier, $useimage["ref"], $position, $size_info);
         }
     
     if($sequencekeys)
@@ -1370,9 +1380,21 @@ function iiif_get_thumbnail($resourceid)
     
     $img_path = get_resource_path($resourceid,true,'thm',false);
     if(!file_exists($img_path))
+        {
+        // If configured, try and use a preview from a related resource
+        $resdata = get_resource_data($resourceid);
+        $pullresource = related_resource_pull($resdata);
+        if($pullresource !== false)
             {
-            return false;
+            $resourceid = $pullresource["ref"];
+            $img_path = get_resource_path($resourceid,true,"thm",false);
             }
+        }
+
+    if(!file_exists($img_path))
+        {
+        return false;
+        }
             
     $thumbnail = array();
     $thumbnail["@id"] = $rootimageurl . $resourceid . "/full/thm/0/default.jpg";
@@ -1436,9 +1458,9 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
 
     $img_path = get_resource_path($resourceid,true,$size,false);
     if(!file_exists($img_path))
-            {
-            return false;
-            }
+        {
+        return false;
+        }
 
     $image_size = get_original_imagesize($resourceid, $img_path);
             

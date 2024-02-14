@@ -876,19 +876,16 @@ if($import && isset($folder_path))
         $_GET["emailresetlink"] = $user["password_reset_hash"];
         $_GET["approved"] = $user["approved"];
         $save_user_status = save_user($new_uref);
-        if($save_user_status === false)
+        # Result can be === True which means save_user was successful
+        # Otherwise it will be a string with an error message describing the reason for failure to save/email
+        if($save_user_status === true)
             {
-            logScript("ERROR: failed to save user '{$user["username"]}' - Username or e-mail address already exist?");
-            exit(1);
-            }
-        else if(is_string($save_user_status))
-            {
-            logScript("ERROR: failed to save user '{$user["username"]}'. Reason: '{$save_user_status}'");
-            exit(1);
+            logScript("Saved user details");
             }
         else
             {
-            logScript("Saved user details");
+            logScript("ERROR: failed to save user '{$user["username"]}'. Reason: '{$save_user_status}'");
+            exit(1);
             }
 
         $process_user_preferences($new_uref, $user);

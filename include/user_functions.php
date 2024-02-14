@@ -664,7 +664,7 @@ function get_user($ref)
 * 
 * @param string $ref ID of the user
 * 
-* @return mixed boolean|string True if successful or a descriptive string if there's an issue
+* @return boolean|string True if successful or a descriptive string if there's an issue
 */
 function save_user($ref)
     {

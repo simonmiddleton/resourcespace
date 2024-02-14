@@ -152,7 +152,7 @@ class GermanStemmer
             }
         }
 
-        if (strpos(self::$R1,'st') !== FALSE) {
+        if (strpos(self::$R1,'st') !== false) {
             self::$R1 = preg_replace('#st$#u','',self::$R1);
             $word = preg_replace('#(...['.implode('',self::$st_ending).'])st$#u','$1',$word);
         }

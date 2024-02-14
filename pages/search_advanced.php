@@ -5,7 +5,15 @@ include "../include/authenticate.php"; if (!checkperm("s")) {exit ("Permission d
 
 $selected_archive_states=array();
 
-$archivechoices=getval("archive",getval("saved_archive",get_default_search_states()));
+$archivechoices=getval("archive",getval("saved_archive", false));
+if($archivechoices !== false)
+    {
+    $search_all_workflow_states = false;
+    }
+else
+    {
+    $archivechoices = get_default_search_states();
+    }
 if(!is_array($archivechoices)){$archivechoices=explode(",",$archivechoices);}
 foreach($archivechoices as $archivechoice)
     {

@@ -17,7 +17,7 @@ $enable_disable_options = array($lang['userpreference_disable_option'], $lang['u
 $yes_no_options         = array($lang['no'], $lang['yes']);
 
 
-
+ob_start();
 // System section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemsetup'] . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
 $page_def[] = config_add_text_input('applicationname', $lang['setup-applicationname'], false, 420, false, '', true);
@@ -817,4 +817,5 @@ if ($debug_log_override_timer_active)
     </script>
 </div>
 <?php
+ob_end_flush();
 include '../../include/footer.php';

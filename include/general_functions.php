@@ -1923,7 +1923,11 @@ function filesize_unlimited($path)
 
     hook('afterfilesize_unlimited', '', array($path));
 
-    return $bytesize;
+    if(is_int_loose($bytesize))
+        {
+        return (int) $bytesize;
+        }
+    return false;
     }
 
 /**

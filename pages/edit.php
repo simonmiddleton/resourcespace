@@ -34,7 +34,16 @@ $uploader = getval("uploader","");
 $collection = getval('collection', 0, true);
 $resetform = (getval("resetform", false) !== false);
 $ajax = filter_var(getval("ajax", false), FILTER_VALIDATE_BOOLEAN);
-$archive=getval("archive",0); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
+$archive=getval("archive", false); // This is the archive state for searching, NOT the archive state to be set from the form POST which we get later
+if($archive !== false)
+    {
+    $search_all_workflow_states = false;
+    }
+else
+    {
+    $archive = 0;
+    }
+
 $search_access = getval("search_access", null, true);
 $submitted = getval("submitted", "");
 $external_upload = upload_share_active();

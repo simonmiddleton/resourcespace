@@ -26,7 +26,7 @@ include_once "{$rs_root}/include/header.php";
 
 <div class="RecordResource">
     <div id="previewimagewrapper">
-                <img id="previewimage" class="Picture" src="<?php echo $preview ?>" alt="Full screen preview" galleryimg="no">
+                <img id="previewimage" class="Picture" src="<?php echo escape($preview) ?>" alt="Full screen preview" galleryimg="no">
     </div>
       
 <div class="RecordDownload" id="RecordDownload">

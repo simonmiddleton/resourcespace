@@ -17,6 +17,7 @@ $exclude_paths = array(
     "/lib/",
     "/filestore/",
     "/vendor/",
+    "rector.php"
 );
 $Directory = new RecursiveDirectoryIterator(dirname(__FILE__) . "/../../");
 $Iterator = new RecursiveIteratorIterator($Directory);

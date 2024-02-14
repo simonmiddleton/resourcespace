@@ -16,7 +16,7 @@ foreach($resources as $resource)
     {
     $file_path = get_resource_path($resource['ref'], true, '', false, $resource['file_extension']);
 
-    if(file_exists($file_path))
+    if(file_exists($file_path) && filesize_unlimited($file_path) > 0)
         {
         continue;
         }

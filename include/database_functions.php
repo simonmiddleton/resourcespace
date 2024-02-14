@@ -403,6 +403,8 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
     $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_enabled,
     $query_cache_already_completed_this_time,$prepared_statement_cache;
     
+    $error = '';
+
     // Check cache for this query
     $cache_write=false;
     $serialised_query=$sql . ":" . serialize($parameters); // Serialised query needed to differentiate between different queries.
@@ -527,13 +529,15 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             if (!array_key_exists($n+1,$parameters)) {trigger_error("Count of \$parameters array must be even (ensure types specified) for query: $sql" . print_r($parameters,true));}
             $params_array[] = $parameters[$n+1];
             }
-        if (!(isset($error) && $error!=""))
+
+        if ($error=="")
             {
-            mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 
+            // Results section
             $use_error_exception_cache = $GLOBALS["use_error_exception"]??false;
             $GLOBALS["use_error_exception"] = true;
             try
                 {
+                mysqli_stmt_bind_param($prepared_statement_cache[$sql],$types,...$params_array); // splat operator 
                 mysqli_stmt_execute($prepared_statement_cache[$sql]);
                 }
             catch (Exception $e)
@@ -543,10 +547,6 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             $GLOBALS["use_error_exception"] = $use_error_exception_cache;
 
             $error = $error ?? mysqli_stmt_error($prepared_statement_cache[$sql]);
-            }
-        if ($error=="")
-            {
-            // Results section
 
             // Buffering of result set
             $prepared_statement_cache[$sql]->store_result();
