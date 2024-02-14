@@ -9480,7 +9480,7 @@ function related_resource_pull(array $resource)
     if ((int)$pull_images === 1)
         {
         $relatedpull = do_search("!related" . $resource["ref"]);
-        debug("Looking for a related resource with image");
+        debug("Looking for a related resource with image for resource ID #" . $resource["ref"]);
         if (is_array($relatedpull))
             {
             foreach ($relatedpull as $related)
