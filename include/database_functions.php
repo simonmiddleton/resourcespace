@@ -545,7 +545,8 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                 $error = $e->getMessage();
                 }
             $GLOBALS["use_error_exception"] = $use_error_exception_cache;
-
+            
+            $error = $error ?? mysqli_stmt_error($prepared_statement_cache[$sql]);
             }
 
         if ($error=="")
