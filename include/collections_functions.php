@@ -4868,7 +4868,7 @@ function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref
     if($tmpfile!==false && file_exists($tmpfile)){$deletion_array[]=$tmpfile;}
 
     daily_stat("Resource download", $ref);
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment, "", "", (int) $usage, $size);
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment, "", "", (int) $usage);
     
     # update hit count if tracking downloads only
     if ($resource_hit_count_on_downloads)
