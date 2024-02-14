@@ -369,7 +369,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             extract_exif_comment($ref,$extension);
             }
         else
-            {        
+            {
             debug("[upload_file()][ref={$ref}] Not extracting embedded metadata!");
             if($merge_filename_with_title && isset($processfile))
                 {
@@ -520,12 +520,9 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $checksum_required = false;
                 }
 
-            if(create_core_previews($ref, $extension, false))
+            if(create_core_previews($ref, $extension, false) === false)
                 {
-                
-                }
-            else
-                {
+                // Proceed with full set of previews
                 if ($enable_thumbnail_creation_on_upload)
                     {
                     create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
@@ -548,8 +545,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     delete_previews($ref);
                     ps_query("UPDATE resource SET has_image = ? WHERE ref= ?", ['i',RESOURCE_PREVIEWS_NONE,'i', $ref]);
                     }
-                }
-           
+                }           
             }
     
         # Update file dimensions
@@ -558,8 +554,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
     if($upload_then_process && !$after_upload_processing)
         {
-        # Add this to the job queue for offline processing
-        
+        # Add this to the job queue for offline processing        
         $job_data=array();
         $job_data["resource"]=$ref;
         $job_data["extract"] = !$no_exif;
@@ -742,7 +737,7 @@ function extract_exif_comment($ref,$extension="")
         # Geolocation Metadata Support
         if (!$disable_geocoding && $dec_long!=0 && $dec_lat!=0)
             {
-             ps_query("update resource set geo_long= ?,geo_lat= ? where ref= ?", ['d', $dec_long, 'd', $dec_lat, 'i', $ref]);
+            ps_query("UPDATE resource SET geo_long= ?,geo_lat= ? WHERE ref= ?", ['d', $dec_long, 'd', $dec_lat, 'i', $ref]);
             }
         
         # Update portrait_landscape_field (when reverting metadata this was getting lost)
@@ -1195,11 +1190,11 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     ps_query("UPDATE resource SET preview_tweaks = '0|1' WHERE ref = ?", ['i', $ref]);
 
     // for compatibility with transform plugin, remove any
-        // transform previews for this resource when regenerating previews
-        $tpdir = get_temp_dir() . "/transform_plugin";
-        if(is_dir($tpdir) && file_exists("$tpdir/pre_$ref.jpg")){
-            unlink("$tpdir/pre_$ref.jpg");
-        }
+    // transform previews for this resource when regenerating previews
+    $tpdir = get_temp_dir() . "/transform_plugin";
+    if(is_dir($tpdir) && file_exists("$tpdir/pre_$ref.jpg")){
+        unlink("$tpdir/pre_$ref.jpg");
+    }
 
     # pages/tools/update_previews.php?previewbased=true
     # use previewbased to avoid touching original files (to preserve manually-uploaded preview images
@@ -1242,86 +1237,6 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     $convert_fullpath = get_utility_path("im-convert");
     if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'"); return false;}
 
-    # Handle alternative image file generation.
-    global $image_alternatives;
-    # Check against the resource extension as extension might refer to a jpg preview file
-    $resource_extension = ps_value('SELECT file_extension value FROM resource WHERE ref=?', array("i",$ref), '');
-    
-    if(isset($image_alternatives) && $alternative == -1)
-        {
-        for($n = 0; $n < count($image_alternatives); $n++)
-            {
-            $exts = explode(',', $image_alternatives[$n]['source_extensions']);
-            if(in_array($resource_extension, $exts))
-                {
-                # Remove any existing alternative file(s) with this name.
-                $existing = ps_query("SELECT ref FROM resource_alt_files WHERE resource = ? AND name = ?", ['i', $ref, 's', $image_alternatives[$n]['name']]);
-                for($m = 0; $m < count($existing); $m++)
-                    {
-                    delete_alternative_file($ref, $existing[$m]['ref']);
-                    }
-
-                # Create the alternative file.
-                $aref  = add_alternative_file($ref, $image_alternatives[$n]['name']);
-                $apath = get_resource_path($ref, true, '', true, $image_alternatives[$n]['target_extension'], -1, 1, false, '', $aref);
-
-                $source_profile = '';
-                if(isset($image_alternatives[$n]['icc']) && $image_alternatives[$n]['icc'] === true)
-                    {
-                    $iccpath = get_resource_path($ref, true, '', false, 'icc');
-                    
-                    global $icc_extraction, $ffmpeg_supported_extensions;
-                    
-                    if(!file_exists($iccpath) && $extension != 'pdf' && !in_array($extension, $ffmpeg_supported_extensions))
-                        {
-                        // extracted profile doesn't exist. Try extracting.
-                        extract_icc_profile($ref, $extension);
-                        }
-
-                    if(file_exists($iccpath))
-                        {
-                        $source_profile = ' -strip -profile ' . $iccpath;
-                        }
-                    }
-
-                $source_params = ' ';
-                if(isset($image_alternatives[$n]['source_params']) && '' !== trim($image_alternatives[$n]['source_params']))
-                    {
-                    $source_params = ' ' . $image_alternatives[$n]['source_params'] . ' ';
-                    }
-
-                # Process the image
-                if($imversion[0] > 5 || ($imversion[0] == 5 && $imversion[1] > 5) || ($imversion[0] == 5 && $imversion[1] == 5 && $imversion[2] > 7 ))
-                    {
-                    // Use the new imagemagick command syntax (file then parameters)
-                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
-                    }
-                else
-                    {
-                    // Use the old imagemagick command syntax (parameters then file)
-                    $command = $convert_fullpath . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($file) . ' ' . escapeshellarg($apath);
-                    }
-                $output = run_command($command);
-
-                if(file_exists($apath))
-                    {
-                    # Update the database with the new file details.
-                    $file_size = filesize_unlimited($apath);
-                    ps_query("UPDATE resource_alt_files SET file_name = ?, file_extension = ?, file_size = ?,creation_date=now() WHERE ref = ?",
-                        [
-                        's', $image_alternatives[$n]['filename'] . '.' . $image_alternatives[$n]['target_extension'],
-                        's', $image_alternatives[$n]['target_extension'],
-                        'i', $file_size,
-                        'i', $aref
-                        ]    
-                    );
-                    }
-                }
-            }
-        }   
-
-    
-        
     if (($extension=="jpg") || ($extension=="jpeg") || ($extension=="png") || ($extension=="gif" && !$ffmpeg_preview_gif))
     # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
         {
@@ -1347,26 +1262,30 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                 return false;
                 }
         
-            $sizes = "";
-            $params = [];
-            if ($thumbonly)
-                {
-                $onlysizes=['thm','col'];
-                }
-            elseif ($previewonly)
-                {
-                $sizes = ['thm','col','pre','scr'];
-                }
-            elseif (count($onlysizes) > 0)
-                {
-                $onlysizes = array_filter($onlysizes,function($v){return ctype_lower($v);});
-                $sizes = ps_param_insert(count($onlysizes));
-                $params = ps_param_fill($onlysizes, 's');   
-                }
-            $ps=ps_query(
-                "SELECT " . columns_in("preview_size") . " FROM preview_size WHERE id IN (" . implode(",",$sizes) . ")",
-                $params
-                );
+            $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
+            $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
+            // $sizes = "";
+            // $params = [];
+            // if ($thumbonly)
+            //     {
+            //     $onlysizes=['thm','col'];
+            //     }
+            // elseif ($previewonly)
+            //     {
+            //     $sizes = ['thm','col','pre','scr'];
+            //     }
+            // elseif (count($onlysizes) > 0)
+            //     {
+            //     $onlysizes = array_filter($onlysizes,function($v){return ctype_lower($v);});
+            //     $sizes = ps_param_insert(count($onlysizes));
+            //     $params = ps_param_fill($onlysizes, 's');   
+            //     }
+            
+            // $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
+            // $ps=ps_query(
+            //     "SELECT " . columns_in("preview_size") . " FROM preview_size WHERE id IN (" . implode(",",$sizes) . ")",
+            //     $params
+            //     );
             for ($n=0;$n<count($ps);$n++)
                 {
                 # fetch target width and height
@@ -1430,7 +1349,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             # flag database so a thumbnail appears on the site
             if ($alternative==-1) # not for alternatives
                 {
-                $has_image = count($sizes) > 0 ? RESOURCE_PREVIEWS_MINIMAL : RESOURCE_PREVIEWS_ALL;
+                $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
                 ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
                 }
             }
@@ -1445,7 +1364,18 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             include dirname(__FILE__)."/preview_preprocessing.php";
             }
         }
-        
+    
+    if($alternative == -1 && isset($GLOBALS["image_alternatives"]) && $generateall) {
+        // Create alternatives
+        create_image_alternatives($ref,
+            ["extension" => $extension,
+            "file" => $file,
+            "previewonly" => $previewonly,
+            "previewbased" => $previewbased,
+            "ingested" => $ingested],
+        );
+    }
+
     hook('afterpreviewcreation', '',array($ref, $alternative));
     return true;
     }
@@ -1548,7 +1478,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             }
         
         $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
-        $generateall = $thumbonly || $previewonly || count($onlysizes) > 0;
+        $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
         # Locate imagemagick.
         $convert_fullpath = get_utility_path("im-convert");
         if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
@@ -2231,6 +2161,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             {
             extract_mean_colour($target,$ref);
             # flag database so a thumbnail appears on the site
+
+
+            debug("BANG " . __LINE__ . ($generateall ? " TRUE" : " FALSE"));
             $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
             ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$has_image,"i",$ref]);
             }
@@ -4102,11 +4035,11 @@ function get_sizes_to_generate(string $extension,array $dimensions, bool $thumbo
             {
             return false;
             }
-        $getsizes = array_fill(0,count($onlysizes),"?");
+        $getsizes = array_fill(0,$validsizecount-1,"?");
         $params = ps_param_fill($onlysizes, 's');   
         }
 
-    $condition = count($getsizes) > 0 ? " WHERE id IN (" . implode(",",$getsizes) . ")" : "";
+    $condition = count($getsizes) > 0 ? " WHERE id IN ('" . implode("','",$getsizes) . "')" : "";
     $ps=ps_query(
         "SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition,
         $params
@@ -4171,4 +4104,116 @@ function get_sizes_to_generate(string $extension,array $dimensions, bool $thumbo
         }
     return $ps;
     }
+
+function create_image_alternatives(int $ref, array $params, $force = false)
+    {
+    // Handle alternative image file generation    
+    $convert_fullpath = get_utility_path("im-convert");
+    if ($convert_fullpath === false) {
+        return false;
+    }
+    $imversion = get_imagemagick_version();
+
+    // Set correct syntax for commands to remove alpha channel
+    $alphaoff = "-alpha off";
+    if($imversion[0] < 7) {
+        $alphaoff = "+matte";
+    }
+    // Check parameters 
+    $file = (string) ($imagedata["file"] ?? "");
+    $extension = (string) ($imagedata["extension"] ?? "jpg");
+    $previewonly = (bool) ($imagedata["previewonly"] ?? false);
+    $previewbased = (bool) ($imagedata["previewbased"] ?? false);
+    $ingested = (bool) ($imagedata["ingested"] ?? true);
+
+    if($file === "") {
+        $file = get_preview_source_file($ref, $extension, $previewonly, $previewbased, -1, $ingested);
+    }
+
+    # Check against the resource extension as extension might refer to a jpg preview file
+    $resource_extension = ps_value('SELECT file_extension value FROM resource WHERE ref=?', array("i",$ref), '');
+    $arrexisting = get_alternative_files($ref);
+    for($n = 0; $n < count($GLOBALS["image_alternatives"]); $n++)
+        {
+        $alternate_config = $GLOBALS["image_alternatives"][$n];
+        debug("Considering image alternative. Name: ''" . $alternate_config['name'] . "', description: '" . $alternate_config['description'] . "'");
+        $exts = explode(',', $alternate_config['source_extensions']);
+        foreach($arrexisting as $existing)
+            {
+            if(in_array($resource_extension, $exts) 
+                && $alternate_config['name'] == $existing["name"]
+                && $alternate_config['description'] == $existing["description"]
+                && $alternate_config['target_extension'] == $existing["file_extension"]
+                )
+                {
+                if($force)
+                    {
+                    debug("Deleting existing image alternative for resource #" . $ref . ", alternative id #" . $existing['ref']); 
+                    delete_alternative_file($ref,$existing["ref"]);
+                    }
+                else
+                    {
+                    debug("Skipping creation of image alternative " . $alternate_config['name'] . " for resource #" . $ref . " as already exists. Alternative id #" . $existing['ref']); 
+                    continue 2;
+                    }
+                }
+            }
+
+        // Create the alternative file.
+        $aref  = add_alternative_file($ref, $alternate_config['name'],$alternate_config['description'] ?? "");
+        $apath = get_resource_path($ref, true, '', true, $alternate_config['target_extension'], -1, 1, false, '', $aref);
+
+        $source_profile = '';
+        if(isset($alternate_config['icc']) && $alternate_config['icc'] === true)
+            {
+            $iccpath = get_resource_path($ref, true, '', false, 'icc');
             
+            global $icc_extraction, $ffmpeg_supported_extensions;
+            
+            if(!file_exists($iccpath) && $extension != 'pdf' && !in_array($extension, $ffmpeg_supported_extensions))
+                {
+                // extracted profile doesn't exist. Try extracting.
+                extract_icc_profile($ref, $extension);
+                }
+
+            if(file_exists($iccpath))
+                {
+                $source_profile = ' -strip -profile ' . $iccpath;
+                }
+            }
+
+        $source_params = ' ';
+        if(isset($alternate_config['source_params']) && '' !== trim($alternate_config['source_params']))
+            {
+            $source_params = ' ' . $alternate_config['source_params'] . ' ';
+            }
+
+        # Process the image
+        if($imversion[0] > 5 || ($imversion[0] == 5 && $imversion[1] > 5) || ($imversion[0] == 5 && $imversion[1] == 5 && $imversion[2] > 7 ))
+            {
+            // Use the new imagemagick command syntax (file then parameters)
+            $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . (!in_array(strtolower($extension), $GLOBALS["preview_keep_alpha_extensions"]) ? $alphaoff : "") : '') . $source_profile . ' ' . $alternate_config['params'] . ' ' . escapeshellarg($apath);
+            }
+        else
+            {
+            // Use the old imagemagick command syntax (parameters then file)
+            $command = $convert_fullpath . $source_profile . ' ' . $alternate_config['params'] . ' ' . escapeshellarg($file) . ' ' . escapeshellarg($apath);
+            }
+        $output = run_command($command);
+
+        if(file_exists($apath))
+            {
+            # Update the database with the new file details.
+            $file_size = filesize_unlimited($apath);
+            ps_query("UPDATE resource_alt_files SET file_name = ?, file_extension = ?, file_size = ?, creation_date=now() WHERE ref = ?",
+                [
+                's', $alternate_config['filename'] . '.' . $alternate_config['target_extension'],
+                's', $alternate_config['target_extension'],
+                'i', $file_size,
+                'i', $aref
+                ]    
+            );
+        }    
+    }
+    }
+
