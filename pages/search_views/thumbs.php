@@ -135,11 +135,6 @@ if (!hook("renderresultthumb"))
 
             $thm_url=get_resource_path($ref,false,$image_size ,false,$result[$n]['preview_extension'],true,1,$use_watermark,$result[$n]['file_modified']);
 
-            if(isset($result[$n]['thm_url']))
-                {
-                $thm_url = $result[$n]['thm_url'];
-                } # Option to override thumbnail image in results
-
                 ?>
                 <a
                     class="<?php echo $display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper'; ?>"

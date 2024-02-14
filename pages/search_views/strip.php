@@ -21,10 +21,6 @@ $thm_url = get_resource_path(
     $result[$n]['file_modified']
 );
 
-if(isset($result[$n]['thm_url']))
-    {
-    $thm_url = $result[$n]['thm_url'];
-    } # Option to override thumbnail image in results
     ?>
     <a
         id="ResourceStrip<?php echo $ref ?>"
