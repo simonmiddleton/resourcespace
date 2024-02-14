@@ -4056,10 +4056,10 @@ function get_sizes_to_generate(string $extension,array $dimensions, bool $thumbo
         )
         {
         // Ensure that scales are in order
-        natsort($preview_tile_scale_factors);
+        natsort($GLOBALS["preview_tile_scale_factors"]);
 
         debug("create_previews - adding tiles to generate list: source width: " . $sw . " source height: " . $sh);
-        foreach($preview_tile_scale_factors as $scale)
+        foreach($GLOBALS["preview_tile_scale_factors"] as $scale)
             {
             foreach(compute_tiles_at_scale_factor($scale, $sw, $sh) as $tile)
                 {
