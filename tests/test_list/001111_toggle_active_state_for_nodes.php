@@ -25,11 +25,11 @@ $rtf_text_node = get_resource_nodes($resource_a, $rtf_text)[0];
 // $nodes_UT_data = array_column(get_nodes_by_refs($nodes_UT), 'active', 'ref');
 // test_log("nodes_UT_data = ". print_r($nodes_UT_data, true));
 
-$use_case_expect = function(array $expected) {
-    return function(array $ids) use ($expected): bool {
+$use_case_expect = function (array $expected) {
+    return function (array $ids) use ($expected): bool {
         $data = array_column(get_nodes_by_refs($ids), 'active', 'ref');
-        test_log("data = ". print_r($data, true));
-        test_log("expected = ". print_r($expected, true));
+        test_log("data = " . print_r($data, true));
+        test_log("expected = " . print_r($expected, true));
         return $expected === $data;
     };
 };
@@ -47,22 +47,19 @@ $use_cases = [
         'valid' => $use_case_expect([$ckb_opt_b => 0]),
     ],
 ];
-foreach($use_cases as $uc)
-    {
+foreach ($use_cases as $uc) {
     // Set up the use case environment
-    if(isset($uc['setup']))
-        {
+    if (isset($uc['setup'])) {
         $uc['setup']();
-        }
+    }
 
     toggle_active_state_for_nodes($uc['input']['refs']);
-    if(!$uc['valid']($uc['input']['refs']))
-        {
+    if (!$uc['valid']($uc['input']['refs'])) {
         test_log('');
         echo "Use case: {$uc['name']} - ";
         return false;
-        }
     }
+}
 
 // Tear down
 unset(
