@@ -1235,7 +1235,19 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     
     # Locate imagemagick.
     $convert_fullpath = get_utility_path("im-convert");
-    if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'"); return false;}
+    if ($convert_fullpath==false) {
+        debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");
+        return false;
+    }
+
+    # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
+    if ((list($sw,$sh) = try_getimagesize($file))===false)
+        {
+        return false;
+        }
+
+    $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
+    $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
 
     if (($extension=="jpg") || ($extension=="jpeg") || ($extension=="png") || ($extension=="gif" && !$ffmpeg_preview_gif))
     # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
@@ -1256,36 +1268,6 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             # Only create previews where the target size IS LESS THAN OR EQUAL TO the source size.
             # Set thumbonly=true to (re)generate thumbnails only.
 
-            # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
-            if ((list($sw,$sh) = try_getimagesize($file))===false)
-                {
-                return false;
-                }
-        
-            $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
-            $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
-            // $sizes = "";
-            // $params = [];
-            // if ($thumbonly)
-            //     {
-            //     $onlysizes=['thm','col'];
-            //     }
-            // elseif ($previewonly)
-            //     {
-            //     $sizes = ['thm','col','pre','scr'];
-            //     }
-            // elseif (count($onlysizes) > 0)
-            //     {
-            //     $onlysizes = array_filter($onlysizes,function($v){return ctype_lower($v);});
-            //     $sizes = ps_param_insert(count($onlysizes));
-            //     $params = ps_param_fill($onlysizes, 's');   
-            //     }
-            
-            // $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
-            // $ps=ps_query(
-            //     "SELECT " . columns_in("preview_size") . " FROM preview_size WHERE id IN (" . implode(",",$sizes) . ")",
-            //     $params
-            //     );
             for ($n=0;$n<count($ps);$n++)
                 {
                 # fetch target width and height
@@ -4021,13 +4003,15 @@ function get_sizes_to_generate(string $extension,array $dimensions, bool $thumbo
     $params = [];
     if ($thumbonly)
         {
-        $getsizes=['thm','col'];
+        $onlysizes=['thm','col'];
         }
     elseif ($previewonly)
         {
-        $getsizes = ['thm','col','pre','scr'];
+        $onlysizes = ['thm','col','pre','scr'];
         }
-    elseif (count($onlysizes) > 0)
+    
+    // Construct query    
+    if (count($onlysizes) > 0)
         {
         $onlysizes = array_filter($onlysizes,function($v){return ctype_lower($v);});
         $validsizecount = count($onlysizes);
@@ -4035,11 +4019,11 @@ function get_sizes_to_generate(string $extension,array $dimensions, bool $thumbo
             {
             return false;
             }
-        $getsizes = array_fill(0,$validsizecount-1,"?");
+        $getsizes = array_fill(0,$validsizecount,"?");
         $params = ps_param_fill($onlysizes, 's');   
         }
 
-    $condition = count($getsizes) > 0 ? " WHERE id IN ('" . implode("','",$getsizes) . "')" : "";
+    $condition = count($getsizes) > 0 ? " WHERE id IN (" . implode(",",$getsizes) . ")" : "";
     $ps=ps_query(
         "SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition,
         $params
