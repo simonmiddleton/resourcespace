@@ -21,6 +21,11 @@ $field_data = get_field($field);
 $node_ref   = getval('node_ref', '');
 $nodes      = array();
 
+// Most likely an incorrect direct navigation - back to manage metadata fields
+if (!is_array($field_data) || !in_array($field_data['type'], $FIXED_LIST_FIELD_TYPES)) {
+    redirect("{$baseurl}/pages/admin/admin_resource_type_fields.php");
+}
+
 // Array of nodes to expand immediately upon page load
 $expand_nodes = getval("expand_nodes","");
 
