@@ -9079,6 +9079,7 @@ function allow_in_browser($path)
     $permitted_mime[] = "image/jpeg";
     $permitted_mime[] = "image/png";
     $permitted_mime[] = "image/gif";
+    $permitted_mime[] = "image/webp";
     $permitted_mime[] = "audio/mpeg";
     $permitted_mime[] = "video/mp4";
     $permitted_mime[] = "text/plain";
