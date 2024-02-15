@@ -925,6 +925,11 @@ function ToggleNodeActivation(ref)
     console.debug('option_name = %o', option_name);
     console.debug('option_parent = %o', option_parent);
 
+    /*
+    todo: the API should reply with confirmation of who actually changed - a must for category trees
+
+    With the children section opened, we can use the response to visually mark as deprecated. Consider refreshing page instead to avoid JS state updates
+    */
     api(
         'toggle_active_state_for_nodes',
         {'refs': JSON.stringify([ref])},
