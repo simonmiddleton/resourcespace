@@ -202,6 +202,18 @@ else
                 plugins: {
                     legend: {
                         display: false,
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                console.log(context);
+                                let value = context.raw;
+                                let sum = context.dataset.data.reduce(function(s,a){return s+a;},0);
+
+                                let label = Math.round(value/sum*100) + "% (" + value + ")";
+                                return label;
+                            }
+                        }
                     }
                 },
             };
