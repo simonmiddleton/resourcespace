@@ -669,7 +669,8 @@ function get_managed_dash()
         {
         $tile_custom_style = '';   
         $buildstring = explode('?', $tile['url']);
-        parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
+        list($url_page, $buildstring) = $buildstring;
+        parse_str(str_replace('&amp;', '&', $buildstring), $buildstring);
         if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
             {
             $tile_custom_style .= get_tile_custom_style($buildstring);
@@ -711,7 +712,7 @@ function get_managed_dash()
                 <script>
                     height = jQuery("#contents_tile<?php echo escape($tile["tile"]);?>").height();
                     width = jQuery("#contents_tile<?php echo escape($tile["tile"]);?>").width();
-                    jQuery("#contents_tile<?php echo escape($tile["tile"]);?>").load("<?php echo $baseurl."/".$tile["url"]."&tile=".escape($tile["tile"]);?>&tlwidth="+width+"&tlheight="+height);
+                    jQuery("#contents_tile<?php echo escape($tile["tile"]);?>").load("<?php echo generateURL($baseurl .'/'. $url_page, array_merge($buildstring, ['tile' => $tile['tile']]));?>&tlwidth="+width+"&tlheight="+height);
                 </script>
             </div>
         </a>
@@ -1155,7 +1156,8 @@ function get_user_dash($user)
         $tile_custom_style = '';
 
         $buildstring = explode('?', $tile['url']);
-        parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
+        list($url_page, $buildstring) = $buildstring;
+        parse_str(str_replace('&amp;', '&', $buildstring), $buildstring);
 
         if ($tile['all_users'] == 1 && strpos($tile['link'], 'team_analytics_edit.php') !== false)
             {
@@ -1203,7 +1205,7 @@ function get_user_dash($user)
                 jQuery(function(){
                     var height = jQuery("#contents_user_tile<?php echo escape($tile["user_tile"]);?>").height();
                     var width = jQuery("#contents_user_tile<?php echo escape($tile["user_tile"]);?>").width();
-                    jQuery('#contents_user_tile<?php echo escape($tile["user_tile"]) ?>').load("<?php echo $baseurl."/".$tile["url"]."&tile=".escape($tile["tile"]);?>&user_tile=<?php echo escape($tile["user_tile"]);?>&tlwidth="+width+"&tlheight="+height);
+                    jQuery('#contents_user_tile<?php echo escape($tile["user_tile"]) ?>').load("<?php echo generateURL($baseurl .'/'. $url_page, array_merge($buildstring, ['tile' => $tile['tile'], 'user_tile' => $tile['user_tile']]));?>&tlwidth="+width+"&tlheight="+height);
                 });
                 </script>
             </div>
