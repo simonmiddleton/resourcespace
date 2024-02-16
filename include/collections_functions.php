@@ -5204,7 +5204,16 @@ function collection_download_process_archive_command($collection_download_tar, &
     if ($use_zip_extension && !$collection_download_tar)
         {
         update_zip_progress_file("zipping");
-        $wait=$zip->close();
+        $GLOBALS["use_error_exception"]=true;
+        try
+            {
+            $wait=$zip->close();
+            }
+        catch (Throwable $e)
+            {
+            debug("collection_download_process_archive_command: Unable to close zip file. Resoan {$e->getMessage()}");
+            }
+        unset($GLOBALS["use_error_exception"]);
         update_zip_progress_file("complete");
         sleep(1);
         }
