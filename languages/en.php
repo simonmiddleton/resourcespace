@@ -1185,7 +1185,7 @@ $lang["description"]="Description";
 $lang["notuploaded"]="Not uploaded";
 $lang["uploadreplacementfile"]="Upload replacement file";
 $lang["backtomanagealternativefiles"]="Back to manage alternative files";
-
+$lang["alternatetype"]="Alternative type";
 
 $lang["resourceistranscoding"]="Resource is currently being transcoded";
 $lang["cantdeletewhiletranscoding"]="You can't delete resources while they are transcoding";
