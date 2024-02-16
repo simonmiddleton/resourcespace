@@ -327,7 +327,6 @@ $corefields = array(
         'thumbs_display_fields',
         'list_display_fields',
         'sort_fields',
-        'xl_thumbs_display_fields',
         'config_sheetlist_fields',
         'config_sheetthumb_fields',
         'config_sheetsingle_fields',

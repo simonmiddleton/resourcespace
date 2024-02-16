@@ -172,7 +172,6 @@ and running.
 $originals_separate_storage=false;
 
 $applicationname="ResourceSpace"; # The name of your implementation / installation (e.g. 'MyCompany Resource System')
-$applicationdesc=""; # Subtitle (i18n translated)
 $header_favicon="gfx/interface/favicon.png";
 
 # Is the logo a link to the home page?
@@ -585,9 +584,6 @@ $video_preview_original=false;
 # Find out and obey the Pixel Aspect Ratio
 $ffmpeg_get_par=false;
 
-# Use New qscale to maintain quality (else uses -sameq)
-$ffmpeg_use_qscale = true;
-
 # FFMPEG - generation of alternative video file sizes/formats
 # It is possible to automatically generate different file sizes and have them attached as alternative files.
 # See below for examples.
@@ -693,7 +689,6 @@ $use_recent_as_home=false;
 # Show images along with theme category headers (image selected is the most popular within the theme category)
 $theme_images=true;
 $theme_images_number = 6; # How many to auto-select (if none chosen manually). Smart FCs only display one.
-$theme_images_align_right=false; # Align theme images to the right on the themes page? (particularly useful when there are multiple theme images)
 $show_theme_collection_stats=false; # Show count of themes and resources in category. $themes_simple_view=false only.
 
 # Theme direct jump mode
@@ -900,21 +895,16 @@ $contact_sheet_preview_size="500x500";
 # To embed more elaborate fonts, acquire the files from the TCPDF distribution or create your own using TCPDF utilities, and install them in the lib/html2pdf/vendor/tecnickcom/tcpdf/fonts folder.
 # If you encounter issues with chinese characters, use "arialunicid0" and make sure GhosScript has ArialUnicodeMS font (on Windows server, this should be there already)
 $contact_sheet_font="helvetica";
-# allow unicode filenames? (stripped out by default in tcpdf but since collection names may 
-# have special characters, probably want to try this on.)
-$contact_sheet_unicode_filenames=true;
 # Set font sizes for contactsheet
 $titlefontsize     = 20; // Contact Sheet Title
 $refnumberfontsize = 14; // This includes field text, not just ref number
 # If making a contact sheet with list sheet style, use these fields in contact sheet:
 $config_sheetlist_fields = array(8); # ** SEE NOTE (1)
-$config_sheetlist_include_ref=true;
 # If making a contact sheet with thumbnail sheet style, use these fields in contact sheet:
 $config_sheetthumb_fields = array(); # ** SEE NOTE (1)
 $config_sheetthumb_include_ref=true;
 # If making a contact sheet with one resource per page sheet style, use these fields in contact sheet:
 $config_sheetsingle_fields = array(8); # ** SEE NOTE (1)
-$config_sheetsingle_include_ref=true;
 
 # Use templates rather than setting contactsheet fields by display style?
 $contactsheet_use_field_templates=false;
@@ -1176,9 +1166,6 @@ $remember_me_checked = true;
 # Show the contact us link?
 $contact_link=true;
 $nav2contact_link = false;
-
-# Show the about us link?
-$about_link=true;
 
 # When uploading resources (batch upload) and editing the template, should the date be reset to today's date?
 # If set to false, the previously entered date is used.
@@ -1539,14 +1526,7 @@ $thumbs_display_extended_fields=array();
     
 # Enable extra large thumbnails option for search screen
 $xlthumbs=false;
-
-# Extra Large Display Fields:  array of fields to display on the xlarge thumbnail view.
-$xl_thumbs_display_fields=array(8); # ** SEE NOTE (1)
-# array of defined xl_thumbs_display_fields to apply CSS modifications to (via $xl_search_results_title_wordwrap, $xl_search_results_title_height, $xl_search_results_title_trim)
-$xl_thumbs_display_extended_fields=array();
-# $xl_search_result_title_height=26;
 $xl_search_results_title_trim=60;
-$xl_search_results_title_wordwrap=100;
 
 # SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
 $sort_fields=array(12); # ** SEE NOTE (1)
@@ -1744,9 +1724,6 @@ $featured_collection_static_bg = false;
 // Used mainly in combination with "$use_theme_as_home = true;"
 // IMPORTANT: access control must still be enforced through permissions. DO NOT rely on this configuration to hide featured collections from users!
 $featured_collections_root_collection = 0;
-
-# Navigate to deeper levels in theme category trees? Set to false to link to matching resources directly.
-$themes_category_navigate_levels=false;
 
 // Enable to have a background image when $themes_simple_view is enabled
 $themes_show_background_image = false;
@@ -2039,9 +2016,6 @@ $upload_methods = array(
         'in_browser_upload' => true
     );
 
-# Hide links to other uploader
-$hide_uploadertryother = false;
-
 # Set path to Unoconv (a python-based bridge to OpenOffice) to allow document conversion to PDF.
 ## $unoconv_path="/usr/bin";
 # Files with these extensions will be passed to unoconv (if enabled above) for conversion to PDF and auto thumb-preview generation.
@@ -2284,9 +2258,6 @@ $search_titles_searchcrumbs=false;
 $manage_collections_remove_link=true;
 $manage_collections_share_link=true;
 
-# Tool at the bottom of the Collection Manager list which allows users to delete any empty collections that they own. 
-$collections_delete_empty=false;
-
 # Allow saving searches as 'smart collections' which self-update based on a saved search. 
 $allow_smart_collections=false;
 # Run Smart collections asynchronously (faster smart collection searches, with the tradeoff that they are updated AFTER the search.
@@ -2335,10 +2306,6 @@ $camera_autorotation_checked = true;
 
 # show the title of the resource being viewed in the browser title bar
 $show_resource_title_in_titlebar = false;
-
-
-// checkerboard for gif and png with transparency
-$transparency_background = "gfx/images/transparency.gif";
 
 # Remove archived resources from collections results unless user has e2 permission (admins).
 $collections_omit_archived=false;
@@ -2426,20 +2393,11 @@ $show_searchitemsdiskusage=true;
 # If set, which field will cause warnings to appear when approving requests containing these resources?
 #$warn_field_request_approval=115;
 
-# Experimental performance enhancement - two pass mode for search results.
-# The first query returns only the necessary number of results for the current search results display
-# The second query is the same but returns only a count of the full result set, which is used to pad the result array to the correct size (so counts display correctly).
-# This means that large volumes of resource data are not passed around unnecessarily, which can significantly improve performance on systems with large data sets.
-$search_sql_double_pass_mode=true;
-
 # Use the new tab ordering system. This will sort the tabs by the order by value set in Admin -> System -> Metadata fields.
 $use_order_by_tab_view=false;
 
 # Display link to request log on view page
 $display_request_log_link=false;
-
-# Start uploads as soon as files are added to the queue?
-$plupload_autostart=false;
 
 # Clear the queue after uploads have completed
 $plupload_clearqueue=true;
@@ -2577,10 +2535,6 @@ $email_sharing=true;
 #Resource Share Expiry Controls
 $resource_share_expire_days=150; #Maximum number of days allowed for the share 
 $resource_share_expire_never=true; #Allow the 'Never' option.
-
-#Collections Share Expiry Controls
-$collection_share_expire_days=150; #Maximum number of days allowed for the share 
-$collection_share_expire_never=true; #Allow the 'Never' option.
 
 # Having keywords_remove_diacritics set to true means that diacritics will be removed for indexing e.g. 'zwälf' is indexed as 'zwalf', 'café' is indexed as 'cafe'.
 # The actual data is not changed, this only affects searching and indexing
