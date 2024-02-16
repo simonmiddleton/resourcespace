@@ -346,11 +346,6 @@ parameters:
 			path: pages/team/team_mail.php
 
 		-
-			message: "#^Function migrate_files invoked with 6 parameters, 5 required\\.$#"
-			count: 2
-			path: pages/tools/filestore_migrate.php
-
-		-
 			message: "#^Variable \\$unoconv_path in isset\\(\\) is never defined\\.$#"
 			count: 1
 			path: pages/tools/staticsync.php
