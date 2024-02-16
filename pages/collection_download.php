@@ -601,6 +601,7 @@ if ($submitted != "")
     # Remove archive.
     if ($use_zip_extension)
         {
+        $GLOBALS["use_error_exception"]=true;
         try {
             rmdir(get_temp_dir(false,$id));
             }
@@ -608,6 +609,7 @@ if ($submitted != "")
             {
             debug("collection_download: Attempt delete temp folder failed. Reason: {$e->getMessage()}");
             }
+        unset($GLOBALS["use_error_exception"]);
         }
     collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", $size);
     hook('beforedownloadcollectionexit');
