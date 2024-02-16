@@ -31,7 +31,6 @@ $lang["anyday"]="Dzien";
 $lang["anycountry"]="Kraj";
 $lang["resultsdisplay"]="Wyświetlanie wyników";
 $lang["largethumbs"]="Duże";
-$lang["smallthumbs"]="Małe";
 $lang["list"]="Lista";
 $lang["perpage"]="na stronie";
 
@@ -1031,7 +1030,6 @@ $lang["collections"]='Kolekcje';
 $lang["changethemeto"]='Zmień motyw na:';
 $lang["xlthumbstitle"]='Bardzo duże miniaturki.';
 $lang["largethumbstitle"]='Duże miniatury.';
-$lang["smallthumbstitle"]='Małe miniaturki.';
 $lang["striptitle"]='Widok paska.';
 $lang["listtitle"]='Widok listy.';
 $lang["powered_by"]='Napędzane przez';

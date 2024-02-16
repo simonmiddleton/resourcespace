@@ -30,7 +30,6 @@ $lang["anyday"]="任意の日";
 $lang["anycountry"]="任意の国";
 $lang["resultsdisplay"]="結果表示";
 $lang["largethumbs"]="サムネイル大";
-$lang["smallthumbs"]="サムネイル小";
 $lang["list"]="一覧";
 $lang["perpage"]="per page";
 
@@ -913,7 +912,6 @@ $lang["collections"]='コレクション';
 $lang["changethemeto"]='テーマを変更する';
 $lang["xlthumbstitle"]='超大サムネイル';
 $lang["largethumbstitle"]='大きなサムネイル';
-$lang["smallthumbstitle"]='小さなサムネイル';
 $lang["strip"]='ストリップ';
 $lang["striptitle"]='ストリップビュー';
 $lang["listtitle"]='リストビュー';

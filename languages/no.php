@@ -92,7 +92,6 @@ $lang["anycountry"]="Uansett land";
 $lang["resultsdisplay"]="Resultatvisning";
 $lang["xlthumbs"]="Ekstra store";
 $lang["largethumbs"]="Store";
-$lang["smallthumbs"]="Små";
 $lang["list"]="Liste";
 $lang["perpage"]="pr. side";
 
@@ -1297,7 +1296,6 @@ $lang["myrequests"]='Mine forespørsler.';
 $lang["changethemeto"]='Endre tema til';
 $lang["xlthumbstitle"]='Ekstra store miniatyrbilder.';
 $lang["largethumbstitle"]='Store miniatyrbilder';
-$lang["smallthumbstitle"]='Små miniatyrbilder.';
 $lang["strip"]='Avkledning';
 $lang["striptitle"]='Fjern visning.';
 $lang["listtitle"]='Listevisning';

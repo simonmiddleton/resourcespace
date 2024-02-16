@@ -186,7 +186,6 @@ $lang["anycountry"]="Mikä tahansa maa";
 $lang["resultsdisplay"]="Tulosten näyttö";
 $lang["xlthumbs"]="Suurimmat pikakuvakkeet";
 $lang["largethumbs"]="Suuri";
-$lang["smallthumbs"]="Pieni";
 $lang["list"]="Luettelu";
 $lang["perpage"]="per sivu";
 
@@ -1559,7 +1558,6 @@ $lang["themeselector"]='Esittelyssä olevat kokoelmat.';
 $lang["changethemeto"]='Vaihda teema muotoon:';
 $lang["xlthumbstitle"]='Erittäin suuret esikatselukuvat.';
 $lang["largethumbstitle"]='Suuret esikatselkuvakkeet.';
-$lang["smallthumbstitle"]='Pienet esikatselukuvat.';
 $lang["strip"]='Poista.';
 $lang["striptitle"]='Poista näkymä.';
 $lang["listtitle"]='Luettelonäkymä';

@@ -153,10 +153,6 @@ if ($pagename=="search"){
             $width="150";
             $height=150/$ffmpeg_preview_max_width*$ffmpeg_preview_max_height;
             break;
-        case "smallthumbs":
-            $width="75";
-            $height=75/$ffmpeg_preview_max_width*$ffmpeg_preview_max_height;
-            break;
     }
 }
 // play video on hover?
@@ -207,23 +203,18 @@ if(isset($videojs_resolution_selection))
                      <?php
                      }
                 ?>
-            <?php if($play_on_hover && !$view_as_gif){?>
+            <?php if($play_on_hover && !$view_as_gif) { ?>
                 "loadingSpinner" : false,
                 "TextTrackDisplay" : true,
                 "nativeTextTracks": false,
                 "children": { 
                     "bigPlayButton":false, 
-                    <?php if($pagename=='search' && $display=='smallthumbs'){?>
-                        "controlBar": false
-                    <?php }
-                    else{ ?>
-                        "controlBar": { 
-                            "children": { 
-                                "playToggle": false, 
-                                "volumeControl":false
-                            }
+                    "controlBar": { 
+                        "children": { 
+                            "playToggle": false, 
+                            "volumeControl":false
                         }
-                    <?php } ?>
+                    }
                 }
             <?php }
             if(isset($videojs_resolution_selection) && count($video_preview_sources)>0 && !$view_as_gif)

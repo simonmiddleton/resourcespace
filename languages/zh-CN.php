@@ -31,7 +31,6 @@ $lang["anycountry"]="任何国家";
 $lang["resultsdisplay"]="搜索结果展示";
 $lang["xlthumbs"]="缩图";
 $lang["largethumbs"]="大缩图";
-$lang["smallthumbs"]="小缩图";
 $lang["list"]="列表";
 $lang["perpage"]="根据页数";
 
@@ -1135,7 +1134,6 @@ $lang["collections"]='收藏夹';
 $lang["changethemeto"]='更改主题';
 $lang["xlthumbstitle"]='超大缩略图';
 $lang["largethumbstitle"]='大缩略图';
-$lang["smallthumbstitle"]='小缩略图';
 $lang["strip"]='剥离 (Bōlí)';
 $lang["striptitle"]='剥离视图';
 $lang["listtitle"]='列表视图';

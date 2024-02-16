@@ -30,7 +30,6 @@ $lang["anyday"]="Qualquer dia";
 $lang["anycountry"]="Qualquer país";
 $lang["resultsdisplay"]="Mostrar";
 $lang["largethumbs"]="Grande";
-$lang["smallthumbs"]="Pequeno";
 $lang["list"]="Lista";
 $lang["perpage"]="por página";
 
@@ -841,7 +840,6 @@ $lang["collections"]='Coleções.';
 $lang["changethemeto"]='Alterar tema para';
 $lang["xlthumbstitle"]='Miniaturas extra grandes.';
 $lang["largethumbstitle"]='Miniaturas grandes.';
-$lang["smallthumbstitle"]='Pequenas miniaturas.';
 $lang["strip"]='Tirar.';
 $lang["striptitle"]='Visualização de Tira.';
 $lang["listtitle"]='Visualização em lista.';

@@ -101,7 +101,7 @@ $feed_title = xmlentities($applicationname ." - " .get_search_title($searchstrin
 
 $r = new RSSFeed($feed_title, $baseurl, xmlentities(str_replace("%search%", $searchstring, $lang["filtered_resource_update_for"])));
 
-// rss fields can include any of thumbs, smallthumbs, list, xlthumbs display fields, or data_joins.
+// rss fields can include any of thumbs, list, xlthumbs display fields, or data_joins.
 $all_field_info=get_fields_for_search_display($rss_fields);
 
 $n=0;

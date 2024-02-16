@@ -32,7 +32,6 @@ $lang["anyday"]=" أي يوم من الأيام ";
 $lang["anycountry"]=" أي بلد ";
 $lang["resultsdisplay"]=" عرض النتائج ";
 $lang["largethumbs"]=" كبير ";
-$lang["smallthumbs"]=" صغير ";
 $lang["list"]=" قائمة ";
 $lang["perpage"]=" لكل صفحة ";
 
@@ -957,7 +956,6 @@ $lang["collections"]='مجموعات';
 $lang["changethemeto"]='تغيير السمة إلى';
 $lang["xlthumbstitle"]='صور مصغرة كبيرة جداً';
 $lang["largethumbstitle"]='صور مصغرة كبيرة';
-$lang["smallthumbstitle"]='صور مصغرة صغيرة';
 $lang["striptitle"]='عرض الشريط';
 $lang["listtitle"]='عرض القائمة';
 $lang["perpage_option"]='? في كل صفحة';

@@ -1696,7 +1696,7 @@ $no_preview_extensions=array("icm","icc");
 // Send a notification X days prior to expiry to all users who have ever downloaded the resource. If set to zero, it will notify on expiry.
 // $notify_on_resource_expiry_days = 1;
 
-# What is the default display mode for search results? (smallthumbs/thumbs/list)
+# What is the default display mode for search results? (thumbs/list)
 $default_display="thumbs";
 
 # Generate thumbs/previews for alternative files?

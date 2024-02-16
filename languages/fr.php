@@ -30,7 +30,6 @@ $lang["anyday"]="Peu importe";
 $lang["anycountry"]="Peu importe";
 $lang["resultsdisplay"]="Afficher les résultats";
 $lang["largethumbs"]="Grand";
-$lang["smallthumbs"]="Petit";
 $lang["list"]="Liste";
 $lang["perpage"]="par page";
 
@@ -898,7 +897,6 @@ $lang["collections"]='Collections
 $lang["changethemeto"]='Changer le thème en';
 $lang["xlthumbstitle"]='Vignettes extra larges.';
 $lang["largethumbstitle"]='Grandes vignettes';
-$lang["smallthumbstitle"]='Petites vignettes';
 $lang["striptitle"]='Vue en bande';
 $lang["listtitle"]='Vue en liste';
 $lang["powered_by"]='Alimenté par';

@@ -18,8 +18,7 @@ if (!hook("iconedit") && (checkperm("e" . $result[$n]["archive"]) || ($edit_acce
 <!-- Collection comment icon -->
 <?php 
 if ($k == "" || $internal_share_access) {
-    // $collection_reorder_caption is an older config, although no longer in config.default.php some older systems may still have it set.
-    if (((isset($collection_reorder_caption) && $collection_reorder_caption) || $collection_commenting) && (substr($search, 0, 11) == "!collection")) { ?>
+    if ($collection_commenting && (substr($search, 0, 11) == "!collection")) { ?>
         <a class="fa fa-comment"
             href="<?php echo generateURL(
                 $baseurl_short . 'pages/collection_comment.php',

@@ -30,7 +30,6 @@ $lang["anyday"]="Semua Hari";
 $lang["anycountry"]="Semua Negara";
 $lang["resultsdisplay"]="Tanda Hasil";
 $lang["largethumbs"]="Besar";
-$lang["smallthumbs"]="Kecil";
 $lang["list"]="Daftar";
 $lang["perpage"]="tiap halaman";
 
@@ -910,7 +909,6 @@ $lang["collections"]='Koleksi';
 $lang["changethemeto"]='Ubah tema menjadi';
 $lang["xlthumbstitle"]='Gambar mini ekstra besar.';
 $lang["largethumbstitle"]='Gambar kecil besar';
-$lang["smallthumbstitle"]='Gambar kecil miniatur.';
 $lang["striptitle"]='Tampilan Strip';
 $lang["listtitle"]='Tampilan daftar';
 $lang["powered_by"]='Didukung oleh';
