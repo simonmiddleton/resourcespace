@@ -63,20 +63,23 @@ if (getval("tweak","")!="" && enforcePostRequest(false))
       }
    }
 
-    $url_params = [
-        "ref" => $resource,
-        "search" => $search,
-        "offset" => $offset,
-        "order_by" => $order_by,
-        "sort" => $sort,
-        "archive" => $archive,
-        
-    ];
-    if($modal)
-        {
-        $url_params["modal"]="true";
-        if($context="Modal")$url_params["context"] = $context;
-        }
+$url_params = [
+    "ref" => $resource,
+    "search" => $search,
+    "offset" => $offset,
+    "order_by" => $order_by,
+    "sort" => $sort,
+    "archive" => $archive,
+];
+
+if($modal) {
+    $url_params["modal"] = "true";
+
+    if ($context == "Modal") {
+        $url_params["context"] = $context;
+    }
+}
+
 if (getval("name","")!="" && getval("tweak","")=="" && enforcePostRequest(false)) // do not do this during a tweak operation!
     {
     hook("markmanualupload");

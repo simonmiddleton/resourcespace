@@ -3725,11 +3725,10 @@ function collection_min_access($collection)
             }
         }
     
-    if ($minaccess = 3)
-        {
-            # Custom permissions are being used so test access to each resource, restricting access as needed
-            $minaccess = 0;
-        }
+    if ($minaccess == 3) {
+        # Custom permissions are being used so test access to each resource, restricting access as needed
+        $minaccess = 0;
+    }
 
     for($n = 0; $n < count($result); $n++)
         {
