@@ -15,7 +15,7 @@ if($download_no_session_cache_limiter)
 $ref                = getval('ref', '', true);
 $size               = trim(getval('size', ''));
 $alternative        = getval('alternative', -1, true);
-$page               = getval('page', 1);
+$page               = getval('page', 1, true);
 $iaccept            = getval('iaccept', 'off');
 $usage              = getval('usage', '-1');
 $usagecomment       = getval('usagecomment', '');
