@@ -1310,7 +1310,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         $img_path = get_resource_path($useimage["ref"],true,$size,false);
         if(!file_exists($img_path))
             {
-            return;
+            continue;
             }
             
         $position = $iiif_result["iiif_position"];
