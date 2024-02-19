@@ -4101,17 +4101,13 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $min_access = 0;
         }
 
-    // If resourceconnect plugin activated, need to consider if resource connect resources exist in the collection - if yes display view all resources link 
-    $count_resourceconnect_resources = hook("countresult","", array($urlparams["collection"],0));
-    $count_resourceconnect_resources = is_numeric($count_resourceconnect_resources) ? $count_resourceconnect_resources : 0;
-
     // View all resources
     if(
         !$top_actions // View all resources makes sense only from collection bar context
         && (
             ($k=="" || $internal_share_access)
             && (isset($collection_data["c"]) && $collection_data["c"] > 0)
-            || (is_array($result) && count($result) > 0) || ($count_resourceconnect_resources > 0)
+            || (is_array($result) && count($result) > 0)
         )
     )
         {
@@ -4565,7 +4561,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         
     
     // Relate / Unrelate all resources
-    if($enable_related_resources && $allow_multi_edit && 0 < $count_result && $count_resourceconnect_resources == 0) 
+    if($enable_related_resources && $allow_multi_edit && 0 < $count_result)
         {
         $options[$o]['value'] = 'relate_all';
         $options[$o]['label'] = $lang['relateallresources'];

@@ -63,9 +63,7 @@ if ($go!="")
             <?php
             }
         }
-    # Check access permissions for this new resource, if an external user.
-    $newkey=hook("nextpreviewregeneratekey");
-    if (is_string($newkey)) {$k=$newkey;}
+
     if ($k!="" && !check_access_key($ref,$k)) {$ref=$origref;} # cancel the move.
 
     $urlparams["curpos"] = $curpos;
