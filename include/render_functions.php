@@ -4219,11 +4219,11 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
     
         if($field['type'] == FIELD_TYPE_CATEGORY_TREE)
             {
-            $parentnode = NULL;
-            $recursive = TRUE;
+            $parentnode = null;
+            $recursive = true;
             $treenodes = get_nodes($field["ref"], $parentnode, $recursive);
-            $detailed=FALSE; # Just get the nodes
-            $node_sort=FALSE; # Do not sort the nodes
+            $detailed=false; # Just get the nodes
+            $node_sort=false; # Do not sort the nodes
             $resource_nodes=get_resource_nodes($ref, $field["ref"], $detailed, $node_sort);
             $treenodenames = array();
             foreach ($treenodes as $treenode)
