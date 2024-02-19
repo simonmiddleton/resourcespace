@@ -1131,8 +1131,8 @@ if (!hook("replacesearchheader")) # Always show search header now.
     if ($search!="!duplicates" && $search!="!unused" && !hook("replacesearchsortorder")) 
         {
         // Relevance is the default sort sequence if viewing resources following a search
-        $default_sort_order='relevance';
-        $rel=$lang["relevance"];
+        $default_sort_order = $default_sort;
+        $rel = $lang[$default_sort] ?? $lang["relevance"];
         if(!hook("replaceasadded"))
             {
             if (isset($collection))

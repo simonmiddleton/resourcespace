@@ -17,10 +17,11 @@ $url_params= ($order_by ? "&orderby={$order_by}" : "") . ($find ? "&find={$find}
 $new_size_id=getval("newsizeid","");
 if ($new_size_id!="" && enforcePostRequest(false))
     {
-    ps_query("insert into preview_size(id,name,internal,width,height) values(?,?,0,0,0)",array("s",strtolower($new_size_id),"s",$new_size_id));
+    ps_query("INSERT INTO preview_size(id,name,internal,width,height) VALUES(?,?,0,0,0)",array("s",strtolower($new_size_id),"s",$new_size_id));
     $ref=sql_insert_id();
     log_activity(null,LOG_CODE_CREATED,$new_size_id,'preview_size','id',$ref,null,'');
-    redirect("{$baseurl_short}pages/admin/admin_size_management_edit.php?ref={$ref}{$url_params}"); // redirect to prevent repost and expose form data
+    clear_query_cache("schema");
+    redirect("{$baseurl_short}pages/admin/admin_size_management_edit.php?ref={$ref}{$url_params}");	// redirect to prevent repost and expose form data
     exit;
     }
 
@@ -34,9 +35,10 @@ if (!ps_value("select ref as value from preview_size where ref=? and internal<>'
 
 if (getval("deleteme", false) && enforcePostRequest(false))
     {
-    ps_query("delete from preview_size where ref=?",array("i",$ref));
+    ps_query("DELETE FROM preview_size WHERE ref=?",array("i",$ref));
     log_activity(null,LOG_CODE_DELETED,null,'preview_size',null,$ref);
-    redirect("{$baseurl_short}pages/admin/admin_size_management.php?{$url_params}");        // return to the size management page
+    clear_query_cache("schema");
+    redirect("{$baseurl_short}pages/admin/admin_size_management.php?{$url_params}");		// return to the size management page
     exit;
     }
 
@@ -73,7 +75,8 @@ if (getval("save", false) && enforcePostRequest(false))
     if (isset($sql_columns))
         {
         $params[]="i";$params[]=$ref;
-        ps_query("update preview_size set {$sql_columns} where ref=?",$params);
+        ps_query("UPDATE preview_size SET {$sql_columns} WHERE ref=?",$params);
+        clear_query_cache("schema");
         }
     redirect("{$baseurl_short}pages/admin/admin_size_management.php?{$url_params}");        // return to the size management page
     exit;

@@ -3368,3 +3368,8 @@ Configure the cache adaptor for the internal library TUS used for upload (Uppy).
 For production systems where APCu isn't available use "redis" instead. To install check out https://redis.io
 */
 $vendor_tus_cache_adapter = 'file';
+
+// $related_pushed_order_by - This is an optional setting to order resources differently when displaying 'pushed' related metadata
+// This can be set to either a metadata field ID or a valid search 'order by' string (e.g. 'resourcetype', 'extension', 'colour' etc.) 
+// See https://www.resourcespace.com/knowledge-base/resourceadmin/push-metadata for more information
+// $related_pushed_order_by = 0;

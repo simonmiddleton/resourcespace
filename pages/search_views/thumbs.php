@@ -97,117 +97,78 @@ if (!hook("renderresultthumb"))
         hook ("resourcethumbtop");
         if (!hook("renderimagethumb")) 
             {
-            # Work out image to use.
-            if($watermark !== '')
+            ?>
+            <a class="<?php echo $display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper'; ?>"
+            href="<?php echo $url?>"  
+            onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" 
+            title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars($resource_view_title))?>">
+            
+            <?php 
+            // Render preview image
+            $usesize = $display == "xlthumbs" ? ($GLOBALS['retina_mode'] ? "scr" : "pre") : ($GLOBALS['retina_mode'] ? "pre" : "thm");
+            $arrsizes = array_unique([$usesize,"pre","thm"]);
+
+            $thumbnail = get_resource_preview($result[$n],$arrsizes,$access,$watermark);
+            if($thumbnail !== false)
                 {
-                $use_watermark=check_use_watermark();
+                // Use standard preview image
+                if($result[$n]["thumb_height"] !== $thumbnail["height"] || $result[$n]["thumb_width"] !== $thumbnail["width"])
+                    {                    
+                    // Preview image dimensions differ from the size data stored for the current resource
+                    $result[$n]["thumb_height"] = $thumbnail["height"];
+                    $result[$n]["thumb_width"]  = $thumbnail["width"];
+                    }
+                render_resource_image($result[$n],$thumbnail["url"],$display);
+                // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
+                // when user hovers over the preview thumbnail
+                if(1 < $ffmpeg_snapshot_frames && (in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) || ($result[$n]['file_extension'] == 'gif' && $ffmpeg_preview_gif)) && 0 < get_video_snapshots($ref, false, true))
+                    {
+                    ?>
+                    <script>
+                    jQuery('#CentralSpace #ResourceShell<?php echo $ref; ?> a img').mousemove(function(event)
+                        {
+                        var x_coord             = event.pageX - jQuery(this).offset().left;
+                        var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref, false, false, true)); ?>;
+                        var snapshot_segment_px = Math.ceil(jQuery(this).width() / Object.keys(video_snapshots).length);
+                        var snapshot_number     = x_coord == 0 ? 1 : Math.ceil(x_coord / snapshot_segment_px);
+                        if(typeof(ss_img_<?php echo $ref; ?>) === "undefined")
+                            {
+                            ss_img_<?php echo $ref; ?> = new Array();
+                            }
+                        ss_img_<?php echo $ref; ?>[snapshot_number] = new Image();
+                        ss_img_<?php echo $ref; ?>[snapshot_number].src = video_snapshots[snapshot_number];
+                        jQuery(this).attr('src', ss_img_<?php echo $ref; ?>[snapshot_number].src);
+                        }
+                    ).mouseout(function(event)
+                        {
+                        jQuery(this).attr('src', "<?php echo $thumbnail["url"]; ?>");
+                        }
+                    );
+                    </script>
+                    <?php
+                    }
                 }
             else
                 {
-                $use_watermark=false;   
-                }
-
-            $image_size = $display == "xlthumbs" ? ($retina_mode ? "scr" : "pre") : ($retina_mode ? "pre" : "thm");
-
-            $thm_url = get_resource_path(
-                $ref,
-                true,
-                $image_size,
-                false,
-                $result[$n]['preview_extension'],
-                true,
-                1,
-                $use_watermark,
-                $result[$n]['file_modified']
-            );
-
-            // If no screen size found try preview
-            if ($image_size == "scr" && !file_exists($thm_url))
-                {
-                $image_size = "pre";
-                $thm_url=get_resource_path($ref,true,$image_size ,false,$result[$n]['preview_extension'],true,1,$use_watermark,$result[$n]['file_modified']);
-                }
-
-            // If no preview size found try thumbnail
-            if ($image_size == "pre" && !file_exists($thm_url))     
-                {
-                $image_size = "thm";
-                $thm_url=get_resource_path($ref,true,$image_size ,false,$result[$n]['preview_extension'],true,1,$use_watermark,$result[$n]['file_modified']);
-                }
-
-            $thm_url=get_resource_path($ref,false,$image_size ,false,$result[$n]['preview_extension'],true,1,$use_watermark,$result[$n]['file_modified']);
-
-            if(isset($result[$n]['thm_url']))
-                {
-                $thm_url = $result[$n]['thm_url'];
-                } # Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
-
                 ?>
-                <a
-                    class="<?php echo $display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper'; ?>"
-                    href="<?php echo $url?>"  
-                    onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" 
-                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars($resource_view_title))?>"
-                >
-                        <?php 
-                        if($result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $image_size))
-                        {
-                        render_resource_image($result[$n],$thm_url,$display);
-                        // For videos ($ffmpeg_supported_extensions), if we have snapshots set, add code to fetch them from the server
-                        // when user hovers over the preview thumbnail
-                        if(1 < $ffmpeg_snapshot_frames && (in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) || ($result[$n]['file_extension'] == 'gif' && $ffmpeg_preview_gif)) && 0 < get_video_snapshots($ref, false, true))
-                            {
-                            ?>
-                            <script>
-                            jQuery('#CentralSpace #ResourceShell<?php echo $ref; ?> a img').mousemove(function(event)
-                                {
-                                var x_coord             = event.pageX - jQuery(this).offset().left;
-                                var video_snapshots     = <?php echo json_encode(get_video_snapshots($ref, false, false, true)); ?>;
-                                var snapshot_segment_px = Math.ceil(jQuery(this).width() / Object.keys(video_snapshots).length);
-                                var snapshot_number     = x_coord == 0 ? 1 : Math.ceil(x_coord / snapshot_segment_px);
-                                if(typeof(ss_img_<?php echo $ref; ?>) === "undefined")
-                                    {
-                                    ss_img_<?php echo $ref; ?> = new Array();
-                                    }
-                                ss_img_<?php echo $ref; ?>[snapshot_number] = new Image();
-                                ss_img_<?php echo $ref; ?>[snapshot_number].src = video_snapshots[snapshot_number];
-                                jQuery(this).attr('src', ss_img_<?php echo $ref; ?>[snapshot_number].src);
-                                }
-                            ).mouseout(function(event)
-                                {
-                                jQuery(this).attr('src', "<?php echo $thm_url; ?>");
-                                }
-                            );
-                            </script>
-                            <?php
-                            }
-                        } 
-                    else 
-                        { ?>
-                        <img 
-                            border=0 
-                            alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-                            src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" style="margin-top:<?php echo $display == "xlthumbs" ? "90px" : "35px"?>;"
-
-                        />
-                        <?php 
-                        }
-                   hook("aftersearchimg","",array($result[$n], $thm_url, $display))
-                   ?>
-                </a>
+                <img border=0 
+                    src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" 
+                    style="margin-top:<?php echo $display == "xlthumbs" ? "90px" : "35px"; ?>;"/>
+                <?php 
+                }
+          
+            hook("aftersearchimg","",array($result[$n], $thumbnail["url"] ?? "", $display))
+            ?>
+            </a>
 <?php 
             } ?> 
         <!-- END HOOK Renderimagethumb-->
-
-        <?php 
-
+        <?php
         if (!hook("replaceicons")) 
             {
             hook("icons");
-            } //end hook replaceicons
-        if (!hook("rendertitlethumb")) {} ?> <!-- END HOOK Rendertitlethumb -->
-        <?php
-
+            }
+        hook("rendertitlethumb");
         if($thumbs_display_archive_state)
             {
             $workflow_html = "<div class='ResourcePanelInfo WorkflowState'>";

@@ -38,37 +38,37 @@ if($sort != 'ASC' && $sort != 'DESC') {$sort = $default_sort_direction;}
 # Get alternative files and configure next and previous buttons relative to the current file
 if($alternative != "-1")
     {
-        $alt_order_by="";$alt_sort="";
-        if ($alt_types_organize)
+    $alt_order_by="";$alt_sort="";
+    if ($alt_types_organize)
+        {
+        $alt_order_by="alt_type";
+        $alt_sort="asc";
+        }
+    $altfiles=get_alternative_files($ref,$alt_order_by,$alt_sort);
+    for ($n=0;$n<count($altfiles);$n++)
+        {	
+        if ($altfiles[$n]["ref"] == $alternative)
             {
-                $alt_order_by="alt_type";
-                $alt_sort="asc";
-            }
-        $altfiles=get_alternative_files($ref,$alt_order_by,$alt_sort);
-        for ($n=0;$n<count($altfiles);$n++)         
-            {   
-                if ($altfiles[$n]["ref"] == $alternative)
+            if ($n == count($altfiles) - 1)
                 {
-                    if ($n == count($altfiles) - 1)
-                    {
-                        $alt_next = $altfiles[$n]["ref"];
-                    }
-                    else
-                    {
-                        $alt_next = $altfiles[++$n]["ref"];
-                        --$n;
-                    }
-                    if ($n == "0")
-                    {
-                        $alt_previous = $altfiles[$n]["ref"];
-                    }
-                    else
-                    {
-                        $alt_previous = $altfiles[--$n]["ref"];
-                        ++$n;
-                    }
+                $alt_next = $altfiles[$n]["ref"];
+                }
+            else
+                {
+                $alt_next = $altfiles[++$n]["ref"];
+                --$n;
+                }
+            if ($n == "0")
+                {
+                $alt_previous = $altfiles[$n]["ref"];
+                }
+            else
+                {
+                $alt_previous = $altfiles[--$n]["ref"];
+                ++$n;
                 }
             }
+        }
     }
 
 # next / previous resource browsing
@@ -109,58 +109,57 @@ if ($go!="")
 
 
 $resource=get_resource_data($ref);
-if ($resource===false) {exit($lang['resourcenotfound']);}
+
+if ($resource===false)
+    {
+    exit($lang['resourcenotfound']);
+    }
+
 $ext="jpg";
-
 if ($ext!="" && $ext!="gif" && $ext!="jpg" && $ext!="png") {$ext="jpg";$border=false;} # Supports types that have been created using ImageMagick
-
 
 # Check permissions (error message is not pretty but they shouldn't ever arrive at this page unless entering a URL manually)
 $access=get_resource_access($ref);
 if($access == RESOURCE_ACCESS_CONFIDENTIAL) 
     {
-    exit("This is a confidential resource.");
+    exit($lang["error-permissiondenied"]);
     }
 
 $use_watermark=check_use_watermark();
 
 hook('replacepreview');
 
+# Locate the resource
+if($resource['has_image'] === 0)
+    {
+    // No preview. If configured, try and use a preview from a related resource
+    $pullresource = related_resource_pull($resource);
+    if($pullresource !== false)
+        {
+        $ref = $pullresource["ref"];
+        $resource = $pullresource;
+        $access = get_resource_access($pullresource);
+        }
+    }
+
+// Determine the appropriate preview sizes to look for. Access will be checked by get_resource_preview()
+$previewsizes = ["scr","pre"];
+$imagepre = get_resource_preview($resource,$previewsizes, $access, $use_watermark);
+if($imagepre)
+    {
+    $url = $imagepre["url"];
+    }
+else
+    {
+    $url = $GLOBALS["baseurl_short"] . 'gfx/' . get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
+    }
+
+
 # Next / previous page browsing (e.g. pdfs)
 $previouspage=$page-1;
 if (!file_exists(get_resource_path($ref,true,"scr",false,$ext,-1,$previouspage,$use_watermark,"",$alternative))&&!file_exists(get_resource_path($ref,true,"",false,$ext,-1,$previouspage,$use_watermark,"",$alternative))) {$previouspage=-1;}
 $nextpage=$page+1;
 if (!file_exists(get_resource_path($ref,true,"scr",false,$ext,-1,$nextpage,$use_watermark,"",$alternative))) {$nextpage=-1;}
-
-
-# Locate the resource
-$path = get_resource_path($ref, true, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
-if(!resource_has_access_denied_by_RT_size($resource['resource_type'], 'scr') && file_exists($path) && !skip_scr_size_preview($access))
-    {
-    $url = get_resource_path($ref, false, 'scr', false, $ext, true, $page, $use_watermark, '', $alternative);
-    }
-else
-    {
-    $path = get_resource_path($ref, true, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative);
-    if(!resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre') && file_exists($path))
-        {
-        $url = get_resource_path($ref, false, 'pre', false, $ext, true, $page, $use_watermark, '', $alternative);
-        }
-    }
-
-if(!isset($url))
-    {
-    $info   = get_resource_data($ref);
-    $url    = $baseurl . '/gfx/' . get_nopreview_icon($info['resource_type'], $info['file_extension'], false);
-    $border = false;
-    }
-
-if(file_exists($path))
-    {
-    list($image_width, $image_height) = @getimagesize($path);
-    }
-
-$resource = get_resource_data($ref);
 
 // get mp3 paths if necessary and set $use_mp3_player switch
 if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && (in_array($resource["file_extension"],$ffmpeg_audio_extensions) || $resource["file_extension"]=="mp3") && $mp3_player){
@@ -169,7 +168,7 @@ if (!(isset($resource['is_transcoding']) && $resource['is_transcoding']==1) && (
     else {
         $use_mp3_player=false;
     }
-if ($use_mp3_player){   
+if ($use_mp3_player){
     $mp3realpath=get_resource_path($ref,true,"",false,"mp3");
     if (file_exists($mp3realpath)){
         $mp3path=get_resource_path($ref,false,"",false,"mp3");

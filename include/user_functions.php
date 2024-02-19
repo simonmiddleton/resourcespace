@@ -3481,3 +3481,57 @@ function validate_temp_download_key(int $ref, string $keystring, string $size, i
         }
     return false;
     }
+
+/**
+ * Set up a dummy user with required permissions etc. to pass permission checks if running scripts from the command line
+ *
+ * @param array     $options[]]         Array of optional user options. Will default to generic system admin permissions if not set
+ *                                      e.g.
+ *                                         ["username"          => "My Application",
+ *                                          "permissions"       => "h,v,e0",
+ *                                          "groupname          => "My Application",
+ *                                          "resource_defaults  => "region=EMEA",
+ *                                         ]
+ * 
+ * @return bool
+ * 
+ */
+function setup_command_line_user(array $setoptions = []) : bool
+    {
+    global $lang;
+   
+    $defaultusername = $lang["system_user_default"];
+
+    // Set defaults, these can then be overidden by $setoptions
+    $dummyuserdata = [];
+    $dummyuserdata["ref"] = 0;
+    $dummyuserdata["username"] = $defaultusername;
+    $dummyuserdata["fullname"] = $defaultusername;
+    $dummyuserdata["groupname"] = $defaultusername;
+    $dummyuserdata["permissions"] = "a,t,v,e-2,e-1,e0,e1,e2,e3";
+    $dummyuserdata["accepted_terms"] = 1;
+    $dummyuserdata["ip_restrict_user"] = "";
+    $dummyuserdata["ip_restrict_group"] = "";
+    $dummyuserdata["current_collection_valid"] = 1;
+
+    // Add any columns from user table, plus any extra array
+    // elements normally obtained from get_user()
+    $requiredelements = columns_in("user",null,null,true);
+    $requiredelements = array_merge($requiredelements, columns_in("usergroup",null,null,true));
+
+    foreach($requiredelements as $requiredelement)
+        {
+        if(!isset($dummyuserdata[$requiredelement]))
+            {
+            $dummyuserdata[$requiredelement] = "";  
+            }
+        }
+
+    // Override with any settings passed
+    foreach($setoptions as $setoption=>$setvalue)
+        {
+        $dummyuserdata[$setoption] = $setvalue;   
+        }
+    $success = setup_user($dummyuserdata);
+    return $success;
+    }

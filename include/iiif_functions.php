@@ -238,11 +238,23 @@ final class IIIFRequest {
 
             if(!file_exists($img_path))
                 {
-                continue;
+                // If configured, try and use a preview from a related resource
+                $pullresource = related_resource_pull($iiif_result);
+                if($pullresource !== false)
+                    {
+                    $this->processing["resource"] = $pullresource["ref"];
+                    $this->processing["size_info"] = [
+                        'identifier' => (is_jpeg_extension($pullresource["file_extension"]) ? 'hpr' : ''),
+                        'return_height_width' => false,
+                        ];
+                    }
                 }
-
             $position = $iiif_result["iiif_position"];
-            $canvases[$position] = $this->generateCanvas($position);
+            $canvas = $this->generateCanvas($position);
+            if($canvas)
+                {
+                $canvases[$position] = $canvas;
+                }
             }
 
         if($sequencekeys)
@@ -312,9 +324,9 @@ final class IIIFRequest {
     *                               'return_height_width' => true
     *                             );
     *
-    * @return array
+    * @return bool|array          Array holding image file data. Returns false if no image available.
     */
-    public function get_image(int $resource, array $size_info): array
+    public function get_image(int $resource, array $size_info)
         {
         // Quick validation of the size_info param
         if(empty($size_info) || (!isset($size_info['identifier']) && !isset($size_info['return_height_width'])))
@@ -324,16 +336,29 @@ final class IIIFRequest {
 
         $size = $size_info['identifier'];
         $return_height_width = $size_info['return_height_width'];
-
         $img_path = get_resource_path($resource,true,$size,false);
         if(!file_exists($img_path))
+            {
+            // If configured, try and use a preview from a related resource
+            $resdata = get_resource_data($resource);
+            $pullresource = related_resource_pull($resdata);
+            if($pullresource !== false)
+                {
+                $resource = $pullresource["ref"];
+                if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"]))
+                    {
+                    // If the related resource is a JPG file then no 'hpr' size will be available
+                    $size = "";
+                    }
+                $img_path = get_resource_path($resource,true,$size,false);
+                }
+            else
                 {
                 return false;
                 }
-
+            }
         $image_size = get_original_imagesize($resource, $img_path);
 
-        $images = [];
         $images = [];
         $images["id"] = $this->rootimageurl . $resource . "/full/max/0/default.jpg";
         $images["type"] = "Image";
@@ -491,14 +516,14 @@ final class IIIFRequest {
                         $reqstatements["value"][$langcode][] = $langstring;
                         }
                     }
-                
+
                 $this->response["requiredStatement"] = $reqstatements;
                 }
             }
         if(isset($this->rights_statement) && $this->rights_statement != "")
             {
             $this->response["rights_statement"] = $this->rights_statement;
-            }            
+            }
 
         // Thumbnail property
         $this->response["thumbnail"] =[];
@@ -526,9 +551,9 @@ final class IIIFRequest {
     /**
      * Generate a canvas
      *
-     * @param int       $position   The canvas identifier
+     * @param int           $position   The canvas identifier
      *
-     * @return $canvas              Canvas data for presentation API response
+     * @return array|bool   canvas      Canvas data for presentation API response, false if no image is available
      *
      */
     public function generateCanvas(int $position)
@@ -538,14 +563,22 @@ final class IIIFRequest {
         $canvas = [];
         $canvasidx = array_search($position,array_column($this->searchresults,"iiif_position"));
         $resource = $this->searchresults[$canvasidx];
-
-        $size = (strtolower($resource["file_extension"]) != "jpg") ? "hpr" : "";
-        $img_path = get_resource_path($resource["ref"],true,$size,false);
-
+        $useimage = $resource;
+        if ((int)$resource['has_image'] === 0)
+            {
+            // If configured, try and use a preview from a related resource
+            debug("No image for IIIF request - check for related resources");
+            $pullresource = related_resource_pull($resource);
+            if($pullresource !== false)
+                {
+                $useimage = $pullresource;
+                }
+            }
+        $size = is_jpeg_extension((string) $useimage["file_extension"]) ? "" : "hpr";
+        $img_path = get_resource_path($useimage["ref"],true,$size,false);
         if(!file_exists($img_path))
             {
-            $this->errors[] = "Invalid canvas requested";
-            $this->triggerError(404);
+            return;
             }
         $position_field=get_resource_type_field($this->sequence_field);
         $position = $resource["iiif_position"];
@@ -575,7 +608,7 @@ final class IIIFRequest {
             }
 
         // Get the size of the images
-        $image_size = get_original_imagesize($resource["ref"],$img_path);
+        $image_size = get_original_imagesize($useimage["ref"],$img_path);
         $canvas["height"] = intval($image_size[2]);
         $canvas["width"] = intval($image_size[1]);
 
@@ -939,9 +972,8 @@ final class IIIFRequest {
                         // Full/max image region requested
                         if($this->max_width >= $this->imagewidth && $this->max_height >= $this->imageheight)
                             {
-                            $isjpeg = in_array(strtolower($resource["file_extension"]),array("jpg","jpeg"));
                             $this->request["getext"] = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
-                            $this->request["getsize"] = $isjpeg ? "" : "hpr";
+                            $this->request["getsize"] = is_jpeg_extension($resource["file_extension"]) ? "" : "hpr";
                             }
                         else
                             {
@@ -1263,12 +1295,22 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     $canvases = array();
     foreach ($iiif_results as $iiif_result)
         {
-        $size = (strtolower($iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
-        $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
-
-        if (!file_exists($img_path))
+        $useimage = $iiif_result;
+        if ((int)$iiif_result['has_image'] === 0)
             {
-            continue;
+            // If configured, try and use a preview from a related resource
+            debug("No image for IIIF request - check for related resources");
+            $pullresource = related_resource_pull($iiif_result);
+            if($pullresource !== false)
+                {
+                $useimage = $pullresource;
+                }
+            }
+        $size = is_jpeg_extension((string) $useimage["file_extension"]) ? "" : "hpr";
+        $img_path = get_resource_path($useimage["ref"],true,$size,false);
+        if(!file_exists($img_path))
+            {
+            return;
             }
             
         $position = $iiif_result["iiif_position"];
@@ -1284,7 +1326,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         $canvases[$position]["label"] = $position_prefix . $position;
         
         // Get the size of the images
-        $image_size = get_original_imagesize($iiif_result["ref"],$img_path);
+        $image_size = get_original_imagesize($useimage["ref"],$img_path);
         $canvases[$position]["height"] = intval($image_size[2]);
         $canvases[$position]["width"] = intval($image_size[1]);
                 
@@ -1296,7 +1338,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
             $image_size[2] = $image_size[2] * 2;
             }
         
-        $canvases[$position]["thumbnail"] = iiif_get_thumbnail($iiif_result["ref"]);
+        $canvases[$position]["thumbnail"] = iiif_get_thumbnail($useimage["ref"]);
         
         // Add image (only 1 per canvas currently supported)
         $canvases[$position]["images"] = array();
@@ -1304,7 +1346,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
             'identifier' => $size,
             'return_height_width' => false,
         );
-        $canvases[$position]["images"][] = iiif_get_image($identifier, $iiif_result["ref"], $position, $size_info);
+        $canvases[$position]["images"][] = iiif_get_image($identifier, $useimage["ref"], $position, $size_info);
         }
     
     if($sequencekeys)
@@ -1338,9 +1380,21 @@ function iiif_get_thumbnail($resourceid)
     
     $img_path = get_resource_path($resourceid,true,'thm',false);
     if(!file_exists($img_path))
+        {
+        // If configured, try and use a preview from a related resource
+        $resdata = get_resource_data($resourceid);
+        $pullresource = related_resource_pull($resdata);
+        if($pullresource !== false)
             {
-            return false;
+            $resourceid = $pullresource["ref"];
+            $img_path = get_resource_path($resourceid,true,"thm",false);
             }
+        }
+
+    if(!file_exists($img_path))
+        {
+        return false;
+        }
             
     $thumbnail = array();
     $thumbnail["@id"] = $rootimageurl . $resourceid . "/full/thm/0/default.jpg";
@@ -1404,9 +1458,9 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
 
     $img_path = get_resource_path($resourceid,true,$size,false);
     if(!file_exists($img_path))
-            {
-            return false;
-            }
+        {
+        return false;
+        }
 
     $image_size = get_original_imagesize($resourceid, $img_path);
             

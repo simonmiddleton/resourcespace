@@ -13,7 +13,8 @@ $config_options        = getval('config_options', '');
 $allowed_extensions    = getval('allowed_extensions', '');
 $tab                   = (int) getval('tab', 0);
 $colour                = getval('colour', 0, true);
-$push_metadata         = ('' != getval('push_metadata', '') ? 1 : 0);
+$push_metadata         = getval('push_metadata', 0,true);
+$pull_images           = getval('pull_images',0,true);
 $icon                  = getval('icon', '');
 
 $allrestypes           = get_resource_types('',true,true,true);
@@ -40,6 +41,7 @@ if (getval("restype_save","")!="" && enforcePostRequest(false))
         "allowed_extensions" => $allowed_extensions,
         "tab" => $tab,
         "push_metadata" => $push_metadata,
+        "pull_images" => $pull_images,
         "colour" => $colour,
         "icon" => $icon,
     ];
@@ -47,8 +49,15 @@ if (getval("restype_save","")!="" && enforcePostRequest(false))
         {
         $savedata["config_options"] = $config_options;
         }
-    save_resource_type($ref, $savedata);
-    redirect(generateURL($baseurl_short . "pages/admin/admin_resource_types.php",$url_params));
+    $saved = save_resource_type($ref, $savedata);
+    if($saved)
+        {
+        $saved_text=$lang['saved'];
+        }
+    else
+        {
+        $error_text = $lang['error_generic'];
+        }
     }
 
 $confirm_delete = false;
@@ -259,19 +268,13 @@ else
     $MARKER_COLORS[-1] = $lang["select"];
     ksort($MARKER_COLORS);
     render_dropdown_question($lang['resource_type_marker_colour'],"colour",$MARKER_COLORS,$restypedata["colour"],'',array("input_class"=>"stdwidth"));
+    
+    config_boolean_select("push_metadata",$lang["property-push_metadata"],(int)$restypedata["push_metadata"],'',420,null,false,null,false,$lang["information-push_metadata"]);
+
+    config_boolean_select("pull_images",$lang["pull_images"],(int)$restypedata["pull_images"],'',420,null,false,null,false,$lang["pull_images_text"]);    
     ?>
-
-        <div class="Question">
-    <label><?php echo htmlspecialchars($lang["property-push_metadata"]) ?></label>
-    <input name="push_metadata" type="checkbox" value="yes" <?php if ($restypedata["push_metadata"]==1) { echo "checked"; } ?> />
-    <div class="FormHelp" style="padding:0;clear:left;" >
-        <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-push_metadata"])  ?>
-        </div>
-    </div>
-    <div class="clearerleft"> </div>
-    </div>
-
-    <div class="QuestionSubmit">        
+       
+    <div class="QuestionSubmit">		
     <input name="save" type="submit" value="&nbsp;&nbsp;<?php  echo escape($lang["save"])?>&nbsp;&nbsp;" onClick="jQuery('#restype_save').val('yes');this.form.submit();return false;"/>
     <input name="delete" type="submit" value="&nbsp;&nbsp;<?php  echo escape($lang["action-delete"])?>&nbsp;&nbsp;" onClick="if(confirm('<?php  echo escape($lang["confirm-deletion"]) ?>')){jQuery('#restype_delete').val('yes');this.form.submit()}else{jQuery('#restype_delete').val('');}return false;"/>
     </div>

@@ -5346,3 +5346,16 @@ function get_size_info(array $size, ?array $originalSize = null): string
 
     return $output;
     }
+
+/**
+ * Simple function to check if a given extension is associated with a JPG file
+ *
+ * @param string $extension     File extension
+ * 
+ * @return bool 
+ * 
+ */
+function is_jpeg_extension(string $extension)
+    {
+    return in_array(strtolower((string) $extension),["jpg","jpeg"]);
+    }

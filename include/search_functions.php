@@ -1376,13 +1376,34 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         # Extract the resource number
         $resource=explode(" ",$search);$resource=str_replace("!relatedpushed","",$resource[0]);
+
+        if(isset($GLOBALS["related_pushed_order_by"]))
+            {
+            $related_order = is_int_loose($GLOBALS["related_pushed_order_by"]) ? "field" . $GLOBALS["related_pushed_order_by"] : $GLOBALS["related_pushed_order_by"];
+            $order_by = set_search_order_by($search, $related_order, "ASC");
+            }
+
         $order_by=str_replace("r.","",$order_by); # UNION below doesn't like table aliases in the ORDER BY.
-        
-        $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score,rt.name resource_type_name, $select FROM resource r join resource_type rt on r.resource_type=rt.ref AND rt.push_metadata=1 join resource_related t on (t.related=r.ref AND t.resource = ?) " . $sql_join->sql . " WHERE 1=1 AND " . $sql_filter->sql . " GROUP BY r.ref 
-        UNION
-        SELECT DISTINCT r.hit_count score, rt.name resource_type_name, $select FROM resource r join resource_type rt on r.resource_type=rt.ref AND rt.push_metadata=1 join resource_related t on (t.resource=r.ref AND t.related= ?) " . $sql_join->sql . "  WHERE 1=1 AND " . $sql_filter->sql . " GROUP BY r.ref 
-        ORDER BY $order_by" . $sql_suffix;
-        $sql->parameters = array_merge(["i",$resource],$sql_join->parameters,$sql_filter->parameters,["i",$resource],$sql_join->parameters,$sql_filter->parameters);
+        $relatedselect = $sql_prefix . "
+                    SELECT DISTINCT r.hit_count score,rt.name resource_type_name, $select
+                      FROM resource r
+                      JOIN resource_type rt ON r.resource_type=rt.ref AND rt.push_metadata=1
+                      JOIN resource_related t ON (%s) "
+                         . $sql_join->sql
+                 . " WHERE 1=1 AND " . $sql_filter->sql
+              . " GROUP BY r.ref";
+
+        $sql->sql = sprintf($relatedselect,"t.related=r.ref AND t.resource = ?")
+                . " UNION " 
+                . sprintf($relatedselect,"t.resource=r.ref AND t.related= ?")
+                . " ORDER BY " . $order_by . $sql_suffix;
+        $sql->parameters = array_merge(
+            ["i",$resource],
+            $sql_join->parameters,
+            $sql_filter->parameters,
+            ["i",$resource],
+            $sql_join->parameters,
+            $sql_filter->parameters);
         }
 
     # View Related
@@ -3360,4 +3381,97 @@ function log_keyword_usage($keywords, $search_result)
             daily_stat($log_code, $keyword);
             }
         }
+    }
+
+
+/**
+ * Validate and set the order_by for the current search from the requested values passed to search_do()
+ *
+ * @param string $search
+ * @param string $order_by
+ * @param string $sort
+ * 
+ * @return string
+ * 
+ */
+function set_search_order_by(string $search,string $order_by, string $sort)
+    {
+    global $include_fieldx;
+    $order_by_date_sql_comma = ",";
+    $order_by_date = "r.ref $sort";
+    if(metadata_field_view_access($GLOBALS["date_field"]))
+        {
+        $order_by_date_sql = "field{$GLOBALS["date_field"]} {$sort}";
+        $order_by_date_sql_comma = ", {$order_by_date_sql}, ";
+        $order_by_date = "{$order_by_date_sql}, r.ref {$sort}";
+        }
+
+    # Check if order_by is empty string as this avoids 'relevance' default
+    if ($order_by === "") {$order_by="relevance";}
+
+    $order = [
+        "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
+        "popularity"      => "user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
+        "rating"          => "r.rating $sort, user_rating $sort, score $sort, r.ref $sort",
+        "date"            => "$order_by_date, r.ref $sort",
+        "colour"          => "has_image $sort, image_blue $sort, image_green $sort, image_red $sort {$order_by_date_sql_comma} r.ref $sort",
+        "title"           => "field" . $GLOBALS["view_title_field"] . " " . $sort . ", r.ref $sort",
+        "file_path"       => "file_path $sort, r.ref $sort",
+        "resourceid"      => "r.ref $sort",
+        "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",
+        "extension"       => "file_extension $sort, r.ref $sort",
+        "random"          => "RAND()",
+        "status"          => "archive $sort, r.ref $sort",
+        "modified"        => "modified $sort, r.ref $sort"
+    ];
+
+    // Used for collection sort order as sortorder is ASC, date is DESC
+    $revsort = (strtoupper($sort) == 'DESC') ? "ASC" : " DESC";
+    
+    // These options are only supported if the default field 3 is still present
+    if(in_array(3,get_resource_table_joins()))
+        {
+        $order["country"] = "field3 $sort, r.ref $sort";
+        $order["titleandcountry"] = "field" . $GLOBALS["view_title_field"] . " $sort, field3 $sort, r.ref $sort";
+        }
+
+    // Add collection sort option only if searching a collection
+    if(substr($search, 0, 11) == '!collection')
+        {
+        $order["collection"] = "c.sortorder $sort,c.date_added $revsort,r.ref $sort";
+        }
+
+    # Check if date_field is being used as this will be needed in the inner select to be used in ordering
+    $GLOBALS["include_fieldx"]=false;
+    if (isset($order_by_date_sql) && array_key_exists($order_by,$order) && strpos($order[$order_by],$order_by_date_sql)!==false)
+        {
+        $GLOBALS["include_fieldx"]=true;
+        }
+
+    # Append order by field to the above array if absent and if named "fieldn" (where n is one or more digits)
+    if (!in_array($order_by,$order) && (substr($order_by,0,5)=="field"))
+        {
+        if (!is_numeric(str_replace("field","",$order_by)))
+            {
+            exit("Order field incorrect.");
+            }
+        # If fieldx is being used this will be needed in the inner select to be used in ordering
+        $GLOBALS["include_fieldx"]=true;
+        # Check for field type
+        $field_order_check=ps_value("SELECT field_constraint value FROM resource_type_field WHERE ref = ?",["i",str_replace("field","",$order_by)],"", "schema");
+        # Establish sort order (numeric or otherwise)
+        # Attach ref as a final key to foster stable result sets which should eliminate resequencing when moving <- and -> through resources (in view.php)
+        if ($field_order_check==1)
+            {
+            $order[$order_by]="$order_by +0 $sort,r.ref $sort";
+            }
+        else
+            {
+            $order[$order_by]="$order_by $sort,r.ref $sort";
+            }
+        }
+    hook("modifyorderarray");
+    $order_by=(isset($order[$order_by]) ? $order[$order_by] : (substr($search, 0, 11) == '!collection' ? $order['collection'] : $order['relevance']));       // fail safe by falling back to default if not found
+
+    return $order_by;
     }

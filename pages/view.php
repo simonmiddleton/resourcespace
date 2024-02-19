@@ -664,513 +664,138 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                     {
                     if (!hook("renderinnerresourcepreview"))
                         {
-                        # Establish whether it's ok to use original as the preview instead of the "pre" size
-                        $sizeforpreview= ($video_preview_original) ? "" : "pre"; 
-                        # Try to find a preview file.
-                        $video_preview_file = get_resource_path(
-                            $ref,
-                            true,
-                            $sizeforpreview,
-                            false,
-                            ((1 == $video_preview_hls_support || 2 == $video_preview_hls_support) && !($ffmpeg_preview_gif && $resource["file_extension"] == 'gif')) ? 'm3u8' : $ffmpeg_preview_extension
-                        );
-
-                        # Default use_watermark if required by related_resources
-                        $use_watermark = false;
-
                         if (file_exists("../players/type" . $resource["resource_type"] . ".php"))
                             {
+                            // Legacy code - should now be replaced by a plugin
                             include "../players/type" . $resource["resource_type"] . ".php";
-                            }
-                        elseif (hook("replacevideoplayerlogic","",array($video_preview_file)))
-                            { }
-                        elseif (
-                            !(isset($resource['is_transcoding']) && $resource['is_transcoding']!=0)
-                            && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre')
-                            && file_exists($video_preview_file)
-                            && ($ffmpeg_preview_gif || (!$ffmpeg_preview_gif && $resource["file_extension"] != 'gif'))
-                            )
-                            {
-                            # Include the player if a video preview file exists for this resource.
-                            if ($resource["file_extension"] != 'gif')
-                                    {
-                                    $download_multisize = false; 
-                                    }
-                                else
-                                    {
-                                    $download_multisize = true; // gif preview sizes remain available when using $ffmpeg_preview_gif
-                                    }
-                            ?>
-                            <div id="previewimagewrapper">
-                                <?php 
-                                if(!hook("customflvplay")) // Note: Legacy hook name; video_player.php no longer deals with FLV files.
-                                    {
-                                    include "video_player.php";
-                                    }
-
-                                if(isset($previewcaption))
-                                    {               
-                                    display_field_data($previewcaption, true);
-                                    } ?>
-                            </div>
-                            <?php	
-                            }
-                        elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"))
-                            { ?>
-                            <div id="previewimagewrapper">
-                            <?php 
-                            $thumb_path=get_resource_path($ref,true,"pre",false,"jpg");
-
-                            if (file_exists($thumb_path) && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre'))
-                                {
-                                $thumb_url=get_resource_path($ref,false,"pre",false,"jpg");
-                                }
-                            else
-                                {
-                                $thumb_url=$baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false);
-                                }
-
-                            include "mp3_play.php";
-
-                            if(isset($previewcaption))
-                                {               
-                                display_field_data($previewcaption, true);
-                                } ?>
-                            </div>
-                            <?php
-                            }   
-
-                        else if (1 == $resource['has_image'])
-                            {
-                            $imageurl="";
-                            $use_watermark = check_use_watermark();
-
-                            // Determine the appropriate preview size to display
-                            // Retina mode uses 'scr' size
-                            foreach(['scr', 'pre', 'thm'] as $use_size)
-                                {
-                                if(resource_has_access_denied_by_RT_size($resource['resource_type'], $use_size))
-                                    {
-                                    continue;
-                                    }
-
-                                $imagepath = get_resource_path($ref, true, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
-                                if(!file_exists($imagepath))
-                                    {
-                                    continue;
-                                    }
-
-                                if($use_size === 'scr' && skip_scr_size_preview($access))
-                                    {
-                                    continue;
-                                    }
-
-                                $imageurl = get_resource_path($ref, false, $use_size, false, $resource['preview_extension'], true, 1, $use_watermark);
-                                break;
-                                }
-
-                            if(!isset($imagepath))
-                                {
-                                $imagepath = dirname(__DIR__) . '/gfx/' . get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
-                                $imageurl = $baseurl_short . 'gfx/' . get_nopreview_icon($resource['resource_type'], $resource['file_extension'], false);
-                                }
-
-                            $previewimagelink = generateURL("{$baseurl}/pages/preview.php", $urlparams, array("ext" => $resource["preview_extension"])) . "&" . hook("previewextraurl");
-                            $previewimagelink_onclick = 'return CentralSpaceLoad(this);';
-
-                            if (!hook("replacepreviewlink"))
-                                {
-                                ?>
-                                <div id="previewimagewrapper">
-                                    <a id="previewimagelink"
-                                        class="enterLink"
-                                        href="<?php echo $previewimagelink; ?>"
-                                        title="<?php echo escape($lang["fullscreenpreview"]); ?>"
-                                        style="position:relative;"
-                                        onclick="<?php echo $previewimagelink_onclick; ?>">
-                                <?php
-                                } 
-
-                            // Below actually means if the 'scr' or the 'pre' file exists then display it
-                            // It checks imagepath but references imageurl as the image source which will only point to 'scr' or 'pre' 
-                            if(file_exists($imagepath))
-                                {
-                                // Imageurl will never point to 'thm' in this context because the imagepath file_exists 
-                                list($image_width, $image_height) = @getimagesize($imagepath);
-                                ?>
-                                <img id="previewimage"
-                                    class="Picture"
-                                    src="<?php echo $imageurl; ?>" 
-                                    alt="<?php echo escape($lang['fullscreenpreview']); ?>" 
-                                    onload="jQuery('.DownloadDBlend').css('pointer-events','auto')"
-                                    GALLERYIMG="no"
-                                <?php
-                                if($annotate_enabled)
-                                    {
-                                    ?>
-                                    data-original="<?php echo "{$baseurl}/annotation/resource/{$ref}"; ?>"
-                                    <?php
-                                    }
-
-                                if($retina_mode)
-                                    {
-                                    ?>
-                                    onload="this.width/=1.8;this.onload=null;"
-                                    <?php
-                                    }
-                                    ?>/>
-                                <?php 
-                                }
-
-                            hook('aftersearchimg', '', array($ref)); ?>
-
-                            </a>
-
-                            <?php
-                            if (isset($previewcaption))
-                                {
-                                ?>
-                                <div class="clearerleft"></div>
-                                <?php
-                                @list($pw) = @getimagesize($imagepath);
-
-                                display_field_data($previewcaption, true, $pw);
-                                }
-
-                            hook('previewextras'); ?>
-
-                            </div>
-
-                            <?php
-                            if ($image_preview_zoom)
-                                {
-                                $image_preview_zoom = false;
-                                $tile_region_support = false;
-                                $fulljpgsize = strtolower($resource['file_extension']) != "jpg" ? "hpr" : "";
-                                $zoom_image_path = get_resource_path($ref, true, $fulljpgsize, false, $resource['file_extension'], true, 1, $use_watermark);
-
-                                if($preview_tiles && file_exists($zoom_image_path) && resource_download_allowed($ref, '', $resource['resource_type']))
-                                    {
-                                    $image_size = get_original_imagesize($ref, $zoom_image_path);
-                                    $image_width = (int) $image_size[1];
-                                    $image_height = (int) $image_size[2];
-
-                                    $tiles = compute_tiles_at_scale_factor(1, $image_width, $image_height);
-                                    $first_tile = (isset($tiles[0]['id']) ? $tiles[0]['id'] : '');
-                                    $last_tile = (isset($tiles[count($tiles) - 1]['id']) ? $tiles[count($tiles) - 1]['id'] : '');
-                                    if(
-                                        $first_tile !== '' && $last_tile !== ''
-                                        && file_exists(get_resource_path($ref, true, $first_tile, false))
-                                        && file_exists(get_resource_path($ref, true, $last_tile, false))
-                                    )
-                                        {
-                                        $tile_region_support = true;
-                                        }
-                                    }
-
-                                if ($tile_region_support)
-                                    {
-                                    // Force $hide_real_filepath temporarily to get the download URL
-                                    $orig_hrfp = $hide_real_filepath;
-                                    $hide_real_filepath = true;
-                                    $tile_url = get_resource_path($ref, false, '', false, $resource['file_extension'], true, 1, $use_watermark);
-                                    $hide_real_filepath = $orig_hrfp;
-
-                                    // Generate the custom tile source object for OpenSeadragon
-                                    $image_preview_zoom_lib_required = true;
-                                    ?>
-                                    <script>
-                                    var openseadragon_custom_tile_source = {
-                                        height: <?php echo $image_height; ?>,
-                                        width:  <?php echo $image_width; ?>,
-                                        tileSize: <?php echo $preview_tile_size; ?>,
-                                        minLevel: 11,
-                                        getTileUrl: function(level, x, y)
-                                            {
-                                            var scale_factor = Math.pow(2, this.maxLevel - level);
-                                            var tile_url = '<?php echo $tile_url; ?>';
-                                                tile_url += '&tile_region=1';
-                                                tile_url += '&tile_scale=' + scale_factor;
-                                                tile_url += '&tile_row=' + y;
-                                                tile_url += '&tile_col=' + x;
-
-                                            console.info('[OpenSeadragon] level = %o, x (column) = %o, y (row) = %o, scale_factor = %o', level, x, y, scale_factor);
-                                            console.debug('[OpenSeadragon] tile_url = %o', tile_url);
-                                            return tile_url;
-                                            }
-                                    };
-                                    </script>
-                                    <?php
-                                    $image_preview_zoom = true;
-                                    }
-                                else
-                                    {
-                                    // Use static image of a higher resolution (lpr/scr) preview
-                                    foreach(['lpr', 'scr'] as $hrs)
-                                        {
-                                        $zoom_image_path = get_resource_path($ref, true, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
-                                        $allowed_static_image_size = resource_download_allowed($ref, $hrs, $resource['resource_type']);
-                                        if(file_exists($zoom_image_path) && !resource_has_access_denied_by_RT_size($resource['resource_type'], $hrs) && $allowed_static_image_size)
-                                            {
-                                            $preview_url = get_resource_path($ref, false, $hrs, false, $resource['preview_extension'], true, 1, $use_watermark);
-
-                                            // Generate the custom tile source object for OpenSeadragon
-                                            $image_preview_zoom_lib_required = true;
-                                            ?>
-                                            <script>
-                                            var openseadragon_custom_tile_source = { type: 'image', url: '<?php echo $preview_url; ?>' };
-                                            </script>
-                                            <?php
-                                            $image_preview_zoom = true;
-                                            break;
-                                            }
-                                        }
-                                    }
-                                }
-
-                            if (canSeePreviewTools())
-                                {
-                                if ($annotate_enabled)
-                                    {
-                                    include_once '../include/annotation_functions.php';
-                                    }
-                                    ?>
-
-                                <!-- Available tools to manipulate previews -->
-                                <div id="PreviewTools" >
-                                    <script>
-                                    function is_another_tool_option_enabled(element)
-                                        {
-                                        var current_selected_tool = jQuery(element);
-                                        var tool_options_enabled = jQuery('#PreviewToolsOptionsWrapper')
-                                            .find('.ToolsOptionLink.Enabled')
-                                            .not(current_selected_tool);
-
-                                        if(tool_options_enabled.length === 0)
-                                            {
-                                            return false;
-                                            }
-
-                                        styledalert('<?php echo escape($lang['not_allowed']); ?>', '<?php echo escape($lang['error_multiple_preview_tools']); ?>');
-                                        return true;
-                                        }
-
-                                    function toggleMode(element)
-                                        {
-                                        jQuery(element).toggleClass('Enabled');
-                                        }
-                                    </script>
-
-                                    <div id="PreviewToolsOptionsWrapper">
-                                        <?php
-                                        if($annotate_enabled && file_exists($imagepath) && canSeeAnnotationsFields())
-                                            {
-                                            ?>
-                                            <a class="ToolsOptionLink AnnotationsOption" href="#" onclick="toggleAnnotationsOption(this); return false;">
-                                                <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
-                                            </a>
-
-                                            <script>
-                                            var rs_tagging_plugin_added = false;
-
-                                            function toggleAnnotationsOption(element)
-                                                {
-                                                var option             = jQuery(element);
-                                                var preview_image      = jQuery('#previewimage');
-                                                var preview_image_link = jQuery('#previewimagelink');
-                                                var img_copy_id        = 'previewimagecopy';
-                                                var img_src            = preview_image.attr('src');
-
-                                                // Setup Annotorious (has to be done only once)
-                                                if(!rs_tagging_plugin_added)
-                                                    {
-                                                    anno.addPlugin('RSTagging',
-                                                        {
-                                                        select              : '<?php echo htmlspecialchars($lang['annotate_select'])?>',
-                                                        annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
-                                                        nodes_endpoint      : '<?php echo $baseurl; ?>/pages/ajax/get_nodes.php',
-                                                        resource            : <?php echo (int) $ref; ?>,
-                                                        read_only           : <?php echo $edit_access ? 'false' : 'true'; ?>,
-                                                        // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
-                                                        csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
-                                                        <?php echo generateAjaxToken('RSTagging'); ?>
-                                                        });
-
-                                                    <?php if ($facial_recognition) { ?>
-                                                        anno.addPlugin('RSFaceRecognition',
-                                                            {
-                                                            annotations_endpoint: '<?php echo $baseurl; ?>/pages/ajax/annotations.php',
-                                                            facial_recognition_endpoint: '<?php echo $baseurl; ?>/pages/ajax/facial_recognition.php',
-                                                            resource: <?php echo (int) $ref; ?>,
-                                                            facial_recognition_tag_field: <?php echo $facial_recognition_tag_field; ?>,
-                                                            // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
-                                                            fr_csrf_identifier: '<?php echo $CSRF_token_identifier; ?>',
-                                                            <?php echo generateAjaxToken('RSFaceRecognition'); ?>
-                                                            });
-                                                    <?php } ?>
-
-                                                    rs_tagging_plugin_added = true;
-
-                                                    // We have to wait for initialisation process to finish as this does ajax calls
-                                                    // in order to set itself up
-                                                    setTimeout(function ()
-                                                        {
-                                                        toggleAnnotationsOption(element);
-                                                        }, 
-                                                        1000);
-
-                                                    return false;
-                                                    }
-
-                                                // Feature enabled? Then disable it.
-                                                if(option.hasClass('Enabled'))
-                                                    {
-                                                    anno.destroy(preview_image.data('original'));
-
-                                                    // Remove the copy and show the linked image again
-                                                    jQuery('#' + img_copy_id).remove();
-                                                    preview_image_link.show();
-
-                                                    toggleMode(element);
-
-                                                    return false;
-                                                    }
-
-                                                // Always check no other conflicting preview tool option is enabled
-                                                if(is_another_tool_option_enabled(element))
-                                                    {
-                                                    return false;
-                                                    }
-
-                                                // Enable feature
-                                                // Hide the linked image for now and use a copy of it to annotate
-                                                var preview_image_copy = preview_image.clone(true);
-                                                preview_image_copy.prop('id', img_copy_id);
-                                                preview_image_copy.prop('src', img_src);
-
-                                                // Set the width and height of the image otherwise if the source of the file
-                                                // is fetched from download.php, Annotorious will not be able to determine its
-                                                // size
-                                                var preview_image_width=preview_image.width();
-                                                var preview_image_height=preview_image.height();
-                                                preview_image_copy.width( preview_image_width );
-                                                preview_image_copy.height( preview_image_height );
-
-                                                preview_image_copy.appendTo(preview_image_link.parent());
-                                                preview_image_link.hide();
-
-                                                anno.makeAnnotatable(document.getElementById(img_copy_id));
-
-                                                toggleMode(element);
-
-                                                return false;
-                                                }
-                                            </script>
-                                            <?php
-                                            }
-
-                                        if($image_preview_zoom)
-                                            {
-                                            $image_preview_zoom_lib_required = true;
-
-                                            # Process rotation from preview tweaks and use it to display the openseadragon preview in the correct orientation.
-                                            if (isset($resource['preview_tweaks']))
-                                                {
-                                                $preview_tweak_parts = explode('|', $resource['preview_tweaks']);
-                                                $osd_preview_rotation = 0;
-                                                if ($preview_tweak_parts[0] > 0 && is_numeric($preview_tweak_parts[0]))
-                                                    {
-                                                    $osd_preview_rotation = 360 - $preview_tweak_parts[0];
-                                                    }
-                                                } ?>
-
-                                            <a class="ToolsOptionLink ImagePreviewZoomOption" href="#" onclick="return toggleImagePreviewZoomOption(this);">
-                                                <i class='fa fa-search-plus' aria-hidden="true"></i>
-                                            </a>
-
-                                            <script>
-                                            var openseadragon_viewer = null;
-                                            function toggleImagePreviewZoomOption(element)
-                                                {
-                                                var zoom_option_enabled = jQuery(element).hasClass('Enabled');
-
-                                                if(!zoom_option_enabled && is_another_tool_option_enabled(element))
-                                                    {
-                                                    // Don't enable the tool while a conflicting preview tool is enabled
-                                                    return false;
-                                                    }
-                                                else if(!zoom_option_enabled)
-                                                    {
-                                                    console.debug('Enabling image zoom with OpenSeadragon');
-
-                                                    jQuery('#previewimagewrapper').prepend('<div id="openseadragon_viewer"></div>');
-
-                                                    // Hide the usual preview image of the resource
-                                                    jQuery('#previewimagelink').toggleClass('DisplayNone');
-
-                                                    openseadragon_viewer = OpenSeadragon({
-                                                        id: "openseadragon_viewer",
-                                                        prefixUrl: "<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/images/",
-                                                        degrees: <?php echo $osd_preview_rotation; ?>,
-                                                        // debugMode: true,
-                                                        // debugGridColor: ['red'],
-
-                                                        tileSources: openseadragon_custom_tile_source
-                                                    });
-                                                    }
-                                                else if(zoom_option_enabled)
-                                                    {
-                                                    console.debug('Disabling image zoom with OpenSeadragon');
-                                                    openseadragon_viewer.destroy();
-                                                    openseadragon_viewer = null;
-                                                    jQuery('#openseadragon_viewer').remove();
-
-                                                    // Show the usual preview image of the resource
-                                                    jQuery('#previewimagelink').toggleClass('DisplayNone');
-                                                    }
-                                                else
-                                                    {
-                                                    console.error('Something went wrong with toggleImagePreviewZoomOption');
-                                                    }
-
-                                                toggleMode(element);
-
-                                                return false;
-                                                }
-                                            </script>
-                                            <?php
-                                            }
-                                            ?>
-                                    </div>
-                                </div>
-                                <?php
-                                } /* end of canSeePreviewTools() */
                             }
                         else
                             {
-                            ?>
-                            <div id="previewimagewrapper">
-                                <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>"
-                                    alt=""
-                                    class="Picture NoPreview"
-                                    style="border:none;"
-                                    id="previewimage" />
-                                <?php
-                                hook('aftersearchimg', '', array($ref));
-                                if(isset($previewcaption))
+                            // Standard previews START
+                            if (
+                                (in_array((string)$resource["file_extension"], $ffmpeg_supported_extensions) 
+                                || ($ffmpeg_preview_gif && strtolower((string)$resource["file_extension"]) === 'gif'))
+                                && 
+                                !(isset($resource['is_transcoding']) && $resource['is_transcoding'] !== 0)
+                                )
+                                {
+                                // Video preview START
+                                # Establish whether it's ok to use original as the preview instead of the "pre" size
+                                $videosize= ($video_preview_original) ? "" : "pre"; 
+                                
+                                # Try to find a preview file.
+                                $video_preview_file = get_resource_path(
+                                    $ref,
+                                    true,
+                                    $videosize,
+                                    false,
+                                    ((1 == $video_preview_hls_support || 2 == $video_preview_hls_support) && !($ffmpeg_preview_gif && $resource["file_extension"] == 'gif')) ? 'm3u8' : $ffmpeg_preview_extension
+                                );
+
+                                if (file_exists($video_preview_file)
+                                    && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre')
+                                    )
                                     {
+                                    # Include the player if a video preview file exists for this resource.
+                                    if ($resource["file_extension"] != 'gif')
+                                            {
+                                            $download_multisize = false; 
+                                            }
+                                        else
+                                            {
+                                            $download_multisize = true; // gif preview sizes remain available when using $ffmpeg_preview_gif
+                                            }
                                     ?>
-                                    <div class="clearerleft"></div>
+                                    <div id="previewimagewrapper">
+                                        <?php 
+                                        if(!hook("customflvplay")) // Note: Legacy hook name; video_player.php no longer deals with FLV files.
+                                            {
+                                            include "video_player.php";
+                                            }
+                                        if(isset($previewcaption))
+                                            {				
+                                            display_field_data($previewcaption, true);
+                                            } ?>
+                                    </div>
                                     <?php
-                                    display_field_data($previewcaption, true);
                                     }
-
-                                hook("previewextras");
+                                } // Video preview END
+                            elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"))
+                                {
+                                // MP3 preview START 
                                 ?>
-                            </div>
-                            <?php
-                            }
+                                <div id="previewimagewrapper">
+                                <?php 
+                                $thumb_path=get_resource_path($ref,true,"pre",false,"jpg");
+    
+                                if (file_exists($thumb_path) && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre'))
+                                    {
+                                    $thumb_url=get_resource_path($ref,false,"pre",false,"jpg");
+                                    }
+                                else
+                                    {
+                                    $thumb_url=$baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false);
+                                    }
+    
+                                include "mp3_play.php";
+    
+                                if(isset($previewcaption))
+                                    {				
+                                    display_field_data($previewcaption, true);
+                                    } ?>
+                                </div>
+                                <?php
+                                // MP3 preview END 
+                                }
+                            elseif($resource['has_image'] === 1)
+                                {
+                                render_resource_view_image($resource,[
+                                    "access"=>$access,
+                                    "edit_access"=>$edit_access,
+                                    "previewcaption"=>$previewcaption ?? [],
+                                    ]
+                                    );
+                                }
+                            else
+                                {
+                                // No preview. If configured, try and use a preview from a related resource
+                                $pullresource = related_resource_pull($resource);
+                                if($pullresource !== false)
+                                    {
+                                    $pull_access = get_resource_access($pullresource);
+                                    render_resource_view_image($pullresource,[
+                                        "access"=>$pull_access,
+                                        "edit_access"=>0, // No ability to modify e.g. annotations
+                                        "previewcaption"=>$previewcaption ?? [],
+                                        ]
+                                        );
+                                    }
+                                else
+                                    {?>
+                                    <div id="previewimagewrapper">
+                                        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>"
+                                            alt=""
+                                            class="Picture NoPreview"
+                                            style="border:none;"
+                                            id="previewimage" />
+                                        <?php
+                                        hook('aftersearchimg', '', array($ref));
+                                        if(isset($previewcaption))
+                                            {
+                                            ?>
+                                            <div class="clearerleft"></div>
+                                            <?php
+                                            display_field_data($previewcaption, true);
+                                            }
 
+
+                                        hook("previewextras");
+                                        ?>
+                                    </div>
+                                    <?php
+                                    }
+                                }
+                            } // Standard previews END
                         } /* End of renderinnerresourcepreview hook */ 
                     } /* End of replacerenderinnerresourcepreview hook */ 
 
@@ -1837,8 +1462,8 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
     $fields_all     = isset($all_field_data[$ref]) ? $all_field_data[$ref] : get_resource_field_data($ref,false,!hook("customgetresourceperms"),null,($k!="" && !$internal_share_access),false);
     $access         = get_resource_access($resource);
     ?>
-    <div class="RecordBox">
-        <div class="RecordPanel">
+    <div class="RecordBox PushedRecordBox">
+        <div class="RecordPanel PushedRecordPanel">
             <div class="backtoresults">&gt;<a href="view.php?ref=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["view"]) ?></a>
         </div>
         <div class="Title"><?php echo i18n_get_translated($resource["resource_type_name"]) . " : " . $resource["field" . $view_title_field] ?></div>
@@ -2151,7 +1776,7 @@ if($annotate_enabled)
     <?php
     }
 
-if($image_preview_zoom_lib_required)
+if($GLOBALS["image_preview_zoom"])
     {
     ?>
     <script src="<?php echo $baseurl . LIB_OPENSEADRAGON; ?>/openseadragon.min.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>

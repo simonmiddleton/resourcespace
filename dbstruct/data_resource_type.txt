@@ -1,4 +1,4 @@
-1,Photo,,,,,,fas fa-image,
-2,Document,,,,,,fas fa-file-alt,
-3,Video,,,,,,fas fa-video,
-4,Audio,,,,,,fas fa-music,
+1,Photo,,,,,,fas fa-image,,
+2,Document,,,,,,fas fa-file-alt,,
+3,Video,,,,,,fas fa-video,,
+4,Audio,,,,,,fas fa-music,,

@@ -9,42 +9,32 @@ else
     $use_watermark = false; 
     }
 
-$thm_url = get_resource_path(
-    $ref,
-    false,
-    'pre',
-    false,
-    $result[$n]['preview_extension'],
-    true,
-    1,
-    $use_watermark,
-    $result[$n]['file_modified']
-);
-
+$thumbnail = get_resource_preview($result[$n],["pre","thm"],$access,$watermark);
 if(isset($result[$n]['thm_url']))
     {
-    $thm_url = $result[$n]['thm_url'];
-    } # Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
+    // Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
+    $thumbnail["url"] = $result[$n]['thm_url'];
+    }
     ?>
-    <a
-        id="ResourceStrip<?php echo $ref ?>"
-        class="ImageStripLink"
-        href="<?php echo $url; ?>"  
-        onClick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this, true);" 
-        title=""
-        ><?php 
-        if($result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'pre'))
-            {
-            ?><img 
-            src="<?php echo $thm_url; ?>" 
-            class="ImageBorder ImageStrip" 
-            alt=""
-            /><?php }
-            else 
-                { ?><img class="ImageStrip" 
-                    border=0
-                    alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-                    src="<?php echo $baseurl_short; ?>gfx/<?php echo get_nopreview_icon($result[$n]['resource_type'], $result[$n]['file_extension'], false); ?>" 
+<a
+    id="ResourceStrip<?php echo $ref ?>"
+    class="ImageStripLink"
+    href="<?php echo $url; ?>"  
+    onClick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this, true);" 
+    title=""
+    ><?php 
+    if($thumbnail !== false) {
+        ?><img 
+        src="<?php echo $thumbnail["url"]; ?>" 
+        class="ImageBorder ImageStrip" 
+        alt=""
+        /><?php 
+    }
+    else { ?><img class="ImageStrip" 
+                border=0
+                alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
+                src="<?php echo $baseurl_short; ?>gfx/<?php echo get_nopreview_icon($result[$n]['resource_type'], $result[$n]['file_extension'], false); ?>" 
 
-                /><?php 
-                } ?></a> 
+            /><?php 
+    } ?>
+</a> 

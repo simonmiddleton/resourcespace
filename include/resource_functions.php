@@ -46,9 +46,14 @@ function get_resource_path(
     global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
     $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
     $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate,
-    $baseurl, $k, $get_resource_path_extra_download_query_string_params;
+    $baseurl, $k, $get_resource_path_extra_download_query_string_params, $resource_path_pull_cache;
 
-    # returns the correct path to resource $ref of size $size ($size==empty string is original resource)
+    if(isset($resource_path_pull_cache[$ref]) && strtolower((string)$extension) == 'jpg')
+        {
+        $ref = $resource_path_pull_cache[$ref]["ref"];
+        }
+
+    # Returns the correct path to resource $ref of size $size ($size==empty string is original resource)
     # If one or more of the folders do not exist, and $generate=true, then they are generated
     if(!preg_match('/^[a-zA-Z0-9]+$/',(string) $extension))
         {
@@ -91,7 +96,6 @@ function get_resource_path(
             }
         }
 
-
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
     if(!$getfilepath && $hide_real_filepath)
         {
@@ -104,7 +108,7 @@ function get_resource_path(
             $get_resource_path_extra_download_query_string_params = array();
             }
 
-        return generateURL(
+        $url = generateURL(
             "{$baseurl}/pages/download.php",
             array(
                 'ref'         => $ref,
@@ -118,6 +122,8 @@ function get_resource_path(
                 'v'           => $refresh_key,
             ),
             $get_resource_path_extra_download_query_string_params);
+
+        return $url;
         }
 
     if ($size=="")
@@ -155,7 +161,8 @@ function get_resource_path(
             else
                 {
                 global $baseurl_short, $k;
-                return $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}";
+                $url =  $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}";
+                return  $url;
                 }
             }
         }
@@ -172,7 +179,6 @@ function get_resource_path(
             {
             $skey = $fstemplate_alt_scramblekey;
             }
-
         $scramblepath = substr(md5("{$ref}_{$skey}"), 0, 15);
         }
 
@@ -189,7 +195,7 @@ function get_resource_path(
             $alt_data=ps_query('select ref,resource,name,description,file_name,file_extension,file_size,creation_date,unoconv,alt_type,page_count from resource_alt_files where ref=?',array("i",$alternative));
             if(!empty($alt_data))
                 {
-                // determin if this file was created from $ffmpeg_alternatives
+                // Determine if this file was created from $ffmpeg_alternatives
                 $ffmpeg_alt=alt_is_ffmpeg_alternative($alt_data[0]);
                 if($ffmpeg_alt)
                     {
@@ -376,6 +382,28 @@ function get_resource_path(
             $migrating_scrambled = true;
             }
         }
+
+    if(!file_exists($file)
+        && !$getfilepath
+        && $alternative==-1
+        && !$generate
+        && !defined("GETRESOURCEPATHNORECURSE" . $ref)
+        )
+        {
+        $resdata = get_resource_data($ref);
+        $pullresource = related_resource_pull($resdata);
+        if($pullresource !== false)
+            {
+            define("GETRESOURCEPATHNORECURSE" . $ref,true);
+            if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"]))
+                {
+                // If a JPG then no 'hpr' will be available
+                $size = "";
+                }
+            $file = get_resource_path($pullresource["ref"],$getfilepath,$size,false,$extension,$scramble,$page,$watermarked,$file_modified,-1,$includemodified);
+            }
+        }
+
     return $file;
     }
 
@@ -453,7 +481,7 @@ function get_resource_data_batch($refs)
     $joins=get_resource_table_joins();
     $join_fields = empty($joins) ? '' : ',' . implode(',', array_map(prefix_value('field'), $joins));
 
-    $resdata=ps_query("SELECT ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " FROM resource WHERE ref IN (" . ps_param_insert(count($resids)). ")",ps_param_fill($resids,"i"));
+    $resdata=ps_query("SELECT ref,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " FROM resource WHERE ref IN (" . ps_param_insert(count($resids)). ")",ps_param_fill($resids,"i"));
     // Create array with resource ID as index
     $resource_data = array();
     foreach($resdata as $resdatarow)
@@ -522,7 +550,7 @@ function create_resource($resource_type,$archive=999,$user=-1,$origin='')
         return false;
         }
 
-    $alltypes=get_resource_types("",false,false,true);
+    $alltypes=get_resource_types("",false,false,false);
     if(!in_array($resource_type,array_column($alltypes,"ref")))
         {
         return false;
@@ -5023,7 +5051,7 @@ function delete_alternative_file($resource,$ref)
         $extensions[]='jpg'; // always look for jpegs, just in case
     $extensions[]='icc'; // always look for extracted icc profiles
     $extensions=array_unique($extensions);
-        $sizes = ps_array('select id value from preview_size',array());
+        $sizes = ps_array('SELECT id value FROM preview_size',array(),"schema");
 
         // in some cases, a jpeg original is generated for non-jpeg files like PDFs. Delete if it exists.
         $path=get_resource_path($resource, true,'', true, 'jpg', -1, 1, false, "", $ref);
@@ -5506,7 +5534,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         else
             {
             # Return the restricted access setting for this resource type.
-            return ps_value("SELECT allow_restricted value FROM preview_size WHERE id = ?", array("s", $size), 0) == 1;
+            return ps_value("SELECT allow_restricted value FROM preview_size WHERE id = ?", array("s", $size), 0, "schema") == 1;
             }
         }
 
@@ -5552,7 +5580,7 @@ function get_edit_access($resource, int $status=-999, array &$resourcedata = [])
     if ($status==-999) # Archive status may not be passed
         {$status=$resourcedata["archive"];}
 
-    if ($resource==0-$userref) {return true;} # Can always edit their own user template.
+    if ($resource == 0-(int)$userref) {return true;} # Can always edit their own user template.
 
     # If $edit_access_for_contributor is true in config then users can always edit their own resources.
     if ($edit_access_for_contributor && $userref==$resourcedata["created_by"]) {return true;}
@@ -7307,7 +7335,7 @@ function save_original_file_as_alternative($ref)
     if ($alternative_file_previews)
         {
         // Move the old previews to new paths
-        $ps=ps_query("select * from preview_size",array());
+        $ps=ps_query("SELECT " . columns_in("preview_size")  . " FROM preview_size",[],"schema");
         for ($n=0;$n<count($ps);$n++)
             {
             # Find the original
@@ -7665,7 +7693,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
 
     # add the original image
     $return=array();
-    $lastname=ps_value("select name value from preview_size where width=(select max(width) from preview_size)",array(), ""); # Start with the highest resolution.
+    $lastname=ps_value("SELECT name value FROM preview_size WHERE width=(SELECT max(width) FROM preview_size)",[], "schema"); # Start with the highest resolution.
     $lastpreview=0;$lastrestricted=0;
     $path2=get_resource_path($ref,true,'',false,$extension);
 
@@ -7715,7 +7743,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $return[]=$returnline;
     }
     # loop through all image sizes
-    $sizes=ps_query("select " . columns_in("preview_size") . " from preview_size order by width desc");
+    $sizes=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size ORDER BY width DESC", [],"schema");
 
     for ($n=0;$n<count($sizes);$n++)
         {
@@ -7923,7 +7951,7 @@ function get_all_image_sizes($internal=false,$restricted=false)
         if($restricted){$condition .= ($condition!=""?" AND ":" WHERE ") . " allow_restricted=1";}
 
         # Executes query.
-        $r = ps_query("select ref,id,width,height,padtosize,name,internal,allow_preview,allow_restricted,quality from preview_size " . $condition . " order by width asc"); // $condition does not contain any user entered params and is safe for inclusion
+        $r = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition . " ORDER BY width ASC",[],"schema"); // $condition does not contain any user entered params and is safe for inclusion
 
         # Translates image sizes in the newly created array.
         $return = array();
@@ -7938,7 +7966,7 @@ function get_all_image_sizes($internal=false,$restricted=false)
 function image_size_restricted_access($id)
     {
     # Returns true if the indicated size is allowed for a restricted user.
-    return ps_value("select allow_restricted value from preview_size where id=?",array("s",$id), false);
+    return ps_value("SELECT allow_restricted value FROM preview_size WHERE id=?",array("s",$id), false,"schema");
     }
 
 
@@ -8742,6 +8770,10 @@ function get_resource_table_joins(){
         $view_title_field,
         $date_field)
     );
+    if(isset($GLOBALS["related_pushed_order_by"]) && is_int_loose($GLOBALS["related_pushed_order_by"]))
+        {
+        $joins[] = $GLOBALS["related_pushed_order_by"];
+        }
     $additional_joins=hook("additionaljoins");
     if ($additional_joins) $joins=array_merge($joins,$additional_joins);
     $joins=array_unique($joins);
@@ -9293,7 +9325,7 @@ function apply_resource_default(int $old_resource_type, int $new_resource_type, 
  * Where access is restricted and restricted access users can't access the scr size, the scr size shouldn't be used.
  *
  * @param  int   $access   Resource access level, typically from get_resource_access()
- * 
+ *
  * @return  bool   True if scr size shouldn't be used else false.
  */
 function skip_scr_size_preview(int $access) : bool
@@ -9310,4 +9342,138 @@ function skip_scr_size_preview(int $access) : bool
         }
 
     return false;
+    }
+
+
+/**
+ * Get a related resource to pull images from
+ *
+ * @param array $resource   Array of resource data from do_search()
+ *
+ * @return array|bool $resdata    Array of alternative resource data to use, or false if not configured or no resource image found
+ *
+ */
+function related_resource_pull(array $resource)
+    {
+    global $resource_path_pull_cache;
+    $related = false;
+    if (isset($resource_path_pull_cache[$resource["ref"]]))
+        {
+        return $resource_path_pull_cache[$resource["ref"]];
+        }
+
+    $restypes = get_resource_types('',false,true,true);
+    $pull_images = array_column($restypes,"pull_images","ref")[$resource['resource_type']];
+    if ((int)$pull_images === 1)
+        {
+        $relatedpull = do_search("!related" . $resource["ref"]);
+        debug("Looking for a related resource with image for resource ID #" . $resource["ref"]);
+        if (is_array($relatedpull))
+            {
+            foreach ($relatedpull as $related)
+                {
+                if($related["has_image"] === 1)
+                    {
+                    $relatedpath = get_resource_path($related["ref"],true,"pre",false,"jpg",true,1,false);
+                    if(file_exists($relatedpath))
+                        {
+                        $resource_path_pull_cache[$resource["ref"]] = $related;
+                        debug("Found related resource with image: " . $related["ref"]);
+                        break;
+                        }
+                    }
+                }
+            }
+        }
+    return $related;
+    }
+
+
+/**
+ * Get the largest available preview URL for the given resource and the given array of sizes
+ *
+ * @param array     $resource   Array of resource data from get_resource_data() or search results
+ * @param int       $access     Resource access
+ * @param array     $sizes      Array of size IDs to look through, in order of size. If not provied will use all sizes
+ * @param bool      $watermark  Look for watermarked versions?
+ *
+ * @return string | bool        URL, or false if no image is found
+ *
+ */
+function get_resource_preview(array $resource,array $sizes = [], int $access = -1, bool $watermark = false)
+    {
+    if(empty($sizes))
+        {
+        $sizes = array_reverse(array_column(get_all_image_sizes(),"id"));
+        }
+
+    $preview["url"] = "";
+    if (isset($resource['thm_url']))
+        {
+        // Option to override thumbnail image in search results, e.g. by plugin using process_search_results hook
+        $preview["url"] = $resource['thm_url'];
+        $preview["height"] = $resource["thumb_height"];
+        $preview["width"] = $resource["thumb_width"];
+        }
+    else
+        {
+        if((int)$resource['has_image'] === 0)
+            {
+            // If configured, try and use a preview from a related resource
+            $pullresource = related_resource_pull($resource);
+            if($pullresource !== false)
+                {
+                $resource = $pullresource;
+                }
+            }
+
+        if($access == -1)
+            {
+            $access = get_resource_access($resource);
+            }
+
+        // Work out image to use.
+        if($watermark !== '')
+            {
+            $use_watermark = check_use_watermark();
+            }
+        else
+            {
+            $use_watermark = false;
+            }
+        $validimage = false;
+        foreach($sizes as $size)
+            {
+            if(resource_has_access_denied_by_RT_size($resource['resource_type'], $size))
+                {
+                continue;
+                }
+
+            // Check that file actually exists
+            $img_file = get_resource_path(
+                $resource['ref'],
+                true,
+                $size,
+                false,
+                $resource['preview_extension'],
+                true,
+                1,
+                $use_watermark,
+                $resource['file_modified']
+            );
+            if(file_exists($img_file))
+                {
+                $preview["path"] = $img_file;
+                $preview["url"] = get_resource_path($resource['ref'],false,$size ,false,$resource['preview_extension'],true,1,$use_watermark,$resource['file_modified']);
+                list($preview["width"], $preview["height"]) = getimagesize($img_file);
+                $validimage = true;
+                break;
+                }
+            }
+        }
+    if(!$validimage)
+        {
+        return false;
+        }
+    return $preview;
     }

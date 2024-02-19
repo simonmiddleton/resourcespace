@@ -49,16 +49,22 @@ if (!hook("replacelistitem"))
         <td width="40px">
             <a href="<?php echo $url?>" onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);">
                 <?php
-                $thm_url = get_resource_path($ref, false, 'col', false, $result[$n]['preview_extension'], true, 1, $watermark, $result[$n]['file_modified']);
-
+                $thumbnail = get_resource_preview($result[$n],["col"],$access,$watermark);
                 if(isset($result[$n]['thm_url']))
                     {
-                    $thm_url = $result[$n]['thm_url'];
-                    } # Option to override thumbnail image in results
+                    // Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
+                    $thumbnail["url"] = $result[$n]['thm_url'];
+                    }
 
-                if($result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'col'))
+                if($thumbnail !== false)
                     {
-                    render_resource_image($result[$n],$thm_url,"list");
+                    if($result[$n]["thumb_height"] !== $thumbnail["height"] || $result[$n]["thumb_width"] !== $thumbnail["width"])
+                        {                    
+                        // Preview image dimensions differ from the size data stored for the current resource
+                        $result[$n]["thumb_height"] = $thumbnail["height"];
+                        $result[$n]["thumb_width"]  = $thumbnail["width"];
+                        }
+                    render_resource_image($result[$n],$thumbnail["url"],"list");
                     }
                 else
                     {
