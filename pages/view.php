@@ -874,7 +874,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     $headline=$newHeadline;
                                                     }
 
-                                                if ($hide_restricted_download_sizes && !$downloadthissize && !checkperm("q") || $resource)
+                                                if ($hide_restricted_download_sizes && !$downloadthissize && !checkperm("q"))
                                                     {
                                                     continue;
                                                     }
@@ -1082,15 +1082,25 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     </td>
                                                     <?php
                                                     }
-                                                elseif(!checkperm('q'))
+                                                // No file. Link to request form.
+                                                else if(checkperm('q'))
+                                                    {
+                                                    if(!hook('resourcerequest'))
+                                                        {
+                                                        ?>
+                                                        <td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
+                                                            <a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);">
+                                                                <?php echo htmlspecialchars($lang["action-request"])?>
+                                                            </a>
+                                                        </td>
+                                                        <?php
+                                                        }
+                                                    }
+                                                else
                                                     {
                                                     ?>
                                                     <td <?php hook("modifydownloadbutton") ?> class="DownloadButton DownloadDisabled"><?php echo htmlspecialchars($lang["access1"])?></td>
                                                     <?php
-                                                    }
-                                                else
-                                                    {
-                                                    // No file. Do not display download or request button.
                                                     }
                                                 ?>
                                             </tr>
