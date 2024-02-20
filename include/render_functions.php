@@ -2798,35 +2798,27 @@ function render_new_featured_collection_cta(string $url, array $ctx)
 * @return void
 */
 function renderSocialMediaShareLinksForUrl($url)
-    {
+{
     global $social_media_links;
 
-    $url_encoded = urlencode($url);
-
-    if(in_array("facebook", $social_media_links))
-        {
-        ?>
+    if (in_array("facebook", $social_media_links)) { ?>
         <!-- Facebook -->
-        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-facebook-official" aria-hidden="true"></i></a>
+        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($url); ?>"><i class="fa-brands fa-xl fa-square-facebook" aria-hidden="true"></i></a>
         <?php
-        }
-
-    if (in_array("twitter", $social_media_links))
-        {
-        ?>
-        <!-- Twitter -->
-        <a target="_blank" href="https://twitter.com/intent/tweet?url=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-twitter-square" aria-hidden="true"></i></a>
-        <?php
-        }
-
-    if (in_array("linkedin", $social_media_links))
-        {
-        ?>
-        <!-- LinkedIn -->
-        <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $url_encoded; ?>"><i class="fa fa-lg fa-linkedin-square" aria-hidden="true"></i></a>
-        <?php
-        }
     }
+
+    if (in_array("twitter", $social_media_links)) { ?>
+        <!-- Twitter -->
+        <a target="_blank" href="https://twitter.com/intent/tweet?url=<?php echo urlencode($url); ?>"><i class="fa-brands fa-xl fa-square-x-twitter" aria-hidden="true"></i></a>
+        <?php
+    }
+
+    if (in_array("linkedin", $social_media_links)) { ?>
+        <!-- LinkedIn -->
+        <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode($url); ?>"><i class="fa-brands fa-xl fa-linkedin" aria-hidden="true"></i></a>
+        <?php
+    }
+}
     
 /**
 * Renders a lock button for a field - used to 'lock' metadata in upload_review_mode
