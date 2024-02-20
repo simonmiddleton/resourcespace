@@ -9465,8 +9465,18 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
                 {
                 $preview["path"] = $img_file;
                 $preview["url"] = get_resource_path($resource['ref'],false,$size ,false,$resource['preview_extension'],true,1,$use_watermark,$resource['file_modified']);
-                list($preview["width"], $preview["height"]) = getimagesize($img_file);
-                $validimage = true;
+                $GLOBALS["use_error_exception"] = true;
+                try
+                    {
+                    list($preview["width"], $preview["height"]) = getimagesize($img_file);
+                    $validimage = true;
+                    }
+                catch (Exception $e)
+                    {
+                    $returned_error = $e->getMessage();
+                    debug("get_resource_preview - getimagesize(): " . $returned_error);
+                    }
+                unset($GLOBALS["use_error_exception"]);
                 break;
                 }
             }
