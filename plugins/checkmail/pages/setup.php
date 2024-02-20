@@ -12,7 +12,7 @@ $page_heading = $lang['checkmail_configuration'];
 $last_checkmail = ps_value("select value from sysvars where name = 'last_checkmail'", array(), ""); 
 $now = ps_value("select now() value", array(), "");
 if (!extension_loaded("imap")){$page_intro=$lang['checkmail_install_php_imap_extension']."<br /><br />";}
-else if ($last_checkmail==""){
+elseif ($last_checkmail==""){
     $page_intro = $lang['checkmail_cronhelp']."<br /><br />";
 } else {
     $page_intro=str_replace("[lastcheck]",nicedate($last_checkmail,true),$lang['checkmail_lastcheck']."<br /><br />");

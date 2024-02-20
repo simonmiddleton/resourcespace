@@ -566,7 +566,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                     <?php
                     }
 
-                else if($modal)
+                elseif($modal)
                     { ?>
                     <div class="backtoresults">
                         <?php
@@ -1083,7 +1083,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     <?php
                                                     }
                                                 // No file. Link to request form.
-                                                else if(checkperm('q'))
+                                                elseif(checkperm('q'))
                                                     {
                                                     if(!hook('resourcerequest'))
                                                         {
@@ -1237,7 +1237,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                         {
                                                         echo "<div class='DisabledLink LockedResourceAction'><i class='fa fa-fw fa-trash'></i>&nbsp;" . $deletetext . "</div>";
                                                         }
-                                                    else if ($delete_requires_password)
+                                                    elseif ($delete_requires_password)
                                                         {
                                                         $delete_url = generateURL($baseurl . "/pages/delete.php", $urlparams);
                                                         echo "<a id='delete_link_" . $ref . "' href='" . $delete_url . "' class='LockedResourceAction' onclick='return ModalLoad(this, true);' ><i class='fa fa-fw fa-trash'></i>&nbsp;" . $deletetext . "</a>";

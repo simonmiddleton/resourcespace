@@ -89,7 +89,7 @@ if('predict_label' == $action)
     // When facial recognition has never been trained, it won't have lbph model states so faceRecognizerPredict() will
     // return false because the files do not exist. Basically this should be seen as an unknown person rather than a
     // system error
-    else if(false === $prediction && (!file_exists($model_file_path) || !file_exists($prepared_image_path)))
+    elseif(false === $prediction && (!file_exists($model_file_path) || !file_exists($prepared_image_path)))
         {
         $prediction = [];
         $prediction[0] = -1;

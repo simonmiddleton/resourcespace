@@ -212,7 +212,7 @@ for($n = 0; $n < count($collection_resources); $n++)
         $replaced_file = true;
         $target_exists = file_exists($p);
         }
-    else if(!$target_exists && $useoriginal == 'yes' && resource_download_allowed($ref,'',$resource_data['resource_type']))
+    elseif(!$target_exists && $useoriginal == 'yes' && resource_download_allowed($ref,'',$resource_data['resource_type']))
         {
         // this size doesn't exist, so we'll try using the original instead
         $p = get_resource_path($ref, true, '', false, $resource_data['file_extension'], -1, 1, $use_watermark);
@@ -255,7 +255,7 @@ for($n = 0; $n < count($collection_resources); $n++)
             {
             $p = $tmpfile; // file already in tmp, just rename it
             }
-        else if(!$replaced_file)
+        elseif(!$replaced_file)
             {
             $copy = true; // copy the file from filestore rather than renaming
             }

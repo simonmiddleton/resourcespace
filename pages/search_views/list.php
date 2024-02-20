@@ -95,7 +95,7 @@ if (!hook("replacelistitem"))
 
             if ($df[$x]['value_filter']!="")
                 {eval(eval_check_signed($df[$x]['value_filter']));}
-            else if (file_exists($plugin)) 
+            elseif (file_exists($plugin)) 
                 {include $plugin;}
 
             # swap title fields if necessary

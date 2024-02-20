@@ -24,7 +24,7 @@ if (!isset($zipcommand))
     if (!$collection_download) {exit($lang["download-of-collections-not-enabled"]);}
     if ($archiver_fullpath==false) {exit($lang["archiver-utility-not-found"]);}
     if (!isset($collection_download_settings)) {exit($lang["collection_download_settings-not-defined"]);}
-    else if (!is_array($collection_download_settings)) {exit($lang["collection_download_settings-not-an-array"]);}
+    elseif (!is_array($collection_download_settings)) {exit($lang["collection_download_settings-not-an-array"]);}
     if (!isset($archiver_listfile_argument)) {exit($lang["listfile-argument-not-defined"]);}
     }
 $archiver = $collection_download && ($archiver_fullpath!=false) && (isset($archiver_listfile_argument)) && (isset($collection_download_settings) ? is_array($collection_download_settings) : false);

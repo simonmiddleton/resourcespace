@@ -454,7 +454,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 {
                 continue;
                 }
-            else if(!is_array($searched_field_nodes))
+            elseif(!is_array($searched_field_nodes))
                 {
                 $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
                 continue;
@@ -562,7 +562,7 @@ function refine_searchstring($search)
                         }
                     }
                 }
-            else if (!in_array($keyword,$noadd))
+            elseif (!in_array($keyword,$noadd))
                 {
                 $keywords=explode(" ",$keyword);
                 $fixedkeywords[]=$keywords[0];
@@ -1707,7 +1707,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE lock_user<>0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
-    else if(preg_match('/^!report(\d+)(p[-1\d]+)?(d\d+)?(fy\d{4})?(fm\d{2})?(fd\d{2})?(ty\d{4})?(tm\d{2})?(td\d{2})?/i', $search, $report_search_data))
+    elseif(preg_match('/^!report(\d+)(p[-1\d]+)?(d\d+)?(fy\d{4})?(fm\d{2})?(fd\d{2})?(ty\d{4})?(tm\d{2})?(td\d{2})?/i', $search, $report_search_data))
         {
         /*
         View report as search results.
@@ -2132,7 +2132,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
             {
             return array($s[0],$s[0] . "-" . $s[1],$search);
             }
-        else if (is_array($search))
+        elseif (is_array($search))
             {
             return $search;
             }
@@ -3088,7 +3088,7 @@ function update_search_from_request($search)
         // Nodes can be searched directly when displayed on simple search bar
         // Note: intially they come grouped by field as we need to know whether if
         // there is a OR case involved (ie. @@101@@102)
-        else if('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched')
+        elseif('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched')
             {
             $node_ref = '';
 
@@ -3099,7 +3099,7 @@ function update_search_from_request($search)
                     {
                     continue;
                     }
-                else if(!is_array($searched_field_nodes))
+                elseif(!is_array($searched_field_nodes))
                     {
                     $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
 

@@ -297,7 +297,7 @@ if (isset($_POST['display']))
     {
     $thumbtypechange = in_array($_POST['display'], $displaytypes);
     }
-else if (!isset($_POST['display']) && isset($_GET['display']))
+elseif (!isset($_POST['display']) && isset($_GET['display']))
     {
     $thumbtypechange = in_array($_GET['display'], $displaytypes);
     }
@@ -989,7 +989,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         {
         echo render_selected_resources_counter(count($selection_collection_resources));
         }
-    else if (isset($collections)) 
+    elseif (isset($collections)) 
         {
         ?>
         <span class="Selected">

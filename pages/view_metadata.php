@@ -60,7 +60,7 @@ foreach(array_keys($system_tabs) as $tab_ref)
             $disable_tabs = false;
             }
         // Unassigned or invalid tab links end up on the "not set" list (IF they will be rendered)
-        else if(
+        elseif(
             !isset($tabs_fields_assoc[0][$i])
             && (0 === $fields[$i]['tab'] || !isset($system_tabs[$fields[$i]['tab']]))
             && $field_can_show_on_tab
@@ -76,7 +76,7 @@ if($disable_tabs)
     {
     $tabs_fields_assoc = [];
     }
-else if(isset($tabs_fields_assoc[0]) && count($tabs_fields_assoc[0]) > 0)
+elseif(isset($tabs_fields_assoc[0]) && count($tabs_fields_assoc[0]) > 0)
     {
     foreach(array_keys($tabs_fields_assoc[0]) as $i)
         {

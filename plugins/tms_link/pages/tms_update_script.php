@@ -45,7 +45,7 @@ if ($argc == 2)
         echo "pass in '--clearlock', '-clearlock', '-c' or '--c'." . PHP_EOL;
         exit("Bye!");
         }
-    else if ( in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')) )
+    elseif ( in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')) )
         {
         if ( is_process_lock("tms_link") )
             {

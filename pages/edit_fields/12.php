@@ -165,7 +165,7 @@ if($display_as_radiobuttons)
     <?php
     }
 // On advanced search, by default, show as checkboxes:
-else if($display_as_checkbox)
+elseif($display_as_checkbox)
     {
     ?>
     <table cellpadding=2 cellspacing=0>
@@ -220,7 +220,7 @@ else if($display_as_checkbox)
     <?php
     }
 // On advanced search, display it as a dropdown, if set like this:
-else if($display_as_dropdown)
+elseif($display_as_dropdown)
     {
     ?>
     <select class="<?php echo $class; ?>" name="<?php echo $name; ?>" <?php if($autoupdate) { ?>onChange="UpdateResultCount();"<?php } ?>>

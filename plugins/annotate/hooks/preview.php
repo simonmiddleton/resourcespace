@@ -77,7 +77,7 @@ $h = $sizes[1];
             <a onClick="return CentralSpaceLoad(this);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams,array("page" => $previouspage)); ?>" class="PDFnav  pagePrev">&lt;</a>
         </td>
     <?php 
-    } else if($nextpage !=-1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>
+    } elseif($nextpage !=-1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>
         <td valign="middle">
             <a href="#" class="PDFnav pagePrev">&nbsp;&nbsp;&nbsp;</a>
         </td>

@@ -57,7 +57,7 @@ foreach($options as $option_name => $option_value)
         $option_name = str_replace("-", "_", $option_name);
         $$option_name = true;
         }
-    else if(in_array($option_name, array("override-newuser-usergroup")))
+    elseif(in_array($option_name, array("override-newuser-usergroup")))
         {
         $option_name = str_replace("-", "_", $option_name);
         $$option_name = $option_value;
@@ -342,7 +342,7 @@ if($import_collections && isset($input_fh))
         {
         logScript("MySQL - Commit transaction");
         }
-    else if(db_rollback_transaction("resourceconnect_data_migration"))
+    elseif(db_rollback_transaction("resourceconnect_data_migration"))
         {
         logScript("MySQL - Rollback Successful");
         }

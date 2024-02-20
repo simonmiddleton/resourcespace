@@ -100,7 +100,7 @@ if ($errors!="")
                 # Use 'scr' path
                 $path=get_resource_path ($ref, false,"scr",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);
                 }
-            else if (!file_exists($path))
+            elseif (!file_exists($path))
                 {
                 # Attempt original file if jpeg
                 $path=get_resource_path ($ref, false,"",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);

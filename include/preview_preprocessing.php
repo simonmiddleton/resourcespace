@@ -417,7 +417,7 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
                 }
             }
         }
-    else if (file_exists($pdffile))
+    elseif (file_exists($pdffile))
         {
         # Attach this PDF file as an alternative download.
         ps_query("delete from resource_alt_files where resource = ? and unoconv='1'",array("i",$ref));    
@@ -675,7 +675,7 @@ if(false != $ffmpeg_fullpath && $snapshotcheck && in_array($extension, $ffmpeg_s
     
     include dirname(__FILE__) . '/ffmpeg_processing.php';
     }
-else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpeg_supported_extensions))
+elseif (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpeg_supported_extensions))
     {
     debug('FFMPEG-VIDEO: Start process for creating previews...');
     
@@ -757,7 +757,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
                 // Landscape
                 $snapshot_scale = "-vf scale={$snapshot_width}:-1";
                 }
-            else if($video_resolution['width'] < $video_resolution['height'] && isset($snapshot_height) && $video_resolution['height'] >= $snapshot_height)
+            elseif($video_resolution['width'] < $video_resolution['height'] && isset($snapshot_height) && $video_resolution['height'] >= $snapshot_height)
                 {
                 // Portrait
                 $snapshot_scale = "-vf scale=-1:{$snapshot_height}";
@@ -1086,7 +1086,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             {
             ps_query("UPDATE resource_alt_files SET page_count = ?, file_size = ? where ref = ?", array("i", $pagecount, "i", $filesize, "i", $alternative));
             }
-        else if (isset($pagecount))
+        elseif (isset($pagecount))
             {
             $sql = "SELECT count(*) AS value FROM `resource_dimensions` WHERE resource = ?";
             $query = ps_value($sql, array("i", $ref), 0);

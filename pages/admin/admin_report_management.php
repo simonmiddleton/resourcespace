@@ -77,7 +77,7 @@ function addColumnHeader($orderName, $labelKey)
 
     if ($order_by == $orderName)
         $image = '<span class="ASC"></span>';
-    else if ($order_by == $orderName . ' desc')
+    elseif ($order_by == $orderName . ' desc')
         $image = '<span class="DESC"></span>';
     else
         $image = '';

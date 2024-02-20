@@ -10,11 +10,11 @@ function Hookyt2rsUpload_batchUpload_page_bottom()
         {
         return false;
         }
-      else if (preg_match("/youtu.be\/[a-z1-9.-_]+/", $youtube_copy_path))
+      elseif (preg_match("/youtu.be\/[a-z1-9.-_]+/", $youtube_copy_path))
         {
         preg_match("/youtu.be\/([a-z1-9.-_]+)/", $youtube_copy_path, $matches);
         }
-      else if (preg_match("/youtube.com(.+)v=([^&]+)/", $youtube_copy_path))
+      elseif (preg_match("/youtube.com(.+)v=([^&]+)/", $youtube_copy_path))
         {
         preg_match("/v=([^&]+)/", $youtube_copy_path, $matches);
         }

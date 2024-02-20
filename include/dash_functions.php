@@ -471,7 +471,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
             {
             update_default_dash_tile_order($tile["tile"],$order);
             }
-        else if((!isset($tile['default_order_by']) || $order != $tile['default_order_by'] || ($tile['default_order_by'] % 10) > 0) && !is_null($user_group_id))
+        elseif((!isset($tile['default_order_by']) || $order != $tile['default_order_by'] || ($tile['default_order_by'] % 10) > 0) && !is_null($user_group_id))
             {
             update_usergroup_dash_tile_order($user_group_id, $tile['tile'], $order);
             }
@@ -1430,7 +1430,7 @@ function build_dash_tile_list($dtiles_available)
                   <?php 
                   if(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]!="custm" && $buildstring["tlstyle"]!="pend")
                       {$tile["txt"] = text($tile["title"]);}
-                  else if(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]=="pend")
+                  elseif(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]=="pend")
                       {
                     if(isset($lang[strtolower($tile['txt'])]))
                         {

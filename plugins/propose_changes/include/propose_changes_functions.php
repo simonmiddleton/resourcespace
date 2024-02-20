@@ -40,7 +40,7 @@ function save_proposed_changes($ref)
                     {
                     $ui_selected_node_values[] = $user_set_values[$fields[$n]['ref']];
                     }
-                else if(isset($user_set_values[$fields[$n]['ref']])
+                elseif(isset($user_set_values[$fields[$n]['ref']])
                     && is_array($user_set_values[$fields[$n]['ref']]))
                     {
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
@@ -115,7 +115,7 @@ function save_proposed_changes($ref)
                         }
                         $val=$newval;
                     }
-                else if ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
+                elseif ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
                     {
                     $val = getval("field_{$fields[$n]['ref']}", false);
                     if($val !== false && !validateDatetime($val, 'Y-m-d'))
@@ -446,7 +446,7 @@ function propose_changes_display_field($n, $field)
                 {
                 $name = "nodes[{$field['ref']}][]";
                 }
-            else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
+            elseif(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
                 {
                 $name = "field_{$field['ref']}";
                 }
@@ -457,7 +457,7 @@ function propose_changes_display_field($n, $field)
                 $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
                 }
             }
-        else if ($field["type"]==FIELD_TYPE_DATE_RANGE)
+        elseif ($field["type"]==FIELD_TYPE_DATE_RANGE)
             {
             $rangedates = explode(",",$value);
             natsort($rangedates);

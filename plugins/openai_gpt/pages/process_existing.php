@@ -57,7 +57,7 @@ if($cli_options !== false)
                 $collections = $option_value;
                 continue;
                 }
-            else if((string)(int)$option_value == (string)$option_value)
+            elseif((string)(int)$option_value == (string)$option_value)
                 {
                 $collections[] = $option_value;
                 }

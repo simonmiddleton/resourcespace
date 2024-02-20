@@ -752,7 +752,7 @@ elseif ($k != "" && !$internal_share_access)
                 <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'collection'=>$usercollection, 'url'=>'pages/download_usage.php?collection='.$usercollection.'&k='.$k]);?>">
                     <?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a><br />
             <?php 
-            } else if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) { ?>
+            } elseif ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) { ?>
                 <a href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'collection'=>$usercollection, 'url'=>'pages/collection_download.php?collection='.$usercollection.'&k='.$k]);?>" 
                     onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a><br />
             <?php 

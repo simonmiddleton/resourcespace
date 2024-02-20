@@ -180,7 +180,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                     {
                     echo $custom;
                     }
-                else if ($key!="thumbnail")
+                elseif ($key!="thumbnail")
                     {
                     $value=lang_or_i18n_get_translated($value, "usergroup-");
                     $value=str_replace('"','""',$value); # escape double quotes

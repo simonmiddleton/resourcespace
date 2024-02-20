@@ -6,7 +6,7 @@ foreach ($download_summary as $usage)
     if (array_key_exists($usage["usageoption"],$download_usage_options))
         {
         $total+=$usage["c"];
-        } else if ($usage['usageoption'] == '-1') {
+        } elseif ($usage['usageoption'] == '-1') {
             $total+=$usage['c'];
         }
     }

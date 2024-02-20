@@ -17,7 +17,7 @@ if ($argc == 2)
         echo "pass in '--clearlock', '-clearlock', '-c' or '--c'.\n";
         exit("Bye!\n");
         }
-    else if ( in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')) )
+    elseif ( in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')) )
         {
         if ( is_process_lock("checkmail") )
             {
@@ -94,7 +94,7 @@ $headerinfo=imap_headerinfo($imap,$current_message);
 if (isset($headerinfo->subject)){
     $subject=$headerinfo->subject; 
 }
-else if (isset($headerinfo->Subject)){
+elseif (isset($headerinfo->Subject)){
     $subject=$headerinfo->Subject; 
 }
 else {

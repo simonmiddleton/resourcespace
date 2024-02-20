@@ -64,7 +64,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         $errline = ($errline == "N/A" || !is_numeric($errline) ? 0 : $errline);
         throw new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
         }
-    else if (substr(PHP_SAPI, 0, 3) == 'cli')
+    elseif (substr(PHP_SAPI, 0, 3) == 'cli')
         {
         // Always show errors when running on the command line.
         echo "\n\n\n" . $error_note;
@@ -656,7 +656,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             db_set_connection_mode($db_connection_mode);
             return ps_query($sql,$parameters,$cache,$fetchrows,$dbstruct,$logthis,false,$fetch_specific_columns);
             }
-        else if(
+        elseif(
             (
                 strpos($error, 'Deadlock found when trying to get lock') !== false
                 || strpos($error, 'Lock wait timeout exceeded') !== false
@@ -961,7 +961,7 @@ function CheckDBStruct($path,$verbose=false)
                         # Integer
                         $column_types[$n]="i";
                         }
-                    else if (strtolower(substr($col[1],0,5))=="float"
+                    elseif (strtolower(substr($col[1],0,5))=="float"
                         || strtolower(substr($col[1],0,7))=="decimal"
                         || strtolower(substr($col[1],0,6))=="double"
                     )
@@ -969,7 +969,7 @@ function CheckDBStruct($path,$verbose=false)
                         # Double
                         $column_types[$n]="d";
                         }
-                    else if (strtolower(substr($col[1],0,8))=="tinyblob"
+                    elseif (strtolower(substr($col[1],0,8))=="tinyblob"
                         || strtolower(substr($col[1],0,4))=="blob"
                         || strtolower(substr($col[1],0,10))=="mediumblob"
                         || strtolower(substr($col[1],0,8))=="longblob"
@@ -1030,7 +1030,7 @@ function CheckDBStruct($path,$verbose=false)
                                 $sql_params[] = null;
                                 }
                             // Legacy? I couldn't find any dbstruct/data_*.txt file containing '' for a column value
-                            else if($row[$n] == "''")
+                            elseif($row[$n] == "''")
                                 {
                                 $sql_params[] = null;
                                 }

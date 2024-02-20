@@ -107,7 +107,7 @@ foreach ($fieldrefs as $fieldref)
         {
         $rd= ps_query("SELECT ref,file_extension FROM resource $join $condition ORDER BY ref", $params);
         }
-    else if (empty($restypes))
+    elseif (empty($restypes))
         {
         echo "Field $fieldref not assigned to any fields or global, skipping...\n";
         continue;

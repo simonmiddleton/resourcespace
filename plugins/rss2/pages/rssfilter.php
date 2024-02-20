@@ -174,8 +174,8 @@ for ($n=0;$n<count($result);$n++)
                         if ($df[$x]['value_filter']!=""){
                             eval(eval_check_signed($df[$x]['value_filter']));
                         }
-                        else if (file_exists($plugin)) {include $plugin;}
-                        else if ($df[$x]["type"]==4 || $df[$x]["type"]==6 || $df[$x]["type"]==10) { 
+                        elseif (file_exists($plugin)) {include $plugin;}
+                        elseif ($df[$x]["type"]==4 || $df[$x]["type"]==6 || $df[$x]["type"]==10) { 
                             $value=NiceDate($value,true,false);
                         }   
                         if ($rss_show_field_titles){$add_desc.=$df[$x]['title'].": ";}  

@@ -107,7 +107,7 @@ if(getval("restype_delete", "") != "" && enforcePostRequest(false))
         // User needs to confirm a new resource type
         $confirm_delete=true;
         }
-    else if(count($dependentfields) > 0)
+    elseif(count($dependentfields) > 0)
         {
         $confirm_move_associated_rtf = true;
         }
@@ -177,7 +177,7 @@ if($actions_required)
         <input type="hidden" name="prereq_action" value="move_affected_resources">
         <?php
         }
-    else if($confirm_move_associated_rtf)
+    elseif($confirm_move_associated_rtf)
         {
         echo htmlspecialchars(str_replace("%COUNT", count($dependentfields), $lang["resource_type_delete_assoc_rtf_confirm"])) . "<br>";
         ?>

@@ -15,7 +15,7 @@ if (!file_exists($progress_file)){
 $content= file_get_contents($progress_file);
 if ($content==""){echo $lang['preparingzip'];}
 
-else if ($content=="zipping"){
+elseif ($content=="zipping"){
     $files=scandir($usertempdir);
     echo "Zipping ";
         foreach ($files as $file){
@@ -25,7 +25,7 @@ else if ($content=="zipping"){
         } 
     }
 
-else if ($content=="nothing_to_download"){
+elseif ($content=="nothing_to_download"){
     echo 'nothing_to_download';
 }
 else {

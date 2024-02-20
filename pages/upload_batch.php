@@ -458,7 +458,7 @@ if(($upload_then_edit || $replace ) && !$alternative)
     $all_allowed_extensions_holder = array_unique($all_allowed_extensions_holder);
     $allowed_extensions = implode(",", $all_allowed_extensions_holder);
     }
-else if ($resource_type!="" && !$alternative)
+elseif ($resource_type!="" && !$alternative)
     {
     $allowed_extensions=get_allowed_extensions_by_type($resource_type);
     }
@@ -794,7 +794,7 @@ if ($processupload)
                     }
                 }
             }
-        else if ($replace=="" && $replace_resource!="")
+        elseif ($replace=="" && $replace_resource!="")
             {
             // Replacing an existing resource file
             // Extract data unless user has selected not to extract exif data and there are no per field options set

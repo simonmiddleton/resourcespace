@@ -229,7 +229,7 @@ else
                 }
             }
             // Nodes search
-            else if(strpos($keyword, NODE_TOKEN_PREFIX) !== false)
+            elseif(strpos($keyword, NODE_TOKEN_PREFIX) !== false)
                 {
                 $nodes = resolve_nodes_from_string($keyword);
 

@@ -77,18 +77,18 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
         echo $help_text;
         exit(0);
         }
-    else if($option_name == 'dry-run')
+    elseif($option_name == 'dry-run')
         {
         $dry_run = true;
         $dry_run_text=strtoupper($option_name)." ";
         $logScriptTexts[]="Script running";
         }
-    else if($option_name == 'delete-permanently')
+    elseif($option_name == 'delete-permanently')
         {
         $delete_permanently = true;
         $logScriptTexts[]="Script running with '{$option_name}' option enabled";
         }
-    else if($option_name == 'manage-method' && is_string($option_value))
+    elseif($option_name == 'manage-method' && is_string($option_value))
         {
         $manage_method = $option_value;
         if($manage_method == 'FIFO')
@@ -97,7 +97,7 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
             $order_by = 'r.ref DESC';
             }
         }
-    else if(in_array($option_name, ['c', 'collection']))
+    elseif(in_array($option_name, ['c', 'collection']))
         {
         $collections = array_values(array_filter(is_array($option_value) ? $option_value : [$option_value], 'is_int_loose'));
         $logScriptTexts[]="Script running for following collections: " . implode(', ', $collections);

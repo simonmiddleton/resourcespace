@@ -159,7 +159,7 @@ if($errortext!="")
     </script><?php
     }
     
-else if ($saved)
+elseif ($saved)
     {
     echo "<div class=\"PageInformal\">" . $lang['saved'] . "</div>";
     }

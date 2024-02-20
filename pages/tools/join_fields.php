@@ -90,7 +90,7 @@ foreach($fields_to_join as $rtf_ref)
         logScript("WARNING: Unable to find metadata field #{$rtf_ref}. Skipping...");
         continue;
         }
-    else if(!in_array($rtf_data['type'], $TEXT_FIELD_TYPES))
+    elseif(!in_array($rtf_data['type'], $TEXT_FIELD_TYPES))
         {
         logScript(
             sprintf(

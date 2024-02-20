@@ -205,7 +205,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $extension=trim(strtolower($extension[count($extension)-1]));
                 } 
             # if not, try exiftool  
-            else if ($exiftool_fullpath!=false)
+            elseif ($exiftool_fullpath!=false)
                 {
                 if(isset($file_path))
                     {
@@ -527,7 +527,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 { 
                 create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
                 }
-            else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
+            elseif(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
                 {
                 $create_previews_job_data = array(
                     'resource' => $ref,
@@ -1934,7 +1934,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                 $profile="";
                                 }
                             }
-                        else if (!empty($default_icc_file))
+                        elseif (!empty($default_icc_file))
                             {
                             if($imagemagick_mpr)
                                 {
@@ -1957,7 +1957,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                 $mpr_parts['strip_target']=false;
                                 $mpr_parts['targetprofile']='';
                                 }
-                            else if ($icc_extraction)
+                            elseif ($icc_extraction)
                                 {
                                 // Keep any profile extracted (don't use -strip).
                                 $profile=" -colorspace ".escapeshellarg($imagemagick_colorspace);
@@ -2064,7 +2064,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             $tmin=min($tw*($sh/$sw),$th);
                             }
                         // Portrait
-                        else if ($sw < $sh)
+                        elseif ($sw < $sh)
                             {
                             $tmin=min($th*($sw/$sh),$tw);
                             }
@@ -2085,7 +2085,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             $wm_scaled_width=$tmin*($wm_scale / 100);
                             }
                         // Portrait
-                        else if ($wmw < $wmh)
+                        elseif ($wmw < $wmh)
                             {
                             $wm_scaled_width=($tmin*($wmw/$wmh))*($wm_scale / 100);
                             $wm_scaled_height=$tmin*($wm_scale / 100);
@@ -2419,10 +2419,10 @@ function update_portrait_landscape_field($ref,$image=null){
         if ($width>$height) {
             $portland=$lang["landscape"];
             } 
-        else if ($height>$width){
+        elseif ($height>$width){
             $portland=$lang["portrait"];
             }
-        else if ($height==$width){
+        elseif ($height==$width){
             $portland=$lang["square"];
         }   
         update_field($ref,$portrait_landscape_field,$portland);
@@ -3518,7 +3518,7 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
         {
         list($w, $h) = getSvgSize($file);
         }
-    else if(!empty($identoutput))
+    elseif(!empty($identoutput))
         {
         $wh=explode("x",$identoutput);
         $w = $o_width = $wh[0];
@@ -3571,7 +3571,7 @@ function getSvgSize($file_path)
         $svg_size[0] = preg_replace("/[^.0-9]/", "", $svg_size[0]);
         $svg_size[1] = preg_replace("/[^.0-9]/", "", $svg_size[1]);
         }
-    else if(isset($attributes->viewBox) && trim($attributes->viewBox) !== '')
+    elseif(isset($attributes->viewBox) && trim($attributes->viewBox) !== '')
         {
         // Note: viewBox coordinates can be separated by either space and/ or a comma
         list($min_x, $min_y, $width, $height) = preg_split("/(\s|,)/", $attributes->viewBox);
@@ -3820,7 +3820,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
                 }
             }
         }
-    else if(!isset($actions["rgb"]) && !$imagemagick_preserve_profiles)
+    elseif(!isset($actions["rgb"]) && !$imagemagick_preserve_profiles)
         {
         $cmd_args['%imagemagick_colorspace'] = $imagemagick_colorspace;
         $profile = ' +profile icc -colorspace %imagemagick_colorspace'; # By default, strip the colour profiles ('+' is remove the profile, confusingly)
@@ -3835,7 +3835,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         $cmd_args['%sourcepath'] = $sourcepath;
         $command .= ' -background %background %sourcepath[0]';
         }
-    else if (strtoupper($of_parts["extension"])=="PNG" || strtoupper($of_parts["extension"])=="GIF")
+    elseif (strtoupper($of_parts["extension"])=="PNG" || strtoupper($of_parts["extension"])=="GIF")
         {
         $keep_transparency=true;
         $cmd_args['%sourcepath'] = $sourcepath;

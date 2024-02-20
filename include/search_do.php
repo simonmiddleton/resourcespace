@@ -438,7 +438,7 @@ function do_search(
                                 array_push($sql_filter->parameters,"s","____-__-" . $keystring . "%");
                                 $c++;
                                 }
-                            else if('basicmonth' == $kw[0])
+                            elseif('basicmonth' == $kw[0])
                                 {
                                 $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "rdn" . $datefieldjoin . ".name like ? ";
                                 array_push($sql_filter->parameters,"s","____-" . $keystring . "%");
@@ -530,7 +530,7 @@ function do_search(
                         $keywordprocessed=true;
                         }
                     // Convert legacy fixed list field search to new format for nodes (@@NodeID)
-                    else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
+                    elseif($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
                         {
                         // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
                         $field_nodes      = get_nodes($fieldinfo['ref'], null, false, true);

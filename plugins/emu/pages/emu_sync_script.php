@@ -429,7 +429,7 @@ foreach($emu_records_data as $emu_record_irn => $emu_record_fields)
         {
         emu_script_log("Updated resource ID {$existing_resource_ref} metadata from EMu record for IRN '{$emu_record_irn}'", $emu_log_file);
         }
-    else if($emu_test_mode)
+    elseif($emu_test_mode)
         {
         emu_script_log('Test mode: updating resource metadata fields based on EMu record column values', $emu_log_file);
         }

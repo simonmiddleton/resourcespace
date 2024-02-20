@@ -2543,7 +2543,7 @@ function verify_antispam($spamcode="",$usercode="",$spamtime=0)
         {
         $dbgr = 'invalid code entered';
         }
-    else if($previous_hash)
+    elseif($previous_hash)
         {
         $dbgr = 'code has previously been used';
         }

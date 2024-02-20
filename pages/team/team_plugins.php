@@ -289,7 +289,7 @@ if($searching)
            {
            $plugin_version = $lang["notavailableshort"];
            }
-        else if(sprintf("%.1f", $plugin_version) == $plugin_version)
+        elseif(sprintf("%.1f", $plugin_version) == $plugin_version)
             {
             $plugin_version = sprintf("%.1f", $plugin_version);
             }

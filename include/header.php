@@ -568,7 +568,7 @@ if ($pagename!="preview" && $pagename!="preview_all")
 
         <?php
         }
-    else if (!hook("replaceloginheader"))
+    elseif (!hook("replaceloginheader"))
         {
         # Empty Header?>
         <div id="HeaderNav1" class="HorizontalNav ">&nbsp;</div>

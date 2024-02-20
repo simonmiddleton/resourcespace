@@ -139,7 +139,7 @@
                             $on_click = ' onClick="return ModalLoad(this, true);"';
                             $target   = '';
                             }   
-                        else if (!isset($custom_top_nav[$n]['modal']) || (isset($custom_top_nav[$n]['modal'])&& !$custom_top_nav[$n]['modal']))
+                        elseif (!isset($custom_top_nav[$n]['modal']) || (isset($custom_top_nav[$n]['modal'])&& !$custom_top_nav[$n]['modal']))
                             {
                             $on_click = ' onClick="return CentralSpaceLoad(this, true);"';
                             $target   = '';

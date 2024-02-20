@@ -190,7 +190,7 @@ if (!hook("renderresultthumb"))
                 {
                 $message = $annotations_count . ' ' . mb_strtolower($lang['annotate_annotations_label']);
                 }
-            else if(1 == $annotations_count)
+            elseif(1 == $annotations_count)
                 {
                 $message = $annotations_count . ' ' . mb_strtolower($lang['annotate_annotation_label']);
                 }
@@ -224,7 +224,7 @@ if (!hook("renderresultthumb"))
             $plugin="../plugins/value_filter_" . $df[$x]['name'] . ".php";
             if ($df[$x]['value_filter']!="")
                 {eval(eval_check_signed($df[$x]['value_filter']));}
-            else if (file_exists($plugin)) 
+            elseif (file_exists($plugin)) 
                 {include $plugin;}
 
             # swap title fields if necessary
@@ -272,7 +272,7 @@ if (!hook("renderresultthumb"))
                 <?php 
                 // normal behavior
                 } 
-            else if  ((isset($metadata_template_title_field)&&$df[$x]['ref']!=$metadata_template_title_field) || !isset($metadata_template_title_field) ) 
+            elseif  ((isset($metadata_template_title_field)&&$df[$x]['ref']!=$metadata_template_title_field) || !isset($metadata_template_title_field) ) 
                 {
                 if (!hook("replaceresourcepanelinfonormal"))
                     { ?>

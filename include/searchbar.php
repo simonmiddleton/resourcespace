@@ -105,7 +105,7 @@ for ($n=0;$n<count($keywords);$n++)
             }
             
         // Nodes search
-        else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
+        elseif(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
             {
             $nodes = resolve_nodes_from_string($keywords[$n]);
             foreach($nodes as $node)

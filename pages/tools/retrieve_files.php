@@ -199,7 +199,7 @@ foreach($resources as $resource)
                     echo " - The remote file " . $resource["ref"]  . " does not exist\n";
                     $missingfiles[] = $localfile;
                     }
-                else if ($file_headers[0] == 'HTTP/1.0 302 Found' && $file_headers[7] == 'HTTP/1.0 404 Not Found')
+                elseif ($file_headers[0] == 'HTTP/1.0 302 Found' && $file_headers[7] == 'HTTP/1.0 404 Not Found')
                     {
                     echo " - The file  " . $resource["ref"]  . " does not exist, and I got redirected to a custom 404 page..\n";
                     $missingfiles[] = $localfile;
