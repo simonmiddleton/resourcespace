@@ -3,7 +3,9 @@
 function HookGrant_editAllCustomediteaccess($ref)
     {
     global $userref;
-    $access = ps_value("SELECT resource value FROM grant_edit WHERE resource = ? AND user = ? AND (expiry IS null OR expiry >= NOW())", array("i",$ref,"i",$userref), "");
+    $access = ps_value("SELECT resource value FROM grant_edit WHERE resource = ? AND user = ? AND (expiry IS null OR expiry >= NOW())
+                        UNION 
+                        SELECT resource value FROM grant_edit ea JOIN user u ON u.usergroup = ea.usergroup WHERE resource = ? AND user = ? AND (expiry IS null OR expiry>=NOW())", array("i",$ref,"i",$userref, 'i', $ref, 'i', $userref), "");
     if($access!=""){return true;}
     return false;
     }
@@ -15,8 +17,11 @@ function HookGrant_editAllModifysearcheditable($editable_filter, $user)
         // There is no restriction on editing so granting edit access is moot
         return false;
         }
-    $editable_filter->sql = " ( " . $editable_filter->sql . " OR (r.ref IN (SELECT resource FROM grant_edit WHERE user = ? AND (expiry IS null OR expiry>=NOW()))))";
-    $editable_filter->parameters = array_merge($editable_filter->parameters,["i",$user]); 
+    $editable_filter->sql = " ( " . $editable_filter->sql . " 
+                                OR (r.ref IN (SELECT resource FROM grant_edit WHERE user = ? AND (expiry IS null OR expiry>=NOW())))
+                                OR (r.ref IN (SELECT resource FROM grant_edit JOIN user WHERE user.usergroup = grant_edit.usergroup AND user.ref = ? AND (expiry IS null OR expiry>=NOW()) ))
+                               )";
+    $editable_filter->parameters = array_merge($editable_filter->parameters,["i",$user, "i", $user]); 
     return $editable_filter;
     }
 
