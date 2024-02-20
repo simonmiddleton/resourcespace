@@ -10,12 +10,7 @@ else
     }
 
 $thumbnail = get_resource_preview($result[$n],["pre","thm"],$access,$watermark);
-if(isset($result[$n]['thm_url']))
-    {
-    // Option to override thumbnail image in results, e.g. by plugin using process_Search_results hook above
-    $thumbnail["url"] = $result[$n]['thm_url'];
-    }
-    ?>
+?>
 <a
     id="ResourceStrip<?php echo $ref ?>"
     class="ImageStripLink"
