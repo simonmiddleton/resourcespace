@@ -1,7 +1,7 @@
 <?php
 
 // current upgrade level of ResourceSpace (used for migration scripts, will set sysvar using this if not already defined)
-define('SYSTEM_UPGRADE_LEVEL', 26);
+define('SYSTEM_UPGRADE_LEVEL', 27);
 
 // PHP VERSION AND MINIMUM SUPPORTED
 if (!defined('PHP_VERSION_ID'))
@@ -97,7 +97,6 @@ define ('LOG_CODE_MULTI_EDITED',        'm');
 define ('LOG_CODE_NODE_REVERT',         'N');
 define ('LOG_CODE_CREATED_BY_CHANGED',  'o');
 define ('LOG_CODE_USER_OPT_IN',         'O');
-define ('LOG_CODE_PAID',                'p');
 define ('LOG_CODE_REVERTED_REUPLOADED', 'r');
 define ('LOG_CODE_REPLACED',            'f');
 define ('LOG_CODE_REORDERED',           'R');
@@ -328,7 +327,6 @@ $corefields = array(
         'thumbs_display_fields',
         'list_display_fields',
         'sort_fields',
-        'xl_thumbs_display_fields',
         'config_sheetlist_fields',
         'config_sheetthumb_fields',
         'config_sheetsingle_fields',

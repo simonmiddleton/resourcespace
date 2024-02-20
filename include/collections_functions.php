@@ -469,8 +469,8 @@ function add_resource_to_collection(
             {
             ps_query('DELETE FROM collection_resource WHERE collection = ? AND resource = ?', ['i', $collection, 'i', $resource]);
             ps_query(
-                'INSERT INTO collection_resource(collection, resource, purchase_size, sortorder) VALUES (?, ?, ?, ?)',
-                ['i', $collection, 'i', $resource, 's', $size ?: null, 'i', $sort_order ?: null]
+                'INSERT INTO collection_resource(collection, resource, sortorder) VALUES (?, ?, ?)',
+                ['i', $collection, 'i', $resource, 'i', $sort_order ?: null]
             );
             }
         
@@ -501,10 +501,9 @@ function add_resource_to_collection(
  * @param  integer $resource
  * @param  integer $collection
  * @param  boolean $smartadd
- * @param  string $size
  * @return boolean | string
  */
-function remove_resource_from_collection($resource,$collection,$smartadd=false,$size="")
+function remove_resource_from_collection($resource,$collection,$smartadd=false)
     {
     global $lang;
 
@@ -517,7 +516,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false,$
         {   
         hook("Removefromcollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
         
-        if(!hook("removefromcollectionsql", "", array( $resource,$collection, $size)))
+        if(!hook("removefromcollectionsql", "", array( $resource,$collection)))
             {
             $delparams = ["i",$resource,"i",$collection];
             ps_query("DELETE FROM collection_resource WHERE resource = ? AND collection = ?",$delparams);
@@ -3493,20 +3492,19 @@ function add_to_collection_link($resource, $extracode="", $size="", $class="", $
  * @param  integer  $resource
  * @param  string   $class
  * @param  string   $onclick    Additional onclick code to call before returning false.
- * @param  bool     $basketmode Whether removing from a basket or a collection.
+ * @param  bool     $notused    No longer used
  * @param  string   $view_title The title of the field, taken from $view_title_field
  * 
  */
-function remove_from_collection_link($resource, $class="", string $onclick = '', $basketmode = false, $view_title=""): string
+function remove_from_collection_link($resource, $class="", string $onclick = '', $notused = false, $view_title=""): string
     {
     # Generates a HTML link for removing a resource from a collection
-    # The collection is referred to as the basket when in basket mode
     global $lang, $pagename;
 
     $resource = (int) $resource;
     $class = escape($class);
     $pagename = escape($pagename);
-    $title = escape($basketmode ? $lang["removefrombasket"] : $lang["removefromcurrentcollection"]);
+    $title = escape($lang["removefromcurrentcollection"]);
 
     if ($view_title != "") {
         $title .= " - " . $view_title;
@@ -3723,11 +3721,10 @@ function collection_min_access($collection)
             }
         }
     
-    if ($minaccess = 3)
-        {
-            # Custom permissions are being used so test access to each resource, restricting access as needed
-            $minaccess = 0;
-        }
+    if ($minaccess == 3) {
+        # Custom permissions are being used so test access to each resource, restricting access as needed
+        $minaccess = 0;
+    }
 
     for($n = 0; $n < count($result); $n++)
         {
@@ -4862,7 +4859,7 @@ function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref
     if($tmpfile!==false && file_exists($tmpfile)){$deletion_array[]=$tmpfile;}
 
     daily_stat("Resource download", $ref);
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment, "", "", (int) $usage, $size);
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment, "", "", (int) $usage);
     
     # update hit count if tracking downloads only
     if ($resource_hit_count_on_downloads)
@@ -5198,7 +5195,16 @@ function collection_download_process_archive_command($collection_download_tar, &
     if ($use_zip_extension && !$collection_download_tar)
         {
         update_zip_progress_file("zipping");
-        $wait=$zip->close();
+        $GLOBALS["use_error_exception"]=true;
+        try
+            {
+            $wait=$zip->close();
+            }
+        catch (Throwable $e)
+            {
+            debug("collection_download_process_archive_command: Unable to close zip file. Resoan {$e->getMessage()}");
+            }
+        unset($GLOBALS["use_error_exception"]);
         update_zip_progress_file("complete");
         sleep(1);
         }

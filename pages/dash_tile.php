@@ -155,7 +155,7 @@ if($submitdashtile && enforcePostRequest(false))
                 }
             else
                 {
-                $buildurl .= "&promimg=" . $promoted_image;
+                $buildurl .= "&promimg=" . escape($promoted_image);
                 }
             }
 

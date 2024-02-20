@@ -8,7 +8,5 @@ resource_type_field,int(11),
 notes,text,Log notes
 diff,mediumtext,Diff between old value and new one
 usageoption,int(11),The resource download usage option
-purchase_size,varchar(10),Purchase size
-purchase_price,decimal(10§2),Purchase price
 access_key,char(50),External access key (added/deleted)
 previous_value,longtext,The original value - before the change being logged.

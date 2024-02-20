@@ -95,91 +95,90 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
 
 <div id="Metadata">
     <div class="NonMetadataProperties">
-    <?php
-    hook("beforefields");
-    if($show_resourceid)
-        {
-        ?>
-        <div class="itemNarrow">
-            <h3><?php echo htmlspecialchars($lang["resourceid"]); ?></h3>
-            <p><?php echo htmlspecialchars($ref)?></p>
-        </div>
         <?php
-        }
-
-    if($show_access_field)
-        {
-        ?>
-        <div class="itemNarrow">
-            <h3><?php echo htmlspecialchars($lang["access"]); ?></h3>
-            <p><?php echo htmlspecialchars($lang["access{$resource['access']}"] ?? ''); ?></p>
-        </div>
-        <?php
-        }
-
-    if($show_resource_type)
-        {
-        ?>
-        <div class="itemNarrow">
-            <h3><?php echo htmlspecialchars($lang["resourcetype"]); ?></h3>
-            <p><?php echo  htmlspecialchars(get_resource_type_name($resource["resource_type"]))?></p>
-        </div>
-        <?php
-        }
-
-    if($show_hitcount)
-        {
-        ?>
-        <div class="itemNarrow">
-            <h3><?php echo $resource_hit_count_on_downloads?$lang["downloads"]:$lang["hitcount"]?></h3>
-            <p><?php echo $resource["hit_count"]+$resource["new_hit_count"]?></p>
-        </div>
-        <?php
-        }
-    hook("extrafields");
-
-    // Contributed by
-    if(!hook("replacecontributedbyfield"))
-        {
-        if($show_contributed_by)
+        hook("beforefields");
+        if($show_resourceid)
             {
-            $udata = get_user($resource["created_by"]);
-            if($udata !== false)
-                {
-                $udata_fullname = highlightkeywords(htmlspecialchars($udata["fullname"]), $search);
-                $udata_a_tag_href = generateURL("{$baseurl_short}pages/team/team_user_edit.php", ['ref' => $udata["ref"]]);
-                $udata_a_tag = sprintf(
-                    '<a href="%s" onclick="return CentralSpaceLoad(this, true);">%s</a>',
-                    $udata_a_tag_href,
-                    $udata_fullname
-                );
-                ?>
-                <div class="itemNarrow">
-                    <h3><?php echo htmlspecialchars($lang["contributedby"]); ?></h3>
-                    <p><?php echo checkperm("u") ? $udata_a_tag : $udata_fullname; ?></p>
-                </div>
-                <?php
-                }
+            ?>
+            <div class="itemNarrow">
+                <h3><?php echo htmlspecialchars($lang["resourceid"]); ?></h3>
+                <p><?php echo htmlspecialchars($ref)?></p>
+            </div>
+            <?php
             }
-        } // end hook replacecontributedby
-    ?>
+
+        if($show_access_field)
+            {
+            ?>
+            <div class="itemNarrow">
+                <h3><?php echo htmlspecialchars($lang["access"]); ?></h3>
+                <p><?php echo htmlspecialchars($lang["access{$resource['access']}"] ?? ''); ?></p>
+            </div>
+            <?php
+            }
+
+        if($show_resource_type)
+            {
+            ?>
+            <div class="itemNarrow">
+                <h3><?php echo htmlspecialchars($lang["resourcetype"]); ?></h3>
+                <p><?php echo  htmlspecialchars(get_resource_type_name($resource["resource_type"]))?></p>
+            </div>
+            <?php
+            }
+
+        if($show_hitcount)
+            {
+            ?>
+            <div class="itemNarrow">
+                <h3><?php echo $resource_hit_count_on_downloads?$lang["downloads"]:$lang["hitcount"]?></h3>
+                <p><?php echo $resource["hit_count"]+$resource["new_hit_count"]?></p>
+            </div>
+            <?php
+            }
+        hook("extrafields");
+
+        // Contributed by
+        if(!hook("replacecontributedbyfield"))
+            {
+            if($show_contributed_by)
+                {
+                $udata = get_user($resource["created_by"]);
+                if($udata !== false)
+                    {
+                    $udata_fullname = highlightkeywords(htmlspecialchars($udata["fullname"]), $search);
+                    $udata_a_tag_href = generateURL("{$baseurl_short}pages/team/team_user_edit.php", ['ref' => $udata["ref"]]);
+                    $udata_a_tag = sprintf(
+                        '<a href="%s" onclick="return CentralSpaceLoad(this, true);">%s</a>',
+                        $udata_a_tag_href,
+                        $udata_fullname
+                    );
+                    ?>
+                    <div class="itemNarrow">
+                        <h3><?php echo htmlspecialchars($lang["contributedby"]); ?></h3>
+                        <p><?php echo checkperm("u") ? $udata_a_tag : $udata_fullname; ?></p>
+                    </div>
+                    <?php
+                    }
+                }
+            } // end hook replacecontributedby
+        ?>
         <div class="clearerleft"></div>
     </div><!-- End of NonMetadataProperties -->
-
-<?php
-global $extra;
-$extra="";
-
-#  -----------------------------  Draw tabs ---------------------------
-$tabname="";
-$tabcount=0;
-$tmp = hook("tweakfielddisp", "", array($ref, $fields)); if($tmp) $fields = $tmp;
-if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0)
-    {
-    ?>
-    <div class="Title"><?php echo htmlspecialchars($lang['metadata']); ?></div>
-    <div class="TabBar">
     <?php
+    global $extra;
+    $extra="";
+
+    #  -----------------------------  Draw tabs ---------------------------
+    $tabname="";
+    $tabcount=0;
+    $tmp = hook("tweakfielddisp", "", array($ref, $fields)); if($tmp) $fields = $tmp;
+    if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0)
+        {
+        ?>
+        <div class="Title"><?php echo htmlspecialchars($lang['metadata']); ?></div>
+        <div class="TabBar">
+        <?php
         foreach ($fields_tab_names as $tab_name) {
             $class_TabSelected = $tabcount == 0 ? ' TabSelected' : '';
             if ($modal) 
@@ -198,54 +197,55 @@ if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0
             $tabcount++;
         }
         ?>
-    </div> <!-- end of TabBar -->
-    <?php
-    }
-
-$tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref;
-?>
-<div class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>" id="<?php echo ($modal ? "Modaltab0" : "tab0").'-'.$ref?>">
-<!-- START of FIRST TabbedPanel -->
-<div class="clearerleft"> </div>
-<div>
-<?php 
-#  ----------------------------- Draw standard and template fields ------------------------
-$tabname                        = '';
-$tabcount                       = 0;
-$extra                          = '';
-$show_default_related_resources = true;
-
-// Process each tab which has fields attached to a defined tab name or the Default tab
-foreach($fields_tab_names as $tab_ref => $tabname)
-    {
-    for($i = 0; $i < count($fields); $i++)
-        {
-        $displaycondition = check_view_display_condition($fields, $i, $fields_all);
-        debug(sprintf('Field #%s has $displaycondition = %s', $fields[$i]['ref'], json_encode($displaycondition)));
-        if($fields[$i]["global"] == 1 || in_array($resource['resource_type'],$arr_fieldrestypes[$fields[$i]['ref']]) || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
-            {
-            if($displaycondition && $tab_ref == $fields[$i]['tab'])
-                {
-                if(!hook('renderfield', '', array($fields[$i], $resource)))
-                    {
-                    display_field_data($fields[$i]);
-                    }
-                }
-            }
+        </div> <!-- end of TabBar -->
+        <?php
         }
 
-    // Fields without templates which are linked to the in-process tab have now all been rendered
-    // Those with templates which are linked to the in-process tab have had their markup appended to $extra
+    $tabModalityClass = ($modal ? " MetaTabIsModal-" : " MetaTabIsNotModal-").$ref; ?>
 
-    // Show related resources which have the in-process tab name:
-    include '../include/related_resources.php';
+    <div class="TabbedPanel<?php echo $tabModalityClass; if ($tabcount>0) { ?> StyledTabbedPanel<?php } ?>" id="<?php echo ($modal ? "Modaltab0" : "tab0").'-'.$ref?>">
+        <!-- START of FIRST TabbedPanel -->
+        <div class="clearerleft"> </div>
+        <div class="TabbedPanelInner">
+        <?php 
+        #  ----------------------------- Draw standard and template fields ------------------------
+        $tabname                        = '';
+        $tabcount                       = 0;
+        $extra                          = '';
+        $show_default_related_resources = true;
 
-    // Now render any markup previously sidelined in $extra (eg. fields with a display template)
-    ?><div class="clearerleft"></div><?php
-    echo $extra;
-    $extra = '';
-    ?>
-    </div>
+        // Process each tab which has fields attached to a defined tab name or the Default tab
+        foreach($fields_tab_names as $tab_ref => $tabname)
+            {
+            for($i = 0; $i < count($fields); $i++)
+                {
+                $displaycondition = check_view_display_condition($fields, $i, $fields_all);
+                debug(sprintf('Field #%s has $displaycondition = %s', $fields[$i]['ref'], json_encode($displaycondition)));
+                if($fields[$i]["global"] == 1 || in_array($resource['resource_type'],$arr_fieldrestypes[$fields[$i]['ref']]) || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
+                    {
+                    if($displaycondition && $tab_ref == $fields[$i]['tab'])
+                        {
+                        if(!hook('renderfield', '', array($fields[$i], $resource)))
+                            {
+                            display_field_data($fields[$i]);
+                            }
+                        }
+                    }
+                }
+
+            // Fields without templates which are linked to the in-process tab have now all been rendered
+            // Those with templates which are linked to the in-process tab have had their markup appended to $extra
+
+            // Show related resources which have the in-process tab name:
+            include '../include/related_resources.php';
+
+            // Now render any markup previously sidelined in $extra (eg. fields with a display template)
+            ?>
+            <div class="clearerleft"></div>
+                <?php echo $extra;
+                $extra = '';
+                ?>
+        </div><!-- END of TabbedPanelInner-->
     </div> <!-- END of TabbedPanel (after extra rendered) -->
     <?php
     // All fields linked to the in-process tab are now rendered

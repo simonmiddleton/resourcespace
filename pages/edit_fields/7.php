@@ -39,7 +39,7 @@ else
     }
 
 // When editing multiple resources, we don't want to preselect any options; the user must make the necessary selection
-if($multiple) 
+if($multiple && $copyfrom == '')
     {
     $selected_nodes = [];
     }

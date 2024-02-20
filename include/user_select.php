@@ -125,7 +125,7 @@ function <?php echo escape($autocomplete_user_scope); ?>addUser(event,ui)
         ?>
         var user_ref='';
         jQuery.ajax({
-            url: '<?php echo escape($baseurl); ?>/pages/ajax/autocomplete_user.php?getuserref=' + username,
+            url: '<?php echo $baseurl; ?>/pages/ajax/autocomplete_user.php?getuserref=' + username,
             type: 'GET',
             async: false,
             success: function(ref, textStatus, xhr) {
@@ -165,7 +165,7 @@ function <?php echo escape($autocomplete_user_scope); ?>addUser(event,ui)
     
     <?php if ($sharing_userlists){?>
     var parameters = 'userstring='+ users.value;
-    var newstring=jQuery.ajax("<?php echo escape($baseurl); ?>/pages/ajax/username_list_update.php",
+    var newstring=jQuery.ajax("<?php echo $baseurl; ?>/pages/ajax/username_list_update.php",
         {
         data: parameters,
         complete: function(modified) {users.value=modified.responseText;    checkUserlist();}
@@ -179,7 +179,7 @@ function <?php echo escape($autocomplete_user_scope); ?>addUser(event,ui)
 jQuery(document).ready(function () {
     jQuery('#<?php echo escape($autocomplete_user_scope); ?>autocomplete').autocomplete(
         {
-        source: "<?php echo escape($baseurl); ?>/pages/ajax/autocomplete_user.php<?php if(isset($single_user_select_field_id)) { ?>?nogroups=true<?php } ?>",
+        source: "<?php echo $baseurl; ?>/pages/ajax/autocomplete_user.php<?php if(isset($single_user_select_field_id)) { ?>?nogroups=true<?php } ?>",
         select: <?php echo escape($autocomplete_user_scope); ?>addUser,
         classes: {
                 "ui-autocomplete": "userselect"
@@ -190,7 +190,7 @@ jQuery(document).ready(function () {
 <?php if ($sharing_userlists){?>
 <?php echo escape($autocomplete_user_scope); ?>updateUserSelect();
 jQuery("#userlist_name_value").autocomplete(
-{ source:"<?php echo escape($baseurl); ?>/pages/ajax/autocomplete_userlist.php"
+{ source:"<?php echo $baseurl; ?>/pages/ajax/autocomplete_userlist.php"
 } );
 <?php } ?>
 
@@ -230,7 +230,7 @@ function checkUserlist()
 function <?php echo escape($autocomplete_user_scope); ?>saveUserList()
     {
     var parameters = 'userref=<?php echo escape($userref); ?>&userstring='+ document.getElementById("<?php echo escape($autocomplete_user_scope); ?>users").value+'&userlistname='+document.getElementById("<?php echo escape($autocomplete_user_scope); ?>userlist_name_value").value;
-    jQuery.ajax("<?php echo escape($baseurl); ?>/pages/ajax/userlist_save.php",
+    jQuery.ajax("<?php echo $baseurl; ?>/pages/ajax/userlist_save.php",
         {
         data: parameters,
         complete: function(){
@@ -246,7 +246,7 @@ function <?php echo escape($autocomplete_user_scope); ?>saveUserList()
 function <?php echo escape($autocomplete_user_scope); ?>deleteUserList()
     {
     var parameters = 'delete=true&userlistref='+document.getElementById('<?php echo escape($autocomplete_user_scope); ?>userlist_select').options[document.getElementById('<?php echo escape($autocomplete_user_scope); ?>userlist_select').selectedIndex].id;
-    jQuery.ajax("<?php echo escape($baseurl); ?>/pages/ajax/userlist_save.php",
+    jQuery.ajax("<?php echo $baseurl; ?>/pages/ajax/userlist_save.php",
         {
         data: parameters,
         complete: function(){
@@ -264,7 +264,7 @@ function <?php echo escape($autocomplete_user_scope); ?>deleteUserList()
 function <?php echo escape($autocomplete_user_scope); ?>updateUserSelect()
     {
     var parameters = 'userref=<?php echo escape($userref); ?>&userstring='+document.getElementById("<?php echo escape($autocomplete_user_scope); ?>users").value;
-    jQuery("#userlist_select").load("<?php echo escape($baseurl); ?>/pages/ajax/userlist_select_update.php",
+    jQuery("#userlist_select").load("<?php echo $baseurl; ?>/pages/ajax/userlist_select_update.php",
         
         parameters,
         function(){

@@ -7,7 +7,6 @@ command_line_only();
 $saved_userref = $userref;
 $savedpermissions = $userpermissions;
 $search_all_workflow_states = false;
-$notify_user_contributed_submitted = false;
 
 // Get baseline to compare in case pre-existing data changes
 $results = do_search('');
@@ -77,6 +76,5 @@ if(count($results) != $allcount)
 $userref = $saved_userref;
 $userpermissions = $savedpermissions;
 $search_all_workflow_states=false;
-$notify_user_contributed_submitted = true;
 
 return true;

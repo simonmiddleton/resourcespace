@@ -8,3 +8,4 @@ push_metadata,int(11),If set, the metadata for this resource will be displayed o
 colour,smallint,Colour used for map marker when using map view search results. 
 icon,tinytext,Font Awesome class name for icon displayed in thumbnail search results. 
 tab,int(11),Reference to a system tab. See the "tab" table.
+pull_images,smallint,Use images from related resources if not one present for the current resource? 0 by default

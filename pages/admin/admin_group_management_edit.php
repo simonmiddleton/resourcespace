@@ -408,7 +408,7 @@ include "../../include/header.php";
             <label for="request_mode"><?php echo $lang["property-request_mode"]; ?></label>
             <select name="request_mode" class="stdwidth">
 <?php
-    for ($i=0; $i<4; $i++)
+    for ($i=0; $i<2; $i++)
         {
 ?>              <option <?php if ($record['request_mode']==$i) { ?> selected="true" <?php } ?>value="<?php echo $i; ?>"><?php echo $lang["resourcerequesttype{$i}"]; ?></option>
 <?php

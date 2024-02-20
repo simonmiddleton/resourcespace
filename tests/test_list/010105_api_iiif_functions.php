@@ -60,13 +60,18 @@ $bg_col = imagecolorallocate($image, 136, 204, 119);
 $text_col = imagecolorallocate($image, 255, 255, 255);
 imagestring($image, 5, 20, 15,  'IIIF', $text_col);
 imagejpeg($image, $iiif_file,50);
-upload_file($resourcea,false,false,false,$iiif_file,false,true);
+upload_file($resourcea,false,false,false,$iiif_file,false,false);
 
 // setup IIIF user and run tests
 $allresources = [$resourcea,$resourceb,$resourcec];
 
 $original_user_data = $userdata;
 $iiif_userid = new_user("iiif_test",2);
+if($iiif_userid === false)
+    {
+    $iiif_userid = get_user_by_username("iiif_test");
+    }
+
 $iiif_user = get_user($iiif_userid);
 $userdata[0] = $iiif_user;
 setup_user($iiif_user);
@@ -76,7 +81,6 @@ $testurl = $iiif->rooturl . $objectid . "/manifest";
 $iiif->parseUrl($testurl);
 $iiif->getResources();
 $iiif->generateManifest();
-
 if(!match_values(array_column($iiif->searchresults,"ref"),$allresources))
     {
     echo "Incorrect resources returned";
@@ -123,8 +127,8 @@ foreach($iiif->getresponse("metadata") as $metadata_item)
                 echo "Incorrect caption returned. Expected: 'Public domain', got: '" . $metadata_item["value"]["en"][0]  . "'";
                 return false;
                 }
-            break;        
-        }    
+            break;
+        }
     }
 
 // Check items

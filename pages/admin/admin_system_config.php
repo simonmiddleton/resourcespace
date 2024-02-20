@@ -17,7 +17,7 @@ $enable_disable_options = array($lang['userpreference_disable_option'], $lang['u
 $yes_no_options         = array($lang['no'], $lang['yes']);
 
 
-ob_start();
+
 // System section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead">' . $lang['systemsetup'] . '</h3><div id="SystemConfigSystemSection" class="CollapsibleSection">');
 $page_def[] = config_add_text_input('applicationname', $lang['setup-applicationname'], false, 420, false, '', true);
@@ -91,7 +91,9 @@ $page_def[] = config_add_single_select(
     true,
     'debug_log_selector_onchange(this);'
 );
-ob_clean();
+
+// Create a temp OB for render_text_question() call below to prevent modifying header information when we include header.php later
+ob_start();
 $autocomplete_user_scope = 'SystemConfigDebugLogSpecificUser_';
 $debug_override_user = (int) get_sysvar('debug_override_user', -1);
 $single_user_select_field_id = 'debug_override_user';
@@ -121,7 +123,7 @@ render_text_question(
     ['div_class' => [$system_config_debug_log_duration_question_class]]
 );
 $user_select_html = ob_get_contents();
-ob_clean();
+ob_end_clean();
 $page_def[] = config_add_html($user_select_html);
 $page_def[] = config_add_html('</div>');
 // End of Debug section
@@ -817,5 +819,4 @@ if ($debug_log_override_timer_active)
     </script>
 </div>
 <?php
-ob_end_flush();
 include '../../include/footer.php';

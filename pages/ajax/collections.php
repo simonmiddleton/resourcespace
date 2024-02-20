@@ -212,7 +212,7 @@ if($action == "remove_resource")
     $smartadd = getval("smartadd", false);
     $size = getval("size", "");
 
-    if(remove_resource_from_collection($resource, $collection, $smartadd, $size))
+    if(remove_resource_from_collection($resource, $collection, $smartadd))
         {
         daily_stat("Removed resource from collection", $resource);
         ajax_send_response(200, ajax_response_ok_no_data());
@@ -229,7 +229,7 @@ if($action == "remove_multiple_resources")
 
     foreach ($resource_list as $resource)
         {
-        if(remove_resource_from_collection($resource, $collection, $smartadd, $size))
+        if(remove_resource_from_collection($resource, $collection, $smartadd))
             {
             daily_stat("Removed resource from collection", $resource);
             }

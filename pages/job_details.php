@@ -4,6 +4,7 @@ include '../include/authenticate.php';
 if(!checkperm('a'))
     {
     error_alert($lang["error-permissiondenied"], false, 401);
+    exit();
     }
 $job = getval("job",0,true);
 

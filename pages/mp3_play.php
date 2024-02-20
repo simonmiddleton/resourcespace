@@ -35,10 +35,6 @@ if($pagename=="search" || $pagename=="view")
                 $width="150";
                 $height=150/$ffmpeg_preview_max_width*$ffmpeg_preview_max_height;
                 break;
-            case "smallthumbs":
-                $width="75";
-                $height=75/$ffmpeg_preview_max_width*$ffmpeg_preview_max_height;
-                break;
         }
         }
     else // Not search, standard page

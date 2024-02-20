@@ -18,8 +18,7 @@ if (!hook("iconedit") && (checkperm("e" . $result[$n]["archive"]) || ($edit_acce
 <!-- Collection comment icon -->
 <?php 
 if ($k == "" || $internal_share_access) {
-    // $collection_reorder_caption is an older config, although no longer in config.default.php some older systems may still have it set.
-    if (((isset($collection_reorder_caption) && $collection_reorder_caption) || $collection_commenting) && (substr($search, 0, 11) == "!collection")) { ?>
+    if ($collection_commenting && (substr($search, 0, 11) == "!collection")) { ?>
         <a class="fa fa-comment"
             href="<?php echo generateURL(
                 $baseurl_short . 'pages/collection_comment.php',
@@ -85,8 +84,6 @@ if (!hook("iconemail")) {
 
 <!-- Remove from collection icon -->
 <?php 
-$basket = $userrequestmode == 2 || $userrequestmode == 3;
-
 if (!checkperm('b') && ($k == '' || $internal_share_access)) {
     $col_link_class = ['fa-minus-circle'];
 
@@ -99,7 +96,7 @@ if (!checkperm('b') && ($k == '' || $internal_share_access)) {
     }
 
     $onclick = 'toggle_addremove_to_collection_icon(this);';
-    echo remove_from_collection_link($ref, implode(' ', array_merge(['fa'], $col_link_class)), $onclick, $basket, $resource_view_title) . '</a>';
+    echo remove_from_collection_link($ref, implode(' ', array_merge(['fa'], $col_link_class)), $onclick, 0, $resource_view_title) . '</a>';
     }
 ?>
 
@@ -107,7 +104,7 @@ if (!checkperm('b') && ($k == '' || $internal_share_access)) {
 <?php
 if (!hook('iconcollect') && $pagename!="collections") {
     if (!checkperm('b') && ('' == $k || $internal_share_access) && !in_array($result[$n]['resource_type'], $collection_block_restypes)) {
-        $col_link_class = ($basket ? ['fa-shopping-cart'] : ['fa-plus-circle']);
+        $col_link_class = ['fa-plus-circle'];
 
         if (
             isset($usercollection_resources)

@@ -247,25 +247,6 @@ function setup_user(array $userdata)
             }
         }
 
-    # Some alternative language choices for basket mode / e-commerce
-    if ($userrequestmode==2 || $userrequestmode==3)
-        {
-        $lang["addtocollection"]=$lang["addtobasket"];
-        $lang["action-addtocollection"]=$lang["addtobasket"];
-        $lang["addtocurrentcollection"]=$lang["addtobasket"];
-        $lang["requestaddedtocollection"]=$lang["buyitemaddedtocollection"];
-        $lang["action-request"]=$lang["addtobasket"];
-        $lang["managemycollections"]=$lang["viewpurchases"];
-        $lang["mycollection"]=$lang["yourbasket"];
-        $lang["action-removefromcollection"]=$lang["removefrombasket"];
-        $lang["total-collections-0"] = $lang["total-orders-0"];
-        $lang["total-collections-1"] = $lang["total-orders-1"];
-        $lang["total-collections-2"] = $lang["total-orders-2"];
-        
-        # The request button (renamed "Buy" by the line above) should always add the item to the current collection.
-        $request_adds_to_collection=true;
-        }        
-
     # Apply config override options
     $config_options=trim((string) $userdata["config_options"]);
     override_rs_variables_by_eval($GLOBALS, $config_options);
@@ -1467,7 +1448,7 @@ function get_user_log($user, $fetchrows=-1)
     {
     global $view_title_field;
     # Executes query.
-    $r = ps_query("select r.ref resourceid, r.field" . (int) $view_title_field . " resourcetitle, l.date, l.type, f.title, l.purchase_size, l.purchase_price, l.notes, l.diff from resource_log l left outer join resource r on l.resource = r.ref left outer join resource_type_field f on f.ref = l.resource_type_field where l.user = ? order by l.date desc", array("i", $user), '', $fetchrows);
+    $r = ps_query("select r.ref resourceid, r.field" . (int) $view_title_field . " resourcetitle, l.date, l.type, f.title, l.notes, l.diff from resource_log l left outer join resource r on l.resource = r.ref left outer join resource_type_field f on f.ref = l.resource_type_field where l.user = ? order by l.date desc", array("i", $user), '', $fetchrows);
 
     # Translates field titles in the newly created array.
     $return = array();
@@ -3240,19 +3221,6 @@ function is_authenticated()
     return isset($is_authenticated) && $is_authenticated;
     }
 
-
-/**
- * Determine whether the user is setup as an e-commerce user
- *
- * @return boolean
- */
-function is_ecommerce_user()
-    {
-    global $userrequestmode;
-    return ($userrequestmode == 2 || $userrequestmode == 3) ? true : false; 
-    }
-
-
 /**
  * Returns an array of the user groups the supplied user group acts as an approver for.
  * Uses config $usergroup_approval_mappings.
@@ -3512,4 +3480,58 @@ function validate_temp_download_key(int $ref, string $keystring, string $size, i
         debug("Failed to decrypt temp_download_key");
         }
     return false;
+    }
+
+/**
+ * Set up a dummy user with required permissions etc. to pass permission checks if running scripts from the command line
+ *
+ * @param array     $options[]]         Array of optional user options. Will default to generic system admin permissions if not set
+ *                                      e.g.
+ *                                         ["username"          => "My Application",
+ *                                          "permissions"       => "h,v,e0",
+ *                                          "groupname          => "My Application",
+ *                                          "resource_defaults  => "region=EMEA",
+ *                                         ]
+ * 
+ * @return bool
+ * 
+ */
+function setup_command_line_user(array $setoptions = []) : bool
+    {
+    global $lang;
+   
+    $defaultusername = $lang["system_user_default"];
+
+    // Set defaults, these can then be overidden by $setoptions
+    $dummyuserdata = [];
+    $dummyuserdata["ref"] = 0;
+    $dummyuserdata["username"] = $defaultusername;
+    $dummyuserdata["fullname"] = $defaultusername;
+    $dummyuserdata["groupname"] = $defaultusername;
+    $dummyuserdata["permissions"] = "a,t,v,e-2,e-1,e0,e1,e2,e3";
+    $dummyuserdata["accepted_terms"] = 1;
+    $dummyuserdata["ip_restrict_user"] = "";
+    $dummyuserdata["ip_restrict_group"] = "";
+    $dummyuserdata["current_collection_valid"] = 1;
+
+    // Add any columns from user table, plus any extra array
+    // elements normally obtained from get_user()
+    $requiredelements = columns_in("user",null,null,true);
+    $requiredelements = array_merge($requiredelements, columns_in("usergroup",null,null,true));
+
+    foreach($requiredelements as $requiredelement)
+        {
+        if(!isset($dummyuserdata[$requiredelement]))
+            {
+            $dummyuserdata[$requiredelement] = "";  
+            }
+        }
+
+    // Override with any settings passed
+    foreach($setoptions as $setoption=>$setvalue)
+        {
+        $dummyuserdata[$setoption] = $setvalue;   
+        }
+    $success = setup_user($dummyuserdata);
+    return $success;
     }
