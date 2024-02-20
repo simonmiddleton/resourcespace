@@ -59,10 +59,15 @@ $cli_long_options  = array(
 
 // Defaults
 $dry_run = false;
+$dry_run_text="";
 $manage_method = 'LIFO';
+$manage_method_text = 'Keep earliest resource found and remove later duplicates';
 $order_by = 'r.ref ASC'; # depends on the $manage_method value
 $delete_permanently = false;
 $collections = [];
+
+// Option logging
+$logScriptTexts = [];
 
 foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option_value)
     {
@@ -72,28 +77,53 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
         echo $help_text;
         exit(0);
         }
-    else if(in_array($option_name, ['dry-run', 'delete-permanently']))
+    else if($option_name == 'dry-run')
         {
-        logScript("Script running with '{$option_name}' option enabled!");
-        $option_name = str_replace("-", "_", $option_name);
-        $$option_name = true;
+        $dry_run = true;
+        $dry_run_text=strtoupper($option_name)." ";
+        $logScriptTexts[]="Script running";
         }
-    else if($option_name == 'manage-method' && is_string($option_value) && in_array($option_value, array('FIFO', 'LIFO')))
+    else if($option_name == 'delete-permanently')
+        {
+        $delete_permanently = true;
+        $logScriptTexts[]="Script running with '{$option_name}' option enabled";
+        }
+    else if($option_name == 'manage-method' && is_string($option_value))
         {
         $manage_method = $option_value;
         if($manage_method == 'FIFO')
             {
+            $manage_method_text = 'Keep latest resource found and remove earlier duplicates';
             $order_by = 'r.ref DESC';
             }
         }
     else if(in_array($option_name, ['c', 'collection']))
         {
         $collections = array_values(array_filter(is_array($option_value) ? $option_value : [$option_value], 'is_int_loose'));
-        logScript("Script running within subset(s) range. Collections received: " . implode(', ', $collections));
+        $logScriptTexts[]="Script running for following collections: " . implode(', ', $collections);
         }
     }
-logScript("Script running with the '{$manage_method}' method!");
 
+// Reject invalid parameters and combinations
+if($dry_run && $delete_permanently)
+    {
+    logScript("ERROR: Script terminated; options --dry-run and --delete-permanently are mutually exclusive");
+    exit(0);
+    }
+
+if(!in_array($manage_method, array('FIFO', 'LIFO')))
+    {
+    logScript("ERROR: Script terminated; option --manage-method={$manage_method} is invalid");
+    exit(0);
+    }
+
+$logScriptTexts[]="Script running with the '{$manage_method}' method; ".$manage_method_text;
+
+// Log the options in effect for this run
+foreach($logScriptTexts as $logScriptText)
+    {
+    logScript($dry_run_text.$logScriptText);
+    }
 
 $collections_limit_sql = empty($collections) 
         ? ''
@@ -107,6 +137,7 @@ $collections_limit_sql = empty($collections)
               GROUP BY r.file_checksum
            )
 ";
+
 $duplicates = ps_query("
         SELECT r.ref, r.file_extension, r.file_checksum
           FROM resource AS r
@@ -124,25 +155,35 @@ $duplicates = ps_query("
     ",
     ps_param_fill($collections, 'i')
 );
-logScript('Found #' . count($duplicates) . ' duplicates');
-logScript("");
+
+$count_matching_checksums=count($duplicates);
+$count_permanent_deletions=0;
+$count_marked_deletions=0;
+$count_unchanged=0;
+logScript($dry_run_text."STARTING SUMMARY");
+logscript($dry_run_text."STARTING Count of candidate resources with matching checksums is {$count_matching_checksums}");
+logScript($dry_run_text."RESOURCE DETAILS");
 
 $saved_duplicates = []; # Key is the resource ID and value is the file checksum
 foreach($duplicates as $duplicate)
     {
-    logScript("Processing resource #{$duplicate['ref']} having checksum '{$duplicate['file_checksum']}'");
+    logScript($dry_run_text."Processing resource #{$duplicate['ref']} with checksum '{$duplicate['file_checksum']}'");
 
     // We keep one resource based on the method chosen to manage the purge (ie. FIFO/ LIFO)
     if(!in_array($duplicate['file_checksum'], $saved_duplicates))
         {
-        logScript("Resource #{$duplicate['ref']} kept");
+        logScript($dry_run_text."Resource #{$duplicate['ref']} kept");
+        $count_unchanged+=1;
         $saved_duplicates[$duplicate['ref']] = $duplicate['file_checksum'];
         continue;
         }
 
     if($delete_permanently)
         {
-        logScript("Deleting permanently resource #{$duplicate['ref']}");
+        // Option delete-permanently and dry-run are mutually exclusive
+        // Option dry-run will never be true and the associated text is always blank at this point; this is just a belt and braces check
+        logScript($dry_run_text."Resource #{$duplicate['ref']} deleted permanently");
+        $count_permanent_deletions+=1;
         if(!$dry_run)
             {
             unset($resource_deletion_state);
@@ -151,7 +192,8 @@ foreach($duplicates as $duplicate)
         }
     else
         {
-        logScript("Moving duplicate resource #{$duplicate['ref']} to archive state #{$resource_deletion_state}");
+        logScript($dry_run_text."Resource #{$duplicate['ref']} deleted logically; marked archive state '{$resource_deletion_state}'");
+        $count_marked_deletions+=1;
         if(!$dry_run)
             {
             update_archive_status($duplicate['ref'], $resource_deletion_state);
@@ -159,4 +201,24 @@ foreach($duplicates as $duplicate)
         }
     }
 
-logScript("Script completed!");
+logScript($dry_run_text."ENDING SUMMARY");
+$count_processed_resources=0;
+logscript($dry_run_text."ENDING Count of resources which are kept ............... {$count_unchanged}");
+
+if ($delete_permanently) {
+    logscript($dry_run_text."ENDING Count of resources permanently deleted .......... {$count_permanent_deletions}");
+    $count_processed_resources = $count_unchanged + $count_permanent_deletions;
+}
+else {
+    logscript($dry_run_text."ENDING Count of resources marked as deleted ............ {$count_marked_deletions}");
+    $count_processed_resources = $count_unchanged + $count_marked_deletions;
+}
+
+// Report whether or not ending counts are as expected
+if ($count_matching_checksums == $count_processed_resources) {
+    logScript($dry_run_text."ENDING Count of processed resources with matching checksums is {$count_processed_resources} as expected");
+}
+else {
+    logScript($dry_run_text."ERROR - Count of processed resources with matching checksums is {$count_processed_resources} which is unexpected");
+}
+logScript($dry_run_text."Script completed!");
