@@ -1089,8 +1089,8 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                         {
                                                         ?>
                                                         <td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
-                                                            <a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);">
-                                                                <?php echo htmlspecialchars($lang["action-request"])?>
+                                                            <a disabled>
+                                                                <?php echo htmlspecialchars($lang["notavailableshort"]??"")?>
                                                             </a>
                                                         </td>
                                                         <?php
