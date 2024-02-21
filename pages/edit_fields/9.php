@@ -82,7 +82,7 @@ foreach($nodes_in_sequence as $node)
 </div>
 <div class="clearerleft"></div>
 <script>
-console.debug('<?php printf('(%s) Init global state for Keywords_%s', __FILE__, $js_keywords_suffix); ?>');
+console.debug('<?php printf('(%s) Init global state for Keywords_%s', str_replace(dirname(__DIR__), '', __FILE__), $js_keywords_suffix); ?>');
 
 // Associative array with key being node name and index being the node ID
 // Example: Keywords_nodes_3 = ['United Kingdom']=232, ['United States']=233
@@ -293,7 +293,7 @@ jQuery(document).ready(function()
     console.debug('<?php
         printf(
             '[document.ready](%s) Going to call updateselectedkeywords_%s(false)',
-            __FILE__,
+            str_replace(dirname(__DIR__), '', __FILE__),
             $js_keywords_suffix
         );
     ?>');

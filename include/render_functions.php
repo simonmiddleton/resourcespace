@@ -4007,7 +4007,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
         <script type="text/javascript">
         function checkDisplayCondition<?php echo $field["ref"];?>()
             {
-            console.debug('(<?php echo __FILE__ . ':' . __LINE__?>) checkDisplayCondition<?php echo $field["ref"]; ?>()');
+            console.debug('(<?php echo str_replace(dirname(__DIR__), '', __FILE__) . ':' . __LINE__?>) checkDisplayCondition<?php echo $field["ref"]; ?>()');
             // Get current display state for governed field ("block" or "none")
             field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
             newfield<?php echo $field['ref']; ?>status = 'none';
