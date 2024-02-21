@@ -70,9 +70,7 @@ if (!hook("renderresultthumb"))
 
     <!--Resource Panel -->    
     <div class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo $display == 'xlthumbs' ? 'ResourcePanelLarge' : ''; ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
-    style="height: <?php echo (int)$thumbs_displayed_fields_height; ?>px;"
-    <?php hook('renderadditionalthumbattributes', '', [$result[$n]]);?>
-    >
+    style="height: <?php echo (int)$thumbs_displayed_fields_height; ?>px;">
         <div class="ResourcePanelTop">
             <?php
             if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "")
@@ -308,7 +306,6 @@ if (!hook("renderresultthumb"))
         <!-- Checkboxes -->
         <div class="ResourcePanelIcons">
         <?php
-        hook("thumblistextras");  // add icons for resourceconnect
 
         if($use_selection_collection)
             {
@@ -349,10 +346,8 @@ if (!hook("renderresultthumb"))
                 { ?><?php }
             } # end hook("replacethumbsidinthumbnail")
 
-        if (!hook("replaceresourcetools"))
-            { 
-            include "resource_tools.php";
-            } // end hook replaceresourcetools ?>
+        include "resource_tools.php";
+    ?>
 
     </div>
 </div>

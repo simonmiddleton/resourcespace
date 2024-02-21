@@ -85,9 +85,6 @@ if ($go!="")
             <?php
             }
         }
-    # Option to replace the key via a plugin (used by resourceconnect plugin).
-    $newkey = hook("nextpreviewregeneratekey");
-    if (is_string($newkey)) {$k = $newkey;}
 
     # Check access permissions for this new resource, if an external user.
     if ($k!="" && !$internal_share_access && !check_access_key($ref, $k)) {$ref = $origref;} # Cancel the move.

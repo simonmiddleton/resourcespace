@@ -20,9 +20,7 @@ function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
         for ($n=0;$n<count($collections);$n++)
             {
             $resources=do_search("!collection".$collections[$n]['ref'],"","relevance","",1);
-            $hook_result=hook("process_search_results","",array("result"=>$resources,"search"=>"!collection".$collections[$n]['ref']));
-            if ($hook_result!==false) {$resources=$hook_result;}
-            
+
             echo "<a href=\"" . $baseurl_short . "pages/search.php?search=" . urlencode("!collection" . $collections[$n]["ref"]) . "\" onClick=\"return CentralSpaceLoad(this,true);\" 
 			class=\"HomePanel DashTile\" id=\"search_tile_col" . $collections[$n]['ref'] . "\">
 			<div id=\"contents_search_tile_col" . $collections[$n]['ref'] . "\" class=\"HomePanelIN HomePanelDynamicDash\">

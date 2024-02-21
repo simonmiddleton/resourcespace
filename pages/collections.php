@@ -716,7 +716,6 @@ if ($addsearch!=-1)
 $result  = do_search("!collection{$usercollection}", '', $default_collection_sort, 0, -1, "ASC", false, 0, false, false, '', false, true,false);
 $count_result = count($result);
 
-$hook_count=hook("countresult","",array($usercollection,$count_result));if (is_numeric($hook_count)) {$count_result=$hook_count;} # Allow count display to be overridden by a plugin (e.g. that adds it's own resources from elsewhere e.g. ResourceConnect).
 $feedback = $cinfo ? $cinfo["request_feedback"] : 0;
 
 ?><div>
@@ -1030,8 +1029,6 @@ else
 
     } # End of loop through standard display thumbnails
 
-    # Hook to allow plugins to list additional resources in a collection (e.g. resourceconnect)   
-        hook("thumblistextra");
     ?>
     <div class="clearerleft"></div>
     <?php

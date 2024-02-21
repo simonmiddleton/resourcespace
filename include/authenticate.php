@@ -341,10 +341,6 @@ foreach($active_plugins as $plugin)
         {
         $plugins[]=$plugin['name'];
         }
-    }   
-foreach($plugins as $plugin)
-    {
-    hook("afterregisterplugin","",array($plugin));
     }
 
 // Load user config options

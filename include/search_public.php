@@ -5,9 +5,7 @@ if ((substr($search,0,11)!="!collection")&&($collections!="")&&is_array($collect
 $shownresults=false;
 for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)));$n++)
     {
-    $resources=do_search("!collection".$collections[$n]['ref'],"","relevance","",5);    
-    $hook_result=hook("process_search_results","",array("result"=>$resources,"search"=>"!collection".$collections[$n]['ref']));
-    if ($hook_result!==false) {$resources=$hook_result;}
+    $resources=do_search("!collection".$collections[$n]['ref'],"","relevance","",5);
 
     $pub_url="search.php?search=" . urlencode("!collection" . $collections[$n]["ref"]);
     if ($display=="thumbs" || $display=="xlthumbs")

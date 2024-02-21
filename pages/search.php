@@ -554,9 +554,6 @@ else
     {
     $result=["total"=>0,"data"=>[]]; # Do not return resources (e.g. for collection searching only)
     }
-# Allow results to be processed by a plugin
-$hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
-if ($hook_result!==false) {$result=$hook_result;}
 
 // Convert structured results back to a simple array for display
 if(isset($result["total"]))
@@ -938,9 +935,6 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
     </script>
 <?php
     }
-
-# Hook to replace all search results (used by ResourceConnect plugin, allows search mechanism to be entirely replaced)
-if (!hook("replacesearchresults")) { 
 
 # Extra CSS to support more height for titles on thumbnails.
 if (isset($result_title_height))
@@ -1329,9 +1323,8 @@ if (!hook("replacesearchheader")) # Always show search header now.
         {
             $collectionsearchname = "";
         }
-    hook("beforesearchresults2");
     hook("beforesearchresultsexpandspace");
-    
+
     // DRAG AND DROP TO UPLOAD FUNCTIONALITY
     // Generate a URL for drag drop function - fires same URL as "upload here" when dragging.
     $drag_upload_params=render_upload_here_button($searchparams,true);
@@ -1553,7 +1546,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 // Global $access needs to be set to check watermarks in search views (and may be used in hooks)        
                 $access=$result[$n]["access"];
             
-                if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results, e.g. by plugin using process_Search_results hook above
+                if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results
     
                 hook('beforesearchviewcalls');
 
@@ -1611,8 +1604,6 @@ $url=generateURL($baseurl . "/pages/search.php",$searchparams);
 </div> <!-- end of CentralSpaceResources -->
 
 <?php
-} # End of replace all results hook conditional
-
 hook("endofsearchpage");
 
 if($display != 'map')

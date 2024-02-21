@@ -338,7 +338,6 @@ for ($n=0;$n<count($plugins);$n++)
     {
     if (!isset($plugins[$n])) { continue; }
     register_plugin($plugins[$n]);
-    hook("afterregisterplugin");
     }
 
 # Register their languages in reverse order
