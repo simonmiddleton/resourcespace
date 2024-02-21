@@ -850,10 +850,18 @@ function do_search(
                                     }
 
                                 # Merge wildcard expansion with related keywords
-                                if (isset($wildcard_sql)) 
+                                if (isset($wildcard_sql) && count($wildcards)>0) 
                                     {
-                                    $relatedsql->sql .= " OR nk[union_index].keyword IN (" . $wildcard_sql->sql . ")";
-                                    $relatedsql->parameters = array_merge($relatedsql->parameters,$wildcard_sql->parameters);
+                                    if (count($wildcards) > SYSTEM_DATABASE_IDS_CHUNK_SIZE)
+                                        {
+                                        $relatedsql->sql .= " OR nk[union_index].keyword IN (" . $wildcard_sql->sql . ")";
+                                        $relatedsql->parameters = array_merge($relatedsql->parameters,$wildcard_sql->parameters);
+                                        }
+                                    else
+                                        {
+                                        $relatedsql->sql .= " OR nk[union_index].keyword IN (" . ps_param_insert(count($wildcards)) . ")";
+                                        $relatedsql->parameters = array_merge($relatedsql->parameters,ps_param_fill($wildcards,'s'));
+                                        }
                                     }
                                 if (count($related) > 0)
                                     {
