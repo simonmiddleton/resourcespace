@@ -1489,7 +1489,15 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     elseif (substr($search,0,10)=="!nopreview")
         {
         $sql = new PreparedStatementQuery();
-        $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image=0 AND " . $sql_filter->sql . " GROUP BY r.ref" . $sql_suffix;
+        $sql->sql = $sql_prefix .
+            "SELECT DISTINCT r.hit_count score, $select
+                FROM resource r
+                $sql_join->sql
+                WHERE has_image=0
+                    AND $sql_filter->sql
+                GROUP BY r.ref
+                ORDER BY $order_by"
+                . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
     elseif (($config_search_for_number && is_numeric($search)) || substr($search,0,9)=="!resource")
