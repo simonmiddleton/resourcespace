@@ -214,7 +214,7 @@ include "../../include/header.php";
                 ["group"     => $group,
                 "order_by"  => $order_by,
                 "find"      =>$find],
-                ["per_page_list"=>$per_page]
+                ["per_page_list"=>99999]
             );
             ?>
             <a
@@ -223,7 +223,7 @@ include "../../include/header.php";
                 ><?php echo htmlspecialchars($lang["all"])?>
             </a><?php
             } ?>
-        </div></div> <?php pager(false); ?><div class="clearerleft"></div></div>
+        </div></div> <?php pager(false, true, ['url' => generateURL($baseurl_short . "pages/team/team_user.php", ["group" => $group, "order_by"  => $order_by, "find" =>$find]), 'per_page' => $per_page]); ?><div class="clearerleft"></div></div>
 
     <div class="Listview">
     <?php if(!hook('overrideuserlist')):
