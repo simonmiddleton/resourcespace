@@ -2276,7 +2276,9 @@ $cc_me=false;
 # Allow listing of all recipients when sending resources or collection.
 $list_recipients=false;
 
-# How many keywords should be included in the search when a single keyword expands via a wildcard. Setting this too high may cause performance issues.
+# How many keywords should be included in the search when a single keyword expands via a wildcard. 
+# Set to 0 to remove limit.
+# Setting this too high or removing the limit may cause performance issues.
 $wildcard_expand_limit=50;
 
 # Enable remote apis - NOTE: does not affect "native" authmode which is always enabled.

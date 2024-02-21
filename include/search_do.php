@@ -615,8 +615,21 @@ function do_search(
 
                                 # Keyword contains a wildcard. Expand.
                                 global $wildcard_expand_limit;
-                                $wildcards = ps_array("SELECT ref value FROM keyword WHERE keyword like ? ORDER BY hit_count DESC LIMIT " . (int)$wildcard_expand_limit,["s", str_replace("*", "%", $keyword)]);
-                                }
+                                
+                                $wildcard_sql = new PreparedStatementQuery ();
+                                $wildcard_sql->sql = 
+                                    "SELECT * FROM (SELECT ref value 
+                                        FROM keyword 
+                                        WHERE keyword LIKE ? 
+                                        ORDER BY hit_count DESC";
+                                if(isset($wildcard_expand_limit) && $wildcard_expand_limit>0)
+                                    {
+                                    $wildcard_sql->sql .= " LIMIT $wildcard_expand_limit ";
+                                    }
+                                $wildcard_sql->sql .= ") AS wildcard";
+                                $wildcard_sql->parameters = ["s", str_replace("*", "%", $keyword)];
+                                $wildcards = ps_array($wildcard_sql->sql,$wildcard_sql->parameters);
+                            }
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
                             if ($keyref === false)
@@ -762,11 +775,23 @@ function do_search(
                                     }
 
                                 # Merge wildcard expansion with related keywords
-                                $related = array_merge($related, $wildcards);
+                                if (isset($wildcard_sql) && count($wildcards)>0) 
+                                    {
+                                    if (count($wildcards) > SYSTEM_DATABASE_IDS_CHUNK_SIZE)
+                                        {
+                                        $relatedsql->sql .= " OR nk[union_index].keyword IN (" . $wildcard_sql->sql . ")";
+                                        $relatedsql->parameters = array_merge($relatedsql->parameters,$wildcard_sql->parameters);
+                                        }
+                                    else
+                                        {
+                                        $relatedsql->sql .= " OR nk[union_index].keyword IN (" . ps_param_insert(count($wildcards)) . ")";
+                                        $relatedsql->parameters = array_merge($relatedsql->parameters,ps_param_fill($wildcards,'s'));
+                                        }
+                                    }
                                 if (count($related) > 0)
                                     {
-                                    $relatedsql->sql = " OR (nk[union_index].keyword IN (" . ps_param_insert(count($related)) . ")";
-                                    $relatedsql->parameters = ps_param_fill($related,"i");
+                                    $relatedsql->sql .= " OR (nk[union_index].keyword IN (" . ps_param_insert(count($related)) . ")";
+                                    $relatedsql->parameters = array_merge($relatedsql->parameters,ps_param_fill($related,"i"));
 
                                     if ($field_short_name_specified && isset($fieldinfo['ref']))
                                         {
