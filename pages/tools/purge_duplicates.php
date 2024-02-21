@@ -62,7 +62,7 @@ $dry_run = false;
 $dry_run_text="";
 $manage_method = 'LIFO';
 $manage_method_text = 'Keep earliest resource found and remove later duplicates';
-$order_by = 'r.ref ASC'; # depends on the $manage_method value
+$order_by = 'ASC'; # depends on the $manage_method value
 $delete_permanently = false;
 $collections = [];
 
@@ -94,7 +94,7 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
         if($manage_method == 'FIFO')
             {
             $manage_method_text = 'Keep latest resource found and remove earlier duplicates';
-            $order_by = 'r.ref DESC';
+            $order_by = 'DESC';
             }
         }
     elseif(in_array($option_name, ['c', 'collection']))
@@ -125,82 +125,91 @@ foreach($logScriptTexts as $logScriptText)
     logScript($dry_run_text.$logScriptText);
     }
 
-$collections_limit_sql = empty($collections) 
-        ? ''
-        : "-- IF file checksum is within a specified range
-       AND file_checksum IN (
-                SELECT DISTINCT r.file_checksum
-                  FROM resource AS r
-            INNER JOIN collection_resource AS cr ON r.ref = cr.resource
-                 WHERE cr.collection IN (" . ps_param_insert(count($collections)) . ")
-                   AND (file_checksum IS NOT NULL AND file_checksum <> '')
-              GROUP BY r.file_checksum
-           )
-";
+// Identify the duplicates depending on the presence or otherwise of collection options
+if (empty($collections)) {
+    $duplicates_by_checksum = 
+    ps_query("SELECT r1.file_checksum, r1.ref 
+        FROM resource r1
+        WHERE coalesce(r1.file_checksum, '') <> ''
+        AND ( SELECT count(*) r2count from resource r2 WHERE r2.file_checksum = r1.file_checksum ) > 1
+        ORDER BY r1.file_checksum ASC, r1.ref {$order_by}");
+}
+else {
+    $duplicates_by_checksum = 
+    ps_query("SELECT d3.file_checksum, d3.ref 
+        FROM (
+        SELECT r3.ref, r3.file_checksum FROM collection_resource cr
+        INNER JOIN resource r3 ON r3.ref = cr.resource ) as d3
+        WHERE coalesce(d3.file_checksum, '') <> ''
+        AND ( SELECT count(*) r4count from resource r4 WHERE r4.file_checksum = d3.file_checksum ) > 1
+        AND cr.collection IN (" . ps_param_insert(count($collections)) . ")
+        ORDER BY d3.file_checksum ASC, d3.ref {$order_by}", ps_param_fill($collections, 'i'));
+}
 
-$duplicates = ps_query("
-        SELECT r.ref, r.file_extension, r.file_checksum
-          FROM resource AS r
-         WHERE length(r.file_extension) > 0
-           AND (r.file_checksum IS NOT NULL AND r.file_checksum <> '')
-           {$collections_limit_sql}
-           -- IF duplicate file checksum (ie. more than one resource has it)
-           AND file_checksum IN (
-                    SELECT file_checksum
-                      FROM resource
-                     WHERE (file_checksum IS NOT NULL AND file_checksum <> '')
-                  GROUP BY file_checksum HAVING count(file_checksum) > 1
-               )
-      ORDER BY {$order_by}
-    ",
-    ps_param_fill($collections, 'i')
-);
-
-$count_matching_checksums=count($duplicates);
+$count_matching_checksums=count($duplicates_by_checksum);
 $count_permanent_deletions=0;
 $count_marked_deletions=0;
 $count_unchanged=0;
+
 logScript($dry_run_text."STARTING SUMMARY");
 logscript($dry_run_text."STARTING Count of candidate resources with matching checksums is {$count_matching_checksums}");
 logScript($dry_run_text."RESOURCE DETAILS");
 
-$saved_duplicates = []; # Key is the resource ID and value is the file checksum
-foreach($duplicates as $duplicate)
-    {
-    logScript($dry_run_text."Processing resource #{$duplicate['ref']} with checksum '{$duplicate['file_checksum']}'");
-
-    // We keep one resource based on the method chosen to manage the purge (ie. FIFO/ LIFO)
-    if(!in_array($duplicate['file_checksum'], $saved_duplicates))
-        {
-        logScript($dry_run_text."Resource #{$duplicate['ref']} kept");
-        $count_unchanged+=1;
-        $saved_duplicates[$duplicate['ref']] = $duplicate['file_checksum'];
-        continue;
-        }
-
-    if($delete_permanently)
-        {
-        // Option delete-permanently and dry-run are mutually exclusive
-        // Option dry-run will never be true and the associated text is always blank at this point; this is just a belt and braces check
-        logScript($dry_run_text."Resource #{$duplicate['ref']} deleted permanently");
-        $count_permanent_deletions+=1;
-        if(!$dry_run)
-            {
-            unset($resource_deletion_state);
-            delete_resource($duplicate['ref']);
-            }
-        }
-    else
-        {
-        logScript($dry_run_text."Resource #{$duplicate['ref']} deleted logically; marked archive state '{$resource_deletion_state}'");
-        $count_marked_deletions+=1;
-        if(!$dry_run)
-            {
-            update_archive_status($duplicate['ref'], $resource_deletion_state);
-            }
-        }
+$keep_resources=array();
+$delete_resources=array();
+$last_kept_resource=null;
+$last_checksum=null;
+// Build an array of resources which will be kept, and another array of the resources to be deleted
+foreach ($duplicates_by_checksum as $duplicate) {
+    if ($duplicate["file_checksum"] !== $last_checksum) {
+        // The first resource for each new checksum will be kept
+        $keep_resources[$duplicate["ref"]]=$duplicate["file_checksum"];
+        $last_checksum=$duplicate["file_checksum"];
+        $last_kept_resource=$duplicate["ref"];
     }
+    else {
+        // Subsequent resources for this checksum will be deleted
+        $delete_resources[$last_kept_resource][]=$duplicate["ref"];
+    }
+}
+// The kept resources array is currently in checksum sequence
+// We want to process the resources in ascending kept resource sequence for logging readability
+ksort($keep_resources);
 
+// Process and log each kept resource and checksum, deleting the other resources identified earlier (ie. with the same checksum))
+foreach ($keep_resources as $keep_ref => $keep_checksum) {
+    // Log resource which will be kept
+    logScript($dry_run_text."Keep resource #{$keep_ref} with checksum '{$keep_checksum}'");
+    $count_unchanged+=1;
+    
+    // Resource deletion 
+    foreach ($delete_resources[$keep_ref] as $delete_resource) {
+
+        if($delete_permanently)
+            {
+            // Option delete-permanently and dry-run are mutually exclusive
+            // Option dry-run will never be true and the associated text is always blank at this point; this is just a belt and braces check
+            logScript($dry_run_text.".. Deleting resource #{$delete_resource} with checksum '{$keep_checksum}' permanently");
+            $count_permanent_deletions+=1;
+            if(!$dry_run)
+                {
+                unset($resource_deletion_state);
+                delete_resource($delete_resource);
+                }
+            }
+        else
+            {
+            logScript($dry_run_text.".. Deleting resource #{$delete_resource} with checksum '{$keep_checksum}' logically; marked as '{$resource_deletion_state}'");
+            $count_marked_deletions+=1;
+            if(!$dry_run)
+                {
+                update_archive_status($delete_resource, $resource_deletion_state);
+                }
+            }
+    }
+}
+
+// Report various processing counts 
 logScript($dry_run_text."ENDING SUMMARY");
 $count_processed_resources=0;
 logscript($dry_run_text."ENDING Count of resources which are kept ............... {$count_unchanged}");
@@ -219,6 +228,6 @@ if ($count_matching_checksums == $count_processed_resources) {
     logScript($dry_run_text."ENDING Count of processed resources with matching checksums is {$count_processed_resources} as expected");
 }
 else {
-    logScript($dry_run_text."ERROR - Count of processed resources with matching checksums is {$count_processed_resources} which is unexpected");
+    logScript($dry_run_text."WARNING Count of processed resources with matching checksums is {$count_processed_resources} which is unexpected");
 }
 logScript($dry_run_text."Script completed!");
