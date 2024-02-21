@@ -2101,6 +2101,8 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
  */
 function get_dash_search_data($link='', $promimg=0)
     {    
+    global $search_all_workflow_states;
+
     $searchdata = [];
     $searchdata["count"] = 0;
     $searchdata["images"] = [];
@@ -2112,6 +2114,10 @@ function get_dash_search_data($link='', $promimg=0)
     $order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
     $archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
     $sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
+
+    if ($archive !== ""){
+        $search_all_workflow_states = false;
+    }
 
     $results= do_search($search,$restypes,$order_by,$archive,-1,$sort);    
     $imagecount = 0;
