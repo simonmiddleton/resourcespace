@@ -116,7 +116,7 @@ if(empty($fcs))
     echo 'UC: Set featured collection, get_featured_collections() returned empty array - ';
     return false;
     }
-else if(!(
+elseif(!(
     $fcs[0]['type'] == COLLECTION_TYPE_FEATURED
     && $fcs[0]['parent'] == $fc_data['featured_collections_changes']['update_parent']
     && $fcs[0]['thumbnail_selection_method'] == $fc_data['featured_collections_changes']['thumbnail_selection_method']

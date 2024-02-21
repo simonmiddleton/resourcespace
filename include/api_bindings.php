@@ -443,7 +443,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
         $file = temp_local_download_remote_file($file, $upload_key);
         $deletesourcefile = true;
         }
-    else if (is_valid_upload_path($file, $valid_upload_paths))
+    elseif (is_valid_upload_path($file, $valid_upload_paths))
         {
         // Path is a file
         if (is_banned_extension(pathinfo($file, PATHINFO_EXTENSION)))
@@ -451,7 +451,7 @@ function api_add_alternative_file($resource, $name, $description = '', $file_nam
             return false;
             }
         }
-    else if ($file != "")
+    elseif ($file != "")
         {
         // Couldn't validate path supplied
         return false;
@@ -1394,7 +1394,7 @@ function api_upload_multipart(int $ref, bool $no_exif, bool $revert): array
                     sprintf($GLOBALS['lang']['plupload-maxfilesize'], ini_get('upload_max_filesize'))
                 ));
                 }
-            else if ($_FILES['file']['error'] !== UPLOAD_ERR_OK)
+            elseif ($_FILES['file']['error'] !== UPLOAD_ERR_OK)
                 {
                 http_response_code(500);
                 return ajax_response_fail(ajax_build_message(

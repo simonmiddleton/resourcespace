@@ -29,7 +29,7 @@ if ($alt_access)
             }
             $last_alt_type=$alt_type;
         }   
-        else if ($n==0)
+        elseif ($n==0)
             {
             hook("viewbeforealtheader");
             ?>

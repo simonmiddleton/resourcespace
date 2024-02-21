@@ -173,7 +173,7 @@ if(get_post_bool('ajax'))
         {
         $response['success'] = true;
         }
-    else if('' !== $admin_password && is_string($password_validation_result) && '' !== $password_validation_result)
+    elseif('' !== $admin_password && is_string($password_validation_result) && '' !== $password_validation_result)
         {
         $response['error'] = $password_validation_result;
         }
@@ -687,7 +687,7 @@ h2#dbaseconfig{  min-height: 32px;}
             {
             $errors['admin_password'] = 'Super Admin password cannot be empty!';
             }
-        else if('' !== $admin_password && is_string($password_validation_result) && '' !== $password_validation_result)
+        elseif('' !== $admin_password && is_string($password_validation_result) && '' !== $password_validation_result)
             {
             $errors['admin_password'] = $password_validation_result;
             }

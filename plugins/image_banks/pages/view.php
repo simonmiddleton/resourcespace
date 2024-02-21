@@ -24,7 +24,7 @@ if ($image_bank_provider_id === 0)
     error_alert($lang['image_banks_provider_id_required'], false);
     exit();
     }
-else if (!array_key_exists($image_bank_provider_id, $providers_select_list))
+elseif (!array_key_exists($image_bank_provider_id, $providers_select_list))
     {
     error_alert($lang['image_banks_provider_not_found'], false);
     exit();

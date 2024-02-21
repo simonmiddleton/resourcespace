@@ -54,7 +54,7 @@ if ($collection_request_min_access == 0)
         $error = $lang["expiredantispam"];    
         }
    // Check the anti-spam code is correct
-    else if ($use_antispam && !verify_antispam($antispamcode, $antispam, $antispamtime))
+    elseif ($use_antispam && !verify_antispam($antispamcode, $antispam, $antispamtime))
         {
         $result = false;
         $error = $lang["requiredantispam"];

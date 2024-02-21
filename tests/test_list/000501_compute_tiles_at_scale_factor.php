@@ -103,7 +103,7 @@ foreach($tiles as $tile)
         {
         $start_tile_region = true;
         }
-    else if($tile['row'] === 1 && $tile['column'] === 2)
+    elseif($tile['row'] === 1 && $tile['column'] === 2)
         {
         $end_tile_region = true;
         }

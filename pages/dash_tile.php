@@ -170,7 +170,7 @@ if($submitdashtile && enforcePostRequest(false))
             $current_specific_user_groups = get_tile_user_groups($tile['ref']);
             update_dash_tile($tile,$buildurl,$link,$title,$reload_interval,$all_users,$tile_audience,$current_specific_user_groups,$specific_user_groups,$default_order_by,$resource_count,$text);
             }
-        else if(!$tile["all_users"] && !$all_users) # Not an all_users tile
+        elseif(!$tile["all_users"] && !$all_users) # Not an all_users tile
             {
             $newtile = create_dash_tile($buildurl,$link,$title,$reload_interval,$all_users,$default_order_by,$resource_count,$text);
             ps_query("UPDATE user_dash_tile SET dash_tile = ? WHERE dash_tile= ? AND user = ?", ['s', $newtile, 'i', $tile['ref'], 'i', $userref]);
@@ -294,7 +294,7 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
                                     {
                                     echo "checked";
                                     }
-                                else if(!isset($existing) && $check)
+                                elseif(!isset($existing) && $check)
                                     {
                                     echo "checked";
                                     $check=false;
@@ -379,9 +379,9 @@ if($create)
             $promoted_resource = true;
             $title=$col["name"];
             }
-        else if(substr($title,0,7)=="!recent")
+        elseif(substr($title,0,7)=="!recent")
             {$title=$lang["recent"];}
-        else if(substr($title,0,5)=="!last")
+        elseif(substr($title,0,5)=="!last")
             {
             $last = preg_replace("/^!last/", "", $title);
             $title= ($last!="") ? $lang["last"]." ".$last : $lang["recent"];
@@ -405,7 +405,7 @@ if($create)
     $validpage=true;
     $submittext = $lang["create"];
     }
-else if($edit)
+elseif($edit)
     {
     #edit contains the dash_tile record ref
     $tile = get_tile($edit);
@@ -633,7 +633,7 @@ if('' != $tile_type && $tile_type !== "conf")
             $sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
             $resources = do_search($search,$restypes,$order_by,$archive,-1,$sort);
             }
-        else if('fcthm' == $tile_type)
+        elseif('fcthm' == $tile_type)
             {
             $link_parts = explode('?', $link);
             parse_str(str_replace('&amp;', '&', $link_parts[1]), $link_parts);

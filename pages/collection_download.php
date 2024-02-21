@@ -62,7 +62,7 @@ if (!isset($zipcommand) && !$use_zip_extension)
     if (!$collection_download) {exit($lang["download-of-collections-not-enabled"]);}
     if ($archiver_fullpath==false) {exit($lang["archiver-utility-not-found"]);}
     if (!isset($collection_download_settings)) {exit($lang["collection_download_settings-not-defined"]);}
-    else if (!is_array($collection_download_settings)) {exit($lang["collection_download_settings-not-an-array"]);}
+    elseif (!is_array($collection_download_settings)) {exit($lang["collection_download_settings-not-an-array"]);}
     if (!isset($archiver_listfile_argument)) {exit($lang["listfile-argument-not-defined"]);}
     }
     
@@ -417,7 +417,7 @@ if ($submitted != "")
                 $replaced_file = true;
                 $target_exists = file_exists($p);
                 }
-            else if (!$target_exists && $useoriginal == 'yes'
+            elseif (!$target_exists && $useoriginal == 'yes'
                     && resource_download_allowed($ref,'',$result[$n]['resource_type']))
                 {
                 // this size doesn't exist, so we'll try using the original instead
@@ -445,7 +445,7 @@ if ($submitted != "")
                         {
                         $p=$tmpfile; // file already in tmp, just rename it
                         }
-                    else if (!$replaced_file)
+                    elseif (!$replaced_file)
                         {
                         $copy=true; // copy the file from filestore rather than renaming
                         }

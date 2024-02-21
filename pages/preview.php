@@ -84,7 +84,7 @@ if ($go!="")
     } else {
         $result=do_search($search,$restypes,$order_by,$archive,-1,$sort,false,DEPRECATED_STARSEARCH,false,false,"",false,true,true);
     }
-    if (is_array($result))
+    if (is_array($result) && !empty($result))
         {
         # Locate this resource
         $pos=-1;

@@ -68,7 +68,7 @@ if (getval("tweak","")!="" && enforcePostRequest(false))
                 else{$ingested=true;}
                 create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
                 }
-            else if ($offline_job_queue && (!$enable_thumbnail_creation_on_upload || (isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB'))))
+            elseif ($offline_job_queue && (!$enable_thumbnail_creation_on_upload || (isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB'))))
                 {
                 $create_previews_job_data = array(
                 'resource' => $resource['ref'],

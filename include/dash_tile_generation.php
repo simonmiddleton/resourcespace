@@ -198,13 +198,13 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
         <h2 class="title"><?php echo htmlspecialchars(i18n_get_translated($tile['title'])); ?></h2>
         <?php
         }
-    else if(!empty($tile['txt']) && isset($lang[strtolower($tile['txt'])]))
+    elseif(!empty($tile['txt']) && isset($lang[strtolower($tile['txt'])]))
         {
         ?>
         <h2 class="title notitle"><?php echo htmlspecialchars($lang[strtolower($tile['txt'])]); ?></h2>
         <?php
         }
-    else if(!empty($tile['txt']) && !isset($lang[strtolower($tile['txt'])]))
+    elseif(!empty($tile['txt']) && !isset($lang[strtolower($tile['txt'])]))
         {
         ?>
         <h2 class="title notitle"><?php echo htmlspecialchars($tile['txt']); ?></h2>
@@ -265,7 +265,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
     $icon = ""; 
     if(substr($search,0,11)=="!collection")
         {$icon="cube";}
-    else if(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
+    elseif(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
         {$icon="clock-o";}
     else{$icon="search";}
 
@@ -277,7 +277,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
         </h2>
         <?php
         }
-    else if(!empty($tile["txt"]))
+    elseif(!empty($tile["txt"]))
         { ?>
         <h2>
         <?php echo htmlspecialchars(i18n_get_translated($tile["txt"]));?>
@@ -310,7 +310,7 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
     $icon = ""; 
     if(substr($search,0,11)=="!collection")
         {$icon="cube";}
-    else if(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
+    elseif(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
         {$icon="clock-o";}
     else
         {$icon="search";}
@@ -323,7 +323,7 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
         </h2>
         <?php
         }
-    else if(!empty($tile["txt"]))
+    elseif(!empty($tile["txt"]))
         { ?>
         <h2>
         <span class='fa fa-<?php echo $icon ?>'></span>
@@ -356,7 +356,7 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
     $icon = ""; 
     if(substr($search,0,11)=="!collection")
         {$icon="cube";}
-    else if(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
+    elseif(substr($search,0,7)=="!recent" || substr($search,0,5)=="!last")
         {$icon="clock-o";}
     else{$icon="search";}
 
@@ -368,7 +368,7 @@ function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
         </h2>
         <?php
         }
-    else if(!empty($tile["txt"]))
+    elseif(!empty($tile["txt"]))
         { ?>
         <h2>
         <span class='fa fa-<?php echo $icon ?>'></span>
@@ -485,7 +485,7 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
             {
             echo htmlspecialchars(i18n_get_translated($tile['title']));
             }
-        else if('' != $tile['txt'])
+        elseif('' != $tile['txt'])
             {
             echo htmlspecialchars(i18n_get_translated($tile['txt']));
             }
@@ -559,7 +559,7 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
             {
             echo htmlspecialchars(i18n_get_translated($tile['title']));
             }
-        else if('' != $tile['txt'])
+        elseif('' != $tile['txt'])
             {
             echo htmlspecialchars(i18n_get_translated($tile['txt']));
             }
@@ -588,7 +588,7 @@ function tile_featured_collection_blank($tile, $tile_id)
             {
             echo htmlspecialchars(i18n_get_translated($tile['title']));
             }
-        else if('' != $tile['txt'])
+        elseif('' != $tile['txt'])
             {
             echo htmlspecialchars(i18n_get_translated($tile['txt']));
             }

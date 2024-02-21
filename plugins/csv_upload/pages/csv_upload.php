@@ -585,7 +585,7 @@ switch($csvstep)
                                 echo " selected ";
                                 $csv_set_options_found=true;
                                 }
-                            else if(!$csv_set_options_found && (in_array(mb_strtolower($csv_field_data["header"]), array(mb_strtolower((string) $field["name"]),mb_strtolower($field["title"]))) &&
+                            elseif(!$csv_set_options_found && (in_array(mb_strtolower($csv_field_data["header"]), array(mb_strtolower((string) $field["name"]),mb_strtolower($field["title"]))) &&
                                     !(isset($csv_set_options["fieldmapping"][$csv_column]) && $csv_set_options["fieldmapping"][$csv_column] == -1)))
                                 {
                                     echo " selected ";

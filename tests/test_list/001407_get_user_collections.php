@@ -29,7 +29,7 @@ if(!in_array($C, $user_cols))
     return false;
     }
 // Users should only be seeing their own collections
-else if($all === array_intersect($all, $user_cols))
+elseif($all === array_intersect($all, $user_cols))
     {
     echo "Get only this users' collections - ";
     return false;

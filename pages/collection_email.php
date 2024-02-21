@@ -35,7 +35,7 @@ if(!collection_readable($ref))
     {
     exit($lang["no_access_to_collection"]);
     }
-else if(
+elseif(
     $collection["type"] == COLLECTION_TYPE_FEATURED
     && !featured_collection_check_access_control((int) $collection["ref"])
     && !allow_featured_collection_share($collection)
@@ -88,7 +88,7 @@ if(is_featured_collection_category($collection))
             {
             break;
             }
-        else if(is_array($collectionstates))
+        elseif(is_array($collectionstates))
             {
             $sub_fcs_resources_states = array_unique(array_merge($sub_fcs_resources_states, $collectionstates));
             }

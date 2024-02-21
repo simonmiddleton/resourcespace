@@ -157,7 +157,7 @@ else
         <div
         <?php if ($from_dash) { ?>
         style="width:220px;height:105px;"
-        <?php } else if ($print) { ?>
+        <?php } elseif ($print) { ?>
         style="width:50%;height:40%;"
         <?php } else { ?>
         style="width:100%;height:80%;"

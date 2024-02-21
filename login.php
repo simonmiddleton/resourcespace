@@ -177,17 +177,18 @@ if (getval("langupdate", "") != "") {
     redirect("login.php");
 }
 
-include "include/header.php";
+$autocomplete_attr = $login_autocomplete ? '' : ' autocomplete="off"';
+$aria_describedby_attr = $error == '' ? '' : ' aria-describedby="LoginError"';
 
+include "include/header.php";
 include "include/login_background.php";
 
 if (!hook("replaceloginform")) {
     ?>
-    <form id="loginform" method="post" action="<?php echo $baseurl_short?>login.php" <?php if (!$login_autocomplete) {
-        ?>autocomplete="off"<?php
-                                               } ?><?php if ($modal) {
-    ?>onsubmit="return ModalPost(this,true,true);" <?php
-                                               } ?>>
+    <form id="loginform" method="post" action="<?php echo $baseurl_short?>login.php"<?php echo $autocomplete_attr;
+    if ($modal) {
+        ?> onsubmit="return ModalPost(this,true,true);"<?php
+    } ?>>
         <input type="hidden" name="langupdate" id="langupdate" value="">  
         <input type="hidden" name="url" value="<?php echo htmlspecialchars($url)?>">
         <input type="hidden" name="modal" value="<?php echo $modal == "true" ? "true" : ""; ?>">
@@ -210,22 +211,14 @@ if (!hook("replaceloginform")) {
 
         <div class="Question">
             <label for="username"><?php echo $lang["username"]?> </label>
-            <input type="text" name="username" id="username" class="stdwidth" <?php if (!$login_autocomplete) {
-                ?>autocomplete="off"<?php
-                                                                              } ?> value="<?php echo htmlspecialchars(getval("username", "")) ?>" <?php if ($error != "") {
-    ?>aria-describedby="LoginError"<?php
-                                                                              } ?>/>
+            <input type="text" name="username" id="username" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?> value="<?php echo escape(getval("username", "")); ?>"/>
             <div class="clearerleft"> </div>
         </div>
         
         <div class="Question">
             <label for="password"><?php echo $lang["password"]?> </label>
-            <input type="password" name="password" id="password" class="stdwidth" <?php if (!$login_autocomplete) {
-                ?>autocomplete="off"<?php
-                                                                                  } ?> <?php if ($error != "") {
-    ?>aria-describedby="LoginError"<?php
-                                                                                  } ?>/>
-             <div id="capswarning"><?php echo $lang["caps-lock-on"]; ?></div>
+            <input type="password" name="password" id="password" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?>/>
+            <div id="capswarning"><?php echo escape($lang["caps-lock-on"]); ?></div>
             <div class="clearerleft"> </div>
         </div>
 

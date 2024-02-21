@@ -294,7 +294,7 @@ function job_queue_run_job($job, $clear_process_lock)
         debug($logmessage);
         return;
         }
-    else if($clear_process_lock)
+    elseif($clear_process_lock)
         {
         $logmessage =  " - Clearing process lock for job #{$jobref}" . PHP_EOL;
         echo $logmessage;

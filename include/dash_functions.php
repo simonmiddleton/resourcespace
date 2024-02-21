@@ -471,7 +471,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
             {
             update_default_dash_tile_order($tile["tile"],$order);
             }
-        else if((!isset($tile['default_order_by']) || $order != $tile['default_order_by'] || ($tile['default_order_by'] % 10) > 0) && !is_null($user_group_id))
+        elseif((!isset($tile['default_order_by']) || $order != $tile['default_order_by'] || ($tile['default_order_by'] % 10) > 0) && !is_null($user_group_id))
             {
             update_usergroup_dash_tile_order($user_group_id, $tile['tile'], $order);
             }
@@ -1430,7 +1430,7 @@ function build_dash_tile_list($dtiles_available)
                   <?php 
                   if(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]!="custm" && $buildstring["tlstyle"]!="pend")
                       {$tile["txt"] = text($tile["title"]);}
-                  else if(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]=="pend")
+                  elseif(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]=="pend")
                       {
                     if(isset($lang[strtolower($tile['txt'])]))
                         {
@@ -2101,6 +2101,8 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
  */
 function get_dash_search_data($link='', $promimg=0)
     {    
+    global $search_all_workflow_states;
+
     $searchdata = [];
     $searchdata["count"] = 0;
     $searchdata["images"] = [];
@@ -2112,6 +2114,10 @@ function get_dash_search_data($link='', $promimg=0)
     $order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
     $archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
     $sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
+
+    if ($archive !== ""){
+        $search_all_workflow_states = false;
+    }
 
     $results= do_search($search,$restypes,$order_by,$archive,-1,$sort);    
     $imagecount = 0;

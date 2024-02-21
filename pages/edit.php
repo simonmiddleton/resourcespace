@@ -999,7 +999,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                     <?php
                     exit();
                     }
-                else if(!is_array($save_errors) && !hook("redirectaftermultisave"))
+                elseif(!is_array($save_errors) && !hook("redirectaftermultisave"))
                     {
                     redirect(generateURL($baseurl_short . "pages/search.php",$urlparams));
                     }
@@ -1047,7 +1047,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
             create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
             refresh_collection_frame();
             }
-            else if((!$enable_thumbnail_creation_on_upload || (isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB'))) && $offline_job_queue)
+            elseif((!$enable_thumbnail_creation_on_upload || (isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB'))) && $offline_job_queue)
             {
             $create_previews_job_data = array(
                 'resource' => $ref,
@@ -1906,7 +1906,7 @@ if($tabs_on_edit)
                 $tabs_fields_assoc[$tab_ref][$field_idx] = $field_data['ref'];
                 }
             // Fields with invalid tab IDs will end up on the "Default" list (ref #1)
-            else if(!isset($tabs_fields_assoc[1][$field_idx]) && !isset($system_tabs[$field_data['tab']]))
+            elseif(!isset($tabs_fields_assoc[1][$field_idx]) && !isset($system_tabs[$field_data['tab']]))
                 {
                 // Override the fields' tab value in order for it to be rendered on the correct tab
                 $fields[$field_idx]['tab'] = 1;

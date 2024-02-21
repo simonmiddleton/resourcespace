@@ -1,27 +1,15 @@
-1,"Keywords used in resource edits","select k.keyword 'Keyword',sum(count) 'Entered Count' from keyword k,daily_stat d where k.ref=d.object_ref and d.activity_type='Keyword added to resource'
+1,"Values used in resource edits","SELECT 
+TRIM( RIGHT ( diff, LENGTH ( diff ) - LOCATE ( '\n+', diff ) - 2 ) ) AS `Value`, 
+count(*) AS `Count` 
+FROM resource_log WHERE type = 'e' 
 
 # --- date ranges
 # Make sure date is greater than FROM date
-and 
-(
-d.year>[from-y]
-or 
-(d.year=[from-y] and d.month>[from-m])
-or
-(d.year=[from-y] and d.month=[from-m] and d.day>=[from-d])
-)
+and date > DATE('[from-y]-[from-m]-[from-d]')
 # Make sure date is less than TO date
-and
-(
-d.year<[to-y]
-or 
-(d.year=[to-y] and d.month<[to-m])
-or
-(d.year=[to-y] and d.month=[to-m] and d.day<=[to-d])
-)
+and date > DATE('[to-y]-[to-m]-[to-d]')
 
-
-group by k.ref order by 'Entered Count' desc limit 5000;
+group by 1 order by 2 desc limit 5000;
 ",0
 2,"Keywords used in searches","select k.keyword 'Keyword',sum(count) Searches from keyword k,daily_stat d where k.ref=d.object_ref and d.activity_type='Keyword usage'
 

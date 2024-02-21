@@ -1654,7 +1654,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
             {
             $no_permission_fields[] = substr($permission_to_check, 2);
             }
-        else if (substr($permission_to_check, 0, 1) == "F")
+        elseif (substr($permission_to_check, 0, 1) == "F")
             {
             $no_permission_fields[] = substr($permission_to_check, 1);
             }

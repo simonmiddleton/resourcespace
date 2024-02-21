@@ -77,7 +77,7 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
         $encodings = array_unique($encodings);
         }
     // We should only encode to one encoding
-    else if($option_name == 'to-encoding' && !is_array($option_value))
+    elseif($option_name == 'to-encoding' && !is_array($option_value))
         {
         $to_encoding = $option_value;
 

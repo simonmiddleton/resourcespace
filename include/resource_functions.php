@@ -713,7 +713,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     {
                     $ui_selected_node_values[] = $user_set_values[$fields[$n]['ref']];
                     }
-                else if(isset($user_set_values[$fields[$n]['ref']])
+                elseif(isset($user_set_values[$fields[$n]['ref']])
                     && is_array($user_set_values[$fields[$n]['ref']]))
                     {
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
@@ -1525,7 +1525,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 {
                 $ui_selected_node_values[] = $user_set_values[$fields[$n]['ref']];
                 }
-            else if(isset($user_set_values[$fields[$n]['ref']])
+            elseif(isset($user_set_values[$fields[$n]['ref']])
                 && is_array($user_set_values[$fields[$n]['ref']]))
                 {
                 $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
@@ -1902,7 +1902,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                     continue;
                     }
                 }
-            else if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
+            elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                 {
                 # date/expiry date type, construct the value from the date dropdowns
                 $val=sanitize_date_field_input($fields[$n]["ref"], false);
@@ -2626,7 +2626,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         }
                     $newnodes[] = $fieldnode["ref"];
                     }
-                else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["ref"],$sent_nodes))
+                elseif(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["ref"],$sent_nodes))
                     {
                     $nodes_to_remove[] = $fieldnode["ref"];
                     }
@@ -4329,7 +4329,7 @@ function get_custom_access($resource, $usergroup, $return_default = true)
         {
         return $default_customaccess;
         }
-    else if ($result === '')
+    elseif ($result === '')
         {
         return false;
         }
@@ -4891,7 +4891,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
                 {
                 create_previews($r, false, $extension, false, false, -1, false, $ingest);
                 }
-            else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
+            elseif(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
                 {
                 $create_previews_job_data = array(
                     'resource' => $r,
@@ -5527,7 +5527,7 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
             global $restricted_full_download;
             return $restricted_full_download;
             }
-        else if('' != $size && in_array($size, $sizes_always_allowed))
+        elseif('' != $size && in_array($size, $sizes_always_allowed))
             {
             return true;
             }
@@ -6038,7 +6038,7 @@ function get_page_count($resource,$alternative=-1)
         {
         $file=get_resource_path($ref,true,"",false,"pdf");
         }
-    else if ($alternative==-1)
+    elseif ($alternative==-1)
         {
         # some unoconv files are not pdfs but this needs to use the auto-alt file
         $alt_ref=ps_value("select ref value from resource_alt_files where resource=? and unoconv=1",array("i",$ref), "");
@@ -6640,7 +6640,7 @@ function update_related_resource($ref,$related,$add=true)
         OR (resource IN (" . ps_param_insert(count($related)) . ") AND related = ?)";
         ps_query($query,$relatedparams);
         }
-    else if($add)
+    elseif($add)
         {
         $newrelated = array();
         foreach($related as $torelate)
@@ -7928,13 +7928,13 @@ function get_data_by_field($resource, $field, bool $flatten = true)
         $tree_nodes = get_resource_nodes($resource, $rtf_ref, true);
         return $flatten ? implode(', ', get_node_strings($tree_nodes, false)) : $tree_nodes;
         }
-    else if(!$fetch_all_resources)
+    elseif(!$fetch_all_resources)
         {
         $resource_data_for_field = get_resource_nodes($resource, $rtf_ref, true);
         return $flatten ? implode(', ', array_column($resource_data_for_field, 'name')) : $resource_data_for_field;
         }
     // Old behaviour from when we had resource_data (before r19945) - return the metadata field values for all resources
-    else if($fetch_all_resources && in_array($rtf_type, NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES))
+    elseif($fetch_all_resources && in_array($rtf_type, NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES))
         {
         return get_resources_nodes_by_rtf($rtf_ref);
         }
@@ -8718,7 +8718,7 @@ function delete_resource_type_field($ref)
         {
         return $lang["admin_delete_field_error"] . "<br/>\$" . implode(", \$",$fieldvars);
         }
-    else if(!empty($core_field_scopes))
+    elseif(!empty($core_field_scopes))
         {
         return sprintf('%s%s', $lang["admin_delete_field_error_scopes"], implode(', ', $core_field_scopes));
         }

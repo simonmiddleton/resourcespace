@@ -115,12 +115,12 @@ if (getval("save","")!="" && enforcePostRequest(false))
         $error = $lang["expiredantispam"];    
         }
     // Check the anti-spam code is correct
-    else if($use_antispam && !verify_antispam($antispamcode, $antispam, $antispamtime))
+    elseif($use_antispam && !verify_antispam($antispamcode, $antispam, $antispamtime))
         {
         $result = false;
         $error = $lang["requiredantispam"];
         }
-    else if (!$internal_share_access || $user_is_anon || $userrequestmode==0)
+    elseif (!$internal_share_access || $user_is_anon || $userrequestmode==0)
         {
         if ((!$internal_share_access || $user_is_anon) && (getval("fullname","")=="" || getval("email","")==""))
             {

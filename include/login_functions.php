@@ -59,7 +59,7 @@ function perform_login($loginuser="",$loginpass="")
         $valid = true;
         }
     // An admin logs in as this user
-    else if(
+    elseif(
         $found_user_record
         && $impersonate_user
         && rs_password_verify($password, $user_data['password'], ['username' => $username, 'impersonate_user' => true])
@@ -340,21 +340,21 @@ function rs_password_verify(string $password, string $hash, array $data)
         {
         return true;
         }
-    else if($hash_v2 === $hash)
+    elseif($hash_v2 === $hash)
         {
         return true;
         }
-    else if($hash_v1 === $hash)
+    elseif($hash_v1 === $hash)
         {
         return true;
         }
     // Legacy: Plain text password - when passwords were not hashed at all (very old code - should really not be the 
     // case anymore) -or- when someone resets it manually in the database
-    else if($password === $hash)
+    elseif($password === $hash)
         {
         return true;
         }
-    else if(isset($GLOBALS["scramble_key_old"]) && $GLOBALS["migrating_scrambled"]
+    elseif(isset($GLOBALS["scramble_key_old"]) && $GLOBALS["migrating_scrambled"]
         && password_verify(hash_hmac('sha256', $RS_madeup_pass, $GLOBALS['scramble_key_old']), $hash) )
         {
         // Force user to change password if password_expiry is enabled

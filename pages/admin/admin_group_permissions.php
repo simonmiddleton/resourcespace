@@ -100,7 +100,7 @@ if ($save !== '' && $copy_from === '' && enforcePostRequest(getval('ajax', '') =
 
     ajax_send_response(200, ajax_response_ok_no_data());
     }
-else if ($save !== '' && $copy_from !== '' && enforcePostRequest(getval('ajax', '') == 'true'))
+elseif ($save !== '' && $copy_from !== '' && enforcePostRequest(getval('ajax', '') == 'true'))
     {
     copy_usergroup_permissions($copy_from,$ref);
     }

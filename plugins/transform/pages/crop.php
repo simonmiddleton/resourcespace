@@ -263,7 +263,7 @@ if ($saveaction != '' && enforcePostRequest(false))
             $verb = $lang['tweaked'];
             }
         }
-    else if (!$cropperestricted)
+    elseif (!$cropperestricted)
         {
         $verb = $lang['cropped'];   
 
