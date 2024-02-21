@@ -82,6 +82,8 @@ foreach($nodes_in_sequence as $node)
 </div>
 <div class="clearerleft"></div>
 <script>
+console.debug('<?php printf('(%s) Init global state for Keywords_%s', __FILE__, $js_keywords_suffix); ?>');
+
 // Associative array with key being node name and index being the node ID
 // Example: Keywords_nodes_3 = ['United Kingdom']=232, ['United States']=233
 // or Keywords_nodes_searched_3 = ['United Kingdom']=232, ['United States']=233
@@ -90,10 +92,13 @@ var Keywords_<?php echo $js_keywords_suffix; ?> = [];
 
 function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     {
+    let fct_name = 'updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>';
+    console.debug('%s(user_action = %o)', fct_name, user_action);
     var html                  = '';
     var hidden_input_elements = '';
     var keyword_count         = 0;
 
+    console.debug('[%s] Keywords_<?php echo $js_keywords_suffix; ?> = %o', fct_name, Keywords_<?php echo $js_keywords_suffix; ?>);
     for (var keyword_value in Keywords_<?php echo $js_keywords_suffix; ?>) 
         {
         var keyword_index = Keywords_<?php echo $js_keywords_suffix; ?>[keyword_value];
@@ -153,6 +158,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
 
 function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
     {
+    console.debug('removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id = %o, user_action = %o)', node_id, user_action);
     <?php
     if((int)$field["required"] === 1)
         {?>        
@@ -189,6 +195,7 @@ function removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, user_action)
 
 function addKeyword_<?php echo $js_keywords_suffix; ?>(node_id, keyword)
     {
+    console.debug('addKeyword_<?php echo $js_keywords_suffix; ?>(node_id = %o, keyword = %o)', node_id, keyword);
     removeKeyword_<?php echo $js_keywords_suffix; ?>(node_id, false);
 
     Keywords_<?php echo $js_keywords_suffix; ?>[keyword] = node_id;
@@ -277,11 +284,19 @@ jQuery('#<?php echo $name; ?>_selector').keydown(function(event)
     });
 
 <?php
+debug("\$add_searched_nodes_function_call = {$add_searched_nodes_function_call}");
 echo $add_searched_nodes_function_call;
 ?>
 
 jQuery(document).ready(function()
     {
+    console.debug('<?php
+        printf(
+            '[document.ready](%s) Going to call updateselectedkeywords_%s(false)',
+            __FILE__,
+            $js_keywords_suffix
+        );
+    ?>');
     updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(false);
     });
 </script>

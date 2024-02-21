@@ -1925,6 +1925,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         {
         debug("display_field: getting all user selected values from form data for field " . $field['ref']);
         $user_set_values = getval('nodes', array());
+        debug(sprintf('$user_set_values = %s', json_encode($user_set_values)));
         }
 
     /****************************** Errors on saving ***************************************/
@@ -3758,12 +3759,15 @@ function render_csrf_data_attributes($ident)
 */
 function check_display_condition($n, array $field, array $fields, $render_js)
     {
+    debug_function_call(__FUNCTION__, [$n, $field['ref'], ['ignored on purpose - too verbose'], $render_js]);
     global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
 
     if(trim((string) $field['display_condition']) == "")
         {
         return true;  # This field does not have a display condition, so it should be displayed
         }
+
+    debug(sprintf('$use = %s', json_encode($use)));
 
     // Assume the candidate field is to be displayed    
     $displaycondition = true;
@@ -3772,19 +3776,21 @@ function check_display_condition($n, array $field, array $fields, $render_js)
     $condref          = 0;
     $scriptconditions = array();
     
-    
     // Need all field data to check display conditions
     global $display_check_data;
     if(!is_array($display_check_data))
         {
         $display_check_data = get_resource_field_data($use,false,false);
+        debug('Loaded $display_check_data');
         }
 
     // On upload, check against the posted nodes as save_resource_data() saves nodes after going through all the fields
     $user_set_values = getval('nodes', array());
+    debug(sprintf('$user_set_values = %s', json_encode($user_set_values)));
 
     foreach ($conditions as $condition) # Check each condition
         {
+        debug(sprintf('field #%s - checking condition "%s"', $field['ref'], $condition));
         $displayconditioncheck = false;
 
         // Break this condition down into fieldname $s[0] and value(s) $s[1]
@@ -3804,10 +3810,12 @@ function check_display_condition($n, array $field, array $fields, $render_js)
             )
                 {
                 $ui_selected_node_values[] = $user_set_values[$display_check_data[$cf]['ref']];
+                debug(sprintf('$ui_selected_node_values = %s', json_encode($ui_selected_node_values)));
                 }
             elseif(isset($user_set_values[$display_check_data[$cf]['ref']]) && is_array($user_set_values[$display_check_data[$cf]['ref']]))
                 {
                 $ui_selected_node_values = $user_set_values[$display_check_data[$cf]['ref']];
+                debug(sprintf('$ui_selected_node_values = %s', json_encode($ui_selected_node_values)));
                 }
 
             // Does the fieldname on this condition match the field being processed
@@ -3815,15 +3823,15 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 {
                 $display_check_data[$cf]['nodes'] = get_nodes($display_check_data[$cf]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $display_check_data[$cf]['type'] ? true : false));
 
-                $node_options = extract_node_options($display_check_data[$cf]['nodes']);
-
                 $scriptconditions[$condref]['field'] = $display_check_data[$cf]['ref'];
                 $scriptconditions[$condref]['type']  = $display_check_data[$cf]['type'];
 
                 $checkvalues=$s[1];
+                debug("\$checkvalues = {$checkvalues}");
                 // Break down values delimited with pipe characters
                 $validvalues = explode("|",$checkvalues);
                 $validvalues = array_map("i18n_get_translated",$validvalues);
+                debug(sprintf('$validvalues = %s', json_encode($validvalues)));
                 $scriptconditions[$condref]['valid'] = array();
 
                 // Use submitted values if field was shown and user has edit access to it
@@ -3912,12 +3920,14 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                             if($GLOBALS["multiple"] === false)
                                 {
                                 ?>
+                                console.debug('[document.ready] Going to call checkDisplayCondition<?php echo $field['ref']; ?>()');
                                 checkDisplayCondition<?php echo $field['ref']; ?>();
                                 <?php
                                 }
                             ?>
                             jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
                                 {
+                                console.debug('#CentralSpace-on-dynamicKeywordChanged for field #<?php echo $field['ref']; ?>');
                                 checkDisplayCondition<?php echo $field['ref']; ?>();
                                 });
                             });
@@ -3997,6 +4007,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
         <script type="text/javascript">
         function checkDisplayCondition<?php echo $field["ref"];?>()
             {
+            console.debug('(<?php echo __FILE__ . ':' . __LINE__?>) checkDisplayCondition<?php echo $field["ref"]; ?>()');
             // Get current display state for governed field ("block" or "none")
             field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
             newfield<?php echo $field['ref']; ?>status = 'none';
@@ -4013,6 +4024,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
                 field<?php echo $field['ref']; ?>valuefound = false;
                 fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
+                console.debug('[checkDisplayCondition<?php echo $field["ref"]; ?>] fieldokvalues<?php echo $scriptcondition['field']; ?> = %o', fieldokvalues<?php echo $scriptcondition['field']; ?>);
 
                 <?php
                 ############################
