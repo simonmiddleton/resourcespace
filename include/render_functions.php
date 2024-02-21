@@ -6816,6 +6816,7 @@ function render_resource_view_image(array $resource, array $context)
     </a>
 
     <?php
+    hook('aftersearchimg', '', array($resource["ref"]));
     if (count($previewcaption) > 0)
         {
         ?>
