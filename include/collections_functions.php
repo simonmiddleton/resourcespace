@@ -5202,7 +5202,7 @@ function collection_download_process_archive_command($collection_download_tar, &
             }
         catch (Throwable $e)
             {
-            debug("collection_download_process_archive_command: Unable to close zip file. Resoan {$e->getMessage()}");
+            debug("collection_download_process_archive_command: Unable to close zip file. Reason {$e->getMessage()}");
             }
         unset($GLOBALS["use_error_exception"]);
         update_zip_progress_file("complete");
