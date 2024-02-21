@@ -1085,11 +1085,7 @@ if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
                                                     if(!hook('resourcerequest'))
                                                         {
                                                         ?>
-                                                        <td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
-                                                            <a disabled>
-                                                                <?php echo htmlspecialchars($lang["notavailableshort"]??"")?>
-                                                            </a>
-                                                        </td>
+                                                        <td <?php hook("modifydownloadbutton") ?> class="DownloadButton"></td>
                                                         <?php
                                                         }
                                                     }
