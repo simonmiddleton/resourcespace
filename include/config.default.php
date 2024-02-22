@@ -840,6 +840,9 @@ $user_preferences = true;
 /* Should the "purge users" function be available? */
 $user_purge=true;
 
+# Limit the total number of users that can be added to the system.
+# $user_limit=50;
+
 # List of active plugins, enabled by default and cannot be disabled in the UI.
 $plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_notifications', 'rse_workflow', 'licensemanager', 'consentmanager');
 

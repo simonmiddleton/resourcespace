@@ -1216,11 +1216,19 @@ function email_user_request()
 */
 function new_user($newuser, $usergroup = 0)
     {
-    global $lang,$home_dash;
+    global $lang,$home_dash,$user_limit;
+
     # Username already exists?
     $c=ps_value("SELECT COUNT(*) value FROM user WHERE username = ?",["s",$newuser],0);
     if ($c>0) {return false;}
     
+    # User limit reached?
+    if (isset($user_limit))
+        {
+        $c=ps_value("SELECT COUNT(*) value FROM user WHERE approved = 1",[],0);
+        if ($c>=$user_limit) {return false;}
+        }
+
     $cols = array("username");
     $sqlparams = ["s",$newuser];
     $cols[] = 'password';
