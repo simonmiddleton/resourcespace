@@ -266,11 +266,6 @@ parameters:
 			path: pages/collections.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$smart_fc_parent\\.$#"
-			count: 1
-			path: pages/collections_featured.php
-
-		-
 			message: "#^Variable \\$allowed_extensions in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: pages/edit.php
