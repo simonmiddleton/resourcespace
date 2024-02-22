@@ -4135,14 +4135,7 @@ function has_browsebar()
 function display_upload_options()
     {
     global $metadata_read, $enable_add_collection_on_upload, $relate_on_upload, $camera_autorotation;
-    if ($metadata_read || $enable_add_collection_on_upload || $relate_on_upload || $camera_autorotation)
-        {
-        return true;
-        }
-    else
-        {
-        return false;
-        }
+    return $metadata_read || $enable_add_collection_on_upload || $relate_on_upload || $camera_autorotation;
     }
     
 

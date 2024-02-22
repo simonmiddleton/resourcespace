@@ -303,14 +303,7 @@ function existing_tile($title,$all_users,$url,$link,$reload_interval,$resource_c
                             's', $text
                           ]
                         );
-    if(isset($existing[0]["ref"]))
-        {
-        return true;
-        }
-    else
-        {
-        return false;
-        }
+    return isset($existing[0]["ref"]);
     }
 
 /*
@@ -2175,14 +2168,7 @@ function can_edit_tile(int $tileref, int $audience, int $user)
         {
         // User is trying to edit a tile visible to only them.
         $result = ps_query("SELECT ref, user, dash_tile, order_by FROM user_dash_tile WHERE dash_tile = ? AND user = ?", ['i', $tileref, 'i', $user]);
-        if (isset($result[0]))
-            {
-            return true;
-            }
-        else
-            {
-            return false;
-            }
+        return isset($result[0]);
         }
     else
         {

@@ -2763,7 +2763,7 @@ function checkperm($perm)
     # 
     global $userpermissions;
     if (!(isset($userpermissions))) {return false;}
-    if (in_array($perm,$userpermissions)) {return true;} else {return false;}
+    return in_array($perm,$userpermissions);
     }
 
 

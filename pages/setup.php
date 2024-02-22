@@ -30,10 +30,7 @@ function get_post($key)
  */
 
 function get_post_bool($key){ 
-    if (isset($_REQUEST[$key]))
-        return true;
-    else
-        return false;
+    return isset($_REQUEST[$key]);
 }
 /**
  * Trims whitespace and trailing slash.
@@ -94,10 +91,7 @@ function url_exists($url)
             fclose($fp);
             $tmp = explode(' ',$resp);
             $response_code = $tmp[1];
-            if ($response_code == 200)
-                return true;
-            else
-                return false;
+            return ($response_code == 200);
         }
     }
     fclose($fp);

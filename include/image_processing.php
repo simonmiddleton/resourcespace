@@ -3248,7 +3248,7 @@ function extract_icc($infile, $ref='') {
    return false;
    }
 
-   if (file_exists($outfile)) { return true; } else { return false; }
+   return file_exists($outfile);
 
 }
 
