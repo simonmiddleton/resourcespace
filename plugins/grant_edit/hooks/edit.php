@@ -195,7 +195,7 @@ function HookGrant_editEditAppendcustomfields()
         ?>  
         
         <div class="Question" id="question_grant_edit" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
-            <label><?php echo escape($lang["grant_edit_list"]); ?></label>
+            <label><?php echo escape($lang["grant_edit_group_list"]); ?></label>
             <table cellpadding=3 cellspacing=3 class="ListviewStyle">
             <tr class="ListviewTitleStyle">
             <td><?php echo escape($lang['user_group']);?></td>
@@ -206,7 +206,7 @@ function HookGrant_editEditAppendcustomfields()
                 {
                 echo "<tr id='grant_edit" . (int) $grant_editgroup['ref'] . "'>
 						<td>" . escape($grant_editgroup['name']) . "</td>
-						<td>" . escape(($grant_editgroup['expiry']!="")?nicedate($grant_editgroup['expiry']):$lang['never'])  . "</td>
+						<td>" . escape(($grant_editgroup['expiry'] != "") ? nicedate($grant_editgroup['expiry']) : $lang['never'])  . "</td>
 						<td><a href='#' onclick='if (confirm(\"" . escape($lang['grant_edit_delete_user']) . " " . escape($grant_editgroup['name']) . "\")){remove_grant_edit(" . (int) $grant_editgroup['ref'] . ");}'>&gt;&nbsp;" . escape($lang['action-delete'])  . "</a></td>
 					  </tr>
 					";
