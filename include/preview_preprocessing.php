@@ -7,7 +7,7 @@
 
 global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace, $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution,
 $pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params, $qlpreview_path,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,
-$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif,$resource_view_use_pre;
+$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif,$resource_view_use_pre, $debug_log, $debug_log_override;
 
 resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews'] . ":\n");
 
@@ -364,7 +364,8 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
         exit("Unoconv executable not found");
         }
 
-    $output = run_command("{$unocommand} --format=pdf %file", false, ['%file' => $file]);
+    $output = run_command("{$unocommand} " . ($debug_log || $debug_log_override ? '-v' : '') . " --format=pdf %file", false, ['%file' => $file]);
+    debug('Preview_preprocessing : ' . $output);
 
     # Check for extracted text - if found, it has already been extracted from the uploaded file so don't replace it with the text from this pdf.
     global $extracted_text_field;
