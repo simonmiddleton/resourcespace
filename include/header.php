@@ -701,6 +701,14 @@ echo "linkreload = " . (($k != "" || $internal_share_access) ? "false" : "true")
 
 jQuery(document).ready(function()
     {
+<?php
+if ($GLOBALS['debug_log'] && $GLOBALS['debug_extended_info'] && isset($GLOBALS['debug_js_events'])) {
+?>
+    resourcespace_monitor_events(document.body);
+<?php
+}
+?>
+
     ActivateHeaderLink(<?php echo json_encode($activate_header_link); ?>);
 
     jQuery(document).mouseup(function(e) 
