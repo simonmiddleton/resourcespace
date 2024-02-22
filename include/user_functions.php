@@ -1236,8 +1236,7 @@ function user_limit_reached()
     global $user_limit;
     if (isset($user_limit))
         {
-        $c=ps_value("SELECT COUNT(*) value FROM user WHERE approved = 1",[],0);
-        if ($c>=$user_limit) {return true;}
+        if (get_total_approved_users()>=$user_limit) {return true;}
         }
     return false;
     }

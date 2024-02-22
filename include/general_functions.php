@@ -3341,6 +3341,16 @@ function get_recent_users($days)
     return ps_value("SELECT count(*) value FROM user WHERE datediff(now(), last_active) <= ?", array("i", $days), 0);
     }
 
+/**
+ * Return the total number of approved
+ *
+ * @return integer  The number of approved users
+ */
+function get_total_approved_users()
+    {
+    return (ps_value("select count(*) value from user where approved=1", [], 0));
+    }
+
 
 /**
 * Check if script last ran more than the failure notification days
@@ -4878,7 +4888,8 @@ function get_system_status()
     $return['results']['recent_user_count'] = [
         'status' => 'OK',
         'info' => get_recent_users(7),
-        'within_year' => get_recent_users(365)
+        'within_year' => get_recent_users(365),
+        'total_approved' => get_total_approved_users()
     ];
 
     // Check if plugins have any warnings
