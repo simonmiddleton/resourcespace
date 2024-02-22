@@ -383,14 +383,14 @@ if ($submitted != "")
                 $usesize = ($size == 'original') ? "" : $size;
                 }      
             
-            if(in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && $usesize !== 'original')
+            if(in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && $usesize !== '')
                 {
-                //Supported video formates will only have a pre sized derivative
-                $pextension = $result[$n]['file_extension'];
+                // Supported video formats will only have a pre sized derivative
+                $pextension = $ffmpeg_preview_extension;
                 $p = get_resource_path($ref,true,'pre',false,$pextension,-1,1);
                 $usesize = 'pre';
                 }
-            elseif(in_array($result[$n]['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])) && $usesize !== 'original')
+            elseif(in_array($result[$n]['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])) && $usesize !== '')
                 {
                 //Supported audio formats are ported to mp3
                 $pextension = 'mp3';

@@ -21,7 +21,7 @@ include_once __DIR__ . '/../pdf_functions.php';
 include_once __DIR__ . '/../csv_export_functions.php';
 
 global $lang, $baseurl, $baseurl_short, $offline_job_delete_completed, $exiftool_write_option, $usage, $usagecomment,
-$text, $collection_download_settings, $pextension, $scramble_key, $archiver_fullpath,$archiver_listfile_argument,
+$text, $collection_download_settings, $pextension, $scramble_key, $archiver_fullpath,$archiver_listfile_argument, $ffmpeg_preview_extension,
 $collection_download_settings,$restricted_full_download, $download_file_lifetime, $ffmpeg_supported_extensions, $ffmpeg_audio_extensions;
 
 foreach($job_data as $arg => $value)
@@ -180,14 +180,14 @@ for($n = 0; $n < count($collection_resources); $n++)
         $usesize = ($size == 'original') ? "" : $size;
         }
 
-    if(in_array($resource_data['file_extension'], $ffmpeg_supported_extensions) && $usesize !== 'original')
+    if(in_array($resource_data['file_extension'], $ffmpeg_supported_extensions) && $usesize !== '')
         {
-        //Supported video formates will only have a pre sized derivative
-        $pextension = $resource_data['file_extension'];
+        // Supported video formats will only have a pre sized derivative
+        $pextension = $ffmpeg_preview_extension;
         $p = get_resource_path($ref,true,'pre',false,$pextension,-1,1);
         $usesize = 'pre';
         }
-    elseif(in_array($resource_data['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])) && $usesize !== 'original')
+    elseif(in_array($resource_data['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])) && $usesize !== '')
         {
         //Supported audio formats are ported to mp3
         $pextension = 'mp3';
