@@ -28,6 +28,10 @@ if (getval("newuser","")!="" && !hook("replace_create_user_save") && enforcePost
         {
         $error=$lang["useralreadyexists"];
         }
+    elseif  ($new==-2)
+        {
+        $error=$lang["userlimitreached"];
+        }
     else
         {
         hook("afterusercreated");

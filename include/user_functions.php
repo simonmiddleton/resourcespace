@@ -694,7 +694,7 @@ function save_user($ref)
        // Enabling a disabled account but at the user limit?
         if (user_limit_reached() && $current_user_data["approved"]!=1 && $approved==1)
             {
-            return $lang["useralreadyexists"]; // Return error message 
+            return $lang["userlimitreached"]; // Return error message 
             }
 
         // Password checks:
@@ -1201,7 +1201,15 @@ function email_user_request()
         {
         $message->append_text($customContents . "<br/><br/>");
         }
-    $message->append_text($account_email_exists_notify ? "lang_userrequestnotificationemailprotection2": "lang_userrequestnotification2");
+    // User limit reached? Add a message explaining.
+    if (user_limit_reached())
+        {
+        $message->append_text("lang_userlimitreached");
+        }
+    else    
+        {
+        $message->append_text($account_email_exists_notify ? "lang_userrequestnotificationemailprotection2": "lang_userrequestnotification2");
+        }
     $message->user_preference = ["user_pref_user_management_notifications" => ["requiredvalue" => true, "default" => $user_pref_user_management_notifications]];
     $message->url = $baseurl . "/pages/team/team_user.php";
     send_user_notification($approval_notify_users,$message);
@@ -1238,7 +1246,7 @@ function user_limit_reached()
 * @param string $newuser  - username to create
 * @param integer $usergroup  - optional usergroup to assign
 * 
-* @return boolean|integer  - id of new user or false if user already exists
+* @return boolean|integer  - id of new user or false if user already exists, or -2 if user limit reached
 */
 function new_user($newuser, $usergroup = 0)
     {
@@ -1249,7 +1257,7 @@ function new_user($newuser, $usergroup = 0)
     if ($c>0) {return false;}
     
     # User limit reached?
-    if (user_limit_reached()) {return false;}
+    if (user_limit_reached()) {return -2;}
 
     $cols = array("username");
     $sqlparams = ["s",$newuser];
