@@ -1175,6 +1175,8 @@ function email_user_request()
     $email              = strip_tags(getval('email', ''));
     $userrequestcomment = strip_tags(getval('userrequestcomment', ''));
 
+    $user_limit_reached=user_limit_reached();
+
     $user_registration_opt_in_message = "";
     if($user_registration_opt_in && getval("login_opt_in", "") == "yes")
         {
@@ -1186,7 +1188,7 @@ function email_user_request()
     $message->set_subject($applicationname . ": ");
     $message->append_subject("lang_requestuserlogin");
     $message->append_subject(" - " . $name);
-    $message->set_text($account_email_exists_notify ? "lang_userrequestnotificationemailprotection1":  "lang_userrequestnotification1");
+    $message->set_text($account_email_exists_notify && !$user_limit_reached ? "lang_userrequestnotificationemailprotection1":  "lang_userrequestnotification1");
     $message->append_text("<br/><br/>");
     $message->append_text("lang_name");
     $message->append_text(": " . $name . "<br/><br/>");
@@ -1202,7 +1204,7 @@ function email_user_request()
         $message->append_text($customContents . "<br/><br/>");
         }
     // User limit reached? Add a message explaining.
-    if (user_limit_reached())
+    if ($user_limit_reached)
         {
         $message->append_text("lang_userlimitreached");
         }
