@@ -691,6 +691,12 @@ function save_user($ref)
             return $lang["useralreadyexists"]; # An account with that e-mail or username already exists, changes not saved
             }
 
+       // Enabling a disabled account but at the user limit?
+        if (user_limit_reached() && $current_user_data["approved"]!=1 && $approved==1)
+            {
+            return $lang["useralreadyexists"]; // Return error message 
+            }
+
         // Password checks:
         if($suggest != '' || ($password == '' && $emailresetlink != ''))
             {
@@ -939,6 +945,9 @@ function auto_create_user_account($hash="")
     {
     global $user_email, $baseurl, $lang, $user_account_auto_creation_usergroup, $registration_group_select, 
            $auto_approve_accounts, $auto_approve_domains, $customContents, $language, $home_dash, $applicationname;
+
+    // Feature disabled if user limit reached.
+    if (user_limit_reached()) {return false;}
 
     # Work out which user group to set. Allow a hook to change this, if necessary.
     $altgroup=hook("auto_approve_account_switch_group");
@@ -1207,6 +1216,23 @@ function email_user_request()
     }
 
 /**
+* Check to see if the user limit has been reached.
+* * 
+* @return boolean  - true if user limit has been reached or exceeded
+*/
+
+function user_limit_reached()
+    {
+    global $user_limit;
+    if (isset($user_limit))
+        {
+        $c=ps_value("SELECT COUNT(*) value FROM user WHERE approved = 1",[],0);
+        if ($c>=$user_limit) {return true;}
+        }
+    return false;
+    }
+
+/**
 * Create a new user
 * * 
 * @param string $newuser  - username to create
@@ -1223,11 +1249,7 @@ function new_user($newuser, $usergroup = 0)
     if ($c>0) {return false;}
     
     # User limit reached?
-    if (isset($user_limit))
-        {
-        $c=ps_value("SELECT COUNT(*) value FROM user WHERE approved = 1",[],0);
-        if ($c>=$user_limit) {return false;}
-        }
+    if (user_limit_reached()) {return false;}
 
     $cols = array("username");
     $sqlparams = ["s",$newuser];
