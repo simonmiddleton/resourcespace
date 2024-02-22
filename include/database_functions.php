@@ -568,7 +568,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                 // Bind results -> standard associative array
                 $fields = $metadata->fetch_fields();
                 $args = array();
-                foreach($fields AS $field)
+                foreach ($fields as $field)
                     {
                     $key = str_replace(' ', '_', $field->name);
                     $args[$key] = &$field->name;

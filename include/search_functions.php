@@ -110,9 +110,9 @@ function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields[]=Array ("ref" => "collection_title", "name" => "collectiontitle", "display_condition" => "", "tooltip_text" => "", "title"=>"Title", "type" => 0, "global"=>0, "resource_types"=>'Collections');
-    $fields[]=Array ("ref" => "collection_keywords", "name" => "collectionkeywords", "display_condition" => "", "tooltip_text" => "", "title"=>"Keywords", "type" => 0, "global"=>0, "resource_types"=>'Collections');
-    $fields[]=Array ("ref" => "collection_owner", "name" => "collectionowner", "display_condition" => "", "tooltip_text" => "", "title"=>"Owner", "type" => 0, "global"=>0, "resource_types"=>'Collections');
+    $fields[] = array("ref" => "collection_title", "name" => "collectiontitle", "display_condition" => "", "tooltip_text" => "", "title"=>"Title", "type" => 0, "global"=>0, "resource_types"=>'Collections');
+    $fields[] = array("ref" => "collection_keywords", "name" => "collectionkeywords", "display_condition" => "", "tooltip_text" => "", "title"=>"Keywords", "type" => 0, "global"=>0, "resource_types"=>'Collections');
+    $fields[] = array("ref" => "collection_owner", "name" => "collectionowner", "display_condition" => "", "tooltip_text" => "", "title"=>"Owner", "type" => 0, "global"=>0, "resource_types"=>'Collections');
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {

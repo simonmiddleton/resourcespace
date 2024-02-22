@@ -135,9 +135,15 @@ for ($n=0;$n<count($log);$n++)
     <td nowrap><?php
     switch ($log[$n]["status"])
         {
-        Case 0: echo $lang["resourcerequeststatus0"];break;
-        Case 1: echo $lang["resourcerequeststatus1"];break;
-        Case 2: echo $lang["resourcerequeststatus2"];break;
+        case 0:
+            echo escape($lang["resourcerequeststatus0"]);
+            break;
+        case 1:
+            echo escape($lang["resourcerequeststatus1"]);
+            break;
+        case 2:
+            echo escape($lang["resourcerequeststatus2"]);
+            break;
         }
     ?>
     </td>

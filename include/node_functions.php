@@ -2127,7 +2127,7 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
 
     $returned_nodes=array();
     foreach($flatnodes as $flatnode) {
-        If ($allnodes || $flatnode['resource']!='') {
+        if ($allnodes || $flatnode['resource']!='') {
             $returned_nodes[$flatnode['ref']]=$flatnode;
         }
     }

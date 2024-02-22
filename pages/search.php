@@ -394,7 +394,7 @@ else
     reset($_POST);reset($_GET);foreach (array_merge($_GET, $_POST) as $key=>$value)
 
         {
-        $hiddenfields=Array();
+        $hiddenfields = array();
         if ($key=="rttickall" && $value=="on"){$restypes="";break;} 
         if ((substr($key,0,8)=="resource")&&!in_array($key, $hiddenfields)) {if ($restypes!="") {$restypes.=",";} $restypes.=substr($key,8);}
         }
