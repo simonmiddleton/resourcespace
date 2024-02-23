@@ -921,6 +921,9 @@ else
         # Loop through resources for thumbnails for standard display
         for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)                  
             {
+            if (!isset($result[$n])) {
+                    continue;
+                }
             $ref=$result[$n]["ref"];
             $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
             ?>
