@@ -1254,13 +1254,7 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
     if ($search_includes_themes_now)
         {
         # Same search as when searching within public collections.
-        $collections=search_public_collections($search,"name","ASC",!$search_includes_themes_now,true,false,$fetchrows);
-        
-        
-        $condensedcollectionsresults=array();
-
-        $condensedcollectionsresults=array();
-        $result=$collections;
+        $result=search_public_collections($search,"name","ASC",!$search_includes_themes_now,true,false,$fetchrows);
         }
     return $result;
     }
