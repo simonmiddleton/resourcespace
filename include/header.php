@@ -331,7 +331,7 @@ hook("headblock");
 endif; # !hook("customhtmlheader") 
 ?>
 </head>
-<body lang="<?php echo $language ?>" class="<?php echo implode(' ', $body_classes); ?>" <?php if (isset($bodyattribs)) { ?><?php echo $bodyattribs?><?php } ?>>
+<body lang="<?php echo escape($language) ?>">
 
 <a href="#UICenter" class="skip-to-main-content"><?php echo htmlspecialchars($lang["skip-to-main-content"]); ?></a>
 

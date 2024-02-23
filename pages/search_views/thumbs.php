@@ -253,10 +253,7 @@ if (!hook("renderresultthumb"))
 <?php 
                             } //end link
                         echo format_display_field($value);
-                        if ($show_extension_in_search) 
-                            { 
-                            echo " " . str_replace_formatted_placeholder("%extension", $result[$n]["file_extension"], $lang["fileextension-inside-brackets"]);
-                            }
+                        
                         if ($x==0)
                             { // add link if necessary ?>
                             </a>

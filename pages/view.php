@@ -355,14 +355,6 @@ if(isset($display_field_below_preview) && is_int($display_field_below_preview))
         }
     }
 
-// Add custom CSS for external users: 
-if($k !='' && !$internal_share_access && $custom_stylesheet_external_share) {
-    $css_path = dirname(__FILE__) . '/..' . $custom_stylesheet_external_share_path;
-    if(file_exists($css_path)) {
-        echo '<link href="' . $baseurl . $custom_stylesheet_external_share_path . '" rel="stylesheet" type="text/css" media="screen,projection,print" />';
-    }
-}
-
 ?>
 <script>
     var resource_lock_status = <?php echo (int)$resource_locked ?>;

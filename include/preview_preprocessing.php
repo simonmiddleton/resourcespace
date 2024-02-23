@@ -6,7 +6,7 @@
 #
 
 global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace, $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution,
-$pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params, $qlpreview_path,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,
+$pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,
 $ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif,$resource_view_use_pre, $debug_log, $debug_log_override;
 
 resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews'] . ":\n");
@@ -79,21 +79,6 @@ if (is_array($preview_preprocessing_results)){
         $keep_for_hpr=$preview_preprocessing_results['keep_for_hpr'];
     }
 }
-    
-/* ----------------------------------------
-    QuickLook Previews (Mac only)
-    For everything except Audio/Video files, attempt to generate a QuickLook preview first.
-   ----------------------------------------
-*/
-if (isset($qlpreview_path) && !in_array($extension, ["tif","tiff"]) && !in_array($extension, $ffmpeg_supported_extensions) && !in_array($extension, $ffmpeg_audio_extensions) && !isset($newfile))
-    {
-    $qlpreview_command=$qlpreview_path."/qlpreview -generatePreviewOnly yes -imageType jpg -maxWidth 800 -maxHeight 800 -asIcon no -preferFileIcon no -inPath " . escapeshellarg($file) . " -outPath " . escapeshellarg($target);
-    debug("qlpreview command: " . $qlpreview_command);
-    $output=run_command($qlpreview_command);
-
-    #sleep(4); # Delay to allow processing
-    if (file_exists($target)){$newfile = $target;debug("qlpreview success!");}
-    }
 
 /* ----------------------------------------
     Try InDesign - for CS5 (page previews)
@@ -210,35 +195,7 @@ if ($extension=="psd" && !isset($newfile) && $psd_transparency_checkerboard)
     }
         
 }   
-        
-    
-    
-/* ----------------------------------------
-    Try SWF
-   ----------------------------------------
-*/
-# Note: gnash-dump must be compiled on the server. http://www.xmission.com/~ink/gnash/gnash-dump/README.txt
-# Ubuntu: ./configure --prefix=/usr/local/gnash-dump --enable-renderer=agg \
-# --enable-gui=gtk,dump --disable-kparts --disable-nsapi --disable-menus
-# several dependencies will also be necessary, according to ./configure
-
-if ($extension=="swf" && !isset($newfile))
-    {
-    global $dump_gnash_path;
-    if (isset($dump_gnash_path))
-        {
-        $cmd=$dump_gnash_path.'/dump-gnash -t 1 --screenshot 5 --screenshot-file '.$target.' '.escapeshellarg($file);
-        $output=run_command($cmd);
-        }
-    if (file_exists($target))
-        {
-        #if the file contains an image, use it; if it's blank, it needs to be erased because it will cause an error in ffmpeg_processing.php
-        if (filesize_unlimited($target)>0){$newfile = $target;}else{unlink($target);}
-        }
-        
-    }   
-
-
+         
 /* ----------------------------------------
     Try RAW preview extraction via exiftool
    ----------------------------------------

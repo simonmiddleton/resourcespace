@@ -91,7 +91,7 @@ if ($errors!="")
         <div class="ResourcePanelShell" id="ResourceShell<?php echo urlencode($ref)?>">
         <div class="ResourcePanel">
         
-        <table border="0" class="ResourceAlign<?php if (in_array($result[$n]["resource_type"],$videotypes)) { ?> IconVideo<?php } ?>"><tr><td>
+        <table border="0" class="ResourceAlign"><tr><td>
         
         <?php if ($result[$n]["has_image"]==1) {
             $path=get_resource_path($ref,true,"scr",false,$result[$n]["preview_extension"],-1,1,$use_watermark,$result[$n]["file_modified"]);

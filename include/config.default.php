@@ -614,10 +614,6 @@ $originals_separate_storage_ffmpegalts_as_previews=false;
 # To be able to run certain actions asyncronus (eg. preview transcoding), define the path to php:
 # $php_path="/usr/bin";
 
-# Use qt-faststart to make mp4 previews start faster
-# $qtfaststart_path="/usr/bin";
-# $qtfaststart_extensions=array("mp4","m4v","mov");
-
 # Create a video preview of GIF files. This will be used on the view page to display the animation rather than a static image preview.
 $ffmpeg_preview_gif = true;
 $ffmpeg_preview_gif_options = '-movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2"';
@@ -830,10 +826,6 @@ $zipped_collection_textfile=false;
 # Set default option for text file download to "no"
 $zipped_collection_textfile_default_no=false;
 
-
-# A list of types which get the extra video icon in the search results
-$videotypes=array(3);
-
 /** USER PREFERENCES **/
 $user_preferences = true;
 
@@ -1021,9 +1013,6 @@ $searchbar_selectall=false;
 # Hide the resource type selector on the simple search and advanced search pages
 $hide_search_resource_types = false;
 
-# Hide the main simple search field in the searchbar (if using only simple search fields for the searchbar)
-$hide_main_simple_search=false;
-
 /*Display keywords as pills on Simple Search. Use tab to create new tags/ pills
 Note: full text strings are also accepted as a pill*/
 $simple_search_pills_view = false;
@@ -1092,12 +1081,6 @@ $save_as=false;
 
 # Allow resources to be e-mailed / shared (internally and externally)
 $allow_share=true;
-
-# Use a custom stylesheet when sharing externally.
-# Note: $custom_stylesheet_external_share_path can be set anywhere inside websites' root folder.
-# eg.: '/plugins/your plugin name/css/external_shares.css'
-$custom_stylesheet_external_share = false;
-$custom_stylesheet_external_share_path = '';
 
 # Hide display of internal URLs when sharing collections. Intended to prevent inadvertently sending external users invalid URLs
 $hide_internal_sharing_url=false;
@@ -1200,9 +1183,6 @@ $show_access_field=true;
 
 # Show the 'contributed by' on the resource view page.
 $show_contributed_by=true;
-
-# Show the extension after the truncated text in the search results.
-$show_extension_in_search=false;
 
 # Should the category tree field (if one exists) default to being open instead of closed?
 $category_tree_open=false;
@@ -2217,11 +2197,6 @@ $enable_thumbnail_creation_on_upload = true;
 //  - This can be enabled per usergroup as a configuration option
 $geo_search_heatmap = false;
 
-# QuickLook previews (Mac Only)
-# If configured, attempt to produce a preview for files using Mac OS-X's built in QuickLook preview system which support multiple files.
-# This requires AT LEAST VERSION 0.2 of 'qlpreview', available from http://www.hamsoftengineering.com/codeSharing/qlpreview/qlpreview.html
-# $qlpreview_path="/usr/bin";
-
 // Log developer debug information to the debug log (filestore/tmp/debug.txt)?  As the default location is world-readable it is recommended for production systems to change the location to somewhere outside of the web directory by also setting $debug_log_location.
 $debug_log=false;
 
@@ -2301,13 +2276,6 @@ $camera_autorotation_gm = false;
 
 // Default for upload rotation. Will be overridden by user preference.
 $camera_autorotation_checked = true;
-
-# if gnash_dump (gnash w/o gui) is compiled, previews are possible:
-# Note: gnash-dump must be compiled on the server. http://www.xmission.com/~ink/gnash/gnash-dump/README.txt
-# Ubuntu: ./configure --prefix=/usr/local/gnash-dump --enable-renderer=agg \
-# --enable-gui=gtk,dump --disable-kparts --disable-nsapi --disable-menus
-# several dependencies will also be necessary, according to ./configure
-# $dump_gnash_path="/usr/local/gnash-dump/bin";
 
 # show the title of the resource being viewed in the browser title bar
 $show_resource_title_in_titlebar = false;
@@ -2507,9 +2475,6 @@ $usage_comment_blank=false;
 # Option to add a link to the resource view page that allows a user to email the $email_notify address about the resource
 $resource_contact_link=false;
 
-# Option to move the welcome text into the Home Picture Panel. Stops text from falling behind other panels.
-$welcome_text_picturepanel=false;
-
 # Hide Welcome Text
 $no_welcometext = false;
 
@@ -2590,9 +2555,6 @@ $team_user_filter_top=false;
 
 # Stemming support. Indexes stems of words only, so plural / singular (etc) forms of keywords are indexed as if they are equivalent. Requires a full reindex.
 $stemming=false;
-
-# Initialize array for classes to be added to <body> element
-$body_classes = array();
 
 # Manage requests automatically using $manage_request_admin[resource type ID] = user ID;
 # IMPORTANT: the admin user needs to have permissions R and Rb set otherwise this will not work.

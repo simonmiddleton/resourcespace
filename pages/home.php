@@ -6,7 +6,7 @@ include_once "../include/dash_functions.php";
 # Fetch promoted collections ready for display later
 $home_collections=get_home_page_promoted_collections();
 $welcometext=false;
-global $welcome_text_picturepanel,$home_dash,$slideshow_big;
+global $home_dash, $slideshow_big;
 
 hook("homeheader");
 
@@ -15,7 +15,7 @@ include "../include/header.php";
 if (!hook("replacehome")) { 
 function loadWelcomeText() 
     {
-    global $welcome_text_picturepanel,$no_welcometext,$home_dash,$productversion;
+    global $no_welcometext,$home_dash,$productversion;
     if (!hook('homereplacewelcome') && !$no_welcometext)
         {
         ?>
@@ -232,8 +232,8 @@ if (!hook("replaceslideshow"))
             </div>
             <?php
             }
-            global $welcome_text_picturepanel,$home_dash,$slideshow_big;
-            if ($welcome_text_picturepanel || ($home_dash && !$slideshow_big))
+            global $home_dash,$slideshow_big;
+            if ($home_dash && !$slideshow_big)
                 {
                 loadWelcomeText();
                 $welcometext=true;
