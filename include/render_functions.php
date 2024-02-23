@@ -3515,9 +3515,7 @@ function render_selected_resources_counter($i)
     $url = generateURL("{$baseurl}", array("c" => $USER_SELECTION_COLLECTION));
 
     $x_selected = '<span class="Selected">' . number_format($i) . "</span> {$lang["selected"]}";
-    $return = "<a href=\"{$url}\" class=\"SelectionCollectionLink\" onclick=\"return CentralSpaceLoad(this, true);\">{$x_selected}</a>";
-
-    return $return;
+    return "<a href=\"{$url}\" class=\"SelectionCollectionLink\" onclick=\"return CentralSpaceLoad(this, true);\">{$x_selected}</a>";
     }
 
 

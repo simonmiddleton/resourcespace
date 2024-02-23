@@ -919,10 +919,8 @@ function message_get_conversation(int $user, $msgusers = array(),$filteropts = a
            . " AND type & '" . MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE . "'"
            . " ORDER BY user_message.ref " . ($sort_desc ? "DESC" : "ASC")
            . ($limit > 0 ? " LIMIT ?" : "");
-    
-    $messages = ps_query($msgquery, $parameters);
-    
-    return $messages;
+
+    return ps_query($msgquery, $parameters);
     }
 
 /**

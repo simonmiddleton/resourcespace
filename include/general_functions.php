@@ -278,8 +278,7 @@ function tidylist($list)
     if (strpos($list,",")===false) {return $list;}
     $list=explode(",",$list);
     if (trim($list[0])=="") {array_shift($list);} # remove initial comma used to identify item is a list
-    $op=join(", ",trim_array($list));
-    return $op;
+    return join(", ", trim_array($list));
     }
 
 /**
@@ -513,9 +512,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
         $i++;
         }
     // Reverse again so that the default language appears first in results
-    $return = array_values(array_reverse($unique_returned_records));
-
-    return $return;
+    return array_values(array_reverse($unique_returned_records));
     }
 
 /**
@@ -1667,8 +1664,7 @@ function remove_extension($strName)
  */
 function get_allowed_extensions_by_type($resource_type)
     {
-    $allowed_extensions = ps_value("select allowed_extensions value from resource_type where ref = ?", array("i", $resource_type), "", "schema");
-    return $allowed_extensions;
+    return ps_value("select allowed_extensions value from resource_type where ref = ?", array("i", $resource_type), "", "schema");
     }
 
 /**
@@ -3069,8 +3065,7 @@ function IsModal()
         {
         return true;
         }
-    $modal = (getval("modal","") == "true");
-    return $modal;
+    return (getval("modal", "") == "true");
     }
 
 /**
@@ -3112,9 +3107,8 @@ function isValidCSRFToken($token_data, $session_id)
         {
         return true;
         }
-    
-    $csrf_valid = rs_validate_token($token_data, $session_id);
-    return $csrf_valid;    
+
+    return rs_validate_token($token_data, $session_id);
     }
 
 
@@ -4096,8 +4090,7 @@ function pagename()
         return $name;
     $url=str_replace("\\","/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
     $urlparts=explode("/",$url);
-    $url=$urlparts[count($urlparts)-1];
-    return $url;
+    return $urlparts[count($urlparts) - 1];
     }
 
 /**

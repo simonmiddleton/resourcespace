@@ -300,8 +300,7 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
 */
 function get_config_option_users($option,$value)
     {
-    $users = ps_array("SELECT user value FROM user_preferences WHERE parameter = ? AND value=?",array("s",$option,"s",$value), "preferences");
-    return $users;   
+    return ps_array("SELECT user value FROM user_preferences WHERE parameter = ? AND value = ?", array("s", $option, "s", $value), "preferences");
     }
 
 /**

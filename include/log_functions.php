@@ -151,8 +151,7 @@ function resource_log_last_rows($minref = 0, $days = 7, $maxrecords = 0, array $
         $sql .= " LIMIT " . (int)$maxrecords;
         }
 
-    $results = ps_query($sql,$parameters);
-    return $results;
+    return ps_query($sql, $parameters);
     }
  
 /**
@@ -373,13 +372,11 @@ function get_user_downloads($userref,$user_dl_days)
     $daylimit = (int)$user_dl_days != 0 ? (int)$user_dl_days : 99999;
     $parameters=array("i",(int)$userref, "i",$daylimit*60*60*24);
 
-    $count = ps_value("SELECT COUNT(DISTINCT resource) value 
+    return ps_value("SELECT COUNT(DISTINCT resource) value 
         FROM resource_log rl
-        WHERE rl.type='d'
+        WHERE rl.type = 'd'
         AND rl.user = ?
-        AND TIMESTAMPDIFF(SECOND,date,now()) <= ?",$parameters,0);
-        
-    return $count;
+        AND TIMESTAMPDIFF(SECOND, date, now()) <= ?", $parameters, 0);
     }
 
 

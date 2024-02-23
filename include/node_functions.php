@@ -1477,8 +1477,8 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
         {
         $query .= " ORDER BY n.resource_type_field, n.order_by ASC";
         }
-    $return = $detailed ? ps_query($query, $params) : ps_array($query, $params);
-    return $return;
+
+    return $detailed ? ps_query($query, $params) : ps_array($query, $params);
     }
 
 

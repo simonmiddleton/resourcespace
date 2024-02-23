@@ -1322,8 +1322,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         {
         if (isset($imagemagick_path))
             {
-            $return_val=create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested, $onlysizes);
-            return $return_val;
+            return create_previews_using_im($ref, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ingested, $onlysizes);
             }
         else
             {
@@ -3542,10 +3541,8 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
             debug("getFileDimensions: Unable to get image size for file: $file");
             }
         }
-    
-    $dimensions = array($w, $h);
 
-    return $dimensions;
+    return array($w, $h);
     }
 
 /**

@@ -2544,7 +2544,7 @@ function get_search_title($searchstring)
     include dirname(__FILE__)."/search_title_processing.php";
 
     if ($restypes!="")
-        { 
+        {
         $resource_types=get_resource_types($restypes,true,false,true);
         foreach($resource_types as $type)
             {
@@ -2552,8 +2552,8 @@ function get_search_title($searchstring)
             }
         $search_title.=" [".implode(', ',$typenames)."]";
         }
-        $title=str_replace(">","",strip_tags(htmlspecialchars_decode($search_title)));
-    return $title;
+
+    return str_replace(">", "", strip_tags(htmlspecialchars_decode($search_title)));
     }
 
 /**
@@ -3639,9 +3639,7 @@ function get_collection_log($collection, $fetchrows = -1)
         array("i",$collection)
     );
 
-    $log = sql_limit_with_total_count($log_query,$fetchrows,0,false,null);
-
-    return $log;
+    return sql_limit_with_total_count($log_query, $fetchrows, 0, false, null);
     }
 
 /**
@@ -6629,8 +6627,7 @@ function upload_share_active()
         }
     elseif(isset($_COOKIE["upload_share_active"]) && getval("k","") != "")
         {
-        $upload_share_active = (int)$_COOKIE["upload_share_active"];
-        return $upload_share_active;
+        return (int) $_COOKIE["upload_share_active"];
         }
     return false;
     }
@@ -6803,8 +6800,7 @@ function purge_expired_shares($filteropts)
 
     $purge_query = "DELETE FROM external_access_keys " . $conditional_sql;
     ps_query($purge_query, $params);
-    $deleted = sql_affected_rows();
-    return $deleted;
+    return sql_affected_rows();
     }
 
     
@@ -7065,8 +7061,7 @@ function check_upload_terms(int $collection, string $k) : bool
         }
     else
         {
-        $return =(array_key_exists("acceptedterms",$_COOKIE) && $_COOKIE["acceptedterms"]==1);
-        return $return;
+        return (array_key_exists("acceptedterms", $_COOKIE) && $_COOKIE["acceptedterms"] == 1);
         }
     }
 

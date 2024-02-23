@@ -1191,8 +1191,7 @@ function api_send_user_message($users,$text)
         return $assert_post;
         }
 
-    $success = send_user_message($users,$text);
-    return $success;
+    return send_user_message($users, $text);
     }
 
 function api_get_profile_image($user)

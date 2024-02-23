@@ -647,8 +647,7 @@ function report_has_date(string $query)
 function report_has_date_by_id(int $report)
     {
     $query = ps_value("SELECT `query` as value FROM report WHERE ref = ?", array("i",$report), 0);
-    $result = report_has_date($query);
-    return $result;
+    return report_has_date($query);
     }
 
 /**
