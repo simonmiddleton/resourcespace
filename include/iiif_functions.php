@@ -249,7 +249,11 @@ final class IIIFRequest {
                         ];
                     }
                 }
-            $canvases[$index] = $this->generateCanvas($index);
+            $canvas = $this->generateCanvas($index);
+            if($canvas)
+                {
+                $canvases[$index] = $canvas;
+                }
             }
 
         if($sequencekeys)
@@ -577,7 +581,8 @@ final class IIIFRequest {
         $img_path = get_resource_path($useimage["ref"],true,$size,false);
         if(!file_exists($img_path))
             {
-            return;
+            debug("IIIF: generateCanvas() No image availkable for identifier:" . $position);
+            return false;
             }
         $sequence_field = get_resource_type_field($this->sequence_field);
         $sequenceid = $resource["iiif_position"];
@@ -1311,7 +1316,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         if ((int)$iiif_result['has_image'] === 0)
             {
             // If configured, try and use a preview from a related resource
-            debug("No image for IIIF request - check for related resources");
+            debug("IIIF: No image for IIIF request - check for related resources");
             $pullresource = related_resource_pull($iiif_result);
             if($pullresource !== false)
                 {
@@ -1513,7 +1518,6 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
  */
 function iiif_error($errorcode = 404, $errors = array())
     {
-    global $iiif_debug;
     if(function_exists("http_response_code"))
         {
         http_response_code($errorcode); # Send error status
