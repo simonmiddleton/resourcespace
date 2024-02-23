@@ -5055,8 +5055,6 @@ function collection_download_process_summary_notes(
         $deletion_array[]=$textfile;    
         }
         }
-
-    return;
     }
 
 /**
