@@ -10,15 +10,17 @@ $rt_name_prefix = sprintf('test_%s-%s', test_get_file_id(__FILE__), $run_id);
 
 // Checkbox field
 $rtf_checkbox = create_resource_type_field("{$rt_title_prefix} checkbox", 1, FIELD_TYPE_CHECK_BOX_LIST, "{$rt_name_prefix}_checkbox", true);
-$ckb_opt_a = set_node(null, $rtf_checkbox, "Option A ({$rt_name_prefix})", null, '');
-$ckb_opt_b = set_node(null, $rtf_checkbox, "Option B ({$rt_name_prefix})", null, '');
-$ckb_opt_c = set_node(null, $rtf_checkbox, "Option C ({$rt_name_prefix})", null, '');
+$ckb_opt_a = set_node(null, $rtf_checkbox, "Check A ({$rt_name_prefix})", null, '');
+$ckb_opt_b = set_node(null, $rtf_checkbox, "Check B ({$rt_name_prefix})", null, '');
+$ckb_opt_c = set_node(null, $rtf_checkbox, "Check C ({$rt_name_prefix})", null, '');
 
-// Text field and a resource with a value (now using nodes)
+// Text field and a resource with a value (it's also using nodes)
 $rtf_text = create_resource_type_field("{$rt_title_prefix} text", 1, FIELD_TYPE_TEXT_BOX_SINGLE_LINE, "{$rt_name_prefix}_txt", false);
 $resource_a = create_resource(1, 0);
 update_field($resource_a, $rtf_text, "Lorem ipsum dolor sit amet. ({$rt_name_prefix})");
-$rtf_text_node = get_resource_nodes($resource_a, $rtf_text)[0];
+$rtf_text_node_id = get_resource_nodes($resource_a, $rtf_text)[0];
+$rtf_text_node = [];
+get_node($rtf_text_node_id, $rtf_text_node, false);
 
 // Cateogry tree field
 $rtf_cat_tree = create_resource_type_field("{$rt_title_prefix} category tree", 1, FIELD_TYPE_CATEGORY_TREE, "{$rt_name_prefix}_tree", true);
@@ -32,18 +34,15 @@ $ct_opt_b = set_node(null, $rtf_cat_tree, 'B', null, '');
 $ct_opt_b_b1 = set_node(null, $rtf_cat_tree, 'b.1', $ct_opt_b, '');
 $ct_opt_c = set_node(null, $rtf_cat_tree, 'C', null, '');
 
-// todo: drop the next 3 lines if I end up not needing to reset
-// $nodes_UT = array_merge([$rtf_text_node], [$ckb_opt_a, $ckb_opt_b, $ckb_opt_c]);
-// $nodes_UT_data = array_column(get_nodes_by_refs($nodes_UT), 'active', 'ref');
-// test_log("nodes_UT_data = ". print_r($nodes_UT_data, true));
-
-$use_case_expect = function (array $expected) {
-    return function (array $ids) use ($expected): bool {
-        $data = array_column(get_nodes_by_refs($ids), 'active', 'ref');
-        test_log("data = " . print_r($data, true));
-        test_log("expected = " . print_r($expected, true));
-        return $expected === $data;
-    };
+// Initial state
+$nodes_UT = array_merge(
+    get_nodes($rtf_checkbox, null, false),
+    [$rtf_text_node],
+    get_nodes($rtf_cat_tree, null, true)
+);
+$reset_state = function () use ($nodes_UT) {
+    test_log('Resetting state...');
+    update_node_active_state(array_column($nodes_UT, 'ref'), true);
 };
 // --- End of Set up
 
@@ -58,10 +57,18 @@ $use_cases = [
         'input' => ['refs' => [$ckb_opt_b]],
         'expected' => [$ckb_opt_b => 0],
     ], */
+    // todo: test using nodes mixture (different rtfs)
     [
-        'name' => 'Category tree root options',
-        'input' => ['refs' => [$ct_opt_c]],
-        'expected' => [$ct_opt_c => 0],
+        'name' => 'Disabling tree root option propagates to children',
+        'reset_state' => true,
+        'input' => ['refs' => [$ct_opt_a]],
+        'expected' => [
+            $ct_opt_a => 0,
+            $ct_opt_a_a1 => 0,
+            $ct_opt_a_a1_a11 => 0,
+            $ct_opt_a_a1_a12 => 0,
+            $ct_opt_a_a2 => 0,
+        ],
     ],
 /*
 A
@@ -77,28 +84,19 @@ C
     If all child options are deprecated, the parent can still be active.
 - toggle_active_state_for_nodes MUST return confirmation of changes (helps for trees where a child option may not be updated)
 
-
-Cases
-=====
-
-Current node: active --- Parent (any up on branch) node: active --- Toggle --- NEW current node: active
----------------------
-1 --- 1 --- yes --- 0
-0 --- 1 --- yes --- 1
-0 --- 0 --- no  --- 0
-
-
+# Category tree cases
+| Current node: active | Parent: active | Toggle? | NEW current node: active | Propagate to children? |
+| -------------------- | -------------- | ------- | ------------------------ | ---------------------- |
+| 1                    | n/a - root     | yes     | 0                        | yes                    |
+| 0                    | n/a - root     | yes     | 1                        | no                     |
 
 */
 ];
-
-
-
-
-
-
-
 foreach ($use_cases as $uc) {
+    if (isset($uc['reset_state'])) {
+        $reset_state();
+    }
+
     // Set up the use case environment
     if (isset($uc['setup'])) {
         $uc['setup']();
@@ -109,7 +107,7 @@ foreach ($use_cases as $uc) {
     ksort($result, SORT_NUMERIC);
     ksort($uc['expected'], SORT_NUMERIC);
 
-    if($uc['expected'] !== $result) {
+    if ($uc['expected'] !== $result) {
         test_log('');
         echo "Use case: {$uc['name']} - ";
         test_log('$result = ' . print_r($result, true));
@@ -131,7 +129,8 @@ unset(
     $rtf_text,
     $resource_a,
     $rtf_text_node,
-    $use_case_expect
+    $nodes_UT,
+    $reset_state
 );
 
 return true;

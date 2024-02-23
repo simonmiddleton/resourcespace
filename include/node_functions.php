@@ -2207,7 +2207,7 @@ function get_cattree_node_strings($nodesordered, $strings_are_paths=true) {
 * 
 * @return array
 */
-function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource, $children, int $active) {
+function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource, $children, int $active): array {
     return [
         'ref' => $ref,
         'resource_type_field' => $resource_type_field,
@@ -2228,7 +2228,7 @@ function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order
 * 
 * @return array         Array of nodes with child nodes flattened out after their respective parents
 */
-function cattree_node_flatten($node) {
+function cattree_node_flatten(array $node): array {
     # Build node being flattened                                            
     $flat_element = [
         'ref' => (string) $node['ref'],
@@ -2239,9 +2239,11 @@ function cattree_node_flatten($node) {
         'resource' => (string) $node['resource'],
         'active' => (int) $node['active'],
     ];
+    $children = $node['children'] ?? [];
+
     # Append children after flattened node                                                                
     $cumulative_entries = array($flat_element);
-    foreach($node['children'] as $child) {
+    foreach($children as $child) {
         $cumulative_entries = array_merge($cumulative_entries, cattree_node_flatten($child));
     }
     return $cumulative_entries;
@@ -2257,7 +2259,7 @@ function cattree_node_flatten($node) {
  * @return array $nodestrings - array of strings for all nodes passed in correct hierarchical order
  * 
  */
-function get_node_strings($resource_nodes,$allnodes = false,$translate = true)
+function get_node_strings($resource_nodes,$allnodes = false,$translate = true): array
     {
     // Arrange all passed nodes with parents first so that unnecessary paths can be removed
     $orderednodes = order_tree_nodes($resource_nodes);
@@ -2351,7 +2353,7 @@ function compute_node_branch_path(array $nodes, int $id)
 * 
 * @return array
 */
-function compute_nodes_by_parent(array $nodes, int $id)
+function compute_nodes_by_parent(array $nodes, int $id): array
     {
     $found_nodes_keys = array_keys(array_column($nodes, 'parent'), $id);
 
@@ -2898,6 +2900,12 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryr
     return $deletedrows > 0 ? ((!$dryrun ? "Deleted " : "Found ") . $deletedrows . " row(s)") :  "No rows found";
     }
 
+/**
+ * Batch update nodes' active state. The same state will apply to all nodes in the list.
+ *
+ * @param list<int> $refs Node IDs
+ * @param bool $new_state Should nodes be active or not?
+ */
 function update_node_active_state(array $refs, bool $new_state): void
     {
     $refs_chunked = db_chunk_id_list($refs);
@@ -2927,8 +2935,19 @@ function update_node_active_state(array $refs, bool $new_state): void
     }
 
 /**
+ * Sort nodes by parent
+ * @param array $a Node structure (parent key required)
+ * @param array $b Node structure (parent key required)
+ * @return -1|0|1 When $a is respectively less than, equal to, or greater than $b
+ */
+function sort_nodes_by_parent(array $a, array $b): int {
+    return (int) $a['parent'] <=> (int) $b['parent'];
+}
+
+/**
  * Toggle a nodes' active state
  * @param list<int>
+ * @return array<int, 0|1>
  */
 function toggle_active_state_for_nodes(array $refs): array
     {
@@ -2936,85 +2955,98 @@ function toggle_active_state_for_nodes(array $refs): array
     $nodes_new_state = [];
     $rtf_is_cat_tree = fn(array $rtf): bool => $rtf['type'] === FIELD_TYPE_CATEGORY_TREE;
 
-    // print_r(array_column(get_parent_nodes($refs, true, true), 'active', 'ref'));die;
-
     db_begin_transaction('toggle_node_active_state');
 
     foreach ($refs_chunked as $refs_chunk) {
-        // $nodes = get_nodes_by_refs($refs_chunk);
-        $nodes = get_nodes_by_refs([
-            641,
-            741,
-            735,
-            829,
-            816,
-            // Testing root deactivation applies to all children down
-            734,
-        ]);
-        echo '<pre>';print_r($nodes);echo '</pre>';
-        
-        // Get unique list of cat trees
+        $nodes = get_nodes_by_refs($refs_chunk);
+        usort($nodes, 'sort_nodes_by_parent');
+        // print_r($nodes);die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
+
+        // Get unique list of category trees
         $uniq_rtfs = array_unique(array_column($nodes, 'resource_type_field'));
         $cat_tree_rtfs = array_filter(get_fields($uniq_rtfs), $rtf_is_cat_tree);
         $cat_tree_data = [];
         
         foreach ($cat_tree_rtfs as $tree_rtf) {
             $cat_tree_data[$tree_rtf['ref']] = get_cattree_nodes_ordered($tree_rtf['ref'], null, true);
-            // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()
+            // Remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be
+            // using get_cattree_node_strings() with it.
             array_shift($cat_tree_data[$tree_rtf['ref']]);
-            // test_log("Tree nodes for #{$tree_rtf['ref']} = " . print_r($cat_tree_data[$tree_rtf['ref']], true));
+            test_log("Tree nodes for #{$tree_rtf['ref']} = " . print_r(array_column($cat_tree_data[$tree_rtf['ref']], 'name', 'ref'), true));
         }
 
         $cat_tree_rtf_list = array_keys($cat_tree_data);
         $nodes_to_toggle = [];
 
-        // todo: sort by options with parent=null. For category trees, it's faster if we disable root options first
         foreach ($nodes as $node) {
-            // Normal fixed list fields just get toggled
+            test_log("Node #{$node['ref']} - {$node['name']}");
+            // Simple fixed list fields get toggled straight away
             if (!in_array($node['resource_type_field'], $cat_tree_rtf_list)) {
                 $nodes_to_toggle[] = $node['ref'];
                 continue;
             }
 
+            // --- Category tree ---
+
+            // Tree root option
+            if ($node['parent'] === null) {
+                if ($node['active'] === 0) {
+                    // Activate - this MUST NOT propagate to its children (if any)
+
+                    // todo: find node in tree nodes and update in memory to allow any children to also be re-enabled if applicable
+                    print_r($cat_tree_data[$node['resource_type_field']]);
+                    die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
+
+                    $nodes_to_toggle[] = $node['ref'];
+                } else {
+                    // Disable - this MUST propagate to its children (if any)
+                    $branch_refs = array_column(
+                        cattree_node_flatten(
+                            array_merge(
+                                $node,
+                                [
+                                    'resource' => null, # Fake it for cattree_node_flatten()
+                                    'children' => get_node_tree($node['ref'], $cat_tree_data[$node['resource_type_field']]),
+                                ]
+                            )
+                        ),
+                        'ref'
+                    );
+                    update_node_active_state($branch_refs, false);
+                    $nodes_new_state += array_column(get_nodes_by_refs($branch_refs), 'active', 'ref');
+                }
+
+                continue;
+            }
+
+            // todo: find if any parent is disabled on path
+            // die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
             $node_branch = array_column(
                 compute_node_branch_path($cat_tree_data[$node['resource_type_field']], $node['ref']),
                 'active',
                 'ref'
             );
-            echo "Node #{$node['ref']} = ". print_r($node_branch, true);
-
-            // Root category tree options
-            if (array_diff_key($node_branch, [$node['ref'] => $node['active']]) === []) {
-                if ($node['active'] === 0) {
-                    // Re-enable - this MUST not change its children (if any)
-                    $nodes_to_toggle[] = $node['ref'];
-                    continue;
-                } else {
-                    todo: find all children
-                    $children = array_column(compute_nodes_by_parent($cat_tree_data[$node['resource_type_field']], $node['ref']), 'ref');
-                    test_log("Disabling children...") . print_r($children);
-                    // update_node_active_state($children, false);
-                }
-
-            }
+            echo "Node #{$node['ref']} branch path = ". print_r($node_branch, true);
+            // update_node_active_state($children, false);
 
         }
-        die('Process stopped in file ' . __FILE__ . ' at line ' . __LINE__);
 
-        ps_query(
-            sprintf(
-                   'UPDATE node AS n
-                INNER JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
-                       SET n.`active` = IF(n.`active` = 1, 0, 1)
-                     WHERE n.`ref` IN (%s)
-                       AND rtf.`type` IN (%s)',
-                ps_param_insert(count($nodes_to_toggle)),
-                ps_param_insert(count($GLOBALS['FIXED_LIST_FIELD_TYPES']))
-            ),
-            array_merge(ps_param_fill($nodes_to_toggle, 'i'), ps_param_fill($GLOBALS['FIXED_LIST_FIELD_TYPES'], 'i'))
-        );
-
-    $nodes_new_state += array_column(get_nodes_by_refs($refs_chunk), 'active', 'ref');
+        if ($nodes_to_toggle !== []) {
+            // die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
+            ps_query(
+                sprintf(
+                    'UPDATE node AS n
+                    INNER JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
+                        SET n.`active` = IF(n.`active` = 1, 0, 1)
+                        WHERE n.`ref` IN (%s)
+                        AND rtf.`type` IN (%s)',
+                    ps_param_insert(count($nodes_to_toggle)),
+                    ps_param_insert(count($GLOBALS['FIXED_LIST_FIELD_TYPES']))
+                ),
+                array_merge(ps_param_fill($nodes_to_toggle, 'i'), ps_param_fill($GLOBALS['FIXED_LIST_FIELD_TYPES'], 'i'))
+            );
+            $nodes_new_state += array_column(get_nodes_by_refs($nodes_to_toggle), 'active', 'ref');
+        }
     }
 
     db_end_transaction('toggle_node_active_state');
