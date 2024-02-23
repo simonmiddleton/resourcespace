@@ -70,6 +70,18 @@ $use_cases = [
             $ct_opt_a_a2 => 0,
         ],
     ],
+    [
+        'name' => 'Re-activating a tree root option leaves children alone',
+        'input' => ['refs' => [$ct_opt_a]],
+        'expected' => [$ct_opt_a => 1],
+    ],
+    [
+        // todo next
+        'name' => 'Toggle child (level 1) traverse check to root',
+        'reset_state' => true,
+        'input' => ['refs' => [$ct_opt_a_a2]],
+        'expected' => [$ct_opt_a_a2 => 0],
+    ],
 /*
 A
     A.1
@@ -82,7 +94,6 @@ C
 
 - For category trees, if a parent is marked as deprecated, then this automatically applies to all of its children.
     If all child options are deprecated, the parent can still be active.
-- toggle_active_state_for_nodes MUST return confirmation of changes (helps for trees where a child option may not be updated)
 
 # Category tree cases
 | Current node: active | Parent: active | Toggle? | NEW current node: active | Propagate to children? |

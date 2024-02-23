@@ -2992,12 +2992,13 @@ function toggle_active_state_for_nodes(array $refs): array
             if ($node['parent'] === null) {
                 if ($node['active'] === 0) {
                     // Activate - this MUST NOT propagate to its children (if any)
+                    $found_idx = array_search($node['ref'], array_column($cat_tree_data[$node['resource_type_field']], 'ref'));
+                    if ($found_idx !== false) {
+                        $nodes_to_toggle[] = $node['ref'];
 
-                    // todo: find node in tree nodes and update in memory to allow any children to also be re-enabled if applicable
-                    print_r($cat_tree_data[$node['resource_type_field']]);
-                    die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
-
-                    $nodes_to_toggle[] = $node['ref'];
+                        // Update in memory record to allow its children to also be re-enabled if applicable later
+                        $cat_tree_data[$node['resource_type_field']][$found_idx]['active'] = 1;
+                    }
                 } else {
                     // Disable - this MUST propagate to its children (if any)
                     $branch_refs = array_column(
@@ -3032,7 +3033,6 @@ function toggle_active_state_for_nodes(array $refs): array
         }
 
         if ($nodes_to_toggle !== []) {
-            // die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
             ps_query(
                 sprintf(
                     'UPDATE node AS n
