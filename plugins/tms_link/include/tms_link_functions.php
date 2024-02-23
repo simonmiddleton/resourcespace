@@ -302,8 +302,7 @@ function tms_add_mediaxref($mediamasterid,$tms_object_id,$create=true)
       $errormessage=odbc_errormsg();
       exit($errormessage);
       }
-    $mediaxref=tms_add_mediaxref($mediamasterid,$tms_object_id,false);
-    return $mediaxref;    
+    return tms_add_mediaxref($mediamasterid, $tms_object_id, false);
     }
   else
     {
@@ -520,11 +519,10 @@ function tms_get_mediamasterid(bool $create=true,int $resource=null)
     if(!$tmsinsert)
       {
       $errormessage=odbc_errormsg();
-      debug("tms_link: ERROR = " . $errormessage);  
+      debug("tms_link: ERROR = " . $errormessage);
       return false;
       }
-    $newmasterid=tms_get_mediamasterid(false,$resource);
-    return $newmasterid;
+    return tms_get_mediamasterid(false, $resource);
     }
   else  
     {
@@ -564,15 +562,14 @@ function tms_get_renditionid($mediamasterid,$resourceid,$create=true)
     $tmsinsert=odbc_exec($conn,$tmssql);
     if(!$tmsinsert)
       {
-      debug("tms_link: SQL = " . $tmssql);  
+      debug("tms_link: SQL = " . $tmssql);
       $errormessage=odbc_errormsg();
-      debug("tms_link: ERROR = " . $errormessage);  
+      debug("tms_link: ERROR = " . $errormessage);
       return false;
       }
-    $renditionid=tms_get_renditionid($mediamasterid,$resourceid,false);
-    return $renditionid;
+    return tms_get_renditionid($mediamasterid, $resourceid, false);
     }
-  else  
+  else
     {
     return false;
     }
@@ -614,18 +611,17 @@ function tms_get_mediapathid($path,$create=true)
     $tmsinsert=odbc_exec($conn,$tmssql);
     if(!$tmsinsert)
       {
-      debug("tms_link: SQL = " . $tmssql); 
-      $errormessage=odbc_errormsg();    
-      debug("tms_link: ERROR = " . $errormessage); 
+      debug("tms_link: SQL = " . $tmssql);
+      $errormessage=odbc_errormsg();
+      debug("tms_link: ERROR = " . $errormessage);
       return false;
       }
-    $newpathid=tms_get_mediapathid($path,false);
-    return $newpathid;
+    return tms_get_mediapathid($path, false);
     }
   
   }
 
-  
+
 function tms_update_media_rendition($mediamasterid,$mediafileid)
   {
   global $conn;
@@ -739,9 +735,8 @@ function tms_add_mediafile($renditionid,$pathid,$filepath,$relfilepath,$create=t
       {
       $errormessage=odbc_errormsg();
       exit($errormessage);
-      }  
-    $mediafileid=tms_add_mediafile($renditionid,$pathid,$filepath,$relfilepath,false);
-    return $mediafileid;    
+      }
+    return tms_add_mediafile($renditionid, $pathid, $filepath, $relfilepath, false);
     }
   else
     {

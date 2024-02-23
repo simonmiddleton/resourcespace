@@ -40,8 +40,7 @@ function get_post_bool($key){
  */
 
 function sslash($data){ 
-    $stripped = rtrim($data, '/');
-    return $stripped;
+    return rtrim($data, '/');
 }
 /**
  * Opens an HTTP request to a host to determine if the url is reachable.

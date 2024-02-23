@@ -278,11 +278,9 @@ function get_proposed_changes($ref, $userid)
              GROUP BY f.ref
              ORDER BY f.global DESC, f.order_by, f.ref;";
     $parameters=array("i",$ref, "i",$userid, "i",$ref);
-    $changes = ps_query($query, $parameters);
-
-    return $changes;
+    return ps_query($query, $parameters);
     }
-        
+
 function delete_proposed_changes($ref, $userid="")
     {
     $query = "DELETE FROM propose_changes_data WHERE resource = ?";

@@ -2760,8 +2760,7 @@ function get_filters($order = "ref", $sort = "ASC", $find = "")
         
     $sql = "SELECT f.ref, f.name FROM filter f {$join}{$condition} GROUP BY f.ref ORDER BY f.{$order} {$sort}"; // $order and $sort are already confirmed to be valid.
 
-    $filters = ps_query($sql,$params);
-    return $filters;
+    return ps_query($sql, $params);
     }
 
 
@@ -2874,8 +2873,7 @@ function save_filter($filter,$filter_name,$filter_condition)
     else
         {
         ps_query("INSERT INTO filter (name, filter_condition) VALUES (?,?)",array("s",$filter_name,"s",$filter_condition));
-        $newfilter = sql_insert_id();
-        return $newfilter;
+        return sql_insert_id();
         }
 
     return $filter;

@@ -39,7 +39,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 
     if($getuserdata)
         {
-        $userdata = ps_query(
+        return ps_query(
             "   SELECT u.ref,
                        u.username,
                        u.origin,
@@ -80,8 +80,6 @@ function validate_user($user_select_sql, $getuserdata=true)
                  WHERE {$full_user_select_sql}",
                  $validateparams
         );
-
-        return $userdata;
         }
     else
         {
@@ -2372,8 +2370,7 @@ function create_password_reset_key($username)
     $resetuniquecode=make_password();
     $password_reset_hash=hash('sha256', date("Ymd") . md5("RS" . $resetuniquecode . $username . $scramble_key));
     ps_query("update user set password_reset_hash = ? where username = ?", array("s", $password_reset_hash, "s", $username));
-    $password_reset_url_key=substr(hash('sha256', date("Ymd") . $password_reset_hash . $username . $scramble_key),0,15);
-    return $password_reset_url_key;
+    return substr(hash('sha256', date("Ymd") . $password_reset_hash . $username . $scramble_key), 0, 15);
     }
     
     
@@ -2882,8 +2879,7 @@ function save_usergroup($ref,$groupoptions)
             }
         $sql = "INSERT INTO usergroup (" . implode(",",$sqlcols) . ") VALUES (" . ps_param_insert(count($sqlvals)) . ")";
         ps_query($sql, ps_param_fill($sqlvals, "s"));
-        $newgroup = sql_insert_id();
-        return $newgroup;
+        return sql_insert_id();
         }
     }
 
@@ -3559,15 +3555,14 @@ function setup_command_line_user(array $setoptions = []) : bool
         {
         if(!isset($dummyuserdata[$requiredelement]))
             {
-            $dummyuserdata[$requiredelement] = "";  
+            $dummyuserdata[$requiredelement] = "";
             }
         }
 
     // Override with any settings passed
     foreach($setoptions as $setoption=>$setvalue)
         {
-        $dummyuserdata[$setoption] = $setvalue;   
+        $dummyuserdata[$setoption] = $setvalue;
         }
-    $success = setup_user($dummyuserdata);
-    return $success;
+    return setup_user($dummyuserdata);
     }

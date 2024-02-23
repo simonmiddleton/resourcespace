@@ -586,9 +586,7 @@ XML;
         curl_close($ch);
 
         if ($response) {
-            $urls = preg_split('%(\r)?\n%', $response);
-
-            return $urls;
+            return preg_split('%(\r)?\n%', $response);
         }
         else {
             return null;

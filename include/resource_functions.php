@@ -108,7 +108,7 @@ function get_resource_path(
             $get_resource_path_extra_download_query_string_params = array();
             }
 
-        $url = generateURL(
+        return generateURL(
             "{$baseurl}/pages/download.php",
             array(
                 'ref'         => $ref,
@@ -122,8 +122,6 @@ function get_resource_path(
                 'v'           => $refresh_key,
             ),
             $get_resource_path_extra_download_query_string_params);
-
-        return $url;
         }
 
     if ($size=="")
@@ -161,8 +159,7 @@ function get_resource_path(
             else
                 {
                 global $baseurl_short, $k;
-                $url =  $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}";
-                return  $url;
+                return $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}";
                 }
             }
         }
@@ -3802,7 +3799,7 @@ function get_resource_types($types = "", $translate = true, $ignore_access = fal
  */
 function get_all_resource_types()
     {
-    $r=ps_query("
+    return ps_query("
          SELECT " . columns_in("resource_type","rt") . ",
                 t.name AS tab_name,
                 GROUP_CONCAT(rtfrt.resource_type_field ORDER BY rtfrt.resource_type_field) AS resource_type_field
@@ -3815,7 +3812,6 @@ function get_all_resource_types()
                 rt.ref",
         [],
         "schema");
-    return $r;
     }
 
 
@@ -5789,9 +5785,7 @@ function log_diff($fromvalue, $tovalue)
 
     // For standard strings, use Diff library
     require_once dirname(__FILE__) . '/../lib/Diff/class.Diff.php';
-    $return = Diff::toString(Diff::compare($fromvalue, $tovalue));
-
-    return $return;
+    return Diff::toString(Diff::compare($fromvalue, $tovalue));
     }
 
 
@@ -5824,7 +5818,7 @@ function get_resource_collections($ref)
         }
     if ($sql!="") {$sql="where " . $sql;}
 
-    $return=ps_query ("select * from
+    return ps_query("select * from
 	(select c.*,u.username,u.fullname,count(r.resource) count from user u join collection c on u.ref=c.user and c.user=? left outer join collection_resource r on c.ref=r.collection group by c.ref
 	union
 	select c.*,u.username,u.fullname,count(r.resource) count from user_collection uc join collection c on uc.collection=c.ref and uc.user=? and c.user<>? left outer join collection_resource r on c.ref=r.collection left join user u on c.user=u.ref group by c.ref) clist where clist.ref in (select collection from collection_resource cr where cr.resource=?)",array(
@@ -5833,8 +5827,6 @@ function get_resource_collections($ref)
         "i",$userref,
         "i",$ref
         ));
-
-    return $return;
     }
 
 function download_summary($resource)
@@ -6800,8 +6792,7 @@ function get_video_info($file)
     {
     $ffprobe_fullpath = get_utility_path("ffprobe");
     $ffprobe_output=run_command($ffprobe_fullpath . " -v 0 " . escapeshellarg($file) . " -show_streams -of json");
-    $ffprobe_array=json_decode($ffprobe_output, true);
-    return $ffprobe_array;
+    return json_decode($ffprobe_output, true);
     }
 
 
@@ -8562,8 +8553,7 @@ function alt_is_ffmpeg_alternative($alternative)
             {
             if($alternative['name']==$alt_setting['name'] && $alternative['file_name']==$alt_setting['filename'] . '.' . $alt_setting['extension'])
                 {
-                $alt_is_ffmpeg_alternative=true;
-                return $alt_is_ffmpeg_alternative;
+                return true;
                 }
             }
         }
@@ -8664,11 +8654,8 @@ function get_workflow_states()
     global $additional_archive_states;
 
     $default_workflow_states = range(-2, 3);
-    $workflow_states = array_merge($default_workflow_states, $additional_archive_states);
-
-    return $workflow_states;
+    return array_merge($default_workflow_states, $additional_archive_states);
     }
-
 
 
 /**
@@ -8980,8 +8967,7 @@ function get_external_shares(array $filteropts)
      " GROUP BY access_key, collection
        ORDER BY " . $share_order_by . " " . $share_sort;
 
-    $external_shares = ps_query($external_access_keys_query, $params);
-    return $external_shares;
+    return ps_query($external_access_keys_query, $params);
     }
 
 /**

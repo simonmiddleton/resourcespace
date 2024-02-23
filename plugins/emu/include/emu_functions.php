@@ -68,9 +68,8 @@ function get_emu_resources()
         ps_param_fill($emu_config_rtfs, 'i'),
         ps_param_fill($emu_config_rts, 'i')
     );
-    $emu_resources = ps_query($sql,$sql_params);
 
-    return $emu_resources;
+    return ps_query($sql, $sql_params);
     }
 
 

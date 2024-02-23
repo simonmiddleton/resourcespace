@@ -71,9 +71,8 @@ function simplesaml_getattributes()
         $as = new SimpleSAML\Auth\Simple($spname);
         }
     $as->requireAuth();
-    $attributes = $as->getAttributes();
-    return $attributes;
-    }   
+    return $as->getAttributes();
+    }
 
 /**
  * Sign out of SAML SP
@@ -148,8 +147,7 @@ function simplesaml_getauthdata($value)
         $as = new SimpleSAML\Auth\Simple($spname);
         }
     $as->requireAuth();
-    $authdata = $as->getAuthData($value)->getValue();
-    return $authdata;
+    return $as->getAuthData($value)->getValue();
     }
 
 /**
@@ -358,6 +356,5 @@ function get_saml_sp_name()
         {
         $simplesaml_sp = $default_sp_name;
         }
-    $safe_sp = $simplesaml_sp;
-    return $safe_sp;
+    return $simplesaml_sp;
     }

@@ -7,8 +7,7 @@ if (!function_exists("rse_workflow_get_actions")){
             $condition="";$params=array();
             if($status!="" && is_int($status)){$condition=" WHERE wa.statusfrom='status' ";}
             if($ref!=""){$condition=" WHERE wa.ref=? ";$params[]="i";$params[]=$ref;}
-            $actions=ps_query("SELECT wa.ref, wa.text, wa.name, wa.buttontext, wa.statusfrom, wa.statusto,a.notify_group,a.name AS statusto_name,a.more_notes_flag,a.notify_user_flag, a.email_from, a.bcc_admin FROM workflow_actions wa LEFT OUTER JOIN archive_states a ON wa.statusto=a.code $condition GROUP BY wa.ref ORDER BY wa.ref,wa.statusfrom,wa.statusto ASC",$params);
-            return $actions;
+            return ps_query("SELECT wa.ref, wa.text, wa.name, wa.buttontext, wa.statusfrom, wa.statusto, a.notify_group, a.name AS statusto_name, a.more_notes_flag, a.notify_user_flag, a.email_from, a.bcc_admin FROM workflow_actions wa LEFT OUTER JOIN archive_states a ON wa.statusto = a.code $condition GROUP BY wa.ref ORDER BY wa.ref, wa.statusfrom, wa.statusto ASC", $params);
             }
     }
 

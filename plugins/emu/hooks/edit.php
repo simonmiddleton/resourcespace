@@ -72,9 +72,7 @@ function HookEmuAllAdditionalvalcheck($fields, $fields_item)
 
                 $emu_confirm_upload = true;
 
-                $error = "{$lang['emu_upload_nodata']} {$lang['emu_confirm_upload_nodata']}";
-
-                return $error;
+                return "{$lang['emu_upload_nodata']} {$lang['emu_confirm_upload_nodata']}";
                 }
             }
         else
