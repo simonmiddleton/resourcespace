@@ -3348,7 +3348,7 @@ function get_recent_users($days)
  */
 function get_total_approved_users()
     {
-    return (ps_value("select count(*) value from user where approved=1", [], 0));
+    return ps_value("SELECT COUNT(*) value FROM user WHERE approved = 1", [], 0);
     }
 
 

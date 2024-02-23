@@ -91,7 +91,7 @@ function url_exists($url)
             fclose($fp);
             $tmp = explode(' ',$resp);
             $response_code = $tmp[1];
-            return ($response_code == 200);
+            return $response_code == 200;
         }
     }
     fclose($fp);

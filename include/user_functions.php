@@ -2678,19 +2678,17 @@ function checkPermission_anonymoususer()
 
     return
         (
-            (
-            isset($anonymous_login)
-            && (
-                (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
-                || (
-                    is_array($anonymous_login)
-                    && array_key_exists($baseurl, $anonymous_login)
-                    && $anonymous_login[$baseurl] == $username
-                   )
-               )
+        isset($anonymous_login)
+        && (
+            (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
+            || (
+                is_array($anonymous_login)
+                && array_key_exists($baseurl, $anonymous_login)
+                && $anonymous_login[$baseurl] == $username
+                )
             )
-            || (isset($anonymous_autouser_group) && $usergroup == $anonymous_autouser_group)
-        );
+        )
+        || (isset($anonymous_autouser_group) && $usergroup == $anonymous_autouser_group);
     }
 
 
