@@ -1425,7 +1425,6 @@ $lang["allresourcessearchbar"]='Svi resursi.';
 $lang["allcollectionssearchbar"]='Sve kolekcije.';
 $lang["backtoresults"]='Povratak na rezultate';
 $lang["continuetoresults"]='Nastavi na rezultate.';
-$lang["preview_all"]='Pregledaj sve.';
 $lang["usagehistory"]='Povijest korištenja.';
 $lang["usagebreakdown"]='Raspodjela korištenja.';
 $lang["usagetotal"]='Ukupni broj preuzimanja.';

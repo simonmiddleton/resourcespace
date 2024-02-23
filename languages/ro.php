@@ -1434,7 +1434,6 @@ $lang["allresourcessearchbar"]='Toate resursele.';
 $lang["allcollectionssearchbar"]='Toate colecțiile.';
 $lang["backtoresults"]='Înapoi la rezultate.';
 $lang["continuetoresults"]='Continuați către rezultate.';
-$lang["preview_all"]='Previzualizare toate.';
 $lang["usagehistory"]='Istoricul de utilizare.';
 $lang["usagebreakdown"]='Descompunerea utilizării.';
 $lang["usagetotal"]='Descărcări totale.';

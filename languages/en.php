@@ -1639,8 +1639,6 @@ $lang["allcollectionssearchbar"]="All collections";
 $lang["backtoresults"]="Back to results";
 $lang["continuetoresults"]="Continue to results";
 
-$lang["preview_all"]="Preview all";
-
 $lang["usagehistory"]="Usage history";
 $lang["usagebreakdown"]="Usage breakdown";
 $lang["usagetotal"]="Total downloads";

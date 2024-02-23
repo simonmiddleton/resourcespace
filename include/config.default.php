@@ -2272,7 +2272,7 @@ $icc_preview_options = '-intent perceptual -black-point-compensation';
 # play videos/audio on hover instead of on click
 $video_search_play_hover=false; // search.php
 $video_view_play_hover=false; // view.php
-$video_preview_play_hover=false; // preview.php and preview_all.php
+$video_preview_play_hover=false; // preview.php
 
 # hotkeys for video playback
 $keyboard_navigation_video_search=false;
@@ -2340,8 +2340,6 @@ $daterange_search=false;
 # Keyboard navigation allows using left and right arrows to browse through resources in view/search/preview modes
 $keyboard_navigation = true;
 $keyboard_navigation_pages_use_alt=false;
-# with $keyboard_scroll_jump on arrow keys jump from picture to picture in preview_all mode (horizontal only)
-$keyboard_scroll_jump=false;
 
 # How long until the Loading popup appears during an ajax request (milliseconds)
 $ajax_loading_timer=500;

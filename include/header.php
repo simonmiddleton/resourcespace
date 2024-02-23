@@ -352,7 +352,7 @@ hook("bodystart"); ?>
 <!--Global Header-->
 <?php
 if (($pagename=="terms") && (getval("url","")=="index.php")) {$loginterms=true;} else {$loginterms=false;}
-if ($pagename!="preview" && $pagename!="preview_all")
+if ($pagename != "preview")
     {
     // Standard header
     $homepage_url=$baseurl."/pages/".$default_home_page;
@@ -577,12 +577,14 @@ if ($pagename!="preview" && $pagename!="preview_all")
         }
     }
 hook("headerbottom"); ?>
-<div class="clearer"></div><?php if ($pagename!="preview" && $pagename!="preview_all") { ?></div><?php } #end of header ?>
+<div class="clearer"></div>
 
-<?php
+<?php if ($pagename != "preview") { ?>
+    </div>
+<?php } # End of header 
+
  $omit_searchbar_pages = array(
         'index',
-        'preview_all',
         'search_advanced',
         'preview',
         'admin_header',

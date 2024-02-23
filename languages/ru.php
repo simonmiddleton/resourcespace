@@ -717,7 +717,6 @@ $lang["treenode-database_statistics"]="Статистика базы данны�
 $lang["treenode-permissions_search"]="Поиск доступа";
 $lang["treenode-no_name"]="(без имени)";
 $lang["selectcollection"]="Выбрать коллекцию";
-$lang["preview_all"]="Увеличить все";
 $lang["horizontal"] = "Горизонтально";
 $lang["vertical"] = "Вертикально";
 $lang["backtoresults"]="Назад к результатам";

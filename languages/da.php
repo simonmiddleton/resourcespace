@@ -1425,7 +1425,6 @@ $lang["allresourcessearchbar"]='Alle ressourcer.';
 $lang["allcollectionssearchbar"]='Alle samlinger.';
 $lang["backtoresults"]='Tilbage til resultater.';
 $lang["continuetoresults"]='Fortsæt til resultater.';
-$lang["preview_all"]='Forhåndsvis alle.';
 $lang["usagehistory"]='Brugshistorik.';
 $lang["usagebreakdown"]='Anvendelsesopdeling';
 $lang["usagetotal"]='Samlede downloads.';

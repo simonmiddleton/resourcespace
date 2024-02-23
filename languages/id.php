@@ -1531,7 +1531,6 @@ $lang["allresourcessearchbar"]='Semua sumber daya.';
 $lang["allcollectionssearchbar"]='Semua koleksi';
 $lang["backtoresults"]='Kembali ke hasil.';
 $lang["continuetoresults"]='Lanjut ke hasil';
-$lang["preview_all"]='Pratinjau semua.';
 $lang["usagehistory"]='Riwayat penggunaan.';
 $lang["usagebreakdown"]='Pemecahan Penggunaan';
 $lang["usagetotal"]='Total unduhan.';

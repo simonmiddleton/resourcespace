@@ -155,19 +155,26 @@ if ($pagename=="search"){
             break;
     }
 }
-// play video on hover?
-$play_on_hover=false;
-if(($pagename=='search' && $video_search_play_hover) || ($pagename=='view' && $video_view_play_hover) || (($pagename=='preview' || $pagename=='preview_all') && $video_preview_play_hover))
-    {
+
+// Play video on hover?
+$play_on_hover = false;
+if (
+    ($pagename == 'search' && $video_search_play_hover)
+    || ($pagename == 'view' && $video_view_play_hover)
+    || ($pagename == 'preview' && $video_preview_play_hover)
+) {
     $play_on_hover=true;
-    }
+}
     
-// using keyboard hotkeys?
-$playback_hotkeys=false;
-if(($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || (($pagename=='preview' || $pagename=='preview_all') && $keyboard_navigation_video_preview))
-    {
+// Using keyboard hotkeys?
+$playback_hotkeys = false;
+if (
+    ($pagename == 'search' && $keyboard_navigation_video_search)
+    || ($pagename == 'view' && $keyboard_navigation_video_view)
+    || ($pagename=='preview' && $keyboard_navigation_video_preview)
+) {
     $playback_hotkeys=true;
-    }
+}
 
 global $ffmpeg_preview_extension,$css_reload_key,$context,$video_preview_hls_support;
 ?>

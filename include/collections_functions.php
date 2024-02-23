@@ -2528,7 +2528,7 @@ function get_search_title($searchstring)
     $use_refine_searchstring=true;
     $search_titles_shortnames=false;
 
-    global $lang,$userref,$baseurl,$collectiondata,$result,$display,$pagename,$collection,$userrequestmode,$preview_all;
+    global $lang,$userref,$baseurl,$collectiondata,$result,$display,$pagename,$collection,$userrequestmode;
 
     parse_str($searchstring,$searchvars);
     if (isset($searchvars["archive"])){$archive=$searchvars["archive"];}else{$archive=0;}
@@ -4006,7 +4006,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path,
            $manage_collections_share_link, $allow_share, $enable_collection_copy,
            $manage_collections_remove_link, $userref, $collection_purge, $result,
-           $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
+           $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
            $show_searchitemsdiskusage, $emptycollection, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $restricted_share, $hidden_collections, $internal_share_access, $search,
@@ -4157,19 +4157,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $o++;
         }
     
-
-    // Preview all
-    if((is_array($result) && count($result) != 0) && ($k=="" || $internal_share_access) && $preview_all)
-        {
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/preview_all.php",$urlparams);
-        $options[$o]['value']='preview_all';
-        $options[$o]['label']=$lang['preview_all'];
-        $options[$o]['data_attr']=$data_attribute;
-        $options[$o]['category'] = ACTIONGROUP_RESOURCE;
-        $options[$o]['order_by'] = 40;
-        $o++;
-        }
-
      // Remove all resources from collection
      if(!checkperm("b") && 0 < $count_result && ($k=="" || $internal_share_access) && isset($emptycollection) && !$system_read_only && collection_writeable($collection_data['ref']))
      {

@@ -1164,8 +1164,6 @@ $lang["getjava"]="Varmistaaksesi, että koneellasi on uusin Java-ohjelmisto, kä
 $lang["all"]="Kaikki";
 $lang["backtoresults"]="Takaisin tuloksiin";
 
-$lang["preview_all"]="Esikatsele kaikki";
-
 $lang["usagehistory"]="Käyttöhistoria";
 $lang["usagebreakdown"]="Käytön tarkastelu";
 $lang["usagetotal"]="Latausten kokonaismäärä";

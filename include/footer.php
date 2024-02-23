@@ -69,7 +69,7 @@ if (getval("ajax","") == "" && !hook("replace_footer"))
     } // end ajax
 
 /* always include the below as they are perpage */
-if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="preview_all") && ($pagename!="user_request"))
+if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="user_request"))
     {?>
     </div><!--End CentralSpacePP-->
     </div><!--End CentralSpaceContainerPP-->
@@ -84,7 +84,7 @@ draw_performance_footer();
 
 if ($show_resource_title_in_titlebar){
 $general_title_pages=array("admin_content","team_archive","team_resource","team_user","team_request","team_research","team_plugins","team_mail","team_export","team_stats","team_report","team_user_log","research_request","team_user_edit","admin_content_edit","team_request_edit","team_research_edit","requests","edit","themes","collection_public","collection_manage","team_home","help","home","tag","upload_java_popup","upload_java","contact","geo_search","search_advanced","about","contribute","user_preferences","view_shares","check","index");
-$search_title_pages=array("contactsheet_settings","search","preview_all","collection_edit","edit","collection_download","collection_share","collection_request");
+$search_title_pages=array("contactsheet_settings","search","collection_edit","edit","collection_download","collection_share","collection_request");
 $resource_title_pages=array("view","delete","log","alternative_file","alternative_files","resource_email","edit","preview");
 $additional_title_pages=array(hook("additional_title_pages_array"));
 
@@ -122,7 +122,6 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
         if ($pagename=="edit"){$title=" - ".$lang['action-editall']." ".$title;}
         if ($pagename=="collection_share"){$title=" - ".$lang['share']." ".$title;}
         if ($pagename=="collection_edit"){$title=" - ".$lang['action-edit']." ".$title;}
-        if ($pagename=="preview_all"){$title=" - ".$lang['preview_all']." ".$title;}
         if ($pagename=="collection_download"){$title=" - ".$lang['download']." ".$title;}
         echo "<script language='javascript'>\n";
         echo "document.title = \"$applicationname $title\";\n";
@@ -262,7 +261,7 @@ if (getval("ajax","") == "")
     {
     // don't show closing tags if we're in ajax mode
     echo "<!--CollectionDiv-->";
-    $omit_collectiondiv_load_pages=array("login","user_request","user_password","index","preview_all");
+    $omit_collectiondiv_load_pages=array("login","user_request","user_password","index");
 
     $more_omit_collectiondiv_load_pages=hook("more_omit_collectiondiv_load_pages");
     if(is_array($more_omit_collectiondiv_load_pages))

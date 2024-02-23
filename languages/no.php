@@ -987,8 +987,6 @@ $lang["getjava"]="For å forsikre deg om at du har den siste Java-programvaren p
 $lang["all"]="Alle";
 $lang["backtoresults"]="Tilbake til resultatvisning";
 
-$lang["preview_all"]="Forhåndsvis alle";
-
 $lang["usagehistory"]="Brukshistorikk";
 $lang["usagebreakdown"]="Bruksdetaljer";
 $lang["usagetotal"]="Nedlastinger totalt";

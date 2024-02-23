@@ -1478,7 +1478,6 @@ $lang["allresourcessearchbar"]='Todos os recursos.';
 $lang["allcollectionssearchbar"]='Todas as coleções.';
 $lang["backtoresults"]='Voltar aos resultados.';
 $lang["continuetoresults"]='Continuar para os resultados.';
-$lang["preview_all"]='Pré-visualizar tudo.';
 $lang["usagehistory"]='Histórico de uso.';
 $lang["usagebreakdown"]='Desagregação de uso.';
 $lang["usagetotal"]='Total de downloads.';
