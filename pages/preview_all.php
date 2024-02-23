@@ -78,8 +78,6 @@ $result=do_search("!collection".$colref);
 else{
 $result=do_search("!collection" . $colref,'',$order_by,$archive,-1,$sort);
 }
-$hook_result=hook("process_search_results","all",array("result"=>$result,"search"=>$search));
-if ($hook_result!==false) {$result=$hook_result;}
 
 include "../include/header.php";
 

@@ -228,7 +228,7 @@ if($on_upload)
     </script>
     <?php
     }
-else if ($edit_upload_options_at_top)
+elseif ($edit_upload_options_at_top)
     {
     ?>
     <!-- End of Upload options -->

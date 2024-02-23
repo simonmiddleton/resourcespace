@@ -67,7 +67,7 @@ if(getval('save', '') !== '' && enforcePostRequest(false))
 
     mplus_save_module_config($museumplus_modules_config);
     }
-else if($action == 'delete' && $id > 0 && enforcePostRequest(false))
+elseif($action == 'delete' && $id > 0 && enforcePostRequest(false))
     {
     if(!isset($museumplus_modules_config[$id]))
         {

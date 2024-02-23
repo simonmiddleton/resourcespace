@@ -177,7 +177,7 @@ else
             ],
         ];
         }
-    else if (mb_strpos($backurl, "pages/admin/admin_report_management.php") !== false)
+    elseif (mb_strpos($backurl, "pages/admin/admin_report_management.php") !== false)
         {
         // Arrived from Manage reports page
         $links_trail = array(

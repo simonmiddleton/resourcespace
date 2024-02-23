@@ -7,7 +7,7 @@
 
 global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace, $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution,
 $pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params, $qlpreview_path,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,
-$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif,$resource_view_use_pre;
+$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif,$resource_view_use_pre, $debug_log, $debug_log_override;
 
 resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews'] . ":\n");
 
@@ -364,7 +364,8 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
         exit("Unoconv executable not found");
         }
 
-    $output = run_command("{$unocommand} --format=pdf %file", false, ['%file' => $file]);
+    $output = run_command("{$unocommand} " . ($debug_log || $debug_log_override ? '-v' : '') . " --format=pdf %file", false, ['%file' => $file]);
+    debug('Preview_preprocessing : ' . $output);
 
     # Check for extracted text - if found, it has already been extracted from the uploaded file so don't replace it with the text from this pdf.
     global $extracted_text_field;
@@ -417,7 +418,7 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
                 }
             }
         }
-    else if (file_exists($pdffile))
+    elseif (file_exists($pdffile))
         {
         # Attach this PDF file as an alternative download.
         ps_query("delete from resource_alt_files where resource = ? and unoconv='1'",array("i",$ref));    
@@ -675,7 +676,7 @@ if(false != $ffmpeg_fullpath && $snapshotcheck && in_array($extension, $ffmpeg_s
     
     include dirname(__FILE__) . '/ffmpeg_processing.php';
     }
-else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpeg_supported_extensions))
+elseif (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpeg_supported_extensions))
     {
     debug('FFMPEG-VIDEO: Start process for creating previews...');
     
@@ -757,7 +758,7 @@ else if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $
                 // Landscape
                 $snapshot_scale = "-vf scale={$snapshot_width}:-1";
                 }
-            else if($video_resolution['width'] < $video_resolution['height'] && isset($snapshot_height) && $video_resolution['height'] >= $snapshot_height)
+            elseif($video_resolution['width'] < $video_resolution['height'] && isset($snapshot_height) && $video_resolution['height'] >= $snapshot_height)
                 {
                 // Portrait
                 $snapshot_scale = "-vf scale=-1:{$snapshot_height}";
@@ -1086,7 +1087,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             {
             ps_query("UPDATE resource_alt_files SET page_count = ?, file_size = ? where ref = ?", array("i", $pagecount, "i", $filesize, "i", $alternative));
             }
-        else if (isset($pagecount))
+        elseif (isset($pagecount))
             {
             $sql = "SELECT count(*) AS value FROM `resource_dimensions` WHERE resource = ?";
             $query = ps_value($sql, array("i", $ref), 0);

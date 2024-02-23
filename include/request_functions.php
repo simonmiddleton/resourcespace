@@ -1,6 +1,6 @@
 <?php
 # Request functions
-# Functions to accomodate resource requests and orders (requests with payment)
+# Functions to accomodate resource requests
 
 /**
  * Retrieve a resource request record

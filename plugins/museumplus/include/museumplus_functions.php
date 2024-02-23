@@ -298,12 +298,12 @@ function mplus_get_associated_module_conf(array $resource_refs, bool $with_value
             }
         // Resource isn't "linked" with a module. Fallback to 'Object' (initially this plugin only worked with the Object
         // module so it's considered a safe default value as long as the plugin is still configured for the Object module).
-        else if(!isset($rn_batch[$r_ref][$museumplus_module_name_field][0]['name']) && !empty($object_cfg))
+        elseif(!isset($rn_batch[$r_ref][$museumplus_module_name_field][0]['name']) && !empty($object_cfg))
             {
             $resources_with_assoc_module_config[$r_ref] = $object_cfg;
             }
         // None of the resources had an explicit link with a module. Fallback to the "Object" module configuration (if it exists)
-        else if(!$found_resources_nodes && !empty($object_cfg))
+        elseif(!$found_resources_nodes && !empty($object_cfg))
             {
             $resources_with_assoc_module_config[$r_ref] = $object_cfg;
             }
@@ -488,7 +488,7 @@ function mplus_validate_association(array $ramc, bool $use_technical_id, bool $f
                 }
             // No changes have been recorded to the "module name - MpID" combo and this resource-module association is valid
             // and we have a technical (ie. "__id") ID to use for further processing (e.g syncing data from M+)
-            else if(!$force && $r_md5 !== '' && $r_md5 === $r_computed_md5 && $r_technical_id !== '' && is_numeric($r_technical_id))
+            elseif(!$force && $r_md5 !== '' && $r_md5 === $r_computed_md5 && $r_technical_id !== '' && is_numeric($r_technical_id))
                 {
                 $valid_ramc[$r_ref] = $ramc[$r_ref] + [MPLUS_FIELD_ID => $r_technical_id];
                 unset($computed_md5s[$r_ref]);
@@ -558,7 +558,7 @@ function mplus_validate_association(array $ramc, bool $use_technical_id, bool $f
                 // Search returned more records than we searched for. Issue on MuseumPlus side, a virtual ID has been re-used
                 // on multiple module items. ResourceSpace would be unable to determine which module item is the one 
                 // meant to be "linked" to the resource.
-                else if($totalSize > count($resources_chunk))
+                elseif($totalSize > count($resources_chunk))
                     {
                     mplus_log_event(
                         'mplus_validate_association(): Search responded with more records than we searched for',

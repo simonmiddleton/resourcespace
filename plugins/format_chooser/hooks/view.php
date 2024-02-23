@@ -1,12 +1,11 @@
 <?php
 
-function show_table_headers($showprice)
+function show_table_headers()
     {
     global $lang;
     if(!hook("replacedownloadspacetableheaders")){
     ?><tr><td><?php echo $lang["fileinformation"]?></td>
     <td><?php echo $lang["filetype"]?></td>
-    <?php if ($showprice) { ?><td><?php echo $lang["price"] ?></td><?php } ?>
     <td class="textcenter"><?php echo $lang["options"]?></td>
     </tr>
     <?php
@@ -15,12 +14,9 @@ function show_table_headers($showprice)
 
 function HookFormat_chooserViewReplacedownloadoptions()
     {
-    global $resource, $ref, $counter, $headline, $lang, $download_multisize, $showprice, $save_as, 
+    global $resource, $ref, $counter, $headline, $lang, $download_multisize, $save_as, 
            $hide_restricted_download_sizes, $format_chooser_output_formats, $baseurl_short, $search, $offset, $k, 
            $order_by, $sort, $archive, $baseurl, $urlparams, $terms_download,$download_usage;
-
-    // Disable for e-commerce
-    if (is_ecommerce_user()) { return false; }
 
     $inputFormat = $resource['file_extension'];
     $origpath = get_resource_path($ref,true,'',false,$resource['file_extension']);
@@ -78,7 +74,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
         if (!$tableHeadersDrawn)
             {
-            show_table_headers($showprice);
+            show_table_headers();
             $tableHeadersDrawn = true;
             }
 
@@ -90,10 +86,6 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
         ?></p><td class="DownloadFileFormat"><?php echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["field-fileextension"]) ?></td><?php
 
-        if ($showprice)
-            {
-            ?><td><?php echo get_display_price($ref, $sizes[$n]) ?></td><?php
-            }
         add_download_column($ref, $sizes[$n], $downloadthissize);
         }
 
@@ -113,7 +105,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
     if ($downloadCount > 0)
         {
         if (!$tableHeadersDrawn)
-            show_table_headers($showprice);
+            show_table_headers();
 
         ?><tr class="DownloadDBlend">
         <td class="DownloadFileSizePicker"><select id="size"><?php
@@ -173,12 +165,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
             ?><option value="<?php echo $n ?>"><?php echo $name ?></option><?php
             }
 
-        ?></select><p id="sizeInfo"></p></td><?php
-        if ($showprice)
-            {
-            ?><td>-</td><?php
-            }
-        ?><td class="DownloadFileFormatPicker" style="vertical-align: top;"><select id="format"><?php
+        ?></select><p id="sizeInfo"></p></td><td class="DownloadFileFormatPicker" style="vertical-align: top;"><select id="format"><?php
 
         foreach ($format_chooser_output_formats as $format)
             {

@@ -297,7 +297,7 @@ if (isset($_POST['display']))
     {
     $thumbtypechange = in_array($_POST['display'], $displaytypes);
     }
-else if (!isset($_POST['display']) && isset($_GET['display']))
+elseif (!isset($_POST['display']) && isset($_GET['display']))
     {
     $thumbtypechange = in_array($_GET['display'], $displaytypes);
     }
@@ -394,7 +394,7 @@ else
     reset($_POST);reset($_GET);foreach (array_merge($_GET, $_POST) as $key=>$value)
 
         {
-        $hiddenfields=Array();
+        $hiddenfields = array();
         if ($key=="rttickall" && $value=="on"){$restypes="";break;} 
         if ((substr($key,0,8)=="resource")&&!in_array($key, $hiddenfields)) {if ($restypes!="") {$restypes.=",";} $restypes.=substr($key,8);}
         }
@@ -554,9 +554,6 @@ else
     {
     $result=["total"=>0,"data"=>[]]; # Do not return resources (e.g. for collection searching only)
     }
-# Allow results to be processed by a plugin
-$hook_result=hook("process_search_results","search",array("result"=>$result,"search"=>$search));
-if ($hook_result!==false) {$result=$hook_result;}
 
 // Convert structured results back to a simple array for display
 if(isset($result["total"]))
@@ -939,9 +936,6 @@ if(getval("promptsubmit","")!= "" && getval("archive","")=="-2" && checkperm("e-
 <?php
     }
 
-# Hook to replace all search results (used by ResourceConnect plugin, allows search mechanism to be entirely replaced)
-if (!hook("replacesearchresults")) { 
-
 # Extra CSS to support more height for titles on thumbnails.
 if (isset($result_title_height))
     {
@@ -989,7 +983,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         {
         echo render_selected_resources_counter(count($selection_collection_resources));
         }
-    else if (isset($collections)) 
+    elseif (isset($collections)) 
         {
         ?>
         <span class="Selected">
@@ -1131,8 +1125,8 @@ if (!hook("replacesearchheader")) # Always show search header now.
     if ($search!="!duplicates" && $search!="!unused" && !hook("replacesearchsortorder")) 
         {
         // Relevance is the default sort sequence if viewing resources following a search
-        $default_sort_order='relevance';
-        $rel=$lang["relevance"];
+        $default_sort_order = $default_sort;
+        $rel = $lang[$default_sort] ?? $lang["relevance"];
         if(!hook("replaceasadded"))
             {
             if (isset($collection))
@@ -1329,9 +1323,8 @@ if (!hook("replacesearchheader")) # Always show search header now.
         {
             $collectionsearchname = "";
         }
-    hook("beforesearchresults2");
     hook("beforesearchresultsexpandspace");
-    
+
     // DRAG AND DROP TO UPLOAD FUNCTIONALITY
     // Generate a URL for drag drop function - fires same URL as "upload here" when dragging.
     $drag_upload_params=render_upload_here_button($searchparams,true);
@@ -1553,7 +1546,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 // Global $access needs to be set to check watermarks in search views (and may be used in hooks)        
                 $access=$result[$n]["access"];
             
-                if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results, e.g. by plugin using process_Search_results hook above
+                if (isset($result[$n]["url"])) {$url = $result[$n]["url"];} # Option to override URL in results
     
                 hook('beforesearchviewcalls');
 
@@ -1611,8 +1604,6 @@ $url=generateURL($baseurl . "/pages/search.php",$searchparams);
 </div> <!-- end of CentralSpaceResources -->
 
 <?php
-} # End of replace all results hook conditional
-
 hook("endofsearchpage");
 
 if($display != 'map')

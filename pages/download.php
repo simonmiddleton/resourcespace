@@ -15,7 +15,7 @@ if($download_no_session_cache_limiter)
 $ref                = getval('ref', '', true);
 $size               = trim(getval('size', ''));
 $alternative        = getval('alternative', -1, true);
-$page               = getval('page', 1);
+$page               = getval('page', 1, true);
 $iaccept            = getval('iaccept', 'off');
 $usage              = getval('usage', '-1');
 $usagecomment       = getval('usagecomment', '');
@@ -176,6 +176,17 @@ else
         exit();
         }
 
+    if((int)$resource_data['has_image'] === 0 && $size != "")
+        {
+        // If configured, try and use the preview from a related resource
+        $pullresource = related_resource_pull($resource_data);
+        if($pullresource !== false)
+            {
+            $resource_data = $pullresource;
+            $ref = $pullresource["ref"];
+            }
+        }
+
     resource_type_config_override($resource_data['resource_type']);
    
     // Check permissions
@@ -248,9 +259,9 @@ else
         }
     
     // Establish nonwatermarked path for use when returning snapshot frames
-    $nowmpath = get_resource_path($ref, true, $size, false, $ext, -1, $page, false, '', $alternative);
+    $nowmpath = get_resource_path($ref, true, $size, false, $ext, -1, $page, false, '', $alternative,true);
 
-    $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative);
+    $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $use_watermark && $alternative == -1, '', $alternative,true);
     $download_extra = hook('download_resource_extra', '', array($path));
 
     // Process depending on whether snapshot frame is to be returned
@@ -358,7 +369,7 @@ if($log_download)
     // Log this activity (download only, not preview)
     daily_stat('Resource download', $ref);
     $email_add_to_log = ($email != "") ? ' Downloaded by ' . $email: "";
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, '', '', $usage, ($alternative != -1 ? $alternative : $size));
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, '', '', $usage);
     
     hook('moredlactions');
 

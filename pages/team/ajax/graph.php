@@ -157,7 +157,7 @@ else
         <div
         <?php if ($from_dash) { ?>
         style="width:220px;height:105px;"
-        <?php } else if ($print) { ?>
+        <?php } elseif ($print) { ?>
         style="width:50%;height:40%;"
         <?php } else { ?>
         style="width:100%;height:80%;"
@@ -202,6 +202,17 @@ else
                 plugins: {
                     legend: {
                         display: false,
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.raw;
+                                let sum = context.dataset.data.reduce(function(s,a){return s+a;},0);
+
+                                let label = Math.round(value/sum*100) + "% (" + value + ")";
+                                return label;
+                            }
+                        }
                     }
                 },
             };

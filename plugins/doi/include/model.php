@@ -250,10 +250,10 @@
                 if (in_array($rtf, $doi_pref_creator_fields) && !in_array($value, $creators)) {
                     $creators[] = $value;
                 }
-                else if (in_array($rtf, $doi_pref_title_fields) && !in_array($value, $titles)) {
+                elseif (in_array($rtf, $doi_pref_title_fields) && !in_array($value, $titles)) {
                     $titles[] = $value;
                 }
-                else if (in_array($rtf, $doi_pref_publicationYear_fields) && !doi_has_content($publicationYear)) {
+                elseif (in_array($rtf, $doi_pref_publicationYear_fields) && !doi_has_content($publicationYear)) {
                     $publicationYear = date('Y', strtotime($date_created));
                 }
 

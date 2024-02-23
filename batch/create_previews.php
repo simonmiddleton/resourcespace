@@ -168,7 +168,7 @@ foreach($resources as $resource) // For each resources
       {
       die("fork failed!\n");
       }
-    else if ($pid)
+    elseif ($pid)
       {
       array_push($children, $pid);
       }

@@ -45,8 +45,11 @@ if (getval("ref","")=="new"){$createnews=true;} else {$news=get_news($ref,"","")
 if (!isset($error[0]) && getval("save","")!=""  && enforcePostRequest(false))
     {
     # Save news
-    If ($createnews) {add_news($date,$title,$body);}
-    else {update_news($ref,$date,$title,$body);}
+    if ($createnews) {
+        add_news($date, $title, $body);
+    } else {
+        update_news($ref, $date, $title, $body);
+    }
     redirect("plugins/news/pages/news_edit.php?findtext=".$findtext."&offset=".$offset);
     }
     

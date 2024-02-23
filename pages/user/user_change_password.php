@@ -77,7 +77,7 @@ if(getval("save", "") != "" && enforcePostRequest(false))
         {
         # The above hook may return true in order to prevent the password from being updated
         }
-    else if(!$password_reset_mode && !rs_password_verify(getval('currentpassword', ''), $userpassword, ['username' => $username]))
+    elseif(!$password_reset_mode && !rs_password_verify(getval('currentpassword', ''), $userpassword, ['username' => $username]))
         {
         $error3 = $lang['wrongpassword'];
         }

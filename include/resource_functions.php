@@ -46,9 +46,14 @@ function get_resource_path(
     global $storagedir, $originals_separate_storage, $fstemplate_alt_threshold, $fstemplate_alt_storagedir,
     $fstemplate_alt_storageurl, $fstemplate_alt_scramblekey, $scramble_key, $hide_real_filepath,
     $migrating_scrambled, $scramble_key_old, $filestore_evenspread, $filestore_migrate,
-    $baseurl, $k, $get_resource_path_extra_download_query_string_params;
+    $baseurl, $k, $get_resource_path_extra_download_query_string_params, $resource_path_pull_cache;
 
-    # returns the correct path to resource $ref of size $size ($size==empty string is original resource)
+    if(isset($resource_path_pull_cache[$ref]) && strtolower((string)$extension) == 'jpg')
+        {
+        $ref = $resource_path_pull_cache[$ref]["ref"];
+        }
+
+    # Returns the correct path to resource $ref of size $size ($size==empty string is original resource)
     # If one or more of the folders do not exist, and $generate=true, then they are generated
     if(!preg_match('/^[a-zA-Z0-9]+$/',(string) $extension))
         {
@@ -91,7 +96,6 @@ function get_resource_path(
             }
         }
 
-
     // Return URL pointing to download.php. download.php will call again get_resource_path() to ask for the physical path
     if(!$getfilepath && $hide_real_filepath)
         {
@@ -104,7 +108,7 @@ function get_resource_path(
             $get_resource_path_extra_download_query_string_params = array();
             }
 
-        return generateURL(
+        $url = generateURL(
             "{$baseurl}/pages/download.php",
             array(
                 'ref'         => $ref,
@@ -118,6 +122,8 @@ function get_resource_path(
                 'v'           => $refresh_key,
             ),
             $get_resource_path_extra_download_query_string_params);
+
+        return $url;
         }
 
     if ($size=="")
@@ -155,7 +161,8 @@ function get_resource_path(
             else
                 {
                 global $baseurl_short, $k;
-                return $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}";
+                $url =  $baseurl_short . "pages/download.php?ref={$ref}&size={$size}&ext={$extension}&noattach=true&k={$k}&page={$page}&alternative={$alternative}";
+                return  $url;
                 }
             }
         }
@@ -172,7 +179,6 @@ function get_resource_path(
             {
             $skey = $fstemplate_alt_scramblekey;
             }
-
         $scramblepath = substr(md5("{$ref}_{$skey}"), 0, 15);
         }
 
@@ -189,7 +195,7 @@ function get_resource_path(
             $alt_data=ps_query('select ref,resource,name,description,file_name,file_extension,file_size,creation_date,unoconv,alt_type,page_count from resource_alt_files where ref=?',array("i",$alternative));
             if(!empty($alt_data))
                 {
-                // determin if this file was created from $ffmpeg_alternatives
+                // Determine if this file was created from $ffmpeg_alternatives
                 $ffmpeg_alt=alt_is_ffmpeg_alternative($alt_data[0]);
                 if($ffmpeg_alt)
                     {
@@ -376,6 +382,28 @@ function get_resource_path(
             $migrating_scrambled = true;
             }
         }
+
+    if(!file_exists($file)
+        && !$getfilepath
+        && $alternative==-1
+        && !$generate
+        && !defined("GETRESOURCEPATHNORECURSE" . $ref)
+        )
+        {
+        $resdata = get_resource_data($ref);
+        $pullresource = related_resource_pull($resdata);
+        if($pullresource !== false)
+            {
+            define("GETRESOURCEPATHNORECURSE" . $ref,true);
+            if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"]))
+                {
+                // If a JPG then no 'hpr' will be available
+                $size = "";
+                }
+            $file = get_resource_path($pullresource["ref"],$getfilepath,$size,false,$extension,$scramble,$page,$watermarked,$file_modified,-1,$includemodified);
+            }
+        }
+
     return $file;
     }
 
@@ -453,7 +481,7 @@ function get_resource_data_batch($refs)
     $joins=get_resource_table_joins();
     $join_fields = empty($joins) ? '' : ',' . implode(',', array_map(prefix_value('field'), $joins));
 
-    $resdata=ps_query("SELECT ref,title,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " FROM resource WHERE ref IN (" . ps_param_insert(count($resids)). ")",ps_param_fill($resids,"i"));
+    $resdata=ps_query("SELECT ref,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " FROM resource WHERE ref IN (" . ps_param_insert(count($resids)). ")",ps_param_fill($resids,"i"));
     // Create array with resource ID as index
     $resource_data = array();
     foreach($resdata as $resdatarow)
@@ -522,7 +550,7 @@ function create_resource($resource_type,$archive=999,$user=-1,$origin='')
         return false;
         }
 
-    $alltypes=get_resource_types("",false,false,true);
+    $alltypes=get_resource_types("",false,false,false);
     if(!in_array($resource_type,array_column($alltypes,"ref")))
         {
         return false;
@@ -685,7 +713,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     {
                     $ui_selected_node_values[] = $user_set_values[$fields[$n]['ref']];
                     }
-                else if(isset($user_set_values[$fields[$n]['ref']])
+                elseif(isset($user_set_values[$fields[$n]['ref']])
                     && is_array($user_set_values[$fields[$n]['ref']]))
                     {
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
@@ -1497,7 +1525,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 {
                 $ui_selected_node_values[] = $user_set_values[$fields[$n]['ref']];
                 }
-            else if(isset($user_set_values[$fields[$n]['ref']])
+            elseif(isset($user_set_values[$fields[$n]['ref']])
                 && is_array($user_set_values[$fields[$n]['ref']]))
                 {
                 $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
@@ -1874,7 +1902,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                     continue;
                     }
                 }
-            else if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
+            elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                 {
                 # date/expiry date type, construct the value from the date dropdowns
                 $val=sanitize_date_field_input($fields[$n]["ref"], false);
@@ -2598,7 +2626,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                         }
                     $newnodes[] = $fieldnode["ref"];
                     }
-                else if(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["ref"],$sent_nodes))
+                elseif(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["ref"],$sent_nodes))
                     {
                     $nodes_to_remove[] = $fieldnode["ref"];
                     }
@@ -4015,19 +4043,17 @@ function copy_resource($from,$resource_type=-1,$origin='')
  * @param   mixed      $fromvalue - original value (int or string)         -- resource_log.previous_value
  * @param   mixed      $tovalue - new value (int or string)
  * @param   int        $usage                                              -- resource_log.usageoption
- * @param   string     $purchase_size                                      -- resource_log.purchase_size
- * @param   float      $purchase_price                                     -- resource_log.purchase_price
  *
  * @return int (or false)
  */
 
-function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1, $purchase_size="", $purchase_price=0.00)
+function resource_log($resource, $type, $field, $notes="", $fromvalue="", $tovalue="", $usage=-1)
     {
     global $userref,$k,$lang,$resource_log_previous_ref, $internal_share_access;
 
     // Param type checks
-    $param_str = array($type,$notes,$purchase_size);
-    $param_num = array($resource,$usage,$purchase_price);
+    $param_str = array($type,$notes);
+    $param_num = array($resource,$usage);
 
     foreach($param_str as $par)
         {
@@ -4049,20 +4075,6 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
     // https://dev.mysql.com/doc/refman/8.0/en/integer-types.html
     $options_db_int = [ 'options' => [ 'min_range' => -2147483648,   'max_range' => 2147483647] ];
     if (!filter_var($usage, FILTER_VALIDATE_INT, $options_db_int) && $usage != 0)
-        {
-        return false;
-        }
-
-    // check that purchase_price is valid for decimal 10,2 field
-    $options_db_purchase_price = [ 'options' => [  'regexp' => "/^[0-9]{0,10}\.?[0-9]{0,2}$/"   ]  ];
-    if (filter_var($purchase_price, FILTER_VALIDATE_REGEXP, $options_db_purchase_price) == "")
-        {
-        return false;
-        }
-
-    // check that purchase_size is valid for varchar(10) field
-    $options_db_purchase_size = [ 'options' => [ 'regexp' => "/^[\w\W]{0,10}$/"]  ];
-    if ($purchase_size != "" && filter_var($purchase_size, FILTER_VALIDATE_REGEXP, $options_db_purchase_size) == "" )
         {
         return false;
         }
@@ -4129,7 +4141,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         }
     else
         {
-        ps_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `purchase_size`,`purchase_price`, `access_key`, `previous_value`) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)",
+        ps_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `access_key`, `previous_value`) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
             'i', (($userref != "") ? $userref : null),
             'i', $resource,
@@ -4138,8 +4150,6 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
             's', $notes,
             's', $diff,
             'i', $usage,
-            's', $purchase_size,
-            'i', $purchase_price,
             's', ((isset($k) && !$internal_share_access) ? mb_strcut($k, 0, 50): null),
             's', $fromvalue
             ]
@@ -4199,10 +4209,7 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
                         r.notes,
                         r.diff,
                         r.usageoption,
-                        r.purchase_price,
-                        r.purchase_size,
                         r.previous_value,
-                        ps.name AS size,
                         r.access_key,
                         ekeys_u.fullname AS shared_by {$extrafields->sql}
                    FROM resource_log AS r
@@ -4210,7 +4217,6 @@ function get_resource_log($resource, $fetchrows = -1, array $filters = array())
         LEFT OUTER JOIN resource_type_field AS f ON f.ref = r.resource_type_field
         LEFT OUTER JOIN external_access_keys AS ekeys ON r.access_key = ekeys.access_key AND r.resource = ekeys.resource
         LEFT OUTER JOIN user AS ekeys_u ON ekeys.user = ekeys_u.ref
-              LEFT JOIN preview_size AS ps ON r.purchase_size = ps.id
         LEFT OUTER JOIN resource_type_field AS rtf ON r.resource_type_field = rtf.ref
                         {$sql_filter}
                GROUP BY r.ref
@@ -4323,7 +4329,7 @@ function get_custom_access($resource, $usergroup, $return_default = true)
         {
         return $default_customaccess;
         }
-    else if ($result === '')
+    elseif ($result === '')
         {
         return false;
         }
@@ -4885,7 +4891,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
                 {
                 create_previews($r, false, $extension, false, false, -1, false, $ingest);
                 }
-            else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
+            elseif(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
                 {
                 $create_previews_job_data = array(
                     'resource' => $r,
@@ -5045,7 +5051,7 @@ function delete_alternative_file($resource,$ref)
         $extensions[]='jpg'; // always look for jpegs, just in case
     $extensions[]='icc'; // always look for extracted icc profiles
     $extensions=array_unique($extensions);
-        $sizes = ps_array('select id value from preview_size',array());
+        $sizes = ps_array('SELECT id value FROM preview_size',array(),"schema");
 
         // in some cases, a jpeg original is generated for non-jpeg files like PDFs. Delete if it exists.
         $path=get_resource_path($resource, true,'', true, 'jpg', -1, 1, false, "", $ref);
@@ -5508,14 +5514,6 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         return true;
         }
 
-    # Special case for purchased downloads.
-    global $userref;
-    if (isset($userref))
-        {
-        $complete=ps_value("select cr.purchase_complete value from collection_resource cr join collection c on cr.collection=c.ref where c.user=? and cr.resource=? and cr.purchase_size=?",array("i",$userref,"i",$resource,"s",$size), 0);
-        if ($complete==1) {return true;}
-        }
-
     # Restricted
     if(1 == $access)
         {
@@ -5529,14 +5527,14 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
             global $restricted_full_download;
             return $restricted_full_download;
             }
-        else if('' != $size && in_array($size, $sizes_always_allowed))
+        elseif('' != $size && in_array($size, $sizes_always_allowed))
             {
             return true;
             }
         else
             {
             # Return the restricted access setting for this resource type.
-            return ps_value("SELECT allow_restricted value FROM preview_size WHERE id = ?", array("s", $size), 0) == 1;
+            return ps_value("SELECT allow_restricted value FROM preview_size WHERE id = ?", array("s", $size), 0, "schema") == 1;
             }
         }
 
@@ -5582,7 +5580,7 @@ function get_edit_access($resource, int $status=-999, array &$resourcedata = [])
     if ($status==-999) # Archive status may not be passed
         {$status=$resourcedata["archive"];}
 
-    if ($resource==0-$userref) {return true;} # Can always edit their own user template.
+    if ($resource == 0-(int)$userref) {return true;} # Can always edit their own user template.
 
     # If $edit_access_for_contributor is true in config then users can always edit their own resources.
     if ($edit_access_for_contributor && $userref==$resourcedata["created_by"]) {return true;}
@@ -6040,7 +6038,7 @@ function get_page_count($resource,$alternative=-1)
         {
         $file=get_resource_path($ref,true,"",false,"pdf");
         }
-    else if ($alternative==-1)
+    elseif ($alternative==-1)
         {
         # some unoconv files are not pdfs but this needs to use the auto-alt file
         $alt_ref=ps_value("select ref value from resource_alt_files where resource=? and unoconv=1",array("i",$ref), "");
@@ -6642,7 +6640,7 @@ function update_related_resource($ref,$related,$add=true)
         OR (resource IN (" . ps_param_insert(count($related)) . ") AND related = ?)";
         ps_query($query,$relatedparams);
         }
-    else if($add)
+    elseif($add)
         {
         $newrelated = array();
         foreach($related as $torelate)
@@ -7337,7 +7335,7 @@ function save_original_file_as_alternative($ref)
     if ($alternative_file_previews)
         {
         // Move the old previews to new paths
-        $ps=ps_query("select * from preview_size",array());
+        $ps=ps_query("SELECT " . columns_in("preview_size")  . " FROM preview_size",[],"schema");
         for ($n=0;$n<count($ps);$n++)
             {
             # Find the original
@@ -7695,7 +7693,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
 
     # add the original image
     $return=array();
-    $lastname=ps_value("select name value from preview_size where width=(select max(width) from preview_size)",array(), ""); # Start with the highest resolution.
+    $lastname=ps_value("SELECT name value FROM preview_size WHERE width=(SELECT max(width) FROM preview_size)",[], "schema"); # Start with the highest resolution.
     $lastpreview=0;$lastrestricted=0;
     $path2=get_resource_path($ref,true,'',false,$extension);
 
@@ -7745,7 +7743,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $return[]=$returnline;
     }
     # loop through all image sizes
-    $sizes=ps_query("select " . columns_in("preview_size") . " from preview_size order by width desc");
+    $sizes=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size ORDER BY width DESC", [],"schema");
 
     for ($n=0;$n<count($sizes);$n++)
         {
@@ -7930,13 +7928,13 @@ function get_data_by_field($resource, $field, bool $flatten = true)
         $tree_nodes = get_resource_nodes($resource, $rtf_ref, true);
         return $flatten ? implode(', ', get_node_strings($tree_nodes, false)) : $tree_nodes;
         }
-    else if(!$fetch_all_resources)
+    elseif(!$fetch_all_resources)
         {
         $resource_data_for_field = get_resource_nodes($resource, $rtf_ref, true);
         return $flatten ? implode(', ', array_column($resource_data_for_field, 'name')) : $resource_data_for_field;
         }
     // Old behaviour from when we had resource_data (before r19945) - return the metadata field values for all resources
-    else if($fetch_all_resources && in_array($rtf_type, NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES))
+    elseif($fetch_all_resources && in_array($rtf_type, NON_FIXED_LIST_SINGULAR_RESOURCE_VALUE_FIELD_TYPES))
         {
         return get_resources_nodes_by_rtf($rtf_ref);
         }
@@ -7953,7 +7951,7 @@ function get_all_image_sizes($internal=false,$restricted=false)
         if($restricted){$condition .= ($condition!=""?" AND ":" WHERE ") . " allow_restricted=1";}
 
         # Executes query.
-        $r = ps_query("select ref,id,width,height,padtosize,name,internal,allow_preview,allow_restricted,quality from preview_size " . $condition . " order by width asc"); // $condition does not contain any user entered params and is safe for inclusion
+        $r = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition . " ORDER BY width ASC",[],"schema"); // $condition does not contain any user entered params and is safe for inclusion
 
         # Translates image sizes in the newly created array.
         $return = array();
@@ -7968,7 +7966,7 @@ function get_all_image_sizes($internal=false,$restricted=false)
 function image_size_restricted_access($id)
     {
     # Returns true if the indicated size is allowed for a restricted user.
-    return ps_value("select allow_restricted value from preview_size where id=?",array("s",$id), false);
+    return ps_value("SELECT allow_restricted value FROM preview_size WHERE id=?",array("s",$id), false,"schema");
     }
 
 
@@ -8127,90 +8125,6 @@ function get_nopreview_icon($resource_type, $extension, $col_size)
     # Fall back to the 'no preview' icon used for type 1.
     return "no_preview/resource_type/type1" . $col . ".png";
     }
-
-function purchase_set_size($collection,$resource,$size,$price)
-    {
-    // Set the selected size for an item in a collection. This is used later on when the items are downloaded.
-    ps_query("update collection_resource set purchase_size=?,purchase_price=? where collection=? and resource=?", array("s",$size,"d",$price,"i",$collection,"i",$resource));
-    return true;
-    }
-
-/**
- * Update ecommerce user's basket to indicate it has been purchased after PayPal callback (invoice users will pactually ay later with manual invoicing)
- *
- * @param  int $collection
- * @param  string $emailconfirmation - LEGACY MUNUSED
- * @return boolean
- */
-function payment_set_complete($collection)
-    {
-    global $applicationname,$baseurl,$userref,$username,$admin_resource_access_notifications,$userfullname,$lang,$currency_symbol;
-    // Mark items in the collection as paid so they can be downloaded.
-    ps_query("UPDATE collection_resource SET purchase_complete=1 WHERE collection=?",["i",$collection]);
-
-    // For each resource, add an entry to the log to show it has been purchased.
-    $resources=ps_query("SELECT * FROM collection_resource WHERE collection=?",array("i",$collection));
-
-    // Construct summary, separating lang entries from fixed text
-    $summaryparts = [];
-    $summaryparts[] = "<style>.InfoTable td {padding:5px;}</style><table border=\"1\" class=\"InfoTable\"><tr><td><strong>";
-    $summaryparts[] = "lang_property-reference";
-    $summaryparts[] = "</strong></td><td><strong>";
-    $summaryparts[] = "lang_size";
-    $summaryparts[] = "</strong></td><td><strong>";
-    $summaryparts[] = "lang_price";
-    $summaryparts[] = "</strong></td></tr>";
-
-    foreach ($resources as $resource)
-        {
-        $purchasesize=$resource["purchase_size"];
-        if ($purchasesize=="")
-            {
-            $purchasesize=$lang["original"];
-            }
-        resource_log($resource["resource"],LOG_CODE_PAID,0,"","","",0,$resource["purchase_size"],$resource["purchase_price"]);
-
-        $summaryparts[] = "<tr><td>" . $resource["resource"] . "</td><td>";
-        $summaryparts[] = ($purchasesize=="" ? "lang_original" : $purchasesize);
-        $summaryparts[] = "</td><td>" . $currency_symbol . $resource["purchase_price"] . "</td></tr>";
-        }
-    $summaryparts[] = "</table>";
-
-    // Construct message components
-    $notify_users=get_notification_users("RESOURCE_ACCESS");
-    $notifymessage = new ResourceSpaceUserNotification();
-    $notifymessage->set_text("lang_purchase_complete_email_admin_body");
-    $notifymessage->append_text("<br/><br/>");
-    $notifymessage->append_text("lang_username");
-    $notifymessage->append_text(": " . $username . " (" . $userfullname . ")<br/><br/>");
-    foreach($summaryparts as $summarypart)
-        {
-        $notifymessage->append_text($summarypart);
-        }
-    $notifymessage->user_preference = ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications]];
-    $notifymessage->set_subject("lang_purchase_complete_email_admin");
-    $notifymessage->url = $baseurl . "/?c=" . $collection;
-    send_user_notification($notify_users,$notifymessage);
-
-    // Send email to user (not a notification as may need to be kept for reference)
-    $userconfirmmessage = new ResourceSpaceUserNotification();
-    $userconfirmmessage->set_text("lang_purchase_complete_email_user_body");
-    $userconfirmmessage->append_text("<br/><br/>");
-    foreach($summaryparts as $summarypart)
-        {
-        $userconfirmmessage->append_text($summarypart);
-        }
-    $userconfirmmessage->set_subject("lang_purchase_complete_email_user");
-    $userconfirmmessage->url = $baseurl . "/?c=" . $collection;
-
-    send_user_notification([$userref],$userconfirmmessage,true);
-
-    // Rename so that can be viewed on my purchases page
-    ps_query("UPDATE collection SET name = ? WHERE ref = ?",["s",date("Y-m-d H:i"),"i",$collection]);
-
-    return true;
-    }
-
 
 /**
  * Get references of resource type fields that are indexed
@@ -8804,7 +8718,7 @@ function delete_resource_type_field($ref)
         {
         return $lang["admin_delete_field_error"] . "<br/>\$" . implode(", \$",$fieldvars);
         }
-    else if(!empty($core_field_scopes))
+    elseif(!empty($core_field_scopes))
         {
         return sprintf('%s%s', $lang["admin_delete_field_error_scopes"], implode(', ', $core_field_scopes));
         }
@@ -8856,6 +8770,10 @@ function get_resource_table_joins(){
         $view_title_field,
         $date_field)
     );
+    if(isset($GLOBALS["related_pushed_order_by"]) && is_int_loose($GLOBALS["related_pushed_order_by"]))
+        {
+        $joins[] = $GLOBALS["related_pushed_order_by"];
+        }
     $additional_joins=hook("additionaljoins");
     if ($additional_joins) $joins=array_merge($joins,$additional_joins);
     $joins=array_unique($joins);
@@ -9193,6 +9111,7 @@ function allow_in_browser($path)
     $permitted_mime[] = "image/jpeg";
     $permitted_mime[] = "image/png";
     $permitted_mime[] = "image/gif";
+    $permitted_mime[] = "image/webp";
     $permitted_mime[] = "audio/mpeg";
     $permitted_mime[] = "video/mp4";
     $permitted_mime[] = "text/plain";
@@ -9406,7 +9325,7 @@ function apply_resource_default(int $old_resource_type, int $new_resource_type, 
  * Where access is restricted and restricted access users can't access the scr size, the scr size shouldn't be used.
  *
  * @param  int   $access   Resource access level, typically from get_resource_access()
- * 
+ *
  * @return  bool   True if scr size shouldn't be used else false.
  */
 function skip_scr_size_preview(int $access) : bool
@@ -9423,4 +9342,148 @@ function skip_scr_size_preview(int $access) : bool
         }
 
     return false;
+    }
+
+
+/**
+ * Get a related resource to pull images from
+ *
+ * @param array $resource   Array of resource data from do_search()
+ *
+ * @return array|bool $resdata    Array of alternative resource data to use, or false if not configured or no resource image found
+ *
+ */
+function related_resource_pull(array $resource)
+    {
+    global $resource_path_pull_cache;
+    $related = false;
+    if (isset($resource_path_pull_cache[$resource["ref"]]))
+        {
+        return $resource_path_pull_cache[$resource["ref"]];
+        }
+
+    $restypes = get_resource_types('',false,true,true);
+    $pull_images = array_column($restypes,"pull_images","ref")[$resource['resource_type']];
+    if ((int)$pull_images === 1)
+        {
+        $relatedpull = do_search("!related" . $resource["ref"]);
+        debug("Looking for a related resource with image for resource ID #" . $resource["ref"]);
+        if (is_array($relatedpull))
+            {
+            foreach ($relatedpull as $related)
+                {
+                if($related["has_image"] === 1)
+                    {
+                    $relatedpath = get_resource_path($related["ref"],true,"pre",false,"jpg",true,1,false);
+                    if(file_exists($relatedpath))
+                        {
+                        $resource_path_pull_cache[$resource["ref"]] = $related;
+                        debug("Found related resource with image: " . $related["ref"]);
+                        break;
+                        }
+                    }
+                }
+            }
+        }
+    return $related;
+    }
+
+
+/**
+ * Get the largest available preview URL for the given resource and the given array of sizes
+ *
+ * @param array     $resource   Array of resource data from get_resource_data() or search results
+ * @param int       $access     Resource access
+ * @param array     $sizes      Array of size IDs to look through, in order of size. If not provied will use all sizes
+ * @param bool      $watermark  Look for watermarked versions?
+ *
+ * @return string | bool        URL, or false if no image is found
+ *
+ */
+function get_resource_preview(array $resource,array $sizes = [], int $access = -1, bool $watermark = false)
+    {
+    if(empty($sizes))
+        {
+        $sizes = array_reverse(array_column(get_all_image_sizes(),"id"));
+        }
+
+    $preview["url"] = "";
+    if (isset($resource['thm_url']))
+        {
+        // Option to override thumbnail image in search results, e.g. by plugin using process_search_results hook
+        $preview["url"] = $resource['thm_url'];
+        $preview["height"] = $resource["thumb_height"];
+        $preview["width"] = $resource["thumb_width"];
+        }
+    else
+        {
+        if((int)$resource['has_image'] === 0)
+            {
+            // If configured, try and use a preview from a related resource
+            $pullresource = related_resource_pull($resource);
+            if($pullresource !== false)
+                {
+                $resource = $pullresource;
+                }
+            }
+
+        if($access == -1)
+            {
+            $access = get_resource_access($resource);
+            }
+
+        // Work out image to use.
+        if($watermark !== '')
+            {
+            $use_watermark = check_use_watermark();
+            }
+        else
+            {
+            $use_watermark = false;
+            }
+        $validimage = false;
+        foreach($sizes as $size)
+            {
+            if(resource_has_access_denied_by_RT_size($resource['resource_type'], $size))
+                {
+                continue;
+                }
+
+            // Check that file actually exists
+            $img_file = get_resource_path(
+                $resource['ref'],
+                true,
+                $size,
+                false,
+                $resource['preview_extension'],
+                true,
+                1,
+                $use_watermark,
+                $resource['file_modified']
+            );
+            if(file_exists($img_file))
+                {
+                $preview["path"] = $img_file;
+                $preview["url"] = get_resource_path($resource['ref'],false,$size ,false,$resource['preview_extension'],true,1,$use_watermark,$resource['file_modified']);
+                $GLOBALS["use_error_exception"] = true;
+                try
+                    {
+                    list($preview["width"], $preview["height"]) = getimagesize($img_file);
+                    $validimage = true;
+                    }
+                catch (Exception $e)
+                    {
+                    $returned_error = $e->getMessage();
+                    debug("get_resource_preview - getimagesize(): " . $returned_error);
+                    }
+                unset($GLOBALS["use_error_exception"]);
+                break;
+                }
+            }
+        }
+    if(!$validimage)
+        {
+        return false;
+        }
+    return $preview;
     }

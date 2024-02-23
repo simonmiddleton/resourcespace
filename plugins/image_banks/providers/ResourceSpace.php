@@ -118,7 +118,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
                     {
                     $item = $item->setOriginalFileUrl($rsize['url']);
                     }
-                else if ($rsize['size_code'] === 'thm')
+                elseif ($rsize['size_code'] === 'thm')
                     {
                     $item = $item
                         ->setPreviewUrl($rsize['url'])
@@ -156,7 +156,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             $ref = $qs_params['ref'] ?? '';
             $ext = $qs_params['ext'] ?? '';
             }
-        else if (preg_match('/\/filestore(?:\/\d+)*\w+\/(\d+)\w+\.([a-zA-Z0-9]{1,10})/', $file_url_path, $matches))
+        elseif (preg_match('/\/filestore(?:\/\d+)*\w+\/(\d+)\w+\.([a-zA-Z0-9]{1,10})/', $file_url_path, $matches))
             {
             [, $ref, $ext] = $matches;
             }
@@ -207,11 +207,11 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             throw new RuntimeException($err_msg_prefix . $request);
             }
         // Handle generic (structured) errors (usually done using ajax_functions.php)
-        else if ($status_code !== 200 && isset($results['error']['detail']))
+        elseif ($status_code !== 200 && isset($results['error']['detail']))
             {
             throw new RuntimeException($err_msg_prefix . $results['error']['detail']);
             }
-        else if ($status_code === 200 && JSON_ERROR_NONE !== json_last_error())
+        elseif ($status_code === 200 && JSON_ERROR_NONE !== json_last_error())
             {
             throw new RuntimeException("$err_msg_prefix (JSON) " . json_last_error_msg());
             }
@@ -306,7 +306,7 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
                 {
                 $item = $item->setOriginalFileUrl($size['url']);
                 }
-            else if ($size['size_code'] === 'pre')
+            elseif ($size['size_code'] === 'pre')
                 {
                 $item = $item->setPreviewUrl($size['url']);
                 }

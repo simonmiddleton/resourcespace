@@ -9,8 +9,6 @@ $lang["usergroup-super_admin"]="Super Admin";
 $lang["usergroup-archivists"]="Archivists";
 $lang["usergroup-restricted_user_-_requests_emailed"]="Restricted User - Requests Emailed";
 $lang["usergroup-restricted_user_-_requests_managed"]="Restricted User - Requests Managed";
-$lang["usergroup-restricted_user_-_payment_immediate"]="Restricted User - Payment Immediate";
-$lang["usergroup-restricted_user_-_payment_invoice"]="Restricted User - Payment Invoice";
 
 # Resource type names (for the default resource types)
 $lang["resourcetype-photo"]="Photo";
@@ -244,8 +242,6 @@ $lang['xlthumbs'] = 'X-large';
 $lang["xlthumbstitle"]="Extra large thumbnails";
 $lang['largethumbs'] = 'Large';
 $lang["largethumbstitle"]="Large thumbnails";
-$lang["smallthumbs"]="Small";
-$lang["smallthumbstitle"]="Small thumbnails";
 $lang["strip"]="Strip";
 $lang["striptitle"]="Strip view";
 $lang['list'] = 'List';
@@ -548,6 +544,7 @@ $lang["modified"]="Modified";
 $lang["jumptopage"]="Page";
 $lang["jump"]="Jump";
 $lang["titleandcountry"]="Title / country";
+$lang["title"]="Title";
 $lang["torefineyourresults"]="To refine your results, try";
 $lang["verybestresources"]="The very best resources";
 $lang["addtocurrentcollection"]="Add to current collection";
@@ -712,7 +709,7 @@ $lang["loginincorrect"]="Sorry, your login details were incorrect.<br /><br />If
 $lang["accountexpired"]="Your account has expired. Please contact the resources team.";
 $lang["accountnoemail-reset-not-emailed"]="Password reset link was not sent because the account has no email address";
 $lang["accountexpired-reset-not-emailed"]="Password reset link was not sent because the account has expired";
-$lang["useralreadyexists"]="An account with that e-mail or username already exists, changes not saved";
+$lang["useralreadyexists"]="An account with that e-mail or username already exists, or you have reached your user allocation.";
 $lang["useremailalreadyexists"]="An account with that e-mail already exists.";
 $lang["ticktoemail"]="E-mail this user their username and new password";
 $lang["ticktodelete"]="Tick to delete this user";
@@ -1189,7 +1186,7 @@ $lang["description"]="Description";
 $lang["notuploaded"]="Not uploaded";
 $lang["uploadreplacementfile"]="Upload replacement file";
 $lang["backtomanagealternativefiles"]="Back to manage alternative files";
-
+$lang["alternatetype"]="Alternative type";
 
 $lang["resourceistranscoding"]="Resource is currently being transcoded";
 $lang["cantdeletewhiletranscoding"]="You can't delete resources while they are transcoding";
@@ -1373,8 +1370,8 @@ $lang["userrequestnotification3"]="If this is a valid request, click the link to
 $lang["ticktoapproveuser"]="You must set the status to approved if you wish to enable this account";
 
 $lang["managerequestsorders"]="Requests";
-$lang["editrequestorder"]="Edit request / e-commerce order";
-$lang["requestorderid"]="Request / order ID";
+$lang["editrequestorder"]="Edit request";
+$lang["requestorderid"]="Request ID";
 $lang["viewrequesturl"]="To view this request, click the link below:";
 $lang["requestreason"]="Reason for request";
 
@@ -1415,8 +1412,6 @@ $lang["cannotshareemptythemecategory"]="This featured collection category contai
 $lang["requestall"]="Request all";
 $lang["requesttype-email_only"]=$lang["resourcerequesttype0"]="Email only";
 $lang["requesttype-managed"]=$lang["resourcerequesttype1"]="Managed request";
-$lang["requesttype-payment_-_immediate"]=$lang["resourcerequesttype2"]="Payment - immediate";
-$lang["requesttype-payment_-_invoice"]=$lang["resourcerequesttype3"]="Payment - invoice";
 
 $lang["requestsent"]="Your resource request has been submitted for approval ";
 $lang["requestsenttext"]="Your resource request has been submitted for approval and will be looked at shortly.";
@@ -1662,38 +1657,6 @@ $lang["closethiswindow"]="Close this window";
 
 $lang["requestaddedtocollection"]="This resource has been added to your current collection. You can request the items in your collection by clicking 'Request All' on the collection bar below.";
 
-# E-commerce text
-$lang["buynow"]="Buy now";
-$lang["yourbasket"]="Your basket";
-$lang["addtobasket"]="Add to basket";
-$lang["yourbasketisempty"]="Your basket is empty.";
-$lang["yourbasketcontains-1"]="Your basket contains 1 item.";
-$lang["yourbasketcontains-2"]="Your basket contains %qty items."; # %qty will be replaced, e.g. Your basket contains 3 items.
-$lang["buy"]="Buy";
-$lang["buyitemaddedtocollection"]="This resource has been added to your basket. You can purchase all the items in your basket by clicking 'Buy Now' below.";
-$lang["buynowintro"]="Please select the sizes you require.";
-$lang["nodownloadsavailable"]="Sorry, there are no downloads available for this resource.";
-$lang["proceedtocheckout"]="Proceed to checkout";
-$lang["totalprice"]="Total price";
-$lang["price"]="Price";
-$lang["waitingforpaymentauthorisation"]="Sorry, we have not yet received the payment authorisation. Please wait a few moments then click 'reload' below.";
-$lang["downloadpurchaseitems"]="Download purchased items";
-$lang["downloadpurchaseitemsnow"]="Please use the links below to download your purchased items immediately.<br><br>Do not navigate away from this page until you have downloaded all the items.";
-$lang["alternatetype"]="Alternative type";
-$lang["viewpurchases"]="My purchases";
-$lang["viewpurchasesintro"]="To access previously purchased resources please use the links below.";
-$lang["orderdate"]="Order date";
-$lang["removefrombasket"]="Remove from basket";
-$lang["total-orders-0"] = "<strong>Total: 0</strong> orders";
-$lang["total-orders-1"] = "<strong>Total: 1</strong> order";
-$lang["total-orders-2"] = "<strong>Total: %number</strong> orders"; # %number will be replaced, e.g. Total: 5 Orders
-$lang["purchase_complete_email_admin"] = "Notification of purchase";
-$lang["purchase_complete_email_admin_body"] = "The following purchase has been completed.";
-$lang["purchase_complete_email_user"] = "Confirmation of purchase";
-$lang["purchase_complete_email_user_body"] = "Thanks for your purchase. Please use the link below to access your purchased items.";
-$lang["purchase_email_address"] = "Please enter a valid email address if you wish to receive confirmation of your purchase";
-
-
 $lang["subcategories"]="Subcategories";
 $lang["subcategory"]="Subcategory";
 $lang["back"]="Back";
@@ -1764,13 +1727,6 @@ $lang["unsubscribed"]="Unsubscribed";
 $lang["youhaveunsubscribedreport"]="You have been unsubscribed from the periodic report e-mail.";
 $lang["sendingreportto"]="Sending report to";
 $lang["reportempty"]="No matching data was found for the selected report and period.";
-
-$lang["purchaseonaccount"]="Add to account";
-$lang["areyousurepayaccount"]="Are you sure you wish to add this purchase to your account?";
-$lang["accountholderpayment"]="Account Holder Payment";
-$lang["subtotal"]="Subtotal";
-$lang["discountsapplied"]="Discounts applied";
-$lang["log-p"]="Purchased resource";
 $lang["viauser"]="via user";
 $lang["close"]="Close";
 
@@ -2543,7 +2499,6 @@ $lang["plugin_category_general"]="General";
 $lang["plugin_category_api"]="API";
 $lang["plugin_category_advanced"]="Advanced";
 $lang["plugin_category_design"]="Design";
-$lang["plugin_category_ecommerce"]="Ecommerce";
 $lang["plugin_integrations"]="Integrations";
 /* * End - Plugin Category Strings * */
 
@@ -3167,3 +3122,8 @@ $lang["email_rate_limit_inactive"] = "The e-mail limit has been lifted and e-mai
 $lang["severity-level_0"]                   = "Critical";
 $lang["severity-level_1"]                   = "Warning";
 $lang["severity-level_2"]                   = "Notice";
+$lang["pull_images"]                        = "Pull images";
+$lang["pull_images_text"]                   = "Use images from related resources if none available";
+$lang["system_user_default"]                = "SYSTEM";
+
+$lang["userlimitreached"] = "You have reached your user limit. An existing user must be disabled or deleted before you can create new accounts or enable existing accounts.";

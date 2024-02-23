@@ -80,7 +80,15 @@ $type_change = false;
 
 if(getval("save","")!="" && getval("delete","")=="" && enforcePostRequest(false))
     {
-    $return = save_resource_type_field($ref,$fieldcolumns,$_POST);
+    $saved = save_resource_type_field($ref,$fieldcolumns,$_POST);
+    if($saved)
+        {
+        $saved_text=$lang['saved'];
+        }
+    else
+        {
+        $error_text = $lang['error_generic'];
+        }
     }
 
 $confirm_delete=false;  

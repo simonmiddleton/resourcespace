@@ -1512,6 +1512,10 @@ function create_resource_type($name)
     ps_query("INSERT INTO resource_type (name) VALUES (?) ",array("s",$name));
     $newid = sql_insert_id();
     clear_query_cache("schema");
+    if(isset($GLOBALS["restype_cache"]))
+        {
+        unset($GLOBALS["restype_cache"]);
+        }
     return $newid;
     }
 
@@ -1528,7 +1532,6 @@ function create_resource_type($name)
 function save_resource_type(int $ref, array $savedata)
     {
     global $execution_lockout;
-
     $restypes = get_resource_types("",true,false,true);
     $restype_refs = array_column($restypes,"ref");
     if(!checkperm('a') || !in_array($ref,$restype_refs))
@@ -1542,14 +1545,14 @@ function save_resource_type(int $ref, array $savedata)
     foreach($savedata as $savecol=>$saveval)
         {
         debug("checking for column " . $savecol . " in " . json_encode(($restype_refs),true));
-        if($saveval == $restypes[$ref][$savecol])
+        if($saveval === $restypes[$ref][$savecol])
             {
             // Unchanged value, skip
             continue;
             }
         switch($savecol)
             {
-            case "name":               
+            case "name":
                 $setcolumns[] = "name";
                 $setparams[] = "s";
                 $setparams[] = mb_strcut($saveval, 0, 100);
@@ -1559,13 +1562,14 @@ function save_resource_type(int $ref, array $savedata)
             case "push_metadata":
             case "tab":
             case "colour":
+            case "pull_images":
                 $setcolumns[] = $savecol;
                 $setparams[] = "i";
                 $setparams[] = $saveval;
                 break;
 
             case "config_options":
-                if (!$execution_lockout) 
+                if (!$execution_lockout)
                     {
                     // Not allowed to save PHP if execution_lockout set.
                     $setcolumns[] = $savecol;
@@ -1579,8 +1583,8 @@ function save_resource_type(int $ref, array $savedata)
                 $setparams[] = "s";
                 $setparams[] = $saveval;
                 break;
-                
-            case "icon":            
+
+            case "icon":
                 $setcolumns[] = $savecol;
                 $setparams[] = "s";
                 $setparams[] = mb_strcut($saveval, 0, 120);
@@ -1595,10 +1599,10 @@ function save_resource_type(int $ref, array $savedata)
         {
         return false;
         }
-    
+
     $setparams[] = "i";
     $setparams[] = $ref;
-    
+
     ps_query(
         "UPDATE resource_type
             SET " . implode("=?,",$setcolumns) . "=?

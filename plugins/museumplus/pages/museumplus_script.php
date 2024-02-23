@@ -53,7 +53,7 @@ if('' != trim($museumplus_log_directory))
         {
         $museumplus_enable_script_log = true;
         }
-    else if(mkdir($museumplus_log_directory, 0755, true))
+    elseif(mkdir($museumplus_log_directory, 0755, true))
         {
         $museumplus_enable_script_log = true;
         logScript("[museumplus] Created log directory: '{$museumplus_log_directory}'");
@@ -125,7 +125,7 @@ foreach(getopt($mplus_short_options, $mplus_long_options) as $option_name => $op
             {
             logScript('[museumplus] Process lock removed!', $mplus_log_file);
             }
-        else if(!is_process_lock(MPLUS_LOCK))
+        elseif(!is_process_lock(MPLUS_LOCK))
             {
             logScript('[museumplus][warn] No process lock found! Please remove the "-c" -or- "--clear-lock" option.', $mplus_log_file);
             }
@@ -155,7 +155,7 @@ foreach(getopt($mplus_short_options, $mplus_long_options) as $option_name => $op
         $filter = mplus_validate_resource_association_filters($raw_filter);
         logScript('[museumplus] Additional valid filters: ' . implode(', ', array_keys($filter)), $mplus_log_file);
         }
-    else if($option_name === 'revalidate')
+    elseif($option_name === 'revalidate')
         {
         $revalidate = true;
         logScript('[museumplus] Set to force re-validation.', $mplus_log_file);

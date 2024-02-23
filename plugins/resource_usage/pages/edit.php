@@ -60,7 +60,7 @@ if(getval('submitted', '') != '' && enforcePostRequest(false))
 
         resource_log($resource, '', '', $lang['new_usage'] . ' ' . $ref);
         }
-    else if(!$new_record && get_edit_access($resource))
+    elseif(!$new_record && get_edit_access($resource))
         {
         # Existing record   
         $parameters=array("s",$usage_location, "s",$usage_medium, "s",$description, "s",$usage_date, "i",$ref, "i",$resource);

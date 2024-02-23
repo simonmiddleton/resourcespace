@@ -1222,17 +1222,17 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                             break;
                         }
                     }
-                else if (substr($placeholder,0,5)=="text_")
+                elseif (substr($placeholder,0,5)=="text_")
                     {
                     // Get text string (legacy)
                     $setvalues[$placeholder] =text(substr($placeholder,5));
                     }
-                else if ($placeholder=="client_ip")
+                elseif ($placeholder=="client_ip")
                     {
                     // Get server variables (ex. [server_REMOTE_ADDR] for a user request)
                     $setvalues[$placeholder] = get_ip();
                     }         
-                else if($placeholder == 'img_headerlogo')
+                elseif($placeholder == 'img_headerlogo')
                     {
                     // Add header image to email if not using template
                     $img_url = get_header_image(true);
@@ -1240,7 +1240,7 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
                     $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
                     $setvalues[$placeholder] = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
                     }
-                else if ($placeholder=="embed_thumbnail")
+                elseif ($placeholder=="embed_thumbnail")
                     {                    
                     # [embed_thumbnail] (requires url in templatevars['thumbnail'])
                     $thumbcid=uniqid('thumb');
@@ -1568,7 +1568,7 @@ function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
         $c = $string[$i];
         if (ctype_alpha($c))
             $result.=$c;
-        else if ($c==' ') {
+        elseif ($c==' ') {
             $result.='_';
             $enc = true;
         } else {
@@ -1898,7 +1898,7 @@ function filesize_unlimited($path)
 
         return exec('for %I in (' . escapeshellarg($path) . ') do @echo %~zI' );
         }
-    else if('Darwin' == PHP_OS || 'FreeBSD' == PHP_OS)
+    elseif('Darwin' == PHP_OS || 'FreeBSD' == PHP_OS)
         {
         $bytesize = exec("stat -f '%z' " . escapeshellarg($path));
         }
@@ -1970,7 +1970,7 @@ function get_temp_dir($asUrl = false,$uniqid="")
         $result = $tempdir;
     }
     // Otherwise, if $storagedir is set, use it.
-    else if (isset($storagedir))
+    elseif (isset($storagedir))
     {
         // Make sure the dir exists.
         if(!is_dir($storagedir . "/tmp"))
@@ -3341,6 +3341,16 @@ function get_recent_users($days)
     return ps_value("SELECT count(*) value FROM user WHERE datediff(now(), last_active) <= ?", array("i", $days), 0);
     }
 
+/**
+ * Return the total number of approved
+ *
+ * @return integer  The number of approved users
+ */
+function get_total_approved_users()
+    {
+    return (ps_value("select count(*) value from user where approved=1", [], 0));
+    }
+
 
 /**
 * Check if script last ran more than the failure notification days
@@ -3855,7 +3865,7 @@ function get_debug_log_dir()
         $result = $tempdir;
     }
     // Otherwise, if $storagedir is set, use it.
-    else if (isset($storagedir))
+    elseif (isset($storagedir))
     {
         // Make sure the dir exists.
         if(!is_dir($storagedir . "/tmp"))
@@ -4103,9 +4113,9 @@ function text($name)
     $key=$pagename . "__" . $name;  
     if (array_key_exists($key,$lang))
         {return $lang[$key];}
-    else if(array_key_exists("all__" . $name,$lang))
+    elseif(array_key_exists("all__" . $name,$lang))
         {return $lang["all__" . $name];}
-    else if(array_key_exists($name,$lang))
+    elseif(array_key_exists($name,$lang))
         {return $lang[$name];}  
 
     return "";
@@ -4536,7 +4546,7 @@ function get_system_status()
         // Return now as this is considered fatal to the system. If not, later checks might crash process because of missing one of these modules.
         return $return;
         }
-    else if($check_requirements_only)
+    elseif($check_requirements_only)
         {
         return ['results' => [], 'status' => 'OK'];
         }
@@ -4766,7 +4776,7 @@ function get_system_status()
         ];
         return $return;
         }
-    else if($calc < 0.05)
+    elseif($calc < 0.05)
         {
         $return['results']['free_disk_space'] = [
             'status' => 'FAIL',
@@ -4796,7 +4806,7 @@ function get_system_status()
             ];
             ++$fail_tests;
             }
-        else if($percent >= 99 && $percent < 100)
+        elseif($percent >= 99 && $percent < 100)
             {
             $return['results']['quota_limit'] = [
                 'status' => 'FAIL',
@@ -4807,7 +4817,7 @@ function get_system_status()
             ];
             return $return;
             }
-        else if($percent >= 100)
+        elseif($percent >= 100)
             {
             $return['results']['quota_limit'] = [
                 'status' => 'FAIL',
@@ -4855,7 +4865,7 @@ function get_system_status()
         # 'svnversion' worked - use this value and also flag local mods using a detectable string.
         $svn_data .= ' r' . str_replace('M', '(mods)', $svnversion);    
         }
-    else if(preg_match('/\nRevision: (\d+)/i', $svninfo, $matches) != 0)
+    elseif(preg_match('/\nRevision: (\d+)/i', $svninfo, $matches) != 0)
         {
         // No 'svnversion' command, but we found the revision in the results from 'svn info'.
         $svn_data .= ' r' . $matches[1];
@@ -4878,7 +4888,8 @@ function get_system_status()
     $return['results']['recent_user_count'] = [
         'status' => 'OK',
         'info' => get_recent_users(7),
-        'within_year' => get_recent_users(365)
+        'within_year' => get_recent_users(365),
+        'total_approved' => get_total_approved_users()
     ];
 
     // Check if plugins have any warnings
@@ -5231,7 +5242,7 @@ function set_watermark_image()
         {
         $GLOBALS["watermark"] = str_replace('[storage_url]', $storagedir, $watermark);  # Watermark from system configuration page
         }
-    else if ($watermark !== '')
+    elseif ($watermark !== '')
         {
         $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
         }
@@ -5246,7 +5257,7 @@ function compute_dpi($width, $height, &$dpi, &$dpi_unit, &$dpi_w, &$dpi_h)
         {
         $dpi=$sizes[$n]['resolution'];
         }
-    else if (!isset($dpi) || $dpi==0)
+    elseif (!isset($dpi) || $dpi==0)
         {
         $dpi=300;
         }
@@ -5345,4 +5356,17 @@ function get_size_info(array $size, ?array $originalSize = null): string
         }
 
     return $output;
+    }
+
+/**
+ * Simple function to check if a given extension is associated with a JPG file
+ *
+ * @param string $extension     File extension
+ * 
+ * @return bool 
+ * 
+ */
+function is_jpeg_extension(string $extension)
+    {
+    return in_array(strtolower((string) $extension),["jpg","jpeg"]);
     }

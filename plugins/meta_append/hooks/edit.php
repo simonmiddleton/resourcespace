@@ -2,7 +2,7 @@
 
 include __DIR__ . "../../config/config.php";
 
-CONST CHECKED_VALUE = "yes";
+const CHECKED_VALUE = "yes";
 
 function HookMeta_appendAllAfterfielddisplay($field_id)
     {

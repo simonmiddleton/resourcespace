@@ -197,7 +197,7 @@ function HookTms_linkEditAftersaveresourcedata()
                     {
                     update_field($resourceref, $tms_rs_mapping['rs_field'], $tmsdata[$module['module_name']][$tms_rs_mapping['tms_column']]);
                     }
-                else if($resourceref > 0 && getval("field_{$module['rs_uid_field']}", '') == '')
+                elseif($resourceref > 0 && getval("field_{$module['rs_uid_field']}", '') == '')
                     {
                     update_field($resourceref, $tms_rs_mapping['rs_field'], '');
                     }

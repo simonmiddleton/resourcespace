@@ -56,7 +56,7 @@ if($resource!==false && is_null($alternative))
         }
     }
 // Process a resource alternative upload
-else if($resource !== false && !is_null($alternative) && $alternative > 0 && $extension != "")
+elseif($resource !== false && !is_null($alternative) && $alternative > 0 && $extension != "")
     {
     $alt_path = get_resource_path($job_data["resource"], true, "", true, $extension, -1, 1, false, "", $alternative);
 
@@ -64,7 +64,7 @@ else if($resource !== false && !is_null($alternative) && $alternative > 0 && $ex
         {
         copy($upload_file_by_url, $alt_path);
         }
-    else if(!is_null($file_path) && $file_path != "")
+    elseif(!is_null($file_path) && $file_path != "")
         {
         $result = rename($file_path, $alt_path);
         if($result === false)

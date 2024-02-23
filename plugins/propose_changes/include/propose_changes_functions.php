@@ -40,7 +40,7 @@ function save_proposed_changes($ref)
                     {
                     $ui_selected_node_values[] = $user_set_values[$fields[$n]['ref']];
                     }
-                else if(isset($user_set_values[$fields[$n]['ref']])
+                elseif(isset($user_set_values[$fields[$n]['ref']])
                     && is_array($user_set_values[$fields[$n]['ref']]))
                     {
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
@@ -115,7 +115,7 @@ function save_proposed_changes($ref)
                         }
                         $val=$newval;
                     }
-                else if ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
+                elseif ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
                     {
                     $val = getval("field_{$fields[$n]['ref']}", false);
                     if($val !== false && !validateDatetime($val, 'Y-m-d'))
@@ -130,56 +130,11 @@ function save_proposed_changes($ref)
                     }
                 elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                     {
-                    $include_time = $fields[$n]['type'] === FIELD_TYPE_DATE_AND_OPTIONAL_TIME;
-                    # date type, construct the value from the date/time dropdowns
-                    $val = getval("field_" . $fields[$n]["ref"] . "-y",false);
-                    if($val !== false)
+                    $val=sanitize_date_field_input($fields[$n]["ref"], false);
+
+                    if ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
                         {
-                        $val = sprintf("%04d",$val);
-                        if (intval($val)<=0) 
-                            {
-                            $val="";
-                            }
-                        elseif (($field=getval("field_" . $fields[$n]["ref"] . "-m",""))!="") 
-                            {
-                            $val.="-" . $field;
-                            if (($field=getval("field_" . $fields[$n]["ref"] . "-d",""))!="") 
-                                {
-                                $val.="-" . $field;
-                                if (($field=getval("field_" . $fields[$n]["ref"] . "-h",""))!="")
-                                    {
-                                    $val.=" " . $field . ":";
-                                    if (($field=getval("field_" . $fields[$n]["ref"] . "-i",""))!="") 
-                                        {
-                                        $val.=$field;
-                                        if (($field=getval("field_" . $fields[$n]["ref"] . "-s",""))!="") 
-                                            {
-                                            $val.=$field;
-                                            } 
-                                        elseif($include_time)
-                                            {
-                                            $val.=":00";
-                                            }
-                                        } 
-                                    elseif($include_time)
-                                        {
-                                        $val.="00:00";
-                                        }
-                                    }
-                                elseif($include_time)
-                                    {
-                                    $val.=" 00:00:00";
-                                    }
-                                }
-                            else 
-                                {
-                                $val.="-00" . ($include_time?" 00:00:00":"");
-                                }
-                            }
-                        else 
-                            {
-                            $val.="-00-00" . ($include_time?" 00:00:00":"");
-                            }
+                        $val = getval("field_{$fields[$n]['ref']}", '');
                         }
                     }
                 elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
@@ -284,7 +239,7 @@ function save_proposed_changes($ref)
                     }
                 }
 
-            if ($val !== false && str_replace("\r\n", "\n", $field_value??"") !== str_replace("\r\n", "\n", unescape($val)))
+            if ($val !== false && trim(str_replace("\r\n", "\n", $field_value??"")) !== trim(str_replace("\r\n", "\n", unescape($val))))
                     {
                     if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                         {
@@ -302,7 +257,7 @@ function save_proposed_changes($ref)
                     }            
             
             }
-                
+
         return true;
         }
         
@@ -491,7 +446,7 @@ function propose_changes_display_field($n, $field)
                 {
                 $name = "nodes[{$field['ref']}][]";
                 }
-            else if(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
+            elseif(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
                 {
                 $name = "field_{$field['ref']}";
                 }
@@ -502,7 +457,7 @@ function propose_changes_display_field($n, $field)
                 $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
                 }
             }
-        else if ($field["type"]==FIELD_TYPE_DATE_RANGE)
+        elseif ($field["type"]==FIELD_TYPE_DATE_RANGE)
             {
             $rangedates = explode(",",$value);
             natsort($rangedates);

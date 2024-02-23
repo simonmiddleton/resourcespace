@@ -77,11 +77,11 @@ function debug_function_call($name, array $args)
             {
             $value = $args[$param->getPosition()];
             }
-        else if($param->isOptional() && isset($args[$param->getPosition()]))
+        elseif($param->isOptional() && isset($args[$param->getPosition()]))
             {
             $value = $args[$param->getPosition()];
             }
-        else if($param->isOptional() && $param->isDefaultValueAvailable())
+        elseif($param->isOptional() && $param->isDefaultValueAvailable())
             {
             $value = $param->getDefaultValue();
             }

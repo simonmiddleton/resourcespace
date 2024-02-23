@@ -52,3 +52,8 @@ for($n = 0; $n < count($resources); $n++)
         echo "Key for " . $resources[$n]["ref"] . " NOT generated<br />\n";
         }
     }
+
+if (empty($resources))
+    {
+    echo 'No resources were found to update.';
+    }

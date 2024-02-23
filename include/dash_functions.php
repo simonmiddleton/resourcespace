@@ -303,14 +303,7 @@ function existing_tile($title,$all_users,$url,$link,$reload_interval,$resource_c
                             's', $text
                           ]
                         );
-    if(isset($existing[0]["ref"]))
-        {
-        return true;
-        }
-    else
-        {
-        return false;
-        }
+    return isset($existing[0]["ref"]);
     }
 
 /*
@@ -471,7 +464,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
             {
             update_default_dash_tile_order($tile["tile"],$order);
             }
-        else if((!isset($tile['default_order_by']) || $order != $tile['default_order_by'] || ($tile['default_order_by'] % 10) > 0) && !is_null($user_group_id))
+        elseif((!isset($tile['default_order_by']) || $order != $tile['default_order_by'] || ($tile['default_order_by'] % 10) > 0) && !is_null($user_group_id))
             {
             update_usergroup_dash_tile_order($user_group_id, $tile['tile'], $order);
             }
@@ -669,7 +662,8 @@ function get_managed_dash()
         {
         $tile_custom_style = '';   
         $buildstring = explode('?', $tile['url']);
-        parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
+        list($url_page, $buildstring) = $buildstring;
+        parse_str(str_replace('&amp;', '&', $buildstring), $buildstring);
         if(isset($buildstring['tltype']) && allow_tile_colour_change($buildstring['tltype']) && isset($buildstring['tlstylecolour']))
             {
             $tile_custom_style .= get_tile_custom_style($buildstring);
@@ -711,7 +705,7 @@ function get_managed_dash()
                 <script>
                     height = jQuery("#contents_tile<?php echo escape($tile["tile"]);?>").height();
                     width = jQuery("#contents_tile<?php echo escape($tile["tile"]);?>").width();
-                    jQuery("#contents_tile<?php echo escape($tile["tile"]);?>").load("<?php echo $baseurl."/".$tile["url"]."&tile=".escape($tile["tile"]);?>&tlwidth="+width+"&tlheight="+height);
+                    jQuery("#contents_tile<?php echo escape($tile["tile"]);?>").load("<?php echo generateURL($baseurl .'/'. $url_page, array_merge($buildstring, ['tile' => $tile['tile']]));?>&tlwidth="+width+"&tlheight="+height);
                 </script>
             </div>
         </a>
@@ -1155,7 +1149,8 @@ function get_user_dash($user)
         $tile_custom_style = '';
 
         $buildstring = explode('?', $tile['url']);
-        parse_str(str_replace('&amp;', '&', ($buildstring[1]??"")), $buildstring);
+        list($url_page, $buildstring) = $buildstring;
+        parse_str(str_replace('&amp;', '&', $buildstring), $buildstring);
 
         if ($tile['all_users'] == 1 && strpos($tile['link'], 'team_analytics_edit.php') !== false)
             {
@@ -1203,7 +1198,7 @@ function get_user_dash($user)
                 jQuery(function(){
                     var height = jQuery("#contents_user_tile<?php echo escape($tile["user_tile"]);?>").height();
                     var width = jQuery("#contents_user_tile<?php echo escape($tile["user_tile"]);?>").width();
-                    jQuery('#contents_user_tile<?php echo escape($tile["user_tile"]) ?>').load("<?php echo $baseurl."/".$tile["url"]."&tile=".escape($tile["tile"]);?>&user_tile=<?php echo escape($tile["user_tile"]);?>&tlwidth="+width+"&tlheight="+height);
+                    jQuery('#contents_user_tile<?php echo escape($tile["user_tile"]) ?>').load("<?php echo generateURL($baseurl .'/'. $url_page, array_merge($buildstring, ['tile' => $tile['tile'], 'user_tile' => $tile['user_tile']]));?>&tlwidth="+width+"&tlheight="+height);
                 });
                 </script>
             </div>
@@ -1428,7 +1423,7 @@ function build_dash_tile_list($dtiles_available)
                   <?php 
                   if(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]!="custm" && $buildstring["tlstyle"]!="pend")
                       {$tile["txt"] = text($tile["title"]);}
-                  else if(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]=="pend")
+                  elseif(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]=="pend")
                       {
                     if(isset($lang[strtolower($tile['txt'])]))
                         {
@@ -2099,6 +2094,8 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
  */
 function get_dash_search_data($link='', $promimg=0)
     {    
+    global $search_all_workflow_states;
+
     $searchdata = [];
     $searchdata["count"] = 0;
     $searchdata["images"] = [];
@@ -2110,6 +2107,10 @@ function get_dash_search_data($link='', $promimg=0)
     $order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
     $archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
     $sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
+
+    if ($archive !== ""){
+        $search_all_workflow_states = false;
+    }
 
     $results= do_search($search,$restypes,$order_by,$archive,-1,$sort);    
     $imagecount = 0;
@@ -2167,14 +2168,7 @@ function can_edit_tile(int $tileref, int $audience, int $user)
         {
         // User is trying to edit a tile visible to only them.
         $result = ps_query("SELECT ref, user, dash_tile, order_by FROM user_dash_tile WHERE dash_tile = ? AND user = ?", ['i', $tileref, 'i', $user]);
-        if (isset($result[0]))
-            {
-            return true;
-            }
-        else
-            {
-            return false;
-            }
+        return isset($result[0]);
         }
     else
         {

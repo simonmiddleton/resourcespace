@@ -42,7 +42,7 @@ if(!validate_remote_code($code))
     echo 'Code setting a variable - ';
     return false;
     }
-else if($test1003_var === false)
+elseif($test1003_var === false)
     {
     echo 'Validation NOT affecting global scope variables - ';
     return false;

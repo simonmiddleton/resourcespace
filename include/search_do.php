@@ -96,94 +96,19 @@ function do_search(
         $sort='asc';
         }
 
-    // Used for collection sort order as sortorder is ASC, date is DESC
-    $revsort = (strtolower($sort) == 'desc') ? "asc" : " desc";
-
+   // Check the requested order_by is valid for this search. Function also allows plugin hooks to change this
     $orig_order=$order_by;
-
-    $order_by_date_sql_comma = ",";
-    $order_by_date = "r.ref $sort";
-    if(metadata_field_view_access($date_field))
-        {
-        $order_by_date_sql = "field{$date_field} {$sort}";
-        $order_by_date_sql_comma = ", {$order_by_date_sql}, ";
-        $order_by_date = "{$order_by_date_sql}, r.ref {$sort}";
-        }
-
-    # Check if order_by is empty string as this avoids 'relevance' default
-    if ($order_by === "") {$order_by="relevance";}
-
-    $order = array(
-        "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
-        "popularity"      => "user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
-        "rating"          => "r.rating $sort, user_rating $sort, score $sort, r.ref $sort",
-        "date"            => "$order_by_date, r.ref $sort",
-        "colour"          => "has_image $sort, image_blue $sort, image_green $sort, image_red $sort {$order_by_date_sql_comma} r.ref $sort",
-        "country"         => "country $sort, r.ref $sort",
-        "title"           => "title $sort, r.ref $sort",
-        "file_path"       => "file_path $sort, r.ref $sort",
-        "resourceid"      => "r.ref $sort",
-        "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",
-        "extension"       => "file_extension $sort, r.ref $sort",
-        "titleandcountry" => "title $sort, country $sort, r.ref $sort",
-        "random"          => "RAND()",
-        "status"          => "archive $sort, r.ref $sort",
-        "modified"        => "modified $sort, r.ref $sort"
-    );
-
-    // Add collection sort option only if searching a collection
-    if(substr($search, 0, 11) == '!collection')
-        {
-        $order["collection"] = "c.sortorder $sort,c.date_added $revsort,r.ref $sort";
-        }
-
-    # Check if date_field is being used as this will be needed in the inner select to be used in ordering
-    $include_fieldx=false;
-    if (isset($order_by_date_sql) && array_key_exists($order_by,$order) && strpos($order[$order_by],$order_by_date_sql)!==false)
-        {
-        $include_fieldx=true;
-        }
-
-    # Append order by field to the above array if absent and if named "fieldn" (where n is one or more digits)
-    if (!in_array($order_by,$order)&&(substr($order_by,0,5)=="field"))
-        {
-        if (!is_numeric(str_replace("field","",$order_by)))
-            {
-            exit("Order field incorrect.");
-            }
-        # If fieldx is being used this will be needed in the inner select to be used in ordering
-        $include_fieldx=true;
-        # Check for field type
-        $field_order_check=ps_value("SELECT field_constraint value FROM resource_type_field WHERE ref = ?",["i",str_replace("field","",$order_by)],"", "schema");
-        # Establish sort order (numeric or otherwise)
-        # Attach ref as a final key to foster stable result sets which should eliminate resequencing when moving <- and -> through resources (in view.php)
-        if ($field_order_check==1)
-            {
-            $order[$order_by]="$order_by +0 $sort,r.ref $sort";
-            }
-        else
-            {
-            $order[$order_by]="$order_by $sort,r.ref $sort";
-            }
-        }
+    $order_by = set_search_order_by($search, $order_by, $sort); 
 
     $archive=explode(",",$archive); // Allows for searching in more than one archive state
-
-    hook("modifyorderarray");
-
-    // ********************************************************************************
 
     // IMPORTANT!
     // add to this array in the format [AND group]=array(<list of nodes> to OR)
     $node_bucket=array();
-
     // add to this normal array to exclude nodes from entire search
     $node_bucket_not=array();
-
     // Take the current search URL and extract any nodes (putting into buckets) removing terms from $search
     resolve_given_nodes($search,$node_bucket,$node_bucket_not);
-
-    $order_by=(isset($order[$order_by]) ? $order[$order_by] : (substr($search, 0, 11) == '!collection' ? $order['collection'] : $order['relevance']));       // fail safe by falling back to default if not found
 
     $searchidmatch = false;
     // Used to check if ok to skip keyword due to a match with resource type/resource ID
@@ -302,7 +227,7 @@ function do_search(
         }
 
     # add 'joins' to select (only add fields if not returning the refs only)
-    $joins=$return_refs_only===false||$include_fieldx===true ? get_resource_table_joins() : array();
+    $joins=$return_refs_only===false|| $GLOBALS["include_fieldx"] === true ? get_resource_table_joins() : array();
     foreach($joins as $datajoin)
         {
         if(metadata_field_view_access($datajoin) || $datajoin == $GLOBALS["view_title_field"])
@@ -513,7 +438,7 @@ function do_search(
                                 array_push($sql_filter->parameters,"s","____-__-" . $keystring . "%");
                                 $c++;
                                 }
-                            else if('basicmonth' == $kw[0])
+                            elseif('basicmonth' == $kw[0])
                                 {
                                 $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "rdn" . $datefieldjoin . ".name like ? ";
                                 array_push($sql_filter->parameters,"s","____-" . $keystring . "%");
@@ -605,7 +530,7 @@ function do_search(
                         $keywordprocessed=true;
                         }
                     // Convert legacy fixed list field search to new format for nodes (@@NodeID)
-                    else if($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
+                    elseif($field_short_name_specified && !$ignore_filters && isset($fieldinfo['type']) && in_array($fieldinfo['type'], $FIXED_LIST_FIELD_TYPES))
                         {
                         // We've searched using a legacy format (ie. fieldShortName:keyword), try and convert it to @@NodeID
                         $field_nodes      = get_nodes($fieldinfo['ref'], null, false, true);
@@ -690,8 +615,21 @@ function do_search(
 
                                 # Keyword contains a wildcard. Expand.
                                 global $wildcard_expand_limit;
-                                $wildcards = ps_array("SELECT ref value FROM keyword WHERE keyword like ? ORDER BY hit_count DESC LIMIT " . (int)$wildcard_expand_limit,["s", str_replace("*", "%", $keyword)]);
-                                }
+                                
+                                $wildcard_sql = new PreparedStatementQuery ();
+                                $wildcard_sql->sql = 
+                                    "SELECT * FROM (SELECT ref value 
+                                        FROM keyword 
+                                        WHERE keyword LIKE ? 
+                                        ORDER BY hit_count DESC";
+                                if(isset($wildcard_expand_limit) && $wildcard_expand_limit>0)
+                                    {
+                                    $wildcard_sql->sql .= " LIMIT $wildcard_expand_limit ";
+                                    }
+                                $wildcard_sql->sql .= ") AS wildcard";
+                                $wildcard_sql->parameters = ["s", str_replace("*", "%", $keyword)];
+                                $wildcards = ps_array($wildcard_sql->sql,$wildcard_sql->parameters);
+                            }
 
                             $keyref = resolve_keyword(str_replace('*', '', $keyword),false,true,!$quoted_string); # Resolve keyword. Ignore any wildcards when resolving. We need wildcards to be present later but not here.
                             if ($keyref === false)
@@ -837,11 +775,23 @@ function do_search(
                                     }
 
                                 # Merge wildcard expansion with related keywords
-                                $related = array_merge($related, $wildcards);
+                                if (isset($wildcard_sql) && count($wildcards)>0) 
+                                    {
+                                    if (count($wildcards) > SYSTEM_DATABASE_IDS_CHUNK_SIZE)
+                                        {
+                                        $relatedsql->sql .= " OR nk[union_index].keyword IN (" . $wildcard_sql->sql . ")";
+                                        $relatedsql->parameters = array_merge($relatedsql->parameters,$wildcard_sql->parameters);
+                                        }
+                                    else
+                                        {
+                                        $relatedsql->sql .= " OR nk[union_index].keyword IN (" . ps_param_insert(count($wildcards)) . ")";
+                                        $relatedsql->parameters = array_merge($relatedsql->parameters,ps_param_fill($wildcards,'s'));
+                                        }
+                                    }
                                 if (count($related) > 0)
                                     {
-                                    $relatedsql->sql = " OR (nk[union_index].keyword IN (" . ps_param_insert(count($related)) . ")";
-                                    $relatedsql->parameters = ps_param_fill($related,"i");
+                                    $relatedsql->sql .= " OR (nk[union_index].keyword IN (" . ps_param_insert(count($related)) . ")";
+                                    $relatedsql->parameters = array_merge($relatedsql->parameters,ps_param_fill($related,"i"));
 
                                     if ($field_short_name_specified && isset($fieldinfo['ref']))
                                         {
@@ -1209,9 +1159,9 @@ function do_search(
     if(strlen(trim((string) $usersearchfilter)) > 0
         && !is_numeric($usersearchfilter)
         && (
-            (trim($userdata[0]["search_filter_override"]) != "" && $userdata[0]["search_filter_o_id"] != -1)
+            (trim((string) $userdata[0]["search_filter_override"]) != "" && $userdata[0]["search_filter_o_id"] != -1)
             ||
-            (trim($userdata[0]["search_filter"]) != "" && $userdata[0]["search_filter_id"] != -1)
+            (trim((string) $userdata[0]["search_filter"]) != "" && $userdata[0]["search_filter_id"] != -1)
             )
         )
         {

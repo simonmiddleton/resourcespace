@@ -28,6 +28,10 @@ if (getval("newuser","")!="" && !hook("replace_create_user_save") && enforcePost
         {
         $error=$lang["useralreadyexists"];
         }
+    elseif  ($new==-2)
+        {
+        $error=$lang["userlimitreached"];
+        }
     else
         {
         hook("afterusercreated");
@@ -214,7 +218,7 @@ include "../../include/header.php";
                 ["group"     => $group,
                 "order_by"  => $order_by,
                 "find"      =>$find],
-                ["per_page_list"=>$per_page]
+                ["per_page_list"=>99999]
             );
             ?>
             <a
@@ -223,7 +227,7 @@ include "../../include/header.php";
                 ><?php echo htmlspecialchars($lang["all"])?>
             </a><?php
             } ?>
-        </div></div> <?php pager(false); ?><div class="clearerleft"></div></div>
+        </div></div> <?php pager(false, true, ['url' => generateURL($baseurl_short . "pages/team/team_user.php", ["group" => $group, "order_by"  => $order_by, "find" =>$find]), 'per_page' => $per_page]); ?><div class="clearerleft"></div></div>
 
     <div class="Listview">
     <?php if(!hook('overrideuserlist')):
@@ -234,7 +238,7 @@ include "../../include/header.php";
 
         if ($order_by == $orderName)
             $image = '<span class="ASC"></span>';
-        else if ($order_by == $orderName . ' desc')
+        elseif ($order_by == $orderName . ' desc')
             $image = '<span class="DESC"></span>';
         else
             $image = '';

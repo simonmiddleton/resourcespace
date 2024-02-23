@@ -1654,7 +1654,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
             {
             $no_permission_fields[] = substr($permission_to_check, 2);
             }
-        else if (substr($permission_to_check, 0, 1) == "F")
+        elseif (substr($permission_to_check, 0, 1) == "F")
             {
             $no_permission_fields[] = substr($permission_to_check, 1);
             }
@@ -2128,7 +2128,7 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
 
     $returned_nodes=array();
     foreach($flatnodes as $flatnode) {
-        If ($allnodes || $flatnode['resource']!='') {
+        if ($allnodes || $flatnode['resource']!='') {
             $returned_nodes[$flatnode['ref']]=$flatnode;
         }
     }

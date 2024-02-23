@@ -553,7 +553,7 @@ function ProcessFolder($folder)
                                                 }
                                             }
                                         }
-                                    else if ($field == 'archive')
+                                    elseif ($field == 'archive')
                                         {
                                         # archive level is a special case
                                         # first determine if the value matches a defined archive level                                        
@@ -565,7 +565,7 @@ function ProcessFolder($folder)
                                             echo " - Will set archive level to " . $lang['status' . $value] . " ($archiveval)". PHP_EOL;
                                             }                                        
                                         }
-                                    else if ($field == 'resource_type')
+                                    elseif ($field == 'resource_type')
                                         {
                                         # first determine if the value matches a valid resource type                                        
                                         $value = $path_parts[$level-1];
