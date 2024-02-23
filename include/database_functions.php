@@ -1431,7 +1431,7 @@ function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
  */
 function db_chunk_id_list(array $refs): array
     {
-    $valid_ids = array_values(array_filter($refs, 'is_int_loose'));
+    $valid_ids = array_values(array_unique(array_filter($refs, 'is_int_loose')));
     return array_filter(
         count($valid_ids) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE
             ? [$valid_ids]
