@@ -180,14 +180,6 @@ if($system_download_config_force_obfuscation && !defined("SYSTEM_DOWNLOAD_CONFIG
 # End of remote config support
 # ---------------------------------------------------------------------------------------------
 
-// Set system to read only mode
-if(isset($system_read_only) && $system_read_only)
-    {
-    $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q,u,dtu,hdta";
-    $global_permissions="p";
-    $mysql_log_transactions=false;
-    $enable_collection_copy = false;
-    }
 if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
     {
     // Add X-Frame-Options to HTTP header, so that page cannot be shown in an iframe unless specifically set in config.
@@ -208,6 +200,16 @@ if (!isset($storageurl)) {$storageurl=$baseurl."/filestore";}
 // Reset prepared statement cache before reconnecting
 unset($prepared_statement_cache);
 sql_connect();
+
+// Set system to read only mode
+if(isset($system_read_only) && $system_read_only)
+    {
+    $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q,u,dtu,hdta";
+    $global_permissions_mask .= ',ert' . implode(',ert', array_column(get_all_resource_types(), 'ref'));
+    $global_permissions="p";
+    $mysql_log_transactions=false;
+    $enable_collection_copy = false;
+    }
 
 # Automatically set a HTTPS URL if running on the SSL port.
 if(isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"]==443)
