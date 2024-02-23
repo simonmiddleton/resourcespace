@@ -41,8 +41,6 @@ if(isset($iiif_sequence_prefix))
 
 $iiif = new IIIFRequest($iiif_options);
 
-$iiif_debug = getval("debug","")!="";
-
 $iiif_user = get_user($iiif_userid);
 if($iiif_user === false)
     {

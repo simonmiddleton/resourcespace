@@ -6,8 +6,6 @@ if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identif
     exit($lang["iiif_disabled"]);
     }
 
-$iiif_debug = getval("debug","")!="";
-
 $iiif_user = get_user($iiif_userid);
 if($iiif_user === false)
     {
@@ -477,32 +475,33 @@ else
                             {
                             if(isset($iiif_results[$n]["field" . $iiif_sequence_field]))
                                 {
-                                $position = $iiif_results[$n]["field" . $iiif_sequence_field];
+                                $sequenceid = $iiif_results[$n]["field" . $iiif_sequence_field];
                                 }
                             else
                                 {
-                                $position = get_data_by_field($iiif_results[$n]["ref"],$iiif_sequence_field);
+                                $sequenceid = get_data_by_field($iiif_results[$n]["ref"],$iiif_sequence_field);
                                 }
-                            $position_field=get_resource_type_field($iiif_sequence_field);
-                            $position_prefix = $position_field["name"] . " ";
+                            $sequence_field = get_resource_type_field($iiif_sequence_field);
+                            $sequence_prefix = $sequence_field["name"] . " ";
 
-                            if(!isset($position) || trim($position) == "")
+                            if(!isset($sequenceid) || trim($sequenceid) == "")
                                 {
                                 // Processing resources without a sequence position separately
-                                debug("iiif position empty for resource ref " . $iiif_results[$n]["ref"]);
+                                debug("IIIF: position empty for resource ref " . $iiif_results[$n]["ref"]);
                                 $iiif_results_without_position[] = $iiif_results[$n];
                                 continue;
                                 }
 
-                            debug("iiif position $position found in resource ref " . $iiif_results[$n]["ref"]);
-                            $iiif_results[$n]["iiif_position"] = $position;
+                            debug("IIIF: position $sequenceid found in resource ref " . $iiif_results[$n]["ref"]);
+                            $iiif_results[$n]["iiif_position"] = $sequenceid;
                             $iiif_results_with_position[] = $iiif_results[$n];
                             }
                         else
                             {
-                            $position = $n;
-                            debug("iiif position $position assigned to resource ref " . $iiif_results[$n]["ref"]);
-                            $iiif_results[$n]["iiif_position"] = $position;
+                            $sequenceid = $n;
+                            debug("IIIF: position $position assigned to resource ref " . $iiif_results[$n]["ref"]);
+                            $iiif_results[$n]["iiif_position"] = $sequenceid;
+                            $iiif_results_with_position[] = $iiif_results[$n];
                             }
                         }
 
@@ -518,6 +517,10 @@ else
                                 {
                                 return $a['iiif_position'] - $b['iiif_position'];
                                 }
+                            elseif(is_int_loose($a['iiif_position']) || is_int_loose($b['iiif_position']))
+                                {
+                                return is_int_loose($a['iiif_position']) ? 1 : -1; // Put strings before numbers
+                                }
                             return strcmp($a['iiif_position'],$b['iiif_position']);
                             });
 
@@ -530,13 +533,25 @@ else
                             }
 
                         $iiif_results = array_merge($iiif_results_with_position, $iiif_results_without_position);
-                        foreach ($iiif_results as $result_key => $result_val)
+
+                        $sorted_final = [];
+                        $maxid = 0;
+                        foreach ($iiif_results as $index => $resource)
                             {
                             # Update iiif_position after sorting using unique array key, removing potential user entered duplicates in sequence field.
                             # iiif_get_canvases() requires unique iiif_position values.
-                            $iiif_results[$result_key]['iiif_position'] = $result_key;
-                            debug("final iiif position $result_key given for resource ref " . $iiif_results[$result_key]["ref"]);
+                            $resourcepos = $resource['iiif_position'] ?? ($maxid + 1);
+                            while(isset($sorted_final[$resourcepos]))
+                                {                                
+                                $resourcepos++;
+                                }
+                        
+                            debug("IIIF: final position $index given for resource ref " . $resource["ref"] . " sequence id: " . $resourcepos);
+                            $sorted_final[$index] = $resource;
+                            $sorted_final[$index]["iiif_position"] = $resourcepos;
+                            $maxid = max((int) $resourcepos,$maxid);
                             }
+                        $iiif_results = $sorted_final;
                         }
 
                     if($xpath[1] == "manifest" || $xpath[1] == "")
@@ -589,7 +604,7 @@ else
                                 unset($def_lang);
                                 foreach($resnodes as $resnode)
                                     {
-                                    debug("iiif: translating " . $resnode["name"] . " from field '" . $iiif_data_row["title"] . "'");
+                                    debug("IIIF: translating " . $resnode["name"] . " from field '" . $iiif_data_row["title"] . "'");
                                     $node_langs = i18n_get_translations($resnode["name"]);
                                     $transcount=0;
                                     $defaulttrans = "";
@@ -598,11 +613,11 @@ else
                                         if(!isset($langentries[$nlang]))
                                             {
                                             // This is the first translated node entry for this language. If we already have translations copy the default language array to make sure no nodes with missing translations are lost
-                                            debug("iiif: Adding a new translation entry for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "'");
+                                            debug("IIIF: Adding a new translation entry for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "'");
                                             $langentries[$nlang] = isset($def_lang)?$def_lang:array();
                                             }
                                         // Add the node text to the array for this language;
-                                        debug("iiif: Adding node translation for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "': " . $nltext);
+                                        debug("IIIF: Adding node translation for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "': " . $nltext);
                                         $langentries[$nlang][] = $nltext;
                                         
                                         // Set default text for any translations
@@ -614,11 +629,11 @@ else
                                     // There may not be translations for all nodes, fill any arrays that don't have an entry with the untranslated versions
                                     foreach($langentries as $mdlang => $mdtrans)
                                         {
-                                        debug("iiif: enry count for " . $mdlang . ":" . count($mdtrans));
-                                        debug("iiif: node count: " . $nodecount);
+                                        debug("IIIF: entry count for " . $mdlang . ":" . count($mdtrans));
+                                        debug("IIIF: node count: " . $nodecount);
                                         if(count($mdtrans) != $nodecount)
                                             {
-                                            debug("iiif: No translation found for " . $mdlang . ". Adding default translation to language array for field '" . $iiif_data_row["title"] . "': " . $mdlang . ": " . $defaulttrans);
+                                            debug("IIIF: No translation found for " . $mdlang . ". Adding default translation to language array for field '" . $iiif_data_row["title"] . "': " . $mdlang . ": " . $defaulttrans);
                                             $langentries[$mdlang][] =  $defaulttrans;
                                             }
                                         }
@@ -626,7 +641,7 @@ else
                                     // To ensure that no nodes are lost due to missing translations,  
                                     // Save the default language array to make sure we include any untranslated nodes that may be missing when/if we find new languages for the next node
                                    
-                                    debug("iiif: Saving default language array for field '" . $iiif_data_row["title"] . "': " . implode(",",$langentries[$defaultlanguage]));
+                                    debug("IIIF: Saving default language array for field '" . $iiif_data_row["title"] . "': " . implode(",",$langentries[$defaultlanguage]));
                                     // Default language is the ideal, but if no default language entries for this node have been found copy the first language we have
                                     reset($langentries);
                                     $def_lang = isset($langentries[$defaultlanguage])?$langentries[$defaultlanguage]:$langentries[key($langentries)];
@@ -641,7 +656,7 @@ else
                                 $o=0;
                                 foreach($langentries as $mdlang => $mdtrans)
                                     {
-                                    debug("iiif: adding to metadata language array: " . $mdlang . ": " . implode(",",$mdtrans));
+                                    debug("IIIF: adding to metadata language array: " . $mdlang . ": " . implode(",",$mdtrans));
                                     $response["metadata"][$n]["value"][$o]["@value"] = implode(",",array_values($mdtrans));
                                     $response["metadata"][$n]["value"][$o]["@language"] = $mdlang;
                                     $o++;
@@ -684,8 +699,7 @@ else
                         $response["sequences"] = array();
                         $response["sequences"][0]["@id"] = $rooturl . $identifier . "/sequence/normal";
                         $response["sequences"][0]["@type"] = "sc:Sequence";
-                        $response["sequences"][0]["label"] = "Default order";
-                           
+                        $response["sequences"][0]["label"] = "Default order";                          
                                                 
                         $response["sequences"][0]["canvases"]  = iiif_get_canvases($identifier,$iiif_results,false);
                         $validrequest = true;   
@@ -719,18 +733,14 @@ else
                         $annotationid = $xpath[2]; 
                         
                         // Need to find the resourceid the annotation is linked to
-                        foreach($iiif_results as $iiif_result)
+                        if(isset($iiif_results[$annotationid]))
                             {
-                            if($iiif_result["iiif_position"] == $annotationid)
-                                {
-                                $resourceid = $iiif_result["ref"];
-                                $size_info = array(
-                                    'identifier' => (strtolower($iiif_result['file_extension']) != 'jpg') ? 'hpr' : '',
-                                    'return_height_width' => false,
-                                );
-                                $validrequest = true;
-                                break;
-                                }
+                            $resourceid = $iiif_results[$annotationid]["ref"];
+                            $size_info = array(
+                                'identifier' => (strtolower($iiif_results[$annotationid]['file_extension']) != 'jpg') ? 'hpr' : '',
+                                'return_height_width' => false,
+                            );
+                            $validrequest = true;                                
                             }
                         if($validrequest)
                             {
@@ -743,7 +753,7 @@ else
                             }
                         else
                             {
-                            $errors[] = "Invalid annotation identifier: " . $identifier;
+                            $errors[] = "Invalid annotation identifier: " . $annotationid;
                             iiif_error(404,$errors);
                             }
                         }
