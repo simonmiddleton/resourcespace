@@ -2178,11 +2178,17 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
             // time to build the command
-            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array(strtolower($extension), $preview_no_flatten_extensions) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
+            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0] -quiet -depth ' . $imagemagick_mpr_depth;
             if(!$unique_flatten)
                 {
-                $command.=($command_parts[0]['flatten'] ? " -flatten " : "");
+                $command.=($command_parts[0]['flatten'] ? " $flatten " : "");
                 }
+
+             if (!in_array(strtolower($extension), $preview_keep_alpha_extensions))
+                {
+                $command .= " $alphaoff ";
+                }
+
              if(!$unique_strip_source)
                 {
                 $command.=($command_parts[0]['strip_source'] ? " -strip " : "");
