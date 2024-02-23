@@ -63,18 +63,28 @@ function create_dash_tile($url,$link,$title,$reload_interval,$all_users,$default
         }
     else
         {
-        $result = ps_query("INSERT INTO dash_tile (url,link,title,reload_interval_secs,all_users,default_order_by,resource_count,allow_delete,txt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                            [
-                            's', $url,
-                            's', $link,
-                            's', $title,
-                            'i', $reload_interval,
-                            'i', $all_users,
-                            'i', $default_order_by,
-                            'i', $resource_count,
-                            'i', $delete,
-                            's', $text
-                            ]);
+        ps_query(
+            "INSERT INTO dash_tile
+                (url,
+                    link,
+                    title,
+                    reload_interval_secs,
+                    all_users,
+                    default_order_by,
+                    resource_count,
+                    allow_delete,txt)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+            's', $url,
+            's', $link,
+            's', $title,
+            'i', $reload_interval,
+            'i', $all_users,
+            'i', $default_order_by,
+            'i', $resource_count,
+            'i', $delete,
+            's', $text
+            ]);
         $tile=sql_insert_id();
 
         foreach($specific_user_groups as $user_group_id)
@@ -230,7 +240,7 @@ function reorder_default_dash()
     $order_by=10 * count($tiles);
     for($i=count($tiles)-1;$i>=0;$i--)
         {
-        $result = update_default_dash_tile_order($tiles[$i]["ref"],$order_by);
+        update_default_dash_tile_order($tiles[$i]["ref"],$order_by);
         $order_by-=10;
         }
     }
@@ -739,10 +749,19 @@ function add_usergroup_dash_tile($usergroup, $tile, $default_order_by)
         $reorder          = false;
         }
 
-    $existing = ps_query("SELECT ref, usergroup, dash_tile, default_order_by, order_by FROM usergroup_dash_tile WHERE usergroup = ? AND dash_tile = ?", ['i', $usergroup, 'i', $tile]);
+    $existing = ps_query(
+        "SELECT ref, usergroup, dash_tile, default_order_by, order_by
+            FROM usergroup_dash_tile
+            WHERE usergroup = ? AND dash_tile = ?",
+        ['i', $usergroup, 'i', $tile]
+    );
     if(!$existing)
         {
-        $result = ps_query("INSERT INTO usergroup_dash_tile (usergroup, dash_tile, default_order_by) VALUES (?, ?, ?)", ['i', $usergroup, 'i', $tile, 'i', $default_order_by]);
+        ps_query(
+            "INSERT INTO usergroup_dash_tile (usergroup, dash_tile, default_order_by)
+            VALUES (?, ?, ?)",
+            ['i', $usergroup, 'i', $tile, 'i', $default_order_by]
+        );
         }
     else
         {
@@ -1964,13 +1983,6 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
 
     $tile_style = $tile_meta['tlstyle'];
 
-    $search_string = explode('?',$tile["link"]);
-    parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
-    $search = isset($search_string["search"]) ? $search_string["search"] :"";
-    $restypes = isset($search_string["restypes"]) ? $search_string["restypes"] : "";
-    $order_by= isset($search_string["order_by"]) ? $search_string["order_by"] : "";
-    $archive = isset($search_string["archive"]) ? $search_string["archive"] : "";
-    $sort = isset($search_string["sort"]) ? $search_string["sort"] : "";
     ?>
     <!-- Resource counter -->
     <p class="no_resources DisplayNone"><?php echo htmlspecialchars($GLOBALS['lang']['noresourcesfound']); ?></p>

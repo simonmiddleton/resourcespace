@@ -1652,7 +1652,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
     global $regexp_slash_replace, $migrate_data, $onload_message, $lang, $baseurl;
 
     $existingfield = get_resource_type_field($ref);
-    $params= $syncparams = [];
+    $params = [];
 
     $resource_types=get_resource_types("",true,false,true);
 

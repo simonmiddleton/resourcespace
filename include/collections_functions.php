@@ -437,7 +437,7 @@ function add_resource_to_collection(
             $expiry_dates=ps_array("SELECT DISTINCT expires value FROM external_access_keys WHERE collection = ?",["i",$collection]);
             $datetime=time();
             $collection_share_warning=true;
-            foreach($expiry_dates as $key => $date)
+            foreach($expiry_dates as $date)
                 {
                 if($date!="" && $date<$datetime){$collection_share_warning=false;}
                 }
@@ -1239,10 +1239,8 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
     $result=array();
     
     # Recognise a quoted search, which is a search for an exact string
-    $quoted_string=false;
     if (substr($search,0,1)=="\"" && substr($search,-1,1)=="\"") 
         {
-        $quoted_string=true;
         $search=substr($search,1,-1);
         }
 
@@ -1258,6 +1256,9 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
         # Same search as when searching within public collections.
         $collections=search_public_collections($search,"name","ASC",!$search_includes_themes_now,true,false,$fetchrows);
         
+        
+        $condensedcollectionsresults=array();
+
         $condensedcollectionsresults=array();
         $result=$collections;
         }
@@ -2118,7 +2119,6 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         }
         
     ##  loop through recipients
-    $themeurl = "";
     for ($nx1=0;$nx1<count($emails);$nx1++)
         {
         ## loop through collections
@@ -3080,8 +3080,6 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
     while(!$queue->isEmpty())
         {
         $fc = $queue->dequeue();
-
-        $fc_parent = ($all_fcs[$fc]['parent'] > 0 ? $all_fcs[$fc]['parent'] : 0);
         $fc_children = array();
 
         if(
@@ -3658,7 +3656,6 @@ function collection_max_access($collection)
         }
     for ($n=0;$n<count($result);$n++)
         {
-        $ref=$result[$n]["ref"];
         # Load access level
         $access=get_resource_access($result[$n]);
         if ($access<$maxaccess) {$maxaccess=$access;}
@@ -4525,7 +4522,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             $user_mycollection=ps_value("select ref value from collection where user=? and name='Default Collection' order by ref limit 1",array("i",$userref),"");
             // check that this collection is not hidden. use first in alphabetical order otherwise
             if(in_array($user_mycollection,$hidden_collections)){
-                $hidden_collections_list=implode(",",array_filter($hidden_collections));
                 $sql="select ref value from collection where user=?";
                 $params=array("i",$userref);
                 if (count($hidden_collections)>0)
@@ -4737,9 +4733,6 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
             $pextension = $pathparts['extension'];
             }
         }
-
-    if ($usesize!=""&&!$subbed_original){$append="-".$usesize;}else {$append="";}
-    $basename_minus_extension=remove_extension($pathparts['basename']);
 
     $fs=explode("/",$filename);
     $filename=$fs[count($fs)-1]; 
@@ -5069,17 +5062,6 @@ function collection_download_process_summary_notes(
  */
 function collection_download_process_csv_metadata_file(array $result, $id, $collection, $collection_download_tar, $use_zip_extension, &$zip, &$path, array &$deletion_array)
     {
-    // Create the CSV filename.
-    $hook_filename = hook('collectiondownloadcsvfilename');
-    if($hook_filename == false)
-        {
-        $csv_filename = '/Col-' . $collection . '-metadata-export.csv';
-        }
-    else
-        {
-        $csv_filename = $hook_filename;
-        }
-
     // Include the CSV file with the metadata of the resources found in this collection
     $csv_file    = get_temp_dir(false, $id) . '/Col-' . $collection . '-metadata-export.csv';
         if(isset($result[0]["ref"]))
@@ -5193,7 +5175,7 @@ function collection_download_process_archive_command($collection_download_tar, &
         $GLOBALS["use_error_exception"]=true;
         try
             {
-            $wait=$zip->close();
+            $zip->close();
             }
         catch (Throwable $e)
             {
@@ -5215,7 +5197,7 @@ function collection_download_process_archive_command($collection_download_tar, &
     elseif ($archiver)
         {
         update_zip_progress_file("zipping");
-        $wait=run_command($archiver_fullpath . " " . $collection_download_settings[$settings_id]["arguments"] . " " . escapeshellarg($zipfile) . " " . $archiver_listfile_argument . escapeshellarg($cmdfile));
+        run_command($archiver_fullpath . " " . $collection_download_settings[$settings_id]["arguments"] . " " . escapeshellarg($zipfile) . " " . $archiver_listfile_argument . escapeshellarg($cmdfile));
         update_zip_progress_file("complete");
         }
     elseif (!$use_zip_extension)
@@ -5224,12 +5206,12 @@ function collection_download_process_archive_command($collection_download_tar, &
         if ($config_windows)
             # Add the command file, containing the filenames, as an argument.
             {
-            $wait=exec("$zipcommand " . escapeshellarg($zipfile) . " @" . escapeshellarg($cmdfile));
+            exec("$zipcommand " . escapeshellarg($zipfile) . " @" . escapeshellarg($cmdfile));
             }
         else
             {
             # Pipe the command file, containing the filenames, to the executable.
-            $wait=exec("$zipcommand " . escapeshellarg($zipfile) . " -@ < " . escapeshellarg($cmdfile));
+            exec("$zipcommand " . escapeshellarg($zipfile) . " -@ < " . escapeshellarg($cmdfile));
             }
             update_zip_progress_file("complete");
         }
@@ -5988,10 +5970,6 @@ function move_featured_collection_branch_path_root(array $branch_path)
         if($fc_root_col_position !== false)
             {
             $branch_path = array_slice($branch_path, ++$fc_root_col_position);
-            if(empty($branch_path))
-                {
-                $links_trail = [];
-                }
             }
         }
 
@@ -6661,7 +6639,6 @@ function upload_share_setup(string $key,$shareopts = array())
 
     emulate_user((int) $shareopts['user'], $usergroup);
     $upload_share_active = upload_share_active();
-    $rs_session = get_rs_session_id(true);
     $upload_then_edit = true;
     
     if(!$upload_share_active || $upload_share_active != $collection)
