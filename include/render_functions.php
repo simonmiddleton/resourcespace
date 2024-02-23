@@ -6731,7 +6731,6 @@ function add_download_column($ref, $size_info, $downloadthissize, $view_in_brows
  * @param array  $context   Array with following named elements
  *                              "access"    - Resource access 
  *                              "edit_access" - Resource edit access 
- *                              "previewcaption" - Caption field data for preview image
  * 
  * @return void
  * 
@@ -6744,7 +6743,6 @@ function render_resource_view_image(array $resource, array $context)
     $use_watermark = check_use_watermark();
     $access = $context["access"] ?? 1; // Default to restricted
     $edit_access = $context["edit_access"] ?? 0;
-    $previewcaption = $context["previewcaption"] ?? [];
 
     // Set the preview sizes to look for. Access will be checked by get_resource_preview()
     // Retina mode uses 'scr' size
@@ -6810,14 +6808,6 @@ function render_resource_view_image(array $resource, array $context)
 
     <?php
     hook('aftersearchimg', '', array($resource["ref"]));
-    if (count($previewcaption) > 0)
-        {
-        ?>
-        <div class="clearerleft"></div>
-        <?php
-        display_field_data($previewcaption, true, $image_width);
-        }
-
     hook('previewextras'); ?>
         
     </div>

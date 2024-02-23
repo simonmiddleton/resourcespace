@@ -1489,11 +1489,6 @@ $enable_find_similar=true;
 #Bypass share.php and go straight to e-mail
 $bypass_share_screen = false;
 
-#  Link back to collections from log page - if "" then link is ignored.
-#  suggest 
-# $back_to_collections_link = "&lt;&lt;-- Back to My Collections &lt;&lt;--";
-$back_to_collections_link = "";
-
 # For fields with partial keyword indexing enabled, this determines the minimum infix length
 $partial_index_min_word_length=3;
 
@@ -2478,10 +2473,6 @@ $resource_contact_link=false;
 # Hide Welcome Text
 $no_welcometext = false;
 
-#Show a specified metadata field below the resource preview image on the view page. Useful for photo captions. 
-#$display_field_below_preview=18;
-
-
 # Optional setting to override the default $email_notify address for resource request email notifications, applies to specified resource types
 # e.g. for photo (resource type 1 by default)
 # $resource_type_request_emails[1]="imageadministrator@my.site"; 
@@ -2530,9 +2521,6 @@ $related_type_upload_link=true;
 
 # Array of preview sizes to always create. This is especially helpful if your preview size is small than the "thm" size.
 $always_make_previews=array();
-
-#Display User Ref on the User Edit Page in the header? Example Output: Edit User 12
-$display_useredit_ref=false;
 
 # Basic option to visually hide resource types when searching and uploading
 # Note: these resource types will still be available (subject to filtering)

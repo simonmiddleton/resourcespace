@@ -333,28 +333,6 @@ $lock_details = get_resource_lock_message($resource["lock_user"]);
 
 if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
-//Check if we want to use a specified field as a caption below the preview
-if(isset($display_field_below_preview) && is_int($display_field_below_preview))
-    {
-    $df=0;
-    foreach ($fields as $field)
-        {
-        if($field["fref"]==$display_field_below_preview)
-            {
-            $displaycondition=check_view_display_condition($fields,$df,$fields_all);
-            if($displaycondition)
-                {
-                $previewcaption=$fields[$df];
-                // Remove from the array so we don't display it twice
-                unset($fields[$df]);
-                //Reorder array 
-                $fields=array_values($fields);              
-                }
-            }
-        $df++;          
-        }
-    }
-
 ?>
 <script>
     var resource_lock_status = <?php echo (int)$resource_locked ?>;
@@ -701,10 +679,7 @@ if(isset($display_field_below_preview) && is_int($display_field_below_preview))
                                             {
                                             include "video_player.php";
                                             }
-                                        if(isset($previewcaption))
-                                            {				
-                                            display_field_data($previewcaption, true);
-                                            } ?>
+                                        ?>
                                     </div>
                                     <?php
                                     }
@@ -727,11 +702,7 @@ if(isset($display_field_below_preview) && is_int($display_field_below_preview))
                                     }
     
                                 include "mp3_play.php";
-    
-                                if(isset($previewcaption))
-                                    {				
-                                    display_field_data($previewcaption, true);
-                                    } ?>
+                                ?>
                                 </div>
                                 <?php
                                 // MP3 preview END 
@@ -741,7 +712,6 @@ if(isset($display_field_below_preview) && is_int($display_field_below_preview))
                                 render_resource_view_image($resource,[
                                     "access"=>$access,
                                     "edit_access"=>$edit_access,
-                                    "previewcaption"=>$previewcaption ?? [],
                                     ]
                                     );
                                 }
@@ -755,7 +725,6 @@ if(isset($display_field_below_preview) && is_int($display_field_below_preview))
                                     render_resource_view_image($pullresource,[
                                         "access"=>$pull_access,
                                         "edit_access"=>0, // No ability to modify e.g. annotations
-                                        "previewcaption"=>$previewcaption ?? [],
                                         ]
                                         );
                                     }
@@ -769,15 +738,6 @@ if(isset($display_field_below_preview) && is_int($display_field_below_preview))
                                             id="previewimage" />
                                         <?php
                                         hook('aftersearchimg', '', array($ref));
-                                        if(isset($previewcaption))
-                                            {
-                                            ?>
-                                            <div class="clearerleft"></div>
-                                            <?php
-                                            display_field_data($previewcaption, true);
-                                            }
-
-
                                         hook("previewextras");
                                         ?>
                                     </div>

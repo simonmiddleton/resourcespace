@@ -226,11 +226,7 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
             $pagetitle=$lang["userlog"] . ": " . $userdata["fullname"];
         }
         elseif($pagename=="team_user_edit"){
-            global $userdata,$display_useredit_ref;
-            $pagetitle=$lang["edituser"];
-            if($display_useredit_ref){
-                $pagetitle.=" ".$ref;
-            }
+            $pagetitle = $lang["edituser"];
         }
         elseif($pagename=="admin_content_edit"){
             $pagetitle=$lang["editcontent"];

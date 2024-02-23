@@ -130,24 +130,21 @@ if(getval('loginas', '') != '')
 
 <?php
 // Breadcrumbs links
-global $display_useredit_ref;
-$links_trail = array(
-    array(
+renderBreadcrumbs([
+    [
         'title' => $lang["teamcentre"],
         'href'  => $baseurl_short . "pages/team/team_home.php",
         'menu' =>  true
-    ),
-    array(
+    ],
+    [
         'title' => $lang["manageusers"],
         'href'  => $baseurl_short . "pages/team/team_user.php"
-    ),
-    array(
-        'title' => $lang["edituser"] . ($display_useredit_ref ? " " . $ref : ""),
+    ],
+    [
+        'title' => $lang["edituser"],
         'help' => 'systemadmin/creating-users'
-    )
-);
-
-renderBreadcrumbs($links_trail);
+    ]
+]);
 ?>
 
 </div>
@@ -180,6 +177,12 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 
     <div class="clearerleft"> </div>
 <?php } ?>
+
+<div class="Question">
+    <label for="reference"><?php echo escape($lang["property-reference"]); ?></label>
+    <div class="Fixed"><?php echo escape($ref); ?></div>
+    <div class="clearerleft"></div>
+</div>
 
 <div class="Question" ><label><?php echo htmlspecialchars($lang["username"])?></label><input id="user_edit_username" name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
 
