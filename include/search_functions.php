@@ -2873,7 +2873,7 @@ function save_filter($filter,$filter_name,$filter_condition)
         }
     else
         {
-        $newfilter = ps_query("INSERT INTO filter (name, filter_condition) VALUES (?,?)",array("s",$filter_name,"s",$filter_condition));
+        ps_query("INSERT INTO filter (name, filter_condition) VALUES (?,?)",array("s",$filter_name,"s",$filter_condition));
         $newfilter = sql_insert_id();
         return $newfilter;
         }

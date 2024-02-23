@@ -154,7 +154,6 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
             $imagesize=getimagesize($imgpath);
             
             $whratio=$imagesize[0]/$imagesize[1];
-            $hwratio=$imagesize[1]/$imagesize[0];
     
             if ($whratio<1){
             $imageheight=$height-4; // vertical images can take up half the page

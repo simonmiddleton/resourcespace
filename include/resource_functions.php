@@ -1870,8 +1870,6 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
                     if(count($added_nodes)>0 || count($removed_nodes)>0)
                         {
-                        $new_nodes = array_diff(array_merge($current_field_nodes, $added_nodes), $removed_nodes);
-
                         $log_node_updates[$ref][] = [
                             'from'  => $current_field_nodes,
                             'to'    => $daterangenodes,
@@ -2503,7 +2501,6 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
         $save_message->append_text("<div>");
         foreach($save_warnings as $save_warning)
             {
-            $field = get_resource_type_field($save_warning["Field"]);
             $save_message->append_text("<div><strong>" . $lang["resourceid"] . ": <a href ='" . $baseurl . "/?r=" . $save_warning["Resource"] . "' target='_blank'>" . $save_warning["Resource"] . "</a></strong><br/><strong>" . $lang["field"] . ": </strong>" . $save_warning["Field"] . "<br /><strong>" . $lang["error"] . ": </strong>" . $save_warning["Message"] . "</div><br />");
             }
         $save_message->append_text("</div>");
@@ -2924,7 +2921,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         if ($curnode > 0 && get_nodes_use_count([$curnode]) == 1)
             {
             // Reuse same node
-            $savenode = set_node($curnode,$field,$value,null,0);
+            set_node($curnode,$field,$value,null,0);
             }
         else
             {

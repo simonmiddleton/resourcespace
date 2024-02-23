@@ -525,7 +525,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 {
                 // For category trees user must be using the same language as the CSV
                 $currentoptions = array();
-                $field_nodes   = $allfields[$fieldid]["nodes"];
                 $node_options = $allfields[$fieldid]["node_options"];
                 $node_trans_arr[$fieldid] = array();
                 foreach($node_options as $noderef => $nodestring)
@@ -538,8 +537,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             elseif (in_array($field_type,$FIXED_LIST_FIELD_TYPES))
                 {
                 // Get all current field options, including translations
-                
-                $field_nodes   = $allfields[$fieldid]["nodes"];
                 $node_options = $allfields[$fieldid]["node_options"];
                 $currentoptions = $allfields[$fieldid]["current_options"];
                 }
@@ -716,7 +713,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
                         if($cell_value == "")
                             {
-                            $nodes_to_remove = $current_field_nodes;
                             break;
                             }
                         if(strpos($cell_value,",") !== false)
@@ -733,7 +729,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                         $daterangeendnode   = set_node(null, $fieldid, isset($rangedates[1])? $rangedates[1] : "", null, null);
 
                         // get latest list of nodes, in case new nodes added with set_node() above
-                        $field_nodes   = $allfields[$fieldid]["nodes"];
                         $node_options = $allfields[$fieldid]["node_options"];
 
                         $node_trans_arr[$fieldid][$daterangestartnode]  = $rangedates[0];

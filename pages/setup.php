@@ -40,7 +40,6 @@ function get_post_bool($key){
  */
 
 function sslash($data){ 
-    $stripped = rtrim($data);
     $stripped = rtrim($data, '/');
     return $stripped;
 }

@@ -2734,13 +2734,6 @@ function add_sql_node_language(&$sql_select,&$sql_params,string $alias = "node")
     {
     global $language,$defaultlanguage;
 
-    $asdefaultlanguage=$defaultlanguage;
-
-    if (!isset($asdefaultlanguage))
-        {
-        $asdefaultlanguage='en';
-        }
-
     // Use language specified, if not use default
     isset($language) ? $language_in_use = $language : $language_in_use = $defaultlanguage;
 

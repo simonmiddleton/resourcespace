@@ -455,7 +455,6 @@ function do_search(
                         elseif (count($datefieldinfo) && substr($keystring,0,5)=="range")
                             {
                             $c++;
-                            $rangefield=$datefieldinfo[0]["ref"];
                             $rangestring=substr($keystring,5);
                             if (strpos($rangestring,"start")!==false )
                                 {
@@ -488,7 +487,6 @@ function do_search(
                         {
                         // Text field numrange search ie mynumberfield:numrange1|1234 indicates that mynumberfield needs a numrange search for 1 to 1234.
                         $c++;
-                        $rangefield=$fieldname;
                         $rangefieldinfo=ps_query("SELECT ref FROM resource_type_field WHERE name = ? AND type IN (0)", ["s",$fieldname], "schema");
                         $rangefieldinfo=$rangefieldinfo[0];
                         $rangefield=$rangefieldinfo["ref"];

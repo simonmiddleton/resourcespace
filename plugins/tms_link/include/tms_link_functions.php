@@ -280,7 +280,6 @@ function tms_add_mediaxref($mediamasterid,$tms_object_id,$create=true)
 
   if(!$mediaxrefresult)
     {
-    $errormessage=odbc_errormsg();
     return false;
     }
   $mediaxrefs=array();
@@ -708,7 +707,6 @@ function tms_add_mediafile($renditionid,$pathid,$filepath,$relfilepath,$create=t
 
   if(!$mediafileresult)
     {
-    $errormessage=odbc_errormsg();
     return false;
     }
   $mediafileids=array();

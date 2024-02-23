@@ -540,7 +540,6 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             # -------- Show a check list or dropdown for dropdowns and check lists?
             # By default show a checkbox list for both (for multiple selections this enabled OR functionality)
 
-            $setnames  = trim_array(explode(";",cleanse_string($value,true)));
             # Translate all options
             $adjusted_dropdownoptions=hook("adjustdropdownoptions");
             if ($adjusted_dropdownoptions){$options=$adjusted_dropdownoptions;}
@@ -774,7 +773,6 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         global $category_tree_add_parents, $category_tree_search_use_and;
 
         $set  = preg_split('/[;\|]/', cleanse_string($value, true));
-        $name = "nodes_searched[{$field['ref']}][]";
 
         /*
         For search, category trees work slightly different than the intended behaviour shown in edit_fields/7.php:
@@ -889,7 +887,6 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             $edit_autosave           = false;
             $display_as_radiobuttons = false;
             $display_as_checkbox     = true;
-            $name                    = "nodes_searched[{$field['ref']}][]";
 
             if($forsearchbar || $field['display_as_dropdown'])
                 {
@@ -2158,18 +2155,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
-            $name = "nodes[{$field['ref']}]";
-
-            // Sometimes we need to pass multiple options
-            if(in_array($field['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE)))
-                {
-                $name = "nodes[{$field['ref']}][]";
-                }
-            elseif(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
-                {
-                $name = "field_{$field['ref']}";
-                }
-
             $field_nodes = array();
             foreach($selected_nodes as $selected_node)
                 {
@@ -5985,7 +5970,6 @@ function display_related_resources($context)
     $k                          =  $context["k"] ?? "";
     $userref                    =  $context["userref"] ?? 0;
     $arr_related                =  $context["relatedresources"] ?? [];
-    $relatedtypes_shown         =  $context["related_types_shown"] ?? [];
     $internal_share_access      =  $context["internal_share_access"] ?? false;
     $related_restypes           =  $context["related_restypes"] ?? [];
     $relatedtypes_shown         =  $context["relatedtypes_shown"] ?? [];

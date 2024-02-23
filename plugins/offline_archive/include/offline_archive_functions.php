@@ -198,7 +198,6 @@ function offline_archive_run_jobs($showoutput = false)
                 else
                     {
                     $restorefile=get_resource_path($ref,true,"",false,$extension);
-                    $restoredir=dirname($restorefile);
                     $archivedir=$GLOBALS["offline_archive_archivepath"] . "/" . $archivecode;
                     }
                 $filename=basename($restorefile);

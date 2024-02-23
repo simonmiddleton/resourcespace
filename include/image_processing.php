@@ -3124,7 +3124,6 @@ function AutoRotateImage($src_image, $ref = false)
             $command = $convert_fullpath . ' ' . escapeshellarg($src_image) . ' -rotate +' . $orientation . ' ' . escapeshellarg($new_image);
             $output=run_command($command);
             }
-        $command = $exiftool_fullpath . ' Orientation=1 ' . escapeshellarg($new_image);
         } 
     else
         {
@@ -3139,9 +3138,6 @@ function AutoRotateImage($src_image, $ref = false)
                 {
                 $command = $convert_fullpath . ' -rotate +' . $orientation . ' ' . escapeshellarg($src_image) . ' ' . escapeshellarg($new_image);
                 $output=run_command($command);
-
-                # change the orientation metadata
-                $command = $exiftool_fullpath . ' -Orientation=1 ' . escapeshellarg($new_image);
                 }
             } 
         else

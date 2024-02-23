@@ -2854,7 +2854,6 @@ function get_featured_collection_resources(array $c, array $ctx)
 
     $limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? (int) $ctx["limit"] : null);
     $use_thumbnail_selection_method = (isset($ctx["use_thumbnail_selection_method"]) ? (bool) $ctx["use_thumbnail_selection_method"] : false);
-    $all_fcs = (isset($ctx["all_fcs"]) && is_array($ctx["all_fcs"]) ? $ctx["all_fcs"] : array());
 
     // Smart FCs
     if(isset($ctx["smart"]) && $ctx["smart"] === true)
@@ -3941,7 +3940,7 @@ function show_hide_collection($colref, $show=true, $user="")
     else
         {
         debug("Hiding collection " . $colref . " from user " . $user);
-        if(($key = array_search($colref, $hidden_collections)) === false) 
+        if(array_search($colref, $hidden_collections) === false) 
             {
             $hidden_collections[]=$colref;
             }

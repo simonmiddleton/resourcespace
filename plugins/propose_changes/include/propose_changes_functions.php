@@ -78,9 +78,7 @@ function save_proposed_changes($ref)
                         $rangeendyear=$rangeendparts[0];
                         $rangeendmonth=isset($rangeendparts[1])?$rangeendparts[1]:12;
                         $rangeendday=isset($rangeendparts[2])?$rangeendparts[2]:cal_days_in_month(CAL_GREGORIAN, $rangeendmonth, $rangeendyear);
-                        $rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;
-                        
-                        $val = $rangestart . ", " . $rangeend;
+                        $rangeend=$rangeendyear . "-" . $rangeendmonth . "-" . $rangeendday;              
                         }
                     else
                         {
@@ -367,13 +365,6 @@ function propose_changes_display_field($n, $field)
         <?php
         }
 
-    if ($multilingual_text_fields)
-        {
-        # Multilingual text fields - find all translations and display the translation for the current language.
-        $translations=i18n_get_translations($value);
-        if (array_key_exists($language,$translations)) {$value=$translations[$language];} else {$value="";}
-        }
-
     ?>
     <div class="Question ProposeChangesQuestion" id="question_<?php echo $n?>">
     <div class="Label ProposeChangesLabel" ><?php echo htmlspecialchars($field["title"])?></div>
@@ -457,12 +448,6 @@ function propose_changes_display_field($n, $field)
                 $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
                 }
             }
-        elseif ($field["type"]==FIELD_TYPE_DATE_RANGE)
-            {
-            $rangedates = explode(",",$value);
-            natsort($rangedates);
-            $value=implode(",",$rangedates);
-            }
 
         $is_search = false;
 
@@ -499,6 +484,7 @@ function propose_changes_display_field($n, $field)
     # If enabled, include code to produce extra fields to allow multilingual free text to be entered.
     if ($multilingual_text_fields && ($field["type"]==0 || $field["type"]==1 || $field["type"]==5))
         {
+        $translations=i18n_get_translations($value);
         propose_changes_display_multilingual_text_field($n, $field, $translations);
         }
     ?>
