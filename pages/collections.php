@@ -916,126 +916,156 @@ else
     }       
 
     # Display thumbnails for standard display
-    if ($count_result>0) 
-    {
+    if ($count_result>0) {
         # Loop through resources for thumbnails for standard display
-        for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++)                  
-            {
+        for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++) {
             if (!isset($result[$n])) {
-                    continue;
-                }
+                continue;
+            }
             $ref=$result[$n]["ref"];
             $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
-            ?>
-    <?php 
-    if (!hook("resourceview")) 
-        { ?>
-        <!--Resource Panel-->
-        <div class="CollectionPanelShell ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
-        <?php if (in_array($ref,$addarray)) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
 
-        <?php if (!hook("rendercollectionthumb")){?>
-        <?php
+            if (!hook("resourceview")) {
+                ?><!--Resource Panel-->
+                <div class="CollectionPanelShell ResourceType<?php echo (int) $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo urlencode($ref) ?>"
+                <?php if (in_array($ref,$addarray)) { ?>style="display:none;"<?php } # Hide new items by default then animate open ?>>
 
-        if (isset($result[$n]["access"]) && $result[$n]["access"]==0 && !checkperm("g") && !$internal_share_access)
-            {
-            # Resource access is open but user does not have the 'g' permission. Set access to restricted. If they have been granted specific access this will be added next
-            $result[$n]["access"]=1; 
-            }
-        $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
-        $use_watermark=check_use_watermark();?>
-        <table border="0" class="CollectionResourceAlign"><tr><td>
-                <a style="position:relative;" onclick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&k=<?php echo urlencode($k)?>&curpos=<?php echo $n ?>">
                 <?php
-                $colimg_preview_size = $retina_mode ? 'thm' : 'col';
-                if(
-                    1 == $result[$n]['has_image']
-                    && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $colimg_preview_size)
-                    && file_exists(get_resource_path($ref, true, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
-                )
-                    {
-                    $colimgpath = get_resource_path($ref, false, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
-                    ?>
-                    <img class="CollectionPanelThumb" border=0 src="<?php echo $colimgpath; ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>" alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
-                    <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?> /><?php
-                    }
-                else
-                        {?>
-                        <img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-                        border=0 src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>" />
-                        <?php
+                if (!hook("rendercollectionthumb")) {
+
+                    if (isset($result[$n]["access"]) && $result[$n]["access"]==0 && !checkperm("g") && !$internal_share_access)
+                        {
+                        # Resource access is open but user does not have the 'g' permission. Set access to restricted. If they have been granted specific access this will be added next
+                        $result[$n]["access"]=1;
                         }
+                    $access = isset($result[$n]["access"]) ? $result[$n]["access"] : get_resource_access($result[$n]);
+                    $use_watermark=check_use_watermark();
+                    $thumb_url = generateURL($baseurl_short . "pages/view.php",[
+                        "ref" => $ref,
+                        "search" => "!collection" . $usercollection,
+                        "order_by" => $order_by,
+                        "sort" => $sort,
+                        "k" => $k,
+                        "curpos" => $n,
+                    ]);
+                    ?>
+                    <table border="0" class="CollectionResourceAlign"><tr><td>
+                        <a style="position:relative;" 
+                            onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
+                            href="<?php echo $thumb_url ?>">
+                        <?php
+                        $colimg_preview_size = $retina_mode ? 'thm' : 'col';
+                        if(1 == $result[$n]['has_image']
+                            && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $colimg_preview_size)
+                            && file_exists(get_resource_path($ref, true, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
+                        ) {
+                            $colimgpath = get_resource_path($ref, false, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
+                            ?>
+                            <img class="CollectionPanelThumb"
+                                border=0
+                                src="<?php echo $colimgpath; ?>"
+                                title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                                alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                                <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?>
+                            />
+                        <?php } else { ?>
+                            <img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
+                                border=0
+                                src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>"
+                            />
+                        <?php }
                         hook("aftersearchimg","",array($result[$n]))?>
                         </a></td>
-        </tr></table>
-        <?php } /* end hook rendercollectionthumb */?>
+                    </tr></table><?php
+                } /* end hook rendercollectionthumb */
 
-        <?php 
+                $title=$result[$n]["field".$view_title_field];
+                $title_field=$view_title_field;
+                if (isset($metadata_template_title_field) && isset($metadata_template_resource_type)) {
+                    if ($result[$n]['resource_type']==$metadata_template_resource_type) {
+                        $title=$result[$n]["field".$metadata_template_title_field];
+                        $title_field=$metadata_template_title_field;
+                    }
+                }
 
-        $title=$result[$n]["field".$view_title_field];  
-        $title_field=$view_title_field;
-        if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
-            {
-            if ($result[$n]['resource_type']==$metadata_template_resource_type)
-                {
-                $title=$result[$n]["field".$metadata_template_title_field];
-                $title_field=$metadata_template_title_field;
-                }   
-            }   
-        $field_type=ps_value("select type value from resource_type_field where ref=?",array("i",$title_field), "", "schema");
-        if($field_type==8){
-            $title=str_replace("&nbsp;"," ",$title);
-        }
-        ?>  
-        <?php if (!hook("replacecolresourcetitle")){?>
-        <div class="CollectionPanelInfo"><a onclick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode("!collection" . $usercollection)?>&k=<?php echo urlencode($k) ?>" title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?></a>&nbsp;</div>
-        <?php } ?>
+                $field_type=ps_value("SELECT type value FROM resource_type_field WHERE ref=?",array("i",$title_field),
+                    "",
+                    "schema"
+                );
+                if ($field_type==8) {
+                    $title=str_replace("&nbsp;"," ",$title);
+                }
 
-        <?php if ($k!="" && $feedback) { # Allow feedback for external access key users
-        ?>
-        <div class="CollectionPanelInfo">
-        <span>  <a aria-hidden="true" class="fa fa-comment"onclick="return ModalLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_comment.php?ref=<?php echo urlencode($ref) ?>&collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"/></span>       
-        </div>
-<?php } ?>
+                if (!hook("replacecolresourcetitle")) {
+                    $replace_resource_url = generateURL($baseurl_short . "pages/view.php",[
+                        "ref"=> $ref,
+                        "search"=> "!collection" . $usercollection,
+                        "k"=> $k
+                    ]);
+                    ?>
+                    <div class="CollectionPanelInfo">
+                        <a onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
+                            href=" <?php echo $replace_resource_url;?>"
+                            title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                            ><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?>
+                        </a>&nbsp;
+                    </div>
+                <?php }
 
-        <?php hook('before_collectionpaneltools'); ?>
+                if ($k!="" && $feedback) { # Allow feedback for external access key users
+                    $comment_url = generateURL($baseurl_short . "pages/collection_comment.php", [
+                        "ref"=>$ref,
+                        "collection"=>$usercollection,
+                        "k"=>$k,
+                        ]);
+                    ?>
+                    <div class="CollectionPanelInfo">
+                        <span>
+                            <a aria-hidden="true"
+                                class="fa fa-comment"
+                                onclick="return ModalLoad(this,true);"
+                                href="<?php echo $comment_url?>">
+                            </a>
+                        </span>
+                    </div>
+                <?php }
+                hook('before_collectionpaneltools');
 
-        <?php if ($k=="" || $internal_share_access) 
-        { ?>
-        <div class="CollectionPanelTools">
+                if ($k=="" || $internal_share_access) {
+                    ?><div class="CollectionPanelTools"><?php
 
-        <?php if (!isset($cinfo['savedsearch'])||(isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null))
-        { // add 'remove' link only if this is not a smart collection 
-        ?>
+                    if (!isset($cinfo['savedsearch'])||(isset($cinfo['savedsearch'])&&$cinfo['savedsearch']==null)) {
+                        // add 'remove' link only if this is not a smart collection
+                        $rating = '';
+                        if (isset($rating_field)) {
+                            $rating = "field{$rating_field}";
+                        }
 
-        <?php
-        $rating = '';
-        if(isset($rating_field))
-            {
-            $rating = "field{$rating_field}";
-            }
+                        $url = generateURL(
+                            $baseurl_short . "pages/view.php",
+                            ["ref" => $ref,
+                            "search" => '!collection' . $usercollection,
+                            "order_by" => $order_by,
+                            "sort" => $sort,
+                            "offset" => $offset,
+                            "archive" => $archive,
+                            "k" => $k,
+                            "curpos" => $n,
+                            "restypes" => $restypes,
+                            ]
+                        );
 
-            $url = $baseurl_short."pages/view.php?ref=" . $ref . "&amp;search=" . urlencode('!collection' . $usercollection) . "&amp;order_by=" . urlencode($order_by) . "&amp;sort=". urlencode($sort) . "&amp;offset=" . urlencode($offset) . "&amp;archive=" . urlencode($archive) . "&amp;k=" . urlencode($k) . "&amp;curpos=" . urlencode($n) . '&amp;restypes=' . urlencode($restypes);
-
-        # Include standard search views    
-        include "search_views/resource_tools.php";  
-
-        } # End of remove link condition 
-        ?>
-        </div>
-<?php 
-        } # End of k="" condition 
-        ?>
-        </div>
-<?php
-        } # End of ResourceView hook
-
-    } # End of loop through standard display thumbnails
-
-    ?>
-    <div class="clearerleft"></div>
-    <?php
-    } # End of display thumbnails for standard display
+                        # Include standard search views
+                        include "search_views/resource_tools.php";
+                    } # End of remove link condition
+                    ?>
+                    </div>
+                <?php } # End of k="" condition ?>
+                </div>
+            <?php } # End of ResourceView hook
+        } # End of loop through standard display thumbnails ?>
+        <div class="clearerleft"></div>
+    <?php } # End of display thumbnails for standard display
 
 
 if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_viewall'))
