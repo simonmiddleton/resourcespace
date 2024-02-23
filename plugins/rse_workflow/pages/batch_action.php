@@ -16,7 +16,7 @@ if(is_null($action))
         {
         ajax_send_response(400, ajax_response_fail(ajax_build_message($lang["rse_workflow_err_invalid_action"])));
         }
-    exit($lang["rse_workflow_err_invalid_action"]);
+    exit(escape($lang["rse_workflow_err_invalid_action"]));
     }
 $action = rse_workflow_get_actions("", $action);
 if(!is_array($action) || empty($action))
@@ -25,7 +25,7 @@ if(!is_array($action) || empty($action))
         {
         ajax_send_response(400, ajax_response_fail(ajax_build_message($lang["rse_workflow_err_invalid_action"])));
         }
-    exit($lang["rse_workflow_err_invalid_action"]);
+    exit(escape($lang["rse_workflow_err_invalid_action"]));
     }
 $action = $action[0];
 
@@ -36,7 +36,7 @@ if(!array_key_exists($action["statusto"], $wf_states))
         {
         ajax_send_response(400, ajax_response_fail(ajax_build_message($lang["rse_workflow_err_missing_wfstate"])));
         }
-    exit($lang["rse_workflow_err_missing_wfstate"]);
+    exit(escape($lang["rse_workflow_err_missing_wfstate"]));
     }
 $to_wf_state = $wf_states[$action["statusto"]];
 
@@ -47,7 +47,7 @@ if(!is_null($collection) && checkperm("b"))
         {
         ajax_unauthorized();
         }
-    exit($lang["error-permissiondenied"]);
+    exit(escape($lang["error-permissiondenied"]));
     }
 
 // Determine resources affected (effectively runs a search to determine if action is valid for each resource)
