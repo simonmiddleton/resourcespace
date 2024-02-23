@@ -1637,6 +1637,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $ps[$o]['id'] = $onlysizes[0]; 
             $ps[$o]['width'] = $customx;
             $ps[$o]["height"] = $customy;
+            $ps[$o]['internal'] = 1;
+            $ps[$o]['allow_preview'] = 0;
             }
             
         # Locate imagemagick.
@@ -1881,7 +1883,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
                 $profile='';
-                if($icc_extraction && file_exists($iccpath) && !$icc_transform_complete && !$previewbased && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
+                if($icc_extraction && !$icc_transform_complete && !$previewbased && file_exists($iccpath) && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
                     {
                     global $icc_preview_profile_embed;
                     // we have an extracted ICC profile, so use it as source
