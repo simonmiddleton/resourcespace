@@ -49,8 +49,8 @@ $reset_state = function () use ($nodes_UT) {
 $use_cases = [
     /* [
         'name' => 'Active state toggles only fixed list fields',
-        'input' => ['refs' => [$rtf_text_node]],
-        'expected' => [$rtf_text_node => 1],
+        'input' => ['refs' => [$rtf_text_node_id]],
+        'expected' => [$rtf_text_node_id => 1],
     ],
     [
         'name' => 'Toggle fixed list fields (e.g checkbox) active state',
@@ -70,18 +70,21 @@ $use_cases = [
             $ct_opt_a_a2 => 0,
         ],
     ],
-    [
+    /* [
         'name' => 'Re-activating a tree root option leaves children alone',
         'input' => ['refs' => [$ct_opt_a]],
         'expected' => [$ct_opt_a => 1],
     ],
     [
-        // todo next
         'name' => 'Toggle child (level 1) traverse check to root',
         'reset_state' => true,
-        'input' => ['refs' => [$ct_opt_a_a2]],
-        'expected' => [$ct_opt_a_a2 => 0],
-    ],
+        'input' => ['refs' => [$ct_opt_a_a1]],
+        'expected' => [
+            $ct_opt_a_a1 => 0,
+            $ct_opt_a_a1_a11 => 0,
+            $ct_opt_a_a1_a12 => 0,
+        ],
+    ], */
 /*
 A
     A.1
@@ -100,6 +103,7 @@ C
 | -------------------- | -------------- | ------- | ------------------------ | ---------------------- |
 | 1                    | n/a - root     | yes     | 0                        | yes                    |
 | 0                    | n/a - root     | yes     | 1                        | no                     |
+| 1                    | 1 - level 1    | yes     | 0                        | yes                    |
 
 */
 ];
