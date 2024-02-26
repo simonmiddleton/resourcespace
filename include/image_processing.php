@@ -1365,10 +1365,10 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false,$onlysizes = array())
     {
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
-    global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
+    global $autorotate_no_ingest,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
-    global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors, $watermark;
-    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
+    global $camera_autorotation_ext, $watermark;
+    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction;
 
     # We will need this to log errors
     $uploadedfilename = getval("file_name",""); 
@@ -2092,8 +2092,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 // save out to file
                 $command.=(($p===($cp_count-1) && !isset($command_parts[$p]['wmpath'])) ? " " : " -quality " . $command_parts[$p]['quality'] . " -write "). escapeshellarg($command_parts[$p]['targetpath']) . ($mpr_wm_created && isset($command_parts[$p]['wmpath']) ? " +delete mpr:" . $ref : "" );
-                //$command.=" -write " . $command_parts[$p]['targetpath'];
-                // watermarks?
                 if(isset($command_parts[$p]['wmpath']))
                     {
                     if(!$mpr_wm_created)
@@ -2142,10 +2140,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         if ($target && $alternative==-1) # Do not run for alternative uploads 
             {
             extract_mean_colour($target,$ref);
-            # flag database so a thumbnail appears on the site
-
-
-            debug("BANG " . __LINE__ . ($generateall ? " TRUE" : " FALSE"));
+            // Flag database so a thumbnail appears on the site
             $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
             ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$has_image,"i",$ref]);
             }
@@ -3962,21 +3957,15 @@ function remove_video_previews(int $resource) : void
  * @return bool                     True if minimal previews have been generated
  * 
  */
-function create_core_previews(int $ref, string $extension, bool $ingested)
-    {
-    $resource_data = !empty($resource_data) ? $resource_data : get_resource_data($ref);
+function create_core_previews(int $ref, string $extension, bool $ingested) {
+    $resource_data = get_resource_data($ref);
 
-    //TODO correct the logic here
-    if($GLOBALS["offline_job_queue"]
-        || $GLOBALS["enable_thumbnail_creation_on_upload"]==false
-        || (isset($GLOBALS["preview_generate_max_file_size"]) && is_int_loose($GLOBALS["preview_generate_max_file_size"]))
-        )
-        {
+    if(minimal_previews_required($resource_data)) {
         create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
         return true; 
-        }
-    return false;
     }
+    return false;
+}
 
 
 /**
@@ -4051,7 +4040,7 @@ function get_sizes_to_generate(string $extension,array $dimensions, bool $thumbo
     }
 
         
-    if((count($ps) > 0  && $GLOBALS["preview_tiles"] && $GLOBALS["preview_tiles_create_auto"]) || in_array("tiles",$onlysizes)
+    if ((count($onlysizes) == 0 && $GLOBALS["preview_tiles"] && $GLOBALS["preview_tiles_create_auto"]) || in_array("tiles",$onlysizes)
         && !in_array($extension, config_merge_non_image_types())
         )
         {
@@ -4201,3 +4190,16 @@ function create_image_alternatives(int $ref, array $params, $force = false)
     }
     }
 
+/**
+ * Check if only minimal previews are required
+ *
+ * @param array $resource_data  Array of data from resource table
+ * 
+ * @return bool
+ * 
+ */
+function minimal_previews_required($resource_data) {
+    return $GLOBALS["offline_job_queue"]
+        || $GLOBALS["enable_thumbnail_creation_on_upload"] == false
+        || (isset($GLOBALS["preview_generate_max_file_size"]) && is_int_loose($GLOBALS["preview_generate_max_file_size"]) && (int)$resource_data["file_size"] >= $GLOBALS["preview_generate_max_file_size"]);
+}
