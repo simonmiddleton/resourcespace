@@ -3065,7 +3065,7 @@ function IsModal()
         {
         return true;
         }
-    return (getval("modal", "") == "true");
+    return getval("modal", "") == "true";
     }
 
 /**

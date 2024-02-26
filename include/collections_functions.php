@@ -7019,7 +7019,7 @@ function check_upload_terms(int $collection, string $k) : bool
         }
     else
         {
-        return (array_key_exists("acceptedterms", $_COOKIE) && $_COOKIE["acceptedterms"] == 1);
+        return array_key_exists("acceptedterms", $_COOKIE) && $_COOKIE["acceptedterms"] == 1;
         }
     }
 
