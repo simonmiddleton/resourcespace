@@ -56,11 +56,6 @@ parameters:
 			path: include/general_functions.php
 
 		-
-			message: "#^Variable \\$extra_warn on left side of \\?\\? is never defined\\.$#"
-			count: 1
-			path: include/general_functions.php
-
-		-
 			message: "#^Variable \\$return_array in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: include/general_functions.php

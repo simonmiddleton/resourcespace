@@ -4902,7 +4902,7 @@ function get_system_status()
                 $return['results'][$check_name]['severity_text'] = $GLOBALS["lang"]["severity-level_" .  $extra_check['severity']];
                 }
 
-            $warn_details = $extra_warn['details'] ?? [];
+            $warn_details = $extra_check['details'] ?? [];
             if ($warn_details !== [])
                 {
                 $return['results'][$check_name]['details'] = $warn_details;
