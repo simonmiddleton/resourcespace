@@ -125,8 +125,9 @@ foreach($logScriptTexts as $logScriptText)
     logScript($dry_run_text.$logScriptText);
     }
 
-// Identify the duplicates depending on the presence or otherwise of collection options
+// Identify the duplicates depending on the presence or otherwise of passed-in collections
 if (empty($collections)) {
+    // All duplicates
     $duplicates_by_checksum = 
     ps_query("SELECT r1.file_checksum, r1.ref 
         FROM resource r1
@@ -135,15 +136,18 @@ if (empty($collections)) {
         ORDER BY r1.file_checksum ASC, r1.ref {$order_by}");
 }
 else {
+    // Duplicates where the checksum is present in any of the passed-in collections
     $duplicates_by_checksum = 
-    ps_query("SELECT d3.file_checksum, d3.ref 
-        FROM (
-        SELECT r3.ref, r3.file_checksum FROM collection_resource cr
-        INNER JOIN resource r3 ON r3.ref = cr.resource ) as d3
-        WHERE coalesce(d3.file_checksum, '') <> ''
-        AND ( SELECT count(*) r4count from resource r4 WHERE r4.file_checksum = d3.file_checksum ) > 1
-        AND cr.collection IN (" . ps_param_insert(count($collections)) . ")
-        ORDER BY d3.file_checksum ASC, d3.ref {$order_by}", ps_param_fill($collections, 'i'));
+    ps_query("SELECT d1.file_checksum, d1.ref FROM (
+        SELECT r1.file_checksum, r1.ref FROM resource r1
+            WHERE coalesce(r1.file_checksum, '') <> ''
+            AND ( SELECT count(*) r2count from resource r2 WHERE r2.file_checksum = r1.file_checksum ) > 1
+            ORDER BY r1.file_checksum ASC, r1.ref ASC) as d1
+        WHERE d1.file_checksum IN
+            (SELECT r3.file_checksum from collection_resource cr
+            INNER JOIN resource r3 on r3.ref = cr.resource and coalesce(r3.file_checksum,'') <> ''
+            WHERE cr.collection IN (" . ps_param_insert(count($collections)) . ")) 
+            ORDER BY d1.file_checksum ASC, d1.ref {$order_by}", ps_param_fill($collections, 'i') );        
 }
 
 $count_matching_checksums=count($duplicates_by_checksum);
