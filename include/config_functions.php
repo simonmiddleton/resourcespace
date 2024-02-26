@@ -1721,22 +1721,38 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
         if($column == "global")
             {
             // Also need to update all resource_type_field -> resource_type associations
-            $setresypes = [];
-            if($val == 0)
-                {
-                $currentrestypes = get_resource_type_field_resource_types([$existingfield]);
+            $setrestypes = [];
+            $currentrestypes = get_resource_type_field_resource_types([$existingfield]);
+            if($val == 0) {
                 // Only need to check them if field is not global
                 foreach($resource_type_array as $resource_type=>$resource_type_name)
                     {
                     if(trim($postdata["field_restype_select_" . $resource_type] ?? "") != "")
                         {
-                        $setresypes[] = $resource_type;
+                        $setrestypes[] = $resource_type;
                         }
                     }
-                 // Set to remove existing data from the resource types that had data stored
-                 $remove_data_restypes = $existingfield["type"] == 1 ? array_column($resource_type_array,"ref") : array_diff($currentrestypes[$ref],$setresypes);
+                // Set to remove existing data from the resource types that had data stored
+                if ($existingfield["type"] == 1) {
+                    $remove_data_restypes = array_column($resource_type_array,"ref");
+                } else {
+                    $remove_data_restypes = array_diff($currentrestypes[$ref],$setrestypes);
                 }
-            update_resource_type_field_resource_types($ref,$setresypes);
+            }
+            update_resource_type_field_resource_types($ref,$setrestypes);
+            if (empty($setrestypes)) {
+                $setrestypes = array_column(get_resource_types("",false,true,true),"ref");
+            }
+            log_activity(
+                null,
+                LOG_CODE_EDITED,
+                implode(", ", $setrestypes),
+                'resource_type_field',
+                'Resource Types',
+                $ref,
+                null,
+                implode(", ",$currentrestypes[$ref])
+            );
             }
 
         log_activity(null,LOG_CODE_EDITED,$val,'resource_type_field',$column,$ref);
