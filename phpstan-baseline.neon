@@ -406,11 +406,6 @@ parameters:
 			path: plugins/simplesaml/hooks/all.php
 
 		-
-			message: "#^Variable \\$video_export_folder in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: plugins/video_splice/pages/splice.php
-
-		-
 			message: "#^Variable \\$end_time in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: plugins/video_splice/pages/trim.php
