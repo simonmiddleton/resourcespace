@@ -3993,7 +3993,7 @@ function rcRmdir ($path,$ignore=array())
     if (is_dir($path))
         {
         $foldercontents = new DirectoryIterator($path);
-        foreach($foldercontents as $objectindex => $object)
+        foreach($foldercontents as $object)
             {
             if($object->isDot() || in_array($path,$ignore))
                 {
@@ -4996,7 +4996,7 @@ function check_filestore_browseability()
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
-        $output = curl_exec($ch);
+        curl_exec($ch);
         $response_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);        
         }

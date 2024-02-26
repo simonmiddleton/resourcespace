@@ -263,7 +263,6 @@ function mix_date($fromdate, $maxoffset=30)
         }
     else
         {
-        $date = new DateTime($fromdate);
         $tstamp = strtotime($fromdate);
         }
 

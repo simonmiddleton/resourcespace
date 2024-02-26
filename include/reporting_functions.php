@@ -253,7 +253,7 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 $f++;
                 if ($key=="thumbnail")
                     {
-                    $thm_path=get_resource_path($value,true,"thm",false,"",$scramble=-1,$page=1,false);
+                    $thm_path=get_resource_path($value,true,"thm",false,"",-1,1,false);
                     if (!file_exists($thm_path)){
                         $resourcedata=get_resource_data($value);
                         if(is_array($resourcedata))

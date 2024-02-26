@@ -631,8 +631,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
             }   
         $querytime += $time_total;
     }
-    
-    $return_rows=array();
+
     if ($error!="")
         {
         static $retries = [];

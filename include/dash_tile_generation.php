@@ -255,9 +255,6 @@ function tile_freetext($tile,$tile_id,$tile_width,$tile_height)
  */
 function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_image=false)
     {
-    global $baseurl_short,$lang;
-    $tile_type="srch";
-    $tile_style="thmbs";
     $search_string = explode('?',$tile["link"]);
     parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
     $search = isset($search_string["search"]) ? $search_string["search"] :"";
@@ -299,10 +296,6 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
 
 function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
     {
-    global $baseurl_short,$lang;
-
-    $tile_type="srch";
-    $tile_style="multi";
     $search_string = explode('?',$tile["link"]);
     parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
     $search = isset($search_string["search"]) ? $search_string["search"] :"";
@@ -346,9 +339,6 @@ function tile_search_multi($tile,$tile_id,$tile_width,$tile_height)
 
 function tile_search_blank($tile,$tile_id,$tile_width,$tile_height)
     {
-    global $baseurl_short,$lang;
-    $tile_type="srch";
-    $tile_style="blank";
     $search_string = explode('?',$tile["link"]);
     parse_str(str_replace("&amp;","&",$search_string[1]),$search_string);
     $search = isset($search_string["search"]) ? $search_string["search"] :"";

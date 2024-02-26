@@ -1026,7 +1026,6 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
     debug("add_node_keyword: node:" . $node . ", keyword: " . $keyword . ", position: " . $position . ", normalize:" . ($normalize?"TRUE":"FALSE") . ", stem:" . ($stem?"TRUE":"FALSE"));
     if($normalize)
         {
-        $original_keyword = $keyword;
         $kworig          = normalize_keyword($keyword);
         // if $keyword has changed after normalizing it, then index the original value as well
         if($keyword != $kworig && $unnormalized_index)
@@ -1333,7 +1332,6 @@ function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, 
 
         if($resourcedata["lock_user"] > 0 && $resourcedata["lock_user"] != $userref)
             {
-            $error = get_resource_lock_message($resourcedata["lock_user"]);
             return false;
             }
         }
@@ -1395,7 +1393,6 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
             
             if($resourcedata["lock_user"] > 0 && $resourcedata["lock_user"] != $userref)
                 {
-                $error = get_resource_lock_message($resourcedata["lock_user"]);
                 return false;
                 }
             }

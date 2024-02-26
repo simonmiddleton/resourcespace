@@ -354,7 +354,6 @@ function email_collection_request($ref,$details,$external_email): bool
         }
 
     # Add custom fields
-    $c="";
     global $custom_request_fields,$custom_request_required;
     if (isset($custom_request_fields))
         {
@@ -499,7 +498,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
     if ($ref_is_resource)
         {
         $resourcedata=get_resource_data($ref);
-        $templatevars['thumbnail']=get_resource_path($ref,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
+        $templatevars['thumbnail']=get_resource_path($ref,true,"thm",false,"jpg",-1,1,($watermark)?(($access==1)?true:false):false);
 
         # Allow alternative configuration settings for this resource type
         resource_type_config_override($resourcedata['resource_type']);
@@ -799,7 +798,6 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             $notification_sent = true;
             }
 
-        $admin_notify_emails=array();
         $admin_notify_users=array();
 
         # Legacy: Check if alternative request email notification address is set, only valid if collection contains resources of the same type
@@ -899,7 +897,7 @@ function email_resource_request($ref,$details)
         }
 
     $resourcedata=get_resource_data($ref);
-    $templatevars['thumbnail']=get_resource_path($ref,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
+    $templatevars['thumbnail']=get_resource_path($ref,true,"thm",false,"jpg",-1,1,($watermark)?(($access==1)?true:false):false);
     if (!file_exists($templatevars['thumbnail']))
         {
         $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
@@ -1242,7 +1240,7 @@ function get_notification_users_by_owner_field(array $users, array $resources)
         return $users_map_ref_email;
         }
 
-    foreach($resource_nodes as $resource_id => $rtf_rns)
+    foreach($resource_nodes as $rtf_rns)
         {
         $owner_field_node_id = $rtf_rns[$owner_field][0]['ref'] ?? 0;
         $mapped_group = $owner_field_mappings[$owner_field_node_id] ?? 0;

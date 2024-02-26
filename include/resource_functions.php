@@ -439,7 +439,9 @@ function get_resource_data($ref,$cache=true)
                 $user = $userref;
 
                 $default_archive_state = get_default_archive_state();
-                $wait = ps_query("INSERT INTO resource (ref,resource_type,created_by, archive) VALUES (?,?,?,?)",array("i",$ref,"i",$default_resource_type,"i",$user,"i",$default_archive_state));
+                ps_query("INSERT INTO resource (ref,resource_type,created_by, archive) VALUES (?,?,?,?)",
+                    ["i",$ref,"i",$default_resource_type,"i",$user,"i",$default_archive_state]
+                );
 
                 $resource = ps_query("SELECT " . columns_in("resource") . " FROM resource WHERE ref=?",array("i",$ref));
                 }
@@ -1532,7 +1534,6 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             $fieldnodes = get_nodes($fields[$n]["ref"],null,$fields[$n]['type'] == FIELD_TYPE_CATEGORY_TREE);
             $nodes_by_ref = array_combine(array_column($fieldnodes, 'ref'),$fieldnodes);
             $valid_nodes = array_column($fieldnodes, 'ref');
-            $node_options = array_column($fieldnodes, 'name', 'ref');
 
             // $valid_nodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
             $ui_selected_node_values = array_intersect($valid_nodes, $ui_selected_node_values);
@@ -2322,8 +2323,6 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
     # Also update archive status
     if (($postvals["editthis_status"] ?? "") != "")
         {
-        $notifyrefs=array();
-        $usernotifyrefs=array();
         for ($m=0;$m<count($list);$m++)
             {
             $ref=$list[$m];
@@ -2441,7 +2440,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 ps_query("UPDATE resource SET geo_lat=NULL,geo_long=NULL WHERE ref IN (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
                 }
 
-            foreach ($list as $key => $ref)
+            foreach ($list as $ref)
                 {
                 $successfully_edited_resources[] = $ref;
                 }
@@ -2463,7 +2462,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 ps_query("UPDATE resource SET mapzoom=NULL WHERE ref IN (" . ps_param_insert(count($list)) . ")",ps_param_fill($list,"i"));
                 }
 
-            foreach ($list as $key => $ref)
+            foreach ($list as $ref)
                 {
                 $successfully_edited_resources[] = $ref;
                 }
@@ -3036,7 +3035,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
 
         # make vars available to template
         global $watermark;
-        $templatevars['thumbnail']=get_resource_path($resource,true,"thm",false,"jpg",$scramble=-1,$page=1,($watermark)?(($access==1)?true:false):false);
+        $templatevars['thumbnail']=get_resource_path($resource,true,"thm",false,"jpg",-1,1,($watermark)?(($access==1)?true:false):false);
         if (!file_exists($templatevars['thumbnail'])){
             $resourcedata=get_resource_data($resource);
             $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
@@ -3091,7 +3090,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
         if ($send_result!==true) {return $send_result;}
 
         # log this
-        resource_log($resource,LOG_CODE_EMAILED,"",$notes=$unames[$n]);
+        resource_log($resource,LOG_CODE_EMAILED,"",$unames[$n]);
         }
     hook("additional_email_resource","",array($resource,$resourcename,$fromusername,$userlist,$message,$access,$expires,$useremail,$from_name,$cc,$templatevars));
     # Return an empty string (all OK).
@@ -3277,7 +3276,6 @@ function get_resource_field_data($ref, $multi = false, $use_permissions = true, 
         }
 
     # If using metadata templates,
-    $templatesql = "";
     if (isset($metadata_template_resource_type) && $metadata_template_resource_type==$rtype) {
         # Show all resource fields, just as with editing multiple resources.
         $multi = true;
@@ -3669,7 +3667,6 @@ function get_resource_field_data_batch($resources,$use_permissions=true,$externa
                 }
 
             // Skip fields which are not applicable
-            $rtype = $restype[$fields[$n]["resource"]];
             if($fields[$n]["global"] != 1 && (!isset($field_restypes[$fields[$n]["ref"]]) || !in_array($restype[$fields[$n]["resource"]],$field_restypes[$fields[$n]["ref"]])))
                 {
                 // This resource's resource_type is not associated with this field
@@ -4523,7 +4520,6 @@ function write_metadata($path, $ref, $uniqid="")
     # Fetch file extension and resource type.
     $resource_data=get_resource_data($ref);
     $extension=$resource_data["file_extension"];
-    $resource_type=$resource_data["resource_type"];
 
     $exiftool_fullpath = get_utility_path("exiftool");
 
@@ -4695,7 +4691,7 @@ function write_metadata($path, $ref, $uniqid="")
             $command.= " " . escapeshellarg($tmpfile);
 
             # Perform the actual writing - execute the command string.
-            $output = run_command($command);
+            run_command($command);
         return $tmpfile;
        }
     else
@@ -4904,7 +4900,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
             $job_code=$r . md5($job_data["r"] . strtotime('now'));
             $job_success_lang="update_resource success " . str_replace(array('%ref', '%title'), array($r, $filename), $lang["ref-title"]);
             $job_failure_lang="update_resource fail " . ": " . str_replace(array('%ref', '%title'), array($r, $filename), $lang["ref-title"]);
-            $jobadded=job_queue_add("update_resource", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);
+            job_queue_add("update_resource", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);
             }
 
     hook('after_update_resource', '', array("resourceId" => $r ));
@@ -6854,7 +6850,6 @@ function copy_locked_data($resource, $locked_fields, $lastedited, $save=false)
 
     // Get details of the last resource edited and use these for this resource if field is 'locked'
     $lastresource = get_resource_data($lastedited,false);
-    $lockable_columns = array("resource_type","archive","access");
 
     if(in_array("resource_type",$locked_fields) && $resource["resource_type"] != $lastresource["resource_type"])
         {
@@ -7063,15 +7058,10 @@ function process_edit_form($ref, $resource)
         }
     $resource=get_resource_data($ref,false); # Reload resource data.
 
-    if(in_array($resource['resource_type'], $data_only_resource_types))
-        {
-        $single=true;
-        }
-    else
-        {
+    if (!in_array($resource['resource_type'], $data_only_resource_types)) {
         unset($uploadparams['forcesingle']);
         unset($uploadparams['noupload']);
-        }
+    }
 
     if(!isset($save_errors))
         {
@@ -7299,7 +7289,7 @@ function save_original_file_as_alternative($ref)
     # Move the old file to the alternative file location
     if(!hook('save_original_alternative_extra', '', array('origpath' => $origpath, 'newaltpath' => $newaltpath)))
         {
-        $result = rename($origpath, $newaltpath);
+        rename($origpath, $newaltpath);
         }
 
     if ($alternative_file_previews)
@@ -7358,7 +7348,7 @@ function replace_resource_file($ref, $file_location, $no_exif=false, $autorotate
         {
         // the following save may not succeed because there is no original in which case a debug log will have been created
         // allow replace resource to continue with its principal task of uploading
-        $savedasalt = save_original_file_as_alternative($ref);
+        save_original_file_as_alternative($ref);
         }
 
     if (filter_var($file_location, FILTER_VALIDATE_URL))
@@ -8232,7 +8222,6 @@ function notify_resource_change($resource)
 
     debug("notify_resource_change - checking for users that have downloaded this resource " . $resource);
     $download_users=ps_query("SELECT DISTINCT u.ref, u.email FROM resource_log rl LEFT JOIN user u ON rl.user=u.ref WHERE rl.type='d' AND rl.resource=? AND DATEDIFF(NOW(),date)<?",["i",$resource,"i",$notify_on_resource_change_days],"");
-    $message_users=array();
     if(count($download_users)>0)
         {
         $notifymessage = new ResourceSpaceUserNotification();

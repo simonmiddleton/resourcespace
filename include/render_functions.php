@@ -69,9 +69,6 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 # If the field being processed is referenced in the current test, then it is a governing field 
                 if ($s[0]==$fields[$cf]["name"]) 
                     {
-                    # The field being processed is a governing field whose value(s) control whether the field being rendered is to be visible or hidden
-                    $display_condition_js_prepend=($forsearchbar ? "#simplesearch_".$fields[$cf]["ref"]." " : "");
-
                     # The script conditions array contains an entry for each governing field
                     $scriptconditions[$condref]["field"]               = $fields[$cf]["ref"];  # governing field
                     $scriptconditions[$condref]["governedfield"]       = $field["ref"];  # governed field
@@ -304,7 +301,6 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
 
             # Prepare fallback selector 
             $jquery_condition_selector = "input[name=\"{$checkname}\"]";
-            $jquery_selector_suffix="";
 
             if(in_array($scriptcondition['type'], $FIXED_LIST_FIELD_TYPES))
                 {
@@ -5641,7 +5637,6 @@ function render_radio_buttons_question($label, $inputname, $options = array(), $
         {
         $div_class = array_merge($div_class, $ctx["div_class"]);
         }
-    $input_class = isset($ctx["input_class"]) ? $ctx["input_class"] : "stdwidth";
 
     $onchange = (isset($ctx["onchange"]) && trim($ctx["onchange"]) != "" ? trim($ctx["onchange"]) : "");
     $onchange = ($onchange != "" ? sprintf("onchange=\"%s\"", $onchange) : "");
@@ -5782,7 +5777,6 @@ function render_antispam_question()
     $font=dirname(__FILE__). "/../gfx/fonts/vera.ttf";
 
     $capimage = imagecreate($width, $height);
-    $graybg = imagecolorallocate($capimage, 245, 245, 245);
     $textcolor = imagecolorallocate($capimage, 34, 34, 34);
     $green = ImageColorAllocate($capimage, 121, 188, 65); 
     ImageRectangle($capimage,0,0,$width-1,$height-1,$green); 
