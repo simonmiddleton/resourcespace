@@ -3873,24 +3873,6 @@ function clear_resource_data($resource)
     return true;
     }
 
-function get_max_resource_ref()
-    {
-    # Returns the highest resource reference in use.
-    return ps_value("SELECT MAX(ref) value FROM resource",[],0);
-    }
-
-/**
- * Returns an array of resource references in the range $lower to $upper.
- *
- * @param  int  $lower    ID of resource, lower in range
- * @param  int  $higher   ID of resource, upper in range
- *
- * @return array
- */
-function get_resource_ref_range($lower,$higher)
-    {
-    return ps_array("select ref value from resource where ref>=? and ref<=? and archive=0 order by ref",array("i",$lower,"i",$higher),0);
-    }
 
 /**
 *  Create a new resource, copying all data from the resource with reference $from.
@@ -8114,16 +8096,6 @@ function get_nopreview_icon($resource_type, $extension, $col_size)
     return "no_preview/resource_type/type1" . $col . ".png";
     }
 
-/**
- * Get references of resource type fields that are indexed
- *
- * @return array
- */
-function get_indexed_resource_type_fields()
-    {
-    return ps_array("select ref as value from resource_type_field where keywords_index=1",array(),"schema");
-    }
-
 
 /**
 * Gets all metadata fields, optionally for a specified array of resource types
@@ -9301,30 +9273,6 @@ function apply_resource_default(int $old_resource_type, int $new_resource_type, 
             }
         set_resource_defaults($resource, $check_resource_default_fields);
         }
-    }
-
-/**
- * Determine if the scr size should be used for previews. When $resource_view_use_pre is true the scr size shouldn't be used.
- * Where access is restricted and restricted access users can't access the scr size, the scr size shouldn't be used.
- *
- * @param  int   $access   Resource access level, typically from get_resource_access()
- *
- * @return  bool   True if scr size shouldn't be used else false.
- */
-function skip_scr_size_preview(int $access) : bool
-    {
-    global $resource_view_use_pre;
-    if ($resource_view_use_pre)
-        {
-        return true;
-        }
-
-    if ($access === 1 && !image_size_restricted_access('scr'))
-        {
-        return true;
-        }
-
-    return false;
     }
 
 
