@@ -2286,7 +2286,7 @@ function get_node_strings($resource_nodes,$allnodes = false,$translate = true): 
 * @param  array    $nodes  List of nodes to search through (MUST contain elements with at least the "ref" index)
 * @param  integer  $id     Node ref we compute the branch path for
 * 
-* @return array Branch path structure starting from root to the searched node
+* @return array Branch path structure starting from root to the searched node (inclusive)
 */
 function compute_node_branch_path(array $nodes, int $id)
     {
@@ -2994,67 +2994,51 @@ function toggle_active_state_for_nodes(array $refs): array
 
 function toggle_category_tree_nodes_active_state(int $rtf, array $node_refs): array {
     // print_r($rtfs_tree);die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
-    $nodes_new_state = [];
-    $is_not_active = fn(int $active): bool => $active === 0;
 
     $rtf_nodes = get_cattree_nodes_ordered($rtf, null, true);
     // Remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be
     // using get_cattree_node_strings() with it.
     array_shift($rtf_nodes);
     test_log("Tree nodes for #{$rtf} = " . print_r(array_column($rtf_nodes, 'name', 'ref'), true));
-
     $rtf_nodes_indexed = array_column($rtf_nodes, null, 'ref');
     $nodes_ordered = array_keys(array_intersect_key($rtf_nodes_indexed, array_flip($node_refs)));
 
+    $is_not_active = fn(int $active): bool => $active === 0;
     $nodes_to_enable = [];
     $nodes_to_disable = [];
 
     foreach ($nodes_ordered as $node_ref) {
-        $node = $rtf_nodes_indexed[$node_ref];
-
-        if ($node['parent'] === null && $node['active'] === 0) {
-            // Activate - this MUST NOT propagate to its children (if any)
-            $nodes_to_enable[] = $node_ref;
-            $rtf_nodes_indexed[$node_ref]['active'] = 1;
+        if (in_array($node_ref, $nodes_to_disable)) {
+            // Child node disabled previously by a parent - no need to carry on processing it (already done because of a parents' change on its path)
             continue;
         }
 
+        $node = $rtf_nodes_indexed[$node_ref];
+        $node_is_active = $node['active'] === 1;
+
+        /* if ($node['parent'] == 0 && !$node_is_active) {
+            test_log("Root node #{$node_ref} isn't active = " . json_encode(!$node_is_active));
+            // Activate - this MUST NOT propagate to its children (if any)
+            $nodes_to_enable[] = $node_ref;
+
+            // Pretend this has been done in case there's going to be a child node in the queue waiting to be toggled 
+            $rtf_nodes_indexed[$node_ref]['active'] = 1;
+            continue;
+        } */
+
         // Toggle a child node if no parent on branch is disabled
         $node_branch = array_column(
-            compute_node_branch_path($rtf_nodes, $node['ref']),
+            compute_node_branch_path(array_values($rtf_nodes_indexed), $node['ref']),
             'active',
             'ref'
         );
-        // Always remove the node in question out of the path because at this point we only care about parents.
-        // It will be taken into account when having to propagate changes to its children (if any) later.
         array_pop($node_branch);
-        test_log("Node #{$node_ref} branch is " . print_r($node_branch, true));
+        // test_log("Node #{$node_ref} branch is " . print_r($node_branch, true));
+        if (array_filter($node_branch, $is_not_active) !== []) {
+            continue;
+        }
 
-        // Node can have no parents or be at depth - need to check in case parent has already been disabled
-        // (todo: consider blocking children from being processed)
-        // If disabling, always apply on children
-    }
-
-    update_node_active_state($nodes_to_enable, true);
-    update_node_active_state($nodes_to_disable, false);
-    print_r(get_nodes_by_refs(array_merge($nodes_to_enable, $nodes_to_disable)));
-    
-    die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
-
-    // Previous logic
-
-    // Tree root option
-    if ($node['parent'] === null) {
-        if ($node['active'] === 0) {
-            // Activate - this MUST NOT propagate to its children (if any)
-            $found_idx = array_search($node['ref'], array_column($rtf_nodes, 'ref'));
-            if ($found_idx !== false) {
-                $nodes_to_toggle[] = $node['ref'];
-
-                // Update in memory record to allow its children to also be re-enabled if applicable later
-                $rtf_nodes[$found_idx]['active'] = 1;
-            }
-        } else {
+        if ($node_is_active) {
             // Disable - this MUST propagate to its children (if any)
             $branch_refs = array_column(
                 cattree_node_flatten(
@@ -3062,31 +3046,29 @@ function toggle_category_tree_nodes_active_state(int $rtf, array $node_refs): ar
                         $node,
                         [
                             'resource' => null, # Fake it for cattree_node_flatten()
-                            'children' => get_node_tree($node['ref'], $rtf_nodes),
+                            'children' => get_node_tree($node['ref'], $rtf_nodes_indexed),
                         ]
                     )
                 ),
                 'ref'
             );
-            update_node_active_state($branch_refs, false);
-            $nodes_new_state += array_column(get_nodes_by_refs($branch_refs), 'active', 'ref');
+            test_log("Node #{$node_ref} children branch is " . json_encode($branch_refs));
+
+            $nodes_to_disable = array_merge($nodes_to_disable, $branch_refs);
+            foreach ($branch_refs as $path_node_ref) {
+                $rtf_nodes_indexed[$path_node_ref]['active'] = 0;
+            }
+        } else {
+            // Activate - this MUST NOT propagate to its children (if any)
+            $nodes_to_enable[] = $node_ref;
+
+            // Pretend this has been done in case there's going to be a child node in the queue waiting to be toggled 
+            $rtf_nodes_indexed[$node_ref]['active'] = 1;
         }
-
     }
 
-    // die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
-    // Toggle a child node if no parent on branch is disabled
-    $node_branch = array_column(
-        compute_node_branch_path($rtf_nodes, $node['ref']),
-        'active',
-        'ref'
-    );
-    // Always remove the node in question out of the path because at this point we only care about parents.
-    // It will be taken into account when having to propagate changes to its children (if any) later.
-    array_pop($node_branch);
-    if (array_filter($node_branch, $is_not_active) === []) {
-        $nodes_to_toggle[] = $node['ref'];
-    }
-
-    return $nodes_new_state;
+    update_node_active_state($nodes_to_enable, true);
+    update_node_active_state($nodes_to_disable, false);
+    
+    return array_column(get_nodes_by_refs(array_merge($nodes_to_enable, $nodes_to_disable)), 'active', 'ref');
 }

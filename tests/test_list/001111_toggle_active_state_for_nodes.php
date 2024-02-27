@@ -47,7 +47,7 @@ $reset_state = function () use ($nodes_UT) {
 // --- End of Set up
 
 $use_cases = [
-    /* [
+    [
         'name' => 'Active state toggles only fixed list fields',
         'input' => ['refs' => [$rtf_text_node_id]],
         'expected' => [$rtf_text_node_id => 1],
@@ -56,7 +56,7 @@ $use_cases = [
         'name' => 'Toggle fixed list fields (e.g checkbox) active state',
         'input' => ['refs' => [$ckb_opt_b]],
         'expected' => [$ckb_opt_b => 0],
-    ], */
+    ],
     // todo: test using nodes mixture (different rtfs)
     [
         'name' => 'Disabling tree root option propagates to children',
@@ -70,13 +70,13 @@ $use_cases = [
             $ct_opt_a_a2 => 0,
         ],
     ],
-    /* [
+    [
         'name' => 'Re-activating a tree root option leaves children alone',
         'input' => ['refs' => [$ct_opt_a]],
         'expected' => [$ct_opt_a => 1],
     ],
     [
-        'name' => 'Toggle child (level 1) traverse check to root',
+        'name' => 'Disabling child (level 1) option propagates to children',
         'reset_state' => true,
         'input' => ['refs' => [$ct_opt_a_a1]],
         'expected' => [
@@ -84,7 +84,14 @@ $use_cases = [
             $ct_opt_a_a1_a11 => 0,
             $ct_opt_a_a1_a12 => 0,
         ],
-    ], */
+    ],
+    [
+        'name' => 'Re-activating a tree level 1 option leaves children alone',
+        'reset_state' => true,
+        'setup' => fn() => update_node_active_state([$ct_opt_a_a1], false),
+        'input' => ['refs' => [$ct_opt_a_a1]],
+        'expected' => [$ct_opt_a_a1 => 1],
+    ],
 /*
 A
     A.1
@@ -95,15 +102,13 @@ B
     B.1
 C
 
-- For category trees, if a parent is marked as deprecated, then this automatically applies to all of its children.
-    If all child options are deprecated, the parent can still be active.
-
 # Category tree cases
 | Current node: active | Parent: active | Toggle? | NEW current node: active | Propagate to children? |
 | -------------------- | -------------- | ------- | ------------------------ | ---------------------- |
 | 1                    | n/a - root     | yes     | 0                        | yes                    |
 | 0                    | n/a - root     | yes     | 1                        | no                     |
 | 1                    | 1 - level 1    | yes     | 0                        | yes                    |
+| 0                    | 1 - level 1    | yes     | 1                        | no                     |
 
 */
 ];
@@ -115,6 +120,10 @@ foreach ($use_cases as $uc) {
     // Set up the use case environment
     if (isset($uc['setup'])) {
         $uc['setup']();
+        test_log(
+            "Setup use case: nodes active state = "
+            . print_r(array_column(get_nodes_by_refs(array_column($nodes_UT, 'ref')), 'active', 'ref'), true)
+        );
     }
 
     $result = toggle_active_state_for_nodes($uc['input']['refs']);
