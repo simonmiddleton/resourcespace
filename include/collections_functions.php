@@ -1667,11 +1667,11 @@ function save_collection($ref, $coldata=array())
             {
             $was_shared_with = ps_array("select username value from user where ref in (" . ps_param_insert(count($old_attached_users)). ")",ps_param_fill($old_attached_users,"i"));
             }
-        if (count($old_attached_groups) > 0)
-            {
-            foreach($old_attached_groups as $old_group)
-            $was_shared_with[] = "Group (Smart): " . ps_value("select name value from usergroup where ref=?",array("i",$old_group),"");
+        if (count($old_attached_groups) > 0) {
+            foreach ($old_attached_groups as $old_group) {
+                $was_shared_with[] = "Group (Smart): " . ps_value("SELECT name value FROM usergroup WHERE ref = ?", array("i", $old_group), "");
             }
+        }
         if (count($urefs) == 0 && count($was_shared_with) > 0)
             {
             collection_log($ref,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, join(", ",$was_shared_with));

@@ -350,7 +350,6 @@ EOT;
 
 
             if (empty($comment['name'])) $comment['name'] = $comment['username'];
-            if (!hook("commentername", "all",array("ref"=>$comment["ref"])))
 
             if ($anonymous_mode == true)
                 {

@@ -7,7 +7,7 @@ if (getval("rp", "") != "") {
     # quick redirect to reset password
     $rp = getval("rp", "");
     $topurl = "pages/user/user_change_password.php?rp=" . $rp;
-        redirect($topurl);
+    redirect($topurl);
 }
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
@@ -17,16 +17,13 @@ if ('' == $k || (!check_access_key_collection(getval('c', ''), $k) && !check_acc
     include 'include/authenticate.php';
 }
 
-if (!hook("replacetopurl")) {
-    $topurl = "pages/" . $default_home_page . "?login=true";
-    if ($use_theme_as_home) {
-        $topurl = "pages/collections_featured.php";
-    }
-    if ($use_recent_as_home) {
-        $topurl = "pages/search.php?search=" . urlencode("!last" . $recent_search_quantity);
-    }
-} /* end hook replacetopurl */
-
+$topurl = "pages/" . $default_home_page . "?login=true";
+if ($use_theme_as_home) {
+    $topurl = "pages/collections_featured.php";
+}
+if ($use_recent_as_home) {
+    $topurl = "pages/search.php?search=" . urlencode("!last" . $recent_search_quantity);
+}
 
 $c = trim(getval("c", ""));
 if ($c != "") {
@@ -36,7 +33,6 @@ if ($c != "") {
     }
 
     $topurl = "pages/search.php?search=" . urlencode("!collection" . $c) . "&k=" . $k;
-
     $collection_resources = get_collection_resources($c);
 
     if ($collection["type"] == COLLECTION_TYPE_FEATURED) {
@@ -72,14 +68,12 @@ if (getval('ur', '') != '') {
     # quick redirect to periodic report unsubscriptions.
     $ur = getval('ur', '', true);
     $unsubscribe_user = getval('user', '', true);
-
     $topurl = 'pages/team/team_report.php?unsubscribe=' . $ur . ($unsubscribe_user !== '' ? '&user=' . $unsubscribe_user : '');
 }
 
 if (getval('dr', '') != '') {
     # quick redirect to periodic report deletion.
     $dr = getval('dr', '');
-
     $topurl = 'pages/team/team_report.php?delete=' . $dr;
 }
 

@@ -326,17 +326,12 @@ if (isset($ffmpeg_alternatives))
 
         if ($generate) # OK to generate this alternative?
             {
-
-            if(!hook("removepreviousalts", "", array($ffmpeg_alternatives, $file, $n))):
-
             # Remove any existing alternative file(s) with this name.
             $existing = ps_query("select ref from resource_alt_files where resource = ? and name = ?", array("i", $ref, "s", $ffmpeg_alternatives[$n]["name"]));
             for ($m=0;$m<count($existing);$m++)
                 {
                 delete_alternative_file($ref,$existing[$m]["ref"]);
                 }
-            
-            endif;
 
             $alt_type = '';
             if(isset($ffmpeg_alternatives[$n]['alt_type'])) {

@@ -50,9 +50,9 @@ if ($alternative==-1 && !($snapshotcheck && in_array($extension, $ffmpeg_support
 
 
 # Set up target file
-if(!hook("previewpskipdel")):
-if (file_exists($target)) {unlink($target);}
-endif;
+if (file_exists($target)) {
+    unlink($target);
+}
 
 # Locate imagemagick.
 $convert_fullpath = get_utility_path("im-convert");
