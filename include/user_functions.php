@@ -591,11 +591,7 @@ function get_usergroup($ref)
 function get_user($ref)
     {
     global $udata_cache;
-    if (isset($udata_cache[$ref]))
-        {
-        $return = $udata_cache[$ref];
-        }
-    else
+    if (!isset($udata_cache[$ref]))
         {
         $user_columns = columns_in("user","u");
         $user_columns = str_replace("ip_restrict`","ip_restrict` ip_restrict_user",$user_columns); 
@@ -2949,7 +2945,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         
         # Create profile image - cropped to square from centre.
         $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . " -resize 400x400 -thumbnail 200x200^^ -gravity center -extent 200x200" . " " . escapeshellarg($profile_image_path);
-        $output = run_command($command);
+        run_command($command);
 
         # Store reference to user image.
         ps_query("update user set profile_image = ? where ref = ?", array("s", $profile_image_name, "i", $user_ref));

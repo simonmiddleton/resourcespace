@@ -460,7 +460,7 @@ final class IIIFRequest {
         $this->data = get_resource_field_data($dataresource["ref"]);
 
         // Label property
-        foreach($this->searchresults as $position => $iiif_result)
+        foreach($this->searchresults as $iiif_result)
             {
             // Keep on until we find a label
             $iiif_label = get_data_by_field($iiif_result["ref"], $this->title_field);

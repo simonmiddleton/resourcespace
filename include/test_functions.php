@@ -9,7 +9,6 @@ function resource_random_jpg($resource,$width, $height)
 
     // Create image
     $test_image = imagecreate($width, $height);
-    $bg_col = imagecolorallocate($test_image, $bg_r,$bg_g,$bg_b);
     $text_r = $bg_r < 128 ? $bg_r + 100 : $bg_r - 100;
     $text_g = $bg_g < 128 ? $bg_g + 100 : $bg_g - 100;
     $text_b = $bg_b < 128 ? $bg_b + 100 : $bg_b - 100;

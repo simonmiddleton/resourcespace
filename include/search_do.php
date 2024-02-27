@@ -244,7 +244,6 @@ function do_search(
     $t = new PreparedStatementQuery();
     $t2 = new PreparedStatementQuery();
     $score="";
-    $skipped_last=false;
 
     # Do not process if a numeric search is provided (resource ID)
     $keysearch=!($config_search_for_number && is_numeric($search));
@@ -329,7 +328,6 @@ function do_search(
                 {
                 if (substr($keyword,0,1)!="!" || substr($keyword,0,6)=="!empty")
                     {
-                    $field=0;
                     $keywordprocessed=false;
 
                     if (strpos($keyword,":")!==false)
@@ -592,7 +590,6 @@ function do_search(
 
                         if (in_array($keyword, $noadd)) # skip common words that are excluded from indexing
                             {
-                            $skipped_last = true;
                             debug("do_search(): skipped common word: {$keyword}");
                             }
                         else
@@ -924,7 +921,6 @@ function do_search(
                                         } // End of standard keyword match
                                     } // end if not omit
                                 } // end found wildcards
-                            $skipped_last = false;
                             } // end handle wildcards
                         } // end normal keyword
                     } // end of check if special search
@@ -1533,7 +1529,6 @@ function do_search(
     # Remove keywords, least used first, until we get results.
     $lsql = new PreparedStatementQuery();
     $omitmatch=false;
-    $params=array();
 
     for ($n=0;$n<count($keywords);$n++)
         {

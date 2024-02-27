@@ -2303,7 +2303,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             $modified_mpr_command=hook('modify_mpr_command','',array($command,$ref,$extension));
             if($modified_mpr_command!=''){$command=$modified_mpr_command;}
-            $output = run_command($command);
+            run_command($command);
             }
         # For the thumbnail image, call extract_mean_colour() to save the colour/size information
         $thumbpath = get_resource_path($ref,true,"thm",false,"jpg",-1,1,false,"",$alternative);
@@ -3137,7 +3137,7 @@ function AutoRotateImage($src_image, $ref = false)
             if ($orientation != 0) 
                 {
                 $command = $convert_fullpath . ' ' . escapeshellarg($src_image) . ' -auto-orient ' . escapeshellarg($new_image);
-                $output=run_command($command);
+                run_command($command);
                 }
             }
         }
@@ -3156,14 +3156,14 @@ function AutoRotateImage($src_image, $ref = false)
         $old_orientation = run_command($cmd);
         $exiftool_copy_command = $exiftool_fullpath . " -TagsFromFile " . escapeshellarg($src_image) . " -all:all " . escapeshellarg($new_image);
 
-        $output=run_command($exiftool_copy_command);
+        run_command($exiftool_copy_command);
 
         # If orientation was empty there's no telling if rotation happened, so don't assume.
         # Also, don't go through this step if the old orientation was set to normal
         if ($old_orientation != '' && $old_orientation != 1) 
             {
             $fix_orientation = $exiftool_fullpath . ' -Orientation=1 -n ' . escapeshellarg($new_image);
-            $output=run_command($fix_orientation);
+            run_command($fix_orientation);
             }
         
         # we'll remove the exiftool created file copy (as a result of using -TagsFromFile)
