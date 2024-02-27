@@ -520,32 +520,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $checksum_required = false;
                 }
 
-            if(create_core_previews($ref, $extension, false) === false)
-                {
-                // Proceed with full set of previews
-                if ($enable_thumbnail_creation_on_upload)
-                    {
-                    create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
-                    }
-                else if(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
-                    {
-                    $create_previews_job_data = array(
-                        'resource' => $ref,
-                        'thumbonly' => false,
-                        'extension' => $extension
-                    );
-                    $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
-                    $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
-    
-                    job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
-                    }
-                else
-                    {
-                    # Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
-                    delete_previews($ref);
-                    ps_query("UPDATE resource SET has_image = ? WHERE ref= ?", ['i',RESOURCE_PREVIEWS_NONE,'i', $ref]);
-                    }
-                }           
+            start_previews($ref, $extension, false);
             }
     
         # Update file dimensions
@@ -2136,7 +2111,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             {
             $target = false;
             }
-        
         if ($target && $alternative==-1) # Do not run for alternative uploads 
             {
             extract_mean_colour($target,$ref);
@@ -2333,68 +2307,57 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
 
     $file=get_resource_path($ref,true,"scr",false,$extension,-1,1,false,'',$alternative);$top="scr";
     if (!file_exists($file)) {
-        # Some images may be too small to have a scr.  Try pre:
+        // Some images may be too small to have a scr.  Try pre:
         $file=get_resource_path($ref,true,"pre",false,$extension,-1,1,false,'',$alternative);$top="pre";
     }
     
-    if (!file_exists($file)) {return false;}
+    if (!file_exists($file)) {
+        return false;
+    }
     $source = imagecreatefromjpeg($file);
-    # Apply tweaks
-    if ($rotateangle!=0)
-        {
+    // Apply tweaks
+    if ($rotateangle!=0) {
         # Use built-in function if available, else use function in this file
-        if (function_exists("imagerotate"))
-            {
+        if (function_exists("imagerotate")) {
             $source=imagerotate($source,$rotateangle,0);
-            }
-        else
-            {
+        } else {
             $source=AltImageRotate($source,$rotateangle);
-            }
         }
+    }
         
     if ($gamma!=0) {imagegammacorrect($source,1.0,$gamma);}
 
-    # Save source image and fetch new dimensions
-
-    imagejpeg($source,$file,95);        
-
+    // Save source image and fetch new dimensions
+    imagejpeg($source,$file,95);
     list($tw,$th) = try_getimagesize($file);   
     
-    # Save all images
-    $ps=ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE (internal=1 OR allow_preview=1) AND id <> ?", ['s', $top]);
-    for ($n=0;$n<count($ps);$n++)
-        {
-        # fetch target width and height
+    // Save all images
+    $ps = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size WHERE (internal=1 OR allow_preview=1) AND id <> ?", ['s', $top]);
+    for ($n=0;$n<count($ps);$n++) {
+        // Fetch target width and height
         $file=get_resource_path($ref,true,$ps[$n]["id"],false,$extension,-1,1,false,'',$alternative);       
-        if (file_exists($file)){
-            list($sw,$sh) = try_getimagesize($file);
-        
-            if ($rotateangle!=0) {$temp=$sw;$sw=$sh;$sh=$temp;}
-        
-            # Rescale image
+        if (file_exists($file)) {
+            list($sw,$sh) = try_getimagesize($file);        
+            if ($rotateangle!=0) {
+                $temp=$sw;$sw=$sh;$sh=$temp;
+            }
+            // Rescale image
             $target = imagecreatetruecolor($sw,$sh);
             imagecopyresampled($target,$source,0,0,0,0,$sw,$sh,$tw,$th);
-            if ($extension=="png")
-                {
+            if ($extension=="png") {
                 imagepng($target,$file);
-                }
-            elseif ($extension=="gif")
-                {
+            } elseif ($extension=="gif") {
                 imagegif($target,$file);
-                }
-            else
-                {
+            } else {
                 imagejpeg($target,$file,95);
-                }
             }
         }
+    }
 
-    if ($rotateangle!=0 && $alternative==-1)
-        {
+    if ($rotateangle!=0 && $alternative==-1) {
         # Swap thumb heights/widths
-        $ts=ps_query("select thumb_width,thumb_height from resource where ref= ?", ['i', $ref]);
-        ps_query("update resource set thumb_width= ?,thumb_height= ? where ref= ?", 
+        $ts = ps_query("SELECT thumb_width,thumb_height FROM resource WHERE ref= ?", ['i', $ref]);
+        ps_query("UPDATE resource SET thumb_width= ?,thumb_height= ? WHERE ref= ?", 
                 [
                 'i', $ts[0]["thumb_height"],
                 'i', $ts[0]["thumb_width"],
@@ -2403,76 +2366,70 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
             );
         
         global $portrait_landscape_field,$lang;
-        if (isset($portrait_landscape_field))
-            {
-            # Write 'Portrait' or 'Landscape' to the appropriate field.
-            if ($ts[0]["thumb_height"]>=$ts[0]["thumb_width"]) {$portland=$lang["landscape"];} else {$portland=$lang["portrait"];}
-            update_field($ref,$portrait_landscape_field,$portland);
+        if (isset($portrait_landscape_field)) {
+            // Write 'Portrait' or 'Landscape' to the appropriate field.
+            if ($ts[0]["thumb_height"]>=$ts[0]["thumb_width"]) {
+                $portland=$lang["landscape"];
+            } else {
+                $portland=$lang["portrait"];
             }
-        
+            update_field($ref,$portrait_landscape_field,$portland);
         }
+    }
     # Update the modified date to force the browser to reload the new thumbs.
     $current_preview_tweak ='';
     if ($alternative==-1){
-        ps_query("update resource set file_modified=now() where ref= ?", ['i', $ref]);
+        ps_query("UPDATE resource SET file_modified=NOW() WHERE ref= ?", ['i', $ref]);
     
-    # record what was done so that we can reconstruct later if needed
-    # current format is rotation|gamma. Additional could be tacked on if more manipulation options are added
-    $current_preview_tweak = ps_value("select preview_tweaks value from resource where ref = ?",array("i",$ref), "");
+    // Record what was done so that we can reconstruct later if needed
+    // current format is rotation|gamma. Additional could be tacked on if more manipulation options are added
+    $current_preview_tweak = ps_value("SELECT preview_tweaks value FROM resource WHERE ref = ?",["i",$ref], "");
     }
     
-    if (strlen($current_preview_tweak) == 0)
-        {
-            $oldrotate = 0;
-            $oldgamma = 1;
-        } else {
-            list($oldrotate,$oldgamma) = explode('|',$current_preview_tweak);
+    if (strlen($current_preview_tweak) == 0) {
+        $oldrotate = 0;
+        $oldgamma = 1;
+    } else {
+        list($oldrotate,$oldgamma) = explode('|',$current_preview_tweak);
         }
-        $newrotate = $oldrotate + $rotateangle;
-        if ($newrotate > 360){
-            $newrotate = $newrotate - 360;
-        }elseif ($newrotate < 0){
-            $newrotate = 360 + $newrotate;
-        }elseif ($newrotate == 360){
-            $newrotate = 0;
-        }
-        if ($gamma > 0){
-            $newgamma = $oldgamma +  $gamma -1;
-        } else {
-            $newgamma = $oldgamma;
-        }
-        global $watermark;
-        if ($watermark){
-            tweak_wm_preview_images($ref,$rotateangle,$gamma,"jpg",$alternative);
-        }
-        if ($alternative==-1){
-            ps_query("update resource set preview_tweaks = ? where ref = ?", ['s', $newrotate . '|' . $newgamma, 'i', $ref]);
-        }
+    $newrotate = $oldrotate + $rotateangle;
+    if ($newrotate > 360) {
+        $newrotate = $newrotate - 360;
+    } elseif ($newrotate < 0) {
+        $newrotate = 360 + $newrotate;
+    } elseif ($newrotate == 360) {
+        $newrotate = 0;
+    }
+    if ($gamma > 0) {
+        $newgamma = $oldgamma +  $gamma -1;
+    } else {
+        $newgamma = $oldgamma;
+    }
+    
+    if ($GLOBALS["watermark"]) {
+        tweak_wm_preview_images($ref,$rotateangle,$gamma,"jpg",$alternative);
+    }
+    if ($alternative==-1) {
+        ps_query("UPDATE resource SET preview_tweaks = ? WHERE ref = ?", ['s', $newrotate . '|' . $newgamma, 'i', $ref]);
+    }
 
-    if ($rotateangle != 0)
-        {
-        if ($resource_ext != "" && in_array($resource_ext, $ffmpeg_supported_extensions))
-            {
+    if ($rotateangle != 0) {
+        if ($resource_ext != "" && in_array($resource_ext, $ffmpeg_supported_extensions)) {
             # Find snapshots for video files so they can be rotated with the thumbnail
             $video_snapshots = get_video_snapshots($ref, true, false);
-            foreach($video_snapshots as $snapshot)
-                {
+            foreach ($video_snapshots as $snapshot) {
                 $snapshot_source = imagecreatefromjpeg($snapshot);
                 # Use built-in function if available, else use function in this file
-                if (function_exists("imagerotate"))
-                    {
+                if (function_exists("imagerotate")) {
                     $snapshot_source = imagerotate($snapshot_source, $rotateangle, 0);
-                    }
-                else
-                    {
+                } else {
                     $snapshot_source = AltImageRotate($snapshot_source, $rotateangle);
-                    }
-                imagejpeg($snapshot_source, $snapshot, 95);
                 }
+                imagejpeg($snapshot_source, $snapshot, 95);
             }
         }
-
     }
+}
 
 function tweak_wm_preview_images($ref,$rotateangle,$gamma,$extension="jpg",$alternative=-1){
 
@@ -3926,45 +3883,72 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
 * @return void
 */
 function remove_video_previews(int $resource) : void
-    {
+{
     global $ffmpeg_preview_extension;
 
     # Remove pre size video
     $pre_video_size = get_resource_path($resource, true, "pre", false, $ffmpeg_preview_extension, -1, 1, false, "", -1);
-    if (file_exists($pre_video_size))
-        {
+    if (file_exists($pre_video_size)) {
         unlink($pre_video_size);
-        }
+    }
 
     # Remove snapshots
     $directory = dirname($pre_video_size);
-    foreach (glob($directory . "/*") as $filetoremove)
-            {
-            if (strpos($filetoremove, 'snapshot_') !== false)
-                {
-                unlink($filetoremove);
-                }
-            }
+    foreach (glob($directory . "/*") as $filetoremove) {
+        if (strpos($filetoremove, 'snapshot_') !== false) {
+            unlink($filetoremove);
+        }
     }
+}
 
 /**
- * Check if only the core preview sizes are required and call create_previews() to generate only these sizes if so
+ * Create preview sizes via create_previews() and/or generate jobs as necessary
  *
  * @param int $ref                  Resource ID
- * @param string $extension         File extension
- * @param bool $ingested            Has resource been ingested into RS (only false for staticsynced resources not in filestore)
  * 
- * @return bool                     True if minimal previews have been generated
+ * @return bool                     true if offline jobs/scripts will create the full set of previews
  * 
  */
-function create_core_previews(int $ref, string $extension, bool $ingested) {
-    $resource_data = get_resource_data($ref);
+function start_previews(int $ref): bool
+{
+    global $lang;
 
-    if(minimal_previews_required($resource_data)) {
-        create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
-        return true; 
+    delete_previews($ref);
+    $minimal_previews_required = false;
+
+    $resource_data = get_resource_data($ref);
+    $ingested = empty($resource_data['file_path']);
+    if($GLOBALS["offline_job_queue"]) {
+        $create_previews_job_data = [
+            'resource' => $ref,
+            'thumbonly' => false,
+            'extension' => $resource_data["file_extension"],
+            'previewonly' => false,
+            'previewbased' => false,
+            'alternative' => -1,
+            'ignoremaxsize' => true,
+        ];
+        $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
+        $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
+        job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+        $minimal_previews_required = true;
+    } elseif (
+        $GLOBALS["enable_thumbnail_creation_on_upload"] === false 
+        || (int) $resource_data["file_size"] >= (int) ($GLOBALS["preview_generate_max_file_size"] ?? PHP_INT_MAX)
+    ) {
+        // These configs require use of a cron task to run batch/create_previews.php
+        ps_query("UPDATE resource SET has_image = ? WHERE ref= ?", ['i',RESOURCE_PREVIEWS_NONE,'i', $ref]);
+        $minimal_previews_required = true;
+        }
+        
+    if($minimal_previews_required) {
+        create_previews($ref,false,$resource_data["file_extension"],false,false,-1,true,$ingested,false,["pre","col","thm"]);
+        return true;
     }
-    return false;
+// No offline preview creation - create the full set of previews immediately
+create_previews($ref,false,$resource_data["file_extension"],false,false,-1,false,$ingested);
+   
+return false;
 }
 
 
@@ -3980,56 +3964,64 @@ function create_core_previews(int $ref, string $extension, bool $ingested) {
  * @return array
  * 
  */
-function get_sizes_to_generate(string $extension,array $dimensions, bool $thumbonly=false,bool $previewonly = false,array $onlysizes = [])
-    {
+function get_sizes_to_generate(
+    string $extension,
+    array $dimensions,
+    bool $thumbonly = false,
+    bool $previewonly = false,
+    array $onlysizes = []
+    )
+{
     $sw = (int) ($dimensions[0] ?? 0);
     $sh = (int) ($dimensions[1] ?? 0);
 
-    if($sw==0 || $sh ==0) {
+    if($sw == 0 || $sh == 0) {
         return false;
     }
     $getsizes = [];
     $params = [];
-    if ($thumbonly)
-        {
+    if ($thumbonly) {
         $onlysizes=['thm','col'];
-        }
-    elseif ($previewonly)
-        {
+    } elseif ($previewonly) {
         $onlysizes = ['thm','col','pre','scr'];
-        }
+    }
     
     // Construct query    
-    if (count($onlysizes) > 0)
-        {
-        $onlysizes = array_filter($onlysizes,function($v){return ctype_lower($v);});
+    if (count($onlysizes) > 0) {
+        $onlysizes = array_filter($onlysizes,function($v) {
+            return ctype_lower($v);
+        });
         $validsizecount = count($onlysizes);
-        if($validsizecount === 0)
-            {
+        if($validsizecount === 0) {
             return false;
-            }
+        }
         $getsizes = array_fill(0,$validsizecount,"?");
         $params = ps_param_fill($onlysizes, 's');   
-        }
+    }
 
     $condition = count($getsizes) > 0 ? " WHERE id IN (" . implode(",",$getsizes) . ")" : "";
-    $ps=ps_query(
+    $ps = ps_query(
         "SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition,
         $params
         );
 
-    if($GLOBALS["lean_preview_generation"] && count($getsizes) == 0) {
+    if ($GLOBALS["lean_preview_generation"] && count($getsizes) == 0) {
         $force_make = array("pre","thm","col");
-        if($extension != "jpg" || $extension != "jpeg"){
+        if ($extension != "jpg" || $extension != "jpeg") {
             array_push($force_make,"hpr","scr");
         }
         $count = count($ps)-1;
         $oversized = 0;
         for ($s = $count;$s>0;$s--) {
-            if (!in_array($ps[$s]['id'],$force_make)
+            if (
+                !in_array($ps[$s]['id'],$force_make)
                 && !in_array($ps[$s]['id'],$GLOBALS["always_make_previews"])
-                && (isset($o_width) && isset($o_height) && $ps[$s]['width']>$o_width && $ps[$s]['height']>$o_height)
-                && !$GLOBALS["previews_allow_enlarge"]) {
+                && isset($o_width)
+                && isset($o_height)
+                && $ps[$s]['width'] > $o_width
+                && $ps[$s]['height'] > $o_height
+                && !$GLOBALS["previews_allow_enlarge"]
+            ) {
                 $oversized++;
             }
             if($oversized>0) {
@@ -4038,33 +4030,33 @@ function get_sizes_to_generate(string $extension,array $dimensions, bool $thumbo
         }
         $ps = array_values($ps);
     }
-
         
-    if ((count($onlysizes) == 0 && $GLOBALS["preview_tiles"] && $GLOBALS["preview_tiles_create_auto"]) || in_array("tiles",$onlysizes)
+    if (
+        (count($onlysizes) === 0 || in_array("tiles",$onlysizes))
+        && $GLOBALS["preview_tiles"] 
+        && $GLOBALS["preview_tiles_create_auto"]
         && !in_array($extension, config_merge_non_image_types())
         )
         {
         // Ensure that scales are in order
         natsort($GLOBALS["preview_tile_scale_factors"]);
 
-        debug("create_previews - adding tiles to generate list: source width: " . $sw . " source height: " . $sh);
-        foreach($GLOBALS["preview_tile_scale_factors"] as $scale)
-            {
-            foreach(compute_tiles_at_scale_factor($scale, $sw, $sh) as $tile)
-                {
+        debug("create_previews - adding tiles to generate list: source width: "
+            . $sw . " source height: " . $sh
+            );
+        foreach($GLOBALS["preview_tile_scale_factors"] as $scale) {
+            foreach(compute_tiles_at_scale_factor($scale, $sw, $sh) as $tile) {
                 $tile['width'] = floor($tile['w'] / $scale);
                 $tile['height'] = floor($tile['h'] / $scale);
                 $tile['type'] = 'tile';
                 $tile['internal'] = 1;
                 $tile['allow_preview'] = 0;
-
                 $ps[] = $tile;
-                }
             }
         }
+    }
     
-    if(count($onlysizes) == 1 && substr($onlysizes[0],0,8) == "resized_")
-        {
+    if(count($onlysizes) == 1 && substr($onlysizes[0],0,8) == "resized_") {
         $o = count($ps);
         $size_req = explode("_",substr($onlysizes[0],8));
         $customx = $size_req[0];
@@ -4074,12 +4066,12 @@ function get_sizes_to_generate(string $extension,array $dimensions, bool $thumbo
         $ps[$o]['id'] = $onlysizes[0]; 
         $ps[$o]['width'] = $customx;
         $ps[$o]["height"] = $customy;
-        }
-    return $ps;
     }
+    return $ps;
+}
 
 function create_image_alternatives(int $ref, array $params, $force = false)
-    {
+{
     // Handle alternative image file generation    
     $convert_fullpath = get_utility_path("im-convert");
     if ($convert_fullpath === false) {
@@ -4188,18 +4180,4 @@ function create_image_alternatives(int $ref, array $params, $force = false)
             );
         }    
     }
-    }
-
-/**
- * Check if only minimal previews are required
- *
- * @param array $resource_data  Array of data from resource table
- * 
- * @return bool
- * 
- */
-function minimal_previews_required($resource_data) {
-    return $GLOBALS["offline_job_queue"]
-        || $GLOBALS["enable_thumbnail_creation_on_upload"] == false
-        || (isset($GLOBALS["preview_generate_max_file_size"]) && is_int_loose($GLOBALS["preview_generate_max_file_size"]) && (int)$resource_data["file_size"] >= $GLOBALS["preview_generate_max_file_size"]);
 }
