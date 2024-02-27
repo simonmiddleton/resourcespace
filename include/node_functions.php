@@ -2827,6 +2827,7 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryr
     $allrestyperefs = array_column($allrestypes,"ref");
     $allfields = get_resource_type_fields();
     $fieldglobals = array_column($allfields,"global","ref");
+    $joined_fields = get_resource_table_joins();
 
     $restypes = array_filter($restypes,function ($val) {return $val > 0;});
     $fields = array_filter($fields,function ($val) {return $val > 0;});
@@ -2869,6 +2870,15 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryr
                 $params = array_merge(["i",$restype],ps_param_fill($remove_fields,"i"));
                 ps_query($query,$params);
                 $deletedrows += sql_affected_rows();
+
+                # Also remove data in joined fields.
+                foreach ($remove_fields as $check_joined_field)
+                    {
+                    if (in_array($check_joined_field, $joined_fields))
+                        {
+                        ps_query("UPDATE resource SET `field" . $check_joined_field . "` = null WHERE resource_type = ?", array("i", $restype));
+                        }
+                    }
                 }
             }
         }
