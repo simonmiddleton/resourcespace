@@ -660,7 +660,7 @@ function save_user($ref)
 
         log_activity("{$current_user_data['username']} ({$ref})", LOG_CODE_DELETED, null, 'user', null, $ref);
 
-        return true; # Successful deletion
+        return true;
         }
     else
         {
@@ -701,7 +701,7 @@ function save_user($ref)
             $message = check_password($password);
             if($message !== true)
                 {
-                return $message; # Returns an error message
+                return $message;
                 }
             }
 
@@ -808,7 +808,7 @@ function save_user($ref)
         $result=email_reset_link($email, true);
         if ($result!==true) 
             {    
-            return $result; # Returns an error message
+            return $result;
             }
         }
         
@@ -818,7 +818,7 @@ function save_user($ref)
         message_remove_related(USER_REQUEST,$ref);
         }
 
-    return true; # Successful save
+    return true; 
     }
 
 
@@ -855,7 +855,7 @@ function email_reset_link($email,$newuser=false)
 
     if($email == '')
         {
-        return $lang["accountnoemail-reset-not-emailed"]; # Password reset link was not sent because the account has expired;
+        return $lang["accountnoemail-reset-not-emailed"]; 
         }
 
     # The reset link is sent after the principal user update has completed
@@ -865,7 +865,7 @@ function email_reset_link($email,$newuser=false)
     sleep($password_brute_force_delay);
     if(count($details) == 0)
         {
-        return $lang["accountexpired-reset-not-emailed"]; # Password reset link was not sent because the account has expired
+        return $lang["accountexpired-reset-not-emailed"]; 
         }
     $details = $details[0];
 
