@@ -172,32 +172,44 @@ if ($use_mp3_player){
 }
 
 include "../include/header.php";
-?>
 
-<?php if(!hook("fullpreviewresultnav")){ ?>
-<?php if (!hook("replacepreviewbacktoview")){?>
-<p style="margin:7px 0 7px 0;padding:0;"><a class="enterLink" href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
-<?php } /*end hook replacepreviewbacktoview*/ ?>
-<?php if ($k=="") { ?>
+if (!hook("fullpreviewresultnav")) {
+    if (!hook("replacepreviewbacktoview")) { ?>
+        <p style="margin:7px 0 7px 0;padding:0;">
+            <a class="enterLink"
+                href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&k=<?php echo urlencode($k)?>&<?php echo hook("viewextraurl") ?>">
+                <?php echo LINK_CARET_BACK . escape($lang["backtoresourceview"]); ?>
+            </a>
+    <?php } /*end hook replacepreviewbacktoview*/
 
-<?php if (!checkperm("b") && !in_array($resource["resource_type"],$collection_block_restypes)) { ?>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<?php echo add_to_collection_link(htmlspecialchars($ref))?><i aria-hidden="true" class="fa fa-plus-circle"></i>&nbsp;<?php echo htmlspecialchars($lang["action-addtocollection"]) ?></a><?php } ?>
-<?php if ($search=="!collection" . $usercollection) { ?>&nbsp;&nbsp;<?php echo remove_from_collection_link(htmlspecialchars($ref))?><i aria-hidden="true" class="fa fa-minus-circle"></i>&nbsp;<?php echo htmlspecialchars($lang["action-removefromcollection"]) ?></a><?php }
+    if ($k == "") {
+        if (!checkperm("b") && !in_array($resource["resource_type"], $collection_block_restypes)) { ?>
+            &nbsp;
+            <?php echo add_to_collection_link(escape($ref)); ?>
+            <i aria-hidden="true" class="fa fa-plus-circle"></i>
+            &nbsp;
+            <?php echo escape($lang["action-addtocollection"]) ?>
+            </a>
+        <?php }
 
-if(count(canSeeAnnotationsFields()) > 0)
-    {
-    ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="#" onclick="toggleAnnotationsOption(this); return false;">
-        <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
-        <span><?php echo $lang['annotate_text_link_label']; ?></span>
-    </a>
-    <?php
+        if ($search == "!collection" . $usercollection) { ?>
+            &nbsp;
+            <?php echo remove_from_collection_link(escape($ref)); ?>
+            <i aria-hidden="true" class="fa fa-minus-circle"></i>
+            &nbsp;
+            <?php echo escape($lang["action-removefromcollection"]) ?>
+            </a>
+        <?php }
+
+        if(count(canSeeAnnotationsFields()) > 0) { ?>
+            &nbsp;
+            <a href="#" onclick="toggleAnnotationsOption(this); return false;">
+                <i class='fa fa-pencil-square-o' aria-hidden="true"></i>
+                <span><?php echo escape($lang['annotate_text_link_label']); ?></span>
+            </a>
+        <?php }
     }
-}
-?>
 
-<?php 
 # If viewing alternative files allow tabbing through them, else tab through resources in the collection
 if ($alternative != "-1")
     {

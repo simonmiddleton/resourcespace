@@ -167,13 +167,13 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
         ?></select><p id="sizeInfo"></p></td><td class="DownloadFileFormatPicker" style="vertical-align: top;"><select id="format"><?php
 
-        foreach ($format_chooser_output_formats as $format)
-            {
-            ?><option value="<?php echo $format ?>" <?php if ($format == $defaultFormat) {
-                ?>selected="selected"<?php } ?>><?php echo str_replace_formatted_placeholder("%extension", $format, $lang["field-fileextension"]) ?></option><?php
-            }
-
-        ?></select><?php showProfileChooser(); ?></td>
+        foreach ($format_chooser_output_formats as $format) { ?>
+            <option value="<?php echo $format ?>" <?php echo $format == $defaultFormat ? 'selected="selected"' : ''; ?>>
+                <?php echo str_replace_formatted_placeholder("%extension", $format, $lang["field-fileextension"]) ?>
+            </option>
+        <?php } ?>
+    
+        </select><?php showProfileChooser(); ?></td>
             <td class="DownloadButton">
                 <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang['action-download']; ?></a>
             </td>
@@ -193,7 +193,8 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     # Calculate new dimensions based on original file's dimensions and configured width and height
                     $size_image_dimensions = calculate_image_dimensions($origpath, $size['width'], $size['height']);
                     if ($size['width'] == $closestSize) {
-                        $size = $originalSize; }
+                        $size = $originalSize;
+                    }
                     # Apply newly calculated width and height dimensions to the sizeInfo array
                     $size_to_output=$size;
                     $size_to_output['width']=$size_image_dimensions['new_width'];

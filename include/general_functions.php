@@ -1411,11 +1411,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
             }
         }
 
-    if (isset($attachments))
-        {
-        foreach ($attachments as $attachment){
-        $mail->AddAttachment($attachment,basename($attachment));}
+    if (isset($attachments)) {
+        foreach ($attachments as $attachment) {
+            $mail->AddAttachment($attachment, basename($attachment));
         }
+    }
 
     if (count($files)>0)
         {

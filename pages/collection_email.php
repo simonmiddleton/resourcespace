@@ -119,12 +119,14 @@ if(!$restricted_share && $minaccess >= RESOURCE_ACCESS_RESTRICTED)
     $error = $lang["restrictedsharecollection"];
     }
 
-if (isset($show_error)){?>
+if (isset($show_error)) { ?>
     <script type="text/javascript">
-    alert('<?php echo $error;?>');
+        alert('<?php echo escape($error); ?>');
         history.go(-1);
-    </script><?php
-    exit();}
+    </script>
+    <?php
+    exit();
+}
 
 $internal_share_only = checkperm("noex") || (isset($user_dl_limit) && intval($user_dl_limit) > 0);
 

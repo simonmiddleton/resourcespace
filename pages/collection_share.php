@@ -212,15 +212,15 @@ if($deleteaccess && !isset($show_error) && enforcePostRequest(getval("ajax", fal
     }
 
 include "../include/header.php";
-?>
 
-
-<?php if (isset($show_error)){?>
+if (isset($show_error)) { ?>
     <script type="text/javascript">
-    alert('<?php echo $error;?>');
+        alert('<?php echo escape($error); ?>');
         history.go(-1);
-    </script><?php
-    exit();}
+    </script>
+    <?php
+    exit();
+}
 ?>
     <div class="BasicsBox">     
     <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref)?>">

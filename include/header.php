@@ -128,13 +128,15 @@ if ($contact_sheet)
 <script type="text/javascript">
     ajaxLoadingTimer=<?php echo $ajax_loading_timer;?>;
 </script>
+
 <?php
 global $enable_ckeditor;
-if ($enable_ckeditor){?>
-<script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script><?php } ?>
+if ($enable_ckeditor) { ?>
+    <script type="text/javascript" src="<?php echo $baseurl?>/lib/ckeditor/ckeditor.js"></script>
+<?php } 
 
-<?php if (!hook("ajaxcollections")) { ?>
-<script src="<?php echo $baseurl;?>/lib/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
+if (!hook("ajaxcollections")) { ?>
+    <script src="<?php echo $baseurl;?>/lib/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <?php } ?>
 
 <!--  UPPY -->

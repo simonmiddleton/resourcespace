@@ -881,39 +881,52 @@ else
 
     <?php 
     # Loop through saved searches
-    if (is_null($cinfo['savedsearch']) && ($k=='' || $internal_share_access))
-        { // don't include saved search item in result if this is a smart collection  
+    if (is_null($cinfo['savedsearch']) && ($k=='' || $internal_share_access)) {
+        // Don't include saved search item in result if this is a smart collection  
 
         # Setting the save search icon
-        $folderurl=$baseurl."/gfx/images/";
-        $iconurl=$folderurl."save-search"."_".$language.".gif";
-        if (!file_exists($iconurl))
-            {
+        $folderurl = $baseurl . "/gfx/images/";
+        $iconurl = $folderurl . "save-search" . "_" . $language . ".gif";
+
+        if (!file_exists($iconurl)) {
             # A language specific icon is not found, use the default icon
             $iconurl = $folderurl . "save-search.gif";
-            }
+        }
 
-        for ($n=0;$n<count($searches);$n++)         
-            {
-            $ref=$searches[$n]["ref"];
-            $url=$baseurl_short."pages/search.php?search=" . urlencode($searches[$n]["search"]) . "&restypes=" . urlencode($searches[$n]["restypes"]) . "&archive=" . urlencode($searches[$n]["archive"]);
+        for ($n = 0; $n < count($searches); $n++) {
+            $ref = $searches[$n]["ref"];
+            $url = $baseurl_short . "pages/search.php?search=" . urlencode($searches[$n]["search"]) . "&restypes=" . urlencode($searches[$n]["restypes"]) . "&archive=" . urlencode($searches[$n]["archive"]);
             ?>
             <!--Resource Panel-->
             <div id="ResourceShell<?php echo $searches[$n]['ref']; ?>" class="CollectionPanelShell" data-saved-search="yes">
-            <table border="0" class="CollectionResourceAlign"><tr><td>
-            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><img alt="" border=0 width=56 height=75 src="<?php echo $iconurl?>"/></a></td>
-            </tr></table>
-            <?php if(!hook('replacesavedsearchtitle')){?>
-            <div class="CollectionPanelInfo">
-            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>"><?php echo substr($lang["savedsearch"],6)?> <?php echo $n+1?></a>&nbsp;</div><?php } ?>
-            <?php if(!hook('replaceremovelink_savedsearch')){?>
-            <div class="CollectionPanelTools">
-            <a class="removeFromCollection fa fa-minus-circle" onclick="return CollectionDivLoad(this);" href="<?php echo $baseurl_short?>pages/collections.php?removesearch=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>">
-            </a></div>  <?php } ?>          
+                <table border="0" class="CollectionResourceAlign">
+                    <tr>
+                        <td>
+                            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>">
+                                <img alt="" border=0 width=56 height=75 src="<?php echo $iconurl?>"/>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+                <?php if (!hook('replacesavedsearchtitle')) { ?>
+                    <div class="CollectionPanelInfo">
+                        <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $url?>">
+                            <?php echo escape(substr($lang["savedsearch"], 6)) . ($n + 1); ?>
+                        </a>
+                        &nbsp;
+                    </div>
+                <?php }
+                if(!hook('replaceremovelink_savedsearch')) { ?>
+                    <div class="CollectionPanelTools">
+                        <a class="removeFromCollection fa fa-minus-circle"
+                            onclick="return CollectionDivLoad(this);"
+                            href="<?php echo $baseurl_short?>pages/collections.php?removesearch=<?php echo urlencode($ref) ?>&nc=<?php echo time()?>">
+                        </a>
+                    </div> 
+                <?php } ?>
             </div>
-            <?php	  
-            }
-    }       
+        <?php }
+    }
 
     # Display thumbnails for standard display
     if ($count_result>0) {

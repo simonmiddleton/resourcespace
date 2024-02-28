@@ -1,52 +1,68 @@
 <?php
 
 function HookRefineresultsSearchBeforesearchresults()
-    {
-    global $baseurl_short,$result,$lang,$search,$k,$archive,$parameters_string, $collections;
+{
+    global $baseurl_short, $result, $lang, $search, $k, $archive, $parameters_string, $collections;
 
     // Only time when this would be needed is when legacy_actions is enabled otherwise we do it through dropdown actions
     $query = 'SELECT inst_version AS `value` FROM plugins WHERE name = \'legacy_actions\';';
-    if(trim(ps_value($query, array(), '')) === '')
-        {
-        return false;
-        }
 
-    $results=0;
-    if (is_array($result)) $results=count($result);
-    if (is_array($collections)) $results+=count($collections);
+    if (trim(ps_value($query, array(), '')) === '') {
+        return false;
+    }
+
+    $results = 0;
+
+    if (is_array($result)) {
+        $results = count($result);
+    }
+
+    if (is_array($collections)) {
+        $results += count($collections);
+    }
 
     # External sharing search support. Clear search drops back to the collection only search.
-    $default_search="";
-    if ($k!="") {$s=explode(" ",$search);$default_search=$s[0];}
+    $default_search = "";
+    if ($k!="") {
+        $s = explode(" ", $search);
+        $default_search=$s[0];
+    }
 
     # dropping back to a special search seems like appropriate behavior in general.
-    if ($k=="" && substr($search,0,1)=="!") {
-        $s=explode(" ",$search);
-        # Should a second Clear be allowed to blank out the special search? 
-        # if (count($s)>1){  
-            $default_search=$s[0];
-        #}
+    if ($k == "" && substr($search, 0, 1) == "!") {
+        $s = explode(" ", $search);
+        $default_search=$s[0];
     }
-
-
-    #if (substr($search,0,1)=="!") {return false;} # Only work for normal (non 'special') searches
     ?>
-    <div class="SearchOptionNav"><?php if ($results!=0 && $results!=1){?><a href="#" onClick="
-    if (jQuery('#RefinePlus').html()=='+')
-        {
-        jQuery('#RefineResults').slideToggle();
-        jQuery('#RefinePlus').html('&minus;');
-        jQuery('#refine_keywords').focus();
-        }
-    else
-        {
-        jQuery('#RefineResults').slideToggle();
-        jQuery('#RefinePlus').html('+');
-        }
-    "><span id='RefinePlus'>+</span> <?php echo $lang["refineresults"]?></a>&nbsp;&nbsp;<?php } ?><?php if ($search!=""){?><a href='<?php echo $baseurl_short?>pages/search.php?search=<?php echo $default_search ?><?php echo $parameters_string?>'>&gt;&nbsp;<?php echo $lang["clearsearch"]?></a><?php } ?></div>
+
+    <div class="SearchOptionNav">
+        <?php if ($results != 0 && $results != 1) { ?>
+            <a href="#" onClick="
+                if (jQuery('#RefinePlus').html()=='+') {
+                    jQuery('#RefineResults').slideToggle();
+                    jQuery('#RefinePlus').html('&minus;');
+                    jQuery('#refine_keywords').focus();
+                } else {
+                    jQuery('#RefineResults').slideToggle();
+                    jQuery('#RefinePlus').html('+');
+                }">
+                <span id='RefinePlus'>+</span>
+                <?php echo escape($lang["refineresults"]); ?>
+            </a>
+            &nbsp;&nbsp;
+        <?php }
+        
+        if ($search != "") { ?>
+            <a href='<?php echo $baseurl_short?>pages/search.php?search=<?php echo $default_search ?><?php echo $parameters_string?>'>
+            &gt;&nbsp;
+            <?php echo escape($lang["clearsearch"]); ?></a>
+        <?php } ?>
+        
+    </div>
+
     <?php
     return true;
-    }
+}
     
 function HookRefineresultsSearchBeforesearchresultsexpandspace()
     {

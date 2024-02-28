@@ -155,14 +155,17 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
             
             $whratio=$imagesize[0]/$imagesize[1];
     
-            if ($whratio<1){
-            $imageheight=$height-4; // vertical images can take up half the page
-            $whratio=$imagesize[0]/$imagesize[1];
-            $imagewidth=$imageheight*$whratio;}
-            if ($whratio>=1 || $imagewidth>$width+1){
-            $imagewidth=$width-1; // horizontal images are scaled to width - 1 in
-            $hwratio=$imagesize[1]/$imagesize[0];
-            $imageheight=$imagewidth*$hwratio;}
+            if ($whratio < 1) {
+                $imageheight = $height - 4; // vertical images can take up half the page
+                $whratio = $imagesize[0] / $imagesize[1];
+                $imagewidth = $imageheight * $whratio;
+            }
+
+            if ($whratio >=1 || $imagewidth > $width+1) {
+                $imagewidth = $width - 1; // horizontal images are scaled to width - 1 in
+                $hwratio = $imagesize[1] / $imagesize[0];
+                $imageheight = $imagewidth * $hwratio;
+            }
         
             $pdf->Text(.5,.5,i18n_get_translated($resourcedata['field'.$view_title_field]).' '.$date);
             $pdf->Image($imgpath,((($width-1)/2)-($imagewidth-1)/2),1,$imagewidth,$imageheight,"jpg",$baseurl. '/?r=' . $ref);  

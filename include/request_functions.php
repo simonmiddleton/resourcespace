@@ -507,10 +507,12 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
         $templatevars['thumbnail']="../gfx/".get_nopreview_icon($resourcedata["resource_type"],$resourcedata["file_extension"],false);
         }
         $templatevars['url']=$baseurl."/?r=".$ref;
-        if (isset($filename_field)){
-        $templatevars["filename"]=$lang["fieldtitle-original_filename"] . ": " . get_data_by_field($ref,$filename_field);}
-        if (isset($resourcedata["field" . $view_title_field])){
-        $templatevars["title"]=$resourcedata["field" . $view_title_field];}
+        if (isset($filename_field)) {
+            $templatevars["filename"] = $lang["fieldtitle-original_filename"] . ": " . get_data_by_field($ref, $filename_field);
+        }
+        if (isset($resourcedata["field" . $view_title_field])) {
+            $templatevars["title"] = $resourcedata["field" . $view_title_field];
+        }
 
         $c=create_collection($userref,$lang["request"] . " " . date("ymdHis"),0,0,0,false,array("type" => COLLECTION_TYPE_REQUEST));
         add_resource_to_collection($ref,$c,true);
@@ -541,8 +543,9 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
 
         $collectiondata=get_collection($ref);
         $templatevars['url']=$baseurl."/?c=".$ref;
-        if (isset($collectiondata["name"])){
-        $templatevars["title"]=$collectiondata["name"];}
+        if (isset($collectiondata["name"])) {
+            $templatevars["title"] = $collectiondata["name"];
+        }
         }
 
     # Formulate e-mail text
