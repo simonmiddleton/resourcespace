@@ -769,6 +769,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         global $category_tree_add_parents, $category_tree_search_use_and;
 
         $set  = preg_split('/[;\|]/', cleanse_string($value, true));
+        $name = "nodes_searched[{$field['ref']}][]";
 
         /*
         For search, category trees work slightly different than the intended behaviour shown in edit_fields/7.php:
@@ -883,6 +884,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             $edit_autosave           = false;
             $display_as_radiobuttons = false;
             $display_as_checkbox     = true;
+            $name                    = "nodes_searched[{$field['ref']}][]";
 
             if($forsearchbar || $field['display_as_dropdown'])
                 {
@@ -2151,6 +2153,18 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
             {
+            $name = "nodes[{$field['ref']}]";
+
+            // Sometimes we need to pass multiple options
+            if(in_array($field['type'], array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE)))
+                {
+                $name = "nodes[{$field['ref']}][]";
+                }
+            elseif(FIELD_TYPE_DYNAMIC_KEYWORDS_LIST == $field['type'])
+                {
+                $name = "field_{$field['ref']}";
+                }
+
             $field_nodes = array();
             foreach($selected_nodes as $selected_node)
                 {
