@@ -1028,7 +1028,16 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
         $fields= ps_query('select ' . columns_in("resource_type_field") . ' from resource_type_field ' .  (($fieldtypefilter=="")?'':' where ' . $fieldtypefilter) . ' order by title, name', $params, "schema");
     }
     else{
-        $fields= ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where resource_type= ? " .  (($fieldtypefilter=="")?"":" and " . $fieldtypefilter) . "order by title, name", array_merge(['i', $rtype], $params),"schema");
+        if ($rtype === 0)
+            {
+            $rtype_sql = '`global` = 1';
+            }
+        else
+            {
+            $rtype_sql = 'ref IN (SELECT resource_type_field FROM resource_type_field_resource_type WHERE resource_type = ?)';
+            $params = array_merge(array('i', $rtype), $params);
+            }
+        $fields = ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where $rtype_sql " .  (($fieldtypefilter == "") ? "" : "and " . $fieldtypefilter) . "order by title, name", $params, "schema");
     }
 ?>
   <div class="Question">
