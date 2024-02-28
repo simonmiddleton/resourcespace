@@ -18,7 +18,6 @@ function HookSimplesamlAllPreheaderoutput()
         global $allow_password_change, $delete_requires_password;
         $delete_requires_password=false;
         $allow_password_change=false;
-        $session_autologout = false;
         return true;
         }
 
@@ -128,7 +127,7 @@ function HookSimplesamlAllPreheaderoutput()
             }
         }
 
-    $as=simplesaml_authenticate();
+    simplesaml_authenticate();
     return true;
     }
 
@@ -475,7 +474,6 @@ function HookSimplesamlAllProvideusercredentials()
             {
             // Update user info
             global $simplesaml_update_group, $session_autologout;
-            $hash_update = "";
             $sql = "UPDATE user SET origin='simplesaml', username=?,";
             $params=array("s",$username);
 

@@ -81,14 +81,6 @@ function HookAnnotateViewRenderinnerresourcepreview()
 
         if(file_exists($imagepath))
             {
-            $page_count         = get_page_count($resource);
-            $multipage_document = false;
-
-            if(1 < $page_count)
-                {
-                $multipage_document = true;
-                }
-            
             $modal = (getval("modal", "") == "true" ? "true" : "false");
             ?>
             <div id="wrapper" class="annotate-view-wrapper">

@@ -391,11 +391,6 @@ parameters:
 			path: plugins/image_banks/providers/ResourceSpace.php
 
 		-
-			message: "#^Variable \\$resource_metadata on left side of \\?\\?\\= is never defined\\.$#"
-			count: 1
-			path: plugins/image_banks/providers/ResourceSpace.php
-
-		-
 			message: "#^Variable \\$email in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: plugins/simplesaml/hooks/all.php

@@ -16,11 +16,9 @@ function HookRefineresultsSearchSearch_header_after_actions()
         }
 
     # External sharing search support. Clear search drops back to the collection only search.
-    $default_search = '';
     if($k != '' || ($k == '' && substr($search, 0, 1) == '!'))
         {
         $s = explode(' ', $search);
-        $default_search = str_replace(',','',$s[0]);
         }
     
     // Search within these results option

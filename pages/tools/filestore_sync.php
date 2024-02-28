@@ -8,7 +8,7 @@ function ShowFilesInFolderRecursive ($path)
     {
     global $storagedir;
     $foldercontents = new DirectoryIterator($path);
-    foreach($foldercontents as $objectindex => $object)
+    foreach($foldercontents as $object)
         {
         if($object->isDot())
             {

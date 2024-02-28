@@ -7,8 +7,9 @@ function HookWordpress_ssoAllProvideusercredentials()
     #use standard authentication if available
     if (isset($_COOKIE["user"]) && $_COOKIE["user"]!="|") {return true;}
 
-    global $username,$hashsql,$session_hash,$baseurl,$lang,$wordpress_sso_url, $wordpress_sso_secret, $wordpress_sso_auto_create;
-    global $wordpress_sso_auto_approve, $wordpress_sso_auto_create_group,$user_select_sql,$session_autologout;
+    global $username,$hashsql,$session_hash,$baseurl,$lang,$wordpress_sso_url, $wordpress_sso_secret;
+    global $wordpress_sso_auto_create, $wordpress_sso_auto_approve, $wordpress_sso_auto_create_group,$user_select_sql;
+    global $session_autologout, $allow_password_change;
 
     $session_hash="";
     @$_COOKIE["user"]="|";

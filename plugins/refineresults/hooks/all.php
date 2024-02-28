@@ -88,7 +88,6 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
     $per_page       = getval('per_page', '');
     $sort           = getval('sort', '');
     $restypes       = getval('restypes', '');
-    $recentdaylimit = getval('recentdaylimit', '');
     $editable_only  = getval('foredit','')=='true';
 
     // Construct archive string and array

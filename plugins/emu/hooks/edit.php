@@ -146,7 +146,7 @@ function HookEmuEditAftersaveresourcedata()
         {
         debug("emu: Updating resource ID #{$resource_ref} with data from EMu database");
 
-        foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
+        foreach($emu_rs_mappings as $emu_module_columns)
             {
             foreach($emu_module_columns as $emu_module_column => $rs_field_id)
                 {

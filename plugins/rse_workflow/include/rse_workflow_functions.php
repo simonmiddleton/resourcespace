@@ -19,7 +19,6 @@ if (!function_exists("rse_workflow_save_action")){
             $tostate=getval("actionto","");
             $name=getval("actionname","");
             $text=getval("actiontext","");
-            $buttontext=getval("actionbuttontext","");
             
             # Check if we are searching for actions specific to a status
             ps_query("UPDATE workflow_actions SET name = ?, text = ?, buttontext = '' statusfrom = ?, statusto = ? WHERE ref = ?",array("s",$name,"s",$text,"i",$fromstate,"i",$tostate,"i",$ref));
@@ -277,7 +276,7 @@ function rse_workflow_create_state(array $data)
         $new_state_data['code'] = ++$code;
         }
 
-    $sql = ps_query(
+    ps_query(
         "INSERT INTO archive_states (code, name, notify_group, more_notes_flag, notify_user_flag, email_from, bcc_admin, simple_search_flag, icon)
               VALUES (" . ps_param_insert(9) . ")",
         array(

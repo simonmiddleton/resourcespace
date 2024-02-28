@@ -78,8 +78,7 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
     $pdfstoragepath=get_annotate_file_path($ref,true,"pdf");
     $jpgstoragepath=get_annotate_file_path($ref,true,"jpg");
     $pdfhttppath=get_annotate_file_path($ref,false,"pdf");
-    $jpghttppath=get_annotate_file_path($ref,false,"jpg");
-    
+
     if ($is_collection){
         $collectiondata=get_collection($ref);
         $resources=do_search("!collection$ref");
@@ -110,8 +109,8 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
     if ($size == "legal") {$width=8.5;$height=14;}
     if ($size == "tabloid") {$width=11;$height=17;}
     #configuring the sheet:
-    $pagewidth=$pagesize[0]=$width;
-    $pageheight=$pagesize[1]=$height;
+    $pagesize[0]=$width;
+    $pagesize[1]=$height;
     
     $pdf = new MYPDF("portrait", "in", $size, true, 'UTF-8', false);
     $pdf->SetFont($annotate_font, '', 8);
@@ -175,7 +174,6 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
     
             $style= array('width' => 0.01, 'cap' => 'butt', 'join' => 'round' ,'dash' => '0', 'color' => array(100,100,100));
             $style1 = array('width' => 0.04, 'cap' => 'butt', 'join' => 'round', 'dash' => '0', 'color' => array(255, 255, 0));
-            $style2 = array('width' => 0.02, 'cap' => 'butt', 'join' => 'round', 'dash' => '3', 'color' => array(255, 0, 0));
             $ypos=$imageheight+1.5;$pdf->SetY($ypos);
             unset($notes);
             if ($resources[$n]['annotation_count']!=0)

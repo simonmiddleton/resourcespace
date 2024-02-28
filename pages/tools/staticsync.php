@@ -672,7 +672,7 @@ function ProcessFolder($folder)
                         if(count($field_nodes)>0)
                             {
                             $nodes_to_add = array();
-                            foreach($field_nodes as $field_id=>$nodeids)
+                            foreach($field_nodes as $nodeids)
                                 {
                                 $nodes_to_add = array_merge($nodes_to_add,$nodeids);
                                 }

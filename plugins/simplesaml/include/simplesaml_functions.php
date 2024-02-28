@@ -307,7 +307,7 @@ function simplesaml_generate_keypair($dn)
 
     // Generate CSR and certificate
     $csr = openssl_csr_new($dn, $privkey, array('digest_alg' => 'AES-128-CBC'));
-    $x509 = openssl_csr_sign($csr, null, $privkey, $days=3650, array('digest_alg' => 'AES-128-CBC'));
+    $x509 = openssl_csr_sign($csr, null, $privkey, 3650, array('digest_alg' => 'AES-128-CBC'));
     
     // Save key and certificate
     $pempath = $storagedir . "/system/" . uniqid("saml_") . ".pem";

@@ -292,7 +292,6 @@ class ResourceSpace extends Provider implements MultipleInstanceProviderInterfac
             debug(sprintf('[image_banks][%s] %s', __METHOD__, $e->getMessage()));
             $title ??= '';
             $preview_sizes ??= [];
-            $resource_metadata ??= [];
             }
 
         $item = (new ProviderResult($id, $this))

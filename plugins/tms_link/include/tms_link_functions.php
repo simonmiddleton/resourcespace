@@ -55,9 +55,6 @@ function tms_convert_value($value, $key, array $module)
             }
         }
 
-    // Default to the old way of detecting the encoding if we can't figure out the expected encoding of the tms column data.
-    $encoding = mb_detect_encoding((string) $value, getEncodingOrder(), true);
-
     // Check if field is defined as UTF-16 or it's not an UTF-8 field
     if(in_array($key, $GLOBALS['tms_link_text_columns']) || !in_array($key, $GLOBALS['tms_link_numeric_columns']))
         {
@@ -226,15 +223,6 @@ function tms_link_test()
 
     if($conn)
         {
-        // Add normal value fields
-        $columnsql = implode(", ", $tms_link_numeric_columns);
-        
-        // Add SQL to get back text fields as VARBINARY(MAX) so we can sort out encoding later
-        foreach ($tms_link_text_columns as $tms_link_text_column)
-            {
-            $columnsql.=", CAST (" . $tms_link_text_column . " AS VARBINARY(MAX)) " . $tms_link_text_column;
-            }
-
         $tmssql = "SELECT TOP 10 * FROM " . $tms_link_table_name . " ;";
 
         // Execute the query to get the data from TMS

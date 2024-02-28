@@ -57,10 +57,8 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
         # Is this the original file? Set that the user can download the original file
         # so the request box does not appear.
-        $fulldownload = false;
         if ($sizes[$n]["id"] == "")
             {
-            $fulldownload = true;
             $fullaccess = $downloadthissize;
             }
 

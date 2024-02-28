@@ -349,7 +349,6 @@ function HookAction_datesCronCron()
             $message_combined=str_replace("%%DAYSMAX",max($action_combined_days),$message_combined) . "\r\n";
         }
 
-        $notification = $message_combined; 
         $notification_restrict = $message_restrict; 
         $notification_state = $message_state; 
 

@@ -98,7 +98,6 @@ function update_feedback_fields(array $fielddata)
         $version = ps_value('SELECT (IFNULL(MAX(version), 0) + 1) as value FROM feedback_fields', array(), '');
         if($version !== '')
             {
-            $n=0;
             foreach($fielddata as $data)
                 {
                 ps_query('INSERT INTO feedback_fields (version, text, type, options) VALUES (?, ?, ?, ?)', ['i', $version, 's', $data['text'], 'i', $data['type'], 's', $data['options']]);

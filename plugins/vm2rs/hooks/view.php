@@ -17,7 +17,7 @@ function isValidVimeoURL($url)
         {
         $vm2rs_videoId = $matches[1];
 
-        if (!$fp = curl_init($url))
+        if (!curl_init($url))
             {
             return false;
             }

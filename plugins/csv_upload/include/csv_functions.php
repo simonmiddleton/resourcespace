@@ -24,8 +24,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     $search_all_workflow_states_cache = $search_all_workflow_states;
     $search_all_workflow_states=true;
 
-    $workflow_states = get_editable_states($userref);
-
     if(!file_exists($filename))
         {
         array_push ($messages,str_replace("%%FILE%%", $filename,$lang["csv_upload_error_file_missing"]));
@@ -583,8 +581,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     $cell_value_array=array();
                     }
 
-            $update_dynamic_field=false;
-
             # validate option against multiple option list 
             foreach ($cell_value_array as $cell_value_item)
                 {
@@ -785,7 +781,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
                     if(count($nodes_to_add) > 0 || count($nodes_to_remove) > 0)
                         {
-                        $new_nodes_val = "";
                         delete_resource_nodes($resource_id, $nodes_to_remove);
 
                         if (count($nodes_to_add) > 0 && in_array($field_type, array(FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS)))
@@ -897,7 +892,6 @@ function csv_upload_get_info($filename, &$messages)
     global $lang;
 
     $file=fopen($filename,'r');
-    $line_count=0;
 
     if (($headers = fgetcsv($file))==false)
         {

@@ -1,10 +1,21 @@
 <?php
+/**
+ * Import users from uploaded CSV file or validate file for future use
+ * 
+ * mandatory_columns in csv: 'username', 'email'
+ * optional_columns in csv: 'password', 'fullname', 'account_expires', 'comments', 'ip_restrict', 'lang'
+ *
+ * @param  string   $csv_file       Filepath to input file
+ * @param  string   $user_group_id  Usergroup reference to add new users to
+ * @param  array    $messages       Array to store errors or warnings
+ * @param  bool     $processcsv     if true process file else validate file only
+ * @return bool     Return true if file processed of validated successfully, false if unable to process or validate file
+ */
 function csv_user_import_process($csv_file, $user_group_id, &$messages, $processcsv = false)
     {
     global $defaultlanguage;
 
     $mandatory_columns = array('username', 'email');
-    $optional_columns  = array('password', 'fullname', 'account_expires', 'comments', 'ip_restrict', 'lang');
     $possible_columns = ps_query("describe user", array());
     $possible_columns = array_column($possible_columns,"Field");
 
