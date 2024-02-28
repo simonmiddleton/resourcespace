@@ -1796,6 +1796,7 @@ $request_adds_to_collection=false;
 #
 # Example - automatically create a PNG file alternative when an EPS file is uploaded.
 # $image_alternatives[0]["name"]="PNG File";
+# $image_alternatives[0]["description"]=" Auto created PNG";
 # $image_alternatives[0]["source_extensions"]="eps";
 # $image_alternatives[0]["source_params"]="";
 # $image_alternatives[0]["filename"]="alternative_png";
@@ -1804,6 +1805,7 @@ $request_adds_to_collection=false;
 # $image_alternatives[0]["icc"]=false;
 
 # $image_alternatives[1]["name"]="CMYK JPEG";
+# $image_alternatives[0]["description"]=" Auto created CMYK JPEG";
 # $image_alternatives[1]["source_extensions"]="jpg,tif";
 # $image_alternatives[1]["source_params"]="";
 # $image_alternatives[1]["filename"]="cmyk";
@@ -1813,6 +1815,7 @@ $request_adds_to_collection=false;
 
 # Example - automatically create a JPG2000 file alternative when an TIF file is uploaded
 # $image_alternatives[2]['name']              = 'JPG2000 File';
+# $image_alternatives[0]["description"]=" Auto created JP2";
 # $image_alternatives[2]['source_extensions'] = 'tif';
 # $image_alternatives[2]["source_params"]="";
 # $image_alternatives[2]['filename']          = 'New JP2 Alternative';

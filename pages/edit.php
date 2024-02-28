@@ -502,13 +502,12 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
         }
     }
 
-if (getval("regen","")!="" && enforcePostRequest($ajax))
-    {
+if (getval("regen","") !== "" && enforcePostRequest($ajax)) {
     hook('edit_recreate_previews_extra', '', array($ref));
-    if(start_previews($ref)) {
+    if(!start_previews($ref)) {
         $onload_message["text"] = $lang["recreatepreviews_pending"];
     }
-    }
+}
 
 if (getval("regenexif","")!="" && enforcePostRequest($ajax))
     {

@@ -60,7 +60,7 @@ if (getval("tweak","")!="" && enforcePostRequest(false))
         
         foreach ($resources as $resource) {
             $ref=$resource['ref'];
-            if(start_previews($ref)) {
+            if(!start_previews($ref)) {
                 $onload_message["text"] = $lang["recreatepreviews_pending"];
             }
         }

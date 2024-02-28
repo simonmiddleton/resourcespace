@@ -1321,7 +1321,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             include dirname(__FILE__)."/preview_preprocessing.php";
             }
         }
-    
+
     if($alternative == -1 && isset($GLOBALS["image_alternatives"]) && $generateall) {
         // Create alternatives
         create_image_alternatives($ref,
@@ -2125,7 +2125,19 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 ps_query("UPDATE resource SET preview_attempts=IFNULL(preview_attempts,0) + 1 WHERE ref = ?",["i",$ref]);
                 }
             }
-        
+
+        if($alternative == -1 && isset($GLOBALS["image_alternatives"]) && $generateall)
+            {
+            // Create alternatives
+            create_image_alternatives($ref,
+                ["extension" => $extension,
+                "file" => $file,
+                "previewonly" => $previewonly,
+                "previewbased" => $previewbased,
+                "ingested" => $ingested],
+            );
+            }
+            
         hook('afterpreviewcreation', '',array($ref, $alternative));
         return true;
         }
@@ -3906,7 +3918,9 @@ function remove_video_previews(int $resource) : void
  *
  * @param int $ref                  Resource ID
  * 
- * @return bool                     true if offline jobs/scripts will create the full set of previews
+ * @return bool                     true if all previews have been created, false if
+ *                                  offline jobs/scripts are required to create the full set 
+ *                                  of previews/image/video alternatives
  * 
  */
 function start_previews(int $ref): bool
@@ -3916,7 +3930,7 @@ function start_previews(int $ref): bool
     delete_previews($ref);
     $minimal_previews_required = false;
 
-    $resource_data = get_resource_data($ref);
+    $resource_data = get_resource_data($ref,false);
     $ingested = empty($resource_data['file_path']);
     if($GLOBALS["offline_job_queue"]) {
         $create_previews_job_data = [
@@ -3943,12 +3957,12 @@ function start_previews(int $ref): bool
         
     if($minimal_previews_required) {
         create_previews($ref,false,$resource_data["file_extension"],false,false,-1,true,$ingested,false,["pre","col","thm"]);
-        return true;
+        return false;
     }
 // No offline preview creation - create the full set of previews immediately
 create_previews($ref,false,$resource_data["file_extension"],false,false,-1,false,$ingested);
    
-return false;
+return true;
 }
 
 
@@ -4101,13 +4115,13 @@ function create_image_alternatives(int $ref, array $params, $force = false)
     for($n = 0; $n < count($GLOBALS["image_alternatives"]); $n++)
         {
         $alternate_config = $GLOBALS["image_alternatives"][$n];
-        debug("Considering image alternative. Name: ''" . $alternate_config['name'] . "', description: '" . $alternate_config['description'] . "'");
+        debug("Considering image alternative. Name: ''" . $alternate_config['name'] . "', description: '" . ($alternate_config['description'] ?? "") . "'");
         $exts = explode(',', $alternate_config['source_extensions']);
         foreach($arrexisting as $existing)
             {
             if(in_array($resource_extension, $exts) 
                 && $alternate_config['name'] == $existing["name"]
-                && $alternate_config['description'] == $existing["description"]
+                && (!isset($alternate_config['description']) || $alternate_config['description'] == $existing["description"])
                 && $alternate_config['target_extension'] == $existing["file_extension"]
                 )
                 {
