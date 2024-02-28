@@ -80,7 +80,11 @@ include "../include/header.php";
 <div class="BasicsBox">
     <h1><?php echo htmlspecialchars($lang["editresourcepreviews"])?></h1>
     <p><?php echo text("introtext")?></p>
-    <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_edit_previews.php">
+    <form 
+        method=post
+        id="collectionform"
+        action="<?php echo $baseurl_short?>pages/collection_edit_previews.php"
+        >
         <?php generateFormToken("collectionform"); ?>
         <input type=hidden value='<?php echo urlencode($ref) ?>' name="ref" id="ref"/>
         <?php if (allow_multi_edit($resources,$ref))
@@ -90,7 +94,7 @@ include "../include/header.php";
                     <?php echo htmlspecialchars($lang["imagecorrection"])?><br/>
                     <?php echo htmlspecialchars($lang["previewthumbonly"])?>
                 </label>
-                <select class="stdwidth" name="tweak" id="tweak" onChange="document.getElementById('collectionform').submit();">
+                <select class="stdwidth" name="tweak" id="tweak" onChange="return CentralSpacePost(this.form,true);">
                     <option value=""><?php echo htmlspecialchars($lang["select"])?></option>
                     <?php
                     # On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.

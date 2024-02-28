@@ -505,8 +505,9 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
 if (getval("regen","")!="" && enforcePostRequest($ajax))
     {
     hook('edit_recreate_previews_extra', '', array($ref));
-    ps_query("update resource set preview_attempts=0 WHERE ref= ?" , ['i', $ref]);
-    create_previews($ref,false,$resource["file_extension"]);
+    if(start_previews($ref)) {
+        $onload_message["text"] = $lang["recreatepreviews_pending"];
+    }
     }
 
 if (getval("regenexif","")!="" && enforcePostRequest($ajax))
@@ -1024,55 +1025,25 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
    $tweak=getval("tweak","");
    debug(sprintf('$tweak = %s', json_encode($tweak)));
    switch($tweak)
-      {
-      case "rotateclock":
-         tweak_preview_images($ref, 270, 0, $resource["preview_extension"], -1, $resource['file_extension']);
-         break;
-      case "rotateanti":
-         tweak_preview_images($ref, 90, 0, $resource["preview_extension"], -1, $resource['file_extension']);
-         break;
-      case "gammaplus":
-         tweak_preview_images($ref, 0, 1.3, $resource["preview_extension"]);
-         break;
-      case "gammaminus":
-         tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
-         break;
-      case "restore":
-        delete_previews($resource);
-        ps_query("UPDATE resource SET has_image=?, preview_attempts=0 WHERE ref= ?",
-            ['i',RESOURCE_PREVIEWS_NONE,'i', $ref]
-            );
-        if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
-        (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
-            {
-            hook('edit_previews_recreate_extra', '', array($ref)); 
-            create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
-            refresh_collection_frame();
-            }
-            else if((!$enable_thumbnail_creation_on_upload || (isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB'))) && $offline_job_queue)
-            {
-            $create_previews_job_data = array(
-                'resource' => $ref,
-                'thumbonly' => false,
-                'extension' => $resource["file_extension"],
-                'previewonly' => false,
-                'previewbased' => false,
-                'alternative' => -1,
-                'ignoremaxsize' => true,
-            );
-            $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
-            $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
-
-            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
-            $onload_message["text"] = $lang["recreatepreviews_pending"];
-            }
-        else
-            {
-            ps_query("UPDATE resource set preview_attempts=0, has_image=? where ref= ?", ['i',RESOURCE_PREVIEWS_NONE,'i', $ref]);
-            $onload_message["text"] = $lang["recreatepreviews_pending"];
+        {
+        case "rotateclock":
+            tweak_preview_images($ref, 270, 0, $resource["preview_extension"], -1, $resource['file_extension']);
+            break;
+        case "rotateanti":
+            tweak_preview_images($ref, 90, 0, $resource["preview_extension"], -1, $resource['file_extension']);
+            break;
+        case "gammaplus":
+            tweak_preview_images($ref, 0, 1.3, $resource["preview_extension"]);
+            break;
+        case "gammaminus":
+            tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
+            break;
+        case "restore":        
+            if(start_previews($ref)) {
+                $onload_message["text"] = $lang["recreatepreviews_pending"];
             }
         break;
-      }
+        }
    hook("moretweakingaction", "", array($tweak, $ref, $resource));
    # Reload resource data.
    $resource=get_resource_data($ref,false);
