@@ -19,12 +19,16 @@ if (!$cinfo["request_feedback"]) {exit("Access denied.");}
 
 # Check that comments have been added.
 $comments=get_collection_comments($collection);
-if (count($comments)==0 && $feedback_resource_select==false) {$errors=$lang["feedbacknocomments"];}
+global $internal_share_access, $userfullname;
+if ($collection_commenting && ($k == '' || $internal_share_access) && count($comments)==0 && $feedback_resource_select==false) {$errors=$lang["feedbacknocomments"];}
 
 $comment="";
 if (getval("save","")!="" && enforcePostRequest(false))
     {
     # Save comment
+    if (empty($userfullname) && $k !== ''){
+        $userfullname = getval('name', '');
+    }
     $comment=trim(getval("comment",""));
     $saveerrors=send_collection_feedback($collection,$comment); 
     if(is_array($saveerrors))

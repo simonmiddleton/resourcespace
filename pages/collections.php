@@ -757,7 +757,7 @@ elseif ($k != "" && !$internal_share_access)
             <?php 
             }
         }
-        if ($feedback) {?><br /><br /><a onclick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["sendfeedback"])?></a><?php } ?>
+        if ($feedback) {?><br /><br /><a onclick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["sendfeedback"])?></a></br><?php } ?>
         <?php if ($count_result>0 && checkperm("q"))
             { 
             # Ability to request a whole collection (only if user has restricted access to any of these resources)

@@ -1042,7 +1042,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
             }
             else {
                 mb_internal_encoding("UTF-8");
-                $headers.=mb_encode_mimeheader($userfullname, "UTF-8"). " <".$ccs[$n].">";
+                $headers.=mb_encode_mimeheader((string) $userfullname, "UTF-8"). " <".$ccs[$n].">";
             }
         }
         $headers.=$eol;
