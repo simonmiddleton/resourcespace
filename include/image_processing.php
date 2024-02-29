@@ -1161,6 +1161,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             generate_file_checksum($ref,$extension);
             }
         }
+
     # first reset preview tweaks to 0
     ps_query("UPDATE resource SET preview_tweaks = '0|1' WHERE ref = ?", ['i', $ref]);
 
@@ -1207,26 +1208,25 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             return false;
             }
         }
-    
+
     # Locate imagemagick.
     $convert_fullpath = get_utility_path("im-convert");
     if ($convert_fullpath==false) {
         debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");
         return false;
     }
-
-    # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
-    if ((list($sw,$sh) = try_getimagesize($file))===false)
-        {
-        return false;
-        }
-
-    $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
+   
     $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
 
     if (($extension=="jpg") || ($extension=="jpeg") || ($extension=="png") || ($extension=="gif" && !$ffmpeg_preview_gif))
     # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
         {
+        # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
+        if ((list($sw,$sh) = try_getimagesize($file))===false)
+            {
+            return false;
+            }    
+        $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
         if (isset($imagemagick_path))
             {
             $return_val=create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested, $onlysizes);
