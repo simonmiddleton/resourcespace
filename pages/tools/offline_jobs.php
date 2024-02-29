@@ -133,4 +133,9 @@ if($offline_job_queue)
             }
         job_queue_run_job($offlinejob, $clear_job_process_lock);    
         }
+    exit($lang["complete"] . PHP_EOL);
+    }
+else
+    {
+    exit($lang["offline_processing_disabled"] . PHP_EOL);
     }

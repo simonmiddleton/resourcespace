@@ -140,7 +140,6 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
 function sendFile($filename, string $download_filename, $usage = -1, $usagecomment = "")
     {
     $suffix = pathinfo($filename, PATHINFO_EXTENSION);
-    $size = filesize_unlimited($filename);
 
     global $baseurl, $username, $scramble_key, $exiftool_write;
 

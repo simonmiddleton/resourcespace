@@ -139,12 +139,6 @@ $pending_submission_prompt_review=true;
 # Prevent granting of open access if a user has edit permissions. Setting to true will allow group permissions ('e*' and 'ea*') to determine editability.
 $prevent_open_access_on_edit_for_active=false;
 
-# Allow a Preview page for entire collections (for more side to side comparison ability)
-$preview_all=false;
-
-# Preview All default orientation ("v" for vertical or "h" for horizontal)
-$preview_all_default_orientation="h";
-
 $psd_transparency_checkerboard=false;
 
 $public_collections_header_only=false; // show public collections page in header, omit from Themes and Manage Collections

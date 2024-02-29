@@ -1,6 +1,6 @@
 <?php
 $on_upload = ($pagename ==  "upload_batch");
-if(!hook("replaceuploadoptions")):  
+ 
 if ($on_upload || (isset($ref) && $ref<0))
     {
     if($show_status_and_access_on_upload && !$on_upload){?></div><!-- end of previous collapsing section --> <?php }
@@ -228,10 +228,9 @@ if($on_upload)
     </script>
     <?php
     }
-else if ($edit_upload_options_at_top)
+elseif ($edit_upload_options_at_top)
     {
     ?>
     <!-- End of Upload options -->
     <?php
     }
-endif; # hook replaceuploadoptions

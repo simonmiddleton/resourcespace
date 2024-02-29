@@ -6,7 +6,7 @@ command_line_only();
 if (!isset($argv[1])) {exit("Usage: php renumber_resources.php [offset +/-]\n");}
 $offset=$argv[1];
 
-function migrate_files($ref, $newref, $alternative, $extension, $sizes)
+function migrate_files_renumber($ref, $newref, $alternative, $extension, $sizes)
     {
     global $scramble_key, $scramble_key_old, $migratedfiles, $filestore_evenspread, $syncdir;
     echo "Checking Resource ID: " . $ref . ", alternative: " . $alternative . PHP_EOL;
@@ -73,7 +73,7 @@ for ($n=0;$n<$totalresources;$n++)
     $sizes[] = array("id" => "", "extension" => "xml");
     $sizes[] = array("id" => "", "extension" => "icc");
     
-    migrate_files($ref, $newref, -1, $extension, $sizes);
+    migrate_files_renumber($ref, $newref, -1, $extension, $sizes);
     
     // Migrate the alternatives
     $alternatives = get_alternative_files($ref);
@@ -81,7 +81,7 @@ for ($n=0;$n<$totalresources;$n++)
         {
         $sizes=get_image_sizes($ref,true,$alternative["file_extension"],false);
         $sizes[] = array("id" => "", "extension" => $alternative["file_extension"]);
-        migrate_files($ref, $newref, $alternative["ref"], $alternative["file_extension"], $sizes);
+        migrate_files_renumber($ref, $newref, $alternative["ref"], $alternative["file_extension"], $sizes);
         }
 
 

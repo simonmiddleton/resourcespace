@@ -150,7 +150,7 @@ if(strpos($backurl, 'pages/admin/admin_resource_type_fields.php') !== false)
         ['title' => $lang["admin_resource_type_fields"], 'href' => $backurl],
     ];
     }
-else if (strpos($backurl, "pages/team/team_user.php") !== false)
+elseif (strpos($backurl, "pages/team/team_user.php") !== false)
     {
     // Arrived from Manage users page
     $links_trail = array(
@@ -165,7 +165,7 @@ else if (strpos($backurl, "pages/team/team_user.php") !== false)
         )
     );
     }
-else if (strpos($backurl, "pages/team/team_user_edit.php") !== false)
+elseif (strpos($backurl, "pages/team/team_user_edit.php") !== false)
     {
     // Arrived from Edit user page
     $links_trail = array(
@@ -390,7 +390,7 @@ $select_table_url = generateURL(
                             <?php
                             }
                         }
-                    else if($table == '' || $table_reference == 0)
+                    elseif($table == '' || $table_reference == 0)
                         {
                         $ref = htmlspecialchars((string) $record['table_reference']);
                         

@@ -101,7 +101,7 @@ $feed_title = xmlentities($applicationname ." - " .get_search_title($searchstrin
 
 $r = new RSSFeed($feed_title, $baseurl, xmlentities(str_replace("%search%", $searchstring, $lang["filtered_resource_update_for"])));
 
-// rss fields can include any of thumbs, smallthumbs, list, xlthumbs display fields, or data_joins.
+// rss fields can include any of thumbs, list, xlthumbs display fields, or data_joins.
 $all_field_info=get_fields_for_search_display($rss_fields);
 
 $n=0;
@@ -174,8 +174,8 @@ for ($n=0;$n<count($result);$n++)
                         if ($df[$x]['value_filter']!=""){
                             eval(eval_check_signed($df[$x]['value_filter']));
                         }
-                        else if (file_exists($plugin)) {include $plugin;}
-                        else if ($df[$x]["type"]==4 || $df[$x]["type"]==6 || $df[$x]["type"]==10) { 
+                        elseif (file_exists($plugin)) {include $plugin;}
+                        elseif ($df[$x]["type"]==4 || $df[$x]["type"]==6 || $df[$x]["type"]==10) { 
                             $value=NiceDate($value,true,false);
                         }   
                         if ($rss_show_field_titles){$add_desc.=$df[$x]['title'].": ";}  

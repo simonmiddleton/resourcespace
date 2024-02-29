@@ -71,9 +71,8 @@ function simplesaml_getattributes()
         $as = new SimpleSAML\Auth\Simple($spname);
         }
     $as->requireAuth();
-    $attributes = $as->getAttributes();
-    return $attributes;
-    }   
+    return $as->getAttributes();
+    }
 
 /**
  * Sign out of SAML SP
@@ -148,8 +147,7 @@ function simplesaml_getauthdata($value)
         $as = new SimpleSAML\Auth\Simple($spname);
         }
     $as->requireAuth();
-    $authdata = $as->getAuthData($value)->getValue();
-    return $authdata;
+    return $as->getAuthData($value)->getValue();
     }
 
 /**
@@ -309,7 +307,7 @@ function simplesaml_generate_keypair($dn)
 
     // Generate CSR and certificate
     $csr = openssl_csr_new($dn, $privkey, array('digest_alg' => 'AES-128-CBC'));
-    $x509 = openssl_csr_sign($csr, null, $privkey, $days=3650, array('digest_alg' => 'AES-128-CBC'));
+    $x509 = openssl_csr_sign($csr, null, $privkey, 3650, array('digest_alg' => 'AES-128-CBC'));
     
     // Save key and certificate
     $pempath = $storagedir . "/system/" . uniqid("saml_") . ".pem";
@@ -358,6 +356,5 @@ function get_saml_sp_name()
         {
         $simplesaml_sp = $default_sp_name;
         }
-    $safe_sp = $simplesaml_sp;
-    return $safe_sp;
+    return $simplesaml_sp;
     }

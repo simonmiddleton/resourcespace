@@ -111,7 +111,7 @@ function sigalrm_handler()
  */
 function sigchld_handler($signal)
   {
-  $running_jobs = reap_children();
+  reap_children();
 
   pcntl_waitpid(-1, $status, WNOHANG);
   }
@@ -168,7 +168,7 @@ foreach($resources as $resource) // For each resources
       {
       die("fork failed!\n");
       }
-    else if ($pid)
+    elseif ($pid)
       {
       array_push($children, $pid);
       }

@@ -113,7 +113,7 @@ if($parent == 0 && $smart_rtf == 0)
         },
         $smart_fc_headers);
     }
-else if($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf))
+elseif($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf))
     {
     // Smart fields. If a category tree, then a parent could be passed once user requests a lower level than root of the tree
     $resource_type_field = get_resource_type_field($smart_rtf);
@@ -121,7 +121,7 @@ else if($parent == 0 && $smart_rtf > 0 && metadata_field_view_access($smart_rtf)
         {
         // We go one level at a time so we don't need it to search recursively even if this is a FIELD_TYPE_CATEGORY_TREE
         $smart_fc_nodes = get_smart_themes_nodes($smart_rtf, false, $smart_fc_parent, $resource_type_field);
-        $smart_fcs_list = array_map(function(array $v) use ($smart_rtf, $smart_fc_parent, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS)
+        $smart_fcs_list = array_map(function(array $v) use ($smart_rtf, $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS)
             {
             return array(
                 "ref" => $v["ref"],
@@ -305,7 +305,7 @@ if($themes_show_background_image && !$full_width)
             $bg_fc_images = get_featured_collection_resources($parent_collection_data, $get_fc_imgs_ctx);
             $bg_fc_images = generate_featured_collection_image_urls($bg_fc_images, "scr");
             }
-        else if (count($smart_fcs_list) > 0)
+        elseif (count($smart_fcs_list) > 0)
             {
             $get_fc_imgs_ctx["smart"] = true;
             foreach($smart_fcs_list as $smart_fc)

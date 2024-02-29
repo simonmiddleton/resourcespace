@@ -74,7 +74,6 @@ function HookAction_datesCronCron()
     # The restriction date will be processed if it is full date or a partial date because either will yield viable timestamps
     if(in_array($action_dates_restrictfield, $allowable_fields))
         {
-        $fieldinfo = get_resource_type_field($action_dates_restrictfield);
         if(PHP_SAPI == "cli")
             {
             echo "action_dates: Checking restrict action field $action_dates_restrictfield.".PHP_EOL;
@@ -350,7 +349,6 @@ function HookAction_datesCronCron()
             $message_combined=str_replace("%%DAYSMAX",max($action_combined_days),$message_combined) . "\r\n";
         }
 
-        $notification = $message_combined; 
         $notification_restrict = $message_restrict; 
         $notification_state = $message_state; 
 

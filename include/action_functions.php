@@ -116,11 +116,8 @@ function get_editable_resource_sql()
     $search_all_workflow_states = false;
     $rtypes=get_resource_types();
     $searchable_restypes=implode(",",array_diff(array_column($rtypes,"ref"),explode(",",$actions_resource_types_hide)));
-
-    $editable_resource_query= new PreparedStatementQuery();
-    $editable_resource_query=do_search("",$searchable_restypes,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
-
-    return $editable_resource_query;
+    
+    return do_search("",$searchable_restypes,'resourceid',$actions_notify_states,-1,'desc',false,0,false,false,'',false,false,false,true,true);
     }
 
 

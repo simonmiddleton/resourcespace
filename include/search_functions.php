@@ -110,9 +110,9 @@ function get_advanced_search_collection_fields($archive=false, $hiddenfields="")
 
     $hiddenfields=explode(",",$hiddenfields);
 
-    $fields[]=Array ("ref" => "collection_title", "name" => "collectiontitle", "display_condition" => "", "tooltip_text" => "", "title"=>"Title", "type" => 0, "global"=>0, "resource_types"=>'Collections');
-    $fields[]=Array ("ref" => "collection_keywords", "name" => "collectionkeywords", "display_condition" => "", "tooltip_text" => "", "title"=>"Keywords", "type" => 0, "global"=>0, "resource_types"=>'Collections');
-    $fields[]=Array ("ref" => "collection_owner", "name" => "collectionowner", "display_condition" => "", "tooltip_text" => "", "title"=>"Owner", "type" => 0, "global"=>0, "resource_types"=>'Collections');
+    $fields[] = array("ref" => "collection_title", "name" => "collectiontitle", "display_condition" => "", "tooltip_text" => "", "title"=>"Title", "type" => 0, "global"=>0, "resource_types"=>'Collections');
+    $fields[] = array("ref" => "collection_keywords", "name" => "collectionkeywords", "display_condition" => "", "tooltip_text" => "", "title"=>"Keywords", "type" => 0, "global"=>0, "resource_types"=>'Collections');
+    $fields[] = array("ref" => "collection_owner", "name" => "collectionowner", "display_condition" => "", "tooltip_text" => "", "title"=>"Owner", "type" => 0, "global"=>0, "resource_types"=>'Collections');
     # Apply field permissions and check for fields hidden in advanced search
     for ($n=0;$n<count($fields);$n++)
         {
@@ -454,7 +454,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
                 {
                 continue;
                 }
-            else if(!is_array($searched_field_nodes))
+            elseif(!is_array($searched_field_nodes))
                 {
                 $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
                 continue;
@@ -562,7 +562,7 @@ function refine_searchstring($search)
                         }
                     }
                 }
-            else if (!in_array($keyword,$noadd))
+            elseif (!in_array($keyword,$noadd))
                 {
                 $keywords=explode(" ",$keyword);
                 $fixedkeywords[]=$keywords[0];
@@ -1361,7 +1361,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                 }   
             }
 
-        $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,c.purchase_size,c.purchase_complete,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
+        $sql->sql = $sql_prefix . "SELECT DISTINCT c.date_added,c.comment,r.hit_count score,length(c.comment) commentset, $select FROM resource r  join collection_resource c on r.ref=c.resource " . $colcustperm->sql . " WHERE c.collection = ? AND (" . $sql_filter->sql . ") GROUP BY r.ref ORDER BY $order_by" . $sql_suffix;
         $sql->parameters = array_merge($colcustperm->parameters,["i",$collection],$sql_filter->parameters);
         $collectionsearchsql=hook('modifycollectionsearchsql','',array($sql));
 
@@ -1376,13 +1376,34 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         # Extract the resource number
         $resource=explode(" ",$search);$resource=str_replace("!relatedpushed","",$resource[0]);
+
+        if(isset($GLOBALS["related_pushed_order_by"]))
+            {
+            $related_order = is_int_loose($GLOBALS["related_pushed_order_by"]) ? "field" . $GLOBALS["related_pushed_order_by"] : $GLOBALS["related_pushed_order_by"];
+            $order_by = set_search_order_by($search, $related_order, "ASC");
+            }
+
         $order_by=str_replace("r.","",$order_by); # UNION below doesn't like table aliases in the ORDER BY.
-        
-        $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score,rt.name resource_type_name, $select FROM resource r join resource_type rt on r.resource_type=rt.ref AND rt.push_metadata=1 join resource_related t on (t.related=r.ref AND t.resource = ?) " . $sql_join->sql . " WHERE 1=1 AND " . $sql_filter->sql . " GROUP BY r.ref 
-        UNION
-        SELECT DISTINCT r.hit_count score, rt.name resource_type_name, $select FROM resource r join resource_type rt on r.resource_type=rt.ref AND rt.push_metadata=1 join resource_related t on (t.resource=r.ref AND t.related= ?) " . $sql_join->sql . "  WHERE 1=1 AND " . $sql_filter->sql . " GROUP BY r.ref 
-        ORDER BY $order_by" . $sql_suffix;
-        $sql->parameters = array_merge(["i",$resource],$sql_join->parameters,$sql_filter->parameters,["i",$resource],$sql_join->parameters,$sql_filter->parameters);
+        $relatedselect = $sql_prefix . "
+                    SELECT DISTINCT r.hit_count score,rt.name resource_type_name, $select
+                      FROM resource r
+                      JOIN resource_type rt ON r.resource_type=rt.ref AND rt.push_metadata=1
+                      JOIN resource_related t ON (%s) "
+                         . $sql_join->sql
+                 . " WHERE 1=1 AND " . $sql_filter->sql
+              . " GROUP BY r.ref";
+
+        $sql->sql = sprintf($relatedselect,"t.related=r.ref AND t.resource = ?")
+                . " UNION " 
+                . sprintf($relatedselect,"t.resource=r.ref AND t.related= ?")
+                . " ORDER BY " . $order_by . $sql_suffix;
+        $sql->parameters = array_merge(
+            ["i",$resource],
+            $sql_join->parameters,
+            $sql_filter->parameters,
+            ["i",$resource],
+            $sql_join->parameters,
+            $sql_filter->parameters);
         }
 
     # View Related
@@ -1468,7 +1489,15 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     elseif (substr($search,0,10)=="!nopreview")
         {
         $sql = new PreparedStatementQuery();
-        $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image=0 AND " . $sql_filter->sql . " GROUP BY r.ref" . $sql_suffix;
+        $sql->sql = $sql_prefix .
+            "SELECT DISTINCT r.hit_count score, " . escape($select) . "
+                FROM resource r
+                $sql_join->sql
+                WHERE has_image=0
+                    AND $sql_filter->sql
+                GROUP BY r.ref
+                ORDER BY " .escape($order_by)
+                . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
     elseif (($config_search_for_number && is_numeric($search)) || substr($search,0,9)=="!resource")
@@ -1686,7 +1715,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE lock_user<>0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
-    else if(preg_match('/^!report(\d+)(p[-1\d]+)?(d\d+)?(fy\d{4})?(fm\d{2})?(fd\d{2})?(ty\d{4})?(tm\d{2})?(td\d{2})?/i', $search, $report_search_data))
+    elseif(preg_match('/^!report(\d+)(p[-1\d]+)?(d\d+)?(fy\d{4})?(fm\d{2})?(fd\d{2})?(ty\d{4})?(tm\d{2})?(td\d{2})?/i', $search, $report_search_data))
         {
         /*
         View report as search results.
@@ -2111,7 +2140,7 @@ function split_keywords($search,$index=false,$partial_index=false,$is_date=false
             {
             return array($s[0],$s[0] . "-" . $s[1],$search);
             }
-        else if (is_array($search))
+        elseif (is_array($search))
             {
             return $search;
             }
@@ -2731,8 +2760,7 @@ function get_filters($order = "ref", $sort = "ASC", $find = "")
         
     $sql = "SELECT f.ref, f.name FROM filter f {$join}{$condition} GROUP BY f.ref ORDER BY f.{$order} {$sort}"; // $order and $sort are already confirmed to be valid.
 
-    $filters = ps_query($sql,$params);
-    return $filters;
+    return ps_query($sql, $params);
     }
 
 
@@ -2844,9 +2872,8 @@ function save_filter($filter,$filter_name,$filter_condition)
         }
     else
         {
-        $newfilter = ps_query("INSERT INTO filter (name, filter_condition) VALUES (?,?)",array("s",$filter_name,"s",$filter_condition));
-        $newfilter = sql_insert_id();
-        return $newfilter;
+        ps_query("INSERT INTO filter (name, filter_condition) VALUES (?,?)",array("s",$filter_name,"s",$filter_condition));
+        return sql_insert_id();
         }
 
     return $filter;
@@ -3067,7 +3094,7 @@ function update_search_from_request($search)
         // Nodes can be searched directly when displayed on simple search bar
         // Note: intially they come grouped by field as we need to know whether if
         // there is a OR case involved (ie. @@101@@102)
-        else if('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched')
+        elseif('' != $value && is_iterable($value) && substr($key, 0, 14) == 'nodes_searched')
             {
             $node_ref = '';
 
@@ -3078,7 +3105,7 @@ function update_search_from_request($search)
                     {
                     continue;
                     }
-                else if(!is_array($searched_field_nodes))
+                elseif(!is_array($searched_field_nodes))
                     {
                     $node_ref .= ', ' . NODE_TOKEN_PREFIX . $searched_field_nodes;
 
@@ -3360,4 +3387,97 @@ function log_keyword_usage($keywords, $search_result)
             daily_stat($log_code, $keyword);
             }
         }
+    }
+
+
+/**
+ * Validate and set the order_by for the current search from the requested values passed to search_do()
+ *
+ * @param string $search
+ * @param string $order_by
+ * @param string $sort
+ * 
+ * @return string
+ * 
+ */
+function set_search_order_by(string $search,string $order_by, string $sort)
+    {
+    global $include_fieldx;
+    $order_by_date_sql_comma = ",";
+    $order_by_date = "r.ref $sort";
+    if(metadata_field_view_access($GLOBALS["date_field"]))
+        {
+        $order_by_date_sql = "field{$GLOBALS["date_field"]} {$sort}";
+        $order_by_date_sql_comma = ", {$order_by_date_sql}, ";
+        $order_by_date = "{$order_by_date_sql}, r.ref {$sort}";
+        }
+
+    # Check if order_by is empty string as this avoids 'relevance' default
+    if ($order_by === "") {$order_by="relevance";}
+
+    $order = [
+        "relevance"       => "score $sort, user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
+        "popularity"      => "user_rating $sort, total_hit_count $sort {$order_by_date_sql_comma} r.ref $sort",
+        "rating"          => "r.rating $sort, user_rating $sort, score $sort, r.ref $sort",
+        "date"            => "$order_by_date, r.ref $sort",
+        "colour"          => "has_image $sort, image_blue $sort, image_green $sort, image_red $sort {$order_by_date_sql_comma} r.ref $sort",
+        "title"           => "field" . $GLOBALS["view_title_field"] . " " . $sort . ", r.ref $sort",
+        "file_path"       => "file_path $sort, r.ref $sort",
+        "resourceid"      => "r.ref $sort",
+        "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",
+        "extension"       => "file_extension $sort, r.ref $sort",
+        "random"          => "RAND()",
+        "status"          => "archive $sort, r.ref $sort",
+        "modified"        => "modified $sort, r.ref $sort"
+    ];
+
+    // Used for collection sort order as sortorder is ASC, date is DESC
+    $revsort = (strtoupper($sort) == 'DESC') ? "ASC" : " DESC";
+    
+    // These options are only supported if the default field 3 is still present
+    if(in_array(3,get_resource_table_joins()))
+        {
+        $order["country"] = "field3 $sort, r.ref $sort";
+        $order["titleandcountry"] = "field" . $GLOBALS["view_title_field"] . " $sort, field3 $sort, r.ref $sort";
+        }
+
+    // Add collection sort option only if searching a collection
+    if(substr($search, 0, 11) == '!collection')
+        {
+        $order["collection"] = "c.sortorder $sort,c.date_added $revsort,r.ref $sort";
+        }
+
+    # Check if date_field is being used as this will be needed in the inner select to be used in ordering
+    $GLOBALS["include_fieldx"]=false;
+    if (isset($order_by_date_sql) && array_key_exists($order_by,$order) && strpos($order[$order_by],$order_by_date_sql)!==false)
+        {
+        $GLOBALS["include_fieldx"]=true;
+        }
+
+    # Append order by field to the above array if absent and if named "fieldn" (where n is one or more digits)
+    if (!in_array($order_by,$order) && (substr($order_by,0,5)=="field"))
+        {
+        if (!is_numeric(str_replace("field","",$order_by)))
+            {
+            exit("Order field incorrect.");
+            }
+        # If fieldx is being used this will be needed in the inner select to be used in ordering
+        $GLOBALS["include_fieldx"]=true;
+        # Check for field type
+        $field_order_check=ps_value("SELECT field_constraint value FROM resource_type_field WHERE ref = ?",["i",str_replace("field","",$order_by)],"", "schema");
+        # Establish sort order (numeric or otherwise)
+        # Attach ref as a final key to foster stable result sets which should eliminate resequencing when moving <- and -> through resources (in view.php)
+        if ($field_order_check==1)
+            {
+            $order[$order_by]="$order_by +0 $sort,r.ref $sort";
+            }
+        else
+            {
+            $order[$order_by]="$order_by $sort,r.ref $sort";
+            }
+        }
+    hook("modifyorderarray");
+    $order_by=(isset($order[$order_by]) ? $order[$order_by] : (substr($search, 0, 11) == '!collection' ? $order['collection'] : $order['relevance']));       // fail safe by falling back to default if not found
+
+    return $order_by;
     }

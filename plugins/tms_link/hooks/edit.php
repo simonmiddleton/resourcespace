@@ -116,9 +116,7 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
                 {
                 global $tms_confirm_upload, $lang;
                 $tms_confirm_upload=true;
-                $error=$lang["tms_link_upload_nodata"] . $tms_form_post_id . " " . $lang["tms_link_confirm_upload_nodata"];
-
-                return $error;                      
+                return $lang["tms_link_upload_nodata"] . $tms_form_post_id . " " . $lang["tms_link_confirm_upload_nodata"];
                 }
             }
         else
@@ -197,7 +195,7 @@ function HookTms_linkEditAftersaveresourcedata()
                     {
                     update_field($resourceref, $tms_rs_mapping['rs_field'], $tmsdata[$module['module_name']][$tms_rs_mapping['tms_column']]);
                     }
-                else if($resourceref > 0 && getval("field_{$module['rs_uid_field']}", '') == '')
+                elseif($resourceref > 0 && getval("field_{$module['rs_uid_field']}", '') == '')
                     {
                     update_field($resourceref, $tms_rs_mapping['rs_field'], '');
                     }

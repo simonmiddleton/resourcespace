@@ -9,7 +9,6 @@ function resource_random_jpg($resource,$width, $height)
 
     // Create image
     $test_image = imagecreate($width, $height);
-    $bg_col = imagecolorallocate($test_image, $bg_r,$bg_g,$bg_b);
     $text_r = $bg_r < 128 ? $bg_r + 100 : $bg_r - 100;
     $text_g = $bg_g < 128 ? $bg_g + 100 : $bg_g - 100;
     $text_b = $bg_b < 128 ? $bg_b + 100 : $bg_b - 100;
@@ -137,4 +136,17 @@ function create_random_video(array $info): array
     return [
         'error' => 'FFMpeg missing',
     ];
+    }
+
+/**
+ * Debug logs for ResourceSpace automated tests
+ * @uses RS_TEST_DEBUG constant {@see tests/test.php}
+ */
+function test_log(string $msg): void
+    {
+    if (!RS_TEST_DEBUG) {
+        return;
+    }
+
+    echo PHP_EOL . $msg;
     }

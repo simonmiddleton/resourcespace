@@ -153,25 +153,28 @@ if ($pagename=="search"){
             $width="150";
             $height=150/$ffmpeg_preview_max_width*$ffmpeg_preview_max_height;
             break;
-        case "smallthumbs":
-            $width="75";
-            $height=75/$ffmpeg_preview_max_width*$ffmpeg_preview_max_height;
-            break;
     }
 }
-// play video on hover?
-$play_on_hover=false;
-if(($pagename=='search' && $video_search_play_hover) || ($pagename=='view' && $video_view_play_hover) || (($pagename=='preview' || $pagename=='preview_all') && $video_preview_play_hover))
-    {
+
+// Play video on hover?
+$play_on_hover = false;
+if (
+    ($pagename == 'search' && $video_search_play_hover)
+    || ($pagename == 'view' && $video_view_play_hover)
+    || ($pagename == 'preview' && $video_preview_play_hover)
+) {
     $play_on_hover=true;
-    }
+}
     
-// using keyboard hotkeys?
-$playback_hotkeys=false;
-if(($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || (($pagename=='preview' || $pagename=='preview_all') && $keyboard_navigation_video_preview))
-    {
+// Using keyboard hotkeys?
+$playback_hotkeys = false;
+if (
+    ($pagename == 'search' && $keyboard_navigation_video_search)
+    || ($pagename == 'view' && $keyboard_navigation_video_view)
+    || ($pagename=='preview' && $keyboard_navigation_video_preview)
+) {
     $playback_hotkeys=true;
-    }
+}
 
 global $ffmpeg_preview_extension,$css_reload_key,$context,$video_preview_hls_support;
 ?>
@@ -207,23 +210,18 @@ if(isset($videojs_resolution_selection))
                      <?php
                      }
                 ?>
-            <?php if($play_on_hover && !$view_as_gif){?>
+            <?php if($play_on_hover && !$view_as_gif) { ?>
                 "loadingSpinner" : false,
                 "TextTrackDisplay" : true,
                 "nativeTextTracks": false,
                 "children": { 
                     "bigPlayButton":false, 
-                    <?php if($pagename=='search' && $display=='smallthumbs'){?>
-                        "controlBar": false
-                    <?php }
-                    else{ ?>
-                        "controlBar": { 
-                            "children": { 
-                                "playToggle": false, 
-                                "volumeControl":false
-                            }
+                    "controlBar": { 
+                        "children": { 
+                            "playToggle": false, 
+                            "volumeControl":false
                         }
-                    <?php } ?>
+                    }
                 }
             <?php }
             if(isset($videojs_resolution_selection) && count($video_preview_sources)>0 && !$view_as_gif)

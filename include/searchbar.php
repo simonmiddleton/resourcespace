@@ -105,7 +105,7 @@ for ($n=0;$n<count($keywords);$n++)
             }
             
         // Nodes search
-        else if(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
+        elseif(strpos($keywords[$n], NODE_TOKEN_PREFIX) !== false)
             {
             $nodes = resolve_nodes_from_string($keywords[$n]);
             foreach($nodes as $node)
@@ -245,7 +245,7 @@ var categoryTreeChecksArray = [];
     if(!hook("replacesearchbox"))
         {
         ?>
-        <input id="ssearchbox" <?php if ($hide_main_simple_search){?>type="hidden"<?php } ?> name="search" type="text" class="SearchWidth" value="<?php echo escape(stripslashes(@$quicksearch))?>" placeholder="<?php echo escape($lang["searchbutton"]); ?>" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
+        <input id="ssearchbox" name="search" type="text" class="SearchWidth" value="<?php echo escape(stripslashes(@$quicksearch))?>" placeholder="<?php echo escape($lang["searchbutton"]); ?>" aria-label="<?php echo escape($lang["simplesearch"]); ?>">
         <input id="ssearchhiddenfields" name="ssearchhiddenfields" type="hidden" value="<?php echo $ssearchhiddenfields; ?>">
         <button class="fas fa-search search-icon" type="submit" alt="<?php echo escape($lang['searchbutton']); ?>" title="<?php echo escape($lang['searchbutton']); ?>"></button>
         <script>
@@ -648,7 +648,7 @@ elseif($restypes=='')
                         // Check to field if no resource types are selected
                         $notypeconditions[] = "jQuery('#TickBox" . (int) $displayedrestype . "').prop('checked') == false";
                         }
-                    $hidecondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $hideconditions) . " || (" . implode(" && ", $notypeconditions) . ")) {";
+                    $hidecondition = " if ((" .  implode(" && ", $showconditions) . ") " . (count($hideconditions) > 0 ? "|| " : "") . implode(" || ", $hideconditions) . " || (" . implode(" && ", $notypeconditions) . ")) {";
                     echo "// Start of hide field code\n" . $hidecondition;?>
                         // Process unchecked element
                         ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"] ?>';
@@ -757,7 +757,7 @@ elseif($restypes=='')
                 {
                 $resetconditions[] = "jQuery('#TickBox" . (int) $invalidrestype . "').prop('checked')";
                 }
-            $resetcondition = " if ((" .  implode(" && ", $showconditions) . ") || "  . implode(" || ", $resetconditions) . ") {";
+            $resetcondition = " if ((" .  implode(" && ", $showconditions) . ") " . (count($resetconditions) > 0 ? "|| " : "")  . implode(" || ", $resetconditions) . ") {";
             }
         echo "// Start of reset field code\n" . $resetcondition;
         # Duplicate fields are skipped
@@ -905,7 +905,7 @@ elseif($restypes=='')
   <br />
   <?php hook("searchbarbeforebottomlinks"); ?>
   <?php if (! $disable_geocoding) { ?><p><i aria-hidden="true" class="fa fa-fw fa-globe"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/geo_search.php"><?php echo htmlspecialchars($lang["geographicsearch"]) ?></a></p><?php } ?>
-  <?php if (! $advancedsearch_disabled && !hook("advancedsearchlink")) { ?><p><i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo htmlspecialchars($lang["gotoadvancedsearch"]) ?></a></p><?php } ?>
+  <?php if (! $advancedsearch_disabled) { ?><p><i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/pages/search_advanced.php"><?php echo htmlspecialchars($lang["gotoadvancedsearch"]) ?></a></p><?php } ?>
 
   <?php hook("searchbarafterbuttons"); ?>
 

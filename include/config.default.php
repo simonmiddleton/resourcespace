@@ -154,7 +154,6 @@ but may want to review them once everything is up
 and running.
 ------------------------------------------------------ */
 
-
 # Uncomment and set next two lines to configure storage locations (to use another server for file storage)
 #
 # Note - these are really only useful on Windows systems where mapping filestore to a remote drive or other location is not trivial.
@@ -172,7 +171,6 @@ and running.
 $originals_separate_storage=false;
 
 $applicationname="ResourceSpace"; # The name of your implementation / installation (e.g. 'MyCompany Resource System')
-$applicationdesc=""; # Subtitle (i18n translated)
 $header_favicon="gfx/interface/favicon.png";
 
 # Is the logo a link to the home page?
@@ -238,7 +236,6 @@ $languages["sk"]="Slovenčina"; # Slovak
 $languages["fi"]="Suomi"; # Finnish
 $languages["sv"]="Svenska"; # Swedish
 
-
 # Disable language selection options (Includes Browser Detection for language)
 $disable_languages=false;
 
@@ -263,12 +260,10 @@ $noadd=array_merge($noadd, array("", "a","the","this","then","another","is","wit
 # Swedish stop words (copied from http://snowball.tartarus.org/algorithms/swedish/stop.txt 20101124)
 #$noadd=array_merge($noadd, array("och", "det", "att", "i", "en", "jag", "hon", "som", "han", "på", "den", "med", "var", "sig", "för", "så", "till", "är", "men", "ett", "om", "hade", "de", "av", "icke", "mig", "du", "henne", "då", "sin", "nu", "har", "inte", "hans", "honom", "skulle", "hennes", "där", "min", "man", "ej", "vid", "kunde", "något", "från", "ut", "när", "efter", "upp", "vi", "dem", "vara", "vad", "över", "än", "dig", "kan", "sina", "här", "ha", "mot", "alla", "under", "någon", "eller", "allt", "mycket", "sedan", "ju", "denna", "själv", "detta", "åt", "utan", "varit", "hur", "ingen", "mitt", "ni", "bli", "blev", "oss", "din", "dessa", "några", "deras", "blir", "mina", "samma", "vilken", "er", "sådan", "vår", "blivit", "dess", "inom", "mellan", "sånt", "varför", "varje", "vilka", "ditt", "vem", "vilket", "sitta", "sådana", "vart", "dina", "vars", "vårt", "våra", "ert", "era", "vilkas"));
 
-
 # How many results trigger the 'suggestion' feature, -1 disables the feature
 # WARNING - there is a significant performance penalty for enabling this feature as it attempts to find the most popular keywords for the entire result set.
 # It is not recommended for large systems.
 $suggest_threshold=-1; 
-
 
 $max_results=200000;
 $minyear=1980; # The year of the earliest resource record, used for the date selector on the search form. Unless you are adding existing resources to the system, probably best to set this to the current year at the time of installation.
@@ -294,7 +289,6 @@ $slideshow_big=false;
 # Number of seconds for slideshow to wait before changing image (must be greater than 1)
 $slideshow_photo_delay = 5;
 
-
 /** Dash Config Options **/
 # Enable home dash functionality (on by default, recommended)
 $home_dash = true;
@@ -314,7 +308,6 @@ $home_themeheaders=false;
 
 # Optional 'quota size' for allocation of a set amount of disk space to this application. Value is in GB (note decimal, not binary, so 1000 multiples).
 # $disksize=150;
-
 
 # GB of disk space left before uploads are disabled.
 # This causes disk space to be checked before each upload attempt
@@ -585,9 +578,6 @@ $video_preview_original=false;
 # Find out and obey the Pixel Aspect Ratio
 $ffmpeg_get_par=false;
 
-# Use New qscale to maintain quality (else uses -sameq)
-$ffmpeg_use_qscale = true;
-
 # FFMPEG - generation of alternative video file sizes/formats
 # It is possible to automatically generate different file sizes and have them attached as alternative files.
 # See below for examples.
@@ -617,10 +607,6 @@ $originals_separate_storage_ffmpegalts_as_previews=false;
 
 # To be able to run certain actions asyncronus (eg. preview transcoding), define the path to php:
 # $php_path="/usr/bin";
-
-# Use qt-faststart to make mp4 previews start faster
-# $qtfaststart_path="/usr/bin";
-# $qtfaststart_extensions=array("mp4","m4v","mov");
 
 # Create a video preview of GIF files. This will be used on the view page to display the animation rather than a static image preview.
 $ffmpeg_preview_gif = true;
@@ -652,7 +638,6 @@ $research_request=false;
 # custom research request fields
 # see https://www.resourcespace.com/knowledge-base/resourceadmin/user-research-requests
 $custom_researchrequest_fields = array();
-
 
 # Country search in the right nav? (requires a field with the short name 'country')
 $country_search=false;
@@ -689,11 +674,9 @@ $use_theme_as_home=false;
 # Use the recent page as the home page?
 $use_recent_as_home=false;
 
-
 # Show images along with theme category headers (image selected is the most popular within the theme category)
 $theme_images=true;
 $theme_images_number = 6; # How many to auto-select (if none chosen manually). Smart FCs only display one.
-$theme_images_align_right=false; # Align theme images to the right on the themes page? (particularly useful when there are multiple theme images)
 $show_theme_collection_stats=false; # Show count of themes and resources in category. $themes_simple_view=false only.
 
 # Theme direct jump mode
@@ -822,7 +805,6 @@ $collection_download_max_size = 1024 * 1024 * 1024; # default 1GB.
 # $archiver_executable = 'tar';
 # $archiver_listfile_argument = " -T ";
 
-
 # Example given for Windows with the 7z utility:
 # $collection_download_settings[0]["name"] = 'ZIP';
 # $collection_download_settings[0]["extension"] = 'zip';
@@ -835,15 +817,14 @@ $zipped_collection_textfile=false;
 # Set default option for text file download to "no"
 $zipped_collection_textfile_default_no=false;
 
-
-# A list of types which get the extra video icon in the search results
-$videotypes=array(3);
-
 /** USER PREFERENCES **/
 $user_preferences = true;
 
 /* Should the "purge users" function be available? */
 $user_purge=true;
+
+# Limit the total number of users that can be added to the system.
+# $user_limit=50;
 
 # List of active plugins, enabled by default and cannot be disabled in the UI.
 $plugins = array('transform', 'rse_version', 'lightbox_preview', 'rse_search_notifications', 'rse_workflow', 'licensemanager', 'consentmanager');
@@ -874,8 +855,6 @@ $disabled_plugins_message = "";
 
 $anonymous_user_session_collection=true;
 
-
-
 # Enable collection commenting and ranking
 $collection_commenting = false;
 
@@ -900,21 +879,16 @@ $contact_sheet_preview_size="500x500";
 # To embed more elaborate fonts, acquire the files from the TCPDF distribution or create your own using TCPDF utilities, and install them in the lib/html2pdf/vendor/tecnickcom/tcpdf/fonts folder.
 # If you encounter issues with chinese characters, use "arialunicid0" and make sure GhosScript has ArialUnicodeMS font (on Windows server, this should be there already)
 $contact_sheet_font="helvetica";
-# allow unicode filenames? (stripped out by default in tcpdf but since collection names may 
-# have special characters, probably want to try this on.)
-$contact_sheet_unicode_filenames=true;
 # Set font sizes for contactsheet
 $titlefontsize     = 20; // Contact Sheet Title
 $refnumberfontsize = 14; // This includes field text, not just ref number
 # If making a contact sheet with list sheet style, use these fields in contact sheet:
 $config_sheetlist_fields = array(8); # ** SEE NOTE (1)
-$config_sheetlist_include_ref=true;
 # If making a contact sheet with thumbnail sheet style, use these fields in contact sheet:
 $config_sheetthumb_fields = array(); # ** SEE NOTE (1)
 $config_sheetthumb_include_ref=true;
 # If making a contact sheet with one resource per page sheet style, use these fields in contact sheet:
 $config_sheetsingle_fields = array(8); # ** SEE NOTE (1)
-$config_sheetsingle_include_ref=true;
 
 # Use templates rather than setting contactsheet fields by display style?
 $contactsheet_use_field_templates=false;
@@ -1028,9 +1002,6 @@ $searchbar_selectall=false;
 # Hide the resource type selector on the simple search and advanced search pages
 $hide_search_resource_types = false;
 
-# Hide the main simple search field in the searchbar (if using only simple search fields for the searchbar)
-$hide_main_simple_search=false;
-
 /*Display keywords as pills on Simple Search. Use tab to create new tags/ pills
 Note: full text strings are also accepted as a pill*/
 $simple_search_pills_view = false;
@@ -1049,7 +1020,6 @@ $simple_search_pills_view = false;
 # $custom_top_nav[1]["title"]="Example Link B";
 # $custom_top_nav[1]["link"]="$baseurl/pages/search.php?search=b";
 # $custom_top_nav[1]['modal']=true;
-
 
 # Display a 'new' flag next to new themes (by default themes created < 2 weeks ago)
 # Note: the age take days as parameter. Anything less than that would mean that a theme becomes old after a few hours which is highly unlikely.
@@ -1084,8 +1054,6 @@ $default_group=2;
 # You may wish to disable this if you are using metadata based access control (search filter on the user group)
 $custom_access=true;
 
-
-
 # How are numeric searches handled?
 #
 # If true:
@@ -1099,12 +1067,6 @@ $save_as=false;
 
 # Allow resources to be e-mailed / shared (internally and externally)
 $allow_share=true;
-
-# Use a custom stylesheet when sharing externally.
-# Note: $custom_stylesheet_external_share_path can be set anywhere inside websites' root folder.
-# eg.: '/plugins/your plugin name/css/external_shares.css'
-$custom_stylesheet_external_share = false;
-$custom_stylesheet_external_share_path = '';
 
 # Hide display of internal URLs when sharing collections. Intended to prevent inadvertently sending external users invalid URLs
 $hide_internal_sharing_url=false;
@@ -1177,9 +1139,6 @@ $remember_me_checked = true;
 $contact_link=true;
 $nav2contact_link = false;
 
-# Show the about us link?
-$about_link=true;
-
 # When uploading resources (batch upload) and editing the template, should the date be reset to today's date?
 # If set to false, the previously entered date is used.
 # Please note that if upload_then_edit is enabled, then this will happen at upload stage in order to get the similar behaviour for this mode
@@ -1210,9 +1169,6 @@ $show_access_field=true;
 
 # Show the 'contributed by' on the resource view page.
 $show_contributed_by=true;
-
-# Show the extension after the truncated text in the search results.
-$show_extension_in_search=false;
 
 # Should the category tree field (if one exists) default to being open instead of closed?
 $category_tree_open=false;
@@ -1329,7 +1285,6 @@ $enable_public_collections=true;
 #      $custom_registration_options["Department"]=array("0:Human Resources","1:Marketing","1:Sales","IT");
 #      Note that if this field is listed in $custom_registration_required, then the user will be forced to check at least one option.
 
-
 # Allow user group to be selected as part of user registration?
 # User groups available for user selection must be specified using the 'Allow registration selection' option on each user group
 # under Admin -> System -> User groups.
@@ -1355,7 +1310,6 @@ $registration_group_select=false;
 $feedback_resource_select=false;
 # When requesting feedback, display the contents of the specified field (if available) instead of the resource ID. 
 #$collection_feedback_display_field=51;
-
 
 # Uncomment and set the below value to set the maximum size of uploaded file that thumbnail/preview images will be created for.
 # This is useful when dealing with very large files that may place a drain on system resources - for example 100MB+ Adobe Photoshop files will take a great deal of cpu/memory for ImageMagick to process and it may be better to skip the automatic preview in this case and add a preview JPEG manually using the "Upload a preview image" function on the resource edit page.
@@ -1398,7 +1352,6 @@ $show_access_on_upload = &$show_status_and_access_on_upload;
 # Example below ensures they have permissions to edit active resources.
 # $show_access_on_upload_perm = "return checkperm('e0')"; #Stack permissions= "return checkperm('e0') && checkperm('c');";
 $show_access_on_upload_perm = "return true;";
-
 
 # Mime types by extensions.
 # used by pages/download.php to detect the mime type of the file proposed to download.
@@ -1446,13 +1399,11 @@ $clear_button_unchecks_collections=true;
 $index_collection_titles = true;
 $index_collection_creator = true; 
 
-
 # Configures separators to use when splitting keywords (in other words - characters to treat as white space)
 # You must reindex after altering this if you have existing data in the system (via pages/tools/reindex.php)
 # 'Space' is included by default and does not need to be specified below.
 # Note: leave non breaking space in
 $config_separators=array("/","_",".",";","-","(",")","'","\"","\\", "?", '’', '“', ' ');
-
 
 # Resource field verbatim keyword regex
 # Using the index value of [resource field], specifies regex criteria for adding verbatim strings to keywords.
@@ -1467,7 +1418,7 @@ $global_permissions="";
 # Global permissions
 # Permissions that will be removed from all user group permissions
 # Useful for temporarily disabling permissions globally, e.g. to make the system readonly during maintenance.
-# Suggested setting for a 'read only' mode: $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q";
+# Suggested setting for a 'read only' mode: $global_permissions_mask="a,t,c,d,e0,e1,e2,e-1,e-2,i,n,h,q"; - Also add ert permission for each resource type.
 $global_permissions_mask="";
 
 # Define user groups who can manage users and requests in other user groups only. An alternative to setting a parent with U permission. 
@@ -1519,11 +1470,6 @@ $enable_find_similar=true;
 #Bypass share.php and go straight to e-mail
 $bypass_share_screen = false;
 
-#  Link back to collections from log page - if "" then link is ignored.
-#  suggest 
-# $back_to_collections_link = "&lt;&lt;-- Back to My Collections &lt;&lt;--";
-$back_to_collections_link = "";
-
 # For fields with partial keyword indexing enabled, this determines the minimum infix length
 $partial_index_min_word_length=3;
 
@@ -1539,14 +1485,7 @@ $thumbs_display_extended_fields=array();
     
 # Enable extra large thumbnails option for search screen
 $xlthumbs=false;
-
-# Extra Large Display Fields:  array of fields to display on the xlarge thumbnail view.
-$xl_thumbs_display_fields=array(8); # ** SEE NOTE (1)
-# array of defined xl_thumbs_display_fields to apply CSS modifications to (via $xl_search_results_title_wordwrap, $xl_search_results_title_height, $xl_search_results_title_trim)
-$xl_thumbs_display_extended_fields=array();
-# $xl_search_result_title_height=26;
 $xl_search_results_title_trim=60;
-$xl_search_results_title_wordwrap=100;
 
 # SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
 $sort_fields=array(12); # ** SEE NOTE (1)
@@ -1555,10 +1494,8 @@ $sort_fields=array(12); # ** SEE NOTE (1)
 $list_display_fields=array(8,3,12); # ** SEE NOTE (1)
 $list_search_results_title_trim=25;
 
-
 # Related Resource title trim: set to 0 to disable
 $related_resources_title_trim=15;
-
 
 # TITLE field: Default title for all resources 
 # Should be used as title on the View and Collections pages.
@@ -1579,8 +1516,6 @@ $id_column=true;
 $resource_type_column=true;
 $date_column=false; // based on creation_date which is a deprecated mapping. The new system distinguishes creation_date (the date the resource record was created) from the date metadata field. creation_date is updated with the date field.
 # ---------------------------
-
-
 
 # On some PHP installations, the imagerotate() function is wrong and images are rotated in the opposite direction
 # to that specified in the dropdown on the edit page.
@@ -1696,7 +1631,7 @@ $no_preview_extensions=array("icm","icc");
 // Send a notification X days prior to expiry to all users who have ever downloaded the resource. If set to zero, it will notify on expiry.
 // $notify_on_resource_expiry_days = 1;
 
-# What is the default display mode for search results? (smallthumbs/thumbs/list)
+# What is the default display mode for search results? (thumbs/list)
 $default_display="thumbs";
 
 # Generate thumbs/previews for alternative files?
@@ -1745,9 +1680,6 @@ $featured_collection_static_bg = false;
 // IMPORTANT: access control must still be enforced through permissions. DO NOT rely on this configuration to hide featured collections from users!
 $featured_collections_root_collection = 0;
 
-# Navigate to deeper levels in theme category trees? Set to false to link to matching resources directly.
-$themes_category_navigate_levels=false;
-
 // Enable to have a background image when $themes_simple_view is enabled
 $themes_show_background_image = false;
 
@@ -1783,7 +1715,6 @@ $request_adds_to_collection=false;
 
 # Option to change the original download filename (Use %EXTENSION, %extension or %Extension as a placeholder. Using ? is now DEPRECATED. The placeholder will be replaced with the filename extension, using the same case. E.g. "Original %EXTENSION file" -> "Original WMV file")
 # $original_download_name="Original %EXTENSION file";
-
 
 # Generation of alternative image file sizes/formats using ImageMagick/GraphicMagick
 # It is possible to automatically generate different file sizes and have them attached as alternative files.
@@ -1823,10 +1754,8 @@ $request_adds_to_collection=false;
 # $image_alternatives[2]['params']            = '';
 # $image_alternatives[2]['icc']               = false;
 
-
 # For reports, the list of default reporting periods
 $reporting_periods_default=array(7,30,100,365);
-
 
 # For checkbox list searching, perform logical AND instead of OR when ticking multiple boxes.
 $checkbox_and = false;
@@ -1872,23 +1801,8 @@ $resource_field_column_limit=200;
 #
 # $resource_created_by_filter=array();
 
-
-#
-# ------------------------ eCommerce Settings -----------------------------
-#
-# Pricing information for the e-commerce / basket request mode.
-# Pricing is size based, so that the user can select the download size they require.
-$pricing["scr"]=10;
-$pricing["lpr"]=20;
-$pricing["hpr"]=30; # (hpr is usually the original file download)
-$currency_symbol="&pound;";
-$payment_address="payment.address@goes.here"; // you must enable Instant Payment Notifications in your Paypal Account Settings.
-$payment_currency="GBP";
-$paypal_url="https://www.paypal.com/cgi-bin/webscr";
-
 # Ability to set a field which will store 'Portrait' or 'Landscape' depending on image dimensions
 # $portrait_landscape_field=1;
-
 
 # ------------------------------------------------------------------------------------------------------------------
 # StaticSync (staticsync.php)
@@ -2027,7 +1941,6 @@ $staticsync_alt_suffix_array =array (
 # Optionally set this to ignore files that aren't at least this many seconds old
 # $staticsync_file_minimum_age = 120; 
 
-
 # if false, the system will always synthesize a title from the filename and path, even
 # if an embedded title is found in the file. If true, the embedded title will be used.
 $staticsync_prefer_embedded_title = true;
@@ -2035,10 +1948,7 @@ $staticsync_prefer_embedded_title = true;
 # Do we allow deletion of files located in $syncdir through the UI?
 $staticsync_allow_syncdir_deletion=false;
 
-
-
 # End of StaticSync settings
-
 
 # Show tabs on the edit/upload page. Disables collapsible sections
 $tabs_on_edit=false;
@@ -2054,9 +1964,6 @@ $upload_methods = array(
         'single_upload' => true,
         'in_browser_upload' => true
     );
-
-# Hide links to other uploader
-$hide_uploadertryother = false;
 
 # Set path to Unoconv (a python-based bridge to OpenOffice) to allow document conversion to PDF.
 ## $unoconv_path="/usr/bin";
@@ -2256,11 +2163,6 @@ $enable_thumbnail_creation_on_upload = true;
 //  - This can be enabled per usergroup as a configuration option
 $geo_search_heatmap = false;
 
-# QuickLook previews (Mac Only)
-# If configured, attempt to produce a preview for files using Mac OS-X's built in QuickLook preview system which support multiple files.
-# This requires AT LEAST VERSION 0.2 of 'qlpreview', available from http://www.hamsoftengineering.com/codeSharing/qlpreview/qlpreview.html
-# $qlpreview_path="/usr/bin";
-
 // Log developer debug information to the debug log (filestore/tmp/debug.txt)?  As the default location is world-readable it is recommended for production systems to change the location to somewhere outside of the web directory by also setting $debug_log_location.
 $debug_log=false;
 
@@ -2300,15 +2202,11 @@ $search_titles_searchcrumbs=false;
 $manage_collections_remove_link=true;
 $manage_collections_share_link=true;
 
-# Tool at the bottom of the Collection Manager list which allows users to delete any empty collections that they own. 
-$collections_delete_empty=false;
-
 # Allow saving searches as 'smart collections' which self-update based on a saved search. 
 $allow_smart_collections=false;
 # Run Smart collections asynchronously (faster smart collection searches, with the tradeoff that they are updated AFTER the search.
 # This may not be appropriate for usergroups that depend on live updates in workflows based on smart collections.
 $smart_collections_async=false;
-
 
 # Allow each user only one rating per resource (can be edited). Note this will remove all accumlated ratings/weighting on newly rated items.
 $user_rating_only_once = true;
@@ -2321,7 +2219,9 @@ $cc_me=false;
 # Allow listing of all recipients when sending resources or collection.
 $list_recipients=false;
 
-# How many keywords should be included in the search when a single keyword expands via a wildcard. Setting this too high may cause performance issues.
+# How many keywords should be included in the search when a single keyword expands via a wildcard. 
+# Set to 0 to remove limit.
+# Setting this too high or removing the limit may cause performance issues.
 $wildcard_expand_limit=50;
 
 # Enable remote apis - NOTE: does not affect "native" authmode which is always enabled.
@@ -2342,19 +2242,8 @@ $camera_autorotation_gm = false;
 // Default for upload rotation. Will be overridden by user preference.
 $camera_autorotation_checked = true;
 
-# if gnash_dump (gnash w/o gui) is compiled, previews are possible:
-# Note: gnash-dump must be compiled on the server. http://www.xmission.com/~ink/gnash/gnash-dump/README.txt
-# Ubuntu: ./configure --prefix=/usr/local/gnash-dump --enable-renderer=agg \
-# --enable-gui=gtk,dump --disable-kparts --disable-nsapi --disable-menus
-# several dependencies will also be necessary, according to ./configure
-# $dump_gnash_path="/usr/local/gnash-dump/bin";
-
 # show the title of the resource being viewed in the browser title bar
 $show_resource_title_in_titlebar = false;
-
-
-// checkerboard for gif and png with transparency
-$transparency_background = "gfx/images/transparency.gif";
 
 # Remove archived resources from collections results unless user has e2 permission (admins).
 $collections_omit_archived=false;
@@ -2366,9 +2255,6 @@ $collections_omit_archived=false;
 # $calibre_path="/usr/bin";
 # Files with these extensions will be passed to calibre (if enabled above) for conversion to PDF and auto thumb-preview generation.
 $calibre_extensions=array("epub","mobi","lrf","pdb","chm","cbr","cbz");
-
-
-
 
 # ICC Color Management Features (Experimental)
 # Note that ImageMagick must be installed and configured with LCMS support
@@ -2389,7 +2275,7 @@ $icc_preview_options = '-intent perceptual -black-point-compensation';
 # play videos/audio on hover instead of on click
 $video_search_play_hover=false; // search.php
 $video_view_play_hover=false; // view.php
-$video_preview_play_hover=false; // preview.php and preview_all.php
+$video_preview_play_hover=false; // preview.php
 
 # hotkeys for video playback
 $keyboard_navigation_video_search=false;
@@ -2442,20 +2328,11 @@ $show_searchitemsdiskusage=true;
 # If set, which field will cause warnings to appear when approving requests containing these resources?
 #$warn_field_request_approval=115;
 
-# Experimental performance enhancement - two pass mode for search results.
-# The first query returns only the necessary number of results for the current search results display
-# The second query is the same but returns only a count of the full result set, which is used to pad the result array to the correct size (so counts display correctly).
-# This means that large volumes of resource data are not passed around unnecessarily, which can significantly improve performance on systems with large data sets.
-$search_sql_double_pass_mode=true;
-
 # Use the new tab ordering system. This will sort the tabs by the order by value set in Admin -> System -> Metadata fields.
 $use_order_by_tab_view=false;
 
 # Display link to request log on view page
 $display_request_log_link=false;
-
-# Start uploads as soon as files are added to the queue?
-$plupload_autostart=false;
 
 # Clear the queue after uploads have completed
 $plupload_clearqueue=true;
@@ -2466,9 +2343,6 @@ $daterange_search=false;
 # Keyboard navigation allows using left and right arrows to browse through resources in view/search/preview modes
 $keyboard_navigation = true;
 $keyboard_navigation_pages_use_alt=false;
-# with $keyboard_scroll_jump on arrow keys jump from picture to picture in preview_all mode (horizontal only)
-$keyboard_scroll_jump=false;
-
 
 # How long until the Loading popup appears during an ajax request (milliseconds)
 $ajax_loading_timer=500;
@@ -2496,7 +2370,6 @@ $download_chunk_size=(2 << 20);
 
 #what to search for in advanced search by default - "Global", "Collections" or resource type id (e.g. 1 for photo in default installation, can be comma separated to enable multiple selections
 $default_advanced_search_mode="Global";
-
 
 # Settings for commenting on resources
 $comments_resource_enable=true;             # allow users to make comments on resources
@@ -2560,15 +2433,8 @@ $usage_comment_blank=false;
 # Option to add a link to the resource view page that allows a user to email the $email_notify address about the resource
 $resource_contact_link=false;
 
-# Option to move the welcome text into the Home Picture Panel. Stops text from falling behind other panels.
-$welcome_text_picturepanel=false;
-
 # Hide Welcome Text
 $no_welcometext = false;
-
-#Show a specified metadata field below the resource preview image on the view page. Useful for photo captions. 
-#$display_field_below_preview=18;
-
 
 # Optional setting to override the default $email_notify address for resource request email notifications, applies to specified resource types
 # e.g. for photo (resource type 1 by default)
@@ -2593,10 +2459,6 @@ $email_sharing=true;
 #Resource Share Expiry Controls
 $resource_share_expire_days=150; #Maximum number of days allowed for the share 
 $resource_share_expire_never=true; #Allow the 'Never' option.
-
-#Collections Share Expiry Controls
-$collection_share_expire_days=150; #Maximum number of days allowed for the share 
-$collection_share_expire_never=true; #Allow the 'Never' option.
 
 # Having keywords_remove_diacritics set to true means that diacritics will be removed for indexing e.g. 'zwälf' is indexed as 'zwalf', 'café' is indexed as 'cafe'.
 # The actual data is not changed, this only affects searching and indexing
@@ -2623,9 +2485,6 @@ $related_type_upload_link=true;
 # Array of preview sizes to always create. This is especially helpful if your preview size is small than the "thm" size.
 $always_make_previews=array();
 
-#Display User Ref on the User Edit Page in the header? Example Output: Edit User 12
-$display_useredit_ref=false;
-
 # Basic option to visually hide resource types when searching and uploading
 # Note: these resource types will still be available (subject to filtering)
 $hide_resource_types = array();
@@ -2647,9 +2506,6 @@ $team_user_filter_top=false;
 
 # Stemming support. Indexes stems of words only, so plural / singular (etc) forms of keywords are indexed as if they are equivalent. Requires a full reindex.
 $stemming=false;
-
-# Initialize array for classes to be added to <body> element
-$body_classes = array();
 
 # Manage requests automatically using $manage_request_admin[resource type ID] = user ID;
 # IMPORTANT: the admin user needs to have permissions R and Rb set otherwise this will not work.
@@ -2830,7 +2686,6 @@ $offline_job_queue=false;
 # Delete completed jobs from the queue?
 $offline_job_delete_completed=false;
 
-
 # $replace_resource_preserve_option - Option to keep original resource files as alternatives when replacing resource
 $replace_resource_preserve_option=false;
 # $replace_resource_preserve_default - if $replace_resource_preserve_option is enabled, should the option be checked by default?
@@ -2855,7 +2710,6 @@ $retina_mode=false;
 
 # $xframe_options - set this to DENY (prevent all), SAMEORIGIN or ALLOW-FROM with a URL to allow site to be used in an iframe. To disable completely set to "";
 $xframe_options = "SAMEORIGIN";
-
 
 /*
 FSTemplate - File System Template. Allows a system to contain an initial batch of resources that are stored elsewhere 
@@ -2908,7 +2762,6 @@ $new_action_email_interval = 0;
 # Option to allow EDTF format when rendering date range field inputs e.g. 2004-06/2006-08, 2005/2006-02 (see http://www.loc.gov/standards/datetime/pre-submission.html#interval)
 $daterange_edtf_support=false;
 
-
 // Mappings between resource types and file extensions.
 // Can be used to automatically create resources in the system based on the extension of the file.
 $resource_type_extension_mapping_default = 1;
@@ -2939,7 +2792,6 @@ $annotate_enabled = false;
 
 // Specify which fields can be used to bind to annotations
 $annotate_fields = array();
-
 
 #######################################
 ################################  IIIF:
@@ -2999,7 +2851,6 @@ the download.php page to give back the file. This prevents users from comming ba
 permissions to the assets have been revoked.*/
 $hide_real_filepath = false;
 
-
 #######################################
 ################### Facial recognition:
 #######################################
@@ -3016,7 +2867,6 @@ $facial_recognition_tag_field = null;
 $facial_recognition_face_recognizer_models_location = '';
 #######################################
 #######################################
-
 
 # Ability to connect to a remote system for the loading of configuration. Can be used to create a multi-instance setup, where one ResourceSpace
 # installation can connect to different databases / set different filestore paths depending on the URL, and be driven from a central management
@@ -3095,7 +2945,6 @@ $CORS_whitelist = array();
 ##################################################
 ##################################################
 
-
 /* Font selection */
 $global_font="Montserrat";
 
@@ -3162,7 +3011,6 @@ $batch_replace_local_folder = ""; # e.g. "/upload";
 $filestore_evenspread=false;
 $filestore_migrate=false;
 
-
 // Set $system_download_config=true if you want to allow admin users to download the config.php file, user and configuration data from your server, optionally including resource data
 // Most data will be obfuscated unless you set $system_download_config_force_obfuscation = false
 // This requires offline jobs to be enabled
@@ -3171,7 +3019,6 @@ $filestore_migrate=false;
 // and care must still be taken to keep secure any exported data.
 $system_download_config = false;
 $system_download_config_force_obfuscation = true;
-
 
 // Block particular config options from shown in the System Config area.
 // E.g. $system_config_hide=array("email_from","email_notify");
@@ -3203,96 +3050,6 @@ $system_read_only = false;
 $upload_link_usergroups = array();
 // Workflow state that will be set for all resources uploaded using the share link
 $upload_link_workflow_state = -1;
-
-// Video splice configurations
-// Used for video splice plugins to decide commands used for video output.
-// SECURITY NOTE: This option should not be exposed to the user as these are run unescaped as they are actual options
-$ffmpeg_std_video_options= array(
-    "MP4 700kbps"=>array(
-        "command"=>"mp4 -b:v 700k -crf 20",
-        "extension"=>"mp4"),
-    "MP4 1500kbps"=>array(
-        "command"=>"mp4 -b:v 1500k -crf 20",
-        "extension"=>"mp4"),
-    "MP4 2500kbps"=>array(
-        "command"=>"mp4 -b:v 2500k -crf 20",
-        "extension"=>"mp4",
-        "default"=>true),
-    "MP4 4000kbps"=>array(
-        "command"=>"mp4 -b:v 4000k -crf 20",
-        "extension"=>"mp4"),
-        );
-
-// Used for video splice plugins to decide commands used for audio output.
-// SECURITY NOTE: This option should not be exposed to the user as these are run unescaped as they are actual options
-$ffmpeg_std_audio_options= array(
-    "AAC 32 kbps 22.05 kHz Mono"=>array(
-        "command"=>"-acodec aac -b:a 32k -ar 22050 -ac 1"),
-    "AAC 64 kbps 44.1 kHz Mono"=>array(
-        "command"=>"-acodec aac -b:a 64k -ar 44100 -ac 1",
-        "default"=>true),
-    "AAC 64 kbps 48 kHz Mono"=>array(
-        "command"=>"-acodec aac -b:a 64k -ar 48000 -ac 1"),
-    "AAC 96 kbps 44.1 kHz Mono"=>array(
-        "command"=>"-acodec aac -b:a 96k -ar 44000 -ac 1"),
-    "AAC 96 kbps 48 kHz Mono"=>array(
-        "command"=>"-acodec aac -b:a 96k -ar 48000 -ac 1"),
-    "MP3 64 kbps 22.05 kHz Mono"=>array(
-        "command"=>"-acodec mp3 -b:a 64k -ar 22050 -ac 1"),
-    "MP3 96 kbps 44.1 kHz Mono"=>array(
-        "command"=>"-acodec mp3 -b:a 96k -ar 44100 -ac 1"),
-    "MP3 96 kbps 48 kHz Mono"=>array(
-        "command"=>"-acodec mp3 -b:a 96k -ar 48000 -ac 1"),
-    "MP3 128 kbps 44.1 kHz Mono"=>array(
-        "command"=>"-acodec mp3 -b:a 128k -ar 44100 -ac 1"),
-    "MP3 128 kbps 48 kHz Mono"=>array(
-        "command"=>"-acodec mp3 -b:a 128k -ar 48000 -ac 1")
-        );
-
-// Used by video splice plugin to decide common resolution for all video files to be merged
-$ffmpeg_std_resolution_options= array(
-    "2560 x 1440"=>array(
-        "width"=>"2560",
-        "height"=>"1440"),
-    "1920 x 1080"=>array(
-        "width"=>"1920",
-        "height"=>"1080"),
-    "1280 x 720"=>array(
-        "width"=>"1280",
-        "height"=>"720",
-        "default"=>true),
-    "960 x 540"=>array(
-        "width"=>"960",
-        "height"=>"540"),
-    "854 x 480"=>array(
-        "width"=>"854",
-        "height"=>"480"),
-    "640 x 360"=>array(
-        "width"=>"640",
-        "height"=>"360"),
-    "480 x 270"=>array(
-        "width"=>"480",
-        "height"=>"270"),
-    "426 x 240"=>array(
-        "width"=>"426",
-        "height"=>"240")
-    );
-
-// Used by video splice plugin to decide common frame rate for all video files to be merged
-$ffmpeg_std_frame_rate_options= array(
-    "23.98(fps)"=>array(
-        "value"=>"23.98"),
-    "30(fps)"=>array(
-        "value"=>"30",
-        "default"=>true),
-    "60(fps)"=>array(
-        "value"=>"60")
-    );
-
-// Folder location used for video exports in video track and video splice plugins. Video tracks will use its own config if provided to keep
-// backwards compatibility
-$video_export_folder = "";
-// End of video splice configurations 
 
 // Specify file extensions that will not be 'flattened' by ImageMagick
 $preview_no_flatten_extensions = array("gif","png","tif","svg");
@@ -3376,7 +3133,6 @@ $uppy_companion_url = "";
 // Optional additional text to display on Uppy panel e.g. a link to the terms page for the companion server
 // $uppy_additional_text = "Click <a href='https://companion.yourdomain.com/' target='_blank'>here</a> for Companion server usage terms";
 
-
 # Array of URLs from which files can be uploaded using the create resource and upload file by URL APIs.
 # URL should be given as the hostname only e.g. $api_upload_urls = array('resourcespace.com', 'localhost');
 # $api_upload_urls = array();
@@ -3430,3 +3186,8 @@ Configure the cache adaptor for the internal library TUS used for upload (Uppy).
 For production systems where APCu isn't available use "redis" instead. To install check out https://redis.io
 */
 $vendor_tus_cache_adapter = 'file';
+
+// $related_pushed_order_by - This is an optional setting to order resources differently when displaying 'pushed' related metadata
+// This can be set to either a metadata field ID or a valid search 'order by' string (e.g. 'resourcetype', 'extension', 'colour' etc.) 
+// See https://www.resourcespace.com/knowledge-base/resourceadmin/push-metadata for more information
+// $related_pushed_order_by = 0;

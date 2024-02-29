@@ -49,16 +49,17 @@ if (!hook("replacelistitem"))
         <td width="40px">
             <a href="<?php echo $url?>" onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);">
                 <?php
-                $thm_url = get_resource_path($ref, false, 'col', false, $result[$n]['preview_extension'], true, 1, $watermark, $result[$n]['file_modified']);
+                $thumbnail = get_resource_preview($result[$n],["col"],$access,$watermark);
 
-                if(isset($result[$n]['thm_url']))
+                if($thumbnail !== false)
                     {
-                    $thm_url = $result[$n]['thm_url'];
-                    } # Option to override thumbnail image in results
-
-                if((int) $result[$n]['has_image'] !== RESOURCE_PREVIEWS_NONE && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'col'))
-                    {
-                    render_resource_image($result[$n],$thm_url,"list");
+                    if($result[$n]["thumb_height"] !== $thumbnail["height"] || $result[$n]["thumb_width"] !== $thumbnail["width"])
+                        {                    
+                        // Preview image dimensions differ from the size data stored for the current resource
+                        $result[$n]["thumb_height"] = $thumbnail["height"];
+                        $result[$n]["thumb_width"]  = $thumbnail["width"];
+                        }
+                    render_resource_image($result[$n],$thumbnail["url"],"list");
                     }
                 else
                     {
@@ -89,7 +90,7 @@ if (!hook("replacelistitem"))
 
             if ($df[$x]['value_filter']!="")
                 {eval(eval_check_signed($df[$x]['value_filter']));}
-            else if (file_exists($plugin)) 
+            elseif (file_exists($plugin)) 
                 {include $plugin;}
 
             # swap title fields if necessary
@@ -131,18 +132,7 @@ if (!hook("replacelistitem"))
             }
         
         hook("searchbeforeratingfield");
-        
-        if ($id_column)
-            { ?>
-            <td <?php hook("listviewcolumnstyle");?> >
-                <?php 
-                $plugin_column_id = hook("listviewcolumnid",'',array($result, $n));
-                echo $plugin_column_id !== false ? $plugin_column_id : $result[$n]["ref"];             
-                ?>
-            </td>
-            <?php
-            }
-        
+
         if ($resource_type_column)
             { ?>
             <td <?php hook("listviewcolumnstyle");?>>

@@ -81,14 +81,6 @@ function HookAnnotateViewRenderinnerresourcepreview()
 
         if(file_exists($imagepath))
             {
-            $page_count         = get_page_count($resource);
-            $multipage_document = false;
-
-            if(1 < $page_count)
-                {
-                $multipage_document = true;
-                }
-            
             $modal = (getval("modal", "") == "true" ? "true" : "false");
             ?>
             <div id="wrapper" class="annotate-view-wrapper">
@@ -152,8 +144,6 @@ function HookAnnotateViewpreviewlinkbar()
                 <p><?php echo htmlspecialchars($preview_with_sizename); ?></p>
             </td>
             <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
-            <?php if ($userrequestmode==2 || $userrequestmode==3) { ?><td></td><?php } # Blank spacer column if displaying a price above (basket mode).
-            ?>
             <td class="DownloadButton">
                 <a class="enterLink previewsize-<?php echo escape($data_viewsize); ?>" 
                     id="previewlink"

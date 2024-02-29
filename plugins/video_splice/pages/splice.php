@@ -68,10 +68,9 @@ elseif (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostReq
     $videos_data = $videos_data_reordered;
 
     // If attempting export with config not set error straight out
-    if($video_splice_type == "video_splice_save_export" && empty($video_export_folder))
-    {
-    $error = true;
-    $notification = $lang["video_splice_no_export_folder"];
+    if($video_splice_type == "video_splice_save_export" && empty($video_export_folder)) {
+        $error = true;
+        $notification = $lang["video_splice_no_export_folder"];
     }
     // If no error above process chosen options and generate merged video
     elseif($video_splice_video!=null && $video_splice_resolution!=null && $video_splice_frame_rate!=null)
@@ -87,7 +86,7 @@ elseif (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostReq
         // Check if video export folder set and created
         if($video_splice_type == "video_splice_save_export")
         {
-        if(isset($video_export_folder) && !is_dir($video_export_folder))
+        if($video_export_folder != "" && !is_dir($video_export_folder))
             {
             mkdir($video_export_folder, 0777);
             }
@@ -317,6 +316,7 @@ include "../../../include/header.php";
                                    for="video_splice_save_new"><?php echo $lang['video_splice_create_new']; ?></label>
                         </td>
                         <?php
+                        if ($video_export_folder !== "") {
                         ?>
                         <td>
                             <input type="radio"
@@ -334,6 +334,7 @@ include "../../../include/header.php";
                             <label class="customFieldLabel Inline"
                                    for="video_splice_save_export"><?php echo $lang['video_splice_save_export']; ?></label>
                         </td>
+                        <?php } ?>
                         <td>
                             <input type="radio"
                                    id="video_splice_download"

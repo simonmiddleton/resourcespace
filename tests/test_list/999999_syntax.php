@@ -4,7 +4,6 @@ command_line_only();
 
 
 $TestPage = function($page) {
-    $html="";
     global $php_path;
     if (!isset($php_path)) {$php_path="/usr/bin";} # fair assumption, if not specifically set; means it will work on many systems
  
@@ -17,6 +16,7 @@ $exclude_paths = array(
     "/lib/",
     "/filestore/",
     "/vendor/",
+    "rector.php"
 );
 $Directory = new RecursiveDirectoryIterator(dirname(__FILE__) . "/../../");
 $Iterator = new RecursiveIteratorIterator($Directory);

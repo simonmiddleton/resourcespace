@@ -10,7 +10,7 @@ function leaflet_osm_basemaps() // OpenStreetMap basemaps.
     {
     global $map_default_cache, $map_retina;
 
-    $osm = "<!--OpenStreetMap (OSM) basemap group-->
+    return "<!--OpenStreetMap (OSM) basemap group-->
         var osm_attribute = 'Map data © <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors';
 
         var osm_mapnik = L.tileLayer.provider('OpenStreetMap.Mapnik', {
@@ -76,15 +76,13 @@ function leaflet_osm_basemaps() // OpenStreetMap basemaps.
             maxZoom: 17,
             attribution: osm_otm_attribute
         }); ";
-
-    return $osm;
     }
 
 function leaflet_esri_basemaps() // ESRI basemaps.
     {
     global $map_default_cache, $map_retina;
 
-    $esri = "<!--ESRI basemap group-->
+    return "<!--ESRI basemap group-->
         var esri_street_attribute = 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012';
         var esri_street = L.tileLayer.provider('Esri.WorldStreetMap', {
             useCache: '" . ( $map_default_cache ? "true" : "false" ) . "',
@@ -162,15 +160,13 @@ function leaflet_esri_basemaps() // ESRI basemaps.
             maxZoom: 16,
             attribution: esri_gray_attribute
         }); ";
-
-    return $esri;
     }
 
 function leaflet_stamen_basemaps() // Stamen basemaps.
     {
     global $map_layer_cache, $map_retina;
 
-    $stamen = "<!--Stamen basemap group-->
+    return "<!--Stamen basemap group-->
         var stamen_attribute = 'Map tiles by <a href=\"http://stamen.com\">Stamen Design</a>, <a href=\"http://creativecommons.org/licenses/by/3.0\">CC BY 3.0</a> &mdash; Map data &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>';
 
         var stamen_toner = L.tileLayer.provider('Stamen.Toner', {
@@ -235,15 +231,13 @@ function leaflet_stamen_basemaps() // Stamen basemaps.
             ext: 'jpg',
             attribution: stamen_attribute
         }); ";
-
-    return $stamen;
     }
 
 function leaflet_hydda_basemaps() // Hydda basemaps.
     {
     global $map_layer_cache, $map_retina;
 
-    $hydda = "<!--Hydda basemap group-->
+    return "<!--Hydda basemap group-->
         var hydda_attribute = 'Tiles courtesy of <a href=\"http://openstreetmap.se/\" target=\"_blank\">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>';
 
         var hydda_full = L.tileLayer.provider('Hydda.Full', {
@@ -259,15 +253,13 @@ function leaflet_hydda_basemaps() // Hydda basemaps.
             maxZoom: 18,
             attribution: hydda_attribute
         }); ";
-
-    return $hydda;
     }
 
 function leaflet_nasa_basemaps() // NASA basemaps.
     {
     global $map_layer_cache, $map_retina;
 
-    $nasa = "<!--NASA GIBS basemap group-->
+    return "<!--NASA GIBS basemap group-->
         var nasa_attribute = 'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href=\"https://earthdata.nasa.gov\">ESDIS</a>) with funding provided by NASA/HQ.';
 
         var nasa_gibscolor = L.tileLayer.provider('NASAGIBS.ModisTerraTrueColorCR', {
@@ -296,15 +288,13 @@ function leaflet_nasa_basemaps() // NASA basemaps.
             format: 'jpg',
             attribution: nasa_attribute
         }); ";
-
-    return $nasa;
     }
 
 function leaflet_usgs_basemaps() // U.S. Geological Survey The National Map basemaps.
     {
     global $map_layer_cache, $map_retina;
-    
-    $usgs_tnm = "<!--USGS The National Map basemaps group-->
+
+    return "<!--USGS The National Map basemaps group-->
         var usgstnm_attribute = 'Map data <a href=\"https://www.doi.gov\">U.S. Department of the Interior</a> | <a href=\"https://www.usgs.gov\">U.S. Geological Survey</a>';
 
         var usgs_topo = L.tileLayer.provider('USGSTNM.USTopo', {
@@ -324,15 +314,13 @@ function leaflet_usgs_basemaps() // U.S. Geological Survey The National Map base
             detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: usgstnm_attribute
         }); ";
-    
-    return $usgs_tnm;
     }
 
 function leaflet_thunderforest_basemaps() // Thunderforest basemaps.
     {
     global $map_layer_cache, $map_retina, $map_tfapi;
 
-    $tf = "<!--Thunderforest basemap group (requires an API key)-->
+    return "<!--Thunderforest basemap group (requires an API key)-->
         var tf_attribute = '&copy; <a href=\"http://www.thunderforest.com/\">Thunderforest</a>, &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>';
 
         var tf_ocm = L.tileLayer.provider('Thunderforest.OpenCycleMap', {
@@ -398,15 +386,13 @@ function leaflet_thunderforest_basemaps() // Thunderforest basemaps.
             maxZoom: 22,
             attribution: tf_attribute
         }); ";
-
-    return $tf;
     }
 
 function leaflet_mapbox_basemaps() // Mapbox basemaps.
     {
     global $map_layer_cache, $map_retina, $map_mapboxid, $map_mapboxtoken, $map_mapboxattribution;
 
-    $mapbox = "<!--Mapbox basemaps group (requires API keys)-->
+    return "<!--Mapbox basemaps group (requires API keys)-->
         var mapbox = L.tileLayer.provider('MapBox', {
             id: '<?php echo $map_mapboxid?>',
             accessToken: '<?php echo $map_mapboxtoken?>',
@@ -414,8 +400,6 @@ function leaflet_mapbox_basemaps() // Mapbox basemaps.
             detectRetina: '" . ( $map_retina ? "true" : "false" ) . "',
             attribution: '<?php echo $map_mapboxattribution?>'
         }); ";
-
-    return $mapbox;
     }
 
 // Determine the map zoom from the geolocation coordinates numeric precision.

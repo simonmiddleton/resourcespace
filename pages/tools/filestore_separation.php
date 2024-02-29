@@ -78,7 +78,7 @@ function filestore_relocate($from,$to){
     $otherpath=$from;
     
     $file_dir=explode("/",$filepath);
-    $filename=array_pop($file_dir);
+    array_pop($file_dir);
     $file_dir=implode("/",$file_dir);
     echo "Copying file to proper location: $file_dir<br/>";
     if(!file_exists($file_dir)){

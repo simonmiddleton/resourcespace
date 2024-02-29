@@ -8,14 +8,14 @@ function isValidURL($url)
         {
         preg_match("/youtu.be\/([a-z1-9.-_]+)/", $url, $matches);
         }
-      else if (preg_match("/youtube.com(.+)v=([^&]+)/", $url))
+      elseif (preg_match("/youtube.com(.+)v=([^&]+)/", $url))
         {
         preg_match("/v=([^&]+)/", $url, $matches);
         }
     if (!empty($matches))
         {
         $ytid = $matches[1];
-        if (!$fp = curl_init($url)) return false;
+        if (!curl_init($url)) return false;
         return true;
         }
     }

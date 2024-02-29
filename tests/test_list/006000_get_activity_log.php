@@ -112,7 +112,7 @@ foreach($usecases as $usecase)
         $results = get_activity_log($usecase['search'],$usecase['offset'],$usecase['rows'],$usecase['wheres'],$usecase['table'],null,$usecase['count']);
         if(count($results) != $usecase['expected']['count'])
             {
-            echo 'ERROR - Result count doesn\'t match expected count for test - ' . $usecase['name'] . ' ';
+            echo 'ERROR - Result count doesn\'t match expected count for test - ' . $usecase['name'] . ' (expected ' . $usecase['expected']['count'] . ', found ' . count($results) . ')';
             return false;
             }
         }

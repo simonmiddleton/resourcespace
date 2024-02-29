@@ -69,7 +69,7 @@ if (getval("ajax","") == "" && !hook("replace_footer"))
     } // end ajax
 
 /* always include the below as they are perpage */
-if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="preview_all") && ($pagename!="user_request"))
+if (($pagename!="login") && ($pagename!="user_password") && ($pagename!="user_request"))
     {?>
     </div><!--End CentralSpacePP-->
     </div><!--End CentralSpaceContainerPP-->
@@ -84,7 +84,7 @@ draw_performance_footer();
 
 if ($show_resource_title_in_titlebar){
 $general_title_pages=array("admin_content","team_archive","team_resource","team_user","team_request","team_research","team_plugins","team_mail","team_export","team_stats","team_report","team_user_log","research_request","team_user_edit","admin_content_edit","team_request_edit","team_research_edit","requests","edit","themes","collection_public","collection_manage","team_home","help","home","tag","upload_java_popup","upload_java","contact","geo_search","search_advanced","about","contribute","user_preferences","view_shares","check","index");
-$search_title_pages=array("contactsheet_settings","search","preview_all","collection_edit","edit","collection_download","collection_share","collection_request");
+$search_title_pages=array("contactsheet_settings","search","collection_edit","edit","collection_download","collection_share","collection_request");
 $resource_title_pages=array("view","delete","log","alternative_file","alternative_files","resource_email","edit","preview");
 $additional_title_pages=array(hook("additional_title_pages_array"));
 
@@ -95,7 +95,7 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
         echo "</script>";
     }
     // place resource titles
-    else if (in_array($pagename,$resource_title_pages) && !isset($_GET['collection']) && !isset($_GET['java'])) /* for edit page */{
+    elseif (in_array($pagename,$resource_title_pages) && !isset($_GET['collection']) && !isset($_GET['java'])) /* for edit page */{
         $title =  str_replace('"',"''",i18n_get_translated(get_data_by_field($ref,$view_title_field)));
         echo "<script type=\"text/javascript\" language='javascript'>\n";
 
@@ -106,7 +106,7 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
     }
 
     // place collection titles
-    else if (in_array($pagename,$search_title_pages)){
+    elseif (in_array($pagename,$search_title_pages)){
         $collection=getval("ref","");
         if (isset($search_title))
             {
@@ -122,7 +122,6 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
         if ($pagename=="edit"){$title=" - ".$lang['action-editall']." ".$title;}
         if ($pagename=="collection_share"){$title=" - ".$lang['share']." ".$title;}
         if ($pagename=="collection_edit"){$title=" - ".$lang['action-edit']." ".$title;}
-        if ($pagename=="preview_all"){$title=" - ".$lang['preview_all']." ".$title;}
         if ($pagename=="collection_download"){$title=" - ".$lang['download']." ".$title;}
         echo "<script language='javascript'>\n";
         echo "document.title = \"$applicationname $title\";\n";
@@ -130,115 +129,111 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
     }
 
       // place page titles
-    else if (in_array($pagename,$general_title_pages)){ 
+    elseif (in_array($pagename,$general_title_pages)){ 
 
         if (isset($lang[$pagename])){
             $pagetitle=$lang[$pagename];
         } 
-        else if (isset($lang['action-'.$pagename])){
+        elseif (isset($lang['action-'.$pagename])){
             $pagetitle=$lang["action-".$pagename];
             if (getval("java","")!=""){$pagetitle=$lang['upload']." ".$pagetitle;}
         }
-        else if (isset($lang[str_replace("_","",$pagename)])){
+        elseif (isset($lang[str_replace("_","",$pagename)])){
             $pagetitle=$lang[str_replace("_","",$pagename)];
         }
-        else if ($pagename=="admin_content"){
+        elseif ($pagename=="admin_content"){
             $pagetitle=$lang['managecontent'];
         }
-        else if ($pagename=="collection_public"){
+        elseif ($pagename=="collection_public"){
             $pagetitle=$lang["publiccollections"];
         }
-        else if ($pagename=="collection_manage"){
+        elseif ($pagename=="collection_manage"){
             $pagetitle=$lang["mycollections"];
         }
-        else if ($pagename=="team_home"){
+        elseif ($pagename=="team_home"){
             $pagetitle=$lang["teamcentre"];
         }
-        else if ($pagename=="help"){
+        elseif ($pagename=="help"){
             $pagetitle=$lang["helpandadvice"];
         }
-        else if (strpos($pagename,"upload")!==false){
+        elseif (strpos($pagename,"upload")!==false){
             $pagetitle=$lang["upload"];
         }
-        else if ($pagename=="contact"){
+        elseif ($pagename=="contact"){
             $pagetitle=$lang["contactus"];
         }
-        else if ($pagename=="geo_search"){
+        elseif ($pagename=="geo_search"){
             $pagetitle=$lang["geographicsearch"];
         }
-        else if ($pagename=="search_advanced"){
+        elseif ($pagename=="search_advanced"){
             $pagetitle=$lang["advancedsearch"];
             if (getval("archive","")==2){$pagetitle.=" - ".$lang['archiveonlysearch'];}
         }   
-        else if ($pagename=="about"){
+        elseif ($pagename=="about"){
             $pagetitle=$lang["aboutus"];
         }   
-        else if ($pagename=="contribute"){
+        elseif ($pagename=="contribute"){
             $pagetitle=$lang["mycontributions"];
         }   
-        else if ($pagename=="user_preferences"){
+        elseif ($pagename=="user_preferences"){
             $pagetitle=$lang["user-preferences"];
         }   
-        else if ($pagename=="requests"){
+        elseif ($pagename=="requests"){
             $pagetitle=$lang["myrequests"];
         }   
-        else if ($pagename=="team_resource"){
+        elseif ($pagename=="team_resource"){
             $pagetitle=$lang["manageresources"];
         }   
-        else if ($pagename=="team_archive"){
+        elseif ($pagename=="team_archive"){
             $pagetitle=$lang["managearchiveresources"];
         }   
-        else if($pagename=="view_shares"){
+        elseif($pagename=="view_shares"){
             $pagetitle=$lang["shared_collections"];
         }   
-        else if($pagename=="team_user"){
+        elseif($pagename=="team_user"){
             $pagetitle=$lang["manageusers"];
         }
-        else if($pagename=="team_request"){
+        elseif($pagename=="team_request"){
             $pagetitle=$lang["managerequestsorders"];
         }
-        else if($pagename=="team_research"){
+        elseif($pagename=="team_research"){
             $pagetitle=$lang["manageresearchrequests"];
         }
-        else if($pagename=="team_plugins"){
+        elseif($pagename=="team_plugins"){
             $pagetitle=$lang["pluginmanager"];
         }
-        else if($pagename=="team_mail"){
+        elseif($pagename=="team_mail"){
             $pagetitle=$lang["sendbulkmail"];
         }
-        else if($pagename=="team_export"){
+        elseif($pagename=="team_export"){
             $pagetitle=$lang["exportdata"];
         }
-        else if($pagename=="team_stats"){
+        elseif($pagename=="team_stats"){
             $pagetitle=$lang["viewstatistics"];
         }
-        else if($pagename=="team_report"){
+        elseif($pagename=="team_report"){
             $pagetitle=$lang["viewreports"];
         }
-        else if($pagename=="check"){
+        elseif($pagename=="check"){
             $pagetitle=$lang["installationcheck"];
         }
-        else if($pagename=="index"){
+        elseif($pagename=="index"){
             $pagetitle=$lang["systemsetup"];
         }
-        else if($pagename=="team_user_log"){
+        elseif($pagename=="team_user_log"){
             global $userdata;
             $pagetitle=$lang["userlog"] . ": " . $userdata["fullname"];
         }
-        else if($pagename=="team_user_edit"){
-            global $userdata,$display_useredit_ref;
-            $pagetitle=$lang["edituser"];
-            if($display_useredit_ref){
-                $pagetitle.=" ".$ref;
-            }
+        elseif($pagename=="team_user_edit"){
+            $pagetitle = $lang["edituser"];
         }
-        else if($pagename=="admin_content_edit"){
+        elseif($pagename=="admin_content_edit"){
             $pagetitle=$lang["editcontent"];
         }
-        else if($pagename=="team_request_edit"){
+        elseif($pagename=="team_request_edit"){
             $pagetitle=$lang["editrequestorder"];
         }
-        else if($pagename=="team_research_edit"){
+        elseif($pagename=="team_research_edit"){
             $pagetitle=$lang["editresearchrequest"];
         }
         else {
@@ -266,7 +261,7 @@ if (getval("ajax","") == "")
     {
     // don't show closing tags if we're in ajax mode
     echo "<!--CollectionDiv-->";
-    $omit_collectiondiv_load_pages=array("login","user_request","user_password","index","preview_all");
+    $omit_collectiondiv_load_pages=array("login","user_request","user_password","index");
 
     $more_omit_collectiondiv_load_pages=hook("more_omit_collectiondiv_load_pages");
     if(is_array($more_omit_collectiondiv_load_pages))

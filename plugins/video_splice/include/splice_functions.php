@@ -31,13 +31,13 @@ function generate_merged_video($videos, $video_splice_type, $target_video_comman
         $video_splice_options = '-f ' . $target_video_command . ' ' . $target_audio_command . ' -vf "fps=' . escapeshellarg($target_frame_rate) . ',scale=' . escapeshellarg($target_width) . ':' . escapeshellarg($target_height) . ':force_original_aspect_ratio=decrease,pad=' . escapeshellarg($target_width) . ':' . escapeshellarg($target_height) . ':(ow-iw)/2:(oh-ih)/2" -sws_flags lanczos';
         $video_splice_command = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i " . $filesource . " " . $video_splice_options . " " . escapeshellarg($target_completed_location);
 
-        $output=run_command($video_splice_command);
+        run_command($video_splice_command);
 
         // If file has no audio channels create blank audio channel to ensure all video files contain audio thus wont loose audio on videos that have it
         if(!empty($has_no_audio))
             {
             $no_audio_command = $ffmpeg_fullpath . " -i " . escapeshellarg($target_completed_location) . " -f lavfi -i anullsrc -vcodec copy " . $target_audio_command . " -shortest " . str_replace("_noaudio","",escapeshellarg($target_completed_location));
-            $output=run_command($no_audio_command);
+            run_command($no_audio_command);
             unlink($target_completed_location);
             $target_completed_location = str_replace("_noaudio","",$target_completed_location);
             }

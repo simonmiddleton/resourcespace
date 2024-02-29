@@ -64,7 +64,7 @@ function addColumnHeader($orderName, $labelKey)
 
     if ($field_order_by == $orderName && $field_sort=="asc")
         $arrow = '<span class="DESC"></span>';
-    else if ($field_order_by == $orderName && $field_sort=="desc")
+    elseif ($field_order_by == $orderName && $field_sort=="desc")
         $arrow = '<span class="ASC"></span>';
     else
         $arrow = '';
@@ -132,7 +132,7 @@ if($allow_reorder)
     <p><?php echo  $lang["admin_resource_type_field_reorder_information"] ?></p>   
     <?php
     }
-else if ($restypefilter=="")
+elseif ($restypefilter=="")
     {
     ?>
     <a href="<?php 
@@ -418,7 +418,7 @@ function enableFieldsort(){
                         {
                         $errormessage=$lang["admin_resource_type_field_reorder_information_tab_order"];
                         }
-                    else if (!$use_order_by_tab_view && $restypefilter=="" && $field_order_by=="order_by" )
+                    elseif (!$use_order_by_tab_view && $restypefilter=="" && $field_order_by=="order_by" )
                         {
                         $errormessage=$lang["admin_resource_type_field_reorder_select_restype"];
                         ?>

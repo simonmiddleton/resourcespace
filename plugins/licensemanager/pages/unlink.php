@@ -4,8 +4,8 @@ include "../../../include/db.php";
 include_once "../../../include/authenticate.php";
 
 
-$ref=getval("ref","");
-$resource=getval("resource","");
+$ref=getval("ref","",true);
+$resource=getval("resource","",true);
 
 # Check access
 $edit_access=get_edit_access($resource);
@@ -40,8 +40,8 @@ include "../../../include/header.php";
 
 <form method="post" action="<?php echo $baseurl_short?>plugins/licensemanager/pages/unlink.php" onSubmit="return CentralSpacePost(this,true);">
 <input type=hidden name="submitted" value="true">
-<input type=hidden name="ref" value="<?php echo $ref?>">
-<input type=hidden name="resource" value="<?php echo $resource?>">
+<input type=hidden name="ref" value="<?php echo (int) $ref?>">
+<input type=hidden name="resource" value="<?php echo (int) $resource?>">
 <?php generateFormToken("licensemanager_unlink"); ?>
 <div class="Question"><label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo htmlspecialchars($resource)?></div>
 <div class="clearerleft"> </div></div>

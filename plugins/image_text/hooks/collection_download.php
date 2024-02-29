@@ -82,9 +82,7 @@ function HookImage_textCollection_downloadModifydownloadfile()
         $convertcommand = $convert_fullpath . " " . escapeshellarg($tmpolfile) .  ' ' . escapeshellarg($p) . ' -append ' . escapeshellarg($newdlfile);
         }
     run_command($convertcommand);
-        
-    $oldpath=$p;
-    
+
     if ($p!=$tmpfile) # If this is not a temporary file having metadata written then copy it to the filestore for future use
         {
         copy($newdlfile, $image_text_saved_file);

@@ -354,14 +354,7 @@ function set_plugin_config($plugin_name, $config)
 function is_plugin_activated($name)
     {
     $activated = ps_query("SELECT name FROM plugins WHERE name = ? and inst_version IS NOT NULL", array("s", $name), "plugins");
-    if (is_array($activated) && count($activated)>0)
-        {
-        return true;
-        }
-    else
-        {
-        return false;
-        }
+    return is_array($activated) && count($activated)>0;
     }
 
 

@@ -26,7 +26,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
             // Return the assignee for the mapping if one exists for the field value pair 
             get_mapped_user_by_field($r_data['ref'], $r_data['value'])!=0?$assigned_administrator=get_mapped_user_by_field($r_data['ref'], $r_data['value']):0;
             // If an assignee was found then terminate loop otherwise move on to next field value pair
-            If($assigned_administrator !== 0) 
+            if ($assigned_administrator !== 0) 
                 {
                 break;
                 } 
@@ -51,7 +51,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
             // Return the assignee for the mapping if one exists for the field value pair 
             get_mapped_user_by_field($r_node['resource_type_field'], $r_node['name'])!=0?$assigned_administrator=get_mapped_user_by_field($r_node['resource_type_field'], $r_node['name']):0;
             // If an assignee was found then terminate loop otherwise move on to next field value pair
-            If($assigned_administrator !== 0)
+            if ($assigned_administrator !== 0)
                 {
                 break;
                 } 

@@ -90,8 +90,10 @@ if(!hook('customchkboxes', '', array($field)))
                                    name="<?php echo $name; ?>"
                                    value="<?php echo $node['ref']; ?>"
                                 <?php
-                                // When editing multiple resources, we don't want to check any options; the user must make the necessary selections
-                                if(!$multiple
+                                // When editing multiple resources, we don't want to check any options; 
+                                // Unless copying from another resource the user must make the necessary selections
+                                
+                                if((!$multiple || getval("copyfrom","")!="")
                                     && in_array($node['ref'], $selected_nodes) || (isset($user_set_values[$field['ref']]) 
                                     && in_array($node['ref'],$user_set_values[$field['ref']])))
                                     {

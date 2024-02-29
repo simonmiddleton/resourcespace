@@ -9,11 +9,11 @@ function Hookvm2rsUpload_batchUpload_page_bottom()
         {
         return false;
         }
-    else if (preg_match("/vimeo.com\/[a-z1-9.-_]+/", $vimeo_copy_path))
+    elseif (preg_match("/vimeo.com\/[a-z1-9.-_]+/", $vimeo_copy_path))
         {
         preg_match("/vimeo.com\/([a-z1-9.-_]+)/", $vimeo_copy_path, $matches);
         }
-    else if (preg_match("/vimeo.com(.+)v=([^&]+)/", $vimeo_copy_path))
+    elseif (preg_match("/vimeo.com(.+)v=([^&]+)/", $vimeo_copy_path))
         {
         preg_match("/v=([^&]+)/", $vimeo_copy_path, $matches);
         }

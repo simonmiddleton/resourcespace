@@ -62,7 +62,7 @@ if (!isset($zipcommand) && !$use_zip_extension)
     if (!$collection_download) {exit($lang["download-of-collections-not-enabled"]);}
     if ($archiver_fullpath==false) {exit($lang["archiver-utility-not-found"]);}
     if (!isset($collection_download_settings)) {exit($lang["collection_download_settings-not-defined"]);}
-    else if (!is_array($collection_download_settings)) {exit($lang["collection_download_settings-not-an-array"]);}
+    elseif (!is_array($collection_download_settings)) {exit($lang["collection_download_settings-not-an-array"]);}
     if (!isset($archiver_listfile_argument)) {exit($lang["listfile-argument-not-defined"]);}
     }
     
@@ -383,14 +383,14 @@ if ($submitted != "")
                 $usesize = ($size == 'original') ? "" : $size;
                 }      
             
-            if(in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && $usesize !== 'original')
+            if(in_array($result[$n]['file_extension'], $ffmpeg_supported_extensions) && $usesize !== '')
                 {
-                //Supported video formates will only have a pre sized derivative
-                $pextension = $result[$n]['file_extension'];
+                // Supported video formats will only have a pre sized derivative
+                $pextension = $ffmpeg_preview_extension;
                 $p = get_resource_path($ref,true,'pre',false,$pextension,-1,1);
                 $usesize = 'pre';
                 }
-            elseif(in_array($result[$n]['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])) && $usesize !== 'original')
+            elseif(in_array($result[$n]['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])) && $usesize !== '')
                 {
                 //Supported audio formats are ported to mp3
                 $pextension = 'mp3';
@@ -417,7 +417,7 @@ if ($submitted != "")
                 $replaced_file = true;
                 $target_exists = file_exists($p);
                 }
-            else if (!$target_exists && $useoriginal == 'yes'
+            elseif (!$target_exists && $useoriginal == 'yes'
                     && resource_download_allowed($ref,'',$result[$n]['resource_type']))
                 {
                 // this size doesn't exist, so we'll try using the original instead
@@ -445,7 +445,7 @@ if ($submitted != "")
                         {
                         $p=$tmpfile; // file already in tmp, just rename it
                         }
-                    else if (!$replaced_file)
+                    elseif (!$replaced_file)
                         {
                         $copy=true; // copy the file from filestore rather than renaming
                         }
@@ -575,10 +575,14 @@ if ($submitted != "")
     $filesize = @filesize_unlimited($zipfile);
 
     header("Content-Disposition: attachment; filename=" . $filename);
-    if ($archiver) {header("Content-Type: " . $collection_download_settings[$settings_id]["mime"]);}
-    else {
-    header("Content-Type: application/zip");}
-    if ($use_zip_extension){header("Content-Transfer-Encoding: binary");}
+    if ($archiver) {
+        header("Content-Type: " . $collection_download_settings[$settings_id]["mime"]);
+    } else {
+        header("Content-Type: application/zip");
+    }
+    if ($use_zip_extension) {
+        header("Content-Transfer-Encoding: binary");
+    }
     header("Content-Length: " . $filesize);
 
     ignore_user_abort(true); // collection download has a problem with leaving junk files when this script is aborted client side. This seems to fix that by letting the process run its course.
@@ -601,6 +605,7 @@ if ($submitted != "")
     # Remove archive.
     if ($use_zip_extension)
         {
+        $GLOBALS["use_error_exception"]=true;
         try {
             rmdir(get_temp_dir(false,$id));
             }
@@ -608,6 +613,7 @@ if ($submitted != "")
             {
             debug("collection_download: Attempt delete temp folder failed. Reason: {$e->getMessage()}");
             }
+        unset($GLOBALS["use_error_exception"]);
         }
     collection_log($collection, LOG_CODE_COLLECTION_COLLECTION_DOWNLOADED, "", $size);
     hook('beforedownloadcollectionexit');

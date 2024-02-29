@@ -14,8 +14,7 @@ function mplus_resource_get_data(array $refs)
         return [];
         }
 
-    $results = ps_query("SELECT ref, museumplus_data_md5, museumplus_technical_id FROM resource WHERE ref IN (". ps_param_insert(count($r_refs)) .")", ps_param_fill($r_refs, 'i'));
-    return $results;
+    return ps_query("SELECT ref, museumplus_data_md5, museumplus_technical_id FROM resource WHERE ref IN (". ps_param_insert(count($r_refs)) .")", ps_param_fill($r_refs, 'i'));
     }
 
 

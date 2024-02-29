@@ -172,4 +172,3 @@ if ($enable_related_resources)
             }
         }
     }
-?>

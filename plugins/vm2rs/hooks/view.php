@@ -8,7 +8,7 @@ function isValidVimeoURL($url)
         {
         preg_match("/vimeo.com\/([a-z1-9.-_]+)/", $url, $matches);
         }
-    else if (preg_match("/vimeo.com(.+)v=([^&]+)/", $url))
+    elseif (preg_match("/vimeo.com(.+)v=([^&]+)/", $url))
         {
         preg_match("/v=([^&]+)/", $url, $matches);
         }
@@ -17,7 +17,7 @@ function isValidVimeoURL($url)
         {
         $vm2rs_videoId = $matches[1];
 
-        if (!$fp = curl_init($url))
+        if (!curl_init($url))
             {
             return false;
             }

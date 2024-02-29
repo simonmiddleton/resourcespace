@@ -15,8 +15,7 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
     global $username;
     global $password;
     global $password_hash,$ldapauth;
-    $debugMode = false;
-        
+
     if ($ldap_debug) { error_log( __FILE__ . " " . __METHOD__ . " " . __LINE__ . "  Starting Debug") ; }    
         
         

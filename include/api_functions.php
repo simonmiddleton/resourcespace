@@ -105,7 +105,7 @@ function execute_api_call($query,$pretty=false)
             debug ("API: " . $param_name . " -   value has been passed : '" . $params["param" . $paramkey] . "'");
             $setparams[$n] = $params["param" . $paramkey];
             }
-        else if(array_key_exists($param_name, $params))
+        elseif(array_key_exists($param_name, $params))
             {
             debug("API: {$param_name} - value has been passed (by name): '" . json_encode($params[$param_name]) . "'");
 
@@ -275,7 +275,7 @@ function assert_post_request(bool $force): array
         {
         return [];
         }
-    else if ($_SERVER['REQUEST_METHOD'] === 'POST')
+    elseif ($_SERVER['REQUEST_METHOD'] === 'POST')
         {
         return [];
         }

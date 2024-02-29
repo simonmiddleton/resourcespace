@@ -1,27 +1,15 @@
-1,"Keywords used in resource edits","select k.keyword 'Keyword',sum(count) 'Entered Count' from keyword k,daily_stat d where k.ref=d.object_ref and d.activity_type='Keyword added to resource'
+1,"Values used in resource edits","SELECT 
+TRIM( RIGHT ( diff, LENGTH ( diff ) - LOCATE ( '\n+', diff ) - 2 ) ) AS `Value`, 
+count(*) AS `Count` 
+FROM resource_log WHERE type = 'e' 
 
 # --- date ranges
 # Make sure date is greater than FROM date
-and 
-(
-d.year>[from-y]
-or 
-(d.year=[from-y] and d.month>[from-m])
-or
-(d.year=[from-y] and d.month=[from-m] and d.day>=[from-d])
-)
+and date > DATE('[from-y]-[from-m]-[from-d]')
 # Make sure date is less than TO date
-and
-(
-d.year<[to-y]
-or 
-(d.year=[to-y] and d.month<[to-m])
-or
-(d.year=[to-y] and d.month=[to-m] and d.day<=[to-d])
-)
+and date > DATE('[to-y]-[to-m]-[to-d]')
 
-
-group by k.ref order by 'Entered Count' desc limit 5000;
+group by 1 order by 2 desc limit 5000;
 ",0
 2,"Keywords used in searches","select k.keyword 'Keyword',sum(count) Searches from keyword k,daily_stat d where k.ref=d.object_ref and d.activity_type='Keyword usage'
 
@@ -122,34 +110,18 @@ or
 group by r.ref order by Sent desc;
 ",0
 6,"Resources added to collection","
-select r.ref 'Resource ID',
-( SELECT n.name 
-FROM resource_node rn, node n 
-WHERE rn.resource = r.ref AND n.ref = rn.node and n.resource_type_field = [title_field]
-LIMIT 1 ) 'Title',sum(count) Added from resource r,daily_stat d where r.ref=d.object_ref and d.activity_type='Add resource to collection'
-
-# --- date ranges
-# Make sure date is greater than FROM date
-and 
-(
-d.year>[from-y]
-or 
-(d.year=[from-y] and d.month>[from-m])
-or
-(d.year=[from-y] and d.month=[from-m] and d.day>=[from-d])
-)
-# Make sure date is less than TO date
-and
-(
-d.year<[to-y]
-or 
-(d.year=[to-y] and d.month<[to-m])
-or
-(d.year=[to-y] and d.month=[to-m] and d.day<=[to-d])
-)
-
-
-group by r.ref order by Added desc;
+select cl.resource 'Resource',
+( SELECT n.name
+FROM resource_node rn, node n
+WHERE rn.resource = cl.resource AND n.ref = rn.node and n.resource_type_field = [title_field]
+LIMIT 1 ) 'Title',
+count(*) 'Collection Add Count'
+from collection_log cl
+where BINARY cl.type='a'
+and cl.date>=date('[from-y]-[from-m]-[from-d]')
+and cl.date<=adddate(date('[to-y]-[to-m]-[to-d]'),1)
+group by resource
+order by resource;
 ",0
 7,"Resources created","
 

@@ -72,7 +72,7 @@ if((!isset($_FILES[$fd]) || 0 < $_FILES[$fd]['error']) && !$process_csv)
     <?php
     }
 // File has already been uploaded and validated, just process it
-else if($process_csv && file_exists($csv_file))
+elseif($process_csv && file_exists($csv_file))
     {
     ?>
     <p><?php echo $lang['csv_user_import_processing_file']; ?></p>

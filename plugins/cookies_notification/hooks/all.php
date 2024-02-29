@@ -31,7 +31,7 @@ function HookCookies_notificationAllHandleuserref()
         {
         redirect("{$baseurl}/login.php?logout=true&cookies_use=true&require_option=true");
         }
-    else if(!is_null($accepted_cookies_use) && (int) $accepted_cookies_use === 0)
+    elseif(!is_null($accepted_cookies_use) && (int) $accepted_cookies_use === 0)
         {
         rs_setcookie('accepted_cookies_use', '', -1, '', '', substr($baseurl, 0, 5) == 'https', true);
         redirect("{$baseurl}/login.php?logout=true&cookies_use=true");

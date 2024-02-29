@@ -41,7 +41,7 @@ class Pixabay extends Provider
             {
             $per_page = 3;
             }
-        else if($per_page > 200)
+        elseif($per_page > 200)
             {
             $per_page = 200;
             }

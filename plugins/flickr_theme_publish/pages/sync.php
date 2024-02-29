@@ -22,7 +22,7 @@ $id="flickr_" . $userref . "_" .$theme;
 $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 
 ?>
-<h1><?php echo $lang["flickr_title"] ?></h1>
+<h1><?php echo escape($lang["flickr_title"]); ?></h1>
 <?php
 if(!metadata_field_view_access($flickr_title_field))
     {
@@ -87,17 +87,17 @@ else
     <form method="post" id='flickr_publish'>
         <?php generateFormToken("flickr_publish"); ?>
     <!-- Public/private? -->
-    <p><?php echo $lang["flickr_publish_as"] ?>
+    <p><?php echo escape($lang["flickr_publish_as"]); ?>
     <select name="private">
-    <option value="1" <?php if (getval("private","")==1) { ?>selected<?php } ?>><?php echo $lang["flickr-publish-private"] . "&nbsp;&nbsp;" ?></option>
-    <option value="0"><?php echo $lang["flickr-publish-public"] . "&nbsp;&nbsp;" ?></option>
+    <option value="1" <?php if (getval("private","")==1) { ?>selected<?php } ?>><?php echo escape($lang["flickr-publish-private"]) . "&nbsp;&nbsp;" ?></option>
+    <option value="0"><?php echo escape($lang["flickr-publish-public"]) . "&nbsp;&nbsp;" ?></option>
     </select>
     </p>
     
 
-    <p><?php echo $lang["publish_new_help"] ?></p>      
+    <p><?php echo escape($lang["publish_new_help"]); ?></p>
     <?php if($flickr_nice_progress){
-        ?><input <?php if ($unpublished==0) { ?>disabled<?php } ?> type="button" name="publish_new" id="publish_new" onclick="flickr_open_nice_progress('<?php echo $theme?>','new')" value="<?php echo escape($unpublished == 1 ? $lang["publish_new-1"] : str_replace("?",$unpublished,$lang["publish_new-2"])); ?>"><?php
+        ?><input <?php if ($unpublished==0) { ?>disabled<?php } ?> type="button" name="publish_new" id="publish_new" onclick="flickr_open_nice_progress('<?php echo escape($theme); ?>','new')" value="<?php echo escape($unpublished == 1 ? $lang["publish_new-1"] : str_replace("?",$unpublished,$lang["publish_new-2"])); ?>"><?php
     }
     else{
         ?><input <?php if ($unpublished==0) { ?>disabled<?php } ?> type="submit" name="publish_new" id="publish_new" value="<?php echo escape($unpublished==1 ? $lang["publish_new-1"] : str_replace("?",$unpublished,$lang["publish_new-2"])); ?>"><?php
@@ -110,21 +110,21 @@ else
     if ($all-$unpublished>0)
         {
         ?>
-        <p><?php echo $lang["publish_all_help"] ?></p>
+        <p><?php echo escape($lang["publish_all_help"]); ?></p>
         <?php if($flickr_nice_progress)
             {
-            ?><input <?php if ($unpublished==0 && $all==0) { ?>disabled<?php } ?> type="button" name="publish_all" id="publish_all" onclick="flickr_open_nice_progress('<?php echo $theme?>','all')" value="<?php echo str_replace(array("$","?"),array($unpublished,$all-$unpublished),$lang["publish_all"]); ?>"><?php
+            ?><input <?php if ($unpublished==0 && $all==0) { ?>disabled<?php } ?> type="button" name="publish_all" id="publish_all" onclick="flickr_open_nice_progress('<?php echo escape($theme); ?>','all')" value="<?php echo escape(str_replace(array("$","?"),array($unpublished,$all-$unpublished),$lang["publish_all"])); ?>"><?php
             }
         else
             {
-            ?><input <?php if ($unpublished==0 && $all==0) { ?>disabled<?php } ?> type="submit" name="publish_all" id="publish_all" value="<?php echo str_replace(array("$","?"),array($unpublished,$all-$unpublished),$lang["publish_all"]); ?>"><?php
+            ?><input <?php if ($unpublished==0 && $all==0) { ?>disabled<?php } ?> type="submit" name="publish_all" id="publish_all" value="<?php echo escape(str_replace(array("$","?"),array($unpublished,$all-$unpublished),$lang["publish_all"])); ?>"><?php
             }
         }
     ?>
 
-    <br /><br /><br /><br /><br /><hr /><h2><?php echo $lang["clear-flickr-photoids"] ?></h2>
-    <p><?php echo $lang["flickr_clear_photoid_help"] ?></p>
-    <input type="submit" name="clear_photoid" value="<?php echo $lang["action-clear-flickr-photoids"]; ?>">
+    <br /><br /><br /><br /><br /><hr /><h2><?php echo escape($lang["clear-flickr-photoids"]); ?></h2>
+    <p><?php echo escape($lang["flickr_clear_photoid_help"]); ?></p>
+    <input type="submit" name="clear_photoid" value="<?php echo escape($lang["action-clear-flickr-photoids"]); ?>">
     
     </form>
     <?php

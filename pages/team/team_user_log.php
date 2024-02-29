@@ -70,10 +70,6 @@ for ($n=$offset;(($n<count($log))&& ($n<($offset+$per_page)));$n++)
 
     # For emailed items, append email address from the 'notes' column
     if ($log[$n]["type"]=="E") { echo " " . $log[$n]["notes"]; }
-    
-    # For purchases, append size and price
-    if ($log[$n]["type"]=="p") {echo " (" . ($log[$n]["purchase_size"]==""?$lang["collection_download_original"]:$log[$n]["purchase_size"]) . ", " . $currency_symbol . number_format($log[$n]["purchase_price"],2) . ")";}
-
     ?></td>
     <td><?php echo $log[$n]["title"] ?></td>
     <?php hook("adduserlogcolumn");?>

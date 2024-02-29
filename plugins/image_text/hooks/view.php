@@ -19,7 +19,7 @@ function HookImage_textViewDownloadbuttonreplace()
                                     . urlencode($order_by)."&nooverlay=true")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["image_text_download_clear"]?></a><?php
             }
             
-        else if (in_array(strtoupper($resource["file_extension"]), $image_text_filetypes))
+        elseif (in_array(strtoupper($resource["file_extension"]), $image_text_filetypes))
             {
             if(isset($size_info["extension"])){$dlext=$size_info["extension"];}else{$dlext=$resource["file_extension"];}
                 

@@ -29,10 +29,13 @@ if (in_array($resource['file_extension'],$annotate_ext_exclude)){return false;}
 if (in_array($resource['resource_type'],$annotate_rt_exclude)){return false;}
 if (!($k=="") && !$annotate_public_view){return false;}
 
-if (!file_exists($path) && !file_exists($path_orig)){return false;}
-if (!file_exists($path)){
-    $sizes = getimagesize($path_orig);}
-else{
+if (!file_exists($path) && !file_exists($path_orig)) {
+    return false;
+}
+
+if (!file_exists($path)) {
+    $sizes = getimagesize($path_orig);
+} else {
     $sizes = getimagesize($path);
 }
 
@@ -77,7 +80,7 @@ $h = $sizes[1];
             <a onClick="return CentralSpaceLoad(this);" href="<?php echo generateURL($baseurl_short . "pages/preview.php", $urlparams,array("page" => $previouspage)); ?>" class="PDFnav  pagePrev">&lt;</a>
         </td>
     <?php 
-    } else if($nextpage !=-1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>
+    } elseif($nextpage !=-1 && resource_download_allowed($ref, "scr", $resource["resource_type"])) { ?>
         <td valign="middle">
             <a href="#" class="PDFnav pagePrev">&nbsp;&nbsp;&nbsp;</a>
         </td>

@@ -6,10 +6,7 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
     {
     global $baseurl_short,$imagemagick_preserve_profiles, $format_chooser_input_formats, $format_chooser_output_formats, $k;
 
-    // Disable for e-commerce
-    if (is_ecommerce_user()) { return false; }
-
-        // Check whether download file extension matches
+     // Check whether download file extension matches
     if(!in_array(strtoupper($ext),$format_chooser_output_formats))
         {return false;}
 
@@ -31,24 +28,24 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
         {return false;}
     
     $profile = getval('profile' , null);
-    if (!empty($profile))
-        {
+    if (!empty($profile)) {
         $url_qs['profile'] = $profile;
-        }
-    else
-        {
-        $path = get_resource_path($ref, true, $size, false, $ext, -1, $page,$size=="scr" && checkperm("w") && $alternative==-1, '', $alternative);
+    } else {
+        $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $size=="scr" && checkperm("w") && $alternative == -1, '', $alternative);
         // We can use the existing previews unless we need to preserve the colour profiles,
         // these are likely to have been removed from scr size and below.
         // Alternative files not being converted can also use the existing file
-        if (file_exists($path) 
-            && (!$imagemagick_preserve_profiles 
-                || in_array($size,array("hpr","lpr")) 
+        if (
+            file_exists($path) 
+            && (
+                !$imagemagick_preserve_profiles 
+                || in_array($size, array("hpr", "lpr")) 
                 || $alternative !== -1
-                )
             )
-        return false;
+        ) {
+            return false;
         }
+    }
     
     return generateURL($baseurl_short . 'plugins/format_chooser/pages/convert.php', $url_qs);
     }
@@ -58,9 +55,6 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
 function HookFormat_chooserAllReplaceuseoriginal()
     {
     global $format_chooser_output_formats, $format_chooser_profiles, $lang, $use_zip_extension;
-
-    // Disable for e-commerce
-    if (is_ecommerce_user()) { return false; }
 
     $disabled = '';
     $submitted = getval('submitted', null);
@@ -105,10 +99,6 @@ function HookFormat_chooserAllReplaceuseoriginal()
 
 function HookFormat_chooserAllSize_is_available($resource, $path, $size)
     {
-
-    // Disable for e-commerce
-    if (is_ecommerce_user()) { return false; }
-
     if (!supportsInputFormat($resource['file_extension']))
         {
         # Let the caller decide whether the file is available
@@ -135,9 +125,6 @@ function HookFormat_chooserAllReplacedownloadextension($resource, $extension)
     {
     global $format_chooser_output_formats, $job_ext;
 
-    // Disable for e-commerce
-    if (is_ecommerce_user()) { return false; }
-
     $inputFormat = $resource['file_extension'];
 
     if (!supportsInputFormat($inputFormat))
@@ -159,10 +146,6 @@ function HookFormat_chooserAllReplacedownloadextension($resource, $extension)
 function HookFormat_chooserAllReplacedownloadfile($resource, $size, $ext,
         $fileExists)
     {
-
-    // Disable for e-commerce
-    if (is_ecommerce_user()) { return false; }
-
     if (!supportsInputFormat($resource['file_extension']))
         {
         # Do not replace files we do not support
@@ -196,9 +179,6 @@ function HookFormat_chooserAllReplacedownloadfile($resource, $size, $ext,
 
 function HookFormat_chooserAllCollection_download_modify_job($job_data=array())
     {
-
-    // Disable for e-commerce
-    if (is_ecommerce_user()) { return false; }
 
     $ext = getval("ext","");
     if(trim($ext) != "")

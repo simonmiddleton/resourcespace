@@ -43,7 +43,7 @@ if('cli' == $php_sapi_name && 2 == $argc)
         echo 'To clear the lock after a failed run, pass in "--clearlock", "-clearlock", "-c" or "--c"' . PHP_EOL;
         exit('Bye!');
         }
-    else if(in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')))
+    elseif(in_array($argv[1], array('--clearlock', '-clearlock', '-c', '--c')))
         {
         if(is_process_lock('emu_import'))
             {

@@ -30,10 +30,7 @@ function get_post($key)
  */
 
 function get_post_bool($key){ 
-    if (isset($_REQUEST[$key]))
-        return true;
-    else
-        return false;
+    return isset($_REQUEST[$key]);
 }
 /**
  * Trims whitespace and trailing slash.
@@ -43,9 +40,7 @@ function get_post_bool($key){
  */
 
 function sslash($data){ 
-    $stripped = rtrim($data);
-    $stripped = rtrim($data, '/');
-    return $stripped;
+    return rtrim($data, '/');
 }
 /**
  * Opens an HTTP request to a host to determine if the url is reachable.
@@ -94,10 +89,7 @@ function url_exists($url)
             fclose($fp);
             $tmp = explode(' ',$resp);
             $response_code = $tmp[1];
-            if ($response_code == 200)
-                return true;
-            else
-                return false;
+            return $response_code == 200;
         }
     }
     fclose($fp);
@@ -173,7 +165,7 @@ if(get_post_bool('ajax'))
         {
         $response['success'] = true;
         }
-    else if('' !== $admin_password && is_string($password_validation_result) && '' !== $password_validation_result)
+    elseif('' !== $admin_password && is_string($password_validation_result) && '' !== $password_validation_result)
         {
         $response['error'] = $password_validation_result;
         }
@@ -687,7 +679,7 @@ h2#dbaseconfig{  min-height: 32px;}
             {
             $errors['admin_password'] = 'Super Admin password cannot be empty!';
             }
-        else if('' !== $admin_password && is_string($password_validation_result) && '' !== $password_validation_result)
+        elseif('' !== $admin_password && is_string($password_validation_result) && '' !== $password_validation_result)
             {
             $errors['admin_password'] = $password_validation_result;
             }

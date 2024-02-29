@@ -63,7 +63,7 @@ foreach($reports as $report)
     
 function t022_perform_migration($rep, $code_to_migrate) {
 
-    foreach($code_to_migrate as $key => $code)
+    foreach($code_to_migrate as $code)
         {
         $position=strpos((string) $rep["query"], (string) $code["fingerprint"]);
         if ($position > 0 || $position === 0) {

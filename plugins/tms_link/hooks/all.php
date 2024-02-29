@@ -61,13 +61,12 @@ function HookTms_linkAllInitialise()
 
 function HookTms_linkAllUpdate_field($resource, $field, $value, $existing)
     {
-    $validfield = false;
     if($resource < 0 || !tms_link_is_rs_uid_field($field))
         {
         return false;
         }
     $resdata = get_resource_data($resource);
-    foreach(tms_link_get_modules_mappings() as $module_uid => $module)
+    foreach(tms_link_get_modules_mappings() as $module)
         {
         if(!in_array($resdata['resource_type'], $module['applicable_resource_types']))
             {

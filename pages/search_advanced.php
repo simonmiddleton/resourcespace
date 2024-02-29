@@ -229,7 +229,7 @@ else
                 }
             }
             // Nodes search
-            else if(strpos($keyword, NODE_TOKEN_PREFIX) !== false)
+            elseif(strpos($keyword, NODE_TOKEN_PREFIX) !== false)
                 {
                 $nodes = resolve_nodes_from_string($keyword);
 
@@ -513,7 +513,7 @@ if ((!empty($selectedtypes[0]) && in_array("Global",$selectedtypes))
 
 ?><table><tr>
 <td valign=middle><input type=checkbox class="SearchTypeCheckbox" id="SearchGlobal" name="resourcetypeGlobal" value="yes" <?php if ($checked) { ?>checked<?php }?>></td><td valign=middle><?php echo htmlspecialchars($lang["resources-all-types"]) ; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
-$hiddentypes=Array();
+$hiddentypes = array();
 for ($n=0;$n<count($types);$n++)
     {
     if(in_array($types[$n]['ref'], $hide_resource_types)) { continue; }
@@ -574,7 +574,6 @@ if (!hook('advsearchallfields')) { ?>
 <div class="clearerleft"> </div>
 </div>
 <?php }
-if (!hook('advsearchdate')) {
 if (!$daterange_search)
     {
     ?>
@@ -612,7 +611,7 @@ if (!$daterange_search)
     </select>
     <div class="clearerleft"> </div>
     </div>
-<?php }} ?>
+<?php } ?>
 
 
 <?php hook('advsearchaddfields'); ?>

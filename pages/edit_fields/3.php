@@ -44,7 +44,7 @@ foreach($field['nodes'] as $node)
         <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>"
         <?php 
         // When editing multiple resources, we don't want to preselect any options; the user must make the necessary selection
-        if(!$multiple 
+        if((!$multiple || $copyfrom != '')
             && in_array($node['ref'], $selected_nodes) || (isset($user_set_values[$field['ref']]) 
             && $node['ref']==$user_set_values[$field['ref']])) 
             { ?>

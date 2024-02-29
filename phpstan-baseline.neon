@@ -26,11 +26,6 @@ parameters:
 			path: include/collections_functions.php
 
 		-
-			message: "#^Variable \\$error on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 2
-			path: include/database_functions.php
-
-		-
 			message: "#^Variable \\$language in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: include/db.php
@@ -57,11 +52,6 @@ parameters:
 
 		-
 			message: "#^Variable \\$array2search in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: include/general_functions.php
-
-		-
-			message: "#^Variable \\$extra_warn on left side of \\?\\? is never defined\\.$#"
 			count: 1
 			path: include/general_functions.php
 
@@ -271,11 +261,6 @@ parameters:
 			path: pages/collections.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$smart_fc_parent\\.$#"
-			count: 1
-			path: pages/collections_featured.php
-
-		-
 			message: "#^Variable \\$allowed_extensions in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: pages/edit.php
@@ -351,11 +336,6 @@ parameters:
 			path: pages/team/team_mail.php
 
 		-
-			message: "#^Function migrate_files invoked with 6 parameters, 5 required\\.$#"
-			count: 2
-			path: pages/tools/filestore_migrate.php
-
-		-
 			message: "#^Variable \\$unoconv_path in isset\\(\\) is never defined\\.$#"
 			count: 1
 			path: pages/tools/staticsync.php
@@ -411,19 +391,9 @@ parameters:
 			path: plugins/image_banks/providers/ResourceSpace.php
 
 		-
-			message: "#^Variable \\$resource_metadata on left side of \\?\\?\\= is never defined\\.$#"
-			count: 1
-			path: plugins/image_banks/providers/ResourceSpace.php
-
-		-
 			message: "#^Variable \\$email in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: plugins/simplesaml/hooks/all.php
-
-		-
-			message: "#^Variable \\$video_export_folder in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: plugins/video_splice/pages/splice.php
 
 		-
 			message: "#^Variable \\$end_time in isset\\(\\) always exists and is not nullable\\.$#"

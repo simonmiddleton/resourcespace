@@ -187,9 +187,9 @@ if (isset($custom_registration_fields))
             $html = $custom_registration_html[$custom[$n]];
             if (is_string($html))
                 echo $html;
-            else if (isset($html[$language]))
+            elseif (isset($html[$language]))
                 echo $html[$language];
-            else if (isset($html[$defaultlanguage]))
+            elseif (isset($html[$defaultlanguage]))
                 echo $html[$defaultlanguage];
             }
         else

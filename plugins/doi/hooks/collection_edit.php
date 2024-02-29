@@ -141,7 +141,7 @@
 
                     if (!empty($doi_err_cache)) {
                         # add errors to summary
-                        foreach ($doi_err_cache as $n => $err) {
+                        foreach ($doi_err_cache as $err) {
                             $summary .= '\n' . $err;
                         }
                         doi_clear_cache($doi_err_cache);

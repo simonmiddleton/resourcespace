@@ -7,8 +7,7 @@ if (!function_exists("rse_workflow_get_actions")){
             $condition="";$params=array();
             if($status!="" && is_int($status)){$condition=" WHERE wa.statusfrom='status' ";}
             if($ref!=""){$condition=" WHERE wa.ref=? ";$params[]="i";$params[]=$ref;}
-            $actions=ps_query("SELECT wa.ref, wa.text, wa.name, wa.buttontext, wa.statusfrom, wa.statusto,a.notify_group,a.name AS statusto_name,a.more_notes_flag,a.notify_user_flag, a.email_from, a.bcc_admin FROM workflow_actions wa LEFT OUTER JOIN archive_states a ON wa.statusto=a.code $condition GROUP BY wa.ref ORDER BY wa.ref,wa.statusfrom,wa.statusto ASC",$params);
-            return $actions;
+            return ps_query("SELECT wa.ref, wa.text, wa.name, wa.buttontext, wa.statusfrom, wa.statusto, a.notify_group, a.name AS statusto_name, a.more_notes_flag, a.notify_user_flag, a.email_from, a.bcc_admin FROM workflow_actions wa LEFT OUTER JOIN archive_states a ON wa.statusto = a.code $condition GROUP BY wa.ref ORDER BY wa.ref, wa.statusfrom, wa.statusto ASC", $params);
             }
     }
 
@@ -20,7 +19,6 @@ if (!function_exists("rse_workflow_save_action")){
             $tostate=getval("actionto","");
             $name=getval("actionname","");
             $text=getval("actiontext","");
-            $buttontext=getval("actionbuttontext","");
             
             # Check if we are searching for actions specific to a status
             ps_query("UPDATE workflow_actions SET name = ?, text = ?, buttontext = '' statusfrom = ?, statusto = ? WHERE ref = ?",array("s",$name,"s",$text,"i",$fromstate,"i",$tostate,"i",$ref));
@@ -278,7 +276,7 @@ function rse_workflow_create_state(array $data)
         $new_state_data['code'] = ++$code;
         }
 
-    $sql = ps_query(
+    ps_query(
         "INSERT INTO archive_states (code, name, notify_group, more_notes_flag, notify_user_flag, email_from, bcc_admin, simple_search_flag, icon)
               VALUES (" . ps_param_insert(9) . ")",
         array(

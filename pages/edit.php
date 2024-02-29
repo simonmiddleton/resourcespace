@@ -502,17 +502,16 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
         }
     }
 
-if (getval("regen","") !== "" && enforcePostRequest($ajax)) {
+if (getval("regen","") != "" && enforcePostRequest($ajax)) {
     hook('edit_recreate_previews_extra', '', array($ref));
     if(!start_previews($ref)) {
-        $onload_message["text"] = $lang["recreatepreviews_pending"];
+       $onload_message["text"] = $lang["recreatepreviews_pending"];
     }
 }
 
-if (getval("regenexif","")!="" && enforcePostRequest($ajax))
-    {
+if (getval("regenexif","")!="" && enforcePostRequest($ajax)) {
     extract_exif_comment($ref);
-    }
+}
 
 # Establish if this is a metadata template resource, so we can switch off certain unnecessary features
 $is_template=(isset($metadata_template_resource_type) && $resource["resource_type"]==$metadata_template_resource_type);
@@ -999,7 +998,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                     <?php
                     exit();
                     }
-                else if(!is_array($save_errors) && !hook("redirectaftermultisave"))
+                elseif(!is_array($save_errors) && !hook("redirectaftermultisave"))
                     {
                     redirect(generateURL($baseurl_short . "pages/search.php",$urlparams));
                     }
@@ -1024,25 +1023,25 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
    $tweak=getval("tweak","");
    debug(sprintf('$tweak = %s', json_encode($tweak)));
    switch($tweak)
-        {
-        case "rotateclock":
-            tweak_preview_images($ref, 270, 0, $resource["preview_extension"], -1, $resource['file_extension']);
-            break;
-        case "rotateanti":
-            tweak_preview_images($ref, 90, 0, $resource["preview_extension"], -1, $resource['file_extension']);
-            break;
-        case "gammaplus":
-            tweak_preview_images($ref, 0, 1.3, $resource["preview_extension"]);
-            break;
-        case "gammaminus":
-            tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
-            break;
-        case "restore":        
-            if(start_previews($ref)) {
-                $onload_message["text"] = $lang["recreatepreviews_pending"];
-            }
-        break;
+      {
+      case "rotateclock":
+         tweak_preview_images($ref, 270, 0, $resource["preview_extension"], -1, $resource['file_extension']);
+         break;
+      case "rotateanti":
+         tweak_preview_images($ref, 90, 0, $resource["preview_extension"], -1, $resource['file_extension']);
+         break;
+      case "gammaplus":
+         tweak_preview_images($ref, 0, 1.3, $resource["preview_extension"]);
+         break;
+      case "gammaminus":
+         tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
+         break;
+      case "restore":
+        if(start_previews($ref)) {
+            $onload_message["text"] = $lang["recreatepreviews_pending"];
         }
+        break;
+      }
    hook("moretweakingaction", "", array($tweak, $ref, $resource));
    # Reload resource data.
    $resource=get_resource_data($ref,false);
@@ -1878,7 +1877,7 @@ if($tabs_on_edit)
                 $tabs_fields_assoc[$tab_ref][$field_idx] = $field_data['ref'];
                 }
             // Fields with invalid tab IDs will end up on the "Default" list (ref #1)
-            else if(!isset($tabs_fields_assoc[1][$field_idx]) && !isset($system_tabs[$field_data['tab']]))
+            elseif(!isset($tabs_fields_assoc[1][$field_idx]) && !isset($system_tabs[$field_data['tab']]))
                 {
                 // Override the fields' tab value in order for it to be rendered on the correct tab
                 $fields[$field_idx]['tab'] = 1;
@@ -2384,12 +2383,14 @@ if ($ref>0 && !$multiple)
             $bbr_preview_size = $edit_large_preview ? 'pre' : 'thm';
             $wmpath="";
             # Establish path to watermarked version if its rendering is a possibility
-            if (checkperm("w") && (int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE) 
+            if (checkperm("w") && (int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                 {
                 $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
                 }
-            if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
-                {
+            if (
+                (int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE 
+                && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size)
+                ) {
                 $path_to_preview = get_resource_path($ref, false, $bbr_preview_size, false, $resource["preview_extension"], -1, 1, false);
                 if ($upload_review_mode && $hide_real_filepath)
                     {

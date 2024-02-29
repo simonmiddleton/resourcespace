@@ -84,9 +84,7 @@ function rsDecrypt($data, $key)
     // Synthetic Initialization Vector (SIV)
     $siv = substr(hash_hmac("sha256", "{$nonce}{$scramble_key}{$key}", $mac_key, true), 0, 16);
 
-    $plaintext = openssl_decrypt(hex2bin($cyphertext), $method, $enc_key, $options, $siv);
-
-    return $plaintext;
+    return openssl_decrypt(hex2bin($cyphertext), $method, $enc_key, $options, $siv);
     }
 
 

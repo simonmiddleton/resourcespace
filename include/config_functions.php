@@ -300,8 +300,7 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
 */
 function get_config_option_users($option,$value)
     {
-    $users = ps_array("SELECT user value FROM user_preferences WHERE parameter = ? AND value=?",array("s",$option,"s",$value), "preferences");
-    return $users;   
+    return ps_array("SELECT user value FROM user_preferences WHERE parameter = ? AND value = ?", array("s", $option, "s", $value), "preferences");
     }
 
 /**
@@ -1029,7 +1028,16 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
         $fields= ps_query('select ' . columns_in("resource_type_field") . ' from resource_type_field ' .  (($fieldtypefilter=="")?'':' where ' . $fieldtypefilter) . ' order by title, name', $params, "schema");
     }
     else{
-        $fields= ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where resource_type= ? " .  (($fieldtypefilter=="")?"":" and " . $fieldtypefilter) . "order by title, name", array_merge(['i', $rtype], $params),"schema");
+        if ($rtype === 0)
+            {
+            $rtype_sql = '`global` = 1';
+            }
+        else
+            {
+            $rtype_sql = 'ref IN (SELECT resource_type_field FROM resource_type_field_resource_type WHERE resource_type = ?)';
+            $params = array_merge(array('i', $rtype), $params);
+            }
+        $fields = ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where $rtype_sql " .  (($fieldtypefilter == "") ? "" : "and " . $fieldtypefilter) . "order by title, name", $params, "schema");
     }
 ?>
   <div class="Question">
@@ -1512,6 +1520,10 @@ function create_resource_type($name)
     ps_query("INSERT INTO resource_type (name) VALUES (?) ",array("s",$name));
     $newid = sql_insert_id();
     clear_query_cache("schema");
+    if(isset($GLOBALS["restype_cache"]))
+        {
+        unset($GLOBALS["restype_cache"]);
+        }
     return $newid;
     }
 
@@ -1528,7 +1540,6 @@ function create_resource_type($name)
 function save_resource_type(int $ref, array $savedata)
     {
     global $execution_lockout;
-
     $restypes = get_resource_types("",true,false,true);
     $restype_refs = array_column($restypes,"ref");
     if(!checkperm('a') || !in_array($ref,$restype_refs))
@@ -1542,14 +1553,14 @@ function save_resource_type(int $ref, array $savedata)
     foreach($savedata as $savecol=>$saveval)
         {
         debug("checking for column " . $savecol . " in " . json_encode(($restype_refs),true));
-        if($saveval == $restypes[$ref][$savecol])
+        if($saveval === $restypes[$ref][$savecol])
             {
             // Unchanged value, skip
             continue;
             }
         switch($savecol)
             {
-            case "name":               
+            case "name":
                 $setcolumns[] = "name";
                 $setparams[] = "s";
                 $setparams[] = mb_strcut($saveval, 0, 100);
@@ -1559,13 +1570,14 @@ function save_resource_type(int $ref, array $savedata)
             case "push_metadata":
             case "tab":
             case "colour":
+            case "pull_images":
                 $setcolumns[] = $savecol;
                 $setparams[] = "i";
                 $setparams[] = $saveval;
                 break;
 
             case "config_options":
-                if (!$execution_lockout) 
+                if (!$execution_lockout)
                     {
                     // Not allowed to save PHP if execution_lockout set.
                     $setcolumns[] = $savecol;
@@ -1579,8 +1591,8 @@ function save_resource_type(int $ref, array $savedata)
                 $setparams[] = "s";
                 $setparams[] = $saveval;
                 break;
-                
-            case "icon":            
+
+            case "icon":
                 $setcolumns[] = $savecol;
                 $setparams[] = "s";
                 $setparams[] = mb_strcut($saveval, 0, 120);
@@ -1595,10 +1607,10 @@ function save_resource_type(int $ref, array $savedata)
         {
         return false;
         }
-    
+
     $setparams[] = "i";
     $setparams[] = $ref;
-    
+
     ps_query(
         "UPDATE resource_type
             SET " . implode("=?,",$setcolumns) . "=?
@@ -1649,7 +1661,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
     global $regexp_slash_replace, $migrate_data, $onload_message, $lang, $baseurl;
 
     $existingfield = get_resource_type_field($ref);
-    $params= $syncparams = [];
+    $params = [];
 
     $resource_types=get_resource_types("",true,false,true);
 
@@ -1718,22 +1730,38 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
         if($column == "global")
             {
             // Also need to update all resource_type_field -> resource_type associations
-            $setresypes = [];
-            if($val == 0)
-                {
-                $currentrestypes = get_resource_type_field_resource_types([$existingfield]);
+            $setrestypes = [];
+            $currentrestypes = get_resource_type_field_resource_types([$existingfield]);
+            if($val == 0) {
                 // Only need to check them if field is not global
                 foreach($resource_type_array as $resource_type=>$resource_type_name)
                     {
                     if(trim($postdata["field_restype_select_" . $resource_type] ?? "") != "")
                         {
-                        $setresypes[] = $resource_type;
+                        $setrestypes[] = $resource_type;
                         }
                     }
-                 // Set to remove existing data from the resource types that had data stored
-                 $remove_data_restypes = $existingfield["type"] == 1 ? array_column($resource_type_array,"ref") : array_diff($currentrestypes[$ref],$setresypes);
+                // Set to remove existing data from the resource types that had data stored
+                if ($existingfield["type"] == 1) {
+                    $remove_data_restypes = array_column($resource_type_array,"ref");
+                } else {
+                    $remove_data_restypes = array_diff($currentrestypes[$ref],$setrestypes);
                 }
-            update_resource_type_field_resource_types($ref,$setresypes);
+            }
+            update_resource_type_field_resource_types($ref,$setrestypes);
+            if (empty($setrestypes)) {
+                $setrestypes = array_column(get_resource_types("",false,true,true),"ref");
+            }
+            log_activity(
+                null,
+                LOG_CODE_EDITED,
+                implode(", ", $setrestypes),
+                'resource_type_field',
+                'Resource Types',
+                $ref,
+                null,
+                implode(", ",$currentrestypes[$ref])
+            );
             }
 
         log_activity(null,LOG_CODE_EDITED,$val,'resource_type_field',$column,$ref);

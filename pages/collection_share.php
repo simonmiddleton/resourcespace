@@ -81,7 +81,7 @@ if(!collection_readable($ref))
     {
     exit($lang["no_access_to_collection"]);
     }
-else if(
+elseif(
     $collection["type"] == COLLECTION_TYPE_FEATURED
     && !featured_collection_check_access_control((int) $collection["ref"])
     && !allow_featured_collection_share($collection)
@@ -118,7 +118,7 @@ if($collection["type"] == COLLECTION_TYPE_SELECTION)
         }
     }
 // Special collection being shared. Ensure certain features are enabled/disabled
-else if(is_featured_collection_category($collection))
+elseif(is_featured_collection_category($collection))
     {
     // Check this is not an empty FC category
     $fc_resources = get_featured_collection_resources($collection, array("limit" => 1));
@@ -141,7 +141,7 @@ else if(is_featured_collection_category($collection))
             {
             break;
             }
-        else if(is_array($collectionstates))
+        elseif(is_array($collectionstates))
             {
             $sub_fcs_resources_states = array_unique(array_merge($sub_fcs_resources_states, $collectionstates));
             }
@@ -189,14 +189,6 @@ if(is_array($collectionstates) && (count($collectionstates)>1 || !in_array(0,$co
         }
     }
 
-// If a plugin needs to fake having more resources, calculate how many are external to ResourceSpace to allow sharing 
-// collections when external resources are in that collection.
-$remoteResources = hook('getRemoteResources', '', [$ref]);
-if($remoteResources !== false)
-    {
-    $resource_count = $resource_count - $remoteResources;
-    }
-
 # Minimum access is restricted or lower and sharing of restricted resources is not allowed. The user cannot share this collection.
 # The same applies for collections where the user creating the share doesn't have access to all resources in the collection e.g. some resources are in states blocked by a z permission.
 $minaccess = (isset($minaccess) ? $minaccess : collection_min_access($ref));
@@ -220,15 +212,15 @@ if($deleteaccess && !isset($show_error) && enforcePostRequest(getval("ajax", fal
     }
 
 include "../include/header.php";
-?>
 
-
-<?php if (isset($show_error)){?>
+if (isset($show_error)) { ?>
     <script type="text/javascript">
-    alert('<?php echo $error;?>');
+        alert('<?php echo escape($error); ?>');
         history.go(-1);
-    </script><?php
-    exit();}
+    </script>
+    <?php
+    exit();
+}
 ?>
     <div class="BasicsBox">     
     <form method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref)?>">
@@ -374,7 +366,7 @@ include "../include/header.php";
             </div>
             <?php
             }
-        else if($editaccess == "" && !($editing && $editexternalurl))
+        elseif($editaccess == "" && !($editing && $editexternalurl))
             {
             // Access has been selected. Generate a new URL.
             $generated_access_key = '';
@@ -383,7 +375,7 @@ include "../include/header.php";
                 {
                 $generated_access_key = generate_collection_access_key($collection, 0, 'URL', $access, $expires, $user_group, $sharepwd);
                 }
-            else if (!empty($allowed_external_share_groups) && !in_array($usergroup, $allowed_external_share_groups))
+            elseif (!empty($allowed_external_share_groups) && !in_array($usergroup, $allowed_external_share_groups))
                 {
                 // Not allowed to select usergroup but this usergroup can not be used, default to the first entry in allowed_external_share_groups
                 $generated_access_key = generate_collection_access_key($collection, 0, 'URL', $access, $expires, $allowed_external_share_groups[0], $sharepwd);

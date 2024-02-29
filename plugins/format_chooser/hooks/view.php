@@ -1,12 +1,11 @@
 <?php
 
-function show_table_headers($showprice)
+function show_table_headers()
     {
     global $lang;
     if(!hook("replacedownloadspacetableheaders")){
     ?><tr><td><?php echo $lang["fileinformation"]?></td>
     <td><?php echo $lang["filetype"]?></td>
-    <?php if ($showprice) { ?><td><?php echo $lang["price"] ?></td><?php } ?>
     <td class="textcenter"><?php echo $lang["options"]?></td>
     </tr>
     <?php
@@ -15,12 +14,9 @@ function show_table_headers($showprice)
 
 function HookFormat_chooserViewReplacedownloadoptions()
     {
-    global $resource, $ref, $counter, $headline, $lang, $download_multisize, $showprice, $save_as, 
+    global $resource, $ref, $counter, $headline, $lang, $download_multisize, $save_as, 
            $hide_restricted_download_sizes, $format_chooser_output_formats, $baseurl_short, $search, $offset, $k, 
            $order_by, $sort, $archive, $baseurl, $urlparams, $terms_download,$download_usage;
-
-    // Disable for e-commerce
-    if (is_ecommerce_user()) { return false; }
 
     $inputFormat = $resource['file_extension'];
     $origpath = get_resource_path($ref,true,'',false,$resource['file_extension']);
@@ -61,10 +57,8 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
         # Is this the original file? Set that the user can download the original file
         # so the request box does not appear.
-        $fulldownload = false;
         if ($sizes[$n]["id"] == "")
             {
-            $fulldownload = true;
             $fullaccess = $downloadthissize;
             }
 
@@ -78,7 +72,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
         if (!$tableHeadersDrawn)
             {
-            show_table_headers($showprice);
+            show_table_headers();
             $tableHeadersDrawn = true;
             }
 
@@ -90,10 +84,6 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
         ?></p><td class="DownloadFileFormat"><?php echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["field-fileextension"]) ?></td><?php
 
-        if ($showprice)
-            {
-            ?><td><?php echo get_display_price($ref, $sizes[$n]) ?></td><?php
-            }
         add_download_column($ref, $sizes[$n], $downloadthissize);
         }
 
@@ -113,7 +103,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
     if ($downloadCount > 0)
         {
         if (!$tableHeadersDrawn)
-            show_table_headers($showprice);
+            show_table_headers();
 
         ?><tr class="DownloadDBlend">
         <td class="DownloadFileSizePicker"><select id="size"><?php
@@ -173,20 +163,15 @@ function HookFormat_chooserViewReplacedownloadoptions()
             ?><option value="<?php echo $n ?>"><?php echo $name ?></option><?php
             }
 
-        ?></select><p id="sizeInfo"></p></td><?php
-        if ($showprice)
-            {
-            ?><td>-</td><?php
-            }
-        ?><td class="DownloadFileFormatPicker" style="vertical-align: top;"><select id="format"><?php
+        ?></select><p id="sizeInfo"></p></td><td class="DownloadFileFormatPicker" style="vertical-align: top;"><select id="format"><?php
 
-        foreach ($format_chooser_output_formats as $format)
-            {
-            ?><option value="<?php echo $format ?>" <?php if ($format == $defaultFormat) {
-                ?>selected="selected"<?php } ?>><?php echo str_replace_formatted_placeholder("%extension", $format, $lang["field-fileextension"]) ?></option><?php
-            }
-
-        ?></select><?php showProfileChooser(); ?></td>
+        foreach ($format_chooser_output_formats as $format) { ?>
+            <option value="<?php echo $format ?>" <?php echo $format == $defaultFormat ? 'selected="selected"' : ''; ?>>
+                <?php echo str_replace_formatted_placeholder("%extension", $format, $lang["field-fileextension"]) ?>
+            </option>
+        <?php } ?>
+    
+        </select><?php showProfileChooser(); ?></td>
             <td class="DownloadButton">
                 <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang['action-download']; ?></a>
             </td>
@@ -206,7 +191,8 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     # Calculate new dimensions based on original file's dimensions and configured width and height
                     $size_image_dimensions = calculate_image_dimensions($origpath, $size['width'], $size['height']);
                     if ($size['width'] == $closestSize) {
-                        $size = $originalSize; }
+                        $size = $originalSize;
+                    }
                     # Apply newly calculated width and height dimensions to the sizeInfo array
                     $size_to_output=$size;
                     $size_to_output['width']=$size_image_dimensions['new_width'];

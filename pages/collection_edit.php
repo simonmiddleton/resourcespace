@@ -40,7 +40,7 @@ if(!in_array($collection["type"], array(COLLECTION_TYPE_STANDARD, COLLECTION_TYP
     error_alert($lang["error-permissiondenied"], true, 401);
     exit();
     }
-else if($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
+elseif($collection["type"] == COLLECTION_TYPE_FEATURED && !featured_collection_check_access_control((int) $collection["ref"]))
     {
     error_alert($lang["error-permissiondenied"], true, 403);
     exit();
@@ -77,7 +77,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
             error_alert($error,!$modal);
             exit();
             }
-        else if(!isset($error))
+        elseif(!isset($error))
             {
             save_collection($ref, $coldata);
             // Modal load done.php
@@ -116,7 +116,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
                 $coldata["bg_img_resource_ref"] = $bg_img_resource_ref;
                 }
             // If invalid bg_img_resource_ref or no full access to resource, then don't submit the change
-            else if($thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
+            elseif($thumbnail_selection_method == $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["manual"])
                 {
                 $reset_thumbnail_selection_method = (isset($collection['thumbnail_selection_method']) ? $collection['thumbnail_selection_method'] : $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS["no_image"]);
                 $coldata['featured_collections_changes']['thumbnail_selection_method'] = $reset_thumbnail_selection_method;
@@ -205,7 +205,7 @@ if(isset($error))
     {
     render_top_page_error_style($error);
     }
-else if($delete_requires_password && $delete_all)
+elseif($delete_requires_password && $delete_all)
     {
     $form_action .= "&redirect=false";
     ?>

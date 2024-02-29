@@ -763,7 +763,7 @@ if($import && isset($folder_path))
             $processed_usergroups[] = $src_ug["ref"];
             fwrite($progress_fh, "\$processed_usergroups[] = {$src_ug["ref"]};" . PHP_EOL);
             }
-        else if(is_array($spec_cfg_value))
+        elseif(is_array($spec_cfg_value))
             {
             if(!isset($spec_cfg_value["create"]))
                 {
@@ -927,7 +927,7 @@ if($import && isset($folder_path))
 
             continue;
             }
-        else if(
+        elseif(
             array_key_exists($archive_state["ref"], $archive_states_spec)
             && !in_array($archive_states_spec[$archive_state["ref"]], $dest_archive_states))
             {
@@ -1298,7 +1298,7 @@ if($import && isset($folder_path))
             logScript("ERROR: Unable to create new node because its parent was not created!");
             exit(1);
             }
-        else if(
+        elseif(
             $found_rtf["type"] == FIELD_TYPE_CATEGORY_TREE
             && (!is_null($src_node["parent"]) || trim($src_node["parent"]) != "")
             && !in_array($src_node["parent"], $nodes_not_created)
@@ -1444,7 +1444,7 @@ if($import && isset($folder_path))
             logScript("ERROR: unable to create job queue for uploading (copying) resource original file from SRC system");
             exit(1);
             }
-        else if(is_string($job_queue_added) && trim($job_queue_added) != "")
+        elseif(is_string($job_queue_added) && trim($job_queue_added) != "")
             {
             logScript("ERROR: unable to create job queue. Reason: '{$job_queue_added}'");
             exit(1);
@@ -1490,7 +1490,7 @@ if($import && isset($folder_path))
             logScript('Updated all resources with the following SRC node IDs: ' . implode(', ', $nodes_applied_to_all_merged_resources));
             fwrite($progress_fh, '$processed_nodes_applied_to_all_merged_resources = true;' . PHP_EOL);
             }
-        else if(isset($processed_nodes_applied_to_all_merged_resources))
+        elseif(isset($processed_nodes_applied_to_all_merged_resources))
             {
             logScript('Nodes that should be applied to all merged resources have already been added. Skipping');
             }
@@ -1789,7 +1789,7 @@ if($import && isset($folder_path))
             logScript("ERROR: unable to create job queue for uploading (copying) resource alternative file from SRC system");
             exit(1);
             }
-        else if(is_string($job_queue_added) && trim($job_queue_added) != "")
+        elseif(is_string($job_queue_added) && trim($job_queue_added) != "")
             {
             logScript("ERROR: unable to create job queue. Reason: '{$job_queue_added}'");
             exit(1);

@@ -4,5 +4,3 @@
 4,Archivists,"s,g,c,t,h,r,u,i,e1,e2,e3,v,q,f*,j*",0,,,,,,,,1,0,,,,,,,
 5,"Restricted User - Requests Emailed (manual fulfilment)","s,f*,j*,q,dtu,z1,z2,z3",0,,,,,,,,0,0,,,,,,,
 6,"Restricted User - Requests Managed","s,f*,j*,q,dtu,z1,z2,z3",0,,,,,,,,1,0,,,,,,,
-7,"Restricted User - Payment Immediate","s,f*,j*,q,dtu,z1,z2,z3",0,,,,,,,,2,0,,,,,,,
-8,"Restricted User - Payment Invoice","s,f*,j*,q,dtu,z1,z2,z3",0,,,,,,,,3,0,,,,,,,

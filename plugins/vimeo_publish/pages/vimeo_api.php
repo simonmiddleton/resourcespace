@@ -83,7 +83,7 @@ if(0 < $vimeo_publish_vimeo_link_field)
         $error = str_replace('[vimeo_url]', "<a href=\"{$vimeo_url}\" target=\"_blank\">{$vimeo_url}</a>", $lang['vimeo_publish_resource_published']);
         }
     // Show warning that video has already been published to Vimeo
-    else if('' !== $vimeo_url)
+    elseif('' !== $vimeo_url)
         {
         $error = str_replace(array('[ref]', '[vimeo_url]'), array($ref, "<a href=\"{$vimeo_url}\" target=\"_blank\">{$vimeo_url}</a>"), $lang['vimeo_publish_resource_already_published']);
         }

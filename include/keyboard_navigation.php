@@ -30,37 +30,26 @@ jQuery(document).ready(function() {
          {
 
             <?php hook ("addhotkeys"); //this comes first so overriding the below is possible ?>
-            // left arrow
-            case <?php echo $keyboard_navigation_prev; ?>: if ((jQuery('.prevLink').length > 0)<?php if ($pagename=="view") { ?>&&(jQuery("#fancybox-content").html()=='')<?php } ?>) {jQuery('.prevLink').click();break;}
-              if (<?php if ($keyboard_navigation_pages_use_alt) echo "modAlt&&"; ?>(jQuery('.prevPageLink').length > 0)) jQuery('.prevPageLink').click();
-
-                     <?php 
-                     if (($pagename=="preview_all") && $keyboard_scroll_jump) { ?>
-                     currentX=jQuery(window).scrollLeft();
-                     jQuery('.ResourceShel_').reverse().each(function(index) {
-                         offset = jQuery(this).offset();
-                         if (offset.left-20<currentX) {
-                            jQuery(window).scrollLeft(offset.left-20)
-                            return false;
-                         }
-                     });                     
-                     <?php } ?>
-                     break;
-            // right arrow
-            case <?php echo $keyboard_navigation_next; ?>: if ((jQuery('.nextLink').length > 0)<?php if ($pagename=="view") { ?>&&(jQuery("#fancybox-content").html()=='')<?php } ?>) {jQuery('.nextLink').click();break;}
-              if (<?php if ($keyboard_navigation_pages_use_alt) echo "modAlt&&"; ?>(jQuery('.nextPageLink').length > 0)) jQuery('.nextPageLink').click();
-                     <?php 
-                     if (($pagename=="preview_all") && $keyboard_scroll_jump) { ?>
-                     currentX=jQuery(window).scrollLeft();
-                     jQuery('.ResourceShel_').each(function(index) {
-                         offset = jQuery(this).offset();
-                         if (offset.left-40>currentX) {
-                            jQuery(window).scrollLeft(offset.left-20)
-                            return false;
-                         }
-                     });                     
-                     <?php } ?>
-                     break;   
+            // Left arrow
+            case <?php echo $keyboard_navigation_prev; ?>:
+                if (jQuery('.prevLink').length > 0) {
+                    jQuery('.prevLink').click();
+                    break;
+                }
+                if (<?php if ($keyboard_navigation_pages_use_alt) echo "modAlt&&"; ?>(jQuery('.prevPageLink').length > 0)) {
+                    jQuery('.prevPageLink').click();
+                    break;
+                }
+            // Right arrow
+            case <?php echo $keyboard_navigation_next; ?>:
+                if (jQuery('.nextLink').length > 0) {
+                    jQuery('.nextLink').click();
+                    break;
+                }
+                if (<?php if ($keyboard_navigation_pages_use_alt) echo "modAlt&&"; ?>(jQuery('.nextPageLink').length > 0)) {
+                    jQuery('.nextPageLink').click();
+                    break;
+                } 
             case <?php echo $keyboard_navigation_add_resource; ?>: if (jQuery('.addToCollection').length > 0) jQuery('.addToCollection:not(.ResourcePanelIcons .addToCollection)').click();
                      break;
             case <?php echo $keyboard_navigation_prev_page; ?>: if (jQuery('.prevLink').length > 0) jQuery('.prevLink').click();
@@ -77,7 +66,7 @@ jQuery(document).ready(function() {
                      break;
             case <?php echo $keyboard_navigation_view_all; ?>: if(!modOn){CentralSpaceLoad('<?php echo $baseurl;?>/pages/search.php?search=!collection'+document.getElementById("currentusercollection").innerHTML+'&k='+share,true)};
                      break;
-            <?php if(($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || (($pagename=='preview' || $pagename=='preview_all') && $keyboard_navigation_video_preview)){?>
+            <?php if(($pagename=='search' && $keyboard_navigation_video_search) || ($pagename=='view' && $keyboard_navigation_video_view) || ($pagename=='preview' && $keyboard_navigation_video_preview)){?>
                 case <?php echo $keyboard_navigation_video_search_play_pause?>:
                     <?php if($pagename=='view' || $pagename=='preview'){ ?>
                         vidActive=document.getElementById('introvideo<?php echo $ref?>');
