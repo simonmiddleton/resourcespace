@@ -30,6 +30,13 @@ $image_alternatives[0]["target_extension"]="png";
 $image_alternatives[0]["params"]="-density 300"; # 300 dpi
 $image_alternatives[0]["icc"]=false;
 
+
+
+$debug_log=true;
+$debug_log_location = "/var/log/resourcespace/debug_dev.log";
+$debug_extended_info = true;
+
+
 // Test B - perform full preview creation
 create_previews($resource500);
 

@@ -1429,6 +1429,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $o_width  = $sw;
             $o_height = $sh;
             }
+        
+        $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
         $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
         
         # Locate imagemagick.
@@ -2124,6 +2126,16 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             }
         
+        if($alternative == -1 && isset($GLOBALS["image_alternatives"]) && $generateall) {
+            // Create alternatives
+            create_image_alternatives($ref,
+                ["extension" => $extension,
+                "file" => $file,
+                "previewonly" => $previewonly,
+                "previewbased" => $previewbased,
+                "ingested" => $ingested],
+            );
+        }
         hook('afterpreviewcreation', '',array($ref, $alternative));
         return true;
         }
@@ -3914,20 +3926,23 @@ function remove_video_previews(int $resource) : void
  * Create preview sizes via create_previews() and/or generate jobs as necessary
  *
  * @param int $ref                  Resource ID
+ * @param string $extension         File extension
  * 
  * @return bool                     true if all previews have been created, false if
  *                                  offline jobs/scripts are required to create the full set 
  *                                  of previews/image/video alternatives
  * 
  */
-function start_previews(int $ref): bool
+function start_previews(int $ref, string $extension = ""): bool
 {
     global $lang;
 
     delete_previews($ref);
     $minimal_previews_required = false;
-
     $resource_data = get_resource_data($ref,false);
+    if(trim($extension) == "") {
+        $extension = $resource_data["file_extension"];
+    }
     $ingested = empty($resource_data['file_path']);
     if($GLOBALS["offline_job_queue"]) {
         $create_previews_job_data = [
@@ -3953,7 +3968,7 @@ function start_previews(int $ref): bool
         }
         
     if($minimal_previews_required) {
-        create_previews($ref,false,$resource_data["file_extension"],false,false,-1,true,$ingested,false,["pre","col","thm"]);
+        create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
         return false;
     }
 // No offline preview creation - create the full set of previews immediately

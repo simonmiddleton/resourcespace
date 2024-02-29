@@ -676,7 +676,7 @@ elseif (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $f
         
         // Generate snapshots for the whole video (not for alternatives)
         // Custom target used ONLY for captured snapshots during the video
-        if(1 < $ffmpeg_snapshot_frames && -1 == $alternative)
+        if($generateall && 1 < $ffmpeg_snapshot_frames && -1 == $alternative)
             {
             $snapshot_scale           = '';
             $escaped_file             = escapeshellarg($file);
@@ -1069,10 +1069,8 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 $non_image_types = config_merge_non_image_types();
 
 # If a file has been created, generate previews just as if a JPG was uploaded.
-if (isset($newfile) && file_exists($newfile))
-    {
-    if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension,config_merge_non_image_types()))
-        {
+if (isset($newfile) && file_exists($newfile)) {
+    if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension,config_merge_non_image_types())) {
         $file_used_for_previewonly = get_resource_path($ref, true, "tmp", false, "jpg");
         // Don't create tiles for these
         $GLOBALS['preview_tiles']=false;
@@ -1082,19 +1080,17 @@ if (isset($newfile) && file_exists($newfile))
             debug("preview_preprocessing: changing previewonly = true for non-image file");
             }
         }
-
-    create_previews($ref,false,"jpg",$previewonly,false,$alternative);
-
-    if(
+    
+    create_previews($ref,false,"jpg",false,false,$alternative,$ignoremaxsize,true,$checksum_required,$onlysizes);
+    if(            
         $GLOBALS['non_image_types_generate_preview_only']
         && in_array($extension, $GLOBALS['non_image_types'])
-        && file_exists($file_used_for_previewonly))
-        {
+        && file_exists($file_used_for_previewonly)
+        ) {
         unlink($file_used_for_previewonly);
-        }
-
-    if(isset($unoconv_fake_pdf_file) && $unoconv_fake_pdf_file)
-        {
-        unlink($file);
-        }
     }
+
+    if(isset($unoconv_fake_pdf_file) && $unoconv_fake_pdf_file) {
+        unlink($file);
+    }
+}
