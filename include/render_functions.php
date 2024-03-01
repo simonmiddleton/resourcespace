@@ -1876,7 +1876,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
   if ($field["display_condition"]!="")
     {
     #Check if field has a display condition set and render the client side check display condition functions
-    $displaycondition = check_display_condition($n, $field, $fields, true);
+    $displaycondition = check_display_condition($n, $field, $fields, true, $use);
     debug(sprintf('$displaycondition = %s', json_encode($displaycondition)));
     }
 
@@ -2038,7 +2038,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
       }
       ?>
 
-      <div class="Question <?php if($upload_review_mode && in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n?>" <?php
+      <div class="Question <?php if($upload_review_mode && in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n . '_' . $use; ?>" <?php
       if (($multiple && !$field_save_error) || !$displaycondition || $newtab)
         {?>style="border-top:none;<?php 
         if (($multiple && $value=="") || !$displaycondition)
@@ -3748,15 +3748,15 @@ function render_csrf_data_attributes($ident)
 * @uses get_resource_nodes()
 * @uses get_node_by_name()
 * 
-* @param integer $n         Question sequence number on the rendered form
-* @param array   $field     Field on which we check display conditions
-* @param array   $fields    Resource field data and properties as returned by get_resource_field_data()
-* @param boolean $render_js Set to TRUE to render the client side code for checking display conditions or FALSE otherwise
-* 
+* @param  integer   $n              Question sequence number on the rendered form
+* @param  array     $field          Field on which we check display conditions
+* @param  array     $fields         Resource field data and properties as returned by get_resource_field_data()
+* @param  boolean   $render_js      Set to TRUE to render the client side code for checking display conditions or FALSE otherwise
+* @param  integer   $resource_ref   Resource reference for which the display condition applies
 * 
 * @return boolean Returns TRUE if no display condition or if field should be displayed or FALSE if field should not be displayed.
 */
-function check_display_condition($n, array $field, array $fields, $render_js)
+function check_display_condition($n, array $field, array $fields, $render_js, int $resource_ref)
     {
     debug_function_call(__FUNCTION__, [$n, $field['ref'], ['ignored on purpose - too verbose'], $render_js]);
     global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
@@ -4008,7 +4008,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
             {
             console.debug('(<?php echo str_replace(dirname(__DIR__), '', __FILE__) . ':' . __LINE__?>) checkDisplayCondition<?php echo $field["ref"]; ?>()');
             // Get current display state for governed field ("block" or "none")
-            field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+            field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n . '_' . $resource_ref; ?>').css('display');
             newfield<?php echo $field['ref']; ?>status = 'none';
 
             // Assume visible by default
@@ -4077,7 +4077,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 // If display status changed then toggle the visibility
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
-                    jQuery('#question_<?php echo $n ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
+                    jQuery('#question_<?php echo $n . '_' . $resource_ref; ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
                     // The visibility status (block/none) will be sent to the server in the following field
                     jQuery('#field_<?php echo $field['ref']; ?>_displayed').attr("value",newfield<?php echo $field['ref']; ?>status);
 
@@ -4093,13 +4093,13 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     }
                     ?>
 
-                    if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
+                    if(jQuery('#question_<?php echo $n . '_' . $resource_ref; ?>').css('display') == 'block')
                         {
-                        jQuery('#question_<?php echo $n ?>').css('border-top', '');
+                        jQuery('#question_<?php echo $n . '_' . $resource_ref; ?>').css('border-top', '');
                         }
                     else
                         {
-                        jQuery('#question_<?php echo $n ?>').css('border-top', 'none');
+                        jQuery('#question_<?php echo $n . '_' . $resource_ref; ?>').css('border-top', 'none');
                         }
                     }
             }

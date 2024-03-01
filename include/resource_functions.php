@@ -1047,7 +1047,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
             }
 
             if( $fields[$n]['required'] == 1
-                && check_display_condition($n, $fields[$n], $fields, false)
+                && check_display_condition($n, $fields[$n], $fields, false, $ref)
                 && (
                     // Required node field with no nodes submitted is a candidate for error
                     (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES) && count($ui_selected_node_values) == 0)
