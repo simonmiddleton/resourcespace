@@ -31,11 +31,6 @@ parameters:
 			path: include/db.php
 
 		-
-			message: "#^Variable \\$deletefiles in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: include/ffmpeg_processing.php
-
-		-
 			message: "#^Variable \\$additional_title_pages in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: include/footer.php
@@ -262,11 +257,6 @@ parameters:
 
 		-
 			message: "#^Variable \\$allowed_extensions in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: pages/edit.php
-
-		-
-			message: "#^Variable \\$preview_generate_max_file_size in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: pages/edit.php
 

@@ -520,7 +520,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 $checksum_required = false;
                 }
 
-            start_previews($ref, $extension, false);
+            start_previews($ref, $extension);
             }
     
         # Update file dimensions
@@ -4111,11 +4111,11 @@ function create_image_alternatives(int $ref, array $params, $force = false)
         $alphaoff = "+matte";
     }
     // Check parameters 
-    $file = (string) ($imagedata["file"] ?? "");
-    $extension = (string) ($imagedata["extension"] ?? "jpg");
-    $previewonly = (bool) ($imagedata["previewonly"] ?? false);
-    $previewbased = (bool) ($imagedata["previewbased"] ?? false);
-    $ingested = (bool) ($imagedata["ingested"] ?? true);
+    $file = (string) ($params["file"] ?? "");
+    $extension = (string) ($params["extension"] ?? "jpg");
+    $previewonly = (bool) ($params["previewonly"] ?? false);
+    $previewbased = (bool) ($params["previewbased"] ?? false);
+    $ingested = (bool) ($params["ingested"] ?? true);
 
     if($file === "") {
         $file = get_preview_source_file($ref, $extension, $previewonly, $previewbased, -1, $ingested);
