@@ -392,10 +392,11 @@ function add_resource_to_collection(
 
     if ($addpermitted)
         {
-        // If this is a featured collection  apply all the external access keys from the categories which make up its 
+        $collection_data = get_collection($collection, true);
+
+        // If this is a featured collection apply all the external access keys from the categories which make up its 
         // branch path to prevent breaking existing shares for any of those featured collection categories.
         $fc_branch_path_keys = [];
-        $collection_data = get_collection($collection, true);
         if($collection_data !== false && $collection_data['type'] === COLLECTION_TYPE_FEATURED)
             {
             $branch_category_ids = array_column(
@@ -480,8 +481,10 @@ function add_resource_to_collection(
             update_node_hitcount_from_search($resource,$search);
             }
         
-        collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
-
+        if($collection_data !== false && $collection_data['type'] != COLLECTION_TYPE_SELECTION) {
+            collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
+        }
+        
         // Clear theme image cache
         clear_query_cache("themeimage");
         clear_query_cache('col_total_ref_count_w_perm');
@@ -3752,14 +3755,17 @@ function collection_set_public($collection)
  * @return void
  */
 function remove_all_resources_from_collection($ref){
-    // abstracts it out of save_collection()
-    $removed_resources = ps_array("SELECT resource AS value FROM collection_resource WHERE collection = ?",array("i",$ref));
 
-    collection_log($ref, LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES, 0);
-    foreach($removed_resources as $removed_resource_id)
-        {
-        collection_log($ref, LOG_CODE_COLLECTION_REMOVED_RESOURCE, $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
+    $collection_type=ps_value("select type value from collection where ref=?",array("i",$ref),"");
+    
+    if ($collection_type != COLLECTION_TYPE_SELECTION) {
+        $removed_resources = ps_array("SELECT resource AS value FROM collection_resource WHERE collection = ?",array("i",$ref));
+        collection_log($ref, LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES, 0);
+
+        foreach($removed_resources as $removed_resource_id) {
+            collection_log($ref, LOG_CODE_COLLECTION_REMOVED_RESOURCE, $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
         }
+    }
 
     ps_query("DELETE FROM collection_resource WHERE collection = ?",array("i",$ref));
     ps_query("DELETE FROM external_access_keys WHERE collection = ? AND upload!=1",array("i",$ref));
