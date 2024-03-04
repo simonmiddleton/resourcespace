@@ -4002,13 +4002,14 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
 
     if($render_js)
         {
+        $question_id = '#question_' . $n . ($GLOBALS["multiple"] === true ? '' : '_' . $resource_ref);
         ?>
         <script type="text/javascript">
         function checkDisplayCondition<?php echo $field["ref"];?>()
             {
             console.debug('(<?php echo str_replace(dirname(__DIR__), '', __FILE__) . ':' . __LINE__?>) checkDisplayCondition<?php echo $field["ref"]; ?>()');
             // Get current display state for governed field ("block" or "none")
-            field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n . ($GLOBALS["multiple"] === true ? '' : '_' . $resource_ref); ?>').css('display');
+            field<?php echo $field['ref']; ?>status    = jQuery('<?php echo escape($question_id); ?>').css('display');
             newfield<?php echo $field['ref']; ?>status = 'none';
 
             // Assume visible by default
@@ -4077,7 +4078,7 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                 // If display status changed then toggle the visibility
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
-                    jQuery('#question_<?php echo $n . ($GLOBALS["multiple"] === true ? '' : '_' . $resource_ref); ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
+                    jQuery('<?php echo escape($question_id); ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
                     // The visibility status (block/none) will be sent to the server in the following field
                     jQuery('#field_<?php echo $field['ref']; ?>_displayed').attr("value",newfield<?php echo $field['ref']; ?>status);
 
@@ -4093,13 +4094,13 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
                     }
                     ?>
 
-                    if(jQuery('#question_<?php echo $n . ($GLOBALS["multiple"] === true ? '' : '_' . $resource_ref); ?>').css('display') == 'block')
+                    if(jQuery('<?php echo escape($question_id); ?>').css('display') == 'block')
                         {
-                        jQuery('#question_<?php echo $n . ($GLOBALS["multiple"] === true ? '' : '_' . $resource_ref); ?>').css('border-top', '');
+                        jQuery('<?php echo escape($question_id); ?>').css('border-top', '');
                         }
                     else
                         {
-                        jQuery('#question_<?php echo $n . ($GLOBALS["multiple"] === true ? '' : '_' . $resource_ref); ?>').css('border-top', 'none');
+                        jQuery('<?php echo escape($question_id); ?>').css('border-top', 'none');
                         }
                     }
             }
