@@ -108,7 +108,7 @@ $resource=get_resource_data($ref);
 
 if ($resource===false)
     {
-    exit($lang['resourcenotfound']);
+    exit(escape($lang['resourcenotfound']));
     }
 
 $ext="jpg";
@@ -118,7 +118,7 @@ if ($ext!="" && $ext!="gif" && $ext!="jpg" && $ext!="png") {$ext="jpg";$border=f
 $access=get_resource_access($ref);
 if($access == RESOURCE_ACCESS_CONFIDENTIAL) 
     {
-    exit($lang["error-permissiondenied"]);
+    exit(escape($lang["error-permissiondenied"]));
     }
 
 $use_watermark=check_use_watermark();

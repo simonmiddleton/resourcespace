@@ -26,7 +26,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering the search field  
     $multiple=false;
 ?>
-<!-- RENDERING FIELD=<?php echo $field['ref']." ".$field['name'];?> -->
+<!-- RENDERING FIELD=<?php echo $field['ref'] . " " . escape($field['name']);?> -->
 <?php
 
     // set this to zero since this does not apply to collections
@@ -6789,7 +6789,7 @@ function render_resource_view_image(array $resource, array $context)
     if($GLOBALS["annotate_enabled"])
         {
         ?>
-        data-original="<?php echo "{$GLOBALS["baseurl"]}/annotation/resource/" . $resource["ref"]; ?>"
+        data-original="<?php echo "{$GLOBALS["baseurl"]}/annotation/resource/" . (int) $resource["ref"]; ?>"
         <?php
         }
 
@@ -6850,7 +6850,7 @@ function render_resource_view_image(array $resource, array $context)
                 var openseadragon_custom_tile_source = {
                     height: <?php echo $image_height; ?>,
                     width:  <?php echo $image_width; ?>,
-                    tileSize: <?php echo $GLOBALS["preview_tile_size"]; ?>,
+                    tileSize: <?php echo (int) $GLOBALS["preview_tile_size"]; ?>,
                     minLevel: 11,
                     getTileUrl: function(level, x, y)
                         {
@@ -6956,7 +6956,7 @@ function render_resource_view_image(array $resource, array $context)
                                     select              : '<?php echo htmlspecialchars($lang['annotate_select'])?>',
                                     annotations_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/annotations.php',
                                     nodes_endpoint      : '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/get_nodes.php',
-                                    resource            : <?php echo $resource["ref"]; ?>,
+                                    resource            : <?php echo (int) $resource["ref"]; ?>,
                                     read_only           : <?php echo $edit_access ? 'false' : 'true'; ?>,
                                     // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                                     csrf_identifier: '<?php echo $GLOBALS["CSRF_token_identifier"]; ?>',
@@ -6969,7 +6969,7 @@ function render_resource_view_image(array $resource, array $context)
                                         annotations_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/annotations.php',
                                         facial_recognition_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/facial_recognition.php',
                                         resource: <?php echo (int) $resource["ref"]; ?>,
-                                        facial_recognition_tag_field: <?php echo $GLOBALS["facial_recognition_tag_field"]; ?>,
+                                        facial_recognition_tag_field: <?php echo (int) $GLOBALS["facial_recognition_tag_field"]; ?>,
                                         // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                                         fr_csrf_identifier: '<?php echo $GLOBALS["CSRF_token_identifier"]; ?>',
                                         <?php echo generateAjaxToken('RSFaceRecognition'); ?>
@@ -7076,7 +7076,7 @@ function render_resource_view_image(array $resource, array $context)
                                 openseadragon_viewer = OpenSeadragon({
                                     id: "openseadragon_viewer",
                                     prefixUrl: "<?php echo $GLOBALS["baseurl"] . LIB_OPENSEADRAGON; ?>/images/",
-                                    degrees: <?php echo $osd_preview_rotation; ?>,
+                                    degrees: <?php echo (int) $osd_preview_rotation; ?>,
                                     // debugMode: true,
                                     // debugGridColor: ['red'],
 

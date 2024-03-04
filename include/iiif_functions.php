@@ -233,7 +233,7 @@ final class IIIFRequest {
         $canvases = [];
         foreach ($this->searchresults as $index => $iiif_result)
             {
-            $size = (strtolower((string)$iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
+            $size = is_jpeg_extension($iiif_result["file_extension"] ?? "") ? '' : "hpr";
             $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
 
             if(!file_exists($img_path))
@@ -244,7 +244,7 @@ final class IIIFRequest {
                     {
                     $this->processing["resource"] = $pullresource["ref"];
                     $this->processing["size_info"] = [
-                        'identifier' => (is_jpeg_extension($pullresource["file_extension"]) ? 'hpr' : ''),
+                        'identifier' => (is_jpeg_extension($pullresource["file_extension"] ?? "") ? '' : 'hpr'),
                         'return_height_width' => false,
                         ];
                     }
@@ -293,17 +293,22 @@ final class IIIFRequest {
         $thumbnail["format"] = "image/jpeg";
 
         // Get the size of the images
-        if ((list($tw,$th) = @getimagesize($img_path))!==false)
+        $GLOBALS["use_error_exception"] = true;
+        try
             {
+            list($tw,$th) = getimagesize($img_path);
             $thumbnail["height"] = (int) $th;
-            $thumbnail["width"] = (int) $tw;
+            $thumbnail["width"] = (int) $tw;  
             }
-        else
+        catch (Exception $e)
             {
+            $returned_error = $e->getMessage();
+            debug("getThumbnail: Unable to get image size for file: $img_path  -  $returned_error");
             // Use defaults
             $thumbnail["height"] = 150;
             $thumbnail["width"] = 150;
             }
+        unset($GLOBALS["use_error_exception"]);
 
         $thumbnail["service"] = [$this->generateImageService($resourceid)];
         return $thumbnail;
@@ -344,7 +349,7 @@ final class IIIFRequest {
             if($pullresource !== false)
                 {
                 $resource = $pullresource["ref"];
-                if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"]))
+                if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"] ?? ""))
                     {
                     // If the related resource is a JPG file then no 'hpr' size will be available
                     $size = "";
@@ -553,7 +558,7 @@ final class IIIFRequest {
      *
      * @param int           $position   The canvas identifier
      *
-     * @return array|bool   canvas      Canvas data for presentation API response, false if no image is available
+     * @return array|bool   $canvas     Canvas data for presentation API response, false if no image is available
      *
      */
     public function generateCanvas(int $position)
@@ -577,11 +582,11 @@ final class IIIFRequest {
                 $useimage = $pullresource;
                 }
             }
-        $size = is_jpeg_extension((string) $useimage["file_extension"]) ? "" : "hpr";
+        $size = is_jpeg_extension((string) $useimage["file_extension"] ?? "") ? "" : "hpr";
         $img_path = get_resource_path($useimage["ref"],true,$size,false);
         if(!file_exists($img_path))
             {
-            debug("IIIF: generateCanvas() No image availkable for identifier:" . $position);
+            debug("IIIF: generateCanvas() No image available for identifier:" . $position);
             return false;
             }
         $sequence_field = get_resource_type_field($this->sequence_field);
@@ -978,7 +983,7 @@ final class IIIFRequest {
                         if($this->max_width >= $this->imagewidth && $this->max_height >= $this->imageheight)
                             {
                             $this->request["getext"] = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
-                            $this->request["getsize"] = is_jpeg_extension($resource["file_extension"]) ? "" : "hpr";
+                            $this->request["getsize"] = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
                             }
                         else
                             {
@@ -1323,7 +1328,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
                 $useimage = $pullresource;
                 }
             }
-        $size = is_jpeg_extension((string) $useimage["file_extension"]) ? "" : "hpr";
+        $size = is_jpeg_extension($useimage["file_extension"] ?? "") ? "" : "hpr";
         $img_path = get_resource_path($useimage["ref"],true,$size,false);
         if(!file_exists($img_path))
             {
@@ -1416,19 +1421,24 @@ function iiif_get_thumbnail($resourceid)
     $thumbnail["@id"] = $rootimageurl . $resourceid . "/full/thm/0/default.jpg";
     $thumbnail["@type"] = "dctypes:Image";
     
-     // Get the size of the images
-    if ((list($tw,$th) = @getimagesize($img_path))!==false)
+    // Get the size of the images
+    $GLOBALS["use_error_exception"] = true;
+    try
         {
+        list($tw,$th) = getimagesize($img_path);
         $thumbnail["height"] = (int) $th;
         $thumbnail["width"] = (int) $tw;   
         }
-    else
+    catch (Exception $e)
         {
+        $returned_error = $e->getMessage();
+        debug("getThumbnail: Unable to get image size for file: $img_path  -  $returned_error");
         // Use defaults
         $thumbnail["height"] = 150;
-        $thumbnail["width"] = 150;    
+        $thumbnail["width"] = 150;
         }
-            
+    unset($GLOBALS["use_error_exception"]);
+                 
     $thumbnail["format"] = "image/jpeg";
     
     $thumbnail["service"] =array();
