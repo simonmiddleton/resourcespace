@@ -683,6 +683,16 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     </div>
                                     <?php
                                     }
+                                elseif($resource['has_image'] !== RESOURCE_PREVIEWS_NONE)
+                                    {
+                                    // render preview image instead, no zoom or annotations possible
+                                    $GLOBALS["annotate_enabled"] = false;
+                                    render_resource_view_image($resource,[
+                                        "access"=>$access,
+                                        "edit_access"=>$edit_access,
+                                        ]
+                                        );
+                                    }
                                 } // Video preview END
                             elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"))
                                 {

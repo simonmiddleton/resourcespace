@@ -29,8 +29,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
     global $lang, $userref, $filename_field, $extracted_text_field, $amended_filename;    
     global $upload_then_process, $upload_then_process_holding_state,$offline_job_queue, $offline_job_in_progress;
-    global $enable_thumbnail_creation_on_upload, $icc_extraction, $camera_autorotation, $camera_autorotation_ext;
-    global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $banned_extensions, $pdf_pages;
+    global $icc_extraction, $camera_autorotation, $camera_autorotation_ext;
+    global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $pdf_pages;
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing, $valid_upload_paths;
 
@@ -2111,12 +2111,15 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             {
             $target = false;
             }
-        
+                
+        $resource_data=get_resource_data($ref);
         if ($target && $alternative==-1) # Do not run for alternative uploads 
             {
             extract_mean_colour($target,$ref);
-            # flag database so a thumbnail appears on the site
-            ps_query("UPDATE resource SET has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$ref]);
+            // Flag database. If this was run for e.g. a video or PDF it is not the full set of previews
+            $has_image = (($resource_data["file_extension"] ?? "") === $extension && $generateall) ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+              
+            ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$has_image,"i",$ref]);
             }
         else
             {
@@ -2126,7 +2129,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             }
         
-        if($alternative == -1 && isset($GLOBALS["image_alternatives"]) && $generateall) {
+        if($alternative == -1 && isset($GLOBALS["image_alternatives"]) && $generateall && ($resource_data["file_extension"] ?? "") === $extension) {
             // Create alternatives
             create_image_alternatives($ref,
                 ["extension" => $extension,
