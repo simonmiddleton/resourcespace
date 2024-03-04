@@ -353,8 +353,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     // Reset 'has_image' if $revert == false
     $set = $revert ? [] : ["has_image=?"];
     $setparams = $revert ? [] : ["i",RESOURCE_PREVIEWS_NONE];
-    $set = array_merge($set,["file_extension= ?","preview_extension='jpg'","file_modified=NOW()"]);
-    $setparams = array_merge($setparams,['s', $extension, 'i', $ref]);
+
+    // Include file size
+    $file_size = @filesize_unlimited($filepath);
+
+    $set = array_merge($set,["file_size=?","file_extension=?","preview_extension='jpg'","file_modified=NOW()"]);
+    $setparams = array_merge($setparams,['i',$file_size,'s', $extension, 'i', $ref]);
     ps_query("UPDATE resource SET " . implode(",",$set). " WHERE ref= ?", $setparams);
    
     if(!$upload_then_process || $after_upload_processing)
@@ -519,7 +523,6 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 {
                 $checksum_required = false;
                 }
-
             start_previews($ref, $extension);
             }
     
