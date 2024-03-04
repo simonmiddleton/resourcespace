@@ -3400,14 +3400,16 @@ function log_keyword_usage($keywords, $search_result)
  * @return string
  * 
  */
-function set_search_order_by(string $search,string $order_by, string $sort)
+function set_search_order_by(string $search,string $order_by, string $sort): string
     {
-    global $include_fieldx;
+    if(strtolower($sort)!=='desc') {
+        $sort='asc';
+    }
     $order_by_date_sql_comma = ",";
     $order_by_date = "r.ref $sort";
     if(metadata_field_view_access($GLOBALS["date_field"]))
         {
-        $order_by_date_sql = "field{$GLOBALS["date_field"]} {$sort}";
+        $order_by_date_sql = "field" . (int) $GLOBALS["date_field"] . " " . $sort;
         $order_by_date_sql_comma = ", {$order_by_date_sql}, ";
         $order_by_date = "{$order_by_date_sql}, r.ref {$sort}";
         }
@@ -3421,7 +3423,7 @@ function set_search_order_by(string $search,string $order_by, string $sort)
         "rating"          => "r.rating $sort, user_rating $sort, score $sort, r.ref $sort",
         "date"            => "$order_by_date, r.ref $sort",
         "colour"          => "has_image $sort, image_blue $sort, image_green $sort, image_red $sort {$order_by_date_sql_comma} r.ref $sort",
-        "title"           => "field" . $GLOBALS["view_title_field"] . " " . $sort . ", r.ref $sort",
+        "title"           => "field" . (int) $GLOBALS["view_title_field"] . " " . $sort . ", r.ref $sort",
         "file_path"       => "file_path $sort, r.ref $sort",
         "resourceid"      => "r.ref $sort",
         "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",

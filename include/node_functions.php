@@ -193,6 +193,11 @@ function delete_node($ref)
 
     $returned_node = array();
     get_node($ref, $returned_node, false);
+    if (empty($returned_node))
+        {
+        // Node has already been removed.
+        return;
+        }
     $resource_type_field = $returned_node['resource_type_field'];
     $field_data = get_resource_type_field($resource_type_field);
 

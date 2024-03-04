@@ -26,7 +26,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering the search field  
     $multiple=false;
 ?>
-<!-- RENDERING FIELD=<?php echo $field['ref']." ".$field['name'];?> -->
+<!-- RENDERING FIELD=<?php echo $field['ref'] . " " . escape($field['name']);?> -->
 <?php
 
     // set this to zero since this does not apply to collections
@@ -1876,7 +1876,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
   if ($field["display_condition"]!="")
     {
     #Check if field has a display condition set and render the client side check display condition functions
-    $displaycondition = check_display_condition($n, $field, $fields, true);
+    $displaycondition = check_display_condition($n, $field, $fields, true, $use);
     debug(sprintf('$displaycondition = %s', json_encode($displaycondition)));
     }
 
@@ -2038,7 +2038,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
       }
       ?>
 
-      <div class="Question <?php if($upload_review_mode && in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n?>" <?php
+      <div class="Question <?php if($upload_review_mode && in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n . ($multiple ? '' : '_' . $use); ?>" <?php
       if (($multiple && !$field_save_error) || !$displaycondition || $newtab)
         {?>style="border-top:none;<?php 
         if (($multiple && $value=="") || !$displaycondition)
@@ -3748,15 +3748,15 @@ function render_csrf_data_attributes($ident)
 * @uses get_resource_nodes()
 * @uses get_node_by_name()
 * 
-* @param integer $n         Question sequence number on the rendered form
-* @param array   $field     Field on which we check display conditions
-* @param array   $fields    Resource field data and properties as returned by get_resource_field_data()
-* @param boolean $render_js Set to TRUE to render the client side code for checking display conditions or FALSE otherwise
-* 
+* @param  integer   $n              Question sequence number on the rendered form
+* @param  array     $field          Field on which we check display conditions
+* @param  array     $fields         Resource field data and properties as returned by get_resource_field_data()
+* @param  boolean   $render_js      Set to TRUE to render the client side code for checking display conditions or FALSE otherwise
+* @param  integer   $resource_ref   Resource reference for which the display condition applies
 * 
 * @return boolean Returns TRUE if no display condition or if field should be displayed or FALSE if field should not be displayed.
 */
-function check_display_condition($n, array $field, array $fields, $render_js)
+function check_display_condition($n, array $field, array $fields, $render_js, int $resource_ref)
     {
     debug_function_call(__FUNCTION__, [$n, $field['ref'], ['ignored on purpose - too verbose'], $render_js]);
     global $required_fields_exempt, $blank_edit_template, $ref, $use, $FIXED_LIST_FIELD_TYPES;
@@ -4002,13 +4002,14 @@ function check_display_condition($n, array $field, array $fields, $render_js)
 
     if($render_js)
         {
+        $question_id = '#question_' . $n . ($GLOBALS["multiple"] === true ? '' : '_' . $resource_ref);
         ?>
         <script type="text/javascript">
         function checkDisplayCondition<?php echo $field["ref"];?>()
             {
             console.debug('(<?php echo str_replace(dirname(__DIR__), '', __FILE__) . ':' . __LINE__?>) checkDisplayCondition<?php echo $field["ref"]; ?>()');
             // Get current display state for governed field ("block" or "none")
-            field<?php echo $field['ref']; ?>status    = jQuery('#question_<?php echo $n; ?>').css('display');
+            field<?php echo $field['ref']; ?>status    = jQuery('<?php echo escape($question_id); ?>').css('display');
             newfield<?php echo $field['ref']; ?>status = 'none';
 
             // Assume visible by default
@@ -4077,7 +4078,7 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                 // If display status changed then toggle the visibility
                 if(newfield<?php echo $field['ref']; ?>status != field<?php echo $field['ref']; ?>status)
                     {
-                    jQuery('#question_<?php echo $n ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
+                    jQuery('<?php echo escape($question_id); ?>').css("display", newfield<?php echo $field['ref']; ?>status); 
                     // The visibility status (block/none) will be sent to the server in the following field
                     jQuery('#field_<?php echo $field['ref']; ?>_displayed').attr("value",newfield<?php echo $field['ref']; ?>status);
 
@@ -4093,13 +4094,13 @@ function check_display_condition($n, array $field, array $fields, $render_js)
                     }
                     ?>
 
-                    if(jQuery('#question_<?php echo $n ?>').css('display') == 'block')
+                    if(jQuery('<?php echo escape($question_id); ?>').css('display') == 'block')
                         {
-                        jQuery('#question_<?php echo $n ?>').css('border-top', '');
+                        jQuery('<?php echo escape($question_id); ?>').css('border-top', '');
                         }
                     else
                         {
-                        jQuery('#question_<?php echo $n ?>').css('border-top', 'none');
+                        jQuery('<?php echo escape($question_id); ?>').css('border-top', 'none');
                         }
                     }
             }
@@ -6789,7 +6790,7 @@ function render_resource_view_image(array $resource, array $context)
     if($GLOBALS["annotate_enabled"])
         {
         ?>
-        data-original="<?php echo "{$GLOBALS["baseurl"]}/annotation/resource/" . $resource["ref"]; ?>"
+        data-original="<?php echo "{$GLOBALS["baseurl"]}/annotation/resource/" . (int) $resource["ref"]; ?>"
         <?php
         }
 
@@ -6850,7 +6851,7 @@ function render_resource_view_image(array $resource, array $context)
                 var openseadragon_custom_tile_source = {
                     height: <?php echo $image_height; ?>,
                     width:  <?php echo $image_width; ?>,
-                    tileSize: <?php echo $GLOBALS["preview_tile_size"]; ?>,
+                    tileSize: <?php echo (int) $GLOBALS["preview_tile_size"]; ?>,
                     minLevel: 11,
                     getTileUrl: function(level, x, y)
                         {
@@ -6956,7 +6957,7 @@ function render_resource_view_image(array $resource, array $context)
                                     select              : '<?php echo htmlspecialchars($lang['annotate_select'])?>',
                                     annotations_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/annotations.php',
                                     nodes_endpoint      : '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/get_nodes.php',
-                                    resource            : <?php echo $resource["ref"]; ?>,
+                                    resource            : <?php echo (int) $resource["ref"]; ?>,
                                     read_only           : <?php echo $edit_access ? 'false' : 'true'; ?>,
                                     // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                                     csrf_identifier: '<?php echo $GLOBALS["CSRF_token_identifier"]; ?>',
@@ -6969,7 +6970,7 @@ function render_resource_view_image(array $resource, array $context)
                                         annotations_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/annotations.php',
                                         facial_recognition_endpoint: '<?php echo $GLOBALS["baseurl"]; ?>/pages/ajax/facial_recognition.php',
                                         resource: <?php echo (int) $resource["ref"]; ?>,
-                                        facial_recognition_tag_field: <?php echo $GLOBALS["facial_recognition_tag_field"]; ?>,
+                                        facial_recognition_tag_field: <?php echo (int) $GLOBALS["facial_recognition_tag_field"]; ?>,
                                         // We pass CSRF token identifier separately in order to know what to get in the Annotorious plugin file
                                         fr_csrf_identifier: '<?php echo $GLOBALS["CSRF_token_identifier"]; ?>',
                                         <?php echo generateAjaxToken('RSFaceRecognition'); ?>
@@ -7076,7 +7077,7 @@ function render_resource_view_image(array $resource, array $context)
                                 openseadragon_viewer = OpenSeadragon({
                                     id: "openseadragon_viewer",
                                     prefixUrl: "<?php echo $GLOBALS["baseurl"] . LIB_OPENSEADRAGON; ?>/images/",
-                                    degrees: <?php echo $osd_preview_rotation; ?>,
+                                    degrees: <?php echo (int) $osd_preview_rotation; ?>,
                                     // debugMode: true,
                                     // debugGridColor: ['red'],
 
