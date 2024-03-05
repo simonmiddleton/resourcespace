@@ -38,12 +38,6 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
     {
     global  $baseurl, $lang, $userref, $wfstates, $applicationname, $use_phpmailer;
 
-    $rse_workflow_from="";
-    if (isset($wfstates[$archive]["rse_workflow_email_from"]) && $wfstates[$archive]["rse_workflow_email_from"]!="")
-        {
-        $rse_workflow_from=$wfstates[$archive]["rse_workflow_email_from"];
-        }
-
     $workflowaction = getval('workflowaction','');
 
     // Set message text and URL to link to resources
@@ -66,10 +60,6 @@ function HookRse_workflowAllAfter_update_archive_status($resource, $archive, $ex
         {
         $linkurl = $baseurl . "/pages/search.php?search=!list" . implode(":",$resource);
         }
-
-
-
-    $maillinkurl = (($use_phpmailer) ? "<a href=\"$linkurl\">$linkurl</a>" : $linkurl); // Convert to anchor link if using html mails
 
     /***** NOTIFY GROUP SUPPORT IS NOW HANDLED BY ACTIONS *****/    
 

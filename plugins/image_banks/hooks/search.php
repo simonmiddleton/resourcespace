@@ -3,7 +3,6 @@ function HookImage_banksSearchSearchaftersearchcookie()
     {
     $search_image_banks = filter_var(getval("search_image_banks", false), FILTER_VALIDATE_BOOLEAN);
     $image_bank_provider_id = getval("image_bank_provider_id", 0, true);
-    $per_page = getval("per_page", 0, true);
     $saved_offset = getval("saved_offset", 0, true);
     $offset = getval("offset", $saved_offset, true);
     $posting = filter_var(getval("posting", false), FILTER_VALIDATE_BOOLEAN);

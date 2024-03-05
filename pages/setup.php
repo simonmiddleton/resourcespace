@@ -40,9 +40,7 @@ function get_post_bool($key){
  */
 
 function sslash($data){ 
-    $stripped = rtrim($data);
-    $stripped = rtrim($data, '/');
-    return $stripped;
+    return rtrim($data, '/');
 }
 /**
  * Opens an HTTP request to a host to determine if the url is reachable.
@@ -91,7 +89,7 @@ function url_exists($url)
             fclose($fp);
             $tmp = explode(' ',$resp);
             $response_code = $tmp[1];
-            return ($response_code == 200);
+            return $response_code == 200;
         }
     }
     fclose($fp);

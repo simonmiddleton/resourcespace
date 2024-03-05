@@ -570,7 +570,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         $job_code=$ref . md5($job_data["resource"] . strtotime('now'));
         $job_success_lang="upload processing success " . str_replace(array('%ref','%title'),array($ref,$filename),$lang["ref-title"]);
         $job_failure_lang="upload processing fail " . ": " . str_replace(array('%ref','%title'),array($ref,$filename),$lang["ref-title"]);
-        $jobadded=job_queue_add("upload_processing", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);             
+        job_queue_add("upload_processing", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);             
         }
     
     hook("uploadfilesuccess", "", array( "resource_ref" => $ref ) );
@@ -1063,7 +1063,7 @@ function extract_exif_comment($ref,$extension="")
         $GLOBALS["use_error_exception"] = true;
         try
             {
-            $size = getimagesize($image, $info);
+            getimagesize($image, $info);
             }
         catch (Throwable $e)
             {
@@ -1157,7 +1157,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         trigger_error("Parameter 'ref' must be numeric!");
         }
 
-    $fs_path = hook('create_previews_extra', '', array($ref));
+    hook('create_previews_extra', '', array($ref));
 
     // keep_for_hpr will be set to true if necessary in preview_preprocessing.php to indicate that an intermediate jpg can serve as the hpr.
     // otherwise when the file extension is a jpg it's assumed no hpr is needed.
@@ -1296,7 +1296,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                     // Use the old imagemagick command syntax (parameters then file)
                     $command = $convert_fullpath . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($file) . ' ' . escapeshellarg($apath);
                     }
-                $output = run_command($command);
+                run_command($command);
 
                 if(file_exists($apath))
                     {
@@ -1322,8 +1322,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
         {
         if (isset($imagemagick_path))
             {
-            $return_val=create_previews_using_im($ref,$thumbonly,$extension,$previewonly,$previewbased,$alternative,$ingested, $onlysizes);
-            return $return_val;
+            return create_previews_using_im($ref, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ingested, $onlysizes);
             }
         else
             {
@@ -1440,9 +1439,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors, $watermark;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
-
-    # We will need this to log errors
-    $uploadedfilename = getval("file_name",""); 
 
     if(!is_numeric($ref))
         {
@@ -1637,13 +1633,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $ps[$o]['id'] = $onlysizes[0]; 
             $ps[$o]['width'] = $customx;
             $ps[$o]["height"] = $customy;
+            $ps[$o]['internal'] = 1;
+            $ps[$o]['allow_preview'] = 0;
             }
-            
+
         # Locate imagemagick.
         $convert_fullpath = get_utility_path("im-convert");
         if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
-        
-        $command_list='';
+
         if($imagemagick_mpr)
             {
             // need to check that we're using IM and not GM
@@ -1881,7 +1878,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
                 $profile='';
-                if($icc_extraction && file_exists($iccpath) && !$icc_transform_complete && !$previewbased && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
+                if($icc_extraction && !$icc_transform_complete && !$previewbased && file_exists($iccpath) && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
                     {
                     global $icc_preview_profile_embed;
                     // we have an extracted ICC profile, so use it as source
@@ -1983,8 +1980,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         $runcommand .= " -resize " . escapeshellarg($tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?"":">")) . " " . $addcheckbdafter . escapeshellarg($path);
                         if(!hook("imagepskipthumb"))
                             {
-                            $command_list.=$runcommand."\n";
-                            $output=run_command($runcommand);
+                            run_command($runcommand);
                             $created_count++;
                             # if this is the first file generated or the original file is used as the source, for non-ingested resources check rotation
                             if($autorotate_no_ingest 
@@ -2111,8 +2107,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                         }
                     if(!$imagemagick_mpr)
                         {
-                        $command_list.=$runcommand."\n";
-                        $output = run_command($runcommand);
+                        run_command($runcommand);
                         }
                     
                     }// end hook replacewatermarkcreation
@@ -2153,7 +2148,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             
             for($p=1;$p<$cp_count;$p++)
                 {
-                $force_mpr_write=false;
                 $skip_source_and_target_profiles=false;
                 // we compare these with the previous
                 if($command_parts[$p]['flatten']!==$command_parts[$p-1]['flatten'] && !$unique_flatten)
@@ -2178,11 +2172,17 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
             // time to build the command
-            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . (!in_array(strtolower($extension), $preview_no_flatten_extensions) ? '[0] -quiet -alpha off' : '[0] -quiet') . ' -depth ' . $imagemagick_mpr_depth;
+            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0] -quiet -depth ' . $imagemagick_mpr_depth;
             if(!$unique_flatten)
                 {
-                $command.=($command_parts[0]['flatten'] ? " -flatten " : "");
+                $command.=($command_parts[0]['flatten'] ? " $flatten " : "");
                 }
+
+             if (!in_array(strtolower($extension), $preview_keep_alpha_extensions))
+                {
+                $command .= " $alphaoff ";
+                }
+
              if(!$unique_strip_source)
                 {
                 $command.=($command_parts[0]['strip_source'] ? " -strip " : "");
@@ -2231,7 +2231,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     // convert to the target profile now. the source profile will only contain $icc_preview_options and needs to be included here as well
                     $command.=($command_parts[$p]['sourceprofile']!='' ? " " . $command_parts[$p]['sourceprofile'] : "") . " -profile " . $command_parts[$p]['targetprofile']. ($mpr_metadata_profiles!=='' ? " +profile \"" . $mpr_metadata_profiles . ",*\"" : "");
                     $mpr_icc_transform_complete=true;
-                    $force_mpr_write=true;
                     $skip_source_and_target_profiles=true;
                     }
                     
@@ -2304,7 +2303,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             $modified_mpr_command=hook('modify_mpr_command','',array($command,$ref,$extension));
             if($modified_mpr_command!=''){$command=$modified_mpr_command;}
-            $output = run_command($command);
+            run_command($command);
             }
         # For the thumbnail image, call extract_mean_colour() to save the colour/size information
         $thumbpath = get_resource_path($ref,true,"thm",false,"jpg",-1,1,false,"",$alternative);
@@ -3114,9 +3113,8 @@ function AutoRotateImage($src_image, $ref = false)
         if ($orientation != 0) 
             {
             $command = $convert_fullpath . ' ' . escapeshellarg($src_image) . ' -rotate +' . $orientation . ' ' . escapeshellarg($new_image);
-            $output=run_command($command);
+            run_command($command);
             }
-        $command = $exiftool_fullpath . ' Orientation=1 ' . escapeshellarg($new_image);
         } 
     else
         {
@@ -3130,10 +3128,7 @@ function AutoRotateImage($src_image, $ref = false)
             if ($orientation != 0) 
                 {
                 $command = $convert_fullpath . ' -rotate +' . $orientation . ' ' . escapeshellarg($src_image) . ' ' . escapeshellarg($new_image);
-                $output=run_command($command);
-
-                # change the orientation metadata
-                $command = $exiftool_fullpath . ' -Orientation=1 ' . escapeshellarg($new_image);
+                run_command($command);
                 }
             } 
         else
@@ -3142,7 +3137,7 @@ function AutoRotateImage($src_image, $ref = false)
             if ($orientation != 0) 
                 {
                 $command = $convert_fullpath . ' ' . escapeshellarg($src_image) . ' -auto-orient ' . escapeshellarg($new_image);
-                $output=run_command($command);
+                run_command($command);
                 }
             }
         }
@@ -3161,14 +3156,14 @@ function AutoRotateImage($src_image, $ref = false)
         $old_orientation = run_command($cmd);
         $exiftool_copy_command = $exiftool_fullpath . " -TagsFromFile " . escapeshellarg($src_image) . " -all:all " . escapeshellarg($new_image);
 
-        $output=run_command($exiftool_copy_command);
+        run_command($exiftool_copy_command);
 
         # If orientation was empty there's no telling if rotation happened, so don't assume.
         # Also, don't go through this step if the old orientation was set to normal
         if ($old_orientation != '' && $old_orientation != 1) 
             {
             $fix_orientation = $exiftool_fullpath . ' -Orientation=1 -n ' . escapeshellarg($new_image);
-            $output=run_command($fix_orientation);
+            run_command($fix_orientation);
             }
         
         # we'll remove the exiftool created file copy (as a result of using -TagsFromFile)
@@ -3521,8 +3516,8 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
     elseif(!empty($identoutput))
         {
         $wh=explode("x",$identoutput);
-        $w = $o_width = $wh[0];
-        $h = $o_height = $wh[1];
+        $w = $wh[0];
+        $h = $wh[1];
         }
     else
         {
@@ -3538,10 +3533,8 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
             debug("getFileDimensions: Unable to get image size for file: $file");
             }
         }
-    
-    $dimensions = array($w, $h);
 
-    return $dimensions;
+    return array($w, $h);
     }
 
 /**
@@ -3866,18 +3859,15 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         }
 
     $colorspace1 = "";
-    $colorspace2 = "";
     if(isset($actions["srgb"]))
         {
         if (version_compare($imversion,"6.7.5-5",">="))
             {
             $colorspace1 = " -colorspace sRGB ";
-            $colorspace2 =  " -colorspace RGB ";
             }
         else
             {
             $colorspace1 = " -colorspace RGB ";
-            $colorspace2 =  " -colorspace sRGB ";
             }
         }
 
@@ -4070,7 +4060,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
 
     $cmd_args['%outputpath'] = $outputpath;
     $command .= $profile . ' %outputpath';
-    $shell_result = run_command($command, false, $cmd_args);
+    run_command($command, false, $cmd_args);
 
     if (file_exists($outputpath))
         {
@@ -4090,7 +4080,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
                 }
 
             $exifcommand.= " %outputfile%";
-            $output = run_command($exifcommand, false, $exifargs);
+            run_command($exifcommand, false, $exifargs);
             }
         }
 

@@ -1544,7 +1544,6 @@ $lang["dosavedsearch"]='Realizar búsqueda guardada';
 $lang["all"]='Todo.';
 $lang["backtoresults"]='Volver a los resultados.';
 $lang["continuetoresults"]='Continuar a los resultados.';
-$lang["preview_all"]='Vista previa de todo.';
 $lang["usagehistory"]='Historial de uso.';
 $lang["usagebreakdown"]='Desglose de uso.';
 $lang["usagetotal"]='Descargas totales.';

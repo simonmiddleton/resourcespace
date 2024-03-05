@@ -712,7 +712,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                         || in_array($resource["resource_type"],explode(",",$field["resource_types"])))
                                     )
                                     {
-                                    $displaycondition = check_display_condition(0, $field, $fields, false); 
+                                    $displaycondition = check_display_condition(0, $field, $fields, false, $ref);
                                     if($displaycondition)
                                         {
                                         if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))

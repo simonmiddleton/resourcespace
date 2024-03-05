@@ -290,9 +290,8 @@ function process_template($template_path, array $bind_placeholders = array())
     // At this point we shoud have all the placeholders we need to render the template nicely
     ob_start();
     include $template_path;
-    $content = ob_get_clean();
 
-    return $content;
+    return ob_get_clean();
     }
 
 

@@ -575,10 +575,14 @@ if ($submitted != "")
     $filesize = @filesize_unlimited($zipfile);
 
     header("Content-Disposition: attachment; filename=" . $filename);
-    if ($archiver) {header("Content-Type: " . $collection_download_settings[$settings_id]["mime"]);}
-    else {
-    header("Content-Type: application/zip");}
-    if ($use_zip_extension){header("Content-Transfer-Encoding: binary");}
+    if ($archiver) {
+        header("Content-Type: " . $collection_download_settings[$settings_id]["mime"]);
+    } else {
+        header("Content-Type: application/zip");
+    }
+    if ($use_zip_extension) {
+        header("Content-Transfer-Encoding: binary");
+    }
     header("Content-Length: " . $filesize);
 
     ignore_user_abort(true); // collection download has a problem with leaving junk files when this script is aborted client side. This seems to fix that by letting the process run its course.

@@ -2,11 +2,7 @@
 
 if (!defined("RUNNING_ASYNC")) {define("RUNNING_ASYNC", !isset($ffmpeg_preview));}
 
-if (!RUNNING_ASYNC)
-    {
-    global $qtfaststart_path, $qtfaststart_extensions;
-    }
-else
+if (RUNNING_ASYNC)
     {
     if(!isset($_SERVER['HTTP_HOST']) && isset($_SERVER['argv'][8]))
         {
@@ -307,15 +303,6 @@ if (!file_exists($targetfile))
     debug("FFmpeg failed: ".$shell_exec_cmd);
     }
 
-if (isset($qtfaststart_path) && file_exists($qtfaststart_path . "/qt-faststart") && in_array($ffmpeg_preview_extension, $qtfaststart_extensions))
-    {
-    $targetfiletmp=$targetfile.".tmp";
-    rename($targetfile, $targetfiletmp);
-    $shell_exec_cmd=$qtfaststart_path . "/qt-faststart " . escapeshellarg($targetfiletmp) . " " . escapeshellarg($targetfile);
-    $output=run_command($shell_exec_cmd);
-    unlink($targetfiletmp);
-    }
-
 # Handle alternative files.
 global $ffmpeg_alternatives;
 if (isset($ffmpeg_alternatives))
@@ -339,17 +326,12 @@ if (isset($ffmpeg_alternatives))
 
         if ($generate) # OK to generate this alternative?
             {
-
-            if(!hook("removepreviousalts", "", array($ffmpeg_alternatives, $file, $n))):
-
             # Remove any existing alternative file(s) with this name.
             $existing = ps_query("select ref from resource_alt_files where resource = ? and name = ?", array("i", $ref, "s", $ffmpeg_alternatives[$n]["name"]));
             for ($m=0;$m<count($existing);$m++)
                 {
                 delete_alternative_file($ref,$existing[$m]["ref"]);
                 }
-            
-            endif;
 
             $alt_type = '';
             if(isset($ffmpeg_alternatives[$n]['alt_type'])) {
@@ -368,16 +350,6 @@ if (isset($ffmpeg_alternatives))
             
             $output = run_command($shell_exec_cmd);  
 
-        if(isset($qtfaststart_path))
-            {
-            if($qtfaststart_path && file_exists($qtfaststart_path . "/qt-faststart") && in_array($ffmpeg_alternatives[$n]["extension"], $qtfaststart_extensions) ){
-                $apathtmp=$apath.".tmp";
-                rename($apath, $apathtmp);
-                $shell_exec_cmd=$qtfaststart_path . "/qt-faststart " . escapeshellarg($apathtmp) . " " . escapeshellarg($apath)." 2>&1";
-                $output=run_command($shell_exec_cmd);
-                unlink($apathtmp);
-                }
-            }
             if (file_exists($apath))
                 {
                 # Update the database with the new file details.

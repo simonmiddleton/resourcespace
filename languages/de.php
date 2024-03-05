@@ -1237,8 +1237,6 @@ $lang["markers"] = "Markierungen";
  $lang["backtoresults"]="Zurück zu den Suchergebnissen";
  $lang["continuetoresults"]="Weiter zu den Suchergebnissen";
 
- $lang["preview_all"]="Alle in Vorschau zeigen";
-
  $lang["usagehistory"]="Nutzungsprotokoll";
  $lang["usagebreakdown"]="Nutzungsanalyse";
  $lang["usagetotal"]="Downloads gesamt";

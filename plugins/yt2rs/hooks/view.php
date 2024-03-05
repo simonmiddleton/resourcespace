@@ -15,7 +15,7 @@ function isValidURL($url)
     if (!empty($matches))
         {
         $ytid = $matches[1];
-        if (!$fp = curl_init($url)) return false;
+        if (!curl_init($url)) return false;
         return true;
         }
     }

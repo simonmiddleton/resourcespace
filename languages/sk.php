@@ -1445,8 +1445,6 @@ $lang["allcollectionssearchbar"]="Všetky zbierky";
 $lang["backtoresults"]="Späť na výsledky";
 $lang["continuetoresults"]="Pokračujte k výsledkom";
 
-$lang["preview_all"]="Zobraziť ukážky";
-
 $lang["usagehistory"]="História používania";
 $lang["usagebreakdown"]="Rozpis použitia";
 $lang["usagetotal"]="Celkový počet stiahnutí";

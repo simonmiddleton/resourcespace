@@ -6,7 +6,7 @@ function HookEmuAllExtra_checks()
     $GLOBALS['use_error_exception'] = true;
     try
         {
-        $emu_api = new EMuAPI($GLOBALS['emu_api_server'], $GLOBALS['emu_api_server_port']);
+        new EMuAPI($GLOBALS['emu_api_server'], $GLOBALS['emu_api_server_port']);
         }
     catch(Throwable $t)
         {

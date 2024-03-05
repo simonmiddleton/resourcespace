@@ -294,7 +294,6 @@ function openai_gpt_generate_completions($apiKey, $model, $messages, $temperatur
 
 function openai_gpt_get_dependent_fields($field)
     {
-    $ai_gpt_input_fields = ps_query("SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE openai_gpt_input_field = ?",["i",$field]);
-    return $ai_gpt_input_fields;
+    return ps_query("SELECT " . columns_in("resource_type_field") . " FROM resource_type_field WHERE openai_gpt_input_field = ?",["i", $field]);
     }
 

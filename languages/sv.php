@@ -1227,8 +1227,6 @@ $lang["allcollectionssearchbar"]="Alla samlingar";
 $lang["backtoresults"]="Tillbaka: Sökresultat";
 $lang["continuetoresults"]="Fortsätt: Sökresultat";
 
-$lang["preview_all"]="Förhandsgranska alla";
-
 $lang["usagehistory"]="Användningshistorik";
 $lang["usagebreakdown"]="Detaljerad användningshistorik";
 $lang["usagetotal"]="Totalt hämtat";

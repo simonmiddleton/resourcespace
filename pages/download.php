@@ -222,6 +222,7 @@ else
     if ($size == 'videojs' && $ext == 'mp3')
         {
         $size="";
+        $log_download = false;
         }
     elseif($preview_tiles && $allowed && $size == '' && getval('tile_region', 0, true) == 1)
         {

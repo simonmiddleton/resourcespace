@@ -11,12 +11,12 @@ if('cli' != PHP_SAPI)
     }
 
 $errors = csv_split_file_validate_args();
-if(count($errors) > 0)
-    {
-    foreach($errors as $error)
-    echo $error . "\n";
-    exit;
+if (count($errors) > 0) {
+    foreach ($errors as $error) {
+        echo $error . "\n";
     }
+    exit;
+}
 
 $file               = $argv[1]; // filepath and filename for file to split
 $number_lines       = $argv[2]; // integer representing number of lines (plus header line)

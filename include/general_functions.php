@@ -278,8 +278,7 @@ function tidylist($list)
     if (strpos($list,",")===false) {return $list;}
     $list=explode(",",$list);
     if (trim($list[0])=="") {array_shift($list);} # remove initial comma used to identify item is a list
-    $op=join(", ",trim_array($list));
-    return $op;
+    return join(", ", trim_array($list));
     }
 
 /**
@@ -513,9 +512,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
         $i++;
         }
     // Reverse again so that the default language appears first in results
-    $return = array_values(array_reverse($unique_returned_records));
-
-    return $return;
+    return array_values(array_reverse($unique_returned_records));
     }
 
 /**
@@ -1045,7 +1042,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
             }
             else {
                 mb_internal_encoding("UTF-8");
-                $headers.=mb_encode_mimeheader($userfullname, "UTF-8"). " <".$ccs[$n].">";
+                $headers.=mb_encode_mimeheader((string) $userfullname, "UTF-8"). " <".$ccs[$n].">";
             }
         }
         $headers.=$eol;
@@ -1414,11 +1411,11 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
             }
         }
 
-    if (isset($attachments))
-        {
-        foreach ($attachments as $attachment){
-        $mail->AddAttachment($attachment,basename($attachment));}
+    if (isset($attachments)) {
+        foreach ($attachments as $attachment) {
+            $mail->AddAttachment($attachment, basename($attachment));
         }
+    }
 
     if (count($files)>0)
         {
@@ -1667,8 +1664,7 @@ function remove_extension($strName)
  */
 function get_allowed_extensions_by_type($resource_type)
     {
-    $allowed_extensions = ps_value("select allowed_extensions value from resource_type where ref = ?", array("i", $resource_type), "", "schema");
-    return $allowed_extensions;
+    return ps_value("select allowed_extensions value from resource_type where ref = ?", array("i", $resource_type), "", "schema");
     }
 
 /**
@@ -3069,8 +3065,7 @@ function IsModal()
         {
         return true;
         }
-    $modal = (getval("modal","") == "true");
-    return $modal;
+    return getval("modal", "") == "true";
     }
 
 /**
@@ -3112,9 +3107,8 @@ function isValidCSRFToken($token_data, $session_id)
         {
         return true;
         }
-    
-    $csrf_valid = rs_validate_token($token_data, $session_id);
-    return $csrf_valid;    
+
+    return rs_validate_token($token_data, $session_id);
     }
 
 
@@ -3348,7 +3342,7 @@ function get_recent_users($days)
  */
 function get_total_approved_users()
     {
-    return (ps_value("select count(*) value from user where approved=1", [], 0));
+    return ps_value("SELECT COUNT(*) value FROM user WHERE approved = 1", [], 0);
     }
 
 
@@ -3999,7 +3993,7 @@ function rcRmdir ($path,$ignore=array())
     if (is_dir($path))
         {
         $foldercontents = new DirectoryIterator($path);
-        foreach($foldercontents as $objectindex => $object)
+        foreach($foldercontents as $object)
             {
             if($object->isDot() || in_array($path,$ignore))
                 {
@@ -4096,8 +4090,7 @@ function pagename()
         return $name;
     $url=str_replace("\\","/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
     $urlparts=explode("/",$url);
-    $url=$urlparts[count($urlparts)-1];
-    return $url;
+    return $urlparts[count($urlparts) - 1];
     }
 
 /**
@@ -4909,7 +4902,7 @@ function get_system_status()
                 $return['results'][$check_name]['severity_text'] = $GLOBALS["lang"]["severity-level_" .  $extra_check['severity']];
                 }
 
-            $warn_details = $extra_warn['details'] ?? [];
+            $warn_details = $extra_check['details'] ?? [];
             if ($warn_details !== [])
                 {
                 $return['results'][$check_name]['details'] = $warn_details;
@@ -5003,7 +4996,7 @@ function check_filestore_browseability()
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
-        $output = curl_exec($ch);
+        curl_exec($ch);
         $response_status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);        
         }

@@ -59,16 +59,8 @@ if("{$storagedir}/1_6326bb8314c6c21/1pre_cf33a61f47b5982.mp4" != get_resource_pa
     }
 
 // Check getting a scrambled version of the path/ URL
-if(
-    (
-        "{$storagedir}/1_6326bb8314c6c21/1pre_cf33a61f47b5982.jpg" != get_resource_path(1, true, 'pre', false, 'jpg')
-        || "{$storagedir}/1_6326bb8314c6c21/1pre_cf33a61f47b5982.jpg" != get_resource_path(1, true, 'pre', false, 'jpg', true)
-    )
-    || (
-            "{$storageurl}/1_6326bb8314c6c21/1pre_cf33a61f47b5982.jpg?v={$file_modified}" != get_resource_path(1, false, 'pre', false, 'jpg',true,1,false,$file_modified)
-            || "{$storageurl}/1_6326bb8314c6c21/1pre_cf33a61f47b5982.jpg?v={$file_modified}" != get_resource_path(1, false, 'pre', false, 'jpg', true,1,false,$file_modified)
-        )
-)
+if ("{$storagedir}/1_6326bb8314c6c21/1pre_cf33a61f47b5982.jpg" != get_resource_path(1, true, 'pre', false, 'jpg') ||
+    "{$storageurl}/1_6326bb8314c6c21/1pre_cf33a61f47b5982.jpg?v={$file_modified}" != get_resource_path(1, false, 'pre', false, 'jpg', true, 1, false, $file_modified))
     {
     echo 'Case: Check getting a scrambled version of the path/ URL -- ';
     return false;

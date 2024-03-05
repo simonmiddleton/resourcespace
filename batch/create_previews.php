@@ -111,7 +111,7 @@ function sigalrm_handler()
  */
 function sigchld_handler($signal)
   {
-  $running_jobs = reap_children();
+  reap_children();
 
   pcntl_waitpid(-1, $status, WNOHANG);
   }

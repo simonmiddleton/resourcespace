@@ -29,10 +29,13 @@ if (in_array($resource['file_extension'],$annotate_ext_exclude)){return false;}
 if (in_array($resource['resource_type'],$annotate_rt_exclude)){return false;}
 if (!($k=="") && !$annotate_public_view){return false;}
 
-if (!file_exists($path) && !file_exists($path_orig)){return false;}
-if (!file_exists($path)){
-    $sizes = getimagesize($path_orig);}
-else{
+if (!file_exists($path) && !file_exists($path_orig)) {
+    return false;
+}
+
+if (!file_exists($path)) {
+    $sizes = getimagesize($path_orig);
+} else {
     $sizes = getimagesize($path);
 }
 

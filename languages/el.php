@@ -1414,7 +1414,6 @@ $lang["allresourcessearchbar"]='Όλοι οι πόροι.';
 $lang["allcollectionssearchbar"]='Όλες οι συλλογές.';
 $lang["backtoresults"]='Επιστροφή στα αποτελέσματα';
 $lang["continuetoresults"]='Συνέχεια στα αποτελέσματα';
-$lang["preview_all"]='Προεπισκόπηση όλων';
 $lang["usagehistory"]='Ιστορικό χρήσης';
 $lang["usagebreakdown"]='Ανάλυση χρήσης';
 $lang["usagetotal"]='Συνολικές λήψεις.';

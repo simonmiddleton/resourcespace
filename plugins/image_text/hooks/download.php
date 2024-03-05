@@ -64,15 +64,15 @@ function HookImage_textDownloadModifydownloadfile()
             
         $tmpolfile= get_temp_dir() . "/" . $ref . "_image_text_" . $userref . "." . $ext;
         $createolcommand = $convert_fullpath . ' -background "#000" -fill white -gravity "' . $image_text_position . '" -font "' . $image_text_font . '" -size ' . $width  . 'x' . $olheight . ' caption:" ' . $overlaytext .  '  " ' . escapeshellarg($tmpolfile);
-        $result=run_command($createolcommand);
+        run_command($createolcommand);
         
         $newdlfile = get_temp_dir() . "/" . $ref . "_image_text_result_" . $userref . "." . $ext;
         if($image_text_banner_position=="bottom")
             {$convertcommand = $convert_fullpath . " " . escapeshellarg($path) .  ' ' . escapeshellarg($tmpolfile) . ' -append ' . escapeshellarg($newdlfile);}
         else
             {$convertcommand = $convert_fullpath . " " . escapeshellarg($tmpolfile) .  ' ' . escapeshellarg($path) . ' -append ' . escapeshellarg($newdlfile);}
-        $result=run_command($convertcommand);
-        
+        run_command($convertcommand);
+
         $oldpath=$path;
         
         if ($path!=$tmpfile) # If this is not a temporary file having metadata written then copy it to the filestore for future use

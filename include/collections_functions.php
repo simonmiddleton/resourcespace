@@ -392,10 +392,11 @@ function add_resource_to_collection(
 
     if ($addpermitted)
         {
-        // If this is a featured collection  apply all the external access keys from the categories which make up its 
+        $collection_data = get_collection($collection, true);
+
+        // If this is a featured collection apply all the external access keys from the categories which make up its 
         // branch path to prevent breaking existing shares for any of those featured collection categories.
         $fc_branch_path_keys = [];
-        $collection_data = get_collection($collection, true);
         if($collection_data !== false && $collection_data['type'] === COLLECTION_TYPE_FEATURED)
             {
             $branch_category_ids = array_column(
@@ -437,7 +438,7 @@ function add_resource_to_collection(
             $expiry_dates=ps_array("SELECT DISTINCT expires value FROM external_access_keys WHERE collection = ?",["i",$collection]);
             $datetime=time();
             $collection_share_warning=true;
-            foreach($expiry_dates as $key => $date)
+            foreach($expiry_dates as $date)
                 {
                 if($date!="" && $date<$datetime){$collection_share_warning=false;}
                 }
@@ -480,8 +481,10 @@ function add_resource_to_collection(
             update_node_hitcount_from_search($resource,$search);
             }
         
-        collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
-
+        if($collection_data !== false && $collection_data['type'] != COLLECTION_TYPE_SELECTION) {
+            collection_log($collection,LOG_CODE_COLLECTION_ADDED_RESOURCE,$resource);
+        }
+        
         // Clear theme image cache
         clear_query_cache("themeimage");
         clear_query_cache('col_total_ref_count_w_perm');
@@ -1239,10 +1242,8 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
     $result=array();
     
     # Recognise a quoted search, which is a search for an exact string
-    $quoted_string=false;
     if (substr($search,0,1)=="\"" && substr($search,-1,1)=="\"") 
         {
-        $quoted_string=true;
         $search=substr($search,1,-1);
         }
 
@@ -1256,10 +1257,7 @@ function do_collections_search($search,$restypes,$archive=0,$order_by='',$sort="
     if ($search_includes_themes_now)
         {
         # Same search as when searching within public collections.
-        $collections=search_public_collections($search,"name","ASC",!$search_includes_themes_now,true,false,$fetchrows);
-        
-        $condensedcollectionsresults=array();
-        $result=$collections;
+        $result=search_public_collections($search,"name","ASC",!$search_includes_themes_now,true,false,$fetchrows);
         }
     return $result;
     }
@@ -1672,11 +1670,11 @@ function save_collection($ref, $coldata=array())
             {
             $was_shared_with = ps_array("select username value from user where ref in (" . ps_param_insert(count($old_attached_users)). ")",ps_param_fill($old_attached_users,"i"));
             }
-        if (count($old_attached_groups) > 0)
-            {
-            foreach($old_attached_groups as $old_group)
-            $was_shared_with[] = "Group (Smart): " . ps_value("select name value from usergroup where ref=?",array("i",$old_group),"");
+        if (count($old_attached_groups) > 0) {
+            foreach ($old_attached_groups as $old_group) {
+                $was_shared_with[] = "Group (Smart): " . ps_value("SELECT name value FROM usergroup WHERE ref = ?", array("i", $old_group), "");
             }
+        }
         if (count($urefs) == 0 && count($was_shared_with) > 0)
             {
             collection_log($ref,LOG_CODE_COLLECTION_STOPPED_SHARING_COLLECTION,0, join(", ",$was_shared_with));
@@ -2118,7 +2116,6 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
         }
         
     ##  loop through recipients
-    $themeurl = "";
     for ($nx1=0;$nx1<count($emails);$nx1++)
         {
         ## loop through collections
@@ -2534,7 +2531,7 @@ function get_search_title($searchstring)
     $use_refine_searchstring=true;
     $search_titles_shortnames=false;
 
-    global $lang,$userref,$baseurl,$collectiondata,$result,$display,$pagename,$collection,$userrequestmode,$preview_all;
+    global $lang,$userref,$baseurl,$collectiondata,$result,$display,$pagename,$collection,$userrequestmode;
 
     parse_str($searchstring,$searchvars);
     if (isset($searchvars["archive"])){$archive=$searchvars["archive"];}else{$archive=0;}
@@ -2544,7 +2541,7 @@ function get_search_title($searchstring)
     include dirname(__FILE__)."/search_title_processing.php";
 
     if ($restypes!="")
-        { 
+        {
         $resource_types=get_resource_types($restypes,true,false,true);
         foreach($resource_types as $type)
             {
@@ -2552,8 +2549,8 @@ function get_search_title($searchstring)
             }
         $search_title.=" [".implode(', ',$typenames)."]";
         }
-        $title=str_replace(">","",strip_tags(htmlspecialchars_decode($search_title)));
-    return $title;
+
+    return str_replace(">", "", strip_tags(htmlspecialchars_decode($search_title)));
     }
 
 /**
@@ -2854,7 +2851,6 @@ function get_featured_collection_resources(array $c, array $ctx)
 
     $limit = (isset($ctx["limit"]) && (int) $ctx["limit"] > 0 ? (int) $ctx["limit"] : null);
     $use_thumbnail_selection_method = (isset($ctx["use_thumbnail_selection_method"]) ? (bool) $ctx["use_thumbnail_selection_method"] : false);
-    $all_fcs = (isset($ctx["all_fcs"]) && is_array($ctx["all_fcs"]) ? $ctx["all_fcs"] : array());
 
     // Smart FCs
     if(isset($ctx["smart"]) && $ctx["smart"] === true)
@@ -3081,8 +3077,6 @@ function get_featured_collection_categ_sub_fcs(array $c, array $ctx = array())
     while(!$queue->isEmpty())
         {
         $fc = $queue->dequeue();
-
-        $fc_parent = ($all_fcs[$fc]['parent'] > 0 ? $all_fcs[$fc]['parent'] : 0);
         $fc_children = array();
 
         if(
@@ -3640,9 +3634,7 @@ function get_collection_log($collection, $fetchrows = -1)
         array("i",$collection)
     );
 
-    $log = sql_limit_with_total_count($log_query,$fetchrows,0,false,null);
-
-    return $log;
+    return sql_limit_with_total_count($log_query, $fetchrows, 0, false, null);
     }
 
 /**
@@ -3661,7 +3653,6 @@ function collection_max_access($collection)
         }
     for ($n=0;$n<count($result);$n++)
         {
-        $ref=$result[$n]["ref"];
         # Load access level
         $access=get_resource_access($result[$n]);
         if ($access<$maxaccess) {$maxaccess=$access;}
@@ -3764,14 +3755,17 @@ function collection_set_public($collection)
  * @return void
  */
 function remove_all_resources_from_collection($ref){
-    // abstracts it out of save_collection()
-    $removed_resources = ps_array("SELECT resource AS value FROM collection_resource WHERE collection = ?",array("i",$ref));
 
-    collection_log($ref, LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES, 0);
-    foreach($removed_resources as $removed_resource_id)
-        {
-        collection_log($ref, LOG_CODE_COLLECTION_REMOVED_RESOURCE, $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
+    $collection_type=ps_value("select type value from collection where ref=?",array("i",$ref),"");
+    
+    if ($collection_type != COLLECTION_TYPE_SELECTION) {
+        $removed_resources = ps_array("SELECT resource AS value FROM collection_resource WHERE collection = ?",array("i",$ref));
+        collection_log($ref, LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES, 0);
+
+        foreach($removed_resources as $removed_resource_id) {
+            collection_log($ref, LOG_CODE_COLLECTION_REMOVED_RESOURCE, $removed_resource_id, ' - Removed all resources from collection ID ' . $ref);
         }
+    }
 
     ps_query("DELETE FROM collection_resource WHERE collection = ?",array("i",$ref));
     ps_query("DELETE FROM external_access_keys WHERE collection = ? AND upload!=1",array("i",$ref));
@@ -3941,7 +3935,7 @@ function show_hide_collection($colref, $show=true, $user="")
     else
         {
         debug("Hiding collection " . $colref . " from user " . $user);
-        if(($key = array_search($colref, $hidden_collections)) === false) 
+        if(array_search($colref, $hidden_collections) === false) 
             {
             $hidden_collections[]=$colref;
             }
@@ -4018,7 +4012,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     global $baseurl_short, $lang, $k, $userrequestmode, $zipcommand, $collection_download, $use_zip_extension, $archiver_path,
            $manage_collections_share_link, $allow_share, $enable_collection_copy,
            $manage_collections_remove_link, $userref, $collection_purge, $result,
-           $preview_all, $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
+           $order_by, $sort, $archive, $contact_sheet_link_on_collection_bar,
            $show_searchitemsdiskusage, $emptycollection, $count_result,
            $download_usage, $home_dash, $top_nav_upload_type, $pagename, $offset, $col_order_by, $find, $default_sort,
            $default_collection_sort, $restricted_share, $hidden_collections, $internal_share_access, $search,
@@ -4169,19 +4163,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
         $o++;
         }
     
-
-    // Preview all
-    if((is_array($result) && count($result) != 0) && ($k=="" || $internal_share_access) && $preview_all)
-        {
-        $data_attribute['url'] = generateURL($baseurl_short . "pages/preview_all.php",$urlparams);
-        $options[$o]['value']='preview_all';
-        $options[$o]['label']=$lang['preview_all'];
-        $options[$o]['data_attr']=$data_attribute;
-        $options[$o]['category'] = ACTIONGROUP_RESOURCE;
-        $options[$o]['order_by'] = 40;
-        $o++;
-        }
-
      // Remove all resources from collection
      if(!checkperm("b") && 0 < $count_result && ($k=="" || $internal_share_access) && isset($emptycollection) && !$system_read_only && collection_writeable($collection_data['ref']))
      {
@@ -4528,7 +4509,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             $user_mycollection=ps_value("select ref value from collection where user=? and name='Default Collection' order by ref limit 1",array("i",$userref),"");
             // check that this collection is not hidden. use first in alphabetical order otherwise
             if(in_array($user_mycollection,$hidden_collections)){
-                $hidden_collections_list=implode(",",array_filter($hidden_collections));
                 $sql="select ref value from collection where user=?";
                 $params=array("i",$userref);
                 if (count($hidden_collections)>0)
@@ -4740,9 +4720,6 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
             $pextension = $pathparts['extension'];
             }
         }
-
-    if ($usesize!=""&&!$subbed_original){$append="-".$usesize;}else {$append="";}
-    $basename_minus_extension=remove_extension($pathparts['basename']);
 
     $fs=explode("/",$filename);
     $filename=$fs[count($fs)-1]; 
@@ -5055,8 +5032,6 @@ function collection_download_process_summary_notes(
         $deletion_array[]=$textfile;    
         }
         }
-
-    return;
     }
 
 /**
@@ -5074,17 +5049,6 @@ function collection_download_process_summary_notes(
  */
 function collection_download_process_csv_metadata_file(array $result, $id, $collection, $collection_download_tar, $use_zip_extension, &$zip, &$path, array &$deletion_array)
     {
-    // Create the CSV filename.
-    $hook_filename = hook('collectiondownloadcsvfilename');
-    if($hook_filename == false)
-        {
-        $csv_filename = '/Col-' . $collection . '-metadata-export.csv';
-        }
-    else
-        {
-        $csv_filename = $hook_filename;
-        }
-
     // Include the CSV file with the metadata of the resources found in this collection
     $csv_file    = get_temp_dir(false, $id) . '/Col-' . $collection . '-metadata-export.csv';
         if(isset($result[0]["ref"]))
@@ -5198,7 +5162,7 @@ function collection_download_process_archive_command($collection_download_tar, &
         $GLOBALS["use_error_exception"]=true;
         try
             {
-            $wait=$zip->close();
+            $zip->close();
             }
         catch (Throwable $e)
             {
@@ -5220,7 +5184,7 @@ function collection_download_process_archive_command($collection_download_tar, &
     elseif ($archiver)
         {
         update_zip_progress_file("zipping");
-        $wait=run_command($archiver_fullpath . " " . $collection_download_settings[$settings_id]["arguments"] . " " . escapeshellarg($zipfile) . " " . $archiver_listfile_argument . escapeshellarg($cmdfile));
+        run_command($archiver_fullpath . " " . $collection_download_settings[$settings_id]["arguments"] . " " . escapeshellarg($zipfile) . " " . $archiver_listfile_argument . escapeshellarg($cmdfile));
         update_zip_progress_file("complete");
         }
     elseif (!$use_zip_extension)
@@ -5229,12 +5193,12 @@ function collection_download_process_archive_command($collection_download_tar, &
         if ($config_windows)
             # Add the command file, containing the filenames, as an argument.
             {
-            $wait=exec("$zipcommand " . escapeshellarg($zipfile) . " @" . escapeshellarg($cmdfile));
+            exec("$zipcommand " . escapeshellarg($zipfile) . " @" . escapeshellarg($cmdfile));
             }
         else
             {
             # Pipe the command file, containing the filenames, to the executable.
-            $wait=exec("$zipcommand " . escapeshellarg($zipfile) . " -@ < " . escapeshellarg($cmdfile));
+            exec("$zipcommand " . escapeshellarg($zipfile) . " -@ < " . escapeshellarg($cmdfile));
             }
             update_zip_progress_file("complete");
         }
@@ -5993,10 +5957,6 @@ function move_featured_collection_branch_path_root(array $branch_path)
         if($fc_root_col_position !== false)
             {
             $branch_path = array_slice($branch_path, ++$fc_root_col_position);
-            if(empty($branch_path))
-                {
-                $links_trail = [];
-                }
             }
         }
 
@@ -6632,8 +6592,7 @@ function upload_share_active()
         }
     elseif(isset($_COOKIE["upload_share_active"]) && getval("k","") != "")
         {
-        $upload_share_active = (int)$_COOKIE["upload_share_active"];
-        return $upload_share_active;
+        return (int) $_COOKIE["upload_share_active"];
         }
     return false;
     }
@@ -6667,7 +6626,6 @@ function upload_share_setup(string $key,$shareopts = array())
 
     emulate_user((int) $shareopts['user'], $usergroup);
     $upload_share_active = upload_share_active();
-    $rs_session = get_rs_session_id(true);
     $upload_then_edit = true;
     
     if(!$upload_share_active || $upload_share_active != $collection)
@@ -6806,8 +6764,7 @@ function purge_expired_shares($filteropts)
 
     $purge_query = "DELETE FROM external_access_keys " . $conditional_sql;
     ps_query($purge_query, $params);
-    $deleted = sql_affected_rows();
-    return $deleted;
+    return sql_affected_rows();
     }
 
     
@@ -7068,8 +7025,7 @@ function check_upload_terms(int $collection, string $k) : bool
         }
     else
         {
-        $return =(array_key_exists("acceptedterms",$_COOKIE) && $_COOKIE["acceptedterms"]==1);
-        return $return;
+        return array_key_exists("acceptedterms", $_COOKIE) && $_COOKIE["acceptedterms"] == 1;
         }
     }
 

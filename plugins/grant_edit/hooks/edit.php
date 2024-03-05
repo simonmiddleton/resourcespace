@@ -120,6 +120,7 @@ function HookGrant_editEditEditstatushide()
 function HookGrant_editEditAppendcustomfields()
     {
     global $ref,$lang,$baseurl,$grant_editusers, $multiple, $usergroup, $grant_edit_groups, $collapsible_sections;
+    global $sharing_userlists;
     
     // Do we have access to see this?
     if(!in_array($usergroup, $grant_edit_groups) || $ref<0){return;}

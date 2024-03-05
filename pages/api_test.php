@@ -12,13 +12,17 @@ if (!$enable_remote_apis) {exit("API not enabled.");}
 if (!checkperm("a")) {exit("Access denied");}
 
 $api_function=getval("api_function","");
+$api_functions = array_filter(get_defined_functions()['user'], function($e) { return (strpos($e,'api_') === 0); });
 
 if ($api_function!="")
     {
-    $fct = new ReflectionFunction("api_" . $api_function);
-    $paramcount=$fct->getNumberOfParameters();
-    $rparamcount=$fct->getNumberOfRequiredParameters();
-    $fct_params = $fct->getParameters();
+    $index = array_search('api_' . $api_function, $api_functions);
+    if ($index !== false){
+        $fct = new ReflectionFunction($api_functions[$index]);
+        $paramcount=$fct->getNumberOfParameters();
+        $rparamcount=$fct->getNumberOfRequiredParameters();
+        $fct_params = $fct->getParameters();
+        }
     }
     
 $output="";
@@ -70,15 +74,11 @@ renderBreadcrumbs([
     <option value=""><?php echo $lang["select"] ?></option>
     <?php
     # Allow selection from built in functions
-    $functions=get_defined_functions();$functions=$functions["user"];asort($functions);
-    foreach ($functions as $function)
-        {
-            if (substr($function,0,4)=="api_")
-                {
-                ?>
-                <option <?php if ($function=="api_" . $api_function) {echo " selected";} ?>><?php echo substr($function,4) ?></option>
-                <?php
-                }
+    asort($api_functions);
+    foreach ($api_functions as $function){
+        ?>
+        <option <?php if ($function=="api_" . $api_function) {echo " selected";} ?>><?php echo substr($function,4) ?></option>
+        <?php
         }
     ?>
     

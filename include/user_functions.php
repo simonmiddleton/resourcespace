@@ -39,7 +39,7 @@ function validate_user($user_select_sql, $getuserdata=true)
 
     if($getuserdata)
         {
-        $userdata = ps_query(
+        return ps_query(
             "   SELECT u.ref,
                        u.username,
                        u.origin,
@@ -80,8 +80,6 @@ function validate_user($user_select_sql, $getuserdata=true)
                  WHERE {$full_user_select_sql}",
                  $validateparams
         );
-
-        return $userdata;
         }
     else
         {
@@ -593,11 +591,7 @@ function get_usergroup($ref)
 function get_user($ref)
     {
     global $udata_cache;
-    if (isset($udata_cache[$ref]))
-        {
-        $return = $udata_cache[$ref];
-        }
-    else
+    if (!isset($udata_cache[$ref]))
         {
         $user_columns = columns_in("user","u");
         $user_columns = str_replace("ip_restrict`","ip_restrict` ip_restrict_user",$user_columns); 
@@ -666,7 +660,7 @@ function save_user($ref)
 
         log_activity("{$current_user_data['username']} ({$ref})", LOG_CODE_DELETED, null, 'user', null, $ref);
 
-        return true; # Successful deletion
+        return true;
         }
     else
         {
@@ -707,7 +701,7 @@ function save_user($ref)
             $message = check_password($password);
             if($message !== true)
                 {
-                return $message; # Returns an error message
+                return $message;
                 }
             }
 
@@ -814,7 +808,7 @@ function save_user($ref)
         $result=email_reset_link($email, true);
         if ($result!==true) 
             {    
-            return $result; # Returns an error message
+            return $result;
             }
         }
         
@@ -824,7 +818,7 @@ function save_user($ref)
         message_remove_related(USER_REQUEST,$ref);
         }
 
-    return true; # Successful save
+    return true; 
     }
 
 
@@ -861,7 +855,7 @@ function email_reset_link($email,$newuser=false)
 
     if($email == '')
         {
-        return $lang["accountnoemail-reset-not-emailed"]; # Password reset link was not sent because the account has expired;
+        return $lang["accountnoemail-reset-not-emailed"]; 
         }
 
     # The reset link is sent after the principal user update has completed
@@ -871,7 +865,7 @@ function email_reset_link($email,$newuser=false)
     sleep($password_brute_force_delay);
     if(count($details) == 0)
         {
-        return $lang["accountexpired-reset-not-emailed"]; # Password reset link was not sent because the account has expired
+        return $lang["accountexpired-reset-not-emailed"]; 
         }
     $details = $details[0];
 
@@ -899,7 +893,6 @@ function email_reset_link($email,$newuser=false)
             }
 
         $templatevars['welcome']=i18n_get_translated($welcome);
-        $message = $templatevars['welcome'] . $lang["newlogindetails"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
         if($blockreset)
             {
             $message = $templatevars['welcome'] . "\n\n" . $lang["passwordresetexternalauth"] . "\n\n" . $baseurl . "\n\n" . $lang["username"] . ": " . $templatevars['username'];
@@ -2373,8 +2366,7 @@ function create_password_reset_key($username)
     $resetuniquecode=make_password();
     $password_reset_hash=hash('sha256', date("Ymd") . md5("RS" . $resetuniquecode . $username . $scramble_key));
     ps_query("update user set password_reset_hash = ? where username = ?", array("s", $password_reset_hash, "s", $username));
-    $password_reset_url_key=substr(hash('sha256', date("Ymd") . $password_reset_hash . $username . $scramble_key),0,15);
-    return $password_reset_url_key;
+    return substr(hash('sha256', date("Ymd") . $password_reset_hash . $username . $scramble_key), 0, 15);
     }
     
     
@@ -2678,19 +2670,17 @@ function checkPermission_anonymoususer()
 
     return
         (
-            (
-            isset($anonymous_login)
-            && (
-                (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
-                || (
-                    is_array($anonymous_login)
-                    && array_key_exists($baseurl, $anonymous_login)
-                    && $anonymous_login[$baseurl] == $username
-                   )
-               )
+        isset($anonymous_login)
+        && (
+            (is_string($anonymous_login) && '' != $anonymous_login && $anonymous_login == $username)
+            || (
+                is_array($anonymous_login)
+                && array_key_exists($baseurl, $anonymous_login)
+                && $anonymous_login[$baseurl] == $username
+                )
             )
-            || (isset($anonymous_autouser_group) && $usergroup == $anonymous_autouser_group)
-        );
+        )
+        || (isset($anonymous_autouser_group) && $usergroup == $anonymous_autouser_group);
     }
 
 
@@ -2885,8 +2875,7 @@ function save_usergroup($ref,$groupoptions)
             }
         $sql = "INSERT INTO usergroup (" . implode(",",$sqlcols) . ") VALUES (" . ps_param_insert(count($sqlvals)) . ")";
         ps_query($sql, ps_param_fill($sqlvals, "s"));
-        $newgroup = sql_insert_id();
-        return $newgroup;
+        return sql_insert_id();
         }
     }
 
@@ -2956,7 +2945,7 @@ function set_user_profile($user_ref,$profile_text,$image_path)
         
         # Create profile image - cropped to square from centre.
         $command = $convert_fullpath . ' '. escapeshellarg((!$config_windows && strpos($image_path, ':')!==false ? $extension .':' : '') . $image_path) . " -resize 400x400 -thumbnail 200x200^^ -gravity center -extent 200x200" . " " . escapeshellarg($profile_image_path);
-        $output = run_command($command);
+        run_command($command);
 
         # Store reference to user image.
         ps_query("update user set profile_image = ? where ref = ?", array("s", $profile_image_name, "i", $user_ref));
@@ -3562,15 +3551,14 @@ function setup_command_line_user(array $setoptions = []) : bool
         {
         if(!isset($dummyuserdata[$requiredelement]))
             {
-            $dummyuserdata[$requiredelement] = "";  
+            $dummyuserdata[$requiredelement] = "";
             }
         }
 
     // Override with any settings passed
     foreach($setoptions as $setoption=>$setvalue)
         {
-        $dummyuserdata[$setoption] = $setvalue;   
+        $dummyuserdata[$setoption] = $setvalue;
         }
-    $success = setup_user($dummyuserdata);
-    return $success;
+    return setup_user($dummyuserdata);
     }

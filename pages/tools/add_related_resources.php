@@ -25,7 +25,7 @@ function show_script_help()
     }
 
 // CLI options check
-$csv_path = "";;
+$csv_path = "";
 $dryrun = false;
 $cli_long_options  = array(
     'csv:',
@@ -63,7 +63,7 @@ if(!file_exists($csv_path))
     exit("ERROR: Could not read CSV file. Check file permissions" . PHP_EOL);
     }
 
-// ob_start();
+ob_start();
 setup_command_line_user();
 
 $csvfile = fopen($csv_path,"r");

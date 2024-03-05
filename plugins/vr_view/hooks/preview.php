@@ -53,9 +53,6 @@ function HookVr_viewPreviewcustomflvplay()
     
     if(file_exists($sourcefile))
         {
-        // Get dimensions
-        list($prewidth, $preheight) = @getimagesize($sourcefile);
-
         // We can't use $hide_real_filepath with this plugin
         global $hide_real_filepath;
         $saved_hide_real_filepath = $hide_real_filepath;

@@ -263,7 +263,6 @@ function mix_date($fromdate, $maxoffset=30)
         }
     else
         {
-        $date = new DateTime($fromdate);
         $tstamp = strtotime($fromdate);
         }
 
@@ -665,6 +664,5 @@ function edit_filter_to_restype_permission($filtertext, $usergroup, $existingper
         }
 
     // Reconstruct filter text without this to create new filter
-    $newfiltertext = implode(";",$cleanedrules);
-    return $newfiltertext;
+    return implode(";", $cleanedrules);
     }

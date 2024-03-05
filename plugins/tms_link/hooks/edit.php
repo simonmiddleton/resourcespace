@@ -116,9 +116,7 @@ function HookTms_linkAllAdditionalvalcheck($fields, $fieldsitem)
                 {
                 global $tms_confirm_upload, $lang;
                 $tms_confirm_upload=true;
-                $error=$lang["tms_link_upload_nodata"] . $tms_form_post_id . " " . $lang["tms_link_confirm_upload_nodata"];
-
-                return $error;                      
+                return $lang["tms_link_upload_nodata"] . $tms_form_post_id . " " . $lang["tms_link_confirm_upload_nodata"];
                 }
             }
         else

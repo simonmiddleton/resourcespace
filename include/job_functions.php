@@ -214,8 +214,7 @@ function job_queue_get_jobs($type="", $status=-1, $user="", $job_code="", $job_o
 
     $sql = "SELECT j.ref, j.type, replace(replace(j.job_data,'\r',' '),'\n',' ') as job_data, j.user, j.status, j.start_date, j.success_text, j.failure_text,j.job_code, j.priority, u.username, u.fullname FROM job_queue j LEFT JOIN user u ON u.ref = j.user " . $conditional_sql . " ORDER BY " . $job_order_by . " " . $job_sort . ",start_date ASC";
     if($returnsql){return new PreparedStatementQuery($sql, $parameters);}
-    $jobs=ps_query($sql, $parameters);
-    return $jobs;
+    return ps_query($sql, $parameters);
     }
 
 /**

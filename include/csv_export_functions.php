@@ -53,9 +53,6 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
         $csv_field_headers['original_link'] = $lang['collection_download_original'];
         }
 
-    // Array to store fields that have data, if no data we won't include it
-    $include_fields = array();
-
     for($n=0;$n<count($resourcebatches);$n++)
         {
         $resources_fields_data = array();

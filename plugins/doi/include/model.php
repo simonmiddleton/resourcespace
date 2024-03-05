@@ -66,7 +66,7 @@
      */
     function doi_extract_field_value(&$fields, $name) {
 
-        foreach ($fields as $key => $field) {
+        foreach ($fields as $field) {
             if ($field['name'] === $name) {
                 $value = $field['value'];
                 if (doi_has_content($value)) {
@@ -586,9 +586,7 @@ XML;
         curl_close($ch);
 
         if ($response) {
-            $urls = preg_split('%(\r)?\n%', $response);
-
-            return $urls;
+            return preg_split('%(\r)?\n%', $response);
         }
         else {
             return null;
@@ -640,15 +638,6 @@ XML;
 
         $response = curl_exec($ch);
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        $msgs = [
-            201 => "Created - operation successful",
-            400 => "Bad Request - request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix",
-            401 => "Unauthorized - no login",
-            403 => "Forbidden - login problem, quota exceeded",
-            412 => "Precondition failed - metadata must be uploaded first",
-            500 => "Internal Server Error - server internal error, try later and if problem persists please contact us"
-        ];
 
         $err = ($code != 201);
 
@@ -769,14 +758,6 @@ XML;
 
         $response = curl_exec($ch);
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        $msgs = [
-            201 => "Created - operation successful",
-            400 => "Bad Request - invalid XML, wrong prefix",
-            401 => "Unauthorized - no login",
-            403 => "Forbidden - login problem, quota exceeded",
-            500 => "Internal Server Error - server internal error, try later and if problem persists please contact us"
-        ];
 
         $err = ($code != 201);
 

@@ -314,7 +314,6 @@ $corefields = array(
     "BASE" => array(
         'filename_field',
         'view_title_field',
-        'display_field_below_preview',
         'date_field',
         'reset_date_field',
         'download_filename_field',

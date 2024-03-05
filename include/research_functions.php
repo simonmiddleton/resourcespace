@@ -156,7 +156,6 @@ function save_research_request($ref)
         {
         $requesting_user=ps_query("SELECT u.email, u.ref FROM user u,research_request r WHERE u.ref=r.user AND r.ref = ?", $parameters);
         $requesting_user = $requesting_user[0];
-        $message="";
         if ($newstatus==1) 
             {
             $assignedmessage = new ResourceSpaceUserNotification();

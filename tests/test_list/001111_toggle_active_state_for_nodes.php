@@ -92,6 +92,13 @@ $use_cases = [
         'input' => ['refs' => [$ct_opt_a_a1]],
         'expected' => [$ct_opt_a_a1 => 1],
     ],
+    [
+        'name' => 'Toggling a child option should check a parent ( is not disabled',
+        'reset_state' => true,
+        'setup' => fn() => update_node_active_state([$ct_opt_a_a1], false),
+        'input' => ['refs' => [$ct_opt_a_a1]],
+        'expected' => [$ct_opt_a_a1 => 1],
+    ],
 /*
 A
     A.1
@@ -109,6 +116,7 @@ C
 | 0                    | n/a - root     | yes     | 1                        | no                     |
 | 1                    | 1 - level 1    | yes     | 0                        | yes                    |
 | 0                    | 1 - level 1    | yes     | 1                        | no                     |
+| 0                    | 0 - level 1    | no      | 0                        | yes                    |
 
 */
 ];

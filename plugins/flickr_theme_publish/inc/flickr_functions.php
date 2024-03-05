@@ -293,9 +293,8 @@ function flickr_get_photoset()
             $photosetid=$photoset["id"];    
             }
         }
-        
-    $photoset_array=array($photoset_name,$photosetid);
-    return $photoset_array;
+
+    return array($photoset_name, $photosetid);
     }
 
 

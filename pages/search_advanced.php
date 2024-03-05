@@ -574,7 +574,6 @@ if (!hook('advsearchallfields')) { ?>
 <div class="clearerleft"> </div>
 </div>
 <?php }
-if (!hook('advsearchdate')) {
 if (!$daterange_search)
     {
     ?>
@@ -612,7 +611,7 @@ if (!$daterange_search)
     </select>
     <div class="clearerleft"> </div>
     </div>
-<?php }} ?>
+<?php } ?>
 
 
 <?php hook('advsearchaddfields'); ?>

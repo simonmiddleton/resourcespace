@@ -193,6 +193,11 @@ function delete_node($ref)
 
     $returned_node = array();
     get_node($ref, $returned_node, false);
+    if (empty($returned_node))
+        {
+        // Node has already been removed.
+        return;
+        }
     $resource_type_field = $returned_node['resource_type_field'];
     $field_data = get_resource_type_field($resource_type_field);
 
@@ -1026,7 +1031,6 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
     debug("add_node_keyword: node:" . $node . ", keyword: " . $keyword . ", position: " . $position . ", normalize:" . ($normalize?"TRUE":"FALSE") . ", stem:" . ($stem?"TRUE":"FALSE"));
     if($normalize)
         {
-        $original_keyword = $keyword;
         $kworig          = normalize_keyword($keyword);
         // if $keyword has changed after normalizing it, then index the original value as well
         if($keyword != $kworig && $unnormalized_index)
@@ -1333,7 +1337,6 @@ function add_resource_nodes(int $resourceid,$nodes=array(), $checkperms = true, 
 
         if($resourcedata["lock_user"] > 0 && $resourcedata["lock_user"] != $userref)
             {
-            $error = get_resource_lock_message($resourcedata["lock_user"]);
             return false;
             }
         }
@@ -1395,7 +1398,6 @@ function add_resource_nodes_multi($resources=array(),$nodes=array(), $checkperms
             
             if($resourcedata["lock_user"] > 0 && $resourcedata["lock_user"] != $userref)
                 {
-                $error = get_resource_lock_message($resourcedata["lock_user"]);
                 return false;
                 }
             }
@@ -1477,8 +1479,8 @@ function get_resource_nodes($resource, $resource_type_field = null, $detailed = 
         {
         $query .= " ORDER BY n.resource_type_field, n.order_by ASC";
         }
-    $return = $detailed ? ps_query($query, $params) : ps_array($query, $params);
-    return $return;
+
+    return $detailed ? ps_query($query, $params) : ps_array($query, $params);
     }
 
 
@@ -2749,13 +2751,6 @@ function add_sql_node_language(&$sql_select,&$sql_params,string $alias = "node")
     {
     global $language,$defaultlanguage;
 
-    $asdefaultlanguage=$defaultlanguage;
-
-    if (!isset($asdefaultlanguage))
-        {
-        $asdefaultlanguage='en';
-        }
-
     // Use language specified, if not use default
     isset($language) ? $language_in_use = $language : $language_in_use = $defaultlanguage;
 
@@ -2852,6 +2847,7 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryr
     $allrestyperefs = array_column($allrestypes,"ref");
     $allfields = get_resource_type_fields();
     $fieldglobals = array_column($allfields,"global","ref");
+    $joined_fields = get_resource_table_joins();
 
     $restypes = array_filter($restypes,function ($val) {return $val > 0;});
     $fields = array_filter($fields,function ($val) {return $val > 0;});
@@ -2894,6 +2890,15 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryr
                 $params = array_merge(["i",$restype],ps_param_fill($remove_fields,"i"));
                 ps_query($query,$params);
                 $deletedrows += sql_affected_rows();
+
+                # Also remove data in joined fields.
+                foreach ($remove_fields as $check_joined_field)
+                    {
+                    if (in_array($check_joined_field, $joined_fields))
+                        {
+                        ps_query("UPDATE resource SET `field" . $check_joined_field . "` = null WHERE resource_type = ?", array("i", $restype));
+                        }
+                    }
                 }
             }
         }

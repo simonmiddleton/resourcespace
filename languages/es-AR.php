@@ -937,7 +937,6 @@ $lang["pluploader_usejava"]="Use el cargador de archivos java";
 $lang["pluploader_warning"]="Tu navegador web, puede no soportar cargas de archivos muy grandes. Si tenes problemas, intentá actualizarlo o utilizar los links de abajo";
 $lang["popupblocked"]="El popup ha sido bloqueado por tu navegador web.";
 $lang["preparingzip"]="Preparando...";
-$lang["preview_all"]="Previsualizar todo";
 $lang["previewpage"]="Previsualizar página";
 $lang["progress"]="Progreso";
 $lang["property-allow_preview"]="Permitir vista previa";

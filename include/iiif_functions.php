@@ -231,9 +231,9 @@ final class IIIFRequest {
     public function getCanvases($sequencekeys=false): void
         {
         $canvases = [];
-        foreach ($this->searchresults as $iiif_result)
+        foreach ($this->searchresults as $index => $iiif_result)
             {
-            $size = (strtolower((string)$iiif_result["file_extension"]) != "jpg") ? "hpr" : "";
+            $size = is_jpeg_extension($iiif_result["file_extension"] ?? "") ? '' : "hpr";
             $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
 
             if(!file_exists($img_path))
@@ -244,16 +244,15 @@ final class IIIFRequest {
                     {
                     $this->processing["resource"] = $pullresource["ref"];
                     $this->processing["size_info"] = [
-                        'identifier' => (is_jpeg_extension($pullresource["file_extension"]) ? 'hpr' : ''),
+                        'identifier' => (is_jpeg_extension($pullresource["file_extension"] ?? "") ? '' : 'hpr'),
                         'return_height_width' => false,
                         ];
                     }
                 }
-            $position = $iiif_result["iiif_position"];
-            $canvas = $this->generateCanvas($position);
+            $canvas = $this->generateCanvas($index);
             if($canvas)
                 {
-                $canvases[$position] = $canvas;
+                $canvases[$index] = $canvas;
                 }
             }
 
@@ -294,17 +293,22 @@ final class IIIFRequest {
         $thumbnail["format"] = "image/jpeg";
 
         // Get the size of the images
-        if ((list($tw,$th) = @getimagesize($img_path))!==false)
+        $GLOBALS["use_error_exception"] = true;
+        try
             {
+            list($tw,$th) = getimagesize($img_path);
             $thumbnail["height"] = (int) $th;
-            $thumbnail["width"] = (int) $tw;
+            $thumbnail["width"] = (int) $tw;  
             }
-        else
+        catch (Exception $e)
             {
+            $returned_error = $e->getMessage();
+            debug("getThumbnail: Unable to get image size for file: $img_path  -  $returned_error");
             // Use defaults
             $thumbnail["height"] = 150;
             $thumbnail["width"] = 150;
             }
+        unset($GLOBALS["use_error_exception"]);
 
         $thumbnail["service"] = [$this->generateImageService($resourceid)];
         return $thumbnail;
@@ -345,7 +349,7 @@ final class IIIFRequest {
             if($pullresource !== false)
                 {
                 $resource = $pullresource["ref"];
-                if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"]))
+                if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"] ?? ""))
                     {
                     // If the related resource is a JPG file then no 'hpr' size will be available
                     $size = "";
@@ -457,7 +461,8 @@ final class IIIFRequest {
         // The manifest data should be the same for all resources that are returned.
         // This is the default when using the tms_link plugin for TMS integration.
         // Therefore we use the data from the first returned result.
-        $this->data = get_resource_field_data($this->searchresults[0]["ref"]);
+        $dataresource = reset($this->searchresults);
+        $this->data = get_resource_field_data($dataresource["ref"]);
 
         // Label property
         foreach($this->searchresults as $iiif_result)
@@ -496,7 +501,7 @@ final class IIIFRequest {
         $this->generateMetadata();
         if($this->license_field != 0)
             {
-            $licensevals = get_data_by_field($this->searchresults[0]["ref"], $this->license_field,false);
+            $licensevals = get_data_by_field($dataresource["ref"], $this->license_field,false);
             if(count($licensevals) > 0)
                 {
                 // Get all field title translations
@@ -530,7 +535,7 @@ final class IIIFRequest {
         foreach($this->searchresults as $iiif_result)
             {
             // Keep on until we find an image
-            $iiif_thumb = $this->getThumbnail($this->searchresults[0]["ref"]);
+            $iiif_thumb = $this->getThumbnail($dataresource["ref"]);
             if($iiif_thumb)
                 {
                 $this->response["thumbnail"][] = $iiif_thumb;
@@ -553,7 +558,7 @@ final class IIIFRequest {
      *
      * @param int           $position   The canvas identifier
      *
-     * @return array|bool   canvas      Canvas data for presentation API response, false if no image is available
+     * @return array|bool   $canvas     Canvas data for presentation API response, false if no image is available
      *
      */
     public function generateCanvas(int $position)
@@ -561,8 +566,11 @@ final class IIIFRequest {
         // This is essentially a resource
         // {scheme}://{host}/{prefix}/{identifier}/canvas/{name}
         $canvas = [];
-        $canvasidx = array_search($position,array_column($this->searchresults,"iiif_position"));
-        $resource = $this->searchresults[$canvasidx];
+        $resource = $this->searchresults[$position] ?? [];
+        if(empty($resource)) {
+            debug("IIIF: generateCanvas() Not a valid canvas identifier:" . $position);
+            return false;
+        }
         $useimage = $resource;
         if ((int)$resource['has_image'] === 0)
             {
@@ -574,25 +582,27 @@ final class IIIFRequest {
                 $useimage = $pullresource;
                 }
             }
-        $size = is_jpeg_extension((string) $useimage["file_extension"]) ? "" : "hpr";
+        $size = is_jpeg_extension((string) $useimage["file_extension"] ?? "") ? "" : "hpr";
         $img_path = get_resource_path($useimage["ref"],true,$size,false);
         if(!file_exists($img_path))
             {
-            return;
+            debug("IIIF: generateCanvas() No image available for identifier:" . $position);
+            return false;
             }
-        $position_field=get_resource_type_field($this->sequence_field);
-        $position = $resource["iiif_position"];
-        $position_prefix = "";
+        $sequence_field = get_resource_type_field($this->sequence_field);
+        $sequenceid = $resource["iiif_position"];
+        debug("IIIF: Found resource " . $resource['ref'] . " in position " . $position . ", sequence ID: " . $sequenceid);
+        $sequence_prefix = "";
         if (isset($this->iiif_sequence_prefix))
             {
-            $position_prefix  = $this->iiif_sequence_prefix === "" ? $position_field["title"] . " " : $this->iiif_sequence_prefix;
+            $sequence_prefix  = $this->iiif_sequence_prefix === "" ? $sequence_field["title"] . " " : $this->iiif_sequence_prefix;
             }
-        $position_val = $resource["field" . $this->sequence_field] ?? get_data_by_field($resource["ref"], $this->sequence_field);
+        $sequence_val = $sequenceid;
         $canvas["id"] = $this->rooturl . $this->request["id"] . "/canvas/" . $position;
         $canvas["type"] = "Canvas";
         $canvas["label"] = [];
-        $arr_18n_pos_labels = i18n_get_translations($position_val);
-        $arr_18n_pos_prefixes = i18n_get_translations($position_prefix);
+        $arr_18n_pos_labels = i18n_get_translations($sequence_val);
+        $arr_18n_pos_prefixes = i18n_get_translations($sequence_prefix);
         if(count($arr_18n_pos_prefixes) > 1 || count($arr_18n_pos_labels) > 1)
             {
             foreach(array_unique(array_merge(array_keys($arr_18n_pos_prefixes),array_keys($arr_18n_pos_labels))) as $langcode)
@@ -604,7 +614,7 @@ final class IIIFRequest {
             }
         else
             {
-            $canvas["label"]["none"] = [$position_prefix . $position_val];    
+            $canvas["label"]["none"] = [$sequence_prefix . $sequence_val];    
             }
 
         // Get the size of the images
@@ -666,8 +676,8 @@ final class IIIFRequest {
             {
             if(in_array($iiif_data_row["type"],$GLOBALS["FIXED_LIST_FIELD_TYPES"]))
                 {
-                // Don't use the data as this has already concatentated the translations, add an entry for each node translation by building up a new array
-                $resnodes = get_resource_nodes($this->searchresults[0]["ref"],$iiif_data_row["resource_type_field"],true);
+                // Don't use the data as this has already concatenated the translations, add an entry for each node translation by building up a new array
+                $resnodes = get_resource_nodes(reset($this->searchresults)["ref"],$iiif_data_row["resource_type_field"],true);
                 if(count($resnodes) == 0)
                     {
                     continue;
@@ -880,7 +890,7 @@ final class IIIFRequest {
                         $this->regiony = (int)$region_filtered[1];
                         $this->regionw = (int)$region_filtered[2];
                         $this->regionh = (int)$region_filtered[3];
-                        debug("IIIF region requested: x:" . $this->regionx . ", y:" . $this->regiony . ", w:" .  $this->regionw . ", h:" . $this->regionh);
+                        debug("IIIF: region requested: x:" . $this->regionx . ", y:" . $this->regiony . ", w:" .  $this->regionw . ", h:" . $this->regionh);
                         if(fmod($this->regionx,$this->preview_tile_size) != 0 || fmod($this->regiony,$this->preview_tile_size) != 0)
                             {
                             // Invalid region
@@ -915,7 +925,7 @@ final class IIIFRequest {
                             }
 
                         $this->request["getsize"] = "tile_" . $this->regionx . "_" . $this->regiony . "_". $this->regionw . "_". $this->regionh;
-                        debug("IIIF" . $this->regionx . "_" . $this->regiony . "_". $this->regionw . "_". $this->regionh);
+                        debug("IIIF: " . $this->regionx . "_" . $this->regiony . "_". $this->regionw . "_". $this->regionh);
                         }
                     else
                         {
@@ -930,7 +940,7 @@ final class IIIFRequest {
                         // Establish which preview size this request relates to
                         foreach($availsizes  as $availsize)
                             {
-                            debug("IIIF - checking available size for resource " . $resource["ref"]  . ". Size '" . $availsize["id"] . "': " . $availsize["width"] . "x" . $availsize["height"] . ". Requested size: " . $this->getwidth . "x" . $this->getheight);
+                            debug("IIIF: checking available size for resource " . $resource["ref"]  . ". Size '" . $availsize["id"] . "': " . $availsize["width"] . "x" . $availsize["height"] . ". Requested size: " . $this->getwidth . "x" . $this->getheight);
                             if($availsize["width"] == $this->getwidth && $availsize["height"] == $this->getheight)
                                 {
                                 $this->request["getsize"] = $availsize["id"];
@@ -973,7 +983,7 @@ final class IIIFRequest {
                         if($this->max_width >= $this->imagewidth && $this->max_height >= $this->imageheight)
                             {
                             $this->request["getext"] = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
-                            $this->request["getsize"] = is_jpeg_extension($resource["file_extension"]) ? "" : "hpr";
+                            $this->request["getsize"] = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
                             }
                         else
                             {
@@ -1031,7 +1041,7 @@ final class IIIFRequest {
                             }
                         catch (Exception $e)
                             {
-                            debug("IIIF error: " . $e->getMessage());
+                            debug("IIIF: error - " . $e->getMessage());
                             $imgfound = false;
                             }
                         unset($GLOBALS["use_error_exception"]);
@@ -1118,30 +1128,31 @@ final class IIIFRequest {
                 {
                 if(isset($this->searchresults[$n]["field" . $this->sequence_field]))
                     {
-                    $position = $this->searchresults[$n]["field" . $this->sequence_field];
+                    $sequenceid = $this->searchresults[$n]["field" . $this->sequence_field];
                     }
                 else
                     {
-                    $position = get_data_by_field($this->searchresults[$n]["ref"],$this->sequence_field);
+                    $sequenceid = get_data_by_field($this->searchresults[$n]["ref"],$this->sequence_field);
                     }
 
-                if(!isset($position) || trim($position) == "")
+                if(!isset($sequenceid) || trim($sequenceid) == "")
                     {
                     // Processing resources without a sequence position separately
-                    debug("iiif position empty for resource ref " . $this->searchresults[$n]["ref"]);
+                    debug("IIIF:  position empty for resource ref " . $this->searchresults[$n]["ref"]);
                     $iiif_results_without_position[] = $this->searchresults[$n];
                     continue;
                     }
 
-                debug("iiif position $position found in resource ref " . $this->searchresults[$n]["ref"]);
-                $this->searchresults[$n]["iiif_position"] = $position;
+                debug("IIIF:  position $sequenceid found in resource ref " . $this->searchresults[$n]["ref"]);
+                $this->searchresults[$n]["iiif_position"] = $sequenceid;
                 $iiif_results_with_position[] = $this->searchresults[$n];
                 }
             else
                 {
-                $position = $n;
-                debug("iiif position $position assigned to resource ref " . $this->searchresults[$n]["ref"]);
-                $this->searchresults[$n]["iiif_position"] = $position;
+                $sequenceid = $n;
+                debug("IIIF:  position $sequenceid assigned to resource ref " . $this->searchresults[$n]["ref"]);
+                $this->searchresults[$n]["iiif_position"] = $sequenceid;
+                $iiif_results_with_position[] = $this->searchresults[$n];
                 }
             }
 
@@ -1157,6 +1168,10 @@ final class IIIFRequest {
                     {
                     return $a['iiif_position'] - $b['iiif_position'];
                     }
+                elseif(is_int_loose($a['iiif_position']) || is_int_loose($b['iiif_position']))
+                    {
+                    return is_int_loose($a['iiif_position']) ? 1 : -1; // Put strings before numbers
+                    }
                 return strcmp($a['iiif_position'],$b['iiif_position']);
                 });
 
@@ -1169,13 +1184,25 @@ final class IIIFRequest {
                 }
 
             $this->searchresults = array_merge($iiif_results_with_position, $iiif_results_without_position);
-            foreach ($this->searchresults as $result_key => $result_val)
+            $sorted_final = [];
+            $maxid = 0;
+            foreach ($this->searchresults as $index => $resource)
                 {
                 # Update iiif_position after sorting using unique array key, removing potential user entered duplicates in sequence field.
-                # getCanvases() requires unique iiif_position values.
-                $this->searchresults[$result_key]['iiif_position'] = $result_key;
-                debug("final iiif position $result_key given for resource ref " . $this->searchresults[$result_key]["ref"]);
+                # iiif_get_canvases() requires unique iiif_position values.
+                $resourcepos = $resource['iiif_position'] ?? ($maxid + 1);
+                while(isset($sorted_final[$resourcepos]))
+                    {                                
+                    $resourcepos++;
+                    }
+                
+                debug("IIIF: final position $index given for resource ref " . $resource["ref"] . " sequence id: " . $resourcepos);
+                $sorted_final[$index] = $resource;
+                $sorted_final[$index]["iiif_position"] = $resourcepos;
+                $maxid = max((int) $resourcepos,$maxid);
                 }
+
+            $this->searchresults = $sorted_final;
             }
         }
 
@@ -1187,22 +1214,17 @@ final class IIIFRequest {
      * @return void
      *
      */
-    public function getResourceFromPosition($position): void
-        {
+    public function getResourceFromPosition($position): void {
         $this->processing = [];
-        foreach($this->searchresults as $iiif_result)
-            {
-            if($iiif_result["iiif_position"] == $position)
-                {
-                $this->processing["resource"] = $iiif_result["ref"];
-                $this->processing["size_info"] = [
-                    'identifier' => (strtolower($iiif_result['file_extension']) != 'jpg') ? 'hpr' : '',
-                    'return_height_width' => false,
-                    ];
-                break;
-                }
-            }
+        // Need to find the resourceid the annotation is linked to
+        if(isset($this->searchresults[$position])) {
+            $this->processing["resource"] = $this->searchresults[$position]["ref"];
+            $this->processing["size_info"] = array(
+                'identifier' => (strtolower($this->searchresults[$position]['file_extension'] ?? "") != 'jpg') ? 'hpr' : '',
+                'return_height_width' => false,
+            );                               
         }
+    }
 
     /**
      * Generate the image API data
@@ -1293,42 +1315,41 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     global $rooturl,$iiif_sequence_field;   
             
     $canvases = array();
-    foreach ($iiif_results as $iiif_result)
+    foreach ($iiif_results as $index=>$iiif_result)
         {
         $useimage = $iiif_result;
         if ((int)$iiif_result['has_image'] === 0)
             {
             // If configured, try and use a preview from a related resource
-            debug("No image for IIIF request - check for related resources");
+            debug("IIIF: No image for IIIF request - check for related resources");
             $pullresource = related_resource_pull($iiif_result);
             if($pullresource !== false)
                 {
                 $useimage = $pullresource;
                 }
             }
-        $size = is_jpeg_extension((string) $useimage["file_extension"]) ? "" : "hpr";
+        $size = is_jpeg_extension($useimage["file_extension"] ?? "") ? "" : "hpr";
         $img_path = get_resource_path($useimage["ref"],true,$size,false);
         if(!file_exists($img_path))
             {
             continue;
             }
-            
-        $position = $iiif_result["iiif_position"];
-        $position_field = get_resource_type_field($iiif_sequence_field);
-        $position_prefix = "";
+        $sequenceid = $iiif_result["iiif_position"];
+        $sequence_field = get_resource_type_field($iiif_sequence_field);
+        $sequence_prefix = "";
         if (isset($GLOBALS["iiif_sequence_prefix"]))
             {
-            $position_prefix  = $GLOBALS["iiif_sequence_prefix"] === "" ? $position_field["title"] . " " : $GLOBALS["iiif_sequence_prefix"];
+            $sequence_prefix  = $GLOBALS["iiif_sequence_prefix"] === "" ? $sequence_field["title"] . " " : $GLOBALS["iiif_sequence_prefix"];
             }
 
-        $canvases[$position]["@id"] = $rooturl . $identifier . "/canvas/" . $position;
-        $canvases[$position]["@type"] = "sc:Canvas";
-        $canvases[$position]["label"] = $position_prefix . $position;
+        $canvases[$index]["@id"] = $rooturl . $identifier . "/canvas/" . $index;
+        $canvases[$index]["@type"] = "sc:Canvas";
+        $canvases[$index]["label"] = $sequence_prefix . $sequenceid;
         
         // Get the size of the images
         $image_size = get_original_imagesize($useimage["ref"],$img_path);
-        $canvases[$position]["height"] = intval($image_size[2]);
-        $canvases[$position]["width"] = intval($image_size[1]);
+        $canvases[$index]["height"] = intval($image_size[2]);
+        $canvases[$index]["width"] = intval($image_size[1]);
                 
         // "If the largest image's dimensions are less than 1200 pixels on either edge, then the canvas dimensions 
         // should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
@@ -1338,15 +1359,15 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
             $image_size[2] = $image_size[2] * 2;
             }
         
-        $canvases[$position]["thumbnail"] = iiif_get_thumbnail($useimage["ref"]);
+        $canvases[$index]["thumbnail"] = iiif_get_thumbnail($useimage["ref"]);
         
         // Add image (only 1 per canvas currently supported)
-        $canvases[$position]["images"] = array();
+        $canvases[$index]["images"] = array();
         $size_info = array(
             'identifier' => $size,
             'return_height_width' => false,
         );
-        $canvases[$position]["images"][] = iiif_get_image($identifier, $useimage["ref"], $position, $size_info);
+        $canvases[$index]["images"][] = iiif_get_image($identifier, $useimage["ref"], $index, $size_info);
         }
     
     if($sequencekeys)
@@ -1400,19 +1421,24 @@ function iiif_get_thumbnail($resourceid)
     $thumbnail["@id"] = $rootimageurl . $resourceid . "/full/thm/0/default.jpg";
     $thumbnail["@type"] = "dctypes:Image";
     
-     // Get the size of the images
-    if ((list($tw,$th) = @getimagesize($img_path))!==false)
+    // Get the size of the images
+    $GLOBALS["use_error_exception"] = true;
+    try
         {
+        list($tw,$th) = getimagesize($img_path);
         $thumbnail["height"] = (int) $th;
         $thumbnail["width"] = (int) $tw;   
         }
-    else
+    catch (Exception $e)
         {
+        $returned_error = $e->getMessage();
+        debug("getThumbnail: Unable to get image size for file: $img_path  -  $returned_error");
         // Use defaults
         $thumbnail["height"] = 150;
-        $thumbnail["width"] = 150;    
+        $thumbnail["width"] = 150;
         }
-            
+    unset($GLOBALS["use_error_exception"]);
+                 
     $thumbnail["format"] = "image/jpeg";
     
     $thumbnail["service"] =array();
@@ -1502,7 +1528,6 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
  */
 function iiif_error($errorcode = 404, $errors = array())
     {
-    global $iiif_debug;
     if(function_exists("http_response_code"))
         {
         http_response_code($errorcode); # Send error status

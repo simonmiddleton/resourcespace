@@ -280,7 +280,6 @@ function check_view_display_condition($fields,$n,$fields_all)
     $displaycondition=true;
     if ($fields[$n]["display_condition"]!="")
         {
-        $fieldstocheck=array(); #' Set up array to use in jQuery script function
         $s=explode(";",$fields[$n]["display_condition"]);
         $condref=0;
         foreach ($s as $condition) # Check each condition
@@ -402,7 +401,7 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
         {
         if ($remove_original)
             {
-            $delete=ps_query("delete from resource_dimensions where resource= ?", ['i', $ref]);
+            ps_query("DELETE FROM resource_dimensions WHERE resource= ?", ['i', $ref]);
             }
         $wh=explode("x",$dimensions_resolution_unit[0]);
         if(count($wh)>1)
@@ -435,7 +434,7 @@ function exiftool_resolution_calc($file_path, $ref, $remove_original = false)
             $sql_insert.=")";
             $sql_values = "values (". ps_param_insert((count($sql_params)/2)) .")";
             $sql=$sql_insert.$sql_values;
-            $wait=ps_query($sql, $sql_params);
+            ps_query($sql, $sql_params);
             }
         }
     }

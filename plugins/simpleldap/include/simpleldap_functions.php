@@ -102,7 +102,6 @@ function simpleldap_authenticate($username,$password)
                 }
             else
                 {
-                $bindsuccess=true;
                 break;
                 }
             }

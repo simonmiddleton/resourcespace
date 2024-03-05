@@ -55,9 +55,6 @@ function tms_convert_value($value, $key, array $module)
             }
         }
 
-    // Default to the old way of detecting the encoding if we can't figure out the expected encoding of the tms column data.
-    $encoding = mb_detect_encoding((string) $value, getEncodingOrder(), true);
-
     // Check if field is defined as UTF-16 or it's not an UTF-8 field
     if(in_array($key, $GLOBALS['tms_link_text_columns']) || !in_array($key, $GLOBALS['tms_link_numeric_columns']))
         {
@@ -226,15 +223,6 @@ function tms_link_test()
 
     if($conn)
         {
-        // Add normal value fields
-        $columnsql = implode(", ", $tms_link_numeric_columns);
-        
-        // Add SQL to get back text fields as VARBINARY(MAX) so we can sort out encoding later
-        foreach ($tms_link_text_columns as $tms_link_text_column)
-            {
-            $columnsql.=", CAST (" . $tms_link_text_column . " AS VARBINARY(MAX)) " . $tms_link_text_column;
-            }
-
         $tmssql = "SELECT TOP 10 * FROM " . $tms_link_table_name . " ;";
 
         // Execute the query to get the data from TMS
@@ -280,7 +268,6 @@ function tms_add_mediaxref($mediamasterid,$tms_object_id,$create=true)
 
   if(!$mediaxrefresult)
     {
-    $errormessage=odbc_errormsg();
     return false;
     }
   $mediaxrefs=array();
@@ -303,8 +290,7 @@ function tms_add_mediaxref($mediamasterid,$tms_object_id,$create=true)
       $errormessage=odbc_errormsg();
       exit($errormessage);
       }
-    $mediaxref=tms_add_mediaxref($mediamasterid,$tms_object_id,false);
-    return $mediaxref;    
+    return tms_add_mediaxref($mediamasterid, $tms_object_id, false);
     }
   else
     {
@@ -521,11 +507,10 @@ function tms_get_mediamasterid(bool $create=true,int $resource=null)
     if(!$tmsinsert)
       {
       $errormessage=odbc_errormsg();
-      debug("tms_link: ERROR = " . $errormessage);  
+      debug("tms_link: ERROR = " . $errormessage);
       return false;
       }
-    $newmasterid=tms_get_mediamasterid(false,$resource);
-    return $newmasterid;
+    return tms_get_mediamasterid(false, $resource);
     }
   else  
     {
@@ -565,15 +550,14 @@ function tms_get_renditionid($mediamasterid,$resourceid,$create=true)
     $tmsinsert=odbc_exec($conn,$tmssql);
     if(!$tmsinsert)
       {
-      debug("tms_link: SQL = " . $tmssql);  
+      debug("tms_link: SQL = " . $tmssql);
       $errormessage=odbc_errormsg();
-      debug("tms_link: ERROR = " . $errormessage);  
+      debug("tms_link: ERROR = " . $errormessage);
       return false;
       }
-    $renditionid=tms_get_renditionid($mediamasterid,$resourceid,false);
-    return $renditionid;
+    return tms_get_renditionid($mediamasterid, $resourceid, false);
     }
-  else  
+  else
     {
     return false;
     }
@@ -615,18 +599,17 @@ function tms_get_mediapathid($path,$create=true)
     $tmsinsert=odbc_exec($conn,$tmssql);
     if(!$tmsinsert)
       {
-      debug("tms_link: SQL = " . $tmssql); 
-      $errormessage=odbc_errormsg();    
-      debug("tms_link: ERROR = " . $errormessage); 
+      debug("tms_link: SQL = " . $tmssql);
+      $errormessage=odbc_errormsg();
+      debug("tms_link: ERROR = " . $errormessage);
       return false;
       }
-    $newpathid=tms_get_mediapathid($path,false);
-    return $newpathid;
+    return tms_get_mediapathid($path, false);
     }
   
   }
 
-  
+
 function tms_update_media_rendition($mediamasterid,$mediafileid)
   {
   global $conn;
@@ -708,7 +691,6 @@ function tms_add_mediafile($renditionid,$pathid,$filepath,$relfilepath,$create=t
 
   if(!$mediafileresult)
     {
-    $errormessage=odbc_errormsg();
     return false;
     }
   $mediafileids=array();
@@ -741,9 +723,8 @@ function tms_add_mediafile($renditionid,$pathid,$filepath,$relfilepath,$create=t
       {
       $errormessage=odbc_errormsg();
       exit($errormessage);
-      }  
-    $mediafileid=tms_add_mediafile($renditionid,$pathid,$filepath,$relfilepath,false);
-    return $mediafileid;    
+      }
+    return tms_add_mediafile($renditionid, $pathid, $filepath, $relfilepath, false);
     }
   else
     {

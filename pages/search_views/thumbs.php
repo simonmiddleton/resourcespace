@@ -150,6 +150,7 @@ if (!hook("renderresultthumb"))
                 {
                 ?>
                 <img border=0 
+                    alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
                     src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" 
                     style="margin-top:<?php echo $display == "xlthumbs" ? "90px" : "35px"; ?>;"/>
                 <?php 
@@ -253,10 +254,7 @@ if (!hook("renderresultthumb"))
 <?php 
                             } //end link
                         echo format_display_field($value);
-                        if ($show_extension_in_search) 
-                            { 
-                            echo " " . str_replace_formatted_placeholder("%extension", $result[$n]["file_extension"], $lang["fileextension-inside-brackets"]);
-                            }
+                        
                         if ($x==0)
                             { // add link if necessary ?>
                             </a>

@@ -28,24 +28,24 @@ function HookFormat_chooserAllGetdownloadurl($ref, $size, $ext, $page = 1, $alte
         {return false;}
     
     $profile = getval('profile' , null);
-    if (!empty($profile))
-        {
+    if (!empty($profile)) {
         $url_qs['profile'] = $profile;
-        }
-    else
-        {
-        $path = get_resource_path($ref, true, $size, false, $ext, -1, $page,$size=="scr" && checkperm("w") && $alternative==-1, '', $alternative);
+    } else {
+        $path = get_resource_path($ref, true, $size, false, $ext, -1, $page, $size=="scr" && checkperm("w") && $alternative == -1, '', $alternative);
         // We can use the existing previews unless we need to preserve the colour profiles,
         // these are likely to have been removed from scr size and below.
         // Alternative files not being converted can also use the existing file
-        if (file_exists($path) 
-            && (!$imagemagick_preserve_profiles 
-                || in_array($size,array("hpr","lpr")) 
+        if (
+            file_exists($path) 
+            && (
+                !$imagemagick_preserve_profiles 
+                || in_array($size, array("hpr", "lpr")) 
                 || $alternative !== -1
-                )
             )
-        return false;
+        ) {
+            return false;
         }
+    }
     
     return generateURL($baseurl_short . 'plugins/format_chooser/pages/convert.php', $url_qs);
     }

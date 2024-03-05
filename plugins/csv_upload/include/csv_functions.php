@@ -24,8 +24,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     $search_all_workflow_states_cache = $search_all_workflow_states;
     $search_all_workflow_states=true;
 
-    $workflow_states = get_editable_states($userref);
-
     if(!file_exists($filename))
         {
         array_push ($messages,str_replace("%%FILE%%", $filename,$lang["csv_upload_error_file_missing"]));
@@ -525,7 +523,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 {
                 // For category trees user must be using the same language as the CSV
                 $currentoptions = array();
-                $field_nodes   = $allfields[$fieldid]["nodes"];
                 $node_options = $allfields[$fieldid]["node_options"];
                 $node_trans_arr[$fieldid] = array();
                 foreach($node_options as $noderef => $nodestring)
@@ -538,8 +535,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             elseif (in_array($field_type,$FIXED_LIST_FIELD_TYPES))
                 {
                 // Get all current field options, including translations
-                
-                $field_nodes   = $allfields[$fieldid]["nodes"];
                 $node_options = $allfields[$fieldid]["node_options"];
                 $currentoptions = $allfields[$fieldid]["current_options"];
                 }
@@ -585,8 +580,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     {
                     $cell_value_array=array();
                     }
-
-            $update_dynamic_field=false;
 
             # validate option against multiple option list 
             foreach ($cell_value_array as $cell_value_item)
@@ -716,7 +709,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
                         if($cell_value == "")
                             {
-                            $nodes_to_remove = $current_field_nodes;
                             break;
                             }
                         if(strpos($cell_value,",") !== false)
@@ -733,7 +725,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                         $daterangeendnode   = set_node(null, $fieldid, isset($rangedates[1])? $rangedates[1] : "", null, null);
 
                         // get latest list of nodes, in case new nodes added with set_node() above
-                        $field_nodes   = $allfields[$fieldid]["nodes"];
                         $node_options = $allfields[$fieldid]["node_options"];
 
                         $node_trans_arr[$fieldid][$daterangestartnode]  = $rangedates[0];
@@ -790,7 +781,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
                     if(count($nodes_to_add) > 0 || count($nodes_to_remove) > 0)
                         {
-                        $new_nodes_val = "";
                         delete_resource_nodes($resource_id, $nodes_to_remove);
 
                         if (count($nodes_to_add) > 0 && in_array($field_type, array(FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS)))
@@ -902,7 +892,6 @@ function csv_upload_get_info($filename, &$messages)
     global $lang;
 
     $file=fopen($filename,'r');
-    $line_count=0;
 
     if (($headers = fgetcsv($file))==false)
         {
