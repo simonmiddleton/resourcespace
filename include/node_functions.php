@@ -9,10 +9,10 @@
 * @param  string   $name                  Node name to be used (international)
 * @param  integer  $parent                ID of the parent of this node (null for non trees)
 * @param  integer  $order_by              Value of the order in the list (e.g. 10). To automatically pick next order by use ''.
-* @param  bool     $active                Is the node active?
+*
 * @return boolean|integer
 */
-function set_node($ref, $resource_type_field, $name, $parent, $order_by, bool $active = true)
+function set_node($ref, $resource_type_field, $name, $parent, $order_by)
     {
     global $FIXED_LIST_FIELD_TYPES;
     if(!is_null($name))
@@ -76,14 +76,14 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by, bool $a
         $order_by = get_node_order_by($resource_type_field, ($resource_type_field_data['type'] == FIELD_TYPE_CATEGORY_TREE), $parent);
         }
 
-    $query = "INSERT INTO `node` (`resource_type_field`, `name`, `parent`, `order_by`, `active`) VALUES (?, ?, ?, ?, ?)";
-    $parameters = [  
+    $query = "INSERT INTO `node` (`resource_type_field`, `name`, `parent`, `order_by`) VALUES (?, ?, ?, ?)";
+    $parameters=array  
+        (
         "i",$resource_type_field,
         "s",$name,
         "i",$parent,
-        "s",$order_by,
-        'i', (int) $active,
-    ];
+        "s",$order_by
+        );
 
     // Check if we only need to save the record
     $current_node = array();
@@ -118,18 +118,17 @@ function set_node($ref, $resource_type_field, $name, $parent, $order_by, bool $a
                    SET resource_type_field = ?,
                        `name` = ?,
                        parent = ?,
-                       order_by = ?,
-                       `active` = ?
+                       order_by = ?
                  WHERE ref = ?
             ";
-        $parameters = [  
-            "i",$resource_type_field,
-            "s",$name,
-            "i",$parent,
-            "s",$order_by,
-            "i",$ref,
-            'i', (int) $active,
-        ];
+        $parameters=array  
+                (
+                "i",$resource_type_field,
+                "s",$name,
+                "i",$parent,
+                "s",$order_by,
+                "i",$ref
+                );
 
         // Handle node indexing for existing nodes
         remove_node_keyword_mappings(array('ref' => $current_node['ref'], 'resource_type_field' => $current_node['resource_type_field'], 'name' => $current_node['name']), null);
@@ -1772,7 +1771,7 @@ function copy_resource_type_field_nodes($from, $to)
                 $parent = $processed_nodes[$parent];
                 }
 
-            $new_node_id = set_node(null, $to, $node['name'], $parent, $node['order_by'], (bool) $node['active']);
+            $new_node_id                   = set_node(null, $to, $node['name'], $parent, $node['order_by']);
             $processed_nodes[$node['ref']] = $new_node_id;
             }
 
@@ -1782,7 +1781,7 @@ function copy_resource_type_field_nodes($from, $to)
     // Default handle for types different than category trees
     foreach($nodes as $node)
         {
-        set_node(null, $to, $node['name'], $node['parent'], $node['order_by'], (bool) $node['active']);
+        set_node(null, $to, $node['name'], $node['parent'], $node['order_by']);
         }
 
     return true;
