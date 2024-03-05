@@ -2400,7 +2400,7 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
 
     if($detailed)
         {
-        $sql_select .= ", n.`name`, n.parent, n.order_by";
+        $sql_select .= ', n.`name`, n.parent, n.order_by, n.`active`';
         }
 
     $resources = array_filter($resources,"is_int_loose");
@@ -2456,13 +2456,14 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
 
         if($detailed)
             {
-            $results[$noderow["resource"]][$noderow["resource_type_field"]][] = array(
+            $results[$noderow["resource"]][$noderow["resource_type_field"]][] = [
                 "ref"                   => $noderow["ref"],
                 "resource_type_field"   => $noderow["resource_type_field"],
                 "name"                  => $noderow["name"],
                 "parent"                => $noderow["parent"],
                 "order_by"              => $noderow["order_by"],
-                );
+                'active'                => $noderow['active'],
+            ];
             }
         else
             {
