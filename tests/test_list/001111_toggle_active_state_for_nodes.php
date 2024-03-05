@@ -48,16 +48,25 @@ $reset_state = function () use ($nodes_UT) {
 
 $use_cases = [
     [
-        'name' => 'Active state toggles only fixed list fields',
+        'name' => 'Only fixed list fields can toggle the active state',
         'input' => ['refs' => [$rtf_text_node_id]],
         'expected' => [$rtf_text_node_id => 1],
     ],
     [
         'name' => 'Toggle fixed list fields (e.g checkbox) active state',
-        'input' => ['refs' => [$ckb_opt_b]],
-        'expected' => [$ckb_opt_b => 0],
+        'input' => ['refs' => [$ckb_opt_a]],
+        'expected' => [$ckb_opt_a => 0],
     ],
-    // todo: test using nodes mixture (different rtfs)
+    [
+        'name' => 'Toggle various fields',
+        'reset_state' => true,
+        'input' => ['refs' => [$ckb_opt_b, $rtf_text_node_id, $ct_opt_c]],
+        'expected' => [
+            $ckb_opt_b => 0,
+            $rtf_text_node_id => 1,
+            $ct_opt_c => 0,
+        ],
+    ],
     [
         'name' => 'Disabling tree root option propagates to children',
         'reset_state' => true,
@@ -93,11 +102,18 @@ $use_cases = [
         'expected' => [$ct_opt_a_a1 => 1],
     ],
     [
-        'name' => 'Toggling a child option should check a parent ( is not disabled',
+        'name' => 'Toggling a child option should check the parent is active',
         'reset_state' => true,
-        'setup' => fn() => update_node_active_state([$ct_opt_a_a1], false),
-        'input' => ['refs' => [$ct_opt_a_a1]],
-        'expected' => [$ct_opt_a_a1 => 1],
+        'setup' => fn() => update_node_active_state([$ct_opt_a_a1, $ct_opt_a_a1_a11], false),
+        'input' => ['refs' => [$ct_opt_a_a1_a11]],
+        'expected' => [$ct_opt_a_a1_a11 => 0],
+    ],
+    [
+        'name' => 'Toggling a child option should check grand parents are active',
+        'reset_state' => true,
+        'setup' => fn() => update_node_active_state([$ct_opt_a, $ct_opt_a_a1_a12], false),
+        'input' => ['refs' => [$ct_opt_a_a1_a12]],
+        'expected' => [$ct_opt_a_a1_a12 => 0],
     ],
 /*
 A
@@ -116,7 +132,8 @@ C
 | 0                    | n/a - root     | yes     | 1                        | no                     |
 | 1                    | 1 - level 1    | yes     | 0                        | yes                    |
 | 0                    | 1 - level 1    | yes     | 1                        | no                     |
-| 0                    | 0 - level 1    | no      | 0                        | yes                    |
+| 0                    | 0 - level 1    | no      | 0                        | n/a (should already be done) |
+| 0                    | 0 - level 2    | no      | 0                        | n/a (should already be done) |
 
 */
 ];
@@ -140,7 +157,6 @@ foreach ($use_cases as $uc) {
     ksort($uc['expected'], SORT_NUMERIC);
 
     if ($uc['expected'] !== $result) {
-        test_log('');
         echo "Use case: {$uc['name']} - ";
         test_log('$result = ' . print_r($result, true));
         test_log('expected = ' . print_r($uc['expected'], true));

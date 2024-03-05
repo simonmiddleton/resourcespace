@@ -2906,7 +2906,9 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryr
     }
 
 /**
- * Batch update nodes' active state. The same state will apply to all nodes in the list.
+ * Batch update nodes' active state to the database. The same state will apply to all nodes in the list.
+ *
+ * For logic on which nodes to toggle {@see toggle_active_state_for_nodes()}
  *
  * @param list<int> $refs Node IDs
  * @param bool $active Should nodes be active or not?
@@ -2944,8 +2946,9 @@ function update_node_active_state(array $refs, bool $active): void
     }
 
 /**
- * Toggle a nodes' active state
- * @param list<int>
+ * Toggle nodes' active state
+ *
+ * @param list<int> $refs Node IDs
  * @return array<int, 0|1>
  */
 function toggle_active_state_for_nodes(array $refs): array
@@ -2997,49 +3000,45 @@ function toggle_active_state_for_nodes(array $refs): array
     return $nodes_new_state;
     }
 
+/**
+ * Toggle category tree nodes' active state
+ *
+ * @param int $rtf Resource type field ID
+ * @param list<int> $node_refs
+ * @return array<int, 0|1>
+ */
 function toggle_category_tree_nodes_active_state(int $rtf, array $node_refs): array {
-    // print_r($rtfs_tree);die(PHP_EOL . 'Process stopped in file ' . __FILE__ . ' at line ' . __LINE__ . PHP_EOL);
+    $is_not_active = fn(int $active): bool => $active === 0;
+    $nodes_to_enable = [];
+    $nodes_to_disable = [];
 
     $rtf_nodes = get_cattree_nodes_ordered($rtf, null, true);
     // Remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be
     // using get_cattree_node_strings() with it.
     array_shift($rtf_nodes);
-    test_log("Tree nodes for #{$rtf} = " . print_r(array_column($rtf_nodes, 'name', 'ref'), true));
     $rtf_nodes_indexed = array_column($rtf_nodes, null, 'ref');
     $nodes_ordered = array_keys(array_intersect_key($rtf_nodes_indexed, array_flip($node_refs)));
 
-    $is_not_active = fn(int $active): bool => $active === 0;
-    $nodes_to_enable = [];
-    $nodes_to_disable = [];
-
     foreach ($nodes_ordered as $node_ref) {
         if (in_array($node_ref, $nodes_to_disable)) {
-            // Child node disabled previously by a parent - no need to carry on processing it (already done because of a parents' change on its path)
+            // Child node disabled previously by a parent - no need to carry on processing it (already done because of 
+            // a parents' change on its path)
             continue;
         }
 
         $node = $rtf_nodes_indexed[$node_ref];
         $node_is_active = $node['active'] === 1;
 
-        /* if ($node['parent'] == 0 && !$node_is_active) {
-            test_log("Root node #{$node_ref} isn't active = " . json_encode(!$node_is_active));
-            // Activate - this MUST NOT propagate to its children (if any)
-            $nodes_to_enable[] = $node_ref;
-
-            // Pretend this has been done in case there's going to be a child node in the queue waiting to be toggled 
-            $rtf_nodes_indexed[$node_ref]['active'] = 1;
-            continue;
-        } */
-
-        // Toggle a child node if no parent on branch is disabled
+        // Check that no parent on this branch path is disabled
         $node_branch = array_column(
             compute_node_branch_path(array_values($rtf_nodes_indexed), $node['ref']),
             'active',
             'ref'
         );
         array_pop($node_branch);
-        // test_log("Node #{$node_ref} branch is " . print_r($node_branch, true));
         if (array_filter($node_branch, $is_not_active) !== []) {
+            // Node should already be disabled, add it to the list so we can return it
+            $nodes_to_disable[] = $node['ref'];
             continue;
         }
 
@@ -3057,7 +3056,6 @@ function toggle_category_tree_nodes_active_state(int $rtf, array $node_refs): ar
                 ),
                 'ref'
             );
-            test_log("Node #{$node_ref} children branch is " . json_encode($branch_refs));
 
             $nodes_to_disable = array_merge($nodes_to_disable, $branch_refs);
             foreach ($branch_refs as $path_node_ref) {
