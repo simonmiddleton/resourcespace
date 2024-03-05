@@ -43,7 +43,7 @@ if(!$ajax)
     }
 
 $new_node_record_form_action = '/pages/admin/admin_manage_field_options.php?field=' . $field;
-$activation_action_label_for = fn(array $node): string => (bool) $node['active']
+$activation_action_label_for = fn(array $node): string => node_is_active($node)
     ? $lang['userpreference_disable_option']
     : $lang['userpreference_enable_option'];
 

@@ -843,7 +843,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     unset($nodes[$nodes_index_to_remove]);
     $nodes = array_values($nodes);
     $node_disabled_class = $node_info['active'] === 0 ? 'FieldDisabled' : '';
-    $activation_action_label = $node_info['active'] === 1
+    $activation_action_label = node_is_active($node_info)
         ? $lang['userpreference_disable_option']
         : $lang['userpreference_enable_option'];
     ?>
@@ -3085,4 +3085,12 @@ function toggle_category_tree_nodes_active_state(int $rtf, array $node_refs): ar
     update_node_active_state($nodes_to_disable, false);
     
     return array_column(get_nodes_by_refs(array_merge($nodes_to_enable, $nodes_to_disable)), 'active', 'ref');
+}
+
+/** Helper function to check if a node is active
+ * Note: a node here requires the "active" key.
+ * @param array{'active': 0|1} $node A node structure with at least the "active" key present
+ */
+function node_is_active(array $node): bool {
+    return $node['active'] === 1;
 }
