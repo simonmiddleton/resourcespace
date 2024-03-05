@@ -568,10 +568,17 @@ if($ajax)
             {
             check_node_indexed($node, $field_data['partial_index']);
             $node_index +=1;
+            $node_disabled_class = $node['active'] === 0 ? 'FieldDisabled' : '';
             ?>
             <tr id="node_<?php echo $node['ref']; ?>">
                 <td>
-                    <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $node['ref']; ?>" value="<?php echo escape($node['name']); ?>" onblur="this.value=this.value.trim()" >
+                    <input type="text"
+                        class="stdwidth <?php echo escape($node_disabled_class); ?>"
+                        name="option_name"
+                        form="option_<?php echo $node['ref']; ?>"
+                        value="<?php echo escape($node['name']); ?>"
+                        onblur="this.value=this.value.trim()"
+                    >
                 </td>
                 <td align="left">
                     <?php echo $node['use_count'] ?>
@@ -628,7 +635,7 @@ if($ajax)
                         <!-- Action buttons -->
                         <td>
                             <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo htmlspecialchars($lang['save']); ?></button>
-                            <button type="submit" onclick="ToggleNodeActivation(<?php echo $node['ref']; ?>); return false;"><?php echo escape($activation_action_label_for($node)); ?></button>
+                            <button id="node_<?php echo escape($node['ref']); ?>_toggle_active_btn" type="submit" onclick="ToggleNodeActivation(<?php echo $node['ref']; ?>); return false;"><?php echo escape($activation_action_label_for($node)); ?></button>
                             <button type="submit" onclick="DeleteNode(<?php echo $node['ref']; ?>); return false;"><?php echo htmlspecialchars($lang['action-delete']); ?></button>
                         </td>
                             
@@ -933,13 +940,16 @@ function ToggleNodeActivation(ref)
     api(
         'toggle_active_state_for_nodes',
         {'refs': JSON.stringify([ref])},
-        function(successful) {
-            if (successful) {
-                console.debug('API - successful = %o', successful);
-                jQuery(node.find('input[name=option_name]')).css('text-decoration', 'line-through');
-            } else {
-                console.debug('API failed');
-            }
+        function (response) {
+            jQuery.each(response, function (node_ref, active_state) {
+                if (active_state === 1) {
+                    jQuery('#node_' + node_ref).find('input[name=option_name]').removeClass('FieldDisabled');
+                    jQuery('#node_' + node_ref + '_toggle_active_btn').text('<?php echo escape($lang['userpreference_disable_option']); ?>');
+                } else {
+                    jQuery('#node_' + node_ref).find('input[name=option_name]').addClass('FieldDisabled');
+                    jQuery('#node_' + node_ref + '_toggle_active_btn').text('<?php echo escape($lang['userpreference_enable_option']); ?>');
+                }
+            });
         },
         <?php echo generate_csrf_js_object('toggle_active_state_for_nodes'); ?>
     );
