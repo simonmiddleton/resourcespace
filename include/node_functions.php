@@ -839,8 +839,13 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     // We remove the current node from the list of parents for it( a node should not add to itself)
     $nodes = $all_nodes;
     $nodes_index_to_remove = array_search($ref, array_column($nodes, 'ref'));
+    $node_info = $nodes[$nodes_index_to_remove];
     unset($nodes[$nodes_index_to_remove]);
     $nodes = array_values($nodes);
+    $node_disabled_class = $node_info['active'] === 0 ? 'FieldDisabled' : '';
+    $activation_action_label = $node_info['active'] === 1
+        ? $lang['userpreference_disable_option']
+        : $lang['userpreference_enable_option'];
     ?>
     <table id="node_<?php echo $ref; ?>" cellspacing="0" cellpadding="5" data-toggle-node-mode = "<?php echo $toggle_node_mode; ?>">
         <tbody>
@@ -862,7 +867,12 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                     <img alt="" id="node_<?php echo (int) $ref; ?>_toggle_button" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/<?php echo $spacer_filename; ?>" onclick="<?php echo $onClick; ?>">
                 </td>
                 <td>
-                    <input type="text" name="option_name" form="option_<?php echo $ref; ?>" value="<?php echo $name; ?>">
+                    <input type="text"
+                        class="<?php echo escape($node_disabled_class); ?>"
+                        name="option_name"
+                        form="option_<?php echo escape($ref); ?>"
+                        value="<?php echo escape($name); ?>"
+                    >
                 </td>
                 <td>
                     <select id="node_option_<?php echo $ref; ?>_parent_select" parent_node="<?php echo $parent; ?>" class="node_parent_chosen_selector" name="option_parent" form="option_<?php echo $ref; ?>">
@@ -910,6 +920,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                             </td>
                         <td> <!-- Action buttons -->
                             <button type="submit" onclick="SaveNode(<?php echo $ref; ?>); return false;"><?php echo $lang['save']; ?></button>
+                            <button id="node_<?php echo escape($ref); ?>_toggle_active_btn" type="submit" onclick="ToggleNodeActivation(<?php echo escape($ref); ?>); return false;"><?php echo escape($activation_action_label); ?></button>
                             <?php
                             if(!is_parent_node($ref))
                                 {?>

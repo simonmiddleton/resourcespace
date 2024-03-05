@@ -915,28 +915,12 @@ function DeleteNode(ref)
 
 function ToggleNodeActivation(ref)
     {
-    // console.debug('var = %o', var);
     console.debug('Calling ToggleNodeActivation(ref = %o)', ref);
 
-    // todo: determine confirmation msg based on node active state
-    /* if (!confirm('<?php echo escape($lang['confirm-disable_node']); ?>')) {
+    if (!confirm('<?php echo escape($lang['confirm-continue']); ?>')) {
         return false;
-    } */
+    }
 
-    let node          = jQuery('#node_' + ref);
-    let node_children = jQuery('#node_' + ref + '_children');
-    let option_name   = node.find('input[name=option_name]').val();
-    let option_parent = node.find('select[name=option_parent]').val();
-    console.debug('node = %o', node);
-    console.debug('node_children = %o', node_children);
-    console.debug('option_name = %o', option_name);
-    console.debug('option_parent = %o', option_parent);
-
-    /*
-    todo: the API should reply with confirmation of who actually changed - a must for category trees
-
-    With the children section opened, we can use the response to visually mark as deprecated. Consider refreshing page instead to avoid JS state updates
-    */
     api(
         'toggle_active_state_for_nodes',
         {'refs': JSON.stringify([ref])},
@@ -944,16 +928,17 @@ function ToggleNodeActivation(ref)
             jQuery.each(response, function (node_ref, active_state) {
                 if (active_state === 1) {
                     jQuery('#node_' + node_ref).find('input[name=option_name]').removeClass('FieldDisabled');
-                    jQuery('#node_' + node_ref + '_toggle_active_btn').text('<?php echo escape($lang['userpreference_disable_option']); ?>');
+                    jQuery('#node_' + node_ref + '_toggle_active_btn')
+                        .text('<?php echo escape($lang['userpreference_disable_option']); ?>');
                 } else {
                     jQuery('#node_' + node_ref).find('input[name=option_name]').addClass('FieldDisabled');
-                    jQuery('#node_' + node_ref + '_toggle_active_btn').text('<?php echo escape($lang['userpreference_enable_option']); ?>');
+                    jQuery('#node_' + node_ref + '_toggle_active_btn')
+                        .text('<?php echo escape($lang['userpreference_enable_option']); ?>');
                 }
             });
         },
         <?php echo generate_csrf_js_object('toggle_active_state_for_nodes'); ?>
     );
-
 
     return true;
     }
