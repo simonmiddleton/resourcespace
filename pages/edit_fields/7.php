@@ -61,6 +61,8 @@ foreach($selected_nodes as $node)
     $valid_nodes [] = $node_data;
     }
 
+$valid_nodes = array_filter($valid_nodes, 'node_is_active');
+
 foreach($valid_nodes as $node)
     {
     $hidden_input_elements .= "<input id=\"{$hidden_input_elements_id_prefix}{$node["ref"]}\" class =\"{$tree_id}_nodes\" type=\"hidden\" name=\"" . escape($name) . "\" value=\"{$node["ref"]}\">";

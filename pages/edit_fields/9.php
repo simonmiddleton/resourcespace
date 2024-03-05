@@ -45,7 +45,7 @@ $add_searched_nodes_function_call = '';
 />
 <?php
 
-$nodes_in_sequence = $field['nodes'];
+$nodes_in_sequence = array_filter($field['nodes'], 'node_is_active');
 
 if((bool) $field['automatic_nodes_ordering'])
     {

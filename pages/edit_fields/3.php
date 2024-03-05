@@ -9,6 +9,8 @@ if(!isset($selected_nodes))
     $selected_nodes = array();
     }
 
+$field['nodes'] = array_filter($field['nodes'], 'node_is_active');
+
 if((bool) $field['automatic_nodes_ordering'])
     {
     $field['nodes'] = reorder_nodes($field['nodes']);

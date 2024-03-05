@@ -16,11 +16,8 @@ if(!isset($selected_nodes))
         }
     }
 
-$node_options = array();
-foreach($field['nodes'] as $node)
-    {
-    $node_options[] = $node['name'];
-    }
+$field['nodes'] = array_filter($field['nodes'], 'node_is_active');
+$node_options = array_column($field['nodes'], 'name');
 $l = average_length($node_options);
 
 $cols = 10;
