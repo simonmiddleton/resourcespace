@@ -1771,7 +1771,8 @@ function copy_resource_type_field_nodes($from, $to)
                 $parent = $processed_nodes[$parent];
                 }
 
-            $new_node_id                   = set_node(null, $to, $node['name'], $parent, $node['order_by']);
+            $new_node_id = set_node(null, $to, $node['name'], $parent, $node['order_by']);
+            update_node_active_state([$new_node_id], node_is_active($node));
             $processed_nodes[$node['ref']] = $new_node_id;
             }
 
@@ -1781,7 +1782,8 @@ function copy_resource_type_field_nodes($from, $to)
     // Default handle for types different than category trees
     foreach($nodes as $node)
         {
-        set_node(null, $to, $node['name'], $node['parent'], $node['order_by']);
+        $new_node_id = set_node(null, $to, $node['name'], $node['parent'], $node['order_by']);
+        update_node_active_state([$new_node_id], node_is_active($node));
         }
 
     return true;
@@ -2932,6 +2934,9 @@ function update_node_active_state(array $refs, bool $active): void
     }
 
     $refs_chunked = db_chunk_id_list($refs);
+    if ($refs_chunked === []) {
+        return;
+    }
 
     db_begin_transaction('set_node_active_state');
 
