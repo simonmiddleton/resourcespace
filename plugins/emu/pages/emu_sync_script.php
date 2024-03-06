@@ -58,13 +58,12 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
         exit();
         }
 
-    if(in_array($option_name, array('c', 'clearlock')))
-        {
-        if(is_process_lock(EMU_SCRIPT_SYNC_LOCK))
-            {
-            clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
-            }
-        }
+    if (
+        in_array($option_name, array('c', 'clearlock'))
+        && is_process_lock(EMU_SCRIPT_SYNC_LOCK)
+        ) {
+        clear_process_lock(EMU_SCRIPT_SYNC_LOCK);
+    }
 
     // Allow CLI options to override $emu_* variables
     if('emu' != substr($option_name, 0, 3))

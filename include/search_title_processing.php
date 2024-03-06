@@ -402,10 +402,11 @@ if ($search_titles)
 
 hook('add_search_title_links');
 
-if (!hook("replacenoresourcesfoundsearchtitle"))
-    {
-    if (!is_array($result) && empty($collections) && getval("addsmartcollection","") == '')
-        {
+if (
+    !hook("replacenoresourcesfoundsearchtitle")
+    && !is_array($result) 
+    && empty($collections) 
+    && getval("addsmartcollection","") == ''
+    ) {
         $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '">'.$lang["noresourcesfound"].'</a></div></div>';
-        }
     }

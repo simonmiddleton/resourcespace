@@ -78,10 +78,11 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
             }
             }
         
-        if (!isset($system_login) && strlen(trim((string)$userdata[0]["last_active"]))>0)
-            {
-            if ($userdata[0]["idle_seconds"]>($session_length*60))
-                {
+        if (
+            !isset($system_login) 
+            && strlen(trim((string)$userdata[0]["last_active"])) > 0
+            && $userdata[0]["idle_seconds"]>($session_length*60)
+            ) {
                 debug("[authenticate.php] Session length expired!");
                 # Last active more than $session_length mins ago?
                 $al="";if (isset($anonymous_login)) {$al=$anonymous_login;}
@@ -116,7 +117,6 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
                     # This is a new 'session' for the purposes of statistics.
                     daily_stat("User session",$userref);
                     }
-                }
             }
         }
         else {$valid=false;}

@@ -278,14 +278,15 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['valid']); ?>;
 
             <?php
-            if ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
-                if ($forsearchbar)
-                    if(!$simple_search_show_dynamic_as_dropdown) {
+            if (
+                $scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST
+                && $forsearchbar
+                && !$simple_search_show_dynamic_as_dropdown
+                ) {
                     ?>
                         // When a dynamic keyword list is rendered as regular input field on simple search, the valid values to check against are the text values (not nodes) 
                         fieldokvalues<?php echo $scriptcondition['field']; ?> = <?php echo json_encode($scriptcondition['validtext']); ?>;
                     <?php
-                    }
                 }
             ?>
 
@@ -332,8 +333,10 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                 }
 
                 # Prepare selector for unusual dynamic keyword list configurations
-                if ($scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
-                    if ($forsearchbar)
+                if (
+                    $scriptcondition['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST
+                    && $forsearchbar
+                    ) {
                         if($simple_search_show_dynamic_as_dropdown) {
                             # Prepare selector for a dynamic keyword list configured to display as a dropdown list on simple search
                             $jquery_condition_selector = "select[name=\"{$checkname}\"] option:selected";
@@ -1925,13 +1928,13 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
     /****************************** Errors on saving ***************************************/
     $field_save_error = false;
-    if (isset($show_error) && isset($save_errors))
-      {
-      if(array_key_exists($field['ref'], $save_errors))
-        {
+    if (
+        isset($show_error) 
+        && isset($save_errors)
+        && array_key_exists($field['ref'], $save_errors)
+        ) {
         $field_save_error = true;
         }
-      }
      
     if ($multiple && !hook("replace_edit_all_checkbox","",array($field["ref"])))
       {
@@ -2005,16 +2008,15 @@ function display_field($n, $field, $newtab=false,$modal=false)
         <option value="AP"<?php if(getval("modeselect_" . $field["ref"],"")=="AP"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["appendtext"])?></option>
 <?php
         }
-      if(in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST))))
-        {
+      if (
         # Remove applies to text boxes, checkboxes, dropdowns, category trees and dynamic keywords only. 
-        if ($field['required'] == 0) 
-            {
-            # And it only applies if the field is optional
+        in_array($field['type'], array_merge($TEXT_FIELD_TYPES, array(FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)))
+        # And it only applies if the field is optional
+        && $field['required'] == 0 
+        ) {
             ?> 
-        <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["removetext"])?></option>
-<?php
-            }
+            <option value="RM"<?php if(getval("modeselect_" . $field["ref"],"")=="RM"){?> selected<?php } ?>><?php echo htmlspecialchars($lang["removetext"])?></option>
+            <?php
         }
         hook ("edit_all_extra_modes","",[$field]);
         ?>
@@ -6038,12 +6040,12 @@ function display_related_resources($context)
                         $access=get_resource_access($rref);
                         $use_watermark=check_use_watermark();
                         # swap title fields if necessary
-                        if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
-                            {
-                            if ($arr_related[$n]['resource_type']==$metadata_template_resource_type)
-                                {
+                        if (
+                            isset($metadata_template_title_field) 
+                            && isset($metadata_template_resource_type)
+                            && $arr_related[$n]['resource_type'] == $metadata_template_resource_type
+                            ) {
                                 $title=$arr_related[$n]["field".$metadata_template_title_field];
-                                }
                             }
                         ?>
                         <div class="CollectionPanelShell">
@@ -6096,12 +6098,12 @@ function display_related_resources($context)
                         $access=get_resource_access($rref);
                         $use_watermark=check_use_watermark();
                         # swap title fields if necessary
-                        if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
-                            {
-                            if ($arr_related[$n]['resource_type']==$metadata_template_resource_type)
-                                {
+                        if (
+                            isset($metadata_template_title_field) 
+                            && isset($metadata_template_resource_type)
+                            && $arr_related[$n]['resource_type'] == $metadata_template_resource_type
+                            ) {
                                 $title=$arr_related[$n]["field".$metadata_template_title_field];
-                                }
                             }
                         ?>
                         <!--Resource Panel-->
@@ -6148,12 +6150,12 @@ function display_related_resources($context)
                 $use_watermark=check_use_watermark();
                 # swap title fields if necessary
 
-                if (isset($metadata_template_title_field) && isset($metadata_template_resource_type))
-                    {
-                    if ($arr_related[$n]["resource_type"]==$metadata_template_resource_type)
-                        {
+                if (
+                    isset($metadata_template_title_field) 
+                    && isset($metadata_template_resource_type)
+                    && $arr_related[$n]["resource_type"] == $metadata_template_resource_type
+                    ) {
                         $title=$arr_related[$n]["field".$metadata_template_title_field];
-                        }   
                     }        
                 ?>
                 <div class="CollectionPanelShell">

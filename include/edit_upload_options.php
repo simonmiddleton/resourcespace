@@ -148,15 +148,30 @@ if ($on_upload || (isset($ref) && $ref<0))
                 for ($n=0;$n<count($list);$n++)
                     {
                     #remove smart collections as they cannot be uploaded to.
-                    if (!isset($list[$n]['savedsearch'])||(isset($list[$n]['savedsearch'])&&$list[$n]['savedsearch']==null))
-                        {
+                    if (
+                        (
+                            !isset($list[$n]['savedsearch'])
+                            || 
+                            (
+                                isset($list[$n]['savedsearch'])
+                                && $list[$n]['savedsearch']==null
+                            ) 
+                        )
                         #show only active collections if a start date is set for $active_collections 
-                        if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="Default Collection" && $list[$n]['user']==$userref))
-                            { if ($list[$n]["ref"]==$usercollection) {$currentfound=true;} 
+                        && 
+                        ( 
+                            strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) 
+                            || 
+                            (
+                                $list[$n]['name'] == "Default Collection" 
+                                && $list[$n]['user']==$userref
+                            ) 
+                        )
+                        ) {
+                            if ($list[$n]["ref"]==$usercollection) {$currentfound=true;} 
                             ?>
                             <option value="<?php echo $list[$n]["ref"]?>" <?php if ($list[$n]['ref']==$collection_add) {?>  selected<?php } ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
                             <?php
-                            }
                         }
                     }
 

@@ -178,12 +178,11 @@ foreach($results as $resource_ref => $html_value)
             }
         }
 
-    if (!$copy_all)
-        {
-        if($html_value === $plaintxt_val)
-            {
+    if (
+        !$copy_all
+        && $html_value === $plaintxt_val
+        ) {
             continue;
-            }
         }
 
     if(trim($plaintxt_val) === '')

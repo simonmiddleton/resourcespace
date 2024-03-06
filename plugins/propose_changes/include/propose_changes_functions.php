@@ -239,14 +239,12 @@ function save_proposed_changes($ref)
 
             if ($val !== false && trim(str_replace("\r\n", "\n", $field_value??"")) !== trim(str_replace("\r\n", "\n", unescape($val))))
                     {
-                    if(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
-                        {
-                        # Check that date hasn't only changed by adding seconds value
-                        if (trim((string) $field_value).":00" == trim($val))
-                            {
-                            continue;    
-                            }
-                        }
+                    if (
+                        in_array($fields[$n]['type'], $DATE_FIELD_TYPES)
+                        && trim((string) $field_value).":00" == trim($val) # Check that date hasn't only changed by adding seconds value
+                        ) {
+                        continue;    
+                    }
                     # This value is different from the value we have on record. 
                     # Add this to the proposed changes table for the user
                     $parameters=array("i",$ref, "i",$userref, "i",$fields[$n]['ref'], "s",$val);

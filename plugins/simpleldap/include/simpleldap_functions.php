@@ -243,16 +243,15 @@ function simpleldap_authenticate($username,$password)
             // Go through all mappings and add any unknown groups to the list of mappings so that it can be easily used (LDAP group names can be hard to remember)
             foreach ($usermemberofgroups as $usermemberofgroup)
                 {
-                if(!isset($knowndept[strtolower($usermemberofgroup)])) // This group is not in the current list
-                    {
-                    if (!is_numeric($usermemberofgroup))
-                        {
+                if (
+                    !isset($knowndept[strtolower($usermemberofgroup)]) // This group is not in the current list
+                    && !is_numeric($usermemberofgroup)
+                    ) {
                         // ignore numbers; this is a kludgey way to deal with the fact
                         // that some ldap servers seem to return a result count as the first value
                         $newdept = simpleldap_to_utf8($usermemberofgroup);
                         $usermemberof[]=$newdept;
                         ps_query("replace into simpleldap_groupmap (ldapgroup, rsgroup) values (?, NULL)", ['s', $newdept]);
-                        } 
                     }
                 }
             }

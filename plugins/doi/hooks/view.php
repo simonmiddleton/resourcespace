@@ -152,9 +152,11 @@
 
         global $resource;
 
-        if (doi_check_user_access() && doi_check_resource_state($resource)) {
-
-            if ($doi_state == 'metadata') {
+        if (
+            doi_check_user_access() 
+            && doi_check_resource_state($resource)
+            && $doi_state == 'metadata'
+            ) {
 
                 global $ref, $fields;
 
@@ -239,7 +241,6 @@ HTML;
                 </div>
                 <!-- End DOI record box -->
                 <?php
-            }
         }
 
         return true;

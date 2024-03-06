@@ -6,8 +6,10 @@ include "../../include/authenticate.php";
 include "../../include/dash_functions.php";
 
 #If can't manage own dash return to user home.
-if(!hook("replace_dash_admin_permission_relocate")){
-    if(!($home_dash && checkPermission_dashmanage()))
+if(
+    !hook("replace_dash_admin_permission_relocate")
+    && !($home_dash && checkPermission_dashmanage())
+    ) {
         {header("location: ".$baseurl_short."pages/user/user_home.php");exit;}
     }
 if(getval("quicksave",false) && enforcePostRequest(false))

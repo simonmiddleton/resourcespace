@@ -78,14 +78,16 @@ foreach($resource_type_fields as $resource_type_field)
                 // Add any values that match but are not currently in resource_node                
                 foreach($fieldnodes as $fieldnode)
                     {
-                    if($datavalue==trim($fieldnode["name"]) || $datavalue==trim(i18n_get_translated($fieldnode["name"])))
+                    if (
+                        (
+                            $datavalue == trim($fieldnode["name"]) 
+                            || $datavalue == trim(i18n_get_translated($fieldnode["name"]))
+                        )
+                        && !in_array($fieldnode["ref"],$resource_nodes) // This is a valid node, is the corresponding resource_node set    
+                        )
                         {
-                        // This is a valid node, is the corresponding resource_node set    
-                        if(!in_array($fieldnode["ref"],$resource_nodes))
-                            {
                             $nodes_to_add[]=$fieldnode["ref"];
                             $node_names[]=$fieldnode["name"];
-                            }
                         }                      
                     }
                 }

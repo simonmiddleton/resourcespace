@@ -2619,13 +2619,12 @@ function check_delete_nodes($nodes)
             {
             $fieldinfo  = get_resource_type_field($nodeinfo["resource_type_field"]);
             debug("check_delete_nodes: checking node " . $node . " - (" . $nodeinfo["name"] . ")");
-            if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES))
-                {
-                if(!isset($count[$node]) ||  $count[$node] == 0)
-                    {
+            if (
+                !in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES)
+                && (!isset($count[$node]) ||  $count[$node] == 0)
+                ) {
                     debug("Deleting unused node #" . $node. " - (" . $nodeinfo["name"] . ")");
                     delete_node($node);
-                    }
                 }
             }
         }

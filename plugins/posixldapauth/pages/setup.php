@@ -117,13 +117,11 @@ if ($ldapauth['enable'])
     if ($objLDAP->connect())
     {
         // we need to check for the kind of LDAP we are talking to here!
-        if ($ldapauth['ldaptype'] == 1 )
-        {
-            // we need to bind!
-            if (!$objLDAP->auth($ldapauth['rootdn'],$ldapauth['rootpass'],1,$ldapauth['addomain'],$ldapauth['adusesingledomain']))
-            {
-                $errmsg["auth"] = $lang['posixldapauth_could_not_bind_to_ad_check_credentials'];
-            }   
+        if (
+            $ldapauth['ldaptype'] == 1 
+            && !$objLDAP->auth($ldapauth['rootdn'],$ldapauth['rootpass'],1,$ldapauth['addomain'],$ldapauth['adusesingledomain']) // we need to bind!
+            ) {
+            $errmsg["auth"] = $lang['posixldapauth_could_not_bind_to_ad_check_credentials']; 
         }
         
         if (!isset ($errmsg))
@@ -337,12 +335,11 @@ include "../../../include/header.php";
                         $ref = $usergroup['ref'];
                         echo '<option value="'.$ref.'"';
                         // check mapping;
-                        if (isset($ldapauth['groupmap'][$lGroupName]['rsGroup']))
-                        {
-                            if ($ref == $ldapauth['groupmap'][$lGroupName]['rsGroup'])
-                            {
-                                  echo "selected";
-                            }
+                        if (
+                            isset($ldapauth['groupmap'][$lGroupName]['rsGroup'])
+                            && $ref == $ldapauth['groupmap'][$lGroupName]['rsGroup']
+                            ) {
+                            echo "selected";
                         }
                         echo '>' . lang_or_i18n_get_translated($usergroup['name'], "usergroup-") . '</option>'; 
                     }
@@ -351,12 +348,11 @@ include "../../../include/header.php";
                     echo "<td>";
                     echo '<input name="ldapGroupEnable['.$lGroupName.']" type="checkbox" ';
                     // check to see if the enabled exists and if it has a value!
-                    if (isset($ldapauth['groupmap'][$lGroupName]['enabled']))
-                    {
-                        if( $ldapauth['groupmap'][$lGroupName]['enabled']) 
-                        {
-                            echo "checked"; 
-                        }
+                    if (
+                        isset($ldapauth['groupmap'][$lGroupName]['enabled'])
+                        && $ldapauth['groupmap'][$lGroupName]['enabled']
+                        ) {
+                        echo "checked"; 
                     }
                     echo ' />'; 
                     echo "</td>\r\n";

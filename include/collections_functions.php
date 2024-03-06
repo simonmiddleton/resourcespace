@@ -656,12 +656,11 @@ function collection_writeable($collection)
         }
 
     global $userref,$usergroup, $allow_smart_collections;
-    if ($allow_smart_collections && !isset($userref))
-        { 
-        if (isset($collectiondata['savedsearch'])&&$collectiondata['savedsearch']!=null)
-            {
+    if (
+        $allow_smart_collections && !isset($userref)
+        && isset($collectiondata['savedsearch'])&&$collectiondata['savedsearch'] != null    
+        ) { 
             return false; // so "you cannot modify this collection"
-            }
         }
     if($collectiondata['type']==COLLECTION_TYPE_REQUEST && !checkperm('R'))
         {
@@ -759,9 +758,7 @@ function collection_readable($collection)
         return true;
         }
 
-    # Perform these checks only if a user is logged in
-    if (is_numeric($userref))
-        {
+        # Perform these checks only if a user is logged in
         # Access if:
         #   - It's their collection
         #   - It's a public collection (or featured collection to which user has access to)
@@ -769,7 +766,8 @@ function collection_readable($collection)
         #   - They are attached to this collection
         #   - Option to ignore collection access is enabled and k is empty
         if(
-            $userref == $collectiondata["user"]
+            is_numeric($userref)
+            && ($userref == $collectiondata["user"]
             || $collectiondata['type'] == COLLECTION_TYPE_PUBLIC
             || ($collectiondata['type'] == COLLECTION_TYPE_FEATURED && featured_collection_check_access_control($collection))
             || checkperm("h")
@@ -777,11 +775,9 @@ function collection_readable($collection)
             || in_array($usergroup, $attached_groups)
             || checkperm("R")
             || $k!=""
-            || ($k=="" && $ignore_collection_access)
-        )
-            {
+            || ($k=="" && $ignore_collection_access))
+        ) {
             return true;
-            }
         }
 
     return false;
@@ -1739,12 +1735,11 @@ function save_collection($ref, $coldata=array())
         }
 
     # Relate all resources?
-    if (isset($coldata["relateall"]) && $coldata["relateall"] != "")
-        {
-        if(allow_multi_edit($ref))
-            {
+    if (
+        isset($coldata["relateall"]) && $coldata["relateall"] != ""
+        && allow_multi_edit($ref)
+        ) {
             relate_all_collection($ref);
-            }
         }
 
     # Remove all resources?
@@ -1754,12 +1749,11 @@ function save_collection($ref, $coldata=array())
         }
 
     # Delete all resources?
-    if (isset($coldata["deleteall"]) && $coldata["deleteall"]!="" && !checkperm("D"))
-        {
-        if(allow_multi_edit($ref))
-            {
+    if (
+        isset($coldata["deleteall"]) && $coldata["deleteall"]!="" && !checkperm("D")
+        && allow_multi_edit($ref)
+        ) {
             delete_resources_in_collection($ref);
-            }
         }
 
     # Update limit count for saved search
@@ -3828,14 +3822,12 @@ function edit_collection_external_access($key,$access=-1,$expires="",$group="",$
         return false;
         }
 
-    if(!isset($shareopts['upload']) || !$shareopts['upload'])
-        {
-        // Only relevant for non-upload shares
-        if ($group=="" || !checkperm("x"))
-            {
+    if (
+        (!isset($shareopts['upload']) || !$shareopts['upload'] )
+        && ($group=="" || !checkperm("x"))
+        ) {
             // Default to sharing with the permission of the current usergroup if not specified OR no access to alternative group selection.
             $group=$usergroup;
-            }
         }
     // Ensure these are escaped as required here
     $setvals = array(
@@ -4177,11 +4169,13 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
  
     if(!collection_is_research_request($collection_data['ref']) || !checkperm('r'))
         {
-        if(!$top_actions && checkperm('s') && $pagename === 'collections')
-            {
+        if (
+            !$top_actions && checkperm('s') 
+            && $pagename === 'collections'
+            && isset($collection_data['request_feedback']) 
+            && $collection_data['request_feedback']
+            ) {
             // Collection feedback
-            if(isset($collection_data['request_feedback']) && $collection_data['request_feedback'])
-                {
                 $data_attribute['url'] = sprintf('%spages/collection_feedback.php?collection=%s&k=%s',
                     $baseurl_short,
                     urlencode($collection_data['ref']),
@@ -4193,7 +4187,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
                 $options[$o]['category'] = ACTIONGROUP_RESOURCE;
                 $options[$o]['order_by'] = 70;
                 $o++;
-                }
             }
         }
     else
@@ -4277,10 +4270,11 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
 
     // Edit all
     # If this collection is (fully) editable, then display an edit all link
-    if(($k=="" || $internal_share_access) && $count_result>0)
-        {
-        if($allow_multi_edit)
-            {
+    if (
+        ( $k=="" || $internal_share_access ) 
+        && $count_result>0
+        && $allow_multi_edit
+        ) {
             $extra_params = array(
                 'editsearchresults' => 'true',
             );
@@ -4292,7 +4286,6 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
             $options[$o]['category'] = ACTIONGROUP_EDIT;
             $options[$o]['order_by'] = 120;
             $o++;
-            }
         }
     
     
@@ -4713,12 +4706,11 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
     # do an extra check to see if the original filename might have uppercase extension that can be preserved.   
     # also, set extension to "" if the original filename didn't have an extension (exiftool identification of filetypes)
     $pathparts = pathinfo($filename);
-    if(isset($pathparts['extension']))
-        {
-        if(strtolower($pathparts['extension']) == $pextension)
-            {
+    if (
+        isset($pathparts['extension'])
+        && strtolower($pathparts['extension']) == $pextension
+        ) {
             $pextension = $pathparts['extension'];
-            }
         }
 
     $fs=explode("/",$filename);
@@ -4972,10 +4964,11 @@ function collection_download_process_summary_notes(
     {
     global $lang, $zipped_collection_textfile, $includetext, $sizetext, $use_zip_extension, $p;
 
-    if(!hook('zippedcollectiontextfile', '', array($text)))
-        {
-    if($zipped_collection_textfile == true && $includetext == "true")
-        {
+    if (
+        !hook('zippedcollectiontextfile', '', array($text))
+        && $zipped_collection_textfile == true 
+        && $includetext == "true"
+    ) {
         $qty_sizes = isset($available_sizes[$size]) ? count($available_sizes[$size]) : 0;
         $qty_total = count($result);
         $text.= $lang["status-note"] . ": " . $qty_sizes . " " . $lang["of"] . " " . $qty_total . " ";
@@ -5030,8 +5023,7 @@ function collection_download_process_summary_notes(
             $path.=$textfile . "\r\n";  
         }
         $deletion_array[]=$textfile;    
-        }
-        }
+    }    
     }
 
 /**
@@ -5273,12 +5265,11 @@ function relate_all_collection($collection, $checkperms = true)
         {
         for ($m=0;$m<count($rlist);$m++)
             {
-            if ($rlist[$n]!=$rlist[$m]) # Don't relate a resource to itself
-                { 
-                if (count(ps_query("SELECT 1 FROM resource_related WHERE resource= ? and related= ? LIMIT 1", ['i', $rlist[$n], 'i', $rlist[$m]]))!=1) 
-                    {
-                    ps_query("insert into resource_related (resource,related) values (?, ?)", ['i', $rlist[$n], 'i', $rlist[$m]]);
-                    }
+            if (
+                $rlist[$n] != $rlist[$m] # Don't relate a resource to itself
+                && count(ps_query("SELECT 1 FROM resource_related WHERE resource= ? and related= ? LIMIT 1", ['i', $rlist[$n], 'i', $rlist[$m]])) != 1
+            ) { 
+                    ps_query("insert into resource_related (resource,related) values (?, ?)", ['i', $rlist[$n], 'i', $rlist[$m]]);            
                 }
             }
         }

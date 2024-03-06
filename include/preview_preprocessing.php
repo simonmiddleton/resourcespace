@@ -84,10 +84,11 @@ if (is_array($preview_preprocessing_results)){
     Try InDesign - for CS5 (page previews)
    ----------------------------------------
 */
-if ($exiftool_fullpath!=false)
-    {
-    if ($extension=="indd" && !isset($newfile))
-        {
+if (
+    $exiftool_fullpath != false
+    && $extension == "indd" 
+    && !isset($newfile)
+    ) {
         $indd_thumbs = extract_indd_pages ($file);
         $filesize_indd=filesize_unlimited($file); 
         $pagescommand="";
@@ -121,15 +122,15 @@ if ($exiftool_fullpath!=false)
                         }
                     $scr_width=$scr_size[0]['width'];
                     $scr_height=$scr_size[0]['height'];
-                    if (!hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative)))
-                        {
-                        if ($watermark !== '' && $alternative==-1)
-                            {
+                    if (
+                        !hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative))
+                        && $watermark !== '' 
+                        && $alternative == -1
+                        ) {
                             $path=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
                             if (file_exists($path)) {unlink($path);}
                             $command2 = $convert_fullpath . " \"$target\"[0] -quality $imagemagick_quality -resize " . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermark) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
                             $output=run_command($command2);
-                            }
                         }
                     }
                 }
@@ -151,7 +152,6 @@ if ($exiftool_fullpath!=false)
 
                 $n=0;
             } 
-        }
     }   
     
 /* ----------------------------------------
@@ -210,16 +210,17 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
     global $raf_thumb_extract;
     global $arw_thumb_extract;
     
-    if (($extension=="cr2" && $cr2_thumb_extract) || 
-        ($extension=="nef" && $nef_thumb_extract) || 
-        ($extension=="dng" && $dng_thumb_extract) || 
-        ($extension=="rw2" && $rw2_thumb_extract) || 
-        ($extension=="raf" && $raf_thumb_extract) ||
-        ('arw' == $extension && $arw_thumb_extract)
-    )
-        {
-        if ($exiftool_fullpath!=false)
-            {   
+    if (
+        ( 
+            ($extension == "cr2" && $cr2_thumb_extract) || 
+            ($extension == "nef" && $nef_thumb_extract) || 
+            ($extension == "dng" && $dng_thumb_extract) || 
+            ($extension == "rw2" && $rw2_thumb_extract) || 
+            ($extension == "raf" && $raf_thumb_extract) ||
+            ($extension == 'arw' && $arw_thumb_extract) 
+        ) && 
+        $exiftool_fullpath != false
+        ) {
             // previews are stored in a couple places, and some nef files have large previews in -otherimage
             if ($extension=="rw2"){$bin_tag=" -jpgfromraw ";}
             if ($extension=="nef"){$bin_tag=" -otherimage ";}
@@ -288,7 +289,6 @@ if (($extension=="cr2" || $extension=="nef" || $extension=="dng" || $extension==
                 unlink($target);
                 }   
             }
-        }
     }   
 
 /* ---------------------------------------- 
@@ -821,11 +821,11 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 
     $photoshop_eps = false;
     global $photoshop_eps_miff;  
-    if ($photoshop_eps_miff){
-        
-        # Recognize Photoshop EPS(F) pixel data files
-        if ($extension=="eps")
-        {
+    if (
+        $photoshop_eps_miff
+        && $extension=="eps" # Recognize Photoshop EPS(F) pixel data files
+        ) {
+
         $eps_file = fopen($file, 'r');
         $i = 0;
         while (!$photoshop_eps && ($eps_line = fgets($eps_file)) && ($i < 100))
@@ -858,7 +858,6 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             $extension = 'miff';
             }
             }
-        }
     }
 
    if (($extension=="pdf") || (($extension=="eps") && !$photoshop_eps) || ($extension=="ai") || ($extension=="ps")) 
@@ -1003,14 +1002,15 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 
             # Add a watermarked image too?
             global $watermark;
-            if (!hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative))){
-                if ($watermark !== '' && $alternative==-1)
-                    {
+            if (
+                !hook("replacewatermarkcreation","",array($ref,$size,$n,$alternative))
+                && $watermark !== '' 
+                && $alternative==-1
+                ){
                 $path=get_resource_path($ref,true,$size,false,"",-1,$n,true,"",$alternative);
                 if (file_exists($path)) {unlink($path);}
                 $command2 = $convert_fullpath . " \"$target\"[0] $profile -quality $imagemagick_quality -resize " . escapeshellarg($scr_width) . "x" . escapeshellarg($scr_height) . " -tile " . escapeshellarg($watermark) . " -draw \"rectangle 0,0 $scr_width,$scr_height\" " . escapeshellarg($path); 
-                    $output=run_command($command2);
-                }
+                $output=run_command($command2);
             }
         }
         

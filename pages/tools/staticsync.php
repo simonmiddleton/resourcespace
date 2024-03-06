@@ -23,12 +23,11 @@ foreach(getopt($cli_short_options, $cli_long_options) as $option_name => $option
         echo 'If you have the configs [$file_checksums=true; $file_upload_block_duplicates=true;] set and would like to have duplicate resource information sent as a notification please run php staticsync.php --send-notifications' . PHP_EOL;
         exit(1);
         }
-    if (in_array($option_name, array('clearlock', 'c')) )
-        {
-        if (is_process_lock("staticsync") )
-            {
+    if (
+        in_array($option_name, array('clearlock', 'c'))
+        && is_process_lock("staticsync")
+        ) {
             clear_process_lock("staticsync");
-            }
         }
 
     if('send-notifications' == $option_name)

@@ -114,20 +114,21 @@ function set_language($defaultlanguage)
         /** @var array $lang */
     }
 
-    if ($defaultlanguage==''){ 
-        //See if we can auto-detect the most likely language.  The user can override this.
-        if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+    if (
+        $defaultlanguage == ''
+        && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) //See if we can auto-detect the most likely language.  The user can override this.
+        ) { 
             $httplanguage = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
             if(array_key_exists($httplanguage[0],$languages)){
                 $defaultlanguage = $httplanguage[0];
             }
-        }
     }
-    if ($defaultlanguage!='en'){
-        if (file_exists("../languages/".$defaultlanguage.".php")){
+    if (
+        $defaultlanguage != 'en'
+        && file_exists("../languages/".$defaultlanguage.".php")
+        ) {
             include "../languages/".$defaultlanguage.".php";
             /** @var array $lang */
-        }
     }
     return $lang;
 }
@@ -1234,12 +1235,12 @@ else
 
             if ($defaultlanguage != "en")
                 {
-                if (substr($defaultlanguage, 2, 1) == '-' && substr($defaultlanguage, 0, 2) != 'en')
-                    {
-                    if (file_exists($langpath . safe_file_name(substr($defaultlanguage, 0, 2)) .  ".php"))
-                        {
+                if (
+                    substr($defaultlanguage, 2, 1) == '-' 
+                    && substr($defaultlanguage, 0, 2) != 'en'
+                    && file_exists($langpath . safe_file_name(substr($defaultlanguage, 0, 2)) .  ".php")
+                    ) {
                         include $langpath . safe_file_name(substr($defaultlanguage, 0, 2)) . ".php";
-                        }
                     }
                 if (file_exists($langpath . safe_file_name($defaultlanguage) . ".php"))
                     {

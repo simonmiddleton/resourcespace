@@ -234,10 +234,10 @@ $legacy_plugins = $plugins; # Make a copy of plugins activated via config.php
 # Check that manually (via config.php) activated plugins are included in the plugins table.
 foreach($plugins as $plugin_name)
     {
-    if ($plugin_name!='')
-        {
-        if (ps_value("SELECT inst_version AS value FROM plugins WHERE name=?",array("s",$plugin_name),'',"plugins")=='')
-            {
+    if (
+        $plugin_name != ''
+        && ps_value("SELECT inst_version AS value FROM plugins WHERE name=?",array("s",$plugin_name),'',"plugins") == ''
+        ) {
             # Installed plugin isn't marked as installed in the DB.  Update it now.
             # Check if there's a plugin.yaml file to get version and author info.
             $plugin_yaml_path = get_plugin_path($plugin_name) . "/{$plugin_name}.yaml";
@@ -260,7 +260,6 @@ foreach($plugins as $plugin_name)
                     )
                 );
             clear_query_cache("plugins");
-            }
         }
     }
 # Need verbatim queries for this query

@@ -124,24 +124,30 @@ for($n = 0; $n < count($collection_resources); $n++)
             //Video files only have a 'pre' sized derivative so flesh out the sizes array using that.
             $p = get_resource_path($ref,true,'pre',false,$resource_data['file_extension']);
             $size_id = 'pre';
-            if(resource_download_allowed($ref,$size_id,$resource_data['resource_type']))
-                {            
-                if (hook('size_is_available', '', array($resource_data, $p, $size_id)) || file_exists($p))
-                    {
+            if (
+                resource_download_allowed($ref,$size_id,$resource_data['resource_type'])
+                && 
+                (
+                    hook('size_is_available', '', array($resource_data, $p, $size_id)) 
+                    || file_exists($p) 
+                )
+                ) {            
                     $available_sizes[$sizeinfo['id']][]=$ref;
-                    }
                 }
             }
         elseif(in_array($resource_data['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])))
             {
             //Audio files are ported to mp3 and do not have different preview sizes
             $p = get_resource_path($ref,true,'',false,'mp3');
-            if(resource_download_allowed($ref,'',$resource_data['resource_type']))
-                {            
-                if (hook('size_is_available', '', array($resource_data, $p, '')) || file_exists($p))
-                    {
+            if (
+                resource_download_allowed($ref,'',$resource_data['resource_type'])
+                && 
+                (
+                    hook('size_is_available', '', array($resource_data, $p, '')) 
+                    || file_exists($p)
+                )
+                ) {            
                     $available_sizes[$sizeinfo['id']][]=$ref;
-                    }
                 }
             }
         else
@@ -150,9 +156,14 @@ for($n = 0; $n < count($collection_resources); $n++)
             $size_extension = get_extension($resource_data, $size_id);
             $p=get_resource_path($ref,true,$size_id,false,$size_extension);
 
-            if (resource_download_allowed($ref,$size_id,$resource_data['resource_type']))
-                {
-                if (hook('size_is_available', '', array($resource_data, $p, $size_id)) || file_exists($p))
+            if (
+                resource_download_allowed($ref,$size_id,$resource_data['resource_type'])
+                && 
+                (
+                    hook('size_is_available', '', array($resource_data, $p, $size_id)) 
+                    || file_exists($p) 
+                )
+                ) {
                     $available_sizes[$size_id][]=$ref;
                 }
             }

@@ -6797,12 +6797,11 @@ function copyAllDataToResource($from, $to, $resourcedata = false)
         }
 
     # Permission check isn't required if copying data from the user's upload template as with edit then upload mode.
-    if ($from != 0 - $userref)
-        {
-        if(!get_edit_access($to,$resourcedata["archive"],$resourcedata))
-            {
+    if (
+        $from != 0 - $userref
+        && !get_edit_access($to,$resourcedata["archive"],$resourcedata)
+        ) {
             return false;
-            }
         }
 
     copy_resource_nodes($from, $to);
@@ -7085,14 +7084,14 @@ function process_edit_form($ref, $resource)
         $save_errors['resource_type'] = $lang["resourcetype"] . ": " . $lang["requiredfield"];
         }
 
-    if ($upload_collection_name_required)
-        {
-        if (getval("entercolname","")=="" && getval("collection_add","")=="new")
-              {
-              if (!is_array($save_errors)){$save_errors=array();}
-              $save_errors['collectionname'] = $lang["collectionname"] . ": " .$lang["requiredfield"];
-              }
-       }
+    if (
+        $upload_collection_name_required
+        && getval("entercolname","") == "" 
+        && getval("collection_add","") == "new"
+        ) {
+            if (!is_array($save_errors)){$save_errors=array();}
+            $save_errors['collectionname'] = $lang["collectionname"] . ": " .$lang["requiredfield"];
+        }
 
     return $save_errors;
   }
@@ -7710,10 +7709,11 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $path=get_resource_path($ref,true,$sizes[$n]["id"],false,"jpg");
         $file_exists = file_exists($path);
 
-        if(($file_exists || !$onlyifexists) && !resource_has_access_denied_by_RT_size($resource_type, $sizes[$n]['id']))
-            {
-            if (($sizes[$n]["internal"]==0) || ($internal))
-                {
+        if (
+            ($file_exists || !$onlyifexists) 
+            && !resource_has_access_denied_by_RT_size($resource_type, $sizes[$n]['id'])
+            && ($sizes[$n]["internal"] == 0 || $internal)
+            ) {
                 $returnline=array();
                 $returnline["name"]=lang_or_i18n_get_translated($sizes[$n]["name"], "imagesize-");
                 $returnline["allow_preview"]=$sizes[$n]["allow_preview"];
@@ -7762,7 +7762,6 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
                 $returnline["height"]=$sh;
                 $returnline["extension"]='jpg';
                 $return[]=$returnline;
-                }
             }
         $lastname=lang_or_i18n_get_translated($sizes[$n]["name"], "imagesize-");
         $lastpreview=$sizes[$n]["allow_preview"];
@@ -8431,15 +8430,12 @@ function get_resource_type_from_extension($extension, array $resource_type_exten
     $resource_types = ps_array("SELECT ref AS value FROM resource_type",array());
     foreach($resource_type_extension_mapping as $resource_type_id => $allowed_extensions)
         {
-        if (!checkperm('T' . $resource_type_id))
-            {
-            if(in_array(strtolower($extension), $allowed_extensions))
-                {
-                    if(in_array($resource_type_id, $resource_types))
-                    {
-                    return $resource_type_id;
-                    }
-                }
+        if (
+            !checkperm('T' . $resource_type_id)
+            && in_array(strtolower($extension), $allowed_extensions)
+            && in_array($resource_type_id, $resource_types)
+            ) {
+                return $resource_type_id;
             }
         }
     if(in_array($default, $resource_types))

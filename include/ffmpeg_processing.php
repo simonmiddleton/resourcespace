@@ -185,11 +185,11 @@ if($video_preview_hls_support!=0)
             
     $output=run_external($shell_exec_cmd);
      
-    if (!file_exists($hlsfile))
-        {
+    if (
+        !file_exists($hlsfile)
         // Check if '-strict experimental' flag 
-        if(strpos($shell_exec_cmd,"experimental") == false)
-            {
+        && strpos($shell_exec_cmd,"experimental") == false
+        ) {
             $shell_exec_cmd = str_replace($hlswidth . "x" . $hlsheight,$hlswidth . "x" . $hlsheight . " -strict experimental ",$shell_exec_cmd);
             
             if ($config_windows)
@@ -199,7 +199,6 @@ if($video_preview_hls_support!=0)
                 $deletefiles[] = $tmp_ffmpeg_file;
                 }
             $output=run_command($shell_exec_cmd);
-            }
         }
             
     if(file_exists($hlsfile))
@@ -275,10 +274,13 @@ if($video_preview_hls_support!=1)
     }
 
 
-if ($ffmpeg_get_par && (isset($snapshotcheck) && $snapshotcheck==false))
-    {
-    if ($par > 0 && $par <> 1)
-        {
+if (
+    $ffmpeg_get_par 
+    && (isset($snapshotcheck) 
+    && $snapshotcheck==false)
+    && $par > 0 
+    && $par <> 1
+    ) {
         # recreate snapshot with correct PAR
         $width=$sourcewidth;
         $height=$sourceheight;
@@ -295,7 +297,6 @@ if ($ffmpeg_get_par && (isset($snapshotcheck) && $snapshotcheck==false))
         if ($height % 2) {$height++;}
         $shell_exec_cmd = $ffmpeg_fullpath . "  $ffmpeg_global_options -y -i " . escapeshellarg($file) . " -s {$width}x{$height} -f image2 -vframes 1 -ss ".$snapshottime." " . escapeshellarg($target);
         $output = run_command($shell_exec_cmd);
-        }
     }
 
 if (!file_exists($targetfile))
@@ -311,14 +312,12 @@ if (isset($ffmpeg_alternatives))
     for($n=0;$n<count($ffmpeg_alternatives);$n++)
         {
         $generate=true;
-        if (isset($ffmpeg_alternatives[$n]["lines_min"]))
-            {
+        if (
+            isset($ffmpeg_alternatives[$n]["lines_min"])
             # If this alternative size is larger than the source, do not generate.
-            if ($ffmpeg_alternatives[$n]["lines_min"]>=$sourceheight)
-                {
+            && $ffmpeg_alternatives[$n]["lines_min"] >= $sourceheight
+            ) {
                 $generate=false;
-                }
-            
             }
 
         $tmp = hook("preventgeneratealt", "", array($file));

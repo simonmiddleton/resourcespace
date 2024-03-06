@@ -758,15 +758,15 @@ elseif ($k != "" && !$internal_share_access)
             }
         }
         if ($feedback) {?><br /><br /><a onclick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["sendfeedback"])?></a></br><?php } ?>
-        <?php if ($count_result>0 && checkperm("q"))
-            { 
-            # Ability to request a whole collection (only if user has restricted access to any of these resources)
-            if ($min_access!=0)
-                {
+        <?php 
+        if (
+            $count_result > 0 
+            && checkperm("q")
+            && $min_access != 0 # Ability to request a whole collection (only if user has restricted access to any of these resources)
+            ) { 
                 ?>
                 <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["requestall"])?></a><br />
                 <?php
-                }
             }
         ?>
         <a  id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang["hidethumbnails"])?></a>
@@ -994,11 +994,13 @@ else
 
                 $title=$result[$n]["field".$view_title_field];
                 $title_field=$view_title_field;
-                if (isset($metadata_template_title_field) && isset($metadata_template_resource_type)) {
-                    if ($result[$n]['resource_type']==$metadata_template_resource_type) {
+                if (
+                    isset($metadata_template_title_field) 
+                    && isset($metadata_template_resource_type)
+                    && $result[$n]['resource_type'] == $metadata_template_resource_type
+                    ) {
                         $title=$result[$n]["field".$metadata_template_title_field];
                         $title_field=$metadata_template_title_field;
-                    }
                 }
 
                 $field_type=ps_value("SELECT type value FROM resource_type_field WHERE ref=?",array("i",$title_field),

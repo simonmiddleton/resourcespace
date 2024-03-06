@@ -69,13 +69,14 @@ if (!isset($zipcommand) && !$use_zip_extension)
 $archiver = $collection_download && ($archiver_fullpath!=false) && (isset($archiver_listfile_argument)) && (isset($collection_download_settings) ? is_array($collection_download_settings) : false);
 
 # initiate text file
-if (($zipped_collection_textfile==true)&&($includetext=="true")) { 
-    if(hook('replacecollectiontextfile', '', array($collectiondata)))
-        {
+if (
+    $zipped_collection_textfile == true
+    && $includetext == "true"
+    && hook('replacecollectiontextfile', '', array($collectiondata))
+    ) { 
     $text = i18n_get_collection_name($collectiondata) . "\r\n" .
     $lang["downloaded"] . " " . nicedate(date("Y-m-d H:i:s"), true, true) . "\r\n\r\n" .
     $lang["contents"] . ":\r\n\r\n";
-    }
 }
 
 # get collection
@@ -114,24 +115,22 @@ for ($n=0;$n<count($result);$n++)
             //Video files only have a 'pre' sized derivative so flesh out the sizes array with that.
             $p = get_resource_path($ref,true,'pre',false,$result[$n]['file_extension']);
             $size_id = 'pre';
-            if(resource_download_allowed($ref,$size_id,$result[$n]['resource_type']))
-                {            
-                if (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
-                    {
+            if (
+                resource_download_allowed($ref,$size_id,$result[$n]['resource_type'])
+                && (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
+                ) {            
                     $available_sizes[$sizeinfo['id']][]=$ref;
-                    }
                 }
             }
         elseif(in_array($result[$n]['file_extension'], array_merge($ffmpeg_audio_extensions, ['mp3'])))
             {
             //Audio files are ported to mp3 and do not have different preview sizes
             $p = get_resource_path($ref,true,'',false,'mp3');
-            if(resource_download_allowed($ref,'',$result[$n]['resource_type']))
-                {            
-                if (hook('size_is_available', '', array($result[$n], $p, '')) || file_exists($p))
-                    {
+            if (
+                resource_download_allowed($ref,'',$result[$n]['resource_type'])
+                && (hook('size_is_available', '', array($result[$n], $p, '')) || file_exists($p))
+                ) {            
                     $available_sizes[$sizeinfo['id']][]=$ref;
-                    }
                 }
             }
         else
@@ -140,9 +139,10 @@ for ($n=0;$n<count($result);$n++)
             $size_extension = get_extension($result[$n], $size_id);
             $p=get_resource_path($ref,true,$size_id,false,$size_extension);
 
-            if (resource_download_allowed($ref,$size_id,$result[$n]['resource_type']))
-                {
-                if (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
+            if (
+                resource_download_allowed($ref,$size_id,$result[$n]['resource_type'])
+                && (hook('size_is_available', '', array($result[$n], $p, $size_id)) || file_exists($p))
+                ) {
                     $available_sizes[$size_id][]=$ref;
                 }
             }
@@ -726,10 +726,10 @@ function ajax_download(download_offline, tar)
 <?php 
 hook("collectiondownloadmessage");
 
-if (!hook('replacesizeoptions'))
-    {
-    if($count_data_only_types !== count($result))
-        {
+if (
+    !hook('replacesizeoptions')
+    && $count_data_only_types !== count($result)
+    ) {
         ?>
         <div class="Question">
         <label for="downloadsize"><?php echo $lang["downloadsize"]?></label>
@@ -763,12 +763,11 @@ foreach ($available_sizes as $key=>$value)
 
 <div class="clearerleft"> </div></div>
 <div class="clearerleft"> </div></div><?php
-       }
     }
-if (!hook('replaceuseoriginal'))
-    {
-    if($count_data_only_types !== count($result))
-        {
+if (
+    !hook('replaceuseoriginal')
+    && $count_data_only_types !== count($result)
+    ) {
         ?>
         <div class="Question">
         <label for="use_original"><?php echo $lang['use_original_if_size']; ?> <br /><?php
@@ -777,12 +776,13 @@ if (!hook('replaceuseoriginal'))
         ?></label><input type=checkbox id="use_original" name="use_original" value="yes" >
         <div class="clearerleft"> </div></div>
         <?php
-       }
     }
 
-if ($zipped_collection_textfile=="true") { 
-    if(!hook('collectiondownloadtextfile'))
-        { ?>
+if (
+    $zipped_collection_textfile == "true"
+    && !hook('collectiondownloadtextfile')
+    ) { 
+        ?>
 <div class="Question">
 <label for="text"><?php echo $lang["zippedcollectiontextfile"]?></label>
 <select name="text" class="shrtwidth" id="text"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>>
@@ -800,7 +800,6 @@ else{
 </div>
 
 <?php
-}
 }
  
 # Archiver settings

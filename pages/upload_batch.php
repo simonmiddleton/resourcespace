@@ -1971,16 +1971,22 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
 
     /* Show the import embedded metadata checkbox when uploading a missing file or replacing a file.
     In the other upload workflows this checkbox is shown in a previous page. */
-    if (!hook("replacemetadatacheckbox"))
-        {
-        if ((getval("upload_a_file","")!="" || getval("replace_resource","")!=""  || getval("replace","")!="") && $metadata_read)
-            { ?>
+    if (
+        !hook("replacemetadatacheckbox")
+        && $metadata_read
+        && 
+        (
+            getval("upload_a_file","")!="" 
+            || getval("replace_resource","")!=""  
+            || getval("replace","")!=""
+        )
+        ) {
+            ?>
             <div class="Question">
                 <label for="no_exif"><?php echo htmlspecialchars($lang["no_exif"])?></label><input type=checkbox <?php if (!$metadata_read_default){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
                 <div class="clearerleft"> </div>
             </div>
             <?php
-            }
         }
 
     } // End of upload options

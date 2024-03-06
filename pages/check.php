@@ -192,9 +192,10 @@ else
 ?><tr><td colspan="2"><?php echo $lang["exif_extension"]?></td><td><b><?php echo $result?></b></td></tr><?php
 
 # Check archiver
-if (!$use_zip_extension){
-if ($collection_download || isset($zipcommand)) # Only check if it is going to be used.
-    {
+if (
+    !$use_zip_extension
+    && ($collection_download || isset($zipcommand)) # Only check if it is going to be used.
+    ) {
     $archiver_fullpath = get_utility_path("archiver", $path);
 
     if ($path==null && !isset($zipcommand))
@@ -215,7 +216,6 @@ if ($collection_download || isset($zipcommand)) # Only check if it is going to b
         $result = $lang["status-fail"] . ": " . str_replace("?", $path, $lang["softwarenotfound"]);
         }
     ?><tr><td colspan="2"><?php echo $lang["archiver_utility"] ?></td><td><b><?php echo $result?></b></td></tr><?php
-    }
 }
 
 # Check PHP timezone identical to server (MySQL will use the server one) so we need to ensure they are the same

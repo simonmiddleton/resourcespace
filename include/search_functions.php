@@ -79,13 +79,12 @@ function get_advanced_search_fields($archive=false, $hiddenfields="")
         $return1=array();
         for ($n=0;$n<count($return);$n++)
             {
-            if (isset($date_field_data))
-                {
-                if (count(array_intersect(explode(",",(string)$return[$n]["resource_types"]),explode(",",(string)$date_field_data['resource_types'])))>0)
-                    {
+            if (
+                isset($date_field_data)
+                && count(array_intersect(explode(",",(string)$return[$n]["resource_types"]),explode(",",(string)$date_field_data['resource_types']))) > 0
+                ) {
                     $return1[]=$date_field_data;
                     $date_field_data=null; # Only insert it once
-                    }
                 }
             $return1[]=$return[$n];
             }
@@ -2273,13 +2272,13 @@ function cleanse_string($string,$preserve_separators,$preserve_hyphen=false,$is_
     // Revert the htmlentities as otherwise we lose ability to identify certain text e.g. diacritics
     $string= html_entity_decode($string,ENT_QUOTES,'UTF-8');
     
-    if ($preserve_hyphen)
-        {
-        # Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
-        if ((substr($string,0,1)=="-" /*support minus as first character for simple NOT searches */ || strpos($string," -")!==false) && strpos($string," - ")==false)
-            {
-                $separators=array_diff($separators,array("-")); # Remove hyphen from separator array.
-            }
+    if (
+        $preserve_hyphen
+        && (substr($string,0,1) == "-" || strpos($string," -") !== false) /*support minus as first character for simple NOT searches */ 
+        && strpos($string," - ") == false
+        ) {
+            # Preserve hyphen - used when NOT indexing so we know which keywords to omit from the search.
+            $separators=array_diff($separators,array("-")); # Remove hyphen from separator array.
         }
     if (substr($string,0,1)=="!" && strpos(substr($string,1),"!")===false) 
             {
@@ -3177,12 +3176,11 @@ function get_selectedtypes()
     $advanced_search_section = getval("advanced_search_section", "");
     
     # If advanced_search_section is absent then load it from restypes
-    if (getval("submitted","")=="") 
-        {
-        if (!isset($advanced_search_section))
-            {
+    if (
+        getval("submitted","") == ""
+        && !isset($advanced_search_section)
+        ) {
             $advanced_search_section = $restypes;
-            }
         }
 
     # If clearbutton pressed then the selected types are reset based on configuration settings

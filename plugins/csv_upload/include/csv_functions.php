@@ -65,10 +65,11 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     $headers = fgetcsv($file);
 
     // Get list of possible resources to replace
-    if($csv_set_options["update_existing"])
-        {
-        if($csv_set_options["csv_update_col"] && $csv_set_options["csv_update_col_id"] > 0)
-            {
+    if(
+        $csv_set_options["update_existing"]
+        && $csv_set_options["csv_update_col"] 
+        && $csv_set_options["csv_update_col_id"] > 0
+        ) {
             $replaceresources = do_search("!collection" . (int)$csv_set_options["csv_update_col_id"],'','ref','',-1,'asc',false,0,false,false,'',false,false,true,true);
             if(!is_array($replaceresources))
                 {
@@ -77,8 +78,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 }
     
             $replaceresources = array_column($replaceresources,"ref");
-            }
-            
         }
 
     # ----- start of header row checks -----
@@ -542,17 +541,15 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                 $cell_value=trim($line[$column_id]);        // important! we trim values, as options may contain a space after the comma
 
             // Raise error if it's a required field and has an empty or null value
-            if (in_array($cell_value,  array(null,"") ))
-                {
-                // raise error if required field
-                if ($required) 
-                    {
+            if (
+                in_array($cell_value,  array(null,""))
+                && $required // raise error if required field
+                ) {
                     $logtext = "Error: \"{$field_name}\" is a required field - empty value - line {$line_count}";
                     csv_upload_log($logfile,$logtext);
                     array_push ($messages,$logtext);
                     $error_count++;
                     continue;
-                    }
                 }
             
             // Extra check to replace backslashes with forward slashes

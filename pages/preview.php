@@ -256,8 +256,11 @@ else
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php
 
-if (!hook("replacepreviewpager")){
-    if (($nextpage!=-1 || $previouspage!=-1) && $nextpage!=-0){
+if (
+    !hook("replacepreviewpager")
+    && ($nextpage != -1 || $previouspage != -1) 
+    && $nextpage != -0
+    ) {
         $pagecount = get_page_count($resource,$alternative);
         if ($pagecount!=null && $pagecount!=-2){
         ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $lang['page'];?>: <select class="ListDropdown" style="width:auto" onChange="CentralSpaceLoad('<?php echo $baseurl_short?>pages/preview.php?ref=<?php echo urlencode($ref) ?>&alternative=<?php echo urlencode($alternative)?>&ext=<?php echo urlencode($ext)?>&k=<?php echo urlencode($k)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?><?php if($saved_thumbs_state=="show"){?>&thumbs=show<?php } ?>&archive=<?php echo urlencode($archive)?>&page='+this.value);"><?php 
@@ -271,7 +274,6 @@ if (!hook("replacepreviewpager")){
         if ($pagecount>$pdf_pages){?><option value="1">...<?php } ?>
         </select><?php
         }
-    }
 }
 ?>
 

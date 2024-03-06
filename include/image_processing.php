@@ -41,14 +41,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
     hook ("removeannotations","",array($ref));
 
-    if(trim($file_path) != "")
-        {
-        // Check a valid path is specified
-        if (!is_valid_upload_path($file_path, $valid_upload_paths))
-            {
+    if (
+        trim($file_path) != ""
+        && !is_valid_upload_path($file_path, $valid_upload_paths)
+        ) {
             debug("Invalid file path specified: " . $file_path);
             return false;
-            }
         }
 
     if(!$after_upload_processing && !(checkperm('c') || checkperm('d') || hook('upload_file_permission_check_override')))
@@ -290,10 +288,10 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         $filename=get_data_by_field($ref,$filename_field);
         }   
 
-    if (!$revert)
-        {
-        if ($after_upload_processing || $filename!="")
-            {
+    if (
+        !$revert
+        && ($after_upload_processing || $filename!="")
+        ) {
             if(!$after_upload_processing)
                 {
                 if ($file_path!="" && ($replace_batch_existing || !$deletesource))
@@ -333,19 +331,18 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
         
             if(!$upload_then_process || $after_upload_processing)
                 {
-                if ($camera_autorotation)
-                    {
-                    if ($autorotate && (in_array($extension,$camera_autorotation_ext)))
-                        {
+                if (
+                    $camera_autorotation
+                    && $autorotate 
+                    && (in_array($extension,$camera_autorotation_ext))
+                    ) {
                         AutoRotateImage($filepath);
-                        }
                     }
 
                 if ($icc_extraction && $extension!="pdf" && !in_array($extension, $ffmpeg_supported_extensions))
                     {
                     extract_icc_profile($ref,$extension);
                     }
-                }
             }
         }   
     
@@ -1831,16 +1828,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             
             # Delete any file at the target path. Unless using the previewbased option, in which case we need it.
-            if(!hook("imagepskipdel") && !$keep_for_hpr)
-                {
-                if (!$previewbased)
-                    {
-                    if (file_exists($path))
-                        {
-                        debug("Deleting file at path: $path");
-                        unlink($path);
-                        }
-                    }
+            if (
+                !hook("imagepskipdel") 
+                && !$keep_for_hpr
+                && !$previewbased
+                && file_exists($path)
+                ) {
+                    debug("Deleting file at path: $path");
+                    unlink($path);
                 }
             if ($keep_for_hpr){$keep_for_hpr=false;}
                     
@@ -2627,10 +2622,11 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
             ps_query("update resource set preview_tweaks = ? where ref = ?", ['s', $newrotate . '|' . $newgamma, 'i', $ref]);
         }
 
-    if ($rotateangle != 0)
-        {
-        if ($resource_ext != "" && in_array($resource_ext, $ffmpeg_supported_extensions))
-            {
+    if (
+        $rotateangle != 0
+        && $resource_ext != "" 
+        && in_array($resource_ext, $ffmpeg_supported_extensions)
+        ) {
             # Find snapshots for video files so they can be rotated with the thumbnail
             $video_snapshots = get_video_snapshots($ref, true, false);
             foreach($video_snapshots as $snapshot)
@@ -2647,7 +2643,6 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
                     }
                 imagejpeg($snapshot_source, $snapshot, 95);
                 }
-            }
         }
 
     }

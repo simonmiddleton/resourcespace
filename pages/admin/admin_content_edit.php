@@ -41,19 +41,17 @@ if(($save != '') && getval('langswitch', '') == '' && $html_validation === true 
     {
     # Save data
     save_site_text($page, $name, $editlanguage, $editgroup);
-    if($newhelp != '')
-        {
-        if(getval('returntolist', '') == '')
-            {
+    if (
+        $newhelp != ''
+        && getval('returntolist', '') == ''
+        ) {
             redirect($baseurl_short . "pages/admin/admin_content_edit.php?page=help&name=" . urlencode($newhelp) . "&offset=" . urlencode($offset) . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) );
-            }
         }
-    if(getval('custom', '') == 1)
-        {
-        if(getval('returntolist', '') == '')
-            {
+    if (
+        getval('custom', '') == 1
+        && getval('returntolist', '') == ''
+        ) {
             redirect($baseurl_short . "pages/admin/admin_content_edit.php?page=". urlencode($page) . "&name=" . urlencode($name) . "&offset=" . urlencode($offset) . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) );
-            }
         }   
     if(getval('returntolist', '') != '')
         {

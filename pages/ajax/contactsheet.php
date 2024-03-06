@@ -206,11 +206,10 @@ foreach($results as $result_data)
             continue;
             }
         
-        if(array_key_exists("field{$ref}", $result_data))
-            {
-            # Include field unless hide restriction is in effect
-            if( !($contact_sheet_field['hide_when_restricted'] && 1 == $access) ) 
-                {
+        if (
+            array_key_exists("field{$ref}", $result_data)
+            && !($contact_sheet_field['hide_when_restricted'] && 1 == $access) # Include field unless hide restriction is in effect
+            ) {
                 $contact_sheet_value = trim(get_data_by_field($result_data['ref'], $contact_sheet_field['ref']));
 
                 // By default we don't limit the field but if HTML2PDF throws an error because of TD tags spreading across
@@ -231,7 +230,6 @@ foreach($results as $result_data)
                     $field_name.=$contact_sheet_field['title'] . ': ';
                     }
                 $placeholders['resources'][$result_data['ref']]['contact_sheet_fields'][$contact_sheet_field['title']] = $field_name . tidylist(i18n_get_translated($contact_sheet_value));
-                }
             }
         }
 

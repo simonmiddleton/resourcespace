@@ -82,8 +82,10 @@ function execute_api_call($query,$pretty=false)
 
     global $lang;
 
-    if(defined("API_AUTHMODE_NATIVE"))
-        {
+    if (
+        defined("API_AUTHMODE_NATIVE")
+        && !in_array($function,API_NATIVE_WHITELIST)
+        ) {
         // Check if this is a whitelisted function for browser use (native mode bypasses $enable_remote_apis=false;)
         if(!in_array($function,API_NATIVE_WHITELIST))
             {

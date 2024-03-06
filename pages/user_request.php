@@ -24,12 +24,11 @@ if (getval("save","")!="")
         $missingFields = array();
         if (getval("name","")=="") { $missingFields[] = $lang["yourname"]; }
         if (getval("email","")=="") { $missingFields[] = $lang["youremailaddress"]; }
-        if ($registration_group_select)
-            {
-            if (getval("usergroup", 0, true) == 0)
-                {
+        if (
+            $registration_group_select
+            && getval("usergroup", 0, true) == 0
+            ) {
                 $missingFields[] = $lang["group"];
-                }
             }
         }
 
@@ -197,9 +196,12 @@ if (isset($custom_registration_fields))
             ?>
             <div class="Question" id="Question<?php echo $n?>">
             <label for="custom<?php echo $n?>"><?php echo htmlspecialchars(i18n_get_translated($custom[$n]))?>
-            <?php if (isset($required))
-            {
-                if (in_array($custom[$n],$required)) { ?><sup>*</sup><?php }
+            <?php 
+            if (
+                isset($required)
+                && in_array($custom[$n],$required)
+                ) {
+                    ?><sup>*</sup><?php
                 }
                  ?>
             </label>

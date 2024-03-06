@@ -295,14 +295,12 @@ function actions_filter_by_user(int $actionuser,array $actions) : array
                 break;
             default;
                 // Handle any actions added by plugins
-                foreach($typeactions as $typeaction)
-                    {
-                    if(isset($typeaction["access_callback"]))
-                        {
-                        if(call_user_func_array($typeaction["access_callback"]["function"],$typeaction["access_callback"]["parameters"]) == $typeaction["access_callback"]["required"])
-                            {
+                foreach ($typeactions as $typeaction){
+                    if (
+                        isset($typeaction["access_callback"])
+                        && call_user_func_array($typeaction["access_callback"]["function"],$typeaction["access_callback"]["parameters"]) == $typeaction["access_callback"]["required"]
+                        ) {
                             $return["userrequest"][] = $typeaction;
-                            }
                         }
                     }
                 break;

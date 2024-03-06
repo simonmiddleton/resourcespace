@@ -606,9 +606,11 @@ if($export && isset($folder_path))
             {
             $records = ps_query("SELECT {$select} FROM {$from} {$where} LIMIT ?,5000", ['i', $counter]);
 
-            if(empty($records))
-                {
-                if($records_count==0){logScript("WARNING: no data found!");}
+            if (
+                empty($records)
+                && $records_count==0
+                ) {
+                    logScript("WARNING: no data found!");
                 }
 
             foreach($records as $record)

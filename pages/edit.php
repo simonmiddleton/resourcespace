@@ -2049,10 +2049,15 @@ if (    (
         upload_share_active() == false
    ) # If grant_edit plugin isn't overriding
 {
-  if(!hook("replacestatusandrelationshipsheader"))
-  {
-    if ($ref>0 || $show_status_and_access_on_upload===true || $show_access_on_upload===true)
-    {
+  if (
+    !hook("replacestatusandrelationshipsheader")
+    &&
+    (
+        $ref>0 
+        || $show_status_and_access_on_upload === true 
+        || $show_access_on_upload === true 
+    )
+    ) {
             if ($enable_related_resources && ($multiple || $ref>0)) # Showing relationships
             {
               ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?> id="StatusRelationshipsSectionHead"><?php echo htmlspecialchars($lang["statusandrelationships"])?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusRelationshipsSection<?php if ($ref==-1) echo "Upload"; ?>"><?php
@@ -2061,17 +2066,16 @@ if (    (
            {
                 ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo htmlspecialchars($lang["status"])?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusSection<?php if ($ref==-1) echo "Upload"; ?>"><?php # Not showing relationships
              }
-          }
 
        } /* end hook replacestatusandrelationshipsheader */
 
        hook("statreladdtopfields");
 
 # Status
-if ($ref>0 || $show_status_and_access_on_upload===true)
-   {
-   if(!hook("replacestatusselector"))
-      {
+if (
+    ($ref>0 || $show_status_and_access_on_upload === true)
+    && !hook("replacestatusselector")
+    ) {
       if ($multiple)
          { ?>
          <div class="Question" id="editmultiple_status"><input name="editthis_status" id="editthis_status" value="yes" type="checkbox" onClick="var q=document.getElementById('question_status');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="editthis_status_label" for="editthis<?php echo $n?>"><?php echo htmlspecialchars($lang["status"])?></label></div>
@@ -2111,8 +2115,7 @@ if ($ref>0 || $show_status_and_access_on_upload===true)
          </select>
          <div class="clearerleft"> </div>
       </div><?php
-      } /* end hook replacestatusselector */
-   }
+   } /* end hook replacestatusselector */
 
     # Access
 hook("beforeaccessselector");

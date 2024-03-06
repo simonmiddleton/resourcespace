@@ -28,15 +28,14 @@ function WinauthAuthenticate()
     
     $userinit = getval("winauth_login","") != "";
     
-    if (!isset($_SERVER["AUTH_USER"]) || $_SERVER["AUTH_USER"] == "")
-        {
-        if($userinit)
-            {
-            $redirecturl = generateURL($baseurl_short. "login.php", array("error"=> ($userinit ? "winauth_nouser" : "")));    
-            redirect($redirecturl);
-            exit();
-            }
-        }
+    if (
+        (!isset($_SERVER["AUTH_USER"]) || $_SERVER["AUTH_USER"] == "")
+        && $userinit
+        ) {
+        $redirecturl = generateURL($baseurl_short. "login.php", array("error"=> ($userinit ? "winauth_nouser" : "")));    
+        redirect($redirecturl);
+        exit();
+    }
     $url = urldecode(getval("url",""));
     
     if(trim($url) == "/" || trim($url) == "")

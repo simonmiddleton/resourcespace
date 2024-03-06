@@ -324,16 +324,15 @@ else
         <div class="clearerleft"> </div>
     </div>
     <?php
-    if(
-        $collection["public"] == 0
-        || (
-            ($collection['type'] == COLLECTION_TYPE_PUBLIC && !$themes_in_my_collections)
-            || ($collection['type'] == COLLECTION_TYPE_FEATURED && $themes_in_my_collections)
+    if (
+        ( 
+            $collection["public"] == 0
+            || ($collection['type'] == COLLECTION_TYPE_PUBLIC && !$themes_in_my_collections)
+            || ($collection['type'] == COLLECTION_TYPE_FEATURED && $themes_in_my_collections) 
         )
-    )
-        {
-        if (!hook("replaceuserselect"))
-            {?>
+        && !hook("replaceuserselect")
+        ) {
+            ?>
             <div class="Question">
                 <label for="users"><?php echo $lang["attachedusers"]?></label>
                 <?php $userstring=htmlspecialchars($collection["users"]);
@@ -348,8 +347,7 @@ else
                 <div class="clearerleft"> </div>
             </div>
             <?php 
-            } /* end hook replaceuserselect */
-        } 
+        }  /* end hook replaceuserselect */
     
     if($enable_themes && $collection["public"] == 1 && checkperm("h"))
         {

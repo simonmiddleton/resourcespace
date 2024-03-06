@@ -91,10 +91,10 @@ if ($alt_access)
             } ?>
         <td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?> rowspan="<?php echo escape((string)$rowspan);?>">
         <?php
-        if(!hook("renderaltthumb","",[$n,$altfiles[$n]]))
-            {
-            if ($alt_thm!="")
-                {
+        if (
+            !hook("renderaltthumb","",[$n,$altfiles[$n]])
+            && $alt_thm != ""
+            ) {
                 $url = generateURL(
                     $baseurl_short . 'pages/preview.php',
                     [
@@ -116,7 +116,6 @@ if ($alt_access)
                     </a>
                 </div>
                 <?php
-                }
             }        
         ?>
         <div class="AlternativeFileText"><h2><?php echo htmlspecialchars($altfiles[$n]["name"])?></h2>
