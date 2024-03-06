@@ -423,7 +423,11 @@ else
     $setarchivestate = getval('status', $default_setarchivestate, true);
     }
 // Validate this is permitted
-$setarchivestate = get_default_archive_state($setarchivestate);
+// If editing own resource with $edit_access_for_contributor, always add the current archive state to display even when blocked by e permission.
+if (!($edit_access_for_contributor && $userref == $resource['created_by'] && !$upload_review_mode))
+    {
+    $setarchivestate = get_default_archive_state($setarchivestate);
+    }
 
 $uploadparams["status"] = $setarchivestate;
 
