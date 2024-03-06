@@ -207,6 +207,8 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
     var found_suggested = true;
     var keyword         = ui.item.label;
     var node_id         = ui.item.value;
+    let no_entry_exists = keyword.substring(0, <?php echo mb_strlen(escape($lang['noentryexists']), 'UTF-8') ?>) == '<?php echo escape($lang["noentryexists"]); ?>';
+    let deactivated_entry = keyword.substring(0, <?php echo mb_strlen(escape($lang['matched_deactivated_entry']), 'UTF-8'); ?>) === '<?php echo escape($lang["matched_deactivated_entry"]); ?>';
 
     if(keyword.substring(0, <?php echo mb_strlen($lang['createnewentryfor'], 'UTF-8'); ?>) == '<?php echo $lang["createnewentryfor"]; ?>')
         {
@@ -243,10 +245,9 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
                 }
             });        
         }
-    else if(keyword.substring(0, <?php echo mb_strlen(escape($lang['noentryexists']), 'UTF-8') ?>) == '<?php echo escape($lang["noentryexists"]); ?>')
+    else if(deactivated_entry || no_entry_exists)
         {
         document.getElementById('<?php echo $name; ?>_selector').value = '';
-
         found_suggested = false;
         }
 
