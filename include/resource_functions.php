@@ -5254,7 +5254,23 @@ function get_resource_access($resource)
         return 2;
         }
 
-    if (checkperm("v"))
+    $usersearchfilter_isvalid = false;
+    $usersearchfilter_isset = trim($usersearchfilter ?? "") != "";
+    if ($usersearchfilter_isset)
+        {
+        # A search filter has been set. Perform filter processing to establish if the user can view this resource.
+        # Apply filters by searching for the resource, utilising the existing filter matching in do_search to avoid duplication of logic.
+        $search_all_workflow_states_cache = $search_all_workflow_states;
+        $search_all_workflow_states = true;
+        $results = do_search("!resource" . $ref);
+        $search_all_workflow_states = $search_all_workflow_states_cache;
+        if (count($results) > 0)
+            {
+            $usersearchfilter_isvalid = true;
+            }
+        }
+
+    if (checkperm("v") && (!$usersearchfilter_isset || $usersearchfilter_isvalid))
         {
         # Permission to access all resources
         # Always return 0
@@ -5337,16 +5353,9 @@ function get_resource_access($resource)
         return 2;
         }
 
-    if (trim($usersearchfilter??"")!="")
+    if ($usersearchfilter_isset && !$usersearchfilter_isvalid)
         {
-        # A search filter has been set. Perform filter processing to establish if the user can view this resource.
-        # Apply filters by searching for the resource, utilising the existing filter matching in do_search to avoid duplication of logic.
-
-        $search_all_workflow_states_cache = $search_all_workflow_states;
-        $search_all_workflow_states = true;
-        $results=do_search("!resource" . $ref);
-        $search_all_workflow_states = $search_all_workflow_states_cache;
-        if (count($results)==0) {return 2;} # Not found in results, so deny
+        return 2; # Not found in results, so deny
         }
 
     /*
