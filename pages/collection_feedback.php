@@ -20,7 +20,13 @@ if (!$cinfo["request_feedback"]) {exit("Access denied.");}
 # Check that comments have been added.
 $comments=get_collection_comments($collection);
 global $internal_share_access, $userfullname;
-if ($collection_commenting && ($k == '' || $internal_share_access) && count($comments)==0 && $feedback_resource_select==false) {$errors=$lang["feedbacknocomments"];}
+if (
+    $collection_commenting 
+    && ($k == '' || $internal_share_access) 
+    && count($comments)==0 && $feedback_resource_select == false
+    ) {
+        $errors=$lang["feedbacknocomments"];
+    }
 
 $comment="";
 if (getval("save","")!="" && enforcePostRequest(false))

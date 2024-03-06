@@ -757,8 +757,13 @@ elseif ($k != "" && !$internal_share_access)
             <?php 
             }
         }
-        if ($feedback) {?><br /><br /><a onclick="return CentralSpaceLoad(this);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["sendfeedback"])?></a></br><?php } ?>
-        <?php 
+        if ($feedback) {?>
+            <br /> <br />
+            <a onclick="return CentralSpaceLoad(this);" 
+                href="<?php echo generateURL($baseurl_short . 'pages/collection_feedback.php', ['collection' => $usercollection, 'k' => $k]); ?>">
+                <?php echo LINK_CARET . htmlspecialchars($lang["sendfeedback"]); ?></a>
+            </br>
+        <?php } 
         if (
             $count_result > 0 
             && checkperm("q")
