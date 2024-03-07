@@ -136,7 +136,7 @@ else
     {
     if (isset($resource_view_large_orientation) && $resource_view_large_orientation == true)
         {
-        if ($resource["has_image"] == 1 && ($resource["thumb_height"] >= $resource["thumb_width"]))
+        if ($resource["has_image"] != RESOURCE_PREVIEWS_NONE && ($resource["thumb_height"] >= $resource["thumb_width"]))
             {
             # Portrait or square image
             $use_larger_layout = false;
@@ -717,7 +717,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 <?php
                                 // MP3 preview END 
                                 }
-                            elseif($resource['has_image'] === 1)
+                            elseif($resource['has_image'] !== RESOURCE_PREVIEWS_NONE)
                                 {
                                 render_resource_view_image($resource,[
                                     "access"=>$access,
@@ -805,7 +805,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                         $table_headers_drawn=false;
                                         $nodownloads=false;$counter=0;$fulldownload=false;
                                         hook("additionalresourcetools");
-                                        if ($resource["has_image"]==1 && $download_multisize)
+                                        if ($resource["has_image"] !== RESOURCE_PREVIEWS_NONE && $download_multisize)
                                             {
                                             # Restricted access? Show the request link.
 
@@ -981,7 +981,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             ?></td><td class="DownloadFileDimensions"><?php
                                                             }
 
-                                                        if ($resource["has_image"]==1)
+                                                        if ($resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                                                             {
                                                             $sizes=get_image_sizes($ref,false,$resource["file_extension"]);
                                                             $original_size = '';

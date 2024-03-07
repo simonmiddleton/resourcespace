@@ -968,7 +968,7 @@ else
                             href="<?php echo $thumb_url ?>">
                         <?php
                         $colimg_preview_size = $retina_mode ? 'thm' : 'col';
-                        if(1 == $result[$n]['has_image']
+                        if($result[$n]['has_image'] !== RESOURCE_PREVIEWS_NONE
                             && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $colimg_preview_size)
                             && file_exists(get_resource_path($ref, true, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
                         ) {
