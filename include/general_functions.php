@@ -1723,10 +1723,10 @@ function getFolderContents($path, $recurse = true, $include_hidden = false)
     $files = array();
     while(($file = readdir($directory_handle)) !== false) // For each directory listing entry.
         {
-        if(! in_array($file, array('.', '..'))) // Test if file is not unix parent and current path.
-            {
-            if($include_hidden || ! preg_match('/^\./', $file)) // Test if the file can be listed.
-                {
+        if (
+            ! in_array($file, array('.', '..')) // Test if file is not unix parent and current path.
+            && ($include_hidden || ! preg_match('/^\./', $file)) // Test if the file can be listed.
+            ) {
                 $complete_path = $path . DIRECTORY_SEPARATOR . $file;
                 if(is_dir($complete_path) && $recurse) // If the path is a directory, and need to be explored.
                     {
@@ -1740,7 +1740,6 @@ function getFolderContents($path, $recurse = true, $include_hidden = false)
                     {
                     $files[] = $file;
                     }
-                } // Test if the file can be listed.
             } // Test if file is not unix parent and current path.
         } // For each directory listing entry.
 
@@ -4198,9 +4197,12 @@ function get_ip()
     {
     global $ip_forwarded_for;
 
-    if ($ip_forwarded_for)
-        {
-        if (isset($_SERVER) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {return $_SERVER["HTTP_X_FORWARDED_FOR"];}
+    if (
+        $ip_forwarded_for
+        && isset($_SERVER) 
+        && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)
+        ) {
+            return $_SERVER["HTTP_X_FORWARDED_FOR"];
         }
 
     # Returns the IP address for the current user.
@@ -5330,10 +5332,13 @@ function get_size_info(array $size, ?array $originalSize = null): string
 
     $output .= '</p>';
 
-    if (!isset($size['extension']) || !in_array(strtolower($size['extension']), $ffmpeg_supported_extensions))
-        {
-        if (!hook("replacedpi"))
-            {   
+    if (
+        (
+            !isset($size['extension']) 
+            || !in_array(strtolower($size['extension']), $ffmpeg_supported_extensions) 
+        )
+        && !hook("replacedpi")
+        ) {
             # Do DPI calculation only for non-videos
             compute_dpi($newWidth, $newHeight, $dpi, $dpi_unit, $dpi_w, $dpi_h);
             $output .= sprintf(
@@ -5345,7 +5350,6 @@ function get_size_info(array $size, ?array $originalSize = null): string
                 htmlspecialchars($dpi),
                 htmlspecialchars($lang['ppi']),
             );
-            }
         }
 
     return $output;

@@ -56,12 +56,12 @@ $checktermsusage =  !in_array($size, $sizes_always_allowed)
     && $slideshow == 0
     && $userfiledownload == ""
     && (!$video_preview_original && get_resource_access($ref));
-if($terms_download && $checktermsusage)
-    {
-    if ($iaccept != 'on')
-        {
+if(
+    $terms_download 
+    && $checktermsusage
+    && $iaccept != 'on'
+    ) {
         exit($lang["mustaccept"]);
-        }
     }
 if ($download_usage && $checktermsusage)
     {
@@ -356,13 +356,12 @@ if(!$file_handle)
     exit();
     }
 
-if(!$noattach)
-    {
+if (
+    !$noattach
+    && (!isset($filename) || $filename == "" || $alternative != -1) 
+    ) {
     // Compute a file name for the download.
-    if(!isset($filename) || $filename == "" || $alternative != -1)
-        {
         $filename = get_download_filename($ref, $size, $alternative, $ext);       
-        }
     }
 
 if($log_download)

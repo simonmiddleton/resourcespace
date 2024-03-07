@@ -568,12 +568,11 @@ function prepareTags(array $dirty_tags)
 
         // Existing tags
         $found_node = array();
-        if(get_node((int) $dirty_tag['ref'], $found_node))
-            {
-            if($found_node['resource_type_field'] == $dirty_tag['resource_type_field'])
-                {
+        if (
+            get_node((int) $dirty_tag['ref'], $found_node)
+           && $found_node['resource_type_field'] == $dirty_tag['resource_type_field'] 
+        ) {
                 $clean_tags[] = $found_node;
-                }
             }
         }
 

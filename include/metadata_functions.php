@@ -254,12 +254,12 @@ function check_date_parts($parts)
         array_push($invalid_parts, 'year');
         }
     // Check time part
-    if (isset($parts[4]) && isset($parts[5])) 
-        {
-        if (!strtotime($parts[4] . ':' . $parts[5]))
-            {
+    if (
+        isset($parts[4]) 
+        && isset($parts[5])
+        && !strtotime($parts[4] . ':' . $parts[5])
+        ) {
             array_push($invalid_parts, 'time');
-            }
         }
 
     // No errors found return false

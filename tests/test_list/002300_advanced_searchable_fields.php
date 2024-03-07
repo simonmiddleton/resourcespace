@@ -20,11 +20,12 @@ function make_field($fieldname, $resourcetype, $fieldtype, $advanced) {
 
 function verify_field_position($fieldname, $searchfieldarray, $expectedposition) {
     foreach($searchfieldarray as $key => $searchfieldentry ) {
-        if($searchfieldentry['title'] == $fieldname) {
-            if($key == $expectedposition) {
-                feedback("FIELD ".$fieldname." PASSED".PHP_EOL);
-                return true;
-            }
+        if (
+            $searchfieldentry['title'] == $fieldname
+            && $key == $expectedposition
+            ) {
+            feedback("FIELD ".$fieldname." PASSED".PHP_EOL);
+            return true;
         }
     }
     # Error; not located in the expected position

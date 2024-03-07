@@ -227,12 +227,14 @@ if (!hook("renderresultthumb"))
                 {include $plugin;}
 
             # swap title fields if necessary
-            if (isset($metadata_template_resource_type) && isset($metadata_template_title_field) && is_int_loose($metadata_template_title_field))
-                {
-                if (($df[$x]['ref']==$view_title_field) && ($result[$n]['resource_type']==$metadata_template_resource_type))
-                    {
+            if (
+                isset($metadata_template_resource_type) 
+                && isset($metadata_template_title_field) 
+                && is_int_loose($metadata_template_title_field)
+                && $df[$x]['ref'] == $view_title_field 
+                && $result[$n]['resource_type'] == $metadata_template_resource_type
+                ) {
                     $value=$result[$n]['field'.$metadata_template_title_field];
-                    }
                 }
             // extended css behavior 
             if (in_array($df[$x]['ref'],$thumbs_display_extended_fields) &&
@@ -305,10 +307,10 @@ if (!hook("renderresultthumb"))
         <div class="ResourcePanelIcons">
         <?php
 
-        if($use_selection_collection)
-            {
-            if(!hook("thumbscheckboxes"))
-                {
+        if (
+            $use_selection_collection
+            && !hook("thumbscheckboxes")
+            ) {
                 if(!in_array($result[$n]['resource_type'],$collection_block_restypes))  
                     {?>
                     <input 
@@ -334,8 +336,7 @@ if (!hook("renderresultthumb"))
                     <input type="checkbox" class="checkselect" style="opacity: 0;">
                     <?php
                     }
-                } # end hook thumbscheckboxes
-            }
+            } # end hook thumbscheckboxes
         if(!hook("replacethumbsidinthumbnail"))
             {
             if ($display_resource_id_in_thumbnail && $ref>0) 

@@ -4,12 +4,11 @@ include "../../include/db.php";
 include "../../include/authenticate.php";
 include "../../include/comment_functions.php";
 
-if('POST' == $_SERVER['REQUEST_METHOD'])
-    {
-    if(!empty($username))
-        {
+if (
+    'POST' == $_SERVER['REQUEST_METHOD']
+    && !empty($username)
+    ) {
         comments_submit();
-        }
     }
 
 $ref             = getval('ref', 0, true);

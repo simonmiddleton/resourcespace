@@ -24,12 +24,11 @@ $search=getval("search","");
 $order_by=getval("order_by","relevance");
 
 # add order_by check to filter values prefixed by 'field'
-if(preg_match("/^field(.*)/", $order_by, $matches))
-    {
-    if (!in_array($matches[1],$sort_fields)) # check that field ref  is in config $sort_fields array
-        {
+if(
+    preg_match("/^field(.*)/", $order_by, $matches)
+    && !in_array($matches[1],$sort_fields) # check that field ref  is in config $sort_fields array
+    ) {
         $order_by="relevance"; # if not, then sort by relevance
-        }
     }
 
 $offset=getval("offset",0,true);
@@ -134,13 +133,14 @@ if (isset($resource_view_large_ext))
     }
 else
     {
-    if (isset($resource_view_large_orientation) && $resource_view_large_orientation == true)
-        {
-        if ($resource["has_image"] == 1 && ($resource["thumb_height"] >= $resource["thumb_width"]))
-            {
+    if (
+        isset($resource_view_large_orientation) 
+        && $resource_view_large_orientation == true
+        && $resource["has_image"] == 1 
+        && ($resource["thumb_height"] >= $resource["thumb_width"])
+        ) {
             # Portrait or square image
             $use_larger_layout = false;
-            }
         }
     }
 
@@ -575,12 +575,13 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                         }
 
                     #If additional archive states are set, put them next to the field used as title
-                    if ( isset($additional_archive_states) && count($additional_archive_states)!=0)
-                        {
-                        if(in_array($resource["archive"],$additional_archive_states))
-                            {?>
+                    if ( 
+                        isset($additional_archive_states) 
+                        && count($additional_archive_states)!=0
+                        && in_array($resource["archive"],$additional_archive_states)
+                        ) {
+                            ?>
                             <span class="ArchiveResourceTitle"><?php echo htmlspecialchars($lang["status" . $resource['archive']]) ?>:</span>&nbsp;<?php	
-                            }
                         }
                     }
 
@@ -596,15 +597,16 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
         </div>
 
         <?php 
-        if (!hook("replaceresourceistranscoding"))
-            {
-            if (isset($resource['is_transcoding']) && $resource['is_transcoding']!=0)
-                { ?>
+        if (
+            !hook("replaceresourceistranscoding")
+            && isset($resource['is_transcoding']) 
+            && $resource['is_transcoding'] != 0
+            ) {
+                ?>
                 <div class="PageInformal">
                     <?php echo htmlspecialchars($lang['resourceistranscoding'])?>
                 </div>
                 <?php
-                }
             } //end hook replaceresourceistrancoding ?>
 
         <?php hook('renderbeforeresourceview', '', array('resource' => $resource));
@@ -627,10 +629,10 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
             <?php
             if (!hook("renderinnerresourceview"))
                 {
-                if (!hook("replacerenderinnerresourcepreview"))
-                    {
-                    if (!hook("renderinnerresourcepreview"))
-                        {
+                if (
+                    !hook("replacerenderinnerresourcepreview")
+                    && !hook("renderinnerresourcepreview")
+                    ) {
                         if (file_exists("../players/type" . $resource["resource_type"] . ".php"))
                             {
                             // Legacy code - should now be replaced by a plugin
@@ -745,8 +747,8 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     }
                                 }
                             } // Standard previews END
-                        } /* End of renderinnerresourcepreview hook */ 
-                    } /* End of replacerenderinnerresourcepreview hook */ 
+
+                    } /* End of replacerenderinnerresourcepreview hook and end of renderinnerresourcepreview hook */ 
 
                 $disable_flag = hook('disable_flag_for_renderbeforerecorddownload');
                 hook("renderbeforerecorddownload", '', array($disable_flag));
@@ -828,10 +830,11 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     continue;
                                                     }
 
-                                                if (!hook("replacedownloadspacetableheaders"))
-                                                    {
-                                                    if ($table_headers_drawn==false)
-                                                        { ?>
+                                                if (
+                                                    !hook("replacedownloadspacetableheaders")
+                                                    && $table_headers_drawn == false
+                                                    ) {
+                                                        ?>
                                                         <td><?php echo htmlspecialchars($lang["fileinformation"])?></td>
                                                         <?php echo $use_larger_layout ? "<td>" . $lang["filedimensions"] . "</td>" : ''; ?>
                                                         <td><?php echo htmlspecialchars($lang["filesize"])?></td>
@@ -839,7 +842,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                         </tr>
                                                         <?php
                                                         $table_headers_drawn=true;
-                                                        } 
                                                     } # end hook("replacedownloadspacetableheaders")?>
 
                                                 <tr class="DownloadDBlend" id="DownloadBox<?php echo $n?>">
@@ -857,10 +859,11 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 </tr>
 
                                                 <?php
-                                                if (!hook("previewlinkbar"))
-                                                    {
-                                                    if ($downloadthissize && $sizes[$n]["allow_preview"]==1)
-                                                        { 
+                                                if (
+                                                    !hook("previewlinkbar")
+                                                    && $downloadthissize 
+                                                    && $sizes[$n]["allow_preview"] == 1
+                                                    ) {
                                                         # Add an extra line for previewing
                                                         global $data_viewsize;
                                                         $data_viewsize=$sizes[$n]["id"];
@@ -885,7 +888,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             </td>
                                                         </tr>
 <?php
-                                                        }
                                                     }
                                                 }
                                             }
@@ -1347,10 +1349,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                         <div class="clearerleft"> </div>
 
                         <?php
-                        if (!hook("replaceuserratingsbox"))
-                            {
-                            # Include user rating box, if enabled and the user is not external.
-                            if ($user_rating && ($k=="" || $internal_share_access)) { include "../include/user_rating.php"; }
+                        if (
+                            !hook("replaceuserratingsbox")
+                            && $user_rating # Include user rating box, if enabled and the user is not external.
+                            && ($k=="" || $internal_share_access)
+                            ) {
+                                include "../include/user_rating.php";
                             } /* end hook replaceuserratingsbox */
 
                         ?>
@@ -1472,13 +1476,14 @@ hook("custompanels"); //For custom panels immediately below resource display are
 $resource=$resourcedata;
 
 // Show resource geolocation map.
-if (!$disable_geocoding) 
-    {
-    // Only show the map if the resource is geocoded or they have the permission to geocode it.
-    if ($edit_access || ($resource['geo_lat'] != '' && $resource['geo_long'] != ''))
-        {
+if (
+    !$disable_geocoding
+    &&  (   // Only show the map if the resource is geocoded or they have the permission to geocode it.
+            $edit_access 
+            || ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
+        )
+    ) {
         include '../include/geocoding_view.php';
-        }
     }
 
 if ($comments_resource_enable && ($k=="" || $internal_share_access))

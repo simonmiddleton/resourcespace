@@ -14,10 +14,10 @@ if (!hook("replacelistitem"))
     <!--List Item-->
     <tr id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo $html_class; hook("listviewrowstyle");?>>
     <?php 
-    if(!hook("listcheckboxes"))
-        {
-        if ($use_selection_collection)
-            {
+    if (
+        !hook("listcheckboxes")
+        && $use_selection_collection
+        ) {
             if(!in_array($result[$n]['resource_type'],$collection_block_restypes))
                 {?>
                 <td width="30px">
@@ -40,7 +40,6 @@ if (!hook("replacelistitem"))
                 <td width="30px"></td>
                 <?php
                 }
-            }
         } #end hook listcheckboxes 
 
         # Display thumbnail of resource
@@ -94,17 +93,25 @@ if (!hook("replacelistitem"))
                 {include $plugin;}
 
             # swap title fields if necessary
-            if (isset($metadata_template_resource_type) && isset ($metadata_template_title_field))
-                {
-                if (($df[$x]['ref']==$view_title_field) && ($result[$n]['resource_type']==$metadata_template_resource_type))
-                    {
+            if (
+                isset($metadata_template_resource_type) 
+                && isset($metadata_template_title_field)
+                && $df[$x]['ref'] == $view_title_field 
+                && $result[$n]['resource_type'] == $metadata_template_resource_type
+                ) {
                     $value=$result[$n]['field'.$metadata_template_title_field];
-                    }
                 }
-            if ( (isset($metadata_template_title_field)&& $df[$x]['ref']!=$metadata_template_title_field ) || !isset($metadata_template_title_field) ) 
-                {
-                if (!hook("replacelisttitle")) 
-                    { ?>
+            if ( 
+                (
+                    (
+                    isset($metadata_template_title_field) 
+                    && $df[$x]['ref']!=$metadata_template_title_field
+                    ) 
+                    || !isset($metadata_template_title_field)
+                ) 
+                && hook("replacelisttitle")
+                ) {
+                    ?>
                     <td 
                         nowrap 
                         <?php 
@@ -127,7 +134,7 @@ if (!hook("replacelistitem"))
                             } //end link conditional ?>
                         </div>
                     </td>
-<?php } 
+<?php  
                 } //end replace list title
             }
         

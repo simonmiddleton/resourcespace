@@ -6,10 +6,14 @@ global $reset_date_upload_template, $reset_date_field, $blank_date_upload_templa
 $dy="";
 $dm=$dd=$dh=$di=-1;
 
-if(!$blank_date_upload_template || $ref>0 || '' != getval('submitted', '')) {
-    
-if ($value!="")
-    {
+if (
+    (
+        !$blank_date_upload_template 
+        || $ref>0 
+        || '' != getval('submitted', '')
+    )
+    && $value!=""
+    ) {
     #fetch the date parts from the value
     $sd=explode(" ",$value);
     if (count($sd)>=2)
@@ -36,9 +40,7 @@ if ($value!="")
         if (count($sd)>=1) $dy=$sd[0];
         if (count($sd)>=2) $dm=intval($sd[1]);
         if (count($sd)>=3) $dd=intval($sd[2]);
-        }
-    }  
-    
+        }    
 }
 if($date_d_m_y){  
 ?>

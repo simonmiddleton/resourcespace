@@ -16,10 +16,12 @@ $tabs_fields_assoc = [];
 // Do not show related resources in tabs for the pushed metadata
 $show_tab_resources = !(isset($GLOBALS["showing_pushed_metadata"]) && $GLOBALS["showing_pushed_metadata"]);
 $configured_resource_type_tabs = [];
-if($show_tab_resources)
-    {
-    if(isset($related_type_show_with_data) && !empty($related_type_show_with_data) && ($related_type_upload_link || count(get_related_resources($ref)) > 0))
-        {
+if (
+    $show_tab_resources
+    && isset($related_type_show_with_data) 
+    && !empty($related_type_show_with_data) 
+    && ($related_type_upload_link || count(get_related_resources($ref)) > 0)
+    ) {
         $configured_resource_type_tabs = ps_array(
             "SELECT DISTINCT t.ref AS `value`
                 FROM resource_type AS rt
@@ -28,7 +30,6 @@ if($show_tab_resources)
             array_merge(ps_param_fill($related_type_show_with_data, 'i'), ['i', $resource['resource_type']]),
             'schema'
         );
-        }
     }
 
 // Clean the tabs by removing the ones that would end up being empty
@@ -139,10 +140,10 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
         hook("extrafields");
 
         // Contributed by
-        if(!hook("replacecontributedbyfield"))
-            {
-            if($show_contributed_by)
-                {
+        if(
+            !hook("replacecontributedbyfield")
+            && $show_contributed_by
+            ) {
                 $udata = get_user($resource["created_by"]);
                 if($udata !== false)
                     {
@@ -160,7 +161,6 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
                     </div>
                     <?php
                     }
-                }
             } // end hook replacecontributedby
         ?>
         <div class="clearerleft"></div>
@@ -221,15 +221,21 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
                 {
                 $displaycondition = check_view_display_condition($fields, $i, $fields_all);
                 debug(sprintf('Field #%s has $displaycondition = %s', $fields[$i]['ref'], json_encode($displaycondition)));
-                if($fields[$i]["global"] == 1 || in_array($resource['resource_type'],$arr_fieldrestypes[$fields[$i]['ref']]) || (isset($metadata_template_resource_type) && $resource['resource_type'] == $metadata_template_resource_type))
-                    {
-                    if($displaycondition && $tab_ref == $fields[$i]['tab'])
-                        {
-                        if(!hook('renderfield', '', array($fields[$i], $resource)))
-                            {
-                            display_field_data($fields[$i]);
-                            }
-                        }
+                if(
+                    (
+                        $fields[$i]["global"] == 1 
+                        || in_array($resource['resource_type'],$arr_fieldrestypes[$fields[$i]['ref']]) 
+                        || 
+                        (
+                            isset($metadata_template_resource_type) 
+                            && $resource['resource_type'] == $metadata_template_resource_type
+                        )
+                    )
+                    && $displaycondition 
+                    && $tab_ref == $fields[$i]['tab']
+                    && !hook('renderfield', '', array($fields[$i], $resource))
+                    ) {
+                        display_field_data($fields[$i]);
                     }
                 }
 
@@ -276,12 +282,11 @@ if(empty($fields_tab_names))
         {
         $displaycondition = check_view_display_condition($fields, $i, $fields_all);
 
-        if($displaycondition)
-            {
-            if(!hook('renderfield',"", array($fields[$i], $resource)))
-                {
+        if (
+            $displaycondition
+            && !hook('renderfield',"", array($fields[$i], $resource))
+            ) {
                 display_field_data($fields[$i]);
-                }
             }
         }
     // Close TabbedPanel - it is now opened before the $fields_tab_names loop even if no real tabs exist

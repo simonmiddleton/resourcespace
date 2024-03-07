@@ -178,13 +178,14 @@ function HookGrant_editEditAppendcustomfields()
                 },
                 timeout: 4000,
                 success: function(result) {
-                    if(result='deleted')
+                    if(result == 'SUCCESS')
                         {
                         jQuery('#grant_edit' + user).remove();
                         }
                     },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     response = "err--" + XMLHttpRequest.status + " -- " + XMLHttpRequest.statusText;
+                    response = DOMPurify.sanitize(response);
                     },
             });
             }
@@ -208,7 +209,7 @@ function HookGrant_editEditAppendcustomfields()
                 echo "<tr id='grant_edit" . (int) $grant_editgroup['ref'] . "'>
 						<td>" . escape($grant_editgroup['name']) . "</td>
 						<td>" . escape(($grant_editgroup['expiry'] != "") ? nicedate($grant_editgroup['expiry']) : $lang['never'])  . "</td>
-						<td><a href='#' onclick='if (confirm(\"" . escape($lang['grant_edit_delete_user']) . " " . escape($grant_editgroup['name']) . "\")){remove_grant_edit(" . (int) $grant_editgroup['ref'] . ");}'>&gt;&nbsp;" . escape($lang['action-delete'])  . "</a></td>
+						<td><a href='#' onclick='if (confirm(\"" . escape($lang['grant_edit_delete_user']) . " " . escape($grant_editgroup['name']) . "\")){remove_grant_edit_group(" . (int) $grant_editgroup['ref'] . ");}'>&gt;&nbsp;" . escape($lang['action-delete'])  . "</a></td>
 					  </tr>
 					";
                 }       
@@ -216,7 +217,7 @@ function HookGrant_editEditAppendcustomfields()
             </table>
         </div>
         <script>
-        function remove_grant_edit(group)
+        function remove_grant_edit_group(group)
             {
             jQuery.ajax({
                 async: true,
@@ -230,13 +231,14 @@ function HookGrant_editEditAppendcustomfields()
                 },
                 timeout: 4000,
                 success: function(result) {
-                    if(result='deleted')
+                    if(result == 'SUCCESS')
                         {
                         jQuery('#grant_edit' + group).remove();
                         }
                     },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     response = "err--" + XMLHttpRequest.status + " -- " + XMLHttpRequest.statusText;
+                    response = DOMPurify.sanitize(response);
                     },
             });
             }

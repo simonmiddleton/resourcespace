@@ -84,12 +84,12 @@ elseif (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostReq
         $target_frame_rate = $ffmpeg_std_frame_rate_options[$video_splice_frame_rate]["value"];
 
         // Check if video export folder set and created
-        if($video_splice_type == "video_splice_save_export")
-        {
-        if($video_export_folder != "" && !is_dir($video_export_folder))
-            {
+        if (
+            $video_splice_type == "video_splice_save_export"
+            && $video_export_folder != "" 
+            && !is_dir($video_export_folder)
+            ) {
             mkdir($video_export_folder, 0777);
-            }
         }
 
         if($offline)

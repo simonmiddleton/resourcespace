@@ -236,13 +236,11 @@ function setup_user(array $userdata)
     $user_dl_limit=trim((string) $userdata["download_limit"]);
     $user_dl_days=trim((string) $userdata["download_log_days"]);
 
-    if((int)$user_dl_limit > 0)
-        {
-        // API cannot be used by these users as would open up opportunities to bypass limits
-        if(defined("API_CALL"))
-            {
+    if (
+        (int)$user_dl_limit > 0
+        && defined("API_CALL") // API cannot be used by these users as would open up opportunities to bypass limits
+        ) {
             return false;
-            }
         }
 
     # Apply config override options
@@ -791,16 +789,15 @@ function save_user($ref)
         }
 
         // Add user group dash tiles as soon as we've changed the user group
-        if($home_dash)
-            {
-            // If user group has changed, remove all user dash tiles that were valid for the old user group
-            if($current_user_data['usergroup'] != $usergroup)
-                {
+        if (
+            $home_dash
+            && $current_user_data['usergroup'] != $usergroup
+            ) {
+                // If user group has changed, remove all user dash tiles that were valid for the old user group
                 ps_query("DELETE FROM user_dash_tile WHERE user = ? AND dash_tile IN (SELECT dash_tile FROM usergroup_dash_tile WHERE usergroup = ?)", array("i", $ref, "i", $current_user_data['usergroup']));
 
                 include_once __DIR__ . '/dash_functions.php';
                 build_usergroup_dash($usergroup, $ref);
-                }
             }
 
     if($emailresetlink != '')
@@ -1227,9 +1224,11 @@ function email_user_request()
 function user_limit_reached()
     {
     global $user_limit;
-    if (isset($user_limit))
-        {
-        if (get_total_approved_users()>=$user_limit) {return true;}
+    if (
+        isset($user_limit)
+        && get_total_approved_users() >= $user_limit
+        ) {
+            return true;
         }
     return false;
     }
@@ -3267,12 +3266,11 @@ function get_approver_usergroups($usergroup = "")
     global $usergroup_approval_mappings;
 
     $approval_groups = array();
-    if (isset($usergroup_approval_mappings))
-        {
-        if (array_key_exists((int)$usergroup, $usergroup_approval_mappings))
-           {
+    if (
+        isset($usergroup_approval_mappings)
+        && array_key_exists((int)$usergroup, $usergroup_approval_mappings)
+        ) {
            $approval_groups = $usergroup_approval_mappings[(int)$usergroup];
-           }
         }
 
     return $approval_groups;

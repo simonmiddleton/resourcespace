@@ -334,13 +334,12 @@ function create_periodic_email($user, $report, $period, $email_days, array $user
     $ref = sql_insert_id();
     
     # Send to all users?
-    if (checkperm('m'))
-        {
-        if(!empty($user_groups))
-            {
+    if (
+        checkperm('m')
+        && !empty($user_groups)
+        ) {
             $ugstring=implode(",",$user_groups);
             ps_query("UPDATE report_periodic_emails SET user_groups = ? WHERE ref = ?",array("s",$ugstring, "i",$ref));
-            }
         }
 
     # Return

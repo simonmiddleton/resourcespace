@@ -1273,10 +1273,13 @@ if (!hook("replacesearchheader")) # Always show search header now.
     hook("stickysearchresults");
 
     // Show collection title and description.
-    if ($collectionsearch)
-        {
-        if ((isset($collectiondata) && array_key_exists("name",$collectiondata)) && $show_collection_name)
-            { ?>
+    if (
+        $collectionsearch
+        && isset($collectiondata) 
+        && array_key_exists("name",$collectiondata) 
+        && $show_collection_name
+        ) {
+            ?>
             <div class="RecordHeader">
                 <h1 class="SearchTitle">
                 <?php echo i18n_get_collection_name($collectiondata); ?>
@@ -1287,7 +1290,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 echo "<p>" . nl2br(htmlspecialchars(i18n_get_translated($collectiondata['description']))) . "</p>";
                 }
             echo "</div>";
-            }
         }
     
     hook("beforesearchresults");
@@ -1512,10 +1514,19 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 # Allow alternative configuration settings for this resource type.
                 resource_type_config_override($result[$n]["resource_type"]);
                 
-                if ($order_by=="resourcetype" && $display!="list")
-                    {
-                    if ($n==0 || ((isset($result[$n-1])) && $result[$n]["resource_type"]!=$result[$n-1]["resource_type"]))
-                        {
+                if (
+                    $order_by == "resourcetype" 
+                    && $display != "list"
+                    && 
+                    ( 
+                        $n==0 
+                        || 
+                        ( 
+                            isset($result[$n-1]) 
+                            && $result[$n]["resource_type"] != $result[$n-1]["resource_type"]
+                        )
+                    )
+                    ) {
                         if($result[$n]["resource_type"]!="")
                             {
                             echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . htmlspecialchars($rtypes[$result[$n]["resource_type"]]) .  "</h1>";
@@ -1524,7 +1535,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
                             {
                             echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . $lang['unknown'] .  "</h1>";
                             }
-                        }
                     }
 
                 $ref = $result[$n]["ref"];

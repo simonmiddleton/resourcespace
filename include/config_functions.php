@@ -1159,10 +1159,11 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
         $valid_extensions = $page_element[5];
 
         // DELETE
-        if(getval('delete_' . $config_name, '') !== '' && enforcePostRequest(false))
-            {
-            if(get_config_option(null, $config_name, $delete_filename))
-                {
+        if (
+            getval('delete_' . $config_name, '') !== '' 
+            && enforcePostRequest(false)
+            && get_config_option(null, $config_name, $delete_filename)
+            ) {
                 $delete_filename = str_replace('[storage_url]' . '/' . $file_location, $file_server_location, $delete_filename);
 
                 if(file_exists($delete_filename))
@@ -1172,13 +1173,13 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
                     }
                 delete_config_option(null, $config_name);
                 $redirect = true;
-                }
             }
         // CLEAR
-        if(getval('clear_' . $config_name, '') !== '' && enforcePostRequest(false))
-            {
-            if(get_config_option(null, $config_name, $missing_file))
-                {
+        if (
+            getval('clear_' . $config_name, '') !== '' 
+            && enforcePostRequest(false)
+            && get_config_option(null, $config_name, $missing_file)
+            ) {
                 $missing_file = str_replace('[storage_url]' . '/' . $file_location, $file_server_location, $missing_file);
                  if(!file_exists($missing_file))
                     {
@@ -1186,7 +1187,6 @@ function config_process_file_input(array $page_def, $file_location, $redirect_lo
 
                     $redirect = true;
                     }
-                }
             }
 
         // UPLOAD

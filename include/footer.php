@@ -272,14 +272,16 @@ if (getval("ajax","") == "")
 
     <?php # Work out the current collection (if any) from the search string if external access
 
-    if (isset($k) && $k!="" && isset($search) && !isset($usercollection))
-        {
-        if (substr($search,0,11)=="!collection")
-            {
+    if (
+        isset($k) 
+        && $k!="" 
+        && isset($search) 
+        && !isset($usercollection)
+        && substr($search,0,11)=="!collection"
+        ) {
             // Search may include extra terms after a space so need to make sure we extract only the ID
             $searchparts = explode(" ",substr($search,11));
             $usercollection = trim($searchparts[0]);
-            }
         }
     ?>
     <script>

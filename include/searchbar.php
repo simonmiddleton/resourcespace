@@ -621,12 +621,20 @@ elseif($restypes=='')
             {
             # Duplicate fields are skipped
             # Fields subjected to display conditioning are skipped
-            if ( !in_array($fields[$n]["name"],$duplicate_fields) 
-              && ( empty($simple_search_display_condition) || (!empty($simple_search_display_condition) && !in_array($fields[$n]['ref'],$simple_search_display_condition))  )  )
-                {
+            if ( 
+                !in_array($fields[$n]["name"],$duplicate_fields) 
+                && 
+                ( 
+                    empty($simple_search_display_condition) 
+                    || 
+                    (
+                        !empty($simple_search_display_condition) 
+                        && !in_array($fields[$n]['ref'],$simple_search_display_condition)
+                    )
+                )  
+                && $fields[$n]["global"]!=1
+                ) {
                 // Process resource type checkboxes, whether checked or unchecked 
-                if ($fields[$n]["global"]!=1) 
-                    {
                     $hideconditions =  [];
                     $showconditions =  [];
                     $notypeconditions = [];
@@ -719,7 +727,6 @@ elseif($restypes=='')
                             }
                         }
                     <?php
-                    }
                 }
             }
         ?>

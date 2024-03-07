@@ -83,6 +83,7 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
             // No nodes present, fake a valid response to clear target field
             $newvalue = '';
             $valid_response = true;
+            $messages = [];
             }
         else
             {

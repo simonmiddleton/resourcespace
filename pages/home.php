@@ -183,15 +183,15 @@ if (!hook("replaceslideshow"))
             {
             ?>
             <div class="HomePicturePanel"
-            <?php if(!hook("replaceeditslideshowwidth"))
-                {
-                if (isset($home_slideshow_width)) 
-                    {
+            <?php 
+            if (
+                !hook("replaceeditslideshowwidth")
+                && isset($home_slideshow_width)
+                ) {
                     echo "style=\"";
                     $slide_width = $home_slideshow_width + 2;
                     echo"width:" .  (string)$slide_width ."px; ";
                     echo "\" ";
-                    }
                 }
             ?>>
             
@@ -207,10 +207,12 @@ if (!hook("replaceslideshow"))
             >
             
             <div class="HomePicturePanelIN" id='photoholder' style="
-            <?php if(!hook("replaceeditslideshowheight")){
-            if (isset($home_slideshow_height)){     
+            <?php 
+            if (
+                !hook("replaceeditslideshowheight")
+                && isset($home_slideshow_height)
+                ) {    
                 echo"height:" .  (string)$home_slideshow_height ."px; ";
-                } 
             }
             ?>
             background-image:url('<?php echo  "{$baseurl}/pages/download.php?slideshow=" . $slideshow_files[0]["ref"]; ?>');">

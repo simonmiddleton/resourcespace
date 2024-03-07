@@ -430,17 +430,14 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                 debug("ps_query(): " . $e->getMessage());
                 }
             unset($GLOBALS["use_error_exception"]);
-            if (!is_null($cachedata)) // JSON decode success
-                {
-                if ($sql==$cachedata["query"]) // Query matches so not a (highly unlikely) hash collision
-                    {
-                    if (time()-$cachedata["time"]<(60*$query_cache_expires_minutes)) // Less than 30 mins old?
-                        {
-                        debug("[ps_query] returning cached data (source: {$cache_file})");
-                        db_clear_connection_mode();
-                        return $cachedata["results"];
-                        }
-                    }
+            if (
+                !is_null($cachedata)  // JSON decode success
+                && $sql == $cachedata["query"] // Query matches so not a (highly unlikely) hash collision
+                && time() - $cachedata["time"] < (60*$query_cache_expires_minutes)  // Less than 30 mins old?
+                ) {
+                    debug("[ps_query] returning cached data (source: {$cache_file})");
+                    db_clear_connection_mode();
+                    return $cachedata["results"];
                 }
             }
         }
@@ -858,12 +855,11 @@ function clear_query_cache($cache)
     
     foreach ($cache_files as $file)
         {
-        if (substr($file, 0, strlen($cache) + 1) == $cache . "_")
-            {
-            if (file_exists($cache_location . "/" . $file))
-                {
+        if (
+            substr($file, 0, strlen($cache) + 1) == $cache . "_"
+            && file_exists($cache_location . "/" . $file)
+            ) {
                 try_unlink($cache_location . "/" . $file);
-                }
             }
         }
 

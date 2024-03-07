@@ -139,12 +139,11 @@ function get_plugin_yaml($path, $validate=true)
         {
         while (($line = fgets($yaml_file_ptr))!='')
             {
-            if($line[0]!='#') #Exclude comments from parsing
-                {
-                if (($pos=strpos($line,':'))!=false)
-                    {
+            if (
+                $line[0] != '#' #Exclude comments from parsing
+                && ($pos = strpos($line,':')) != false
+                ) {
                     $plugin_yaml[trim(substr($line,0,$pos))] = trim(substr($line, $pos+1));
-                    }
                 }
             }
             
@@ -1411,12 +1410,12 @@ function register_plugin_language($plugin)
 
     if ($language != "en")
         {
-        if (substr($language, 2, 1) == '-' && substr($language, 0, 2) != 'en')
-            {
-            if (file_exists($langpath . safe_file_name(substr($language, 0, 2)) .  ".php"))
-                {
+        if (
+            substr($language, 2, 1) == '-' 
+            && substr($language, 0, 2) != 'en'
+            && file_exists($langpath . safe_file_name(substr($language, 0, 2)) .  ".php")
+            ) {
                 include $langpath . safe_file_name(substr($language, 0, 2)) . ".php";
-                }
             }
         if (file_exists($langpath . safe_file_name($language) . ".php"))
             {

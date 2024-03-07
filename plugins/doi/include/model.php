@@ -99,10 +99,10 @@
     function doi_deduct_rights($rights_URI) {
         if (filter_var($rights_URI, FILTER_VALIDATE_URL, 0) !== false) {
             $uri_parts = explode('/', $rights_URI);
-            if (count($uri_parts) > 3) {
-
-                # CREATIVE COMMONS
-                if (stripos($uri_parts[2], 'creativecommons.org') !== false) {
+            if (
+                count($uri_parts) > 3
+                && stripos($uri_parts[2], 'creativecommons.org') !== false # CREATIVE COMMONS
+                ) {
 
                     # http://creativecommons.org/licenses/by/3.0/ -> Creative Commons Attribution (CC BY 3.0)
                     # license parts:
@@ -141,7 +141,6 @@
                             return $result;
                         }
                     }
-                }
                 # .. inspect other rights URIs
             }
         }
@@ -288,10 +287,11 @@
                         break;
 
                     case 'licenseurl':
-                        if (filter_var($value, FILTER_VALIDATE_URL) !== false) {
-                            if (!$rightsURI) {
-                                $rightsURI = $value;
-                            }
+                        if (
+                            filter_var($value, FILTER_VALIDATE_URL) !== false
+                            && !$rightsURI
+                            ) {
+                            $rightsURI = $value;
                         }
                         break;
 

@@ -196,13 +196,13 @@ if($editing && !$editexternalurl)
             <div class="VerticalNav">
                 <ul>
                 <?php
-                if(!$editing || $editexternalurl)
-                    {
-                    if ($email_sharing) 
-                        { ?>
+                if (
+                    (!$editing || $editexternalurl) 
+                    && $email_sharing
+                    ) {
+                         ?>
                         <li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a href="<?php echo $baseurl_short . 'pages/resource_email.php?' . $query_string ?>" onclick="return <?php echo $modal ? 'ModalLoad' : 'CentralSpaceLoad';?>(this, true);"><?php echo escape($lang["emailresourcetitle"])?></a></li> 
                         <?php 
-                        }
                     }
                 if(!$editing)
                     { ?>
