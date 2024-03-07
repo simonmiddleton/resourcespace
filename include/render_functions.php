@@ -2930,6 +2930,11 @@ function calculate_image_display(array $imagedata, string $img_url, string $disp
             $defaultheight = 40;
             break;
 
+        case "col":
+            $defaultwidth = $imagedata['thumb_width'];
+            $defaultheight = $imagedata['thumb_height'];
+            break;
+
         default:
             $defaultwidth = 75;
             $defaultheight = 75;
@@ -2939,14 +2944,14 @@ function calculate_image_display(array $imagedata, string $img_url, string $disp
     if ($ratio > 1)
         {
         $width = $defaultwidth;
-        $height = round($defaultheight / $ratio);
+        $height = round($defaultwidth / $ratio);
         $margin = floor(($defaultheight - $height ) / 2);
         }
     elseif ($ratio < 1)
         {
         # portrait image dimensions
         $height = $defaultheight;
-        $width = round($defaultwidth * $ratio);
+        $width = round($defaultheight * $ratio);
         $margin = floor(($defaultheight - $height ) / 2);
         }
     else
