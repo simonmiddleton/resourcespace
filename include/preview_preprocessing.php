@@ -844,11 +844,11 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
         {
         debug("PDF multi page preview generation starting",RESOURCE_LOG_APPEND_PREVIOUS);
         
-      # For EPS/PS/PDF files, use GS directly and allow multiple pages.
+    # For EPS/PS/PDF files, use GS directly and allow multiple pages.
     # EPS files are always single pages:
-    if ($extension=="eps") {$pdf_pages=1;}
-    if ($extension=="ai") {$pdf_pages=1;}
-    if ($extension=="ps") {$pdf_pages=1;}
+    if (in_array($extension,["eps","ai","ps"]) || !$generateall) {
+        $pdf_pages = 1;
+    }
     $resolution=$pdf_resolution;
     $scr_size=ps_query("select width,height from preview_size where id='scr'");
     if(empty($scr_size)){
