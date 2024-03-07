@@ -195,12 +195,6 @@
                 $resourceType = 'Photo';
                 break;
 
-            case 2:
-            default: // Document
-                $resourceTypeGeneral = 'Text';
-                $resourceType = 'Document';
-                break;
-
             case 3: // Video
                 $resourceTypeGeneral = 'Audiovisual';
                 $resourceType = 'Video';
@@ -209,6 +203,12 @@
             case 4: // Audio
                 $resourceTypeGeneral = 'Sound';
                 $resourceType = 'Audio';
+                break;
+            
+            case 2:
+            default: // Document
+                $resourceTypeGeneral = 'Text';
+                $resourceType = 'Document';
                 break;
         }
 

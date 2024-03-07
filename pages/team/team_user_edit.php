@@ -317,15 +317,13 @@ if (!hook("replacecomments"))
 <div class="Question"><label><?php echo htmlspecialchars($lang["profile_image"])?></label>
 <?php
 $profile_image = get_profile_image($ref);
-if ($profile_image != "")
-    {
-    ?> <div class="Fixed"> <img src="<?php echo $profile_image ?>" alt="Current profile image"></div> <?php   
-    }
-else
-    {
-    ?> <div class="Fixed"><?php echo htmlspecialchars($lang["no_profile_image"]) ?></div> <?php
-    }
-?>
+if ($profile_image != "") { ?>
+    <div class="Fixed">
+        <img src="<?php echo $profile_image ?>" alt="<?php echo escape($lang['current_profile']); ?>">
+    </div>
+<?php } else { ?>
+    <div class="Fixed"><?php echo escape($lang["no_profile_image"]) ?></div>
+<?php } ?>
 <div class="clearerleft"> </div></div>
 
 <?php if ($enable_remote_apis) { ?>
