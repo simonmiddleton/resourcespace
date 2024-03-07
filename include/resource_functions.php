@@ -665,6 +665,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
     $new_node_values            = [];
     $updated_resources          = [];
 
+    $node_not_active = fn(array $node): bool => !node_is_active($node);
+
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/removed
     $user_set_values = getval('nodes', array());
@@ -723,6 +725,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $all_tree_nodes_ordered = get_cattree_nodes_ordered($fields[$n]['ref'], null, true);
                     // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()
                     array_shift($all_tree_nodes_ordered);
+                    $inactive_nodes = array_column(array_filter($all_tree_nodes_ordered, $node_not_active), 'ref');
                     $all_tree_nodes_ordered = array_values($all_tree_nodes_ordered);
 
                     $node_options = array_column($all_tree_nodes_ordered, 'name', 'ref');
@@ -733,19 +736,27 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $fieldnodes   = get_nodes($fields[$n]['ref'], '', false);
                     $node_options = array_column($fieldnodes, 'name', 'ref');
                     $validnodes   = array_column($fieldnodes, 'ref');
+                    $inactive_nodes = array_column(array_filter($fieldnodes, $node_not_active), 'ref');
                     }
 
                 // $validnodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
                 $ui_selected_node_values = array_values(array_intersect($validnodes, $ui_selected_node_values));
 
                 // Set new value for logging
-                $new_node_values = array_merge($new_node_values,$ui_selected_node_values);
-                $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
+                $new_node_values = array_merge($new_node_values, $ui_selected_node_values);
 
+                $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes, $inactive_nodes);
                 debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
                 $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
-                $removed_nodes = array_diff($current_field_nodes,$ui_selected_node_values);
 
+                if (in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS])) {
+                    // We must release an inactive node if the type can only hold one value
+                    $removed_nodes = array_diff($current_field_nodes, $ui_selected_node_values);
+                    $current_inactive_resource_field_nodes = [];
+                } else {
+                    $removed_nodes = array_diff($current_field_nodes, $ui_selected_node_values, $inactive_nodes);
+                    $current_inactive_resource_field_nodes = array_intersect($current_field_nodes, $inactive_nodes);
+                }
                 debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));
                 $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
 
@@ -780,6 +791,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             }
                         }
                     $val = implode(",",$new_nodevals);
+                    $ui_selected_node_values = array_merge($ui_selected_node_values, $current_inactive_resource_field_nodes);
                     sort($ui_selected_node_values);
                     $new_checksums[$fields[$n]['ref']] = md5(implode(',',$ui_selected_node_values));
                     $updated_resources[$ref][$fields[$n]['ref']] = $new_nodevals; // To pass to hook
@@ -7070,7 +7082,6 @@ function process_edit_form($ref, $resource)
         unset($uploadparams['forcesingle']);
         unset($uploadparams['noupload']);
     }
-
     if(!isset($save_errors))
         {
         # Perform the save
