@@ -1968,7 +1968,7 @@ $lang["starttypingkeyword"]="Start typing keyword...";
 $lang["createnewentryfor"]="Create new entry for";
 $lang["confirmcreatenewentryfor"]="Are you sure you wish to create a new keyword list entry for '%%'?";
 $lang["noentryexists"]="No entry exists for";
-$lang['matched_deactivated_entry'] = 'Matched deactivated entry for';
+$lang['matched_inactive_entry'] = 'Matched an inactive entry for';
 
 $lang["editresourcepreviews"]="Edit Resource Previews";
 $lang["can_assign_resource_requests"]="Can assign resource requests to others";
