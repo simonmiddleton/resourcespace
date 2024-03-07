@@ -211,8 +211,8 @@ foreach($resources as $resource) // For each resources
 
             $success=create_previews($resource['ref'], false, $resource['file_extension'],false,false,-1,$ignoremaxsize,$ingested);
             hook('after_batch_create_preview');
-            $success_sting=($success==true ? "successfully" : "with error" );
-            echo sprintf("Processed resource %d %s in %01.2f seconds.\n", $resource['ref'], $success_sting, microtime(true) - $start_time);
+            $success_string=($success==true ? "successfully" : "with error" );
+            echo sprintf("Processed resource %d %s in %01.2f seconds.\n", $resource['ref'], $success_string, microtime(true) - $start_time);
             }
 
       if ($multiprocess)

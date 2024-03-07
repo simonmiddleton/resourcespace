@@ -3191,3 +3191,6 @@ $vendor_tus_cache_adapter = 'file';
 // This can be set to either a metadata field ID or a valid search 'order by' string (e.g. 'resourcetype', 'extension', 'colour' etc.) 
 // See https://www.resourcespace.com/knowledge-base/resourceadmin/push-metadata for more information
 // $related_pushed_order_by = 0;
+
+// Optionally prevent immediate creation of core preview sizes ('col', 'thm' and 'pre') for the specified file extensions when one of the offline preview options are configured.
+$minimal_preview_creation_exclude_extensions = [];

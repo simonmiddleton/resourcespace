@@ -1334,6 +1334,14 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             "ingested" => $ingested],
         );
     }
+    
+    # Flag database so a thumbnail appears on the site
+    if ($alternative==-1)
+        {
+        // Not for alternatives
+        $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+        ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
+        }
         
     hook('afterpreviewcreation', '',array($ref, $alternative));
     return true;
@@ -3944,7 +3952,7 @@ function start_previews(int $ref, string $extension = ""): bool
     global $lang;
 
     delete_previews($ref);
-    $minimal_previews_required = false;
+    $minimal_previews = false;
     $resource_data = get_resource_data($ref,false);
     if(trim($extension) == "") {
         $extension = $resource_data["file_extension"];
@@ -3963,24 +3971,27 @@ function start_previews(int $ref, string $extension = ""): bool
         $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
         $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
         job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
-        $minimal_previews_required = true;
+        $minimal_previews = true;
     } elseif (
         $GLOBALS["enable_thumbnail_creation_on_upload"] === false 
         || (int) $resource_data["file_size"] >= (int) ($GLOBALS["preview_generate_max_file_size"] ?? PHP_INT_MAX)
     ) {
         // These configs require use of a cron task to run batch/create_previews.php
         ps_query("UPDATE resource SET has_image = ? WHERE ref= ?", ['i',RESOURCE_PREVIEWS_NONE,'i', $ref]);
-        $minimal_previews_required = true;
+        $minimal_previews = true;
         }
         
-    if($minimal_previews_required) {
-        create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
+    if($minimal_previews) {
+        if (!in_array($extension,$GLOBALS["minimal_preview_creation_exclude_extensions"])) {
+            // Extension hasn't been excluded from immediate preview creation
+            create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
+        }
         return false;
     }
-// No offline preview creation - create the full set of previews immediately
-create_previews($ref,false,$resource_data["file_extension"],false,false,-1,false,$ingested);
-   
-return true;
+    // No offline preview creation - create the full set of previews immediately
+    create_previews($ref,false,$resource_data["file_extension"],false,false,-1,false,$ingested);
+    
+    return true;
 }
 
 
