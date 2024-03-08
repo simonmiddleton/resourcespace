@@ -3234,85 +3234,70 @@ function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool
  *
  */ 
 function delete_previews($resource,$alternative=-1)
-    {
-    global $ffmpeg_preview_extension, $ffmpeg_supported_extensions, $watermark;
+{
+    global $ffmpeg_supported_extensions, $watermark;
     
     // If a resource array has been passed we already have the extensions
-    if(is_array($resource))
-        {
-        $resource_data=$resource;
-        $extension=$resource["file_extension"];
-        $resource=$resource["ref"];
-        }
-    else
-        {
-        $resource_data=get_resource_data($resource);
-        $extension=$resource_data["file_extension"];
-        }
+    if (is_array($resource)) {
+        $resource_data = $resource;
+        $extension = $resource["file_extension"];
+        $resource = $resource["ref"];
+    } else {
+        $resource_data = get_resource_data($resource,false);
+        $extension = $resource_data["file_extension"];
+    }
     
-    $fullsizejpgpath=get_resource_path($resource,true,"",false,"jpg",-1,1,false,"",$alternative);           
-    # Delete the full size original if not a JPG resource
-    if($extension!="" && strtolower($extension)!="jpg" && file_exists($fullsizejpgpath) && $alternative==-1)
-        {
+    $fullsizejpgpath = get_resource_path($resource,true,"",false,"jpg",-1,1,false,"",$alternative);           
+    // Delete the full size original if not a JPG resource
+    if ($extension !== "" && strtolower($extension)!="jpg" && file_exists($fullsizejpgpath) && $alternative==-1) {
         unlink($fullsizejpgpath);
-        }           
+    }           
     
-    $dirinfo=pathinfo($fullsizejpgpath);    
+    $dirinfo = pathinfo($fullsizejpgpath);    
     $resourcefolder = $dirinfo["dirname"];
 
-    $presizes=ps_array("select id value from preview_size",array());
-    $pagecount=get_page_count($resource_data,$alternative);
-    foreach($presizes as $presize)
-        {
-        for($page=1;$page<=$pagecount;$page++)
-            {
-            $previewpath=get_resource_path($resource,true,$presize,false,"jpg",-1,$page,false,"",$alternative);
-            if(file_exists($previewpath))
-                {
+    $presizes = ps_array("SELECT id value FROM preview_size");
+    $pagecount = get_page_count($resource_data,$alternative);
+    foreach($presizes as $presize) {
+        for($page=1;$page<=$pagecount;$page++) {
+            $previewpath = get_resource_path($resource,true,$presize,false,"jpg",-1,$page,false,"",$alternative);
+            if (file_exists($previewpath)) {
                 unlink($previewpath);
-                }
-            if ($watermark !== '')
-                {
-                $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "",$alternative);
-                if (file_exists($wm_path))
-                    {
-                    unlink($wm_path);
-                    }
-                }
             }
-        }
-
-    if (in_array($extension, $ffmpeg_supported_extensions) || $extension == 'gif')
-        {
-        remove_video_previews($resource);
-        }
-
-    $delete_prefixes = array();
-    $delete_prefixes[] = "resized_";
-    $delete_prefixes[] = "tile_";
-    $delete_prefixes[] = "tmp_";
-
-    if(!file_exists($resourcefolder))
-        {
-        return;
-        }
-    
-    $allfiles = new DirectoryIterator($resourcefolder);
-    foreach ($allfiles as $fileinfo)
-        {
-        if (!$fileinfo->isDot())
-            {
-            $filename = $fileinfo->getFilename();
-            foreach($delete_prefixes as $delete_prefix)
-                {
-                if(substr($filename,strlen($resource),strlen($delete_prefix)) == $delete_prefix)
-                    {
-                    unlink($resourcefolder . DIRECTORY_SEPARATOR . $filename);
-                    }
+            if ($watermark !== '') {
+                $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "",$alternative);
+                if (file_exists($wm_path)) {
+                    unlink($wm_path);
                 }
             }
         }
     }
+
+    if (in_array($extension, $ffmpeg_supported_extensions) || $extension == 'gif') {
+        remove_video_previews($resource);
+    }
+
+    $delete_prefixes = [];
+    $delete_prefixes[] = "resized_";
+    $delete_prefixes[] = "tile_";
+    $delete_prefixes[] = "tmp_";
+
+    if (!file_exists($resourcefolder)) {
+        return;
+    }
+    
+    $allfiles = new DirectoryIterator($resourcefolder);
+    foreach ($allfiles as $fileinfo) {
+        if (!$fileinfo->isDot()) {
+            $filename = $fileinfo->getFilename();
+            foreach($delete_prefixes as $delete_prefix) {
+                if(substr($filename,strlen($resource),strlen($delete_prefix)) == $delete_prefix) {
+                    unlink($resourcefolder . DIRECTORY_SEPARATOR . $filename);
+                }
+            }
+        }
+    }
+}
 
 /**
  * Get dimensions of image file
@@ -3951,9 +3936,9 @@ function start_previews(int $ref, string $extension = ""): bool
 {
     global $lang;
 
-    delete_previews($ref);
     $minimal_previews = false;
     $resource_data = get_resource_data($ref,false);
+    delete_previews($resource_data);
     if(trim($extension) == "") {
         $extension = $resource_data["file_extension"];
     }
