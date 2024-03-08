@@ -1037,7 +1037,7 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
          tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
          break;
       case "restore":
-        if(start_previews($ref)) {
+        if(!start_previews($ref)) {
             $onload_message["text"] = $lang["recreatepreviews_pending"];
         }
         break;
