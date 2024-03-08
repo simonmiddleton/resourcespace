@@ -19,7 +19,7 @@ jQuery(document).ready(function() {
         }
     else
         {
-        var share='<?php echo htmlspecialchars($k) ?>';
+        var share='<?php echo escape($k) ?>';
         var modAlt=e.altKey;
         var modShift=e.shiftKey;
         var modCtrl=e.ctrlKey;
