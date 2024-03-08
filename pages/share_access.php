@@ -37,10 +37,10 @@ include "../include/header.php";
     
     <form method="post" action="<?php echo $baseurl_short ?>pages/share_access.php" >
     <?php generateFormToken("share_access"); ?>
-    <input type=hidden name="collection" value="<?php echo htmlspecialchars($collection)?>">
-    <input type=hidden name="resource" value="<?php echo htmlspecialchars($resource)?>">
-    <input type=hidden name="k" value="<?php echo htmlspecialchars($k)?>">
-    <input type=hidden name="return_url" value="<?php echo htmlspecialchars($return_url)?>">
+    <input type=hidden name="collection" value="<?php echo escape($collection)?>">
+    <input type=hidden name="resource" value="<?php echo escape($resource)?>">
+    <input type=hidden name="k" value="<?php echo escape($k)?>">
+    <input type=hidden name="return_url" value="<?php echo escape($return_url)?>">
     
     <div class="Question">
     <label><?php echo $lang["share-enter-password"] ?></label>

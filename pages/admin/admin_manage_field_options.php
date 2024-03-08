@@ -281,7 +281,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
                                             EnableMoveTo(<?php echo $new_record_ref; ?>);
                                             return false;
                                         ">
-                                        <?php echo htmlspecialchars($lang['action-move-to']); ?>
+                                        <?php echo escape($lang['action-move-to']); ?>
                                     </button>
                                     <button 
                                         type="submit"
@@ -292,17 +292,17 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
                                         "
                                         style="display: none;"
                                     >
-                                    <?php echo htmlspecialchars($lang['action-title_apply']); ?>
+                                    <?php echo escape($lang['action-title_apply']); ?>
                                     </button>
-                                    <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'moveup'); return false;"><?php echo htmlspecialchars($lang['action-move-up']); ?></button>
-                                    <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'movedown'); return false;"><?php echo htmlspecialchars($lang['action-move-down']); ?></button>
+                                    <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'moveup'); return false;"><?php echo escape($lang['action-move-up']); ?></button>
+                                    <button type="submit" onclick="ReorderNode(<?php echo $new_record_ref; ?>, 'movedown'); return false;"><?php echo escape($lang['action-move-down']); ?></button>
                                 </td>
                                 <?php
                                 }
                                 ?>
                             <td> <!-- Action buttons -->
-                                <button type="submit" onclick="SaveNode(<?php echo $new_record_ref; ?>); return false;"><?php echo htmlspecialchars($lang['save']); ?></button>
-                                <button type="submit" onclick="DeleteNode(<?php echo $new_record_ref; ?>); return false;"><?php echo htmlspecialchars($lang['action-delete']); ?></button>
+                                <button type="submit" onclick="SaveNode(<?php echo $new_record_ref; ?>); return false;"><?php echo escape($lang['save']); ?></button>
+                                <button type="submit" onclick="DeleteNode(<?php echo $new_record_ref; ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
                             </td>
                                 
                             <?php generateFormToken("option_{$new_record_ref}"); ?>
@@ -493,7 +493,7 @@ if($ajax)
     renderBreadcrumbs($links_trail);
 ?>
 
-    <p><?php echo htmlspecialchars($lang['manage_metadata_text']); render_help_link("resourceadmin/modifying-field-options");?></p>
+    <p><?php echo escape($lang['manage_metadata_text']); render_help_link("resourceadmin/modifying-field-options");?></p>
     <div id="AdminManageMetadataFieldOptions" class="ListView">
     <?php
     if(7 != $field_data['type'])
@@ -502,13 +502,13 @@ if($ajax)
         <form id="FilterNodeOptions" class="FormFilter" method="GET" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php">
             <input type="hidden" name="field" value="<?php echo escape($field); ?>">
             <fieldset>
-                <legend><?php echo htmlspecialchars($lang['filter_label']); ?></legend>
+                <legend><?php echo escape($lang['filter_label']); ?></legend>
                 <div class="FilterItemContainer">
-                    <label><?php echo htmlspecialchars($lang['name']); ?></label>
+                    <label><?php echo escape($lang['name']); ?></label>
                     <input type="text" name="filter_by_name" value="<?php echo escape($filter_by_name); ?>">
                 </div>
-                <button type="submit"><?php echo htmlspecialchars($lang['filterbutton']); ?></button>
-                <button class="ClearButton" type="submit" onCLick="ClearFilterForm('FilterNodeOptions'); return false;"><?php echo htmlspecialchars($lang['clearbutton']); ?></button>
+                <button type="submit"><?php echo escape($lang['filterbutton']); ?></button>
+                <button class="ClearButton" type="submit" onCLick="ClearFilterForm('FilterNodeOptions'); return false;"><?php echo escape($lang['clearbutton']); ?></button>
             </fieldset>
         </form>
         <!-- Pager -->
@@ -535,10 +535,10 @@ if($ajax)
             ?>
             <thead>
                 <tr class="ListviewTitleStyle">
-                    <td><?php echo htmlspecialchars($lang['name']); ?></td>
-                    <td><?php echo htmlspecialchars($lang['resources']); ?></td>
-                    <td><?php echo htmlspecialchars($lang['property-order_by']); ?></td>
-                    <td><?php echo htmlspecialchars($lang['actions']); ?></td>
+                    <td><?php echo escape($lang['name']); ?></td>
+                    <td><?php echo escape($lang['resources']); ?></td>
+                    <td><?php echo escape($lang['property-order_by']); ?></td>
+                    <td><?php echo escape($lang['actions']); ?></td>
                     <td> </td>
                     <td> </td>
                 </tr>
@@ -600,7 +600,7 @@ if($ajax)
                                         
                                         return false;
                                     ">
-                                    <?php echo htmlspecialchars($lang['action-move-to']); ?>
+                                    <?php echo escape($lang['action-move-to']); ?>
                                 </button>
                                 <button 
                                     type="submit"
@@ -611,18 +611,18 @@ if($ajax)
                                     "
                                     style="display: none;"
                                 >
-                                <?php echo htmlspecialchars($lang['action-title_apply']); ?>
+                                <?php echo escape($lang['action-title_apply']); ?>
                                 </button>
-                                <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'moveup'); return false;"><?php echo htmlspecialchars($lang['action-move-up']); ?></button>
-                                <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'movedown'); return false;"><?php echo htmlspecialchars($lang['action-move-down']); ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'moveup'); return false;"><?php echo escape($lang['action-move-up']); ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'movedown'); return false;"><?php echo escape($lang['action-move-down']); ?></button>
                                 </td>
                             <?php
                             }
                             ?>
                         <!-- Action buttons -->
                         <td>
-                            <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo htmlspecialchars($lang['save']); ?></button>
-                            <button type="submit" onclick="DeleteNode(<?php echo $node['ref']; ?>); return false;"><?php echo htmlspecialchars($lang['action-delete']); ?></button>
+                            <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo escape($lang['save']); ?></button>
+                            <button type="submit" onclick="DeleteNode(<?php echo $node['ref']; ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
                         </td>
                             
                         <?php generateFormToken("option_{$node['ref']}"); ?>
@@ -673,7 +673,7 @@ if($field_data['type'] == 7 && !($tree_nodes==""))
     <?php
     foreach($all_nodes as $node)
         {
-        ?><option value="<?php echo escape($node['ref'])?>" id="master_node_<?php echo escape($node['ref'])?>"><?php echo htmlspecialchars($node['name'])?></option><?php
+        ?><option value="<?php echo escape($node['ref'])?>" id="master_node_<?php echo escape($node['ref'])?>"><?php echo escape($node['name'])?></option><?php
         }
     ?>
     </select>
@@ -1094,7 +1094,7 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
 </script>
 
 <div class="BasicsBox">
-    <h3><?php echo htmlspecialchars($lang['import_export']); ?></h3>
+    <h3><?php echo escape($lang['import_export']); ?></h3>
 
     <?php 
     if($field_data['type'] == FIELD_TYPE_CATEGORY_TREE)
@@ -1144,7 +1144,7 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
 
     <div class="Question">
         <form id="import_nodes_form" method="POST" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>" enctype="multipart/form-data">
-            <label for="import_nodes"><?php echo htmlspecialchars($lang['import']); ?></label>
+            <label for="import_nodes"><?php echo escape($lang['import']); ?></label>
             <?php generateFormToken("import_nodes_form"); ?>
             <input type="file" name="import_nodes">
             <input type="submit" name="upload_import_nodes" value="<?php echo escape($lang['import']); ?>">
@@ -1153,8 +1153,8 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
     </div>
 
     <div class="Question">
-        <label><?php echo htmlspecialchars($lang['export']); ?></label>
-        <button type="submit" onclick="ExportNodes();"><?php echo htmlspecialchars($lang['export']); ?></button>
+        <label><?php echo escape($lang['export']); ?></label>
+        <button type="submit" onclick="ExportNodes();"><?php echo escape($lang['export']); ?></button>
         <script>
         function ExportNodes()
             {

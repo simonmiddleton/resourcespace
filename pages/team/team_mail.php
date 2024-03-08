@@ -114,7 +114,7 @@ if (isset($error)) { ?><div class="FormError"><?php echo $error?></div><?php } ?
     <div class="Question"><label><?php echo $lang["emailsubject"]?></label><input name="subject" type="text" class="stdwidth Inline required" value="<?php echo escape(getval("subject",$applicationname))?>"><div class="clearerleft"> </div></div>
 </div>
 
-<div class="Question"><label><?php echo $lang["text"]?></label><textarea name="text" class="stdwidth Inline required" rows=25 cols=50><?php echo htmlspecialchars(getval("text",""))?></textarea><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo $lang["text"]?></label><textarea name="text" class="stdwidth Inline required" rows=25 cols=50><?php echo escape(getval("text",""))?></textarea><div class="clearerleft"> </div></div>
 
 <?php hook("additionalemailfield");?>
 

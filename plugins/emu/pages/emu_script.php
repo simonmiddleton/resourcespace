@@ -106,7 +106,7 @@ if('' != trim($emu_log_directory))
 
         if(!is_dir($emu_log_directory))
             {
-            echo 'Unable to create log directory: "' . htmlspecialchars($emu_log_directory) . '"' . PHP_EOL;
+            echo 'Unable to create log directory: "' . escape($emu_log_directory) . '"' . PHP_EOL;
             }
         }
     else

@@ -126,10 +126,10 @@ else
                 // Image information request. Only fullsize available in this initial version
                 $response["@context"] = "http://iiif.io/api/image/2/context.json";
                 $response["@id"] = $rootimageurl . $resourceid;
-                                
+
                 $response["height"] = $imageHeight;
                 $response["width"]  = $imageWidth;
-                
+
                 $response["profile"] = array();
                 $response["profile"][] = "http://iiif.io/api/image/2/level0.json";
                 if($iiif_custom_sizes)
@@ -242,7 +242,7 @@ else
                             // Size specified is not the standard tile width, may be right or bottom edge of image
                             $validtileh = false;
                             $validtilew = false;
-                            
+
                             if($getwidth > 0 && $getheight == 0)
                                 {
                                 $scale = ceil($regionw / $getwidth);
@@ -256,7 +256,7 @@ else
                                 $errors[] = "Invalid tile size requested";
                                 iiif_error(501,$errors);
                                 }
-                                                        
+
                             if(!in_array($scale,$preview_tile_scale_factors))
                                 {
                                 $errors[] = "Invalid tile size requested";
@@ -274,10 +274,10 @@ else
                             $errors[] = "Invalid tile size requested";
                             iiif_error(400,$errors);                             
                             }
-                            
+
                         $getsize = "tile_" . $regionx . "_" . $regiony . "_". $regionw . "_". $regionh;
                         $getext = "jpg";
-                            
+
                         debug("IIIF" . $regionx . "_" . $regiony . "_". $regionw . "_". $regionh);
                         }
                     else
@@ -314,7 +314,7 @@ else
                                 }
                             }   
                         }
-                    
+
                     }
                 elseif($size == "full"  || $size == "max" || $size == "thm")
                     {
@@ -352,7 +352,7 @@ else
                     $errors[] = "Invalid size requested";
                     iiif_error(400,$errors);  
                     }
-                
+
                 if($rotation!=0)
                     {
                     // Rotation. As we only support IIIF Image level 0 only a rotation value of 0 is accepted 
@@ -585,7 +585,7 @@ else
                             }
 
                         $response["description"] = get_data_by_field($iiif_results[0]["ref"], $iiif_description_field);
-                        
+
                         // Construct metadata array from resource field data 
                         $response["metadata"] = array();
                         $n=0;
@@ -619,7 +619,7 @@ else
                                         // Add the node text to the array for this language;
                                         debug("IIIF: Adding node translation for language '" . $nlang . "', field '" . $iiif_data_row["title"] . "': " . $nltext);
                                         $langentries[$nlang][] = $nltext;
-                                        
+
                                         // Set default text for any translations
                                         if($nlang == $defaultlanguage || $defaulttrans == ""){$defaulttrans = $nltext;}
                                         $transcount++;
@@ -640,18 +640,18 @@ else
 
                                     // To ensure that no nodes are lost due to missing translations,  
                                     // Save the default language array to make sure we include any untranslated nodes that may be missing when/if we find new languages for the next node
-                                   
+
                                     debug("IIIF: Saving default language array for field '" . $iiif_data_row["title"] . "': " . implode(",",$langentries[$defaultlanguage]));
                                     // Default language is the ideal, but if no default language entries for this node have been found copy the first language we have
                                     reset($langentries);
                                     $def_lang = isset($langentries[$defaultlanguage])?$langentries[$defaultlanguage]:$langentries[key($langentries)];
                                     }       
 
-                                
+
                                 $response["metadata"][$n] = array();
                                 $response["metadata"][$n]["label"] = $iiif_data_row["title"];
                                 $response["metadata"][$n]["value"] = array();
-                                
+
                                 // Add each tag
                                 $o=0;
                                 foreach($langentries as $mdlang => $mdtrans)
@@ -694,13 +694,13 @@ else
                             {
                             $response["thumbnail"] = $baseurl . "/gfx/" . get_nopreview_icon($iiif_results[0]["resource_type"],"jpg",false);
                             }
-                            
+
                         // Sequences
                         $response["sequences"] = array();
                         $response["sequences"][0]["@id"] = $rooturl . $identifier . "/sequence/normal";
                         $response["sequences"][0]["@type"] = "sc:Sequence";
                         $response["sequences"][0]["label"] = "Default order";                          
-                                                
+
                         $response["sequences"][0]["canvases"]  = iiif_get_canvases($identifier,$iiif_results,false);
                         $validrequest = true;   
                         /* MANIFEST REQUEST END */

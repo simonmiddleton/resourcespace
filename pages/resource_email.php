@@ -66,9 +66,9 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<p><a onClick="return <?php echo $modal ? 'ModalLoad' : 'CentralSpaceLoad';?>(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoshareresource"]); ?></a></p>
+<p><a onClick="return <?php echo $modal ? 'ModalLoad' : 'CentralSpaceLoad';?>(this,true);" href="<?php echo $baseurl_short; ?>pages/resource_share.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoshareresource"]); ?></a></p>
 
-<h1><?php echo htmlspecialchars($lang["emailresourcetitle"])?></h1>
+<h1><?php echo escape($lang["emailresourcetitle"])?></h1>
 
 <p><?php echo text("introtext");render_help_link("user/sharing-resources");?></p>
 
@@ -76,18 +76,18 @@ include "../include/header.php";
 <input type=hidden name=ref value="<?php echo escape($ref)?>">
 <?php generateFormToken("resourceform"); ?>
 <div class="Question">
-<label><?php echo htmlspecialchars($lang["resourcetitle"])?></label><div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resource["field".$view_title_field]))?></div>
+<label><?php echo escape($lang["resourcetitle"])?></label><div class="Fixed"><?php echo escape(i18n_get_translated($resource["field".$view_title_field]))?></div>
 <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-<label><?php echo htmlspecialchars($lang["resourceid"])?></label><div class="Fixed"><?php echo $resource["ref"]?></div>
+<label><?php echo escape($lang["resourceid"])?></label><div class="Fixed"><?php echo $resource["ref"]?></div>
 <div class="clearerleft"> </div>
 </div>
 <?php
 hook("resemailmoreinfo"); ?>
 <div class="Question">
-<label for="message"><?php echo htmlspecialchars($lang["message"])?></label><textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
+<label for="message"><?php echo escape($lang["message"])?></label><textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
 <div class="clearerleft"> </div>
 </div>
 
@@ -101,13 +101,13 @@ hook("resemailmoreinfo"); ?>
 
 include "../include/user_select.php"; ?>
 <div class="clearerleft"> </div>
-<?php if ($errors!="") { ?><div class="FormError">!! <?php echo htmlspecialchars($errors)?> !!</div><?php } ?>
+<?php if ($errors!="") { ?><div class="FormError">!! <?php echo escape($errors)?> !!</div><?php } ?>
 </div>
 <?php } ?>
 
 <?php if ($list_recipients){?>
 <div class="Question">
-<label for="list_recipients"><?php echo htmlspecialchars($lang["list-recipients-label"]); ?></label><input type=checkbox id="list_recipients" name="list_recipients">
+<label for="list_recipients"><?php echo escape($lang["list-recipients-label"]); ?></label><input type=checkbox id="list_recipients" name="list_recipients">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>
@@ -118,7 +118,7 @@ include "../include/user_select.php"; ?>
     if(get_edit_access($ref,$resource['archive'],$resource))
         {?>
         <div class="Question">
-        <label for="grant_internal_access"><?php echo htmlspecialchars($lang["internal_share_grant_access"]) ?></label>
+        <label for="grant_internal_access"><?php echo escape($lang["internal_share_grant_access"]) ?></label>
         <input type=checkbox id="grant_internal_access" name="grant_internal_access" onClick="if(this.checked){jQuery('#question_internal_access').slideDown();}else{jQuery('#question_internal_access').slideUp()};">
         <div class="clearerleft"> </div>
         </div>
@@ -132,9 +132,9 @@ include "../include/user_select.php"; ?>
 if(!$user_select_internal)
     {
     ?>
-    <h2 class="CollapsibleSectionHead collapsed"><?php echo htmlspecialchars($lang['external_shares_options']);?></h2>
+    <h2 class="CollapsibleSectionHead collapsed"><?php echo escape($lang['external_shares_options']);?></h2>
     <div class="CollapsibleSection" id="ExternalShareOptionsSection">
-        <p><?php echo htmlspecialchars($lang['email_shares_options_summary']);?></p>
+        <p><?php echo escape($lang['email_shares_options_summary']);?></p>
     <?php
     render_share_options();
     ?></div><?php    
@@ -147,7 +147,7 @@ if(!$user_select_internal)
 <?php if ($useremail!="") { // Only allow this option if there is an email address available for the user.
 ?>
 <div class="Question">
-<label for="use_user_email"><?php echo htmlspecialchars($lang["emailfromuser"]).$useremail.". ".$lang["emailfromsystem"].$email_from ?></label><input type=checkbox checked id="use_user_email" name="use_user_email">
+<label for="use_user_email"><?php echo escape($lang["emailfromuser"]).$useremail.". ".$lang["emailfromsystem"].$email_from ?></label><input type=checkbox checked id="use_user_email" name="use_user_email">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>

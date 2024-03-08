@@ -160,7 +160,7 @@
         {
 
         global $lang,$baseurl,$search_notification_max_thumbnails;
-        
+
         $sql_and = "";
         $parameters = array();
         if ($owner != -1)

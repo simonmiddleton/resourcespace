@@ -139,9 +139,9 @@ function HookAnnotateViewpreviewlinkbar()
         ?> 
         <tr class="DownloadDBlend">
             <td class="DownloadFileName">
-                <h2><?php echo htmlspecialchars($lang["preview"])?></h2>
+                <h2><?php echo escape($lang["preview"])?></h2>
                 <?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';?>
-                <p><?php echo htmlspecialchars($preview_with_sizename); ?></p>
+                <p><?php echo escape($preview_with_sizename); ?></p>
             </td>
             <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
             <td class="DownloadButton">

@@ -71,8 +71,8 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
     ?>
     <!--List Item-->
     <tr>
-    <td><?php echo htmlspecialchars(nicedate($log[$n]["date"],true, true, true)) ?></td>
-    <td><?php echo htmlspecialchars((string) $log[$n]["fullname"])?></td>
+    <td><?php echo escape(nicedate($log[$n]["date"],true, true, true)) ?></td>
+    <td><?php echo escape((string) $log[$n]["fullname"])?></td>
     <td><?php 
         echo $lang["collectionlog-" . $log[$n]["type"]] ;
         if ($log[$n]["notes"] != "" ) { 
@@ -81,7 +81,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
             $standard = array('#all_users', '#new_resource');
             $translated   = array($lang["all_users"], $lang["new_resource"]);
             $newnotes = " - " . str_replace($standard, $translated, $log[$n]["notes"]);
-            echo htmlspecialchars($newnotes);
+            echo escape($newnotes);
         }
         ?></td>
     <td><?php if ($log[$n]['resource']!=0){?><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($log[$n]["resource"]) ?>'><?php echo $log[$n]["resource"]?></a><?php } ?></td>

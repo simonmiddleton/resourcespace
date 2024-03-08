@@ -71,18 +71,18 @@ if ($errors!="")
 
 
 <div class="BasicsBox">
-<h1><?php echo htmlspecialchars($lang["sendfeedback"])?></h1>
-<?php if ($done) { ?><p><?php echo htmlspecialchars($lang["feedbacksent"])?></p><?php } else { ?>
+<h1><?php echo escape($lang["sendfeedback"])?></h1>
+<?php if ($done) { ?><p><?php echo escape($lang["feedbacksent"])?></p><?php } else { ?>
 
 <form method="post" action="<?php echo $baseurl_short?>pages/collection_feedback.php">
     <?php generateFormToken("collection_feedback"); ?>
     <input type="hidden" name="k" value="<?php echo escape($k) ?>">
     <input type="hidden" name="collection" value="<?php echo escape($collection) ?>">
 
-<p><a class="downloadcollection" href="<?php echo $baseurl_short?>pages/collection_download.php?collection=<?php echo urlencode($collection)?>&k=<?php echo urlencode($k)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["download_collection"])?></a></p>
+<p><a class="downloadcollection" href="<?php echo $baseurl_short?>pages/collection_download.php?collection=<?php echo urlencode($collection)?>&k=<?php echo urlencode($k)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["download_collection"])?></a></p>
 <?php if ($feedback_resource_select)
     {
-    ?><h2><?php echo htmlspecialchars($lang["selectedresources"])?>:</h2><?php
+    ?><h2><?php echo escape($lang["selectedresources"])?>:</h2><?php
     # Show thumbnails and allow the user to select resources.
     $result=do_search("!collection" . $collection,"","resourceid",0,-1,"desc");
     for ($n=0;$n<count($result);$n++)
@@ -91,9 +91,9 @@ if ($errors!="")
         $access=get_resource_access($ref);
         $use_watermark=check_use_watermark();
         
-        $title=$ref . " : " . htmlspecialchars(tidy_trim (i18n_get_translated ($result[$n]["field".$view_title_field]),60));
+        $title=$ref . " : " . escape(tidy_trim (i18n_get_translated ($result[$n]["field".$view_title_field]),60));
         if (isset($collection_feedback_display_field)) {
-            $displaytitle=htmlspecialchars(get_data_by_field($ref,$collection_feedback_display_field));
+            $displaytitle=escape(get_data_by_field($ref,$collection_feedback_display_field));
             }
         else {$displaytitle=$title;}
         ?>
@@ -137,7 +137,7 @@ if ($errors!="")
         </tr></table>
         <span class="ResourceSelect"><input type="checkbox" name="select_<?php echo urlencode($ref) ?>" value="yes"></span>
 
-        <div class="ResourcePanelInfo"><?php echo htmlspecialchars($displaytitle) ?>&nbsp;</div>
+        <div class="ResourcePanelInfo"><?php echo escape($displaytitle) ?>&nbsp;</div>
             
         <div class="clearer"> </div>
         </div>
@@ -152,7 +152,7 @@ if ($errors!="")
 
 <div class="Question">
 <?php if ($errors!="") { ?><div class="FormError"><?php echo $errors?></div><?php } ?>
-<label for="comment"><?php echo htmlspecialchars($lang["message"])?></label><textarea class="stdwidth" style="width:450px;" rows=20 cols=80 name="comment" id="comment"><?php echo htmlspecialchars($comment) ?></textarea>
+<label for="comment"><?php echo escape($lang["message"])?></label><textarea class="stdwidth" style="width:450px;" rows=20 cols=80 name="comment" id="comment"><?php echo escape($comment) ?></textarea>
 <div class="clearerleft"> </div>
 </div>
 
@@ -161,11 +161,11 @@ if ($errors!="")
     # For external users, ask for their name/e-mail in case this has been passed to several users.
     ?>
     <div class="Question">
-    <label for="name"><?php echo htmlspecialchars($lang["yourname"])?></label><input type="text" class="stdwidth" name="name" id="name" value="<?php echo escape(getval("name","")) ?>">
+    <label for="name"><?php echo escape($lang["yourname"])?></label><input type="text" class="stdwidth" name="name" id="name" value="<?php echo escape(getval("name","")) ?>">
     <div class="clearerleft"> </div>
     </div>
     <div class="Question">
-    <label for="email"><?php echo htmlspecialchars($lang["youremailaddress"]); ?> *</label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo escape(getval("email","")) ?>">
+    <label for="email"><?php echo escape($lang["youremailaddress"]); ?> *</label><input type="text" class="stdwidth" name="email" id="email" value="<?php echo escape(getval("email","")) ?>">
     <div class="clearerleft"> </div>
     </div>
 <?php

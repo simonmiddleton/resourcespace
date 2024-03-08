@@ -6,13 +6,13 @@ if ($on_upload || (isset($ref) && $ref<0))
     if($show_status_and_access_on_upload && !$on_upload){?></div><!-- end of previous collapsing section --> <?php }
     if($tabs_on_edit && !$on_upload)
         {
-        ?><h1><?php  echo htmlspecialchars($lang["upload-options"])  ?></h1>
+        ?><h1><?php  echo escape($lang["upload-options"])  ?></h1>
         <div id="UploadOptionsSection">
         <?php
         }
     elseif(!$on_upload)
         {       
-        ?><h2 class="CollapsibleSectionHead"><?php  echo htmlspecialchars($lang["upload-options"])  ?></h2>
+        ?><h2 class="CollapsibleSectionHead"><?php  echo escape($lang["upload-options"])  ?></h2>
         <div class="CollapsibleSection" id="UploadOptionsSection">
         <?php
         }
@@ -26,7 +26,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                     class="stdwidth"
                     name="resource_type"
                     >
-                <option value='' <?php ($resource_type == "") ? "selected" : ""?>><?php  echo htmlspecialchars($lang["select"]) ; ?></option>
+                <option value='' <?php ($resource_type == "") ? "selected" : ""?>><?php  echo escape($lang["select"]) ; ?></option>
             <?php
             $types                = get_resource_types("",false,false,true);
             $shown_resource_types = array();
@@ -51,7 +51,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                     $selected = 'selected';
                     }
                 ?>
-                <option value="<?php echo $types[$n]['ref']; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($types[$n]["name"]); ?></option>
+                <option value="<?php echo $types[$n]['ref']; ?>" <?php echo $selected; ?>><?php echo escape($types[$n]["name"]); ?></option>
                 <?php
                 }
             ?>
@@ -68,7 +68,7 @@ if ($on_upload || (isset($ref) && $ref<0))
             // Show option to prevent extraction of exif data
             ?>
             <div class="Question" id="question_noexif">
-            <label for="no_exif"><?php  echo htmlspecialchars($lang["no_exif"]) ?></label><input type=checkbox id="no_exif" name="no_exif" value="yes" <?php if (getval("no_exif",($metadata_read_default)?"":"no")!="") { ?>checked<?php } ?>>
+            <label for="no_exif"><?php  echo escape($lang["no_exif"]) ?></label><input type=checkbox id="no_exif" name="no_exif" value="yes" <?php if (getval("no_exif",($metadata_read_default)?"":"no")!="") { ?>checked<?php } ?>>
             <div class="clearerleft"> </div>
             </div>
 <?php
@@ -92,7 +92,7 @@ if ($on_upload || (isset($ref) && $ref<0))
         {
         ?>
         <div class="Question" id="question_related">
-        <label for="relateonupload"><?php  echo htmlspecialchars($lang["relatedresources_onupload"]) ?></label>
+        <label for="relateonupload"><?php  echo escape($lang["relatedresources_onupload"]) ?></label>
         <input name="relateonupload" id="relateonupload" type="checkbox" value="1" style="margin-top:7px;" <?php if($relate_on_upload_default){echo " checked ";} ?>/> 
         <div class="clearerleft"> </div>
         </div><?php
@@ -107,17 +107,17 @@ if ($on_upload || (isset($ref) && $ref<0))
             $collection_add=getval("collection_add","");
             ?>
             <div class="Question <?php if(!$on_upload && isset($save_errors) && is_array($save_errors) && array_key_exists('collectionname',$save_errors)) { echo " FieldSaveError"; } ?>" id="question_collectionadd">
-                <label for="collection_add"><?php  echo htmlspecialchars($lang["addtocollection"]) ?></label>
+                <label for="collection_add"><?php  echo escape($lang["addtocollection"]) ?></label>
                 <select name="collection_add" id="collection_add" class="stdwidth" >
 
                 <?php if (can_create_collections() && $upload_add_to_new_collection_opt)
                     {
-                    ?><option value="new" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo htmlspecialchars($lang["createnewcollection"]) ?>)</option>
+                    ?><option value="new" <?php if ($upload_add_to_new_collection){ ?>selected <?php }?>>(<?php echo escape($lang["createnewcollection"]) ?>)</option>
                     <?php
                     }
                 if ($upload_do_not_add_to_new_collection_opt && !hook("remove_do_not_add_to_collection"))
                     {
-                    ?><option value="false" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default || $collection_add=='false'){ ?>selected <?php }?>><?php echo htmlspecialchars($lang["batchdonotaddcollection"]) ?></option>
+                    ?><option value="false" <?php if (!$upload_add_to_new_collection || $do_not_add_to_new_collection_default || $collection_add=='false'){ ?>selected <?php }?>><?php echo escape($lang["batchdonotaddcollection"]) ?></option>
                     <?php
                     }                
 
@@ -185,7 +185,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                         {
                         $currentfound = true;
                         ?>
-                        <option value="<?php echo htmlspecialchars($usercollection) ?>" <?php if (is_numeric($collection_add) && $usercollection==$collection_add){?>selected <?php } ?>><?php echo i18n_get_collection_name($cc)?></option>
+                        <option value="<?php echo escape($usercollection) ?>" <?php if (is_numeric($collection_add) && $usercollection==$collection_add){?>selected <?php } ?>><?php echo i18n_get_collection_name($cc)?></option>
                         <?php
                         }
                     }
@@ -194,7 +194,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                 <div class="clearerleft"> </div>
                 <div name="collectioninfo" id="collectioninfo" style="display:none;">
                     <div name="collectionname" id="collectionname" <?php if ($upload_add_to_new_collection_opt){ ?> style="display:block;"<?php } else { ?> style="display:none;"<?php } ?>>
-                    <label for="entercolname"><?php  echo htmlspecialchars($lang["collectionname"]) ?><?php if ($upload_collection_name_required){?><sup>*</sup><?php } ?></label>
+                    <label for="entercolname"><?php  echo escape($lang["collectionname"]) ?><?php if ($upload_collection_name_required){?><sup>*</sup><?php } ?></label>
                     <input type=text id="entercolname" name="entercolname" class="stdwidth" value='<?php echo htmlentities(stripslashes(getval("entercolname","")), ENT_QUOTES);?>'> 
                     </div>
                 </div> <!-- end collectioninfo -->

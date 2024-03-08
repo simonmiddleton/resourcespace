@@ -72,7 +72,7 @@ function HookSearch_tilesSearchReplacesearchpublic($search="",$collections="")
                     }
                 }?>
                 <h2 class="title thmbs_tile">
-                <?php echo htmlspecialchars(str_replace(array("\"","'"),"", i18n_get_collection_name($collections[$n]))); ?>
+                <?php echo escape(str_replace(array("\"","'"),"", i18n_get_collection_name($collections[$n]))); ?>
                 </h2>
                 <?php
                 if($search_tiles_collection_count)

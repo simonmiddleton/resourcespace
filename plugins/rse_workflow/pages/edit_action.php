@@ -155,25 +155,25 @@ renderBreadcrumbs($links_trail);
 
 <form id="form_workflow_action" name="form_workflow_action" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $ref ?>">
     <?php generateFormToken("form_workflow_action"); ?>
-    <input type="hidden" name="ref" id="actionref" value="<?php echo htmlspecialchars($ref) ?>" />
+    <input type="hidden" name="ref" id="actionref" value="<?php echo escape($ref) ?>" />
     <input type="hidden" name="submitted" value="true">
         
     <div class="Question" id="actionname_question">
     <label for="actionname"><?php echo $lang["rse_workflow_action_name"]?></label>
-    <input class="stdwidth" type="text" name="actionname" id="actionname" value="<?php echo htmlspecialchars($workflowaction["name"]);  ?>" />
+    <input class="stdwidth" type="text" name="actionname" id="actionname" value="<?php echo escape($workflowaction["name"]);  ?>" />
     <div class="clearerleft"> </div>
     </div>
 
     
     <div class="Question" id="actiontext_question">
     <label for="actiontext"><?php echo $lang["rse_workflow_action_text"]?></label>
-    <input class="stdwidth" type="text" name="actiontext" id="actiontext" value="<?php echo htmlspecialchars($workflowaction["text"]);  ?>" />
+    <input class="stdwidth" type="text" name="actiontext" id="actiontext" value="<?php echo escape($workflowaction["text"]);  ?>" />
     <div class="clearerleft"> </div>
     </div>
     
     <div class="Question" id="buttontext_question">
     <label for="buttontext"><?php echo $lang["rse_workflow_button_text"]?></label>
-    <input class="stdwidth" type="text" name="buttontext" id="buttontext" value="<?php echo htmlspecialchars($workflowaction["buttontext"]);  ?>" />
+    <input class="stdwidth" type="text" name="buttontext" id="buttontext" value="<?php echo escape($workflowaction["buttontext"]);  ?>" />
     <div class="clearerleft"> </div>
     </div>
     

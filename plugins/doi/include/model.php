@@ -171,7 +171,7 @@
         $identifier = ($doi_use_testprefix ? $doi_test_prefix : $doi_prefix) . "$ref"; # init, mandatory
         $creators = []; # mandatory
         $titles = []; # mandatory
-        $publisher = htmlspecialchars($doi_publisher); # mandatory
+        $publisher = escape($doi_publisher); # mandatory
         $publicationYear = ''; # mandatory
         $date_created = '';
         $subjects = [];
@@ -219,7 +219,7 @@
                         break;
 
                     case 'title':
-                        $titles[] = htmlspecialchars($value);
+                        $titles[] = escape($value);
                         break;
 
                     case 'created_by':
@@ -239,7 +239,7 @@
             $value = $field['value'];
 
             if (doi_has_content($value)) {
-                $value = htmlspecialchars($value);
+                $value = escape($value);
 
                 doi_debug($field);
                 $rtf = $field['ref'];
@@ -430,7 +430,7 @@ XML;
                 # decode description again,
                 $description = htmlspecialchars_decode($description);
                 $description = preg_replace('%' . chr(12) . '%', '', $description); # remove form feed (ff character)
-                $description = htmlspecialchars($description);
+                $description = escape($description);
                 $description = preg_replace('%(\r?\n|\r\n?|)%', '<br />', $description); # replace any line breaks with html entity
                 #               $description = htmlspecialchars($description);
                 $sxe_description = $sxe_descriptions->addChild('description', $description);

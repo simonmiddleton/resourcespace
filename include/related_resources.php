@@ -45,7 +45,7 @@ if ($enable_related_resources)
                         {
                         ?>
                         <div class="ResourcePanelShellSmall" id="RelatedResource_<?php echo $relatedresource["ref"]?>">
-                            <a class="ImageWrapperSmall" href="<?php echo $baseurl_short ?>pages/view.php?ref=<?php echo $relatedresource["ref"]?>" title="<?php echo htmlspecialchars(i18n_get_translated(($relatedresource["field".$view_title_field]))) ?>" onClick="return ModalLoad(this,true);">
+                            <a class="ImageWrapperSmall" href="<?php echo $baseurl_short ?>pages/view.php?ref=<?php echo $relatedresource["ref"]?>" title="<?php echo escape(i18n_get_translated(($relatedresource["field".$view_title_field]))) ?>" onClick="return ModalLoad(this,true);">
                             <?php if ($relatedresource["has_image"]==1)
                                 {
                                 $thm_url = get_resource_path($relatedresource["ref"],false,"col",false,$relatedresource["preview_extension"],-1,1,$use_watermark,$relatedresource["file_modified"]);
@@ -74,7 +74,7 @@ if ($enable_related_resources)
                                     jQuery('#RelatedResource_<?php echo (int) $relatedresource["ref"] ?>').remove();
                                     }
                                     return false;" >
-                                    <?php echo LINK_CARET . htmlspecialchars($lang["action-remove"]) ?></a></div>
+                                    <?php echo LINK_CARET . escape($lang["action-remove"]) ?></a></div>
                             <?php
                             }?>
                         </div>
@@ -92,7 +92,7 @@ if ($enable_related_resources)
                         $uploadurl = generateURL($baseurl . "/pages/edit.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams) . "#RelatedResources","ref"=>-$userref],["relateto"=>$ref]);
                         }
                     echo "<div class=\"clearerleft\" ></div>";
-                    echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $uploadurl  . "\" onclick=\"return CentralSpaceLoad(this, true);\">" . LINK_CARET . htmlspecialchars($lang["upload"]) . "</a>";
+                    echo "<a class=\"ResourcePanelSmallIcons\" href=\"" . $uploadurl  . "\" onclick=\"return CentralSpaceLoad(this, true);\">" . LINK_CARET . escape($lang["upload"]) . "</a>";
                     }
                 }
             else
@@ -109,7 +109,7 @@ if ($enable_related_resources)
                         <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
                         <tbody>
                             <tr class="ListviewTitleStyle">
-                                <td><h3><?php echo htmlspecialchars($restypename); ?></h3></td>     
+                                <td><h3><?php echo escape($restypename); ?></h3></td>     
                                 <td><div class="ListTools"></div></td>                                    
                             </tr>
                             <?php
@@ -121,7 +121,7 @@ if ($enable_related_resources)
                                         {
                                         $relatedtitle = (string) $relatedresource["field{$view_title_field}"];
                                         echo "<tr id=\"relatedresource{$related_resource_ref}\" class=\"RelatedResourceRow\">";
-                                        echo "<td class=\"link\"><a href=\"{$baseurl_short}pages/view.php?ref={$related_resource_ref}\"  onClick=\"return ModalLoad(this,true);\" >" . htmlspecialchars($relatedtitle) . "</a></td>";
+                                        echo "<td class=\"link\"><a href=\"{$baseurl_short}pages/view.php?ref={$related_resource_ref}\"  onClick=\"return ModalLoad(this,true);\" >" . escape($relatedtitle) . "</a></td>";
                                         echo "<td>";
                                         if($edit_access)
                                             {
@@ -135,7 +135,7 @@ if ($enable_related_resources)
                                                     jQuery('#RelatedResource_<?php echo (int) $relatedresource["ref"] ?>').remove();
                                                     }
                                                     return false;" >
-                                                    <?php echo LINK_CARET . htmlspecialchars($lang["action-remove"]) ?></a></div>
+                                                    <?php echo LINK_CARET . escape($lang["action-remove"]) ?></a></div>
                                             <?php
                                             }
                                         echo "</td>";   
@@ -155,7 +155,7 @@ if ($enable_related_resources)
                                         $uploadurl = generateURL($baseurl . "/pages/edit.php",["redirecturl"=>generateURL($baseurl . "/pages/view.php",$urlparams) . "#RelatedResources","ref"=>-$userref],["relateto"=>$ref]);
                                         }
 
-                                    echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $uploadurl . "\">" . LINK_CARET . htmlspecialchars($lang["upload"]) . "</a></div></td>";
+                                    echo "<tr><td></td><td><div class=\"ListTools\"><a href=\"" . $uploadurl . "\">" . LINK_CARET . escape($lang["upload"]) . "</a></div></td>";
                                     }
                             ?>
                         </tbody>

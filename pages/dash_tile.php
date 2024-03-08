@@ -218,7 +218,7 @@ if($submitdashtile && enforcePostRequest(false))
     if($error)
         {?>
         <p class="FormError" style="margin-left:5px;">
-        <?php echo htmlspecialchars($error);?>
+        <?php echo escape($error);?>
         </p>
         <?php
         }?>
@@ -227,7 +227,7 @@ if($submitdashtile && enforcePostRequest(false))
     if($message)
         {?>
         <p style="margin-left:5px;">
-        <?php echo htmlspecialchars($message);?>
+        <?php echo escape($message);?>
         </p>
         <?php
         if(strpos($link,"pages/")===0)
@@ -285,7 +285,7 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
                             <input 
                                 type="radio" 
                                 class="tlstyle" 
-                                id="tile_style_<?php echo htmlspecialchars($style);?>" 
+                                id="tile_style_<?php echo escape($style);?>" 
                                 name="tlstyle" 
                                 value="<?php echo $style;?>" 
                                 <?php 
@@ -302,7 +302,7 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
                             />
                         </td>
                         <td align="left" valign="middle" >
-                            <label class="customFieldLabel" for="tile_style_<?php echo htmlspecialchars($style);?>"><?php echo $lang["tile_".$style];?></label>
+                            <label class="customFieldLabel" for="tile_style_<?php echo escape($style);?>"><?php echo $lang["tile_".$style];?></label>
                         </td>
                         <?php
                         }?>
@@ -492,8 +492,8 @@ if(!$validpage)
 <div class="BasicsBox">
 <h1><?php echo $pagetitle;render_help_link("user/create-dash-tile");?></h1>
 <form id="create_dash" name="create_dash" method="post">
-    <input type="hidden" name="tltype" value="<?php echo htmlspecialchars($tile_type)?>" />
-    <input type="hidden" name="url" value="<?php echo htmlspecialchars($url); ?>" />
+    <input type="hidden" name="tltype" value="<?php echo escape($tile_type)?>" />
+    <input type="hidden" name="url" value="<?php echo escape($url); ?>" />
     <?php generateFormToken("create_dash"); ?>
 
     <div class="Question">
@@ -517,21 +517,21 @@ if(!$validpage)
         ?>
         <div class="Question">
             <label for="link"><?php echo $lang["dashtilelink"];?></label> 
-            <input type="text" name="link" value="<?php echo htmlspecialchars($link);?>"/>
+            <input type="text" name="link" value="<?php echo escape($link);?>"/>
             <div class="clearerleft"></div>
         </div>
         <?php
         }
     else
         {?>
-        <input type="hidden" name="link" id="previewlink" value="<?php echo htmlspecialchars($link);?>" />
+        <input type="hidden" name="link" id="previewlink" value="<?php echo escape($link);?>" />
         <?php
         }
     if(!$notitle)
         { ?>
         <div class="Question">
             <label for="title"><?php echo $lang["dashtiletitle"];?></label> 
-            <input type="text" id="previewtitle" name="title" value="<?php echo htmlspecialchars(ucfirst ($title));?>"/>
+            <input type="text" id="previewtitle" name="title" value="<?php echo escape(ucfirst ($title));?>"/>
             <div class="clearerleft"></div>
         </div>
         <?php
@@ -549,7 +549,7 @@ if(!$validpage)
         ?>
         <div class="Question">
             <label for="freetext"><?php echo $lang["dashtiletext"];?></label> 
-            <textarea class="stdwidth" rows="3" type="text" id="previewtext" name="freetext" /><?php echo htmlspecialchars(ucfirst($freetext));?></textarea>
+            <textarea class="stdwidth" rows="3" type="text" id="previewtext" name="freetext" /><?php echo escape(ucfirst($freetext));?></textarea>
             <div class="clearerleft"></div>
         </div>
         <?php
@@ -672,10 +672,10 @@ if('' != $tile_type && $tile_type !== "conf")
             foreach($resources as $resource)
                 {
                 ?>
-                <option value="<?php echo htmlspecialchars($resource["ref"]); ?>"
+                <option value="<?php echo escape($resource["ref"]); ?>"
                     <?php echo $promoted_resource === $resource['ref'] ? 'selected="selected"' : ''; ?>
                 ><?php
-                    echo htmlspecialchars(str_replace(
+                    echo escape(str_replace(
                         array('%ref','%title'),
                         array(
                             $resource['ref'],

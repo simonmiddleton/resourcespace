@@ -499,7 +499,7 @@ if($advanced_search_buttons_top)
 if($search_includes_resources && !hook("advsearchrestypes") && !$hide_search_resource_types)
  {?>
  <div class="Question">
- <label><?php echo htmlspecialchars($lang["search-mode"]) ?></label><?php
+ <label><?php echo escape($lang["search-mode"]) ?></label><?php
 
 $wrap=0;
 
@@ -512,7 +512,7 @@ if ((!empty($selectedtypes[0]) && in_array("Global",$selectedtypes))
     }
 
 ?><table><tr>
-<td valign=middle><input type=checkbox class="SearchTypeCheckbox" id="SearchGlobal" name="resourcetypeGlobal" value="yes" <?php if ($checked) { ?>checked<?php }?>></td><td valign=middle><?php echo htmlspecialchars($lang["resources-all-types"]) ; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
+<td valign=middle><input type=checkbox class="SearchTypeCheckbox" id="SearchGlobal" name="resourcetypeGlobal" value="yes" <?php if ($checked) { ?>checked<?php }?>></td><td valign=middle><?php echo escape($lang["resources-all-types"]) ; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
 $hiddentypes = array();
 for ($n=0;$n<count($types);$n++)
     {
@@ -526,7 +526,7 @@ for ($n=0;$n<count($types);$n++)
         $checked=true;
         }
 
-    ?><td valign=middle><input type=checkbox class="SearchTypeCheckbox SearchTypeItemCheckbox" name="resourcetype<?php echo $types[$n]["ref"]?>" value="yes" <?php if ($checked) {?>checked<?php } else $hiddentypes[]=$types[$n]["ref"]; ?>></td><td valign=middle><?php echo htmlspecialchars($types[$n]["name"])?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
+    ?><td valign=middle><input type=checkbox class="SearchTypeCheckbox SearchTypeItemCheckbox" name="resourcetype<?php echo $types[$n]["ref"]?>" value="yes" <?php if ($checked) {?>checked<?php } else $hiddentypes[]=$types[$n]["ref"]; ?>></td><td valign=middle><?php echo escape($types[$n]["name"])?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><?php
     }
 ?>
 <?php if ($search_includes_themes)
@@ -550,7 +550,7 @@ if (!hook('advsearchallfields')) { ?>
 <input type="hidden" id="hiddenfields" name="hiddenfields" value="">
 
 <div class="Question">
-<label for="allfields"><?php echo htmlspecialchars($lang["allfields"]) ?></label><input class="SearchWidth" type=text name="allfields" id="allfields" value="<?php echo escape($allwords)?>" onChange="UpdateResultCount();">
+<label for="allfields"><?php echo escape($lang["allfields"]) ?></label><input class="SearchWidth" type=text name="allfields" id="allfields" value="<?php echo escape($allwords)?>" onChange="UpdateResultCount();">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>
@@ -559,7 +559,7 @@ if (!hook('advsearchallfields')) { ?>
         {?>
         style="display: none;"
 <?php   } ?>>
-<?php echo htmlspecialchars($lang["resourcetype-global_fields"]) ; ?>
+<?php echo escape($lang["resourcetype-global_fields"]) ; ?>
 </h1>
 <div class="AdvancedSection" id="AdvancedSearchGlobalSection"
 <?php if (in_array("FeaturedCollections",$selectedtypes))
@@ -570,16 +570,16 @@ if (!hook('advsearchallfields')) { ?>
 <?php if (!hook('advsearchresid')) { ?>
 <!-- Search for resource ID(s) -->
 <div class="Question">
-<label for="resourceids"><?php echo htmlspecialchars($lang["resourceids"]) ?></label><input class="SearchWidth" type=text name="resourceids" id="resourceids" value="<?php echo escape(getval("resourceids","")) ?>" onChange="UpdateResultCount();">
+<label for="resourceids"><?php echo escape($lang["resourceids"]) ?></label><input class="SearchWidth" type=text name="resourceids" id="resourceids" value="<?php echo escape(getval("resourceids","")) ?>" onChange="UpdateResultCount();">
 <div class="clearerleft"> </div>
 </div>
 <?php }
 if (!$daterange_search)
     {
     ?>
-    <div class="Question"><label><?php echo htmlspecialchars($lang["bydate"]) ?></label>
+    <div class="Question"><label><?php echo escape($lang["bydate"]) ?></label>
     <select name="basicyear" class="SearchWidth" style="width:120px;" onChange="UpdateResultCount();">
-      <option value=""><?php echo htmlspecialchars($lang["anyyear"]) ?></option>
+      <option value=""><?php echo escape($lang["anyyear"]) ?></option>
       <?php
       $y=date("Y");
       $y += $maxyear_extends_current;
@@ -590,17 +590,17 @@ if (!$daterange_search)
       ?>
     </select>
     <select name="basicmonth" class="SearchWidth" style="width:120px;" onChange="UpdateResultCount();">
-      <option value=""><?php echo htmlspecialchars($lang["anymonth"]) ?></option>
+      <option value=""><?php echo escape($lang["anymonth"]) ?></option>
       <?php
       for ($n=1;$n<=12;$n++)
         {
         $m=str_pad($n,2,"0",STR_PAD_LEFT);
-        ?><option <?php if ($n==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo htmlspecialchars($lang["months"][$n-1]) ?></option><?php
+        ?><option <?php if ($n==$found_month) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$n-1]) ?></option><?php
         }
       ?>
     </select>
     <select name="basicday" class="SearchWidth" style="width:120px;" onChange="UpdateResultCount();">
-      <option value=""><?php echo htmlspecialchars($lang["anyday"]) ?></option>
+      <option value=""><?php echo escape($lang["anyday"]) ?></option>
       <?php
       for ($n=1;$n<=31;$n++)
         {
@@ -650,7 +650,7 @@ for ($n=0;$n<count($fields);$n++)
                     <?php
                     }
                     ?>
-            ><?php echo htmlspecialchars($lang["typespecific"])  ?></h1>
+            ><?php echo escape($lang["typespecific"])  ?></h1>
         <div class="AdvancedSection"
              id="AdvancedSearchRestypeSection"
              <?php
@@ -679,13 +679,13 @@ for ($n=0;$n<count($fields);$n++)
 </div>
 
 <!-- Resource section-->
-<h1 class="AdvancedSectionHead CollapsibleSectionHead ResourceSectionHead"  id="AdvancedSearchResourceSectionHead"><?php echo htmlspecialchars($lang["advancedsearch_resource_section"])  ?></h1>
+<h1 class="AdvancedSectionHead CollapsibleSectionHead ResourceSectionHead"  id="AdvancedSearchResourceSectionHead"><?php echo escape($lang["advancedsearch_resource_section"])  ?></h1>
 <div class="AdvancedSection ResourceSection"
     id="AdvancedSearchResourceSection">
 
     <!-- Full text search (uses built in MySQL indexing) -->
     <div class="Question">
-        <label for="<?php echo FULLTEXT_SEARCH_PREFIX; ?>"><?php echo htmlspecialchars($lang["search_full_text"]); ?></label><input class="SearchWidth" type=text name="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" id="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" value="<?php echo escape($full_text_search); ?>" onChange="UpdateResultCount();">
+        <label for="<?php echo FULLTEXT_SEARCH_PREFIX; ?>"><?php echo escape($lang["search_full_text"]); ?></label><input class="SearchWidth" type=text name="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" id="<?php echo FULLTEXT_SEARCH_PREFIX; ?>" value="<?php echo escape($full_text_search); ?>" onChange="UpdateResultCount();">
         <div class="clearerleft"> </div>
     </div>
 
@@ -705,7 +705,7 @@ if($advanced_search_archive_select)
         ?>
 
         <div class="Question" id="question_archive" >
-            <label><?php echo htmlspecialchars($lang["status"]) ?></label>
+            <label><?php echo escape($lang["status"]) ?></label>
             <table cellpadding=2 cellspacing=0>
 
                 <?php
@@ -726,7 +726,7 @@ if($advanced_search_archive_select)
                             }?>
                         >
                 </td>
-                <td><?php echo htmlspecialchars(i18n_get_translated($state_name)); ?>&nbsp;</td>
+                <td><?php echo escape(i18n_get_translated($state_name)); ?>&nbsp;</td>
                 </tr>
                     <?php
                     }
@@ -747,13 +747,13 @@ if($advanced_search_archive_select)
         render_question_div("search_advanced_access_question", function() use ($lang, $access)
             {
             ?>
-            <label for="search_advanced_access"><?php echo htmlspecialchars($lang["access"]); ?></label>
+            <label for="search_advanced_access"><?php echo escape($lang["access"]); ?></label>
             <select id="search_advanced_access" class="SearchWidth" name="access" onchange="UpdateResultCount();">
-                <option><?php echo htmlspecialchars($lang["all"]) ; ?></option>
+                <option><?php echo escape($lang["all"]) ; ?></option>
             <?php
             foreach(range(0, 2) as $access_level)
                 {
-                $label = htmlspecialchars($lang["access{$access_level}"]);
+                $label = escape($lang["access{$access_level}"]);
                 $extra_attributes = (!is_null($access) && $access_level == $access ? " selected" : "");
 
                 echo render_dropdown_option($access_level, $label, array(), $extra_attributes);
@@ -768,7 +768,7 @@ if($advanced_search_archive_select)
         {
         ?>
         <div class="Question">
-            <label><?php echo htmlspecialchars($lang["contributedby"]) ; ?></label>
+            <label><?php echo escape($lang["contributedby"]) ; ?></label>
             <?php
             $single_user_select_field_value=$properties_contributor;
             $single_user_select_field_id='properties_contributor';
@@ -792,7 +792,7 @@ if($advanced_search_archive_select)
 
 <?php if ($search_includes_themes)
     { ?>
-    <h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchFeaturedCollectionsSectionHead" <?php if (!in_array("FeaturedCollections",$selectedtypes)) {?> style="display: none;" <?php } ?>><?php echo htmlspecialchars($lang["themes"]) ; ?></h1>
+    <h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchFeaturedCollectionsSectionHead" <?php if (!in_array("FeaturedCollections",$selectedtypes)) {?> style="display: none;" <?php } ?>><?php echo escape($lang["themes"]) ; ?></h1>
     <div class="AdvancedSection" id="AdvancedSearchFeaturedCollectionsSection" <?php if (!in_array("FeaturedCollections",$selectedtypes)) {?> style="display: none;" <?php } ?>>
     <?php
     $fields=get_advanced_search_collection_fields();
@@ -816,7 +816,7 @@ if($advanced_search_archive_select)
 if($advanced_search_media_section)
     {
     ?>
-    <h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchMediaSectionHead" ><?php echo htmlspecialchars($lang["media"]) ; ?></h1>
+    <h1 class="AdvancedSectionHead CollapsibleSectionHead" id="AdvancedSearchMediaSectionHead" ><?php echo escape($lang["media"]) ; ?></h1>
     <div class="AdvancedSection" id="AdvancedSearchMediaSection">
     <?php
     render_split_text_question($lang["pixel_height"], array('media_heightmin'=>$lang['from'],'media_heightmax'=>$lang['to']),$lang["pixels"], true, " class=\"stdWidth\" OnChange=\"UpdateResultCount();\"", array('media_heightmin'=>$media_heightmin,'media_heightmax'=>$media_heightmax));

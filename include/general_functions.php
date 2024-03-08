@@ -1622,9 +1622,9 @@ function pager($break=true,$scrolltotop=true,$options=array())
         if ($totalpages!=0 && $totalpages!=1){?>     
             <span class="TopInpageNavRight"><?php if ($break) { ?>&nbsp;<br /><?php } hook("custompagerstyle"); if ($curpage>1) { ?><a class="prevPageLink" title="<?php echo escape($lang["previous"]) ?>" href="<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"prev","offset"=> ($offset-$per_page)));?>" <?php if(!hook("replacepageronclick_prev")){?>onClick="<?php echo $confirm_page_change;?> return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this, <?php echo $scroll; ?>);" <?php } ?>><?php } ?><i aria-hidden="true" class="fa fa-arrow-left"></i><?php if ($curpage>1) { ?></a><?php } ?>&nbsp;&nbsp;
 
-            <div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo htmlspecialchars($lang["jumptopage"]) ?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"page")); ?>&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}">
+            <div class="JumpPanel" id="jumppanel<?php echo $jumpcount?>" style="display:none;"><?php echo escape($lang["jumptopage"]) ?>: <input type="text" size="1" id="jumpto<?php echo $jumpcount?>" onkeydown="var evt = event || window.event;if (evt.keyCode == 13) {var jumpto=document.getElementById('jumpto<?php echo $jumpcount?>').value;if (jumpto<1){jumpto=1;};if (jumpto><?php echo $totalpages?>){jumpto=<?php echo $totalpages?>;};<?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load('<?php echo generateURL($url, (isset($url_params) ? $url_params : array()), array("go"=>"page")); ?>&amp;offset=' + ((jumpto-1) * <?php echo urlencode($per_page) ?>), <?php echo $scroll; ?>);}">
             &nbsp;<a aria-hidden="true" class="fa fa-times-circle" href="#" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='none';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='inline';"></a></div>
-            <a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo escape($lang["jumptopage"]) ?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo htmlspecialchars($lang["page"]) ?>&nbsp;<?php echo htmlspecialchars($curpage) ?>&nbsp;<?php echo htmlspecialchars($lang["of"]) ?>&nbsp;<?php echo $totalpages?></a>
+            <a href="#" id="jumplink<?php echo $jumpcount?>" title="<?php echo escape($lang["jumptopage"]) ?>" onClick="document.getElementById('jumppanel<?php echo $jumpcount?>').style.display='inline';document.getElementById('jumplink<?php echo $jumpcount?>').style.display='none';document.getElementById('jumpto<?php echo $jumpcount?>').focus(); return false;"><?php echo escape($lang["page"]) ?>&nbsp;<?php echo escape($curpage) ?>&nbsp;<?php echo escape($lang["of"]) ?>&nbsp;<?php echo $totalpages?></a>
             &nbsp;&nbsp;<?php
             if ($curpage<$totalpages)
                 {
@@ -2258,7 +2258,7 @@ function format_display_field($value)
         }
     else
         {
-        $string=htmlspecialchars($string);
+        $string=escape($string);
         }
 
     $string=highlightkeywords($string,$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
@@ -2858,12 +2858,12 @@ function validate_html($html)
     {
     $line=xml_get_current_line_number($parser);
 
-    $error=htmlspecialchars(xml_error_string($errcode)) . "<br />Line: " . $line . "<br /><br />";
+    $error=escape(xml_error_string($errcode)) . "<br />Line: " . $line . "<br /><br />";
     $s=explode("\n",$html);
     $error .= "<pre>" ;
-    $error.= isset($s[$line-2]) ? trim(htmlspecialchars($s[$line-2])) . "<br />": "";
-    $error.= isset($s[$line-1]) ? "<strong>" . trim(htmlspecialchars($s[$line-1])) . "</strong><br />": "";
-    $error.= isset($s[$line]) ? trim(htmlspecialchars($s[$line])) . "<br />" : "";   
+    $error.= isset($s[$line-2]) ? trim(escape($s[$line-2])) . "<br />": "";
+    $error.= isset($s[$line-1]) ? "<strong>" . trim(escape($s[$line-1])) . "</strong><br />": "";
+    $error.= isset($s[$line]) ? trim(escape($s[$line])) . "<br />" : "";   
     $error .= "</pre>";    
     return $error;
     }
@@ -3023,7 +3023,7 @@ function form_value_display($row,$name,$default="")
     {
     if (!is_array($row)) {return false;}
     if (array_key_exists($name,$row)) {$default=$row[$name];}
-    return htmlspecialchars((string) getval($name,$default));
+    return escape((string) getval($name,$default));
     }
 
 /**
@@ -5313,9 +5313,9 @@ function get_size_info(array $size, ?array $originalSize = null): string
 
     $output = sprintf(
         '<p>%s &times; %s %s',
-        htmlspecialchars($newWidth),
-        htmlspecialchars($newHeight),
-        htmlspecialchars($lang['pixels']),
+        escape($newWidth),
+        escape($newHeight),
+        escape($lang['pixels']),
     );
 
     if (!hook('replacemp'))
@@ -5324,8 +5324,8 @@ function get_size_info(array $size, ?array $originalSize = null): string
         if ($mp >= 0)
             {
             $output .= sprintf(' (%s %s)',
-                htmlspecialchars($mp),
-                htmlspecialchars($lang['megapixel-short']),
+                escape($mp),
+                escape($lang['megapixel-short']),
             );
             }
         }
@@ -5343,12 +5343,12 @@ function get_size_info(array $size, ?array $originalSize = null): string
             compute_dpi($newWidth, $newHeight, $dpi, $dpi_unit, $dpi_w, $dpi_h);
             $output .= sprintf(
                 '<p>%1$s %2$s &times; %3$s %2$s %4$s %5$s %6$s</p>',
-                htmlspecialchars($dpi_w),
-                htmlspecialchars($dpi_unit),
-                htmlspecialchars($dpi_h),
-                htmlspecialchars($lang['at-resolution']),
-                htmlspecialchars($dpi),
-                htmlspecialchars($lang['ppi']),
+                escape($dpi_w),
+                escape($dpi_unit),
+                escape($dpi_h),
+                escape($lang['at-resolution']),
+                escape($dpi),
+                escape($lang['ppi']),
             );
         }
 

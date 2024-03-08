@@ -103,7 +103,7 @@ $links_trail = array(
 include '../../../include/header.php';
 ?>
 <div class="BasicsBox"> 
-    <h1><?php echo htmlspecialchars($lang['simplesaml_configuration']); ?></h1>
+    <h1><?php echo escape($lang['simplesaml_configuration']); ?></h1>
 <?php
 renderBreadcrumbs($links_trail);
 
@@ -141,8 +141,8 @@ else
             foreach($spdata as $spsetting =>$spvalue)
                 {
                 echo "<div class='Question'>";
-                echo "<label>" . htmlspecialchars($spsetting) . "</label>";
-                echo "<div class='Fixed'>" . htmlspecialchars($spvalue) . "</div>";
+                echo "<label>" . escape($spsetting) . "</label>";
+                echo "<div class='Fixed'>" . escape($spvalue) . "</div>";
                 echo "<div class='clearerleft'></div></div>";
                 }
             echo "</div>";
@@ -200,8 +200,8 @@ config_text_input("simplesaml_sp",$lang['simplesaml_service_provider'],$simplesa
 ?>
 <div class="Question">
     <br>
-    <h2><?php echo htmlspecialchars($lang['simplesaml_authorisation_rules_header']); ?></h2>
-        <p><?php echo htmlspecialchars($lang['simplesaml_authorisation_rules_description']); ?></p>
+    <h2><?php echo escape($lang['simplesaml_authorisation_rules_header']); ?></h2>
+        <p><?php echo escape($lang['simplesaml_authorisation_rules_description']); ?></p>
     <div class="clearerleft"></div>
   </div>
 <?php

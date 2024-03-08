@@ -115,10 +115,10 @@ function addColumnHeader($orderName, $labelKey)
             ?>
             <tr>
                 <td>
-                    <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["ref"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE); ?></a>
+                    <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["ref"],escape($find),STR_HIGHLIGHT_SIMPLE); ?></a>
                 </td>
                 <td>
-                    <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["name"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE); ?></a>
+                    <a href="<?php echo $a_href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo str_highlight ($report["name"],escape($find),STR_HIGHLIGHT_SIMPLE); ?></a>
                 </td>
                 <td><?php echo escape($support_non_correlated_sql ? $lang['yes'] : $lang['no']); ?></td>
                 <td>
@@ -185,7 +185,7 @@ function addColumnHeader($orderName, $labelKey)
         <?php
         if ($order_by)
             {
-            ?><input type="hidden" name="orderby" value="<?php echo htmlspecialchars($order_by); ?>">
+            ?><input type="hidden" name="orderby" value="<?php echo escape($order_by); ?>">
             <?php
             }
         if ($find)

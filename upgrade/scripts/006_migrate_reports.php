@@ -9,9 +9,9 @@ foreach ($reports as $report)
     {
     $sql=$report["query"];
     $ref=$report["ref"];
-    
+
     echo "Migrating report: " . $ref . "\n";
-    
+
     global $view_title_field;
     $view_title_field_subquery = "
         (
@@ -48,7 +48,7 @@ foreach ($reports as $report)
 
     #Now crystallize the view title subselect reference with the actual subselect necessary to fulfil it 
     $sql=str_replace("view_title_field_subselect", $view_title_field_subquery, $sql);
-    
+
     ps_query("update report set query=? where ref=?",array("s",$sql,"i",$ref)); // Note $sql here is the report to be inserted - it's not executed here
     }
     

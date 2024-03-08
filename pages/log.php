@@ -137,7 +137,7 @@ elseif ($previous_page_modal)
                 ?>
             </div>
         </div>
-        <h1><?php echo $lang["resourcelog"] . " : " . $lang["resourceid"] . " " .  htmlspecialchars($ref);render_help_link("user/logs");?></h1>
+        <h1><?php echo $lang["resourcelog"] . " : " . $lang["resourceid"] . " " .  escape($ref);render_help_link("user/logs");?></h1>
     </div>
 
 <?php
@@ -214,15 +214,15 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
         {
         if(isset($download_usage_options[$log[$n]["usageoption"]]) && $log[$n]["usageoption"] != -1 && $log[$n]["usageoption"] >= 0)
             {
-            $logentry["usage"] = nl2br(htmlspecialchars(i18n_get_translated($download_usage_options[$log[$n]["usageoption"]])));
+            $logentry["usage"] = nl2br(escape(i18n_get_translated($download_usage_options[$log[$n]["usageoption"]])));
             }
-        $logentry["usagemedium"]  = htmlspecialchars($log[$n]["notes"]);
+        $logentry["usagemedium"]  = escape($log[$n]["notes"]);
         $tabledata["data"][] = $logentry;        
         }
     else
         {
-        $logentry["action"]     = htmlspecialchars($lang["log-" . $log[$n]["type"]]." ".$log[$n]["notes"]);
-        $logentry["field"]      = htmlspecialchars($log[$n]["title"]);
+        $logentry["action"]     = escape($lang["log-" . $log[$n]["type"]]." ".$log[$n]["notes"]);
+        $logentry["field"]      = escape($log[$n]["title"]);
         $logentry["rowlink"]    = generateURL("{$baseurl_short}pages/log_entry.php", array_merge($url_params, $filter_url_params), array("ref" => $log[$n]["ref"]));
         $tabledata["data"][] = $logentry;
         }

@@ -92,7 +92,7 @@ if(!hook('customchkboxes', '', array($field)))
                                 <?php
                                 // When editing multiple resources, we don't want to check any options; 
                                 // Unless copying from another resource the user must make the necessary selections
-                                
+
                                 if((!$multiple || getval("copyfrom","")!="")
                                     && in_array($node['ref'], $selected_nodes) || (isset($user_set_values[$field['ref']]) 
                                     && in_array($node['ref'],$user_set_values[$field['ref']])))
@@ -108,7 +108,7 @@ if(!hook('customchkboxes', '', array($field)))
                                     onChange="AutoSave('<?php echo $field['ref']; ?>');"
                                     <?php
                                     }
-                                    ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>"><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label>
+                                    ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>"><?php echo escape(i18n_get_translated($node['name'])); ?></label>
                         </td>
                         <?php
                         }
@@ -167,7 +167,7 @@ if(!hook('customchkboxes', '', array($field)))
                         onChange="AutoSave('<?php echo $field['ref']; ?>');"
                         <?php
                         }
-                        ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>"><?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?></label></td>
+                        ?>><label class="customFieldLabel" for="nodes_<?php echo $node['ref']; ?>"><?php echo escape(i18n_get_translated($node['name'])); ?></label></td>
             <?php
             }
             ?>

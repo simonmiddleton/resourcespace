@@ -298,7 +298,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
             <?php
             foreach ($video_tracks_output_formats as $video_tracks_output_format=>$video_tracks_output_command)
                 {
-                echo "<option value='" . htmlspecialchars(trim($video_tracks_output_format)) . "' >" . htmlspecialchars(trim($video_tracks_output_format)) . "</option>";
+                echo "<option value='" . escape(trim($video_tracks_output_format)) . "' >" . escape(trim($video_tracks_output_format)) . "</option>";
                 }
                 ?>
             </select>
@@ -317,7 +317,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                 {
                 if(in_array(mb_strtolower($subtitle_alt["file_extension"]),$video_tracks_subtitle_extensions))
                     {
-                    echo "<option value='" . $subtitle_alt["ref"] . "' >" . htmlspecialchars(trim($subtitle_alt["description"])) . " (" . $subtitle_alt["name"] . ")</option>";
+                    echo "<option value='" . $subtitle_alt["ref"] . "' >" . escape(trim($subtitle_alt["description"])) . " (" . $subtitle_alt["name"] . ")</option>";
                     }     
                 }
             ?>
@@ -339,7 +339,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                 {
                 if(in_array(mb_strtolower($audio_alt["file_extension"]),$video_tracks_audio_extensions))
                     {
-                    echo "<option value='" . $audio_alt["ref"] . "' >" . htmlspecialchars(trim($audio_alt["description"])) . " (" . $audio_alt["name"] . ")</option>";
+                    echo "<option value='" . $audio_alt["ref"] . "' >" . escape(trim($audio_alt["description"])) . " (" . $audio_alt["name"] . ")</option>";
                     }     
                 }
             ?>

@@ -21,7 +21,7 @@ if($ajax != "" && $current_css_reload != 0 && $current_css_reload != $css_reload
     http_response_code(205);
     $return["error"] = array(
         "status" => 205,
-        "title"  => htmlspecialchars($lang["error-reload-required"]),
+        "title"  => escape($lang["error-reload-required"]),
     );
     echo json_encode($return);
     exit();
@@ -77,7 +77,7 @@ $noauth_page = in_array(
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <?php hook('extra_meta'); ?>
 
-<title><?php echo htmlspecialchars($applicationname)?></title>
+<title><?php echo escape($applicationname)?></title>
 <?php
 if('' == $header_favicon)
     {
@@ -335,10 +335,10 @@ endif; # !hook("customhtmlheader")
 </head>
 <body lang="<?php echo escape($language) ?>">
 
-<a href="#UICenter" class="skip-to-main-content"><?php echo htmlspecialchars($lang["skip-to-main-content"]); ?></a>
+<a href="#UICenter" class="skip-to-main-content"><?php echo escape($lang["skip-to-main-content"]); ?></a>
 
 <!-- Processing graphic -->
-<div id='ProcessingBox' style='display: none'><h3><?php echo htmlspecialchars($lang["status_processing"]); ?></h3><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
+<div id='ProcessingBox' style='display: none'><h3><?php echo escape($lang["status_processing"]); ?></h3><i aria-hidden="true" class="fa fa-cog fa-spin fa-3x fa-fw"></i></div>
 
 <!-- Loading graphic -->
 <?php
@@ -421,11 +421,11 @@ if ($pagename != "preview")
                     <span class="rbText">
                         <?php if ($allow_password_change == false)
                             {
-                            echo htmlspecialchars((!isset($userfullname)||$userfullname==""?$username:$userfullname));
+                            echo escape((!isset($userfullname)||$userfullname==""?$username:$userfullname));
                             }
                         else 
                             {
-                            echo htmlspecialchars($lang["responsive_settings_menu"]);
+                            echo escape($lang["responsive_settings_menu"]);
                             }?>
                         </span>
                     <?php if ($user_profile_image != "")
@@ -438,7 +438,7 @@ if ($pagename != "preview")
                         }
                     ?></a>
                 <a href="#" id="HeaderNav2Click" class="ResponsiveHeaderButton ResourcePanel ResponsiveButton">
-                    <span class="rbText"><?php echo htmlspecialchars($lang["responsive_main_menu"]); ?></span>
+                    <span class="rbText"><?php echo escape($lang["responsive_main_menu"]); ?></span>
                     <span class="fa fa-fw fa-lg fa-bars"></span>
                 </a>
             </div>
@@ -464,9 +464,9 @@ if ($pagename != "preview")
                 {
                 ?>
                 <ul>
-                <li><a href="<?php echo $baseurl?>/login.php"><?php echo htmlspecialchars($lang["login"]) ?></a></li>
+                <li><a href="<?php echo $baseurl?>/login.php"><?php echo escape($lang["login"]) ?></a></li>
                 <?php hook("addtoplinksanon");?>
-                <?php if ($contact_link) { ?><li><a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["contactus"]) ?></a></li><?php } ?>
+                <?php if ($contact_link) { ?><li><a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["contactus"]) ?></a></li><?php } ?>
                 </ul>
                 <?php
                 } /* end replaceheadernav1anon */
@@ -481,7 +481,7 @@ if ($pagename != "preview")
                     $topuploadurl = get_upload_url("",$k);
                     ?>
                     <li class="HeaderLink UploadButton">
-                        <a href="<?php echo $topuploadurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo htmlspecialchars($lang["upload"]); ?></a>
+                        <a href="<?php echo $topuploadurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo UPLOAD_ICON ?><?php echo escape($lang["upload"]); ?></a>
                     </li><?php
                     }
 
@@ -495,14 +495,14 @@ if ($pagename != "preview")
                             {
                             if ($user_profile_image != "")
                                 {                    
-                                ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> &nbsp;<?php echo htmlspecialchars($userfullname=="" ? $username : $userfullname) ?>
+                                ?><img src='<?php echo $user_profile_image; ?>' alt='Profile icon' class="ProfileImage" id='UserProfileImage'> &nbsp;<?php echo escape($userfullname=="" ? $username : $userfullname) ?>
                                 <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                                 <?php
                                 }
                             else
                                 {
                                 ?>
-                                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo htmlspecialchars($userfullname=="" ? $username : $userfullname) ?>
+                                <i aria-hidden="true" class="fa fa-user fa-fw"></i>&nbsp;<?php echo escape($userfullname=="" ? $username : $userfullname) ?>
                                 <span class="MessageTotalCountPill Pill" style="display: none;"></span>
                                 <?php
                                 }

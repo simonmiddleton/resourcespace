@@ -144,11 +144,11 @@ include "../../../include/header.php";
 
 if(isset($error))
     {
-    print '<div class="PageInformal">' . htmlspecialchars($error) . '</div>';
+    print '<div class="PageInformal">' . escape($error) . '</div>';
     }
 
-print '<h1>' . htmlspecialchars($lang["bookend"]) . '</h1>';
-print '<p>' . htmlspecialchars($lang["bookend-intro"]) . '</p>';
+print '<h1>' . escape($lang["bookend"]) . '</h1>';
+print '<p>' . escape($lang["bookend-intro"]) . '</p>';
 print '<form method="post">';
 
 generateFormToken("video_bookend");
@@ -162,7 +162,7 @@ for($n = 1; $n <= 2; $n++)
     
     foreach ($alternatives as $alternative)
         {
-        print '<option value="' . $alternative["ref"] . '">' . htmlspecialchars($alternative["name"]) . '</option>';
+        print '<option value="' . $alternative["ref"] . '">' . escape($alternative["name"]) . '</option>';
         }
 
     print '</select>';

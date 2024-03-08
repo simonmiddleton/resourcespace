@@ -102,7 +102,7 @@ foreach($tab_records['data'] as $tab_record)
     $tab_record['reorder_handle'] = isset($allow_reorder) ? '<i class="fas fa-sort"></i>' : '';
     $tab_record['name'] = sprintf(
         '<span>%s</span><input name="tab_name_inline_edit_%s" type="text" class="DisplayNone" value="%s">',
-        htmlspecialchars(i18n_get_translated($tab_record['name'])),
+        escape(i18n_get_translated($tab_record['name'])),
         escape($tab_record['ref']),
         escape($tab_record['name'])
     );
@@ -166,7 +166,7 @@ include '../../include/header.php';
         ['title' => $lang['systemsetup'], 'href' => "{$baseurl_short}pages/admin/admin_home.php"],
         ['title' => $lang['system_tabs']],
     ]); ?>
-    <p><?php echo htmlspecialchars($lang['manage_tabs_instructions']); render_help_link('systemadmin/manage-tabs'); ?></p>
+    <p><?php echo escape($lang['manage_tabs_instructions']); render_help_link('systemadmin/manage-tabs'); ?></p>
 
     <?php render_table($table_info); ?>
 
@@ -174,14 +174,14 @@ include '../../include/header.php';
     <form method="post" action="<?php echo $admin_tabs_management_page_url; ?>" onsubmit="return CentralSpacePost(this, false);">
         <?php generateFormToken('admin_tabs'); ?>
         <div class="Question">
-            <label for="new_tab_name"><?php echo htmlspecialchars($lang['tabs_create_new']); ?></label>
+            <label for="new_tab_name"><?php echo escape($lang['tabs_create_new']); ?></label>
             <div class="tickset">
                 <div class="Inline">
                     <input name="new_tab_name" type="text" value="" id="new_tab_name" class="shrtwidth">
                 </div>
                 <div class="Inline">
                     <input name="action_create" type="submit"
-                           value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang['create']); ?>&nbsp;&nbsp;"
+                           value="&nbsp;&nbsp;<?php echo escape($lang['create']); ?>&nbsp;&nbsp;"
                            onclick="return (this.form.elements[0].value != '');">
                 </div>
             </div>

@@ -99,16 +99,16 @@ function VrViewRenderPlayer($ref,$source, $isvideo = false,$width=852, $height=6
         
     ?>
     <div id="<?php echo $parentdivid; ?>">
-        <div id="<?php echo htmlspecialchars($scope); ?>vrview" style="width:<?php echo htmlspecialchars($width); ?>px;margin:auto;"></div>
+        <div id="<?php echo escape($scope); ?>vrview" style="width:<?php echo escape($width); ?>px;margin:auto;"></div>
     </div>
     <script>
         jQuery(document).ready(function ()
             {
-            var vrView = new VRView.Player('#<?php echo htmlspecialchars($scope); ?>vrview', {
+            var vrView = new VRView.Player('#<?php echo escape($scope); ?>vrview', {
             <?php echo $isvideo ? "video" : "image" ?>: '<?php echo $source; ?>',
                 is_stereo: <?php echo $stereo ? "true": "false" ?>,
-                width: <?php echo htmlspecialchars($width) ?>,
-                height: <?php echo htmlspecialchars($height) ?>,
+                width: <?php echo escape($width) ?>,
+                height: <?php echo escape($height) ?>,
                 is_yaw_only: <?php echo $yaw_only ? "true": "false" ?>,
                 //default_yaw: 0,
                 is_vr_off: <?php echo $vr_view_vr_mode_off ? "true": "false" ?>,

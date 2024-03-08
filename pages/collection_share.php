@@ -270,7 +270,7 @@ if (isset($show_error)) { ?>
 
     if($collection["type"] == COLLECTION_TYPE_FEATURED && is_featured_collection_category($collection))
         {
-        echo "<p>" . htmlspecialchars($lang["share_fc_warning"]) . "</p>";
+        echo "<p>" . escape($lang["share_fc_warning"]) . "</p>";
         }
     ?>
     <div class="VerticalNav">
@@ -282,7 +282,7 @@ if (isset($show_error)) { ?>
 
     if(!$editing || $editexternalurl)
         {?>
-        <?php if ($email_sharing) { ?><li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_email.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&collection=<?php echo urlencode($collection_url); ?>&restypes=<?php echo urlencode($restypes); ?>&order_by=<?php echo urlencode($order_by); ?>&col_order_by=<?php echo urlencode($col_order_by); ?>&sort=<?php echo urlencode($sort); ?>&offset=<?php echo urlencode($offset); ?>&find=<?php echo urlencode($find); ?>&k=<?php echo urlencode($k); ?>"><?php echo htmlspecialchars($lang["emailcollectiontitle"])?></a></li><?php } ?>
+        <?php if ($email_sharing) { ?><li><i aria-hidden="true" class="fa fa-fw fa-envelope"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_email.php?ref=<?php echo urlencode($ref); ?>&search=<?php echo urlencode($search); ?>&collection=<?php echo urlencode($collection_url); ?>&restypes=<?php echo urlencode($restypes); ?>&order_by=<?php echo urlencode($order_by); ?>&col_order_by=<?php echo urlencode($col_order_by); ?>&sort=<?php echo urlencode($sort); ?>&offset=<?php echo urlencode($offset); ?>&find=<?php echo urlencode($find); ?>&k=<?php echo urlencode($k); ?>"><?php echo escape($lang["emailcollectiontitle"])?></a></li><?php } ?>
 
         <?php
         # Share as a dash tile.
@@ -290,7 +290,7 @@ if (isset($show_error)) { ?>
 
         if($home_dash && checkPermission_dashcreate() && !hook('replace_share_dash_create'))
             {?>
-            <li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short;?>pages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=!collection<?php echo $ref?>&order_by=relevance&sort=DESC"  onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["createnewdashtile"]);?></a></li>
+            <li><i aria-hidden="true" class="fa fa-fw fa-th"></i>&nbsp;<a href="<?php echo $baseurl_short;?>pages/dash_tile.php?create=true&tltype=srch&promoted_resource=true&freetext=true&all_users=1&link=/pages/search.php?search=!collection<?php echo $ref?>&order_by=relevance&sort=DESC"  onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["createnewdashtile"]);?></a></li>
             <?php
         }
         ?>
@@ -298,7 +298,7 @@ if (isset($show_error)) { ?>
         <?php 
         if(!$internal_share_only)
             { ?>
-            <li><i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref) ?>&generateurl=true"><?php echo htmlspecialchars($lang["generateurl"])?></a></li> <?php 
+            <li><i aria-hidden="true" class="fa fa-fw fa-link"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_share.php?ref=<?php echo urlencode($ref) ?>&generateurl=true"><?php echo escape($lang["generateurl"])?></a></li> <?php 
             } 
 
         if($hide_internal_sharing_url==false 
@@ -307,7 +307,7 @@ if (isset($show_error)) { ?>
             || $collection["public"]==1 || $ignore_collection_access)
             && !$generateurl) // Just show the internal share URL straight away as there is no generate link
                 {?>
-                <p><?php echo htmlspecialchars($lang["generateurlinternal"])?></p>
+                <p><?php echo escape($lang["generateurlinternal"])?></p>
                 <p><input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
                 <?php
                 $generateinternalurl_rendered=true;
@@ -322,7 +322,7 @@ if (isset($show_error)) { ?>
             # Only render "generateinternalurl" text and associated input field if it hasn't already been rendered
             if(!$generateinternalurl_rendered) 
                 {?>
-                <p><?php echo htmlspecialchars($lang["generateurlinternal"])?></p>
+                <p><?php echo escape($lang["generateurlinternal"])?></p>
                 <p><input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>">
                 <?php
                 $generateinternalurl_rendered=true;
@@ -333,7 +333,7 @@ if (isset($show_error)) { ?>
         if ($access==-1 || ($editing && !$editexternalurl))
             {
             ?>
-            <p><?php if (!$editing || $editexternalurl){echo htmlspecialchars($lang["selectgenerateurlexternal"]);} ?></p>
+            <p><?php if (!$editing || $editexternalurl){echo escape($lang["selectgenerateurlexternal"]);} ?></p>
             <?php
             if($editing)
                 {
@@ -384,7 +384,7 @@ if (isset($show_error)) { ?>
             if('' != $generated_access_key)
                 {
                 ?>
-                <p><?php echo htmlspecialchars($lang['generateurlexternal']); ?></p>
+                <p><?php echo escape($lang['generateurlexternal']); ?></p>
                 <p>
                     <input class="URLDisplay" type="text" value="<?php echo $baseurl?>/?c=<?php echo urlencode($ref) ?>&k=<?php echo $generated_access_key; ?>">
                 </p>
@@ -393,7 +393,7 @@ if (isset($show_error)) { ?>
             else
                 {
                 ?>
-                <div class="PageInformal"><?php echo htmlspecialchars($lang['error_generating_access_key']); ?></div>
+                <div class="PageInformal"><?php echo escape($lang['error_generating_access_key']); ?></div>
                 <?php
                 }
             }
@@ -418,11 +418,11 @@ if (isset($show_error)) { ?>
     if (!($hide_internal_sharing_url) && (!$editing || $editexternalurl))
         {
         ?>
-        <h2><?php echo htmlspecialchars($lang["internalusersharing"])?></h2>
+        <h2><?php echo escape($lang["internalusersharing"])?></h2>
         <div class="Question">
-        <label for="users"><?php echo htmlspecialchars($lang["attachedusers"])?></label>
+        <label for="users"><?php echo escape($lang["attachedusers"])?></label>
         <div class="Fixed"><?php echo escape($collection["users"] == "" ? $lang["noattachedusers"] : $collection["users"]); ?><br /><br />
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_edit.php?ref=<?php echo urlencode($ref); ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-edit"]);?></a>
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_edit.php?ref=<?php echo urlencode($ref); ?>"><?php echo LINK_CARET ?><?php echo escape($lang["action-edit"]);?></a>
         </div>
         <div class="clearerleft"> </div>
         </div>
@@ -432,14 +432,14 @@ if (isset($show_error)) { ?>
         }
     if(!$internal_share_only)
         {?>
-        <h2><?php echo htmlspecialchars($lang["externalusersharing"])?></h2>
+        <h2><?php echo escape($lang["externalusersharing"])?></h2>
 
         <?php
         $keys=get_external_shares(array("share_collection"=>$ref));
         if (count($keys)==0)
             {
             ?>
-            <p><?php echo htmlspecialchars($lang["noexternalsharing"]) ?></p>
+            <p><?php echo escape($lang["noexternalsharing"]) ?></p>
             <?php
             }
         else
@@ -448,37 +448,37 @@ if (isset($show_error)) { ?>
             <div class="Listview">
             <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
             <tr class="ListviewTitleStyle">
-            <td><?php echo htmlspecialchars($lang["accesskey"]);?></td>
-            <td><?php echo htmlspecialchars($lang["sharedby"]);?></td>
-            <td><?php echo htmlspecialchars($lang["sharedwith"]);?></td>
-            <td><?php echo htmlspecialchars($lang["lastupdated"]);?></td>
-            <td><?php echo htmlspecialchars($lang["lastused"]);?></td>
-            <td><?php echo htmlspecialchars($lang["expires"]);?></td>
-            <td><?php echo htmlspecialchars($lang["access"]);?></td>
+            <td><?php echo escape($lang["accesskey"]);?></td>
+            <td><?php echo escape($lang["sharedby"]);?></td>
+            <td><?php echo escape($lang["sharedwith"]);?></td>
+            <td><?php echo escape($lang["lastupdated"]);?></td>
+            <td><?php echo escape($lang["lastused"]);?></td>
+            <td><?php echo escape($lang["expires"]);?></td>
+            <td><?php echo escape($lang["access"]);?></td>
             <?php
             global $social_media_links;
             if (!empty($social_media_links))
                 {
                 ?>
-                <td><?php echo htmlspecialchars($lang['social_media']); ?></td>
+                <td><?php echo escape($lang['social_media']); ?></td>
                 <?php
                 }
             ?>
             <?php hook("additionalcolexternalshareheader");?>
-            <td><div class="ListTools"><?php echo htmlspecialchars($lang["tools"])?></div></td>
+            <td><div class="ListTools"><?php echo escape($lang["tools"])?></div></td>
             </tr>
             <?php
             for ($n=0;$n<count($keys);$n++)
                 {
                 ?>
                 <tr>
-                <td><div class="ListTitle"><a target="_blank" href="<?php echo $baseurl . "?c=" . urlencode($ref) . "&k=" . urlencode($keys[$n]["access_key"]) ?>"><?php echo htmlspecialchars($keys[$n]["access_key"]) ?></a></div></td>
-                <td><?php echo htmlspecialchars(resolve_users($keys[$n]["user"])??"")?></td>
-                <td><?php echo htmlspecialchars($keys[$n]["email"]??"") ?></td>
-                <td><?php echo htmlspecialchars(nicedate($keys[$n]["date"],true, true, true)??"");  ?></td>
-                <td><?php echo htmlspecialchars(nicedate($keys[$n]["lastused"],true, true, true)??""); ?></td>
-                <td><?php echo htmlspecialchars(($keys[$n]["expires"]=="")?$lang["never"]:nicedate($keys[$n]["expires"],false)??"") ?></td>
-                <td><?php echo htmlspecialchars(($keys[$n]["access"]==-1)?"":$lang["access" . $keys[$n]["access"]]??""); ?></td>
+                <td><div class="ListTitle"><a target="_blank" href="<?php echo $baseurl . "?c=" . urlencode($ref) . "&k=" . urlencode($keys[$n]["access_key"]) ?>"><?php echo escape($keys[$n]["access_key"]) ?></a></div></td>
+                <td><?php echo escape(resolve_users($keys[$n]["user"])??"")?></td>
+                <td><?php echo escape($keys[$n]["email"]??"") ?></td>
+                <td><?php echo escape(nicedate($keys[$n]["date"],true, true, true)??"");  ?></td>
+                <td><?php echo escape(nicedate($keys[$n]["lastused"],true, true, true)??""); ?></td>
+                <td><?php echo escape(($keys[$n]["expires"]=="")?$lang["never"]:nicedate($keys[$n]["expires"],false)??"") ?></td>
+                <td><?php echo escape(($keys[$n]["access"]==-1)?"":$lang["access" . $keys[$n]["access"]]??""); ?></td>
                 <?php
                 if (!empty($social_media_links))
                     {
@@ -495,8 +495,8 @@ if (isset($show_error)) { ?>
                     ));
                 ?>                
                 <td><div class="ListTools">
-                <a href="#" onClick="if (confirm('<?php echo escape($lang["confirmdeleteaccess"])?>')) {document.getElementById('deleteaccess').value='<?php echo escape($keys[$n]["access_key"]) ?>';document.getElementById('collectionform').submit(); return false;}"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-delete"])?></a>
-                <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-edit"])?></a>
+                <a href="#" onClick="if (confirm('<?php echo escape($lang["confirmdeleteaccess"])?>')) {document.getElementById('deleteaccess').value='<?php echo escape($keys[$n]["access_key"]) ?>';document.getElementById('collectionform').submit(); return false;}"><?php echo LINK_CARET ?><?php echo escape($lang["action-delete"])?></a>
+                <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo escape($lang["action-edit"])?></a>
                 </div></td>
                 </tr>
                 <?php

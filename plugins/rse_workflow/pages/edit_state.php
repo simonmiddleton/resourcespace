@@ -172,19 +172,19 @@ elseif ($saved)
 <form id="form_workflow_state" name="form_workflow_state" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_state.php?code=<?php echo $code ?>">
     <?php generateFormToken("form_workflow_state"); ?>
     <input type="hidden" name="submitted" value="true">
-    <input type="hidden" name="code" value="<?php echo htmlspecialchars($code);  ?>">
+    <input type="hidden" name="code" value="<?php echo escape($code);  ?>">
         
     <div class="Question" id="status_name_question">
     <label for="name"><?php echo $lang["rse_workflow_state_name"]?></label>
     <?php if ($fixedstate)
         {?>
-        <div class="Fixed"><?php echo htmlspecialchars($workflowstate["name"]); ?></div>
-        <input type="hidden" name="name" value="<?php echo htmlspecialchars($workflowstate["name"]);  ?>">
+        <div class="Fixed"><?php echo escape($workflowstate["name"]); ?></div>
+        <input type="hidden" name="name" value="<?php echo escape($workflowstate["name"]);  ?>">
         <?php
         }
     else
         {?>
-        <input type="text" class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($workflowstate["name"]);  ?>" />
+        <input type="text" class="stdwidth" name="name" id="name" value="<?php echo escape($workflowstate["name"]);  ?>" />
         <?php
         }
         ?>

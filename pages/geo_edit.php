@@ -206,8 +206,8 @@ if ($valid_coords == false && getval('geo-loc','') != '')
     if (leaflet_coordinate_check($resource['geo_lat'], 'latitude') && leaflet_coordinate_check($resource['geo_long'], 'longitude'))
         {
         $resourcezoom = leaflet_map_zoom($resource['mapzoom']); ?>
-        resourceLat = <?php echo htmlspecialchars($resource['geo_lat']); ?>;
-        resourceLong = <?php echo htmlspecialchars($resource['geo_long']); ?>;
+        resourceLat = <?php echo escape($resource['geo_lat']); ?>;
+        resourceLong = <?php echo escape($resource['geo_long']); ?>;
         resourceZoom = <?php echo $resourcezoom; ?>;
 
         resourceMarker = L.marker([resourceLat, resourceLong], {

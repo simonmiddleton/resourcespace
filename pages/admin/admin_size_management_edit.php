@@ -93,7 +93,7 @@ include "../../include/header.php";
       onSubmit="return CentralSpacePost(this, true);">
     <?php generateFormToken("mainform"); ?>
     <div class="BasicsBox">
-    <h1><?php echo htmlspecialchars($lang["page-title_size_management_edit"]); ?></h1>
+    <h1><?php echo escape($lang["page-title_size_management_edit"]); ?></h1>
     <?php
     $links_trail = array(
         array(
@@ -112,42 +112,42 @@ include "../../include/header.php";
 
     renderBreadcrumbs($links_trail);
     ?>
-    <p><?php echo htmlspecialchars($lang['page-subtitle_size_management_edit']);render_help_link('systemadmin/manage_sizes');?></p>
+    <p><?php echo escape($lang['page-subtitle_size_management_edit']);render_help_link('systemadmin/manage_sizes');?></p>
 
         <input type="hidden" name="save" value="1">
 
         <div class="Question">
-            <label for="reference"><?php echo htmlspecialchars($lang["property-id"]); ?></label>
+            <label for="reference"><?php echo escape($lang["property-id"]); ?></label>
             <div class="Fixed"><?php echo $record['id']; ?></div>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label for="name"><?php echo htmlspecialchars($lang["property-name"]); ?></label>
+            <label for="name"><?php echo escape($lang["property-name"]); ?></label>
             <input name="name" type="text" class="stdwidth" value="<?php echo $record['name']; ?>"> 
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label for="name"><?php echo htmlspecialchars($lang["property-width"]); ?></label>
+            <label for="name"><?php echo escape($lang["property-width"]); ?></label>
             <input name="width" type="text" class="shrtwidth" value="<?php echo $record['width']; ?>">
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label for="name"><?php echo htmlspecialchars($lang["property-height"]); ?></label>
+            <label for="name"><?php echo escape($lang["property-height"]); ?></label>
             <input name="height" type="text" class="shrtwidth" value="<?php echo $record['height']; ?>">
             <div class="clearerleft"></div>
         </div>
         
         <div class="Question">
-            <label><?php echo htmlspecialchars($lang['property-allow_preview']); ?></label>
+            <label><?php echo escape($lang['property-allow_preview']); ?></label>
             <input name="allowpreview" type="checkbox" value="1"<?php if($record['allow_preview']) {?> checked="checked"<?php }?>>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label><?php echo htmlspecialchars($lang['property-allow_restricted_download']); ?></label>
+            <label><?php echo escape($lang['property-allow_restricted_download']); ?></label>
             <input name="allowrestricted" type="checkbox" value="1"<?php if($record['allow_restricted']) {?> checked="checked"<?php }?>>
             <div class="clearerleft"></div>
         </div>
@@ -157,7 +157,7 @@ include "../../include/header.php";
             {
             ?>
             <div class="Question">
-                <label><?php echo htmlspecialchars($lang["fieldtitle-tick_to_delete_size"])?></label>
+                <label><?php echo escape($lang["fieldtitle-tick_to_delete_size"])?></label>
                 <input name="deleteme" type="checkbox" value="1">
                 <div class="clearerleft"></div>
             </div>

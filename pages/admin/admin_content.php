@@ -86,9 +86,9 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
     $url=$baseurl_short . "pages/admin/admin_content_edit.php?page=" . urlencode($text[$n]["page"]) . "&name=" . urlencode($text[$n]["name"]) . "&editlanguage=" . urlencode($text[$n]["language"]) . "&editgroup=" . (is_null($text[$n]["group"]) ? "" : urlencode($text[$n]["group"])) . "&findpage=" . urlencode($findpage) . "&findname=" . urlencode($findname) . "&findtext=" . urlencode($findtext) . "&offset=" . urlencode($offset);
     ?>
     <tr>
-    <td><div class="ListTitle"><a href="<?php echo $url ?>"><?php echo highlightkeywords(($text[$n]["page"]==""||$text[$n]["page"]=="all"?$lang["all"]:$text[$n]["page"]),htmlspecialchars($findpage),true);?></a></div></td>
+    <td><div class="ListTitle"><a href="<?php echo $url ?>"><?php echo highlightkeywords(($text[$n]["page"]==""||$text[$n]["page"]=="all"?$lang["all"]:$text[$n]["page"]),escape($findpage),true);?></a></div></td>
     
-    <td><div class="ListTitle"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($text[$n]["name"],htmlspecialchars($findname),true)?></a></div></td>
+    <td><div class="ListTitle"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($text[$n]["name"],escape($findname),true)?></a></div></td>
     
     <?php if ($extended) {
     # Extended view. Show the language and group when searching, as these variants are expanded out when searching.
@@ -112,7 +112,7 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
     <td><?php echo $group_resolved ?></td>
     <?php } ?>
     
-    <td><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords(tidy_trim(htmlspecialchars($text[$n]["text"]),100), htmlspecialchars($findtext), true, '', 1, STR_HIGHLIGHT_SIMPLE & STR_HIGHLIGHT_STRIPLINKS); ?></a></td>
+    <td><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords(tidy_trim(escape($text[$n]["text"]),100), escape($findtext), true, '', 1, STR_HIGHLIGHT_SIMPLE & STR_HIGHLIGHT_STRIPLINKS); ?></a></td>
     
     <td><div class="ListTools"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a></div></td>
     </tr>

@@ -23,7 +23,7 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 
 <div id='flickr_publish'>
         
-    <input type=hidden name="id" value="<?php echo htmlspecialchars($id) ?>">
+    <input type=hidden name="id" value="<?php echo escape($id) ?>">
     <iframe id="progressiframe" style="display:none;"></iframe>
     <div class="clearerleft"></div>
     

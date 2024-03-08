@@ -20,7 +20,7 @@ if($msgto != 0)
         exit();
         }
     $to_username = isset($to_user["fullname"]) ? $to_user["fullname"] : $to_user["username"];
-    $to_username = htmlspecialchars($to_username);
+    $to_username = escape($to_username);
     }
 else
     {
@@ -174,7 +174,7 @@ if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"],"team_user
         );
     if($msgto != 0)
         {
-        $links_trail_user = array("title" => $to_username,"href" => $baseurl_short . "pages/team/team_user_edit.php?ref=" . htmlspecialchars($to_user["ref"]));
+        $links_trail_user = array("title" => $to_username,"href" => $baseurl_short . "pages/team/team_user_edit.php?ref=" . escape($to_user["ref"]));
         $links_trail[] = $links_trail_user;
         }
     }
@@ -188,7 +188,7 @@ else
         {
         $links_trail_user = array(
             "title" => $to_username,
-            "href"  => $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars($to_user["username"]),
+            "href"  => $baseurl_short . "pages/user/user_profile.php?username=" . escape($to_user["username"]),
             "help"  => "user/messaging",
             );
         $links_trail[] = $links_trail_user;

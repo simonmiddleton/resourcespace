@@ -191,10 +191,10 @@ else
     ];
     }
 $links_trail[] = array(
-    'title' => htmlspecialchars($title)
+    'title' => escape($title)
 );
 ?>
-<h1><?php echo htmlspecialchars($title); ?></h1>
+<h1><?php echo escape($title); ?></h1>
 <?php
 renderBreadcrumbs($links_trail);
 ?>
@@ -207,12 +207,12 @@ renderBreadcrumbs($links_trail);
             <input type="hidden" name="logyear" value="<?php echo $logyear; ?>">
             <input type="hidden" name="logmonth" value="<?php echo $logmonth; ?>">
             <input type="text" name="log_search" placeholder="<?php echo escape($log_search); ?>">
-            <input type="submit" name="searching" value="<?php echo htmlspecialchars($lang["searchbutton"]); ?>">
+            <input type="submit" name="searching" value="<?php echo escape($lang["searchbutton"]); ?>">
         <?php
         if($log_search != "")
             {
             ?>
-            <input type="submit" name="clear_search" value="<?php echo htmlspecialchars($lang["clearbutton"]); ?>">
+            <input type="submit" name="clear_search" value="<?php echo escape($lang["clearbutton"]); ?>">
             <?php
             }
             ?>
@@ -358,23 +358,23 @@ $select_table_url = generateURL(
                 {
                 ?>
                 <tr>
-                    <td><?php echo htmlspecialchars((string) nicedate($record['datetime'], true, true, true)); ?></td>
-                    <td><?php echo htmlspecialchars((string) $record['user']); ?></td>
-                    <td><?php echo htmlspecialchars((string) $record['operation']); ?></td>
-                    <td><?php echo hook("userdisplay","",array(array("access_key"=>$record['access_key'],'username'=>$record['user'])))?"":htmlspecialchars((string) $record['notes']); ?></td>
-                    <td><?php echo htmlspecialchars((string) $record['resource_field']); ?></td>
-                    <td><?php echo htmlspecialchars((string) $record['old_value']); ?></td>
-                    <td><?php echo htmlspecialchars((string) $record['new_value']); ?></td>
+                    <td><?php echo escape((string) nicedate($record['datetime'], true, true, true)); ?></td>
+                    <td><?php echo escape((string) $record['user']); ?></td>
+                    <td><?php echo escape((string) $record['operation']); ?></td>
+                    <td><?php echo hook("userdisplay","",array(array("access_key"=>$record['access_key'],'username'=>$record['user'])))?"":escape((string) $record['notes']); ?></td>
+                    <td><?php echo escape((string) $record['resource_field']); ?></td>
+                    <td><?php echo escape((string) $record['old_value']); ?></td>
+                    <td><?php echo escape((string) $record['new_value']); ?></td>
                     <td><?php echo strip_tags_and_attributes($record['difference'], array("pre")); ?></td>
                     <?php
                     if($table == '' || $table_reference == 0)
                         {
                         ?>
-                        <td><?php echo htmlspecialchars((string) $record['table']); ?></td>
+                        <td><?php echo escape((string) $record['table']); ?></td>
                         <?php
                         }
                         ?>
-                    <td><?php echo htmlspecialchars((string) $record['column']); ?></td>
+                    <td><?php echo escape((string) $record['column']); ?></td>
                     <?php
                     if($table != '' && $table_reference == 0 && array_key_exists($record['table'], $tables_data))
                         {
@@ -386,13 +386,13 @@ $select_table_url = generateURL(
                         if($record_table_reference_data !== false)
                             {
                             ?>
-                            <td><?php echo htmlspecialchars($record_table_reference_data[$record_table_data['title_column']]); ?></td>
+                            <td><?php echo escape($record_table_reference_data[$record_table_data['title_column']]); ?></td>
                             <?php
                             }
                         }
                     elseif($table == '' || $table_reference == 0)
                         {
-                        $ref = htmlspecialchars((string) $record['table_reference']);
+                        $ref = escape((string) $record['table_reference']);
                         
                         switch ($record['column'])
                             {

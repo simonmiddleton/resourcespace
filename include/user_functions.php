@@ -876,7 +876,7 @@ function email_reset_link($email,$newuser=false)
         $password_reset_url_key = create_password_reset_key($details['username']);        
         $templatevars['url'] = $baseurl . '/?rp=' . $details['ref'] . $password_reset_url_key;
         }
-        
+
     if($newuser)
         {
         $templatevars['username']=$details["username"];
@@ -2273,7 +2273,7 @@ function resolve_user_emails($user_list)
             {
             if(false === strpos($user, '@') || (isset($user_select_internal) && $user_select_internal))
                 {
-                error_alert(htmlspecialchars("{$lang['couldnotmatchallusernames']}: {$user}"));
+                error_alert(escape("{$lang['couldnotmatchallusernames']}: {$user}"));
                 die();
                 }
 

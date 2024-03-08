@@ -223,18 +223,18 @@ for ($n=0;$n<count($fields);$n++)
     ?>
     <tr class="resource_type_field_row <?php if ($fields[$n]["active"]==0) { ?>FieldDisabled<?php } ?>" id="field_sort_<?php echo $fields[$n]["ref"];?>">
         <td>
-            <?php echo str_highlight ($fields[$n]["ref"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE);?>
+            <?php echo str_highlight ($fields[$n]["ref"],escape($find),STR_HIGHLIGHT_SIMPLE);?>
         </td>   
         <td>
             <div class="ListTitle">
-                  <a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php",$url_params, array("ref"=>$fields[$n]["ref"],"backurl"=>$url)); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><span><?php echo str_highlight (i18n_get_translated($fields[$n]["title"]),htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE);?></span></a>
+                  <a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_field_edit.php",$url_params, array("ref"=>$fields[$n]["ref"],"backurl"=>$url)); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><span><?php echo str_highlight (i18n_get_translated($fields[$n]["title"]),escape($find),STR_HIGHLIGHT_SIMPLE);?></span></a>
             </div>
         </td>
 
         <?php if (!hook('replacenamecolumn'))
             {
             ?><td>
-                <?php echo str_highlight($fields[$n]["name"],htmlspecialchars($find),STR_HIGHLIGHT_SIMPLE);?>
+                <?php echo str_highlight($fields[$n]["name"],escape($find),STR_HIGHLIGHT_SIMPLE);?>
             </td><?php
             }?>
         <td>
@@ -255,11 +255,11 @@ for ($n=0;$n<count($fields);$n++)
             $restypestring = implode(", ",array_intersect_key($arr_restypes, array_flip($fieldrestypes)));
             }?>
         <td title="<?php echo escape($restypestring); ?>">
-            <?php echo htmlspecialchars(tidy_trim($restypestring,30)); ?>
+            <?php echo escape(tidy_trim($restypestring,30)); ?>
         </td>
     <?php if (!hook('replacetabnamecolumn')) {
         ?><td>
-            <?php echo str_highlight($system_tabs[(int) $fields[$n]['tab']] ?? '', htmlspecialchars($find), STR_HIGHLIGHT_SIMPLE); ?>
+            <?php echo str_highlight($system_tabs[(int) $fields[$n]['tab']] ?? '', escape($find), STR_HIGHLIGHT_SIMPLE); ?>
         </td><?php
     }?>
 
@@ -287,7 +287,7 @@ for ($n=0;$n<count($fields);$n++)
                         'table_reference' => $fields[$n]['ref'],
                     ],
                     $common_rs_url_params
-                ); ?>" onclick="return CentralSpaceLoad(this, true);"><i class="fas fa-history"></i>&nbsp;<?php echo htmlspecialchars($lang["log"]); ?></a>
+                ); ?>" onclick="return CentralSpaceLoad(this, true);"><i class="fas fa-history"></i>&nbsp;<?php echo escape($lang["log"]); ?></a>
             </div>
         </td>
     </tr>
@@ -321,7 +321,7 @@ for ($n=0;$n<count($fields);$n++)
         <div class="Question">
             <label for="newfield"><?php echo $lang["admin_resource_type_field_create"]?></label>
             <div class="tickset">
-             <input type="hidden" name="newfieldrestype" value="<?php echo htmlspecialchars($restypefilter) ?>"/>   
+             <input type="hidden" name="newfieldrestype" value="<?php echo escape($restypefilter) ?>"/>   
              <div class="Inline"><input type=text name="newfield" id="newtype" maxlength="100" class="shrtwidth" /></div>
 
             <div class="Inline"><select name="field_type" id="new_field_type_select" class="medwidth">

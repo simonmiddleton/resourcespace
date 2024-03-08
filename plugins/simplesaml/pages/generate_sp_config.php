@@ -1,4 +1,3 @@
-
 <?php
 #
 # simplesaml setup page
@@ -80,7 +79,7 @@ foreach($saml_settings as $saml_setting => $configvalue)
         // Don't need to add defaults or metadatadir to config
         continue;
         }
-    $spconfig[$saml_setting] = "\$simplesamlconfig[\"config\"][\"" . $saml_setting . "\"] = '" . htmlspecialchars($samlvalue) . "';";
+    $spconfig[$saml_setting] = "\$simplesamlconfig[\"config\"][\"" . $saml_setting . "\"] = '" . escape($samlvalue) . "';";
     }
 
 if(getval('sp_submit', '') !== '' && enforcePostRequest(false))
@@ -167,10 +166,10 @@ if(getval('sp_submit', '') !== '' && enforcePostRequest(false))
         'admin' => ['core:AdminPassword'],
         '{$saml_live_sp_name}' => [
         'saml:SP',
-        'privatekey' => '" . htmlspecialchars($keypath) . "',
-        'certificate' => '" . htmlspecialchars($certpath) . "',
+        'privatekey' => '" . escape($keypath) . "',
+        'certificate' => '" . escape($certpath) . "',
         'entityID' => null,
-        'idp' => '" . htmlspecialchars($samlidp) . "',
+        'idp' => '" . escape($samlidp) . "',
         'discoURL' => null,
         ]
     ];";
@@ -218,7 +217,7 @@ if ($error_text != "") { ?><div class="PageInformal"><?php echo $error_text?></d
             ?>
             <div class="Question">
                 <label for="rs_saml_config"><?php echo $lang["simplesaml_saml_config_output"]; ?></label>
-                <textarea id="rs_saml_config" rows="20" class="stdwidth" name="rs_saml_config"><?php echo trim(htmlspecialchars($spconfigtext));?>
+                <textarea id="rs_saml_config" rows="20" class="stdwidth" name="rs_saml_config"><?php echo trim(escape($spconfigtext));?>
                 </textarea>
                 <div class="clearerleft"></div>
             </div>
@@ -247,7 +246,7 @@ if ($error_text != "") { ?><div class="PageInformal"><?php echo $error_text?></d
                 <?php
                 foreach($certreqdetails as $certreqdetail)
                     {
-                    render_text_question($lang["simplesaml_sp_cert_" . strtolower($certreqdetail)] . " *",$certreqdetail,'',false,'class="stdwidth"',htmlspecialchars(getval($certreqdetail,"")));    
+                    render_text_question($lang["simplesaml_sp_cert_" . strtolower($certreqdetail)] . " *",$certreqdetail,'',false,'class="stdwidth"',escape(getval($certreqdetail,"")));    
                     }?>
         </div>
         <div class="Question">

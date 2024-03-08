@@ -15,7 +15,7 @@ function HookSensitive_imagesViewReplacepreviewlink()
 
         #previewimagewrapper::before 
                 {
-                content: '<?php echo htmlspecialchars($sensitive) ?>. Click image to show.';
+                content: '<?php echo escape($sensitive) ?>. Click image to show.';
                 z-index: 5;
                 position: absolute;
                 left: 50%;

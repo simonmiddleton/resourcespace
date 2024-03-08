@@ -13,7 +13,7 @@ else {document.getElementById('groupselector').style.display='block';}">
         {
         ?>
         <tr>
-        <td valign=middle nowrap><?php echo htmlspecialchars($grouplist[$n]["name"])?>&nbsp;&nbsp;</td>
+        <td valign=middle nowrap><?php echo escape($grouplist[$n]["name"])?>&nbsp;&nbsp;</td>
         <td width=10 valign=middle><input type=checkbox name="groups[]" value="<?php echo $grouplist[$n]["ref"]?>" <?php if (in_array($grouplist[$n]["ref"],$groups)) { ?>checked<?php } ?>></td>
         </tr>
         <?php

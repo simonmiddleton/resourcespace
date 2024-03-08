@@ -196,7 +196,7 @@ if ($search_titles)
             {
             if (in_array($resource_types_array[$n]["ref"], $searched_types_refs_array)) 
                 {
-                $searched_resource_types_names_array[] = htmlspecialchars(lang_or_i18n_get_translated($resource_types_array[$n]["name"], "resourcetype-", "-2"));
+                $searched_resource_types_names_array[] = escape(lang_or_i18n_get_translated($resource_types_array[$n]["name"], "resourcetype-", "-2"));
                 }
             }
         if (count($searched_resource_types_names_array)==count($resource_types_array))
@@ -256,7 +256,7 @@ if ($search_titles)
             $searchtitle = str_replace_formatted_placeholder("%collectiontypes%", $lang["all-collectiontypes"], $searchtitle, false, $lang["collectiontypes_separator"]);
             }
 
-        $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=" onClick="return CentralSpaceLoad(this,true);">'.htmlspecialchars($searchtitle).'</a></div></div> ';
+        $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="'.$baseurl_short.'pages/search.php?search=" onClick="return CentralSpaceLoad(this,true);">'.escape($searchtitle).'</a></div></div> ';
         }
     elseif (substr($search,0,1)=="!")
         {
@@ -382,7 +382,7 @@ if ($search_titles)
             } 
         if(isset($title_string) && $title_string !="")
             {
-            $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars($title_string) . '</a> ' . $searchcrumbs . '</div></div> ';
+            $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . escape($title_string) . '</a> ' . $searchcrumbs . '</div></div> ';
             }
         }
     
@@ -394,7 +394,7 @@ if ($search_titles)
             {
             $title_strings[] = $lang["status" . $wfstate] ?? $lang["archive"] . ": " . $wfstate;
             }
-        $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . htmlspecialchars(implode(", ",$title_strings)) . '</a>' . htmlspecialchars($searchcrumbs) . '</div></div> ';
+        $search_title = '<div class="BreadcrumbsBox BreadcrumbsBoxSlim BreadcrumbsBoxTheme"><div class="SearchBreadcrumbs"><a href="' . $search_url . '" onClick="return CentralSpaceLoad(this,true);">' . escape(implode(", ",$title_strings)) . '</a>' . escape($searchcrumbs) . '</div></div> ';
         }
     
     hook("addspecialsearchtitle");

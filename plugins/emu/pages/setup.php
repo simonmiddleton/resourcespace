@@ -78,7 +78,7 @@ $script_last_ran_content =sprintf(
     %s
     </div>
     <div class=\"clearerleft\"></div>",
-    htmlspecialchars($lang['emu_last_run_date']),
+    escape($lang['emu_last_run_date']),
     escape($emu_script_last_ran),
     escape($scripts_test_functionality??"")
 );
@@ -130,7 +130,7 @@ foreach($emu_rs_mappings as $emu_module => $emu_module_columns)
     {
     foreach($emu_module_columns as $emu_module_column => $emu_rs_field)
         {
-        $row_id = 'row_' . htmlspecialchars("{$emu_module}_{$emu_module_column}");
+        $row_id = 'row_' . escape("{$emu_module}_{$emu_module_column}");
 
         $emu_rs_mappings_html .= "
         <tr id ='{$row_id}'>

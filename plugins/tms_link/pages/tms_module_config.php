@@ -116,7 +116,7 @@ include '../../../include/header.php';
 
         <div class="Question">
             <label><?php echo $lang["tms_link_tms_uid_field"]; ?></label>
-            <input name="tms_link_tms_uid_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($tms_link_tms_uid_field); ?>">
+            <input name="tms_link_tms_uid_field" type="text" class="stdwidth" value="<?php echo escape($tms_link_tms_uid_field); ?>">
             <div class="clearerleft"></div>
         </div>
         <?php
@@ -159,7 +159,7 @@ include '../../../include/header.php';
                             <input class="medwidth"
                                    type="text"
                                    name="tms_rs_mappings[<?php echo $tms_rs_mapping_index; ?>][tms_column]"
-                                   value="<?php echo htmlspecialchars($tms_rs_mapping['tms_column']); ?>">
+                                   value="<?php echo escape($tms_rs_mapping['tms_column']); ?>">
                         </td>
                         <td>
                             <select class="medwidth" name="tms_rs_mappings[<?php echo $tms_rs_mapping_index; ?>][rs_field]">
@@ -181,7 +181,7 @@ include '../../../include/header.php';
                             <input class="srtwidth"
                                    type="text"
                                    name="tms_rs_mappings[<?php echo $tms_rs_mapping_index; ?>][encoding]"
-                                   value="<?php echo htmlspecialchars($tms_rs_mapping['encoding']); ?>">
+                                   value="<?php echo escape($tms_rs_mapping['encoding']); ?>">
                         </td>
                         <td>
                             <button type="button" onclick="delete_tms_field_mapping(this);"><?php echo $lang['action-delete']; ?></button>

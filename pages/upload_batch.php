@@ -583,8 +583,8 @@ if ($processupload)
                 $result["status"] = false;
                 $result["message"] = get_resource_lock_message($resource_data["lock_user"]);
                 $result["error"] = 111;
-                $result["id"] = htmlspecialchars($ref);
-                $result["collection"] = htmlspecialchars($collection_add);
+                $result["id"] = escape($ref);
+                $result["collection"] = escape($collection_add);
                 }
             else
                 {
@@ -685,8 +685,8 @@ if ($processupload)
                 $result["status"] = false;
                 $result["message"] = "Failed to create resource with given resource type: $resource_type";
                 $result["error"] = 125;
-                $result["id"] = htmlspecialchars($ref);
-                $result["collection"] = htmlspecialchars($collection_add);
+                $result["id"] = escape($ref);
+                $result["collection"] = escape($collection_add);
                 }
             else
                 {
@@ -789,8 +789,8 @@ if ($processupload)
                     {
                     $result["status"] = true;
                     $result["message"] = $lang["created"];
-                    $result["id"] = htmlspecialchars($ref);
-                    $result["collection"] = htmlspecialchars($collection_add);
+                    $result["id"] = escape($ref);
+                    $result["collection"] = escape($collection_add);
                     }
                 }
             }
@@ -813,7 +813,7 @@ if ($processupload)
                 $result["status"] = true;
                 $result["message"] = $lang["replacefile"];
                 $result["error"] = 0;
-                $result["id"] = htmlspecialchars($replace_resource);
+                $result["id"] = escape($replace_resource);
                 }
             }
         else
@@ -845,9 +845,9 @@ if ($processupload)
                 if ($replace_resources === false)
                     {
                     $result["status"] = false;
-                    $result["message"] = htmlspecialchars($lang["error_upload_replace_file_fail_invalid_collection"]);
+                    $result["message"] = escape($lang["error_upload_replace_file_fail_invalid_collection"]);
                     $result["error"] = 109;
-                    $result["id"] = htmlspecialchars($batch_replace_col);
+                    $result["id"] = escape($batch_replace_col);
                     unlink($upfilepath);
                     exit(json_encode($result));
                     }
@@ -876,7 +876,7 @@ if ($processupload)
                         $result["status"] = true;
                         $result["message"] = $lang["replacefile"];
                         $result["error"] = 0;
-                        $result["id"] = htmlspecialchars($target_resource[0]);
+                        $result["id"] = escape($target_resource[0]);
                         }
                     }
                 elseif(count($target_resource)==0)
@@ -911,7 +911,7 @@ if ($processupload)
                         $result["status"] = true;
                         $result["message"] = $lang["replacefile"];
                         $result["error"] = 0;
-                        $result["id"] = htmlspecialchars($resourcelist);
+                        $result["id"] = escape($resourcelist);
                         }
                     else
                         {
@@ -957,7 +957,7 @@ if ($processupload)
                             $result["status"] = true;
                             $result["message"] = $lang["replacefile"];
                             $result["error"] = 0;
-                            $result["id"] = htmlspecialchars($ref);
+                            $result["id"] = escape($ref);
                             }
                         }
                     else
@@ -1096,7 +1096,7 @@ jQuery(document).ready(function () {
 
         locale: {
                 strings: {
-                    uploadComplete: '<?php echo htmlspecialchars($lang["upload_complete_processing"]); ?>',
+                    uploadComplete: '<?php echo escape($lang["upload_complete_processing"]); ?>',
                     browseFiles: '<?php echo escape($lang["upload_browse"]) ?>',
                     uploadXFiles: '<?php echo escape($lang["upload_start"]) ?>',
                     dropPasteFiles: '<?php echo escape($lang["upload_droparea_text"]) ?>',
@@ -1192,7 +1192,7 @@ jQuery(document).ready(function () {
             {
             // This is an external upload, add data so that we can authenticate Uppy uploads
             ?>
-            rs_k: '<?php echo htmlspecialchars($k) ?>',
+            rs_k: '<?php echo escape($k) ?>',
             rs_collection_add: '<?php echo (int)$collection_add ?>',
 <?php
             }?>
@@ -1257,7 +1257,7 @@ jQuery(document).ready(function () {
                 echo ".use(" . $uploader_plugin  . ", {target: Dashboard,";
                 if($supported_plugins[$uploader_plugin] === true && trim($uppy_companion_url) != "")
                     {
-                    echo "\ncompanionUrl: '" . htmlspecialchars($uppy_companion_url) . "'";
+                    echo "\ncompanionUrl: '" . escape($uppy_companion_url) . "'";
                     }
                 echo "
                     })";
@@ -1754,7 +1754,7 @@ function postUploadActions()
 
     if(upRedirBlock)
         {
-        completedlang = '<?php echo htmlspecialchars($lang["upload_finished_processing"]); ?>';
+        completedlang = '<?php echo escape($lang["upload_finished_processing"]); ?>';
         completedlang = completedlang.replace('%COUNT%',count);
         completedlang = completedlang.replace('%ERRORS%',processerrors.length);
         uppy.setOptions({
@@ -1815,7 +1815,7 @@ if  ($alternative!="")
     $alturl = generateURL($baseurl_short . 'pages/alternative_files.php',$searchparams,array("ref"=>$alternative));
     ?>
     <p>
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $alturl ?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtomanagealternativefiles"])?></a>
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $alturl ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtomanagealternativefiles"])?></a>
     </p><?php
     }
 elseif ($replace_resource!="")
@@ -1824,9 +1824,9 @@ elseif ($replace_resource!="")
     $viewurl = generateURL($baseurl_short . 'pages/view.php',$searchparams,array("ref"=>$replace_resource));
     ?>
     <p>
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editurl ?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoeditmetadata"])?></a>
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editurl ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoeditmetadata"])?></a>
     <br />
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewurl ?>"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoresourceview"])?></a>
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewurl ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"])?></a>
     </p>
     <?php
     }
@@ -1844,7 +1844,7 @@ if ($alternative!="")
             <?php
             }
         }
-    echo "<h2>" . htmlspecialchars((string) $resource['field'.$view_title_field]) . "</h2><br/>";
+    echo "<h2>" . escape((string) $resource['field'.$view_title_field]) . "</h2><br/>";
     }
 
 # Define the titles:
@@ -1915,7 +1915,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
-    <h2 class="CollapsibleSectionHead <?php if ($resource_type_force_selection && $replace_resource == '' && $replace == '') { ?>expanded<?php } else { ?>collapsed<?php }?>" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo htmlspecialchars($lang["upload-options"]); ?></h2>
+    <h2 class="CollapsibleSectionHead <?php if ($resource_type_force_selection && $replace_resource == '' && $replace == '') { ?>expanded<?php } else { ?>collapsed<?php }?>" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo escape($lang["upload-options"]); ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
     <form id="UploadForm" class="uploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_batch.php">
     <?php
@@ -1930,12 +1930,12 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
             }
         ?>
         <div class="Question">
-            <label for="keep_original"><?php echo htmlspecialchars($lang["replace_resource_preserve_original"]); ?></label>
+            <label for="keep_original"><?php echo escape($lang["replace_resource_preserve_original"]); ?></label>
             <input id="keep_original" type="checkbox" name="keep_original" <?php if($replace_resource_preserve_default) { ?>checked<?php } ?> value="yes">
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="replace_resource_original_alt_filename"><?php echo htmlspecialchars($lang['replace_resource_original_alt_filename']); ?></label>
+            <label for="replace_resource_original_alt_filename"><?php echo escape($lang['replace_resource_original_alt_filename']); ?></label>
             <input id="replace_resource_original_alt_filename" type="text" name="replace_resource_original_alt_filename" value="<?php echo $default_replace_resource_original_alt_filename; ?>">
             <div class="clearerleft"></div>
             <script>
@@ -1983,7 +1983,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
         ) {
             ?>
             <div class="Question">
-                <label for="no_exif"><?php echo htmlspecialchars($lang["no_exif"])?></label><input type=checkbox <?php if (!$metadata_read_default){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
+                <label for="no_exif"><?php echo escape($lang["no_exif"])?></label><input type=checkbox <?php if (!$metadata_read_default){?>checked<?php } ?> id="no_exif" name="no_exif" value="yes">
                 <div class="clearerleft"> </div>
             </div>
             <?php
@@ -1996,9 +1996,9 @@ hook('plupload_before_status');
 </div><!-- End of UploadOptionsSection -->
 
 <div class="BasicsBox" >
-    <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo htmlspecialchars($lang["log"]); ?></h2>
+    <h2 class="CollapsibleSectionHead collapsed" id="UploadLogSectionHead" onClick="UICenterScrollBottom();"><?php echo escape($lang["log"]); ?></h2>
     <div class="CollapsibleSection" id="UploadLogSection">
-        <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo htmlspecialchars($lang["plupload_log_intro"]) . date("d M y @ H:i"); ?></textarea>
+        <textarea id="upload_log" rows=10 cols=100 style="width: 100%; border: solid 1px;" ><?php echo escape($lang["plupload_log_intro"]) . date("d M y @ H:i"); ?></textarea>
     </div> <!-- End of UploadLogSection -->
 </div>
 </div>

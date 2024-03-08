@@ -382,7 +382,7 @@ else { ?>
                             }
                         else
                             {
-                            RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id, <?php echo htmlspecialchars(generate_csrf_js_object('remove_resource_from_collection'), ENT_NOQUOTES); ?>);
+                            RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id, <?php echo escape(generate_csrf_js_object('remove_resource_from_collection')); ?>);
                             // Remove resource from search results if this is not a collection search   
                             if(is_special_search('!collection', 11))
                                 {
@@ -445,7 +445,7 @@ else { ?>
     <body class="CollectBack" id="collectbody">
 <div style="display:none;" id="currentusercollection"><?php echo $usercollection?></div>
 
-<script>usercollection='<?php echo htmlspecialchars($usercollection) ?>';</script>
+<script>usercollection='<?php echo escape($usercollection) ?>';</script>
 <?php 
 
 $addarray=array();
@@ -749,11 +749,11 @@ elseif ($k != "" && !$internal_share_access)
             # Ability to download only if minimum access allows it
             if ($download_usage && ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0)) { ?>
                 <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'collection'=>$usercollection, 'url'=>'pages/download_usage.php?collection='.$usercollection.'&k='.$k]);?>">
-                    <?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a><br />
+                    <?php echo LINK_CARET ?><?php echo escape($lang["action-download"])?></a><br />
             <?php 
             } elseif ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result)>0) { ?>
                 <a href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'collection'=>$usercollection, 'url'=>'pages/collection_download.php?collection='.$usercollection.'&k='.$k]);?>" 
-                    onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["action-download"])?></a><br />
+                    onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["action-download"])?></a><br />
             <?php 
             }
         }
@@ -761,7 +761,7 @@ elseif ($k != "" && !$internal_share_access)
             <br /> <br />
             <a onclick="return CentralSpaceLoad(this);" 
                 href="<?php echo generateURL($baseurl_short . 'pages/collection_feedback.php', ['collection' => $usercollection, 'k' => $k]); ?>">
-                <?php echo LINK_CARET . htmlspecialchars($lang["sendfeedback"]); ?></a>
+                <?php echo LINK_CARET . escape($lang["sendfeedback"]); ?></a>
             </br>
         <?php } 
         if (
@@ -770,11 +770,11 @@ elseif ($k != "" && !$internal_share_access)
             && $min_access != 0 # Ability to request a whole collection (only if user has restricted access to any of these resources)
             ) { 
                 ?>
-                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["requestall"])?></a><br />
+                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo LINK_CARET ?><?php echo escape($lang["requestall"])?></a><br />
                 <?php
             }
         ?>
-        <a  id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang["hidethumbnails"])?></a>
+        <a  id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo escape($lang["hidethumbnails"])?></a>
     </div>
     <?php 
     }
@@ -789,11 +789,11 @@ else
         if (!hook("replacecollectiontitle") && !hook("replacecollectiontitlemax"))
             {?>
             <h2 id="CollectionsPanelHeader">
-                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_manage.php"><?php echo htmlspecialchars($lang["mycollections"])?></a>
+                <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_manage.php"><?php echo escape($lang["mycollections"])?></a>
             </h2><?php
             }?>
             <form method="get" id="colselect" onsubmit="newcolname=encodeURIComponent(jQuery('#entername').val());CollectionDivLoad('<?php echo $baseurl_short?>pages/collections.php?collection=new&search=<?php echo urlencode($search)?>&k=<?php echo urlencode($k) ?>&entername='+newcolname);return false;">
-                <div style="padding:0;margin:0;"><?php echo htmlspecialchars($lang["currentcollection"])?>: 
+                <div style="padding:0;margin:0;"><?php echo escape($lang["currentcollection"])?>: 
                     <br />
                     <select name="collection" id="collection" aria-label="<?php echo escape($lang["collections"]) ?>"
 
@@ -838,23 +838,23 @@ else
                         if ($notfound !== false)
                             {
                             ?>
-                            <option value="<?php echo htmlspecialchars($notfound['ref']); ?>" selected><?php echo i18n_get_collection_name($notfound) ?></option>
+                            <option value="<?php echo escape($notfound['ref']); ?>" selected><?php echo i18n_get_collection_name($notfound) ?></option>
                             <?php
                             }
                         elseif($validcollection==0)
                             {
                             ?>
-                            <option selected><?php echo htmlspecialchars($lang["error-collectionnotfound"]) ?></option>
+                            <option selected><?php echo escape($lang["error-collectionnotfound"]) ?></option>
                             <?php  
                             }
                         }
 
                     if (can_create_collections())
                         {?>
-                        <option value="new">(<?php echo htmlspecialchars($lang["createnewcollection"])?>)</option><?php
+                        <option value="new">(<?php echo escape($lang["createnewcollection"])?>)</option><?php
                         }?>
                     </select>
-                    <br /><small><?php echo $count_result . " "; if ($count_result==1){echo htmlspecialchars($lang["item"]);} else {echo htmlspecialchars($lang["items"]);} ?></small>
+                    <br /><small><?php echo $count_result . " "; if ($count_result==1){echo escape($lang["item"]);} else {echo escape($lang["items"]);} ?></small>
                     <input type=text id="entername" name="entername" style="display:none;" placeholder="<?php echo escape($lang['entercollectionname'])?>" class="SearchWidth">
                 </div>          
             </form>
@@ -873,7 +873,7 @@ else
         hook('collectiontool');
         ?>
         <li>
-            <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang['hidethumbnails']); ?></a>
+            <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo escape($lang['hidethumbnails']); ?></a>
         </li>
         </ul>
     </div>
@@ -1029,8 +1029,8 @@ else
                     <div class="CollectionPanelInfo">
                         <a onclick="return <?php echo $resource_view_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);"
                             href=" <?php echo $replace_resource_url;?>"
-                            title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
-                            ><?php echo htmlspecialchars(tidy_trim(i18n_get_translated($title),14));?>
+                            title="<?php echo escape(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                            ><?php echo escape(tidy_trim(i18n_get_translated($title),14));?>
                         </a>&nbsp;
                     </div>
                 <?php }
@@ -1083,12 +1083,12 @@ else
                     } # End of remove link condition
                     ?>
                     </div>
-                <?php } # End of k="" condition ?>
+<?php } # End of k="" condition ?>
                 </div>
-            <?php } # End of ResourceView hook
+<?php } # End of ResourceView hook
         } # End of loop through standard display thumbnails ?>
         <div class="clearerleft"></div>
-    <?php } # End of display thumbnails for standard display
+<?php } # End of display thumbnails for standard display
 
 
 if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_viewall'))
@@ -1101,7 +1101,7 @@ if($count_result > $max_collection_thumbs && !hook('replace_collectionpanel_view
             </tr>
         </table>
         <div class="CollectionPanelInfo">
-            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $usercollection?>&k=<?php echo urlencode($k) ?>"><?php echo htmlspecialchars($lang['viewall'])?>...</a>
+            <a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $usercollection?>&k=<?php echo urlencode($k) ?>"><?php echo escape($lang['viewall'])?>...</a>
         </div>
     </div>
     <?php
@@ -1112,7 +1112,7 @@ if (count($addarray)>0 && $addarray[0]!="")
     # Animate the new item
     ?>
     <script type="text/javascript">
-    jQuery("#CollectionSpace #ResourceShell<?php echo htmlspecialchars($addarray[0]) ?>").slideDown('fast');
+    jQuery("#CollectionSpace #ResourceShell<?php echo escape($addarray[0]) ?>").slideDown('fast');
     </script>
 <?php      
     }
@@ -1146,11 +1146,11 @@ if (count($addarray)>0 && $addarray[0]!="")
             {
             if ((isset($zipcommand) || $collection_download) && $count_result>0 && count($result) > 0)
                 {?>
-                <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'url'=>'pages/collection_download.php?collection='.$usercollection.'&k='.$k])?>"><?php echo htmlspecialchars($lang["action-download"])?></a></li>
+                <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short.'pages/terms.php', ['k'=>$k, 'url'=>'pages/collection_download.php?collection='.$usercollection.'&k='.$k])?>"><?php echo escape($lang["action-download"])?></a></li>
                 <?php
                 }
             if ($feedback)
-                {?><li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo htmlspecialchars($lang["sendfeedback"])?></a></li><?php
+                {?><li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_feedback.php?collection=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo escape($lang["sendfeedback"])?></a></li><?php
                 }
             if ($count_result>0)
                 { 
@@ -1163,7 +1163,7 @@ if (count($addarray)>0 && $addarray[0]!="")
                     <?php
                     }
                 }?>
-            <li><a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang["showthumbnails"])?></a></li><?php
+            <li><a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo escape($lang["showthumbnails"])?></a></li><?php
             } # end hook("replaceanoncollectiontools") ?>
     </div>
 <?php 
@@ -1172,7 +1172,7 @@ if (count($addarray)>0 && $addarray[0]!="")
         {
         ?>
         <div class="ToggleThumbsContainer">
-            <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo htmlspecialchars($lang['showthumbnails']); ?></a>
+            <a id="toggleThumbsLink" href="#" onClick="ToggleThumbs();return false;"><?php echo escape($lang['showthumbnails']); ?></a>
         </div>
 
         <?php hook('aftertogglethumbs'); ?>
@@ -1190,7 +1190,7 @@ if (count($addarray)>0 && $addarray[0]!="")
         if(!hook('replace_collectionmindroptitle'))
             {
             ?>
-        <div id="CollectionMinDropTitle"><?php echo htmlspecialchars($lang['currentcollection']); ?>:&nbsp;</div>
+        <div id="CollectionMinDropTitle"><?php echo escape($lang['currentcollection']); ?>:&nbsp;</div>
             <?php
             } # end hook replace_collectionmindroptitle
             ?>
@@ -1210,7 +1210,7 @@ if (count($addarray)>0 && $addarray[0]!="")
     ?>
     <!--Collection Count--> 
     <?php if(!hook("replace_collectionminitems")){?>
-    <div id="CollectionMinitems"><strong><?php echo $count_result?></strong>&nbsp;<?php if ($count_result==1){echo htmlspecialchars($lang["item"]);} else {echo htmlspecialchars($lang["items"]);}?></div>
+    <div id="CollectionMinitems"><strong><?php echo $count_result?></strong>&nbsp;<?php if ($count_result==1){echo escape($lang["item"]);} else {echo escape($lang["items"]);}?></div>
     <?php } # end hook replace_collectionminitems ?>
     </div>
 

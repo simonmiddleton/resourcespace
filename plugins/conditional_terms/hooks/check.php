@@ -7,8 +7,8 @@ function HookConditional_termsCheckAddinstallationcheck()
         {
         ?>
         <tr>
-            <td colspan="2"><?php echo htmlspecialchars("{$lang['pluginssetup']}: {$lang['conditional_terms_title']}"); ?></td>
-            <td><b><?php echo htmlspecialchars($lang['status-fail']); ?></b></td>
+            <td colspan="2"><?php echo escape("{$lang['pluginssetup']}: {$lang['conditional_terms_title']}"); ?></td>
+            <td><b><?php echo escape($lang['status-fail']); ?></b></td>
         </tr>
         <?php
         }

@@ -45,7 +45,7 @@ if(!is_array($job_details) || count($job_details) == 0)
                         continue;
                         }
                     echo "<tr><td width='50%'>";
-                    echo htmlspecialchars($name);
+                    echo escape($name);
                     echo "</td><td width='50%'>";
                     if($name =="job_data")
                         {
@@ -70,7 +70,7 @@ if(!is_array($job_details) || count($job_details) == 0)
                         }
                     else
                         {
-                        echo htmlspecialchars($value);
+                        echo escape($value);
                         }
                     echo "</td></tr>";
                     }

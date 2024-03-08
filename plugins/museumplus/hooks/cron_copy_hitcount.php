@@ -56,7 +56,7 @@ function HookMuseumplusCron_copy_hitcountAddplugincronjob()
                 mkdir($museumplus_log_directory, 0755, true);
             }
             catch (Exception $e) {
-                echo nl2br(PHP_EOL . 'MuseumPlus: Unable to create log directory: "' . htmlspecialchars($museumplus_log_directory) . "Reason: {$e->getMessage()}" .'"', !$cli);
+                echo nl2br(PHP_EOL . 'MuseumPlus: Unable to create log directory: "' . escape($museumplus_log_directory) . "Reason: {$e->getMessage()}" .'"', !$cli);
             }
             unset($GLOBALS["use_error_exception"]);
             }

@@ -483,7 +483,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
     global $lang,$baseurl_short;
 ?>
     <div class="BasicsBox">
-    <h1><?php echo htmlspecialchars($plugin_page_heading); ?></h1>
+    <h1><?php echo escape($plugin_page_heading); ?></h1>
 <?php
     $links_trail = array(
         array(
@@ -506,7 +506,7 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
         echo $plugin_page_frontm;
         }
 ?>
-        <form id="form1" name="form1" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <form id="form1" name="form1" method="post" action="<?php echo escape($_SERVER["PHP_SELF"]); ?>">
     <?php
     generateFormToken("form1");
 
@@ -930,7 +930,7 @@ function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$
                 $str_restypes = " (" .  implode(",",$fieldrestypenames) . ")";
                 }
             }
-        echo '<option value="'. $field['ref'] . '"' . (in_array($field['ref'],$current) ? ' selected':'') . '>' . htmlspecialchars(lang_or_i18n_get_translated($field['title'],'fieldtitle-') .  $str_restypes) .  '</option>';
+        echo '<option value="'. $field['ref'] . '"' . (in_array($field['ref'],$current) ? ' selected':'') . '>' . escape(lang_or_i18n_get_translated($field['title'],'fieldtitle-') .  $str_restypes) .  '</option>';
         }
 ?>
     </select>
@@ -1010,7 +1010,7 @@ function config_multi_rtype_select($name, $label, $current, $width=300)
     $rtypes=get_resource_types();
     ?>
     <div class="Question">
-        <label for="<?php echo escape($name) ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])) ?>"><?php echo htmlspecialchars($label) ?></label>
+        <label for="<?php echo escape($name) ?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])) ?>"><?php echo escape($label) ?></label>
         <fieldset id="<?php echo escape($name) ?>" class="MultiRTypeSelect">
             <?php foreach($rtypes as $rtype) { ?>
                 <input type="checkbox"
@@ -1018,7 +1018,7 @@ function config_multi_rtype_select($name, $label, $current, $width=300)
                     name="<?php echo escape($name) ?>[]"
                     id="<?php echo escape($name . $rtype['ref']) ?>"
                     <?php echo in_array($rtype['ref'],$current) ? ' checked="checked"' : '' ?>>
-                <label for="<?php echo escape($name . $rtype['ref']) ?>"><?php echo htmlspecialchars(lang_or_i18n_get_translated($rtype['name'],'resourcetype-')) ?></label>
+                <label for="<?php echo escape($name . $rtype['ref']) ?>"><?php echo escape(lang_or_i18n_get_translated($rtype['name'],'resourcetype-')) ?></label>
                 <br />
             <?php } ?>
         </fieldset>
@@ -1056,7 +1056,7 @@ function config_multi_archive_select($name, $label, $current, $choices, $width=3
     global $lang;
     ?>
     <div class="Question">
-        <label for="<?php echo escape($name)?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar']))?>"><?php echo htmlspecialchars($label)?></label>
+        <label for="<?php echo escape($name)?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar']))?>"><?php echo escape($label)?></label>
         <fieldset id="<?php echo escape($name)?>" class="MultiRTypeSelect">
             <?php foreach($choices as $statekey => $statename) { ?>
                 <span id="archivestate<?php echo escape($statekey) ?>">
@@ -1065,7 +1065,7 @@ function config_multi_archive_select($name, $label, $current, $choices, $width=3
                         name="<?php echo escape($name) . '[]' ?>"
                         id="<?php echo escape($name . $statekey) ?>" 
                         <?php echo isset($current) && $current != '' && in_array($statekey,$current) ? ' checked="checked"' : '' ?>>
-                    <label for="<?php echo escape($name . $statekey) ?>"><?php echo htmlspecialchars($statename) ?></label>
+                    <label for="<?php echo escape($name . $statekey) ?>"><?php echo escape($statename) ?></label>
                     <br />
                 </span>
             <?php } ?>

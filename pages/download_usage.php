@@ -118,18 +118,18 @@ if(isset($download_usage_prevent_options))
         generateFormToken("download_usage");
 
         if($download_usage) { ?>
-        <input type="hidden" name="url" value="<?php echo htmlspecialchars($url)?>"/>
+        <input type="hidden" name="url" value="<?php echo escape($url)?>"/>
         <?php if($col != -1){?>
-        <input type="hidden" name="col" value="<?php echo htmlspecialchars($col) ?>" />
+        <input type="hidden" name="col" value="<?php echo escape($col) ?>" />
         <?php }
         } ?>
-        <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>" />
-        <input type="hidden" name="size" value="<?php echo htmlspecialchars($size) ?>" />
-        <input type="hidden" name="ext" value="<?php echo htmlspecialchars($ext) ?>" />
-        <input type="hidden" name="alternative" value="<?php echo htmlspecialchars($alternative) ?>" />
-        <input type="hidden" name="k" value="<?php echo htmlspecialchars($k) ?>" />
+        <input type="hidden" name="ref" value="<?php echo escape($ref) ?>" />
+        <input type="hidden" name="size" value="<?php echo escape($size) ?>" />
+        <input type="hidden" name="ext" value="<?php echo escape($ext) ?>" />
+        <input type="hidden" name="alternative" value="<?php echo escape($alternative) ?>" />
+        <input type="hidden" name="k" value="<?php echo escape($k) ?>" />
         <input type="hidden" name="save" value="true" />
-        <input type="hidden" name="iaccept" value="<?php echo htmlspecialchars($iaccept) ?>" />
+        <input type="hidden" name="iaccept" value="<?php echo escape($iaccept) ?>" />
         <h1><?php echo $lang["usage"]?></h1>
         <p><?php echo $lang["indicateusage"]?></p>
 
@@ -137,7 +137,7 @@ if(isset($download_usage_prevent_options))
 <?php if ($download_usage_email){ ?>
     <div class="Question">
         <label><?php echo $lang["emailaddress"]?></label>
-        <input name="email" type="text" class="stdwidth" value="<?php echo htmlspecialchars($email) ?>">
+        <input name="email" type="text" class="stdwidth" value="<?php echo escape($email) ?>">
         <span class="error"><?php echo isset($error['email']) ? $error["email"] : "" ?></span>
         <div class="clearerleft"> </div>
     </div>
@@ -153,7 +153,7 @@ if(isset($download_usage_prevent_options))
                     {
                     $selected = ($n === $usage) ? "selected" : "";
                     ?>
-                    <option <?php echo $selected ?> value="<?php echo $n; ?>"><?php echo htmlspecialchars(i18n_get_translated($download_usage_options[$n])) ?></option>
+                    <option <?php echo $selected ?> value="<?php echo $n; ?>"><?php echo escape(i18n_get_translated($download_usage_options[$n])) ?></option>
                     <?php
                     } ?>
             </select>
@@ -196,7 +196,7 @@ function html_usagecomments($usagecomment,$error)
         (
         "{label}"   => $lang["usagecomments"],
         "{error}"   => isset($error["usagecomment"]) ?  $error["usagecomment"] : "",
-        "{value}"   => htmlspecialchars($usagecomment)
+        "{value}"   => escape($usagecomment)
         );
 
     $html = str_replace(array_keys($replace),array_values($replace), $html );

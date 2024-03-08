@@ -354,7 +354,7 @@ if(!IsModal())
     }
     
 if ($show_resource_title_in_titlebar){
-    $title =  htmlspecialchars(i18n_get_translated(get_data_by_field($ref,$view_title_field)));
+    $title =  escape(i18n_get_translated(get_data_by_field($ref,$view_title_field)));
     if (strlen($title) > 0){
         echo "<script language='javascript'>\n";
         echo "document.title = \"$applicationname - $title\";\n";

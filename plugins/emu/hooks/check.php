@@ -12,8 +12,8 @@ function HookEmuCheckAddinstallationcheck()
         {
         ?>
         <tr>
-            <td colspan="2"><?php echo htmlspecialchars("{$GLOBALS['lang']['emu_configuration']}: {$t->getMessage()}"); ?></td>
-            <td><b><?php echo htmlspecialchars($GLOBALS['lang']['status-fail']); ?></b></td>
+            <td colspan="2"><?php echo escape("{$GLOBALS['lang']['emu_configuration']}: {$t->getMessage()}"); ?></td>
+            <td><b><?php echo escape($GLOBALS['lang']['status-fail']); ?></b></td>
         </tr>
         <?php
         }

@@ -53,16 +53,16 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
         $fields = get_resource_type_fields();
         ?>
         <div class="Question" >
-            <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
+            <label><?php echo escape((string) $column_detail[0]); ?></label>
             <select id="field_edit_<?php echo escape((string) $column); ?>" name="<?php echo escape((string) $column); ?>" class="stdwidth">
-            <option value="" <?php if ($currentvalue == "") { echo "selected"; } ?>><?php echo htmlspecialchars($lang["select"]); ?></option>
-            <option value="-1" <?php if ($currentvalue == "-1") { echo "selected"; } ?>><?php echo htmlspecialchars($lang["image"] . ": " . $lang["previewimage"]) ?></option>
+            <option value="" <?php if ($currentvalue == "") { echo "selected"; } ?>><?php echo escape($lang["select"]); ?></option>
+            <option value="-1" <?php if ($currentvalue == "-1") { echo "selected"; } ?>><?php echo escape($lang["image"] . ": " . $lang["previewimage"]) ?></option>
             <?php
             foreach($fields as $field)
                 {
                 if($field["ref"]!=$ref) // Don't show itself as an option
                     {?>
-                    <option value="<?php echo (int)$field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo htmlspecialchars($lang["field"]. ": " . i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="") ? "" : htmlspecialchars((string) $field["name"]))  . ")" ?></option>
+                    <option value="<?php echo (int)$field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo escape($lang["field"]. ": " . i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="") ? "" : escape((string) $field["name"]))  . ")" ?></option>
                     <?php
                     }
                 }
@@ -76,8 +76,8 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
         {
         ?>
         <div class="Question" >
-            <label><?php echo htmlspecialchars((string) $column_detail[0]); ?></label>
-            <textarea class="stdwidth" rows="3" id="field_edit_<?php echo htmlspecialchars((string) $column_detail[0]); ?>" name="<?php echo htmlspecialchars((string) $column); ?>"><?php echo htmlspecialchars((string) $currentvalue)?></textarea>
+            <label><?php echo escape((string) $column_detail[0]); ?></label>
+            <textarea class="stdwidth" rows="3" id="field_edit_<?php echo escape((string) $column_detail[0]); ?>" name="<?php echo escape((string) $column); ?>"><?php echo escape((string) $currentvalue)?></textarea>
         </div>      
         <?php
         return true;

@@ -73,7 +73,7 @@ function display_video_subtitles($ref,$access)
                 {
                 $video_altfile["path"] = get_resource_path($ref, false, '', true, $video_altfile["file_extension"], -1, 1, false, '',  $video_altfile["ref"]);
                 ?>
-                <track class="videojs_alt_track" kind="subtitles" src="<?php echo htmlspecialchars($video_altfile["path"]) ?>" label="<?php echo htmlspecialchars($video_altfile["description"]); ?>" ></track>
+                <track class="videojs_alt_track" kind="subtitles" src="<?php echo escape($video_altfile["path"]) ?>" label="<?php echo escape($video_altfile["description"]); ?>" ></track>
                 <?php
                 }
             }

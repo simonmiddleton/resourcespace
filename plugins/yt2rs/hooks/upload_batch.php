@@ -27,7 +27,7 @@ function Hookyt2rsUpload_batchUpload_page_bottom()
     $ytthumb_id = $matches[1];
     $thumb_path = 'http://img.youtube.com/vi/' . $ytthumb_id . '/mqdefault.jpg';
 ?>
-    <h1><?php echo htmlspecialchars($lang['yt2rs_thumb']); ?></h1>
+    <h1><?php echo escape($lang['yt2rs_thumb']); ?></h1>
 <?php
-    echo htmlspecialchars($thumb_path);
+    echo escape($thumb_path);
     }

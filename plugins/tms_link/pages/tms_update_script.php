@@ -80,7 +80,7 @@ if(trim($tms_link_log_directory)!="")
         @mkdir($tms_link_log_directory, 0755, true);
         if (!is_dir($tms_link_log_directory))
             {
-            echo 'Unable to create log directory: ' . htmlspecialchars($tms_link_log_directory) . PHP_EOL;
+            echo 'Unable to create log directory: ' . escape($tms_link_log_directory) . PHP_EOL;
             }
         }
     else

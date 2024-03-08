@@ -96,7 +96,7 @@ else
         {
         ?>
         <p><a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a></p>
-        <p><b><?php echo htmlspecialchars($_FILES[$fd]['name']); ?></b></p>
+        <p><b><?php echo escape($_FILES[$fd]['name']); ?></b></p>
 
         <?php
         $validated = csv_user_import_process($_FILES[$fd]['tmp_name'], $user_group_selector, $messages, false);

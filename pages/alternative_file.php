@@ -142,8 +142,8 @@ if($modal)
         }
     }
 generateFormToken('fileform'); ?>
-<input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
-<input type=hidden name=resource value="<?php echo htmlspecialchars($resource) ?>">
+<input type=hidden name=ref value="<?php echo escape($ref) ?>">
+<input type=hidden name=resource value="<?php echo escape($resource) ?>">
 
 <?php //display preview if exists
 $previews_exist = false;
@@ -161,17 +161,17 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
     }
     ?>
 <div class="Question">
-<label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo htmlspecialchars($resource) ?></div>
+<label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo escape($resource) ?></div>
 <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-<label for="name"><?php echo $lang["name"]?></label><input type=text class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($file["name"]) ?>" maxlength="100">
+<label for="name"><?php echo $lang["name"]?></label><input type=text class="stdwidth" name="name" id="name" value="<?php echo escape($file["name"]) ?>" maxlength="100">
 <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-<label for="name"><?php echo $lang["description"]?></label><input type=text class="stdwidth" name="description" id="description" value="<?php echo htmlspecialchars($file["description"]) ?>" maxlength="200">
+<label for="name"><?php echo $lang["description"]?></label><input type=text class="stdwidth" name="description" id="description" value="<?php echo escape($file["description"]) ?>" maxlength="200">
 <div class="clearerleft"> </div>
 </div>
 <?php hook('alternative_file_question', ''); ?>

@@ -26,7 +26,7 @@ function HookTms_linkEditEditbeforesectionhead()
         ?>
         <div class="Question">
             <label for="<?php echo $input_identifier; ?>"><?php echo $field_label; ?></label>
-            <input id="<?php echo $input_identifier; ?>" name="<?php echo $input_identifier; ?>" type="text" value="<?php echo htmlspecialchars(get_data_by_field($ref, $module['rs_uid_field'])); ?>">
+            <input id="<?php echo $input_identifier; ?>" name="<?php echo $input_identifier; ?>" type="text" value="<?php echo escape(get_data_by_field($ref, $module['rs_uid_field'])); ?>">
             <div class="clearerleft"></div>
         </div>
         <?php

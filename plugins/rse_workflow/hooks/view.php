@@ -201,7 +201,7 @@ function HookRse_workflowViewAdditionaldownloadtabbuttons()
         ?>
         <div class="Tab" id="ResourceWorkflowActionsButton">
             <a href="#" onclick="selectDownloadTab('ResourceWorkflowActions',<?php echo $modal ? 'true' : 'false'; ?>);">
-                <?php echo htmlspecialchars($lang["rse_workflow_actions_heading"]) ?>
+                <?php echo escape($lang["rse_workflow_actions_heading"]) ?>
             </a>
         </div>
         <?php

@@ -39,12 +39,12 @@ include "../../include/header.php";
     <?php generateFormToken("mainform"); ?>
 <input type="hidden" name="keyword" value="<?php echo escape($keyword)?>">
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["keyword"])?></label><div class="Fixed"><?php echo htmlspecialchars($keyword)?></div><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["keyword"])?></label><div class="Fixed"><?php echo escape($keyword)?></div><div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["relatedkeywords"])?></label><textarea name="related" class="stdwidth" rows=5 cols=50><?php echo htmlspecialchars($related)?></textarea><div class="clearerleft"></div></div>
+<div class="Question"><label><?php echo escape($lang["relatedkeywords"])?></label><textarea name="related" class="stdwidth" rows=5 cols=50><?php echo escape($related)?></textarea><div class="clearerleft"></div></div>
 
 <div class="QuestionSubmit">        
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["save"])?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"])?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>

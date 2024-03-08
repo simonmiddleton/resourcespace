@@ -1968,13 +1968,13 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
                         // Set up array of strings to match as we may have a number of variations in the existing value
                         $html_entity_strings = array();
-                        $html_entity_strings[] = str_replace($rich_field_characters_replace, $rich_field_characters_sub, htmlspecialchars($findstring));
+                        $html_entity_strings[] = str_replace($rich_field_characters_replace, $rich_field_characters_sub, escape($findstring));
                         $html_entity_strings[] = str_replace($rich_field_characters_replace, $rich_field_characters_sub, htmlentities($findstring));
                         $html_entity_strings[] = htmlentities($findstring);
-                        $html_entity_strings[] = htmlspecialchars($findstring);
+                        $html_entity_strings[] = escape($findstring);
 
                         // Just need one replace string
-                        $replacestring = htmlspecialchars($replacestring);
+                        $replacestring = escape($replacestring);
 
                         $val=str_replace($html_entity_strings, $replacestring, $val);
                         }

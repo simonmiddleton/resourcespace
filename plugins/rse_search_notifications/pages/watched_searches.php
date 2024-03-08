@@ -13,7 +13,7 @@ if (!$plugin_active)
     {
     redirect("pages/".$default_home_page);
     }
-    
+
 $all_users_mode=getval("allusers",0)==1 && checkperm("a");
 $find=getval("find","");
 $callback=getval("callback","");
@@ -96,7 +96,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
             <div class="Question">
                 <div class="tickset">
                     <div class="Inline">
-                        <input type="text" name="find" id="find" value="<?php echo htmlspecialchars($find); ?>" maxlength="100" class="shrtwidth">
+                        <input type="text" name="find" id="find" value="<?php echo escape($find); ?>" maxlength="100" class="shrtwidth">
                     </div>
                     <input type="hidden" name="offset" id="offset" value="0" />
                     <div class="Inline"><input name="Submit" type="submit" value="<?php echo $lang["searchbutton"]; ?>"></div>
@@ -124,7 +124,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
         ?><form action="<?php echo $watched_searches_url; ?>" onchange="CentralSpacePost(this,true);">
             <?php generateFormToken("rse_search_notifications_watched_searches"); ?>
             <input type="hidden" name="offset" id="offset" value="0" />
-            <input type="hidden" name="find" id="find" value="<?php echo htmlspecialchars($find); ?>" >
+            <input type="hidden" name="find" id="find" value="<?php echo escape($find); ?>" >
             <label for="allusers"><?php echo $lang['search_notifications_show_for_all_users']; ?></label>
             <?php
             if ($all_users_mode)
@@ -224,10 +224,10 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                 $ws = $watched_searches[$i];
                 $view_search_url = search_notification_make_url($ws);
                 ?><tr>
-                    <td><?php echo nicedate(htmlspecialchars($ws["created"]), true, true, true); ?></td>
-                    <td><?php echo highlightkeywords(htmlspecialchars($ws["username"]),$find); ?></td>
-                    <td><a href="<?php echo $view_search_url; ?>"><?php echo highlightkeywords(htmlspecialchars($ws["title"]),$find); ?></a></td>
-                    <td><a href="<?php echo $view_search_url; ?>"><?php echo htmlspecialchars($ws["checksum_matches"]); ?></a></td>
+                    <td><?php echo nicedate(escape($ws["created"]), true, true, true); ?></td>
+                    <td><?php echo highlightkeywords(escape($ws["username"]),$find); ?></td>
+                    <td><a href="<?php echo $view_search_url; ?>"><?php echo highlightkeywords(escape($ws["title"]),$find); ?></a></td>
+                    <td><a href="<?php echo $view_search_url; ?>"><?php echo escape($ws["checksum_matches"]); ?></a></td>
                     <td><?php
                         if ($ws["enabled"])
                             {

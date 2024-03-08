@@ -50,8 +50,8 @@ include "../../include/header.php";
 ?>
 <div class="BasicsBox">
 
-  <h1><?php echo htmlspecialchars($lang["actions_myactions"])?></h1>
-  <p><?php echo htmlspecialchars($lang["actions_introtext"]) ?></p>
+  <h1><?php echo escape($lang["actions_myactions"])?></h1>
+  <p><?php echo escape($lang["actions_introtext"]) ?></p>
   
 <div class="VerticalNav">
 <ul>
@@ -93,15 +93,15 @@ if(count($actiontypes)>1)
         <form id="FilterActions" class="FormFilter" method="post" action="<?php echo $url ?>">
             <?php generateFormToken("FilterActions"); ?>
             <fieldset>
-                <legend><?php echo htmlspecialchars($lang['filter_label']); ?></legend>  
+                <legend><?php echo escape($lang['filter_label']); ?></legend>  
                 <div class="tickset">
                     <div class="Inline">
                         <select name="actiontype" id="actiontype" onChange="this.form.submit();">
-                            <option value=""<?php if ($actiontype == '') { echo " selected"; } ?>><?php echo htmlspecialchars($lang["all"]); ?></option>
+                            <option value=""<?php if ($actiontype == '') { echo " selected"; } ?>><?php echo escape($lang["all"]); ?></option>
                             <?php
                             foreach($actiontypes as $action_type_option){
                                 ?>
-                                <option value="<?php echo $action_type_option; ?>"<?php if ($actiontype == $action_type_option) { echo " selected"; } ?>><?php echo htmlspecialchars($lang["actions_type_" . $action_type_option]); ?></option>
+                                <option value="<?php echo $action_type_option; ?>"<?php if ($actiontype == $action_type_option) { echo " selected"; } ?>><?php echo escape($lang["actions_type_" . $action_type_option]); ?></option>
                                 <?php
                             }
                             ?>
@@ -124,13 +124,13 @@ else
     ?>
 <div class="TopInpageNav"><div class="TopInpageNavLeft">
   
-    <div class="InpageNavLeftBlock"><?php echo htmlspecialchars($lang["actions-total"]) . ": <strong>" . $results; ?> </strong></div>
-    <div class="InpageNavLeftBlock"><?php echo htmlspecialchars($lang["resultsdisplay"])?>:
+    <div class="InpageNavLeftBlock"><?php echo escape($lang["actions-total"]) . ": <strong>" . $results; ?> </strong></div>
+    <div class="InpageNavLeftBlock"><?php echo escape($lang["resultsdisplay"])?>:
     <?php 
     for($n=0;$n<count($list_display_array);$n++){?>
     <?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("per_page_list"=>$list_display_array[$n])) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $list_display_array[$n]?></a><?php } ?>&nbsp;|
     <?php } ?>
-    <?php if ($per_page==99999){?><span class="Selected"><?php echo htmlspecialchars($lang["all"])?></span><?php } else { ?><a href="<?php echo $url; ?>&per_page_list=99999" onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($lang["all"])?></a><?php } ?>
+    <?php if ($per_page==99999){?><span class="Selected"><?php echo escape($lang["all"])?></span><?php } else { ?><a href="<?php echo $url; ?>&per_page_list=99999" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["all"])?></a><?php } ?>
     </div>
     </div> <?php pager(false); ?>
     <div class="clearerleft"></div>
@@ -142,15 +142,15 @@ else
   <div class="Listview" id="<?php echo $modal ? "Modal" : "CentralSpace"; ?>_resource_actions">
       <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
           <tr class="ListviewTitleStyle">
-              <td><?php if ($order_by=="date"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"date")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($lang["date"]); ?></a></td>
+              <td><?php if ($order_by=="date"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"date")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["date"]); ?></a></td>
               
-            <td> <?php if ($order_by=="name"       ) {?><td><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($lang["user"]); ?></a></td>
-            <?php if ($messages_actions_usergroup){?><td> <?php  if ($order_by=="usergroup"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($lang["columnheader-user_group"]); ?></a></td>
+            <td> <?php if ($order_by=="name"       ) {?><td><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["user"]); ?></a></td>
+            <?php if ($messages_actions_usergroup){?><td> <?php  if ($order_by=="usergroup"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"user")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["columnheader-user_group"]); ?></a></td>
             <?php } ?>
-              <td><?php if ($order_by=="ref"        ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"ref")) ?>"         onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($lang["property-reference"]); ?></a></td>
-              <td><?php if ($order_by=="description") {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"description")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($lang["description"]); ?></a></td>
-              <td><?php if ($order_by=="type"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"type")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo htmlspecialchars($lang["type"]); ?></a></td>
-              <td><div class="ListTools"><?php echo htmlspecialchars($lang["tools"])?></div></td>
+              <td><?php if ($order_by=="ref"        ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"ref")) ?>"         onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["property-reference"]); ?></a></td>
+              <td><?php if ($order_by=="description") {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"description")) ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["description"]); ?></a></td>
+              <td><?php if ($order_by=="type"       ) {?><span class="Selected"><?php } ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("offset"=>0,"actions_sort"=>urlencode($revsort),"actions_order_by"=>"type")) ?>"        onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["type"]); ?></a></td>
+              <td><div class="ListTools"><?php echo escape($lang["tools"])?></div></td>
           </tr>
   <?php
   
@@ -206,13 +206,13 @@ else
                         }?> 
                 <td><a href="<?php echo $editlink; ?>" onClick="actionreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" ><?php echo $all_actions[$n]["ref"]; ?></a></td>
                 <td><?php echo strip_tags_and_attributes(tidy_trim(TidyList($all_actions[$n]["description"]),$list_search_results_title_trim)) ; ?></td>
-                <td><?php echo htmlspecialchars($lang["actions_type_" . $all_actions[$n]["type"]]); ?></td>
+                <td><?php echo escape($lang["actions_type_" . $all_actions[$n]["type"]]); ?></td>
                 <td>
                     <div class="ListTools">
                       <?php
                       if($actionaddlink!=""){echo $actionaddlink;}
-                      if($editlink!=""){?><a aria-hidden="true" href="<?php echo $editlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" title="<?php echo escape($lang["action-edit"]); ?>"><i class="fas fa-edit"></i>&nbsp;<?php echo htmlspecialchars($lang["action-edit"]); ?></a><?php }
-                      if($viewlink!=""){?><a aria-hidden="true" href="<?php echo $viewlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" title="<?php echo escape($lang["view"]); ?>"><i class="fas fa-expand"></i>&nbsp;<?php echo htmlspecialchars($lang["view"]); ?></a><?php }?>
+                      if($editlink!=""){?><a aria-hidden="true" href="<?php echo $editlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" title="<?php echo escape($lang["action-edit"]); ?>"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a><?php }
+                      if($viewlink!=""){?><a aria-hidden="true" href="<?php echo $viewlink; ?>" onClick="actionsreload=true;return <?php echo $actions_modal ? 'Modal' : 'CentralSpace'; ?>Load(this,true);" title="<?php echo escape($lang["view"]); ?>"><i class="fas fa-expand"></i>&nbsp;<?php echo escape($lang["view"]); ?></a><?php }?>
                     </div>
                 </td>
             </tr>

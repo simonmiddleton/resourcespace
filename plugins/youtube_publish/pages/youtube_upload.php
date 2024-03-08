@@ -263,7 +263,7 @@ if ($youtube_username != '')
         <textarea class="stdwidth" rows="6" columns="50" id="video-description" name="video_description"><?php echo strip_tags($description); ?></textarea>
         <br>
         <label for="video_keywords"><?php echo $lang["youtube_publish_video_tags"] ?></label>
-        <textarea class="stdwidth" rows="6" columns="50" id="video_keywords" name="video_keywords"><?php echo htmlspecialchars($video_keywords); ?></textarea>
+        <textarea class="stdwidth" rows="6" columns="50" id="video_keywords" name="video_keywords"><?php echo escape($video_keywords); ?></textarea>
         <br>
     </div>  
     <div class="Question" >

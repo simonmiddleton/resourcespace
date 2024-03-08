@@ -69,7 +69,7 @@ $script_last_ran_content = sprintf(
     <input name=\"script_last_ran\" type=\"text\" value=\"%s\" disabled style=\"width: 420px;\">
 </div>
 <div class=\"clearerleft\"></div>",
-htmlspecialchars($lang['museumplus_last_run_date']),
+escape($lang['museumplus_last_run_date']),
 escape($museumplus_script_last_ran)
 );
 
@@ -113,10 +113,10 @@ foreach($museumplus_modules_config as $module_conf_index => $module_conf)
                 <button type="button" onclick="museumplus_delete_module_conf(this, %5$s);">%7$s</button>
             </td>
         </tr>',
-        htmlspecialchars($module_conf['module_name']),
-        htmlspecialchars($module_conf['mplus_id_field']),
-        htmlspecialchars($rs_uid_field),
-        htmlspecialchars(join(', ', $applicable_resource_types)),
+        escape($module_conf['module_name']),
+        escape($module_conf['mplus_id_field']),
+        escape($rs_uid_field),
+        escape(join(', ', $applicable_resource_types)),
         $module_conf_index,
         $lang['action-edit'],
         $lang['action-delete']);

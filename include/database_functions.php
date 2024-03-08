@@ -93,7 +93,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
                 <?php
                 if ($show_detailed_errors)
                     {?>
-                    <p style="font-size:11px;color:black;"><?php echo htmlspecialchars($error_info); ?></p>
+                    <p style="font-size:11px;color:black;"><?php echo escape($error_info); ?></p>
                     <?php
                     }
                 } ?>

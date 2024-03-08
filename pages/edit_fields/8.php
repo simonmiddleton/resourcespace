@@ -8,7 +8,7 @@
 ><?php if($value == strip_tags($value)){
     $value=nl2br($value);
 }
-echo htmlspecialchars(strip_tags_and_attributes($value,array("a"),array("href","target")))?></textarea>
+echo escape(strip_tags_and_attributes($value,array("a"),array("href","target")))?></textarea>
 </div>
 <?php
 

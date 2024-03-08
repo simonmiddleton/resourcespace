@@ -251,7 +251,7 @@ include "../../../include/header.php";
             <?php
             foreach ($ffmpeg_std_video_options as $video_output_video=>$video_splice_output_command)
                 {
-                echo "<option value='" . htmlspecialchars(trim($video_output_video)) . "' " . (isset($ffmpeg_std_video_options[$video_output_video]["default"])?"selected":"") . ">" . htmlspecialchars(trim($video_output_video)) . "</option>";
+                echo "<option value='" . escape(trim($video_output_video)) . "' " . (isset($ffmpeg_std_video_options[$video_output_video]["default"])?"selected":"") . ">" . escape(trim($video_output_video)) . "</option>";
                 }
                 ?>
             </select>
@@ -263,7 +263,7 @@ include "../../../include/header.php";
             <?php
             foreach ($ffmpeg_std_resolution_options as $video_output_resolution=>$video_splice_output_command)
                 {
-                echo "<option value='" . htmlspecialchars(trim($video_output_resolution)) . "' " . (isset($ffmpeg_std_resolution_options[$video_output_resolution]["default"])?"selected":"") . ">" . htmlspecialchars(trim($video_output_resolution)) . "</option>";
+                echo "<option value='" . escape(trim($video_output_resolution)) . "' " . (isset($ffmpeg_std_resolution_options[$video_output_resolution]["default"])?"selected":"") . ">" . escape(trim($video_output_resolution)) . "</option>";
                 }
                 ?>
             </select>
@@ -275,7 +275,7 @@ include "../../../include/header.php";
             <?php
             foreach ($ffmpeg_std_frame_rate_options as $video_output_frame_rate=>$video_splice_output_command)
                 {
-                echo "<option value='" . htmlspecialchars(trim($video_output_frame_rate)) . "' " . (isset($ffmpeg_std_frame_rate_options[$video_output_frame_rate]["default"])?"selected":"") . ">" . htmlspecialchars(trim($video_output_frame_rate)) . "</option>";
+                echo "<option value='" . escape(trim($video_output_frame_rate)) . "' " . (isset($ffmpeg_std_frame_rate_options[$video_output_frame_rate]["default"])?"selected":"") . ">" . escape(trim($video_output_frame_rate)) . "</option>";
                 }
                 ?>
             </select>
@@ -287,7 +287,7 @@ include "../../../include/header.php";
             <?php
             foreach ($ffmpeg_std_audio_options as $video_output_audio=>$video_splice_output_command)
                 {
-                echo "<option value='" . htmlspecialchars(trim($video_output_audio)) . "' " . (isset($ffmpeg_std_audio_options[$video_output_audio]["default"])?"selected":"") . ">" . htmlspecialchars(trim($video_output_audio)) . "</option>";
+                echo "<option value='" . escape(trim($video_output_audio)) . "' " . (isset($ffmpeg_std_audio_options[$video_output_audio]["default"])?"selected":"") . ">" . escape(trim($video_output_audio)) . "</option>";
                 }
                 ?>
             </select>

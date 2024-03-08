@@ -868,7 +868,7 @@ $contact_sheet=true;
 $contact_sheet_resource=false;
 # ID of resource type to create
 $contact_sheet_resource_type=1; 
- 
+
 # Ajax previews in contact sheet configuration. 
 $contact_sheet_previews=true;
 # Ajax previews in contact sheet, preview image size in pixels. 
@@ -1482,7 +1482,7 @@ $thumbs_display_extended_fields=array();
     # $search_result_title_height=26;
     $search_results_title_trim=30;
     $search_results_title_wordwrap=100; // Force breaking up of very large titles so they wrap to multiple lines (useful when using multi line titles with $search_result_title_height). By default this is set very high so that breaking doesn't occur. If you use titles that have large unbroken words (e.g. filenames with no spaces) then it may be useful to set this value to something lower, e.g. 20
-    
+
 # Enable extra large thumbnails option for search screen
 $xlthumbs=false;
 $xl_search_results_title_trim=60;
@@ -1616,7 +1616,7 @@ $ffmpeg_audio_extensions = array(
     'gsm',
     'weba',
     );
-    
+
 # The audio settings for mp3 previews
 $ffmpeg_audio_params = "-acodec libmp3lame -ab 64k -ac 1"; # Default to 64Kbps mono
 
@@ -2105,7 +2105,7 @@ $enable_thumbnail_creation_on_upload = true;
 
     // Limit number of search results that can be displayed in map view. Set to 0 for no limit
     $search_map_max_results = 5000;
-    
+
     // Use zoom slidebar instead of standard +/- buttons?
     $map_zoomslider = true;
 
@@ -2878,7 +2878,7 @@ $facial_recognition_face_recognizer_models_location = '';
     $config='
     $applicationname="Test Remote Config ";
     ';
-    
+
     echo $config . "#" . md5($remote_config_key . $config);
 
  */

@@ -117,7 +117,7 @@ if($html_validation !== true && $html_validation !== '')
         <input type="hidden" name="custom" value="<?php echo getval('custom', 0, true)?>">
         <div class="Question">
             <label><?php echo $lang["page"]?></label>
-            <div class="Fixed"><?php echo htmlspecialchars(($page==""?$lang["all"]:$page)) ?></div>
+            <div class="Fixed"><?php echo escape(($page==""?$lang["all"]:$page)) ?></div>
             <div class="clearerleft"></div>
         </div>
 
@@ -127,7 +127,7 @@ if($html_validation !== true && $html_validation !== '')
         ?>
         <div class="Question">
             <label for="name"><?php echo $lang["name"]?></label>
-            <input type=text name="name" class="stdwidth" value="<?php echo htmlspecialchars($name)?>">
+            <input type=text name="name" class="stdwidth" value="<?php echo escape($name)?>">
             <div class="clearerleft"></div>
         </div>
         <?php
@@ -137,7 +137,7 @@ if($html_validation !== true && $html_validation !== '')
         ?>
         <div class="Question">
             <label><?php echo $lang["name"]?></label>
-            <div class="Fixed"><?php echo htmlspecialchars($name) ?></div>
+            <div class="Fixed"><?php echo escape($name) ?></div>
             <div class="clearerleft"></div>
         </div>
         <?php
@@ -195,7 +195,7 @@ if($html_validation !== true && $html_validation !== '')
             {
             ?>
             <label for="text"><?php echo $lang['text']; ?></label>
-            <textarea id="<?php echo $lang["text"]?>" class="stdwidth" name="text" rows=15 cols=50><?php echo htmlspecialchars($text); ?></textarea>
+            <textarea id="<?php echo $lang["text"]?>" class="stdwidth" name="text" rows=15 cols=50><?php echo escape($text); ?></textarea>
             <script type="text/javascript">
             <?php
             if(!hook('ckeditorinit'))
@@ -225,7 +225,7 @@ if($html_validation !== true && $html_validation !== '')
             {
             ?>
             <label for="text"><?php echo $lang['text']; ?></label>
-            <textarea id="text" class="stdwidth" name="text" rows=15 cols=50><?php echo htmlspecialchars($text); ?></textarea>
+            <textarea id="text" class="stdwidth" name="text" rows=15 cols=50><?php echo escape($text); ?></textarea>
             <?php
             }
             ?>

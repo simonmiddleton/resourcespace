@@ -103,7 +103,7 @@ $h = $sizes[1];
 <div style="padding-top:5px;">
 
      <?php if ($annotate_pdf_output){?>
-     &nbsp;&nbsp;<a style="display:inline;float:right;margin-right:10px;" href="<?php echo generateURL($baseurl. '/plugins/annotate/pages/annotate_pdf_config.php?', $urlparams, ['ext' => $resource["preview_extension"]])?>" >&gt;&nbsp;<?php echo htmlspecialchars($lang["pdfwithnotes"])?></a> &nbsp;&nbsp;
+     &nbsp;&nbsp;<a style="display:inline;float:right;margin-right:10px;" href="<?php echo generateURL($baseurl. '/plugins/annotate/pages/annotate_pdf_config.php?', $urlparams, ['ext' => $resource["preview_extension"]])?>" >&gt;&nbsp;<?php echo escape($lang["pdfwithnotes"])?></a> &nbsp;&nbsp;
      <?php } ?>
         </div>
     </tr></table>

@@ -48,8 +48,8 @@ if (count($params)==0) exit("No template parameters found.");
 foreach ($params as $param)
     {
     ?>
-    <p><?php echo htmlspecialchars($param) ?><br />
-    <input type="text" class="stdwidth" name="<?php echo base64_encode($param) ?>" id="<?php echo base64_encode($param) ?>" value="<?php echo htmlspecialchars($param) ?>" onKeyUp="UpdateSVG();" onChange="onKeyUp="UpdateSVG();" />
+    <p><?php echo escape($param) ?><br />
+    <input type="text" class="stdwidth" name="<?php echo base64_encode($param) ?>" id="<?php echo base64_encode($param) ?>" value="<?php echo escape($param) ?>" onKeyUp="UpdateSVG();" onChange="onKeyUp="UpdateSVG();" />
     </p>
     <?php
     }

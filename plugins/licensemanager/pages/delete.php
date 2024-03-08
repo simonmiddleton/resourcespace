@@ -39,7 +39,7 @@ include "../../../include/header.php";
 <input type=hidden name="ref" value="<?php echo escape($ref); ?>">
 <?php generateFormToken("licensemanager_delete"); ?>
 
-<div class="Question"><label><?php echo escape($lang["license_id"]); ?></label><div class="Fixed"><?php echo htmlspecialchars($ref)?></div>
+<div class="Question"><label><?php echo escape($lang["license_id"]); ?></label><div class="Fixed"><?php echo escape($ref)?></div>
 <div class="clearerleft"> </div></div>
 
 

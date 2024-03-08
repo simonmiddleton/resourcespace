@@ -178,7 +178,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
                 ?>
                 <script>
                 ModalClose();
-                CentralSpaceLoad('<?php echo htmlspecialchars($redirection_endpoint); ?>');
+                CentralSpaceLoad('<?php echo escape($redirection_endpoint); ?>');
                 </script>
                 <?php
                 }
@@ -260,7 +260,7 @@ else
     <input type=hidden name="update_parent" value="false">
     <div class="Question">
         <label for="name"><?php echo escape($lang["name"])?></label>
-        <input type=text class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($collection["name"]) ?>" maxlength="100" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>>
+        <input type=text class="stdwidth" name="name" id="name" value="<?php echo escape($collection["name"]) ?>" maxlength="100" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>>
         <div class="clearerleft"> </div>
     </div>
 
@@ -268,19 +268,19 @@ else
 
     <div class="Question">
         <label for="description"><?php echo $lang["collection_description"]?></label>
-        <textarea class="stdwidth" rows="4" name="description" id="description"><?php echo htmlspecialchars((string) $collection["description"])?></textarea>
+        <textarea class="stdwidth" rows="4" name="description" id="description"><?php echo escape((string) $collection["description"])?></textarea>
         <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
         <label for="keywords"><?php echo $lang["relatedkeywords"]?></label>
-        <textarea class="stdwidth" rows="3" name="keywords" id="keywords" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>><?php echo htmlspecialchars((string) $collection["keywords"])?></textarea>
+        <textarea class="stdwidth" rows="3" name="keywords" id="keywords" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>><?php echo escape((string) $collection["keywords"])?></textarea>
         <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
         <label><?php echo $lang["id"]?></label>
-        <div class="Fixed"><?php echo htmlspecialchars($collection["ref"]) ?></div>
+        <div class="Fixed"><?php echo escape($collection["ref"]) ?></div>
         <div class="clearerleft"> </div>
     </div>
 
@@ -290,7 +290,7 @@ else
     $result_limit=ps_value("select result_limit value from collection_savedsearch where collection= ?", ['i', $ref],"");    
     ?>
     <div class="Question">
-        <label for="name"><?php echo htmlspecialchars($lang["smart_collection_result_limit"]); ?></label>
+        <label for="name"><?php echo escape($lang["smart_collection_result_limit"]); ?></label>
         <input type=text class="stdwidth" name="result_limit" id="result_limit" value="<?php echo escape((string) $result_limit); ?>" />
         <div class="clearerleft"> </div>
     </div>
@@ -335,13 +335,13 @@ else
             ?>
             <div class="Question">
                 <label for="users"><?php echo $lang["attachedusers"]?></label>
-                <?php $userstring=htmlspecialchars($collection["users"]);
+                <?php $userstring=escape($collection["users"]);
 
                 if($userstring!='')
                     {
                     $userstring.=",";
                     }
-                $userstring.=htmlspecialchars($collection["groups"]);
+                $userstring.=escape($collection["groups"]);
 
                 include "../include/user_select.php"; ?>
                 <div class="clearerleft"> </div>
@@ -410,7 +410,7 @@ else
             ?>
             <div class="Question">
             <label for="home_page_text"><?php echo $lang["theme_home_page_text"]?></label>
-            <textarea class="stdwidth" rows="3" name="home_page_text" id="home_page_text"><?php echo htmlspecialchars($collection["home_page_text"]==""?$collection["name"]:$collection["home_page_text"])?></textarea>
+            <textarea class="stdwidth" rows="3" name="home_page_text" id="home_page_text"><?php echo escape($collection["home_page_text"]==""?$collection["name"]:$collection["home_page_text"])?></textarea>
             <div class="clearerleft"> </div>
             </div>
             <div class="Question">
@@ -420,7 +420,7 @@ else
             <?php foreach ($resources as $resource)
                 {
                 ?>
-                <option value="<?php echo htmlspecialchars($resource["ref"]) ?>" <?php if ($resource["ref"]==$collection["home_page_image"]) { ?>selected<?php } ?>><?php echo str_replace(array("%ref", "%title"), array($resource["ref"], i18n_get_translated($resource["field" . $view_title_field])), $lang["ref-title"]) ?></option>
+                <option value="<?php echo escape($resource["ref"]) ?>" <?php if ($resource["ref"]==$collection["home_page_image"]) { ?>selected<?php } ?>><?php echo str_replace(array("%ref", "%title"), array($resource["ref"], i18n_get_translated($resource["field" . $view_title_field])), $lang["ref-title"]) ?></option>
                 <?php
                 }
             ?>

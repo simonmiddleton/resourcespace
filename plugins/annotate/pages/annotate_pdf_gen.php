@@ -20,7 +20,7 @@ $cleartmp=getval("cleartmp","");
 
 if ($cleartmp!="")
     {
-    echo htmlspecialchars(getval("annotateid",""));
+    echo escape(getval("annotateid",""));
     clear_annotate_temp($ref,getval("annotateid",""));
     exit("cleared");
     }

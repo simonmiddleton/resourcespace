@@ -78,7 +78,7 @@ if (isset($info_text))
 <form action="<?php echo $baseurl_short?>pages/upload_replace_batch.php" >
 
 <?php generateFormToken("upload_replace_batch"); ?>
-<input id="batch_replace_mode" type="hidden" name="batch_replace_mode" value="<?php echo htmlspecialchars($mode); ?>" />
+<input id="batch_replace_mode" type="hidden" name="batch_replace_mode" value="<?php echo escape($mode); ?>" />
 <input id="submit" type="hidden" name="submit" value="true" />
     
 <div class="Question">
@@ -110,19 +110,19 @@ if (isset($info_text))
 
 <div class="Question">
     <label for="batch_replace_col"><?php echo $lang["replacebatch_collection"]?></label>
-    <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_col > 0) ? htmlspecialchars($batch_replace_col) : ""; ?>" name="batch_replace_col" id="batch_replace_col" />
+    <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_col > 0) ? escape($batch_replace_col) : ""; ?>" name="batch_replace_col" id="batch_replace_col" />
     <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
     <label for="batch_replace_min"><?php echo $lang["replacebatch_resource_min"]?></label>
-    <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_min > 0) ? htmlspecialchars($batch_replace_min) : ""; ?>" name="batch_replace_min" id="batch_replace_min" />
+    <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_min > 0) ? escape($batch_replace_min) : ""; ?>" name="batch_replace_min" id="batch_replace_min" />
     <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
     <label for="batch_replace_max"><?php echo $lang["replacebatch_resource_max"]?></label>
-    <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_max > 0) ?  htmlspecialchars($batch_replace_max) : ""; ?>" name="batch_replace_max" id="batch_replace_max" />
+    <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_max > 0) ?  escape($batch_replace_max) : ""; ?>" name="batch_replace_max" id="batch_replace_max" />
     <div class="clearerleft"> </div>
 </div>
 

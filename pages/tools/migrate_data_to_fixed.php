@@ -136,7 +136,7 @@ if(getval("submit","") != "")
                         {
                         $newnode = set_node(null, $migrate_field, $newvalue, null, '');
                         $newnodecounter = count($existing_nodes);
-                        $logtext .= " - New option added for '" . htmlspecialchars($newvalue) . "' - ref: " . $newnode . PHP_EOL;
+                        $logtext .= " - New option added for '" . escape($newvalue) . "' - ref: " . $newnode . PHP_EOL;
                         $nodes_to_add[] = $newnode;
                         $existing_nodes[$newnodecounter]["ref"] = $newnode;
                         $existing_nodes[$newnodecounter]["name"] = $newvalue;
@@ -144,7 +144,7 @@ if(getval("submit","") != "")
                     else
                         {
                         $newnode = $newnoderef;
-                        $logtext .= " - Added node for '" . htmlspecialchars($newvalue) . "' - ref: " . $newnode . PHP_EOL;
+                        $logtext .= " - Added node for '" . escape($newvalue) . "' - ref: " . $newnode . PHP_EOL;
                         $newnodecounter = count($existing_nodes);
                         $nodes_to_add[] = $newnode;
                         $existing_nodes[$newnodecounter]["ref"] = $newnoderef;
@@ -242,7 +242,7 @@ include_once "../../include/header.php";
     </p>
     <h1><?php echo $lang["admin_resource_type_field_migrate_data"] ?></h1>
 
-    <form method="post" class="FormWide" action="<?php echo $baseurl_short ?>pages/tools/migrate_data_to_fixed.php" onsubmit="if(jQuery('#splitchar').val()==''){styledalert('<?php echo htmlspecialchars($lang["admin_resource_type_field_no_action"]); ?>');return false;};start_task(this);return false;">
+    <form method="post" class="FormWide" action="<?php echo $baseurl_short ?>pages/tools/migrate_data_to_fixed.php" onsubmit="if(jQuery('#splitchar').val()==''){styledalert('<?php echo escape($lang["admin_resource_type_field_no_action"]); ?>');return false;};start_task(this);return false;">
      <?php generateFormToken("migrate_data_to_fixed"); ?>
     <?php
     render_field_selector_question($lang["field"],"field",[],"medwidth",false,$migrate_field);

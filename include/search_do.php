@@ -610,7 +610,7 @@ function do_search(
 
                                 # Keyword contains a wildcard. Expand.
                                 global $wildcard_expand_limit;
-                                
+
                                 $wildcard_sql = new PreparedStatementQuery ();
                                 $wildcard_sql->sql = 
                                     "SELECT * FROM (SELECT ref value 

@@ -13,4 +13,4 @@
             <?php
             }
         ?>
-><?php echo htmlspecialchars($value); ?></textarea>
+><?php echo escape($value); ?></textarea>

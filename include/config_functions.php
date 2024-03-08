@@ -489,7 +489,7 @@ function config_text_input($name, $label, $current, $password = false, $width = 
     else
         {
         ?>
-        <textarea id="<?php echo $name; ?>" name="<?php echo $name; ?>" style="width:<?php echo $width; ?>px"><?php echo htmlspecialchars($current, ENT_QUOTES); ?></textarea>
+        <textarea id="<?php echo $name; ?>" name="<?php echo $name; ?>" style="width:<?php echo $width; ?>px"><?php echo escape($current); ?></textarea>
         <?php
         }
         ?>
@@ -560,7 +560,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
     ?>
     <div class="Question" id="question_<?php echo escape($name); ?>">
         <form method="POST" action="<?php echo escape($form_action); ?>" enctype="multipart/form-data">
-        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo escape($name); ?>"><?php echo htmlspecialchars($label); ?></label>
+        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo escape($name); ?>"><?php echo escape($label); ?></label>
         <div class="AutoSaveStatus">
         <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
         </div>
@@ -568,7 +568,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
         if($current !== '' && $pathparts[1]=="system" && !file_exists($missing_file))
             {
             ?>
-            <span><?php echo htmlspecialchars($lang['applogo_does_not_exists']); ?></span>
+            <span><?php echo escape($lang['applogo_does_not_exists']); ?></span>
             <input type="submit" name="clear_<?php echo escape($name); ?>" value="<?php echo escape($lang["clearbutton"]); ?>">
             <?php
             }
@@ -576,13 +576,13 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             {
             ?>
             <input type="file" name="<?php echo escape($name); ?>" style="width:<?php echo (int) $width; ?>px">
-            <input type="submit" name="upload_<?php echo escape($name); ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension_' . htmlspecialchars($name) . '()"';} ?> value="<?php echo escape($lang['upload']); ?>">
+            <input type="submit" name="upload_<?php echo escape($name); ?>" <?php if (count($valid_extensions) > 0) {echo 'onclick="return checkValidExtension_' . escape($name) . '()"';} ?> value="<?php echo escape($lang['upload']); ?>">
             <?php
             if (count($valid_extensions) > 0)
                 {
                 ?>
                 <script>
-                function checkValidExtension_<?php echo htmlspecialchars($name) ?>()
+                function checkValidExtension_<?php echo escape($name) ?>()
                     {
                     let file_path = document.getElementsByName("<?php echo escape($name); ?>")[0].value;
                     let ext = file_path.toLowerCase().substr(file_path.lastIndexOf(".")+1);
@@ -601,7 +601,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
         else
             {
             ?>
-            <span><?php echo htmlspecialchars(str_replace('[storage_url]/', '', $current), ENT_QUOTES); ?></span>
+            <span><?php echo escape(str_replace('[storage_url]/', '', $current)); ?></span>
             <input type="submit" name="delete_<?php echo escape($name); ?>" value="<?php echo escape($lang['action-delete']); ?>">
             <?php
             }
@@ -909,7 +909,7 @@ function config_checkbox_select($name, $label, $current, $choices, $usekeys=true
     $wrap = 0;
     ?>
     <div class="Question" id="question_<?php echo $name; ?>" <?php if ($hidden){echo "style=\"display:none;\"";} ?> >
-    <label for="<?php echo escape($name)?>" ><?php echo htmlspecialchars($label)?></label>
+    <label for="<?php echo escape($name)?>" ><?php echo escape($label)?></label>
         <?php
         if($autosave)
             {
@@ -951,7 +951,7 @@ function config_checkbox_select($name, $label, $current, $choices, $usekeys=true
                         }?>
                     >
             </td>
-            <td><?php echo htmlspecialchars(i18n_get_translated($choice)); ?>&nbsp;</td>
+            <td><?php echo escape(i18n_get_translated($choice)); ?>&nbsp;</td>
             <?php
             }
             ?>

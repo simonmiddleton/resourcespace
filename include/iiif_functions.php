@@ -1195,7 +1195,7 @@ final class IIIFRequest {
                     {                                
                     $resourcepos++;
                     }
-                
+
                 debug("IIIF: final position $index given for resource ref " . $resource["ref"] . " sequence id: " . $resourcepos);
                 $sorted_final[$index] = $resource;
                 $sorted_final[$index]["iiif_position"] = $resourcepos;
@@ -1313,7 +1313,7 @@ final class IIIFRequest {
 function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     {
     global $rooturl,$iiif_sequence_field;   
-            
+
     $canvases = array();
     foreach ($iiif_results as $index=>$iiif_result)
         {
@@ -1345,12 +1345,12 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         $canvases[$index]["@id"] = $rooturl . $identifier . "/canvas/" . $index;
         $canvases[$index]["@type"] = "sc:Canvas";
         $canvases[$index]["label"] = $sequence_prefix . $sequenceid;
-        
+
         // Get the size of the images
         $image_size = get_original_imagesize($useimage["ref"],$img_path);
         $canvases[$index]["height"] = intval($image_size[2]);
         $canvases[$index]["width"] = intval($image_size[1]);
-                
+
         // "If the largest image's dimensions are less than 1200 pixels on either edge, then the canvas dimensions 
         // should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
         if($image_size[1] < 1200 || $image_size[2] < 1200)
@@ -1358,9 +1358,9 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
             $image_size[1] = $image_size[1] * 2;
             $image_size[2] = $image_size[2] * 2;
             }
-        
+
         $canvases[$index]["thumbnail"] = iiif_get_thumbnail($useimage["ref"]);
-        
+
         // Add image (only 1 per canvas currently supported)
         $canvases[$index]["images"] = array();
         $size_info = array(
@@ -1369,13 +1369,13 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         );
         $canvases[$index]["images"][] = iiif_get_image($identifier, $useimage["ref"], $index, $size_info);
         }
-    
+
     if($sequencekeys)
         {
         // keep the sequence identifiers as keys so a required canvas can be accessed by sequence id
         return $canvases;
         }
-    
+
     ksort($canvases);   
     $return=array();
     foreach($canvases as $canvas)
@@ -1398,7 +1398,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
 function iiif_get_thumbnail($resourceid)
     {
     global $rootimageurl;
-    
+
     $img_path = get_resource_path($resourceid,true,'thm',false);
     if(!file_exists($img_path))
         {
@@ -1416,11 +1416,11 @@ function iiif_get_thumbnail($resourceid)
         {
         return false;
         }
-            
+
     $thumbnail = array();
     $thumbnail["@id"] = $rootimageurl . $resourceid . "/full/thm/0/default.jpg";
     $thumbnail["@type"] = "dctypes:Image";
-    
+
     // Get the size of the images
     $GLOBALS["use_error_exception"] = true;
     try
@@ -1438,16 +1438,16 @@ function iiif_get_thumbnail($resourceid)
         $thumbnail["width"] = 150;
         }
     unset($GLOBALS["use_error_exception"]);
-                 
+
     $thumbnail["format"] = "image/jpeg";
-    
+
     $thumbnail["service"] =array();
     $thumbnail["service"]["@context"] = "http://iiif.io/api/image/2/context.json";
     $thumbnail["service"]["@id"] = $rootimageurl . $resourceid;
     $thumbnail["service"]["profile"] = "http://iiif.io/api/image/2/level1.json";
     return $thumbnail;
     }
-    
+
 /**
 * Get the image for the specified identifier canvas and resource id
 * 
@@ -1489,13 +1489,13 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
         }
 
     $image_size = get_original_imagesize($resourceid, $img_path);
-            
+
     $images = array();
     $images["@context"] = "http://iiif.io/api/presentation/2/context.json";
     $images["@id"] = $rooturl . $identifier . "/annotation/" . $position;
     $images["@type"] = "oa:Annotation";
     $images["motivation"] = "sc:painting";
-    
+
     $images["resource"] = array();
     $images["resource"]["@id"] = $rootimageurl . $resourceid . "/full/max/0/default.jpg";
     $images["resource"]["@type"] = "dctypes:Image";

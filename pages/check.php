@@ -140,9 +140,9 @@ if ($success===false) {$result=$lang["status-fail"] . ": " . $homeanim_folder . 
 $cfb = check_filestore_browseability();
 ?>
 <tr>
-    <td colspan="2"><?php echo $lang["blockedbrowsingoffilestore"]; ?> (<a href="<?php echo $cfb['filestore_url']; ?>" target="_blank"><?php echo htmlspecialchars($cfb['filestore_url']); ?></a>)</td>
+    <td colspan="2"><?php echo $lang["blockedbrowsingoffilestore"]; ?> (<a href="<?php echo $cfb['filestore_url']; ?>" target="_blank"><?php echo escape($cfb['filestore_url']); ?></a>)</td>
     <td>
-        <b><?php echo htmlspecialchars($cfb['index_disabled'] ? $cfb['status'] : "{$cfb['status']}: {$cfb['info']}"); ?></b>
+        <b><?php echo escape($cfb['index_disabled'] ? $cfb['status'] : "{$cfb['status']}: {$cfb['info']}"); ?></b>
     </td>
 </tr><?php
 

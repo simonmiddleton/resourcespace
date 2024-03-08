@@ -68,7 +68,7 @@ foreach($valid_nodes as $node)
     // Show previously selected options on the status box
     if(!(isset($treeonly) && true == $treeonly))
         {
-        $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" . htmlspecialchars(i18n_get_translated($node['name'])) . "</span><br /></div>";
+        $status_box_elements .= "<div id=\"".$tree_id."_selected_".$node['ref']."\" class=\"" . $tree_id . "_option_status\"  ><span id=\"{$status_box_id}_option_{$node['ref']}\">" . escape(i18n_get_translated($node['name'])) . "</span><br /></div>";
         }
     }
 
@@ -208,7 +208,7 @@ echo $hidden_input_elements;
                             node_ref       : node.id,
                             field          : <?php echo $field['ref']; ?>,
                             selected_nodes : <?php echo json_encode(array_column($valid_nodes,"ref")); ?>,
-                            k : '<?php echo htmlspecialchars((string)$k); ?>'
+                            k : '<?php echo escape((string)$k); ?>'
                             };
                     }
             },
@@ -374,7 +374,7 @@ if(!$is_search)
             if(typeof(edit_tree_block_autosave) == 'undefined' || !edit_tree_block_autosave)
                 {
                 edit_tree_block_autosave = true;
-                loadingtimers.push(window.setTimeout("AutoSave('<?php echo htmlspecialchars($field['ref']); ?>');edit_tree_block_autosave = false;",500));
+                loadingtimers.push(window.setTimeout("AutoSave('<?php echo escape($field['ref']); ?>');edit_tree_block_autosave = false;",500));
                 }
             <?php
             }

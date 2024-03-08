@@ -116,8 +116,8 @@ foreach($recentactions as $notifyuser=>$user_actions)
 
 
             $actionfromuser = get_user($user_action["user"]);
-            $usernotification->append_text('<td>' . htmlspecialchars(isset($actionfromuser["fullname"]) ? $actionfromuser["fullname"] : $actionfromuser["username"]) . '</td>');
-            $usernotification->append_text('<td>' . htmlspecialchars(tidy_trim($user_action["description"],200)) . '</td>');
+            $usernotification->append_text('<td>' . escape(isset($actionfromuser["fullname"]) ? $actionfromuser["fullname"] : $actionfromuser["username"]) . '</td>');
+            $usernotification->append_text('<td>' . escape(tidy_trim($user_action["description"],200)) . '</td>');
             $usernotification->append_text('<td>');
             $langtype = 'actions_type_' . $user_action['type'];
             $usernotification->append_text('lang_' . $langtype);

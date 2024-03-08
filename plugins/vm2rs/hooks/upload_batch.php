@@ -35,6 +35,6 @@ function Hookvm2rsUpload_batchUpload_page_bottom()
 
     echo "<h1>" . $lang['vm2rs_thumb'] . "</h1>";
 
-    echo htmlspecialchars($thumb_path);
+    echo escape($thumb_path);
     }
  

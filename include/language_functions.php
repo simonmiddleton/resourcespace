@@ -96,13 +96,13 @@ function i18n_get_collection_name($mixedcollection, $index="name")
         # Check if it is a Smart Collection
         if (isset($mixedcollection['savedsearch']) && ($mixedcollection['savedsearch']!=null))
             {
-            return htmlspecialchars($lang['smartcollection'] . ": " . $name_untranslated);
+            return escape($lang['smartcollection'] . ": " . $name_untranslated);
             }
         }
 
     # Check if it is a Default Collection (n)
     $name_translated = preg_replace('/(^Default Collection)(|(\s\d+))$/', $lang["mycollection"] . '$2', $name_untranslated, -1, $translated);
-    if ($translated==1) {return htmlspecialchars($name_translated);}
+    if ($translated==1) {return escape($name_translated);}
 
     # Check if it is a Upload YYMMDDHHMMSS
     $upload_date = preg_replace('/(^Upload)\s(\d{12})$/', '$2', $name_untranslated, -1, $translated);
@@ -130,17 +130,17 @@ function i18n_get_collection_name($mixedcollection, $index="name")
         $minute = substr($upload_date, 8, 2);
         $second = substr($upload_date, 10, 2);
         $date = nicedate("$year-$month-$day $hour:$minute:$second", true);
-        return htmlspecialchars($lang['upload'] . ' ' . $date);
+        return escape($lang['upload'] . ' ' . $date);
         }
 
     # Check if it is a Research Request
     if(substr($name_untranslated, 0, 9) == "Research:")
         {
-        return htmlspecialchars("{$lang["research"]}: " . i18n_get_translated(substr($name_untranslated,9)));
+        return escape("{$lang["research"]}: " . i18n_get_translated(substr($name_untranslated,9)));
         }
 
     # Ordinary collection - translate with i18n_get_translated
-    return htmlspecialchars(i18n_get_translated($name_untranslated));
+    return escape(i18n_get_translated($name_untranslated));
     }
 
 /**

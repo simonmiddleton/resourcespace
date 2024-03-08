@@ -29,7 +29,7 @@ include "../../include/header.php";
 
 <div class="BasicsBox"> 
   <h2>&nbsp;</h2>
-  <h1><?php echo htmlspecialchars($lang["manageresearchrequests"])?></h1>
+  <h1><?php echo escape($lang["manageresearchrequests"])?></h1>
   <p><?php echo text("introtext");render_help_link('resourceadmin/user-research-requests');?></p>
  
 <?php 
@@ -48,13 +48,13 @@ $jumpcount=1;
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=ref&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["researchid"])?></a></td>
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=name&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["nameofproject"])?></a></td>
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=created&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["date"])?></a></td>
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=status&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["status"])?></a></td>
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=assigned_to&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["assignedto"])?></a></td>
-<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=collection&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($lang["collectionid"])?></a></td>
-<td><div class="ListTools"><?php echo htmlspecialchars($lang["tools"])?></div></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=ref&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["researchid"])?></a></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=name&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["nameofproject"])?></a></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=created&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["date"])?></a></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=status&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["status"])?></a></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=assigned_to&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["assignedto"])?></a></td>
+<td><a href="<?php echo $baseurl_short?>pages/team/team_research.php?offset=0&order_by=collection&sort=<?php echo $revsort?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["collectionid"])?></a></td>
+<td><div class="ListTools"><?php echo escape($lang["tools"])?></div></td>
 </tr>
 
 <?php
@@ -64,12 +64,12 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
     ?>
     <tr>
     <td><?php echo $requests[$n]["ref"]?></td>
-    <td><div class="ListTitle"><a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars(i18n_get_translated($requests[$n]["name"]));?></a>&nbsp;</div></td>
+    <td><div class="ListTitle"><a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape(i18n_get_translated($requests[$n]["name"]));?></a>&nbsp;</div></td>
     <td><?php echo nicedate($requests[$n]["created"],false,true)?></td>
-    <td><?php echo htmlspecialchars($statusname[$requests[$n]["status"]])?></td>
-    <td><?php echo (strlen((string) $requests[$n]["assigned_username"])==0) ? "-" : htmlspecialchars($requests[$n]["assigned_username"])?></td>
-    <td><?php echo (strlen((string) $requests[$n]["collection"])==0) ? "-" : htmlspecialchars($requests[$n]["collection"])?></td>
-    <td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-file-signature"></i>&nbsp' . htmlspecialchars($lang["editresearch"])?></a>&nbsp;&nbsp;<a href="<?php echo $baseurl_short?>pages/collections.php?research=<?php echo $requests[$n]["ref"]?>" onClick="return CollectionDivLoad(this);"><?php echo '<i class="fas fa-shopping-bag"></i>&nbsp' . htmlspecialchars($lang["editcollection"])?></a></div></td>
+    <td><?php echo escape($statusname[$requests[$n]["status"]])?></td>
+    <td><?php echo (strlen((string) $requests[$n]["assigned_username"])==0) ? "-" : escape($requests[$n]["assigned_username"])?></td>
+    <td><?php echo (strlen((string) $requests[$n]["collection"])==0) ? "-" : escape($requests[$n]["collection"])?></td>
+    <td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-file-signature"></i>&nbsp' . escape($lang["editresearch"])?></a>&nbsp;&nbsp;<a href="<?php echo $baseurl_short?>pages/collections.php?research=<?php echo $requests[$n]["ref"]?>" onClick="return CollectionDivLoad(this);"><?php echo '<i class="fas fa-shopping-bag"></i>&nbsp' . escape($lang["editcollection"])?></a></div></td>
     </tr>
     <?php
     }
@@ -77,14 +77,14 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
 
 </table>
 </div>
-<div class="BottomInpageNav"><div class="InpageNavLeftBlock"><a href="<?php echo $baseurl_short?>pages/research_request.php?assign=true" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["createresearchforuser"])?></a></div><?php pager(false); ?></div>
+<div class="BottomInpageNav"><div class="InpageNavLeftBlock"><a href="<?php echo $baseurl_short?>pages/research_request.php?assign=true" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["createresearchforuser"])?></a></div><?php pager(false); ?></div>
 </div>
 
 
 <div class="BasicsBox">
     <form method="GET" action="<?php echo $baseurl_short?>pages/team/team_research.php">
         <div class="Question">
-            <label for="findpublic"><?php echo htmlspecialchars($lang["searchresearchrequests"])?></label>
+            <label for="findpublic"><?php echo escape($lang["searchresearchrequests"])?></label>
             <div class="tickset">
              <div class="Inline"><input type=text name="find" id="find" value="<?php echo $find?>" maxlength="100" class="shrtwidth" /></div>
              <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"])?>&nbsp;&nbsp;" /></div>

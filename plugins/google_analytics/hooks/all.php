@@ -54,6 +54,6 @@ function HookGoogle_analyticsAllExtra_meta()
         return;
         }
     ?>
-    <meta name="google-site-verification" content="<?php echo htmlspecialchars($google_analytics_verification_code); ?>" />
+    <meta name="google-site-verification" content="<?php echo escape($google_analytics_verification_code); ?>" />
     <?php
     }

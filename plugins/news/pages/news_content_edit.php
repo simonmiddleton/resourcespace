@@ -94,7 +94,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 
         <div class="Question">
             <label><?php echo $lang["news_body"]?></label>
-            <textarea name="body" class="stdwidth" rows="15" cols="50"><?php if (!$createnews) { echo htmlspecialchars($news[0]["body"]); } ?></textarea>
+            <textarea name="body" class="stdwidth" rows="15" cols="50"><?php if (!$createnews) { echo escape($news[0]["body"]); } ?></textarea>
         </div>
 
         <div class="clearerleft"> </div>

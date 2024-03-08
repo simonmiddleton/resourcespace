@@ -27,7 +27,7 @@ function HookAnnotateSearchIcons($collections = false)
         <div class="ResourcePanelInfo">
             <span class="IconUserRatingSpace" style="width:0px;"></span>
             <img alt="" src="<?php echo $baseurl?>/plugins/annotate/lib/jquery/images/asterisk_yellow.png" height="10"/>
-            <a href="<?php echo generateURL($baseurl . '/pages/view.php', ['annotate' => true, 'ref' => $result[$n]['ref'], 'k' => $k, 'search' => $search, 'offset' => $offset, 'order_by' => $order_by, 'sort' => $sort, 'archive' => $archive])?>" onClick="return CentralSpaceLoad(this,true);"><?php echo htmlspecialchars($result[$n]['annotation_count']==1 ? $lang["note-1"] : str_replace("%number", $result[$n]['annotation_count'], $lang["note-2"])); ?></a>
+            <a href="<?php echo generateURL($baseurl . '/pages/view.php', ['annotate' => true, 'ref' => $result[$n]['ref'], 'k' => $k, 'search' => $search, 'offset' => $offset, 'order_by' => $order_by, 'sort' => $sort, 'archive' => $archive])?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($result[$n]['annotation_count']==1 ? $lang["note-1"] : str_replace("%number", $result[$n]['annotation_count'], $lang["note-2"])); ?></a>
         </div>
         <?php 
         }

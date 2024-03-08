@@ -108,7 +108,7 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
                     foreach($fc_categories as $header)
                         {
                         ?>
-                        <option value="<?php echo generateURL($url, array("parent" => $header["ref"])); ?>"><?php echo htmlspecialchars(i18n_get_translated($header["name"])); ?></option>
+                        <option value="<?php echo generateURL($url, array("parent" => $header["ref"])); ?>"><?php echo escape(i18n_get_translated($header["name"])); ?></option>
                         <?php
                         }
                     ?>
@@ -142,8 +142,8 @@ function tile_config_custom($tile,$tile_id,$tile_width,$tile_height)
     global $lang;
     ?>
     <span class='search-icon'></span>
-    <h2> <?php echo htmlspecialchars(i18n_get_translated($tile["title"])); ?></h2>
-    <p><?php echo htmlspecialchars(i18n_get_translated($tile["txt"])); ?></p>
+    <h2> <?php echo escape(i18n_get_translated($tile["title"])); ?></h2>
+    <p><?php echo escape(i18n_get_translated($tile["txt"])); ?></p>
     <?php
     }
 function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
@@ -179,7 +179,7 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
         $tile_element_id = isset($usertile) ? "user_tile{$usertile['ref']}" : "tile{$tile['ref']}";
         ?>
         <style>
-        #<?php echo htmlspecialchars($tile_element_id); ?>
+        #<?php echo escape($tile_element_id); ?>
             {
             display:none;
             }
@@ -194,19 +194,19 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
     if(!empty($tile['title']))
         {
         ?>
-        <h2 class="title"><?php echo htmlspecialchars(i18n_get_translated($tile['title'])); ?></h2>
+        <h2 class="title"><?php echo escape(i18n_get_translated($tile['title'])); ?></h2>
         <?php
         }
     elseif(!empty($tile['txt']) && isset($lang[strtolower($tile['txt'])]))
         {
         ?>
-        <h2 class="title notitle"><?php echo htmlspecialchars($lang[strtolower($tile['txt'])]); ?></h2>
+        <h2 class="title notitle"><?php echo escape($lang[strtolower($tile['txt'])]); ?></h2>
         <?php
         }
     elseif(!empty($tile['txt']) && !isset($lang[strtolower($tile['txt'])]))
         {
         ?>
-        <h2 class="title notitle"><?php echo htmlspecialchars($tile['txt']); ?></h2>
+        <h2 class="title notitle"><?php echo escape($tile['txt']); ?></h2>
         <?php
         }
         
@@ -215,13 +215,13 @@ function tile_config_pending($tile,$tile_id,$tile_width,$tile_height)
         if(isset($lang[strtolower($tile['txt'])]))
             {
         ?>
-        <p><?php echo htmlspecialchars($lang[strtolower($tile['txt'])]); ?></p>
+        <p><?php echo escape($lang[strtolower($tile['txt'])]); ?></p>
         <?php
             }
         else
             {
             ?>
-        <p><?php echo htmlspecialchars(i18n_get_translated($tile['txt'])); ?></p>
+        <p><?php echo escape(i18n_get_translated($tile['txt'])); ?></p>
             <?php
             }
         }
@@ -242,8 +242,8 @@ function tile_freetext($tile,$tile_id,$tile_width,$tile_height)
     global $lang;
     ?>
     <span class='help-icon'></span>
-    <h2> <?php echo htmlspecialchars(i18n_get_translated($tile["title"])); ?></h2>
-    <p><?php echo htmlspecialchars(i18n_get_translated($tile["txt"])); ?></p>
+    <h2> <?php echo escape(i18n_get_translated($tile["title"])); ?></h2>
+    <p><?php echo escape(i18n_get_translated($tile["txt"])); ?></p>
     <?php
     generate_dash_tile_toolbar($tile,$tile_id);
     }
@@ -269,14 +269,14 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
         { ?>
         <h2>
         <span class='fa fa-<?php echo $icon ?>'></span>
-        <?php echo htmlspecialchars(i18n_get_translated($tile["title"]));?>
+        <?php echo escape(i18n_get_translated($tile["title"]));?>
         </h2>
         <?php
         }
     elseif(!empty($tile["txt"]))
         { ?>
         <h2>
-        <?php echo htmlspecialchars(i18n_get_translated($tile["txt"]));?>
+        <?php echo escape(i18n_get_translated($tile["txt"]));?>
         </h2>
         <?php
         }
@@ -284,7 +284,7 @@ function tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_im
     if(!empty($tile["title"]) && !empty($tile["txt"]))
         { ?>
         <p>
-        <?php echo htmlspecialchars(i18n_get_translated($tile["txt"]));?>
+        <?php echo escape(i18n_get_translated($tile["txt"]));?>
         </p>
         <?php
         }
@@ -311,7 +311,7 @@ function tile_search_multi_or_blank($tile,$tile_id,$tile_width,$tile_height)
         { ?>
         <h2>
         <span class='fa fa-<?php echo $icon ?>'></span>
-        <?php echo htmlspecialchars(i18n_get_translated($tile["title"]));?>
+        <?php echo escape(i18n_get_translated($tile["title"]));?>
         </h2>
         <?php
         }
@@ -319,7 +319,7 @@ function tile_search_multi_or_blank($tile,$tile_id,$tile_width,$tile_height)
         { ?>
         <h2>
         <span class='fa fa-<?php echo $icon ?>'></span>
-        <?php echo htmlspecialchars(i18n_get_translated($tile["txt"]));?>
+        <?php echo escape(i18n_get_translated($tile["txt"]));?>
         </h2>
         <?php
         }
@@ -327,7 +327,7 @@ function tile_search_multi_or_blank($tile,$tile_id,$tile_width,$tile_height)
     if(!empty($tile["title"]) && !empty($tile["txt"]))
         { ?>
         <p>
-        <?php echo htmlspecialchars(i18n_get_translated($tile["txt"]));?>
+        <?php echo escape(i18n_get_translated($tile["txt"]));?>
         </p>
         <?php
         }
@@ -429,11 +429,11 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
         <?php
         if('' != $tile['title'])
             {
-            echo htmlspecialchars(i18n_get_translated($tile['title']));
+            echo escape(i18n_get_translated($tile['title']));
             }
         elseif('' != $tile['txt'])
             {
-            echo htmlspecialchars(i18n_get_translated($tile['txt']));
+            echo escape(i18n_get_translated($tile['txt']));
             }
         ?>
     </h2>
@@ -441,7 +441,7 @@ function tile_featured_collection_thumbs($tile, $tile_id, $tile_width, $tile_hei
     if('' != $tile['title'] && '' != $tile['txt'])
         { 
         ?>
-        <p><?php echo htmlspecialchars(i18n_get_translated($tile['txt'])); ?></p>
+        <p><?php echo escape(i18n_get_translated($tile['txt'])); ?></p>
         <?php
         }
 
@@ -503,11 +503,11 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
         <?php
         if('' != $tile['title'])
             {
-            echo htmlspecialchars(i18n_get_translated($tile['title']));
+            echo escape(i18n_get_translated($tile['title']));
             }
         elseif('' != $tile['txt'])
             {
-            echo htmlspecialchars(i18n_get_translated($tile['txt']));
+            echo escape(i18n_get_translated($tile['txt']));
             }
         ?>
     </h2>
@@ -515,7 +515,7 @@ function tile_featured_collection_multi($tile, $tile_id, $tile_width,$tile_heigh
     if('' != $tile['title'] && '' != $tile['txt'])
         { 
         ?>
-        <p><?php echo htmlspecialchars(i18n_get_translated($tile['txt'])); ?></p>
+        <p><?php echo escape(i18n_get_translated($tile['txt'])); ?></p>
         <?php
         }
 
@@ -532,11 +532,11 @@ function tile_featured_collection_blank($tile, $tile_id)
         <?php
         if('' != $tile['title'])
             {
-            echo htmlspecialchars(i18n_get_translated($tile['title']));
+            echo escape(i18n_get_translated($tile['title']));
             }
         elseif('' != $tile['txt'])
             {
-            echo htmlspecialchars(i18n_get_translated($tile['txt']));
+            echo escape(i18n_get_translated($tile['txt']));
             }
         ?>
     </h2>
@@ -544,7 +544,7 @@ function tile_featured_collection_blank($tile, $tile_id)
     if('' != $tile['title'] && '' != $tile['txt'])
         { 
         ?>
-        <p><?php echo htmlspecialchars(i18n_get_translated($tile['txt'])); ?></p>
+        <p><?php echo escape(i18n_get_translated($tile['txt'])); ?></p>
         <?php
         }
 

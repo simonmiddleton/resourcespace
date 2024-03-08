@@ -63,13 +63,13 @@ $tms_modules_mappings_html = "
 
 foreach($tms_link_modules_mappings as $tms_link_module_index => $tms_link_module)
     {
-    $tms_link_module_name = htmlspecialchars($tms_link_module['module_name']??"");
-    $tms_link_tms_uid_field = htmlspecialchars($tms_link_module['tms_uid_field']??"");
+    $tms_link_module_name = escape($tms_link_module['module_name']??"");
+    $tms_link_tms_uid_field = escape($tms_link_module['tms_uid_field']??"");
 
     $tms_link_rs_uid_field = get_resource_type_field($tms_link_module['rs_uid_field']??"");
     if(false !== $tms_link_rs_uid_field)
         {
-        $tms_link_rs_uid_field = htmlspecialchars((string) $tms_link_rs_uid_field['title']);
+        $tms_link_rs_uid_field = escape((string) $tms_link_rs_uid_field['title']);
         }
 
     $tms_link_applicable_resource_types = '';
@@ -77,7 +77,7 @@ foreach($tms_link_modules_mappings as $tms_link_module_index => $tms_link_module
         {
         $tms_link_applicable_resource_types = get_resource_types(implode(',', $tms_link_module['applicable_resource_types']));
         $tms_link_applicable_resource_types = array_column($tms_link_applicable_resource_types, 'name');
-        $tms_link_applicable_resource_types = htmlspecialchars(implode(', ', $tms_link_applicable_resource_types));
+        $tms_link_applicable_resource_types = escape(implode(', ', $tms_link_applicable_resource_types));
         }
 
     $tms_modules_mappings_html .= "
@@ -179,7 +179,7 @@ if(trim($tms_link_log_directory)!="" && (getval("save","")!="" || getval("submit
         @mkdir($tms_link_log_directory, 0755, true);
         if (!is_dir($tms_link_log_directory))
             {
-            $errortext = 'Invalid log directory: ' . htmlspecialchars($tms_link_log_directory);
+            $errortext = 'Invalid log directory: ' . escape($tms_link_log_directory);
             }
         }
     else
@@ -188,7 +188,7 @@ if(trim($tms_link_log_directory)!="" && (getval("save","")!="" || getval("submit
         $logfile=@fopen($logfilepath,'a');
         if(!file_exists($logfilepath))
             {
-            $errortext = 'Unable to create log file in directory: ' . htmlspecialchars($tms_link_log_directory);            
+            $errortext = 'Unable to create log file in directory: ' . escape($tms_link_log_directory);            
             }
         else
             {

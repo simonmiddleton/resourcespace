@@ -18,7 +18,7 @@ function HookVr_viewAllAdditionalheaderjs()
         }
     else
         {?>
-        <script type="text/javascript" src="<?php echo htmlspecialchars($vr_view_js_url) ?>"></script>
+        <script type="text/javascript" src="<?php echo escape($vr_view_js_url) ?>"></script>
         <?php
         }
     }

@@ -505,7 +505,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                 }
             else
                 {
-                $link = $baseurl."/".htmlspecialchars($tile["link"]);
+                $link = $baseurl."/".escape($tile["link"]);
                 $newtab=false;
                 }
             ?>
@@ -520,7 +520,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                     {
                     # Only pre-render the title if using a "standard" tile and therefore we know the H2 will be in the target data.
                     ?>
-                    <h2 class="title"><?php echo htmlspecialchars($tile["title"]);?></h2>
+                    <h2 class="title"><?php echo escape($tile["title"]);?></h2>
 <?php 
                     }
                     ?>
@@ -689,7 +689,7 @@ function get_managed_dash()
                 }
             else
                 {
-                $link   = $baseurl . '/' . htmlspecialchars(parse_dashtile_link($tile['link']));
+                $link   = $baseurl . '/' . escape(parse_dashtile_link($tile['link']));
                 $newtab = false;
                 }
                 ?>
@@ -708,7 +708,7 @@ function get_managed_dash()
                     {
                     # Only pre-render the title if using a "standard" tile and therefore we know the H2 will be in the target data.
                     ?>
-                    <h2 class="title"><?php echo htmlspecialchars($tile["title"]);?></h2>
+                    <h2 class="title"><?php echo escape($tile["title"]);?></h2>
 <?php 
                     } ?>
                 <p>Loading...</p>
@@ -1197,12 +1197,12 @@ function get_user_dash($user)
             # Check link for external or internal
             if(mb_strtolower(substr($tile["link"],0,4))=="http")
                 {
-                $link = htmlspecialchars($tile["link"]);
+                $link = escape($tile["link"]);
                 $newtab = true;
                 }
             else
                 {
-                $link = $baseurl."/".htmlspecialchars($tile["link"]);
+                $link = $baseurl."/".escape($tile["link"]);
                 $newtab=false;
                 }
             ?>
@@ -1433,9 +1433,9 @@ function build_dash_tile_list($dtiles_available)
               <td>
                   <?php 
                   if(isset($buildstring["tltype"]) && $buildstring["tltype"]=="conf" && $buildstring["tlstyle"]!="custm" && $buildstring["tlstyle"]!="pend" && isset($lang[$tile["title"]]))
-                      {echo htmlspecialchars(i18n_get_translated($lang[$tile["title"]]));}
+                      {echo escape(i18n_get_translated($lang[$tile["title"]]));}
                   else 
-                      {echo htmlspecialchars(i18n_get_translated($tile["title"]));}
+                      {echo escape(i18n_get_translated($tile["title"]));}
                   ?>
               </td>
               <td>
@@ -1446,21 +1446,21 @@ function build_dash_tile_list($dtiles_available)
                       {
                     if(isset($lang[strtolower($tile['txt'])]))
                         {
-                        $tile['txt'] = htmlspecialchars($lang[strtolower($tile["txt"])]);
+                        $tile['txt'] = escape($lang[strtolower($tile["txt"])]);
                         }
                     else
                         {
-                        $tile['txt'] = htmlspecialchars($tile['txt']);
+                        $tile['txt'] = escape($tile['txt']);
                         }
                     }
                   
                   if(strlen($tile["txt"])>75)
                       {
-                      echo htmlspecialchars(substr(i18n_get_translated($tile["txt"]),0,72)."...");
+                      echo escape(substr(i18n_get_translated($tile["txt"]),0,72)."...");
                       }
                   else
                       {
-                      echo htmlspecialchars(i18n_get_translated($tile["txt"]));
+                      echo escape(i18n_get_translated($tile["txt"]));
                       }
                   ?>
               </td>
@@ -1469,7 +1469,7 @@ function build_dash_tile_list($dtiles_available)
                       href="<?php echo (mb_strtolower(substr($tile["link"],0,4))=="http")? escape($tile["link"]): $baseurl."/".escape($tile["link"]);?>"
                       target="_blank"
                   >
-                      <?php echo htmlspecialchars($lang["dashtilevisitlink"]); ?>
+                      <?php echo escape($lang["dashtilevisitlink"]); ?>
                   </a>
               </td>
               <td><?php echo $tile["resource_count"]? $lang["yes"]: $lang["no"];?></td>
@@ -1551,7 +1551,7 @@ function render_dash_tile_colour_chooser($tile_style, $tile_colour)
         <?php
         }
         ?>
-        <label><?php echo htmlspecialchars($lang['colour']); ?></label>
+        <label><?php echo escape($lang['colour']); ?></label>
    
         <script src="<?php echo $baseurl; ?>/lib/spectrum/spectrum.js"></script>
         <link rel="stylesheet" href="<?php echo $baseurl; ?>/lib/spectrum/spectrum.css" />
@@ -1709,8 +1709,8 @@ function render_upgrade_available_tile($user)
        class="HomePanel DashTile"
        id="upgrade_available_tile">
         <div id="contents_user_tile_upgrade_available" class="HomePanelIN HomePanelDynamicDash">
-            <h2><?php echo htmlspecialchars($GLOBALS['lang']['upgrade_available_title']); ?></h2>
-            <p><?php echo htmlspecialchars($GLOBALS['lang']['upgrade_available_text']); ?></p>
+            <h2><?php echo escape($GLOBALS['lang']['upgrade_available_title']); ?></h2>
+            <p><?php echo escape($GLOBALS['lang']['upgrade_available_text']); ?></p>
         </div>
     </a>
     <?php
@@ -1985,7 +1985,7 @@ function tltype_srch_generate_js_for_background_and_count(array $tile, string $t
 
     ?>
     <!-- Resource counter -->
-    <p class="no_resources DisplayNone"><?php echo htmlspecialchars($GLOBALS['lang']['noresourcesfound']); ?></p>
+    <p class="no_resources DisplayNone"><?php echo escape($GLOBALS['lang']['noresourcesfound']); ?></p>
     <p class="tile_corner_box DisplayNone">
         <span aria-hidden="true" class="fa fa-clone"></span>
     </p>

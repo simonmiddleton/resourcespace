@@ -15,19 +15,19 @@ if (count($collections)!=0){
         <div class="RecordBox">
         <div class="RecordPanel">
         <div id="AssociatedCollections"> 
-        <div class="Title"><?php echo htmlspecialchars($lang['associatedcollections'])?></div>
+        <div class="Title"><?php echo escape($lang['associatedcollections'])?></div>
 
 <div class="Listview nopadding" >
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo htmlspecialchars($lang["collectionname"])?></td>
-<td><?php echo htmlspecialchars($lang["owner"])?></td>
-<td><?php echo htmlspecialchars($lang["id"])?></td>
-<td><?php echo htmlspecialchars($lang["created"])?></td>
-<td><?php echo htmlspecialchars($lang["itemstitle"])?></td>
-<td><?php echo htmlspecialchars($lang["access"])?></td>
+<td><?php echo escape($lang["collectionname"])?></td>
+<td><?php echo escape($lang["owner"])?></td>
+<td><?php echo escape($lang["id"])?></td>
+<td><?php echo escape($lang["created"])?></td>
+<td><?php echo escape($lang["itemstitle"])?></td>
+<td><?php echo escape($lang["access"])?></td>
 <?php hook("beforecollectiontoolscolumnheader");?>
-<td><div class="ListTools"><?php echo htmlspecialchars($lang["actions"])?></div></td>
+<td><div class="ListTools"><?php echo escape($lang["actions"])?></div></td>
 </tr>
 <?php
 
@@ -36,7 +36,7 @@ for ($n=0;$n<count($collections);$n++)
     ?><tr <?php hook("collectionlistrowstyle");?>>
     <td><div class="ListTitle">
     <a onClick="return CentralSpaceLoad(this,true);" <?php if($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>style="font-style:italic;"<?php } ?> href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>"><?php echo i18n_get_collection_name($collections[$n])?></a></div></td>
-    <td><?php echo htmlspecialchars($collections[$n]["fullname"])?></td>
+    <td><?php echo escape($collections[$n]["fullname"])?></td>
     <td><?php echo $collections[$n]["ref"]?></td>
     <td><?php echo nicedate($collections[$n]["created"],true)?></td>
     <td><?php echo $collections[$n]["count"]?></td>
@@ -44,16 +44,16 @@ for ($n=0;$n<count($collections);$n++)
     switch($collections[$n]["type"])
         {
         case COLLECTION_TYPE_PUBLIC:
-            echo htmlspecialchars($lang["public"]);
+            echo escape($lang["public"]);
             break;
 
         case COLLECTION_TYPE_FEATURED:
-            echo htmlspecialchars($lang["theme"]);
+            echo escape($lang["theme"]);
             break;
 
         case COLLECTION_TYPE_STANDARD:
         default:
-            echo htmlspecialchars($lang["private"]);
+            echo escape($lang["private"]);
             break;
         }
     ?></td>

@@ -162,7 +162,7 @@ if (
 
 if(isset($resource['field'.$view_title_field]))
     {
-    echo "<h2>" . htmlspecialchars(i18n_get_translated($resource['field'.$view_title_field])) . "</h2><br/>";
+    echo "<h2>" . escape(i18n_get_translated($resource['field'.$view_title_field])) . "</h2><br/>";
     }
     ?>
 
@@ -196,8 +196,8 @@ for ($n=0;$n<count($files);$n++)
     <!--List Item-->
     <tr <?php if($files[$n]["ref"]==$alt){echo "class='Highlight' ";} ?> id='altlistrow<?php echo $files[$n]['ref']?>'>
     <td><input type="checkbox" class="checkbox" name="altcheckbox[]" value="<?php echo $files[$n]["ref"];?>" /></td>
-    <td><?php echo htmlspecialchars($files[$n]["name"])?></td>  
-    <td><?php echo htmlspecialchars($files[$n]["description"])?>&nbsp;</td>
+    <td><?php echo escape($files[$n]["name"])?></td>  
+    <td><?php echo escape($files[$n]["description"])?>&nbsp;</td>
     <?php hook('alternativefileslist2', '', array($ref, $files[$n])); ?>
     <td><?php echo escape($files[$n]["file_extension"] == "" ? $lang["notuploaded"] : str_replace_formatted_placeholder("%extension", $files[$n]["file_extension"], $lang["cell-fileoftype"])); ?></td> 
     <td><?php echo formatfilesize($files[$n]["file_size"])?></td>   
@@ -257,8 +257,8 @@ for ($n=0;$n<count($files);$n++)
 
 <form method=post id="previewform" name="previewform" action="<?php echo generateurl($baseurl . "/pages/upload_preview.php",$urlparams) ; ?>">
     <?php generateFormToken("previewform"); ?>
-    <input type=hidden name="ref", id="upload_ref" value="<?php echo htmlspecialchars($ref); ?>"/>
-    <input type=hidden name="previewref", id="upload_pre_ref" value="<?php echo htmlspecialchars($ref); ?>"/>
+    <input type=hidden name="ref", id="upload_ref" value="<?php echo escape($ref); ?>"/>
+    <input type=hidden name="previewref", id="upload_pre_ref" value="<?php echo escape($ref); ?>"/>
     <input type=hidden name="previewalt", id="upload_pre_alt" value=""/>
 </form>
 </div> <!-- end of basicbox -->

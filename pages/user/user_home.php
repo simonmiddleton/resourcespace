@@ -8,7 +8,7 @@ include "../../include/header.php";
 $introtext=text("introtext");
 ?>
 <div class="BasicsBox"> 
-  <h1><?php echo htmlspecialchars(($userfullname=="" ? $username : $userfullname)) ?></h1>
+  <h1><?php echo escape(($userfullname=="" ? $username : $userfullname)) ?></h1>
   
   <?php if (trim($introtext)!="") { ?>
   <p><?php echo $introtext ?></p>

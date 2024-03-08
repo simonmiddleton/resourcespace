@@ -105,7 +105,7 @@ else
     <?php
     foreach($geo_leaflet_sources as $leaflet_source)
         {
-        echo "{ groupName: \"" .  htmlspecialchars(i18n_get_translated($leaflet_source["name"])) . "\",
+        echo "{ groupName: \"" .  escape(i18n_get_translated($leaflet_source["name"])) . "\",
             expanded: true,
             layers: {\n";
         foreach($leaflet_source["variants"] as $variant=>$varopts)

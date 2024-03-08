@@ -85,7 +85,7 @@ if ($collection_request_min_access == 0)
         {
         ?>
         <script>
-        CentralSpaceLoad("<?php echo $baseurl_short ?>pages/done.php?text=resource_request&k=<?php echo htmlspecialchars($k); ?>",true);
+        CentralSpaceLoad("<?php echo $baseurl_short ?>pages/done.php?text=resource_request&k=<?php echo escape($k); ?>",true);
         </script>
         <?php
         }
@@ -116,7 +116,7 @@ if ($collection_request_min_access == 0)
     
     <div class="Question">
     <label><?php echo $lang["collectionname"]?></label>
-    <div class="Fixed"><?php echo htmlspecialchars(i18n_get_collection_name($cinfo)); ?></div>
+    <div class="Fixed"><?php echo escape(i18n_get_collection_name($cinfo)); ?></div>
     <div class="clearerleft"> </div>
     </div>
 
@@ -149,7 +149,7 @@ if ($collection_request_min_access == 0)
     
     <div class="Question">
     <label for="requestreason"><?php echo $lang["requestreason"]?> <?php if ($resource_request_reason_required) { ?><sup>*</sup><?php } ?></label>
-    <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo htmlspecialchars(getval("request","")) ?></textarea>
+    <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo escape(getval("request","")) ?></textarea>
     <div class="clearerleft"> </div>
     </div>
 
@@ -176,7 +176,7 @@ if (isset($custom_request_fields))
             {
             ?>
             <div class="Question">
-            <label for="custom<?php echo $n?>"><?php echo htmlspecialchars(i18n_get_translated($custom[$n]))?>
+            <label for="custom<?php echo $n?>"><?php echo escape(i18n_get_translated($custom[$n]))?>
             <?php if (in_array($custom[$n],$required)) { ?><sup>*</sup><?php } ?>
             </label>
             
@@ -187,7 +187,7 @@ if (isset($custom_request_fields))
 
             <?php if ($type==2) { # Large text box 
             ?>
-            <textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
+            <textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo escape(getval("custom" . $n,""))?></textarea>
 <?php } ?>
 
             <?php if ($type==3) { # Drop down box
@@ -197,7 +197,7 @@ if (isset($custom_request_fields))
                 {
                 $val=i18n_get_translated($option);
                 ?>
-                <option <?php if (getval("custom" . $n,"")==$val) { ?>selected<?php } ?>><?php echo htmlspecialchars(i18n_get_translated($option));?></option>
+                <option <?php if (getval("custom" . $n,"")==$val) { ?>selected<?php } ?>><?php echo escape(i18n_get_translated($option));?></option>
                 <?php
                 }
             ?>

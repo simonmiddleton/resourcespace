@@ -87,12 +87,12 @@ if (!empty($errors))
     render_top_page_error_style(implode('<br> - ', $errors));
     }
 ?>
-<h2><?php echo htmlspecialchars($lang['museumplus_object_details_title']); ?></h2>
+<h2><?php echo escape($lang['museumplus_object_details_title']); ?></h2>
 <p><?php printf(
     'Resource #%d associated with module "%s" using UID "%s" found M+ record with technical ID (__id) #%d',
     $ref,
-    htmlspecialchars($ramc[$ref]['module_name']),
-    htmlspecialchars($ramc[$ref]['field_values'][$ramc[$ref]['rs_uid_field']]),
+    escape($ramc[$ref]['module_name']),
+    escape($ramc[$ref]['field_values'][$ramc[$ref]['rs_uid_field']]),
     $valid_association[$ref][MPLUS_FIELD_ID] ?? 0
 ); ?></p>
 <div id="MuseumPlusDetailContainer" class='Listview'>
@@ -102,8 +102,8 @@ if (!empty($errors))
         {
         ?>
         <tr> 
-        <td><strong><?php echo htmlspecialchars($key); ?></strong></td>
-        <td><?php echo htmlspecialchars($value); ?></td> 
+        <td><strong><?php echo escape($key); ?></strong></td>
+        <td><?php echo escape($value); ?></td> 
         </tr>
         <?php
         }

@@ -21,7 +21,7 @@ function HookEmuEditEditbeforesectionhead()
     global $lang, $baseurl, $ref, $resource, $emu_irn_field, $emu_confirm_upload, $emu_resource_types;
     if(0 > $ref && in_array($resource['resource_type'], $emu_resource_types))
         {
-        $value = htmlspecialchars(get_data_by_field($ref,$emu_irn_field));
+        $value = escape(get_data_by_field($ref,$emu_irn_field));
         ?>
         <div id="question_emu" class="Question">
             <label for="question_emu"><?php echo $lang['emu_upload_emu_field_label']; ?></label>

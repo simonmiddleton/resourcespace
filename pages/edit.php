@@ -362,7 +362,7 @@ else
 $resource=get_resource_data($ref);
 if ($resource === false)
     {
-    exit(htmlspecialchars($lang["resourcenotfound"]));
+    exit(escape($lang["resourcenotfound"]));
     }
 debug(sprintf('Fetched resource data for #%s', $resource['ref']));
 
@@ -920,8 +920,8 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
         $form_lastedit = getval("last_resource_edit",date("Y-m-d H:i:s"));
         if($last_resource_edit !== false && ($form_lastedit < $last_resource_edit["time"] && getval("ignoreconflict","") == ""))
             {
-            $cfmsg = htmlspecialchars(str_replace("%%USERNAME%%", $last_resource_edit["user"] , $lang["save-conflict-multiple"]));
-            $cfmsg .= "<br /><br /><a href='" .$baseurl_short . "?r=" . $last_resource_edit["ref"] . "' target='_blank' onClick='return ModalLoad(this);'>" . htmlspecialchars($lang["action-view"]) . "</a>";
+            $cfmsg = escape(str_replace("%%USERNAME%%", $last_resource_edit["user"] , $lang["save-conflict-multiple"]));
+            $cfmsg .= "<br /><br /><a href='" .$baseurl_short . "?r=" . $last_resource_edit["ref"] . "' target='_blank' onClick='return ModalLoad(this);'>" . escape($lang["action-view"]) . "</a>";
             ?>
             <script>
             jQuery("#modal_dialog").html("<?php echo $cfmsg; ?>");
@@ -1320,7 +1320,7 @@ else
         <input type="hidden" name="last_resource_edit" value="<?php echo $last_resource_edit ? $last_resource_edit["time"] :  0 ; ?>">
         <input type="hidden" id="ignoreconflict" name="ignoreconflict" value="">
 
-        <h1 id="editmultipleresources"><?php echo htmlspecialchars($lang["editmultipleresources"])?></h1>
+        <h1 id="editmultipleresources"><?php echo escape($lang["editmultipleresources"])?></h1>
         <p style="padding-bottom:20px;"><?php $qty = count($items);
         echo ($qty==1 ? $lang["resources_selected-1"] : str_replace("%number", $qty, $lang["resources_selected-2"])) . ". ";
         # The script doesn't allow editing of empty collections, no need to handle that case here.
@@ -1335,13 +1335,13 @@ else
         else {$previous_page_modal = false;}
         if(!$modal)
             {?>
-            <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoresourceview"])?></a></p>
+            <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"])?></a></p>
             <?php
             }
         elseif ($previous_page_modal)
             {
             ?>
-            <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams); ?>" onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoresourceview"])?></a></p>
+            <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams); ?>" onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"])?></a></p>
             <?php
             }
         }
@@ -1353,9 +1353,9 @@ else
             if (!$multiple  && $ref>0  && !hook("dontshoweditnav")) { EditNav(); }
             
             if (!$upload_review_mode) { ?>
-            <h1 id="editresource"><?php echo htmlspecialchars($lang["action-editmetadata"]);render_help_link("user/editing-resources");?></h1>
+            <h1 id="editresource"><?php echo escape($lang["action-editmetadata"]);render_help_link("user/editing-resources");?></h1>
             <?php } else { ?>
-            <h1 id="editresource"><?php echo htmlspecialchars($lang["refinemetadata"]);render_help_link("user/editing-resources");?></h1>
+            <h1 id="editresource"><?php echo escape($lang["refinemetadata"]);render_help_link("user/editing-resources");?></h1>
             <?php } ?>
             
             </div><!-- end of RecordHeader -->
@@ -1365,7 +1365,7 @@ else
         if (!$upload_review_mode)
             { ?>
             <div class="Question" id="resource_ref_div" style="border-top:none;">
-            <label><?php echo htmlspecialchars($lang["resourceid"])?></label>
+            <label><?php echo escape($lang["resourceid"])?></label>
             <div class="Fixed"><?php echo urlencode($ref) ?></div>
             <div class="clearerleft"> </div>
             </div>
@@ -1377,9 +1377,9 @@ else
     if (!checkperm("F*") && !$resource_file_readonly && !$upload_review_mode)
         { ?>
         <div class="Question" id="question_imagecorrection">
-            <label><?php echo htmlspecialchars($lang["imagecorrection"])?><br/><?php echo htmlspecialchars($lang["previewthumbonly"])?></label>
+            <label><?php echo escape($lang["imagecorrection"])?><br/><?php echo escape($lang["previewthumbonly"])?></label>
             <select class="stdwidth" name="tweak" id="tweak" onchange="add_hidden_modal_input('mainform', <?php echo $modal ? "true" : "false"; ?>); <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('mainform'),true);">
-            <option value=""><?php echo htmlspecialchars($lang["select"])?></option>
+            <option value=""><?php echo escape($lang["select"])?></option>
             <?php if ($resource["has_image"]==1)
                 {
                 # On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.
@@ -1387,25 +1387,25 @@ else
                 if (!$image_rotate_reverse_options)
                     {
                     ?>
-                    <option value="rotateclock"><?php echo htmlspecialchars($lang["rotateclockwise"])?></option>
-                    <option value="rotateanti"><?php echo htmlspecialchars($lang["rotateanticlockwise"])?></option>
+                    <option value="rotateclock"><?php echo escape($lang["rotateclockwise"])?></option>
+                    <option value="rotateanti"><?php echo escape($lang["rotateanticlockwise"])?></option>
                     <?php
                     }
                 else
                     {
                     ?>
-                    <option value="rotateanti"><?php echo htmlspecialchars($lang["rotateclockwise"])?></option>
-                    <option value="rotateclock"><?php echo htmlspecialchars($lang["rotateanticlockwise"])?></option>
+                    <option value="rotateanti"><?php echo escape($lang["rotateclockwise"])?></option>
+                    <option value="rotateclock"><?php echo escape($lang["rotateanticlockwise"])?></option>
                     <?php
                     }?>
-                <option value="gammaplus"><?php echo htmlspecialchars($lang["increasegamma"])?></option>
-                <option value="gammaminus"><?php echo htmlspecialchars($lang["decreasegamma"])?></option>
-                <option value="restore"><?php echo htmlspecialchars($lang["recreatepreviews"])?></option>
+                <option value="gammaplus"><?php echo escape($lang["increasegamma"])?></option>
+                <option value="gammaminus"><?php echo escape($lang["decreasegamma"])?></option>
+                <option value="restore"><?php echo escape($lang["recreatepreviews"])?></option>
                 <?php
                 }
             else
                 {?>
-                <option value="restore"><?php echo htmlspecialchars($lang["retrypreviews"])?></option>
+                <option value="restore"><?php echo escape($lang["retrypreviews"])?></option>
                 <?php
                 } 
             hook("moretweakingopt"); ?>
@@ -1448,7 +1448,7 @@ hook("editbefresmetadata"); ?>
         {
         ?>
         <div class="Question <?php if($upload_review_mode && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
-            <label for="resourcetype"><?php echo htmlspecialchars($lang["resourcetype"]) . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
+            <label for="resourcetype"><?php echo escape($lang["resourcetype"]) . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
             if ($upload_review_mode)
                 {
                 renderLockButton('resource_type', $locked_fields);
@@ -1514,7 +1514,7 @@ hook("editbefresmetadata"); ?>
                         ?>selected<?php
                         }
                         ?>
-                ><?php echo htmlspecialchars($types[$n]["name"])?></option>
+                ><?php echo escape($types[$n]["name"])?></option>
                 <?php
                 }
 
@@ -1544,15 +1544,15 @@ hook("editbefresmetadata"); ?>
         {
         # Multiple method of changing resource type.
         ?>
-        <h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo htmlspecialchars($lang["resourcetype"]) ?></h2>
+        <h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo escape($lang["resourcetype"]) ?></h2>
         <div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="ResourceTypeSection<?php if ($ref==-1) echo "Upload"; ?>">
         <div class="Question">
             <input name="editresourcetype" id="editresourcetype" type="checkbox" value="yes" onClick="var q=document.getElementById('editresourcetype_question');if (this.checked) {q.style.display='block';alert('<?php echo escape($lang["editallresourcetypewarning"]) ?>');} else {q.style.display='none';}">
             &nbsp;
-            <label for="editresourcetype"><?php echo htmlspecialchars($lang["resourcetype"]) ?></label>
+            <label for="editresourcetype"><?php echo escape($lang["resourcetype"]) ?></label>
         </div>
         <div class="Question" style="display:none;" id="editresourcetype_question">
-            <label for="resourcetype"><?php echo htmlspecialchars($lang["resourcetype"])?></label>
+            <label for="resourcetype"><?php echo escape($lang["resourcetype"])?></label>
             <select name="resource_type" id="resourcetype" class="stdwidth">
                 <?php
                 $types = get_resource_types();
@@ -1563,7 +1563,7 @@ hook("editbefresmetadata"); ?>
                         continue;
                         }
                     ?>
-                    <option value="<?php echo $types[$n]["ref"]?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo htmlspecialchars($types[$n]["name"])?></option>
+                    <option value="<?php echo $types[$n]["ref"]?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo escape($types[$n]["name"])?></option>
                     <?php
                     }
                 ?>
@@ -1594,7 +1594,7 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
     $first_option_conditions = $metadatatemplate == 0;
     ?>
     <div class="Question <?php if($upload_review_mode && in_array("metadatatemplate",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('metadatatemplate',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_metadatatemplate">
-        <label for="metadatatemplate"><?php echo htmlspecialchars($lang['usemetadatatemplate']);
+        <label for="metadatatemplate"><?php echo escape($lang['usemetadatatemplate']);
         if ($upload_review_mode)
             {
             renderLockButton('metadatatemplate', $locked_fields);
@@ -1612,7 +1612,7 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
                 $template_selected = ' selected';
                 }
                 ?>
-            <option value="<?php echo (int)$template["ref"] ?>" <?php echo $template_selected; ?>><?php echo htmlspecialchars((string)$template["field{$metadata_template_title_field}"]); ?></option>
+            <option value="<?php echo (int)$template["ref"] ?>" <?php echo $template_selected; ?>><?php echo escape((string)$template["field{$metadata_template_title_field}"]); ?></option>
             <?php   
             }
             ?>
@@ -1654,7 +1654,7 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
 if($embedded_data_user_select && $ref<0 && !$multiple)
  {?>
 <div class="Question" id="question_exif">
- <label for="exif_option"><?php echo htmlspecialchars($lang["embedded_metadata"])?></label>
+ <label for="exif_option"><?php echo escape($lang["embedded_metadata"])?></label>
  <table id="" cellpadding="3" cellspacing="3" style="display: block;">                    
    <tbody>
      <tr>        
@@ -1662,7 +1662,7 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
          <input type="radio" id="exif_extract" name="exif_option" value="extract" onClick="jQuery('.ExifOptions').hide();" <?php if($metadata_read_default) echo "checked" ?>>
       </td>
       <td align="left" valign="middle">
-         <label class="customFieldLabel" for="exif_extract"><?php echo htmlspecialchars($lang["embedded_metadata_extract_option"]) ?></label>
+         <label class="customFieldLabel" for="exif_extract"><?php echo escape($lang["embedded_metadata_extract_option"]) ?></label>
       </td>
 
 
@@ -1670,7 +1670,7 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
          <input type="radio" id="no_exif" name="exif_option" value="yes" onClick="jQuery('.ExifOptions').hide();" <?php if(!$metadata_read_default) echo "checked" ?>>
       </td>
       <td align="left" valign="middle">
-         <label class="customFieldLabel" for="no_exif"><?php echo htmlspecialchars($lang["embedded_metadata_donot_extract_option"]) ?></label>
+         <label class="customFieldLabel" for="no_exif"><?php echo escape($lang["embedded_metadata_donot_extract_option"]) ?></label>
       </td>
 
 
@@ -1678,7 +1678,7 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
          <input type="radio" id="exif_append" name="exif_option" value="append" onClick="jQuery('.ExifOptions').hide();">
       </td>
       <td align="left" valign="middle">
-         <label class="customFieldLabel" for="exif_append"><?php echo htmlspecialchars($lang["embedded_metadata_append_option"]) ?></label>
+         <label class="customFieldLabel" for="exif_append"><?php echo escape($lang["embedded_metadata_append_option"]) ?></label>
       </td>
 
 
@@ -1686,14 +1686,14 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
          <input type="radio" id="exif_prepend" name="exif_option" value="prepend" onClick="jQuery('.ExifOptions').hide();">
       </td>
       <td align="left" valign="middle">
-         <label class="customFieldLabel" for="exif_prepend"><?php echo htmlspecialchars($lang["embedded_metadata_prepend_option"]) ?></label>
+         <label class="customFieldLabel" for="exif_prepend"><?php echo escape($lang["embedded_metadata_prepend_option"]) ?></label>
       </td>
 
       <td width="10" valign="middle">
          <input type="radio" id="exif_custom" name="exif_option" value="custom" onClick="jQuery('.ExifOptions').show();">
       </td>
       <td align="left" valign="middle">
-         <label class="customFieldLabel" for="exif_custom"><?php echo htmlspecialchars($lang["embedded_metadata_custom_option"]) ?></label>
+         <label class="customFieldLabel" for="exif_custom"><?php echo escape($lang["embedded_metadata_custom_option"]) ?></label>
       </td>
 
    </tr>
@@ -1839,7 +1839,7 @@ for ($n=0;$n<$fields_count;$n++)
 if ($display_any_fields && $enable_copy_data_from && !$upload_review_mode)
     { ?>
  <div class="Question" id="question_copyfrom">
-    <label for="copyfrom"><?php echo htmlspecialchars($lang["batchcopyfrom"])?></label>
+    <label for="copyfrom"><?php echo escape($lang["batchcopyfrom"])?></label>
     <input class="stdwidth" type="text" name="copyfrom" id="copyfrom" value="" style="width:80px;">
     <input type= "hidden" name="modal" id="modalcopyfrom" value="<?php echo $modal ? "true" : "false"; ?>">
     <input type="submit" id="copyfromsubmit" name="copyfromsubmit" value="<?php echo escape($lang["copy"])?>" onClick="return CentralSpacePost(document.getElementById('mainform'),true,<?php echo $modal ?>);">
@@ -1868,7 +1868,7 @@ global $collapsible_sections;
 <?php hook('addcollapsiblesection'); 
 if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_options()){include '../include/edit_upload_options.php';}
 ?>
-<h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo htmlspecialchars($lang["resourcemetadata"])?></h2><?php
+<h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo escape($lang["resourcemetadata"])?></h2><?php
  } 
 
 ?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
@@ -1877,7 +1877,7 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 # Check code signing flag and display warning if present
 if (get_sysvar("code_sign_required")=="YES")
     {
-    ?><div class="Question"><div class="FormError"><?php echo htmlspecialchars($lang["code_sign_required_warning"]); ?></div></div><?php
+    ?><div class="Question"><div class="FormError"><?php echo escape($lang["code_sign_required_warning"]); ?></div></div><?php
     }
 
 
@@ -1953,7 +1953,7 @@ if($tabs_on_edit)
             $ref,
             $tabcount,
             $modalTrueFalse,
-            htmlspecialchars($tab_name)
+            escape($tab_name)
         );
         ++$tabcount;
         }
@@ -2033,7 +2033,7 @@ if ($ref < 0 && !$show_status_and_access_on_upload)
     {
     # Upload template and not displaying status. Hide the dropdown and set the default status.
     ?>
-    <input type=hidden name="status" id="status" value="<?php echo htmlspecialchars($setarchivestate)?>"><?php
+    <input type=hidden name="status" id="status" value="<?php echo escape($setarchivestate)?>"><?php
     }
 
 ?>
@@ -2064,11 +2064,11 @@ if (    (
     ) {
             if ($enable_related_resources && ($multiple || $ref>0)) # Showing relationships
             {
-              ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?> id="StatusRelationshipsSectionHead"><?php echo htmlspecialchars($lang["statusandrelationships"])?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusRelationshipsSection<?php if ($ref==-1) echo "Upload"; ?>"><?php
+              ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?> id="StatusRelationshipsSectionHead"><?php echo escape($lang["statusandrelationships"])?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusRelationshipsSection<?php if ($ref==-1) echo "Upload"; ?>"><?php
            }
            else
            {
-                ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo htmlspecialchars($lang["status"])?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusSection<?php if ($ref==-1) echo "Upload"; ?>"><?php # Not showing relationships
+                ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo escape($lang["status"])?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusSection<?php if ($ref==-1) echo "Upload"; ?>"><?php # Not showing relationships
              }
 
        } /* end hook replacestatusandrelationshipsheader */
@@ -2082,7 +2082,7 @@ if (
     ) {
       if ($multiple)
          { ?>
-         <div class="Question" id="editmultiple_status"><input name="editthis_status" id="editthis_status" value="yes" type="checkbox" onClick="var q=document.getElementById('question_status');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="editthis_status_label" for="editthis<?php echo $n?>"><?php echo htmlspecialchars($lang["status"])?></label></div>
+         <div class="Question" id="editmultiple_status"><input name="editthis_status" id="editthis_status" value="yes" type="checkbox" onClick="var q=document.getElementById('question_status');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label id="editthis_status_label" for="editthis<?php echo $n?>"><?php echo escape($lang["status"])?></label></div>
          <?php
          }
 
@@ -2110,7 +2110,7 @@ if (
          <select class="stdwidth" name="status" id="status" <?php if ($edit_autosave) {?>onChange="AutoSave('Status');"<?php } ?>><?php
          for ($n=-2;$n<=3;$n++)
             {
-            if (checkperm("e" . $n) || $n==$setarchivestate) { ?><option value="<?php echo $n?>" <?php if ($setarchivestate==$n) { ?>selected<?php } ?>><?php echo htmlspecialchars($lang["status" . $n])?></option><?php }
+            if (checkperm("e" . $n) || $n==$setarchivestate) { ?><option value="<?php echo $n?>" <?php if ($setarchivestate==$n) { ?>selected<?php } ?>><?php echo escape($lang["status" . $n])?></option><?php }
             }
          foreach ($additional_archive_states as $additional_archive_state)
             {
@@ -2132,15 +2132,15 @@ if (!hook("replaceaccessselector"))
 
 if ($ref<0 && (($show_status_and_access_on_upload== false && $show_access_on_upload == false) || ($show_access_on_upload == false || ($show_access_on_upload == true && !eval($show_access_on_upload_perm)))))            # Upload template and the status and access fields are configured to be hidden on uploads.
    {?>
-   <input type=hidden name="access" value="<?php echo htmlspecialchars($resource["access"])?>"><?php
+   <input type=hidden name="access" value="<?php echo escape($resource["access"])?>"><?php
 }
 else
 {
-   if ($multiple) { ?><div class="Question"><input name="editthis_access" id="editthis_access" value="yes" type="checkbox" onClick="var q=document.getElementById('question_access');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis<?php echo $n?>"><?php echo htmlspecialchars($lang["access"])?></label></div><?php } ?>
+   if ($multiple) { ?><div class="Question"><input name="editthis_access" id="editthis_access" value="yes" type="checkbox" onClick="var q=document.getElementById('question_access');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis<?php echo $n?>"><?php echo escape($lang["access"])?></label></div><?php } ?>
 
    <div class="Question <?php if($upload_review_mode && in_array("access",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('access',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_access" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
       <label for="access">
-      <?php echo htmlspecialchars($lang["access"]);
+      <?php echo escape($lang["access"]);
       if ($upload_review_mode)
             {
             renderLockButton('access', $locked_fields);
@@ -2170,13 +2170,13 @@ else
         <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
                     if($ea0)    //0 - open
-                    {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo htmlspecialchars($lang["access" . $n])?></option><?php }
+                    {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
                     if($ea1)    //1 - restricted
-                    {$n=1;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo htmlspecialchars($lang["access" . $n])?></option><?php }
+                    {$n=1;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
                     if($ea2)    //2 - confidential
-                    {$n=2;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo htmlspecialchars($lang["access" . $n])?></option><?php }
+                    {$n=2;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
                     if($ea3)    //3 - custom
-                    {$n=3;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo htmlspecialchars($lang["access" . $n])?></option><?php }
+                    {$n=3;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
                     ?>
                  </select>
                  <?php
@@ -2184,7 +2184,7 @@ else
               else
               {
                  ?>
-                 <label class="stdwidth" id="access"><?php echo htmlspecialchars($lang["access" .$resource["access"]]);?></label>
+                 <label class="stdwidth" id="access"><?php echo escape($lang["access" .$resource["access"]]);?></label>
                  <?php
               }
               ?>
@@ -2215,22 +2215,22 @@ else
                    $perms=explode(",",(string) $groups[$n]["permissions"]);
                    if (in_array("v",$perms) || $groups[$n]["ref"] == $usergroup) {$access=0;$editable=false;} ?>
                    <tr>
-                      <td valign=middle nowrap><?php echo htmlspecialchars($groups[$n]["name"])?>&nbsp;&nbsp;</td>
+                      <td valign=middle nowrap><?php echo escape($groups[$n]["name"])?>&nbsp;&nbsp;</td>
 
                       <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="0" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==0) { ?>checked <?php }
                       if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
-                      <td align=left valign=middle><?php echo htmlspecialchars($lang["access0"])?></td>
+                      <td align=left valign=middle><?php echo escape($lang["access0"])?></td>
 
                       <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="1" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==1) { ?>checked <?php }
                       if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
-                      <td align=left valign=middle><?php echo htmlspecialchars($lang["access1"])?></td>
+                      <td align=left valign=middle><?php echo escape($lang["access1"])?></td>
 
                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="2" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==2) { ?>checked <?php }
                      if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
-                     <td align=left valign=middle><?php echo htmlspecialchars($lang["access2"])?></td>
+                     <td align=left valign=middle><?php echo escape($lang["access2"])?></td>
 
                   </tr><?php
                } ?>
@@ -2246,10 +2246,10 @@ else
     # Related Resources
     if ($enable_related_resources && ($multiple || ($ref > 0 && !$upload_review_mode))) # Not when uploading
     {
-       if ($multiple) { ?><div class="Question"><input name="editthis_related" id="editthis_related" value="yes" type="checkbox" onClick="var q=document.getElementById('question_related');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_related"><?php echo htmlspecialchars($lang["relatedresources"])?></label></div><?php } ?>
+       if ($multiple) { ?><div class="Question"><input name="editthis_related" id="editthis_related" value="yes" type="checkbox" onClick="var q=document.getElementById('question_related');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_related"><?php echo escape($lang["relatedresources"])?></label></div><?php } ?>
 
        <div class="Question<?php if($upload_review_mode && in_array("related_resources",$locked_fields)){echo " lockedQuestion ";} ?>" id="question_related" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
-          <label for="related"><?php echo htmlspecialchars($lang["relatedresources"]);
+          <label for="related"><?php echo escape($lang["relatedresources"]);
            if ($upload_review_mode)
             {
             renderLockButton('related_resources', $locked_fields);
@@ -2284,9 +2284,9 @@ else
       $autocomplete_user_scope = "created_by";
       $single_user_select_field_value = $resource["created_by"];
       if ($edit_autosave) {$single_user_select_field_onchange = "AutoSave('created_by');"; }
-      if ($multiple) { ?><div class="Question"><input name="editthis_created_by" id="editthis_created_by" value="yes" type="checkbox" onClick="var q=document.getElementById('question_created_by');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_created_by>"><?php echo htmlspecialchars($lang["contributedby"]) ?></label></div><?php } ?>
+      if ($multiple) { ?><div class="Question"><input name="editthis_created_by" id="editthis_created_by" value="yes" type="checkbox" onClick="var q=document.getElementById('question_created_by');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editthis_created_by>"><?php echo escape($lang["contributedby"]) ?></label></div><?php } ?>
       <div class="Question" id="question_created_by" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
-        <label><?php echo htmlspecialchars($lang["contributedby"]) ?></label><?php include __DIR__ . "/../include/user_select.php"; ?>
+        <label><?php echo escape($lang["contributedby"]) ?></label><?php include __DIR__ . "/../include/user_select.php"; ?>
         <div class="clearerleft"> </div>
       </div>
       <?php
@@ -2295,22 +2295,22 @@ else
 // Multiple method of changing geolocation.
 if ($multiple && !$disable_geocoding)
     { ?>
-    </div><h2 <?php echo ($collapsible_sections) ? " class=\"CollapsibleSectionHead\"" : ""?> id="location_title"><?php echo htmlspecialchars($lang["location-title"]); ?></h2><div <?php echo ($collapsible_sections) ? "class=\"CollapsibleSection\"" : ""?> id="LocationSection<?php if ($ref == "new") echo "Upload"; ?>">
+    </div><h2 <?php echo ($collapsible_sections) ? " class=\"CollapsibleSectionHead\"" : ""?> id="location_title"><?php echo escape($lang["location-title"]); ?></h2><div <?php echo ($collapsible_sections) ? "class=\"CollapsibleSection\"" : ""?> id="LocationSection<?php if ($ref == "new") echo "Upload"; ?>">
 
-    <div class="Question"><input name="editlocation" id="editlocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editlocation_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editlocation"><?php echo htmlspecialchars($lang["location"]); ?></label></div>
+    <div class="Question"><input name="editlocation" id="editlocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editlocation_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editlocation"><?php echo escape($lang["location"]); ?></label></div>
 
     <div class="Question" style="display:none;" id="editlocation_question">
-        <label for="location"><?php echo htmlspecialchars($lang["latlong"]); ?></label>
+        <label for="location"><?php echo escape($lang["latlong"]); ?></label>
         <input type="text" name="location" id="location" class="stdwidth">
         <div class="clearerleft"> </div>
     </div>
 
-    <div class="Question"><input name="editmapzoom" id="editmapzoom" type="checkbox" value="yes" onClick="var q=document.getElementById('editmapzoom_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editmapzoom"><?php echo htmlspecialchars($lang["mapzoom"]); ?></label></div>
+    <div class="Question"><input name="editmapzoom" id="editmapzoom" type="checkbox" value="yes" onClick="var q=document.getElementById('editmapzoom_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editmapzoom"><?php echo escape($lang["mapzoom"]); ?></label></div>
 
     <div class="Question" style="display:none;" id="editmapzoom_question">
-        <label for="mapzoom"><?php echo htmlspecialchars($lang["mapzoom"]); ?></label>
+        <label for="mapzoom"><?php echo escape($lang["mapzoom"]); ?></label>
         <select name="mapzoom" id="mapzoom">
-            <option value=""><?php echo htmlspecialchars($lang["select"]); ?></option>
+            <option value=""><?php echo escape($lang["select"]); ?></option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
@@ -2331,7 +2331,7 @@ if ($multiple && !$disable_geocoding)
         </select>
     </div>
 
-    <div class="Question"><input name="editmaplocation" id="editmaplocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editmaplocation_map');if (this.checked) {q.style.display='block'; map3.invalidateSize(true);} else {q.style.display='none';}">&nbsp;<label for="editmaplocation"><?php echo htmlspecialchars($lang['mapview']); ?></label></div>
+    <div class="Question"><input name="editmaplocation" id="editmaplocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editmaplocation_map');if (this.checked) {q.style.display='block'; map3.invalidateSize(true);} else {q.style.display='none';}">&nbsp;<label for="editmaplocation"><?php echo escape($lang['mapview']); ?></label></div>
 
     <!--Setup Leaflet map container with sizing-->
     <div id="editmaplocation_map" style="display:none; width: 99%; margin-top:0px; margin-bottom:0px; height:300px; border:1px solid black; float:none; overflow: hidden;">
@@ -2386,7 +2386,7 @@ if($disablenavlinks)
 
 if(is_int_loose($collection_add))
     { 
-    echo "<input type=hidden name='collection_add' value='" . htmlspecialchars($collection_add) . "'>";
+    echo "<input type=hidden name='collection_add' value='" . escape($collection_add) . "'>";
     }
         
 if (!$edit_upload_options_at_top && display_upload_options()){include '../include/edit_upload_options.php';}
@@ -2473,7 +2473,7 @@ if ($ref>0 && !$multiple)
                 if (checkperm("w") && $wmpath!="" && file_exists($wmpath))
                     {?> 
                     &nbsp;&nbsp;
-                    <a href="#" onclick="jQuery('#wmpreview').toggle();jQuery('#preview').toggle();if (jQuery(this).text()=='<?php echo escape($lang['showwatermark'])?>'){jQuery(this).text('<?php echo escape($lang['hidewatermark'])?>');} else {jQuery(this).text('<?php echo escape($lang['showwatermark'])?>');}"><?php echo htmlspecialchars($lang['showwatermark'])?></a>
+                    <a href="#" onclick="jQuery('#wmpreview').toggle();jQuery('#preview').toggle();if (jQuery(this).text()=='<?php echo escape($lang['showwatermark'])?>'){jQuery(this).text('<?php echo escape($lang['hidewatermark'])?>');} else {jQuery(this).text('<?php echo escape($lang['showwatermark'])?>');}"><?php echo escape($lang['showwatermark'])?></a>
                     <?php 
                     }?>
                 <br />
@@ -2540,7 +2540,7 @@ if (isset($show_error) && isset($save_errors) && is_array($save_errors) && !hook
         {
         if(is_string($save_error))
             {
-            $save_error=htmlspecialchars($save_error);
+            $save_error=escape($save_error);
             }
         }
     ?>

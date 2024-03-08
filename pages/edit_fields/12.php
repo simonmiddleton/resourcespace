@@ -209,7 +209,7 @@ elseif($display_as_checkbox)
                             ?>>
                 </td>
                 <td valign=middle>
-                    <?php echo htmlspecialchars(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
+                    <?php echo escape(i18n_get_translated($node['name'])); ?>&nbsp;&nbsp;
                 </td>
                 <?php 
                 }
@@ -231,7 +231,7 @@ elseif($display_as_dropdown)
         if('' != trim($node['name']))
             {
             ?>
-            <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>"<?php if(in_array($node['ref'], $selected_nodes)) { ?> selected<?php } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
+            <option value="<?php echo escape(trim($node['ref'])); ?>"<?php if(in_array($node['ref'], $selected_nodes)) { ?> selected<?php } ?>><?php echo escape(trim(i18n_get_translated($node['name']))); ?></option>
             <?php
             }
         }

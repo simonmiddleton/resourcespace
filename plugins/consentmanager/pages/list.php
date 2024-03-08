@@ -36,7 +36,7 @@ $url_params = array(
 <?php
     $links_trail = array(
         array(
-            'title' => !$is_admin ? htmlspecialchars($lang["home"]) : htmlspecialchars($lang["teamcentre"]),
+            'title' => !$is_admin ? escape($lang["home"]) : escape($lang["teamcentre"]),
             'href'  => $baseurl_short . (!$is_admin ? "pages/home.php" : "pages/team/team_home.php"),
             'menu'  => !$is_admin ? false : true
         ),
