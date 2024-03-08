@@ -3959,12 +3959,12 @@ function start_previews(int $ref, string $extension = ""): bool
         $minimal_previews = true;
     } elseif (
         $GLOBALS["enable_thumbnail_creation_on_upload"] === false 
-        || (int) $resource_data["file_size"] >= (int) ($GLOBALS["preview_generate_max_file_size"] ?? PHP_INT_MAX)
+        || (int) $resource_data["file_size"]/(1024*1024) >= (int) ($GLOBALS["preview_generate_max_file_size"] ?? PHP_INT_MAX)
     ) {
         // These configs require use of a cron task to run batch/create_previews.php
         ps_query("UPDATE resource SET has_image = ? WHERE ref= ?", ['i',RESOURCE_PREVIEWS_NONE,'i', $ref]);
         $minimal_previews = true;
-        }
+    }
         
     if($minimal_previews) {
         if (!in_array($extension,$GLOBALS["minimal_preview_creation_exclude_extensions"])) {
