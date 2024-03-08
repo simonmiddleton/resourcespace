@@ -33,12 +33,15 @@ return RectorConfig::configure()
         __DIR__ . '/vendor',
     ])
     ->withPaths([
+        __DIR__ . '/index.php',
+        __DIR__ . '/login.php',
         __DIR__ . '/api',
         __DIR__ . '/batch',
         __DIR__ . '/include',
         __DIR__ . '/languages', # can be useful for language changes
         __DIR__ . '/pages',
         __DIR__ . '/plugins',
+        __DIR__ . '/templates/contact_sheet',
         __DIR__ . '/tests',
         __DIR__ . '/upgrade',
 

@@ -23,6 +23,7 @@ parameters:
 
     excludePaths:
         analyse:
+            - include/ReplaceFunctionCallRector.php
             - plugins/*/lib/*
 
     earlyTerminatingFunctionCalls:

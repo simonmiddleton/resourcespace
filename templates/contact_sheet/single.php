@@ -37,7 +37,7 @@ if(isset($contactsheet_header))
                 	{
                 	?>
                 	<td style="width: 60%;">
-                		<h1><?php echo htmlspecialchars($applicationname); ?></h1>
+                		<h1><?php echo escape($applicationname); ?></h1>
                 	</td>
                 	<?php
                 	}
@@ -65,8 +65,8 @@ if(isset($contact_sheet_footer))
         <table style="width: 100%;">
             <tr>
                 <td class="centeredText" style="width: 90%">
-                    <span><?php echo htmlspecialchars($lang['contact_sheet_footer_address']); ?></span>
-                    <p><?php echo htmlspecialchars($lang['contact_sheet_footer_copyright']); ?></p>
+                    <span><?php echo escape($lang['contact_sheet_footer_address']); ?></span>
+                    <p><?php echo escape($lang['contact_sheet_footer_copyright']); ?></p>
                 </td>
                 <td style="text-align: right; width: 10%">[[page_cu]] of [[page_nb]]</td>
             </tr>
@@ -78,7 +78,7 @@ if(isset($contact_sheet_footer))
 
 
     <!-- Real content starts here -->
-    <h3 id="pageTitle"><?php echo htmlspecialchars($title); ?></h3>
+    <h3 id="pageTitle"><?php echo escape($title); ?></h3>
 
     <table style="width: 100%;">
         <tr>
@@ -92,7 +92,7 @@ if(isset($contact_sheet_footer))
                 // IMPORTANT: having space between a tag and img creates some weird visual lines (HTML2PDF issues maybe?!)
                 ?>
                 <a target="_blank" href="<?php echo $baseurl; ?>/?r=<?php echo (int) $resource_ref; ?>"><img style="margin-left: <?php echo $image_dimensions['y_offset']; ?>px;" src="<?php echo $resource['preview_src']; ?>" width="<?php echo $image_dimensions['new_width']; ?>" height="<?php echo $image_dimensions['new_height']; ?>" alt="Resource Preview"></a>
-                <?php
+<?php
                 }
             else
                 {
@@ -119,13 +119,13 @@ if(isset($contact_sheet_footer))
             {
             $contact_sheet_field=explode(': ', $contact_sheet_field);
             ?>
-            <p><b><?php echo htmlspecialchars($contact_sheet_field[0]); ?></b>: <?php echo htmlspecialchars($contact_sheet_field[1]); ?></p>
+            <p><b><?php echo escape($contact_sheet_field[0]); ?></b>: <?php echo escape($contact_sheet_field[1]); ?></p>
             <?php
             }
         else
             {
             ?>
-            <p><?php echo htmlspecialchars($contact_sheet_field); ?></p>
+            <p><?php echo escape($contact_sheet_field); ?></p>
             <?php
             }
         }

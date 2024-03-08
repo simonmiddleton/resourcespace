@@ -20,7 +20,7 @@ if ($modal || getval("ajax", "") != "") {
     # add the capslock lib because there's no header
     ?>
     <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery.capslockstate.js"></script>
-    <?php
+<?php
 }
 
 # process log in
@@ -190,14 +190,14 @@ if (!hook("replaceloginform")) {
         ?> onsubmit="return ModalPost(this,true,true);"<?php
     } ?>>
         <input type="hidden" name="langupdate" id="langupdate" value="">  
-        <input type="hidden" name="url" value="<?php echo htmlspecialchars($url)?>">
+        <input type="hidden" name="url" value="<?php echo escape($url)?>">
         <input type="hidden" name="modal" value="<?php echo $modal == "true" ? "true" : ""; ?>">
 
         <?php $header_img_src = get_header_image(); ?>
         <div id="LoginHeader">
             <img src="<?php echo $header_img_src; ?>" class="LoginHeaderImg" alt="<?php echo $applicationname ?>">
         </div>
-        
+
         <h1><?php echo text("welcomelogin")?></h1>
 
         <p class="ExternalLoginLinks">
@@ -214,7 +214,7 @@ if (!hook("replaceloginform")) {
             <input type="text" name="username" id="username" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?> value="<?php echo escape(getval("username", "")); ?>"/>
             <div class="clearerleft"> </div>
         </div>
-        
+
         <div class="Question">
             <label for="password"><?php echo $lang["password"]?> </label>
             <input type="password" name="password" id="password" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?>/>
@@ -237,7 +237,7 @@ if (!hook("replaceloginform")) {
         <?php } ?>
 
         <div class="Question HalfWidth">
-            <label for="user_local_tz"><?php echo htmlspecialchars($lang["local_tz"]); ?></label>
+            <label for="user_local_tz"><?php echo escape($lang["local_tz"]); ?></label>
             <select id="user_local_tz" class="stdwidth" name="user_local_timezone">
             <?php
 
@@ -284,7 +284,7 @@ if (!hook("replaceloginform")) {
             <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
         </div>
 
-    
+
         <p class="LoginLinks">
         <?php if ($allow_account_request) { ?>
             <a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php"><i class="fas fa-fw fa-user-plus"></i>&nbsp;<?php echo $lang["nopassword"]?></a>
