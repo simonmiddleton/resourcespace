@@ -3178,12 +3178,12 @@ $vendor_tus_cache_adapter = 'file';
 ===============================================================================
 Offline preview generation options
 ===============================================================================
-These options all allow previews and auto generated alternative files etc. to be generated offline.
+These options all allow previews and automatically generated alternative files etc. to be generated offline.
 This is useful when dealing with large files that may place a drain on system resources
 -------------------------------------------------------------------------------
-OPTION 1 $offline_job_queue. (preferred)
+OPTION 1: $offline_job_queue. (preferred)
 -------------------------------------------------------------------------------
-The offline job functionality will create jobs to run resource heavy tasks e.g. preview creation, large collection downloads
+The offline job functionality will create jobs to run slow or resource intensive tasks e.g. preview creation, large collection downloads
 or CSV uploads. Most jobs will send notifications to users once completed.
 IMPORTANT: If this is enabled a frequent scheduled task must be created on the server to run pages/tools/offline_jobs.php 
 Note that this should be set to run as the web service account to avoid file permission issues
@@ -3197,7 +3197,7 @@ OPTION 2 $preview_generate_max_file_size (legacy)
 -------------------------------------------------------------------------------
 This is only effective if $offline_job_queue is false 
 
-IMPORTANT : If enabled a frequent scheduled task must be created on the server to run batch/create_previews.php 
+IMPORTANT: If enabled a frequent scheduled task must be created on the server to run batch/create_previews.php 
 Note that this should be set to run as the web service account to avoid file permission issues
 
 Set the maximum size of uploaded file that preview images will be created for.
@@ -3206,9 +3206,9 @@ $preview_generate_max_file_size=100;
 -------------------------------------------------------------------------------
 OPTION 3 $enable_thumbnail_creation_on_upload  (legacy)
 -------------------------------------------------------------------------------
-Set to false to disable immediate preview generation. Superceded by $offline_job_queue
+Set to false to disable immediate preview generation. Superseded by $offline_job_queue
 
-IMPORTANT : If enabled a frequent scheduled task must be created on the server to run batch/create_previews.php 
+IMPORTANT: If enabled a frequent scheduled task must be created on the server to run batch/create_previews.php 
 Note that this should be set to run as the web service account to avoid file permission issues
 */
 $enable_thumbnail_creation_on_upload = true;
@@ -3216,7 +3216,7 @@ $enable_thumbnail_creation_on_upload = true;
 ===============================================================================
 Blocking immediate creation of core previews
 ===============================================================================
-Optionally use this array prevent immediate creation of core preview sizes ('col', 'thm' and 'pre') for the specified 
+Optionally use this array to prevent immediate creation of core preview sizes ('col', 'thm' and 'pre') for the specified 
 file extensions when one of the offline preview options above are configured.
 */
 $minimal_preview_creation_exclude_extensions = [];
