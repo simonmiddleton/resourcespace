@@ -108,7 +108,7 @@ if(!$exactmatch && !$readonly)
     }
 elseif ($exactmatch && $match_is_deactivated)
     {
-    $text = "{$lang['matched_inactive_entry']} {$keyword}";
+    $text = "{$lang['inactive_entry_matched']} {$keyword}";
     $results = [
         [
             'label' => $text,
