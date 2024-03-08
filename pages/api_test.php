@@ -12,7 +12,7 @@ if (!$enable_remote_apis) {exit("API not enabled.");}
 if (!checkperm("a")) {exit("Access denied");}
 
 $api_function=getval("api_function","");
-$api_functions = array_filter(get_defined_functions()['user'], function($e) { return (strpos($e,'api_') === 0); });
+$api_functions = array_filter(get_defined_functions()['user'], function($e) { return strpos($e,'api_') === 0; });
 
 if ($api_function!="")
     {

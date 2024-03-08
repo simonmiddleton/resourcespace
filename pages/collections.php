@@ -973,25 +973,28 @@ else
                             href="<?php echo $thumb_url ?>">
                         <?php
                         $colimg_preview_size = $retina_mode ? 'thm' : 'col';
-                        if(1 == $result[$n]['has_image']
-                            && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $colimg_preview_size)
-                            && file_exists(get_resource_path($ref, true, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
-                        ) {
-                            $colimgpath = get_resource_path($ref, false, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
+                        $thumbnail = get_resource_preview($result[$n],[$colimg_preview_size],$access,$watermark);
+                        if($thumbnail !== false)
+                            {
+                            // Use standard preview image
+                            if($result[$n]["thumb_height"] !== $thumbnail["height"] || $result[$n]["thumb_width"] !== $thumbnail["width"])
+                                {                    
+                                // Preview image dimensions differ from the size data stored for the current resource
+                                $result[$n]["thumb_height"] = $thumbnail["height"];
+                                $result[$n]["thumb_width"]  = $thumbnail["width"];
+                                }
+                            render_resource_image($result[$n],$thumbnail["url"],$colimg_preview_size);                        
+                            }
+                        else
+                            {
                             ?>
-                            <img class="CollectionPanelThumb"
-                                border=0
-                                src="<?php echo $colimgpath; ?>"
-                                title="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
-                                alt="<?php echo htmlspecialchars(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
-                                <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?>
+                            <img border=0 
+                                alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
+                                src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" 
                             />
-                        <?php } else { ?>
-                            <img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-                                border=0
-                                src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>"
-                            />
-                        <?php }
+                            <?php 
+                            }
+
                         hook("aftersearchimg","",array($result[$n]))?>
                         </a></td>
                     </tr></table><?php

@@ -307,10 +307,25 @@ if($order_by_resource_type)
     {
     $sort_order_fields['resourcetype'] = $lang['type'];
     }
+
+foreach ($sort_fields as $field) {
+    $sort_order_fields["field$field"] = get_resource_type_field($field)["title"];
+}
+
 $page_def[] = config_add_single_select(
     'default_sort',
     $lang['userpreference_default_sort_label'],
     $sort_order_fields,
+    true,
+    420,
+    '',
+    true
+);
+
+$page_def[] = config_add_single_select(
+    'default_sort_direction',
+    $lang['userpreference_default_sort_order_label'],
+    ['ASC' => 'Ascending', 'DESC' => 'Descending'],
     true,
     420,
     '',

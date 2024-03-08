@@ -46,8 +46,7 @@ function tile_select($tile_type,$tile_style,$tile,$tile_id,$tile_width,$tile_hei
             case "thmbs":   $promoted_image=getval("promimg",false);
                             tile_search_thumbs($tile,$tile_id,$tile_width,$tile_height,$promoted_image);
                             exit;
-            case "multi":   tile_search_multi_or_blank($tile,$tile_id,$tile_width,$tile_height);
-                            exit;
+            case "multi":
             case "blank":   tile_search_multi_or_blank($tile,$tile_id,$tile_width,$tile_height);
                             exit;
             }

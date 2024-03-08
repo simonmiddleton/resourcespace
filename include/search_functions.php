@@ -1489,13 +1489,13 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         $sql = new PreparedStatementQuery();
         $sql->sql = $sql_prefix .
-            "SELECT DISTINCT r.hit_count score, " . escape($select) . "
+            "SELECT DISTINCT r.hit_count score, $select
                 FROM resource r
                 $sql_join->sql
                 WHERE has_image=0
                     AND $sql_filter->sql
                 GROUP BY r.ref
-                ORDER BY " .escape($order_by)
+                ORDER BY $order_by"
                 . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }

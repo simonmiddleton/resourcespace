@@ -2733,9 +2733,7 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
             }
         return $titles;
         }
-    if(count($blockedtypes)>0)
-        {
-        }
+        
     return array();
     }
 
