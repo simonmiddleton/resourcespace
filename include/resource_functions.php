@@ -4379,9 +4379,7 @@ function update_resource_type($ref,$type)
         {
         $rts = get_resource_types("$type,$old_rt");
         $rts = array_column($rts, 'name', 'ref');
-        $rts_oldname=(isset($rts[$old_rt])?$rts[$old_rt]:"");
-        $rts_newname=(isset($rts[$type])?$rts[$type]:"");
-        resource_log($ref, '', null, $lang["log-rtchange"], $rts_oldname, $rts_newname);
+        resource_log($ref, '', null, $lang["log-rtchange"], $rts[$old_rt]??"", $rts[$type]??"");
         }
     return true;
     }
