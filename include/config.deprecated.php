@@ -60,9 +60,6 @@ $email_from_user=false;
 # Do not create any new snapshots when recreating FFMPEG previews. (This is to aid in migration to mp4 when custom previews have been uploaded)
 $ffmpeg_no_new_snapshots=false;
 
-# Workflow states to ignore when verifying file integrity (to verify file integrity usign checksums requires $file_checksums_50k=false;)
-$file_integrity_ignore_states = array();
-
 # Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.
 $force_display_template_orderby=false;
 
