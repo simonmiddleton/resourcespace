@@ -314,3 +314,46 @@ function is_valid_upload_path(string $file_path, array $valid_upload_paths) : bo
 
     return false;
     }
+
+/**
+ * Validate the files on disk that are associated with the given resources
+ *
+ * @param array $resources      Array of  resource IDs
+ * @param array $criteria       Array with an array of callables with the required return values in order to pass the check e.g. 
+ *                              'file_exists" =>true for a file presence only check
+ * 
+ * @return array $results       An array with resource ID as the index and the results of the check as the value (boolean)
+ *                              e.g. ["1234" => true, "1235" => false]
+ * 
+ */
+function validate_resource_files(array $resources,array $criteria = []): array
+{
+    $resource_data = get_resource_data_batch($resources);    
+    $results = [];
+    foreach($resources as $resource) {
+        if (!is_int_loose($resource)) {
+            $results[$resource] = false;
+            continue;
+        }
+        $filepath = get_resource_path($resource,true,'',false,$resource_data[$resource]["file_extension"] ?? "jpg");
+        $results[$resource] = false;
+        foreach ($criteria as $criterion=>$expected) {
+            if(!is_callable($criterion)) {
+                $results[$resource] = false;
+                // Not a valid check
+                // TODO Remove/amend
+                debug('BANG ' . __LINE__);
+                continue 2;
+            }
+            $results[$resource] = call_user_func($criterion,$filepath) === $expected;
+            if ($results[$resource] === false) {
+                // TODO Remove/amend
+                debug('BANG ' . __LINE__ . " " . $resource);
+                // No need to continue with other $criteria as check has failed
+                continue 2;
+            }
+            debug('BANG ' . __LINE__ . " " . var_dump($results[$resource]));
+        }
+    }
+    return $results;
+}
