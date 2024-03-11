@@ -937,7 +937,8 @@ else
     if ($count_result>0) {
         # Loop through resources for thumbnails for standard display
         for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++) {
-            if (!isset($result[$n])) {
+            if (!isset($result[$n]) || !is_array($result[$n])) {
+                # $result can be a list of suggested searches, in this case do not process this item.
                 continue;
             }
             $ref=$result[$n]["ref"];
