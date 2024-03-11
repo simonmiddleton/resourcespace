@@ -600,8 +600,12 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             }
         else
             {
+            $file_location = str_replace('[storage_url]', $storagedir, $current);
+            $mime_type = explode("/",mime_content_type($file_location));
+            $file_type = end($mime_type);
+            $file_size = str_replace("&nbsp;"," ",formatfilesize(filesize($file_location)));
             ?>
-            <span><?php echo escape(str_replace('[storage_url]/', '', $current)); ?></span>
+            <span style="width: 316px;display: inline-block;"><?php echo escape("$file_type ($file_size)"); ?></span>
             <input type="submit" name="delete_<?php echo escape($name); ?>" value="<?php echo escape($lang['action-delete']); ?>">
             <?php
             }
