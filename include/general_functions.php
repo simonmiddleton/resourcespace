@@ -4599,12 +4599,12 @@ function get_system_status()
 
     // Check database encoding.
     global $mysql_db;
-    $db_encoding = ps_value("SELECT default_character_set_name AS `value` FROM information_schema.SCHEMATA WHERE `schema_name` = ?;", array("s",$mysql_db), '');
-    if (substr(strtolower($db_encoding), 0, 4) != 'utf8')
+    $badtables = ps_query("SELECT TABLE_NAME, TABLE_COLLATION FROM information_schema.tables WHERE TABLE_SCHEMA=? AND `TABLE_COLLATION` NOT LIKE 'utf8%';", array("s",$mysql_db));
+    if (count($badtables) > 0)
         {
         $return['results']['database_encoding'] = [
             'status' => 'FAIL',
-            'info' => 'Database encoding is not utf8',
+            'info' => 'Database encoding not utf8. e.g. ' . $badtables[0]["TABLE_NAME"] . ": " . $badtables[0]["TABLE_COLLATION"],
             'severity' => SEVERITY_WARNING,
             'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
         ];
