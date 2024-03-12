@@ -4260,7 +4260,7 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
         {
         debug('value formatting due to ~ character...');
         # The field value may be a list of comma separated language encoded values, so process the nodes
-        $field_nodes_in_value=explode(",",$field["nodes"]);
+        $field_nodes_in_value=explode(",",$value);
         if(count($field_nodes_in_value) == 1)  
             {
             # Translate the single value
