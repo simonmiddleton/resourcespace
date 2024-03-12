@@ -917,7 +917,6 @@ $lang["not_allowed"] = "Not allowed";
 $lang["no_results_found"] = "No results found";
 $lang["function_not_enabled"] = "This function is not enabled.";
 $lang['remaining'] = 'remaining';
-$lang['confirm-continue'] = 'Are you sure you wish to continue?';
 
 # Pager
 $lang["next"]="Next";

@@ -917,10 +917,6 @@ function ToggleNodeActivation(ref)
     {
     console.debug('Calling ToggleNodeActivation(ref = %o)', ref);
 
-    if (!confirm('<?php echo escape($lang['confirm-continue']); ?>')) {
-        return false;
-    }
-
     api(
         'toggle_active_state_for_nodes',
         {'refs': JSON.stringify([ref])},
