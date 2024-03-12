@@ -177,7 +177,7 @@ if($editing && !$editexternalurl)
         <form method="post" id="resourceshareform" action="<?php echo $baseurl_short?>pages/resource_share.php?ref=<?php echo urlencode($ref)?>">
             <input type="hidden" name="deleteaccess" id="deleteaccess" value="">
             <input type="hidden" name="generateurl" id="generateurl" value="">
-            <input type="hidden" name="editaccess" id="editaccess" value="<?php echo htmlspecialchars($editaccess)?>">
+            <input type="hidden" name="editaccess" id="editaccess" value="<?php echo escape($editaccess)?>">
             <input type="hidden" name="editexpiration" id="editexpiration" value="">
             <input type="hidden" name="editgroup" id="editgroup" value="">
             <input type="hidden" name="editaccesslevel" id="editaccesslevel" value="">
@@ -349,14 +349,14 @@ if($editing && !$editexternalurl)
                         $keyaccess  = ($key["access"] == -1)  ? "" : $lang["access" . $key["access"]];
                         ?>
                         <tr>
-                            <td><div class="ListTitle"><a target="_blank" href="<?php echo $url ?>"><?php echo htmlspecialchars($key["access_key"]) ?></a></div></td>
+                            <td><div class="ListTitle"><a target="_blank" href="<?php echo $url ?>"><?php echo escape($key["access_key"]) ?></a></div></td>
                             <td><?php echo $type                                              ?></td>
-                            <td><?php echo htmlspecialchars(resolve_users($key["users"]))     ?></td>
-                            <td><?php echo htmlspecialchars($key["emails"]??"")                   ?></td>
-                            <td><?php echo htmlspecialchars(nicedate($key["maxdate"],true));  ?></td>
-                            <td><?php echo htmlspecialchars(nicedate($key["lastused"],true)); ?></td>
-                            <td><?php echo htmlspecialchars($keyexpires)                         ?></td>
-                            <td><?php echo htmlspecialchars($keyaccess);                         ?></td>
+                            <td><?php echo escape(resolve_users($key["users"]))     ?></td>
+                            <td><?php echo escape($key["emails"]??"")                   ?></td>
+                            <td><?php echo escape(nicedate($key["maxdate"],true));  ?></td>
+                            <td><?php echo escape(nicedate($key["lastused"],true)); ?></td>
+                            <td><?php echo escape($keyexpires)                         ?></td>
+                            <td><?php echo escape($keyaccess);                         ?></td>
                             <?php
                             if (!empty($social_media_links))
                                 {
@@ -460,10 +460,10 @@ if($editing && !$editexternalurl)
                         $custexpires = ($ca["expires"] == "") ? $lang["never"] : nicedate($ca["expires"],false);
                         $custaccess  = ($ca["access"] == -1)  ? "" : $lang["access" . $ca["access"]];
                         ?><tr>
-                            <td><?php echo htmlspecialchars($ca["user"]??""); ?></td>
-                            <td><?php echo htmlspecialchars($ca["usergroup"]??""); ?></td>
-                            <td><?php echo htmlspecialchars($custexpires); ?></td>
-                            <td><?php echo htmlspecialchars($custaccess); ?></td>
+                            <td><?php echo escape($ca["user"]??""); ?></td>
+                            <td><?php echo escape($ca["usergroup"]??""); ?></td>
+                            <td><?php echo escape($custexpires); ?></td>
+                            <td><?php echo escape($custaccess); ?></td>
                             <td><div class="ListTools"><a href="#" onClick="return resourceShareDeleteUserCustomAccess(<?php echo get_user_by_username($ca["user"]) ?>);"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a></div></td>
                         </tr>
                         <?php

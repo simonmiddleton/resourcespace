@@ -206,13 +206,13 @@ include __DIR__ . "/../../../include/header.php";
 <div class="BasicsBox">
 <p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo escape($resource) ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"] ?></a></p>
 
-<?php if (isset($error)) { ?><div class="PageInfoMessage"><?php echo htmlspecialchars($error) ?></div><?php } ?>
+<?php if (isset($error)) { ?><div class="PageInfoMessage"><?php echo escape($error) ?></div><?php } ?>
 
 <h1><?php echo $lang["revert"]?></h1>
 <p><?php echo $lang['revertingclicktoproceed'];?></p>
 
 <form method=post name="rse_revert_form" id="rse_revert_form" action="<?php echo generateurl($baseurl_short . "plugins/rse_version/pages/revert.php",["ref"=>$ref]); ?> onSubmit="return CentralSpacePost(this,true);">
-<input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>">
+<input type="hidden" name="ref" value="<?php echo escape($ref) ?>">
 <input type="hidden" name="revert_action" value="revert">
 <?php
 generateFormToken("form");
@@ -227,7 +227,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         <?php
         foreach($nodes_to_add as $node_to_add)
             {
-            echo htmlspecialchars($cattree ? $nodes_by_ref[$node_to_add]["translated_path"] : $nodes_by_ref[$node_to_add]["translated_name"]);
+            echo escape($cattree ? $nodes_by_ref[$node_to_add]["translated_path"] : $nodes_by_ref[$node_to_add]["translated_name"]);
             ?><br/>
             <?php
             }
@@ -243,7 +243,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         <?php
         foreach($nodes_to_remove as $node_to_remove)
             {
-            echo htmlspecialchars($cattree ? $nodes_by_ref[$node_to_remove]["translated_path"] : $nodes_by_ref[$node_to_remove]["translated_name"]);
+            echo escape($cattree ? $nodes_by_ref[$node_to_remove]["translated_path"] : $nodes_by_ref[$node_to_remove]["translated_name"]);
             ?><br/>
             <?php
             }
@@ -259,7 +259,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         <?php
         foreach($node_strings_not_found as $node_string_not_found)
             {
-            echo htmlspecialchars($node_string_not_found);
+            echo escape($node_string_not_found);
             ?><br/>
             <?php
             }
@@ -272,7 +272,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         { ?>
 <div class="Question">
 <label><?php echo $lang["revertingwillapply"]?></label>
-<div class="Fixed"><?php echo nl2br(htmlspecialchars($diff)) ?></div>
+<div class="Fixed"><?php echo nl2br(escape($diff)) ?></div>
 <div class="clearerleft"> </div>
 </div>
 <?php   }

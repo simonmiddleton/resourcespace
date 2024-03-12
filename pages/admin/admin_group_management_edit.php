@@ -246,7 +246,7 @@ include "../../include/header.php";
 
         <div class="Question">
             <label for="name"><?php echo $lang["property-name"]; ?></label>
-            <input name="name" type="text" class="stdwidth" value="<?php echo htmlspecialchars($record['name']); ?>"> 
+            <input name="name" type="text" class="stdwidth" value="<?php echo escape($record['name']); ?>"> 
             <div class="clearerleft"></div>
         </div>
 
@@ -268,10 +268,10 @@ include "../../include/header.php";
                 }?>
 
             <div id ="permissions_area" <?php if(in_array("permissions",$record['inherit'])){echo "style=display:none;";} ?>>
-                <input type="button" class="stdwidth<?php echo $record['parent'] ? ' label-spacer' : ''; ?>" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo escape($ref . $url_params); ?>',true);" value="<?php echo htmlspecialchars($lang["launchpermissionsmanager"]); ?>"></input>                       
+                <input type="button" class="stdwidth<?php echo $record['parent'] ? ' label-spacer' : ''; ?>" onclick="return CentralSpaceLoad('<?php echo $baseurl_short; ?>pages/admin/admin_group_permissions.php?ref=<?php echo escape($ref . $url_params); ?>',true);" value="<?php echo escape($lang["launchpermissionsmanager"]); ?>"></input>                       
                 <div class="clearerleft"></div>
                 <label></label>
-                <textarea name="permissions" class="stdwidth" rows="5" cols="50"><?php echo htmlspecialchars((string) $record['permissions']); ?></textarea>
+                <textarea name="permissions" class="stdwidth" rows="5" cols="50"><?php echo escape((string) $record['permissions']); ?></textarea>
                 <div class="clearerleft"></div>
             </div> <!-- End of permissions_area -->
         </div>
@@ -348,18 +348,18 @@ include "../../include/header.php";
             </select>
             <div class="clearerleft"></div>
             <div class="FormHelp">
-                <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-derestrict_filter"]); ?></div>
+                <div class="FormHelpInner"><?php echo escape($lang["information-derestrict_filter"]); ?></div>
             </div>
         </div>
         <div class="Question">
             <label for="download_limit"><?php echo $lang["group_download_limit_title"]; ?></label>
-            <input name="download_limit" type="number" class="vshrtwidth" value="<?php echo htmlspecialchars((string)$record['download_limit']); ?>">
+            <input name="download_limit" type="number" class="vshrtwidth" value="<?php echo escape((string)$record['download_limit']); ?>">
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
             <label for="download_log_days"><?php echo $lang["group_download_limit_period"]; ?></label>
-            <input name="download_log_days" type="number" class="vshrtwidth" value="<?php echo htmlspecialchars((string)$record['download_log_days']); ?>">
+            <input name="download_log_days" type="number" class="vshrtwidth" value="<?php echo escape((string)$record['download_log_days']); ?>">
             <div class="clearerleft"></div>
         </div>
 

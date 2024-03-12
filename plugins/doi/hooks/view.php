@@ -99,7 +99,7 @@
                             $summary .= $lang['doi_not_successfully_registered'];
                         }
                         if ($key != 'xml')
-                            $summary .= ': ' . htmlspecialchars($meta[$key]);
+                            $summary .= ': ' . escape($meta[$key]);
                         else
                             $summary .= '.';
                         $summary .= '\n';

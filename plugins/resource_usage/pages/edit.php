@@ -76,7 +76,7 @@ include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
     <p>
-        <a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo htmlspecialchars($resource); ?>" onClick="return CentralSpaceLoad(this, true);">&lt;&nbsp;<?php echo htmlspecialchars($lang['backtoresourceview']); ?></a>
+        <a href="<?php echo $baseurl_short; ?>pages/view.php?ref=<?php echo escape($resource); ?>" onClick="return CentralSpaceLoad(this, true);">&lt;&nbsp;<?php echo escape($lang['backtoresourceview']); ?></a>
     </p>
     <h1><?php echo escape($new_record ? $lang['new_usage'] : $lang['edit_usage']); ?></h1>
 
@@ -94,13 +94,13 @@ include "../../../include/header.php";
 
     <div class="Question">
         <label><?php echo $lang['resourceid']; ?></label>
-        <div class="Fixed"><?php echo htmlspecialchars($usage_data['resource']); ?></div>
+        <div class="Fixed"><?php echo escape($usage_data['resource']); ?></div>
         <div class="clearerleft"></div>
     </div>
 
     <div class="Question">
         <label><?php echo $lang['usage_location']; ?></label>
-        <input class="stdwidth" type="text" name="usage_location" value="<?php echo htmlspecialchars($usage_data['usage_location']); ?>">
+        <input class="stdwidth" type="text" name="usage_location" value="<?php echo escape($usage_data['usage_location']); ?>">
         <div class="clearerleft"></div>
     </div>
 
@@ -136,7 +136,7 @@ include "../../../include/header.php";
 
     <div class="Question">
         <label><?php echo $lang['description']; ?></label>
-        <textarea id="description" class="stdwidth" name="description" rows="4"><?php echo htmlspecialchars($usage_data["description"]); ?></textarea>
+        <textarea id="description" class="stdwidth" name="description" rows="4"><?php echo escape($usage_data["description"]); ?></textarea>
         <div class="clearerleft"></div>
     </div>
 

@@ -1136,7 +1136,7 @@ renderBreadcrumbs($links_trail);
         }
         
         echo $lang['originalsize'] . ": ";
-        echo htmlspecialchars($origwidth) . "x" . htmlspecialchars($origheight);
+        echo escape($origwidth) . "x" . escape($origheight);
         echo "&nbsp;" . $lang['pixels'] . " $orig_mptext";
         ?>
     </p>
@@ -1190,7 +1190,7 @@ renderBreadcrumbs($links_trail);
                         echo "<tr><td style='text-align:right'>\n<label for='alt_type'>".$lang["alternatetype"].":</label></td><td colspan='3'><select name='alt_type' id='alt_type'>";
                         foreach($alt_types as $thealttype)
                             {
-                            $thealttype = htmlspecialchars($thealttype,ENT_QUOTES);
+                            $thealttype = escape($thealttype);
                             echo "\n   <option value='$thealttype' >$thealttype</option>";
                             }
                         echo "</select>\n</td></tr>";
@@ -1306,10 +1306,10 @@ renderBreadcrumbs($links_trail);
 
                     foreach($cropper_preset_sizes as $category=>$categorysizes)
                             {
-                            echo "<optgroup label='" . htmlspecialchars($category) . "'>\n";
+                            echo "<optgroup label='" . escape($category) . "'>\n";
                             foreach($categorysizes as $description=>$size)
                                 {
-                                echo "<option value='" . htmlspecialchars($size)  . "'>" .htmlspecialchars($description) . "</option>\n";
+                                echo "<option value='" . escape($size)  . "'>" .escape($description) . "</option>\n";
                                 }
 
                             echo "</optgroup>";
@@ -1338,7 +1338,7 @@ renderBreadcrumbs($links_trail);
                     <?php 
                     foreach ($image_quality_presets as $image_quality_preset) 
                         {
-                        echo "<option value='" . htmlspecialchars($image_quality_preset) . "'>" . htmlspecialchars(isset($lang["image_quality_" . $image_quality_preset]) ? $lang["image_quality_" . $image_quality_preset] : $image_quality_preset) . "&nbsp;</option>\n";
+                        echo "<option value='" . escape($image_quality_preset) . "'>" . escape(isset($lang["image_quality_" . $image_quality_preset]) ? $lang["image_quality_" . $image_quality_preset] : $image_quality_preset) . "&nbsp;</option>\n";
                         }
                         ?>
                     </select>
@@ -1365,7 +1365,7 @@ renderBreadcrumbs($links_trail);
                     <?php 
                     foreach ($cropper_resolutions as $cropper_resolution)
                         {
-                        echo "<option value='" . htmlspecialchars($cropper_resolution) . "'>" . htmlspecialchars($cropper_resolution) . "&nbsp;</option>\n";
+                        echo "<option value='" . escape($cropper_resolution) . "'>" . escape($cropper_resolution) . "&nbsp;</option>\n";
                         }
                         ?>
                     </select>

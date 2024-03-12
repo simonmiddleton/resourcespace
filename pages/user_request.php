@@ -143,10 +143,10 @@ if (!hook("replacemain"))
     { /* BEGIN hook Replacemain */ 
 
     $name = getval("name","");
-    $name = is_array($name) ? "" : htmlspecialchars($name);
+    $name = is_array($name) ? "" : escape($name);
 
     $email = getval("email","");
-    $email = is_array($email) ? "" : htmlspecialchars($email);
+    $email = is_array($email) ? "" : escape($email);
 
     ?>
     <div class="Question">
@@ -195,7 +195,7 @@ if (isset($custom_registration_fields))
             {
             ?>
             <div class="Question" id="Question<?php echo $n?>">
-            <label for="custom<?php echo $n?>"><?php echo htmlspecialchars(i18n_get_translated($custom[$n]))?>
+            <label for="custom<?php echo $n?>"><?php echo escape(i18n_get_translated($custom[$n]))?>
             <?php 
             if (
                 isset($required)
@@ -208,12 +208,12 @@ if (isset($custom_registration_fields))
 
             <?php if ($type==1) {  # Normal text box
             ?>
-            <input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
+            <input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo escape(getval("custom" . $n,""))?>">
 <?php } ?>
 
             <?php if ($type==2) { # Large text box 
             ?>
-            <textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
+            <textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo escape(getval("custom" . $n,""))?></textarea>
 <?php } ?>
 
             <?php if ($type==3) { # Drop down box
@@ -222,7 +222,7 @@ if (isset($custom_registration_fields))
             <?php foreach ($custom_registration_options[$custom[$n]] as $option)
                 {
                 ?>
-                <option><?php echo htmlspecialchars(i18n_get_translated($option));?></option>
+                <option><?php echo escape(i18n_get_translated($option));?></option>
                 <?php
                 }
             ?>
@@ -243,12 +243,12 @@ if (isset($custom_registration_fields))
                             if (count($option_exploded) == 2)       # there are two fields, the first indicates if checked by default, the second is the name
                                 {
                                 $option_checked = ($option_exploded[0] == "1");
-                                $option_label = htmlspecialchars(i18n_get_translated(trim($option_exploded[1])));
+                                $option_label = escape(i18n_get_translated(trim($option_exploded[1])));
                                 }
                             else        # there are not two fields so treat the whole string as the name and set to unchecked
                                 {
                                 $option_checked = false;
-                                $option_label = htmlspecialchars(i18n_get_translated(trim($option)));
+                                $option_label = escape(i18n_get_translated(trim($option)));
                                 }
                             $option_field_name = "custom" . $n . "_" . $i;      # same format as all custom fields, but with a _<n> indicating sub field number
                             ?>
@@ -288,7 +288,7 @@ $groups=get_registration_selectable_usergroups();
 <?php for ($n=0;$n<count($groups);$n++)
     {
     ?>
-    <option value="<?php echo $groups[$n]["ref"] ?>" <?php if($groups[$n]["ref"] == getval("usergroup", 0, true)){echo " selected";} ?>><?php echo htmlspecialchars($groups[$n]["name"]) ?></option>
+    <option value="<?php echo $groups[$n]["ref"] ?>" <?php if($groups[$n]["ref"] == getval("usergroup", 0, true)){echo " selected";} ?>><?php echo escape($groups[$n]["name"]) ?></option>
     <?php
     }
 ?>
@@ -300,7 +300,7 @@ $groups=get_registration_selectable_usergroups();
 
 <?php if (!hook("replaceuserrequestcomment")){ 
     $userrequestcomment = getval("userrequestcomment","");
-    $userrequestcomment = is_array($userrequestcomment) ? "" : htmlspecialchars($userrequestcomment);
+    $userrequestcomment = is_array($userrequestcomment) ? "" : escape($userrequestcomment);
 
 
     ?>

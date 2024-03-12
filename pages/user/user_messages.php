@@ -27,8 +27,8 @@ include "../../include/header.php";
 <div class="BasicsBox">
     <div class="VerticalNav">
         <ul>
-            <h1><?php echo htmlspecialchars($lang["mymessages"])?></h1>
-            <p><?php echo htmlspecialchars($lang["mymessages_introtext"]);render_help_link('user/messages'); ?></p>
+            <h1><?php echo escape($lang["mymessages"])?></h1>
+            <p><?php echo escape($lang["mymessages_introtext"]);render_help_link('user/messages'); ?></p>
 
             <?php if ($user_preferences) { ?>
                 <li>
@@ -52,7 +52,7 @@ include "../../include/header.php";
                 </div> <!-- End of VerticalNav -->
                 </div> <!-- End of BasicsBox -->
                 <?php
-                echo htmlspecialchars($lang['mymessages_youhavenomessages']);
+                echo escape($lang['mymessages_youhavenomessages']);
                 include "../../include/footer.php";
                 return;
                 }
@@ -89,19 +89,19 @@ include "../../include/header.php";
  
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">
-            <div class="InpageNavLeftBlock"><?php echo htmlspecialchars($lang["resultsdisplay"])?>:
+            <div class="InpageNavLeftBlock"><?php echo escape($lang["resultsdisplay"])?>:
                 <?php 
                 for ($n=0; $n<count($list_display_array); $n++)
                     {
                     if ($per_page == $list_display_array[$n])
                         { ?>
-                        <span class="Selected"><?php echo htmlspecialchars($list_display_array[$n]) ?></span>
+                        <span class="Selected"><?php echo escape($list_display_array[$n]) ?></span>
                         <?php
                         }
                     else
                         { ?>
                         <a href="<?php echo $url; ?>&per_page_list=<?php echo urlencode($list_display_array[$n])?>" onClick="return CentralSpaceLoad(this);">
-                            <?php echo htmlspecialchars($list_display_array[$n]) ?>
+                            <?php echo escape($list_display_array[$n]) ?>
                         </a>
                         <?php
                         } ?>&nbsp;|
@@ -110,13 +110,13 @@ include "../../include/header.php";
  
                 if ($per_page==99999)
                     { ?>
-                    <span class="Selected"><?php echo htmlspecialchars($lang["all"])?></span>
+                    <span class="Selected"><?php echo escape($lang["all"])?></span>
                     <?php
                     }
                 else
                     { ?>
                     <a href="<?php echo $url; ?>&per_page_list=99999" onClick="return CentralSpaceLoad(this);">
-                        <?php echo htmlspecialchars($lang["all"])?>
+                        <?php echo escape($lang["all"])?>
                     </a>
                     <?php
                     }
@@ -129,13 +129,13 @@ include "../../include/header.php";
 
     <div class="ListViewBulkActions">
         <span id="messages-delete-selected" class="DisabledLink">
-            <i class="fas fa-trash-alt"></i><?php echo htmlspecialchars($lang["action-delete"]); ?>
+            <i class="fas fa-trash-alt"></i><?php echo escape($lang["action-delete"]); ?>
                 </span>
         <span id="messages-mark-selected-read" class="DisabledLink">
-            <i class="fas fa-envelope-open"></i><?php echo htmlspecialchars($lang["mymessages_markread"]); ?>
+            <i class="fas fa-envelope-open"></i><?php echo escape($lang["mymessages_markread"]); ?>
                 </span>
         <span id="messages-mark-selected-unread" class="DisabledLink">
-            <i class="fas fa-envelope"></i><?php echo htmlspecialchars($lang["mymessages_markunread"]); ?>
+            <i class="fas fa-envelope"></i><?php echo escape($lang["mymessages_markunread"]); ?>
                 </span>
     </div>
 
@@ -145,7 +145,7 @@ include "../../include/header.php";
                 <td><input type="checkbox" id="messages-select-all"></td>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=created&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo htmlspecialchars($lang["created"])?>
+                        <?php echo escape($lang["created"])?>
                     </a>
                     <?php if ($msg_order_by == "created") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
@@ -153,7 +153,7 @@ include "../../include/header.php";
                 </td>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=from&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo htmlspecialchars($lang["from"])?>
+                        <?php echo escape($lang["from"])?>
                     </a>
                     <?php if ($msg_order_by == "from") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
@@ -161,18 +161,18 @@ include "../../include/header.php";
                 </td>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=fullname&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo htmlspecialchars($lang["fullname"])?>
+                        <?php echo escape($lang["fullname"])?>
                     </a>
                     <?php if ($msg_order_by == "fullname") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
                 </td>
                 <?php if ($messages_actions_usergroup) { ?>
-                    <td><?php echo htmlspecialchars($lang["property-user_group"]); ?></td>
+                    <td><?php echo escape($lang["property-user_group"]); ?></td>
                 <?php } ?>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=message&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo htmlspecialchars($lang["message"])?>
+                        <?php echo escape($lang["message"])?>
                     </a>
                     <?php if ($msg_order_by == "message") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
@@ -180,7 +180,7 @@ include "../../include/header.php";
                 </td>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=expires&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo htmlspecialchars($lang["expires"])?>
+                        <?php echo escape($lang["expires"])?>
                     </a>
                     <?php if ($msg_order_by == "expires") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
@@ -188,13 +188,13 @@ include "../../include/header.php";
                 </td>
                 <td>
                     <a href="<?php echo $baseurl_short?>pages/user/user_messages.php?offset=0&msg_order_by=seen&sort=<?php echo urlencode($revsort)?>" onClick="return CentralSpaceLoad(this);">
-                        <?php echo htmlspecialchars($lang["seen"])?>
+                        <?php echo escape($lang["seen"])?>
                     </a>
                     <?php if ($msg_order_by == "seen") { ?>
                         <div class="<?php echo urlencode($sort)?>">&nbsp;</div>
                     <?php } ?>
                 </td>
-                <td><div class="ListTools"><?php echo htmlspecialchars($lang["tools"])?></div></td>
+                <td><div class="ListTools"><?php echo escape($lang["tools"])?></div></td>
             </tr>
             <?php
             for ($n = $offset; (($n < count($messages)) && ($n < ($offset + $per_page))); $n++)
@@ -219,7 +219,7 @@ include "../../include/header.php";
                 <tr>
                     <td><input type="checkbox" class="message-checkbox" data-message="<?php echo (int)$messages[$n]['ref'];?>" id="message-checkbox-<?php echo (int)$messages[$n]['ref'];?>"></td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo nicedate($messages[$n]["created"],true, true, true); ?></td>
-                    <td class="<?php echo $unread_css; ?>"><?php echo htmlspecialchars((string)$messages[$n]["owner"]); ?></td>
+                    <td class="<?php echo $unread_css; ?>"><?php echo escape((string)$messages[$n]["owner"]); ?></td>
                     <td class="SingleLine<?php echo $unread_css; ?>"><?php echo escape((isset($user['fullname']) && trim($user['fullname']) != "") ? $user['fullname'] : $user['username']); ?></td>
                     <?php if ($messages_actions_usergroup) { ?>
                         <td class="<?php echo $unread_css; ?>"><?php echo $user['groupname']; ?></td>
@@ -236,13 +236,13 @@ include "../../include/header.php";
                                 {
                                 $replyurl = $baseurl_short . "pages/user/user_message.php?msgto=" . (int)$messages[$n]["ownerid"];
                                 ?>
-                                <a href="<?php echo $replyurl; ?>"><?php echo '<i class="fas fa-reply"></i>&nbsp;' . htmlspecialchars($lang["reply"]); ?></a>
+                                <a href="<?php echo $replyurl; ?>"><?php echo '<i class="fas fa-reply"></i>&nbsp;' . escape($lang["reply"]); ?></a>
                                 <?php
                                 }
 
                             if ($messages[$n]["url"]!="")
                                 { ?>
-                                <a href="<?php echo escape($messages[$n]["url"]); ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . htmlspecialchars($lang["link"]); ?></a>
+                                <a href="<?php echo escape($messages[$n]["url"]); ?>"><?php echo '<i class="fas fa-link"></i>&nbsp;' . escape($lang["link"]); ?></a>
                                 <?php
                                 } ?> 
                         </div>

@@ -56,16 +56,16 @@ for ($n=$offset;(($n<count($keywords)) && ($n<($offset+$per_page)));$n++)
     <tr>
     <td>
         <div class="ListTitle">
-            <a href="<?php echo $edit_url?>"><?php echo htmlspecialchars($keywords[$n]["keyword"])?>
+            <a href="<?php echo $edit_url?>"><?php echo escape($keywords[$n]["keyword"])?>
         </div>
     </td>
-    <td><?php echo tidy_trim(htmlspecialchars($keywords[$n]["related"]),45)?></td>
+    <td><?php echo tidy_trim(escape($keywords[$n]["related"]),45)?></td>
     <td>
         <div class="ListTools">
             <a 
                 onClick="return CentralSpaceLoad(this,true);" 
                 href="<?php echo $edit_url?>"
-                ><?php echo '<i class="fas fa-edit"></i>&nbsp' . htmlspecialchars($lang["action-edit"])?>
+                ><?php echo '<i class="fas fa-edit"></i>&nbsp' . escape($lang["action-edit"])?>
             </a>
         </div>
     </td>

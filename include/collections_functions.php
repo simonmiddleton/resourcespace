@@ -658,7 +658,7 @@ function collection_writeable($collection)
     global $userref,$usergroup, $allow_smart_collections;
     if (
         $allow_smart_collections && !isset($userref)
-        && isset($collectiondata['savedsearch'])&&$collectiondata['savedsearch'] != null    
+        && isset($collectiondata['savedsearch'])&&$collectiondata['savedsearch'] != null
         ) { 
             return false; // so "you cannot modify this collection"
         }
@@ -2181,7 +2181,7 @@ function email_collection($colrefs,$collectionname,$fromusername,$userlist,$mess
                     }
                 if ($use_phpmailer)
                     {
-                    $link='<a href="' . $url . '">' . htmlspecialchars($collection_name) . '</a>';
+                    $link='<a href="' . $url . '">' . escape($collection_name) . '</a>';
                     $list.= $htmlbreak.$link;
                     // alternate list style
                     $list2.=$htmlbreak.$collection_name.' -'.$htmlbreaksingle . $url;
@@ -4291,7 +4291,7 @@ function compile_collection_actions(array $collection_data, $top_actions, $resou
     if (($k=="" || $internal_share_access) && $count_result > 0 && !(checkperm('F*')) && ($userref == $collection_data['user'] || $collection_data['allow_changes'] == 1 || checkperm('h')) && $allow_multi_edit)
         {
         $main_pages   = array('search', 'collection_manage', 'collection_public', 'themes');
-        $back_to_page = (in_array($pagename, $main_pages) ? htmlspecialchars($pagename) : '');
+        $back_to_page = (in_array($pagename, $main_pages) ? escape($pagename) : '');
         $data_attribute['url'] = generateURL($baseurl_short . "pages/collection_edit_previews.php",$urlparams,array("backto"=>$back_to_page));
         $options[$o]['value']     = 'edit_previews';
         $options[$o]['label']     = $lang['editcollectionresources'];

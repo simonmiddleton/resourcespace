@@ -163,7 +163,7 @@ if(isset($user_dl_limit) && intval($user_dl_limit) > 0)
         $errormessage = $lang["download_limit_collection_error"] . " " . str_replace(array("%%DOWNLOADED%%","%%LIMIT%%"),array($download_limit_check,$user_dl_limit),$lang['download_limit_summary']);
         if(getval("ajax","") != "")
             {
-            error_alert(htmlspecialchars($errormessage), true,200);
+            error_alert(escape($errormessage), true,200);
             }
         else
             {
@@ -628,7 +628,7 @@ include "../include/header.php";
     $urlparams = array(
         "search"      =>  "!collection".$collection,
         "k"           =>  $k);
-    ?><p><a href="<?php echo generateURL($baseurl_short."pages/search.php",$urlparams); ?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo htmlspecialchars($lang['back'])?></a></p><?php
+    ?><p><a href="<?php echo generateURL($baseurl_short."pages/search.php",$urlparams); ?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo escape($lang['back'])?></a></p><?php
 }?>
 
 <h1><?php echo $lang["downloadzip"]?></h1>
@@ -713,13 +713,13 @@ function ajax_download(download_offline, tar)
 
     <form id='myform' action="<?php echo $baseurl_short?>pages/collection_download.php?id=<?php echo urlencode($uniqid) ?>&submitted=true" method=post>
         <?php generateFormToken("myform"); ?>
-<input type=hidden name="collection" value="<?php echo htmlspecialchars($collection) ?>">
-<input type=hidden name="usage" value="<?php echo htmlspecialchars($usage); ?>">
-<input type=hidden name="usagecomment" value="<?php echo htmlspecialchars($usagecomment); ?>">
-<input type=hidden name="k" value="<?php echo htmlspecialchars($k) ?>">
+<input type=hidden name="collection" value="<?php echo escape($collection) ?>">
+<input type=hidden name="usage" value="<?php echo escape($usage); ?>">
+<input type=hidden name="usagecomment" value="<?php echo escape($usagecomment); ?>">
+<input type=hidden name="k" value="<?php echo escape($k) ?>">
 
 
-    <input type=hidden name="id" value="<?php echo htmlspecialchars($uniqid) ?>">
+    <input type=hidden name="id" value="<?php echo escape($uniqid) ?>">
     <iframe id="downloadiframe" style="display:none;"></iframe>
 
 
@@ -811,7 +811,7 @@ if ($archiver && count($collection_download_settings)>1)
     <select name="settings" class="stdwidth" id="archivesettings"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>><?php
     foreach ($collection_download_settings as $key=>$value)
         { ?>
-        <option value="<?php echo htmlspecialchars($key) ?>"><?php echo lang_or_i18n_get_translated($value["name"],"archive-") ?></option><?php
+        <option value="<?php echo escape($key) ?>"><?php echo lang_or_i18n_get_translated($value["name"],"archive-") ?></option><?php
         } ?>
     </select>
     <div class="clearerleft"></div></div><br />

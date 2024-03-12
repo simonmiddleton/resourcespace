@@ -225,7 +225,7 @@ else
 <?php render_top_page_error_style($error); ?>
 <form method="post" action="<?php echo $baseurl ?>/pages/team/team_report.php" onSubmit="if (!do_download) {return CentralSpacePost(this);}">
     <?php generateFormToken("team_report"); ?>
-    <input type="hidden" name="backurl" value="<?php echo htmlspecialchars($backurl); ?>">
+    <input type="hidden" name="backurl" value="<?php echo escape($backurl); ?>">
 <div class="Question">
     <script>
     function show_hide_date()
@@ -255,7 +255,7 @@ foreach($report_options as $report_opt)
         ($report_opt['contains_date'] == true ? 1 : 0),
         (int) ($report_opt['has_thumbnail'] && !$report_opt['support_non_correlated_sql']),
         ($report_opt['ref'] == $report ? ' selected' : ''),
-        htmlspecialchars($report_opt['name']));
+        escape($report_opt['name']));
     }
     ?>
 </select>
@@ -328,7 +328,7 @@ foreach($report_options as $report_opt)
             ?>
             <div class="clearerleft"></div>
             <br />
-            <input name="createemail" type="submit" onClick="do_download=true;" value="<?php echo htmlspecialchars($lang["create"]); ?>" />
+            <input name="createemail" type="submit" onClick="do_download=true;" value="<?php echo escape($lang["create"]); ?>" />
             </div>
             <div class="clearerleft"></div>
         </div>
@@ -341,13 +341,13 @@ foreach($report_options as $report_opt)
     var do_download=false;
     </script>
     <div class="QuestionSubmit" id="SubmitBlock">       
-        <input name="save" type="submit" onClick="do_download=false;" value="<?php echo htmlspecialchars($lang["viewreport"]); ?>" />
-        <input name="download" type="submit" onClick="do_download=true;" value="<?php echo htmlspecialchars($lang["downloadreport"]); ?>" />
+        <input name="save" type="submit" onClick="do_download=false;" value="<?php echo escape($lang["viewreport"]); ?>" />
+        <input name="download" type="submit" onClick="do_download=true;" value="<?php echo escape($lang["downloadreport"]); ?>" />
         <input name="view_as_search_results"
                class="DisplayNone"
                onclick="return report_view_as_search_results_btn(this);"
                type="submit"
-               value="<?php echo htmlspecialchars($lang['action-view_as_search_results']); ?>">
+               value="<?php echo escape($lang['action-view_as_search_results']); ?>">
     </div>
 </form>
 <?php echo $output; ?>

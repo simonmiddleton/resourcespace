@@ -23,7 +23,7 @@ function HookAdobe_linkViewBefore_footer_always()
         window.addEventListener("message", function(event) {
             if(event.data && event.data.eventType=="assetReadyToPlace")
                 {
-                styledalert('<?php echo htmlspecialchars($lang["adobe_link_title"]); ?>','<?php echo htmlspecialchars($lang["adobe_link_copy_successful"]); ?>');
+                styledalert('<?php echo escape($lang["adobe_link_title"]); ?>','<?php echo escape($lang["adobe_link_copy_successful"]); ?>');
                 }    
             });
         });
@@ -54,7 +54,7 @@ function HookAdobe_linkViewBefore_footer_always()
         objMessage.count = objMessage.items.length;
         objMessage.eventType = "downloadDocument";
 
-        styledalert('<?php echo htmlspecialchars($lang["adobe_link_title"]); ?>','<?php echo htmlspecialchars($lang["adobe_link_import_successful"]); ?>');
+        styledalert('<?php echo escape($lang["adobe_link_title"]); ?>','<?php echo escape($lang["adobe_link_import_successful"]); ?>');
 
         window.postMessage(objMessage, '*');
         }
@@ -80,7 +80,7 @@ function HookAdobe_linkViewBefore_footer_always()
         if ($_SERVER['HTTP_USER_AGENT'] != "InDesign-DAMConnect")
             {
             // Photoshop not always showing the 'Asset ready to place' message
-            echo "styledalert('" . htmlspecialchars($lang["adobe_link_title"]) . "','" . htmlspecialchars($lang["adobe_link_copy_successful"]) . "');";
+            echo "styledalert('" . escape($lang["adobe_link_title"]) . "','" . escape($lang["adobe_link_copy_successful"]) . "');";
             }
             ?>
         
@@ -180,9 +180,9 @@ function HookAdobe_linkViewDownloadbuttonreplace()
     $path = generateURL($baseurl . "/pages/download.php", $urlparams, $extraparams);
 
     $adobelink = "<a href='" . $path . "'";
-    $adobelink .= "data-attribute-path='" . htmlspecialchars($path) . "' ";
-    $adobelink .= "data-attribute-ref='" . htmlspecialchars($ref) . "' ";
-    $adobelink .= "data-attribute-name='" . htmlspecialchars($adobefilename) . "' ";
+    $adobelink .= "data-attribute-path='" . escape($path) . "' ";
+    $adobelink .= "data-attribute-ref='" . escape($ref) . "' ";
+    $adobelink .= "data-attribute-name='" . escape($adobefilename) . "' ";
     
     if(in_array(strtolower($adb_ext),$adobe_link_asset_extensions))
         {
@@ -204,7 +204,7 @@ function HookAdobe_linkViewDownloadbuttonreplace()
         $extraparams[$CSRF_token_identifier] =  generateCSRFToken($usersession, "adobe_upload");
         $uploadpath = generateURL($baseurl . "/pages/upload_batch.php", $urlparams, $extraparams);
         $adobesavelink = "</td><td class='DownloadButton'><a href='" . $uploadpath . "' ";
-        $adobesavelink .= "data-attribute-path='" . htmlspecialchars($uploadpath) . "' ";
+        $adobesavelink .= "data-attribute-path='" . escape($uploadpath) . "' ";
         $adobesavelink .= "onclick='AdobeLinkDocumentSave(this);return false;' ";
         $adobesavelink .= ">" . $lang["adobe_link_upload_document"]. "</a>";
         echo $adobesavelink;
@@ -242,9 +242,9 @@ function HookAdobe_linkViewOrigdownloadlink()
     $adobefilename = get_download_filename($ref,'',-1,$resource['file_extension']);    
 
     $adobelink = "<a href='" . $path . "'";
-    $adobelink .= "data-attribute-path='" . htmlspecialchars($path) . "' ";
-    $adobelink .= "data-attribute-ref='" . htmlspecialchars($ref) . "' ";
-    $adobelink .= "data-attribute-name='" . htmlspecialchars($adobefilename) . "' ";
+    $adobelink .= "data-attribute-path='" . escape($path) . "' ";
+    $adobelink .= "data-attribute-ref='" . escape($ref) . "' ";
+    $adobelink .= "data-attribute-name='" . escape($adobefilename) . "' ";
 
     if(in_array(strtolower($resource['file_extension']),$adobe_link_asset_extensions))
         {
@@ -274,7 +274,7 @@ function HookAdobe_linkViewOrigdownloadlink()
         $extraparams["no_exif"]          =  "yes";
         $uploadpath = generateURL($baseurl . "/pages/upload_batch.php", $urlparams, $extraparams);
         $adobesavelink = "</td><td class='DownloadButton'><a href='" . $uploadpath . "'";
-        $adobesavelink .= "data-attribute-path='" . htmlspecialchars($uploadpath) . "' ";
+        $adobesavelink .= "data-attribute-path='" . escape($uploadpath) . "' ";
         $adobesavelink .= "onclick='AdobeLinkDocumentSave(this);return false;' ";
         $adobesavelink .= ">" . $lang["adobe_link_upload_document"]. "</a>";
         echo $adobesavelink;

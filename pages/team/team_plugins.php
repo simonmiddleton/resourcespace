@@ -318,11 +318,11 @@ if($searching)
             }
         ?>
             <tr>
-                <td><?php echo '<i class="plugin-icon ' . htmlspecialchars($plugin["icon"]) . '"></i>'; ?></td>
-                <td><?php echo $plugin["title"] != "" ? htmlspecialchars($plugin["title"]) : htmlspecialchars($plugin["name"]); ?></td>
-                <td><?php echo htmlspecialchars($plugin_description); ?></td>
-                <td><?php echo htmlspecialchars($plugin["author"]); ?></td>
-                <td><?php echo htmlspecialchars($plugin_version); ?></td>
+                <td><?php echo '<i class="plugin-icon ' . escape($plugin["icon"]) . '"></i>'; ?></td>
+                <td><?php echo $plugin["title"] != "" ? escape($plugin["title"]) : escape($plugin["name"]); ?></td>
+                <td><?php echo escape($plugin_description); ?></td>
+                <td><?php echo escape($plugin["author"]); ?></td>
+                <td><?php echo escape($plugin_version); ?></td>
                 <?php hook('additional_plugin_column_data'); ?>
                 <td>
                     <div class="ListTools">
@@ -354,7 +354,7 @@ if($searching)
                     }
                    else
                     {$plugin_config_url = $baseurl_short . $plugin['config_url'];}
-                   echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' . htmlspecialchars($lang['options']).'</a> ';        
+                   echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' . escape($lang['options']).'</a> ';        
                    }
                 ?>
                     </div><!-- End of ListTools -->
@@ -449,7 +449,7 @@ if (count($inst_plugins)>0)
                 }
                else
                 {$plugin_config_url = $baseurl_short . $p['config_url'];}
-               echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' .htmlspecialchars($lang['options']).'</a> ';        
+               echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="' . $plugin_config_url . '"><i class="fas fa-cog"></i>&nbsp;' .escape($lang['options']).'</a> ';        
                }
             echo '</div></td></tr>';
             } 
@@ -555,7 +555,7 @@ function display_plugin_category($plugins,$category,$header=true)
         {
         $category_name = isset($lang["plugin_category_{$category}"]) ? $lang["plugin_category_{$category}"] : $category;
         ?>
-        <h3 class="CollapsiblePluginListHead collapsed"><?php echo htmlspecialchars($category_name); ?></h3>
+        <h3 class="CollapsiblePluginListHead collapsed"><?php echo escape($category_name); ?></h3>
         <?php
         }
         ?>

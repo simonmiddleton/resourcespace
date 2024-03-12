@@ -71,7 +71,7 @@ renderBreadcrumbs($links_trail);
 if(isset($saved_text))
     {
     ?>
-    <div class="PageInformal"><?php echo htmlspecialchars($saved_text); ?></div>
+    <div class="PageInformal"><?php echo escape($saved_text); ?></div>
     <?php
     }
     ?>

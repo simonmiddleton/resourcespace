@@ -16,7 +16,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
         <div class="ResourcePanel">
 
         <div class="ImageWrapper" style="position: relative;height:150px;">
-        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo htmlspecialchars(str_replace(array("\"","'"),"",i18n_get_collection_name($collections[$n]))) ?>">
+        <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>" title="<?php echo escape(str_replace(array("\"","'"),"",i18n_get_collection_name($collections[$n]))) ?>">
 
         <?php 
         $images=0;
@@ -57,7 +57,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
                     if ($x == count($df) - 1) { ?>
                         <a onClick="return CentralSpaceLoad(this, true);"
                             href="<?php echo $pub_url?>"
-                            title="<?php echo htmlspecialchars(str_replace(array("\"", "'"), "", i18n_get_collection_name($collections[$n]))) ?>">
+                            title="<?php echo escape(str_replace(array("\"", "'"), "", i18n_get_collection_name($collections[$n]))) ?>">
                             <?php echo highlightkeywords(tidy_trim(i18n_get_collection_name($collections[$n]), 32), $search)?>
                         </a>
                     <?php } ?>

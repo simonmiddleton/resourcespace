@@ -77,13 +77,13 @@ if(isset($error))
     <p><?php echo text("introtext"); ?></p>
     <form method=post id="collectionform" action="<?php echo $action_url; ?>">
         <?php generateFormToken("collectionform"); ?>
-        <input type=hidden name=ref value="<?php echo htmlspecialchars($ref); ?>">
+        <input type=hidden name=ref value="<?php echo escape($ref); ?>">
         <input type=hidden name="submitted" value="true">
         <input type="hidden" name="redirect" id="redirect" value="yes" >
         <input type=hidden name="update_parent" value="false">
         <div class="Question">
             <label for="name"><?php echo $lang["collection"]?></label>
-            <div class="Fixed"><?php echo htmlspecialchars(i18n_get_collection_name($collection, $index="name")); ?></div >
+            <div class="Fixed"><?php echo escape(i18n_get_collection_name($collection, $index="name")); ?></div >
             <div class="clearerleft"> </div>
         </div>
         <?php

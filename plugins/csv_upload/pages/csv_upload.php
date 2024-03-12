@@ -86,7 +86,8 @@ $selected_columns[] = $csv_set_options["status_column"];
 $selected_columns[] = $csv_set_options["access_column"];
 $selected_columns = array_filter($selected_columns,"emptyiszero");
 
-$csvdir     = get_temp_dir() . DIRECTORY_SEPARATOR . "csv_upload" . DIRECTORY_SEPARATOR . md5($session_hash);
+$usehash = $session_hash ?? get_rs_session_id(true);
+$csvdir     = get_temp_dir() . DIRECTORY_SEPARATOR . "csv_upload" . DIRECTORY_SEPARATOR . md5($usehash);
 if(!file_exists($csvdir))
     {
     mkdir($csvdir,0777,true);
@@ -329,7 +330,7 @@ switch($csvstep)
                         <?php
                         foreach($csv_info as $csv_column => $csv_field_data)
                             {
-                            echo "<option value=\"" . $csv_column . "\" " . (($csv_set_options["resource_type_column"] != "" && $csv_set_options["resource_type_column"] == $csv_column) || strtolower($csv_field_data["header"]) == strtolower($lang["resourcetype"]) ? " selected " : "") . ">" . htmlspecialchars($csv_field_data["header"]) . "</option>\n";
+                            echo "<option value=\"" . $csv_column . "\" " . (($csv_set_options["resource_type_column"] != "" && $csv_set_options["resource_type_column"] == $csv_column) || strtolower($csv_field_data["header"]) == strtolower($lang["resourcetype"]) ? " selected " : "") . ">" . escape($csv_field_data["header"]) . "</option>\n";
                             }
                             ?>
                     </select>
@@ -342,7 +343,7 @@ switch($csvstep)
                             <?php   
                             foreach ($resource_types as $resource_type)
                                 {
-                                ?><option value="<?php echo $resource_type["ref"]; ?>" <?php if($csv_set_options["resource_type_default"] == $resource_type["ref"]){echo " selected ";}?>><?php echo htmlspecialchars($resource_type["name"]); ?></option>                                   
+                                ?><option value="<?php echo $resource_type["ref"]; ?>" <?php if($csv_set_options["resource_type_default"] == $resource_type["ref"]){echo " selected ";}?>><?php echo escape($resource_type["name"]); ?></option>                                   
                                 <?php
                                 }
                             ?>
@@ -357,7 +358,7 @@ switch($csvstep)
                         <?php
                         foreach($csv_info as $csv_column => $csv_field_data)
                             {
-                            echo "<option value=\"" . $csv_column . "\" " . (($csv_set_options["status_column"] === $csv_column || strtolower($csv_field_data["header"]) == strtolower($lang["status"])) ? " selected " : "") . ">" . htmlspecialchars($csv_field_data["header"]) . "</option>\n";
+                            echo "<option value=\"" . $csv_column . "\" " . (($csv_set_options["status_column"] === $csv_column || strtolower($csv_field_data["header"]) == strtolower($lang["status"])) ? " selected " : "") . ">" . escape($csv_field_data["header"]) . "</option>\n";
                             }
                             ?>
                     </select>
@@ -372,7 +373,7 @@ switch($csvstep)
                             $workflow_states = get_editable_states($userref);
                             foreach($workflow_states as $workflow_state)
                                 {
-                                ?><option value="<?php echo $workflow_state["id"]; ?>" <?php if($csv_set_options["status_default"] == $workflow_state["id"]){echo " selected ";} ?>><?php echo htmlspecialchars($workflow_state["name"]); ?></option>                                   
+                                ?><option value="<?php echo $workflow_state["id"]; ?>" <?php if($csv_set_options["status_default"] == $workflow_state["id"]){echo " selected ";} ?>><?php echo escape($workflow_state["name"]); ?></option>                                   
                                 <?php
                                 }
                             ?>
@@ -396,7 +397,7 @@ switch($csvstep)
                                 {
                                 echo " selected ";
                                 }
-                            echo  ">" . htmlspecialchars($csv_field_data["header"]) . "</option>\n";
+                            echo  ">" . escape($csv_field_data["header"]) . "</option>\n";
                             }                            
                             ?>
                     </select>
@@ -413,7 +414,7 @@ switch($csvstep)
                                 {
                                 if(!checkperm("ea" . $n) || checkperm("v"))
                                     {
-                                    echo "<option value=\"" . $n . "\" " . (($csv_set_options["access_default"] == $n) ? " selected " : "") . ">" . htmlspecialchars($lang["access" . $n]) . "</option>\n";
+                                    echo "<option value=\"" . $n . "\" " . (($csv_set_options["access_default"] == $n) ? " selected " : "") . ">" . escape($lang["access" . $n]) . "</option>\n";
                                     }
                                 }
                                 ?>
@@ -476,7 +477,7 @@ switch($csvstep)
                                 {
                                 echo " selected ";
                                 }
-                            echo  ">" . htmlspecialchars($csv_field_data["header"]) . "</option>\n";
+                            echo  ">" . escape($csv_field_data["header"]) . "</option>\n";
                             }
                             ?>
                     </select>
@@ -499,7 +500,7 @@ switch($csvstep)
                                 {
                                 echo " selected ";
                                 }
-                            echo  ">" . htmlspecialchars($csv_field_data["header"]) . "</option>\n";
+                            echo  ">" . escape($csv_field_data["header"]) . "</option>\n";
                             }
                             ?>
                     </select>
@@ -574,7 +575,7 @@ switch($csvstep)
                             continue;
                             }
                         echo "<tr>";
-                        echo "<td><div class='fixed medwidth' >". htmlspecialchars($csv_field_data["header"]) . "</div></td>\n";
+                        echo "<td><div class='fixed medwidth' >". escape($csv_field_data["header"]) . "</div></td>\n";
                         echo "<td><select name='fieldmapping[" . $csv_column  . "]' class='stdwidth columnselect'>";
                         echo "<option value='-1' " . ((isset($csv_set_options["fieldmapping"][$csv_column]) && $csv_set_options["fieldmapping"][$csv_column] == -1) ? "selected" : "") . ">" . $lang["csv_upload_mapping_ignore"] . "</option>";
                         foreach($allfields as $field)
@@ -590,7 +591,7 @@ switch($csvstep)
                                 {
                                     echo " selected ";
                                 }
-                            echo  ">" . htmlspecialchars(i18n_get_translated($field["title"]));
+                            echo  ">" . escape(i18n_get_translated($field["title"]));
                             if((int)$field["global"] !== 1)
                                 {
                                 $fieldrestypes = explode(",",(string)$field["resource_types"]);
@@ -723,7 +724,7 @@ switch($csvstep)
         if($csv_set_options["process_offline"])
             {            
             // Move the CSV to a new location so that it doesn't get overwritten
-            $csvdir     = get_temp_dir() . DIRECTORY_SEPARATOR . "csv_upload" . DIRECTORY_SEPARATOR . $session_hash;
+            $csvdir     = get_temp_dir() . DIRECTORY_SEPARATOR . "csv_upload" . DIRECTORY_SEPARATOR . ($usehash);
             if(!file_exists($csvdir))
                 {
                 mkdir($csvdir,0777,true);

@@ -138,7 +138,7 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
                     $binddomains=explode(";",$simpleldap['domain']);
                     foreach ($binddomains as $binddomain)
                         {
-                        echo "<option value'" . htmlspecialchars($binddomain)  . "'>" . htmlspecialchars($binddomain) . "</option>";
+                        echo "<option value'" . escape($binddomain)  . "'>" . escape($binddomain) . "</option>";
                         }               
                     ?>
                     </select>
@@ -165,17 +165,17 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
             userdomain = jQuery('#ldapdomain').val();
             var post_data = {
                 ajax: true,
-                ldapserver: '<?php echo htmlspecialchars($simpleldap['ldapserver']) ?>',
-                port: '<?php echo htmlspecialchars($simpleldap['port']) ?>',
-                ldaptype: '<?php echo htmlspecialchars($simpleldap['ldaptype']) ?>',
-                domain: '<?php echo htmlspecialchars($simpleldap['domain']) ?>',
-                loginfield: '<?php echo htmlspecialchars($simpleldap['loginfield']) ?>',                
-                basedn: '<?php echo htmlspecialchars($simpleldap['basedn']) ?>',    
-                ldapgroupfield: '<?php echo htmlspecialchars($simpleldap['ldapgroupfield']) ?>',
-                email_attribute: '<?php echo htmlspecialchars($simpleldap['email_attribute']) ?>',
-                phone_attribute: '<?php echo htmlspecialchars($simpleldap['phone_attribute']) ?>',  
-                emailsuffix: '<?php echo htmlspecialchars($simpleldap['emailsuffix']) ?>',  
-                LDAPTLS_REQCERT_never: '<?php echo htmlspecialchars($simpleldap['LDAPTLS_REQCERT_never']) ?>',      
+                ldapserver: '<?php echo escape($simpleldap['ldapserver']) ?>',
+                port: '<?php echo escape($simpleldap['port']) ?>',
+                ldaptype: '<?php echo escape($simpleldap['ldaptype']) ?>',
+                domain: '<?php echo escape($simpleldap['domain']) ?>',
+                loginfield: '<?php echo escape($simpleldap['loginfield']) ?>',                
+                basedn: '<?php echo escape($simpleldap['basedn']) ?>',    
+                ldapgroupfield: '<?php echo escape($simpleldap['ldapgroupfield']) ?>',
+                email_attribute: '<?php echo escape($simpleldap['email_attribute']) ?>',
+                phone_attribute: '<?php echo escape($simpleldap['phone_attribute']) ?>',  
+                emailsuffix: '<?php echo escape($simpleldap['emailsuffix']) ?>',  
+                LDAPTLS_REQCERT_never: '<?php echo escape($simpleldap['LDAPTLS_REQCERT_never']) ?>',      
                 ldapuser: user,
                 ldappassword: password,
                 userdomain: userdomain,

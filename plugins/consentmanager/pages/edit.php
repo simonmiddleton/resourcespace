@@ -202,14 +202,14 @@ include "../../../include/header.php";
 <div class="Question"><label><?php echo $lang["consent_id"]?></label><div class="Fixed"><?php echo escape($ref == "new" ? $lang["consentmanager_new"] : $ref)?></div>
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["name"]?></label><input type=text class="stdwidth" name="name" id="name" value="<?php echo htmlspecialchars($consent["name"])?>" />
+<div class="Question"><label><?php echo $lang["name"]?></label><input type=text class="stdwidth" name="name" id="name" value="<?php echo escape($consent["name"])?>" />
 <div class="clearerleft"> </div></div>
 
 
-<div class="Question"><label><?php echo $lang["email"]?></label><input type=text class="stdwidth" name="email" id="email" value="<?php echo htmlspecialchars($consent["email"])?>" />
+<div class="Question"><label><?php echo $lang["email"]?></label><input type=text class="stdwidth" name="email" id="email" value="<?php echo escape($consent["email"])?>" />
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["telephone"]?></label><input type=text class="stdwidth" name="telephone" id="telephone" value="<?php echo htmlspecialchars($consent["telephone"])?>" />
+<div class="Question"><label><?php echo $lang["telephone"]?></label><input type=text class="stdwidth" name="telephone" id="telephone" value="<?php echo escape($consent["telephone"])?>" />
 <div class="clearerleft"> </div></div>
 
 
@@ -290,7 +290,7 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
 
     <div class="Question">
         <label for="notes"><?php echo $lang["notes"]?></label>
-        <textarea class="stdwidth" rows="5" name="notes" id="notes"><?php echo htmlspecialchars($consent["notes"]) ?></textarea>
+        <textarea class="stdwidth" rows="5" name="notes" id="notes"><?php echo escape($consent["notes"]) ?></textarea>
         <div class="clearerleft"> </div>
     </div>
 

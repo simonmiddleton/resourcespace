@@ -84,8 +84,8 @@ function HookEmbeddocumentViewAfterresourceactions2()
     <li><a href="#" onClick="
     if (document.getElementById('embeddocument').style.display=='block') {document.getElementById('embeddocument').style.display='none';} else {document.getElementById('embeddocument').style.display='block';}
     if (document.getElementById('embeddocument2').style.display=='block') {document.getElementById('embeddocument2').style.display='none';} else {document.getElementById('embeddocument2').style.display='block';}
-    return false;"><?php echo "<i class='fa fa-share-alt'></i>&nbsp;" . htmlspecialchars($lang["embeddocument_embed"]) ?></a></li>
-    <p id="embeddocument2" style="display:none;padding:10px 0 3px 0;"><?php echo htmlspecialchars($lang["embeddocument_help"]) ?><br/>
+    return false;"><?php echo "<i class='fa fa-share-alt'></i>&nbsp;" . escape($lang["embeddocument_embed"]) ?></a></li>
+    <p id="embeddocument2" style="display:none;padding:10px 0 3px 0;"><?php echo escape($lang["embeddocument_help"]) ?><br/>
         <br/>
 
     <?php if ($access==0)
@@ -102,12 +102,12 @@ function HookEmbeddocumentViewAfterresourceactions2()
             document.getElementById('embeddocument').style.display='block'; 
             document.getElementById('embeddocument_download').style.display='none';
             }
-        "><?php echo htmlspecialchars($lang["embeddocument_allow_original_download"]) ?></p>
+        "><?php echo escape($lang["embeddocument_allow_original_download"]) ?></p>
         <?php
         } ?>
 
-    <textarea id="embeddocument" style="width:335px;height:120px;display:none;"><?php echo htmlspecialchars($embed); ?></textarea>
-<textarea id="embeddocument_download" style="width:335px;height:120px;display:none;"><?php echo htmlspecialchars(str_replace($viewer_url,$download_url,$embed)); ?></textarea>
+    <textarea id="embeddocument" style="width:335px;height:120px;display:none;"><?php echo escape($embed); ?></textarea>
+<textarea id="embeddocument_download" style="width:335px;height:120px;display:none;"><?php echo escape(str_replace($viewer_url,$download_url,$embed)); ?></textarea>
     <?php
     return true;
     }

@@ -34,8 +34,8 @@ foreach($tmsdata as $key=>$value)
     {
     ?>
     <tr> 
-    <td><strong><?php echo htmlspecialchars($key); ?></strong></td>
-    <td><?php echo htmlspecialchars($value); ?></td>
+    <td><strong><?php echo escape($key); ?></strong></td>
+    <td><?php echo escape($value); ?></td>
     </tr>
     <?php
     }

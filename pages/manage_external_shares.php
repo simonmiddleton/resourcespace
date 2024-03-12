@@ -443,7 +443,7 @@ function clearsharefilter()
 </script>
 
 <div class='BasicsBox'>
-    <h1><?php echo htmlspecialchars($pagetitle);render_help_link('user/manage_external_shares'); ?></h1>
+    <h1><?php echo escape($pagetitle);render_help_link('user/manage_external_shares'); ?></h1>
 
     <?php
     renderBreadcrumbs($breadcrumbs);
@@ -485,7 +485,7 @@ function clearsharefilter()
             if(checkperm('a'))
                 {?>
                 <div class="Question"  id="QuestionShareUser">
-                    <label><?php echo htmlspecialchars($lang["share_user"]); ?></label>
+                    <label><?php echo escape($lang["share_user"]); ?></label>
                     <?php include __DIR__ . "/../include/user_select.php" ?> 
                     <div class="clearerleft"></div>
                 </div>

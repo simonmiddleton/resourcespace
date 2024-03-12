@@ -27,7 +27,7 @@ include "../../../include/header.php";
      <?php generateFormToken("tmsraw"); ?>
         <div class="Question">
             <label for="id" >Enter TMS Identifier</label>
-            <input type="text" name="tmsid" value ="<?php echo htmlspecialchars($tmsid); ?>" />
+            <input type="text" name="tmsid" value ="<?php echo escape($tmsid); ?>" />
         </div>
         <div class="Question">
             <input type="submit" name="save" value="Get data" onclick="return CentralSpacePost(jQuery('#tmsraw'), false);">

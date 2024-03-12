@@ -102,8 +102,8 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
             {
             ?>
             <div class="itemNarrow">
-                <h3><?php echo htmlspecialchars($lang["resourceid"]); ?></h3>
-                <p><?php echo htmlspecialchars($ref)?></p>
+                <h3><?php echo escape($lang["resourceid"]); ?></h3>
+                <p><?php echo escape($ref)?></p>
             </div>
             <?php
             }
@@ -112,8 +112,8 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
             {
             ?>
             <div class="itemNarrow">
-                <h3><?php echo htmlspecialchars($lang["access"]); ?></h3>
-                <p><?php echo htmlspecialchars($lang["access{$resource['access']}"] ?? ''); ?></p>
+                <h3><?php echo escape($lang["access"]); ?></h3>
+                <p><?php echo escape($lang["access{$resource['access']}"] ?? ''); ?></p>
             </div>
             <?php
             }
@@ -122,8 +122,8 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
             {
             ?>
             <div class="itemNarrow">
-                <h3><?php echo htmlspecialchars($lang["resourcetype"]); ?></h3>
-                <p><?php echo  htmlspecialchars(get_resource_type_name($resource["resource_type"]))?></p>
+                <h3><?php echo escape($lang["resourcetype"]); ?></h3>
+                <p><?php echo  escape(get_resource_type_name($resource["resource_type"]))?></p>
             </div>
             <?php
             }
@@ -147,7 +147,7 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
                 $udata = get_user($resource["created_by"]);
                 if($udata !== false)
                     {
-                    $udata_fullname = highlightkeywords(htmlspecialchars($udata["fullname"]), $search);
+                    $udata_fullname = highlightkeywords(escape($udata["fullname"]), $search);
                     $udata_a_tag_href = generateURL("{$baseurl_short}pages/team/team_user_edit.php", ['ref' => $udata["ref"]]);
                     $udata_a_tag = sprintf(
                         '<a href="%s" onclick="return CentralSpaceLoad(this, true);">%s</a>',
@@ -156,7 +156,7 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
                     );
                     ?>
                     <div class="itemNarrow">
-                        <h3><?php echo htmlspecialchars($lang["contributedby"]); ?></h3>
+                        <h3><?php echo escape($lang["contributedby"]); ?></h3>
                         <p><?php echo checkperm("u") ? $udata_a_tag : $udata_fullname; ?></p>
                     </div>
                     <?php
@@ -176,7 +176,7 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
     if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0)
         {
         ?>
-        <div class="Title"><?php echo htmlspecialchars($lang['metadata']); ?></div>
+        <div class="Title"><?php echo escape($lang['metadata']); ?></div>
         <div class="TabBar">
         <?php
         foreach ($fields_tab_names as $tab_name) {
@@ -191,7 +191,7 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
                 }
             ?>
             <div id="<?php echo $modal ? "Modal" : ""; ?>tabswitch<?php echo $tabcount.'-'.$ref; ?>" class="Tab<?php echo $class_TabSelected; ?>">
-                <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo htmlspecialchars($tab_name); ?></a>
+                <a href="#" onclick="<?php echo $tabOnClick?>"><?php echo escape($tab_name); ?></a>
             </div>
             <?php 
             $tabcount++;

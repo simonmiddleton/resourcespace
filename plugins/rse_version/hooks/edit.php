@@ -4,7 +4,7 @@ function HookRse_versionEditEdit_all_extra_modes($field)
     {
     global $lang;
     ?>
-    <option value="Revert"><?php echo htmlspecialchars($lang["revertmetadatatodatetime"]); ?></option>
+    <option value="Revert"><?php echo escape($lang["revertmetadatatodatetime"]); ?></option>
     <?php
     }
     
@@ -91,10 +91,10 @@ function HookRse_versionEditBefore_status_question()
         });
     </script>
     <div class="Question" id="edit_mode_status" style="display: none; padding-bottom: 0px; margin-bottom: 0px;">
-        <label><?php echo htmlspecialchars($lang["editmode"]); ?></label>
+        <label><?php echo escape($lang["editmode"]); ?></label>
         <select id="modeselect_status" class="stdwidth" name="modeselect_status" onchange="modeselect_status_onchange(this);">
             <option value=""></option>
-            <option value="revert"><?php echo htmlspecialchars($lang["revertmetadatatodatetime"]); ?></option>
+            <option value="revert"><?php echo escape($lang["revertmetadatatodatetime"]); ?></option>
         </select>
         <script>
         function modeselect_status_onchange(el)

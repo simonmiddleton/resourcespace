@@ -187,7 +187,7 @@ function addColumnHeader($orderName, $labelKey)
                     <?php
                     if ($groups[$n]["orphaned"])
                         {
-                        ?><a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">&lt;<?php echo htmlspecialchars($groups[$n]["pname"]) ;?>&gt;</a>
+                        ?><a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);">&lt;<?php echo escape($groups[$n]["pname"]) ;?>&gt;</a>
                         <?php
                         }
                     else

@@ -88,13 +88,13 @@ function UserRatingSet(userref,ref,rating)
 <table cellpadding="0" cellspacing="0" width="100%">
 <tr class="DownloadDBlend">
 <?php hook("beforeuserratingheader"); ?>
-<td id="UserRatingMessage"><?php echo htmlspecialchars($lang["ratethisresource"])?></td>
-<td width="33%" class="RatingStars" onMouseOut="UserRatingDisplay(<?php echo htmlspecialchars($rating) ?>,'StarCurrent');">
+<td id="UserRatingMessage"><?php echo escape($lang["ratethisresource"])?></td>
+<td width="33%" class="RatingStars" onMouseOut="UserRatingDisplay(<?php echo escape($rating) ?>,'StarCurrent');">
 <div class="RatingStarsContainer">
-<?php if ($user_rating_only_once) {?><a href="#" onClick="UserRatingSet(<?php echo $userref?>,<?php echo htmlspecialchars($ref) ?>,0);return false;" title="<?php echo escape($lang["ratingremovehover"])?>" style="display:<?php echo $removeratingvis;?>"><span id="RatingStarLink0">X&nbsp;&nbsp;</span></a><?php }?>
+<?php if ($user_rating_only_once) {?><a href="#" onClick="UserRatingSet(<?php echo $userref?>,<?php echo escape($ref) ?>,0);return false;" title="<?php echo escape($lang["ratingremovehover"])?>" style="display:<?php echo $removeratingvis;?>"><span id="RatingStarLink0">X&nbsp;&nbsp;</span></a><?php }?>
 <?php for ($n=1;$n<=5;$n++)
     {
-    ?><a href="#" onMouseOver="UserRatingDisplay(<?php echo $n?>,'StarSelect');" onClick="UserRatingSet(<?php echo $userref?>,<?php echo htmlspecialchars($ref) ?>,<?php echo $n?>);return false;" id="RatingStarLink<?php echo $n?>"><span id="RatingStar<?php echo $n?>" class="Star<?php echo $n <= $rating ? "Current" : "Empty"; ?>"><img alt="" src="<?php echo $baseurl?>/gfx/interface/sp.gif" width="15" height="15"></span></a><?php
+    ?><a href="#" onMouseOver="UserRatingDisplay(<?php echo $n?>,'StarSelect');" onClick="UserRatingSet(<?php echo $userref?>,<?php echo escape($ref) ?>,<?php echo $n?>);return false;" id="RatingStarLink<?php echo $n?>"><span id="RatingStar<?php echo $n?>" class="Star<?php echo $n <= $rating ? "Current" : "Empty"; ?>"><img alt="" src="<?php echo $baseurl?>/gfx/interface/sp.gif" width="15" height="15"></span></a><?php
     #&#9733;
     }
 ?>

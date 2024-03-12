@@ -195,8 +195,8 @@ function mplus_generate_module_record_url(string $module, int $id)
     return sprintf('%s/%s/v#!m/%s/%s',
         $host,
         $application,
-        htmlspecialchars($module),
-        htmlspecialchars($id));
+        escape($module),
+        escape($id));
     }
 
 

@@ -66,10 +66,10 @@ include_once "{$rs_root}/include/header.php";
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">
             <div id="SearchResultFound" class="InpageNavLeftBlock">
-                <span class="Selected"><?php echo number_format($results->total); ?></span> <?php echo htmlspecialchars($lang["youfoundresults"]); ?>
+                <span class="Selected"><?php echo number_format($results->total); ?></span> <?php echo escape($lang["youfoundresults"]); ?>
             </div>
             <div class="InpageNavLeftBlock AlignLeftBlockText">
-                <span class="Selected"><?php echo htmlspecialchars($lang["image_banks_image_bank"]); ?>: </span><?php echo htmlspecialchars($provider_name); ?>
+                <span class="Selected"><?php echo escape($lang["image_banks_image_bank"]); ?>: </span><?php echo escape($provider_name); ?>
             </div>
             <div class="InpageNavLeftBlock">
                 <select name="per_page" onchange="CentralSpaceLoad(this.value, true);">
@@ -101,7 +101,7 @@ include_once "{$rs_root}/include/header.php";
                 {
                 ?>
                 <div class="InpageNavLeftBlock AlignLeftBlockText WarningBox">
-                    <span class="Selected RedText"><?php echo htmlspecialchars($lang["image_banks_warning"]); ?></span><span><?php echo htmlspecialchars($results_warning); ?></span>
+                    <span class="Selected RedText"><?php echo escape($lang["image_banks_warning"]); ?></span><span><?php echo escape($results_warning); ?></span>
                 </div>
                 <?php
                 }
@@ -121,8 +121,8 @@ if($results_error !== "")
     <div id="CentralSpaceResources">
         <div class="BasicsBox"> 
             <div class="NoFind">
-                <p><?php echo htmlspecialchars($lang["searchnomatches"]); ?></p>
-                <p><?php echo htmlspecialchars($results_error); ?></p>
+                <p><?php echo escape($lang["searchnomatches"]); ?></p>
+                <p><?php echo escape($results_error); ?></p>
             </div>
         </div>
     </div>
@@ -173,7 +173,7 @@ foreach($results as $result)
             ?>
             <a href="<?php echo escape($result->getOriginalFileUrl()); ?>"
                class="fa fa-files-o"
-               title="<?php echo htmlspecialchars($lang["image_banks_create_new_resource"]); ?>"
+               title="<?php echo escape($lang["image_banks_create_new_resource"]); ?>"
                onclick="createNewResource(event, this);"></a>
             <?php
             }

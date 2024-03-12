@@ -72,7 +72,7 @@
                 if ($not_yet_immutable > 0)
                     $sum .= $not_yet_immutable . ' ' . $lang['doi_sum_of'] . " $total $lang[doi_sum_not_yet_archived] " . strtolower($lang['status' . $doi_archive_state]) . " $lang[doi_sum_not_yet_archived_2]" . '\n';
                 if ($no_title > 0)
-                    $sum .= $no_title . ' ' . $lang['doi_sum_of'] . " $total " . $lang['doi_sum_no_title'] . '\n <' . htmlspecialchars($lang['doi_datacite_unknown_info_codes'][$doi_pref_title_fields_default]) . '>\n' . $lang['doi_sum_no_title_2'] . '\n';
+                    $sum .= $no_title . ' ' . $lang['doi_sum_of'] . " $total " . $lang['doi_sum_no_title'] . '\n <' . escape($lang['doi_datacite_unknown_info_codes'][$doi_pref_title_fields_default]) . '>\n' . $lang['doi_sum_no_title_2'] . '\n';
                 if (count($ready_to_reg) > 0) {
                     $sum .= count($ready_to_reg) . ' ' . $lang['doi_sum_of'] . " $total " . $lang['doi_sum_ready_for_reg'] . '\n\n   ';
                     $sum .= str_replace('x', count($ready_to_reg), $lang['doi_sure_register_resource']);

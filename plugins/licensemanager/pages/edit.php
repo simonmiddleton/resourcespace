@@ -207,7 +207,7 @@ include "../../../include/header.php";
 <div class="clearerleft"> </div></div>
 
 
-<div class="Question"><label><?php echo $lang["licensor_licensee"]?></label><input type=text class="stdwidth" name="holder" id="holder" value="<?php echo htmlspecialchars($license["holder"])?>" />
+<div class="Question"><label><?php echo $lang["licensor_licensee"]?></label><input type=text class="stdwidth" name="holder" id="holder" value="<?php echo escape($license["holder"])?>" />
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["indicateusagemedium"]?></label>
@@ -236,7 +236,7 @@ foreach ($license_usage_mediums as $medium)
 
 
 
-<div class="Question"><label><?php echo $lang["description"]?></label><textarea rows="4" class="stdwidth" name="description" id="description"><?php echo htmlspecialchars($license["description"]) ?></textarea>
+<div class="Question"><label><?php echo $lang["description"]?></label><textarea rows="4" class="stdwidth" name="description" id="description"><?php echo escape($license["description"]) ?></textarea>
 <div class="clearerleft"> </div></div>
 
 

@@ -176,20 +176,20 @@ foreach($resources as $resource)
     // Show the desciption and tags if publishing a collection
     if($action=="publish" && $collection != 0 && !$saveform)
         {
-        echo "<td>" . htmlspecialchars($template_text) . "</td>";   
-        echo "<td>" . htmlspecialchars($template_tags) . "</td>";
+        echo "<td>" . escape($template_text) . "</td>";   
+        echo "<td>" . escape($template_tags) . "</td>";
         }
     
     echo "<td>";
     
     if(isset($results[$resid]))
         {
-        echo htmlspecialchars($results[$resid]);    
+        echo escape($results[$resid]);    
         }
     elseif(isset($published[$resid]))
         {
         $falconurl=str_replace("[id]",$published[$resid],$falcon_link_template_url);
-        echo $lang["falcon_link_already_published"] . " <br />(<a href='" . $falconurl . "' target='_blank' title='" . htmlspecialchars($lang["falcon_link_view_in_falcon"]) ."'>" . htmlspecialchars($published[$resid]) . "</a>)";
+        echo $lang["falcon_link_already_published"] . " <br />(<a href='" . $falconurl . "' target='_blank' title='" . escape($lang["falcon_link_view_in_falcon"]) ."'>" . escape($published[$resid]) . "</a>)";
         }
     
     echo "</td>";
@@ -211,13 +211,13 @@ if(!$saveform)
         if($collection == 0 && $action =="publish" && ($publishedresources + $nopublish == 0))
             {?>
             <div class="Question" >
-                <label for="template_text"><?php echo htmlspecialchars($lang["falcon_link_template_description"]) ?></label>
-                <textarea class="stdwidth" rows="6" columns="50" id="template_text" name="template_text"><?php echo htmlspecialchars($template_text); ?></textarea>
+                <label for="template_text"><?php echo escape($lang["falcon_link_template_description"]) ?></label>
+                <textarea class="stdwidth" rows="6" columns="50" id="template_text" name="template_text"><?php echo escape($template_text); ?></textarea>
                 <br />
             </div>
             <div class="Question" >
-                <label for="template_tags"><?php echo htmlspecialchars($lang["falcon_link_template_tags"]) ?></label>
-                <textarea class="stdwidth" rows="6" columns="50" id="template_tags" name="template_tags"><?php echo htmlspecialchars($template_tags); ?></textarea>
+                <label for="template_tags"><?php echo escape($lang["falcon_link_template_tags"]) ?></label>
+                <textarea class="stdwidth" rows="6" columns="50" id="template_tags" name="template_tags"><?php echo escape($template_tags); ?></textarea>
                 <br />
             </div>
             <?php
@@ -228,18 +228,18 @@ if(!$saveform)
         <?php   
         if(($action == "publish" || $collection != 0) && ($publishedresources + $nopublish < $rescount))
             {?>
-            <input type="submit" name="publish" onclick="document.getElementById('falcon_action').value='publish';" value="<?php echo htmlspecialchars($lang["falcon_link_publish_button_text"]); ?>" />            
+            <input type="submit" name="publish" onclick="document.getElementById('falcon_action').value='publish';" value="<?php echo escape($lang["falcon_link_publish_button_text"]); ?>" />            
             <?php
             }
         if(($action == "archive" || $collection != 0) && $publishedresources > 0)
             {?>
-            <input type="submit" name="archive" onclick="document.getElementById('falcon_action').value='archive';" value="<?php echo htmlspecialchars($lang["falcon_link_archive_button_text"]);?>" />
+            <input type="submit" name="archive" onclick="document.getElementById('falcon_action').value='archive';" value="<?php echo escape($lang["falcon_link_archive_button_text"]);?>" />
             <?php
             }?>
             <div class="clearerleft" ></div>
         </div>
-        <input type="hidden" name="collection" value="<?php echo htmlspecialchars($collection); ?>" />
-        <input type="hidden" name="resource" value="<?php echo htmlspecialchars($ref); ?>">
+        <input type="hidden" name="collection" value="<?php echo escape($collection); ?>" />
+        <input type="hidden" name="resource" value="<?php echo escape($ref); ?>">
         <input type="hidden" name="save" value="true">
         
        

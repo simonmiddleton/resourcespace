@@ -119,7 +119,7 @@ if ($api_function!="")
             <input type="text"
                    name="<?php echo $param_name; ?>"
                    class="stdwidth"
-                   value="<?php echo htmlspecialchars(getval($param_name, "")); ?>"
+                   value="<?php echo escape(getval($param_name, "")); ?>"
                    <?php echo "{$required_attr} {$disabled_attr}"; ?>>
         </div>
         <?php
@@ -149,7 +149,7 @@ if ($api_function!="")
         strpos(urlencode($param_val), '%') === false?$query .= '&' . $param_name . '=' . $param_val:$query .= '&' . $param_name . '=" . urlencode("' . $param_val . '") . "';
         }
     ?>
-<pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:black;color:white;padding:5px;border-left:10px solid #666;"><?php echo htmlspecialchars($output) ?></pre>
+<pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:black;color:white;padding:5px;border-left:10px solid #666;"><?php echo escape($output) ?></pre>
 
 
 <br /><br />
@@ -165,13 +165,13 @@ $private_key="<?php echo get_api_key($userref) ?>";
 $user=<?php echo strpos(urlencode($username), '%') === false?'"' . $username . '"':'urlencode("' . $username . '")'; ?>;
 
 <span class="codecomment">// Formulate the query</span>
-$query="user=" . $user . "&amp;<?php echo substr($query, -4)!=' . "'?htmlspecialchars($query) . '"':substr(htmlspecialchars($query), 0, -9); ?>;
+$query="user=" . $user . "&amp;<?php echo substr($query, -4)!=' . "'?escape($query) . '"':substr(escape($query), 0, -9); ?>;
 
 <span class="codecomment">// Sign the query using the private key</span>
 $sign=hash("sha256",$private_key . $query);
 
 <span class="codecomment">// Make the request and output the JSON results.</span>
-$results=json_decode(file_get_contents("<?php echo htmlspecialchars($baseurl) ?>/api/?" . $query . "&sign=" . $sign));
+$results=json_decode(file_get_contents("<?php echo escape($baseurl) ?>/api/?" . $query . "&sign=" . $sign));
 print_r($results);
 </pre>
 

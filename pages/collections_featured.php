@@ -210,8 +210,8 @@ jQuery(document).ready(function ()
         {
         api('get_collections_resource_count', {'refs': fc_refs.join(',')}, function(response)
             {
-            var lang_resource = '<?php echo htmlspecialchars($lang['youfoundresource']); ?>';
-            var lang_resources = '<?php echo htmlspecialchars($lang['youfoundresources']); ?>';
+            var lang_resource = '<?php echo escape($lang['youfoundresource']); ?>';
+            var lang_resources = '<?php echo escape($lang['youfoundresources']); ?>';
 
             Object.keys(response).forEach(function(k)
                 {

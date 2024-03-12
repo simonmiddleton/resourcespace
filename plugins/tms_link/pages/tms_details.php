@@ -34,14 +34,14 @@ if(!is_array($tmsdata))
 foreach($tmsdata as $module_name => $module_tms_data)
     {
     ?>
-    <tr colspan="2"><strong><?php echo htmlspecialchars($module_name); ?></strong></tr>
+    <tr colspan="2"><strong><?php echo escape($module_name); ?></strong></tr>
     <?php
     foreach($module_tms_data as $tms_column => $tms_value)
         {
         ?>
         <tr> 
-           <td><strong><?php echo htmlspecialchars($tms_column); ?></strong></td>
-           <td><?php echo htmlspecialchars($tms_value??""); ?></td>
+           <td><strong><?php echo escape($tms_column); ?></strong></td>
+           <td><?php echo escape($tms_value??""); ?></td>
         </tr>
         <?php
         }

@@ -112,7 +112,7 @@ include "../../include/header.php";
 
         if($sf[$x]['ref'] != $metadata_template_title_field)
             {
-            $sort_order_fields['field' . $sf[$x]['ref']] = htmlspecialchars($sf[$x]['title']);
+            $sort_order_fields['field' . $sf[$x]['ref']] = escape($sf[$x]['title']);
             }
         }
 

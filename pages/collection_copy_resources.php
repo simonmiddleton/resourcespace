@@ -43,11 +43,11 @@ include "../include/header.php";
 <p><?php echo text("introtext")?></p>
 <form method=post id="collection_copy_form" action="<?php echo $baseurl_short?>pages/collection_copy_resources.php">
     <?php generateFormToken("collection_copy_form"); ?>
-    <input type=hidden name=ref value="<?php echo htmlspecialchars($ref) ?>">
+    <input type=hidden name=ref value="<?php echo escape($ref) ?>">
     <input type=hidden name="submitted" value="true">
     <div class="Question">
         <label for="name"><?php echo $lang["collection"]?></label>
-        <div class="Fixed"><?php echo htmlspecialchars(i18n_get_collection_name($collection, $index="name")); ?></div >
+        <div class="Fixed"><?php echo escape(i18n_get_collection_name($collection, $index="name")); ?></div >
         <div class="clearerleft"> </div>
     </div>
     <div class="Question">
@@ -65,7 +65,7 @@ include "../include/header.php";
             #show only active collections if a start date is set for $active_collections 
             if (strtotime($list[$n]['created']) > ((isset($active_collections)) ? strtotime($active_collections) : 1) || ($list[$n]['name']=="Default Collection" && $list[$n]['user']==$userref))
                     {
-                    echo "<option value='" . $list[$n]["ref"] . "'>" . htmlspecialchars(i18n_get_collection_name($list[$n])) . "</option>\n";
+                    echo "<option value='" . $list[$n]["ref"] . "'>" . escape(i18n_get_collection_name($list[$n])) . "</option>\n";
                     }
             }
             ?>

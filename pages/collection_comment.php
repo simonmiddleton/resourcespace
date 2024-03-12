@@ -64,12 +64,12 @@ if (file_exists($imagepath)){?>
 
 <form method="post" action="<?php echo $baseurl_short?>pages/collection_comment.php"  onSubmit="return CentralSpacePost(this, true, false, false);">
     <?php generateFormToken("collection_comment"); ?>
-<input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>">
-<input type="hidden" name="k" value="<?php echo htmlspecialchars($k) ?>">
-<input type="hidden" name="collection" value="<?php echo htmlspecialchars($collection) ?>">
+<input type="hidden" name="ref" value="<?php echo escape($ref) ?>">
+<input type="hidden" name="k" value="<?php echo escape($k) ?>">
+<input type="hidden" name="collection" value="<?php echo escape($collection) ?>">
 <input type=hidden name="submitted" value="true">
 <div class="Question">
-<label for="name"><?php echo $lang["comment"]?></label><textarea class="stdwidth" style="width:450px;" rows=20 cols=80 name="comment" id="comment"><?php echo htmlspecialchars($comment)?></textarea>
+<label for="name"><?php echo $lang["comment"]?></label><textarea class="stdwidth" style="width:450px;" rows=20 cols=80 name="comment" id="comment"><?php echo escape($comment)?></textarea>
 <div class="clearerleft"> </div>
 </div>
 

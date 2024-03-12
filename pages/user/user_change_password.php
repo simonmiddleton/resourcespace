@@ -147,7 +147,7 @@ else
     <?php if (getval("expired","")!="") { ?><div class="FormError">!! <?php echo $lang["password_expired"]?> !!</div><?php } ?>
 
     <form method="post" action="<?php echo $baseurl_short?>pages/user/user_change_password.php">
-    <input type="hidden" name="expired" value="<?php echo htmlspecialchars(getval("expired",""))?>">
+    <input type="hidden" name="expired" value="<?php echo escape(getval("expired",""))?>">
     <?php
     generateFormToken("user_change_password");
 
@@ -167,7 +167,7 @@ else
         }
     else
         {?>
-        <input type="hidden" name="rp" id="resetkey" value="<?php echo htmlspecialchars($resetuserref) . htmlspecialchars($resetkey)  ?>" />    
+        <input type="hidden" name="rp" id="resetkey" value="<?php echo escape($resetuserref) . escape($resetkey)  ?>" />    
         <?php
         }
         ?>

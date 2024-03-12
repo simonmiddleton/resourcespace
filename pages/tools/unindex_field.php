@@ -48,7 +48,7 @@ if (PHP_SAPI == 'cli' || (getval("submit","")!="" && enforcePostRequest(false)))
     {    
     // Delete existing keywords index for this field
     remove_field_keywords($field);
-    $result = PHP_SAPI == 'cli' ? "Keywords removed from field $field\n\n" : "<div class='PageInfoMessage'>Keywords removed from " . htmlspecialchars($fieldinfo["title"]) . "</div>";
+    $result = PHP_SAPI == 'cli' ? "Keywords removed from field $field\n\n" : "<div class='PageInfoMessage'>Keywords removed from " . escape($fieldinfo["title"]) . "</div>";
     echo $result;
     }
 

@@ -102,7 +102,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 </form> 
 
 <div class="BasicsBox" id ="NewsDisplayBox"> 
-    <h1><?php echo htmlspecialchars($newsdisplay[0]["title"]);?></h1>
+    <h1><?php echo escape($newsdisplay[0]["title"]);?></h1>
     <hr>
     <div id="NewsBodyDisplay" ><p><?php echo escape($newsdisplay[0]["body"]);?></p> </div>
     <h2><?php echo $newsdisplay[0]["date"];?></h2>

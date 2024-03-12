@@ -128,7 +128,7 @@ if(!$modal)
     <label for="password"><?php echo $lang["yourpassword"]?></label>
     <input type=password class="shrtwidth" name="password" id="password" />
     <div class="clearerleft"> </div>
-    <?php if ($error!="") { ?><div class="FormError">!! <?php echo htmlspecialchars($error) ?> !!</div><?php } ?>
+    <?php if ($error!="") { ?><div class="FormError">!! <?php echo escape($error) ?> !!</div><?php } ?>
     </div>
     <?php }
 

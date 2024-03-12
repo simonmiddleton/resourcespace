@@ -167,16 +167,16 @@ function loadIt() {
     ];
     
     if (!$is_collection){?>
-    <p><a href="<?php echo generateURL($baseurl_short . 'pages/view.php', $urlparams, ['annotate' => 'true'])?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoresourceview"])?></a></p>
+    <p><a href="<?php echo generateURL($baseurl_short . 'pages/view.php', $urlparams, ['annotate' => 'true'])?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"])?></a></p>
     <?php } else {?>
-    <p><a href="<?php echo generateURL($baseurl_short . 'pages/search.php?', $urlparams, ['search' => '!collection' . substr($ref,1)])?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo htmlspecialchars($lang["backtoresults"])?></a></p>
+    <p><a href="<?php echo generateURL($baseurl_short . 'pages/search.php?', $urlparams, ['search' => '!collection' . substr($ref,1)])?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresults"])?></a></p>
     <?php } ?>
 
     <h1><?php echo $lang["annotatepdfconfig"]?></h1>
 
     <?php if ($annotate){?>
     <div id="heading" style="float:left;margin-bottom:0;" >
-        <p id="introtext"><?php echo htmlspecialchars($lang["annotatepdfintrotext"])?></p>
+        <p id="introtext"><?php echo escape($lang["annotatepdfintrotext"])?></p>
     </div>
     <div style="clear:left;"></div>
 
@@ -189,26 +189,26 @@ function loadIt() {
         generateFormToken("annotateform");
         if ($is_collection){?>
         <div class="Question">
-        <label><?php echo htmlspecialchars($lang["collection"])?></label><div class="Fixed"><?php echo htmlspecialchars(i18n_get_collection_name($collection))?></div>
+        <label><?php echo escape($lang["collection"])?></label><div class="Fixed"><?php echo escape(i18n_get_collection_name($collection))?></div>
         <div class="clearerleft"> </div>
         </div>
 
         <?php } else { ?>
         <div class="Question">
-        <label><?php echo htmlspecialchars($lang["resourcetitle"])?></label><div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resources[0]['field'.$view_title_field]))?></div>
+        <label><?php echo escape($lang["resourcetitle"])?></label><div class="Fixed"><?php echo escape(i18n_get_translated($resources[0]['field'.$view_title_field]))?></div>
         <div class="clearerleft"> </div>
         </div>
         <?php } ?>
 
         <div class="Question">
-        <label><?php echo htmlspecialchars($lang["size"])?></label>
+        <label><?php echo escape($lang["size"])?></label>
         <select class="shrtwidth" name="size" id="size" onChange="jQuery().annotate('preview'); "><?php echo $papersize_select ?>
         </select>
         <div class="clearerleft"> </div>
         </div>
 
         <div name="previewPageOptions" id="previewPageOptions" class="Question" style="display:none">
-        <label><?php echo htmlspecialchars($lang['previewpage'])?></label>
+        <label><?php echo escape($lang['previewpage'])?></label>
         <select class="shrtwidth" name="previewpage" id="previewpage" onChange="jQuery().annotate('preview');   ">
         </select>
         </div>

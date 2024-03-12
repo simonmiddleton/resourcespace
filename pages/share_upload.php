@@ -183,7 +183,7 @@ include "../include/header.php";
         <form method=post id="shareuploadform" action="<?php echo generateURL($baseurl_short . "pages/share_upload.php", $cursharefltr); ?>" onsubmit="return CentralSpacePost(this,true);">
             <input type="hidden" name="deleteshare" id="deleteshare" value="">   
             <input type="hidden" name="submitted" id="submit" value="true">    
-            <input type="hidden" name="uploadkey" id="uploadkey" value="<?php echo htmlspecialchars($uploadkey); ?>">
+            <input type="hidden" name="uploadkey" id="uploadkey" value="<?php echo escape($uploadkey); ?>">
             <?php generateFormToken("shareuploadform"); ?>
             
             <div class="Question">
@@ -199,7 +199,7 @@ include "../include/header.php";
                 }                
             else
                 {
-                echo "<input type='hidden' name='usergroup' value='" . htmlspecialchars(isset($upload_link_usergroups[0]) ? $upload_link_usergroups[0] : $usergroup) . "'>";    
+                echo "<input type='hidden' name='usergroup' value='" . escape(isset($upload_link_usergroups[0]) ? $upload_link_usergroups[0] : $usergroup) . "'>";    
                 }
             ?>
             <div class="Question">
@@ -224,7 +224,7 @@ include "../include/header.php";
                 <div class="CollapsibleSection" id="EmailUploadSection" style="display:none;">
                     <div class="Question">
                         <label for="message"><?php echo $lang["message"]?></label>
-                        <textarea class="stdwidth" rows=6 cols=50 name="message" id="message"><?php echo htmlspecialchars($emailmessage); ?></textarea>
+                        <textarea class="stdwidth" rows=6 cols=50 name="message" id="message"><?php echo escape($emailmessage); ?></textarea>
                     <div class="clearerleft"> </div>
                     </div>
                     <div class="Question">

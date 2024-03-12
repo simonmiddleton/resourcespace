@@ -353,20 +353,20 @@ EOT;
 
             if ($anonymous_mode == true)
                 {
-                echo "<div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div>";
+                echo "<div class='CommentEntryInfoCommenterName'>" . escape($comment['name']) . "</div>";
                 }
             else
                 {
-                echo "<a href='" . $baseurl_short . "pages/user/user_profile.php?username=" . htmlspecialchars((string)$comment['username']) . "'><div class='CommentEntryInfoCommenterName'>" . htmlspecialchars($comment['name']) . "</div></a>";
+                echo "<a href='" . $baseurl_short . "pages/user/user_profile.php?username=" . escape((string)$comment['username']) . "'><div class='CommentEntryInfoCommenterName'>" . escape($comment['name']) . "</div></a>";
                 }
 
             if ($comments_show_anonymous_email_address && !empty($comment['email']))
                 {
-                echo "<div class='CommentEntryInfoCommenterEmail'>" . htmlspecialchars ($comment['email']) . "</div>";
+                echo "<div class='CommentEntryInfoCommenterEmail'>" . escape($comment['email']) . "</div>";
                 }
             if  (!empty ($comment['website_url']))
                 {
-                echo "<div class='CommentEntryInfoCommenterWebsite'>" . htmlspecialchars ($comment['website_url']) . "</div>";
+                echo "<div class='CommentEntryInfoCommenterWebsite'>" . escape($comment['website_url']) . "</div>";
                 }
 
             echo "</div>";
@@ -391,7 +391,7 @@ EOT;
             }
             else
                 {
-                echo comments_tags_to_links(htmlspecialchars ($comment['body']));
+                echo comments_tags_to_links(escape($comment['body']));
                 }
             echo "</div>";
 
@@ -461,8 +461,8 @@ EOT;
                     ?>
                     <form class="comment_removal_form">
                         <?php generateFormToken("comment_removal_form"); ?>
-                        <input type="hidden" name="comment_to_hide" value="<?php echo htmlspecialchars($thisRef); ?>"></input>
-                        <a href="javascript:void(0)" onclick="if (confirm ('<?php echo htmlspecialchars($lang['comments_hide-comment-text-confirm']); ?>')) submitForm(this.parentNode);"><?php echo '<i aria-hidden="true" class="fa fa-trash-alt"></i>&nbsp;' . $lang['comments_hide-comment-text-link']; ?></a>
+                        <input type="hidden" name="comment_to_hide" value="<?php echo escape($thisRef); ?>"></input>
+                        <a href="javascript:void(0)" onclick="if (confirm ('<?php echo escape($lang['comments_hide-comment-text-confirm']); ?>')) submitForm(this.parentNode);"><?php echo '<i aria-hidden="true" class="fa fa-trash-alt"></i>&nbsp;' . $lang['comments_hide-comment-text-link']; ?></a>
                     </form>
                     <?php
                     }

@@ -133,7 +133,7 @@ include "../../include/header.php";
 <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
 
 <div class="BasicsBox">
-<h1><?php echo htmlspecialchars(i18n_get_translated($restypedata["name"])); ?></h1>
+<h1><?php echo escape(i18n_get_translated($restypedata["name"])); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -146,7 +146,7 @@ $links_trail = array(
         'href'  => $backurl
     ),
     array(
-        'title' => htmlspecialchars(i18n_get_translated($restypedata["name"])),
+        'title' => escape(i18n_get_translated($restypedata["name"])),
         'help'  => "resourceadmin/resource-types"
     )
 );
@@ -172,39 +172,39 @@ if($actions_required)
     <?php
     if($confirm_delete)
         {
-        echo htmlspecialchars(str_replace("%%RESOURCECOUNT%%",count($affectedresources),$lang["resource_type_delete_confirmation"])) . "<br />";
+        echo escape(str_replace("%%RESOURCECOUNT%%",count($affectedresources),$lang["resource_type_delete_confirmation"])) . "<br />";
         ?>
         <input type="hidden" name="prereq_action" value="move_affected_resources">
         <?php
         }
     elseif($confirm_move_associated_rtf)
         {
-        echo htmlspecialchars(str_replace("%COUNT", count($dependentfields), $lang["resource_type_delete_assoc_rtf_confirm"])) . "<br>";
+        echo escape(str_replace("%COUNT", count($dependentfields), $lang["resource_type_delete_assoc_rtf_confirm"])) . "<br>";
         ?>
         <input type="hidden" name="prereq_action" value="move_affected_rtfs">
         <?php
         }
 
-    echo htmlspecialchars($lang["resource_type_delete_select_new"]) ;
+    echo escape($lang["resource_type_delete_select_new"]) ;
     ?>
     </div>
     <div class="Question">  
-    <label for="targettype"><?php echo htmlspecialchars($lang["resourcetype"]) ; ?></label>    
+    <label for="targettype"><?php echo escape($lang["resourcetype"]) ; ?></label>    
     <div class="tickset">
       <div class="Inline"><select name="targettype" id="targettype" >
-        <option value="" selected ><?php echo htmlspecialchars($lang["select"]) ; ?></option>
+        <option value="" selected ><?php echo escape($lang["select"]) ; ?></option>
     <?php
     if($confirm_move_associated_rtf)
         {
         ?>
-        <option value="0"><?php echo htmlspecialchars($lang["resourcetype-global_field"]) ; ?></option>
+        <option value="0"><?php echo escape($lang["resourcetype-global_field"]) ; ?></option>
         <?php
         }
     for($n=0;$n<count($allrestypes);$n++)
         {
         if($allrestypes[$n]["ref"] != $ref)
             {?>
-            <option value="<?php echo $allrestypes[$n]["ref"]; ?>"><?php echo htmlspecialchars(i18n_get_translated($allrestypes[$n]["name"])); ?></option>
+            <option value="<?php echo $allrestypes[$n]["ref"]; ?>"><?php echo escape(i18n_get_translated($allrestypes[$n]["name"])); ?></option>
             <?php
             }
         }
@@ -225,13 +225,13 @@ if($actions_required)
 else
     {
     ?>    
-    <div class="Question"><label><?php echo htmlspecialchars($lang["property-reference"]) ?></label>
+    <div class="Question"><label><?php echo escape($lang["property-reference"]) ?></label>
     <div class="Fixed"><?php echo  $restypedata["ref"] ?></div>
     <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
-    <label><?php echo htmlspecialchars($lang["property-name"]) ?></label>
+    <label><?php echo escape($lang["property-name"]) ?></label>
     <input name="name" type="text" class="stdwidth" value="<?php echo escape((string)$restypedata["name"])?>" />
     <div class="clearerleft"> </div>
     </div>
@@ -241,11 +241,11 @@ else
     ?>
 
     <div class="Question">
-    <label><?php echo htmlspecialchars($lang["property-allowed_extensions"]) ?></label>
+    <label><?php echo escape($lang["property-allowed_extensions"]) ?></label>
     <input name="allowed_extensions" type="text" class="stdwidth" value="<?php echo escape((string)$restypedata["allowed_extensions"])?>" />
 
     <div class="FormHelp" style="padding:0;clear:left;" >
-        <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-allowed_extensions"])  ?>
+        <div class="FormHelpInner"><?php echo escape($lang["information-allowed_extensions"])  ?>
         </div>
     </div>    
     <div class="clearerleft"> </div>    
@@ -253,10 +253,10 @@ else
 
     <?php if (!$execution_lockout) { ?>
     <div class="Question">
-    <label><?php echo htmlspecialchars($lang["property-override_config_options"])  ?></label>
-    <textarea name="config_options" class="stdwidth" rows=5 cols=50><?php echo htmlspecialchars((string)$restypedata["config_options"])?></textarea>
+    <label><?php echo escape($lang["property-override_config_options"])  ?></label>
+    <textarea name="config_options" class="stdwidth" rows=5 cols=50><?php echo escape((string)$restypedata["config_options"])?></textarea>
     <div class="FormHelp" style="padding:0;clear:left;" >
-        <div class="FormHelpInner"><?php echo htmlspecialchars($lang["information-resource_type_config_override"])  ?>
+        <div class="FormHelpInner"><?php echo escape($lang["information-resource_type_config_override"])  ?>
         </div>
     </div>
     <div class="clearerleft"> </div>
@@ -268,12 +268,12 @@ else
     $MARKER_COLORS[-1] = $lang["select"];
     ksort($MARKER_COLORS);
     render_dropdown_question($lang['resource_type_marker_colour'],"colour",$MARKER_COLORS,$restypedata["colour"],'',array("input_class"=>"stdwidth"));
-    
+
     config_boolean_select("push_metadata",$lang["property-push_metadata"],(int)$restypedata["push_metadata"],'',420,null,false,null,false,$lang["information-push_metadata"]);
 
     config_boolean_select("pull_images",$lang["pull_images"],(int)$restypedata["pull_images"],'',420,null,false,null,false,$lang["pull_images_text"]);    
     ?>
-       
+
     <div class="QuestionSubmit">		
     <input name="save" type="submit" value="&nbsp;&nbsp;<?php  echo escape($lang["save"])?>&nbsp;&nbsp;" onClick="jQuery('#restype_save').val('yes');this.form.submit();return false;"/>
     <input name="delete" type="submit" value="&nbsp;&nbsp;<?php  echo escape($lang["action-delete"])?>&nbsp;&nbsp;" onClick="if(confirm('<?php  echo escape($lang["confirm-deletion"]) ?>')){jQuery('#restype_delete').val('yes');this.form.submit()}else{jQuery('#restype_delete').val('');}return false;"/>

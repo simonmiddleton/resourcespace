@@ -293,7 +293,7 @@ if (getval("ajax","") == "")
         }
     else
         {?>
-        usercollection='<?php echo htmlspecialchars($usercollection) ?>';
+        usercollection='<?php echo escape($usercollection) ?>';
         <?php
         } ?>
     </script><?php 
@@ -312,7 +312,7 @@ if (getval("ajax","") == "")
 
             <script type="text/javascript">
             var collection_frame_height=<?php echo $collection_frame_height?>;
-            var thumbs="<?php echo htmlspecialchars($thumbs); ?>";                                  
+            var thumbs="<?php echo escape($thumbs); ?>";                                  
             function ShowThumbs()
                 {
                 myLayout.sizePane("south", collection_frame_height);

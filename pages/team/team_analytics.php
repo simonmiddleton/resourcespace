@@ -101,7 +101,7 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
     <form method="post" onSubmit="return CentralSpacePost(this,true);">
         <?php generateFormToken("team_analytics_search"); ?>
         <div class="Question">
-            <label for="find"><?php echo htmlspecialchars($lang["find"]) ?><br/></label>
+            <label for="find"><?php echo escape($lang["find"]) ?><br/></label>
             <div class="tickset">
              <div class="Inline">
             <input

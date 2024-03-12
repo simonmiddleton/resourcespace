@@ -69,13 +69,13 @@ if (!hook("renderresultthumb"))
     ?>
 
     <!--Resource Panel -->    
-    <div class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo $display == 'xlthumbs' ? 'ResourcePanelLarge' : ''; ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
+    <div class="ResourcePanel <?php echo implode(" ", $class); ?> <?php echo $display == 'xlthumbs' ? 'ResourcePanelLarge' : ''; ?> ArchiveState<?php echo $result[$n]['archive'];?> <?php hook('thumbsviewpanelstyle'); ?> ResourceType<?php echo $result[$n]['resource_type']; ?>" id="ResourceShell<?php echo escape($ref)?>" <?php echo hook('resourcepanelshell_attributes')?>
     style="height: <?php echo (int)$thumbs_displayed_fields_height; ?>px;">
         <div class="ResourcePanelTop">
             <?php
             if (isset($result[$n]['file_extension']) && $result[$n]['file_extension'] != "")
                 { ?>
-                <div class="thumbs-file-extension"><?php echo strtoupper(htmlspecialchars($result[$n]['file_extension'])) ?></div>
+                <div class="thumbs-file-extension"><?php echo strtoupper(escape($result[$n]['file_extension'])) ?></div>
                 <?php
                 }
 
@@ -85,7 +85,7 @@ if (!hook("renderresultthumb"))
                     {
                     if (($type["ref"] == $result[$n]['resource_type']) && isset($type["icon"]) && $type["icon"] != "")
                         {
-                        echo '<div class="ResourceTypeIcon fa-fw ' . htmlspecialchars($type["icon"]) . '" title="' . htmlspecialchars($type["name"]) . '"></div>';  
+                        echo '<div class="ResourceTypeIcon fa-fw ' . escape($type["icon"]) . '" title="' . escape($type["name"]) . '"></div>';  
                         }
                     }
                 }
@@ -99,8 +99,8 @@ if (!hook("renderresultthumb"))
             <a class="<?php echo $display == 'xlthumbs' ? 'ImageWrapperLarge' : 'ImageWrapper'; ?>"
             href="<?php echo $url?>"  
             onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this,true);" 
-            title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars($resource_view_title))?>">
-            
+            title="<?php echo str_replace(array("\"","'"),"",escape($resource_view_title))?>">
+
             <?php 
             // Render preview image
             $usesize = $display == "xlthumbs" ? ($GLOBALS['retina_mode'] ? "scr" : "pre") : ($GLOBALS['retina_mode'] ? "pre" : "thm");
@@ -155,7 +155,7 @@ if (!hook("renderresultthumb"))
                     style="margin-top:<?php echo $display == "xlthumbs" ? "90px" : "35px"; ?>;"/>
                 <?php 
                 }
-          
+
             hook("aftersearchimg","",array($result[$n], $thumbnail["url"] ?? "", $display))
             ?>
             </a>
@@ -175,7 +175,7 @@ if (!hook("renderresultthumb"))
             $icon = $workflowicons[$result[$n]['archive']] ?? (WORKFLOW_DEFAULT_ICONS[$result[$n]['archive']] ?? WORKFLOW_DEFAULT_ICON);
             $workflow_html .= "<i class='" . escape($icon) . "'></i>&nbsp;";
             // Add text for workflow state
-            $workflow_html .= isset($lang["status" . $result[$n]['archive']]) ? (htmlspecialchars($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']);
+            $workflow_html .= isset($lang["status" . $result[$n]['archive']]) ? (escape($lang["status" . $result[$n]['archive']])) : ($lang["status"] . "&nbsp;" . $result[$n]['archive']);
             $workflow_html .= "</div>";
             echo $workflow_html;
             }
@@ -243,7 +243,7 @@ if (!hook("renderresultthumb"))
                 if (!hook("replaceresourcepanelinfo"))
                     { ?>
                     <div class="ResourcePanelInfo ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' ResourcePanelTitle' : ''?>"
-                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value)))?>"
+                    title="<?php echo str_replace(array("\"","'"),"",escape(i18n_get_translated($value)))?>"
                     >
                         <div class="extended">
                         <?php 
@@ -256,7 +256,7 @@ if (!hook("renderresultthumb"))
 <?php 
                             } //end link
                         echo format_display_field($value);
-                        
+
                         if ($x==0)
                             { // add link if necessary ?>
                             </a>
@@ -275,7 +275,7 @@ if (!hook("renderresultthumb"))
                 if (!hook("replaceresourcepanelinfonormal"))
                     { ?>
                     <div class="ResourcePanelInfo  ResourceTypeField<?php echo $df[$x]['ref']; echo $x == 0 ? ' ResourcePanelTitle' : ''?>"
-                    title="<?php echo str_replace(array("\"","'"),"",htmlspecialchars(i18n_get_translated($value))); ?>"
+                    title="<?php echo str_replace(array("\"","'"),"",escape(i18n_get_translated($value))); ?>"
                     >
                         <?php 
                         if ($x==0)
@@ -286,7 +286,7 @@ if (!hook("renderresultthumb"))
                             >
 <?php 
                             } //end link
-                        echo highlightkeywords(htmlspecialchars(tidy_trim(TidyList(i18n_get_translated($value)),$resolved_title_trim)),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
+                        echo highlightkeywords(escape(tidy_trim(TidyList(i18n_get_translated($value)),$resolved_title_trim)),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
                         if ($x==0)
                             { // add link if necessary ?>
                             </a>
@@ -315,10 +315,10 @@ if (!hook("renderresultthumb"))
                     {?>
                     <input 
                         type="checkbox" 
-                        id="check<?php echo htmlspecialchars($ref)?>" 
+                        id="check<?php echo escape($ref)?>" 
                         class="checkselect"
                         title="<?php echo escape($lang['action-select'] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>"
-                        data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
+                        data-resource="<?php echo escape($result[$n]["ref"]); ?>"
                         aria-label="<?php echo escape($lang["action-select"])?>"
                         <?php echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}"); ?>
                         <?php 
@@ -340,7 +340,7 @@ if (!hook("renderresultthumb"))
         if(!hook("replacethumbsidinthumbnail"))
             {
             if ($display_resource_id_in_thumbnail && $ref>0) 
-                { echo "<span class='ResourcePanelResourceID'>" . htmlspecialchars($ref) . "</span>$br"; } 
+                { echo "<span class='ResourcePanelResourceID'>" . escape($ref) . "</span>$br"; } 
             else 
                 { ?><?php }
             } # end hook("replacethumbsidinthumbnail")

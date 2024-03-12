@@ -67,11 +67,11 @@ else
                 {
                 if($varoption == "attribution")
                     {
-                    echo "    " . htmlspecialchars($varoption) . ": '" . $optval . "',\n";
+                    echo "    " . escape($varoption) . ": '" . $optval . "',\n";
                     }
                 else
                     {
-                    echo "    " . htmlspecialchars($varoption) . ": " . htmlspecialchars($optval) . ",\n";
+                    echo "    " . escape($varoption) . ": " . escape($optval) . ",\n";
                     }
                 }
             echo "});\n";

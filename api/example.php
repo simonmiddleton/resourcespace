@@ -39,4 +39,4 @@ $results=file_get_contents("http://localhost/resourcespace/api/?" . $query . "&s
 
 # Output the JSON
 echo "<pre>";
-echo htmlspecialchars($results);
+echo escape($results);

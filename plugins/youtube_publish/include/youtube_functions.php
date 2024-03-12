@@ -65,12 +65,12 @@ function youtube_publish_initialize()
     catch (Google_Service_Exception $e)
         {
         $errortext = sprintf('<p>A service error occurred: <code>%s</code></p>',
-        htmlspecialchars($e->getMessage()));
+        escape($e->getMessage()));
         }
     catch (Google_Exception $e)
         {
         $errortext = sprintf('<p>A client error occurred: <code>%s</code></p>',
-        htmlspecialchars($e->getMessage()));
+        escape($e->getMessage()));
         }
        
     if($client->isAccessTokenExpired())
@@ -111,12 +111,12 @@ function youtube_publish_initialize()
     catch (Google_Service_Exception $e)
         {
         $errortext = sprintf('<p>A service error occurred: <code>%s</code></p>',
-        htmlspecialchars($e->getMessage()));
+        escape($e->getMessage()));
         }
     catch (Google_Exception $e)
         {
         $errortext = sprintf('<p>A client error occurred: <code>%s</code></p>',
-        htmlspecialchars($e->getMessage()));
+        escape($e->getMessage()));
         }
         
     if(isset($errortext))
@@ -228,13 +228,13 @@ function upload_video()
     catch (Google_Service_Exception $e)
         {
         $htmlBody = sprintf('<p>A service error occurred: <code>%s</code></p>',
-        htmlspecialchars($e->getMessage()));
+        escape($e->getMessage()));
         exit($htmlBody);
         }
     catch (Google_Exception $e)
         {
         $htmlBody = sprintf('<p>A client error occurred: <code>%s</code></p>',
-        htmlspecialchars($e->getMessage()));
+        escape($e->getMessage()));
         exit($htmlBody);
         }     
         
@@ -257,12 +257,12 @@ function youtube_upload_get_categories()
     catch (Google_Service_Exception $e)
         {
         $errortext = sprintf('<p>A service error occurred: <code>%s</code></p>',
-        htmlspecialchars($e->getMessage()));
+        escape($e->getMessage()));
         }
     catch (Google_Exception $e)
         {
         $errortext = sprintf('<p>A client error occurred: <code>%s</code></p>',
-        htmlspecialchars($e->getMessage()));
+        escape($e->getMessage()));
         }        
         
     if(isset($errortext))

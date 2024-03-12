@@ -20,7 +20,7 @@ if(trim($openai_gpt_model) == "text-davinci-003")
 // Build configuration variable descriptions
 $page_def[] = config_add_text_input("openai_gpt_api_key",$lang["openai_gpt_api_key"]);
 $page_def[] = config_add_section_header($lang["plugin_category_advanced"]);
-$page_def[] = config_add_html("<div class='Question'><strong>" . htmlspecialchars($lang["openai_gpt_advanced"]) . "</strong><div class='clearerleft'></div></div>");
+$page_def[] = config_add_html("<div class='Question'><strong>" . escape($lang["openai_gpt_advanced"]) . "</strong><div class='clearerleft'></div></div>");
 $page_def[] = config_add_text_input("openai_gpt_model",$lang["openai_gpt_model"]);
 $page_def[] = config_add_text_input("openai_gpt_system_message",$lang["openai_gpt_system_message"]);
 $page_def[] = config_add_text_input("openai_gpt_temperature",$lang["openai_gpt_temperature"]);

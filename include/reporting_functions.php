@@ -776,17 +776,17 @@ function render_pie_graph($id,$data,$total=null)
     // Setup Styling
 
 
-    new Chart(document.getElementById('<?php echo htmlspecialchars($id) ?>'), {
+    new Chart(document.getElementById('<?php echo escape($id) ?>'), {
         type: 'pie',
         data: {
-            labels: ['<?php echo htmlspecialchars(implode("', '",$labels)) ?>'],
+            labels: ['<?php echo escape(implode("', '",$labels)) ?>'],
                 datasets: [
                         {
-                    data: [<?php echo htmlspecialchars(implode(", ",$values)) ?>]
+                    data: [<?php echo escape(implode(", ",$values)) ?>]
                 }
             ]
         },
-        options: chartstyling<?php echo htmlspecialchars($id)?>,
+        options: chartstyling<?php echo escape($id)?>,
 
 
     });
@@ -816,17 +816,17 @@ function render_bar_graph(string $id, array $data)
     ?>
     <script type="text/javascript">
         new Chart(
-            document.getElementById('<?php echo htmlspecialchars($id) ?>'),
+            document.getElementById('<?php echo escape($id) ?>'),
             {
             type: 'line',
             data: {
                 datasets: [
                     {
-                        data: [<?php echo htmlspecialchars($values) ?>]
+                        data: [<?php echo escape($values) ?>]
                     }
                 ]
             },
-            options: chartstyling<?php echo htmlspecialchars($id)?>,
+            options: chartstyling<?php echo escape($id)?>,
         }
         );
     </script>

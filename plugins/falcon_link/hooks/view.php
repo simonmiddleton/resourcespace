@@ -43,8 +43,8 @@ function HookFalcon_linkViewAfterresourceactions()
         else
             {
             $falconurl=str_replace("[id]",$falconid,$falcon_link_template_url);
-            echo "<li><a href='" . htmlspecialchars($falconurl) . "' target = '_blank' ><i class='fa fa-external-link-square'></i>&nbsp;" . htmlspecialchars($lang["falcon_link_view_in_falcon"]) . "</a></li>";
-            echo "<li><a href='$baseurl/plugins/falcon_link/pages/falcon_link.php?resource=" . htmlspecialchars($ref) . "&falcon_action=archive' title='" . htmlspecialchars($lang["falcon_link_view_in_falcon"]) ."' onclick='CentralSpaceLoad(this,true);'><i class='fa fa-archive'></i>&nbsp;" . $lang["falcon_link_archive"] . "</a></li>";
+            echo "<li><a href='" . escape($falconurl) . "' target = '_blank' ><i class='fa fa-external-link-square'></i>&nbsp;" . escape($lang["falcon_link_view_in_falcon"]) . "</a></li>";
+            echo "<li><a href='$baseurl/plugins/falcon_link/pages/falcon_link.php?resource=" . escape($ref) . "&falcon_action=archive' title='" . escape($lang["falcon_link_view_in_falcon"]) ."' onclick='CentralSpaceLoad(this,true);'><i class='fa fa-archive'></i>&nbsp;" . $lang["falcon_link_archive"] . "</a></li>";
             }
         }
     }
@@ -57,8 +57,8 @@ function HookFalcon_linkViewRenderfield($field)
         $value = $field["value"];
         $falconurl=str_replace("[id]",$value,$falcon_link_template_url);
         $value=highlightkeywords($value,$search,$field["partial_index"],$field["name"],$field["keywords_index"]);
-        $title=htmlspecialchars($field["title"]);   
-        ?><div class="itemNarrow"><h3><?php echo htmlspecialchars($title) ?></h3><p><a href="<?php echo htmlspecialchars($falconurl) ?>" title="<?php echo htmlspecialchars($lang["falcon_link_view_in_falcon"]); ?>" target="_blank" ><?php echo $value?></a></p></div><?php
+        $title=escape($field["title"]);   
+        ?><div class="itemNarrow"><h3><?php echo escape($title) ?></h3><p><a href="<?php echo escape($falconurl) ?>" title="<?php echo escape($lang["falcon_link_view_in_falcon"]); ?>" target="_blank" ><?php echo $value?></a></p></div><?php
         return true;
         }
     return false;

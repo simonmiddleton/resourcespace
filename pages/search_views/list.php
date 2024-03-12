@@ -12,7 +12,7 @@ if (!hook("replacelistitem"))
     $resource_view_title = i18n_get_translated($result[$n]["field" . $view_title_field]);
     ?>
     <!--List Item-->
-    <tr id="ResourceShell<?php echo htmlspecialchars($ref)?>" <?php echo $html_class; hook("listviewrowstyle");?>>
+    <tr id="ResourceShell<?php echo escape($ref)?>" <?php echo $html_class; hook("listviewrowstyle");?>>
     <?php 
     if (
         !hook("listcheckboxes")
@@ -23,10 +23,10 @@ if (!hook("replacelistitem"))
                 <td width="30px">
                     <input 
                         type="checkbox" 
-                        id="check<?php echo htmlspecialchars($ref)?>" 
+                        id="check<?php echo escape($ref)?>" 
                         class="checkselect"
                         title="<?php echo escape($lang['action-select'] . " - " . $resource_view_title) ?>"
-                        data-resource="<?php echo htmlspecialchars($result[$n]["ref"]); ?>"
+                        data-resource="<?php echo escape($result[$n]["ref"]); ?>"
                         aria-label="<?php echo escape($lang["action-select"])?>"
                         <?php echo render_csrf_data_attributes("ToggleCollectionResourceSelection_{$result[$n]["ref"]}"); ?>
                         <?php if (in_array($ref, $selection_collection_resources)) { ?> checked <?php } ?>
@@ -126,7 +126,7 @@ if (!hook("replacelistitem"))
                                 >
 <?php 
                             } //end link conditional
-                        echo highlightkeywords(htmlspecialchars(tidy_trim(TidyList(i18n_get_translated($value)),$results_title_trim)),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
+                        echo highlightkeywords(escape(tidy_trim(TidyList(i18n_get_translated($value)),$results_title_trim)),$search,$df[$x]['partial_index'],$df[$x]['name'],$df[$x]['indexed']);
                         if ($x==0)
                             { // add link to first item only ?>
                             </a>
@@ -155,7 +155,7 @@ if (!hook("replacelistitem"))
         ?>
 
         <td <?php hook("listviewcolumnstyle");?>>
-            <?php echo strtoupper(htmlspecialchars((string) $result[$n]["file_extension"])); ?>
+            <?php echo strtoupper(escape((string) $result[$n]["file_extension"])); ?>
         </td>
 
         <?php

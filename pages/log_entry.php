@@ -142,7 +142,7 @@ if(!checkperm('v') && !$bypass_permission_check)
                                         }
                                     $difftext = implode("\n",$transdifflines);
                                     }
-                                $value = nl2br(format_string_more_link(htmlspecialchars(wordwrap($difftext,75,"\n",true))));
+                                $value = nl2br(format_string_more_link(escape(wordwrap($difftext,75,"\n",true))));
                                 $cleanval = false;
                             break;
                             
@@ -190,9 +190,9 @@ if(!checkperm('v') && !$bypass_permission_check)
                             }
 
                         echo "<tr><td width='50%'>";
-                        echo htmlspecialchars((string) $name);
+                        echo escape((string) $name);
                         echo "</td><td width='50%'>";
-                        echo $cleanval ? htmlspecialchars((string) $value) : $value;
+                        echo $cleanval ? escape((string) $value) : $value;
                         echo "</td></tr>";
                         }
                     }

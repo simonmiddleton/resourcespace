@@ -45,7 +45,7 @@ $page_def[] = config_add_html('</div>');
 
 // Debug section
 $page_def[] = config_add_html(
-    '<h3 class="CollapsibleSectionHead collapsed">' . htmlspecialchars($lang['systemconfig_debug']) . '</h3>'
+    '<h3 class="CollapsibleSectionHead collapsed">' . escape($lang['systemconfig_debug']) . '</h3>'
     . '<div id="SystemConfigDebugSection" class="CollapsibleSection">'
 );
 
@@ -115,7 +115,7 @@ render_text_question(
     sprintf(
         '<span class="MarginLeft1rem"><span id="DebugLogOverrideTimerText">%s</span>s %s</span>',
         $debug_log_override_time_left,
-        htmlspecialchars($lang['remaining'])
+        escape($lang['remaining'])
     ),
     true,
     ' onchange="create_debug_log_override(undefined, this.value);"',
@@ -649,7 +649,7 @@ if ($searching)
 include '../../include/header.php';
 ?>
 <div class="BasicsBox">
-    <h1 class="inline_config_search"><?php echo htmlspecialchars($lang["systemconfig"]); ?></h1>
+    <h1 class="inline_config_search"><?php echo escape($lang["systemconfig"]); ?></h1>
 
     <form id="SearchSystemPages" class="inline_config_search" method="post" onSubmit="return CentralSpacePost(this);">
         <?php generateFormToken("system_config_search"); ?>
@@ -667,7 +667,7 @@ include '../../include/header.php';
         </div>
         <div>
         <input type="checkbox" name="only_modified" id="only_modified" value="yes" <?php  echo $only_modified ? 'checked="checked"' : ''; ?>>
-        <label for="only_modified"><?php echo htmlspecialchars($lang["systemconfig_only_show_modified"]); ?></label>
+        <label for="only_modified"><?php echo escape($lang["systemconfig_only_show_modified"]); ?></label>
         </div>
     </form>
 

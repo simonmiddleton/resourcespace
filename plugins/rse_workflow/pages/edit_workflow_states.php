@@ -137,7 +137,7 @@ foreach ($wfstates as $wfstate=>$wfstateinfo)
                                                      
     echo "<tr class=\"rse_workflow_link\" onclick=\"CentralSpaceLoad('" .  $baseurl . "/plugins/rse_workflow/pages/edit_state.php?code=" . $wfstate . "',true);\">";
     ?>
-        <td><?php echo htmlspecialchars($wfstateinfo["name"]); ?>
+        <td><?php echo escape($wfstateinfo["name"]); ?>
         </td>
         <td><?php echo $wfstate; ?>
         </td>                   

@@ -95,12 +95,12 @@ if($submitted && $resultcount > 0)
 include "../include/header.php";
 if (isset($error))
     {
-    echo "<div class=\"FormError\">" . $lang["error"] . ":&nbsp;" . htmlspecialchars($error) . "</div>";
+    echo "<div class=\"FormError\">" . $lang["error"] . ":&nbsp;" . escape($error) . "</div>";
     }
 
 elseif (isset($message))
     {
-    echo "<div class=\"PageInformal\">" . htmlspecialchars($message) . "</div>";
+    echo "<div class=\"PageInformal\">" . escape($message) . "</div>";
     }
 ?>
 <div class="BasicsBox">
@@ -110,24 +110,24 @@ elseif (isset($message))
         generateFormToken("csv_export_results");
         ?>
 
-        <input type="hidden" name="search" value="<?php echo htmlspecialchars((string)$search) ?>" />
-        <input type="hidden" name="restypes" value="<?php echo htmlspecialchars((string)$restypes) ?>" />
-        <input type="hidden" name="order_by" value="<?php echo htmlspecialchars((string)$order_by) ?>" />
-        <input type="hidden" name="archive" value="<?php echo htmlspecialchars((string)$archive) ?>" />
-        <input type="hidden" name="access" value="<?php echo htmlspecialchars((string)$access) ?>" />
-        <input type="hidden" name="sort" value="<?php echo htmlspecialchars((string)$sort) ?>" />
+        <input type="hidden" name="search" value="<?php echo escape((string)$search) ?>" />
+        <input type="hidden" name="restypes" value="<?php echo escape((string)$restypes) ?>" />
+        <input type="hidden" name="order_by" value="<?php echo escape((string)$order_by) ?>" />
+        <input type="hidden" name="archive" value="<?php echo escape((string)$archive) ?>" />
+        <input type="hidden" name="access" value="<?php echo escape((string)$access) ?>" />
+        <input type="hidden" name="sort" value="<?php echo escape((string)$sort) ?>" />
         
         <h1><?php echo $lang["csvExportResultsMetadata"];render_help_link("user/csv_export");?></h1>
 
 
         <div class="Question" id="question_personal">
-            <label for="personaldata"><?php echo htmlspecialchars($lang['csvExportResultsMetadataPersonal']) ?></label>
+            <label for="personaldata"><?php echo escape($lang['csvExportResultsMetadataPersonal']) ?></label>
             <input name="personaldata" id="personaldata" type="checkbox" value="true" style="margin-top:7px;" <?php if($personaldata){echo " checked ";} ?>> 
             <div class="clearerleft"> </div>
         </div>
         
         <div class="Question" id="question_personal">
-            <label for="allavailable"><?php echo htmlspecialchars($lang['csvExportResultsMetadataAll']) ?></label>
+            <label for="allavailable"><?php echo escape($lang['csvExportResultsMetadataAll']) ?></label>
             <input name="allavailable" id="allavailable" type="checkbox" value="true" style="margin-top:7px;" <?php if($allavailable){echo " checked ";} ?>> 
             <div class="clearerleft"> </div>
         </div>

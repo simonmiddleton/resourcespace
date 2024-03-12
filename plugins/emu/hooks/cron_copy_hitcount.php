@@ -50,7 +50,7 @@ function HookEmuCron_copy_hitcountAddplugincronjob()
 
             if(!is_dir($emu_log_directory))
                 {
-                echo PHP_EOL . 'Unable to create log directory: "' . htmlspecialchars($emu_log_directory) . '"';
+                echo PHP_EOL . 'Unable to create log directory: "' . escape($emu_log_directory) . '"';
                 return false;
                 }
             }

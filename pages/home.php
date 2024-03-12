@@ -290,7 +290,7 @@ if (!hook("replaceslideshow"))
                     foreach(get_featured_collection_categories(0, array()) as $header)
                         {
                         ?>
-                        <option value="<?php echo generateURL($url, array("parent" => $header["ref"])); ?>"><?php echo htmlspecialchars(i18n_get_translated($header["name"])); ?></option>
+                        <option value="<?php echo generateURL($url, array("parent" => $header["ref"])); ?>"><?php echo escape(i18n_get_translated($header["name"])); ?></option>
                         <?php
                         } ?>
                     </select>

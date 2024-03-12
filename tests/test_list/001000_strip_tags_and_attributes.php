@@ -132,7 +132,7 @@ $use_cases = [
     [
         'name' => 'HTML which has been through htmlspecialchars()',
         'input' => [
-            'html' => htmlspecialchars('<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <script>alert("XSS test")</script></p>'),
+            'html' => escape('<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <script>alert("XSS test")</script></p>'),
         ],
         'expected' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>',
     ],

@@ -685,7 +685,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     {
                     continue; 
                     }
-                
+
                 $nodes_to_add       = array();
                 $nodes_to_remove    = array();
                 if ($processcsv)
@@ -726,7 +726,7 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
 
                         $node_trans_arr[$fieldid][$daterangestartnode]  = $rangedates[0];
                         $node_trans_arr[$fieldid][$daterangeendnode]    = isset($rangedates[1])? $rangedates[1] : "";
-                        
+
                         if($daterangeendnode!="")
                             {
                             $daterangenodes = array($daterangestartnode,$daterangeendnode);

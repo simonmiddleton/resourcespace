@@ -118,12 +118,12 @@ if(isset($error))
     <?php generateFormToken("MplusModuleConfigForm"); ?>
     <div class="Question">
         <label><?php echo $lang["museumplus_module_name"]; ?></label>
-        <input name="module_name" type="text" class="stdwidth" value="<?php echo htmlspecialchars($module_name); ?>">
+        <input name="module_name" type="text" class="stdwidth" value="<?php echo escape($module_name); ?>">
         <div class="clearerleft"></div>
     </div>
     <div class="Question">
         <label><?php echo $lang["museumplus_mplus_id_field"]; ?></label>
-        <input name="mplus_id_field" type="text" class="stdwidth" value="<?php echo htmlspecialchars($mplus_id_field); ?>">
+        <input name="mplus_id_field" type="text" class="stdwidth" value="<?php echo escape($mplus_id_field); ?>">
         <?php render_question_form_helper($lang['museumplus_mplus_id_field_helptxt'], 'mplus_id_field', array()); ?>
         <div class="clearerleft"></div>
     </div>
@@ -159,7 +159,7 @@ if(isset($error))
                             <input class="medwidth"
                                    type="text"
                                    name="field_mappings[<?php echo $mapping_index; ?>][field_name]"
-                                   value="<?php echo htmlspecialchars($mapping['field_name']); ?>">
+                                   value="<?php echo escape($mapping['field_name']); ?>">
                         </td>
                         <td>
                             <select class="medwidth" name="field_mappings[<?php echo $mapping_index; ?>][rs_field]">
@@ -168,7 +168,7 @@ if(isset($error))
                             foreach($rtfs as $rtf)
                                 {
                                 $selected = ($mapping['rs_field'] == $rtf['ref'] ? ' selected' : '');
-                                $option_text = htmlspecialchars(lang_or_i18n_get_translated($rtf['title'], 'fieldtitle-'));
+                                $option_text = escape(lang_or_i18n_get_translated($rtf['title'], 'fieldtitle-'));
                                 ?>
                                 <option value="<?php echo $rtf['ref']; ?>" <?php echo $selected; ?>><?php echo $option_text; ?></option>
                                 <?php
@@ -211,7 +211,7 @@ function museumplus_add_new_field_mapping(element)
     <?php
     foreach($rtfs as $rtf)
         {
-        $option_text = htmlspecialchars(lang_or_i18n_get_translated($rtf['title'], 'fieldtitle-'));
+        $option_text = escape(lang_or_i18n_get_translated($rtf['title'], 'fieldtitle-'));
         ?>
         new_row_html += '<option value="<?php echo $rtf['ref']; ?>"><?php echo $option_text; ?></option>';
         <?php

@@ -13,6 +13,6 @@ function HookRse_workflowAdmin_group_permissionsAdditionalperms()
     <?php
     foreach ($workflowactions as $workflowaction)
         {
-         DrawOption("wf" . $workflowaction["ref"], $lang["rse_workflow_access"] . " " . htmlspecialchars($workflowaction["name"]));
+         DrawOption("wf" . $workflowaction["ref"], $lang["rse_workflow_access"] . " " . escape($workflowaction["name"]));
         }        
     }

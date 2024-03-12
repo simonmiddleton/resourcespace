@@ -43,7 +43,7 @@ foreach($field['nodes'] as $node)
     if('' != trim($node['name']))
         {
         ?>
-        <option value="<?php echo htmlspecialchars(trim($node['ref'])); ?>"
+        <option value="<?php echo escape(trim($node['ref'])); ?>"
         <?php 
         // When editing multiple resources, we don't want to preselect any options; the user must make the necessary selection
         if((!$multiple || $copyfrom != '')
@@ -52,7 +52,7 @@ foreach($field['nodes'] as $node)
             { ?>
              selected
              <?php 
-            } ?>><?php echo htmlspecialchars(trim(i18n_get_translated($node['name']))); ?></option>
+            } ?>><?php echo escape(trim(i18n_get_translated($node['name']))); ?></option>
         <?php
         }
     }

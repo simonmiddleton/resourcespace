@@ -83,7 +83,7 @@ function HookConsentmanagerAllTopnavlinksafterhome()
     global $baseurl,$lang;
     if (!checkperm("t") && checkperm("cm"))
         {
-        ?><li class="HeaderLink"><a href="<?php echo $baseurl ?>/plugins/consentmanager/pages/list.php" onClick="CentralSpaceLoad(this,true);return false;"><?php echo '<i aria-hidden="true" class="fa fa-fw fa-user-check"></i>&nbsp;' . htmlspecialchars($lang["manageconsent"]); ?></a></li>
+        ?><li class="HeaderLink"><a href="<?php echo $baseurl ?>/plugins/consentmanager/pages/list.php" onClick="CentralSpaceLoad(this,true);return false;"><?php echo '<i aria-hidden="true" class="fa fa-fw fa-user-check"></i>&nbsp;' . escape($lang["manageconsent"]); ?></a></li>
         <?php
         }
     }

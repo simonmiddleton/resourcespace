@@ -113,7 +113,7 @@ $permissions_done=array();
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["page-title_user_group_permissions_edit"] . " - " . htmlspecialchars($group["name"]); ?></h1>
+<h1><?php echo $lang["page-title_user_group_permissions_edit"] . " - " . escape($group["name"]); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -130,14 +130,14 @@ $links_trail = array(
         'href'  => generateURL("{$baseurl_short}pages/admin/admin_group_management_edit.php", $url_params),
     ),
     array(
-        'title' => $lang["page-title_user_group_permissions_edit"] . " - " . htmlspecialchars($group["name"])
+        'title' => $lang["page-title_user_group_permissions_edit"] . " - " . escape($group["name"])
     )
 );
 
 renderBreadcrumbs($links_trail);
 ?>
     <p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>   
-    <?php if(getval("submitted", false) == true){?><div class="PageInformal"><?php echo htmlspecialchars($lang['changessaved']);?></div><?php }?>
+    <?php if(getval("submitted", false) == true){?><div class="PageInformal"><?php echo escape($lang['changessaved']);?></div><?php }?>
     <form method="post" id="copypermissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="return CentralSpacePost(this,true);">   
         <?php generateFormToken("permissions"); ?>
         <input type="hidden" name="save" value="1">
@@ -167,7 +167,7 @@ renderBreadcrumbs($links_trail);
         <div class="Listview">
             <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
                 <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo htmlspecialchars($lang["searching_and_access"]) ?></td>
+                    <td colspan=3 class="permheader"><?php echo escape($lang["searching_and_access"]) ?></td>
                 </tr>
 <?php
 DrawOption("s", $lang["searchcapability"]);
@@ -217,7 +217,7 @@ foreach ($fields as $field)
         $fieldprefix="";$fieldsuffix="";
         if ($field["active"]==0) {$fieldprefix="<span class=FieldDisabled>";$fieldsuffix="</span>";}
 
-        DrawOption("f" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_see_field"] . " '" . $fieldprefix . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . $fieldsuffix . "'" . (($field["name"]=="")?"":"<em> (" . htmlspecialchars($field["name"]) . ")</em>"));
+        DrawOption("f" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_see_field"] . " '" . $fieldprefix . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . $fieldsuffix . "'" . (($field["name"]=="")?"":"<em> (" . escape($field["name"]) . ")</em>"));
         }
     else
         {
@@ -236,7 +236,7 @@ foreach ($fields as $field)
         $fieldprefix="";$fieldsuffix="";
         if ($field["active"]==0) {$fieldprefix="<span class=FieldDisabled>";$fieldsuffix="</span>";}
 
-        DrawOption("F-" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_edit_field"] . " '" . $fieldprefix . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . $fieldsuffix . "'"  . (($field["name"]=="")?"":"<em> (" . htmlspecialchars($field["name"]) . ")</em>"), false);
+        DrawOption("F-" . $field["ref"], "&nbsp;&nbsp; - " . $lang["can_edit_field"] . " '" . $fieldprefix . lang_or_i18n_get_translated($field["title"], "fieldtitle-") . $fieldsuffix . "'"  . (($field["name"]=="")?"":"<em> (" . escape($field["name"]) . ")</em>"), false);
         }
     else
         {
@@ -322,7 +322,7 @@ DrawOption("i", $lang["can_manage_archive_resources"]);
 DrawOption('A', $lang["can_manage_alternative_files"], true);
 ?>
     <tr class="ListviewTitleStyle">
-        <td colspan=3 class="permheader"><?php echo htmlspecialchars($lang["themes_and_collections"]); ?></td>
+        <td colspan=3 class="permheader"><?php echo escape($lang["themes_and_collections"]); ?></td>
     </tr>
 <?php
 
@@ -420,7 +420,7 @@ $custom_permissions = join(",", array_diff($permissions, $permissions_done));
                 rows="3"
                 cols="50"
                 data-custom_permissions_copy="<?php echo escape($custom_permissions);  ?>"
-            ><?php echo htmlspecialchars($custom_permissions); ?></textarea>            
+            ><?php echo escape($custom_permissions); ?></textarea>            
             <div class="clearerleft"></div>
         </div>
 

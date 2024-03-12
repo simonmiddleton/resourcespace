@@ -552,7 +552,7 @@ function build_actiondates_urls(array $resource_refs)
             {
             $url = $baseurl . "/pages/search.php?search=!list";
             $url .= implode(":", $refs_chunk);
-            $url = '<li><a href="' . $url . '">' . htmlspecialchars($lang["show_affected_resources"]) . ' [' . htmlspecialchars($lang["group_no"]) . ' ' . $link_no . ']</a></li>';
+            $url = '<li><a href="' . $url . '">' . escape($lang["show_affected_resources"]) . ' [' . escape($lang["group_no"]) . ' ' . $link_no . ']</a></li>';
             $urls[] = $url;
             }
         

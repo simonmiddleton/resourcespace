@@ -62,12 +62,12 @@ include '../../include/header.php';
     <?php
     if (isset($error))
         {
-        echo "<div class=\"FormError\">" . $lang["error"] . ":&nbsp;" . htmlspecialchars($error) . "</div>";
+        echo "<div class=\"FormError\">" . $lang["error"] . ":&nbsp;" . escape($error) . "</div>";
         }
 
     elseif (isset($message))
         {
-        echo "<div class=\"PageInformal\">" . htmlspecialchars($message) . "</div>";
+        echo "<div class=\"PageInformal\">" . escape($message) . "</div>";
         }
     ?>
     <p><?php echo $lang['exportdata-instructions']; render_help_link("admin/download-config");?></p>

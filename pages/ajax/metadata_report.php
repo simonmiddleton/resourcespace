@@ -210,7 +210,7 @@ else
 
         ?>
         <tr>
-            <td colspan="5"><?php echo htmlspecialchars($lang['metadata-report-fits_section']) ; ?></td>
+            <td colspan="5"><?php echo escape($lang['metadata-report-fits_section']) ; ?></td>
         </tr>
         <?php
 

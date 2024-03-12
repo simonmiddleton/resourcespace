@@ -161,7 +161,7 @@ if(
                     if($proposed_change["resource_type_field"]==$proposefields[$n]["ref"])
                         {
                         $deletedchanges[$deletedchangescount]["field"]=$proposefields[$n]["title"];
-                        $deletedchanges[$deletedchangescount]["value"]=htmlspecialchars($proposed_change["value"]);
+                        $deletedchanges[$deletedchangescount]["value"]=escape($proposed_change["value"]);
                         $deletedchangescount++;
                         }
                     }
@@ -198,7 +198,7 @@ if(
             }
         for($n=0;$n<$deletedchangescount;$n++)
             {
-            $changesummary->append_text($deletedchanges[$n]["field"] . " : " . htmlspecialchars($deletedchanges[$n]["value"]) . "<br/>");
+            $changesummary->append_text($deletedchanges[$n]["field"] . " : " . escape($deletedchanges[$n]["value"]) . "<br/>");
             }
 
         $templatevars['changesummary']=$changesummary->get_text();
@@ -262,7 +262,7 @@ if(
                             }
                         }
                     $submittedchanges[$submittedchangescount]["field"] = $proposefields[$n]["title"];
-                    $submittedchanges[$submittedchangescount]["value"] = htmlspecialchars($proposed_change_value);
+                    $submittedchanges[$submittedchangescount]["value"] = escape($proposed_change_value);
                     $submittedchangescount++;
                     }
                 }
@@ -274,7 +274,7 @@ if(
             $changesummary->append_text("<br/><br/>");
             for($n=0;$n<$submittedchangescount;$n++)
                 {
-                $changesummary->append_text($submittedchanges[$n]["field"] . " : " . htmlspecialchars($submittedchanges[$n]["value"]) . "<br/>");
+                $changesummary->append_text($submittedchanges[$n]["field"] . " : " . escape($submittedchanges[$n]["value"]) . "<br/>");
                 }
 
             $templatevars['proposer']=(($username=="") ? $username : $userfullname);
@@ -386,7 +386,7 @@ if(!$editaccess)
                 <?php 
                 foreach ($userproposals as $userproposal)
                     {
-                    echo  "<option value=" . $userproposal["user"] . " " . (($view_user==$userproposal["user"])?"selected":"") . ">" . htmlspecialchars($userproposal["username"]) . "</option>";
+                    echo  "<option value=" . $userproposal["user"] . " " . (($view_user==$userproposal["user"])?"selected":"") . ">" . escape($userproposal["username"]) . "</option>";
                     }
                 ?>
                 </select>
@@ -395,7 +395,7 @@ if(!$editaccess)
             else
                 {
                 ?>
-                <div class="Fixed"><?php echo htmlspecialchars($userproposals[0]["username"]) ?></div>
+                <div class="Fixed"><?php echo escape($userproposals[0]["username"]) ?></div>
                 <?php
                 }
                 ?>
@@ -504,7 +504,7 @@ if(!$editaccess)
     <div class="QuestionSubmit">
         <input id="resetform" name="resetform" type="hidden" value=""/>
         <input id="save"  name="submitted" type="hidden" value="" />
-        <input name="proposeuser" type="hidden" value="<?php echo isset($view_user) ? htmlspecialchars($view_user) : ""?>" />
+        <input name="proposeuser" type="hidden" value="<?php echo isset($view_user) ? escape($view_user) : ""?>" />
         <input name="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" onClick="return jQuery('#resetform').val('true');"/>&nbsp;
             <?php if($editaccess)
                 {?>

@@ -97,7 +97,7 @@ if(!collection_readable($collection))
     
     <?php if ($error != "" && isset($lang[$error]))
         {
-        echo "<div class='PageInformal' name='error' id='error'>" . htmlspecialchars($lang[$error]) . "</div>";
+        echo "<div class='PageInformal' name='error' id='error'>" . escape($lang[$error]) . "</div>";
         }
     ?>
 
@@ -107,7 +107,7 @@ if(!collection_readable($collection))
     preview image that can be judged before initiating a download of sometimes several MB.-->
     <form method="post" name="contactsheetform" id="contactsheetform" action="<?php echo $baseurl_short; ?>pages/ajax/contactsheet.php" >
         <?php generateFormToken("contactsheetform"); ?>
-        <input type=hidden name="c" value="<?php echo htmlspecialchars($collection); ?>">
+        <input type=hidden name="c" value="<?php echo escape($collection); ?>">
         <input type=hidden name="field_value_limit" value="<?php echo escape($field_value_limit); ?>">
         <input type=hidden name="order_by" value="<?php echo escape($order_by); ?>">
         <!--<div name="error" id="error"></div>-->
@@ -159,7 +159,7 @@ if(!collection_readable($collection))
                     <?php
                     foreach($templates as $template)
                         {
-                        echo "<option value='" . htmlspecialchars($template) . "'>" .  (isset($lang[$template]) ? $lang[$template] : htmlspecialchars($template)) . "</option>";
+                        echo "<option value='" . escape($template) . "'>" .  (isset($lang[$template]) ? $lang[$template] : escape($template)) . "</option>";
                         }?>
                 </select>
                 <div class="clearerleft"></div>
@@ -242,7 +242,7 @@ if($contact_sheet_single_select_size)
         <?php
         foreach($sizes as $size)
             {
-            echo '    <option value="'. $size['id'] . '"' . ($size['id']=='lpr'?' selected':'') . '>' . htmlspecialchars($size['name']) . '</option>';
+            echo '    <option value="'. $size['id'] . '"' . ($size['id']=='lpr'?' selected':'') . '>' . escape($size['name']) . '</option>';
             }
             ?>
         </select>
@@ -414,7 +414,7 @@ if($contactsheet_sorting)
                 if(!($sortable_field["title"] == $lang["date"] || $sortable_field["title"] == $lang["colour"]))
                     {
                     ?>
-                    <option value="<?php echo $sortable_field['ref']?>"><?php echo htmlspecialchars($sortable_field["title"]) ?></option>
+                    <option value="<?php echo $sortable_field['ref']?>"><?php echo escape($sortable_field["title"]) ?></option>
                     <?php
                     }
                 }   
@@ -424,7 +424,7 @@ if($contactsheet_sorting)
     </div>
 
     <div class="Question">
-        <label><?php echo htmlspecialchars($lang["sort-type"]) ?></label>
+        <label><?php echo escape($lang["sort-type"]) ?></label>
         <select class="shrtwidth" name="sort" id="sort" onChange="jQuery().rsContactSheet('preview','<?php echo $collection; ?>','<?php echo $filename_uid; ?>');">
             <option value="asc" selected><?php echo $lang["ascending"]?></option>
             <option value="desc"><?php echo $lang["descending"]?></option>
@@ -496,7 +496,7 @@ $height  = $cs_size[1];
 if($contact_sheet_previews == true)
     {
     ?>
-    <div style="float:left;padding:0px -50px 15px 0;height:<?php echo htmlspecialchars($height) ?>px;margin-top:-15px;margin-right:-50px">
+    <div style="float:left;padding:0px -50px 15px 0;height:<?php echo escape($height) ?>px;margin-top:-15px;margin-right:-50px">
         <img alt="" id="previewimage" name="previewimage" src=""/>
     </div>
     <?php

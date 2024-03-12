@@ -124,7 +124,7 @@ if(getval('loginas', '') != '')
 
 <div class="RecordHeader">
 
-<h1><?php echo htmlspecialchars($lang["edituser"]); ?></h1>
+<h1><?php echo escape($lang["edituser"]); ?></h1>
 
 <?php
 // Breadcrumbs links
@@ -168,7 +168,7 @@ generateFormToken("team_user_edit");
 <?php
 if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user["login_last_try"]) > (time() - ($max_login_attempts_wait_minutes * 60))))
  {?>
-    <div class="Question"><label><strong><?php echo htmlspecialchars($lang["accountlockedstatus"])?></strong></label>
+    <div class="Question"><label><strong><?php echo escape($lang["accountlockedstatus"])?></strong></label>
         <input class="medcomplementwidth" type=submit name="unlock" value="<?php echo escape($lang["accountunlock"])?>" onclick="jQuery('#unlockuser').val('true');"/>
         <input id="unlockuser" type=hidden name="unlock" value="" />
     </div>
@@ -182,19 +182,19 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
     <div class="clearerleft"></div>
 </div>
 
-<div class="Question" ><label><?php echo htmlspecialchars($lang["username"])?></label><input id="user_edit_username" name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
+<div class="Question" ><label><?php echo escape($lang["username"])?></label><input id="user_edit_username" name="username" type="text" class="stdwidth" value="<?php echo form_value_display($user,"username") ?>"><div class="clearerleft"> </div></div>
 
 <?php if (!hook("password", "", array($user))) { ?>
-<div class="Question"><label><?php echo htmlspecialchars($lang["password"])?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo escape($lang["hidden"]); ?>" autocomplete="new-password">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo escape($lang["suggest"])?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["password"])?></label><input name="password" id="password" type="text" class="medwidth" value="<?php echo escape($lang["hidden"]); ?>" autocomplete="new-password">&nbsp;<input class="medcomplementwidth" type=submit name="suggest" value="<?php echo escape($lang["suggest"])?>" onclick="jQuery.get(this.form.action + '?suggest=true', function(result) {jQuery('#password').val(result);});return false;" /><div class="clearerleft"> </div></div>
 <?php } else { ?>
 <div><input name="password" id="password" type="hidden" value="<?php echo escape($lang["hidden"]);?>" /></div>
 <?php } ?>
 
 <?php if (!hook("replacefullname")){?>
-<div class="Question"><label><?php echo htmlspecialchars($lang["fullname"])?></label><input name="fullname" id="user_edit_fullname" type="text" class="stdwidth" value="<?php echo form_value_display($user,"fullname") ?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["fullname"])?></label><input name="fullname" id="user_edit_fullname" type="text" class="stdwidth" value="<?php echo form_value_display($user,"fullname") ?>"><div class="clearerleft"> </div></div>
 <?php } ?>
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["group"])?></label>
+<div class="Question"><label><?php echo escape($lang["group"])?></label>
 <?php if (!hook("replaceusergroups")) { ?>
 <select class="stdwidth" name="usergroup">
 <?php
@@ -219,7 +219,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
 <?php hook("additionalusergroupfields"); ?>
 
 <div class="Question">
-    <label><?php echo htmlspecialchars($lang["emailaddress"])?></label>
+    <label><?php echo escape($lang["emailaddress"])?></label>
     <input 
         name="email" 
         id="user_edit_email" 
@@ -234,9 +234,9 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
     <div class="clearerleft"> </div>
 </div>
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["accountexpiresoptional"])?><br/><?php echo htmlspecialchars($lang["format"]) . ": " . $lang["yyyy-mm-dd"]?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["accountexpiresoptional"])?><br/><?php echo escape($lang["format"]) . ": " . $lang["yyyy-mm-dd"]?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["ipaddressrestriction"])?><br/><?php echo htmlspecialchars($lang["wildcardpermittedeg"])?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict_user") ?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["ipaddressrestriction"])?><br/><?php echo escape($lang["wildcardpermittedeg"])?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict_user") ?>"><div class="clearerleft"> </div></div>
 
 <?php
 if (is_numeric($user['search_filter_o_id']) && $user['search_filter_o_id'] > 0)
@@ -278,7 +278,7 @@ $search_filters = get_filters("name","ASC");
 $filters[] = array("ref" => -1, "name" => $lang["disabled"]);
 ?>
 <div class="Question">
-    <label for="search_filter_o_id"><?php echo htmlspecialchars($lang["searchfilteroverride"]); ?></label>
+    <label for="search_filter_o_id"><?php echo escape($lang["searchfilteroverride"]); ?></label>
     <select id="user_edit_search_filter" name="search_filter_o_id" class="stdwidth">
         <?php
         echo "<option value='0' >" . $lang["filter_none"] . "</option>";
@@ -294,27 +294,27 @@ $filters[] = array("ref" => -1, "name" => $lang["disabled"]);
 hook("additionaluserfields");
 if (!hook("replacecomments"))
     { ?>
-    <div class="Question"><label><?php echo htmlspecialchars($lang["comments"])?></label><textarea id="user_edit_comments" name="comments" class="stdwidth" rows=5 cols=50><?php echo form_value_display($user,"comments")?></textarea><div class="clearerleft"> </div></div>
+    <div class="Question"><label><?php echo escape($lang["comments"])?></label><textarea id="user_edit_comments" name="comments" class="stdwidth" rows=5 cols=50><?php echo form_value_display($user,"comments")?></textarea><div class="clearerleft"> </div></div>
     <?php
     } ?>
-<div class="Question"><label><?php echo htmlspecialchars($lang["created"])?></label>
+<div class="Question"><label><?php echo escape($lang["created"])?></label>
 <div class="Fixed"><?php echo nicedate($user["created"],true,true,true) ?></div>
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["origin"]); ?></label>
+<div class="Question"><label><?php echo escape($lang["origin"]); ?></label>
 <div class="Fixed"><?php echo escape($user["origin"]!="" ? (isset($lang["origin_" . $user["origin"]]) ? $lang["origin_" . $user["origin"]]:$user["origin"]) : $applicationname); ?></div>
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["lastactive"])?></label>
+<div class="Question"><label><?php echo escape($lang["lastactive"])?></label>
 <div class="Fixed"><?php echo nicedate($user["last_active"],true,true,true) ?></div>
 <div class="clearerleft"> </div></div>
 
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["lastbrowser"])?></label>
+<div class="Question"><label><?php echo escape($lang["lastbrowser"])?></label>
 <div class="Fixed"><?php echo resolve_user_agent($user["last_browser"])?></div>
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["profile_image"])?></label>
+<div class="Question"><label><?php echo escape($lang["profile_image"])?></label>
 <?php
 $profile_image = get_profile_image($ref);
 if ($profile_image != "") { ?>
@@ -327,7 +327,7 @@ if ($profile_image != "") { ?>
 <div class="clearerleft"> </div></div>
 
 <?php if ($enable_remote_apis) { ?>
-<div class="Question"><label><?php echo htmlspecialchars($lang["private-api-key"]) ?></label>
+<div class="Question"><label><?php echo escape($lang["private-api-key"]) ?></label>
 <div class="Fixed"><?php echo get_api_key($user["ref"]) ?></div>
 <div class="clearerleft"> </div></div>
 <?php }
@@ -335,14 +335,14 @@ if ($profile_image != "") { ?>
 if(!hook('ticktoemailpassword')) 
     {
     ?>
-    <div class="Question"><label><?php echo htmlspecialchars($lang["ticktoemaillink"])?></label>
+    <div class="Question"><label><?php echo escape($lang["ticktoemaillink"])?></label>
     <input name="emailresetlink" type="checkbox" value="yes" <?php if ($user["approved"]==0 || getval("emailresetlink","") != "") { ?>checked<?php } ?>>
     <div class="clearerleft"> </div></div>
     <?php
     }
     ?> 
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["status"])?></label>
+<div class="Question"><label><?php echo escape($lang["status"])?></label>
 <select name="approved" >
     <?php
     for($n=0;$n<=2;$n++)
@@ -351,23 +351,23 @@ if(!hook('ticktoemailpassword'))
         }
     ?>
 </select>
-<?php if ($user["approved"]!=1) { ?><div class="FormError">!! <?php echo htmlspecialchars($lang["ticktoapproveuser"])?> !!</div><?php } ?>
+<?php if ($user["approved"]!=1) { ?><div class="FormError">!! <?php echo escape($lang["ticktoapproveuser"])?> !!</div><?php } ?>
 <div class="clearerleft"> </div></div>
 
 <div class="Question">
-    <label><?php echo htmlspecialchars($lang['ticktodelete']); ?></label>
+    <label><?php echo escape($lang['ticktodelete']); ?></label>
     <input type="checkbox" name="deleteme" value="yes" onclick="return confirm_delete_user(this);">
     <div class="clearerleft"></div>
 </div>
 <?php hook("additionaluserlinks");?>
 
 <div class="Question">
-<label><?php echo htmlspecialchars($lang["team_user_contributions"])?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo $ref?>"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["team_user_view_contributions"]) ?></a></div>
+<label><?php echo escape($lang["team_user_contributions"])?></label>
+<div class="Fixed"><a href="<?php echo $baseurl_short?>pages/search.php?search=!contributions<?php echo $ref?>"><?php echo LINK_CARET ?><?php echo escape($lang["team_user_view_contributions"]) ?></a></div>
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo htmlspecialchars($lang["log"])?></label>
-<div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["clicktoviewlog"])?></a></div>
+<div class="Question"><label><?php echo escape($lang["log"])?></label>
+<div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/admin/admin_system_log.php?actasuser=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["clicktoviewlog"])?></a></div>
 <div class="clearerleft"> </div></div>
 
 <?php
@@ -375,8 +375,8 @@ if($userref != $ref)
     {
     // Add message link
     ?>
-    <div class="Question"><label><?php echo htmlspecialchars($lang["new_message"])?></label>
-    <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["message"])?></a></div>
+    <div class="Question"><label><?php echo escape($lang["new_message"])?></label>
+    <div class="Fixed"><a href="<?php echo $baseurl_short ?>pages/user/user_message.php?msgto=<?php echo $ref ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["message"])?></a></div>
     <div class="clearerleft"> </div></div>
 <?php
     }  
@@ -393,16 +393,16 @@ if ($user["approved"]==1 && !hook("loginasuser"))
         )
         {
         ?>
-        <div class="Question"><label><?php echo htmlspecialchars($lang["login"])?></label>
-        <div class="Fixed"><a href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $ref?>&loginas=true"><?php echo LINK_CARET ?><?php echo htmlspecialchars($lang["clicktologinasthisuser"])?></a></div>
+        <div class="Question"><label><?php echo escape($lang["login"])?></label>
+        <div class="Fixed"><a href="<?php echo $baseurl_short?>pages/team/team_user_edit.php?ref=<?php echo $ref?>&loginas=true"><?php echo LINK_CARET ?><?php echo escape($lang["clicktologinasthisuser"])?></a></div>
         <div class="clearerleft"> </div></div>
         <?php
         }
     else
         {
         ?>
-        <div class="Question"><label><?php echo htmlspecialchars($lang["login"])?></label>
-        <div class="Fixed"><?php echo htmlspecialchars($lang["accountorpasswordexpired"])?></div>
+        <div class="Question"><label><?php echo escape($lang["login"])?></label>
+        <div class="Fixed"><?php echo escape($lang["accountorpasswordexpired"])?></div>
         <div class="clearerleft"> </div></div>
         <?php
         }
@@ -412,7 +412,7 @@ if ($user["approved"]==1 && !hook("loginasuser"))
 
 
 <div class="QuestionSubmit">            
-<input name="save" type="submit" id="user_edit_save" value="&nbsp;&nbsp;<?php echo htmlspecialchars($lang["save"])?>&nbsp;&nbsp;" />
+<input name="save" type="submit" id="user_edit_save" value="&nbsp;&nbsp;<?php echo escape($lang["save"])?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>

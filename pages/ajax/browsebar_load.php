@@ -85,7 +85,7 @@ switch ($returntype)
                 // Create link based on parent and current restype
                 $return_items[$n] = array();
                 $return_items[$n]["id"] = $id . "-RT:" . $restype["ref"];
-                $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($restype["name"]));
+                $return_items[$n]["name"] = escape(i18n_get_translated($restype["name"]));
                 $return_items[$n]["class"] = "Restype";
                 $return_items[$n]["expandable"] = "true";            
                 $tgtparams = array();
@@ -198,7 +198,7 @@ switch ($returntype)
                 // Create link based on parent and current restype
                 $return_items[$n] = array();
                 $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
-                $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($node["name"]));
+                $return_items[$n]["name"] = escape(i18n_get_translated($node["name"]));
                 $return_items[$n]["class"] = "Node";
                 $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";
                 
@@ -257,7 +257,7 @@ switch ($returntype)
                 {
                 $return_items[$n] = array();
                 $return_items[$n]["id"] = $id . "-N:" . $node["ref"];
-                $return_items[$n]["name"] = htmlspecialchars(i18n_get_translated($node["name"]));
+                $return_items[$n]["name"] = escape(i18n_get_translated($node["name"]));
                 $return_items[$n]["class"] = "Node";           
                 $return_items[$n]["expandable"] = (is_parent_node($node["ref"])) ? "true" : "false";            
                 $tgtparams = array();
@@ -284,7 +284,7 @@ switch ($returntype)
             {
             $item = array(
                 "id" => "{$id}-FC:new",
-                "name" => htmlspecialchars($lang["create"]),
+                "name" => escape($lang["create"]),
                 "class" => "New",
                 "expandable" => "false",
                 "link" => generateURL(
@@ -316,7 +316,7 @@ switch ($returntype)
 
             $item = array(
                 "id" => "{$id}-{$id_part}:{$fc["ref"]}",
-                "name" => htmlspecialchars(strip_prefix_chars(i18n_get_translated($fc["name"]),"*")),
+                "name" => escape(strip_prefix_chars(i18n_get_translated($fc["name"]),"*")),
                 "class" => ($is_featured_collection_category ? "Featured" : "Col"),
                 "expandable" => ($is_featured_collection_category ? "true" : "false"), # lib/js/browsebar_js.php requires this to be a string.
                 "link" => $link,

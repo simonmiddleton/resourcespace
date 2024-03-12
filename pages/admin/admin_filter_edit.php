@@ -62,15 +62,15 @@ if($delete_filter != "" && enforcePostRequest("admin_filter_edit"))
         {
         $response   = array('deleted' => false);
         $errors = array();
-        $errors[] = htmlspecialchars($lang["filter_delete_error"]) . ":- ";
+        $errors[] = escape($lang["filter_delete_error"]) . ":- ";
         foreach($result["groups"] as $group)
             {
-            $errors[] = htmlspecialchars($lang["group"]) . ": <a href='" . $baseurl_short . "/pages/admin/admin_group_management_edit.php?ref=" . (int) $group . "' target='_blank' >" . (int) $group . "</a>";
+            $errors[] = escape($lang["group"]) . ": <a href='" . $baseurl_short . "/pages/admin/admin_group_management_edit.php?ref=" . (int) $group . "' target='_blank' >" . (int) $group . "</a>";
             }
            
         foreach($result["users"] as $user)
             {
-            $errors[] = htmlspecialchars($lang["user"]) . ": <a href='" . $baseurl_short . "?u=" . (int) $user . "' target='_blank' >" . (int) $user . "</a>";
+            $errors[] = escape($lang["user"]) . ": <a href='" . $baseurl_short . "?u=" . (int) $user . "' target='_blank' >" . (int) $user . "</a>";
             }
         if(getval("filter_manage_page","") != "")
             {
@@ -215,7 +215,7 @@ include "../../include/header.php";
              
             <h2><?php echo $lang["filter_edit_text"];render_help_link("systemadmin/search-filters");?></h2>
             <form id="filter_edit_form" name="filter_edit_form" method="post" class="FormWide" action="<?php echo $filter_edit_url; ?>">
-                <input type="hidden" name="filter" value="<?php echo htmlspecialchars($filterid); ?>" />
+                <input type="hidden" name="filter" value="<?php echo escape($filterid); ?>" />
                 <input type="hidden" name="save" value="true" />
                 <?php generateFormToken("admin_filter_edit"); ?>
                 <div class="Question" id="filter_name_question">
@@ -281,7 +281,7 @@ include "../../include/header.php";
 
                 <div class="Question">
                     <label><?php echo $lang["action-delete"]?></label>
-                    <input id="delete_filter" name="delete_filter" type="checkbox" value="<?php echo htmlspecialchars($filterid); ?>" >
+                    <input id="delete_filter" name="delete_filter" type="checkbox" value="<?php echo escape($filterid); ?>" >
                     <div class="clearerleft"></div>
                 </div>
                         

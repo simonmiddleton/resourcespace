@@ -170,7 +170,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
                 <?php echo str_replace_formatted_placeholder("%extension", $format, $lang["field-fileextension"]) ?>
             </option>
         <?php } ?>
-    
+
         </select><?php showProfileChooser(); ?></td>
             <td class="DownloadButton">
                 <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang['action-download']; ?></a>

@@ -108,8 +108,8 @@ include "../include/header.php";
     <form method="post" action="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k); ?>&collection=<?php echo urlencode($k_shares_collection); ?>" 
         onSubmit="if (!document.getElementById('iaccept').checked) {alert('<?php echo $lang["mustaccept"] ?>');return false;}">
     <?php generateFormToken("terms"); ?>
-    <input type=hidden name="url" value="<?php echo htmlspecialchars($url)?>">
-    <input type=hidden name="ref" value="<?php echo htmlspecialchars($ref)?>">
+    <input type=hidden name="url" value="<?php echo escape($url)?>">
+    <input type=hidden name="ref" value="<?php echo escape($ref)?>">
     
     <div class="Question">
     <label for="iaccept"><?php echo $lang["iaccept"] ?></label>

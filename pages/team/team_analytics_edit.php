@@ -157,7 +157,7 @@ else
 
 <div class="Question">
 <label for="report_name"><?php echo $lang["report_name"] ?></label>
-<input type="text" class="stdwidth" id="report_name" name="name" value="<?php echo htmlspecialchars(getval("name",isset($report["name"])?$report["name"]:"")) ?>"/>
+<input type="text" class="stdwidth" id="report_name" name="name" value="<?php echo escape(getval("name",isset($report["name"])?$report["name"]:"")) ?>"/>
 <!--<input type="submit" name="suggest" value="Suggest" />-->
 <div class="clearerleft"> </div>
 </div>
@@ -186,9 +186,9 @@ for ($n=0;$n<count($types);$n++)
 foreach($resource_types as $type)
     {
     ?>
-    <option value="<?php echo htmlspecialchars($type['ref']) ?>"
+    <option value="<?php echo escape($type['ref']) ?>"
     <?php if ($resource_type == $type['ref']) { ?>selected<?php } ?>
-    ><?php echo htmlspecialchars($type['name'])?>
+    ><?php echo escape($type['name'])?>
     </option>
     <?php
     }
@@ -209,9 +209,9 @@ $list=get_user_collections($userref);
 for ($n=0;$n<count($list);$n++)
         {
         ?>
-        <option value="<?php echo htmlspecialchars($list[$n]["ref"]) ?>"
+        <option value="<?php echo escape($list[$n]["ref"]) ?>"
         <?php if ($collection==$list[$n]["ref"]) { ?>selected<?php } ?>
-        ><?php echo htmlspecialchars($list[$n]["name"])?></option>
+        ><?php echo escape($list[$n]["name"])?></option>
         <?php
         }
 ?>
@@ -222,9 +222,9 @@ $list=search_public_collections("","name","ASC",false, false);
 for ($n=0;$n<count($list);$n++)
         {
         ?>
-        <option value="<?php echo htmlspecialchars($list[$n]["ref"]) ?>"
+        <option value="<?php echo escape($list[$n]["ref"]) ?>"
         <?php if ($collection==$list[$n]["ref"]) { ?>selected<?php } ?>
-        ><?php echo htmlspecialchars($list[$n]["name"])?></option>
+        ><?php echo escape($list[$n]["name"])?></option>
         <?php
         }
 ?>

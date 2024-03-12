@@ -199,7 +199,7 @@ render_help_link("user/sharing-resources");?>
 
 <form name="collectionform" method=post id="collectionform" action="<?php echo $baseurl_short?>pages/collection_email.php?catshare=<?php if($themeshare==true){echo "true";}else{echo "false";}?>">
 <input type=hidden name=redirect id=redirect value=yes>
-<input type=hidden name=ref id="ref" value="<?php echo htmlspecialchars($collection["ref"]); ?>">
+<input type=hidden name=ref id="ref" value="<?php echo escape($collection["ref"]); ?>">
 <?php
 generateFormToken("collectionform");
 

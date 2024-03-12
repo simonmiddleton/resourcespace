@@ -93,7 +93,7 @@ include "../include/header.php";
 
         <div class="Question">
             <label for="name"><?php echo $lang["nameofproject"]?> *</label>
-            <input id="name" name="name" class="stdwidth" type="text" value="<?php echo htmlspecialchars($name) ?>">
+            <input id="name" name="name" class="stdwidth" type="text" value="<?php echo escape($name) ?>">
             <div class="clearerleft"></div>
             <?php if (isset($error_name)) { ?><div class="FormError"><?php echo $lang["noprojectname"]?></div><?php } ?>
         </div>
@@ -103,7 +103,7 @@ include "../include/header.php";
                 <?php echo $lang["descriptionofproject"]?> *<br/>
                 <span class="OxColourPale"><?php echo $lang["descriptionofprojecteg"]?></span>
             </label>
-            <textarea id="description" rows="5" cols="50" name="description" class="stdwidth"><?php echo htmlspecialchars($description) ?></textarea>
+            <textarea id="description" rows="5" cols="50" name="description" class="stdwidth"><?php echo escape($description) ?></textarea>
             <div class="clearerleft"></div>
             <?php if (isset($error_description)) { ?><div class="FormError"><?php echo $lang["noprojectdescription"]?></div><?php } ?>
         </div>
@@ -134,7 +134,7 @@ include "../include/header.php";
             ?>
             <div class="Question" id="email">
                 <label for="email"><?php echo $lang["email"]?></label>
-                <input id="email" name="email" class="stdwidth" type="text" maxlength="200" value="<?php echo htmlspecialchars($email) ?>">
+                <input id="email" name="email" class="stdwidth" type="text" maxlength="200" value="<?php echo escape($email) ?>">
                 <div class="clearerleft"> </div>
                 <?php if (isset($error_email)) { ?><div class="FormError"><?php echo $lang["setup-emailerr"]?></div><?php } ?>
             </div>
@@ -142,7 +142,7 @@ include "../include/header.php";
 
         <div class="Question" id="contacttelephone">
             <label for="contact"><?php echo $lang["contacttelephone"]?></label>
-            <input id="contact" name="contact" class="stdwidth" type="text" maxlength="100" value="<?php echo htmlspecialchars(getval("contact","")) ?>">
+            <input id="contact" name="contact" class="stdwidth" type="text" maxlength="100" value="<?php echo escape(getval("contact","")) ?>">
             <div class="clearerleft"></div>
         </div>
 
@@ -151,7 +151,7 @@ include "../include/header.php";
                 <?php echo $lang["finaluse"]?><br/>
                 <span class="OxColourPale"><?php echo $lang["finaluseeg"]?></span>
             </label>
-            <input id="finaluse" name="finaluse" class="stdwidth" type="text" value="<?php echo htmlspecialchars(getval("finaluse","")) ?>">
+            <input id="finaluse" name="finaluse" class="stdwidth" type="text" value="<?php echo escape(getval("finaluse","")) ?>">
             <div class="clearerleft"></div>
         </div>
 
@@ -164,7 +164,7 @@ include "../include/header.php";
                     { ?>
                     <div class="Inline">
                         <input id="TickBox" type="checkbox" name="resource<?php echo $types[$n]["ref"]?>" value="yes" checked>
-                        &nbsp;<?php echo htmlspecialchars($types[$n]["name"])?>
+                        &nbsp;<?php echo escape($types[$n]["name"])?>
                     </div>
                 <?php } ?>
             </div>
@@ -173,7 +173,7 @@ include "../include/header.php";
 
         <div class="Question" id="noresourcesrequired">
             <label for="noresources"><?php echo $lang["noresourcesrequired"]?></label>
-            <input id="noresources" name="noresources" class="shrtwidth" type="text" value="<?php echo htmlspecialchars(getval("noresources",""))?>">
+            <input id="noresources" name="noresources" class="shrtwidth" type="text" value="<?php echo escape(getval("noresources",""))?>">
             <div class="clearerleft"></div>
         </div>
 

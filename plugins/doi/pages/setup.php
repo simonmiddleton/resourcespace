@@ -179,7 +179,7 @@ XML;
                 $summary .= $lang['doi_not_successfully_registered'];
             }
             if ($key != 'xml')
-                $summary .= ': ' . htmlspecialchars($meta[$key]);
+                $summary .= ': ' . escape($meta[$key]);
             else
                 $summary .= '.';
         }
@@ -195,7 +195,7 @@ XML;
 
         ?>
         <script type="text/javascript">
-            alert('<?php echo htmlspecialchars($summary);?>');
+            alert('<?php echo escape($summary);?>');
         </script>
         <?php
     }

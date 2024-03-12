@@ -107,7 +107,7 @@ else
         }
     else
         {
-        echo "Skipping " . htmlspecialchars($ref);
+        echo "Skipping " . escape($ref);
         }
 
     if ($ref<$max && getval("only","")=="")

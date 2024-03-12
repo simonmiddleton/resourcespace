@@ -344,7 +344,7 @@ if(!empty($trimmed_resources_alt))
 <?php
 if(isset($resource["field".$view_title_field]))
     {
-    echo "<h2>" . htmlspecialchars(i18n_get_translated($resource["field".$view_title_field])) . "</h2><br/>";
+    echo "<h2>" . escape(i18n_get_translated($resource["field".$view_title_field])) . "</h2><br/>";
     }
 ?>
 <div class="RecordBox">

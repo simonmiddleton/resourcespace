@@ -65,7 +65,7 @@ if (PHP_SAPI == 'cli' || (getval("submit","")!="" && enforcePostRequest(false)))
         }
     while(!empty($nodes));
 
-    $result = PHP_SAPI == 'cli' ? "Reindex complete\n\n" : "<div class='PageInfoMessage'>Reindex of field '" . htmlspecialchars($fieldinfo["title"]) . "' complete </div>";
+    $result = PHP_SAPI == 'cli' ? "Reindex complete\n\n" : "<div class='PageInfoMessage'>Reindex of field '" . escape($fieldinfo["title"]) . "' complete </div>";
     echo $result;
     }
 

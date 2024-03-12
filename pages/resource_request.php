@@ -177,18 +177,18 @@ $back_url = generateURL(
     <?php render_top_page_error_style($error); ?>
     <form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php" onsubmit="return CentralSpacePost(this,true);">
         <?php generateFormToken("resource_request"); ?>
-    <input type="hidden" name="k" value="<?php echo htmlspecialchars($k); ?>">
-    <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref)?>">
+    <input type="hidden" name="k" value="<?php echo escape($k); ?>">
+    <input type="hidden" name="ref" value="<?php echo escape($ref)?>">
     
     <div class="Question">
     <label><?php echo $lang["resourceid"]?></label>
-    <div class="Fixed"><?php echo htmlspecialchars($ref)?></div>
+    <div class="Fixed"><?php echo escape($ref)?></div>
     <div class="clearerleft"> </div>
     </div>
     
     <div class="Question">
     <label><?php echo $lang['resourcetitle']; ?></label>
-    <div class="Fixed"><?php echo htmlspecialchars(i18n_get_translated($resource_title)); ?></div>
+    <div class="Fixed"><?php echo escape(i18n_get_translated($resource_title)); ?></div>
     <div class="clearerleft"> </div>
     </div>
     
@@ -196,28 +196,28 @@ $back_url = generateURL(
     <div class="Question">
     <label><?php echo $lang["fullname"]?> <sup>*</sup></label>
     <input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]?>">
-    <input name="fullname" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getval("fullname","")) ?>">
+    <input name="fullname" type="text" class="stdwidth" value="<?php echo escape(getval("fullname","")) ?>">
     <div class="clearerleft"> </div>
     </div>
     
     <div class="Question">
     <label><?php echo $lang["emailaddress"]?> <sup>*</sup></label>
     <input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]?>">
-    <input name="email" type="email" class="stdwidth" value="<?php echo htmlspecialchars(getval("email","")) ?>">
+    <input name="email" type="email" class="stdwidth" value="<?php echo escape(getval("email","")) ?>">
     <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
     <label><?php echo $lang["contacttelephone"]?></label>
     <input type="hidden" name="contact_label" value="<?php echo $lang["contacttelephone"]?>">
-    <input name="contact" type="text" class="stdwidth" value="<?php echo htmlspecialchars(getval("contact","")) ?>">
+    <input name="contact" type="text" class="stdwidth" value="<?php echo escape(getval("contact","")) ?>">
     <div class="clearerleft"> </div>
     </div>
     <?php } ?>
 
     <div class="Question">
     <label for="request"><?php echo $lang["requestreason"]?> <?php if ($resource_request_reason_required) { ?><sup>*</sup><?php } ?></label>
-    <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo htmlspecialchars(getval("request","")) ?></textarea>
+    <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo escape(getval("request","")) ?></textarea>
     <div class="clearerleft"> </div>
     </div>
 
@@ -243,18 +243,18 @@ if (isset($custom_request_fields))
             {
             ?>
             <div class="Question">
-            <label for="custom<?php echo $n?>"><?php echo htmlspecialchars(i18n_get_translated($custom[$n]))?>
+            <label for="custom<?php echo $n?>"><?php echo escape(i18n_get_translated($custom[$n]))?>
             <?php if (in_array($custom[$n],$required)) { ?><sup>*</sup><?php } ?>
             </label>
             
             <?php if ($type==1) {  # Normal text box
             ?>
-            <input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo htmlspecialchars(getval("custom" . $n,""))?>">
+            <input type=text name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" value="<?php echo escape(getval("custom" . $n,""))?>">
 <?php } ?>
 
             <?php if ($type==2) { # Large text box 
             ?>
-            <textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo htmlspecialchars(getval("custom" . $n,""))?></textarea>
+            <textarea name="custom<?php echo $n?>" id="custom<?php echo $n?>" class="stdwidth" rows="5"><?php echo escape(getval("custom" . $n,""))?></textarea>
 <?php } ?>
 
             <?php if ($type==3) { # Drop down box
@@ -268,7 +268,7 @@ if (isset($custom_request_fields))
                     {
                     $val=i18n_get_translated($option);
                     ?>
-                    <option <?php if (getval("custom" . $n,"")==$val) { ?>selected<?php } ?>><?php echo htmlspecialchars($val);?></option>
+                    <option <?php if (getval("custom" . $n,"")==$val) { ?>selected<?php } ?>><?php echo escape($val);?></option>
                     <?php
                     }
                }
@@ -292,7 +292,7 @@ hook("resource_request_form_bottom");
 ?>
     <div class="QuestionSubmit">        
     <input name="save" value="true" type="hidden" />
-    <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo htmlspecialchars($ref)?>';"/>&nbsp;
+    <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo escape($ref)?>';"/>&nbsp;
     <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo i18n_get_translated($lang["requestresource"])?>&nbsp;&nbsp;" />
     </div>
     </form>

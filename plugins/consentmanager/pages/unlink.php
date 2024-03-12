@@ -43,10 +43,10 @@ include "../../../include/header.php";
 <input type=hidden name="ref" value="<?php echo $ref?>">
 <input type=hidden name="resource" value="<?php echo $resource?>">
 <?php generateFormToken("consentmanager_unlink"); ?>
-<div class="Question"><label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo htmlspecialchars($resource)?></div>
+<div class="Question"><label><?php echo $lang["resourceid"]?></label><div class="Fixed"><?php echo escape($resource)?></div>
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["consent_id"]?></label><div class="Fixed"><?php echo htmlspecialchars($ref)?></div>
+<div class="Question"><label><?php echo $lang["consent_id"]?></label><div class="Fixed"><?php echo escape($ref)?></div>
 <div class="clearerleft"> </div></div>
 
 

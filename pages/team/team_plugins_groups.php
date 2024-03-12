@@ -52,7 +52,7 @@ include "../../include/header.php";
 $s=explode(",",$access);
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["groupaccess"] . ': ' . htmlspecialchars($plugin); ?></h1>
+<h1><?php echo $lang["groupaccess"] . ': ' . escape($plugin); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -79,7 +79,7 @@ renderBreadcrumbs($links_trail);
 <br/>
 <input type="radio" name="access" value="some" id="some" <?php if ($access!="") { ?>checked<?php } ?>> <?php echo $lang["plugin-groupsspecific"] ?>
 <?php foreach ($groups as $group) { ?>
-<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=checkbox name="group_<?php echo $group["ref"] ?>" value="yes" <?php if (in_array($group["ref"],$s)) { ?>checked<?php } ?> onClick="document.getElementById('some').checked=true;"><?php echo htmlspecialchars($group["name"]); ?>
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=checkbox name="group_<?php echo $group["ref"] ?>" value="yes" <?php if (in_array($group["ref"],$s)) { ?>checked<?php } ?> onClick="document.getElementById('some').checked=true;"><?php echo escape($group["name"]); ?>
 <?php } ?>
 </p>
 

@@ -619,7 +619,7 @@ function header_add_map_providers()
         <?php   
         foreach($geo_leaflet_sources as $leaflet_source)
             {
-            echo htmlspecialchars($leaflet_source["code"])  . ": {\n";
+            echo escape($leaflet_source["code"])  . ": {\n";
             if($geo_tile_caching)
                 {
                 $urlparams = array(

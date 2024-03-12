@@ -12,7 +12,7 @@ function HookTms_linkViewRenderfield($field)
         {           
         $tmsid = $field["value"];
         $value = highlightkeywords($tmsid, $search, $field["partial_index"], $field["name"], $field["keywords_index"]);
-        $title = htmlspecialchars($field["title"]);
+        $title = escape($field["title"]);
         $a_href = generateURL(
             "{$baseurl}/plugins/tms_link/pages/tms_details.php",
             array(

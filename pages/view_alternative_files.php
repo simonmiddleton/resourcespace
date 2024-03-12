@@ -118,8 +118,8 @@ if ($alt_access)
                 <?php
             }        
         ?>
-        <div class="AlternativeFileText"><h2><?php echo htmlspecialchars($altfiles[$n]["name"])?></h2>
-        <p><?php echo htmlspecialchars($altfiles[$n]["description"])?></p>
+        <div class="AlternativeFileText"><h2><?php echo escape($altfiles[$n]["name"])?></h2>
+        <p><?php echo escape($altfiles[$n]["description"])?></p>
         <div>
         </td>
         <?php hook('view_altfiles_table', '', array($altfiles[$n])); ?>
@@ -192,7 +192,7 @@ if ($alt_access)
                 $preview_url = generateURL($baseurl . "/pages/download_usage.php", ['ref'=>$ref, 'url'=>$preview_url, 'alternative'=>$altfiles[$n]['ref'], 'k' => $k]);
                 }
             ?>
-            <td colspan="2" class="DownloadButton"><a href="<?php echo $preview_url;?>" target="_blank"><?php echo htmlspecialchars($lang["view_in_browser"]);?></a></td>
+            <td colspan="2" class="DownloadButton"><a href="<?php echo $preview_url;?>" target="_blank"><?php echo escape($lang["view_in_browser"]);?></a></td>
             </tr>
             <?php
             }    

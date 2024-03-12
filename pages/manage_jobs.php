@@ -248,7 +248,7 @@ include '../include/header.php';
 </script>
 
 <div class='BasicsBox'>
-    <h1><?php echo htmlspecialchars($pagetitle);render_help_link('user/manage_jobs'); ?></h1>
+    <h1><?php echo escape($pagetitle);render_help_link('user/manage_jobs'); ?></h1>
     <?php
     $introtext=text("introtext");
     if ($introtext!="")
@@ -273,7 +273,7 @@ include '../include/header.php';
         <div id="QuestionJobFilter">
 
             <div class="Question" id="QuestionJobType">
-                <label><?php echo htmlspecialchars($lang["job_filter_type"]); ?></label>
+                <label><?php echo escape($lang["job_filter_type"]); ?></label>
                 <select class="stdwidth" id="job_type" name="job_type">
                     <?php 
                     // Not filtered by default when searching, add option to filter by month
@@ -281,14 +281,14 @@ include '../include/header.php';
                     $alljobtypes = array_unique(array_column($jobs,"type"));
                     foreach ($alljobtypes as $avail_jobtype)
                         {
-                        echo "<option " .  ($avail_jobtype == $job_type ? " selected" : "") . " value=\"" .  htmlspecialchars($avail_jobtype) . "\">" . htmlspecialchars($avail_jobtype) . "</option>\n";
+                        echo "<option " .  ($avail_jobtype == $job_type ? " selected" : "") . " value=\"" .  escape($avail_jobtype) . "\">" . escape($avail_jobtype) . "</option>\n";
                         }
                     ?>
                 </select>
                 <div class="clearerleft"></div> 
             </div>   
             <div class="Question" id="QuestionJobStatus">
-                <label><?php echo htmlspecialchars($lang["job_filter_status"]); ?></label>
+                <label><?php echo escape($lang["job_filter_status"]); ?></label>
                 <select class="stdwidth" id="job_status" name="job_status">
                     <?php 
                     // Not filtered by default when searching, add option to filter by month
@@ -305,7 +305,7 @@ include '../include/header.php';
             if(checkperm('a'))
                 {?>
                 <div class="Question"  id="QuestionJobUser">
-                    <label><?php echo htmlspecialchars($lang["job_filter_user"]); ?></label>
+                    <label><?php echo escape($lang["job_filter_user"]); ?></label>
                     <?php include __DIR__ . "/../include/user_select.php" ?> 
                     <div class="clearerleft"></div>
                 </div>

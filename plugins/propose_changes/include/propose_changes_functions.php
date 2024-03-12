@@ -296,7 +296,7 @@ function propose_changes_display_multilingual_text_field($n, $field, $translatio
     {
     global $language, $languages, $lang;
     ?>
-    <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape($lang["hidetranslations"])?>';} return false;"><?php echo htmlspecialchars($lang["showtranslations"]) ?></a></p>
+    <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape($lang["hidetranslations"])?>';} return false;"><?php echo escape($lang["showtranslations"]) ?></a></p>
     <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
     <?php
     reset($languages);
@@ -307,19 +307,19 @@ function propose_changes_display_multilingual_text_field($n, $field, $translatio
             if (array_key_exists($langkey,$translations)) {$transval=$translations[$langkey];} else {$transval="";}
             ?>
             <tr>
-            <td nowrap valign="top"><?php echo htmlspecialchars($langname)?>&nbsp;&nbsp;</td>
+            <td nowrap valign="top"><?php echo escape($langname)?>&nbsp;&nbsp;</td>
 
             <?php
             if ($field["type"]==0)
                 {
                 ?>
-                <td><input type="text" class="stdwidth" name="multilingual_<?php echo $n?>_<?php echo $langkey?>" value="<?php echo htmlspecialchars($transval)?>"></td>
+                <td><input type="text" class="stdwidth" name="multilingual_<?php echo $n?>_<?php echo $langkey?>" value="<?php echo escape($transval)?>"></td>
                 <?php
                 }
             else
                 {
                 ?>
-                <td><textarea rows=6 cols=50 name="multilingual_<?php echo $n?>_<?php echo $langkey?>"><?php echo htmlspecialchars($transval)?></textarea></td>
+                <td><textarea rows=6 cols=50 name="multilingual_<?php echo $n?>_<?php echo $langkey?>"><?php echo escape($transval)?></textarea></td>
                 <?php
                 }
             ?>
@@ -363,7 +363,7 @@ function propose_changes_display_field($n, $field)
 
     ?>
     <div class="Question ProposeChangesQuestion" id="question_<?php echo $n?>">
-    <div class="Label ProposeChangesLabel" ><?php echo htmlspecialchars($field["title"])?></div>
+    <div class="Label ProposeChangesLabel" ><?php echo escape($field["title"])?></div>
 
     <?php 
     # Define some Javascript for help actions (applies to all fields)
@@ -387,7 +387,7 @@ function propose_changes_display_field($n, $field)
             }                        
         else
             {
-            ?><div class="propose_changes_current ProposeChangesCurrent"><?php echo htmlspecialchars($lang["propose_changes_novalue"])  ?></div>    
+            ?><div class="propose_changes_current ProposeChangesCurrent"><?php echo escape($lang["propose_changes_novalue"])  ?></div>    
             <?php
             }
         if(!$editaccess && $proposed_value=="")
@@ -459,9 +459,9 @@ function propose_changes_display_field($n, $field)
             <div class="ProposeChangesAccept ProposeChangesAcceptDeleteColumn">
             <table>
             <tr>
-            <td><input class="ProposeChangesAcceptCheckbox" type="checkbox" id="accept_change_<?php echo $field["ref"] ?>" name="accept_change_<?php echo $field["ref"] ?>" onchange="UpdateProposals(this,<?php echo $field["ref"] ?>);" checked ></input><?php echo htmlspecialchars($lang["propose_changes_accept_change"])  ?></td>
+            <td><input class="ProposeChangesAcceptCheckbox" type="checkbox" id="accept_change_<?php echo $field["ref"] ?>" name="accept_change_<?php echo $field["ref"] ?>" onchange="UpdateProposals(this,<?php echo $field["ref"] ?>);" checked ></input><?php echo escape($lang["propose_changes_accept_change"])  ?></td>
             <td>
-            <input class="ProposeChangesDeleteCheckbox" type="checkbox" id="delete_change_<?php echo $field["ref"] ?>" name="delete_change_<?php echo $field["ref"] ?>" onchange="DeleteProposal(this,<?php echo $field["ref"] ?>);" ></input><?php echo htmlspecialchars($lang["action-delete"])  ?></td>
+            <input class="ProposeChangesDeleteCheckbox" type="checkbox" id="delete_change_<?php echo $field["ref"] ?>" name="delete_change_<?php echo $field["ref"] ?>" onchange="DeleteProposal(this,<?php echo $field["ref"] ?>);" ></input><?php echo escape($lang["action-delete"])  ?></td>
             </tr>
             </table>
             </div>
@@ -473,7 +473,7 @@ function propose_changes_display_field($n, $field)
         # Show inline help for this field.
         # For certain field types that have no obvious focus, the help always appears.
         ?>
-        <div class="FormHelp" style="<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?>display:none;<?php } else { ?>clear:left;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(htmlspecialchars(i18n_get_translated($field["help_text"]))))?></div></div>
+        <div class="FormHelp" style="<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?>display:none;<?php } else { ?>clear:left;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(escape(i18n_get_translated($field["help_text"]))))?></div></div>
 <?php
         }
 

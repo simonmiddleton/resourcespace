@@ -23,7 +23,7 @@ config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 if(isset($error))
     {
-    $error = htmlspecialchars($error);
+    $error = escape($error);
     echo "<div class=\"PageInformal\">{$error}</div>";
     }
 config_gen_setup_html($page_def, $plugin_name, null, $lang['custom_filename_configuration']);

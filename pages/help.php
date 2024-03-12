@@ -43,7 +43,7 @@ if('' == $section)
         if ($page != "")
             {
             // Build link for the specified KnowlegeBase page
-            echo '<iframe src="https://www.resourcespace.com/knowledge-base/' . htmlspecialchars($page) . '?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+            echo '<iframe src="https://www.resourcespace.com/knowledge-base/' . escape($page) . '?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
             }
         else
             {
@@ -61,7 +61,7 @@ if('' == $section)
         ?>
         <li>
             <a onClick="<?php echo $onClick; ?>"
-               href="<?php echo $baseurl_short?>pages/help.php?section=<?php echo urlencode($sections[$n]); ?>"><?php echo htmlspecialchars($sections[$n]); ?></a>
+               href="<?php echo $baseurl_short?>pages/help.php?section=<?php echo urlencode($sections[$n]); ?>"><?php echo escape($sections[$n]); ?></a>
         </li>
         <?php
         }
@@ -74,7 +74,7 @@ if('' == $section)
 else
     {
     ?>
-    <h1><?php echo htmlspecialchars($section)?></h1>
+    <h1><?php echo escape($section)?></h1>
     <p><?php echo text($section)?></p>
     <p><a onClick="<?php echo $onClick; ?>" href="<?php echo $baseurl_short?>pages/help.php"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtohelphome"]?></a></p>
     <?php

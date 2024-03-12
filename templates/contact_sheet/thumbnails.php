@@ -35,7 +35,7 @@ if(isset($contactsheet_header))
                 	{
                 	?>
                 	<td style="width: 60%;">
-                		<h1><?php echo htmlspecialchars($applicationname); ?></h1>
+                		<h1><?php echo escape($applicationname); ?></h1>
                 	</td>
                 	<?php
                 	}
@@ -63,8 +63,8 @@ if(isset($contact_sheet_footer))
         <table style="width: 100%;">
             <tr>
                 <td class="centeredText" style="width: 90%">
-                    <span><?php echo htmlspecialchars($lang['contact_sheet_footer_address']); ?></span>
-                    <p><?php echo htmlspecialchars($lang['contact_sheet_footer_copyright']); ?></p>
+                    <span><?php echo escape($lang['contact_sheet_footer_address']); ?></span>
+                    <p><?php echo escape($lang['contact_sheet_footer_copyright']); ?></p>
                 </td>
                 <td style="text-align: right; width: 10%">[[page_cu]] of [[page_nb]]</td>
             </tr>
@@ -76,7 +76,7 @@ if(isset($contact_sheet_footer))
 
 
     <!-- Real content starts here -->
-    <h3 id="pageTitle"><?php echo htmlspecialchars($title); ?></h3>
+    <h3 id="pageTitle"><?php echo escape($title); ?></h3>
 
 <table>
 <tbody>
@@ -112,7 +112,7 @@ foreach($resources as $resource_ref => $resource)
 		foreach($resource['contact_sheet_fields'] as $contact_sheet_field)
 			{
 			?>
-			<span><?php echo wordwrap(htmlspecialchars($contact_sheet_field),(int)($column_width/7),"<br>",true); ?></span><br>
+			<span><?php echo wordwrap(escape($contact_sheet_field),(int)($column_width/7),"<br>",true); ?></span><br>
 			<?php
 			}
 		}
@@ -122,7 +122,7 @@ foreach($resources as $resource_ref => $resource)
         // IMPORTANT: having space between a tag and img creates some weird visual lines (HTML2PDF issues maybe?!)
         ?>
         <a target="_blank" href="<?php echo $baseurl; ?>/?r=<?php echo (int) $resource_ref; ?>"><img class="resourcePreview" src="<?php echo $resource['preview_src']; ?>" alt="Resource Preview"></a>
-        <?php
+<?php
         }
     else
         {
@@ -139,13 +139,13 @@ foreach($resources as $resource_ref => $resource)
                 {
                 $contact_sheet_field=explode(': ', $contact_sheet_field);
                 ?>
-                <span><b><?php echo htmlspecialchars($contact_sheet_field[0]); ?></b>: <?php echo wordwrap(htmlspecialchars($contact_sheet_field[1]),(int)($column_width/7),"<br>",true); ?></span><br>
+                <span><b><?php echo escape($contact_sheet_field[0]); ?></b>: <?php echo wordwrap(escape($contact_sheet_field[1]),(int)($column_width/7),"<br>",true); ?></span><br>
                 <?php
                 }
             else
                 {
                 ?>
-                <span><?php echo wordwrap(htmlspecialchars($contact_sheet_field),(int)($column_width/7),"<br>",true); ?></span><br>
+                <span><?php echo wordwrap(escape($contact_sheet_field),(int)($column_width/7),"<br>",true); ?></span><br>
                 <?php
                 }
 			}

@@ -49,7 +49,7 @@ function HookLightbox_previewAllReplacefullscreenpreviewicon()
     ?>
     <span class="IconPreview">
         <a class="fa fa-expand"
-            id="previewlink<?php echo htmlspecialchars($order_by) . $ref?>"
+            id="previewlink<?php echo escape($order_by) . $ref?>"
             href="<?php generateURL(
                 $baseurl_short . 'pages/preview.php',
                 [
@@ -68,7 +68,7 @@ function HookLightbox_previewAllReplacefullscreenpreviewicon()
     </span>
 
     <?php
-    addLightBox('#previewlink' . htmlspecialchars($order_by) . $ref, $url, $result[$n]["field".$view_title_field], htmlspecialchars($order_by));
+    addLightBox('#previewlink' . escape($order_by) . $ref, $url, $result[$n]["field".$view_title_field], escape($order_by));
     return true;
     }
 

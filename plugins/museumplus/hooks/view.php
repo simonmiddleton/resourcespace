@@ -44,14 +44,14 @@ function HookMuseumplusViewRenderfield($field, $resource)
                 continue;
                 }
 
-            $rendered_secondary_links[] = sprintf('<a href="%s" target="_blank">%s</a>', $mplus_module_record_url, htmlspecialchars($sec_link_str));
+            $rendered_secondary_links[] = sprintf('<a href="%s" target="_blank">%s</a>', $mplus_module_record_url, escape($sec_link_str));
             }
 
         if(!empty($rendered_secondary_links))
             {
             ?>
             <div class="item">
-                <h3><?php echo htmlspecialchars($field['title']); ?></h3>
+                <h3><?php echo escape($field['title']); ?></h3>
                 <p><?php echo implode(', ', $rendered_secondary_links); ?></p>
             </div>
             <div class="clearerleft"></div>
@@ -91,14 +91,14 @@ function HookMuseumplusViewRenderfield($field, $resource)
             }
         ?>
         <div class="itemNarrow">
-            <h3><?php echo htmlspecialchars($field['title']); ?></h3>
+            <h3><?php echo escape($field['title']); ?></h3>
             <p><?php echo $value; ?></p>
             <?php
             if(isset($mplus_module_url) && $mplus_module_url !== '')
                 {
                 ?>
                 <p>
-                    <a href="<?php echo $mplus_module_url; ?>" target="_blank"><?php echo htmlspecialchars($lang['museumplus_view_in_museumplus']); ?></a>
+                    <a href="<?php echo $mplus_module_url; ?>" target="_blank"><?php echo escape($lang['museumplus_view_in_museumplus']); ?></a>
                 </p>
                 <?php
                 }

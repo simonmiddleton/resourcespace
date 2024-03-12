@@ -39,7 +39,7 @@ if (getval("submitted","") != "" && enforcePostRequest(false))
 $request = get_request($ref);
 if ($request === false && !isset($resulttext))
     {
-    $resulttext = "Request " . htmlspecialchars($ref) . " not found.";
+    $resulttext = "Request " . escape($ref) . " not found.";
     }
   
 include "../../include/header.php";
@@ -97,7 +97,7 @@ if ($request !== false)
         <?php
         }
         ?>
-        <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref) ?>" />
+        <input type="hidden" name="ref" value="<?php echo escape($ref) ?>" />
         <input type="hidden" name="submitted" value="yes" />
 
         <div class="Question">
@@ -257,13 +257,13 @@ if ($request !== false)
 
         <div class="Question" id="ReasonDecline" <?php if ($request["status"]!=2) { ?>style="display:none;"<?php } ?>>
             <label><?php echo $lang["declinereason"]?></label>
-            <textarea name="reason" class="stdwidth" rows="5" cols="50"><?php echo htmlspecialchars((string) $request["reason"])?></textarea>
+            <textarea name="reason" class="stdwidth" rows="5" cols="50"><?php echo escape((string) $request["reason"])?></textarea>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question" id="ReasonApprove" <?php if ($request["status"]!=1) { ?>style="display:none;"<?php } ?>>
             <label><?php echo $lang["approvalreason"]?></label>
-            <textarea name="reasonapproved" class="stdwidth" rows="5" cols="50"><?php echo htmlspecialchars((string) $request["reasonapproved"])?></textarea>
+            <textarea name="reasonapproved" class="stdwidth" rows="5" cols="50"><?php echo escape((string) $request["reasonapproved"])?></textarea>
             <div class="clearerleft"></div>
         </div>
 

@@ -189,7 +189,7 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
         ?>
         <div class="Question">      
         <label><?php echo $lang["slideshowhtml"] ?></label>
-        <textarea style="width:535px;height:120px;"><?php echo htmlspecialchars($embed); ?></textarea>
+        <textarea style="width:535px;height:120px;"><?php echo escape($embed); ?></textarea>
         <div class="clearerleft"></div>
         </div>
 
@@ -200,11 +200,11 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
             "$baseurl/plugins/embedslideshow/pages/viewer.php",
             ["ref"          => $ref,
             "k"             => $key,
-            "size"          => htmlspecialchars(getval("size","")),
-            "transition"    => htmlspecialchars(getval("transition","")),
+            "size"          => escape(getval("size","")),
+            "transition"    => escape(getval("transition","")),
             "width"         => $width,
             "height"        => $height,
-            "showtext"      => htmlspecialchars(getval("showtext","0"))
+            "showtext"      => escape(getval("showtext","0"))
             ]
         );?>
         <div class="Fixed"><a href="<?php echo $embedslideshow_src_url?>" target="_blank"><?php echo $lang["embedslideshow_directlinkopen"] ?></a></div>

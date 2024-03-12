@@ -65,20 +65,20 @@ function Hookvm2rsViewreplacedownloadoptions()
         { ?>
         <table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions">
             <tr >
-                <td><?php echo htmlspecialchars($lang["fileinformation"]) ?></td>
-                <td><?php echo htmlspecialchars($lang["filesize"]) ?></td>
-                <td><?php echo htmlspecialchars($lang["options"]) ?></td>
+                <td><?php echo escape($lang["fileinformation"]) ?></td>
+                <td><?php echo escape($lang["filesize"]) ?></td>
+                <td><?php echo escape($lang["options"]) ?></td>
             </tr>
             <tr class="DownloadDBlend">
                 <td>
-                    <h2><?php echo htmlspecialchars($lang["vm2rs_online_preview"]) ?></h2>
-                    <p><?php echo htmlspecialchars($lang["vm2rs_youtube_video"]) ?></p>
+                    <h2><?php echo escape($lang["vm2rs_online_preview"]) ?></h2>
+                    <p><?php echo escape($lang["vm2rs_youtube_video"]) ?></p>
                 </td>
-                <td><?php echo htmlspecialchars($lang["notavailableshort"]) ?></td>
+                <td><?php echo escape($lang["notavailableshort"]) ?></td>
                 <td class="DownloadButton HorizontalWhiteNav">
                     <a href="<?php echo $baseurl_short; ?>pages/resource_request.php?ref=<?php echo urlencode($ref); ?>&k=<?php echo escape(getval("k", "")); ?>"
                         onClick="return CentralSpaceLoad(this,true);">
-                    <?php echo htmlspecialchars($lang["action-request"]) ?>
+                    <?php echo escape($lang["action-request"]) ?>
                 </td>
             </tr>
         </table>
