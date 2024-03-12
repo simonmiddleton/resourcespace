@@ -256,10 +256,7 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
     if(count($tile_styles[$tile_type]) < 2)
         {
         // If this tile type allows for changing its colour, show it
-        if (
-            allow_tile_colour_change($tile_type)
-            && allow_tile_colour_change($tile_type)
-            ) {
+        if (allow_tile_colour_change($tile_type)) {
                 foreach($tile_styles[$tile_type] as $style)
                     {
                     if(allow_tile_colour_change($tile_type, $style))
