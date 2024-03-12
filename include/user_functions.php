@@ -2379,7 +2379,7 @@ function get_rs_session_id($create=false)
     {
     global $baseurl, $anonymous_login, $usergroup, $rs_session;
     // Note this is not a PHP session, we are using this to create an ID so we can distinguish between anonymous users or users accessing external upload links 
-    $existing_session = isset($rs_session) ? $rs_session : (isset($_COOKIE["rs_session"]) ? $_COOKIE["rs_session"] : "");
+    $existing_session = (string) $rs_session !== "" ? $rs_session : ($_COOKIE["rs_session"] ?? "");
     if($existing_session != "")
         {
         if (!headers_sent())

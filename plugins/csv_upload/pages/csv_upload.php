@@ -86,7 +86,8 @@ $selected_columns[] = $csv_set_options["status_column"];
 $selected_columns[] = $csv_set_options["access_column"];
 $selected_columns = array_filter($selected_columns,"emptyiszero");
 
-$csvdir     = get_temp_dir() . DIRECTORY_SEPARATOR . "csv_upload" . DIRECTORY_SEPARATOR . md5($session_hash);
+$usehash = $session_hash ?? get_rs_session_id(true);
+$csvdir     = get_temp_dir() . DIRECTORY_SEPARATOR . "csv_upload" . DIRECTORY_SEPARATOR . md5($usehash);
 if(!file_exists($csvdir))
     {
     mkdir($csvdir,0777,true);
@@ -723,7 +724,7 @@ switch($csvstep)
         if($csv_set_options["process_offline"])
             {            
             // Move the CSV to a new location so that it doesn't get overwritten
-            $csvdir     = get_temp_dir() . DIRECTORY_SEPARATOR . "csv_upload" . DIRECTORY_SEPARATOR . $session_hash;
+            $csvdir     = get_temp_dir() . DIRECTORY_SEPARATOR . "csv_upload" . DIRECTORY_SEPARATOR . ($usehash);
             if(!file_exists($csvdir))
                 {
                 mkdir($csvdir,0777,true);
