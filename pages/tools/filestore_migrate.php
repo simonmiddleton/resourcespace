@@ -49,7 +49,9 @@ $migrating_scrambled = false;
 
 function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mode, bool $dry_run = true)
     {
-    global $scramble_key, $scramble_key_old, $migratedfiles, $filestore_evenspread, $syncdir, $filestore_migrate, $migrating_scrambled;
+    global $scramble_key, $scramble_key_old, $migratedfiles, $filestore_evenspread, $syncdir, $filestore_migrate, $migrating_scrambled,
+    $ffmpeg_supported_extensions, $ffmpeg_snapshot_frames, $unoconv_extensions, $ffmpeg_preview_gif;
+
     echo "Checking Resource ID: " . $ref . ", alternative: " . $alternative . PHP_EOL;
     $resource_data=get_resource_data($ref);
     $pagecount=get_page_count($resource_data,$alternative);
@@ -58,7 +60,8 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
         for ($m=0;$m<count($sizes);$m++)
             {
             // Get the new path for each file
-            $newpath=get_resource_path($ref,true,$sizes[$m]["id"],true,$sizes[$m]["extension"],true,$page,false,'',$alternative);
+            $newpaths = array();
+            $newpaths[] = get_resource_path($ref, true, $sizes[$m]["id"], true, $sizes[$m]["extension"], true, $page, false, '', $alternative);
 
             // Use old settings to get old path before migration and migrate if found. Save the current key/option first
             if($redistribute_mode)
@@ -70,29 +73,59 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
                 $scramble_key_saved = $scramble_key;
                 $scramble_key = isset($scramble_key_old) ? $scramble_key_old : "";
                 }        
-                
-            $path = get_resource_path($ref,true,$sizes[$m]["id"],false,$sizes[$m]["extension"],true,$page,false,'',$alternative);
-            echo " - Size: " . $sizes[$m]["id"] . ", extension: " . $sizes[$m]["extension"] . " Snew path: " . $newpath . PHP_EOL;
-            echo " - Checking old path: " . $path . PHP_EOL;
-            if (file_exists($path) && !($sizes[$m]["id"] == "" && $syncdir != "" && strpos($path, $syncdir) !== false))
+            
+            $paths = array();
+            $paths[] = get_resource_path($ref,true,$sizes[$m]["id"],false,$sizes[$m]["extension"],true,$page,false,'',$alternative);
+
+            if ($ffmpeg_preview_gif)
+                 {
+                 $ffmpeg_supported_extensions[] = 'gif';
+                 }
+            if ($sizes[$m]["id"] == 'snapshot' && in_array($extension, $ffmpeg_supported_extensions))
                 {
-                echo " - Found file at old path : " . $path . PHP_EOL;  
-                if(!file_exists($newpath))
+                $snapshot_frames = $ffmpeg_snapshot_frames + 1; # Plus 1 for rounding of duration in preview creation might create an extra file.
+                for ($v = 1; $v <= $snapshot_frames; ++$v)
                     {
-                    echo " - Moving resource file for resource #" . $ref  . " - old path= " . $path  . ", new path=" . $newpath . PHP_EOL;
-                    if (!$dry_run)
-                        {
-                        if(!file_exists(dirname($newpath)))
-                            {
-                            mkdir(dirname($newpath),0777,true);
-                            }
-                        rename ($path,$newpath);
-                        }
-                    $migratedfiles++;
+                    $paths[] = str_replace('snapshot', "snapshot_{$v}", $paths[0]);
+                    $newpaths[] = str_replace('snapshot', "snapshot_{$v}", $newpaths[0]);
                     }
-                else
+                array_shift($paths);
+                array_shift($newpaths);
+                }
+
+            $unoconv_extensions[] = 'pdf'; $unoconv_extensions[] = 'eps'; # Will also create jpg icc files so we check for them.
+            if ($sizes[$m]["extension"] == 'icc' && in_array($extension, $unoconv_extensions))
+                {
+                $paths[0] = str_replace($extension, 'jpg', $paths[0]);
+                $newpaths[0] = str_replace($extension, 'jpg', $newpaths[0]);
+                }
+
+            for ($p = 0; $p < count($paths); ++$p)
+                {
+                $path = $paths[$p];
+                $newpath = $newpaths[$p];
+                echo " - Size: " . $sizes[$m]["id"] . ", extension: " . $sizes[$m]["extension"] . " Snew path: " . $newpath . PHP_EOL;
+                echo " - Checking old path: " . $path . PHP_EOL;
+                if (file_exists($path) && !($sizes[$m]["id"] == "" && $syncdir != "" && strpos($path, $syncdir) !== false))
                     {
-                    echo " - Resource file for resource #" . $ref  . " - already exists at new path= " . $newpath  . PHP_EOL;
+                    echo " - Found file at old path : " . $path . PHP_EOL;  
+                    if(!file_exists($newpath))
+                        {
+                        echo " - Moving resource file for resource #" . $ref  . " - old path= " . $path  . ", new path=" . $newpath . PHP_EOL;
+                        if (!$dry_run)
+                            {
+                            if(!file_exists(dirname($newpath)))
+                                {
+                                mkdir(dirname($newpath),0777,true);
+                                }
+                            rename ($path,$newpath);
+                            }
+                        $migratedfiles++;
+                        }
+                    else
+                        {
+                        echo " - Resource file for resource #" . $ref  . " - already exists at new path= " . $newpath  . PHP_EOL;
+                        }
                     }
                 }
                 
@@ -111,15 +144,23 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
     // Clear old directory if empty
     $delfolder = dirname($path);
     $newfolder = dirname($newpath);
-    if(file_exists($delfolder) && $delfolder != $newfolder && count(scandir($delfolder))==2 && is_writable($delfolder))
-        {       
-        echo "Deleting folder $delfolder \n";
-        if (!$dry_run)
+    if(file_exists($delfolder) && $delfolder != $newfolder)
+        {
+        if (count(scandir($delfolder))==2 && is_writable($delfolder))
             {
-            rmdir($delfolder);
+            echo "Deleting folder $delfolder \n";
+            if (!$dry_run)
+                {
+                rmdir($delfolder);
+                }
+            }
+        else
+            {
+            return $delfolder;
             }
         }
 
+    return ''; // No old directory path to return - it has been deleted as it was empty.
     }
 
 set_time_limit(0);
@@ -133,24 +174,45 @@ for ($n=0;$n<$totalresources;$n++)
     $extension=$resources[$n]["file_extension"];
     if ($extension=="") {$extension="jpg";}
     $sizes=get_image_sizes($ref,true,$extension,false);
-    
+
     // Add in original resource files, jpg preview, ffmpeg previews and other non-size files
     $sizes[] = array("id" => "", "extension" => $extension);
     $sizes[] = array("id" => "pre", "extension" => $ffmpeg_preview_extension);
     $sizes[] = array("id" => "", "extension" => "jpg");
     $sizes[] = array("id" => "", "extension" => "xml");
     $sizes[] = array("id" => "", "extension" => "icc");
-    
-    migrate_files($ref, -1, $extension, $sizes, $redistribute_mode, $dry_run);
-    
+    $sizes[] = array("id" => "tmp", "extension" => "jpg");
+    $sizes[] = array("id" => "snapshot", "extension" => "jpg");
+    if (in_array($extension, $ffmpeg_audio_extensions))
+        {
+        $sizes[] = array("id" => "", "extension" => "mp3");
+        }
+
+    $old_path_checked = migrate_files($ref, -1, $extension, $sizes, $redistribute_mode, $dry_run);
+
     // Migrate the alternatives
     $alternatives = get_alternative_files($ref);
     foreach($alternatives as $alternative)
         {
         $sizes=get_image_sizes($ref,true,$alternative["file_extension"],false);
         $sizes[] = array("id" => "", "extension" => $alternative["file_extension"]);
+        $sizes[] = array("id" => "", "extension" => "icc");
+        $sizes[] = array("id" => "", "extension" => "jpg");
+        if (in_array($alternative["file_extension"], $ffmpeg_audio_extensions))
+            {
+            $sizes[] = array("id" => "", "extension" => "mp3");
+            }
         migrate_files($ref, $alternative["ref"], $alternative["file_extension"], $sizes, $redistribute_mode, $dry_run);
         }
+
+    // Everything expected has been moved. Do a final check for any remaining files and list them for manual action.
+    if (!$dry_run && $old_path_checked !== '')
+        {
+        foreach (glob($old_path_checked . "/*") as $fileremaining)
+            {
+            echo "File $fileremaining NOT MOVED for resource $ref - consider manual action." . PHP_EOL;
+            }
+        }
     }
-    
+
 exit("FINISHED. " . $migratedfiles . " files migrated for " . $totalresources . " resources" . PHP_EOL);
