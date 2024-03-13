@@ -5934,7 +5934,7 @@ function check_use_watermark($download_key = "", $resource="")
 *
 * IMPORTANT: Auto completing blank fields with inactive options should be allowed (possibly a system misconfiguration).
 * This function will NOT exclude inactive nodes because, for required fields, you might end up having no value
-* after processing the field. 
+* after processing the field.
 *
 * @param  integer   $resource         Resource ID
 * @param  boolean   $force_run        Allow code to force running this function and update the fields even if there is data.
