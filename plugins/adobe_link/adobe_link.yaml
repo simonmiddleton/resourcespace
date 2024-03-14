@@ -9,4 +9,4 @@ info_url: https://www.resourcespace.com/knowledge-base/user/plugin-adobe_link
 category: Integrations
 disable_group_select: 0
 info_url: https://www.resourcespace.com/knowledge-base/plugins/adobe_link
-priority: 1
+default_priority: 1
