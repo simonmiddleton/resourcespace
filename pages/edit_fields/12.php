@@ -94,6 +94,7 @@ if($edit_autosave)
 
 if($display_as_radiobuttons) 
     {
+    $active_nodes = array_column(array_filter($field['nodes'], 'node_is_active'), 'ref');
     ?>
     <table id="" class="radioOptionTable" cellpadding="3" cellspacing="3">                    
         <tbody>
@@ -113,6 +114,17 @@ if($display_as_radiobuttons)
                     <?php 
                     }
                 $col++;
+
+                $checked = (
+                    (!$multiple ||  $copyfrom != '')
+                    && in_array($node['ref'], $selected_nodes) || (isset($user_set_values[$field['ref']]) 
+                    && $node['ref'] == $user_set_values[$field['ref']])
+                );
+                $inactive = !in_array($node['ref'], $active_nodes);
+
+                if (($multiple && $inactive) || (!$checked && $inactive)) {
+                    continue;
+                }
                 ?>
                 <td width="10" valign="middle">
                     <input type="radio"
@@ -120,14 +132,7 @@ if($display_as_radiobuttons)
                            name="<?php echo $name; ?>"
                            value="<?php echo $node['ref']; ?>"
                        <?php
-                       if((!$multiple ||  $copyfrom != '')
-                        && in_array($node['ref'], $selected_nodes) || (isset($user_set_values[$field['ref']]) 
-                        && $node['ref'] == $user_set_values[$field['ref']]))
-                            {
-                            ?>
-                            checked
-                            <?php
-                            }
+                        echo $checked ? ' checked' : '';
 
                         if($edit_autosave)
                             {
