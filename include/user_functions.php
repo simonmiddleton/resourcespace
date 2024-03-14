@@ -852,19 +852,33 @@ function email_reset_link($email,$newuser=false)
 
     if($email == '')
         {
-        return $lang["accountnoemail-reset-not-emailed"]; 
+        return $lang["accountnoemail-reset-not-emailed"]; # Password reset link was not sent because the account has no email address
         }
 
     # The reset link is sent after the principal user update has completed
     # It will only be sent if (after the user update) there is an approved and unexpired user with the specified email address
-    $details = ps_query("SELECT ref, username, usergroup, origin FROM user WHERE email LIKE ? AND approved = 1 AND (account_expires IS NULL OR account_expires > now());", 
-                array("s", $email));
+    $details = ps_query("SELECT ref, username, usergroup, origin, approved, 
+	CASE WHEN isnull(account_expires) THEN false
+         WHEN account_expires > now() THEN false
+         ELSE true END as has_expired
+         FROM user WHERE email = ?;", 
+    array("s", $email));
+    
     sleep($password_brute_force_delay);
-    if(count($details) == 0)
-        {
-        return $lang["accountexpired-reset-not-emailed"]; 
-        }
+
+    if(count($details) == 0) {
+        return $lang["accountnotfound-reset-not-emailed"]; # Password reset link was not sent because there is no account with that email 
+    }
+
+    # Process the user with the email address
     $details = $details[0];
+
+    if($details["has_expired"]) {
+        return $lang["accountexpired-reset-not-emailed"]; # Password reset link was not sent because the account has expired 
+    } 
+    if($details["approved"] != 1) {
+        return $lang["accountnotapproved-reset-not-emailed"]; # Password reset link was not sent because the account is not approved 
+    }
 
     // Don't send password reset links if we don't control the password
     $blockreset = isset($details["origin"]) && trim($details["origin"]) != "";
