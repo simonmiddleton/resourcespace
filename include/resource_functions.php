@@ -1574,9 +1574,10 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
             $fieldnodes = get_nodes($fields[$n]["ref"],null,$fields[$n]['type'] == FIELD_TYPE_CATEGORY_TREE);
             $inactive_nodes = array_column(array_filter($fieldnodes, $node_not_active), 'ref');
             $nodes_by_ref = array_column($fieldnodes, null, 'ref');
-            $valid_nodes = in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS])
-                // We must include inactive nodes if the type can only hold one value so it can be removed later on
+            $valid_nodes = in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS]) && $ui_selected_node_values !== []
+                // We must include inactive nodes if the type can only hold one value so it can be removed later on...
                 ? array_keys($nodes_by_ref)
+                // ...but prevent direct removals (ie. no value)
                 : array_values(array_diff(array_keys($nodes_by_ref), $inactive_nodes));
 
             // $valid_nodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
