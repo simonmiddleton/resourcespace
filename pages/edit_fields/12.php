@@ -1,7 +1,10 @@
 <?php
-/*******************************************/
-/**************RADIO BUTTONS****************/
-/*******************************************/
+/*
+---------- Radio buttons ----------
+
+Inactive nodes should be shown because this type of field can only hold one value so a user changing its value is
+allowed to remove a disabled option for another (active) option.
+*/
 
 // Selected nodes should be used most of the times.
 // When searching, an array of searched_nodes can be found instead
@@ -16,7 +19,6 @@ if(!isset($selected_nodes))
         }
     }
 
-$field['nodes'] = array_filter($field['nodes'], 'node_is_active');
 $node_options = array_column($field['nodes'], 'name');
 $l = average_length($node_options);
 

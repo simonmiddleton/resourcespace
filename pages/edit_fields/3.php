@@ -1,5 +1,10 @@
 <?php
-/* -------- Drop down list ------------------ */ 
+/*
+---------- Drop down list ----------
+
+Inactive nodes should be shown because this type of field can only hold one value so a user changing its value is
+allowed to remove a disabled option for another (active) option.
+*/
 
 // Selected nodes should be used most of the times.
 // When searching, an array of searched_nodes can be found instead
@@ -8,8 +13,6 @@ if(!isset($selected_nodes))
     {
     $selected_nodes = array();
     }
-
-$field['nodes'] = array_filter($field['nodes'], 'node_is_active');
 
 if((bool) $field['automatic_nodes_ordering'])
     {
