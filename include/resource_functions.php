@@ -752,6 +752,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
                 // $validnodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
                 $ui_selected_node_values = array_values(array_intersect($validnodes, $ui_selected_node_values));
+                debug("save_resource_data(): UI selected nodes for resource {$ref}: " . implode(',', $ui_selected_node_values));
 
                 // Set new value for logging
                 $new_node_values = array_merge($new_node_values, $ui_selected_node_values);
@@ -760,8 +761,12 @@ function save_resource_data($ref,$multi,$autosave_field="")
                 debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
                 $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
 
-                if (in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS])) {
-                    // We must release an inactive node if the type can only hold one value
+                if (
+                    // We must release an inactive node if the type can only hold one value...
+                    in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS])
+                    // ...but prevent direct removals (ie. no value)
+                    && $ui_selected_node_values !== []
+                ) {
                     $removed_nodes = array_diff($current_field_nodes, $ui_selected_node_values);
                     $current_inactive_resource_field_nodes = [];
                 } else {
