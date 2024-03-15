@@ -24,6 +24,7 @@ parameters:
     excludePaths:
         analyse:
             - include/ReplaceFunctionCallRector.php
+            - include/EscapeLanguageStringsRector.php
             - plugins/*/lib/*
 
     earlyTerminatingFunctionCalls:
