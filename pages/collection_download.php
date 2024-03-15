@@ -325,10 +325,9 @@ if ($submitted != "")
                $folderstodelete[]=$tempdirbase . DIRECTORY_SEPARATOR . $tmpfilename;                
                }
             }
-        elseif($purge_temp_folder_age!=0 && time()-$object->getMTime()>$purge_temp_folder_age*24*60*60)
-            {
-            unlink($tempdirbase . DIRECTORY_SEPARATOR . $tmpfilename);              
-            }
+        elseif($purge_temp_folder_age!=0 && time()-$object->getMTime()>$purge_temp_folder_age*24*60*60) {
+            try_unlink($tempdirbase . DIRECTORY_SEPARATOR . $tmpfilename);
+        }
         
         }
     foreach ($folderstodelete as $foldertodelete)
