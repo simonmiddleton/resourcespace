@@ -47,7 +47,7 @@ if (getval("ajax","") == "" && !hook("replace_footer"))
             {
             ?>
             <div class="ResponsiveViewFullSite">
-                <a href="#" onClick="SetCookie('ui_view_full_site', true, 1, true); location.reload();"><?php echo $lang['responsive_view_full_site']; ?></a>
+                <a href="#" onClick="SetCookie('ui_view_full_site', true, 1, true); location.reload();"><?php echo escape($lang['responsive_view_full_site']); ?></a>
             </div>
             <?php
             }
@@ -391,7 +391,7 @@ if (getval("ajax","") == "")
             {
             livePaneResizing:true,
             triggerEventsDuringLiveResize: false,
-            resizerTip: '<?php echo $lang["resize"]; ?>',
+            resizerTip: '<?php echo escape($lang["resize"]); ?>',
 
             east__spacing_open:0,
             east__spacing_closed:8,
@@ -412,7 +412,7 @@ if (getval("ajax","") == "")
                 south__spacing_open:8,
                 south__spacing_closed:8, 
                 south__togglerLength_open:"200",
-                south__togglerTip_open: '<?php echo $lang["toggle"]; ?>',
+                south__togglerTip_open: '<?php echo escape($lang["toggle"]); ?>',
                 south__onclose_start: function(pane)
                     {
                     if (pane=="south" && (typeof colbarresizeon === "undefined" || colbarresizeon==true))
@@ -471,7 +471,7 @@ if (getval("ajax","") == "")
                 {
                 jQuery("#searchspace").removeClass("ResponsiveSimpleSearch");
                 jQuery("#SearchBarContainer").removeClass("FullSearch");
-                jQuery("#Rssearchexpand").val("<?php echo $lang["responsive_more"];?>");
+                jQuery("#Rssearchexpand").val("<?php echo escape($lang["responsive_more"]);?>");
                 jQuery('#UICenter').show(0);
                 search_show = false;
                 }
@@ -479,7 +479,7 @@ if (getval("ajax","") == "")
                 {
                 jQuery("#searchspace").addClass("ResponsiveSimpleSearch");
                 jQuery("#SearchBarContainer").addClass("FullSearch");
-                jQuery("#Rssearchexpand").val(" <?php echo $lang["responsive_less"];?> ");
+                jQuery("#Rssearchexpand").val(" <?php echo escape($lang["responsive_less"]);?> ");
                 jQuery('#UICenter').hide(0);
                 search_show = true;
                 }
@@ -507,7 +507,7 @@ if (getval("ajax","") == "")
                 }
             }
 
-        var responsive_show = "<?php echo $lang['responsive_collectiontogglehide'];?>";
+        var responsive_show = "<?php echo escape($lang['responsive_collectiontogglehide']);?>";
         var responsive_hide;
         var responsive_newpage = true;
 

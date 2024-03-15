@@ -204,11 +204,11 @@ include __DIR__ . "/../../../include/header.php";
 ?>
 
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo escape($resource) ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]; ?></a></p>
+<p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo escape($resource) ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a></p>
 
 <?php if (isset($error)) { ?><div class="PageInfoMessage"><?php echo escape($error) ?></div><?php } ?>
 
-<h1><?php echo $lang["revert"]; ?></h1>
+<h1><?php echo escape($lang["revert"]); ?></h1>
 <p><?php echo $lang['revertingclicktoproceed'];?></p>
 
 <form method=post name="rse_revert_form" id="rse_revert_form" action="<?php echo generateurl($baseurl_short . "plugins/rse_version/pages/revert.php",["ref"=>$ref]); ?> onSubmit="return CentralSpacePost(this,true);">
@@ -295,7 +295,7 @@ if ($type==LOG_CODE_UPLOADED) {
     <label><?php echo $lang["revertingwillreplace"]; ?></label>
 
     <div class="Fixed">
-    <img src="<?php echo $image ?>" alt="<?php echo $lang["preview"]; ?>" />
+    <img src="<?php echo $image ?>" alt="<?php echo escape($lang["preview"]); ?>" />
     </div>
     <div class="clearerleft"> </div>
     </div>
@@ -305,7 +305,7 @@ if ($type==LOG_CODE_UPLOADED) {
 <?php } ?>
 
 <div class="QuestionSubmit">
-    <input name="revert" type="submit" value="&nbsp;&nbsp;<?php echo $lang["revert"]; ?>&nbsp;&nbsp;" />
+    <input name="revert" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["revert"]); ?>&nbsp;&nbsp;" />
 </div>
 
 </form>

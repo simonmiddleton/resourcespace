@@ -311,7 +311,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         <div class="Question" id="question_video_subtitles">
             <label><?php echo $lang["video_tracks_select_subtitle"]; ?></label>
             <select class="stdwidth" name="video_subtitle_file" id="video_subtitle_file" >
-            <option value=""><?php echo $lang["select"]; ?></option>
+            <option value=""><?php echo escape($lang["select"]); ?></option>
             <?php
             foreach ($subtitle_alts as $subtitle_alt)
                 {
@@ -333,7 +333,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         <div class="Question" id="question_video_audio">
             <label><?php echo $lang["video_tracks_select_audio"]; ?></label>
             <select class="stdwidth" name="video_audio_file" id="video_subtitle_file" >
-            <option value=""><?php echo $lang["select"]; ?></option>
+            <option value=""><?php echo escape($lang["select"]); ?></option>
             <?php
             foreach ($audio_alts as $audio_alt)
                 {
@@ -404,7 +404,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                                         jQuery('#question_transcode_now_or_notify_me').slideDown();
                             ">
                             <label class="customFieldLabel Inline"
-                                   for="video_track_download"><?php echo $lang['download']; ?></label>
+                                   for="video_track_download"><?php echo escape($lang['download']); ?></label>
                         </td>
                     </tr>
                 </tbody>
@@ -413,7 +413,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         </div>
 
         <div class="Question" id="question_alternative_description" style="display:none;">
-            <label for="video_track_alt_desc" ><?php echo $lang["description"]; ?></label>
+            <label for="video_track_alt_desc" ><?php echo escape($lang["description"]); ?></label>
             <input type="text" class="stdwidth" id="video_track_alt_desc" name="video_track_alt_desc" value="" />
             <div class="clearerleft"></div>
         </div>
@@ -468,7 +468,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                             return false;
                             }
                     ">
-            <input type="submit" name="submit" class="video_tracks_button" value="<?php echo $lang["close"]; ?>" onClick="ModalClose();return false;"/>
+            <input type="submit" name="submit" class="video_tracks_button" value="<?php echo escape($lang["close"]); ?>" onClick="ModalClose();return false;"/>
         </div>
     </form>
 </div><!--End of BasicsBox -->

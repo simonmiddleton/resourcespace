@@ -84,7 +84,7 @@ if(getval("quicksave",false))
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang["manage_dash_tiles"]; ?></h1>
+    <h1><?php echo escape($lang["manage_dash_tiles"]); ?></h1>
     <?php
         $links_trail = array(
         array(
@@ -109,14 +109,14 @@ if($show_usergroups_dash)
     }
     ?>
     <p>
-        <a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET; ?><?php echo $lang['view_tiles']; ?></a>
+        <a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET; ?><?php echo escape($lang['view_tiles']); ?></a>
     </p>
 <?php
 if(!$show_usergroups_dash)
     {
     ?>
     <p>
-        <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile_special.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang['specialdashtiles']; ?></a>
+        <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile_special.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang['specialdashtiles']); ?></a>
     </p>
     <?php
     }
@@ -134,12 +134,12 @@ render_dropdown_question(
     <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
         <thead>
             <tr class="ListviewTitleStyle">
-                <td><?php echo $lang["dashtileshow"];?></td>
-                <td><?php echo $lang["dashtiletitle"];?></td>
-                <td><?php echo $lang["dashtiletext"];?></td>
-                <td><?php echo $lang["dashtilelink"];?></td>
-                <td><?php echo $lang["showresourcecount"];?></td>
-                <td><?php echo $lang["tools"];?></td>
+                <td><?php echo escape($lang["dashtileshow"]);?></td>
+                <td><?php echo escape($lang["dashtiletitle"]);?></td>
+                <td><?php echo escape($lang["dashtiletext"]);?></td>
+                <td><?php echo escape($lang["dashtilelink"]);?></td>
+                <td><?php echo escape($lang["showresourcecount"]);?></td>
+                <td><?php echo escape($lang["tools"]);?></td>
             </tr>
         </thead>
         <tbody id="dashtilelist">
@@ -157,7 +157,7 @@ render_dropdown_question(
       </tbody>
     </table>
     <div id="confirm_dialog" style="display:none;text-align:left;"></div>
-    <div id="delete_permanent_dialog" style="display:none;text-align:left;"><?php echo $lang['confirmdeleteconfigtile'];?></div>
+    <div id="delete_permanent_dialog" style="display:none;text-align:left;"><?php echo escape($lang['confirmdeleteconfigtile']);?></div>
     </form>
     <style>
     .ListviewStyle tr.positiveglow td,.ListviewStyle tr.positiveglow:hover td{background: rgba(45, 154, 0, 0.38);}
@@ -188,16 +188,16 @@ render_dropdown_question(
             if(!jQuery("#tile"+tile+" .tilecheck").prop("checked")) {
                 if(jQuery("#tile"+tile).hasClass("conftile")) {
                     jQuery("#delete_permanent_dialog").dialog({
-                        title:'<?php echo $lang["dashtiledelete"]; ?>',
+                        title:'<?php echo escape($lang["dashtiledelete"]); ?>',
                         modal: true,
                         resizable: false,
                         dialogClass: 'delete-dialog no-close',
                         buttons: {
-                            "<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {
+                            "<?php echo escape($lang['confirmdefaultdashtiledelete']); ?>": function() {
                                     jQuery(this).dialog("close");
                                     deleteDefaultDashTile(tile);
                                 },    
-                            "<?php echo $lang['cancel']; ?>": function() {
+                            "<?php echo escape($lang['cancel']); ?>": function() {
                                     jQuery(".tilecheck[value="+tile+"]").attr('checked', true);
                                     jQuery(this).dialog('close');
                                 }
@@ -207,13 +207,13 @@ render_dropdown_question(
                 }
                 else {
                     jQuery("#confirm_dialog").dialog({
-                    title:'<?php echo $lang["dashtiledelete"]; ?>',
+                    title:'<?php echo escape($lang["dashtiledelete"]); ?>',
                     modal: true,
                     resizable: false,
                     dialogClass: 'confirm-dialog no-close',
                     buttons: {
-                        "<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {processTileChange(tile,true); jQuery(this).dialog( "close" );},
-                        "<?php echo $lang['cancel']; ?>":  function() { jQuery(".tilecheck[value="+tile+"]").prop('checked', true); jQuery(this).dialog('close'); }
+                        "<?php echo escape($lang['confirmdefaultdashtiledelete']); ?>": function() {processTileChange(tile,true); jQuery(this).dialog( "close" );},
+                        "<?php echo escape($lang['cancel']); ?>":  function() { jQuery(".tilecheck[value="+tile+"]").prop('checked', true); jQuery(this).dialog('close'); }
                     }
                     });
                 }

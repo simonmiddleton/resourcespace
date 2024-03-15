@@ -39,19 +39,19 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["collection_copy_resources"]; ?></h1>
+<h1><?php echo escape($lang["collection_copy_resources"]); ?></h1>
 <p><?php echo text("introtext")?></p>
 <form method=post id="collection_copy_form" action="<?php echo $baseurl_short?>pages/collection_copy_resources.php">
     <?php generateFormToken("collection_copy_form"); ?>
     <input type=hidden name=ref value="<?php echo escape($ref) ?>">
     <input type=hidden name="submitted" value="true">
     <div class="Question">
-        <label for="name"><?php echo $lang["collection"]; ?></label>
+        <label for="name"><?php echo escape($lang["collection"]); ?></label>
         <div class="Fixed"><?php echo escape(i18n_get_collection_name($collection, $index="name")); ?></div >
         <div class="clearerleft"> </div>
     </div>
     <div class="Question">
-        <label for='collection_copy_from' id='label_collection'><?php echo $lang["copyfromcollection"]; ?></label>
+        <label for='collection_copy_from' id='label_collection'><?php echo escape($lang["copyfromcollection"]); ?></label>
         <select name='collection_copy_from' id='collection_copy_from'>
     
         <?php
@@ -73,7 +73,7 @@ include "../include/header.php";
     </div>
 
     <div class="QuestionSubmit">        
-        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["copy"]; ?>&nbsp;&nbsp;" />
+        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["copy"]); ?>&nbsp;&nbsp;" />
     </div>
 </form>
 </div>

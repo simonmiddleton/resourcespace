@@ -135,7 +135,7 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
                 remoteData=trimFlickerData(remoteData);
                 updateCount=true;
             }
-            else if(remoteData.indexOf("<?php echo $lang["done"]; ?>")!=-1){
+            else if(remoteData.indexOf("<?php echo escape($lang["done"]); ?>")!=-1){
                 progress.stop();
                 results_processed=getResultsProcessed(remoteData);
                 databk=remoteData;

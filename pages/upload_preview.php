@@ -83,7 +83,7 @@ include "../include/header.php";
 ?>
 
 <div class="BasicsBox"> 
-<h1><?php echo $lang["uploadpreview"];render_help_link("user/edit-resource-preview");?></h1>
+<h1><?php echo escape($lang["uploadpreview"]);render_help_link("user/edit-resource-preview");?></h1>
 <p><?php echo text("introtext")?></p>
 <script language="JavaScript">
 // Check allowed extensions:
@@ -101,16 +101,16 @@ function check(filename) {
 <?php if ($status!="") { ?><?php echo $status?><?php } ?>
 <div id="invalid" <?php if (!$error) {echo "style=\"display:none;\"";} ?> class="FormIncorrect"><?php echo str_replace_formatted_placeholder("%extensions", "JPG", $lang['invalidextension_mustbe-extensions']); ?></div>
 <div class="Question">
-<label for="userfile"><?php echo $lang["clickbrowsetolocate"]; ?></label>
+<label for="userfile"><?php echo escape($lang["clickbrowsetolocate"]); ?></label>
 <input type=file name=userfile id=userfile>
 <div class="clearerleft"> </div>
 </div>
 
 <div class="QuestionSubmit">        
-<input name="save" type="submit" onclick="if (!check(this.form.userfile.value)){document.getElementById('invalid').style.display='block';return false;}else {document.getElementById('invalid').style.display='none';}" value="&nbsp;&nbsp;<?php echo $lang["upload_file"]; ?>&nbsp;&nbsp;" />
+<input name="save" type="submit" onclick="if (!check(this.form.userfile.value)){document.getElementById('invalid').style.display='block';return false;}else {document.getElementById('invalid').style.display='none';}" value="&nbsp;&nbsp;<?php echo escape($lang["upload_file"]); ?>&nbsp;&nbsp;" />
 </div>
 
-<p><a onClick="return ModalLoad(this,true);" href="view.php?ref=<?php echo urlencode($ref)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
+<p><a onClick="return ModalLoad(this,true);" href="view.php?ref=<?php echo urlencode($ref)?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
 
 </form>
 </div>

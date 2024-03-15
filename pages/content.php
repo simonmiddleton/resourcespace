@@ -20,7 +20,7 @@ if($modal)
     {
 ?>
     <div class="backtoresults">
-        <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"]; ?>"></a>
+        <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
     </div>
 <?php
     }

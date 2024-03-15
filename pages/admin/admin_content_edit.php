@@ -80,7 +80,7 @@ $language=$languagesaved;
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["editcontent"]; ?></h1>
+<h1><?php echo escape($lang["editcontent"]); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -102,7 +102,7 @@ renderBreadcrumbs($links_trail);
 if($html_validation !== true && $html_validation !== '')
     {
     ?>
-    <div class="PageInformal"><?php echo $lang['error_check_html_first']; ?></div>
+    <div class="PageInformal"><?php echo escape($lang['error_check_html_first']); ?></div>
     <?php
     }
     ?>
@@ -116,7 +116,7 @@ if($html_validation !== true && $html_validation !== '')
         <input type=hidden name=groupswitch id="groupswitch" value="">
         <input type="hidden" name="custom" value="<?php echo getval('custom', 0, true)?>">
         <div class="Question">
-            <label><?php echo $lang["page"]; ?></label>
+            <label><?php echo escape($lang["page"]); ?></label>
             <div class="Fixed"><?php echo escape(($page==""?$lang["all"]:$page)) ?></div>
             <div class="clearerleft"></div>
         </div>
@@ -126,7 +126,7 @@ if($html_validation !== true && $html_validation !== '')
         {
         ?>
         <div class="Question">
-            <label for="name"><?php echo $lang["name"]; ?></label>
+            <label for="name"><?php echo escape($lang["name"]); ?></label>
             <input type=text name="name" class="stdwidth" value="<?php echo escape($name)?>">
             <div class="clearerleft"></div>
         </div>
@@ -136,7 +136,7 @@ if($html_validation !== true && $html_validation !== '')
         {
         ?>
         <div class="Question">
-            <label><?php echo $lang["name"]; ?></label>
+            <label><?php echo escape($lang["name"]); ?></label>
             <div class="Fixed"><?php echo escape($name) ?></div>
             <div class="clearerleft"></div>
         </div>
@@ -145,7 +145,7 @@ if($html_validation !== true && $html_validation !== '')
         ?>
 
         <div class="Question">
-            <label for="editlanguage"><?php echo $lang["language"]; ?></label>
+            <label for="editlanguage"><?php echo escape($lang["language"]); ?></label>
             <select class="stdwidth" name="editlanguage" onchange="document.getElementById('langswitch').value='yes';document.getElementById('mainform').submit();">
             <?php
             foreach($languages as $key => $value)
@@ -164,7 +164,7 @@ if($html_validation !== true && $html_validation !== '')
         {
         ?>
         <div class="Question">
-            <label for="editgroup"><?php echo $lang["group"]; ?></label>
+            <label for="editgroup"><?php echo escape($lang["group"]); ?></label>
             <select class="stdwidth" name="editgroup" onchange="document.getElementById('groupswitch').value='yes';document.getElementById('copyme').value='yes';document.getElementById('mainform').submit();">
                 <option value=""></option>
             <?php 
@@ -194,25 +194,25 @@ if($html_validation !== true && $html_validation !== '')
         if($site_text_use_ckeditor)
             {
             ?>
-            <label for="text"><?php echo $lang['text']; ?></label>
-            <textarea id="<?php echo $lang["text"]; ?>" class="stdwidth" name="text" rows=15 cols=50><?php echo escape($text); ?></textarea>
+            <label for="text"><?php echo escape($lang['text']); ?></label>
+            <textarea id="<?php echo escape($lang["text"]); ?>" class="stdwidth" name="text" rows=15 cols=50><?php echo escape($text); ?></textarea>
             <script type="text/javascript">
             <?php
             if(!hook('ckeditorinit'))
                 {
                 ?>
-                var editor = CKEDITOR.instances['<?php echo $lang["text"]; ?>'];
+                var editor = CKEDITOR.instances['<?php echo escape($lang["text"]); ?>'];
                 if(editor) {
                     editor.destroy(true);
                 }
 
-                CKEDITOR.replace('<?php echo $lang["text"]; ?>',
+                CKEDITOR.replace('<?php echo escape($lang["text"]); ?>',
                     {
                     toolbar : [ <?php global $ckeditor_content_toolbars;echo $ckeditor_content_toolbars; ?> ],
                     height: "600"
                     });
                 
-                var editor = CKEDITOR.instances['<?php echo $lang["text"]; ?>'];
+                var editor = CKEDITOR.instances['<?php echo escape($lang["text"]); ?>'];
                 
                 CKEDITOR.config.autoParagraph = false;
                 <?php
@@ -224,7 +224,7 @@ if($html_validation !== true && $html_validation !== '')
         else
             {
             ?>
-            <label for="text"><?php echo $lang['text']; ?></label>
+            <label for="text"><?php echo escape($lang['text']); ?></label>
             <textarea id="text" class="stdwidth" name="text" rows=15 cols=50><?php echo escape($text); ?></textarea>
             <?php
             }
@@ -240,7 +240,7 @@ if($html_validation !== true && $html_validation !== '')
             {
             ?>
             <div class="Question">
-                <label for="deleteme"><?php echo $lang["ticktodeletehelp"]; ?></label>
+                <label for="deleteme"><?php echo escape($lang["ticktodeletehelp"]); ?></label>
                 <input id="deleteme" class="deleteBox" name="deleteme" type="checkbox" value="yes"><div class="clearerleft" />
             </div>
             <?php
@@ -248,7 +248,7 @@ if($html_validation !== true && $html_validation !== '')
             ?>
             <br /><br />
             <div class="Question">
-                <label for="newhelp"><?php echo $lang["createnewhelp"]; ?></label><input name="newhelp" type=text value="" />
+                <label for="newhelp"><?php echo escape($lang["createnewhelp"]); ?></label><input name="newhelp" type=text value="" />
                 <div class="clearerleft"></div>
             </div>
         <?php 
@@ -259,7 +259,7 @@ if($html_validation !== true && $html_validation !== '')
             {
             ?>
             <div class="Question">
-                <label for="deletecustom"><?php echo $lang["ticktodeletehelp"]; ?></label>
+                <label for="deletecustom"><?php echo escape($lang["ticktodeletehelp"]); ?></label>
                 <input id="deletecustom" class="deleteBox" name="deletecustom" type="checkbox" value="yes" />
                 <div class="clearerleft"> </div>
             </div>
@@ -272,8 +272,8 @@ if($html_validation !== true && $html_validation !== '')
             <div class="QuestionSubmit">
                 <label for="save"></label>
                 <input type="submit" name="checkhtml" id="checkhtml" value="Check HTML" />
-                <input type="submit" name="save" value="<?php echo $lang["save"]; ?>" />
-                <input type="submit" name="save" value="<?php echo $lang['saveandreturntolist']; ?>" onClick="jQuery('#returntolist').val(true);" />
+                <input type="submit" name="save" value="<?php echo escape($lang["save"]); ?>" />
+                <input type="submit" name="save" value="<?php echo escape($lang['saveandreturntolist']); ?>" onClick="jQuery('#returntolist').val(true);" />
             </div>
         </form>
     </div><!-- End of BasicsBox -->

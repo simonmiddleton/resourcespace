@@ -30,13 +30,13 @@ function HookResource_usageViewCustompanels()
                     <td><?php echo $lang['usage_ref']; ?></a></td>
                     <td><?php echo $lang['usage_location']; ?></a></td>
                     <td><?php echo $lang['usage_medium']; ?></a></td>
-                    <td><?php echo $lang['description']; ?></a></td>
+                    <td><?php echo escape($lang['description']); ?></a></td>
                     <td><?php echo $lang['usage_date']; ?></a></td>
     <?php
     if($edit_access)
         {
         ?>
-        <td><div class="ListTools"><?php echo $lang['tools']; ?></div></td>
+        <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
         <?php
         }
         ?>
@@ -59,8 +59,8 @@ function HookResource_usageViewCustompanels()
             ?>
             <td>
                 <div class="ListTools">
-                    <a href="<?php echo $baseurl_short ?>plugins/resource_usage/pages/edit.php?ref=<?php echo $usage['ref']; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]; ?></a>
-                    <a href="<?php echo $baseurl_short ?>plugins/resource_usage/pages/delete.php?ref=<?php echo $usage['ref']; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-delete"]; ?></a>
+                    <a href="<?php echo $baseurl_short ?>plugins/resource_usage/pages/edit.php?ref=<?php echo $usage['ref']; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
+                    <a href="<?php echo $baseurl_short ?>plugins/resource_usage/pages/delete.php?ref=<?php echo $usage['ref']; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo escape($lang["action-delete"]); ?></a>
                 </div>
             </td>
             <?php

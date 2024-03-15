@@ -213,19 +213,19 @@ include "../../include/header.php";
             renderBreadcrumbs($links_trail);
             ?>
              
-            <h2><?php echo $lang["filter_edit_text"];render_help_link("systemadmin/search-filters");?></h2>
+            <h2><?php echo escape($lang["filter_edit_text"]);render_help_link("systemadmin/search-filters");?></h2>
             <form id="filter_edit_form" name="filter_edit_form" method="post" class="FormWide" action="<?php echo $filter_edit_url; ?>">
                 <input type="hidden" name="filter" value="<?php echo escape($filterid); ?>" />
                 <input type="hidden" name="save" value="true" />
                 <?php generateFormToken("admin_filter_edit"); ?>
                 <div class="Question" id="filter_name_question">
-                    <label for="filter_name"><?php echo $lang["filter_name"]; ?></label>
+                    <label for="filter_name"><?php echo escape($lang["filter_name"]); ?></label>
                     <input class="stdwidth" type="text" name="filter_name" id="filter_name" value="<?php echo i18n_get_translated($filter["name"]) ?>" />
                     <div class="clearerleft"> </div>
                 </div>
     
                 <div class="Question" id="filter_condition_question" title="" style="height: 50px;">
-                    <label><?php echo $lang["filter_condition_label"]; ?></label>
+                    <label><?php echo escape($lang["filter_condition_label"]); ?></label>
                     <select class="stdwidth" name="filter_condition">
                         <?php
                         foreach(array(RS_FILTER_ALL => "filter_criteria_all",RS_FILTER_NONE => "filter_criteria_none",RS_FILTER_ANY => "filter_criteria_any") as $filter_condition => $description)
@@ -238,13 +238,13 @@ include "../../include/header.php";
 
 
                 <div class="Question" id="fr_question">
-                    <label for="fr_list"><?php echo $lang["filter_rules"]; ?></label>
+                    <label for="fr_list"><?php echo escape($lang["filter_rules"]); ?></label>
                     <div id="fr_list" class="stdwidth">
                         <table class="OptionTable">
                         <?php
                         if(count($rules) == 0)
                             {
-                            echo  $lang["filter_rules_none"];
+                            echo escape($lang["filter_rules_none"]);
                             }
                         else
                             {
@@ -275,12 +275,12 @@ include "../../include/header.php";
 
 
                 <div class="Question">
-                    <input name="ruleadd" type="button" onclick="addFilterRule();"value="&nbsp;&nbsp;<?php echo $lang["filter_rule_add"]; ?>&nbsp;&nbsp;">
+                    <input name="ruleadd" type="button" onclick="addFilterRule();"value="&nbsp;&nbsp;<?php echo escape($lang["filter_rule_add"]); ?>&nbsp;&nbsp;">
                 <div class="clearerleft"></div>
                 </div>
 
                 <div class="Question">
-                    <label><?php echo $lang["action-delete"]; ?></label>
+                    <label><?php echo escape($lang["action-delete"]); ?></label>
                     <input id="delete_filter" name="delete_filter" type="checkbox" value="<?php echo escape($filterid); ?>" >
                     <div class="clearerleft"></div>
                 </div>
@@ -319,7 +319,7 @@ function deleteFilterRule(rule)
                 }
             else
                 {
-                styledalert('<?php echo $lang["error"]; ?>',response);
+                styledalert('<?php echo escape($lang["error"]); ?>',response);
                 }
         }, 'json');
         

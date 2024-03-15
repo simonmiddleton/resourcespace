@@ -58,7 +58,7 @@ include "../../../include/header.php";
 <input type=hidden name="submitted" value="true">
 
 <div class="QuestionSubmit">
-<label for="buttons"><?php echo $lang["proceed"]; ?></label>         
+<label for="buttons"><?php echo escape($lang["proceed"]); ?></label>         
 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["system_reset_delete_all"]; ?>&nbsp;&nbsp;" />
 </div>
 </form>

@@ -597,8 +597,8 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
         }
         ?>
         <div class="Question">
-          <input type="submit" name="save" id="save" value="<?php echo $lang['plugins-saveconfig']; ?>">
-          <input type="submit" name="submit" id="submit" value="<?php echo $lang['plugins-saveandexit']; ?>">
+          <input type="submit" name="save" id="save" value="<?php echo escape($lang['plugins-saveconfig']); ?>">
+          <input type="submit" name="submit" id="submit" value="<?php echo escape($lang['plugins-saveandexit']); ?>">
           <div class="clearerleft"></div>
         </div>
       </form>

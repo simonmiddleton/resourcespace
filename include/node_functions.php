@@ -655,7 +655,7 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
                 <div class="ListTools">
                     <form id="new_option" method="post" action="<?php echo $form_action; ?>">
                         <?php generateFormToken("new_option"); ?>
-                        <button type="submit" onClick="AddNode(<?php echo $parent; ?>); return false;"><?php echo $lang['add']; ?></button>
+                        <button type="submit" onClick="AddNode(<?php echo $parent; ?>); return false;"><?php echo escape($lang['add']); ?></button>
                     </form>
                 </div>
             </td>
@@ -711,7 +711,7 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
                     <div class="ListTools">
                         <form id="new_node_<?php echo $parent; ?>_option" method="post" action="<?php echo $form_action; ?>">
                             <?php generateFormToken("new_node_{$parent}_option"); ?>
-                            <button type="submit" onClick="AddNode(<?php echo $parent; ?>); return false;"><?php echo $lang['add']; ?></button>
+                            <button type="submit" onClick="AddNode(<?php echo $parent; ?>); return false;"><?php echo escape($lang['add']); ?></button>
                         </form>
                     </div>
                 </td>
@@ -892,7 +892,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                                         
                                         return false;
                                     ">
-                                    <?php echo $lang['action-move-to']; ?>
+                                    <?php echo escape($lang['action-move-to']); ?>
                                 </button>
                                 <button 
                                     type="submit"
@@ -903,17 +903,17 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                                     "
                                     style="display: none;"
                                 >
-                                <?php echo $lang['action-title_apply']; ?>
+                                <?php echo escape($lang['action-title_apply']); ?>
                                 </button>
-                                <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'moveup'); return false;"><?php echo $lang['action-move-up']; ?></button>
-                                <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'movedown'); return false;"><?php echo $lang['action-move-down']; ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'moveup'); return false;"><?php echo escape($lang['action-move-up']); ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo $ref; ?>, 'movedown'); return false;"><?php echo escape($lang['action-move-down']); ?></button>
                             </td>
                         <td> <!-- Action buttons -->
-                            <button type="submit" onclick="SaveNode(<?php echo $ref; ?>); return false;"><?php echo $lang['save']; ?></button>
+                            <button type="submit" onclick="SaveNode(<?php echo $ref; ?>); return false;"><?php echo escape($lang['save']); ?></button>
                             <?php
                             if(!is_parent_node($ref))
                                 {?>
-                            <button type="submit" onclick="DeleteNode(<?php echo $ref; ?>); return false;"><?php echo $lang['action-delete']; ?></button>
+                            <button type="submit" onclick="DeleteNode(<?php echo $ref; ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
                                 <?php 
                                 }
                             ?>

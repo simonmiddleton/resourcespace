@@ -168,7 +168,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php if ($themeshare){echo $lang["email_theme_category"];} else {echo $lang["emailcollectiontitle"];}?></h1>
+<h1><?php if ($themeshare){echo escape($lang["email_theme_category"]);} else {echo escape($lang["emailcollectiontitle"]);}?></h1>
 
 <?php
 
@@ -187,7 +187,7 @@ include "../include/header.php";
 
 ?>
 
-<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $link_back ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtosharecollection"]; ?></a></p>
+<p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $link_back ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtosharecollection"]); ?></a></p>
 
 <p><?php 
 if ($themeshare && text("introtextthemeshare")!="")
@@ -216,7 +216,7 @@ if($themeshare)
 else
     {?> 
     <div class="Question">
-    <label><?php if ($themeshare) {echo $lang["themes"];} else {echo $lang["collectionname"];}?></label><div class="Fixed"><?php 
+    <label><?php if ($themeshare) {echo escape($lang["themes"]);} else {echo escape($lang["collectionname"]);}?></label><div class="Fixed"><?php 
         if (!$themeshare) { 
             echo i18n_get_collection_name($collection);
         } else { ##  this select copied from collections.php 
@@ -252,7 +252,7 @@ else
             </div>
     <?php }?>
 <div class="Question">
-<label for="message"><?php echo $lang["message"]; ?></label><textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
+<label for="message"><?php echo escape($lang["message"]); ?></label><textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
 <div class="clearerleft"> </div>
 </div>
 
@@ -269,7 +269,7 @@ else
 
 <?php if ($list_recipients){?>
 <div class="Question">
-<label for="list_recipients"><?php echo $lang["list-recipients-label"]; ?></label><input type=checkbox id="list_recipients" name="list_recipients">
+<label for="list_recipients"><?php echo escape($lang["list-recipients-label"]); ?></label><input type=checkbox id="list_recipients" name="list_recipients">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>
@@ -279,7 +279,7 @@ $allow_edit=allow_multi_edit($ref);
 if($allow_edit)
     { ?>
     <div class="Question">
-    <label for="grant_internal_access"><?php echo $lang["internal_share_grant_access"]; ?></label>
+    <label for="grant_internal_access"><?php echo escape($lang["internal_share_grant_access"]); ?></label>
     <input type=checkbox id="grant_internal_access" name="grant_internal_access" onClick="if(this.checked){jQuery('#question_internal_access').slideDown();}else{jQuery('#question_internal_access').slideUp()};">
     <div class="clearerleft"> </div>
     </div>  
@@ -303,7 +303,7 @@ if(!$internal_share_only)
 ?>
 <?php if(!hook("replaceemailrequestfeedback")){?>
 <div class="Question">
-<label for="request_feedback"><?php echo $lang["requestfeedback"]; ?></label><input type=checkbox id="request_feedback" name="request_feedback" value="yes">
+<label for="request_feedback"><?php echo strip_tags_and_attributes($lang["requestfeedback"]); ?></label><input type=checkbox id="request_feedback" name="request_feedback" value="yes">
 <div class="clearerleft"> </div>
 </div>
 <?php } # end hook replaceemailrequestfeedback ?>
@@ -330,7 +330,7 @@ if(!$internal_share_only)
 
 <?php if(!hook("replaceemailsubmitbutton")){?>
 <div class="QuestionSubmit">
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php if ($themeshare){echo $lang["email_theme_category"];} else {echo $lang["emailcollectiontitle"];}?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php if ($themeshare){echo escape($lang["email_theme_category"]);} else {echo escape($lang["emailcollectiontitle"]);}?>&nbsp;&nbsp;" />
 </div>
 <?php } # end hook replaceemailsubmitbutton ?>
 

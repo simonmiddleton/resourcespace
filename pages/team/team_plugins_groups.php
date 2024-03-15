@@ -75,9 +75,9 @@ renderBreadcrumbs($links_trail);
 <form onSubmit="return CentralSpacePost(this,true);" method="post" action="<?php echo $baseurl_short?>pages/team/team_plugins_groups.php?save=true">
     <?php generateFormToken("team_plugins_groups"); ?>
 <p>
-<input type="radio" name="access" value="all" <?php if ($access=="") { ?>checked<?php } ?>> <?php echo $lang["plugin-groupsallaccess"]; ?>
+<input type="radio" name="access" value="all" <?php if ($access=="") { ?>checked<?php } ?>> <?php echo escape($lang["plugin-groupsallaccess"]); ?>
 <br/>
-<input type="radio" name="access" value="some" id="some" <?php if ($access!="") { ?>checked<?php } ?>> <?php echo $lang["plugin-groupsspecific"]; ?>
+<input type="radio" name="access" value="some" id="some" <?php if ($access!="") { ?>checked<?php } ?>> <?php echo escape($lang["plugin-groupsspecific"]); ?>
 <?php foreach ($groups as $group) { ?>
 <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=checkbox name="group_<?php echo $group["ref"]; ?>" value="yes" <?php if (in_array($group["ref"],$s)) { ?>checked<?php } ?> onClick="document.getElementById('some').checked=true;"><?php echo escape($group["name"]); ?>
 <?php } ?>
@@ -85,7 +85,7 @@ renderBreadcrumbs($links_trail);
 
 <input type=hidden name="plugin" value="<?php echo escape(getval('plugin',''))?>"/>
   
-<input name="save" type="submit" value="<?php echo $lang["save"]; ?>">
+<input name="save" type="submit" value="<?php echo escape($lang["save"]); ?>">
 </form>
 </div>
 

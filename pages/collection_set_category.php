@@ -73,7 +73,7 @@ if(isset($error))
     render_top_page_error_style($error);
     }
     ?>
-    <h1><?php echo $lang["collection_set_theme_category_title"]; render_help_link("user/themes-public-collections"); ?></h1>
+    <h1><?php echo escape($lang["collection_set_theme_category_title"]); render_help_link("user/themes-public-collections"); ?></h1>
     <p><?php echo text("introtext"); ?></p>
     <form method=post id="collectionform" action="<?php echo $action_url; ?>">
         <?php generateFormToken("collectionform"); ?>
@@ -82,7 +82,7 @@ if(isset($error))
         <input type="hidden" name="redirect" id="redirect" value="yes" >
         <input type=hidden name="update_parent" value="false">
         <div class="Question">
-            <label for="name"><?php echo $lang["collection"]; ?></label>
+            <label for="name"><?php echo escape($lang["collection"]); ?></label>
             <div class="Fixed"><?php echo escape(i18n_get_collection_name($collection, $index="name")); ?></div >
             <div class="clearerleft"> </div>
         </div>

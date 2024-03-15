@@ -505,7 +505,7 @@ function leaflet_markers_legend()
 
     if (!isset($marker_metadata_field) || $lang['custom_metadata_markers'] == '')
         { ?>
-        <b> <?php echo $lang['legend_text']; ?>&nbsp;</b>
+        <b> <?php echo escape($lang['legend_text']); ?>&nbsp;</b>
         <?php
         $restypes = get_resource_types();
         foreach($restypes as $restype)

@@ -33,13 +33,13 @@ $rl_params_override = array(
     </td>
 </tr>
 <tr class="DownloadDBlend" >
-<td><?php echo $lang["usagetotalno"]; ?></td>
+<td><?php echo escape($lang["usagetotalno"]); ?></td>
 <td width="20%"><?php echo $total ?></th>       
 </tr>
 </table>
 <?php if($total>0 && $download_usage && $usage['usageoption'] != '-1')  { ?>
 <table cellpadding="0" cellspacing="0">
-<tr><td colspan=2><?php echo $lang["usagebreakdown"]; ?></td></tr>
+<tr><td colspan=2><?php echo escape($lang["usagebreakdown"]); ?></td></tr>
 <?php foreach ($download_summary as $usage)
     { 
     if (array_key_exists($usage["usageoption"],$download_usage_options))

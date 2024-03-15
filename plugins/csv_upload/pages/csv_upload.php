@@ -253,7 +253,7 @@ switch($csvstep)
 
             <div class="file_selected Question" style="display: none;">
                 <label for="submit" class="file_selected" style="display: none;"></label>
-                <input type="submit" id="submit" value="<?php echo $lang["next"]; ?>" class="file_selected" style="display: none;"> 
+                <input type="submit" id="submit" value="<?php echo escape($lang["next"]); ?>" class="file_selected" style="display: none;"> 
                 <div class="clearerleft"> </div>
             </div>
         </form>
@@ -286,7 +286,7 @@ switch($csvstep)
                     
                     <div class="config_selected Question" style="display: none;">
                         <label for="submit" class="config_selected" style="display: none;"></label>
-                        <input type="submit" id="submit" value="<?php echo $lang["upload"]; ?>" class="config_selected" style="display: none;"> 
+                        <input type="submit" id="submit" value="<?php echo escape($lang["upload"]); ?>" class="config_selected" style="display: none;"> 
                         <div class="clearerleft"> </div>
                     </div>
                     <?php
@@ -326,7 +326,7 @@ switch($csvstep)
                 <div class="Question" id="resource_type_question">
                     <label for="resource_type_column"><?php echo $lang["csv_upload_resource_type_column"]; ?></label>
                     <select id="resource_type_column" name="resource_type_column"  class="stdwidth columnselect">                    
-                        <option value=""><?php echo $lang["select"]; ?></option>
+                        <option value=""><?php echo escape($lang["select"]); ?></option>
                         <?php
                         foreach($csv_info as $csv_column => $csv_field_data)
                             {
@@ -339,7 +339,7 @@ switch($csvstep)
                 <div class="Question" id="resource_type_default_question">
                     <label for="resource_type_default"><?php echo $lang["csv_upload_resource_type_default"]; ?></label>
                     <select id="resource_type_default" name="resource_type_default" class="stdwidth" onchange="if (this.options[this.selectedIndex].value=='default') { jQuery('.override').hide();jQuery('.override').attr('disabled','disabled'); } else { jQuery('.override').removeAttr('disabled');jQuery('.override').show(); }">                                     
-                            <option value="0"><?php echo $lang["select"]; ?></option>
+                            <option value="0"><?php echo escape($lang["select"]); ?></option>
                             <?php   
                             foreach ($resource_types as $resource_type)
                                 {
@@ -354,7 +354,7 @@ switch($csvstep)
                 <div class="Question" id="status_question">
                     <label for="status_column"><?php echo $lang["csv_upload_workflow_column"]; ?></label>
                     <select id="status_column" name="status_column"  class="stdwidth columnselect">                    
-                        <option value=""><?php echo $lang["select"]; ?></option>
+                        <option value=""><?php echo escape($lang["select"]); ?></option>
                         <?php
                         foreach($csv_info as $csv_column => $csv_field_data)
                             {
@@ -368,7 +368,7 @@ switch($csvstep)
                 <div class="Question" id="status_default_question">
                     <label for="status_default"><?php echo $lang["csv_upload_workflow_default"]; ?></label>
                     <select id="status_default" name="status_default" class="stdwidth" onchange="if (this.options[this.selectedIndex].value=='default') { jQuery('.override').hide();jQuery('.override').attr('disabled','disabled'); } else { jQuery('.override').removeAttr('disabled');jQuery('.override').show(); }">                                     
-                            <option value="0"><?php echo $lang["select"]; ?></option>
+                            <option value="0"><?php echo escape($lang["select"]); ?></option>
                             <?php   
                             $workflow_states = get_editable_states($userref);
                             foreach($workflow_states as $workflow_state)
@@ -384,7 +384,7 @@ switch($csvstep)
                 <div class="Question" id="access_question">
                     <label for="access_column"><?php echo $lang["csv_upload_access_column"]; ?></label>
                     <select id="access_column" name="access_column" class="stdwidth columnselect">                    
-                        <option value=""><?php echo $lang["select"]; ?></option>
+                        <option value=""><?php echo escape($lang["select"]); ?></option>
                         <?php
                         foreach($csv_info as $csv_column => $csv_field_data)
                             {
@@ -407,7 +407,7 @@ switch($csvstep)
                 <div class="Question" id="access_default_question">
                     <label for="access_default"><?php echo $lang["csv_upload_access_default"]; ?></label>
                     <select id="access_default" name="access_default" class="stdwidth" onchange="if (this.options[this.selectedIndex].value=='default') { jQuery('.override').hide();jQuery('.override').attr('disabled','disabled'); } else { jQuery('.override').removeAttr('disabled');jQuery('.override').show(); }">                                     
-                            <option value="0"><?php echo $lang["select"]; ?></option>
+                            <option value="0"><?php echo escape($lang["select"]); ?></option>
                             <?php   
                              // Get applicable access options - custom access omitted as can be added by batch editing later
                             for($n=0;$n<3;$n++)
@@ -424,8 +424,8 @@ switch($csvstep)
                 </div>               
 
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
-                    <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
-                    <input type="submit" id="submit" value="<?php echo $lang["next"]; ?>">
+                    <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
+                    <input type="submit" id="submit" value="<?php echo escape($lang["next"]); ?>">
                 <div class="clearerleft"> </div>
                 </div>   
             </form>
@@ -464,7 +464,7 @@ switch($csvstep)
                 <div class="Question" id="resource_type_question" >
                     <label for="resource_type_column"><?php echo $lang["csv_upload_resource_type_column"]; ?></label>
                     <select id="resource_type_column" name="resource_type_column" class="stdwidth columnselect">                    
-                        <option value=""><?php echo $lang["select"]; ?></option>
+                        <option value=""><?php echo escape($lang["select"]); ?></option>
                         <?php
                         foreach($csv_info as $csv_column => $csv_field_data)
                             {
@@ -487,7 +487,7 @@ switch($csvstep)
                 <div class="Question" id="id_column_question">
                     <label for="id_column"><?php echo $lang["csv_upload_resource_match_column"]; ?></label>
                         <select id="id_column" name="id_column" class="stdwidth columnselect">                    
-                        <option value=""><?php echo $lang["select"]; ?></option>
+                        <option value=""><?php echo escape($lang["select"]); ?></option>
                         <?php
                         foreach($csv_info as $csv_column => $csv_field_data)
                             {
@@ -510,7 +510,7 @@ switch($csvstep)
                 <div class="Question" id="id_column_match_question">
                     <label for="id_column_match"><?php echo $lang["csv_upload_match_type"]; ?></label>
                     <select id="id_column_match" name="id_column_match" class="stdwidth" onchange="if (this.value==0) { jQuery('#multiple_match_question').hide();} else { jQuery('#multiple_match_question').show(); }">
-                            <option value="0"><?php echo $lang["resourceid"]; ?></option>
+                            <option value="0"><?php echo escape($lang["resourceid"]); ?></option>
                             <?php   
                             foreach($allfields as $field)
                                 {
@@ -531,8 +531,8 @@ switch($csvstep)
                 </div>   
 
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
-                    <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
-                    <input type="submit" id="submit" value="<?php echo $lang["next"]; ?>">
+                    <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
+                    <input type="submit" id="submit" value="<?php echo escape($lang["next"]); ?>">
                     <div class="clearerleft"> </div>
                 </div>
             </form>
@@ -560,7 +560,7 @@ switch($csvstep)
                     <table id="csv_upload_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
                     <tr class="ListviewTitleStyle"> 
                         <th><?php echo $lang["csv_upload_mapping_header"]; ?></th>
-                        <th><?php echo $lang["field"]; ?></th>
+                        <th><?php echo escape($lang["field"]); ?></th>
                         <th><?php echo $lang["csv_upload_mapping_csv_data"]; ?></th>
                     </tr>
 
@@ -636,8 +636,8 @@ switch($csvstep)
                     <?php
                     }?>                
                 <div class="Question">
-                    <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
-                    <input type="submit" id="submit" value="<?php echo $lang["next"]; ?>">
+                    <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
+                    <input type="submit" id="submit" value="<?php echo escape($lang["next"]); ?>">
                     <div class="clearerleft"> </div>
                 </div>    
             </form>
@@ -707,7 +707,7 @@ switch($csvstep)
                 <input type="hidden" id="csvstep" name="csvstep" value="5" > 
 
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
-                    <input type="button" id="back" value="<?php echo $lang["back"]; ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
+                    <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 
                     <input type="submit" id="submit" value="<?php echo $lang["csv_upload_process"]; ?>" <?php if (!$valid_csv){echo "onclick=\"return confirm('" . $lang["csv_upload_ignore_errors"] . "');\"";} ?>>
                     <div class="clearerleft"> </div>
                 </div>    

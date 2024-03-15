@@ -150,7 +150,7 @@ function HookAnnotateViewpreviewlinkbar()
                     data-viewsize="<?php echo escape($data_viewsize); ?>"
                     data-viewsizeurl="<?php echo escape($data_viewsizeurl); ?>"  
                     href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>">
-                    <?php echo $lang["action-view"]; ?>
+                    <?php echo escape($lang["action-view"]); ?>
                 </a>
             </td>
         </tr>

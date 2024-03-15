@@ -149,7 +149,7 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
             ?>
         
         <input type="submit" onClick="simpleldap_test();return false;" name="testauth" value="<?php echo $lang["simpleldap_test_auth"]; ?>" <?php if (!$dstestconn){echo "disabled='true'";} ?>>        
-        <input type="submit" onClick="ModalClose();return false;" name="cancel" value="<?php echo $lang["cancel"]; ?>">
+        <input type="submit" onClick="ModalClose();return false;" name="cancel" value="<?php echo escape($lang["cancel"]); ?>">
         
         <br /><br />
         <!--<textarea id="simpleldaptestresults" class="Fixed" rows=15 cols=100 style="display: none; width: 100%; border: solid 1px;" ></textarea>-->
@@ -192,16 +192,16 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
                         
                         jQuery('#testbindresult').html(response.bindsuccess);
                         if(response.success){
-                            jQuery('#testgetuserresult').html('<?php echo $lang["status-ok"]; ?> (' + response.binduser + ')');
+                            jQuery('#testgetuserresult').html('<?php echo escape($lang["status-ok"]); ?> (' + response.binduser + ')');
                         }
                         else {
-                            jQuery('#testgetuserresult').html('<?php echo $lang["status-fail"]; ?>');
+                            jQuery('#testgetuserresult').html('<?php echo escape($lang["status-fail"]); ?>');
                         }
                             
                                                 
                         returnmessage = response.message;
                         if(response.success) {                      
-                            returnmessage += "<tr class='resultrow'><td><?php echo $lang["email"]; ?>: </td><td>" + response.email + "</td></tr>";
+                            returnmessage += "<tr class='resultrow'><td><?php echo escape($lang["email"]); ?>: </td><td>" + response.email + "</td></tr>";
                             returnmessage += "<tr class='resultrow'><td><?php echo $lang["simpleldap_telephone"]; ?>: </td><td>" + response.phone + "</td></tr>";
                             returnmessage += "<tr class='resultrow'><td><?php echo $lang["simpleldap_memberof"]; ?>";
                             for (var i = 0, len = response.memberof.length; i < len; i++) {
@@ -212,10 +212,10 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
                         jQuery('#blankrow').before(returnmessage);
                     }
                     else if(response.complete === false && response.message && response.message.length > 0) {
-                        jQuery('#testgetuserdata').html('<?php echo $lang["error"]; ?> : ' + response.message);
+                        jQuery('#testgetuserdata').html('<?php echo escape($lang["error"]); ?> : ' + response.message);
                     }
                     else {
-                        jQuery('#testgetuserdata').html('<?php echo $lang["error"]; ?>');
+                        jQuery('#testgetuserdata').html('<?php echo escape($lang["error"]); ?>');
                     }
                 },
                   error: function(xhr, textStatus, error){
@@ -354,8 +354,8 @@ config_text_field("notification_email",$lang['simpleldap_notification_email'],$s
 <div class="clearerleft"></div>
 
 <div class="Question">
-<input type="submit" name="save" value="<?php echo $lang["save"]; ?>">
-<input type="submit" name="submit" value="<?php echo $lang["plugins-saveandexit"]; ?>">
+<input type="submit" name="save" value="<?php echo escape($lang["save"]); ?>">
+<input type="submit" name="submit" value="<?php echo escape($lang["plugins-saveandexit"]); ?>">
 
 </div>
 <div class="clearerleft"></div>

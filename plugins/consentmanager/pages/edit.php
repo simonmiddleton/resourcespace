@@ -185,9 +185,9 @@ include "../../../include/header.php";
 <div class="BasicsBox">
 
 <?php if ($resource!="") { ?>
-<p><a href="<?php echo $redirect_url ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
+<p><a href="<?php echo $redirect_url ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
 <?php } else { ?>
-<p><a href="<?php echo $redirect_url ?>  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]; ?></a></p>
+<p><a href="<?php echo $redirect_url ?>  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a></p>
 <?php } ?>
 
 
@@ -202,18 +202,18 @@ include "../../../include/header.php";
 <div class="Question"><label><?php echo $lang["consent_id"]; ?></label><div class="Fixed"><?php echo escape($ref == "new" ? $lang["consentmanager_new"] : $ref)?></div>
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["name"]; ?></label><input type=text class="stdwidth" name="name" id="name" value="<?php echo escape($consent["name"])?>" />
+<div class="Question"><label><?php echo escape($lang["name"]); ?></label><input type=text class="stdwidth" name="name" id="name" value="<?php echo escape($consent["name"])?>" />
 <div class="clearerleft"> </div></div>
 
 
-<div class="Question"><label><?php echo $lang["email"]; ?></label><input type=text class="stdwidth" name="email" id="email" value="<?php echo escape($consent["email"])?>" />
+<div class="Question"><label><?php echo escape($lang["email"]); ?></label><input type=text class="stdwidth" name="email" id="email" value="<?php echo escape($consent["email"])?>" />
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["telephone"]; ?></label><input type=text class="stdwidth" name="telephone" id="telephone" value="<?php echo escape($consent["telephone"])?>" />
 <div class="clearerleft"> </div></div>
 
 
-<div class="Question"><label><?php echo $lang["indicateusagemedium"]; ?></label>
+<div class="Question"><label><?php echo escape($lang["indicateusagemedium"]); ?></label>
 <table>
 <?php
 $s=trim_array(explode(",",$consent["consent_usage"]));
@@ -231,7 +231,7 @@ foreach ($consent_usage_mediums as $medium)
     <!-- Option to tick all mediums -->
     <input type="checkbox"
 onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($allchecked) { ?>checked<?php } ?>
-    /><?php echo $lang["selectall"]; ?>
+    /><?php echo escape($lang["selectall"]); ?>
     </td></tr>
 </table>
 
@@ -240,7 +240,7 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
 
 
 
-<div class="Question"><label><?php echo $lang["fieldtitle-expiry_date"]; ?></label>
+<div class="Question"><label><?php echo escape($lang["fieldtitle-expiry_date"]); ?></label>
 
 
     <select id="expires_day" name="expires_day" class="SearchWidth" style="width:98px;">
@@ -295,21 +295,21 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
     </div>
 
     <div class="Question" id="file">
-        <label for="file"><?php echo $lang["file"]; ?></label>
+        <label for="file"><?php echo escape($lang["file"]); ?></label>
         <?php
         
         if($consent["file"]!="")
             {
             ?>
             <span><i class="fa fa-file"></i> <a href="download.php?resource=<?php echo $resource ?>&ref=<?php echo $ref ?>"><?php echo $consent['file']; ?></a></span>
-            &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo $lang["clearbutton"]; ?>" onclick="return confirm('<?php echo $lang["confirmdeleteconsentfile"]; ?>');">
+            &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo escape($lang["clearbutton"]); ?>" onclick="return confirm('<?php echo $lang["confirmdeleteconsentfile"]; ?>');">
             <?php
             }
         else
             {
             ?>
             <input type="file" name="file" style="width:300px">
-            <input type="submit" name="upload_file" value="<?php echo $lang['upload']; ?>">
+            <input type="submit" name="upload_file" value="<?php echo escape($lang['upload']); ?>">
             <?php
             }
             ?>
@@ -319,7 +319,7 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
 
 
 <div class="QuestionSubmit">        
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>

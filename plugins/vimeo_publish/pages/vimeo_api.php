@@ -110,7 +110,7 @@ $params["ref"] = $ref;
         <h1><?php echo $lang["vimeo_publish_resource_tool_link"]; ?></h1>
         <p>
             <a href="<?php echo generateurl($baseurl_short . 'pages/view.php', $params); ?>" onClick="return CentralSpaceLoad(this,true);">
-                <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?>
+                <?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?>
             </a>
         </p>
     </div>

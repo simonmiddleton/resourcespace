@@ -19,7 +19,7 @@ function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slides
     ?>
     <div id="add_new_slideshow" class="Question">
         <span class="stdwidth">
-            <button type="submit" onclick="jQuery('#new_slideshow_form').fadeIn(); return false;"><?php echo $lang['action-add-new']; ?></button>
+            <button type="submit" onclick="jQuery('#new_slideshow_form').fadeIn(); return false;"><?php echo escape($lang['action-add-new']); ?></button>
             <form
                 id="new_slideshow_form"
                 method="POST"
@@ -30,14 +30,14 @@ function HookTransformAdmin_manage_slideshowRender_new_element_for_manage_slides
                 <input 
                     name="ref"
                     type="text"
-                    value="<?php echo $lang['resourceid']; ?>"
-                    onfocus="if(this.value == '<?php echo $lang['resourceid']; ?>') { this.value = ''; }"
-                    onblur="if(this.value == '') {this.value = '<?php echo $lang['resourceid']; ?>';}"
+                    value="<?php echo escape($lang['resourceid']); ?>"
+                    onfocus="if(this.value == '<?php echo escape($lang['resourceid']); ?>') { this.value = ''; }"
+                    onblur="if(this.value == '') {this.value = '<?php echo escape($lang['resourceid']); ?>';}"
                 >
                 <input name="manage_slideshow_action" type="hidden" value="add_new">
                 <input name="manage_slideshow_id" type="hidden" value="<?php echo $new_slideshow_id; ?>">
                 <input name="return_to_url" type="hidden" value="<?php echo $return_to_url; ?>">
-                <button type="submit"><?php echo $lang['action-submit-button-label']; ?></button>
+                <button type="submit"><?php echo escape($lang['action-submit-button-label']); ?></button>
             </form>
         </span>
         <div class="clearerleft"></div>
@@ -56,7 +56,7 @@ function HookTransformAdmin_manage_slideshowRender_replace_button_for_manage_sli
         }
 
     ?>
-    <button type="submit" onclick="jQuery('#replace_slideshow_image_form_<?php echo $slideshow_image; ?>').slideToggle(229); return false;"><?php echo $lang['action-replace']; ?></button>
+    <button type="submit" onclick="jQuery('#replace_slideshow_image_form_<?php echo $slideshow_image; ?>').slideToggle(229); return false;"><?php echo escape($lang['action-replace']); ?></button>
     <?php
     if($slideshow_file_info['resource_ref'] > 0)
         {
@@ -99,14 +99,14 @@ function HookTransformAdmin_manage_slideshowRender_replace_slideshow_form_for_ma
         <input
             name="ref"
             type="text"
-            value="<?php echo $lang['resourceid']; ?>"
-            onfocus="if(this.value == '<?php echo $lang['resourceid']; ?>') { this.value = ''; }"
-            onblur="if(this.value == '') {this.value = '<?php echo $lang['resourceid']; ?>';}"
+            value="<?php echo escape($lang['resourceid']); ?>"
+            onfocus="if(this.value == '<?php echo escape($lang['resourceid']); ?>') { this.value = ''; }"
+            onblur="if(this.value == '') {this.value = '<?php echo escape($lang['resourceid']); ?>';}"
         >
         <input name="manage_slideshow_action" type="hidden" value="replace">
         <input name="manage_slideshow_id" type="hidden" value="<?php echo $replace_slideshow_id; ?>">
         <input name="return_to_url" type="hidden" value="<?php echo $return_to_url; ?>">
-        <button type="submit"><?php echo $lang['action-submit-button-label']; ?></button>
+        <button type="submit"><?php echo escape($lang['action-submit-button-label']); ?></button>
     </form>
     <?php
     }

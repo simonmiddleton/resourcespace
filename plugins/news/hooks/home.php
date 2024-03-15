@@ -9,7 +9,7 @@ function HookNewsHomeHomebeforepanels()
     ?>
 
     <div class="BasicsBox" id="NewsPanel">
-        <h2><span class="fa fa-newspaper-o"></span>&nbsp;<?php echo $lang['title']; ?></h2>
+        <h2><span class="fa fa-newspaper-o"></span>&nbsp;<?php echo escape($lang['title']); ?></h2>
         <?php
             if($results > 0)
             {

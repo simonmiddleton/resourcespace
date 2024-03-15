@@ -216,7 +216,7 @@ include "../../include/header.php"; ?>
 })(jQuery);
 </script>
 <div class="BasicsBox">
-<h1><?php echo $lang["pluginmanager"]; ?></h1>
+<h1><?php echo escape($lang["pluginmanager"]); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -245,7 +245,7 @@ if($searching)
     ?>
 </form>
 
-<p><?php echo $lang["plugins-headertext"]; render_help_link('systemadmin/managing_plugins');?></p>
+<p><?php echo escape($lang["plugins-headertext"]); render_help_link('systemadmin/managing_plugins');?></p>
 <h2 class="pageline"><?php echo escape(!$searching ? $lang['plugins-installedheader'] : $lang['plugins-search-results-header']); ?></h2>
 <?php hook("before_active_plugin_list");
 if($searching)
@@ -256,13 +256,13 @@ if($searching)
         <table class= "ListviewStyle" cellspacing="0" cellpadding="0" border="0">
             <thead>
                 <tr class="ListviewTitleStyle">
-                    <td><?php echo $lang['plugins-icon']; ?></td>
-                    <td><?php echo $lang['name']; ?></td>
-                    <td><?php echo $lang['description']; ?></td>
-                    <td><?php echo $lang['plugins-author']; ?></td>
-                    <td><?php echo $lang['plugins-version']; ?></td>
+                    <td><?php echo escape($lang['plugins-icon']); ?></td>
+                    <td><?php echo escape($lang['name']); ?></td>
+                    <td><?php echo escape($lang['description']); ?></td>
+                    <td><?php echo escape($lang['plugins-author']); ?></td>
+                    <td><?php echo escape($lang['plugins-version']); ?></td>
                     <?php hook('additional_plugin_columns'); ?>
-                    <td><div class="ListTools"><?php echo $lang['tools']; ?></div></td>
+                    <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
                 </tr>
             </thead>
             <tbody>
@@ -382,13 +382,13 @@ if (count($inst_plugins)>0)
    <table class= "ListviewStyle" cellspacing="0" cellpadding="0" border="0">
       <thead>
          <tr class="ListviewTitleStyle">
-         <td><?php echo $lang['plugins-icon']; ?></td>
-         <td><?php echo $lang['name']; ?></td>
-         <td><?php echo $lang['description']; ?></td>
-         <td><?php echo $lang['plugins-author']; ?></td>
-         <td><?php echo $lang['plugins-instversion']; ?></td>
+         <td><?php echo escape($lang['plugins-icon']); ?></td>
+         <td><?php echo escape($lang['name']); ?></td>
+         <td><?php echo escape($lang['description']); ?></td>
+         <td><?php echo escape($lang['plugins-author']); ?></td>
+         <td><?php echo escape($lang['plugins-instversion']); ?></td>
          <?php hook('additional_plugin_columns'); ?>
-         <td><div class="ListTools"><?php echo $lang['tools']; ?></div></td>
+         <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
          </tr>
       </thead>
       <tbody>
@@ -464,7 +464,7 @@ else
    echo "<p>".$lang['plugins-noneinstalled']."</p>";
    } ?>
 
-<h2 class="pageline"><?php echo $lang['plugins-availableheader']; ?></h2>
+<h2 class="pageline"><?php echo escape($lang['plugins-availableheader']); ?></h2>
 <?php
 
 if (count($plugins_avail)>0) 
@@ -563,12 +563,12 @@ function display_plugin_category($plugins,$category,$header=true)
             <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
                 <thead>
                     <tr class="ListviewTitleStyle">
-                    <td><?php echo $lang['plugins-icon']; ?></td>
-                    <td><?php echo $lang['name']; ?></td>
-                    <td><?php echo $lang['description']; ?></td>
-                    <td><?php echo $lang['plugins-author']; ?></td>
-                    <td><?php echo $lang['plugins-version']; ?></td>
-                    <td><div class="ListTools"><?php echo $lang['tools']; ?></div></td>
+                    <td><?php echo escape($lang['plugins-icon']); ?></td>
+                    <td><?php echo escape($lang['name']); ?></td>
+                    <td><?php echo escape($lang['description']); ?></td>
+                    <td><?php echo escape($lang['plugins-author']); ?></td>
+                    <td><?php echo escape($lang['plugins-version']); ?></td>
+                    <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
                     </tr>
                 </thead>
                 <tbody>

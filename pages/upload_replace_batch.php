@@ -71,9 +71,9 @@ if (isset($info_text))
 
 ?>
 
-<h1><?php echo $lang["replaceresourcebatch"]; ?></h1>
+<h1><?php echo escape($lang["replaceresourcebatch"]); ?></h1>
 
-<p><?php echo $lang["batch_replace_filename_intro"];render_help_link("resourceadmin/batch-replace");?></p>
+<p><?php echo escape($lang["batch_replace_filename_intro"]);render_help_link("resourceadmin/batch-replace");?></p>
 
 <form action="<?php echo $baseurl_short?>pages/upload_replace_batch.php" >
 
@@ -82,13 +82,13 @@ if (isset($info_text))
 <input id="submit" type="hidden" name="submit" value="true" />
     
 <div class="Question">
-    <label for="use_resourceid"><?php echo $lang["batch_replace_use_resourceid"]; ?></label>
+    <label for="use_resourceid"><?php echo escape($lang["batch_replace_use_resourceid"]); ?></label>
     <input type="checkbox" value="yes" <?php if ($filename_field == 0) {echo " checked ";} ?> name="use_resourceid" id="use_resourceid" onClick="if(this.checked){jQuery('#question_filename_field').slideUp();jQuery('#filename_field').prop('disabled',true);}else{jQuery('#question_filename_field').slideDown();jQuery('#filename_field').prop('disabled',false);}" />
     <div class="clearerleft"> </div>
 </div>
 
 <div class="Question" id="question_filename_field" <?php if ($filename_field == 0) {echo "style='display:none;'";}?>>
-    <label for="filename_field"><?php echo $lang["batch_replace_filename_field_select"]; ?></label>
+    <label for="filename_field"><?php echo escape($lang["batch_replace_filename_field_select"]); ?></label>
     <select  class="stdwidth" name="filename_field" id="filename_field">
 
     <option value="0" >
@@ -109,25 +109,25 @@ if (isset($info_text))
 
 
 <div class="Question">
-    <label for="batch_replace_col"><?php echo $lang["replacebatch_collection"]; ?></label>
+    <label for="batch_replace_col"><?php echo escape($lang["replacebatch_collection"]); ?></label>
     <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_col > 0) ? escape($batch_replace_col) : ""; ?>" name="batch_replace_col" id="batch_replace_col" />
     <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-    <label for="batch_replace_min"><?php echo $lang["replacebatch_resource_min"]; ?></label>
+    <label for="batch_replace_min"><?php echo escape($lang["replacebatch_resource_min"]); ?></label>
     <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_min > 0) ? escape($batch_replace_min) : ""; ?>" name="batch_replace_min" id="batch_replace_min" />
     <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-    <label for="batch_replace_max"><?php echo $lang["replacebatch_resource_max"]; ?></label>
+    <label for="batch_replace_max"><?php echo escape($lang["replacebatch_resource_max"]); ?></label>
     <input type="text" class="shrtwidth" value="<?php echo ($batch_replace_max > 0) ?  escape($batch_replace_max) : ""; ?>" name="batch_replace_max" id="batch_replace_max" />
     <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-    <label for="no_exif"><?php echo $lang["no_exif"]; ?></label>
+    <label for="no_exif"><?php echo escape($lang["no_exif"]); ?></label>
     <input type=checkbox checked id="no_exif" name="no_exif" value="yes">
     <div class="clearerleft"> </div>
 </div>
@@ -136,7 +136,7 @@ if (isset($info_text))
 if($offline_job_queue)
     {?>
     <div class="Question">
-        <label for="replace_batch_local"><?php echo $lang["replacebatchlocalfolder"]; ?></label>
+        <label for="replace_batch_local"><?php echo escape($lang["replacebatchlocalfolder"]); ?></label>
         <input type="checkbox" value="yes" <?php if($mode == "fetch_local") {echo " checked";} ?> name="replace_batch_local" id="replace_batch_local" onClick="if(this.checked){document.getElementById('batch_replace_mode').value = 'fetch_local';}else{document.getElementById('batch_replace_mode').value = 'upload'}" />
         <div class="clearerleft"> </div>
     </div>
@@ -147,7 +147,7 @@ if($offline_job_queue)
     ?>
 
 <div class="Question">
-<input type="submit" value="<?php echo $lang["start"]; ?>" name="upload" id="upload_button" />
+<input type="submit" value="<?php echo escape($lang["start"]); ?>" name="upload" id="upload_button" />
 <div class="clearerleft"> </div>
 </div>
 

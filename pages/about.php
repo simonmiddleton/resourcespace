@@ -8,7 +8,7 @@ include "../include/header.php";
 ?>
 
 <div class="BasicsBox">
-  <h1><?php echo $lang["aboutus"]; ?></h1>
+  <h1><?php echo escape($lang["aboutus"]); ?></h1>
   <p><?php echo text("about")?></p>
 </div>
 

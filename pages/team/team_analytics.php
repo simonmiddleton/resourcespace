@@ -23,7 +23,7 @@ include dirname(__FILE__)."/../../include/header.php";
 ?>
 
 <div class="BasicsBox">
-<h1><?php echo $lang["rse_analytics"]; ?></h1>
+<h1><?php echo escape($lang["rse_analytics"]); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -71,8 +71,8 @@ $jumpcount=1;
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo $lang["report_name"]; ?></td>
-<td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+<td><?php echo escape($lang["report_name"]); ?></td>
+<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
 </tr>
 
 <?php
@@ -83,8 +83,8 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
     <td><div class="ListTitle"><a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($reports[$n]["name"],$findtext,true);?></a></div></td>
     <td>
     <div class="ListTools">
-        <a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]; ?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a>
-        <a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]; ?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]; ?>';document.getElementById('reportsform').submit();} return false;"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]; ?></a>
+        <a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]; ?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
+        <a href="#" onclick="if (confirm('<?php echo escape($lang["confirm-deletion"]); ?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]; ?>';document.getElementById('reportsform').submit();} return false;"><i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?></a>
         </div>
     </td>
     </tr>
@@ -114,8 +114,8 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
                 class="shrtwidth"
             />
 
-            <input type="button" value="<?php echo $lang['clearbutton']; ?>" onClick="$('findtext').value='';form.submit();" />
-            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;" />
+            <input type="button" value="<?php echo escape($lang['clearbutton']); ?>" onClick="$('findtext').value='';form.submit();" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;" />
 
             </div>
             </div>

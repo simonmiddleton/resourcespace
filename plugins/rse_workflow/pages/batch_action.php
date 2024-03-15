@@ -166,8 +166,8 @@ include_once '../../../include/header.php';
     <p><?php echo str_replace("%wf_name", $to_wf_state["name"], $lang["rse_workflow_confirm_to_state"]); ?></p>
     <p><?php echo str_replace("%count", $affected_resources_count, $lang["rse_workflow_affected_resources"]); ?></p>
     <div class="QuestionSubmit">
-        <button type="button" onclick="ModalClose();"><?php echo $lang["cancel"]; ?></button>
-        <button type="button" onclick="process_wf_action(this);" <?php echo $action_csrf_data; ?>><?php echo $lang["ok"]; ?></button>
+        <button type="button" onclick="ModalClose();"><?php echo escape($lang["cancel"]); ?></button>
+        <button type="button" onclick="process_wf_action(this);" <?php echo $action_csrf_data; ?>><?php echo escape($lang["ok"]); ?></button>
     </div>
 </div>
 <script>

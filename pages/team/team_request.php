@@ -17,7 +17,7 @@ $offset=getval("offset",0,true);
 ?>
 
 <div class="BasicsBox"> 
-<h1><?php echo $lang["managerequestsorders"]; ?></h1>
+<h1><?php echo escape($lang["managerequestsorders"]); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -53,15 +53,15 @@ $jumpcount=1;
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
 <?php if(!hook("requestlistheader")): ?>
-<td><?php echo $lang["requestorderid"]; ?></td>
-<td><?php echo $lang["username"]; ?></td>
-<td><?php echo $lang["fullname"]; ?></td>
-<td><?php echo $lang["date"]; ?></td>
-<td><?php echo $lang["itemstitle"]; ?></td>
-<td><?php echo $lang["type"]; ?></td>
-<td><?php echo $lang["assignedto"]; ?></td>
-<td><?php echo $lang["status"]; ?></td>
-<td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+<td><?php echo escape($lang["requestorderid"]); ?></td>
+<td><?php echo escape($lang["username"]); ?></td>
+<td><?php echo escape($lang["fullname"]); ?></td>
+<td><?php echo escape($lang["date"]); ?></td>
+<td><?php echo escape($lang["itemstitle"]); ?></td>
+<td><?php echo escape($lang["type"]); ?></td>
+<td><?php echo escape($lang["assignedto"]); ?></td>
+<td><?php echo escape($lang["status"]); ?></td>
+<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
 <?php endif; ?>
 </tr>
 
@@ -82,7 +82,7 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
     <td><?php echo $lang["resourcerequesttype" . $requests[$n]["request_mode"]]; ?></td>
     <td><?php echo $requests[$n]["assigned_to_username"]; ?></td>
     <td><?php echo $lang["resourcerequeststatus" . $requests[$n]["status"]]; ?></td>
-    <td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_request_edit.php?ref=<?php echo $requests[$n]["ref"]; ?>" onClick="return <?php echo $modal_default ? "Modal" : "CentralSpace"; ?>Load(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a></a></div></td>
+    <td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_request_edit.php?ref=<?php echo $requests[$n]["ref"]; ?>" onClick="return <?php echo $modal_default ? "Modal" : "CentralSpace"; ?>Load(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a></a></div></td>
 <?php endif; ?>
     </tr>
     <?php

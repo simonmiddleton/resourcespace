@@ -686,7 +686,7 @@ include '../../include/header.php';
     renderBreadcrumbs($links_trail);
     ?>
 
-    <p><?php echo $lang['systemconfig_description']; ?></p>
+    <p><?php echo escape($lang['systemconfig_description']); ?></p>
     <div class="CollapsibleSections">
     <?php
     config_generate_html($page_def);

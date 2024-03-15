@@ -1,9 +1,9 @@
 <div class="Question">
-<label for="groupselect"><?php echo $lang["group"]; ?></label><select id="groupselect" name="groupselect" class="stdwidth"
+<label for="groupselect"><?php echo escape($lang["group"]); ?></label><select id="groupselect" name="groupselect" class="stdwidth"
 onchange="if (this.value=='viewall') {document.getElementById('groupselector').style.display='none';}
 else {document.getElementById('groupselector').style.display='block';}">
-<?php if (!checkperm("U")) { ?><option <?php if ($groupselect=="viewall") { ?>selected<?php } ?> value="viewall"><?php echo $lang["allgroups"]; ?></option><?php } ?>
-<option <?php if ($groupselect=="select") { ?>selected<?php } ?> value="select"><?php echo $lang["select"]; ?></option>
+<?php if (!checkperm("U")) { ?><option <?php if ($groupselect=="viewall") { ?>selected<?php } ?> value="viewall"><?php echo escape($lang["allgroups"]); ?></option><?php } ?>
+<option <?php if ($groupselect=="select") { ?>selected<?php } ?> value="select"><?php echo escape($lang["select"]); ?></option>
 </select>
 <div class="clearerleft"> </div>
     <table id="groupselector" cellpadding=3 cellspacing=3 style="padding-left:150px;<?php if ($groupselect=="viewall") { ?>display:none;<?php } ?>">

@@ -271,7 +271,7 @@ elseif ($saved)
     ?>
 
     <div class="Question" id="QuestionSubmit">
-        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>
+        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>
     </div>
 </form>
 </div>

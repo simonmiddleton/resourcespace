@@ -34,8 +34,8 @@ $url        = generateurl($baseurl_short . 'pages/view.php', $get_params );
     <div class="Listview">
         <table id="track_field_history_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
             <tr class="ListviewTitleStyle">
-                <td width="10%"><?php echo $lang['date']; ?></td>
-                <td width="10%"><?php echo $lang['user']; ?></td>
+                <td width="10%"><?php echo escape($lang['date']); ?></td>
+                <td width="10%"><?php echo escape($lang['user']); ?></td>
                 <td><?php echo $lang['track_field_history_change']; ?></td>
             </tr>
             <?php

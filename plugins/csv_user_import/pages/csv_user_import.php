@@ -53,7 +53,7 @@ if((!isset($_FILES[$fd]) || 0 < $_FILES[$fd]['error']) && !$process_csv)
                 onchange="if(this.value == null || this.value == '') { jQuery('.file_selected').hide(); } else { jQuery('.file_selected').show(); }">
         </div>
         <div class="Question file_selected" style="display: none;">
-            <label for="user_group_selector"><?php echo $lang['property-user_group']; ?></label>
+            <label for="user_group_selector"><?php echo escape($lang['property-user_group']); ?></label>
             <select id="user_group_selector" name="user_group_selector">
             <?php
             $usergroups = get_usergroups();
@@ -95,7 +95,7 @@ else
     if(check_valid_file_extension($_FILES[$fd],array("csv")))
         {
         ?>
-        <p><a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a></p>
+        <p><a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang['back']); ?></a></p>
         <p><b><?php echo escape($_FILES[$fd]['name']); ?></b></p>
 
         <?php
@@ -149,7 +149,7 @@ else
         {
         ?>
         <p>
-            <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a>
+            <a href="<?php echo $_SERVER['SCRIPT_NAME']; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang['back']); ?></a>
         </p>
         <p>
             <b><?php echo str_replace("%EXTENSIONS",".csv",$lang["invalidextension_mustbe-extensions"]); ?></b>

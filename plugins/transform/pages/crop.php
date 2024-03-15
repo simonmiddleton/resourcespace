@@ -1214,7 +1214,7 @@ renderBreadcrumbs($links_trail);
                 render_dropdown_question($lang["format"],"new_ext",array_combine($cropper_formatarray , $cropper_formatarray),strtoupper($orig_ext));
                 ?>
                 <div class="QuestionSubmit">
-                    <input type='submit' name='download' value="<?php echo $lang["action-download"]; ?>" onclick="postCrop(true);return false;" />
+                    <input type='submit' name='download' value="<?php echo escape($lang["action-download"]); ?>" onclick="postCrop(true);return false;" />
                 
                     <div class="clearerleft"></div>
                 </div>
@@ -1225,7 +1225,7 @@ renderBreadcrumbs($links_trail);
                 {?>
                 <div class="imagetools_save_action" id="imagetools_original_actions" style="display:none;">
                     <div class="Question" id="keep_original_question">
-                        <label for="keep_original"><?php echo $lang["replace_resource_preserve_original"]; ?></label>
+                        <label for="keep_original"><?php echo escape($lang["replace_resource_preserve_original"]); ?></label>
             <?php
             if($replace_resource_preserve_option && $replace_resource_preserve_default)
             {?>
@@ -1249,7 +1249,7 @@ renderBreadcrumbs($links_trail);
 
             <div class="imagetools_save_action" id="imagetools_preview_actions" style="display:none;">
                 <div class="QuestionSubmit">
-                    <input type='submit' name='preview' value="<?php echo $lang['useaspreviewimage']; ?>"   onclick="postCrop();return false;"/>
+                    <input type='submit' name='preview' value="<?php echo escape($lang['useaspreviewimage']); ?>"   onclick="postCrop();return false;"/>
                     <div class="clearerleft"></div>
                 </div>
             </div>
@@ -1297,7 +1297,7 @@ renderBreadcrumbs($links_trail);
             <div class="Question">
                 <label for="preset"><?php echo $lang["transform_preset_sizes"]; ?></label>
                 <select class="stdwidth" onchange="setCropperSize(this.value);" id="size_preset_select">
-                    <option value=""><?php echo $lang["select"]; ?></option>
+                    <option value=""><?php echo escape($lang["select"]); ?></option>
                     <?php
                     if(isset($custom_cropper_preset_sizes))
                         {
@@ -1333,7 +1333,7 @@ renderBreadcrumbs($links_trail);
             if($cropper_quality_select && count($image_quality_presets) > 0)
                 {?>
                 <div class="Question">
-                    <label for="quality"><?php echo $lang['property-quality']; ?></label>
+                    <label for="quality"><?php echo escape($lang['property-quality']); ?></label>
                     <select name='quality'  class="stdwidth" >
                     <?php 
                     foreach ($image_quality_presets as $image_quality_preset) 

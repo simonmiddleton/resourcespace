@@ -208,14 +208,14 @@ if($confirm_delete)
     <input name="confirmdelete" id="confirmdelete" type="hidden" value="">
     <div class="textcenter">
     <input name="delete" type="button" value="<?php echo escape($lang["action-delete"])?>" onClick="jQuery('#field_edit_delete').val('yes');jQuery('#confirmdelete').val('yes');this.form.submit();" />
-    <input type="button" class="button" onClick="CentralSpaceLoad('<?php generateURL($baseurl_short . "/pages/admin/admin_resource_type_field_edit.php",$url_params,array("ref"=>"")); ?>',true);return false;" value="&nbsp;&nbsp;<?php echo $lang["cancel"]; ?>&nbsp;&nbsp;" >
+    <input type="button" class="button" onClick="CentralSpaceLoad('<?php generateURL($baseurl_short . "/pages/admin/admin_resource_type_field_edit.php",$url_params,array("ref"=>"")); ?>',true);return false;" value="&nbsp;&nbsp;<?php echo escape($lang["cancel"]); ?>&nbsp;&nbsp;" >
     </div>
      <?php	
     }
 else
     {
     ?>
-    <div class="Question"><label><?php echo $lang["property-field_id"]; ?></label>
+    <div class="Question"><label><?php echo escape($lang["property-field_id"]); ?></label>
     <div class="Fixed"><?php echo  $fielddata["ref"]; ?></div>
     <div class="clearerleft"> </div>
     </div>
@@ -228,7 +228,7 @@ else
             {
             if ($column=="partial_index") // Start the hidden advanced section here
                 {?>
-                <h2 id="showhiddenfields" class="CollapsibleSectionHead collapsed" ><?php echo $lang["admin_advanced_field_properties"]; ?></h2>
+                <h2 id="showhiddenfields" class="CollapsibleSectionHead collapsed" ><?php echo escape($lang["admin_advanced_field_properties"]); ?></h2>
                 <div class="CollapsibleSection" id="admin_hidden_field_properties" >     
                 <?php
                 }
@@ -239,8 +239,8 @@ else
     </div><!-- End of hidden advanced section -->    
     
     <div class="QuestionSubmit">    
-    <input name="save" type="submit" value="&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;" />&nbsp;&nbsp;
-    <input type="button" class="button" onClick="CentralSpaceLoad('<?php echo $baseurl . "/pages/admin/admin_copy_field.php?ref=" . $ref . "&backurl=" . $url ?>',true);return false;" value="&nbsp;&nbsp;<?php echo $lang["copy-field"]; ?>&nbsp;&nbsp;" >
+    <input name="save" type="submit" value="&nbsp;&nbsp;&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;&nbsp;&nbsp;" />&nbsp;&nbsp;
+    <input type="button" class="button" onClick="CentralSpaceLoad('<?php echo $baseurl . "/pages/admin/admin_copy_field.php?ref=" . $ref . "&backurl=" . $url ?>',true);return false;" value="&nbsp;&nbsp;<?php echo escape($lang["copy-field"]); ?>&nbsp;&nbsp;" >
     <input name="migrate_data" id="migrate_data" type="hidden" value="">
 
     <?php if ($fielddata["active"]==0) { ?>

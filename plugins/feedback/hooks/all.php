@@ -36,8 +36,8 @@ function HookFeedbackAllHeadertop()
         <div id="feedback_prompt" style="border:1px solid #BBB;border-bottom-width:3px;border-bottom-color:#bbb;background-color:white;width:300px;height:auto;position:absolute;top:100px;left:300px;text-align:left;padding:10px;color:black;z-index:99999;">
             <?php echo $feedback_prompt_text; ?>
             <div style="text-align:right;">
-                <input type="button" value="<?php echo $lang["yes"]; ?>" onClick="SetCookie('feedback_completed','yes',30);jQuery('#feedback_prompt').remove();CentralSpaceLoad('<?php echo $baseurl?>/plugins/feedback/pages/feedback.php',true);">
-                <input type="button" value="<?php echo $lang["no"]; ?>" onClick="SetCookie('feedback_completed','yes',30);document.getElementById('feedback_prompt').style.display='none';">
+                <input type="button" value="<?php echo escape($lang["yes"]); ?>" onClick="SetCookie('feedback_completed','yes',30);jQuery('#feedback_prompt').remove();CentralSpaceLoad('<?php echo $baseurl?>/plugins/feedback/pages/feedback.php',true);">
+                <input type="button" value="<?php echo escape($lang["no"]); ?>" onClick="SetCookie('feedback_completed','yes',30);document.getElementById('feedback_prompt').style.display='none';">
                 <input type="button" value="<?php echo $lang["feedback_remind_me_later"]; ?>" onClick="SetCookie('feedback_completed','yes',0.5);document.getElementById('feedback_prompt').style.display='none';">
             </div>
         </div>

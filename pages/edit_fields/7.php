@@ -143,7 +143,7 @@ if(!(isset($treeonly) && true == $treeonly))
 
 
     function clearCategoryTree_<?php echo $tree_id; ?>() {
-        if(!confirm('<?php echo $lang["clearcategoriesareyousure"];?>')) {
+        if(!confirm('<?php echo escape($lang["clearcategoriesareyousure"]);?>')) {
             return false;
         }
         var thisJstree = jQuery('#<?php echo $tree_id; ?>');

@@ -75,7 +75,7 @@ if (getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false))
         create_periodic_email($userref, $report, $period, getval('email_days', 1, true), $user_group_selection, $search_params);
         ?>
         <script type="text/javascript">
-        alert("<?php echo $lang["newemailreportcreated"]; ?>");
+        alert("<?php echo escape($lang["newemailreportcreated"]); ?>");
         </script>
         <?php
     
@@ -84,7 +84,7 @@ if (getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false))
         {
         ?>
         <script type="text/javascript">
-        alert("<?php echo $lang["report-select-required"]; ?>");
+        alert("<?php echo escape($lang["report-select-required"]); ?>");
         </script>
         <?php
         }
@@ -98,8 +98,8 @@ if($delete != '')
         delete_periodic_report($delete);
         ?>
         <div class="BasicsBox">
-            <h1><?php echo $lang['deleted']; ?></h1>
-            <p><?php echo $lang['report_periodic_email_deletion_confirmed']; ?></p>
+            <h1><?php echo escape($lang['deleted']); ?></h1>
+            <p><?php echo escape($lang['report_periodic_email_deletion_confirmed']); ?></p>
         </div>
         <?php
         }
@@ -107,16 +107,16 @@ if($delete != '')
         {
         ?>
         <div class="BasicsBox">
-            <h2><?php echo $lang['report_periodic_email_delete_title']; ?></h2>
+            <h2><?php echo escape($lang['report_periodic_email_delete_title']); ?></h2>
             <form method="post" action="<?php echo $baseurl_short; ?>pages/team/team_report.php?delete=<?php echo urlencode($delete); ?>">
                 <?php generateFormToken("delete_periodic_report"); ?>
                 <div class="Question">
-                    <label for="delete_confirmed"><?php echo $lang['report_periodic_email_delete_confirmation']; ?></label>
+                    <label for="delete_confirmed"><?php echo escape($lang['report_periodic_email_delete_confirmation']); ?></label>
                     <input id="delete_confirmed" type="checkbox" name="delete_confirmed" value="yes" />
                     <div class="clearerleft"></div>
                 </div>
                 <div class="QuestionSubmit">
-                    <input name="save" type="submit" value="<?php echo $lang['comments_submit-button-label']; ?>" />
+                    <input name="save" type="submit" value="<?php echo escape($lang['comments_submit-button-label']); ?>" />
                 </div>
             </form>
         </div>
@@ -136,8 +136,8 @@ if($unsubscribe != '')
         unsubscribe_user_from_periodic_report($unsubscribe_user, $unsubscribe);
         ?>
         <div class="BasicsBox">
-            <h1><?php echo $lang["unsubscribed"]; ?></h1>
-            <p><?php echo $lang["youhaveunsubscribedreport"]; ?></p>
+            <h1><?php echo escape($lang["unsubscribed"]); ?></h1>
+            <p><?php echo escape($lang["youhaveunsubscribedreport"]); ?></p>
         </div>
         <?php
         }
@@ -145,16 +145,16 @@ if($unsubscribe != '')
         {
         ?>
         <div class="BasicsBox">
-            <h2><?php echo $lang['report_periodic_email_unsubscribe_title']; ?></h2>
+            <h2><?php echo escape($lang['report_periodic_email_unsubscribe_title']); ?></h2>
             <form method="post" action="<?php echo $baseurl_short; ?>pages/team/team_report.php?unsubscribe=<?php echo urlencode($unsubscribe); ?>">
                 <?php generateFormToken("unsubscribe_user_from_periodic_report"); ?>
                 <div class="Question">
-                    <label for="unsubscription_confirmed"><?php echo $lang['report_periodic_email_unsubscribe_confirmation']; ?></label>
+                    <label for="unsubscription_confirmed"><?php echo escape($lang['report_periodic_email_unsubscribe_confirmation']); ?></label>
                     <input id="unsubscription_confirmed" type="checkbox" name="unsubscription_confirmed" value="yes" />
                     <div class="clearerleft"></div>
                 </div>
                 <div class="QuestionSubmit">
-                    <input name="save" type="submit" value="<?php echo $lang['comments_submit-button-label']; ?>" />
+                    <input name="save" type="submit" value="<?php echo escape($lang['comments_submit-button-label']); ?>" />
                 </div>
             </form>
         </div>
@@ -166,7 +166,7 @@ else
     # Normal behaviour.
     ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang['viewreports']; ?></h1>
+    <h1><?php echo escape($lang['viewreports']); ?></h1>
     <?php
     if($run_report_on_search_results)
         {
@@ -243,9 +243,9 @@ else
             }
         }
     </script>
-<label for="report"><?php echo $lang["viewreport"]; ?></label>
+<label for="report"><?php echo escape($lang["viewreport"]); ?></label>
 <select id="report" name="report" class="stdwidth" onchange="show_hide_date(); update_view_as_search_results_btn(this);">
-    <option value="" selected disabled hidden><?php echo $lang['select']; ?></option>
+    <option value="" selected disabled hidden><?php echo escape($lang['select']); ?></option>
 <?php
 foreach($report_options as $report_opt)
     {
@@ -276,7 +276,7 @@ foreach($report_options as $report_opt)
 <!-- E-mail Me function -->
 <div id="EmailMe" <?php if ($period_init==-1) { ?>style="display:none;"<?php } ?>>
     <div class="Question">
-        <label for="email"><?php echo $lang['emailperiodically']; ?></label>
+        <label for="email"><?php echo escape($lang['emailperiodically']); ?></label>
         <input type="checkbox" onClick="
         if (this.checked)
             {
@@ -312,7 +312,7 @@ foreach($report_options as $report_opt)
            <br />
            <br />
            <label for="report_for_me_only">
-                <input id="report_for_me_only" type="radio" name="report_receiver" value="user_only" onClick="document.getElementById('user_group_selection').style.display = 'none';" checked /> <?php echo $lang['report_periodic_email_option_me']; ?>
+                <input id="report_for_me_only" type="radio" name="report_receiver" value="user_only" onClick="document.getElementById('user_group_selection').style.display = 'none';" checked /> <?php echo escape($lang['report_periodic_email_option_me']); ?>
            </label>
            <?php
             if (checkperm('m'))
@@ -320,7 +320,7 @@ foreach($report_options as $report_opt)
                 ?>
                 <br />
                 <label for="selected_user_groups">
-                    <input id="selected_user_groups" type="radio" name="report_receiver" value="specific_user_groups" onClick="document.getElementById('user_group_selection').style.display = 'block';" /> <?php echo $lang['report_periodic_email_option_selected_user_groups']; ?>
+                    <input id="selected_user_groups" type="radio" name="report_receiver" value="specific_user_groups" onClick="document.getElementById('user_group_selection').style.display = 'block';" /> <?php echo escape($lang['report_periodic_email_option_selected_user_groups']); ?>
                 </label>
                 <?php
                 render_user_group_multi_select('user_group_selection', array(), 10, 'display: none;');

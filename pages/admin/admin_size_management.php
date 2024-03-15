@@ -31,7 +31,7 @@ $sql.=" ORDER BY {$order_by}";
 $sizes=ps_query($sql,$params);
 
 ?><div class="BasicsBox"> 
-    <h1><?php echo $lang["page-title_size_management"]; ?></h1>
+    <h1><?php echo escape($lang["page-title_size_management"]); ?></h1>
     <?php
     $links_trail = array(
         array(
@@ -46,7 +46,7 @@ $sizes=ps_query($sql,$params);
 
     renderBreadcrumbs($links_trail);
     ?>
-    <p><?php echo $lang['page-subtitle_size_management'];render_help_link('systemadmin/manage_sizes'); ?></p>
+    <p><?php echo escape($lang['page-subtitle_size_management']);render_help_link('systemadmin/manage_sizes'); ?></p>
 
 <?php
 function addColumnHeader($orderName, $labelKey)
@@ -77,7 +77,7 @@ function addColumnHeader($orderName, $labelKey)
                 <?php addColumnHeader("name", "property-name"); ?>
                 <?php addColumnHeader("width", "property-width"); ?>
                 <?php addColumnHeader("height", "property-height"); ?>
-                <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+                <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
             </tr>
 <?php
         foreach ($sizes as $size)
@@ -116,7 +116,7 @@ function addColumnHeader($orderName, $labelKey)
     if ($edit_url != "")
     {
 ?>                  <div class="ListTools">
-                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a>
+                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
                     </div>
 <?php
     }
@@ -132,9 +132,9 @@ function addColumnHeader($orderName, $labelKey)
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_size_management.php" onSubmit="return CentralSpacePost(this,false);">
         <?php generateFormToken("admin_size_management"); ?>
         <div class="Question">
-            <label for="find"><?php echo $lang["property-search_filter"]; ?></label>
+            <label for="find"><?php echo escape($lang["property-search_filter"]); ?></label>
             <input name="find" type="text" class="medwidth" value="<?php echo escape($find); ?>">
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;">
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;">
             <div class="clearerleft"></div>
         </div>
 <?php
@@ -142,7 +142,7 @@ function addColumnHeader($orderName, $labelKey)
         ?>
         <div class="QuestionSubmit">
             <input name="buttonsave" type="button" onclick="CentralSpaceLoad('admin_size_management.php',false);"
-                   value="&nbsp;&nbsp;<?php echo $lang["clearbutton"]; ?>&nbsp;&nbsp;">
+                   value="&nbsp;&nbsp;<?php echo escape($lang["clearbutton"]); ?>&nbsp;&nbsp;">
         </div>
 <?php
     }
@@ -153,13 +153,13 @@ function addColumnHeader($orderName, $labelKey)
     <form method="post" action="<?php echo $baseurl_short; ?>pages/admin/admin_size_management_edit.php" onSubmit="return CentralSpacePost(this,false);">
         <?php generateFormToken("admin_size_management_edit"); ?>
         <div class="Question">
-            <label for="name"><?php echo $lang['action-title_create_size_with_id']; ?></label>
+            <label for="name"><?php echo escape($lang['action-title_create_size_with_id']); ?></label>
             <div class="tickset">
                 <div class="Inline">
                     <input name="newsizeid" type="text" value="" class="shrtwidth" maxlength="3">
                 </div>
                 <div class="Inline">
-                    <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]; ?>&nbsp;&nbsp;" onclick="return (this.form.elements[0].value!='');">
+                    <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"]); ?>&nbsp;&nbsp;" onclick="return (this.form.elements[0].value!='');">
                 </div>
             </div>
             <div class="clearerleft"></div>

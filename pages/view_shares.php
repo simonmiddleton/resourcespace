@@ -12,8 +12,8 @@ include "../include/header.php";
 
 ?>
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["managecollectionslink"]; ?></a></p>  
-<h1><?php echo $lang["shared_collections"];render_help_link("user/sharing-resources");?></h1>
+<p><a href="<?php echo $baseurl_short?>pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["managecollectionslink"]); ?></a></p>  
+<h1><?php echo escape($lang["shared_collections"]);render_help_link("user/sharing-resources");?></h1>
 <?php
 
 $collections=get_user_collections($userref,"!shared");
@@ -46,15 +46,15 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
             <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
                 <tr class="ListviewBoxedTitleStyle">
                     <td width="15%">
-                    <?php echo $lang["sharedwith"]; ?>
+                    <?php echo escape($lang["sharedwith"]); ?>
                     </td>
                     <td width="15%">
-                    <?php echo  $lang["access"]; ?>
+                    <?php echo escape($lang["access"]); ?>
                     </td>
                     <td width="40%">
-                    <?php echo $lang["fieldtitle-notes"]; ?>
+                    <?php echo escape($lang["fieldtitle-notes"]); ?>
                     </td>
-                    <td width="30%"><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+                    <td width="30%"><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
                 </tr>
             <?php
             // Display row for each share/attached user

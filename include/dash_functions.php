@@ -465,7 +465,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
         }
 
     $order=10;
-    if(count($tiles)==0){echo $lang["nodashtilefound"];exit;}
+    if(count($tiles)==0){echo escape($lang["nodashtilefound"]);exit;}
     foreach($tiles as $tile)
         {
         $contents_tile_class = '';
@@ -569,7 +569,7 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                 jQuery(function() {
                     if(is_touch_device())
                         {
-                        jQuery("#HomePanelContainer").prepend("<p><?php echo $lang["dashtilesmalldevice"];?></p>");
+                        jQuery("#HomePanelContainer").prepend("<p><?php echo escape($lang["dashtilesmalldevice"]);?></p>");
                         return false;
                         }
                      jQuery("#HomePanelContainer").sortable({
@@ -599,16 +599,16 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                             jQuery("#dash_tile_bin").hide();
                             if(jQuery("#tile"+id).hasClass("conftile")) {
                                 jQuery("#delete_permanent_dialog").dialog({
-                                    title:'<?php echo $lang["dashtiledelete"]; ?>',
+                                    title:'<?php echo escape($lang["dashtiledelete"]); ?>',
                                     modal: true,
                                     resizable: false,
                                     dialogClass: 'delete-dialog no-close',
                                     buttons: {
-                                        "<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {
+                                        "<?php echo escape($lang['confirmdefaultdashtiledelete']); ?>": function() {
                                                 jQuery(this).dialog("close");
                                                 deleteDefaultDashTile(id);
                                             },    
-                                        "<?php echo $lang['cancel']; ?>": function() { 
+                                        "<?php echo escape($lang['cancel']); ?>": function() { 
                                                 jQuery(this).dialog('close');
                                             }
                                     }
@@ -616,13 +616,13 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                                 return;
                             }
                             jQuery("#trash_bin_delete_dialog").dialog({
-                                title:'<?php echo $lang["dashtiledelete"]; ?>',
+                                title:'<?php echo escape($lang["dashtiledelete"]); ?>',
                                 modal: true,
                                 resizable: false,
                                 dialogClass: 'delete-dialog no-close',
                                 buttons: {
-                                    "<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {jQuery(this).dialog("close");deleteDefaultDashTile(id); },    
-                                    "<?php echo $lang['cancel']; ?>": function() { jQuery(this).dialog('close'); }
+                                    "<?php echo escape($lang['confirmdefaultdashtiledelete']); ?>": function() {jQuery(this).dialog("close");deleteDefaultDashTile(id); },    
+                                    "<?php echo escape($lang['cancel']); ?>": function() { jQuery(this).dialog('close'); }
                                 }
                             });
                         }
@@ -1351,19 +1351,19 @@ function render_delete_dialog_JS($all_users=false)
     global $baseurl, $lang;
     ?>
     jQuery("#trash_bin_delete_dialog").dialog({
-        title:'<?php echo $lang["dashtiledelete"]; ?>',
+        title:'<?php echo escape($lang["dashtiledelete"]); ?>',
         autoOpen: true,
         modal: true,
         resizable: false,
         dialogClass: 'delete-dialog no-close',
         buttons: {
-            "<?php echo $lang['confirmdashtiledelete']; ?>": function() {deleteDashTile(usertileid); jQuery(this).dialog( "close" );},
+            "<?php echo escape($lang['confirmdashtiledelete']); ?>": function() {deleteDashTile(usertileid); jQuery(this).dialog( "close" );},
             <?php if($all_users){
             ?>
-            "<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {deleteDefaultDashTile(tileid,usertileid); jQuery(this).dialog( "close" );},
-            "<?php echo $lang['managedefaultdash']; ?>": function() {window.location = "<?php echo $baseurl; ?>/pages/team/team_dash_tile.php"; return false;},
+            "<?php echo escape($lang['confirmdefaultdashtiledelete']); ?>": function() {deleteDefaultDashTile(tileid,usertileid); jQuery(this).dialog( "close" );},
+            "<?php echo escape($lang['managedefaultdash']); ?>": function() {window.location = "<?php echo $baseurl; ?>/pages/team/team_dash_tile.php"; return false;},
             <?php } ?>
-            "<?php echo $lang['cancel']; ?>":  function() { jQuery(this).dialog('close'); }
+            "<?php echo escape($lang['cancel']); ?>":  function() { jQuery(this).dialog('close'); }
         }
     });
     <?php
@@ -1485,7 +1485,7 @@ function build_dash_tile_list($dtiles_available)
                           )
                       )
                       { ?>
-                      <a href="<?php echo $baseurl_short; ?>pages/dash_tile.php?edit=<?php echo $tile['ref'];?>" ><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"];?></a>
+                      <a href="<?php echo $baseurl_short; ?>pages/dash_tile.php?edit=<?php echo $tile['ref'];?>" ><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]);?></a>
                       <?php
                       }
                   ?>
@@ -1726,7 +1726,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
         <div id="DashTileActions_<?php echo substr($tile_id, 18); ?>" class="DashTileActions"  style="display:none;">
         <div class="tool dash-delete_<?php echo substr($tile_id, 18); ?>">
             <a href="#">
-                <span><?php echo LINK_CARET ?><?php echo $lang['action-delete']; ?></span>
+                <span><?php echo LINK_CARET ?><?php echo escape($lang['action-delete']); ?></span>
             </a>
         </div>
         <?php
@@ -1735,7 +1735,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
             ?>
             <div class="tool edit">
                 <a href="<?php echo $editlink ?>" onClick="return CentralSpaceLoad(this,true);">
-                    <span><?php echo LINK_CARET ?><?php echo $lang['action-edit']; ?></span>
+                    <span><?php echo LINK_CARET ?><?php echo escape($lang['action-edit']); ?></span>
                 </a>
             </div>
             <?php

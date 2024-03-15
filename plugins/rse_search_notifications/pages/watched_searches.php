@@ -99,8 +99,8 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                         <input type="text" name="find" id="find" value="<?php echo escape($find); ?>" maxlength="100" class="shrtwidth">
                     </div>
                     <input type="hidden" name="offset" id="offset" value="0" />
-                    <div class="Inline"><input name="Submit" type="submit" value="<?php echo $lang["searchbutton"]; ?>"></div>
-                    <div class="Inline"><input name="Clear" type="button" onclick="document.getElementById('find').value=''; return CentralSpacePost(this.form,true);" value="<?php echo $lang["clearbutton"]; ?>"></div>
+                    <div class="Inline"><input name="Submit" type="submit" value="<?php echo escape($lang["searchbutton"]); ?>"></div>
+                    <div class="Inline"><input name="Clear" type="button" onclick="document.getElementById('find').value=''; return CentralSpacePost(this.form,true);" value="<?php echo escape($lang["clearbutton"]); ?>"></div>
                 </div>
                 <div class="clearerleft"> </div>
             </div>
@@ -212,7 +212,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                 <td><?php render_sortable_header($lang["columnheader-title"],4); ?></td>
                 <td><?php render_sortable_header($lang["columnheader-last-found"],11); ?></td>
                 <td><?php render_sortable_header($lang["columnheader-enabled"],8); ?></td>
-                <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+                <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
             </tr>
             <?php
             for ($i=$offset; $i<$offset + WATCHED_SEARCHES_ITEMS_PER_PAGE; $i++)
@@ -231,7 +231,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                     <td><?php
                         if ($ws["enabled"])
                             {
-                            echo $lang["yes"];
+                            echo escape($lang["yes"]);
                             ?></td>
                             <td>
                                 <div class="ListTools">
@@ -249,11 +249,11 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                             }
                         else
                             {
-                            echo $lang["no"];
+                            echo escape($lang["no"]);
                             ?></td>
                             <td>
                                 <div class="ListTools">
-                                    <a href="<?php echo $view_search_url; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["searchbutton"]; ?></a>
+                                    <a href="<?php echo $view_search_url; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo escape($lang["searchbutton"]); ?></a>
                                     <a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=enable&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
                                         echo $lang['enable']; ?></a>
                             <?php

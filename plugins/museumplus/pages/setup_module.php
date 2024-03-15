@@ -163,7 +163,7 @@ if(isset($error))
                         </td>
                         <td>
                             <select class="medwidth" name="field_mappings[<?php echo $mapping_index; ?>][rs_field]">
-                                <option value=""><?php echo $lang['select']; ?></option>
+                                <option value=""><?php echo escape($lang['select']); ?></option>
                             <?php
                             foreach($rtfs as $rtf)
                                 {
@@ -177,7 +177,7 @@ if(isset($error))
                             </select>
                         </td>
                         <td>
-                            <button type="button" onclick="museumplus_delete_field_mapping(this);"><?php echo $lang['action-delete']; ?></button>
+                            <button type="button" onclick="museumplus_delete_field_mapping(this);"><?php echo escape($lang['action-delete']); ?></button>
                         </td>
                     </tr>
                     <?php
@@ -193,7 +193,7 @@ if(isset($error))
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">
-            <input type="submit" name="save" value="<?php echo $lang["save"]; ?>">
+            <input type="submit" name="save" value="<?php echo escape($lang["save"]); ?>">
         </div>
     </form>  <!-- end of MplusModuleConfigForm -->
 </div> <!-- end of BasicBox -->
@@ -207,7 +207,7 @@ function museumplus_add_new_field_mapping(element)
     new_row_html += '<tr>';
     new_row_html += '<td><input class="medwidth" type="text" name="field_mappings[' + row_index + '][field_name]" value=""></td>';
     new_row_html += '<td><select class="medwidth" name="field_mappings[' + row_index + '][rs_field]">';
-    new_row_html += '<option value=""><?php echo $lang['select']; ?></option>';
+    new_row_html += '<option value=""><?php echo escape($lang['select']); ?></option>';
     <?php
     foreach($rtfs as $rtf)
         {
@@ -218,7 +218,7 @@ function museumplus_add_new_field_mapping(element)
         }
     ?>
     new_row_html += '</select></td>';
-    new_row_html += '<td><button type="button" onclick="museumplus_delete_field_mapping(this);"><?php echo $lang['action-delete']; ?></button></td>';
+    new_row_html += '<td><button type="button" onclick="museumplus_delete_field_mapping(this);"><?php echo escape($lang['action-delete']); ?></button></td>';
     new_row_html += '</tr>';
     jQuery(new_row_html).insertBefore(jQuery(button).closest('tr'));
 

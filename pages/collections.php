@@ -1160,7 +1160,7 @@ if (count($addarray)>0 && $addarray[0]!="")
                 if ($min_access!=0)
                     {
                     ?>
-                    <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo   $lang["requestall"]; ?></a></li>
+                    <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo escape($lang["requestall"]); ?></a></li>
                     <?php
                     }
                 }?>

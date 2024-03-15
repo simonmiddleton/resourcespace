@@ -215,7 +215,7 @@ renderBreadcrumbs($links_trail);
     </div>
     
     <div class="Question" id="QuestionSubmit">
-    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" onclick="event.preventDefault();SaveWorkflowAction();"/>
+    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" onclick="event.preventDefault();SaveWorkflowAction();"/>
     </div>
 </form>
     <div class="clearerleft"> </div>

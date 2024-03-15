@@ -282,10 +282,10 @@ if (!hook("replaceslideshow"))
             <div class="HomePanel">
                 <div class="HomePanelIN HomePanelThemes <?php if (count($home_collections)>0) { ?> HomePanelMatchPromotedHeight<?php } ?>">
                 <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collections_featured.php">
-                <h2 style="padding: 0px 15px 0 44px;margin-top: 26px;margin-left: 15px;"><?php echo $lang["themes"]; ?></h2></a>
+                <h2 style="padding: 0px 15px 0 44px;margin-top: 26px;margin-left: 15px;"><?php echo escape($lang["themes"]); ?></h2></a>
                 <p style="text-shadow: none;">
                     <select id="themeselect" onChange="CentralSpaceLoad(this.value,true);">
-                    <option value=""><?php echo $lang["select"]; ?></option>
+                    <option value=""><?php echo escape($lang["select"]); ?></option>
                     <?php
                     foreach(get_featured_collection_categories(0, array()) as $header)
                         {
@@ -294,7 +294,7 @@ if (!hook("replaceslideshow"))
                         <?php
                         } ?>
                     </select>
-                    <a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>"><?php echo LINK_CARET ?><?php echo $lang["viewall"]; ?></a>
+                    <a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>"><?php echo LINK_CARET ?><?php echo escape($lang["viewall"]); ?></a>
                 </p>
                 </div>
                 

@@ -53,7 +53,7 @@ include "../../include/header.php";
     <div id="CentralSpace">
 
         <div class="BasicsBox">
-            <h1><?php echo $lang["filter_manage"]; ?></h1>
+            <h1><?php echo escape($lang["filter_manage"]); ?></h1>
             <?php
             $links_trail = array(
                 array(
@@ -75,11 +75,11 @@ include "../../include/header.php";
             <tbody>
                 <tr class="ListviewTitleStyle">
                     <td>
-                        <a href="<?php echo generateURL($filter_manage_url,$params, array("filterorder"=>"ref", "sort"=> $revsort)); ?>" onclick="return CentralSpaceLoad(this);"><?php echo $lang['property-reference']; ?></a>
+                        <a href="<?php echo generateURL($filter_manage_url,$params, array("filterorder"=>"ref", "sort"=> $revsort)); ?>" onclick="return CentralSpaceLoad(this);"><?php echo escape($lang['property-reference']); ?></a>
                     </td>
-                    <td><a href="<?php echo generateURL($filter_manage_url,$params, array("filterorder"=>"name", "sort"=> $revsort)); ?>" onclick="return CentralSpaceLoad(this);"><?php echo $lang['property-name']; ?></a>
+                    <td><a href="<?php echo generateURL($filter_manage_url,$params, array("filterorder"=>"name", "sort"=> $revsort)); ?>" onclick="return CentralSpaceLoad(this);"><?php echo escape($lang['property-name']); ?></a>
                     </td>
-                    <td><div class="ListTools"><?php echo $lang['tools']; ?></div></td>
+                    <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
                 </tr>
 
             <?php
@@ -103,7 +103,7 @@ include "../../include/header.php";
                             onClick='
                                     event.preventDefault();
             
-                                    if(confirm("<?php echo $lang["confirm-deletion"]; ?>"))
+                                    if(confirm("<?php echo escape($lang["confirm-deletion"]); ?>"))
                                         {
                                         var post_data = {
                                             ajax: true,
@@ -157,10 +157,10 @@ include "../../include/header.php";
                 <input type="hidden" id="form_copy_from" name="copy_from" value="" />
                 <input type="hidden" name="save" value="true" />
                 <div class="Question">
-                    <label for="filter_name"><?php echo $lang["filter_create_name"]; ?></label>
+                    <label for="filter_name"><?php echo escape($lang["filter_create_name"]); ?></label>
                     <div class="tickset">
                     <div class="Inline"><input type=text name="filter_name" id="filter_name" maxlength="100" class="shrtwidth" /></div>
-                    <div class="Inline"><input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]; ?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" /></div>
+                    <div class="Inline"><input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"]); ?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" /></div>
                     </div>
                     <div class="clearerleft"> </div>
                 </div>

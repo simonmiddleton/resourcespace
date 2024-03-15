@@ -93,7 +93,7 @@ function sendMessage()
         'text': messagetext,
         }
 
-    if(users.length == 1 && users[0].indexOf('<?php echo $lang["group"]; ?>: ') == -1 && msgto == 0)
+    if(users.length == 1 && users[0].indexOf('<?php echo escape($lang["group"]); ?>: ') == -1 && msgto == 0)
         {
         // Get details of selected recipient to reload and show conversation
         touser = api("get_users",{'find':  users[0],'exact_username_match': true},function(response)
@@ -249,11 +249,11 @@ renderBreadcrumbs($links_trail);
     echo "<div class='clearer'> </div>";
     echo "</div>";
     ?>
-    <div class="Question"><label><?php echo $lang["message"]; ?></label>
+    <div class="Question"><label><?php echo escape($lang["message"]); ?></label>
         <textarea id="messagetext" name="messagetext" class="stdwidth Inline required" rows=5 cols=50></textarea>
         <div class="clearerleft"> </div></div>
     <div class="QuestionSubmit">        
-    <input name="send" type="submit" value="&nbsp;&nbsp;<?php echo $lang["send"]; ?>&nbsp;&nbsp;" onclick="sendMessage();return false;"/>
+    <input name="send" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["send"]); ?>&nbsp;&nbsp;" onclick="sendMessage();return false;"/>
     </div>
     </form>
 </div>

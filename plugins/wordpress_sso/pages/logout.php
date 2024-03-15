@@ -17,7 +17,7 @@ include "../../../include/header.php";
 <h2><?php echo $lang["wordpress_sso_loggedout"]; ?></h2>
 <br>
 <p>
-<a class="" id="link" href="<?php echo $wordpress_sso_url ?>/wp-login.php?action=logout">&gt;&nbsp;<?php echo $lang["logout"] ;?></a>
+<a class="" id="link" href="<?php echo $wordpress_sso_url ?>/wp-login.php?action=logout">&gt;&nbsp;<?php echo escape($lang["logout"]);?></a>
 </p>
 </div>
 <script type="text/javascript">

@@ -8,7 +8,7 @@ if (!$metadata_report) {exit("This function is not enabled.");}
 $exiftool_fullpath = get_utility_path("exiftool");
 if ($exiftool_fullpath==false)
     {
-    echo $lang["exiftoolnotfound"];
+    echo escape($lang["exiftoolnotfound"]);
     }
 else
     {

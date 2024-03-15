@@ -28,15 +28,15 @@ $jumpcount=1;
 
 ?>
 <div class="BasicsBox">
-<?php if ($backurl!="none"){?><p><a href="<?php echo $backurl?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["manageusers"]; ?></a></p><?php } ?>
+<?php if ($backurl!="none"){?><p><a href="<?php echo $backurl?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["manageusers"]); ?></a></p><?php } ?>
 <?php if (!hook("replaceuserlogheader")){?><h1><?php echo $lang["userlog"] . ": " . $userdata["fullname"]; ?></h1><?php } ?>
 <div class="TopInpageNav">
-<div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]; ?>:
+<div class="InpageNavLeftBlock"><?php echo escape($lang["resultsdisplay"]); ?>:
     <?php 
     for($n=0;$n<count($list_display_array);$n++){?>
     <?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]; ?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=<?php echo $list_display_array[$n]; ?>"><?php echo $list_display_array[$n]; ?></a><?php } ?>&nbsp;|
     <?php } ?>
-    <?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]; ?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=99999"><?php echo $lang["all"]; ?></a><?php } ?>
+    <?php if ($per_page==99999){?><span class="Selected"><?php echo escape($lang["all"]); ?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=99999"><?php echo escape($lang["all"]); ?></a><?php } ?>
     </div> <?php pager(false); ?></div>
 
 
@@ -44,12 +44,12 @@ $jumpcount=1;
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <!--Title row-->    
 <tr class="ListviewTitleStyle">
-<td><?php echo $lang["date"]; ?></td>
+<td><?php echo escape($lang["date"]); ?></td>
 <?php hook("user_log_before_userid");?>
-<td><?php echo $lang["resourceid"]; ?></td>
+<td><?php echo escape($lang["resourceid"]); ?></td>
 <?php if (!hook("replaceuserlogtitleheader")){?><td><?php $field=get_fields(array($view_title_field)); if(isset($field[0])){echo lang_or_i18n_get_translated($field[0]["title"], "fieldtitle-");}?></td><?php } ?>
-<td><?php echo $lang["action"]; ?></td>
-<td><?php echo $lang["field"]; ?></td>
+<td><?php echo escape($lang["action"]); ?></td>
+<td><?php echo escape($lang["field"]); ?></td>
 <?php hook("adduserlogcolumnheader");?>
 </tr>
 

@@ -17,7 +17,7 @@
                 <li class="HeaderLink">
                     <a href="<?php echo $baseurl?>/pages/search_advanced.php" onClick="return CentralSpaceLoad(this,true);">
                         <i aria-hidden="true" class="fa fa-fw fa-search-plus"></i>
-                        <?php echo $lang["advancedsearch"]; ?>
+                        <?php echo escape($lang["advancedsearch"]); ?>
                     </a>
                 </li>
             <?php } ?>
@@ -27,12 +27,12 @@
                 <?php if((checkperm("s")) &&  ((isset($_COOKIE["search_form_submit"]) )   || (isset($_COOKIE["search"]) && strlen($_COOKIE["search"])>0) || (isset($search) && (strlen($search)>0) && (strpos($search,"!")===false)))) { # active search present ?>
                         <a href="<?php echo $baseurl?>/pages/search.php" onClick="return CentralSpaceLoad(this,true);">
                             <i aria-hidden="true" class="fa fa-fw fa-search"></i>
-                            <?php echo $lang["searchresults"]; ?>
+                            <?php echo escape($lang["searchresults"]); ?>
                         </a>
 <?php } else { ?>
                     <a class="SearchResultsDisabled">
                         <i aria-hidden="true" class="fa fa-fw fa-search"></i>
-                        <?php echo $lang["searchresults"]; ?>
+                        <?php echo escape($lang["searchresults"]); ?>
                     </a>
                     <?php } ?>
                 </li>
@@ -51,7 +51,7 @@
             <?php if (checkperm("s") && ($public_collections_top_nav || $public_collections_header_only)) { ?>
                 <li class="HeaderLink">
                     <a href="<?php echo $baseurl?>/pages/collection_public.php" onClick="return CentralSpaceLoad(this,true);">
-                        <?php echo $lang["publiccollections"]; ?>
+                        <?php echo escape($lang["publiccollections"]); ?>
                     </a>
                 </li>
             <?php } ?>
@@ -59,7 +59,7 @@
             <?php if (checkperm("s") && $mycollections_link && !checkperm("b")) { ?>
                 <li class="HeaderLink">
                     <a href="<?php echo $baseurl?>/pages/collection_manage.php" onClick="return CentralSpaceLoad(this,true);">
-                        <?php echo $lang["mycollections"]; ?>
+                        <?php echo escape($lang["mycollections"]); ?>
                     </a>
                 </li>
             <?php } ?>
@@ -94,7 +94,7 @@
             <?php if (checkperm("s") && $myrequests_link && checkperm("q")) { ?>
                 <li class="HeaderLink">
                     <a href="<?php echo $baseurl?>/pages/requests.php" onClick="return CentralSpaceLoad(this,true);">
-                        <?php echo $lang["myrequests"]; ?>
+                        <?php echo escape($lang["myrequests"]); ?>
                     </a>
                 </li>
             <?php } ?>
@@ -113,7 +113,7 @@
                 <?php if (($research_request) && ($research_link) && (checkperm("s")) && (checkperm("q"))) { ?>
                     <li class="HeaderLink">
                         <a href="<?php echo $baseurl?>/pages/research_request.php" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo $lang["researchrequest"]; ?>
+                            <?php echo escape($lang["researchrequest"]); ?>
                         </a>
                     </li>
                 <?php } ?>
@@ -171,7 +171,7 @@
             <?php global $nav2contact_link; if ($nav2contact_link) { ?>
                 <li class="HeaderLink">
                     <a href="<?php echo $baseurl?>/pages/contact.php" onClick="return CentralSpaceLoad(this,true);">
-                        <?php echo $lang["contactus"]; ?>
+                        <?php echo escape($lang["contactus"]); ?>
                     </a>
                 </li>
             <?php }

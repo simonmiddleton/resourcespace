@@ -36,8 +36,8 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
 <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
 
 <div class="BasicsBox">
-    <h1><?php echo $lang["filter_rule_add"]; ?></h1>
-    <h2><?php echo $lang["filter_rule_edit_text"]; ?></h2>
+    <h1><?php echo escape($lang["filter_rule_add"]); ?></h1>
+    <h2><?php echo escape($lang["filter_rule_edit_text"]); ?></h2>
     <form id="filter_edit_form" name="filter_edit_form" method="post" action="<?php echo $saveurl; ?>" onSubmit="processFilterRules();return CentralSpacePost(this,true);">
     <input type="hidden" name="filter_rule" value="<?php echo $ruleid; ?>" />
     <input type="hidden" name="filter" value="<?php echo $filterid; ?>" />
@@ -52,7 +52,7 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
         ?>
         <div class="Question filter_rule_question">
         <select name="filter_rule_field" id="filter_rule_field" style="width:300px" onChange="updateFieldOptions(jQuery(this).parent());">
-            <option value='0' ><?php echo $lang["select"]; ?></option>
+            <option value='0' ><?php echo escape($lang["select"]); ?></option>
             <?php
             
             foreach($allfields as $field)
@@ -67,8 +67,8 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
         </select>
 
         <select name="filter_rule_node_condition[]" class="filter_rule_node_condition" id="filter_rule_node_condition" style="width:150px">
-            <option value="0" <?php if($filter_line['node_condition']==0){echo 'selected';}?> ><?php echo $lang["filter_is_not_in"]; ?></option>
-            <option value="1" <?php if($filter_line['node_condition']==1){echo 'selected';}?> ><?php echo $lang["filter_is_in"]; ?></option>
+            <option value="0" <?php if($filter_line['node_condition']==0){echo 'selected';}?> ><?php echo escape($lang["filter_is_not_in"]); ?></option>
+            <option value="1" <?php if($filter_line['node_condition']==1){echo 'selected';}?> ><?php echo escape($lang["filter_is_in"]); ?></option>
         </select>
         
         <select name='filter_rule_nodes[]' class='filter_rule_nodes' multiple='multiple' size='7' style='width:420px'>
@@ -94,7 +94,7 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
 
     <div class="Question filter_rule_question">
         <select name="filter_rule_field" id="filter_rule_field" style="width:300px" onChange="updateFieldOptions(jQuery(this).parent());">
-            <option value='0' ><?php echo $lang["select"]; ?></option>
+            <option value='0' ><?php echo escape($lang["select"]); ?></option>
             <?php
             foreach($allfields as $field)
                 {
@@ -107,12 +107,12 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
         </select>
 
         <select name="filter_rule_node_condition[]" class="filter_rule_node_condition" id="filter_rule_node_condition" style="width:150px">
-            <option value="0" selected ><?php echo $lang["filter_is_not_in"]; ?></option>
-            <option value="1" ><?php echo $lang["filter_is_in"]; ?></option>
+            <option value="0" selected ><?php echo escape($lang["filter_is_not_in"]); ?></option>
+            <option value="1" ><?php echo escape($lang["filter_is_in"]); ?></option>
         </select>
         
         <select name='filter_rule_nodes[]' class='filter_rule_nodes' multiple='multiple' size='7' style='width:420px'>
-            <option value='0' ><?php echo $lang["select"]; ?></option>
+            <option value='0' ><?php echo escape($lang["select"]); ?></option>
         </select>
         
     </div>
@@ -128,7 +128,7 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
 
     <div class="Question">
         <label for="ruleadd"></label>
-        <input name="ruleadd" type="submit" value="&nbsp;&nbsp;<?php if($ruleid!="new"){echo $lang["filter_rule_save"];}else{echo $lang["filter_rule_add"];} ?>&nbsp;&nbsp;">
+        <input name="ruleadd" type="submit" value="&nbsp;&nbsp;<?php if($ruleid!="new"){echo escape($lang["filter_rule_save"]);}else{echo escape($lang["filter_rule_add"]);} ?>&nbsp;&nbsp;">
     <div class="clearerleft"></div>
     </div>
 

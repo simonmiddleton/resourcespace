@@ -234,7 +234,7 @@ if (!isset($userref))
 <div class="QuestionSubmit">
 <?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><br /><?php } ?>
 <label style="width:250px;" for="buttons"> </label>         
-<input name="send" type="submit" onclick="return CentralSpacePost(this,true);" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $lang["send"]; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
+<input name="send" type="submit" onclick="return CentralSpacePost(this,true);" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo escape($lang["send"]); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" />
 </div>
 </form>
 <?php } ?>

@@ -117,7 +117,7 @@ elseif (isset($message))
         <input type="hidden" name="access" value="<?php echo escape((string)$access) ?>" />
         <input type="hidden" name="sort" value="<?php echo escape((string)$sort) ?>" />
         
-        <h1><?php echo $lang["csvExportResultsMetadata"];render_help_link("user/csv_export");?></h1>
+        <h1><?php echo escape($lang["csvExportResultsMetadata"]);render_help_link("user/csv_export");?></h1>
 
 
         <div class="Question" id="question_personal">
@@ -133,7 +133,7 @@ elseif (isset($message))
         </div>
 
         <div class="Question" >
-            <label for="process_offline"><?php echo $lang["csv_export_offline_option"]; ?></label>
+            <label for="process_offline"><?php echo escape($lang["csv_export_offline_option"]); ?></label>
             <?php 
             if($offline_job_queue)
                 {
@@ -149,7 +149,7 @@ elseif (isset($message))
 
         <div class="QuestionSubmit">       
             <input type="hidden" name="submit" value="true" />  
-            <input name="submit" type="submit" id="submit" value="&nbsp;&nbsp;<?php echo $lang["action-download"]; ?>&nbsp;&nbsp;" />
+            <input name="submit" type="submit" id="submit" value="&nbsp;&nbsp;<?php echo escape($lang["action-download"]); ?>&nbsp;&nbsp;" />
         </div>
 
     </form>

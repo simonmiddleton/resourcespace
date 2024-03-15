@@ -136,16 +136,16 @@ $links_trail = array(
 
 renderBreadcrumbs($links_trail);
 ?>
-    <p><?php echo $lang['page-subtitle_user_group_permissions_edit']; render_help_link("systemadmin/all-user-permissions");?></p>   
+    <p><?php echo escape($lang['page-subtitle_user_group_permissions_edit']); render_help_link("systemadmin/all-user-permissions");?></p>   
     <?php if(getval("submitted", false) == true){?><div class="PageInformal"><?php echo escape($lang['changessaved']);?></div><?php }?>
     <form method="post" id="copypermissions" action="<?php echo $admin_group_permissions_url; ?>" onsubmit="return CentralSpacePost(this,true);">   
         <?php generateFormToken("permissions"); ?>
         <input type="hidden" name="save" value="1">
 
         <div class="BasicsBox">
-            <label><?php echo $lang["copypermissions"];?></label>
+            <label><?php echo escape($lang["copypermissions"]);?></label>
             <input type="text" name="copyfrom">
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["copy"]; ?>&nbsp;&nbsp;" onClick="return confirm('<?php echo $lang["confirmcopypermissions"]; ?>');">
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["copy"]); ?>&nbsp;&nbsp;" onClick="return confirm('<?php echo escape($lang["confirmcopypermissions"]); ?>');">
         </div>
     </form>
 
@@ -202,7 +202,7 @@ DrawOption("q", $lang["can_make_resource_requests"], false);
 DrawOption("w", $lang["show_watermarked_previews_and_thumbnails"]);
 
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo $lang["metadatafields"]; ?></td>
+                    <td colspan=3 class="permheader"><?php echo escape($lang["metadatafields"]); ?></td>
                 </tr>
 <?php
 
@@ -246,7 +246,7 @@ foreach ($fields as $field)
     }
 
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo $lang["resourcetypes"]; ?></td>
+                    <td colspan=3 class="permheader"><?php echo escape($lang["resourcetypes"]); ?></td>
                 </tr>
 <?php
 
@@ -293,7 +293,7 @@ if (in_array("XE",$permissions))
         }
 
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo $lang["resource_creation_and_management"]; ?></td>
+                    <td colspan=3 class="permheader"><?php echo escape($lang["resource_creation_and_management"]); ?></td>
                 </tr>
 <?php
 
@@ -363,7 +363,7 @@ DrawOption("J", $lang["display_only_resources_within_accessible_themes"]);
 # ---------- End of Dash Tiles
 
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo $lang["administration"]; ?></td>
+                    <td colspan=3 class="permheader"><?php echo escape($lang["administration"]); ?></td>
                 </tr>
 <?php
 
@@ -396,7 +396,7 @@ else
     }
 DrawOption('ex', $lang['permission_manage_external_shares']);
 ?>              <tr class="ListviewTitleStyle">
-                    <td colspan=3 class="permheader"><?php echo $lang["other"]; ?></td>
+                    <td colspan=3 class="permheader"><?php echo escape($lang["other"]); ?></td>
                 </tr>
 <?php
 DrawOption("p", $lang["can_change_own_password"], true);
@@ -413,7 +413,7 @@ $custom_permissions = join(",", array_diff($permissions, $permissions_done));
         </div>  <!-- end of Listview -->
 
         <div class="Question">
-            <label for="other"><?php echo $lang["custompermissions"]; ?></label>
+            <label for="other"><?php echo escape($lang["custompermissions"]); ?></label>
             <textarea
                 name="other"
                 class="stdwidth"

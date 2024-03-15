@@ -34,7 +34,7 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
-<p><a href="<?php echo $redirect_url ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
+<p><a href="<?php echo $redirect_url ?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
 
 <h1><?php echo $lang["unlink_consent"]; ?></h1>
 
@@ -43,7 +43,7 @@ include "../../../include/header.php";
 <input type=hidden name="ref" value="<?php echo $ref?>">
 <input type=hidden name="resource" value="<?php echo $resource?>">
 <?php generateFormToken("consentmanager_unlink"); ?>
-<div class="Question"><label><?php echo $lang["resourceid"]; ?></label><div class="Fixed"><?php echo escape($resource)?></div>
+<div class="Question"><label><?php echo escape($lang["resourceid"]); ?></label><div class="Fixed"><?php echo escape($resource)?></div>
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo $lang["consent_id"]; ?></label><div class="Fixed"><?php echo escape($ref)?></div>

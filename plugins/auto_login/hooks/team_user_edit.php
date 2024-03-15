@@ -10,7 +10,7 @@ function HookAuto_loginTeam_user_editAdditionaluserfields()
             if ($user['auto_login_enabled']==1) echo 'checked'; ?> />
         <div class="clearerleft"> </div></div>
     <div class="Question"><label><?php echo $lang["auto_login_ip"]; ?><br/>
-        <?php echo $lang["wildcardpermittedeg"]; ?> 192.168.*</label>
+        <?php echo escape($lang["wildcardpermittedeg"]); ?> 192.168.*</label>
         <input name="auto_login_ip" type="text" class="stdwidth" value="<?php
             echo $user["auto_login_ip"]; ?>">
         <div class="clearerleft"> </div></div>

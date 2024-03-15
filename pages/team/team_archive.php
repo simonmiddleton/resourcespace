@@ -8,7 +8,7 @@ include "../../include/header.php";
 
 
 <div class="BasicsBox"> 
-    <h1><?php echo $lang["managearchiveresources"]; ?></h1>
+    <h1><?php echo escape($lang["managearchiveresources"]); ?></h1>
     <?php
     $links_trail = array(
         array(

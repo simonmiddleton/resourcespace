@@ -181,7 +181,7 @@ button[disabled]{
 }
 </style>
 <div class="BasicsBox">
-    <h1><?php echo $lang["manage_slideshow"]; ?></h1>
+    <h1><?php echo escape($lang["manage_slideshow"]); ?></h1>
     <?php
     $links_trail = array(
         array(
@@ -197,17 +197,17 @@ button[disabled]{
     renderBreadcrumbs($links_trail);
     ?>
 
-    <p><?php echo $lang['manage-slideshow-instructions']; render_help_link("resourceadmin/homepage-slideshow");?></p>
+    <p><?php echo escape($lang['manage-slideshow-instructions']); render_help_link("resourceadmin/homepage-slideshow");?></p>
     <div class="Listview">
         <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="0">
             <tbody>
                 <tr class="ListviewTitleStyle">
-                    <td><?php echo $lang["preview"]; ?></td>
-                    <td><?php echo $lang["resourceid"]; ?></td>
-                    <td><?php echo $lang["home_page"]; ?></td>
-                    <td><?php echo $lang["theme"]; ?></td>
-                    <td><?php echo $lang["login_word"]; ?></td>
-                    <td><?php echo $lang["tools"]; ?></td>
+                    <td><?php echo escape($lang["preview"]); ?></td>
+                    <td><?php echo escape($lang["resourceid"]); ?></td>
+                    <td><?php echo escape($lang["home_page"]); ?></td>
+                    <td><?php echo escape($lang["theme"]); ?></td>
+                    <td><?php echo escape($lang["login_word"]); ?></td>
+                    <td><?php echo escape($lang["tools"]); ?></td>
                 </tr>
             <?php
             foreach($slideshow_files as $slideshow_index => $slideshow_file_info)
@@ -290,16 +290,16 @@ button[disabled]{
                         <button id="slideshow_<?php echo $slideshow_ref; ?>_moveup"
                                 type="submit" slideMoveUpButton
                                 onclick="ReorderSlideshowImage(this, 'moveup');"
-                                <?php echo $moveup_disabled; ?>><?php echo $lang['action-move-up']; ?></button>
+                                <?php echo $moveup_disabled; ?>><?php echo escape($lang['action-move-up']); ?></button>
                         <button id="slideshow_<?php echo $slideshow_ref; ?>_movedown"
                                 type="submit" slideMoveDownButton 
                                 onclick="ReorderSlideshowImage(this, 'movedown');"
-                                <?php echo $movedown_disabled; ?>><?php echo $lang['action-move-down']; ?></button>
+                                <?php echo $movedown_disabled; ?>><?php echo escape($lang['action-move-down']); ?></button>
                         <?php hook('render_replace_button_for_manage_slideshow', '', array($slideshow_ref, $slideshow_file_info)); ?>
                         <button id="slideshow_<?php echo $slideshow_ref; ?>_delete"
                                 type="submit" slideDeleteButton
                                 onclick="DeleteSlideshowImage(this);"
-                                <?php echo $delete_btn_disabled; ?>><?php echo $lang['action-delete']; ?></button>
+                                <?php echo $delete_btn_disabled; ?>><?php echo escape($lang['action-delete']); ?></button>
                         <?php hook('render_replace_slideshow_form_for_manage_slideshow', '', array($slideshow_ref, $slideshow_files)); ?>
                     </td>
                 </tr>
@@ -314,7 +314,7 @@ if($slideshow_big)
     {?>
     <div id="slideshow_static_image" class="Question">
         <label>
-        <?php echo $lang["slideshow_use_static_image"]; ?>    
+        <?php echo escape($lang["slideshow_use_static_image"]); ?>    
         </label>
         <input type="checkbox" name="slideshow_static_image" id="slideshow_static_image_checkbox" <?php if($static_slideshow_image){echo "checked";} ?> onchange="if(this.checked){jQuery.get('<?php echo $manageurl ?>?ajax=true&static=true');}else{jQuery.get('<?php echo $manageurl ?>?ajax=true&static=false');}"></input>
     <div class="clearerleft"></div>

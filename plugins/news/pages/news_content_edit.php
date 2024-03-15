@@ -79,7 +79,7 @@ include dirname(__FILE__)."/../../../include/header.php";
         <input type=hidden name=name value="<?php echo $ref?>">
 
         <div class="Question">
-            <label><?php echo $lang["date"]; ?></label>
+            <label><?php echo escape($lang["date"]); ?></label>
             <input name="date" class="stdwidth" type="text" value="<?php echo $createnews ? date("Y-m-d H:i:s") : $news[0]["date"]; ?>">
         </div>
 
@@ -100,7 +100,7 @@ include dirname(__FILE__)."/../../../include/header.php";
         <div class="clearerleft"> </div>
 
         <div class="QuestionSubmit">
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" />
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" />
         </div>
     </form>
 </div>

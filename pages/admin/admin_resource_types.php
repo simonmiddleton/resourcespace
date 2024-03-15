@@ -160,7 +160,7 @@ for ($n=0;$n<count($resource_types);$n++)
                         <?php
                         }
                     ?>
-                <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]; ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?> </a>
+                <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]; ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?> </a>
 
                 <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-bars"></i>&nbsp;<?php echo escape($lang["metadatafields"]) ?> </a>
                 

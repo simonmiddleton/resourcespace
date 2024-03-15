@@ -124,7 +124,7 @@ function addColumnHeader($orderName, $labelKey)
 }
 
 ?><div class="BasicsBox">
-<h1><?php echo $lang["page-title_user_group_management"]; ?></h1>
+<h1><?php echo escape($lang["page-title_user_group_management"]); ?></h1>
 <?php
     $links_trail = array(
         array(
@@ -139,7 +139,7 @@ function addColumnHeader($orderName, $labelKey)
 
     renderBreadcrumbs($links_trail);
 ?>
-    <p><?php echo $lang['page-subtitle_user_group_management']; render_help_link("systemadmin/creating-user-groups");?></p>
+    <p><?php echo escape($lang['page-subtitle_user_group_management']); render_help_link("systemadmin/creating-user-groups");?></p>
     
     <div class="TopInpageNav">
         <div class="TopInpageNavLeft">
@@ -157,7 +157,7 @@ function addColumnHeader($orderName, $labelKey)
                 <?php addColumnHeader("name", "property-user_group"); ?>
                 <?php addColumnHeader("users", "users"); ?>
                 <?php addColumnHeader("pname", "property-user_group_parent"); ?>
-                <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+                <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
             </tr>
 <?php
         $url_params=
@@ -201,9 +201,9 @@ function addColumnHeader($orderName, $labelKey)
 
                 <td>
                     <div class="ListTools">
-                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a>
+                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
                         &nbsp;
-                        <a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-users"></i>&nbsp;<?php echo $lang["users"]; ?></a>
+                        <a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-users"></i>&nbsp;<?php echo escape($lang["users"]); ?></a>
                     </div>
                 </td>
             </tr>
@@ -225,17 +225,17 @@ function addColumnHeader($orderName, $labelKey)
         <input type="hidden" name="orderby" value="<?php echo $order_by; ?>">
 
         <div class="Question">
-            <label for="find"><?php echo $lang["property-search_filter"]; ?></label>
+            <label for="find"><?php echo escape($lang["property-search_filter"]); ?></label>
             <input name="find" type="text" class="medwidth" value="<?php echo escape($find); ?>">
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;">
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;">
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label for="filterbyparent"><?php echo $lang['action-title_filter_by_parent_group']; ?></label>
+            <label for="filterbyparent"><?php echo escape($lang['action-title_filter_by_parent_group']); ?></label>
             <div class="tickset">
                 <select name="filterbyparent" class="medwidth" onchange="this.form.submit();">
-                    <option value="" ><?php if($filter_by_parent != "") echo $lang["removethisfilter"]; ?></option>
+                    <option value="" ><?php if($filter_by_parent != "") echo escape($lang["removethisfilter"]); ?></option>
 <?php	
 
 $groups=ps_query("
@@ -263,14 +263,14 @@ foreach ($groups as $group)
         </div>
 
         <div class="Question">
-            <label for="filterbypermissions"><?php echo $lang["action-title_filter_by_permissions"]; ?></label>
+            <label for="filterbypermissions"><?php echo escape($lang["action-title_filter_by_permissions"]); ?></label>
             <input name="filterbypermissions" type="text" class="medwidth" value="<?php echo escape($filter_by_permissions); ?>">
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-title_apply"]; ?>&nbsp;&nbsp;">
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["action-title_apply"]); ?>&nbsp;&nbsp;">
             <div class="clearerleft"></div>
         </div>
 
         <div class="FormHelp">
-            <div class="FormHelpInner"><?php echo $lang["fieldhelp-permissions_filter"]; ?></div>
+            <div class="FormHelpInner"><?php echo escape($lang["fieldhelp-permissions_filter"]); ?></div>
         </div>
 
 <?php
@@ -278,7 +278,7 @@ foreach ($groups as $group)
 ?>      <div class="QuestionSubmit">
             <input name="buttonsave" type="submit"
                    onclick="CentralSpaceLoad('admin_group_management.php?orderby=<?php echo $order_by;
-                   ?>',false);" value="&nbsp;&nbsp;<?php echo $lang["clearall"]; ?>&nbsp;&nbsp;">
+                   ?>',false);" value="&nbsp;&nbsp;<?php echo escape($lang["clearall"]); ?>&nbsp;&nbsp;">
         </div>
 <?php
     }
@@ -289,13 +289,13 @@ foreach ($groups as $group)
     <form method="post" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_management_edit.php" onSubmit="return CentralSpacePost(this,false);">
         <?php generateFormToken("admin_group_management"); ?>
         <div class="Question">
-            <label for="name"><?php echo $lang['action-title_create_user_group_called']; ?></label>         
+            <label for="name"><?php echo escape($lang['action-title_create_user_group_called']); ?></label>         
             <div class="tickset">
                 <div class="Inline">
                     <input name="newusergroupname" type="text" value="" class="shrtwidth">  
                 </div>
                 <div class="Inline">
-                    <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]; ?>&nbsp;&nbsp;" onclick="return (this.form.elements[0].value!='');">
+                    <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"]); ?>&nbsp;&nbsp;" onclick="return (this.form.elements[0].value!='');">
                 </div>
             </div>          
             <div class="clearerleft"></div>     

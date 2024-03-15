@@ -38,7 +38,7 @@ include "../../include/header.php";
 
 
 <div class="BasicsBox" style="position:relative;">
-<h1><?php echo $lang["managecontent"]; ?></h1>
+<h1><?php echo escape($lang["managecontent"]); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -114,7 +114,7 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
     
     <td><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords(tidy_trim(escape($text[$n]["text"]),100), escape($findtext), true, '', 1, STR_HIGHLIGHT_SIMPLE & STR_HIGHLIGHT_STRIPLINKS); ?></a></td>
     
-    <td><div class="ListTools"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?> </a></div></td>
+    <td><div class="ListTools"><a href="<?php echo $url ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?> </a></div></td>
     </tr>
     <?php
     }
@@ -135,16 +135,16 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_content.php" onsubmit="return CentralSpacePost(this);">
         <?php generateFormToken("admin_content_find"); ?>
         <div class="Question">
-            <label for="find"><?php echo $lang["searchcontent"]; ?><br/><?php echo $lang["searchcontenteg"]; ?></label>
+            <label for="find"><?php echo escape($lang["searchcontent"]); ?><br/><?php echo escape($lang["searchcontenteg"]); ?></label>
             <div class="tickset">
-             <div class="Inline"><input type=text placeholder="<?php echo $lang['searchbypage']; ?>" name="findpage" id="findpage" value="<?php echo escape($findpage)?>" maxlength="100" class="shrtwidth" />
+             <div class="Inline"><input type=text placeholder="<?php echo escape($lang['searchbypage']); ?>" name="findpage" id="findpage" value="<?php echo escape($findpage)?>" maxlength="100" class="shrtwidth" />
             
-            <input type=text placeholder="<?php echo $lang['searchbyname']; ?>" name="findname" id="findname" value="<?php echo escape($findname)?>" maxlength="100" class="shrtwidth" />
+            <input type=text placeholder="<?php echo escape($lang['searchbyname']); ?>" name="findname" id="findname" value="<?php echo escape($findname)?>" maxlength="100" class="shrtwidth" />
         
-            <input type=text placeholder="<?php echo $lang['searchbytext']; ?>" name="findtext" id="findtext" value="<?php echo escape($findtext)?>" maxlength="100" class="shrtwidth" />
+            <input type=text placeholder="<?php echo escape($lang['searchbytext']); ?>" name="findtext" id="findtext" value="<?php echo escape($findtext)?>" maxlength="100" class="shrtwidth" />
             
-            <input type="button" value="<?php echo $lang['clearall']; ?>" onClick="jQuery('#findtext').val('');jQuery('#findpage').val('');jQuery('#findname').val('');form.submit();" />
-            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;" />
+            <input type="button" value="<?php echo escape($lang['clearall']); ?>" onClick="jQuery('#findtext').val('');jQuery('#findpage').val('');jQuery('#findname').val('');form.submit();" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;" />
              
             </div>
             </div>
@@ -160,11 +160,11 @@ for ($n=$offset;(($n<count($text)) && ($n<($offset+$per_page)));$n++)
     <input type="hidden" name="custom" value="1"/>
         <?php generateFormToken("admin_content_new"); ?>
         <div class="Question">
-            <label for="find"><?php echo $lang["addnewcontent"]; ?></label>
+            <label for="find"><?php echo escape($lang["addnewcontent"]); ?></label>
             <div class="tickset">
              <div class="Inline"><input type=text name="page" id="page" maxlength="50" class="shrtwidth" /></div>
              <div class="Inline"><input type=text name="name" id="name" maxlength="50" class="shrtwidth" /></div>
-             <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]; ?>&nbsp;&nbsp;" /></div>
+             <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"]); ?>&nbsp;&nbsp;" /></div>
             </div>
             <div class="clearerleft"> </div>
         </div>

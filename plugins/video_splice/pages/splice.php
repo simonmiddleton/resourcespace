@@ -349,7 +349,7 @@ include "../../../include/header.php";
                                         jQuery('#question_transcode_now_or_notify_me').slideDown();
                             ">
                             <label class="customFieldLabel Inline"
-                                   for="video_splice_download"><?php echo $lang['download']; ?></label>
+                                   for="video_splice_download"><?php echo escape($lang['download']); ?></label>
                         </td>
                     </tr>
                 </tbody>
@@ -358,7 +358,7 @@ include "../../../include/header.php";
         </div>
         <!--Create new specific questions-->
         <div class="Question" id="question_description">
-            <label for="video_splice_new_desc" ><?php echo $lang["description"]; ?></label>
+            <label for="video_splice_new_desc" ><?php echo escape($lang["description"]); ?></label>
             <input type="text" class="stdwidth" id="video_splice_new_desc" name="video_splice_new_desc" value="" />
             <div class="clearerleft"></div>
         </div>

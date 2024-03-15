@@ -100,13 +100,13 @@ if ($collection_request_min_access == 0)
   if($backlink!="")
     {
     ?><p>
-      <a href='<?php echo rawurldecode($backlink); ?>'><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a>
+      <a href='<?php echo rawurldecode($backlink); ?>'><?php echo LINK_CARET_BACK ?><?php echo escape($lang['back']); ?></a>
     </p>
     <?php
     }?>
         
         
-  <h1><?php echo $lang["requestcollection"];render_help_link("resourceadmin/user-resource-requests");?></h1>
+  <h1><?php echo escape($lang["requestcollection"]);render_help_link("resourceadmin/user-resource-requests");?></h1>
   <p><?php echo text("introtext")?></p>
   
     <form method="post" onsubmit="return CentralSpacePost(this,true);" action="<?php echo $baseurl_short?>pages/collection_request.php">  
@@ -115,7 +115,7 @@ if ($collection_request_min_access == 0)
     <input type=hidden name="k" value="<?php echo escape($k) ?>">
     
     <div class="Question">
-    <label><?php echo $lang["collectionname"]; ?></label>
+    <label><?php echo escape($lang["collectionname"]); ?></label>
     <div class="Fixed"><?php echo escape(i18n_get_collection_name($cinfo)); ?></div>
     <div class="clearerleft"> </div>
     </div>
@@ -126,29 +126,29 @@ if ($collection_request_min_access == 0)
     # Only ask for user details if this is an external share. Otherwise this is already known from the user record.
     if ($k != "" || $user_is_anon) { ?>
     <div class="Question">
-    <label><?php echo $lang["fullname"]; ?> <sup>*</sup></label>
-    <input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]; ?>">
+    <label><?php echo escape($lang["fullname"]); ?> <sup>*</sup></label>
+    <input type="hidden" name="fullname_label" value="<?php echo escape($lang["fullname"]); ?>">
     <input name="fullname" class="stdwidth" type="text" value="<?php echo escape(getval("fullname","")) ?>">
     <div class="clearerleft"> </div>
     </div>
     
     <div class="Question">
-    <label><?php echo $lang["emailaddress"]; ?> <sup>*</sup></label>
-    <input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]; ?>">
+    <label><?php echo escape($lang["emailaddress"]); ?> <sup>*</sup></label>
+    <input type="hidden" name="email_label" value="<?php echo escape($lang["emailaddress"]); ?>">
     <input name="email" class="stdwidth" type="text" value="<?php echo escape(getval("email","")) ?>">
     <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
-    <label><?php echo $lang["contacttelephone"]; ?></label>
+    <label><?php echo escape($lang["contacttelephone"]); ?></label>
     <input name="contact" class="stdwidth" type="text" value="<?php echo escape(getval("contact","")) ?>">
-    <input type="hidden" name="contact_label" value="<?php echo $lang["contacttelephone"]; ?>">
+    <input type="hidden" name="contact_label" value="<?php echo escape($lang["contacttelephone"]); ?>">
     <div class="clearerleft"> </div>
     </div>
     <?php } ?>
     
     <div class="Question">
-    <label for="requestreason"><?php echo $lang["requestreason"]; ?> <?php if ($resource_request_reason_required) { ?><sup>*</sup><?php } ?></label>
+    <label for="requestreason"><?php echo escape($lang["requestreason"]); ?> <?php if ($resource_request_reason_required) { ?><sup>*</sup><?php } ?></label>
     <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo escape(getval("request","")) ?></textarea>
     <div class="clearerleft"> </div>
     </div>
@@ -221,9 +221,9 @@ if($use_antispam)
 
     <div class="QuestionSubmit">
     <?php if ($error) { ?><div class="FormError">!! <?php echo $error ?> !!</div><?php } ?>         
-    <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]; ?>&nbsp;&nbsp;" onclick="document.location='<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo urlencode($ref) ?>';"/>&nbsp;
+    <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo escape($lang["cancel"]); ?>&nbsp;&nbsp;" onclick="document.location='<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo urlencode($ref) ?>';"/>&nbsp;
     <input name="save" value="true" type="hidden" />
-    <input type="submit" value="&nbsp;&nbsp;<?php echo $lang["requestcollection"]; ?>&nbsp;&nbsp;" />
+    <input type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["requestcollection"]); ?>&nbsp;&nbsp;" />
     </div>
     </form>
     

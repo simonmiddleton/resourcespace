@@ -95,7 +95,7 @@ function deletestate(code)
     <div class="clearerleft"> </div>
     </div>
     <br>
-    <input name="deletebutton" type="submit" value="&nbsp;&nbsp;<?php echo $lang["action-delete"]; ?>&nbsp;&nbsp;" onclick="event.preventDefault();deletestate();"/>
+    <input name="deletebutton" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["action-delete"]); ?>&nbsp;&nbsp;" onclick="event.preventDefault();deletestate();"/>
     
 </form>
 
@@ -126,7 +126,7 @@ renderBreadcrumbs($links_trail);
                 </td><td>
                 <?php echo $lang['rse_workflow_state_reference']; ?>
                 </td><td>
-                <?php echo $lang['tools']; ?>
+                <?php echo escape($lang['tools']); ?>
                 </td>
             </tr>
 
@@ -142,11 +142,11 @@ foreach ($wfstates as $wfstate=>$wfstateinfo)
         <td><?php echo $wfstate; ?>
         </td>                   
         <td class="ListTools">
-        <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_state.php?code=<?php echo $wfstate ?>" onclick="return CentralSpaceLoad(this,true);" ><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?> </a>
+        <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_state.php?code=<?php echo $wfstate ?>" onclick="return CentralSpaceLoad(this,true);" ><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?> </a>
         <?php
         if(!in_array($wfstate,$fixed_archive_states))
             {?>
-            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_states.php?delete=<?php echo $wfstate ?>" class="deletestate" onClick="deletestate(<?php echo $wfstate ?>);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]; ?> </a>
+            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_states.php?delete=<?php echo $wfstate ?>" class="deletestate" onClick="deletestate(<?php echo $wfstate ?>);"><i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?> </a>
             <?php
             }
             ?>

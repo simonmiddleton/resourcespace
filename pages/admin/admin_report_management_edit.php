@@ -86,7 +86,7 @@ include "../../include/header.php";
       onSubmit="return CentralSpacePost(this,true);" class="FormWide">
     <?php generateFormToken("mainform"); ?>
     <div class="BasicsBox">
-    <h1><?php echo $lang["page-title_report_management_edit"]; ?></h1>
+    <h1><?php echo escape($lang["page-title_report_management_edit"]); ?></h1>
     <?php
     $links_trail = array(
         array(
@@ -106,36 +106,36 @@ include "../../include/header.php";
     renderBreadcrumbs($links_trail);
     ?>
 
-    <p><?php echo $lang['page-subtitle_report_management_edit'];render_help_link("resourceadmin/custom_reports"); ?></p>
+    <p><?php echo escape($lang['page-subtitle_report_management_edit']);render_help_link("resourceadmin/custom_reports"); ?></p>
 
         <input type="hidden" name="save" value="1">
 
         <div class="Question">
-            <label for="reference"><?php echo $lang["property-reference"]; ?></label>
+            <label for="reference"><?php echo escape($lang["property-reference"]); ?></label>
             <div class="Fixed"><?php echo $ref; ?></div>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label for="name"><?php echo $lang["property-name"]; ?></label>
+            <label for="name"><?php echo escape($lang["property-name"]); ?></label>
             <input name="name" type="text" class="stdwidth" value="<?php echo $record['name']; ?>"> 
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">          
-            <label for="query"><?php echo $lang["property-query"]; ?></label>
+            <label for="query"><?php echo escape($lang["property-query"]); ?></label>
             <textarea name="query" class="stdwidth" style="height: 300px;"><?php echo $record['query']; ?></textarea>
             <div class="clearerleft"></div>     
         </div>
 
         <div class="Question">
-            <label><?php echo $lang["fieldtitle-tick_to_delete_report"]; ?></label>
+            <label><?php echo escape($lang["fieldtitle-tick_to_delete_report"]); ?></label>
             <input name="deleteme" type="checkbox" value="yes">
             <div class="clearerleft"></div>
         </div>
 
         <div class="QuestionSubmit">
-            <input name="buttonsave" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;">
+            <input name="buttonsave" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;">
         </div>
 
     </div>

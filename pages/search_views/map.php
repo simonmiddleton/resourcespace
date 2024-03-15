@@ -204,7 +204,7 @@ get_geo_maps_scripts();
                     
                     <!--Show the resource preview image-->
                     var imagePath = "<img src='" + preview + "'/>";
-                    var text1 = "<?php echo $lang['resourceid']; ?>";
+                    var text1 = "<?php echo escape($lang['resourceid']); ?>";
                     var imageLink = '<a href=' + baseurl + '/pages/view.php?ref=' + rf + " target='_blank'" + '  onclick="return ModalLoad(this,true);">' + '<img src=' + preview + '>' + '</a>';
                     marker.bindPopup(imageLink + text1 + " " + rf + "<br>" + georound(lat) + ", " + georound(lon), {
                         minWidth: 175,

@@ -132,7 +132,7 @@ include "../include/header.php";
 
 include "../include/login_background.php";
 ?>
-<h1><?php echo $lang["requestuserlogin"]; ?></h1>
+<h1><?php echo escape($lang["requestuserlogin"]); ?></h1>
 <p><?php echo text("introtext")?></p>
 
 <form method="post" id='mainform' action="<?php echo $baseurl_short?>pages/user_request.php">  
@@ -150,13 +150,13 @@ if (!hook("replacemain"))
 
     ?>
     <div class="Question">
-    <label for="name"><?php echo $lang["yourname"]; ?> <sup>*</sup></label>
+    <label for="name"><?php echo escape($lang["yourname"]); ?> <sup>*</sup></label>
     <input type=text name="name" id="name" class="stdwidth" value="<?php echo $name ?>">
     <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
-    <label for="email"><?php echo $lang["youremailaddress"]; ?> <sup>*</sup></label>
+    <label for="email"><?php echo escape($lang["youremailaddress"]); ?> <sup>*</sup></label>
     <input type=text name="email" id="email" class="stdwidth" value="<?php echo $email ?>">
     <div class="clearerleft"> </div>
     </div>
@@ -282,7 +282,7 @@ if (isset($custom_registration_fields))
 $groups=get_registration_selectable_usergroups();
 ?>
 <div class="Question">
-<label for="usergroup"><?php echo $lang["group"]; ?> *</label>
+<label for="usergroup"><?php echo escape($lang["group"]); ?> *</label>
 <select name="usergroup" id="usergroup" class="stdwidth">
 <option value></option>
 <?php for ($n=0;$n<count($groups);$n++)
@@ -305,7 +305,7 @@ $groups=get_registration_selectable_usergroups();
 
     ?>
 <div class="Question">
-<label for="userrequestcomment"><?php echo $lang["userrequestcomment"]; ?></label>
+<label for="userrequestcomment"><?php echo escape($lang["userrequestcomment"]); ?></label>
 <textarea name="userrequestcomment" id="userrequestcomment" class="stdwidth"><?php echo $userrequestcomment ?></textarea>
 <div class="clearerleft"> </div>
 </div>  
@@ -349,7 +349,7 @@ function submitForm()
 
 <div class="QuestionSubmit UserRequestSubmit">      
 <input name='save' value='yes' type='hidden'>
-<input name="user_save" id="user_submit" onclick="submitForm()" type="button" value="&nbsp;&nbsp;<?php echo $lang["requestuserlogin"]; ?>&nbsp;&nbsp;" />
+<input name="user_save" id="user_submit" onclick="submitForm()" type="button" value="&nbsp;&nbsp;<?php echo escape($lang["requestuserlogin"]); ?>&nbsp;&nbsp;" />
 </div>
 </form>
 
@@ -357,7 +357,7 @@ function submitForm()
 if(!hook("replace_user_request_required_key"))
     {
     ?>
-    <p><sup>*</sup> <?php echo $lang["requiredfield"]; ?></p>
+    <p><sup>*</sup> <?php echo escape($lang["requiredfield"]); ?></p>
     <?php
     }
 ?>

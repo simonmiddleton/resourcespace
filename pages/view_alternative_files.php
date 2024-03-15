@@ -34,7 +34,7 @@ if ($alt_access)
             hook("viewbeforealtheader");
             ?>
             <tr>
-            <td colspan="3" id="altfileheader"><?php echo $lang["alternativefiles"]; ?></td>
+            <td colspan="3" id="altfileheader"><?php echo escape($lang["alternativefiles"]); ?></td>
             </tr>
             <?php
             }
@@ -132,7 +132,7 @@ if ($alt_access)
             {
             if(!hook("downloadbuttonreplace"))
                 {
-                ?><a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&alternative=" . $altfiles[$n]["ref"] . "&k=" . $k . "&ext=" . $altfiles[$n]["file_extension"]))) { ?>href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("alternative"=>$altfiles[$n]["ref"],"ext"=> $altfiles[$n]["file_extension"])))); ?>"<?php } ?> onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["action-download"]; ?></a><?php 
+                ?><a <?php if (!hook("downloadlink","",array("ref=" . $ref . "&alternative=" . $altfiles[$n]["ref"] . "&k=" . $k . "&ext=" . $altfiles[$n]["file_extension"]))) { ?>href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=> generateURL($baseurl_short . "pages/download_progress.php",$urlparams,array("alternative"=>$altfiles[$n]["ref"],"ext"=> $altfiles[$n]["file_extension"])))); ?>"<?php } ?> onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["action-download"]); ?></a><?php 
                 }
             }
 
@@ -145,7 +145,7 @@ if ($alt_access)
                         {
                         ?>href="<?php echo generateURL($baseurl . '/pages/download_usage.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) . '"';
                         }   
-                    ?>><?php echo $lang["action-download"]; ?></a><?php
+                    ?>><?php echo escape($lang["action-download"]); ?></a><?php
                 }   
         else 
             { 
@@ -155,7 +155,7 @@ if ($alt_access)
                 {
                 echo 'href="#" onclick="directDownload(\'' . generateURL($baseurl . '/pages/download_progress.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>')"<?php
                 }   
-                ?>><?php echo $lang["action-download"]; ?></a><?php
+                ?>><?php echo escape($lang["action-download"]); ?></a><?php
             } ?></td></td>
         <?php } elseif (checkperm("q")) { ?>
         <td class="DownloadButton"><?php
@@ -167,11 +167,11 @@ if ($alt_access)
                 {
                 ?><a href="<?php echo generateURL($baseurl . "/pages/resource_request.php",$urlparams) ?>" onClick="return CentralSpaceLoad(this,true);"><?php
                 }
-            echo $lang["action-request"]; ?></a></td>
+            echo escape($lang["action-request"]); ?></a></td>
         <?php } 
         else
             {
-            ?><td class="DownloadButton DownloadDisabled"><?php echo $lang["access1"]; ?></td><?php
+            ?><td class="DownloadButton DownloadDisabled"><?php echo escape($lang["access1"]); ?></td><?php
             } 
         ?>
         </tr>

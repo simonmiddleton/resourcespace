@@ -292,7 +292,7 @@ if(!$modal)
     {
     ?>
     <p>
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a>
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
     </p>
     <?php
     }
@@ -301,7 +301,7 @@ elseif($previous_page_modal)
     $urlparams["context"]="Modal";
     ?>
     <p>
-    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a>
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
     </p>
     <?php
     }
@@ -423,12 +423,12 @@ if(isset($resource["field".$view_title_field]))
             <div class="clearerleft"> </div>
             </div>
             <div class="Question" id="resource_ref_div" style="border-top:none;">
-            <label><?php echo $lang["resourceid"]; ?></label>
+            <label><?php echo escape($lang["resourceid"]); ?></label>
             <div class="Fixed"><?php echo urlencode($ref) ?></div>
             <div class="clearerleft"> </div>
             </div>
             <div class="Question" id="question_file">
-                <label><?php echo $lang["file"]; ?></label>
+                <label><?php echo escape($lang["file"]); ?></label>
             <div class="Fixed">
             <?php
             if ($resource["has_image"]==1)
@@ -469,7 +469,7 @@ if(isset($resource["field".$view_title_field]))
                 if (checkperm("w") && $resource["has_image"]==1 && file_exists($wmpath))
                     {?>
                     &nbsp;&nbsp;
-                    <a href="#" onclick='jQuery("#wmpreview").toggle();jQuery("#preview").toggle();if (jQuery(this).text()=="<?php echo $lang["showwatermark"]; ?>"){jQuery(this).text("<?php echo $lang["hidewatermark"]; ?>");} else {jQuery(this).text("<?php echo $lang["showwatermark"]; ?>");}'><?php echo $lang["showwatermark"]; ?></a>
+                    <a href="#" onclick='jQuery("#wmpreview").toggle();jQuery("#preview").toggle();if (jQuery(this).text()=="<?php echo escape($lang["showwatermark"]); ?>"){jQuery(this).text("<?php echo escape($lang["hidewatermark"]); ?>");} else {jQuery(this).text("<?php echo escape($lang["showwatermark"]); ?>");}'><?php echo escape($lang["showwatermark"]); ?></a>
                     <?php
                     }?>
                 <br />
@@ -482,13 +482,13 @@ if(isset($resource["field".$view_title_field]))
         <div class="Question" id="question_uploadtype">
             <label><?php echo $lang["video-trim_upload-type"]; ?></label>
             <select name="upload_type" id="uploadtype" class="stdwidth" onChange="var q=document.getElementById('question_collectionadd');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
-            <?php if(!checkperm("A")){?><option value="alt"><?php echo $lang["addalternativefile"]; ?></option><?php }?>
-            <?php if(get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo $lang["createnewresource"]; ?></option><?php }?>
+            <?php if(!checkperm("A")){?><option value="alt"><?php echo escape($lang["addalternativefile"]); ?></option><?php }?>
+            <?php if(get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo escape($lang["createnewresource"]); ?></option><?php }?>
             </select>
             <div class="clearerleft"> </div>
         </div>
         <div class="Question" id="question_collectionadd" style="display:none;">
-            <label><?php echo $lang["addtocurrentcollection"]; ?></label>
+            <label><?php echo escape($lang["addtocurrentcollection"]); ?></label>
             <input name="collection_add" id="collectionadd" value="yes" type="checkbox">
             <div class="clearerleft"> </div>
         </div>

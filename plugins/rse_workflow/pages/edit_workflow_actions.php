@@ -90,7 +90,7 @@ renderBreadcrumbs($links_trail);
             <div class="tickset">
                 <div class="Inline">
                     <select class="stdwidth" name="filterstate" id="filterstate" >
-                    <option value="all" <?php if($filterstate=="all"){echo " selected";}?>><?php echo $lang["all"]; ?></option>
+                    <option value="all" <?php if($filterstate=="all"){echo " selected";}?>><?php echo escape($lang["all"]); ?></option>
                     <?php
                     for ($n=-2;$n<=3;$n++)
                         {
@@ -103,7 +103,7 @@ renderBreadcrumbs($links_trail);
                     ?>
                     </select>
              </div>
-             <div class="Inline"><input name="filtersubmit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;" onclick="preventDefault();CentralSpacePost(document.getElementById('form_filter_action'),false);"></div>
+             <div class="Inline"><input name="filtersubmit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;" onclick="preventDefault();CentralSpacePost(document.getElementById('form_filter_action'),false);"></div>
             </div>
         <div class="clearerleft"> </div>
         </div>
@@ -127,7 +127,7 @@ renderBreadcrumbs($links_trail);
                 </td><td>
                 <?php echo $lang['rse_workflow_action_reference']; ?>
                 </td><td>
-                <?php echo $lang['tools']; ?>
+                <?php echo escape($lang['tools']); ?>
                 </td>
             </tr>
 
@@ -169,8 +169,8 @@ else
             <td>wf<?php echo $workflowaction["ref"]; ?>
             </td>
             <td class="ListTools">
-            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?> </a>
-            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"]; ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]; ?>,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]; ?> </a>
+            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?> </a>
+            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"]; ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]; ?>,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?> </a>
             </td>
         </tr>
         <?php	

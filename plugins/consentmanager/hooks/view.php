@@ -33,12 +33,12 @@ function HookConsentmanagerViewCustompanels()
         <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
         <tr class="ListviewTitleStyle">
         <td><?php echo $lang["consent_id"]; ?></a></td>
-        <td><?php echo $lang["name"]; ?></a></td>
-        <td><?php echo $lang["usage"]; ?></a></td>
-        <td><?php echo $lang["fieldtitle-expiry_date"]; ?></a></td>
+        <td><?php echo escape($lang["name"]); ?></a></td>
+        <td><?php echo escape($lang["usage"]); ?></a></td>
+        <td><?php echo escape($lang["fieldtitle-expiry_date"]); ?></a></td>
 
         <?php if ($edit_access || checkperm("cm")) { ?>
-        <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+        <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
         <?php } ?>
 
         </tr>
@@ -65,7 +65,7 @@ function HookConsentmanagerViewCustompanels()
 
             <?php if ($edit_access || checkperm("cm")) { ?>
             <td><div class="ListTools">
-            <a href="<?php echo $baseurl_short ?>plugins/consentmanager/pages/edit.php?ref=<?php echo $consent["ref"]; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]; ?></a>
+            <a href="<?php echo $baseurl_short ?>plugins/consentmanager/pages/edit.php?ref=<?php echo $consent["ref"]; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
             <a href="<?php echo $baseurl_short ?>plugins/consentmanager/pages/unlink.php?ref=<?php echo $consent["ref"]; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-unlink"]; ?></a>
             </div></td>
             <?php } ?>

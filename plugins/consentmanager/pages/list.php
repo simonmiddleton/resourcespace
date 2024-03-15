@@ -78,10 +78,10 @@ $jumpcount=1;
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
 <td><?php echo $lang["consent_id"]; ?></a></td>
-<td><?php echo $lang["name"]; ?></a></td>
-<td><?php echo $lang["usage"]; ?></a></td>
-<td><?php echo $lang["fieldtitle-expiry_date"]; ?></a></td>
-<td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+<td><?php echo escape($lang["name"]); ?></a></td>
+<td><?php echo escape($lang["usage"]); ?></a></td>
+<td><?php echo escape($lang["fieldtitle-expiry_date"]); ?></a></td>
+<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
 </tr>
 
 <?php
@@ -108,8 +108,8 @@ for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
             <td><?php echo escape($consent["expires"] == "" ? $lang["no_expiry_date"] : nicedate($consent["expires"])); ?></td>
         
             <td><div class="ListTools">
-            <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a>
-            <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]; ?></a>
+            <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
+            <a href="<?php echo generateURL($baseurl_short . "plugins/consentmanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?></a>
             </div></td>
     </tr>
     <?php

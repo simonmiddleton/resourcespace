@@ -5,7 +5,7 @@ include "../include/header.php";
 ?>
 
 <div class="BasicsBox"> 
-    <h1><?php echo $lang["installationcheck"];render_help_link("systemadmin/install_overview");?></h1>
+    <h1><?php echo escape($lang["installationcheck"]);render_help_link("systemadmin/install_overview");?></h1>
     <?php
     renderBreadcrumbs([
         ['title' => $lang["systemsetup"], 'href'  => $baseurl_short . "pages/admin/admin_home.php", 'menu' => true],
@@ -122,7 +122,7 @@ if (ResolveKB($upload_max_filesize)<(100*1024)) {$result=$lang["status-warning"]
 
 # Check flag set if code needs signing
 if (get_sysvar("code_sign_required")=="YES") {$result=$lang["status-fail"];$result2=$lang["code_sign_required_warning"];} else {$result=$lang["status-ok"];$result2="";}
-?><tr><td><?php echo $lang["code_sign_required"]; ?></td><td><?php echo $result2 ?></td><td><b><?php echo $result?></b></td></tr><?php
+?><tr><td><?php echo escape($lang["code_sign_required"]); ?></td><td><?php echo $result2 ?></td><td><b><?php echo $result?></b></td></tr><?php
 
 # Check write access to filestore
 $success=is_writable($storagedir);
@@ -140,7 +140,7 @@ if ($success===false) {$result=$lang["status-fail"] . ": " . $homeanim_folder . 
 $cfb = check_filestore_browseability();
 ?>
 <tr>
-    <td colspan="2"><?php echo $lang["blockedbrowsingoffilestore"]; ?> (<a href="<?php echo $cfb['filestore_url']; ?>" target="_blank"><?php echo escape($cfb['filestore_url']); ?></a>)</td>
+    <td colspan="2"><?php echo escape($lang["blockedbrowsingoffilestore"]); ?> (<a href="<?php echo $cfb['filestore_url']; ?>" target="_blank"><?php echo escape($cfb['filestore_url']); ?></a>)</td>
     <td>
         <b><?php echo escape($cfb['index_disabled'] ? $cfb['status'] : "{$cfb['status']}: {$cfb['info']}"); ?></b>
     </td>
@@ -164,7 +164,7 @@ if (!php_is_64bit()){
 } else {
     $result=$lang["status-ok"];
 }
-?><tr><td colspan='2'><?php echo $lang['large_file_support_64_bit']; ?></td><td><b><?php echo $result?></b></td></tr><?php
+?><tr><td colspan='2'><?php echo escape($lang['large_file_support_64_bit']); ?></td><td><b><?php echo $result?></b></td></tr><?php
 
 // Check system utilities
 foreach(RS_SYSTEM_UTILITIES as $sysu_name => $sysu)
@@ -189,7 +189,7 @@ else
     $version=$lang["status-notinstalled"];
     $result=$lang["status-fail"];
     }
-?><tr><td colspan="2"><?php echo $lang["exif_extension"]; ?></td><td><b><?php echo $result?></b></td></tr><?php
+?><tr><td colspan="2"><?php echo escape($lang["exif_extension"]); ?></td><td><b><?php echo $result?></b></td></tr><?php
 
 # Check archiver
 if (
@@ -215,7 +215,7 @@ if (
         {
         $result = $lang["status-fail"] . ": " . str_replace("?", $path, $lang["softwarenotfound"]);
         }
-    ?><tr><td colspan="2"><?php echo $lang["archiver_utility"]; ?></td><td><b><?php echo $result?></b></td></tr><?php
+    ?><tr><td colspan="2"><?php echo escape($lang["archiver_utility"]); ?></td><td><b><?php echo $result?></b></td></tr><?php
 }
 
 # Check PHP timezone identical to server (MySQL will use the server one) so we need to ensure they are the same
@@ -229,13 +229,13 @@ if(strtoupper($php_tz) == strtoupper($mysql_tz))
     }
 ?>
 <tr>
-    <td colspan="2"><?php echo $lang['server_timezone_check']; ?></td>
+    <td colspan="2"><?php echo escape($lang['server_timezone_check']); ?></td>
     <td><b><?php echo $timezone_check; ?></b></td>
 </tr>
 <tr>
-<td><?php echo $lang["lastscheduledtaskexection"]; ?></td>
+<td><?php echo escape($lang["lastscheduledtaskexection"]); ?></td>
 <td><?php $last_cron=ps_value("select datediff(now(),value) value from sysvars where name='last_cron'",array(),$lang["status-never"]);echo $last_cron ?></td>
-<td><?php if ($last_cron>2 || $last_cron==$lang["status-never"]) { ?><b><?php echo $lang["status-warning"]; ?></b><br/><?php echo $lang["executecronphp"]; ?><?php } else {?><b><?php echo $lang["status-ok"]; ?></b><?php } ?></td>
+<td><?php if ($last_cron>2 || $last_cron==$lang["status-never"]) { ?><b><?php echo escape($lang["status-warning"]); ?></b><br/><?php echo strip_tags_and_attributes($lang["executecronphp"]); ?><?php } else {?><b><?php echo escape($lang["status-ok"]); ?></b><?php } ?></td>
 </tr>
 
 <?php
@@ -248,7 +248,7 @@ foreach($extensions_required as $module=> $required_fn)
     <tr>
         <td colspan="2">php-<?php echo $module ?></td>
         <td><b><?php 
-        if (function_exists($required_fn)){echo $lang['status-ok'];}
+        if (function_exists($required_fn)){echo escape($lang['status-ok']);}
         else {echo escape($lang['server_' . $module . '_check_fail'] ?? $lang['status-fail']);}?></b></td>
     </tr>
     <?php

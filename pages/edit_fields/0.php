@@ -31,47 +31,47 @@ if($show_merge_options)
     }
 ?>
 <div id="merge_filename_title_container">
-<div id="" class=""><?php echo $lang['merge_filename_title_question']; ?></div>
+<div id="" class=""><?php echo escape($lang['merge_filename_title_question']); ?></div>
 <table id="" class="radioOptionTable" cellpadding="3" cellspacing="3">
     <tbody>
         <tr>
             <td>
-                <input type="radio" id="merge_filename_title_do_not_use" name="merge_filename_with_title_option" value="<?php echo $lang['merge_filename_title_do_not_use']; ?>" <?php if($do_not_use) { ?>checked<?php } ?>/>
+                <input type="radio" id="merge_filename_title_do_not_use" name="merge_filename_with_title_option" value="<?php echo escape($lang['merge_filename_title_do_not_use']); ?>" <?php if($do_not_use) { ?>checked<?php } ?>/>
             </td>
             <td>
-                <label class="customFieldLabel" for="merge_filename_title_do_not_use"><?php echo $lang['merge_filename_title_do_not_use']; ?></label>
+                <label class="customFieldLabel" for="merge_filename_title_do_not_use"><?php echo escape($lang['merge_filename_title_do_not_use']); ?></label>
             </td>
             <td>
-                <input type="radio" id="merge_filename_title_replace" name="merge_filename_with_title_option" value="<?php echo $lang['merge_filename_title_replace']; ?>" <?php if($replace) { ?>checked<?php } ?>/>
+                <input type="radio" id="merge_filename_title_replace" name="merge_filename_with_title_option" value="<?php echo escape($lang['merge_filename_title_replace']); ?>" <?php if($replace) { ?>checked<?php } ?>/>
             </td>
             <td>
-                <label class="customFieldLabel" for="merge_filename_title_replace"><?php echo $lang['merge_filename_title_replace']; ?></label>
+                <label class="customFieldLabel" for="merge_filename_title_replace"><?php echo escape($lang['merge_filename_title_replace']); ?></label>
             </td>
             <td>
-                <input type="radio" id="merge_filename_title_prefix" name="merge_filename_with_title_option" value="<?php echo $lang['merge_filename_title_prefix']; ?>" <?php if($prefix) { ?>checked<?php } ?>/>
+                <input type="radio" id="merge_filename_title_prefix" name="merge_filename_with_title_option" value="<?php echo escape($lang['merge_filename_title_prefix']); ?>" <?php if($prefix) { ?>checked<?php } ?>/>
             </td>
             <td>
-                <label class="customFieldLabel" for="merge_filename_title_prefix"><?php echo $lang['merge_filename_title_prefix']; ?></label>
+                <label class="customFieldLabel" for="merge_filename_title_prefix"><?php echo escape($lang['merge_filename_title_prefix']); ?></label>
             </td>
             <td>
-                <input type="radio" id="merge_filename_title_suffix" name="merge_filename_with_title_option" value="<?php echo $lang['merge_filename_title_suffix']; ?>" <?php if($suffix) { ?>checked<?php } ?>/>
+                <input type="radio" id="merge_filename_title_suffix" name="merge_filename_with_title_option" value="<?php echo escape($lang['merge_filename_title_suffix']); ?>" <?php if($suffix) { ?>checked<?php } ?>/>
             </td>
             <td>
-                <label class="customFieldLabel" for="merge_filename_title_suffix"><?php echo $lang['merge_filename_title_suffix']; ?></label>
+                <label class="customFieldLabel" for="merge_filename_title_suffix"><?php echo escape($lang['merge_filename_title_suffix']); ?></label>
             </td>
             <!-- Include extension? -->
             <td>
                 <input type="checkbox" id="merge_filename_title_include_extension" name="merge_filename_with_title_include_extensions" value="yes" />
             </td>
             <td>
-                <label class="customFieldLabel" for="merge_filename_title_include_extension"><?php echo $lang['merge_filename_title_include_extensions']; ?></label>
+                <label class="customFieldLabel" for="merge_filename_title_include_extension"><?php echo escape($lang['merge_filename_title_include_extensions']); ?></label>
             </td>
             <!-- Spacer -->
             <td>
                 <input type="text" id="merge_filename_title_spacer" name="merge_filename_with_title_spacer" value="" maxlength="3" />
             </td>
             <td>
-                <label class="customFieldLabel" for="merge_filename_title_spacer"><?php echo $lang['merge_filename_title_spacer']; ?></label>
+                <label class="customFieldLabel" for="merge_filename_title_spacer"><?php echo escape($lang['merge_filename_title_spacer']); ?></label>
             </td>
         </tr>
     </tbody>

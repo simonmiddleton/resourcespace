@@ -1085,7 +1085,7 @@ function config_generate_AutoSaveConfigOption_function($post_url)
     <script>
     function AutoSaveConfigOption(option_name, reload_page = false)
         {
-        jQuery('#AutoSaveStatus-' + option_name).html('<?php echo $lang["saving"]; ?>');
+        jQuery('#AutoSaveStatus-' + option_name).html('<?php echo escape($lang["saving"]); ?>');
         jQuery('#AutoSaveStatus-' + option_name).show();
 
         if (jQuery('input[name=' + option_name + ']').is(':checkbox')) {
@@ -1112,7 +1112,7 @@ function config_generate_AutoSaveConfigOption_function($post_url)
 
             if(response.success === true)
                 {
-                jQuery('#AutoSaveStatus-' + option_name).html('<?php echo $lang["saved"]; ?>');
+                jQuery('#AutoSaveStatus-' + option_name).html('<?php echo escape($lang["saved"]); ?>');
                 jQuery('#AutoSaveStatus-' + option_name).fadeOut('slow');
                 if (reload_page)
                     {

@@ -213,7 +213,7 @@ if($submitdashtile && enforcePostRequest(false))
         }
     include "../include/header.php";
     ?>
-    <h1><?php echo $lang["createnewdashtile"];render_help_link("user/create-dash-tile");?></h1>
+    <h1><?php echo escape($lang["createnewdashtile"]);render_help_link("user/create-dash-tile");?></h1>
     <?php 
     if($error)
         {?>
@@ -237,7 +237,7 @@ if($submitdashtile && enforcePostRequest(false))
             }
         }?>
 
-    <a href="<?php echo $link;?>"><?php echo LINK_CARET ?><?php echo $lang["returntopreviouspage"];?></a>
+    <a href="<?php echo $link;?>"><?php echo LINK_CARET ?><?php echo escape($lang["returntopreviouspage"]);?></a>
     <?php
     include "../include/footer.php";
     exit();
@@ -270,7 +270,7 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
         }
     ?>
     <div class="Question">
-        <label for="tltype"><?php echo $lang["dashtilestyle"];?></label> 
+        <label for="tltype"><?php echo escape($lang["dashtilestyle"]);?></label> 
         <table>
             <tbody>
                 <tr>
@@ -495,7 +495,7 @@ if(!$validpage)
 
     <div class="Question">
         <label>
-        <?php echo $lang["preview"]; ?>
+        <?php echo escape($lang["preview"]); ?>
         </label>
         <br />
         <div class="HomePanel DashTile">
@@ -513,7 +513,7 @@ if(!$validpage)
         {
         ?>
         <div class="Question">
-            <label for="link"><?php echo $lang["dashtilelink"];?></label> 
+            <label for="link"><?php echo escape($lang["dashtilelink"]);?></label> 
             <input type="text" name="link" value="<?php echo escape($link);?>"/>
             <div class="clearerleft"></div>
         </div>
@@ -527,7 +527,7 @@ if(!$validpage)
     if(!$notitle)
         { ?>
         <div class="Question">
-            <label for="title"><?php echo $lang["dashtiletitle"];?></label> 
+            <label for="title"><?php echo escape($lang["dashtiletitle"]);?></label> 
             <input type="text" id="previewtitle" name="title" value="<?php echo escape(ucfirst ($title));?>"/>
             <div class="clearerleft"></div>
         </div>
@@ -545,7 +545,7 @@ if(!$validpage)
             {$freetext="";}
         ?>
         <div class="Question">
-            <label for="freetext"><?php echo $lang["dashtiletext"];?></label> 
+            <label for="freetext"><?php echo escape($lang["dashtiletext"]);?></label> 
             <textarea class="stdwidth" rows="3" type="text" id="previewtext" name="freetext" /><?php echo escape(ucfirst($freetext));?></textarea>
             <div class="clearerleft"></div>
         </div>
@@ -587,7 +587,7 @@ if('' != $tile_type && $tile_type !== "conf")
     if($tile_type=="srch")
         {?>
         <div class="Question" id="showresourcecount" >
-            <label for="tltype"><?php echo $lang["showresourcecount"];?></label> 
+            <label for="tltype"><?php echo escape($lang["showresourcecount"]);?></label> 
             <table>
                 <tbody>
                     <tr>
@@ -663,7 +663,7 @@ if('' != $tile_type && $tile_type !== "conf")
             {
             ?>
         <div class="Question" id="promotedresource">
-            <label for="promoted_image"><?php echo $lang['dashtileimage']; ?></label>
+            <label for="promoted_image"><?php echo escape($lang['dashtileimage']); ?></label>
             <select class="stdwidth" id="previewimage" name="promoted_image">
             <?php 
             foreach($resources as $resource)
@@ -710,7 +710,7 @@ if('' != $tile_type && $tile_type !== "conf")
         {
         ?>
         <div class="Question">
-            <label for="tile_audience"><?php echo $lang['who_should_see_dash_tile']; ?></label> 
+            <label for="tile_audience"><?php echo escape($lang['who_should_see_dash_tile']); ?></label> 
             <table>
                 <tbody>
                     <tr>
@@ -718,24 +718,24 @@ if('' != $tile_type && $tile_type !== "conf")
                             <input type="radio" id="all_users_false" name="tile_audience" value="false" <?php echo $allusers ? '' : 'checked'; ?> />
                         </td>
                         <td align="left" valign="middle" >
-                            <label class="customFieldLabel" for="all_users_false"><?php echo $lang['dash_tile_audience_me']; ?></label>
+                            <label class="customFieldLabel" for="all_users_false"><?php echo escape($lang['dash_tile_audience_me']); ?></label>
                         </td>
                         <td width="10" valign="middle" >
                             <input type="radio" id="all_users_true" name="tile_audience" value="true" <?php echo ($allusers && empty($current_specific_user_groups)) ? 'checked' : ''; ?> />
                         </td>
                         <td align="left" valign="middle" >
-                            <label class="customFieldLabel" for="all_users_true"><?php echo $lang['dash_tile_audience_all_users']; ?></label>
+                            <label class="customFieldLabel" for="all_users_true"><?php echo escape($lang['dash_tile_audience_all_users']); ?></label>
                         </td>
                         <td width="10" valign="middle" >
                             <input type="radio" id="dash_tile_audience_user_group" name="tile_audience" value="specific_user_groups" <?php echo ($allusers && !empty($current_specific_user_groups)) ? 'checked' : ''; ?> />
                         </td>
                         <td align="left" valign="middle" >
-                            <label class="customFieldLabel" for="dash_tile_audience_user_group"><?php echo $lang['dash_tile_audience_user_group']; ?></label>
+                            <label class="customFieldLabel" for="dash_tile_audience_user_group"><?php echo escape($lang['dash_tile_audience_user_group']); ?></label>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <span style='margin-top:10px;float:left;display:none;font-style:italic;' class='FormHelp clearerleft' id='all_userseditchange'><?php echo $lang["dasheditchangeall_users"];?></span>
+            <span style='margin-top:10px;float:left;display:none;font-style:italic;' class='FormHelp clearerleft' id='all_userseditchange'><?php echo escape($lang["dasheditchangeall_users"]);?></span>
             <div class="clearerleft"> </div>
             <?php 
             if($edit && $allusers && !$managed_home_dash)

@@ -187,7 +187,7 @@ include "../include/header.php";
             <?php generateFormToken("shareuploadform"); ?>
             
             <div class="Question">
-                <label><?php echo $lang["collectionname"]; ?></label>
+                <label><?php echo escape($lang["collectionname"]); ?></label>
                 <div class="Fixed"><?php echo i18n_get_collection_name($collectiondata); ?></div>
                 <div class="clearerleft"> </div>
             </div>
@@ -203,7 +203,7 @@ include "../include/header.php";
                 }
             ?>
             <div class="Question">
-                <label><?php echo $lang["expires"]; ?></label>
+                <label><?php echo escape($lang["expires"]); ?></label>
                 <input name="shareexpires" type=date class="stdwidth" min="<?php echo date("Y-m-d",time()); ?>" value="<?php if($shareexpires != ""){echo substr($shareexpires,0,10);}else{echo date("Y-m-d",time()+60*60*24*7);} ?>"></input>
                 <div class="clearerleft"> </div>
             </div>
@@ -214,27 +214,27 @@ include "../include/header.php";
             if($editing)
                 {?>
                 <div class="QuestionSubmit">        
-                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo $lang["save"] ;}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
+                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo escape($lang["save"]);}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
                 </div><?php
                 }
             else
                 {?>
-                <h2 class="CollapsibleSectionHead collapsed" id="EmailUploadSectionHead"><?php echo $lang["action-email-upload-link"]; ?></h2>
+                <h2 class="CollapsibleSectionHead collapsed" id="EmailUploadSectionHead"><?php echo escape($lang["action-email-upload-link"]); ?></h2>
 
                 <div class="CollapsibleSection" id="EmailUploadSection" style="display:none;">
                     <div class="Question">
-                        <label for="message"><?php echo $lang["message"]; ?></label>
+                        <label for="message"><?php echo escape($lang["message"]); ?></label>
                         <textarea class="stdwidth" rows=6 cols=50 name="message" id="message"><?php echo escape($emailmessage); ?></textarea>
                     <div class="clearerleft"> </div>
                     </div>
                     <div class="Question">
-                        <label for="share_emails"><?php echo $lang["upload_share_email_users"]; ?></label>
+                        <label for="share_emails"><?php echo strip_tags_and_attributes($lang["upload_share_email_users"]); ?></label>
                         <input name="share_emails" id="share_emails" type="text" class="stdwidth"></input>
                         <div class="clearerleft"> </div>
                     </div>
                 </div>
                 <div class="QuestionSubmit">        
-                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo $lang["button-upload-link-create"] ;}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
+                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo escape($lang["button-upload-link-create"]);}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
                 </div><?php
                 }
                 ?>

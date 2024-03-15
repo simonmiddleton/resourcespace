@@ -30,12 +30,12 @@ if('' == $section)
         {
         ?>
         <div class="backtoresults">
-            <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"]; ?>"></a>
+            <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
         </div>
         <?php
         }
         ?>
-        <h1><?php echo $lang['helpandadvice']; ?></h1>
+        <h1><?php echo escape($lang['helpandadvice']); ?></h1>
     </div>
 
     <p>
@@ -76,7 +76,7 @@ else
     ?>
     <h1><?php echo escape($section)?></h1>
     <p><?php echo text($section)?></p>
-    <p><a onClick="<?php echo $onClick; ?>" href="<?php echo $baseurl_short?>pages/help.php"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtohelphome"]; ?></a></p>
+    <p><a onClick="<?php echo $onClick; ?>" href="<?php echo $baseurl_short?>pages/help.php"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtohelphome"]); ?></a></p>
     <?php
     }
 } // end hook replacehelp?>

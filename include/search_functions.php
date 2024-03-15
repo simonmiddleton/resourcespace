@@ -3216,9 +3216,9 @@ function render_advanced_search_buttons()
     ?>
 
     <div class="QuestionSubmit QuestionSticky">
-        <input name="resetform" class="resetform" type="submit" onClick="unsetCookie('search_form_submit','<?php echo $baseurl_short; ?>')" value="<?php echo $lang["clearbutton"]; ?>" />
+        <input name="resetform" class="resetform" type="submit" onClick="unsetCookie('search_form_submit','<?php echo $baseurl_short; ?>')" value="<?php echo escape($lang["clearbutton"]); ?>" />
         &nbsp;
-        <input name="dosearch" class="dosearch" type="submit" value="<?php echo $lang["action-viewmatchingresults"]; ?>" />
+        <input name="dosearch" class="dosearch" type="submit" value="<?php echo escape($lang["action-viewmatchingresults"]); ?>" />
     </div>
     
     <?php

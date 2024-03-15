@@ -28,7 +28,7 @@ function render_revert_state_form()
     <div class="BasicsBox">
         <p>
             <a href="<?php echo $baseurl_short ?>pages/collection_log.php?ref=<?php echo $collection; ?>"
-               onclick="CentralSpaceLoad(this, true); return false;"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]; ?></a>
+               onclick="CentralSpaceLoad(this, true); return false;"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a>
        </p>
         <h1><?php echo $lang["rse_version_revert_state"]; ?></h1>
         <p><?php echo $change_summary; ?></p>
@@ -41,7 +41,7 @@ function render_revert_state_form()
             <input type="hidden" name="action" value="revert_state">
             <?php generateFormToken("rse_version_revert_state_form"); ?>
             <div class="QuestionSubmit">
-                <input name="revert" type="submit" value="<?php echo $lang["revert"]; ?>">
+                <input name="revert" type="submit" value="<?php echo escape($lang["revert"]); ?>">
             </div>
         </form>
     </div>

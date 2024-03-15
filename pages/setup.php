@@ -177,7 +177,7 @@ if(get_post_bool('ajax'))
 ?>
 <html>
 <head>
-<title><?php echo $lang["setup-rs_initial_configuration"];?></title>
+<title><?php echo escape($lang["setup-rs_initial_configuration"]);?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link href="../css/global.css?csr=5" rel="stylesheet" type="text/css" /> 
 <link href="../css/colour.css?csr=5" rel="stylesheet" type="text/css" /> 
@@ -402,7 +402,7 @@ h2#dbaseconfig{  min-height: 32px;}
     if (file_exists($outputfile))
     {
     ?>
-    <div id="errorheader"><?php echo $lang["setup-alreadyconfigured"];?></div> 
+    <div id="errorheader"><?php echo strip_tags_and_attributes($lang["setup-alreadyconfigured"]);?></div> 
     </body>
     </html>
     <?php
@@ -1027,12 +1027,12 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
 
     ?>
     <div id="intro">
-        <h1><?php echo $lang["setup-successheader"]; ?></h1>
-        <p><?php echo $lang["setup-successdetails"]; ?></p>
-        <p><?php echo $lang["setup-successnextsteps"]; ?></p>
+        <h1><?php echo escape($lang["setup-successheader"]); ?></h1>
+        <p><?php echo escape($lang["setup-successdetails"]); ?></p>
+        <p><?php echo escape($lang["setup-successnextsteps"]); ?></p>
         <ul>
-            <li><?php echo $lang["setup-successremovewrite"]; ?></li>
-            <li><?php echo $lang["setup-visitwiki"]; ?></li>
+            <li><?php echo escape($lang["setup-successremovewrite"]); ?></li>
+            <li><?php echo strip_tags_and_attributes($lang["setup-visitwiki"]); ?></li>
             <li><a href="<?php echo $baseurl;?>/login.php"><?php echo $lang["setup-login_to"] . " " . $applicationname; ?></a>
                 <ul>
                     <li><?php echo $lang["username"] . ': ' . $admin_username; ?></li>
@@ -1050,7 +1050,7 @@ else
 <?php echo $config_windows==true?'<input type="hidden" name="config_windows" value="true"/>':'' ?>
     <div id="intro">
             <div id="preconfig">
-                <h2><?php echo $lang["installationcheck"]; ?></h2>
+                <h2><?php echo escape($lang["installationcheck"]); ?></h2>
                 <?php 
                     $continue = true;
                     $phpversion = PHP_VERSION;
@@ -1172,11 +1172,11 @@ else
                 ?>
                     <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo $lang["setup-checkstoragewrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
             </div>
-            <h1><?php echo $lang["setup-welcome"];?></h1>
-            <p><?php echo $lang["setup-introtext"];?></p>
-            <p><?php echo $lang["setup-visitwiki"];?></p>
+            <h1><?php echo escape($lang["setup-welcome"]);?></h1>
+            <p><?php echo strip_tags_and_attributes($lang["setup-introtext"]);?></p>
+            <p><?php echo strip_tags_and_attributes($lang["setup-visitwiki"]);?></p>
             <div class="language" style="clear: none;text-align: left;padding: 0px;">
-                    <label for="defaultlanguage"><?php echo $lang["language"];?>:</label><select id="defaultlanguage" name="defaultlanguage">
+                    <label for="defaultlanguage"><?php echo escape($lang["language"]);?>:</label><select id="defaultlanguage" name="defaultlanguage">
                         <?php
                             foreach($languages as $code => $text){
                                 echo "<option value=\"$code\"";
@@ -1186,11 +1186,11 @@ else
                             }
                         ?>
                     </select>
-                    <input type="submit" id="changelanguage" name="changelanguage" value="<?php echo $lang["action-changelanguage"]; ?>"/>
+                    <input type="submit" id="changelanguage" name="changelanguage" value="<?php echo escape($lang["action-changelanguage"]); ?>"/>
                 </div>
             <div id="introbottom">
             <?php if ($continue===false) { ?>
-            <strong><?php echo $lang["setup-checkerrors"];?></strong>
+            <strong><?php echo strip_tags_and_attributes($lang["setup-checkerrors"]);?></strong>
             <?php } else { ?>
             <script type="text/javascript">
             $(document).ready(function(){
@@ -1255,7 +1255,7 @@ else
         ksort ($plugins_avail);
         ?>
         <div id="structural_plugins">
-            <h2><?php echo $lang["setup-structuralplugins"]; ?></h2>
+            <h2><?php echo escape($lang["setup-structuralplugins"]); ?></h2>
             <?php
             $default= (isset($structural_plugin) && !empty($structural_plugin)) ? $structural_plugin : "general_structure";
             foreach($plugins_avail as $plugin)
@@ -1299,24 +1299,24 @@ else
     ?>
     
     <?php if (isset($errors)){ ?>   
-        <div id="errorheader"><?php echo $lang["setup-errorheader"];?></div>
+        <div id="errorheader"><?php echo escape($lang["setup-errorheader"]);?></div>
     <?php } ?>  
     <?php if (isset($warnings)){ ?> 
-        <div id="warnheader"><?php echo $lang["setup-warnheader"];?></div>
+        <div id="warnheader"><?php echo escape($lang["setup-warnheader"]);?></div>
     <?php } ?>  
     <div class="settings">
-                <h2 id="dbaseconfig"><?php echo $lang["setup-dbaseconfig"];?><i class="starthidden ajloadicon fa fa-spinner fa-spin" id="al-testconn"></i></h2>
+                <h2 id="dbaseconfig"><?php echo escape($lang["setup-dbaseconfig"]);?><i class="starthidden ajloadicon fa fa-spinner fa-spin" id="al-testconn"></i></h2>
                 <?php if(isset($errors['database'])){?>
-                    <div class="erroritem"><?php echo $lang["setup-mysqlerror"];?>
+                    <div class="erroritem"><?php echo escape($lang["setup-mysqlerror"]);?>
                         <?php 
                         if(isset($errors['databaseversion'])) 
-                            {echo $lang["setup-mysqlerrorversion"];}
+                            {echo escape($lang["setup-mysqlerrorversion"]);}
                         if(isset($errors['databaseserver']))
-                            {echo $lang["setup-mysqlerrorserver"];} 
+                            {echo escape($lang["setup-mysqlerrorserver"]);} 
                         if(isset($errors['databaselogin']))
-                            {echo $lang["setup-mysqlerrorlogin"];}
+                            {echo escape($lang["setup-mysqlerrorlogin"]);}
                         if(isset($errors['databasedb']))
-                            {echo $lang["setup-mysqlerrordbase"];}
+                            {echo escape($lang["setup-mysqlerrordbase"]);}
                         if(isset($errors['databaseperms']))
                             {echo $lang["setup-mysqlerrorperms"];} 
                         ?>
@@ -1326,11 +1326,11 @@ else
                 <?php } ?>
                         
                 <div class="configitem">
-                    <label for="mysqlserver"><?php echo $lang["setup-mysqlserver"];?></label><input class="mysqlconn" type="text" required id="mysqlserver" name="mysql_server" value="<?php echo escape($mysql_server);?>"/><strong>*</strong><a class="iflink" href="#if-mysql-server">?</a>
-                    <p class="iteminfo" id="if-mysql-server"><?php echo $lang["setup-if_mysqlserver"];?></p>
+                    <label for="mysqlserver"><?php echo escape($lang["setup-mysqlserver"]);?></label><input class="mysqlconn" type="text" required id="mysqlserver" name="mysql_server" value="<?php echo escape($mysql_server);?>"/><strong>*</strong><a class="iflink" href="#if-mysql-server">?</a>
+                    <p class="iteminfo" id="if-mysql-server"><?php echo strip_tags_and_attributes($lang["setup-if_mysqlserver"]);?></p>
                 </div>
                 <div class="configitem">
-                    <label for="mysqlusername"><?php echo $lang["setup-mysqlusername"]; ?></label>
+                    <label for="mysqlusername"><?php echo escape($lang["setup-mysqlusername"]); ?></label>
                     <input class="mysqlconn"
                            type="text"
                            required
@@ -1340,10 +1340,10 @@ else
                            data-connection_mode="read_write"/>
                     <strong>*</strong>
                     <a class="iflink" href="#if-mysql-username">?</a>
-                    <p class="iteminfo" id="if-mysql-username"><?php echo $lang["setup-if_mysqlusername"];?></p>        
+                    <p class="iteminfo" id="if-mysql-username"><?php echo escape($lang["setup-if_mysqlusername"]);?></p>        
                 </div>
                 <div class="configitem">
-                    <label for="mysqlpassword"><?php echo $lang["setup-mysqlpassword"];?></label>
+                    <label for="mysqlpassword"><?php echo escape($lang["setup-mysqlpassword"]);?></label>
                     <input class="mysqlconn"
                            type="password"
                            id="mysqlpassword"
@@ -1351,10 +1351,10 @@ else
                            value="<?php echo escape($db_connection_modes["read_write"]["mysql_password"]); ?>"
                            data-connection_mode="read_write"/>
                     <a class="iflink" href="#if-mysql-password">?</a>
-                    <p class="iteminfo" id="if-mysql-password"><?php echo $lang["setup-if_mysqlpassword"];?></p>
+                    <p class="iteminfo" id="if-mysql-password"><?php echo escape($lang["setup-if_mysqlpassword"]);?></p>
                 </div>
                 <div class="configitem">
-                    <label for="mysql_read_only_username"><?php echo $lang["setup-mysql_read_only_username"]; ?></label>
+                    <label for="mysql_read_only_username"><?php echo escape($lang["setup-mysql_read_only_username"]); ?></label>
                     <input id="mysql_read_only_username"
                            class="mysqlconn"
                            type="text"
@@ -1362,10 +1362,10 @@ else
                            value="<?php echo escape($db_connection_modes["read_only"]["mysql_username"]); ?>"
                            data-connection_mode="read_only">
                     <a class="iflink" href="#if-mysql-read-only-username">?</a>
-                    <p class="iteminfo" id="if-mysql-read-only-username"><?php echo $lang["setup-if_mysql_read_only_username"]; ?></p>        
+                    <p class="iteminfo" id="if-mysql-read-only-username"><?php echo escape($lang["setup-if_mysql_read_only_username"]); ?></p>        
                 </div>
                 <div class="configitem">
-                    <label for="mysql_read_only_password"><?php echo $lang["setup-mysql_read_only_password"]; ?></label>
+                    <label for="mysql_read_only_password"><?php echo escape($lang["setup-mysql_read_only_password"]); ?></label>
                     <input id="mysql_read_only_password"
                            class="mysqlconn"
                            type="password"
@@ -1373,47 +1373,47 @@ else
                            value="<?php echo escape($db_connection_modes["read_only"]["mysql_password"]); ?>"
                            data-connection_mode="read_only">
                     <a class="iflink" href="#if-mysql-read-only-password">?</a>
-                    <p class="iteminfo" id="if-mysql-read-only-password"><?php echo $lang["setup-if_mysql_read_only_password"]; ?></p>
+                    <p class="iteminfo" id="if-mysql-read-only-password"><?php echo escape($lang["setup-if_mysql_read_only_password"]); ?></p>
                 </div>
                 <div class="configitem">
-                    <label for="mysqldb"><?php echo $lang["setup-mysqldb"];?></label><input id="mysqldb" class="mysqlconn" type="text" required name="mysql_db" value="<?php echo escape($mysql_db);?>"/><a class="iflink" href="#if-mysql-db">?</a>
-                    <p class="iteminfo" id="if-mysql-db"><?php echo $lang["setup-if_mysqldb"];?></p>
+                    <label for="mysqldb"><?php echo escape($lang["setup-mysqldb"]);?></label><input id="mysqldb" class="mysqlconn" type="text" required name="mysql_db" value="<?php echo escape($mysql_db);?>"/><a class="iflink" href="#if-mysql-db">?</a>
+                    <p class="iteminfo" id="if-mysql-db"><?php echo escape($lang["setup-if_mysqldb"]);?></p>
                 </div>
                 
                 <div class="configitem">
                     <?php if(isset($errors['mysqlbinpath'])){?>
-                        <div class="erroritem"><?php echo $lang["setup-err_mysqlbinpath"];?></div>
+                        <div class="erroritem"><?php echo escape($lang["setup-err_mysqlbinpath"]);?></div>
                     <?php } ?>
-                    <label for="mysqlbinpath"><?php echo $lang["setup-mysqlbinpath"];?></label><input id="mysqlbinpath" type="text" name="mysql_bin_path" value="<?php echo escape($mysql_bin_path);?>"/><a class="iflink" href="#if-mysql-bin-path">?</a>
-                    <p class="iteminfo" id="if-mysql-bin-path"><?php echo $lang["setup-if_mysqlbinpath"];?></p>
+                    <label for="mysqlbinpath"><?php echo escape($lang["setup-mysqlbinpath"]);?></label><input id="mysqlbinpath" type="text" name="mysql_bin_path" value="<?php echo escape($mysql_bin_path);?>"/><a class="iflink" href="#if-mysql-bin-path">?</a>
+                    <p class="iteminfo" id="if-mysql-bin-path"><?php echo escape($lang["setup-if_mysqlbinpath"]);?></p>
                 </div>
             </p>
             <p class="configsection">
-                <h2><?php echo $lang["setup-generalsettings"];?><img alt="" id="admin_test" class="starthidden ajloadicon" src="../gfx/ajax-loader.gif"/></h2>
+                <h2><?php echo escape($lang["setup-generalsettings"]);?><img alt="" id="admin_test" class="starthidden ajloadicon" src="../gfx/ajax-loader.gif"/></h2>
                 <div class="configitem">
-                    <label for="applicationname"><?php echo $lang["setup-applicationname"];?></label><input id="applicationname" type="text" name="applicationname" value="<?php echo escape($applicationname);?>"/><a class="iflink" href="#if-applicationname">?</a>
-                    <p class="iteminfo" id="if-applicationname"><?php echo $lang["setup-if_applicationname"];?></p>
+                    <label for="applicationname"><?php echo escape($lang["setup-applicationname"]);?></label><input id="applicationname" type="text" name="applicationname" value="<?php echo escape($applicationname);?>"/><a class="iflink" href="#if-applicationname">?</a>
+                    <p class="iteminfo" id="if-applicationname"><?php echo escape($lang["setup-if_applicationname"]);?></p>
                 </div>
                 <div class="configitem">
                     <?php if(isset($errors['baseurl'])){?>
-                        <div class="erroritem"><?php echo $lang["setup-err_baseurl"];?></div>
+                        <div class="erroritem"><?php echo escape($lang["setup-err_baseurl"]);?></div>
                     <?php } ?>
                     <?php if(isset($warnings['baseurlverify'])){?>
-                        <div class="warnitem"><?php echo $lang["setup-err_baseurlverify"];?></div>
+                        <div class="warnitem"><?php echo escape($lang["setup-err_baseurlverify"]);?></div>
                     <?php } ?>
-                    <label for="baseurl"><?php echo $lang["setup-baseurl"];?></label><input id="baseurl" type="url" name="baseurl" required value="<?php echo escape($baseurl);?>"/><strong>*</strong><a class="iflink" href="#if-baseurl">?</a>
-                    <p class="iteminfo" id="if-baseurl"><?php echo $lang["setup-if_baseurl"];?></p>
+                    <label for="baseurl"><?php echo escape($lang["setup-baseurl"]);?></label><input id="baseurl" type="url" name="baseurl" required value="<?php echo escape($baseurl);?>"/><strong>*</strong><a class="iflink" href="#if-baseurl">?</a>
+                    <p class="iteminfo" id="if-baseurl"><?php echo escape($lang["setup-if_baseurl"]);?></p>
                 </div>
                 <div class="configitem">
                     <?php
                 if(isset($errors['admin_fullname']))
                     {
                     ?>
-                    <div class="erroritem"><?php echo $lang['setup-admin_fullname_error']; ?></div>
+                    <div class="erroritem"><?php echo escape($lang['setup-admin_fullname_error']); ?></div>
                     <?php
                     }
                     ?>
-                    <label for="admin_fullname"><?php echo $lang['setup-admin_fullname']; ?></label>
+                    <label for="admin_fullname"><?php echo escape($lang['setup-admin_fullname']); ?></label>
                     <input id="admin_fullname" class="admin_credentials" type="text" name="admin_fullname" value="<?php echo escape($admin_fullname); ?>"/>
                 </div>
                 <div class="configitem">
@@ -1421,132 +1421,132 @@ else
                 if(isset($errors['admin_email']))
                     {
                     ?>
-                    <div class="erroritem"><?php echo $lang['setup-emailerr']; ?></div>
+                    <div class="erroritem"><?php echo escape($lang['setup-emailerr']); ?></div>
                     <?php
                     }
                     ?>
-                    <label for="admin_email"><?php echo $lang['setup-admin_email']; ?></label>
+                    <label for="admin_email"><?php echo escape($lang['setup-admin_email']); ?></label>
                     <input id="admin_email" class="admin_credentials" type="email" name="admin_email" required value="<?php echo $admin_email; ?>"/><strong>*</strong>
                 </div>
                 <div class="configitem">
-                    <label for="admin_username"><?php echo $lang['setup-admin_username']; ?></label>
+                    <label for="admin_username"><?php echo escape($lang['setup-admin_username']); ?></label>
                     <input id="admin_username" class="admin_credentials" type="text" name="admin_username" required value="<?php echo escape($admin_username); ?>"/><strong>*</strong><a class="iflink" href="#if-admin-username">?</a>
-                    <p id="if-admin-username" class="iteminfo"><?php echo $lang['setup-if_admin_username']; ?></p>
+                    <p id="if-admin-username" class="iteminfo"><?php echo escape($lang['setup-if_admin_username']); ?></p>
                 </div>
                 <div class="configitem">
                     <div id="admin_password_error" class="erroritem" <?php echo !isset($errors['admin_password']) ? 'style="display: none;"' : ''; ?>><?php echo isset($errors['admin_password']) ? $errors['admin_password'] : ''; ?></div>
-                    <label for="admin_password"><?php echo $lang['setup-admin_password']; ?></label>
+                    <label for="admin_password"><?php echo escape($lang['setup-admin_password']); ?></label>
                     <input id="admin_password" class="admin_credentials" type="password" name="admin_password" required value="<?php echo escape($admin_password); ?>"/><strong>*</strong><a class="iflink" href="#if-admin-password">?</a>
-                    <p id="if-admin-password" class="iteminfo"><?php echo $lang['setup-if_admin_password']; ?></p>
+                    <p id="if-admin-password" class="iteminfo"><?php echo escape($lang['setup-if_admin_password']); ?></p>
                 </div>
                 <div class="configitem">
                 <?php
                 if(isset($errors['email_from']))
                     {
                     ?>
-                    <div class="erroritem"><?php echo $lang["setup-emailerr"];?></div>
+                    <div class="erroritem"><?php echo escape($lang["setup-emailerr"]);?></div>
                     <?php
                     }
                     ?>
-                    <label for="emailfrom"><?php echo $lang["setup-emailfrom"];?></label><input id="emailfrom" type="email" required name="email_from" value="<?php echo escape($email_from);?>"/><strong>*</strong><a class="iflink" href="#if-emailfrom">?</a>
-                    <p id="if-emailfrom" class="iteminfo"><?php echo $lang["setup-if_emailfrom"];?></p>
+                    <label for="emailfrom"><?php echo escape($lang["setup-emailfrom"]);?></label><input id="emailfrom" type="email" required name="email_from" value="<?php echo escape($email_from);?>"/><strong>*</strong><a class="iflink" href="#if-emailfrom">?</a>
+                    <p id="if-emailfrom" class="iteminfo"><?php echo escape($lang["setup-if_emailfrom"]);?></p>
                 </div>
 
             </p>
             <p class="configsection">
-                <h2><?php echo $lang["setup-paths"];?></h2>
-                <p><?php echo $lang["setup-pathsdetail"];?></p>
+                <h2><?php echo escape($lang["setup-paths"]);?></h2>
+                <p><?php echo escape($lang["setup-pathsdetail"]);?></p>
                 <div class="configitem">
                     <?php if(isset($errors['imagemagick_path'])){?>
-                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'convert'.</div>
+                        <div class="erroritem"><?php echo escape($lang["setup-err_path"]);?> 'convert'.</div>
                     <?php } ?>
                     <label for="imagemagickpath"><?php echo str_replace("%bin", "ImageMagick/GraphicsMagick", $lang["setup-binpath"]) . ":"; ?></label><input id="imagemagickpath" type="text" name="imagemagick_path" value="<?php echo escape($imagemagick_path); ?>"/>
                 </div>
                 <div class="configitem">
                     <?php if(isset($errors['ghostscript_path'])){?>
-                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'gs'.</div>
+                        <div class="erroritem"><?php echo escape($lang["setup-err_path"]);?> 'gs'.</div>
                     <?php } ?>
                     <label for="ghostscriptpath"><?php echo str_replace("%bin", "Ghostscript", $lang["setup-binpath"]) . ":"; ?></label><input id="ghostscriptpath" type="text" name="ghostscript_path" value="<?php echo escape($ghostscript_path); ?>"/>
                 </div>
                 <div class="configitem">
                     <?php if(isset($errors['ffmpeg_path'])){?>
-                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'ffmpeg'.</div>
+                        <div class="erroritem"><?php echo escape($lang["setup-err_path"]);?> 'ffmpeg'.</div>
                     <?php } ?>
                     <label for="ffmpegpath"><?php echo str_replace("%bin", "FFMpeg/libav", $lang["setup-binpath"]) . ":"; ?></label><input id="ffmpegpath" type="text" name="ffmpeg_path" value="<?php echo escape($ffmpeg_path); ?>"/>
                 </div>
                 <div class="configitem">
                     <?php if(isset($errors['exiftool_path'])){?>
-                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'exiftool'.</div>
+                        <div class="erroritem"><?php echo escape($lang["setup-err_path"]);?> 'exiftool'.</div>
                     <?php } ?>
                     <label for="exiftoolpath"><?php echo str_replace("%bin", "Exiftool", $lang["setup-binpath"]) . ":"; ?></label><input id="exiftoolpath" type="text" name="exiftool_path" value="<?php echo escape($exiftool_path); ?>"/>
                 </div>
                 <div class="configitem">
                 <?php if(isset($errors['antiword_path'])){?>
-                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'AntiWord'.</div>
+                        <div class="erroritem"><?php echo escape($lang["setup-err_path"]);?> 'AntiWord'.</div>
                     <?php } ?>
                     <label for="antiwordpath"><?php echo str_replace("%bin", "AntiWord", $lang["setup-binpath"]) . ":"; ?></label><input id="antiwordpath" type="text" name="antiword_path" value="<?php echo escape($antiword_path); ?>"/>
                 </div>
                 
                 <div class="configitem">
                     <?php if(isset($errors['pdftotext_path'])){?>
-                        <div class="erroritem"><?php echo $lang["setup-err_path"];?> 'pdftotext'.</div>
+                        <div class="erroritem"><?php echo escape($lang["setup-err_path"]);?> 'pdftotext'.</div>
                     <?php } ?>
                     <label for="pdftotextpath"><?php echo str_replace("%bin", "PDFtotext", $lang["setup-binpath"]) . ":"; ?></label><input id="pdftotextpath" type="text" name="pdftotext_path" value="<?php echo escape($pdftotext_path); ?>"/>
                 </div>
             </p>
 
 
-            <h2><?php echo $lang["setup-smtp-settings"]; ?></h2>
+            <h2><?php echo escape($lang["setup-smtp-settings"]); ?></h2>
             <div class="advsection" id="smtpsettings">
                 <div class="configitem">
                     <label for="use_smtp"><?php echo $lang["usesmtp"] . ":"; ?></label>
                     <input id="use_smtp" name="use_smtp" type="checkbox"  <?php echo $use_smtp?"checked":"";?>/>
                     <a class="iflink" href="#if-usesmtp">?</a>
-                    <p class="iteminfo" id="if-usesmtp"><?php echo $lang["setup-if-usesmtp"];?></p>
+                    <p class="iteminfo" id="if-usesmtp"><?php echo escape($lang["setup-if-usesmtp"]);?></p>
                 </div>
                 <div id="use-SMTP-settings">
                     <div class="configitem">
                         <label for="smtp_secure"><?php echo $lang["smtpsecure"] . ":"; ?></label>
                         <input id="smtp_secure" name="smtp_secure" type="text" value="<?php echo escape($smtp_secure);?>" />
                         <a class="iflink" href="#if-smtpsecure">?</a>
-                        <p class="iteminfo" id="if-smtpsecure"><?php echo $lang["setup-if-smtpsecure"];?></p>
+                        <p class="iteminfo" id="if-smtpsecure"><?php echo escape($lang["setup-if-smtpsecure"]);?></p>
                     </div>
                     <div class="configitem">
                         <label for="smtp_host"><?php echo $lang["smtphost"] . ":"; ?></label>
                         <input id="smtp_host" name="smtp_host" type="text" value="<?php echo escape($smtp_host);?>"/>
                         <a class="iflink" href="#if-smtphost">?</a>
-                        <p class="iteminfo" id="if-smtphost"><?php echo $lang["setup-if-smtphost"];?></p>
+                        <p class="iteminfo" id="if-smtphost"><?php echo escape($lang["setup-if-smtphost"]);?></p>
                     </div>
                     <div class="configitem">
                         <label for="smtp_port"><?php echo $lang["smtpport"] . ":"; ?></label>
                         <input id="smtp_port" name="smtp_port" type="text" value="<?php echo escape($smtp_port);?>"/>
                         <a class="iflink" href="#if-smtpport">?</a>
-                        <p class="iteminfo" id="if-smtpport"><?php echo $lang["setup-if-smtpport"];?></p>
+                        <p class="iteminfo" id="if-smtpport"><?php echo escape($lang["setup-if-smtpport"]);?></p>
                     </div>
                     <div class="configitem">
                         <label for="smtp_auth"><?php echo $lang["smtpauth"] . ":"; ?></label>
                         <input id="smtp_auth" name="smtp_auth" type="checkbox" checked />
                         <a class="iflink" href="#if-smtpauth">?</a>
-                        <p class="iteminfo" id="if-smtpauth"><?php echo $lang["setup-if-smtpauth"];?></p>
+                        <p class="iteminfo" id="if-smtpauth"><?php echo escape($lang["setup-if-smtpauth"]);?></p>
                     </div>
                     <div class="configitem">
                         <label for="smtp_username"><?php echo $lang["smtpusername"] . ":"; ?></label>
                         <input id="smtp_username" name="smtp_username" type="text" value="<?php echo escape($smtp_username);?>"/>
                         <a class="iflink" href="#if-smtpusername">?</a>
-                        <p class="iteminfo" id="if-smtpusername"><?php echo $lang["setup-if-smtpusername"];?></p>
+                        <p class="iteminfo" id="if-smtpusername"><?php echo escape($lang["setup-if-smtpusername"]);?></p>
                     </div>
                     <div class="configitem">
                         <label for="smtp_password"><?php echo $lang["smtppassword"] . ":"; ?></label>
                         <input id="smtp_password" name="smtp_password" type="password" value="<?php echo escape($smtp_password);?>"/>
                         <a class="iflink" href="#if-smtppassword">?</a>
-                        <p class="iteminfo" id="if-smtppassword"><?php echo $lang["setup-if-smtppassword"];?></p>
+                        <p class="iteminfo" id="if-smtppassword"><?php echo escape($lang["setup-if-smtppassword"]);?></p>
                     </div>
                 </div>
             </div>
-            <h2><?php echo $lang["pluginssetup"]; ?></h2>
+            <h2><?php echo escape($lang["pluginssetup"]); ?></h2>
             <div class="advsection" id="plugin_settings">
                 <div class="configitem">
-                    <label for="google_vision_enable"><?php echo $lang["setup_google_vision_enable"]; ?></label>
+                    <label for="google_vision_enable"><?php echo escape($lang["setup_google_vision_enable"]); ?></label>
                     <input id="google_vision_enable" name="google_vision_enable" type="checkbox"  <?php echo $google_vision_enable ? "checked" : "";?>/>
                     <a class="iflink" href="https://www.resourcespace.com/knowledge-base/plugins/google-vision" target="_blank">?</a>
                 </div>
@@ -1557,7 +1557,7 @@ else
                     </div>
                 </div>
             </div>
-        <input type="submit" id="submit" name="submit" value="<?php echo $lang["setup-begin_installation"];?>"/>
+        <input type="submit" id="submit" name="submit" value="<?php echo escape($lang["setup-begin_installation"]);?>"/>
     </div>
 </form>
 <script>

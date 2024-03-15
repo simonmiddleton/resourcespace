@@ -94,7 +94,7 @@ function addColumnHeader($orderName, $labelKey)
     ?>
 
     <div class="BasicsBox">
-    <h1><?php echo $lang["admin_resource_type_fields"]; ?></h1>
+    <h1><?php echo escape($lang["admin_resource_type_fields"]); ?></h1>
     <?php
 
   renderBreadcrumbs($links_trail);
@@ -129,7 +129,7 @@ $results=count($fields);
 if($allow_reorder)
     {
     ?>
-    <p><?php echo  $lang["admin_resource_type_field_reorder_information"]; ?></p>   
+    <p><?php echo escape($lang["admin_resource_type_field_reorder_information"]); ?></p>   
     <?php
     }
 elseif ($restypefilter=="")
@@ -151,18 +151,18 @@ elseif ($restypefilter=="")
     <?php echo LINK_CARET ?>
     <?php if($use_order_by_tab_view)
         {
-        echo $lang["admin_resource_type_field_reorder_mode_all"];
+        echo escape($lang["admin_resource_type_field_reorder_mode_all"]);
         }
     else
         {
-        echo $lang["admin_resource_type_field_reorder_mode"];
+        echo escape($lang["admin_resource_type_field_reorder_mode"]);
         }?></a>
     <?php
     }
 else
     {
     ?>
-    <p><?php echo  $lang["admin_resource_type_field_reorder_select_restype"]; ?></p>   
+    <p><?php echo escape($lang["admin_resource_type_field_reorder_select_restype"]); ?></p>   
     <?php
     }
 ?>
@@ -170,12 +170,12 @@ else
 <form method="post" id="AdminResourceTypeFieldForm" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params); ?>" >
     <?php generateFormToken("AdminResourceTypeFieldForm"); ?>       
     <div class="Question">  
-        <label for="restypefilter"><?php echo $lang["property-resource_type"]; ?></label>
+        <label for="restypefilter"><?php echo escape($lang["property-resource_type"]); ?></label>
         <div class="tickset">
           <div class="Inline">
           <select name="restypefilter" id="restypefilter" onChange="return CentralSpacePost(this.form,true);" >
-            <option value=""<?php if ($restypefilter == "") { echo " selected"; } ?>><?php echo $lang["all"]; ?></option>
-            <option value="0"<?php if ($restypefilter == "0") { echo " selected"; } ?>><?php echo $lang["resourcetype-global_field"]; ?></option>
+            <option value=""<?php if ($restypefilter == "") { echo " selected"; } ?>><?php echo escape($lang["all"]); ?></option>
+            <option value="0"<?php if ($restypefilter == "0") { echo " selected"; } ?>><?php echo escape($lang["resourcetype-global_field"]); ?></option>
             
             <?php
               for($n=0;$n<count($resource_types);$n++){
@@ -211,7 +211,7 @@ if (!hook('replacetabnamecolumnheader'))
     addColumnHeader('tab_name', 'property-tab_name');
     }
 ?>
-<td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+<td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
 </tr>
 
 <tbody id="resource_type_field_table_body">
@@ -271,15 +271,15 @@ for ($n=0;$n<count($fields);$n++)
             if($field_order_by=="order_by" && $allow_reorder)
                 {
                 ?>      
-                <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($fields)-1){ ?> disabled <?php } ?>><i class="fas fa-arrow-down"></i>&nbsp;<?php echo $lang['action-move-down']; ?></a>
-                <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><i class="fas fa-arrow-up"></i>&nbsp;<?php echo $lang['action-move-up']; ?></a>
+                <a href="javascript:void(0)" class="movelink movedownlink" <?php if($n==count($fields)-1){ ?> disabled <?php } ?>><i class="fas fa-arrow-down"></i>&nbsp;<?php echo escape($lang['action-move-down']); ?></a>
+                <a href="javascript:void(0)" class="movelink moveuplink" <?php if($n==0){ ?> disabled <?php } ?>><i class="fas fa-arrow-up"></i>&nbsp;<?php echo escape($lang['action-move-up']); ?></a>
                 <?php
                 }
                 ?>
             
             
-                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_copy_field.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="CentralSpaceLoad(this,true)" ><i class="fas fa-copy"></i>&nbsp;<?php echo $lang["copy"]; ?></a>
-                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_resource_type_field_edit.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;&nbsp;<?php echo $lang["action-edit"]; ?> </a>
+                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_copy_field.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="CentralSpaceLoad(this,true)" ><i class="fas fa-copy"></i>&nbsp;<?php echo escape($lang["copy"]); ?></a>
+                <a href="<?php echo generateURL("{$baseurl}/pages/admin/admin_resource_type_field_edit.php", ['ref' => $fields[$n]["ref"]], $common_rs_url_params); ?>" onClick="jQuery('#resource_type_field_table_body').sortable('cancel');return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;&nbsp;<?php echo escape($lang["action-edit"]); ?> </a>
                 <a href="<?php echo generateURL(
                     "{$baseurl}/pages/admin/admin_system_log.php",
                     [
@@ -302,15 +302,15 @@ for ($n=0;$n<count($fields);$n++)
 <form method="post" id="AdminResourceTypeFieldForm2" onSubmit="return CentralSpacePost(this,true);"  action="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params); ?>" >
     <?php generateFormToken("AdminResourceTypeFieldForm2"); ?>
     <div class="Question">
-            <label for="find"><?php echo $lang["find"]; ?></label>
+            <label for="find"><?php echo escape($lang["find"]); ?></label>
             <div class="tickset">
              <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape($find)?>" maxlength="100" class="shrtwidth" /></div>
-             <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;" /></div>
+             <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;" /></div>
             <?php
             if ($find!="")
                 {
                 ?>
-                <div class="Inline"><input name="resetform" class="resetform" type="submit" value="<?php echo $lang["clearbutton"]; ?>" onclick="CentralSpaceLoad('<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,array("find"=>"")); ?>',false);return false;" /></div>
+                <div class="Inline"><input name="resetform" class="resetform" type="submit" value="<?php echo escape($lang["clearbutton"]); ?>" onclick="CentralSpaceLoad('<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,array("find"=>"")); ?>',false);return false;" /></div>
                 <?php
                 }
             ?>
@@ -319,7 +319,7 @@ for ($n=0;$n<count($fields);$n++)
         </div>
     
         <div class="Question">
-            <label for="newfield"><?php echo $lang["admin_resource_type_field_create"]; ?></label>
+            <label for="newfield"><?php echo escape($lang["admin_resource_type_field_create"]); ?></label>
             <div class="tickset">
              <input type="hidden" name="newfieldrestype" value="<?php echo escape($restypefilter) ?>"/>   
              <div class="Inline"><input type=text name="newfield" id="newtype" maxlength="100" class="shrtwidth" /></div>
@@ -337,7 +337,7 @@ for ($n=0;$n<count($fields);$n++)
             </select>
             </div>
 
-             <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]; ?>&nbsp;&nbsp;" /></div>
+             <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"]); ?>&nbsp;&nbsp;" /></div>
             </div>
             <div class="clearerleft"> </div>
         </div>

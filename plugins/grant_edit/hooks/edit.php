@@ -147,8 +147,8 @@ function HookGrant_editEditAppendcustomfields()
             <label><?php echo $lang["grant_edit_list"]; ?></label>
             <table cellpadding=3 cellspacing=3 class="ListviewStyle">
             <tr class="ListviewTitleStyle">
-            <td><?php echo $lang['user'];?></td>
-            <td><?php echo $lang['expires'];?></td>
+            <td><?php echo escape($lang['user']);?></td>
+            <td><?php echo escape($lang['expires']);?></td>
             </tr>
             <?php
             foreach($grant_editusers as $grant_edituser)
@@ -258,7 +258,7 @@ function HookGrant_editEditAppendcustomfields()
         <div class="Question">
             <label><?php echo $lang["grant_edit_date"]; ?></label>
             <select name="grant_edit_expiry" class="stdwidth">
-            <option value=""><?php echo $lang["never"]; ?></option>
+            <option value=""><?php echo escape($lang["never"]); ?></option>
             <?php for ($n=1;$n<=150;$n++)
                 {
                 $date=time()+(60*60*24*$n);

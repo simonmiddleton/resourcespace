@@ -31,7 +31,7 @@ if($find!="")
 $reports=ps_query("SELECT ref, `name`, support_non_correlated_sql FROM report {$find_sql} ORDER BY {$order_by}",$sql_params??[]);
 
 ?><div class="BasicsBox"> 
-    <h1><?php echo $lang["page-title_report_management"]; ?></h1>
+    <h1><?php echo escape($lang["page-title_report_management"]); ?></h1>
     <?php
     $links_trail = array(
         array(
@@ -47,7 +47,7 @@ $reports=ps_query("SELECT ref, `name`, support_non_correlated_sql FROM report {$
     renderBreadcrumbs($links_trail);
     ?>
     
-    <p><?php echo $lang['page-subtitle_report_management_edit'];render_help_link("resourceadmin/reports-and-statistics"); ?></p>
+    <p><?php echo escape($lang['page-subtitle_report_management_edit']);render_help_link("resourceadmin/reports-and-statistics"); ?></p>
 
     <!--code for copy report link -->
     <!-- form #copy_report -->
@@ -100,7 +100,7 @@ function addColumnHeader($orderName, $labelKey)
                 addColumnHeader("name", "property-name");
                 addColumnHeader('support_non_correlated_sql', 'property-support_non_correlated_sql');
                 ?>
-                <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+                <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
             </tr>
 <?php
         foreach ($reports as $report)
@@ -126,14 +126,14 @@ function addColumnHeader($orderName, $labelKey)
                         <?php
                         if(!$support_non_correlated_sql)
                             {
-                            ?><a href="<?php echo $view_url; ?>" onclick="return CentralSpaceLoad(this, true);"><i class="fas fa-table"></i>&nbsp;<?php echo $lang["action-view"]; ?></a>
+                            ?><a href="<?php echo $view_url; ?>" onclick="return CentralSpaceLoad(this, true);"><i class="fas fa-table"></i>&nbsp;<?php echo escape($lang["action-view"]); ?></a>
                             <?php
                             }
 
                         if(db_use_multiple_connection_modes() || !$execution_lockout)
                             {
-                            ?><a href="<?php echo $edit_url; ?>" onclick="return CentralSpaceLoad(this, true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a>
-                            <a href="javascript:copyReport('<?php echo $report["ref"]; ?>')"><i class="fas fa-copy"></i>&nbsp;<?php echo $lang["copy"]; ?></a>
+                            ?><a href="<?php echo $edit_url; ?>" onclick="return CentralSpaceLoad(this, true);"><i class="fa fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
+                            <a href="javascript:copyReport('<?php echo $report["ref"]; ?>')"><i class="fas fa-copy"></i>&nbsp;<?php echo escape($lang["copy"]); ?></a>
                             <?php
                             }
                             ?>
@@ -150,9 +150,9 @@ function addColumnHeader($orderName, $labelKey)
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_report_management.php" onSubmit="return CentralSpacePost(this,false);">
         <?php generateFormToken("admin_report_management_find"); ?>
         <div class="Question">
-            <label for="find"><?php echo $lang["property-search_filter"]; ?></label>
+            <label for="find"><?php echo escape($lang["property-search_filter"]); ?></label>
             <input name="find" type="text" class="medwidth" value="<?php echo escape($find); ?>">
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;">
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;">
             <div class="clearerleft"></div>
         </div>
 <?php
@@ -160,7 +160,7 @@ function addColumnHeader($orderName, $labelKey)
         {
 ?>      <div class="QuestionSubmit">
             <input name="buttonsave" type="button" onclick="CentralSpaceLoad('admin_report_management.php',false);"
-                   value="&nbsp;&nbsp;<?php echo $lang["clearbutton"]; ?>&nbsp;&nbsp;">
+                   value="&nbsp;&nbsp;<?php echo escape($lang["clearbutton"]); ?>&nbsp;&nbsp;">
         </div>
 <?php
         }
@@ -171,13 +171,13 @@ function addColumnHeader($orderName, $labelKey)
     <form method="post" action="<?php echo $baseurl_short; ?>pages/admin/admin_report_management_edit.php" onSubmit="return CentralSpacePost(this,false);">
         <?php generateFormToken("admin_report_management"); ?>
         <div class="Question">
-            <label for="name"><?php echo $lang['action-title_create_report_called']; ?></label>
+            <label for="name"><?php echo escape($lang['action-title_create_report_called']); ?></label>
             <div class="tickset">
                 <div class="Inline">
                     <input name="newreportname" type="text" value="" class="shrtwidth">
                 </div>
                 <div class="Inline">
-                    <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["create"]; ?>&nbsp;&nbsp;" onclick="return (this.form.elements[0].value!='');">
+                    <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["create"]); ?>&nbsp;&nbsp;" onclick="return (this.form.elements[0].value!='');">
                 </div>
             </div>
             <div class="clearerleft"></div>

@@ -43,14 +43,14 @@ include "../include/header.php";
     <input type=hidden name="return_url" value="<?php echo escape($return_url)?>">
     
     <div class="Question">
-    <label><?php echo $lang["share-enter-password"]; ?></label>
+    <label><?php echo escape($lang["share-enter-password"]); ?></label>
     <input name="share_password" id="share_password" type="password" class="stdwidth" />
     <div class="clearerleft"> </div>
     </div>
     
     <div class="QuestionSubmit">
     <input type=hidden name="submit" value=true">
-    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["proceed"]; ?>&nbsp;&nbsp;" />
+    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["proceed"]); ?>&nbsp;&nbsp;" />
     </div>
     </form>
     

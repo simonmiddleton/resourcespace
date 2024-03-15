@@ -73,7 +73,7 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
                 $scramble_key_saved = $scramble_key;
                 $scramble_key = isset($scramble_key_old) ? $scramble_key_old : "";
                 }        
-            
+
             $paths = array();
             $paths[] = get_resource_path($ref,true,$sizes[$m]["id"],false,$sizes[$m]["extension"],true,$page,false,'',$alternative);
 
@@ -128,7 +128,7 @@ function migrate_files($ref, $alternative, $extension, $sizes, $redistribute_mod
                         }
                     }
                 }
-                
+
             // Reset key/evenspread value before next 
             if($redistribute_mode)
                 {

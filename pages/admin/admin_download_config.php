@@ -56,9 +56,9 @@ include '../../include/header.php';
 ?>
 <div class="BasicsBox">
     <p>
-        <a href="<?php echo $baseurl_short; ?>pages/admin/admin_home.php" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo $lang['back']; ?></a>
+        <a href="<?php echo $baseurl_short; ?>pages/admin/admin_home.php" onClick="return CentralSpaceLoad(this, true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang['back']); ?></a>
     </p>
-    <h1><?php echo $lang['exportdata']; ?></h1>
+    <h1><?php echo escape($lang['exportdata']); ?></h1>
     <?php
     if (isset($error))
         {
@@ -70,7 +70,7 @@ include '../../include/header.php';
         echo "<div class=\"PageInformal\">" . escape($message) . "</div>";
         }
     ?>
-    <p><?php echo $lang['exportdata-instructions']; render_help_link("admin/download-config");?></p>
+    <p><?php echo strip_tags_and_attributes($lang['exportdata-instructions']); render_help_link("admin/download-config");?></p>
     
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_download_config.php" onSubmit="return CentralSpacePost(this,true);">
         <input type="hidden" name="export" value="true" />
@@ -80,7 +80,7 @@ include '../../include/header.php';
             {
             ?>
             <div class="Question">
-            <label><?php echo $lang['exportobfuscate']; ?></label>
+            <label><?php echo escape($lang['exportobfuscate']); ?></label>
             <input type="checkbox" name="obfuscate" value="1"  <?php echo $obfuscate? "checked" : "";?> />
             <div class="clearerleft"> </div>
             </div>
@@ -88,20 +88,20 @@ include '../../include/header.php';
             }?>        
 
         <div class="Question">
-            <label><?php echo $lang['exportcollection']; ?></label>
+            <label><?php echo escape($lang['exportcollection']); ?></label>
             <input type="number" name="exportcollection" value="<?php echo (int)$exportcollection; ?>"></input>
             <div class="clearerleft"> </div>
         </div>
 
         <div class="Question">
-            <label><?php echo $lang['export_separate_sql']; ?></label>
+            <label><?php echo escape($lang['export_separate_sql']); ?></label>
             <input type="checkbox" name="separatesql" value="1" <?php echo $separatesql? "checked" : "";?> />
             <div class="clearerleft"> </div>
         </div>
 
 
         <div class="Question" <?php if(isset($error)){echo "style=\"display: none;\"";}?>>
-            <input type="button" name="export" value="<?php echo $lang["export"]; ?>" onClick="jQuery(this.form).submit();" >
+            <input type="button" name="export" value="<?php echo escape($lang["export"]); ?>" onClick="jQuery(this.form).submit();" >
             <div class="clearerleft"> </div>
         </div>
 

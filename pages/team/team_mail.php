@@ -82,44 +82,44 @@ generateFormToken("myform");
 
 if (isset($error)) { ?><div class="FormError"><?php echo $error?></div><?php } ?>
 
-<div class="Question"><label><?php echo $lang["emailrecipients"]; ?></label><?php include "../../include/user_select.php"; ?>
+<div class="Question"><label><?php echo escape($lang["emailrecipients"]); ?></label><?php include "../../include/user_select.php"; ?>
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["type"]; ?></label>
+<div class="Question"><label><?php echo escape($lang["type"]); ?></label>
 
     <input type="radio" id="message_type_<?php echo MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL; ?>" name="message_type" value="<?php
-        echo MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL; ?>" onclick="jQuery('h1').closest('h1').html('<?php echo $lang["sendbulkmail"]; ?>');
+        echo MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL; ?>" onclick="jQuery('h1').closest('h1').html('<?php echo escape($lang["sendbulkmail"]); ?>');
         jQuery('#message_email').slideDown(); jQuery('#message_screen').slideUp();" <?php
-            if($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL) { ?> checked='checked'<?php }?>><?php echo $lang['email']; ?>
+            if($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL) { ?> checked='checked'<?php }?>><?php echo escape($lang['email']); ?>
 
     <input type="radio" id="message_type_<?php echo MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN; ?>" name="message_type" value="<?php
-        echo MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN; ?>" onclick="jQuery('h1').closest('h1').html('<?php echo $lang["sendbulkmessage"]; ?>');
+        echo MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN; ?>" onclick="jQuery('h1').closest('h1').html('<?php echo escape($lang["sendbulkmessage"]); ?>');
         jQuery('#message_email').slideUp(); jQuery('#message_screen').slideDown();"<?php
-            if($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN) { ?> checked='checked'<?php }?>><?php echo $lang['screen']; ?>
+            if($message_type==MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN) { ?> checked='checked'<?php }?>><?php echo escape($lang['screen']); ?>
     
     <input type="radio" id="message_type_<?php echo MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN | MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL; ?>" name="message_type" value="<?php
-        echo MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN | MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL; ?>" onclick="jQuery('h1').closest('h1').html('<?php echo $lang["sendbulkmailandmessage"]; ?>');
+        echo MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN | MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL; ?>" onclick="jQuery('h1').closest('h1').html('<?php echo escape($lang["sendbulkmailandmessage"]); ?>');
         jQuery('#message_email').slideDown(); jQuery('#message_screen').slideDown();"<?php
-            if($message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN | MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)) { ?> checked='checked'<?php }?>><?php echo $lang['email_and_screen']; ?>
+            if($message_type==(MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN | MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)) { ?> checked='checked'<?php }?>><?php echo escape($lang['email_and_screen']); ?>
 
     <div class="clearerleft"></div>
 </div>
 
 <div id="message_screen" style="<?php if($message_type!=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN && $message_type!=(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)) {?>display:none;<?php } ?>">
-    <div class="Question"><label><?php echo $lang["message_url"]; ?></label><input name="url" type="text" class="stdwidth Inline required" value="<?php echo escape(getval("url","")); ?>"><div class="clearerleft"></div></div>
+    <div class="Question"><label><?php echo escape($lang["message_url"]); ?></label><input name="url" type="text" class="stdwidth Inline required" value="<?php echo escape(getval("url","")); ?>"><div class="clearerleft"></div></div>
 </div>
 
 <div id="message_email" style="<?php if($message_type!==MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL && $message_type!=(MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL | MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)) {?>display:none;<?php } ?>">
-    <div class="Question"><label><?php echo $lang["emailhtml"]; ?></label><input name="html" type="checkbox" value="yes" <?php if (getval("html","")=="yes") { ?>checked<?php } ?>><div class="clearerleft"> </div></div>
-    <div class="Question"><label><?php echo $lang["emailsubject"]; ?></label><input name="subject" type="text" class="stdwidth Inline required" value="<?php echo escape(getval("subject",$applicationname))?>"><div class="clearerleft"> </div></div>
+    <div class="Question"><label><?php echo escape($lang["emailhtml"]); ?></label><input name="html" type="checkbox" value="yes" <?php if (getval("html","")=="yes") { ?>checked<?php } ?>><div class="clearerleft"> </div></div>
+    <div class="Question"><label><?php echo escape($lang["emailsubject"]); ?></label><input name="subject" type="text" class="stdwidth Inline required" value="<?php echo escape(getval("subject",$applicationname))?>"><div class="clearerleft"> </div></div>
 </div>
 
-<div class="Question"><label><?php echo $lang["text"]; ?></label><textarea name="text" class="stdwidth Inline required" rows=25 cols=50><?php echo escape(getval("text",""))?></textarea><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["text"]); ?></label><textarea name="text" class="stdwidth Inline required" rows=25 cols=50><?php echo escape(getval("text",""))?></textarea><div class="clearerleft"> </div></div>
 
 <?php hook("additionalemailfield");?>
 
 <div class="QuestionSubmit">        
-<input name="send" type="submit" value="&nbsp;&nbsp;<?php echo $lang["send"]; ?>&nbsp;&nbsp;" />
+<input name="send" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["send"]); ?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>

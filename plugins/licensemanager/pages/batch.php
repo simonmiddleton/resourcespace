@@ -56,7 +56,7 @@ include "../../../include/header.php";
 <?php generateFormToken("licensemanager_batch"); ?>
 
 <div class="Question"><label><?php echo $lang["license_id"]; ?></label>
-<select name="ref"><option value=""><?php echo $lang["select"]; ?></option>
+<select name="ref"><option value=""><?php echo escape($lang["select"]); ?></option>
 <?php $licenses=ps_query("select ref,description,holder from license order by ref"); foreach ($licenses as $license) { ?>
 <option value="<?php echo $license["ref"]; ?>"><?php echo $license["ref"]; ?> - <?php echo $license["description"] . " / " . $license["holder"]; ?></option>
 <?php } ?>
@@ -64,7 +64,7 @@ include "../../../include/header.php";
 <div class="clearerleft"> </div></div>
 
 <div class="QuestionSubmit">        
-<input name="batch" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" />
+<input name="batch" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>

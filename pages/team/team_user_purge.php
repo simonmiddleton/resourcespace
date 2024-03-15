@@ -69,23 +69,23 @@ generateFormToken("team_user_purge");
 if(isset($count) && $count==0)
     {
     ?>
-    <p><?php echo $lang["purgeusersnousers"]; ?></p>
+    <p><?php echo escape($lang["purgeusersnousers"]); ?></p>
 
 <?php } elseif (isset($count)) { ?>
 
 <p><?php echo str_replace("%",$count,($user_purge_disable ? $lang["purgeusersconfirmdisable"] : $lang["purgeusersconfirm"] )) ?>
 <br /><br />
 <input type="hidden" name="months" value="<?php echo $months ?>">
-<input name="purge2" type="submit" value="&nbsp;&nbsp;<?php echo $lang["purgeusers"]; ?>&nbsp;&nbsp;" />
+<input name="purge2" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["purgeusers"]); ?>&nbsp;&nbsp;" />
 </p>
 <?php $users=ps_query("select " . columns_in("user") . " from user where $condition"); ?>
 <table class="InfoTable">
     <tr>
-        <td><strong><?php echo $lang["username"]; ?></strong></td>
-        <td><strong><?php echo $lang["fullname"]; ?></strong></td>
-        <td><strong><?php echo $lang["email"]; ?></strong></td>
-        <td><strong><?php echo $lang["created"]; ?></strong></td>
-        <td><strong><?php echo $lang["lastactive"]; ?></strong></td>
+        <td><strong><?php echo escape($lang["username"]); ?></strong></td>
+        <td><strong><?php echo escape($lang["fullname"]); ?></strong></td>
+        <td><strong><?php echo escape($lang["email"]); ?></strong></td>
+        <td><strong><?php echo escape($lang["created"]); ?></strong></td>
+        <td><strong><?php echo escape($lang["lastactive"]); ?></strong></td>
     </tr>
 <?php foreach ($users as $user) 
     {
@@ -105,7 +105,7 @@ if(isset($count) && $count==0)
 
 <p><?php echo str_replace("%","<input type='number' class='PurgeUsersMonths' name=months value=12>",$lang["purgeuserscommand"]) ?>
 <br /><br />
-<input name="purge1" type="submit" value="&nbsp;&nbsp;<?php echo $lang["purgeusers"]; ?>&nbsp;&nbsp;" />
+<input name="purge1" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["purgeusers"]); ?>&nbsp;&nbsp;" />
 </p>
 <?php } ?>
 

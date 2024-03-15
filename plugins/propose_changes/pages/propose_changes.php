@@ -323,7 +323,7 @@ $searchparams = get_search_params();
 if(!$modal)
     {
     ?>
-    <p><a href="<?php echo generateurl($baseurl . "/pages/view.php",$searchparams,["ref" => $ref]); ?>" onClick="return  <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
+    <p><a href="<?php echo generateurl($baseurl . "/pages/view.php",$searchparams,["ref" => $ref]); ?>" onClick="return  <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
     <?php
     }
     ?>
@@ -366,7 +366,7 @@ if(!$editaccess)
     ?>
 
     <div class="Question" id="resource_ref_div" style="border-top:none;">
-        <label><?php echo $lang["resourceid"]; ?></label>
+        <label><?php echo escape($lang["resourceid"]); ?></label>
         <div class="Fixed"><?php echo urlencode($ref) ?></div>
         <div class="clearerleft"> </div>
     </div>
@@ -447,7 +447,7 @@ if(!$editaccess)
                     <input id="ProposeChangesAcceptAllCheckbox" class="ProposeChangesAcceptCheckbox" type="checkbox" name="accept_all_changes" onClick="ProposeChangesUpdateAll(this);" checked ><?php echo $lang["propose_changes_accept_change"]; ?>
                     </td>
                     <td>
-                    <input id="ProposeChangesDeleteAllCheckbox" class="ProposeChangesDeleteCheckbox" type="checkbox" name="delete_all_changes" onClick="ProposeChangesDeleteAll(this);" ><?php echo $lang["action-delete"]; ?>
+                    <input id="ProposeChangesDeleteAllCheckbox" class="ProposeChangesDeleteCheckbox" type="checkbox" name="delete_all_changes" onClick="ProposeChangesDeleteAll(this);" ><?php echo escape($lang["action-delete"]); ?>
                     </td>
                     </tr>
                     </table>
@@ -505,7 +505,7 @@ if(!$editaccess)
         <input id="resetform" name="resetform" type="hidden" value=""/>
         <input id="save"  name="submitted" type="hidden" value="" />
         <input name="proposeuser" type="hidden" value="<?php echo isset($view_user) ? escape($view_user) : ""?>" />
-        <input name="resetform" type="submit" value="<?php echo $lang["clearbutton"]; ?>" onClick="return jQuery('#resetform').val('true');"/>&nbsp;
+        <input name="resetform" type="submit" value="<?php echo escape($lang["clearbutton"]); ?>" onClick="return jQuery('#resetform').val('true');"/>&nbsp;
             <?php if($editaccess)
                 {?>
                 <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["propose_changes_save_changes"]; ?>&nbsp;&nbsp;" onClick="return jQuery('#save').val('true');"/><br />
@@ -513,7 +513,7 @@ if(!$editaccess)
                 }
             else
                 {?>
-                <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;"  onClick="return jQuery('#save').val('true');"/><br />
+                <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;"  onClick="return jQuery('#save').val('true');"/><br />
                 <?php
                 }
                     ?>

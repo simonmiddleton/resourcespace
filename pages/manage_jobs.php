@@ -313,8 +313,8 @@ include '../include/header.php';
                 }?>
 
             <div class="Question"  id="QuestionJobFilterSubmit">
-                <input type="button" id="filter" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('JobFilterForm'));">
-                <input type="button" id="clearfilter" class="searchbutton" value="<?php echo $lang['clearbutton']; ?>" onclick="addUser();jQuery('#job_status').val('-1');jQuery('#job_type').val('');return CentralSpacePost(document.getElementById('JobFilterForm'));">
+                <input type="button" id="filter" class="searchbutton" value="<?php echo escape($lang['filterbutton']); ?>" onclick="return CentralSpacePost(document.getElementById('JobFilterForm'));">
+                <input type="button" id="clearfilter" class="searchbutton" value="<?php echo escape($lang['clearbutton']); ?>" onclick="addUser();jQuery('#job_status').val('-1');jQuery('#job_type').val('');return CentralSpacePost(document.getElementById('JobFilterForm'));">
                 <div class="clearerleft"></div>
             </div>
         </div>

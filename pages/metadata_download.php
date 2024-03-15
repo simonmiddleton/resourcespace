@@ -193,20 +193,20 @@ include "../include/header.php";
     if(!$modal)
         {
         ?>
-        <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
+        <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
         <?php
         }
     elseif ($previous_page_modal)
         {
         ?>
-        <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
+        <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
         <?php
         }
      
         ?>
-    <h1><?php echo $lang["downloadingmetadata"]; ?></h1>
+    <h1><?php echo escape($lang["downloadingmetadata"]); ?></h1>
 
-    <p><?php echo $lang["file-contains-metadata"];render_help_link("user/resource-tools");?></p>
+    <p><?php echo escape($lang["file-contains-metadata"]);render_help_link("user/resource-tools");?></p>
 
     <form id="metadataDownloadForm" name="metadataDownloadForm" method=post action="<?php echo $baseurl_short; ?>pages/metadata_download.php" >
         <?php generateFormToken("metadataDownloadForm"); ?>
@@ -222,7 +222,7 @@ include "../include/header.php";
         </div>
 
         <div class="QuestionSubmit">
-            <input name="download" type="submit" value="<?php echo $lang['download']; ?>" />
+            <input name="download" type="submit" value="<?php echo escape($lang['download']); ?>" />
         </div>
     </form>
 

@@ -4,9 +4,9 @@ function show_table_headers()
     {
     global $lang;
     if(!hook("replacedownloadspacetableheaders")){
-    ?><tr><td><?php echo $lang["fileinformation"]; ?></td>
-    <td><?php echo $lang["filetype"]; ?></td>
-    <td class="textcenter"><?php echo $lang["options"]; ?></td>
+    ?><tr><td><?php echo escape($lang["fileinformation"]); ?></td>
+    <td><?php echo escape($lang["filetype"]); ?></td>
+    <td class="textcenter"><?php echo escape($lang["options"]); ?></td>
     </tr>
     <?php
     } # end hook("replacedownloadspacetableheaders")
@@ -173,7 +173,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
         </select><?php showProfileChooser(); ?></td>
             <td class="DownloadButton">
-                <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang['action-download']; ?></a>
+                <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php echo escape($lang['action-download']); ?></a>
             </td>
         </tr><?php
         }
@@ -217,11 +217,11 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     {
                     request_url = "<?php echo generateURL("{$baseurl}/pages/resource_request.php", $urlparams); ?>";
                     jQuery("a#convertDownload").attr("href", request_url);
-                    jQuery("a#convertDownload").text("<?php echo $lang["action-request"]; ?>");
+                    jQuery("a#convertDownload").text("<?php echo escape($lang["action-request"]); ?>");
                     return;
                     }
 
-                jQuery("a#convertDownload").text("<?php echo $lang["action-download"]; ?>");
+                jQuery("a#convertDownload").text("<?php echo escape($lang["action-download"]); ?>");
 
 
                 var profile = jQuery('select#profile').find(":selected").val();

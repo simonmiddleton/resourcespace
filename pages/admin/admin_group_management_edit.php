@@ -214,7 +214,7 @@ include "../../include/header.php";
 ?><form method="post" enctype="multipart/form-data" action="<?php echo $baseurl_short; ?>pages/admin/admin_group_management_edit.php?ref=<?php echo $ref . $url_params ?>" id="mainform" class="FormWide">
     <?php generateFormToken("mainform"); ?>
     <div class="BasicsBox">
-    <h1><?php echo $lang["page-title_user_group_management_edit"]; ?></h1>
+    <h1><?php echo escape($lang["page-title_user_group_management_edit"]); ?></h1>
     <?php
         $links_trail = array(
             array(
@@ -234,34 +234,34 @@ include "../../include/header.php";
         renderBreadcrumbs($links_trail);
     ?>
 
-    <p><?php echo $lang['page-subtitle_user_group_management_edit']; render_help_link("systemadmin/creating-user-groups"); ?></p>
+    <p><?php echo escape($lang['page-subtitle_user_group_management_edit']); render_help_link("systemadmin/creating-user-groups"); ?></p>
 
         <input type="hidden" name="save" value="1">
 
         <div class="Question">
-            <label for="reference"><?php echo $lang["property-reference"]; ?></label>
+            <label for="reference"><?php echo escape($lang["property-reference"]); ?></label>
             <div class="Fixed"><?php echo $ref; ?></div>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label for="name"><?php echo $lang["property-name"]; ?></label>
+            <label for="name"><?php echo escape($lang["property-name"]); ?></label>
             <input name="name" type="text" class="stdwidth" value="<?php echo escape($record['name']); ?>"> 
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label for="dependants"><?php echo $lang["property-contains"]; ?></label>
-            <div class="Fixed"><?php echo $dependant_user_count; ?>&nbsp;<?php echo $lang['users']; ?>, <?php echo $dependant_groups; ?>&nbsp;<?php echo $lang['property-groups']; ?></div>
+            <label for="dependants"><?php echo escape($lang["property-contains"]); ?></label>
+            <div class="Fixed"><?php echo $dependant_user_count; ?>&nbsp;<?php echo escape($lang['users']); ?>, <?php echo $dependant_groups; ?>&nbsp;<?php echo escape($lang['property-groups']); ?></div>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label for="permissions"><?php echo $lang["property-permissions"]; ?></label>
+            <label for="permissions"><?php echo escape($lang["property-permissions"]); ?></label>
 
             <?php if ($record['parent'])
                 {?>
-                <label><?php echo $lang["property-permissions_inherit"]; ?></label>
+                <label><?php echo escape($lang["property-permissions_inherit"]); ?></label>
                 <input id="permissions_inherit" name="inherit_flags[]" type="checkbox" value="permissions" onClick="if(jQuery('#permissions_inherit').is(':checked')){jQuery('#permissions_area').slideUp();}else{jQuery('#permissions_area').slideDown();}" <?php if(in_array("permissions",$record['inherit'])){echo "checked";} ?>>
                 <div class="clearerleft"></div> 
                 <?php
@@ -277,9 +277,9 @@ include "../../include/header.php";
         </div>
 
         <div class="Question">
-            <label for="parent"><?php echo $lang["property-parent"]; ?></label>
+            <label for="parent"><?php echo escape($lang["property-parent"]); ?></label>
             <select name="parent" class="stdwidth">
-                <option value="0" ><?php if ($record['parent']) echo $lang["property-user_group_remove_parent"]; ?></option>
+                <option value="0" ><?php if ($record['parent']) echo escape($lang["property-user_group_remove_parent"]); ?></option>
                 <?php
                 $groups=get_usergroups();
                 foreach ($groups as $group)
@@ -297,11 +297,11 @@ include "../../include/header.php";
 
     </div>
 
-    <h2 class="CollapsibleSectionHead collapsed"><?php echo $lang["fieldtitle-advanced_options"]; ?></h2>
+    <h2 class="CollapsibleSectionHead collapsed"><?php echo escape($lang["fieldtitle-advanced_options"]); ?></h2>
 
     <div class="CollapsibleSection" style="display:none;">
 
-        <p><?php echo $lang["action-title_see_wiki_for_user_group_advanced_options"]; ?></p>
+        <p><?php echo strip_tags_and_attributes($lang["action-title_see_wiki_for_user_group_advanced_options"]); ?></p>
 
         <?php
         $filters = get_filters("name","ASC");
@@ -310,7 +310,7 @@ include "../../include/header.php";
         // Add the option to indicate filter migration failed
         ?>
         <div class="Question">
-            <label for="search_filter_id"><?php echo $lang["property-search_filter"]; ?></label>
+            <label for="search_filter_id"><?php echo escape($lang["property-search_filter"]); ?></label>
             <select name="search_filter_id" class="stdwidth">
                 <?php
                 echo "<option value='0' >" . ($record['search_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
@@ -323,7 +323,7 @@ include "../../include/header.php";
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="edit_filter_id"><?php echo $lang["property-edit_filter"]; ?></label>
+            <label for="edit_filter_id"><?php echo escape($lang["property-edit_filter"]); ?></label>
             <select name="edit_filter_id" class="stdwidth">
                 <?php
                 echo "<option value='0' >" . ($record['edit_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
@@ -336,7 +336,7 @@ include "../../include/header.php";
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="derestrict_filter_id"><?php echo $lang["fieldtitle-derestrict_filter"]; ?></label>
+            <label for="derestrict_filter_id"><?php echo escape($lang["fieldtitle-derestrict_filter"]); ?></label>
             <select name="derestrict_filter_id" class="stdwidth">
                 <?php
                 echo "<option value='0' >" . ($record['derestrict_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
@@ -352,31 +352,31 @@ include "../../include/header.php";
             </div>
         </div>
         <div class="Question">
-            <label for="download_limit"><?php echo $lang["group_download_limit_title"]; ?></label>
+            <label for="download_limit"><?php echo escape($lang["group_download_limit_title"]); ?></label>
             <input name="download_limit" type="number" class="vshrtwidth" value="<?php echo escape((string)$record['download_limit']); ?>">
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label for="download_log_days"><?php echo $lang["group_download_limit_period"]; ?></label>
+            <label for="download_log_days"><?php echo escape($lang["group_download_limit_period"]); ?></label>
             <input name="download_log_days" type="number" class="vshrtwidth" value="<?php echo escape((string)$record['download_log_days']); ?>">
             <div class="clearerleft"></div>
         </div>
 
 
         <div class="Question">
-            <label for="resource_defaults"><?php echo $lang["property-resource_defaults"]; ?></label>
+            <label for="resource_defaults"><?php echo escape($lang["property-resource_defaults"]); ?></label>
             <textarea name="resource_defaults" class="stdwidth" rows="3" cols="50"><?php echo $record['resource_defaults']; ?></textarea>
             <div class="clearerleft"></div>
         </div>
 
         <?php if (!$execution_lockout) { ?>
         <div class="Question">
-            <label for="config_options"><?php echo $lang["property-override_config_options"]; ?></label>
+            <label for="config_options"><?php echo escape($lang["property-override_config_options"]); ?></label>
 
             <?php if ($record['parent'])
                 {?>
-                <label><?php echo $lang["property-config_inherit"]; ?></label>
+                <label><?php echo escape($lang["property-config_inherit"]); ?></label>
                 <input id="config_inherit" name="inherit_flags[]" type="checkbox" value="config_options" onClick="if(jQuery('#config_inherit').is(':checked')){jQuery('#config_area').slideUp();}else{jQuery('#config_area').slideDown();}" <?php if(in_array("config_options",$record['inherit'])){echo "checked";} ?>>
                 <div class="clearerleft"></div> 
                 <?php
@@ -390,22 +390,22 @@ include "../../include/header.php";
         <?php } ?>
 
         <div class="Question">
-            <label for="welcome_message"><?php echo $lang["property-email_welcome_message"]; ?></label>
+            <label for="welcome_message"><?php echo escape($lang["property-email_welcome_message"]); ?></label>
             <textarea name="welcome_message" class="stdwidth" rows="12" cols="50"><?php echo $record['welcome_message']; ?></textarea>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label for="ip_restrict"><?php echo $lang["property-ip_address_restriction"]; ?></label>
+            <label for="ip_restrict"><?php echo escape($lang["property-ip_address_restriction"]); ?></label>
             <input name="ip_restrict" type="text" class="stdwidth" value="<?php echo $record['ip_restrict']; ?>">
             <div class="clearerleft"></div>
             <div class="FormHelp">
-                <div class="FormHelpInner"><?php echo $lang["information-ip_address_restriction"]; ?></div>
+                <div class="FormHelpInner"><?php echo escape($lang["information-ip_address_restriction"]); ?></div>
             </div>
         </div>
 
         <div class="Question">
-            <label for="request_mode"><?php echo $lang["property-request_mode"]; ?></label>
+            <label for="request_mode"><?php echo escape($lang["property-request_mode"]); ?></label>
             <select name="request_mode" class="stdwidth">
 <?php
     for ($i=0; $i<2; $i++)
@@ -418,7 +418,7 @@ include "../../include/header.php";
         </div>
 
         <div class="Question">
-            <label for="allow_registration_selection"><?php echo $lang["property-allow_registration_selection"]; ?></label>
+            <label for="allow_registration_selection"><?php echo escape($lang["property-allow_registration_selection"]); ?></label>
             <input name="allow_registration_selection" type="checkbox" value="1" <?php if ($record['allow_registration_selection']==1) { ?> checked="checked"<?php } ?>>
             <div class="clearerleft"></div>
         </div>
@@ -429,16 +429,16 @@ include "../../include/header.php";
         $linkedheaderimgsrc = (isset($storageurl)? $storageurl : $baseurl."/filestore"). "/admin/groupheaderimg/group".$record['ref'].".".$record["group_specific_logo"];
         ?>
         <div class="Question">
-            <label for="grouplogocurrent"><?php echo $lang["fieldtitle-group_logo"]; ?></label>
+            <label for="grouplogocurrent"><?php echo escape($lang["fieldtitle-group_logo"]); ?></label>
                 <img src="<?php echo $linkedheaderimgsrc;?>" alt="Group logo" height='126'>
         </div>
         <div class="Question">
-            <label for="grouplogo"><?php echo $lang["fieldtitle-group_logo_replace"]; ?></label>
+            <label for="grouplogo"><?php echo escape($lang["fieldtitle-group_logo_replace"]); ?></label>
             <input name="grouplogo" type="file">
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="removelogo"><?php echo $lang["action-title_remove_user_group_logo"]; ?></label>
+            <label for="removelogo"><?php echo escape($lang["action-title_remove_user_group_logo"]); ?></label>
             <input name="removelogo" type="checkbox" value="1">
             <div class="clearerleft"></div>
         </div>
@@ -447,7 +447,7 @@ include "../../include/header.php";
     else
         {
 ?>      <div class="Question">
-            <label for="grouplogo"><?php echo $lang["fieldtitle-group_logo"]; ?></label>
+            <label for="grouplogo"><?php echo escape($lang["fieldtitle-group_logo"]); ?></label>
             <input name="grouplogo" type="file">
             <div class="clearerleft"></div>
         </div>
@@ -460,16 +460,16 @@ include "../../include/header.php";
     <div class="BasicsBox">
 
         <div class="Question">
-            <label><?php echo $lang["fieldtitle-tick_to_delete_group"]; ?></label>
+            <label><?php echo escape($lang["fieldtitle-tick_to_delete_group"]); ?></label>
             <input id="delete_user_group" name="deleteme" type="checkbox" value="yes" <?php if($has_dependants) { ?> disabled="disabled"<?php } ?>>
             <div class="clearerleft"></div>
             <div class="FormHelp">
-                <div class="FormHelpInner"><?php echo $lang["fieldhelp-tick_to_delete_group"]; ?></div>
+                <div class="FormHelpInner"><?php echo escape($lang["fieldhelp-tick_to_delete_group"]); ?></div>
             </div>
         </div>
 
         <div class="QuestionSubmit">
-            <input name="buttonsave" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;">
+            <input name="buttonsave" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;">
         </div>
 
     </div>

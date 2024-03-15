@@ -117,11 +117,11 @@ $backtoalternativefileurl = generateURL("{$baseurl_short}pages/alternative_file.
 <a onClick="return <?php echo $context != "Modal" ? "CentralSpace" : "Modal"; ?>Load(this,true);" 
     href="<?php echo $backtoalternativefilesurl?>">
     <?php echo LINK_CARET_BACK;
-    echo $lang["backtomanagealternativefiles"];?>
+    echo escape($lang["backtomanagealternativefiles"]);?>
 </a>
 </p>
 
-<h1><?php echo $lang["editalternativefile"]; render_help_link('user/alternative-files');?></h1>
+<h1><?php echo escape($lang["editalternativefile"]); render_help_link('user/alternative-files');?></h1>
 
 <form 
     method="post"
@@ -161,17 +161,17 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
     }
     ?>
 <div class="Question">
-<label><?php echo $lang["resourceid"]; ?></label><div class="Fixed"><?php echo escape($resource) ?></div>
+<label><?php echo escape($lang["resourceid"]); ?></label><div class="Fixed"><?php echo escape($resource) ?></div>
 <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-<label for="name"><?php echo $lang["name"]; ?></label><input type=text class="stdwidth" name="name" id="name" value="<?php echo escape($file["name"]) ?>" maxlength="100">
+<label for="name"><?php echo escape($lang["name"]); ?></label><input type=text class="stdwidth" name="name" id="name" value="<?php echo escape($file["name"]) ?>" maxlength="100">
 <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-<label for="name"><?php echo $lang["description"]; ?></label><input type=text class="stdwidth" name="description" id="description" value="<?php echo escape($file["description"]) ?>" maxlength="200">
+<label for="name"><?php echo escape($lang["description"]); ?></label><input type=text class="stdwidth" name="description" id="description" value="<?php echo escape($file["description"]) ?>" maxlength="200">
 <div class="clearerleft"> </div>
 </div>
 <?php hook('alternative_file_question', ''); ?>
@@ -190,28 +190,28 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
 ?>
 <?php if ($previews_exist){?>
 <div class="Question" id="question_imagecorrection">
-   <label><?php echo $lang["imagecorrection"]; ?><br/><?php echo $lang["previewthumbonly"]; ?></label>
+   <label><?php echo escape($lang["imagecorrection"]); ?><br/><?php echo escape($lang["previewthumbonly"]); ?></label>
    <select name="tweak" id="tweak" onChange="form.submit()">
-   <option value=""><?php echo $lang["select"]; ?></option>
+   <option value=""><?php echo escape($lang["select"]); ?></option>
    <?php
     # On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.
     # A local configuration setting allows this to be rectified
    if (!$image_rotate_reverse_options)
    {
      ?>
-     <option value="rotateclock"><?php echo $lang["rotateclockwise"]; ?></option>
-     <option value="rotateanti"><?php echo $lang["rotateanticlockwise"]; ?></option>
+     <option value="rotateclock"><?php echo escape($lang["rotateclockwise"]); ?></option>
+     <option value="rotateanti"><?php echo escape($lang["rotateanticlockwise"]); ?></option>
      <?php
    }
   else
   {
      ?>
-     <option value="rotateanti"><?php echo $lang["rotateclockwise"]; ?></option>
-     <option value="rotateclock"><?php echo $lang["rotateanticlockwise"]; ?></option>
+     <option value="rotateanti"><?php echo escape($lang["rotateclockwise"]); ?></option>
+     <option value="rotateclock"><?php echo escape($lang["rotateanticlockwise"]); ?></option>
      <?php
   }
   ?>
-  <option value="restore"><?php echo $lang["recreatepreviews"]; ?></option>
+  <option value="restore"><?php echo escape($lang["recreatepreviews"]); ?></option>
 
 </select>
 <div class="clearerleft"> </div>
@@ -219,7 +219,7 @@ if(file_exists(get_resource_path($resource , true, 'thm', true, 'jpg', true, 1, 
 <?php } ?>
 
 <div class="QuestionSubmit">
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>

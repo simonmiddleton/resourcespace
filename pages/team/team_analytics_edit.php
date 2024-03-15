@@ -145,7 +145,7 @@ else
         }
     ?>
     <p>
-        <a target="blank" href="team_analytics_edit.php?ref=<?php echo $ref ?>&print=true"><i class="fa fa-print"></i> <?php echo $lang["print_report"]; ?></a>
+        <a target="blank" href="team_analytics_edit.php?ref=<?php echo $ref ?>&print=true"><i class="fa fa-print"></i> <?php echo escape($lang["print_report"]); ?></a>
     </p>
 
 <h1 id="ReportHeader" class="CollapsibleSectionHead <?php if ($ref=="") { ?>expanded<?php } else { ?>collapsed<?php } ?>"><?php echo escape($ref == "" ? $lang["new_report"] : $lang["edit_report"]);render_help_link('resourceadmin/analytics'); ?></h1>
@@ -156,15 +156,15 @@ else
 <input type="hidden" name="ref" value="<?php echo $ref?>">
 
 <div class="Question">
-<label for="report_name"><?php echo $lang["report_name"]; ?></label>
+<label for="report_name"><?php echo escape($lang["report_name"]); ?></label>
 <input type="text" class="stdwidth" id="report_name" name="name" value="<?php echo escape(getval("name",isset($report["name"])?$report["name"]:"")) ?>"/>
 <!--<input type="submit" name="suggest" value="Suggest" />-->
 <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-<label for="activity_type"><?php echo $lang["activity"]; ?></label><select id="activity_type" name="activity_type" class="stdwidth">
-<option value=""><?php echo $lang["all_activity"]; ?></option>
+<label for="activity_type"><?php echo escape($lang["activity"]); ?></label><select id="activity_type" name="activity_type" class="stdwidth">
+<option value=""><?php echo escape($lang["all_activity"]); ?></option>
 <?php $types=get_stats_activity_types(); 
 for ($n=0;$n<count($types);$n++)
     { 
@@ -180,8 +180,8 @@ for ($n=0;$n<count($types);$n++)
 <?php include "../../include/usergroup_select.php" ?>
 
 <div class="Question">
-<label for="resource_type"><?php echo $lang["report_resource_type"]; ?></label><select id="resource_type" name="resource_type" class="stdwidth">
-<option value=""><?php echo $lang["all_resource_types"]; ?></option>
+<label for="resource_type"><?php echo escape($lang["report_resource_type"]); ?></label><select id="resource_type" name="resource_type" class="stdwidth">
+<option value=""><?php echo escape($lang["all_resource_types"]); ?></option>
 <?php $resource_types=get_resource_types();
 foreach($resource_types as $type)
     {
@@ -200,10 +200,10 @@ foreach($resource_types as $type)
 <?php include "../../include/date_range_selector.php" ?>
 
 <div class="Question">
-<label for="report_collection"><?php echo $lang["report_filter_to_collection"]; ?></label>
+<label for="report_collection"><?php echo escape($lang["report_filter_to_collection"]); ?></label>
 <select name="collection" id="report_collection" class="stdwidth" onChange="document.getElementById('mainform').submit();">
-<option value=""><?php echo $lang["report_all_resources"]; ?></option>
-<option value="" disabled="disabled" style="background-color:#ccc;">--- <?php echo $lang["mycollections"]; ?> ---</option>
+<option value=""><?php echo escape($lang["report_all_resources"]); ?></option>
+<option value="" disabled="disabled" style="background-color:#ccc;">--- <?php echo escape($lang["mycollections"]); ?> ---</option>
 <?php
 $list=get_user_collections($userref);
 for ($n=0;$n<count($list);$n++)
@@ -215,7 +215,7 @@ for ($n=0;$n<count($list);$n++)
         <?php
         }
 ?>
-<option value="" disabled="disabled" style="background-color:#ccc;">--- <?php echo $lang["themes"]; ?> ---</option>
+<option value="" disabled="disabled" style="background-color:#ccc;">--- <?php echo escape($lang["themes"]); ?> ---</option>
 <?php
 
 $list=search_public_collections("","name","ASC",false, false);
@@ -234,7 +234,7 @@ for ($n=0;$n<count($list);$n++)
     
 
 <div class="Question">
-<label for="report_external"><?php echo $lang["report_external_options"]; ?></label>
+<label for="report_external"><?php echo escape($lang["report_external_options"]); ?></label>
 <select name="external" id="report_external" class="stdwidth" onChange="document.getElementById('mainform').submit();">
 <?php for ($n=0;$n<=2;$n++)
     {
@@ -250,13 +250,13 @@ for ($n=0;$n<count($list);$n++)
 
     
 <div class="Question">
-<label for="graph_types"><?php echo $lang["report_graph_types"]; ?></label>
+<label for="graph_types"><?php echo escape($lang["report_graph_types"]); ?></label>
 <table cellpadding=2 cellspacing=0><tr>
-<td width="1"><input type="checkbox" id="pie_check" name="graph_types[]" value="pie" <?php if (in_array("pie",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="pie_check" ><?php echo $lang["report_breakdown_pie"]; ?></label></td>
-<td width="1"><input type="checkbox" id="piegroup_check" name="graph_types[]" value="piegroup" <?php if (in_array("piegroup",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="piegroup_check" ><?php echo $lang["report_user_group_pie"]; ?></label></td>
-<td width="1"><input type="checkbox" id="pieresourcetype_check" name="graph_types[]" value="pieresourcetype" <?php if (in_array("pieresourcetype",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="pieresourcetype_check" ><?php echo $lang["report_resource_type_pie"]; ?></label></td>
-<td width="1"><input type="checkbox" id="line_check" name="graph_types[]" value="line" <?php if (in_array("line",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="line_check" ><?php echo $lang["report_time_line"]; ?></label></td>
-<td width="1"><input type="checkbox" id="summary_check" name="graph_types[]" value="summary" <?php if (in_array("summary",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="line_check" ><?php echo $lang["report_summary_block"]; ?></label></td>
+<td width="1"><input type="checkbox" id="pie_check" name="graph_types[]" value="pie" <?php if (in_array("pie",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="pie_check" ><?php echo escape($lang["report_breakdown_pie"]); ?></label></td>
+<td width="1"><input type="checkbox" id="piegroup_check" name="graph_types[]" value="piegroup" <?php if (in_array("piegroup",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="piegroup_check" ><?php echo escape($lang["report_user_group_pie"]); ?></label></td>
+<td width="1"><input type="checkbox" id="pieresourcetype_check" name="graph_types[]" value="pieresourcetype" <?php if (in_array("pieresourcetype",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="pieresourcetype_check" ><?php echo escape($lang["report_resource_type_pie"]); ?></label></td>
+<td width="1"><input type="checkbox" id="line_check" name="graph_types[]" value="line" <?php if (in_array("line",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="line_check" ><?php echo escape($lang["report_time_line"]); ?></label></td>
+<td width="1"><input type="checkbox" id="summary_check" name="graph_types[]" value="summary" <?php if (in_array("summary",$graph_types) || count($graph_types)==0) { ?>checked<?php } ?> /></td><td><label class="customFieldLabel" for="line_check" ><?php echo escape($lang["report_summary_block"]); ?></label></td>
 </tr></table>
 <div class="clearerleft"> </div>
 </div>
@@ -264,8 +264,8 @@ for ($n=0;$n<count($list);$n++)
 
 <div class="QuestionSubmit">
     <input type="hidden" name="save" value="save report">   
-<input name="update" type="submit" value="&nbsp;&nbsp;<?php echo $lang["update_report"]; ?>&nbsp;&nbsp;" />
-<input name="save" type="submit" onClick="if (document.getElementById('report_name').value=='') {alert('<?php echo addslashes($lang["report_please_enter_name"]) ?>');}" value="&nbsp;&nbsp;<?php echo $lang["save_report"]; ?>&nbsp;&nbsp;" />
+<input name="update" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["update_report"]); ?>&nbsp;&nbsp;" />
+<input name="save" type="submit" onClick="if (document.getElementById('report_name').value=='') {alert('<?php echo addslashes($lang["report_please_enter_name"]) ?>');}" value="&nbsp;&nbsp;<?php echo escape($lang["save_report"]); ?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>
@@ -315,19 +315,19 @@ for ($n=0;$n<count($types);$n++)
             if ($show_breakdown)
                 {
                 ?>
-                <div class="pie" id="pie<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"]; ?></div>
+                <div class="pie" id="pie<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo escape($lang["loading"]); ?></div>
                 <?php
                 }
             if ($show_piegroup)
                 {
                 ?>
-                <div class="pie" id="piegroup<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"]; ?></div>
+                <div class="pie" id="piegroup<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo escape($lang["loading"]); ?></div>
                 <?php
                 }
             if ($show_pieresourcetype)
                 {
                 ?>
-                <div class="pie" id="pieresourcetype<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo $lang["loading"]; ?></div>
+                <div class="pie" id="pieresourcetype<?php echo $n ?>" style="float:left;width:24%;height:300px;"><?php echo escape($lang["loading"]); ?></div>
                 <?php
                 }
             if ($show_line)
@@ -349,13 +349,13 @@ for ($n=0;$n<count($types);$n++)
                     $line_width = 50;
                     }
                 echo $line_width . "%";
-                ?>;height:300px;"><?php echo $lang["loading"]; ?></div>
+                ?>;height:300px;"><?php echo escape($lang["loading"]); ?></div>
                 <?php
                 }
             if ($show_summary)
                 {
                 ?>
-                <div id="summary<?php echo $n ?>" style="float:left;width:99%;height:100px;"><?php echo $lang["loading"]; ?></div>
+                <div id="summary<?php echo $n ?>" style="float:left;width:99%;height:100px;"><?php echo escape($lang["loading"]); ?></div>
                 <?php
                 }
             ?>

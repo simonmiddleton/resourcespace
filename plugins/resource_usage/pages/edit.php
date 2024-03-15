@@ -93,7 +93,7 @@ include "../../../include/header.php";
     </div>
 
     <div class="Question">
-        <label><?php echo $lang['resourceid']; ?></label>
+        <label><?php echo escape($lang['resourceid']); ?></label>
         <div class="Fixed"><?php echo escape($usage_data['resource']); ?></div>
         <div class="clearerleft"></div>
     </div>
@@ -135,7 +135,7 @@ include "../../../include/header.php";
     </div>
 
     <div class="Question">
-        <label><?php echo $lang['description']; ?></label>
+        <label><?php echo escape($lang['description']); ?></label>
         <textarea id="description" class="stdwidth" name="description" rows="4"><?php echo escape($usage_data["description"]); ?></textarea>
         <div class="clearerleft"></div>
     </div>
@@ -179,7 +179,7 @@ include "../../../include/header.php";
     </div>
 
     <div class="QuestionSubmit">        
-        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang['save']; ?>&nbsp;&nbsp;" />
+        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang['save']); ?>&nbsp;&nbsp;" />
     </div>
     </form>
 </div>

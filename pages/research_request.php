@@ -66,9 +66,9 @@ if ($save)
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang["researchrequest"]; ?></h1>
+    <h1><?php echo escape($lang["researchrequest"]); ?></h1>
     <p class="tight"><?php echo text("introtext");render_help_link("resourceadmin/user-research-requests");?></p>
-    <p class="greyText noPadding">* <?php echo $lang["requiredfield"]; ?></p>
+    <p class="greyText noPadding">* <?php echo escape($lang["requiredfield"]); ?></p>
     <?php if (!hook('replace_research_request_form')) { ?>
     <form method="post" action="<?php echo $baseurl_short?>pages/research_request.php">
         <?php
@@ -76,7 +76,7 @@ include "../include/header.php";
 
         if (getval("assign","")!="") { ?>
         <div class="Question">
-            <label><?php echo $lang["requestasuser"]; ?></label>
+            <label><?php echo escape($lang["requestasuser"]); ?></label>
             <select name="as_user" class="stdwidth">
                 <?php
                 $users=get_users(0,"","u.username",true);
@@ -92,26 +92,26 @@ include "../include/header.php";
         <?php } ?>
 
         <div class="Question">
-            <label for="name"><?php echo $lang["nameofproject"]; ?> *</label>
+            <label for="name"><?php echo escape($lang["nameofproject"]); ?> *</label>
             <input id="name" name="name" class="stdwidth" type="text" value="<?php echo escape($name) ?>">
             <div class="clearerleft"></div>
-            <?php if (isset($error_name)) { ?><div class="FormError"><?php echo $lang["noprojectname"]; ?></div><?php } ?>
+            <?php if (isset($error_name)) { ?><div class="FormError"><?php echo escape($lang["noprojectname"]); ?></div><?php } ?>
         </div>
 
         <div class="Question">
             <label for="description">
-                <?php echo $lang["descriptionofproject"]; ?> *<br/>
-                <span class="OxColourPale"><?php echo $lang["descriptionofprojecteg"]; ?></span>
+                <?php echo escape($lang["descriptionofproject"]); ?> *<br/>
+                <span class="OxColourPale"><?php echo escape($lang["descriptionofprojecteg"]); ?></span>
             </label>
             <textarea id="description" rows="5" cols="50" name="description" class="stdwidth"><?php echo escape($description) ?></textarea>
             <div class="clearerleft"></div>
-            <?php if (isset($error_description)) { ?><div class="FormError"><?php echo $lang["noprojectdescription"]; ?></div><?php } ?>
+            <?php if (isset($error_description)) { ?><div class="FormError"><?php echo escape($lang["noprojectdescription"]); ?></div><?php } ?>
         </div>
 
         <div class="Question">
-            <label for="deadline"><?php echo $lang["deadline"]; ?></label>
+            <label for="deadline"><?php echo escape($lang["deadline"]); ?></label>
             <select id="deadline" name="deadline" class="stdwidth">
-                <option value=""><?php echo $lang["nodeadline"]; ?></option>
+                <option value=""><?php echo escape($lang["nodeadline"]); ?></option>
                 <?php 
                 for ($n=0;$n<=150;$n++)
                     {
@@ -133,30 +133,30 @@ include "../include/header.php";
             # Anonymous access - we need to collect their e-mail address.
             ?>
             <div class="Question" id="email">
-                <label for="email"><?php echo $lang["email"]; ?></label>
+                <label for="email"><?php echo escape($lang["email"]); ?></label>
                 <input id="email" name="email" class="stdwidth" type="text" maxlength="200" value="<?php echo escape($email) ?>">
                 <div class="clearerleft"> </div>
-                <?php if (isset($error_email)) { ?><div class="FormError"><?php echo $lang["setup-emailerr"]; ?></div><?php } ?>
+                <?php if (isset($error_email)) { ?><div class="FormError"><?php echo escape($lang["setup-emailerr"]); ?></div><?php } ?>
             </div>
 <?php } ?>
 
         <div class="Question" id="contacttelephone">
-            <label for="contact"><?php echo $lang["contacttelephone"]; ?></label>
+            <label for="contact"><?php echo escape($lang["contacttelephone"]); ?></label>
             <input id="contact" name="contact" class="stdwidth" type="text" maxlength="100" value="<?php echo escape(getval("contact","")) ?>">
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
             <label for="finaluse">
-                <?php echo $lang["finaluse"]; ?><br/>
-                <span class="OxColourPale"><?php echo $lang["finaluseeg"]; ?></span>
+                <?php echo escape($lang["finaluse"]); ?><br/>
+                <span class="OxColourPale"><?php echo escape($lang["finaluseeg"]); ?></span>
             </label>
             <input id="finaluse" name="finaluse" class="stdwidth" type="text" value="<?php echo escape(getval("finaluse","")) ?>">
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question" id="resourcetype">
-            <label><?php echo $lang["resourcetype"]; ?></label>
+            <label><?php echo escape($lang["resourcetype"]); ?></label>
             <div class="tickset lineup">
                 <?php 
                 $types = get_resource_types();
@@ -172,17 +172,17 @@ include "../include/header.php";
         </div>
 
         <div class="Question" id="noresourcesrequired">
-            <label for="noresources"><?php echo $lang["noresourcesrequired"]; ?></label>
+            <label for="noresources"><?php echo escape($lang["noresourcesrequired"]); ?></label>
             <input id="noresources" name="noresources" class="shrtwidth" type="text" value="<?php echo escape(getval("noresources",""))?>">
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question" id="shaperequired">
-            <label for="shape"><?php echo $lang["shaperequired"]; ?></label>
+            <label for="shape"><?php echo escape($lang["shaperequired"]); ?></label>
             <select id="shape" name="shape" class="stdwidth">
-                <option><?php echo $lang["portrait"]; ?></option>
-                <option><?php echo $lang["landscape"]; ?></option>
-                <option selected><?php echo $lang["either"]; ?></option>
+                <option><?php echo escape($lang["portrait"]); ?></option>
+                <option><?php echo escape($lang["landscape"]); ?></option>
+                <option selected><?php echo escape($lang["either"]); ?></option>
             </select>
             <div class="clearerleft"></div>
         </div>
@@ -205,7 +205,7 @@ include "../include/header.php";
             }
         ?>
         <div class="QuestionSubmit">      
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["sendrequest"]; ?>&nbsp;&nbsp;" />
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["sendrequest"]); ?>&nbsp;&nbsp;" />
         </div>
 
     </form>

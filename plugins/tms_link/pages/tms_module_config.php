@@ -163,7 +163,7 @@ include '../../../include/header.php';
                         </td>
                         <td>
                             <select class="medwidth" name="tms_rs_mappings[<?php echo $tms_rs_mapping_index; ?>][rs_field]">
-                                <option value=""><?php echo $lang['select']; ?></option>
+                                <option value=""><?php echo escape($lang['select']); ?></option>
                         <?php
                         $fields = ps_query('SELECT * FROM resource_type_field ORDER BY title, name', array(), "schema");
                         foreach($fields as $field)
@@ -184,7 +184,7 @@ include '../../../include/header.php';
                                    value="<?php echo escape($tms_rs_mapping['encoding']); ?>">
                         </td>
                         <td>
-                            <button type="button" onclick="delete_tms_field_mapping(this);"><?php echo $lang['action-delete']; ?></button>
+                            <button type="button" onclick="delete_tms_field_mapping(this);"><?php echo escape($lang['action-delete']); ?></button>
                         </td>
                     </tr>
                     <?php
@@ -207,7 +207,7 @@ include '../../../include/header.php';
                 new_row_html += '<tr>';
                 new_row_html += '<td><input class="medwidth" type="text" name="tms_rs_mappings[' + row_index + '][tms_column]" value=""></td>';
                 new_row_html += '<td><select class="medwidth" name="tms_rs_mappings[' + row_index + '][rs_field]">';
-                new_row_html += '<option value=""><?php echo $lang['select']; ?></option>';
+                new_row_html += '<option value=""><?php echo escape($lang['select']); ?></option>';
                 <?php
                 $fields = ps_query('SELECT * FROM resource_type_field ORDER BY title, name', array(), "schema");
                 foreach($fields as $field)
@@ -221,7 +221,7 @@ include '../../../include/header.php';
                 new_row_html += '</select>';
                 new_row_html += '</td>';
                 new_row_html += '<td><input class="srtwidth" type="text" name="tms_rs_mappings[' + row_index + '][encoding]" value=""></td>';
-                new_row_html += '<td><button type="button" onclick="delete_tms_field_mapping(this);"><?php echo $lang['action-delete']; ?></button></td>';
+                new_row_html += '<td><button type="button" onclick="delete_tms_field_mapping(this);"><?php echo escape($lang['action-delete']); ?></button></td>';
                 new_row_html += '</tr>';
 
                 jQuery(new_row_html).insertBefore(jQuery(button).closest('tr'));
@@ -264,7 +264,7 @@ include '../../../include/header.php';
             </script>
         </div>
         <div class="QuestionSubmit">
-            <input name="save" type="submit" value="<?php echo $lang["save"]; ?>">
+            <input name="save" type="submit" value="<?php echo escape($lang["save"]); ?>">
         </div>
     </form>
 </div>

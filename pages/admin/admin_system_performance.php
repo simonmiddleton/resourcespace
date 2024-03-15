@@ -17,7 +17,7 @@ $disk_baseline=20558;
         </a>
     </p>
 
-    <h1><?php echo $lang["system_performance"]; ?></h1>
+    <h1><?php echo escape($lang["system_performance"]); ?></h1>
 
 <?php
 renderBreadcrumbs([
@@ -41,7 +41,7 @@ while (microtime(true)<($timer+1)) // Run for one second
 ps_query("drop table if exists performance_test");
 ?>
 <div class="Question">
-<label><?php echo $lang["mysql_throughput"]; ?></label><div class="Fixed"><?php echo round(($counter/$mysql_baseline) * 100,1) ?></div>
+<label><?php echo escape($lang["mysql_throughput"]); ?></label><div class="Fixed"><?php echo round(($counter/$mysql_baseline) * 100,1) ?></div>
 <div class="clearerleft"></div>
 </div>
 
@@ -56,7 +56,7 @@ while (microtime(true)<($timer+1)) // Run for one second
     }
 ?>
 <div class="Question">
-<label><?php echo $lang["cpu_benchmark"]; ?></label><div class="Fixed"><?php echo round(($counter/$cpu_baseline) * 100,1) ?></div>
+<label><?php echo escape($lang["cpu_benchmark"]); ?></label><div class="Fixed"><?php echo round(($counter/$cpu_baseline) * 100,1) ?></div>
 <div class="clearerleft"></div>
 </div>
 
@@ -76,7 +76,7 @@ fclose($f);
 unlink($tmp . "/performance_test.txt");
 ?>
 <div class="Question">
-<label><?php echo $lang["disk_write_speed"]; ?></label><div class="Fixed"><?php echo round(($counter/$disk_baseline) * 100,1) ?></div>
+<label><?php echo escape($lang["disk_write_speed"]); ?></label><div class="Fixed"><?php echo round(($counter/$disk_baseline) * 100,1) ?></div>
 <div class="clearerleft"></div>
 </div>
 

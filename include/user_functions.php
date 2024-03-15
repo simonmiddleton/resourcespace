@@ -863,7 +863,7 @@ function email_reset_link($email,$newuser=false)
          ELSE true END as has_expired
          FROM user WHERE email = ?;", 
     array("s", $email));
-    
+
     sleep($password_brute_force_delay);
 
     if(count($details) == 0) {
@@ -1876,7 +1876,7 @@ function check_access_key($resources,$key,$checkcollection=true)
         global $lang;
         ?>
         <script type="text/javascript">
-        alert("<?php echo $lang["externalshareexpired"]; ?>");
+        alert("<?php echo escape($lang["externalshareexpired"]); ?>");
         history.go(-1);
         </script>
         <?php
