@@ -2810,6 +2810,8 @@ $lang["actions_type_userrequest"] = "Account request";
 $lang["actions_add_editable_to_collection"] = "Add all editable resources to collection";
 $lang["field_search_no_results"] = "Try without specifying a metadata field, or";
 $lang["actions_view_editable_as_resultset"]="View resources to review as a result set";
+$lang['email_actions_truncated'] = "Only the most recent 1000 actions are shown here. You have %%TOTAL%% actions. Login to %%APPLICATIONNAME%% to view them all.";
+
 
 $lang["refinemetadata"]="Refine metadata";
 $lang["saveandnext"]="Save and next";
