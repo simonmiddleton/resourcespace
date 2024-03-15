@@ -168,7 +168,7 @@ if($editing && !$editexternalurl)
                 }
             ?>
 
-            <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?>
+            <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?>
                 </a>
             </p><?php
             }
@@ -240,7 +240,7 @@ if($editing && !$editexternalurl)
                                 }
                             else
                                 { ?>
-                                <input name="generateurl" type="button" value="&nbsp;&nbsp;<?php echo $lang["generateexternalurl"]?>&nbsp;&nbsp;"
+                                <input name="generateurl" type="button" value="&nbsp;&nbsp;<?php echo $lang["generateexternalurl"]; ?>&nbsp;&nbsp;"
                                 onclick="document.getElementById('generateurl').value = '<?php echo escape($lang["save"]); ?>';return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resourceshareform'), true);">
                                 <?php 
                                 }
@@ -294,13 +294,13 @@ if($editing && !$editexternalurl)
         if (!$internal_share_only && $minaccess==0)
             {
             ?>
-            <h2><?php echo $lang["externalusersharing"]?></h2>
+            <h2><?php echo $lang["externalusersharing"]; ?></h2>
             <?php
             $keys = get_resource_external_access($ref);
             if (count($keys) == 0)
                 {
                 ?>
-                <p><?php echo $lang["noexternalsharing"] ?></p>
+                <p><?php echo $lang["noexternalsharing"]; ?></p>
                 <?php
                 }
             else
@@ -327,7 +327,7 @@ if($editing && !$editexternalurl)
                                 }
                             ?>
                             <?php hook("additionalresourceexternalshareheader");?>
-                            <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+                            <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
                         </tr>
                 <?php
                 foreach ($keys as $key)
@@ -380,8 +380,8 @@ if($editing && !$editexternalurl)
                                     
                                     $viewlink = generateurl($baseurl . "/", array("c"=> $key["collection"]));
                                     ?>
-                                    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
-                                    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewlink; ?>"><?php echo LINK_CARET ?><?php echo $lang["view"]?></a>
+                                    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]; ?></a>
+                                    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewlink; ?>"><?php echo LINK_CARET ?><?php echo $lang["view"]; ?></a>
                                     <?php
                                     }
                                 else
@@ -393,8 +393,8 @@ if($editing && !$editexternalurl)
                                             "share_user"        => $key["users"]
                                         ));
                                     ?>
-                                    <a href="#" onClick="return resourceShareDeleteShare('<?php echo $key["access_key"] ?>');"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a>      
-                                    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
+                                    <a href="#" onClick="return resourceShareDeleteShare('<?php echo $key["access_key"]; ?>');"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]; ?></a>      
+                                    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]; ?></a>
                                     <?php
                                     }
                                     ?>
@@ -433,13 +433,13 @@ if($editing && !$editexternalurl)
         ?>
         
         
-        <h2><?php echo $lang["custompermissions"]?></h2>
+        <h2><?php echo $lang["custompermissions"]; ?></h2>
             <?php
             $custom_access_rows = get_resource_custom_access_users_usergroups($ref);
             if (count($custom_access_rows) == 0)
                 {
                 ?>
-                <p><?php echo $lang["remove_custom_access_no_users_found"] ?></p>
+                <p><?php echo $lang["remove_custom_access_no_users_found"]; ?></p>
                 <?php
                 }
             elseif ( (count($custom_access_rows) > 0) && checkperm('v') )
@@ -452,7 +452,7 @@ if($editing && !$editexternalurl)
                             <td><?php echo $lang["property-user_group"];        ?></td>
                             <td><?php echo $lang["expires"];  ?></td>
                             <td><?php echo $lang["access"];    ?></td>
-                            <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+                            <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
                         </tr>
                     <?php
                         foreach ($custom_access_rows as $ca)
@@ -464,7 +464,7 @@ if($editing && !$editexternalurl)
                             <td><?php echo escape($ca["usergroup"]??""); ?></td>
                             <td><?php echo escape($custexpires); ?></td>
                             <td><?php echo escape($custaccess); ?></td>
-                            <td><div class="ListTools"><a href="#" onClick="return resourceShareDeleteUserCustomAccess(<?php echo get_user_by_username($ca["user"]) ?>);"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]?></a></div></td>
+                            <td><div class="ListTools"><a href="#" onClick="return resourceShareDeleteUserCustomAccess(<?php echo get_user_by_username($ca["user"]) ?>);"><?php echo LINK_CARET ?><?php echo $lang["action-delete"]; ?></a></div></td>
                         </tr>
                         <?php
                         }

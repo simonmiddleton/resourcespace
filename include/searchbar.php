@@ -415,12 +415,12 @@ if (!$basic_simple_search && !$hide_search_resource_types)
         $clear_function   .="resetTickAll();";
         }?>
         <div class="<?php echo $tickBoxClass; ?>">
-        <input class="<?php echo $inputBoxClass; ?>" id="TickBox<?php echo $types[$n]["ref"]?>" 
-            type="checkbox" value="yes" name="resource<?php echo $types[$n]["ref"]?>"  
+        <input class="<?php echo $inputBoxClass; ?>" id="TickBox<?php echo $types[$n]["ref"]; ?>" 
+            type="checkbox" value="yes" name="resource<?php echo $types[$n]["ref"]; ?>"  
         <?php if (((count($rt)==1) && ($rt[0]=="")) || ($restypes=="Global") || (in_array($types[$n]["ref"],$rt))) 
             {?> checked="checked"<?php } ?> 
             onClick="SimpleSearchFieldsHideOrShow(true);<?php echo $resetTickAllCall;?>">
-        <label for="TickBox<?php echo $types[$n]["ref"]?>">&nbsp;<?php echo escape($types[$n]["name"]) ?></label>
+        <label for="TickBox<?php echo $types[$n]["ref"]; ?>">&nbsp;<?php echo escape($types[$n]["name"]) ?></label>
     </div>
     <?php 
     }
@@ -581,11 +581,11 @@ elseif($restypes=='')
             for ($n=0;$n<count($types);$n++)
                 {
                 ?>
-                if (resourcetypes.indexOf('<?php echo $types[$n]["ref"]?>') == -1) {
-                    jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', false);
+                if (resourcetypes.indexOf('<?php echo $types[$n]["ref"]; ?>') == -1) {
+                    jQuery("#TickBox<?php echo $types[$n]["ref"]; ?>").prop('checked', false);
                 }
                 else if (allselected){
-                    jQuery("#TickBox<?php echo $types[$n]["ref"]?>").prop('checked', true);
+                    jQuery("#TickBox<?php echo $types[$n]["ref"]; ?>").prop('checked', true);
                 }
                 <?php
                 }
@@ -659,7 +659,7 @@ elseif($restypes=='')
                     $hidecondition = " if ((" .  implode(" && ", $showconditions) . ") " . (count($hideconditions) > 0 ? "|| " : "") . implode(" || ", $hideconditions) . " || (" . implode(" && ", $notypeconditions) . ")) {";
                     echo "// Start of hide field code\n" . $hidecondition;?>
                         // Process unchecked element
-                        ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"] ?>';
+                        ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"]; ?>';
                         document.getElementById(ssearchfieldname).style.display='none';
 
                         // Search field is hidden, so add it to the list of hidden search field names for use when searchbar is redisplayed
@@ -711,12 +711,12 @@ elseif($restypes=='')
                         if(in_array($fields[$n]['type'],array(2,3)) || ($fields[$n]["type"]==9 && $simple_search_show_dynamic_as_dropdown))
                             {
                             ?>
-                            document.getElementById('field_<?php echo $fields[$n]["ref"] ?>').disabled=false;
+                            document.getElementById('field_<?php echo $fields[$n]["ref"]; ?>').disabled=false;
                             <?php
                             }
                             ?>
 
-                        ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"] ?>';
+                        ssearchfieldname='simplesearch_<?php echo $fields[$n]["ref"]; ?>';
                         document.getElementById(ssearchfieldname).style.display='';
 
                         // Search field is no longer hidden, so remove it from the list of hidden search field names for use when searchbar is redisplayed

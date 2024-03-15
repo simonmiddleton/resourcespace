@@ -58,7 +58,7 @@ if ($go!="")
             {
             ?>
             <script type="text/javascript">
-            alert('<?php echo $lang["resourcenotinresults"] ?>');
+            alert('<?php echo $lang["resourcenotinresults"]; ?>');
             </script>
             <?php
             }
@@ -79,12 +79,12 @@ include "../include/header.php";
 <?php
 if($previous_page_modal)
     {?>
-    <p><a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <p><a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
     <?php
     }
 else
     {?>
-    <p><a onClick="ModalClose();return false;" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <p><a onClick="ModalClose();return false;" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
     <?php
     }
 ?>
@@ -95,7 +95,7 @@ else
 hook("viewallresults");
 if ($k=="" && !$modal) { ?>
 |
-<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/search.php",$urlparams); ?>"><?php echo $lang["viewallresults"]?></a>
+<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/search.php",$urlparams); ?>"><?php echo $lang["viewallresults"]; ?></a>
 <?php } ?>
 |
 <a onClick="return <?php echo $modal ? "Modal" : "CentralSpace" ?>Load(this,true);" href="<?php echo generateurl($baseurl_short . "pages/request_log.php",$urlparams, array("go"=>"next")) . escape($extraparams) ?>"><?php echo escape($lang["nextresult"])?>&nbsp;&gt;</a>
@@ -109,13 +109,13 @@ if ($k=="" && !$modal) { ?>
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <!--Title row-->    
 <tr class="ListviewTitleStyle">
-<td width="5%"><?php echo $lang["date"]?></td>
-<td width="5%"><?php echo $lang["requestorderid"]?></td>
-<td width="5%"><?php echo $lang["user"]?></td>
-<td width="25%"><?php echo $lang["comments"]?></td>
-<td width="10%"><?php echo $lang["status"]?></td>
-<td width="25%"><?php echo $lang["approvalreason"] ?></td>
-<td width="25%"><?php echo $lang["declinereason"] ?></td>
+<td width="5%"><?php echo $lang["date"]; ?></td>
+<td width="5%"><?php echo $lang["requestorderid"]; ?></td>
+<td width="5%"><?php echo $lang["user"]; ?></td>
+<td width="25%"><?php echo $lang["comments"]; ?></td>
+<td width="10%"><?php echo $lang["status"]; ?></td>
+<td width="25%"><?php echo $lang["approvalreason"]; ?></td>
+<td width="25%"><?php echo $lang["declinereason"]; ?></td>
 </tr>
 
 <?php
@@ -129,8 +129,8 @@ for ($n=0;$n<count($log);$n++)
     <!--List Item-->
     <tr>
     <td nowrap><?php echo nicedate($log[$n]["date"],true,true)?></td>
-    <td nowrap><?php echo $log[$n]["ref"] ?></td>
-    <td nowrap><?php echo $log[$n]["username"] ?></td>
+    <td nowrap><?php echo $log[$n]["ref"]; ?></td>
+    <td nowrap><?php echo $log[$n]["username"]; ?></td>
     <td><?php echo escape($log[$n]["comments"]) ?></td>
     <td nowrap><?php
     switch ($log[$n]["status"])
@@ -147,8 +147,8 @@ for ($n=0;$n<count($log);$n++)
         }
     ?>
     </td>
-    <td><?php echo $log[$n]["reasonapproved"] ?></td>
-    <td><?php echo $log[$n]["reason"] ?></td>
+    <td><?php echo $log[$n]["reasonapproved"]; ?></td>
+    <td><?php echo $log[$n]["reason"]; ?></td>
     
     
     </tr>

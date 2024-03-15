@@ -109,7 +109,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
                 if($annotate_pdf_output)
                     {
                     ?>
-                    &nbsp;&nbsp;<a style="display:inline;float:right;" class="nowrap" href="<?php echo generateURL($baseurl_short . 'plugins/annotate/pages/annotate_pdf_config.php', $urlparams)?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET . $lang["pdfwithnotes"]?></a>
+                    &nbsp;&nbsp;<a style="display:inline;float:right;" class="nowrap" href="<?php echo generateURL($baseurl_short . 'plugins/annotate/pages/annotate_pdf_config.php', $urlparams)?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET . $lang["pdfwithnotes"]; ?></a>
                     <?php
                     }
                     ?>
@@ -143,14 +143,14 @@ function HookAnnotateViewpreviewlinkbar()
                 <?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';?>
                 <p><?php echo escape($preview_with_sizename); ?></p>
             </td>
-            <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
+            <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]; ?></td>
             <td class="DownloadButton">
                 <a class="enterLink previewsize-<?php echo escape($data_viewsize); ?>" 
                     id="previewlink"
                     data-viewsize="<?php echo escape($data_viewsize); ?>"
                     data-viewsizeurl="<?php echo escape($data_viewsizeurl); ?>"  
                     href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>">
-                    <?php echo $lang["action-view"]?>
+                    <?php echo $lang["action-view"]; ?>
                 </a>
             </td>
         </tr>

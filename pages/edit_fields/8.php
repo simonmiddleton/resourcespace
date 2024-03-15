@@ -53,7 +53,7 @@ editor.on('blur',function(e)
     if(this.checkDirty())
         {
         this.updateElement();
-        AutoSave('<?php echo $field["ref"]?>');
+        AutoSave('<?php echo $field["ref"]; ?>');
         }
     });
 
@@ -62,12 +62,12 @@ editor.on('blur',function(e)
 // Ensure that help text is shown when given focus
 editor.on('focus', function(e)
     {
-    ShowHelp('<?php echo $field["ref"]?>');
+    ShowHelp('<?php echo $field["ref"]; ?>');
     });
 
 editor.on('blur', function(e)
     {
-    HideHelp('<?php echo $field["ref"]?>');
+    HideHelp('<?php echo $field["ref"]; ?>');
     });
 
 </script>

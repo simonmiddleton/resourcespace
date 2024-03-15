@@ -185,7 +185,7 @@ include "../../include/header.php";
             {
             if ($per_page==$list_display_array[$n])
                 {
-                ?><span class="Selected"><?php echo (int) $list_display_array[$n]?></span><?php
+                ?><span class="Selected"><?php echo (int) $list_display_array[$n]; ?></span><?php
                 }
             else
                 {
@@ -307,13 +307,13 @@ include "../../include/header.php";
         <td><?php echo escape((string)$users[$n]["fullname"])?></td>
         <?php } ?>
         <?php if (!hook("replacegroupnamerow")){?>
-        <td><?php echo $users[$n]["groupname"]?></td>
+        <td><?php echo $users[$n]["groupname"]; ?></td>
         <?php } ?>
         <?php if (!hook("replaceemailrow")){?>
         <td><?php echo htmlentities((string)$users[$n]["email"])?></td>
         <?php } ?>
         <td><?php echo nicedate($users[$n]["created"]) ?></td>
-        <td><?php echo $approval_state_text[$users[$n]["approved"]] ?></td>
+        <td><?php echo $approval_state_text[$users[$n]["approved"]]; ?></td>
         <td><?php echo nicedate($users[$n]["last_active"],true,true,true) ?></td>
         <?php hook("additional_user_column");?>
         <td><?php if (($usergroup==3) || ($users[$n]["usergroup"]!=3)) { ?><div class="ListTools">

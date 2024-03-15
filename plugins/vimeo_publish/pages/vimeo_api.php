@@ -110,7 +110,7 @@ $params["ref"] = $ref;
         <h1><?php echo $lang["vimeo_publish_resource_tool_link"]; ?></h1>
         <p>
             <a href="<?php echo generateurl($baseurl_short . 'pages/view.php', $params); ?>" onClick="return CentralSpaceLoad(this,true);">
-                <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?>
+                <?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?>
             </a>
         </p>
     </div>
@@ -155,7 +155,7 @@ if($vimeo_publish_allow_user_accounts && get_vimeo_user($vimeo_publish_client_id
         <h2><?php echo $lang['vimeo_publish_video_details']; ?></h2>
     </div>
     <div class="Question">
-        <label for="video_title"><?php echo $lang['vimeo_publish_video_title'] ?></label>
+        <label for="video_title"><?php echo $lang['vimeo_publish_video_title']; ?></label>
         <input type="text" class="stdwidth" name="video_title" value="<?php echo $default_video_title; ?>"/>
         <br>
         <label for="video_description"><?php echo $lang['vimeo_publish_video_description']; ?></label>

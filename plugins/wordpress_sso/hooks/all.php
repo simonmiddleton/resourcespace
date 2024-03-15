@@ -172,7 +172,7 @@ function HookWordpress_ssoTeam_user_editPassword()
     if  (strlen($checkwpuser)>0)
         {
         ?>
-        <input type="hidden" name="password" value="<?php echo $lang['hidden'] ?>">
+        <input type="hidden" name="password" value="<?php echo $lang['hidden']; ?>">
         <?php
         return true;
         }

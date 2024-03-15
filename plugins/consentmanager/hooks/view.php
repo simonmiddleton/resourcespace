@@ -10,7 +10,7 @@ function HookConsentmanagerViewCustompanels()
     ?>
     <div class="RecordBox">
     <div class="RecordPanel">
-    <div class="Title"><?php echo $lang["consent_management"] ?></div>
+    <div class="Title"><?php echo $lang["consent_management"]; ?></div>
 
     <?php if ($edit_access || checkperm("cm")) { 
         $new_consent_url_params = array(
@@ -25,20 +25,20 @@ function HookConsentmanagerViewCustompanels()
         );
         $new_consent_url = generateURL($baseurl_short . "plugins/consentmanager/pages/edit.php",$new_consent_url_params);
         ?>    
-    <p><a href="<?php echo $new_consent_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS . $lang["new_consent"] ?></a></p>    
+    <p><a href="<?php echo $new_consent_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS . $lang["new_consent"]; ?></a></p>    
     <?php } ?>
 
     <?php if (count($consents)>0) { ?>
         <div class="Listview">
         <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
         <tr class="ListviewTitleStyle">
-        <td><?php echo $lang["consent_id"] ?></a></td>
-        <td><?php echo $lang["name"] ?></a></td>
-        <td><?php echo $lang["usage"] ?></a></td>
-        <td><?php echo $lang["fieldtitle-expiry_date"] ?></a></td>
+        <td><?php echo $lang["consent_id"]; ?></a></td>
+        <td><?php echo $lang["name"]; ?></a></td>
+        <td><?php echo $lang["usage"]; ?></a></td>
+        <td><?php echo $lang["fieldtitle-expiry_date"]; ?></a></td>
 
         <?php if ($edit_access || checkperm("cm")) { ?>
-        <td><div class="ListTools"><?php echo $lang["tools"] ?></div></td>
+        <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
         <?php } ?>
 
         </tr>
@@ -48,8 +48,8 @@ function HookConsentmanagerViewCustompanels()
             {
             ?>
             <tr>
-            <td><?php echo $consent["ref"] ?></td>
-            <td><?php echo $consent["name"] ?></td>
+            <td><?php echo $consent["ref"]; ?></td>
+            <td><?php echo $consent["name"]; ?></td>
             <td><?php
                 $consent_usage_mediums = trim_array(explode(", ", $consent["consent_usage"]));
                 $translated_mediums = "";
@@ -65,8 +65,8 @@ function HookConsentmanagerViewCustompanels()
 
             <?php if ($edit_access || checkperm("cm")) { ?>
             <td><div class="ListTools">
-            <a href="<?php echo $baseurl_short ?>plugins/consentmanager/pages/edit.php?ref=<?php echo $consent["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
-            <a href="<?php echo $baseurl_short ?>plugins/consentmanager/pages/unlink.php?ref=<?php echo $consent["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-unlink"]?></a>
+            <a href="<?php echo $baseurl_short ?>plugins/consentmanager/pages/edit.php?ref=<?php echo $consent["ref"]; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]; ?></a>
+            <a href="<?php echo $baseurl_short ?>plugins/consentmanager/pages/unlink.php?ref=<?php echo $consent["ref"]; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-unlink"]; ?></a>
             </div></td>
             <?php } ?>
 

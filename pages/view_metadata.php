@@ -132,8 +132,8 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
             {
             ?>
             <div class="itemNarrow">
-                <h3><?php echo $resource_hit_count_on_downloads?$lang["downloads"]:$lang["hitcount"]?></h3>
-                <p><?php echo $resource["hit_count"]+$resource["new_hit_count"]?></p>
+                <h3><?php echo $resource_hit_count_on_downloads?$lang["downloads"]:$lang["hitcount"]; ?></h3>
+                <p><?php echo $resource["hit_count"]+$resource["new_hit_count"]; ?></p>
             </div>
             <?php
             }

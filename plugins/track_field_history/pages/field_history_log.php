@@ -47,7 +47,7 @@ $url        = generateurl($baseurl_short . 'pages/view.php', $get_params );
                 ?>
                 <tr>
                     <td nowrap><?php echo nicedate($field_log_record['date'], true, true, true); ?></td>
-                    <td><?php echo $field_log_record['user'] ?></td>
+                    <td><?php echo $field_log_record['user']; ?></td>
                     <td><?php echo nl2br(escape(strip_tags($field_log_record['diff']))); ?></td>
                 </tr>
                 <?php

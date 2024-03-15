@@ -495,7 +495,7 @@ if(!$validpage)
 
     <div class="Question">
         <label>
-        <?php echo $lang["preview"] ?>
+        <?php echo $lang["preview"]; ?>
         </label>
         <br />
         <div class="HomePanel DashTile">

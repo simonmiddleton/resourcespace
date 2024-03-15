@@ -393,14 +393,14 @@ function propose_changes_display_field($n, $field)
         if(!$editaccess && $proposed_value=="")
             {
             ?>
-            <div class="propose_change_button" id="propose_change_button_<?php echo $field["ref"] ?>">
-            <input type="submit" value="<?php echo escape($lang["propose_changes_buttontext"]) ?>" onClick="ShowProposeChanges(<?php echo $field["ref"] ?>);return false;" />
+            <div class="propose_change_button" id="propose_change_button_<?php echo $field["ref"]; ?>">
+            <input type="submit" value="<?php echo escape($lang["propose_changes_buttontext"]) ?>" onClick="ShowProposeChanges(<?php echo $field["ref"]; ?>);return false;" />
             </div>
             <?php
             }?>
 
-    <div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if($proposed_value==""){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo $field["ref"] ?>">
-    <input type="hidden" id="propose_change_<?php echo $field["ref"] ?>" name="propose_change_<?php echo $field["ref"] ?>" value="true" <?php if($proposed_value==""){echo "disabled=\"disabled\""; } ?> />
+    <div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if($proposed_value==""){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo $field["ref"]; ?>">
+    <input type="hidden" id="propose_change_<?php echo $field["ref"]; ?>" name="propose_change_<?php echo $field["ref"]; ?>" value="true" <?php if($proposed_value==""){echo "disabled=\"disabled\""; } ?> />
     <?php
     # ----------------------------  Show field -----------------------------------
     // Checkif we have a proposed value for this field
@@ -451,7 +451,7 @@ function propose_changes_display_field($n, $field)
         }
     # ----------------------------------------------------------------------------
     ?>
-        </div><!-- close proposed_change_<?php echo $field["ref"] ?> -->
+        </div><!-- close proposed_change_<?php echo $field["ref"]; ?> -->
         <?php
         if($editaccess)
             {
@@ -459,9 +459,9 @@ function propose_changes_display_field($n, $field)
             <div class="ProposeChangesAccept ProposeChangesAcceptDeleteColumn">
             <table>
             <tr>
-            <td><input class="ProposeChangesAcceptCheckbox" type="checkbox" id="accept_change_<?php echo $field["ref"] ?>" name="accept_change_<?php echo $field["ref"] ?>" onchange="UpdateProposals(this,<?php echo $field["ref"] ?>);" checked ></input><?php echo escape($lang["propose_changes_accept_change"])  ?></td>
+            <td><input class="ProposeChangesAcceptCheckbox" type="checkbox" id="accept_change_<?php echo $field["ref"]; ?>" name="accept_change_<?php echo $field["ref"]; ?>" onchange="UpdateProposals(this,<?php echo $field["ref"]; ?>);" checked ></input><?php echo escape($lang["propose_changes_accept_change"])  ?></td>
             <td>
-            <input class="ProposeChangesDeleteCheckbox" type="checkbox" id="delete_change_<?php echo $field["ref"] ?>" name="delete_change_<?php echo $field["ref"] ?>" onchange="DeleteProposal(this,<?php echo $field["ref"] ?>);" ></input><?php echo escape($lang["action-delete"])  ?></td>
+            <input class="ProposeChangesDeleteCheckbox" type="checkbox" id="delete_change_<?php echo $field["ref"]; ?>" name="delete_change_<?php echo $field["ref"]; ?>" onchange="DeleteProposal(this,<?php echo $field["ref"]; ?>);" ></input><?php echo escape($lang["action-delete"])  ?></td>
             </tr>
             </table>
             </div>
@@ -473,7 +473,7 @@ function propose_changes_display_field($n, $field)
         # Show inline help for this field.
         # For certain field types that have no obvious focus, the help always appears.
         ?>
-        <div class="FormHelp" style="<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?>display:none;<?php } else { ?>clear:left;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(escape(i18n_get_translated($field["help_text"]))))?></div></div>
+        <div class="FormHelp" style="<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?>display:none;<?php } else { ?>clear:left;<?php } ?>" id="help_<?php echo $field["ref"]; ?>"><div class="FormHelpInner"><?php echo nl2br(trim(escape(i18n_get_translated($field["help_text"]))))?></div></div>
 <?php
         }
 

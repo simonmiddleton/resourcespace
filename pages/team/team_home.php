@@ -63,12 +63,12 @@ include "../../include/header.php";
                   }
                 ?>
             
-            ><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo $lang["manageresources"]?></a></li><?php
+            ><i aria-hidden="true" class="fa fa-fw fa-files-o"></i><br /><?php echo $lang["manageresources"]; ?></a></li><?php
             }
         }
     ?>
                 
-    <?php if (checkperm("R")) { ?><li><a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i><br /><?php echo $lang["managerequestsorders"]?>
+    <?php if (checkperm("R")) { ?><li><a href="<?php echo $baseurl_short ?>pages/team/team_request.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-shopping-cart"></i><br /><?php echo $lang["managerequestsorders"]; ?>
         <?php
         $condition = "";$params=array();
         if (checkperm("Rb")) {$condition = "and assigned_to=?";$params[]="i";$params[]=$userref;} # Only show pending for this user?
@@ -83,7 +83,7 @@ include "../../include/header.php";
         </a>
     </li><?php } ?>
 
-    <?php if (checkperm("r") && $research_request) { ?><li><a href="<?php echo $baseurl_short?>pages/team/team_research.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-question-circle"></i><br /><?php echo $lang["manageresearchrequests"]?><br>
+    <?php if (checkperm("r") && $research_request) { ?><li><a href="<?php echo $baseurl_short?>pages/team/team_research.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-question-circle"></i><br /><?php echo $lang["manageresearchrequests"]; ?><br>
     <?php
         $unassigned = ps_value("select count(*) value from research_request where status = 0",array(), 0);
         if ($unassigned > 0)
@@ -126,9 +126,9 @@ include "../../include/header.php";
         }
         ?>
 
-    <li><a href="<?php echo $baseurl_short?>pages/team/team_analytics.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-pie-chart"></i><br /><?php echo $lang["rse_analytics"]?></a></li>
+    <li><a href="<?php echo $baseurl_short?>pages/team/team_analytics.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-pie-chart"></i><br /><?php echo $lang["rse_analytics"]; ?></a></li>
     
-    <li><a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-table"></i><br /><?php echo $lang["viewreports"]?></a></li>
+    <li><a href="<?php echo $baseurl_short?>pages/team/team_report.php" onClick="return CentralSpaceLoad(this,true);"><i aria-hidden="true" class="fa fa-fw fa-table"></i><br /><?php echo $lang["viewreports"]; ?></a></li>
 
     <?php hook("customteamfunction")?>
     
@@ -152,7 +152,7 @@ include "../../include/header.php";
       <?php
       }
     ?>
-    ><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["systemsetup"]?></a>
+    ><i aria-hidden="true" class="fa fa-fw fa-cog"></i><br /><?php echo $lang["systemsetup"]; ?></a>
     <br><span class="Pill <?php echo ($pending == 0)? 'DisplayNone' : '' ?>"><?php echo $pending;?></span>
     </li>
     <?php hook("customteamfunctionadmin")?>
@@ -161,7 +161,7 @@ include "../../include/header.php";
     </ul>
     </div>
     
-<p class="clearerleft"><i aria-hidden="true" class="fa fa-fw fa-hdd-o"></i> <?php echo $lang["diskusage"]?>: <b><?php echo round(($avail?$used/$avail:0)*100,0)?>%</b>
+<p class="clearerleft"><i aria-hidden="true" class="fa fa-fw fa-hdd-o"></i> <?php echo $lang["diskusage"]; ?>: <b><?php echo round(($avail?$used/$avail:0)*100,0)?>%</b>
 &nbsp;&nbsp;&nbsp;<span class="sub"><?php echo formatfilesize($used)?> / <?php echo formatfilesize($avail)?></span>
 </p>
 

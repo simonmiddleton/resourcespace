@@ -188,7 +188,7 @@ include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
 <h1><?php echo $lang["video-splice"]; render_help_link("plugins/video-splice");?></h1>
-<p><?php echo $lang["video-splice-intro"]?></p>
+<p><?php echo $lang["video-splice-intro"]; ?></p>
 <?php
     // Holder/area for message feedback
     if ($notification!="")
@@ -224,7 +224,7 @@ include "../../../include/header.php";
 
                 ?>
                 <img alt="<?php echo escape(i18n_get_translated($video_data['field'.$view_title_field] ?? ""));?>"
-                 src="<?php echo $img ?>" id="splice_<?php echo $video_data["ref"] ?>" class="splice_item">
+                 src="<?php echo $img ?>" id="splice_<?php echo $video_data["ref"]; ?>" class="splice_item">
                 <?php } ?>
                 </div>
             </div>
@@ -241,12 +241,12 @@ include "../../../include/header.php";
             return Post(this, true);">
             <?php generateFormToken("spliceform"); ?>
             <div class="Question" id="video_splice_tool">
-            <label><?php echo $lang["video_splice_order"]?></label>
+            <label><?php echo $lang["video_splice_order"]; ?></label>
             <p id="ids_in_order"></p>
             <div class="clearerleft"> </div>
             </div>
         <div class="Question" id="question_video_splice_video">
-            <label><?php echo $lang["video_splice_select_video"] ?></label>
+            <label><?php echo $lang["video_splice_select_video"]; ?></label>
             <select class="stdwidth" name="video_splice_video" id="video_splice_video" >
             <?php
             foreach ($ffmpeg_std_video_options as $video_output_video=>$video_splice_output_command)
@@ -258,7 +258,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_splice_resolution">
-            <label><?php echo $lang["video_splice_select_resolution"] ?></label>
+            <label><?php echo $lang["video_splice_select_resolution"]; ?></label>
             <select class="stdwidth" name="video_splice_resolution" id="video_splice_resolution" >
             <?php
             foreach ($ffmpeg_std_resolution_options as $video_output_resolution=>$video_splice_output_command)
@@ -270,7 +270,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_splice_frame_rate">
-            <label><?php echo $lang["video_splice_select_frame_rate"] ?></label>
+            <label><?php echo $lang["video_splice_select_frame_rate"]; ?></label>
             <select class="stdwidth" name="video_splice_frame_rate" id="video_splice_frame_rate" >
             <?php
             foreach ($ffmpeg_std_frame_rate_options as $video_output_frame_rate=>$video_splice_output_command)
@@ -282,7 +282,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_splice_audio">
-            <label><?php echo $lang["video_splice_select_audio"] ?></label>
+            <label><?php echo $lang["video_splice_select_audio"]; ?></label>
             <select class="stdwidth" name="video_splice_audio" id="video_splice_audio" >
             <?php
             foreach ($ffmpeg_std_audio_options as $video_output_audio=>$video_splice_output_command)
@@ -294,7 +294,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_save_to">
-            <label><?php echo $lang["video_splice_save_to"] ?></label>
+            <label><?php echo $lang["video_splice_save_to"]; ?></label>
             <table cellpadding="5" cellspacing="0">
                 <tbody>
                     <tr>
@@ -414,7 +414,7 @@ include "../../../include/header.php";
         <!--Hidden value to track new order to post on submit-->
         <input type="hidden" name="splice_order" id="splice_reel_order" />
         <div class="QuestionSubmit">
-             <input name="splice_submit" class="spliceubmit" type="submit" value="<?php echo $lang["action-splice"]?>" onclick="CentralSpaceShowLoading();">
+             <input name="splice_submit" class="spliceubmit" type="submit" value="<?php echo $lang["action-splice"]; ?>" onclick="CentralSpaceShowLoading();">
              <br />
              <div class="clearerleft"> </div>
         </div>

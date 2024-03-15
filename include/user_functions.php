@@ -1876,7 +1876,7 @@ function check_access_key($resources,$key,$checkcollection=true)
         global $lang;
         ?>
         <script type="text/javascript">
-        alert("<?php echo $lang["externalshareexpired"] ?>");
+        alert("<?php echo $lang["externalshareexpired"]; ?>");
         history.go(-1);
         </script>
         <?php

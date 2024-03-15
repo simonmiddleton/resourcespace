@@ -292,7 +292,7 @@ if(!$modal)
     {
     ?>
     <p>
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a>
     </p>
     <?php
     }
@@ -301,7 +301,7 @@ elseif($previous_page_modal)
     $urlparams["context"]="Modal";
     ?>
     <p>
-    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a>
     </p>
     <?php
     }
@@ -404,7 +404,7 @@ if(isset($resource["field".$view_title_field]))
             return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this, true);">
             <?php generateFormToken("trimform"); ?>
             <div class="Question" id="video_trim_tool">
-            <label><?php echo $lang["video-trim"]?></label>
+            <label><?php echo $lang["video-trim"]; ?></label>
             <div class="video-trim-tool">
                 <input type="range" name="input_start" id="input-start" min="0" max="<?php echo $original_duration ?>" value="0">
                 <input type="range" name="input_end" id="input-end" min="0" max="<?php echo $original_duration ?>" value="<?php echo $original_duration ?>">
@@ -423,12 +423,12 @@ if(isset($resource["field".$view_title_field]))
             <div class="clearerleft"> </div>
             </div>
             <div class="Question" id="resource_ref_div" style="border-top:none;">
-            <label><?php echo $lang["resourceid"]?></label>
+            <label><?php echo $lang["resourceid"]; ?></label>
             <div class="Fixed"><?php echo urlencode($ref) ?></div>
             <div class="clearerleft"> </div>
             </div>
             <div class="Question" id="question_file">
-                <label><?php echo $lang["file"]?></label>
+                <label><?php echo $lang["file"]; ?></label>
             <div class="Fixed">
             <?php
             if ($resource["has_image"]==1)
@@ -469,7 +469,7 @@ if(isset($resource["field".$view_title_field]))
                 if (checkperm("w") && $resource["has_image"]==1 && file_exists($wmpath))
                     {?>
                     &nbsp;&nbsp;
-                    <a href="#" onclick='jQuery("#wmpreview").toggle();jQuery("#preview").toggle();if (jQuery(this).text()=="<?php echo $lang["showwatermark"]?>"){jQuery(this).text("<?php echo $lang["hidewatermark"]?>");} else {jQuery(this).text("<?php echo $lang["showwatermark"]?>");}'><?php echo $lang["showwatermark"]?></a>
+                    <a href="#" onclick='jQuery("#wmpreview").toggle();jQuery("#preview").toggle();if (jQuery(this).text()=="<?php echo $lang["showwatermark"]; ?>"){jQuery(this).text("<?php echo $lang["hidewatermark"]; ?>");} else {jQuery(this).text("<?php echo $lang["showwatermark"]; ?>");}'><?php echo $lang["showwatermark"]; ?></a>
                     <?php
                     }?>
                 <br />
@@ -480,20 +480,20 @@ if(isset($resource["field".$view_title_field]))
             <div class="clearerleft"> </div>
         </div>
         <div class="Question" id="question_uploadtype">
-            <label><?php echo $lang["video-trim_upload-type"]?></label>
+            <label><?php echo $lang["video-trim_upload-type"]; ?></label>
             <select name="upload_type" id="uploadtype" class="stdwidth" onChange="var q=document.getElementById('question_collectionadd');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
-            <?php if(!checkperm("A")){?><option value="alt"><?php echo $lang["addalternativefile"]?></option><?php }?>
-            <?php if(get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo $lang["createnewresource"]?></option><?php }?>
+            <?php if(!checkperm("A")){?><option value="alt"><?php echo $lang["addalternativefile"]; ?></option><?php }?>
+            <?php if(get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo $lang["createnewresource"]; ?></option><?php }?>
             </select>
             <div class="clearerleft"> </div>
         </div>
         <div class="Question" id="question_collectionadd" style="display:none;">
-            <label><?php echo $lang["addtocurrentcollection"]?></label>
+            <label><?php echo $lang["addtocurrentcollection"]; ?></label>
             <input name="collection_add" id="collectionadd" value="yes" type="checkbox">
             <div class="clearerleft"> </div>
         </div>
         <div class="QuestionSubmit">
-             <input name="trim_submit" class="trimsubmit" type="submit" value="<?php echo $lang["action-trim"] ?>" onclick="stopLoop()">
+             <input name="trim_submit" class="trimsubmit" type="submit" value="<?php echo $lang["action-trim"]; ?>" onclick="stopLoop()">
              <br />
              <div class="clearerleft"> </div>
         </div>
@@ -581,7 +581,7 @@ function startCalculatedPreviewPlayback(start, end){
     // if preview file duration smaller then original file the start or end of trim preview needs to be capped
     if (start > <?php echo $preview_cap ?> || end > <?php echo $preview_cap ?>)
         {
-        styledalert("<?php echo $lang["video-trim-warning"] ?>", "<?php echo $lang["video-trim-warning-text"]; ?>", 500);
+        styledalert("<?php echo $lang["video-trim-warning"]; ?>", "<?php echo $lang["video-trim-warning-text"]; ?>", 500);
 
         preview.currentTime = 0;
         preview.pause();

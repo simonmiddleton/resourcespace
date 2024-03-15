@@ -82,7 +82,7 @@ if(isset($error))
         <input type="hidden" name="redirect" id="redirect" value="yes" >
         <input type=hidden name="update_parent" value="false">
         <div class="Question">
-            <label for="name"><?php echo $lang["collection"]?></label>
+            <label for="name"><?php echo $lang["collection"]; ?></label>
             <div class="Fixed"><?php echo escape(i18n_get_collection_name($collection, $index="name")); ?></div >
             <div class="clearerleft"> </div>
         </div>

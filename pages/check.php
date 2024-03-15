@@ -13,7 +13,7 @@ include "../include/header.php";
     ]);
     ?>
     <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/check.php">
-        <?php echo '<i aria-hidden="true" class="fa fa-sync-alt"></i>&nbsp;' . $lang["repeatinstallationcheck"]?>
+        <?php echo '<i aria-hidden="true" class="fa fa-sync-alt"></i>&nbsp;' . $lang["repeatinstallationcheck"]; ?>
     </a>
     <br/><br/>
     <table class="InfoTable">
@@ -189,7 +189,7 @@ else
     $version=$lang["status-notinstalled"];
     $result=$lang["status-fail"];
     }
-?><tr><td colspan="2"><?php echo $lang["exif_extension"]?></td><td><b><?php echo $result?></b></td></tr><?php
+?><tr><td colspan="2"><?php echo $lang["exif_extension"]; ?></td><td><b><?php echo $result?></b></td></tr><?php
 
 # Check archiver
 if (
@@ -215,7 +215,7 @@ if (
         {
         $result = $lang["status-fail"] . ": " . str_replace("?", $path, $lang["softwarenotfound"]);
         }
-    ?><tr><td colspan="2"><?php echo $lang["archiver_utility"] ?></td><td><b><?php echo $result?></b></td></tr><?php
+    ?><tr><td colspan="2"><?php echo $lang["archiver_utility"]; ?></td><td><b><?php echo $result?></b></td></tr><?php
 }
 
 # Check PHP timezone identical to server (MySQL will use the server one) so we need to ensure they are the same
@@ -233,9 +233,9 @@ if(strtoupper($php_tz) == strtoupper($mysql_tz))
     <td><b><?php echo $timezone_check; ?></b></td>
 </tr>
 <tr>
-<td><?php echo $lang["lastscheduledtaskexection"] ?></td>
+<td><?php echo $lang["lastscheduledtaskexection"]; ?></td>
 <td><?php $last_cron=ps_value("select datediff(now(),value) value from sysvars where name='last_cron'",array(),$lang["status-never"]);echo $last_cron ?></td>
-<td><?php if ($last_cron>2 || $last_cron==$lang["status-never"]) { ?><b><?php echo $lang["status-warning"] ?></b><br/><?php echo $lang["executecronphp"] ?><?php } else {?><b><?php echo $lang["status-ok"] ?></b><?php } ?></td>
+<td><?php if ($last_cron>2 || $last_cron==$lang["status-never"]) { ?><b><?php echo $lang["status-warning"]; ?></b><br/><?php echo $lang["executecronphp"]; ?><?php } else {?><b><?php echo $lang["status-ok"]; ?></b><?php } ?></td>
 </tr>
 
 <?php
@@ -284,8 +284,8 @@ function display_utility_status($utilityname)
         $result = $utility["error"];
         }
 
-    ?><tr><td <?php if ($utility["success"]==false) { ?>colspan="2"<?php } ?>><?php echo $utility["name"] ?></td>
-    <?php if ($utility["success"]==true) { ?><td><?php echo $utility["version"] ?></td><?php } ?>
+    ?><tr><td <?php if ($utility["success"]==false) { ?>colspan="2"<?php } ?>><?php echo $utility["name"]; ?></td>
+    <?php if ($utility["success"]==true) { ?><td><?php echo $utility["version"]; ?></td><?php } ?>
     <td><b><?php echo $result?></b></td></tr><?php
     }
    

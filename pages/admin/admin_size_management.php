@@ -77,7 +77,7 @@ function addColumnHeader($orderName, $labelKey)
                 <?php addColumnHeader("name", "property-name"); ?>
                 <?php addColumnHeader("width", "property-width"); ?>
                 <?php addColumnHeader("height", "property-height"); ?>
-                <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+                <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
             </tr>
 <?php
         foreach ($sizes as $size)
@@ -116,7 +116,7 @@ function addColumnHeader($orderName, $labelKey)
     if ($edit_url != "")
     {
 ?>                  <div class="ListTools">
-                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
+                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a>
                     </div>
 <?php
     }
@@ -132,7 +132,7 @@ function addColumnHeader($orderName, $labelKey)
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_size_management.php" onSubmit="return CentralSpacePost(this,false);">
         <?php generateFormToken("admin_size_management"); ?>
         <div class="Question">
-            <label for="find"><?php echo $lang["property-search_filter"] ?></label>
+            <label for="find"><?php echo $lang["property-search_filter"]; ?></label>
             <input name="find" type="text" class="medwidth" value="<?php echo escape($find); ?>">
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;">
             <div class="clearerleft"></div>

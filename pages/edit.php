@@ -1563,7 +1563,7 @@ hook("editbefresmetadata"); ?>
                         continue;
                         }
                     ?>
-                    <option value="<?php echo $types[$n]["ref"]?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo escape($types[$n]["name"])?></option>
+                    <option value="<?php echo $types[$n]["ref"]; ?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo escape($types[$n]["name"])?></option>
                     <?php
                     }
                 ?>
@@ -1612,7 +1612,7 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
                 $template_selected = ' selected';
                 }
                 ?>
-            <option value="<?php echo (int)$template["ref"] ?>" <?php echo $template_selected; ?>><?php echo escape((string)$template["field{$metadata_template_title_field}"]); ?></option>
+            <option value="<?php echo (int)$template["ref"]; ?>" <?php echo $template_selected; ?>><?php echo escape((string)$template["field{$metadata_template_title_field}"]); ?></option>
             <?php   
             }
             ?>
@@ -2167,7 +2167,7 @@ else
             {
             echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $access_stored_value . "'>";
             }?>
-        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
+        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"]; ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
                     if($ea0)    //0 - open
                     {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
@@ -2217,17 +2217,17 @@ else
                    <tr>
                       <td valign=middle nowrap><?php echo escape($groups[$n]["name"])?>&nbsp;&nbsp;</td>
 
-                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="0" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==0) { ?>checked <?php }
+                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]; ?>" value="0" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==0) { ?>checked <?php }
                       if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
                       <td align=left valign=middle><?php echo escape($lang["access0"])?></td>
 
-                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="1" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==1) { ?>checked <?php }
+                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]; ?>" value="1" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==1) { ?>checked <?php }
                       if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
                       <td align=left valign=middle><?php echo escape($lang["access1"])?></td>
 
-                     <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="2" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==2) { ?>checked <?php }
+                     <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]; ?>" value="2" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==2) { ?>checked <?php }
                      if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
                      <td align=left valign=middle><?php echo escape($lang["access2"])?></td>

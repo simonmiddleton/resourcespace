@@ -1256,7 +1256,7 @@ renderBreadcrumbs($links_trail);
 
             <div class="imagetools_save_action" id="imagetools_slideshow_actions" <?php if('' === trim($manage_slideshow_action)) { ?> style="display: none;"<?php } ?>>
 
-                <div class="Question textcenter"><strong><?php echo $lang['transformcrophelp'] ?></strong></div>
+                <div class="Question textcenter"><strong><?php echo $lang['transformcrophelp']; ?></strong></div>
 
                 <div class="Question">
                     <label><?php echo  $lang["slideshowmakelink"]; ?></label>
@@ -1297,7 +1297,7 @@ renderBreadcrumbs($links_trail);
             <div class="Question">
                 <label for="preset"><?php echo $lang["transform_preset_sizes"]; ?></label>
                 <select class="stdwidth" onchange="setCropperSize(this.value);" id="size_preset_select">
-                    <option value=""><?php echo $lang["select"]?></option>
+                    <option value=""><?php echo $lang["select"]; ?></option>
                     <?php
                     if(isset($custom_cropper_preset_sizes))
                         {

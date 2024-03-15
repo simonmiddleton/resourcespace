@@ -96,14 +96,14 @@ function tile_config_themeselector($tile,$tile_id,$tile_width,$tile_height)
     <?php 
         }?>
                 <span class="theme-icon"></span>
-                <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collections_featured.php"><h2><?php echo $lang["themes"]?></h2></a>
+                <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collections_featured.php"><h2><?php echo $lang["themes"]; ?></h2></a>
                 <p>
                 <?php
                 if(!empty($fc_categories))
                     {
                     ?>
                     <select id="themeselect" onChange="CentralSpaceLoad(this.value,true);">
-                    <option value=""><?php echo $lang["select"] ?></option>
+                    <option value=""><?php echo $lang["select"]; ?></option>
                     <?php
                     foreach($fc_categories as $header)
                         {

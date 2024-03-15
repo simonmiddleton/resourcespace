@@ -22,7 +22,7 @@ if(!is_array($job_details) || count($job_details) == 0)
         <div class="RecordHeader">
 
             <div class="backtoresults"> 
-                <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
+                <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"]; ?>"></a>
             </div>
             <h1><?php echo $lang["job_text"] . " #" . $job_details["ref"]; ?></h1>
 
@@ -35,8 +35,8 @@ if(!is_array($job_details) || count($job_details) == 0)
         <div class="Listview">
             <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle" style="margin:0;">
                 <tr class="ListviewTitleStyle">
-                    <th><?php echo $lang["job_data"]?></th>
-                    <th><?php echo $lang["job_value"]?></th>
+                    <th><?php echo $lang["job_data"]; ?></th>
+                    <th><?php echo $lang["job_value"]; ?></th>
                 </tr>
                 <?php foreach($job_details as $name => $value)
                     {

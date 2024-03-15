@@ -44,8 +44,8 @@ if ($enable_related_resources)
                     if($relatedresource['resource_type'] == $rtype)
                         {
                         ?>
-                        <div class="ResourcePanelShellSmall" id="RelatedResource_<?php echo $relatedresource["ref"]?>">
-                            <a class="ImageWrapperSmall" href="<?php echo $baseurl_short ?>pages/view.php?ref=<?php echo $relatedresource["ref"]?>" title="<?php echo escape(i18n_get_translated(($relatedresource["field".$view_title_field]))) ?>" onClick="return ModalLoad(this,true);">
+                        <div class="ResourcePanelShellSmall" id="RelatedResource_<?php echo $relatedresource["ref"]; ?>">
+                            <a class="ImageWrapperSmall" href="<?php echo $baseurl_short ?>pages/view.php?ref=<?php echo $relatedresource["ref"]; ?>" title="<?php echo escape(i18n_get_translated(($relatedresource["field".$view_title_field]))) ?>" onClick="return ModalLoad(this,true);">
                             <?php if ($relatedresource["has_image"]==1)
                                 {
                                 $thm_url = get_resource_path($relatedresource["ref"],false,"col",false,$relatedresource["preview_extension"],-1,1,$use_watermark,$relatedresource["file_modified"]);
@@ -71,7 +71,7 @@ if ($enable_related_resources)
                                     {
                                     relateresources(<?php echo (int) $ref . "," . (int) $relatedresource["ref"] ;?>,'remove',
                                     <?php echo escape(generate_csrf_js_object('update_related_resource')); ?>);
-                                    jQuery('#RelatedResource_<?php echo (int) $relatedresource["ref"] ?>').remove();
+                                    jQuery('#RelatedResource_<?php echo (int) $relatedresource["ref"]; ?>').remove();
                                     }
                                     return false;" >
                                     <?php echo LINK_CARET . escape($lang["action-remove"]) ?></a></div>
@@ -132,7 +132,7 @@ if ($enable_related_resources)
                                                     {
                                                     relateresources(<?php echo (int) $ref . "," . (int) $relatedresource["ref"] ;?>,'remove',
                                                     <?php echo escape(generate_csrf_js_object('update_related_resource')); ?>);
-                                                    jQuery('#RelatedResource_<?php echo (int) $relatedresource["ref"] ?>').remove();
+                                                    jQuery('#RelatedResource_<?php echo (int) $relatedresource["ref"]; ?>').remove();
                                                     }
                                                     return false;" >
                                                     <?php echo LINK_CARET . escape($lang["action-remove"]) ?></a></div>

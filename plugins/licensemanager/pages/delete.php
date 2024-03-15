@@ -30,9 +30,9 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
-<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
+<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]; ?></a></p>
 
-<h1><?php echo $lang["delete_license"] ?></h1>
+<h1><?php echo $lang["delete_license"]; ?></h1>
 
 <form method="post" action="<?php echo $baseurl_short?>plugins/licensemanager/pages/delete.php" onSubmit="return CentralSpacePost(this,true);">
 <input type=hidden name="submitted" value="true">

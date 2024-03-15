@@ -13,7 +13,7 @@ function HookLicensemanagerViewCustompanels()
     ?>
     <div class="RecordBox">
     <div class="RecordPanel">
-    <div class="Title"><?php echo $lang["license_management"] ?></div>
+    <div class="Title"><?php echo $lang["license_management"]; ?></div>
 
     <?php if ($edit_access || checkperm("lm")) { 
         $new_license_url_params = array(
@@ -28,22 +28,22 @@ function HookLicensemanagerViewCustompanels()
         );
         $new_license_url = generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$new_license_url_params);
         ?>    
-    <p><a href="<?php echo $new_license_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS . $lang["new_license"] ?></a></p>    
+    <p><a href="<?php echo $new_license_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS . $lang["new_license"]; ?></a></p>    
     <?php } ?>
 
     <?php if (count($licenses)>0) { ?>
         <div class="Listview">
         <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
         <tr class="ListviewTitleStyle">
-        <td><?php echo $lang["license_id"] ?></a></td>
-        <td><?php echo $lang["type"] ?></a></td>
-        <td><?php echo $lang["licensor_licensee"] ?></a></td>
-        <td><?php echo $lang["indicateusagemedium"] ?></a></td>
-        <td><?php echo $lang["description"] ?></a></td>
-        <td><?php echo $lang["fieldtitle-expiry_date"] ?></a></td>
+        <td><?php echo $lang["license_id"]; ?></a></td>
+        <td><?php echo $lang["type"]; ?></a></td>
+        <td><?php echo $lang["licensor_licensee"]; ?></a></td>
+        <td><?php echo $lang["indicateusagemedium"]; ?></a></td>
+        <td><?php echo $lang["description"]; ?></a></td>
+        <td><?php echo $lang["fieldtitle-expiry_date"]; ?></a></td>
 
         <?php if ($edit_access || checkperm("lm")) { ?>
-        <td><div class="ListTools"><?php echo $lang["tools"] ?></div></td>
+        <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
         <?php } ?>
 
         </tr>
@@ -55,9 +55,9 @@ function HookLicensemanagerViewCustompanels()
             $translated_mediums = "";
             ?>
             <tr>
-            <td><?php echo $license["ref"] ?></td>
+            <td><?php echo $license["ref"]; ?></td>
             <td><?php echo escape($license["outbound"] ? $lang["outbound"] : $lang["inbound"]); ?></td>
-            <td><?php echo $license["holder"] ?></td>
+            <td><?php echo $license["holder"]; ?></td>
             <td><?php
                 foreach ($license_usage_mediums as $medium)
                     {
@@ -67,13 +67,13 @@ function HookLicensemanagerViewCustompanels()
                 echo $translated_mediums;
                 ?>
             </td>
-            <td><?php echo $license["description"] ?></td>
+            <td><?php echo $license["description"]; ?></td>
             <td><?php echo escape($license["expires"] == "" ? $lang["no_expiry_date"] : nicedate($license["expires"])); ?></td>
 
             <?php if ($edit_access || checkperm("lm")) { ?>
             <td><div class="ListTools">
-            <a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=<?php echo $license["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]?></a>
-            <a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/unlink.php?ref=<?php echo $license["ref"] ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-unlink"]?></a>
+            <a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=<?php echo $license["ref"]; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-edit"]; ?></a>
+            <a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/unlink.php?ref=<?php echo $license["ref"]; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-unlink"]; ?></a>
             </div></td>
             <?php } ?>
 

@@ -293,7 +293,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         <input name="ref" type="hidden" value="<?php echo $ref; ?>">
         <input type="hidden" name="generate" value="yes" />
         <div class="Question" id="question_video_track_format">
-            <label><?php echo $lang["video_tracks_select_output"] ?></label>
+            <label><?php echo $lang["video_tracks_select_output"]; ?></label>
             <select class="stdwidth" name="video_track_format" id="video_track_format" >
             <?php
             foreach ($video_tracks_output_formats as $video_tracks_output_format=>$video_tracks_output_command)
@@ -309,7 +309,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         {?>
         <!-- Select subtitle file -->
         <div class="Question" id="question_video_subtitles">
-            <label><?php echo $lang["video_tracks_select_subtitle"] ?></label>
+            <label><?php echo $lang["video_tracks_select_subtitle"]; ?></label>
             <select class="stdwidth" name="video_subtitle_file" id="video_subtitle_file" >
             <option value=""><?php echo $lang["select"]; ?></option>
             <?php
@@ -331,7 +331,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         {?>
         <!-- Select audio file -->
         <div class="Question" id="question_video_audio">
-            <label><?php echo $lang["video_tracks_select_audio"] ?></label>
+            <label><?php echo $lang["video_tracks_select_audio"]; ?></label>
             <select class="stdwidth" name="video_audio_file" id="video_subtitle_file" >
             <option value=""><?php echo $lang["select"]; ?></option>
             <?php
@@ -350,7 +350,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         }
         ?>
         <div class="Question" id="question_video_save_to">
-            <label><?php echo $lang["video_tracks_save_to"] ?></label>
+            <label><?php echo $lang["video_tracks_save_to"]; ?></label>
             <table cellpadding="5" cellspacing="0">
                 <tbody>
                     <tr>

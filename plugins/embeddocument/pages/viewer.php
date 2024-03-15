@@ -32,7 +32,7 @@ $download=getval("download","") != "";
 <li class="embeddocument_auto" Style="cursor: pointer;" onClick="embeddocument_auto=!embeddocument_auto;if (embeddocument_auto) {embeddocument_ShowPage(embeddocument_page,false,false_<?php echo $ref ?>);} else {clearTimeout(timer);}"<span>||</span></li>
 <li class="embeddocument_next" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(embeddocument_page+1,false,false);"<span>></span></li>
 <li class="embeddocument_end" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(embeddocument_pages.length-1,false,false);"><span>>|</span></li>
-<li class="embeddocument_jump" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(document.getElementById('embeddocument_page_box').value,false,true);"><span><?php echo $lang["jump"]?></span></li>
+<li class="embeddocument_jump" Style="cursor: pointer;" onClick="embeddocument_auto=false;embeddocument_ShowPage(document.getElementById('embeddocument_page_box').value,false,true);"><span><?php echo $lang["jump"]; ?></span></li>
 <li class="embeddocument_jump-box" <input type="text" id="embeddocument_page_box" size="1" /> / <span id="page-count">#</span> </li>
 
 <?php if ($downloadkey != "")
@@ -47,7 +47,7 @@ $download=getval("download","") != "";
             $pdf_url_path=get_resource_path($ref,false,"",false,"pdf");
             $pdf_url_path .= "&k=" . urlencode($k);
             ?>
-            <li class="embeddocument_download" Style="cursor: pointer;" onClick="top.location.href='<?php echo $pdf_url_path ?>';"><?php echo $lang["embeddocument_download_pdf"]?></li>
+            <li class="embeddocument_download" Style="cursor: pointer;" onClick="top.location.href='<?php echo $pdf_url_path ?>';"><?php echo $lang["embeddocument_download_pdf"]; ?></li>
             <?php
             }
         }
@@ -89,7 +89,7 @@ function embeddocument_ShowPage(page_set,from_auto,jump)
     {
     if (!embeddocument_auto && from_auto) {return false;} // Auto switched off but timer still running. Terminate.
     
-    if (embeddocument_page==page_set && jump) {alert("<?php echo $lang["embeddocument_alreadyonpage"]?>");return false;}
+    if (embeddocument_page==page_set && jump) {alert("<?php echo $lang["embeddocument_alreadyonpage"]; ?>");return false;}
     
     embeddocument_page=page_set;
     if (embeddocument_page>(embeddocument_pages.length-1)) {embeddocument_page=embeddocument_pages.length-1;} // back to first page

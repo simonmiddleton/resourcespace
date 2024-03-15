@@ -101,7 +101,7 @@ if(isset($download_usage_prevent_options))
             validoptions = new Array(<?php echo "'" . implode("','",$download_usage_prevent_options) . "'" ?>);
             if (jQuery.inArray(jQuery('#usage').find(":selected").text(), validoptions ) !=- 1) {
                 jQuery('#submit').prop('disabled', true).css("filter", "opacity(0.25)");
-                alert("<?php echo $lang["download_usage_option_blocked"] ?>");
+                alert("<?php echo $lang["download_usage_option_blocked"]; ?>");
             }
             else {
                 jQuery('#submit').prop('disabled', false).css("filter", "opacity(1)");
@@ -130,13 +130,13 @@ if(isset($download_usage_prevent_options))
         <input type="hidden" name="k" value="<?php echo escape($k) ?>" />
         <input type="hidden" name="save" value="true" />
         <input type="hidden" name="iaccept" value="<?php echo escape($iaccept) ?>" />
-        <h1><?php echo $lang["usage"]?></h1>
-        <p><?php echo $lang["indicateusage"]?></p>
+        <h1><?php echo $lang["usage"]; ?></h1>
+        <p><?php echo $lang["indicateusage"]; ?></p>
 
 
 <?php if ($download_usage_email){ ?>
     <div class="Question">
-        <label><?php echo $lang["emailaddress"]?></label>
+        <label><?php echo $lang["emailaddress"]; ?></label>
         <input name="email" type="text" class="stdwidth" value="<?php echo escape($email) ?>">
         <span class="error"><?php echo isset($error['email']) ? $error["email"] : "" ?></span>
         <div class="clearerleft"> </div>
@@ -145,9 +145,9 @@ if(isset($download_usage_prevent_options))
    
         <?php  if(!$remove_usage_textbox && !$usage_textbox_below)  {  echo html_usagecomments($usagecomment,$error);   }   ?>
 
-        <div class="Question"><label><?php echo $lang["indicateusagemedium"]?></label>
+        <div class="Question"><label><?php echo $lang["indicateusagemedium"]; ?></label>
             <select class="stdwidth" name="usage" id="usage" <?php if(isset($download_usage_prevent_options)){ echo 'onchange="checkvalidusage();"';}?>>
-                <option value=""><?php echo $lang["select"] ?></option>
+                <option value=""><?php echo $lang["select"]; ?></option>
                 <?php 
                 for ($n=0;$n<count($download_usage_options);$n++)
                     {
@@ -164,7 +164,7 @@ if(isset($download_usage_prevent_options))
         <?php if ($usage_textbox_below && !$remove_usage_textbox) {  echo html_usagecomments($usagecomment,$error); } ?>
 
         <div class="QuestionSubmit">        
-            <input name="submit" type="submit" id="submit" value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
+            <input name="submit" type="submit" id="submit" value="&nbsp;&nbsp;<?php echo $lang["action-download"]; ?>&nbsp;&nbsp;" />
         </div>
 
     </form>

@@ -69,9 +69,9 @@ renderBreadcrumbs([
 <?php generateFormToken("api-form"); ?>
 
 <div class="Question">
-<label><?php echo $lang["api-function"] ?></label>
+<label><?php echo $lang["api-function"]; ?></label>
 <select class="stdwidth" name="api_function" onChange="CentralSpacePost(document.getElementById('api-form'));">
-    <option value=""><?php echo $lang["select"] ?></option>
+    <option value=""><?php echo $lang["select"]; ?></option>
     <?php
     # Allow selection from built in functions
     asort($api_functions);
@@ -83,7 +83,7 @@ renderBreadcrumbs([
     ?>
     
 </select>
-<?php if ($api_function!="") { ?>&nbsp;&nbsp;<a target="_blank" href="https://www.resourcespace.com/knowledge-base/api/<?php echo $api_function ?>"><?php echo $lang["api-view-documentation"] ?></a><?php } ?>
+<?php if ($api_function!="") { ?>&nbsp;&nbsp;<a target="_blank" href="https://www.resourcespace.com/knowledge-base/api/<?php echo $api_function ?>"><?php echo $lang["api-view-documentation"]; ?></a><?php } ?>
 </div>
 
 <?php
@@ -153,8 +153,8 @@ if ($api_function!="")
 
 
 <br /><br />
-<h2><?php echo $lang["api-php-code"] ?></h2>
-<p><?php echo $lang["api-php-help"] ?></p>
+<h2><?php echo $lang["api-php-code"]; ?></h2>
+<p><?php echo $lang["api-php-help"]; ?></p>
 
 <style>.codecomment {color:#090;}</style>
 <pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:white;color:black;padding:10px;">

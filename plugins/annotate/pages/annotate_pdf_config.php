@@ -172,7 +172,7 @@ function loadIt() {
     <p><a href="<?php echo generateURL($baseurl_short . 'pages/search.php?', $urlparams, ['search' => '!collection' . substr($ref,1)])?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresults"])?></a></p>
     <?php } ?>
 
-    <h1><?php echo $lang["annotatepdfconfig"]?></h1>
+    <h1><?php echo $lang["annotatepdfconfig"]; ?></h1>
 
     <?php if ($annotate){?>
     <div id="heading" style="float:left;margin-bottom:0;" >

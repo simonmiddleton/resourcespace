@@ -157,7 +157,7 @@ function addColumnHeader($orderName, $labelKey)
                 <?php addColumnHeader("name", "property-user_group"); ?>
                 <?php addColumnHeader("users", "users"); ?>
                 <?php addColumnHeader("pname", "property-user_group_parent"); ?>
-                <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+                <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
             </tr>
 <?php
         $url_params=
@@ -201,9 +201,9 @@ function addColumnHeader($orderName, $labelKey)
 
                 <td>
                     <div class="ListTools">
-                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
+                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a>
                         &nbsp;
-                        <a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-users"></i>&nbsp;<?php echo $lang["users"]?></a>
+                        <a href="<?php echo $users_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-users"></i>&nbsp;<?php echo $lang["users"]; ?></a>
                     </div>
                 </td>
             </tr>
@@ -225,7 +225,7 @@ function addColumnHeader($orderName, $labelKey)
         <input type="hidden" name="orderby" value="<?php echo $order_by; ?>">
 
         <div class="Question">
-            <label for="find"><?php echo $lang["property-search_filter"] ?></label>
+            <label for="find"><?php echo $lang["property-search_filter"]; ?></label>
             <input name="find" type="text" class="medwidth" value="<?php echo escape($find); ?>">
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;">
             <div class="clearerleft"></div>

@@ -181,7 +181,7 @@ $back_url = generateURL(
     <input type="hidden" name="ref" value="<?php echo escape($ref)?>">
     
     <div class="Question">
-    <label><?php echo $lang["resourceid"]?></label>
+    <label><?php echo $lang["resourceid"]; ?></label>
     <div class="Fixed"><?php echo escape($ref)?></div>
     <div class="clearerleft"> </div>
     </div>
@@ -194,29 +194,29 @@ $back_url = generateURL(
     
     <?php if (!$internal_share_access || $user_is_anon) { ?>
     <div class="Question">
-    <label><?php echo $lang["fullname"]?> <sup>*</sup></label>
-    <input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]?>">
+    <label><?php echo $lang["fullname"]; ?> <sup>*</sup></label>
+    <input type="hidden" name="fullname_label" value="<?php echo $lang["fullname"]; ?>">
     <input name="fullname" type="text" class="stdwidth" value="<?php echo escape(getval("fullname","")) ?>">
     <div class="clearerleft"> </div>
     </div>
     
     <div class="Question">
-    <label><?php echo $lang["emailaddress"]?> <sup>*</sup></label>
-    <input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]?>">
+    <label><?php echo $lang["emailaddress"]; ?> <sup>*</sup></label>
+    <input type="hidden" name="email_label" value="<?php echo $lang["emailaddress"]; ?>">
     <input name="email" type="email" class="stdwidth" value="<?php echo escape(getval("email","")) ?>">
     <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
-    <label><?php echo $lang["contacttelephone"]?></label>
-    <input type="hidden" name="contact_label" value="<?php echo $lang["contacttelephone"]?>">
+    <label><?php echo $lang["contacttelephone"]; ?></label>
+    <input type="hidden" name="contact_label" value="<?php echo $lang["contacttelephone"]; ?>">
     <input name="contact" type="text" class="stdwidth" value="<?php echo escape(getval("contact","")) ?>">
     <div class="clearerleft"> </div>
     </div>
     <?php } ?>
 
     <div class="Question">
-    <label for="request"><?php echo $lang["requestreason"]?> <?php if ($resource_request_reason_required) { ?><sup>*</sup><?php } ?></label>
+    <label for="request"><?php echo $lang["requestreason"]; ?> <?php if ($resource_request_reason_required) { ?><sup>*</sup><?php } ?></label>
     <textarea class="stdwidth" name="request" id="request" rows=5 cols=50><?php echo escape(getval("request","")) ?></textarea>
     <div class="clearerleft"> </div>
     </div>
@@ -292,7 +292,7 @@ hook("resource_request_form_bottom");
 ?>
     <div class="QuestionSubmit">        
     <input name="save" value="true" type="hidden" />
-    <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo escape($ref)?>';"/>&nbsp;
+    <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]; ?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo escape($ref)?>';"/>&nbsp;
     <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo i18n_get_translated($lang["requestresource"])?>&nbsp;&nbsp;" />
     </div>
     </form>

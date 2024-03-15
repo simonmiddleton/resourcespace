@@ -171,7 +171,7 @@ $('#embedslideshow_auto').fadeTo(100,0.4);
 <?php if ($width>200) {
 # Jump controls - only if enough room to display them
  ?>
-<li class="embedslideshow_jump" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(document.getElementById('embedslideshow_page_box').value,false,true);return false;"><span><?php echo $lang["jump"] ?></span></li>
+<li class="embedslideshow_jump" Style="cursor: pointer;" onClick="embedslideshow_auto=false;embedslideshow_ShowPage(document.getElementById('embedslideshow_page_box').value,false,true);return false;"><span><?php echo $lang["jump"]; ?></span></li>
 <li class="embedslideshow_jump-box"> <input type="text" id="embedslideshow_page_box" size="1" /> / <span id="page-count">#</span> </li>
 <?php } ?>
 </ul>
@@ -182,7 +182,7 @@ function embedslideshow_ShowPage(page_set,from_auto,jump)
     {
     if (!embedslideshow_auto && from_auto) {return false;} // Auto switched off but timer still running. Terminate.
     
-    if (embedslideshow_page==page_set && jump) {alert("<?php echo $lang["embedslideshow_alreadyonpage"]?>");return false;}
+    if (embedslideshow_page==page_set && jump) {alert("<?php echo $lang["embedslideshow_alreadyonpage"]; ?>");return false;}
     
     // Fade out pause button if manually clicked
     if (!embedslideshow_auto)

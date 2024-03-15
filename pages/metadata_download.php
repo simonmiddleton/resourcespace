@@ -204,7 +204,7 @@ include "../include/header.php";
         }
      
         ?>
-    <h1><?php echo $lang["downloadingmetadata"]?></h1>
+    <h1><?php echo $lang["downloadingmetadata"]; ?></h1>
 
     <p><?php echo $lang["file-contains-metadata"];render_help_link("user/resource-tools");?></p>
 

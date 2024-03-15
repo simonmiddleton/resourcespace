@@ -505,7 +505,7 @@ function leaflet_markers_legend()
 
     if (!isset($marker_metadata_field) || $lang['custom_metadata_markers'] == '')
         { ?>
-        <b> <?php echo $lang['legend_text']?>&nbsp;</b>
+        <b> <?php echo $lang['legend_text']; ?>&nbsp;</b>
         <?php
         $restypes = get_resource_types();
         foreach($restypes as $restype)
@@ -516,7 +516,7 @@ function leaflet_markers_legend()
         }
     else // Custom metadata field color markers legend.
         { ?>
-        <b> <?php echo $lang['custom_metadata_markers']?>&nbsp;</b> <?php
+        <b> <?php echo $lang['custom_metadata_markers']; ?>&nbsp;</b> <?php
 
         // Loop through and create the custom color marker legend text, ignoring the first 'unset' item
         for ($i = 0; $i < count($marker_metadata_array); $i++)
@@ -526,7 +526,7 @@ function leaflet_markers_legend()
 
         for ($i = 0; $i < count($marker_metadata_array); $i++)
             {
-            ?> <img src="../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-<?php echo strtolower($MARKER_COLORS[$i])?>.png" alt="<?php echo $MARKER_COLORS[$i]?> Icon" style="width:19px;height:31px;"> <?php echo $ltext[$i]; ?> &nbsp; <?php
+            ?> <img src="../lib/leaflet_plugins/leaflet-colormarkers-1.0.0/img/marker-icon-<?php echo strtolower($MARKER_COLORS[$i])?>.png" alt="<?php echo $MARKER_COLORS[$i]; ?> Icon" style="width:19px;height:31px;"> <?php echo $ltext[$i]; ?> &nbsp; <?php
             }
         }
     }

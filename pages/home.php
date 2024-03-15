@@ -282,10 +282,10 @@ if (!hook("replaceslideshow"))
             <div class="HomePanel">
                 <div class="HomePanelIN HomePanelThemes <?php if (count($home_collections)>0) { ?> HomePanelMatchPromotedHeight<?php } ?>">
                 <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collections_featured.php">
-                <h2 style="padding: 0px 15px 0 44px;margin-top: 26px;margin-left: 15px;"><?php echo $lang["themes"]?></h2></a>
+                <h2 style="padding: 0px 15px 0 44px;margin-top: 26px;margin-left: 15px;"><?php echo $lang["themes"]; ?></h2></a>
                 <p style="text-shadow: none;">
                     <select id="themeselect" onChange="CentralSpaceLoad(this.value,true);">
-                    <option value=""><?php echo $lang["select"] ?></option>
+                    <option value=""><?php echo $lang["select"]; ?></option>
                     <?php
                     foreach(get_featured_collection_categories(0, array()) as $header)
                         {
@@ -294,7 +294,7 @@ if (!hook("replaceslideshow"))
                         <?php
                         } ?>
                     </select>
-                    <a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>"><?php echo LINK_CARET ?><?php echo $lang["viewall"] ?></a>
+                    <a id="themeviewall" onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>"><?php echo LINK_CARET ?><?php echo $lang["viewall"]; ?></a>
                 </p>
                 </div>
                 
@@ -337,7 +337,7 @@ if (!hook("replaceslideshow"))
                     }
                 else
                     { ?>
-                    <a href="<?php echo $custom_home_panels[$n]["link"] ?>" <?php if (isset($custom_home_panels[$n]["additional"])){ echo $custom_home_panels[$n]["additional"];} ?> class="HomePanel">
+                    <a href="<?php echo $custom_home_panels[$n]["link"]; ?>" <?php if (isset($custom_home_panels[$n]["additional"])){ echo $custom_home_panels[$n]["additional"];} ?> class="HomePanel">
                         <div class="HomePanelIN<?php if (count($home_collections)>0) { ?> HomePanelMatchPromotedHeight<?php } ?>" <?php if ($custom_home_panels[$n]["text"]=="") {?>style="min-height:0;"<?php } ?>>
                     <h2> <?php echo i18n_get_translated($custom_home_panels[$n]["title"]) ?></h2>
                     <span><?php echo i18n_get_translated($custom_home_panels[$n]["text"]) ?></span>
@@ -404,8 +404,8 @@ if (!hook("replaceslideshow"))
                 $tile_width=250;
                 $resource_data=get_resource_data($home_collection["home_page_image"]);
                 ?>
-                <a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $home_collection["ref"] ?>" onClick="return CentralSpaceLoad(this,true);" class="HomePanel HomePanelPromoted">
-                    <div id="HomePanelPromoted<?php echo $home_collection["ref"] ?>" class="HomePanelIN HomePanelPromotedIN" style="padding: 0;overflow: hidden;position: relative;height: 100%;width: 100%;min-height: 180px;">
+                <a href="<?php echo $baseurl_short?>pages/search.php?search=!collection<?php echo $home_collection["ref"]; ?>" onClick="return CentralSpaceLoad(this,true);" class="HomePanel HomePanelPromoted">
+                    <div id="HomePanelPromoted<?php echo $home_collection["ref"]; ?>" class="HomePanelIN HomePanelPromotedIN" style="padding: 0;overflow: hidden;position: relative;height: 100%;width: 100%;min-height: 180px;">
                             <img
                                 alt="<?php echo escape(i18n_get_translated($resource_data['field'.$view_title_field] ?? "")); ?>"
                                 src="<?php echo $home_col_image ?>" 

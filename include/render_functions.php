@@ -134,7 +134,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                     clearTimeout(wto);
                                     wto=setTimeout(function() {
                                         // Reflect the change of the governing field into the following governed field condition checker
-                                        console.log("<?php echo "DISPCOND CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref'] ?>");
+                                        console.log("<?php echo "DISPCOND CATTREE CHANGEGOVERNOR=".$fields[$cf]['ref']; ?>");
                                         for (i = 0; i<categoryTreeChecksArray.length; i++) {
                                             categoryTreeChecksArray[i]();
                                         }
@@ -162,7 +162,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                 jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                     {
                                     // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "DISPCOND DYNAMKKD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+                                    console.log("<?php echo "DISPCOND DYNAMKKD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref']; ?>");
                                     checkSearchDisplayCondition<?php echo $field['ref']; ?>();
                                     });
                                 });
@@ -178,7 +178,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                 jQuery('#CentralSpace').on('dynamicKeywordChanged', function(e,node)
                                     {
                                     // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "DISPCOND DYNAMKWD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+                                    console.log("<?php echo "DISPCOND DYNAMKWD CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref']; ?>");
                                     checkSearchDisplayCondition<?php echo $field['ref']; ?>();
                                     });
                                 });
@@ -216,7 +216,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
                                 jQuery('<?php echo $jquery_selector; ?>').change(function ()
                                     {
                                     // Reflect the change of the governing field into the following governed field condition checker
-                                    console.log("<?php echo "DISPCOND CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref'] ?>");
+                                    console.log("<?php echo "DISPCOND CHANGEGOVERNOR=".$fields[$cf]['ref']." CHECK GOVERNED=".$field['ref']; ?>");
                                     checkSearchDisplayCondition<?php echo $field['ref']; ?>();
                                     });
                                 });
@@ -473,7 +473,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         {
         hook("modifysearchfieldtitle");
         ?>
-        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"] ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><label for="simplesearch_<?php echo $field["ref"] ?>"><?php echo escape(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?></label><br/>
+        <div class="SearchItem" id="simplesearch_<?php echo $field["ref"]; ?>" <?php if (!$displaycondition || $simpleSearchFieldsAreHidden) {?>style="display:none;"<?php } if (strlen($field["tooltip_text"] ?? "" ) >= 1){ echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";} ?> ><label for="simplesearch_<?php echo $field["ref"]; ?>"><?php echo escape(lang_or_i18n_get_translated($field["title"], "fieldtitle-")) ?></label><br/>
 
         <?php
         #hook to modify field type in special case. Returning zero (to get a standard text box) doesn't work, so return 1 for type 0, 2 for type 1, etc.
@@ -902,7 +902,7 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
             // need to adjust the field's name value
             ?>
             <script type="text/javascript">
-                jQuery("#field_<?php echo $field['ref']?>").attr('name', 'field_<?php echo $field["name"]?>');
+                jQuery("#field_<?php echo $field['ref']; ?>").attr('name', 'field_<?php echo $field["name"]; ?>');
             </script>
             <?php
         break;
@@ -1344,7 +1344,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
                                     {
                                     CentralSpaceLoad(document.URL);
                                     }
-                                else if(basename(document.URL).substr(0, 6) === 'search' && '<?php echo $search_collection?>'=='<?php echo $collection_data["ref"]?>')
+                                else if(basename(document.URL).substr(0, 6) === 'search' && '<?php echo $search_collection?>'=='<?php echo $collection_data["ref"]; ?>')
                                     {
                                     CentralSpaceLoad('<?php echo $baseurl; ?>/pages/search.php?search=!collection' + response.redirect_to_collection, true);
                                     }
@@ -1442,7 +1442,7 @@ function render_actions(array $collection_data, $top_actions = true, $two_line =
 
                             jQuery.post('<?php echo $baseurl; ?>/pages/collection_edit.php?ajax=true', post_data, function()
                                 {
-                                CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"] ?>');
+                                CollectionDivLoad('<?php echo $baseurl; ?>/pages/collections.php?collection=<?php echo $collection_data["ref"]; ?>');
                                 });
                             <?php
                             }?>
@@ -1983,7 +1983,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
       ?>
       <div class="Question" id="modeselect_<?php echo $n?>" style="<?php if($value=="" && !$field_save_error ){echo "display:none;";} ?>padding-bottom:0;margin-bottom:0;">
       <label for="modeselectinput"><?php echo escape($lang["editmode"])?></label>
-      <select id="modeselectinput_<?php echo $n?>" name="modeselect_<?php echo $field["ref"]?>" class="stdwidth" onChange="<?php echo $onchangejs;hook ("edit_all_mode_js"); ?>">
+      <select id="modeselectinput_<?php echo $n?>" name="modeselect_<?php echo $field["ref"]; ?>" class="stdwidth" onChange="<?php echo $onchangejs;hook ("edit_all_mode_js"); ?>">
       <option value="RT"><?php echo escape($lang["replacealltext"])?></option>
       <?php
       if (in_array($field["type"], $TEXT_FIELD_TYPES ))
@@ -2032,8 +2032,8 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
       <div class="Question" id="findreplace_<?php echo $n?>" style="display:none;border-top:none;">
         <label>&nbsp;</label>
-        <?php echo escape($lang["find"])?> <input type="text" name="find_<?php echo $field["ref"]?>" class="shrtwidth">
-        <?php echo escape($lang["andreplacewith"])?> <input type="text" name="replace_<?php echo $field["ref"]?>" class="shrtwidth">
+        <?php echo escape($lang["find"])?> <input type="text" name="find_<?php echo $field["ref"]; ?>" class="shrtwidth">
+        <?php echo escape($lang["andreplacewith"])?> <input type="text" name="replace_<?php echo $field["ref"]; ?>" class="shrtwidth">
       </div><!-- End of findreplace_<?php echo $n?> -->
 
       <?php hook ("edit_all_after_findreplace","",array($field,$n)); 
@@ -2097,7 +2097,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
       {
       ?>
       <div class="AutoSaveStatus">
-      <span id="AutoSaveStatus<?php echo $field["ref"] ?>" style="display:none;"></span>
+      <span id="AutoSaveStatus<?php echo $field["ref"]; ?>" style="display:none;"></span>
       </div>
       <?php
       } 
@@ -2226,7 +2226,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
     if (array_key_exists($field["ref"],$errors))
       {
        ?>
-       <div class="FormError">!! <?php echo $errors[$field["ref"]]?> !!</div>
+       <div class="FormError">!! <?php echo $errors[$field["ref"]]; ?> !!</div>
        <?php
       }
 
@@ -2235,7 +2235,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
         # Show inline help for this field.
         # For certain field types that have no obvious focus, the help always appears
        ?>
-       <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,3,4,6,7,10,12,14)) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"])))?></div></div>
+       <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,3,4,6,7,10,12,14)) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]; ?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"])))?></div></div>
 <?php
      }
 
@@ -2248,41 +2248,41 @@ function display_field($n, $field, $newtab=false,$modal=false)
     if(($embedded_data_user_select || (isset($embedded_data_user_select_fields) && in_array($field["ref"],$embedded_data_user_select_fields))) && ($ref<0 && !$multiple))
     {
       ?>
-      <table id="exif_<?php echo $field["ref"] ?>" class="ExifOptions" cellpadding="3" cellspacing="3" <?php if ($embedded_data_user_select){?> style="display: none;" <?php } ?>>                    
+      <table id="exif_<?php echo $field["ref"]; ?>" class="ExifOptions" cellpadding="3" cellspacing="3" <?php if ($embedded_data_user_select){?> style="display: none;" <?php } ?>>                    
          <tbody>
            <tr>        
              <td>
                 <?php echo "&nbsp;&nbsp;" . $lang["embeddedvalue"] . ": " ?>
              </td>
              <td width="10" valign="middle">
-               <input type="radio" id="exif_extract_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="yes" checked>
+               <input type="radio" id="exif_extract_<?php echo $field["ref"]; ?>" name="exif_option_<?php echo $field["ref"]; ?>" value="yes" checked>
             </td>
             <td align="left" valign="middle">
-               <label class="customFieldLabel" for="exif_extract_<?php echo $field["ref"] ?>"><?php echo escape($lang["embedded_metadata_extract_option"]) ?></label>
+               <label class="customFieldLabel" for="exif_extract_<?php echo $field["ref"]; ?>"><?php echo escape($lang["embedded_metadata_extract_option"]) ?></label>
             </td>
 
 
             <td width="10" valign="middle">
-               <input type="radio" id="no_exif_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="no">
+               <input type="radio" id="no_exif_<?php echo $field["ref"]; ?>" name="exif_option_<?php echo $field["ref"]; ?>" value="no">
             </td>
             <td align="left" valign="middle">
-               <label class="customFieldLabel" for="no_exif_<?php echo $field["ref"] ?>"><?php echo escape($lang["embedded_metadata_donot_extract_option"]) ?></label>
+               <label class="customFieldLabel" for="no_exif_<?php echo $field["ref"]; ?>"><?php echo escape($lang["embedded_metadata_donot_extract_option"]) ?></label>
             </td>
 
 
             <td width="10" valign="middle">
-               <input type="radio" id="exif_append_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="append">
+               <input type="radio" id="exif_append_<?php echo $field["ref"]; ?>" name="exif_option_<?php echo $field["ref"]; ?>" value="append">
             </td>
             <td align="left" valign="middle">
-               <label class="customFieldLabel" for="exif_append_<?php echo $field["ref"] ?>"><?php echo escape($lang["embedded_metadata_append_option"]) ?></label>
+               <label class="customFieldLabel" for="exif_append_<?php echo $field["ref"]; ?>"><?php echo escape($lang["embedded_metadata_append_option"]) ?></label>
             </td>
 
 
             <td width="10" valign="middle">
-               <input type="radio" id="exif_prepend_<?php echo $field["ref"] ?>" name="exif_option_<?php echo $field["ref"] ?>" value="prepend">
+               <input type="radio" id="exif_prepend_<?php echo $field["ref"]; ?>" name="exif_option_<?php echo $field["ref"]; ?>" value="prepend">
             </td>
             <td align="left" valign="middle">
-               <label class="customFieldLabel" for="exif_prepend_<?php echo $field["ref"] ?>"><?php echo escape($lang["embedded_metadata_prepend_option"]) ?></label>
+               <label class="customFieldLabel" for="exif_prepend_<?php echo $field["ref"]; ?>"><?php echo escape($lang["embedded_metadata_prepend_option"]) ?></label>
             </td>
 
          </tr>
@@ -2366,7 +2366,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
         {
         // Use EDTF format for date input
         ?>      
-        <input class="<?php echo $forsearch?"SearchWidth":"stdwidth"; ?>"  name="<?php echo $name?>_edtf" id="<?php echo $name?>_edtf" type="text" value="<?php echo ($startvalue!=""|$endvalue!="")?$startvalue . "/" . $endvalue:""; ?>" style="display:none;" disabled <?php if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearch && !$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } elseif (!$forsearch  && $edit_autosave){?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
+        <input class="<?php echo $forsearch?"SearchWidth":"stdwidth"; ?>"  name="<?php echo $name?>_edtf" id="<?php echo $name?>_edtf" type="text" value="<?php echo ($startvalue!=""|$endvalue!="")?$startvalue . "/" . $endvalue:""; ?>" style="display:none;" disabled <?php if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } if($forsearch && !$forsearchbar){ ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php } elseif (!$forsearch  && $edit_autosave){?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>>
 <?php
         }?>
     <!--  date range search start -->           
@@ -2384,7 +2384,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
             elseif (!$forsearch  && $edit_autosave)
-            {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+            {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
               >
               <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
               <?php
@@ -2401,7 +2401,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
                 <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
                 <?php
@@ -2422,7 +2422,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >                   
                 <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
                 <?php
@@ -2438,7 +2438,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
               <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
               <?php
@@ -2459,7 +2459,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 if ($forsearch && $autoupdate) 
                         { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                 >
                 <option value=""><?php echo $forsearch?$lang["anyyear"]:$lang["year"]; ?></option>
                 <?php
@@ -2482,7 +2482,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 if($forsearch && !$forsearchbar)
                     { ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
+                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>>
             <?php
             }?>
     </div>
@@ -2506,7 +2506,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
                 <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
                 <?php
@@ -2522,7 +2522,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
                 <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
                 <?php
@@ -2540,7 +2540,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             <label class="accessibility-hidden" for="<?php echo escape($name) ?>_end_month"><?php echo escape($lang["month"]); ?></label>
             <select name="<?php echo $name?>_end_month" <?php 
                 if (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } 
+                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } 
                 else
                     {?>onChange="UpdateResultCount();"<?php } ?>
                     >                   
@@ -2558,7 +2558,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 if ($forsearch && $autoupdate) 
                     { ?>onChange="UpdateResultCount();"<?php }
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
               <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
               <?php
@@ -2578,9 +2578,9 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             <?php 
             if ($forsearch && $autoupdate) { ?>onChange="UpdateResultCount();"<?php } 
                 elseif (!$forsearch  && $edit_autosave)
-                    {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
+                    {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
-              <option value=""><?php echo $forsearch?$lang["anyyear"]:$lang["year"]?></option>
+              <option value=""><?php echo $forsearch?$lang["anyyear"]:$lang["year"]; ?></option>
               <?php
               $y=date("Y");
               $y += $maxyear_extends_current;
@@ -2603,7 +2603,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     if($forsearch && !$forsearchbar)
                         { ?> onKeyPress="if (!(updating)) {setTimeout('UpdateResultCount()',2000);updating=true;}"<?php }
                     elseif (!$forsearch  && $edit_autosave)
-                        {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
+                        {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>>
                 <?php
                 }
             
@@ -3054,7 +3054,7 @@ function render_share_options($shareopts=array())
 
                 $selected = $editgroup == $group["ref"] || ($editgroup == "" && $usergroup == $group["ref"]);
                 ?>
-                <option value="<?php echo $group["ref"] ?>" <?php if ($selected) echo "selected" ?>><?php echo $group["name"] ?></option>
+                <option value="<?php echo $group["ref"]; ?>" <?php if ($selected) echo "selected" ?>><?php echo $group["name"]; ?></option>
                 <?php
                 }
                 ?>

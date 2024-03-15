@@ -126,7 +126,7 @@ for ($n=0;$n<count($resource_types);$n++)
         </td>   
         <td>
             <div class="ListTitle">
-                    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
+                    <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]; ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
                     <?php echo escape(i18n_get_translated($resource_types[$n]["name"]));?>
                     </a>
                 </a>
@@ -139,7 +139,7 @@ for ($n=0;$n<count($resource_types);$n++)
                     {
                     ?>
                     <a href="<?php echo $baseurl_short?>pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);">
-                    <?php echo $resource_types[$n]["fieldcount"] ?>
+                    <?php echo $resource_types[$n]["fieldcount"]; ?>
                     </a>
                     <?php
                     }
@@ -160,7 +160,7 @@ for ($n=0;$n<count($resource_types);$n++)
                         <?php
                         }
                     ?>
-                <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
+                <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_edit.php?ref=<?php echo $resource_types[$n]["ref"]; ?>&backurl=<?php echo urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?> </a>
 
                 <a href="<?php echo $baseurl ?>/pages/admin/admin_resource_type_fields.php?restypefilter=<?php echo $resource_types[$n]["ref"] . "&backurl=" . urlencode($url) ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-bars"></i>&nbsp;<?php echo escape($lang["metadatafields"]) ?> </a>
                 

@@ -604,11 +604,11 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                                     resizable: false,
                                     dialogClass: 'delete-dialog no-close',
                                     buttons: {
-                                        "<?php echo $lang['confirmdefaultdashtiledelete'] ?>": function() {
+                                        "<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {
                                                 jQuery(this).dialog("close");
                                                 deleteDefaultDashTile(id);
                                             },    
-                                        "<?php echo $lang['cancel'] ?>": function() { 
+                                        "<?php echo $lang['cancel']; ?>": function() { 
                                                 jQuery(this).dialog('close');
                                             }
                                     }
@@ -621,8 +621,8 @@ function get_default_dash($user_group_id = null, $edit_mode = false)
                                 resizable: false,
                                 dialogClass: 'delete-dialog no-close',
                                 buttons: {
-                                    "<?php echo $lang['confirmdefaultdashtiledelete'] ?>": function() {jQuery(this).dialog("close");deleteDefaultDashTile(id); },    
-                                    "<?php echo $lang['cancel'] ?>": function() { jQuery(this).dialog('close'); }
+                                    "<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {jQuery(this).dialog("close");deleteDefaultDashTile(id); },    
+                                    "<?php echo $lang['cancel']; ?>": function() { jQuery(this).dialog('close'); }
                                 }
                             });
                         }
@@ -1357,13 +1357,13 @@ function render_delete_dialog_JS($all_users=false)
         resizable: false,
         dialogClass: 'delete-dialog no-close',
         buttons: {
-            "<?php echo $lang['confirmdashtiledelete'] ?>": function() {deleteDashTile(usertileid); jQuery(this).dialog( "close" );},
+            "<?php echo $lang['confirmdashtiledelete']; ?>": function() {deleteDashTile(usertileid); jQuery(this).dialog( "close" );},
             <?php if($all_users){
             ?>
-            "<?php echo $lang['confirmdefaultdashtiledelete'] ?>": function() {deleteDefaultDashTile(tileid,usertileid); jQuery(this).dialog( "close" );},
-            "<?php echo $lang['managedefaultdash'] ?>": function() {window.location = "<?php echo $baseurl; ?>/pages/team/team_dash_tile.php"; return false;},
+            "<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {deleteDefaultDashTile(tileid,usertileid); jQuery(this).dialog( "close" );},
+            "<?php echo $lang['managedefaultdash']; ?>": function() {window.location = "<?php echo $baseurl; ?>/pages/team/team_dash_tile.php"; return false;},
             <?php } ?>
-            "<?php echo $lang['cancel'] ?>":  function() { jQuery(this).dialog('close'); }
+            "<?php echo $lang['cancel']; ?>":  function() { jQuery(this).dialog('close'); }
         }
     });
     <?php
@@ -1751,7 +1751,7 @@ function generate_dash_tile_toolbar(array $tile, $tile_id)
         {
         if (pagename == "home")
         {
-            var tileid = "<?php echo $tile["ref"]?>"; //Needs to be set for delete functionality
+            var tileid = "<?php echo $tile["ref"]; ?>"; //Needs to be set for delete functionality
             var usertileid = "<?php echo escape(substr($tile_id, 18)); ?>" //Needs to be set for delete functionality
             var usertileidname = "#<?php echo escape(substr($tile_id, 9)); ?>";
             var dashtileactionsid = "#DashTileActions_" + usertileid;

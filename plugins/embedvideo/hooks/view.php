@@ -32,12 +32,12 @@ function HookEmbedvideoViewAfterresourceactions()
     ?>
     <li>
         <a href="#" onClick="jQuery('#embed-video').toggle();jQuery('#embed-video-help').toggle();">
-            <?php echo "<i class='fa fa-fw fa-share-alt'></i>&nbsp;" . $lang["embed"] ?>
+            <?php echo "<i class='fa fa-fw fa-share-alt'></i>&nbsp;" . $lang["embed"]; ?>
         </a>
     </li>
 
     <p id="embed-video-help">
-        <?php echo $lang["embed_help"] ?>
+        <?php echo $lang["embed_help"]; ?>
     </p>
 
     <textarea id="embed-video"><?php

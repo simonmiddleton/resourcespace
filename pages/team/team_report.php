@@ -75,7 +75,7 @@ if (getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false))
         create_periodic_email($userref, $report, $period, getval('email_days', 1, true), $user_group_selection, $search_params);
         ?>
         <script type="text/javascript">
-        alert("<?php echo $lang["newemailreportcreated"] ?>");
+        alert("<?php echo $lang["newemailreportcreated"]; ?>");
         </script>
         <?php
     
@@ -84,7 +84,7 @@ if (getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false))
         {
         ?>
         <script type="text/javascript">
-        alert("<?php echo $lang["report-select-required"] ?>");
+        alert("<?php echo $lang["report-select-required"]; ?>");
         </script>
         <?php
         }
@@ -98,8 +98,8 @@ if($delete != '')
         delete_periodic_report($delete);
         ?>
         <div class="BasicsBox">
-            <h1><?php echo $lang['deleted']?></h1>
-            <p><?php echo $lang['report_periodic_email_deletion_confirmed']?></p>
+            <h1><?php echo $lang['deleted']; ?></h1>
+            <p><?php echo $lang['report_periodic_email_deletion_confirmed']; ?></p>
         </div>
         <?php
         }
@@ -136,8 +136,8 @@ if($unsubscribe != '')
         unsubscribe_user_from_periodic_report($unsubscribe_user, $unsubscribe);
         ?>
         <div class="BasicsBox">
-            <h1><?php echo $lang["unsubscribed"]?></h1>
-            <p><?php echo $lang["youhaveunsubscribedreport"]?></p>
+            <h1><?php echo $lang["unsubscribed"]; ?></h1>
+            <p><?php echo $lang["youhaveunsubscribedreport"]; ?></p>
         </div>
         <?php
         }
@@ -243,7 +243,7 @@ else
             }
         }
     </script>
-<label for="report"><?php echo $lang["viewreport"]?></label>
+<label for="report"><?php echo $lang["viewreport"]; ?></label>
 <select id="report" name="report" class="stdwidth" onchange="show_hide_date(); update_view_as_search_results_btn(this);">
     <option value="" selected disabled hidden><?php echo $lang['select']; ?></option>
 <?php

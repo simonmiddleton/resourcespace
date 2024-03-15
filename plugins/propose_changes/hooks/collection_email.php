@@ -10,7 +10,7 @@ function HookPropose_changesCollection_emailAdditionalemailfield()
         global $lang, $collection;
         ?>
         <div class="Question">
-        <label for="propose_changes"><?php echo $lang["propose_changes_option"]?></label><input type=checkbox id="propose_changes" name="propose_changes" <?php if ($collection["propose_changes"]==1) { ?>checked<?php } ?>>
+        <label for="propose_changes"><?php echo $lang["propose_changes_option"]; ?></label><input type=checkbox id="propose_changes" name="propose_changes" <?php if ($collection["propose_changes"]==1) { ?>checked<?php } ?>>
         <div class="clearerleft"> </div>
         </div>
         <?php 

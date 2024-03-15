@@ -76,19 +76,19 @@ $url="list.php?findtext=".urlencode($findtext)."&offset=". $offset;
 $jumpcount=1;
 ?>
 
-<p><a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=new" onClick="CentralSpaceLoad(this);return false;"><?php echo LINK_PLUS_CIRCLE . $lang["new_license"] ?></a></p>
+<p><a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=new" onClick="CentralSpaceLoad(this);return false;"><?php echo LINK_PLUS_CIRCLE . $lang["new_license"]; ?></a></p>
 
 
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo $lang["license_id"] ?></a></td>
-<td><?php echo $lang["type"] ?></a></td>
-<td><?php echo $lang["licensor_licensee"] ?></a></td>
-<td><?php echo $lang["indicateusagemedium"] ?></a></td>
-<td><?php echo $lang["description"] ?></a></td>
-<td><?php echo $lang["fieldtitle-expiry_date"] ?></a></td>
-<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+<td><?php echo $lang["license_id"]; ?></a></td>
+<td><?php echo $lang["type"]; ?></a></td>
+<td><?php echo $lang["licensor_licensee"]; ?></a></td>
+<td><?php echo $lang["indicateusagemedium"]; ?></a></td>
+<td><?php echo $lang["description"]; ?></a></td>
+<td><?php echo $lang["fieldtitle-expiry_date"]; ?></a></td>
+<td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
 </tr>
 
 <?php
@@ -101,9 +101,9 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
     ?>
     <tr>
     <td>
-            <?php echo $license["ref"] ?></td>
+            <?php echo $license["ref"]; ?></td>
             <td><?php echo escape($license["outbound"] ? $lang["outbound"] : $lang["inbound"]); ?></td>
-            <td><?php echo $license["holder"] ?></td>
+            <td><?php echo $license["holder"]; ?></td>
             <td><?php
                 foreach ($license_usage_mediums as $medium)
                     {
@@ -113,12 +113,12 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
                 echo $translated_mediums;
                 ?>
             </td>
-            <td><?php echo $license["description"] ?></td>
+            <td><?php echo $license["description"]; ?></td>
             <td><?php echo escape($license["expires"] == "" ? $lang["no_expiry_date"] : nicedate($license["expires"])); ?></td>
         
             <td><div class="ListTools">
-            <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
-            <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?></a>
+            <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/edit.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a>
+            <a href="<?php echo generateURL($baseurl_short . "plugins/licensemanager/pages/delete.php",$url_params); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]; ?></a>
             </div></td>
     </tr>
     <?php
@@ -132,13 +132,13 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
 
 
         <div class="Question">
-            <label for="find"><?php echo $lang["licensesearch"]?><br/></label>
+            <label for="find"><?php echo $lang["licensesearch"]; ?><br/></label>
             <div class="tickset">
              <div class="Inline">           
-            <input type=text placeholder="<?php echo $lang['searchbytext']?>" name="findtext" id="findtext" value="<?php echo escape($findtext)?>" maxlength="100" class="shrtwidth" />
+            <input type=text placeholder="<?php echo $lang['searchbytext']; ?>" name="findtext" id="findtext" value="<?php echo escape($findtext)?>" maxlength="100" class="shrtwidth" />
             
-            <input type="button" value="<?php echo $lang['clearbutton']?>" onClick="$('findtext').value='';CentralSpacePost(document.getElementById('licenselist'));return false;" />
-            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />
+            <input type="button" value="<?php echo $lang['clearbutton']; ?>" onClick="$('findtext').value='';CentralSpacePost(document.getElementById('licenselist'));return false;" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;" />
              
             </div>
             </div>

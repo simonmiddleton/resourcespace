@@ -13,7 +13,7 @@ if ($geo_search_heatmap)
     } ?>
 
 <div class="BasicsBox">
-<h1><?php echo $lang["geographicsearch"] ?></h1>
+<h1><?php echo $lang["geographicsearch"]; ?></h1>
 <p><?php echo $lang["geographicsearch_help"]; render_help_link("user/geographic-search");?></p>
 
 <?php
@@ -44,10 +44,10 @@ if ($map_zoomslider)
 
 <!-- Drag mode selector -->
 <div id="GeoDragMode">
-    <?php echo $lang['geodragmode'] ?>:&nbsp;
-    <input type="radio" name="dragmode" id="dragmodepan" onClick="map1.editTools.stopDrawing();" /><label for="dragmodepan"> <?php echo $lang['geodragmodepan'] ?></label>
+    <?php echo $lang['geodragmode']; ?>:&nbsp;
+    <input type="radio" name="dragmode" id="dragmodepan" onClick="map1.editTools.stopDrawing();" /><label for="dragmodepan"> <?php echo $lang['geodragmodepan']; ?></label>
         &nbsp;
-    <input type="radio" name="dragmode" id="dragmodearea" checked="checked" onClick="map1.editTools.startRectangle();" /><label for="dragmodearea"><?php echo $lang['geodragmodeareaselect'] ?></label>
+    <input type="radio" name="dragmode" id="dragmodearea" checked="checked" onClick="map1.editTools.startRectangle();" /><label for="dragmodearea"><?php echo $lang['geodragmodeareaselect']; ?></label>
 </div>
 
 <!--Setup Leaflet map container with sizing-->

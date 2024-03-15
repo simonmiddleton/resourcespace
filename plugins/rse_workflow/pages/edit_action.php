@@ -100,7 +100,7 @@ include '../../../include/header.php';
 function SaveWorkflowAction(){
     if(jQuery('#actionsfrom').val()==jQuery('#actionto').val())
         {
-        alert('<?php echo $lang["rse_workflow_action_check_fields"] ?>');
+        alert('<?php echo $lang["rse_workflow_action_check_fields"]; ?>');
         return false;
         }
     CentralSpacePost(document.getElementById('form_workflow_action'),false);
@@ -116,7 +116,7 @@ if (isset($saveerror))
         {
         ?>
         <script type="text/javascript">
-        alert('<?php echo $lang['rse_workflow_action_check_fields'] ?>');
+        alert('<?php echo $lang['rse_workflow_action_check_fields']; ?>');
         </script><?php
         }
     
@@ -159,38 +159,38 @@ renderBreadcrumbs($links_trail);
     <input type="hidden" name="submitted" value="true">
         
     <div class="Question" id="actionname_question">
-    <label for="actionname"><?php echo $lang["rse_workflow_action_name"]?></label>
+    <label for="actionname"><?php echo $lang["rse_workflow_action_name"]; ?></label>
     <input class="stdwidth" type="text" name="actionname" id="actionname" value="<?php echo escape($workflowaction["name"]);  ?>" />
     <div class="clearerleft"> </div>
     </div>
 
     
     <div class="Question" id="actiontext_question">
-    <label for="actiontext"><?php echo $lang["rse_workflow_action_text"]?></label>
+    <label for="actiontext"><?php echo $lang["rse_workflow_action_text"]; ?></label>
     <input class="stdwidth" type="text" name="actiontext" id="actiontext" value="<?php echo escape($workflowaction["text"]);  ?>" />
     <div class="clearerleft"> </div>
     </div>
     
     <div class="Question" id="buttontext_question">
-    <label for="buttontext"><?php echo $lang["rse_workflow_button_text"]?></label>
+    <label for="buttontext"><?php echo $lang["rse_workflow_button_text"]; ?></label>
     <input class="stdwidth" type="text" name="buttontext" id="buttontext" value="<?php echo escape($workflowaction["buttontext"]);  ?>" />
     <div class="clearerleft"> </div>
     </div>
     
     <div class="Question" id="actionfrom_question">
-    <label for="actionfrom"><?php echo $lang["rse_workflow_action_status_from"]?></label>
+    <label for="actionfrom"><?php echo $lang["rse_workflow_action_status_from"]; ?></label>
     
     <table cellpadding=2 cellspacing=0>
     <?php
     $fromstates=explode(",",$workflowaction["statusfrom"]); 
     for ($n=-2;$n<=3;$n++)
         {?>
-        <tr><td width="1"><input type="checkbox" name="from<?php echo $n?>" value="yes" <?php if (in_array($n,$fromstates)) {?>checked<?php } ?>/></td><td><?php echo $lang["status" . $n]?>&nbsp;</td></tr>
+        <tr><td width="1"><input type="checkbox" name="from<?php echo $n?>" value="yes" <?php if (in_array($n,$fromstates)) {?>checked<?php } ?>/></td><td><?php echo $lang["status" . $n]; ?>&nbsp;</td></tr>
         <?php
         }
     foreach ($additional_archive_states as $additional_archive_state)
         {?>
-        <tr><td width="1"><input type="checkbox" name="from<?php echo $additional_archive_state?>" value="yes" <?php if (in_array($additional_archive_state,$fromstates)) {?>checked<?php } ?>/></td><td><?php echo $lang["status" . $additional_archive_state]?>&nbsp;</td></tr>
+        <tr><td width="1"><input type="checkbox" name="from<?php echo $additional_archive_state?>" value="yes" <?php if (in_array($additional_archive_state,$fromstates)) {?>checked<?php } ?>/></td><td><?php echo $lang["status" . $additional_archive_state]; ?>&nbsp;</td></tr>
         <?php	  
         }
     ?></tr></table> 
@@ -198,16 +198,16 @@ renderBreadcrumbs($links_trail);
     </div>
     
     <div class="Question" id="actionto_question">
-    <label for="actionto"><?php echo $lang["rse_workflow_action_status_to"]?></label>
+    <label for="actionto"><?php echo $lang["rse_workflow_action_status_to"]; ?></label>
     <select class="stdwidth" name="actionto" id="actionto" >
     <?php
     for ($n=-2;$n<=3;$n++)
         {?>
-        <option value="<?php echo $n ?>" <?php if ($n==$workflowaction["statusto"]) {echo " selected";} ?>><?php echo $lang["status" . $n] ?></option>';<?php
+        <option value="<?php echo $n ?>" <?php if ($n==$workflowaction["statusto"]) {echo " selected";} ?>><?php echo $lang["status" . $n]; ?></option>';<?php
         }
     foreach ($additional_archive_states as $additional_archive_state)
         {?>
-        <option value="<?php echo (int)$additional_archive_state ?>" <?php if ($additional_archive_state==$workflowaction["statusto"]) {echo " selected";} ?>><?php echo $lang["status" . $additional_archive_state] ?></option>';<?php
+        <option value="<?php echo (int)$additional_archive_state ?>" <?php if ($additional_archive_state==$workflowaction["statusto"]) {echo " selected";} ?>><?php echo $lang["status" . $additional_archive_state]; ?></option>';<?php
         }   
     ?>
     </select>
@@ -215,7 +215,7 @@ renderBreadcrumbs($links_trail);
     </div>
     
     <div class="Question" id="QuestionSubmit">
-    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" onclick="event.preventDefault();SaveWorkflowAction();"/>
+    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" onclick="event.preventDefault();SaveWorkflowAction();"/>
     </div>
 </form>
     <div class="clearerleft"> </div>

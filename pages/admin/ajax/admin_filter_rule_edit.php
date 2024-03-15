@@ -36,8 +36,8 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
 <link rel="stylesheet" href="<?php echo $baseurl_short ?>lib/chosen/chosen.min.css">
 
 <div class="BasicsBox">
-    <h1><?php echo $lang["filter_rule_add"] ?></h1>
-    <h2><?php echo $lang["filter_rule_edit_text"] ?></h2>
+    <h1><?php echo $lang["filter_rule_add"]; ?></h1>
+    <h2><?php echo $lang["filter_rule_edit_text"]; ?></h2>
     <form id="filter_edit_form" name="filter_edit_form" method="post" action="<?php echo $saveurl; ?>" onSubmit="processFilterRules();return CentralSpacePost(this,true);">
     <input type="hidden" name="filter_rule" value="<?php echo $ruleid; ?>" />
     <input type="hidden" name="filter" value="<?php echo $filterid; ?>" />
@@ -52,7 +52,7 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
         ?>
         <div class="Question filter_rule_question">
         <select name="filter_rule_field" id="filter_rule_field" style="width:300px" onChange="updateFieldOptions(jQuery(this).parent());">
-            <option value='0' ><?php echo $lang["select"] ?></option>
+            <option value='0' ><?php echo $lang["select"]; ?></option>
             <?php
             
             foreach($allfields as $field)
@@ -78,7 +78,7 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
             foreach($field_options as $option)
                 {
                 ?>
-                <option value='<?php echo $option['ref'];?>' <?php if(in_array($option["ref"],explode(',',$filter_line["nodes"]))){echo "selected";}?>><?php echo $option["name"] ?></option>
+                <option value='<?php echo $option['ref'];?>' <?php if(in_array($option["ref"],explode(',',$filter_line["nodes"]))){echo "selected";}?>><?php echo $option["name"]; ?></option>
                 <?php
                 }
                 ?>
@@ -94,7 +94,7 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
 
     <div class="Question filter_rule_question">
         <select name="filter_rule_field" id="filter_rule_field" style="width:300px" onChange="updateFieldOptions(jQuery(this).parent());">
-            <option value='0' ><?php echo $lang["select"] ?></option>
+            <option value='0' ><?php echo $lang["select"]; ?></option>
             <?php
             foreach($allfields as $field)
                 {
@@ -112,7 +112,7 @@ $saveurl = generateURL($baseurl . "/pages/admin/admin_filter_edit.php",$savepara
         </select>
         
         <select name='filter_rule_nodes[]' class='filter_rule_nodes' multiple='multiple' size='7' style='width:420px'>
-            <option value='0' ><?php echo $lang["select"] ?></option>
+            <option value='0' ><?php echo $lang["select"]; ?></option>
         </select>
         
     </div>

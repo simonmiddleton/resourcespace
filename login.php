@@ -210,13 +210,13 @@ if (!hook("replaceloginform")) {
         <?php }?>
 
         <div class="Question">
-            <label for="username"><?php echo $lang["username"]?> </label>
+            <label for="username"><?php echo $lang["username"]; ?> </label>
             <input type="text" name="username" id="username" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?> value="<?php echo escape(getval("username", "")); ?>"/>
             <div class="clearerleft"> </div>
         </div>
 
         <div class="Question">
-            <label for="password"><?php echo $lang["password"]?> </label>
+            <label for="password"><?php echo $lang["password"]; ?> </label>
             <input type="password" name="password" id="password" class="stdwidth"<?php echo $autocomplete_attr . $aria_describedby_attr; ?>/>
             <div id="capswarning"><?php echo escape($lang["caps-lock-on"]); ?></div>
             <div class="clearerleft"> </div>
@@ -224,7 +224,7 @@ if (!hook("replaceloginform")) {
 
         <?php if ($disable_languages == false) { ?>   
             <div class="Question HalfWidth">
-                <label for="language"><?php echo $lang["language"]?></label>
+                <label for="language"><?php echo $lang["language"]; ?></label>
                 <select id="language" class="stdwidth" name="language" onBlur="document.getElementById('langupdate').value='YES';document.getElementById('loginform').submit();">
                 <?php reset($languages); foreach ($languages as $key => $value) { ?>
                     <option value="<?php echo $key?>" <?php if ($language == $key) {
@@ -274,23 +274,23 @@ if (!hook("replaceloginform")) {
 
         <?php if ($allow_keep_logged_in) { ?>
             <div class="Question KeepLoggedIn">
-                <label for="remember"><?php echo $lang["keepmeloggedin"]?></label>
+                <label for="remember"><?php echo $lang["keepmeloggedin"]; ?></label>
                 <input name="remember" id="remember" type="checkbox" value="yes" <?php echo ($remember_me_checked === true) ? "checked='checked'" : "";?>>
                 <div class="clearer"> </div>
             </div>
         <?php } ?>
 
         <div class="QuestionSubmit">       
-            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]?>&nbsp;&nbsp;" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["login"]; ?>&nbsp;&nbsp;" />
         </div>
 
 
         <p class="LoginLinks">
         <?php if ($allow_account_request) { ?>
-            <a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php"><i class="fas fa-fw fa-user-plus"></i>&nbsp;<?php echo $lang["nopassword"]?></a>
+            <a id="account_apply" href="<?php echo $baseurl_short?>pages/user_request.php"><i class="fas fa-fw fa-user-plus"></i>&nbsp;<?php echo $lang["nopassword"]; ?></a>
         <?php } ?>
         <?php if ($allow_password_reset) { ?>
-            <br/><a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php"><i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo $lang["forgottenpassword"]?></a>
+            <br/><a id="account_pw_reset" href="<?php echo $baseurl_short?>pages/user_password.php"><i class="fas fa-fw fa-lock"></i>&nbsp;<?php echo $lang["forgottenpassword"]; ?></a>
         <?php } ?>
         </p>
 

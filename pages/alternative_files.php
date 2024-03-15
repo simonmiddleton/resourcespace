@@ -101,7 +101,7 @@ function clickDelete(){
         );
     });
 
-    if (errors > 0){styledalert('<?php echo $lang['error'] ?>','<?php echo $lang['altfilesdeletefail']?>');return false;}
+    if (errors > 0){styledalert('<?php echo $lang['error']; ?>','<?php echo $lang['altfilesdeletefail']; ?>');return false;}
     else {return true;}
 }
 function toggleAll(){
@@ -119,8 +119,8 @@ if(!$modal)
     {
     ?>
     <p>
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a><br / >
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]; ?></a><br / >
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a>
     </p>
     <?php
     }
@@ -129,8 +129,8 @@ elseif($previous_page_modal)
     $urlparams["context"]='Modal';
     ?>
     <p>
-    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]?></a><br / >
-    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoeditmetadata"]; ?></a><br / >
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a>
     </p>
     <?php
     }
@@ -168,7 +168,7 @@ if(isset($resource['field'.$view_title_field]))
 
 <h1><?php echo $lang["managealternativefilestitle"]; render_help_link('user/alternative-files');?></h1>
 
-<?php if (count($files)>0){?><a href="#" id="deletechecked" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {clickDelete();} return false;"><?php echo LINK_CARET ?><?php echo $lang["action-deletechecked"]?></a><?php } ?>
+<?php if (count($files)>0){?><a href="#" id="deletechecked" onclick="if (confirm('<?php echo $lang["confirm-deletion"]; ?>')) {clickDelete();} return false;"><?php echo LINK_CARET ?><?php echo $lang["action-deletechecked"]; ?></a><?php } ?>
 <form method=post id="fileform" action="<?php echo generateurl($baseurl . "/pages/alternative_files.php",$urlparams); ?>">
 <input type=hidden name="filedelete" id="filedelete" value="">
 <?php generateFormToken("fileform"); ?>
@@ -178,14 +178,14 @@ if(isset($resource['field'.$view_title_field]))
 <!--Title row-->    
 <tr class="ListviewTitleStyle">
 <td><?php if (count($files)>0){?><input type="checkbox" class="checkbox" onclick="toggleAll();" id="toggleall" /><?php } ?></td>
-<td><?php echo $lang["name"]?></td>
-<td><?php echo $lang["description"]?></td>
+<td><?php echo $lang["name"]; ?></td>
+<td><?php echo $lang["description"]; ?></td>
 <?php hook('alternativefileslist'); ?>
-<td><?php echo $lang["filetype"]?></td>
-<td><?php echo $lang["filesize"]?></td>
-<td><?php echo $lang["date"]?></td>
-<?php if(count($alt_types) > 1){ ?><td><?php echo $lang["alternatetype"]?></td><?php } ?>
-<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+<td><?php echo $lang["filetype"]; ?></td>
+<td><?php echo $lang["filesize"]; ?></td>
+<td><?php echo $lang["date"]; ?></td>
+<?php if(count($alt_types) > 1){ ?><td><?php echo $lang["alternatetype"]; ?></td><?php } ?>
+<td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
 </tr>
 
 <?php
@@ -194,7 +194,7 @@ for ($n=0;$n<count($files);$n++)
     {
     ?>
     <!--List Item-->
-    <tr <?php if($files[$n]["ref"]==$alt){echo "class='Highlight' ";} ?> id='altlistrow<?php echo $files[$n]['ref']?>'>
+    <tr <?php if($files[$n]["ref"]==$alt){echo "class='Highlight' ";} ?> id='altlistrow<?php echo $files[$n]['ref']; ?>'>
     <td><input type="checkbox" class="checkbox" name="altcheckbox[]" value="<?php echo $files[$n]["ref"];?>" /></td>
     <td><?php echo escape($files[$n]["name"])?></td>  
     <td><?php echo escape($files[$n]["description"])?>&nbsp;</td>
@@ -202,11 +202,11 @@ for ($n=0;$n<count($files);$n++)
     <td><?php echo escape($files[$n]["file_extension"] == "" ? $lang["notuploaded"] : str_replace_formatted_placeholder("%extension", $files[$n]["file_extension"], $lang["cell-fileoftype"])); ?></td> 
     <td><?php echo formatfilesize($files[$n]["file_size"])?></td>   
     <td><?php echo nicedate($files[$n]["creation_date"],true)?></td>
-    <?php if(count($alt_types) > 1){ ?><td><?php echo $files[$n]["alt_type"] ?></td><?php } ?>
+    <?php if(count($alt_types) > 1){ ?><td><?php echo $files[$n]["alt_type"]; ?></td><?php } ?>
     <td><div class="ListTools">
     
     <a href="#" onclick="
-        if (confirm('<?php echo $lang['filedeleteconfirm']?>'))
+        if (confirm('<?php echo $lang['filedeleteconfirm']; ?>'))
             {
             postdata = {
                 'resource' : '<?php echo $ref;?>',
@@ -234,7 +234,7 @@ for ($n=0;$n<count($files);$n++)
         return false;
     "><?php echo LINK_CARET ?><?php echo escape($lang["action-delete"])?></a>
 
-    &nbsp;<a onclick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this, true);" href="<?php echo generateurl($baseurl . "/pages/alternative_file.php",$urlparams,array("ref"=>$files[$n]["ref"])); ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]?></a>
+    &nbsp;<a onclick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this, true);" href="<?php echo generateurl($baseurl . "/pages/alternative_file.php",$urlparams,array("ref"=>$files[$n]["ref"])); ?>"><?php echo LINK_CARET ?><?php echo $lang["action-edit"]; ?></a>
 
     <?php if($editaccess && (file_exists(get_resource_path($ref , true, '', true, 'jpg', true, 1, false, '', $files[$n]["ref"], true)) || file_exists(get_resource_path($ref , true, 'hpr', true, 'jpg', true, 1, false, '', $files[$n]["ref"], true))))
         {
@@ -251,7 +251,7 @@ for ($n=0;$n<count($files);$n++)
 </table>
 </div>
 <p>
-    <a onclick="return CentralSpaceLoad(this, true);" href="<?php echo generateurl($baseurl . "/pages/upload_batch.php",$urlparams,array('alternative'=>$ref)); ?>"><?php echo LINK_CARET ?><?php echo $lang["alternativebatchupload"] ?></a>
+    <a onclick="return CentralSpaceLoad(this, true);" href="<?php echo generateurl($baseurl . "/pages/upload_batch.php",$urlparams,array('alternative'=>$ref)); ?>"><?php echo LINK_CARET ?><?php echo $lang["alternativebatchupload"]; ?></a>
 </p>
 </form>
 

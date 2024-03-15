@@ -568,7 +568,7 @@ if($ajax)
                     <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $node['ref']; ?>" value="<?php echo escape($node['name']); ?>" onblur="this.value=this.value.trim()" >
                 </td>
                 <td align="left">
-                    <?php echo $node['use_count'] ?>
+                    <?php echo $node['use_count']; ?>
                 </td>
 
                     <div class="ListTools">

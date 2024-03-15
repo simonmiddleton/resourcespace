@@ -43,12 +43,12 @@ $intro=text("introtext");
 if ($intro!="") { ?><p><?php echo $intro ?></p><?php } 
 ?>
 <div class="TopInpageNav">
-<div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]?>:
+<div class="InpageNavLeftBlock"><?php echo $lang["resultsdisplay"]; ?>:
     <?php 
     for($n=0;$n<count($list_display_array);$n++){?>
-    <?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=<?php echo $list_display_array[$n]?>"><?php echo $list_display_array[$n]?></a><?php } ?>&nbsp;|
+    <?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]; ?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=<?php echo $list_display_array[$n]; ?>"><?php echo $list_display_array[$n]; ?></a><?php } ?>&nbsp;|
     <?php } ?>
-    <?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=99999"><?php echo $lang["all"]?></a><?php } ?>
+    <?php if ($per_page==99999){?><span class="Selected"><?php echo $lang["all"]; ?></span><?php } else { ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $url; ?>&per_page_list_log=99999"><?php echo $lang["all"]; ?></a><?php } ?>
     </div> <?php pager(false); ?></div>
 
 
@@ -56,10 +56,10 @@ if ($intro!="") { ?><p><?php echo $intro ?></p><?php }
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <!--Title row-->    
 <tr class="ListviewTitleStyle">
-<td><?php echo $lang["date"]?></td>
-<td><?php echo $lang["user"]?></td>
-<td><?php echo $lang["action"]?></td>
-<td><?php echo $lang["resourceid"]?></td>
+<td><?php echo $lang["date"]; ?></td>
+<td><?php echo $lang["user"]; ?></td>
+<td><?php echo $lang["action"]; ?></td>
+<td><?php echo $lang["resourceid"]; ?></td>
 <td><?php $field=get_fields(array($view_title_field)); if (!empty($field[0]["title"])) {echo lang_or_i18n_get_translated($field[0]["title"], "fieldtitle-");}?></td>
 <?php hook("log_extra_columns_header"); ?>
 </tr>
@@ -84,7 +84,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
             echo escape($newnotes);
         }
         ?></td>
-    <td><?php if ($log[$n]['resource']!=0){?><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($log[$n]["resource"]) ?>'><?php echo $log[$n]["resource"]?></a><?php } ?></td>
+    <td><?php if ($log[$n]['resource']!=0){?><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($log[$n]["resource"]) ?>'><?php echo $log[$n]["resource"]; ?></a><?php } ?></td>
     <td><?php if ($log[$n]['resource']!=0){?><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($log[$n]["resource"]) ?>'><?php echo i18n_get_translated($log[$n]["title"])?></a><?php } ?></td>
     <?php hook("log_extra_columns_row", "", array($log[$n], $colinfo)); ?>
     </tr> 

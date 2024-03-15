@@ -219,13 +219,13 @@ elseif($delete_requires_password && $delete_all)
     <?php generateFormToken("delete_resource"); ?>
 
     <div class="Question">
-    <label><?php echo $lang["collectionid"]?></label>
+    <label><?php echo $lang["collectionid"]; ?></label>
     <div class="Fixed"><?php echo $ref ?></div>
     <div class="clearerleft"> </div>
     </div>
     
     <div class="Question">
-    <label for="password"><?php echo $lang["yourpassword"]?></label>
+    <label for="password"><?php echo $lang["yourpassword"]; ?></label>
     <input type=password class="shrtwidth" name="password" id="password" />
     <div class="clearerleft"> </div>
     </div>
@@ -235,13 +235,13 @@ elseif($delete_requires_password && $delete_all)
     <input 
         name="save" 
         type="submit" 
-        value="&nbsp;&nbsp;<?php echo $lang["deleteresources"]?>&nbsp;&nbsp;"  
+        value="&nbsp;&nbsp;<?php echo $lang["deleteresources"]; ?>&nbsp;&nbsp;"  
         onclick="return ModalPost(this.form,true);"
     />
     <input 
         name="cancel" 
         type="button" 
-        value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;"  
+        value="&nbsp;&nbsp;<?php echo $lang["cancel"]; ?>&nbsp;&nbsp;"  
         onclick='return ModalClose();'
     />
     </div>
@@ -267,19 +267,19 @@ else
     <?php hook('additionalfields');?>
 
     <div class="Question">
-        <label for="description"><?php echo $lang["collection_description"]?></label>
+        <label for="description"><?php echo $lang["collection_description"]; ?></label>
         <textarea class="stdwidth" rows="4" name="description" id="description"><?php echo escape((string) $collection["description"])?></textarea>
         <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
-        <label for="keywords"><?php echo $lang["relatedkeywords"]?></label>
+        <label for="keywords"><?php echo $lang["relatedkeywords"]; ?></label>
         <textarea class="stdwidth" rows="3" name="keywords" id="keywords" <?php if ($collection["cant_delete"]==1) { ?>readonly=true<?php } ?>><?php echo escape((string) $collection["keywords"])?></textarea>
         <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
-        <label><?php echo $lang["id"]?></label>
+        <label><?php echo $lang["id"]; ?></label>
         <div class="Fixed"><?php echo escape($collection["ref"]) ?></div>
         <div class="clearerleft"> </div>
     </div>
@@ -298,14 +298,14 @@ else
     } ?>
 
     <div class="Question">
-        <label for="public"><?php echo $lang["access"]?></label>
+        <label for="public"><?php echo $lang["access"]; ?></label>
         <?php 
         if ($collection["cant_delete"]==1) 
             { 
             # This is a user's My Collection, which cannot be made public or turned into a theme. Display a warning.
             ?>
             <input type="hidden" id="public" name="public" value="0">
-            <div class="Fixed"><?php echo $lang["mycollection_notpublic"] ?></div>
+            <div class="Fixed"><?php echo $lang["mycollection_notpublic"]; ?></div>
 <?php 
             } 
         else 
@@ -334,7 +334,7 @@ else
         ) {
             ?>
             <div class="Question">
-                <label for="users"><?php echo $lang["attachedusers"]?></label>
+                <label for="users"><?php echo $lang["attachedusers"]; ?></label>
                 <?php $userstring=escape($collection["users"]);
 
                 if($userstring!='')
@@ -399,7 +399,7 @@ else
         # Option to publish to the home page.
         ?>
         <div class="Question">
-        <label for="allow_changes"><?php echo $lang["theme_home_promote"]?></label>
+        <label for="allow_changes"><?php echo $lang["theme_home_promote"]; ?></label>
         <input type="checkbox" id="home_page_publish" name="home_page_publish" value="1" <?php if ($collection["home_page_publish"]==1) { ?>checked<?php } ?> onClick="document.getElementById('redirect').value='';<?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('collectionform'));">
         <div class="clearerleft"> </div>
         </div>
@@ -409,13 +409,13 @@ else
             # Option ticked - collect extra data
             ?>
             <div class="Question">
-            <label for="home_page_text"><?php echo $lang["theme_home_page_text"]?></label>
+            <label for="home_page_text"><?php echo $lang["theme_home_page_text"]; ?></label>
             <textarea class="stdwidth" rows="3" name="home_page_text" id="home_page_text"><?php echo escape($collection["home_page_text"]==""?$collection["name"]:$collection["home_page_text"])?></textarea>
             <div class="clearerleft"> </div>
             </div>
             <div class="Question">
             <label for="home_page_image">
-            <?php echo $lang["theme_home_page_image"]?></label>
+            <?php echo $lang["theme_home_page_image"]; ?></label>
             <select class="stdwidth" name="home_page_image" id="home_page_image">
             <?php foreach ($resources as $resource)
                 {
@@ -436,7 +436,7 @@ else
         # disallowing share breaks smart collections 
         ?>
         <div class="Question">
-        <label for="allow_changes"><?php echo $lang["allowothersaddremove"]?></label>
+        <label for="allow_changes"><?php echo $lang["allowothersaddremove"]; ?></label>
         <input type="checkbox" id="allow_changes" name="allow_changes" <?php if ($collection["allow_changes"]==1) { ?>checked<?php } ?>>
         <div class="clearerleft"> </div>
         </div>
@@ -459,7 +459,7 @@ else
         }
     ?>
     <div class="QuestionSubmit">        
-        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
+        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" />
     </div>
 </form>
 <?php } ?>

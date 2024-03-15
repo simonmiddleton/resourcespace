@@ -18,8 +18,8 @@ $id="flickr_".$theme;
 $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 
 ?>
-<h1><?php echo $lang["flickr_title"] ?></h1>
-<p><?php echo $lang["flickr_publishing_in_progress"]?></p>
+<h1><?php echo $lang["flickr_title"]; ?></h1>
+<p><?php echo $lang["flickr_publishing_in_progress"]; ?></p>
 
 <div id='flickr_publish'>
         
@@ -28,7 +28,7 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
     <div class="clearerleft"></div>
     
     <div id="flickr_status">
-        <div class="Fixed" id="flickr_progress_current" ><?php echo $lang["flickr_processing"]?></div><div class="clearerleft"></div>
+        <div class="Fixed" id="flickr_progress_current" ><?php echo $lang["flickr_processing"]; ?></div><div class="clearerleft"></div>
         <div class="Fixed" id="flickr_progress_processed" ></div><div class="clearerleft"></div>
         <div class="Fixed" id="flickr_progress_added" ></div><div class="clearerleft"></div>
         <div class="Fixed" id="flickr_progress_updated" ></div><div class="clearerleft"></div>
@@ -135,7 +135,7 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
                 remoteData=trimFlickerData(remoteData);
                 updateCount=true;
             }
-            else if(remoteData.indexOf("<?php echo $lang["done"]?>")!=-1){
+            else if(remoteData.indexOf("<?php echo $lang["done"]; ?>")!=-1){
                 progress.stop();
                 results_processed=getResultsProcessed(remoteData);
                 databk=remoteData;
@@ -143,24 +143,24 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
                 updateCount=true;
             }
             else if(remoteData.indexOf("permissions")!=-1){
-                var newData='<?php echo $lang["setting-permissions"]?>';
-                if(<?php echo $private?>==1){remoteData=newData.replace("%permission",'<?php echo $lang["flickr_private"]?>');}
-                else{remoteData=newData.replace("%permission",'<?php echo $lang["flickr_public"]?>');}
+                var newData='<?php echo $lang["setting-permissions"]; ?>';
+                if(<?php echo $private?>==1){remoteData=newData.replace("%permission",'<?php echo $lang["flickr_private"]; ?>');}
+                else{remoteData=newData.replace("%permission",'<?php echo $lang["flickr_public"]; ?>');}
             }
             if(updateCount==true){
                 // update counts
                 results_processed=getResultsProcessed(databk,"processed=");
-                results_new_publish=getResultsProcessed(databk,"new_publish=");jQuery('#flickr_progress_added').html(results_new_publish+' <?php echo $lang['flickr_published']?>');
-                results_no_publish=getResultsProcessed(databk,"no_publish=");jQuery('#flickr_progress_error').html(results_no_publish+' <?php echo $lang['flickr_no_published']?>');
-                results_update_publish=getResultsProcessed(databk,"update_meta=");jQuery('#flickr_progress_updated').html(results_update_publish+' <?php echo $lang['flickr_updated']?>');
+                results_new_publish=getResultsProcessed(databk,"new_publish=");jQuery('#flickr_progress_added').html(results_new_publish+' <?php echo $lang['flickr_published']; ?>');
+                results_no_publish=getResultsProcessed(databk,"no_publish=");jQuery('#flickr_progress_error').html(results_no_publish+' <?php echo $lang['flickr_no_published']; ?>');
+                results_update_publish=getResultsProcessed(databk,"update_meta=");jQuery('#flickr_progress_updated').html(results_update_publish+' <?php echo $lang['flickr_updated']; ?>');
             }
             
             // number of processed
             if (results_processed==1){
-                var message=results_processed+' <?php echo $lang['photoprocessed']?>';
+                var message=results_processed+' <?php echo $lang['photoprocessed']; ?>';
             }
             else{ 
-                var message=results_processed+' <?php echo $lang['photosprocessed']?>';
+                var message=results_processed+' <?php echo $lang['photosprocessed']; ?>';
             }
             // Upper case first letter of first word
             remoteData = remoteData.slice(0,1).toUpperCase() + remoteData.slice(1);

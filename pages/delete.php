@@ -81,7 +81,7 @@ if (isset($resource['is_transcoding']) && $resource['is_transcoding']==1)
 <div class="BasicsBox"> 
   <h2>&nbsp;</h2>
   <h1><?php echo $lang["deleteresource"];render_help_link("user/deleting-resources");?></h1>
-  <p class="FormIncorrect"><?php echo $lang["cantdeletewhiletranscoding"]?></p>
+  <p class="FormIncorrect"><?php echo $lang["cantdeletewhiletranscoding"]; ?></p>
 </div>
 <?php	
     }
@@ -95,13 +95,13 @@ else {$previous_page_modal = false;}
 if(!$modal)
     {
     ?>
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a>
     <?php
     }
     elseif ($previous_page_modal)
     {
     ?>
-    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a>
     <?php
     }
 ?>
@@ -112,20 +112,20 @@ if(!$modal)
   <h1><?php echo $lang["deleteresource"];render_help_link("user/deleting-resources");?></h1>
   <p><?php if($delete_requires_password){text("introtext");}else{echo $lang["delete__nopassword"];} ?></p>
   
-  <?php if ($resource["archive"]==3) { ?><p><strong><?php echo $lang["finaldeletion"] ?></strong></p><?php } ?>
+  <?php if ($resource["archive"]==3) { ?><p><strong><?php echo $lang["finaldeletion"]; ?></strong></p><?php } ?>
   
     <form method="post" action="<?php echo $baseurl_short?>pages/delete.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>&amp;restypes=<?php echo urlencode($restypes); ?>">
     <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
     <?php generateFormToken("delete_resource"); ?>
     <div class="Question">
-    <label><?php echo $lang["resourceid"]?></label>
+    <label><?php echo $lang["resourceid"]; ?></label>
     <div class="Fixed"><?php echo urlencode($ref) ?></div>
     <div class="clearerleft"> </div>
     </div>
     
     <?php if ($delete_requires_password) { ?>
     <div class="Question">
-    <label for="password"><?php echo $lang["yourpassword"]?></label>
+    <label for="password"><?php echo $lang["yourpassword"]; ?></label>
     <input type=password class="shrtwidth" name="password" id="password" />
     <div class="clearerleft"> </div>
     <?php if ($error!="") { ?><div class="FormError">!! <?php echo escape($error) ?> !!</div><?php } ?>
@@ -147,8 +147,8 @@ if(!$modal)
     
     <div class="QuestionSubmit">
     <input name="save" type="hidden" value="true" />    
-    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["deleteresource"]?>&nbsp;&nbsp;"  onclick="return ModalPost(this.form,true);"/>        
-    <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;"  onclick='return CentralSpaceLoad("<?php echo $cancelurl ?>",true);'/>
+    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["deleteresource"]; ?>&nbsp;&nbsp;"  onclick="return ModalPost(this.form,true);"/>        
+    <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo $lang["cancel"]; ?>&nbsp;&nbsp;"  onclick='return CentralSpaceLoad("<?php echo $cancelurl ?>",true);'/>
     </div>
 
 

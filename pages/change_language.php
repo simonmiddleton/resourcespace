@@ -14,12 +14,12 @@ include "../include/header.php";
 ?>
 <div class="BasicsBox">
     
-<h1><?php echo $lang["languageselection"]?></h1>
+<h1><?php echo $lang["languageselection"]; ?></h1>
 <p><?php echo text("introtext");render_help_link('user/language-options');?></p>
 <form method="post" action="<?php echo $baseurl_short?>pages/change_language.php">
     <?php generateFormToken("change_language"); ?>
 <div class="Question">
-<label for="password"><?php echo $lang["language"]?></label>
+<label for="password"><?php echo $lang["language"]; ?></label>
 <select class="stdwidth" name="language">
 <?php reset ($languages); foreach ($languages as $key=>$value) { ?>
 <option value="<?php echo escape($key)?>" <?php if ($language==$key) { ?>selected<?php } ?>><?php echo escape($value) ?></option>
@@ -29,7 +29,7 @@ include "../include/header.php";
 </div>
 
 <div class="QuestionSubmit">    
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" />
 </div>
 </form>
 

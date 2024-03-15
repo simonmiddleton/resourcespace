@@ -51,13 +51,13 @@ if (!$save_as)
     <?php if ($save_as) { 
     # $save_as set or Opera browser? Provide a download link instead. Opera blocks any attempt to send it a download (meta/js redirect) ?>
     <h2>&nbsp;<h2> 
-    <h1><?php echo $lang["downloadresource"]?></h1>
-    <p style="font-weight:bold;"><?php echo LINK_CARET ?><a href="<?php echo escape($url); ?>"><?php echo $lang["rightclicktodownload"]?></a></p>
+    <h1><?php echo $lang["downloadresource"]; ?></h1>
+    <p style="font-weight:bold;"><?php echo LINK_CARET ?><a href="<?php echo escape($url); ?>"><?php echo $lang["rightclicktodownload"]; ?></a></p>
 <?php } else { 
     # Any other browser - standard 'your download will start shortly' text.
     ?>
     <h2>&nbsp;<h2>
-    <h1><?php echo $lang["downloadinprogress"]?></h1>
+    <h1><?php echo $lang["downloadinprogress"]; ?></h1>
     <p><?php echo text("introtext")?></p>
 <?php } 
     $offset= getval("saved_offset",getval("offset",0,true));
@@ -80,17 +80,17 @@ if (!$save_as)
     ?>
     <?php if (!hook("downloadfinishlinks"))
         {?>
-        <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/view.php",$url_parameters) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+        <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/view.php",$url_parameters) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
         <?php
         if(strpos($search,"!collection") !== false)
             {?>
-            <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php", $url_parameters) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresults"]?></a></p>
+            <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/search.php", $url_parameters) ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresults"]; ?></a></p>
             <?php
             }
 
         if ($k=="")
             { ?>
-            <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short  . "pages/home.php") ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtohome"]?></a></p>
+            <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short  . "pages/home.php") ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtohome"]; ?></a></p>
             <?php
             }
         }?>

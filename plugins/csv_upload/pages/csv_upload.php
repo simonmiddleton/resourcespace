@@ -238,7 +238,7 @@ switch($csvstep)
             <?php generateFormToken("upload_csv_form"); ?>
             <input type="hidden" id="csvstepmain" name="csvstep" value="2" >            
             <div class="Question">
-                <label for="<?php echo $fd; ?>"><?php echo $lang['csv_upload_file'] ?></label>
+                <label for="<?php echo $fd; ?>"><?php echo $lang['csv_upload_file']; ?></label>
                 <input type="file" id="<?php echo $fd; ?>" name="<?php echo $fd; ?>" onchange="if(this.value==null || this.value=='') { jQuery('.file_selected').hide(); } else { jQuery('.file_selected').show(); } "> 
                 <div class="clearerleft"> </div>
             </div>  
@@ -246,7 +246,7 @@ switch($csvstep)
             <div class="file_selected Question" style="display: none;">
                 <input id="update_existing" name="update_existing" type=hidden value="0">
                                        
-                <label for="update_existing_option"><?php echo $lang["csv_upload_update_existing"] ?></label>
+                <label for="update_existing_option"><?php echo $lang["csv_upload_update_existing"]; ?></label>
                 <input type="checkbox" id="update_existing_option" name="update_existing_option" onchange="if(this.value==null || this.value=='') {jQuery('#update_existing').val('0'); } else {jQuery('#update_existing').val('1');}" >
                 <div class="clearerleft"> </div>
             </div>
@@ -279,7 +279,7 @@ switch($csvstep)
                 else
                     {?>
                     <div class="Question">
-                        <label for="csv_config"><?php echo $lang['csv_upload_upload_config'] ?></label>
+                        <label for="csv_config"><?php echo $lang['csv_upload_upload_config']; ?></label>
                         <input type="file" id="csv_config" name="csv_config" onchange="if(this.value==null || this.value=='') { jQuery('.config_selected').hide(); } else { jQuery('.config_selected').show(); } "> 
                         <div class="clearerleft"> </div>
                     </div>  
@@ -318,7 +318,7 @@ switch($csvstep)
                 <?php generateFormToken("upload_csv_form"); ?>
                 <input type="hidden" id="csvstep" name="csvstep" value="3" > 
                 <div class="Question">
-                    <label for="add_to_collection"><?php echo $lang['csv_upload_add_to_collection'] ?></label>
+                    <label for="add_to_collection"><?php echo $lang['csv_upload_add_to_collection']; ?></label>
                     <input type="checkbox" id="add_to_collection" name="add_to_collection" value="1"<?php if($csv_set_options["add_to_collection"] != ""){echo " checked ";}?>> 
                     <div class="clearerleft"> </div>
                 </div>
@@ -352,7 +352,7 @@ switch($csvstep)
                 </div>
 
                 <div class="Question" id="status_question">
-                    <label for="status_column"><?php echo $lang["csv_upload_workflow_column"] ?></label>
+                    <label for="status_column"><?php echo $lang["csv_upload_workflow_column"]; ?></label>
                     <select id="status_column" name="status_column"  class="stdwidth columnselect">                    
                         <option value=""><?php echo $lang["select"]; ?></option>
                         <?php
@@ -446,7 +446,7 @@ switch($csvstep)
             <input type="hidden" id="csvstep" name="csvstep" value="3" > 
 
                 <div class="Question">
-                    <label for="csv_update_col"><?php echo $lang["csv_upload_update_existing_collection"] ?></label>
+                    <label for="csv_update_col"><?php echo $lang["csv_upload_update_existing_collection"]; ?></label>
                     <input id="csv_update_col" name="csv_update_col" type=hidden value="<?php echo $csv_set_options["csv_update_col"]; ?>">
                     <input type="checkbox" name="csv_update_col_select" onchange="if(this.checked) { jQuery('#csv_update_col_id_select').show(); jQuery('#csv_update_col').val('1');} else { jQuery('#csv_update_col_id_select').hide(); jQuery('#csv_update_col').val('0'); }" <?php if($csv_set_options["csv_update_col"]){echo " checked"; } ?>> 
                     
@@ -462,7 +462,7 @@ switch($csvstep)
                 </div>
 
                 <div class="Question" id="resource_type_question" >
-                    <label for="resource_type_column"><?php echo $lang["csv_upload_resource_type_column"] ?></label>
+                    <label for="resource_type_column"><?php echo $lang["csv_upload_resource_type_column"]; ?></label>
                     <select id="resource_type_column" name="resource_type_column" class="stdwidth columnselect">                    
                         <option value=""><?php echo $lang["select"]; ?></option>
                         <?php
@@ -629,7 +629,7 @@ switch($csvstep)
                 if($offline_job_queue)
                     {?>
                         <div class="Question">
-                        <label for="process_offline"><?php echo $lang["csv_upload_process_offline_quick"] ?></label>
+                        <label for="process_offline"><?php echo $lang["csv_upload_process_offline_quick"]; ?></label>
                         <input type="checkbox" id="process_offline" name="process_offline" value="1" onclick="if(this.checked){jQuery('#csvstep').val('5');}else{jQuery('#csvstep').val('4');}">
                         <div class="clearerleft"></div>
                     </div>
@@ -688,7 +688,7 @@ switch($csvstep)
                 if(!$force_offline)
                     {?>
                     <div class="Question" >
-                        <label for="process_offline"><?php echo $lang["csv_upload_process_offline"] ?></label>
+                        <label for="process_offline"><?php echo $lang["csv_upload_process_offline"]; ?></label>
                         <?php 
                         if($offline_job_queue)
                             {?>

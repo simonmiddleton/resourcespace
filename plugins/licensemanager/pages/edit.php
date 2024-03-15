@@ -182,9 +182,9 @@ include "../../../include/header.php";
 <div class="BasicsBox">
 
 <?php if ($resource!="") { ?>
-<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a></p>
 <?php } else { ?>
-<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>
+<p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]; ?></a></p>
 <?php } ?>
 
 
@@ -196,21 +196,21 @@ include "../../../include/header.php";
 <input type=hidden name="resource" value="<?php echo $resource?>">
 <?php generateFormToken("licensemanager_edit"); ?>
 
-<div class="Question"><label><?php echo $lang["license_id"]?></label><div class="Fixed"><?php echo escape($ref == "new" ? $lang["licensemanager_new"] : $ref); ?></div>
+<div class="Question"><label><?php echo $lang["license_id"]; ?></label><div class="Fixed"><?php echo escape($ref == "new" ? $lang["licensemanager_new"] : $ref); ?></div>
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["type"]?></label>
+<div class="Question"><label><?php echo $lang["type"]; ?></label>
 <div class="Fixed">
-<input type=radio name="outbound" id="outbound_1" value="1" <?php if ($license["outbound"]==1) { ?>checked<?php } ?> /> <strong><?php echo $lang["outbound"] ?></strong> <?php echo $lang["outbound_license_description"] ?><br>
-<input type=radio name="outbound" id="outbound_0" value="0" <?php if ($license["outbound"]==0) { ?>checked<?php } ?> /> <strong><?php echo $lang["inbound"] ?></strong> <?php echo $lang["inbound_license_description"] ?>
+<input type=radio name="outbound" id="outbound_1" value="1" <?php if ($license["outbound"]==1) { ?>checked<?php } ?> /> <strong><?php echo $lang["outbound"]; ?></strong> <?php echo $lang["outbound_license_description"]; ?><br>
+<input type=radio name="outbound" id="outbound_0" value="0" <?php if ($license["outbound"]==0) { ?>checked<?php } ?> /> <strong><?php echo $lang["inbound"]; ?></strong> <?php echo $lang["inbound_license_description"]; ?>
 </div>
 <div class="clearerleft"> </div></div>
 
 
-<div class="Question"><label><?php echo $lang["licensor_licensee"]?></label><input type=text class="stdwidth" name="holder" id="holder" value="<?php echo escape($license["holder"])?>" />
+<div class="Question"><label><?php echo $lang["licensor_licensee"]; ?></label><input type=text class="stdwidth" name="holder" id="holder" value="<?php echo escape($license["holder"])?>" />
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["indicateusagemedium"]?></label>
+<div class="Question"><label><?php echo $lang["indicateusagemedium"]; ?></label>
 <table>
 <?php
 $s=trim_array(explode(",",$license["license_usage"]));
@@ -227,7 +227,7 @@ foreach ($license_usage_mediums as $medium)
 
     <!-- Option to tick all mediums -->
     <tr><td>
-        <input type="checkbox" onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($allchecked) { ?>checked<?php } ?>/><?php echo $lang["selectall"] ?>
+        <input type="checkbox" onChange="jQuery('.license_usage').attr('checked',this.checked);" <?php if ($allchecked) { ?>checked<?php } ?>/><?php echo $lang["selectall"]; ?>
     </td></tr>
 
 </table>
@@ -236,11 +236,11 @@ foreach ($license_usage_mediums as $medium)
 
 
 
-<div class="Question"><label><?php echo $lang["description"]?></label><textarea rows="4" class="stdwidth" name="description" id="description"><?php echo escape($license["description"]) ?></textarea>
+<div class="Question"><label><?php echo $lang["description"]; ?></label><textarea rows="4" class="stdwidth" name="description" id="description"><?php echo escape($license["description"]) ?></textarea>
 <div class="clearerleft"> </div></div>
 
 
-<div class="Question"><label><?php echo $lang["fieldtitle-expiry_date"]?></label>
+<div class="Question"><label><?php echo $lang["fieldtitle-expiry_date"]; ?></label>
 
 
     <select id="expires_day" name="expires_day" class="SearchWidth" style="width:98px;">
@@ -258,7 +258,7 @@ foreach ($license_usage_mediums as $medium)
       for ($n=1;$n<=12;$n++)
         {
         $m=str_pad($n,2,"0",STR_PAD_LEFT);
-        ?><option <?php if ($n==substr((string) $license["expires"],5,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$n-1]?></option><?php
+        ?><option <?php if ($n==substr((string) $license["expires"],5,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$n-1]; ?></option><?php
         }
       ?>
     </select>
@@ -276,27 +276,27 @@ foreach ($license_usage_mediums as $medium)
     <!-- Option for no expiry date -->
     &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="no_expiry_date" value="yes" id="no_expiry" <?php if ($license["expires"]=="") { ?>checked<?php } ?>
     onChange="jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',this.checked);"
-    /><?php echo $lang["no_expiry_date"] ?>
+    /><?php echo $lang["no_expiry_date"]; ?>
     <?php if ($license["expires"]=="") { ?><script>jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',true);</script><?php } ?>
 
 <div class="clearerleft"> </div></div>
 
 
 <div class="Question">
-    <label for="resources"><?php echo $lang["linkedresources"]?></label>
+    <label for="resources"><?php echo $lang["linkedresources"]; ?></label>
     <textarea class="stdwidth" rows="3" name="resources" id="resources"><?php echo join(", ",$resources)?></textarea>
     <div class="clearerleft"> </div>
 </div>
 
 <div class="Question" id="file">
-    <label for="file"><?php echo $lang["file"] ?></label>
+    <label for="file"><?php echo $lang["file"]; ?></label>
     <?php
     
     if($license["file"]!="")
         {
         ?>
         <span><i class="fa fa-file"></i> <a href="download.php?resource=<?php echo $resource ?>&ref=<?php echo $ref ?>"><?php echo $license['file']; ?></a></span>
-        &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo $lang["clearbutton"]; ?>" onclick="return confirm('<?php echo $lang["confirmdeletelicensefile"] ?>');">
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo $lang["clearbutton"]; ?>" onclick="return confirm('<?php echo $lang["confirmdeletelicensefile"]; ?>');">
         <?php
         }
     else
@@ -312,7 +312,7 @@ foreach ($license_usage_mediums as $medium)
 
 
 <div class="QuestionSubmit">        
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>

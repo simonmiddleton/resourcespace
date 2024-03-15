@@ -32,7 +32,7 @@ include "../../../include/header.php";
 <div class="BasicsBox">
 <p><a href="<?php echo $redirect_url ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a></p>
 
-<h1><?php echo $lang["delete_consent"] ?></h1>
+<h1><?php echo $lang["delete_consent"]; ?></h1>
 
 <form method="post" action="<?php echo $baseurl_short?>plugins/consentmanager/pages/delete.php" onSubmit="return CentralSpacePost(this,true);">
 <input type=hidden name="submitted" value="true">

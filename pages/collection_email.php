@@ -230,7 +230,7 @@ else
             $found=false;
             for ($n=0;$n<count($list);$n++)
                 {?> 
-                <option value="<?php echo $list[$n]["ref"]?>" <?php if ($ref==$list[$n]["ref"]) {?>     selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
+                <option value="<?php echo $list[$n]["ref"]; ?>" <?php if ($ref==$list[$n]["ref"]) {?>     selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
                 <?php 
                 }
             if ($found==false)
@@ -240,7 +240,7 @@ else
                 if ($notfound!==false)
                     {
                     ?>
-                    <option value="<?php echo urlencode($ref) ?>" selected><?php echo $notfound["name"]?></option>
+                    <option value="<?php echo urlencode($ref) ?>" selected><?php echo $notfound["name"]; ?></option>
                     <?php
                     }
                 }
@@ -252,7 +252,7 @@ else
             </div>
     <?php }?>
 <div class="Question">
-<label for="message"><?php echo $lang["message"]?></label><textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
+<label for="message"><?php echo $lang["message"]; ?></label><textarea class="stdwidth" rows=6 cols=50 name="message" id="message"></textarea>
 <div class="clearerleft"> </div>
 </div>
 
@@ -279,7 +279,7 @@ $allow_edit=allow_multi_edit($ref);
 if($allow_edit)
     { ?>
     <div class="Question">
-    <label for="grant_internal_access"><?php echo $lang["internal_share_grant_access"] ?></label>
+    <label for="grant_internal_access"><?php echo $lang["internal_share_grant_access"]; ?></label>
     <input type=checkbox id="grant_internal_access" name="grant_internal_access" onClick="if(this.checked){jQuery('#question_internal_access').slideDown();}else{jQuery('#question_internal_access').slideUp()};">
     <div class="clearerleft"> </div>
     </div>  
@@ -303,7 +303,7 @@ if(!$internal_share_only)
 ?>
 <?php if(!hook("replaceemailrequestfeedback")){?>
 <div class="Question">
-<label for="request_feedback"><?php echo $lang["requestfeedback"]?></label><input type=checkbox id="request_feedback" name="request_feedback" value="yes">
+<label for="request_feedback"><?php echo $lang["requestfeedback"]; ?></label><input type=checkbox id="request_feedback" name="request_feedback" value="yes">
 <div class="clearerleft"> </div>
 </div>
 <?php } # end hook replaceemailrequestfeedback ?>

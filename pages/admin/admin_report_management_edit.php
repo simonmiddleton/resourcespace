@@ -129,7 +129,7 @@ include "../../include/header.php";
         </div>
 
         <div class="Question">
-            <label><?php echo $lang["fieldtitle-tick_to_delete_report"]?></label>
+            <label><?php echo $lang["fieldtitle-tick_to_delete_report"]; ?></label>
             <input name="deleteme" type="checkbox" value="yes">
             <div class="clearerleft"></div>
         </div>

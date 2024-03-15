@@ -133,7 +133,7 @@ elseif (isset($message))
         </div>
 
         <div class="Question" >
-            <label for="process_offline"><?php echo $lang["csv_export_offline_option"] ?></label>
+            <label for="process_offline"><?php echo $lang["csv_export_offline_option"]; ?></label>
             <?php 
             if($offline_job_queue)
                 {
@@ -149,7 +149,7 @@ elseif (isset($message))
 
         <div class="QuestionSubmit">       
             <input type="hidden" name="submit" value="true" />  
-            <input name="submit" type="submit" id="submit" value="&nbsp;&nbsp;<?php echo $lang["action-download"]?>&nbsp;&nbsp;" />
+            <input name="submit" type="submit" id="submit" value="&nbsp;&nbsp;<?php echo $lang["action-download"]; ?>&nbsp;&nbsp;" />
         </div>
 
     </form>

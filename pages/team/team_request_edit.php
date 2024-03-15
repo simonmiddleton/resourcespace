@@ -101,29 +101,29 @@ if ($request !== false)
         <input type="hidden" name="submitted" value="yes" />
 
         <div class="Question">
-            <label><?php echo $lang["requestedby"]?></label>
-            <div class="Fixed"><?php echo $request["fullname"]?> (<?php echo $request["username"]?> / <?php echo $request["email"]?>)</div>
+            <label><?php echo $lang["requestedby"]; ?></label>
+            <div class="Fixed"><?php echo $request["fullname"]; ?> (<?php echo $request["username"]; ?> / <?php echo $request["email"]; ?>)</div>
             <div class="clearerleft"></div>
         </div>
 
         <?php hook("morerequesterinfo"); ?>
 
         <div class="Question">
-            <label><?php echo $lang["date"]?></label>
+            <label><?php echo $lang["date"]; ?></label>
             <div class="Fixed"><?php echo nicedate($request["created"],true,true, true)?></div>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label><?php echo $lang["comments"]?></label>
+            <label><?php echo $lang["comments"]; ?></label>
             <div class="Fixed"><?php echo strip_tags(nl2br($request["comments"]),'<br>')?></div>
             <div class="clearerleft"></div>
         </div>
 
         <?php if(!hook("disprequesteditems")): ?>
         <div class="Question">
-            <label><?php echo $lang["requesteditems"]?></label>
-            <div class="Fixed"><a href="#" onclick="ChangeCollection(<?php echo $request["collection"]?>,'');"><?php echo LINK_CARET ?><?php echo $lang["action-selectrequesteditems"]?></a></div>
+            <label><?php echo $lang["requesteditems"]; ?></label>
+            <div class="Fixed"><a href="#" onclick="ChangeCollection(<?php echo $request["collection"]; ?>,'');"><?php echo LINK_CARET ?><?php echo $lang["action-selectrequesteditems"]; ?></a></div>
             <div class="clearerleft"></div>
         </div>
         <?php endif; ?>
@@ -146,7 +146,7 @@ if ($request !== false)
                 <div class="Question">
                     <div class="FormError">
                         <?php echo str_replace("%","<a onClick='return CentralSpaceLoad(this,true);' href=".$baseurl_short."pages/view.php?ref=" . $warning["resource"] . ">" . $warning["resource"] . "</a>",$lang["warningrequestapprovalfield"]) ?><br/>
-                        <?php echo $warning["name"] ?>
+                        <?php echo $warning["name"]; ?>
                     </div>
                     <div class="clearerleft"></div>
                 </div>
@@ -158,16 +158,16 @@ if ($request !== false)
             {
             ?>
             <div class="Question">
-                <label><?php echo $lang["assignedtoteammember"]?></label>
+                <label><?php echo $lang["assignedtoteammember"]; ?></label>
                 <select class="shrtwidth" name="assigned_to">
-                    <option value="0"><?php echo $lang["requeststatus0"]?></option>
+                    <option value="0"><?php echo $lang["requeststatus0"]; ?></option>
                     <?php 
                     $users = get_users_with_permission("Rb");
                     for ($n=0;$n<count($users);$n++)
                         { 
                         $assigned_selected = ($request["assigned_to"] == $users[$n]["ref"]) ? 'selected' : '';
                         ?>
-                        <option value="<?php echo $users[$n]["ref"]?>" <?php echo $assigned_selected ?>><?php echo $users[$n]["username"]?></option> 
+                        <option value="<?php echo $users[$n]["ref"]; ?>" <?php echo $assigned_selected ?>><?php echo $users[$n]["username"]; ?></option> 
                         <?php
                         } ?>
                 </select>
@@ -177,7 +177,7 @@ if ($request !== false)
             } ?>
 
         <div class="Question">
-            <label><?php echo $lang["status"]?></label>
+            <label><?php echo $lang["status"]; ?></label>
             <div class="tickset">
                 <?php 
                 for ($n=0;$n<=2;$n++) 
@@ -204,7 +204,7 @@ if ($request !== false)
                                     { 
                                     ?>jQuery('#ReasonDecline').slideUp();<?php 
                                     } ?>"/> 
-                                <?php echo $lang["resourcerequeststatus" . $n] ?>
+                                <?php echo $lang["resourcerequeststatus" . $n]; ?>
                         </label>
                     </div>
                     <?php 
@@ -214,12 +214,12 @@ if ($request !== false)
         </div>
 
         <div class="Question" id="Expires" <?php if ($request["status"]!=1) { ?>style="display:none;"<?php } ?>>
-            <label><?php echo $lang["expires"]?></label>
+            <label><?php echo $lang["expires"]; ?></label>
             <select name="expires" class="stdwidth">
                 <?php 
                 if (!$removenever) 
                     { ?>
-                    <option value=""><?php echo $lang["never"]?></option>
+                    <option value=""><?php echo $lang["never"]; ?></option>
                     <?php 
                     } 
                 $sel = false;
@@ -247,7 +247,7 @@ if ($request !== false)
                     {
                     # Option is out of range, but show it anyway.
                     ?>
-                    <option value="<?php echo $request["expires"] ?>" selected><?php echo nicedate(date("Y-m-d",strtotime($request["expires"])),false,true)?></option>
+                    <option value="<?php echo $request["expires"]; ?>" selected><?php echo nicedate(date("Y-m-d",strtotime($request["expires"])),false,true)?></option>
 <?php
                     }
                 ?>
@@ -256,25 +256,25 @@ if ($request !== false)
         </div>
 
         <div class="Question" id="ReasonDecline" <?php if ($request["status"]!=2) { ?>style="display:none;"<?php } ?>>
-            <label><?php echo $lang["declinereason"]?></label>
+            <label><?php echo $lang["declinereason"]; ?></label>
             <textarea name="reason" class="stdwidth" rows="5" cols="50"><?php echo escape((string) $request["reason"])?></textarea>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question" id="ReasonApprove" <?php if ($request["status"]!=1) { ?>style="display:none;"<?php } ?>>
-            <label><?php echo $lang["approvalreason"]?></label>
+            <label><?php echo $lang["approvalreason"]; ?></label>
             <textarea name="reasonapproved" class="stdwidth" rows="5" cols="50"><?php echo escape((string) $request["reasonapproved"])?></textarea>
             <div class="clearerleft"></div>
         </div>
 
         <div class="Question">
-            <label><?php echo $lang["deletethisrequest"]?></label>
+            <label><?php echo $lang["deletethisrequest"]; ?></label>
             <input name="delete" type="checkbox" value="yes">
             <div class="clearerleft"></div>
         </div>
 
         <div class="QuestionSubmit">    
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" />
         </div>
     </form>
 

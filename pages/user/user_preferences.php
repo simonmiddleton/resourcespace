@@ -17,8 +17,8 @@ $enable_disable_options = array($lang['userpreference_disable_option'], $lang['u
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
-    <h1><?php echo $lang["userpreferences"]?></h1>
-    <p><?php echo $lang["modifyuserpreferencesintro"]?></p>
+    <h1><?php echo $lang["userpreferences"]; ?></h1>
+    <p><?php echo $lang["modifyuserpreferencesintro"]; ?></p>
     
 <div class="CollapsibleSections">
     <?php

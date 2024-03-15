@@ -59,7 +59,7 @@ $jumpcount=1;
 
 
 <div class="TopInpageNav">
-<a href="<?php echo $baseurl_short ?>pages/team/team_analytics_edit.php" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET . $lang["report_create_new"] ?></a>
+<a href="<?php echo $baseurl_short ?>pages/team/team_analytics_edit.php" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET . $lang["report_create_new"]; ?></a>
 
 <?php pager(); ?></div>
 
@@ -71,8 +71,8 @@ $jumpcount=1;
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo $lang["report_name"]?></td>
-<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+<td><?php echo $lang["report_name"]; ?></td>
+<td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
 </tr>
 
 <?php
@@ -80,11 +80,11 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
     {
     ?>
     <tr>
-    <td><div class="ListTitle"><a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"] ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($reports[$n]["name"],$findtext,true);?></a></div></td>
+    <td><div class="ListTitle"><a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords($reports[$n]["name"],$findtext,true);?></a></div></td>
     <td>
     <div class="ListTools">
-        <a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?></a>
-        <a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]?>';document.getElementById('reportsform').submit();} return false;"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?></a>
+        <a href="team_analytics_edit.php?ref=<?php echo $reports[$n]["ref"]; ?>&backurl=<?php echo urlencode($url . "&offset=" . $offset . "&findtext=" . $findtext)?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]; ?></a>
+        <a href="#" onclick="if (confirm('<?php echo $lang["confirm-deletion"]; ?>')) {document.getElementById('reportdelete').value='<?php echo $reports[$n]["ref"]; ?>';document.getElementById('reportsform').submit();} return false;"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]; ?></a>
         </div>
     </td>
     </tr>
@@ -114,8 +114,8 @@ for ($n=$offset;(($n<count($reports)) && ($n<($offset+$per_page)));$n++)
                 class="shrtwidth"
             />
 
-            <input type="button" value="<?php echo $lang['clearbutton']?>" onClick="$('findtext').value='';form.submit();" />
-            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" />
+            <input type="button" value="<?php echo $lang['clearbutton']; ?>" onClick="$('findtext').value='';form.submit();" />
+            <input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;" />
 
             </div>
             </div>

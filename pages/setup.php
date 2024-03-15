@@ -1281,7 +1281,7 @@ else
                         <a 
                             class="moreinfo" 
                             target="_blank" 
-                            href="<?php echo $plugin["info_url"]?>"
+                            href="<?php echo $plugin["info_url"]; ?>"
                         >
                             <?php echo $lang["more-information"]."..."; ?>
                         </a>

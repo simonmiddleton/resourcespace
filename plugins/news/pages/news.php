@@ -95,7 +95,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 <?php generateFormToken("news"); ?> 
     <input name="previous" type="submit" value="&lt;"/> 
     <?php if (checkperm("o")) { ?>  
-        <input name="edit" type="submit" value="<?php echo $lang["action-edit"]?>"/>
+        <input name="edit" type="submit" value="<?php echo $lang["action-edit"]; ?>"/>
     <?php } ?>      
     <input name="next" type="submit" value="&gt;"/>
 </div>

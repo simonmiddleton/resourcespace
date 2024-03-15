@@ -121,18 +121,18 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
             debug("LDAP - Connected to LDAP server ");
             ?>
             <div class="Question">
-            <label for="ldapuser"><?php echo $lang["simpleldap_username"] ?></label><input id='ldapuser' type="text" name='ldapuser'>
+            <label for="ldapuser"><?php echo $lang["simpleldap_username"]; ?></label><input id='ldapuser' type="text" name='ldapuser'>
             </div>
             
             <div class="Question">
-            <label for="ldappassword"><?php echo $lang["simpleldap_password"] ?></label><input id='ldappassword' type="password" name='ldappassword'>
+            <label for="ldappassword"><?php echo $lang["simpleldap_password"]; ?></label><input id='ldappassword' type="password" name='ldappassword'>
             </div>      
 
             <?php
             if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype']==1) 
                 {?>
                 <div class="Question">
-                <label for="ldapdomain"><?php echo $lang["simpleldap_domain"] ?></label>
+                <label for="ldapdomain"><?php echo $lang["simpleldap_domain"]; ?></label>
                     <select id='ldapdomain' name='ldapdomain'>
                     <?php
                     $binddomains=explode(";",$simpleldap['domain']);
@@ -349,13 +349,13 @@ config_text_field("notification_email",$lang['simpleldap_notification_email'],$s
 
 <div class="Question">
     <input type="hidden" name="testConnflag" id="testConnflag" value="" />
-    <input type="submit" name="testConn" onclick="jQuery('#testConnflag').val('true');ModalPost(this.form,true);return false;" value="<?php echo $lang['simpleldap_test'] ?>" />
+    <input type="submit" name="testConn" onclick="jQuery('#testConnflag').val('true');ModalPost(this.form,true);return false;" value="<?php echo $lang['simpleldap_test']; ?>" />
  </div>
 <div class="clearerleft"></div>
 
 <div class="Question">
-<input type="submit" name="save" value="<?php echo $lang["save"]?>">
-<input type="submit" name="submit" value="<?php echo $lang["plugins-saveandexit"]?>">
+<input type="submit" name="save" value="<?php echo $lang["save"]; ?>">
+<input type="submit" name="submit" value="<?php echo $lang["plugins-saveandexit"]; ?>">
 
 </div>
 <div class="clearerleft"></div>

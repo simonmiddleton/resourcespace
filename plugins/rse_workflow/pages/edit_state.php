@@ -155,7 +155,7 @@ if($errortext!="")
     {
     ?>
     <script type="text/javascript">
-    alert('<?php echo $lang['rse_workflow_state_check_fields'] ?>');
+    alert('<?php echo $lang['rse_workflow_state_check_fields']; ?>');
     </script><?php
     }
     
@@ -175,7 +175,7 @@ elseif ($saved)
     <input type="hidden" name="code" value="<?php echo escape($code);  ?>">
         
     <div class="Question" id="status_name_question">
-    <label for="name"><?php echo $lang["rse_workflow_state_name"]?></label>
+    <label for="name"><?php echo $lang["rse_workflow_state_name"]; ?></label>
     <?php if ($fixedstate)
         {?>
         <div class="Fixed"><?php echo escape($workflowstate["name"]); ?></div>
@@ -192,7 +192,7 @@ elseif ($saved)
     </div>
 
         <div class="Question" id="status_notify_group_question">
-    <label for="notify_group"><?php echo $lang["rse_workflow_state_notify_group"]?></label>
+    <label for="notify_group"><?php echo $lang["rse_workflow_state_notify_group"]; ?></label>
         <select class="stdwidth" name="notify_group" id="notify_group">
         <option value=""></option>
         <?php
@@ -200,7 +200,7 @@ elseif ($saved)
         for ($n=0;$n<count($groups);$n++)
                 {
                 ?>
-                <option value="<?php echo $groups[$n]["ref"]?>" <?php if ($workflowstate["notify_group"]==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]?></option>
+                <option value="<?php echo $groups[$n]["ref"]; ?>" <?php if ($workflowstate["notify_group"]==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]; ?></option>
                 <?php
                 }?>
         </select>
@@ -271,7 +271,7 @@ elseif ($saved)
     ?>
 
     <div class="Question" id="QuestionSubmit">
-        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>
+        <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" onclick="event.preventDefault();CentralSpacePost(document.getElementById('form_workflow_state'),true);"/>
     </div>
 </form>
 </div>

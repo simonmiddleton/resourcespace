@@ -223,7 +223,7 @@ include "../include/header.php";
 
                 <div class="CollapsibleSection" id="EmailUploadSection" style="display:none;">
                     <div class="Question">
-                        <label for="message"><?php echo $lang["message"]?></label>
+                        <label for="message"><?php echo $lang["message"]; ?></label>
                         <textarea class="stdwidth" rows=6 cols=50 name="message" id="message"><?php echo escape($emailmessage); ?></textarea>
                     <div class="clearerleft"> </div>
                     </div>

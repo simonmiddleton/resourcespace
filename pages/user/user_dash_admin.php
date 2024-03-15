@@ -94,7 +94,7 @@ include "../../include/header.php";
     <div id="confirm_dialog" style="display:none;text-align:left;"><?php echo $lang["dashtiledeleteusertile"];?></div>
     <noscript>
         <div class="QuestionSubmit">
-            <input type="submit" value="<?php echo $lang["save"]?>"/>
+            <input type="submit" value="<?php echo $lang["save"]; ?>"/>
         </div>
     </noscript>
     </form>
@@ -134,8 +134,8 @@ include "../../include/header.php";
                     resizable: false,
                     dialogClass: 'confirm-dialog no-close',
                     buttons: {
-                        "<?php echo $lang['confirmdashtiledelete'] ?>": function() {processTileChange(tile); jQuery(this).dialog( "close" );CentralSpaceLoad(window.location.href);},
-                        "<?php echo $lang['cancel'] ?>":  function() { jQuery(".tilecheck[value="+tile+"]").prop('checked', true); jQuery(this).dialog('close'); }
+                        "<?php echo $lang['confirmdashtiledelete']; ?>": function() {processTileChange(tile); jQuery(this).dialog( "close" );CentralSpaceLoad(window.location.href);},
+                        "<?php echo $lang['cancel']; ?>":  function() { jQuery(".tilecheck[value="+tile+"]").prop('checked', true); jQuery(this).dialog('close'); }
                     }
                 });
             } else {
@@ -149,7 +149,7 @@ include "../../include/header.php";
         if($home_dash && checkPermission_dashcreate())
             { ?>
             <p>
-                <a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=ftxt&modifylink=true&freetext=Helpful%20tips%20here&nostyleoptions=true&all_users=0&link=https://resourcespace.com/knowledge-base/&title=Knowledge%20Base";?>"><?php echo LINK_CARET ?><?php echo $lang["createdashtilefreetext"]?></a>
+                <a href="<?php echo $baseurl."/pages/dash_tile.php?create=true&tltype=ftxt&modifylink=true&freetext=Helpful%20tips%20here&nostyleoptions=true&all_users=0&link=https://resourcespace.com/knowledge-base/&title=Knowledge%20Base";?>"><?php echo LINK_CARET ?><?php echo $lang["createdashtilefreetext"]; ?></a>
             </p>
             <?php
             } 

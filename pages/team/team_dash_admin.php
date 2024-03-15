@@ -193,11 +193,11 @@ render_dropdown_question(
                         resizable: false,
                         dialogClass: 'delete-dialog no-close',
                         buttons: {
-                            "<?php echo $lang['confirmdefaultdashtiledelete'] ?>": function() {
+                            "<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {
                                     jQuery(this).dialog("close");
                                     deleteDefaultDashTile(tile);
                                 },    
-                            "<?php echo $lang['cancel'] ?>": function() {
+                            "<?php echo $lang['cancel']; ?>": function() {
                                     jQuery(".tilecheck[value="+tile+"]").attr('checked', true);
                                     jQuery(this).dialog('close');
                                 }
@@ -213,7 +213,7 @@ render_dropdown_question(
                     dialogClass: 'confirm-dialog no-close',
                     buttons: {
                         "<?php echo $lang['confirmdefaultdashtiledelete']; ?>": function() {processTileChange(tile,true); jQuery(this).dialog( "close" );},
-                        "<?php echo $lang['cancel'] ?>":  function() { jQuery(".tilecheck[value="+tile+"]").prop('checked', true); jQuery(this).dialog('close'); }
+                        "<?php echo $lang['cancel']; ?>":  function() { jQuery(".tilecheck[value="+tile+"]").prop('checked', true); jQuery(this).dialog('close'); }
                     }
                     });
                 }

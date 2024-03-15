@@ -7,7 +7,7 @@ include "../include/header.php";
 
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["mycontributions"]?></h1>
+  <h1><?php echo $lang["mycontributions"]; ?></h1>
   <p><?php echo text("introtext");render_help_link("user/uploading");?></p>
 
     <div class="VerticalNav">

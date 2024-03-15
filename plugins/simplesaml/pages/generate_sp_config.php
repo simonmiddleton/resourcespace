@@ -240,7 +240,7 @@ if ($error_text != "") { ?><div class="PageInformal"><?php echo $error_text?></d
         ?>
         <div id="certificate_info_questions" <?php if($certpath != "" && $keypath != ""){echo "style='display:none;'";}?>>
             <div class="Question" >
-                <br><h2><?php echo $lang['simplesaml_sp_cert_info'] ?></h2>
+                <br><h2><?php echo $lang['simplesaml_sp_cert_info']; ?></h2>
                     <div class="clearerleft"></div>
                 </div>
                 <?php
@@ -250,7 +250,7 @@ if ($error_text != "") { ?><div class="PageInformal"><?php echo $error_text?></d
                     }?>
         </div>
         <div class="Question">
-        <br><h2><?php echo $lang['simplesaml_idp_section'] ?></h2>
+        <br><h2><?php echo $lang['simplesaml_idp_section']; ?></h2>
             <div class="clearerleft"></div>
         </div>
         <div class="Question">

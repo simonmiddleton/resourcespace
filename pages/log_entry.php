@@ -32,9 +32,9 @@ if(!checkperm('v') && !$bypass_permission_check)
 <div class="RecordBox">
     <div class="RecordPanel">
         <div class="RecordHeader">
-        <p><a href="<?php echo generateurl($baseurl_short . "pages/log.php",$searchparams,array("ref"=>$log_entry["resource"]));?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]?></a></p>   
+        <p><a href="<?php echo generateurl($baseurl_short . "pages/log.php",$searchparams,array("ref"=>$log_entry["resource"]));?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]; ?></a></p>   
         <div class="backtoresults"> 
-                <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"] ?>"></a>
+                <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo $lang["close"]; ?>"></a>
             </div>
             <h1><?php echo $lang["log-reference"] . " " . $log_entry["ref"]; ?></h1>
         </div>       
@@ -44,8 +44,8 @@ if(!checkperm('v') && !$bypass_permission_check)
         <div class="Listview">
             <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle" style="margin:0;">
                 <tr class="ListviewTitleStyle">
-                    <th><?php echo $lang["log_column"] ?></th>
-                    <th><?php echo $lang["log_value"] ?></th>
+                    <th><?php echo $lang["log_column"]; ?></th>
+                    <th><?php echo $lang["log_value"]; ?></th>
                 </tr>
                 <?php                
                 foreach($log_entry as $column => $value)

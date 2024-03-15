@@ -204,11 +204,11 @@ include __DIR__ . "/../../../include/header.php";
 ?>
 
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo escape($resource) ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"] ?></a></p>
+<p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo escape($resource) ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET_BACK ?><?php echo $lang["back"]; ?></a></p>
 
 <?php if (isset($error)) { ?><div class="PageInfoMessage"><?php echo escape($error) ?></div><?php } ?>
 
-<h1><?php echo $lang["revert"]?></h1>
+<h1><?php echo $lang["revert"]; ?></h1>
 <p><?php echo $lang['revertingclicktoproceed'];?></p>
 
 <form method=post name="rse_revert_form" id="rse_revert_form" action="<?php echo generateurl($baseurl_short . "plugins/rse_version/pages/revert.php",["ref"=>$ref]); ?> onSubmit="return CentralSpacePost(this,true);">
@@ -222,7 +222,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         if(count($nodes_to_add)>0)
             {
 ?><div class="Question">
-<label><?php echo $lang["revertingwilladd"]?></label>
+<label><?php echo $lang["revertingwilladd"]; ?></label>
     <div class="Fixed">
         <?php
         foreach($nodes_to_add as $node_to_add)
@@ -238,7 +238,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         if(count($nodes_to_remove)>0)
             {
 ?><div class="Question">
-    <label><?php echo $lang["revertingwillremove"]?></label>
+    <label><?php echo $lang["revertingwillremove"]; ?></label>
     <div class="Fixed">
         <?php
         foreach($nodes_to_remove as $node_to_remove)
@@ -254,7 +254,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
         if(count($node_strings_not_found)>0)
             {
 ?><div class="Question">
-    <label><?php echo $lang["revertingwillignore"]?></label>
+    <label><?php echo $lang["revertingwillignore"]; ?></label>
     <div class="Fixed">
         <?php
         foreach($node_strings_not_found as $node_string_not_found)
@@ -271,7 +271,7 @@ if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NO
     else
         { ?>
 <div class="Question">
-<label><?php echo $lang["revertingwillapply"]?></label>
+<label><?php echo $lang["revertingwillapply"]; ?></label>
 <div class="Fixed"><?php echo nl2br(escape($diff)) ?></div>
 <div class="clearerleft"> </div>
 </div>
@@ -292,10 +292,10 @@ if ($type==LOG_CODE_UPLOADED) {
         $image = $baseurl_short . 'gfx/' . get_nopreview_icon('', $alter_data['file_extension'], '');
         }?>
     <div class="Question">
-    <label><?php echo $lang["revertingwillreplace"]?></label>
+    <label><?php echo $lang["revertingwillreplace"]; ?></label>
 
     <div class="Fixed">
-    <img src="<?php echo $image ?>" alt="<?php echo $lang["preview"] ?>" />
+    <img src="<?php echo $image ?>" alt="<?php echo $lang["preview"]; ?>" />
     </div>
     <div class="clearerleft"> </div>
     </div>
@@ -305,7 +305,7 @@ if ($type==LOG_CODE_UPLOADED) {
 <?php } ?>
 
 <div class="QuestionSubmit">
-    <input name="revert" type="submit" value="&nbsp;&nbsp;<?php echo $lang["revert"]?>&nbsp;&nbsp;" />
+    <input name="revert" type="submit" value="&nbsp;&nbsp;<?php echo $lang["revert"]; ?>&nbsp;&nbsp;" />
 </div>
 
 </form>

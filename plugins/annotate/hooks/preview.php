@@ -13,7 +13,7 @@ function HookAnnotatePreviewReplacepreviewbacktoview(){
         "k"         => $k,
         );
     ?>
-<p style="margin:7px 0 7px 0;padding:0;"><a class="enterLink" href="<?php echo generateURL($baseurl . "/pages/view.php", $urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a>
+<p style="margin:7px 0 7px 0;padding:0;"><a class="enterLink" href="<?php echo generateURL($baseurl . "/pages/view.php", $urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]; ?></a>
 <?php return true;
 } 
 

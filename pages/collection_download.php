@@ -296,7 +296,7 @@ if ($submitted != "")
         {
         ?>
         <script>
-        alert("<?php echo $lang["collection_download_too_large"] ?>");
+        alert("<?php echo $lang["collection_download_too_large"]; ?>");
         history.go(-1);
         </script>
         <?php
@@ -631,7 +631,7 @@ include "../include/header.php";
     ?><p><a href="<?php echo generateURL($baseurl_short."pages/search.php",$urlparams); ?>" onclick="return CentralSpaceLoad(this,true);">< <?php echo escape($lang['back'])?></a></p><?php
 }?>
 
-<h1><?php echo $lang["downloadzip"]?></h1>
+<h1><?php echo $lang["downloadzip"]; ?></h1>
 <?php
 $intro=text("introtext");
 if ($intro!="") { ?><p><?php echo $intro ?></p><?php } 
@@ -665,7 +665,7 @@ function ajax_download(download_offline, tar)
 
     if(tar)
         {
-        document.getElementById('progress2').innerHTML="<?php echo $lang['collection_download_tar_started']?>";
+        document.getElementById('progress2').innerHTML="<?php echo $lang['collection_download_tar_started']; ?>";
         document.getElementById('progress').style.display="none";
         }
     else
@@ -702,7 +702,7 @@ function ajax_download(download_offline, tar)
                         else {
                             // fix zip message or allow any
                             console.log(remoteData);
-                            document.getElementById('progress2').innerHTML=remoteData.replace("zipping","<?php echo $lang['zipping']?>");
+                            document.getElementById('progress2').innerHTML=remoteData.replace("zipping","<?php echo $lang['zipping']; ?>");
                         }
              
             });
@@ -732,7 +732,7 @@ if (
     ) {
         ?>
         <div class="Question">
-        <label for="downloadsize"><?php echo $lang["downloadsize"]?></label>
+        <label for="downloadsize"><?php echo $lang["downloadsize"]; ?></label>
         <div class="tickset">
     <?php
     $maxaccess=collection_max_access($collection);
@@ -784,15 +784,15 @@ if (
     ) { 
         ?>
 <div class="Question">
-<label for="text"><?php echo $lang["zippedcollectiontextfile"]?></label>
+<label for="text"><?php echo $lang["zippedcollectiontextfile"]; ?></label>
 <select name="text" class="shrtwidth" id="text"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>>
 <?php if($zipped_collection_textfile_default_no){
-    ?><option value="false"><?php echo $lang["no"]?></option>
-    <option value="true"><?php echo $lang["yes"]?></option><?php
+    ?><option value="false"><?php echo $lang["no"]; ?></option>
+    <option value="true"><?php echo $lang["yes"]; ?></option><?php
 }
 else{
-    ?><option value="true"><?php echo $lang["yes"]?></option>
-    <option value="false"><?php echo $lang["no"]?></option><?php
+    ?><option value="true"><?php echo $lang["yes"]; ?></option>
+    <option value="false"><?php echo $lang["no"]; ?></option><?php
 }
 ?>  
 </select>
@@ -806,7 +806,7 @@ else{
 if ($archiver && count($collection_download_settings)>1)
     { ?>
     <div class="Question" id="archivesettings_question" <?php if($collection_download_tar){echo "style=\"display:none\"";}?>>
-    <label for="archivesettings"><?php echo $lang["archivesettings"]?></label>
+    <label for="archivesettings"><?php echo $lang["archivesettings"]; ?></label>
     <div class="tickset">
     <select name="settings" class="stdwidth" id="archivesettings"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>><?php
     foreach ($collection_download_settings as $key=>$value)
@@ -844,7 +844,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 
 <script>var tar = <?php echo $collection_download_tar_option ? 'true' : 'false'; ?>;</script>
 <div class="Question"  <?php if(!$collection_download_tar){echo "style=\"display:none;\"";} ?>>
-    <label for="tardownload"><?php echo $lang["collection_download_format"]?></label>
+    <label for="tardownload"><?php echo $lang["collection_download_format"]; ?></label>
     <div class="tickset">
     <select name="tardownload" class="stdwidth" id="tardownload" onChange="if(jQuery(this).val()=='off'){tar=false;jQuery('#exiftool_question').slideDown();jQuery('#archivesettings_question').slideDown();}else{tar=true;jQuery('#exiftool_question').slideUp();jQuery('#archivesettings_question').slideUp();}">
         <?php if(!hook('collectiondownloadfileformats'))
@@ -859,7 +859,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     <label for="tarinfo"></label>
     <?php if(!hook('collectiondownloadformhelp'))
         { ?>
-    <div class="FormHelpInner tickset"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]?></div><?php
+    <div class="FormHelpInner tickset"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]; ?></div><?php
         } ?>
     
     <div class="clearerleft"></div>
@@ -878,7 +878,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
 
 
 <div class="Question" id="progressdiv" style="display:none;border-top:none;"> 
-<label><?php echo $lang['progress']?></label>
+<label><?php echo $lang['progress']; ?></label>
 <div class="Fixed" id="progress3" ></div>
 <div class="Fixed" id="progress2" ></div>
 

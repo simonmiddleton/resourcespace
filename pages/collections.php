@@ -741,7 +741,7 @@ elseif ($k != "" && !$internal_share_access)
         <br />
         <div class="CollectionStatsAnon">
         <?php echo ($tempcol) ?  $lang["created"] . " " . nicedate($tempcol["created"]) : "" ?><br />
-        <?php echo $count_result . " " . $lang["youfoundresources"]?><br />
+        <?php echo $count_result . " " . $lang["youfoundresources"]; ?><br />
         </div>
         <?php
         $min_access=collection_min_access($result);
@@ -827,7 +827,7 @@ else
                         #show only active collections if a start date is set for $active_collections 
                         if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="Default Collection" && $list[$n]['user']==$userref))
                             {?>
-                            <option value="<?php echo $list[$n]["ref"]?>" <?php if ($usercollection==$list[$n]["ref"]) {?>  selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option><?php
+                            <option value="<?php echo $list[$n]["ref"]; ?>" <?php if ($usercollection==$list[$n]["ref"]) {?>  selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option><?php
                             }
                         }
 
@@ -1160,7 +1160,7 @@ if (count($addarray)>0 && $addarray[0]!="")
                 if ($min_access!=0)
                     {
                     ?>
-                    <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo   $lang["requestall"]?></a></li>
+                    <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo   $lang["requestall"]; ?></a></li>
                     <?php
                     }
                 }?>

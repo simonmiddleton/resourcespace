@@ -46,28 +46,28 @@ if($date_d_m_y){
 ?>
 <select id="<?php echo $name; ?>-d" name="<?php echo $name?>-d"
 
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
-><option value=""><?php echo $lang["day"]?></option>
+<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+><option value=""><?php echo $lang["day"]; ?></option>
 <?php for ($d=1;$d<=31;$d++) {?><option value="<?php echo sprintf("%02d",$d)?>"<?php if($d==$dd){echo " selected";}?>><?php echo sprintf("%02d",$d)?></option><?php } ?>
 </select>
     
 <select id="<?php echo $name; ?>-m" name="<?php echo $name?>-m"
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
-><option value=""><?php echo $lang["month"]?></option>
-<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo $lang["months"][$m-1]?></option><?php } ?>
+<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+><option value=""><?php echo $lang["month"]; ?></option>
+<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo $lang["months"][$m-1]; ?></option><?php } ?>
 </select>
 <?php
 }
 else{
 ?>
 <select id="<?php echo $name; ?>-m" name="<?php echo $name?>-m"
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
-><option value=""><?php echo $lang["month"]?></option>
-<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo $lang["months"][$m-1]?></option><?php } ?>
+<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+><option value=""><?php echo $lang["month"]; ?></option>
+<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo $lang["months"][$m-1]; ?></option><?php } ?>
 </select>
 
 <select id="<?php echo $name; ?>-d" name="<?php echo $name?>-d"
-><option value=""><?php echo $lang["day"]?></option>
+><option value=""><?php echo $lang["day"]; ?></option>
 <?php for ($d=1;$d<=31;$d++) {?><option value="<?php echo sprintf("%02d",$d)?>"<?php if($d==$dd){echo " selected";}?>><?php echo sprintf("%02d",$d)?></option><?php } ?>
 </select>
 <?php
@@ -179,7 +179,7 @@ else{
 
 </script>
 <label class="accessibility-hidden" for="<?php echo $name; ?>-y"><?php echo $lang["year"]; ?></label>
-<input id="<?php echo $name; ?>-y" type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>" <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>>
+<input id="<?php echo $name; ?>-y" type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>" <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>>
 
 
 <?php hook("addtoeditdate","",array($field));?>
@@ -189,14 +189,14 @@ else{
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <select id="<?php echo $name; ?>-h" name="<?php echo $name?>-h"
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
-><option value=""><?php echo $lang["hour-abbreviated"]?></option>
+<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+><option value=""><?php echo $lang["hour-abbreviated"]; ?></option>
 <?php for ($m=0;$m<=23;$m++) {?><option <?php if($m==$dh){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
 </select>
 
 <select id="<?php echo $name; ?>-i" name="<?php echo $name?>-i"
-<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]?>');"<?php } ?>
-><option value=""><?php echo $lang["minute-abbreviated"]?></option>
+<?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
+><option value=""><?php echo $lang["minute-abbreviated"]; ?></option>
 <?php for ($m=0;$m<=59;$m++) {?><option <?php if($m==$di){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
 </select>
 <?php }

@@ -219,13 +219,13 @@ include "../../include/header.php";
                 <input type="hidden" name="save" value="true" />
                 <?php generateFormToken("admin_filter_edit"); ?>
                 <div class="Question" id="filter_name_question">
-                    <label for="filter_name"><?php echo $lang["filter_name"] ?></label>
+                    <label for="filter_name"><?php echo $lang["filter_name"]; ?></label>
                     <input class="stdwidth" type="text" name="filter_name" id="filter_name" value="<?php echo i18n_get_translated($filter["name"]) ?>" />
                     <div class="clearerleft"> </div>
                 </div>
     
                 <div class="Question" id="filter_condition_question" title="" style="height: 50px;">
-                    <label><?php echo $lang["filter_condition_label"] ?></label>
+                    <label><?php echo $lang["filter_condition_label"]; ?></label>
                     <select class="stdwidth" name="filter_condition">
                         <?php
                         foreach(array(RS_FILTER_ALL => "filter_criteria_all",RS_FILTER_NONE => "filter_criteria_none",RS_FILTER_ANY => "filter_criteria_any") as $filter_condition => $description)
@@ -280,7 +280,7 @@ include "../../include/header.php";
                 </div>
 
                 <div class="Question">
-                    <label><?php echo $lang["action-delete"]?></label>
+                    <label><?php echo $lang["action-delete"]; ?></label>
                     <input id="delete_filter" name="delete_filter" type="checkbox" value="<?php echo escape($filterid); ?>" >
                     <div class="clearerleft"></div>
                 </div>

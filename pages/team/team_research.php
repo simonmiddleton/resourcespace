@@ -63,13 +63,13 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
     {
     ?>
     <tr>
-    <td><?php echo $requests[$n]["ref"]?></td>
-    <td><div class="ListTitle"><a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape(i18n_get_translated($requests[$n]["name"]));?></a>&nbsp;</div></td>
+    <td><?php echo $requests[$n]["ref"]; ?></td>
+    <td><div class="ListTitle"><a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape(i18n_get_translated($requests[$n]["name"]));?></a>&nbsp;</div></td>
     <td><?php echo nicedate($requests[$n]["created"],false,true)?></td>
     <td><?php echo escape($statusname[$requests[$n]["status"]])?></td>
     <td><?php echo (strlen((string) $requests[$n]["assigned_username"])==0) ? "-" : escape($requests[$n]["assigned_username"])?></td>
     <td><?php echo (strlen((string) $requests[$n]["collection"])==0) ? "-" : escape($requests[$n]["collection"])?></td>
-    <td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-file-signature"></i>&nbsp' . escape($lang["editresearch"])?></a>&nbsp;&nbsp;<a href="<?php echo $baseurl_short?>pages/collections.php?research=<?php echo $requests[$n]["ref"]?>" onClick="return CollectionDivLoad(this);"><?php echo '<i class="fas fa-shopping-bag"></i>&nbsp' . escape($lang["editcollection"])?></a></div></td>
+    <td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_research_edit.php?ref=<?php echo $requests[$n]["ref"]; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-file-signature"></i>&nbsp' . escape($lang["editresearch"])?></a>&nbsp;&nbsp;<a href="<?php echo $baseurl_short?>pages/collections.php?research=<?php echo $requests[$n]["ref"]; ?>" onClick="return CollectionDivLoad(this);"><?php echo '<i class="fas fa-shopping-bag"></i>&nbsp' . escape($lang["editcollection"])?></a></div></td>
     </tr>
     <?php
     }

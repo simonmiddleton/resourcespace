@@ -35,12 +35,12 @@ $jumpcount=1;
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo $lang["requestorderid"]?></td>
-<td><?php echo $lang["description"]?></td>
-<td><?php echo $lang["date"]?></td>
-<td><?php echo $lang["itemstitle"]?></td>
-<td><?php echo $lang["status"]?></td>
-<td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+<td><?php echo $lang["requestorderid"]; ?></td>
+<td><?php echo $lang["description"]; ?></td>
+<td><?php echo $lang["date"]; ?></td>
+<td><?php echo $lang["itemstitle"]; ?></td>
+<td><?php echo $lang["status"]; ?></td>
+<td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
 </tr>
 
 <?php
@@ -51,19 +51,19 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
     {
     ?>
     <tr>
-    <td><?php echo $requests[$n]["ref"]?></td>
-    <td><?php echo $requests[$n]["comments"] ?></td>
+    <td><?php echo $requests[$n]["ref"]; ?></td>
+    <td><?php echo $requests[$n]["comments"]; ?></td>
     <td><?php echo nicedate($requests[$n]["created"],true)?></td>
-    <td><?php echo $requests[$n]["c"] ?></td>
-    <td><?php echo $lang["resourcerequeststatus" . $requests[$n]["status"]] ?></td>
+    <td><?php echo $requests[$n]["c"]; ?></td>
+    <td><?php echo $lang["resourcerequeststatus" . $requests[$n]["status"]]; ?></td>
     <td>
     <div class="ListTools">
     <?php if ($requests[$n]["collection_id"] > 0) // only show tools if the collection still exists
         {?>
-        <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $requests[$n]["collection"])?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-view"]?></a>
+        <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $requests[$n]["collection"])?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["action-view"]; ?></a>
         <?php if (!checkperm("b"))
             {?>
-            &nbsp;<a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $requests[$n]["collection"]; if ($autoshow_thumbs) {echo "&amp;thumbs=show";}?>" onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET ?><?php echo $lang["action-select"]?></a><?php
+            &nbsp;<a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $requests[$n]["collection"]; if ($autoshow_thumbs) {echo "&amp;thumbs=show";}?>" onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET ?><?php echo $lang["action-select"]; ?></a><?php
             }
         } // end of if collection still exists ?>
     </div>

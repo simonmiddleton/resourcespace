@@ -22,19 +22,19 @@ include "../include/header.php";
 
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["searchitemsdiskusage"] ?></h1>
+<h1><?php echo $lang["searchitemsdiskusage"]; ?></h1>
 <?php
 $intro=text("introtext");
 if ($intro!="") { ?><p><?php echo $intro ?></p><?php } 
 ?>
 <div class="Question">
-<label><?php echo $lang["matchingresourceslabel"] ?></label>
+<label><?php echo $lang["matchingresourceslabel"]; ?></label>
 <div class="Fixed"><?php echo number_format($count)  ?></div>
 <div class="clearerleft"></div>
 </div>
 
 <div class="Question">
-<label><?php echo $lang["diskusage"] ?></label>
+<label><?php echo $lang["diskusage"]; ?></label>
 <div class="Fixed"><strong> <?php echo formatfilesize($disk_usage) ?></strong></div>
 <div class="clearerleft"></div>
 </div>

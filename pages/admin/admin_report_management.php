@@ -100,7 +100,7 @@ function addColumnHeader($orderName, $labelKey)
                 addColumnHeader("name", "property-name");
                 addColumnHeader('support_non_correlated_sql', 'property-support_non_correlated_sql');
                 ?>
-                <td><div class="ListTools"><?php echo $lang["tools"]?></div></td>
+                <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
             </tr>
 <?php
         foreach ($reports as $report)
@@ -150,7 +150,7 @@ function addColumnHeader($orderName, $labelKey)
     <form method="post" action="<?php echo $baseurl_short?>pages/admin/admin_report_management.php" onSubmit="return CentralSpacePost(this,false);">
         <?php generateFormToken("admin_report_management_find"); ?>
         <div class="Question">
-            <label for="find"><?php echo $lang["property-search_filter"] ?></label>
+            <label for="find"><?php echo $lang["property-search_filter"]; ?></label>
             <input name="find" type="text" class="medwidth" value="<?php echo escape($find); ?>">
             <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]; ?>&nbsp;&nbsp;">
             <div class="clearerleft"></div>

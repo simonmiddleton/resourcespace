@@ -88,11 +88,11 @@ if($terms_download == false && $terms_upload==false && getval("noredir","") == "
 include "../include/header.php";
 ?>
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["termsandconditions"]?></h1>
+  <h1><?php echo $lang["termsandconditions"]; ?></h1>
   <p><?php echo text("introtext")?></p>
   
     <div class="Question">
-    <label><?php echo $lang["termsandconditions"]?></label>
+    <label><?php echo $lang["termsandconditions"]; ?></label>
     <div class="Terms"><?php 
         $termstext=text(($upload?"upload_terms":"terms"));
         $modified_termstext=hook('modified_termstext');
@@ -106,13 +106,13 @@ include "../include/header.php";
     </div>
     
     <form method="post" action="<?php echo $baseurl_short?>pages/terms.php?k=<?php echo urlencode($k); ?>&collection=<?php echo urlencode($k_shares_collection); ?>" 
-        onSubmit="if (!document.getElementById('iaccept').checked) {alert('<?php echo $lang["mustaccept"] ?>');return false;}">
+        onSubmit="if (!document.getElementById('iaccept').checked) {alert('<?php echo $lang["mustaccept"]; ?>');return false;}">
     <?php generateFormToken("terms"); ?>
     <input type=hidden name="url" value="<?php echo escape($url)?>">
     <input type=hidden name="ref" value="<?php echo escape($ref)?>">
     
     <div class="Question">
-    <label for="iaccept"><?php echo $lang["iaccept"] ?></label>
+    <label for="iaccept"><?php echo $lang["iaccept"]; ?></label>
     <input type="checkbox" name="iaccept" id="iaccept" />
     <div class="clearerleft"> </div>
     </div>
@@ -120,7 +120,7 @@ include "../include/header.php";
     <div class="QuestionSubmit">
         <input name="save"
                type="submit"
-               value="&nbsp;&nbsp;<?php echo $lang["proceed"]?>&nbsp;&nbsp;"
+               value="&nbsp;&nbsp;<?php echo $lang["proceed"]; ?>&nbsp;&nbsp;"
                <?php hook('terms_save_input_attributes', '', array($ref, $url)); ?>/>
     </div>
     </form>

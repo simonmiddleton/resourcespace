@@ -391,7 +391,7 @@ if (getval("ajax","") == "")
             {
             livePaneResizing:true,
             triggerEventsDuringLiveResize: false,
-            resizerTip: '<?php echo $lang["resize"]?>',
+            resizerTip: '<?php echo $lang["resize"]; ?>',
 
             east__spacing_open:0,
             east__spacing_closed:8,
@@ -412,7 +412,7 @@ if (getval("ajax","") == "")
                 south__spacing_open:8,
                 south__spacing_closed:8, 
                 south__togglerLength_open:"200",
-                south__togglerTip_open: '<?php echo $lang["toggle"]?>',
+                south__togglerTip_open: '<?php echo $lang["toggle"]; ?>',
                 south__onclose_start: function(pane)
                     {
                     if (pane=="south" && (typeof colbarresizeon === "undefined" || colbarresizeon==true))

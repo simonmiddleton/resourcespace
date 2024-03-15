@@ -144,7 +144,7 @@ get_geo_maps_scripts();
                     for ($i = 0; $i < count($marker_metadata_array); $i++)
                         {
                         echo "\n";?>
-                        if (cmfm >= <?php echo $marker_metadata_array[$i]['min']?> && cmfm <= <?php echo $marker_metadata_array[$i]['max']?>)
+                        if (cmfm >= <?php echo $marker_metadata_array[$i]['min']; ?> && cmfm <= <?php echo $marker_metadata_array[$i]['max']; ?>)
                             {                            
                             rtype = <?php echo $i; ?>;
                             }<?php

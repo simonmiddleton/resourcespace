@@ -1071,7 +1071,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                     }
                 else
                     { ?>
-                    <a  id="map_view_link" href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo ($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle'] ?>' onClick="<?php
+                    <a  id="map_view_link" href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo ($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle']; ?>' onClick="<?php
                     if($search_map_max_results > 0  && $resources_count > $search_map_max_results)
                         {
                         echo "styledalert('" . $lang["error"] . "','" . $lang['search_results_overlimit'] . "');return false;";
@@ -1306,7 +1306,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         if ($arcresults>0) 
             {
             ?>
-            <div class="SearchOptionNav"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("archive"=>2)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET ?><?php echo escape($lang["view"])?> <span class="Selected"><?php echo number_format($arcresults)?></span> <?php echo ($arcresults==1)?$lang["match"]:$lang["matches"]?> <?php echo escape($lang["inthearchive"])?></a></div>
+            <div class="SearchOptionNav"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("archive"=>2)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET ?><?php echo escape($lang["view"])?> <span class="Selected"><?php echo number_format($arcresults)?></span> <?php echo ($arcresults==1)?$lang["match"]:$lang["matches"]; ?> <?php echo escape($lang["inthearchive"])?></a></div>
             <?php 
             }
         else

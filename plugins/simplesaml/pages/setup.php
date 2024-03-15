@@ -285,8 +285,8 @@ config_text_input('simplesaml_custom_attributes', $lang['simplesaml_custom_attri
 
 <div class="Question">  
 <label for="submit"></label>
-<input type="submit" name="save" id="save" value="<?php echo $lang['plugins-saveconfig']?>">
-<input type="submit" name="submit" id="submit" value="<?php echo $lang['plugins-saveandexit']?>">
+<input type="submit" name="save" id="save" value="<?php echo $lang['plugins-saveconfig']; ?>">
+<input type="submit" name="submit" id="submit" value="<?php echo $lang['plugins-saveandexit']; ?>">
 </div><div class="clearerleft"></div>
 
 </form>

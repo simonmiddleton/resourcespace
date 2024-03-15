@@ -48,14 +48,14 @@ if (getval("submitted","")!="" && enforcePostRequest(false))
 include "../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["collectioncomments"]?></h1>
+<h1><?php echo $lang["collectioncomments"]; ?></h1>
 <p><?php echo $lang["collectioncommentsinfo"];render_help_link("user/resource_commenting");?></p>
 <?php 
 $imagepath = get_resource_path($ref,true,"col",false,"jpg");
 $imageurl = get_resource_path($ref,false,"col",false,"jpg");
 if (file_exists($imagepath)){?>
 <div class="Question">
-<label for="image"><?php echo $lang["preview"]?></label><img src="<?php echo $imageurl?>?nc=<?php echo time()?>" alt="" class="Picture" />
+<label for="image"><?php echo $lang["preview"]; ?></label><img src="<?php echo $imageurl?>?nc=<?php echo time()?>" alt="" class="Picture" />
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>
@@ -69,12 +69,12 @@ if (file_exists($imagepath)){?>
 <input type="hidden" name="collection" value="<?php echo escape($collection) ?>">
 <input type=hidden name="submitted" value="true">
 <div class="Question">
-<label for="name"><?php echo $lang["comment"]?></label><textarea class="stdwidth" style="width:450px;" rows=20 cols=80 name="comment" id="comment"><?php echo escape($comment)?></textarea>
+<label for="name"><?php echo $lang["comment"]; ?></label><textarea class="stdwidth" style="width:450px;" rows=20 cols=80 name="comment" id="comment"><?php echo escape($comment)?></textarea>
 <div class="clearerleft"> </div>
 </div>
 
 <div class="Question">
-<label for="name"><?php echo $lang["rating"]?></label><select class="stdwidth" name="rating">
+<label for="name"><?php echo $lang["rating"]; ?></label><select class="stdwidth" name="rating">
 <option value="" <?php if ($rating=="") { ?>selected<?php } ?>></option>
 <?php for ($n=1;$n<=5;$n++) { ?>
 <option value="<?php echo $n?>" <?php if ($rating==$n) { ?>selected<?php } ?>><?php echo str_pad("",$n,"*")?></option>
@@ -87,7 +87,7 @@ if($cinfo["type"] == COLLECTION_TYPE_FEATURED && checkperm("h"))
     {
     ?>
     <div class="Question">
-    <label for="use_as_theme_thumbnail"><?php echo $lang["useasthemethumbnail"]?></label>
+    <label for="use_as_theme_thumbnail"><?php echo $lang["useasthemethumbnail"]; ?></label>
     <input name="use_as_theme_thumbnail" id="use_as_theme_thumbnail" type="checkbox" value="yes" <?php if ($commentdata["use_as_theme_thumbnail"]==1) { ?>checked<?php } ?>>
     <div class="clearerleft"> </div>
     </div>
@@ -95,7 +95,7 @@ if($cinfo["type"] == COLLECTION_TYPE_FEATURED && checkperm("h"))
     }
     ?>
 <div class="QuestionSubmit">        
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]; ?>&nbsp;&nbsp;" />
 </div>
 </form>
 
