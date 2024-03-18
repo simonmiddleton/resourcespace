@@ -100,7 +100,7 @@ include '../../../include/header.php';
 function SaveWorkflowAction(){
     if(jQuery('#actionsfrom').val()==jQuery('#actionto').val())
         {
-        alert('<?php echo $lang["rse_workflow_action_check_fields"]; ?>');
+        alert('<?php echo escape($lang["rse_workflow_action_check_fields"]); ?>');
         return false;
         }
     CentralSpacePost(document.getElementById('form_workflow_action'),false);
@@ -116,7 +116,7 @@ if (isset($saveerror))
         {
         ?>
         <script type="text/javascript">
-        alert('<?php echo $lang['rse_workflow_action_check_fields']; ?>');
+        alert('<?php echo escape($lang['rse_workflow_action_check_fields']); ?>');
         </script><?php
         }
     
@@ -129,7 +129,7 @@ if (isset($saveerror))
 ?>
         
 <div class="BasicsBox">
-<h1><?php echo $lang["rse_workflow_action_edit_action"]; ?></h1>
+<h1><?php echo escape($lang["rse_workflow_action_edit_action"]); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -159,26 +159,26 @@ renderBreadcrumbs($links_trail);
     <input type="hidden" name="submitted" value="true">
         
     <div class="Question" id="actionname_question">
-    <label for="actionname"><?php echo $lang["rse_workflow_action_name"]; ?></label>
+    <label for="actionname"><?php echo escape($lang["rse_workflow_action_name"]); ?></label>
     <input class="stdwidth" type="text" name="actionname" id="actionname" value="<?php echo escape($workflowaction["name"]);  ?>" />
     <div class="clearerleft"> </div>
     </div>
 
     
     <div class="Question" id="actiontext_question">
-    <label for="actiontext"><?php echo $lang["rse_workflow_action_text"]; ?></label>
+    <label for="actiontext"><?php echo escape($lang["rse_workflow_action_text"]); ?></label>
     <input class="stdwidth" type="text" name="actiontext" id="actiontext" value="<?php echo escape($workflowaction["text"]);  ?>" />
     <div class="clearerleft"> </div>
     </div>
     
     <div class="Question" id="buttontext_question">
-    <label for="buttontext"><?php echo $lang["rse_workflow_button_text"]; ?></label>
+    <label for="buttontext"><?php echo escape($lang["rse_workflow_button_text"]); ?></label>
     <input class="stdwidth" type="text" name="buttontext" id="buttontext" value="<?php echo escape($workflowaction["buttontext"]);  ?>" />
     <div class="clearerleft"> </div>
     </div>
     
     <div class="Question" id="actionfrom_question">
-    <label for="actionfrom"><?php echo $lang["rse_workflow_action_status_from"]; ?></label>
+    <label for="actionfrom"><?php echo escape($lang["rse_workflow_action_status_from"]); ?></label>
     
     <table cellpadding=2 cellspacing=0>
     <?php
@@ -198,7 +198,7 @@ renderBreadcrumbs($links_trail);
     </div>
     
     <div class="Question" id="actionto_question">
-    <label for="actionto"><?php echo $lang["rse_workflow_action_status_to"]; ?></label>
+    <label for="actionto"><?php echo escape($lang["rse_workflow_action_status_to"]); ?></label>
     <select class="stdwidth" name="actionto" id="actionto" >
     <?php
     for ($n=-2;$n<=3;$n++)

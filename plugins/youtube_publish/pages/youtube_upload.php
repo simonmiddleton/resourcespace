@@ -177,7 +177,7 @@ include "../../../include/header.php";
 <script language="JavaScript">
 function confirmSubmit()
 {
-var agree=confirm("<?php echo $lang["youtube_publish_legal_warning"]; ?>");
+var agree=confirm("<?php echo escape($lang["youtube_publish_legal_warning"]); ?>");
 if (agree)
 return true ;
 else
@@ -236,7 +236,7 @@ else
         }
     else
         {
-        echo $lang["youtube_publish_notuploaded"];
+        echo escape($lang["youtube_publish_notuploaded"]);
         }
 echo "</p>";
 ?>
@@ -256,19 +256,19 @@ if ($youtube_username != '')
 <form action="<?php echo $baseurl ?>/plugins/youtube_publish/pages/youtube_upload.php?resource=<?php echo $ref ?>" method="post">
     <?php generateFormToken("youtube_upload"); ?>
     <div class="Question" >
-        <label for="video_title"><?php echo $lang["youtube_publish_video_title"]; ?></label>
+        <label for="video_title"><?php echo escape($lang["youtube_publish_video_title"]); ?></label>
         <input type="text" class="stdwidth" name="video_title" value="<?php echo $title; ?>"/>
         <br>
-        <label for="video_description"><?php echo $lang["youtube_publish_video_description"]; ?></label>
+        <label for="video_description"><?php echo escape($lang["youtube_publish_video_description"]); ?></label>
         <textarea class="stdwidth" rows="6" columns="50" id="video-description" name="video_description"><?php echo strip_tags($description); ?></textarea>
         <br>
-        <label for="video_keywords"><?php echo $lang["youtube_publish_video_tags"]; ?></label>
+        <label for="video_keywords"><?php echo escape($lang["youtube_publish_video_tags"]); ?></label>
         <textarea class="stdwidth" rows="6" columns="50" id="video_keywords" name="video_keywords"><?php echo escape($video_keywords); ?></textarea>
         <br>
     </div>  
     <div class="Question" >
     
-        <label for="video_status"><?php echo $lang["youtube_publish_access"]; ?></label>
+        <label for="video_status"><?php echo escape($lang["youtube_publish_access"]); ?></label>
         <select name="video_status">
         <option value="public" <?php if ($video_status=="public") {echo "selected";} ?>><?php echo $lang["youtube_publish_public"] . "&nbsp;&nbsp;" ?></option>
         <option value="private" <?php if ($video_status=="private") {echo "selected";} ?>><?php echo $lang["youtube_publish_private"] . "&nbsp;&nbsp;" ?></option>
@@ -280,7 +280,7 @@ if ($youtube_username != '')
     
     <div class="Question" >
     
-        <label for="video_category"><?php echo $lang["youtube_publish_category"]; ?></label>
+        <label for="video_category"><?php echo escape($lang["youtube_publish_category"]); ?></label>
         <select name="video_category">
         <?php
         if(is_array($categories)) {
@@ -294,7 +294,7 @@ if ($youtube_username != '')
         </p>
     </div>  
     
-    <input type="submit" value="<?php echo $lang["youtube_publish_button_text"]; ?>" onClick="return confirmSubmit()"/>
+    <input type="submit" value="<?php echo escape($lang["youtube_publish_button_text"]); ?>" onClick="return confirmSubmit()"/>
     
     
 </form> 

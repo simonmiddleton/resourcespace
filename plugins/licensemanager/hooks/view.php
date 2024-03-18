@@ -13,7 +13,7 @@ function HookLicensemanagerViewCustompanels()
     ?>
     <div class="RecordBox">
     <div class="RecordPanel">
-    <div class="Title"><?php echo $lang["license_management"]; ?></div>
+    <div class="Title"><?php echo escape($lang["license_management"]); ?></div>
 
     <?php if ($edit_access || checkperm("lm")) { 
         $new_license_url_params = array(
@@ -35,9 +35,9 @@ function HookLicensemanagerViewCustompanels()
         <div class="Listview">
         <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
         <tr class="ListviewTitleStyle">
-        <td><?php echo $lang["license_id"]; ?></a></td>
+        <td><?php echo escape($lang["license_id"]); ?></a></td>
         <td><?php echo escape($lang["type"]); ?></a></td>
-        <td><?php echo $lang["licensor_licensee"]; ?></a></td>
+        <td><?php echo escape($lang["licensor_licensee"]); ?></a></td>
         <td><?php echo escape($lang["indicateusagemedium"]); ?></a></td>
         <td><?php echo escape($lang["description"]); ?></a></td>
         <td><?php echo escape($lang["fieldtitle-expiry_date"]); ?></a></td>
@@ -73,7 +73,7 @@ function HookLicensemanagerViewCustompanels()
             <?php if ($edit_access || checkperm("lm")) { ?>
             <td><div class="ListTools">
             <a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/edit.php?ref=<?php echo $license["ref"]; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
-            <a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/unlink.php?ref=<?php echo $license["ref"]; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["action-unlink"]; ?></a>
+            <a href="<?php echo $baseurl_short ?>plugins/licensemanager/pages/unlink.php?ref=<?php echo $license["ref"]; ?>&resource=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo escape($lang["action-unlink"]); ?></a>
             </div></td>
             <?php } ?>
 

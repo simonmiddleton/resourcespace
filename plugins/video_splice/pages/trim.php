@@ -340,7 +340,7 @@ if(!empty($trimmed_resources_alt))
     echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%ref", $parent_link, str_replace("%links", $links_holder, $lang["video-trim_alt-response"])) . "</div>";
     }
     ?>
-<h1><?php echo $lang["video-trim"]; render_help_link("plugins/video-splice");?></h1>
+<h1><?php echo escape($lang["video-trim"]); render_help_link("plugins/video-splice");?></h1>
 <?php
 if(isset($resource["field".$view_title_field]))
     {
@@ -404,7 +404,7 @@ if(isset($resource["field".$view_title_field]))
             return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this, true);">
             <?php generateFormToken("trimform"); ?>
             <div class="Question" id="video_trim_tool">
-            <label><?php echo $lang["video-trim"]; ?></label>
+            <label><?php echo escape($lang["video-trim"]); ?></label>
             <div class="video-trim-tool">
                 <input type="range" name="input_start" id="input-start" min="0" max="<?php echo $original_duration ?>" value="0">
                 <input type="range" name="input_end" id="input-end" min="0" max="<?php echo $original_duration ?>" value="<?php echo $original_duration ?>">
@@ -480,7 +480,7 @@ if(isset($resource["field".$view_title_field]))
             <div class="clearerleft"> </div>
         </div>
         <div class="Question" id="question_uploadtype">
-            <label><?php echo $lang["video-trim_upload-type"]; ?></label>
+            <label><?php echo escape($lang["video-trim_upload-type"]); ?></label>
             <select name="upload_type" id="uploadtype" class="stdwidth" onChange="var q=document.getElementById('question_collectionadd');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
             <?php if(!checkperm("A")){?><option value="alt"><?php echo escape($lang["addalternativefile"]); ?></option><?php }?>
             <?php if(get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo escape($lang["createnewresource"]); ?></option><?php }?>
@@ -493,7 +493,7 @@ if(isset($resource["field".$view_title_field]))
             <div class="clearerleft"> </div>
         </div>
         <div class="QuestionSubmit">
-             <input name="trim_submit" class="trimsubmit" type="submit" value="<?php echo $lang["action-trim"]; ?>" onclick="stopLoop()">
+             <input name="trim_submit" class="trimsubmit" type="submit" value="<?php echo escape($lang["action-trim"]); ?>" onclick="stopLoop()">
              <br />
              <div class="clearerleft"> </div>
         </div>
@@ -581,7 +581,7 @@ function startCalculatedPreviewPlayback(start, end){
     // if preview file duration smaller then original file the start or end of trim preview needs to be capped
     if (start > <?php echo $preview_cap ?> || end > <?php echo $preview_cap ?>)
         {
-        styledalert("<?php echo $lang["video-trim-warning"]; ?>", "<?php echo $lang["video-trim-warning-text"]; ?>", 500);
+        styledalert("<?php echo escape($lang["video-trim-warning"]); ?>", "<?php echo strip_tags_and_attributes($lang["video-trim-warning-text"]); ?>", 500);
 
         preview.currentTime = 0;
         preview.pause();

@@ -74,7 +74,7 @@ function HookVideo_tracksViewAdditionalresourcetools2($resource, $access)
     ?>
     <tr class="DownloadDBlend">
         <td class="DownloadFileName" colspan="2">
-            <h2><?php echo $lang['video_tracks_custom_video_formats_label']; ?></h2>
+            <h2><?php echo escape($lang['video_tracks_custom_video_formats_label']); ?></h2>
         </td>
         <td class="DownloadButton">
             <a href="<?php echo $url; ?>"
@@ -87,7 +87,7 @@ function HookVideo_tracksViewAdditionalresourcetools2($resource, $access)
                         }
 
                     return ModalLoad(this, true, true);
-                "><?php echo $lang['video_tracks_generate_label']; ?></a>
+                "><?php echo escape($lang['video_tracks_generate_label']); ?></a>
         </td>
     </tr>
     <?php

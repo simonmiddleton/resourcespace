@@ -22,14 +22,14 @@ $messages = array();
 include '../../../include/header.php';
 ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang['csv_user_import']; ?></h1>
+    <h1><?php echo escape($lang['csv_user_import']); ?></h1>
 
 <?php
 // CSV upload form
 if((!isset($_FILES[$fd]) || 0 < $_FILES[$fd]['error']) && !$process_csv)
     {
     ?>
-    <p><?php echo $lang['csv_user_import_intro']; ?></p>
+    <p><?php echo escape($lang['csv_user_import_intro']); ?></p>
     <ul>
     <?php
     $i = 1;
@@ -45,7 +45,7 @@ if((!isset($_FILES[$fd]) || 0 < $_FILES[$fd]['error']) && !$process_csv)
     <form id="upload_csv_form" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>">
         <?php generateFormToken("upload_csv_form"); ?>
         <div class="Question">
-            <label for="<?php echo $fd; ?>"><?php echo $lang['csv_user_import_upload_file']; ?></label>
+            <label for="<?php echo $fd; ?>"><?php echo escape($lang['csv_user_import_upload_file']); ?></label>
             <input
                 id="<?php echo $fd; ?>"
                 type="file"
@@ -75,7 +75,7 @@ if((!isset($_FILES[$fd]) || 0 < $_FILES[$fd]['error']) && !$process_csv)
 elseif($process_csv && file_exists($csv_file))
     {
     ?>
-    <p><?php echo $lang['csv_user_import_processing_file']; ?></p>
+    <p><?php echo escape($lang['csv_user_import_processing_file']); ?></p>
     <?php
     csv_user_import_process($csv_file, $user_group_selector, $messages, true);
     ?>
@@ -134,14 +134,14 @@ else
             else
                 {
                 ?>
-                <h2><?php echo $lang['csv_user_import_move_upload_file_failure']; ?></h2>
+                <h2><?php echo escape($lang['csv_user_import_move_upload_file_failure']); ?></h2>
                 <?php
                 }
             }
         else
             {
             ?>
-            <h2><?php echo $lang['csv_user_import_error_found']; ?></h2>
+            <h2><?php echo escape($lang['csv_user_import_error_found']); ?></h2>
             <?php
             }
         }

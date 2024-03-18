@@ -37,7 +37,7 @@ $url_params = array(
 );
 ?>
 <div class="BasicsBox"> 
-<h1><?php echo $lang["managelicenses"]; ?></h1>
+<h1><?php echo escape($lang["managelicenses"]); ?></h1>
 <?php
     $links_trail = array(
         array(
@@ -82,9 +82,9 @@ $jumpcount=1;
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo $lang["license_id"]; ?></a></td>
+<td><?php echo escape($lang["license_id"]); ?></a></td>
 <td><?php echo escape($lang["type"]); ?></a></td>
-<td><?php echo $lang["licensor_licensee"]; ?></a></td>
+<td><?php echo escape($lang["licensor_licensee"]); ?></a></td>
 <td><?php echo escape($lang["indicateusagemedium"]); ?></a></td>
 <td><?php echo escape($lang["description"]); ?></a></td>
 <td><?php echo escape($lang["fieldtitle-expiry_date"]); ?></a></td>
@@ -132,7 +132,7 @@ for ($n=$offset;(($n<count($licenses)) && ($n<($offset+$per_page)));$n++)
 
 
         <div class="Question">
-            <label for="find"><?php echo $lang["licensesearch"]; ?><br/></label>
+            <label for="find"><?php echo escape($lang["licensesearch"]); ?><br/></label>
             <div class="tickset">
              <div class="Inline">           
             <input type=text placeholder="<?php echo escape($lang['searchbytext']); ?>" name="findtext" id="findtext" value="<?php echo escape($findtext)?>" maxlength="100" class="shrtwidth" />

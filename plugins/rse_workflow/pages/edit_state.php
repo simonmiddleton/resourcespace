@@ -124,7 +124,7 @@ include '../../../include/header.php';
 ?>
 
 <div class="BasicsBox">
-<h1><?php echo $lang["rse_workflow_edit_state"]; render_help_link("plugins/workflow");?></h1> 
+<h1><?php echo escape($lang["rse_workflow_edit_state"]); render_help_link("plugins/workflow");?></h1> 
 <?php
 $links_trail = array(
     array(
@@ -155,7 +155,7 @@ if($errortext!="")
     {
     ?>
     <script type="text/javascript">
-    alert('<?php echo $lang['rse_workflow_state_check_fields']; ?>');
+    alert('<?php echo escape($lang['rse_workflow_state_check_fields']); ?>');
     </script><?php
     }
     
@@ -175,7 +175,7 @@ elseif ($saved)
     <input type="hidden" name="code" value="<?php echo escape($code);  ?>">
         
     <div class="Question" id="status_name_question">
-    <label for="name"><?php echo $lang["rse_workflow_state_name"]; ?></label>
+    <label for="name"><?php echo escape($lang["rse_workflow_state_name"]); ?></label>
     <?php if ($fixedstate)
         {?>
         <div class="Fixed"><?php echo escape($workflowstate["name"]); ?></div>
@@ -192,7 +192,7 @@ elseif ($saved)
     </div>
 
         <div class="Question" id="status_notify_group_question">
-    <label for="notify_group"><?php echo $lang["rse_workflow_state_notify_group"]; ?></label>
+    <label for="notify_group"><?php echo escape($lang["rse_workflow_state_notify_group"]); ?></label>
         <select class="stdwidth" name="notify_group" id="notify_group">
         <option value=""></option>
         <?php
@@ -205,12 +205,12 @@ elseif ($saved)
                 }?>
         </select>
         <div class="FormHelp" >
-            <div class="FormHelpInner"><?php echo $lang["rse_workflow_state_notify_help"]; ?></div>
+            <div class="FormHelpInner"><?php echo escape($lang["rse_workflow_state_notify_help"]); ?></div>
         </div>
         <div class="clearerleft"> </div></div>
 
         <div class="Question" id="more_notes_question">
-            <label for="more_notes"><?php echo $lang['rse_workflow_more_notes_label']; ?></label>
+            <label for="more_notes"><?php echo escape($lang['rse_workflow_more_notes_label']); ?></label>
             <?php
                 $more_notes_checked = '';
                 if($workflowstate['more_notes_flag'] == 1) {
@@ -222,7 +222,7 @@ elseif ($saved)
         </div>
 
         <div class="Question" id="notify_user_question">
-            <label for="notify_user"><?php echo $lang['rse_workflow_notify_user_label']; ?></label>
+            <label for="notify_user"><?php echo escape($lang['rse_workflow_notify_user_label']); ?></label>
             <?php
                 $notify_user_checked = '';
                 if($workflowstate['notify_user_flag'] == 1) {
@@ -254,7 +254,7 @@ elseif ($saved)
         else{
             ?>
             <div class="Question" id="simple_search_question">
-                <label for="simple_search"><?php echo $lang['rse_workflow_simple_search_label']; ?></label>
+                <label for="simple_search"><?php echo escape($lang['rse_workflow_simple_search_label']); ?></label>
                 <?php
                     $simple_search_checked = '';
                     if($workflowstate['simple_search_flag'] == 1) {

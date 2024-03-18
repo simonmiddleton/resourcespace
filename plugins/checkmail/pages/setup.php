@@ -75,11 +75,11 @@ jQuery("#checkmail_allow_users_based_on_permission").on("change", function() {
     var chkPermLabel = jQuery("label[for='checkmail_users']");
     if (this.value == 0) 
         {
-        chkPermLabel[0].textContent="<?php echo $lang['checkmail_users']; ?>";
+        chkPermLabel[0].textContent="<?php echo escape($lang['checkmail_users']); ?>";
         } 
     else 
         {
-        chkPermLabel[0].textContent="<?php echo $lang['checkmail_blocked_users_label']; ?>";
+        chkPermLabel[0].textContent="<?php echo escape($lang['checkmail_blocked_users_label']); ?>";
         }
 });
 </script>

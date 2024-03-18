@@ -55,7 +55,7 @@ include "../../../include/header.php";
 <input type=hidden name="unlink" value="<?php echo $unlink ? "true" : ""; ?>">
 <?php generateFormToken("licensemanager_batch"); ?>
 
-<div class="Question"><label><?php echo $lang["license_id"]; ?></label>
+<div class="Question"><label><?php echo escape($lang["license_id"]); ?></label>
 <select name="ref"><option value=""><?php echo escape($lang["select"]); ?></option>
 <?php $licenses=ps_query("select ref,description,holder from license order by ref"); foreach ($licenses as $license) { ?>
 <option value="<?php echo $license["ref"]; ?>"><?php echo $license["ref"]; ?> - <?php echo $license["description"] . " / " . $license["holder"]; ?></option>

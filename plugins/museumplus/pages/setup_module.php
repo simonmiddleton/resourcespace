@@ -106,7 +106,7 @@ $rtfs = ps_query('SELECT * FROM resource_type_field ORDER BY title, name', [],'s
 include '../../../include/header.php';
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang['museumplus_module_setup']; ?></h1>
+<h1><?php echo escape($lang['museumplus_module_setup']); ?></h1>
 <?php
 renderBreadcrumbs($breadcrumbs);
 if(isset($error))
@@ -117,12 +117,12 @@ if(isset($error))
     <form id="MplusModuleConfigForm" method="post" action="<?php echo $form_action; ?>">
     <?php generateFormToken("MplusModuleConfigForm"); ?>
     <div class="Question">
-        <label><?php echo $lang["museumplus_module_name"]; ?></label>
+        <label><?php echo escape($lang["museumplus_module_name"]); ?></label>
         <input name="module_name" type="text" class="stdwidth" value="<?php echo escape($module_name); ?>">
         <div class="clearerleft"></div>
     </div>
     <div class="Question">
-        <label><?php echo $lang["museumplus_mplus_id_field"]; ?></label>
+        <label><?php echo escape($lang["museumplus_mplus_id_field"]); ?></label>
         <input name="mplus_id_field" type="text" class="stdwidth" value="<?php echo escape($mplus_id_field); ?>">
         <?php render_question_form_helper($lang['museumplus_mplus_id_field_helptxt'], 'mplus_id_field', array()); ?>
         <div class="clearerleft"></div>
@@ -142,12 +142,12 @@ if(isset($error))
         420);
     ?>
         <div class="Question">
-            <label for="buttons"><?php echo $lang["museumplus_field_mappings"]; ?></label>
+            <label for="buttons"><?php echo escape($lang["museumplus_field_mappings"]); ?></label>
             <table id="MplusModuleFieldsMappingTable">
                 <tbody>
                     <tr>
-                        <th><strong><?php echo $lang["museumplus_mplus_field_name"]; ?></strong></th>
-                        <th><strong><?php echo $lang["museumplus_rs_field"]; ?></strong></th>
+                        <th><strong><?php echo escape($lang["museumplus_mplus_field_name"]); ?></strong></th>
+                        <th><strong><?php echo escape($lang["museumplus_rs_field"]); ?></strong></th>
                         <th><strong><!-- actions --></strong></th>
                     </tr>
                 <?php
@@ -185,7 +185,7 @@ if(isset($error))
                     ?>
                     <tr>
                         <td colspan="4">
-                            <button type="button" onclick="museumplus_add_new_field_mapping(this);"><?php echo $lang['museumplus_add_mapping']; ?></button>
+                            <button type="button" onclick="museumplus_add_new_field_mapping(this);"><?php echo escape($lang['museumplus_add_mapping']); ?></button>
                         </td>
                     </tr>
                 </tbody>

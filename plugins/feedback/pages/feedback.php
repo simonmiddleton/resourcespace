@@ -143,9 +143,9 @@ h2 {font-size:18px;}
 
 <div class="BasicsBox"> 
   <h2>&nbsp;</h2>
-  <h1><?php echo $lang["feedback_user_survey"]; ?></h1>
+  <h1><?php echo escape($lang["feedback_user_survey"]); ?></h1>
 
-<?php if ($sent) { ?><p><?php echo $lang["feedback_thank_you"]; ?></p><?php 
+<?php if ($sent) { ?><p><?php echo escape($lang["feedback_thank_you"]); ?></p><?php 
 } else { ?>
 
 <form method=post action="<?php echo $baseurl_short?>plugins/feedback/pages/feedback.php">
@@ -222,7 +222,7 @@ if (!isset($userref))
     ?>
     <br><br>
         <div class="Question" style="border-top:none;">
-        <label style="width:250px;padding-right:5px;" for="username"><?php echo $lang["feedback_your_full_name"]; ?></label>
+        <label style="width:250px;padding-right:5px;" for="username"><?php echo escape($lang["feedback_your_full_name"]); ?></label>
 
         <input type=text name="username" id="username" class="stdwidth" value="<?php echo escape(getval("username",""))?>">
         <div class="clearerleft"> </div>

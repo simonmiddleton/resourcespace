@@ -121,18 +121,18 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
             debug("LDAP - Connected to LDAP server ");
             ?>
             <div class="Question">
-            <label for="ldapuser"><?php echo $lang["simpleldap_username"]; ?></label><input id='ldapuser' type="text" name='ldapuser'>
+            <label for="ldapuser"><?php echo escape($lang["simpleldap_username"]); ?></label><input id='ldapuser' type="text" name='ldapuser'>
             </div>
             
             <div class="Question">
-            <label for="ldappassword"><?php echo $lang["simpleldap_password"]; ?></label><input id='ldappassword' type="password" name='ldappassword'>
+            <label for="ldappassword"><?php echo escape($lang["simpleldap_password"]); ?></label><input id='ldappassword' type="password" name='ldappassword'>
             </div>      
 
             <?php
             if(!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype']==1) 
                 {?>
                 <div class="Question">
-                <label for="ldapdomain"><?php echo $lang["simpleldap_domain"]; ?></label>
+                <label for="ldapdomain"><?php echo escape($lang["simpleldap_domain"]); ?></label>
                     <select id='ldapdomain' name='ldapdomain'>
                     <?php
                     $binddomains=explode(";",$simpleldap['domain']);
@@ -148,7 +148,7 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
             }
             ?>
         
-        <input type="submit" onClick="simpleldap_test();return false;" name="testauth" value="<?php echo $lang["simpleldap_test_auth"]; ?>" <?php if (!$dstestconn){echo "disabled='true'";} ?>>        
+        <input type="submit" onClick="simpleldap_test();return false;" name="testauth" value="<?php echo escape($lang["simpleldap_test_auth"]); ?>" <?php if (!$dstestconn){echo "disabled='true'";} ?>>        
         <input type="submit" onClick="ModalClose();return false;" name="cancel" value="<?php echo escape($lang["cancel"]); ?>">
         
         <br /><br />
@@ -202,8 +202,8 @@ if(getval("testConnflag","")!="" && getval("submit","")=="" && getval("save","")
                         returnmessage = response.message;
                         if(response.success) {                      
                             returnmessage += "<tr class='resultrow'><td><?php echo escape($lang["email"]); ?>: </td><td>" + response.email + "</td></tr>";
-                            returnmessage += "<tr class='resultrow'><td><?php echo $lang["simpleldap_telephone"]; ?>: </td><td>" + response.phone + "</td></tr>";
-                            returnmessage += "<tr class='resultrow'><td><?php echo $lang["simpleldap_memberof"]; ?>";
+                            returnmessage += "<tr class='resultrow'><td><?php echo escape($lang["simpleldap_telephone"]); ?>: </td><td>" + response.phone + "</td></tr>";
+                            returnmessage += "<tr class='resultrow'><td><?php echo escape($lang["simpleldap_memberof"]); ?>";
                             for (var i = 0, len = response.memberof.length; i < len; i++) {
                               returnmessage += "</td><td>" + response.memberof[i]  + "</td></tr><tr class='resultrow'><td>";
                             }       
@@ -283,7 +283,7 @@ config_text_field("notification_email",$lang['simpleldap_notification_email'],$s
 ?>
 
 <div class="Question">
-    <label for="fallbackusergroup"><?php echo $lang['fallbackusergroup']; ?></label>
+    <label for="fallbackusergroup"><?php echo escape($lang['fallbackusergroup']); ?></label>
     <select name='fallbackusergroup'><option value=''></option>
     <?php   
         foreach ($rsgroups as $rsgroup){
@@ -300,14 +300,14 @@ config_text_field("notification_email",$lang['simpleldap_notification_email'],$s
 
 
 <div class="Question">
-<h3><?php echo $lang['ldaprsgroupmapping']; ?></h3>
+<h3><?php echo escape($lang['ldaprsgroupmapping']); ?></h3>
 <table id='groupmaptable'>
 <tr><th>
-<strong><?php echo $lang['ldapvalue']; ?></strong>
+<strong><?php echo escape($lang['ldapvalue']); ?></strong>
 </th><th>
-<strong><?php echo $lang['rsgroup']; ?></strong>
+<strong><?php echo escape($lang['rsgroup']); ?></strong>
 </th><th>
-<strong><?php echo $lang['simpleldappriority']; ?></strong>
+<strong><?php echo escape($lang['simpleldappriority']); ?></strong>
 </th>
 </tr>
 
@@ -343,13 +343,13 @@ config_text_field("notification_email",$lang['simpleldap_notification_email'],$s
 <?php } ?>
 </table>
 
-<a onclick='addGroupMapRow()'><?php echo $lang['addrow']; ?></a>
+<a onclick='addGroupMapRow()'><?php echo escape($lang['addrow']); ?></a>
 </div>
 
 
 <div class="Question">
     <input type="hidden" name="testConnflag" id="testConnflag" value="" />
-    <input type="submit" name="testConn" onclick="jQuery('#testConnflag').val('true');ModalPost(this.form,true);return false;" value="<?php echo $lang['simpleldap_test']; ?>" />
+    <input type="submit" name="testConn" onclick="jQuery('#testConnflag').val('true');ModalPost(this.form,true);return false;" value="<?php echo escape($lang['simpleldap_test']); ?>" />
  </div>
 <div class="clearerleft"></div>
 

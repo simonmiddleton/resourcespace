@@ -32,7 +32,7 @@ $url_params = array(
 );
 ?>
 <div class="BasicsBox"> 
-<h1><?php echo $lang["manageconsents"]; ?></h1>
+<h1><?php echo escape($lang["manageconsents"]); ?></h1>
 <?php
     $links_trail = array(
         array(
@@ -77,7 +77,7 @@ $jumpcount=1;
 <div class="Listview">
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
-<td><?php echo $lang["consent_id"]; ?></a></td>
+<td><?php echo escape($lang["consent_id"]); ?></a></td>
 <td><?php echo escape($lang["name"]); ?></a></td>
 <td><?php echo escape($lang["usage"]); ?></a></td>
 <td><?php echo escape($lang["fieldtitle-expiry_date"]); ?></a></td>
@@ -123,7 +123,7 @@ for ($n=$offset;(($n<count($consents)) && ($n<($offset+$per_page)));$n++)
 
 
         <div class="Question">
-            <label for="find"><?php echo $lang["consentsearch"]; ?><br/></label>
+            <label for="find"><?php echo escape($lang["consentsearch"]); ?><br/></label>
             <div class="tickset">
              <div class="Inline">           
             <input type=text placeholder="<?php echo escape($lang['searchbytext']); ?>" name="findtext" id="findtext" value="<?php echo escape($findtext); ?>" maxlength="100" class="shrtwidth" />

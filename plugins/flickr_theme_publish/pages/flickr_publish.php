@@ -15,7 +15,7 @@ $progress_file=get_temp_dir(false,$id) . "/progress_file.txt";
 
 
 ?>
-<h1><?php echo $lang["flickr_title"]; ?></h1>
+<h1><?php echo escape($lang["flickr_title"]); ?></h1>
 <?php
 
 # Does this user have a Flickr token set? If so let's try and use it.

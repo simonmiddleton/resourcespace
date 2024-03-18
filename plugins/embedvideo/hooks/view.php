@@ -37,7 +37,7 @@ function HookEmbedvideoViewAfterresourceactions()
     </li>
 
     <p id="embed-video-help">
-        <?php echo $lang["embed_help"]; ?>
+        <?php echo escape($lang["embed_help"]); ?>
     </p>
 
     <textarea id="embed-video"><?php

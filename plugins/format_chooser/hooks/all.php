@@ -76,9 +76,9 @@ function HookFormat_chooserAllReplaceuseoriginal()
 
     ?><div class="Question">
     <input type=hidden name="useoriginal" value="yes" />
-    <label for="downloadformat"><?php echo $lang["downloadformat"]; ?></label>
+    <label for="downloadformat"><?php echo escape($lang["downloadformat"]); ?></label>
     <select name="ext" class="stdwidth" id="downloadformat"<?php echo $disabled ?>>
-        <option value="" selected="selected"><?php echo $lang['format_chooser_keep_format']; ?></option>
+        <option value="" selected="selected"><?php echo escape($lang['format_chooser_keep_format']); ?></option>
     <?php
     foreach ($format_chooser_output_formats as $format)
         {
@@ -90,7 +90,7 @@ function HookFormat_chooserAllReplaceuseoriginal()
         {
         ?>
         <div class="Question">
-        <label for="profile"><?php echo $lang['format_chooser_choose_profile']; ?></label>
+        <label for="profile"><?php echo escape($lang['format_chooser_choose_profile']); ?></label>
         <?php showProfileChooser('stdwidth') ?>
         <div class="clearerleft"> </div></div><?php
         }

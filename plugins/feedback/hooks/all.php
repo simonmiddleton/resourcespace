@@ -4,7 +4,7 @@ function HookFeedbackAllToptoolbaradder()
     {
     global $target,$baseurl,$lang;  
     ?>
-    <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/plugins/feedback/pages/feedback.php"><?php echo $lang["feedback_user_survey"]; ?></a></li>
+    <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl?>/plugins/feedback/pages/feedback.php"><?php echo escape($lang["feedback_user_survey"]); ?></a></li>
     <?php
     }
 
@@ -38,7 +38,7 @@ function HookFeedbackAllHeadertop()
             <div style="text-align:right;">
                 <input type="button" value="<?php echo escape($lang["yes"]); ?>" onClick="SetCookie('feedback_completed','yes',30);jQuery('#feedback_prompt').remove();CentralSpaceLoad('<?php echo $baseurl?>/plugins/feedback/pages/feedback.php',true);">
                 <input type="button" value="<?php echo escape($lang["no"]); ?>" onClick="SetCookie('feedback_completed','yes',30);document.getElementById('feedback_prompt').style.display='none';">
-                <input type="button" value="<?php echo $lang["feedback_remind_me_later"]; ?>" onClick="SetCookie('feedback_completed','yes',0.5);document.getElementById('feedback_prompt').style.display='none';">
+                <input type="button" value="<?php echo escape($lang["feedback_remind_me_later"]); ?>" onClick="SetCookie('feedback_completed','yes',0.5);document.getElementById('feedback_prompt').style.display='none';">
             </div>
         </div>
         <?php

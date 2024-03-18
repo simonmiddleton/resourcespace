@@ -22,7 +22,7 @@ function HookNewsHomeHomebeforepanels()
             }
         else
             {
-            echo $lang['news_nonewmessages'];
+            echo escape($lang['news_nonewmessages']);
             }
         ?>
     </div>

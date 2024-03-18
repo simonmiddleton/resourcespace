@@ -4,7 +4,7 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
     {
     global $ref,$lang,$baseurl,$embedslideshow_min_size,$embedslideshow_max_size, $embedslideshow_dynamic_size;
     ?>
-    <li><i aria-hidden="true" class="fa fa-fw fa-slideshare"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="collection_share.php?ref=<?php echo $ref?>&embedslideshow=true"><?php echo $lang["embedslideshow"]; ?></a></li>
+    <li><i aria-hidden="true" class="fa fa-fw fa-slideshare"></i>&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="collection_share.php?ref=<?php echo $ref?>&embedslideshow=true"><?php echo escape($lang["embedslideshow"]); ?></a></li>
     <?php
     
     if (!is_int_loose($ref))
@@ -15,10 +15,10 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
     if (getval("embedslideshow","")!="" )
         {
         ?>
-        <p><?php echo $lang["embedslideshow_action_description"]; ?></p>
+        <p><?php echo escape($lang["embedslideshow_action_description"]); ?></p>
                 
         <div class="Question">      
-        <label><?php echo $lang["embedslideshow_size"]; ?></label>
+        <label><?php echo escape($lang["embedslideshow_size"]); ?></label>
         <select name="size" class="stdwidth">
         <?php
         $sizes=get_all_image_sizes(true);
@@ -38,9 +38,9 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
         </div>      
 
         <div class="Question">      
-        <label><?php echo $lang["embedslideshow_transitiontime"]; ?></label>
+        <label><?php echo escape($lang["embedslideshow_transitiontime"]); ?></label>
         <select name="transition" class="stdwidth">
-        <option value="0"><?php echo $lang["embedslideshow_notransition"]; ?></option>
+        <option value="0"><?php echo escape($lang["embedslideshow_notransition"]); ?></option>
         <?php for ($n=1;$n<20;$n++) { ?>
         <option value="<?php echo $n ?>" <?php if ($n==getval("transition","4")) { ?>selected<?php } ?>><?php echo str_replace("?",$n,$lang["embedslideshow_seconds"]) ?></option>
         <?php } ?>
@@ -49,7 +49,7 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
         </div>  
 
         <div class="Question">      
-        <label><?php echo $lang["embedslideshow_maximise_option"]; ?></label>
+        <label><?php echo escape($lang["embedslideshow_maximise_option"]); ?></label>
         <input type="checkbox" value="1" name="maximise" <?php if (isset($_POST["maximise"]) && $_POST["maximise"]=="1") { ?>checked<?php } ?>>
         <div class="clearerleft"></div>
         </div>  
@@ -59,14 +59,14 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
         if($embedslideshow_textfield) 
             {?>
             <div class="Question">      
-            <label><?php echo $lang['embedslideshow_textfield']; ?></label>
+            <label><?php echo escape($lang['embedslideshow_textfield']); ?></label>
             <input type="checkbox" value="1" name="showtext" <?php if (isset($_POST["showtext"]) && $_POST["showtext"]=="1") { ?>checked<?php } ?>>
             <div class="clearerleft"></div>
             </div>  <?php 
             } ?>
 
         <div class="QuestionSubmit" style="padding-top:0;margin-top:0;">
-        <input name="generateslideshow" type="submit" value="&nbsp;&nbsp;<?php echo $lang["generateslideshowhtml"]; ?>&nbsp;&nbsp;" />
+        <input name="generateslideshow" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["generateslideshowhtml"]); ?>&nbsp;&nbsp;" />
         </div>
         <?php
         }
@@ -188,13 +188,13 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
             }
         ?>
         <div class="Question">      
-        <label><?php echo $lang["slideshowhtml"]; ?></label>
+        <label><?php echo escape($lang["slideshowhtml"]); ?></label>
         <textarea style="width:535px;height:120px;"><?php echo escape($embed); ?></textarea>
         <div class="clearerleft"></div>
         </div>
 
         <div class="Question">      
-        <label><?php echo $lang["embedslideshow_directlink"]; ?></label>
+        <label><?php echo escape($lang["embedslideshow_directlink"]); ?></label>
         <?php
         $embedslideshow_src_url = generateURL(
             "$baseurl/plugins/embedslideshow/pages/viewer.php",
@@ -207,12 +207,12 @@ function HookEmbedslideshowCollection_shareExtra_share_options()
             "showtext"      => escape(getval("showtext","0"))
             ]
         );?>
-        <div class="Fixed"><a href="<?php echo $embedslideshow_src_url?>" target="_blank"><?php echo $lang["embedslideshow_directlinkopen"]; ?></a></div>
+        <div class="Fixed"><a href="<?php echo $embedslideshow_src_url?>" target="_blank"><?php echo escape($lang["embedslideshow_directlinkopen"]); ?></a></div>
         <div class="clearerleft"></div>
         </div>
                 
         <div class="Question">      
-        <label><?php echo $lang["slideshowpreview"]; ?></label>
+        <label><?php echo escape($lang["slideshowpreview"]); ?></label>
             <div class="Fixed">
             <?php echo $embed ?>
             </div>

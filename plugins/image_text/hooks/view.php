@@ -16,7 +16,7 @@ function HookImage_textViewDownloadbuttonreplace()
                                     echo urlencode($search) ?>&k=<?php echo urlencode($k)?>&url=<?php
                                     echo urlencode("pages/download_progress.php?ref=" . $ref . "&ext=" . $altfiles[$n]["file_extension"] . "&k=" . $k . "&search=" . urlencode($search)
                                     . "&offset=" . $offset . "&alternative=" . $altfiles[$n]["ref"] . "&archive=" . $archive . "&sort=".$sort."&order_by="
-                                    . urlencode($order_by)."&nooverlay=true")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["image_text_download_clear"]; ?></a><?php
+                                    . urlencode($order_by)."&nooverlay=true")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["image_text_download_clear"]); ?></a><?php
             }
             
         elseif (in_array(strtoupper($resource["file_extension"]), $image_text_filetypes))
@@ -28,7 +28,7 @@ function HookImage_textViewDownloadbuttonreplace()
                         echo urlencode("pages/download_progress.php?ref=" . $ref . "&size=" . $size_info["id"]
             . "&ext=" . $dlext . "&k=" . $k . "&search=" . urlencode($search)
             . "&offset=" . $offset . "&archive=" . $archive . "&sort=".$sort."&order_by="
-            . urlencode($order_by) ."&nooverlay=true")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang["image_text_download_clear"]; ?></a><?php    
+            . urlencode($order_by) ."&nooverlay=true")?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["image_text_download_clear"]); ?></a><?php    
             }
     return false;
     }

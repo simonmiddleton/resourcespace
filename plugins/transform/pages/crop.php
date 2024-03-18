@@ -495,7 +495,7 @@ if ($resource["has_image"]==1)
     }
 else
     {
-    echo $lang['noimagefound'];
+    echo escape($lang['noimagefound']);
     exit;
     }
 
@@ -544,7 +544,7 @@ renderBreadcrumbs($links_trail);
 <p><?php
   if($cropperestricted)
       {
-      echo $lang['transformblurbrestricted'];
+      echo strip_tags_and_attributes($lang['transformblurbrestricted']);
       }
   else
       {
@@ -1201,7 +1201,7 @@ renderBreadcrumbs($links_trail);
                         }
                     ?>
                     <div class="QuestionSubmit">
-                        <input type='submit' name='savealternative' value="<?php echo $lang['savealternative']; ?>"  onclick="postCrop();return false;" />
+                        <input type='submit' name='savealternative' value="<?php echo escape($lang['savealternative']); ?>"  onclick="postCrop();return false;" />
                         <div class="clearerleft"></div>
                     </div>
                 </div>
@@ -1240,7 +1240,7 @@ renderBreadcrumbs($links_trail);
                         <div class="clearerleft"></div>
                     </div>
                     <div class="Question">
-                        <input type='submit' name='replace' value="<?php echo $lang['transform_original']; ?>"  onclick="postCrop();return false;" />
+                        <input type='submit' name='replace' value="<?php echo escape($lang['transform_original']); ?>"  onclick="postCrop();return false;" />
                         <div class="clearerleft"></div>
                     </div>
                 </div>
@@ -1256,10 +1256,10 @@ renderBreadcrumbs($links_trail);
 
             <div class="imagetools_save_action" id="imagetools_slideshow_actions" <?php if('' === trim($manage_slideshow_action)) { ?> style="display: none;"<?php } ?>>
 
-                <div class="Question textcenter"><strong><?php echo $lang['transformcrophelp']; ?></strong></div>
+                <div class="Question textcenter"><strong><?php echo escape($lang['transformcrophelp']); ?></strong></div>
 
                 <div class="Question">
-                    <label><?php echo  $lang["slideshowmakelink"]; ?></label>
+                    <label><?php echo escape($lang["slideshowmakelink"]); ?></label>
                     <input type="checkbox" name='linkslideshow' id='linkslideshow' value="1" checked>
                     <div class="clearerleft"></div>
                 </div>
@@ -1270,7 +1270,7 @@ renderBreadcrumbs($links_trail);
 
                     <input type="submit"
                         name="submitTransformAction"
-                        value="<?php echo $lang['replaceslideshowimage']; ?>" onclick="postCrop();return false;" >
+                        value="<?php echo escape($lang['replaceslideshowimage']); ?>" onclick="postCrop();return false;" >
                     <div class="clearerleft"></div>
                 </div>
             </div>
@@ -1282,20 +1282,20 @@ renderBreadcrumbs($links_trail);
         <div class="imagetools_actions" id="imagetools_crop_actions" style="display:none;">
             
             <div class="Question">
-                <label for="new_width"><?php echo $lang["width"]; ?></label>
+                <label for="new_width"><?php echo escape($lang["width"]); ?></label>
                 <input type="number" class="stdwidth" id="new_width" name="new_width" onblur="evaluate_values();">
-                <?php echo $lang['px'] ;?>
+                <?php echo escape($lang['px']);?>
                 <div class="clearerleft"></div>
             </div>
             <div class="QuestionSubmit">
-                <label for="new_height"><?php echo $lang["height"]; ?></label>
+                <label for="new_height"><?php echo escape($lang["height"]); ?></label>
                 <input type="number" class="stdwidth" id="new_height" name="new_height" onblur="evaluate_values();">
-                <?php echo $lang['px'] ;?>
+                <?php echo escape($lang['px']);?>
                 <div class="clearerleft"></div>
             </div>
 
             <div class="Question">
-                <label for="preset"><?php echo $lang["transform_preset_sizes"]; ?></label>
+                <label for="preset"><?php echo escape($lang["transform_preset_sizes"]); ?></label>
                 <select class="stdwidth" onchange="setCropperSize(this.value);" id="size_preset_select">
                     <option value=""><?php echo escape($lang["select"]); ?></option>
                     <?php
@@ -1349,7 +1349,7 @@ renderBreadcrumbs($links_trail);
             if (!$cropper_jpeg_rgb && $cropper_srgb_option)
                 {?>
                 <div class="Question">
-                    <label for="use_srgb"><?php echo $lang["cropper_use_srgb"]; ?>:</label>
+                    <label for="use_srgb"><?php echo escape($lang["cropper_use_srgb"]); ?>:</label>
                     <input type="checkbox" id="use_srgb" name="use_srgb" val="1" checked>
                     <div class="clearerleft"></div>
                 </div>        
@@ -1359,7 +1359,7 @@ renderBreadcrumbs($links_trail);
             if (count($cropper_resolutions)>0)
                 {?>
                 <div class="Question">
-                    <label for="resolution"><?php echo $lang['cropper_resolution_select']; ?></label>
+                    <label for="resolution"><?php echo strip_tags_and_attributes($lang['cropper_resolution_select']); ?></label>
                     <select name='resolution' class="stdwidth" >
                     <option value='' selected></option>
                     <?php 
@@ -1375,7 +1375,7 @@ renderBreadcrumbs($links_trail);
                 }
             ?>
             <div class="QuestionSubmit">
-                <input type='submit' name='updatepreview' onclick="cropReload();return false;" value="<?php echo $lang['transform_update_preview']; ?>" />
+                <input type='submit' name='updatepreview' onclick="cropReload();return false;" value="<?php echo escape($lang['transform_update_preview']); ?>" />
                 <div class="clearerleft"></div>
             </div>
         </div>

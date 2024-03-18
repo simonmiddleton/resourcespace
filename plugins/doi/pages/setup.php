@@ -44,18 +44,18 @@ HTML;
 ?>
     <div class="Question">
         <br>
-        <h2><?php echo $lang['doi_resource_conditions_title']; ?></h2>
+        <h2><?php echo escape($lang['doi_resource_conditions_title']); ?></h2>
     </div>
     <ul><?php echo str_replace('{status}', strtolower($lang['status' . $doi_archive_state]), $lang['doi_resource_conditions']); ?></ul>
 
     <div class="Question">
         <br>
-        <h2><?php echo $lang['doi_further_information']; ?>: </h2>
+        <h2><?php echo escape($lang['doi_further_information']); ?>: </h2>
     </div>
     <ul>
-        <li><?php echo $lang['doi_info_link']; ?></li>
-        <li><?php echo $lang['doi_info_metadata_schema']; ?></li>
-        <li><?php echo $lang['doi_info_mds_api']; ?></li>
+        <li><?php echo strip_tags_and_attributes($lang['doi_info_link']); ?></li>
+        <li><?php echo strip_tags_and_attributes($lang['doi_info_metadata_schema']); ?></li>
+        <li><?php echo strip_tags_and_attributes($lang['doi_info_mds_api']); ?></li>
     </ul>
 <?php
 

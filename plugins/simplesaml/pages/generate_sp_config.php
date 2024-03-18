@@ -216,7 +216,7 @@ if ($error_text != "") { ?><div class="PageInformal"><?php echo $error_text?></d
             {
             ?>
             <div class="Question">
-                <label for="rs_saml_config"><?php echo $lang["simplesaml_saml_config_output"]; ?></label>
+                <label for="rs_saml_config"><?php echo escape($lang["simplesaml_saml_config_output"]); ?></label>
                 <textarea id="rs_saml_config" rows="20" class="stdwidth" name="rs_saml_config"><?php echo trim(escape($spconfigtext));?>
                 </textarea>
                 <div class="clearerleft"></div>
@@ -240,7 +240,7 @@ if ($error_text != "") { ?><div class="PageInformal"><?php echo $error_text?></d
         ?>
         <div id="certificate_info_questions" <?php if($certpath != "" && $keypath != ""){echo "style='display:none;'";}?>>
             <div class="Question" >
-                <br><h2><?php echo $lang['simplesaml_sp_cert_info']; ?></h2>
+                <br><h2><?php echo escape($lang['simplesaml_sp_cert_info']); ?></h2>
                     <div class="clearerleft"></div>
                 </div>
                 <?php
@@ -250,17 +250,17 @@ if ($error_text != "") { ?><div class="PageInformal"><?php echo $error_text?></d
                     }?>
         </div>
         <div class="Question">
-        <br><h2><?php echo $lang['simplesaml_idp_section']; ?></h2>
+        <br><h2><?php echo escape($lang['simplesaml_idp_section']); ?></h2>
             <div class="clearerleft"></div>
         </div>
         <div class="Question">
-            <label for="metadata_xml"><?php echo $lang["simplesaml_idp_metadata_xml"]; ?></label>
+            <label for="metadata_xml"><?php echo escape($lang["simplesaml_idp_metadata_xml"]); ?></label>
             <textarea id="metadata_xml" rows="20" class="stdwidth" name="metadata_xml"></textarea>
             <div class="clearerleft"></div>
         </div>
 
         <div class="QuestionSubmit">
-            <input name="sp_submit" type="submit" value="<?php echo $lang["simplesaml_sp_generate_config"]; ?>" onclick="jQuery('#sp_submit').val('true');return CentralSpacePost(this.form,true);">
+            <input name="sp_submit" type="submit" value="<?php echo escape($lang["simplesaml_sp_generate_config"]); ?>" onclick="jQuery('#sp_submit').val('true');return CentralSpacePost(this.form,true);">
         </div>
 </form>
 

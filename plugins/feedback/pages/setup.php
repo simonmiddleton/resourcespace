@@ -82,39 +82,39 @@ include "../../../include/header.php";
 ?>
 <div class="BasicsBox"> 
   <h2>&nbsp;</h2>
-  <h1><?php echo $lang["feedback_user feedback_configuration"]; ?></h1>
+  <h1><?php echo escape($lang["feedback_user feedback_configuration"]); ?></h1>
 
 
  <form id="form1" name="form1" method="post" action="">
 <?php generateFormToken("form1"); ?>
-<p><?php echo $lang["feedback_pop-up_prompt_box_text"]; ?><br />
+<p><?php echo escape($lang["feedback_pop-up_prompt_box_text"]); ?><br />
 <textarea rows=6 cols=50 style="width:600px;" name="feedback_prompt_text"><?php echo $feedback_prompt_text ?></textarea>
 </p>
-<h2><?php echo $lang["feedback_questions"]; ?></h2>
+<h2><?php echo escape($lang["feedback_questions"]); ?></h2>
 <hr />
 
 <?php for ($n=0;$n<count($feedback_questions);$n++)
     {
     ?>
-   <p><?php echo $lang["feedback_type"]; ?>
+   <p><?php echo escape($lang["feedback_type"]); ?>
    <select name="type_<?php echo $n?>" style="width:150px;">
-   <option value="1" <?php if ($feedback_questions[$n]["type"]==1) { ?>selected<?php } ?>><?php echo $lang["feedback_small_text_field"]; ?></option>
-   <option value="2" <?php if ($feedback_questions[$n]["type"]==2) { ?>selected<?php } ?>><?php echo $lang["feedback_large_text_field"]; ?></option>
-   <option value="3" <?php if ($feedback_questions[$n]["type"]==3) { ?>selected<?php } ?>><?php echo $lang["feedback_list-single_selection"]; ?></option>
-   <option value="5" <?php if ($feedback_questions[$n]["type"]==5) { ?>selected<?php } ?>><?php echo $lang["feedback_list-multiple_selection"]; ?></option>
-   <option value="4" <?php if ($feedback_questions[$n]["type"]==4) { ?>selected<?php } ?>><?php echo $lang["feedback_label"]; ?></option>
+   <option value="1" <?php if ($feedback_questions[$n]["type"]==1) { ?>selected<?php } ?>><?php echo escape($lang["feedback_small_text_field"]); ?></option>
+   <option value="2" <?php if ($feedback_questions[$n]["type"]==2) { ?>selected<?php } ?>><?php echo escape($lang["feedback_large_text_field"]); ?></option>
+   <option value="3" <?php if ($feedback_questions[$n]["type"]==3) { ?>selected<?php } ?>><?php echo escape($lang["feedback_list-single_selection"]); ?></option>
+   <option value="5" <?php if ($feedback_questions[$n]["type"]==5) { ?>selected<?php } ?>><?php echo escape($lang["feedback_list-multiple_selection"]); ?></option>
+   <option value="4" <?php if ($feedback_questions[$n]["type"]==4) { ?>selected<?php } ?>><?php echo escape($lang["feedback_label"]); ?></option>
    </select>
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   <input type="checkbox" name="delete_<?php echo $n?>" value="yes"><?php echo $lang["feedback_delete_this_question"]; ?>
-   <input type="checkbox" name="add_<?php echo $n?>" value="yes"><?php echo $lang["feedback_add_new_question_after"]; ?>
+   <input type="checkbox" name="delete_<?php echo $n?>" value="yes"><?php echo escape($lang["feedback_delete_this_question"]); ?>
+   <input type="checkbox" name="add_<?php echo $n?>" value="yes"><?php echo escape($lang["feedback_add_new_question_after"]); ?>
     </p>
 
     <p>
-<?php echo $lang["feedback_text-html"]; ?><br/>
+<?php echo escape($lang["feedback_text-html"]); ?><br/>
    <textarea rows=3 cols=50 style="width:600px;" name="text_<?php echo $n?>"><?php echo $feedback_questions[$n]["text"]; ?></textarea>
    </p>
     
-    <p><?php echo $lang["feedback_options-comma_separated"]; ?> <br />
+    <p><?php echo escape($lang["feedback_options-comma_separated"]); ?> <br />
     <textarea rows=2 cols=50 style="width:600px;" name="options_<?php echo $n?>"><?php echo $feedback_questions[$n]["options"]; ?></textarea>
     </p>
    
@@ -123,12 +123,12 @@ include "../../../include/header.php";
     }
 ?>
 <br /><br /><a name="add"></a>
-<input type="submit" name="add" value="<?php echo $lang["feedback_add_new_field"]; ?>">   
+<input type="submit" name="add" value="<?php echo escape($lang["feedback_add_new_field"]); ?>">   
 
 <input type="submit" name="submit" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;">   
 
 <br/><br/>
-<p><?php echo LINK_CARET_BACK ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/team/team_plugins.php"><?php echo $lang["feedback_back_to_plugin_manager"]; ?></a></p>
+<p><?php echo LINK_CARET_BACK ?><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/team/team_plugins.php"><?php echo escape($lang["feedback_back_to_plugin_manager"]); ?></a></p>
 
 </form>
 </div>

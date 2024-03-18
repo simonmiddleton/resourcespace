@@ -32,7 +32,7 @@ $svg_source=file_get_contents($svg_path);
 </p>
     <div class="svg" id="svgpreview"></div>
 </div>
-<h1><?php echo $lang["stencilvg-go"]; ?></h1>
+<h1><?php echo escape($lang["stencilvg-go"]); ?></h1>
 <?php
 
 # Fetch parameters

@@ -107,7 +107,7 @@ $params["ref"] = $ref;
 
 <div class="BasicsBox">
     <div class="RecordHeader">
-        <h1><?php echo $lang["vimeo_publish_resource_tool_link"]; ?></h1>
+        <h1><?php echo escape($lang["vimeo_publish_resource_tool_link"]); ?></h1>
         <p>
             <a href="<?php echo generateurl($baseurl_short . 'pages/view.php', $params); ?>" onClick="return CentralSpaceLoad(this,true);">
                 <?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?>
@@ -132,13 +132,13 @@ if($vimeo_publish_allow_user_accounts && get_vimeo_user($vimeo_publish_client_id
     {
     ?>
     <div class="Question">
-        <p><?php echo $lang['vimeo_publish_publish_as_user']; ?><a href="<?php echo $vimeo_user_data['link']; ?>" target="_blank"><strong><?php echo $vimeo_user_data['name']; ?></strong> (<?php echo ucfirst($vimeo_user_data['account']); ?> account - <?php echo formatfilesize($vimeo_user_data['upload_quota_free']); ?> free)</a></p>
+        <p><?php echo escape($lang['vimeo_publish_publish_as_user']); ?><a href="<?php echo $vimeo_user_data['link']; ?>" target="_blank"><strong><?php echo $vimeo_user_data['name']; ?></strong> (<?php echo ucfirst($vimeo_user_data['account']); ?> account - <?php echo formatfilesize($vimeo_user_data['upload_quota_free']); ?> free)</a></p>
         <?php
         if($vimeo_publish_allow_user_accounts)
             {
             ?>
             <p>
-                <a href="<?php echo $vimeo_callback_url; ?>?resource=<?php echo $ref; ?>&delete_token=true">&gt;&nbsp;<?php echo $lang['vimeo_publish_delete_token']; ?></a>
+                <a href="<?php echo $vimeo_callback_url; ?>?resource=<?php echo $ref; ?>&delete_token=true">&gt;&nbsp;<?php echo escape($lang['vimeo_publish_delete_token']); ?></a>
             </p>
             <?php
             }?>
@@ -152,21 +152,21 @@ if($vimeo_publish_allow_user_accounts && get_vimeo_user($vimeo_publish_client_id
     <input type="hidden" name="upload" value="true"/>
     <div class="Question">
         <br>
-        <h2><?php echo $lang['vimeo_publish_video_details']; ?></h2>
+        <h2><?php echo escape($lang['vimeo_publish_video_details']); ?></h2>
     </div>
     <div class="Question">
-        <label for="video_title"><?php echo $lang['vimeo_publish_video_title']; ?></label>
+        <label for="video_title"><?php echo escape($lang['vimeo_publish_video_title']); ?></label>
         <input type="text" class="stdwidth" name="video_title" value="<?php echo $default_video_title; ?>"/>
         <br>
-        <label for="video_description"><?php echo $lang['vimeo_publish_video_description']; ?></label>
+        <label for="video_description"><?php echo escape($lang['vimeo_publish_video_description']); ?></label>
         <textarea class="stdwidth" rows="6" columns="50" id="video_description" name="video_description"><?php echo strip_tags($default_video_description); ?></textarea>
         <br>
-        <input type="submit" value="<?php echo $lang['vimeo_publish_button_text']; ?>" onClick="return confirmSubmit();"/>
+        <input type="submit" value="<?php echo escape($lang['vimeo_publish_button_text']); ?>" onClick="return confirmSubmit();"/>
     </div>
     <script>
     function confirmSubmit()
         {
-        var agree = confirm("<?php echo $lang['vimeo_publish_legal_warning']; ?>");
+        var agree = confirm("<?php echo escape($lang['vimeo_publish_legal_warning']); ?>");
 
         if(agree)
             {

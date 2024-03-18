@@ -36,11 +36,11 @@ $url        = generateurl($baseurl_short . 'pages/view.php', $get_params );
             <tr class="ListviewTitleStyle">
                 <td width="10%"><?php echo escape($lang['date']); ?></td>
                 <td width="10%"><?php echo escape($lang['user']); ?></td>
-                <td><?php echo $lang['track_field_history_change']; ?></td>
+                <td><?php echo escape($lang['track_field_history_change']); ?></td>
             </tr>
             <?php
             if($no_records) { ?>
-                <tr><td colspan="10"><b><?php echo $lang['track_field_history_error_no_records']; ?></b></td></tr>
+                <tr><td colspan="10"><b><?php echo escape($lang['track_field_history_error_no_records']); ?></b></td></tr>
             <?php }
 
             foreach ($field_log_records as $field_log_record) {

@@ -36,7 +36,7 @@ function HookTms_linkEditEditbeforesectionhead()
         {
         ?>
         <div class="Question FieldSaveError" id="tms_confirm_upload">
-            <label for="tms_confirm_upload"><?php echo $lang["tms_link_confirm_upload_nodata"]; ?></label>
+            <label for="tms_confirm_upload"><?php echo escape($lang["tms_link_confirm_upload_nodata"]); ?></label>
             <input type="checkbox" id="tms_confirm_upload" name="tms_confirm_upload" value="true">
             <div class="clearerleft"></div>
         </div>

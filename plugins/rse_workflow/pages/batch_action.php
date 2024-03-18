@@ -160,7 +160,7 @@ include_once '../../../include/header.php';
                 ?>
             </div>
         </div>
-        <h1><?php echo $lang["rse_workflow_confirm_batch_wf_change"]; ?></h1>
+        <h1><?php echo escape($lang["rse_workflow_confirm_batch_wf_change"]); ?></h1>
     </div>
 
     <p><?php echo str_replace("%wf_name", $to_wf_state["name"], $lang["rse_workflow_confirm_to_state"]); ?></p>

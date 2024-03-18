@@ -128,14 +128,14 @@ function HookGrant_editEditAppendcustomfields()
     $grant_editusers  = ps_query("SELECT ea.user, u.fullname, u.username, ea.expiry FROM grant_edit ea LEFT JOIN user u ON u.ref = ea.user WHERE ea.resource = ? AND ea.user IS NOT NULL AND (ea.expiry IS NULL OR ea.expiry >= NOW()) ORDER BY expiry, u.username", array("i",$ref));
     $grant_editgroups = ps_query('SELECT u.ref, u.name, ea.expiry FROM grant_edit ea LEFT JOIN usergroup u on u.ref = ea.usergroup WHERE ea.usergroup IS NOT NULL AND ea.resource = ? AND (ea.expiry is NULL OR ea.expiry >= NOW()) ORDER BY expiry', ['i', $ref]);
     ?>
-    <h2 id="resource_custom_access" <?php echo ($collapsible_sections) ? ' class="CollapsibleSectionHead"' : ''; ?>><?php echo $lang["grant_edit_title"]; ?></h2>
+    <h2 id="resource_custom_access" <?php echo ($collapsible_sections) ? ' class="CollapsibleSectionHead"' : ''; ?>><?php echo escape($lang["grant_edit_title"]); ?></h2>
     <?php
    
     if ($multiple)
         { ?>
         <div class="Question" id="editmultiple_grant_edit">
             <input name="editthis_grant_edit" id="editthis_grant_edit" value="yes" type="checkbox" onClick="var q=document.getElementById('grant_edit_fields');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
-            <label id="editthis_grant_edit_label" for="editthisenhancedaccess>"><?php echo $lang["grant_edit_title"]; ?></label>
+            <label id="editthis_grant_edit_label" for="editthisenhancedaccess>"><?php echo escape($lang["grant_edit_title"]); ?></label>
         </div><?php
         }
     
@@ -144,7 +144,7 @@ function HookGrant_editEditAppendcustomfields()
         ?>  
         
         <div class="Question" id="question_grant_edit" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
-            <label><?php echo $lang["grant_edit_list"]; ?></label>
+            <label><?php echo escape($lang["grant_edit_list"]); ?></label>
             <table cellpadding=3 cellspacing=3 class="ListviewStyle">
             <tr class="ListviewTitleStyle">
             <td><?php echo escape($lang['user']);?></td>
@@ -251,12 +251,12 @@ function HookGrant_editEditAppendcustomfields()
     ?>
     <div id="grant_edit_fields" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
         <div class="Question" id="grant_edit_select" >
-            <label for="users"><?php echo $lang["grant_edit_add"]; ?></label><?php include "../include/user_select.php"; ?>
+            <label for="users"><?php echo escape($lang["grant_edit_add"]); ?></label><?php include "../include/user_select.php"; ?>
             <div class="clearerleft"> </div>
         </div>
                 
         <div class="Question">
-            <label><?php echo $lang["grant_edit_date"]; ?></label>
+            <label><?php echo escape($lang["grant_edit_date"]); ?></label>
             <select name="grant_edit_expiry" class="stdwidth">
             <option value=""><?php echo escape($lang["never"]); ?></option>
             <?php for ($n=1;$n<=150;$n++)

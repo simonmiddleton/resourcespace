@@ -199,7 +199,7 @@ include "../../../include/header.php";
 <input type=hidden name="resource" value="<?php echo $resource?>">
 <?php generateFormToken("consentmanager_edit"); ?>
 
-<div class="Question"><label><?php echo $lang["consent_id"]; ?></label><div class="Fixed"><?php echo escape($ref == "new" ? $lang["consentmanager_new"] : $ref)?></div>
+<div class="Question"><label><?php echo escape($lang["consent_id"]); ?></label><div class="Fixed"><?php echo escape($ref == "new" ? $lang["consentmanager_new"] : $ref)?></div>
 <div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo escape($lang["name"]); ?></label><input type=text class="stdwidth" name="name" id="name" value="<?php echo escape($consent["name"])?>" />
@@ -209,7 +209,7 @@ include "../../../include/header.php";
 <div class="Question"><label><?php echo escape($lang["email"]); ?></label><input type=text class="stdwidth" name="email" id="email" value="<?php echo escape($consent["email"])?>" />
 <div class="clearerleft"> </div></div>
 
-<div class="Question"><label><?php echo $lang["telephone"]; ?></label><input type=text class="stdwidth" name="telephone" id="telephone" value="<?php echo escape($consent["telephone"])?>" />
+<div class="Question"><label><?php echo escape($lang["telephone"]); ?></label><input type=text class="stdwidth" name="telephone" id="telephone" value="<?php echo escape($consent["telephone"])?>" />
 <div class="clearerleft"> </div></div>
 
 
@@ -276,20 +276,20 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
     <!-- Option for no expiry date -->
     &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="no_expiry_date" value="yes" id="no_expiry" <?php if ($consent["expires"]=="") { ?>checked<?php } ?>
     onChange="jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',this.checked);"
-    /><?php echo $lang["no_expiry_date"]; ?>
+    /><?php echo escape($lang["no_expiry_date"]); ?>
     <?php if ($consent["expires"]=="") { ?><script>jQuery('#expires_day, #expires_month, #expires_year').attr('disabled',true);</script><?php } ?>
 
 <div class="clearerleft"> </div></div>
 
 
 <div class="Question">
-        <label for="resources"><?php echo $lang["linkedresources"]; ?></label>
+        <label for="resources"><?php echo escape($lang["linkedresources"]); ?></label>
         <textarea class="stdwidth" rows="3" name="resources" id="resources"><?php echo join(", ",$resources)?></textarea>
         <div class="clearerleft"> </div>
     </div>
 
     <div class="Question">
-        <label for="notes"><?php echo $lang["notes"]; ?></label>
+        <label for="notes"><?php echo escape($lang["notes"]); ?></label>
         <textarea class="stdwidth" rows="5" name="notes" id="notes"><?php echo escape($consent["notes"]) ?></textarea>
         <div class="clearerleft"> </div>
     </div>
@@ -302,7 +302,7 @@ onChange="jQuery('.consent_usage').attr('checked',this.checked);" <?php if ($all
             {
             ?>
             <span><i class="fa fa-file"></i> <a href="download.php?resource=<?php echo $resource ?>&ref=<?php echo $ref ?>"><?php echo $consent['file']; ?></a></span>
-            &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo escape($lang["clearbutton"]); ?>" onclick="return confirm('<?php echo $lang["confirmdeleteconsentfile"]; ?>');">
+            &nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="clear_file" value="<?php echo escape($lang["clearbutton"]); ?>" onclick="return confirm('<?php echo escape($lang["confirmdeleteconsentfile"]); ?>');">
             <?php
             }
         else

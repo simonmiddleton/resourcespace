@@ -49,7 +49,7 @@ function deleteaction(ref)
         event.preventDefault();
         event.stopPropagation();        
         
-        if(confirm('<?php echo $lang["rse_workflow_confirm_action_delete"]; ?>'))
+        if(confirm('<?php echo escape($lang["rse_workflow_confirm_action_delete"]); ?>'))
                 {
                 CentralSpaceLoad("<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=" + ref, true);         
                 }
@@ -61,7 +61,7 @@ function deleteaction(ref)
 
 
 <div class="BasicsBox">
-<h1><?php echo $lang["rse_workflow_manage_actions"]; ?></h1>
+<h1><?php echo escape($lang["rse_workflow_manage_actions"]); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -86,7 +86,7 @@ renderBreadcrumbs($links_trail);
     <form method="post" name="form_filter_action" id="form_filter_action" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_actions.php">
         <?php generateFormToken("form_filter_action"); ?>
         <div class="Question">
-            <label for="filterstate"><?php echo $lang["rse_workflow_action_filter"]; ?></label>
+            <label for="filterstate"><?php echo escape($lang["rse_workflow_action_filter"]); ?></label>
             <div class="tickset">
                 <div class="Inline">
                     <select class="stdwidth" name="filterstate" id="filterstate" >
@@ -109,23 +109,23 @@ renderBreadcrumbs($links_trail);
         </div>
     </form>
 </div>
-<h2><?php echo $lang['rse_workflow_status_heading']; ?></h2>
+<h2><?php echo escape($lang['rse_workflow_status_heading']); ?></h2>
 <div class="BasicsBox">
 <div class="Listview">
         <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle rse_workflow_table" id='rse_workflow_table'>
             <tr class="ListviewTitleStyle">
                 <td>
-                <?php echo $lang['rse_workflow_action_name']; ?>
+                <?php echo escape($lang['rse_workflow_action_name']); ?>
                 </td><td>
-                <?php echo $lang['rse_workflow_action_text']; ?>
+                <?php echo escape($lang['rse_workflow_action_text']); ?>
                 </td><td>
-                <?php echo $lang['rse_workflow_button_text']; ?>
+                <?php echo escape($lang['rse_workflow_button_text']); ?>
                 </td><td>               
-                <?php echo $lang['rse_workflow_action_status_from']; ?>
+                <?php echo escape($lang['rse_workflow_action_status_from']); ?>
                 </td><td>
-                <?php echo $lang['rse_workflow_action_status_to']; ?>
+                <?php echo escape($lang['rse_workflow_action_status_to']); ?>
                 </td><td>
-                <?php echo $lang['rse_workflow_action_reference']; ?>
+                <?php echo escape($lang['rse_workflow_action_reference']); ?>
                 </td><td>
                 <?php echo escape($lang['tools']); ?>
                 </td>

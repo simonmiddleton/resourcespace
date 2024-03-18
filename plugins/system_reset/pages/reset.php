@@ -49,17 +49,17 @@ include "../../../include/header.php";
 ?>
 <div class="BasicsBox">
 
-<h1><?php echo $lang["system_reset"]; ?></h1>
+<h1><?php echo escape($lang["system_reset"]); ?></h1>
 
-<p><?php echo $lang["system_reset_warning"]; ?></p>
+<p><?php echo escape($lang["system_reset_warning"]); ?></p>
 
-<form method="post" action="<?php echo $baseurl_short?>plugins/system_reset/pages/reset.php" onSubmit="return confirm('<?php echo $lang["system_reset_confirm"]; ?>');">
+<form method="post" action="<?php echo $baseurl_short?>plugins/system_reset/pages/reset.php" onSubmit="return confirm('<?php echo escape($lang["system_reset_confirm"]); ?>');">
 <?php generateFormToken("system_reset"); ?>
 <input type=hidden name="submitted" value="true">
 
 <div class="QuestionSubmit">
 <label for="buttons"><?php echo escape($lang["proceed"]); ?></label>         
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["system_reset_delete_all"]; ?>&nbsp;&nbsp;" />
+<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["system_reset_delete_all"]); ?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>

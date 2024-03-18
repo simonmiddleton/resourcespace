@@ -332,11 +332,11 @@ if(!$modal)
 <?php
 if(!$editaccess)
     { 
-    echo $lang['propose_changes_short'];
+    echo escape($lang['propose_changes_short']);
     }
 else
     {
-    echo $lang['propose_changes_review_proposed_changes'];
+    echo escape($lang['propose_changes_review_proposed_changes']);
     }
 ?>
 </h1>
@@ -344,7 +344,7 @@ else
 <?php
 if(!$editaccess)
     {
-    echo $lang['propose_changes_text'];
+    echo escape($lang['propose_changes_text']);
     }
 ?>
 </p>
@@ -378,7 +378,7 @@ if(!$editaccess)
         <div class="Question" id="ProposeChangesUsers">
         <form id="propose_changes_select_user_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
             <?php generateFormToken("propose_changes_select_user_form"); ?>
-            <label><?php echo $lang["propose_changes_view_user"]; ?></label>
+            <label><?php echo escape($lang["propose_changes_view_user"]); ?></label>
             <?php
             if(count($userproposals) > 1)
                 {?>
@@ -428,13 +428,13 @@ if(!$editaccess)
         
     <form id="propose_changes_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>"  onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
     <?php generateFormToken("propose_changes_form"); ?>
-    <h2 id="ProposeChangesHead"><?php echo $lang["propose_changes_proposed_changes"]; ?></h2><?php
+    <h2 id="ProposeChangesHead"><?php echo escape($lang["propose_changes_proposed_changes"]); ?></h2><?php
         ?><div id="ProposeChangesSection">
                 <div class="Question ProposeChangesQuestion" id="propose_changes_field_header" >
                         
-                <div class="ProposeChangesTitle ProposeChangesLabel" ><?php echo $lang["propose_changes_field_name"]; ?></div>                
-                <div class="ProposeChangesTitle ProposeChangesCurrent"><?php echo $lang["propose_changes_current_value"]; ?></div>
-                <div class="ProposeChangesTitle ProposeChangesProposed" ><?php echo $lang["propose_changes_proposed_value"]; ?></div>
+                <div class="ProposeChangesTitle ProposeChangesLabel" ><?php echo escape($lang["propose_changes_field_name"]); ?></div>                
+                <div class="ProposeChangesTitle ProposeChangesCurrent"><?php echo escape($lang["propose_changes_current_value"]); ?></div>
+                <div class="ProposeChangesTitle ProposeChangesProposed" ><?php echo escape($lang["propose_changes_proposed_value"]); ?></div>
                 
                 <?php
                 if($editaccess)
@@ -444,7 +444,7 @@ if(!$editaccess)
                     <table>
                     <tr>
                     <td>
-                    <input id="ProposeChangesAcceptAllCheckbox" class="ProposeChangesAcceptCheckbox" type="checkbox" name="accept_all_changes" onClick="ProposeChangesUpdateAll(this);" checked ><?php echo $lang["propose_changes_accept_change"]; ?>
+                    <input id="ProposeChangesAcceptAllCheckbox" class="ProposeChangesAcceptCheckbox" type="checkbox" name="accept_all_changes" onClick="ProposeChangesUpdateAll(this);" checked ><?php echo escape($lang["propose_changes_accept_change"]); ?>
                     </td>
                     <td>
                     <input id="ProposeChangesDeleteAllCheckbox" class="ProposeChangesDeleteCheckbox" type="checkbox" name="delete_all_changes" onClick="ProposeChangesDeleteAll(this);" ><?php echo escape($lang["action-delete"]); ?>
@@ -496,7 +496,7 @@ if(!$editaccess)
         {
         ?>
         <div id="message" class="Question ProposeChangesQuestion">
-            <?php echo $lang['propose_changes_no_changes_to_review']; ?>
+            <?php echo strip_tags_and_attributes($lang['propose_changes_no_changes_to_review']); ?>
         </div>
         <?php
         }?>
@@ -508,7 +508,7 @@ if(!$editaccess)
         <input name="resetform" type="submit" value="<?php echo escape($lang["clearbutton"]); ?>" onClick="return jQuery('#resetform').val('true');"/>&nbsp;
             <?php if($editaccess)
                 {?>
-                <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["propose_changes_save_changes"]; ?>&nbsp;&nbsp;" onClick="return jQuery('#save').val('true');"/><br />
+                <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["propose_changes_save_changes"]); ?>&nbsp;&nbsp;" onClick="return jQuery('#save').val('true');"/><br />
                 <?php
                 }
             else

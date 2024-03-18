@@ -86,8 +86,8 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 
 ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang["search_notifications_watched_searches"]; ?></h1>
-    <p><?php echo $lang["search_notifications_introtext"]; ?></p>
+    <h1><?php echo escape($lang["search_notifications_watched_searches"]); ?></h1>
+    <p><?php echo strip_tags_and_attributes($lang["search_notifications_introtext"]); ?></p>
 
     <div class="TopInpageNav">
 
@@ -125,7 +125,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
             <?php generateFormToken("rse_search_notifications_watched_searches"); ?>
             <input type="hidden" name="offset" id="offset" value="0" />
             <input type="hidden" name="find" id="find" value="<?php echo escape($find); ?>" >
-            <label for="allusers"><?php echo $lang['search_notifications_show_for_all_users']; ?></label>
+            <label for="allusers"><?php echo escape($lang['search_notifications_show_for_all_users']); ?></label>
             <?php
             if ($all_users_mode)
                 {
@@ -164,7 +164,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
     if ($any_enabled)
         {
         ?><a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=disable_all" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
-        echo $lang['disable_all']; ?></a>
+        echo escape($lang['disable_all']); ?></a>
         <?php
         }
 
@@ -176,7 +176,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
     if ($any_disabled)
         {
         ?><a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=enable_all" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
-        echo $lang['enable_all']; ?></a>
+        echo escape($lang['enable_all']); ?></a>
         <?php
         }
 
@@ -195,7 +195,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 <?php
     if(!$watched_searches_found)
     {
-        echo $lang['search_notifications_no_watched_searches'];
+        echo escape($lang['search_notifications_no_watched_searches']);
         ?>
         </div> <!-- end of BasicsBox -->
         <?php
@@ -255,7 +255,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                                 <div class="ListTools">
                                     <a href="<?php echo $view_search_url; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo escape($lang["searchbutton"]); ?></a>
                                     <a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=enable&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
-                                        echo $lang['enable']; ?></a>
+                                        echo escape($lang['enable']); ?></a>
                             <?php
                             }
                         ?>

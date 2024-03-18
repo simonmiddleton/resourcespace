@@ -48,7 +48,7 @@ include '../../../include/header.php';
     </div>
     <div class="QuestionSubmit">
         <button type="button" class="RSButton" onclick="ModalClose();"><?php echo escape($lang['close']); ?></button>
-        <button type="button" class="RSButton" onclick="runScript(<?php echo $script; ?>);"><?php echo $lang['emu_run_script']; ?></button>
+        <button type="button" class="RSButton" onclick="runScript(<?php echo $script; ?>);"><?php echo escape($lang['emu_run_script']); ?></button>
         <div class="clearerleft"></div>
     </div>
     <script>

@@ -12,12 +12,12 @@ function HookResource_usageViewCustompanels()
     ?>
     <div class="RecordBox">
     <div class="RecordPanel">
-    <div class="Title"><?php echo $lang['resource_usage']; ?></div>
+    <div class="Title"><?php echo escape($lang['resource_usage']); ?></div>
     <?php
     if(resource_download_allowed($ref, "", $resource["resource_type"]))
         {
         ?>    
-        <p><?php echo LINK_PLUS ?><a href="<?php echo $baseurl_short; ?>plugins/resource_usage/pages/edit.php?resource=<?php echo $ref; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo $lang['new_usage']; ?></a></p>
+        <p><?php echo LINK_PLUS ?><a href="<?php echo $baseurl_short; ?>plugins/resource_usage/pages/edit.php?resource=<?php echo $ref; ?>" onClick="return CentralSpaceLoad(this, true);"><?php echo escape($lang['new_usage']); ?></a></p>
         <?php
         }
 
@@ -27,11 +27,11 @@ function HookResource_usageViewCustompanels()
         <div class="Listview">
             <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
                 <tr class="ListviewTitleStyle">
-                    <td><?php echo $lang['usage_ref']; ?></a></td>
-                    <td><?php echo $lang['usage_location']; ?></a></td>
-                    <td><?php echo $lang['usage_medium']; ?></a></td>
+                    <td><?php echo escape($lang['usage_ref']); ?></a></td>
+                    <td><?php echo escape($lang['usage_location']); ?></a></td>
+                    <td><?php echo escape($lang['usage_medium']); ?></a></td>
                     <td><?php echo escape($lang['description']); ?></a></td>
-                    <td><?php echo $lang['usage_date']; ?></a></td>
+                    <td><?php echo escape($lang['usage_date']); ?></a></td>
     <?php
     if($edit_access)
         {

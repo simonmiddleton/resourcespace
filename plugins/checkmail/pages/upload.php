@@ -12,7 +12,7 @@ include "../../../include/header.php";
 
 <div class="BasicsBox">
     <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/team/team_resource.php"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a></p>
-<h1><?php echo $lang['uploadviaemail']; ?></h1>
+<h1><?php echo escape($lang['uploadviaemail']); ?></h1>
 
 <?php 
 

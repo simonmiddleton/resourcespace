@@ -50,6 +50,17 @@ final class EscapeLanguageStringsRector extends AbstractRector
         // Only load the en version because we assume other translations follow its format (e.g. if a string contains
         // HTML tags, all the other translations should do too).
         require dirname(__DIR__) . '/languages/en.php';
+        $plugins_path = dirname(__DIR__) . '/plugins';
+        $valid_plugins = scandir($plugins_path) ?: [];
+        $plugin = array_pop(
+            array_reverse(
+                array_diff(explode('/', $this->file->getFilePath()), explode('/', $plugins_path))
+            )
+        );
+        $plugin_en_file = "{$plugins_path}/{$plugin}/languages/en.php";
+        if (in_array($plugin, $valid_plugins) && file_exists($plugin_en_file)) {
+            require $plugin_en_file;
+        }
 
         if (!isset($lang[$dim_value])) {
             return null;

@@ -8,7 +8,7 @@ function HookRse_workflowAdmin_group_permissionsAdditionalperms()
     
     ?>
     <tr class="ListviewTitleStyle">
-      <td colspan=3 class="permheader"><?php echo $lang["rse_workflow_actions_heading"]; ?></td>
+      <td colspan=3 class="permheader"><?php echo escape($lang["rse_workflow_actions_heading"]); ?></td>
     </tr>
     <?php
     foreach ($workflowactions as $workflowaction)

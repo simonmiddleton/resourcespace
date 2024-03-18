@@ -182,7 +182,7 @@ function embedslideshow_ShowPage(page_set,from_auto,jump)
     {
     if (!embedslideshow_auto && from_auto) {return false;} // Auto switched off but timer still running. Terminate.
     
-    if (embedslideshow_page==page_set && jump) {alert("<?php echo $lang["embedslideshow_alreadyonpage"]; ?>");return false;}
+    if (embedslideshow_page==page_set && jump) {alert("<?php echo escape($lang["embedslideshow_alreadyonpage"]); ?>");return false;}
     
     // Fade out pause button if manually clicked
     if (!embedslideshow_auto)

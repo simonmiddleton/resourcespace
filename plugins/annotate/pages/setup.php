@@ -35,7 +35,7 @@ include '../../../include/header.php';
 if(empty($annotate_resource_type_field) || $annotate_resource_type_field == 0)
     {
     ?>
-    <div class="PageInformal"><?php echo $lang['annotate_metadatafield_error']; ?></div>
+    <div class="PageInformal"><?php echo escape($lang['annotate_metadatafield_error']); ?></div>
     <script>jQuery(document).ready(function(){jQuery('#annotate_resource_type_field').addClass('highlighted');});</script>
     <?php
     }

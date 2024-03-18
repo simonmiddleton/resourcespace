@@ -87,7 +87,7 @@ include "../../../include/header.php";
         <input type=hidden name="resource" value="<?php echo escape($resource); ?>">
 
     <div class="Question">
-        <label><?php echo $lang['usage_ref']; ?></label>
+        <label><?php echo escape($lang['usage_ref']); ?></label>
         <div class="Fixed"><?php echo escape($new_record ? $lang['usage_id_new'] : $ref); ?></div>
         <div class="clearerleft"></div>
     </div>
@@ -99,13 +99,13 @@ include "../../../include/header.php";
     </div>
 
     <div class="Question">
-        <label><?php echo $lang['usage_location']; ?></label>
+        <label><?php echo escape($lang['usage_location']); ?></label>
         <input class="stdwidth" type="text" name="usage_location" value="<?php echo escape($usage_data['usage_location']); ?>">
         <div class="clearerleft"></div>
     </div>
 
     <div class="Question">
-        <label><?php echo $lang['usage_medium']; ?></label>
+        <label><?php echo escape($lang['usage_medium']); ?></label>
         <fieldset class="MultiRTypeSelect">
         <?php
         $s = trim_array(explode(',', $usage_data['usage_medium']));
@@ -141,7 +141,7 @@ include "../../../include/header.php";
     </div>
 
     <div class="Question">
-        <label><?php echo $lang['usage_date']; ?></label>
+        <label><?php echo escape($lang['usage_date']); ?></label>
         <select name="usage_date_day" class="SearchWidth" style="width:98px;">
         <?php
         for($n = 1; $n <= 31; $n++)

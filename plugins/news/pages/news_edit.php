@@ -32,8 +32,8 @@ include dirname(__FILE__)."/../../../include/header.php";
 ?>
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["news_manage"]; ?></h1>
-  <h2><?php echo $lang["news_intro"]; ?></h2>
+  <h1><?php echo escape($lang["news_manage"]); ?></h1>
+  <h2><?php echo escape($lang["news_intro"]); ?></h2>
  
 <?php 
 $news=get_news("","",$findtext);
@@ -50,7 +50,7 @@ $jumpcount=1;
 <div class="BasicsBox">
     <form method="post">
         <?php generateFormToken("news_add"); ?> 
-        <input name="create" type="submit" value="<?php echo $lang["news_add"]; ?>"/>
+        <input name="create" type="submit" value="<?php echo escape($lang["news_add"]); ?>"/>
     </form>
 </div>
 
@@ -66,8 +66,8 @@ $jumpcount=1;
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
 <td><?php echo escape($lang["date"]); ?></td>
-<td><?php echo $lang["news_headline"]; ?></td>
-<td><?php echo $lang["news_body"]; ?></td>
+<td><?php echo escape($lang["news_headline"]); ?></td>
+<td><?php echo escape($lang["news_body"]); ?></td>
 <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
 </tr>
 
@@ -102,7 +102,7 @@ for ($n=$offset;(($n<count($news)) && ($n<($offset+$per_page)));$n++)
     <form method="post">
         <?php generateFormToken("news_search"); ?>
         <div class="Question">
-            <label for="find"><?php echo $lang["news_search"]; ?><br/></label>
+            <label for="find"><?php echo escape($lang["news_search"]); ?><br/></label>
             <div class="tickset">
              <div class="Inline">           
             <input type=text placeholder="<?php echo escape($lang['searchbytext']); ?>" name="findtext" id="findtext" value="<?php echo escape($findtext)?>" maxlength="100" class="shrtwidth" />

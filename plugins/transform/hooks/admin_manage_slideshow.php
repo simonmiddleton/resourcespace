@@ -61,7 +61,7 @@ function HookTransformAdmin_manage_slideshowRender_replace_button_for_manage_sli
     if($slideshow_file_info['resource_ref'] > 0)
         {
         ?>
-        <button type="submit" form="RecropSlideshowImage_<?php echo $slideshow_image; ?>"><?php echo $lang['transform-recrop']; ?></button>
+        <button type="submit" form="RecropSlideshowImage_<?php echo $slideshow_image; ?>"><?php echo escape($lang['transform-recrop']); ?></button>
         <form id="RecropSlideshowImage_<?php echo $slideshow_image; ?>"
               method="POST"
               action="<?php echo $baseurl; ?>/plugins/transform/pages/crop.php"

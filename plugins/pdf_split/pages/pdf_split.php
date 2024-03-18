@@ -95,9 +95,9 @@ include "../../../include/header.php";
 ?>
 
 <div class="BasicsBox">
-<h1><?php echo $lang["splitpdf"]; ?></h1>
+<h1><?php echo escape($lang["splitpdf"]); ?></h1>
 
-<p><?php echo $lang["splitpdf_pleaseselectrange"]; ?></p>
+<p><?php echo escape($lang["splitpdf_pleaseselectrange"]); ?></p>
 
 <script>
 
@@ -112,9 +112,9 @@ function DrawRanges()
         var range=rs[n].split(":");
         
         // draw some HTML for this range
-        ranges_html += '<?php echo $lang["range"]; ?> ' + (n+1) + ': <?php echo $lang["pages"]; ?> <input onChange="UpdateRanges();return false;" type="text" size="8" id="range' + n + '_from" value="' + range[0] + '"> <?php echo $lang["to-page"]; ?> <input onChange="UpdateRanges();return false;" type="text" size="8" id="range' + n + '_to" value="' + range[1] + '">';
+        ranges_html += '<?php echo escape($lang["range"]); ?> ' + (n+1) + ': <?php echo escape($lang["pages"]); ?> <input onChange="UpdateRanges();return false;" type="text" size="8" id="range' + n + '_from" value="' + range[0] + '"> <?php echo escape($lang["to-page"]); ?> <input onChange="UpdateRanges();return false;" type="text" size="8" id="range' + n + '_to" value="' + range[1] + '">';
         // Remove page option for ranges > 1
-        if (n>0) {ranges_html+='&nbsp;&nbsp;<a href="#" onClick="RemoveRange('+n+');return false;">&gt;&nbsp;<?php echo $lang["removerange"]; ?></a>';}
+        if (n>0) {ranges_html+='&nbsp;&nbsp;<a href="#" onClick="RemoveRange('+n+');return false;">&gt;&nbsp;<?php echo escape($lang["removerange"]); ?></a>';}
         ranges_html+='<br/>';
         }
 
@@ -156,9 +156,9 @@ function UpdateRanges()
         var rfrom=parseInt(document.getElementById('range' + n + '_from').value);
         var rto=parseInt(document.getElementById('range' + n + '_to').value);       
         
-        if (rfrom<1 || rfrom ><?php echo $page ?>) {alert('<?php echo $lang["outofrange"]; ?>');DrawRanges();return false;}
-        if (rto  <1 || rto   ><?php echo $page ?>) {alert('<?php echo $lang["outofrange"]; ?>');DrawRanges();return false;}
-        if (rto < rfrom) {alert('<?php echo $lang["invalidrange"]; ?>');DrawRanges();return false;}
+        if (rfrom<1 || rfrom ><?php echo $page ?>) {alert('<?php echo escape($lang["outofrange"]); ?>');DrawRanges();return false;}
+        if (rto  <1 || rto   ><?php echo $page ?>) {alert('<?php echo escape($lang["outofrange"]); ?>');DrawRanges();return false;}
+        if (rto < rfrom) {alert('<?php echo escape($lang["invalidrange"]); ?>');DrawRanges();return false;}
         
         new_ranges+=rfrom + ':' + rto;
         }

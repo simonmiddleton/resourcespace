@@ -30,7 +30,7 @@ function render_revert_state_form()
             <a href="<?php echo $baseurl_short ?>pages/collection_log.php?ref=<?php echo $collection; ?>"
                onclick="CentralSpaceLoad(this, true); return false;"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a>
        </p>
-        <h1><?php echo $lang["rse_version_revert_state"]; ?></h1>
+        <h1><?php echo escape($lang["rse_version_revert_state"]); ?></h1>
         <p><?php echo $change_summary; ?></p>
         <form method="post"
               name="rse_version_revert_state_form" 

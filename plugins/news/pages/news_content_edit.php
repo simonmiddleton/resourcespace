@@ -59,11 +59,11 @@ include dirname(__FILE__)."/../../../include/header.php";
 ?>
 
 <p id="EditNewsBack">
-    <a href="news_edit.php?offset=<?php echo $offset?>&findtext=<?php echo escape($findtext)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["news_manage"]; ?></a>
+    <a href="news_edit.php?offset=<?php echo $offset?>&findtext=<?php echo escape($findtext)?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["news_manage"]); ?></a>
 </p>
 
 <div class="BasicsBox">
-    <h1><?php echo $lang["news_edit"]; ?></h1>
+    <h1><?php echo escape($lang["news_edit"]); ?></h1>
     <span class="FormError">
     <?php 
     
@@ -86,14 +86,14 @@ include dirname(__FILE__)."/../../../include/header.php";
         <div class="clearerleft"> </div>
 
         <div class="Question">
-            <label><?php echo $lang["news_headline"];?></label>
+            <label><?php echo escape($lang["news_headline"]);?></label>
             <input name="title" class="stdwidth" type="text" value="<?php echo $createnews ? $lang["news_addtitle"] : $news[0]["title"]; ?>">
         </div>
 
         <div class="clearerleft"> </div>
 
         <div class="Question">
-            <label><?php echo $lang["news_body"]; ?></label>
+            <label><?php echo escape($lang["news_body"]); ?></label>
             <textarea name="body" class="stdwidth" rows="15" cols="50"><?php if (!$createnews) { echo escape($news[0]["body"]); } ?></textarea>
         </div>
 

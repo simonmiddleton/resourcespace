@@ -55,7 +55,7 @@ include "../../../include/header.php";
 <input type=hidden name="unlink" value="<?php echo $unlink ? "true" : ""; ?>">
 <?php generateFormToken("consentmanager_batch"); ?>
 
-<div class="Question"><label><?php echo $lang["consent_id"]; ?></label>
+<div class="Question"><label><?php echo escape($lang["consent_id"]); ?></label>
 <select name="ref"><option value=""><?php echo escape($lang["select"]); ?></option>
 <?php $consents=ps_query("select ref,name from consent order by ref"); foreach ($consents as $consent) { ?>
 <option value="<?php echo $consent["ref"]; ?>"><?php echo $consent["ref"]; ?> - <?php echo $consent["name"]; ?></option>

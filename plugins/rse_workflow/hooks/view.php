@@ -105,7 +105,7 @@ function HookRse_workflowViewAdditionaldownloadtabs()
     if(count($validactions)>0)
         {?>
         <div class="RecordDownloadSpace" id="ResourceWorkflowActions" style="display:none;">
-        <p><?php echo $lang['rse_workflow_user_info']; ?></p>
+        <p><?php echo escape($lang['rse_workflow_user_info']); ?></p>
         <script type="text/javascript">
         function open_notes(action_ref) {
             var workflow_action = jQuery('#rse_workflow_action_' + action_ref);
@@ -117,9 +117,9 @@ function HookRse_workflowViewAdditionaldownloadtabs()
             more_link.after('<textarea id="more_for_workflow_action_' + action_ref 
                 + '" name="more_for_workflow_action_' + action_ref 
                 + '" style="width: 100%; resize: none;" rows="6">' + more_text_hidden + '</textarea>');
-            more_link.after('<p id="notes_for_workflow_action_' + action_ref + '"><?php echo $lang["rse_workflow_more_notes_title"]; ?></p>');
+            more_link.after('<p id="notes_for_workflow_action_' + action_ref + '"><?php echo escape($lang["rse_workflow_more_notes_title"]); ?></p>');
 
-            more_link.text('<?php echo $lang["rse_workflow_link_close"]; ?>');
+            more_link.text('<?php echo escape($lang["rse_workflow_link_close"]); ?>');
             more_link.attr('onClick', 'close_notes(' + action_ref + ');');
 
             // Bind the input textarea 'more_for_workflow_action' value to the hidden 'more_workflow_action' field
@@ -139,7 +139,7 @@ function HookRse_workflowViewAdditionaldownloadtabs()
             notes_title.remove();
             notes_textarea.remove();
 
-            more_link.text('<?php echo $lang["rse_workflow_link_open"]; ?>');
+            more_link.text('<?php echo escape($lang["rse_workflow_link_open"]); ?>');
             more_link.attr('onClick', 'open_notes(' + action_ref + ');');
 
         }
@@ -156,7 +156,7 @@ function HookRse_workflowViewAdditionaldownloadtabs()
                 }
             ?>
              <tr class="DownloadDBlend">
-                <td><?php echo i18n_get_translated($validaction["text"]); if($show_more_link) { ?><a href="#" id="more_link_<?php echo $validaction["ref"]; ?>" onClick="open_notes(<?php echo $validaction["ref"]; ?>);" style="float: right;"><?php echo $lang['rse_workflow_link_open']; ?></a><?php } ?></td>
+                <td><?php echo i18n_get_translated($validaction["text"]); if($show_more_link) { ?><a href="#" id="more_link_<?php echo $validaction["ref"]; ?>" onClick="open_notes(<?php echo $validaction["ref"]; ?>);" style="float: right;"><?php echo escape($lang['rse_workflow_link_open']); ?></a><?php } ?></td>
                 <td>
                     <form action="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo urlencode($ref)?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&curpos=<?php echo urlencode($curpos)?>&workflowaction=<?php echo urlencode($validaction["ref"])?>" 
                           id="resource_<?php echo $ref; ?>_workflowaction<?php echo $validaction['ref']; ?>">

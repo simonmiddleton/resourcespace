@@ -177,7 +177,7 @@ function showProfileChooser($class = '', $disabled = false)
     ?><select name="profile" id="profile" <?php if (!empty($class)) echo 'class="' . $class . '"';
             echo $disabled ? ' disabled="disabled"' : ''; ?>>
         <option value="" selected="selected"><?php
-                echo $lang['format_chooser_keep_profile']; ?></option><?php
+                echo escape($lang['format_chooser_keep_profile']); ?></option><?php
 
     $index = 0;
     foreach (array_keys($format_chooser_profiles) as $name)

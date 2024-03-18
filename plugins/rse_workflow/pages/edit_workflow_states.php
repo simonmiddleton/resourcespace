@@ -62,7 +62,7 @@ function deletestate(code)
             return true;
             }
                 
-        if(confirm('<?php echo $lang["rse_workflow_confirm_state_delete"]; ?>'))
+        if(confirm('<?php echo escape($lang["rse_workflow_confirm_state_delete"]); ?>'))
             {
             CentralSpacePost(document.getElementById('form_delete_state'),true)         
             }
@@ -74,14 +74,14 @@ function deletestate(code)
 
 
 <div class="BasicsBox">
-<h1><?php echo $lang["rse_workflow_manage_states"]; ?></h1>
+<h1><?php echo escape($lang["rse_workflow_manage_states"]); ?></h1>
 <div class="clearerleft" ></div>
 
 <form style="display:none" id="form_delete_state" name="form_delete_state" method="post" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_states.php">
     <?php generateFormToken("form_delete_state"); ?>    
     <input type="hidden" id="deletecode" name="delete" value="">
     <div id="status_name_question">
-    <?php echo $lang["rse_workflow_state_need_target"]; ?>
+    <?php echo escape($lang["rse_workflow_state_need_target"]); ?>
     <br><br>
     <select class="stdwidth" name="deletenewstate" id="deletenewstate" >
     <option value="">&nbsp;</option>
@@ -122,9 +122,9 @@ renderBreadcrumbs($links_trail);
         <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle rse_workflow_table" id='rse_workflow_table'>
             <tr class="ListviewTitleStyle">
                 <td>
-                <?php echo $lang['rse_workflow_state_name']; ?>
+                <?php echo escape($lang['rse_workflow_state_name']); ?>
                 </td><td>
-                <?php echo $lang['rse_workflow_state_reference']; ?>
+                <?php echo escape($lang['rse_workflow_state_reference']); ?>
                 </td><td>
                 <?php echo escape($lang['tools']); ?>
                 </td>
