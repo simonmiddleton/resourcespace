@@ -14,6 +14,7 @@ else
     {
     $ref=getval("ref","");
     $resource=get_resource_data($ref);
+    if ($resource===false) {exit("Could not fetch resource data.");} // Should not occur - invalid ref?
     $ext=$resource['file_extension'];
     if ($ext==""){die($lang['nometadatareport']);}
     $resource_type=$resource['resource_type'];
