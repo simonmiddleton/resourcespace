@@ -191,8 +191,9 @@ class NorwegianStemmer
         }
 
         $r1 = $substrings[1];
+        $r1_escaped = implode('\#', explode('#', $r1));
 
-        while (self::count($r1) > 0 && self::count(preg_replace("#$r1$#", '', $word)) < 3) {
+        while (self::count($r1) > 0 && self::count(preg_replace("#$r1_escaped$#", '', $word)) < 3) {
             $r1 = substr($r1, 1);
         }
 
