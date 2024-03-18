@@ -3,7 +3,24 @@ include "../include/db.php";
 include "../include/authenticate.php"; if (!checkperm("a")) {exit("Access denied.");}
 include "../include/header.php";
 ?>
-
+<script>
+function is_touch_capable() {
+    if ('maxTouchPoints' in navigator) {
+        if (navigator.maxTouchPoints > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        // Fallback for older browsers
+        if ('ontouchstart' in window || navigator.msMaxTouchPoints) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+</script>
 <div class="BasicsBox"> 
     <h1><?php echo escape($lang["installationcheck"]);render_help_link("systemadmin/install_overview");?></h1>
     <?php
@@ -17,6 +34,18 @@ include "../include/header.php";
     </a>
     <br/><br/>
     <table class="InfoTable">
+
+
+    <script>
+    jQuery(document).ready(function() {
+        if (is_touch_capable()) {
+            console.log("TC=TRUE");
+        } else {    
+            console.log("TC=FALSE");    
+        };
+    });
+    </script>
+
 <?php
 
 
