@@ -103,4 +103,3 @@ foreach ($resources as $resource)
     }
 echo "Process complete\n";
 
-
