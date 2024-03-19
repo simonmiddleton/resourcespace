@@ -3003,8 +3003,10 @@ $batch_replace_local_folder = ""; # e.g. "/upload";
 
 // Option to distribute files in filestore more equally. 
 // Setting $filestore_evenspread=true; means that all resources with IDs ending in 1 will be stored under filestore/1, whereas historically (with this set to false) this would contain all resources with IDs starting with 1.
-// If enabling this after the system has been in use you can run /pages/tools/filetore_migrate.php which will relocate the existing files into the neew folders
-// You may also wish to set the option $filestore_migrate=true; which will force the system to check for a file in the old location and move it in the event that it cannot be found.
+// If enabling this after the system has been in use you can run /pages/tools/filetore_migrate.php which will relocate the existing files into the new folders
+// You may also wish to set the option $filestore_migrate=true; which will force the system to check for a file in the old location and move it in the event that it cannot be found. However, this option alone will only
+// attempt to move the files which are loaded in the browser. Files which are not loaded including but not limited to tmp files, video snapshots and some alternative file types will be left behind in the old location. It is
+// recommended that /pages/tools/filetore_migrate.php be run to avoid a fragmented filestore.
 $filestore_evenspread=false;
 $filestore_migrate=false;
 

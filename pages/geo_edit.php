@@ -116,7 +116,7 @@ if ($valid_coords == false && getval('geo-loc','') != '')
 
 <div class="RecordBox">
 <div class="RecordPanel">
-<div class="Title"><?php echo $lang['location-title']; render_help_link("user/geolocation");?></div>
+<div class="Title"><?php echo escape($lang['location-title']); render_help_link("user/geolocation");?></div>
 
 <?php if (!hook('customgeobacklink'))
     { ?>
@@ -283,7 +283,7 @@ hook('rendermapfooter'); ?>
     <input name="map-zoom" type="hidden" value="<?php echo $zoom; ?>" id="map-zoom" />
     <?php echo $lang['marker'] . " " . strtolower($lang['latlong']); ?>: <input name="geo-loc" type="text" size="50" value="<?php echo $resource['geo_long'] == ""?"" : ($resource['geo_lat'] . ',' . $resource['geo_long']) ?>" id="map-input" />
     <?php hook('renderlocationextras'); ?>
-    <input name="submit" type="submit" value="<?php echo $lang['save']; ?>" onclick="return CentralSpacePost(this.form,true);" />
+    <input name="submit" type="submit" value="<?php echo escape($lang['save']); ?>" onclick="return CentralSpacePost(this.form,true);" />
 </form>
 
 

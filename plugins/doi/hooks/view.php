@@ -198,10 +198,10 @@ HTML;
                         var anchor = document.getElementById("doiShowHideXml");
                         if (div.style.display == "none") {
                             div.style.display = "block";
-                            anchor.innerHTML = "<?php echo '&gt; ' . $lang['doi_hide_meta']?>";
+                            anchor.innerHTML = "<?php echo '&gt; ' . $lang['doi_hide_meta']; ?>";
                         } else if (div.style.display == "block") {
                             div.style.display = "none";
-                            anchor.innerHTML = "<?php echo '&gt; ' . $lang['doi_show_meta']?>";
+                            anchor.innerHTML = "<?php echo '&gt; ' . $lang['doi_show_meta']; ?>";
                         }
                     }
                 </script>

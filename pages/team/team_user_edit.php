@@ -208,7 +208,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
         else
             {
             ?>
-            <option value="<?php echo $groups[$n]["ref"]?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]?></option>   
+            <option value="<?php echo $groups[$n]["ref"]; ?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]; ?></option>   
             <?php
             }
         }
@@ -234,7 +234,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
     <div class="clearerleft"> </div>
 </div>
 
-<div class="Question"><label><?php echo escape($lang["accountexpiresoptional"])?><br/><?php echo escape($lang["format"]) . ": " . $lang["yyyy-mm-dd"]?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["accountexpiresoptional"])?><br/><?php echo escape($lang["format"]) . ": " . $lang["yyyy-mm-dd"]; ?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo escape($lang["ipaddressrestriction"])?><br/><?php echo escape($lang["wildcardpermittedeg"])?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict_user") ?>"><div class="clearerleft"> </div></div>
 

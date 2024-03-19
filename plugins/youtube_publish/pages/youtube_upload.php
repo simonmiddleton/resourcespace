@@ -73,7 +73,7 @@ if ($go!="")
             {
             ?>
             <script type="text/javascript">
-            alert("<?php echo $lang["resourcenotinresults"] ?>");
+            alert("<?php echo escape($lang["resourcenotinresults"]); ?>");
             </script>
             <?php
             }
@@ -177,7 +177,7 @@ include "../../../include/header.php";
 <script language="JavaScript">
 function confirmSubmit()
 {
-var agree=confirm("<?php echo $lang["youtube_publish_legal_warning"]; ?>");
+var agree=confirm("<?php echo escape($lang["youtube_publish_legal_warning"]); ?>");
 if (agree)
 return true ;
 else
@@ -187,16 +187,16 @@ return false ;
 </script>
 <div class="BasicsBox" >
 
-    <a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <a href="<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
 
 
     <div class="backtoresults">
-        <a class="prevLink" href="<?php echo $baseurl_short?>plugins/youtube_publish/pages/youtube_upload.php?ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>&go=previous&<?php echo hook("nextpreviousextraurl") ?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo $lang["previousresult"]?></a>
+        <a class="prevLink" href="<?php echo $baseurl_short?>plugins/youtube_publish/pages/youtube_upload.php?ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>&go=previous&<?php echo hook("nextpreviousextraurl") ?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["previousresult"]); ?></a>
         <?php 
         hook("viewallresults");
         ?>
         |
-        <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["viewallresults"]?></a>
+        <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["viewallresults"]); ?></a>
         |
         <a class="nextLink" href="<?php echo $baseurl_short?>plugins/youtube_publish/pages/youtube_upload.php?ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>&go=next&<?php echo hook("nextpreviousextraurl") ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["nextresult"] . "&nbsp;" . LINK_CARET ?></a>
     </div>
@@ -236,7 +236,7 @@ else
         }
     else
         {
-        echo $lang["youtube_publish_notuploaded"];
+        echo escape($lang["youtube_publish_notuploaded"]);
         }
 echo "</p>";
 ?>
@@ -256,19 +256,19 @@ if ($youtube_username != '')
 <form action="<?php echo $baseurl ?>/plugins/youtube_publish/pages/youtube_upload.php?resource=<?php echo $ref ?>" method="post">
     <?php generateFormToken("youtube_upload"); ?>
     <div class="Question" >
-        <label for="video_title"><?php echo $lang["youtube_publish_video_title"] ?></label>
+        <label for="video_title"><?php echo escape($lang["youtube_publish_video_title"]); ?></label>
         <input type="text" class="stdwidth" name="video_title" value="<?php echo $title; ?>"/>
         <br>
-        <label for="video_description"><?php echo $lang["youtube_publish_video_description"] ?></label>
+        <label for="video_description"><?php echo escape($lang["youtube_publish_video_description"]); ?></label>
         <textarea class="stdwidth" rows="6" columns="50" id="video-description" name="video_description"><?php echo strip_tags($description); ?></textarea>
         <br>
-        <label for="video_keywords"><?php echo $lang["youtube_publish_video_tags"] ?></label>
+        <label for="video_keywords"><?php echo escape($lang["youtube_publish_video_tags"]); ?></label>
         <textarea class="stdwidth" rows="6" columns="50" id="video_keywords" name="video_keywords"><?php echo escape($video_keywords); ?></textarea>
         <br>
     </div>  
     <div class="Question" >
     
-        <label for="video_status"><?php echo $lang["youtube_publish_access"] ?></label>
+        <label for="video_status"><?php echo escape($lang["youtube_publish_access"]); ?></label>
         <select name="video_status">
         <option value="public" <?php if ($video_status=="public") {echo "selected";} ?>><?php echo $lang["youtube_publish_public"] . "&nbsp;&nbsp;" ?></option>
         <option value="private" <?php if ($video_status=="private") {echo "selected";} ?>><?php echo $lang["youtube_publish_private"] . "&nbsp;&nbsp;" ?></option>
@@ -280,7 +280,7 @@ if ($youtube_username != '')
     
     <div class="Question" >
     
-        <label for="video_category"><?php echo $lang["youtube_publish_category"] ?></label>
+        <label for="video_category"><?php echo escape($lang["youtube_publish_category"]); ?></label>
         <select name="video_category">
         <?php
         if(is_array($categories)) {
@@ -294,7 +294,7 @@ if ($youtube_username != '')
         </p>
     </div>  
     
-    <input type="submit" value="<?php echo $lang["youtube_publish_button_text"]; ?>" onClick="return confirmSubmit()"/>
+    <input type="submit" value="<?php echo escape($lang["youtube_publish_button_text"]); ?>" onClick="return confirmSubmit()"/>
     
     
 </form> 

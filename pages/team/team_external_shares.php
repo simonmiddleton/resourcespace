@@ -73,15 +73,15 @@ include '../../include/header.php';
             <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="0">
                 <tbody>
                     <tr class="ListviewTitleStyle">
-                        <td><?php echo $lang['accesskey']; ?></td>
-                        <td><?php echo $lang['type']; ?></td>
-                        <td><?php echo $lang['sharedby']; ?></td>
-                        <td><?php echo $lang['sharedwith']; ?></td>
-                        <td><?php echo $lang['lastupdated']; ?></td>
-                        <td><?php echo $lang['lastused']; ?></td>
-                        <td><?php echo $lang['expires']; ?></td>
-                        <td><?php echo $lang['access']; ?></td>
-                        <td><div class="ListTools"><?php echo $lang['tools']; ?></div></td>
+                        <td><?php echo escape($lang['accesskey']); ?></td>
+                        <td><?php echo escape($lang['type']); ?></td>
+                        <td><?php echo escape($lang['sharedby']); ?></td>
+                        <td><?php echo escape($lang['sharedwith']); ?></td>
+                        <td><?php echo escape($lang['lastupdated']); ?></td>
+                        <td><?php echo escape($lang['lastused']); ?></td>
+                        <td><?php echo escape($lang['expires']); ?></td>
+                        <td><?php echo escape($lang['access']); ?></td>
+                        <td><div class="ListTools"><?php echo escape($lang['tools']); ?></div></td>
                     </tr>
                     <?php
                     foreach($external_shares as $external_share)

@@ -75,8 +75,8 @@ if(trim($actions_notify_states) != "")
     $add_editable_resources_url = $baseurl_short . "pages/collections.php?addsearch=&mode=resources&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true&order_by=date";
     $search_url = $baseurl_short . "pages/search.php?search=&restypes=" . $searchable_restypes . "&archive=" . $actions_notify_states . "&foredit=true";
     ?>
-    <li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_add_editable_to_collection']?></a></li>
-    <li><a href="#" onclick="CentralSpaceLoad('<?php echo $search_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_view_editable_as_resultset']?></a></li>
+    <li><a href="#" onclick="CollectionDivLoad('<?php echo $add_editable_resources_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_add_editable_to_collection']; ?></a></li>
+    <li><a href="#" onclick="CentralSpaceLoad('<?php echo $search_url?>');return false;" ><?php echo LINK_CARET . "&nbsp;" . $lang['actions_view_editable_as_resultset']; ?></a></li>
     <?php
     }?>
 
@@ -128,7 +128,7 @@ else
     <div class="InpageNavLeftBlock"><?php echo escape($lang["resultsdisplay"])?>:
     <?php 
     for($n=0;$n<count($list_display_array);$n++){?>
-    <?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php } else { ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("per_page_list"=>$list_display_array[$n])) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $list_display_array[$n]?></a><?php } ?>&nbsp;|
+    <?php if ($per_page==$list_display_array[$n]){?><span class="Selected"><?php echo $list_display_array[$n]; ?></span><?php } else { ?><a href="<?php echo generateURL($baseurl . "/pages/user/user_actions.php",$url_params,array("per_page_list"=>$list_display_array[$n])) ?>" onClick="return CentralSpaceLoad(this);"><?php echo $list_display_array[$n]; ?></a><?php } ?>&nbsp;|
     <?php } ?>
     <?php if ($per_page==99999){?><span class="Selected"><?php echo escape($lang["all"])?></span><?php } else { ?><a href="<?php echo $url; ?>&per_page_list=99999" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["all"])?></a><?php } ?>
     </div>

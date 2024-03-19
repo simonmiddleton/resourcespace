@@ -52,15 +52,15 @@ function HookCookies_notificationAllAfteruicenter()
         }
     ?>
     <div id="CookiesUseWrapper">
-        <p id="CookieUseMessage"><?php echo $lang['cookies_notification_use_cookies_message']; ?></p>
+        <p id="CookieUseMessage"><?php echo escape($lang['cookies_notification_use_cookies_message']); ?></p>
         <span id="CookiesUseActions">
             <input class="CookiesUseBtn"
                    type="button"
-                   value="<?php echo $lang['cookies_notification_do_not_accept']; ?>"
+                   value="<?php echo escape($lang['cookies_notification_do_not_accept']); ?>"
                    onclick="setCookiesUse('deny');">
             <input class="CookiesUseBtn HighlightBtn"
                    type="button"
-                   value="<?php echo $lang['cookies_notification_accept']; ?>"
+                   value="<?php echo escape($lang['cookies_notification_accept']); ?>"
                    onclick="setCookiesUse('accept');">
         </span>
         <div class="clearer"></div>

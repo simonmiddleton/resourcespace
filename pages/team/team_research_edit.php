@@ -107,7 +107,7 @@ array_walk($rr_cfields, function($field, $i)
 for ($n=0;$n<count($users);$n++)
     {
     ?>
-    <option value="<?php echo $users[$n]["ref"]?>" <?php if ($research["assigned_to"]==$users[$n]["ref"]) {?>selected<?php } ?>><?php echo escape($users[$n]["username"])?></option>  
+    <option value="<?php echo $users[$n]["ref"]; ?>" <?php if ($research["assigned_to"]==$users[$n]["ref"]) {?>selected<?php } ?>><?php echo escape($users[$n]["username"])?></option>  
     <?php
     }
 ?>

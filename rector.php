@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Montala\ResourceSpace\Utils\Rector\EscapeLanguageStringsRector;
 use Montala\ResourceSpace\Utils\Rector\ReplaceFunctionCallRector;
 use Rector\Config\RectorConfig;
 use Rector\Removing\Rector\FuncCall\RemoveFuncCallArgRector;
@@ -52,6 +53,7 @@ return RectorConfig::configure()
     // Reach current PHP version (based on composer.json) - https://getrector.com/documentation/php-version-features
     ->withPhpSets()
     ->withRules([
+        EscapeLanguageStringsRector::class,
         // ReplaceFunctionCallRector::class,
         AddVoidReturnTypeWhereNoReturnRector::class,
         ReturnTypeFromStrictNativeCallRector::class,

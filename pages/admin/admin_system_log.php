@@ -265,7 +265,7 @@ $select_table_url = generateURL(
         {
         ?>
         <select class="SplitSearch" name="table">
-            <option value=""><?php echo $lang['filter_by_table']; ?></option>
+            <option value=""><?php echo escape($lang['filter_by_table']); ?></option>
             <?php
             foreach($tables_data as $select_table => $select_table_data)
                 {
@@ -310,7 +310,7 @@ $select_table_url = generateURL(
         }
     ?>
 
-<input type="button" id="datesubmit" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('TableFilterForm'));">
+<input type="button" id="datesubmit" class="searchbutton" value="<?php echo escape($lang['filterbutton']); ?>" onclick="return CentralSpacePost(document.getElementById('TableFilterForm'));">
 <div class="clearerleft"></div>
 </form>
     <div class="TopInpageNav">
@@ -324,28 +324,28 @@ $select_table_url = generateURL(
         <table class="ListviewStyle" border="0" cellspacing="0" cellpadding="5">
             <tbody>
                 <tr class="ListviewTitleStyle">
-                    <td><?php echo $lang['fieldtype-date_and_time']; ?></td>
-                    <td><?php echo $lang['user']; ?></td>
-                    <td><?php echo $lang['property-operation']; ?></td>
-                    <td><?php echo $lang['fieldtitle-notes']; ?></td>
-                    <td><?php echo $lang['property-resource-field']; ?></td>
-                    <td><?php echo $lang['property-old_value']; ?></td>
-                    <td><?php echo $lang['property-new_value']; ?></td>
-                    <td><?php echo $lang['difference']; ?></td>
+                    <td><?php echo escape($lang['fieldtype-date_and_time']); ?></td>
+                    <td><?php echo escape($lang['user']); ?></td>
+                    <td><?php echo escape($lang['property-operation']); ?></td>
+                    <td><?php echo escape($lang['fieldtitle-notes']); ?></td>
+                    <td><?php echo escape($lang['property-resource-field']); ?></td>
+                    <td><?php echo escape($lang['property-old_value']); ?></td>
+                    <td><?php echo escape($lang['property-new_value']); ?></td>
+                    <td><?php echo escape($lang['difference']); ?></td>
                     <?php
                     if($table == '' || $table_reference == 0)
                         {
                         ?>
-                        <td><?php echo $lang['property-table']; ?></td>
+                        <td><?php echo escape($lang['property-table']); ?></td>
                         <?php
                         }
                         ?>
-                    <td><?php echo $lang['property-column']; ?></td>
+                    <td><?php echo escape($lang['property-column']); ?></td>
                     <?php
                     if($table == '' || $table_reference == 0)
                         {
                         ?>
-                        <td><?php echo $lang['property-table_reference']; ?></td>
+                        <td><?php echo escape($lang['property-table_reference']); ?></td>
                         <?php
                         }
                         ?>

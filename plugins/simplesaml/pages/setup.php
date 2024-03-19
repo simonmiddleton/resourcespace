@@ -238,14 +238,14 @@ config_single_select("simplesaml_fallback_group",$lang['simplesaml_fallback_grou
 config_text_input('simplesaml_custom_attributes', $lang['simplesaml_custom_attributes'], $simplesaml_custom_attributes);
 ?>
 <div class="Question">
-<h3><?php echo $lang['simplesaml_groupmapping']; ?></h3>
+<h3><?php echo escape($lang['simplesaml_groupmapping']); ?></h3>
 <table id='groupmaptable'>
 <tr><th>
-<strong><?php echo $lang['simplesaml_samlgroup']; ?></strong>
+<strong><?php echo escape($lang['simplesaml_samlgroup']); ?></strong>
 </th><th>
-<strong><?php echo $lang['simplesaml_rsgroup']; ?></strong>
+<strong><?php echo escape($lang['simplesaml_rsgroup']); ?></strong>
 </th><th>
-<strong><?php echo $lang['simplesaml_priority']; ?></strong>
+<strong><?php echo escape($lang['simplesaml_priority']); ?></strong>
 </th>
 </tr>
 
@@ -280,13 +280,13 @@ config_text_input('simplesaml_custom_attributes', $lang['simplesaml_custom_attri
 <?php } ?>
 </table>
 
-<a onclick='addGroupMapRow()'><?php echo $lang['simplesaml_addrow']; ?></a>
+<a onclick='addGroupMapRow()'><?php echo escape($lang['simplesaml_addrow']); ?></a>
 </div>
 
 <div class="Question">  
 <label for="submit"></label>
-<input type="submit" name="save" id="save" value="<?php echo $lang['plugins-saveconfig']?>">
-<input type="submit" name="submit" id="submit" value="<?php echo $lang['plugins-saveandexit']?>">
+<input type="submit" name="save" id="save" value="<?php echo escape($lang['plugins-saveconfig']); ?>">
+<input type="submit" name="submit" id="submit" value="<?php echo escape($lang['plugins-saveandexit']); ?>">
 </div><div class="clearerleft"></div>
 
 </form>

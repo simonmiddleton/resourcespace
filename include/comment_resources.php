@@ -6,7 +6,7 @@
             <div id="CommentsPanelHeader">
                 <div id="CommentsPanelHeaderRow">
                     <div id="CommentsPanelHeaderRowTitle">
-                        <div class="Title"><?php echo $lang['comments_box-title']; ?></div>
+                        <div class="Title"><?php echo escape($lang['comments_box-title']); ?></div>
                     </div>
                     <?php if ($comments_policy_enable) { ?>                 
                         <div id="CommentsPanelHeaderRowPolicyLink">             

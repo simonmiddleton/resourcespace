@@ -49,7 +49,7 @@ function deleteaction(ref)
         event.preventDefault();
         event.stopPropagation();        
         
-        if(confirm('<?php echo $lang["rse_workflow_confirm_action_delete"]?>'))
+        if(confirm('<?php echo escape($lang["rse_workflow_confirm_action_delete"]); ?>'))
                 {
                 CentralSpaceLoad("<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=" + ref, true);         
                 }
@@ -61,7 +61,7 @@ function deleteaction(ref)
 
 
 <div class="BasicsBox">
-<h1><?php echo $lang["rse_workflow_manage_actions"]; ?></h1>
+<h1><?php echo escape($lang["rse_workflow_manage_actions"]); ?></h1>
 <?php
 $links_trail = array(
     array(
@@ -86,11 +86,11 @@ renderBreadcrumbs($links_trail);
     <form method="post" name="form_filter_action" id="form_filter_action" action="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_workflow_actions.php">
         <?php generateFormToken("form_filter_action"); ?>
         <div class="Question">
-            <label for="filterstate"><?php echo $lang["rse_workflow_action_filter"]?></label>
+            <label for="filterstate"><?php echo escape($lang["rse_workflow_action_filter"]); ?></label>
             <div class="tickset">
                 <div class="Inline">
                     <select class="stdwidth" name="filterstate" id="filterstate" >
-                    <option value="all" <?php if($filterstate=="all"){echo " selected";}?>><?php echo $lang["all"] ?></option>
+                    <option value="all" <?php if($filterstate=="all"){echo " selected";}?>><?php echo escape($lang["all"]); ?></option>
                     <?php
                     for ($n=-2;$n<=3;$n++)
                         {
@@ -103,31 +103,31 @@ renderBreadcrumbs($links_trail);
                     ?>
                     </select>
              </div>
-             <div class="Inline"><input name="filtersubmit" type="submit" value="&nbsp;&nbsp;<?php echo $lang["searchbutton"]?>&nbsp;&nbsp;" onclick="preventDefault();CentralSpacePost(document.getElementById('form_filter_action'),false);"></div>
+             <div class="Inline"><input name="filtersubmit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;" onclick="preventDefault();CentralSpacePost(document.getElementById('form_filter_action'),false);"></div>
             </div>
         <div class="clearerleft"> </div>
         </div>
     </form>
 </div>
-<h2><?php echo $lang['rse_workflow_status_heading']; ?></h2>
+<h2><?php echo escape($lang['rse_workflow_status_heading']); ?></h2>
 <div class="BasicsBox">
 <div class="Listview">
         <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle rse_workflow_table" id='rse_workflow_table'>
             <tr class="ListviewTitleStyle">
                 <td>
-                <?php echo $lang['rse_workflow_action_name']; ?>
+                <?php echo escape($lang['rse_workflow_action_name']); ?>
                 </td><td>
-                <?php echo $lang['rse_workflow_action_text']; ?>
+                <?php echo escape($lang['rse_workflow_action_text']); ?>
                 </td><td>
-                <?php echo $lang['rse_workflow_button_text']; ?>
+                <?php echo escape($lang['rse_workflow_button_text']); ?>
                 </td><td>               
-                <?php echo $lang['rse_workflow_action_status_from']; ?>
+                <?php echo escape($lang['rse_workflow_action_status_from']); ?>
                 </td><td>
-                <?php echo $lang['rse_workflow_action_status_to']; ?>
+                <?php echo escape($lang['rse_workflow_action_status_to']); ?>
                 </td><td>
-                <?php echo $lang['rse_workflow_action_reference']; ?>
+                <?php echo escape($lang['rse_workflow_action_reference']); ?>
                 </td><td>
-                <?php echo $lang['tools']; ?>
+                <?php echo escape($lang['tools']); ?>
                 </td>
             </tr>
 
@@ -169,8 +169,8 @@ else
             <td>wf<?php echo $workflowaction["ref"]; ?>
             </td>
             <td class="ListTools">
-            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"] ?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo $lang["action-edit"]?> </a>
-            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"] ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]  ?>,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo $lang["action-delete"]?> </a>
+            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_action.php?ref=<?php echo $workflowaction["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?> </a>
+            <a href="<?php echo $baseurl?>/plugins/rse_workflow/pages/edit_workflow_actions.php?delete=<?php echo $workflowaction["ref"]; ?>" class="deleteaction" onClick="deleteaction(<?php echo $workflowaction["ref"]; ?>,true);"><i class="fa fa-trash"></i>&nbsp;<?php echo escape($lang["action-delete"]); ?> </a>
             </td>
         </tr>
         <?php	
@@ -182,7 +182,7 @@ else
 </div>
 
 
-<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_action.php?ref=new" onclick="event.preventDefault();CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["rse_workflow_action_new"] ?></a>
+<a href="<?php echo $baseurl_short?>plugins/rse_workflow/pages/edit_action.php?ref=new" onclick="event.preventDefault();CentralSpaceLoad(this,true);"><?php echo LINK_CARET . $lang["rse_workflow_action_new"]; ?></a>
 
 
 </div>

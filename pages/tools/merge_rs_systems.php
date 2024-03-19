@@ -862,6 +862,11 @@ if($import && isset($folder_path))
 
         db_begin_transaction(TX_SAVEPOINT);
         $new_uref = new_user($user["username"], $usergroups_spec[$user["usergroup"]]);
+        if ($new_uref<=0)
+            {
+            logScript("ERROR: User could not be created - check user limit or user name conflicts.");
+            exit(1);
+            }
         logScript("Created new user '{$user["username"]}' (ID #{$new_uref} | User group ID: {$usergroups_spec[$user["usergroup"]]})");
 
         $_GET["username"] = $user["username"];
@@ -1127,7 +1132,7 @@ if($import && isset($folder_path))
         // This is merged as a new field
         if(is_null($mapped_rtf_ref))
             {
-            $db_rtf_known_columns = array_column(ps_query('DESCRIBE resource_type_field', '', -1, false), 'Field');
+            $db_rtf_known_columns = array_column(ps_query('DESCRIBE resource_type_field', [], -1, false), 'Field');
 
             db_begin_transaction(TX_SAVEPOINT);
             $new_rtf_ref = create_resource_type_field(

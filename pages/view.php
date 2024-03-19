@@ -854,7 +854,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             }
                                                             ?>
                                                     </td>
-                                                    <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
+                                                    <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]; ?></td>
                                                     <?php add_download_column($ref, $sizes[$n], $downloadthissize); ?>
                                                 </tr>
 
@@ -876,7 +876,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                                 <?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';?>
                                                                 <p><?php echo $preview_with_sizename; ?></p>
                                                             </td>
-                                                            <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
+                                                            <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]; ?></td>
                                                             <td class="DownloadButton">
                                                                 <a class="enterLink previewsizelink previewsize-<?php echo $data_viewsize; ?>" 
                                                                     id="previewlink"
@@ -1119,7 +1119,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 { ?>
                                                 <li>
                                                     <a href="<?php echo $baseurl ?>/pages/ajax/contactadmin.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="showContactBox();return false;" >
-                                                        <?php echo "<i class='fa fa-fw fa-user'></i>&nbsp;" . $lang["contactadmin"]?>
+                                                        <?php echo "<i class='fa fa-fw fa-user'></i>&nbsp;" . $lang["contactadmin"]; ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1144,7 +1144,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     <li>
                                                         <?php 
                                                         echo remove_from_collection_link($ref,"","",0);
-                                                        echo "<i class='fa fa-fw fa-minus-circle'></i>&nbsp;" .$lang["action-removefromcollection"]?>
+                                                        echo "<i class='fa fa-fw fa-minus-circle'></i>&nbsp;" .$lang["action-removefromcollection"]; ?>
                                                         </a>
                                                     </li>
                                                     <?php 
@@ -1293,7 +1293,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 { ?>
                                                 <li>
                                                     <a href="<?php echo generateurl($baseurl . "/pages/metadata_download.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
-                                                        <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["downloadmetadata"]?>
+                                                        <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["downloadmetadata"]; ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1309,7 +1309,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 { ?>
                                                 <li>
                                                     <a id="view_log_link" href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams,$overrideparams);?>" onclick="return ModalLoad(this, true);">
-                                                        <?php echo "<i class='fa fa-fw fa-bars'></i>&nbsp;" .$lang["log"]?>
+                                                        <?php echo "<i class='fa fa-fw fa-bars'></i>&nbsp;" .$lang["log"]; ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1319,7 +1319,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 { ?>
                                                 <li>
                                                     <a href="<?php echo generateurl($baseurl . "/pages/request_log.php",$urlparams,$overrideparams);?>" onclick="return ModalLoad(this, true);">
-                                                        <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["requestlog"]?>
+                                                        <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["requestlog"]; ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1425,7 +1425,7 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
         <div class="RecordPanel PushedRecordPanel">
             <div class="backtoresults">&gt;<a href="view.php?ref=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["view"]) ?></a>
         </div>
-        <div class="Title"><?php echo i18n_get_translated($resource["resource_type_name"]) . " : " . $resource["field" . $view_title_field] ?></div>
+        <div class="Title"><?php echo i18n_get_translated($resource["resource_type_name"]) . " : " . $resource["field" . $view_title_field]; ?></div>
             <?php
             $GLOBALS["showing_pushed_metadata"] = true;
             include "view_metadata.php";
@@ -1663,7 +1663,7 @@ if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access
     </script>
 
     <form method="post" action="<?php echo $baseurl ?>/pages/find_similar.php?context=<?php echo $context ?>" id="<?php echo $context ?>findsimilar">
-    <input type="hidden" name="resource_type" value="<?php echo $resource["resource_type"]?>">
+    <input type="hidden" name="resource_type" value="<?php echo $resource["resource_type"]; ?>">
     <input type="hidden" name="countonly" id="<?php echo $context ?>countonly" value="">
     <?php
     generateFormToken("{$context}findsimilar");

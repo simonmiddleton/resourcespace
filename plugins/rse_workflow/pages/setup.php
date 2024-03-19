@@ -16,7 +16,7 @@ if(!in_array($plugin_name, $plugins))
 
 
 <div class="BasicsBox">
-<h1><?php echo $lang['rse_workflow_configuration']; ?></h1>
+<h1><?php echo escape($lang['rse_workflow_configuration']); ?></h1>
 <div class="clearerleft" ></div>
 
 <div>

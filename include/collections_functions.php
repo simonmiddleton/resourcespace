@@ -4602,19 +4602,19 @@ function new_featured_collection_form(int $parent)
     $form_action = "{$baseurl_short}pages/collection_manage.php";
     ?>
     <div class="BasicsBox">
-        <h1><?php echo $lang["createnewcollection"]; ?></h1>
+        <h1><?php echo escape($lang["createnewcollection"]); ?></h1>
         <form name="new_collection_form" id="new_collection_form" class="modalform"
               method="POST" action="<?php echo $form_action; ?>" onsubmit="return CentralSpacePost(this, true);">
             <?php generateFormToken("new_collection_form"); ?>
             <input type="hidden" name="call_to_action_tile" value="true"></input>
             <input type="hidden" name="parent" value="<?php echo $parent; ?>"></input>
             <div class="Question">
-                <label for="newcollection" ><?php echo $lang["collectionname"]; ?></label>
+                <label for="newcollection" ><?php echo escape($lang["collectionname"]); ?></label>
                 <input type="text" name="name" id="newcollection" maxlength="100" required="true"></input>
                 <div class="clearleft"></div>
             </div>
             <div class="QuestionSubmit" >
-                <input type="submit" name="create" value="<?php echo $lang["create"]; ?>"></input>
+                <input type="submit" name="create" value="<?php echo escape($lang["create"]); ?>"></input>
                 <div class="clearleft"></div>
             </div>
         </form>

@@ -330,19 +330,19 @@ function delete_access_key_multiple()
     var params={'access_keys': access_keys.join(','),'resources': resources.join(','), 'collections': collections.join(',')};
 
     if(countCollectionKeys == 0 && countResourceKeys == 1) {
-        confirmationMessage = "<?php echo $lang['confirmdeleteaccessresource']; ?>";
+        confirmationMessage = "<?php echo escape($lang['confirmdeleteaccessresource']); ?>";
     }
     else if(countCollectionKeys == 0 && countResourceKeys > 1) {
-        confirmationMessage = "<?php echo $lang['confirmdeleteaccessmultires']; ?>";
+        confirmationMessage = "<?php echo escape($lang['confirmdeleteaccessmultires']); ?>";
     }
     else if(countCollectionKeys == 1 && countResourceKeys == 0) {
-        confirmationMessage = "<?php echo $lang['confirmdeleteaccess']; ?>";
+        confirmationMessage = "<?php echo escape($lang['confirmdeleteaccess']); ?>";
     }
     else if(countCollectionKeys > 1 && countResourceKeys == 0) {
-        confirmationMessage = "<?php echo $lang['confirmdeleteaccessmulticol']; ?>";
+        confirmationMessage = "<?php echo escape($lang['confirmdeleteaccessmulticol']); ?>";
     }
     else if(countCollectionKeys > 0 && countResourceKeys > 0) {
-        confirmationMessage = "<?php echo $lang['confirmdeleteaccessmultimix']; ?>";
+        confirmationMessage = "<?php echo escape($lang['confirmdeleteaccessmultimix']); ?>";
     }
 
     if(confirm(confirmationMessage))
@@ -361,7 +361,7 @@ function delete_access_key_multiple()
 function delete_access_key(access_key, resource, collection)
     {
     // Assume the deletion is for a resource level access key
-    var confirmationMessage = "<?php echo $lang['confirmdeleteaccessresource']; ?>";
+    var confirmationMessage = "<?php echo escape($lang['confirmdeleteaccessresource']); ?>";
     var post_data = {
         ajax: true,
         delete_access_key: access_key,
@@ -372,7 +372,7 @@ function delete_access_key(access_key, resource, collection)
     // Adjust the data if the deletion is for a collection level access key
     if(collection != '-')
         {
-        confirmationMessage = "<?php echo $lang['confirmdeleteaccess']; ?>";
+        confirmationMessage = "<?php echo escape($lang['confirmdeleteaccess']); ?>";
         delete post_data.resource;
         post_data.delete_collection = collection;
         }
@@ -420,7 +420,7 @@ function purge_expired_shares()
         <?php
         }?>
 
-    confirmationMessage = "<?php echo $lang['share_confirm_purge']; ?>";
+    confirmationMessage = "<?php echo escape($lang['share_confirm_purge']); ?>";
 
     if(confirm(confirmationMessage))
         {
@@ -494,8 +494,8 @@ function clearsharefilter()
 
 
             <div class="Question"  id="QuestionShareFilterSubmit">
-                <input type="button" id="filter_button" class="searchbutton" value="<?php echo $lang['filterbutton']; ?>" onclick="return CentralSpacePost(document.getElementById('ShareFilterForm'));">
-                <input type="button" id="clear_button" class="searchbutton" value="<?php echo $lang['clearbutton']; ?>" onclick="clearsharefilter();return CentralSpacePost(document.getElementById('ShareFilterForm'));">
+                <input type="button" id="filter_button" class="searchbutton" value="<?php echo escape($lang['filterbutton']); ?>" onclick="return CentralSpacePost(document.getElementById('ShareFilterForm'));">
+                <input type="button" id="clear_button" class="searchbutton" value="<?php echo escape($lang['clearbutton']); ?>" onclick="clearsharefilter();return CentralSpacePost(document.getElementById('ShareFilterForm'));">
                 <div class="clearerleft"></div>
             </div>
         </div>

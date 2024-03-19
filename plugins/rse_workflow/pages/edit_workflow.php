@@ -10,7 +10,7 @@ include '../../../include/header.php';
 ?>
 
 <div class="BasicsBox"> 
-    <h1><?php echo $lang["rse_workflow_manage_workflow"]; ?></h1>
+    <h1><?php echo escape($lang["rse_workflow_manage_workflow"]); ?></h1>
     <?php
     $links_trail = array(
         array(

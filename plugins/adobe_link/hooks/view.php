@@ -138,7 +138,7 @@ function HookAdobe_linkViewBefore_footer_always()
         objData.uploadUrl = jQuery(link).attr('data-attribute-path');
         objMessage.data = objData;
         window.postMessage(objMessage, '*');
-        styledalert('<?php echo $lang["adobe_link_saving"]; ?>','<?php echo $lang["adobe_link_saving_wait"]; ?>');
+        styledalert('<?php echo escape($lang["adobe_link_saving"]); ?>','<?php echo escape($lang["adobe_link_saving_wait"]); ?>');
         window.setTimeout("imgsrc = jQuery('#previewimage').attr('src');jQuery('#previewimage').attr('src',imgsrc + new Date().getTime());",5000);
    }          
         

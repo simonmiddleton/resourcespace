@@ -81,7 +81,7 @@ include "../include/header.php";
 </div>
 
 <div class="Question">
-<label><?php echo escape($lang["resourceid"])?></label><div class="Fixed"><?php echo $resource["ref"]?></div>
+<label><?php echo escape($lang["resourceid"])?></label><div class="Fixed"><?php echo $resource["ref"]; ?></div>
 <div class="clearerleft"> </div>
 </div>
 <?php

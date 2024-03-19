@@ -7,7 +7,7 @@ function HookImage_textCollection_downloadReplaceuseoriginal()
     if (!in_array($usergroup, $image_text_override_groups)){return false;}
         
      ?><div class="Question">
-    <label for="no_overlay"><?php echo $lang['image_text_download_clear']; ?></label><input type=checkbox id="nooverlay" name="nooverlay" value="true" >
+    <label for="no_overlay"><?php echo escape($lang['image_text_download_clear']); ?></label><input type=checkbox id="nooverlay" name="nooverlay" value="true" >
     <div class="clearerleft"> </div></div>
     <?php
     return false;        

@@ -581,7 +581,7 @@ if($ajax)
                     >
                 </td>
                 <td align="left">
-                    <?php echo $node['use_count'] ?>
+                    <?php echo $node['use_count']; ?>
                 </td>
 
                     <div class="ListTools">

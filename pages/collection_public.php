@@ -95,11 +95,11 @@ $url=$baseurl_short."pages/collection_public.php?paging=true&col_order_by=".urle
             {
             if ($per_page==$list_display_array[$n])
                 {
-                ?><span class="Selected"><?php echo $list_display_array[$n]?></span><?php 
+                ?><span class="Selected"><?php echo $list_display_array[$n]; ?></span><?php 
                 } 
             else 
                 { 
-                ?><a href="<?php echo $url; ?>&per_page_list=<?php echo $list_display_array[$n]?>" onClick="return CentralSpaceLoad(this);"><?php echo $list_display_array[$n]?></a><?php 
+                ?><a href="<?php echo $url; ?>&per_page_list=<?php echo $list_display_array[$n]; ?>" onClick="return CentralSpaceLoad(this);"><?php echo $list_display_array[$n]; ?></a><?php 
                 } ?> &nbsp;| <?php 
             } ?>
         <?php
@@ -198,7 +198,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
             } ?>
         <td class="ref"><?php echo highlightkeywords($collections[$n]["ref"],$find)?></td>
         <td class="created"><?php echo nicedate($collections[$n]["created"],true)?></td>
-        <td class="count"><?php echo $collections[$n]["count"]?></td>
+        <td class="count"><?php echo $collections[$n]["count"]; ?></td>
         <?php 
         switch($collections[$n]["type"])
             {

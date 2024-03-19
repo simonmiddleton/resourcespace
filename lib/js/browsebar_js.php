@@ -426,11 +426,11 @@ function BrowseAction(post_data,browselink)
                 //console.log(response);
             if(typeof xhr.responseJSON.message !== "undefined")
                 {
-                styledalert('<?php echo $lang["error"]?>',xhr.responseJSON.message);
+                styledalert('<?php echo $lang["error"]; ?>',xhr.responseJSON.message);
                 }
             else
                 {
-                styledalert('<?php echo $lang["error"]?>', xhr.status + ' ' + xhr.statusText + ' ' + xhr.responseText);
+                styledalert('<?php echo $lang["error"]; ?>', xhr.status + ' ' + xhr.statusText + ' ' + xhr.responseText);
                 }
             });
     }

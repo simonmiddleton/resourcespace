@@ -89,8 +89,8 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
         if($show_revert_link)
             {
             ?>
-            <td><?php echo $lang["actions"]; ?></td>
-            <td><a href="<?php echo $baseurl; ?>/plugins/rse_version/pages/revert.php?ref=<?php echo $logentry["ref"] ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET . $lang["revert"] ?></a></td>
+            <td><?php echo escape($lang["actions"]); ?></td>
+            <td><a href="<?php echo $baseurl; ?>/plugins/rse_version/pages/revert.php?ref=<?php echo $logentry["ref"]; ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET . $lang["revert"]; ?></a></td>
             <?php
             return true;
             }

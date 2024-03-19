@@ -555,7 +555,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
     <td class="fullname"><?php echo strip_tags_and_attributes(highlightkeywords($colusername, $find)); ?></td>
     <td class="ref"><?php echo strip_tags_and_attributes(highlightkeywords($collections[$n]["ref"], $find)); ?></td>
     <td class="created"><?php echo nicedate($collections[$n]["created"],true) ?></td>
-    <td class="count"><?php echo $collections[$n]["count"] ?></td>
+    <td class="count"><?php echo $collections[$n]["count"]; ?></td>
     <td class="access"><?php
     if(!hook('collectionaccessmode'))
         {
@@ -577,7 +577,7 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
         }
     ?></td>
 
-<td class="collectionin"><input type="checkbox" onClick='UpdateHiddenCollections(this, "<?php echo $collections[$n]['ref'] ?>", {<?php echo generateAjaxToken("colactions"); ?>});' <?php if(!in_array($collections[$n]['ref'],$hidden_collections)){echo "checked";}?>></td>
+<td class="collectionin"><input type="checkbox" onClick='UpdateHiddenCollections(this, "<?php echo $collections[$n]['ref']; ?>", {<?php echo generateAjaxToken("colactions"); ?>});' <?php if(!in_array($collections[$n]['ref'],$hidden_collections)){echo "checked";}?>></td>
 
 <?php hook('beforecollectiontoolscolumn');
 $action_selection_id = 'collections_action_selection' . $collections[$n]['ref']  . "_bottom_" . $collections[$n]["ref"] ;

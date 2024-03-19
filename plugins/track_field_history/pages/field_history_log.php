@@ -34,20 +34,20 @@ $url        = generateurl($baseurl_short . 'pages/view.php', $get_params );
     <div class="Listview">
         <table id="track_field_history_table" border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
             <tr class="ListviewTitleStyle">
-                <td width="10%"><?php echo $lang['date']; ?></td>
-                <td width="10%"><?php echo $lang['user']; ?></td>
-                <td><?php echo $lang['track_field_history_change']; ?></td>
+                <td width="10%"><?php echo escape($lang['date']); ?></td>
+                <td width="10%"><?php echo escape($lang['user']); ?></td>
+                <td><?php echo escape($lang['track_field_history_change']); ?></td>
             </tr>
             <?php
             if($no_records) { ?>
-                <tr><td colspan="10"><b><?php echo $lang['track_field_history_error_no_records']; ?></b></td></tr>
+                <tr><td colspan="10"><b><?php echo escape($lang['track_field_history_error_no_records']); ?></b></td></tr>
             <?php }
 
             foreach ($field_log_records as $field_log_record) {
                 ?>
                 <tr>
                     <td nowrap><?php echo nicedate($field_log_record['date'], true, true, true); ?></td>
-                    <td><?php echo $field_log_record['user'] ?></td>
+                    <td><?php echo $field_log_record['user']; ?></td>
                     <td><?php echo nl2br(escape(strip_tags($field_log_record['diff']))); ?></td>
                 </tr>
                 <?php

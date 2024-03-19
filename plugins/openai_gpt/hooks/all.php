@@ -62,7 +62,7 @@ function HookOpenai_gptAdmin_resource_type_field_editAdmin_field_replace_questio
                 {
                 if($field["ref"]!=$ref) // Don't show itself as an option
                     {?>
-                    <option value="<?php echo (int)$field["ref"] ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo escape($lang["field"]. ": " . i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="") ? "" : escape((string) $field["name"]))  . ")" ?></option>
+                    <option value="<?php echo (int)$field["ref"]; ?>"<?php if ($currentvalue == $field["ref"]) { echo " selected"; } ?>><?php echo escape($lang["field"]. ": " . i18n_get_translated($field["title"]))  . "&nbsp;(" . (($field["name"]=="") ? "" : escape((string) $field["name"]))  . ")" ?></option>
                     <?php
                     }
                 }

@@ -10,19 +10,18 @@ if(!(in_array('tab', $resource_type_field_structure) && in_array('tab', $resourc
     check_db_structs(false);
     }
 
+$all_tab_names_data = array();
+if (count(ps_query("SHOW COLUMNS FROM resource_type LIKE 'tab_name';")) === 1)
+    {
+    $all_tab_names_data = ps_query("SELECT 'resource_type' AS entity, ref, tab_name FROM resource_type WHERE tab_name IS NOT NULL AND trim(tab_name) <> '';");
+    }
 
-$all_tab_names_data = ps_query(
-    "SELECT *
-       FROM (
-            SELECT 'resource_type' AS entity, ref, tab_name FROM resource_type
-            UNION 
-            SELECT 'resource_type_field' AS entity, ref, tab_name FROM resource_type_field
-       ) AS q
-      WHERE tab_name IS NOT NULL
-        AND trim(tab_name) <> ''"
-);
+if (count(ps_query("SHOW COLUMNS FROM resource_type_field LIKE 'tab_name';")) === 1)
+    {
+    $all_tab_names_data = array_merge($all_tab_names_data, ps_query("SELECT 'resource_type_field' AS entity, ref, tab_name FROM resource_type_field WHERE tab_name IS NOT NULL AND trim(tab_name) <> '';"));
+    }
+
 logScript('Found #' . count($all_tab_names_data) . ' tab names');
-
 
 $system_tabs = array_column(get_all_tabs(), 'name', 'ref');
 logScript('Found #' . count($system_tabs) . ' system tabs');

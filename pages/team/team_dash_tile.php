@@ -49,14 +49,14 @@ if($show_usergroups_dash)
     }
     ?>
     <p>
-        <a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["dasheditmodifytiles"];?></a>
+        <a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["dasheditmodifytiles"]);?></a>
     </p>
 <?php
 if(!$show_usergroups_dash)
     {
     ?>
     <p>
-        <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile_special.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo $lang["specialdashtiles"];?></a>
+        <a href="<?php echo $baseurl_short?>pages/team/team_dash_tile_special.php" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["specialdashtiles"]);?></a>
     </p>
     <?php
     }
@@ -70,7 +70,7 @@ if(!$show_usergroups_dash)
     else
         {
     ?>
-        <p><?php echo $lang['manage_all_user_dash_tiles_note']; ?></p>
+        <p><?php echo escape($lang['manage_all_user_dash_tiles_note']); ?></p>
     <div id="HomePanelContainer" class="manage-all-user-tiles">
         <?php
         get_default_dash(null, true);

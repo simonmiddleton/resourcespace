@@ -19,7 +19,7 @@ function HookRse_search_notificationsSearchafterResulthints()
     if($k == '')
         {
         ?><a href="<?php echo $href; ?>" onClick="return CentralSpaceLoad(this, true);"><?php
-            echo $lang['search_notifications_notify_me'];
+            echo escape($lang['search_notifications_notify_me']);
         ?></a>
         <?php
         }

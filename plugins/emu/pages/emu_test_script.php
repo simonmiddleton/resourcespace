@@ -47,8 +47,8 @@ include '../../../include/header.php';
         <textarea id="emu_test_script_log" disabled><?php echo implode(PHP_EOL, $output); ?></textarea>
     </div>
     <div class="QuestionSubmit">
-        <button type="button" class="RSButton" onclick="ModalClose();"><?php echo $lang['close']; ?></button>
-        <button type="button" class="RSButton" onclick="runScript(<?php echo $script; ?>);"><?php echo $lang['emu_run_script']; ?></button>
+        <button type="button" class="RSButton" onclick="ModalClose();"><?php echo escape($lang['close']); ?></button>
+        <button type="button" class="RSButton" onclick="runScript(<?php echo $script; ?>);"><?php echo escape($lang['emu_run_script']); ?></button>
         <div class="clearerleft"></div>
     </div>
     <script>

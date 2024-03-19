@@ -255,7 +255,7 @@ if(isset($videojs_resolution_selection))
         foreach($video_preview_sources as $video_preview_source)
             {
             ?>
-            <source src="<?php echo $video_preview_source["url"] ?>" type='<?php echo $video_preview_source["type"]; ?>' label='<?php echo escape($video_preview_source["label"] != "" ? $video_preview_source["label"] : $lang["preview"]); ?>'/>
+            <source src="<?php echo $video_preview_source["url"]; ?>" type='<?php echo $video_preview_source["type"]; ?>' label='<?php echo escape($video_preview_source["label"] != "" ? $video_preview_source["label"] : $lang["preview"]); ?>'/>
             <?php	
             }?>
         <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>

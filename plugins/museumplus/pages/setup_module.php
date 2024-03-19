@@ -106,7 +106,7 @@ $rtfs = ps_query('SELECT * FROM resource_type_field ORDER BY title, name', [],'s
 include '../../../include/header.php';
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang['museumplus_module_setup']; ?></h1>
+<h1><?php echo escape($lang['museumplus_module_setup']); ?></h1>
 <?php
 renderBreadcrumbs($breadcrumbs);
 if(isset($error))
@@ -117,12 +117,12 @@ if(isset($error))
     <form id="MplusModuleConfigForm" method="post" action="<?php echo $form_action; ?>">
     <?php generateFormToken("MplusModuleConfigForm"); ?>
     <div class="Question">
-        <label><?php echo $lang["museumplus_module_name"]; ?></label>
+        <label><?php echo escape($lang["museumplus_module_name"]); ?></label>
         <input name="module_name" type="text" class="stdwidth" value="<?php echo escape($module_name); ?>">
         <div class="clearerleft"></div>
     </div>
     <div class="Question">
-        <label><?php echo $lang["museumplus_mplus_id_field"]; ?></label>
+        <label><?php echo escape($lang["museumplus_mplus_id_field"]); ?></label>
         <input name="mplus_id_field" type="text" class="stdwidth" value="<?php echo escape($mplus_id_field); ?>">
         <?php render_question_form_helper($lang['museumplus_mplus_id_field_helptxt'], 'mplus_id_field', array()); ?>
         <div class="clearerleft"></div>
@@ -142,12 +142,12 @@ if(isset($error))
         420);
     ?>
         <div class="Question">
-            <label for="buttons"><?php echo $lang["museumplus_field_mappings"]; ?></label>
+            <label for="buttons"><?php echo escape($lang["museumplus_field_mappings"]); ?></label>
             <table id="MplusModuleFieldsMappingTable">
                 <tbody>
                     <tr>
-                        <th><strong><?php echo $lang["museumplus_mplus_field_name"]; ?></strong></th>
-                        <th><strong><?php echo $lang["museumplus_rs_field"]; ?></strong></th>
+                        <th><strong><?php echo escape($lang["museumplus_mplus_field_name"]); ?></strong></th>
+                        <th><strong><?php echo escape($lang["museumplus_rs_field"]); ?></strong></th>
                         <th><strong><!-- actions --></strong></th>
                     </tr>
                 <?php
@@ -163,7 +163,7 @@ if(isset($error))
                         </td>
                         <td>
                             <select class="medwidth" name="field_mappings[<?php echo $mapping_index; ?>][rs_field]">
-                                <option value=""><?php echo $lang['select']; ?></option>
+                                <option value=""><?php echo escape($lang['select']); ?></option>
                             <?php
                             foreach($rtfs as $rtf)
                                 {
@@ -177,7 +177,7 @@ if(isset($error))
                             </select>
                         </td>
                         <td>
-                            <button type="button" onclick="museumplus_delete_field_mapping(this);"><?php echo $lang['action-delete']; ?></button>
+                            <button type="button" onclick="museumplus_delete_field_mapping(this);"><?php echo escape($lang['action-delete']); ?></button>
                         </td>
                     </tr>
                     <?php
@@ -185,7 +185,7 @@ if(isset($error))
                     ?>
                     <tr>
                         <td colspan="4">
-                            <button type="button" onclick="museumplus_add_new_field_mapping(this);"><?php echo $lang['museumplus_add_mapping']; ?></button>
+                            <button type="button" onclick="museumplus_add_new_field_mapping(this);"><?php echo escape($lang['museumplus_add_mapping']); ?></button>
                         </td>
                     </tr>
                 </tbody>
@@ -193,7 +193,7 @@ if(isset($error))
             <div class="clearerleft"></div>
         </div>
         <div class="QuestionSubmit">
-            <input type="submit" name="save" value="<?php echo $lang["save"]; ?>">
+            <input type="submit" name="save" value="<?php echo escape($lang["save"]); ?>">
         </div>
     </form>  <!-- end of MplusModuleConfigForm -->
 </div> <!-- end of BasicBox -->
@@ -207,7 +207,7 @@ function museumplus_add_new_field_mapping(element)
     new_row_html += '<tr>';
     new_row_html += '<td><input class="medwidth" type="text" name="field_mappings[' + row_index + '][field_name]" value=""></td>';
     new_row_html += '<td><select class="medwidth" name="field_mappings[' + row_index + '][rs_field]">';
-    new_row_html += '<option value=""><?php echo $lang['select']; ?></option>';
+    new_row_html += '<option value=""><?php echo escape($lang['select']); ?></option>';
     <?php
     foreach($rtfs as $rtf)
         {
@@ -218,7 +218,7 @@ function museumplus_add_new_field_mapping(element)
         }
     ?>
     new_row_html += '</select></td>';
-    new_row_html += '<td><button type="button" onclick="museumplus_delete_field_mapping(this);"><?php echo $lang['action-delete']; ?></button></td>';
+    new_row_html += '<td><button type="button" onclick="museumplus_delete_field_mapping(this);"><?php echo escape($lang['action-delete']); ?></button></td>';
     new_row_html += '</tr>';
     jQuery(new_row_html).insertBefore(jQuery(button).closest('tr'));
 

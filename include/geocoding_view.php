@@ -82,14 +82,14 @@ if (!isset($geolocation_panel_only))
 if(!$hide_geolocation_panel || isset($geolocation_panel_only))
     { ?>
     <div id="GeolocationData">
-    <div class="Title"><?php echo $lang['location-title']; ?></div>
+    <div class="Title"><?php echo escape($lang['location-title']); ?></div>
     <?php
 
 if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
     { ?>
     <?php if ($edit_access)
         { ?>
-        <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['location-edit']; ?></a></p>
+        <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang['location-edit']); ?></a></p>
         <?php
         }
     $zoom = leaflet_map_zoom($resource['mapzoom']);
@@ -219,7 +219,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
         }
     else
         { ?>
-        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS ?><?php echo $lang['location-add'];?></a> <?php
+        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS ?><?php echo escape($lang['location-add']);?></a> <?php
         }
 
 if($view_panels)

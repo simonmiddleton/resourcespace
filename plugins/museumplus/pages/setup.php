@@ -153,7 +153,7 @@ function museumplus_edit_module_conf(id)
 
 function museumplus_delete_module_conf(element, id)
     {
-    if(confirm('<?php echo $lang["museumplus_confirm_delete_module_config"]; ?>') == false)
+    if(confirm('<?php echo escape($lang["museumplus_confirm_delete_module_config"]); ?>') == false)
         {
         return;
         }

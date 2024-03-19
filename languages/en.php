@@ -707,8 +707,10 @@ $lang["password"]="Password";
 $lang["login"]="Log in";
 $lang["loginincorrect"]="Sorry, your login details were incorrect.<br /><br />If you have forgotten your password,<br />use the link below to request a new one.";
 $lang["accountexpired"]="Your account has expired. Please contact the resources team.";
+$lang["accountnotfound-reset-not-emailed"]="Password reset link was not sent because there is no account with that email";
 $lang["accountnoemail-reset-not-emailed"]="Password reset link was not sent because the account has no email address";
 $lang["accountexpired-reset-not-emailed"]="Password reset link was not sent because the account has expired";
+$lang["accountnotapproved-reset-not-emailed"]="Password reset link was not sent because the account is not approved";
 $lang["useralreadyexists"]="An account with that e-mail or username already exists, or you have reached your user allocation.";
 $lang["useremailalreadyexists"]="An account with that e-mail already exists.";
 $lang["ticktoemail"]="E-mail this user their username and new password";
@@ -2809,6 +2811,8 @@ $lang["actions_type_userrequest"] = "Account request";
 $lang["actions_add_editable_to_collection"] = "Add all editable resources to collection";
 $lang["field_search_no_results"] = "Try without specifying a metadata field, or";
 $lang["actions_view_editable_as_resultset"]="View resources to review as a result set";
+$lang['email_actions_truncated'] = "Only the most recent 1000 actions are shown here. You have %%TOTAL%% actions. Login to %%APPLICATIONNAME%% to view them all.";
+
 
 $lang["refinemetadata"]="Refine metadata";
 $lang["saveandnext"]="Save and next";

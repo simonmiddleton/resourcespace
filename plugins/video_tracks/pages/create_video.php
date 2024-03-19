@@ -281,7 +281,7 @@ if($generate && enforcePostRequest(false))
 var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
 </script>
 <div class="BasicsBox">
-    <h1><?php echo $lang["video_tracks_create_video_link"];?> </h1>
+    <h1><?php echo escape($lang["video_tracks_create_video_link"]);?> </h1>
     <?php
     if ($message!="")
         {
@@ -293,7 +293,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         <input name="ref" type="hidden" value="<?php echo $ref; ?>">
         <input type="hidden" name="generate" value="yes" />
         <div class="Question" id="question_video_track_format">
-            <label><?php echo $lang["video_tracks_select_output"] ?></label>
+            <label><?php echo escape($lang["video_tracks_select_output"]); ?></label>
             <select class="stdwidth" name="video_track_format" id="video_track_format" >
             <?php
             foreach ($video_tracks_output_formats as $video_tracks_output_format=>$video_tracks_output_command)
@@ -309,9 +309,9 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         {?>
         <!-- Select subtitle file -->
         <div class="Question" id="question_video_subtitles">
-            <label><?php echo $lang["video_tracks_select_subtitle"] ?></label>
+            <label><?php echo escape($lang["video_tracks_select_subtitle"]); ?></label>
             <select class="stdwidth" name="video_subtitle_file" id="video_subtitle_file" >
-            <option value=""><?php echo $lang["select"]; ?></option>
+            <option value=""><?php echo escape($lang["select"]); ?></option>
             <?php
             foreach ($subtitle_alts as $subtitle_alt)
                 {
@@ -331,9 +331,9 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         {?>
         <!-- Select audio file -->
         <div class="Question" id="question_video_audio">
-            <label><?php echo $lang["video_tracks_select_audio"] ?></label>
+            <label><?php echo escape($lang["video_tracks_select_audio"]); ?></label>
             <select class="stdwidth" name="video_audio_file" id="video_subtitle_file" >
-            <option value=""><?php echo $lang["select"]; ?></option>
+            <option value=""><?php echo escape($lang["select"]); ?></option>
             <?php
             foreach ($audio_alts as $audio_alt)
                 {
@@ -350,7 +350,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         }
         ?>
         <div class="Question" id="question_video_save_to">
-            <label><?php echo $lang["video_tracks_save_to"] ?></label>
+            <label><?php echo escape($lang["video_tracks_save_to"]); ?></label>
             <table cellpadding="5" cellspacing="0">
                 <tbody>
                     <tr>
@@ -371,7 +371,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                                         jQuery('#question_alternative_description').slideDown();
                             ">
                             <label class="customFieldLabel Inline"
-                                   for="video_track_save_alt"><?php echo $lang['video_tracks_save_alternative']; ?></label>
+                                   for="video_track_save_alt"><?php echo escape($lang['video_tracks_save_alternative']); ?></label>
                         </td>
                         <?php
                         }
@@ -389,7 +389,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                                         jQuery('#question_transcode_now_or_notify_me').slideUp();
                             ">
                             <label class="customFieldLabel Inline"
-                                   for="video_track_save_export"><?php echo $lang['video_tracks_save_export']; ?></label>
+                                   for="video_track_save_export"><?php echo escape($lang['video_tracks_save_export']); ?></label>
                         </td>
                         <td>
                             <input type="radio"
@@ -404,7 +404,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                                         jQuery('#question_transcode_now_or_notify_me').slideDown();
                             ">
                             <label class="customFieldLabel Inline"
-                                   for="video_track_download"><?php echo $lang['download']; ?></label>
+                                   for="video_track_download"><?php echo escape($lang['download']); ?></label>
                         </td>
                     </tr>
                 </tbody>
@@ -413,7 +413,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         </div>
 
         <div class="Question" id="question_alternative_description" style="display:none;">
-            <label for="video_track_alt_desc" ><?php echo $lang["description"]; ?></label>
+            <label for="video_track_alt_desc" ><?php echo escape($lang["description"]); ?></label>
             <input type="text" class="stdwidth" id="video_track_alt_desc" name="video_track_alt_desc" value="" />
             <div class="clearerleft"></div>
         </div>
@@ -422,7 +422,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
         {
         ?>
         <div id="question_transcode_now_or_notify_me" class="Question DisplayNone">
-            <label><?php echo $lang['video_tracks_transcode_now_or_notify_me_label']; ?></label>
+            <label><?php echo escape($lang['video_tracks_transcode_now_or_notify_me_label']); ?></label>
             <table cellpadding="5" cellspacing="0">
                 <tbody>
                     <tr>
@@ -440,7 +440,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                                             }
                                    ">
                             <label class="customFieldLabel Inline"
-                                   for="transcode_now"><?php echo $lang['video_tracks_transcode_now_label']; ?></label>
+                                   for="transcode_now"><?php echo escape($lang['video_tracks_transcode_now_label']); ?></label>
                         </td>
                     </tr>
                 </tbody>
@@ -454,7 +454,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
             <input type="submit"
                    name="submit"
                    class="video_tracks_button"
-                   value="<?php echo $lang["video_tracks_generate"]; ?>"
+                   value="<?php echo escape($lang["video_tracks_generate"]); ?>"
                    onClick="
                         if(jQuery('#video_track_download').is(':checked') && !video_tracks_offline)
                             {
@@ -468,7 +468,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                             return false;
                             }
                     ">
-            <input type="submit" name="submit" class="video_tracks_button" value="<?php echo $lang["close"]; ?>" onClick="ModalClose();return false;"/>
+            <input type="submit" name="submit" class="video_tracks_button" value="<?php echo escape($lang["close"]); ?>" onClick="ModalClose();return false;"/>
         </div>
     </form>
 </div><!--End of BasicsBox -->

@@ -26,7 +26,7 @@ function HookRefineresultsSearchSearch_header_after_actions()
         {
         ?>
         <div id="refine_results_button" class="InpageNavLeftBlock">
-        <a href="#" onClick="jQuery('#RefineResults').slideToggle();jQuery('#refine_keywords').focus();"><div class="fa fa-fw fa-search-plus"></div><?php echo $lang["refineresults"]; ?></a>
+        <a href="#" onClick="jQuery('#RefineResults').slideToggle();jQuery('#refine_keywords').focus();"><div class="fa fa-fw fa-search-plus"></div><?php echo escape($lang["refineresults"]); ?></a>
         </div>
         <?php
         }

@@ -19,7 +19,7 @@ $tmsdata = tms_link_get_tms_data($ref, $tmsid);
 
 include "../../../include/header.php";
 ?>
-<h2><?php echo $lang["tms_link_tms_data"]; ?></h2>
+<h2><?php echo escape($lang["tms_link_tms_data"]); ?></h2>
 <?php
 if(!is_array($tmsdata))
     {

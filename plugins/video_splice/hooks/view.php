@@ -13,7 +13,7 @@ function HookVideo_spliceViewAfterresourceactions()
     ?>
 
     <li><a href="<?php echo generateurl($baseurl . "/plugins/video_splice/pages/trim.php", $urlparams);?>" onclick="return ModalLoad(this, true);">
-    <?php echo "<i class='fa fa-fw fa-scissors'></i>&nbsp;" . $lang["action-trim"]?>
+    <?php echo "<i class='fa fa-fw fa-scissors'></i>&nbsp;" . $lang["action-trim"]; ?>
     </a></li>
     <?php
     }

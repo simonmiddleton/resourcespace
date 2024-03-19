@@ -226,7 +226,7 @@ else
     {
     ?>    
     <div class="Question"><label><?php echo escape($lang["property-reference"]) ?></label>
-    <div class="Fixed"><?php echo  $restypedata["ref"] ?></div>
+    <div class="Fixed"><?php echo  $restypedata["ref"]; ?></div>
     <div class="clearerleft"> </div>
     </div>
 

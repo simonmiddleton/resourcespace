@@ -16,7 +16,7 @@ for ($n=0;$n<count($userlists) && $n<=20;$n++)
     if (!$first) { ?>, <?php }
             $first=false;
     ?>{
-       "value": "<?php echo $userlists[$n]['userlist_name']?>"}<?php	
+       "value": "<?php echo $userlists[$n]['userlist_name']; ?>"}<?php	
     }
 ?>
 ]
