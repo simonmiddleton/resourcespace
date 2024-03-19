@@ -319,7 +319,7 @@ if (!hook("replacecomments"))
 $profile_image = get_profile_image($ref);
 if ($profile_image != "") { ?>
     <div class="Fixed">
-        <img src="<?php echo $profile_image ?>" alt="<?php echo escape($lang['current_profile']); ?>">
+        <img src="<?php echo escape($profile_image); ?>" alt="<?php echo escape($lang['current_profile']); ?>">
     </div>
 <?php } else { ?>
     <div class="Fixed"><?php echo escape($lang["no_profile_image"]) ?></div>
