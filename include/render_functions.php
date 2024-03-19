@@ -444,20 +444,24 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
         ?>
         <div class="Question <?php 
         // Add class for each supported resource type to allow showing/hiding on advanced search
-        if($field["resource_types"] == "Collections")
+        // Skip any fields that are hidden because of a display condition i.e. $displaycondition is false, as the display condition controls visibility.
+        if ($displaycondition)
             {
-            echo "QuestionSearchRestypeCollections";
-            }
-        elseif($field["global"] == 1)
-            {
-            echo "QuestionSearchRestypeGlobal";
-            }
-        else
-            {
-            echo "QuestionSearchRestypeSpec ";
-            foreach(explode(",",(string)$field["resource_types"]) as $fieldrestype)
+            if($field["resource_types"] == "Collections")
                 {
-                echo "QuestionSearchRestype" . (int)$fieldrestype . " ";
+                echo "QuestionSearchRestypeCollections";
+                }
+            elseif($field["global"] == 1)
+                {
+                echo "QuestionSearchRestypeGlobal";
+                }
+            else
+                {
+                echo "QuestionSearchRestypeSpec ";
+                foreach(explode(",",(string)$field["resource_types"]) as $fieldrestype)
+                    {
+                    echo "QuestionSearchRestype" . (int)$fieldrestype . " ";
+                    }
                 }
             }
         ?>" id="question_<?php echo $n ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
