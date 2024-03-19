@@ -862,7 +862,12 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                     <img alt="" id="node_<?php echo (int) $ref; ?>_toggle_button" width="11" height="11" hspace="4" src="<?php echo $baseurl_short; ?>gfx/interface/<?php echo $spacer_filename; ?>" onclick="<?php echo $onClick; ?>">
                 </td>
                 <td>
-                    <input type="text" name="option_name" form="option_<?php echo $ref; ?>" value="<?php echo $name; ?>">
+                    <input
+                        type="text"
+                        name="option_name"
+                        form="option_<?php echo (int) $ref; ?>"
+                        value="<?php echo escape($name); ?>"
+                    >
                 </td>
                 <td>
                     <select id="node_option_<?php echo $ref; ?>_parent_select" parent_node="<?php echo $parent; ?>" class="node_parent_chosen_selector" name="option_parent" form="option_<?php echo $ref; ?>">
