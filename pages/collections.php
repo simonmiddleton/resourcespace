@@ -758,11 +758,11 @@ elseif ($k != "" && !$internal_share_access)
             }
         }
         if ($feedback) {?>
-            <br /> <br />
+            <br><br>
             <a onclick="return CentralSpaceLoad(this);" 
                 href="<?php echo generateURL($baseurl_short . 'pages/collection_feedback.php', ['collection' => $usercollection, 'k' => $k]); ?>">
                 <?php echo LINK_CARET . escape($lang["sendfeedback"]); ?></a>
-            </br>
+            <br>
         <?php } 
         if (
             $count_result > 0 
