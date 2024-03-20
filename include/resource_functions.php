@@ -9297,7 +9297,7 @@ function related_resource_pull(array $resource)
             {
             foreach ($relatedpull as $related)
                 {
-                if($related["has_image"] === 1)
+                if($related["has_image"] !== RESOURCE_PREVIEWS_NONE)
                     {
                     $relatedpath = get_resource_path($related["ref"],true,"pre",false,"jpg",true,1,false);
                     if(file_exists($relatedpath))
@@ -9342,7 +9342,7 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
         }
     else
         {
-        if((int)$resource['has_image'] === 0)
+        if((int)$resource['has_image'] !== RESOURCE_PREVIEWS_NONE)
             {
             // If configured, try and use a preview from a related resource
             $pullresource = related_resource_pull($resource);
