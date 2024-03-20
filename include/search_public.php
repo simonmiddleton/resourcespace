@@ -24,7 +24,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
             {
             $border=true;    
             $ref=$resources[$m]['ref'];
-            if($resources[$m]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($resources[$m]['resource_type'], 'col'))
+            if((int) $resources[$m]['has_image'] !== 0 && !resource_has_access_denied_by_RT_size($resources[$m]['resource_type'], 'col'))
                 {
                 $previewpath=get_resource_path($ref,false,"col",false,"jpg",-1,1,false,$resources[$m]["file_modified"]);
                 }

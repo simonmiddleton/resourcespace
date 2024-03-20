@@ -46,7 +46,7 @@ if ($enable_related_resources)
                         ?>
                         <div class="ResourcePanelShellSmall" id="RelatedResource_<?php echo $relatedresource["ref"]; ?>">
                             <a class="ImageWrapperSmall" href="<?php echo $baseurl_short ?>pages/view.php?ref=<?php echo $relatedresource["ref"]; ?>" title="<?php echo escape(i18n_get_translated(($relatedresource["field".$view_title_field]))) ?>" onClick="return ModalLoad(this,true);">
-                            <?php if ($relatedresource["has_image"]==1)
+                            <?php if ((int) $relatedresource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                                 {
                                 $thm_url = get_resource_path($relatedresource["ref"],false,"col",false,$relatedresource["preview_extension"],-1,1,$use_watermark,$relatedresource["file_modified"]);
                                 }

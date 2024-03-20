@@ -349,7 +349,7 @@ if(!$editaccess)
 ?>
 </p>
     <?php
-    if ($resource["has_image"]==1)
+    if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
         {
         ?><img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
         src="<?php echo get_resource_path($ref,false,"thm",false,$resource["preview_extension"],-1,1,checkperm("w"))?>" class="ImageBorder" style="margin-right:10px;"/>

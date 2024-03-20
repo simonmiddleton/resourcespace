@@ -21,7 +21,7 @@ if (
             onClick="return <?php echo $resource_view_modal ? "Modal" : "CentralSpace"; ?>Load(this, true);" 
             title="<?php echo escape($lang["action-editmetadata"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
         </a><?php
-} ?>    
+    } ?>    
 
 <!-- Collection comment icon -->
 <?php 
@@ -41,7 +41,7 @@ if (
             onClick="return ModalLoad(this,true);" 
             title="<?php echo escape($lang["addorviewcomments"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
         </a>
-        </span><?php 
+        </span><?php
 }
 hook("largesearchicon");
 ?>
@@ -50,7 +50,7 @@ hook("largesearchicon");
 <?php 
 if (
     !hook("replacefullscreenpreviewicon")
-    && $result[$n]["has_image"]==1
+    && (int) $result[$n]["has_image"] !== RESOURCE_PREVIEWS_NONE
     ) {
     ?>
         <a class="fa fa-expand"
@@ -74,12 +74,8 @@ if (
 
 <!-- Share icon -->
 <?php 
-if (
-    !hook("iconemail")
-    && $allow_share 
-    && ($k == "" || $internal_share_access)
-    ) { 
-    ?>
+if (!hook("iconemail")) { 
+    if ($allow_share && ($k == "" || $internal_share_access)) { ?>
         <a class="fa fa-share-alt"
             href="<?php echo generateURL(
                 $baseurl_short . 'pages/resource_share.php',
@@ -96,6 +92,7 @@ if (
             title="<?php echo escape($lang["share-resource"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
         </a>
         <?php 
+    }
 } ?>
 
 <!-- Remove from collection icon -->
@@ -125,18 +122,18 @@ if (
     && !in_array($result[$n]['resource_type'], $collection_block_restypes)
     && ('' == $k || $internal_share_access) 
     ) {
-        $col_link_class = ['fa-plus-circle'];
+    $col_link_class = ['fa-plus-circle'];
 
-        if (
-            isset($usercollection_resources)
-            && is_array($usercollection_resources)
-            && in_array($ref, $usercollection_resources)
-        ) {
-            $col_link_class[] = 'DisplayNone';
-        }
+    if (
+        isset($usercollection_resources)
+        && is_array($usercollection_resources)
+        && in_array($ref, $usercollection_resources)
+    ) {
+        $col_link_class[] = 'DisplayNone';
+    }
 
-        $onclick = 'toggle_addremove_to_collection_icon(this);';
-        echo add_to_collection_link($ref, $onclick, '', implode(' ', array_merge(['fa'], $col_link_class)), $resource_view_title) . '</a>';
+    $onclick = 'toggle_addremove_to_collection_icon(this);';
+    echo add_to_collection_link($ref, $onclick, '', implode(' ', array_merge(['fa'], $col_link_class)), $resource_view_title) . '</a>';
     } # end hook iconcollect
 ?>
 

@@ -9,7 +9,7 @@ function HookTransformViewAfterresourceactions (){
         return false;
         }
  
-    if ($access==0 && $resource['has_image']==1 && in_array(strtoupper($resource['file_extension']),$cropper_allowed_extensions)){
+    if ($access==0 && (int) $resource['has_image'] !== RESOURCE_PREVIEWS_NONE && in_array(strtoupper($resource['file_extension']),$cropper_allowed_extensions)){
         $urlparams = array(
             "ref"       =>  $ref,
             "search"    =>  $search,

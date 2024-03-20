@@ -431,7 +431,7 @@ if(isset($resource["field".$view_title_field]))
                 <label><?php echo escape($lang["file"]); ?></label>
             <div class="Fixed">
             <?php
-            if ($resource["has_image"]==1)
+            if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                 { ?>
                 <img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
                 id="preview" align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview && !$modal?"pre":"thm"),false,$resource["preview_extension"],-1,1,false)?>" class="ImageBorder" style="margin-right:10px; max-width: 40vw;"/>
@@ -466,7 +466,7 @@ if(isset($resource["field".$view_title_field]))
                 ?>
                 </strong>
                 <?php
-                if (checkperm("w") && $resource["has_image"]==1 && file_exists($wmpath))
+                if (checkperm("w") && (int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE && file_exists($wmpath))
                     {?>
                     &nbsp;&nbsp;
                     <a href="#" onclick='jQuery("#wmpreview").toggle();jQuery("#preview").toggle();if (jQuery(this).text()=="<?php echo escape($lang["showwatermark"]); ?>"){jQuery(this).text("<?php echo escape($lang["hidewatermark"]); ?>");} else {jQuery(this).text("<?php echo escape($lang["showwatermark"]); ?>");}'><?php echo escape($lang["showwatermark"]); ?></a>

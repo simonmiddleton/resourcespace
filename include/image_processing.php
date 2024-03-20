@@ -29,8 +29,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
 
     global $lang, $userref, $filename_field, $extracted_text_field, $amended_filename;    
     global $upload_then_process, $upload_then_process_holding_state,$offline_job_queue, $offline_job_in_progress;
-    global $enable_thumbnail_creation_on_upload, $icc_extraction, $camera_autorotation, $camera_autorotation_ext;
-    global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $banned_extensions, $pdf_pages;
+    global $icc_extraction, $camera_autorotation, $camera_autorotation_ext;
+    global $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $pdf_pages;
     global $unoconv_extensions, $merge_filename_with_title, $merge_filename_with_title_default;
     global $file_checksums_offline, $file_upload_block_duplicates, $replace_batch_existing, $valid_upload_paths;
 
@@ -345,18 +345,19 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                     }
             }
         }   
-    
-    # Store extension in the database and update file modified time.
-    if ($revert)
-        {
-        $has_image="";
-        }
-    else 
-        {
-        $has_image=",has_image=0";
-        }
-    ps_query("UPDATE resource SET file_extension= ?,preview_extension='jpg',file_modified=NOW() $has_image WHERE ref= ?", ['s', $extension, 'i', $ref]);
-    
+
+    // Store extension in the database and update file modified time.
+    // Reset 'has_image' if $revert == false
+    $set = $revert ? [] : ["has_image=?"];
+    $setparams = $revert ? [] : ["i",RESOURCE_PREVIEWS_NONE];
+
+    // Include file size
+    $file_size = @filesize_unlimited($filepath);
+
+    $set = array_merge($set,["file_size=?","file_extension=?","preview_extension='jpg'","file_modified=NOW()"]);
+    $setparams = array_merge($setparams,['i',$file_size,'s', $extension, 'i', $ref]);
+    ps_query("UPDATE resource SET " . implode(",",$set). " WHERE ref= ?", $setparams);
+   
     if(!$upload_then_process || $after_upload_processing)
         {
         # delete existing resource_dimensions
@@ -519,29 +520,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 {
                 $checksum_required = false;
                 }
-
-            if ($enable_thumbnail_creation_on_upload)
-                { 
-                create_previews($ref,false,$extension,false,false,-1,false,false,$checksum_required);
-                }
-            elseif(!$enable_thumbnail_creation_on_upload && $offline_job_queue)
-                {
-                $create_previews_job_data = array(
-                    'resource' => $ref,
-                    'thumbonly' => false,
-                    'extension' => $extension
-                );
-                $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
-                $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
-
-                job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
-                }
-            else
-                {
-                # Offline thumbnail generation is being used. Set 'has_image' to zero so the offline create_previews.php script picks this up.
-                delete_previews($ref);
-                ps_query("update resource set has_image=0 where ref= ?", ['i', $ref]);
-                }
+            start_previews($ref, $extension);
             }
     
         # Update file dimensions
@@ -734,7 +713,7 @@ function extract_exif_comment($ref,$extension="")
         # Geolocation Metadata Support
         if (!$disable_geocoding && $dec_long!=0 && $dec_lat!=0)
             {
-             ps_query("update resource set geo_long= ?,geo_lat= ? where ref= ?", ['d', $dec_long, 'd', $dec_lat, 'i', $ref]);
+            ps_query("UPDATE resource SET geo_long= ?,geo_lat= ? WHERE ref= ?", ['d', $dec_long, 'd', $dec_lat, 'i', $ref]);
             }
         
         # Update portrait_landscape_field (when reverting metadata this was getting lost)
@@ -1176,7 +1155,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     if (!$previewonly)
         {
         // make sure the extension is the same as the original so checksums aren't done for previews
-        $o_ext=ps_value("select file_extension value from resource where ref=?",array("i",$ref),"");
+        $o_ext=ps_value("SELECT file_extension value FROM resource WHERE ref=?",["i",$ref],"");
         if($extension==$o_ext && $checksum_required)
             {
             debug("create_previews - generate checksum for $ref");
@@ -1184,8 +1163,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             }
         }
     # first reset preview tweaks to 0
-    ps_query("update resource set preview_tweaks = '0|1' where ref = ?", ['i', $ref]);
-
+    ps_query("UPDATE resource SET preview_tweaks = '0|1' WHERE ref = ?", ['i', $ref]);
     // for compatibility with transform plugin, remove any
         // transform previews for this resource when regenerating previews
         $tpdir = get_temp_dir() . "/transform_plugin";
@@ -1201,11 +1179,10 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     debug("File source is $file");
 
     # Make sure the file exists, if not update preview_attempts so that we don't keep trying to generate a preview
-    if (!file_exists($file)) 
-        {
-        ps_query("update resource set preview_attempts=ifnull(preview_attempts,0) + 1 where ref= ?", ['i', $ref]);
+    if (!file_exists($file)) {
+        ps_query("UPDATE resource SET preview_attempts=IFNULL(preview_attempts,0) + 1 WHERE ref= ?", ['i', $ref]);
         return false;
-        }
+    }
     
     # If configured, make sure the file is within the size limit for preview generation
     if (isset($preview_generate_max_file_size) && !$ignoremaxsize)
@@ -1232,91 +1209,21 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     
     # Locate imagemagick.
     $convert_fullpath = get_utility_path("im-convert");
-    if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'"); return false;}
+    if ($convert_fullpath==false){
+        debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'");
+        return false;
+    }
 
-    # Handle alternative image file generation.
-    global $image_alternatives;
-    # Check against the resource extension as extension might refer to a jpg preview file
-    $resource_extension = ps_value('SELECT file_extension value FROM resource WHERE ref=?', array("i",$ref), '');
-    
-    if(isset($image_alternatives) && $alternative == -1)
-        {
-        for($n = 0; $n < count($image_alternatives); $n++)
-            {
-            $exts = explode(',', $image_alternatives[$n]['source_extensions']);
-            if(in_array($resource_extension, $exts))
-                {
-                # Remove any existing alternative file(s) with this name.
-                $existing = ps_query("SELECT ref FROM resource_alt_files WHERE resource = ? AND name = ?", ['i', $ref, 's', $image_alternatives[$n]['name']]);
-                for($m = 0; $m < count($existing); $m++)
-                    {
-                    delete_alternative_file($ref, $existing[$m]['ref']);
-                    }
+    $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
 
-                # Create the alternative file.
-                $aref  = add_alternative_file($ref, $image_alternatives[$n]['name']);
-                $apath = get_resource_path($ref, true, '', true, $image_alternatives[$n]['target_extension'], -1, 1, false, '', $aref);
-
-                $source_profile = '';
-                if(isset($image_alternatives[$n]['icc']) && $image_alternatives[$n]['icc'] === true)
-                    {
-                    $iccpath = get_resource_path($ref, true, '', false, 'icc');
-                    
-                    global $icc_extraction, $ffmpeg_supported_extensions;
-                    
-                    if(!file_exists($iccpath) && $extension != 'pdf' && !in_array($extension, $ffmpeg_supported_extensions))
-                        {
-                        // extracted profile doesn't exist. Try extracting.
-                        extract_icc_profile($ref, $extension);
-                        }
-
-                    if(file_exists($iccpath))
-                        {
-                        $source_profile = ' -strip -profile ' . $iccpath;
-                        }
-                    }
-
-                $source_params = ' ';
-                if(isset($image_alternatives[$n]['source_params']) && '' !== trim($image_alternatives[$n]['source_params']))
-                    {
-                    $source_params = ' ' . $image_alternatives[$n]['source_params'] . ' ';
-                    }
-
-                # Process the image
-                if($imversion[0] > 5 || ($imversion[0] == 5 && $imversion[1] > 5) || ($imversion[0] == 5 && $imversion[1] == 5 && $imversion[2] > 7 ))
-                    {
-                    // Use the new imagemagick command syntax (file then parameters)
-                    $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") : '') . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($apath);
-                    }
-                else
-                    {
-                    // Use the old imagemagick command syntax (parameters then file)
-                    $command = $convert_fullpath . $source_profile . ' ' . $image_alternatives[$n]['params'] . ' ' . escapeshellarg($file) . ' ' . escapeshellarg($apath);
-                    }
-                run_command($command);
-
-                if(file_exists($apath))
-                    {
-                    # Update the database with the new file details.
-                    $file_size = filesize_unlimited($apath);
-                    ps_query("UPDATE resource_alt_files SET file_name = ?, file_extension = ?, file_size = ?,creation_date=now() WHERE ref = ?",
-                        [
-                        's', $image_alternatives[$n]['filename'] . '.' . $image_alternatives[$n]['target_extension'],
-                        's', $image_alternatives[$n]['target_extension'],
-                        'i', $file_size,
-                        'i', $aref
-                        ]    
-                    );
-                    }
-                }
-            }
-        }   
-
-    
-        
     if (($extension=="jpg") || ($extension=="jpeg") || ($extension=="png") || ($extension=="gif" && !$ffmpeg_preview_gif))
-    # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
+        # Create image previews for built-in supported file types only (JPEG, PNG, GIF)
         {
+        # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
+        if ((list($sw,$sh) = try_getimagesize($file))===false)
+            {
+            return false;
+            }    
         if (isset($imagemagick_path))
             {
             return create_previews_using_im($ref, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ingested, $onlysizes);
@@ -1332,21 +1239,8 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             # Only create previews where the target size IS LESS THAN OR EQUAL TO the source size.
             # Set thumbonly=true to (re)generate thumbnails only.
 
-            $sizes="";
-            if ($thumbonly) {$sizes=" where id='thm' or id='col'";}
-            if ($previewonly) {$sizes=" where id='thm' or id='col' or id='pre' or id='scr'";}
-            $params=[];
-            if (count($onlysizes) > 0 )
-                {
-                $onlysizes = array_filter($onlysizes,function($v){return ctype_lower($v);});
-                $sizes=" where id in (". ps_param_insert(count($onlysizes)) .")";
-                $params= ps_param_fill($onlysizes, 's');   
-                }
+            $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
 
-            # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
-            if ((list($sw,$sh) = try_getimagesize($file))===false) {return false;}
-        
-            $ps=ps_query("select " . columns_in("preview_size") . " from preview_size $sizes", $params);
             for ($n=0;$n<count($ps);$n++)
                 {
                 # fetch target width and height
@@ -1403,14 +1297,16 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                     # If the source is smaller than the pre/thm/col, we still need these sizes; just copy the file
                     copy($file,get_resource_path($ref,true,$id,false,$extension,-1,1,false,"",$alternative));
                     if ($id=="thm") {
-                        ps_query("update resource set thumb_width= ?,thumb_height= ? where ref= ?", ['i', $sw, 'i', $sh, 'i', $ref]);
+                        ps_query("UPDATE resource SET thumb_width= ?,thumb_height= ? WHERE ref= ?", ['i', $sw, 'i', $sh, 'i', $ref]);
                         }
                     }
                 }
             # flag database so a thumbnail appears on the site
-            if ($alternative==-1) # not for alternatives
+            if ($alternative==-1)
                 {
-                ps_query("update resource set has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=now() where ref= ?", ['i', $ref]);
+                // Not for alternatives
+                $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+                ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
                 }
             }
         }
@@ -1423,6 +1319,25 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
             {
             include dirname(__FILE__)."/preview_preprocessing.php";
             }
+        }
+
+    if($alternative == -1 && isset($GLOBALS["image_alternatives"]) && $generateall) {
+        // Create alternatives
+        create_image_alternatives($ref,
+            ["extension" => $extension,
+            "file" => $file,
+            "previewonly" => $previewonly,
+            "previewbased" => $previewbased,
+            "ingested" => $ingested],
+        );
+    }
+    
+    # Flag database so a thumbnail appears on the site
+    if ($alternative==-1)
+        {
+        // Not for alternatives
+        $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+        ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
         }
         
     hook('afterpreviewcreation', '',array($ref, $alternative));
@@ -1447,7 +1362,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
     if (isset($imagemagick_path))
         {
-
         # ----------------------------------------
         # Use ImageMagick to perform the resize
         # ----------------------------------------
@@ -1466,32 +1380,25 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $origfile = get_resource_path($ref,true,"",false,$extension,-1,1,false,"",$alternative);
             }
 
-        # If $onlysizes set, don't remove other preview sizes.
-        $unlink_size = fn($check_size) => count($onlysizes) == 0 || (count($onlysizes) > 0 && in_array($check_size, $onlysizes));
+        // Function to check if $onlysizes is set, and if so don't remove other preview sizes.
+        $f_unlink_size = fn($check_size) => count($onlysizes) == 0 || (count($onlysizes) > 0 && in_array($check_size, $onlysizes));
 
-        $hpr_path=get_resource_path($ref,true,"hpr",false,"jpg",-1,1,false,"",$alternative);
-        if (file_exists($hpr_path) && !$previewbased && $unlink_size('hpr'))
-            {
-            unlink($hpr_path);
+        $removesizes = ["hpr","lpr","scr"];
+        $allpresizes = [];
+        $filestounlink = [];
+        foreach($removesizes as $removesize) {
+            $allpresizes[$removesize] = get_resource_path($ref,true,$removesize,false,"jpg",-1,1,false,"",$alternative);
+            if(!$previewbased && $f_unlink_size($removesize)) {
+                $filestounlink[] = $allpresizes[$removesize];
+                // Add watermarked path
+                $filestounlink[]=get_resource_path($ref,true,$removesize,false,"jpg",-1,1,true,"",$alternative);
             }
-
-        $lpr_path=get_resource_path($ref,true,"lpr",false,"jpg",-1,1,false,"",$alternative);
-        if (file_exists($lpr_path) && !$previewbased && $unlink_size('lpr'))
-            {
-            unlink($lpr_path);
+        }
+        foreach($filestounlink as $filetounlink){
+            if (file_exists($filetounlink)){
+                try_unlink($filetounlink);
             }
-
-        $scr_path=get_resource_path($ref,true,"scr",false,"jpg",-1,1,false,"",$alternative);
-        if (file_exists($scr_path) && !$previewbased && $unlink_size('scr'))
-            {
-            unlink($scr_path);
-            }
-
-        $scr_wm_path=get_resource_path($ref,true,"scr",false,"jpg",-1,1,true,"",$alternative);
-        if (file_exists($scr_wm_path) && !$previewbased && $unlink_size('scr'))
-            {
-            unlink($scr_wm_path);
-            }
+        };
 
         $prefix = '';
         # Camera RAW images need prefix
@@ -1530,110 +1437,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $o_width  = $sw;
             $o_height = $sh;
             }
-
-        if($lean_preview_generation)
-            {
-            $all_sizes=false;
-            if(!$thumbonly && !$previewonly)
-                {
-                // seperate width and height
-                $all_sizes=true;
-                }
-            }
         
-        $sizes="";
-        $params = [];
-        $lookup_sizes = true;
-        if ($thumbonly)
-            {
-            $sizes=" WHERE id='thm' or id='col'";
-            }
-        elseif ($previewonly)
-            {
-            $sizes=" WHERE id='thm' or id='col' or id='pre' or id='scr'";
-            }
-        elseif (is_array($onlysizes) && count($onlysizes) > 0 )
-            {
-            $sizefilter = array_filter($onlysizes,function($v){return ctype_lower($v);});
-            if (count($sizefilter) > 0)
-                {
-                $sizes = " WHERE id IN (" . ps_param_insert(count($sizefilter)) . ")";
-                $params = ps_param_fill($sizefilter, 's');
-                }
-            else
-                {
-                // No valid sizes supplied in $onlysizes. Don't return all sizes from the db instead.
-                $lookup_sizes = false;
-                $ps = array();
-                }
-            $all_sizes= false;
-            }
+        $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
+        $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
         
-        if ($lookup_sizes)
-            {
-            $ps = ps_query("SELECT " . columns_in("preview_size") . " FROM preview_size $sizes ORDER BY width DESC, height DESC", $params);
-            }
-
-        if($lean_preview_generation && $all_sizes)
-            {
-            $force_make=array("pre","thm","col");
-            if($extension!="jpg" || $extension!="jpeg"){
-                array_push($force_make,"hpr","scr");
-            }
-            $count=count($ps)-1;
-            $oversized=0;
-            for($s=$count;$s>0;$s--)
-                {
-                if(!in_array($ps[$s]['id'],$force_make) && !in_array($ps[$s]['id'],$always_make_previews) && (isset($o_width) && isset($o_height) && $ps[$s]['width']>$o_width && $ps[$s]['height']>$o_height) && !$previews_allow_enlarge)
-                    {
-                    $oversized++;
-                    }
-                if($oversized>0)
-                    {
-                    unset($ps[$s]);
-                    }
-                }
-            $ps = array_values($ps);
-            }
-            
-        if((count($ps) > 0  && $preview_tiles && $preview_tiles_create_auto) || in_array("tiles",$onlysizes)
-            && !in_array($extension, config_merge_non_image_types())
-            )
-            {
-            // Ensure that scales are in order
-            natsort($preview_tile_scale_factors);
-
-            debug("create_previews - adding tiles to generate list: source width: " . $sw . " source height: " . $sh);
-            foreach($preview_tile_scale_factors as $scale)
-                {
-                foreach(compute_tiles_at_scale_factor($scale, $sw, $sh) as $tile)
-                    {
-                    $tile['width'] = floor($tile['w'] / $scale);
-                    $tile['height'] = floor($tile['h'] / $scale);
-                    $tile['type'] = 'tile';
-                    $tile['internal'] = 1;
-                    $tile['allow_preview'] = 0;
-
-                    $ps[] = $tile;
-                    }
-                }
-            }
-        
-        if(count($onlysizes) == 1 && substr($onlysizes[0],0,8) == "resized_")
-            {
-            $o = count($ps);
-            $size_req = explode("_",substr($onlysizes[0],8));
-            $customx = $size_req[0];
-            $customy = $size_req[1];
-    
-            debug("create_previews - creating custom size width: " . $customx . " height: " . $customy);
-            $ps[$o]['id'] = $onlysizes[0]; 
-            $ps[$o]['width'] = $customx;
-            $ps[$o]["height"] = $customy;
-            $ps[$o]['internal'] = 1;
-            $ps[$o]['allow_preview'] = 0;
-            }
-
         # Locate imagemagick.
         $convert_fullpath = get_utility_path("im-convert");
         if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
@@ -1667,7 +1474,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             # If preview_preprocessing indicates the intermediate jpg should be kept as the hpr image, do that. 
             if ($keep_for_hpr && $ps[$n]['id']=="hpr")
                 {
-                rename($file,$hpr_path); // $keep_for_hpr is switched to false below
+                rename($file,$allpresizes["hpr"]); // $keep_for_hpr is switched to false below
                 $override_size = true; // Prevent using original file when hpr size is smaller than pre size - always create pre size.
                 }
             
@@ -1686,19 +1493,19 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 if (isset($ps[$n]['type']) && $ps[$n]['type'] == "tile")
                     {
                     // Alway use original or HPR size as source
-                    $file=file_exists($hpr_path) ? $hpr_path : $origfile;
+                    $file=file_exists($allpresizes["hpr"]) ? $allpresizes["hpr"] : $origfile;
                     if($file == $origfile)
                         {
                         $using_original = true;
                         $icc_transform_complete = false;
                         }
                     }
-                elseif ($file!=$hpr_path)
+                elseif ($file != $allpresizes["hpr"])
                     {
                     # Get a source file with dimensions sufficient to create the required size. Unusually wide
                     # or tall images can mean that the height/width of the larger sizes is less than the required
                     # target height/width
-                    foreach(array($scr_path,$lpr_path,$hpr_path,$origfile) as $pre_source)
+                    foreach(array_values(array_merge($allpresizes,[$origfile])) as $pre_source)
                         {
                         if(file_exists($pre_source))
                             {
@@ -2310,12 +2117,15 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             {
             $target = false;
             }
-        
+                
+        $resource_data=get_resource_data($ref);
         if ($target && $alternative==-1) # Do not run for alternative uploads 
             {
             extract_mean_colour($target,$ref);
-            # flag database so a thumbnail appears on the site
-            ps_query("UPDATE resource SET has_image=1,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$ref]);
+            // Flag database. If this was run for e.g. a video or PDF it is not the full set of previews
+            $has_image = (($resource_data["file_extension"] ?? "") === $extension && $generateall) ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
+              
+            ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=NOW() WHERE ref = ?",["i",$has_image,"i",$ref]);
             }
         else
             {
@@ -2325,6 +2135,16 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             }
         
+        if($alternative == -1 && isset($GLOBALS["image_alternatives"]) && $generateall && ($resource_data["file_extension"] ?? "") === $extension) {
+            // Create alternatives
+            create_image_alternatives($ref,
+                ["extension" => $extension,
+                "file" => $file,
+                "previewonly" => $previewonly,
+                "previewbased" => $previewbased,
+                "ingested" => $ingested],
+            );
+        }
         hook('afterpreviewcreation', '',array($ref, $alternative));
         return true;
         }
@@ -3409,85 +3229,70 @@ function upload_file_by_url(int $ref,bool $no_exif=false,bool $revert=false,bool
  *
  */ 
 function delete_previews($resource,$alternative=-1)
-    {
-    global $ffmpeg_preview_extension, $ffmpeg_supported_extensions, $watermark;
+{
+    global $ffmpeg_supported_extensions, $watermark;
     
     // If a resource array has been passed we already have the extensions
-    if(is_array($resource))
-        {
-        $resource_data=$resource;
-        $extension=$resource["file_extension"];
-        $resource=$resource["ref"];
-        }
-    else
-        {
-        $resource_data=get_resource_data($resource);
-        $extension=$resource_data["file_extension"];
-        }
+    if (is_array($resource)) {
+        $resource_data = $resource;
+        $extension = $resource["file_extension"];
+        $resource = $resource["ref"];
+    } else {
+        $resource_data = get_resource_data($resource,false);
+        $extension = $resource_data["file_extension"];
+    }
     
-    $fullsizejpgpath=get_resource_path($resource,true,"",false,"jpg",-1,1,false,"",$alternative);           
-    # Delete the full size original if not a JPG resource
-    if($extension!="" && strtolower($extension)!="jpg" && file_exists($fullsizejpgpath) && $alternative==-1)
-        {
+    $fullsizejpgpath = get_resource_path($resource,true,"",false,"jpg",-1,1,false,"",$alternative);           
+    // Delete the full size original if not a JPG resource
+    if ($extension !== "" && strtolower($extension)!="jpg" && file_exists($fullsizejpgpath) && $alternative==-1) {
         unlink($fullsizejpgpath);
-        }           
+    }           
     
-    $dirinfo=pathinfo($fullsizejpgpath);    
+    $dirinfo = pathinfo($fullsizejpgpath);    
     $resourcefolder = $dirinfo["dirname"];
 
-    $presizes=ps_array("select id value from preview_size",array());
-    $pagecount=get_page_count($resource_data,$alternative);
-    foreach($presizes as $presize)
-        {
-        for($page=1;$page<=$pagecount;$page++)
-            {
-            $previewpath=get_resource_path($resource,true,$presize,false,"jpg",-1,$page,false,"",$alternative);
-            if(file_exists($previewpath))
-                {
+    $presizes = ps_array("SELECT id value FROM preview_size");
+    $pagecount = get_page_count($resource_data,$alternative);
+    foreach($presizes as $presize) {
+        for($page=1;$page<=$pagecount;$page++) {
+            $previewpath = get_resource_path($resource,true,$presize,false,"jpg",-1,$page,false,"",$alternative);
+            if (file_exists($previewpath)) {
                 unlink($previewpath);
-                }
-            if ($watermark !== '')
-                {
-                $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "",$alternative);
-                if (file_exists($wm_path))
-                    {
-                    unlink($wm_path);
-                    }
-                }
             }
-        }
-
-    if (in_array($extension, $ffmpeg_supported_extensions) || $extension == 'gif')
-        {
-        remove_video_previews($resource);
-        }
-
-    $delete_prefixes = array();
-    $delete_prefixes[] = "resized_";
-    $delete_prefixes[] = "tile_";
-    $delete_prefixes[] = "tmp_";
-
-    if(!file_exists($resourcefolder))
-        {
-        return;
-        }
-    
-    $allfiles = new DirectoryIterator($resourcefolder);
-    foreach ($allfiles as $fileinfo)
-        {
-        if (!$fileinfo->isDot())
-            {
-            $filename = $fileinfo->getFilename();
-            foreach($delete_prefixes as $delete_prefix)
-                {
-                if(substr($filename,strlen($resource),strlen($delete_prefix)) == $delete_prefix)
-                    {
-                    unlink($resourcefolder . DIRECTORY_SEPARATOR . $filename);
-                    }
+            if ($watermark !== '') {
+                $wm_path = get_resource_path($resource, true, $presize, false, "jpg", -1, $page, true, "",$alternative);
+                if (file_exists($wm_path)) {
+                    unlink($wm_path);
                 }
             }
         }
     }
+
+    if (in_array($extension, $ffmpeg_supported_extensions) || $extension == 'gif') {
+        remove_video_previews($resource);
+    }
+
+    $delete_prefixes = [];
+    $delete_prefixes[] = "resized_";
+    $delete_prefixes[] = "tile_";
+    $delete_prefixes[] = "tmp_";
+
+    if (!file_exists($resourcefolder)) {
+        return;
+    }
+    
+    $allfiles = new DirectoryIterator($resourcefolder);
+    foreach ($allfiles as $fileinfo) {
+        if (!$fileinfo->isDot()) {
+            $filename = $fileinfo->getFilename();
+            foreach($delete_prefixes as $delete_prefix) {
+                if(substr($filename,strlen($resource),strlen($delete_prefix)) == $delete_prefix) {
+                    unlink($resourcefolder . DIRECTORY_SEPARATOR . $filename);
+                }
+            }
+        }
+    }
+}
 
 /**
  * Get dimensions of image file
@@ -4110,3 +3915,292 @@ function remove_video_previews(int $resource) : void
                 }
             }
     }
+
+/**
+ * Create preview sizes via create_previews() and/or generate jobs as necessary
+ *
+ * @param int $ref                  Resource ID
+ * @param string $extension         File extension
+ * 
+ * @return bool                     true if all previews have been created, false if
+ *                                  offline jobs/scripts are required to create the full set 
+ *                                  of previews/image/video alternatives
+ * 
+ */
+function start_previews(int $ref, string $extension = ""): bool
+{
+    global $lang;
+
+    $minimal_previews = false;
+    $resource_data = get_resource_data($ref,false);
+    delete_previews($resource_data);
+    if(trim($extension) == "") {
+        $extension = $resource_data["file_extension"];
+    }
+    $ingested = empty($resource_data['file_path']);
+    if($GLOBALS["offline_job_queue"]) {
+        $create_previews_job_data = [
+            'resource' => $ref,
+            'thumbonly' => false,
+            'extension' => $resource_data["file_extension"],
+            'previewonly' => false,
+            'previewbased' => false,
+            'alternative' => -1,
+            'ignoremaxsize' => true,
+        ];
+        $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
+        $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
+        job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+        $minimal_previews = true;
+    } elseif (
+        $GLOBALS["enable_thumbnail_creation_on_upload"] === false 
+        || (int) $resource_data["file_size"]/(1024*1024) >= (int) ($GLOBALS["preview_generate_max_file_size"] ?? PHP_INT_MAX)
+    ) {
+        // These configs require use of a cron task to run batch/create_previews.php
+        ps_query("UPDATE resource SET has_image = ? WHERE ref= ?", ['i',RESOURCE_PREVIEWS_NONE,'i', $ref]);
+        $minimal_previews = true;
+    }
+        
+    if($minimal_previews) {
+        if (!in_array($extension,$GLOBALS["minimal_preview_creation_exclude_extensions"])) {
+            // Extension hasn't been excluded from immediate preview creation
+            create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
+        }
+        return false;
+    }
+    // No offline preview creation - create the full set of previews immediately
+    create_previews($ref,false,$resource_data["file_extension"],false,false,-1,false,$ingested);
+    
+    return true;
+}
+
+
+/**
+ * Get an array of preview size IDs to generate
+ *
+ * @param string $extension         File extension ('hpr' is only required for non-JPG images)
+ * @param array $dimensions         Image source dimensions in format [width,height]
+ * @param bool $thumbonly           Generate 'thm' and 'col' only 
+ * @param bool $previewonly         Generate 'scr', 'pre', 'thm' and 'col' only 
+ * @param array $onlysizes          Array of requested size IDs to generate
+ * 
+ * @return array
+ * 
+ */
+function get_sizes_to_generate(
+    string $extension,
+    array $dimensions,
+    bool $thumbonly = false,
+    bool $previewonly = false,
+    array $onlysizes = []
+    )
+{
+    $sw = (int) ($dimensions[0] ?? 0);
+    $sh = (int) ($dimensions[1] ?? 0);
+
+    if($sw == 0 || $sh == 0) {
+        return false;
+    }
+    $getsizes = [];
+    $params = [];
+    if ($thumbonly) {
+        $onlysizes=['thm','col'];
+    } elseif ($previewonly) {
+        $onlysizes = ['thm','col','pre','scr'];
+    }
+    
+    // Construct query    
+    if (count($onlysizes) > 0) {
+        $onlysizes = array_filter($onlysizes,function($v) {
+            return ctype_lower($v);
+        });
+        $validsizecount = count($onlysizes);
+        if($validsizecount === 0) {
+            return false;
+        }
+        $getsizes = array_fill(0,$validsizecount,"?");
+        $params = ps_param_fill($onlysizes, 's');   
+    }
+
+    $condition = count($getsizes) > 0 ? " WHERE id IN (" . implode(",",$getsizes) . ")" : "";
+    $ps = ps_query(
+        "SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition,
+        $params
+        );
+
+    if ($GLOBALS["lean_preview_generation"] && count($getsizes) == 0) {
+        $force_make = array("pre","thm","col");
+        if ($extension != "jpg" || $extension != "jpeg") {
+            array_push($force_make,"hpr","scr");
+        }
+        $count = count($ps)-1;
+        $oversized = 0;
+        for ($s = $count;$s>0;$s--) {
+            if (
+                !in_array($ps[$s]['id'],$force_make)
+                && !in_array($ps[$s]['id'],$GLOBALS["always_make_previews"])
+                && isset($o_width)
+                && isset($o_height)
+                && $ps[$s]['width'] > $o_width
+                && $ps[$s]['height'] > $o_height
+                && !$GLOBALS["previews_allow_enlarge"]
+            ) {
+                $oversized++;
+            }
+            if($oversized>0) {
+                unset($ps[$s]);
+            }
+        }
+        $ps = array_values($ps);
+    }
+        
+    if (
+        (count($onlysizes) === 0 || in_array("tiles",$onlysizes))
+        && $GLOBALS["preview_tiles"] 
+        && $GLOBALS["preview_tiles_create_auto"]
+        && !in_array($extension, config_merge_non_image_types())
+        )
+        {
+        // Ensure that scales are in order
+        natsort($GLOBALS["preview_tile_scale_factors"]);
+
+        debug("create_previews - adding tiles to generate list: source width: "
+            . $sw . " source height: " . $sh
+            );
+        foreach($GLOBALS["preview_tile_scale_factors"] as $scale) {
+            foreach(compute_tiles_at_scale_factor($scale, $sw, $sh) as $tile) {
+                $tile['width'] = floor($tile['w'] / $scale);
+                $tile['height'] = floor($tile['h'] / $scale);
+                $tile['type'] = 'tile';
+                $tile['internal'] = 1;
+                $tile['allow_preview'] = 0;
+                $ps[] = $tile;
+            }
+        }
+    }
+    
+    if(count($onlysizes) == 1 && substr($onlysizes[0],0,8) == "resized_") {
+        $o = count($ps);
+        $size_req = explode("_",substr($onlysizes[0],8));
+        $customx = $size_req[0];
+        $customy = $size_req[1];
+
+        debug("create_previews - creating custom size width: " . $customx . " height: " . $customy);
+        $ps[$o]['id'] = $onlysizes[0]; 
+        $ps[$o]['width'] = $customx;
+        $ps[$o]["height"] = $customy;
+    }
+    return $ps;
+}
+
+function create_image_alternatives(int $ref, array $params, $force = false)
+{
+    // Handle alternative image file generation    
+    $convert_fullpath = get_utility_path("im-convert");
+    if ($convert_fullpath === false) {
+        return false;
+    }
+    $imversion = get_imagemagick_version();
+
+    // Set correct syntax for commands to remove alpha channel
+    $alphaoff = "-alpha off";
+    if($imversion[0] < 7) {
+        $alphaoff = "+matte";
+    }
+    // Check parameters 
+    $file = (string) ($params["file"] ?? "");
+    $extension = (string) ($params["extension"] ?? "jpg");
+    $previewonly = (bool) ($params["previewonly"] ?? false);
+    $previewbased = (bool) ($params["previewbased"] ?? false);
+    $ingested = (bool) ($params["ingested"] ?? true);
+
+    if($file === "") {
+        $file = get_preview_source_file($ref, $extension, $previewonly, $previewbased, -1, $ingested);
+    }
+
+    # Check against the resource extension as extension might refer to a jpg preview file
+    $resource_extension = ps_value('SELECT file_extension value FROM resource WHERE ref=?', array("i",$ref), '');
+    $arrexisting = get_alternative_files($ref);
+    for($n = 0; $n < count($GLOBALS["image_alternatives"]); $n++)
+        {
+        $alternate_config = $GLOBALS["image_alternatives"][$n];
+        debug("Considering image alternative. Name: ''" . $alternate_config['name'] . "', description: '" . ($alternate_config['description'] ?? "") . "'");
+        $exts = explode(',', $alternate_config['source_extensions']);
+        foreach($arrexisting as $existing)
+             {
+            if(in_array($resource_extension, $exts) 
+                && $alternate_config['name'] == $existing["name"]
+                && (!isset($alternate_config['description']) || $alternate_config['description'] == $existing["description"])
+                && $alternate_config['target_extension'] == $existing["file_extension"]
+                )
+                 {
+                if($force)
+                    {
+                    debug("Deleting existing image alternative for resource #" . $ref . ", alternative id #" . $existing['ref']); 
+                    delete_alternative_file($ref,$existing["ref"]);
+                    }
+                else
+                    {
+                    debug("Skipping creation of image alternative " . $alternate_config['name'] . " for resource #" . $ref . " as already exists. Alternative id #" . $existing['ref']); 
+                    continue 2;
+                    }
+                 }
+             }
+
+        // Create the alternative file.
+        $aref  = add_alternative_file($ref, $alternate_config['name'],$alternate_config['description'] ?? "");
+        $apath = get_resource_path($ref, true, '', true, $alternate_config['target_extension'], -1, 1, false, '', $aref);
+
+        $source_profile = '';
+        if(isset($alternate_config['icc']) && $alternate_config['icc'] === true)
+            {
+            $iccpath = get_resource_path($ref, true, '', false, 'icc');
+            
+            global $icc_extraction, $ffmpeg_supported_extensions;
+            
+            if(!file_exists($iccpath) && $extension != 'pdf' && !in_array($extension, $ffmpeg_supported_extensions))
+                {
+                // extracted profile doesn't exist. Try extracting.
+                extract_icc_profile($ref, $extension);
+                }
+
+            if(file_exists($iccpath))
+                {
+                $source_profile = ' -strip -profile ' . $iccpath;
+                }
+            }
+
+        $source_params = ' ';
+        if(isset($alternate_config['source_params']) && '' !== trim($alternate_config['source_params']))
+            {
+            $source_params = ' ' . $alternate_config['source_params'] . ' ';
+            }
+
+        # Process the image
+        if($imversion[0] > 5 || ($imversion[0] == 5 && $imversion[1] > 5) || ($imversion[0] == 5 && $imversion[1] == 5 && $imversion[2] > 7 ))
+            {
+            // Use the new imagemagick command syntax (file then parameters)
+            $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . (!in_array(strtolower($extension), $GLOBALS["preview_keep_alpha_extensions"]) ? $alphaoff : "") : '') . $source_profile . ' ' . $alternate_config['params'] . ' ' . escapeshellarg($apath);
+            }
+        else
+            {
+            // Use the old imagemagick command syntax (parameters then file)
+            $command = $convert_fullpath . $source_profile . ' ' . $alternate_config['params'] . ' ' . escapeshellarg($file) . ' ' . escapeshellarg($apath);
+            }
+        $output = run_command($command);
+
+        if(file_exists($apath))
+            {
+            # Update the database with the new file details.
+            $file_size = filesize_unlimited($apath);
+            ps_query("UPDATE resource_alt_files SET file_name = ?, file_extension = ?, file_size = ?, creation_date=now() WHERE ref = ?",
+                [
+                's', $alternate_config['filename'] . '.' . $alternate_config['target_extension'],
+                's', $alternate_config['target_extension'],
+                'i', $file_size,
+                'i', $aref
+                ]    
+            );
+        }    
+    }
+}

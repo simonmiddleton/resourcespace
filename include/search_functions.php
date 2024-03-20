@@ -1454,7 +1454,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         # Extract the colour key
         $colourkey=explode(" ",$search);$colourkey=str_replace("!colourkey","",$colourkey[0]);
         $sql = new PreparedStatementQuery();
-        $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image=1 AND LEFT(colour_key,4) = ? AND " . $sql_filter->sql . " GROUP BY r.ref" . $sql_suffix;
+        $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image > 0 AND LEFT(colour_key,4) = ? AND " . $sql_filter->sql . " GROUP BY r.ref" . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,["s",$colourkey],$sql_filter->parameters);
         }
 
@@ -1481,7 +1481,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
         {
         $rgb=explode(":",$search);$rgb=explode(",",$rgb[1]);
         $searchsql = new PreparedStatementQuery();
-        $searchsql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image=1 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY (abs(image_red - ?)+abs(image_green - ?)+abs(image_blue - ?)) ASC LIMIT 500" . $sql_suffix;
+        $searchsql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image > 0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY (abs(image_red - ?)+abs(image_green - ?)+abs(image_blue - ?)) ASC LIMIT 500" . $sql_suffix;
         $searchsql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters,["i",$rgb[0],"i",$rgb[1],"i",$rgb[2]]);
         $sql = $searchsql;
         }
@@ -1544,7 +1544,7 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
     elseif ($search=="!images") 
         {
         // Search for resources with images
-        $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image=1 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
+        $sql->sql = $sql_prefix . "SELECT DISTINCT r.hit_count score, $select FROM resource r " . $sql_join->sql . " WHERE has_image>0 AND " . $sql_filter->sql . " GROUP BY r.ref ORDER BY " . $order_by . $sql_suffix;
         $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
         }
     elseif (substr($search,0,7)=="!unused")

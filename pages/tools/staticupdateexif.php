@@ -71,7 +71,7 @@ set_time_limit(60*60*40);
 
 echo "Updating EXIF/IPTC...\n";
 
-$sql = new PreparedStatementQuery("SELECT ref, file_extension FROM resource WHERE has_image = 1",[]);
+$sql = new PreparedStatementQuery("SELECT ref, file_extension FROM resource WHERE has_image > ?",["i",RESOURCE_PREVIEWS_NONE]);
 
 if($collectionid>0) {
     echo "Collection ID: " . $collectionid . PHP_EOL;

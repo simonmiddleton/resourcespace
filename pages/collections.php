@@ -974,28 +974,25 @@ else
                             href="<?php echo $thumb_url ?>">
                         <?php
                         $colimg_preview_size = $retina_mode ? 'thm' : 'col';
-                        $thumbnail = get_resource_preview($result[$n],[$colimg_preview_size],$access,$watermark);
-                        if($thumbnail !== false)
-                            {
-                            // Use standard preview image
-                            if($result[$n]["thumb_height"] !== $thumbnail["height"] || $result[$n]["thumb_width"] !== $thumbnail["width"])
-                                {                    
-                                // Preview image dimensions differ from the size data stored for the current resource
-                                $result[$n]["thumb_height"] = $thumbnail["height"];
-                                $result[$n]["thumb_width"]  = $thumbnail["width"];
-                                }
-                            render_resource_image($result[$n],$thumbnail["url"],$colimg_preview_size);                        
-                            }
-                        else
-                            {
+                        if($result[$n]['has_image'] !== RESOURCE_PREVIEWS_NONE
+                            && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $colimg_preview_size)
+                            && file_exists(get_resource_path($ref, true, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
+                        ) {
+                            $colimgpath = get_resource_path($ref, false, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
                             ?>
-                            <img border=0 
-                                alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-                                src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" 
+                            <img class="CollectionPanelThumb"
+                                border=0
+                                src="<?php echo $colimgpath; ?>"
+                                title="<?php echo escape(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                                alt="<?php echo escape(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                                <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?>
                             />
-                            <?php 
-                            }
-
+                        <?php } else { ?>
+                            <img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
+                                border=0
+                                src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>"
+                            />
+                        <?php }
                         hook("aftersearchimg","",array($result[$n]))?>
                         </a></td>
                     </tr></table><?php
@@ -1003,13 +1000,11 @@ else
 
                 $title=$result[$n]["field".$view_title_field];
                 $title_field=$view_title_field;
-                if (
-                    isset($metadata_template_title_field) 
-                    && isset($metadata_template_resource_type)
-                    && $result[$n]['resource_type'] == $metadata_template_resource_type
-                    ) {
+                if (isset($metadata_template_title_field) && isset($metadata_template_resource_type)) {
+                    if ($result[$n]['resource_type']==$metadata_template_resource_type) {
                         $title=$result[$n]["field".$metadata_template_title_field];
                         $title_field=$metadata_template_title_field;
+                    }
                 }
 
                 $field_type=ps_value("SELECT type value FROM resource_type_field WHERE ref=?",array("i",$title_field),
@@ -1084,9 +1079,9 @@ else
                     } # End of remove link condition
                     ?>
                     </div>
-<?php } # End of k="" condition ?>
+        <?php } # End of k="" condition ?>
                 </div>
-<?php } # End of ResourceView hook
+    <?php } # End of ResourceView hook
         } # End of loop through standard display thumbnails ?>
         <div class="clearerleft"></div>
 <?php } # End of display thumbnails for standard display

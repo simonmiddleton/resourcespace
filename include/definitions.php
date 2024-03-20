@@ -859,3 +859,9 @@ const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource_%filename%size.%extension'
 const SEVERITY_CRITICAL = 0;
 const SEVERITY_WARNING = 1;
 const SEVERITY_NOTICE = 2;
+
+
+// ------------ PREVIEW IMAGE STATUS CODES (the resource table has_image  column)  ----------
+const RESOURCE_PREVIEWS_NONE = 0;
+const RESOURCE_PREVIEWS_ALL = 1;
+const RESOURCE_PREVIEWS_MINIMAL = 2;
