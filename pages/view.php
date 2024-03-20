@@ -651,14 +651,16 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 // Video preview START
                                 # Establish whether it's ok to use original as the preview instead of the "pre" size
                                 $videosize= ($video_preview_original) ? "" : "pre"; 
-                                
+                                # Now pass the original file extension when necessary instead of arbitrarily passing the ffmpeg preview extension
+                                $videoextension = ($video_preview_original) ? $resource["file_extension"] : $ffmpeg_preview_extension;
+
                                 # Try to find a preview file.
                                 $video_preview_file = get_resource_path(
                                     $ref,
                                     true,
                                     $videosize,
                                     false,
-                                    ((1 == $video_preview_hls_support || 2 == $video_preview_hls_support) && !($ffmpeg_preview_gif && $resource["file_extension"] == 'gif')) ? 'm3u8' : $ffmpeg_preview_extension
+                                    ((1 == $video_preview_hls_support || 2 == $video_preview_hls_support) && !($ffmpeg_preview_gif && $resource["file_extension"] == 'gif')) ? 'm3u8' : $videoextension
                                 );
 
                                 if (file_exists($video_preview_file)
