@@ -160,8 +160,21 @@ if(
                     {
                     if($proposed_change["resource_type_field"]==$proposefields[$n]["ref"])
                         {
+                        if (in_array($proposed_change['type'], $FIXED_LIST_FIELD_TYPES)) {
+                            $deleted_proposed_value = implode(
+                                ', ',
+                                array_intersect_key(
+                                    array_column($proposefields[$n]['nodes'], 'translated_name', 'ref'),
+                                    array_flip(array_filter(explode(', ', $proposed_change['value'])))
+                                )
+                            );
+
+                        } else {
+                            $deleted_proposed_value = $proposed_change['value'];
+                        }
+
                         $deletedchanges[$deletedchangescount]["field"]=$proposefields[$n]["title"];
-                        $deletedchanges[$deletedchangescount]["value"]=escape($proposed_change["value"]);
+                        $deletedchanges[$deletedchangescount]["value"] = escape($deleted_proposed_value);
                         $deletedchangescount++;
                         }
                     }
