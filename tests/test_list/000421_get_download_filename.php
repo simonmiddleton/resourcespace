@@ -1,4 +1,5 @@
 <?php 
+
 command_line_only();
 
 
@@ -141,6 +142,16 @@ $use_cases = [
             },
         'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
         'expected' => "RS{$resource_mp4_file}-Lorem ipsum dolor sit amet..mp4",
+    ],
+    [
+        'name' => 'Format with %fieldXX placeholder (i18n value)',
+        'setup' => function() use ($resource_mp4_file, $rtf_text)
+            {
+            update_field($resource_mp4_file, $rtf_text, '~en:Bird~fr:Oiseau');
+            $GLOBALS['download_filename_format'] = "RS%resource-%field{$rtf_text}.%extension";
+            },
+        'input' => ['ref' => $resource_mp4_file, 'size' => '', 'alternative' => 0, 'ext' => 'mp4'],
+        'expected' => "RS{$resource_mp4_file}-Bird.mp4",
     ],
     [
         'name' => 'Format with multiple %fieldXX placeholders',

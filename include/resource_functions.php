@@ -8369,7 +8369,7 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
             $field_data = trim(get_data_by_field($ref, $field_id, true));
             if ($field_data !== '')
                 {
-                $bind[$placeholder] = $field_data;
+                $bind[$placeholder] = i18n_get_translated($field_data);
                 }
             else
                 {
