@@ -107,7 +107,7 @@ function create_random_video(array $info): array
         // Create video file
         $path = get_temp_dir() . DIRECTORY_SEPARATOR . "{$filename}.{$extension}";
         $cmd_output = run_command(
-            "$ffmpeg -f lavfi -i testsrc=duration=%duration:size=%wx%h:rate=30 $cmd_vf %outfile",
+            "$ffmpeg -i testsrc=duration=%duration:size=%wx%h:rate=30 $cmd_vf %outfile",
             true,
             array_merge(
                 [
