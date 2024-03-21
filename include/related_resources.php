@@ -1,5 +1,5 @@
 <?php
-global $baseurl,$baseurl_short,$enable_related_resources, $edit_access, $title_field, $upload_then_edit;
+global $baseurl,$baseurl_short,$enable_related_resources, $edit_access, $title_field;
 $view_title_field = $title_field;
 
 if ($enable_related_resources)

@@ -1414,7 +1414,7 @@ foreach ($pushed as $pushed_resource)
 
 function RenderPushedMetadata($resource, $field_data, $all_field_data)
     {
-    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $ref, $access, $userpermissions;
+    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $ref, $access, $userpermissions, $upload_then_edit, $urlparams;
     // Save currentt resource data
     $reset_ref          = $ref;
     $reset_access       = $access;
