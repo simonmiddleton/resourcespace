@@ -864,3 +864,17 @@ const SEVERITY_NOTICE = 2;
 const RESOURCE_PREVIEWS_NONE = 0;
 const RESOURCE_PREVIEWS_ALL = 1;
 const RESOURCE_PREVIEWS_MINIMAL = 2;
+
+# Set Normalizer form based on user language
+# Options need to be in language_code=>option.
+# i.e. to use Canonical Decomposition followed by Canonical Composition: "en" => Normalizer::NFD
+# Possible options are
+# Normalizer::NFD;  Normalization Form D (NFD) - Canonical Decomposition
+# Normalizer::NFKD; Normalization Form KD (NFKD) - Compatibility Decomposition
+# Normalizer::NFC;  Normalization Form C (NFC) - Canonical Decomposition followed by Canonical Composition
+# Normalizer::NFKC; Normalization Form KC (NFKC) - Compatibility Decomposition, followed by Canonical Composition
+# See https://www.php.net/manual/en/class.normalizer.php for more information
+$language_normalize_mapping =[
+    "fr" => Normalizer::NFD,
+    "sv" => Normalizer::NFC,
+];

@@ -588,7 +588,7 @@ function reorder_nodes(array $unordered_nodes)
     $use_index_key     = array();
     foreach($unordered_nodes as $unordered_node_index => $node)
         {
-        $reordered_options[$node['ref']] = i18n_get_translated($node['name']);
+        $reordered_options[$node['ref']] = normalize_keyword(i18n_get_translated($node['name']),true);
         $use_index_key[$node['ref']]     = ($unordered_node_index == $node['ref']);
         }
 
