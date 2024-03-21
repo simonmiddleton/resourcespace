@@ -768,7 +768,6 @@ const SENSITIVE_VARIABLE_NAMES = [
     'storagedir',
     'storageurl',
     'email_notify',
-    'spider_password',
     'scramble_key',
     'scramble_key_old',
     'api_scramble_key',

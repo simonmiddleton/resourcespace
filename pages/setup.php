@@ -709,7 +709,6 @@ h2#dbaseconfig{  min-height: 32px;}
         $scramble_key = generateSecureKey(64);
 
         $config_output .= "# Secure keys\r\n";
-        $config_output .= "\$spider_password = '" . generateSecureKey(64) . "';\r\n";
         $config_output .= "\$scramble_key = '{$scramble_key}';\r\n";
         $config_output .= "\$api_scramble_key = '" . generateSecureKey(64) . "';\r\n\r\n";
         
