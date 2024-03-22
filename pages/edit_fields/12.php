@@ -132,7 +132,7 @@ if($display_as_radiobuttons)
                            name="<?php echo $name; ?>"
                            value="<?php echo $node['ref']; ?>"
                        <?php
-                        echo $checked ? ' checked' : '';
+                        echo $checked ? ' checked ' : '';
 
                         if($edit_autosave)
                             {
