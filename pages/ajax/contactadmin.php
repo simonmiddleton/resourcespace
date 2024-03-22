@@ -92,7 +92,7 @@ if ($insert=="")
         
     <?php
 
-    if ($resource["has_image"]==1)
+    if ((int) $resource["has_image"] != RESOURCE_PREVIEWS_NONE)
         {
         ?><img align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,checkperm("w"))?>" alt="<?php echo $imagename ?>" class="Picture"/><br />
         <?php

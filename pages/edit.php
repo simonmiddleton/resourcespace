@@ -506,17 +506,16 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
         }
     }
 
-if (getval("regen","")!="" && enforcePostRequest($ajax))
-    {
+if (getval("regen","") != "" && enforcePostRequest($ajax)) {
     hook('edit_recreate_previews_extra', '', array($ref));
-    ps_query("update resource set preview_attempts=0 WHERE ref= ?" , ['i', $ref]);
-    create_previews($ref,false,$resource["file_extension"]);
+    if(!start_previews($ref)) {
+       $onload_message["text"] = $lang["recreatepreviews_pending"];
     }
+}
 
-if (getval("regenexif","")!="" && enforcePostRequest($ajax))
-    {
+if (getval("regenexif","")!="" && enforcePostRequest($ajax)) {
     extract_exif_comment($ref);
-    }
+}
 
 # Establish if this is a metadata template resource, so we can switch off certain unnecessary features
 $is_template=(isset($metadata_template_resource_type) && $resource["resource_type"]==$metadata_template_resource_type);
@@ -1042,37 +1041,9 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
          tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
          break;
       case "restore":
-        delete_previews($resource);
-        ps_query("update resource set has_image=0, preview_attempts=0 WHERE ref= ?", ['i', $ref]);
-        if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
-        (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
-            {
-            hook('edit_previews_recreate_extra', '', array($ref)); 
-            create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
-            refresh_collection_frame();
-            }
-            elseif((!$enable_thumbnail_creation_on_upload || (isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB'))) && $offline_job_queue)
-            {
-            $create_previews_job_data = array(
-                'resource' => $ref,
-                'thumbonly' => false,
-                'extension' => $resource["file_extension"],
-                'previewonly' => false,
-                'previewbased' => false,
-                'alternative' => -1,
-                'ignoremaxsize' => true,
-            );
-            $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
-            $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
-
-            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+        if(!start_previews($ref)) {
             $onload_message["text"] = $lang["recreatepreviews_pending"];
-            }
-        else
-            {
-            ps_query("update resource set preview_attempts=0, has_image=0 where ref= ?", ['i', $ref]);
-            $onload_message["text"] = $lang["recreatepreviews_pending"];
-            }
+        }
         break;
       }
    hook("moretweakingaction", "", array($tweak, $ref, $resource));
@@ -1380,7 +1351,7 @@ else
             <label><?php echo escape($lang["imagecorrection"])?><br/><?php echo escape($lang["previewthumbonly"])?></label>
             <select class="stdwidth" name="tweak" id="tweak" onchange="add_hidden_modal_input('mainform', <?php echo $modal ? "true" : "false"; ?>); <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('mainform'),true);">
             <option value=""><?php echo escape($lang["select"])?></option>
-            <?php if ($resource["has_image"]==1)
+            <?php if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                 {
                 # On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.
                 # A local configuration setting allows this to be rectified
@@ -2419,12 +2390,14 @@ if ($ref>0 && !$multiple)
             $bbr_preview_size = $edit_large_preview ? 'pre' : 'thm';
             $wmpath="";
             # Establish path to watermarked version if its rendering is a possibility
-            if (checkperm("w") && $resource["has_image"]==1) 
+            if (checkperm("w") && (int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                 {
                 $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
                 }
-            if ($resource["has_image"]==1 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
-                {
+            if (
+                (int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE 
+                && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size)
+                ) {
                 $path_to_preview = get_resource_path($ref, false, $bbr_preview_size, false, $resource["preview_extension"], -1, 1, false);
                 if ($upload_review_mode && $hide_real_filepath)
                     {

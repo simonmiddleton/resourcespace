@@ -323,23 +323,28 @@ function ucfirstletter_callback($matches){
 /**
  * Normalize the text if function available
  *
- * @param  string $keyword
+ * @param  string $keyword          Keywor to normalize
+ * @param  bool   $user_language    Flag to enable normalizing based on the current user language.
+ *                                  
  * @return string
  */
-function normalize_keyword($keyword)
-    {
-    global $normalize_keywords, $keywords_remove_diacritics;
-    if($normalize_keywords && function_exists('normalizer_normalize'))
-        {
-        $keyword=normalizer_normalize($keyword);
+function normalize_keyword ($keyword,bool $user_language = false) {
+    global $normalize_keywords, $keywords_remove_diacritics,$language_normalize_mapping;
+    if ($normalize_keywords && function_exists('normalizer_normalize')) {
+        if ($user_language && key_exists($GLOBALS["language"],$language_normalize_mapping)) {
+            $form = $language_normalize_mapping[$GLOBALS["language"]];
+        } else {
+            $form = Normalizer::FORM_C;
         }
-        
-    if($keywords_remove_diacritics)
-        {
-        $keyword=remove_accents($keyword);
-        }
-    return $keyword;
+
+        $keyword=normalizer_normalize($keyword,$form);
     }
+
+    if ($keywords_remove_diacritics) {
+        $keyword=remove_accents($keyword);
+    }
+    return $keyword;
+}
 
 
 /**

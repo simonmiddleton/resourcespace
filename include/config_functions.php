@@ -1020,29 +1020,10 @@ function config_add_single_ftype_select($config_var, $label, $width=300, $rtype=
 function config_single_ftype_select($name, $label, $current, $width=300, $rtype=false, $ftypes=array(), $autosave = false)
     {
     global $lang;
-    $fieldtypefilter="";
-    $params = [];
-    if(count($ftypes)>0)
-        {
-        $fieldtypefilter = " type in (". ps_param_insert(count($ftypes)) .")";
-        $params = ps_param_fill($ftypes, 'i');
-        }
-        
-    if($rtype===false){
-        $fields= ps_query('select ' . columns_in("resource_type_field") . ' from resource_type_field ' .  (($fieldtypefilter=="")?'':' where ' . $fieldtypefilter) . ' order by title, name', $params, "schema");
-    }
-    else{
-        if ($rtype === 0)
-            {
-            $rtype_sql = '`global` = 1';
-            }
-        else
-            {
-            $rtype_sql = 'ref IN (SELECT resource_type_field FROM resource_type_field_resource_type WHERE resource_type = ?)';
-            $params = array_merge(array('i', $rtype), $params);
-            }
-        $fields = ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where $rtype_sql " .  (($fieldtypefilter == "") ? "" : "and " . $fieldtypefilter) . "order by title, name", $params, "schema");
-    }
+
+    if ($rtype === false) { $rtype = ''; }
+    $fields = get_resource_type_fields($rtype, 'title, name', 'asc', '', $ftypes, true);
+
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>

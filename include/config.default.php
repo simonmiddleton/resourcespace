@@ -1311,11 +1311,6 @@ $feedback_resource_select=false;
 # When requesting feedback, display the contents of the specified field (if available) instead of the resource ID. 
 #$collection_feedback_display_field=51;
 
-# Uncomment and set the below value to set the maximum size of uploaded file that thumbnail/preview images will be created for.
-# This is useful when dealing with very large files that may place a drain on system resources - for example 100MB+ Adobe Photoshop files will take a great deal of cpu/memory for ImageMagick to process and it may be better to skip the automatic preview in this case and add a preview JPEG manually using the "Upload a preview image" function on the resource edit page.
-# The value is in MB.
-# $preview_generate_max_file_size=100;
-
 # Should resource views be logged for reporting purposes?
 # Note that general daily statistics for each resource are logged anyway for the statistics graphs
 # - this option relates to specific user tracking for the more detailed report.
@@ -1727,6 +1722,7 @@ $request_adds_to_collection=false;
 #
 # Example - automatically create a PNG file alternative when an EPS file is uploaded.
 # $image_alternatives[0]["name"]="PNG File";
+# $image_alternatives[0]["description"]=" Auto created PNG";
 # $image_alternatives[0]["source_extensions"]="eps";
 # $image_alternatives[0]["source_params"]="";
 # $image_alternatives[0]["filename"]="alternative_png";
@@ -1735,6 +1731,7 @@ $request_adds_to_collection=false;
 # $image_alternatives[0]["icc"]=false;
 
 # $image_alternatives[1]["name"]="CMYK JPEG";
+# $image_alternatives[0]["description"]=" Auto created CMYK JPEG";
 # $image_alternatives[1]["source_extensions"]="jpg,tif";
 # $image_alternatives[1]["source_params"]="";
 # $image_alternatives[1]["filename"]="cmyk";
@@ -1743,12 +1740,13 @@ $request_adds_to_collection=false;
 # $image_alternatives[1]["icc"]=true; # use source ICC profile in command
 
 # Example - automatically create a JPG2000 file alternative when an TIF file is uploaded
-# $image_alternatives[2]['name']              = 'JPG2000 File';
-# $image_alternatives[2]['source_extensions'] = 'tif';
+# $image_alternatives[2]['name']              = "JPG2000 File";
+# $image_alternatives[0]["description"]       = "Auto created JP2";
+# $image_alternatives[2]['source_extensions'] = "tif";
 # $image_alternatives[2]["source_params"]="";
-# $image_alternatives[2]['filename']          = 'New JP2 Alternative';
-# $image_alternatives[2]['target_extension']  = 'jp2';
-# $image_alternatives[2]['params']            = '';
+# $image_alternatives[2]['filename']          = "New JP2 Alternative";
+# $image_alternatives[2]['target_extension']  = "jp2";
+# $image_alternatives[2]['params']            = "";
 # $image_alternatives[2]['icc']               = false;
 
 # For reports, the list of default reporting periods
@@ -2018,14 +2016,6 @@ $mp3_player=true;
 $config_show_performance_footer=false;
 
 $use_phpmailer=false;
-
-# Allow to disable thumbnail generation during batch resource upload from FTP or local folder.
-# In addition to this option, a multi-thread thumbnail generation script is available in the batch
-# folder (create_previews.php). You can use it as a cron job, or manually.
-# Notes:-
-#  - This also works for normal uploads (through web browser)
-#  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
-$enable_thumbnail_creation_on_upload = true;
 
 // GEOLOCATION MAP CONFIGURATION------------
     // Disable maps and geocoding features?
@@ -2676,13 +2666,6 @@ $watermark_single_image = array(
 );
 */
 
-# $offline_job_queue. Enable the job_queue functionality that runs resource heavy tasks to be run offline and send notifications once complete. Initially used by video_tracks plugin 
-# If set to true a frequent cron job or scheduled task should be added to run pages/tools/offline_jobs.php 
-# NOTE: This setting may be overridden in certain cirumstances  - e.g. if previews are required at upload time because Google Vision facial recognition is configured with a dependent metadata field
-$offline_job_queue=false;
-# Delete completed jobs from the queue?
-$offline_job_delete_completed=false;
-
 # $replace_resource_preserve_option - Option to keep original resource files as alternatives when replacing resource
 $replace_resource_preserve_option=false;
 # $replace_resource_preserve_default - if $replace_resource_preserve_option is enabled, should the option be checked by default?
@@ -3190,3 +3173,61 @@ $vendor_tus_cache_adapter = 'file';
 // This can be set to either a metadata field ID or a valid search 'order by' string (e.g. 'resourcetype', 'extension', 'colour' etc.) 
 // See https://www.resourcespace.com/knowledge-base/resourceadmin/push-metadata for more information
 // $related_pushed_order_by = 0;
+
+
+
+/* 
+===============================================================================
+Offline preview generation options
+===============================================================================
+These options allow previews and automatically generated alternative files etc. to be generated offline.
+This is useful when dealing with large files that may place a drain on system resources.
+
+By default core preview sizes ('col', 'thm' and 'pre') will still be created at upload time
+-------------------------------------------------------------------------------
+OPTION 1: $offline_job_queue. (preferred)
+-------------------------------------------------------------------------------
+The offline job functionality will create jobs to run slow or resource intensive tasks e.g. preview creation, 
+large collection downloads or CSV uploads. Most jobs will send notifications to users once completed.
+
+IMPORTANT: 
+- If this is enabled a frequent scheduled task must be created on the server to run pages/tools/offline_jobs.php 
+  Note that this should be set to run as the web service account to avoid file permission issues
+*/
+$offline_job_queue=false;
+// Delete completed jobs from the queue?
+$offline_job_delete_completed=false;
+/*
+-------------------------------------------------------------------------------
+OPTION 2 $preview_generate_max_file_size (legacy)
+-------------------------------------------------------------------------------
+This is only effective if $offline_job_queue is false.
+
+If configured, only resource files smaller than this size will have all the preview sizes created at upload.
+For larger files only the core preview sizes will be created at upload time.
+
+IMPORTANT: 
+- If enabled a frequent scheduled task must be created on the server to run batch/create_previews.php
+  This should be set to run as the web service account to avoid file permission issues
+- When recreating previews via collection_edit_previews no previews will be created immediately
+
+Set the maximum size of uploaded file that preview images will be created for.
+The value is in MB.
+$preview_generate_max_file_size=100;
+-------------------------------------------------------------------------------
+OPTION 3 $enable_thumbnail_creation_on_upload  (legacy)
+-------------------------------------------------------------------------------
+Set to false to disable immediate preview generation. Superseded by $offline_job_queue
+
+IMPORTANT: If enabled a frequent scheduled task must be created on the server to run batch/create_previews.php 
+Note that this should be set to run as the web service account to avoid file permission issues
+*/
+$enable_thumbnail_creation_on_upload = true;
+/*
+===============================================================================
+Blocking immediate creation of core previews
+===============================================================================
+Optionally use this array to prevent the immediate creation at upload of core preview sizes ('col', 'thm' and 'pre')
+for the specified file extensions when one of the offline preview options above are configured.
+*/
+$minimal_preview_creation_exclude_extensions = [];

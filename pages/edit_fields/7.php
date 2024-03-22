@@ -33,7 +33,7 @@ elseif(isset($searched_nodes) && is_array($searched_nodes))
     {
     $selected_nodes = $searched_nodes;
     }
-else
+elseif (!isset($selected_nodes))
     {
     $selected_nodes = [];
     }

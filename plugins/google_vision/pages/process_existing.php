@@ -39,7 +39,7 @@ if(empty($collections))
           FROM resource
          WHERE (google_vision_processed IS NULL OR google_vision_processed = 0)
            AND ref > 0
-           AND has_image = 1
+           AND has_image !== RESOURCE_PREVIEWS_NONE
            AND resource_type IN (" . ps_param_insert(count($google_vision_restypes)) . ") ";
 
     $parameters = ps_param_fill($google_vision_restypes,"i");

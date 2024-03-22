@@ -138,11 +138,11 @@ if ($multiprocess)
 
 // We fetch the list of resources to process.
 global  $no_preview_extensions;
-$condition="resource.has_image = 0 and";
+$condition="resource.has_image != 1 AND";
 if ($noimage) {$condition="";}
-$resources=ps_query("SELECT resource.ref, resource.file_extension, ifnull(resource.preview_attempts, 1) preview_attempts, creation_date FROM resource 
-    WHERE $condition resource.ref > 0 and (resource.preview_attempts < 5 or resource.preview_attempts is NULL) and file_extension is not null and length(file_extension) > 0 
-	and lower(file_extension) not in (" . ps_param_insert(count($no_preview_extensions)) . ")", ps_param_fill($no_preview_extensions,"s"));
+$resources=ps_query("SELECT resource.ref, resource.file_extension, IFNULL(resource.preview_attempts, 1) preview_attempts, creation_date FROM resource 
+    WHERE $condition resource.ref > 0 AND (resource.preview_attempts < 5 OR resource.preview_attempts IS NULL) AND file_extension IS NOT NULL AND LENGTH(file_extension) > 0 
+	AND lower(file_extension) NOT IN (" . ps_param_insert(count($no_preview_extensions)) . ")", ps_param_fill($no_preview_extensions,"s"));
 
 foreach($resources as $resource) // For each resources
   {
@@ -211,8 +211,8 @@ foreach($resources as $resource) // For each resources
 
             $success=create_previews($resource['ref'], false, $resource['file_extension'],false,false,-1,$ignoremaxsize,$ingested);
             hook('after_batch_create_preview');
-            $success_sting=($success==true ? "successfully" : "with error" );
-            echo sprintf("Processed resource %d %s in %01.2f seconds.\n", $resource['ref'], $success_sting, microtime(true) - $start_time);
+            $success_string=($success==true ? "successfully" : "with error" );
+            echo sprintf("Processed resource %d %s in %01.2f seconds.\n", $resource['ref'], $success_string, microtime(true) - $start_time);
             }
 
       if ($multiprocess)

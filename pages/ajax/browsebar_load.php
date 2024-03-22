@@ -278,9 +278,9 @@ switch ($returntype)
     // Featured collection
     case "FC":
         $fc_parent = validate_collection_parent(array("parent" => $fc_parent));
-
+        $can_create = checkperm("h") && can_create_collections();
         // Add 'create new' option
-        if(checkperm("h") && can_create_collections())
+        if($can_create)
             {
             $item = array(
                 "id" => "{$id}-FC:new",
@@ -307,6 +307,7 @@ switch ($returntype)
         foreach($featured_collections as $fc)
             {
             $is_featured_collection_category = is_featured_collection_category($fc);
+            $child_collection_count = count(get_featured_collections($fc['ref'], []));
             $id_part = ($is_featured_collection_category ? "FC" : "C");
             $link = generateURL("{$baseurl_short}pages/search.php", array("search" => "!collection{$fc["ref"]}", "noreload" => "true"));
             if($is_featured_collection_category)
@@ -318,7 +319,7 @@ switch ($returntype)
                 "id" => "{$id}-{$id_part}:{$fc["ref"]}",
                 "name" => escape(strip_prefix_chars(i18n_get_translated($fc["name"]),"*")),
                 "class" => ($is_featured_collection_category ? "Featured" : "Col"),
-                "expandable" => ($is_featured_collection_category ? "true" : "false"), # lib/js/browsebar_js.php requires this to be a string.
+                "expandable" => (($is_featured_collection_category && $child_collection_count > 0) || $can_create ? "true" : "false"), # lib/js/browsebar_js.php requires this to be a string.
                 "link" => $link,
                 "modal" => false,
                 "drop" => !$is_featured_collection_category,

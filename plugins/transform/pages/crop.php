@@ -482,7 +482,7 @@ if ($saveaction != '' && enforcePostRequest(false))
 $resource = get_resource_data($ref);
 
 // retrieve path to image and figure out size we're using
-if ($resource["has_image"]==1)
+if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
     {
     if (!file_exists($crop_pre_file))
         {

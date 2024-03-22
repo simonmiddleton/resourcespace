@@ -57,9 +57,6 @@ $email_errors_address="";
 #enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
 $email_from_user=false;
 
-# Do not create any new snapshots when recreating FFMPEG previews. (This is to aid in migration to mp4 when custom previews have been uploaded)
-$ffmpeg_no_new_snapshots=false;
-
 # Workflow states to ignore when verifying file integrity (to verify file integrity usign checksums requires $file_checksums_50k=false;)
 $file_integrity_ignore_states = array();
 

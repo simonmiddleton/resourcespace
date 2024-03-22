@@ -1453,7 +1453,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 {
                 // Create array of geolocation parameters.
                 $geomarker[] = "[" . $geomark['geo_long'] . ", " . $geomark['geo_lat'] . ", " . $geomark['ref'] . ", " . $geomark['resource_type'] . "," . (trim($geomark2) != "" ? floatval($geomark2) : "") . "]";
-                $preview_paths[] = $result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'thm')
+                $preview_paths[] = (int) $result[$n]['has_image'] !== 0 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'thm')
                     ? get_resource_path($geo, false, 'thm', false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified'])
                     : $baseurl_short . 'gfx/' . get_nopreview_icon($result[$n]['resource_type'], $result[$n]['file_extension'], false);
 
