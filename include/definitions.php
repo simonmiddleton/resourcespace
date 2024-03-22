@@ -878,3 +878,11 @@ $language_normalize_mapping =[
     "fr" => Normalizer::NFD,
     "sv" => Normalizer::NFC,
 ];
+
+const API_ISSUE_VALID_DESTINATIONS = [
+    "linkrui" => [
+        "name" => "LinkrUI",
+        "url" => "https://resourcespace.linkrui.com/saml",
+        "stateparam" => "state",
+    ],
+];

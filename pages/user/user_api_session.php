@@ -4,14 +4,7 @@ include "../../include/api_functions.php";
 include "../../include/authenticate.php";
 
 $system = getval("system","");
-$destinations = [
-    "linkrui" => [
-        "name" => "LinkrUI",
-        "url" => "https://resourcespace.linkrui.com/saml",
-        "stateparam" => "state",
-    ],
-];
-$remote_system = $destinations[$system] ?? false;
+$remote_system = API_ISSUE_VALID_DESTINATIONS[$system] ?? false;
 if($remote_system) {
     $state = getval($remote_system["stateparam"],"");
     if (isset($_POST['submit']) && enforcePostRequest(false)) {        
@@ -30,9 +23,9 @@ if($remote_system) {
         $cerror = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
         if($cerror == 200) {
-            $message = $lang["user_api_session_grant_success"] . ":" . json_decode($curl_response,true)["message"];
+            $message = $lang["user_api_session_grant_success"] . " " . json_decode($curl_response,true)["message"];
         } else {
-            $message = $lang["user_api_session_grant_error"] . ": " . json_decode($curl_response,true)["message"];
+            $message = $lang["user_api_session_grant_error"] . " " . json_decode($curl_response,true)["message"];
         }
     }
 } else {
@@ -57,16 +50,22 @@ include "../../include/header.php";
             ));?>
         </p>
 
-        </div><form method="post" action="<?php echo $baseurl_short . "pages/user/user_api_session.php?system=" . escape($system); ?>" onsubmit="return CentralSpacePost(this,true);">
-        
-            <input type="hidden" name="state" value="<?php echo escape($state ?? ""); ?>">
-            <input type="hidden" name="system" value="<?php echo escape($system ?? ""); ?>">
+        <form method="post" 
+            action="<?php echo $baseurl_short . "pages/user/user_api_session.php?system=" . escape($system); ?>"
+            onsubmit="return CentralSpacePost(this,true);"
+            >        
+            <input type="hidden" name="state" value="<?php echo escape($state); ?>">
+            <input type="hidden" name="system" value="<?php echo escape($system); ?>">
             <input type="hidden" name="submit" value="true">
             <?php
             generateFormToken("user_api_session");
             ?>
             <div class="QuestionSubmit">
-                <input name="save" type="submit" value="<?php echo escape($lang["user_api_session_grant_access"]); ?>" /><div class="clearerleft"> </div>
+                <input name="save"
+                    type="submit" 
+                    value="<?php echo escape($lang["user_api_session_grant_access"]); ?>" 
+                    />
+                <div class="clearerleft"> </div>
             </div>
         </form>
     <?php
