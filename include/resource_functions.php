@@ -474,11 +474,9 @@ function get_resource_data_batch($refs)
     if (count($resids) === 0) {
         return array();
     }
-    $resids_chunked = array_filter(
-        count($resids) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE
-            ? [$resids]
-            : array_chunk($resids, SYSTEM_DATABASE_IDS_CHUNK_SIZE)
-    );
+    $resids_chunked = count($resids) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE
+        ? [$resids]
+        : array_chunk($resids, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
 
     # Build a string that will return the 'join' columns (not actually joins but cached truncated metadata stored at the resource level)
     $joins = get_resource_table_joins();
