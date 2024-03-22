@@ -466,30 +466,43 @@ function get_resource_data($ref,$cache=true)
  * @return array
  */
 function get_resource_data_batch($refs)
-    {
+{
     global $get_resource_data_cache;
     truncate_cache_arrays();
-    $resids = array_filter($refs,function($id){return (string)(int)$id==(string)$id;});
- 
-    if (count($resids) === 0)
-        {
+
+    $resids = array_values(array_unique(array_filter($refs, 'is_int_loose')));
+    if (count($resids) === 0) {
         return array();
-        }
+    }
+    $resids_chunked = array_filter(
+        count($resids) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE
+            ? [$resids]
+            : array_chunk($resids, SYSTEM_DATABASE_IDS_CHUNK_SIZE)
+    );
 
     # Build a string that will return the 'join' columns (not actually joins but cached truncated metadata stored at the resource level)
-    $joins=get_resource_table_joins();
+    $joins = get_resource_table_joins();
     $join_fields = empty($joins) ? '' : ',' . implode(',', array_map(prefix_value('field'), $joins));
 
-    $resdata=ps_query("SELECT ref,resource_type,has_image,is_transcoding,hit_count,new_hit_count,creation_date,rating,user_rating,user_rating_count,user_rating_total,country,file_extension,preview_extension,image_red,image_green,image_blue,thumb_width,thumb_height,archive,access,colour_key,created_by,file_path,file_modified,file_checksum,request_count,expiry_notification_sent,preview_tweaks,geo_lat,geo_long,mapzoom,disk_usage,disk_usage_last_updated,file_size,preview_attempts,modified,last_verified,integrity_fail,lock_user" . $join_fields . " FROM resource WHERE ref IN (" . ps_param_insert(count($resids)). ")",ps_param_fill($resids,"i"));
-    // Create array with resource ID as index
     $resource_data = array();
-    foreach($resdata as $resdatarow)
-       {
-       $resource_data[$resdatarow["ref"]] = $resdatarow;
-       $get_resource_data_cache[$resdatarow["ref"]] = $resdatarow;
-       }
-    return $resource_data;
+    foreach ($resids_chunked as $resids_cnk) {
+        $resdata = ps_query(
+            sprintf(
+                'SELECT %s%s FROM `resource` WHERE ref IN (%s)',
+                columns_in('resource'),
+                $join_fields,
+                ps_param_insert(count($resids_cnk))
+            ),
+            ps_param_fill($resids_cnk, 'i')
+        );
+        foreach ($resdata as $resdatarow) {
+            $resource_data[$resdatarow["ref"]] = $resdatarow;
+            $get_resource_data_cache[$resdatarow["ref"]] = $resdatarow;
+        }
     }
+
+    return $resource_data;
+}
 
 /**
 * Updates $resource with the name/value pairs in $data - this relates to the resource table column, not metadata.
