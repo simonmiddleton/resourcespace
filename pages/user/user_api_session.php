@@ -37,7 +37,7 @@ include "../../include/header.php";
 ?>
 <div class="BasicsBox">
 
-    <h1><?php echo $lang["user_api_session_title"]; ?></h1>
+    <h1><?php echo escape($lang["user_api_session_title"]); ?></h1>
     <?php if (isset($message)) {?>
         <div class='PageInformal'><?php echo escape($message); ?></div>
         <?php
