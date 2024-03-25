@@ -28,16 +28,16 @@ $slideshow          = getval("slideshow",0,true);
 $userfiledownload   = getval('userfile', '');
 $write_exif_data    = (getval('exif_write', '') == 'true');
 $k                  = getval('k', '');
-$download_temp_key  = trim(getval("access_key",""));
+$download_temp_key  = getval("access_key",null);
 $watermarked        = getval('watermarked', 0, true);
-$override_temp_key  = trim(getval("override_key",""));
+$override_temp_key  = getval("override_key",null);
 $noattach           = getval('noattach','') != '';
 
 // Check for temporary download access using key (e.g. from API get_resource_path) 
 $valid_key = false;
-if($ref>0 && $download_temp_key != "")
+if($ref>0 && ($download_temp_key != null || $override_temp_key != null))
     {
-    $valid_key = validate_temp_download_key($ref, $download_temp_key, $size);
+    $valid_key = validate_temp_download_key($ref, trim($download_temp_key ?? $override_temp_key), $size);
     }
 
 // External access support (authenticate only if no key provided, or if invalid access key provided)
@@ -81,11 +81,11 @@ if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
     }
 
 $override_key = false;
-if($ref > 0 && $override_temp_key != "")
+if($ref > 0 && $override_temp_key != null)
     {
     // Check if the download should be allowed. Permissions have already been considered elsewhere.
     // Used to display edit page resource preview image after upload where search filter has not yet been set.
-    $override_key = validate_temp_download_key($ref, $override_temp_key, $size, 2, false);
+    $override_key = validate_temp_download_key($ref, trim($override_temp_key), $size, 2, false);
     }
 
 // Is this a user specific download?
