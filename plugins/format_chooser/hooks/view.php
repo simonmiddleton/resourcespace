@@ -258,7 +258,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     }   
 
                 jQuery("a#convertDownload").attr("href", "#");
-                jQuery("a#convertDownload").attr("onclick", "directDownload('" + basePage + "')");
+                jQuery("a#convertDownload").attr("onclick", "directDownload('" + basePage + "', this)");
 
                 return;
             }
