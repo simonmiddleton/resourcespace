@@ -37,7 +37,7 @@ $noattach           = getval('noattach','') != '';
 $valid_key = false;
 if($ref>0 && ($download_temp_key != null || $override_temp_key != null))
     {
-    $valid_key = validate_temp_download_key($ref, trim($download_temp_key ?? $override_temp_key), $size);
+    $valid_key = validate_temp_download_key($ref, trim(is_null($download_temp_key) ? $override_temp_key : $download_temp_key), $size);
     }
 
 // External access support (authenticate only if no key provided, or if invalid access key provided)
