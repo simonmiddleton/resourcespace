@@ -2,6 +2,11 @@
 /* -------- Dynamic Keywords List ----------- */ 
 global $baseurl, $pagename, $edit_autosave, $dynamic_keyword_and, $k;
 
+if ($pagename == 'search_advanced')
+    {
+    $name .= '_search_adv';
+    }
+
 if(!isset($selected_nodes))
     {
     $selected_nodes = array();
@@ -131,13 +136,18 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
         document.getElementById('<?php echo $name; ?>_selector').disabled = false;
         }
 
-    // Update the result counter, if the function is available (e.g. on Advanced Search).
-    if(typeof(UpdateResultCount) == 'function' && user_action)
+    <?php
+    if ($pagename != 'edit')
         {
-        UpdateResultCount();
+        ?>
+        // Update the result counter, if the function is available (e.g. on Advanced Search).
+        if(typeof(UpdateResultCount) == 'function' && user_action)
+            {
+            UpdateResultCount();
+            }
+        <?php
         }
 
-    <?php
     if($edit_autosave)
         {
         ?>
