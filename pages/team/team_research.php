@@ -86,7 +86,7 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
         <div class="Question">
             <label for="findpublic"><?php echo escape($lang["searchresearchrequests"])?></label>
             <div class="tickset">
-             <div class="Inline"><input type=text name="find" id="find" value="<?php echo $find?>" maxlength="100" class="shrtwidth" /></div>
+             <div class="Inline"><input type=text name="find" id="find" value="<?php echo escape($find); ?>" maxlength="100" class="shrtwidth" /></div>
              <div class="Inline"><input name="Submit" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"])?>&nbsp;&nbsp;" /></div>
             </div>
             <div class="clearerleft"> </div>
