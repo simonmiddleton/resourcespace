@@ -307,7 +307,7 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
     $unoconvert=true;
     if(!$unocommand)
         {
-        get_utility_path('unoconv');
+        $unocommand = get_utility_path('unoconv');
         $unoconvert=false; // Legacy mode for unoconv
         }
     if(!$unocommand)
