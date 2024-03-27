@@ -2676,6 +2676,17 @@ function get_utility_path($utilityname, &$checked_path = null)
                 $checked_path
             );
 
+        case 'unoconvert':
+
+            return get_executable_path(
+                $GLOBALS['config_windows'] ? $GLOBALS['unoconv_python_path'] : $GLOBALS['unoconv_path'],
+                [
+                    'unix' => 'unoconvert',
+                    'win'  => 'unoconvert.exe'
+                ],
+                $checked_path
+            );
+
         case 'calibre':
             if(!isset($GLOBALS['calibre_path']) || $GLOBALS['calibre_path'] === '')
                 {
