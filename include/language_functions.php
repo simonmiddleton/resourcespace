@@ -323,10 +323,13 @@ function ucfirstletter_callback($matches){
 /**
  * Normalize the text if function available
  *
- * @param  string $keyword          Keywor to normalize
+ * @param  string $keyword          Keyword to normalize
  * @param  bool   $user_language    Flag to enable normalizing based on the current user language.
- *                                  
- * @return string
+ *                                  Some languages consider characters with accents to be different characters
+ *                                  and therefore order them after z and other consider them to be the same as the 
+ *                                  character without the accent.
+ *                                  See https://www.php.net/manual/en/class.normalizer.php for more information
+ * @return string                   Normalized keyword
  */
 function normalize_keyword ($keyword,bool $user_language = false) {
     global $normalize_keywords, $keywords_remove_diacritics,$language_normalize_mapping;
