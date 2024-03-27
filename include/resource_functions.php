@@ -522,7 +522,7 @@ function put_resource_data($resource,$data)
     $safe_column_types=array("i","s","d","i","i","i","d","s","s","s");
 
     // Permit the created by column to be changed also
-    if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";}
+    if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";$safe_column_types[]='i';}
 
     $sql="";$params=array();
     foreach ($data as $column=>$value)
