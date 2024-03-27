@@ -2712,7 +2712,7 @@ function upload_preview($ref)
 * @param string  $extension  File extension
 * @param string  $path       Path can be set to use an alternate file, for example, in the case of unoconv
 * 
-* @return void
+* @return  bool   Returns false on error else true.
 */
 function extract_text($ref,$extension,$path="")
     {
@@ -2722,7 +2722,13 @@ function extract_text($ref,$extension,$path="")
 
     $text="";
     if ($path==""){$path=get_resource_path($ref,true,"",false,$extension);}
-    
+
+    if (!file_exists($path))
+        {
+        debug("ERROR: Unable to extract text for resource $ref. The source file does not exist at: $path");
+        return false;
+        }
+
     # Microsoft Word extraction using AntiWord.
     if ($extension=="doc" && isset($antiword_path))
         {
@@ -2852,7 +2858,7 @@ function extract_text($ref,$extension,$path="")
         # Save text
         update_field($ref,$extracted_text_field,$text);
         }
-    
+    return true;
     }
     
 function get_image_orientation($file)
