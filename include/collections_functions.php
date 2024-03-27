@@ -297,7 +297,7 @@ function get_collection_resources($collection)
         return $plugin_collection_resources;
         }
 
-    return ps_array("SELECT resource value FROM collection_resource WHERE collection = ? ORDER BY sortorder ASC, date_added DESC, resource DESC",array("i",$collection)); 
+    return ps_array("SELECT resource value FROM collection_resource WHERE collection = ? ORDER BY sortorder ASC, date_added DESC, resource ASC",array("i",$collection)); 
     }
 
 /**
