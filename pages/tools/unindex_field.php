@@ -6,7 +6,7 @@
 # Removes Indexes for a field
 #
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include "../../include/image_processing.php";

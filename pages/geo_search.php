@@ -1,7 +1,7 @@
 <?php
 // Geographic Map Search for Resources Using Leaflet.js and Various Leaflet Plugins
 
-include '../include/db.php';
+include '../include/boot.php';
 include '../include/authenticate.php'; 
 include '../include/header.php';
 

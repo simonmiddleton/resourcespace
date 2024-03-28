@@ -1,7 +1,7 @@
 <?php
 $suppress_headers=true; # Suppress headers including the XFRAME limitation so that this page can be remotely embedded.
 
-include "../../../include/db.php";
+include "../../../include/boot.php";
 
 
 include_once "../languages/en.php"; # Because this may not be included automatically, i.e. if the plugin is not available to all groups.

@@ -3,7 +3,7 @@
 * @package ResourceSpace\Tools
 */
 $webroot = dirname(__DIR__, 2);
-include_once "{$webroot}/include/db.php";
+include_once "{$webroot}/include/boot.php";
 command_line_only();
 
 set_time_limit(0);

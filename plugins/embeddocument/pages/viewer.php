@@ -1,5 +1,5 @@
 <?php
-include "../../../include/db.php";
+include "../../../include/boot.php";
 
 # Get variables and check key is valid.
 $ref=getval("ref","");

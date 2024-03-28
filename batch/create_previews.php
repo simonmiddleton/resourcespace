@@ -6,7 +6,7 @@ if (PHP_SAPI != 'cli')
     exit("Command line execution only.");
     }
 
-include dirname(__FILE__) . "/../include/db.php";
+include dirname(__FILE__) . "/../include/boot.php";
 include_once dirname(__FILE__) . "/../include/image_processing.php";
 
 # Prevent this script from creating offline jobs for tasks such as extracting text.

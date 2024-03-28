@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . "/../../include/db.php";
+include __DIR__ . "/../../include/boot.php";
 command_line_only();
 
 // This script renumbers resources using the provided offset to shift up/down. Files are moved accordingly.

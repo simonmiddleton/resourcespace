@@ -5,7 +5,7 @@
 # It's done one at a time via the browser so progress can be monitored.
 #
 #
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include "../../include/image_processing.php";

@@ -4,7 +4,7 @@ WARNING: read what this does before even attempting to run it as it will convert
          double encode
 */
 $webroot = dirname(dirname(__DIR__));
-include_once "{$webroot}/include/db.php";
+include_once "{$webroot}/include/boot.php";
 include_once "{$webroot}/include/log_functions.php";
 command_line_only();
 

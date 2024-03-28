@@ -4,7 +4,7 @@
  * 
  * @package ResourceSpace
  */
-include "../include/db.php";
+include "../include/boot.php";
 
 include "../include/authenticate.php";
 include "../include/request_functions.php";

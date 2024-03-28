@@ -5,7 +5,7 @@
  *
  */
 
-include "../include/db.php";
+include "../include/boot.php";
 
 $k=getval("k","");
 include "../include/authenticate.php";

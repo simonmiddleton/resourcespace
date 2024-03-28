@@ -13,7 +13,7 @@
     #
 
     // Do the include and authorization checking ritual -- don't change this section.
-    include '../../../include/db.php';
+    include '../../../include/boot.php';
         include '../../../include/authenticate.php';
     if (!checkperm('a')) {
         exit ($lang['error-permissiondenied']);

@@ -1,5 +1,5 @@
 <?php 
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include_once '../../../include/image_processing.php';
 include_once '../include/checkmail_functions.php';
 

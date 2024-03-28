@@ -2,7 +2,7 @@
 #
 # winauth login page - logs the user in if Windows authentication is enabled
 #
-include dirname(__FILE__) . '/../../../../include/db.php';
+include dirname(__FILE__) . '/../../../../include/boot.php';
 include_once dirname(__FILE__) . '/../../include/winauth_functions.php';
    
 $session_hash="";

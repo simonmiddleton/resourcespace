@@ -400,7 +400,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
                 }
             include dirname(__FILE__)."/../languages/" . safe_file_name($search_language) . ".php";
 
-            # Include plugin languages in reverse order as per db.php
+            # Include plugin languages in reverse order as per boot.php
             global $plugins;
             $language = $search_language;
             for ($n=count($plugins)-1;$n>=0;$n--)
@@ -575,7 +575,7 @@ function get_site_text($page,$name,$getlanguage,$group)
         include $getlangfile;
         }
 
-    # Include plugin languages in reverse order as per db.php
+    # Include plugin languages in reverse order as per boot.php
     global $plugins;    
     $language = $defaultlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
@@ -4522,7 +4522,7 @@ function get_system_status()
     $fail_tests = 0;
     $rs_root = dirname(__DIR__);
 
-    // Checking requirements must be done before db.php. If that's the case always stop after testing for required PHP modules
+    // Checking requirements must be done before boot.php. If that's the case always stop after testing for required PHP modules
     // otherwise the function will break because of undefined global variables or functions (as expected).
     $check_requirements_only = false;
     if(!defined('SYSTEM_REQUIRED_PHP_MODULES'))

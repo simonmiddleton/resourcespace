@@ -1,5 +1,5 @@
 <?php
-include '../../include/db.php';
+include '../../include/boot.php';
 include '../../include/authenticate.php'; if(!checkperm('a')) { exit('Permission denied.'); }
 include_once '../../include/config_functions.php';
 include_once '../../include/ajax_functions.php';

@@ -1,5 +1,5 @@
 <?php
-include "../../../include/db.php";
+include "../../../include/boot.php";
 
 
 global $baseurl, $lang, $username, $wordpress_sso_url, $wordpress_sso_secret;

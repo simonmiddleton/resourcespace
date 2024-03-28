@@ -3,7 +3,7 @@
 # reaches the notification limit an email will be sent out. This should be set up as a 
 # cron job.
 
-include "../../include/db.php";
+include "../../include/boot.php";
 command_line_only();
 
 if(!isset($disk_quota_limit_size_warning_noupload) && !isset($disk_quota_notification_limit_percent_warning))

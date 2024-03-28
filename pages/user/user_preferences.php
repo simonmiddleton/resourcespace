@@ -1,6 +1,6 @@
 <?php
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php";
 include_once '../../include/config_functions.php';

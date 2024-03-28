@@ -137,7 +137,7 @@ foreach($options as $option_name => $option_value)
     }
 
 $webroot = dirname(dirname(__DIR__));
-include_once "{$webroot}/include/db.php";
+include_once "{$webroot}/include/boot.php";
 set_time_limit(0);
 
 // Increase this DB session idle timeout to 24 hours

@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__ . "/../../../include/db.php";
+include_once __DIR__ . "/../../../include/boot.php";
 include_once __DIR__ . "/../../../include/authenticate.php";
 include_once __DIR__ . "/../../../include/image_processing.php";
 

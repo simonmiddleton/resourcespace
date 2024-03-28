@@ -2,7 +2,7 @@
 //
 // vm2rs setup page
 //
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php';
 
 if (!checkperm('a'))

@@ -1,6 +1,6 @@
 <?php
 // vimeo_publish setup page
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php';
 include_once '../include/vimeo_publish_functions.php';
 

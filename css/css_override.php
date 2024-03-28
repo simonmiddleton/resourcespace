@@ -6,7 +6,7 @@
 * @package ResourceSpace
 */
 
-include_once "../include/db.php";
+include_once "../include/boot.php";
 
 $k = getval('k', '');
 if ((is_array($k) || trim($k) === '') && getval('noauth', '') != true) {

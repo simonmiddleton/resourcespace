@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 
 include "../include/authenticate.php"; 
 if ($disable_upload_preview || (checkperm("F*") && !$custompermshowfile)){exit ("Permission denied.");}

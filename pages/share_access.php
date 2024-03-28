@@ -1,5 +1,5 @@
 <?php
-include_once "../include/db.php";
+include_once "../include/boot.php";
 $k = getval("k","");
 $resource = getval("resource","",true);
 $collection = getval("collection","",true);

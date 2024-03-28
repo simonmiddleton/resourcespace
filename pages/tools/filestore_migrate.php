@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 command_line_only();
 
 // This script moves resources from old locations to new locations if settings are changed after initial setup

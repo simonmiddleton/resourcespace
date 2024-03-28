@@ -1,5 +1,5 @@
 <?php
-include "../../../include/db.php";
+include "../../../include/boot.php";
 include "../../../include/authenticate.php";
 include_once "../../../include/image_processing.php";
 

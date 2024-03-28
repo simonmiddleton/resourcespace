@@ -2,7 +2,7 @@
 #
 # ResourceSpace Analytics - draw a graph
 #
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php';
 include '../../../include/reporting_functions.php';
 include '../../../include/dash_functions.php';

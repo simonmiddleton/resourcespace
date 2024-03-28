@@ -1,5 +1,5 @@
 <?php
-include dirname(__FILE__) . '/../include/db.php';
+include dirname(__FILE__) . '/../include/boot.php';
 include dirname(__FILE__) . '/../include/header.php';
 ?>
     <div id="system_down_container">

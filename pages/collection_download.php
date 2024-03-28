@@ -1,6 +1,6 @@
 <?php 
 ini_set('zlib.output_compression','off'); // disable PHP output compression since it breaks collection downloading
-include "../include/db.php";
+include "../include/boot.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $k=getval("k","");

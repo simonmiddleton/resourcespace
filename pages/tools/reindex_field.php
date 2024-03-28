@@ -6,7 +6,7 @@
 # Reindexes the resource metadata for a single field
 #
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 if (!(PHP_SAPI == 'cli'))
     {

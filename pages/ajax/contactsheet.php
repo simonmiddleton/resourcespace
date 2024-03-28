@@ -2,7 +2,7 @@
 #
 # PDF Contact Sheet Functionality
 #
-include '../../include/db.php';
+include '../../include/boot.php';
 include '../../include/authenticate.php';
 include_once '../../include/image_processing.php';
 include_once '../../include/pdf_functions.php';

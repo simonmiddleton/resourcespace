@@ -2,7 +2,7 @@
 
 use SimpleSAML\Console\Application;
 
-include_once __DIR__ . '/../../../include/db.php';
+include_once __DIR__ . '/../../../include/boot.php';
 include __DIR__ . '/../../../include/authenticate.php';
 include_once __DIR__ . '/../include/propose_changes_functions.php';
 

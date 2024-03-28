@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 
 $ref=getval("ref","",true);
 $k=getval("k","");if ($k=="" || !check_access_key_collection($ref,$k)) {include "../include/authenticate.php";}

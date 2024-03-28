@@ -6,7 +6,7 @@
 # Reindexes the collection index used for public searching.
 #
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include "../../include/image_processing.php";

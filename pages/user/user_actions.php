@@ -1,6 +1,6 @@
 <?php
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include_once "../../include/request_functions.php";
 include_once "../../include/action_functions.php";

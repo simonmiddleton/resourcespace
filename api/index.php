@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 header('Content-Type: application/json');
 include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";

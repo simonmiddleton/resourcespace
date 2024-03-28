@@ -2,7 +2,7 @@
 // Uses Uppy and tus-php. For licenses refer to documentation/licenses/uppy.txt and documentation/licenses/tus-php.txt
 use Predis\Protocol\Text\Handler\StatusResponse;
 
-include "../include/db.php";
+include "../include/boot.php";
 $upload_session = "";
 $tusupload = false;
 $tus_validated = false;

@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 
 $ref = getval("ref", "", true);
 $k = getval("k", "");

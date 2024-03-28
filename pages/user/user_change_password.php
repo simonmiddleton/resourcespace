@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 include_once dirname(__DIR__, 2) . '/include/login_functions.php';
 
 $password_reset_mode=false;

@@ -9,7 +9,7 @@ if($disable_geocoding)
     exit($lang['error-geocodingdisabled']);
     }
 
-include '../include/db.php';
+include '../include/boot.php';
 include '../include/authenticate.php';
 include '../include/header.php';
 

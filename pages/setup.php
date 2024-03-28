@@ -841,7 +841,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
 
     // Check database structure now
     $suppress_headers = true;
-    include_once '../include/db.php';
+    include_once '../include/boot.php';
     $show_detailed_errors=true; // Always show detailed errors during setup process.
     check_db_structs();
 
@@ -854,7 +854,7 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
     if(!empty($structural_plugin) && !$develmode)
         {
         $suppress_headers=true;
-        include_once "../include/db.php";
+        include_once "../include/boot.php";
         //BUILD Data from plugin
         global $mysql_db, $resource_field_column_limit;
     

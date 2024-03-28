@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . '/../../../include/db.php';
+include __DIR__ . '/../../../include/boot.php';
 
 if('cli' != PHP_SAPI)
     {

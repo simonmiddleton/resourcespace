@@ -1,6 +1,6 @@
 <?php
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 $uniqid = getval("id", "");
 $user = getval("user", ""); // Need to get this from query string since we haven't authenticated

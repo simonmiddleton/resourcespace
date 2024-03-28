@@ -358,7 +358,7 @@ hook('handleuserref','',array($userref));
 $trace_id_components = [
     getmypid(),
     $_SERVER['REQUEST_TIME_FLOAT'],
-    $GLOBALS['pagename'], # already set in db.php
+    $GLOBALS['pagename'], # already set in boot.php
     http_build_query($_GET),
     $GLOBALS['userref'],
 ];

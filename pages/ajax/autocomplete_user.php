@@ -1,7 +1,7 @@
 <?php
 # Feeder page for AJAX user/group search for the user selection include file.
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php";
 

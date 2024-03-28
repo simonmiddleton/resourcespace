@@ -1,6 +1,6 @@
 <?php
 
-include "include/db.php";
+include "include/boot.php";
 debug("[index.php] Reached index page...");
 
 if (getval("rp", "") != "") {

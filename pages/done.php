@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 
 if ((getval("user","")!="" || isset($anonymous_login) || hook('provideusercredentials')) && getval("k","")=="")
     {

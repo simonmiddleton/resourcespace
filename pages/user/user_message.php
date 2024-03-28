@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 include "../../include/authenticate.php";
 
 if (isset($anonymous_login) && $anonymous_login == $username)

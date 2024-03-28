@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 
 if (!$allow_password_reset) {exit("Password requests have been disabled.");} # User should never see this.
 

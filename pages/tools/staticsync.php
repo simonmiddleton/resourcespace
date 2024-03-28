@@ -1,5 +1,5 @@
 <?php
-include_once dirname(__FILE__) . "/../../include/db.php";
+include_once dirname(__FILE__) . "/../../include/boot.php";
 include_once dirname(__FILE__) . "/../../include/image_processing.php";
 command_line_only();
 

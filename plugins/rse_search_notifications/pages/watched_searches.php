@@ -2,7 +2,7 @@
 
 DEFINE('WATCHED_SEARCHES_ITEMS_PER_PAGE',10);
 
-include_once "../../../include/db.php";
+include_once "../../../include/boot.php";
 include_once "../../../include/authenticate.php";
 include_once "../../../include/search_do.php";
 include_once "../include/search_notifications_functions.php";

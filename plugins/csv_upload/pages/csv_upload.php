@@ -4,7 +4,7 @@
  * @package ResourceSpace
  */
 
-include dirname(__FILE__)."/../../../include/db.php";
+include dirname(__FILE__)."/../../../include/boot.php";
 include dirname(__FILE__)."/../../../include/authenticate.php";
 include_once dirname(__FILE__)."/../include/meta_functions.php";
 include_once dirname(__FILE__)."/../include/csv_functions.php";
