@@ -471,6 +471,18 @@ $photoshop_eps_miff=false;
 # (enabling may cause a slowdown on viewing resources when large files are used)
 $imagemagick_calculate_sizes=false;
 
+# Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
+$imagemagick_mpr = false;
+
+# Set the depth to be passed to mpr command.
+$imagemagick_mpr_depth = "8";
+
+# Should colour profiles be preserved?
+$imagemagick_mpr_preserve_profiles = true;
+
+# If using imagemagick and mpr, specify any metadata profiles to be retained. Default setting good for ensuring copyright info is not stripped which may be required by law
+$imagemagick_mpr_preserve_metadata_profiles = array('iptc');
+
 # If using imagemagick for PDF, EPS and PS files, up to how many pages should be extracted for the previews?
 # If this is set to more than one the user will be able to page through the PDF file.
 $pdf_pages=30;
