@@ -4295,14 +4295,14 @@ function save_resource_custom_access($resource)
  *
  * @param  int     $resource         Resource ID.
  * @param  int     $usergroup        User group ID.
- * @param  bool    $return_default   Return default custom access value from config. $default_customaccess.
+ * @param  bool    $return_default   Return default custom access value RESOURCE_ACCESS_CONFIDENTIAL
  * 
  * @return mixed   False if custom access is disabled or there is no custom access value set for this resource.
  *                 Int representing custom access level if set; 0 - open, 1 - restricted, 2 - confidential.
  */
 function get_custom_access($resource, $usergroup, $return_default = true)
     {
-    global $custom_access, $default_customaccess;
+    global $custom_access;
 
     if ($custom_access == false) {return false;}
 
@@ -4310,7 +4310,7 @@ function get_custom_access($resource, $usergroup, $return_default = true)
 
     if ($result === '' && $return_default)
         {
-        return $default_customaccess;
+        return RESOURCE_ACCESS_CONFIDENTIAL;
         }
     elseif ($result === '')
         {

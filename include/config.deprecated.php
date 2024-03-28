@@ -8,15 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Set the Default Level for Custom Access. 
-# This will only work for resources that haven't been set to custom previously, otherwise they will show their previously set values.
-/*
-    0 - Open
-    1 - Restricted
-    2 - Confidential
-*/
-$default_customaccess=2;
-
 # Default home page (when not using themes as the home page).
 # You can set other pages, for example search results, as the home page e.g.
 # $default_home_page="search.php?search=example";
