@@ -341,6 +341,9 @@ $exif_date=12;
 # You may want to enable it on the usergroup level by overriding this config option in System Setup.
 $metadata_report=false;
 
+# Option to turn on metadata download in view.php.
+$metadata_download = false;
+
 # Use Exiftool to attempt to extract specified resolution and unit information from files (ex. Adobe files) upon upload.
 $exiftool_resolution_calc=false;
 
