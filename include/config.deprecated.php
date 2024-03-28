@@ -11,9 +11,6 @@
 # Do not show any notification text if a password reset attempt fails to find a valid user. Setting this to false means potential hackers can discover valid email addresses
 $hide_failed_reset_text=true;
 
-# Highlight search keywords when displaying results and resources?
-$highlightkeywords=true;
-
 # embed the target preview profile?
 $icc_preview_profile_embed=false;
 

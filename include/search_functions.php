@@ -2389,10 +2389,9 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
         }
 
     # Highlight searched keywords in $text
-    # Optional - depends on $highlightkeywords being set in config.php.
-    global $highlightkeywords, $stemming;
+    global $stemming;
     # Situations where we do not need to do this.
-    if (!isset($highlightkeywords) || ($highlightkeywords==false) || ($search=="") || ($text=="")) {return $text;}
+    if ($search=="" || $text=="") {return $text;}
 
         # Generate the cache of search keywords (no longer global so it can test against particular fields.
         # a search is a small array so I don't think there is much to lose by processing it.
