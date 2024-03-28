@@ -2269,6 +2269,9 @@ $icc_preview_profile = 'sRGB_IEC61966-2-1_black_scaled.icc';
 # additional options for profile conversion during preview generation
 $icc_preview_options = '-intent perceptual -black-point-compensation';
 
+# Embed the target preview profile?
+$icc_preview_profile_embed = false;
+
 # play videos/audio on hover instead of on click
 $video_search_play_hover=false; // search.php
 $video_view_play_hover=false; // view.php
