@@ -1682,22 +1682,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $profile='';
                 if($icc_extraction && !$icc_transform_complete && !$previewbased && file_exists($iccpath) && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
                     {
-                    global $icc_preview_profile_embed;
-                    // we have an extracted ICC profile, so use it as source
-                    if ($icc_preview_profile != "" && $icc_preview_profile_embed)
-                        {
-                        $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
-                        }
-                    else
-                        {
-                        $targetprofile = "";
-                        }
+                    $targetprofile = "";
 
                     if($imagemagick_mpr)
                         {
                         $mpr_parts['strip_source']=(!$imagemagick_mpr_preserve_profiles ? true : false);
                         $mpr_parts['sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? escapeshellarg($iccpath) : ''). " " . $icc_preview_options;
-                        $mpr_parts['strip_target']=($icc_preview_profile_embed ? false : true);
+                        $mpr_parts['strip_target']=true;
                         $mpr_parts['targetprofile']=escapeshellarg($targetprofile);
                         }
                     else

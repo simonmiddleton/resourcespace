@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# embed the target preview profile?
-$icc_preview_profile_embed=false;
-
 # Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
 $imagemagick_mpr=false;
 
