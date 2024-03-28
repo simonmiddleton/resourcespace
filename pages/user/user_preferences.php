@@ -129,10 +129,7 @@ include "../../include/header.php";
         {
         $default_display_array['xlthumbs'] = $lang['xlthumbstitle'];
         }
-    if($searchlist || $GLOBALS['default_display'] == 'list')
-        {
-        $default_display_array['list'] = $lang['listtitle'];
-        }
+    $default_display_array['list'] = $lang['listtitle'];
     $default_display_array['strip']  = $lang['striptitle'];
     
     $page_def[] = config_add_single_select(

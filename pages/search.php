@@ -1047,21 +1047,20 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 <?php
                 }
                 
-            if ($searchlist == true) 
+
+            if($display == 'list')
                 {
-                if($display == 'list')
-                    {
-                    ?><span class="smalllisticonactive"></span><?php
-                    }
-                else
-                    {
-                    ?>
-                    <a id="list_view_link"  href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo escape($lang["listtitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
-                        <span class="smalllisticon"></span>
-                    </a>
-                    <?php
-                    }
+                ?><span class="smalllisticonactive"></span><?php
                 }
+            else
+                {
+                ?>
+                <a id="list_view_link"  href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo escape($lang["listtitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                    <span class="smalllisticon"></span>
+                </a>
+                <?php
+                }
+                
             
             if (!$disable_geocoding)
                 {

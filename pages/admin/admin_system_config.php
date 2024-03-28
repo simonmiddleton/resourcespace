@@ -330,10 +330,7 @@ if($xlthumbs || $GLOBALS['default_display'] == 'xlthumbs')
     {
     $default_display_array['xlthumbs'] = $lang['xlthumbstitle'];
     }
-if($searchlist || $GLOBALS['default_display'] == 'list')
-    {
-    $default_display_array['list'] = $lang['listtitle'];
-    }
+$default_display_array['list'] = $lang['listtitle'];
 $default_display_array['strip']  = $lang['striptitle'];
 
 $page_def[] = config_add_single_select('default_perpage', $lang['userpreference_default_perpage_label'], $results_display_array, false, 420, '', true);
