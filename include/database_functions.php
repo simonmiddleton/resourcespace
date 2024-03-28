@@ -390,7 +390,7 @@ function db_rollback_transaction($name)
  */
 function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
-    global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
+    global $db, $config_show_performance_footer, $debug_log, $debug_log_override,
     $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_enabled,
     $query_cache_already_completed_this_time,$prepared_statement_cache;
     
@@ -450,7 +450,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
         $querycount++;
         }
 
-    if (($debug_log || $debug_log_override) && !$suppress_sql_log)
+    if (($debug_log || $debug_log_override))
         {
         debug("SQL: " . $sql . "  Parameters: " . json_encode($parameters));
         }

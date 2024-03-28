@@ -42,9 +42,6 @@ $search_all_workflow_states=false;
 # whether field-specific keywords should include their shortnames in searchcrumbs (if $search_titles_searchcrumbs=true;) ex. "originalfilename:pdf"
 $search_titles_shortnames=false;
 
-# Suppress SQL information in the debug log?
-$suppress_sql_log = false;
-
 # Index the unnormalized keyword in addition to the normalized version, also applies to keywords with diacritics removed. Quoted search can then be used to find matches for original unnormalized keyword.
 $unnormalized_index=false;
 
