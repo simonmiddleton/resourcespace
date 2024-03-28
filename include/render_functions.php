@@ -4153,7 +4153,7 @@ function display_upload_options()
 function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
     {
     debug_function_call(__FUNCTION__, [$field['ref'], $valueonly, $fixedwidth]);
-    global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES, $force_display_template_orderby;
+    global $ref, $show_expiry_warning, $access, $search, $extra, $lang, $FIXED_LIST_FIELD_TYPES;
 
     $value=$field["value"];
     $title=escape($field["title"]);
@@ -4391,12 +4391,6 @@ function display_field_data(array $field,$valueonly=false,$fixedwidth=452)
                     } ?>>
                 <h3><?php echo $title?></h3><p><?php echo $value; ?></p></div><?php
                 }
-            }
-            
-        if($force_display_template_orderby)
-            {
-            echo $extra;
-            $extra='';
             }
         }
     }

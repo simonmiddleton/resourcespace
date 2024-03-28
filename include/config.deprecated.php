@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.
-$force_display_template_orderby=false;
-
 # Do not show any notification text if a password reset attempt fails to find a valid user. Setting this to false means potential hackers can discover valid email addresses
 $hide_failed_reset_text=true;
 
