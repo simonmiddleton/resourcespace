@@ -8,10 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# experimental email notification of php errors to $email_notify. 
-$email_errors=false;
-$email_errors_address="";
-
 #enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
 $email_from_user=false;
 

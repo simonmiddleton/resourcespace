@@ -48,7 +48,7 @@ final class PreparedStatementQuery {
  */
 function errorhandler($errno, $errstr, $errfile, $errline)
     {
-    global $baseurl, $pagename, $show_report_bug_link, $email_errors, $show_error_messages,$show_detailed_errors, $use_error_exception,$log_error_messages_url, $username, $plugins;
+    global $baseurl, $pagename, $show_report_bug_link, $show_error_messages,$show_detailed_errors, $use_error_exception,$log_error_messages_url, $username, $plugins;
 
     if (!error_reporting()) 
         {
@@ -140,16 +140,6 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         echo @file_get_contents($log_error_messages_url,0,$ctx);
         }
 
-    // Optionally e-mail errors to a configured address
-    if ($email_errors)
-        {
-        global $email_notify, $email_from, $email_errors_address, $applicationname;
-        if ($email_errors_address == "") 
-            { 
-            $email_errors_address = $email_notify; 
-            }
-        send_mail($email_errors_address, "$applicationname Error", $error_info, $email_from, $email_from, "", null, "Error Reporting");
-        }
     hook('after_error_handler', '', array($errno, $errstr, $errfile, $errline));
     exit();
     }
