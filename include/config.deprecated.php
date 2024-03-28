@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Workflow states to ignore when verifying file integrity (to verify file integrity usign checksums requires $file_checksums_50k=false;)
-$file_integrity_ignore_states = array();
-
 # Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.
 $force_display_template_orderby=false;
 
