@@ -521,7 +521,6 @@ elseif($restypes=='')
     hook('extra_search_buttons');
     
     $searchbuttons.="</div>";
-    if (!$searchbar_buttons_at_bottom){ echo $searchbuttons."<br/>"; }
     if (!$basic_simple_search) {
     // Include simple search items (if any)
     global $clear_function, $simple_search_show_dynamic_as_dropdown;
@@ -906,7 +905,7 @@ elseif($restypes=='')
     
     <?php hook("searchbarbeforebuttons"); ?>
         
-    <?php if ($searchbar_buttons_at_bottom){ echo $searchbuttons; } ?>
+    <?php echo $searchbuttons; ?>
             
   </form>
   <br />
