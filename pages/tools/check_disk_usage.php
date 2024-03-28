@@ -72,19 +72,6 @@ else
                 $admin_notify_users = array();
                 $notify_users=get_notification_users("SYSTEM_ADMIN");
                 
-                if(isset($disk_quota_notification_email))
-                    {
-                    $disk_quota_notification_user=ps_value("select ref value from user where email = ?",array("s",$disk_quota_notification_email),0);
-                    if($disk_quota_notification_user>0)
-                        {
-                        $admin_notify_users[]=$disk_quota_notification_user;    
-                        }
-                    else
-                        {
-                        $admin_notify_emails[] = $disk_quota_notification_email;    
-                        }
-                    }
-                
                 foreach($notify_users as $notify_user)
                     {
                     get_config_option($notify_user['ref'],'user_pref_system_management_notifications', $send_message);        
@@ -151,18 +138,7 @@ else
                 $admin_notify_emails = array();
                 $admin_notify_users = array();
                 $notify_users=get_notification_users("SYSTEM_ADMIN");
-                if(isset($disk_quota_notification_email))
-                    {
-                    $disk_quota_notification_user=ps_value("select ref value from user where email = ?",array("s",$disk_quota_notification_email), 0);
-                    if($disk_quota_notification_user>0)
-                        {
-                        $notify_users[]=array("ref" => $disk_quota_notification_user, "email" => $disk_quota_notification_email);
-                        }
-                    else
-                        {
-                        $admin_notify_emails[] = $disk_quota_notification_email;    
-                        }
-                    }
+
                 foreach($notify_users as $notify_user)
                     {
                     get_config_option($notify_user['ref'],'user_pref_system_management_notifications', $send_message);        

@@ -8,13 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Disk Usage Warnings - require running check_disk_usage.php
-# Percentage of disk space used before notification is sent out. The number should be between 1 and 100.
-#$disk_quota_notification_limit_percent_warning=90;
-# interval in hours to wait before sending another percent warning 
-#$disk_quota_notification_interval=24;
-$disk_quota_notification_email='';
-
 # Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
 $download_file_lifetime=14;
 
