@@ -18,14 +18,6 @@ $lean_preview_generation=false;
 # How many thumbnails to show in the collections panel until a 'View All...' link appears, linking to a search in the main window.
 $max_collection_thumbs=150;
 
-# Enable multi-lingual free text fields
-# By default, only the checkbox list/dropdown fields can be multilingual by using the special syntax when defining
-# the options. However, setting the below to true means that free text fields can also be multi-lingual. Several text boxes appear when entering data so that translations can be entered.
-$multilingual_text_fields=false;
-
-# Normalize keywords when indexing and searching? Having this set to true means that various character encodings of e.g. diacritics will be standardised when indexing and searching. Requires internationalization functions (PHP versions >5.3). For example, there are several different ways of encoding "é" (e acute) and this will ensure that a standard form of "é" will always be used.
-$normalize_keywords=true;
-
 # Allow sorting by resource_type on thumbnail views
 $order_by_resource_type=true;
 

@@ -1756,7 +1756,6 @@ function render_access_key_tr(array $record)
     <?php
     }
 
-# The functions is_field_displayed, display_multilingual_text_field and display_field below moved from edit.php
 function is_field_displayed($field)
     {
     global $ref, $resource, $upload_review_mode;
@@ -1775,50 +1774,11 @@ function is_field_displayed($field)
         || hook('edithidefield2', '', array('field' => $field)));
     }
 
-# Allows language alternatives to be entered for free text metadata fields.
-function display_multilingual_text_field($n, $field, $translations)
-  {
-  global $language, $languages, $lang;
-  ?>
-  <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape($lang["hidetranslations"])?>';} return false;"><?php echo escape($lang["showtranslations"])?></a></p>
-  <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
-     <?php
-     reset($languages);
-     foreach ($languages as $langkey => $langname)
-     {
-       if ($language!=$langkey)
-       {
-         if (array_key_exists($langkey,$translations)) {$transval=$translations[$langkey];} else {$transval="";}
-         ?>
-         <tr>
-            <td nowrap valign="top"><?php echo escape($langname)?>&nbsp;&nbsp;</td>
-
-            <?php
-            if ($field["type"]==0)
-            {
-              ?>
-              <td><input type="text" class="stdwidth" name="multilingual_<?php echo $n?>_<?php echo $langkey?>" value="<?php echo escape($transval)?>"></td>
-              <?php
-           }
-           else
-           {
-              ?>
-              <td><textarea rows=6 cols=50 name="multilingual_<?php echo $n?>_<?php echo $langkey?>"><?php echo escape($transval)?></textarea></td>
-              <?php
-           }
-           ?>
-        </tr>
-        <?php
-     }
-  }
-  ?></table><?php
-  }
-
 function display_field($n, $field, $newtab=false,$modal=false)
   {
   debug_function_call(__FUNCTION__, [$n, $field['ref'], $newtab, $modal]);
 
-  global $use, $ref, $original_fields, $multilingual_text_fields, $multiple, $lastglobal,$is_template, $language, $lang,
+  global $use, $ref, $original_fields, $multiple, $lastglobal,$is_template, $language, $lang,
   $blank_edit_template, $edit_autosave, $errors, $tabs_on_edit, $collapsible_sections, $ctrls_to_save,
   $embedded_data_user_select, $embedded_data_user_select_fields, $show_error, $save_errors, $baseurl, $is_search,
   $all_selected_nodes,$original_nodes, $FIXED_LIST_FIELD_TYPES, $TEXT_FIELD_TYPES, $DATE_FIELD_TYPES, $upload_review_mode, $check_edit_checksums, $locked_fields, $lastedited, $copyfrom, $fields;
@@ -1890,14 +1850,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
     debug(sprintf('$displaycondition = %s', json_encode($displaycondition)));
     }
 
-  if ($multilingual_text_fields)
-    {
-    # Multilingual text fields - find all translations and display the translation for the current language.
-    $translations=i18n_get_translations($value);
-    if (array_key_exists($language,$translations)) {$value=$translations[$language];} else {$value="";}
-    }
-
-  if ($multiple && 
+    if ($multiple && 
     ( (getval("copyfrom","") == "" && getval('metadatatemplate', '') == "") 
       || str_replace(array(" ",","),"",(string)$value)=="") ) 
         {
@@ -1999,16 +1952,10 @@ function display_field($n, $field, $newtab=false,$modal=false)
         ?>
         <option value="FR"<?php if(getval("modeselect_" . $field["ref"],"")=="FR"){?> selected<?php } ?>><?php echo escape($lang["findandreplace"])?></option>
         <option value="CF"<?php if(getval("modeselect_" . $field["ref"],"")=="CF"){?> selected<?php } ?>><?php echo escape($lang["edit_copy_from_field"])?></option>
-        <?php
-        if(!$multilingual_text_fields)
-            {
-            // Prepending text doesn't work wih multilingual fields
-            ?>
-            <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo escape($lang["prependtext"])?></option>
-<?php
-            }
+        <option value="PP"<?php if(getval("modeselect_" . $field["ref"],"")=="PP"){?> selected<?php } ?>><?php echo escape($lang["prependtext"])?></option>
+        <?php  
         }
-      if((in_array($field['type'], $TEXT_FIELD_TYPES) && !$multilingual_text_fields) || in_array($field['type'], [FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST]))
+      if((in_array($field['type'], $TEXT_FIELD_TYPES)) || in_array($field['type'], [FIELD_TYPE_CHECK_BOX_LIST, FIELD_TYPE_CATEGORY_TREE, FIELD_TYPE_DYNAMIC_KEYWORDS_LIST]))
         {
         # Append applies to text boxes, checkboxes ,category tree and dynamic keyword fields onl.
         ?>
@@ -2245,13 +2192,6 @@ function display_field($n, $field, $newtab=false,$modal=false)
        <div class="FormHelp" style="padding:0;<?php if ( in_array($field["type"],array(2,3,4,6,7,10,12,14)) ) { ?> clear:left;<?php } else { ?> display:none;<?php } ?>" id="help_<?php echo $field["ref"]; ?>"><div class="FormHelpInner"><?php echo nl2br(trim(i18n_get_translated($field["help_text"])))?></div></div>
 <?php
      }
-
-    # If enabled, include code to produce extra fields to allow multilingual free text to be entered.
-    if ($multilingual_text_fields && ($field["type"]==0 || $field["type"]==1 || $field["type"]==5))
-      {
-       display_multilingual_text_field($n, $field, $translations);
-      }
-    
     if(($embedded_data_user_select || (isset($embedded_data_user_select_fields) && in_array($field["ref"],$embedded_data_user_select_fields))) && ($ref<0 && !$multiple))
     {
       ?>

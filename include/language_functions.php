@@ -332,8 +332,8 @@ function ucfirstletter_callback($matches){
  * @return string                   Normalized keyword
  */
 function normalize_keyword ($keyword,bool $user_language = false) {
-    global $normalize_keywords, $keywords_remove_diacritics,$language_normalize_mapping;
-    if ($normalize_keywords && function_exists('normalizer_normalize')) {
+    global $keywords_remove_diacritics,$language_normalize_mapping;
+    if (function_exists('normalizer_normalize')) {
         if ($user_language && key_exists($GLOBALS["language"],$language_normalize_mapping)) {
             $form = $language_normalize_mapping[$GLOBALS["language"]];
         } else {
