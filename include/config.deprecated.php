@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-// Display help links on pages
-$contextual_help_links=true;
-
 # Set the Default Level for Custom Access. 
 # This will only work for resources that haven't been set to custom previously, otherwise they will show their previously set values.
 /*

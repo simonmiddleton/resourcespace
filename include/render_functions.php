@@ -3380,8 +3380,6 @@ function generate_browse_bar_item($id, $text)
     
 /**
 * Generates a help icon that opens the relevant Knowledge Base article in a modal
-*  
-* These links can be disabled by setting $contextual_help_links=false;
 * 
 * @param string  $page              Knowledge Base article to display, leave blank to show the Knowledge Base homepage
 * @param boolean $return_string     Set to true to return the html as a single line string, False will cause the function to echo the html
@@ -3390,8 +3388,7 @@ function generate_browse_bar_item($id, $text)
 */
 function render_help_link($page='',$return_string=false)
     {
-    global $contextual_help_links,$pagename,$lang,$help_modal,$baseurl;
-    if ($contextual_help_links === false){return;}
+    global $pagename,$lang,$help_modal,$baseurl;
 
     // Build html for link into a string
     $help_link_html  =      '<a ';
