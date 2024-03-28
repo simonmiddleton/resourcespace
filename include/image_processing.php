@@ -1347,7 +1347,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false,$onlysizes = array())
     {
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
-    global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
+    global $autorotate_no_ingest,$always_make_previews,$previews_allow_enlarge,$alternative_file_previews;
     global $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors, $watermark;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
@@ -3729,32 +3729,6 @@ function get_sizes_to_generate(
         "SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition,
         $params
         );
-
-    if ($GLOBALS["lean_preview_generation"] && count($getsizes) == 0) {
-        $force_make = array("pre","thm","col");
-        if ($extension != "jpg" || $extension != "jpeg") {
-            array_push($force_make,"hpr","scr");
-        }
-        $count = count($ps)-1;
-        $oversized = 0;
-        for ($s = $count;$s>0;$s--) {
-            if (
-                !in_array($ps[$s]['id'],$force_make)
-                && !in_array($ps[$s]['id'],$GLOBALS["always_make_previews"])
-                && isset($o_width)
-                && isset($o_height)
-                && $ps[$s]['width'] > $o_width
-                && $ps[$s]['height'] > $o_height
-                && !$GLOBALS["previews_allow_enlarge"]
-            ) {
-                $oversized++;
-            }
-            if($oversized>0) {
-                unset($ps[$s]);
-            }
-        }
-        $ps = array_values($ps);
-    }
         
     if (
         (count($onlysizes) === 0 || in_array("tiles",$onlysizes))

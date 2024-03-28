@@ -11,10 +11,6 @@
 // Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
 $inactive_message_auto_digest_period=7;
 
-# Prevent previews from creating versions that result in the same size?
-# If true pre, thm, and col sizes will not be considered.
-$lean_preview_generation=false;
-
 # How many thumbnails to show in the collections panel until a 'View All...' link appears, linking to a search in the main window.
 $max_collection_thumbs=150;
 
