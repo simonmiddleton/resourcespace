@@ -180,6 +180,17 @@ if($system_download_config_force_obfuscation && !defined("SYSTEM_DOWNLOAD_CONFIG
 # End of remote config support
 # ---------------------------------------------------------------------------------------------
 
+
+// Remove stream wrappers that aren't needed to reduce security vulnerabilities.
+$wrappers = stream_get_wrappers();
+foreach(UNREGISTER_WRAPPERS as $unregwrapper)
+    {
+    if(in_array($unregwrapper,$wrappers))
+        {
+        stream_wrapper_unregister($unregwrapper);
+        }
+    }
+
 if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
     {
     // Add X-Frame-Options to HTTP header, so that page cannot be shown in an iframe unless specifically set in config.

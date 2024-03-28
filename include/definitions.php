@@ -886,3 +886,6 @@ const API_ISSUE_VALID_DESTINATIONS = [
         "stateparam" => "state",
     ],
 ];
+
+// Stream wrappers not needed by ResourceSpace, to unregister during boot.php to improve security. 
+const UNREGISTER_WRAPPERS = ['ftp','ftps', 'phar'];
