@@ -1278,7 +1278,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     }
 
                                                 // Show the upload preview link
-                                                if (!$disable_upload_preview && !resource_file_readonly($ref) && !checkperm("F*") && !$custompermshowfile) 
+                                                if (!resource_file_readonly($ref) && !checkperm("F*") && !$custompermshowfile) 
                                                     { ?>
                                                     <li>
                                                         <a id="view_upload_preview_link" href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">

@@ -2,7 +2,7 @@
 include "../include/boot.php";
 
 include "../include/authenticate.php"; 
-if ($disable_upload_preview || (checkperm("F*") && !$custompermshowfile)){exit ("Permission denied.");}
+if (checkperm("F*") && !$custompermshowfile){exit ("Permission denied.");}
 include_once "../include/image_processing.php";
 
 $ref=getval("ref","",true);
