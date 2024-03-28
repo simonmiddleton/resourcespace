@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-#enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
-$email_from_user=false;
-
 # Workflow states to ignore when verifying file integrity (to verify file integrity usign checksums requires $file_checksums_50k=false;)
 $file_integrity_ignore_states = array();
 
