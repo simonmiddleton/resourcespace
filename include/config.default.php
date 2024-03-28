@@ -2195,6 +2195,12 @@ $cc_me=false;
 # Allow listing of all recipients when sending resources or collection.
 $list_recipients=false;
 
+# Should *all* manually entered keywords (e.g. basic search and 'all fields' search on advanced search) be treated as wildcards?
+# E.g. "cat" will always match "catch", "catalogue", "category" with no need for an asterisk.
+# WARNING - this option could cause search performance issues due to the hugely expanded searches that will be performed.
+# It will also cause some other features to be disabled: related keywords and quoted string support
+$wildcard_always_applied = false;
+
 # How many keywords should be included in the search when a single keyword expands via a wildcard. 
 # Set to 0 to remove limit.
 # Setting this too high or removing the limit may cause performance issues.
