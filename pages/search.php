@@ -1154,8 +1154,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             $orderFields['colour'] = $lang['colour'];
         if ($order_by_resource_id)
             $orderFields['resourceid'] = $lang['resourceid'];
-        if ($order_by_resource_type)
-            $orderFields['resourcetype'] = $lang['type'];
+        $orderFields['resourcetype'] = $lang['type'];
         
         $orderFields['modified'] = $lang['modified'];
 

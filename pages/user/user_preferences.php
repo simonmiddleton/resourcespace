@@ -93,10 +93,7 @@ include "../../include/header.php";
         $sort_order_fields['resourceid'] = $lang['resourceid'];
         }
 
-    if($order_by_resource_type)
-        {
-        $sort_order_fields['resourcetype'] = $lang['type'];
-        }
+    $sort_order_fields['resourcetype'] = $lang['type'];
 
     // Add thumbs_display_fields to sort order links for thumbs views
     for($x = 0; $x < count($sf); $x++)

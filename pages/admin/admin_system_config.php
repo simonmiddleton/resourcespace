@@ -299,10 +299,7 @@ if($order_by_resource_id)
     $sort_order_fields['resourceid'] = $lang['resourceid'];
     }
 
-if($order_by_resource_type)
-    {
-    $sort_order_fields['resourcetype'] = $lang['type'];
-    }
+$sort_order_fields['resourcetype'] = $lang['type'];
 
 foreach ($sort_fields as $field) {
     $sort_order_fields["field$field"] = get_resource_type_field($field)["title"];

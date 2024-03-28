@@ -14,9 +14,6 @@ $inactive_message_auto_digest_period=7;
 # How many thumbnails to show in the collections panel until a 'View All...' link appears, linking to a search in the main window.
 $max_collection_thumbs=150;
 
-# Allow sorting by resource_type on thumbnail views
-$order_by_resource_type=true;
-
 # Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
 $pending_submission_prompt_review=true;
 
