@@ -4,8 +4,8 @@
             <?php if (!hook("replacehomelinknav")) { ?>
                 <?php if (!$use_theme_as_home && !$use_recent_as_home) { ?>
                     <li class="HeaderLink">
-                        <a href="<?php echo $baseurl?>/pages/<?php echo $default_home_page?>" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo $default_home_page == "home.php" ? DASH_ICON . escape($lang["dash"]) : HOME_ICON . escape($lang["home"]); ?>
+                        <a href="<?php echo $baseurl?>/pages/home.php" onClick="return CentralSpaceLoad(this,true);">
+                            <?php echo  DASH_ICON . escape($lang["dash"]); ?>
                         </a>
                     </li>
                 <?php } ?>
