@@ -1300,16 +1300,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     }
                                                 }
 
-                                            if ($metadata_download && (checkperm('f*') || $can_see_fields_individually))    
-                                                { ?>
-                                                <li>
-                                                    <a href="<?php echo generateurl($baseurl . "/pages/metadata_download.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
-                                                        <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["downloadmetadata"]?>
-                                                    </a>
-                                                </li>
-                                                <?php 
-                                                }
-
                                             $overrideparams= array(
                                                 'search_offset'     => $offset,
                                                 'offset'            => 0,

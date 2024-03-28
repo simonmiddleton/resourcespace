@@ -18,9 +18,6 @@ $lean_preview_generation=false;
 # How many thumbnails to show in the collections panel until a 'View All...' link appears, linking to a search in the main window.
 $max_collection_thumbs=150;
 
-#Option to turn on metadata download in view.php.
-$metadata_download=false;
-
 # Enable multi-lingual free text fields
 # By default, only the checkbox list/dropdown fields can be multilingual by using the special syntax when defining
 # the options. However, setting the below to true means that free text fields can also be multi-lingual. Several text boxes appear when entering data so that translations can be entered.
