@@ -73,7 +73,7 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         echo PHP_EOL;
         }
-    elseif (API_CALL)
+    elseif (defined("API_CALL"))
         {
         // If an API call, return a standardised error format.
         $response["error"]=true;
