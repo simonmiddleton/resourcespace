@@ -273,10 +273,6 @@ $page_def[] = config_add_html('</div>');
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['searchcapability'] . '</h3><div id="SystemConfigSearchSection" class="CollapsibleSection">');
 
 $sort_order_fields = array('relevance' => $lang['relevance']);
-if($random_sort)
-    {
-    $sort_order_fields['random'] = $lang['random'];
-    }
 
 if($popularity_sort)
     {

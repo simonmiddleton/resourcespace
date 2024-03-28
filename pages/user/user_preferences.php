@@ -67,10 +67,6 @@ include "../../include/header.php";
         }
 
     $sort_order_fields = array('relevance' => $lang['relevance']);
-    if($random_sort)
-        {
-        $sort_order_fields['random'] = $lang['random'];
-        }
 
     if($popularity_sort)
         {

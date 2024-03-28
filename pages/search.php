@@ -1144,8 +1144,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         // Build the available sort sequence entries, starting with the default derived above
         $orderFields = array($default_sort_order => $rel);
-        if ($random_sort)
-            $orderFields['random'] = $lang['random'];
         if ($popularity_sort)
             $orderFields['popularity'] = $lang['popularity'];
         if ($orderbyrating)

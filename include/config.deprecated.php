@@ -31,8 +31,6 @@ $psd_transparency_checkerboard=false;
 
 $public_collections_header_only=false; // show public collections page in header, omit from Themes and Manage Collections
 
-$random_sort=false;
-
 # Select the field to display in searchcrumbs for a related search (defaults to filename)
 # If this is set to a different field and the value is empty fallback to filename
 $related_search_searchcrumb_field=51;
