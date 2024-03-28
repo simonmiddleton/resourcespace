@@ -3,6 +3,9 @@ command_line_only();
 
 
 // Check for searching using related keywords and with keyword_relationships_one_way set
+
+$keyword_relationships_one_way = false;
+
 $resourcea=create_resource(1,0);
 $resourceb=create_resource(1,0);
 
@@ -39,4 +42,30 @@ if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']
     return false;
     }
 
+// SUBTEST C
+// Now set $keyword_relationships_one_way. Also need to wipe the related keyword cache!
+$keyword_relationships_one_way = true;
+unset($related_keywords_cache);
+
+// Do search for 'fdgrefgfr' again, should only return resource b
+$results=do_search('fdgrefgfr');
+if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourceb)
+    {
+    echo "ERROR - SUBTEST C\n";
+    return false;
+    }
+
+// SUBTEST D
+// Do search for 'rggweqvdfr' again - should still return resources a and b 
+$results = do_search('rggweqvdfr');
+if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref'])
+    ||
+    !match_values(array_column($results,'ref'),array($resourcea, $resourceb))
+    )
+    {
+    echo "ERROR - SUBTEST D\n";
+    return false;
+    }
+
+$keyword_relationships_one_way = false;
 return true;

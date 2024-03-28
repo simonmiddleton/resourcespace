@@ -2570,24 +2570,28 @@ function get_suggested_keywords($search,$ref="")
 
 
 function get_related_keywords($keyref)
-    {
+{
     debug_function_call("get_related_keywords", func_get_args());
 
     # For a given keyword reference returns the related keywords
     # Also reverses the process, returning keywords for matching related words
     # and for matching related words, also returns other words related to the same keyword.
-    global $related_keywords_cache;
-    if (isset($related_keywords_cache[$keyref]))
-        {
+    global $keyword_relationships_one_way, $related_keywords_cache;
+
+    if (isset($related_keywords_cache[$keyref])) {
         return $related_keywords_cache[$keyref];
-        }
-    else
-        {
-        $related_keywords_cache[$keyref]=ps_array("select keyword value from keyword_related where related=? union select related value from keyword_related where (keyword=? or keyword in (select keyword value from keyword_related where related=?)) and related<>?",array("i",$keyref,"i",$keyref,"i",$keyref,"i",$keyref));
-        return $related_keywords_cache[$keyref];
+    } else {
+        if ($keyword_relationships_one_way) {
+            $related_keywords_cache[$keyref] = ps_array("SELECT related value FROM keyword_related WHERE keyword = ?", array("i", $keyref));
+            return $related_keywords_cache[$keyref];
+        } else {
+            $related_keywords_cache[$keyref] = ps_array("SELECT keyword value FROM keyword_related WHERE related = ? UNION SELECT related value FROM keyword_related WHERE (keyword = ? OR keyword IN (SELECT keyword value FROM keyword_related WHERE related = ?)) AND related <> ?", array("i", $keyref, "i", $keyref, "i", $keyref, "i", $keyref));
+            return $related_keywords_cache[$keyref];
         }
     }
-  
+}
+
+    
     
 function get_grouped_related_keywords($find="",$specific="")
     {

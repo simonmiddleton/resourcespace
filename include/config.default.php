@@ -2308,6 +2308,12 @@ $edit_autosave=true;
 # use_refine_searchstring can improve search string parsing. disabled by Dan due to an issue I was unable to replicate. (tom)  
 $use_refine_searchstring=false;
 
+# By default, keyword relationships are two-way 
+# (if "tiger" has a related keyword "cat", then a search for "cat" also includes "tiger" matches).
+# $keyword_relationships_one_way=true means that if "tiger" has a related keyword "cat",
+# then a search for "tiger" includes "tiger", but does not include "cat" matches.
+$keyword_relationships_one_way = false;
+
 $show_searchitemsdiskusage=true;
 
 # If set, which field will cause warnings to appear when approving requests containing these resources?
