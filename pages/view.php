@@ -285,7 +285,7 @@ if($resource_contact_link && ($k=="" || $internal_share_access))
                         type: "GET",
                         url: baseurl_short+"pages/ajax/contactadmin.php?ref="+<?php echo $ref ?>+"&insert=true&ajax=true",
                         success: function(html){
-                                jQuery('#RecordDownload li:last-child').after(html);
+                                jQuery('#RecordDownloadTabContainer li:last-child').after(html);
                                 document.getElementById('messagetext').focus();
                                 },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
