@@ -786,7 +786,7 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
     debug_function_call("search_filter", func_get_args());
 
     global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
-    $geo_search_restrict,$search_all_workflow_states,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
+    $search_all_workflow_states,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
     
     if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
     $userpermissions = (isset($userpermissions)) ? $userpermissions : array();
@@ -842,22 +842,6 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
             if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
             $sql_filter->sql .= "(" . $created_filter . ")";
             $sql_filter->parameters = array_merge($sql_filter->parameters,$created_filter_params);
-            }
-        }
-
-
-    # Geo zone exclusion
-    # A list of upper/lower long/lat bounds, defining areas that will be excluded from geo search results.
-    # Areas are defined as southwest lat, southwest long, northeast lat, northeast long
-    if (count($geo_search_restrict)>0 && substr($search,0,4)=="!geo")
-        {
-        foreach ($geo_search_restrict as $zone)
-            {
-            if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
-            $sql_filter->sql.= "(geo_lat IS null OR geo_long IS null OR not(geo_lat >= ? AND geo_lat<= ?";
-            $sql_filter->sql.= " AND geo_long >= ? AND geo_long<= ?))";
-            // Note the order below is not in ascending order
-            $sql_filter->parameters = array_merge($sql_filter->parameters,$zone[0],$zone[2],$zone[1],$zone[3]);
             }
         }
 

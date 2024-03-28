@@ -2044,13 +2044,6 @@ $use_phpmailer=false;
     // Optional path to tile cache directory. Defaults to ResourceSpace temp directory if not set
     # $geo_tile_cache_directory = '';    
 
-    // Array of southwest (SW) and northeast (NE) latitude/longitude bounds, defining spatial areas that will be excluded from map search results and that are defined by: SW latitude, SW longitude, NE latitude, NE longitude.
-    $geo_search_restrict = array(
-        # array(50,-3,54,3)      // Example omission zone 1.
-        # ,array(-10,-20,-8,-18) // Example omission zone 2.
-        # ,array(1,1,2,2)        // Example omission zone 3.
-    );
-
     // Map height in pixels on the Resource View page.
     $view_mapheight = 350;
 

@@ -11,15 +11,6 @@
 # Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.
 $force_display_template_orderby=false;
 
-# A list of upper/lower long/lat bounds, defining areas that will be excluded from geographical search results.
-# Areas are defined using values in the following sequence: southwest lat, southwest long, northeast lat, northeast long
-$geo_search_restrict=array
-    (   
-    # array(50,-3,54,3) # Example omission zone
-    # ,array(-10,-20,-8,-18) # Example omission zone 2
-    # ,array(1,1,2,2) # Example omission zone 3
-    );
-
 # Do not show any notification text if a password reset attempt fails to find a valid user. Setting this to false means potential hackers can discover valid email addresses
 $hide_failed_reset_text=true;
 
