@@ -274,10 +274,7 @@ foreach($plugins as $plugin_name)
         }
     }
 # Need verbatim queries for this query
-$mysql_vq = $mysql_verbatim_queries;
-$mysql_verbatim_queries = true;
 $active_plugins = get_active_plugins();
-$mysql_verbatim_queries = $mysql_vq;
 
 $active_yaml = array();
 $plugins = array();

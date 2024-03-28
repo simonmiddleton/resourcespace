@@ -275,14 +275,11 @@ function config_encode($input)
  * @see set_plugin_config
  */
 function get_plugin_config($name){
-    global $mysql_verbatim_queries, $mysql_charset;
+    global $mysql_charset;
 
     # Need verbatim queries here
-    $mysql_vq = $mysql_verbatim_queries;
-    $mysql_verbatim_queries = true;
     $configs = ps_query("SELECT config, config_json from plugins where name = ?", array("s", $name), 'plugins');
     $configs = $configs[0] ?? [];
-    $mysql_verbatim_queries = $mysql_vq;
     if (!array_key_exists('config', $configs) || is_null($configs['config_json']))
         {
         return null;

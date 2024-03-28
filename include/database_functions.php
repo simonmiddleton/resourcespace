@@ -228,7 +228,7 @@ $db = null;
  */
 function sql_connect() 
     {
-    global $db,$mysql_server,$mysql_username,$mysql_password,$mysql_db,$mysql_charset,$mysql_force_strict_mode, 
+    global $db,$mysql_server,$mysql_username,$mysql_password,$mysql_db,$mysql_charset, 
            $mysql_server_port, $use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert;
 
     $init_connection = function(
@@ -271,13 +271,6 @@ function sql_connect()
         # Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)
         db_set_connection_mode($db_connection_mode);
         ps_query("SET SESSION group_concat_max_len = 32767", [], '', -1, false, 0); 
-
-        if ($mysql_force_strict_mode)    
-            {
-            db_set_connection_mode($db_connection_mode);
-            ps_query("SET SESSION sql_mode='STRICT_ALL_TABLES'", [], '', -1, false, 0);
-            continue;
-            }
 
         db_set_connection_mode($db_connection_mode);
         $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');

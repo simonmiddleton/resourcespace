@@ -23,13 +23,6 @@ $max_collection_thumbs=150;
 # the options. However, setting the below to true means that free text fields can also be multi-lingual. Several text boxes appear when entering data so that translations can be entered.
 $multilingual_text_fields=false;
 
-# Force MySQL Strict Mode? (regardless of existing setting) - This is useful for developers so that errors that might only occur when Strict Mode is enabled are caught. Strict Mode is enabled by default with some versions of MySQL. The typical error caused is when the empty string ('') is inserted into a numeric column when NULL should be inserted instead. With Strict Mode turned off, MySQL inserts NULL without complaining. With Strict Mode turned on, a warning/error is generated.
-$mysql_force_strict_mode = false;
-
-# If true, it does not remove the backslash from DB queries, and doesn't do any special processing.
-# to them. Unless you need to store '\' in your fields, you can safely keep the default.
-$mysql_verbatim_queries = false;
-
 # Normalize keywords when indexing and searching? Having this set to true means that various character encodings of e.g. diacritics will be standardised when indexing and searching. Requires internationalization functions (PHP versions >5.3). For example, there are several different ways of encoding "é" (e acute) and this will ensure that a standard form of "é" will always be used.
 $normalize_keywords=true;
 
