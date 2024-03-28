@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
-$download_file_lifetime=14;
-
 # For dynamic keyword list searching, perform logical AND instead of OR when selecting multiple options.
 $dynamic_keyword_and = false;
 

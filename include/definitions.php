@@ -892,3 +892,5 @@ const UNREGISTER_WRAPPERS = ['ftp','ftps', 'phar'];
 
 const COLLECTION_FRAME_HEIGHT=153;
 
+// Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
+const DOWNLOAD_FILE_LIFETIME=14;
