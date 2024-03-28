@@ -6375,12 +6375,12 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                         <input type="checkbox" name="automatic_nodes_ordering" value="1"<?php if(1 == $automatic_nodes_ordering) { ?> checked="checked"<?php } ?>>
                     <?php
                     // create constraints selector
-                    admin_resource_type_field_constraint($ref, $currentvalue);
+                    admin_resource_type_field_constraint($ref, (int)$currentvalue);
                     }
                 }
             elseif (in_array($currentvalue, array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE)))
                 { // create constraints selector
-                admin_resource_type_field_constraint($ref, $currentvalue);
+				admin_resource_type_field_constraint($ref, (int)$currentvalue);
                 }
             }
         elseif($propertyname=="linked_data_field")
