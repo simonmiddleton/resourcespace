@@ -858,7 +858,7 @@ function allowed_type_mime($allowedtype)
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
     { 
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $baseurl, $userfullname;
-    global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override, $userref, $email_rate_limit, $lang, $useremail_rate_limit_active;
+    global $email_footer, $header_colour_style_override, $userref, $email_rate_limit, $lang, $useremail_rate_limit_active;
 
     if(defined("RS_TEST_MODE"))
         {
@@ -994,17 +994,11 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $body.="--PHP-mixed-" . $random_hash . "--" . $eol; # Final terminating boundary.
 
         $message = $body;
-        $disable_quoted_printable_enc = true; // If false then attachment names and utf8 text get corrupted
         }
-
 
     $message.=$eol.$eol.$eol . $email_footer;
-
-    if (!$disable_quoted_printable_enc)
-        {
-        $message=rs_quoted_printable_encode($message);
-        $subject=rs_quoted_printable_encode_subject($subject);
-        }
+    $message=rs_quoted_printable_encode($message);
+    $subject=rs_quoted_printable_encode_subject($subject);
 
     if ($from=="") {$from=$email_from;}
     if ($reply_to=="") {$reply_to=$email_from;}

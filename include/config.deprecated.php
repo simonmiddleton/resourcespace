@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Multi-lingual support for e-mails. Try switching this to true if e-mail links aren't working and ASCII characters alone are required (e.g. in the US).
-$disable_quoted_printable_enc=false;
-
 # edit.php - disable links to upload preview 
 $disable_upload_preview = false;
 
