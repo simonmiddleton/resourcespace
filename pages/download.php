@@ -218,9 +218,12 @@ else
         $ext = 'jpg';
         }
 
-    // Where we are getting mp3 preview for videojs, clear size as we want to get the auto generated mp3 file rather than a custom size.
-    if ($size == 'videojs' && $ext == 'mp3')
-        {
+    // Where we are getting mp3 preview for videojs, clear size as we want to get the auto generated mp3 file rather than a custom size. 
+    // Also allow mp4 files for videojs if $video_preview_original is enabled
+    if (
+        $size == 'videojs' 
+        && ($ext == 'mp3' || ($ext == 'mp4' && $video_preview_original))
+        ) {
         $size="";
         $log_download = false;
         }
