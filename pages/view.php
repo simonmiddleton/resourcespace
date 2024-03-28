@@ -1625,12 +1625,6 @@ if ($show_related_themes==true )
                                 $url = generateURL("{$baseurl}/pages/search.php", array("search" => "!collection{$result[$n]["ref"]}"));
 
                                 $path = $result[$n]["path"];
-                                if(!$collection_public_hide_owner)
-                                    {
-                                    $col_name = i18n_get_translated($result[$n]["name"]);
-                                    // legacy thing: we add the fullname right before the collection name in the path.
-                                    $path = str_replace($col_name, htmlspecialchars($result[$n]["fullname"]) . " / {$col_name}", $path);
-                                    }
                                 $path = sprintf("%s %s", LINK_CARET, htmlspecialchars($path));
                                 ?>
                                 <a href="<?php echo $url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $path; ?></a><br>

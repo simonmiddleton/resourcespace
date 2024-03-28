@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Hide owner in list of public collections
-$collection_public_hide_owner=true;
-
 // Display help links on pages
 $contextual_help_links=true;
 
