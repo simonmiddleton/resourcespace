@@ -1348,7 +1348,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     {
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
-    global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
+    global $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors, $watermark;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
 
@@ -1444,32 +1444,11 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         # Locate imagemagick.
         $convert_fullpath = get_utility_path("im-convert");
         if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
-
-        if($imagemagick_mpr)
-            {
-            // need to check that we're using IM and not GM
-            $version = run_command($convert_fullpath . " -version");
-            if (strpos($version, "GraphicsMagick")!==false)
-                {
-                $imagemagick_mpr=false;
-                }
-            else
-                {
-                global $imagemagick_mpr_depth;
-                $command='';
-                $command_parts=array();
-                }
-            }
-        
+       
         $created_count=0;
         $override_size = false;
         for ($n=0;$n<count($ps);$n++)
             { 
-            if($imagemagick_mpr)
-                {
-                $mpr_parts=array();
-                }
-            
             # If this is just a jpg resource, we avoid the hpr size because the resource itself is an original sized jpg. 
             # If preview_preprocessing indicates the intermediate jpg should be kept as the hpr image, do that. 
             if ($keep_for_hpr && $ps[$n]['id']=="hpr")
@@ -1590,10 +1569,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $addcheckbdafter = "-compose over -composite ";
                 }
 
-            if(!$imagemagick_mpr)
-                {
-                $command = $convert_fullpath . ' '. $addcheckbdpre . ($extension != 'svg' ? escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0]' : "\( " . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . "[0] -transparent none \)") . ' ' . $flatten . ' -quality ' . $imagemagick_quality;
-                }
+
+            $command = $convert_fullpath . ' '. $addcheckbdpre . ($extension != 'svg' ? escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0]' : "\( " . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . "[0] -transparent none \)") . ' ' . $flatten . ' -quality ' . $imagemagick_quality;
 
             # fetch target width and height
             $tw=$ps[$n]["width"];
@@ -1610,30 +1587,13 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 $croph = $ps[$n]["h"];
                 $crop = true;
                 }
-                
-            if($imagemagick_mpr)
-                {
-                $mpr_parts['id']=$id;
-                $mpr_parts['quality']=$imagemagick_quality;
-                $mpr_parts['tw']=($id=='hpr' && $tw==999999 && isset($o_width) ? $o_width : $tw); // might as well pass on the original dimension
-                $mpr_parts['th']=($id=='hpr' && $th==999999 && isset($o_height) ? $o_height : $th); // might as well pass on the original dimension
-                
-                # TODO Add support for tiles
-                $mpr_parts['flatten']=($flatten=='' ? false : true);
-                $mpr_parts['icc_transform_complete']=$icc_transform_complete;
-                }
                
             # Debug
             debug("Contemplating " . $ps[$n]["id"] . " (sw=$sw, tw=$tw, sh=$sh, th=$th, extension=$extension)");
 
             # Find the target path
-            $path=get_resource_path($ref,true,$ps[$n]["id"],($imagemagick_mpr ? true : false),"jpg",-1,1,false,"",$alternative);
-            
-            if($imagemagick_mpr)
-                {
-                $mpr_parts['targetpath']=$path;
-                }
-            
+            $path=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,false,"",$alternative);
+
             # Delete any file at the target path. Unless using the previewbased option, in which case we need it.
             if (
                 !hook("imagepskipdel") 
@@ -1680,74 +1640,19 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     }
                 }
                 $profile='';
-                if($icc_extraction && !$icc_transform_complete && !$previewbased && file_exists($iccpath) && (!$imagemagick_mpr || ($imagemagick_mpr_preserve_profiles && ($id=="thm" || $id=="col" || $id=="pre" || $id=="scr"))))
-                    {
-                    $targetprofile = "";
 
-                    if($imagemagick_mpr)
-                        {
-                        $mpr_parts['strip_source']=(!$imagemagick_mpr_preserve_profiles ? true : false);
-                        $mpr_parts['sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? escapeshellarg($iccpath) : ''). " " . $icc_preview_options;
-                        $mpr_parts['strip_target']=true;
-                        $mpr_parts['targetprofile']=escapeshellarg($targetprofile);
-                        }
-                    else
-                        {
-                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . ' ' . $icc_preview_options . ' ' . ($targetprofile != "" ? "-profile " . escapeshellarg($targetprofile) : "");
-                        }
-
-                    // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
-                    if ($id == 'hpr' || $id == 'lpr' || $id == 'scr')
-                        {
-                        $icc_transform_complete=true;
-                        if($imagemagick_mpr)
-                            {
-                            $mpr_parts['icc_transform_complete']=$icc_transform_complete;
-                            }
-                        }
-                    }
-                    else 
-                        {
-                        // use existing strategy for color profiles
                         # Preserve colour profiles? (omit for smaller sizes)
-                        if (($imagemagick_preserve_profiles || $imagemagick_mpr_preserve_profiles) && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr" && substr($id,0,4)!="tile")
+                        if (($imagemagick_preserve_profiles) && $id!="thm" && $id!="col" && $id!="pre" && $id!="scr" && substr($id,0,4)!="tile")
                             {
-                            if($imagemagick_mpr)
-                                {
-                                $mpr_parts['strip_source']=false;
-                                $mpr_parts['sourceprofile']='';
-                                $mpr_parts['strip_target']=false;
-                                $mpr_parts['targetprofile']='';
-                                }
-                            else
-                                {
-                                $profile="";
-                                }
+                            $profile="";
                             }
                         elseif (!empty($default_icc_file))
                             {
-                            if($imagemagick_mpr)
-                                {
-                                $mpr_parts['strip_source']=false;
-                                $mpr_parts['sourceprofile']=$default_icc_file;
-                                $mpr_parts['strip_target']=false;
-                                $mpr_parts['targetprofile']='';
-                                }
-                            else
-                                {
-                                $profile="-profile " . escapeshellarg($default_icc_file);
-                                }
+                            $profile="-profile " . escapeshellarg($default_icc_file);
                             }
                         else
                             {
-                            if($imagemagick_mpr)
-                                {
-                                $mpr_parts['strip_source']=true;
-                                $mpr_parts['sourceprofile']='';
-                                $mpr_parts['strip_target']=false;
-                                $mpr_parts['targetprofile']='';
-                                }
-                            elseif ($icc_extraction)
+                            if ($icc_extraction)
                                 {
                                 // Keep any profile extracted (don't use -strip).
                                 $profile=" -colorspace ".escapeshellarg($imagemagick_colorspace);
@@ -1758,10 +1663,9 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                 $profile="-strip -colorspace ". escapeshellarg($imagemagick_colorspace);
                                 }
                             }
-                        }
+                        
                 
-                    if(!$imagemagick_mpr)
-                        {
+
                         $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : $profile);
                         
                         if($crop)
@@ -1798,7 +1702,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                     }
                                 }
                             }
-                    }           
+                       
 
                 # Add a watermarked image too?
                 global $watermark, $watermark_single_image;
@@ -1809,11 +1713,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     {
                     $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,'',$alternative);
                     if (file_exists($wmpath)) {unlink($wmpath);}
-                    
-                    if($imagemagick_mpr)
-                        {
-                        $mpr_parts['wmpath']=$wmpath;
-                        }
                     
                     if(!isset($watermark_single_image))
                         {
@@ -1898,206 +1797,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             escapeshellarg($wmpath)
                         );
                         }
-                    if(!$imagemagick_mpr)
-                        {
-                        run_command($runcommand);
-                        }
+                    run_command($runcommand);
                     
                     }// end hook replacewatermarkcreation
-                if($imagemagick_mpr)
-                    {
-                    // need a watermark replacement here as the existing hook doesn't work
-                    $modified_mpr_watermark=hook("modify_mpr_watermark",'',array($ref,$ps, $n,$alternative));
-                    if($modified_mpr_watermark!='')
-                        {
-                        $mpr_parts['wmpath']=$modified_mpr_watermark;
-                        if($id!="thm" && $id!="col" && $id!="pre" && $id!="scr")
-                            {
-                            // need to convert the profile
-                            $mpr_parts['wm_sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? $iccpath : ''). " " . $icc_preview_options;
-                            $mpr_parts['wm_targetprofile']=($icc_extraction && file_exists($iccpath) && $id!="thm" || $id!="col" || $id!="pre" || $id=="scr" ? dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile : "");
-                            }
-                        }
-                    $command_parts[]=$mpr_parts;
-                    } 
                 }
-            
             }
         
-        // run the mpr command if set
-        if($imagemagick_mpr)
-            {
-            // let's run some checks to better optimize the convert command. Assume everything is the same until proven otherwise
-            $unique_flatten=false;
-            $unique_strip_source=false;
-            $unique_source_profile=false;
-            $unique_strip_target=false;
-            $unique_target_profile=false;
-            
-            $cp_count=count($command_parts);
-            $mpr_init_write=false;
-            $mpr_icc_transform_complete=false;
-            $mpr_wm_created=false;
-            
-            for($p=1;$p<$cp_count;$p++)
-                {
-                $skip_source_and_target_profiles=false;
-                // we compare these with the previous
-                if($command_parts[$p]['flatten']!==$command_parts[$p-1]['flatten'] && !$unique_flatten)
-                    {
-                    $unique_flatten=true;
-                    }
-                if($command_parts[$p]['strip_source']!==$command_parts[$p-1]['strip_source'] && !$unique_strip_source)
-                    {
-                    $unique_strip_source=true;
-                    }
-                if($command_parts[$p]['sourceprofile']!==$command_parts[$p-1]['sourceprofile'] && !$unique_source_profile)
-                    {
-                    $unique_source_profile=true;
-                    }
-                if($command_parts[$p]['strip_target']!==$command_parts[$p-1]['strip_target'] && !$unique_strip_target)
-                    {
-                    $unique_strip_target=true;
-                    }
-                if($command_parts[$p]['targetprofile']!==$command_parts[$p-1]['targetprofile'] && !$unique_target_profile)
-                    {
-                    $unique_target_profile=true;
-                    }
-                }
-            // time to build the command
-            $command=$convert_fullpath . ' ' . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0] -quiet -depth ' . $imagemagick_mpr_depth;
-            if(!$unique_flatten)
-                {
-                $command.=($command_parts[0]['flatten'] ? " $flatten " : "");
-                }
-
-             if (!in_array(strtolower($extension), $preview_keep_alpha_extensions))
-                {
-                $command .= " $alphaoff ";
-                }
-
-             if(!$unique_strip_source)
-                {
-                $command.=($command_parts[0]['strip_source'] ? " -strip " : "");
-                }
-             if(!$unique_source_profile && $command_parts[0]['sourceprofile']!=='')
-                {
-                $command.=" -profile " . $command_parts[0]['sourceprofile'];
-                }
-             if(!$unique_strip_target)
-                {
-                $command.=($command_parts[0]['strip_target'] ? " -strip " : "");
-                }
-             if(!$unique_source_profile && !$unique_target_profile && $command_parts[0]['targetprofile']!=='') // if the source is different but the target is the same we could get into trouble...
-                {
-                $command.=" -profile " . $command_parts[0]['targetprofile'];
-                }
-                    
-            if($autorotate_no_ingest)
-                {
-                $orientation = get_image_orientation($file);
-                if($orientation != 0) 
-                    {
-                    $command.=' -rotate +' . $orientation;
-                    }
-                }
-            $mpr_metadata_profiles='';
-            if(!empty($imagemagick_mpr_preserve_metadata_profiles))
-                {
-                $mpr_metadata_profiles="!" . implode(",!",$imagemagick_mpr_preserve_metadata_profiles); 
-                }   
-            
-            for($p=0;$p<$cp_count;$p++)
-                {
-                if($extension=="png" || $extension=="gif")
-                    {
-                    $command_parts[$p]['targetpath']=str_replace($extension,"jpg",$command_parts[$p]['targetpath']);
-                    if($p==0)
-                        {
-                        $command.=" \( -size " . $command_parts[$p]['tw'] . "x" . $command_parts[$p]['th'] . " tile:pattern:checkerboard -modulate 150,100 \) +swap -compose over -composite";
-                        }
-                    }
-                $command.=($p>0 && $mpr_init_write ? ' mpr:' . $ref : '');
-                
-                if(isset($command_parts[$p]['icc_transform_complete']) && !$mpr_icc_transform_complete && $command_parts[$p]['icc_transform_complete'] && $command_parts[$p]['targetprofile']!=='')
-                    {
-                    // convert to the target profile now. the source profile will only contain $icc_preview_options and needs to be included here as well
-                    $command.=($command_parts[$p]['sourceprofile']!='' ? " " . $command_parts[$p]['sourceprofile'] : "") . " -profile " . $command_parts[$p]['targetprofile']. ($mpr_metadata_profiles!=='' ? " +profile \"" . $mpr_metadata_profiles . ",*\"" : "");
-                    $mpr_icc_transform_complete=true;
-                    $skip_source_and_target_profiles=true;
-                    }
-                    
-                if($command_parts[$p]['tw']!=='' && $command_parts[$p]['th']!=='')
-                    {
-                    $command.=" -resize " . $command_parts[$p]['tw'] . "x" . $command_parts[$p]['th'] . (($previews_allow_enlarge && $command_parts[$p]['id']!="hpr")?" ":"\">\"");
-                    if($p>0)
-                        {
-                        $command.=" -write mpr:" . $ref ." -delete 1";
-                        }
-                    }
-                
-                if($unique_flatten || $unique_strip_source || $unique_source_profile || $unique_strip_target || $unique_target_profile)
-                    {
-                    // make these changes
-                    if($unique_flatten)
-                        {
-                        $command.=($command_parts[$p]['flatten'] ? " -flatten " : "");
-                        }
-                     if($unique_strip_source && !$skip_source_and_target_profiles && !$mpr_icc_transform_complete)
-                        {
-                        $command.=($command_parts[$p]['strip_source'] ? " -strip " : "");
-                        }
-                     if($unique_source_profile && $command_parts[$p]['sourceprofile']!=='' && !$skip_source_and_target_profiles && !$mpr_icc_transform_complete)
-                        {
-                        $command.=" -profile " . $command_parts[$p]['sourceprofile'];
-                        }
-                     if($unique_strip_target && !$skip_source_and_target_profiles && !$mpr_icc_transform_complete) // if the source is different but the target is the same we could get into trouble...
-                        {
-                        $command.=($command_parts[$p]['strip_target'] ? " -strip" : "");
-                        }
-                     if($unique_target_profile && $command_parts[$p]['targetprofile']!=='' && !$skip_source_and_target_profiles && !$mpr_icc_transform_complete)
-                        {
-                        $command.=" -profile " . $command_parts[$p]['targetprofile'];
-                        }
-                    }
-                // save out to file
-                $command.=(($p===($cp_count-1) && !isset($command_parts[$p]['wmpath'])) ? " " : " -quality " . $command_parts[$p]['quality'] . " -write "). escapeshellarg($command_parts[$p]['targetpath']) . ($mpr_wm_created && isset($command_parts[$p]['wmpath']) ? " +delete mpr:" . $ref : "" );
-                //$command.=" -write " . $command_parts[$p]['targetpath'];
-                // watermarks?
-                if(isset($command_parts[$p]['wmpath']))
-                    {
-                    if(!$mpr_wm_created)
-                        {
-                        if(isset($command_parts[$p]['wm_sourceprofile']))
-                            {
-                            // convert to the target profile now. the source profile will only contain $icc_preview_options and needs to be included here as well
-                            $command.=($command_parts[$p]['wm_sourceprofile']!='' ? " " . $command_parts[$p]['wm_sourceprofile'] : "") . (isset($command_parts[$p]['wm_targetprofile']) && $command_parts[$p]['wm_targetprofile']!='' ? " -profile " . $command_parts[$p]['wm_targetprofile'] : "" ) . ($mpr_metadata_profiles!=='' ? " +profile \"" . $mpr_metadata_profiles . ",*\"" : "");
-                            $mpr_icc_transform_complete=true;
-                            }
-                        $TILESIZE=($command_parts[$p]['th']<$command_parts[$p]['tw'] ? $command_parts[$p]['th'] : $command_parts[$p]['tw']);
-                        $TILESIZE=$TILESIZE/3;
-                        $TILEROLL=$TILESIZE/4;
-                        
-                        // let's create the watermark and save as an mpr
-                        $command.=" \( " . escapeshellarg($watermark) . " -resize x" . escapeshellarg($TILESIZE) . " -background none -write mpr:" . $ref . " +delete \)";
-                        $command.=" \( -size " . escapeshellarg($command_parts[$p]['tw']) . "x" . escapeshellarg($command_parts[$p]['th']) . " -roll -" . escapeshellarg($TILEROLL) . "-" . escapeshellarg($TILEROLL) . " tile:mpr:" . $ref . " \) \( -clone 0 -clone 1 -compose dissolve -define compose:args=5 -composite \)";
-                        $mpr_init_write=true;
-                        $mpr_wm_created=true;
-                        $command.=" -delete 1 -write mpr:" . $ref . " -delete 0";
-                        $command.=" -quality " . $command_parts[$p]['quality'] . ($p!==($cp_count-1) ? " -write " : " "). escapeshellarg($command_parts[$p]['wmpath']);
-                        }
-                    // now add the watermark line in
-                    else
-                        {
-                        $command.=" -delete 0" . ($p!==($cp_count-1) ? " -write " : " "). escapeshellarg($command_parts[$p]['wmpath']);
-                        }
-                    }
-                    $command.=($p!==($cp_count-1) && $mpr_init_write ? " +delete" : "");
-                }
-            $modified_mpr_command=hook('modify_mpr_command','',array($command,$ref,$extension));
-            if($modified_mpr_command!=''){$command=$modified_mpr_command;}
-            run_command($command);
-            }
         # For the thumbnail image, call extract_mean_colour() to save the colour/size information
         $thumbpath = get_resource_path($ref,true,"thm",false,"jpg",-1,1,false,"",$alternative);
         if(file_exists($thumbpath))

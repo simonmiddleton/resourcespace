@@ -8,18 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
-$imagemagick_mpr=false;
-
-# Set the depth to be passed to mpr command.
-$imagemagick_mpr_depth="8";
-
-# Should colour profiles be preserved?
-$imagemagick_mpr_preserve_profiles=true;
-
-# If using imagemagick and mpr, specify any metadata profiles to be retained. Default setting good for ensuring copyright info is not stripped which may be required by law
-$imagemagick_mpr_preserve_metadata_profiles=array('iptc');
-
 // Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
 $inactive_message_auto_digest_period=7;
 
