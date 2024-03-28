@@ -131,7 +131,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     #
     # This is used to take the advanced search form and assemble it into a search query.
     
-    global $auto_order_checkbox,$checkbox_and,$dynamic_keyword_and,$resource_field_verbatim_keyword_regex;
+    global $auto_order_checkbox,$checkbox_and,$resource_field_verbatim_keyword_regex;
     $search="";
     if (getval("basicyear","")!="")
         {
@@ -442,8 +442,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
         ##### NODES #####
         // Fixed lists will be handled separately as we don't care about the field
-        // they belong to (except when $checkbox_and and $dynamic_keyword_and)
-        // we know exactly what we are searching for.
+        // they belong to 
         $node_ref = '';
 
         foreach(getval('nodes_searched', array()) as $searchedfield => $searched_field_nodes)
@@ -466,7 +465,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
             foreach($searched_field_nodes as $searched_node_ref)
                 {
-                if(($fieldinfo["type"] == FIELD_TYPE_CHECK_BOX_LIST && $checkbox_and) || ($fieldinfo["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && $dynamic_keyword_and))
+                if($fieldinfo["type"] == FIELD_TYPE_CHECK_BOX_LIST && $checkbox_and)
                     {
                     // Split into an additional search element to force a join since this is a separate condition
                     $node_ref .= ', ';
@@ -509,7 +508,7 @@ function refine_searchstring($search)
     # This function solves several issues related to searching.
     # it eliminates duplicate terms, helps the field content to carry values over into advanced search correctly, fixes a searchbar bug where separators (such as in a pasted filename) cause an initial search to fail, separates terms for searchcrumbs.
     
-    global $use_refine_searchstring, $dynamic_keyword_and;
+    global $use_refine_searchstring;
     
     if (!$use_refine_searchstring){return $search;}
     
@@ -545,7 +544,7 @@ function refine_searchstring($search)
             if (substr($keyname,0,1)!="!")
                 {
                 if(substr($keywordar[1],0,5)=="range"){$keywordar[1]=str_replace(" ","-",$keywordar[1]);}
-                if (!in_array($keyname,$orfields) && (!$dynamic_keyword_and || ($dynamic_keyword_and && !in_array($keyname, $dynamic_keyword_fields))))
+                if (!in_array($keyname,$orfields))
                     {
                     $keyvalues=explode(" ",str_replace($keywordar[0].":","",$keywordar[1]));
                     }

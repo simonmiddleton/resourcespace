@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# For dynamic keyword list searching, perform logical AND instead of OR when selecting multiple options.
-$dynamic_keyword_and = false;
-
 # experimental email notification of php errors to $email_notify. 
 $email_errors=false;
 $email_errors_address="";

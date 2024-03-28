@@ -1,6 +1,6 @@
 <?php
 /* -------- Dynamic Keywords List ----------- */ 
-global $baseurl, $pagename, $edit_autosave, $dynamic_keyword_and, $k;
+global $baseurl, $pagename, $edit_autosave, $k;
 
 if ($pagename == 'search_advanced')
     {
@@ -127,7 +127,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     document.getElementById('<?php echo $name; ?>_selected').insertAdjacentHTML('beforeBegin', hidden_input_elements);
     document.getElementById('<?php echo $name; ?>_selected').innerHTML = html;
     
-    if("<?php echo $field['field_constraint']; ?>"==1 && keyword_count>=1 && (pagename!='search_advanced' || '<?php echo var_export($dynamic_keyword_and, true) ?>'==='true'))
+    if("<?php echo $field['field_constraint']; ?>"==1 && keyword_count>=1 && (pagename!='search_advanced'))
         {
         document.getElementById('<?php echo $name; ?>_selector').disabled = true;
         }

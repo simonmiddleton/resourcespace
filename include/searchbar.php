@@ -143,7 +143,7 @@ for ($n=0;$n<count($keywords);$n++)
 
                     $all_fields_index = array_search($node['resource_type_field'], array_column($all_fields, 'ref'));                        
                     $field_name = $all_fields[$all_fields_index]["name"];
-                    if(isset($last_field_name) && $last_field_name == $field_name && (($all_fields[$all_fields_index]["type"] == FIELD_TYPE_CHECK_BOX_LIST && !$checkbox_and) ||  ($all_fields[$all_fields_index]["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !$dynamic_keyword_and)))
+                    if(isset($last_field_name) && $last_field_name == $field_name && (($all_fields[$all_fields_index]["type"] == FIELD_TYPE_CHECK_BOX_LIST && !$checkbox_and) ||  ($all_fields[$all_fields_index]["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST)))
                         {
                         // Append in order to construct the field:value1;value2 syntax used for an OR search in the same field
                         $fieldsearchterm = substr($fieldsearchterm,strpos($fieldsearchterm,":")+1);
