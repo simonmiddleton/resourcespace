@@ -434,7 +434,7 @@ else { ?>
     <style>
     #CollectionMenuExp
         {
-        height:<?php echo $collection_frame_height-15?>px;
+        height:<?php echo COLLECTION_FRAME_HEIGHT-15?>px;
         }
     </style>
 

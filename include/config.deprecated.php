@@ -8,9 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Ability to alter collection frame height
-$collection_frame_height=153;
-
 # Hide owner in list of public collections
 $collection_public_hide_owner=true;
 
