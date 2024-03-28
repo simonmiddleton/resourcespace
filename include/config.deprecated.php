@@ -11,12 +11,6 @@
 // Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
 $inactive_message_auto_digest_period=7;
 
-# By default, keyword relationships are two-way 
-# (if "tiger" has a related keyword "cat", then a search for "cat" also includes "tiger" matches).
-# $keyword_relationships_one_way=true means that if "tiger" has a related keyword "cat",
-# then a search for "tiger" includes "tiger", but does not include "cat" matches.
-$keyword_relationships_one_way=false;
-
 # Prevent previews from creating versions that result in the same size?
 # If true pre, thm, and col sizes will not be considered.
 $lean_preview_generation=false;
