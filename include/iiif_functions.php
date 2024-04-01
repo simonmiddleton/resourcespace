@@ -1021,6 +1021,7 @@ final class IIIFRequest {
                     {
                     // Request is supported, send the image
                     $imgpath = get_resource_path($this->request["id"],true,$this->request["getsize"],false,$this->request["getext"]);
+                    $imgfound = false;
                     debug ("IIIF: image path: " . $imgpath);
                     if(file_exists($imgpath))
                         {
