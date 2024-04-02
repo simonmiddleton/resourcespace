@@ -3014,6 +3014,7 @@ function toggle_active_state_for_nodes(array $refs): array
         $nodes_new_state += toggle_category_tree_nodes_active_state($rtf, $nodes_list);
     }
 
+    clear_query_cache('schema');
     return $nodes_new_state;
     }
 
