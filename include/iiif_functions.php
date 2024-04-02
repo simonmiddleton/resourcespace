@@ -481,7 +481,7 @@ final class IIIFRequest {
             }
         if(!$iiif_label)
             {
-            $this->response["label"][$defaultlanguage] = $lang["notavailableshort"];
+            $this->response["label"][$defaultlanguage] = [$lang["notavailableshort"]];
             }
 
         foreach($this->searchresults as $iiif_result)
