@@ -3185,7 +3185,7 @@ function delete_resource($ref)
 */
 function get_resource_type_field($field)
     {
-    $rtf_query="SELECT " . columns_in("resource_type_field","rtf") . ", GROUP_CONCAT(rtfrt.resource_type) resource_types FROM resource_type_field rtf LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field=rtf.ref WHERE rtf.ref = ?";
+    $rtf_query="SELECT " . columns_in("resource_type_field","rtf") . ", GROUP_CONCAT(rtfrt.resource_type) resource_types FROM resource_type_field rtf LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field=rtf.ref WHERE rtf.ref = ? GROUP BY rtf.ref";
     $return = ps_query($rtf_query, array("i",$field), "schema");
 
     if(0 == count($return))
