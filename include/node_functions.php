@@ -1630,16 +1630,11 @@ function delete_node_resources(int $node)
 
 /**
 * Copy resource nodes from one resource to another. Only applies for active metadata fields.
-* 
-* @uses ps_array()
-* @uses ps_query()
-* 
+*
 * @param integer $resourcefrom Resource we are copying data from
 * @param integer $resourceto   Resource we are copying data to
-* 
-* @return void
 */
-function copy_resource_nodes($resourcefrom, $resourceto)
+function copy_resource_nodes($resourcefrom, $resourceto): void
     {
     $omit_fields_sql = '';
     $omit_fields_sql_params = array();
@@ -1686,6 +1681,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
         FROM resource_node AS rnold
     LEFT JOIN node AS n ON n.ref = rnold.node
     WHERE resource = ?
+        AND n.`active` = 1
         {$omit_fields_sql};
     ", array_merge(array("i", (int) $resourcefrom), $omit_fields_sql_params));
 
@@ -1697,6 +1693,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
           LEFT JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
               WHERE resource = ?
               AND rtf.active = 1
+                AND n.`active` = 1
                 {$omit_fields_sql}
                  ON DUPLICATE KEY UPDATE hit_count = rnold.new_hit_count;
     ", array_merge(array("i", $resourceto, "i", $resourcefrom), $omit_fields_sql_params));
