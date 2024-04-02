@@ -429,27 +429,21 @@ function get_nodes_by_refs(array $refs)
 /**
 * Checks whether a node is parent to other nodes or not
 *
-* @param  integer    $ref    Node ref
-*
-* @return boolean
+* @param int $ref Node ref
+* @param bool $active_only Check only for active (children) nodes
 */
-function is_parent_node($ref)
+function is_parent_node($ref, bool $active_only = false): bool
     {
     if(is_null($ref))
         {
         return false;
         }
 
-    $query = "SELECT exists (SELECT ref from node WHERE parent = ?) AS value;";
-    $parameters = array("i",$ref);
-    $parent_exists = ps_value($query, $parameters, 0);
+    $query = $active_only
+        ? 'SELECT exists (SELECT ref from node WHERE parent = ? AND active = 1) AS `value`'
+        : 'SELECT exists (SELECT ref from node WHERE parent = ?) AS `value`';
 
-    if($parent_exists > 0)
-        {
-        return true;
-        }
-
-    return false;
+    return ps_value($query, ['i', $ref], 0) > 0;
     }
 
 

@@ -62,7 +62,7 @@ foreach($nodes as $node)
                 'opened'   => $node_opened,
                 'selected' => in_array($node['ref'], $selected_nodes)
             ),
-            'children' => is_parent_node($node['ref'])
+            'children' => is_parent_node($node['ref'], true)
         );
     }
 
