@@ -309,10 +309,14 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
                                 }
                                 ?>
                             <td> <!-- Action buttons -->
-                                <button type="submit" onclick="SaveNode(<?php echo $new_record_ref; ?>); return false;"><?php echo escape($lang['save']); ?></button>
-                                <button type="submit" onclick="DeleteNode(<?php echo $new_record_ref; ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
+                                <button type="submit" onclick="SaveNode(<?php echo escape($new_record_ref); ?>); return false;"><?php echo escape($lang['save']); ?></button>
+                                <button
+                                    id="node_<?php echo escape($new_record_ref); ?>_toggle_active_btn"
+                                    type="submit"
+                                    onclick="ToggleNodeActivation(<?php echo escape($new_record_ref); ?>); return false;"
+                                ><?php echo escape($lang['userpreference_disable_option']); ?></button>
+                                <button type="submit" onclick="DeleteNode(<?php echo escape($new_record_ref); ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
                             </td>
-                                
                             <?php generateFormToken("option_{$new_record_ref}"); ?>
                             </form>
                         </div>
