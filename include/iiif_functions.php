@@ -1250,34 +1250,38 @@ final class IIIFRequest {
      * @return bool
      *
      */
-    public function isValidTileRequest(): bool
-        {
-        if(($this->getwidth == $this->preview_tile_size && $this->getheight == 0) // "w,"
+    public function isValidTileRequest(): bool {
+        if (
+            ($this->getwidth == $this->preview_tile_size && $this->getheight == 0) // "w,"
             || ($this->getheight == $this->preview_tile_size && $this->getwidth == 0) // ",h"
-            || ($this->getheight == $this->preview_tile_size && $this->getwidth == $this->preview_tile_size)) // "w,h"
-            {
+            || ($this->getheight == $this->preview_tile_size && $this->getwidth == $this->preview_tile_size) // "w,h"
+        ) {
             // Standard tile widths
             return true;
-            }
-        elseif(($this->regionx + $this->regionw) === ($this->imagewidth)
+        }
+        elseif (
+            ($this->regionx + $this->regionw) === ($this->imagewidth)
             || ((int)$this->regiony + (int)$this->regionh) === ((int)$this->imageheight)
-            )
-            {
+        ) {
             // Size specified is not the standard tile width - only valid for right side or bottom edge of image
-            if(($this->getwidth == 0 || fmod($this->regionw,$this->getwidth) == 0)
+            if (
+                ($this->getwidth == 0 || fmod($this->regionw,$this->getwidth) == 0)
                 && ($this->getheight == 0 || fmod($this->regionh,$this->getheight) == 0)
-                )
-                {
-                $hscale = $this->getwidth > 0 ? ceil($this->regionw / $this->getwidth) : 1;
+            ) {
+                // Check this is a valid scale from the width/height requested. 
+                // If using just e.g. "x," or ",y" then default to 1)
+                $hscale = $this->getwidth > 0 ? ceil($this->regionw / $this->getwidth) : 1; 
                 $vscale = $this->getheight > 0 ? ceil($this->regionh / $this->getheight) : 1;
-                if($hscale == $vscale && count(array_diff([$hscale,$vscale],$this->preview_tile_scale_factors)) == 0)
-                    {
+                if (
+                    ($this->getwidth === 0 || $this->getheight === 0 || $vscale == $vscale)
+                    && count(array_diff([$hscale,$vscale],$this->preview_tile_scale_factors)) == 0
+                ) {
                     return true;
-                    }
                 }
             }
-        return false;
         }
+        return false;
+    }
 
     /**
      * Indicate whether the response is an image file

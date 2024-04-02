@@ -3,6 +3,9 @@ $suppress_headers = true;
 include_once "../../include/boot.php";
 include_once "../../include/image_processing.php";
 
+// Some viewer pre-flight checks seem to require this to be explicitly set
+header("Access-Control-Allow-Origin: *");
+
 if(!$iiif_enabled || !isset($iiif_identifier_field) || !is_numeric($iiif_identifier_field) || !isset($iiif_userid) || !is_numeric($iiif_userid) || !isset($iiif_description_field))
     {
     exit($lang["iiif_disabled"]);
