@@ -308,8 +308,11 @@ function propose_changes_display_field($n, $field)
 
     $edit_autosave=false;
     $name="field_" . $field["ref"];
-    $value=$field["value"];
-    $value=trim($value??"");
+    $value=trim($field['value'] ?? '');
+    
+    // Force display field because we rely on display_field_data() which is meant to honour this property (but meant 
+    // only for the view page). In this context, "hiding" fields is done using permissions.
+    $field['display_field'] = 1;
 
     # is there a proposed value set for this field?
     /**
