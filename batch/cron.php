@@ -10,7 +10,9 @@ set_time_limit($cron_job_time_limit);
 ob_end_flush();
 ob_implicit_flush();
 ob_start();
-echo "{$baseurl} Starting cron process..." . $LINE_END;
+
+$this_run_start = date("Y-m-d H:i:s");
+echo "{$this_run_start} {$baseurl} Starting cron process..." . $LINE_END;
 
 # Get last cron date
 $lastcron       = get_sysvar('last_cron', '1970-01-01');
@@ -27,7 +29,8 @@ for($i=0; $i<=999; $i++)
         {
         if(preg_match('/^' . str_pad($i,3,'0',STR_PAD_LEFT) . '_.*\.php/', $file))
             {
-            echo "{$baseurl} Executing job: " . $file  . $LINE_END;flush();ob_flush();
+            $this_job_start = date("Y-m-d H:i:s");
+            echo "{$this_job_start} {$baseurl} Executing job: " . $file  . $LINE_END;flush();ob_flush();
             include __DIR__ .  '/cron_jobs/' . $file;
             }
         }
@@ -37,7 +40,8 @@ for($i=0; $i<=999; $i++)
 # Allow plugins to add their own cron jobs.
 hook("cron");
 
-echo PHP_EOL . "{$baseurl} All tasks complete" .  $LINE_END;
+$this_run_end = date("Y-m-d H:i:s");
+echo PHP_EOL . "{$this_run_end} {$baseurl} All tasks complete" .  $LINE_END;
 
 # Update last cron date
 set_sysvar("last_cron",date("Y-m-d H:i:s"));
