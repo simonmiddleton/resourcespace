@@ -1273,7 +1273,7 @@ final class IIIFRequest {
                 $hscale = $this->getwidth > 0 ? ceil($this->regionw / $this->getwidth) : 1; 
                 $vscale = $this->getheight > 0 ? ceil($this->regionh / $this->getheight) : 1;
                 if (
-                    ($this->getwidth === 0 || $this->getheight === 0 || $vscale == $vscale)
+                    ($this->getwidth === 0 || $this->getheight === 0 || $hscale == $vscale)
                     && count(array_diff([$hscale,$vscale],$this->preview_tile_scale_factors)) == 0
                 ) {
                     return true;
