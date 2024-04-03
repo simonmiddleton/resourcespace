@@ -450,7 +450,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
         $querycount++;
         }
 
-    if (($debug_log || $debug_log_override))
+    if ($debug_log || $debug_log_override)
         {
         debug("SQL: " . $sql . "  Parameters: " . json_encode($parameters));
         }
