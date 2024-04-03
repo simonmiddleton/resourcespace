@@ -1398,7 +1398,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             if (file_exists($filetounlink)){
                 try_unlink($filetounlink);
             }
-        };
+        }
 
         $prefix = '';
         # Camera RAW images need prefix
