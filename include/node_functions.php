@@ -1708,10 +1708,8 @@ function copy_resource_nodes($resourcefrom, $resourceto): void
 * 
 * @param integer $from resource_type_field ID FROM which we copy
 * @param integer $to   resource_type_field ID TO which we copy
-* 
-* @return boolean
 */
-function copy_resource_type_field_nodes($from, $to)
+function copy_resource_type_field_nodes($from, $to): bool
     {
     global $FIXED_LIST_FIELD_TYPES;
 
@@ -1723,28 +1721,14 @@ function copy_resource_type_field_nodes($from, $to)
         return false;
         }
 
-    $nodes = get_nodes($from, null, true);
-
-    // Handle category trees
-    if(7 == $type)
+    if (FIELD_TYPE_CATEGORY_TREE == $type)
         {
-        // Sort array of nodes to put parent item at the top of each branch to make sure each child item can find its parent below.
-        $node_branches = array();
-        foreach($nodes as $node)
-            {
-            if($node['parent'] == "")
-                {
-                $node_branches[] = $node;
-                $next_branch = array();
-                $next_branch[] = get_nodes($from, $node['ref'], true);
-                foreach ($next_branch[0] as $leaf)
-                    {
-                    $node_branches[] = $leaf;
-                    }
-                }
-            }
-        $nodes = $node_branches;
-        
+        $nodes = get_cattree_nodes_ordered($from, null, true);
+        // Remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be
+        // using get_cattree_node_strings() with it.
+        array_shift($nodes);
+        $nodes = array_filter($nodes, 'node_is_active');
+
         // array(from_ref => new_ref)
         $processed_nodes = array();
 
@@ -1755,16 +1739,17 @@ function copy_resource_type_field_nodes($from, $to)
                 continue;
                 }
 
-            $parent = $node['parent'];
+            // Make the parent the expected type of a node parent (i.e. null|int) because get_cattree_nodes_ordered() is
+            // setting root parent to string zero for some unknown reason.
+            $parent = $node['parent'] == 0 ? null : $node['parent'];
 
             // Child nodes need to have their parent set to the new parent ID
-            if('' != trim($parent))
+            if($parent !== null)
                 {
                 $parent = $processed_nodes[$parent];
                 }
 
             $new_node_id = set_node(null, $to, $node['name'], $parent, $node['order_by']);
-            update_node_active_state([$new_node_id], node_is_active($node));
             $processed_nodes[$node['ref']] = $new_node_id;
             }
 
@@ -1772,10 +1757,10 @@ function copy_resource_type_field_nodes($from, $to)
         }
 
     // Default handle for types different than category trees
+    $nodes = array_filter(get_nodes($from), 'node_is_active');
     foreach($nodes as $node)
         {
-        $new_node_id = set_node(null, $to, $node['name'], $node['parent'], $node['order_by']);
-        update_node_active_state([$new_node_id], node_is_active($node));
+        set_node(null, $to, $node['name'], $node['parent'], $node['order_by']);
         }
 
     return true;
