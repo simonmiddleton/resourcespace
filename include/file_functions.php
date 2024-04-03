@@ -318,8 +318,10 @@ function is_valid_upload_path(string $file_path, array $valid_upload_paths) : bo
 /**
  * Validate the files on disk that are associated with the given resources
  *
- * @param array $resources      Array of  resource IDs
- * @param array $criteria       Array with an array of callables with the required return values in order to pass the check e.g. 
+ * @param array $resources      Array of resource IDs or
+ *                              array of resource data e.g, from search results
+ * @param array $criteria       Array with an array of callables for each resource with the 
+ *                              required return values in order to pass the check e.g. 
  *                              'file_exists" =>true for a file presence only check
  * 
  * @return array $results       An array with resource ID as the index and the results of the check as the value (boolean)
@@ -328,31 +330,38 @@ function is_valid_upload_path(string $file_path, array $valid_upload_paths) : bo
  */
 function validate_resource_files(array $resources,array $criteria = []): array
 {
-    $resource_data = get_resource_data_batch($resources);    
+    $checkresources = isset($resources[0]["ref"]) ? $resources : get_resource_data_batch($resources); 
     $results = [];
-    foreach($resources as $resource) {
-        if (!is_int_loose($resource)) {
-            $results[$resource] = false;
+    foreach($checkresources as $resource) {
+
+    // TODO Remove/amend
+    debug('BANG ref ' . $resource["ref"]);
+        if (!is_int_loose($resource["ref"])) {
+            $results[$resource["ref"]] = false;
             continue;
         }
-        $filepath = get_resource_path($resource,true,'',false,$resource_data[$resource]["file_extension"] ?? "jpg");
-        $results[$resource] = false;
+        $filepath = get_resource_path($resource["ref"],true,'',false,$resource["file_extension"] ?? "jpg");
+        $results[$resource["ref"]] = false;
         foreach ($criteria as $criterion=>$expected) {
             if(!is_callable($criterion)) {
-                $results[$resource] = false;
+                $results[$resource["ref"]] = false;
                 // Not a valid check
                 // TODO Remove/amend
-                debug('BANG ' . __LINE__);
+                // debug('BANG ' . __LINE__);
                 continue 2;
             }
-            $results[$resource] = call_user_func($criterion,$filepath) === $expected;
-            if ($results[$resource] === false) {
+            if(substr($expected,0,10) == "%RESOURCE%") {
+                // $expected is an resource table column
+                $expected = $resource[substr($expected,10)];
+            }
+            $testresult = call_user_func($criterion,$filepath);
+            $results[$resource["ref"]] = $testresult === $expected;
+            if ($results[$resource["ref"]] === false) {
                 // TODO Remove/amend
-                debug('BANG ' . __LINE__ . " " . $resource);
+                debug($resource["ref"] . " FAILED, expected: " . $expected . ", got: " . $testresult );
                 // No need to continue with other $criteria as check has failed
                 continue 2;
             }
-            debug('BANG ' . __LINE__ . " " . var_dump($results[$resource]));
         }
     }
     return $results;

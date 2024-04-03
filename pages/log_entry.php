@@ -72,6 +72,9 @@ if(!checkperm('v') && !$bypass_permission_check)
                                     {
                                     $value = $lang["externalusersharing"];
                                     }
+                                if (trim((string) $value) === "") {
+                                    $value = $lang["system_user_default"];
+                                }
                             break;
                             case "fullname":
                                 $name = $lang["fullname"];
@@ -80,6 +83,9 @@ if(!checkperm('v') && !$bypass_permission_check)
                                     // Already shown as username
                                     continue 2;
                                     }
+                                if (trim((string) $value) === "") {
+                                    $value = $lang["system_user_default"];
+                                }
                             break;
 
                             case "resource_type_field":
