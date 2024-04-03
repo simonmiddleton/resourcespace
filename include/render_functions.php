@@ -1925,6 +1925,11 @@ function display_field($n, $field, $newtab=false,$modal=false)
     elseif($ref != $use && $copyfrom != '')
         {
         $user_set_values = array();
+
+        if(in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+            {
+            $field['nodes'] = array_filter($field['nodes'], 'node_is_active');
+            }
         }
     else
         {
