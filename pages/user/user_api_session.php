@@ -41,7 +41,7 @@ include "../../include/header.php";
     <?php if (isset($message)) {?>
         <div class='PageInformal'><?php echo escape($message); ?></div>
         <?php
-    } else if($remote_system) {?>
+    } elseif($remote_system) {?>
         <p>
         <?php echo escape(str_replace(
             ["%system%","%applicationname%"],
