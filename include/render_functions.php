@@ -2663,9 +2663,6 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
             // search_title_processing.php is building spans with different class names. We need to allow HTML in link titles.
             $title = get_inner_html_from_tag(strip_tags_and_attributes($links[$i]['title']), "p");
 
-            // remove leading * used for featured collection sorting.
-            $title = strip_prefix_chars($title,"*");
-
             if(0 < $i)
                 {
                 echo LINK_CHEVRON_RIGHT;
@@ -2678,7 +2675,7 @@ function renderBreadcrumbs(array $links, $pre_links = '', $class = '')
                     <?php } else { ?>
                         onclick="return CentralSpaceLoad(this, true);"
                     <?php }
-                    echo $anchor_attrs; ?>>
+                    echo escape($anchor_attrs); ?>>
             <?php } ?>
 
             <span><?php echo $title; ?></span>

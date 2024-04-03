@@ -2,7 +2,7 @@
 
 function HookRefineresultsSearchBeforesearchresults()
 {
-    global $baseurl_short, $result, $lang, $search, $k, $archive, $parameters_string, $collections;
+    global $baseurl_short, $result, $lang, $search, $k, $collections;
 
     // Only time when this would be needed is when legacy_actions is enabled otherwise we do it through dropdown actions
     $query = 'SELECT inst_version AS `value` FROM plugins WHERE name = \'legacy_actions\';';
@@ -53,7 +53,7 @@ function HookRefineresultsSearchBeforesearchresults()
         <?php }
         
         if ($search != "") { ?>
-            <a href='<?php echo $baseurl_short?>pages/search.php?search=<?php echo $default_search ?><?php echo $parameters_string?>'>
+            <a href='<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($default_search); ?>'>
             &gt;&nbsp;
             <?php echo escape($lang["clearsearch"]); ?></a>
         <?php } ?>
