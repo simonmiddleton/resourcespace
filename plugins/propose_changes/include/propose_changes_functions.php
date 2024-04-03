@@ -377,8 +377,8 @@ function propose_changes_display_field($n, $field)
             <?php
             }?>
 
-    <div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if(!$has_proposed_changes){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo $field["ref"]; ?>">
-    <input type="hidden" id="propose_change_<?php echo $field["ref"]; ?>" name="propose_change_<?php echo $field["ref"]; ?>" value="true" <?php if(!$has_proposed_changes){echo "disabled=\"disabled\""; } ?> />
+    <div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if(!$has_proposed_changes){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo escape($field["ref"]); ?>">
+    <input type="hidden" id="propose_change_<?php echo escape($field["ref"]); ?>" name="propose_change_<?php echo escape($field["ref"]); ?>" value="true" <?php if(!$has_proposed_changes){echo "disabled=\"disabled\""; } ?> />
     <?php
     # ----------------------------  Show field -----------------------------------
     $value = $has_proposed_changes ? $proposed_value : $realvalue;
