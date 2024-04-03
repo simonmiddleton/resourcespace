@@ -1000,11 +1000,14 @@ else
 
                 $title=$result[$n]["field".$view_title_field];
                 $title_field=$view_title_field;
-                if (isset($metadata_template_title_field) && isset($metadata_template_resource_type)) {
-                    if ($result[$n]['resource_type']==$metadata_template_resource_type) {
-                        $title=$result[$n]["field".$metadata_template_title_field];
-                        $title_field=$metadata_template_title_field;
-                    }
+
+                if (
+                    isset($metadata_template_title_field)
+                    && isset($metadata_template_resource_type)
+                    && $result[$n]['resource_type'] == $metadata_template_resource_type
+                ) {
+                    $title = $result[$n]["field" . $metadata_template_title_field];
+                    $title_field = $metadata_template_title_field;
                 }
 
                 $field_type=ps_value("SELECT type value FROM resource_type_field WHERE ref=?",array("i",$title_field),
