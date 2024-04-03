@@ -261,11 +261,9 @@ if (!hook("replaceloginform")) {
             jQuery(document).ready(function() {
                 var user_local_tz = detect_local_timezone();
                 <?php
-
-                if (!isset($user_local_timezone) || $user_local_timezone == '') {
+                if ($user_local_timezone === '') {
                     ?>jQuery('#user_local_tz').val(user_local_tz);<?php
                 }
-
                 ?>
             });
             </script>
