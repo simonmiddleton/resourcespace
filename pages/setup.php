@@ -11,6 +11,7 @@ include_once '../include/definitions.php';
 include_once '../include/general_functions.php';
 include_once '../include/user_functions.php';
 include_once '../include/login_functions.php';
+include_once '../include/render_functions.php';
 
 /**
  * Santitizes input from a given request key.
