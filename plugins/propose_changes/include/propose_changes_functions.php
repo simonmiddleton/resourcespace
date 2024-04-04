@@ -33,15 +33,19 @@ function save_proposed_changes($ref)
             $val = false;
             $new_nodes = array();
 
-            ##### NODES #####
-            if (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
-                {
-                $fields[$n]['nodes'] = get_nodes($fields[$n]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type'] ? true : false));
-                }
-
-            // Fixed list fields use node IDs directly
             if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
                 {
+                debug("Field #{$fields[$n]['ref']} -- FIXED_LIST_FIELD_TYPES");
+                $fields[$n]['nodes'] = get_nodes(
+                    $fields[$n]['ref'],
+                    null,
+                    FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type']
+                );
+                $valid_nodes = in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS])
+                    ? array_column($fields[$n]['nodes'], 'ref')
+                    : array_column(array_filter($fields[$n]['nodes'], 'node_is_active'), 'ref');
+
+                // Fixed list fields use node IDs directly
                 $ui_selected_node_values = array();
                 if(isset($user_set_values[$fields[$n]['ref']])
                     && !is_array($user_set_values[$fields[$n]['ref']])
@@ -56,17 +60,31 @@ function save_proposed_changes($ref)
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
                     }
 
-                foreach($fields[$n]['nodes'] as $node)
-                    {
-                    if(in_array($node['ref'], $ui_selected_node_values))
-                        {
-                        $new_nodes[] = $node['ref'];
-                        }
-                    }
+                $new_nodes = array_intersect($valid_nodes, $ui_selected_node_values);
+                natsort($new_nodes);
                 debug(sprintf('Field #%s -- $new_nodes = %s', $fields[$n]['ref'], implode(',', $new_nodes)));
+                $val = implode(', ', $new_nodes);
+
+                /* 
+                Field values contain only active nodes because when determining new nodes that will already remove
+                inactive ones (e.g when rendering the field on the page or receiving the submitted data - see above).
+                This way we won't detect a change is proposed if the only thing different is the lack of inactive 
+                nodes.
+                */
+                $field_value = implode(
+                    ', ',
+                    array_column(
+                        in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS])
+                            ? get_resource_nodes($ref, $fields[$n]['ref'], true)
+                            : array_filter(get_resource_nodes($ref, $fields[$n]['ref'], true), 'node_is_active'),
+                        'ref'
+                    )
+                );
                 }               
         else
                 {
+                $field_value = $fields[$n]['value'];
+
                 if($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
                     {
                     # date range type
@@ -209,30 +227,6 @@ function save_proposed_changes($ref)
                 global $lang;               
                 $errors[$fields[$n]["ref"]]=$error;
                 continue;
-                }
-
-            $field_value = $fields[$n]['value'];
-            if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
-                {
-                $field_value    = '';
-                $val            = '';
-                $resource_nodes = array();
-
-                foreach(get_resource_nodes($ref, $fields[$n]['ref'], true) as $resource_node)
-                    {
-                    $resource_nodes[] = $resource_node['ref'];
-                    }
-
-                if(0 < count($resource_nodes))
-                    {
-                    $field_value = implode(', ', $resource_nodes);
-                    }
-
-                if(0 < count($new_nodes))
-                    {
-                    natsort($new_nodes);
-                    $val = implode(', ', $new_nodes);
-                    }
                 }
 
             debug(sprintf('Field #%s -- $field_value = %s', $fields[$n]['ref'], json_encode($field_value)));

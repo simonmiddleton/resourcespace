@@ -21,6 +21,11 @@ $field_data = get_field($field);
 $node_ref   = getval('node_ref', '');
 $nodes      = array();
 
+// Most likely an incorrect direct navigation - back to manage metadata fields
+if (!is_array($field_data) || !in_array($field_data['type'], $FIXED_LIST_FIELD_TYPES)) {
+    redirect("{$baseurl}/pages/admin/admin_resource_type_fields.php");
+}
+
 // Array of nodes to expand immediately upon page load
 $expand_nodes = getval("expand_nodes","");
 
@@ -38,6 +43,9 @@ if(!$ajax)
     }
 
 $new_node_record_form_action = '/pages/admin/admin_manage_field_options.php?field=' . $field;
+$activation_action_label_for = fn(array $node): string => node_is_active($node)
+    ? $lang['userpreference_disable_option']
+    : $lang['userpreference_enable_option'];
 
 
 // Process form requests
@@ -245,7 +253,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
         {
         if(isset($new_record_ref) && !(trim($new_record_ref)==""))
             {
-            if(7 != $field_data['type'] && (trim($new_option_parent)==""))
+            if(FIELD_TYPE_CATEGORY_TREE != $field_data['type'] && (trim($new_option_parent)==""))
                 {
                 ?>
                 <tr id="node_<?php echo $new_record_ref; ?>">
@@ -301,10 +309,14 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
                                 }
                                 ?>
                             <td> <!-- Action buttons -->
-                                <button type="submit" onclick="SaveNode(<?php echo $new_record_ref; ?>); return false;"><?php echo escape($lang['save']); ?></button>
-                                <button type="submit" onclick="DeleteNode(<?php echo $new_record_ref; ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
+                                <button type="submit" onclick="SaveNode(<?php echo escape($new_record_ref); ?>); return false;"><?php echo escape($lang['save']); ?></button>
+                                <button
+                                    id="node_<?php echo escape($new_record_ref); ?>_toggle_active_btn"
+                                    type="submit"
+                                    onclick="ToggleNodeActivation(<?php echo escape($new_record_ref); ?>); return false;"
+                                ><?php echo escape($lang['userpreference_disable_option']); ?></button>
+                                <button type="submit" onclick="DeleteNode(<?php echo escape($new_record_ref); ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
                             </td>
-                                
                             <?php generateFormToken("option_{$new_record_ref}"); ?>
                             </form>
                         </div>
@@ -492,11 +504,10 @@ if($ajax)
 
     renderBreadcrumbs($links_trail);
 ?>
-
     <p><?php echo escape($lang['manage_metadata_text']); render_help_link("resourceadmin/modifying-field-options");?></p>
     <div id="AdminManageMetadataFieldOptions" class="ListView">
     <?php
-    if(7 != $field_data['type'])
+    if(FIELD_TYPE_CATEGORY_TREE != $field_data['type'])
         {
         ?>
         <form id="FilterNodeOptions" class="FormFilter" method="GET" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php">
@@ -512,7 +523,6 @@ if($ajax)
             </fieldset>
         </form>
         <!-- Pager -->
-
         <div class="TopInpageNav">
             <div class="TopInpageNavRight">
             <?php
@@ -530,7 +540,7 @@ if($ajax)
         <?php
         // When editing a category tree we won't show the table headers since the data
         // will move to the right every time we go one level deep
-        if(7 != $field_data['type'])
+        if(FIELD_TYPE_CATEGORY_TREE != $field_data['type'])
             {
             ?>
             <thead>
@@ -562,10 +572,17 @@ if($ajax)
             {
             check_node_indexed($node, $field_data['partial_index']);
             $node_index +=1;
+            $node_disabled_class = $node['active'] === 0 ? 'FieldDisabled' : '';
             ?>
             <tr id="node_<?php echo $node['ref']; ?>">
                 <td>
-                    <input type="text" class="stdwidth" name="option_name" form="option_<?php echo $node['ref']; ?>" value="<?php echo escape($node['name']); ?>" onblur="this.value=this.value.trim()" >
+                    <input type="text"
+                        class="stdwidth <?php echo escape($node_disabled_class); ?>"
+                        name="option_name"
+                        form="option_<?php echo $node['ref']; ?>"
+                        value="<?php echo escape($node['name']); ?>"
+                        onblur="this.value=this.value.trim()"
+                    >
                 </td>
                 <td align="left">
                     <?php echo $node['use_count']; ?>
@@ -615,13 +632,14 @@ if($ajax)
                                 </button>
                                 <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'moveup'); return false;"><?php echo escape($lang['action-move-up']); ?></button>
                                 <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'movedown'); return false;"><?php echo escape($lang['action-move-down']); ?></button>
-                                </td>
+                            </td>
                             <?php
                             }
                             ?>
                         <!-- Action buttons -->
                         <td>
                             <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo escape($lang['save']); ?></button>
+                            <button id="node_<?php echo escape($node['ref']); ?>_toggle_active_btn" type="submit" onclick="ToggleNodeActivation(<?php echo $node['ref']; ?>); return false;"><?php echo escape($activation_action_label_for($node)); ?></button>
                             <button type="submit" onclick="DeleteNode(<?php echo $node['ref']; ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
                         </td>
                             
@@ -642,7 +660,7 @@ if($ajax)
         </table>
         </div>
     <?php
-    if(7 != $field_data['type'])
+    if(FIELD_TYPE_CATEGORY_TREE != $field_data['type'])
         {
         ?>
         <div class="BottomInpageNav">
@@ -895,6 +913,32 @@ function DeleteNode(ref)
         <?php
         }
         ?>
+
+    return true;
+    }
+
+function ToggleNodeActivation(ref)
+    {
+    console.debug('Calling ToggleNodeActivation(ref = %o)', ref);
+
+    api(
+        'toggle_active_state_for_nodes',
+        {'refs': JSON.stringify([ref])},
+        function (response) {
+            jQuery.each(response, function (node_ref, active_state) {
+                if (active_state === 1) {
+                    jQuery('#node_' + node_ref).find('input[name=option_name]').removeClass('FieldDisabled');
+                    jQuery('#node_' + node_ref + '_toggle_active_btn')
+                        .text('<?php echo escape($lang['userpreference_disable_option']); ?>');
+                } else {
+                    jQuery('#node_' + node_ref).find('input[name=option_name]').addClass('FieldDisabled');
+                    jQuery('#node_' + node_ref + '_toggle_active_btn')
+                        .text('<?php echo escape($lang['userpreference_enable_option']); ?>');
+                }
+            });
+        },
+        <?php echo generate_csrf_js_object('toggle_active_state_for_nodes'); ?>
+    );
 
     return true;
     }

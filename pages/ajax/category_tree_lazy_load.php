@@ -16,7 +16,7 @@ $selected_nodes = getval('selected_nodes', array());
 $opened_nodes   = array();
 $js_tree_data   = array();
 
-$nodes = get_nodes($field, $node_ref);
+$nodes = array_filter(get_nodes($field, $node_ref), 'node_is_active');
 
 // Find the ancestor nodes for any of the searched nodes
 // Most of the nodes will most likely be a tree leaf. 
@@ -62,7 +62,7 @@ foreach($nodes as $node)
                 'opened'   => $node_opened,
                 'selected' => in_array($node['ref'], $selected_nodes)
             ),
-            'children' => is_parent_node($node['ref'])
+            'children' => is_parent_node($node['ref'], true)
         );
     }
 

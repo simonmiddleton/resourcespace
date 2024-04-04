@@ -1333,10 +1333,9 @@ function sql_reorder_records(string $table, array $refs)
         return;
         }
 
-    $refs = array_values(array_filter($refs, 'is_int_loose'));
+    $refs_chunked = db_chunk_id_list($refs);
     $order_by = 0;
 
-    $refs_chunked = array_filter(count($refs) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE ? [$refs] : array_chunk($refs, SYSTEM_DATABASE_IDS_CHUNK_SIZE));
     foreach($refs_chunked as $refs)
         {
         $cases_params = [];
@@ -1409,4 +1408,19 @@ function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
         }
 
     return "`" . $alias . "`.`" . join("`, `" . $alias . "`.`",$columns) . "`";
+    }
+
+/**
+ * Database helper to chunk a list of IDs
+ * @param list<int> $refs
+ * @return list<list<int>>
+ */
+function db_chunk_id_list(array $refs): array
+    {
+    $valid_ids = array_values(array_unique(array_filter($refs, 'is_int_loose')));
+    return array_filter(
+        count($valid_ids) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE
+            ? [$valid_ids]
+            : array_chunk($valid_ids, SYSTEM_DATABASE_IDS_CHUNK_SIZE)
+    );
     }

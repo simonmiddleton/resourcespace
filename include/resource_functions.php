@@ -623,6 +623,17 @@ function update_hitcount($ref)
         }
     }
 
+/**
+ * Save resource data
+ *
+ * IMPORTANT: inactive nodes should be left alone (don't add/remove) except when processing fixed list field types that 
+ * only hold one value (dropdown, radio). Plugins should determine this based on their use cases when hooking.
+ *
+ * @param int $ref
+ * @param bool $multi
+ * @param string|int $autosave_field
+ * @return true|array List of errors if unsuccessful, true otherwise
+ */
 function save_resource_data($ref,$multi,$autosave_field="")
     {
     debug_function_call("save_resource_data", func_get_args());
@@ -674,6 +685,8 @@ function save_resource_data($ref,$multi,$autosave_field="")
     $all_current_field_nodes    = [];
     $new_node_values            = [];
     $updated_resources          = [];
+
+    $node_not_active = fn(array $node): bool => !node_is_active($node);
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/removed
@@ -733,6 +746,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $all_tree_nodes_ordered = get_cattree_nodes_ordered($fields[$n]['ref'], null, true);
                     // remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be using get_cattree_node_strings()
                     array_shift($all_tree_nodes_ordered);
+                    $inactive_nodes = array_column(array_filter($all_tree_nodes_ordered, $node_not_active), 'ref');
                     $all_tree_nodes_ordered = array_values($all_tree_nodes_ordered);
 
                     $node_options = array_column($all_tree_nodes_ordered, 'name', 'ref');
@@ -743,19 +757,32 @@ function save_resource_data($ref,$multi,$autosave_field="")
                     $fieldnodes   = get_nodes($fields[$n]['ref'], '', false);
                     $node_options = array_column($fieldnodes, 'name', 'ref');
                     $validnodes   = array_column($fieldnodes, 'ref');
+                    $inactive_nodes = array_column(array_filter($fieldnodes, $node_not_active), 'ref');
                     }
 
                 // $validnodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
                 $ui_selected_node_values = array_values(array_intersect($validnodes, $ui_selected_node_values));
+                debug("save_resource_data(): UI selected nodes for resource {$ref}: " . implode(',', $ui_selected_node_values));
 
                 // Set new value for logging
-                $new_node_values = array_merge($new_node_values,$ui_selected_node_values);
-                $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes);
+                $new_node_values = array_merge($new_node_values, $ui_selected_node_values);
 
+                $added_nodes = array_diff($ui_selected_node_values, $current_field_nodes, $inactive_nodes);
                 debug("save_resource_data(): Adding nodes to resource " . $ref . ": " . implode(",",$added_nodes));
                 $nodes_to_add = array_merge($nodes_to_add, $added_nodes);
-                $removed_nodes = array_diff($current_field_nodes,$ui_selected_node_values);
 
+                if (
+                    // We must release an inactive node if the type can only hold one value...
+                    in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS])
+                    // ...but prevent direct removals (ie. no value)
+                    && $ui_selected_node_values !== []
+                ) {
+                    $removed_nodes = array_diff($current_field_nodes, $ui_selected_node_values);
+                    $current_inactive_resource_field_nodes = [];
+                } else {
+                    $removed_nodes = array_diff($current_field_nodes, $ui_selected_node_values, $inactive_nodes);
+                    $current_inactive_resource_field_nodes = array_intersect($current_field_nodes, $inactive_nodes);
+                }
                 debug("save_resource_data(): Removed nodes from resource " . $ref . ": " . implode(",",$removed_nodes));
                 $nodes_to_remove = array_merge($nodes_to_remove, $removed_nodes);
 
@@ -790,6 +817,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
                             }
                         }
                     $val = implode(",",$new_nodevals);
+                    $ui_selected_node_values = array_merge($ui_selected_node_values, $current_inactive_resource_field_nodes);
                     sort($ui_selected_node_values);
                     $new_checksums[$fields[$n]['ref']] = md5(implode(',',$ui_selected_node_values));
                     $updated_resources[$ref][$fields[$n]['ref']] = $new_nodevals; // To pass to hook
@@ -1383,6 +1411,17 @@ function set_resource_defaults($ref, array $specific_fields = array())
     return true;
     }
 
+/**
+ * Batch save resources in a collection
+ *
+ * IMPORTANT: inactive nodes should be left alone (don't add/remove) except when processing fixed list field types that 
+ * only hold one value (dropdown, radio). Plugins should determine this based on their use cases when hooking.
+ *
+ * @param int $collection
+ * @param array $editsearch
+ * @param array $postvals
+ * @return true|array List of errors if unsuccessful, true otherwise
+ */
 function save_resource_data_multi($collection,$editsearch = array(), $postvals = [])
     {
     global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $languages, $language, $baseurl;
@@ -1475,6 +1514,7 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
     $fields = array_values(array_filter($fields,function($field) use ($postvals){
         return ($postvals['editthis_field_' . $field['ref']] ?? '') != '' || hook('save_resource_data_multi_field_decision', '', array($field['ref']));
         }));
+    $node_not_active = fn(array $node): bool => !node_is_active($node);
 
     // Get all existing nodes for the edited resources
     $existing_nodes = get_resource_nodes_batch($list,array_column($fields,"ref"));
@@ -1508,8 +1548,13 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
 
             // Check nodes are valid for this field
             $fieldnodes = get_nodes($fields[$n]["ref"],null,$fields[$n]['type'] == FIELD_TYPE_CATEGORY_TREE);
-            $nodes_by_ref = array_combine(array_column($fieldnodes, 'ref'),$fieldnodes);
-            $valid_nodes = array_column($fieldnodes, 'ref');
+            $inactive_nodes = array_column(array_filter($fieldnodes, $node_not_active), 'ref');
+            $nodes_by_ref = array_column($fieldnodes, null, 'ref');
+            $valid_nodes = in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS]) && $ui_selected_node_values !== []
+                // We must include inactive nodes if the type can only hold one value so it can be removed later on...
+                ? array_keys($nodes_by_ref)
+                // ...but prevent direct removals (ie. no value)
+                : array_values(array_diff(array_keys($nodes_by_ref), $inactive_nodes));
 
             // $valid_nodes are already sorted by the order_by (default for get_nodes). This is needed for the data_joins fields later
             $ui_selected_node_values = array_intersect($valid_nodes, $ui_selected_node_values);
@@ -1525,7 +1570,6 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 // Remove option(s) mode
                 $nodes_to_remove = $ui_selected_node_values;
                 $all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
-                debug("Removing nodes: " .  implode(",",$nodes_to_remove));
                 }
             elseif ($mode=="RT")
                 {
@@ -1535,6 +1579,9 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 $all_nodes_to_add    = array_merge($all_nodes_to_add,$nodes_to_add);
                 $all_nodes_to_remove = array_merge($all_nodes_to_remove,$nodes_to_remove);
                 }
+
+            debug(sprintf('Mode %s - $nodes_to_add = %s', $mode, implode(',', $nodes_to_add)));
+            debug(sprintf('Mode %s - $nodes_to_remove = %s', $mode, implode(',', $nodes_to_remove)));
 
             if($fields[$n]["required"] == 1 && count($nodes_to_add) == 0 && $mode!=="")
                 {
@@ -1561,9 +1608,14 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 $current_field_nodes = $existing_nodes[$ref][$fields[$n]['ref']] ?? [];
                 debug('Current nodes for resource #' . $ref . ' : ' . implode(',',$current_field_nodes));
 
-                # Possibility to hook in and alter the value - additional mode support
-                $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$current_field_nodes,$postvals,&$errors));
+                /* 
+                Possibility to hook in and alter the value - additional mode support.
 
+                Plugins will have to determine if their use cases should handle saving inactive nodes or ignoring them.
+                For example, rse_version will act upon inactive nodes because we can't assume a node will not be required
+                later (it could be re-activated) when reverting.
+                */
+                $hookval = hook('save_resource_data_multi_extra_modes', '', array($ref, $fields[$n],$current_field_nodes,$postvals,&$errors));
                 if($hookval !== false)
                     {
                     if(!is_string($hookval))
@@ -1635,6 +1687,9 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                             }
                         $resource_nodes_add[$ref] =$resource_add_nodes;
                         $resource_nodes_remove[$ref] = array_diff($current_field_nodes,$resource_add_nodes);                        
+                        debug(sprintf('$resource_nodes_add[%s] = %s', $ref, implode(',', $resource_nodes_add[$ref])));
+                        debug(sprintf('$resource_nodes_remove[%s] = %s', $ref, implode(',', $resource_nodes_remove[$ref])));
+
                         $log_node_updates[$ref][] = [
                             'from'  => $current_field_nodes,
                             'to'    => $resource_add_nodes,
@@ -5836,12 +5891,11 @@ function check_use_watermark($download_key = "", $resource="")
 
 
 /**
-* Fill in any blank fields for the resource
+* Fill in any blank fields for the resource.
 *
-* @uses ps_value()
-* @uses ps_query()
-* @uses update_field()
-* @uses get_resource_nodes()
+* IMPORTANT: Auto completing blank fields with inactive options should be allowed (possibly a system misconfiguration).
+* This function will NOT exclude inactive nodes because, for required fields, you might end up having no value
+* after processing the field.
 *
 * @param  integer   $resource         Resource ID
 * @param  boolean   $force_run        Allow code to force running this function and update the fields even if there is data.
@@ -7025,7 +7079,6 @@ function process_edit_form($ref, $resource)
         unset($uploadparams['forcesingle']);
         unset($uploadparams['noupload']);
     }
-
     if(!isset($save_errors))
         {
         # Perform the save

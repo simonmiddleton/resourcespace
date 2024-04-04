@@ -50,7 +50,7 @@ $add_searched_nodes_function_call = '';
 />
 <?php
 
-$nodes_in_sequence = $field['nodes'];
+$nodes_in_sequence = array_filter($field['nodes'], 'node_is_active');
 
 if((bool) $field['automatic_nodes_ordering'])
     {
@@ -217,6 +217,8 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
     var found_suggested = true;
     var keyword         = ui.item.label;
     var node_id         = ui.item.value;
+    let no_entry_exists = keyword.substring(0, <?php echo mb_strlen(escape($lang['noentryexists']), 'UTF-8') ?>) == '<?php echo escape($lang["noentryexists"]); ?>';
+    let inactive_entry = keyword.substring(0, <?php echo mb_strlen(escape($lang['inactive_entry_matched']), 'UTF-8'); ?>) === '<?php echo escape($lang['inactive_entry_matched']); ?>';
 
     if(keyword.substring(0, <?php echo mb_strlen($lang['createnewentryfor'], 'UTF-8'); ?>) == '<?php echo escape($lang["createnewentryfor"]); ?>')
         {
@@ -253,10 +255,9 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
                 }
             });        
         }
-    else if(keyword.substring(0, <?php echo mb_strlen(escape($lang['noentryexists']), 'UTF-8') ?>) == '<?php echo escape($lang["noentryexists"]); ?>')
+    else if(inactive_entry || no_entry_exists)
         {
         document.getElementById('<?php echo $name; ?>_selector').value = '';
-
         found_suggested = false;
         }
 

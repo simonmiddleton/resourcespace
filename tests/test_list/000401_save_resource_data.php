@@ -8,6 +8,7 @@ $initial_field_column_string_separator = $field_column_string_separator;
 $rtf_checkbox = create_resource_type_field('Test #401 checkbox', 1, FIELD_TYPE_CHECK_BOX_LIST, 'test_401_checkbox', true);
 $ckb_opt_a = set_node(null, $rtf_checkbox, '~en:Scanned negative~fr:Négatif scanné', null, 20);
 $ckb_opt_b = set_node(null, $rtf_checkbox, '~en:Digital camera~fr:Appareil photo numérique', null, 10);
+$ckb_opt_c = set_node(null, $rtf_checkbox, 'Check C', null, '');
 
 $rtf_cat_tree = create_resource_type_field('Test #401 category tree', 1, FIELD_TYPE_CATEGORY_TREE, 'test_401_tree', true);
 $ct_opt_colors = set_node(null, $rtf_cat_tree, '~en:Colors~fr:Couleurs', null, 10);
@@ -18,9 +19,14 @@ $ct_opt_colors_blue = set_node(null, $rtf_cat_tree, '~en:blue~fr:bleue', $ct_opt
 
 $rtf_date = create_resource_type_field("Test #401 date", 1, FIELD_TYPE_DATE, 'test_401_date', false);
 
+$rtf_dropdown = create_resource_type_field('Test #401 dropdown', 1, FIELD_TYPE_DROP_DOWN_LIST, 'test_401_dropdown', true);
+$drpd_opt_a = set_node(null, $rtf_dropdown, 'Drop A', null, '');
+$drpd_opt_b = set_node(null, $rtf_dropdown, 'Drop B', null, '');
+
 // Resources
 $resource_a = create_resource(1, 0);
 $resource_b = create_resource(1, 0);
+$resource_c = create_resource(1, 0);
 // --- End of Set up
 
 
@@ -121,6 +127,38 @@ if($expected_cat_tree_fieldx_value !== $cat_tree_fieldx_value)
     return false;
     }
 
+// Check disabled options use cases. Info: https://www.resourcespace.com/knowledge-base/developers/fixed-list-fields
+toggle_active_state_for_nodes([$ckb_opt_c, $drpd_opt_b]);
+// - Disabled options shouldn't be added to resources
+$_POST['nodes'][$rtf_checkbox] = [$ckb_opt_b, $ckb_opt_c];
+save_resource_data($resource_c, false, $rtf_checkbox);
+if(array_column(get_resource_nodes($resource_c, $rtf_checkbox, true), 'ref') !== [$ckb_opt_b])
+    {
+    echo 'Use case: Adding disabled options - ';
+    return false;
+    }
+
+// - Disabled options shouldn't be removed (exceptions apply)
+delete_all_resource_nodes($resource_c);
+add_resource_nodes($resource_c, [$ckb_opt_c], false, false); # Pretend we already had it
+$_POST['nodes'][$rtf_checkbox] = [$ckb_opt_b];
+save_resource_data($resource_c, false, $rtf_checkbox);
+if(array_column(get_resource_nodes($resource_c, $rtf_checkbox, true), 'ref') !== [$ckb_opt_b, $ckb_opt_c])
+    {
+    echo 'Use case: Removing disabled options - ';
+    return false;
+    }
+
+// - Allow changing (removing) a disabled fixed list field option for a type that can only hold one value (e.g dropdown)
+delete_all_resource_nodes($resource_c);
+add_resource_nodes($resource_c, [$drpd_opt_b], false, false); # Pretend we already had it
+$_POST['nodes'][$rtf_dropdown] = [$drpd_opt_a];
+save_resource_data($resource_c, false, $rtf_dropdown);
+if(array_column(get_resource_nodes($resource_c, $rtf_dropdown, true), 'ref') !== [$drpd_opt_a])
+    {
+    echo 'Use case: Removing disabled options for a type that can only hold one value (e.g. dropdown) - ';
+    return false;
+    }
 
 
 
@@ -129,10 +167,10 @@ $field_column_string_separator = $initial_field_column_string_separator;
 $data_joins = $_POST = [];
 unset(
     $initial_field_column_string_separator,
-    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $rtf_date,
+    $rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $ckb_opt_c, $rtf_date, $rtf_dropdown, $drpd_opt_a, $drpd_opt_b,
     $rtf_cat_tree, $ct_opt_colors, $ct_opt_colors_red, $ct_opt_colors_black, $ct_opt_colors_blue, $ct_opt_numbers,
-    $resource_a, $resource_b,
+    $resource_a, $resource_b, $resource_c,
     $use_cases
 );
- 
+
 return true;

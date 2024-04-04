@@ -1,7 +1,10 @@
 <?php
-/*******************************************/
-/**************RADIO BUTTONS****************/
-/*******************************************/
+/*
+---------- Radio buttons ----------
+
+Inactive nodes should be shown because this type of field can only hold one value so a user changing its value is
+allowed to remove a disabled option for another (active) option.
+*/
 
 // Selected nodes should be used most of the times.
 // When searching, an array of searched_nodes can be found instead
@@ -16,11 +19,7 @@ if(!isset($selected_nodes))
         }
     }
 
-$node_options = array();
-foreach($field['nodes'] as $node)
-    {
-    $node_options[] = $node['name'];
-    }
+$node_options = array_column($field['nodes'], 'name');
 $l = average_length($node_options);
 
 $cols = 10;
@@ -95,6 +94,7 @@ if($edit_autosave)
 
 if($display_as_radiobuttons) 
     {
+    $active_nodes = array_column(array_filter($field['nodes'], 'node_is_active'), 'ref');
     ?>
     <table id="" class="radioOptionTable" cellpadding="3" cellspacing="3">                    
         <tbody>
@@ -114,6 +114,17 @@ if($display_as_radiobuttons)
                     <?php 
                     }
                 $col++;
+
+                $checked = (
+                    (!$multiple ||  $copyfrom != '')
+                    && in_array($node['ref'], $selected_nodes) || (isset($user_set_values[$field['ref']]) 
+                    && $node['ref'] == $user_set_values[$field['ref']])
+                );
+                $inactive = !in_array($node['ref'], $active_nodes);
+
+                if (($multiple && $inactive) || (!$checked && $inactive)) {
+                    continue;
+                }
                 ?>
                 <td width="10" valign="middle">
                     <input type="radio"
@@ -121,14 +132,7 @@ if($display_as_radiobuttons)
                            name="<?php echo $name; ?>"
                            value="<?php echo $node['ref']; ?>"
                        <?php
-                       if((!$multiple ||  $copyfrom != '')
-                        && in_array($node['ref'], $selected_nodes) || (isset($user_set_values[$field['ref']]) 
-                        && $node['ref'] == $user_set_values[$field['ref']]))
-                            {
-                            ?>
-                            checked
-                            <?php
-                            }
+                        echo $checked ? ' checked ' : '';
 
                         if($edit_autosave)
                             {

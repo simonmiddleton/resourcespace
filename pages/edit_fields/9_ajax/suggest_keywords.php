@@ -17,6 +17,7 @@ node_field_options_override($fielddata);
 $first      = true;
 $exactmatch = false;
 $results    = array();
+$match_is_deactivated = false;
 
 if(!is_array($fielddata))
     {
@@ -33,6 +34,7 @@ if(!isset($fielddata['nodes']) || !is_array($fielddata['nodes']))
 foreach($fielddata['nodes'] as $node)
     {
     $trans = i18n_get_translated($node['name']);
+    $node_is_active = node_is_active($node);
     
     if($dynamic_keyword_suggest_contains)
         {
@@ -41,11 +43,15 @@ foreach($fielddata['nodes'] as $node)
             if(strtolower($trans) == strtolower($keyword))
                 {
                 $exactmatch = true;
+                $match_is_deactivated = !$node_is_active;
                 }
-            $results[] = array(
+            
+            if ($node_is_active) {
+                $results[] = array(
                     'label' => $trans,
                     'value' => $node['ref']
                 );
+            }
             }
         }
     else
@@ -55,12 +61,15 @@ foreach($fielddata['nodes'] as $node)
             if(strtolower($trans) == strtolower($keyword))
                 {
                 $exactmatch = true;
+                $match_is_deactivated = !$node_is_active;
                 }
 
-            $results[] = array(
+            if ($node_is_active) {
+                $results[] = array(
                     'label' => $trans,
                     'value' => $node['ref']
                 );
+            }
             }
         }
     }
@@ -96,6 +105,16 @@ if(!$exactmatch && !$readonly)
         );
         }
 
+    }
+elseif ($exactmatch && $match_is_deactivated)
+    {
+    $text = "{$lang['inactive_entry_matched']} {$keyword}";
+    $results = [
+        [
+            'label' => $text,
+            'value' => $text,
+        ]
+    ];
     }
 elseif($readonly && empty($results))
     {

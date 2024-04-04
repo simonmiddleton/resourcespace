@@ -8,7 +8,7 @@
 * @param  integer  $resource_type_field   ID of the metadata field
 * @param  string   $name                  Node name to be used (international)
 * @param  integer  $parent                ID of the parent of this node (null for non trees)
-* @param  integer  $order_by              Value of the order in the list (e.g. 10)
+* @param  integer  $order_by              Value of the order in the list (e.g. 10). To automatically pick next order by use ''.
 *
 * @return boolean|integer
 */
@@ -429,27 +429,21 @@ function get_nodes_by_refs(array $refs)
 /**
 * Checks whether a node is parent to other nodes or not
 *
-* @param  integer    $ref    Node ref
-*
-* @return boolean
+* @param int $ref Node ref
+* @param bool $active_only Check only for active (children) nodes
 */
-function is_parent_node($ref)
+function is_parent_node($ref, bool $active_only = false): bool
     {
     if(is_null($ref))
         {
         return false;
         }
 
-    $query = "SELECT exists (SELECT ref from node WHERE parent = ?) AS value;";
-    $parameters = array("i",$ref);
-    $parent_exists = ps_value($query, $parameters, 0);
+    $query = $active_only
+        ? 'SELECT exists (SELECT ref from node WHERE parent = ? AND active = 1) AS `value`'
+        : 'SELECT exists (SELECT ref from node WHERE parent = ?) AS `value`';
 
-    if($parent_exists > 0)
-        {
-        return true;
-        }
-
-    return false;
+    return ps_value($query, ['i', $ref], 0) > 0;
     }
 
 
@@ -839,8 +833,13 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
     // We remove the current node from the list of parents for it( a node should not add to itself)
     $nodes = $all_nodes;
     $nodes_index_to_remove = array_search($ref, array_column($nodes, 'ref'));
+    $node_info = $nodes[$nodes_index_to_remove];
     unset($nodes[$nodes_index_to_remove]);
     $nodes = array_values($nodes);
+    $node_disabled_class = $node_info['active'] === 0 ? 'FieldDisabled' : '';
+    $activation_action_label = node_is_active($node_info)
+        ? $lang['userpreference_disable_option']
+        : $lang['userpreference_enable_option'];
     ?>
     <table id="node_<?php echo $ref; ?>" cellspacing="0" cellpadding="5" data-toggle-node-mode = "<?php echo $toggle_node_mode; ?>">
         <tbody>
@@ -864,6 +863,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                 <td>
                     <input
                         type="text"
+                        class="<?php echo escape($node_disabled_class); ?>"
                         name="option_name"
                         form="option_<?php echo (int) $ref; ?>"
                         value="<?php echo escape($name); ?>"
@@ -915,6 +915,7 @@ function draw_tree_node_table($ref, $resource_type_field, $name, $parent, $order
                             </td>
                         <td> <!-- Action buttons -->
                             <button type="submit" onclick="SaveNode(<?php echo $ref; ?>); return false;"><?php echo escape($lang['save']); ?></button>
+                            <button id="node_<?php echo escape($ref); ?>_toggle_active_btn" type="submit" onclick="ToggleNodeActivation(<?php echo escape($ref); ?>); return false;"><?php echo escape($activation_action_label); ?></button>
                             <?php
                             if(!is_parent_node($ref))
                                 {?>
@@ -1629,16 +1630,11 @@ function delete_node_resources(int $node)
 
 /**
 * Copy resource nodes from one resource to another. Only applies for active metadata fields.
-* 
-* @uses ps_array()
-* @uses ps_query()
-* 
+*
 * @param integer $resourcefrom Resource we are copying data from
 * @param integer $resourceto   Resource we are copying data to
-* 
-* @return void
 */
-function copy_resource_nodes($resourcefrom, $resourceto)
+function copy_resource_nodes($resourcefrom, $resourceto): void
     {
     $omit_fields_sql = '';
     $omit_fields_sql_params = array();
@@ -1685,6 +1681,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
         FROM resource_node AS rnold
     LEFT JOIN node AS n ON n.ref = rnold.node
     WHERE resource = ?
+        AND n.`active` = 1
         {$omit_fields_sql};
     ", array_merge(array("i", (int) $resourcefrom), $omit_fields_sql_params));
 
@@ -1696,6 +1693,7 @@ function copy_resource_nodes($resourcefrom, $resourceto)
           LEFT JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
               WHERE resource = ?
               AND rtf.active = 1
+                AND n.`active` = 1
                 {$omit_fields_sql}
                  ON DUPLICATE KEY UPDATE hit_count = rnold.new_hit_count;
     ", array_merge(array("i", $resourceto, "i", $resourcefrom), $omit_fields_sql_params));
@@ -1710,10 +1708,8 @@ function copy_resource_nodes($resourcefrom, $resourceto)
 * 
 * @param integer $from resource_type_field ID FROM which we copy
 * @param integer $to   resource_type_field ID TO which we copy
-* 
-* @return boolean
 */
-function copy_resource_type_field_nodes($from, $to)
+function copy_resource_type_field_nodes($from, $to): bool
     {
     global $FIXED_LIST_FIELD_TYPES;
 
@@ -1725,28 +1721,14 @@ function copy_resource_type_field_nodes($from, $to)
         return false;
         }
 
-    $nodes = get_nodes($from, null, true);
-
-    // Handle category trees
-    if(7 == $type)
+    if (FIELD_TYPE_CATEGORY_TREE == $type)
         {
-        // Sort array of nodes to put parent item at the top of each branch to make sure each child item can find its parent below.
-        $node_branches = array();
-        foreach($nodes as $node)
-            {
-            if($node['parent'] == "")
-                {
-                $node_branches[] = $node;
-                $next_branch = array();
-                $next_branch[] = get_nodes($from, $node['ref'], true);
-                foreach ($next_branch[0] as $leaf)
-                    {
-                    $node_branches[] = $leaf;
-                    }
-                }
-            }
-        $nodes = $node_branches;
-        
+        $nodes = get_cattree_nodes_ordered($from, null, true);
+        // Remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be
+        // using get_cattree_node_strings() with it.
+        array_shift($nodes);
+        $nodes = array_filter($nodes, 'node_is_active');
+
         // array(from_ref => new_ref)
         $processed_nodes = array();
 
@@ -1757,15 +1739,17 @@ function copy_resource_type_field_nodes($from, $to)
                 continue;
                 }
 
-            $parent = $node['parent'];
+            // Make the parent the expected type of a node parent (i.e. null|int) because get_cattree_nodes_ordered() is
+            // setting root parent to string zero for some unknown reason.
+            $parent = $node['parent'] == 0 ? null : $node['parent'];
 
             // Child nodes need to have their parent set to the new parent ID
-            if('' != trim($parent))
+            if($parent !== null)
                 {
                 $parent = $processed_nodes[$parent];
                 }
 
-            $new_node_id                   = set_node(null, $to, $node['name'], $parent, $node['order_by']);
+            $new_node_id = set_node(null, $to, $node['name'], $parent, $node['order_by']);
             $processed_nodes[$node['ref']] = $new_node_id;
             }
 
@@ -1773,6 +1757,7 @@ function copy_resource_type_field_nodes($from, $to)
         }
 
     // Default handle for types different than category trees
+    $nodes = array_filter(get_nodes($from), 'node_is_active');
     foreach($nodes as $node)
         {
         set_node(null, $to, $node['name'], $node['parent'], $node['order_by']);
@@ -1796,8 +1781,8 @@ function get_parent_nodes(int $noderef,bool $detailed = false, $include_child=fa
     $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
     if(version_compare($mysql_version[0]['ver'], '8.0', '>=')) 
         {
-        $colsa = $detailed ? "ref, name, parent, resource_type_field, order_by" : "ref, name, parent";
-        $colsb = $detailed ? "n.ref, n.name, n.parent, n.resource_type_field, n.order_by" : "n.ref, n.name, n.parent";
+        $colsa = $detailed ? "ref, name, parent, resource_type_field, order_by, `active`" : "ref, name, parent";
+        $colsb = $detailed ? "n.ref, n.name, n.parent, n.resource_type_field, n.order_by, n.`active`" : "n.ref, n.name, n.parent";
         $parent_nodes = ps_query("
             WITH RECURSIVE cte($colsa,level) AS
                     (
@@ -2077,7 +2062,7 @@ function get_node_tree($parentId = "", array $nodes = array())
  * 
  */
 function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) {
-    $sql_query = "SELECT n.ref, n.resource_type_field, n.name, coalesce(n.parent, 0) parent, n.order_by, rn.resource FROM node n ";
+    $sql_query = "SELECT n.ref, n.resource_type_field, n.name, coalesce(n.parent, 0) parent, n.order_by, n.active, rn.resource FROM node n ";
     if ($allnodes)
         {
         $sql_query .= " LEFT OUTER ";
@@ -2099,7 +2084,7 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
         }
 
     # Category trees have no container root, so create one to carry all top level category tree nodes which don't have a parent
-    $rootnode = cattree_node_creator(0, 0, "ROOT", null, 0, null, array());
+    $rootnode = cattree_node_creator(0, 0, "ROOT", null, 0, null, array(), 1);
 
     $nodeswithpointers = array(0 => &$rootnode);
 
@@ -2110,6 +2095,7 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
         $parent = $nodeentry['parent'];
         $order_by = $nodeentry['order_by'];
         $resource = $nodeentry['resource'];
+        $active = $nodeentry['active'];
 
         # Save the current node prior to establishing the pointer which can null the current node
         $savednode=null;
@@ -2126,7 +2112,7 @@ function get_cattree_nodes_ordered($treefield, $resource=null, $allnodes=false) 
         if ($savednode && isset($savednode['children'])) {
             $existingchildren = $savednode['children'];
         }   
-        $nodeswithpointers[$ref] = cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource, $existingchildren);
+        $nodeswithpointers[$ref] = cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource, $existingchildren, $active);
     }
 
     # Flatten the tree starting at the root                                                          
@@ -2209,12 +2195,21 @@ function get_cattree_node_strings($nodesordered, $strings_are_paths=true) {
 * @param int    $order_by               Node order by
 * @param int    $resource               Resource id
 * @param array  $children               Array of child node ids
+* @param int    $active                 Node active state (0 or 1)
 * 
 * @return array
 */
-function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource, $children) {
-    return array('ref' => $ref, 'resource_type_field' => $resource_type_field, 'name' => $name, 
-                'parent' => $parent, 'order_by' => $order_by, 'resource' => $resource, 'children' => $children);
+function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order_by, $resource, $children, int $active): array {
+    return [
+        'ref' => $ref,
+        'resource_type_field' => $resource_type_field,
+        'name' => $name,
+        'parent' => $parent,
+        'order_by' => $order_by,
+        'resource' => $resource,
+        'children' => $children,
+        'active' => $active,
+    ];
 }
   
 
@@ -2225,17 +2220,22 @@ function cattree_node_creator($ref, $resource_type_field, $name, $parent, $order
 * 
 * @return array         Array of nodes with child nodes flattened out after their respective parents
 */
-function cattree_node_flatten($node) {
+function cattree_node_flatten(array $node): array {
     # Build node being flattened                                            
-    $flat_element = array('ref' => (string) $node['ref'],
-                        'resource_type_field' => (string) $node['resource_type_field'],
-                        'name' => (string) $node['name'],
-                        'parent' => (string) $node['parent'],
-                        'order_by' => (string) $node['order_by'],
-                        'resource' => (string) $node['resource']);
+    $flat_element = [
+        'ref' => (string) $node['ref'],
+        'resource_type_field' => (string) $node['resource_type_field'],
+        'name' => (string) $node['name'],
+        'parent' => (string) $node['parent'],
+        'order_by' => (string) $node['order_by'],
+        'resource' => (string) $node['resource'],
+        'active' => (int) $node['active'],
+    ];
+    $children = $node['children'] ?? [];
+
     # Append children after flattened node                                                                
     $cumulative_entries = array($flat_element);
-    foreach($node['children'] as $child) {
+    foreach($children as $child) {
         $cumulative_entries = array_merge($cumulative_entries, cattree_node_flatten($child));
     }
     return $cumulative_entries;
@@ -2251,7 +2251,7 @@ function cattree_node_flatten($node) {
  * @return array $nodestrings - array of strings for all nodes passed in correct hierarchical order
  * 
  */
-function get_node_strings($resource_nodes,$allnodes = false,$translate = true)
+function get_node_strings($resource_nodes,$allnodes = false,$translate = true): array
     {
     // Arrange all passed nodes with parents first so that unnecessary paths can be removed
     $orderednodes = order_tree_nodes($resource_nodes);
@@ -2278,7 +2278,7 @@ function get_node_strings($resource_nodes,$allnodes = false,$translate = true)
 * @param  array    $nodes  List of nodes to search through (MUST contain elements with at least the "ref" index)
 * @param  integer  $id     Node ref we compute the branch path for
 * 
-* @return array Branch path structure starting from root to the searched node
+* @return array Branch path structure starting from root to the searched node (inclusive)
 */
 function compute_node_branch_path(array $nodes, int $id)
     {
@@ -2345,7 +2345,7 @@ function compute_node_branch_path(array $nodes, int $id)
 * 
 * @return array
 */
-function compute_nodes_by_parent(array $nodes, int $id)
+function compute_nodes_by_parent(array $nodes, int $id): array
     {
     $found_nodes_keys = array_keys(array_column($nodes, 'parent'), $id);
 
@@ -2379,7 +2379,7 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
 
     if($detailed)
         {
-        $sql_select .= ", n.`name`, n.parent, n.order_by";
+        $sql_select .= ', n.`name`, n.parent, n.order_by, n.`active`';
         }
 
     $resources = array_filter($resources,"is_int_loose");
@@ -2435,13 +2435,14 @@ function get_resource_nodes_batch(array $resources, array $resource_type_fields 
 
         if($detailed)
             {
-            $results[$noderow["resource"]][$noderow["resource_type_field"]][] = array(
+            $results[$noderow["resource"]][$noderow["resource_type_field"]][] = [
                 "ref"                   => $noderow["ref"],
                 "resource_type_field"   => $noderow["resource_type_field"],
                 "name"                  => $noderow["name"],
                 "parent"                => $noderow["parent"],
                 "order_by"              => $noderow["order_by"],
-                );
+                'active'                => $noderow['active'],
+            ];
             }
         else
             {
@@ -2893,3 +2894,186 @@ function cleanup_invalid_nodes(array $fields = [],array $restypes=[], bool $dryr
         }
     return $deletedrows > 0 ? ((!$dryrun ? "Deleted " : "Found ") . $deletedrows . " row(s)") :  "No rows found";
     }
+
+/**
+ * Batch update nodes' active state to the database. The same state will apply to all nodes in the list.
+ *
+ * For logic on which nodes to toggle {@see toggle_active_state_for_nodes()}
+ *
+ * @param list<int> $refs Node IDs
+ * @param bool $active Should nodes be active or not?
+ */
+function update_node_active_state(array $refs, bool $active): void
+    {
+    if ($refs === []) {
+        return;
+    }
+
+    $refs_chunked = db_chunk_id_list($refs);
+    if ($refs_chunked === []) {
+        return;
+    }
+
+    db_begin_transaction('set_node_active_state');
+
+    foreach ($refs_chunked as $refs_chunk) {
+        ps_query(
+            sprintf(
+                   'UPDATE node AS n
+                INNER JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
+                       SET n.`active` = ?
+                     WHERE n.`ref` IN (%s)
+                       AND rtf.`type` IN (%s)',
+                ps_param_insert(count($refs_chunk)),
+                ps_param_insert(count($GLOBALS['FIXED_LIST_FIELD_TYPES']))
+            ),
+            array_merge(
+                ['i', $active],
+                ps_param_fill($refs_chunk, 'i'),
+                ps_param_fill($GLOBALS['FIXED_LIST_FIELD_TYPES'], 'i')
+            )
+        );
+    }
+
+    db_end_transaction('set_node_active_state');
+    }
+
+/**
+ * Toggle nodes' active state
+ *
+ * @param list<int> $refs Node IDs
+ * @return array<int, 0|1>
+ */
+function toggle_active_state_for_nodes(array $refs): array
+    {
+    $refs_chunked = db_chunk_id_list($refs);
+    $rtfs_tree = array_column(get_resource_type_fields('', 'ref', 'asc', '', [FIELD_TYPE_CATEGORY_TREE]), 'ref');
+    $tree_nodes_by_rtf = [];
+    $nodes_new_state = [];
+
+    db_begin_transaction('toggle_node_active_state');
+
+    foreach ($refs_chunked as $refs_chunk) {
+        $nodes = get_nodes_by_refs($refs_chunk);
+        $nodes_to_toggle = [];
+
+        foreach ($nodes as $node) {
+            if (in_array($node['resource_type_field'], $rtfs_tree)) {
+                // Build a list of nodes, grouped by resource type fields because changes to a tree need to follow its structure
+                $tree_nodes_by_rtf[$node['resource_type_field']][] = $node['ref'];
+            } else {
+                // Simple fixed list fields get toggled straight away
+                $nodes_to_toggle[] = $node['ref'];
+            }
+        }
+
+        if ($nodes_to_toggle !== []) {
+            ps_query(
+                sprintf(
+                    'UPDATE node AS n
+                    INNER JOIN resource_type_field AS rtf ON n.resource_type_field = rtf.ref
+                        SET n.`active` = IF(n.`active` = 1, 0, 1)
+                        WHERE n.`ref` IN (%s)
+                        AND rtf.`type` IN (%s)',
+                    ps_param_insert(count($nodes_to_toggle)),
+                    ps_param_insert(count($GLOBALS['FIXED_LIST_FIELD_TYPES']))
+                ),
+                array_merge(ps_param_fill($nodes_to_toggle, 'i'), ps_param_fill($GLOBALS['FIXED_LIST_FIELD_TYPES'], 'i'))
+            );
+            $nodes_new_state += array_column(get_nodes_by_refs($nodes_to_toggle), 'active', 'ref');
+        }
+    }
+
+    db_end_transaction('toggle_node_active_state');
+
+    foreach ($tree_nodes_by_rtf as $rtf => $nodes_list) {
+        $nodes_new_state += toggle_category_tree_nodes_active_state($rtf, $nodes_list);
+    }
+
+    clear_query_cache('schema');
+    return $nodes_new_state;
+    }
+
+/**
+ * Toggle category tree nodes' active state
+ *
+ * @param int $rtf Resource type field ID
+ * @param list<int> $node_refs
+ * @return array<int, 0|1>
+ */
+function toggle_category_tree_nodes_active_state(int $rtf, array $node_refs): array {
+    $is_not_active = fn(int $active): bool => $active === 0;
+    $nodes_to_enable = [];
+    $nodes_to_disable = [];
+
+    $rtf_nodes = get_cattree_nodes_ordered($rtf, null, true);
+    // Remove the fake "root" node which get_cattree_nodes_ordered() is adding since we won't be
+    // using get_cattree_node_strings() with it.
+    array_shift($rtf_nodes);
+    $rtf_nodes_indexed = array_column($rtf_nodes, null, 'ref');
+    $nodes_ordered = array_keys(array_intersect_key($rtf_nodes_indexed, array_flip($node_refs)));
+
+    foreach ($nodes_ordered as $node_ref) {
+        if (in_array($node_ref, $nodes_to_disable)) {
+            // Child node disabled previously by a parent - no need to carry on processing it (already done because of 
+            // a parents' change on its path)
+            continue;
+        }
+
+        $node = $rtf_nodes_indexed[$node_ref];
+        $node_is_active = $node['active'] === 1;
+
+        // Check that no parent on this branch path is disabled
+        $node_branch = array_column(
+            compute_node_branch_path(array_values($rtf_nodes_indexed), $node['ref']),
+            'active',
+            'ref'
+        );
+        array_pop($node_branch);
+        if (array_filter($node_branch, $is_not_active) !== []) {
+            // Node should already be disabled, add it to the list so we can return it
+            $nodes_to_disable[] = $node['ref'];
+            continue;
+        }
+
+        if ($node_is_active) {
+            // Disable - this MUST propagate to its children (if any)
+            $branch_refs = array_column(
+                cattree_node_flatten(
+                    array_merge(
+                        $node,
+                        [
+                            'resource' => null, # Fake it for cattree_node_flatten()
+                            'children' => get_node_tree($node['ref'], $rtf_nodes_indexed),
+                        ]
+                    )
+                ),
+                'ref'
+            );
+
+            $nodes_to_disable = array_merge($nodes_to_disable, $branch_refs);
+            foreach ($branch_refs as $path_node_ref) {
+                $rtf_nodes_indexed[$path_node_ref]['active'] = 0;
+            }
+        } else {
+            // Activate - this MUST NOT propagate to its children (if any)
+            $nodes_to_enable[] = $node_ref;
+
+            // Pretend this has been done in case there's going to be a child node in the queue waiting to be toggled 
+            $rtf_nodes_indexed[$node_ref]['active'] = 1;
+        }
+    }
+
+    update_node_active_state($nodes_to_enable, true);
+    update_node_active_state($nodes_to_disable, false);
+    
+    return array_column(get_nodes_by_refs(array_merge($nodes_to_enable, $nodes_to_disable)), 'active', 'ref');
+}
+
+/** Helper function to check if a node is active
+ * Note: a node here requires the "active" key.
+ * @param array{'active': 0|1} $node A node structure with at least the "active" key present
+ */
+function node_is_active(array $node): bool {
+    return $node['active'] === 1;
+}
