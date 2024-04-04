@@ -22,6 +22,7 @@ if(start_previews($resource500)
 }
 
 $previews_allow_enlarge = true; // To always get lpr size
+$image_alternatives = [];
 $image_alternatives[0]["name"]="PNG File";
 $image_alternatives[0]["source_extensions"]="jpg";
 $image_alternatives[0]["source_params"]="";
