@@ -15,17 +15,18 @@ if($remote_system) {
         ];
 
         $curl = curl_init($remote_system["url"]);
-        curl_setopt( $curl, CURLOPT_HEADER, "Content-Type:application/x-www-form-urlencoded" );
         curl_setopt( $curl, CURLOPT_POST, 1);
         curl_setopt( $curl, CURLOPT_POSTFIELDS, $postdata);
         curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
         $curl_response = curl_exec($curl);
         $cerror = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-        if($cerror == 200) {
-            $message = $lang["user_api_session_grant_success"] . " " . json_decode($curl_response,true)["message"];
+
+        $response_json = json_decode($curl_response,true);
+        if($cerror == 200 && !is_null($response_json)) {
+            $message = $lang["user_api_session_grant_success"] . " " . $response_json["message"];
         } else {
-            $message = $lang["user_api_session_grant_error"] . " " . json_decode($curl_response,true)["message"];
+            $message = $lang["user_api_session_grant_error"] . " message: " . ($response_json["message"] ?? $curl_response);
         }
     }
 } else {
