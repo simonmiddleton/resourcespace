@@ -3,7 +3,7 @@
 # rse_workflow setup page, requires System Setup permission
 #
 
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include '../../../include/header.php';
 

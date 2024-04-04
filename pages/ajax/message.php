@@ -6,7 +6,7 @@
     // check for callback, i.e. this file being called directly to get any new messages
     if (basename(__FILE__)==basename($_SERVER['PHP_SELF']))
         {
-        include_once __DIR__ . "/../../include/db.php";
+        include_once __DIR__ . "/../../include/boot.php";
         
         include __DIR__ . "/../../include/authenticate.php";
         if($actions_on)

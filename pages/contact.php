@@ -1,5 +1,5 @@
 <?php
-include_once "../include/db.php";
+include_once "../include/boot.php";
 
 if (!hook("authenticate")){include "../include/authenticate.php";}
 

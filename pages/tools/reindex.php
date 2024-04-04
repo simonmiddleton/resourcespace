@@ -5,7 +5,7 @@
 # Reindexes all nodes. This should be unnecessary unless the node_keyword table has been corrupted.
 #
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 if (!(PHP_SAPI == 'cli'))
     {

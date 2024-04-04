@@ -3,7 +3,7 @@
 function save_proposed_changes($ref)
     {
     debug_function_call(__FUNCTION__, func_get_args());
-    global $userref, $auto_order_checkbox,$multilingual_text_fields,$languages,$language, $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES;
+    global $userref, $auto_order_checkbox,$languages,$language, $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES;
 
     if(!is_numeric($ref))
         {
@@ -167,23 +167,6 @@ function save_proposed_changes($ref)
                         $val = getval("field_{$fields[$n]['ref']}", '');
                         }
                     }
-                elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
-                    {
-                    debug("Field #{$fields[$n]['ref']} -- Construct a multilingual string from the submitted translations");
-                    $val=getval("field_" . $fields[$n]["ref"], false);
-                    if($val !== false)
-                        {
-                        $val="~" . $language . ":" . $val;
-                        reset ($languages);
-                        foreach ($languages as $langkey => $langname)
-                            {
-                            if ($language!=$langkey)
-                                {
-                                $val.="~" . $langkey . ":" . getval("multilingual_" . $n . "_" . $langkey,"");
-                                }
-                            }
-                        }
-                    }
                 else
                     {
                     debug("Field #{$fields[$n]['ref']} -- Set the value exactly as sent");
@@ -309,49 +292,9 @@ function delete_proposed_changes($ref, $userid="")
     ps_query($query, $parameters);
     }
 
-# Allows language alternatives to be entered for free text metadata fields.
-function propose_changes_display_multilingual_text_field($n, $field, $translations)
-    {
-    global $language, $languages, $lang;
-    ?>
-    <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape($lang["hidetranslations"])?>';} return false;"><?php echo escape($lang["showtranslations"]) ?></a></p>
-    <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
-    <?php
-    reset($languages);
-    foreach ($languages as $langkey => $langname)
-        {
-        if ($language!=$langkey)
-            {
-            if (array_key_exists($langkey,$translations)) {$transval=$translations[$langkey];} else {$transval="";}
-            ?>
-            <tr>
-            <td nowrap valign="top"><?php echo escape($langname)?>&nbsp;&nbsp;</td>
-
-            <?php
-            if ($field["type"]==0)
-                {
-                ?>
-                <td><input type="text" class="stdwidth" name="multilingual_<?php echo $n?>_<?php echo $langkey?>" value="<?php echo escape($transval)?>"></td>
-                <?php
-                }
-            else
-                {
-                ?>
-                <td><textarea rows=6 cols=50 name="multilingual_<?php echo $n?>_<?php echo $langkey?>"><?php echo escape($transval)?></textarea></td>
-                <?php
-                }
-            ?>
-            </tr>
-            <?php
-            }
-        }
-    ?></table><?php
-    }
-
 function propose_changes_display_field($n, $field)
     {
-    global $ref, $original_fields, $multilingual_text_fields,
-    $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess,
+    global $ref, $original_fields, $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess,
     $FIXED_LIST_FIELD_TYPES,$range_separator, $edit_autosave;
 
     # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering propose change field  
@@ -359,8 +302,11 @@ function propose_changes_display_field($n, $field)
 
     $edit_autosave=false;
     $name="field_" . $field["ref"];
-    $value=$field["value"];
-    $value=trim($value??"");
+    $value=trim($field['value'] ?? '');
+    
+    // Force display field because we rely on display_field_data() which is meant to honour this property (but meant 
+    // only for the view page). In this context, "hiding" fields is done using permissions.
+    $field['display_field'] = 1;
 
     # is there a proposed value set for this field?
     /**
@@ -425,8 +371,8 @@ function propose_changes_display_field($n, $field)
             <?php
             }?>
 
-    <div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if(!$has_proposed_changes){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo $field["ref"]; ?>">
-    <input type="hidden" id="propose_change_<?php echo $field["ref"]; ?>" name="propose_change_<?php echo $field["ref"]; ?>" value="true" <?php if(!$has_proposed_changes){echo "disabled=\"disabled\""; } ?> />
+    <div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if(!$has_proposed_changes){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo escape($field["ref"]); ?>">
+    <input type="hidden" id="propose_change_<?php echo escape($field["ref"]); ?>" name="propose_change_<?php echo escape($field["ref"]); ?>" value="true" <?php if(!$has_proposed_changes){echo "disabled=\"disabled\""; } ?> />
     <?php
     # ----------------------------  Show field -----------------------------------
     $value = $has_proposed_changes ? $proposed_value : $realvalue;
@@ -489,14 +435,7 @@ function propose_changes_display_field($n, $field)
         # For certain field types that have no obvious focus, the help always appears.
         ?>
         <div class="FormHelp" style="<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?>display:none;<?php } else { ?>clear:left;<?php } ?>" id="help_<?php echo $field["ref"]; ?>"><div class="FormHelpInner"><?php echo nl2br(trim(escape(i18n_get_translated($field["help_text"]))))?></div></div>
-<?php
-        }
-
-    # If enabled, include code to produce extra fields to allow multilingual free text to be entered.
-    if ($multilingual_text_fields && ($field["type"]==0 || $field["type"]==1 || $field["type"]==5))
-        {
-        $translations=i18n_get_translations($value);
-        propose_changes_display_multilingual_text_field($n, $field, $translations);
+        <?php
         }
     ?>
     <div class="clearerleft"> </div>

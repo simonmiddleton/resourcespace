@@ -1,5 +1,5 @@
 <?php
-include "../../../include/db.php";
+include "../../../include/boot.php";
 include_once "../include/feedback_functions.php";
 
 include "../../../include/authenticate.php"; if (!checkperm("a")) {exit ("Permission denied.");}

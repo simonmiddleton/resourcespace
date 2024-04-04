@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 $k = getval("k", "");
 $ref=getval("ref","",true);
 $internal_share_access = false;

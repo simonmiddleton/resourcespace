@@ -400,7 +400,7 @@ function get_all_site_text($findpage="",$findname="",$findtext="")
                 }
             include dirname(__FILE__)."/../languages/" . safe_file_name($search_language) . ".php";
 
-            # Include plugin languages in reverse order as per db.php
+            # Include plugin languages in reverse order as per boot.php
             global $plugins;
             $language = $search_language;
             for ($n=count($plugins)-1;$n>=0;$n--)
@@ -575,7 +575,7 @@ function get_site_text($page,$name,$getlanguage,$group)
         include $getlangfile;
         }
 
-    # Include plugin languages in reverse order as per db.php
+    # Include plugin languages in reverse order as per boot.php
     global $plugins;    
     $language = $defaultlanguage;
     for ($n=count($plugins)-1;$n>=0;$n--)
@@ -858,7 +858,7 @@ function allowed_type_mime($allowedtype)
 function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template="",$templatevars=null,$from_name="",$cc="",$bcc="",$files = array())
     { 
     global $applicationname, $use_phpmailer, $email_from, $email_notify, $always_email_copy_admin, $baseurl, $userfullname;
-    global $email_footer, $disable_quoted_printable_enc, $header_colour_style_override, $userref, $email_rate_limit, $lang, $useremail_rate_limit_active;
+    global $email_footer, $header_colour_style_override, $userref, $email_rate_limit, $lang, $useremail_rate_limit_active;
 
     if(defined("RS_TEST_MODE"))
         {
@@ -994,17 +994,11 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $body.="--PHP-mixed-" . $random_hash . "--" . $eol; # Final terminating boundary.
 
         $message = $body;
-        $disable_quoted_printable_enc = true; // If false then attachment names and utf8 text get corrupted
         }
-
 
     $message.=$eol.$eol.$eol . $email_footer;
-
-    if (!$disable_quoted_printable_enc)
-        {
-        $message=rs_quoted_printable_encode($message);
-        $subject=rs_quoted_printable_encode_subject($subject);
-        }
+    $message=rs_quoted_printable_encode($message);
+    $subject=rs_quoted_printable_encode_subject($subject);
 
     if ($from=="") {$from=$email_from;}
     if ($reply_to=="") {$reply_to=$email_from;}
@@ -2672,6 +2666,17 @@ function get_utility_path($utilityname, &$checked_path = null)
                 [
                     'unix' => 'unoconv',
                     'win'  => 'python.exe'
+                ],
+                $checked_path
+            );
+
+        case 'unoconvert':
+
+            return get_executable_path(
+                $GLOBALS['config_windows'] ? $GLOBALS['unoconv_python_path'] : $GLOBALS['unoconv_path'],
+                [
+                    'unix' => 'unoconvert',
+                    'win'  => 'unoconvert.exe'
                 ],
                 $checked_path
             );
@@ -4511,7 +4516,7 @@ function get_system_status()
     $fail_tests = 0;
     $rs_root = dirname(__DIR__);
 
-    // Checking requirements must be done before db.php. If that's the case always stop after testing for required PHP modules
+    // Checking requirements must be done before boot.php. If that's the case always stop after testing for required PHP modules
     // otherwise the function will break because of undefined global variables or functions (as expected).
     $check_requirements_only = false;
     if(!defined('SYSTEM_REQUIRED_PHP_MODULES'))

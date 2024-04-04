@@ -2,7 +2,7 @@
 // Resource View Leaflet Map Using Leaflet.js and Various Leaflet Plugins
 
 // Setup initial Leaflet map variables.
-global $lang, $geo_search_restrict, $baseurl, $baseurl_short, $view_mapheight, $map_default, $map_zoomslider, $map_zoomnavbar, $map_kml, $map, $map_kml_file, $map_retina, $map_polygon_field, $modal, $fields;
+global $lang, $baseurl, $baseurl_short, $view_mapheight, $map_default, $map_zoomslider, $map_zoomnavbar, $map_kml, $map, $map_kml_file, $map_retina, $map_polygon_field, $modal, $fields;
 $zoomslider = 'false';
 $zoomcontrol = 'true';
 $polygon = '';
@@ -27,17 +27,6 @@ if ($map_zoomslider)
     $zoomcontrol = 'false';
     }
 
-// If inside spatial restricted zone, do not show location data.
-if (count($geo_search_restrict) > 0)
-    {
-    foreach ($geo_search_restrict as $zone)
-        {
-        if ($resource['geo_lat'] >= $zone[0] && $resource['geo_lat'] <= $zone[2] && $resource['geo_long'] >= $zone[1] && $resource['geo_long'] <= $zone[3])
-            {
-            return false;
-            }
-        }
-    }
 if($hide_geolocation_panel && !isset($geolocation_panel_only))
     { ?>
     <script>

@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 
 include "../include/authenticate.php";
 
@@ -166,8 +166,6 @@ echo "<br />";
 <tr class="ListviewTitleStyle">
 <td class="name"><?php if ($col_order_by=="name") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_public.php?offset=0&col_order_by=name&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["collectionname"])?></a><?php if ($col_order_by=="name") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
 
-<?php if (!$collection_public_hide_owner) { ?><td class="fullname"><?php if ($col_order_by=="user") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_public.php?offset=0&col_order_by=user&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["owner"])?></a><?php if ($col_order_by=="user") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td><?php } ?>
-
 <td class="ref"><?php if ($col_order_by=="ref") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_public.php?offset=0&col_order_by=ref&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["id"])?></a><?php if ($col_order_by=="ref") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
 
 <td class="created"><?php if ($col_order_by=="created") {?><span class="Selected"><?php } ?><a href="<?php echo $baseurl_short?>pages/collection_public.php?offset=0&col_order_by=created&sort=<?php echo urlencode($revsort)?>&find=<?php echo urlencode($find)?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["created"])?></a><?php if ($col_order_by=="created") {?><div class="<?php echo urlencode($sort)?>">&nbsp;</div><?php } ?></td>
@@ -190,12 +188,6 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
             <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode("!collection" . $collections[$n]["ref"])?>" onClick="return CentralSpaceLoad(this,true);"><?php echo highlightkeywords(i18n_get_collection_name($collections[$n]),$find)?></a>
             </div>
         </td>
-        <?php 
-        if (!$collection_public_hide_owner) 
-            { ?>
-            <td class="fullname"><?php echo highlightkeywords(escape((string) $collections[$n]["fullname"]),$find)?></td>
-            <?php 
-            } ?>
         <td class="ref"><?php echo highlightkeywords($collections[$n]["ref"],$find)?></td>
         <td class="created"><?php echo nicedate($collections[$n]["created"],true)?></td>
         <td class="count"><?php echo $collections[$n]["count"]; ?></td>

@@ -311,7 +311,7 @@ if (getval("ajax","") == "")
             <div id="CollectionDiv" class="CollectBack AjaxCollect ui-layout-south"></div>
 
             <script type="text/javascript">
-            var collection_frame_height=<?php echo $collection_frame_height?>;
+            var collection_frame_height=<?php echo COLLECTION_FRAME_HEIGHT ?>;
             var thumbs="<?php echo escape($thumbs); ?>";                                  
             function ShowThumbs()
                 {

@@ -77,6 +77,9 @@ $email_from=""; # Where system e-mails appear to come from. Written to config.ph
 $email_notify=""; # Where resource/research/user requests are sent. Written to config.php by setup.php
 $email_notify_usergroups=array(); # Use of email_notify is deprecated as system notifications are now sent to the appropriate users based on permissions and user preferences. This variable can be set to an array of usergroup references and will take precedence.
 
+# Enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
+$email_from_user = false;
+
 # Scramble resource paths? If this is a public installation then this is a very wise idea.
 # Set the scramble key to be a hard-to-guess string (similar to a password).
 # To disable, set to the empty string ("").
@@ -341,6 +344,9 @@ $exif_date=12;
 # You may want to enable it on the usergroup level by overriding this config option in System Setup.
 $metadata_report=false;
 
+# Option to turn on metadata download in view.php.
+$metadata_download = false;
+
 # Use Exiftool to attempt to extract specified resolution and unit information from files (ex. Adobe files) upon upload.
 $exiftool_resolution_calc=false;
 
@@ -467,6 +473,18 @@ $photoshop_eps_miff=false;
 # Attempt to resolve a height and width of the ImageMagick file formats at view time
 # (enabling may cause a slowdown on viewing resources when large files are used)
 $imagemagick_calculate_sizes=false;
+
+# Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
+$imagemagick_mpr = false;
+
+# Set the depth to be passed to mpr command.
+$imagemagick_mpr_depth = "8";
+
+# Should colour profiles be preserved?
+$imagemagick_mpr_preserve_profiles = true;
+
+# If using imagemagick and mpr, specify any metadata profiles to be retained. Default setting good for ensuring copyright info is not stripped which may be required by law
+$imagemagick_mpr_preserve_metadata_profiles = array('iptc');
 
 # If using imagemagick for PDF, EPS and PS files, up to how many pages should be extracted for the previews?
 # If this is set to more than one the user will be able to page through the PDF file.
@@ -2044,13 +2062,6 @@ $use_phpmailer=false;
     // Optional path to tile cache directory. Defaults to ResourceSpace temp directory if not set
     # $geo_tile_cache_directory = '';    
 
-    // Array of southwest (SW) and northeast (NE) latitude/longitude bounds, defining spatial areas that will be excluded from map search results and that are defined by: SW latitude, SW longitude, NE latitude, NE longitude.
-    $geo_search_restrict = array(
-        # array(50,-3,54,3)      // Example omission zone 1.
-        # ,array(-10,-20,-8,-18) // Example omission zone 2.
-        # ,array(1,1,2,2)        // Example omission zone 3.
-    );
-
     // Map height in pixels on the Resource View page.
     $view_mapheight = 350;
 
@@ -2160,10 +2171,6 @@ $debug_extended_info = false;
 # $debug_log_location = "d:/logs/resourcespace.log";
 # $debug_log_location = "/var/log/resourcespace/resourcespace.log";
 
-# enable a list of collections that a resource belongs to, on the view page
-// Suppress SQL information in the debug log?
-$suppress_sql_log = false;
-
 # Enable Metadata Templates. This should be set to the ID of the resource type that you intend to use for metadata templates.
 # Metadata templates can be selected on the resource edit screen to pre-fill fields.
 # The intention is that you will create a new resource type named "Metadata Template" and enter its ID below.
@@ -2205,6 +2212,12 @@ $cc_me=false;
 
 # Allow listing of all recipients when sending resources or collection.
 $list_recipients=false;
+
+# Should *all* manually entered keywords (e.g. basic search and 'all fields' search on advanced search) be treated as wildcards?
+# E.g. "cat" will always match "catch", "catalogue", "category" with no need for an asterisk.
+# WARNING - this option could cause search performance issues due to the hugely expanded searches that will be performed.
+# It will also cause some other features to be disabled: related keywords and quoted string support
+$wildcard_always_applied = false;
 
 # How many keywords should be included in the search when a single keyword expands via a wildcard. 
 # Set to 0 to remove limit.
@@ -2259,6 +2272,9 @@ $icc_preview_profile = 'sRGB_IEC61966-2-1_black_scaled.icc';
 # additional options for profile conversion during preview generation
 $icc_preview_options = '-intent perceptual -black-point-compensation';
 
+# Embed the target preview profile?
+$icc_preview_profile_embed = false;
+
 # play videos/audio on hover instead of on click
 $video_search_play_hover=false; // search.php
 $video_view_play_hover=false; // view.php
@@ -2309,6 +2325,12 @@ $edit_autosave=true;
 
 # use_refine_searchstring can improve search string parsing. disabled by Dan due to an issue I was unable to replicate. (tom)  
 $use_refine_searchstring=false;
+
+# By default, keyword relationships are two-way 
+# (if "tiger" has a related keyword "cat", then a search for "cat" also includes "tiger" matches).
+# $keyword_relationships_one_way=true means that if "tiger" has a related keyword "cat",
+# then a search for "tiger" includes "tiger", but does not include "cat" matches.
+$keyword_relationships_one_way = false;
 
 $show_searchitemsdiskusage=true;
 
@@ -2422,6 +2444,9 @@ $resource_contact_link=false;
 
 # Hide Welcome Text
 $no_welcometext = false;
+
+# Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.
+$force_display_template_orderby = false;
 
 # Optional setting to override the default $email_notify address for resource request email notifications, applies to specified resource types
 # e.g. for photo (resource type 1 by default)

@@ -9,7 +9,7 @@ if (RUNNING_ASYNC)
         $_SERVER['HTTP_HOST'] = $_SERVER['argv'][8];
         }
 
-    require dirname(__FILE__)."/db.php";
+    require dirname(__FILE__)."/boot.php";
     
     if (empty($_SERVER['argv'][1]) || $scramble_key!==$_SERVER['argv'][1]) {exit("Incorrect scramble_key");}
     

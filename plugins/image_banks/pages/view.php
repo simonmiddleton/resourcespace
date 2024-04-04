@@ -9,7 +9,7 @@ use function ImageBanks\render_provider_search_result_link;
 use function ImageBanks\render_view_metadata_item_narrow;
 
 $rs_root = dirname(__DIR__, 3);
-include_once "{$rs_root}/include/db.php";
+include_once "{$rs_root}/include/boot.php";
 include_once "{$rs_root}/include/authenticate.php";
 
 /** @var string Remote Provider ID */

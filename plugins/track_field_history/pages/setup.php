@@ -3,7 +3,7 @@
 # Setup page for track_field_history plugin
 
 # Do the include and authorization checking ritual.
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
 # Specify the name of this plugin, the heading to display for the page.

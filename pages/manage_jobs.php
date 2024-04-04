@@ -1,5 +1,5 @@
 <?php
-include '../include/db.php';
+include '../include/boot.php';
 include '../include/authenticate.php';
 
 $job_user    = getval("job_user",0,true);

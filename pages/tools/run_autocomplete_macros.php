@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 
 // Allow access from UI only if authenticated and admin
 if (PHP_SAPI != 'cli')

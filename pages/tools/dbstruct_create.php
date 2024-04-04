@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 # Specify whether you want to have table_* and index_* files created

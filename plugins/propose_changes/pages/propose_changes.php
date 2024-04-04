@@ -2,7 +2,7 @@
 
 use SimpleSAML\Console\Application;
 
-include_once __DIR__ . '/../../../include/db.php';
+include_once __DIR__ . '/../../../include/boot.php';
 include __DIR__ . '/../../../include/authenticate.php';
 include_once __DIR__ . '/../include/propose_changes_functions.php';
 
@@ -425,7 +425,6 @@ if(!$editaccess)
         node_field_options_override($proposefields[$n]);
         if (
             $proposefields[$n]["active"] == 1 &&
-            $proposefields[$n]["display_field"] == 1 &&
             ($proposefields[$n]["global"]==1 || in_array($resource["resource_type"],$fieldrestypes[$proposefields[$n]["ref"]])) &&
             metadata_field_view_access($proposefields[$n]["ref"])
             )
@@ -480,7 +479,6 @@ if(!$editaccess)
         # Should this field be displayed?
         if ((isset($proposefields[$n]["display"]) && $proposefields[$n]["display"]==true) ||
             ($proposefields[$n]["active"] == 1 &&
-            $proposefields[$n]["display_field"] == 1 &&
             ($proposefields[$n]["global"]==1 || in_array($resource["resource_type"],$fieldrestypes[$proposefields[$n]["ref"]])) &&
             metadata_field_view_access($proposefields[$n]["ref"])
             )

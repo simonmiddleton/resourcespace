@@ -1,5 +1,5 @@
 <?php
-include_once "../include/db.php";
+include_once "../include/boot.php";
 
 $k = trim(getval("k", ""));
 $parent = (int) getval("parent", $featured_collections_root_collection, true);

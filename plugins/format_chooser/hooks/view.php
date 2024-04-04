@@ -21,7 +21,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
     $inputFormat = $resource['file_extension'];
     $origpath = get_resource_path($ref,true,'',false,$resource['file_extension']);
 
-    if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE
+    if ((int) $resource["has_image"] === RESOURCE_PREVIEWS_NONE
         || !$download_multisize
         || $save_as
         || !supportsInputFormat($inputFormat)
@@ -258,7 +258,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
                     }   
 
                 jQuery("a#convertDownload").attr("href", "#");
-                jQuery("a#convertDownload").attr("onclick", "directDownload('" + basePage + "')");
+                jQuery("a#convertDownload").attr("onclick", "directDownload('" + basePage + "', this)");
 
                 return;
             }

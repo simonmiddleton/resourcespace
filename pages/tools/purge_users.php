@@ -10,7 +10,7 @@ if(PHP_SAPI != 'cli')
     exit('Access denied - Command line only!');
     }
 
-include __DIR__ . '/../../include/db.php';
+include __DIR__ . '/../../include/boot.php';
 
 // Separate output of this script from any initialisation messages
 echo PHP_EOL;

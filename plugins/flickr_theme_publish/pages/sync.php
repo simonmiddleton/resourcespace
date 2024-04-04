@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "../../../include/db.php";
+include "../../../include/boot.php";
 
 include "../../../include/authenticate.php";
 include "../inc/flickr_functions.php";

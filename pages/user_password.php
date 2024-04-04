@@ -1,18 +1,11 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 
 if (!$allow_password_reset) {exit("Password requests have been disabled.");} # User should never see this.
 
 if (getval("save","")!="" && enforcePostRequest(false))
     {
-    if (email_reset_link(getval("email","")) || $hide_failed_reset_text)
-        {
-        redirect("pages/done.php?text=user_password_link_sent");
-        }
-    else
-        {
-        $error=true;
-        }
+    redirect("pages/done.php?text=user_password_link_sent");
     }
 include "../include/header.php";
 
@@ -28,7 +21,7 @@ include "../include/login_background.php";
     <div class="Question">
     <label for="email"><?php echo escape($lang["youremailaddress"]); ?></label>
     <input type=text name="email" id="email" class="stdwidth" value="<?php echo escape(getval("email",""))?>">
-    <?php if (isset($error) && !$hide_failed_reset_text) { ?><div class="FormError">!! <?php echo escape($lang["emailnotfound"]); ?> !!</div><?php hook("userpasswdextramsg"); ?><?php } ?>
+
     <div class="clearerleft"> </div>
     </div>
     

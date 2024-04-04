@@ -103,7 +103,7 @@ if (array_key_exists("user",$_COOKIE) || array_key_exists("user",$_GET) || isset
                     if (isset($anonymous_login))
                         {
                         # If the system is set up with anonymous access, redirect to the home page after logging out.
-                        redirect("pages/" . $default_home_page);
+                        redirect("pages/home.php");
                         }
                     else
                         {
@@ -248,7 +248,7 @@ Note: it is considered safe to show the collection bar because even if we enable
 */
 if($terms_login && 0 == $useracceptedterms && in_array($pagename, array("reload_links","browsebar_js","css_override","category_tree_lazy_load","message","terms","collections","login","user_change_password")) === false )
     {
-    redirect('pages/terms.php?noredir=true&url=' . urlencode("pages/{$default_home_page}"));
+    redirect('pages/terms.php?noredir=true&url=' . urlencode("pages/home.php"));
     }
 
 if (isset($_SERVER["HTTP_USER_AGENT"]))
@@ -358,7 +358,7 @@ hook('handleuserref','',array($userref));
 $trace_id_components = [
     getmypid(),
     $_SERVER['REQUEST_TIME_FLOAT'],
-    $GLOBALS['pagename'], # already set in db.php
+    $GLOBALS['pagename'], # already set in boot.php
     http_build_query($_GET),
     $GLOBALS['userref'],
 ];

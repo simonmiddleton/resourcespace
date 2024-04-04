@@ -879,3 +879,19 @@ $language_normalize_mapping =[
     "fr" => Normalizer::NFD,
     "sv" => Normalizer::NFC,
 ];
+
+const API_ISSUE_VALID_DESTINATIONS = [
+    "linkrui" => [
+        "name" => "LinkrUI",
+        "url" => "https://resourcespace.linkrui.com/saml",
+        "stateparam" => "state",
+    ],
+];
+
+// Stream wrappers not needed by ResourceSpace, to unregister during boot.php to improve security. 
+const UNREGISTER_WRAPPERS = ['ftp','ftps', 'phar'];
+
+const COLLECTION_FRAME_HEIGHT=153;
+
+// Default lifetime in days of a temporary download file created by the job queue. After this time it will be deleted by another job
+const DOWNLOAD_FILE_LIFETIME=14;

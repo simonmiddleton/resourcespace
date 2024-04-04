@@ -5,7 +5,7 @@
 # It's been included in case users have a large amount of locally translated content in site_text that needs to be pulled out in to language files.
 # ~Dan Huby, Montla Limited, Feb 2015.
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 

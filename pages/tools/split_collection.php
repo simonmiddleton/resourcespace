@@ -2,7 +2,7 @@
 
 # Split a collection into multiple collections
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 

@@ -303,13 +303,33 @@ if ( (($extension=="pages") || ($extension=="numbers") || (!isset($unoconv_path)
 global $unoconv_extensions;
 if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoconv_path) && !isset($newfile))
     {
-    $unocommand = get_utility_path('unoconv');
+    $unocommand = get_utility_path('unoconvert');
+    $unoconvert=true;
     if(!$unocommand)
         {
-        exit("Unoconv executable not found");
+        $unocommand = get_utility_path('unoconv');
+        $unoconvert=false; // Legacy mode for unoconv
+        }
+    if(!$unocommand)
+        {
+        exit("unoconv/unoconvert executable not found");
         }
 
-    $output = run_command("{$unocommand} " . ($debug_log || $debug_log_override ? '-v' : '') . " --format=pdf %file", false, ['%file' => $file]);
+    $path_parts=pathinfo($file);
+    $basename_minus_extension=remove_extension($path_parts['basename']);
+    $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
+    
+    if ($unoconvert)
+        {
+        // Use newer unoconvert utility (note - does not have a verbose mode)
+        $output = run_command("{$unocommand} %file %pdffile", false, ['%file' => $file,'%pdffile' => $pdffile]);
+        }
+    else    
+        {
+        // Legacy support for unoconv
+        $output = run_command("{$unocommand} " . ($debug_log || $debug_log_override ? '-v' : '') . " --format=pdf %file", false, ['%file' => $file]);
+        }
+
     debug('Preview_preprocessing : ' . $output);
 
     # Check for extracted text - if found, it has already been extracted from the uploaded file so don't replace it with the text from this pdf.
@@ -325,9 +345,6 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
             }
         }
 
-    $path_parts=pathinfo($file);
-    $basename_minus_extension=remove_extension($path_parts['basename']);
-    $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
 
     $no_alt_condition = (
         $GLOBALS['non_image_types_generate_preview_only']

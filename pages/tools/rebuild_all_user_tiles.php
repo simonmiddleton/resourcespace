@@ -5,7 +5,7 @@
  * This WILL NOT delete existing user only tiles
  */
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 include "../../include/dash_functions.php";

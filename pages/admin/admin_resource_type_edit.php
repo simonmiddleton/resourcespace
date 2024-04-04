@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php"; 
 include "../../lib/fontawesome/resourcespace/icon_classes.php";

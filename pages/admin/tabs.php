@@ -1,5 +1,5 @@
 <?php
-include '../../include/db.php';
+include '../../include/boot.php';
 include '../../include/authenticate.php';
 if(!acl_can_manage_tabs()) { exit($lang['error-permissiondenied']); }
 

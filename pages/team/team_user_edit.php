@@ -5,7 +5,7 @@
  * @package ResourceSpace
  * @subpackage Pages_Team
  */
-include "../../include/db.php";
+include "../../include/boot.php";
 include "../../include/authenticate.php"; 
 include "../../include/api_functions.php"; 
 
@@ -88,7 +88,7 @@ if (!checkperm_user_edit($user))
     exit();
     }
 
-// Block this from running if we are logging in as a user because running this here will block db.php from setting headers
+// Block this from running if we are logging in as a user because running this here will block boot.php from setting headers
 if(getval('loginas', '') === '')
     {
     include "../../include/header.php";

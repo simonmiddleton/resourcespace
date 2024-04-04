@@ -1,6 +1,6 @@
 <?php
 
-include "include/db.php";
+include "include/boot.php";
 debug("[index.php] Reached index page...");
 
 if (getval("rp", "") != "") {
@@ -17,7 +17,7 @@ if ('' == $k || (!check_access_key_collection(getval('c', ''), $k) && !check_acc
     include 'include/authenticate.php';
 }
 
-$topurl = "pages/" . $default_home_page . "?login=true";
+$topurl = "pages/home.php?login=true";
 if ($use_theme_as_home) {
     $topurl = "pages/collections_featured.php";
 }

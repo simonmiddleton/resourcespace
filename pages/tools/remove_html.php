@@ -6,7 +6,7 @@ if('cli' != PHP_SAPI)
     }
 
 $webroot = dirname(__DIR__, 2);
-include_once "{$webroot}/include/db.php";
+include_once "{$webroot}/include/boot.php";
 
 
 

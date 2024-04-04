@@ -1,6 +1,6 @@
 <?php
 
-include "../../../include/db.php";
+include "../../../include/boot.php";
 
 include "../inc/flickr_functions.php";
 

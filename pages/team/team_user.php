@@ -5,7 +5,7 @@
  * @Package ResourceSpace
  * @Subpackage Pages_Team
  */
-include "../../include/db.php";
+include "../../include/boot.php";
 include "../../include/authenticate.php";if (!checkperm("u")) {exit ("Permission denied.");}
 
 $offset=getval("offset",0,true);

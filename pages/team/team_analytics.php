@@ -2,7 +2,7 @@
 #
 # ResourceSpace Analytics - list my reports
 #
-include '../../include/db.php';
+include '../../include/boot.php';
 include '../../include/authenticate.php';
 
 global $baseurl;

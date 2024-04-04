@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 
 if ((getval("user","")!="" || isset($anonymous_login) || hook('provideusercredentials')) && getval("k","")=="")
     {
@@ -52,7 +52,7 @@ include "../include/header.php";
         if ($k=="")
             {?>
             <p><a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>&amp;restypes=<?php echo urlencode($restypes); ?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["continuetoresults"]); ?></a></p>
-            <p><a href="<?php echo $use_theme_as_home ? $baseurl_short.'pages/collections_featured.php' : $default_home_page?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["continuetohome"]); ?></a></p>
+            <p><a href="<?php echo $use_theme_as_home ? $baseurl_short.'pages/collections_featured.php' : 'home.php'?>" onclick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET ?><?php echo escape($lang["continuetohome"]); ?></a></p>
             <?php
             }
         elseif($k!="" && upload_share_active())

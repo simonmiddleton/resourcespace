@@ -17,8 +17,7 @@ include_once dirname(__FILE__)."/../../../include/definitions.php";
  */
 function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set_options,$max_error_count=100,$processcsv=false)
     {
-    global $DATE_FIELD_TYPES, $FIXED_LIST_FIELD_TYPES, $userref,$username, $category_tree_add_parents,
-    $mysql_verbatim_queries, $lang, $search_all_workflow_states;
+    global $DATE_FIELD_TYPES, $FIXED_LIST_FIELD_TYPES, $userref,$username, $category_tree_add_parents, $lang, $search_all_workflow_states;
     
     // Ensure that the searchs are across all states
     $search_all_workflow_states_cache = $search_all_workflow_states;
@@ -552,15 +551,6 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     continue;
                 }
             
-            // Extra check to replace backslashes with forward slashes
-            // This is required because file paths are often used as resource identifier but back slashes
-            // cannot be stored in resource_data by default
-
-            if(!$mysql_verbatim_queries && mb_strpos($cell_value,"\\") !== false)
-                {
-                $cell_value = str_replace("\\","/",$cell_value);
-                }
-
             // Check for multiple options
             // cell value may be a series of values, but not for radio or drop down types
             if(in_array($field_type, array_diff($FIXED_LIST_FIELD_TYPES, [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS])))

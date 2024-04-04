@@ -5,7 +5,7 @@
 # if embedded data is present.
 # Collection or resource type can be be passed in to filter the resources that are processed.
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include_once "../../include/image_processing.php";
 $sapi_type = php_sapi_name();

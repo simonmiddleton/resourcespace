@@ -1116,10 +1116,9 @@ h2.CollapsibleSectionHead, h1.CollapsibleSectionHead
     margin-right: 5px;
     }
     
-.contactadminbutton  {
-    float:right;
+input.contactadminbutton  {
     margin-bottom: 10px;    
-    margin-left: 10px;
+    margin-right: 10px;
     width: 150px;
     }
 

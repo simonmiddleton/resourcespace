@@ -10,7 +10,7 @@ $job_data["$search_results"] - (array) Result set returned by do_search()*/
 
 include_once __DIR__ . '/../csv_export_functions.php';
 
-global $lang, $baseurl_short, $offline_job_delete_completed, $scramble_key, $download_file_lifetime, $userref, $username;
+global $lang, $baseurl_short, $offline_job_delete_completed, $scramble_key, $userref, $username;
 
 foreach($job_data as $arg => $value)
     {
@@ -55,6 +55,6 @@ message_add($job["user"], $job_success_text, $csvurl);
 
 $delete_job_data=array();
 $delete_job_data["file"]=$csvfile;
-$delete_date = date('Y-m-d H:i:s',time()+(60*60*24*(int)$download_file_lifetime)); // Delete file after set number of days
+$delete_date = date('Y-m-d H:i:s',time()+(60*60*24*DOWNLOAD_FILE_LIFETIME)); // Delete file after set number of days
 $job_code=md5($csvfile);
 job_queue_add("delete_file",$delete_job_data,"",$delete_date,"","",$job_code);

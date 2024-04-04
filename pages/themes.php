@@ -1,5 +1,5 @@
 <?php
-include_once "../include/db.php";
+include_once "../include/boot.php";
 include "../include/authenticate.php";
 
 $smart_theme = getval("smart_theme", 0, true);

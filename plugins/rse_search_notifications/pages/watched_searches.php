@@ -2,7 +2,7 @@
 
 DEFINE('WATCHED_SEARCHES_ITEMS_PER_PAGE',10);
 
-include_once "../../../include/db.php";
+include_once "../../../include/boot.php";
 include_once "../../../include/authenticate.php";
 include_once "../../../include/search_do.php";
 include_once "../include/search_notifications_functions.php";
@@ -11,7 +11,7 @@ $plugin_name            = "rse_search_notifications";
 $plugin_active          = in_array($plugin_name, $plugins); // is the plugin active?
 if (!$plugin_active)
     {
-    redirect("pages/".$default_home_page);
+    redirect("pages/home.php");
     }
 
 $all_users_mode=getval("allusers",0)==1 && checkperm("a");

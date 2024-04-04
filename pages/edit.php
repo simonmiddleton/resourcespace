@@ -1,5 +1,5 @@
 <?php
-include_once "../include/db.php";
+include_once "../include/boot.php";
 
 // External share support
 $k = getval('k','');
@@ -2165,13 +2165,12 @@ else
               {
                  ?>
                  <table id="custom_access" cellpadding=3 cellspacing=3 style="padding-left:150px;<?php if ($resource["access"]!=3) { ?>display:none;<?php } ?>"><?php
-                 global $default_customaccess;
                  $customaccesssource = ($upload_review_mode && in_array("access",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
                  $groups=get_resource_custom_access($customaccesssource);
                  $groups_count = count($groups);
                  for ($n=0;$n<$groups_count;$n++)
                  {
-                   $access=$default_customaccess;
+                   $access=RESOURCE_ACCESS_CONFIDENTIAL;
                    $editable= (!$ea3)?false:true;
 
                    if (isset($submitted_access_groups) && $submitted_access_groups[$groups[$n]['ref']] !== "" )

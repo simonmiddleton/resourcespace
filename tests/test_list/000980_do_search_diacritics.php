@@ -16,7 +16,6 @@ debug("Resource C: " . $resourcec);
 debug("Resource D: " . $resourced);
 debug("Resource E: " . $resourcee);
 
-$normalize_keywords=true;
 $keywords_remove_diacritics=true;
 $unnormalized_index=false;
 

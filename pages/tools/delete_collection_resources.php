@@ -2,7 +2,7 @@
 
 # Delete all resources in a collection
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 command_line_only();
 

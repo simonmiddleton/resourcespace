@@ -1,7 +1,7 @@
 <?php
 # Feeder page for AJAX search auto-completion.
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php";
 

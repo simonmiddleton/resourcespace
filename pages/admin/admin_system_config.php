@@ -1,5 +1,5 @@
 <?php
-include '../../include/db.php';
+include '../../include/boot.php';
 include '../../include/authenticate.php'; if(!checkperm('a')) { exit('Permission denied.'); }
 include_once '../../include/config_functions.php';
 include_once '../../include/ajax_functions.php';
@@ -273,10 +273,6 @@ $page_def[] = config_add_html('</div>');
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['searchcapability'] . '</h3><div id="SystemConfigSearchSection" class="CollapsibleSection">');
 
 $sort_order_fields = array('relevance' => $lang['relevance']);
-if($random_sort)
-    {
-    $sort_order_fields['random'] = $lang['random'];
-    }
 
 if($popularity_sort)
     {
@@ -303,10 +299,7 @@ if($order_by_resource_id)
     $sort_order_fields['resourceid'] = $lang['resourceid'];
     }
 
-if($order_by_resource_type)
-    {
-    $sort_order_fields['resourcetype'] = $lang['type'];
-    }
+$sort_order_fields['resourcetype'] = $lang['type'];
 
 foreach ($sort_fields as $field) {
     $sort_order_fields["field$field"] = get_resource_type_field($field)["title"];
@@ -337,10 +330,7 @@ if($xlthumbs || $GLOBALS['default_display'] == 'xlthumbs')
     {
     $default_display_array['xlthumbs'] = $lang['xlthumbstitle'];
     }
-if($searchlist || $GLOBALS['default_display'] == 'list')
-    {
-    $default_display_array['list'] = $lang['listtitle'];
-    }
+$default_display_array['list'] = $lang['listtitle'];
 $default_display_array['strip']  = $lang['striptitle'];
 
 $page_def[] = config_add_single_select('default_perpage', $lang['userpreference_default_perpage_label'], $results_display_array, false, 420, '', true);

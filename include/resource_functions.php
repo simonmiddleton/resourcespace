@@ -522,7 +522,7 @@ function put_resource_data($resource,$data)
     $safe_column_types=array("i","s","d","i","i","i","d","s","s","s");
 
     // Permit the created by column to be changed also
-    if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";}
+    if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";$safe_column_types[]='i';}
 
     $sql="";$params=array();
     foreach ($data as $column=>$value)
@@ -639,8 +639,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
     debug_function_call("save_resource_data", func_get_args());
     # Save all submitted data for resource $ref.
     # Also re-index all keywords from indexable fields.
-    global $lang, $multilingual_text_fields,
-           $languages, $language, $FIXED_LIST_FIELD_TYPES,
+    global $lang, $languages, $language, $FIXED_LIST_FIELD_TYPES,
            $DATE_FIELD_TYPES, $reset_date_field, $reset_date_upload_template,
            $edit_contributed_by, $new_checksums, $upload_review_mode, $blank_edit_template, $is_template, $NODE_FIELDS,
            $userref, $userresourcedefaults;
@@ -976,40 +975,6 @@ function save_resource_data($ref,$multi,$autosave_field="")
                         }
 
                     $new_checksums[$fields[$n]['ref']] = md5($val);
-                    $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
-                    }
-                elseif (
-                    $multilingual_text_fields
-                    && (
-                        $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_SINGLE_LINE
-                        || $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_MULTI_LINE
-                        || $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE
-                        )
-                        )
-                    {
-                    # Construct a multilingual string from the submitted translations
-                    $val = getval("field_" . $fields[$n]["ref"],"");
-                    $rawval = $val;
-                    $val="~" . $language . ":" . $val;
-                    reset ($languages);
-                    foreach ($languages as $langkey => $langname)
-                        {
-                        if ($language!=$langkey)
-                            {
-                            $val.="~" . $langkey . ":" . getval("multilingual_" . $n . "_" . $langkey,"");
-                            }
-                        }
-
-                    // Check if resource field data has been changed between form being loaded and submitted
-                    $post_cs = getval("field_" . $fields[$n]['ref'] . "_checksum","");
-                    $current_cs = md5(trim(preg_replace('/\s\s+/', ' ', $fields[$n]['value'])));
-                    if($check_edit_checksums && $post_cs != "" && $post_cs != $current_cs)
-                        {
-                        $errors[$fields[$n]["ref"]] = i18n_get_translated($fields[$n]['title']) . ': ' . $lang["save-conflict-error"];
-                        continue;
-                        }
-
-                    $new_checksums[$fields[$n]['ref']] = md5(trim(preg_replace('/\s\s+/', ' ', $rawval)));
                     $updated_resources[$ref][$fields[$n]['ref']][] = $val; // To pass to hook
                     }
                 else
@@ -1459,7 +1424,7 @@ function set_resource_defaults($ref, array $specific_fields = array())
  */
 function save_resource_data_multi($collection,$editsearch = array(), $postvals = [])
     {
-    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $multilingual_text_fields, $languages, $language, $baseurl;
+    global $FIXED_LIST_FIELD_TYPES,$DATE_FIELD_TYPES, $edit_contributed_by, $TEXT_FIELD_TYPES, $userref, $lang, $languages, $language, $baseurl;
 
     # Save all submitted data for collection $collection or a search result set, this is for the 'edit multiple resources' feature
     if(empty($postvals))
@@ -1968,27 +1933,6 @@ function save_resource_data_multi($collection,$editsearch = array(), $postvals =
                 {
                 # date/expiry date type, construct the value from the date dropdowns
                 $val=sanitize_date_field_input($fields[$n]["ref"], false);
-                }
-            elseif (
-                    $multilingual_text_fields
-                && (
-                    $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_SINGLE_LINE
-                    || $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_MULTI_LINE
-                    || $fields[$n]["type"]==FIELD_TYPE_TEXT_BOX_LARGE_MULTI_LINE
-                    )
-                )
-                {
-                # Construct a multilingual string from the submitted translations
-                $val = $postvals["field_" . $fields[$n]["ref"]] ?? "";
-                $val="~" . $language . ":" . $val;
-                reset ($languages);
-                foreach ($languages as $langkey => $langname)
-                    {
-                    if ($language!=$langkey)
-                        {
-                        $val.="~" . $langkey . ":" . (string)($postvals["multilingual_" . $n . "_" . $langkey] ?? "");
-                        }
-                    }
                 }
             else
                 {
@@ -3296,7 +3240,7 @@ function delete_resource($ref)
 */
 function get_resource_type_field($field)
     {
-    $rtf_query="SELECT " . columns_in("resource_type_field","rtf") . ", GROUP_CONCAT(rtfrt.resource_type) resource_types FROM resource_type_field rtf LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field=rtf.ref WHERE rtf.ref = ?";
+    $rtf_query="SELECT " . columns_in("resource_type_field","rtf") . ", GROUP_CONCAT(rtfrt.resource_type) resource_types FROM resource_type_field rtf LEFT JOIN resource_type_field_resource_type rtfrt ON rtfrt.resource_type_field=rtf.ref WHERE rtf.ref = ? GROUP BY rtf.ref";
     $return = ps_query($rtf_query, array("i",$field), "schema");
 
     if(0 == count($return))
@@ -4350,14 +4294,14 @@ function save_resource_custom_access($resource)
  *
  * @param  int     $resource         Resource ID.
  * @param  int     $usergroup        User group ID.
- * @param  bool    $return_default   Return default custom access value from config. $default_customaccess.
+ * @param  bool    $return_default   Return default custom access value RESOURCE_ACCESS_CONFIDENTIAL
  * 
  * @return mixed   False if custom access is disabled or there is no custom access value set for this resource.
  *                 Int representing custom access level if set; 0 - open, 1 - restricted, 2 - confidential.
  */
 function get_custom_access($resource, $usergroup, $return_default = true)
     {
-    global $custom_access, $default_customaccess;
+    global $custom_access;
 
     if ($custom_access == false) {return false;}
 
@@ -4365,7 +4309,7 @@ function get_custom_access($resource, $usergroup, $return_default = true)
 
     if ($result === '' && $return_default)
         {
-        return $default_customaccess;
+        return RESOURCE_ACCESS_CONFIDENTIAL;
         }
     elseif ($result === '')
         {

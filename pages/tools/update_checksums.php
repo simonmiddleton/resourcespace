@@ -8,7 +8,7 @@
 # If you would like to recreate all checksums (useful after adjusting $file_checksums_50k) you can pass "recreate=true"
 #
 $cwd = dirname(__FILE__);
-include "$cwd/../../include/db.php";
+include "$cwd/../../include/boot.php";
 
 include_once "$cwd/../../include/image_processing.php";
 

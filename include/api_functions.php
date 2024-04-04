@@ -82,16 +82,13 @@ function execute_api_call($query,$pretty=false)
 
     global $lang;
 
+    // Check if this is a whitelisted function for browser use (native mode bypasses $enable_remote_apis=false;)
     if (
         defined("API_AUTHMODE_NATIVE")
-        && !in_array($function,API_NATIVE_WHITELIST)
-        ) {
-        // Check if this is a whitelisted function for browser use (native mode bypasses $enable_remote_apis=false;)
-        if(!in_array($function,API_NATIVE_WHITELIST))
-            {
-            ajax_unauthorized();
-            }
-        }
+        && !in_array($function, API_NATIVE_WHITELIST)
+    ) {
+        ajax_unauthorized();
+    }
 
     // Construct an array of the real params, setting default values as necessary
     $setparams = [];

@@ -1,5 +1,5 @@
 <?php
-include '../include/db.php';
+include '../include/boot.php';
 include '../include/authenticate.php';
 
 $share_user    = getval("share_user",0,true);

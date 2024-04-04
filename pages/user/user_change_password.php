@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 include_once dirname(__DIR__, 2) . '/include/login_functions.php';
 
 $password_reset_mode=false;
@@ -95,7 +95,7 @@ if(getval("save", "") != "" && enforcePostRequest(false))
                     redirect($baseurl_short."pages/done.php?text=password_changed&notloggedin=true");
                     exit();
                     }
-                redirect($baseurl_short."pages/" . ($use_theme_as_home?'collections_featured.php':$default_home_page));
+                redirect($baseurl_short."pages/" . ($use_theme_as_home?'collections_featured.php':"home.php"));
                 exit();
                 }
             else

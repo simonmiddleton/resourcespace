@@ -1,6 +1,6 @@
 <?php
 $webroot = dirname(__DIR__, 2);
-include_once "{$webroot}/include/db.php";
+include_once "{$webroot}/include/boot.php";
 include_once "{$webroot}/include/log_functions.php";
 command_line_only();
 set_time_limit(0);

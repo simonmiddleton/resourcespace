@@ -8,7 +8,7 @@ use function ImageBanks\providersCheckedAndActive;
 use function ImageBanks\render_provider_search_result_link;
 
 $rs_root = dirname(__DIR__, 3);
-include_once "{$rs_root}/include/db.php";
+include_once "{$rs_root}/include/boot.php";
 include_once "{$rs_root}/include/authenticate.php";
 
 $search = getval("search", "");

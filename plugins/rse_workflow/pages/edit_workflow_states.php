@@ -2,7 +2,7 @@
 #
 # rse_workflow edit workflow states page, requires System Setup permission
 #
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include_once '../include/rse_workflow_functions.php';
 

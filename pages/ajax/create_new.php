@@ -1,7 +1,7 @@
 <?php
 // Generic modal page to create new resource types or metadata fields
 
-include_once __DIR__ . "/../../include/db.php";
+include_once __DIR__ . "/../../include/boot.php";
 
 include_once __DIR__ . "/../../include/authenticate.php";
 

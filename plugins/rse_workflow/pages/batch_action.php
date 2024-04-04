@@ -1,5 +1,5 @@
 <?php
-include_once '../../../include/db.php';
+include_once '../../../include/boot.php';
 include_once '../../../include/authenticate.php';
 include_once '../../../include/ajax_functions.php';
 include_once '../include/rse_workflow_functions.php';

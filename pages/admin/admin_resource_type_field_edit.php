@@ -6,7 +6,7 @@
  * @subpackage Pages_Team
  */
 
-include "../../include/db.php";
+include "../../include/boot.php";
 include "../../include/authenticate.php"; 
 if (!checkperm("a"))
     {
@@ -232,7 +232,7 @@ else
                 <div class="CollapsibleSection" id="admin_hidden_field_properties" >     
                 <?php
                 }
-            admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],$fielddata["type"],$system_date_field);
+            admin_resource_type_field_option($column,$column_detail[0],$column_detail[1],$column_detail[2],$fielddata[$column],(int)$fielddata["type"],$system_date_field);
             }
         }
     ?>

@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 include_once "../../include/authenticate.php";
 if(!checkperm("a")){exit("Access denied");}
 

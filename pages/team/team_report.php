@@ -5,7 +5,7 @@
  * @package ResourceSpace
  * @subpackage Pages_Team
  */
-include "../../include/db.php";
+include "../../include/boot.php";
 
 // Unsubscribe bypasses t permission so anon access needs to be disabled to ensure user logs in
 unset($anonymous_login); 

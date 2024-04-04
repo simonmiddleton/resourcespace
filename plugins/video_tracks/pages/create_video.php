@@ -1,5 +1,5 @@
 <?php
-include_once '../../../include/db.php';
+include_once '../../../include/boot.php';
 include_once '../../../include/resource_functions.php';
 include_once '../../../include/authenticate.php';
 include_once '../../../include/image_processing.php';
@@ -183,7 +183,7 @@ if($generate && enforcePostRequest(false))
                 $job_data["command"]=$shell_exec_cmd;
                 $job_data["outputfile"]=$targetfile;
                 $job_data["url"]=$baseurl_short . "pages/download.php?userfile=" . $ref . "_" . $randstring . "." . $video_track_command["extension"];
-                $job_data["lifetime"]=$download_file_lifetime;
+                $job_data["lifetime"]=DOWNLOAD_FILE_LIFETIME;
                 $job_code=$ref . $userref . md5($job_data["command"]); // unique code for this job, used to prevent duplicate job creation
                 $jobadded=job_queue_add("create_download_file",$job_data,$userref,'',$job_success_lang,$job_failure_lang,$job_code);
                 if(!is_int_loose($jobadded))

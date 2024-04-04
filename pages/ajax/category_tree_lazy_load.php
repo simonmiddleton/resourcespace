@@ -1,5 +1,5 @@
 <?php
-include '../../include/db.php';
+include '../../include/boot.php';
 
 $k = getval('k','');
 $upload_collection = getval('upload_share_active',''); 

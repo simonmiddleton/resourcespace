@@ -1,5 +1,5 @@
 <?php
-include dirname(__FILE__) . '/../../../include/db.php';
+include dirname(__FILE__) . '/../../../include/boot.php';
 
 $k = getval('k','');
 $upload_collection = upload_share_active();

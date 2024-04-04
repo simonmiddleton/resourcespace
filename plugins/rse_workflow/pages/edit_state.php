@@ -3,7 +3,7 @@
 # rse_workflow edit archive/workflow states page, requires System Setup permission
 #
 
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 unset($additional_archive_states);$additional_archive_states=array();
 include_once '../include/rse_workflow_functions.php';

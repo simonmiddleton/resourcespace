@@ -1,6 +1,6 @@
 <?php
 $museumplus_rs_root = dirname(__FILE__, 4);
-include "$museumplus_rs_root/include/db.php";
+include "$museumplus_rs_root/include/boot.php";
 include "$museumplus_rs_root/include/authenticate.php";
 if(!checkperm('t'))
     {

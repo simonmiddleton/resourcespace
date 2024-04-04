@@ -131,7 +131,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
     #
     # This is used to take the advanced search form and assemble it into a search query.
     
-    global $auto_order_checkbox,$checkbox_and,$dynamic_keyword_and,$resource_field_verbatim_keyword_regex;
+    global $auto_order_checkbox,$checkbox_and,$resource_field_verbatim_keyword_regex;
     $search="";
     if (getval("basicyear","")!="")
         {
@@ -442,8 +442,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
         ##### NODES #####
         // Fixed lists will be handled separately as we don't care about the field
-        // they belong to (except when $checkbox_and and $dynamic_keyword_and)
-        // we know exactly what we are searching for.
+        // they belong to 
         $node_ref = '';
 
         foreach(getval('nodes_searched', array()) as $searchedfield => $searched_field_nodes)
@@ -466,7 +465,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
 
             foreach($searched_field_nodes as $searched_node_ref)
                 {
-                if(($fieldinfo["type"] == FIELD_TYPE_CHECK_BOX_LIST && $checkbox_and) || ($fieldinfo["type"] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && $dynamic_keyword_and))
+                if($fieldinfo["type"] == FIELD_TYPE_CHECK_BOX_LIST && $checkbox_and)
                     {
                     // Split into an additional search element to force a join since this is a separate condition
                     $node_ref .= ', ';
@@ -509,7 +508,7 @@ function refine_searchstring($search)
     # This function solves several issues related to searching.
     # it eliminates duplicate terms, helps the field content to carry values over into advanced search correctly, fixes a searchbar bug where separators (such as in a pasted filename) cause an initial search to fail, separates terms for searchcrumbs.
     
-    global $use_refine_searchstring, $dynamic_keyword_and;
+    global $use_refine_searchstring;
     
     if (!$use_refine_searchstring){return $search;}
     
@@ -545,7 +544,7 @@ function refine_searchstring($search)
             if (substr($keyname,0,1)!="!")
                 {
                 if(substr($keywordar[1],0,5)=="range"){$keywordar[1]=str_replace(" ","-",$keywordar[1]);}
-                if (!in_array($keyname,$orfields) && (!$dynamic_keyword_and || ($dynamic_keyword_and && !in_array($keyname, $dynamic_keyword_fields))))
+                if (!in_array($keyname,$orfields))
                     {
                     $keyvalues=explode(" ",str_replace($keywordar[0].":","",$keywordar[1]));
                     }
@@ -787,7 +786,7 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
     debug_function_call("search_filter", func_get_args());
 
     global $userref,$userpermissions,$resource_created_by_filter,$uploader_view_override,$edit_access_for_contributor,$additional_archive_states,$heightmin,
-    $geo_search_restrict,$search_all_workflow_states,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
+    $search_all_workflow_states,$collections_omit_archived,$k,$collection_allow_not_approved_share,$archive_standard;
     
     if (hook("modifyuserpermissions")){$userpermissions=hook("modifyuserpermissions");}
     $userpermissions = (isset($userpermissions)) ? $userpermissions : array();
@@ -843,22 +842,6 @@ function search_filter($search,$archive,$restypes,$recent_search_daylimit,$acces
             if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
             $sql_filter->sql .= "(" . $created_filter . ")";
             $sql_filter->parameters = array_merge($sql_filter->parameters,$created_filter_params);
-            }
-        }
-
-
-    # Geo zone exclusion
-    # A list of upper/lower long/lat bounds, defining areas that will be excluded from geo search results.
-    # Areas are defined as southwest lat, southwest long, northeast lat, northeast long
-    if (count($geo_search_restrict)>0 && substr($search,0,4)=="!geo")
-        {
-        foreach ($geo_search_restrict as $zone)
-            {
-            if ($sql_filter->sql!="") {$sql_filter->sql.=" AND ";}
-            $sql_filter->sql.= "(geo_lat IS null OR geo_long IS null OR not(geo_lat >= ? AND geo_lat<= ?";
-            $sql_filter->sql.= " AND geo_long >= ? AND geo_long<= ?))";
-            // Note the order below is not in ascending order
-            $sql_filter->parameters = array_merge($sql_filter->parameters,$zone[0],$zone[2],$zone[1],$zone[3]);
             }
         }
 
@@ -2406,10 +2389,9 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
         }
 
     # Highlight searched keywords in $text
-    # Optional - depends on $highlightkeywords being set in config.php.
-    global $highlightkeywords, $stemming;
+    global $stemming;
     # Situations where we do not need to do this.
-    if (!isset($highlightkeywords) || ($highlightkeywords==false) || ($search=="") || ($text=="")) {return $text;}
+    if ($search=="" || $text=="") {return $text;}
 
         # Generate the cache of search keywords (no longer global so it can test against particular fields.
         # a search is a small array so I don't think there is much to lose by processing it.
@@ -2588,27 +2570,26 @@ function get_suggested_keywords($search,$ref="")
 
 
 function get_related_keywords($keyref)
-    {
+{
     debug_function_call("get_related_keywords", func_get_args());
 
     # For a given keyword reference returns the related keywords
     # Also reverses the process, returning keywords for matching related words
     # and for matching related words, also returns other words related to the same keyword.
-    global $keyword_relationships_one_way;
-    global $related_keywords_cache;
-    if (isset($related_keywords_cache[$keyref])){
+    global $keyword_relationships_one_way, $related_keywords_cache;
+
+    if (isset($related_keywords_cache[$keyref])) {
         return $related_keywords_cache[$keyref];
     } else {
-        if ($keyword_relationships_one_way){
-            $related_keywords_cache[$keyref]=ps_array("select related value from keyword_related where keyword=?",array("i",$keyref));
+        if ($keyword_relationships_one_way) {
+            $related_keywords_cache[$keyref] = ps_array("SELECT related value FROM keyword_related WHERE keyword = ?", array("i", $keyref));
             return $related_keywords_cache[$keyref];
-            }
-        else {
-            $related_keywords_cache[$keyref]=ps_array("select keyword value from keyword_related where related=? union select related value from keyword_related where (keyword=? or keyword in (select keyword value from keyword_related where related=?)) and related<>?",array("i",$keyref,"i",$keyref,"i",$keyref,"i",$keyref));
+        } else {
+            $related_keywords_cache[$keyref] = ps_array("SELECT keyword value FROM keyword_related WHERE related = ? UNION SELECT related value FROM keyword_related WHERE (keyword = ? OR keyword IN (SELECT keyword value FROM keyword_related WHERE related = ?)) AND related <> ?", array("i", $keyref, "i", $keyref, "i", $keyref, "i", $keyref));
             return $related_keywords_cache[$keyref];
-            }
         }
     }
+}
 
     
     

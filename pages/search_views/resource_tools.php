@@ -74,25 +74,23 @@ if (
 
 <!-- Share icon -->
 <?php 
-if (!hook("iconemail")) { 
-    if ($allow_share && ($k == "" || $internal_share_access)) { ?>
-        <a class="fa fa-share-alt"
-            href="<?php echo generateURL(
-                $baseurl_short . 'pages/resource_share.php',
-                [
-                    'ref' => $ref,
-                    'search' => $search,
-                    'offset' => $offset,
-                    'order_by' => $order_by,
-                    'sort' => $sort,
-                    'archive' => $archive,
-                    'k' => $k
-                ]) ?>"
-            onClick="return CentralSpaceLoad(this,true);"  
-            title="<?php echo escape($lang["share-resource"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
-        </a>
-        <?php 
-    }
+if (!hook("iconemail") && $allow_share && ($k == "" || $internal_share_access)) { ?>
+    <a class="fa fa-share-alt"
+        href="<?php echo generateURL(
+            $baseurl_short . 'pages/resource_share.php',
+            [
+                'ref' => $ref,
+                'search' => $search,
+                'offset' => $offset,
+                'order_by' => $order_by,
+                'sort' => $sort,
+                'archive' => $archive,
+                'k' => $k
+            ]) ?>"
+        onClick="return CentralSpaceLoad(this,true);"  
+        title="<?php echo escape($lang["share-resource"] . (($resource_view_title != "") ? " - " . $resource_view_title : "")) ?>">
+    </a>
+<?php
 } ?>
 
 <!-- Remove from collection icon -->

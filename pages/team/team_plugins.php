@@ -9,7 +9,7 @@
  * @todo Fortify plugin delete code
  * @todo Update plugin DB if uploaded plugin is installed (upgrade functionality)
  */
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php";
 

@@ -1,6 +1,6 @@
 <?php
 $_SERVER["HTTP_HOST"] = $argv[2];
-require dirname(__FILE__) . "/../../include/db.php";
+require dirname(__FILE__) . "/../../include/boot.php";
 command_line_only();
 
 set_time_limit(0);

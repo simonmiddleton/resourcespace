@@ -1347,7 +1347,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
 function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false,$onlysizes = array())
     {
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
-    global $autorotate_no_ingest,$always_make_previews,$lean_preview_generation,$previews_allow_enlarge,$alternative_file_previews;
+    global $autorotate_no_ingest,$always_make_previews,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors, $watermark;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
@@ -1398,7 +1398,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             if (file_exists($filetounlink)){
                 try_unlink($filetounlink);
             }
-        };
+        }
 
         $prefix = '';
         # Camera RAW images need prefix
@@ -1464,7 +1464,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         $created_count=0;
         $override_size = false;
         for ($n=0;$n<count($ps);$n++)
-            {
+            { 
             if($imagemagick_mpr)
                 {
                 $mpr_parts=array();
@@ -1650,7 +1650,6 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $wpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,"",$alternative);
                 if (file_exists($wpath))
                     {unlink($wpath);}
-            
             # Always make a screen size for non-JPEG extensions regardless of actual image size
             # This is because the original file itself is not suitable for full screen preview, as it is with JPEG files.
             #
@@ -1658,7 +1657,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             #
             # Always make pre/thm/col sizes regardless of source image size.
             if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && $watermark !== '') || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
-                {           
+                {
+
                 # Debug
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',"Generating preview size " . $ps[$n]["id"]); // log the size being created but not the path
                 debug("Generating preview size " . $ps[$n]["id"] . " to " . $path);
@@ -2712,7 +2712,7 @@ function upload_preview($ref)
 * @param string  $extension  File extension
 * @param string  $path       Path can be set to use an alternate file, for example, in the case of unoconv
 * 
-* @return void
+* @return  bool   Returns false on error else true.
 */
 function extract_text($ref,$extension,$path="")
     {
@@ -2722,7 +2722,13 @@ function extract_text($ref,$extension,$path="")
 
     $text="";
     if ($path==""){$path=get_resource_path($ref,true,"",false,$extension);}
-    
+
+    if (!file_exists($path))
+        {
+        debug("ERROR: Unable to extract text for resource $ref. The source file does not exist at: $path");
+        return false;
+        }
+
     # Microsoft Word extraction using AntiWord.
     if ($extension=="doc" && isset($antiword_path))
         {
@@ -2852,7 +2858,7 @@ function extract_text($ref,$extension,$path="")
         # Save text
         update_field($ref,$extracted_text_field,$text);
         }
-    
+    return true;
     }
     
 function get_image_orientation($file)
@@ -4012,7 +4018,7 @@ function get_sizes_to_generate(
     // Construct query    
     if (count($onlysizes) > 0) {
         $onlysizes = array_filter($onlysizes,function($v) {
-            return ctype_lower($v);
+            return ctype_lower($v) || ($GLOBALS["iiif_custom_sizes"] && substr($v,0,8) == "resized_"); 
         });
         $validsizecount = count($onlysizes);
         if($validsizecount === 0) {
@@ -4027,32 +4033,6 @@ function get_sizes_to_generate(
         "SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition,
         $params
         );
-
-    if ($GLOBALS["lean_preview_generation"] && count($getsizes) == 0) {
-        $force_make = array("pre","thm","col");
-        if ($extension != "jpg" || $extension != "jpeg") {
-            array_push($force_make,"hpr","scr");
-        }
-        $count = count($ps)-1;
-        $oversized = 0;
-        for ($s = $count;$s>0;$s--) {
-            if (
-                !in_array($ps[$s]['id'],$force_make)
-                && !in_array($ps[$s]['id'],$GLOBALS["always_make_previews"])
-                && isset($o_width)
-                && isset($o_height)
-                && $ps[$s]['width'] > $o_width
-                && $ps[$s]['height'] > $o_height
-                && !$GLOBALS["previews_allow_enlarge"]
-            ) {
-                $oversized++;
-            }
-            if($oversized>0) {
-                unset($ps[$s]);
-            }
-        }
-        $ps = array_values($ps);
-    }
         
     if (
         (count($onlysizes) === 0 || in_array("tiles",$onlysizes))

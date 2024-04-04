@@ -3,7 +3,7 @@
  * Home Dash Ajax Interface - Montala Ltd, Jethro Dew
  * Requests from the dash interactions are processed here.
  */
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php";
 include "../../include/dash_functions.php";

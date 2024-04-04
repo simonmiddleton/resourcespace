@@ -1,11 +1,14 @@
 <?php
 // Send email notification of new actions
 
+// Record the time at the start so as not to miss actions that may be created during processing
+$this_run_start = date("Y-m-d H:i:s");
+
 if((int)$new_action_email_interval == 0)
     {
     if('cli' == PHP_SAPI)
         {
-        echo " - Action notifications - \$new_action_email_interval not set. Skipping" . PHP_EOL;
+        echo "{$baseurl} - {$this_run_start} - Action notifications - \$new_action_email_interval not set. Skipping" . PHP_EOL;
         }
     return;
     }
@@ -21,9 +24,6 @@ if ($action_notifications_elapsed_sec < $new_action_email_interval*60*60)
     logScript(" - Skipping action email notifications - last run: " . $last_action_notifications);
     return;
     }
-
-// Record the time at the start so as not to miss actions that may be created during processing
-$this_run_start = date("Y-m-d H:i:s");
 
 $action_notify_users = get_users_by_preference("user_pref_new_action_emails","1");
 
@@ -43,7 +43,7 @@ foreach($recentactions as $notifyuser=>$user_actions)
     $usermail = $actionuser["email"];
 
     // Set timezone if required
-    get_config_option($userref,'user_local_timezone', $user_local_timezone, true);
+    get_config_option($notifyuser,'user_local_timezone', $user_local_timezone, true);
 
     if(!filter_var($usermail, FILTER_VALIDATE_EMAIL))
         {

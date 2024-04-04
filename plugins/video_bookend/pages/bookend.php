@@ -4,7 +4,7 @@ ob_start();
 
 $nocache = true;
 
-include_once "../../../include/db.php";
+include_once "../../../include/boot.php";
 include_once "../../../include/authenticate.php";
 include_once "../../../include/image_processing.php";
 

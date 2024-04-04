@@ -153,7 +153,7 @@ if ($alt_access)
             <?php 
             if (!hook("downloadlink","",array("ref=" . $ref . "&alternative=" . $altfiles[$n]["ref"] . "&k=" . $k . "&ext=" . $altfiles[$n]["file_extension"]))) 
                 {
-                echo 'href="#" onclick="directDownload(\'' . generateURL($baseurl . '/pages/download_progress.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>')"<?php
+                echo 'href="#" onclick="directDownload(\'' . generateURL($baseurl . '/pages/download_progress.php',$urlparams,array('ext'=>$altfiles[$n]['file_extension'],'alternative'=>$altfiles[$n]['ref'])) ?>', this)"<?php
                 }   
                 ?>><?php echo escape($lang["action-download"]); ?></a><?php
             } ?></td></td>
