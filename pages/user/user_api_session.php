@@ -9,12 +9,13 @@ if($remote_system) {
     $state = getval($remote_system["stateparam"],"");
     if (isset($_POST['submit']) && enforcePostRequest(false)) {        
         // Send session key to remote system with the passed state string
-        $postdata = [
+        $postdata = http_build_query([
             $remote_system["stateparam"] =>  $state,
             "sessionkey" =>  get_session_api_key($userref),
-        ];
+        ]);
 
         $curl = curl_init($remote_system["url"]);
+        curl_setopt( $curl, CURLOPT_HEADER, "Content-Type: application/x-www-form-urlencoded");
         curl_setopt( $curl, CURLOPT_POST, 1);
         curl_setopt( $curl, CURLOPT_POSTFIELDS, $postdata);
         curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
