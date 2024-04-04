@@ -6760,8 +6760,10 @@ function render_resource_view_image(array $resource, array $context)
             {
             $GLOBALS["image_preview_zoom"] = false;
             $tile_region_support = false;
-            $fulljpgsize = strtolower($resource['file_extension']) != "jpg" ? "hpr" : "";
-            $zoom_image_path = get_resource_path($resource["ref"], true, $fulljpgsize, false, $resource['file_extension'], true, 1, $use_watermark);
+            $not_jpg = strtolower($resource['file_extension']) != "jpg";
+            $fulljpgsize = $not_jpg ? "hpr" : "";
+            $fulljpgext = $not_jpg ? 'jpg' : $resource['file_extension'];
+            $zoom_image_path = get_resource_path($resource["ref"], true, $fulljpgsize, false, $fulljpgext, true, 1, $use_watermark);
 
             if($GLOBALS["preview_tiles"] && file_exists($zoom_image_path) && resource_download_allowed($resource["ref"], '', $resource['resource_type']))
                 {
