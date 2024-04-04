@@ -38,7 +38,7 @@ if($video_preview_hls_support!=1 || !$video_preview_player_hls)
 
         if(file_exists($origvideofile) && strtolower($resource['file_extension']) == "mp4") # Check video js supported file type
             {
-            $video_preview_path = get_resource_path($ref, false, '', false, $resource['file_extension'], true, 1, false, '', $alternative, false);
+            $video_preview_path = get_resource_path($ref, false, $hide_real_filepath ? 'videojs' : '', false, $resource['file_extension'], true, 1, false, '', $alternative, false);
             $video_preview_type = "video/{$ffmpeg_preview_extension}";
             }
         }
@@ -255,7 +255,7 @@ if(isset($videojs_resolution_selection))
         foreach($video_preview_sources as $video_preview_source)
             {
             ?>
-            <source src="<?php echo $video_preview_source["url"] ?>" type='<?php echo $video_preview_source["type"]; ?>' label='<?php echo escape($video_preview_source["label"] != "" ? $video_preview_source["label"] : $lang["preview"]); ?>'/>
+            <source src="<?php echo $video_preview_source["url"]; ?>" type='<?php echo $video_preview_source["type"]; ?>' label='<?php echo escape($video_preview_source["label"] != "" ? $video_preview_source["label"] : $lang["preview"]); ?>'/>
             <?php	
             }?>
         <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>

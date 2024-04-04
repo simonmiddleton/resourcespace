@@ -5,7 +5,7 @@
 # Use "remove=" to drop the column of a specific field or list of fields
 # If neither are set the script will use $data_joins to add AND remove fields
 #
-include "../../include/db.php";
+include "../../include/boot.php";
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 
 $add=getval("add","");

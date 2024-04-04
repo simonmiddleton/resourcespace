@@ -1,6 +1,6 @@
 <?php
 
-include_once "../../../include/db.php";
+include_once "../../../include/boot.php";
 include_once "../../../include/authenticate.php";
 include_once "../../../include/header.php";
 
@@ -32,7 +32,7 @@ $svg_source=file_get_contents($svg_path);
 </p>
     <div class="svg" id="svgpreview"></div>
 </div>
-<h1><?php echo $lang["stencilvg-go"] ?></h1>
+<h1><?php echo escape($lang["stencilvg-go"]); ?></h1>
 <?php
 
 # Fetch parameters

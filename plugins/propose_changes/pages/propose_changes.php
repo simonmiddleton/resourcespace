@@ -2,7 +2,7 @@
 
 use SimpleSAML\Console\Application;
 
-include_once __DIR__ . '/../../../include/db.php';
+include_once __DIR__ . '/../../../include/boot.php';
 include __DIR__ . '/../../../include/authenticate.php';
 include_once __DIR__ . '/../include/propose_changes_functions.php';
 
@@ -160,8 +160,21 @@ if(
                     {
                     if($proposed_change["resource_type_field"]==$proposefields[$n]["ref"])
                         {
+                        if (in_array($proposed_change['type'], $FIXED_LIST_FIELD_TYPES)) {
+                            $deleted_proposed_value = implode(
+                                ', ',
+                                array_intersect_key(
+                                    array_column($proposefields[$n]['nodes'], 'translated_name', 'ref'),
+                                    array_flip(array_filter(explode(', ', $proposed_change['value'])))
+                                )
+                            );
+
+                        } else {
+                            $deleted_proposed_value = $proposed_change['value'];
+                        }
+
                         $deletedchanges[$deletedchangescount]["field"]=$proposefields[$n]["title"];
-                        $deletedchanges[$deletedchangescount]["value"]=escape($proposed_change["value"]);
+                        $deletedchanges[$deletedchangescount]["value"] = escape($deleted_proposed_value);
                         $deletedchangescount++;
                         }
                     }
@@ -323,7 +336,7 @@ $searchparams = get_search_params();
 if(!$modal)
     {
     ?>
-    <p><a href="<?php echo generateurl($baseurl . "/pages/view.php",$searchparams,["ref" => $ref]); ?>" onClick="return  <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <p><a href="<?php echo generateurl($baseurl . "/pages/view.php",$searchparams,["ref" => $ref]); ?>" onClick="return  <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
     <?php
     }
     ?>
@@ -332,11 +345,11 @@ if(!$modal)
 <?php
 if(!$editaccess)
     { 
-    echo $lang['propose_changes_short'];
+    echo escape($lang['propose_changes_short']);
     }
 else
     {
-    echo $lang['propose_changes_review_proposed_changes'];
+    echo escape($lang['propose_changes_review_proposed_changes']);
     }
 ?>
 </h1>
@@ -344,12 +357,12 @@ else
 <?php
 if(!$editaccess)
     {
-    echo $lang['propose_changes_text'];
+    echo escape($lang['propose_changes_text']);
     }
 ?>
 </p>
     <?php
-    if ($resource["has_image"]==1)
+    if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
         {
         ?><img alt="<?php echo escape(i18n_get_translated($resource['field'.$view_title_field] ?? ""));?>"
         src="<?php echo get_resource_path($ref,false,"thm",false,$resource["preview_extension"],-1,1,checkperm("w"))?>" class="ImageBorder" style="margin-right:10px;"/>
@@ -366,7 +379,7 @@ if(!$editaccess)
     ?>
 
     <div class="Question" id="resource_ref_div" style="border-top:none;">
-        <label><?php echo $lang["resourceid"]?></label>
+        <label><?php echo escape($lang["resourceid"]); ?></label>
         <div class="Fixed"><?php echo urlencode($ref) ?></div>
         <div class="clearerleft"> </div>
     </div>
@@ -378,7 +391,7 @@ if(!$editaccess)
         <div class="Question" id="ProposeChangesUsers">
         <form id="propose_changes_select_user_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
             <?php generateFormToken("propose_changes_select_user_form"); ?>
-            <label><?php echo $lang["propose_changes_view_user"]; ?></label>
+            <label><?php echo escape($lang["propose_changes_view_user"]); ?></label>
             <?php
             if(count($userproposals) > 1)
                 {?>
@@ -412,7 +425,6 @@ if(!$editaccess)
         node_field_options_override($proposefields[$n]);
         if (
             $proposefields[$n]["active"] == 1 &&
-            $proposefields[$n]["display_field"] == 1 &&
             ($proposefields[$n]["global"]==1 || in_array($resource["resource_type"],$fieldrestypes[$proposefields[$n]["ref"]])) &&
             metadata_field_view_access($proposefields[$n]["ref"])
             )
@@ -428,13 +440,13 @@ if(!$editaccess)
         
     <form id="propose_changes_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>"  onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
     <?php generateFormToken("propose_changes_form"); ?>
-    <h2 id="ProposeChangesHead"><?php echo $lang["propose_changes_proposed_changes"] ?></h2><?php
+    <h2 id="ProposeChangesHead"><?php echo escape($lang["propose_changes_proposed_changes"]); ?></h2><?php
         ?><div id="ProposeChangesSection">
                 <div class="Question ProposeChangesQuestion" id="propose_changes_field_header" >
                         
-                <div class="ProposeChangesTitle ProposeChangesLabel" ><?php echo $lang["propose_changes_field_name"] ?></div>                
-                <div class="ProposeChangesTitle ProposeChangesCurrent"><?php echo $lang["propose_changes_current_value"] ?></div>
-                <div class="ProposeChangesTitle ProposeChangesProposed" ><?php echo $lang["propose_changes_proposed_value"] ?></div>
+                <div class="ProposeChangesTitle ProposeChangesLabel" ><?php echo escape($lang["propose_changes_field_name"]); ?></div>                
+                <div class="ProposeChangesTitle ProposeChangesCurrent"><?php echo escape($lang["propose_changes_current_value"]); ?></div>
+                <div class="ProposeChangesTitle ProposeChangesProposed" ><?php echo escape($lang["propose_changes_proposed_value"]); ?></div>
                 
                 <?php
                 if($editaccess)
@@ -444,10 +456,10 @@ if(!$editaccess)
                     <table>
                     <tr>
                     <td>
-                    <input id="ProposeChangesAcceptAllCheckbox" class="ProposeChangesAcceptCheckbox" type="checkbox" name="accept_all_changes" onClick="ProposeChangesUpdateAll(this);" checked ><?php echo $lang["propose_changes_accept_change"] ?>
+                    <input id="ProposeChangesAcceptAllCheckbox" class="ProposeChangesAcceptCheckbox" type="checkbox" name="accept_all_changes" onClick="ProposeChangesUpdateAll(this);" checked ><?php echo escape($lang["propose_changes_accept_change"]); ?>
                     </td>
                     <td>
-                    <input id="ProposeChangesDeleteAllCheckbox" class="ProposeChangesDeleteCheckbox" type="checkbox" name="delete_all_changes" onClick="ProposeChangesDeleteAll(this);" ><?php echo $lang["action-delete"] ?>
+                    <input id="ProposeChangesDeleteAllCheckbox" class="ProposeChangesDeleteCheckbox" type="checkbox" name="delete_all_changes" onClick="ProposeChangesDeleteAll(this);" ><?php echo escape($lang["action-delete"]); ?>
                     </td>
                     </tr>
                     </table>
@@ -467,7 +479,6 @@ if(!$editaccess)
         # Should this field be displayed?
         if ((isset($proposefields[$n]["display"]) && $proposefields[$n]["display"]==true) ||
             ($proposefields[$n]["active"] == 1 &&
-            $proposefields[$n]["display_field"] == 1 &&
             ($proposefields[$n]["global"]==1 || in_array($resource["resource_type"],$fieldrestypes[$proposefields[$n]["ref"]])) &&
             metadata_field_view_access($proposefields[$n]["ref"])
             )
@@ -496,7 +507,7 @@ if(!$editaccess)
         {
         ?>
         <div id="message" class="Question ProposeChangesQuestion">
-            <?php echo $lang['propose_changes_no_changes_to_review']; ?>
+            <?php echo strip_tags_and_attributes($lang['propose_changes_no_changes_to_review']); ?>
         </div>
         <?php
         }?>
@@ -505,15 +516,15 @@ if(!$editaccess)
         <input id="resetform" name="resetform" type="hidden" value=""/>
         <input id="save"  name="submitted" type="hidden" value="" />
         <input name="proposeuser" type="hidden" value="<?php echo isset($view_user) ? escape($view_user) : ""?>" />
-        <input name="resetform" type="submit" value="<?php echo $lang["clearbutton"]?>" onClick="return jQuery('#resetform').val('true');"/>&nbsp;
+        <input name="resetform" type="submit" value="<?php echo escape($lang["clearbutton"]); ?>" onClick="return jQuery('#resetform').val('true');"/>&nbsp;
             <?php if($editaccess)
                 {?>
-                <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["propose_changes_save_changes"]?>&nbsp;&nbsp;" onClick="return jQuery('#save').val('true');"/><br />
+                <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["propose_changes_save_changes"]); ?>&nbsp;&nbsp;" onClick="return jQuery('#save').val('true');"/><br />
                 <?php
                 }
             else
                 {?>
-                <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;"  onClick="return jQuery('#save').val('true');"/><br />
+                <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;"  onClick="return jQuery('#save').val('true');"/><br />
                 <?php
                 }
                     ?>

@@ -107,7 +107,7 @@ function create_random_video(array $info): array
         // Create video file
         $path = get_temp_dir() . DIRECTORY_SEPARATOR . "{$filename}.{$extension}";
         $cmd_output = run_command(
-            "$ffmpeg -f lavfi -i testsrc=duration=%duration:size=%wx%h:rate=30 $cmd_vf %outfile",
+            "$ffmpeg -i testsrc=duration=%duration:size=%wx%h:rate=30 $cmd_vf %outfile",
             true,
             array_merge(
                 [
@@ -149,4 +149,13 @@ function test_log(string $msg): void
     }
 
     echo PHP_EOL . $msg;
+    }
+
+/**
+ * Get the test files' ID (from its file name)
+ */
+function test_get_file_id(string $file): int
+    {
+    $matches = [];
+    return preg_match('/[1-9][0-9]{2,}/', basename($file), $matches) === 1 ? (int) $matches[0] : 0;
     }

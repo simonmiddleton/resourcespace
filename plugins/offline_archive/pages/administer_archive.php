@@ -3,7 +3,7 @@
 # offline_archive setup page
 #
 
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php';
 if (!checkperm('i'))
     {

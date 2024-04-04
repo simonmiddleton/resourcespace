@@ -1,7 +1,7 @@
 <?php
 // Generic modal page to create new resource types or metadata fields
 
-include_once __DIR__ . "/../../include/db.php";
+include_once __DIR__ . "/../../include/boot.php";
 
 include_once __DIR__ . "/../../include/authenticate.php";
 
@@ -79,7 +79,7 @@ switch ($newtype)
     
     <?php if ($newtype=="resource_type_field") { ?>
         <div class="Question">
-        <label><?php echo $lang["property-field_type"] ?></label>    
+        <label><?php echo escape($lang["property-field_type"]); ?></label>    
         <select name="field_type" class="medwidth">
          
          <?php
@@ -95,8 +95,8 @@ switch ($newtype)
     <?php } ?>
 
     <div class="Question">
-        <input type="submit" class="medcomplementwidth" value="<?php echo $lang["save"]?>" />
-        <input type="submit" class="medcomplementwidth" value="<?php echo $lang["cancel"]?>" onclick="ModalClose();" />
+        <input type="submit" class="medcomplementwidth" value="<?php echo escape($lang["save"]); ?>" />
+        <input type="submit" class="medcomplementwidth" value="<?php echo escape($lang["cancel"]); ?>" onclick="ModalClose();" />
         <div class="clearerleft"> </div>
     </div>
     </form>

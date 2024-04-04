@@ -1,6 +1,6 @@
 <?php
 // grabs preview image to show while publishing
-include "../../../include/db.php";
+include "../../../include/boot.php";
 include "../../../include/authenticate.php";
 
 $ref=getval("ref",0,true);

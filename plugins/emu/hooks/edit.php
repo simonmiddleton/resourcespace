@@ -24,7 +24,7 @@ function HookEmuEditEditbeforesectionhead()
         $value = escape(get_data_by_field($ref,$emu_irn_field));
         ?>
         <div id="question_emu" class="Question">
-            <label for="question_emu"><?php echo $lang['emu_upload_emu_field_label']; ?></label>
+            <label for="question_emu"><?php echo escape($lang['emu_upload_emu_field_label']); ?></label>
             <input id="field_<?php echo $emu_irn_field; ?>" type="text" name="field_<?php echo $emu_irn_field; ?>" value="<?php echo $value; ?>">
             <div class="clearerleft"></div>
         </div>
@@ -33,7 +33,7 @@ function HookEmuEditEditbeforesectionhead()
             {
             ?>
             <div id="emu_confirm_upload" class="Question FieldSaveError">
-                <label for="emu_confirm_upload"><?php echo $lang['emu_confirm_upload_nodata']; ?></label>
+                <label for="emu_confirm_upload"><?php echo escape($lang['emu_confirm_upload_nodata']); ?></label>
                 <input id="emu_confirm_upload" type="checkbox" name="emu_confirm_upload" value="true">
                 <div class="clearerleft"></div>
             </div>

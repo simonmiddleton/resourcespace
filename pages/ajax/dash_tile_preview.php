@@ -5,7 +5,7 @@
  * Content for the tile is sent via ajax to this page. Standard build functions available from include/dash_tile_generation.php
  */
 
-include "../../include/db.php";
+include "../../include/boot.php";
 include "../../include/authenticate.php";
 include "../../include/dash_functions.php";
 

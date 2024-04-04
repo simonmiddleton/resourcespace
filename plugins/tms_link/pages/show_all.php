@@ -1,5 +1,5 @@
 <?php
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include "../../../include/authenticate.php";
 if(!checkperm("t")){exit ("Access denied"); }
 
@@ -53,7 +53,7 @@ foreach(tms_link_get_modules_mappings() as $module)
 if($tmscount == 0)
     {
     ?>
-    <td colspan='4'><?php echo $lang["tms_link_no_tms_resources"]; ?></td>
+    <td colspan='4'><?php echo escape($lang["tms_link_no_tms_resources"]); ?></td>
     <?php
     }
 ?>

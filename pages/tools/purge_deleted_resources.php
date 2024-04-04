@@ -16,7 +16,7 @@ if (substr($sapi_type, 0, 3) != 'cli') {
 echo "error - aborting.";
 exit;
 }
-include __DIR__ . "/../../include/db.php"; ob_end_clean(); // Discard output buffering as it's causing the script to stop working
+include __DIR__ . "/../../include/boot.php"; ob_end_clean(); // Discard output buffering as it's causing the script to stop working
 
 include __DIR__ . "/../../include/image_processing.php";
 

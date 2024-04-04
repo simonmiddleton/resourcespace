@@ -3,7 +3,7 @@
 # image_text setup page
 #
 
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
 // Specify the name of this plugin and the heading to display for the page.

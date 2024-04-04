@@ -1,5 +1,5 @@
 <?php
-include dirname(__FILE__)."/../../../include/db.php";
+include dirname(__FILE__)."/../../../include/boot.php";
 include_once dirname(__FILE__)."/../../../include/image_processing.php";
 
 if(!function_exists("get_api_key"))
@@ -152,7 +152,7 @@ for ($n=0;$n<count($result);$n++)
     
     $imgurl="";
     $imgurl=get_resource_path($result[$n]['ref'],true,"col",false);
-    if ($result[$n]['has_image']!=1){ $imgurl=$baseurl."/gfx/".get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true);} 
+    if ((int) $result[$n]['has_image'] === RESOURCE_PREVIEWS_NONE){ $imgurl=$baseurl."/gfx/".get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true);} 
     else{$imgurl=get_resource_path($result[$n]['ref'],false,"col",false);}
     $add_desc="";
     foreach ($rss_fields as $rssfield)

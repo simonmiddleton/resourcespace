@@ -2,7 +2,8 @@
 
 function save_proposed_changes($ref)
     {
-    global $userref, $auto_order_checkbox,$multilingual_text_fields,$languages,$language, $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES;
+    debug_function_call(__FUNCTION__, func_get_args());
+    global $userref, $auto_order_checkbox,$languages,$language, $FIXED_LIST_FIELD_TYPES, $DATE_FIELD_TYPES;
 
     if(!is_numeric($ref))
         {
@@ -20,19 +21,32 @@ function save_proposed_changes($ref)
 
         for ($n=0;$n<count($fields);$n++)
             {
+            /**
+             * @var false|string $val The proposed value change submitted. Meanings:
+             * - false: field hasn't been submitted (e.g. user doesn't have access)
+             * - string: empty string to unset field value -or- the proposed value (for fixed list fields that means a
+             *           CSV of node IDs)
+             *
+             * Note: the meaning of an empty string is contextual - it can also mean no proposed change to an existing
+             * unset field. Those cases are ignored by our logic (further down) since there's no real change.
+             */
+            $val = false;
             $new_nodes = array();
 
-            ##### NODES #####
-            if (in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
-                {
-                $fields[$n]['nodes'] = get_nodes($fields[$n]['ref'], null, (FIELD_TYPE_CATEGORY_TREE == $fields[$n]['type'] ? true : false));
-                }
-
-            // Fixed list fields use node IDs directly
             if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
                 {
-                $ui_selected_node_values = array();
+                debug("Field #{$fields[$n]['ref']} -- FIXED_LIST_FIELD_TYPES");
+                $fields[$n]['nodes'] = get_nodes(
+                    $fields[$n]['ref'],
+                    null,
+                    FIELD_TYPE_CATEGORY_TREE === $fields[$n]['type']
+                );
+                $valid_nodes = in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS])
+                    ? array_column($fields[$n]['nodes'], 'ref')
+                    : array_column(array_filter($fields[$n]['nodes'], 'node_is_active'), 'ref');
 
+                // Fixed list fields use node IDs directly
+                $ui_selected_node_values = array();
                 if(isset($user_set_values[$fields[$n]['ref']])
                     && !is_array($user_set_values[$fields[$n]['ref']])
                     && '' != $user_set_values[$fields[$n]['ref']]
@@ -46,16 +60,31 @@ function save_proposed_changes($ref)
                     $ui_selected_node_values = $user_set_values[$fields[$n]['ref']];
                     }
 
-                foreach($fields[$n]['nodes'] as $node)
-                    {
-                    if(in_array($node['ref'], $ui_selected_node_values))
-                        {
-                        $new_nodes[] = $node['ref'];
-                        }
-                    }
+                $new_nodes = array_intersect($valid_nodes, $ui_selected_node_values);
+                natsort($new_nodes);
+                debug(sprintf('Field #%s -- $new_nodes = %s', $fields[$n]['ref'], implode(',', $new_nodes)));
+                $val = implode(', ', $new_nodes);
+
+                /* 
+                Field values contain only active nodes because when determining new nodes that will already remove
+                inactive ones (e.g when rendering the field on the page or receiving the submitted data - see above).
+                This way we won't detect a change is proposed if the only thing different is the lack of inactive 
+                nodes.
+                */
+                $field_value = implode(
+                    ', ',
+                    array_column(
+                        in_array($fields[$n]['type'], [FIELD_TYPE_DROP_DOWN_LIST, FIELD_TYPE_RADIO_BUTTONS])
+                            ? get_resource_nodes($ref, $fields[$n]['ref'], true)
+                            : array_filter(get_resource_nodes($ref, $fields[$n]['ref'], true), 'node_is_active'),
+                        'ref'
+                    )
+                );
                 }               
         else
                 {
+                $field_value = $fields[$n]['value'];
+
                 if($fields[$n]['type']==FIELD_TYPE_DATE_RANGE)
                     {
                     # date range type
@@ -65,6 +94,7 @@ function save_proposed_changes($ref)
                     
                     if(($date_edtf=getval("field_" . $fields[$n]["ref"] . "_edtf", false))!==false)
                         {
+                        debug("Field #{$fields[$n]['ref']} -- EDTF date range");
                         // We have been passed the range in EDTF format, check it is in the correct format
                         $rangeregex="/^(\d{4})(-\d{2})?(-\d{2})?\/(\d{4})(-\d{2})?(-\d{2})?/";
                         if(!preg_match($rangeregex,$date_edtf,$matches))
@@ -82,7 +112,7 @@ function save_proposed_changes($ref)
                         }
                     else
                         {
-                        // Range has been passed via normal inputs, construct the value from the date/time dropdowns
+                        debug("Field #{$fields[$n]['ref']} -- Range has been passed via normal inputs, construct the value from the date/time dropdowns");
                         $date_parts=array("start","end");
                         
                         foreach($date_parts as $date_part)
@@ -115,6 +145,7 @@ function save_proposed_changes($ref)
                     }
                 elseif ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
                     {
+                    debug("Field #{$fields[$n]['ref']} -- FIELD_TYPE_DATE (w/ native input)");
                     $val = getval("field_{$fields[$n]['ref']}", false);
                     if($val !== false && !validateDatetime($val, 'Y-m-d'))
                         {
@@ -128,6 +159,7 @@ function save_proposed_changes($ref)
                     }
                 elseif(in_array($fields[$n]['type'], $DATE_FIELD_TYPES))
                     {
+                    debug("Field #{$fields[$n]['ref']} -- DATE_FIELD_TYPES");
                     $val=sanitize_date_field_input($fields[$n]["ref"], false);
 
                     if ($GLOBALS['use_native_input_for_date_field'] && $fields[$n]['type'] === FIELD_TYPE_DATE)
@@ -135,28 +167,12 @@ function save_proposed_changes($ref)
                         $val = getval("field_{$fields[$n]['ref']}", '');
                         }
                     }
-                elseif ($multilingual_text_fields && ($fields[$n]["type"]==0 || $fields[$n]["type"]==1 || $fields[$n]["type"]==5))
-                    {
-                    # Construct a multilingual string from the submitted translations
-                    $val=getval("field_" . $fields[$n]["ref"], false);
-                    if($val !== false)
-                        {
-                        $val="~" . $language . ":" . $val;
-                        reset ($languages);
-                        foreach ($languages as $langkey => $langname)
-                            {
-                            if ($language!=$langkey)
-                                {
-                                $val.="~" . $langkey . ":" . getval("multilingual_" . $n . "_" . $langkey,"");
-                                }
-                            }
-                        }
-                    }
                 else
                     {
-                    # Set the value exactly as sent.
+                    debug("Field #{$fields[$n]['ref']} -- Set the value exactly as sent");
                     $val=getval("field_" . $fields[$n]["ref"],false);
-                    } 
+                    }
+
                 # Check for regular expression match
                 if (strlen(trim((string)$fields[$n]["regexp_filter"]))>=1 && strlen($val)>0)
                     {
@@ -213,43 +229,28 @@ function save_proposed_changes($ref)
                 continue;
                 }
 
-            $field_value = $fields[$n]['value'];
-            if(in_array($fields[$n]['type'], $FIXED_LIST_FIELD_TYPES))
-                {
-                $field_value    = '';
-                $val            = '';
-                $resource_nodes = array();
-
-                foreach(get_resource_nodes($ref, $fields[$n]['ref'], true) as $resource_node)
-                    {
-                    $resource_nodes[] = $resource_node['ref'];
-                    }
-
-                if(0 < count($resource_nodes))
-                    {
-                    $field_value = implode(', ', $resource_nodes);
-                    }
-
-                if(0 < count($new_nodes))
-                    {
-                    natsort($new_nodes);
-                    $val = implode(', ', $new_nodes);
-                    }
-                }
+            debug(sprintf('Field #%s -- $field_value = %s', $fields[$n]['ref'], json_encode($field_value)));
+            debug(sprintf('Field #%s -- $val = %s', $fields[$n]['ref'], json_encode($val)));
 
             if ($val !== false && trim(str_replace("\r\n", "\n", $field_value??"")) !== trim(str_replace("\r\n", "\n", unescape($val))))
                     {
                     if (
                         in_array($fields[$n]['type'], $DATE_FIELD_TYPES)
                         && trim((string) $field_value).":00" == trim($val) # Check that date hasn't only changed by adding seconds value
-                        ) {
+                    ) {
                         continue;    
                     }
-                    # This value is different from the value we have on record. 
-                    # Add this to the proposed changes table for the user
-                    $parameters=array("i",$ref, "i",$userref, "i",$fields[$n]['ref'], "s",$val);
-                    ps_query("INSERT INTO propose_changes_data(resource, user, resource_type_field, value, date) 
-                                VALUES( ?, ?, ?, ?, now() )", $parameters);
+
+                    debug("Field #{$fields[$n]['ref']} -- Save proposed change (this value is different from the value we have on record)");
+                    ps_query(
+                        'INSERT INTO propose_changes_data (resource, user, resource_type_field, value, date) VALUES (?, ?, ?, ?, now())',
+                        [
+                            'i',$ref,
+                            'i',$userref,
+                            'i',$fields[$n]['ref'],
+                            's',$val,
+                        ]
+                    );
                     }            
             
             }
@@ -291,49 +292,9 @@ function delete_proposed_changes($ref, $userid="")
     ps_query($query, $parameters);
     }
 
-# Allows language alternatives to be entered for free text metadata fields.
-function propose_changes_display_multilingual_text_field($n, $field, $translations)
-    {
-    global $language, $languages, $lang;
-    ?>
-    <p><a href="#" class="OptionToggle" onClick="l=document.getElementById('LanguageEntry_<?php echo $n?>');if (l.style.display=='block') {l.style.display='none';this.innerHTML='<?php echo escape($lang["showtranslations"])?>';} else {l.style.display='block';this.innerHTML='<?php echo escape($lang["hidetranslations"])?>';} return false;"><?php echo escape($lang["showtranslations"]) ?></a></p>
-    <table class="OptionTable" style="display:none;" id="LanguageEntry_<?php echo $n?>">
-    <?php
-    reset($languages);
-    foreach ($languages as $langkey => $langname)
-        {
-        if ($language!=$langkey)
-            {
-            if (array_key_exists($langkey,$translations)) {$transval=$translations[$langkey];} else {$transval="";}
-            ?>
-            <tr>
-            <td nowrap valign="top"><?php echo escape($langname)?>&nbsp;&nbsp;</td>
-
-            <?php
-            if ($field["type"]==0)
-                {
-                ?>
-                <td><input type="text" class="stdwidth" name="multilingual_<?php echo $n?>_<?php echo $langkey?>" value="<?php echo escape($transval)?>"></td>
-                <?php
-                }
-            else
-                {
-                ?>
-                <td><textarea rows=6 cols=50 name="multilingual_<?php echo $n?>_<?php echo $langkey?>"><?php echo escape($transval)?></textarea></td>
-                <?php
-                }
-            ?>
-            </tr>
-            <?php
-            }
-        }
-    ?></table><?php
-    }
-
 function propose_changes_display_field($n, $field)
     {
-    global $ref, $original_fields, $multilingual_text_fields,
-    $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess,
+    global $ref, $original_fields, $is_template, $language, $lang,  $errors, $proposed_changes, $editaccess,
     $FIXED_LIST_FIELD_TYPES,$range_separator, $edit_autosave;
 
     # Certain edit_fields/x.php functions check for bulk edit which must be defined as false prior to rendering propose change field  
@@ -341,10 +302,19 @@ function propose_changes_display_field($n, $field)
 
     $edit_autosave=false;
     $name="field_" . $field["ref"];
-    $value=$field["value"];
-    $value=trim($value??"");
-    $proposed_value="";            
+    $value=trim($field['value'] ?? '');
+    
+    // Force display field because we rely on display_field_data() which is meant to honour this property (but meant 
+    // only for the view page). In this context, "hiding" fields is done using permissions.
+    $field['display_field'] = 1;
+
     # is there a proposed value set for this field?
+    /**
+     * @var false|string $proposed_value The proposed value change submitted. Meanings:
+     * - false: no proposed change found
+     * - string: empty string to unset field value -or- the proposed value (for fixed list fields that means a CSV of node IDs)
+     */
+    $proposed_value = false;
     foreach($proposed_changes as $proposed_change)
         {
         if($proposed_change['resource_type_field'] == $field['ref'])
@@ -352,9 +322,11 @@ function propose_changes_display_field($n, $field)
             $proposed_value = $proposed_change['value'];
             }
         }
+    
+    $has_proposed_changes = $proposed_value !== false;
 
     // Don't show this if user is an admin viewing proposed changes, needs to be on form so that form is still submitted with all data
-    if ($editaccess && $proposed_value=="")
+    if ($editaccess && !$has_proposed_changes)
         {
         ?>
         <div style="display:none" >
@@ -390,29 +362,20 @@ function propose_changes_display_field($n, $field)
             ?><div class="propose_changes_current ProposeChangesCurrent"><?php echo escape($lang["propose_changes_novalue"])  ?></div>    
             <?php
             }
-        if(!$editaccess && $proposed_value=="")
+        if(!$editaccess && !$has_proposed_changes)
             {
             ?>
-            <div class="propose_change_button" id="propose_change_button_<?php echo $field["ref"] ?>">
-            <input type="submit" value="<?php echo escape($lang["propose_changes_buttontext"]) ?>" onClick="ShowProposeChanges(<?php echo $field["ref"] ?>);return false;" />
+            <div class="propose_change_button" id="propose_change_button_<?php echo $field["ref"]; ?>">
+            <input type="submit" value="<?php echo escape($lang["propose_changes_buttontext"]) ?>" onClick="ShowProposeChanges(<?php echo $field["ref"]; ?>);return false;" />
             </div>
             <?php
             }?>
 
-    <div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if($proposed_value==""){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo $field["ref"] ?>">
-    <input type="hidden" id="propose_change_<?php echo $field["ref"] ?>" name="propose_change_<?php echo $field["ref"] ?>" value="true" <?php if($proposed_value==""){echo "disabled=\"disabled\""; } ?> />
+    <div class="proposed_change proposed_change_value proposed ProposeChangesProposed" <?php if(!$has_proposed_changes){echo "style=\"display:none;\""; } ?> id="proposed_change_<?php echo escape($field["ref"]); ?>">
+    <input type="hidden" id="propose_change_<?php echo escape($field["ref"]); ?>" name="propose_change_<?php echo escape($field["ref"]); ?>" value="true" <?php if(!$has_proposed_changes){echo "disabled=\"disabled\""; } ?> />
     <?php
     # ----------------------------  Show field -----------------------------------
-    // Checkif we have a proposed value for this field
-    if('' != $proposed_value)
-        {
-        $value = $proposed_value;
-        }
-    else
-        {
-        $value = $realvalue;
-        }
-
+    $value = $has_proposed_changes ? $proposed_value : $realvalue;
     $type = $field['type'];
 
     if('' == $type)
@@ -438,11 +401,9 @@ function propose_changes_display_field($n, $field)
                 $name = "field_{$field['ref']}";
                 }
 
-            $selected_nodes = (trim($proposed_value) != "" ? explode(', ', $proposed_value) : array());
-            if(!$editaccess && '' == $proposed_value)
-                {
-                $selected_nodes = get_resource_nodes($ref, $field['resource_type_field']);
-                }
+            $selected_nodes = !$editaccess && !$has_proposed_changes
+                ? get_resource_nodes($ref, $field['resource_type_field'])
+                : ($has_proposed_changes ? explode(', ', $proposed_value) : []);
             }
 
         $is_search = false;
@@ -451,7 +412,7 @@ function propose_changes_display_field($n, $field)
         }
     # ----------------------------------------------------------------------------
     ?>
-        </div><!-- close proposed_change_<?php echo $field["ref"] ?> -->
+        </div><!-- close proposed_change_<?php echo $field["ref"]; ?> -->
         <?php
         if($editaccess)
             {
@@ -459,9 +420,9 @@ function propose_changes_display_field($n, $field)
             <div class="ProposeChangesAccept ProposeChangesAcceptDeleteColumn">
             <table>
             <tr>
-            <td><input class="ProposeChangesAcceptCheckbox" type="checkbox" id="accept_change_<?php echo $field["ref"] ?>" name="accept_change_<?php echo $field["ref"] ?>" onchange="UpdateProposals(this,<?php echo $field["ref"] ?>);" checked ></input><?php echo escape($lang["propose_changes_accept_change"])  ?></td>
+            <td><input class="ProposeChangesAcceptCheckbox" type="checkbox" id="accept_change_<?php echo $field["ref"]; ?>" name="accept_change_<?php echo $field["ref"]; ?>" onchange="UpdateProposals(this,<?php echo $field["ref"]; ?>);" checked ></input><?php echo escape($lang["propose_changes_accept_change"])  ?></td>
             <td>
-            <input class="ProposeChangesDeleteCheckbox" type="checkbox" id="delete_change_<?php echo $field["ref"] ?>" name="delete_change_<?php echo $field["ref"] ?>" onchange="DeleteProposal(this,<?php echo $field["ref"] ?>);" ></input><?php echo escape($lang["action-delete"])  ?></td>
+            <input class="ProposeChangesDeleteCheckbox" type="checkbox" id="delete_change_<?php echo $field["ref"]; ?>" name="delete_change_<?php echo $field["ref"]; ?>" onchange="DeleteProposal(this,<?php echo $field["ref"]; ?>);" ></input><?php echo escape($lang["action-delete"])  ?></td>
             </tr>
             </table>
             </div>
@@ -473,22 +434,15 @@ function propose_changes_display_field($n, $field)
         # Show inline help for this field.
         # For certain field types that have no obvious focus, the help always appears.
         ?>
-        <div class="FormHelp" style="<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?>display:none;<?php } else { ?>clear:left;<?php } ?>" id="help_<?php echo $field["ref"]?>"><div class="FormHelpInner"><?php echo nl2br(trim(escape(i18n_get_translated($field["help_text"]))))?></div></div>
-<?php
-        }
-
-    # If enabled, include code to produce extra fields to allow multilingual free text to be entered.
-    if ($multilingual_text_fields && ($field["type"]==0 || $field["type"]==1 || $field["type"]==5))
-        {
-        $translations=i18n_get_translations($value);
-        propose_changes_display_multilingual_text_field($n, $field, $translations);
+        <div class="FormHelp" style="<?php if (!in_array($field["type"],array(2,4,6,7,10))) { ?>display:none;<?php } else { ?>clear:left;<?php } ?>" id="help_<?php echo $field["ref"]; ?>"><div class="FormHelpInner"><?php echo nl2br(trim(escape(i18n_get_translated($field["help_text"]))))?></div></div>
+        <?php
         }
     ?>
     <div class="clearerleft"> </div>
     </div><!-- end of question_<?php echo $n?> div -->
     <?php
     // Don't show this if user is an admin viewing proposed changes
-    if ($editaccess && $proposed_value=="")
+    if ($editaccess && !$has_proposed_changes)
         {
         ?>
         </div><!-- End of hidden field -->

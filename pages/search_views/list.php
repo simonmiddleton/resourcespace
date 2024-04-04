@@ -101,15 +101,16 @@ if (!hook("replacelistitem"))
                 ) {
                     $value=$result[$n]['field'.$metadata_template_title_field];
                 }
+
             if ( 
                 (
                     (
                     isset($metadata_template_title_field) 
                     && $df[$x]['ref']!=$metadata_template_title_field
-                    ) 
+                ) 
                     || !isset($metadata_template_title_field)
                 ) 
-                && hook("replacelisttitle")
+                && !hook("replacelisttitle")
                 ) {
                     ?>
                     <td 
@@ -139,6 +140,12 @@ if (!hook("replacelistitem"))
             }
         
         hook("searchbeforeratingfield");
+
+        if ($id_column) { ?>
+            <td <?php hook("listviewcolumnstyle"); ?>>
+                <?php echo (int)$result[$n]["ref"]; ?>
+            </td>
+        <?php }
 
         if ($resource_type_column)
             { ?>

@@ -4,7 +4,7 @@
 #
 
 // Do the include and authorization checking ritual -- don't change this section.
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include_once '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 
 // Specify the name of this plugin and the heading to display for the page.

@@ -32,11 +32,11 @@ function SensitiveImageResultsReplace($collection)
             {
             ?>
             <style>
-            <?php echo $collection ? "#CollectionSpace" : "#CentralSpaceResources"; ?> #ResourceShell<?php echo $result[$n]["ref"] ?> 
+            <?php echo $collection ? "#CollectionSpace" : "#CentralSpaceResources"; ?> #ResourceShell<?php echo $result[$n]["ref"]; ?> 
              img {filter: blur(<?php echo (int)$sensitive_images_blur_level; ?>px);}
 
 
-            <?php if (!$collection) { ?>#CentralSpaceResources #ResourceShell<?php echo $result[$n]["ref"] ?>::before 
+            <?php if (!$collection) { ?>#CentralSpaceResources #ResourceShell<?php echo $result[$n]["ref"]; ?>::before 
                 {
                 content: '!';
                 z-index: 5;

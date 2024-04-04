@@ -48,7 +48,7 @@ final class PreparedStatementQuery {
  */
 function errorhandler($errno, $errstr, $errfile, $errline)
     {
-    global $baseurl, $pagename, $show_report_bug_link, $email_errors, $show_error_messages,$show_detailed_errors, $use_error_exception,$log_error_messages_url, $username, $plugins;
+    global $baseurl, $pagename, $show_report_bug_link, $show_error_messages,$show_detailed_errors, $use_error_exception,$log_error_messages_url, $username, $plugins;
 
     if (!error_reporting()) 
         {
@@ -72,6 +72,14 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         // Dump additional trace information to help with diagnosis.
         debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         echo PHP_EOL;
+        }
+    elseif (defined("API_CALL"))
+        {
+        // If an API call, return a standardised error format.
+        $response["error"]=true;
+        $response["error_note"]=$error_note;
+        if ($show_detailed_errors) {$response["error_info"]=$error_info;}
+        echo json_encode($response);
         }
     else
         {
@@ -132,16 +140,6 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         echo @file_get_contents($log_error_messages_url,0,$ctx);
         }
 
-    // Optionally e-mail errors to a configured address
-    if ($email_errors)
-        {
-        global $email_notify, $email_from, $email_errors_address, $applicationname;
-        if ($email_errors_address == "") 
-            { 
-            $email_errors_address = $email_notify; 
-            }
-        send_mail($email_errors_address, "$applicationname Error", $error_info, $email_from, $email_from, "", null, "Error Reporting");
-        }
     hook('after_error_handler', '', array($errno, $errstr, $errfile, $errline));
     exit();
     }
@@ -230,7 +228,7 @@ $db = null;
  */
 function sql_connect() 
     {
-    global $db,$mysql_server,$mysql_username,$mysql_password,$mysql_db,$mysql_charset,$mysql_force_strict_mode, 
+    global $db,$mysql_server,$mysql_username,$mysql_password,$mysql_db,$mysql_charset, 
            $mysql_server_port, $use_mysqli_ssl, $mysqli_ssl_server_cert, $mysqli_ssl_ca_cert;
 
     $init_connection = function(
@@ -273,13 +271,6 @@ function sql_connect()
         # Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)
         db_set_connection_mode($db_connection_mode);
         ps_query("SET SESSION group_concat_max_len = 32767", [], '', -1, false, 0); 
-
-        if ($mysql_force_strict_mode)    
-            {
-            db_set_connection_mode($db_connection_mode);
-            ps_query("SET SESSION sql_mode='STRICT_ALL_TABLES'", [], '', -1, false, 0);
-            continue;
-            }
 
         db_set_connection_mode($db_connection_mode);
         $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
@@ -399,7 +390,7 @@ function db_rollback_transaction($name)
  */
 function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstruct=true, $logthis=2, $reconnect=true, $fetch_specific_columns=false)
     {
-    global $db, $config_show_performance_footer, $debug_log, $debug_log_override, $suppress_sql_log,
+    global $db, $config_show_performance_footer, $debug_log, $debug_log_override,
     $storagedir, $scramble_key, $query_cache_expires_minutes, $query_cache_enabled,
     $query_cache_already_completed_this_time,$prepared_statement_cache;
     
@@ -459,7 +450,7 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
         $querycount++;
         }
 
-    if (($debug_log || $debug_log_override) && !$suppress_sql_log)
+    if ($debug_log || $debug_log_override)
         {
         debug("SQL: " . $sql . "  Parameters: " . json_encode($parameters));
         }
@@ -1342,10 +1333,9 @@ function sql_reorder_records(string $table, array $refs)
         return;
         }
 
-    $refs = array_values(array_filter($refs, 'is_int_loose'));
+    $refs_chunked = db_chunk_id_list($refs);
     $order_by = 0;
 
-    $refs_chunked = array_filter(count($refs) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE ? [$refs] : array_chunk($refs, SYSTEM_DATABASE_IDS_CHUNK_SIZE));
     foreach($refs_chunked as $refs)
         {
         $cases_params = [];
@@ -1418,4 +1408,19 @@ function columns_in($table,$alias=null,$plugin=null, bool $return_list = false)
         }
 
     return "`" . $alias . "`.`" . join("`, `" . $alias . "`.`",$columns) . "`";
+    }
+
+/**
+ * Database helper to chunk a list of IDs
+ * @param list<int> $refs
+ * @return list<list<int>>
+ */
+function db_chunk_id_list(array $refs): array
+    {
+    $valid_ids = array_values(array_unique(array_filter($refs, 'is_int_loose')));
+    return array_filter(
+        count($valid_ids) <= SYSTEM_DATABASE_IDS_CHUNK_SIZE
+            ? [$valid_ids]
+            : array_chunk($valid_ids, SYSTEM_DATABASE_IDS_CHUNK_SIZE)
+    );
     }

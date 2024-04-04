@@ -1,4 +1,4 @@
-<?php include "../../include/db.php";
+<?php include "../../include/boot.php";
 
 // Copy files from the remote system
 // Before running this the scramble key must be the same on both systems so copy over the relevant config.php entries first.

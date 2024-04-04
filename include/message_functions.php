@@ -690,8 +690,17 @@ function message_send_unread_emails()
         if($actions_on)
             {
             if(!$actions_on){break;}
-            $user_actions = get_user_actions(false);
-            if (count($user_actions) > 0)       
+
+            $user_actions = get_user_actions(false, '', 'date', 'DESC');
+            $action_count = count($user_actions);
+            $actions_truncated = false;
+            if ($action_count > 1000)
+                {
+                $user_actions = array_slice($user_actions, 0, 1000);
+                $actions_truncated = true;
+                }
+
+            if ($action_count > 0)
                 {
                 $actionflag=true;
                 debug("Adding actions to message for user " . $usermail);
@@ -700,6 +709,12 @@ function message_send_unread_emails()
                     $message .= "</table><br /><br />";
                     }
                 $message .= $lang['email_daily_digest_actions'] . "<br /><br />". $lang["actions_introtext"] . "<br />";
+
+                if ($actions_truncated)
+                    {
+                    $message .= escape(str_replace(array('%%TOTAL%%', '%%APPLICATIONNAME%%'), array($action_count, $applicationname), $lang['email_actions_truncated'])) . "<br />";
+                    }
+
                 $message .= "<style>.InfoTable td {padding:5px; margin: 0px;border: 1px solid #000;}</style><table class='InfoTable'>";
                 $message .= "<tr><th>" . $lang["date"] . "</th>";
                 $message .= "<th>" . $lang["property-reference"] . "</th>";

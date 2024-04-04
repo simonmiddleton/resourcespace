@@ -1,6 +1,6 @@
 <?php
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php";
 include_once '../../include/config_functions.php';
@@ -17,8 +17,8 @@ $enable_disable_options = array($lang['userpreference_disable_option'], $lang['u
 include "../../include/header.php";
 ?>
 <div class="BasicsBox"> 
-    <h1><?php echo $lang["userpreferences"]?></h1>
-    <p><?php echo $lang["modifyuserpreferencesintro"]?></p>
+    <h1><?php echo escape($lang["userpreferences"]); ?></h1>
+    <p><?php echo escape($lang["modifyuserpreferencesintro"]); ?></p>
     
 <div class="CollapsibleSections">
     <?php
@@ -67,10 +67,6 @@ include "../../include/header.php";
         }
 
     $sort_order_fields = array('relevance' => $lang['relevance']);
-    if($random_sort)
-        {
-        $sort_order_fields['random'] = $lang['random'];
-        }
 
     if($popularity_sort)
         {
@@ -97,10 +93,7 @@ include "../../include/header.php";
         $sort_order_fields['resourceid'] = $lang['resourceid'];
         }
 
-    if($order_by_resource_type)
-        {
-        $sort_order_fields['resourcetype'] = $lang['type'];
-        }
+    $sort_order_fields['resourcetype'] = $lang['type'];
 
     // Add thumbs_display_fields to sort order links for thumbs views
     for($x = 0; $x < count($sf); $x++)
@@ -136,10 +129,7 @@ include "../../include/header.php";
         {
         $default_display_array['xlthumbs'] = $lang['xlthumbstitle'];
         }
-    if($searchlist || $GLOBALS['default_display'] == 'list')
-        {
-        $default_display_array['list'] = $lang['listtitle'];
-        }
+    $default_display_array['list'] = $lang['listtitle'];
     $default_display_array['strip']  = $lang['striptitle'];
     
     $page_def[] = config_add_single_select(

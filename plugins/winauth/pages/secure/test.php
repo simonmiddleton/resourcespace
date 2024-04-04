@@ -1,5 +1,5 @@
 <?php
-include dirname(__FILE__) . '/../../../../include/db.php';
+include dirname(__FILE__) . '/../../../../include/boot.php';
 include_once dirname(__FILE__) . '/../../include/winauth_functions.php';
 
 if(isset($_SERVER["AUTH_USER"]) && $_SERVER["AUTH_USER"] != "")
@@ -8,5 +8,5 @@ if(isset($_SERVER["AUTH_USER"]) && $_SERVER["AUTH_USER"] != "")
     }
 else
     {
-    echo $lang["winauth_not_logged_in"];
+    echo escape($lang["winauth_not_logged_in"]);
     }

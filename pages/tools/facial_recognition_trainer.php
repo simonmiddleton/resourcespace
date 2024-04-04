@@ -5,7 +5,7 @@ if('cli' != PHP_SAPI)
     exit('Access denied - Command line only!');
     }
 
-include __DIR__ . '/../../include/db.php';
+include __DIR__ . '/../../include/boot.php';
 
 ob_end_clean();
 restore_error_handler();

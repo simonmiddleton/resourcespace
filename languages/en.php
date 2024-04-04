@@ -707,8 +707,10 @@ $lang["password"]="Password";
 $lang["login"]="Log in";
 $lang["loginincorrect"]="Sorry, your login details were incorrect.<br /><br />If you have forgotten your password,<br />use the link below to request a new one.";
 $lang["accountexpired"]="Your account has expired. Please contact the resources team.";
+$lang["accountnotfound-reset-not-emailed"]="Password reset link was not sent because there is no account with that email";
 $lang["accountnoemail-reset-not-emailed"]="Password reset link was not sent because the account has no email address";
 $lang["accountexpired-reset-not-emailed"]="Password reset link was not sent because the account has expired";
+$lang["accountnotapproved-reset-not-emailed"]="Password reset link was not sent because the account is not approved";
 $lang["useralreadyexists"]="An account with that e-mail or username already exists, or you have reached your user allocation.";
 $lang["useremailalreadyexists"]="An account with that e-mail already exists.";
 $lang["ticktoemail"]="E-mail this user their username and new password";
@@ -1967,6 +1969,7 @@ $lang["starttypingkeyword"]="Start typing keyword...";
 $lang["createnewentryfor"]="Create new entry for";
 $lang["confirmcreatenewentryfor"]="Are you sure you wish to create a new keyword list entry for '%%'?";
 $lang["noentryexists"]="No entry exists for";
+$lang['inactive_entry_matched'] = 'Inactive entry matched for';
 
 $lang["editresourcepreviews"]="Edit Resource Previews";
 $lang["can_assign_resource_requests"]="Can assign resource requests to others";
@@ -2808,6 +2811,8 @@ $lang["actions_type_userrequest"] = "Account request";
 $lang["actions_add_editable_to_collection"] = "Add all editable resources to collection";
 $lang["field_search_no_results"] = "Try without specifying a metadata field, or";
 $lang["actions_view_editable_as_resultset"]="View resources to review as a result set";
+$lang['email_actions_truncated'] = "Only the most recent 1000 actions are shown here. You have %%TOTAL%% actions. Login to %%APPLICATIONNAME%% to view them all.";
+
 
 $lang["refinemetadata"]="Refine metadata";
 $lang["saveandnext"]="Save and next";
@@ -2865,7 +2870,9 @@ $lang["api-function"]="API function";
 $lang["api-help"]='Please refer to the <a target="_blank" href="https://www.resourcespace.com/knowledge-base/api">API documentation</a> for function specifics. <strong>Be careful - any commands you enter will be executed using your live data.</strong>';
 $lang["api-view-documentation"]="View documentation";
 $lang["api-php-code"]="PHP code";
-$lang["api-php-help"]="Paste the below into the remote system to call the entered API function with the provided parameters.";
+$lang["api-php-help"]="Use the below PHP code on a remote system to call the entered API function with the provided parameters.";
+$lang["api-curl-example"] = "cURL example";
+$lang["api-curl-help"] = "The below one line bash script can be executed on any UNIX system with OpenSSL and cURL installed.";
 
 $lang["font"]="Font";
 
@@ -3125,3 +3132,12 @@ $lang["pull_images_text"]                   = "Use images from related resources
 $lang["system_user_default"]                = "SYSTEM";
 
 $lang["userlimitreached"] = "You have reached your user limit. An existing user must be disabled or deleted before you can create new accounts or enable existing accounts.";
+
+$lang["user_api_session_title"]             = "Remote system API access";
+$lang["user_api_session_text"]              = "The remote system '%system%' is requesting access to %applicationname% using your credentials. Click 'Grant access' only if you have initiated this request"; 
+$lang["user_api_session_invalid_system"]    = "Invalid system requested";
+$lang["user_api_session_grant_access"]      = "Grant access";
+$lang["user_api_session_grant_success"]     = "Key issued successfully.";
+$lang["user_api_session_grant_error"]       = "Key issuance failed.";
+
+

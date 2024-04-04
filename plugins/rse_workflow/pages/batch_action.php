@@ -1,5 +1,5 @@
 <?php
-include_once '../../../include/db.php';
+include_once '../../../include/boot.php';
 include_once '../../../include/authenticate.php';
 include_once '../../../include/ajax_functions.php';
 include_once '../include/rse_workflow_functions.php';
@@ -160,14 +160,14 @@ include_once '../../../include/header.php';
                 ?>
             </div>
         </div>
-        <h1><?php echo $lang["rse_workflow_confirm_batch_wf_change"]; ?></h1>
+        <h1><?php echo escape($lang["rse_workflow_confirm_batch_wf_change"]); ?></h1>
     </div>
 
     <p><?php echo str_replace("%wf_name", $to_wf_state["name"], $lang["rse_workflow_confirm_to_state"]); ?></p>
     <p><?php echo str_replace("%count", $affected_resources_count, $lang["rse_workflow_affected_resources"]); ?></p>
     <div class="QuestionSubmit">
-        <button type="button" onclick="ModalClose();"><?php echo $lang["cancel"]; ?></button>
-        <button type="button" onclick="process_wf_action(this);" <?php echo $action_csrf_data; ?>><?php echo $lang["ok"]; ?></button>
+        <button type="button" onclick="ModalClose();"><?php echo escape($lang["cancel"]); ?></button>
+        <button type="button" onclick="process_wf_action(this);" <?php echo $action_csrf_data; ?>><?php echo escape($lang["ok"]); ?></button>
     </div>
 </div>
 <script>

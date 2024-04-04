@@ -8,7 +8,7 @@ use function ImageBanks\providersCheckedAndActive;
 use function ImageBanks\validFileSource;
 
 $rs_root = dirname(__DIR__, 3);
-include_once "{$rs_root}/include/db.php";
+include_once "{$rs_root}/include/boot.php";
 include_once "{$rs_root}/include/authenticate.php";
 include_once "{$rs_root}/include/image_processing.php";
 include_once "{$rs_root}/include/ajax_functions.php";

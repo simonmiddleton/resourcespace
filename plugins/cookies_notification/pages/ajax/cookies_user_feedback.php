@@ -1,5 +1,5 @@
 <?php
-include dirname(__DIR__) . '/../../../include/db.php';
+include dirname(__DIR__) . '/../../../include/boot.php';
 include dirname(__DIR__) . '/../../../include/authenticate.php';
 
 

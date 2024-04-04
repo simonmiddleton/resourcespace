@@ -1,6 +1,11 @@
 <?php
 /* -------- Dynamic Keywords List ----------- */ 
-global $baseurl, $pagename, $edit_autosave, $dynamic_keyword_and, $k;
+global $baseurl, $pagename, $edit_autosave, $k;
+
+if ($pagename == 'search_advanced')
+    {
+    $name .= '_search_adv';
+    }
 
 if(!isset($selected_nodes))
     {
@@ -27,7 +32,7 @@ $add_searched_nodes_function_call = '';
 <div class="dynamickeywords ui-front">
     <input id="<?php echo $name; ?>_selector" type="text" <?php if ($pagename=="search_advanced") { ?> class="SearchWidth" <?php } else {?>  class="stdwidth" <?php } ?>
            name="<?php echo $name; ?>_selector"
-           placeholder="<?php echo $lang['starttypingkeyword']; ?>"
+           placeholder="<?php echo escape($lang['starttypingkeyword']); ?>"
            onFocus="
                 <?php
                 if($pagename=="edit")
@@ -45,7 +50,7 @@ $add_searched_nodes_function_call = '';
 />
 <?php
 
-$nodes_in_sequence = $field['nodes'];
+$nodes_in_sequence = array_filter($field['nodes'], 'node_is_active');
 
 if((bool) $field['automatic_nodes_ordering'])
     {
@@ -122,7 +127,7 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
     document.getElementById('<?php echo $name; ?>_selected').insertAdjacentHTML('beforeBegin', hidden_input_elements);
     document.getElementById('<?php echo $name; ?>_selected').innerHTML = html;
     
-    if("<?php echo $field['field_constraint']?>"==1 && keyword_count>=1 && (pagename!='search_advanced' || '<?php echo var_export($dynamic_keyword_and, true) ?>'==='true'))
+    if("<?php echo $field['field_constraint']; ?>"==1 && keyword_count>=1 && (pagename!='search_advanced'))
         {
         document.getElementById('<?php echo $name; ?>_selector').disabled = true;
         }
@@ -131,13 +136,18 @@ function updateSelectedKeywords_<?php echo $js_keywords_suffix; ?>(user_action)
         document.getElementById('<?php echo $name; ?>_selector').disabled = false;
         }
 
-    // Update the result counter, if the function is available (e.g. on Advanced Search).
-    if(typeof(UpdateResultCount) == 'function' && user_action)
+    <?php
+    if ($pagename != 'edit')
         {
-        UpdateResultCount();
+        ?>
+        // Update the result counter, if the function is available (e.g. on Advanced Search).
+        if(typeof(UpdateResultCount) == 'function' && user_action)
+            {
+            UpdateResultCount();
+            }
+        <?php
         }
 
-    <?php
     if($edit_autosave)
         {
         ?>
@@ -207,8 +217,10 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
     var found_suggested = true;
     var keyword         = ui.item.label;
     var node_id         = ui.item.value;
+    let no_entry_exists = keyword.substring(0, <?php echo mb_strlen(escape($lang['noentryexists']), 'UTF-8') ?>) == '<?php echo escape($lang["noentryexists"]); ?>';
+    let inactive_entry = keyword.substring(0, <?php echo mb_strlen(escape($lang['inactive_entry_matched']), 'UTF-8'); ?>) === '<?php echo escape($lang['inactive_entry_matched']); ?>';
 
-    if(keyword.substring(0, <?php echo mb_strlen($lang['createnewentryfor'], 'UTF-8'); ?>) == '<?php echo $lang["createnewentryfor"]; ?>')
+    if(keyword.substring(0, <?php echo mb_strlen($lang['createnewentryfor'], 'UTF-8'); ?>) == '<?php echo escape($lang["createnewentryfor"]); ?>')
         {
         keyword = keyword.substring(<?php echo mb_strlen($lang['createnewentryfor'], 'UTF-8') + 1; ?>);
 
@@ -243,10 +255,9 @@ function selectKeyword_<?php echo $js_keywords_suffix; ?>(event, ui)
                 }
             });        
         }
-    else if(keyword.substring(0, <?php echo mb_strlen(escape($lang['noentryexists']), 'UTF-8') ?>) == '<?php echo escape($lang["noentryexists"]); ?>')
+    else if(inactive_entry || no_entry_exists)
         {
         document.getElementById('<?php echo $name; ?>_selector').value = '';
-
         found_suggested = false;
         }
 

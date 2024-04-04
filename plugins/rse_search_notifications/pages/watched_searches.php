@@ -2,7 +2,7 @@
 
 DEFINE('WATCHED_SEARCHES_ITEMS_PER_PAGE',10);
 
-include_once "../../../include/db.php";
+include_once "../../../include/boot.php";
 include_once "../../../include/authenticate.php";
 include_once "../../../include/search_do.php";
 include_once "../include/search_notifications_functions.php";
@@ -11,7 +11,7 @@ $plugin_name            = "rse_search_notifications";
 $plugin_active          = in_array($plugin_name, $plugins); // is the plugin active?
 if (!$plugin_active)
     {
-    redirect("pages/".$default_home_page);
+    redirect("pages/home.php");
     }
 
 $all_users_mode=getval("allusers",0)==1 && checkperm("a");
@@ -86,8 +86,8 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 
 ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang["search_notifications_watched_searches"]; ?></h1>
-    <p><?php echo $lang["search_notifications_introtext"]; ?></p>
+    <h1><?php echo escape($lang["search_notifications_watched_searches"]); ?></h1>
+    <p><?php echo strip_tags_and_attributes($lang["search_notifications_introtext"]); ?></p>
 
     <div class="TopInpageNav">
 
@@ -99,8 +99,8 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                         <input type="text" name="find" id="find" value="<?php echo escape($find); ?>" maxlength="100" class="shrtwidth">
                     </div>
                     <input type="hidden" name="offset" id="offset" value="0" />
-                    <div class="Inline"><input name="Submit" type="submit" value="<?php echo $lang["searchbutton"]; ?>"></div>
-                    <div class="Inline"><input name="Clear" type="button" onclick="document.getElementById('find').value=''; return CentralSpacePost(this.form,true);" value="<?php echo $lang["clearbutton"]; ?>"></div>
+                    <div class="Inline"><input name="Submit" type="submit" value="<?php echo escape($lang["searchbutton"]); ?>"></div>
+                    <div class="Inline"><input name="Clear" type="button" onclick="document.getElementById('find').value=''; return CentralSpacePost(this.form,true);" value="<?php echo escape($lang["clearbutton"]); ?>"></div>
                 </div>
                 <div class="clearerleft"> </div>
             </div>
@@ -125,7 +125,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
             <?php generateFormToken("rse_search_notifications_watched_searches"); ?>
             <input type="hidden" name="offset" id="offset" value="0" />
             <input type="hidden" name="find" id="find" value="<?php echo escape($find); ?>" >
-            <label for="allusers"><?php echo $lang['search_notifications_show_for_all_users']; ?></label>
+            <label for="allusers"><?php echo escape($lang['search_notifications_show_for_all_users']); ?></label>
             <?php
             if ($all_users_mode)
                 {
@@ -164,7 +164,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
     if ($any_enabled)
         {
         ?><a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=disable_all" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
-        echo $lang['disable_all']; ?></a>
+        echo escape($lang['disable_all']); ?></a>
         <?php
         }
 
@@ -176,7 +176,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
     if ($any_disabled)
         {
         ?><a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=enable_all" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
-        echo $lang['enable_all']; ?></a>
+        echo escape($lang['enable_all']); ?></a>
         <?php
         }
 
@@ -195,7 +195,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
 <?php
     if(!$watched_searches_found)
     {
-        echo $lang['search_notifications_no_watched_searches'];
+        echo escape($lang['search_notifications_no_watched_searches']);
         ?>
         </div> <!-- end of BasicsBox -->
         <?php
@@ -212,7 +212,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                 <td><?php render_sortable_header($lang["columnheader-title"],4); ?></td>
                 <td><?php render_sortable_header($lang["columnheader-last-found"],11); ?></td>
                 <td><?php render_sortable_header($lang["columnheader-enabled"],8); ?></td>
-                <td><div class="ListTools"><?php echo $lang["tools"]; ?></div></td>
+                <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
             </tr>
             <?php
             for ($i=$offset; $i<$offset + WATCHED_SEARCHES_ITEMS_PER_PAGE; $i++)
@@ -231,7 +231,7 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                     <td><?php
                         if ($ws["enabled"])
                             {
-                            echo $lang["yes"];
+                            echo escape($lang["yes"]);
                             ?></td>
                             <td>
                                 <div class="ListTools">
@@ -249,13 +249,13 @@ $url = generateURL($watched_searches_url, array("offset" => $offset), $url_set_p
                             }
                         else
                             {
-                            echo $lang["no"];
+                            echo escape($lang["no"]);
                             ?></td>
                             <td>
                                 <div class="ListTools">
-                                    <a href="<?php echo $view_search_url; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo $lang["searchbutton"]; ?></a>
+                                    <a href="<?php echo $view_search_url; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php echo escape($lang["searchbutton"]); ?></a>
                                     <a href="<?php echo $url; echo strpos($url,'?')!==false?'&':'?'; ?>callback=enable&ref=<?php echo $ws["ref"]; ?>" onclick="return CentralSpaceLoad(this,true);">&gt;&nbsp;<?php
-                                        echo $lang['enable']; ?></a>
+                                        echo escape($lang['enable']); ?></a>
                             <?php
                             }
                         ?>

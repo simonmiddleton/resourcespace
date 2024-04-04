@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 include "../include/authenticate.php";
 include_once "../include/image_processing.php";
 include_once "../include/api_functions.php";
@@ -54,7 +54,7 @@ if (getval("submitting","")!="" && $api_function!="")
 
 <div class="RecordBox">
 <div class="RecordPanel">
-<h1><?php echo $lang['api-test-tool']; ?></h1>
+<h1><?php echo escape($lang['api-test-tool']); ?></h1>
 
 <?php
 renderBreadcrumbs([
@@ -63,15 +63,15 @@ renderBreadcrumbs([
 ]);
 ?>
 
-<p><?php echo $lang["api-help"];render_help_link("api"); ?></p>
+<p><?php echo strip_tags_and_attributes($lang["api-help"]);render_help_link("api"); ?></p>
 
 <form id="api-form" method="post" action="<?php echo $baseurl_short?>pages/api_test.php" onSubmit="return CentralSpacePost(this);">
 <?php generateFormToken("api-form"); ?>
 
 <div class="Question">
-<label><?php echo $lang["api-function"] ?></label>
+<label><?php echo escape($lang["api-function"]); ?></label>
 <select class="stdwidth" name="api_function" onChange="CentralSpacePost(document.getElementById('api-form'));">
-    <option value=""><?php echo $lang["select"] ?></option>
+    <option value=""><?php echo escape($lang["select"]); ?></option>
     <?php
     # Allow selection from built in functions
     asort($api_functions);
@@ -83,7 +83,7 @@ renderBreadcrumbs([
     ?>
     
 </select>
-<?php if ($api_function!="") { ?>&nbsp;&nbsp;<a target="_blank" href="https://www.resourcespace.com/knowledge-base/api/<?php echo $api_function ?>"><?php echo $lang["api-view-documentation"] ?></a><?php } ?>
+<?php if ($api_function!="") { ?>&nbsp;&nbsp;<a target="_blank" href="https://www.resourcespace.com/knowledge-base/api/<?php echo $api_function ?>"><?php echo escape($lang["api-view-documentation"]); ?></a><?php } ?>
 </div>
 
 <?php
@@ -133,8 +133,10 @@ if ($api_function!="")
 
 </form>
 
-<?php if ($output!="") { 
+<?php if ($output!="")
+    { 
     //rebuild params for output to include encoding if needed
+    $original_query=$query;
     $query="function=" . $api_function;
     foreach($fct_params as $fparam)
         {
@@ -149,15 +151,14 @@ if ($api_function!="")
         strpos(urlencode($param_val), '%') === false?$query .= '&' . $param_name . '=' . $param_val:$query .= '&' . $param_name . '=" . urlencode("' . $param_val . '") . "';
         }
     ?>
-<pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:black;color:white;padding:5px;border-left:10px solid #666;"><?php echo escape($output) ?></pre>
+<pre class="codeoutput"><?php echo escape($output) ?></pre>
 
 
 <br /><br />
-<h2><?php echo $lang["api-php-code"] ?></h2>
-<p><?php echo $lang["api-php-help"] ?></p>
+<h2><?php echo escape($lang["api-php-code"]); ?></h2>
+<p><?php echo escape($lang["api-php-help"]); ?></p>
 
-<style>.codecomment {color:#090;}</style>
-<pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:white;color:black;padding:10px;">
+<pre class="codeexample">
 &lt;?php
 
 <span class="codecomment">// Set the private API key for the user (from the user account page) and the user we're accessing the system as.</span>
@@ -173,6 +174,13 @@ $sign=hash("sha256",$private_key . $query);
 <span class="codecomment">// Make the request and output the JSON results.</span>
 $results=json_decode(file_get_contents("<?php echo escape($baseurl) ?>/api/?" . $query . "&sign=" . $sign));
 print_r($results);
+</pre>
+
+<h2><?php echo escape($lang["api-curl-example"]); ?></h2>
+<p><?php echo escape($lang["api-curl-help"]); ?></p>
+
+<pre class="codeexample">
+private_key="<?php echo get_api_key($userref) ?>"; user=<?php echo escapeshellarg($username); ?>; query=<?php echo escapeshellarg("user=" . $username . "&" . $original_query); ?>; sign=$(echo -n "${private_key}${query}" | openssl dgst -sha256); curl -X POST "<?php echo $baseurl ?>/api/?${query}&sign=$(echo ${sign} | sed 's/^.* //')"
 </pre>
 
 <?php } ?>

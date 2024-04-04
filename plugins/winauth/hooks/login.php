@@ -4,11 +4,11 @@
 function HookWinauthLoginLoginformlink()
     {
     // Add a link to login.php, which is still used if $wordpress_sso_allow_standard_login is set to true
-    global $baseurl_short, $lang, $winauth_enable, $default_home_page;
+    global $baseurl_short, $lang, $winauth_enable;
     if($winauth_enable)
         {
         $url = urldecode(getval("url",""));
-        $redirecturl = (trim($url) != "/" && trim($url) != "") ? $url : "pages/" . $default_home_page;
+        $redirecturl = (trim($url) != "/" && trim($url) != "") ? $url : "pages/home.php";
         $winauthurl = generateURL("{$baseurl_short}plugins/winauth/pages/secure/winauth.php", array("url" => $redirecturl,"winauth_login" => "true"));
         echo "<a href='" . $winauthurl . "' >" . '<i class="fab fa-fw fa-windows"></i>&nbsp;' . $lang["winauth_use_win_login"] . "</a><br/>";
         }

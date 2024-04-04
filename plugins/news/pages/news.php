@@ -4,7 +4,7 @@
  * @package ResourceSpace
  */
 
-include dirname(__FILE__)."/../../../include/db.php";
+include dirname(__FILE__)."/../../../include/boot.php";
 
 include dirname(__FILE__)."/../../../include/authenticate.php";
 include_once dirname(__FILE__)."/../inc/news_functions.php";
@@ -95,7 +95,7 @@ include dirname(__FILE__)."/../../../include/header.php";
 <?php generateFormToken("news"); ?> 
     <input name="previous" type="submit" value="&lt;"/> 
     <?php if (checkperm("o")) { ?>  
-        <input name="edit" type="submit" value="<?php echo $lang["action-edit"]?>"/>
+        <input name="edit" type="submit" value="<?php echo escape($lang["action-edit"]); ?>"/>
     <?php } ?>      
     <input name="next" type="submit" value="&gt;"/>
 </div>

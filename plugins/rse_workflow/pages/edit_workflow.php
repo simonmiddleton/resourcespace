@@ -3,14 +3,14 @@
 # rse_workflow setup page, requires System Setup permission
 #
 
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php'; if (!checkperm('a')) {exit ($lang['error-permissiondenied']);}
 include '../../../include/header.php';
 
 ?>
 
 <div class="BasicsBox"> 
-    <h1><?php echo $lang["rse_workflow_manage_workflow"]; ?></h1>
+    <h1><?php echo escape($lang["rse_workflow_manage_workflow"]); ?></h1>
     <?php
     $links_trail = array(
         array(

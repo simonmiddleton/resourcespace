@@ -51,7 +51,7 @@ if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|`)/i", $shell_exec_cmd))
     
      if(file_exists($job_data["outputfile"]))
         {
-        global $lang, $baseurl, $download_file_lifetime, $offline_job_delete_completed;
+        global $lang, $baseurl, $offline_job_delete_completed;
         $url=(isset($job_data["url"])) ? $job_data["url"] : (isset($job_data["resource"]) ? $baseurl_short . "?r=" . $job_data["resource"]:"");
         $message=$job_success_text!=""?$job_success_text:$lang["download_file_created"]  . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";
         message_add($job["user"],$message,$url,0);
@@ -67,7 +67,7 @@ if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|`)/i", $shell_exec_cmd))
             {
             $delete_job_data=array();
             $delete_job_data["file"]=$job_data["outputfile"];
-            $delete_date = date('Y-m-d H:i:s',time()+(60*60*24*$download_file_lifetime));
+            $delete_date = date('Y-m-d H:i:s',time()+(60*60*24*DOWNLOAD_FILE_LIFETIME));
             $job_code=md5($job_data["outputfile"]); 
             job_queue_add("delete_file",$delete_job_data,"",$delete_date,"","",$job_code);
             }

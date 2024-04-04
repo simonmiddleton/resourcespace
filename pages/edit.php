@@ -1,5 +1,5 @@
 <?php
-include_once "../include/db.php";
+include_once "../include/boot.php";
 
 // External share support
 $k = getval('k','');
@@ -506,17 +506,16 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
         }
     }
 
-if (getval("regen","")!="" && enforcePostRequest($ajax))
-    {
+if (getval("regen","") != "" && enforcePostRequest($ajax)) {
     hook('edit_recreate_previews_extra', '', array($ref));
-    ps_query("update resource set preview_attempts=0 WHERE ref= ?" , ['i', $ref]);
-    create_previews($ref,false,$resource["file_extension"]);
+    if(!start_previews($ref)) {
+       $onload_message["text"] = $lang["recreatepreviews_pending"];
     }
+}
 
-if (getval("regenexif","")!="" && enforcePostRequest($ajax))
-    {
+if (getval("regenexif","")!="" && enforcePostRequest($ajax)) {
     extract_exif_comment($ref);
-    }
+}
 
 # Establish if this is a metadata template resource, so we can switch off certain unnecessary features
 $is_template=(isset($metadata_template_resource_type) && $resource["resource_type"]==$metadata_template_resource_type);
@@ -1042,37 +1041,9 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
          tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
          break;
       case "restore":
-        delete_previews($resource);
-        ps_query("update resource set has_image=0, preview_attempts=0 WHERE ref= ?", ['i', $ref]);
-        if ($enable_thumbnail_creation_on_upload && !(isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB')) || 
-        (isset($preview_generate_max_file_size) && $resource["file_size"] < filesize2bytes($preview_generate_max_file_size.'MB')))   
-            {
-            hook('edit_previews_recreate_extra', '', array($ref)); 
-            create_previews($ref,false,$resource["file_extension"],false,false,-1,true);
-            refresh_collection_frame();
-            }
-            elseif((!$enable_thumbnail_creation_on_upload || (isset($preview_generate_max_file_size) && $resource["file_size"] > filesize2bytes($preview_generate_max_file_size.'MB'))) && $offline_job_queue)
-            {
-            $create_previews_job_data = array(
-                'resource' => $ref,
-                'thumbonly' => false,
-                'extension' => $resource["file_extension"],
-                'previewonly' => false,
-                'previewbased' => false,
-                'alternative' => -1,
-                'ignoremaxsize' => true,
-            );
-            $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
-            $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
-
-            job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+        if(!start_previews($ref)) {
             $onload_message["text"] = $lang["recreatepreviews_pending"];
-            }
-        else
-            {
-            ps_query("update resource set preview_attempts=0, has_image=0 where ref= ?", ['i', $ref]);
-            $onload_message["text"] = $lang["recreatepreviews_pending"];
-            }
+        }
         break;
       }
    hook("moretweakingaction", "", array($tweak, $ref, $resource));
@@ -1380,7 +1351,7 @@ else
             <label><?php echo escape($lang["imagecorrection"])?><br/><?php echo escape($lang["previewthumbonly"])?></label>
             <select class="stdwidth" name="tweak" id="tweak" onchange="add_hidden_modal_input('mainform', <?php echo $modal ? "true" : "false"; ?>); <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('mainform'),true);">
             <option value=""><?php echo escape($lang["select"])?></option>
-            <?php if ($resource["has_image"]==1)
+            <?php if ((int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                 {
                 # On some PHP installations, the imagerotate() function is wrong and images are turned incorrectly.
                 # A local configuration setting allows this to be rectified
@@ -1563,7 +1534,7 @@ hook("editbefresmetadata"); ?>
                         continue;
                         }
                     ?>
-                    <option value="<?php echo $types[$n]["ref"]?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo escape($types[$n]["name"])?></option>
+                    <option value="<?php echo $types[$n]["ref"]; ?>" <?php if ($resource["resource_type"]==$types[$n]["ref"]) {?>selected<?php } ?>><?php echo escape($types[$n]["name"])?></option>
                     <?php
                     }
                 ?>
@@ -1612,7 +1583,7 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
                 $template_selected = ' selected';
                 }
                 ?>
-            <option value="<?php echo (int)$template["ref"] ?>" <?php echo $template_selected; ?>><?php echo escape((string)$template["field{$metadata_template_title_field}"]); ?></option>
+            <option value="<?php echo (int)$template["ref"]; ?>" <?php echo $template_selected; ?>><?php echo escape((string)$template["field{$metadata_template_title_field}"]); ?></option>
             <?php   
             }
             ?>
@@ -2167,7 +2138,7 @@ else
             {
             echo "<input id='access_checksum' name='access_checksum' type='hidden' value='" . $access_stored_value . "'>";
             }?>
-        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"] ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
+        <select class="stdwidth" name="access" id="access" onChange="var c=document.getElementById('custom_access');<?php if ($resource["access"]==3) { ?>if (!confirm('<?php echo escape($lang["confirm_remove_custom_usergroup_access"]) ?>')) {this.value=<?php echo $resource["access"]; ?>;return false;}<?php } ?>if (this.value==3) {c.style.display='block';} else {c.style.display='none';}<?php if ($edit_autosave) {?>AutoSave('Access');<?php } ?>">
           <?php
                     if($ea0)    //0 - open
                     {$n=0;?><option value="<?php echo $n?>" <?php if ($resource["access"]==$n) { ?>selected<?php } ?>><?php echo escape($lang["access" . $n])?></option><?php }
@@ -2194,13 +2165,12 @@ else
               {
                  ?>
                  <table id="custom_access" cellpadding=3 cellspacing=3 style="padding-left:150px;<?php if ($resource["access"]!=3) { ?>display:none;<?php } ?>"><?php
-                 global $default_customaccess;
                  $customaccesssource = ($upload_review_mode && in_array("access",$locked_fields) && $lastedited > 0) ? $lastedited : $ref;
                  $groups=get_resource_custom_access($customaccesssource);
                  $groups_count = count($groups);
                  for ($n=0;$n<$groups_count;$n++)
                  {
-                   $access=$default_customaccess;
+                   $access=RESOURCE_ACCESS_CONFIDENTIAL;
                    $editable= (!$ea3)?false:true;
 
                    if (isset($submitted_access_groups) && $submitted_access_groups[$groups[$n]['ref']] !== "" )
@@ -2217,17 +2187,17 @@ else
                    <tr>
                       <td valign=middle nowrap><?php echo escape($groups[$n]["name"])?>&nbsp;&nbsp;</td>
 
-                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="0" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==0) { ?>checked <?php }
+                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]; ?>" value="0" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==0) { ?>checked <?php }
                       if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
                       <td align=left valign=middle><?php echo escape($lang["access0"])?></td>
 
-                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="1" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==1) { ?>checked <?php }
+                      <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]; ?>" value="1" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==1) { ?>checked <?php }
                       if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
                       <td align=left valign=middle><?php echo escape($lang["access1"])?></td>
 
-                     <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]?>" value="2" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==2) { ?>checked <?php }
+                     <td width=10 valign=middle><input type=radio name="custom_<?php echo $groups[$n]["ref"]; ?>" value="2" <?php if (!$editable) { ?>disabled<?php } ?> <?php if ($access==2) { ?>checked <?php }
                      if ($edit_autosave) {?> onChange="AutoSave('Access');"<?php } ?>></td>
 
                      <td align=left valign=middle><?php echo escape($lang["access2"])?></td>
@@ -2419,12 +2389,14 @@ if ($ref>0 && !$multiple)
             $bbr_preview_size = $edit_large_preview ? 'pre' : 'thm';
             $wmpath="";
             # Establish path to watermarked version if its rendering is a possibility
-            if (checkperm("w") && $resource["has_image"]==1) 
+            if (checkperm("w") && (int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                 {
                 $wmpath=get_resource_path($ref,true, $bbr_preview_size,false,$resource["preview_extension"],-1,1,true);
                 }
-            if ($resource["has_image"]==1 && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size))
-                {
+            if (
+                (int) $resource["has_image"] !== RESOURCE_PREVIEWS_NONE 
+                && !resource_has_access_denied_by_RT_size($resource['resource_type'], $bbr_preview_size)
+                ) {
                 $path_to_preview = get_resource_path($ref, false, $bbr_preview_size, false, $resource["preview_extension"], -1, 1, false);
                 if ($upload_review_mode && $hide_real_filepath)
                     {

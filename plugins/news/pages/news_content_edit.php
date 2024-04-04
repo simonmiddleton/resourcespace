@@ -5,7 +5,7 @@
  * @package ResourceSpace
  * @subpackage Pages_Team
  */
-include dirname(__FILE__)."/../../../include/db.php";
+include dirname(__FILE__)."/../../../include/boot.php";
 
 include dirname(__FILE__)."/../../../include/authenticate.php";if (!checkperm("o")) {exit ("Permission denied.");}
 include_once dirname(__FILE__)."/../inc/news_functions.php";
@@ -59,11 +59,11 @@ include dirname(__FILE__)."/../../../include/header.php";
 ?>
 
 <p id="EditNewsBack">
-    <a href="news_edit.php?offset=<?php echo $offset?>&findtext=<?php echo escape($findtext)?>"><?php echo LINK_CARET_BACK ?><?php echo $lang["news_manage"]?></a>
+    <a href="news_edit.php?offset=<?php echo $offset?>&findtext=<?php echo escape($findtext)?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["news_manage"]); ?></a>
 </p>
 
 <div class="BasicsBox">
-    <h1><?php echo $lang["news_edit"]?></h1>
+    <h1><?php echo escape($lang["news_edit"]); ?></h1>
     <span class="FormError">
     <?php 
     
@@ -79,28 +79,28 @@ include dirname(__FILE__)."/../../../include/header.php";
         <input type=hidden name=name value="<?php echo $ref?>">
 
         <div class="Question">
-            <label><?php echo $lang["date"]?></label>
+            <label><?php echo escape($lang["date"]); ?></label>
             <input name="date" class="stdwidth" type="text" value="<?php echo $createnews ? date("Y-m-d H:i:s") : $news[0]["date"]; ?>">
         </div>
 
         <div class="clearerleft"> </div>
 
         <div class="Question">
-            <label><?php echo $lang["news_headline"];?></label>
+            <label><?php echo escape($lang["news_headline"]);?></label>
             <input name="title" class="stdwidth" type="text" value="<?php echo $createnews ? $lang["news_addtitle"] : $news[0]["title"]; ?>">
         </div>
 
         <div class="clearerleft"> </div>
 
         <div class="Question">
-            <label><?php echo $lang["news_body"]?></label>
+            <label><?php echo escape($lang["news_body"]); ?></label>
             <textarea name="body" class="stdwidth" rows="15" cols="50"><?php if (!$createnews) { echo escape($news[0]["body"]); } ?></textarea>
         </div>
 
         <div class="clearerleft"> </div>
 
         <div class="QuestionSubmit">
-            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
+            <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" />
         </div>
     </form>
 </div>

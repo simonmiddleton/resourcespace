@@ -5,7 +5,7 @@
 # Cleans the database of unused / orphaned rows
 #
 
-require dirname(__FILE__) . "/../../include/db.php";
+require dirname(__FILE__) . "/../../include/boot.php";
 command_line_only();
 
 

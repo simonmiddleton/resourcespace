@@ -1,5 +1,5 @@
 <?php
-include_once dirname(__FILE__)."/../include/db.php";
+include_once dirname(__FILE__)."/../include/boot.php";
 
 # External access support (authenticate only if no key provided, or if invalid access key provided)
 $k=getval("k","");if (($k=="") || (!check_access_key_collection(getval("collection","",true),$k))) {include_once dirname(__FILE__)."/../include/authenticate.php";}
@@ -382,7 +382,7 @@ else { ?>
                             }
                         else
                             {
-                            RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id, <?php echo escape(generate_csrf_js_object('remove_resource_from_collection')); ?>);
+                            RemoveResourceFromCollection(event, resource_id, '<?php echo $pagename; ?>', collection_id, <?php echo htmlspecialchars(generate_csrf_js_object('remove_resource_from_collection'), ENT_NOQUOTES); ?>);
                             // Remove resource from search results if this is not a collection search   
                             if(is_special_search('!collection', 11))
                                 {
@@ -434,7 +434,7 @@ else { ?>
     <style>
     #CollectionMenuExp
         {
-        height:<?php echo $collection_frame_height-15?>px;
+        height:<?php echo COLLECTION_FRAME_HEIGHT-15?>px;
         }
     </style>
 
@@ -741,7 +741,7 @@ elseif ($k != "" && !$internal_share_access)
         <br />
         <div class="CollectionStatsAnon">
         <?php echo ($tempcol) ?  $lang["created"] . " " . nicedate($tempcol["created"]) : "" ?><br />
-        <?php echo $count_result . " " . $lang["youfoundresources"]?><br />
+        <?php echo $count_result . " " . $lang["youfoundresources"]; ?><br />
         </div>
         <?php
         $min_access=collection_min_access($result);
@@ -758,11 +758,11 @@ elseif ($k != "" && !$internal_share_access)
             }
         }
         if ($feedback) {?>
-            <br /> <br />
+            <br><br>
             <a onclick="return CentralSpaceLoad(this);" 
                 href="<?php echo generateURL($baseurl_short . 'pages/collection_feedback.php', ['collection' => $usercollection, 'k' => $k]); ?>">
                 <?php echo LINK_CARET . escape($lang["sendfeedback"]); ?></a>
-            </br>
+            <br>
         <?php } 
         if (
             $count_result > 0 
@@ -827,7 +827,7 @@ else
                         #show only active collections if a start date is set for $active_collections 
                         if (strtotime($list[$n]['created']) > ((isset($active_collections))?strtotime($active_collections):1) || ($list[$n]['name']=="Default Collection" && $list[$n]['user']==$userref))
                             {?>
-                            <option value="<?php echo $list[$n]["ref"]?>" <?php if ($usercollection==$list[$n]["ref"]) {?>  selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option><?php
+                            <option value="<?php echo $list[$n]["ref"]; ?>" <?php if ($usercollection==$list[$n]["ref"]) {?>  selected<?php $found=true;} ?>><?php echo i18n_get_collection_name($list[$n]) ?></option><?php
                             }
                         }
 
@@ -937,7 +937,8 @@ else
     if ($count_result>0) {
         # Loop through resources for thumbnails for standard display
         for ($n=0;$n<count($result) && $n<$count_result && $n<$max_collection_thumbs;$n++) {
-            if (!isset($result[$n])) {
+            if (!isset($result[$n]) || !is_array($result[$n])) {
+                # $result can be a list of suggested searches, in this case do not process this item.
                 continue;
             }
             $ref=$result[$n]["ref"];
@@ -973,28 +974,25 @@ else
                             href="<?php echo $thumb_url ?>">
                         <?php
                         $colimg_preview_size = $retina_mode ? 'thm' : 'col';
-                        $thumbnail = get_resource_preview($result[$n],[$colimg_preview_size],$access,$watermark);
-                        if($thumbnail !== false)
-                            {
-                            // Use standard preview image
-                            if($result[$n]["thumb_height"] !== $thumbnail["height"] || $result[$n]["thumb_width"] !== $thumbnail["width"])
-                                {                    
-                                // Preview image dimensions differ from the size data stored for the current resource
-                                $result[$n]["thumb_height"] = $thumbnail["height"];
-                                $result[$n]["thumb_width"]  = $thumbnail["width"];
-                                }
-                            render_resource_image($result[$n],$thumbnail["url"],$colimg_preview_size);                        
-                            }
-                        else
-                            {
+                        if($result[$n]['has_image'] !== RESOURCE_PREVIEWS_NONE
+                            && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], $colimg_preview_size)
+                            && file_exists(get_resource_path($ref, true, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']))
+                        ) {
+                            $colimgpath = get_resource_path($ref, false, $colimg_preview_size, false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified']);
                             ?>
-                            <img border=0 
-                                alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
-                                src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],false) ?>" 
+                            <img class="CollectionPanelThumb"
+                                border=0
+                                src="<?php echo $colimgpath; ?>"
+                                title="<?php echo escape(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                                alt="<?php echo escape(i18n_get_translated($result[$n]["field".$view_title_field]))?>"
+                                <?php if ($retina_mode) { ?>onload="this.width/=2;this.onload=null;"<?php } ?>
                             />
-                            <?php 
-                            }
-
+                        <?php } else { ?>
+                            <img alt="<?php echo escape(i18n_get_translated($result[$n]['field'.$view_title_field] ?? "")); ?>"
+                                border=0
+                                src="<?php echo $baseurl_short?>gfx/<?php echo get_nopreview_icon($result[$n]["resource_type"],$result[$n]["file_extension"],true) ?>"
+                            />
+                        <?php }
                         hook("aftersearchimg","",array($result[$n]))?>
                         </a></td>
                     </tr></table><?php
@@ -1002,13 +1000,14 @@ else
 
                 $title=$result[$n]["field".$view_title_field];
                 $title_field=$view_title_field;
+
                 if (
-                    isset($metadata_template_title_field) 
+                    isset($metadata_template_title_field)
                     && isset($metadata_template_resource_type)
                     && $result[$n]['resource_type'] == $metadata_template_resource_type
-                    ) {
-                        $title=$result[$n]["field".$metadata_template_title_field];
-                        $title_field=$metadata_template_title_field;
+                ) {
+                    $title = $result[$n]["field" . $metadata_template_title_field];
+                    $title_field = $metadata_template_title_field;
                 }
 
                 $field_type=ps_value("SELECT type value FROM resource_type_field WHERE ref=?",array("i",$title_field),
@@ -1083,9 +1082,9 @@ else
                     } # End of remove link condition
                     ?>
                     </div>
-<?php } # End of k="" condition ?>
+        <?php } # End of k="" condition ?>
                 </div>
-<?php } # End of ResourceView hook
+    <?php } # End of ResourceView hook
         } # End of loop through standard display thumbnails ?>
         <div class="clearerleft"></div>
 <?php } # End of display thumbnails for standard display
@@ -1159,7 +1158,7 @@ if (count($addarray)>0 && $addarray[0]!="")
                 if ($min_access!=0)
                     {
                     ?>
-                    <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo   $lang["requestall"]?></a></li>
+                    <li><a onclick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short?>pages/collection_request.php?ref=<?php echo urlencode($usercollection) ?>&k=<?php echo urlencode($k) ?>"><?php echo escape($lang["requestall"]); ?></a></li>
                     <?php
                     }
                 }?>

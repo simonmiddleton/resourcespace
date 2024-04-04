@@ -170,7 +170,7 @@ if ($on_upload || (isset($ref) && $ref<0))
                         ) {
                             if ($list[$n]["ref"]==$usercollection) {$currentfound=true;} 
                             ?>
-                            <option value="<?php echo $list[$n]["ref"]?>" <?php if ($list[$n]['ref']==$collection_add) {?>  selected<?php } ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
+                            <option value="<?php echo $list[$n]["ref"]; ?>" <?php if ($list[$n]['ref']==$collection_add) {?>  selected<?php } ?>><?php echo i18n_get_collection_name($list[$n]) ?></option>
                             <?php
                         }
                     }

@@ -7,10 +7,10 @@ define('SYSVAR_CURRENT_UPGRADE_LEVEL','upgrade_system_level');
 
 $cli=PHP_SAPI=='cli';
 
-// if running from the command line or called somewhere within RS check to see if we need to include db.php
-if ($cli || !in_array(realpath(__DIR__ . '/../include/db.php'), get_included_files()))
+// if running from the command line or called somewhere within RS check to see if we need to include boot.php
+if ($cli || !in_array(realpath(__DIR__ . '/../include/boot.php'), get_included_files()))
     {
-    include_once __DIR__ . '/../include/db.php';
+    include_once __DIR__ . '/../include/boot.php';
     }
 
 $ajax = (!$cli ? getval("ajax", false) : false);

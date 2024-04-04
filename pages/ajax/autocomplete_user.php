@@ -1,7 +1,7 @@
 <?php
 # Feeder page for AJAX user/group search for the user selection include file.
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php";
 
@@ -52,7 +52,7 @@ if(!$ignoregroups)
                 if (!$first) { ?>, <?php }
                 $first=false;
 
-                ?>{ "label": "<?php echo $lang["group"]?>: <?php echo $groups[$n]["name"]?>", "value": "<?php echo $lang["group"]?>: <?php echo $groups[$n]["name"]?>" <?php if ($getrefs){?>,  "ref": "<?php echo $groups[$n]["ref"]?>"<?php }?> }<?php 
+                ?>{ "label": "<?php echo escape($lang["group"]); ?>: <?php echo $groups[$n]["name"]; ?>", "value": "<?php echo escape($lang["group"]); ?>: <?php echo $groups[$n]["name"]; ?>" <?php if ($getrefs){?>,  "ref": "<?php echo $groups[$n]["ref"]; ?>"<?php }?> }<?php 
                 }
             }
         }
@@ -89,7 +89,7 @@ if(!$ignoregroups)
                 if (!$first) { ?>, <?php }
                 $first=false;
 
-                ?>{ "label": "<?php echo $lang["groupsmart"]?>: <?php echo $groups[$n]["name"]?>", "value": "<?php echo $lang["groupsmart"]?>: <?php echo $groups[$n]["name"]?>" <?php if ($getrefs){?>,  "ref": "<?php echo $groups[$n]["ref"]?>"<?php }?> }<?php 
+                ?>{ "label": "<?php echo escape($lang["groupsmart"]); ?>: <?php echo $groups[$n]["name"]; ?>", "value": "<?php echo escape($lang["groupsmart"]); ?>: <?php echo $groups[$n]["name"]; ?>" <?php if ($getrefs){?>,  "ref": "<?php echo $groups[$n]["ref"]; ?>"<?php }?> }<?php 
                 }
             }
         }
@@ -109,7 +109,7 @@ if(!$ignoregroups)
             if (!$first) { ?>, <?php }
             $first=false;
 
-            ?>{ "label": "<?php echo $users[$n]["fullname"]?>", "value": "<?php echo $users[$n]["username"]?>" <?php if ($getrefs){?>,  "ref": "<?php echo $users[$n]["ref"]?>"<?php }?> } <?php
+            ?>{ "label": "<?php echo $users[$n]["fullname"]; ?>", "value": "<?php echo $users[$n]["username"]; ?>" <?php if ($getrefs){?>,  "ref": "<?php echo $users[$n]["ref"]; ?>"<?php }?> } <?php
             }
         }
 

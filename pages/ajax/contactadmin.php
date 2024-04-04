@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php";
 
@@ -86,13 +86,13 @@ if ($insert=="")
 
     include "../../include/header.php";     
     ?>
-    <p><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
-    <h1><?php echo $lang["contactadmin"]?></h1>             
+    <p><a href="<?php echo $baseurl ?>/pages/view.php?ref=<?php echo urlencode($ref) ?>&search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($offset) ?>&order_by=<?php echo urlencode($order_by) ?>&sort=<?php echo urlencode($sort) ?>&archive=<?php echo urlencode($archive) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
+    <h1><?php echo escape($lang["contactadmin"]); ?></h1>             
     <div>       
         
     <?php
 
-    if ($resource["has_image"]==1)
+    if ((int) $resource["has_image"] != RESOURCE_PREVIEWS_NONE)
         {
         ?><img align="top" src="<?php echo get_resource_path($ref,false,($edit_large_preview?"pre":"thm"),false,$resource["preview_extension"],-1,1,checkperm("w"))?>" alt="<?php echo $imagename ?>" class="Picture"/><br />
         <?php
@@ -125,14 +125,14 @@ function sendResourceMessage()
         success: function(html){                        
                 //jQuery('#RecordDownload li:last-child').after(html);
                 if(html=="SUCCESS")
-                    {alert('<?php echo $lang["emailsent"] ?>');}
+                    {alert('<?php echo escape($lang["emailsent"]); ?>');}
                 else
-                    {alert('<?php echo $lang["error"] ?>\n' + html);}
+                    {alert('<?php echo escape($lang["error"]); ?>\n' + html);}
                 jQuery('#messagetext').val("");
                 jQuery('#contactadminbox').slideUp();
                 },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            alert('<?php echo $lang["error"] ?>\n' + textStatus);
+            alert('<?php echo escape($lang["error"]); ?>\n' + textStatus);
             }
         });
     }
@@ -140,19 +140,19 @@ function sendResourceMessage()
 </script>
 <div class="clearerleft"> </div>
 <div id="contactadminbox">
-<p><php echo $lang["contactadmin"] ?></p>
+<p><php echo $lang["contactadmin"]; ?></p>
 <form name="contactadminform" method=post id="contactadminform" action="<?php echo $baseurl_short?>pages/ajax/contactadmin.php?ref=<?php echo $ref ?>">
     <?php generateFormToken("contactadminform"); ?>
 <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">
 
 <div>
-<p><?php echo $lang["contactadminintro"]?></p>
+<p><?php echo escape($lang["contactadminintro"]); ?></p>
 <textarea rows=6 name="messagetext" id="messagetext"></textarea>
 <div class="clearerleft"> </div>
 
 <div id="contactadminbuttons">
-<input name="send" type="submit" class="contactadminbutton" value="&nbsp;&nbsp;<?php echo $lang["send"]?>&nbsp;&nbsp;" onClick="sendResourceMessage();return false;" />
-<input name="cancel" type="submit" class="contactadminbutton" value="&nbsp;&nbsp;<?php echo $lang["cancel"]?>&nbsp;&nbsp;" onClick="jQuery('#contactadminbox').slideUp();return false;" />
+<input name="send" type="submit" class="contactadminbutton" value="&nbsp;&nbsp;<?php echo escape($lang["send"]); ?>&nbsp;&nbsp;" onClick="sendResourceMessage();return false;" />
+<input name="cancel" type="submit" class="contactadminbutton" value="&nbsp;&nbsp;<?php echo escape($lang["cancel"]); ?>&nbsp;&nbsp;" onClick="jQuery('#contactadminbox').slideUp();return false;" />
 </div>
 </div>
 

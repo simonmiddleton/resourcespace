@@ -1,5 +1,5 @@
 <?php
-include_once "../../include/db.php";
+include_once "../../include/boot.php";
 
 $provider   = getval("provider","");
 $variant    = getval("variant","");

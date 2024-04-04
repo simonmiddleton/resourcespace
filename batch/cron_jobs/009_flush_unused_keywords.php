@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . "/../../include/db.php";
+include_once __DIR__ . "/../../include/boot.php";
 if($sysvars["upgrade_system_level"] < 2)
     {
     // After migrating to nodes it is preferable to delete resource_keyword rows for fixed list data

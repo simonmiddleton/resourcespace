@@ -1,5 +1,5 @@
 <?php 
-include "../../include/db.php";
+include "../../include/boot.php";
  
 include "../../include/authenticate.php"; 
 
@@ -8,12 +8,13 @@ if (!$metadata_report) {exit("This function is not enabled.");}
 $exiftool_fullpath = get_utility_path("exiftool");
 if ($exiftool_fullpath==false)
     {
-    echo $lang["exiftoolnotfound"];
+    echo escape($lang["exiftoolnotfound"]);
     }
 else
     {
     $ref=getval("ref","");
     $resource=get_resource_data($ref);
+    if ($resource===false) {exit("Could not fetch resource data.");} // Should not occur - invalid ref?
     $ext=$resource['file_extension'];
     if ($ext==""){die($lang['nometadatareport']);}
     $resource_type=$resource['resource_type'];

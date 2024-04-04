@@ -24,7 +24,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
             {
             $border=true;    
             $ref=$resources[$m]['ref'];
-            if($resources[$m]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($resources[$m]['resource_type'], 'col'))
+            if((int) $resources[$m]['has_image'] !== 0 && !resource_has_access_denied_by_RT_size($resources[$m]['resource_type'], 'col'))
                 {
                 $previewpath=get_resource_path($ref,false,"col",false,"jpg",-1,1,false,$resources[$m]["file_modified"]);
                 }
@@ -69,7 +69,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
             <?php }
         } ?>
         <?php if (!hook("replacecollectiontools")){?>
-        <div class="ResourcePanelIcons" style="float:right;"><a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]?>" onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]?></a>&nbsp;&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . $lang["view"]?></a></div>     
+        <div class="ResourcePanelIcons" style="float:right;"><a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]; ?>" onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]; ?></a>&nbsp;&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . $lang["view"]; ?></a></div>     
         <?php } ?>
         <?php hook("searchiconpublic");?>
         <div class="clearer"></div>
@@ -100,13 +100,13 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
             }
 
         ?>
-        <?php if ($id_column){?><td><?php echo $collections[$n]['ref']?></td><?php } ?>
+        <?php if ($id_column){?><td><?php echo $collections[$n]['ref']; ?></td><?php } ?>
         <?php if ($resource_type_column){?><td><?php echo $collection_tag?></td><?php } ?>
         <?php if ($date_column){?><td><?php echo nicedate($collections[$n]["created"],false,true)?></td><?php } ?>
         <?php hook("addlistviewcolumnpublic");?>
         <td><div class="ListTools">
         <?php if (!hook("replacecollectiontools")){?>
-        <a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]?>"  onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]?></a>&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . $lang["viewall"]?></a>
+        <a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]; ?>"  onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]; ?></a>&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . $lang["viewall"]; ?></a>
         <?php } ?>
         </div></td>
         <?php } ?>

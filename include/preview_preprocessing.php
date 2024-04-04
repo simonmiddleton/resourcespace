@@ -5,9 +5,10 @@
 # for example types that use GhostScript or FFmpeg.
 #
 
-global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace, $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution,
-$pdf_dynamic_rip, $ffmpeg_audio_extensions, $ffmpeg_audio_params,$ffmpeg_supported_extensions, $ffmpeg_global_options,$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds,
-$ffmpeg_no_new_snapshots, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif,$resource_view_use_pre, $debug_log, $debug_log_override;
+global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace,
+$ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip,
+$ffmpeg_audio_extensions, $ffmpeg_audio_params,$ffmpeg_supported_extensions, $ffmpeg_global_options,
+$ffmpeg_snapshot_fraction, $ffmpeg_snapshot_seconds, $lang, $dUseCIEColor, $blender_path, $ffmpeg_preview_gif,$resource_view_use_pre, $debug_log, $debug_log_override;
 
 resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['createpreviews'] . ":\n");
 
@@ -35,19 +36,6 @@ if ($ffmpeg_preview_gif) {$ffmpeg_supported_extensions[] = 'gif';}
 
 # Set up ImageMagick
 putenv("MAGICK_HOME=" . $imagemagick_path);
-
-$snapshotcheck=false;
-if (in_array($extension, $ffmpeg_supported_extensions)){
-    $snapshotcheck=file_exists(get_resource_path($ref,true,"pre",false,'jpg',-1,1,false,""));
-    if ($snapshotcheck){ps_query("update resource set has_image=1 where ref=?",array("i",$ref));}
-}
-
-if ($alternative==-1 && !($snapshotcheck && in_array($extension, $ffmpeg_supported_extensions) && $ffmpeg_no_new_snapshots))
-    {
-    # Reset the 'has thumbnail image' status in case previewing fails with this new file. 
-    ps_query("update resource set has_image=0 where ref=?",array("i",$ref)); 
-    }
-
 
 # Set up target file
 if (file_exists($target)) {
@@ -315,13 +303,33 @@ if ( (($extension=="pages") || ($extension=="numbers") || (!isset($unoconv_path)
 global $unoconv_extensions;
 if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoconv_path) && !isset($newfile))
     {
-    $unocommand = get_utility_path('unoconv');
+    $unocommand = get_utility_path('unoconvert');
+    $unoconvert=true;
     if(!$unocommand)
         {
-        exit("Unoconv executable not found");
+        $unocommand = get_utility_path('unoconv');
+        $unoconvert=false; // Legacy mode for unoconv
+        }
+    if(!$unocommand)
+        {
+        exit("unoconv/unoconvert executable not found");
         }
 
-    $output = run_command("{$unocommand} " . ($debug_log || $debug_log_override ? '-v' : '') . " --format=pdf %file", false, ['%file' => $file]);
+    $path_parts=pathinfo($file);
+    $basename_minus_extension=remove_extension($path_parts['basename']);
+    $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
+    
+    if ($unoconvert)
+        {
+        // Use newer unoconvert utility (note - does not have a verbose mode)
+        $output = run_command("{$unocommand} %file %pdffile", false, ['%file' => $file,'%pdffile' => $pdffile]);
+        }
+    else    
+        {
+        // Legacy support for unoconv
+        $output = run_command("{$unocommand} " . ($debug_log || $debug_log_override ? '-v' : '') . " --format=pdf %file", false, ['%file' => $file]);
+        }
+
     debug('Preview_preprocessing : ' . $output);
 
     # Check for extracted text - if found, it has already been extracted from the uploaded file so don't replace it with the text from this pdf.
@@ -337,9 +345,6 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
             }
         }
 
-    $path_parts=pathinfo($file);
-    $basename_minus_extension=remove_extension($path_parts['basename']);
-    $pdffile=$path_parts['dirname']."/".$basename_minus_extension.".pdf";
 
     $no_alt_condition = (
         $GLOBALS['non_image_types_generate_preview_only']
@@ -624,16 +629,7 @@ global $ffmpeg_preview,$ffmpeg_preview_seconds,$ffmpeg_preview_extension,$ffmpeg
 debug('FFMPEG-VIDEO: ####################################################################');
 debug('FFMPEG-VIDEO: Start trying FFMPeg for video files -- resource ID ' . $ref);
 
-// If a snapshot has already been created and $ffmpeg_no_new_snapshots, never revert the snapshot (this is usually a custom preview)
-if(false != $ffmpeg_fullpath && $snapshotcheck && in_array($extension, $ffmpeg_supported_extensions) && $ffmpeg_no_new_snapshots)
-    {
-    debug('FFMPEG-VIDEO: Create a preview for this video by going straight to ffmpeg_processing.php');
-
-    $target = get_resource_path($ref, true, 'pre', false, 'jpg', -1, 1, false, '');
-    
-    include dirname(__FILE__) . '/ffmpeg_processing.php';
-    }
-elseif (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpeg_supported_extensions))
+if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpeg_supported_extensions))
     {
     debug('FFMPEG-VIDEO: Start process for creating previews...');
     
@@ -676,7 +672,7 @@ elseif (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $f
         
         // Generate snapshots for the whole video (not for alternatives)
         // Custom target used ONLY for captured snapshots during the video
-        if(1 < $ffmpeg_snapshot_frames && -1 == $alternative)
+        if($generateall && 1 < $ffmpeg_snapshot_frames && -1 == $alternative)
             {
             $snapshot_scale           = '';
             $escaped_file             = escapeshellarg($file);
@@ -864,11 +860,11 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
         {
         debug("PDF multi page preview generation starting",RESOURCE_LOG_APPEND_PREVIOUS);
         
-      # For EPS/PS/PDF files, use GS directly and allow multiple pages.
+    # For EPS/PS/PDF files, use GS directly and allow multiple pages.
     # EPS files are always single pages:
-    if ($extension=="eps") {$pdf_pages=1;}
-    if ($extension=="ai") {$pdf_pages=1;}
-    if ($extension=="ps") {$pdf_pages=1;}
+    if (in_array($extension,["eps","ai","ps"]) || !$generateall) {
+        $pdf_pages = 1;
+    }
     $resolution=$pdf_resolution;
     $scr_size=ps_query("select width,height from preview_size where id='scr'");
     if(empty($scr_size)){
@@ -1069,10 +1065,8 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 $non_image_types = config_merge_non_image_types();
 
 # If a file has been created, generate previews just as if a JPG was uploaded.
-if (isset($newfile) && file_exists($newfile))
-    {
-    if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension,config_merge_non_image_types()))
-        {
+if (isset($newfile) && file_exists($newfile)) {
+    if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension,config_merge_non_image_types())) {
         $file_used_for_previewonly = get_resource_path($ref, true, "tmp", false, "jpg");
         // Don't create tiles for these
         $GLOBALS['preview_tiles']=false;
@@ -1082,19 +1076,17 @@ if (isset($newfile) && file_exists($newfile))
             debug("preview_preprocessing: changing previewonly = true for non-image file");
             }
         }
-
-    create_previews($ref,false,"jpg",$previewonly,false,$alternative);
-
-    if(
+    
+    create_previews($ref,false,"jpg",false,false,$alternative,$ignoremaxsize,true,$checksum_required,$onlysizes);
+    if(            
         $GLOBALS['non_image_types_generate_preview_only']
         && in_array($extension, $GLOBALS['non_image_types'])
-        && file_exists($file_used_for_previewonly))
-        {
+        && file_exists($file_used_for_previewonly)
+        ) {
         unlink($file_used_for_previewonly);
-        }
-
-    if(isset($unoconv_fake_pdf_file) && $unoconv_fake_pdf_file)
-        {
-        unlink($file);
-        }
     }
+
+    if(isset($unoconv_fake_pdf_file) && $unoconv_fake_pdf_file) {
+        unlink($file);
+    }
+}

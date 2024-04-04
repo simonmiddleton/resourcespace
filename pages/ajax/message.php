@@ -6,7 +6,7 @@
     // check for callback, i.e. this file being called directly to get any new messages
     if (basename(__FILE__)==basename($_SERVER['PHP_SELF']))
         {
-        include_once __DIR__ . "/../../include/db.php";
+        include_once __DIR__ . "/../../include/boot.php";
         
         include __DIR__ . "/../../include/authenticate.php";
         if($actions_on)
@@ -312,7 +312,7 @@
         if (url!="")
         {
             url=decodeURIComponent(url);
-            url="<a href='" + url + "'><?php echo $lang['link']; ?></a>";
+            url="<a href='" + url + "'><?php echo escape($lang['link']); ?></a>";
         }
         var id='message' + ref;
         if (jQuery("#" + id).length)        // already being displayed
@@ -393,7 +393,7 @@
             title: '<?php echo $lang['message'] . " " . strtolower($lang["from"]) . " "; ?>' + owner,
             modal: true,
             resizable: false,
-            buttons: [{text: "<?php echo $lang['ok'] ?>",
+            buttons: [{text: "<?php echo escape($lang['ok']); ?>",
                         click: function() {
                         jQuery( this ).dialog( "close" );
                         }}],

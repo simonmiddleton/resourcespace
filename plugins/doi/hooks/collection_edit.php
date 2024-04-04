@@ -87,7 +87,7 @@
 
                     <div class="Fixed">
                         <a onclick="return confirm('<?php echo $sum; ?>')<?php if (count($ready_to_reg) == 0) echo ' && false'; ?>;"
-                            <?php if (count($ready_to_reg) > 0) echo 'href="' . $baseurl_short . 'pages/collection_edit.php?ref=' . $ref . '&registerdois=yes"'; ?>><?php echo $lang['doi_register_all']; ?>
+                            <?php if (count($ready_to_reg) > 0) echo 'href="' . $baseurl_short . 'pages/collection_edit.php?ref=' . $ref . '&registerdois=yes"'; ?>><?php echo escape($lang['doi_register_all']); ?>
                             &gt;</a>
                     </div>
                     <div class="clearerleft"></div>

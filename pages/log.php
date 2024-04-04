@@ -1,5 +1,5 @@
 <?php
-include "../include/db.php";
+include "../include/boot.php";
 
 include "../include/authenticate.php";
 
@@ -75,7 +75,7 @@ if ($go!="")
             {
             ?>
             <script type="text/javascript">
-            alert('<?php echo $lang["resourcenotinresults"] ?>');
+            alert('<?php echo escape($lang["resourcenotinresults"]); ?>');
             </script>
             <?php
             }
@@ -104,13 +104,13 @@ else {$previous_page_modal = false;}
 if(!$modal)
     {
     ?>
-    <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$url_params);?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$url_params);?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
     <?php
     }
 elseif ($previous_page_modal)
     {
     ?>
-    <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$url_params);?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $lang["backtoresourceview"]?></a></p>
+    <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$url_params);?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
     <?php
     }
 ?>
@@ -122,7 +122,7 @@ elseif ($previous_page_modal)
                 hook("viewallresults");
                 if ($k=="") { ?>
                 |
-                <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($search_offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $lang["viewallresults"]?></a>
+                <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo urlencode($search_offset)?>&order_by=<?php echo urlencode($order_by)?>&sort=<?php echo urlencode($sort)?>&archive=<?php echo urlencode($archive)?>&k=<?php echo urlencode($k)?>" onclick="return CentralSpaceLoad(this, true);"><?php echo escape($lang["viewallresults"]); ?></a>
                 <?php } ?>
                 |
                 <a href="<?php echo generateURL("{$baseurl_short}pages/log.php", array_merge($url_params, $filter_url_params), array("search_go" => "next")) . hook("nextpreviousextraurl"); ?>" onclick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this, true);"><?php echo escape($lang["nextresult"])?>&nbsp;<?php echo LINK_CARET ?></a>
@@ -137,7 +137,7 @@ elseif ($previous_page_modal)
                 ?>
             </div>
         </div>
-        <h1><?php echo $lang["resourcelog"] . " : " . $lang["resourceid"] . " " .  escape($ref);render_help_link("user/logs");?></h1>
+        <h1><?php echo escape($lang["resourcelog"]) . " : " . escape($lang["resourceid"]) . " " .  escape($ref);render_help_link("user/logs");?></h1>
     </div>
 
 <?php
@@ -209,7 +209,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
         }
     $logusertext = $log[$n]["access_key"] != "" ? 
         ($lang["externalusersharing"] . ": " . $log[$n]["access_key"] . " " . $lang["viauser"] . " " . (empty($log[$n]["shared_by"]) ? $log[$n]["fullname"] : $log[$n]["shared_by"])) 
-        : (trim((string) $log[$n]["fullname"]) !== "" ? $log[$n]["fullname"] : $lang["system_user_default"]);    
+        : (trim((string) $log[$n]["fullname"]) !== "" ? $log[$n]["fullname"] : $lang["system_user_default"]);
     $logentry["user"] = hook("userdisplay","",array($log[$n])) ? "" : $logusertext;
 
     if($filter_dld_records_only)

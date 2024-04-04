@@ -18,14 +18,10 @@ if(!hook('customchkboxes', '', array($field)))
             }
         }
 
-    $node_options = array();
-    foreach($field['nodes'] as $node)
-        {
-        $node_options[] = $node['name'];
-        }
+    $field['nodes'] = array_filter($field['nodes'], 'node_is_active');
 
     // Work out an appropriate number of columns based on the average length of the options.
-    $l = average_length($node_options);
+    $l = average_length(array_column($field['nodes'], 'name'));
     switch($l)
         {
         case $l > 25: $cols = 1; break;   

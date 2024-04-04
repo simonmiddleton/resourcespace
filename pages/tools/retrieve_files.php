@@ -26,7 +26,7 @@
 *  **** CAUTION SHOULD BE USED IF SERVER IS ON AN INTERNAL NETWORK ****
 */
 
-include __DIR__ . '/../../include/db.php';
+include __DIR__ . '/../../include/boot.php';
 include_once __DIR__ . '/../../include/resource_functions.php';
 command_line_only();
 set_time_limit(0);

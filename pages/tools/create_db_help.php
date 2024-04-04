@@ -1,6 +1,6 @@
 <?php
 // Creates or updates the database help files, ready for manual completion by adding a note to each column.
-include "../../include/db.php";
+include "../../include/boot.php";
 command_line_only();
 
 $folder=dirname(__FILE__) . "/../../dbstruct/";

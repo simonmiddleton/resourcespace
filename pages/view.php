@@ -5,7 +5,7 @@
  * @package ResourceSpace
  * @subpackage Pages
  */
-include_once "../include/db.php";
+include_once "../include/boot.php";
 
 $ref=(int) getval("ref",0,true);
 
@@ -28,8 +28,8 @@ if(
     preg_match("/^field(.*)/", $order_by, $matches)
     && !in_array($matches[1],$sort_fields) # check that field ref  is in config $sort_fields array
     ) {
-        $order_by="relevance"; # if not, then sort by relevance
-    }
+    $order_by="relevance"; # if not, then sort by relevance
+}
 
 $offset=getval("offset",0,true);
 $restypes=getval("restypes","");
@@ -134,13 +134,13 @@ if (isset($resource_view_large_ext))
 else
     {
     if (
-        isset($resource_view_large_orientation) 
+        isset($resource_view_large_orientation)
         && $resource_view_large_orientation == true
-        && $resource["has_image"] == 1 
+        && $resource["has_image"] == 1
         && ($resource["thumb_height"] >= $resource["thumb_width"])
         ) {
             # Portrait or square image
-            $use_larger_layout = false;
+           $use_larger_layout = false;
         }
     }
 
@@ -285,7 +285,7 @@ if($resource_contact_link && ($k=="" || $internal_share_access))
                         type: "GET",
                         url: baseurl_short+"pages/ajax/contactadmin.php?ref="+<?php echo $ref ?>+"&insert=true&ajax=true",
                         success: function(html){
-                                jQuery('#RecordDownload li:last-child').after(html);
+                                jQuery('#RecordDownloadTabContainer li:last-child').after(html);
                                 document.getElementById('messagetext').focus();
                                 },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -370,14 +370,14 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                 jQuery('#lock_link_' + resource).toggleClass("ResourceUnlocked");
                 if(lockstatus==1)
                     {               
-                    jQuery('#lock_link_' + resource).html('&nbsp;<?php echo escape($lang["action_unlock"]) ;?>');
+                    jQuery('#lock_link_' + resource).html('&nbsp;<?php echo escape($lang["action_unlock"]) ; ?>');
                     jQuery('#lock_link_' + resource).attr("title","<?php echo escape($lang["status_locked_self"]); ?>");
                     lockmessage[resource] = '<?php echo escape($lang["status_locked_self"]); ?>';
                     jQuery('#lock_details_link').show();
                     }
                 else
                     {
-                    jQuery('#lock_link_' + resource).html('&nbsp;<?php echo escape($lang["action_lock"]) ;?>');
+                    jQuery('#lock_link_' + resource).html('&nbsp;<?php echo escape($lang["action_lock"]); ?>');
                     lockmessage[resource] = '';
                     jQuery('#lock_details_link').hide();
                     // Timeout added as title resists removal if cursor is hovering as it is removed
@@ -454,7 +454,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                 parent_element.find("#"+jQuery(this).attr("panel")).css("position", "relative").css("left","0px").show();;
                 if (jQuery(this).attr("panel")=="Comments") {
                     jQuery("#CommentsContainer").load(
-                    "../pages/ajax/comments_handler.php?ref=<?php echo $ref;?>", 
+                    "../pages/ajax/comments_handler.php?ref=<?php echo $ref; ?>", 
                     function() {
                     if (jQuery.type(jQuery(window.location.hash)[0])!=="undefined")             
                         jQuery(window.location.hash)[0].scrollIntoView();
@@ -498,7 +498,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                         <a class="prevLink fa fa-arrow-left"
                             href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"previous")) . "&amp;" .  hook("nextpreviousextraurl") ?>"
                             onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this);"
-                            title="<?php echo escape($lang["previousresult"])?>">
+                            title="<?php echo escape($lang["previousresult"]); ?>">
                         </a>
 
                         <?php 
@@ -507,7 +507,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                             <a class="upLink"
                                 href="<?php echo generateURL($baseurl . "/pages/search.php",$urlparams,array("go"=>"up","place"=>$ref)) ?>"
                                 onClick="return CentralSpaceLoad(this);">
-                                <?php echo escape($lang["viewallresults"])?>
+                                <?php echo escape($lang["viewallresults"]); ?>
                             </a>
                             <?php 
                             } ?>
@@ -515,7 +515,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                         <a class="nextLink fa fa-arrow-right"
                             href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams, array("go"=>"next")) . "&amp;" .  hook("nextpreviousextraurl") ?>"
                             onClick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this);"
-                            title="<?php echo escape($lang["nextresult"])?>">
+                            title="<?php echo escape($lang["nextresult"]); ?>">
                         </a>
 
                         <?php
@@ -524,7 +524,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                             <a href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams) ?>"
                                 onClick="return CentralSpaceLoad(this, true);"
                                 class="maxLink fa fa-expand"
-                                title="<?php echo escape($lang["maximise"])?>">
+                                title="<?php echo escape($lang["maximise"]); ?>">
                             </a>
                             <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]) ?>"></a>
                             <?php
@@ -543,7 +543,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 generateURL($baseurl . "/pages/view.php",$urlparams) ?>"
                                 onClick="return CentralSpaceLoad(this);"
                                 class="maxLink fa fa-expand"
-                                title="<?php echo escape($lang["maximise"])?>">
+                                title="<?php echo escape($lang["maximise"]); ?>">
                             </a>
                             <?php
                             } ?>
@@ -558,30 +558,30 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                     if (!hook("replacetitleprefix","",array($resource["archive"]))) { switch ($resource["archive"])
                         {
                         case -2:
-                        ?><span class="ResourcePendingSubmissionTitle"><?php echo escape($lang["status-2"])?>:</span>&nbsp;<?php
+                        ?><span class="ResourcePendingSubmissionTitle"><?php echo escape($lang["status-2"]); ?>:</span>&nbsp;<?php
                         break;
                         case -1:
-                        ?><span class="ResourcePendingReviewTitle"><?php echo escape($lang["status-1"])?>:</span>&nbsp;<?php
+                        ?><span class="ResourcePendingReviewTitle"><?php echo escape($lang["status-1"]); ?>:</span>&nbsp;<?php
                         break;
                         case 1:
-                        ?><span class="ArchiveResourceTitle"><?php echo escape($lang["status1"])?>:</span>&nbsp;<?php
+                        ?><span class="ArchiveResourceTitle"><?php echo escape($lang["status1"]); ?>:</span>&nbsp;<?php
                         break;
                         case 2:
-                        ?><span class="ArchiveResourceTitle"><?php echo escape($lang["status2"])?>:</span>&nbsp;<?php
+                        ?><span class="ArchiveResourceTitle"><?php echo escape($lang["status2"]); ?>:</span>&nbsp;<?php
                         break;
                         case 3:
-                        ?><span class="DeletedResourceTitle"><?php echo escape($lang["status3"])?>:</span>&nbsp;<?php
+                        ?><span class="DeletedResourceTitle"><?php echo escape($lang["status3"]); ?>:</span>&nbsp;<?php
                         break;
                         }
 
                     #If additional archive states are set, put them next to the field used as title
-                    if ( 
-                        isset($additional_archive_states) 
+                    if (
+                        isset($additional_archive_states)
                         && count($additional_archive_states)!=0
                         && in_array($resource["archive"],$additional_archive_states)
                         ) {
                             ?>
-                            <span class="ArchiveResourceTitle"><?php echo escape($lang["status" . $resource['archive']]) ?>:</span>&nbsp;<?php	
+                            <span class="ArchiveResourceTitle"><?php echo escape($lang["status" . $resource['archive']]) ?>:</span>&nbsp;<?php       
                         }
                     }
 
@@ -596,15 +596,15 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
             } /* End of renderinnerresourceheader hook */ ?>
         </div>
 
-        <?php 
+        <?php
         if (
             !hook("replaceresourceistranscoding")
-            && isset($resource['is_transcoding']) 
+            && isset($resource['is_transcoding'])
             && $resource['is_transcoding'] != 0
             ) {
                 ?>
                 <div class="PageInformal">
-                    <?php echo escape($lang['resourceistranscoding'])?>
+                    <?php echo escape($lang['resourceistranscoding']); ?>
                 </div>
                 <?php
             } //end hook replaceresourceistrancoding ?>
@@ -642,15 +642,17 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                             {
                             // Standard previews START
                             if (
-                                (in_array((string)$resource["file_extension"], $ffmpeg_supported_extensions) 
+                                (in_array((string)$resource["file_extension"], $ffmpeg_supported_extensions)
                                 || ($ffmpeg_preview_gif && strtolower((string)$resource["file_extension"]) === 'gif'))
-                                && 
+                                &&
                                 !(isset($resource['is_transcoding']) && $resource['is_transcoding'] !== 0)
                                 )
                                 {
                                 // Video preview START
                                 # Establish whether it's ok to use original as the preview instead of the "pre" size
                                 $videosize= ($video_preview_original) ? "" : "pre"; 
+                                # Now pass the original file extension when necessary instead of arbitrarily passing the ffmpeg preview extension
+                                $videoextension = ($video_preview_original) ? $resource["file_extension"] : $ffmpeg_preview_extension;
 
                                 # Try to find a preview file.
                                 $video_preview_file = get_resource_path(
@@ -658,7 +660,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     true,
                                     $videosize,
                                     false,
-                                    ((1 == $video_preview_hls_support || 2 == $video_preview_hls_support) && !($ffmpeg_preview_gif && $resource["file_extension"] == 'gif')) ? 'm3u8' : $ffmpeg_preview_extension
+                                    ((1 == $video_preview_hls_support || 2 == $video_preview_hls_support) && !($ffmpeg_preview_gif && $resource["file_extension"] == 'gif')) ? 'm3u8' : $videoextension
                                 );
 
                                 if (file_exists($video_preview_file)
@@ -685,6 +687,16 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     </div>
                                     <?php
                                     }
+                                elseif ($resource['has_image'] !== RESOURCE_PREVIEWS_NONE)
+                                    {
+                                    // render preview image instead, no zoom or annotations possible
+                                    $GLOBALS["annotate_enabled"] = false;
+                                    render_resource_view_image($resource,[
+                                        "access"=>$access,
+                                        "edit_access"=>$edit_access,
+                                        ]
+                                        );
+                                    }
                                 } // Video preview END
                             elseif ($use_mp3_player && file_exists($mp3realpath) && !hook("replacemp3player"))
                                 {
@@ -693,7 +705,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 <div id="previewimagewrapper">
                                 <?php 
                                 $thumb_path=get_resource_path($ref,true,"pre",false,"jpg");
-
+    
                                 if (file_exists($thumb_path) && !resource_has_access_denied_by_RT_size($resource['resource_type'], 'pre'))
                                     {
                                     $thumb_url=get_resource_path($ref,false,"pre",false,"jpg");
@@ -702,14 +714,14 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     {
                                     $thumb_url=$baseurl . "/gfx/" . get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false);
                                     }
-
+    
                                 include "mp3_play.php";
                                 ?>
                                 </div>
                                 <?php
                                 // MP3 preview END 
                                 }
-                            elseif($resource['has_image'] === 1)
+                            elseif($resource['has_image'] !== RESOURCE_PREVIEWS_NONE)
                                 {
                                 render_resource_view_image($resource,[
                                     "access"=>$access,
@@ -733,7 +745,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 else
                                     {?>
                                     <div id="previewimagewrapper">
-                                        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false)?>"
+                                        <img src="<?php echo $baseurl ?>/gfx/<?php echo get_nopreview_icon($resource["resource_type"],$resource["file_extension"],false); ?>"
                                             alt=""
                                             class="Picture NoPreview"
                                             style="border:none;"
@@ -747,8 +759,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     }
                                 }
                             } // Standard previews END
-
-                    } /* End of replacerenderinnerresourcepreview hook and end of renderinnerresourcepreview hook */ 
+                    } /* End of replacerenderinnerresourcepreview hook and end of renderinnerresourcepreview hook */
 
                 $disable_flag = hook('disable_flag_for_renderbeforerecorddownload');
                 hook("renderbeforerecorddownload", '', array($disable_flag));
@@ -792,12 +803,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 { 
                                 ?>
                                 <table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions">
-                                    <tr <?php hook("downloadtableheaderattributes")?> id="ResourceDownloadOptionsHeader">
+                                    <tr <?php hook("downloadtableheaderattributes"); ?> id="ResourceDownloadOptionsHeader">
                                         <?php
                                         $table_headers_drawn=false;
                                         $nodownloads=false;$counter=0;$fulldownload=false;
                                         hook("additionalresourcetools");
-                                        if ($resource["has_image"]==1 && $download_multisize)
+                                        if ($resource["has_image"] !== RESOURCE_PREVIEWS_NONE && $download_multisize)
                                             {
                                             # Restricted access? Show the request link.
 
@@ -835,14 +846,14 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     && $table_headers_drawn == false
                                                     ) {
                                                         ?>
-                                                        <td><?php echo escape($lang["fileinformation"])?></td>
+                                                        <td><?php echo escape($lang["fileinformation"]); ?></td>
                                                         <?php echo $use_larger_layout ? "<td>" . $lang["filedimensions"] . "</td>" : ''; ?>
-                                                        <td><?php echo escape($lang["filesize"])?></td>
-                                                        <td class="textcenter"><?php echo escape($lang["options"])?></td>
+                                                        <td><?php echo escape($lang["filesize"]); ?></td>
+                                                        <td class="textcenter"><?php echo escape($lang["options"]); ?></td>
                                                         </tr>
                                                         <?php
                                                         $table_headers_drawn=true;
-                                                    } # end hook("replacedownloadspacetableheaders")?>
+                                                    } # end hook("replacedownloadspacetableheaders") ?>
 
                                                 <tr class="DownloadDBlend" id="DownloadBox<?php echo $n?>">
                                                     <td class="DownloadFileName"><h2><?php echo $headline?></h2><?php
@@ -861,32 +872,32 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 <?php
                                                 if (
                                                     !hook("previewlinkbar")
-                                                    && $downloadthissize 
+                                                    && $downloadthissize
                                                     && $sizes[$n]["allow_preview"] == 1
                                                     ) {
-                                                        # Add an extra line for previewing
-                                                        global $data_viewsize;
-                                                        $data_viewsize=$sizes[$n]["id"];
-                                                        $data_viewsizeurl=hook('getpreviewurlforsize');
-                                                        $preview_with_sizename=str_replace('%sizename', $sizes[$n]["name"], $lang['previewithsizename']);
-                                                        ?> 
-                                                        <tr class="DownloadDBlend">
-                                                            <td class="DownloadFileName">
-                                                                <h2><?php echo escape($lang["preview"])?></h2>
-                                                                <?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';?>
-                                                                <p><?php echo $preview_with_sizename; ?></p>
-                                                            </td>
-                                                            <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
-                                                            <td class="DownloadButton">
-                                                                <a class="enterLink previewsizelink previewsize-<?php echo $data_viewsize; ?>" 
-                                                                    id="previewlink"
-                                                                    data-viewsize="<?php echo $data_viewsize; ?>"
-                                                                    data-viewsizeurl="<?php echo $data_viewsizeurl; ?>"  
-                                                                    href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>">
-                                                                    <?php echo escape($lang["action-view"])?>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
+                                                    # Add an extra line for previewing
+                                                    global $data_viewsize;
+                                                    $data_viewsize=$sizes[$n]["id"];
+                                                    $data_viewsizeurl=hook('getpreviewurlforsize');
+                                                    $preview_with_sizename=str_replace('%sizename', $sizes[$n]["name"], $lang['previewithsizename']);
+                                                    ?> 
+                                                    <tr class="DownloadDBlend">
+                                                        <td class="DownloadFileName">
+                                                            <h2><?php echo escape($lang["preview"]); ?></h2>
+                                                            <?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : ''; ?>
+                                                            <p><?php echo $preview_with_sizename; ?></p>
+                                                        </td>
+                                                        <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
+                                                        <td class="DownloadButton">
+                                                            <a class="enterLink previewsizelink previewsize-<?php echo $data_viewsize; ?>" 
+                                                                id="previewlink"
+                                                                data-viewsize="<?php echo $data_viewsize; ?>"
+                                                                data-viewsizeurl="<?php echo $data_viewsizeurl; ?>"  
+                                                                href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>">
+                                                                <?php echo escape($lang["action-view"]); ?>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
 <?php
                                                     }
                                                 }
@@ -906,7 +917,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                         <td class="DownloadFileName" <?php echo $use_larger_layout ? ' colspan="2"' : ''; ?>>
                                                             <h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2>
                                                         </td>
-                                                        <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
+                                                        <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path)); ?></td>
 
                                                         <?php
                                                         $size_info = array('id' => '', 'extension' => $resource['file_extension']);
@@ -940,7 +951,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                         <td class="DownloadFileName">
                                                             <h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2>
                                                         </td>
-                                                        <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
+                                                        <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path)); ?></td>
                                                         <?php
                                                         $size_info = array('id' => '', 'extension' => $resource['file_extension']);
                                                         add_download_column($ref, $size_info, $downloadthissize);
@@ -973,7 +984,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             ?></td><td class="DownloadFileDimensions"><?php
                                                             }
 
-                                                        if ($resource["has_image"]==1)
+                                                        if ($resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                                                             {
                                                             $sizes=get_image_sizes($ref,false,$resource["file_extension"]);
                                                             $original_size = '';
@@ -989,7 +1000,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             }
                                                         ?>
                                                     </td>
-                                                    <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path))?></td>
+                                                    <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path)); ?></td>
                                                     <?php
                                                     $size_info = array('id' => '', 'extension' => $resource['file_extension']);
                                                     add_download_column($ref, $size_info, $downloadthissize, true);
@@ -1014,7 +1025,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             ?>
                                             <tr class="DownloadDBlend">
                                                 <td class="DownloadFileName"><h2><?php echo $download_file_name; ?></h2></td>
-                                                <td class="DownloadFileSize"><?php echo escape($lang["notavailableshort"])?></td>
+                                                <td class="DownloadFileSize"><?php echo escape($lang["notavailableshort"]); ?></td>
 
                                                 <?php
                                                 if ($generate_data_only_pdf_file)
@@ -1046,7 +1057,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 else
                                                     {
                                                     ?>
-                                                    <td <?php hook("modifydownloadbutton") ?> class="DownloadButton DownloadDisabled"><?php echo escape($lang["access1"])?></td>
+                                                    <td <?php hook("modifydownloadbutton") ?> class="DownloadButton DownloadDisabled"><?php echo escape($lang["access1"]); ?></td>
                                                     <?php
                                                     }
                                                 ?>
@@ -1062,28 +1073,28 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 <td class="DownloadFileName" colspan="2">
                                                     <h2><?php echo (isset($ffmpeg_preview_download_name)) ? $ffmpeg_preview_download_name : str_replace_formatted_placeholder("%extension", $ffmpeg_preview_extension, $lang["cell-fileoftype"]); ?></h2>
                                                 </td>
-                                                <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($video_preview_file))?></td>
+                                                <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($video_preview_file)); ?></td>
                                                 <td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
                                                     <?php
                                                     if ($terms_download || $save_as)
                                                         { ?>
                                                         <a href="<?php echo generateURL($baseurl . "/pages/terms.php",$urlparams,array("url"=>generateURL($baseurl . "/pages/download_progress.php",$urlparams,array("ext"=>$ffmpeg_preview_extension,"size"=>"pre")))) ?>" onClick="return CentralSpaceLoad(this,true);">
-                                                            <?php echo escape($lang["action-download"]) ?>
+                                                            <?php echo escape($lang["action-download"]); ?>
                                                         </a>
                                                         <?php
                                                         }
                                                     elseif ($download_usage)
                                                         // download usage form displayed - load into main window
                                                         { ?>
-                                                        <a href="<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>">
-                                                            <?php echo escape($lang["action-download"])?>
+                                                        <a href="<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref); ?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>">
+                                                            <?php echo escape($lang["action-download"]); ?>
                                                         </a>                
                                                         <?php
                                                         }
                                                     else
                                                         { ?>
-                                                        <a href="#" onclick="directDownload('<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref)?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>')">
-                                                            <?php echo escape($lang["action-download"])?>
+                                                        <a href="#" onclick="directDownload('<?php echo $baseurl ?>/pages/download_progress.php?ref=<?php echo urlencode($ref); ?>&ext=<?php echo $ffmpeg_preview_extension?>&size=pre&k=<?php echo urlencode($k) ?>', this)">
+                                                            <?php echo escape($lang["action-download"]); ?>
                                                         </a>
                                                         <?php
                                                         } ?>
@@ -1116,10 +1127,14 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             hook("resourceactionstitle");
 
                                             if ($resource_contact_link) 
-                                                { ?>
+                                                { 
+                                                $contacturl = generateURL(
+                                                    $baseurl . "/pages/ajax/contactadmin.php",
+                                                    $urlparams); 
+                                                ?>
                                                 <li>
-                                                    <a href="<?php echo $baseurl ?>/pages/ajax/contactadmin.php?ref=<?php echo urlencode($ref)?>&amp;search=<?php echo urlencode($search)?>&amp;offset=<?php echo urlencode($offset)?>&amp;order_by=<?php echo urlencode($order_by)?>&amp;sort=<?php echo urlencode($sort)?>&amp;archive=<?php echo urlencode($archive)?>" onClick="showContactBox();return false;" >
-                                                        <?php echo "<i class='fa fa-fw fa-user'></i>&nbsp;" . $lang["contactadmin"]?>
+                                                    <a href="<?php echo $contacturl; ?>" onClick="showContactBox();return false;" >
+                                                        <?php echo "<i class='fa fa-fw fa-user'></i>&nbsp;" . escape($lang["contactadmin"]); ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1155,8 +1170,8 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 { 
                                                 ?>
                                                 <li>
-                                                    <a href="<?php echo generateurl($baseurl . "/pages/resource_share.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
-                                                        <?php echo "<i class='fa fa-fw fa-share-alt'></i>&nbsp;" . $lang["share"];?>
+                                                    <a href="<?php echo generateurl($baseurl . "/pages/resource_share.php",$urlparams); ?>" onclick="return ModalLoad(this, true);">
+                                                        <?php echo "<i class='fa fa-fw fa-share-alt'></i>&nbsp;" . $lang["share"]; ?>
                                                     </a>
                                                 </li>
                                                 <?php 
@@ -1267,11 +1282,11 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     }
 
                                                 // Show the upload preview link
-                                                if (!$disable_upload_preview && !resource_file_readonly($ref) && !checkperm("F*") && !$custompermshowfile) 
+                                                if (!resource_file_readonly($ref) && !checkperm("F*") && !$custompermshowfile) 
                                                     { ?>
                                                     <li>
                                                         <a id="view_upload_preview_link" href="<?php echo generateURL($baseurl_short . "pages/upload_preview.php",$urlparams); ?>" onClick="return ModalLoad(this,true);">
-                                                            <i class='fa fa-fw fa-upload'></i>&nbsp;<?php echo escape($lang["uploadpreview"])?>
+                                                            <i class='fa fa-fw fa-upload'></i>&nbsp;<?php echo escape($lang["uploadpreview"]); ?>
                                                         </a>
                                                     </li>
                                                     <?php
@@ -1289,15 +1304,14 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     }
                                                 }
 
-                                            if ($metadata_download && (checkperm('f*') || $can_see_fields_individually))    
-                                                { ?>
+                                            if ($metadata_download && (checkperm('f*') || $can_see_fields_individually)) { ?>
                                                 <li>
-                                                    <a href="<?php echo generateurl($baseurl . "/pages/metadata_download.php",$urlparams);?>" onclick="return ModalLoad(this, true);">
-                                                        <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["downloadmetadata"]?>
+                                                    <a href="<?php echo generateurl($baseurl . "/pages/metadata_download.php", $urlparams);?>" onclick="return ModalLoad(this, true);">
+                                                        <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" . escape($lang["downloadmetadata"]); ?>
                                                     </a>
                                                 </li>
                                                 <?php 
-                                                }
+                                            }
 
                                             $overrideparams= array(
                                                 'search_offset'     => $offset,
@@ -1308,7 +1322,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             if (checkperm('v')) 
                                                 { ?>
                                                 <li>
-                                                    <a id="view_log_link" href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams,$overrideparams);?>" onclick="return ModalLoad(this, true);">
+                                                    <a id="view_log_link" href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams,$overrideparams); ?>" onclick="return ModalLoad(this, true);">
                                                         <?php echo "<i class='fa fa-fw fa-bars'></i>&nbsp;" .$lang["log"]?>
                                                     </a>
                                                 </li>
@@ -1318,7 +1332,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             if (checkperm("R") && $display_request_log_link) 
                                                 { ?>
                                                 <li>
-                                                    <a href="<?php echo generateurl($baseurl . "/pages/request_log.php",$urlparams,$overrideparams);?>" onclick="return ModalLoad(this, true);">
+                                                    <a href="<?php echo generateurl($baseurl . "/pages/request_log.php",$urlparams,$overrideparams); ?>" onclick="return ModalLoad(this, true);">
                                                         <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["requestlog"]?>
                                                     </a>
                                                 </li>
@@ -1352,7 +1366,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                         if (
                             !hook("replaceuserratingsbox")
                             && $user_rating # Include user rating box, if enabled and the user is not external.
-                            && ($k=="" || $internal_share_access)
+                           && ($k=="" || $internal_share_access)
                             ) {
                                 include "../include/user_rating.php";
                             } /* end hook replaceuserratingsbox */
@@ -1372,7 +1386,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                 ?>
                 <div id="Panel1" class="ViewPanel">
                     <div id="Titles1" class="ViewPanelTitles">
-                        <div class="Title Selected" panel="Metadata"><?php if (!hook("customdetailstitle")) echo escape($lang["resourcedetails"])?></div>
+                        <div class="Title Selected" panel="Metadata"><?php if (!hook("customdetailstitle")) echo escape($lang["resourcedetails"]); ?></div>
                     </div>
                 </div>
                 <?php include "view_metadata.php";
@@ -1403,7 +1417,7 @@ foreach ($pushed as $pushed_resource)
 
 function RenderPushedMetadata($resource, $field_data, $all_field_data)
     {
-    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $ref, $access, $userpermissions;
+    global $k,$view_title_field,$lang, $internal_share_access, $fields_all, $ref, $access, $userpermissions, $upload_then_edit, $urlparams;
     // Save currentt resource data
     $reset_ref          = $ref;
     $reset_access       = $access;
@@ -1423,7 +1437,7 @@ function RenderPushedMetadata($resource, $field_data, $all_field_data)
     ?>
     <div class="RecordBox PushedRecordBox">
         <div class="RecordPanel PushedRecordPanel">
-            <div class="backtoresults">&gt;<a href="view.php?ref=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["view"]) ?></a>
+            <div class="backtoresults">&gt;<a href="view.php?ref=<?php echo $ref ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang["view"]); ?></a>
         </div>
         <div class="Title"><?php echo i18n_get_translated($resource["resource_type_name"]) . " : " . $resource["field" . $view_title_field] ?></div>
             <?php
@@ -1479,7 +1493,7 @@ $resource=$resourcedata;
 if (
     !$disable_geocoding
     &&  (   // Only show the map if the resource is geocoded or they have the permission to geocode it.
-            $edit_access 
+            $edit_access
             || ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
         )
     ) {
@@ -1496,7 +1510,7 @@ hook("w2pspawn");
 if ($view_resource_collections && !checkperm('b')){ ?>
     <div id="resourcecollections"></div>
     <script type="text/javascript">
-    jQuery("#resourcecollections").load('<?php echo $baseurl ?>/pages/resource_collection_list.php?ref=<?php echo urlencode($ref)?>&k=<?php echo urlencode($k)?>'
+    jQuery("#resourcecollections").load('<?php echo $baseurl ?>/pages/resource_collection_list.php?ref=<?php echo urlencode($ref); ?>&k=<?php echo urlencode($k); ?>'
     <?php
     if ($view_panels) {
     ?>
@@ -1607,19 +1621,13 @@ if ($show_related_themes==true )
             <div class="RecordPanel">  
                 <div id="CollectionsThemes">
                     <div class="RecordResource BasicsBox nopadding">
-                        <div class="Title"><?php echo escape($lang["collectionsthemes"])?></div>
+                        <div class="Title"><?php echo escape($lang["collectionsthemes"]); ?></div>
                         <?php
                             for ($n=0;$n<count($result);$n++)
                                 {
                                 $url = generateURL("{$baseurl}/pages/search.php", array("search" => "!collection{$result[$n]["ref"]}"));
 
                                 $path = $result[$n]["path"];
-                                if(!$collection_public_hide_owner)
-                                    {
-                                    $col_name = i18n_get_translated($result[$n]["name"]);
-                                    // legacy thing: we add the fullname right before the collection name in the path.
-                                    $path = str_replace($col_name, escape($result[$n]["fullname"]) . " / {$col_name}", $path);
-                                    }
                                 $path = sprintf("%s %s", LINK_CARET, escape($path));
                                 ?>
                                 <a href="<?php echo $url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $path; ?></a><br>
@@ -1642,7 +1650,7 @@ if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access
     <div id="SearchSimilar">
 
     <div class="RecordResource">
-    <div class="Title"><?php echo escape($lang["searchforsimilarresources"])?></div>
+    <div class="Title"><?php echo escape($lang["searchforsimilarresources"]); ?></div>
 
     <script type="text/javascript">
     function <?php echo $context ?>UpdateFSResultCount()
@@ -1677,14 +1685,14 @@ if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access
             <div class="SearchSimilar">
                 <input 
                     type=checkbox 
-                    id="<?php echo escape($context . "similar_search_" . $keywords[$n] . "_" . $n)  ?>" 
-                    name="keyword_<?php echo escape($keywords[$n])?>" 
+                    id="<?php echo escape($context . "similar_search_" . $keywords[$n] . "_" . $n); ?>" 
+                    name="keyword_<?php echo escape($keywords[$n]); ?>" 
                     value="yes"
                     onClick="<?php echo escape($context) ?>UpdateFSResultCount();">
                     <label 
                         class="customFieldLabel" 
-                        for="<?php echo escape($context . "similar_search_" . $keywords[$n] . "_" . $n)?>">
-                        <?php echo escape(i18n_get_translated($keywords[$n]))?>
+                        for="<?php echo escape($context . "similar_search_" . $keywords[$n] . "_" . $n); ?>">
+                        <?php echo escape(i18n_get_translated($keywords[$n])); ?>
                     </label>
                 </div>
             <?php
@@ -1692,7 +1700,7 @@ if($enable_find_similar && checkperm('s') && ($k == '' || $internal_share_access
         ?>
         <div class="clearerleft"> </div>
         <br />
-        <input name="search" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"])?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
+        <input name="search" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["searchbutton"]); ?>&nbsp;&nbsp;" id="<?php echo $context ?>dosearch"/>
         <iframe src="<?php echo $baseurl ?>/pages/blank.html" frameborder=0 scrolling=no width=1 height=1 style="visibility:hidden;" name="<?php echo $context ?>resultcount" id="<?php echo $context ?>resultcount"></iframe>
         </form>
         <?php

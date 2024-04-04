@@ -33,7 +33,7 @@ elseif(isset($searched_nodes) && is_array($searched_nodes))
     {
     $selected_nodes = $searched_nodes;
     }
-else
+elseif (!isset($selected_nodes))
     {
     $selected_nodes = [];
     }
@@ -60,6 +60,8 @@ foreach($selected_nodes as $node)
         }
     $valid_nodes [] = $node_data;
     }
+
+$valid_nodes = array_filter($valid_nodes, 'node_is_active');
 
 foreach($valid_nodes as $node)
     {
@@ -143,7 +145,7 @@ if(!(isset($treeonly) && true == $treeonly))
 
 
     function clearCategoryTree_<?php echo $tree_id; ?>() {
-        if(!confirm('<?php echo $lang["clearcategoriesareyousure"];?>')) {
+        if(!confirm('<?php echo escape($lang["clearcategoriesareyousure"]);?>')) {
             return false;
         }
         var thisJstree = jQuery('#<?php echo $tree_id; ?>');

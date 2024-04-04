@@ -7,7 +7,7 @@
 # Output from this function will include the ids of the duplicate nodes removed, the id of a single duplicate to become the single value, 
 # the node value without translation and the resource reference of any resources updated.
 
-include_once '../../include/db.php';
+include_once '../../include/boot.php';
 include_once '../../include/general_functions.php';
 if (!(PHP_SAPI == 'cli')) {include_once "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}}
 include_once '../../include/node_functions.php';

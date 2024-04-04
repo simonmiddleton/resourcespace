@@ -6,7 +6,7 @@
 # If you want to recreate preview for a single resource, you can pass ref=[ref]&only=true
 # also includes optional -videoupdate to cater for systems moving from old flv videos to HTML5 compatible video
 
-include_once __DIR__ . "/../include/db.php";
+include_once __DIR__ . "/../include/boot.php";
 
 include_once __DIR__ . "/../include/image_processing.php";
 

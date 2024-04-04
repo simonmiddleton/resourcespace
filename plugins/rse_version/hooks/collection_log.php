@@ -4,7 +4,7 @@ function HookRse_versionCollection_logLog_extra_columns_header()
     global $lang;
     ?>
     <td width="5%">
-        <div class="ListTools"><?php echo $lang["tools"]; ?></div>
+        <div class="ListTools"><?php echo escape($lang["tools"]); ?></div>
     </td>
     <?php
     }

@@ -1,5 +1,5 @@
 <?php
-include "../../../include/db.php";
+include "../../../include/boot.php";
 
 include_once "../../../include/authenticate.php";
 if (!checkperm("a") && !checkperm("lm")) {exit("Access denied");} # Should never arrive at this page without admin access
@@ -55,16 +55,16 @@ include "../../../include/header.php";
 <input type=hidden name="unlink" value="<?php echo $unlink ? "true" : ""; ?>">
 <?php generateFormToken("licensemanager_batch"); ?>
 
-<div class="Question"><label><?php echo $lang["license_id"]?></label>
-<select name="ref"><option value=""><?php echo $lang["select"] ?></option>
+<div class="Question"><label><?php echo escape($lang["license_id"]); ?></label>
+<select name="ref"><option value=""><?php echo escape($lang["select"]); ?></option>
 <?php $licenses=ps_query("select ref,description,holder from license order by ref"); foreach ($licenses as $license) { ?>
-<option value="<?php echo $license["ref"] ?>"><?php echo $license["ref"] ?> - <?php echo $license["description"] . " / " . $license["holder"]; ?></option>
+<option value="<?php echo $license["ref"]; ?>"><?php echo $license["ref"]; ?> - <?php echo $license["description"] . " / " . $license["holder"]; ?></option>
 <?php } ?>
 </select>
 <div class="clearerleft"> </div></div>
 
 <div class="QuestionSubmit">        
-<input name="batch" type="submit" value="&nbsp;&nbsp;<?php echo $lang["save"]?>&nbsp;&nbsp;" />
+<input name="batch" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;" />
 </div>
 </form>
 </div>

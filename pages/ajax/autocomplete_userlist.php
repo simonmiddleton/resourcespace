@@ -1,7 +1,7 @@
 <?php
 # Feeder page for userlist names
 
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php";
 
@@ -16,7 +16,7 @@ for ($n=0;$n<count($userlists) && $n<=20;$n++)
     if (!$first) { ?>, <?php }
             $first=false;
     ?>{
-       "value": "<?php echo $userlists[$n]['userlist_name']?>"}<?php	
+       "value": "<?php echo $userlists[$n]['userlist_name']; ?>"}<?php	
     }
 ?>
 ]

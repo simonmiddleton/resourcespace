@@ -1449,10 +1449,6 @@ function do_search(
         {
         # Execute query but only ask for ref columns back from ps_query();
         # We force verbatim query mode on (and restore it afterwards) as there is no point trying to strip slashes etc. just for a ref column
-        global $mysql_verbatim_queries;
-        $mysql_vq=$mysql_verbatim_queries;
-        $mysql_verbatim_queries=true;
-
         if($returnsql)
             {
             return $results_sql;
@@ -1474,7 +1470,6 @@ function do_search(
         } elseif (!is_array($fetchrows)) {
             $result = [];
         }
-        $mysql_verbatim_queries=$mysql_vq;
         log_keyword_usage($keywords_used, $result);
         return $result;
         }

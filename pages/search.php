@@ -1,5 +1,5 @@
 <?php
-include_once "../include/db.php";
+include_once "../include/boot.php";
 
 if($annotate_enabled)
     {
@@ -103,19 +103,12 @@ foreach($keywords as $keyword)
         }
 
     $resource_type_field = ps_value("SELECT ref AS `value` FROM resource_type_field WHERE `name` = ?", array("s",$field_shortname), 0, "schema");
-    $resource_type_field_type = get_resource_type_field($resource_type_field)["type"];
-    
-    if(0 == $resource_type_field)
-        {
-        continue;
-        }
-
-    if(!metadata_field_view_access($resource_type_field))
+    if(0 == $resource_type_field || metadata_field_view_access($resource_type_field))
         {
         // User can't search against a metadata field they don't have access to
         continue;
         }
-    $nodes = get_nodes($resource_type_field, null, $resource_type_field_type==FIELD_TYPE_CATEGORY_TREE);
+    $nodes = get_nodes($resource_type_field, null, $resource_type_field["type"]==FIELD_TYPE_CATEGORY_TREE);
     
     // Check if multiple nodes have been specified for an OR search
     $keywords_expanded=explode(';',$specific_field_search[1]);
@@ -1047,21 +1040,20 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 <?php
                 }
                 
-            if ($searchlist == true) 
+
+            if($display == 'list')
                 {
-                if($display == 'list')
-                    {
-                    ?><span class="smalllisticonactive"></span><?php
-                    }
-                else
-                    {
-                    ?>
-                    <a id="list_view_link"  href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo escape($lang["listtitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
-                        <span class="smalllisticon"></span>
-                    </a>
-                    <?php
-                    }
+                ?><span class="smalllisticonactive"></span><?php
                 }
+            else
+                {
+                ?>
+                <a id="list_view_link"  href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("display"=>"list")); ?>" title='<?php echo escape($lang["listtitle"]) ?>' onClick="return <?php echo $modal ? 'Modal' : 'CentralSpace'; ?>Load(this);">
+                    <span class="smalllisticon"></span>
+                </a>
+                <?php
+                }
+                
             
             if (!$disable_geocoding)
                 {
@@ -1071,7 +1063,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                     }
                 else
                     { ?>
-                    <a  id="map_view_link" href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo ($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle'] ?>' onClick="<?php
+                    <a  id="map_view_link" href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo ($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle']; ?>' onClick="<?php
                     if($search_map_max_results > 0  && $resources_count > $search_map_max_results)
                         {
                         echo "styledalert('" . $lang["error"] . "','" . $lang['search_results_overlimit'] . "');return false;";
@@ -1144,8 +1136,6 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         // Build the available sort sequence entries, starting with the default derived above
         $orderFields = array($default_sort_order => $rel);
-        if ($random_sort)
-            $orderFields['random'] = $lang['random'];
         if ($popularity_sort)
             $orderFields['popularity'] = $lang['popularity'];
         if ($orderbyrating)
@@ -1156,8 +1146,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
             $orderFields['colour'] = $lang['colour'];
         if ($order_by_resource_id)
             $orderFields['resourceid'] = $lang['resourceid'];
-        if ($order_by_resource_type)
-            $orderFields['resourcetype'] = $lang['type'];
+        $orderFields['resourcetype'] = $lang['type'];
         
         $orderFields['modified'] = $lang['modified'];
 
@@ -1306,7 +1295,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
         if ($arcresults>0) 
             {
             ?>
-            <div class="SearchOptionNav"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("archive"=>2)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET ?><?php echo escape($lang["view"])?> <span class="Selected"><?php echo number_format($arcresults)?></span> <?php echo ($arcresults==1)?$lang["match"]:$lang["matches"]?> <?php echo escape($lang["inthearchive"])?></a></div>
+            <div class="SearchOptionNav"><a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("archive"=>2)); ?>" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET ?><?php echo escape($lang["view"])?> <span class="Selected"><?php echo number_format($arcresults)?></span> <?php echo ($arcresults==1)?$lang["match"]:$lang["matches"]; ?> <?php echo escape($lang["inthearchive"])?></a></div>
             <?php 
             }
         else
@@ -1453,7 +1442,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                 {
                 // Create array of geolocation parameters.
                 $geomarker[] = "[" . $geomark['geo_long'] . ", " . $geomark['geo_lat'] . ", " . $geomark['ref'] . ", " . $geomark['resource_type'] . "," . (trim($geomark2) != "" ? floatval($geomark2) : "") . "]";
-                $preview_paths[] = $result[$n]['has_image'] == 1 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'thm')
+                $preview_paths[] = (int) $result[$n]['has_image'] !== 0 && !resource_has_access_denied_by_RT_size($result[$n]['resource_type'], 'thm')
                     ? get_resource_path($geo, false, 'thm', false, $result[$n]['preview_extension'], true, 1, $use_watermark, $result[$n]['file_modified'])
                     : $baseurl_short . 'gfx/' . get_nopreview_icon($result[$n]['resource_type'], $result[$n]['file_extension'], false);
 

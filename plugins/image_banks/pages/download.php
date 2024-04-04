@@ -7,7 +7,7 @@ use function ImageBanks\validFileSource;
 
 ob_start(); $nocache=true;
 $rs_root = dirname(__DIR__, 3);
-include_once "{$rs_root}/include/db.php";
+include_once "{$rs_root}/include/boot.php";
 include_once "{$rs_root}/include/authenticate.php";
 ob_end_clean();
 

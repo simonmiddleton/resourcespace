@@ -8,7 +8,7 @@ delete them.
 */
 
 
-include dirname(__FILE__) . "/../../include/db.php";
+include dirname(__FILE__) . "/../../include/boot.php";
 
 include dirname(__FILE__) . "/../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
 

@@ -2,7 +2,7 @@
 
 function HookRefineresultsSearchBeforesearchresults()
 {
-    global $baseurl_short, $result, $lang, $search, $k, $archive, $parameters_string, $collections;
+    global $baseurl_short, $result, $lang, $search, $k, $collections;
 
     // Only time when this would be needed is when legacy_actions is enabled otherwise we do it through dropdown actions
     $query = 'SELECT inst_version AS `value` FROM plugins WHERE name = \'legacy_actions\';';
@@ -53,7 +53,7 @@ function HookRefineresultsSearchBeforesearchresults()
         <?php }
         
         if ($search != "") { ?>
-            <a href='<?php echo $baseurl_short?>pages/search.php?search=<?php echo $default_search ?><?php echo $parameters_string?>'>
+            <a href='<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($default_search); ?>'>
             &gt;&nbsp;
             <?php echo escape($lang["clearsearch"]); ?></a>
         <?php } ?>
@@ -131,10 +131,10 @@ function HookRefineresultsSearchBeforesearchresultsexpandspace()
     <form method="post" action="<?php echo $search_url ?>" onSubmit="return CentralSpacePost (this,true);">
        <?php generateFormToken("refineresults_before_search_results"); ?>
     <div class="Question Inline" id="question_refine" style="border-top:none;">
-    <label id="label_refine" for="refine_keywords"><?php echo $lang["additionalkeywords"]?></label>
+    <label id="label_refine" for="refine_keywords"><?php echo escape($lang["additionalkeywords"]); ?></label>
     <input class="medwidth Inline" type=text id="refine_keywords" name="refine_keywords" value="<?php echo $value ?>">
     <input type=hidden name="archive" value="<?php echo $archive?>">
-    <input class="vshrtwidth Inline" name="save" type="submit" id="refine_submit" value="&nbsp;&nbsp;<?php echo $lang["refine"]?>&nbsp;&nbsp;" />
+    <input class="vshrtwidth Inline" name="save" type="submit" id="refine_submit" value="&nbsp;&nbsp;<?php echo escape($lang["refine"]); ?>&nbsp;&nbsp;" />
     <div class="clearerleft"> </div>
     </div>
 

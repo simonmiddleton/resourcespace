@@ -1,6 +1,6 @@
 <?php
 $rsroot = dirname(dirname(dirname(__FILE__)));
-include "{$rsroot}/include/db.php";
+include "{$rsroot}/include/boot.php";
 
 include "{$rsroot}/include/authenticate.php";
 include_once "{$rsroot}/include/ajax_functions.php";

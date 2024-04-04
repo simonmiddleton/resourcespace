@@ -5,7 +5,7 @@ if (substr(php_sapi_name(), 0, 3) != 'cli')
     exit;
     }
 
-include_once dirname(__FILE__) . "/../../../include/db.php";
+include_once dirname(__FILE__) . "/../../../include/boot.php";
 
 include_once dirname(__FILE__) . "/../include/search_notifications_functions.php";
 

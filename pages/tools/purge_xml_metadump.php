@@ -5,7 +5,7 @@
 #
 # delete all XML metadump files in filestore
 #
-include "../../include/db.php";
+include "../../include/boot.php";
 include "../../include/image_processing.php";
 command_line_only();
 

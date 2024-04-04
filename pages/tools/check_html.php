@@ -1,7 +1,7 @@
 <?php
 
 # Quick script to check valid HTML
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php";
 

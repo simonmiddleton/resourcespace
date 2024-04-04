@@ -275,14 +275,11 @@ function config_encode($input)
  * @see set_plugin_config
  */
 function get_plugin_config($name){
-    global $mysql_verbatim_queries, $mysql_charset;
+    global $mysql_charset;
 
     # Need verbatim queries here
-    $mysql_vq = $mysql_verbatim_queries;
-    $mysql_verbatim_queries = true;
     $configs = ps_query("SELECT config, config_json from plugins where name = ?", array("s", $name), 'plugins');
     $configs = $configs[0] ?? [];
-    $mysql_verbatim_queries = $mysql_vq;
     if (!array_key_exists('config', $configs) || is_null($configs['config_json']))
         {
         return null;
@@ -597,8 +594,8 @@ function config_gen_setup_html($page_def,$plugin_name,$upload_status,$plugin_pag
         }
         ?>
         <div class="Question">
-          <input type="submit" name="save" id="save" value="<?php echo $lang['plugins-saveconfig']?>">
-          <input type="submit" name="submit" id="submit" value="<?php echo $lang['plugins-saveandexit']?>">
+          <input type="submit" name="save" id="save" value="<?php echo escape($lang['plugins-saveconfig']); ?>">
+          <input type="submit" name="submit" id="submit" value="<?php echo escape($lang['plugins-saveandexit']); ?>">
           <div class="clearerleft"></div>
         </div>
       </form>

@@ -77,6 +77,9 @@ $email_from=""; # Where system e-mails appear to come from. Written to config.ph
 $email_notify=""; # Where resource/research/user requests are sent. Written to config.php by setup.php
 $email_notify_usergroups=array(); # Use of email_notify is deprecated as system notifications are now sent to the appropriate users based on permissions and user preferences. This variable can be set to an array of usergroup references and will take precedence.
 
+# Enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
+$email_from_user = false;
+
 # Scramble resource paths? If this is a public installation then this is a very wise idea.
 # Set the scramble key to be a hard-to-guess string (similar to a password).
 # To disable, set to the empty string ("").
@@ -341,6 +344,9 @@ $exif_date=12;
 # You may want to enable it on the usergroup level by overriding this config option in System Setup.
 $metadata_report=false;
 
+# Option to turn on metadata download in view.php.
+$metadata_download = false;
+
 # Use Exiftool to attempt to extract specified resolution and unit information from files (ex. Adobe files) upon upload.
 $exiftool_resolution_calc=false;
 
@@ -467,6 +473,18 @@ $photoshop_eps_miff=false;
 # Attempt to resolve a height and width of the ImageMagick file formats at view time
 # (enabling may cause a slowdown on viewing resources when large files are used)
 $imagemagick_calculate_sizes=false;
+
+# Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
+$imagemagick_mpr = false;
+
+# Set the depth to be passed to mpr command.
+$imagemagick_mpr_depth = "8";
+
+# Should colour profiles be preserved?
+$imagemagick_mpr_preserve_profiles = true;
+
+# If using imagemagick and mpr, specify any metadata profiles to be retained. Default setting good for ensuring copyright info is not stripped which may be required by law
+$imagemagick_mpr_preserve_metadata_profiles = array('iptc');
 
 # If using imagemagick for PDF, EPS and PS files, up to how many pages should be extracted for the previews?
 # If this is set to more than one the user will be able to page through the PDF file.
@@ -1052,6 +1070,9 @@ $file_integrity_verify_window = [0,0];     # Off by default
 $file_integrity_ignore_states = [];
 // Resource types to ignore when verifying file integrity. This will include $data_only_resource_types automatically.
 $file_integrity_ignore_resource_types = [];
+ 
+# Workflow states to ignore when verifying file integrity (to verify file integrity using checksums requires $file_checksums_50k=false;)
+$file_integrity_ignore_states = [];
 
 
 # Default group when adding new users;
@@ -1318,11 +1339,6 @@ $registration_group_select=false;
 $feedback_resource_select=false;
 # When requesting feedback, display the contents of the specified field (if available) instead of the resource ID. 
 #$collection_feedback_display_field=51;
-
-# Uncomment and set the below value to set the maximum size of uploaded file that thumbnail/preview images will be created for.
-# This is useful when dealing with very large files that may place a drain on system resources - for example 100MB+ Adobe Photoshop files will take a great deal of cpu/memory for ImageMagick to process and it may be better to skip the automatic preview in this case and add a preview JPEG manually using the "Upload a preview image" function on the resource edit page.
-# The value is in MB.
-# $preview_generate_max_file_size=100;
 
 # Should resource views be logged for reporting purposes?
 # Note that general daily statistics for each resource are logged anyway for the statistics graphs
@@ -1735,6 +1751,7 @@ $request_adds_to_collection=false;
 #
 # Example - automatically create a PNG file alternative when an EPS file is uploaded.
 # $image_alternatives[0]["name"]="PNG File";
+# $image_alternatives[0]["description"]=" Auto created PNG";
 # $image_alternatives[0]["source_extensions"]="eps";
 # $image_alternatives[0]["source_params"]="";
 # $image_alternatives[0]["filename"]="alternative_png";
@@ -1743,6 +1760,7 @@ $request_adds_to_collection=false;
 # $image_alternatives[0]["icc"]=false;
 
 # $image_alternatives[1]["name"]="CMYK JPEG";
+# $image_alternatives[0]["description"]=" Auto created CMYK JPEG";
 # $image_alternatives[1]["source_extensions"]="jpg,tif";
 # $image_alternatives[1]["source_params"]="";
 # $image_alternatives[1]["filename"]="cmyk";
@@ -1751,12 +1769,13 @@ $request_adds_to_collection=false;
 # $image_alternatives[1]["icc"]=true; # use source ICC profile in command
 
 # Example - automatically create a JPG2000 file alternative when an TIF file is uploaded
-# $image_alternatives[2]['name']              = 'JPG2000 File';
-# $image_alternatives[2]['source_extensions'] = 'tif';
+# $image_alternatives[2]['name']              = "JPG2000 File";
+# $image_alternatives[0]["description"]       = "Auto created JP2";
+# $image_alternatives[2]['source_extensions'] = "tif";
 # $image_alternatives[2]["source_params"]="";
-# $image_alternatives[2]['filename']          = 'New JP2 Alternative';
-# $image_alternatives[2]['target_extension']  = 'jp2';
-# $image_alternatives[2]['params']            = '';
+# $image_alternatives[2]['filename']          = "New JP2 Alternative";
+# $image_alternatives[2]['target_extension']  = "jp2";
+# $image_alternatives[2]['params']            = "";
 # $image_alternatives[2]['icc']               = false;
 
 # For reports, the list of default reporting periods
@@ -2027,14 +2046,6 @@ $config_show_performance_footer=false;
 
 $use_phpmailer=false;
 
-# Allow to disable thumbnail generation during batch resource upload from FTP or local folder.
-# In addition to this option, a multi-thread thumbnail generation script is available in the batch
-# folder (create_previews.php). You can use it as a cron job, or manually.
-# Notes:-
-#  - This also works for normal uploads (through web browser)
-#  - This setting may be overridden if previews are required at upload time e.g. if Google Vision facial recognition is configured with a dependent field
-$enable_thumbnail_creation_on_upload = true;
-
 // GEOLOCATION MAP CONFIGURATION------------
     // Disable maps and geocoding features?
     $disable_geocoding = false;
@@ -2061,13 +2072,6 @@ $enable_thumbnail_creation_on_upload = true;
 
     // Optional path to tile cache directory. Defaults to ResourceSpace temp directory if not set
     # $geo_tile_cache_directory = '';    
-
-    // Array of southwest (SW) and northeast (NE) latitude/longitude bounds, defining spatial areas that will be excluded from map search results and that are defined by: SW latitude, SW longitude, NE latitude, NE longitude.
-    $geo_search_restrict = array(
-        # array(50,-3,54,3)      // Example omission zone 1.
-        # ,array(-10,-20,-8,-18) // Example omission zone 2.
-        # ,array(1,1,2,2)        // Example omission zone 3.
-    );
 
     // Map height in pixels on the Resource View page.
     $view_mapheight = 350;
@@ -2178,10 +2182,6 @@ $debug_extended_info = false;
 # $debug_log_location = "d:/logs/resourcespace.log";
 # $debug_log_location = "/var/log/resourcespace/resourcespace.log";
 
-# enable a list of collections that a resource belongs to, on the view page
-// Suppress SQL information in the debug log?
-$suppress_sql_log = false;
-
 # Enable Metadata Templates. This should be set to the ID of the resource type that you intend to use for metadata templates.
 # Metadata templates can be selected on the resource edit screen to pre-fill fields.
 # The intention is that you will create a new resource type named "Metadata Template" and enter its ID below.
@@ -2223,6 +2223,12 @@ $cc_me=false;
 
 # Allow listing of all recipients when sending resources or collection.
 $list_recipients=false;
+
+# Should *all* manually entered keywords (e.g. basic search and 'all fields' search on advanced search) be treated as wildcards?
+# E.g. "cat" will always match "catch", "catalogue", "category" with no need for an asterisk.
+# WARNING - this option could cause search performance issues due to the hugely expanded searches that will be performed.
+# It will also cause some other features to be disabled: related keywords and quoted string support
+$wildcard_always_applied = false;
 
 # How many keywords should be included in the search when a single keyword expands via a wildcard. 
 # Set to 0 to remove limit.
@@ -2277,6 +2283,9 @@ $icc_preview_profile = 'sRGB_IEC61966-2-1_black_scaled.icc';
 # additional options for profile conversion during preview generation
 $icc_preview_options = '-intent perceptual -black-point-compensation';
 
+# Embed the target preview profile?
+$icc_preview_profile_embed = false;
+
 # play videos/audio on hover instead of on click
 $video_search_play_hover=false; // search.php
 $video_view_play_hover=false; // view.php
@@ -2327,6 +2336,12 @@ $edit_autosave=true;
 
 # use_refine_searchstring can improve search string parsing. disabled by Dan due to an issue I was unable to replicate. (tom)  
 $use_refine_searchstring=false;
+
+# By default, keyword relationships are two-way 
+# (if "tiger" has a related keyword "cat", then a search for "cat" also includes "tiger" matches).
+# $keyword_relationships_one_way=true means that if "tiger" has a related keyword "cat",
+# then a search for "tiger" includes "tiger", but does not include "cat" matches.
+$keyword_relationships_one_way = false;
 
 $show_searchitemsdiskusage=true;
 
@@ -2440,6 +2455,9 @@ $resource_contact_link=false;
 
 # Hide Welcome Text
 $no_welcometext = false;
+
+# Display fields with display templates in their ordered position instead of at the end of the metadata on the view page.
+$force_display_template_orderby = false;
 
 # Optional setting to override the default $email_notify address for resource request email notifications, applies to specified resource types
 # e.g. for photo (resource type 1 by default)
@@ -2683,13 +2701,6 @@ $watermark_single_image = array(
     'position' => 'Center',
 );
 */
-
-# $offline_job_queue. Enable the job_queue functionality that runs resource heavy tasks to be run offline and send notifications once complete. Initially used by video_tracks plugin 
-# If set to true a frequent cron job or scheduled task should be added to run pages/tools/offline_jobs.php 
-# NOTE: This setting may be overridden in certain cirumstances  - e.g. if previews are required at upload time because Google Vision facial recognition is configured with a dependent metadata field
-$offline_job_queue=false;
-# Delete completed jobs from the queue?
-$offline_job_delete_completed=false;
 
 # $replace_resource_preserve_option - Option to keep original resource files as alternatives when replacing resource
 $replace_resource_preserve_option=false;
@@ -3011,8 +3022,10 @@ $batch_replace_local_folder = ""; # e.g. "/upload";
 
 // Option to distribute files in filestore more equally. 
 // Setting $filestore_evenspread=true; means that all resources with IDs ending in 1 will be stored under filestore/1, whereas historically (with this set to false) this would contain all resources with IDs starting with 1.
-// If enabling this after the system has been in use you can run /pages/tools/filetore_migrate.php which will relocate the existing files into the neew folders
-// You may also wish to set the option $filestore_migrate=true; which will force the system to check for a file in the old location and move it in the event that it cannot be found.
+// If enabling this after the system has been in use you can run /pages/tools/filetore_migrate.php which will relocate the existing files into the new folders
+// You may also wish to set the option $filestore_migrate=true; which will force the system to check for a file in the old location and move it in the event that it cannot be found. However, this option alone will only
+// attempt to move the files which are loaded in the browser. Files which are not loaded including but not limited to tmp files, video snapshots and some alternative file types will be left behind in the old location. It is
+// recommended that /pages/tools/filetore_migrate.php be run to avoid a fragmented filestore.
 $filestore_evenspread=false;
 $filestore_migrate=false;
 
@@ -3196,3 +3209,61 @@ $vendor_tus_cache_adapter = 'file';
 // This can be set to either a metadata field ID or a valid search 'order by' string (e.g. 'resourcetype', 'extension', 'colour' etc.) 
 // See https://www.resourcespace.com/knowledge-base/resourceadmin/push-metadata for more information
 // $related_pushed_order_by = 0;
+
+
+
+/* 
+===============================================================================
+Offline preview generation options
+===============================================================================
+These options allow previews and automatically generated alternative files etc. to be generated offline.
+This is useful when dealing with large files that may place a drain on system resources.
+
+By default core preview sizes ('col', 'thm' and 'pre') will still be created at upload time
+-------------------------------------------------------------------------------
+OPTION 1: $offline_job_queue. (preferred)
+-------------------------------------------------------------------------------
+The offline job functionality will create jobs to run slow or resource intensive tasks e.g. preview creation, 
+large collection downloads or CSV uploads. Most jobs will send notifications to users once completed.
+
+IMPORTANT: 
+- If this is enabled a frequent scheduled task must be created on the server to run pages/tools/offline_jobs.php 
+  Note that this should be set to run as the web service account to avoid file permission issues
+*/
+$offline_job_queue=false;
+// Delete completed jobs from the queue?
+$offline_job_delete_completed=false;
+/*
+-------------------------------------------------------------------------------
+OPTION 2 $preview_generate_max_file_size (legacy)
+-------------------------------------------------------------------------------
+This is only effective if $offline_job_queue is false.
+
+If configured, only resource files smaller than this size will have all the preview sizes created at upload.
+For larger files only the core preview sizes will be created at upload time.
+
+IMPORTANT: 
+- If enabled a frequent scheduled task must be created on the server to run batch/create_previews.php
+  This should be set to run as the web service account to avoid file permission issues
+- When recreating previews via collection_edit_previews no previews will be created immediately
+
+Set the maximum size of uploaded file that preview images will be created for.
+The value is in MB.
+$preview_generate_max_file_size=100;
+-------------------------------------------------------------------------------
+OPTION 3 $enable_thumbnail_creation_on_upload  (legacy)
+-------------------------------------------------------------------------------
+Set to false to disable immediate preview generation. Superseded by $offline_job_queue
+
+IMPORTANT: If enabled a frequent scheduled task must be created on the server to run batch/create_previews.php 
+Note that this should be set to run as the web service account to avoid file permission issues
+*/
+$enable_thumbnail_creation_on_upload = true;
+/*
+===============================================================================
+Blocking immediate creation of core previews
+===============================================================================
+Optionally use this array to prevent the immediate creation at upload of core preview sizes ('col', 'thm' and 'pre')
+for the specified file extensions when one of the offline preview options above are configured.
+*/
+$minimal_preview_creation_exclude_extensions = [];

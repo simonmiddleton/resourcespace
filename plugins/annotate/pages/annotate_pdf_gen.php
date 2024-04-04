@@ -1,7 +1,7 @@
 <?php
 
 // this program creates a new PDF document with annotations
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include_once "../include/annotate_functions.php";
 include '../../../include/authenticate.php';
 

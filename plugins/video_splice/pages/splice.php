@@ -1,6 +1,6 @@
 <?php
 
-include_once "../../../include/db.php";
+include_once "../../../include/boot.php";
 
 include_once "../../../include/authenticate.php";
 include_once "../include/splice_functions.php";
@@ -187,8 +187,8 @@ include "../../../include/header.php";
 
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["video-splice"]; render_help_link("plugins/video-splice");?></h1>
-<p><?php echo $lang["video-splice-intro"]?></p>
+<h1><?php echo escape($lang["video-splice"]); render_help_link("plugins/video-splice");?></h1>
+<p><?php echo escape($lang["video-splice-intro"]); ?></p>
 <?php
     // Holder/area for message feedback
     if ($notification!="")
@@ -213,7 +213,7 @@ include "../../../include/header.php";
 
                     foreach ($videos_data as $video_data)
                         {
-                        if ($video_data["has_image"])
+                        if ((int) $video_data["has_image"] !== RESOURCE_PREVIEWS_NONE)
                             {
                             $img = get_resource_path($video_data["ref"], false, "thm", false, $video_data["preview_extension"], -1, 1, false, $video_data["file_modified"]);
                             }
@@ -224,7 +224,7 @@ include "../../../include/header.php";
 
                 ?>
                 <img alt="<?php echo escape(i18n_get_translated($video_data['field'.$view_title_field] ?? ""));?>"
-                 src="<?php echo $img ?>" id="splice_<?php echo $video_data["ref"] ?>" class="splice_item">
+                 src="<?php echo $img ?>" id="splice_<?php echo $video_data["ref"]; ?>" class="splice_item">
                 <?php } ?>
                 </div>
             </div>
@@ -241,12 +241,12 @@ include "../../../include/header.php";
             return Post(this, true);">
             <?php generateFormToken("spliceform"); ?>
             <div class="Question" id="video_splice_tool">
-            <label><?php echo $lang["video_splice_order"]?></label>
+            <label><?php echo escape($lang["video_splice_order"]); ?></label>
             <p id="ids_in_order"></p>
             <div class="clearerleft"> </div>
             </div>
         <div class="Question" id="question_video_splice_video">
-            <label><?php echo $lang["video_splice_select_video"] ?></label>
+            <label><?php echo escape($lang["video_splice_select_video"]); ?></label>
             <select class="stdwidth" name="video_splice_video" id="video_splice_video" >
             <?php
             foreach ($ffmpeg_std_video_options as $video_output_video=>$video_splice_output_command)
@@ -258,7 +258,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_splice_resolution">
-            <label><?php echo $lang["video_splice_select_resolution"] ?></label>
+            <label><?php echo escape($lang["video_splice_select_resolution"]); ?></label>
             <select class="stdwidth" name="video_splice_resolution" id="video_splice_resolution" >
             <?php
             foreach ($ffmpeg_std_resolution_options as $video_output_resolution=>$video_splice_output_command)
@@ -270,7 +270,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_splice_frame_rate">
-            <label><?php echo $lang["video_splice_select_frame_rate"] ?></label>
+            <label><?php echo escape($lang["video_splice_select_frame_rate"]); ?></label>
             <select class="stdwidth" name="video_splice_frame_rate" id="video_splice_frame_rate" >
             <?php
             foreach ($ffmpeg_std_frame_rate_options as $video_output_frame_rate=>$video_splice_output_command)
@@ -282,7 +282,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_splice_audio">
-            <label><?php echo $lang["video_splice_select_audio"] ?></label>
+            <label><?php echo escape($lang["video_splice_select_audio"]); ?></label>
             <select class="stdwidth" name="video_splice_audio" id="video_splice_audio" >
             <?php
             foreach ($ffmpeg_std_audio_options as $video_output_audio=>$video_splice_output_command)
@@ -294,7 +294,7 @@ include "../../../include/header.php";
         <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_video_save_to">
-            <label><?php echo $lang["video_splice_save_to"] ?></label>
+            <label><?php echo escape($lang["video_splice_save_to"]); ?></label>
             <table cellpadding="5" cellspacing="0">
                 <tbody>
                     <tr>
@@ -313,7 +313,7 @@ include "../../../include/header.php";
                                         jQuery('#question_auto_populate_video_info').slideDown();
                             ">
                             <label class="customFieldLabel Inline"
-                                   for="video_splice_save_new"><?php echo $lang['video_splice_create_new']; ?></label>
+                                   for="video_splice_save_new"><?php echo escape($lang['video_splice_create_new']); ?></label>
                         </td>
                         <?php
                         if ($video_export_folder !== "") {
@@ -332,7 +332,7 @@ include "../../../include/header.php";
                                         jQuery('#question_transcode_now_or_notify_me').slideUp();
                             ">
                             <label class="customFieldLabel Inline"
-                                   for="video_splice_save_export"><?php echo $lang['video_splice_save_export']; ?></label>
+                                   for="video_splice_save_export"><?php echo escape($lang['video_splice_save_export']); ?></label>
                         </td>
                         <?php } ?>
                         <td>
@@ -349,7 +349,7 @@ include "../../../include/header.php";
                                         jQuery('#question_transcode_now_or_notify_me').slideDown();
                             ">
                             <label class="customFieldLabel Inline"
-                                   for="video_splice_download"><?php echo $lang['download']; ?></label>
+                                   for="video_splice_download"><?php echo escape($lang['download']); ?></label>
                         </td>
                     </tr>
                 </tbody>
@@ -358,12 +358,12 @@ include "../../../include/header.php";
         </div>
         <!--Create new specific questions-->
         <div class="Question" id="question_description">
-            <label for="video_splice_new_desc" ><?php echo $lang["description"]; ?></label>
+            <label for="video_splice_new_desc" ><?php echo escape($lang["description"]); ?></label>
             <input type="text" class="stdwidth" id="video_splice_new_desc" name="video_splice_new_desc" value="" />
             <div class="clearerleft"></div>
         </div>
         <div class="Question" id="question_auto_populate_video_info">
-            <label><?php echo $lang['video_splice_auto_populate_video_info_label']; ?></label>
+            <label><?php echo escape($lang['video_splice_auto_populate_video_info_label']); ?></label>
             <table cellpadding="5" cellspacing="0">
                 <tbody>
                     <tr>
@@ -376,7 +376,7 @@ include "../../../include/header.php";
                                    checked
                                    ">
                             <label class="customFieldLabel Inline"
-                                   for="auto_populate"><?php echo $lang['video_splice_auto_populate_label']; ?></label>
+                                   for="auto_populate"><?php echo escape($lang['video_splice_auto_populate_label']); ?></label>
                         </td>
                     </tr>
                 </tbody>
@@ -389,7 +389,7 @@ include "../../../include/header.php";
             {
             ?>
             <div class="Question" id="question_transcode_now_or_notify_me" style="display:none;">
-                <label><?php echo $lang['video_splice_transcode_now_or_notify_me_label']; ?></label>
+                <label><?php echo escape($lang['video_splice_transcode_now_or_notify_me_label']); ?></label>
                 <table cellpadding="5" cellspacing="0">
                     <tbody>
                         <tr>
@@ -401,7 +401,7 @@ include "../../../include/header.php";
                                        value="yes"
                                        ">
                                 <label class="customFieldLabel Inline"
-                                       for="transcode_now"><?php echo $lang['video_splice_transcode_now_label']; ?></label>
+                                       for="transcode_now"><?php echo escape($lang['video_splice_transcode_now_label']); ?></label>
                             </td>
                         </tr>
                     </tbody>
@@ -414,7 +414,7 @@ include "../../../include/header.php";
         <!--Hidden value to track new order to post on submit-->
         <input type="hidden" name="splice_order" id="splice_reel_order" />
         <div class="QuestionSubmit">
-             <input name="splice_submit" class="spliceubmit" type="submit" value="<?php echo $lang["action-splice"]?>" onclick="CentralSpaceShowLoading();">
+             <input name="splice_submit" class="spliceubmit" type="submit" value="<?php echo escape($lang["action-splice"]); ?>" onclick="CentralSpaceShowLoading();">
              <br />
              <div class="clearerleft"> </div>
         </div>

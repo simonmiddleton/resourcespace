@@ -1,5 +1,5 @@
 <?php
-require_once "../include/db.php";
+require_once "../include/boot.php";
 require_once "../include/authenticate.php";if (!checkperm("d")&&!(checkperm('c') && checkperm('e0'))) {exit ("Permission denied.");}
 
 include "../include/header.php";
@@ -7,7 +7,7 @@ include "../include/header.php";
 
 
 <div class="BasicsBox"> 
-  <h1><?php echo $lang["mycontributions"]?></h1>
+  <h1><?php echo escape($lang["mycontributions"]); ?></h1>
   <p><?php echo text("introtext");render_help_link("user/uploading");?></p>
 
     <div class="VerticalNav">
@@ -22,7 +22,7 @@ include "../include/header.php";
                 else {?>
                         href="<?php echo $baseurl_short?>pages/edit.php?ref=-<?php echo urlencode($userref) ?>&uploader=batch"><?php 
                 }?>
-    <?php echo $lang["addresourcebatchbrowser"];?></a>
+    <?php echo escape($lang["addresourcebatchbrowser"]);?></a>
     </li>
 <?php
 foreach(get_workflow_states() as $workflow_state)

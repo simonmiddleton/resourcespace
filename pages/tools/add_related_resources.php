@@ -1,7 +1,7 @@
 <?php
 // This script is used to add new related resources from a CSV file
 
-include_once __DIR__ . "/../../include/db.php";
+include_once __DIR__ . "/../../include/boot.php";
 command_line_only();
 
 function show_script_help()

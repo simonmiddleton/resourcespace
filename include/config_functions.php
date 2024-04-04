@@ -600,8 +600,12 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
             }
         else
             {
+            $file_location = str_replace('[storage_url]', $storagedir, $current);
+            $mime_type = explode("/",mime_content_type($file_location));
+            $file_type = end($mime_type);
+            $file_size = str_replace("&nbsp;"," ",formatfilesize(filesize($file_location)));
             ?>
-            <span><?php echo escape(str_replace('[storage_url]/', '', $current)); ?></span>
+            <span style="width: 316px;display: inline-block;"><?php echo escape("$file_type ($file_size)"); ?></span>
             <input type="submit" name="delete_<?php echo escape($name); ?>" value="<?php echo escape($lang['action-delete']); ?>">
             <?php
             }
@@ -1016,29 +1020,10 @@ function config_add_single_ftype_select($config_var, $label, $width=300, $rtype=
 function config_single_ftype_select($name, $label, $current, $width=300, $rtype=false, $ftypes=array(), $autosave = false)
     {
     global $lang;
-    $fieldtypefilter="";
-    $params = [];
-    if(count($ftypes)>0)
-        {
-        $fieldtypefilter = " type in (". ps_param_insert(count($ftypes)) .")";
-        $params = ps_param_fill($ftypes, 'i');
-        }
-        
-    if($rtype===false){
-        $fields= ps_query('select ' . columns_in("resource_type_field") . ' from resource_type_field ' .  (($fieldtypefilter=="")?'':' where ' . $fieldtypefilter) . ' order by title, name', $params, "schema");
-    }
-    else{
-        if ($rtype === 0)
-            {
-            $rtype_sql = '`global` = 1';
-            }
-        else
-            {
-            $rtype_sql = 'ref IN (SELECT resource_type_field FROM resource_type_field_resource_type WHERE resource_type = ?)';
-            $params = array_merge(array('i', $rtype), $params);
-            }
-        $fields = ps_query("select " . columns_in("resource_type_field") . " from resource_type_field where $rtype_sql " .  (($fieldtypefilter == "") ? "" : "and " . $fieldtypefilter) . "order by title, name", $params, "schema");
-    }
+
+    if ($rtype === false) { $rtype = ''; }
+    $fields = get_resource_type_fields($rtype, 'title, name', 'asc', '', $ftypes, true);
+
 ?>
   <div class="Question">
     <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
@@ -1081,7 +1066,7 @@ function config_generate_AutoSaveConfigOption_function($post_url)
     <script>
     function AutoSaveConfigOption(option_name, reload_page = false)
         {
-        jQuery('#AutoSaveStatus-' + option_name).html('<?php echo $lang["saving"]; ?>');
+        jQuery('#AutoSaveStatus-' + option_name).html('<?php echo escape($lang["saving"]); ?>');
         jQuery('#AutoSaveStatus-' + option_name).show();
 
         if (jQuery('input[name=' + option_name + ']').is(':checkbox')) {
@@ -1108,7 +1093,7 @@ function config_generate_AutoSaveConfigOption_function($post_url)
 
             if(response.success === true)
                 {
-                jQuery('#AutoSaveStatus-' + option_name).html('<?php echo $lang["saved"]; ?>');
+                jQuery('#AutoSaveStatus-' + option_name).html('<?php echo escape($lang["saved"]); ?>');
                 jQuery('#AutoSaveStatus-' + option_name).fadeOut('slow');
                 if (reload_page)
                     {

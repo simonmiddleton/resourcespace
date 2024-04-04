@@ -1,5 +1,5 @@
 <?php
-include "../../include/db.php";
+include "../../include/boot.php";
 
 include "../../include/authenticate.php"; 
 include "../../lib/fontawesome/resourcespace/icon_classes.php";
@@ -226,7 +226,7 @@ else
     {
     ?>    
     <div class="Question"><label><?php echo escape($lang["property-reference"]) ?></label>
-    <div class="Fixed"><?php echo  $restypedata["ref"] ?></div>
+    <div class="Fixed"><?php echo  $restypedata["ref"]; ?></div>
     <div class="clearerleft"> </div>
     </div>
 

@@ -1,5 +1,5 @@
 <?php
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include '../../../include/authenticate.php';
 if(!checkperm('a'))
     {
@@ -96,7 +96,7 @@ include '../../../include/header.php';
     <p>
         <a href="<?php echo $back_to_url; ?>" onclick="return CentralSpaceLoad(this, true);"><?php echo $back_to_link_name; ?></a>
     </p>
-    <h1><?php echo $lang["tms_link_tms_module_configuration"]; ?></h1>
+    <h1><?php echo escape($lang["tms_link_tms_module_configuration"]); ?></h1>
     <?php
     if(isset($error))
         {
@@ -115,7 +115,7 @@ include '../../../include/header.php';
         render_dropdown_question($lang["tms_link_tms_module_name"],"tms_link_module_name",$arrtables,$tms_link_module_name); ?>
 
         <div class="Question">
-            <label><?php echo $lang["tms_link_tms_uid_field"]; ?></label>
+            <label><?php echo escape($lang["tms_link_tms_uid_field"]); ?></label>
             <input name="tms_link_tms_uid_field" type="text" class="stdwidth" value="<?php echo escape($tms_link_tms_uid_field); ?>">
             <div class="clearerleft"></div>
         </div>
@@ -141,12 +141,12 @@ include '../../../include/header.php';
             420);
         ?>
         <div class="Question">
-            <label for="buttons"><?php echo $lang["tms_link_field_mappings"]; ?></label>
+            <label for="buttons"><?php echo escape($lang["tms_link_field_mappings"]); ?></label>
             <table id="tmsModulesMappingTable">
                 <tbody>
                     <tr>
-                        <th><strong><?php echo $lang["tms_link_column_name"]; ?></strong></th>
-                        <th><strong><?php echo $lang["tms_link_resourcespace_field"]; ?></strong></th>
+                        <th><strong><?php echo escape($lang["tms_link_column_name"]); ?></strong></th>
+                        <th><strong><?php echo escape($lang["tms_link_resourcespace_field"]); ?></strong></th>
                         <th><strong><?php echo "{$lang["tms_link_column_name"]} {$lang["tms_link_encoding"]}"; ?></strong></th>
                         <th><strong></strong></th>
                     </tr>
@@ -163,7 +163,7 @@ include '../../../include/header.php';
                         </td>
                         <td>
                             <select class="medwidth" name="tms_rs_mappings[<?php echo $tms_rs_mapping_index; ?>][rs_field]">
-                                <option value=""><?php echo $lang['select']; ?></option>
+                                <option value=""><?php echo escape($lang['select']); ?></option>
                         <?php
                         $fields = ps_query('SELECT * FROM resource_type_field ORDER BY title, name', array(), "schema");
                         foreach($fields as $field)
@@ -184,7 +184,7 @@ include '../../../include/header.php';
                                    value="<?php echo escape($tms_rs_mapping['encoding']); ?>">
                         </td>
                         <td>
-                            <button type="button" onclick="delete_tms_field_mapping(this);"><?php echo $lang['action-delete']; ?></button>
+                            <button type="button" onclick="delete_tms_field_mapping(this);"><?php echo escape($lang['action-delete']); ?></button>
                         </td>
                     </tr>
                     <?php
@@ -192,7 +192,7 @@ include '../../../include/header.php';
                     ?>
                     <tr>
                         <td colspan="4">
-                            <button type="button" onclick="add_new_tms_field_mapping(this);"><?php echo $lang['tms_link_add_mapping']; ?></button>
+                            <button type="button" onclick="add_new_tms_field_mapping(this);"><?php echo escape($lang['tms_link_add_mapping']); ?></button>
                         </td>
                     </tr>
                 </tbody>
@@ -207,7 +207,7 @@ include '../../../include/header.php';
                 new_row_html += '<tr>';
                 new_row_html += '<td><input class="medwidth" type="text" name="tms_rs_mappings[' + row_index + '][tms_column]" value=""></td>';
                 new_row_html += '<td><select class="medwidth" name="tms_rs_mappings[' + row_index + '][rs_field]">';
-                new_row_html += '<option value=""><?php echo $lang['select']; ?></option>';
+                new_row_html += '<option value=""><?php echo escape($lang['select']); ?></option>';
                 <?php
                 $fields = ps_query('SELECT * FROM resource_type_field ORDER BY title, name', array(), "schema");
                 foreach($fields as $field)
@@ -221,7 +221,7 @@ include '../../../include/header.php';
                 new_row_html += '</select>';
                 new_row_html += '</td>';
                 new_row_html += '<td><input class="srtwidth" type="text" name="tms_rs_mappings[' + row_index + '][encoding]" value=""></td>';
-                new_row_html += '<td><button type="button" onclick="delete_tms_field_mapping(this);"><?php echo $lang['action-delete']; ?></button></td>';
+                new_row_html += '<td><button type="button" onclick="delete_tms_field_mapping(this);"><?php echo escape($lang['action-delete']); ?></button></td>';
                 new_row_html += '</tr>';
 
                 jQuery(new_row_html).insertBefore(jQuery(button).closest('tr'));
@@ -264,7 +264,7 @@ include '../../../include/header.php';
             </script>
         </div>
         <div class="QuestionSubmit">
-            <input name="save" type="submit" value="<?php echo $lang["save"]; ?>">
+            <input name="save" type="submit" value="<?php echo escape($lang["save"]); ?>">
         </div>
     </form>
 </div>

@@ -1,6 +1,6 @@
 <?php
 
-include '../../../include/db.php';
+include '../../../include/boot.php';
 include_once dirname(__FILE__) . "/../include/utility.php";
 
 $k=getval("k","");

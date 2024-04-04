@@ -5,7 +5,7 @@
  * @package ResourceSpace
  * @subpackage Pages_Team
  */
-include "../../include/db.php";
+include "../../include/boot.php";
 include "../../include/authenticate.php"; 
 include "../../include/api_functions.php"; 
 
@@ -88,7 +88,7 @@ if (!checkperm_user_edit($user))
     exit();
     }
 
-// Block this from running if we are logging in as a user because running this here will block db.php from setting headers
+// Block this from running if we are logging in as a user because running this here will block boot.php from setting headers
 if(getval('loginas', '') === '')
     {
     include "../../include/header.php";
@@ -208,7 +208,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
         else
             {
             ?>
-            <option value="<?php echo $groups[$n]["ref"]?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]?></option>   
+            <option value="<?php echo $groups[$n]["ref"]; ?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]; ?></option>   
             <?php
             }
         }
@@ -234,7 +234,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
     <div class="clearerleft"> </div>
 </div>
 
-<div class="Question"><label><?php echo escape($lang["accountexpiresoptional"])?><br/><?php echo escape($lang["format"]) . ": " . $lang["yyyy-mm-dd"]?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
+<div class="Question"><label><?php echo escape($lang["accountexpiresoptional"])?><br/><?php echo escape($lang["format"]) . ": " . $lang["yyyy-mm-dd"]; ?></label><input name="account_expires" id="user_edit_expires" type="text" class="stdwidth" value="<?php echo form_value_display($user,"account_expires")?>"><div class="clearerleft"> </div></div>
 
 <div class="Question"><label><?php echo escape($lang["ipaddressrestriction"])?><br/><?php echo escape($lang["wildcardpermittedeg"])?> 194.128.*</label><input name="ip_restrict" type="text" class="stdwidth" value="<?php echo form_value_display($user,"ip_restrict_user") ?>"><div class="clearerleft"> </div></div>
 
@@ -319,7 +319,7 @@ if (!hook("replacecomments"))
 $profile_image = get_profile_image($ref);
 if ($profile_image != "") { ?>
     <div class="Fixed">
-        <img src="<?php echo $profile_image ?>" alt="<?php echo escape($lang['current_profile']); ?>">
+        <img src="<?php echo escape($profile_image); ?>" alt="<?php echo escape($lang['current_profile']); ?>">
     </div>
 <?php } else { ?>
     <div class="Fixed"><?php echo escape($lang["no_profile_image"]) ?></div>

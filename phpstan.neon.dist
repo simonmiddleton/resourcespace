@@ -4,6 +4,8 @@ includes:
 parameters:
     level: 1
     paths:
+        - index.php
+        - login.php
         - api
         - batch
         - css
@@ -24,6 +26,7 @@ parameters:
     excludePaths:
         analyse:
             - include/ReplaceFunctionCallRector.php
+            - include/EscapeLanguageStringsRector.php
             - plugins/*/lib/*
 
     earlyTerminatingFunctionCalls:

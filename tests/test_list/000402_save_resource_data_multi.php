@@ -8,6 +8,7 @@ $initial_field_column_string_separator = $field_column_string_separator;
 $rtf_checkbox = create_resource_type_field("Test #402 checkbox", 1, FIELD_TYPE_CHECK_BOX_LIST, "test_402_checkbox", true);
 $ckb_opt_a = set_node(null, $rtf_checkbox, '~en:Scanned negative~fr:Négatif scanné', null, 10);
 $ckb_opt_b = set_node(null, $rtf_checkbox, '~en:Digital camera~fr:Appareil photo numérique', null, 20);
+$ckb_opt_c = set_node(null, $rtf_checkbox, 'Check C', null, '');
 
 $rtf_cat_tree = create_resource_type_field('Test #402 category tree', 1, FIELD_TYPE_CATEGORY_TREE, 'test_402_tree', true);
 $ct_opt_colors = set_node(null, $rtf_cat_tree, '~en:Colors~fr:Couleurs', null, 10);
@@ -17,6 +18,10 @@ $ct_opt_colors_black = set_node(null, $rtf_cat_tree, '~en:black~fr:noire', $ct_o
 $ct_opt_colors_blue = set_node(null, $rtf_cat_tree, '~en:blue~fr:bleue', $ct_opt_colors, 30);
 
 $rtf_date = create_resource_type_field("Test #402 date", 1, FIELD_TYPE_DATE, 'test_402_date', false);
+
+$rtf_dropdown = create_resource_type_field('Test #402 dropdown', 1, FIELD_TYPE_DROP_DOWN_LIST, 'test_402_dropdown', true);
+$drpd_opt_a = set_node(null, $rtf_dropdown, 'Drop A', null, '');
+$drpd_opt_b = set_node(null, $rtf_dropdown, 'Drop B', null, '');
 
 // Resources
 $resource_a = create_resource(1, 0);
@@ -51,6 +56,9 @@ $assert_same_all_resources_fieldx = function($resources, $rtf)
 
     return false;
     };
+
+// Deactivate some nodes
+toggle_active_state_for_nodes([$ckb_opt_c, $drpd_opt_b]);
 // --- End of Set up
 
 
@@ -80,12 +88,54 @@ $use_cases = [
         ],
         'expected' => true,
     ],
+    [
+        'name' => 'Adding disabled options',
+        'input' => [
+            'collection' => $collection_ref,
+            'postvals' => [
+                'nodes' => [$rtf_checkbox => [$ckb_opt_b, $ckb_opt_c]],
+                "editthis_field_{$rtf_checkbox}" => 'yes',
+                "modeselect_{$rtf_checkbox}" => 'RT',
+            ],
+        ],
+        'expected' => true,
+    ],
+    [
+        'name' => 'Removing disabled options',
+        'setup' => fn() => add_resource_nodes($resource_b, [$ckb_opt_c], false, false),
+        'input' => [
+            'collection' => $collection_ref,
+            'postvals' => [
+                'nodes' => [$rtf_checkbox => [$ckb_opt_b]],
+                "editthis_field_{$rtf_checkbox}" => 'yes',
+                "modeselect_{$rtf_checkbox}" => 'RT',
+            ],
+        ],
+        'expected' => true,
+    ],
+    [
+        'name' => 'Removing disabled options for a type that can only hold one value (e.g. dropdown)',
+        'setup' => fn() => add_resource_nodes($resource_b, [$drpd_opt_b], false, false),
+        'input' => [
+            'collection' => $collection_ref,
+            'postvals' => [
+                'nodes' => [$rtf_dropdown => [$drpd_opt_a]],
+                "editthis_field_{$rtf_dropdown}" => 'yes',
+                "modeselect_{$rtf_dropdown}" => 'RT',
+            ],
+        ],
+        'expected' => true,
+    ],
 ];
 foreach ($use_cases as $uc)
     {
-    $result = save_resource_data_multi($uc['input']['collection'], [], $uc['input']['postvals']);
-    
-    if($uc['expected'] !== $result)
+    // Set up the use case environment
+    if(isset($uc['setup']))
+        {
+        $uc['setup']();
+        }
+
+    if($uc['expected'] !== save_resource_data_multi($uc['input']['collection'], [], $uc['input']['postvals']))
         {
         echo "Use case: {$uc['name']} - ";
         return false;
@@ -191,7 +241,7 @@ $data_joins = $_POST = [];
 unset(
     $rtf_checkbox, $ckb_opt_a, $ckb_opt_b, $resource_a, $resource_b, $collection_ref, $resources_list, $rtf_date,
     $assert_same_all_resources_fieldx, $cat_tree_fieldx_value, $cat_tree_fieldX_values, $expected_cat_tree_fieldx_value,
-    $use_cases
+    $use_cases, $rtf_dropdown, $ckb_opt_c, $drpd_opt_a, $drpd_opt_b
 );
- 
+
 return true;

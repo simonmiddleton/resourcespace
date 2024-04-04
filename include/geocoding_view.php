@@ -2,7 +2,7 @@
 // Resource View Leaflet Map Using Leaflet.js and Various Leaflet Plugins
 
 // Setup initial Leaflet map variables.
-global $lang, $geo_search_restrict, $baseurl, $baseurl_short, $view_mapheight, $map_default, $map_zoomslider, $map_zoomnavbar, $map_kml, $map, $map_kml_file, $map_retina, $map_polygon_field, $modal, $fields;
+global $lang, $baseurl, $baseurl_short, $view_mapheight, $map_default, $map_zoomslider, $map_zoomnavbar, $map_kml, $map, $map_kml_file, $map_retina, $map_polygon_field, $modal, $fields;
 $zoomslider = 'false';
 $zoomcontrol = 'true';
 $polygon = '';
@@ -27,17 +27,6 @@ if ($map_zoomslider)
     $zoomcontrol = 'false';
     }
 
-// If inside spatial restricted zone, do not show location data.
-if (count($geo_search_restrict) > 0)
-    {
-    foreach ($geo_search_restrict as $zone)
-        {
-        if ($resource['geo_lat'] >= $zone[0] && $resource['geo_lat'] <= $zone[2] && $resource['geo_long'] >= $zone[1] && $resource['geo_long'] <= $zone[3])
-            {
-            return false;
-            }
-        }
-    }
 if($hide_geolocation_panel && !isset($geolocation_panel_only))
     { ?>
     <script>
@@ -82,14 +71,14 @@ if (!isset($geolocation_panel_only))
 if(!$hide_geolocation_panel || isset($geolocation_panel_only))
     { ?>
     <div id="GeolocationData">
-    <div class="Title"><?php echo $lang['location-title']; ?></div>
+    <div class="Title"><?php echo escape($lang['location-title']); ?></div>
     <?php
 
 if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
     { ?>
     <?php if ($edit_access)
         { ?>
-        <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo $lang['location-edit']; ?></a></p>
+        <p><?php echo LINK_CARET ?><a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo escape($lang['location-edit']); ?></a></p>
         <?php
         }
     $zoom = leaflet_map_zoom($resource['mapzoom']);
@@ -219,7 +208,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
         }
     else
         { ?>
-        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS ?><?php echo $lang['location-add'];?></a> <?php
+        <a href="<?php echo $baseurl_short?>pages/geo_edit.php?ref=<?php echo urlencode($ref); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_PLUS ?><?php echo escape($lang['location-add']);?></a> <?php
         }
 
 if($view_panels)
