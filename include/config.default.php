@@ -1063,6 +1063,9 @@ $file_checksums_offline = true;
 # $file_integrity_verify_window = array(22,6);  # # between 10PM and 6AM (first hour is later than second so time must be after first OR before second)
 # $file_integrity_verify_window = array(18,0);  # between 6PM and 12AM (midnight)
 $file_integrity_verify_window = array(0,0);     # Off by default
+ 
+# Workflow states to ignore when verifying file integrity (to verify file integrity using checksums requires $file_checksums_50k=false;)
+$file_integrity_ignore_states = [];
 
 # Default group when adding new users;
 $default_group=2;

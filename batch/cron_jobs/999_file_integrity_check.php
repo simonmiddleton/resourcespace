@@ -10,7 +10,7 @@ if (is_process_lock("file_integrity_check"))
 set_process_lock("file_integrity_check");
 
 // Get resources and checksums to validate
-$resources      = ps_query("SELECT ref, archive, file_extension, file_checksum, last_verified, integrity_fail FROM resource WHERE ref > 0 AND (datediff(now(), last_verified) > 1 OR last_verified IS NULL) ORDER BY last_verified ASC", []);
+$resources      = ps_query("SELECT ref, archive, file_extension, file_checksum, last_verified, integrity_fail FROM resource WHERE ref > 0 AND (datediff(now(), last_verified) > 1 OR last_verified IS NULL) " . ((count($file_integrity_ignore_states) > 0) ? " AND archive NOT IN (" . ps_param_insert(count($file_integrity_ignore_states)) . ")" : "") . " ORDER BY last_verified ASC", ps_param_fill($file_integrity_ignore_states, "i"));
 $checkfailed    = array();
 $validtime      = true;
 
@@ -62,7 +62,7 @@ foreach($resources as $resource)
                     {
                     ps_query("UPDATE resource SET integrity_fail = 0, last_verified = now() WHERE ref = ?", array("i", $resource['ref']));
                     }
-                else
+                elseif(!in_array($resource["ref"],$file_integrity_ignore_states))
                     {
                     if('cli' == PHP_SAPI)
                         {
@@ -81,11 +81,14 @@ foreach($resources as $resource)
         else
             {
             // File is missing or not readable, record this and update the resource table
-            if('cli' == PHP_SAPI)
+            if(!in_array($resource['archive'],$file_integrity_ignore_states))
                 {
-                echo " - Missing or unreadable resource file for resource " . $resource['ref'] . ".  Expected location: " . $path . $LINE_END;
+                if('cli' == PHP_SAPI)
+                    {
+                    echo " - Missing or unreadable resource file for resource " . $resource['ref'] . ".  Expected location: " . $path . $LINE_END;
+                    }
+                $checkfailed[] = $resource['ref'];
                 }
-            $checkfailed[] = $resource['ref'];
             }
         }
     }
