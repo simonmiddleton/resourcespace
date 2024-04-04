@@ -133,8 +133,10 @@ if ($api_function!="")
 
 </form>
 
-<?php if ($output!="") { 
+<?php if ($output!="")
+    { 
     //rebuild params for output to include encoding if needed
+    $original_query=$query;
     $query="function=" . $api_function;
     foreach($fct_params as $fparam)
         {
@@ -149,15 +151,14 @@ if ($api_function!="")
         strpos(urlencode($param_val), '%') === false?$query .= '&' . $param_name . '=' . $param_val:$query .= '&' . $param_name . '=" . urlencode("' . $param_val . '") . "';
         }
     ?>
-<pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:black;color:white;padding:5px;border-left:10px solid #666;"><?php echo escape($output) ?></pre>
+<pre class="codeoutput"><?php echo escape($output) ?></pre>
 
 
 <br /><br />
 <h2><?php echo escape($lang["api-php-code"]); ?></h2>
 <p><?php echo escape($lang["api-php-help"]); ?></p>
 
-<style>.codecomment {color:#090;}</style>
-<pre style=" white-space: pre-wrap;word-wrap: break-word; width:100%;background-color:white;color:black;padding:10px;">
+<pre class="codeexample">
 &lt;?php
 
 <span class="codecomment">// Set the private API key for the user (from the user account page) and the user we're accessing the system as.</span>
@@ -173,6 +174,13 @@ $sign=hash("sha256",$private_key . $query);
 <span class="codecomment">// Make the request and output the JSON results.</span>
 $results=json_decode(file_get_contents("<?php echo escape($baseurl) ?>/api/?" . $query . "&sign=" . $sign));
 print_r($results);
+</pre>
+
+<h2><?php echo escape($lang["api-curl-example"]); ?></h2>
+<p><?php echo escape($lang["api-curl-help"]); ?></p>
+
+<pre class="codeexample">
+private_key="<?php echo get_api_key($userref) ?>"; user=<?php echo escapeshellarg($username); ?>; query=<?php echo escapeshellarg("user=" . $username . "&" . $original_query); ?>; sign=$(echo -n "${private_key}${query}" | openssl dgst -sha256); curl -X POST "<?php echo $baseurl ?>/api/?${query}&sign=$(echo ${sign} | sed 's/^.* //')"
 </pre>
 
 <?php } ?>

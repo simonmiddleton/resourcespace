@@ -2573,3 +2573,15 @@ input[type="text"]#iconpicker-input {
 .leaflet-touch .leaflet-control-geocoder-icon {
     min-width: unset; 
 }
+
+.codeexample
+    {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    width:100%;
+    padding:10px;
+    }
+.codeoutput
+    {
+    white-space: pre-wrap;word-wrap: break-word; width:100%;padding:5px;
+    }
