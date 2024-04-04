@@ -442,29 +442,21 @@ function render_search_field($field,$fields,$value="",$autoupdate=false,$class="
     if (!$forsearchbar)
         {
         ?>
-        <div class="Question <?php 
+        <div class="Question ConditionalVisibility" data-for_resource_types="<?php 
         // Add class for each supported resource type to allow showing/hiding on advanced search
-        // Skip any fields that are hidden because of a display condition i.e. $displaycondition is false, as the display condition controls visibility.
-        if ($displaycondition)
+        if($field["resource_types"] == "Collections")
             {
-            if($field["resource_types"] == "Collections")
-                {
-                echo "QuestionSearchRestypeCollections";
-                }
-            elseif($field["global"] == 1)
-                {
-                echo "QuestionSearchRestypeGlobal";
-                }
-            else
-                {
-                echo "QuestionSearchRestypeSpec ";
-                foreach(explode(",",(string)$field["resource_types"]) as $fieldrestype)
-                    {
-                    echo "QuestionSearchRestype" . (int)$fieldrestype . " ";
-                    }
-                }
+            echo "Collections";
             }
-        ?>" id="question_<?php echo $n ?>" <?php if (!$displaycondition) {?>style="display:none;border-top:none;"<?php } ?><?php
+        elseif($field["global"] == 1)
+            {
+            echo "Global";
+            }
+        else
+            {
+            echo (string)$field["resource_types"];
+            }
+        ?>" id="question_<?php echo $n ?>" data-has_display_condition="<?php echo !$displaycondition ? '1' : '0'; ?>" data-question_field_ref="<?php echo (int) $field['ref']; ?>"<?php
         if (strlen((string) $field["tooltip_text"])>=1)
             {
             echo "title=\"" . escape(lang_or_i18n_get_translated($field["tooltip_text"], "fieldtooltip-")) . "\"";

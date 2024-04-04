@@ -264,6 +264,74 @@ for ($n=0;$n<count($types);$n++)
     }
 ?>
 
+function displayValidFields() {
+    // Determine which fields should be displayed for the selected resource types and considering any field display conditions.
+    const conditionalquestions = document.getElementsByClassName("ConditionalVisibility");
+    let fieldvalidfortypes = [];
+    let $add_type_specific_header = false;
+
+    for (let conditionalquestion of conditionalquestions)
+        {
+        fieldvalidfortypes = conditionalquestion.dataset.for_resource_types.split(",");
+        hidefield = false;
+
+        for (let selectedtype of selectedtypes)
+            {
+            if (fieldvalidfortypes[0] !== "Global" && hidefield === false && fieldvalidfortypes.indexOf(selectedtype) === -1)
+                {
+                // Question resource type must be a selected resource type. e.g. types: 3,4 question: 3 
+                hidefield = true;
+                }
+            }
+
+        if (selectedtypes.length === 0 && fieldvalidfortypes[0] !== "Global")
+            {
+            // Don't show any resource type specific fields if no resource types are set.
+            hidefield = true;
+            }
+
+        if (hidefield === true)
+            {
+            // Field isn't valid for the selected resource types so hide.
+            document.getElementById(conditionalquestion.id).style.display = "none";
+            console.log("hide " + conditionalquestion.id);
+            }
+        else if (conditionalquestion.dataset.has_display_condition === '1')
+            {
+            // Display condition applies for field so check it to decide if field is shown.
+            let conditiontocheck = 'checkSearchDisplayCondition' + conditionalquestion.dataset.question_field_ref;
+            window[conditiontocheck]();
+            console.log("display condition check for " + conditionalquestion.id);
+            }
+        else
+            {
+            // No display condition and field valid for resource types selected so show.
+            document.getElementById(conditionalquestion.id).style.display = "";
+            console.log("show " + conditionalquestion.id);
+            }
+
+        if (document.getElementById(conditionalquestion.id).style.display == '' && fieldvalidfortypes[0] !== "Global")
+            {
+            // At least one resource type field is displayed so add the type specific fields section.
+            $add_type_specific_header = true;
+            }
+        }
+
+    // Determine if resource type specific fields section should be displayed.
+    if ($add_type_specific_header)
+        {
+        jQuery('#AdvancedSearchRestypeSectionHead').show();
+        if (getCookie('AdvancedSearchRestypeSection') != "collapsed") {
+            jQuery('#AdvancedSearchRestypeSection').show();
+            }
+        }
+    else
+        {
+        jQuery('#AdvancedSearchRestypeSectionHead').hide();
+        jQuery('#AdvancedSearchRestypeSection').hide();
+        }
+    }
+
 function advSearchShowHideSection(name,show) {
     // Show or hide sections
     console.debug('advSearchShowHide(' + name + ',' + show + ');');
@@ -280,30 +348,12 @@ function advSearchShowHideSection(name,show) {
         }
     }
 
-function checkHideTypeSpecific() {
-    // Hide type specific section if no valid fields
-    jQuery('#AdvancedSearchRestypeSection').show();
-    if(jQuery('.QuestionSearchRestypeSpec:visible').length == 0)
-        {
-        console.debug("Hiding resource type specific section");
-        jQuery('#AdvancedSearchRestypeSectionHead').hide();
-        jQuery('#AdvancedSearchRestypeSection').hide();
-        }
-    if (getCookie('AdvancedSearchRestypeSection')=="collapsed")
-        {
-        jQuery('#AdvancedSearchRestypeSection').hide();
-        }
-    }
-
 jQuery(document).ready(function()
     {
     selectedtypes=['<?php echo implode("','",array_filter($selectedtypes,fn($v) => (is_int_loose($v) || $v == "Global"))) ?>'];
     if(selectedtypes[0]===""){selectedtypes.shift();}
 
-    // Hide invalid fields
-    jQuery('.QuestionSearchRestypeSpec').hide();
-    validselector = '.QuestionSearchRestype' + selectedtypes.join('.QuestionSearchRestype');
-    jQuery(validselector).show();
+    displayValidFields();
 
     jQuery('.SearchTypeCheckbox').change(function()
         {
@@ -319,10 +369,11 @@ jQuery(document).ready(function()
                 //Uncheck Featured Collections
                 jQuery('#SearchFeaturedCollectionsCheckbox').prop('checked',false);
                 advSearchShowHideSection('Global',true);
-                advSearchShowHideSection('Restype',false);
+                advSearchShowHideSection('',false);
                 advSearchShowHideSection('FeaturedCollections',false);
                 advSearchShowHideSection('Resource',true);
                 advSearchShowHideSection('Media',true);
+                displayValidFields();
             }
             else if (id=="FeaturedCollections") {
                 console.debug("Showing fields for FeaturedCollections");
@@ -333,10 +384,12 @@ jQuery(document).ready(function()
                 jQuery('#SearchFeaturedCollectionsCheckbox').prop('checked',true);
 
                 advSearchShowHideSection('Global',false);
-                advSearchShowHideSection('Restype',false);
                 advSearchShowHideSection('FeaturedCollections',true);
                 advSearchShowHideSection('Resource',false);
                 advSearchShowHideSection('Media',false);
+                jQuery('#AdvancedSearchFeaturedCollectionsSectionHead').show();
+                jQuery('#AdvancedSearchFeaturedCollectionsSection').show();
+                displayValidFields();
             }
             else {
                 // Standard resource type checked
@@ -349,18 +402,13 @@ jQuery(document).ready(function()
                 console.debug("Showing fields for selected types: " + selectedtypes);
                 jQuery('#SearchGlobal').prop('checked',false);
                 jQuery('#SearchFeaturedCollectionsCheckbox').prop('checked',false);
-
+                jQuery('#AdvancedSearchFeaturedCollectionsSectionHead').hide();
+                jQuery('#AdvancedSearchFeaturedCollectionsSection').hide();
                 advSearchShowHideSection('Global',true);
-                advSearchShowHideSection('Restype',true);
                 advSearchShowHideSection('FeaturedCollections',false);
                 advSearchShowHideSection('Resource',true);
                 advSearchShowHideSection('Media',true);
-
-                // Hide fields that are not valid for the selected types
-                jQuery('.QuestionSearchRestypeSpec').hide();
-                validselector = '.QuestionSearchRestype' + selectedtypes.join('.QuestionSearchRestype');
-                jQuery(validselector).show();
-                checkHideTypeSpecific();
+                displayValidFields();
             }
         }
         else { // Process checkbox change from checked to unchecked
@@ -372,18 +420,8 @@ jQuery(document).ready(function()
                 jQuery('.SearchTypeItemCheckbox').prop('checked',false);
             }
             else if (id=="FeaturedCollections") {
-                advSearchShowHideSection('Global',true);
-                advSearchShowHideSection('Restype',true);
                 advSearchShowHideSection('FeaturedCollections',false);
-                advSearchShowHideSection('Resource',true);
-                advSearchShowHideSection('Media',true);
-
-                // Hide fields that are not valid for the selected types
-                jQuery('.QuestionSearchRestypeSpec').hide();
-                validselector = '.QuestionSearchRestype' + selectedtypes.join('.QuestionSearchRestype');
-                jQuery(validselector).show();
-
-                checkHideTypeSpecific();
+                displayValidFields();
             }
             else {
                 // Standard resource type unchecked
@@ -393,17 +431,8 @@ jQuery(document).ready(function()
                     selectedtypes = resTypes;
                     }
                 selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != id;});
-                advSearchShowHideSection('Global',true);
-                advSearchShowHideSection('Restype',true);
                 advSearchShowHideSection('FeaturedCollections',false);
-                advSearchShowHideSection('Resource',true);
-                advSearchShowHideSection('Media',true);
-
-                // Hide fields that are not valid for the selected types
-                jQuery('.QuestionSearchRestypeSpec').hide();
-                validselector = '.QuestionSearchRestype' + selectedtypes.join('.QuestionSearchRestype');
-                jQuery(validselector).show();
-                checkHideTypeSpecific();
+                displayValidFields();
             }
         }
 
