@@ -420,18 +420,24 @@ jQuery(document).ready(function()
                 jQuery('.SearchTypeItemCheckbox').prop('checked',false);
             }
             else if (id=="FeaturedCollections") {
+                advSearchShowHideSection('Global',true);
                 advSearchShowHideSection('FeaturedCollections',false);
+                advSearchShowHideSection('Resource',true);
+                advSearchShowHideSection('Media',true);
                 displayValidFields();
             }
             else {
                 // Standard resource type unchecked
+                advSearchShowHideSection('Global',true);
                 jQuery('#SearchGlobal').prop('checked',false);
+                advSearchShowHideSection('Resource',true);
+                advSearchShowHideSection('Media',true);
+                advSearchShowHideSection('FeaturedCollections',false);
                 if(selectedtypes=="Global") {
                     // Need to set all other types and unset this one
                     selectedtypes = resTypes;
                     }
                 selectedtypes = jQuery.grep(selectedtypes, function(value) {return value != id;});
-                advSearchShowHideSection('FeaturedCollections',false);
                 displayValidFields();
             }
         }
