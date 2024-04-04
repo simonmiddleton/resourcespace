@@ -2968,7 +2968,7 @@ $lang["file_integrity_fail_search"]         = "File integrity failures";
 $lang["file_integrity_fail_latest"]         = "View latest file integrity failures";
 $lang["file_integrity_fail_all"]            = "View all resources with file integrity failures";
 $lang["all__file_integrity_fail_email"]     = "[img_headerlogo]<br />\n[lang_file_integrity_summary_failed] <br /><br /> \n[lang_file_integrity_fail_search] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["team_resource_integrity_fail"]       = "View suspect resources";
+$lang["team_resource_integrity_fail"]       = "View file integrity failures";
 $lang["team_resource_integrity_fail_info"]  = "Resources with missing or possibly corrupted files";
 $lang["collection_copy_resources"]          = "Copy collection resources";
 $lang["collection_actiontype_1"]            = "Resources";

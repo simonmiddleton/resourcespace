@@ -9425,11 +9425,12 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
  * Check integrity of primary resource files
  *
  * @param array $resources      array of resource data e.g, from search results
+ * @param bool $presenceonly    Check for file presence only? If false file checksums will be checked (if configured)
  * 
  * @return array                Array of resource IDs that have failed  to verify
  * 
  */
-function check_resources(array $resources = []): array
+function check_resources(array $resources = [], bool $presenceonly = false): array
 {
     if(count($resources) === 0) {
         $resources = get_resources_to_validate();
@@ -9447,11 +9448,11 @@ function check_resources(array $resources = []): array
     $return_failed = [];
     foreach (array_chunk($resources,1000) as $checkresources) {
         $checks = [];
-        if($GLOBALS["file_checksums"] && !$GLOBALS["file_checksums_50k"]) {
+        if(!$presenceonly && $GLOBALS["file_checksums"] && !$GLOBALS["file_checksums_50k"]) {
             $checks["get_checksum"]  = "%RESOURCE%file_checksum";
             } else {
                 $checks["is_readable"]  = true;
-            }           
+            }
         $results = validate_resource_files($checkresources,$checks);
 
         $failed = [];
