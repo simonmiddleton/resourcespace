@@ -122,6 +122,17 @@ if($comments_resource_enable && $comments_view_panel_show_marker){
     $resource_comments=ps_value("select count(*) value from comment where resource_ref=?",array("i",$ref),"0");
 }
 
+$missing_original = false;
+if (
+    !in_array($resource["resource_type"],
+        array_unique(array_merge($data_only_resource_types,$file_integrity_ignore_resource_types))
+        )
+    && !in_array($resource["archive"],$file_integrity_ignore_states)
+) {
+    // Validate resource file
+    $missing_original = count(array_intersect(check_resources([$resource]),[$ref])) === 1;
+}
+
 # Should the page use a larger resource preview layout?
 $use_larger_layout = true;
 if (isset($resource_view_large_ext))
@@ -813,7 +824,15 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             # Restricted access? Show the request link.
 
                                             # List all sizes and allow the user to download them
-                                            $sizes=get_image_sizes($ref,false,$resource["file_extension"]);
+                                            $sizes = get_image_sizes($ref,false,$resource["file_extension"]);
+
+                                            if ($missing_original && (int) $resource["no_file"] === 0) {
+                                                // Need to display the missing file size info
+                                                $allsizes = get_image_sizes($ref,false,$resource["file_extension"],false);
+                                                $origidx = array_search(1,array_column($allsizes,"original"),true);
+                                                $sizes = array_merge([$allsizes[$origidx]],$sizes);
+                                            }
+
                                             for ($n=0;$n<count($sizes);$n++)
                                                 {
                                                 # Is this the original file? Set that the user can download the original file
@@ -866,7 +885,25 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             ?>
                                                     </td>
                                                     <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
-                                                    <?php add_download_column($ref, $sizes[$n], $downloadthissize); ?>
+                                                    <?php 
+                                                    if ($fulldownload && $missing_original) { ?>
+                                                        <td class="MissingFile">
+                                                            <a 
+                                                                title="<?php echo escape($lang["missing_file"]); ?>" 
+                                                                href="#" 
+                                                                onclick="styledalert(
+                                                                    '<?php echo escape($lang['no_file']); ?>',
+                                                                    '<?php echo escape($lang['missing_file']); ?>'
+                                                                    );"
+                                                                >
+                                                                <?php echo escape($lang["no_file"]); ?>
+                                                            </a>
+                                                        </td>
+                                                        <?php
+                                                        } else {
+                                                            add_download_column($ref, $sizes[$n], $downloadthissize);
+                                                        } 
+                                                    ?>
                                                 </tr>
 
                                                 <?php
@@ -1120,12 +1157,81 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     # ----------------------------- Resource Actions -------------------------------------
                                     hook ("resourceactions");
 
-                                    if ($k=="" || $internal_share_access)
+                                    if ($k == "" || $internal_share_access)
                                         {
                                         if (!hook("replaceresourceactions"))
                                             {
                                             hook("resourceactionstitle");
 
+                                            if($missing_original && checkperm("a")) {
+                                                if((int) $resource["no_file"] === 1) {
+                                                    // Option to mark the resource as having a missing file
+                                                    // (set no_file=0)
+                                                    echo sprintf("
+                                                    <li>
+                                                        <a id='unset_no_file_%s'
+                                                            href='#'
+                                                            onclick='
+                                                            params = [];
+                                                            params[\"resource\"] = %s;
+                                                            data = [];
+                                                            data[\"no_file\"]=0;
+                                                            params[\"data\"]=data;
+
+                                                                api(\"put_resource_data\", 
+                                                                    {\"resource\": %s,{\\\"no_file\\\": 0},
+                                                                    function(response) {styledalert(\"%s\",\"%s\");},
+                                                                    %s
+                                                                );
+                                                                return false'
+                                                            >
+                                                        <i class='fa fa-fw fa-pencil'></i>
+                                                        &nbsp;%s
+                                                        </a>
+                                                    </li>",
+                                                    $ref,
+                                                    $ref,
+                                                    escape($lang['ok']),
+                                                    escape($lang['completed_unset_no_file']),
+                                                    generate_csrf_js_object('unset_no_file'),
+                                                    escape($lang['action_unset_no_file']),
+                                                    );
+                                                } else {
+                                                    // Option to mark the resource as legitimately having no associated
+                                                    // file to prevent alerts
+                                                    echo sprintf("
+                                                        <li>
+                                                            <a id='set_no_file_%s'
+                                                                href='#'
+                                                                onclick='
+                                                                params = [];
+                                                                params[\"resource\"] = %s;
+                                                                data = [];
+                                                                data[\"no_file\"]=1;
+                                                                params[\"data\"]=data;
+
+                                                                    api(\"put_resource_data\", 
+                                                                        params,
+                                                                        function(response) {styledalert(\"%s\",\"%s\");},
+                                                                        %s
+                                                                    );
+                                                                    return false;'
+                                                                    >
+                                                                <i class='fa fa-fw fa-pencil'></i>
+                                                                &nbsp;%s
+                                                            </a>
+                                                        </li>",
+                                                        $ref,
+                                                        $ref,
+                                                        escape($lang['ok']),
+                                                        escape($lang['completed_set_no_file']),
+                                                        generate_csrf_js_object('set_no_file'),
+                                                        escape($lang['action_set_no_file']),
+                                                        );
+                                                }
+                                            }
+
+                                            
                                             if ($resource_contact_link) 
                                                 { 
                                                 $contacturl = generateURL(

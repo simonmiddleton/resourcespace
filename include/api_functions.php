@@ -89,7 +89,6 @@ function execute_api_call($query,$pretty=false)
     ) {
         ajax_unauthorized();
     }
-
     // Construct an array of the real params, setting default values as necessary
     $setparams = [];
     $n = 0;
@@ -121,6 +120,7 @@ function execute_api_call($query,$pretty=false)
                 $GLOBALS["use_error_exception"] = true;
                 try
                     {
+                        debug("BANG " . $params[$param_name]); 
                     $decoded = json_decode($params[$param_name],JSON_OBJECT_AS_ARRAY);
                     }
                 catch (Exception $e)

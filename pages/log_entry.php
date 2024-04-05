@@ -57,10 +57,11 @@ if(!checkperm('v') && !$bypass_permission_check)
                             {
                             case "type":
                                 $name = $lang["type"];
-                                if(isset($lang["log-" . $value]))
-                                    {
+                                if(isset($lang["log-" . $value])) {
                                     $value = $lang["log-".$value];
-                                    }
+                                } elseif (isset($lang["log_code_" . $value])) {
+                                    $value = $lang["log_code_".$value];
+                                }
                             break;
                             case "date":
                                 $name = $lang["date"];

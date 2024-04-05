@@ -4125,7 +4125,7 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         {
         ps_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `access_key`, `previous_value`) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-            'i', (($userref != "") ? $userref : null),
+            'i', (($userref != "" && $type !== LOG_CODE_SYSTEM) ? $userref : null),
             'i', $resource,
             's', $type,
             'i', (($field=="" || !is_numeric($field)) ? null : $field),
@@ -7673,7 +7673,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
     $lastpreview=0;$lastrestricted=0;
     $path2=get_resource_path($ref,true,'',false,$extension);
 
-    if(!resource_has_access_denied_by_RT_size($resource_type, '') && file_exists($path2))
+    if(!resource_has_access_denied_by_RT_size($resource_type, '') && (file_exists($path2) || !$onlyifexists))
     {
         $returnline=array();
         $returnline["name"]=lang_or_i18n_get_translated($lastname, "imagesize-");
@@ -7682,6 +7682,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $returnline["path"]=$path2;
         $returnline["url"] = get_resource_path($ref, false, "", false, $extension);
         $returnline["id"]="";
+        $returnline["original"] = 1;
         $dimensions = ps_query("select width,height,file_size,resolution,unit from resource_dimensions where resource=?",array("i",$ref));
 
         if (count($dimensions))
@@ -7733,6 +7734,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
             ) {
                 $returnline=array();
                 $returnline["name"]=lang_or_i18n_get_translated($sizes[$n]["name"], "imagesize-");
+                $returnline["original"] = 0;
                 $returnline["allow_preview"]=$sizes[$n]["allow_preview"];
 
                 # The ability to restrict download size by user group and resource type.
