@@ -43,7 +43,8 @@ foreach($recentactions as $notifyuser=>$user_actions)
     $usermail = $actionuser["email"];
 
     // Set timezone if required
-    get_config_option($notifyuser,'user_local_timezone', $user_local_timezone, true);
+    $default_user_local_timezone = $user_local_timezone;
+    get_config_option($notifyuser,'user_local_timezone', $user_local_timezone, $default_user_local_timezone);
 
     if(!filter_var($usermail, FILTER_VALIDATE_EMAIL))
         {
