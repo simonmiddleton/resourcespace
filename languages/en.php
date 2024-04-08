@@ -3142,7 +3142,7 @@ $lang["user_api_session_grant_error"]       = "Key issuance failed.";
 
 $lang["no_file"]                            = "No file";
 $lang["missing_file"]                       = "This file is missing. Please contact your system administrator";
-$lang["action_set_no_file"]                 = "Ignore missing file";
+$lang["action_set_no_file"]                 = "Mark as having no file";
 $lang["action_unset_no_file"]               = "Mark as file missing";
 $lang["completed_set_no_file"]              = "Resource marked as having no file";
 $lang["completed_unset_no_file"]            = "Resource marked as file missing";

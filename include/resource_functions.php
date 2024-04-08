@@ -519,7 +519,7 @@ function put_resource_data($resource,$data)
 
     // Define safe columns
     $safe_columns=array("resource_type","creation_date","rating","user_rating","archive","access","mapzoom","modified","geo_lat","geo_long","no_file");
-    $safe_column_types=array("i","s","d","i","i","i","d","s","s","s");
+    $safe_column_types=array("i","s","d","i","i","i","d","s","s","s","i");
 
     // Permit the created by column to be changed also
     if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";$safe_column_types[]='i';}

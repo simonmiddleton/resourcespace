@@ -1164,74 +1164,44 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             hook("resourceactionstitle");
 
                                             if($missing_original && checkperm("a")) {
-                                                if((int) $resource["no_file"] === 1) {
-                                                    // Option to mark the resource as having a missing file
-                                                    // (set no_file=0)
-                                                    echo sprintf("
-                                                    <li>
-                                                        <a id='unset_no_file_%s'
-                                                            href='#'
-                                                            onclick='
-                                                            params = [];
-                                                            params[\"resource\"] = %s;
-                                                            data = [];
-                                                            data[\"no_file\"]=0;
-                                                            params[\"data\"]=data;
-
-                                                                api(\"put_resource_data\", 
-                                                                    {\"resource\": %s,{\\\"no_file\\\": 0},
-                                                                    function(response) {styledalert(\"%s\",\"%s\");},
-                                                                    %s
-                                                                );
-                                                                return false'
-                                                            >
-                                                        <i class='fa fa-fw fa-pencil'></i>
-                                                        &nbsp;%s
-                                                        </a>
-                                                    </li>",
-                                                    $ref,
-                                                    $ref,
-                                                    escape($lang['ok']),
-                                                    escape($lang['completed_unset_no_file']),
-                                                    generate_csrf_js_object('unset_no_file'),
-                                                    escape($lang['action_unset_no_file']),
-                                                    );
-                                                } else {
-                                                    // Option to mark the resource as legitimately having no associated
-                                                    // file to prevent alerts
-                                                    echo sprintf("
-                                                        <li>
-                                                            <a id='set_no_file_%s'
-                                                                href='#'
-                                                                onclick='
-                                                                params = [];
-                                                                params[\"resource\"] = %s;
-                                                                data = [];
-                                                                data[\"no_file\"]=1;
-                                                                params[\"data\"]=data;
-
-                                                                    api(\"put_resource_data\", 
-                                                                        params,
-                                                                        function(response) {styledalert(\"%s\",\"%s\");},
-                                                                        %s
-                                                                    );
-                                                                    return false;'
-                                                                    >
-                                                                <i class='fa fa-fw fa-pencil'></i>
-                                                                &nbsp;%s
-                                                            </a>
-                                                        </li>",
-                                                        $ref,
-                                                        $ref,
-                                                        escape($lang['ok']),
-                                                        escape($lang['completed_set_no_file']),
-                                                        generate_csrf_js_object('set_no_file'),
-                                                        escape($lang['action_set_no_file']),
-                                                        );
-                                                }
+                                                $no_file_set = (bool) $resource["no_file"];
+                                                $nofile_id = ($modal ? "modal_" : "") . "no_file_link"; // Anchor ID
+                                                echo sprintf("
+                                                <li>
+                                                    <a  id=\"%s\"
+                                                        class='no_file_link %s'
+                                                        href='#'
+                                                        data-no-file-state='%s'
+                                                        onclick='
+                                                        el_no_file = jQuery(\"#%s\");
+                                                        newstate = el_no_file.attr(\"data-no-file-state\") === \"0\" ? 1 : 0;
+                                                        newtext = newstate ? \"%s\" : \"%s\";
+                                                        api(\"put_resource_data\", 
+                                                        {\"resource\": \"%s\",\"data\": {\"no_file\": newstate}},
+                                                                function(response) {
+                                                                    el_no_file.toggleClass(\"no_file has_file\");
+                                                                    el_no_file.attr(\"data-no-file-state\",newstate);
+                                                                    el_no_file.html(newtext);
+                                                                },
+                                                                %s
+                                                            );
+                                                            return false;'
+                                                        >
+                                                    %s
+                                                    </a>
+                                                </li>",
+                                                $nofile_id, // ID of anchor tag
+                                                ($no_file_set ? "no_file" : "has_file"), // Current state for CSS targeting
+                                                ($no_file_set ? 1 : 0), // Current state for data-no-file-state
+                                                $nofile_id, // For JQuery selector to find current anchor
+                                                escape($lang['action_unset_no_file']), // Lang string to set no_file=0
+                                                escape($lang['action_set_no_file']), // Lang string  to set no_file=1
+                                                $ref, // For API call
+                                                generate_csrf_js_object('set_no_file'), 
+                                                escape($no_file_set ? $lang['action_unset_no_file'] : $lang['action_set_no_file']), // Anchor text
+                                                );                                                
                                             }
-
-                                            
+                                                                                        
                                             if ($resource_contact_link) 
                                                 { 
                                                 $contacturl = generateURL(
