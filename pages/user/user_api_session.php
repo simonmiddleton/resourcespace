@@ -7,11 +7,12 @@ $system = getval("system","");
 $remote_system = API_ISSUE_VALID_DESTINATIONS[$system] ?? false;
 if($remote_system) {
     $state = getval($remote_system["stateparam"],"");
-    if (isset($_POST['submit']) && enforcePostRequest(false)) {        
+    if (isset($_POST['submit']) && enforcePostRequest(false)) {
         // Send session key to remote system with the passed state string
         $postdata = http_build_query([
-            $remote_system["stateparam"] =>  $state,
-            "sessionkey" =>  get_session_api_key($userref),
+            $remote_system["stateparam"] => $state,
+            "username" => $username,
+            "sessionkey" => get_session_api_key($userref),
         ]);
 
         $curl = curl_init($remote_system["url"]);
@@ -65,7 +66,7 @@ include "../../include/header.php";
             <div class="QuestionSubmit">
                 <input name="save"
                     type="submit" 
-                    value="<?php echo escape($lang["user_api_session_grant_access"]); ?>" 
+                    value="<?php echo escape($lang["user_api_session_grant_access"]); ?>"
                     />
                 <div class="clearerleft"> </div>
             </div>
