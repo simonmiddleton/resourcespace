@@ -92,3 +92,9 @@ $original_filenames_when_downloading=true;
 # REQUIRES: $php_path
 # Deprecated as there are now much better options for offline video processing
 $ffmpeg_preview_async=false;
+
+# Disk Usage Warnings - requires running check_disk_usage.php
+# Percentage of disk space used before notification is sent out. The number should be between 1 and 100.
+# $disk_quota_notification_limit_percent_warning = 90;
+# Interval in hours to wait before sending another percent warning 
+# $disk_quota_notification_interval = 24;
