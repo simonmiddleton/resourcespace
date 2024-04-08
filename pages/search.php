@@ -477,7 +477,13 @@ $searchparams= array(
     'noreload'       => "true",
     'access'         => $search_access,
 );
- 
+
+if (!empty($selected_archive_states))
+    {
+    // This is an advanced search.
+    $searchparams['advsearch'] = "true";
+    }
+
 $checkparams = array();
 $checkparams[] = "order_by";
 $checkparams[] = "sort";

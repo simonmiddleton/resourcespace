@@ -169,6 +169,7 @@ $replace_resource                       = getval('replace_resource', ''); # Opti
 $replace_resource_original_alt_filename = getval('replace_resource_original_alt_filename', '');
 $single                                 = getval("single","") != "" || getval("forcesingle","") != "";
 $upload_here                            = (getval('upload_here', '') != '' ? true : false);
+$from_advanced_search                   = getval('advsearch', '') == 'true';
 
 // Set to process upload once file upload complete
 $processupload                          = getval("processupload","") != "";
@@ -419,6 +420,10 @@ if($upload_here)
     $uploadparams['search'] = $search;
     $uploadparams['resource_type'] = $resource_type;
     $uploadparams['status'] = $setarchivestate;
+    if ($from_advanced_search)
+        {
+        $uploadparams['advsearch'] = 'true';
+        }
     }
     $hook_params = hook('addtopluploadurl');
     if(!empty($hook_params))
@@ -646,7 +651,7 @@ if ($processupload)
             // For upload_then_edit mode ONLY, set the resource type based on the extension. User
             // can later change this at the edit stage
             // IMPORTANT: Change resource type only if user has access to it
-            if($upload_then_edit && !$resource_type_force_selection && (!$upload_here || !is_int_loose($resource_type)))
+            if($upload_then_edit && !$resource_type_force_selection && (!($upload_here && $from_advanced_search) || !is_int_loose($resource_type)))
                 {
                 $resource_type_from_extension = get_resource_type_from_extension(
                     pathinfo($upfilepath, PATHINFO_EXTENSION),

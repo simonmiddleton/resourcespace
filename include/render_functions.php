@@ -3144,6 +3144,11 @@ function render_upload_here_button(array $search_params, $return_params_only = f
         $upload_here_params['collection_add'] = $collection;
         }
 
+    if (isset($search_params['advsearch']) && $search_params['advsearch'] == 'true')
+        {
+        $upload_here_params['advsearch'] = 'true';
+        }
+
     // If resource types is a list then always select the first resource type the user has access to
     $resource_types = explode(',', $search_params['restypes']);
     foreach($resource_types as $resource_type)
