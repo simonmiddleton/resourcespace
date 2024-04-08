@@ -127,7 +127,7 @@ $curparams = array(
     "offset"            =>$offset,
 );
 
-$url = generateurl($baseurl . "/pages/manage_external_shares.php",$curparams);
+$url = generateURL($baseurl . "/pages/manage_external_shares.php",$curparams);
 
 $tabledata = array(
     "class" => "ShareTable",
@@ -224,7 +224,7 @@ for($n=0;$n<$sharecount;$n++)
             if((bool)$shares[$n]["upload"])
                 {
                 // Edit an upload share
-                $editlink = generateurl($baseurl . "/pages/share_upload.php", 
+                $editlink = generateURL($baseurl . "/pages/share_upload.php", 
                     array(
                         "share_collection"    => $shares[$n]["collection"],
                         "uploadkey"     => $shares[$n]["access_key"],
@@ -232,7 +232,7 @@ for($n=0;$n<$sharecount;$n++)
                 }
             elseif($colshare)
                 {
-                $editlink = generateurl($baseurl . "/pages/collection_share.php", 
+                $editlink = generateURL($baseurl . "/pages/collection_share.php", 
                     array(
                         "ref"               => $shares[$n]["collection"],
                         "editaccess"        => $shares[$n]["access_key"],
@@ -245,7 +245,7 @@ for($n=0;$n<$sharecount;$n++)
             else
                 {
                 // Edit a resource share
-                $editlink = generateurl($baseurl . "/pages/resource_share.php", 
+                $editlink = generateURL($baseurl . "/pages/resource_share.php", 
                     array(
                         "ref"               => $shares[$n]["resource"],
                         "editaccess"        => $shares[$n]["access_key"],

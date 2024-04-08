@@ -65,7 +65,7 @@ function HookRse_versionLog_entryLog_entry_processing($column, $value, $logentry
                         ))
                 );
             
-            $altdl_link = generateurl($baseurl . "/pages/terms.php",$altdlparams);
+            $altdl_link = generateURL($baseurl . "/pages/terms.php",$altdlparams);
             echo "<br/><a href='" . $altdl_link . "'  onClick='return CentralSpaceLoad(this,true);'>" . LINK_CARET . $lang['logdownloadearlierversion'] . "</a>";
             }
         echo "</td></tr>";

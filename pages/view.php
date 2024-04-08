@@ -1170,7 +1170,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 { 
                                                 ?>
                                                 <li>
-                                                    <a href="<?php echo generateurl($baseurl . "/pages/resource_share.php",$urlparams); ?>" onclick="return ModalLoad(this, true);">
+                                                    <a href="<?php echo generateURL($baseurl . "/pages/resource_share.php",$urlparams); ?>" onclick="return ModalLoad(this, true);">
                                                         <?php echo "<i class='fa fa-fw fa-share-alt'></i>&nbsp;" . $lang["share"]; ?>
                                                     </a>
                                                 </li>
@@ -1306,7 +1306,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
                                             if ($metadata_download && (checkperm('f*') || $can_see_fields_individually)) { ?>
                                                 <li>
-                                                    <a href="<?php echo generateurl($baseurl . "/pages/metadata_download.php", $urlparams);?>" onclick="return ModalLoad(this, true);">
+                                                    <a href="<?php echo generateURL($baseurl . "/pages/metadata_download.php", $urlparams);?>" onclick="return ModalLoad(this, true);">
                                                         <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" . escape($lang["downloadmetadata"]); ?>
                                                     </a>
                                                 </li>
@@ -1322,7 +1322,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             if (checkperm('v')) 
                                                 { ?>
                                                 <li>
-                                                    <a id="view_log_link" href="<?php echo generateurl($baseurl . "/pages/log.php",$urlparams,$overrideparams); ?>" onclick="return ModalLoad(this, true);">
+                                                    <a id="view_log_link" href="<?php echo generateURL($baseurl . "/pages/log.php",$urlparams,$overrideparams); ?>" onclick="return ModalLoad(this, true);">
                                                         <?php echo "<i class='fa fa-fw fa-bars'></i>&nbsp;" .$lang["log"]?>
                                                     </a>
                                                 </li>
@@ -1332,7 +1332,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             if (checkperm("R") && $display_request_log_link) 
                                                 { ?>
                                                 <li>
-                                                    <a href="<?php echo generateurl($baseurl . "/pages/request_log.php",$urlparams,$overrideparams); ?>" onclick="return ModalLoad(this, true);">
+                                                    <a href="<?php echo generateURL($baseurl . "/pages/request_log.php",$urlparams,$overrideparams); ?>" onclick="return ModalLoad(this, true);">
                                                         <?php echo "<i class='fa fa-fw fa-history'></i>&nbsp;" .$lang["requestlog"]?>
                                                     </a>
                                                 </li>

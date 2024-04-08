@@ -292,7 +292,7 @@ if(!$modal)
     {
     ?>
     <p>
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
     </p>
     <?php
     }
@@ -301,7 +301,7 @@ elseif($previous_page_modal)
     $urlparams["context"]="Modal";
     ?>
     <p>
-    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
     </p>
     <?php
     }

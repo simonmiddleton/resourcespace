@@ -119,8 +119,8 @@ if(!$modal)
     {
     ?>
     <p>
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoeditmetadata"]); ?></a><br / >
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoeditmetadata"]); ?></a><br / >
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
     </p>
     <?php
     }
@@ -129,8 +129,8 @@ elseif($previous_page_modal)
     $urlparams["context"]='Modal';
     ?>
     <p>
-    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoeditmetadata"]); ?></a><br / >
-    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/edit.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoeditmetadata"]); ?></a><br / >
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateURL($baseurl . "/pages/view.php",$urlparams); ?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
     </p>
     <?php
     }
@@ -169,7 +169,7 @@ if(isset($resource['field'.$view_title_field]))
 <h1><?php echo escape($lang["managealternativefilestitle"]); render_help_link('user/alternative-files');?></h1>
 
 <?php if (count($files)>0){?><a href="#" id="deletechecked" onclick="if (confirm('<?php echo escape($lang["confirm-deletion"]); ?>')) {clickDelete();} return false;"><?php echo LINK_CARET ?><?php echo escape($lang["action-deletechecked"]); ?></a><?php } ?>
-<form method=post id="fileform" action="<?php echo generateurl($baseurl . "/pages/alternative_files.php",$urlparams); ?>">
+<form method=post id="fileform" action="<?php echo generateURL($baseurl . "/pages/alternative_files.php",$urlparams); ?>">
 <input type=hidden name="filedelete" id="filedelete" value="">
 <?php generateFormToken("fileform"); ?>
 <div class="Listview"  id="altlistitems">
@@ -234,7 +234,7 @@ for ($n=0;$n<count($files);$n++)
         return false;
     "><?php echo LINK_CARET ?><?php echo escape($lang["action-delete"])?></a>
 
-    &nbsp;<a onclick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this, true);" href="<?php echo generateurl($baseurl . "/pages/alternative_file.php",$urlparams,array("ref"=>$files[$n]["ref"])); ?>"><?php echo LINK_CARET ?><?php echo escape($lang["action-edit"]); ?></a>
+    &nbsp;<a onclick="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this, true);" href="<?php echo generateURL($baseurl . "/pages/alternative_file.php",$urlparams,array("ref"=>$files[$n]["ref"])); ?>"><?php echo LINK_CARET ?><?php echo escape($lang["action-edit"]); ?></a>
 
     <?php if($editaccess && (file_exists(get_resource_path($ref , true, '', true, 'jpg', true, 1, false, '', $files[$n]["ref"], true)) || file_exists(get_resource_path($ref , true, 'hpr', true, 'jpg', true, 1, false, '', $files[$n]["ref"], true))))
         {
@@ -251,11 +251,11 @@ for ($n=0;$n<count($files);$n++)
 </table>
 </div>
 <p>
-    <a onclick="return CentralSpaceLoad(this, true);" href="<?php echo generateurl($baseurl . "/pages/upload_batch.php",$urlparams,array('alternative'=>$ref)); ?>"><?php echo LINK_CARET ?><?php echo escape($lang["alternativebatchupload"]); ?></a>
+    <a onclick="return CentralSpaceLoad(this, true);" href="<?php echo generateURL($baseurl . "/pages/upload_batch.php",$urlparams,array('alternative'=>$ref)); ?>"><?php echo LINK_CARET ?><?php echo escape($lang["alternativebatchupload"]); ?></a>
 </p>
 </form>
 
-<form method=post id="previewform" name="previewform" action="<?php echo generateurl($baseurl . "/pages/upload_preview.php",$urlparams) ; ?>">
+<form method=post id="previewform" name="previewform" action="<?php echo generateURL($baseurl . "/pages/upload_preview.php",$urlparams) ; ?>">
     <?php generateFormToken("previewform"); ?>
     <input type=hidden name="ref", id="upload_ref" value="<?php echo escape($ref); ?>"/>
     <input type=hidden name="previewref", id="upload_pre_ref" value="<?php echo escape($ref); ?>"/>

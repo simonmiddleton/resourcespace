@@ -211,7 +211,7 @@ include __DIR__ . "/../../../include/header.php";
 <h1><?php echo escape($lang["revert"]); ?></h1>
 <p><?php echo escape($lang['revertingclicktoproceed']);?></p>
 
-<form method=post name="rse_revert_form" id="rse_revert_form" action="<?php echo generateurl($baseurl_short . "plugins/rse_version/pages/revert.php",["ref"=>$ref]); ?> onSubmit="return CentralSpacePost(this,true);">
+<form method=post name="rse_revert_form" id="rse_revert_form" action="<?php echo generateURL($baseurl_short . "plugins/rse_version/pages/revert.php",["ref"=>$ref]); ?> onSubmit="return CentralSpacePost(this,true);">
 <input type="hidden" name="ref" value="<?php echo escape($ref) ?>">
 <input type="hidden" name="revert_action" value="revert">
 <?php

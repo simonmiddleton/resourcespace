@@ -625,7 +625,7 @@ function header_add_map_providers()
                 $urlparams = array(
                     "provider"  =>  $leaflet_source["code"],
                     );
-                $sourceurl = generateurl($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}";
+                $sourceurl = generateURL($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}";
                 }
             else
                 {
@@ -651,7 +651,7 @@ function header_add_map_providers()
                     if($geo_tile_caching)
                         {
                         $urlparams["variant"] = $variant;
-                        $variantdata["url"] = generateurl($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}";
+                        $variantdata["url"] = generateURL($baseurl . "/pages/ajax/tiles.php",$urlparams) . "&x={x}&y={y}&z={z}";
                         }
                     echo "    url: '" . $variantdata["url"] . "'\n";
                     }

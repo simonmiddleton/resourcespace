@@ -95,13 +95,13 @@ else {$previous_page_modal = false;}
 if(!$modal)
     {
     ?>
-    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
+    <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
     <?php
     }
     elseif ($previous_page_modal)
     {
     ?>
-    <a onClick="return ModalLoad(this,true);" href="<?php echo generateurl($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
+    <a onClick="return ModalLoad(this,true);" href="<?php echo generateURL($baseurl_short . "pages/view.php",$urlparams);?>"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a>
     <?php
     }
 ?>

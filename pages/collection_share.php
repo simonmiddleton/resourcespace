@@ -488,7 +488,7 @@ if (isset($show_error)) { ?>
                     }
                 ?>
                 <?php hook("additionalcolexternalsharerecord");
-                $editlink = generateurl($baseurl . "/pages/collection_share.php", 
+                $editlink = generateURL($baseurl . "/pages/collection_share.php", 
                     array(
                         "ref"               => $keys[$n]["collection"],
                         "editaccess"        => $keys[$n]["access_key"],

@@ -80,7 +80,7 @@ $curparams = array(
     "job_find"=>$job_find
 );
 
-$url = generateurl($baseurl . "/pages/manage_jobs.php",$curparams);
+$url = generateURL($baseurl . "/pages/manage_jobs.php",$curparams);
 
 $tabledata = array(
     "class" => "JobTable",
@@ -182,7 +182,7 @@ for($n=0;$n<$jobcount;$n++)
             $tablejob["tools"][] = array(
                 "icon"=>"fa fa-fw fa-info",
                 "text"=>$lang["job_details"],
-                "url"=>generateurl($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
+                "url"=>generateURL($baseurl . "/pages/job_details.php",array("job" => $jobs[$n]["ref"])),
                 "modal"=>true,
                 );
             $tablejob["tools"][] = array(

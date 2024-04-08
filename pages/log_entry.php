@@ -32,7 +32,7 @@ if(!checkperm('v') && !$bypass_permission_check)
 <div class="RecordBox">
     <div class="RecordPanel">
         <div class="RecordHeader">
-        <p><a href="<?php echo generateurl($baseurl_short . "pages/log.php",$searchparams,array("ref"=>$log_entry["resource"]));?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a></p>   
+        <p><a href="<?php echo generateURL($baseurl_short . "pages/log.php",$searchparams,array("ref"=>$log_entry["resource"]));?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a></p>   
         <div class="backtoresults"> 
                 <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
             </div>

@@ -215,7 +215,7 @@ if(
             }
 
         $templatevars['changesummary']=$changesummary->get_text();
-        $templatevars['url'] = generateurl($baseurl . "/pages/view.php",["ref"=> $ref]); 
+        $templatevars['url'] = generateURL($baseurl . "/pages/view.php",["ref"=> $ref]); 
 
         $message->append_text_multi($changesummary->get_text(true));
         $message->set_subject("lang_propose_changes_proposed_changes_reviewed");
@@ -291,7 +291,7 @@ if(
                 }
 
             $templatevars['proposer']=(($username=="") ? $username : $userfullname);
-            $templatevars['url'] = generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",["ref"=> $ref,"proposeuser" => $userref]); 
+            $templatevars['url'] = generateURL($baseurl . "/plugins/propose_changes/pages/propose_changes.php",["ref"=> $ref,"proposeuser" => $userref]); 
 
             $message = new ResourceSpaceUserNotification;
             $message->set_text("lang_propose_changes_proposed_changes_submitted");
@@ -336,7 +336,7 @@ $searchparams = get_search_params();
 if(!$modal)
     {
     ?>
-    <p><a href="<?php echo generateurl($baseurl . "/pages/view.php",$searchparams,["ref" => $ref]); ?>" onClick="return  <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
+    <p><a href="<?php echo generateURL($baseurl . "/pages/view.php",$searchparams,["ref" => $ref]); ?>" onClick="return  <?php echo $modal ? "Modal" : "CentralSpace"; ?>Load(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
     <?php
     }
     ?>
@@ -389,7 +389,7 @@ if(!$editaccess)
         {
         ?>
         <div class="Question" id="ProposeChangesUsers">
-        <form id="propose_changes_select_user_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
+        <form id="propose_changes_select_user_form" method="post" action="<?php echo generateURL($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>" onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
             <?php generateFormToken("propose_changes_select_user_form"); ?>
             <label><?php echo escape($lang["propose_changes_view_user"]); ?></label>
             <?php
@@ -438,7 +438,7 @@ if(!$editaccess)
         {
         ?>
         
-    <form id="propose_changes_form" method="post" action="<?php echo generateurl($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>"  onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
+    <form id="propose_changes_form" method="post" action="<?php echo generateURL($baseurl . "/plugins/propose_changes/pages/propose_changes.php",$searchparams,["ref" => $ref]); ?>"  onsubmit="return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this,true);">
     <?php generateFormToken("propose_changes_form"); ?>
     <h2 id="ProposeChangesHead"><?php echo escape($lang["propose_changes_proposed_changes"]); ?></h2><?php
         ?><div id="ProposeChangesSection">

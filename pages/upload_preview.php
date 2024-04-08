@@ -63,7 +63,7 @@ if (array_key_exists("userfile",$_FILES) && enforcePostRequest(false))
     $status=upload_preview($ref);
     if($status !== false)
         {
-        redirect(generateurl($baseurl . "/pages/view.php", $urlparams));
+        redirect(generateURL($baseurl . "/pages/view.php", $urlparams));
         exit();
         }
     $error = true;
@@ -73,7 +73,7 @@ elseif($previewresource > 0 && enforcePostRequest(false))
     $status=replace_preview_from_resource($ref,$previewresource,$previewresourcealt);
     if($status !== false)
         {
-        redirect(generateurl($baseurl . "/pages/view.php", $urlparams));
+        redirect(generateURL($baseurl . "/pages/view.php", $urlparams));
         exit();
         }
     $error = true;

@@ -22,7 +22,7 @@ if(empty($field_log_records)) {
 }
 
 $get_params = array("ref" => $resource_id, "search" => $search);
-$url        = generateurl($baseurl_short . 'pages/view.php', $get_params );
+$url        = generateURL($baseurl_short . 'pages/view.php', $get_params );
 
 ?>
 <p>

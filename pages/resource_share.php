@@ -157,13 +157,13 @@ if($editing && !$editexternalurl)
             if($previous_page_modal)
                 {
                 ?>
-                <a href="<?php echo generateurl($baseurl_short . 'pages/view.php', $urlparams); ?>" onClick="return ModalLoad(this,true);">
+                <a href="<?php echo generateURL($baseurl_short . 'pages/view.php', $urlparams); ?>" onClick="return ModalLoad(this,true);">
                 <?php
                 }
             else
                 {
                 ?>
-                <a href="<?php echo generateurl($baseurl_short . 'pages/view.php', $urlparams); ?>" onClick="return CentralSpaceLoad(this,true);">
+                <a href="<?php echo generateURL($baseurl_short . 'pages/view.php', $urlparams); ?>" onClick="return CentralSpaceLoad(this,true);">
                 <?php
                 }
             ?>
@@ -371,14 +371,14 @@ if($editing && !$editexternalurl)
                                 <?php 
                                 if ($collection_share)
                                     {
-                                    $editlink = generateurl($baseurl . "/pages/collection_share.php", 
+                                    $editlink = generateURL($baseurl . "/pages/collection_share.php", 
                                         array(
                                             "ref"               => $key["collection"],
                                             "editaccess"        => $key["access_key"],
                                             "share_user"        => $key["users"]
                                         ));
                                     
-                                    $viewlink = generateurl($baseurl . "/", array("c"=> $key["collection"]));
+                                    $viewlink = generateURL($baseurl . "/", array("c"=> $key["collection"]));
                                     ?>
                                     <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $editlink; ?>"><?php echo LINK_CARET ?><?php echo escape($lang["action-edit"]); ?></a>
                                     <a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $viewlink; ?>"><?php echo LINK_CARET ?><?php echo escape($lang["view"]); ?></a>
@@ -386,7 +386,7 @@ if($editing && !$editexternalurl)
                                     }
                                 else
                                     {
-                                    $editlink = generateurl($baseurl . "/pages/resource_share.php", 
+                                    $editlink = generateURL($baseurl . "/pages/resource_share.php", 
                                         array(
                                             "ref"               => $ref,
                                             "editaccess"        => $key["access_key"],

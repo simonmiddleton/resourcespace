@@ -104,13 +104,13 @@ else {$previous_page_modal = false;}
 if(!$modal)
     {
     ?>
-    <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$url_params);?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
+    <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$url_params);?>"  onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
     <?php
     }
 elseif ($previous_page_modal)
     {
     ?>
-    <p><a href="<?php echo generateurl($baseurl_short . "pages/view.php",$url_params);?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
+    <p><a href="<?php echo generateURL($baseurl_short . "pages/view.php",$url_params);?>"  onClick="return ModalLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["backtoresourceview"]); ?></a></p>
     <?php
     }
 ?>
