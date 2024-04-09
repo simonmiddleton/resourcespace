@@ -135,7 +135,7 @@ $lang["editresearchrequests"]="調査依頼の編集";
 $lang["savedsearch"]="検索保存";
 $lang["mustspecifyoneusername"]="一つ以上のユーザ名を指定してください";
 $lang["couldnotmatchallusernames"]="マッチするユーザ名がありません";
-$lang["emailcollectionmessage"]="%applicationname% から'マイコレクション'のページに追加するリソースのコレクションをメールしました。"; # ユーザ名の後に 例) "フレッドはあなたにコレクションをメールしました."
+$lang["emailcollectionmessage"]="%applicationname% から'マイコレクション'のページに追加するリソースのコレクションをメールしました。"; # ユーザ名の後に 例) "フレッドはあなたにコレクションをメールしました.."
 $lang["clicklinkviewcollection"]="コレクション表示は以下のリンクをクリック。";
 $lang["zippedcollectiontextfile"]="リソース/コレクションのデータに含まれるテキストファイル。";
 $lang["copycollectionremoveall"]="コピーする前に全てのリソース削除";
@@ -150,7 +150,7 @@ $lang["rightclicktodownload"]="本リンクを右クリックし'名前を付け
 $lang["downloadinprogress"]="ダウンロード中";
 $lang["editmultipleresources"]="複数リソースの編集";
 $lang["editresource"]="リソースの編集";
-$lang["resourcesselected"]="リソース選択"; # e.g. 17 resources selected
+$lang["resourcesselected"]="リソース選択"; # e.g. 17 resources selected.
 $lang["image"]="画像";
 $lang["previewimage"]="画像のプレビュー";
 $lang["file"]="ファイル";
@@ -393,7 +393,7 @@ $lang["backtouser"]="ユーザログインへ戻る";
 $lang["termsandconditions"]="使用条件";
 $lang["iaccept"]="同意";
 $lang["contributedby"]="投稿者:";
-$lang["format"]="フォーマット"; # This $lang was accidently defined twice. If you need $lang["format"]="書式" as the translation was at the first occurrence, it's possible to add a new $lang to the system
+$lang["format"]="フォーマット"; # This $lang was accidently defined twice. If you need $lang["format"]="書式" as the translation was at the first occurrence, it's possible to add a new $lang to the system.
 
 # Pager
 $lang["next"]="次へ";
