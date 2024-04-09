@@ -59,7 +59,7 @@ if ($collectionid == false){
     if ($ref<$max && getval("only","")=="")
         {
         ?>
-        <meta http-equiv="refresh" content="0;url=<?php echo $baseurl?>/pages/tools/update_previews.php?ref=<?php echo $ref+1?>&previewbased=<?php echo $previewbased?>"/>
+        <meta http-equiv="refresh" content="0;url=<?php echo $baseurl?>/pages/tools/update_previews.php?ref=<?php echo $ref+1?>&previewbased=<?php echo escape($previewbased);?>"/>
         <?php
         }
     else
@@ -90,7 +90,7 @@ else {
     if (isset($collection[$key+1])){
         $next_ref = $collection[$key+1];
         ?>
-        <meta http-equiv="refresh" content="0;url=<?php echo $baseurl?>/pages/tools/update_previews.php?col=<?php echo $collectionid?>&ref=<?php echo $next_ref?>&previewbased=<?php echo $previewbased?>"/>
+        <meta http-equiv="refresh" content="0;url=<?php echo $baseurl?>/pages/tools/update_previews.php?col=<?php echo escape($collectionid);?>&ref=<?php echo $next_ref?>&previewbased=<?php echo escape($previewbased);?>"/>
         <?php
     }
     else {
