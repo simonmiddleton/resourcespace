@@ -326,9 +326,9 @@ if(!empty($trimmed_resources_new))
     {
     $links_holder = "";
     foreach ($trimmed_resources_new as $trimmed_ref) {
-        $links_holder = $links_holder . '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $trimmed_ref)) . '">' . $trimmed_ref . '</a> ';
+        $links_holder = $links_holder . '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $trimmed_ref)) . '">' . escape($trimmed_ref) . '</a> ';
     }
-    echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%links", $links_holder, $lang["video-trim_new-response"]) . "</div>";
+    echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%links", $links_holder, escape($lang["video-trim_new-response"])) . "</div>";
     }
 if(!empty($trimmed_resources_alt))
     {
