@@ -313,7 +313,7 @@ if(!$internal_share_only)
 <?php if ($useremail!="") { # Only allow this option if there is an email address available for the user.
 ?>
 <div class="Question">
-<label for="use_user_email"><?php echo $lang["emailfromuser"].$useremail.". ".$lang["emailfromsystem"].$email_from ?></label><input type=checkbox checked id="use_user_email" name="use_user_email">
+<label for="use_user_email"><?php echo escape($lang["emailfromuser"].$useremail.". ".$lang["emailfromsystem"].$email_from); ?></label><input type=checkbox checked id="use_user_email" name="use_user_email">
 <div class="clearerleft"> </div>
 </div>
 <?php } ?>

@@ -1135,7 +1135,7 @@ renderBreadcrumbs($links_trail);
                 $orig_mptext = '';
         }
         
-        echo $lang['originalsize'] . ": ";
+        echo escape($lang['originalsize']) . ": ";
         echo escape($origwidth) . "x" . escape($origheight);
         echo "&nbsp;" . $lang['pixels'] . " $orig_mptext";
         ?>

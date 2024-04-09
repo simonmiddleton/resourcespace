@@ -2,7 +2,6 @@
 // Generic modal page to create new resource types or metadata fields
 
 include_once __DIR__ . "/../../include/boot.php";
-
 include_once __DIR__ . "/../../include/authenticate.php";
 
 $newtype = getval("type","");
@@ -86,7 +85,7 @@ switch ($newtype)
          foreach($field_types as $field_type=>$field_type_description)
              {
              ?>
-             <option value="<?php echo $field_type ?>"><?php echo $lang[$field_type_description] ; ?></option>
+             <option value="<?php echo $field_type ?>"><?php echo escape($lang[$field_type_description]) ; ?></option>
              <?php
              }
          ?>

@@ -74,15 +74,15 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
     ?>
     <tr>
 <?php if(!hook("requestlistitems")): ?>
-    <td><?php echo $requests[$n]["ref"]; ?></td>
-    <td><?php echo $requests[$n]["username"]; ?></td>
-    <td><?php echo $requests[$n]["fullname"]; ?></td>
-    <td><?php echo nicedate($requests[$n]["created"],true, true, true);?></td>
-    <td><?php echo $requests[$n]["c"]; ?></td>
-    <td><?php echo $lang["resourcerequesttype" . $requests[$n]["request_mode"]]; ?></td>
-    <td><?php echo $requests[$n]["assigned_to_username"]; ?></td>
-    <td><?php echo $lang["resourcerequeststatus" . $requests[$n]["status"]]; ?></td>
-    <td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_request_edit.php?ref=<?php echo $requests[$n]["ref"]; ?>" onClick="return <?php echo $modal_default ? "Modal" : "CentralSpace"; ?>Load(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a></a></div></td>
+    <td><?php echo escape($requests[$n]["ref"]); ?></td>
+    <td><?php echo escape($requests[$n]["username"]); ?></td>
+    <td><?php echo escape($requests[$n]["fullname"]); ?></td>
+    <td><?php echo escape(nicedate($requests[$n]["created"],true, true, true));?></td>
+    <td><?php echo escape($requests[$n]["c"]); ?></td>
+    <td><?php echo escape($lang["resourcerequesttype" . $requests[$n]["request_mode"]]); ?></td>
+    <td><?php echo escape($requests[$n]["assigned_to_username"]); ?></td>
+    <td><?php echo escape($lang["resourcerequeststatus" . $requests[$n]["status"]]); ?></td>
+    <td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_request_edit.php?ref=<?php echo escape($requests[$n]["ref"]); ?>" onClick="return <?php echo $modal_default ? "Modal" : "CentralSpace"; ?>Load(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a></a></div></td>
 <?php endif; ?>
     </tr>
     <?php

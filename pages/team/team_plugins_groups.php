@@ -52,7 +52,7 @@ include "../../include/header.php";
 $s=explode(",",$access);
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["groupaccess"] . ': ' . escape($plugin); ?></h1>
+<h1><?php echo escape("{$lang["groupaccess"]}: {$plugin}"); ?></h1>
 <?php
 $links_trail = array(
     array(

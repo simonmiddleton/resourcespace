@@ -11,7 +11,7 @@ if($geo_leaflet_maps_sources)
             layers: {
                 <?php if (isset($map_osm) && $map_osm) { ?> "<?php echo escape($lang['map_osm']);?>" : osm_mapnik, <?php } ?>
                 <?php if (isset($map_osmde) && $map_osmde) { ?> "<?php echo escape($lang['map_osmde']);?>" : osm_de, <?php } ?>
-                <?php if (isset($map_osmfr) && $map_osmfr) { ?> "<?php echo $lang['map_osmfr'];?>" : osm_fr, <?php } ?>
+                <?php if (isset($map_osmfr) && $map_osmfr) { ?> "<?php echo escape($lang['map_osmfr']);?>" : osm_fr, <?php } ?>
                 <?php if (isset($map_osmbzh) && $map_osmbzh) { ?> "<?php echo escape($lang['map_osmbzh']);?>" : osm_bzh, <?php } ?>
                 <?php if (isset($map_osmhot) && $map_osmhot) { ?> "<?php echo escape($lang['map_osmhot']);?>" : osm_hot, <?php } ?>
                 <?php if (isset($map_osmmtb) && $map_osmmtb) { ?> "<?php echo escape($lang['map_osmmtb']);?>" : osm_mtb, <?php } ?>

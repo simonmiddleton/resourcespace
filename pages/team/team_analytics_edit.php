@@ -170,7 +170,7 @@ for ($n=0;$n<count($types);$n++)
     { 
     if (!isset($lang["stat-" . strtolower(str_replace(" ","",$types[$n]))])){$lang["stat-" . strtolower(str_replace(" ","",$types[$n]))]=str_replace("[type]",$types[$n],$lang["log-missinglang"]);}    
         
-    ?><option <?php if ($activity_type==$types[$n]) { ?>selected<?php } ?> value="<?php echo $types[$n]; ?>"><?php echo $lang["stat-" . strtolower(str_replace(" ","",$types[$n]))]; ?></option><?php
+    ?><option <?php if ($activity_type==$types[$n]) { ?>selected<?php } ?> value="<?php echo $types[$n]; ?>"><?php echo escape($lang["stat-" . strtolower(str_replace(" ","",$types[$n]))]); ?></option><?php
     }
 ?>
 </select>
@@ -239,7 +239,7 @@ for ($n=0;$n<count($list);$n++)
 <?php for ($n=0;$n<=2;$n++)
     {
     ?>
-    <option value="<?php echo $n ?>" <?php if ($n==$external) { ?>selected<?php } ?>><?php echo $lang["report_external_option" . $n]; ?></option>
+    <option value="<?php echo $n ?>" <?php if ($n==$external) { ?>selected<?php } ?>><?php echo escape($lang["report_external_option" . $n]); ?></option>
     <?php
     }
 ?>

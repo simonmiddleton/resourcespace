@@ -1,6 +1,5 @@
 <?php
 include "../../../include/boot.php";
-
 include "../../../include/authenticate.php";
 
 $ref      = getval('ref', 0, true);
@@ -159,7 +158,7 @@ include "../../../include/header.php";
             {
             $m = str_pad($n, 2, '0', STR_PAD_LEFT);
             ?>
-            <option <?php if($n == substr($usage_data['usage_date'], 5, 2)) { ?>selected<?php } ?> value="<?php echo $m; ?>"><?php echo $lang['months'][$n - 1]; ?></option>
+            <option <?php if($n == substr($usage_data['usage_date'], 5, 2)) { ?>selected<?php } ?> value="<?php echo $m; ?>"><?php echo escape($lang['months'][$n - 1]); ?></option>
             <?php
             }
         ?>

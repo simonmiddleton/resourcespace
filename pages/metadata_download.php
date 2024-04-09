@@ -113,7 +113,7 @@ if($download && $download_file_type === 'pdf') {
             </table>
         </page_footer>
         <!-- Real content starts here -->
-        <h2><?php echo $lang['metadata-pdf-title'] . ' ' . $ref; ?></h2>
+        <h2><?php echo escape($lang['metadata-pdf-title'] . ' ' . $ref); ?></h2>
         <table style="width: 90%;" align="center" cellspacing="15">
             <tbody>
             <?php

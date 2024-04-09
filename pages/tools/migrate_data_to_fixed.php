@@ -253,7 +253,7 @@ include_once "../../include/header.php";
         <div class="clearerleft"> </div>
     </div>
     <div class="Question" >
-        <label for="maxrows" ><?php echo $lang["max"] . " " . $lang["resources"]; ?></label>
+        <label for="maxrows" ><?php echo escape($lang["max"] . " " . $lang["resources"]); ?></label>
         <input class="medwidth" type="text" name="maxrows" value="">
         <div class="clearerleft"> </div>
     </div>

@@ -56,7 +56,7 @@ $dd=getval($name . "-d",1);
 <?php for ($m=1;$m<=31;$m++) {?><option <?php if($m==$dd){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
 </select>
 <select name="<?php echo $name?>-m">
-<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo $lang["months"][$m-1]; ?></option><?php } ?>
+<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo escape($lang["months"][$m-1]); ?></option><?php } ?>
 </select>
 <input type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>">
 <div class="clearerleft"> </div>
@@ -74,7 +74,7 @@ $dd=getval($name . "-d",date("d"));
 <?php for ($m=1;$m<=31;$m++) {?><option <?php if($m==$dd){echo " selected";}?>><?php echo sprintf("%02d",$m)?></option><?php } ?>
 </select>
 <select name="<?php echo $name?>-m">
-<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo $lang["months"][$m-1]; ?></option><?php } ?>
+<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo escape($lang["months"][$m-1]); ?></option><?php } ?>
 </select>
 <input type=text size=5 name="<?php echo $name?>-y" value="<?php echo $dy?>">
 <div class="clearerleft"> </div>

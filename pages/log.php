@@ -1,6 +1,5 @@
 <?php
 include "../include/boot.php";
-
 include "../include/authenticate.php";
 
 $ref=getval("ref","",true);
@@ -137,7 +136,7 @@ elseif ($previous_page_modal)
                 ?>
             </div>
         </div>
-        <h1><?php echo $lang["resourcelog"] . " : " . $lang["resourceid"] . " " .  escape($ref);render_help_link("user/logs");?></h1>
+        <h1><?php echo escape("{$lang["resourcelog"]} : {$lang["resourceid"]} {$ref}");render_help_link("user/logs");?></h1>
     </div>
 
 <?php

@@ -127,13 +127,13 @@ if (get_sysvar("code_sign_required")=="YES") {$result=$lang["status-fail"];$resu
 # Check write access to filestore
 $success=is_writable($storagedir);
 if ($success===false) {$result=$lang["status-fail"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"];} else {$result=$lang["status-ok"];}
-?><tr><td colspan="2"><?php echo $lang["writeaccesstofilestore"] . $storagedir ?></td><td><b><?php echo $result?></b></td></tr><?php
+?><tr><td colspan="2"><?php echo escape($lang["writeaccesstofilestore"] . $storagedir); ?></td><td><b><?php echo escape($result); ?></b></td></tr><?php
 
 # Check write access to homeanim (if transform plugin is installed)
 if (in_array("transform",$plugins)){
 $success=is_writable(dirname(__FILE__) . "/../".$homeanim_folder);
 if ($success===false) {$result=$lang["status-fail"] . ": " . $homeanim_folder . $lang["nowriteaccesstohomeanim"];} else {$result=$lang["status-ok"];}
-?><tr><td colspan="2"><?php echo $lang["writeaccesstohomeanim"] . $homeanim_folder ?></td><td><b><?php echo $result?></b></td></tr>
+?><tr><td colspan="2"><?php echo escape($lang["writeaccesstohomeanim"] . $homeanim_folder); ?></td><td><b><?php echo escape($result); ?></b></td></tr>
 <?php } 
 
 # Check filestore folder browseability

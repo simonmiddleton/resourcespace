@@ -537,7 +537,7 @@ function send_periodic_report_emails($echo_out = true, $toemail=true)
 
             if ($echo_out)
                 {
-                echo $lang["sendingreportto"] . " " . $email . "<br />" . $output . $unsubscribe_link . "<br />";
+                echo escape($lang["sendingreportto"]) . " " . $email . "<br />" . $output . $unsubscribe_link . "<br />";
                 }
 
             $delete_link = "";

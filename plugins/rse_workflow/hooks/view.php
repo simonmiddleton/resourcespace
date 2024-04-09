@@ -59,7 +59,7 @@ function HookRse_workflowViewPageevaluation()
                         {
                         ?>
                         <script type="text/javascript">
-                        styledalert('<?php echo escape($lang["success"]); ?>','<?php echo $lang["rse_workflow_saved"] . "&nbsp;" . $lang["status" . $workflowaction["statusto"]];?>');
+                        styledalert('<?php echo escape($lang["success"]); ?>','<?php echo escape($lang["rse_workflow_saved"]) . "&nbsp;" . escape($lang["status" . $workflowaction["statusto"]]);?>');
                         if(jQuery("#modal").is(":visible"))
                             {
                             ModalClose();

@@ -54,7 +54,7 @@ if($date_d_m_y){
 <select id="<?php echo $name; ?>-m" name="<?php echo $name?>-m"
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
 ><option value=""><?php echo escape($lang["month"]); ?></option>
-<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo $lang["months"][$m-1]; ?></option><?php } ?>
+<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo escape($lang["months"][$m-1]); ?></option><?php } ?>
 </select>
 <?php
 }
@@ -63,7 +63,7 @@ else{
 <select id="<?php echo $name; ?>-m" name="<?php echo $name?>-m"
 <?php if ($edit_autosave) {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
 ><option value=""><?php echo escape($lang["month"]); ?></option>
-<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo $lang["months"][$m-1]; ?></option><?php } ?>
+<?php for ($m=1;$m<=12;$m++) {?><option <?php if($m==$dm){echo " selected";}?> value="<?php echo sprintf("%02d",$m)?>"><?php echo escape($lang["months"][$m-1]); ?></option><?php } ?>
 </select>
 
 <select id="<?php echo $name; ?>-d" name="<?php echo $name?>-d"

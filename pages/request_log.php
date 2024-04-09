@@ -1,6 +1,5 @@
 <?php
 include "../include/boot.php";
-
 include "../include/authenticate.php";if (!checkperm("R")) {exit ("Permission denied.");}
 
 $ref=getval("ref","",true);
@@ -101,7 +100,7 @@ if ($k=="" && !$modal) { ?>
 <a onClick="return <?php echo $modal ? "Modal" : "CentralSpace" ?>Load(this,true);" href="<?php echo generateURL($baseurl_short . "pages/request_log.php",$urlparams, array("go"=>"next")) . escape($extraparams) ?>"><?php echo escape($lang["nextresult"])?>&nbsp;&gt;</a>
 </div>
 
-<h1><?php echo $lang["requestlog"] . " : " . $lang["resourceid"] . " " .  $ref;render_help_link("resourceadmin/user-resource-requests");?></h1>
+<h1><?php echo escape($lang["requestlog"] . " : " . $lang["resourceid"] . " " .  $ref);render_help_link("resourceadmin/user-resource-requests");?></h1>
 
 
 

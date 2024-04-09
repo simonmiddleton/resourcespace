@@ -1,6 +1,5 @@
 <?php
 include "../../include/boot.php";
-
 include "../../include/authenticate.php";
 
 if (!checkperm("a"))
@@ -410,7 +409,7 @@ include "../../include/header.php";
 <?php
     for ($i=0; $i<2; $i++)
         {
-?>              <option <?php if ($record['request_mode']==$i) { ?> selected="true" <?php } ?>value="<?php echo $i; ?>"><?php echo $lang["resourcerequesttype{$i}"]; ?></option>
+?>              <option <?php if ($record['request_mode']==$i) { ?> selected="true" <?php } ?>value="<?php echo $i; ?>"><?php echo escape($lang["resourcerequesttype{$i}"]); ?></option>
 <?php
         }
 ?>              </select>

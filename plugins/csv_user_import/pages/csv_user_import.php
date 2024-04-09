@@ -36,7 +36,7 @@ if((!isset($_FILES[$fd]) || 0 < $_FILES[$fd]['error']) && !$process_csv)
     while(isset($lang['csv_user_import_condition' . $i]))
         {
         ?>
-        <li><?php echo $lang['csv_user_import_condition' . $i]; ?></li>
+        <li><?php echo escape($lang['csv_user_import_condition' . $i]); ?></li>
         <?php
         $i++;
         }

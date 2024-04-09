@@ -204,7 +204,7 @@ if ($request !== false)
                                     { 
                                     ?>jQuery('#ReasonDecline').slideUp();<?php 
                                     } ?>"/> 
-                                <?php echo $lang["resourcerequeststatus" . $n]; ?>
+                                <?php echo escape($lang["resourcerequeststatus" . $n]); ?>
                         </label>
                     </div>
                     <?php 

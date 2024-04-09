@@ -1,6 +1,5 @@
 <?php
 include "../include/boot.php";
-
 include "../include/authenticate.php";
 
 $logref=getval("ref","",true);
@@ -36,7 +35,7 @@ if(!checkperm('v') && !$bypass_permission_check)
         <div class="backtoresults"> 
                 <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
             </div>
-            <h1><?php echo $lang["log-reference"] . " " . $log_entry["ref"]; ?></h1>
+            <h1><?php echo escape($lang["log-reference"] . " " . $log_entry["ref"]); ?></h1>
         </div>       
     </div>
 

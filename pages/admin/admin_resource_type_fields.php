@@ -1,7 +1,6 @@
 <?php
 
 include "../../include/boot.php";
-
 include "../../include/authenticate.php";
 
 if (!checkperm("a"))
@@ -75,7 +74,7 @@ function addColumnHeader($orderName, $labelKey)
 
     ?>
     <td><a href="<?php echo generateURL($baseurl . "/pages/admin/admin_resource_type_fields.php",$url_params,$newparams); ?>" onClick="return CentralSpaceLoad(this);"><?php
-          echo $lang[$labelKey] . $arrow ?></a>
+          echo escape($lang[$labelKey]) . $arrow ?></a>
     </td>
     <?php
     }
@@ -330,7 +329,7 @@ for ($n=0;$n<count($fields);$n++)
             foreach($field_types as $field_type=>$field_type_description)
                 {
                 ?>
-                <option value="<?php echo $field_type ?>"><?php echo $lang[$field_type_description] ; ?></option>
+                <option value="<?php echo $field_type ?>"><?php echo escape($lang[$field_type_description]) ; ?></option>
                 <?php
                 }
             ?>

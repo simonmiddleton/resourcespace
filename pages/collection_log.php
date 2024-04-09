@@ -74,7 +74,7 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
     <td><?php echo escape(nicedate($log[$n]["date"],true, true, true)) ?></td>
     <td><?php echo escape((string) $log[$n]["fullname"])?></td>
     <td><?php 
-        echo $lang["collectionlog-" . $log[$n]["type"]] ;
+        echo escape($lang["collectionlog-" . $log[$n]["type"]]) ;
         if ($log[$n]["notes"] != "" ) { 
             ##  notes field contains user IDs, collection references and /or standard texts
             ##  Translate the standard texts

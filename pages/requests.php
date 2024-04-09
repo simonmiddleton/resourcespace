@@ -51,11 +51,11 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
     {
     ?>
     <tr>
-    <td><?php echo $requests[$n]["ref"]; ?></td>
-    <td><?php echo $requests[$n]["comments"]; ?></td>
-    <td><?php echo nicedate($requests[$n]["created"],true)?></td>
-    <td><?php echo $requests[$n]["c"]; ?></td>
-    <td><?php echo $lang["resourcerequeststatus" . $requests[$n]["status"]]; ?></td>
+    <td><?php echo escape($requests[$n]["ref"]); ?></td>
+    <td><?php echo escape($requests[$n]["comments"]); ?></td>
+    <td><?php echo escape(nicedate($requests[$n]["created"],true)); ?></td>
+    <td><?php echo escape($requests[$n]["c"]); ?></td>
+    <td><?php echo escape($lang["resourcerequeststatus" . $requests[$n]["status"]]); ?></td>
     <td>
     <div class="ListTools">
     <?php if ($requests[$n]["collection_id"] > 0) // only show tools if the collection still exists

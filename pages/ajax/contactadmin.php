@@ -1,6 +1,5 @@
 <?php
 include "../../include/boot.php";
-
 include "../../include/authenticate.php";
 
 
@@ -140,7 +139,7 @@ function sendResourceMessage()
 </script>
 <div class="clearerleft"> </div>
 <div id="contactadminbox">
-<p><php echo $lang["contactadmin"]; ?></p>
+<p><?php echo escape($lang["contactadmin"]); ?></p>
 <form name="contactadminform" method=post id="contactadminform" action="<?php echo $baseurl_short?>pages/ajax/contactadmin.php?ref=<?php echo $ref ?>">
     <?php generateFormToken("contactadminform"); ?>
 <input type=hidden name=ref value="<?php echo urlencode($ref) ?>">

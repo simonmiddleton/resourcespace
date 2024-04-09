@@ -202,7 +202,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
 
         <!--Show resource geolocation value-->
         <div id="resource_coordinate" style="margin-top:0px; margin-bottom:0px; width: 99%;">
-            <p> <?php echo $lang['marker'] . ' ' . strtolower($lang['latlong']) . ': '; echo round($resource['geo_lat'], 6) . ', '; echo round($resource['geo_long'], 6) . ' (WGS84)'; ?> </p>
+            <p> <?php echo escape($lang['marker'] . ' ' . strtolower($lang['latlong'])) . ': '; echo round($resource['geo_lat'], 6) . ', '; echo round($resource['geo_long'], 6) . ' (WGS84)'; ?> </p>
         </div>
         <?php
         }

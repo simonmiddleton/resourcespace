@@ -113,7 +113,7 @@ $permissions_done=array();
 include "../../include/header.php";
 ?>
 <div class="BasicsBox">
-<h1><?php echo $lang["page-title_user_group_permissions_edit"] . " - " . escape($group["name"]); ?></h1>
+<h1><?php echo escape($lang["page-title_user_group_permissions_edit"] . " - " . $group["name"]); ?></h1>
 <?php
 $links_trail = array(
     array(

@@ -858,7 +858,7 @@ if($exiftool_write && !$force_exiftool_write_metadata)
     <label for="tarinfo"></label>
     <?php if(!hook('collectiondownloadformhelp'))
         { ?>
-    <div class="FormHelpInner tickset"><?php echo $lang["collection_download_tar_info"]  . "<br />" . $lang["collection_download_tar_applink"]; ?></div><?php
+    <div class="FormHelpInner tickset"><?php echo escape($lang["collection_download_tar_info"])  . "<br />" . escape($lang["collection_download_tar_applink"]); ?></div><?php
         } ?>
     
     <div class="clearerleft"></div>

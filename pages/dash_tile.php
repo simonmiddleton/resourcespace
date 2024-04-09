@@ -299,7 +299,7 @@ function tileStyle($tile_type, $existing = null, $tile_colour = '')
                             />
                         </td>
                         <td align="left" valign="middle" >
-                            <label class="customFieldLabel" for="tile_style_<?php echo escape($style);?>"><?php echo $lang["tile_".$style];?></label>
+                            <label class="customFieldLabel" for="tile_style_<?php echo escape($style);?>"><?php echo escape($lang["tile_".$style]);?></label>
                         </td>
                         <?php
                         }?>

@@ -1,6 +1,5 @@
 <?php
 include "../../../include/boot.php";
-
 include "../../../include/authenticate.php";
 include_once "../include/falcon_link_functions.php";
 
@@ -189,7 +188,7 @@ foreach($resources as $resource)
     elseif(isset($published[$resid]))
         {
         $falconurl=str_replace("[id]",$published[$resid],$falcon_link_template_url);
-        echo $lang["falcon_link_already_published"] . " <br />(<a href='" . $falconurl . "' target='_blank' title='" . escape($lang["falcon_link_view_in_falcon"]) ."'>" . escape($published[$resid]) . "</a>)";
+        echo escape($lang["falcon_link_already_published"]) . " <br />(<a href='" . $falconurl . "' target='_blank' title='" . escape($lang["falcon_link_view_in_falcon"]) ."'>" . escape($published[$resid]) . "</a>)";
         }
     
     echo "</td>";

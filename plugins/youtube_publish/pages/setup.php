@@ -40,7 +40,7 @@ $page_def[] = config_add_text_input('youtube_chunk_size',$lang['youtube_chunk_si
 // Do the page generation ritual -- don't change this section.
 config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
-echo $lang["youtube_publish_base"] . ": " . $baseurl . "<br>";
-echo $lang["youtube_publish_callback_url"] . ": " . $baseurl . "/plugins/youtube_publish/pages/youtube_upload.php";
+echo escape($lang["youtube_publish_base"]) . ": " . $baseurl . "<br>";
+echo escape($lang["youtube_publish_callback_url"]) . ": " . $baseurl . "/plugins/youtube_publish/pages/youtube_upload.php";
 config_gen_setup_html($page_def, $plugin_name, null, $plugin_page_heading);
 include '../../../include/footer.php';

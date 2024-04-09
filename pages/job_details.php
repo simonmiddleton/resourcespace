@@ -24,7 +24,7 @@ if(!is_array($job_details) || count($job_details) == 0)
             <div class="backtoresults"> 
                 <a href="#" onClick="ModalClose();" class="closeLink fa fa-times" title="<?php echo escape($lang["close"]); ?>"></a>
             </div>
-            <h1><?php echo $lang["job_text"] . " #" . $job_details["ref"]; ?></h1>
+            <h1><?php echo escape($lang["job_text"] . " #" . $job_details["ref"]); ?></h1>
 
         </div>
        

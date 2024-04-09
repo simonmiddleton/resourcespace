@@ -281,7 +281,7 @@ hook('rendermapfooter'); ?>
     <input name="submit" type="hidden" value="true" />
     <input name="geocol" type="hidden" value="<?php echo $geocol; ?>" />
     <input name="map-zoom" type="hidden" value="<?php echo $zoom; ?>" id="map-zoom" />
-    <?php echo $lang['marker'] . " " . strtolower($lang['latlong']); ?>: <input name="geo-loc" type="text" size="50" value="<?php echo $resource['geo_long'] == ""?"" : ($resource['geo_lat'] . ',' . $resource['geo_long']) ?>" id="map-input" />
+    <?php echo escape($lang['marker'] . " " . strtolower($lang['latlong'])); ?>: <input name="geo-loc" type="text" size="50" value="<?php echo $resource['geo_long'] == ""?"" : escape($resource['geo_lat'] . ',' . $resource['geo_long']) ?>" id="map-input" />
     <?php hook('renderlocationextras'); ?>
     <input name="submit" type="submit" value="<?php echo escape($lang['save']); ?>" onclick="return CentralSpacePost(this.form,true);" />
 </form>

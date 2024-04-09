@@ -6,7 +6,6 @@
  * @subpackage Pages_Team
  */
 include "../../include/boot.php";
-
 include "../../include/authenticate.php";
 
 $offset=getval("offset",0,true);
@@ -29,7 +28,7 @@ $jumpcount=1;
 ?>
 <div class="BasicsBox">
 <?php if ($backurl!="none"){?><p><a href="<?php echo $backurl?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["manageusers"]); ?></a></p><?php } ?>
-<?php if (!hook("replaceuserlogheader")){?><h1><?php echo $lang["userlog"] . ": " . $userdata["fullname"]; ?></h1><?php } ?>
+<?php if (!hook("replaceuserlogheader")){?><h1><?php echo escape("{$lang["userlog"]}: {$userdata["fullname"]}"); ?></h1><?php } ?>
 <div class="TopInpageNav">
 <div class="InpageNavLeftBlock"><?php echo escape($lang["resultsdisplay"]); ?>:
     <?php 
@@ -66,12 +65,12 @@ for ($n=$offset;(($n<count($log))&& ($n<($offset+$per_page)));$n++)
        <td><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $log[$n]["resourceid"]; ?>'><?php echo $log[$n]["resourceid"]; ?></a></td>
     <td><?php if(!hook("replaceuserlogtitlelink")) {?><a onClick="return CentralSpaceLoad(this,true);" href='<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $log[$n]["resourceid"]; ?>'><?php if(!hook("replaceuserlogtitle")) {echo i18n_get_translated($log[$n]["resourcetitle"]);}?></a><?php } ?></td>
     
-    <td><?php echo $lang["log-" . $log[$n]["type"]];
+    <td><?php echo escape($lang["log-" . $log[$n]["type"]]);
 
     # For emailed items, append email address from the 'notes' column
-    if ($log[$n]["type"]=="E") { echo " " . $log[$n]["notes"]; }
+    if ($log[$n]["type"]=="E") { echo " " . escape($log[$n]["notes"]); }
     ?></td>
-    <td><?php echo $log[$n]["title"]; ?></td>
+    <td><?php echo escape($log[$n]["title"]); ?></td>
     <?php hook("adduserlogcolumn");?>
     </tr>
     <?php

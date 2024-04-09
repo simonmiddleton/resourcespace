@@ -1033,10 +1033,10 @@ if ((isset($_REQUEST['submit'])) && (!isset($errors)) && (!isset($warnings)))
         <ul>
             <li><?php echo escape($lang["setup-successremovewrite"]); ?></li>
             <li><?php echo strip_tags_and_attributes($lang["setup-visitwiki"]); ?></li>
-            <li><a href="<?php echo $baseurl;?>/login.php"><?php echo $lang["setup-login_to"] . " " . $applicationname; ?></a>
+            <li><a href="<?php echo $baseurl;?>/login.php"><?php echo escape($lang["setup-login_to"] . " " . $applicationname); ?></a>
                 <ul>
-                    <li><?php echo $lang["username"] . ': ' . $admin_username; ?></li>
-                    <li><?php echo $lang["password"] . ': ' . $admin_password; ?></li>
+                    <li><?php echo escape($lang["username"] . ': ' . $admin_username); ?></li>
+                    <li><?php echo escape($lang["password"] . ': ' . $admin_password); ?></li>
                 </ul>
             </li>
         </ul>
@@ -1145,7 +1145,7 @@ else
                         $pass = true;
                         }
                 ?>
-                    <p class="<?php echo $pass == true ? '' : 'failure';?>"><?php echo $lang["setup-checkconfigwrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+                    <p class="<?php echo $pass == true ? '' : 'failure';?>"><?php echo escape($lang["setup-checkconfigwrite"]) . ($pass==false?'<br />':' ') . "(" . escape($result) . ")"; ?></p>
                 <?php
                     if (!file_exists($storagedir))
                         {
@@ -1170,7 +1170,7 @@ else
                         $pass = true;
                         }
                 ?>
-                    <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo $lang["setup-checkstoragewrite"] . ($pass==false?'<br />':' ') . "(" . $result . ")"; ?></p>
+                    <p class="<?php echo $pass == true ? '' : 'failure'; ?>"><?php echo escape($lang["setup-checkstoragewrite"]) . ($pass==false?'<br />':' ') . "(" . escape($result) . ")"; ?></p>
             </div>
             <h1><?php echo escape($lang["setup-welcome"]);?></h1>
             <p><?php echo strip_tags_and_attributes($lang["setup-introtext"]);?></p>
@@ -1283,7 +1283,7 @@ else
                             target="_blank" 
                             href="<?php echo $plugin["info_url"]; ?>"
                         >
-                            <?php echo $lang["more-information"]."..."; ?>
+                            <?php echo escape($lang["more-information"])."..."; ?>
                         </a>
                         <?php
                         } ?>
@@ -1318,7 +1318,7 @@ else
                         if(isset($errors['databasedb']))
                             {echo escape($lang["setup-mysqlerrordbase"]);}
                         if(isset($errors['databaseperms']))
-                            {echo $lang["setup-mysqlerrorperms"];} 
+                            {echo escape($lang["setup-mysqlerrorperms"]);} 
                         ?>
                         
                         <p><?php echo $errors['database'];?></p>
@@ -1499,44 +1499,44 @@ else
             <h2><?php echo escape($lang["setup-smtp-settings"]); ?></h2>
             <div class="advsection" id="smtpsettings">
                 <div class="configitem">
-                    <label for="use_smtp"><?php echo $lang["usesmtp"] . ":"; ?></label>
+                    <label for="use_smtp"><?php echo escape($lang["usesmtp"]) . ":"; ?></label>
                     <input id="use_smtp" name="use_smtp" type="checkbox"  <?php echo $use_smtp?"checked":"";?>/>
                     <a class="iflink" href="#if-usesmtp">?</a>
                     <p class="iteminfo" id="if-usesmtp"><?php echo escape($lang["setup-if-usesmtp"]);?></p>
                 </div>
                 <div id="use-SMTP-settings">
                     <div class="configitem">
-                        <label for="smtp_secure"><?php echo $lang["smtpsecure"] . ":"; ?></label>
+                        <label for="smtp_secure"><?php echo escape($lang["smtpsecure"]) . ":"; ?></label>
                         <input id="smtp_secure" name="smtp_secure" type="text" value="<?php echo escape($smtp_secure);?>" />
                         <a class="iflink" href="#if-smtpsecure">?</a>
                         <p class="iteminfo" id="if-smtpsecure"><?php echo escape($lang["setup-if-smtpsecure"]);?></p>
                     </div>
                     <div class="configitem">
-                        <label for="smtp_host"><?php echo $lang["smtphost"] . ":"; ?></label>
+                        <label for="smtp_host"><?php echo escape($lang["smtphost"]) . ":"; ?></label>
                         <input id="smtp_host" name="smtp_host" type="text" value="<?php echo escape($smtp_host);?>"/>
                         <a class="iflink" href="#if-smtphost">?</a>
                         <p class="iteminfo" id="if-smtphost"><?php echo escape($lang["setup-if-smtphost"]);?></p>
                     </div>
                     <div class="configitem">
-                        <label for="smtp_port"><?php echo $lang["smtpport"] . ":"; ?></label>
+                        <label for="smtp_port"><?php echo escape($lang["smtpport"]) . ":"; ?></label>
                         <input id="smtp_port" name="smtp_port" type="text" value="<?php echo escape($smtp_port);?>"/>
                         <a class="iflink" href="#if-smtpport">?</a>
                         <p class="iteminfo" id="if-smtpport"><?php echo escape($lang["setup-if-smtpport"]);?></p>
                     </div>
                     <div class="configitem">
-                        <label for="smtp_auth"><?php echo $lang["smtpauth"] . ":"; ?></label>
+                        <label for="smtp_auth"><?php echo escape($lang["smtpauth"]) . ":"; ?></label>
                         <input id="smtp_auth" name="smtp_auth" type="checkbox" checked />
                         <a class="iflink" href="#if-smtpauth">?</a>
                         <p class="iteminfo" id="if-smtpauth"><?php echo escape($lang["setup-if-smtpauth"]);?></p>
                     </div>
                     <div class="configitem">
-                        <label for="smtp_username"><?php echo $lang["smtpusername"] . ":"; ?></label>
+                        <label for="smtp_username"><?php echo escape($lang["smtpusername"]) . ":"; ?></label>
                         <input id="smtp_username" name="smtp_username" type="text" value="<?php echo escape($smtp_username);?>"/>
                         <a class="iflink" href="#if-smtpusername">?</a>
                         <p class="iteminfo" id="if-smtpusername"><?php echo escape($lang["setup-if-smtpusername"]);?></p>
                     </div>
                     <div class="configitem">
-                        <label for="smtp_password"><?php echo $lang["smtppassword"] . ":"; ?></label>
+                        <label for="smtp_password"><?php echo escape($lang["smtppassword"]) . ":"; ?></label>
                         <input id="smtp_password" name="smtp_password" type="password" value="<?php echo escape($smtp_password);?>"/>
                         <a class="iflink" href="#if-smtppassword">?</a>
                         <p class="iteminfo" id="if-smtppassword"><?php echo escape($lang["setup-if-smtppassword"]);?></p>
@@ -1552,7 +1552,7 @@ else
                 </div>
                 <div id="plugin_google_vision_settings">
                     <div class="configitem">
-                        <label for="google_vision_key"><?php echo $lang["google_vision_api_key"] . ":"; ?></label>
+                        <label for="google_vision_key"><?php echo escape($lang["google_vision_api_key"]) . ":"; ?></label>
                         <input id="google_vision_key" name="google_vision_key" type="text" value="<?php echo escape(get_post('google_vision_key')); ?>" />
                     </div>
                 </div>
@@ -1598,7 +1598,7 @@ else
 if (($develmode)&& isset($config_output))
     { ?>
     <div id="configoutput">
-        <h1><?php echo $lang["setup-configuration_file_output"] . ":"; ?></h1>
+        <h1><?php echo escape($lang["setup-configuration_file_output"]) . ":"; ?></h1>
         <pre><?php echo escape($config_output); ?></pre>
     </div>
     <?php 

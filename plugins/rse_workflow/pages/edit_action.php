@@ -185,12 +185,12 @@ renderBreadcrumbs($links_trail);
     $fromstates=explode(",",$workflowaction["statusfrom"]); 
     for ($n=-2;$n<=3;$n++)
         {?>
-        <tr><td width="1"><input type="checkbox" name="from<?php echo $n?>" value="yes" <?php if (in_array($n,$fromstates)) {?>checked<?php } ?>/></td><td><?php echo $lang["status" . $n]; ?>&nbsp;</td></tr>
+        <tr><td width="1"><input type="checkbox" name="from<?php echo $n?>" value="yes" <?php if (in_array($n,$fromstates)) {?>checked<?php } ?>/></td><td><?php echo escape($lang["status" . $n]); ?>&nbsp;</td></tr>
         <?php
         }
     foreach ($additional_archive_states as $additional_archive_state)
         {?>
-        <tr><td width="1"><input type="checkbox" name="from<?php echo $additional_archive_state?>" value="yes" <?php if (in_array($additional_archive_state,$fromstates)) {?>checked<?php } ?>/></td><td><?php echo $lang["status" . $additional_archive_state]; ?>&nbsp;</td></tr>
+        <tr><td width="1"><input type="checkbox" name="from<?php echo $additional_archive_state?>" value="yes" <?php if (in_array($additional_archive_state,$fromstates)) {?>checked<?php } ?>/></td><td><?php echo escape($lang["status" . $additional_archive_state]); ?>&nbsp;</td></tr>
         <?php	  
         }
     ?></tr></table> 
@@ -203,11 +203,11 @@ renderBreadcrumbs($links_trail);
     <?php
     for ($n=-2;$n<=3;$n++)
         {?>
-        <option value="<?php echo $n ?>" <?php if ($n==$workflowaction["statusto"]) {echo " selected";} ?>><?php echo $lang["status" . $n]; ?></option>';<?php
+        <option value="<?php echo $n ?>" <?php if ($n==$workflowaction["statusto"]) {echo " selected";} ?>><?php echo escape($lang["status" . $n]); ?></option>';<?php
         }
     foreach ($additional_archive_states as $additional_archive_state)
         {?>
-        <option value="<?php echo (int)$additional_archive_state ?>" <?php if ($additional_archive_state==$workflowaction["statusto"]) {echo " selected";} ?>><?php echo $lang["status" . $additional_archive_state]; ?></option>';<?php
+        <option value="<?php echo (int)$additional_archive_state ?>" <?php if ($additional_archive_state==$workflowaction["statusto"]) {echo " selected";} ?>><?php echo escape($lang["status" . $additional_archive_state]); ?></option>';<?php
         }   
     ?>
     </select>

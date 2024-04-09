@@ -390,7 +390,7 @@
         jQuery("#modal_dialog").html("<div class='MessageText'>" + nl2br(DOMPurify.sanitize(message)) + "</div>" + url);
         jQuery("#modal_dialog").addClass('message_dialog');
         jQuery("#modal_dialog").dialog({
-            title: '<?php echo $lang['message'] . " " . strtolower($lang["from"]) . " "; ?>' + owner,
+            title: '<?php echo escape($lang['message'] . " " . strtolower($lang["from"])) . " "; ?>' + owner,
             modal: true,
             resizable: false,
             buttons: [{text: "<?php echo escape($lang['ok']); ?>",

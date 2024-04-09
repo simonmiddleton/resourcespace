@@ -1,7 +1,6 @@
 <?php
 
 include "../../include/boot.php";
-
 include "../../include/authenticate.php";
 
 if (!checkperm("a"))
@@ -64,7 +63,7 @@ function addColumnHeader($orderName, $labelKey)
     <a href="<?php echo $baseurl ?>/pages/admin/admin_size_management.php?<?php
     if ($find!="") { ?>&find=<?php echo escape($find); }
     ?>&orderby=<?php echo $orderName . ($order_by==$orderName ? '+desc' : ''); ?>"
-       onClick="return CentralSpaceLoad(this);"><?php echo $lang[$labelKey] . $image ?></a>
+       onClick="return CentralSpaceLoad(this);"><?php echo escape($lang[$labelKey]) . $image ?></a>
     </td>
     <?php
 }

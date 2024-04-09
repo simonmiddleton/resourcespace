@@ -516,7 +516,7 @@ function leaflet_markers_legend()
         }
     else // Custom metadata field color markers legend.
         { ?>
-        <b> <?php echo $lang['custom_metadata_markers']; ?>&nbsp;</b> <?php
+        <b> <?php echo escape($lang['custom_metadata_markers']); ?>&nbsp;</b> <?php
 
         // Loop through and create the custom color marker legend text, ignoring the first 'unset' item
         for ($i = 0; $i < count($marker_metadata_array); $i++)

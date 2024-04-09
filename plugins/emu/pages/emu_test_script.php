@@ -35,7 +35,7 @@ else
 include '../../../include/header.php';
 ?>
 <div class="BasicsBox">
-    <h1><?php echo $lang['emu_test_script_title'] . ' - ' . $SCRIPTS[$script]['name']; ?></h1>
+    <h1><?php echo escape($lang['emu_test_script_title'] . ' - ' . $SCRIPTS[$script]['name']); ?></h1>
     <?php
     if(isset($error))
         {

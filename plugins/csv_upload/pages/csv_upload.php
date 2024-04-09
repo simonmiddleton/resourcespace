@@ -145,7 +145,7 @@ if (!checkperm("c"))
 
 <div class="BasicsBox">
 <h1><?php echo escape($lang["csv_upload_nav_link"]); render_help_link("plugins/csv-upload");?></h1>
-<h2><?php echo $lang["csv_upload_step" . $csvstep]; ?></h2>
+<h2><?php echo escape($lang["csv_upload_step" . $csvstep]); ?></h2>
 
 <script>
 selectedFields = new Array();
@@ -227,7 +227,7 @@ switch($csvstep)
         $condition=1;
         while(isset($lang["csv_upload_condition" . $condition]))
             {
-            echo $lang["csv_upload_condition" . $condition];
+            echo escape($lang["csv_upload_condition" . $condition]);
             $condition++;
             }
         echo "</ul>";

@@ -171,7 +171,7 @@ if (!hook("replacelistitem"))
             { ?>
             <td <?php hook("listviewcolumnstyle");?> >
                 <?php 
-                echo $lang["status" . $result[$n]["archive"]];
+                echo escape($lang["status" . $result[$n]["archive"]]);
                 ?>
             </td>
             <?php 

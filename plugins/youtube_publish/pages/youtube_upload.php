@@ -1,6 +1,5 @@
 <?php
 include "../../../include/boot.php";
-
 include "../../../include/authenticate.php";
 include "../include/youtube_functions.php";
 
@@ -198,7 +197,7 @@ return false ;
         |
         <a href="<?php echo $baseurl_short?>pages/search.php?search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["viewallresults"]); ?></a>
         |
-        <a class="nextLink" href="<?php echo $baseurl_short?>plugins/youtube_publish/pages/youtube_upload.php?ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>&go=next&<?php echo hook("nextpreviousextraurl") ?>" onClick="return CentralSpaceLoad(this);"><?php echo $lang["nextresult"] . "&nbsp;" . LINK_CARET ?></a>
+        <a class="nextLink" href="<?php echo $baseurl_short?>plugins/youtube_publish/pages/youtube_upload.php?ref=<?php echo $ref?>&search=<?php echo urlencode($search)?>&offset=<?php echo $offset?>&order_by=<?php echo $order_by?>&sort=<?php echo $sort?>&archive=<?php echo $archive?>&go=next&<?php echo hook("nextpreviousextraurl") ?>" onClick="return CentralSpaceLoad(this);"><?php echo escape($lang["nextresult"]) . "&nbsp;" . LINK_CARET ?></a>
     </div>
 </div>
 <div class="BasicsBox" >
@@ -222,7 +221,7 @@ else
 <div class="Question">
 
 <p> 
-<?php echo $lang["youtube_publish_existingurl"] . "<p>";
+<?php echo escape($lang["youtube_publish_existingurl"]) . "<p>";
     if ($youtube_url!="")
         {
         echo $youtube_url;
@@ -270,9 +269,9 @@ if ($youtube_username != '')
     
         <label for="video_status"><?php echo escape($lang["youtube_publish_access"]); ?></label>
         <select name="video_status">
-        <option value="public" <?php if ($video_status=="public") {echo "selected";} ?>><?php echo $lang["youtube_publish_public"] . "&nbsp;&nbsp;" ?></option>
-        <option value="private" <?php if ($video_status=="private") {echo "selected";} ?>><?php echo $lang["youtube_publish_private"] . "&nbsp;&nbsp;" ?></option>
-        <option value="unlisted" <?php if ($video_status=="unlisted") {echo "selected";} ?> ><?php echo $lang["youtube_publish_unlisted"] . "&nbsp;&nbsp;" ?></option>      
+        <option value="public" <?php if ($video_status=="public") {echo "selected";} ?>><?php echo escape($lang["youtube_publish_public"]) . "&nbsp;&nbsp;" ?></option>
+        <option value="private" <?php if ($video_status=="private") {echo "selected";} ?>><?php echo escape($lang["youtube_publish_private"]) . "&nbsp;&nbsp;" ?></option>
+        <option value="unlisted" <?php if ($video_status=="unlisted") {echo "selected";} ?> ><?php echo escape($lang["youtube_publish_unlisted"]) . "&nbsp;&nbsp;" ?></option>      
         
         </select>
         </p>

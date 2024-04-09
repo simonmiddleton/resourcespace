@@ -258,7 +258,7 @@ foreach ($license_usage_mediums as $medium)
       for ($n=1;$n<=12;$n++)
         {
         $m=str_pad($n,2,"0",STR_PAD_LEFT);
-        ?><option <?php if ($n==substr((string) $license["expires"],5,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo $lang["months"][$n-1]; ?></option><?php
+        ?><option <?php if ($n==substr((string) $license["expires"],5,2)) { ?>selected<?php } ?> value="<?php echo $m?>"><?php echo escape($lang["months"][$n-1]); ?></option><?php
         }
       ?>
     </select>
