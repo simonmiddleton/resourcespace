@@ -31,9 +31,6 @@ $related_search_searchcrumb_field=51;
 # Send confirmation emails to user when request sent or assigned
 $request_senduserupdates=true;
 
-# Option to force users to select a resource type at upload
-$resource_type_force_selection=false;
-
 # Specifies that searching will search all workflow states
 # NOTE - does not work with $advanced_search_archive_select=true (advanced search status searching) as the below option removes the workflow selection altogether.
 # IMPORTANT - this feature gets disabled when requests ask for a specific archive state (e.g. View deleted resources or View resources in pending review)

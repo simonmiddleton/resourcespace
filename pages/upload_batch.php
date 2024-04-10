@@ -186,25 +186,12 @@ if ($replace_resource && (!get_edit_access($replace_resource) || resource_file_r
     $replace_resource = false;
     }
 
-if($upload_then_edit && $resource_type_force_selection && getval('posting', '') != '') 
-    {
-    // Resource type selection was forced so use the resource type passed in on the url
-    update_resource_type(0 - $userref, $resource_type);
-    }
-
-if ($resource_type_force_selection && $resource_type != "" && checkperm("XU" . $resource_type))
-    {
-    // Server side check that resource type supplied can be uploaded to. Use default if blocked.
-    $resource_type = '';
-    $resource_type_force_selection = false;
-    }
-
 // If upload_then_edit we may not have a resource type, so we need to find the first resource type
 // which does not have an XU? (restrict upload) permission
 // This will be the resource type used for the upload, but may be changed later when extension is known
 // Resource types that can't be added to collections must be avoided for edit then upload mode to display the edit page for metadata entry.
 $all_resource_types = get_resource_types();
-if($resource_type == "" && !$resource_type_force_selection)
+if($resource_type == "")
     {
     foreach($all_resource_types as $restype)
         {
@@ -651,7 +638,7 @@ if ($processupload)
             // For upload_then_edit mode ONLY, set the resource type based on the extension. User
             // can later change this at the edit stage
             // IMPORTANT: Change resource type only if user has access to it
-            if($upload_then_edit && !$resource_type_force_selection && (!($upload_here && $from_advanced_search) || !is_int_loose($resource_type)))
+            if($upload_then_edit && (!($upload_here && $from_advanced_search) || !is_int_loose($resource_type)))
                 {
                 $resource_type_from_extension = get_resource_type_from_extension(
                     pathinfo($upfilepath, PATHINFO_EXTENSION),
@@ -1120,20 +1107,6 @@ jQuery(document).ready(function () {
                 {
                     res_type = res_type_field.value;
                 }
-
-            <?php
-            if ($resource_type_force_selection && $upload_then_edit && $replace_resource == "" && $replace == "" && $alternative == "")
-                {
-                // Only check resource type is set on upload with $resource_type_force_selection true and upload then edit mode.
-                ?>
-                if (res_type == "")
-                    {
-                    styledalert("<?php echo escape($lang["error"])?>", "<?php echo escape($lang["requiredfield_resource_type"])?>", 450);
-                    return false;
-                    }
-<?php
-                }
-            ?>
 
             processafter = []; // Array of alternative files to process after primary files
             // Check if a new collection is required
@@ -1925,7 +1898,7 @@ if(($replace_resource != '' || $replace != '' || $upload_then_edit) && !(isset($
     {
     // Show options on the upload page if in 'upload_then_edit' mode or replacing a resource
     ?>
-    <h2 class="CollapsibleSectionHead <?php if ($resource_type_force_selection && $replace_resource == '' && $replace == '') { ?>expanded<?php } else { ?>collapsed<?php }?>" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo escape($lang["upload-options"]); ?></h2>
+    <h2 class="CollapsibleSectionHead collapsed" onClick="UICenterScrollBottom();" id="UploadOptionsSectionHead"><?php echo escape($lang["upload-options"]); ?></h2>
     <div class="CollapsibleSection" id="UploadOptionsSection">
     <form id="UploadForm" class="uploadform FormWide" action="<?php echo $baseurl_short?>pages/upload_batch.php">
     <?php

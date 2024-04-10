@@ -374,13 +374,6 @@ if ($upload_review_mode && $lastedited > 0)
     $resource = copy_locked_data($resource, $locked_fields, $lastedited);
     }
 
-if($ref < 0 && $resource_type_force_selection)
-  {
-  $resource_type = "";
-  $resource["resource_type"] = "";
-  debug('Force resource type selection');
-  }
-
 // Create metadata resource record without uploading a file e.g. template, text only resource.
 $create_record_only = getval("recordonly", "") != "";
 
@@ -1419,7 +1412,7 @@ hook("editbefresmetadata"); ?>
         {
         ?>
         <div class="Question <?php if($upload_review_mode && in_array("resource_type",$locked_fields)){echo "lockedQuestion ";}if(isset($save_errors) && is_array($save_errors) && array_key_exists('resource_type',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_resourcetype">
-            <label for="resourcetype"><?php echo escape($lang["resourcetype"]) . (($ref < 0 && $resource_type_force_selection) ? " <sup>*</sup>" : "" );
+            <label for="resourcetype"><?php echo escape($lang["resourcetype"]);
             if ($upload_review_mode)
                 {
                 renderLockButton('resource_type', $locked_fields);
@@ -1439,11 +1432,7 @@ hook("editbefresmetadata"); ?>
             <?php
             $types                = get_resource_types();
             $shown_resource_types = array();
-            if($ref < 0 && $resource_type_force_selection && $resource_type=="") // $resource_type is obtained from getval
-            {
-            echo "<option value='' selected>" . $lang["select"] . "</option>";
-            }
-            
+           
             for($n = 0; $n < count($types); $n++)
                 {
                 if(trim((string) $types[$n]['allowed_extensions']) != "")
