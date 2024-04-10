@@ -574,12 +574,12 @@ if($ajax)
             $node_index +=1;
             $node_disabled_class = $node['active'] === 0 ? 'FieldDisabled' : '';
             ?>
-            <tr id="node_<?php echo $node['ref']; ?>">
+            <tr id="node_<?php echo escape($node['ref']); ?>">
                 <td>
                     <input type="text"
                         class="stdwidth <?php echo escape($node_disabled_class); ?>"
                         name="option_name"
-                        form="option_<?php echo $node['ref']; ?>"
+                        form="option_<?php echo escape($node['ref']); ?>"
                         value="<?php echo escape($node['name']); ?>"
                         onblur="this.value=this.value.trim()"
                     >
@@ -589,14 +589,14 @@ if($ajax)
                 </td>
 
                     <div class="ListTools">
-                        <form id="option_<?php echo $node['ref']; ?>" method="post" action="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
+                        <form id="option_<?php echo escape($node['ref']); ?>" method="post" action="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
                             <td>
-                                <input type="hidden" name="node_ref" value="<?php echo $node['ref']; ?>">
+                                <input type="hidden" name="node_ref" value="<?php echo escape($node['ref']); ?>">
                                 <input 
                                     type="number"
                                     name="node_order_by" 
                                     value="<?php echo $node_index; ?>" 
-                                    id="option_<?php echo $node['ref']; ?>_order_by" 
+                                    id="option_<?php echo escape($node['ref']); ?>_order_by" 
                                     readonly='true'
                                     min='1'
                                     class="TableOrderBy"
@@ -611,9 +611,9 @@ if($ajax)
                             <td> <!-- Buttons for changing order -->
                                 <button 
                                     type="button"
-                                    id="option_<?php echo $node['ref']; ?>_move_to"
+                                    id="option_<?php echo escape($node['ref']); ?>_move_to"
                                     onclick="
-                                        EnableMoveTo(<?php echo $node['ref']; ?>);
+                                        EnableMoveTo(<?php echo escape($node['ref']); ?>);
                                         
                                         return false;
                                     ">
@@ -621,26 +621,26 @@ if($ajax)
                                 </button>
                                 <button 
                                     type="submit"
-                                    id="option_<?php echo $node['ref']; ?>_order_by_apply"
+                                    id="option_<?php echo escape($node['ref']); ?>_order_by_apply"
                                     onclick="
-                                        ApplyMoveTo(<?php echo $node['ref']; ?>);
+                                        ApplyMoveTo(<?php echo escape($node['ref']); ?>);
                                         return false;
                                     "
                                     style="display: none;"
                                 >
                                 <?php echo escape($lang['action-title_apply']); ?>
                                 </button>
-                                <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'moveup'); return false;"><?php echo escape($lang['action-move-up']); ?></button>
-                                <button type="submit" onclick="ReorderNode(<?php echo $node['ref']; ?>, 'movedown'); return false;"><?php echo escape($lang['action-move-down']); ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo escape($node['ref']); ?>, 'moveup'); return false;"><?php echo escape($lang['action-move-up']); ?></button>
+                                <button type="submit" onclick="ReorderNode(<?php echo escape($node['ref']); ?>, 'movedown'); return false;"><?php echo escape($lang['action-move-down']); ?></button>
                             </td>
                             <?php
                             }
                             ?>
                         <!-- Action buttons -->
                         <td>
-                            <button type="submit" onclick="SaveNode(<?php echo $node['ref']; ?>); return false;"><?php echo escape($lang['save']); ?></button>
-                            <button id="node_<?php echo escape($node['ref']); ?>_toggle_active_btn" type="submit" onclick="ToggleNodeActivation(<?php echo $node['ref']; ?>); return false;"><?php echo escape($activation_action_label_for($node)); ?></button>
-                            <button type="submit" onclick="DeleteNode(<?php echo $node['ref']; ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
+                            <button type="submit" onclick="SaveNode(<?php echo escape($node['ref']); ?>); return false;"><?php echo escape($lang['save']); ?></button>
+                            <button id="node_<?php echo escape($node['ref']); ?>_toggle_active_btn" type="submit" onclick="ToggleNodeActivation(<?php echo escape($node['ref']); ?>); return false;"><?php echo escape($activation_action_label_for($node)); ?></button>
+                            <button type="submit" onclick="DeleteNode(<?php echo escape($node['ref']); ?>); return false;"><?php echo escape($lang['action-delete']); ?></button>
                         </td>
                             
                         <?php generateFormToken("option_{$node['ref']}"); ?>
