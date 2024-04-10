@@ -335,9 +335,9 @@ if(!empty($trimmed_resources_alt))
     $parent_link = '<a href="' . generateURL($baseurl . '/pages/view.php', array('ref' => $ref)) . '">' . $ref . '</a>';
     $links_holder = "";
     foreach ($trimmed_resources_alt as $trimmed_ref) {
-        $links_holder = $links_holder . '<a href="' . generateURL($baseurl . '/pages/preview.php', array('ref' => $ref, 'alternative' => $trimmed_ref)) . '">' . $trimmed_ref . '</a> ';
+        $links_holder = $links_holder . '<a href="' . generateURL($baseurl . '/pages/preview.php', array('ref' => $ref, 'alternative' => $trimmed_ref)) . '">' . escape($trimmed_ref) . '</a> ';
     }
-    echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%ref", $parent_link, str_replace("%links", $links_holder, $lang["video-trim_alt-response"])) . "</div>";
+    echo "<div class=\"PageInformal\"><i class='fa fa-fw fa-check-square'></i>&nbsp;" . str_replace("%ref", $parent_link, str_replace("%links", $links_holder, escape($lang["video-trim_alt-response"]))) . "</div>";
     }
     ?>
 <h1><?php echo escape($lang["video-trim"]); render_help_link("plugins/video-splice");?></h1>
@@ -497,9 +497,8 @@ if(isset($resource["field".$view_title_field]))
              <br />
              <div class="clearerleft"> </div>
         </div>
-        <input type="hidden" name="trimmed_resources_new" value="<?php echo isset($trimmed_resources_new)?implode(',', $trimmed_resources_new):null ?>" />
-        <input type="hidden" name="trimmed_resources_alt" value="<?php echo isset($trimmed_resources_alt)?implode(',', $trimmed_resources_alt):null ?>" />
-    </form>
+        <input type="hidden" name="trimmed_resources_new" value="<?php echo escape(isset($trimmed_resources_new)?implode(',', $trimmed_resources_new):''); ?>" />
+        <input type="hidden" name="trimmed_resources_alt" value="<?php echo escape(isset($trimmed_resources_alt)?implode(',', $trimmed_resources_alt):''); ?>" />    </form>
 </div>
 <script>
 var inputStart = document.getElementById("input-start");
