@@ -4754,7 +4754,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         if ($ingest){$file_path="";} else {$file_path=$path;}
 
         # Store extension/data in the database
-        ps_query("UPDATE resource SET archive=0,file_path=?,file_extension=?,preview_extension=?,file_modified=NOW() WHERE ref=?",array("s",$file_path,"s",$extension,"s",$extension,"i",$r));
+        ps_query("UPDATE resource SET archive=0,file_path=?,file_extension=?,preview_extension=?,file_modified=NOW(),no_file=0 WHERE ref=?",array("s",$file_path,"s",$extension,"s",$extension,"i",$r));
 
         # Store original filename in field, if set
         if (!$ingest)
@@ -9243,7 +9243,7 @@ function revert_resource_file($resource,$logentry,$createpreviews=true)
 
     copy($revert_path,$current_path);
     $parameters=array("s",$revert_ext, "i",$resource);
-    ps_query("UPDATE resource SET file_extension=?, has_image=0 WHERE ref=?",$parameters);
+    ps_query("UPDATE resource SET file_extension=?, has_image=0,no_file=0 WHERE ref=?",$parameters);
     if($createpreviews)
         {
         create_previews($resource,false,$revert_ext);

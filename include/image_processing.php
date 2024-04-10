@@ -354,7 +354,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     // Include file size
     $file_size = @filesize_unlimited($filepath);
 
-    $set = array_merge($set,["file_size=?","file_extension=?","preview_extension='jpg'","file_modified=NOW()"]);
+    $set = array_merge($set,["file_size=?","file_extension=?","preview_extension='jpg'","file_modified=NOW()","no_file=0"]);
     $setparams = array_merge($setparams,['i',$file_size,'s', $extension, 'i', $ref]);
     ps_query("UPDATE resource SET " . implode(",",$set). " WHERE ref= ?", $setparams);
    
