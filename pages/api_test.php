@@ -138,18 +138,20 @@ if ($api_function!="")
     //rebuild params for output to include encoding if needed
     $original_query=$query;
     $query="function=" . $api_function;
-    foreach($fct_params as $fparam)
-        {
+    foreach($fct_params as $fparam) {
         $param_name = $fparam->getName();
         $param_val = trim(getval($param_name, ""));
 
-        if($fparam->isOptional() && $param_val == "")
-            {
+        if($fparam->isOptional() && $param_val == "") {
             continue;
-            }
-
-        strpos(urlencode($param_val), '%') === false?$query .= '&' . $param_name . '=' . $param_val:$query .= '&' . $param_name . '=" . urlencode("' . $param_val . '") . "';
         }
+
+        if (strpos(urlencode($param_val), '%') === false) {
+            $query .= '&' . $param_name . '=' . $param_val;
+        } else {
+            $query .= '&' . $param_name . '=" . urlencode("' . addslashes($param_val) . '") . "';
+        }
+    }
     ?>
 <pre class="codeoutput"><?php echo escape($output) ?></pre>
 
