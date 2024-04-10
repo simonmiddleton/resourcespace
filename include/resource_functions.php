@@ -517,25 +517,63 @@ function put_resource_data($resource,$data)
     // Check access
     if (!get_edit_access($resource)) {return false;}
 
+    // Get current resource data
+    $currentdata = get_resource_data($resource);
+
     // Define safe columns
-    $safe_columns=array("resource_type","creation_date","rating","user_rating","archive","access","mapzoom","modified","geo_lat","geo_long","no_file");
+    $safe_columns = ["resource_type","creation_date","rating","user_rating","archive","access","mapzoom","modified","geo_lat","geo_long","no_file"];
+    $log_columns = [
+        "resource_type" => LOG_CODE_EDITED_RESOURCE,
+        "access" => LOG_CODE_ACCESS_CHANGED,
+        "archive" => LOG_CODE_STATUS_CHANGED,
+        "creation_date" => LOG_CODE_EDITED_RESOURCE,
+        "geo_lat" => LOG_CODE_EDITED_RESOURCE,
+        "geo_long" => LOG_CODE_EDITED_RESOURCE,
+        "no_file" => [0 => LOG_CODE_UNSET_NO_FILE, 1 => LOG_CODE_SET_NO_FILE],
+        "locked" => [0 => LOG_CODE_UNLOCKED, 1 => LOG_CODE_LOCKED],
+    ];
     $safe_column_types=array("i","s","d","i","i","i","d","s","s","s","i");
 
     // Permit the created by column to be changed also
     if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";$safe_column_types[]='i';}
 
     $sql="";$params=array();
-    foreach ($data as $column=>$value)
-        {
-        if (!in_array($column,$safe_columns)) {return false;} // Attempted to update a column outside of the expected set
+    $logupdates = [];
+    foreach ($data as $column=>$value) {
+        if (!in_array($column,$safe_columns)) {
+            // Attempted to update a column outside of the expected set
+            return false;
+        }
+        if (isset($currentdata[$column]) && $value == $currentdata[$column]) {
+            // No change
+            continue;
+        }
         if ($sql!="") {$sql.=",";}
         $sql.=$column . "=?";
         $params[]=$safe_column_types[array_search($column,$safe_columns)]; // Fetch type to use
         $params[]=$value;
+        // Add to $logupdates
+        if (isset($log_columns[$column])) {
+            // Set log value and type
+            $logupdates[] = [
+                $log_columns[$column][$value] ?? $log_columns[$column], // Log code
+                $column, // Log note
+                $currentdata[$column], // From value
+                $value, // To value
+            ];
         }
+    }
+
     if ($sql=="") {return false;} // Nothing to do.
     $params[]="i";$params[]=$resource;
-    ps_query("update resource set $sql where ref=?",$params);
+    ps_query("UPDATE resource SET $sql WHERE ref=?",$params);
+    if(count($logupdates) > 0) {
+        db_begin_transaction("resource_log_updates");
+        foreach($logupdates as $logupdate) {
+            resource_log($resource,$logupdate[0],0,$logupdate[1],$logupdate[2],$logupdate[3]);
+        }
+        db_end_transaction("resource_log_updates");
+    }
     return true;
     }
 
@@ -5730,11 +5768,11 @@ function log_diff($fromvalue, $tovalue)
     debug_function_call("log_diff",func_get_args());
 
     // Trim values as it can cause out of memory errors with class.Diff.php e.g. when saving extracted text or creating previews for large PDF files
-    if(strlen($fromvalue)>10000)
+    if(strlen((string) $fromvalue)>10000)
         {
         $fromvalue = mb_substr($fromvalue,10000);
         }
-    if(strlen($tovalue)>10000)
+    if(strlen((string) $tovalue)>10000)
         {
         $tovalue = mb_substr($tovalue,10000);
         }

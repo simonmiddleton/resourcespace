@@ -643,6 +643,9 @@ $lang['log-X']="Locked resource";
 $lang['log-Y']="Unlocked resource";
 $lang['log-XK']="Deleted external access key";
 $lang['log-EUP']="External share upload";
+$lang['log-NOFIL']="Marked as having no file";
+$lang['log-FIL']="Marked as having file";
+$lang['log-EDT']="Edited resource";
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"]="Access changed";
