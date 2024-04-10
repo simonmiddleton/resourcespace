@@ -1055,7 +1055,7 @@ $file_upload_block_duplicates=false;
 
 # checksums will not be generated in realtime; a background cron job must be used
 # recommended if files are large, since the checksums can take time
-$file_checksums_offline = true;
+$file_checksums_offline = false;
 
 # $file_integrity_verify_window - set server time window that the file integrity check script can run in.
 # This can be resource intensive when checking checksums for a large number of resources.
@@ -1478,7 +1478,7 @@ $user_account_fullname_create=false;
 $edit_large_preview=true;
 
 # Allow sorting by resource ID
-$order_by_resource_id=false;
+$order_by_resource_id = true;
 
 # Enable find similar search?
 $enable_find_similar=true;
@@ -1500,7 +1500,7 @@ $thumbs_display_extended_fields=array();
     $search_results_title_wordwrap=100; // Force breaking up of very large titles so they wrap to multiple lines (useful when using multi line titles with $search_result_title_height). By default this is set very high so that breaking doesn't occur. If you use titles that have large unbroken words (e.g. filenames with no spaces) then it may be useful to set this value to something lower, e.g. 20
 
 # Enable extra large thumbnails option for search screen
-$xlthumbs=false;
+$xlthumbs = true;
 $xl_search_results_title_trim=60;
 
 # SORT Fields: display fields to be added to the sort links in large,small, and xlarge thumbnail views
@@ -2002,7 +2002,7 @@ $sort_relations_by_filetype=false;
 $sort_relations_by_restype=false;
 
 # When using the "View these resources as a result set" link, show the original resource in search result?
-$related_search_show_self=false;
+$related_search_show_self = true;
 
 # Use the collection name in the downloaded zip filename when downloading collections as a zip file?
 $use_collection_name_in_zip_name=false;
@@ -2238,7 +2238,7 @@ $collection_purge=false;
 
 # enable option to autorotate new images based on embedded camera orientation data
 # requires ImageMagick to work.
-$camera_autorotation = false;
+$camera_autorotation = true;
 $camera_autorotation_ext = array('jpg','jpeg','tif','tiff','png'); // only try to autorotate these formats
 $camera_autorotation_gm = false;
 

@@ -20,7 +20,7 @@
 
 </div>",0,,JobID,1,0,,0,1,,0,0,,,,,,,,,,,,0,1,1,1,0,
 29,person,Named person(s),,9,70,1,0,1,,1,1,,,0,,"XMP:PersonInImage,XMP:People",1,0,,0,1,,0,0,,,,,,,,,,,,1,1,1,1,0,
-51,originalfilename,Original filename,,0,100,1,0,1,file_path,0,1,,,0,,,1,0,,0,1,,1,0,,,,,,,,,,,,0,1,1,1,0,
+51,originalfilename,Original filename,,0,100,1,0,1,file_path,1,1,,,0,,,1,0,,0,1,,1,0,,,,,,,,,,,,0,1,1,1,0,
 52,camera,Camera make / model,,0,1600,0,0,0,,1,0,,,0,,Model,1,0,,0,1,,1,0,,,,,,,,,,,,0,1,1,1,0,
 54,source,Source,,3,1601,0,0,0,,1,1,,,0,,XMP:FileSource,1,0,,0,1,,0,0,,,,,,,,,,,,0,1,1,1,0,
 72,text,Extracted text,,5,110,0,0,1,,0,0,,"<div class=""item""><h3>[title]</h3><p>[value]</p></div><div class=""clearerleft""> </div>",0,,,1,0,,0,1,,1,0,,,,,,,,,,,,0,1,1,1,0,

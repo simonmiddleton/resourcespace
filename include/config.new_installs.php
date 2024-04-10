@@ -44,3 +44,11 @@ $api_upload_urls = array();
 
 $use_native_input_for_date_field = true;
 $resource_view_use_pre = true;
+
+$sort_tabs = false;
+$maxyear_extends_current = 5;
+$thumbs_display_archive_state = true;
+$featured_collection_static_bg = true;
+$enable_find_similar = false;
+$file_checksums = true;
+$hide_real_filepath = true;
