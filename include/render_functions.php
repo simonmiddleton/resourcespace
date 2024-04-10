@@ -6378,8 +6378,9 @@ function admin_resource_type_field_option(string $propertyname,string $propertyt
                     }
                 }
             elseif (in_array($currentvalue, array(FIELD_TYPE_TEXT_BOX_SINGLE_LINE)))
-                { // create constraints selector
-				admin_resource_type_field_constraint($ref, (int)$currentvalue);
+                { 
+                // create constraints selector
+                admin_resource_type_field_constraint($ref, (int)$currentvalue);
                 }
             }
         elseif($propertyname=="linked_data_field")
