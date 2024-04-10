@@ -623,7 +623,7 @@ $php_fullpath    = get_utility_path("php");
 
 global $ffmpeg_preview,$ffmpeg_preview_seconds,$ffmpeg_preview_extension,$ffmpeg_preview_options,
        $ffmpeg_preview_min_width, $ffmpeg_preview_min_height, $ffmpeg_preview_max_width,
-       $ffmpeg_preview_max_height, $ffmpeg_preview_async, $ffmpeg_preview_force,
+       $ffmpeg_preview_max_height, $ffmpeg_preview_force,
        $ffmpeg_snapshot_frames, $video_preview_hls_support,$ffmpeg_hls_preview_options, $video_hls_streams, $h264_profiles;
 
 debug('FFMPEG-VIDEO: ####################################################################');
@@ -753,27 +753,8 @@ if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpe
 
         if ($ffmpeg_preview && ($extension!=$ffmpeg_preview_extension || $ffmpeg_preview_force || $video_preview_hls_support!=0) )
             {
-                debug('FFMPEG-VIDEO: Before running the actual preview command...');
-                if ($ffmpeg_preview_async && $php_fullpath !== false)
-                    {
-                        debug('FFMPEG-VIDEO: Create preview asynchronously...');
-                    global $scramble_key;
-                    exec($php_fullpath . dirname(__FILE__) . "/ffmpeg_processing.php " . 
-                        escapeshellarg($scramble_key) . " " . 
-                        escapeshellarg($ref) . " " . 
-                        escapeshellarg($file) . " " . 
-                        escapeshellarg($target) . " " . 
-                        escapeshellarg($previewonly) . " " . 
-                escapeshellarg($snapshottime) . " " .
-                                    escapeshellarg($alternative) . " " .
-                    (isset($_SERVER['HTTP_HOST']) ?  escapeshellarg($_SERVER['HTTP_HOST']) : '') . " " .
-                                    "> /dev/null 2>&1 &");
-                    }
-                else 
-                    {
-                        debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...');
-                    include dirname(__FILE__)."/ffmpeg_processing.php";
-                    }
+            debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...');
+            include dirname(__FILE__)."/ffmpeg_processing.php";
             }
         }
         debug('FFMPEG-VIDEO: ####################################################################');
