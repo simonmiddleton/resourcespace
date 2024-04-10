@@ -22,7 +22,7 @@ $rtf_text_node_id = get_resource_nodes($resource_a, $rtf_text)[0];
 $rtf_text_node = [];
 get_node($rtf_text_node_id, $rtf_text_node, false);
 
-// Cateogry tree field
+// Category tree field
 $rtf_cat_tree = create_resource_type_field("{$rt_title_prefix} category tree", 1, FIELD_TYPE_CATEGORY_TREE, "{$rt_name_prefix}_tree", true);
 test_log("rtf_cat_tree = {$rtf_cat_tree}");
 $ct_opt_a = set_node(null, $rtf_cat_tree, 'A', null, '');
