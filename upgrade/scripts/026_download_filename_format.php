@@ -2,19 +2,15 @@
 set_sysvar(SYSVAR_UPGRADE_PROGRESS_SCRIPT, 'Start download_filename_format configuration upgrade...');
 
 /*
-Reference only, the deprecated configs defaults (now in config.deprecated), grouped by how they relate:
-
-$prefix_resource_id_to_filename=true;
-$prefix_filename_string="RS";
-
-$original_filenames_when_downloading=true;
-
-$download_filename_id_only = false;
-$download_id_only_with_size = false;
-
-// $download_filename_field=8;
-$download_filenames_without_size = false;
+Set the legacy vars to the defaults if not set.
 */
+$prefix_resource_id_to_filename=$prefix_resource_id_to_filename ?? true;
+$prefix_filename_string=$prefix_filename_string ?? "RS";
+$original_filenames_when_downloading=$original_filenames_when_downloading ?? true;
+$download_filename_id_only = $download_filename_id_only ?? false;
+$download_id_only_with_size = $download_id_only_with_size ?? false;
+$download_filenames_without_size = $download_filenames_without_size ?? false;
+
 $build_download_filename_format = function(): string
     {
     $format_parts = [
