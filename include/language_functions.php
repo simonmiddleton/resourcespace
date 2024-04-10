@@ -719,3 +719,47 @@ function i18n_get_all_translations(string $langid): array
     $lang = $savedlang;
     return $alltranslations;
     }
+
+/**
+ * Merge values for across multiple translation strings.
+ * Where a value is missing for a language used elsewhere i18n_get_translated will be used.
+ * If no value is provided and no English (en) string is found then blank will be returned.
+ * 
+ * Example input: ["~en:cheese~fr:fromage","~en:bread~fr:pain"]
+ * 
+ * Example output: ["~en:cheese, bread","~fr:fromage, pain"]
+ *
+ * @param  array $values    Translation strings to merge.
+ * 
+ * @return array            Each language string as a comma separated list.
+ */
+function i18n_merge_translations(array $values): array
+{
+    if(count($values)<=1) {
+        return $values;
+    }
+
+    $values_split = array_map('i18n_get_translations',$values);
+
+    $languages = [];
+    foreach ($values_split as $value) {
+        $languages = array_unique(array_merge($languages,array_keys($value)));
+    }
+
+    $options = [];
+    foreach ($values_split as $value) {
+        foreach ($languages as $language) {
+            if (key_exists($language,$value)) {
+                $options[$language][]=$value[$language];
+            } else {
+                $options[$language][]=i18n_get_translated($value['en']??"");
+            }
+        }
+    }
+
+    return array_map(
+        fn(string $lang, array $values): string => "~$lang:" . implode(", ",$values),
+        array_keys($options),
+        array_values($options)
+    );
+}

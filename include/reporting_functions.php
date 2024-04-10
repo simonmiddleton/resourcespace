@@ -141,7 +141,18 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
         {
         // No point downloading as the resultant file will be empty
         $download=false;
-        }            
+        }
+
+    foreach($results as &$result) {
+        foreach ($result as $key=>&$value) {
+            # Merge translation strings if multiple in a single column
+            if (substr($key,0,4)=="i18n") {
+                $delimiter = substr($key,4,strpos($key,"_")-4);
+                $value=implode("", i18n_merge_translations(explode($delimiter,$value)));
+            }
+        }
+    }
+
     if ($download)
         {
         header("Content-type: application/octet-stream");
@@ -161,13 +172,16 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
             if ($n==0)
                 {
                 $f=0;
-                foreach ($result as $key => $value)
-                    {
+                foreach ($result as $key => $value) {
                     $f++;
                     if ($f>1) {echo ",";}
-                    if ($key!="thumbnail")
-                        {echo "\"" . lang_or_i18n_get_translated($key,"columnheader-") . "\"";}
+                    if (substr($key,0,4)=="i18n") {
+                        $key = substr($key,strpos($key,"_")+1);
                     }
+                    if ($key!="thumbnail") {
+                        echo "\"" . lang_or_i18n_get_translated($key,"columnheader-") . "\"";
+                    }
+                }
                 echo "\n";
                 }
             $f=0;
@@ -234,16 +248,17 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 {
                 $f=0;
                 $output.="<tr>\r\n";
-                foreach ($result as $key => $value)
-                    {
+                foreach ($result as $key => $value) {
                     $f++;
-                    if ($key=="thumbnail")
-                        {$output.="<td><strong>Link</strong></td>\r\n";}
-                    else
-                        {
-                        $output.="<td><strong>" . lang_or_i18n_get_translated($key,"columnheader-") . "</strong></td>\r\n";
+                    if ($key=="thumbnail") {
+                        $output.="<td><strong>Link</strong></td>\r\n";
+                    } else {
+                        if (substr($key,0,4)=="i18n") {
+                            $key = substr($key,strpos($key,"_")+1);
                         }
+                        $output.="<td><strong>" . lang_or_i18n_get_translated($key,"columnheader-") . "</strong></td>\r\n";
                     }
+                }
                 $output.="</tr>\r\n";
                 }
             $f=0;
