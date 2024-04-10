@@ -9476,7 +9476,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
         }
         
         if (count($succeeded) > 0) {
-            $success_sql = "UPDATE resource SET integrity_fail = 0, last_verified=NOW() WHERE ref IN (" . ps_param_insert(count($succeeded)) . ")";
+            $success_sql = "UPDATE resource SET integrity_fail = 0,no_file=0, last_verified=NOW() WHERE ref IN (" . ps_param_insert(count($succeeded)) . ")";
             $success_params = ps_param_fill($succeeded,"i");
             ps_query($success_sql,$success_params);
         }
