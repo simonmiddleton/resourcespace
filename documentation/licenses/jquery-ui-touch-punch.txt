@@ -1,4 +1,0 @@
-This code is dual licensed under the MIT or GPL Version 2 licenses.
-
-https://github.com/furf/jquery-ui-touch-punch
-http://touchpunch.furf.com/
