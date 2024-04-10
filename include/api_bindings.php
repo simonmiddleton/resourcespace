@@ -1519,6 +1519,12 @@ function api_get_edit_access(int $resource): bool
     return get_edit_access($resource);
     }
 
+/**
+ * Toggle active state for nodes
+ * @see https://www.resourcespace.com/knowledge-base/developers/fixed-list-fields
+ * @param array $refs List of node IDs
+ * @return array Returns the affected nodes' active state (including empty list) and 403 HTTP status if not authorised.
+ */
 function api_toggle_active_state_for_nodes(array $refs): array
     {
     $assert_post = assert_post_request(defined('API_AUTHMODE_NATIVE'));
