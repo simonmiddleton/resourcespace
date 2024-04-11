@@ -9464,11 +9464,12 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
 /**
  * Check integrity of primary resource files
  *
- * @param array $resources      array of resource data e.g, from search results
- * @param bool $presenceonly    Check for file presence only? If false file checksums will be checked (if configured)
- * 
+ * @param array $resources      Array of resource data e.g. from search results
+ * @param bool $presenceonly    Check for file presence only? If false (and if $file_checksums is enabled)
+ *                              then file checksums will be checked
+ *
  * @return array                Array of resource IDs that have failed  to verify
- * 
+ *
  */
 function check_resources(array $resources = [], bool $presenceonly = false): array
 {
@@ -9488,7 +9489,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
     $return_failed = [];
     foreach (array_chunk($resources,1000) as $checkresources) {
         $checks = [];
-        if(!$presenceonly && $GLOBALS["file_checksums"] && !$GLOBALS["file_checksums_50k"]) {
+        if(!$presenceonly && $GLOBALS["file_checksums"]) {
             $checks["get_checksum"]  = "%RESOURCE%file_checksum";
             } else {
                 $checks["is_readable"]  = true;
@@ -9497,7 +9498,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
 
         $failed = [];
         $succeeded = [];
-        foreach($results as $ref=>$result) {
+        foreach ($results as $ref=>$result) {
             if($result === false) {
                 $failed[] = $ref;
             } else {
@@ -9505,14 +9506,12 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
             }
         }
 
-        db_begin_transaction("checkresources");        
+        db_begin_transaction("checkresources");
         if (count($failed) > 0) {
             $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref in (" . ps_param_insert(count($failed)) . ")";
             $failed_params = ps_param_fill($failed,"i");
             ps_query($failed_sql,$failed_params);
-            
         }
-        
         if (count($succeeded) > 0) {
             $success_sql = "UPDATE resource SET integrity_fail = 0,no_file=0, last_verified=NOW() WHERE ref IN (" . ps_param_insert(count($succeeded)) . ")";
             $success_params = ps_param_fill($succeeded,"i");
@@ -9526,7 +9525,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
         db_begin_transaction("logfailedresources");
         $arr_newfails = array_diff($failed,$existingfailed);
         foreach($arr_newfails as $newfail) {
-            resource_log($newfail, LOG_CODE_SYSTEM, null, "Failed file integrity check", 0,1);
+            resource_log($newfail, LOG_CODE_SYSTEM, 0, "Failed file integrity check", 0,1);
         }
         db_end_transaction("logfailedresources");
 
@@ -9534,36 +9533,23 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
          db_begin_transaction("logrecoveredresources");
          $arr_recovered = array_intersect($succeeded,$existingfailed);
          foreach($arr_recovered as $recovered) {
-             resource_log($recovered, LOG_CODE_SYSTEM, null, "Passed file integrity check", 1,0);
+             resource_log($recovered, LOG_CODE_SYSTEM, 0, "Passed file integrity check", 1,0);
          }
          db_end_transaction("logrecoveredresources");
     }
-
     return $return_failed;
-     
-    
-    //  - Update multiple resources where possible and use a transaction for the results (db_begin_transaction/db_end_transaction)
-    //  - Reset  the 'no_file' column  to 0 for a resource if currently 1 and an original file is found (e.g. file_exists=true is returned)
-    //  - Only set integrity_fail =1 if these conditions are met:
-    //     a) The resource type is not in $file_integrity_ignore_resource_types or $data_only_resource_types
-    //     b) The resource's workflow state is not in the $file_integrity_ignore_states array
-     
-    //  - Only reset the integrity_fail value back to 0 if when the checksum is checked
-    //  - Add code to update the resource log if a file's integrity state changes - (use type LOG_CODE_SYSTEM)
-    
-    //  returns boolean - TRUE if file is valid, FALSE if file is missing or has a checksum mismatch
 }
 
 /**
  * Get an array of all resources that require files to be validated
  *
  * @param int $days     Return only resources not validated in the last X number of days
- * 
+ *
  * @return array
- * 
+ *
  */
 function get_resources_to_validate(int $days = 0) : array
-{    
+{
     $params = [];
     $filtersql = "";
     $restypes_ignore = array_unique(array_merge(
@@ -9579,16 +9565,15 @@ function get_resources_to_validate(int $days = 0) : array
         $filtersql .= " AND resource_type NOT IN (" . ps_param_insert(count($restypes_ignore)) . ")";
         $params = array_merge($params,ps_param_fill($restypes_ignore, "i"));
     }
-  
-    $dayfilter = $days > 0 ? "AND (last_verified IS NULL OR DATEDIFF(NOW(), last_verified) > {$days})" : ""; 
+    $dayfilter = $days > 0 ? "AND (last_verified IS NULL OR DATEDIFF(NOW(), last_verified) > {$days})" : "";
     $resources = ps_query("SELECT ref,
-                                  archive, 
-                                  file_extension, 
-                                  resource_type, 
-                                  file_checksum, 
-                                  last_verified, 
-                                  integrity_fail 
-                             FROM resource 
+                                  archive,
+                                  file_extension,
+                                  resource_type,
+                                  file_checksum,
+                                  last_verified,
+                                  integrity_fail
+                             FROM resource
                             WHERE ref > 0 AND no_file = 0 {$dayfilter} {$filtersql}
                          ORDER BY integrity_fail DESC, last_verified ASC",
                             $params);

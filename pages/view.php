@@ -1176,7 +1176,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                         el_no_file = jQuery(\"#%s\");
                                                         newstate = el_no_file.attr(\"data-no-file-state\") === \"0\" ? 1 : 0;
                                                         newtext = newstate ? \"%s\" : \"%s\";
-                                                        api(\"put_resource_data\", 
+                                                        api(\"put_resource_data\",
                                                         {\"resource\": \"%s\",\"data\": {\"no_file\": newstate}},
                                                                 function(response) {
                                                                     el_no_file.toggleClass(\"no_file has_file\");
@@ -1197,11 +1197,11 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 escape($lang['action_unset_no_file']), // Lang string to set no_file=0
                                                 escape($lang['action_set_no_file']), // Lang string  to set no_file=1
                                                 $ref, // For API call
-                                                generate_csrf_js_object('set_no_file'), 
+                                                generate_csrf_js_object('set_no_file'),
                                                 escape($no_file_set ? $lang['action_unset_no_file'] : $lang['action_set_no_file']), // Anchor text
-                                                );                                                
+                                                );
                                             }
-                                                                                        
+
                                             if ($resource_contact_link) 
                                                 { 
                                                 $contacturl = generateURL(

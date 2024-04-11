@@ -320,22 +320,18 @@ function is_valid_upload_path(string $file_path, array $valid_upload_paths) : bo
  *
  * @param array $resources      Array of resource IDs or
  *                              array of resource data e.g, from search results
- * @param array $criteria       Array with an array of callables for each resource with the 
- *                              required return values in order to pass the check e.g. 
+ * @param array $criteria       Array with an array of callables for each resource with the
+ *                              required return values in order to pass the check e.g.
  *                              'file_exists" =>true for a file presence only check
- * 
+ *
  * @return array $results       An array with resource ID as the index and the results of the check as the value (boolean)
  *                              e.g. ["1234" => true, "1235" => false]
- * 
  */
 function validate_resource_files(array $resources,array $criteria = []): array
 {
-    $checkresources = isset($resources[0]["ref"]) ? $resources : get_resource_data_batch($resources); 
+    $checkresources = isset($resources[0]["ref"]) ? $resources : get_resource_data_batch($resources);
     $results = [];
     foreach($checkresources as $resource) {
-
-    // TODO Remove/amend
-    debug('BANG ref ' . $resource["ref"]);
         if (!is_int_loose($resource["ref"])) {
             $results[$resource["ref"]] = false;
             continue;
@@ -346,19 +342,17 @@ function validate_resource_files(array $resources,array $criteria = []): array
             if(!is_callable($criterion)) {
                 $results[$resource["ref"]] = false;
                 // Not a valid check
-                // TODO Remove/amend
-                // debug('BANG ' . __LINE__);
                 continue 2;
             }
             if(substr($expected,0,10) == "%RESOURCE%") {
-                // $expected is an resource table column
+                // $expected is a resource table column
                 $expected = $resource[substr($expected,10)];
             }
+
             $testresult = call_user_func($criterion,$filepath);
             $results[$resource["ref"]] = $testresult === $expected;
             if ($results[$resource["ref"]] === false) {
-                // TODO Remove/amend
-                debug($resource["ref"] . " FAILED, expected: " . $expected . ", got: " . $testresult );
+                debug($resource["ref"] . " failed integrity check. Expected: " . $criterion . "=". $expected . ", got : " . $testresult);
                 // No need to continue with other $criteria as check has failed
                 continue 2;
             }

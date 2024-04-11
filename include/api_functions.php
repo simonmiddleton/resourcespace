@@ -120,7 +120,6 @@ function execute_api_call($query,$pretty=false)
                 $GLOBALS["use_error_exception"] = true;
                 try
                     {
-                        debug("BANG " . $params[$param_name]); 
                     $decoded = json_decode($params[$param_name],JSON_OBJECT_AS_ARRAY);
                     }
                 catch (Exception $e)

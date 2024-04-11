@@ -2595,16 +2595,13 @@ function extract_indd_pages($filename)
 function generate_file_checksum($resource,$extension,$anyway=false)
     {
     global $file_checksums;
-    global $file_checksums_50k;
     global $file_checksums_offline;
     $generated = false;
 
     debug("generate_file_checksum(resource = $resource, extension = $extension, anyway = $anyway)");
-
     if (($file_checksums && !$file_checksums_offline)||$anyway) // do it if file checksums are turned on, or if requestor said do it anyway
         {
-        # Generates a unique checksum for the given file, based either on the first 50K and the file size or the full file.
-
+        # Generates a unique checksum for the given file, based either on the first 50K and the file size or the full file.x
         $path=get_resource_path($resource,true,"",false,$extension);
         if (file_exists($path))
             {
