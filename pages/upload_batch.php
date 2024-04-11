@@ -305,6 +305,7 @@ if($collection_add=='undefined')
     $uploadparams['collection_add']=$usercollection;
     }
 
+# Determine whether to autorotate for regular upload
 if($camera_autorotation)
     {
     if(isset($autorotation_preference))
@@ -568,6 +569,15 @@ if ($processupload)
         {
         if ($alternative!="")
             {
+            # Determine whether to autorotate for alternative upload
+            $autorotate = false;
+            if($camera_autorotation) {
+                $autorotate = true;
+                if(isset($autorotation_preference)) {
+                    $autorotate = $autorotation_preference;
+                }
+            }
+
             # Upload an alternative file
             $resource_data = get_resource_data($alternative);
             if($resource_data["lock_user"] > 0 && $resource_data["lock_user"] != $userref)
@@ -600,6 +610,11 @@ if ($processupload)
                     {
                     chmod($path,0777);
                     $file_size = @filesize_unlimited($path);
+
+                    # Autorotate the alternative if required
+                    if($autorotate) {
+                        AutoRotateImage($path);
+                    }
 
                     # Save alternative file data.
                     ps_query("update resource_alt_files set file_name=?,file_extension=?,file_size=?,creation_date=now() where resource=? and ref=?",array("s",$upfilename,"s",$extension,"i",$file_size,"i",$alternative,"i",$aref));
