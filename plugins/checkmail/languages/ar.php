@@ -33,7 +33,7 @@ $lang["addresourcesviaemail"]='إضافة عبر البريد الإلكترون
 $lang["uploadviaemail"]='إضافة عبر البريد الإلكتروني';
 $lang["uploadviaemail-intro"]='للرفع عبر البريد الإلكتروني، يرجى إرفاق الملفات وإرسالها إلى العنوان التالي <b><a href=\'mailto:[toaddress]\'>[toaddress]</a></b>.</p> <p>تأكد من إرسالها من <b>[fromaddress]</b>، وإلا سيتم تجاهلها.</p><p>يرجى ملاحظة أن أي شيء في عنوان البريد الإلكتروني سيتم وضعه في حقل [subjectfield] في %applicationname%.</p><p> كما يرجى ملاحظة أن أي شيء في جسم البريد الإلكتروني سيتم وضعه في حقل [bodyfield] في %applicationname%.</p>  <p>سيتم تجميع الملفات المتعددة في مجموعة. ستكون مواردك الافتراضية على مستوى الوصول <b>\'[access]\'</b>، وحالة الأرشيف <b>\'[archive]\'</b>.</p><p> [confirmation]</p>';
 $lang["checkmail_confirmation_message"]='ستتلقى رسالة تأكيد عبر البريد الإلكتروني عندما يتم معالجة بريدك الإلكتروني بنجاح. إذا تم تخطي بريدك الإلكتروني بشكل برمجي لأي سبب (مثل إرساله من عنوان خاطئ)، سيتم إخطار المسؤول بأن هناك بريدًا إلكترونيًا يتطلب اهتمامًا.';
-$lang["yourresourcehasbeenuploaded"]='تم تحميل موردك.';
-$lang["yourresourceshavebeenuploaded"]='تم تحميل مواردك.';
+$lang["yourresourcehasbeenuploaded"]='تم تحميل موردك';
+$lang["yourresourceshavebeenuploaded"]='تم تحميل مواردك';
 $lang["checkmail_not_allowed_error_template"]='المستخدم [user-fullname] ([username])، برقم [user-ref] والبريد الإلكتروني [user-email] غير مسموح له بالرفع عبر البريد الإلكتروني (يرجى التحقق من الأذونات "c" أو "d" أو المستخدمين المحظورين في صفحة إعدادات البريد الإلكتروني). تم تسجيل هذا في: [datetime].';
-$lang["checkmail_createdfromcheckmail"]='تم إنشاؤها من مكوّن إضافة تحقق البريد الإلكتروني.';
+$lang["checkmail_createdfromcheckmail"]='تم إنشاؤها من مكوّن إضافة تحقق البريد الإلكتروني';

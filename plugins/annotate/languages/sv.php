@@ -32,6 +32,6 @@ $lang["annotate_font"]="Typsnitt:";
 $lang["annotate_pdf_output"]="Möjlighet att spara pdf med noteringar (experimentell):";
 $lang["annotate_pdf_output_only_annotated"]="Inkludera endast material med noteringar, i sparad pdf:";
 
-$lang["annotate_metadatafield_error"]='En metadatafält krävs för att lagra anteckningarna.';
-$lang["annotate_admin_edit_access"]='Möjlighet att redigera andra användares anteckningar.';
-$lang["annotate_ref_not_supplied"]='Referens ej tillhandahållen.';
+$lang["annotate_metadatafield_error"]='En metadatafält krävs för att lagra anteckningarna';
+$lang["annotate_admin_edit_access"]='Möjlighet att redigera andra användares anteckningar';
+$lang["annotate_ref_not_supplied"]='Referens ej tillhandahållen';

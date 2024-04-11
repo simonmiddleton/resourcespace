@@ -8,6 +8,6 @@ $lang["embeddocument_alreadyonpage"]='Introduïu un número de pàgina a la case
 $lang["embeddocument_download_pdf"]='descarregar PDF';
 $lang["embeddocument_minimise"]='minimitzar';
 $lang["embeddocument_maximise"]='maximitzar';
-$lang["embeddocument_heading"]='Configuració del visualitzador de documents remot.';
+$lang["embeddocument_heading"]='Configuració del visualitzador de documents remot';
 $lang["embeddocument_specify_resourcetype"]='Si us plau, especifiqueu per a quin tipus de recurs hauria d\'aparèixer la funcionalitat \'incrustar\'.';
 $lang["embeddocument_document_resourcetype"]='Tipus de recurs Visualitzador de documents remots';

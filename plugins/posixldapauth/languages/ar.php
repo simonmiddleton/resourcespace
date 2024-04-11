@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["posixldapauth_plugin_heading"]='تكوين مكوّن البرنامج الإضافي Posixldapauth.';
+$lang["posixldapauth_plugin_heading"]='تكوين مكوّن البرنامج الإضافي Posixldapauth';
 $lang["posixldapauth_enabled"]='تمكين:';
 $lang["posixldapauth_ldap_server"]='خادم LDAP:';
 $lang["posixldapauth_ldap_information"]='معلومات LDAP';
@@ -26,9 +26,9 @@ $lang["posixldapauth_login_field"]='حقل تسجيل الدخول:';
 $lang["posixldapauth_test_connection"]='اختبار الاتصال:';
 $lang["posixldapauth_test"]='اختبار';
 $lang["posixldapauth_resourcespace_configuration"]='تكوين ResourceSpace';
-$lang["posixldapauth_user_suffix"]='لاحقة المستخدم.';
+$lang["posixldapauth_user_suffix"]='لاحقة المستخدم';
 $lang["posixldapauth_create_users"]='إنشاء مستخدمين:';
-$lang["posixldapauth_group_based_user_creation"]='إنشاء مستخدمين بناءً على المجموعة.';
+$lang["posixldapauth_group_based_user_creation"]='إنشاء مستخدمين بناءً على المجموعة';
 $lang["posixldapauth_new_user_group"]='مجموعة مستخدمين جديدة:';
 $lang["posixldapauth_group_mapping"]='تعيين المجموعة';
 $lang["posixldapauth_group_name"]='اسم المجموعة';

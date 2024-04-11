@@ -1,8 +1,8 @@
 <?php
 
 
-$lang["resource_usage"]='Bruk av ressurser.';
-$lang["new_usage"]='Ny bruk.';
+$lang["resource_usage"]='Bruk av ressurser';
+$lang["new_usage"]='Ny bruk';
 $lang["usage_ref"]='Bruks-ID';
 $lang["usage_location"]='Bruk';
 $lang["usage_medium"]='Bruksmedium';

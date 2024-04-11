@@ -649,7 +649,7 @@ $lang["setup-visitwiki"]='Visit the <a target="_blank" href="http://www.resource
 $lang["setup-checkconfigwrite"]="Write access to config directory:";
 $lang["setup-checkstoragewrite"]="Write access to storage directory:";
 $lang["setup-welcome"]="Welcome to ResourceSpace";
-$lang["setup-introtext"]="Thanks for choosing ResourceSpace.  This configuration script will help you setup ResourceSpace.  This process only needs to be completed once.";
+$lang["setup-introtext"]="Thanks for choosing ResourceSpace.  This configuration script will help you setup ResourceSpace.  This process only needs to be completed once";
 $lang["setup-checkerrors"]="Pre-configuration errors were detected.<br />  Please resolve these errors and return to this page to continue.";
 $lang["setup-errorheader"]="There were errors detected in your configuration.  See below for detailed error messages.";
 $lang["setup-warnheader"]="Some of your settings generated warning messages.  See below for details.  This doesn't necessarily mean there is a problem with your configuration.";
@@ -873,8 +873,8 @@ $lang["savesearchassmartcollection"]="将搜索到的资源加入快速收藏夹
 $lang["smartcollection"]="快速收藏夹";
 
 
-$lang["uploadertryjava"]="如果这个浏览器有问题, 请使用 <strong>Java</strong>.";
-$lang["getjava"]="确定你有最新版本的Java, 请浏览 Java 网站.";
+$lang["uploadertryjava"]="如果这个浏览器有问题, 请使用 <strong>Java</strong>";
+$lang["getjava"]="确定你有最新版本的Java, 请浏览 Java 网站";
 
 $lang["all"]="全部";
 $lang["backtoresults"]="返回搜索结果";
@@ -893,7 +893,7 @@ $lang["closethiswindow"]="关闭这视窗";
 
 $lang["requestaddedtocollection"]="该资源已加入你的收藏夹中.";
 
-$lang["nodownloadsavailable"]="Sorry, there are no downloads available for this resource.";
+$lang["nodownloadsavailable"]="Sorry, there are no downloads available for this resource";
 $lang["reload"]="Reload";
 $lang["alternatetype"]="alternatetye";
 

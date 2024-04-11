@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["bookend"]='Kirjahyllyn päätytuki.';
+$lang["bookend"]='Kirjahyllyn päätytuki';
 $lang["bookend-image-1"]='Otsikkokuva';
 $lang["bookend-image-2"]='Sulkeutumiskuva';
 $lang["bookend-noimage-1"]='(ei otsikkokuvaa)';

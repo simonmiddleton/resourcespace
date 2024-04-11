@@ -28,7 +28,7 @@ $lang["doi_pref_publicationYear_fields"]='在以下位置查找<a target="_blank
 $lang["doi_pref_creator_fields"]='在以下位置查找<a style="font-style: italic" target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">创建者</a>：';
 $lang["doi_pref_title_fields"]='在以下位置查找<a style="font-style: italic" target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">标题</a>：';
 $lang["doi_setup_default"]='如果找不到任何值，请使用<a href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=38" target="_blank">标准代码</a>：';
-$lang["doi_setup_test_plugin"]='测试插件..';
+$lang["doi_setup_test_plugin"]='测试插件.';
 $lang["doi_setup_test_succeeded"]='测试成功！';
 $lang["doi_setup_test_failed"]='测试失败！';
 $lang["doi_alert_text"]='注意！一旦DOI被发送到DataCite，注册将无法撤销。';

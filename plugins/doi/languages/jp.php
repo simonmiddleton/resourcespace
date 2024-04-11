@@ -29,7 +29,7 @@ $lang["doi_pref_publicationYear_fields"]='<a target="_blank" href="https://schem
 $lang["doi_pref_creator_fields"]='「Creator」を以下で検索してください：<a style="font-style: italic" target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">Creator</a>';
 $lang["doi_pref_title_fields"]='以下で<a style="font-style: italic" target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=9">タイトル</a>を検索してください：';
 $lang["doi_setup_default"]='値が見つからない場合は、<a href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=38" target="_blank">標準コード</a>を使用してください。';
-$lang["doi_setup_test_plugin"]='テストプラグイン..';
+$lang["doi_setup_test_plugin"]='テストプラグイン.';
 $lang["doi_setup_test_succeeded"]='テストに成功しました！';
 $lang["doi_setup_test_failed"]='テストに失敗しました！';
 $lang["doi_alert_text"]='注意！DOIがDataCiteに送信されると、登録を元に戻すことはできません。';

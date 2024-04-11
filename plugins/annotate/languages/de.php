@@ -24,12 +24,12 @@ $lang["annotate_show_author"] = "Display annotation author when viewing previews
 
 $lang["annotate_font"]="Schriftart:";
 
-$lang["annotate_metadatafield_error"]='Ein Metadatenfeld ist erforderlich, um die Anmerkungen zu speichern.';
-$lang["annotate_admin_edit_access"]='Fähigkeit, die Anmerkungen anderer Benutzer zu bearbeiten.';
-$lang["annotate_ref_not_supplied"]='Referenz nicht angegeben.';
-$lang["annotate_configuration"]='Konfiguration annotieren.';
+$lang["annotate_metadatafield_error"]='Ein Metadatenfeld ist erforderlich, um die Anmerkungen zu speichern';
+$lang["annotate_admin_edit_access"]='Fähigkeit, die Anmerkungen anderer Benutzer zu bearbeiten';
+$lang["annotate_ref_not_supplied"]='Referenz nicht angegeben';
+$lang["annotate_configuration"]='Konfiguration annotieren';
 $lang["extensions_to_exclude"]='Ausgeschlossene Erweiterungen<br />(durch Komma getrennt):';
 $lang["resource_types_to_exclude"]='Auszuschließende Ressourcentypen (anklicken, um auszuschließen):';
 $lang["annotatedebug"]='Fehlerbehebung:';
 $lang["annotate_pdf_output"]='PDF-Ausgabeoption (experimentell)';
-$lang["annotate_pdf_output_only_annotated"]='Nur annotierte Ressourcen in PDF-Ausgabe einschließen.';
+$lang["annotate_pdf_output_only_annotated"]='Nur annotierte Ressourcen in PDF-Ausgabe einschließen';

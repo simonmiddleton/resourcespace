@@ -1,7 +1,7 @@
 <?php
 
 
-$lang["posixldapauth_plugin_heading"]='Ρύθμιση του Προσθέτου Posixldapauth.';
+$lang["posixldapauth_plugin_heading"]='Ρύθμιση του Προσθέτου Posixldapauth';
 $lang["posixldapauth_enabled"]='Ενεργοποιημένο:';
 $lang["posixldapauth_ldap_server"]='Διακομιστής LDAP:';
 $lang["posixldapauth_ldap_information"]='Πληροφορίες LDAP';
@@ -20,7 +20,7 @@ $lang["posixldapauth_member_field"]='Πεδίο Μέλους:';
 $lang["posixldapauth_use_to_overide_group_containers_member_field"]='Χρησιμοποιήστε για να αντικαταστήσετε το πεδίο μέλους των δοχείων ομάδων.';
 $lang["posixldapauth_member_field_type"]='Τύπος Πεδίου Μέλους:';
 $lang["posixldapauth_default"]='Προεπιλογή';
-$lang["posixldapauth_user_name"]='Όνομα Χρήστη.';
+$lang["posixldapauth_user_name"]='Όνομα Χρήστη';
 $lang["posixldapauth_use_to_change_content_of_group_member_field"]='Χρησιμοποιήστε για να αλλάξετε το περιεχόμενο του πεδίου μέλους Ομάδας.';
 $lang["posixldapauth_login_field"]='Πεδίο Σύνδεσης:';
 $lang["posixldapauth_test_connection"]='Έλεγχος Σύνδεσης:';
@@ -32,15 +32,15 @@ $lang["posixldapauth_group_based_user_creation"]='Δημιουργία Χρησ�
 $lang["posixldapauth_new_user_group"]='Νέα Ομάδα Χρηστών:';
 $lang["posixldapauth_group_mapping"]='Χαρτογράφηση Ομάδων';
 $lang["posixldapauth_group_name"]='Όνομα Ομάδας';
-$lang["posixldapauth_map_to"]='Χαρτογράφηση σε.';
+$lang["posixldapauth_map_to"]='Χαρτογράφηση σε';
 $lang["posixldapauth_enable_group"]='Ενεργοποίηση Ομάδας';
 $lang["posixldapauth_could_not_bind_to_ad_check_credentials"]='Αδυναμία σύνδεσης με το AD, παρακαλώ ελέγξτε τα διαπιστευτήριά σας.';
 $lang["posixldapauth_connection_to_ldap_server_failed"]='Αποτυχία σύνδεσης με τον διακομιστή LDAP.';
 $lang["posixldapauth_error-msg"]='Σφάλμα: %msg%';
-$lang["posixldapauth_passed"]='Πέρασε.';
+$lang["posixldapauth_passed"]='Πέρασε';
 $lang["posixldapauth_tests_passed_save_settings_and_set_group_mapping"]='Τα τεστ πέρασαν, παρακαλώ αποθηκεύστε τις ρυθμίσεις σας και στη συνέχεια επιστρέψτε για να ορίσετε την αντιστοίχιση ομάδων.';
 $lang["posixldapauth_tests_failed_check_settings_and_test_again"]='Οι δοκιμές απέτυχαν, παρακαλώ ελέγξτε τις ρυθμίσεις σας και δοκιμάστε ξανά.';
-$lang["posixldapauth_status_error_in"]='Σφάλμα κατάστασης στο.';
+$lang["posixldapauth_status_error_in"]='Σφάλμα κατάστασης στο';
 $lang["posixldapauth_server_error"]='Σφάλμα διακομιστή';
 $lang["posixldapauth_could_not_connect_to_ldap_server"]='Αδυναμία σύνδεσης με τον διακομιστή LDAP.';
 $lang["posixldapauth_unable_to_search_ldap_server"]='Αδυναμία αναζήτησης στον διακομιστή LDAP.';

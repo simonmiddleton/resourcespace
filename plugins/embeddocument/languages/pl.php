@@ -8,6 +8,6 @@ $lang["embeddocument_alreadyonpage"]='Wpisz numer strony w polu po prawej stroni
 $lang["embeddocument_download_pdf"]='pobierz plik PDF';
 $lang["embeddocument_minimise"]='zminimalizuj';
 $lang["embeddocument_maximise"]='maksymalizować';
-$lang["embeddocument_heading"]='Konfiguracja zdalnego przeglądarki dokumentów.';
+$lang["embeddocument_heading"]='Konfiguracja zdalnego przeglądarki dokumentów';
 $lang["embeddocument_specify_resourcetype"]='Proszę określić dla jakiego typu zasobu funkcjonalność „osadzania” powinna być dostępna.';
 $lang["embeddocument_document_resourcetype"]='Zdalny przeglądarka dokumentów - Typ zasobu:';

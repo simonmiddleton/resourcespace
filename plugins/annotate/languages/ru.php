@@ -30,6 +30,6 @@ $lang["annotate_font"]="Шрифт:";
 $lang["annotate_pdf_output"]="Вывод в PDF (экспериментальная опция)";
 $lang["annotate_pdf_output_only_annotated"]="Включать в PDF только аннотированные объекты";
 
-$lang["annotate_metadatafield_error"]='Для хранения аннотаций необходимо заполнить поле метаданных.';
-$lang["annotate_admin_edit_access"]='Возможность редактировать аннотации других пользователей.';
-$lang["annotate_ref_not_supplied"]='Ссылка не предоставлена.';
+$lang["annotate_metadatafield_error"]='Для хранения аннотаций необходимо заполнить поле метаданных';
+$lang["annotate_admin_edit_access"]='Возможность редактировать аннотации других пользователей';
+$lang["annotate_ref_not_supplied"]='Ссылка не предоставлена';

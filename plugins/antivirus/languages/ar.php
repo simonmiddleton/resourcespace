@@ -3,8 +3,8 @@
 
 $lang["antivirus_configuration"]='تكوين مضاد الفيروسات';
 $lang["antivirus_label"]='مضاد الفيروسات';
-$lang["antivirus_action_label"]='اختر الإجراء المناسب الذي يجب اتخاذه عند اكتشاف ملفات خبيثة.';
-$lang["antivirus_quarantine_status_label"]='حدد حالة الأرشيف التي سيتم استخدامها كمنطقة احتجاز الحجر الصحي.';
+$lang["antivirus_action_label"]='اختر الإجراء المناسب الذي يجب اتخاذه عند اكتشاف ملفات خبيثة';
+$lang["antivirus_quarantine_status_label"]='حدد حالة الأرشيف التي سيتم استخدامها كمنطقة احتجاز الحجر الصحي';
 $lang["antivirus_action_delete"]='حذف بشكل دائم';
 $lang["antivirus_action_quarantine"]='الانتقال إلى الحجر الصحي';
 $lang["antivirus_deleting_file"]='حذف المورد [%resource_id%] وأي ملفات مرتبطة به!';

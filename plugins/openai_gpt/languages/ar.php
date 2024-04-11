@@ -3,7 +3,7 @@
 
 $lang["openai_gpt_title"]='التكامل مع OpenAI';
 $lang["openai_gpt_intro"]='يضيف بيانات وصفية تم إنشاؤها عن طريق تمرير البيانات الحالية إلى واجهة برمجة تطبيقات OpenAI مع إمكانية تخصيص الاستفسار. يمكنك الحصول على مفتاح واجهة برمجة التطبيقات الخاص بك من <a href=\'https://openai.com/api\' target=\'_blank\' >https://openai.com/api</a><br />يرجى الرجوع إلى https://beta.openai.com/docs/introduction للحصول على معلومات أكثر تفصيلاً.';
-$lang["property-openai_gpt_prompt"]='النص المحفِّز لـ GPT.';
+$lang["property-openai_gpt_prompt"]='النص المحفِّز لـ GPT';
 $lang["property-openai_gpt_input_field"]='حقل إدخال GPT';
 $lang["openai_gpt_api_key"]='مفتاح واجهة برمجة تطبيقات OpenAI';
 $lang["openai_gpt_model"]='اسم نموذج API المستخدم (على سبيل المثال \'text-davinci-003\')';

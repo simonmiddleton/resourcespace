@@ -12,8 +12,8 @@ $lang["removerange"]="Ta bort sidintervall";
 $lang["range"]="Sidintervall";
 $lang["pages"]="Sidor";
 $lang["to-page"]="till";
-$lang["outofrange"]="Utanför sidomfång.";
-$lang["invalidrange"]="Felaktigt sidintervall.";
+$lang["outofrange"]="Utanför sidomfång";
+$lang["invalidrange"]="Felaktigt sidintervall";
 
 $lang["splitpdf_createnewresource"]="Skapa ett nytt material för varje sidintervall";
 $lang["splitpdf_createnewalternativefile"]="Skapa en ny alternativ fil tillhörande det här materialet för varje sidintervall";

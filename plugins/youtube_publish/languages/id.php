@@ -1,39 +1,39 @@
 <?php
 
 
-$lang["youtube_publish_title"]='Penerbitan YouTube.';
-$lang["youtube_publish_linktext"]='Terbitkan ke YouTube.';
+$lang["youtube_publish_title"]='Penerbitan YouTube';
+$lang["youtube_publish_linktext"]='Terbitkan ke YouTube';
 $lang["youtube_publish_configuration"]='Terbitkan ke YouTube - Pengaturan';
-$lang["youtube_publish_notconfigured"]='Plugin unggah YouTube belum dikonfigurasi. Mohon minta administrator Anda untuk mengonfigurasi plugin di.';
+$lang["youtube_publish_notconfigured"]='Plugin unggah YouTube belum dikonfigurasi. Mohon minta administrator Anda untuk mengonfigurasi plugin di';
 $lang["youtube_publish_legal_warning"]='Dengan mengklik \'OK\', Anda menyatakan bahwa Anda memiliki semua hak atas konten atau diizinkan oleh pemilik untuk membuat konten tersebut tersedia untuk umum di YouTube, dan bahwa konten tersebut mematuhi Ketentuan Layanan YouTube yang terdapat di http://www.youtube.com/t/terms.';
-$lang["youtube_publish_resource_types_to_include"]='Pilih jenis Sumber Daya YouTube yang valid.';
-$lang["youtube_publish_mappings_title"]='Pemetaan kolom ResourceSpace - YouTube.';
+$lang["youtube_publish_resource_types_to_include"]='Pilih jenis Sumber Daya YouTube yang valid';
+$lang["youtube_publish_mappings_title"]='Pemetaan kolom ResourceSpace - YouTube';
 $lang["youtube_publish_title_field"]='Bidang Judul';
 $lang["youtube_publish_descriptionfields"]='Kolom Deskripsi';
 $lang["youtube_publish_keywords_fields"]='Kolom tag';
-$lang["youtube_publish_url_field"]='Kolom metadata untuk menyimpan URL YouTube.';
+$lang["youtube_publish_url_field"]='Kolom metadata untuk menyimpan URL YouTube';
 $lang["youtube_publish_allow_multiple"]='Izinkan pengunggahan ganda dari sumber daya yang sama?';
-$lang["youtube_publish_log_share"]='Dibagikan di YouTube.';
+$lang["youtube_publish_log_share"]='Dibagikan di YouTube';
 $lang["youtube_publish_unpublished"]='tidak dipublikasikan';
 $lang["youtube_publishloggedinas"]='Anda akan mempublikasikan ke akun YouTube: %youtube_username%';
-$lang["youtube_publish_change_login"]='Gunakan akun YouTube yang berbeda.';
-$lang["youtube_publish_accessdenied"]='Anda tidak memiliki izin untuk mempublikasikan sumber daya ini.';
+$lang["youtube_publish_change_login"]='Gunakan akun YouTube yang berbeda';
+$lang["youtube_publish_accessdenied"]='Anda tidak memiliki izin untuk mempublikasikan sumber daya ini';
 $lang["youtube_publish_alreadypublished"]='Sumber daya ini sudah dipublikasikan ke YouTube.';
 $lang["youtube_access_failed"]='Gagal mengakses antarmuka layanan unggah YouTube. Silakan hubungi administrator Anda atau periksa konfigurasi Anda.';
-$lang["youtube_publish_video_title"]='Judul video.';
-$lang["youtube_publish_video_description"]='Deskripsi video.';
-$lang["youtube_publish_video_tags"]='Tag video.';
+$lang["youtube_publish_video_title"]='Judul video';
+$lang["youtube_publish_video_description"]='Deskripsi video';
+$lang["youtube_publish_video_tags"]='Tag video';
 $lang["youtube_publish_access"]='Atur akses';
 $lang["youtube_public"]='umum';
 $lang["youtube_private"]='rahasia';
 $lang["youtube_publish_public"]='Publik';
 $lang["youtube_publish_private"]='Pribadi';
-$lang["youtube_publish_unlisted"]='Tidak terdaftar.';
+$lang["youtube_publish_unlisted"]='Tidak terdaftar';
 $lang["youtube_publish_button_text"]='Terbitkan';
 $lang["youtube_publish_authentication"]='Otentikasi';
 $lang["youtube_publish_use_oauth2"]='Gunakan OAuth 2.0?';
-$lang["youtube_publish_oauth2_advice"]='Petunjuk YouTube OAuth 2.0.';
-$lang["youtube_publish_oauth2_advice_desc"]='Untuk mengatur plugin ini, Anda perlu mengatur OAuth 2.0 karena semua metode otentikasi lainnya secara resmi sudah tidak digunakan. Untuk ini, Anda perlu mendaftarkan situs ResourceSpace Anda sebagai proyek dengan Google dan mendapatkan ID klien dan rahasia OAuth. Tidak ada biaya yang terlibat.
+$lang["youtube_publish_oauth2_advice"]='Petunjuk YouTube OAuth 2.0';
+$lang["youtube_publish_oauth2_advice_desc"]='Untuk mengatur plugin ini, Anda perlu mengatur OAuth 2.0 karena semua metode otentikasi lainnya secara resmi sudah tidak digunakan. Untuk ini, Anda perlu mendaftarkan situs ResourceSpace Anda sebagai proyek dengan Google dan mendapatkan ID klien dan rahasia OAuth. Tidak ada biaya yang terlibat
 
 Berikut adalah langkah-langkahnya:
 <ul>
@@ -51,16 +51,16 @@ Berikut adalah langkah-langkahnya:
 <li>Anda kemudian akan disajikan dengan layar yang menunjukkan \'client ID\' dan \'client secret\' yang baru dibuat.</li>
 <li>Catat ID klien dan rahasia kemudian masukkan detail ini di bawah.</li>
 </ul>';
-$lang["youtube_publish_developer_key"]='Kunci pengembang.';
+$lang["youtube_publish_developer_key"]='Kunci pengembang';
 $lang["youtube_publish_oauth2_clientid"]='ID Klien';
-$lang["youtube_publish_oauth2_clientsecret"]='Rahasia Klien.';
+$lang["youtube_publish_oauth2_clientsecret"]='Rahasia Klien';
 $lang["youtube_publish_base"]='URL Dasar';
 $lang["youtube_publish_callback_url"]='URL Panggil Kembali';
 $lang["youtube_publish_username"]='Nama Pengguna YouTube';
-$lang["youtube_publish_password"]='Kata Sandi YouTube.';
+$lang["youtube_publish_password"]='Kata Sandi YouTube';
 $lang["youtube_publish_existingurl"]='URL YouTube yang sudah ada:';
-$lang["youtube_publish_notuploaded"]='Belum diunggah.';
-$lang["youtube_publish_failedupload_error"]='Kesalahan unggah.';
+$lang["youtube_publish_notuploaded"]='Belum diunggah';
+$lang["youtube_publish_failedupload_error"]='Kesalahan unggah';
 $lang["youtube_publish_success"]='Video berhasil dipublikasikan!';
 $lang["youtube_publish_renewing_token"]='Memperbarui token akses';
 $lang["youtube_publish_category"]='Kategori';

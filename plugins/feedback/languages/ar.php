@@ -4,8 +4,8 @@
 $lang["feedback_user_survey"]='استبيان المستخدمين';
 $lang["feedback_thank_you"]='شكرًا لك على ملاحظاتك.';
 $lang["feedback_your_full_name"]='اسمك الكامل';
-$lang["feedback_remind_me_later"]='تذكرني لاحقًا.';
-$lang["feedback_user feedback_configuration"]='تكوين ردود فعل المستخدم.';
+$lang["feedback_remind_me_later"]='تذكرني لاحقًا';
+$lang["feedback_user feedback_configuration"]='تكوين ردود فعل المستخدم';
 $lang["feedback_pop-up_prompt_box_text"]='نص صندوق الحوار المنبثق';
 $lang["feedback_questions"]='الأسئلة';
 $lang["feedback_type"]='النوع:';
@@ -19,4 +19,4 @@ $lang["feedback_add_new_question_after"]='هل ترغب في إضافة سؤال
 $lang["feedback_text-html"]='نص / HTML';
 $lang["feedback_options-comma_separated"]='الخيارات: (مفصولة بفاصلة)';
 $lang["feedback_add_new_field"]='إضافة حقل جديد';
-$lang["feedback_back_to_plugin_manager"]='العودة إلى مدير المكوّنات الإضافية.';
+$lang["feedback_back_to_plugin_manager"]='العودة إلى مدير المكوّنات الإضافية';

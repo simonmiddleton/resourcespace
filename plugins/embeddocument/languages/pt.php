@@ -8,6 +8,6 @@ $lang["embeddocument_alreadyonpage"]='Digite um número de página na caixa à d
 $lang["embeddocument_download_pdf"]='baixar PDF';
 $lang["embeddocument_minimise"]='minimizar';
 $lang["embeddocument_maximise"]='maximizar';
-$lang["embeddocument_heading"]='Configuração do Visualizador Remoto de Documentos.';
+$lang["embeddocument_heading"]='Configuração do Visualizador Remoto de Documentos';
 $lang["embeddocument_specify_resourcetype"]='Por favor, especifique para qual tipo de recurso a funcionalidade \'embed\' deve aparecer.';
 $lang["embeddocument_document_resourcetype"]='Tipo de Recurso do Visualizador de Documentos Remoto:';

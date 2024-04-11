@@ -2,6 +2,6 @@
 
 
 $lang["refine"]='Poboljšaj';
-$lang["refineresults"]='Preciziraj rezultate.';
+$lang["refineresults"]='Preciziraj rezultate';
 $lang["additionalkeywords"]='Dodatni pojmovi za pretraživanje';
-$lang["clearsearch"]='Očisti pojmove pretrage.';
+$lang["clearsearch"]='Očisti pojmove pretrage';
