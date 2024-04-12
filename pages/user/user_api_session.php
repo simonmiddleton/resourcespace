@@ -28,7 +28,7 @@ if($remote_system) {
         if($cerror == 200 && !is_null($response_json)) {
             $message = $lang["user_api_session_grant_success"] . " " . $response_json["message"];
         } else {
-            $message = $lang["user_api_session_grant_error"] . " message: " . ($response_json["message"] ?? $curl_response);
+            $message = $lang["user_api_session_grant_error"] . " message: " . ($response_json["message"] ?? $curl_response) . " HTTP code: " . $cerror;
         }
     }
 } else {
