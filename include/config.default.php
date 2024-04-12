@@ -78,6 +78,7 @@ $email_notify=""; # Where resource/research/user requests are sent. Written to c
 $email_notify_usergroups=array(); # Use of email_notify is deprecated as system notifications are now sent to the appropriate users based on permissions and user preferences. This variable can be set to an array of usergroup references and will take precedence.
 
 # Enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
+# NOTE: It is strongly recommended to use a custom SMTP server if this is enabled, emails may be seen as spoofing attempts. 
 $email_from_user = false;
 
 # Scramble resource paths? If this is a public installation then this is a very wise idea.
