@@ -25,10 +25,10 @@ if($remote_system) {
         curl_close($curl);
 
         $response_json = json_decode($curl_response,true);
-        if($cerror == 200 && !is_null($response_json)) {
-            $message = $lang["user_api_session_grant_success"] . " " . $response_json["message"];
+        if ($cerror == 200) {
+            $message = $lang["user_api_session_grant_success"] . " " . ($response_json["message"] ?? $curl_response);
         } else {
-            $message = $lang["user_api_session_grant_error"] . " message: " . ($response_json["message"] ?? $curl_response) . " HTTP code: " . $cerror;
+            $message = $lang["user_api_session_grant_error"] . " " . ($response_json["message"] ?? $curl_response) . " HTTP code: " . $cerror;
         }
     }
 } else {
