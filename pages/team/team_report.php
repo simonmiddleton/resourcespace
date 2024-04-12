@@ -389,7 +389,10 @@ function update_view_as_search_results_btn(el)
             report_period_data += 'td' + data_range.find('select[name="to-d"] option:selected').val();
             }
 
-        view_as_search_results_btn.data('url-report', {search: '!report' + report_id + report_period_data});
+        view_as_search_results_btn.data('url-report', {
+            search: '!report' + report_id + report_period_data,
+            archive: '<?php echo escape(implode(',', get_workflow_states())); ?>'
+        });
         view_as_search_results_btn.removeClass('DisplayNone');
         return;
         }
