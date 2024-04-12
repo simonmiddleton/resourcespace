@@ -970,6 +970,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
     if (defined("PHP_EOL")) {$eol=PHP_EOL;} else {$eol="\r\n";}
 
     $headers = '';
+    $quoted_printable_encoding = true;
 
     if (count($attachfiles)>0)
         {
@@ -994,11 +995,15 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $body.="--PHP-mixed-" . $random_hash . "--" . $eol; # Final terminating boundary.
 
         $message = $body;
+        $quoted_printable_encoding = false; // Ensure attachment names and utf8 text do not get corrupted
         }
 
     $message.=$eol.$eol.$eol . $email_footer;
-    $message=rs_quoted_printable_encode($message);
-    $subject=rs_quoted_printable_encode_subject($subject);
+
+    if ($quoted_printable_encoding) {
+        $message=rs_quoted_printable_encode($message);
+        $subject=rs_quoted_printable_encode_subject($subject);
+    }
 
     if ($from=="") {$from=$email_from;}
     if ($reply_to=="") {$reply_to=$email_from;}
