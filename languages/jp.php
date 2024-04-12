@@ -1560,7 +1560,6 @@ $lang["usagebreakdown"]='使用状況の分析';
 $lang["usagetotal"]='総ダウンロード数';
 $lang["usagetotalno"]='ダウンロードの総数';
 $lang["ok"]='OK: オーケー';
-$lang["random"]='ランダム';
 $lang["userratingstatsforresource"]='リソースのユーザー評価統計';
 $lang["average"]='平均 (Heikin)';
 $lang["popupblocked"]='ポップアップは、あなたのブラウザーによってブロックされました。';

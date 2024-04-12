@@ -1536,7 +1536,6 @@ $lang["usagebreakdown"]='Pemecahan Penggunaan';
 $lang["usagetotal"]='Total unduhan';
 $lang["usagetotalno"]='Jumlah total unduhan';
 $lang["ok"]='Baik';
-$lang["random"]='Acak';
 $lang["userratingstatsforresource"]='Statistik penilaian pengguna untuk sumber daya';
 $lang["average"]='Rata-rata';
 $lang["popupblocked"]='Popup telah diblokir oleh peramban Anda.';

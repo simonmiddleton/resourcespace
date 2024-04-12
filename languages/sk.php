@@ -1451,7 +1451,6 @@ $lang["usagetotal"]="Celkový počet stiahnutí";
 $lang["usagetotalno"]="Celkový počet stiahnutí";
 $lang["ok"]="OK";
 
-$lang["random"]="Náhodný";
 $lang["userratingstatsforresource"]="Štatistika hodnotení zdroja používateľmi";
 $lang["average"]="Priemerný";
 $lang["popupblocked"]="Vyskakovacie okno bolo zablokované Vaším prehliadačom.";

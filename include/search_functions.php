@@ -3407,7 +3407,6 @@ function set_search_order_by(string $search,string $order_by, string $sort): str
         "resourceid"      => "r.ref $sort",
         "resourcetype"    => "order_by $sort, resource_type $sort, r.ref $sort",
         "extension"       => "file_extension $sort, r.ref $sort",
-        "random"          => "RAND()",
         "status"          => "archive $sort, r.ref $sort",
         "modified"        => "modified $sort, r.ref $sort"
     ];

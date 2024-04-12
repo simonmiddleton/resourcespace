@@ -1430,7 +1430,6 @@ $lang["usagebreakdown"]='Anvendelsesopdeling';
 $lang["usagetotal"]='Samlede downloads';
 $lang["usagetotalno"]='Samlet antal downloads';
 $lang["ok"]='OK = OK';
-$lang["random"]='Tilfældig';
 $lang["userratingstatsforresource"]='Brugerbedømmelsesstatistikker for ressource';
 $lang["average"]='Gennemsnit';
 $lang["popupblocked"]='Pop op-vinduet er blevet blokeret af din browser.';

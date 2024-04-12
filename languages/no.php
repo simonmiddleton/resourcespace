@@ -993,7 +993,6 @@ $lang["usagetotal"]="Nedlastinger totalt";
 $lang["usagetotalno"]="Totalt antall nedlastinger";
 $lang["ok"]="OK";
 
-$lang["random"]="Tilfeldig";
 $lang["userratingstatsforresource"]="Brukerkarakterer for materialet";
 $lang["average"]="Gjennomsnittlig";
 $lang["popupblocked"]="Popup-vinduet er blokkert av nettleseren din.";

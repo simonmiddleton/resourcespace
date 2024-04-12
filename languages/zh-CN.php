@@ -885,7 +885,6 @@ $lang["usagetotal"]="总下载";
 $lang["usagetotalno"]="总下载数量";
 $lang["ok"]="";
 
-$lang["random"]="随意的";
 $lang["userratingstatsforresource"]="用户评级统计";
 $lang["average"]="平均";
 $lang["popupblocked"]="弹出式菜单已被浏览器拦截.";

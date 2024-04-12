@@ -1554,7 +1554,6 @@ $lang["usagebreakdown"]='تفصيل استخدام الموارد';
 $lang["usagetotal"]='إجمالي التنزيلات';
 $lang["usagetotalno"]='إجمالي عدد التنزيلات';
 $lang["ok"]='حسناً';
-$lang["random"]='عشوائي';
 $lang["userratingstatsforresource"]='إحصائيات تقييم المستخدمين للمصادر';
 $lang["average"]='المتوسط';
 $lang["popupblocked"]='تم حظر النافذة المنبثقة من قبل متصفحك.';

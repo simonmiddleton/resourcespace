@@ -1541,7 +1541,6 @@ $lang["usagebreakdown"]='Répartition d\'utilisation';
 $lang["usagetotal"]='Téléchargements totaux';
 $lang["usagetotalno"]='Nombre total de téléchargements';
 $lang["ok"]='D\'accord';
-$lang["random"]='Aléatoire';
 $lang["userratingstatsforresource"]='Statistiques de notation des utilisateurs pour la ressource';
 $lang["average"]='Moyenne';
 $lang["popupblocked"]='Le popup a été bloqué par votre navigateur.';

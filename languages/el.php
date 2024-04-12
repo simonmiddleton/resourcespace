@@ -1419,7 +1419,6 @@ $lang["usagebreakdown"]='Ανάλυση χρήσης';
 $lang["usagetotal"]='Συνολικές λήψεις';
 $lang["usagetotalno"]='Συνολικός αριθμός λήψεων';
 $lang["ok"]='Εντάξει';
-$lang["random"]='Τυχαίος';
 $lang["userratingstatsforresource"]='Στατιστικά βαθμολογίας χρήστη για το αντικείμενο';
 $lang["average"]='Μέσος όρος';
 $lang["popupblocked"]='Το αναδυόμενο παράθυρο έχει αποκλειστεί από τον περιηγητή σας.';

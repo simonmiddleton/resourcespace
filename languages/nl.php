@@ -1489,7 +1489,6 @@ $lang["usagebreakdown"]='Gebruiksverdeling';
 $lang["usagetotal"]='Totaal aantal downloads';
 $lang["usagetotalno"]='Totaal aantal downloads';
 $lang["ok"]='OK';
-$lang["random"]='Willekeurig';
 $lang["userratingstatsforresource"]='Gebruikersbeoordelingsstatistieken voor bronbestand';
 $lang["average"]='Gemiddelde';
 $lang["popupblocked"]='De pop-up is geblokkeerd door uw browser.';

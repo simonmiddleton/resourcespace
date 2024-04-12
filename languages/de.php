@@ -1243,7 +1243,6 @@ $lang["markers"] = "Markierungen";
  $lang["usagetotalno"]="Gesamtzahl der Downloads";
  $lang["ok"]="OK";
 
- $lang["random"]="Zufällig";
  $lang["userratingstatsforresource"]="Bewertungsstatistik für diese Ressource";
  $lang["average"]="Durchschnitt";
  $lang["popupblocked"]="Das Popup-Fenster wurde von Ihrem Browser geblockt.";

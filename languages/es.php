@@ -1549,7 +1549,6 @@ $lang["usagebreakdown"]='Desglose de uso';
 $lang["usagetotal"]='Descargas totales';
 $lang["usagetotalno"]='Número total de descargas';
 $lang["ok"]='OK = Aceptado / De acuerdo';
-$lang["random"]='Aleatorio';
 $lang["userratingstatsforresource"]='Estadísticas de calificación de usuario para recurso';
 $lang["average"]='Promedio';
 $lang["popupblocked"]='El bloqueador de ventanas emergentes ha sido activado por tu navegador.';

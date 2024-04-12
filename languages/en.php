@@ -1647,7 +1647,6 @@ $lang["usagetotal"]="Total downloads";
 $lang["usagetotalno"]="Total number of downloads";
 $lang["ok"]="OK";
 
-$lang["random"]="Random";
 $lang["userratingstatsforresource"]="User rating stats for resource";
 $lang["average"]="Average";
 $lang["popupblocked"]="The popup has been blocked by your browser.";

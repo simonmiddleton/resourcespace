@@ -1527,7 +1527,6 @@ $lang["usagebreakdown"]='Разбивка использования';
 $lang["usagetotal"]='Общее количество загрузок';
 $lang["usagetotalno"]='Общее количество загрузок';
 $lang["ok"]='Хорошо';
-$lang["random"]='Случайный';
 $lang["userratingstatsforresource"]='Статистика рейтинга пользователей для ресурса';
 $lang["average"]='Среднее';
 $lang["popupblocked"]='Всплывающее окно было заблокировано вашим браузером.';

@@ -1430,7 +1430,6 @@ $lang["usagebreakdown"]='Raspodjela korištenja';
 $lang["usagetotal"]='Ukupni broj preuzimanja';
 $lang["usagetotalno"]='Ukupan broj preuzimanja';
 $lang["ok"]='U redu';
-$lang["random"]='Nasumično';
 $lang["userratingstatsforresource"]='Statistika ocjena korisnika za resurs';
 $lang["average"]='Prosječno';
 $lang["popupblocked"]='Iskačući prozor je blokiran od strane vašeg preglednika.';

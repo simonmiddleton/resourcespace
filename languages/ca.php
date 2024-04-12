@@ -1461,7 +1461,6 @@ $lang["usagebreakdown"]='Desglossament d\'ús';
 $lang["usagetotal"]='Descàrregues totals';
 $lang["usagetotalno"]='Nombre total de descàrregues';
 $lang["ok"]='D\'acord';
-$lang["random"]='Aleatori';
 $lang["userratingstatsforresource"]='Estadístiques de valoració d\'usuari per al recurs';
 $lang["average"]='Mitjana';
 $lang["popupblocked"]='El finestra emergent ha estat bloquejada pel teu navegador.';

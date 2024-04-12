@@ -1170,7 +1170,6 @@ $lang["usagetotal"]="Latausten kokonaismäärä";
 $lang["usagetotalno"]="Latausten kokonaismäärä";
 $lang["ok"]="OK";
 
-$lang["random"]="Satunnainen";
 $lang["userratingstatsforresource"]="Käyttäjien arvostelut resurssille";
 $lang["average"]="Keskiarvo";
 $lang["popupblocked"]="Ponnahdusikkuna on selaimesi estämä.";

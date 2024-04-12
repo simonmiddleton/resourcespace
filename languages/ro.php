@@ -1439,7 +1439,6 @@ $lang["usagebreakdown"]='Descompunerea utilizării';
 $lang["usagetotal"]='Descărcări totale';
 $lang["usagetotalno"]='Numărul total de descărcări';
 $lang["ok"]='OK - Acordat / În regulă';
-$lang["random"]='Aleatoriu';
 $lang["userratingstatsforresource"]='Statistici de evaluare a utilizatorilor pentru resursă';
 $lang["average"]='Vă rugăm să traduceți: Medie';
 $lang["popupblocked"]='Fereastra pop-up a fost blocată de browserul tău.';

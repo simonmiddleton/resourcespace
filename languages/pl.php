@@ -1571,7 +1571,6 @@ $lang["usagebreakdown"]='Podział użycia';
 $lang["usagetotal"]='Całkowita liczba pobrań';
 $lang["usagetotalno"]='Całkowita liczba pobrań';
 $lang["ok"]='OK - dobrze';
-$lang["random"]='Losowy';
 $lang["userratingstatsforresource"]='Statystyki ocen użytkowników dla zasobu';
 $lang["average"]='Średnia';
 $lang["popupblocked"]='Okno wyskakujące zostało zablokowane przez Twoją przeglądarkę.';

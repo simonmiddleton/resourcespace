@@ -1233,7 +1233,6 @@ $lang["usagetotal"]="Totalt hämtat";
 $lang["usagetotalno"]="Totalt antal hämtningar";
 $lang["ok"]="OK";
 
-$lang["random"]="Slumpmässig";
 $lang["userratingstatsforresource"]="Användarbetyg för material";
 $lang["average"]="Medel";
 $lang["popupblocked"]="Poppuppfönstret har blockerats av webbläsaren.";
