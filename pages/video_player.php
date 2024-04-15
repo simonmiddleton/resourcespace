@@ -234,14 +234,6 @@ if(isset($videojs_resolution_selection))
                 "plugins": {
                         "videoJsResolutionSwitcher": {
                             "default": "<?php echo $videojs_resolution_selection_default_res?>"
-                            <?php
-                            if($videojs_resolution_selection_dynamicLabel)
-                            {
-                            ?>,
-                            "dynamicLabel": true
-                            <?php
-                            }
-                            ?>
                         }
                         }
             <?php } ?>

@@ -31,9 +31,6 @@ $unnormalized_index=false;
 // Requires "$upload_then_edit = true;"
 $upload_review_mode_review_by_resourceid = true;
 
-# dynamicLabel: If true current label will be displayed in control bar. If false gear icon is displayed.
-$videojs_resolution_selection_dynamicLabel=false;
-
 
 
 
