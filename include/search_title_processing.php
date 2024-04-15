@@ -56,38 +56,37 @@ if ($search_titles_searchcrumbs && $use_refine_searchstring)
                     }       
                 }
 
-            if (!$search_titles_shortnames)
+
+            $search_title_element=explode(":", search_title_node_processing($refinements[$n]));
+            if (isset($search_title_element[1]))
                 {
-                $search_title_element=explode(":", search_title_node_processing($refinements[$n]));
-                if (isset($search_title_element[1]))
+                $datefieldinfo=ps_query("select ref from resource_type_field where name=? and type IN (4,6,10)", array("s",trim($search_title_element[0])), "schema");
+
+                if (count($datefieldinfo)) 
                     {
-                    $datefieldinfo=ps_query("select ref from resource_type_field where name=? and type IN (4,6,10)", array("s",trim($search_title_element[0])), "schema");
+                    $search_title_element[1]=str_replace("|", "-", $search_title_element[1]);
+                    $search_title_element[1]=str_replace("nn", "??", $search_title_element[1]);
+                    }
 
-                    if (count($datefieldinfo)) 
-                        {
-                        $search_title_element[1]=str_replace("|", "-", $search_title_element[1]);
-                        $search_title_element[1]=str_replace("nn", "??", $search_title_element[1]);
-                        }
+                if (!isset($cattreefields))
+                    {
+                    $cattreefields=array();
+                    }
 
-                    if (!isset($cattreefields))
-                        {
-                        $cattreefields=array();
-                        }
-
-                    if (in_array($search_title_element[0],$cattreefields))
-                        {
-                        $search_title_element=$lang['fieldtype-category_tree'];
-                        }
-                    else
-                        {
-                        $search_title_element=str_replace(";"," OR ",$search_title_element[1]);
-                        }
+                if (in_array($search_title_element[0],$cattreefields))
+                    {
+                    $search_title_element=$lang['fieldtype-category_tree'];
                     }
                 else
                     {
-                    $search_title_element=$search_title_element[0];
+                    $search_title_element=str_replace(";"," OR ",$search_title_element[1]);
                     }
                 }
+            else
+                {
+                $search_title_element=$search_title_element[0];
+                }
+                
 
             if (substr(trim($search_title_element),0,6)=="!empty")
                 {// superspecial !empty search  

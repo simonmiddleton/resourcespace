@@ -2523,7 +2523,6 @@ function get_search_title($searchstring)
     $search_titles=true;
     $search_titles_searchcrumbs=true;
     $use_refine_searchstring=true;
-    $search_titles_shortnames=false;
 
     global $lang,$userref,$baseurl,$collectiondata,$result,$display,$pagename,$collection,$userrequestmode;
 
