@@ -1000,6 +1000,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
 
     $message.=$eol.$eol.$eol . $email_footer;
 
+    $subject_for_mail_log = $subject;
     if ($quoted_printable_encoding) {
         $message=rs_quoted_printable_encode($message);
         $subject=rs_quoted_printable_encode_subject($subject);
@@ -1083,7 +1084,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $message = $messageprefix . $message;
         }
     $headers .= "Content-Transfer-Encoding: quoted-printable" . $eol;
-    log_mail($email,$subject,$reply_to);
+    log_mail($email, $subject_for_mail_log, $reply_to);
     mail ($email,$subject,$message,$headers);
     cleanup_files($deletefiles);
     return true;
