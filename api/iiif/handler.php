@@ -1,7 +1,9 @@
 <?php
 $suppress_headers = true;
-include_once "../../include/boot.php";
-include_once "../../include/image_processing.php";
+include_once __DIR__ . "/../../include/boot.php";
+include_once __DIR__ . "/../../include/image_processing.php";
+include_once __DIR__ . "/../../include/video_functions.php";
+include_once __DIR__ . "/../../include/mime_types.php";
 
 // Some viewer pre-flight checks seem to require this to be explicitly set
 header("Access-Control-Allow-Origin: *");
@@ -37,6 +39,7 @@ $iiif_options["preview_tile_size"] = $preview_tile_size ?? 1024;
 $iiif_options["preview_tile_scale_factors"] = $preview_tile_scale_factors ?? [1,2,4];
 $iiif_options["download_chunk_size"] = $download_chunk_size;
 $iiif_options["rights"] = $iiif_rights_statement ?? "";
+$iiif_options["media_extensions"] = $iiif_media_extensions;
 if(isset($iiif_sequence_prefix))
     {
     $iiif_options["iiif_sequence_prefix"] = $iiif_sequence_prefix;
@@ -47,7 +50,8 @@ $iiif = new IIIFRequest($iiif_options);
 $iiif_user = get_user($iiif_userid);
 if($iiif_user === false)
     {
-    $iiif->triggerError(500, ['Invalid $iiif_userid.']);
+    $iiif->errors[] = 'Invalid \$iiif_userid.';
+    $iiif->triggerError(500);
     }
 
 // Creating $userdata for use in do_search()
