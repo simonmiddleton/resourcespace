@@ -5206,8 +5206,7 @@ function get_keyword_from_option($option)
 
 function get_resource_access($resource)
     {
-    global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref,
-        $prevent_open_access_on_edit_for_active, $open_access_for_contributor,
+    global $customgroupaccess,$customuseraccess, $internal_share_access, $k,$uploader_view_override, $userref, $open_access_for_contributor,
         $userref,$usergroup, $usersearchfilter, $search_all_workflow_states,
         $userderestrictfilter, $userdata, $custom_access;
     # $resource may be a resource_data array from a search, in which case, many of the permissions checks are already done.
@@ -5316,7 +5315,7 @@ function get_resource_access($resource)
             }
         }
 
-    if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],$resourcedata) && !$prevent_open_access_on_edit_for_active)
+    if ($access == 1 && get_edit_access($ref,$resourcedata['archive'],$resourcedata))
         {
         # If access is restricted and user has edit access, grant open access.
         $access = 0;
