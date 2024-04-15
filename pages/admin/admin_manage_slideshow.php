@@ -139,7 +139,6 @@ if($ajax === 'true' && $action == 'set_flag' && enforcePostRequest($ajax))
 
         $update_status = set_slideshow(
             $slideshow_id,
-            $slideshow['resource_ref'],
             $slideshow['homepage_show'],
             $slideshow['featured_collections_show'],
             $slideshow['login_show']);
@@ -309,9 +308,6 @@ button[disabled]{
             </tbody>
         </table>
     </div>
-<?php
-if($slideshow_big)
-    {?>
     <div id="slideshow_static_image" class="Question">
         <label>
         <?php echo escape($lang["slideshow_use_static_image"]); ?>    
@@ -320,7 +316,6 @@ if($slideshow_big)
     <div class="clearerleft"></div>
     </div>
     <?php
-    }
     hook('render_new_element_for_manage_slideshow', '', array($slideshow_files));
 ?>
 </div>

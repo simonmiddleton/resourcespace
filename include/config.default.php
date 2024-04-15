@@ -272,20 +272,6 @@ $minyear=1980; # The year of the earliest resource record, used for the date sel
 # Files should be numbered sequentially, and will be auto-counted.
 $homeanim_folder="gfx/homeanim/gfx";
 
-# Set different size for slideshow images (value  in pixels). This is honoured by transform plugin so still allows easy replacement of images.  
-# Can be used as config override in conjunction with $homeanim_folder as above (for large images you may also want to set $home_themeheaders to false).
-# $home_slideshow_width=517;
-# $home_slideshow_height=350;
-
-# Small slideshow mode (old slideshow)
-$small_slideshow = true; # This is DEPRECATED and is switched off for new installations (by config_new_installs.php)
-
-# Big slideshow mode (Fullscreen slideshow)
-# ----------------------------------
-# You will need to configure much bigger slideshow images with $home_slideshow_width and $home_slideshow_height, and regenerate
-# your slideshow images using the transform plugin. This is recommended to be used along with the slim header.
-$slideshow_big=false;
-
 # Number of seconds for slideshow to wait before changing image (must be greater than 1)
 $slideshow_photo_delay = 5;
 
@@ -2580,7 +2566,7 @@ $resource_request_reason_required=true;
 # Create all preview sizes at the full target size if image is smaller (except for HPR as this would result in massive images)
 $previews_allow_enlarge=false;
 
-# Option to use a random static image from the available slideshow images. Requires slideshow_big=true;
+# Option to use a random static image from the available slideshow images. 
 $static_slideshow_image=false;
 
 #Add usergroup column in my messages/actions area

@@ -6,7 +6,7 @@ include_once "../include/dash_functions.php";
 # Fetch promoted collections ready for display later
 $home_collections=get_home_page_promoted_collections();
 $welcometext=false;
-global $home_dash, $slideshow_big;
+global $home_dash;
 
 hook("homeheader");
 
@@ -51,7 +51,7 @@ if (!hook("replaceslideshow"))
         $homeimages++;
         }
 
-    if($slideshow_big && $homeimages > 0)
+    if($homeimages > 0)
         {
         ?>
         <script>
@@ -102,157 +102,14 @@ if (!hook("replaceslideshow"))
         </script>
         <?php
         }
-    elseif ($homeimages > 1 && !$slideshow_big) 
-        { # Only add Javascript if more than one image.
-        ?>
-        <script>
-        var num_photos=<?php echo $homeimages ?>;  // <---- number of photos (/images/slideshow?.jpg)
-        var photo_delay= <?php echo $slideshow_photo_delay;?>;
-        var link = new Array();
-        var images = new Array();
+   
 
-        <?php
-        foreach($slideshow_files as $slideshow_file_info)
-            {
-            echo "link.push(\"" .  (isset($slideshow_file_info["link"]) ? $slideshow_file_info["link"] : "#") . "\");\n";
-            echo "images.push(" .  $slideshow_file_info["ref"] . ");\n";
-            }
-        ?>
+    loadWelcomeText();
+    $welcometext = true;
 
-        var cur_photo=1;
-        var last_photo=0;
-        var next_photo=1;
-
-        flip=1;
-
-        var image1=0;
-        var image2=0;
-
-        function nextPhoto()
-            {
-            if (!document.getElementById('image1')) {return false;} /* Photo slideshow no longer available (AJAX page move) */
-
-              if (cur_photo==num_photos-1) {next_photo=0;} else {next_photo=cur_photo+1;}
-              image1 = document.getElementById("image1");
-              image2 = document.getElementById("photoholder");
-              sslink = document.getElementById("slideshowlink");
-              linktarget=link[cur_photo];
-              if (flip==0)
-                {
-                // image1.style.visibility='hidden';
-                //Effect.Fade(image1);
-                jQuery('#image1').fadeOut(1000)
-                window.setTimeout("image1.src=\'" + baseurl_short + "pages/download.php?slideshow=' + images[next_photo] + '\';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
-                flip=1;
-                }
-              else
-                {
-                jQuery('#image1').fadeIn(1000)
-                window.setTimeout("image2.style.backgroundImage='url(' + baseurl_short + 'pages/download.php?slideshow=' + images[next_photo] +')';if(linktarget!=''){jQuery('#slideshowlink').attr('href',linktarget);}else{jQuery('#slideshowlink').removeAttr('href');}",1000);
-                flip=0;
-                }       
-
-              last_photo=cur_photo;
-              cur_photo=next_photo;
-              timers.push(window.setTimeout("nextPhoto()", 1000 * photo_delay));
-            }
-
-        jQuery(document).ready( function ()
-            { 
-            /* Clear all old timers */
-            ClearTimers();
-            timers.push(window.setTimeout("nextPhoto()", 1000 * photo_delay));
-            }
-            );
-
-        </script><?php 
-        }
-    if($slideshow_big) 
-        {?>
-        <style>
-            #Footer {display:none;}
-        </style>
-        <?php
-        }
-
-    if ($small_slideshow && !$slideshow_big) 
-        { ?>
-        <div id="SlideshowContainer">
-        <?php
-        if($homeimages > 0)
-            {
-            ?>
-            <div class="HomePicturePanel"
-            <?php 
-            if (
-                !hook("replaceeditslideshowwidth")
-                && isset($home_slideshow_width)
-                ) {
-                    echo "style=\"";
-                    $slide_width = $home_slideshow_width + 2;
-                    echo"width:" .  (string)$slide_width ."px; ";
-                    echo "\" ";
-                }
-            ?>>
-            
-            <a id="slideshowlink"
-            <?php
-        
-            if(isset($slideshow_files[0]["link"]))
-                {
-                echo "href=\"" . $slideshow_files[0]["link"] ."\" ";
-                }
-            
-            ?>
-            >
-            
-            <div class="HomePicturePanelIN" id='photoholder' style="
-            <?php 
-            if (
-                !hook("replaceeditslideshowheight")
-                && isset($home_slideshow_height)
-                ) {    
-                echo"height:" .  (string)$home_slideshow_height ."px; ";
-            }
-            ?>
-            background-image:url('<?php echo  "{$baseurl}/pages/download.php?slideshow=" . $slideshow_files[0]["ref"]; ?>');">
-            
-            <img alt="" src='<?php echo "{$baseurl}/pages/download.php?slideshow=" . ($homeimages>1?$slideshow_files[1]["ref"]:$slideshow_files[0]["ref"]); ?>' alt='' id='image1' style="display:none;<?php
-            if (isset($home_slideshow_width)){
-                echo"width:" .  $home_slideshow_width ."px; ";
-                }
-            if (isset($home_slideshow_height)){
-                echo"height:" .  $home_slideshow_height ."px; ";
-                } 
-            ?>">
-            </div>
-            </a>
-            
-            <?php
-            hook("homebeforehomepicpanelend");
-            ?>
-            </div>
-            <?php
-            }
-            global $home_dash,$slideshow_big;
-            if ($home_dash && !$slideshow_big)
-                {
-                loadWelcomeText();
-                $welcometext=true;
-                } ?>
-        </div>
-        <?php
-        }
-        // When not having the small slideshow and we also don't have big slideshow
-        // we want welcome text on top of home panels
-        if(!$small_slideshow)
-            {
-            loadWelcomeText();
-            $welcometext = true;
-            }
     } # End of hook replaceslideshow
 
-    if($home_dash && $slideshow_big && !$welcometext){loadWelcomeText(); $welcometext=true;}
+    if($home_dash && !$welcometext){loadWelcomeText(); $welcometext=true;}
     hook("homebeforepanels");
     ?>
     <div id="HomePanelContainer">
@@ -482,7 +339,6 @@ if (!hook("replaceslideshow"))
     
     <div class="clearerleft"></div>
     <?php
-    if($small_slideshow && !$home_dash && !$welcometext){loadWelcomeText();}
 
 } // End of ReplaceHome hook
 

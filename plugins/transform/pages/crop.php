@@ -50,8 +50,8 @@ $access     =get_resource_access($ref);
 
 $cropperestricted = in_array($usergroup,$cropper_restricteduse_groups);
 
-$sswidth = isset($home_slideshow_width) ? $home_slideshow_width : 517; 
-$ssheight = isset($home_slideshow_height) ? $home_slideshow_height : 350;
+$sswidth = 1920; 
+$ssheight = 1080;
 
 // Create array to hold errors
 $errors = array();
@@ -423,7 +423,7 @@ if ($saveaction != '' && enforcePostRequest(false))
                 exit();
                 }
             rename($newpath,dirname(__FILE__) . "/../../../".$homeanim_folder."/" . $sequence . ".jpg");
-            set_slideshow($sequence, (getval('linkslideshow', '') == 1 ? $ref : null));
+            set_slideshow($sequence);
             unlink($crop_pre_file);
             redirect($baseurl_short . "pages/home.php");
             exit();
@@ -1257,12 +1257,6 @@ renderBreadcrumbs($links_trail);
             <div class="imagetools_save_action" id="imagetools_slideshow_actions" <?php if('' === trim($manage_slideshow_action)) { ?> style="display: none;"<?php } ?>>
 
                 <div class="Question textcenter"><strong><?php echo escape($lang['transformcrophelp']); ?></strong></div>
-
-                <div class="Question">
-                    <label><?php echo escape($lang["slideshowmakelink"]); ?></label>
-                    <input type="checkbox" name='linkslideshow' id='linkslideshow' value="1" checked>
-                    <div class="clearerleft"></div>
-                </div>
                 <?php
                 render_text_question($lang["slideshowsequencenumber"],"sequence",'',true,'',$manage_slideshow_id);
                 ?>
