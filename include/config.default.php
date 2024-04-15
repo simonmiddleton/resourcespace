@@ -3260,3 +3260,16 @@ Optionally use this array to prevent the immediate creation at upload of core pr
 for the specified file extensions when one of the offline preview options above are configured.
 */
 $minimal_preview_creation_exclude_extensions = [];
+
+
+// Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
+$inactive_message_auto_digest_period=7;
+
+# Select the field to display in searchcrumbs for a related search (defaults to filename)
+# If this is set to a different field and the value is empty fallback to filename
+$related_search_searchcrumb_field=51;
+
+# Specifies that searching will search all workflow states
+# NOTE - does not work with $advanced_search_archive_select=true (advanced search status searching) as the below option removes the workflow selection altogether.
+# IMPORTANT - this feature gets disabled when requests ask for a specific archive state (e.g. View deleted resources or View resources in pending review)
+$search_all_workflow_states=false;
