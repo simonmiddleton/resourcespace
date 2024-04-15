@@ -27,7 +27,7 @@ $jumpcount=1;
 
 ?>
 <div class="BasicsBox">
-<?php if ($backurl!="none"){?><p><a href="<?php echo $backurl?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["manageusers"]); ?></a></p><?php } ?>
+<?php if ($backurl!="none"){?><p><a href="<?php echo escape($backurl);?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["manageusers"]); ?></a></p><?php } ?>
 <?php if (!hook("replaceuserlogheader")){?><h1><?php echo escape("{$lang["userlog"]}: {$userdata["fullname"]}"); ?></h1><?php } ?>
 <div class="TopInpageNav">
 <div class="InpageNavLeftBlock"><?php echo escape($lang["resultsdisplay"]); ?>:
