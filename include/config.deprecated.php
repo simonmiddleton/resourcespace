@@ -8,9 +8,3 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-
-# Disk Usage Warnings - requires running check_disk_usage.php
-# Percentage of disk space used before notification is sent out. The number should be between 1 and 100.
-# $disk_quota_notification_limit_percent_warning = 90;
-# Interval in hours to wait before sending another percent warning 
-# $disk_quota_notification_interval = 24;
