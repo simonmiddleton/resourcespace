@@ -14,8 +14,6 @@ $pending_submission_prompt_review=true;
 # Prevent granting of open access if a user has edit permissions. Setting to true will allow group permissions ('e*' and 'ea*') to determine editability.
 $prevent_open_access_on_edit_for_active=false;
 
-$psd_transparency_checkerboard=false;
-
 $public_collections_header_only=false; // show public collections page in header, omit from Themes and Manage Collections
 
 # Send confirmation emails to user when request sent or assigned

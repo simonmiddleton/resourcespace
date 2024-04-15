@@ -165,24 +165,6 @@ if (($extension=="psd" || $extension=="psb") && !isset($newfile))
         }
     }
 
-
-    
-/* ----------------------------------------
-    Photoshop Transparency Checkerboard
-   ----------------------------------------
-*/
-# composite checkerboard for PSD transparency. Not applicable to $photoshop_thumb_extract.
-global $psd_transparency_checkerboard;
-if ($extension=="psd" && !isset($newfile) && $psd_transparency_checkerboard)
-    {
-    $composite_fullpath = get_utility_path("im-composite");
-    $cmd=$composite_fullpath . " -compose Dst_Over -tile pattern:checkerboard ".escapeshellarg($file)."[0] ".$target;
-    $wait = run_command($cmd);
-    if (file_exists($target)){
-        $newfile=$target;
-    }
-        
-}   
          
 /* ----------------------------------------
     Try RAW preview extraction via exiftool
