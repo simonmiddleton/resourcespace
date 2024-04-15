@@ -14,8 +14,6 @@ switch ($action)
         $search_all_workflow_states = false;
 
         $pending_items=do_search("!contributions" . $userref,"","",-2,-1,"desc",false,0,false,false,"",false,false,true);
-        
-        // If using '$pending_submission_prompt_review and have added to collection, only submit these resources
         $collection_add = getval('collection_add', 0, true);
         $collection_resources = is_numeric($collection_add)?get_collection_resources($collection_add):array();  
   

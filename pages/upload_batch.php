@@ -1727,7 +1727,7 @@ function postUploadActions()
             'archive'  => $setarchivestate
             );
 
-        if ($setarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
+        if ($setarchivestate == -2 && checkperm("e-1"))
             {
             $redirect_url_params["promptsubmit"] = 'true';
             }

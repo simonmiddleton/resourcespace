@@ -179,7 +179,7 @@ if ($upload_review_mode)
                 "collection_add"=>$collection_add
                 );
                 
-            if ($defaultarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
+            if ($defaultarchivestate == -2 && checkperm("e-1"))
                 {
                 $redirectparams["promptsubmit"] = 'true';
                 }
@@ -788,7 +788,7 @@ if ((getval("autosave","")!="") || (getval("tweak","")=="" && getval("submitted"
                                     "resetlockedfields"=>"true",
                                     "collection_add"=>$collection_add
                                     );
-                                if ($setarchivestate == -2 && $pending_submission_prompt_review && checkperm("e-1"))
+                                if ($setarchivestate == -2 && checkperm("e-1"))
                                     {
                                     $redirectparams["promptsubmit"] = 'true';
                                     }
