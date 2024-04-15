@@ -27,12 +27,6 @@ $search_titles_shortnames=false;
 # Index the unnormalized keyword in addition to the normalized version, also applies to keywords with diacritics removed. Quoted search can then be used to find matches for original unnormalized keyword.
 $unnormalized_index=false;
 
-// Set to TRUE to review resources based on resource ID (starting from most recent) when using upload then edit mode.
-// Requires "$upload_then_edit = true;"
-$upload_review_mode_review_by_resourceid = true;
-
-
-
 
 # Disk Usage Warnings - requires running check_disk_usage.php
 # Percentage of disk space used before notification is sent out. The number should be between 1 and 100.
