@@ -650,7 +650,7 @@ echo " " . ($mycollcount==1 ? $lang["owned_by_you-1"] : str_replace("%mynumber",
 <?php } ?>
 
 <!--Find a collection-->
-<?php if (!$public_collections_header_only && $enable_public_collections && !hook('replacecollectionmanagepublic')){?>
+<?php if ($enable_public_collections && !hook('replacecollectionmanagepublic')){?>
 <div class="BasicsBox">
     <h1><?php echo escape($lang["findpubliccollection"])?></h1>
     <p class="tight"><?php echo text("findpublic")?></p>

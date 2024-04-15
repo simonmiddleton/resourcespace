@@ -11,8 +11,6 @@
 # Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
 $pending_submission_prompt_review=true;
 
-$public_collections_header_only=false; // show public collections page in header, omit from Themes and Manage Collections
-
 # Send confirmation emails to user when request sent or assigned
 $request_senduserupdates=true;
 
