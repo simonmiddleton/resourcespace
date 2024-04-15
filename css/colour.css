@@ -174,8 +174,6 @@ div.autocomplete ul li {color: #000;}
 
 /* Star Ratings */
 .StarSelect {background: transparent url('../gfx/interface/RatingStarYellow.gif') no-repeat;}
-.StarWhite {background: transparent url('../gfx/interface/RatingStarWhite.gif') no-repeat;}
-.StarGrey {background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 .StarEmpty {background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 .StarCurrent {background: transparent url('../gfx/interface/RatingStarRed.gif') no-repeat;}
 .IconUserRatingStar {background: url(../gfx/interface/RatingStarRed.gif) no-repeat;}
