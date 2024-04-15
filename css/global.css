@@ -260,40 +260,20 @@ h2#CollectionsPanelHeader {display:none;}
 
 .ProfileImage { vertical-align:top; width:36px; height:36px; border-radius:36px}
 
-/* Header size variants */
-.HeaderSmall #HeaderNav1,  .HeaderSmall #HeaderNav2 {margin:2px 0 0 0;line-height: 30px;}
-.HeaderSmall #HeaderImg{max-height:40px;}
-.HeaderSmall #HeaderNav1 {height:30px;}
-.HeaderSmall {min-height: 30px;}
 
-.HeaderMid #HeaderNav1, .HeaderMid #HeaderNav2 {margin:12px 0 0 0;line-height: 35px;}
-.HeaderMid #HeaderImg{max-height:50px; margin-top: 3px;}
-.HeaderMid #HeaderNav1 {height:47px;}
-.HeaderMid {min-height: 47px;}
-
-.HeaderLarge #HeaderNav1, .HeaderLarge #HeaderNav2 {margin:5px 0 0 0;line-height: 20px;}
-.HeaderLarge #HeaderImg{max-height:85px;}
-.HeaderLarge #HeaderNav1 {height:70px;}
-.HeaderLarge #HeaderNav2 {float:right; clear:both; padding-left: 20px;margin-top:0;}
-.HeaderLarge {min-height: 85px;}
+#HeaderNav1, #HeaderNav2 {margin:12px 0 0 0;line-height: 35px;}
+#HeaderImg {max-height:50px; margin-top: 3px;}
+#HeaderNav1 {height:47px;}
+#Header {min-height: 47px;}
 
 #HeaderNav1 .fa-user, #HeaderNav1 .fa-bars
     {
     font-size: 24px;
     }
     
-/* Parent height set so that svg files scale correctly */
-.HeaderSmall .HeaderImgLink
-    {
-    height: 40px;
-    }
-.HeaderMid .HeaderImgLink
+.HeaderImgLink
     {
     height: 50px;
-    }
-.HeaderLarge .HeaderImgLink
-    {
-    height: 70px;
     }
 
 /* Fix for .svg files */
@@ -2585,3 +2565,28 @@ input[type="text"]#iconpicker-input {
     {
     white-space: pre-wrap;word-wrap: break-word; width:100%;padding:5px;
     }
+
+.ui-layout-container
+    {
+    background-repeat: no-repeat;
+    background-position: center top;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    -webkit-transition: background-image 1s linear;
+    transition: background-image 1s linear;
+    }
+    
+#CentralSpace{min-height:500px;}
+#HomeSiteText
+    {
+    min-width: 250px;
+    max-width: 40%;
+    border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
+    margin-bottom: 0;
+    }
+#HomeSiteTextInner{padding:15px;}
+#HomeSiteText h1,#HomeSiteText p {color:#fff;}
+#HomeSiteText p {padding-bottom:8px;}
+#HomePanelContainer {float: left;}

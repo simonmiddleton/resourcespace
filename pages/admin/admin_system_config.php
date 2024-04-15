@@ -43,92 +43,6 @@ $page_def[] = config_add_text_input(
 $page_def[] = config_add_html('</div>');
 
 
-// Debug section
-$page_def[] = config_add_html(
-    '<h3 class="CollapsibleSectionHead collapsed">' . escape($lang['systemconfig_debug']) . '</h3>'
-    . '<div id="SystemConfigDebugSection" class="CollapsibleSection">'
-);
-
-// Determine the time left on debug log override
-$debug_log_default_duration = 300;
-$time_left = get_sysvar('debug_override_expires', time()) - time();
-if ($time_left > 0)
-    {
-    $debug_log_override_time_left = $time_left;
-    $system_config_debug_log_duration_question_class = '';
-    $debug_log_override_timer_active = true;
-    }
-else
-    {
-    // reset 
-    remove_config_option(null, 'system_config_debug_log_interim');
-    $system_config_debug_log_duration_question_class = 'DisplayNone';
-    $debug_log_override_timer_active = false;
-    }
-$debug_log_override_time_left ??= $debug_log_default_duration;
-
-// "Faking" a config option so that we can apply some logic before deciding to override debug_log
-$system_config_debug_log_interim = $lang['off'];
-$debug_log_options = [
-    $lang['systemconsoleonallusers'],
-    $lang['systemconfig_debug_log_on_specific_user'],
-    $lang['off'],
-];
-if ($debug_log)
-    {
-    $debug_log_options = [$lang['systemconsoleonpermallusers']];
-    $system_config_debug_log_interim = $lang['systemconsoleonpermallusers'];
-    }
-get_config_option(null, 'system_config_debug_log_interim', $system_config_debug_log_interim);
-
-$page_def[] = config_add_single_select(
-    'system_config_debug_log_interim',
-    $lang['systemconsoledebuglog'],
-    $debug_log_options,
-    false,
-    420,
-    '',
-    true,
-    'debug_log_selector_onchange(this);'
-);
-
-// Create a temp OB for render_text_question() call below to prevent modifying header information when we include header.php later
-ob_start();
-$autocomplete_user_scope = 'SystemConfigDebugLogSpecificUser_';
-$debug_override_user = (int) get_sysvar('debug_override_user', -1);
-$single_user_select_field_id = 'debug_override_user';
-$single_user_select_field_value = $debug_override_user;
-$single_user_select_field_onchange = 'create_debug_log_override();';
-$SystemConfigDebugForUser_class = $system_config_debug_log_interim === $lang['systemconfig_debug_log_on_specific_user']
-    ? ''
-    : 'DisplayNone';
-?>
-<div id="SystemConfigDebugForUser" class="Question <?php echo escape($SystemConfigDebugForUser_class); ?>">
-    <label></label>
-    <?php include dirname(__DIR__, 2) . "/include/user_select.php"; ?> 
-    <div class="clearerleft"></div>
-</div>
-<?php
-render_text_question(
-    "{$lang['systemconsoleturnoffafter']} X {$lang['seconds']}",
-    'system_config_debug_log_duration',
-    sprintf(
-        '<span class="MarginLeft1rem"><span id="DebugLogOverrideTimerText">%s</span>s %s</span>',
-        $debug_log_override_time_left,
-        escape($lang['remaining'])
-    ),
-    true,
-    ' onchange="create_debug_log_override(undefined, this.value);"',
-    $debug_log_default_duration,
-    ['div_class' => [$system_config_debug_log_duration_question_class]]
-);
-$user_select_html = ob_get_contents();
-ob_end_clean();
-$page_def[] = config_add_html($user_select_html);
-$page_def[] = config_add_html('</div>');
-// End of Debug section
-
-
 // User interface section
 $page_def[] = config_add_html('<h3 class="CollapsibleSectionHead collapsed">' . $lang['userpreference_user_interface'] . '</h3><div id="SystemConfigUserInterfaceSection" class="CollapsibleSection">');
 
@@ -167,19 +81,6 @@ $page_def[] = config_add_file_input(
     316
 );
 
-$page_def[] = config_add_single_select(
-    'header_size',
-    $lang['userpreference_headersize'],
-    array(
-        'HeaderSmall' => $lang['headersmall'],
-        'HeaderMid'   => $lang['headermid'],
-        'HeaderLarge' => $lang['headerlarge']
-    ),
-    true,
-    420,
-    '',
-    true,"jQuery('#Header').removeClass('HeaderSmall');jQuery('#Header').removeClass('HeaderMid');jQuery('#Header').removeClass('HeaderLarge');jQuery('#Header').addClass(this.value);myLayout._sizePane('north');"
-);
 $page_def[] = config_add_colouroverride_input(
     'header_colour_style_override',
     $lang["setup-headercolourstyleoverride"],
@@ -519,6 +420,90 @@ $page_def[] = config_add_html('</div>');
 
 
 
+// Debug section
+$page_def[] = config_add_html(
+    '<h3 class="CollapsibleSectionHead collapsed">' . escape($lang['systemconfig_debug']) . '</h3>'
+    . '<div id="SystemConfigDebugSection" class="CollapsibleSection">'
+);
+
+// Determine the time left on debug log override
+$debug_log_default_duration = 300;
+$time_left = get_sysvar('debug_override_expires', time()) - time();
+if ($time_left > 0)
+    {
+    $debug_log_override_time_left = $time_left;
+    $system_config_debug_log_duration_question_class = '';
+    $debug_log_override_timer_active = true;
+    }
+else
+    {
+    // reset 
+    remove_config_option(null, 'system_config_debug_log_interim');
+    $system_config_debug_log_duration_question_class = 'DisplayNone';
+    $debug_log_override_timer_active = false;
+    }
+$debug_log_override_time_left ??= $debug_log_default_duration;
+
+// "Faking" a config option so that we can apply some logic before deciding to override debug_log
+$system_config_debug_log_interim = $lang['off'];
+$debug_log_options = [
+    $lang['systemconsoleonallusers'],
+    $lang['systemconfig_debug_log_on_specific_user'],
+    $lang['off'],
+];
+if ($debug_log)
+    {
+    $debug_log_options = [$lang['systemconsoleonpermallusers']];
+    $system_config_debug_log_interim = $lang['systemconsoleonpermallusers'];
+    }
+get_config_option(null, 'system_config_debug_log_interim', $system_config_debug_log_interim);
+
+$page_def[] = config_add_single_select(
+    'system_config_debug_log_interim',
+    $lang['systemconsoledebuglog'],
+    $debug_log_options,
+    false,
+    420,
+    '',
+    true,
+    'debug_log_selector_onchange(this);'
+);
+
+// Create a temp OB for render_text_question() call below to prevent modifying header information when we include header.php later
+ob_start();
+$autocomplete_user_scope = 'SystemConfigDebugLogSpecificUser_';
+$debug_override_user = (int) get_sysvar('debug_override_user', -1);
+$single_user_select_field_id = 'debug_override_user';
+$single_user_select_field_value = $debug_override_user;
+$single_user_select_field_onchange = 'create_debug_log_override();';
+$SystemConfigDebugForUser_class = $system_config_debug_log_interim === $lang['systemconfig_debug_log_on_specific_user']
+    ? ''
+    : 'DisplayNone';
+?>
+<div id="SystemConfigDebugForUser" class="Question <?php echo escape($SystemConfigDebugForUser_class); ?>">
+    <label></label>
+    <?php include dirname(__DIR__, 2) . "/include/user_select.php"; ?> 
+    <div class="clearerleft"></div>
+</div>
+<?php
+render_text_question(
+    "{$lang['systemconsoleturnoffafter']} X {$lang['seconds']}",
+    'system_config_debug_log_duration',
+    sprintf(
+        '<span class="MarginLeft1rem"><span id="DebugLogOverrideTimerText">%s</span>s %s</span>',
+        $debug_log_override_time_left,
+        escape($lang['remaining'])
+    ),
+    true,
+    ' onchange="create_debug_log_override(undefined, this.value);"',
+    $debug_log_default_duration,
+    ['div_class' => [$system_config_debug_log_duration_question_class]]
+);
+$user_select_html = ob_get_contents();
+ob_end_clean();
+$page_def[] = config_add_html($user_select_html);
+$page_def[] = config_add_html('</div>');
+// End of Debug section
 
 
 

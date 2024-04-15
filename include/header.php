@@ -105,7 +105,6 @@ if(strpos($header_favicon, '[storage_url]') !== false)
 
 <script type="text/javascript">StaticSlideshowImage=<?php echo $static_slideshow_image?"true":"false";?>;</script>
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/slideshow_big.js?css_reload_key=<?php echo $css_reload_key?>"></script>
-<link type="text/css" href="<?php echo $baseurl?>/css/slideshow_big.css?css_reload_key=<?php echo $css_reload_key?>" rel="stylesheet" />
 
 <?php
 if ($contact_sheet)
@@ -375,7 +374,6 @@ if ($pagename != "preview")
     <div id="Header" class="<?php
             echo in_array($pagename, $not_authenticated_pages) ? ' LoginHeader ' : ' ui-layout-north ';
             echo isset($slimheader_darken) && $slimheader_darken ? 'slimheader_darken' : '';
-            echo " " . $header_size;
     ?>">
 
     <?php

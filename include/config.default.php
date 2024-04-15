@@ -176,9 +176,6 @@ $header_favicon="gfx/interface/favicon.png";
 # Is the logo a link to the home page?
 $header_link=true;
 
-# Header size class. Options are HeaderSmall, HeaderMid, HeaderLarge.
-$header_size="HeaderMid";
-
 # Header includes username to right of user menu icon
 $header_include_username=false;
 

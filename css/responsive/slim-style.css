@@ -413,7 +413,7 @@ body {
     #HeaderNav2 ul {
         text-align: center;
     }
-    .HeaderMid #HeaderImg, .HeaderSmall #HeaderImg, .HeaderLarge #HeaderImg  {
+    #HeaderImg {
         margin-left: 10px;
     }
 }
