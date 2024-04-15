@@ -1349,28 +1349,6 @@ $show_access_on_upload = &$show_status_and_access_on_upload;
 # $show_access_on_upload_perm = "return checkperm('e0')"; #Stack permissions= "return checkperm('e0') && checkperm('c');";
 $show_access_on_upload_perm = "return true;";
 
-# Mime types by extensions.
-# used by pages/download.php to detect the mime type of the file proposed to download.
-$mime_type_by_extension = array(
-    'mov'  => 'video/quicktime',
-    '3gp'  => 'video/3gpp',
-    'mpg'  => 'video/mpeg',
-    'mp4'  => 'video/mp4',
-    'avi'  => 'video/msvideo',
-    'mp3'  => 'audio/mpeg',
-    'wav'  => 'audio/x-wav',
-    'weba' => 'audio/webm',    
-    'jpg'  => 'image/jpeg',
-    'jpeg' => 'image/jpeg',
-    'gif'  => 'image/gif',
-    'png'  => 'image/png',
-    'odt'  => 'application/vnd.oasis.opendocument.text',
-    'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
-    'odp'  => 'application/vnd.oasis.opendocument.presentation',
-    'svg'  => 'image/svg+xml',
-    'pdf'  => 'application/pdf',
-  );
-
 # PHP execution time limit
 # Default is 5 minutes.
 $php_time_limit = PHP_SAPI != "cli" ? 300 : 0;

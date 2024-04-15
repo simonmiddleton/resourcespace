@@ -29,6 +29,7 @@ include_once dirname(__FILE__) . '/migration_functions.php';
 include_once dirname(__FILE__) . '/metadata_functions.php';
 include_once dirname(__FILE__) . '/job_functions.php';
 include_once dirname(__FILE__) . '/tab_functions.php';
+include_once dirname(__FILE__) . '/mime_types.php';
 
 # Switch on output buffering.
 ob_start(null,4096);

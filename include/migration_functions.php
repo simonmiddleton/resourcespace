@@ -286,7 +286,7 @@ function mix_date($fromdate, $maxoffset=30)
 */
 function mix_text(?string $string, bool $recurse=true): string
     {
-    global $mixcache, $mime_type_by_extension;
+    global $mixcache, $mime_types_by_extension;
 
     $string ??= '';
     if (trim($string) === '')
@@ -312,7 +312,7 @@ function mix_text(?string $string, bool $recurse=true): string
         debug("This is a URL - calling mix_url()");
         return mix_url($string);
         }
-    elseif(in_array(mb_substr($string,strrpos($string,".")),$mime_type_by_extension) && $recurse)
+    elseif(in_array(mb_substr($string,strrpos($string,".")),$mime_types_by_extension) && $recurse)
         {
         debug("This is a filename - calling mix_filename()");
         return mix_filename($string);
