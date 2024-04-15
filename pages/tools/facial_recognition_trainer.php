@@ -1,12 +1,6 @@
 <?php
-if('cli' != PHP_SAPI)
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit('Access denied - Command line only!');
-    }
-
 include __DIR__ . '/../../include/boot.php';
-
+command_line_only();
 ob_end_clean();
 restore_error_handler();
 

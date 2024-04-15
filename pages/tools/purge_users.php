@@ -4,13 +4,8 @@ Script designed to purge users based on multiple conditions.
 At the moment, only based on the user group but can be easily improved with more options
 IMPORTANT: make sure to update the help section if adding new options!
 */
-if(PHP_SAPI != 'cli')
-    {
-    header('HTTP/1.1 401 Unauthorized');
-    exit('Access denied - Command line only!');
-    }
-
 include __DIR__ . '/../../include/boot.php';
+command_line_only();
 
 // Separate output of this script from any initialisation messages
 echo PHP_EOL;

@@ -1,21 +1,8 @@
 <?php
 // Script to purge all resources in the deletion state (status 3)
 // set following line to true to enable this script
-$PURGE_ENABLED = false;
+command_line_only();
 
-
-if (!$PURGE_ENABLED){
-echo "Script is disabled -- edit the script file and set \$PURGE_ENABLED to use it.\n";
-exit;
-}
-
-
-$sapi_type = php_sapi_name();
-if (substr($sapi_type, 0, 3) != 'cli') {
-// only run this from the command line
-echo "error - aborting.";
-exit;
-}
 include __DIR__ . "/../../include/boot.php"; ob_end_clean(); // Discard output buffering as it's causing the script to stop working
 
 include __DIR__ . "/../../include/image_processing.php";

@@ -1,9 +1,6 @@
 <?php
 include __DIR__ . "/../../include/boot.php";
-if (PHP_SAPI != 'cli')
-    {
-    exit('Access denied - Command line only!');
-    }
+command_line_only();
 
 // php populate_nodes_pre_v10.php [maximum time to run for in minutes]
 // e.g. to run script for 6 hours
