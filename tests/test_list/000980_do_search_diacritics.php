@@ -17,7 +17,6 @@ debug("Resource D: " . $resourced);
 debug("Resource E: " . $resourcee);
 
 $keywords_remove_diacritics=true;
-$unnormalized_index=false;
 
 // Add text to free text fields, samples thanks to Markus Kuhn <http://www.cl.cam.ac.uk/~mgk25/>
 update_field($resourcea,'title','Zwölf Boxkämpfer jagten Eva quer über den Sylter Deich');

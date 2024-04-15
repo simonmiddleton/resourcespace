@@ -144,9 +144,8 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
     $feedback=getval("request_feedback","");    if ($feedback=="") {$feedback=false;} else {$feedback=true;}
     $list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
 
-    $use_user_email=getval("use_user_email",false);
-    if ($use_user_email){$user_email=$useremail;} else {$user_email="";} // if use_user_email, set reply-to address
-    if (!$use_user_email){$from_name=$applicationname;} else {$from_name=$userfullname;} // make sure from_name matches email
+    $user_email=""; 
+    $from_name=$userfullname;
 
     if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
 
@@ -307,16 +306,6 @@ if(!$internal_share_only)
 <div class="clearerleft"> </div>
 </div>
 <?php } # end hook replaceemailrequestfeedback ?>
-<?php } ?>
-
-<?php if ($email_from_user){?>
-<?php if ($useremail!="") { # Only allow this option if there is an email address available for the user.
-?>
-<div class="Question">
-<label for="use_user_email"><?php echo escape($lang["emailfromuser"].$useremail.". ".$lang["emailfromsystem"].$email_from); ?></label><input type=checkbox checked id="use_user_email" name="use_user_email">
-<div class="clearerleft"> </div>
-</div>
-<?php } ?>
 <?php } ?>
 
 <?php if ($cc_me && $useremail!=""){?>

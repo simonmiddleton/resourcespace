@@ -24,10 +24,6 @@ $request_senduserupdates=true;
 # whether field-specific keywords should include their shortnames in searchcrumbs (if $search_titles_searchcrumbs=true;) ex. "originalfilename:pdf"
 $search_titles_shortnames=false;
 
-# Index the unnormalized keyword in addition to the normalized version, also applies to keywords with diacritics removed. Quoted search can then be used to find matches for original unnormalized keyword.
-$unnormalized_index=false;
-
-
 # Disk Usage Warnings - requires running check_disk_usage.php
 # Percentage of disk space used before notification is sent out. The number should be between 1 and 100.
 # $disk_quota_notification_limit_percent_warning = 90;

@@ -1032,18 +1032,9 @@ function node_field_options_override(&$field,$resource_type_field=null)
 */
 function add_node_keyword($node, $keyword, $position, $normalize = true, $stem = true)
     {
-    global $unnormalized_index, $noadd, $stemming;
+    global $noadd, $stemming;
 
     debug("add_node_keyword: node:" . $node . ", keyword: " . $keyword . ", position: " . $position . ", normalize:" . ($normalize?"TRUE":"FALSE") . ", stem:" . ($stem?"TRUE":"FALSE"));
-    if($normalize)
-        {
-        $kworig          = normalize_keyword($keyword);
-        // if $keyword has changed after normalizing it, then index the original value as well
-        if($keyword != $kworig && $unnormalized_index)
-            {
-            add_node_keyword($node, $kworig, $position, false, $stem);
-            }
-        }
 
      $unstemmed=$keyword;
      if ($stem && $stemming && function_exists("GetStem"))
@@ -1084,18 +1075,11 @@ function add_node_keyword($node, $keyword, $position, $normalize = true, $stem =
 */
 function remove_node_keyword($node, $keyword, $position, $normalized = false)
     {
-    global $unnormalized_index, $noadd;
+    global $noadd;
 
     if(!$normalized)
         {
-        $original_keyword = $keyword;
         $keyword          = normalize_keyword($keyword);
-
-        // if $keyword has changed after normalizing it, then remove the original value as well
-        if($keyword != $original_keyword && $unnormalized_index)
-            {
-            remove_node_keyword($node, $original_keyword, $position, true);
-            }
         }
 
     $keyword_ref = resolve_keyword($keyword, true);
