@@ -2711,9 +2711,6 @@ $fstemplate_alt_storageurl="";
 # The scramble key used by the template installation, so paths must be scrambled using this instead for the sample images.
 $fstemplate_alt_scramblekey="";
 
-# Ability to switch off responsive on UI
-$responsive_ui = true;
-
 # Default action settings
 $actions_enable = true;
 # If $actions_enable is false, option to enable actions only for users with certain permissions, To enable actions based on users having more than one permission, separate with a comma.

@@ -42,16 +42,11 @@ if (getval("ajax","") == "" && !hook("replace_footer"))
         ?>
         <!--Global Footer-->
         <div id="Footer">
-        <?php
-        if ($responsive_ui)
-            {
-            ?>
-            <div class="ResponsiveViewFullSite">
-                <a href="#" onClick="SetCookie('ui_view_full_site', true, 1, true); location.reload();"><?php echo escape($lang['responsive_view_full_site']); ?></a>
-            </div>
-            <?php
-            }
+        <div class="ResponsiveViewFullSite">
+            <a href="#" onClick="SetCookie('ui_view_full_site', true, 1, true); location.reload();"><?php echo escape($lang['responsive_view_full_site']); ?></a>
+        </div>
 
+        <?php
         if (!hook("replace_footernavrightbottom"))
             {
             ?>
@@ -459,7 +454,7 @@ if (getval("ajax","") == "")
         <?php
         }
 
-    if($responsive_ui && !hook("responsive_footer"))
+    if(!hook("responsive_footer"))
         {
         ?>
         <!-- Responsive -->
@@ -636,7 +631,7 @@ if (getval("ajax","") == "")
         </script>
         <!-- end of Responsive -->
         <?php
-        } /* end of if $responsive_ui*/
+        } 
 
     hook('afteruilayout');
     ?>

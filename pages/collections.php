@@ -228,25 +228,20 @@ else { ?>
     } 
 
     hook('collections_thumbs_loaded');
-
-    if($responsive_ui)
+    ?>
+    <!-- Responsive -->
+    <script type="text/javascript">
+    jQuery(document).ready(function()
         {
-        ?>
-        <!-- Responsive -->
-        <script type="text/javascript">
-        jQuery(document).ready(function()
+        if(typeof responsive_newpage !== 'undefined' && responsive_newpage === true)
             {
-            if(typeof responsive_newpage !== 'undefined' && responsive_newpage === true)
-                {
-                hideMyCollectionsCols();
-                responsiveCollectionBar();
-                responsive_newpage = false;
-                }
-            }); 
-        </script>
-        <?php
-        }
-        ?>
+            hideMyCollectionsCols();
+            responsiveCollectionBar();
+            responsive_newpage = false;
+            }
+        }); 
+    </script>
+
     <!-- Drag and Drop -->
     <script>
         jQuery('#CentralSpace').on('prepareDragDrop', function() {

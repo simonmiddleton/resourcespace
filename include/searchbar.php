@@ -513,10 +513,7 @@ elseif($restypes=='')
 
     $searchbuttons.="<input name=\"Submit\" id=\"searchbutton\" class=\"searchbutton\" type=\"submit\" value=\"". escape($lang['searchbutton'])."\" onclick=\"SimpleSearchFieldsHideOrShow();\" />";
 
-    if($responsive_ui)
-        {
-        $searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . escape($lang['responsive_more']) . '">';
-        }
+    $searchbuttons .= '<input type="button" id="Rssearchexpand" class="searchbutton" style="display:none;" value="' . escape($lang['responsive_more']) . '">';
 
     hook('extra_search_buttons');
     

@@ -373,13 +373,6 @@ debug(sprintf(
 
 $is_authenticated=true;
 
-// Checks user has opted to see the full site view rather than
-// the responsive version on a device
-if(true == getval('ui_view_full_site', false))
-    {
-    $responsive_ui = false;
-    }
-
 // Check CSRF Token
 $csrf_token = getval($CSRF_token_identifier, "");
 if(
