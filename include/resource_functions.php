@@ -5016,10 +5016,23 @@ function add_alternative_file($resource,$name,$description="",$file_name="",$fil
     return sql_insert_id();
     }
 
+/**
+ * delete_alternative_file
+ *
+ * @param   int   $resource   Resource id.
+ * @param   int   $ref        Alternative file id.
+ * 
+ * @return  bool   false on error else true.
+ */
 function delete_alternative_file($resource,$ref)
     {
     # Delete any uploaded file.
     $info=get_alternative_file($resource,$ref);
+    if (!$info)
+        {
+        return false;
+        }
+
     $path=get_resource_path($resource, true, "", true, $info["file_extension"], -1, 1, false, "", $ref);
     hook('delete_alternative_file_extra', '', array($path));
     if (file_exists($path)) {unlink($path);}
