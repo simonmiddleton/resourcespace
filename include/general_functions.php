@@ -2986,7 +2986,7 @@ function get_slideshow_files_data()
 
     $homeanim_folder_path = dirname(__DIR__) . "/{$homeanim_folder}";
 
-    $slideshow_records = ps_query("SELECT ref, resource_ref, homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
+    $slideshow_records = ps_query("SELECT ref,  homepage_show, featured_collections_show, login_show FROM slideshow", array(), "slideshow");
 
     $slideshow_files = array();
 
@@ -3008,11 +3008,6 @@ function get_slideshow_files_data()
                 'slideshow' => $slideshow['ref'],
                 'nc' => $slideshow_file['checksum'],
             ));
-
-        if ((int) $slideshow['resource_ref'] > 0)
-            {
-            $slideshow_file['link'] = generateURL($baseurl, array('r' => $slideshow['resource_ref']));
-            }
 
         $slideshow_files[] = $slideshow_file;
         }
