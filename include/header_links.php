@@ -48,7 +48,7 @@
                 <?php } ?>
             <?php } /* end hook replacethemelink */?>
 
-            <?php if (checkperm("s") && ($public_collections_top_nav || $public_collections_header_only)) { ?>
+            <?php if (checkperm("s") && ($public_collections_top_nav)) { ?>
                 <li class="HeaderLink">
                     <a href="<?php echo $baseurl?>/pages/collection_public.php" onClick="return CentralSpaceLoad(this,true);">
                         <?php echo escape($lang["publiccollections"]); ?>

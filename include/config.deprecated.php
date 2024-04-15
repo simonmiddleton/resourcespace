@@ -8,12 +8,6 @@
  * If you need to change any of the below values, copy them to config.php and change them there, although as these options will be removed in a future release, this is not advised.
  */
 
-# Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
-$pending_submission_prompt_review=true;
-
-# Send confirmation emails to user when request sent or assigned
-$request_senduserupdates=true;
-
 # whether field-specific keywords should include their shortnames in searchcrumbs (if $search_titles_searchcrumbs=true;) ex. "originalfilename:pdf"
 $search_titles_shortnames=false;
 

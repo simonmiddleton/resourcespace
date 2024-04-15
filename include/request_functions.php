@@ -58,7 +58,7 @@ function get_user_requests($excludecompleted=false,$returnsql=false)
 function save_request($request)
     {
     # Use the posted form to update the request
-    global $applicationname,$baseurl,$lang,$request_senduserupdates,$admin_resource_access_notifications,$userref;
+    global $applicationname,$baseurl,$lang,$admin_resource_access_notifications,$userref;
 
     $status=getval("status","",true);
     $expires=getval("expires","");
@@ -287,7 +287,7 @@ function get_requests($excludecompleted=false,$excludeassigned=false,$returnsql=
  */
 function email_collection_request($ref,$details,$external_email): bool
     {
-    global $applicationname,$email_from,$baseurl,$username,$useremail,$lang,$request_senduserupdates,$userref,$resource_type_request_emails,
+    global $applicationname,$email_from,$baseurl,$username,$useremail,$lang,$userref,$resource_type_request_emails,
     $resource_request_reason_required,$resource_type_request_emails_and_email_notify,$admin_resource_access_notifications;
 
     if (trim($details)=="" && $resource_request_reason_required) {return false;}
@@ -451,7 +451,7 @@ function email_collection_request($ref,$details,$external_email): bool
 
     # $userref and $useremail will be that of the internal requestor
     # - We need to send the $userconfirmmessage to the internal requestor saying that their request has been submitted
-    if (isset($userref) && $request_senduserupdates)
+    if (isset($userref))
         {
         send_user_notification([$userref],$userconfirmmessage);
         }
@@ -481,7 +481,7 @@ function email_collection_request($ref,$details,$external_email): bool
  */
 function managed_collection_request($ref,$details,$ref_is_resource=false)
     {   
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,
+    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,
         $watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,
         $resource_type_request_emails_and_email_notify, $manage_request_admin,$resource_request_reason_required,
         $admin_resource_access_notifications, $notify_manage_request_admin,
@@ -850,21 +850,18 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             }
         }
 
-    if ($request_senduserupdates)
-        {
-        $user_message = new ResourceSpaceUserNotification();
-        $user_message->set_subject($applicationname . ": " );
-        $user_message->append_subject("lang_requestsent");
-        $user_message->append_subject(" - " . $ref);
-        $user_message->set_text("lang_requestsenttext");
-        $user_message->append_text("<br /><br />");
-        $user_message->append_text_multi($message->get_text(true));
-        $user_message->append_text("<br /><br />");
-        $user_message->append_text("lang_clicktoviewresource");
-        $user_message->url = $baseurl . "/?c=" . $ref;
-        // Note no user_preference set so that message will always send
-        send_user_notification([$userref],$user_message);
-        }
+    $user_message = new ResourceSpaceUserNotification();
+    $user_message->set_subject($applicationname . ": " );
+    $user_message->append_subject("lang_requestsent");
+    $user_message->append_subject(" - " . $ref);
+    $user_message->set_text("lang_requestsenttext");
+    $user_message->append_text("<br /><br />");
+    $user_message->append_text_multi($message->get_text(true));
+    $user_message->append_text("<br /><br />");
+    $user_message->append_text("lang_clicktoviewresource");
+    $user_message->url = $baseurl . "/?c=" . $ref;
+    // Note no user_preference set so that message will always send
+    send_user_notification([$userref],$user_message);
 
     # Increment the request counter for each resource in the requested collection
     ps_query("UPDATE resource SET request_count=request_count+1  
@@ -883,7 +880,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
  */
 function email_resource_request($ref,$details)
     {
-    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$request_senduserupdates,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $user_dl_limit, $user_dl_days, $k, $user_is_anon,$resource_type_request_emails_and_email_notify,$admin_resource_access_notifications;
+    global $applicationname,$email_from,$baseurl,$email_notify,$username,$useremail,$userref,$lang,$watermark,$filename_field,$view_title_field,$access,$resource_type_request_emails,$resource_request_reason_required, $user_dl_limit, $user_dl_days, $k, $user_is_anon,$resource_type_request_emails_and_email_notify,$admin_resource_access_notifications;
 
     $message = new ResourceSpaceUserNotification;
     $detailstext = new ResourceSpaceUserNotification;
@@ -1047,31 +1044,29 @@ function email_resource_request($ref,$details)
         if ($send_result!==true) {return $send_result;}
         }
 
-    if ($request_senduserupdates)
-        {
-        $userconfirmmessage = clone $message;
-        $userconfirmmessage->set_subject($applicationname . ": ");
-        $userconfirmmessage->append_subject(" - "  . $ref);
-        $userconfirmmessage->prepend_text("<br /><br />");
-        $userconfirmmessage->prepend_text("lang_requestsenttext");
-        $userconfirmmessage->append_text($adddetails . $c); 
-        $key_str=($k!="") ? "&k=" . $k : "";
+    $userconfirmmessage = clone $message;
+    $userconfirmmessage->set_subject($applicationname . ": ");
+    $userconfirmmessage->append_subject(" - "  . $ref);
+    $userconfirmmessage->prepend_text("<br /><br />");
+    $userconfirmmessage->prepend_text("lang_requestsenttext");
+    $userconfirmmessage->append_text($adddetails . $c); 
+    $key_str=($k!="") ? "&k=" . $k : "";
 
-        if (isset($userref))
-            {
-            $userconfirmmessage->url = $baseurl . "/?r=" . $ref . $key_str;
-            send_user_notification([$userref],$userconfirmmessage);
-            }
-        else
-            {
-            $sender =  (!empty($useremail)) ? $useremail : ((!empty($templatevars["formemail"]))? $templatevars["formemail"] : "");
-            if($sender!="" && filter_var($sender, FILTER_VALIDATE_EMAIL))
-                {
-                $userconfirmmessage->append_text("<br /><a href='" . $baseurl . "/?r=" . $ref . $key_str . "'>" . $baseurl . "/?r=" . $ref . $key_str . "</a>");
-                send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage->get_text(),$email_from,$email_notify);
-                }  
-            }
+    if (isset($userref))
+        {
+        $userconfirmmessage->url = $baseurl . "/?r=" . $ref . $key_str;
+        send_user_notification([$userref],$userconfirmmessage);
         }
+    else
+        {
+        $sender =  (!empty($useremail)) ? $useremail : ((!empty($templatevars["formemail"]))? $templatevars["formemail"] : "");
+        if($sender!="" && filter_var($sender, FILTER_VALIDATE_EMAIL))
+            {
+            $userconfirmmessage->append_text("<br /><a href='" . $baseurl . "/?r=" . $ref . $key_str . "'>" . $baseurl . "/?r=" . $ref . $key_str . "</a>");
+            send_mail($sender,$applicationname . ": " . $lang["requestsent"] . " - $ref",$userconfirmmessage->get_text(),$email_from,$email_notify);
+            }  
+        }
+        
 
     # Increment the request counter
     ps_query("UPDATE resource SET request_count=request_count+1 WHERE ref = ?", array("i",$ref));

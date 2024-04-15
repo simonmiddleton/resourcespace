@@ -84,7 +84,7 @@ function HookAutoassign_mrequestsAllAutoassign_individual_requests($user_ref, $c
 
 function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $collection_data, $message, $manage_collection_request)
     {
-    global $manage_request_admin, $assigned_to_user, $request_senduserupdates, $baseurl, $applicationname, 
+    global $manage_request_admin, $assigned_to_user, $baseurl, $applicationname, 
            $request_query, $notify_manage_request_admin, $username, $user_mail_template;
 
     // Do not process this any further as this should only handle collection requests
@@ -217,23 +217,20 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
             send_user_notification($assigned_to,$adminmessage);
             }
 
-        if ($request_senduserupdates)
-            {
-            $collection_url = $baseurl . "/?c=" . $collection_data['ref'];
-            $usermessage = new ResourceSpaceUserNotification();
-            $usermessage->set_subject($applicationname . ": ");
-            $usermessage->append_subject("lang_requestsent");
-            $usermessage->set_text("lang_requestsenttext");
-            $usermessage->append_text("<br/><br/>");
-            $usermessage->append_text_multi($message->get_text(true));
-            $usermessage->append_text("<br/><br/>");
-            $usermessage->append_text("lang_clicktoviewresource");
-            $usermessage->url = $collection_url;
-            $templatevars['requesturl'] = $collection_url;
-            $usermessage->template = $user_mail_template;
-            $usermessage->templatevars = $templatevars;        
-            send_user_notification([$user_ref],$usermessage);
-            }
+        $collection_url = $baseurl . "/?c=" . $collection_data['ref'];
+        $usermessage = new ResourceSpaceUserNotification();
+        $usermessage->set_subject($applicationname . ": ");
+        $usermessage->append_subject("lang_requestsent");
+        $usermessage->set_text("lang_requestsenttext");
+        $usermessage->append_text("<br/><br/>");
+        $usermessage->append_text_multi($message->get_text(true));
+        $usermessage->append_text("<br/><br/>");
+        $usermessage->append_text("lang_clicktoviewresource");
+        $usermessage->url = $collection_url;
+        $templatevars['requesturl'] = $collection_url;
+        $usermessage->template = $user_mail_template;
+        $usermessage->templatevars = $templatevars;        
+        send_user_notification([$user_ref],$usermessage);
         $notify_manage_request_admin = false;
         }
 
@@ -246,7 +243,7 @@ function HookAutoassign_mrequestsAllAutoassign_collection_requests($user_ref, $c
 
 function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manage_individual_requests, $collection_id, $request_query, $message, $templatevars, $assigned_to_user, $admin_mail_template, $user_mail_template)
     {
-    global $applicationname, $baseurl, $email_from, $resource_type_request_emails_and_email_notify, $lang, $username, $userref, $notify_manage_request_admin, $resource_type_request_emails, $request_senduserupdates;
+    global $applicationname, $baseurl, $email_from, $resource_type_request_emails_and_email_notify, $lang, $username, $userref, $notify_manage_request_admin, $resource_type_request_emails;
 
     // Collection level requests have already been created and e-mails sent so skip this step
     if(!$manage_individual_requests)
@@ -346,23 +343,20 @@ function HookAutoassign_mrequestsAllBypass_end_managed_collection_request($manag
         send_user_notification($notify_users,$adminmessage);
         }
    
-    if ($request_senduserupdates)
-        {
-        $collection_url = $baseurl . "/?c=" . $collection_id;
-        $usermessage = new ResourceSpaceUserNotification();
-        $usermessage->set_subject($applicationname . ": ");
-        $usermessage->append_subject("lang_requestsent");
-        $usermessage->set_text("lang_requestsenttext");
-        $usermessage->append_text("<br/><br/>");
-        $usermessage->append_text_multi($message->get_text(true));
-        $usermessage->append_text("<br/><br/>");
-        $usermessage->append_text("lang_viewrequesturl");
-        $usermessage->url = $collection_url;
-        $templatevars['requesturl'] = $collection_url;
-        $usermessage->template = $user_mail_template;
-        $usermessage->templatevars = $templatevars;        
-        send_user_notification([$userref],$usermessage);
-        }
+    $collection_url = $baseurl . "/?c=" . $collection_id;
+    $usermessage = new ResourceSpaceUserNotification();
+    $usermessage->set_subject($applicationname . ": ");
+    $usermessage->append_subject("lang_requestsent");
+    $usermessage->set_text("lang_requestsenttext");
+    $usermessage->append_text("<br/><br/>");
+    $usermessage->append_text_multi($message->get_text(true));
+    $usermessage->append_text("<br/><br/>");
+    $usermessage->append_text("lang_viewrequesturl");
+    $usermessage->url = $collection_url;
+    $templatevars['requesturl'] = $collection_url;
+    $usermessage->template = $user_mail_template;
+    $usermessage->templatevars = $templatevars;        
+    send_user_notification([$userref],$usermessage);
     return true;
     }
 

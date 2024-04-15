@@ -77,10 +77,6 @@ $email_from=""; # Where system e-mails appear to come from. Written to config.ph
 $email_notify=""; # Where resource/research/user requests are sent. Written to config.php by setup.php
 $email_notify_usergroups=array(); # Use of email_notify is deprecated as system notifications are now sent to the appropriate users based on permissions and user preferences. This variable can be set to an array of usergroup references and will take precedence.
 
-# Enable user-to-user emails to come from user's address by default (for better reply-to), with the user-level option of reverting to the system address
-# NOTE: It is strongly recommended to use a custom SMTP server if this is enabled, emails may be seen as spoofing attempts. 
-$email_from_user = false;
-
 # Scramble resource paths? If this is a public installation then this is a very wise idea.
 # Set the scramble key to be a hard-to-guess string (similar to a password).
 # To disable, set to the empty string ("").
@@ -2565,9 +2561,6 @@ $resource_view_use_pre = false;
 # Use the larger layout on the view page for landscape images, smaller layout for portrait images.
 # NOTE: Enabling $resource_view_large_ext will override this.
 $resource_view_large_orientation = true;
-
-# Option to show a popup to users that upload resources to pending submission status. Prompts user to either submit for review or continue editing.
-$pending_submission_prompt_review=true;
 
 # Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
 $message_polling_interval_seconds = 10;
