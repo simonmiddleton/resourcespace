@@ -5,8 +5,10 @@ if (!$allow_password_reset) {exit("Password requests have been disabled.");} # U
 
 if (getval("save","")!="" && enforcePostRequest(false))
     {
+    email_reset_link(getval("email", ""));
     redirect("pages/done.php?text=user_password_link_sent");
     }
+
 include "../include/header.php";
 
 include "../include/login_background.php";
