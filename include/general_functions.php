@@ -1154,14 +1154,14 @@ function send_mail_phpmailer($email,$subject,$message="",$from="",$reply_to="",$
         if ($to_usergrouplang==""){global $defaultlanguage; $to_usergrouplang=$defaultlanguage;}
 
         if (isset($to_usergroupref))
-            {   
+            {
             $modified_to_usergroupref=hook("modifytousergroup","",$to_usergroupref);
             if (is_int($modified_to_usergroupref)){$to_usergroupref=$modified_to_usergroupref;}
-            $results = ps_query("select language, name, text from site_text where page = 'all' and name = ? and specific_to_group = ?", array("s", $html_template, "i", $to_usergroupref));
+            $results = ps_query("SELECT `language`, `name`, `text` FROM site_text WHERE (`page` = 'all' OR `page` = '') AND `name` = ? AND specific_to_group = ?;", array("s", $html_template, "i", $to_usergroupref));
             }
-        else 
-            {   
-            $results = ps_query("select language, name, text from site_text where page = 'all' and name = ? and specific_to_group is null", array("s", $html_template));
+        else
+            {
+            $results = ps_query("SELECT `language`, `name`, `text` FROM site_text WHERE (`page` = 'all' OR `page` = '') AND `name` = ? AND specific_to_group IS NULL;", array("s", $html_template));
             }
 
         global $site_text;
