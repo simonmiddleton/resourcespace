@@ -35,6 +35,21 @@ $error = false;
 # Determine the minimum access across all of the resources in the collection being requested
 $collection_request_min_access = collection_min_access($ref);
 
+# Check if any X?_ permissions are blocking sizes
+$resource_types = get_resource_types();
+foreach ($resource_types as $type) {
+    if (checkperm("X" . $type["ref"] . "_")) {
+        $collection_request_min_access = max($collection_request_min_access,1);
+        break;
+    }
+    foreach (get_all_image_sizes() as $size) {
+        if (checkperm("X" . $type["ref"] . "_" . $size["id"])) {
+        $collection_request_min_access = max($collection_request_min_access,1);
+        break;
+        }
+    }
+}
+
 # Prevent "request all" resources in a collection if the user has access to all of its resources
 if ($collection_request_min_access == 0)
     {
