@@ -2056,7 +2056,7 @@ $lang["notify_resource_change_email_subject"]='S\'ha modificat un recurs';
 $lang["notify_resource_change_email"]='Un recurs que vas descarregar fa [dies] dies ha estat modificat. Fes clic a l\'enllaç de sota per veure el recurs.<br /><br /><a href=\'[url]\'>[url]</a>';
 $lang["notify_resource_change_notification"]='Un recurs que vas descarregar en els últims [dies] dies ha estat modificat.';
 $lang["passwordresetemail"]='Si us plau, feu clic a l\'enllaç següent per restablir la vostra contrasenya.';
-$lang["password_reset_email_html"]='Nom d\'usuari: [nom d\'usuari]<br /><br />Si us plau, feu clic a l\'enllaç següent per restablir la vostra contrasenya.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
+$lang["password_reset_email_html"]='Nom d\'usuari: [username]<br /><br />Si us plau, feu clic a l\'enllaç següent per restablir la vostra contrasenya.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Si us plau, feu clic a l\'enllaç següent per establir una nova contrasenya per al vostre compte.';
 $lang["passwordresetexternalauth"]='El teu compte no està autenticat per ResourceSpace. Si us plau, contacta amb l\'administrador del sistema per obtenir les instruccions d\'inici de sessió';
 $lang["passwordlinkexpired"]='L\'enllaç per restablir la contrasenya ha caducat o bé ja s\'ha utilitzat. Si us plau, inicieu sessió o sol·liciteu un nou enllaç.';

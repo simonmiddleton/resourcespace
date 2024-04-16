@@ -2053,7 +2053,7 @@ $lang["notify_resource_change_email_subject"]='Se ha modificado un recurso';
 $lang["notify_resource_change_email"]='Un recurso que descargaste en los últimos [días] días ha sido modificado. Haz clic en el siguiente enlace para ver el recurso.<br /><br /><a href=\'[url]\'>[url]</a>';
 $lang["notify_resource_change_notification"]='Un recurso que descargaste en los últimos [días] días ha sido modificado.';
 $lang["passwordresetemail"]='Por favor, haga clic en el enlace de abajo para restablecer su contraseña.';
-$lang["password_reset_email_html"]='Nombre de usuario: [nombre de usuario]<br /><br />Por favor, haga clic en el siguiente enlace para restablecer su contraseña.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
+$lang["password_reset_email_html"]='Nombre de usuario: [username]<br /><br />Por favor, haga clic en el siguiente enlace para restablecer su contraseña.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Por favor, haga clic en el enlace de abajo para establecer una nueva contraseña para su cuenta.';
 $lang["passwordresetexternalauth"]='Su cuenta no está autenticada por ResourceSpace. Por favor, contacte a su administrador del sistema para obtener instrucciones de inicio de sesión';
 $lang["passwordlinkexpired"]='El enlace para restablecer la contraseña ha caducado o ya ha sido utilizado. Por favor, inicie sesión o solicite un nuevo enlace.';

@@ -2310,7 +2310,7 @@ $lang["notify_resource_change_email_subject"]='En resurs har modifierats';
 $lang["notify_resource_change_email"]='En resurs som du laddade ner för [dagar] dagar sedan har ändrats. Klicka på länken nedan för att visa resursen.<br /><br /><a href=\'[url]\'>[url]</a>';
 $lang["notify_resource_change_notification"]='En resurs som du laddade ner för [dagar] dagar sedan har ändrats.';
 $lang["passwordresetemail"]='Vänligen klicka på länken nedan för att återställa ditt lösenord.';
-$lang["password_reset_email_html"]='Användarnamn: [användarnamn]<br /><br />Klicka på länken nedan för att återställa ditt lösenord.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
+$lang["password_reset_email_html"]='Användarnamn: [username]<br /><br />Klicka på länken nedan för att återställa ditt lösenord.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Klicka på länken nedan för att ange ett nytt lösenord för ditt konto.';
 $lang["passwordresetexternalauth"]='Ditt konto är inte autentiserat av ResourceSpace. Vänligen kontakta din systemadministratör för inloggningsinstruktioner';
 $lang["passwordlinkexpired"]='Länken för återställning av lösenord har antingen gått ut eller har redan använts. Vänligen logga in eller begär en ny länk.';

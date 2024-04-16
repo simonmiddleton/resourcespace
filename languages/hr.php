@@ -2022,7 +2022,7 @@ $lang["notify_resource_change_email_subject"]='Resurs je izmijenjen';
 $lang["notify_resource_change_email"]='Resurs koji ste preuzeli u proteklih [days] dana je izmijenjen. Kliknite na donju poveznicu kako biste pregledali resurs.<br /><br /><a href=\'[url]\'>[url]</a>';
 $lang["notify_resource_change_notification"]='Resurs koji ste preuzeli u proteklih [days] dana je izmijenjen.';
 $lang["passwordresetemail"]='Molimo kliknite na donju poveznicu kako biste resetirali svoju lozinku.';
-$lang["password_reset_email_html"]='Korisničko ime: [korisničko ime]<br /><br />Molimo kliknite na donju poveznicu kako biste resetirali svoju lozinku.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
+$lang["password_reset_email_html"]='Korisničko ime: [username]<br /><br />Molimo kliknite na donju poveznicu kako biste resetirali svoju lozinku.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Molimo kliknite na donju poveznicu kako biste postavili novu lozinku za svoj račun.';
 $lang["passwordresetexternalauth"]='Vaš račun nije autentificiran od strane ResourceSpace-a. Molimo kontaktirajte svog sistem administratora za upute za prijavu';
 $lang["passwordlinkexpired"]='Poveznica za resetiranje lozinke je ili istekla ili je već korištena. Molimo prijavite se ili zatražite novu poveznicu.';

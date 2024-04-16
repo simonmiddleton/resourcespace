@@ -2348,7 +2348,7 @@ $lang["notify_resource_change_email_subject"]='Eine Ressource wurde geändert';
 $lang["notify_resource_change_email"]='Ein Ressource, die Sie in den letzten [Tagen] Tagen heruntergeladen haben, wurde geändert. Klicken Sie auf den untenstehenden Link, um die Ressource anzuzeigen.<br /><br /><a href=\'[url]\'>[url]</a>';
 $lang["notify_resource_change_notification"]='Eine Ressource, die Sie in den letzten [Tagen] Tagen heruntergeladen haben, wurde geändert.';
 $lang["passwordresetemail"]='Bitte klicken Sie auf den unten stehenden Link, um Ihr Passwort zurückzusetzen.';
-$lang["password_reset_email_html"]='Benutzername: [Benutzername]<br /><br />Bitte klicken Sie auf den unten stehenden Link, um Ihr Passwort zurückzusetzen.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
+$lang["password_reset_email_html"]='Benutzername: [username]<br /><br />Bitte klicken Sie auf den unten stehenden Link, um Ihr Passwort zurückzusetzen.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Bitte klicken Sie auf den unten stehenden Link, um ein neues Passwort für Ihr Konto festzulegen.';
 $lang["passwordresetexternalauth"]='Ihr Konto ist nicht von ResourceSpace authentifiziert. Bitte kontaktieren Sie Ihren Systemadministrator für Anweisungen zur Anmeldung';
 $lang["passwordlinkexpired"]='Der Link zum Zurücksetzen des Passworts ist entweder abgelaufen oder wurde bereits verwendet. Bitte melden Sie sich an oder fordern Sie einen neuen Link an.';

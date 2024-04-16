@@ -2029,7 +2029,7 @@ $lang["notify_resource_change_email_subject"]='En ressource er blevet ændret';
 $lang["notify_resource_change_email"]='En ressource, som du downloadede for [dage] dage siden, er blevet ændret. Klik på nedenstående link for at se ressourcen.<br /><br /><a href=\'[url]\'>[url]</a>';
 $lang["notify_resource_change_notification"]='En ressource, som du downloadede inden for de seneste [dage] dage, er blevet ændret.';
 $lang["passwordresetemail"]='Venligst klik på nedenstående link for at nulstille din adgangskode.';
-$lang["password_reset_email_html"]='Brugernavn: [brugernavn]<br /><br />Klik venligst på nedenstående link for at nulstille din adgangskode.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
+$lang["password_reset_email_html"]='Brugernavn: [username]<br /><br />Klik venligst på nedenstående link for at nulstille din adgangskode.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Venligst klik på nedenstående link for at indstille en ny adgangskode til din konto.';
 $lang["passwordresetexternalauth"]='Din konto er ikke godkendt af ResourceSpace. Kontakt venligst din systemadministrator for logininstruktioner';
 $lang["passwordlinkexpired"]='Adgangskodelinket til nulstilling er enten udløbet eller blevet brugt. Venligst log ind eller anmod om et nyt link.';

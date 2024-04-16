@@ -2155,7 +2155,7 @@ $lang["notify_resource_change_email_subject"]='تم تعديل المورد';
 $lang["notify_resource_change_email"]='تم تعديل المورد الذي قمت بتنزيله خلال الـ [أيام] الماضية. انقر على الرابط أدناه لعرض المورد. <br /><br /><a href=\'[url]\'>[url]</a>';
 $lang["notify_resource_change_notification"]='تم تعديل المورد الذي قمت بتنزيله خلال الـ [أيام] السابقة.';
 $lang["passwordresetemail"]='يرجى النقر على الرابط أدناه لإعادة تعيين كلمة المرور الخاصة بك.';
-$lang["password_reset_email_html"]='اسم المستخدم: [اسم المستخدم] <br /><br />يرجى النقر على الرابط أدناه لإعادة تعيين كلمة المرور الخاصة بك. <br /><br /><a href="[رابط]" target="_blank">[رابط]</a>';
+$lang["password_reset_email_html"]='[username]: اسم المستخدم <br /><br />يرجى النقر على الرابط أدناه لإعادة تعيين كلمة المرور الخاصة بك. <br /><br /><a href="[url]" target="_blank">[url]</a>';
 $lang["passwordnewemail"]='يرجى النقر على الرابط أدناه لتعيين كلمة مرور جديدة لحسابك.';
 $lang["passwordresetexternalauth"]='حسابك غير مصادق عليه من قبل برنامج ResourceSpace. يرجى الاتصال بمسؤول النظام الخاص بك للحصول على تعليمات تسجيل الدخول';
 $lang["passwordlinkexpired"]='انتهت صلاحية رابط إعادة تعيين كلمة المرور أو تم استخدامه. يرجى تسجيل الدخول أو طلب رابط جديد.';

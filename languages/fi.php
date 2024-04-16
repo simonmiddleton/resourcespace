@@ -2266,7 +2266,7 @@ $lang["notify_resource_change_email_subject"]='Resurssia on muokattu';
 $lang["notify_resource_change_email"]='Aiemmin ladattu resurssi on muokattu [päivien] päivän sisällä. Klikkaa alla olevaa linkkiä tarkastaaksesi resurssin.<br /><br /><a href=\'[url]\'>[url]</a>';
 $lang["notify_resource_change_notification"]='Aiemmin ladattu resurssi on muokattu [päivien] päivän sisällä.';
 $lang["passwordresetemail"]='Klikkaa alla olevaa linkkiä nollataksesi salasanasi.';
-$lang["password_reset_email_html"]='Käyttäjänimi: [käyttäjänimi]<br /><br />Klikkaa alla olevaa linkkiä nollataksesi salasanasi.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
+$lang["password_reset_email_html"]='Käyttäjänimi: [username]<br /><br />Klikkaa alla olevaa linkkiä nollataksesi salasanasi.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Klikkaa alla olevaa linkkiä asettaaksesi uuden salasanan tilillesi.';
 $lang["passwordresetexternalauth"]='Tilisi ei ole todennettu ResourceSpacessa. Ota yhteyttä järjestelmänvalvojaasi saadaksesi kirjautumisohjeet';
 $lang["passwordlinkexpired"]='Salasanan palautuslinkki on joko vanhentunut tai sitä on jo käytetty. Kirjaudu sisään tai pyydä uutta linkkiä.';

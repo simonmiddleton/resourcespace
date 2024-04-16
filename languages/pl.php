@@ -2170,7 +2170,7 @@ $lang["notify_resource_change_email_subject"]='Zasób został zmodyfikowany';
 $lang["notify_resource_change_email"]='Zasób, który pobrałeś[aś] w ciągu ostatnich [days] dni, został zmodyfikowany. Kliknij poniższy link, aby wyświetlić zasób.<br /><br /><a href=\'[url]\'>[url]</a>';
 $lang["notify_resource_change_notification"]='Zasób, który pobrałeś w ciągu ostatnich [days] dni, został zmodyfikowany.';
 $lang["passwordresetemail"]='Proszę kliknąć poniższy link, aby zresetować hasło.';
-$lang["password_reset_email_html"]='Nazwa użytkownika: [nazwa użytkownika]<br /><br />Proszę kliknąć poniższy link, aby zresetować hasło.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
+$lang["password_reset_email_html"]='Nazwa użytkownika: [username]<br /><br />Proszę kliknąć poniższy link, aby zresetować hasło.<br /><br /><a href="[url]" target="_blank" >[url]</a>';
 $lang["passwordnewemail"]='Proszę kliknąć poniższy link, aby ustawić nowe hasło dla Twojego konta.';
 $lang["passwordresetexternalauth"]='Twoje konto nie zostało uwierzytelnione przez ResourceSpace. Skontaktuj się z administratorem systemu w celu uzyskania instrukcji logowania';
 $lang["passwordlinkexpired"]='Link do resetowania hasła wygasł lub został już użyty. Proszę zaloguj się lub poproś o nowy link.';
