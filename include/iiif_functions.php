@@ -361,19 +361,20 @@ final class IIIFRequest {
         $media = [];
 
         if(in_array($resdata["file_extension"],array_merge($this->media_extensions))) {
-            $media["duration"] = 0; // Set this as default if the duration is not determined so that previews will always work
+            $media["duration"] = get_video_duration($media_path); // Also works for audio
             $accesskey = generate_temp_download_key($GLOBALS["userref"],$resource,"");
             $url = $GLOBALS["baseurl"] . "/pages/download.php";
             $params = [
                 "ref" => $resource,
                 "ext" => $resdata["file_extension"],
+                "noattach" => true,
                 "access_key" => $accesskey,
             ];
             $media["id"] = generateURL($url,$params);
             $media["type"] = in_array(
                 strtolower($resdata["file_extension"]),
-                $GLOBALS["ffmpeg_audio_extensions"]
-            ) ? "Audio" : "Video";
+                array_merge($GLOBALS["ffmpeg_audio_extensions"],["mp3"])
+            ) ? "Sound" : "Video";
             $media["format"] = $GLOBALS["mime_types_by_extension"][$resdata["file_extension"]] ?? "application/octet-stream";
             $size = "";
         } else {

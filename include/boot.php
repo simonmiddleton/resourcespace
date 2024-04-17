@@ -364,8 +364,9 @@ if (($pagename!="download") && ($pagename!="graph") && !$suppress_headers) {head
 # Basic CORS and CSRF protection
 #
 if($iiif_enabled && $pagename == "download") {
-    // Required as media files may be served through download.php and mustn't be blocked by this
-    $CORS_whitelist[] = $_SERVER['HTTP_ORIGIN'];
+    // Required as direct links to media files may be served through download.php 
+    // and may fail without the Access-Control-Allow-Origin header being set
+    $CORS_whitelist[] = $_SERVER['HTTP_ORIGIN'] ?? ($_SERVER['HTTP_REFERER'] ?? "");
 }
 if($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers && !in_array($pagename,$CSRF_exempt_pages))
     {
