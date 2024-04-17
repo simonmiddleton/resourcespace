@@ -143,8 +143,7 @@ if ($upload_review_mode)
     $search_all_workflow_states = true;
     $check_edit_checksums = false;
     $usersearchfilter = "";
-    $upload_review_collection_order_by = 'resourceid';
-    $review_collection_contents = do_search("!collection{$collection}", '', $upload_review_collection_order_by);
+    $review_collection_contents = do_search("!collection{$collection}", '', 'resourceid');
     # Revert save settings
     $search_all_workflow_states = $search_all_workflow_states_cache;
     $usersearchfilter = $usersearchfilter_cache;
