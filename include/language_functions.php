@@ -87,11 +87,11 @@ function i18n_get_collection_name($mixedcollection, $index="name")
     # The function handles both strings and arrays.
     if (!is_array($mixedcollection))
         {
-        $name_untranslated = $mixedcollection;
+        $name_untranslated = $mixedcollection ?? "";
         }
     else
         {
-        $name_untranslated = $mixedcollection[$index];
+        $name_untranslated = $mixedcollection[$index] ?? "";
 
         # Check if it is a Smart Collection
         if (isset($mixedcollection['savedsearch']) && ($mixedcollection['savedsearch']!=null))
