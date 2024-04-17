@@ -14,8 +14,8 @@ $maxresources = 0;
 $lastchecked = 0;
 $cli_long_options  = [
     'help',
-    'lastchecked',
-    'maxresources',
+    'lastchecked:',
+    'maxresources:',
 ];
 
 foreach (getopt('', $cli_long_options) as $option_name => $option_value) {
