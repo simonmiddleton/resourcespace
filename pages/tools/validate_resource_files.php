@@ -13,6 +13,7 @@ if (is_process_lock("file_integrity_check")) {
 $maxresources = 0;
 $lastchecked = 0;
 $cli_long_options  = [
+    'help',
     'lastchecked',
     'maxresources',
 ];
