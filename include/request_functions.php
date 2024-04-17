@@ -1156,7 +1156,7 @@ function process_custom_fields_submission(array $fields, $submitted)
             // The HTML id and name are basically identical (@see gen_custom_fields_html_props() ). If field is of fixed 
             // list type, then the name prop will be appended with "[]". For this reason, when we call getval() we need 
             // to use the elements' ID instead.
-            $submitted_data = getval($field["html_properties"]["id"], array());
+            $submitted_data = getval($field["html_properties"]["id"], [], false, 'is_array');
 
             // Find the selected options
             $field["selected_options"] = array_filter($field["options"], function($option) use ($field, $submitted_data)

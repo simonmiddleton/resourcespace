@@ -67,7 +67,7 @@ if (getval('createemail', '') != '' && enforcePostRequest(getval("ajax", false))
         switch($report_receiver)
             {
             case 'specific_user_groups':
-                $user_group_selection = getval('user_group_selection', array());
+                $user_group_selection = getval('user_group_selection', [], false, 'is_array');
                 break;
             }
     

@@ -690,7 +690,7 @@ function save_resource_data($ref,$multi,$autosave_field="")
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/removed
-    $user_set_values = getval('nodes', array());
+    $user_set_values = getval('nodes', [], false, 'is_array');
 
     // Initialise array to store new checksums that client needs after autosave, without which subsequent edits will fail
     $new_checksums = array();

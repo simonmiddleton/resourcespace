@@ -445,7 +445,7 @@ function search_form_to_search_query($fields,$fromsearchbar=false)
         // they belong to 
         $node_ref = '';
 
-        foreach(getval('nodes_searched', array()) as $searchedfield => $searched_field_nodes)
+        foreach(getval('nodes_searched', [], false, 'is_array') as $searchedfield => $searched_field_nodes)
             {
             // Fields that are displayed as a dropdown will only pass one node ID
             if(!is_array($searched_field_nodes) && '' == $searched_field_nodes)

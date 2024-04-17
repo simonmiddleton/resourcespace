@@ -37,8 +37,8 @@ $action = getval('action', '');
 $module_name = getval('module_name', '');
 $mplus_id_field = getval('mplus_id_field', '');
 $rs_uid_field = getval('rs_uid_field', 0, true);
-$applicable_resource_types = getval('applicable_resource_types', array());
-$field_mappings = getval('field_mappings', array());
+$applicable_resource_types = getval('applicable_resource_types', [], false, 'is_array');
+$field_mappings = getval('field_mappings', [], false, 'is_array');
 
 
 if(getval('save', '') !== '' && enforcePostRequest(false))

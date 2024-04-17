@@ -666,8 +666,8 @@ function save_user($ref)
         $username               = trim(getval('username', ''));
         $password               = trim(getval('password', ''));
         $fullname               = str_replace("\t", ' ', trim(getval('fullname', '')));
-        $email                  = trim(getval('email', '')); //To be escaped on usage in DB
-        $usergroup              = trim(getval('usergroup', ''));  // escaping required until build_usergroup_dash() moved to prepared statements
+        $email                  = trim(getval('email', ''));
+        $usergroup              = trim(getval('usergroup', '', false, 'is_int_loose'));
         $ip_restrict            = trim(getval('ip_restrict', ''));
         $search_filter_override = trim(getval('search_filter_override', ''));
         $search_filter_o_id     = trim(getval('search_filter_o_id', 0, true));

@@ -41,11 +41,11 @@ if(getval('submit', '') != '' || getval('save','') != '' && enforcePostRequest(f
     $action_dates_config["action_dates_restrictfield"] = getval('action_dates_restrictfield','',true);
     $action_dates_config["action_dates_remove_from_collection"] = getval('action_dates_remove_from_collection','');
     $action_dates_config['action_dates_workflow_actions'] = getval('action_dates_workflow_actions',false);
-    $action_dates_config["action_dates_weekdays"] = getval('action_dates_weekdays','');
+    $action_dates_config["action_dates_weekdays"] = getval('action_dates_weekdays', [], false, 'is_array');
     
     // Get the extra rows fom the table
-    $action_date_extra_fields     = getval('action_dates_extra_field',array());
-    $action_date_extra_statuses   = getval('action_dates_extra_status',array());
+    $action_date_extra_fields     = getval('action_dates_extra_field', [], false, 'is_array');
+    $action_date_extra_statuses   = getval('action_dates_extra_status', [], false, 'is_array');
 
     $action_dates_extra_config = array();
     $mappingcount=0;

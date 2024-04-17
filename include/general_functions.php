@@ -7,26 +7,37 @@
 #
 
 /**
- * Retrieve a user-submitted parameter from the browser, via post/get/cookies in that order.
+ * Retrieve a user-submitted parameter from the browser via post/get/cookies, in that order.
  *
- * @param  string $val              The parameter name
- * @param  string $default          A default value to return if no matching parameter was found
- * @param  boolean $force_numeric   Ensure a number is returned
- * @return string
+ * @param string $param The parameter name
+ * @param string $default A default value to return if no matching parameter was found
+ * @param boolean $force_numeric Ensure a number is returned. (DEPRECATED)
+ * @param callable $type_check Validate param type. Default is to check param values are strings.
  */
-function getval($val,$default,$force_numeric=false)
+function getval($param,$default,$force_numeric=false, ?callable $type_check = null)
 {
-    # return a value from POST, GET or COOKIE (in that order), or $default if none set
-    if (array_key_exists($val,$_POST)) {
-        return $force_numeric && !is_numeric($_POST[$val]) ? $default : $_POST[$val];
+    /*
+    TODO: remove in favour of type_check. Example:
+    - getval('some_param_name', 0, true);
+    + getval('some_param_name', 0, 'is_numeric'); # Once $force_numeric arg is removed
+
+    For now $force_numeric has a higher precedence while still in place.
+    */
+    if ($force_numeric) {
+        $type_check = 'is_numeric';
+    } elseif ($type_check === null) {
+        $type_check = 'is_string';
     }
-    if (array_key_exists($val,$_GET)) {
-        return $force_numeric && !is_numeric($_GET[$val]) ? $default : $_GET[$val];
+
+    if (array_key_exists($param,$_POST)) {
+        return $type_check($_POST[$param]) ? $_POST[$param] : $default;
+    } elseif (array_key_exists($param,$_GET)) {
+        return $type_check($_GET[$param]) ? $_GET[$param] : $default;
+    } elseif (array_key_exists($param,$_COOKIE)) {
+        return $type_check($_COOKIE[$param]) ? $_COOKIE[$param] : $default;
+    } else {
+        return $default;
     }
-    if (array_key_exists($val,$_COOKIE)) {
-        return $force_numeric && !is_numeric($_COOKIE[$val])?$default:$_COOKIE[$val];
-    }
-    return $default;
 }
 
 /**

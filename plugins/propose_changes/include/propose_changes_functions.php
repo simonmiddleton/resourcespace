@@ -17,7 +17,7 @@ function save_proposed_changes($ref)
 
     // All the nodes passed for editing. Some of them were already a value
     // of the fields while others have been added/ removed
-    $user_set_values = getval('nodes', array());
+    $user_set_values = getval('nodes', [], false, 'is_array');
 
         for ($n=0;$n<count($fields);$n++)
             {

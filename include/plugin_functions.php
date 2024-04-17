@@ -433,7 +433,13 @@ function config_gen_setup_post($page_def,$plugin_name)
                     case 'hidden_param':
                         break;
                     default:
-                        $GLOBALS[$def[1]] = getval($def[1], is_array($GLOBALS[$def[1]])?array():'');
+                        $def1_is_array = is_array($GLOBALS[$def[1]]);
+                        $GLOBALS[$def[1]] = getval(
+                            $def[1],
+                            $def1_is_array ? [] : '',
+                            false,
+                            $def1_is_array ? 'is_array' : null
+                        );
                         break;
                     }
                 

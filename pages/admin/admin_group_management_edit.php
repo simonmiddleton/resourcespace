@@ -128,13 +128,9 @@ if (getval("save",false) && enforcePostRequest(false))
             $update_sql_params = array_merge($update_sql_params, array("i", $val));
             }
 
-        elseif($column=="inherit_flags" && getval($column,'')!="")
+        elseif($column=="inherit_flags" && getval($column, [], false, 'is_array') !== [])
             {
-            $val = getval($column,'');
-            if (is_array($val))
-                {
-                $val=implode(",", $val);
-                }
+            $val = implode(',', getval($column, [], false, 'is_array'));
             $update_sql_params = array_merge($update_sql_params, array("s", $val));
             }
         elseif(in_array($column,array("parent","download_limit","download_log_days","search_filter_id","edit_filter_id","derestrict_filter_id")))

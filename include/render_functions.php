@@ -1879,7 +1879,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
     else
         {
         debug("display_field: getting all user selected values from form data for field " . $field['ref']);
-        $user_set_values = getval('nodes', array());
+        $user_set_values = getval('nodes', [], false, 'is_array');
         debug(sprintf('$user_set_values = %s', json_encode($user_set_values)));
         }
 
@@ -3734,7 +3734,7 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
         }
 
     // On upload, check against the posted nodes as save_resource_data() saves nodes after going through all the fields
-    $user_set_values = getval('nodes', array());
+    $user_set_values = getval('nodes', [], false, 'is_array');
     debug(sprintf('$user_set_values = %s', json_encode($user_set_values)));
 
     foreach ($conditions as $condition) # Check each condition

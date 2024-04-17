@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Variable \\$language in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: include/boot.php
+
+		-
 			message: "#^Constant MESSAGE_DEFAULT_TTL_SECONDS not found\\.$#"
 			count: 1
 			path: include/collections_functions.php
@@ -24,11 +29,6 @@ parameters:
 			message: "#^Variable \\$user in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: include/collections_functions.php
-
-		-
-			message: "#^Variable \\$language in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: include/boot.php
 
 		-
 			message: "#^Variable \\$additional_title_pages in empty\\(\\) always exists and is not falsy\\.$#"
@@ -161,11 +161,6 @@ parameters:
 			path: include/resource_functions.php
 
 		-
-			message: "#^Variable \\$advanced_search_section in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: include/search_functions.php
-
-		-
 			message: "#^Variable \\$initial_tags in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: include/searchbar.php
@@ -216,29 +211,9 @@ parameters:
 			path: pages/ajax/autocomplete_user.php
 
 		-
-			message: "#^Variable \\$rawtile in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: pages/ajax/dash_tile.php
-
-		-
-			message: "#^Variable \\$user_rawtile in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: pages/ajax/dash_tile.php
-
-		-
-			message: "#^Offset 'geometry' on string in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: pages/ajax/facial_recognition.php
-
-		-
 			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE not found\\.$#"
 			count: 1
 			path: pages/ajax/message.php
-
-		-
-			message: "#^Variable \\$submitted in empty\\(\\) always exists and is always falsy\\.$#"
-			count: 3
-			path: pages/collection_download.php
 
 		-
 			message: "#^Variable \\$allowed_external_share_groups in empty\\(\\) always exists and is not falsy\\.$#"
@@ -267,11 +242,6 @@ parameters:
 
 		-
 			message: "#^Variable \\$collectiondata in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: pages/search.php
-
-		-
-			message: "#^Variable \\$k in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: pages/search.php
 
@@ -326,16 +296,6 @@ parameters:
 			path: pages/tools/staticsync.php
 
 		-
-			message: "#^Variable \\$alternative in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: pages/upload_batch.php
-
-		-
-			message: "#^Variable \\$batch_replace_col in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: pages/upload_batch.php
-
-		-
 			message: "#^Constant MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE not found\\.$#"
 			count: 1
 			path: pages/user/user_messages.php
@@ -379,21 +339,6 @@ parameters:
 			message: "#^Variable \\$email in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: plugins/simplesaml/hooks/all.php
-
-		-
-			message: "#^Variable \\$end_time in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: plugins/video_splice/pages/trim.php
-
-		-
-			message: "#^Variable \\$start_time in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: plugins/video_splice/pages/trim.php
-
-		-
-			message: "#^Variable \\$upload_type in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: plugins/video_splice/pages/trim.php
 
 		-
 			message: "#^Constant MESSAGE_DEFAULT_TTL_SECONDS not found\\.$#"

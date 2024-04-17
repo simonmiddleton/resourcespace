@@ -24,7 +24,7 @@ $page     = getval('page', 0, true);
 
 // Get annotation data if an ID has been provided
 $annotation_id = getval('annotation_id', 0, true);
-$annotation    = getval('annotation', array());
+$annotation    = getval('annotation', [], false, 'is_array');
 
 debug(sprintf('[annotations][annotations.php] AJAX request: action = %s | resource = %s | annotation_id = %s', $action, $resource, $annotation_id));
 

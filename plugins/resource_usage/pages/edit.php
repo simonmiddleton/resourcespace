@@ -34,18 +34,11 @@ if ($ref > 0)
 if(getval('submitted', '') != '' && enforcePostRequest(false))
     {
     $usage_location = getval('usage_location', '');
-    $usage_medium   = getval('usage_medium', '');
+    $usage_medium   = implode(', ', getval('usage_medium', [], false, 'is_array'));
     $description    = getval('description', '');
 
     # Construct usage date
     $usage_date = getval('usage_date_year', '') . '-' . getval('usage_date_month', '') . '-' . getval('usage_date_day', '-');
-
-    # Construct usage medium
-    $usage_medium = '';
-    if(isset($_POST['usage_medium']))
-        {
-        $usage_medium = join(', ', $_POST['usage_medium']);
-        }
 
     $resource_data = get_resource_data($resource);
     if($new_record && $resource_data !== false && resource_download_allowed($resource, "", $resource_data["resource_type"]))

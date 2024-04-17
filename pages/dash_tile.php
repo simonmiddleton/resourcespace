@@ -57,7 +57,7 @@ if($submitdashtile && enforcePostRequest(false))
     - specific_user_groups
     */
     $tile_audience        = getval('tile_audience', '');
-    $specific_user_groups = getval('specific_user_groups', array());
+    $specific_user_groups = getval('specific_user_groups', [], false, 'is_array');
 
     if(checkPermission_dashadmin())
         {

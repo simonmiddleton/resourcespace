@@ -12,7 +12,7 @@ if ($k=="" || (!check_access_key_collection($upload_collection,$k)))
 $ajax           = ('' != getval('ajax', '') ? true : false);
 $node_ref       = getval('node_ref', null, true);
 $field          = (int) getval('field', '', true);
-$selected_nodes = getval('selected_nodes', array());
+$selected_nodes = getval('selected_nodes', [], false, 'is_array');
 $opened_nodes   = array();
 $js_tree_data   = array();
 

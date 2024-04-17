@@ -27,7 +27,7 @@ if(
 
 if('prepare_selected_area' == $action)
     {
-    $shape = getval('shape', array());
+    $shape = getval('shape', [], false, 'is_array');
 
     if(
         !isset($shape['geometry']['x']) ||

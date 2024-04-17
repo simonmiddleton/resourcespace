@@ -29,8 +29,8 @@ $tms_link_module_name = getval('tms_link_module_name', '');
 $tms_link_tms_uid_field = getval('tms_link_tms_uid_field', '');
 $tms_link_rs_uid_field = getval('tms_link_rs_uid_field', 0, true);
 $tms_link_checksum_field = getval('tms_link_checksum_field', 0, true);
-$tms_link_applicable_resource_types = getval('tms_link_applicable_resource_types', array());
-$tms_link_tms_rs_mappings = getval('tms_rs_mappings', array());
+$tms_link_applicable_resource_types = getval('tms_link_applicable_resource_types', [], false, 'is_array');
+$tms_link_tms_rs_mappings = getval('tms_rs_mappings', [], false, 'is_array');
 
 if(getval('save', '') !== '' && enforcePostRequest(false))
     {
