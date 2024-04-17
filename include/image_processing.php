@@ -2716,7 +2716,7 @@ function upload_preview($ref)
 */
 function extract_text($ref,$extension,$path="")
     {
-    global $extracted_text_field,$antiword_path,$pdftotext_path,$zip_contents_field,$lang;
+    global $extracted_text_field,$antiword_path,$pdftotext_path,$lang;
 
     resource_log($ref,LOG_CODE_TRANSFORMED,'','','',$lang['embedded_metadata_extract_option']);
 
@@ -2816,20 +2816,6 @@ function extract_text($ref,$extension,$path="")
 
         $cmd="unzip -l $path";
         $text=run_command($cmd);
-
-        global $zip_contents_field_crop;
-        if ($zip_contents_field_crop>0)
-            {
-            # Remove the first few lines according to $zip_contents_field_crop in config.
-            $text=explode("\n",$text);
-            for ($n=0;$n<$zip_contents_field_crop;$n++) {array_shift($text);}
-            $text=join("\n",$text);
-            }
-        
-        if (isset($zip_contents_field))
-            {
-            $extracted_text_field=$zip_contents_field;
-            }
         }
     
     hook("textextraction", "all", array($extension,$path));
