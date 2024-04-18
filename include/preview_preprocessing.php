@@ -721,7 +721,16 @@ if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpe
 
     if(!hook('previewpskipthumb', '', array($file)))
         {
-        $cmd = $ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y -ss ' . $snapshottime . ' -i ' . escapeshellarg($file) . ' -f image2 -vframes 1 ' . escapeshellarg($target);
+        $scale = '';
+        if ($exiftool_fullpath != false) {
+            $cmd = $exiftool_fullpath . ' -s3 -ImageWidth -ImageHeight ' . escapeshellarg($file);
+            $output = run_command($cmd);
+            $dimensions = explode("\n",$output);
+            if (count(array_filter($dimensions, 'is_int_loose')) == 2) {
+                $scale = '-vf scale=' . escapeshellarg(implode(':', $dimensions));
+            }
+        }
+        $cmd = $ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y -ss ' . $snapshottime . ' -i ' . escapeshellarg($file) . ' ' . $scale . ' -f image2 -vframes 1 ' . escapeshellarg($target);
         $output = run_command($cmd);
 
         debug("FFMPEG-VIDEO: Get snapshot: {$cmd}");
