@@ -138,7 +138,7 @@ if ($multiprocess)
 
 // We fetch the list of resources to process.
 global  $no_preview_extensions;
-$condition="resource.has_image != 1 AND";
+$condition="resource.has_image != " . RESOURCE_PREVIEWS_ALL . " AND";
 if ($noimage) {$condition="";}
 $resources=ps_query("SELECT resource.ref, resource.file_extension, IFNULL(resource.preview_attempts, 1) preview_attempts, creation_date FROM resource 
     WHERE $condition resource.ref > 0 AND (resource.preview_attempts < 5 OR resource.preview_attempts IS NULL) AND file_extension IS NOT NULL AND LENGTH(file_extension) > 0 
@@ -194,12 +194,15 @@ foreach($resources as $resource) // For each resources
         if ($resource['preview_attempts']>3 && $resourceage<1000){echo "Just added so may not have finished copying, resetting attempts \n"; ps_query("UPDATE resource SET preview_attempts = 0 WHERE ref = ?", array("i", $resource['ref'])); continue;} 
 
         #check whether resource already has mp3 preview in which case we set preview_attempts to 5
-        if ($resource['file_extension']!="mp3" && in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists(get_resource_path($resource['ref'],true,"",false,"mp3")))  
-            {
+        if (
+            $resource['file_extension'] != "mp3" 
+            && in_array($resource['file_extension'], $ffmpeg_audio_extensions)
+            && file_exists(get_resource_path($resource['ref'],true,"",false,"mp3"))
+        ) {
             $ref=$resource['ref'];
             echo "Resource already has mp3 preview\n";
-            ps_query("update resource set preview_attempts = 5 where ref = ?", array("i", $ref));
-            }
+            ps_query("UPDATE resource SET preview_attempts = 5 WHERE ref = ?", array("i", $ref));
+        }
 
         elseif ($resource['preview_attempts'] < 5 && $resource['file_extension'] != "") 
             {
@@ -207,11 +210,11 @@ foreach($resources as $resource) // For each resources
             else{$ingested=true;}
 
             # Increment the preview count.
-            ps_query("update resource set preview_attempts = ifnull(preview_attempts, 1) + 1 where ref = ?", array("i", $resource['ref']));
+            ps_query("UPDATE resource SET preview_attempts = IFNULL(preview_attempts, 1) + 1 WHERE ref = ?", array("i", $resource['ref']));
 
-            $success=create_previews($resource['ref'], false, $resource['file_extension'],false,false,-1,$ignoremaxsize,$ingested);
+            $success = create_previews($resource['ref'], false, $resource['file_extension'],false,false,-1,$ignoremaxsize,$ingested);
             hook('after_batch_create_preview');
-            $success_string=($success==true ? "successfully" : "with error" );
+            $success_string = ($success == true ? "successfully" : "with error" );
             echo sprintf("Processed resource %d %s in %01.2f seconds.\n", $resource['ref'], $success_string, microtime(true) - $start_time);
             }
 

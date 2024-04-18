@@ -11,7 +11,8 @@ $enable_thumbnail_creation_on_upload = false;
 $valid_upload_paths[] = dirname(__FILE__) . '/../../gfx/homeanim/';
 upload_file($resource500,true,false,false,dirname(__FILE__) . '/../../gfx/homeanim/1.jpg',false,false);
 
-if(start_previews($resource500) 
+$result = start_previews($resource500);
+if($result !== 2 
     || file_exists(get_resource_path($resource500,true,'lpr'))
     || !file_exists(get_resource_path($resource500,true,'col'))
     || !file_exists(get_resource_path($resource500,true,'thm'))

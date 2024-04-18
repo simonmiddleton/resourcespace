@@ -1027,6 +1027,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 
 $non_image_types = config_merge_non_image_types();
 
+$preview_preprocessing_success = false;
 # If a file has been created, generate previews just as if a JPG was uploaded.
 if (isset($newfile) && file_exists($newfile)) {
     if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension,config_merge_non_image_types())) {
@@ -1040,7 +1041,7 @@ if (isset($newfile) && file_exists($newfile)) {
             }
         }
     
-    create_previews($ref,false,"jpg",false,false,$alternative,$ignoremaxsize,true,$checksum_required,$onlysizes);
+    $preview_preprocessing_success = create_previews($ref,false,"jpg",false,false,$alternative,$ignoremaxsize,true,$checksum_required,$onlysizes);
     if(            
         $GLOBALS['non_image_types_generate_preview_only']
         && in_array($extension, $GLOBALS['non_image_types'])

@@ -1309,17 +1309,19 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                 ps_query("UPDATE resource SET has_image=?,preview_extension='jpg',preview_attempts=0,file_modified=now() WHERE ref= ?", ['i',$has_image,'i', $ref]);
                 }
             }
-        }
-    else
-        {
+        } else {
         # If using ImageMagick, call preview_preprocessing.php which makes use of ImageMagick and other tools
         # to attempt to extract a preview.
         global $no_preview_extensions;
-        if (isset($imagemagick_path) && !in_array(strtolower($extension),$no_preview_extensions))
-            {
+        if (isset($imagemagick_path) && !in_array(strtolower($extension),$no_preview_extensions)) {
+            $preview_preprocessing_success = false;
             include dirname(__FILE__)."/preview_preprocessing.php";
+            // $created_previews will have been set in preview_preprocessing.php to indicate succces/failure
+            if(!$preview_preprocessing_success) {
+                return false;
             }
         }
+    }
 
     if($alternative == -1 && isset($GLOBALS["image_alternatives"]) && $generateall) {
         // Create alternatives
@@ -1333,7 +1335,7 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     }
     
     # Flag database so a thumbnail appears on the site
-    if ($alternative==-1)
+    if ($alternative == -1)
         {
         // Not for alternatives
         $has_image = $generateall ? RESOURCE_PREVIEWS_ALL : RESOURCE_PREVIEWS_MINIMAL;
@@ -2386,15 +2388,15 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
     if ($rotateangle!=0 && $alternative==-1)
         {
         # Swap thumb heights/widths
-        $ts=ps_query("select thumb_width,thumb_height from resource where ref= ?", ['i', $ref]);
-        ps_query("update resource set thumb_width= ?,thumb_height= ? where ref= ?", 
+        $ts=ps_query("SELECT thumb_width,thumb_height FROM resource WHERE ref= ?", ['i', $ref]);
+        ps_query("UPDATE resource SET thumb_width= ?,thumb_height= ? WHERE ref= ?",
                 [
                 'i', $ts[0]["thumb_height"],
                 'i', $ts[0]["thumb_width"],
                 'i', $ref
                 ]
             );
-        
+
         global $portrait_landscape_field,$lang;
         if (isset($portrait_landscape_field))
             {
@@ -2402,13 +2404,13 @@ function tweak_preview_images($ref, $rotateangle, $gamma, $extension="jpg", $alt
             if ($ts[0]["thumb_height"]>=$ts[0]["thumb_width"]) {$portland=$lang["landscape"];} else {$portland=$lang["portrait"];}
             update_field($ref,$portrait_landscape_field,$portland);
             }
-        
+
         }
     # Update the modified date to force the browser to reload the new thumbs.
     $current_preview_tweak ='';
-    if ($alternative==-1){
-        ps_query("update resource set file_modified=now() where ref= ?", ['i', $ref]);
-    
+    if ($alternative == -1){
+        ps_query("UPDATE resource SET file_modified=NOW() WHERE ref= ?", ['i', $ref]);
+
     # record what was done so that we can reconstruct later if needed
     # current format is rotation|gamma. Additional could be tacked on if more manipulation options are added
     $current_preview_tweak = ps_value("select preview_tweaks value from resource where ref = ?",array("i",$ref), "");
@@ -3913,13 +3915,14 @@ function remove_video_previews(int $resource) : void
  *
  * @param int $ref                  Resource ID
  * @param string $extension         File extension
- * 
- * @return bool                     true if all previews have been created, false if
- *                                  offline jobs/scripts are required to create the full set 
- *                                  of previews/image/video alternatives
- * 
+ *
+ * @return int                      0 if preview creation failed
+ *                                  1 if all previews have been created
+ *                                  2 if minimal previews created and offline jobs/scripts are required
+ *                                   to create the full set of previews/image/video $alternatives
+ *
  */
-function start_previews(int $ref, string $extension = ""): bool
+function start_previews(int $ref, string $extension = ""): int
 {
     global $lang;
 
@@ -3952,18 +3955,18 @@ function start_previews(int $ref, string $extension = ""): bool
         ps_query("UPDATE resource SET has_image = ? WHERE ref= ?", ['i',RESOURCE_PREVIEWS_NONE,'i', $ref]);
         $minimal_previews = true;
     }
-        
+
     if($minimal_previews) {
         if (!in_array($extension,$GLOBALS["minimal_preview_creation_exclude_extensions"])) {
             // Extension hasn't been excluded from immediate preview creation
-            create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
+            $success = create_previews($ref,false,$extension,false,false,-1,true,$ingested,false,["pre","col","thm"]);
+            return $success ? 2 : 0;
         }
-        return false;
+        return 2;
     }
     // No offline preview creation - create the full set of previews immediately
-    create_previews($ref,false,$resource_data["file_extension"],false,false,-1,false,$ingested);
-    
-    return true;
+    $success = create_previews($ref,false,$resource_data["file_extension"],false,false,-1,false,$ingested);
+    return $success ? 1 : 0;
 }
 
 

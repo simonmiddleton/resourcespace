@@ -499,9 +499,19 @@ if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     }
 
 if (getval("regen","") != "" && enforcePostRequest($ajax)) {
-    hook('edit_recreate_previews_extra', '', array($ref));
-    if(!start_previews($ref)) {
-       $onload_message["text"] = $lang["recreatepreviews_pending"];
+    hook('edit_recreate_previews_extra', '', [$ref]);
+    $result = start_previews($ref);
+    switch ($result) {
+        case 0:
+        default:
+            $onload_message["text"] = $lang["error"];
+            break;
+        case 1:
+            $onload_message["text"] = $lang["success"];
+            break;
+        case 2:
+            $onload_message["text"] = $lang["recreatepreviews_pending"];
+            break;
     }
 }
 
@@ -1033,8 +1043,18 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
          tweak_preview_images($ref, 0, 0.7, $resource["preview_extension"]);
          break;
       case "restore":
-        if(!start_previews($ref)) {
-            $onload_message["text"] = $lang["recreatepreviews_pending"];
+        $result = start_previews($ref);
+        switch ($result) {
+            case 0:
+            default:
+                $onload_message["text"] = $lang["error"];
+                break;
+            case 1:
+                $onload_message["text"] = $lang["success"];
+                break;
+            case 2:
+                $onload_message["text"] = $lang["recreatepreviews_pending"];
+                break;
         }
         break;
       }

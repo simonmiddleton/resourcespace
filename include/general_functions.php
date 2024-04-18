@@ -3543,7 +3543,7 @@ function get_sysvar($name, $default=false)
  *
  * @param  string $name
  * @param  string $pagename
- * @param  string $params
+ * @param  array $params
  * @param  boolean $last_hook_value_wins
  * @return mixed
  */
