@@ -675,7 +675,7 @@ function config_multi_select($name, $label, $current, $choices, $usekeys=true, $
     global $lang;
 ?>
   <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
     <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" <?php if(count($choices) > 7) echo ' size="7"'?> style="width:<?php echo $width ?>px">
 <?php
     foreach($choices as $key => $choice)
@@ -725,7 +725,7 @@ function config_single_user_select($name, $label, $current=array(), $width=300)
     global $lang;
 ?>
   <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
     <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px">
 <?php
     $users=get_users();
@@ -770,7 +770,7 @@ function config_multi_user_select($name, $label, $current=array(), $width=300)
     global $lang;
 ?>
   <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
     <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="7" style="width:<?php echo $width ?>px">
 <?php
     $users=get_users();
@@ -814,7 +814,7 @@ function config_single_group_select($name, $label, $current=array(), $width=300)
     global $lang;
 ?>
   <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
     <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px">
 <?php
     $usergroups=get_usergroups();
@@ -859,7 +859,7 @@ function config_multi_group_select($name, $label, $current=array(), $width=300)
     global $lang;
 ?>
   <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
     <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="7" style="width:<?php echo $width ?>px">
 <?php
     $usergroups=get_usergroups();
@@ -913,7 +913,7 @@ function config_multi_ftype_select($name, $label, $current, $width=300,$size=7,$
     $resource_types = array_column($all_resource_types,"name","ref");
     ?>
     <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
     <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" size="<?php echo $size?>" style="width:<?php echo $width ?>px">
     <?php
     foreach($fields as $field)
@@ -970,7 +970,7 @@ function config_single_rtype_select($name, $label, $current, $width=300)
     $rtypes=get_resource_types("",true,false,true);
 ?>
   <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
     <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px">
 <?php
     foreach($rtypes as $rtype)
@@ -1118,7 +1118,7 @@ function config_db_single_select($name, $label, $current, $choices, $ixcol='ref'
     global $lang;
 ?>
   <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
     <select name="<?php echo $name?>" id="<?php echo $name?>" style="width:<?php echo $width ?>px">
 <?php
     foreach($choices as $item)
@@ -1192,7 +1192,7 @@ function config_add_db_single_select($config_var, $label, $choices, $ixcol='ref'
     global $lang;
 ?>
   <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
     <select name="<?php echo $name?>[]" id="<?php echo $name?>" multiple="multiple" size="7" class="MultiSelect" style="width:<?php echo $width ?>px">
 <?php
     foreach($choices as $item)

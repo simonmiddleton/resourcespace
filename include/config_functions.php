@@ -1026,7 +1026,7 @@ function config_single_ftype_select($name, $label, $current, $width=300, $rtype=
 
 ?>
   <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo str_replace('%cvn', $name, $lang['plugins-configvar'])?>"><?php echo $label?></label>
+    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
     
      <?php
     if($autosave)

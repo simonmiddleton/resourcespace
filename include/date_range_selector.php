@@ -18,7 +18,15 @@ else
 <?php
 foreach ($reporting_periods_default as $period_default)
     {
-    ?><option value="<?php echo $period_default?>" <?php if ($period_init==$period_default) { ?>selected<?php } ?>><?php echo str_replace("?",$period_default,$lang["lastndays"])?></option><?php
+    if (is_int($period_default))
+        {
+        printf(
+            '<option value="%s"%s>%s</option>',
+            $period_default,
+            $period_init == $period_default ? ' selected' : '',
+            escape(str_replace('?', $period_default, $lang['lastndays']))
+        );
+        }
     }
 ?>
 <option value="0" <?php if ($period_init==0) { ?>selected<?php } ?>><?php echo escape($lang["specificdays"]); ?></option>
@@ -34,8 +42,8 @@ foreach ($reporting_periods_default as $period_default)
 <div class="Question">
 <label for="period_days"><?php echo escape($lang["specificdays"]); ?></label>
 <?php
-$textbox="<input type=\"text\" id=\"period_days\" name=\"period_days\" size=\"4\" value=\"" . getval("period_days","") . "\">";
-echo str_replace("?",$textbox,$lang["lastndays"]);
+$textbox="<input type=\"text\" id=\"period_days\" name=\"period_days\" size=\"4\" value=\"" . escape(getval("period_days","")) . "\">";
+echo str_replace("?",$textbox, escape($lang["lastndays"]));
 ?>
 <div class="clearerleft"> </div>
 </div>

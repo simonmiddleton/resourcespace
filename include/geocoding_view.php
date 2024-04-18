@@ -63,8 +63,8 @@ if (!isset($geolocation_panel_only))
 
     if ($hide_geolocation_panel)
         { ?>
-        <div id="GeolocationShowLink" class="CollapsibleSection" ><?php echo "<a href=\"javascript: void(0)\" onClick=\"ShowGeolocation();\">&#x25B8;&nbsp;" . $lang['showgeolocationpanel'] . "</a>";?></div>
-        <div id="GeolocationHideLink" class="CollapsibleSection" style="display:none"><?php echo "<a href=\"javascript: void(0)\" onClick=\"HideGeolocation();return false;\">&#x25BE;&nbsp;" . $lang['hidegeolocationpanel'] . "</a>";?></div> <?php
+        <div id="GeolocationShowLink" class="CollapsibleSection" ><?php echo "<a href=\"javascript: void(0)\" onClick=\"ShowGeolocation();\">&#x25B8;&nbsp;" . escape($lang['showgeolocationpanel']) . "</a>";?></div>
+        <div id="GeolocationHideLink" class="CollapsibleSection" style="display:none"><?php echo "<a href=\"javascript: void(0)\" onClick=\"HideGeolocation();return false;\">&#x25BE;&nbsp;" . escape($lang['hidegeolocationpanel']) . "</a>";?></div> <?php
         }
     }
 
