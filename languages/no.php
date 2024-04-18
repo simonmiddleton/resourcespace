@@ -951,12 +951,7 @@ $lang["groupaccess"]="Gruppetilgang";
 $lang["plugin-groupsallaccess"]="Dette programtillegget er aktivert for alle grupper";
 $lang["plugin-groupsspecific"]="Dette programtillegget er kun aktivert for de valgte gruppene";
 
-
 $lang["associatedcollections"]="Assosierte lysbord";
-$lang["emailfromuser"]="Send e-posten fra ";
-$lang["emailfromsystem"]="Hvis uavkrysset vil e-posten bli sendt fra systemadressen: ";
-
-
 
 $lang["previewpage"]="Forhåndsvis side";
 $lang["nodownloads"]="Ingen nedlastinger";
@@ -2538,10 +2533,6 @@ $lang["collection_restype_blocked"]='Følgende ressurstyper kan ikke legges til'
 $lang["retina_mode"]='Netthinnemodus';
 $lang["private-api-key"]='Privat API-nøkkel';
 $lang["force_edit_resource_type"]='Tving redigeringsadgang til ressurstype:';
-$lang["userpreference_headersize"]='Størrelse på overskrift';
-$lang["headersmall"]='Liten';
-$lang["headermid"]='Middels';
-$lang["headerlarge"]='Stor';
 $lang["responsive_configtitle"]='Responsiv';
 $lang["responsive_main_menu"]='Meny';
 $lang["responsive_settings_menu"]='Konto';

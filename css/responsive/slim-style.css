@@ -651,14 +651,6 @@ body {
     }
 }
 @media(max-width:819px) {
-    .HomePicturePanel {
-        margin: 0 0 0 0;
-        text-align: center;
-        width: 100%;
-    }
-    .HomePicturePanel a {
-        display:inline-block;
-    }
     #HomeSiteText {
         width: 100%;
         margin-left: 0.5%;
@@ -684,9 +676,6 @@ body {
     }
 }
 @media(max-width:559px) {
-    .HomePicturePanel {
-        display:none;
-    }
     #CentralSpace {
         padding:0;
     }

@@ -1515,8 +1515,6 @@ $lang["groupaccess"]='صلاحية المجموعة';
 $lang["plugin-groupsallaccess"]='تم تفعيل هذه الإضافة لجميع المجموعات';
 $lang["plugin-groupsspecific"]='تم تفعيل هذه الإضافة للمجموعات المحددة فقط';
 $lang["associatedcollections"]='المجموعات المرتبطة';
-$lang["emailfromuser"]='إرسال البريد الإلكتروني من';
-$lang["emailfromsystem"]='إذا لم يتم التحقق، سيتم إرسال البريد الإلكتروني من عنوان النظام:';
 $lang["previewpage"]='صفحة المعاينة';
 $lang["nodownloads"]='لا يوجد تنزيلات';
 $lang["uncollectedresources"]='الموارد غير المستخدمة في المجموعات';
@@ -2468,10 +2466,6 @@ $lang["collection_restype_blocked"]='لا يمكن إضافة أنواع الم�
 $lang["retina_mode"]='وضع الشبكية (Retina mode)';
 $lang["private-api-key"]='مفتاح API الخاص';
 $lang["force_edit_resource_type"]='فرض صلاحية التعديل القسري على نوع المورد:';
-$lang["userpreference_headersize"]='حجم الرأس (Hajm al-ra\'s)';
-$lang["headersmall"]='صغير';
-$lang["headermid"]='متوسط (Mutoasif)';
-$lang["headerlarge"]='كبير';
 $lang["responsive_configtitle"]='متجاوب';
 $lang["responsive_main_menu"]='القائمة';
 $lang["responsive_settings_menu"]='حساب';

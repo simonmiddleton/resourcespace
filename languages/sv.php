@@ -1181,12 +1181,7 @@ $lang["groupaccess"]="Gruppåtkomst";
 $lang["plugin-groupsallaccess"]="Detta tillägg är aktiverat för alla grupper";
 $lang["plugin-groupsspecific"]="Detta tillägg är aktiverat endast för markerade grupper";
 
-
 $lang["associatedcollections"]="Samlingar som detta material ingår i";
-$lang["emailfromuser"]="Skicka e-postmeddelandet från ";
-$lang["emailfromsystem"]="Avmarkera kryssrutan om du vill att e-postmeddelandet ska skickas från systemets e-postadress: ";
-
-
 
 $lang["previewpage"]="Förhandsgranska sida";
 $lang["nodownloads"]="Inga hämtningar";
@@ -2618,10 +2613,6 @@ $lang["collection_restype_blocked"]='Följande resurstyper kan inte läggas till
 $lang["retina_mode"]='Retina-läge';
 $lang["private-api-key"]='Privat API-nyckel';
 $lang["force_edit_resource_type"]='Tvinga redigeringsåtkomst till resurstyp:';
-$lang["userpreference_headersize"]='Rubrikstorlek';
-$lang["headersmall"]='Liten';
-$lang["headermid"]='Mellanstorlek';
-$lang["headerlarge"]='Stor';
 $lang["responsive_configtitle"]='Responsiv';
 $lang["linkedheaderimgsrc"]='Platsen för logobilden i sidhuvudet (standardinställning är ResourceSpace):';
 $lang["responsive_result_settings"]='Resultatinställningar';

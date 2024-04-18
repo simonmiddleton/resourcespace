@@ -1400,8 +1400,6 @@ $lang["groupaccess"]='Acces de grup';
 $lang["plugin-groupsallaccess"]='Acest plugin este activat pentru toate grupurile';
 $lang["plugin-groupsspecific"]='Acest plugin este activat doar pentru grupurile selectate';
 $lang["associatedcollections"]='Coleții asociate';
-$lang["emailfromuser"]='Trimite e-mailul de la';
-$lang["emailfromsystem"]='Dacă nu este bifată, email-ul va fi trimis de la adresa sistemului:';
 $lang["previewpage"]='Pagină de previzualizare';
 $lang["nodownloads"]='Nicio descărcare';
 $lang["uncollectedresources"]='Resurse neutilizate în colecții';
@@ -2339,10 +2337,6 @@ $lang["collection_restype_blocked"]='Tipurile de resurse următoare nu pot fi ad
 $lang["retina_mode"]='Modul Retina';
 $lang["private-api-key"]='Cheie API privată';
 $lang["force_edit_resource_type"]='Acces forțat la editarea tipului de resursă:';
-$lang["userpreference_headersize"]='Dimensiune antet';
-$lang["headersmall"]='Mic';
-$lang["headermid"]='Mijlociu';
-$lang["headerlarge"]='Mare';
 $lang["responsive_configtitle"]='Vă rugăm să traduceți: Responsive
 
 Răspuns: Receptiv';

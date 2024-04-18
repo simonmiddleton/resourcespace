@@ -1398,12 +1398,7 @@ $lang["groupaccess"]="Skupinový prístup";
 $lang["plugin-groupsallaccess"]="Toto rozšírenie je aktivované pre všetky skupiny";
 $lang["plugin-groupsspecific"]="Toto rozšírenie je aktivované iba pre vybrané skupiny";
 
-
 $lang["associatedcollections"]="Súvisiace zbierky";
-$lang["emailfromuser"]="Poslať e-mail od";
-$lang["emailfromsystem"]="Ak nie je začiarknuté, e-mail bude odoslaný zo systémovej adresy:";
-
-
 
 $lang["previewpage"]="Ukážka stránky";
 $lang["nodownloads"]="Žiadne sťahovania";
@@ -2483,11 +2478,6 @@ $lang["retina_mode"]="Režim RETINA";
 
 $lang["private-api-key"]="Súkromný kľúč API";
 $lang["can_edit_resource_type"] = "Vynútiť prístup k úpravám typu zdroja:";
-
-$lang["userpreference_headersize"]="Veľkosť hlavičky";
-$lang["headersmall"]="Malá";
-$lang["headermid"]="Stredná";
-$lang["headerlarge"]="Veľká";
 
 // Responsive
 $lang["responsive_configtitle"]="Responzívny";

@@ -109,8 +109,6 @@ tr[id^="ResourceShell"].Selected { background-color: #d5eafa; /* Used a tint of 
 .HomePanel h2 {color:#FFF;}
 #HomeSiteText {padding:10px;}
 #HomeSiteText.dashtext h1 {color:#FFF;}
-#SlideshowContainer #HomeSiteText.dashtext h1 {color:#373737;}
-#SlideshowContainer #HomeSiteText.dashtext {background:transparent;border:none;color:#373737;}
 
 /* Default colours for search, dash tiles, browse bar etc */
 #SearchBox, #HomeSiteText.dashtext, .HomePanelIN, .PopupCategoryTree {
@@ -174,6 +172,8 @@ div.autocomplete ul li {color: #000;}
 
 /* Star Ratings */
 .StarSelect {background: transparent url('../gfx/interface/RatingStarYellow.gif') no-repeat;}
+.StarWhite {background: transparent url('../gfx/interface/RatingStarWhite.gif') no-repeat;}
+.StarGrey {background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 .StarEmpty {background: transparent url('../gfx/interface/RatingStarGrey.gif') no-repeat;}
 .StarCurrent {background: transparent url('../gfx/interface/RatingStarRed.gif') no-repeat;}
 .IconUserRatingStar {background: url(../gfx/interface/RatingStarRed.gif) no-repeat;}

@@ -329,7 +329,6 @@ $corefields = array(
         'config_sheetlist_fields',
         'config_sheetthumb_fields',
         'config_sheetsingle_fields',
-        'zip_contents_field',
         'related_search_searchcrumb_field',
         'warn_field_request_approval',
         'rating_field',

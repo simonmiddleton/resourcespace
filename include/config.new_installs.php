@@ -13,11 +13,6 @@ This provides a mechanism for enabling new features for new installations withou
 $imagemagick_colorspace = "sRGB";
 
 $contact_link=false;
-
-$slideshow_big=true;
-$home_slideshow_width=1920;
-$home_slideshow_height=1080;
-
 $themes_simple_view=true;
 
 $stemming=true;

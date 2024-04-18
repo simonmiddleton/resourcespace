@@ -846,12 +846,7 @@ $lang["groupaccess"]="组群使用权限";
 $lang["plugin-groupsallaccess"]="这个plugin已为所有用户群启动";
 $lang["plugin-groupsspecific"]="这个plugin只为已特定的用户群启动";
 
-
 $lang["associatedcollections"]="相关的收藏夹";
-$lang["emailfromuser"]="以这个身份发出电邮 ";
-$lang["emailfromsystem"]="如未检查, 电邮会以系统的身份发出: ";
-
-
 
 $lang["previewpage"]="预览页";
 $lang["nodownloads"]="未有下载";
@@ -2487,10 +2482,6 @@ $lang["collection_restype_blocked"]='以下资源类型无法添加。';
 $lang["retina_mode"]='视网膜模式';
 $lang["private-api-key"]='私有 API 密钥';
 $lang["force_edit_resource_type"]='强制编辑资源类型的访问：';
-$lang["userpreference_headersize"]='页眉大小';
-$lang["headersmall"]='小的';
-$lang["headermid"]='中等 (Zhōngděng)';
-$lang["headerlarge"]='大的';
 $lang["responsive_configtitle"]='响应式的';
 $lang["responsive_main_menu"]='菜单';
 $lang["responsive_settings_menu"]='账户';

@@ -10,14 +10,3 @@
 #remote_assist {
     color: white;
 }
-
-/* Styling for $small_slideshow */
-
-#SlideshowContainer #remote_assist,
-#SlideshowContainer #remote_assist a {
-    color: #373737;
-}
-
-#SlideshowContainer #remote_assist #HomeSiteText {
-    padding: 0;
-}

@@ -500,12 +500,9 @@ $lang["collectionlog"]="log collezione";
 $lang["externalselectresourceaccess"]="Se vuoi mandare una mail a utenti esterni, seleziona il livello di accesso che desideri correlare alla risorsa.";
 $lang["externalselectresourceexpires"]="Se vuoi mandare una mail a utenti esterni, seleziona una data di scadenza dell'url.";
 $lang["requestfeedback"]="Richiedi un feedback <br />(ti verrà mandata una mail di risposta)";
-$lang["emailfromuser"]="Invia l'e-mail da ";
 
 $lang["never"]="Mai";
 $lang["noattachedusers"]="nessun utente allegato";
-$lang["emailfromsystem"]="Se non selezioni l'opzione, la mail verrÃ  mandata dall'indirizzo di sistema: ";
-
 
 $lang["usergroup-administrators"]='Amministratori';
 $lang["usergroup-general_users"]='Utenti generali';
@@ -2385,10 +2382,6 @@ $lang["collection_restype_blocked"]='I seguenti tipi di risorse non possono esse
 $lang["retina_mode"]='Modalità Retina';
 $lang["private-api-key"]='Chiave API privata';
 $lang["force_edit_resource_type"]='Forzare l\'accesso di modifica al tipo di risorsa:';
-$lang["userpreference_headersize"]='Dimensione dell\'intestazione';
-$lang["headersmall"]='Piccolo';
-$lang["headermid"]='Mezzo';
-$lang["headerlarge"]='Grande';
 $lang["responsive_configtitle"]='Risposta adattiva';
 $lang["responsive_more"]='Di più..';
 $lang["responsive_less"]='Meno..';

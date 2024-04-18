@@ -1127,9 +1127,6 @@ $lang["plugin-groupsallaccess"]="Tämä lisäosa on aktivoitu kaikille ryhmille"
 $lang["plugin-groupsspecific"]="Tämä lisäosa on aktivoitu vain valituille ryhmille";
 
 $lang["associatedcollections"]="Liittyvät kokoelmat";
-$lang["emailfromuser"]="Lähetä sähköposti osoitteesta ";
-$lang["emailfromsystem"]="Jos sähköposti jätetään rastimatta, se lähetetään järjestelmän osoitteesta: ";
-
 $lang["previewpage"]="Esikatselusivu";
 $lang["nodownloads"]="Ei latauksia";
 $lang["uncollectedresources"]="Kokoelmissa käyttämättömiä resursseja";
@@ -2577,10 +2574,6 @@ $lang["collection_restype_blocked"]='Seuraavia resurssityyppejä ei voi lisätä
 $lang["retina_mode"]='Verkkokalvotila';
 $lang["private-api-key"]='Yksityinen API-avain';
 $lang["force_edit_resource_type"]='Pakota muokkausoikeus resurssityyppiin:';
-$lang["userpreference_headersize"]='Otsikon koko';
-$lang["headersmall"]='Pieni';
-$lang["headermid"]='Keskikokoinen';
-$lang["headerlarge"]='Suuri';
 $lang["responsive_configtitle"]='Vastauskykyinen';
 $lang["responsive_main_menu"]='Valikko';
 $lang["responsive_settings_menu"]='Tili';

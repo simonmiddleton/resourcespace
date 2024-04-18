@@ -1597,12 +1597,7 @@ $lang["groupaccess"]="Group access";
 $lang["plugin-groupsallaccess"]="This plugin is activated for all groups";
 $lang["plugin-groupsspecific"]="This plugin is activated for the selected groups only";
 
-
 $lang["associatedcollections"]="Associated collections";
-$lang["emailfromuser"]="Send the e-mail from ";
-$lang["emailfromsystem"]="If unchecked, email will be sent from the system address: ";
-
-
 
 $lang["previewpage"]="Preview page";
 $lang["nodownloads"]="No downloads";
@@ -2770,11 +2765,6 @@ $lang["retina_mode"]="Retina mode";
 
 $lang["private-api-key"]="Private API key";
 $lang["force_edit_resource_type"] = "Force edit access to resource type: ";
-
-$lang["userpreference_headersize"]="Header size";
-$lang["headersmall"]="Small";
-$lang["headermid"]="Medium";
-$lang["headerlarge"]="Large";
 
 // Responsive
 $lang["responsive_configtitle"]="Responsive";

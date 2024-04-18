@@ -836,12 +836,7 @@ $lang["groupaccess"]="Group Access";
 $lang["plugin-groupsallaccess"]="This plugin is activated for all groups";
 $lang["plugin-groupsspecific"]="This plugin is activated for the selected groups only";
 
-
 $lang["associatedcollections"]="Associated Collections";
-$lang["emailfromuser"]="Send the e-mail from ";
-$lang["emailfromsystem"]="If unchecked, email will be sent from the system address: ";
-
-
 
 $lang["previewpage"]="Preview Page";
 
@@ -2478,10 +2473,6 @@ $lang["collection_restype_blocked"]='Następujące typy zasobów nie mogą zosta
 $lang["retina_mode"]='Tryb Retina';
 $lang["private-api-key"]='Prywatny klucz API';
 $lang["force_edit_resource_type"]='Wymuś dostęp do edycji dla typu zasobu:';
-$lang["userpreference_headersize"]='Rozmiar nagłówka';
-$lang["headersmall"]='Mały';
-$lang["headermid"]='Średni';
-$lang["headerlarge"]='Duży';
 $lang["responsive_configtitle"]='Dostosowywalny';
 $lang["responsive_settings_menu"]='Konto';
 $lang["responsive_more"]='Więcej...';

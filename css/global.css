@@ -680,12 +680,8 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .HomePanelIN {padding: 15px;min-height: 150px;}
 .HomePanel h2 {display:block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .HomePanel p {margin: 0; padding: 5px 0 4px 0;}
-.HomePicturePanel {    margin:0 15px 10px 0;float: left;width: 517px;}
-.HomePicturePanelIN img {width:517px; height:350px;}
-.HomePicturePanelIN {height: 350px;}
 
 .HomePanelPromotedImageWrap {text-align:center;min-height:155px;vertical-align:middle;}
-#SlideshowContainer #HomeSiteText {width: 100%;clear: left;}
 a.HomePanel {text-decoration:none; cursor:pointer;}
 
 .TabBar {padding:8px 0 0 0;margin-bottom: -1px;}
@@ -1193,9 +1189,7 @@ input.contactadminbutton  {
 #HomePanelContainer {
   width: 100%;
 }
-#SlideshowContainer {
-    float:left;
-}
+
 #HomePanelContainer a {-webkit-user-drag: none;}
 
 .HomePanelPromotedIN h3 {
@@ -1830,11 +1824,6 @@ form.FormFilter button.ClearButton {
 }
 .keywordselected a {padding-left:8px;}
 .RemoveKeyword {font-weight: bold; font-size: 1.2em;}
-
-#photoholder {  
-    margin-top: 15px;
-}
-
 
 #PreviewTools {
     height: 41px;

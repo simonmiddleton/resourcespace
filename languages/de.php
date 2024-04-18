@@ -1191,12 +1191,7 @@ $lang["markers"] = "Markierungen";
  $lang["plugin-groupsallaccess"]="Dieses Plugin ist für alle Gruppen aktiv";
  $lang["plugin-groupsspecific"]="Dieses Plugin ist nur für ausgewählte Gruppen aktiv";
 
-
  $lang["associatedcollections"]="Verbundene Kollektionen";
- $lang["emailfromuser"]="E-Mail senden von ";
- $lang["emailfromsystem"]="Haken entfernen, um die E-Mail von der System-Adresse zu senden: ";
-
-
 
  $lang["previewpage"]="Vorschauseite";
  $lang["nodownloads"]="Keine Downloads";
@@ -2644,10 +2639,6 @@ $lang["collection_restype_blocked"]='Die folgenden Ressourcentypen können nicht
 $lang["retina_mode"]='Retina-Modus';
 $lang["private-api-key"]='Privater API-Schlüssel';
 $lang["force_edit_resource_type"]='Erzwinge Bearbeitungszugriff auf Ressourcentyp:';
-$lang["userpreference_headersize"]='Größe des Headers';
-$lang["headersmall"]='Klein';
-$lang["headermid"]='Mittelgroß';
-$lang["headerlarge"]='Groß';
 $lang["responsive_configtitle"]='Reaktionsfähig';
 $lang["responsive_main_menu"]='Menü';
 $lang["responsive_settings_menu"]='Konto';
