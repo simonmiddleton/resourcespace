@@ -92,22 +92,40 @@ if(!$targetfield_data)
     exit("Invalid field specified: # {$targetfield}\n\n");
     }
 $input_field = $targetfield_data["openai_gpt_input_field"];
-$input_field_data = get_resource_type_field($input_field);
-if(!$input_field_data)
+
+$input_is_file = false;
+if ($input_field === -1)
     {
-    exit("Invalid input field for {$targetfield} : '{$input_field}'\n\n");
+    // Input field is the image i.e GPT Input is "Image: Preview image"
+    $input_is_file = true;
     }
+else
+    {
+    $input_field_data = get_resource_type_field($input_field);
+    if(!$input_field_data)
+        {
+        exit("Invalid input field for {$targetfield} : '{$input_field}'\n\n");
+        }
+    }
+
 $allstates = get_workflow_states();
 $arr_toprocess = [];
 
 echo"OpenAI GPT plugin - process_existing.php script...\n";
 echo" - Overwrite existing data: " . ($overwrite ? "TRUE" : "FALSE") . "\n";
 echo" - Target field : #" . $targetfield  . " - " . $targetfield_data["title"] . " (" . $targetfield_data["name"] . ")\n";
-echo" - input field : #" . $input_field . " - " . $input_field_data["title"] . " (" . $input_field_data["name"] . ")\n";
+if ($input_is_file)
+    {
+    echo" - Input field : Image: Preview image\n";
+    }
+else
+    {
+    echo" - Input field : #" . $input_field . " - " . $input_field_data["title"] . " (" . $input_field_data["name"] . ")\n";
+    }
 echo" - Prompt : " . $targetfield_data["openai_gpt_prompt"] . "\n";
 echo" - Collections : " . implode(",",$collections) . "\n";
 
-if(!$overwrite)
+if(!$overwrite && !$input_is_file)
     {
     $arr_allresources = do_search('!hasdata' . $input_field,'','',implode(",",$allstates),-1,'desc',true,null,true,false,'',false,false,true);
     }
@@ -141,40 +159,74 @@ if(!$overwrite)
 
 echo "Found ". count($arr_toprocess) . " valid resource(s) to process\n";
 flush();ob_flush();
-// Sort into an array indexed by nodes so resources with the same data can be processed together
-$nodegroups = [];
-foreach($arr_toprocess as $resource)
-    {
-    $resnodes = get_resource_nodes($resource,$input_field,true,SORT_ASC);
-    $nodehash = empty($resnodes) ? "BLANK" : md5(implode(",",array_column($resnodes,"ref")));
-    if(!isset($nodegroups[$nodehash]))
-        {
-        $nodegroups[$nodehash] = [];
-        $nodegroups[$nodehash]["resources"] = [];
-        $nodegroups[$nodehash]["nodes"] = $resnodes;
-        }
-    $nodegroups[$nodehash]["resources"][] = $resource;
-    }
 
 $arr_success = [];
 $arr_failure = [];
-foreach($nodegroups as $nodehash=>$nodegroup)
+if ($input_is_file)
     {
-    echo "Processing resources: " . implode(",",$nodegroup["resources"]) . "\n";
-    flush();ob_flush();
-    $strings = ($nodehash != "BLANK" && count($nodegroup["nodes"]) > 0) ? get_node_strings($nodegroup["nodes"]) : [];
-    $updated = openai_gpt_update_field($nodegroup["resources"],$targetfield_data,$strings);
-    if($updated)
+    foreach($arr_toprocess as $resource)
         {
-        $arr_success = array_merge($arr_success,$nodegroup["resources"]);
-        echo " - SUCCESS\n";
+        echo "Processing resource: $resource\n";
+        flush(); ob_flush();
+
+        $path_to_file=get_resource_path($resource, true, "pre");
+        if (!file_exists($path_to_file))
+            {
+            $arr_failure[] = $resource;
+            echo " - ERROR. Pre size file was not found for resource\n";
+            flush(); ob_flush();
+            continue;
+            }
+
+        $updated = openai_gpt_update_field($resource, $targetfield_data, array(), $path_to_file);
+        if($updated)
+            {
+            $arr_success[] = $resource;
+            echo " - SUCCESS\n";
+            }
+        else
+            {
+            $arr_failure[] = $resource;
+            echo " - ERROR. The above resource was not updated\n";
+            }
+        flush(); ob_flush();
         }
-    else
+    }
+else
+    {
+    // Sort into an array indexed by nodes so resources with the same data can be processed together
+    $nodegroups = [];
+    foreach($arr_toprocess as $resource)
         {
-        $arr_failure = array_merge($arr_failure,$nodegroup["resources"]);
-        echo " - ERROR. None of the above resources were updated\n";
+        $resnodes = get_resource_nodes($resource,$input_field,true,SORT_ASC);
+        $nodehash = empty($resnodes) ? "BLANK" : md5(implode(",",array_column($resnodes,"ref")));
+        if(!isset($nodegroups[$nodehash]))
+            {
+            $nodegroups[$nodehash] = [];
+            $nodegroups[$nodehash]["resources"] = [];
+            $nodegroups[$nodehash]["nodes"] = $resnodes;
+            }
+        $nodegroups[$nodehash]["resources"][] = $resource;
         }
-    flush();ob_flush();
+
+    foreach($nodegroups as $nodehash=>$nodegroup)
+        {
+        echo "Processing resources: " . implode(",",$nodegroup["resources"]) . "\n";
+        flush();ob_flush();
+        $strings = ($nodehash != "BLANK" && count($nodegroup["nodes"]) > 0) ? get_node_strings($nodegroup["nodes"]) : [];
+        $updated = openai_gpt_update_field($nodegroup["resources"],$targetfield_data,$strings);
+        if($updated)
+            {
+            $arr_success = array_merge($arr_success,$nodegroup["resources"]);
+            echo " - SUCCESS\n";
+            }
+        else
+            {
+            $arr_failure = array_merge($arr_failure,$nodegroup["resources"]);
+            echo " - ERROR. None of the above resources were updated\n";
+            }
+        flush();ob_flush();
+        }
     }
 
 $c_success = count($arr_success);
@@ -188,5 +240,5 @@ $c_failure = count($arr_failure);
 if($c_failure>0)
     {
     echo "   " . str_pad($c_failure,6) .  " resources failed to update\n";
-    echo "Failed resources: " . implode(",",$arr_failure);
+    echo "Failed resources: " . implode(",",$arr_failure) ."\n";
     }
