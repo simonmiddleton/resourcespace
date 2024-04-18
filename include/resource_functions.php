@@ -23,7 +23,7 @@ $GLOBALS['get_resource_path_fpcache'] = array();
 * @param boolean $scramble         Set to TRUE to get the scrambled folder (requires scramble key for it to work)
 * @param integer $page             For documents, use the page number we are trying to get the preview of.
 * @param boolean $watermarked      Get the watermark version?
-* @param string  $file_modified    Specify when the file was last modified
+* @param int     $file_modified    Specify when the file was last modified as a Unix timestamp
 * @param integer $alternative      ID of the alternative file
 * @param boolean $includemodified  Show when the file was last modified
 *
@@ -52,6 +52,13 @@ function get_resource_path(
         {
         $ref = $resource_path_pull_cache[$ref]["ref"];
         }
+
+    $size = safe_file_name($size);
+    $extension = safe_file_name($extension);
+
+    if (!is_int_loose($file_modified)) {
+        $file_modified = '';
+    }
 
     # Returns the correct path to resource $ref of size $size ($size==empty string is original resource)
     # If one or more of the folders do not exist, and $generate=true, then they are generated
