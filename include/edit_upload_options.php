@@ -17,7 +17,7 @@ if ($on_upload || (isset($ref) && $ref<0))
         <?php
         }
 
-    if($on_upload && $upload_then_edit && $resource_type_force_selection)
+    if($on_upload && $upload_then_edit)
         {
         ?>
         <div id="question_resourcetype" class="Question">
