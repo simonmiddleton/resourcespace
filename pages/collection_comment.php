@@ -69,7 +69,7 @@ if (file_exists($imagepath)){?>
 <input type="hidden" name="collection" value="<?php echo escape($collection) ?>">
 <input type=hidden name="submitted" value="true">
 <div class="Question">
-<label for="name"><?php echo escape($lang["comment"]); ?></label><textarea class="stdwidth" style="width:450px;" rows=20 cols=80 name="comment" id="comment"><?php echo escape($comment)?></textarea>
+<label for="name"><?php echo escape($lang["comment"]); ?></label><textarea class="stdwidth" style="width:450px;" rows=20 cols=80 name="comment" id="comment"><?php echo escape((string) $comment)?></textarea>
 <div class="clearerleft"> </div>
 </div>
 
