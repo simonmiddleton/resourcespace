@@ -235,7 +235,7 @@ final class IIIFRequest {
                 $size = "";
                 $media_path = get_resource_path($iiif_result["ref"],true,$size,false,$iiif_result["file_extension"]);
             } else {
-                $size = is_jpeg_extension($iiif_result["file_extension"]) ? "" : "hpr";
+                $size = is_jpeg_extension($iiif_result["file_extension"] ?? "") ? "" : "hpr";
                 $media_path = get_resource_path($iiif_result["ref"],true,$size,false);
             }
             if(!file_exists($media_path)) {
@@ -244,7 +244,7 @@ final class IIIFRequest {
                 if($pullresource !== false) {
                     $this->processing["resource"] = $pullresource["ref"];
                     $this->processing["size_info"] = [
-                        'identifier' => (is_jpeg_extension($pullresource["file_extension"] ?? "") ? '' : 'hpr'),
+                        'identifier' => (is_jpeg_extension($pullresource["file_extension"] ?? '') ? '' : 'hpr'),
                         'return_height_width' => false,
                         ];
                 }
@@ -359,7 +359,6 @@ final class IIIFRequest {
         }
 
         $media = [];
-
         if(in_array($resdata["file_extension"],array_merge($this->media_extensions))) {
             $media["duration"] = get_video_duration($media_path); // Also works for audio
             $accesskey = generate_temp_download_key($GLOBALS["userref"],$resource,"");
@@ -599,11 +598,10 @@ final class IIIFRequest {
             $size = is_jpeg_extension($useimage["file_extension"] ?? "") ? "" : "hpr";
         }
         $media_path = get_resource_path($useimage["ref"],true,$size,false,$useimage["file_extension"]);
-        if(!file_exists($media_path))
-            {
+        if(!file_exists($media_path)) {
             debug("IIIF: generateCanvas() No image available for identifier:" . $position);
             return false;
-            }
+        }
         $sequence_field = get_resource_type_field($this->sequence_field);
         $sequenceid = $resource["iiif_position"];
         debug("IIIF: Found resource " . $resource['ref'] . " in position " . $position . ", sequence ID: " . $sequenceid);
@@ -1238,7 +1236,7 @@ final class IIIFRequest {
             if(in_array(strtolower($this->searchresults[$position]['file_extension'] ?? ""), $this->media_extensions)) {
                 $identifier = '';
             } else {
-                $identifier = is_jpeg_extension($this->processing["file_extension"] ?? "") ? "" : "hpr";
+                $identifier = is_jpeg_extension($this->searchresults[$position]['file_extension'] ?? "") ? "" : "hpr";
             }
             $this->processing["size_info"] = array(
                 'identifier' => $identifier,
@@ -1288,9 +1286,9 @@ final class IIIFRequest {
                 ($this->getwidth == 0 || fmod($this->regionw,$this->getwidth) == 0)
                 && ($this->getheight == 0 || fmod($this->regionh,$this->getheight) == 0)
             ) {
-                // Check this is a valid scale from the width/height requested. 
+                // Check this is a valid scale from the width/height requested.
                 // If using just e.g. "x," or ",y" then default to 1)
-                $hscale = $this->getwidth > 0 ? ceil($this->regionw / $this->getwidth) : 1; 
+                $hscale = $this->getwidth > 0 ? ceil($this->regionw / $this->getwidth) : 1;
                 $vscale = $this->getheight > 0 ? ceil($this->regionh / $this->getheight) : 1;
                 if (
                     ($this->getwidth === 0 || $this->getheight === 0 || $hscale == $vscale)
@@ -1321,23 +1319,23 @@ final class IIIFRequest {
 
 /**
 * Get an array of all the canvases for the identifier ready for JSON encoding
-* 
+*
 * @uses get_data_by_field()
 * @uses get_original_imagesize()
 * @uses get_resource_type_field()
 * @uses get_resource_path()
 * @uses iiif_get_thumbnail()
 * @uses iiif_get_image()
-* 
+*
 * @param integer $identifier        IIIF identifier (this associates resources via the metadata field set as $iiif_identifier_field
-* @param array $iiif_results        Array of ResourceSpace search results that match the $identifier, sorted 
+* @param array $iiif_results        Array of ResourceSpace search results that match the $identifier, sorted
 * @param boolean $sequencekeys      Get the array with each key matching the value set in the metadata field $iiif_sequence_field. By default the array will be sorted but have a 0 based index
-* 
+*
 * @return array
 */
 function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     {
-    global $rooturl,$iiif_sequence_field;   
+    global $rooturl,$iiif_sequence_field;
 
     $canvases = array();
     foreach ($iiif_results as $index=>$iiif_result)
@@ -1376,7 +1374,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         $canvases[$index]["height"] = intval($image_size[2]);
         $canvases[$index]["width"] = intval($image_size[1]);
 
-        // "If the largest image's dimensions are less than 1200 pixels on either edge, then the canvas dimensions 
+        // "If the largest image's dimensions are less than 1200 pixels on either edge, then the canvas dimensions
         // should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
         if($image_size[1] < 1200 || $image_size[2] < 1200)
             {
@@ -1401,7 +1399,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         return $canvases;
         }
 
-    ksort($canvases);   
+    ksort($canvases);
     $return=array();
     foreach($canvases as $canvas)
         {
@@ -1412,10 +1410,10 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
 
 /**
 * Get  thumbnail information for the specified resource id ready for IIIF JSON encoding
-* 
+*
 * @uses get_resource_path()
 * @uses getimagesize()
-* 
+*
 * @param integer $resourceid        Resource ID
 *
 * @return array
@@ -1452,7 +1450,7 @@ function iiif_get_thumbnail($resourceid)
         {
         list($tw,$th) = getimagesize($img_path);
         $thumbnail["height"] = (int) $th;
-        $thumbnail["width"] = (int) $tw;   
+        $thumbnail["width"] = (int) $tw;
         }
     catch (Exception $e)
         {
@@ -1475,25 +1473,25 @@ function iiif_get_thumbnail($resourceid)
 
 /**
 * Get the image for the specified identifier canvas and resource id
-* 
+*
 * @uses get_original_imagesize()
 * @uses get_resource_path()
-* 
+*
 * @param integer $identifier  IIIF identifier (this associates resources via the metadata field set as $iiif_identifier_field
 * @param integer $resourceid  Resource ID
 * @param string $position     The canvas identifier, i.e position in the sequence. If $iiif_sequence_field is defined
-* @param array $size          ResourceSpace size information. Required information: identifier and whether it 
-*                             requires to return height & width back (e.g annotations don't require it). 
-*                             Please note for the identifier - we use 'hpr' if the original file is not a JPG file it 
+* @param array $size          ResourceSpace size information. Required information: identifier and whether it
+*                             requires to return height & width back (e.g annotations don't require it).
+*                             Please note for the identifier - we use 'hpr' if the original file is not a JPG file it
 *                             will be the value of this metadata field for the given resource
 *                             Example:
 *                             $size_info = array(
 *                               'identifier'          => 'hpr',
 *                               'return_height_width' => true
 *                             );
-* 
+*
 * @return array
-*/  
+*/
 function iiif_get_image($identifier,$resourceid,$position, array $size_info)
     {
     global $rooturl,$rootimageurl;
@@ -1557,7 +1555,7 @@ function iiif_error($errorcode = 404, $errors = array())
         {
         http_response_code($errorcode); # Send error status
         }
-    echo json_encode($errors);   
+    echo json_encode($errors);
     exit();
     }
 
