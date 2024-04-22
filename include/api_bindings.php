@@ -162,6 +162,12 @@ function api_create_resource($resource_type,$archive=999,$url="",$no_exif=false,
         return false;
         }
 
+    if ($archive !== 999 && get_default_archive_state($archive) != $archive)
+        {
+        // User supplied archive state which they don't have permission to use.
+        return false;
+        }
+
     $no_exif    = filter_var($no_exif, FILTER_VALIDATE_BOOLEAN);
     $revert     = filter_var($revert, FILTER_VALIDATE_BOOLEAN);
     $autorotate = filter_var($autorotate, FILTER_VALIDATE_BOOLEAN);
