@@ -3360,6 +3360,22 @@ function get_total_approved_users()
     return ps_value("SELECT COUNT(*) value FROM user WHERE approved = 1", [], 0);
     }
 
+/**
+ * Return the number of resources in the system with optional filter by archive state
+ *
+ * @param  int|bool $status     Archive state to filter by if required
+ * @return int                  Number of resources in the system, filtered by status if provided
+ */
+function get_total_resources($status = false)
+{
+    $sql = new PreparedStatementQuery("SELECT COUNT(*) value FROM resource WHERE ref>0",[]);
+
+    if (is_int($status)) {
+        $sql->sql .= " AND archive=?";
+        $sql->parameters = array_merge($sql->parameters,["i",$status]);
+    }
+    return ps_value($sql->sql,$sql->parameters,0);
+}
 
 /**
 * Check if script last ran more than the failure notification days
@@ -4901,6 +4917,13 @@ function get_system_status()
         'info' => get_recent_users(7),
         'within_year' => get_recent_users(365),
         'total_approved' => get_total_approved_users()
+    ];
+
+    // Return current number of resources
+    $return['results']['resource_count'] = [
+        'status' => 'OK',
+        'total' => get_total_resources(),
+        'active' => get_total_resources(0),
     ];
 
     // Check if plugins have any warnings
