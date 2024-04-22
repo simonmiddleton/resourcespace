@@ -9489,10 +9489,9 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
     $return_failed = [];
     foreach (array_chunk($resources,1000) as $checkresources) {
         $checks = [];
+        $checks["is_readable"]  = true; // Always check for file presence as checksums may not have been generated yet
         if(!$presenceonly && $GLOBALS["file_checksums"]) {
             $checks["get_checksum"]  = "%RESOURCE%file_checksum";
-            } else {
-                $checks["is_readable"]  = true;
             }
         $results = validate_resource_files($checkresources,$checks);
 

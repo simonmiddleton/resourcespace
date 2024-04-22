@@ -354,7 +354,7 @@ function validate_resource_files(array $resources,array $criteria = []): array
                 // No checksum is currently recorded. Update it now that it's been calculated
                 $results[$resource["ref"]] = true;
                 debug("Skipping checksum check for resource " . $resource["ref"] . " - no existing checksum");
-                ps_query("UPDATE resource SET file_checksum=? WHERE ref=?", ['s', $testresult, 'i', $resource["ref"]]);
+                ps_query("UPDATE resource SET file_checksum = ? WHERE ref = ?", ['s', $testresult, 'i', $resource["ref"]]);
                 continue;
             }
 

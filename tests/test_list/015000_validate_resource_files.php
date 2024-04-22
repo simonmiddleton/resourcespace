@@ -1,9 +1,9 @@
 <?php
 command_line_only();
 
-
 $enable_thumbnail_creation_on_upload = false; // Don't need previews here
 $GLOBALS["valid_upload_paths"][] = realpath(__DIR__ . "/../../");
+ps_query("TRUNCATE resource");
 
 // Create resources with files
 $test_image_type = create_resource_type("15000 image resources");
