@@ -762,8 +762,19 @@ function extract_exif_comment($ref,$extension="")
                             }
                         }
 
-                    if ($read_from[$i]["type"] == FIELD_TYPE_DATE)
+                    if (in_array($read_from[$i]["type"], array(FIELD_TYPE_DATE, FIELD_TYPE_DATE_AND_OPTIONAL_TIME)))
                         {
+                        // RS expects dates to use hyphen separator.
+                        debug("-- Data from exiftool command- field: " . $read_from[$i]["ref"] . ' type: '. $read_from[$i]["type"] . " value: $value");
+                        if (strpos($value, ':') == 4)
+                            {
+                            // Date separator is hyphen.
+                            $date_time_parts = explode(' ', $value);
+                            $date_time_parts[0] = str_replace(':', '-', $date_time_parts[0]);
+                            $value = implode(' ', $date_time_parts);
+                            debug("-- Converted- field: " . $read_from[$i]["ref"] . ' type: '. $read_from[$i]["type"] . " value: $value");
+                            }
+
                         $invalid_date = check_date_format($value);
 
                         if(!empty($invalid_date))
