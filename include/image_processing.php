@@ -768,7 +768,6 @@ function extract_exif_comment($ref,$extension="")
                         debug("-- Data from exiftool command- field: " . $read_from[$i]["ref"] . ' type: '. $read_from[$i]["type"] . " value: $value");
                         if (strpos($value, ':') == 4)
                             {
-                            // Date separator is hyphen.
                             $date_time_parts = explode(' ', $value);
                             $date_time_parts[0] = str_replace(':', '-', $date_time_parts[0]);
                             $value = implode(' ', $date_time_parts);
