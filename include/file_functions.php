@@ -344,12 +344,20 @@ function validate_resource_files(array $resources,array $criteria = []): array
                 // Not a valid check
                 continue 2;
             }
+            $cscheck = $expected === "%RESOURCE%file_checksum";
             if(substr($expected,0,10) == "%RESOURCE%") {
                 // $expected is a resource table column
                 $expected = $resource[substr($expected,10)];
             }
-
             $testresult = call_user_func($criterion,$filepath);
+            if($cscheck && ($expected === NULL || $expected === "")) {
+                // No checksum is currently recorded. Update it now that it's been calculated
+                $results[$resource["ref"]] = true;
+                debug("Skipping checksum check for resource " . $resource["ref"] . " - no existing checksum");
+                ps_query("UPDATE resource SET file_checksum=? WHERE ref=?", ['s', $testresult, 'i', $resource["ref"]]);
+                continue;
+            }
+
             $results[$resource["ref"]] = $testresult === $expected;
             if ($results[$resource["ref"]] === false) {
                 debug($resource["ref"] . " failed integrity check. Expected: " . $criterion . "=". $expected . ", got : " . $testresult);
