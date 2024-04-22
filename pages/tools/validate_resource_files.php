@@ -34,15 +34,18 @@ foreach (getopt('', $cli_long_options) as $option_name => $option_value) {
 
 
 set_process_lock("file_integrity_check");
-
 $resources = get_resources_to_validate($lastchecked);
-if ($maxresources > 0) {
-    $resources = array_slice($resources,0,$maxresources);
-}
-
-$failures = check_resources($resources);
-if (count($failures) > 0) {
-    send_integrity_failure_notices($failures);
+$failures = [];
+if (count($resources) > 0) {
+    if ($maxresources > 0) {
+        $resources = array_slice($resources,0,$maxresources);
+    }
+    echo "Validating " . count($resources) . " resources." . PHP_EOL;
+    $failures = check_resources($resources);
+    if (count($failures) > 0) {
+        send_integrity_failure_notices($failures);
+    }
 }
 
 clear_process_lock("file_integrity_check");
+echo "Finished validating " . count($resources) . " resources. There were " . count($failures) . " failures". PHP_EOL;
