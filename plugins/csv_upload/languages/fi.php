@@ -7,9 +7,9 @@ $lang["csv_upload_condition1"]='Varmista, että CSV-tiedosto on koodattu käytt�
 $lang["csv_upload_condition2"]='CSV-tiedoston ensimmäisellä rivillä on oltava otsikkorivi';
 $lang["csv_upload_condition3"]='Jotta voit ladata resurssitiedostoja myöhemmin käyttäen eräkorvaustoimintoa, tulee olla sarakkeen nimi \'Alkuperäinen tiedostonimi\' ja jokaisella tiedostolla tulee olla uniikki tiedostonimi';
 $lang["csv_upload_condition4"]='Kaikki pakolliset kentät uusille resursseille on oltava läsnä CSV-tiedostossa';
-$lang["csv_upload_condition5"]='<li>Sarakkeille, joiden arvot sisältävät <b>pilkkuja (,)</b>, varmista, että muotoilet sen tyypiksi <b>teksti</b>, jotta sinun ei tarvitse lisätä lainausmerkkejä (""). Tallentaessasi tiedostoa csv-muodossa, varmista, että valitset vaihtoehdon lainata tekstityypin soluja</li>';
+$lang["csv_upload_condition5"]='Sarakkeille, joiden arvot sisältävät <b>pilkkuja (,)</b>, varmista, että muotoilet sen tyypiksi <b>teksti</b>, jotta sinun ei tarvitse lisätä lainausmerkkejä (""). Tallentaessasi tiedostoa csv-muodossa, varmista, että valitset vaihtoehdon lainata tekstityypin soluja';
 $lang["csv_upload_condition6"]='Voit ladata CSV-tiedoston esimerkin napsauttamalla <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
-$lang["csv_upload_condition7"]='<li>Jotta voit päivittää olemassa olevan resurssin tietoja, voit ladata CSV-tiedoston olemassa olevalla metatiedolla napsauttamalla "CSV-vienti - metatiedot" -vaihtoehtoa kokoelman tai hakutulosten toimintovalikosta.</li>';
+$lang["csv_upload_condition7"]='Jotta voit päivittää olemassa olevan resurssin tietoja, voit ladata CSV-tiedoston olemassa olevalla metatiedolla napsauttamalla "CSV-vienti - metatiedot" -vaihtoehtoa kokoelman tai hakutulosten toimintovalikosta.';
 $lang["csv_upload_condition8"]='Voit käyttää uudelleen aiemmin määritetyn CSV-määritystiedoston napsauttamalla \'Lataa CSV-määritystiedosto\'';
 $lang["csv_upload_error_no_permission"]='Sinulla ei ole oikeutta ladata CSV-tiedostoa';
 $lang["check_line_count"]='Löytyi vähintään kaksi riviä CSV-tiedostosta';

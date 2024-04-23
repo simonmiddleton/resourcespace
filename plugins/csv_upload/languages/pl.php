@@ -3,11 +3,11 @@
 
 $lang["csv_upload_nav_link"]='Przesyłanie pliku CSV';
 $lang["csv_upload_intro"]='Ten plugin umożliwia tworzenie lub aktualizowanie zasobów poprzez przesyłanie pliku CSV. Format pliku CSV jest ważny';
-$lang["csv_upload_condition1"]='<li>Upewnij się, że plik CSV jest zakodowany w <b>UTF-8 bez BOM</b>.</li>';
-$lang["csv_upload_condition2"]='<li>CSV musi mieć wiersz nagłówka</li>';
+$lang["csv_upload_condition1"]='Upewnij się, że plik CSV jest zakodowany w <b>UTF-8 bez BOM</b>.';
+$lang["csv_upload_condition2"]='CSV musi mieć wiersz nagłówka';
 $lang["csv_upload_condition3"]='Aby móc później przesłać pliki zasobów za pomocą funkcji wsadowej zamiany, powinna istnieć kolumna o nazwie "Oryginalna nazwa pliku", a każdy plik powinien mieć unikalną nazwę pliku';
-$lang["csv_upload_condition4"]='<li>Wszystkie obowiązkowe pola dla nowo utworzonych zasobów muszą być obecne w pliku CSV</li>';
-$lang["csv_upload_condition5"]='<li>Dla kolumn, które zawierają wartości z <b>przecinkami (,)</b>, upewnij się, że formatujesz je jako typ <b>tekstowy</b>, aby nie musieć dodawać cudzysłowów (""). Przy zapisywaniu pliku csv, upewnij się, że zaznaczasz opcję cytowania komórek typu tekstowego.</li>';
+$lang["csv_upload_condition4"]='Wszystkie obowiązkowe pola dla nowo utworzonych zasobów muszą być obecne w pliku CSV';
+$lang["csv_upload_condition5"]='Dla kolumn, które zawierają wartości z <b>przecinkami (,)</b>, upewnij się, że formatujesz je jako typ <b>tekstowy</b>, aby nie musieć dodawać cudzysłowów (""). Przy zapisywaniu pliku csv, upewnij się, że zaznaczasz opcję cytowania komórek typu tekstowego.';
 $lang["csv_upload_condition6"]='Możesz pobrać przykładowy plik CSV, klikając na <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
 $lang["csv_upload_condition7"]='Aby zaktualizować istniejące dane zasobu, możesz pobrać plik CSV z istniejącymi metadanymi, klikając opcję "Eksport CSV - metadane" z menu działań kolekcji lub wyników wyszukiwania';
 $lang["csv_upload_condition8"]='Możesz ponownie użyć wcześniej skonfigurowanego pliku mapowania CSV, klikając na "Prześlij plik konfiguracji CSV"';

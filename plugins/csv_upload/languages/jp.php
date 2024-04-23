@@ -3,14 +3,14 @@
 
 $lang["csv_upload_nav_link"]='CSVアップロード';
 $lang["csv_upload_intro"]='このプラグインを使用すると、CSVファイルをアップロードしてリソースを作成または更新できます。CSVの形式が重要です。';
-$lang["csv_upload_condition1"]='<li>CSVファイルが <b>BOMなしUTF-8</b>でエンコードされていることを確認してください。</li>';
+$lang["csv_upload_condition1"]='CSVファイルが <b>BOMなしUTF-8</b>でエンコードされていることを確認してください。';
 $lang["csv_upload_condition2"]='CSVはヘッダー行を持っている必要があります。';
-$lang["csv_upload_condition3"]='<li>バッチ置換機能を使用して後でリソースファイルをアップロードできるようにするには、「元のファイル名」という名前の列が必要であり、各ファイルにはユニークなファイル名が必要です。</li>';
+$lang["csv_upload_condition3"]='バッチ置換機能を使用して後でリソースファイルをアップロードできるようにするには、「元のファイル名」という名前の列が必要であり、各ファイルにはユニークなファイル名が必要です。';
 $lang["csv_upload_condition4"]='新しく作成されたリソースのすべての必須フィールドはCSVに存在している必要があります。';
-$lang["csv_upload_condition5"]='<li>値に<b>カンマ( , )</b>を含む列については、引用符("")を追加する必要がないように、タイプ<b>テキスト</b>としてフォーマットしてください。CSVファイルとして保存する場合は、テキストタイプのセルを引用符で囲むオプションを確認してください。</li>';
-$lang["csv_upload_condition6"]='<li>CSVファイルの例を<a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>をクリックしてダウンロードできます。</li>';
-$lang["csv_upload_condition7"]='<li>既存のリソースデータを更新するには、コレクションまたは検索結果のアクションメニューから「CSVエクスポート - メタデータ」オプションをクリックして、既存のメタデータを含むCSVをダウンロードできます。</li>';
-$lang["csv_upload_condition8"]='<li>\'Upload CSV configuration file\' をクリックすることで、以前に設定した CSV マッピングファイルを再利用できます。</li>';
+$lang["csv_upload_condition5"]='値に<b>カンマ( , )</b>を含む列については、引用符("")を追加する必要がないように、タイプ<b>テキスト</b>としてフォーマットしてください。CSVファイルとして保存する場合は、テキストタイプのセルを引用符で囲むオプションを確認してください。';
+$lang["csv_upload_condition6"]='CSVファイルの例を<a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>をクリックしてダウンロードできます。';
+$lang["csv_upload_condition7"]='既存のリソースデータを更新するには、コレクションまたは検索結果のアクションメニューから「CSVエクスポート - メタデータ」オプションをクリックして、既存のメタデータを含むCSVをダウンロードできます。';
+$lang["csv_upload_condition8"]='\'Upload CSV configuration file\' をクリックすることで、以前に設定した CSV マッピングファイルを再利用できます。';
 $lang["csv_upload_error_no_permission"]='CSVファイルをアップロードするための適切な権限がありません。';
 $lang["check_line_count"]='CSVファイルで少なくとも2つの行が見つかりました。';
 $lang["csv_upload_file"]='CSVファイルを選択してください。';

@@ -3,13 +3,13 @@
 
 $lang["csv_upload_nav_link"]='Prijenos CSV datoteke';
 $lang["csv_upload_intro"]='Ovaj dodatak omogućuje vam stvaranje ili ažuriranje resursa putem prijenosa CSV datoteke. Format CSV-a je važan';
-$lang["csv_upload_condition1"]='<li>Provjerite je li CSV datoteka kodirana pomoću <b>UTF-8 bez BOM znaka</b>.</li>';
+$lang["csv_upload_condition1"]='Provjerite je li CSV datoteka kodirana pomoću <b>UTF-8 bez BOM znaka</b>.';
 $lang["csv_upload_condition2"]='CSV datoteka mora imati zaglavljeni redak';
 $lang["csv_upload_condition3"]='Da biste kasnije mogli prenositi datoteke resursa koristeći funkcionalnost zamjene u grupi, potrebno je da postoji stupac nazvan "Izvorni naziv datoteke" i da svaka datoteka ima jedinstven naziv';
 $lang["csv_upload_condition4"]='Svi obvezni polja za sve novo kreirane resurse moraju biti prisutni u CSV-u';
-$lang["csv_upload_condition5"]='<li>Za stupce koji sadrže vrijednosti s <b>zarezima (,)</b>, provjerite jeste li ih formatirali kao tip <b>tekst</b> kako ne biste morali dodavati navodnike (""). Prilikom spremanja kao CSV datoteku, provjerite opciju navođenja ćelija tipa teksta.</li>';
+$lang["csv_upload_condition5"]='Za stupce koji sadrže vrijednosti s <b>zarezima (,)</b>, provjerite jeste li ih formatirali kao tip <b>tekst</b> kako ne biste morali dodavati navodnike (""). Prilikom spremanja kao CSV datoteku, provjerite opciju navođenja ćelija tipa teksta.';
 $lang["csv_upload_condition6"]='Možete preuzeti primjer CSV datoteke klikom na <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
-$lang["csv_upload_condition7"]='<li>Za ažuriranje postojećih podataka o resursima možete preuzeti CSV s postojećim metapodacima klikom na opciju "Izvoz CSV-a - metapodaci" iz izbornika radnji kolekcije ili rezultata pretraživanja</li>';
+$lang["csv_upload_condition7"]='Za ažuriranje postojećih podataka o resursima možete preuzeti CSV s postojećim metapodacima klikom na opciju "Izvoz CSV-a - metapodaci" iz izbornika radnji kolekcije ili rezultata pretraživanja';
 $lang["csv_upload_condition8"]='Možete ponovno koristiti prethodno konfiguriranu CSV datoteku mapiranja klikom na \'Učitaj datoteku konfiguracije CSV-a\'';
 $lang["csv_upload_error_no_permission"]='Nemate odgovarajuće ovlasti za prijenos CSV datoteke';
 $lang["check_line_count"]='Pronađeno je najmanje dvije reda u CSV datoteci';

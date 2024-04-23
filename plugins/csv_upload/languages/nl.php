@@ -3,14 +3,14 @@
 
 $lang["csv_upload_nav_link"]='CSV upload vertaling: CSV uploaden';
 $lang["csv_upload_intro"]='Dit plugin stelt je in staat om resources te creëren of bij te werken door middel van het uploaden van een CSV-bestand. Het formaat van de CSV is belangrijk';
-$lang["csv_upload_condition1"]='<li>Zorg ervoor dat het CSV-bestand is gecodeerd met <b>UTF-8 zonder BOM</b>.</li>';
-$lang["csv_upload_condition2"]='<li>De CSV moet een kopregel hebben</li>';
-$lang["csv_upload_condition3"]='<li>Om later bronbestanden te kunnen uploaden met behulp van de batchvervangingsfunctionaliteit, moet er een kolom zijn met de naam \'Originele bestandsnaam\' en moet elk bestand een unieke bestandsnaam hebben</li>';
-$lang["csv_upload_condition4"]='<li>Alle verplichte velden voor nieuw aangemaakte resources moeten aanwezig zijn in de CSV</li>';
-$lang["csv_upload_condition5"]='<li>Voor kolommen die waarden bevatten met <b>komma\'s ( , )</b>, zorg ervoor dat je het format instelt als type <b>tekst</b>, zodat je geen aanhalingstekens ("") hoeft toe te voegen. Bij het opslaan als een csv-bestand, controleer of de optie om teksttype cellen tussen aanhalingstekens te plaatsen is aangevinkt.</li>';
+$lang["csv_upload_condition1"]='Zorg ervoor dat het CSV-bestand is gecodeerd met <b>UTF-8 zonder BOM</b>.';
+$lang["csv_upload_condition2"]='De CSV moet een kopregel hebben';
+$lang["csv_upload_condition3"]='Om later bronbestanden te kunnen uploaden met behulp van de batchvervangingsfunctionaliteit, moet er een kolom zijn met de naam \'Originele bestandsnaam\' en moet elk bestand een unieke bestandsnaam hebben';
+$lang["csv_upload_condition4"]='Alle verplichte velden voor nieuw aangemaakte resources moeten aanwezig zijn in de CSV';
+$lang["csv_upload_condition5"]='Voor kolommen die waarden bevatten met <b>komma\'s ( , )</b>, zorg ervoor dat je het format instelt als type <b>tekst</b>, zodat je geen aanhalingstekens ("") hoeft toe te voegen. Bij het opslaan als een csv-bestand, controleer of de optie om teksttype cellen tussen aanhalingstekens te plaatsen is aangevinkt.';
 $lang["csv_upload_condition6"]='Je kunt een voorbeeld CSV-bestand downloaden door te klikken op <a href="../downloads/csv_upload_example.csv">csv-upload-voorbeeld.csv</a>';
-$lang["csv_upload_condition7"]='<li>Om bestaande gegevens van een resource bij te werken, kunt u een CSV downloaden met de bestaande metadata door te klikken op de optie \'CSV-export - metadata\' in het actiemenu van de collectie of zoekresultaten.</li>';
-$lang["csv_upload_condition8"]='<li>Je kunt een eerder geconfigureerd CSV-mappingbestand opnieuw gebruiken door te klikken op \'CSV-configuratiebestand uploaden\'</li>';
+$lang["csv_upload_condition7"]='Om bestaande gegevens van een resource bij te werken, kunt u een CSV downloaden met de bestaande metadata door te klikken op de optie \'CSV-export - metadata\' in het actiemenu van de collectie of zoekresultaten.';
+$lang["csv_upload_condition8"]='Je kunt een eerder geconfigureerd CSV-mappingbestand opnieuw gebruiken door te klikken op \'CSV-configuratiebestand uploaden\'';
 $lang["csv_upload_error_no_permission"]='Je hebt niet de juiste rechten om een CSV-bestand te uploaden';
 $lang["check_line_count"]='Ten minste twee rijen gevonden in CSV-bestand';
 $lang["csv_upload_file"]='Selecteer CSV-bestand';

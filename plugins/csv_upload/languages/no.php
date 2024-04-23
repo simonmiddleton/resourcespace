@@ -3,13 +3,13 @@
 
 $lang["csv_upload_nav_link"]='CSV-opplasting';
 $lang["csv_upload_intro"]='Dette tillegget lar deg opprette eller oppdatere ressurser ved å laste opp en CSV-fil. Formatet på CSV-filen er viktig';
-$lang["csv_upload_condition1"]='<li>Sørg for at CSV-filen er kodet med <b>UTF-8 uten BOM</b>.</li>';
-$lang["csv_upload_condition2"]='<li>CSV-filen må ha en overskriftsrad</li>';
-$lang["csv_upload_condition3"]='<li>For å kunne laste opp ressursfiler senere ved hjelp av funksjonaliteten for masseerstattning, bør det være en kolonne som heter \'Opprinnelig filnavn\', og hver fil bør ha et unikt filnavn.</li>';
-$lang["csv_upload_condition4"]='<li>Alle obligatoriske felt for nyopprettede ressurser må være til stede i CSV-filen</li>';
-$lang["csv_upload_condition5"]='<li>For kolonner som har verdier som inneholder <b>kommategn (,)</b>, sørg for å formatere det som type <b>tekst</b> slik at du ikke trenger å legge til anførselstegn (""). Når du lagrer som en csv-fil, må du sørge for å sjekke alternativet for å sitere celler av teksttype.</li>';
+$lang["csv_upload_condition1"]='Sørg for at CSV-filen er kodet med <b>UTF-8 uten BOM</b>.';
+$lang["csv_upload_condition2"]='CSV-filen må ha en overskriftsrad';
+$lang["csv_upload_condition3"]='For å kunne laste opp ressursfiler senere ved hjelp av funksjonaliteten for masseerstattning, bør det være en kolonne som heter \'Opprinnelig filnavn\', og hver fil bør ha et unikt filnavn.';
+$lang["csv_upload_condition4"]='Alle obligatoriske felt for nyopprettede ressurser må være til stede i CSV-filen';
+$lang["csv_upload_condition5"]='For kolonner som har verdier som inneholder <b>kommategn (,)</b>, sørg for å formatere det som type <b>tekst</b> slik at du ikke trenger å legge til anførselstegn (""). Når du lagrer som en csv-fil, må du sørge for å sjekke alternativet for å sitere celler av teksttype.';
 $lang["csv_upload_condition6"]='Du kan laste ned et CSV-fil eksempel ved å klikke på <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
-$lang["csv_upload_condition7"]='<li>For å oppdatere eksisterende ressursdata kan du laste ned en CSV-fil med eksisterende metadata ved å klikke på \'CSV-eksport - metadata\'-alternativet fra samlingen eller søkeresultatene i handlingsmenyen</li>';
+$lang["csv_upload_condition7"]='For å oppdatere eksisterende ressursdata kan du laste ned en CSV-fil med eksisterende metadata ved å klikke på \'CSV-eksport - metadata\'-alternativet fra samlingen eller søkeresultatene i handlingsmenyen';
 $lang["csv_upload_condition8"]='Du kan gjenbruke en tidligere konfigurert CSV-mappingfil ved å klikke på \'Last opp CSV-konfigurasjonsfil\'';
 $lang["csv_upload_error_no_permission"]='Du har ikke tilstrekkelige tillatelser til å laste opp en CSV-fil';
 $lang["check_line_count"]='Minst to rader funnet i CSV-filen';

@@ -3,13 +3,13 @@
 
 $lang["csv_upload_nav_link"]='Téléchargement CSV';
 $lang["csv_upload_intro"]='Ce plugin vous permet de créer ou de mettre à jour des ressources en téléchargeant un fichier CSV. Le format du CSV est important';
-$lang["csv_upload_condition1"]='<li>Assurez-vous que le fichier CSV est encodé en utilisant <b>UTF-8 sans BOM</b>.</li>';
-$lang["csv_upload_condition2"]='<li>Le CSV doit avoir une ligne d\'en-tête</li>';
-$lang["csv_upload_condition3"]='<li>Pour pouvoir télécharger des fichiers de ressources ultérieurement en utilisant la fonctionnalité de remplacement par lots, il doit y avoir une colonne nommée "Nom de fichier d\'origine" et chaque fichier doit avoir un nom de fichier unique</li>';
-$lang["csv_upload_condition4"]='<li>Tous les champs obligatoires pour toutes les ressources nouvellement créées doivent être présents dans le CSV</li>';
-$lang["csv_upload_condition5"]='<li>Pour les colonnes qui contiennent des valeurs avec des <b>virgules (,)</b>, assurez-vous de les formater en tant que type <b>texte</b> afin de ne pas avoir à ajouter des guillemets (""). Lors de l\'enregistrement en tant que fichier CSV, assurez-vous de cocher l\'option de citation des cellules de type texte.</li>';
+$lang["csv_upload_condition1"]='Assurez-vous que le fichier CSV est encodé en utilisant <b>UTF-8 sans BOM</b>.';
+$lang["csv_upload_condition2"]='Le CSV doit avoir une ligne d\'en-tête';
+$lang["csv_upload_condition3"]='Pour pouvoir télécharger des fichiers de ressources ultérieurement en utilisant la fonctionnalité de remplacement par lots, il doit y avoir une colonne nommée "Nom de fichier d\'origine" et chaque fichier doit avoir un nom de fichier unique';
+$lang["csv_upload_condition4"]='Tous les champs obligatoires pour toutes les ressources nouvellement créées doivent être présents dans le CSV';
+$lang["csv_upload_condition5"]='Pour les colonnes qui contiennent des valeurs avec des <b>virgules (,)</b>, assurez-vous de les formater en tant que type <b>texte</b> afin de ne pas avoir à ajouter des guillemets (""). Lors de l\'enregistrement en tant que fichier CSV, assurez-vous de cocher l\'option de citation des cellules de type texte.';
 $lang["csv_upload_condition6"]='Vous pouvez télécharger un exemple de fichier CSV en cliquant sur <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
-$lang["csv_upload_condition7"]='<li>Pour mettre à jour les données d\'une ressource existante, vous pouvez télécharger un fichier CSV contenant les métadonnées existantes en cliquant sur l\'option "Export CSV - métadonnées" dans le menu des actions de la collection ou des résultats de recherche.</li>';
+$lang["csv_upload_condition7"]='Pour mettre à jour les données d\'une ressource existante, vous pouvez télécharger un fichier CSV contenant les métadonnées existantes en cliquant sur l\'option "Export CSV - métadonnées" dans le menu des actions de la collection ou des résultats de recherche.';
 $lang["csv_upload_condition8"]='Vous pouvez réutiliser un fichier de mappage CSV précédemment configuré en cliquant sur "Télécharger le fichier de configuration CSV"';
 $lang["csv_upload_error_no_permission"]='Vous n\'avez pas les permissions nécessaires pour télécharger un fichier CSV';
 $lang["check_line_count"]='Au moins deux lignes trouvées dans le fichier CSV';

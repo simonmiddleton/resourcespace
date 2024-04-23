@@ -3,11 +3,11 @@
 
 $lang["csv_upload_nav_link"]='Caricamento CSV';
 $lang["csv_upload_intro"]='Questo plugin consente di creare o aggiornare risorse caricando un file CSV. Il formato del CSV è importante';
-$lang["csv_upload_condition1"]='<li>Assicurati che il file CSV sia codificato utilizzando <b>UTF-8 senza BOM</b>.</li>';
+$lang["csv_upload_condition1"]='Assicurati che il file CSV sia codificato utilizzando <b>UTF-8 senza BOM</b>.';
 $lang["csv_upload_condition2"]='Il file CSV deve avere una riga di intestazione';
-$lang["csv_upload_condition3"]='<li>Per poter caricare i file di risorse in seguito utilizzando la funzionalità di sostituzione batch, dovrebbe esserci una colonna chiamata \'Nome file originale\' e ogni file dovrebbe avere un nome univoco</li>';
+$lang["csv_upload_condition3"]='Per poter caricare i file di risorse in seguito utilizzando la funzionalità di sostituzione batch, dovrebbe esserci una colonna chiamata \'Nome file originale\' e ogni file dovrebbe avere un nome univoco';
 $lang["csv_upload_condition4"]='Tutti i campi obbligatori per le nuove risorse create devono essere presenti nel file CSV';
-$lang["csv_upload_condition5"]='<li>Per le colonne che hanno valori contenenti <b>virgole (,)</b>, assicurati di formattarle come tipo <b>testo</b> in modo da non dover aggiungere virgolette (""). Quando salvi come file csv, assicurati di selezionare l\'opzione di citazione delle celle di tipo testo</li>';
+$lang["csv_upload_condition5"]='Per le colonne che hanno valori contenenti <b>virgole (,)</b>, assicurati di formattarle come tipo <b>testo</b> in modo da non dover aggiungere virgolette (""). Quando salvi come file csv, assicurati di selezionare l\'opzione di citazione delle celle di tipo testo';
 $lang["csv_upload_condition6"]='Puoi scaricare un esempio di file CSV cliccando su <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
 $lang["csv_upload_condition7"]='Per aggiornare i dati di una risorsa esistente, puoi scaricare un file CSV con i metadati esistenti cliccando sull\'opzione "Esporta CSV - metadati" dal menu azioni della collezione o dei risultati di ricerca';
 $lang["csv_upload_condition8"]='Puoi riutilizzare un file di mappatura CSV configurato in precedenza cliccando su \'Carica file di configurazione CSV\'';

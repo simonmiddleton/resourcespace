@@ -3,13 +3,13 @@
 
 $lang["csv_upload_nav_link"]='CSV上传';
 $lang["csv_upload_intro"]='该插件允许您通过上传CSV文件来创建或更新资源。CSV的格式非常重要。';
-$lang["csv_upload_condition1"]='<li>请确保 CSV 文件使用 <b>UTF-8 无 BOM</b> 编码。</li>';
+$lang["csv_upload_condition1"]='请确保 CSV 文件使用 <b>UTF-8 无 BOM</b> 编码。';
 $lang["csv_upload_condition2"]='CSV 必须有一个标题行。';
-$lang["csv_upload_condition3"]='<li>为了能够使用批量替换功能后上传资源文件，每个文件都应该有一个唯一的文件名，并且应该有一个名为“原始文件名”的列</li>';
-$lang["csv_upload_condition4"]='<li>任何新创建的资源的所有必填字段都必须在CSV中存在</li>';
-$lang["csv_upload_condition5"]='<li>对于包含<b>逗号( , )</b>的列，请确保将其格式化为<b>文本</b>类型，以便您无需添加引号("")。保存为csv文件时，请确保选中引用文本类型单元格的选项。</li>';
+$lang["csv_upload_condition3"]='为了能够使用批量替换功能后上传资源文件，每个文件都应该有一个唯一的文件名，并且应该有一个名为“原始文件名”的列';
+$lang["csv_upload_condition4"]='任何新创建的资源的所有必填字段都必须在CSV中存在';
+$lang["csv_upload_condition5"]='对于包含<b>逗号( , )</b>的列，请确保将其格式化为<b>文本</b>类型，以便您无需添加引号("")。保存为csv文件时，请确保选中引用文本类型单元格的选项。';
 $lang["csv_upload_condition6"]='您可以通过点击<a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>来下载CSV文件示例。';
-$lang["csv_upload_condition7"]='<li>要更新现有资源数据，您可以通过在集合或搜索结果操作菜单中单击“CSV导出-元数据”选项来下载包含现有元数据的CSV文件。</li>';
+$lang["csv_upload_condition7"]='要更新现有资源数据，您可以通过在集合或搜索结果操作菜单中单击“CSV导出-元数据”选项来下载包含现有元数据的CSV文件。';
 $lang["csv_upload_condition8"]='您可以通过单击“上传CSV配置文件”来重复使用先前配置的CSV映射文件。';
 $lang["csv_upload_error_no_permission"]='您没有上传CSV文件的正确权限。';
 $lang["check_line_count"]='CSV文件中至少找到了两行。';

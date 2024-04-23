@@ -3,14 +3,14 @@
 
 $lang["csv_upload_nav_link"]='CSV-uppladdning';
 $lang["csv_upload_intro"]='Detta tillägg gör det möjligt att skapa eller uppdatera resurser genom att ladda upp en CSV-fil. Formatet på CSV-filen är viktigt';
-$lang["csv_upload_condition1"]='<li>Säkerställ att CSV-filen är kodad med <b>UTF-8 utan BOM</b>.</li>';
-$lang["csv_upload_condition2"]='<li>CSV-filen måste ha en rubrikrad</li>';
-$lang["csv_upload_condition3"]='<li>För att kunna ladda upp resursfiler senare med hjälp av funktionen för batchutbyte, bör det finnas en kolumn som heter "Ursprungligt filnamn" och varje fil bör ha ett unikt filnamn.</li>';
-$lang["csv_upload_condition4"]='<li>Alla obligatoriska fält för nyskapade resurser måste finnas i CSV-filen</li>';
-$lang["csv_upload_condition5"]='<li>För kolumner som har värden som innehåller <b>kommor (,)</b>, se till att du formaterar det som typen <b>text</b> så att du inte behöver lägga till citattecken (""). När du sparar som en csv-fil, se till att markera alternativet att citera celler av typen text</li>';
+$lang["csv_upload_condition1"]='Säkerställ att CSV-filen är kodad med <b>UTF-8 utan BOM</b>.';
+$lang["csv_upload_condition2"]='CSV-filen måste ha en rubrikrad';
+$lang["csv_upload_condition3"]='För att kunna ladda upp resursfiler senare med hjälp av funktionen för batchutbyte, bör det finnas en kolumn som heter "Ursprungligt filnamn" och varje fil bör ha ett unikt filnamn.';
+$lang["csv_upload_condition4"]='Alla obligatoriska fält för nyskapade resurser måste finnas i CSV-filen';
+$lang["csv_upload_condition5"]='För kolumner som har värden som innehåller <b>kommor (,)</b>, se till att du formaterar det som typen <b>text</b> så att du inte behöver lägga till citattecken (""). När du sparar som en csv-fil, se till att markera alternativet att citera celler av typen text';
 $lang["csv_upload_condition6"]='Du kan ladda ner ett exempel på en CSV-fil genom att klicka på <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
-$lang["csv_upload_condition7"]='<li>För att uppdatera befintliga resursdata kan du ladda ner en CSV-fil med befintlig metadata genom att klicka på alternativet \'CSV-export - metadata\' från samlingens eller sökresultatens åtgärdsmeny.</li>';
-$lang["csv_upload_condition8"]='<li>Du kan återanvända en tidigare konfigurerad CSV-mappningsfil genom att klicka på \'Ladda upp CSV-konfigurationsfil\'</li>';
+$lang["csv_upload_condition7"]='För att uppdatera befintliga resursdata kan du ladda ner en CSV-fil med befintlig metadata genom att klicka på alternativet \'CSV-export - metadata\' från samlingens eller sökresultatens åtgärdsmeny.';
+$lang["csv_upload_condition8"]='Du kan återanvända en tidigare konfigurerad CSV-mappningsfil genom att klicka på \'Ladda upp CSV-konfigurationsfil\'';
 $lang["csv_upload_error_no_permission"]='Du har inte tillräckliga behörigheter för att ladda upp en CSV-fil';
 $lang["check_line_count"]='Minst två rader hittades i CSV-filen';
 $lang["csv_upload_file"]='Välj CSV-fil';

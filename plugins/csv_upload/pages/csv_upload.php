@@ -222,12 +222,12 @@ foreach($restypearr as $restype)
 switch($csvstep)
     {
     case 1:
-        echo strip_tags_and_attributes($lang["csv_upload_intro"]);
+        echo "<p>" . strip_tags_and_attributes($lang["csv_upload_intro"]) . "</p>";
         echo "<ul>";
         $condition=1;
         while(isset($lang["csv_upload_condition" . $condition]))
             {
-            echo escape($lang["csv_upload_condition" . $condition]);
+            echo "<li>" . strip_tags_and_attributes($lang["csv_upload_condition" . $condition],['a','b']) . "</li>";
             $condition++;
             }
         echo "</ul>";

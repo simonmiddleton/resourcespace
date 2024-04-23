@@ -3,13 +3,13 @@
 
 $lang["csv_upload_nav_link"]='Carregamento de CSV';
 $lang["csv_upload_intro"]='Este plugin permite criar ou atualizar recursos através do upload de um arquivo CSV. O formato do CSV é importante';
-$lang["csv_upload_condition1"]='<li>Verifique se o arquivo CSV está codificado usando <b>UTF-8 sem BOM</b>.</li>';
-$lang["csv_upload_condition2"]='<li>O CSV deve ter uma linha de cabeçalho</li>';
-$lang["csv_upload_condition3"]='<li>Para poder carregar arquivos de recursos posteriormente usando a funcionalidade de substituição em lote, deve haver uma coluna chamada \'Nome do arquivo original\' e cada arquivo deve ter um nome exclusivo</li>';
-$lang["csv_upload_condition4"]='<li>Todos os campos obrigatórios para quaisquer recursos recém-criados devem estar presentes no CSV</li>';
-$lang["csv_upload_condition5"]='<li>Para colunas que possuem valores contendo <b>vírgulas (,)</b>, certifique-se de formatá-las como tipo <b>texto</b> para que não seja necessário adicionar aspas (""). Ao salvar como um arquivo csv, verifique a opção de citar células do tipo texto.</li>';
+$lang["csv_upload_condition1"]='Verifique se o arquivo CSV está codificado usando <b>UTF-8 sem BOM</b>.';
+$lang["csv_upload_condition2"]='O CSV deve ter uma linha de cabeçalho';
+$lang["csv_upload_condition3"]='Para poder carregar arquivos de recursos posteriormente usando a funcionalidade de substituição em lote, deve haver uma coluna chamada \'Nome do arquivo original\' e cada arquivo deve ter um nome exclusivo';
+$lang["csv_upload_condition4"]='Todos os campos obrigatórios para quaisquer recursos recém-criados devem estar presentes no CSV';
+$lang["csv_upload_condition5"]='Para colunas que possuem valores contendo <b>vírgulas (,)</b>, certifique-se de formatá-las como tipo <b>texto</b> para que não seja necessário adicionar aspas (""). Ao salvar como um arquivo csv, verifique a opção de citar células do tipo texto.';
 $lang["csv_upload_condition6"]='Você pode baixar um exemplo de arquivo CSV clicando em <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
-$lang["csv_upload_condition7"]='<li>Para atualizar os dados de recursos existentes, você pode baixar um CSV com os metadados existentes clicando na opção \'Exportar CSV - metadados\' no menu de ações de coleções ou resultados de pesquisa.</li>';
+$lang["csv_upload_condition7"]='Para atualizar os dados de recursos existentes, você pode baixar um CSV com os metadados existentes clicando na opção \'Exportar CSV - metadados\' no menu de ações de coleções ou resultados de pesquisa.';
 $lang["csv_upload_condition8"]='Você pode reutilizar um arquivo de mapeamento CSV previamente configurado clicando em \'Carregar arquivo de configuração CSV\'';
 $lang["csv_upload_error_no_permission"]='Você não tem as permissões corretas para fazer o upload de um arquivo CSV';
 $lang["check_line_count"]='Foram encontradas pelo menos duas linhas no arquivo CSV';

@@ -7,7 +7,7 @@ $lang["csv_upload_condition1"]='Asigurați-vă că fișierul CSV este codificat 
 $lang["csv_upload_condition2"]='CSV-ul trebuie să aibă o linie antet';
 $lang["csv_upload_condition3"]='Pentru a putea încărca fișiere de resurse ulterior folosind funcționalitatea de înlocuire în lot, trebuie să existe o coloană numită "Numele original al fișierului" și fiecare fișier trebuie să aibă un nume unic';
 $lang["csv_upload_condition4"]='Toate câmpurile obligatorii pentru orice resursă nou creată trebuie să fie prezente în fișierul CSV';
-$lang["csv_upload_condition5"]='<li>Pentru coloanele care au valori care conțin <b>virgule (,)</b>, asigurați-vă că le formatați ca tip <b>text</b>, astfel încât să nu fie necesar să adăugați ghilimele (""). Când salvați ca fișier csv, asigurați-vă că verificați opțiunea de citare a celulelor de tip text</li>';
+$lang["csv_upload_condition5"]='Pentru coloanele care au valori care conțin <b>virgule (,)</b>, asigurați-vă că le formatați ca tip <b>text</b>, astfel încât să nu fie necesar să adăugați ghilimele (""). Când salvați ca fișier csv, asigurați-vă că verificați opțiunea de citare a celulelor de tip text';
 $lang["csv_upload_condition6"]='Puteți descărca un exemplu de fișier CSV făcând clic pe <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
 $lang["csv_upload_condition7"]='Pentru a actualiza datele existente ale resurselor, puteți descărca un fișier CSV cu metadatele existente făcând clic pe opțiunea „Export CSV - metadate” din meniul acțiunilor rezultatelor de căutare sau din colecție';
 $lang["csv_upload_condition8"]='Puteți reutiliza un fișier de mapare CSV configurat anterior făcând clic pe "Încărcați fișierul de configurare CSV"';

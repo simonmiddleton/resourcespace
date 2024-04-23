@@ -3,13 +3,13 @@
 
 $lang["csv_upload_nav_link"]='Nahrávanie CSV súboru';
 $lang["csv_upload_intro"]='Tento plugin umožňuje vytvárať alebo aktualizovať zdroje nahratím súboru CSV. Formát CSV súboru je dôležitý';
-$lang["csv_upload_condition1"]='<li>Uistite sa, že CSV súbor je zakódovaný pomocou <b>UTF-8 bez BOM</b>.</li>';
+$lang["csv_upload_condition1"]='Uistite sa, že CSV súbor je zakódovaný pomocou <b>UTF-8 bez BOM</b>.';
 $lang["csv_upload_condition2"]='CSV musí obsahovať riadok s hlavičkou';
-$lang["csv_upload_condition3"]='<li>Aby bolo možné neskôr nahrať súbory zdrojov pomocou funkcie hromadnej náhrady, musí byť stĺpec s názvom "Pôvodný názov súboru" a každý súbor musí mať jedinečný názov.</li>';
+$lang["csv_upload_condition3"]='Aby bolo možné neskôr nahrať súbory zdrojov pomocou funkcie hromadnej náhrady, musí byť stĺpec s názvom "Pôvodný názov súboru" a každý súbor musí mať jedinečný názov.';
 $lang["csv_upload_condition4"]='V CSV súbore pre novovytvorené zdroje musia byť prítomné všetky povinné polia';
-$lang["csv_upload_condition5"]='<li>Pre stĺpce, ktoré obsahujú hodnoty s <b>čiarkami (,)</b>, uistite sa, že ich formátujete ako typ <b>text</b>, aby ste nemuseli pridávať úvodzovky (""). Pri ukladaní ako súbor csv sa uistite, že ste zvolili možnosť citovania buniek typu text</li>';
+$lang["csv_upload_condition5"]='Pre stĺpce, ktoré obsahujú hodnoty s <b>čiarkami (,)</b>, uistite sa, že ich formátujete ako typ <b>text</b>, aby ste nemuseli pridávať úvodzovky (""). Pri ukladaní ako súbor csv sa uistite, že ste zvolili možnosť citovania buniek typu text';
 $lang["csv_upload_condition6"]='Lahko prenesete primer datoteke CSV tako, da kliknete na <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
-$lang["csv_upload_condition7"]='<li>Ak chcete aktualizovať existujúce údaje o zdroji, môžete si stiahnuť CSV s existujúcimi metadátami kliknutím na možnosť "CSV export - metadata" v ponuke akcií v kolekcii alebo výsledkoch vyhľadávania.</li>';
+$lang["csv_upload_condition7"]='Ak chcete aktualizovať existujúce údaje o zdroji, môžete si stiahnuť CSV s existujúcimi metadátami kliknutím na možnosť "CSV export - metadata" v ponuke akcií v kolekcii alebo výsledkoch vyhľadávania.';
 $lang["csv_upload_condition8"]='Môžete opätovne použiť predtým nakonfigurovaný súbor mapovania CSV kliknutím na "Nahrať súbor konfigurácie CSV"';
 $lang["csv_upload_error_no_permission"]='Nemáte správne oprávnenia na nahrávanie súboru CSV';
 $lang["check_line_count"]='Nájdené sú aspoň dva riadky v súbore CSV';

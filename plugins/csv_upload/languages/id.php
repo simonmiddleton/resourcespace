@@ -3,11 +3,11 @@
 
 $lang["csv_upload_nav_link"]='Unggah CSV';
 $lang["csv_upload_intro"]='Plugin ini memungkinkan Anda untuk membuat atau memperbarui sumber daya dengan mengunggah file CSV. Format CSV sangat penting';
-$lang["csv_upload_condition1"]='Pastikan file CSV di-encode menggunakan <b>UTF-8 tanpa BOM</b>. </li>';
+$lang["csv_upload_condition1"]='Pastikan file CSV di-encode menggunakan <b>UTF-8 tanpa BOM</b>. ';
 $lang["csv_upload_condition2"]='CSV harus memiliki baris header';
 $lang["csv_upload_condition3"]='Untuk dapat mengunggah file sumber nanti menggunakan fungsi penggantian batch, harus ada kolom bernama \'Nama file asli\' dan setiap file harus memiliki nama file yang unik';
 $lang["csv_upload_condition4"]='Semua kolom wajib untuk sumber daya yang baru dibuat harus ada dalam CSV';
-$lang["csv_upload_condition5"]='<li>Untuk kolom yang memiliki nilai yang mengandung <b>koma (,)</b>, pastikan Anda memformatnya sebagai tipe <b>teks</b> sehingga Anda tidak perlu menambahkan tanda kutip (""). Saat menyimpan sebagai file csv, pastikan untuk memeriksa opsi mengutip sel tipe teks</li>';
+$lang["csv_upload_condition5"]='Untuk kolom yang memiliki nilai yang mengandung <b>koma (,)</b>, pastikan Anda memformatnya sebagai tipe <b>teks</b> sehingga Anda tidak perlu menambahkan tanda kutip (""). Saat menyimpan sebagai file csv, pastikan untuk memeriksa opsi mengutip sel tipe teks';
 $lang["csv_upload_condition6"]='Anda dapat mengunduh contoh file CSV dengan mengklik <a href="../downloads/csv_upload_example.csv">csv-upload-example.csv</a>';
 $lang["csv_upload_condition7"]='Untuk memperbarui data sumber daya yang sudah ada, Anda dapat mengunduh CSV dengan metadata yang sudah ada dengan mengklik opsi \'Ekspor CSV - metadata\' dari menu tindakan hasil koleksi atau pencarian';
 $lang["csv_upload_condition8"]='Anda dapat menggunakan kembali file pemetaan CSV yang telah dikonfigurasi sebelumnya dengan mengklik \'Unggah file konfigurasi CSV\'';
