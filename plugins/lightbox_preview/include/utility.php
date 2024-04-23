@@ -2,9 +2,19 @@
 
 function getPreviewURLForType($resource, $type, $alternative = -1, $page = 1)
     {
-    global $baseurl, $use_watermark, $ffmpeg_preview_extension;
+    global $baseurl, $use_watermark, $ffmpeg_preview_extension, $ffmpeg_supported_extensions;
 
-    if ($resource['file_extension'] == $ffmpeg_preview_extension)
+    if ($alternative !== -1)
+        {
+        // Don't use lightbox_preview for video alternative files. Link should use preview.php to play video.
+        $alt_file_info = get_alternative_file($resource['ref'], $alternative);
+        if (in_array($alt_file_info['file_extension'], $ffmpeg_supported_extensions))
+            {
+            return false;
+            }
+        }
+
+    if ($alternative === -1 && $resource['file_extension'] == $ffmpeg_preview_extension)
         {
         return false;
         }
