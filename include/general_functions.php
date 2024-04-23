@@ -4709,7 +4709,7 @@ function get_system_status()
         $return['results']['files_integrity_fail'] = [
             'status' => 'FAIL',
             'info' => "Files have failed integrity checks",
-            'severity' => SEVERITY_CRITICAL,
+            'severity' => SEVERITY_WARNING,
             'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
         ];
     }
