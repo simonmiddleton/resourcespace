@@ -53,8 +53,8 @@ function get_resource_path(
         $ref = $resource_path_pull_cache[$ref]["ref"];
         }
 
-    $size = safe_file_name($size);
-    $extension = safe_file_name($extension);
+    $size = safe_file_name((string) $size);
+    $extension = safe_file_name((string) $extension);
 
     if (!is_int_loose($file_modified)) {
         $file_modified = '';

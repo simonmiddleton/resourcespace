@@ -39,6 +39,12 @@ if("{$dirname_path}/1pre_cf33a61f47b5982.jpg" != get_resource_path(1, true, 'pre
     return false;
     }
 
+if("{$dirname_path}/1_71a3211b5d04a88.jpg" != get_resource_path(1, true, null))
+    {
+    echo 'Case: null size is identical to requesting original (historically true) -- ';
+    return false;
+    }
+
 // Check Generation of folder
 if(!file_exists(get_resource_path(100000, true, '', false)))
     {
@@ -56,6 +62,12 @@ if(!file_exists(get_resource_path(100000, true, '', false)))
 if("{$dirname_path}/1pre_cf33a61f47b5982.mp4" != get_resource_path(1, true, 'pre', false, 'mp4'))
     {
     echo 'Case: Check looking for specific preview by extension (like videos/ audio) -- ';
+    return false;
+    }
+
+if("{$dirname_path}/1pre_cf33a61f47b5982.jpg" != get_resource_path(1, true, 'pre', false, null))
+    {
+    echo 'Case: null extension is identical to empty string (historically true) -- ';
     return false;
     }
 
