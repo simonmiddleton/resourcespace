@@ -498,7 +498,8 @@ if(isset($resource["field".$view_title_field]))
              <div class="clearerleft"> </div>
         </div>
         <input type="hidden" name="trimmed_resources_new" value="<?php echo escape(isset($trimmed_resources_new)?implode(',', $trimmed_resources_new):''); ?>" />
-        <input type="hidden" name="trimmed_resources_alt" value="<?php echo escape(isset($trimmed_resources_alt)?implode(',', $trimmed_resources_alt):''); ?>" />    </form>
+        <input type="hidden" name="trimmed_resources_alt" value="<?php echo escape(isset($trimmed_resources_alt)?implode(',', $trimmed_resources_alt):''); ?>" />
+    </form>
 </div>
 <script>
 var inputStart = document.getElementById("input-start");
