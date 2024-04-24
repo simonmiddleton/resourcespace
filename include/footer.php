@@ -78,11 +78,11 @@ draw_performance_footer();
 //titlebar modifications
 
 if ($show_resource_title_in_titlebar){
-$general_title_pages=array("admin_content","team_archive","team_resource","team_user","team_request","team_research","team_plugins","team_mail","team_export","team_stats","team_report","team_user_log","research_request","team_user_edit","admin_content_edit","team_request_edit","team_research_edit","requests","edit","themes","collection_public","collection_manage","team_home","help","home","tag","upload_java_popup","upload_java","contact","geo_search","search_advanced","about","contribute","user_preferences","view_shares","check","index");
-$search_title_pages=array("contactsheet_settings","search","collection_edit","edit","collection_download","collection_share","collection_request");
-$resource_title_pages=array("view","delete","log","alternative_file","alternative_files","resource_email","edit","preview");
-$additional_title_pages=array(hook("additional_title_pages_array"));
-
+    $general_title_pages=array("admin_content","team_archive","team_resource","team_user","team_request","team_research","team_plugins","team_mail","team_export","team_stats","team_report","team_user_log","research_request","team_user_edit","admin_content_edit","team_request_edit","team_research_edit","requests","edit","themes","collection_public","collection_manage","team_home","help","home","tag","upload_java_popup","upload_java","contact","geo_search","search_advanced","about","contribute","user_preferences","view_shares","check","index");
+    $search_title_pages=array("contactsheet_settings","search","collection_edit","edit","collection_download","collection_share","collection_request");
+    $resource_title_pages=array("view","delete","log","alternative_file","alternative_files","resource_email","edit","preview");
+    $additional_title_pages=array(hook("additional_title_pages_array"));
+    $title="";
     // clear resource or search title for pages that don't apply:
     if (!in_array($pagename,array_merge($general_title_pages,$search_title_pages,$resource_title_pages)) && (empty($additional_title_pages) || !in_array($pagename,$additional_title_pages))){
         echo "<script language='javascript'>\n";
@@ -91,7 +91,9 @@ $additional_title_pages=array(hook("additional_title_pages_array"));
     }
     // place resource titles
     elseif (in_array($pagename,$resource_title_pages) && !isset($_GET['collection']) && !isset($_GET['java'])) /* for edit page */{
-        $title =  str_replace('"',"''",i18n_get_translated(get_data_by_field($ref,$view_title_field)));
+        if(isset($ref)) {
+            $title =  str_replace('"',"''",i18n_get_translated(get_data_by_field($ref,$view_title_field)));
+        }
         echo "<script type=\"text/javascript\" language='javascript'>\n";
 
         if ($pagename=="edit"){$title=$lang['action-edit']." - ".$title;}
