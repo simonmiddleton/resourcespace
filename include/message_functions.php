@@ -312,7 +312,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
         // send an email if the user has notifications and emails setting and the message hasn't already been sent via email
         if(~$notification_type & MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)
             {
-            get_config_option($user,'email_and_user_notifications', $notifications_always_email);
+            get_config_option($user,'email_and_user_notifications', $notifications_always_email, $GLOBALS['system_wide_config_options']['email_and_user_notifications']);
             if($notifications_always_email)
                 {
                 $email_to=ps_value("SELECT email value FROM user WHERE ref = ?", array("i",$user), "");
