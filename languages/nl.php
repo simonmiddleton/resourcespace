@@ -244,7 +244,7 @@ $lang["backtoresourceview"]="Terug naar materiaalvenster";
 # Resource status
 $lang["status"]="Status";
 $lang["status-2"]="Door gebruiker toegevoegd: Wachten op toevoeging";
-$lang["status-1"]="oor gebruiker toegevoegd: Wachten op goedkeuring";
+$lang["status-1"]="Door gebruiker toegevoegd: Wachten op goedkeuring";
 $lang["status0"]="Actief";
 $lang["status1"]="Wachten op archivering";
 $lang["status2"]="Gearchiveerd";
