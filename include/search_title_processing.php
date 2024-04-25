@@ -195,7 +195,7 @@ if ($search_titles)
             {
             if (in_array($resource_types_array[$n]["ref"], $searched_types_refs_array)) 
                 {
-                $searched_resource_types_names_array[] = escape(lang_or_i18n_get_translated($resource_types_array[$n]["name"], "resourcetype-", "-2"));
+                $searched_resource_types_names_array[] = lang_or_i18n_get_translated($resource_types_array[$n]["name"], "resourcetype-", "-2");
                 }
             }
         if (count($searched_resource_types_names_array)==count($resource_types_array))
