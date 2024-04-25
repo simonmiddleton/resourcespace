@@ -6767,8 +6767,7 @@ function purge_expired_shares($filteropts)
  */
 function can_delete_collection($collection_data, $userref, $k = "")
     {
-    return  is_array($collection_data)
-        && ($k == ''
+    return ($k == '' 
             && (($userref == $collection_data['user']) || checkperm('h')) 
             && $collection_data['cant_delete'] == 0) 
         && $collection_data['type'] != COLLECTION_TYPE_REQUEST;
