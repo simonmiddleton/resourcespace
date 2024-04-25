@@ -69,11 +69,10 @@ foreach ($delete_collections as $delete)
         {
         // Check user is actually allowed to delete the collection first
         $collection_data = get_collection($delete);
-        if(!can_delete_collection($collection_data, $userref, $k))
-            {
+        if (is_array($collection_data) && !can_delete_collection($collection_data, $userref, $k)) {
             header('HTTP/1.1 401 Unauthorized');
             die('Permission denied!');
-            }
+        }
 
         # Delete collection
         delete_collection($collection_data);

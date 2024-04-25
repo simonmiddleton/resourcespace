@@ -6765,7 +6765,7 @@ function purge_expired_shares($filteropts)
  * 
  * @return  boolean   Returns true is the collection can be deleted or false if it cannot.
  */
-function can_delete_collection($collection_data, $userref, $k = "")
+function can_delete_collection(array $collection_data, $userref, $k = "")
     {
     return ($k == '' 
             && (($userref == $collection_data['user']) || checkperm('h')) 
