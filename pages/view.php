@@ -826,7 +826,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             # List all sizes and allow the user to download them
                                             $sizes = get_image_sizes($ref,false,$resource["file_extension"]);
 
-                                            if ($missing_original && (int) $resource["no_file"] === 0) {
+                                            if ($missing_original && (int) $resource["no_file"] === 0 && array_search(1,array_column($sizes,"original")) === false) {
                                                 // Need to display the missing file size info
                                                 $allsizes = get_image_sizes($ref,false,$resource["file_extension"],false);
                                                 $origidx = array_search(1,array_column($allsizes,"original"),true);
