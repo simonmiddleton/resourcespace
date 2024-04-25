@@ -5042,10 +5042,8 @@ function add_alternative_file($resource,$name,$description="",$file_name="",$fil
  *
  * @param   int   $resource   Resource id.
  * @param   int   $ref        Alternative file id.
- * 
- * @return  bool   false on error else true.
  */
-function delete_alternative_file($resource,$ref)
+function delete_alternative_file($resource, $ref) : bool
     {
     # Delete any uploaded file.
     $info=get_alternative_file($resource,$ref);
