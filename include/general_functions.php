@@ -937,7 +937,7 @@ function send_mail($email,$subject,$message,$from="",$reply_to="",$html_template
         $bcc.="," . $email_notify;
         }
 
-
+    $subject = strip_tags($subject);
 
     // Validate all files to attach are valid and copy any that are URLs locally
     $attachfiles = array();
