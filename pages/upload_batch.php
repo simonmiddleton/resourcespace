@@ -146,6 +146,9 @@ if($tusupload && $tus_validated)
 
 include_once "../include/image_processing.php";
 
+$modal                                  = getval("modal","");
+$context                                = getval("context","");
+
 $resource_type                          = getval('resource_type', ''); # Int representing resource type or string, see get_search_default_restypes()
 $collectionname                         = getval('entercolname', '');
 $search                                 = getval('search', '');
@@ -1702,6 +1705,15 @@ function postUploadActions()
         }
 
     <?php
+    
+    if($context==="Modal"){?>
+        loadAsModal=true;
+    <?php
+    } else {?>
+        loadAsModal=false;
+    <?php
+    }
+
     if ($redirecturl != "")
         {?>
         if(!upRedirBlock)
@@ -1711,10 +1723,13 @@ function postUploadActions()
         <?php
         }
     elseif ($replace_resource>0)
-        {?>
+        {
+        $searchparams = get_search_params();
+        $redirecturl = generateURL("{$baseurl}/pages/view.php", array_merge(['ref' => $replace_resource],$searchparams));
+        ?>
         if(!upRedirBlock)
             {
-            CentralSpaceLoad('<?php echo $baseurl_short?>pages/view.php?ref=<?php echo $replace_resource; ?>',true);
+            CentralSpaceLoad('<?php echo $redirecturl ?>',true,loadAsModal);
             }
         <?php
         }
