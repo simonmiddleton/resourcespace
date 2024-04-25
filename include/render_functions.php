@@ -2196,7 +2196,7 @@ function display_field($n, $field, $newtab=false,$modal=false)
          <tbody>
            <tr>        
              <td>
-                <?php echo "&nbsp;&nbsp;" . $lang["embeddedvalue"] . ": " ?>
+                <?php echo "&nbsp;&nbsp;" . escape($lang["embeddedvalue"]) . ": " ?>
              </td>
              <td width="10" valign="middle">
                <input type="radio" id="exif_extract_<?php echo $field["ref"]; ?>" name="exif_option_<?php echo $field["ref"]; ?>" value="yes" checked>
@@ -2330,7 +2330,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
             elseif (!$forsearch  && $edit_autosave)
             {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
               >
-              <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
+              <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
               <?php
               for ($d=1;$d<=31;$d++)
                 {
@@ -2347,7 +2347,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
-                <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
+                <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
                 <?php
                 for ($d=1;$d<=12;$d++)
                     {
@@ -2368,7 +2368,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >                   
-                <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
+                <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
                 <?php
                 for ($d=1;$d<=12;$d++)
                     {
@@ -2384,7 +2384,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
-              <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
+              <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
               <?php
               for ($d=1;$d<=31;$d++)
                 {
@@ -2405,7 +2405,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                 {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                 >
-                <option value=""><?php echo $forsearch?$lang["anyyear"]:$lang["year"]; ?></option>
+                <option value=""><?php echo escape($forsearch?$lang["anyyear"]:$lang["year"]); ?></option>
                 <?php
                 $y=date("Y");
                 $y += $maxyear_extends_current;
@@ -2452,7 +2452,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
-                <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
+                <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
                 <?php
                 for ($d=1;$d<=31;$d++)
                     {
@@ -2468,7 +2468,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
-                <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
+                <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
                 <?php
                 for ($d=1;$d<=12;$d++)
                     {
@@ -2488,7 +2488,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 else
                     {?>onChange="UpdateResultCount();"<?php } ?>
                     >                   
-                <option value=""><?php echo $forsearch?$lang["anymonth"]:$lang["month"]; ?></option>
+                <option value=""><?php echo escape($forsearch?$lang["anymonth"]:$lang["month"]); ?></option>
                 <?php
                 for ($d=1;$d<=12;$d++)
                     {
@@ -2504,7 +2504,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
-              <option value=""><?php echo $forsearch?$lang["anyday"]:$lang["day"]; ?></option>
+              <option value=""><?php echo escape($forsearch?$lang["anyday"]:$lang["day"]); ?></option>
               <?php
               for ($d=1;$d<=31;$d++)
                 {
@@ -2524,7 +2524,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 elseif (!$forsearch  && $edit_autosave)
                     {?>onChange="AutoSave('<?php echo $field["ref"]; ?>');"<?php } ?>
                     >
-              <option value=""><?php echo $forsearch?$lang["anyyear"]:$lang["year"]; ?></option>
+              <option value=""><?php echo escape($forsearch?$lang["anyyear"]:$lang["year"]); ?></option>
               <?php
               $y=date("Y");
               $y += $maxyear_extends_current;
@@ -2566,7 +2566,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 let year  = jQuery('[name=<?php echo escape($name); ?>_start_year]').val().trim(); 
                 if (year != "" && !jQuery.isNumeric(year))
                     {
-                    styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
+                    styledalert(<?php echo "'" . escape($lang["error"] . "','" . $lang["invalid_date_generic"]) . "'" ?>);
                     jQuery(this).val(jQuery.data(this, 'current'));
                     }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
@@ -2576,7 +2576,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     let date        = new Date(date_string).toISOString().split('T')[0];
                     //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
                     if(date_string !== date){
-                        styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
+                        styledalert(<?php echo "'" . escape($lang["error"] . "','" . $lang["invalid_date_generic"]) . "'" ?>);
                         jQuery(this).val(jQuery.data(this, 'current'))
                     }
                 }
@@ -2588,7 +2588,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                 let year  = jQuery('[name=<?php echo escape($name); ?>_end_year]').val().trim();
                 if (year != "" && !jQuery.isNumeric(year))
                     {
-                    styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
+                    styledalert(<?php echo "'" . escape($lang["error"] . "','" . $lang["invalid_date_generic"]) . "'" ?>);
                     jQuery(this).val(jQuery.data(this, 'current'));
                     }
                 if(jQuery.isNumeric(year) && jQuery.isNumeric(day) && jQuery.isNumeric(month)){
@@ -2598,7 +2598,7 @@ function render_date_range_field($name,$value,$forsearch=true,$autoupdate=false,
                     let date        = new Date(date_string).toISOString().split('T')[0];
                     //check if the before and after are the same, if a date like 2021-02-30 is selected date would be 2021-03-02
                     if(date_string !== date){
-                        styledalert(<?php echo "'" . $lang["error"] . "','" . $lang["invalid_date_generic"] . "'" ?>);
+                        styledalert(<?php echo "'" . escape($lang["error"] . "','" . $lang["invalid_date_generic"]) . "'" ?>);
                         jQuery(this).val(jQuery.data(this, 'current'))
                     }
                 }
@@ -3045,10 +3045,10 @@ function render_field_selector_question($label, $name, $ftypes, $class = "stdwid
 
     $fields = ps_query("SELECT " . columns_in("resource_type_field") . " from resource_type_field " .  (($fieldtypefilter=="")?"":$fieldtypefilter) . " ORDER BY title, name", $parameters, "schema");
 
-    echo "<div class='Question' id='" . $name . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
+    echo "<div class='Question' id='" . escape($name) . "'" . ($hidden ? " style='display:none;border-top:none;'" : "") . ">";
     echo "<label for='" . escape($name) . "' >" . escape($label) . "</label>";
     echo "<select name='" . escape($name) . "' id='" . escape($name) . "' class='" . $class . "'>";
-    echo "<option value='' selected >" . $lang["select"] . "</option>";
+    echo "<option value='' selected >" . escape($lang["select"]) . "</option>";
     foreach($fields as $field)
         {
         $selected = ($field["ref"] == $current ? "selected" : "");
@@ -3659,7 +3659,7 @@ function render_user_collection_select($name = "collection", $collections=array(
         }
     
     echo "<select name=\"" . $name . "\" id=\"" . $name . "\" " . ($onchangejs != "" ? (" onchange=\"" . escape($onchangejs) . "\"") : "") . ($classes != "" ? (" class=\"" . escape($classes) . "\"") : "")  . ">";
-    echo "<option value=\"0\">" . $lang["select"] . "</option>";
+    echo "<option value=\"0\">" . escape($lang["select"]) . "</option>";
     for ($n=0;$n<count($collections);$n++)
         {
         if(in_array($collections[$n]['ref'],$hidden_collections))
@@ -4395,7 +4395,7 @@ function render_resource_lock_link($ref,$lockuser,$editaccess)
         echo "<div  class='ResourceLocked' title='" .  escape($lock_details) . "' >" . $lang["status_locked"] . "</div>";
         }
 
-    echo "<a id='lock_details_link' href='#' " . ($resource_locked ? "" : "style='display:none;'") . " onclick='if(resource_lock_status){styledalert(\"" . $lang["status_locked"] . "\",lockmessage[" . $ref . "]);}'>&nbsp;<i class='fas fa-info-circle'></i></a> </li>";
+    echo "<a id='lock_details_link' href='#' " . ($resource_locked ? "" : "style='display:none;'") . " onclick='if(resource_lock_status){styledalert(\"" . escape($lang["status_locked"]) . "\",lockmessage[" . escape($ref) . "]);}'>&nbsp;<i class='fas fa-info-circle'></i></a> </li>";
     }
 
 /**
@@ -4457,7 +4457,7 @@ function SaveAndClearButtons($extraclass="",$requiredfields=false,$backtoresults
         <?php
         if($ref < 0 || $upload_review_mode)
             {
-            echo "<input id='edit_reset_button' name='resetform' class='resetform' type='submit' value='" . $lang["clearbutton"] . "' />&nbsp;";
+            echo "<input id='edit_reset_button' name='resetform' class='resetform' type='submit' value='" . escape($lang["clearbutton"]) . "' />&nbsp;";
             }
             ?>
         <input 
@@ -4529,7 +4529,7 @@ function display_size_option($sizeID, $sizeName, $fordropdown=true)
         $resultCount = count($result);
         if ($availableCount != $resultCount && $sizeID != "largest")
             {
-            echo " (" . $availableCount . " " . $lang["of"] . " " . $resultCount . " ";
+            echo " (" . escape($availableCount . " " . $lang["of"] . " " . $resultCount) . " ";
             switch ($availableCount)
                 {
                 case 0:
@@ -5168,7 +5168,7 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
     if (in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
         {
         $colspan = $use_larger_layout ? ' colspan="2"' : '';
-        echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>" . $lang['mp3_preview_file'] . "</h2></td><td class=\"DownloadFileSize\">" . formatfilesize(filesize_unlimited($path)) . "</td>" ; 
+        echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>" . escape($lang['mp3_preview_file']) . "</h2></td><td class=\"DownloadFileSize\">" . escape(formatfilesize(filesize_unlimited($path))) . "</td>" ; 
         add_download_column($ref,$size_info, true);
         echo "</tr>";
         }   
@@ -5245,7 +5245,7 @@ function render_table($tabledata)
             "url_params" => $tabledata["params"],
             );
         echo '<div class="TopInpageNav TableNav">';
-        echo '<div class="InpageNavLeftBlock">' . $lang["resultsdisplay"] . ': ';
+        echo '<div class="InpageNavLeftBlock">' . escape($lang["resultsdisplay"]) . ': ';
         // Show per page options
         $list_display_array["all"] = 99999;
         $pplinks = array();
@@ -5507,7 +5507,7 @@ function render_share_password_question($blank=true)
     ?>
     <div class="Question">
     <label for="sharepassword"><?php echo escape($lang["share-set-password"]) ?></label>
-    <input type="password" id="sharepassword" name="sharepassword" autocomplete="new-password" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : $lang["password_unchanged"]; ?>">
+    <input type="password" id="sharepassword" name="sharepassword" autocomplete="new-password" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : escape($lang["password_unchanged"]); ?>">
     <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('sharepassword');"></span>
     <script>
 

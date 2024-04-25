@@ -1472,7 +1472,7 @@ function build_dash_tile_list($dtiles_available)
                       <?php echo escape($lang["dashtilevisitlink"]); ?>
                   </a>
               </td>
-              <td><?php echo $tile["resource_count"]? $lang["yes"]: $lang["no"];?></td>
+              <td><?php echo escape($tile["resource_count"]? $lang["yes"]: $lang["no"]); ?></td>
               <td class="ListTools">
                   <?php
                   if  ( 

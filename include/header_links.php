@@ -42,7 +42,7 @@
                 <?php if (checkperm("s") && $enable_themes && !$theme_direct_jump && $themes_navlink) { ?>
                     <li class="HeaderLink">
                         <a href="<?php echo $baseurl?>/pages/collections_featured.php" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo FEATURED_COLLECTION_ICON . $lang["themes"]; ?>
+                            <?php echo FEATURED_COLLECTION_ICON . escape($lang["themes"]); ?>
                         </a>
                     </li>
                 <?php } ?>
@@ -85,7 +85,7 @@
                     ?>
                     <li class="HeaderLink">
                         <a href="<?php echo $recenturl ?>" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo RECENT_ICON . $lang["recent"]; ?>
+                            <?php echo RECENT_ICON . escape($lang["recent"]); ?>
                         </a>
                     </li>
                 <?php } ?>
@@ -103,7 +103,7 @@
                 <?php if (checkperm("d")||($mycontributions_link && checkperm("c"))) { ?>
                     <li class="HeaderLink">
                         <a href="<?php echo $baseurl?>/pages/contribute.php" onClick="return CentralSpaceLoad(this,true);">
-                            <?php echo CONTRIBUTIONS_ICON . $lang["mycontributions"]; ?>
+                            <?php echo CONTRIBUTIONS_ICON . escape($lang["mycontributions"]); ?>
                         </a>
                     </li>
                 <?php } ?>
@@ -163,7 +163,7 @@
             <?php if ($help_link) { ?>
                 <li class="HeaderLink">
                     <a href="<?php echo $baseurl?>/pages/help.php" onClick="return <?php if (!$help_modal) { ?>CentralSpaceLoad(this,true);<?php } else { ?>ModalLoad(this,true);<?php } ?>">
-                        <?php echo HELP_ICON . $lang["helpandadvice"]; ?>
+                        <?php echo HELP_ICON . escape($lang["helpandadvice"]); ?>
                     </a>
                 </li>
             <?php } ?>
