@@ -2926,13 +2926,11 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         ) {
             // Establish whether date is a valid date or a valid date time
             $value_valid_date_part=false;  
-            $value_valid_time_part=false;
             if(validateDatetime($value, 'Y-m-d')) {
                 $value_valid_date_part=true;  
             }
             elseif(validateDatetime($value, 'Y-m-d H:i:s')) {
                 $value_valid_date_part=true;  
-                $value_valid_time_part=true;  
             }
             // Return if there is no valid date part
             if(!$value_valid_date_part) {
