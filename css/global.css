@@ -95,6 +95,15 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     box-shadow: 0 1px 3px rgba(0,0,0,0.25);
 }
 
+.RecordPanel .RecordDownloadSpace .DownloadDBlend .MissingFile a {
+    border: 1px solid #000;
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    border-radius: 5px;
+    cursor: default;
+}
+
 .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
     line-height: 1.8rem;
     padding: 0 1rem;
@@ -2578,3 +2587,18 @@ input[type="text"]#iconpicker-input {
 #HomeSiteTextInner{padding:15px;}
 #HomeSiteText h1,#HomeSiteText p {color:#fff;}
 #HomeSiteText p {padding-bottom:8px;}
+
+.no_file_link.no_file:before {
+    font-family: "Font Awesome 5 Free", sans-serif;
+    font-weight: 600;
+    content: "\f1ce";
+    font-size: 16px;
+    padding-right:5px;
+}
+.no_file_link.has_file:before {
+    font-family: "Font Awesome 5 Free", sans-serif;
+    font-weight: 600;
+    content: "\f5bf";
+    font-size: 16px;
+    padding-right:5px;
+}

@@ -56,10 +56,11 @@ if(!checkperm('v') && !$bypass_permission_check)
                             {
                             case "type":
                                 $name = $lang["type"];
-                                if(isset($lang["log-" . $value]))
-                                    {
+                                if(isset($lang["log-" . $value])) {
                                     $value = $lang["log-".$value];
-                                    }
+                                } elseif (isset($lang["log_code_" . $value])) {
+                                    $value = $lang["log_code_".$value];
+                                }
                             break;
                             case "date":
                                 $name = $lang["date"];
@@ -71,6 +72,9 @@ if(!checkperm('v') && !$bypass_permission_check)
                                     {
                                     $value = $lang["externalusersharing"];
                                     }
+                                if (trim((string) $value) === "") {
+                                    $value = $lang["system_user_default"];
+                                }
                             break;
                             case "fullname":
                                 $name = $lang["fullname"];
@@ -79,6 +83,9 @@ if(!checkperm('v') && !$bypass_permission_check)
                                     // Already shown as username
                                     continue 2;
                                     }
+                                if (trim((string) $value) === "") {
+                                    $value = $lang["system_user_default"];
+                                }
                             break;
 
                             case "resource_type_field":

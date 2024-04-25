@@ -122,6 +122,17 @@ if($comments_resource_enable && $comments_view_panel_show_marker){
     $resource_comments=ps_value("select count(*) value from comment where resource_ref=?",array("i",$ref),"0");
 }
 
+$missing_original = false;
+if (
+    !in_array($resource["resource_type"],
+        array_unique(array_merge($data_only_resource_types,$file_integrity_ignore_resource_types))
+        )
+    && !in_array($resource["archive"],$file_integrity_ignore_states)
+) {
+    // Validate resource file
+    $missing_original = count(array_intersect(check_resources([$resource]),[$ref])) === 1;
+}
+
 # Should the page use a larger resource preview layout?
 $use_larger_layout = true;
 if (isset($resource_view_large_ext))
@@ -813,7 +824,15 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                             # Restricted access? Show the request link.
 
                                             # List all sizes and allow the user to download them
-                                            $sizes=get_image_sizes($ref,false,$resource["file_extension"]);
+                                            $sizes = get_image_sizes($ref,false,$resource["file_extension"]);
+
+                                            if ($missing_original && (int) $resource["no_file"] === 0 && array_search(1,array_column($sizes,"original")) === false) {
+                                                // Need to display the missing file size info
+                                                $allsizes = get_image_sizes($ref,false,$resource["file_extension"],false);
+                                                $origidx = array_search(1,array_column($allsizes,"original"),true);
+                                                $sizes = array_merge([$allsizes[$origidx]],$sizes);
+                                            }
+
                                             for ($n=0;$n<count($sizes);$n++)
                                                 {
                                                 # Is this the original file? Set that the user can download the original file
@@ -856,7 +875,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     } # end hook("replacedownloadspacetableheaders") ?>
 
                                                 <tr class="DownloadDBlend" id="DownloadBox<?php echo $n?>">
-                                                    <td class="DownloadFileName"><h2><?php echo $headline?></h2><?php
+                                                    <td class="DownloadFileName"><h2><?php echo escape($headline); ?></h2><?php
                                                         echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';
 
                                                         if (is_numeric($sizes[$n]["width"]))
@@ -865,8 +884,26 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             }
                                                             ?>
                                                     </td>
-                                                    <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
-                                                    <?php add_download_column($ref, $sizes[$n], $downloadthissize); ?>
+                                                    <td class="DownloadFileSize"><?php echo escape($sizes[$n]["filesize"]); ?></td>
+                                                    <?php 
+                                                    if ($fulldownload && $missing_original) { ?>
+                                                        <td class="MissingFile">
+                                                            <a 
+                                                                title="<?php echo escape($lang["missing_file"]); ?>" 
+                                                                href="#" 
+                                                                onclick="styledalert(
+                                                                    '<?php echo escape($lang['no_file']); ?>',
+                                                                    '<?php echo escape($lang['missing_file']); ?>'
+                                                                    );"
+                                                                >
+                                                                <?php echo escape($lang["no_file"]); ?>
+                                                            </a>
+                                                        </td>
+                                                        <?php
+                                                        } else {
+                                                            add_download_column($ref, $sizes[$n], $downloadthissize);
+                                                        } 
+                                                    ?>
                                                 </tr>
 
                                                 <?php
@@ -1120,11 +1157,50 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     # ----------------------------- Resource Actions -------------------------------------
                                     hook ("resourceactions");
 
-                                    if ($k=="" || $internal_share_access)
+                                    if ($k == "" || $internal_share_access)
                                         {
                                         if (!hook("replaceresourceactions"))
                                             {
                                             hook("resourceactionstitle");
+
+                                            if($missing_original && checkperm("a")) {
+                                                $no_file_set = (bool) $resource["no_file"];
+                                                $nofile_id = ($modal ? "modal_" : "") . "no_file_link"; // Anchor ID
+                                                echo sprintf("
+                                                <li>
+                                                    <a  id=\"%s\"
+                                                        class='no_file_link %s'
+                                                        href='#'
+                                                        data-no-file-state='%s'
+                                                        onclick='
+                                                        el_no_file = jQuery(\"#%s\");
+                                                        newstate = el_no_file.attr(\"data-no-file-state\") === \"0\" ? 1 : 0;
+                                                        newtext = newstate ? \"%s\" : \"%s\";
+                                                        api(\"put_resource_data\",
+                                                        {\"resource\": \"%s\",\"data\": {\"no_file\": newstate}},
+                                                                function(response) {
+                                                                    el_no_file.toggleClass(\"no_file has_file\");
+                                                                    el_no_file.attr(\"data-no-file-state\",newstate);
+                                                                    el_no_file.html(newtext);
+                                                                },
+                                                                %s
+                                                            );
+                                                            return false;'
+                                                        >
+                                                    %s
+                                                    </a>
+                                                </li>",
+                                                $nofile_id, // ID of anchor tag
+                                                ($no_file_set ? "no_file" : "has_file"), // Current state for CSS targeting
+                                                ($no_file_set ? 1 : 0), // Current state for data-no-file-state
+                                                $nofile_id, // For JQuery selector to find current anchor
+                                                escape($lang['action_unset_no_file']), // Lang string to set no_file=0
+                                                escape($lang['action_set_no_file']), // Lang string  to set no_file=1
+                                                $ref, // For API call
+                                                generate_csrf_js_object('set_no_file'),
+                                                escape($no_file_set ? $lang['action_unset_no_file'] : $lang['action_set_no_file']), // Anchor text
+                                                );
+                                            }
 
                                             if ($resource_contact_link) 
                                                 { 

@@ -314,3 +314,57 @@ function is_valid_upload_path(string $file_path, array $valid_upload_paths) : bo
 
     return false;
     }
+
+/**
+ * Validate the files on disk that are associated with the given resources
+ *
+ * @param array $resources      Array of resource IDs or
+ *                              array of resource data e.g, from search results
+ * @param array $criteria       Array with an array of callables for each resource with the
+ *                              required return values in order to pass the check e.g.
+ *                              'file_exists" =>true for a file presence only check
+ *
+ * @return array $results       An array with resource ID as the index and the results of the check as the value (boolean)
+ *                              e.g. ["1234" => true, "1235" => false]
+ */
+function validate_resource_files(array $resources,array $criteria = []): array
+{
+    $checkresources = isset($resources[0]["ref"]) ? $resources : get_resource_data_batch($resources);
+    $results = [];
+    foreach($checkresources as $resource) {
+        if (!is_int_loose($resource["ref"])) {
+            $results[$resource["ref"]] = false;
+            continue;
+        }
+        $filepath = get_resource_path($resource["ref"],true,'',false,$resource["file_extension"] ?? "jpg");
+        $results[$resource["ref"]] = false;
+        foreach ($criteria as $criterion=>$expected) {
+            if(!is_callable($criterion)) {
+                $results[$resource["ref"]] = false;
+                // Not a valid check
+                continue 2;
+            }
+            $cscheck = $expected === "%RESOURCE%file_checksum";
+            if(substr($expected,0,10) == "%RESOURCE%") {
+                // $expected is a resource table column
+                $expected = $resource[substr($expected,10)];
+            }
+            $testresult = call_user_func($criterion,$filepath);
+            if($cscheck && ($expected === NULL || $expected === "")) {
+                // No checksum is currently recorded. Update it now that it's been calculated
+                $results[$resource["ref"]] = true;
+                debug("Skipping checksum check for resource " . $resource["ref"] . " - no existing checksum");
+                ps_query("UPDATE resource SET file_checksum = ? WHERE ref = ?", ['s', $testresult, 'i', $resource["ref"]]);
+                continue;
+            }
+
+            $results[$resource["ref"]] = $testresult === $expected;
+            if ($results[$resource["ref"]] === false) {
+                debug($resource["ref"] . " failed integrity check. Expected: " . $criterion . "=". $expected . ", got : " . $testresult);
+                // No need to continue with other $criteria as check has failed
+                continue 2;
+            }
+        }
+    }
+    return $results;
+}

@@ -85,37 +85,40 @@ $NODE_FIELDS = array_merge($FIXED_LIST_FIELD_TYPES, [FIELD_TYPE_DATE_RANGE], NON
 
 // codes used for log entries (including resource, collection and activity logs)
 
-define ('LOG_CODE_ACCESS_CHANGED',      'a');
-define ('LOG_CODE_ALTERNATIVE_CREATED', 'b');
-define ('LOG_CODE_CREATED',             'c');
-define ('LOG_CODE_COPIED',              'C');
-define ('LOG_CODE_DOWNLOADED',          'd');
-define ('LOG_CODE_EDITED',              'e');
-define ('LOG_CODE_EMAILED',             'E');
-define ('LOG_CODE_LOGGED_IN',           'l');
-define ('LOG_CODE_MULTI_EDITED',        'm');
-define ('LOG_CODE_NODE_REVERT',         'N');
-define ('LOG_CODE_CREATED_BY_CHANGED',  'o');
-define ('LOG_CODE_USER_OPT_IN',         'O');
-define ('LOG_CODE_REVERTED_REUPLOADED', 'r');
-define ('LOG_CODE_REPLACED',            'f');
-define ('LOG_CODE_REORDERED',           'R');
-define ('LOG_CODE_STATUS_CHANGED',      's');
-define ('LOG_CODE_SYSTEM',              'S');
-define ('LOG_CODE_TRANSFORMED',         't');
-define ('LOG_CODE_UPLOADED',            'u');
-define ('LOG_CODE_UNSPECIFIED',         'U');
-define ('LOG_CODE_VIEWED',              'v');
-define ('LOG_CODE_DELETED',             'x');
-define ('LOG_CODE_DELETED_PERMANENTLY', 'xx');
-define ('LOG_CODE_DELETED_ALTERNATIVE', 'y');
-define ('LOG_CODE_ENABLED',             '+');
-define ('LOG_CODE_DISABLED',            '-');
-define ('LOG_CODE_LOCKED',              'X');
-define ('LOG_CODE_UNLOCKED',            'Y');
-define ('LOG_CODE_DELETED_ACCESS_KEY',  'XK');
-define ('LOG_CODE_FAILED_LOGIN_ATTEMPT','Xl');
-define ('LOG_CODE_EXTERNAL_UPLOAD',     'EUP');
+define ('LOG_CODE_ACCESS_CHANGED',          'a');
+define ('LOG_CODE_ALTERNATIVE_CREATED',     'b');
+define ('LOG_CODE_CREATED',                 'c');
+define ('LOG_CODE_COPIED',                  'C');
+define ('LOG_CODE_DOWNLOADED',              'd');
+define ('LOG_CODE_EDITED',                  'e');
+define ('LOG_CODE_EMAILED',                 'E');
+define ('LOG_CODE_LOGGED_IN',               'l');
+define ('LOG_CODE_MULTI_EDITED',            'm');
+define ('LOG_CODE_NODE_REVERT',             'N');
+define ('LOG_CODE_CREATED_BY_CHANGED',      'o');
+define ('LOG_CODE_USER_OPT_IN',             'O');
+define ('LOG_CODE_REVERTED_REUPLOADED',     'r');
+define ('LOG_CODE_REPLACED',                'f');
+define ('LOG_CODE_REORDERED',               'R');
+define ('LOG_CODE_STATUS_CHANGED',          's');
+define ('LOG_CODE_SYSTEM',                  'S');
+define ('LOG_CODE_TRANSFORMED',             't');
+define ('LOG_CODE_UPLOADED',                'u');
+define ('LOG_CODE_UNSPECIFIED',             'U');
+define ('LOG_CODE_VIEWED',                  'v');
+define ('LOG_CODE_DELETED',                 'x');
+define ('LOG_CODE_DELETED_PERMANENTLY',     'xx');
+define ('LOG_CODE_DELETED_ALTERNATIVE',     'y');
+define ('LOG_CODE_ENABLED',                 '+');
+define ('LOG_CODE_DISABLED',                '-');
+define ('LOG_CODE_LOCKED',                  'X');
+define ('LOG_CODE_UNLOCKED',                'Y');
+define ('LOG_CODE_DELETED_ACCESS_KEY',      'XK');
+define ('LOG_CODE_FAILED_LOGIN_ATTEMPT',    'Xl');
+define ('LOG_CODE_EXTERNAL_UPLOAD',         'EUP');
+define ('LOG_CODE_EDITED_RESOURCE',         'EDT');
+define ('LOG_CODE_SET_NO_FILE',             'NOFIL');
+define ('LOG_CODE_UNSET_NO_FILE',           'FIL');
 define ('LOG_CODE_COLLECTION_REMOVED_RESOURCE',             'r');
 define ('LOG_CODE_COLLECTION_REMOVED_ALL_RESOURCES',        'R');
 define ('LOG_CODE_COLLECTION_DELETED_ALL_RESOURCES',        'D');
@@ -850,6 +853,7 @@ const API_NATIVE_WHITELIST = [
     'send_user_message',
     'update_related_resource',
     'toggle_active_state_for_nodes',
+    'put_resource_data',
 ];
 
 const DEFAULT_DOWNLOAD_FILENAME_FORMAT = 'RS%resource_%filename%size.%extension';

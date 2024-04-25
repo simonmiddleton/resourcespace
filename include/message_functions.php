@@ -1170,3 +1170,55 @@ function get_user_message(int $ref, bool $checkaccess=true)
     
     return $message ? ["message"=>$message[0]["message"],"url"=>$message[0]["url"],"owner"=>$message[0]["owner"]] : false;    
     }
+
+
+
+/**
+ * Send notifications about file integrity failures
+ *
+ * @param array $failures   Array of resources that have failed integrity check
+ * 
+ * @return void
+ * 
+ */
+function send_integrity_failure_notices( array $failures): void
+{
+    $last_integrity_check_notify = get_sysvar('last_integrity_check_notify', '1970-01-01');
+    if (time()-strtotime($last_integrity_check_notify) < 24*60*60) {
+        if('cli' == PHP_SAPI) {
+            echo " - Skipping sending of integrity failure notifications - last sent: " . $last_integrity_check_notify . PHP_EOL;
+        }
+    } else {
+        if('cli' == PHP_SAPI) {
+            echo " - Sending summary messages to administrators" . PHP_EOL;
+        }
+            
+    # Send notification
+    $message = new ResourceSpaceUserNotification();
+    $message->set_subject("lang_file_integrity_summary");
+    $message->set_text("lang_file_integrity_summary_failed"); 
+    $message->append_text("<br><br>");
+    if(count($failures) < 1000) {
+        // Show links to the resources that have failed this time.
+        // If too many have failed it will still include a link to the general search for all failed resources.
+        $message->append_text("<table class='ListviewStyle'");
+        $n = 1;
+        foreach (array_chunk($failures,200) as $arr_failed) {
+            $message->append_text("<tr><td class='SingleLine'><a href='");
+            $message->append_text($GLOBALS["baseurl"] . "/pages/search.php?search=!list" . implode(":", $arr_failed));
+            $message->append_text("'>");
+            $message->append_text("lang_file_integrity_fail_search");
+            $message->append_text(" ({$n})");
+            $message->append_text("</a></td></tr>");
+            $n++;
+            }
+        $message->append_text("</table>");
+    }
+
+    $message->url = $GLOBALS["baseurl"] . "/pages/search.php?search=!integrityfail";
+
+    $notify_users = get_notification_users("SYSTEM_ADMIN");
+    send_user_notification($notify_users,$message);
+    set_sysvar("last_integrity_check_notify",date("Y-m-d H:i:s"));
+    }
+}

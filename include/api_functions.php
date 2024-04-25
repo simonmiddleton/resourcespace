@@ -89,7 +89,6 @@ function execute_api_call($query,$pretty=false)
     ) {
         ajax_unauthorized();
     }
-
     // Construct an array of the real params, setting default values as necessary
     $setparams = [];
     $n = 0;
@@ -115,7 +114,7 @@ function execute_api_call($query,$pretty=false)
                 // type is an object
                 $type = $type->getName();
                 }
-            if($fparam->hasType() && gettype($type) == "string" && $type == "array")
+            if($fparam->hasType() && gettype($type) == "string" && $type == "array" && !is_array($params[$param_name]))
                 {
                 // Decode as must be json encoded if array
                 $GLOBALS["use_error_exception"] = true;

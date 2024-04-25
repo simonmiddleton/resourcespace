@@ -37,6 +37,7 @@ disk_usage_last_updated,datetime,The last time disk_usage was updated
 file_size,bigint(20),The file size of the core file in bytes
 preview_attempts,int(11),Set to 0 to indicate resource can be processed to get previews created offline/async. Set to 1 otherwise.
 modified,timestamp,Date resource (metadata) was last modified.
-last_verified,datetime,Date of the last time the file checksum was generated.
+last_verified,datetime,Date of the last time the primary resource file had it's integrity verified
 integrity_fail,tinyint(1),Set to 1 if integrity check failed, 0 otherwise.
 lock_user,int(11),The ID of the user that has checked out (locked) this resource record
+no_file,tinyint(1),Set to 1 if resource is intended to have no accompanying file e.g. the resource type is in the $data_only_resource_types array. Avoids alerts being raised when no file is found., 0 otherwise.

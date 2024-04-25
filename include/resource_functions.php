@@ -524,25 +524,63 @@ function put_resource_data($resource,$data)
     // Check access
     if (!get_edit_access($resource)) {return false;}
 
+    // Get current resource data
+    $currentdata = get_resource_data($resource);
+
     // Define safe columns
-    $safe_columns=array("resource_type","creation_date","rating","user_rating","archive","access","mapzoom","modified","geo_lat","geo_long");
-    $safe_column_types=array("i","s","d","i","i","i","d","s","s","s");
+    $safe_columns = ["resource_type","creation_date","rating","user_rating","archive","access","mapzoom","modified","geo_lat","geo_long","no_file"];
+    $log_columns = [
+        "resource_type" => LOG_CODE_EDITED_RESOURCE,
+        "access" => LOG_CODE_ACCESS_CHANGED,
+        "archive" => LOG_CODE_STATUS_CHANGED,
+        "creation_date" => LOG_CODE_EDITED_RESOURCE,
+        "geo_lat" => LOG_CODE_EDITED_RESOURCE,
+        "geo_long" => LOG_CODE_EDITED_RESOURCE,
+        "no_file" => [0 => LOG_CODE_UNSET_NO_FILE, 1 => LOG_CODE_SET_NO_FILE],
+        "locked" => [0 => LOG_CODE_UNLOCKED, 1 => LOG_CODE_LOCKED],
+    ];
+    $safe_column_types=array("i","s","d","i","i","i","d","s","s","s","i");
 
     // Permit the created by column to be changed also
     if (checkperm("v") && $edit_contributed_by) {$safe_columns[]="created_by";$safe_column_types[]='i';}
 
     $sql="";$params=array();
-    foreach ($data as $column=>$value)
-        {
-        if (!in_array($column,$safe_columns)) {return false;} // Attempted to update a column outside of the expected set
+    $logupdates = [];
+    foreach ($data as $column=>$value) {
+        if (!in_array($column,$safe_columns)) {
+            // Attempted to update a column outside of the expected set
+            return false;
+        }
+        if (isset($currentdata[$column]) && $value == $currentdata[$column]) {
+            // No change
+            continue;
+        }
         if ($sql!="") {$sql.=",";}
         $sql.=$column . "=?";
         $params[]=$safe_column_types[array_search($column,$safe_columns)]; // Fetch type to use
         $params[]=$value;
+        // Add to $logupdates
+        if (isset($log_columns[$column])) {
+            // Set log value and type
+            $logupdates[] = [
+                $log_columns[$column][$value] ?? $log_columns[$column], // Log code
+                $column, // Log note
+                $currentdata[$column], // From value
+                $value, // To value
+            ];
         }
+    }
+
     if ($sql=="") {return false;} // Nothing to do.
     $params[]="i";$params[]=$resource;
-    ps_query("update resource set $sql where ref=?",$params);
+    ps_query("UPDATE resource SET $sql WHERE ref=?",$params);
+    if(count($logupdates) > 0) {
+        db_begin_transaction("resource_log_updates");
+        foreach($logupdates as $logupdate) {
+            resource_log($resource,$logupdate[0],0,$logupdate[1],$logupdate[2],$logupdate[3]);
+        }
+        db_end_transaction("resource_log_updates");
+    }
     return true;
     }
 
@@ -4144,9 +4182,9 @@ function resource_log($resource, $type, $field, $notes="", $fromvalue="", $toval
         }
     else
         {
-        ps_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `access_key`, `previous_value`) VALUES (now(), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        ps_query("INSERT INTO `resource_log` (`date`, `user`, `resource`, `type`, `resource_type_field`, `notes`, `diff`, `usageoption`, `access_key`, `previous_value`) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-            'i', (($userref != "") ? $userref : null),
+            'i', (($userref != "" && $type !== LOG_CODE_SYSTEM) ? $userref : null),
             'i', $resource,
             's', $type,
             'i', (($field=="" || !is_numeric($field)) ? null : $field),
@@ -4775,7 +4813,7 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
         if ($ingest){$file_path="";} else {$file_path=$path;}
 
         # Store extension/data in the database
-        ps_query("UPDATE resource SET archive=0,file_path=?,file_extension=?,preview_extension=?,file_modified=NOW() WHERE ref=?",array("s",$file_path,"s",$extension,"s",$extension,"i",$r));
+        ps_query("UPDATE resource SET archive=0,file_path=?,file_extension=?,preview_extension=?,file_modified=NOW(),no_file=0 WHERE ref=?",array("s",$file_path,"s",$extension,"s",$extension,"i",$r));
 
         # Store original filename in field, if set
         if (!$ingest)
@@ -5761,11 +5799,11 @@ function log_diff($fromvalue, $tovalue)
     debug_function_call("log_diff",func_get_args());
 
     // Trim values as it can cause out of memory errors with class.Diff.php e.g. when saving extracted text or creating previews for large PDF files
-    if(strlen($fromvalue)>10000)
+    if(strlen((string) $fromvalue)>10000)
         {
         $fromvalue = mb_substr($fromvalue,10000);
         }
-    if(strlen($tovalue)>10000)
+    if(strlen((string) $tovalue)>10000)
         {
         $tovalue = mb_substr($tovalue,10000);
         }
@@ -7704,7 +7742,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
     $lastpreview=0;$lastrestricted=0;
     $path2=get_resource_path($ref,true,'',false,$extension);
 
-    if(!resource_has_access_denied_by_RT_size($resource_type, '') && file_exists($path2))
+    if(!resource_has_access_denied_by_RT_size($resource_type, '') && (file_exists($path2) || !$onlyifexists))
     {
         $returnline=array();
         $returnline["name"]=lang_or_i18n_get_translated($lastname, "imagesize-");
@@ -7713,6 +7751,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
         $returnline["path"]=$path2;
         $returnline["url"] = get_resource_path($ref, false, "", false, $extension);
         $returnline["id"]="";
+        $returnline["original"] = 1;
         $dimensions = ps_query("select width,height,file_size,resolution,unit from resource_dimensions where resource=?",array("i",$ref));
 
         if (count($dimensions))
@@ -7764,6 +7803,7 @@ function get_image_sizes(int $ref,$internal=false,$extension="jpg",$onlyifexists
             ) {
                 $returnline=array();
                 $returnline["name"]=lang_or_i18n_get_translated($sizes[$n]["name"], "imagesize-");
+                $returnline["original"] = 0;
                 $returnline["allow_preview"]=$sizes[$n]["allow_preview"];
 
                 # The ability to restrict download size by user group and resource type.
@@ -9272,7 +9312,7 @@ function revert_resource_file($resource,$logentry,$createpreviews=true)
 
     copy($revert_path,$current_path);
     $parameters=array("s",$revert_ext, "i",$resource);
-    ps_query("UPDATE resource SET file_extension=?, has_image=0 WHERE ref=?",$parameters);
+    ps_query("UPDATE resource SET file_extension=?, has_image=0,no_file=0 WHERE ref=?",$parameters);
     if($createpreviews)
         {
         create_previews($resource,false,$revert_ext);
@@ -9451,3 +9491,122 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
         }
     return $preview;
     }
+
+/**
+ * Check integrity of primary resource files
+ *
+ * @param array $resources      Array of resource data e.g. from search results
+ * @param bool $presenceonly    Check for file presence only? If false (and if $file_checksums is enabled)
+ *                              then file checksums will be checked
+ *
+ * @return array                Array of resource IDs that have failed  to verify
+ *
+ */
+function check_resources(array $resources = [], bool $presenceonly = false): array
+{
+    if(count($resources) === 0) {
+        $resources = get_resources_to_validate();
+    }
+    if(count($resources) === 0)
+        {
+        echo " - No resources require integrity checks" . PHP_EOL;
+        return [];
+        }
+
+    $existingfailed = array_column(array_filter($resources, function($resource) {
+        return $resource["integrity_fail"] == 1;
+    }),"ref");
+
+    $return_failed = [];
+    foreach (array_chunk($resources,1000) as $checkresources) {
+        $checks = [];
+        $checks["is_readable"]  = true; // Always check for file presence as checksums may not have been generated yet
+        if(!$presenceonly && $GLOBALS["file_checksums"]) {
+            $checks["get_checksum"]  = "%RESOURCE%file_checksum";
+            }
+        $results = validate_resource_files($checkresources,$checks);
+
+        $failed = [];
+        $succeeded = [];
+        foreach ($results as $ref=>$result) {
+            if($result === false) {
+                $failed[] = $ref;
+            } else {
+                $succeeded[] = $ref;
+            }
+        }
+
+        db_begin_transaction("checkresources");
+        if (count($failed) > 0) {
+            $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref in (" . ps_param_insert(count($failed)) . ")";
+            $failed_params = ps_param_fill($failed,"i");
+            ps_query($failed_sql,$failed_params);
+        }
+        if (count($succeeded) > 0) {
+            $success_sql = "UPDATE resource SET integrity_fail = 0,no_file=0, last_verified=NOW() WHERE ref IN (" . ps_param_insert(count($succeeded)) . ")";
+            $success_params = ps_param_fill($succeeded,"i");
+            ps_query($success_sql,$success_params);
+        }
+        // Add any failures to the array to return
+        $return_failed = array_merge($return_failed,$failed);
+        db_end_transaction("checkresources");
+
+        // Log any newly failed resources
+        db_begin_transaction("logfailedresources");
+        $arr_newfails = array_diff($failed,$existingfailed);
+        foreach($arr_newfails as $newfail) {
+            resource_log($newfail, LOG_CODE_SYSTEM, 0, "Failed file integrity check", 0,1);
+        }
+        db_end_transaction("logfailedresources");
+
+         // Log any recovered resources
+         db_begin_transaction("logrecoveredresources");
+         $arr_recovered = array_intersect($succeeded,$existingfailed);
+         foreach($arr_recovered as $recovered) {
+             resource_log($recovered, LOG_CODE_SYSTEM, 0, "Passed file integrity check", 1,0);
+         }
+         db_end_transaction("logrecoveredresources");
+    }
+    return $return_failed;
+}
+
+/**
+ * Get an array of all resources that require files to be validated
+ *
+ * @param int $days     Return only resources not validated in the last X number of days
+ *
+ * @return array
+ *
+ */
+function get_resources_to_validate(int $days = 0) : array
+{
+    $params = [];
+    $filtersql = "";
+    $restypes_ignore = array_unique(array_merge(
+        $GLOBALS["data_only_resource_types"],
+        $GLOBALS["file_integrity_ignore_resource_types"])
+        );
+
+    if (count($GLOBALS["file_integrity_ignore_states"]) > 0) {
+        $filtersql .= " AND archive NOT IN (" . ps_param_insert(count($GLOBALS["file_integrity_ignore_states"])) . ")";
+        $params = array_merge($params,ps_param_fill($GLOBALS["file_integrity_ignore_states"], "i"));
+    }
+    if(count($restypes_ignore) > 0) {
+        $filtersql .= " AND resource_type NOT IN (" . ps_param_insert(count($restypes_ignore)) . ")";
+        $params = array_merge($params,ps_param_fill($restypes_ignore, "i"));
+    }
+    $dayfilter = $days > 0 ? "AND (last_verified IS NULL OR DATEDIFF(NOW(), last_verified) > {$days})" : "";
+    $resources = ps_query("SELECT ref,
+                                  archive,
+                                  file_extension,
+                                  resource_type,
+                                  file_checksum,
+                                  last_verified,
+                                  integrity_fail
+                             FROM resource
+                            WHERE ref > 0 AND no_file = 0 {$dayfilter} {$filtersql}
+                         ORDER BY integrity_fail DESC, last_verified ASC",
+                            $params);
+
+    return $resources;
+}

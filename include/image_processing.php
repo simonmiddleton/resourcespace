@@ -354,9 +354,9 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
     // Include file size
     $file_size = @filesize_unlimited($filepath);
 
-    $set = array_merge($set,["file_size=?","file_extension=?","preview_extension='jpg'","file_modified=NOW()"]);
+    $set = array_merge($set,["file_size=?","file_extension=?","preview_extension='jpg'","file_modified=NOW()","no_file=0","file_checksum=NULL","integrity_fail=0"]);
     $setparams = array_merge($setparams,['i',$file_size,'s', $extension, 'i', $ref]);
-    ps_query("UPDATE resource SET " . implode(",",$set). " WHERE ref= ?", $setparams);
+    ps_query("UPDATE resource SET " . join(",",$set). " WHERE ref= ?", $setparams);
    
     if(!$upload_then_process || $after_upload_processing)
         {
@@ -2607,16 +2607,13 @@ function extract_indd_pages($filename)
 function generate_file_checksum($resource,$extension,$anyway=false)
     {
     global $file_checksums;
-    global $file_checksums_50k;
     global $file_checksums_offline;
     $generated = false;
 
     debug("generate_file_checksum(resource = $resource, extension = $extension, anyway = $anyway)");
-
     if (($file_checksums && !$file_checksums_offline)||$anyway) // do it if file checksums are turned on, or if requestor said do it anyway
         {
-        # Generates a unique checksum for the given file, based either on the first 50K and the file size or the full file.
-
+        # Generates a unique checksum for the given file, based either on the first 50K and the file size or the full file.x
         $path=get_resource_path($resource,true,"",false,$extension);
         if (file_exists($path))
             {

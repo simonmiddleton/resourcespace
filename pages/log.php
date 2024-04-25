@@ -206,7 +206,9 @@ for ($n=$offset;(($n<count($log)) && ($n<($offset+$per_page)));$n++)
         {
         $lang["log-".$log[$n]["type"]]="";
         }
-    $logusertext = $log[$n]["access_key"] != "" ? ($lang["externalusersharing"] . ": " . $log[$n]["access_key"] . " " . $lang["viauser"] . " " . (empty($log[$n]["shared_by"]) ? $log[$n]["fullname"] : $log[$n]["shared_by"])) : $log[$n]["fullname"];    
+    $logusertext = $log[$n]["access_key"] != "" ? 
+        ($lang["externalusersharing"] . ": " . $log[$n]["access_key"] . " " . $lang["viauser"] . " " . (empty($log[$n]["shared_by"]) ? $log[$n]["fullname"] : $log[$n]["shared_by"])) 
+        : (trim((string) $log[$n]["fullname"]) !== "" ? $log[$n]["fullname"] : $lang["system_user_default"]);
     $logentry["user"] = hook("userdisplay","",array($log[$n])) ? "" : $logusertext;
 
     if($filter_dld_records_only)

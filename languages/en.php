@@ -643,6 +643,9 @@ $lang['log-X']="Locked resource";
 $lang['log-Y']="Unlocked resource";
 $lang['log-XK']="Deleted external access key";
 $lang['log-EUP']="External share upload";
+$lang['log-NOFIL']="Marked as having no file";
+$lang['log-FIL']="Marked as having file";
+$lang['log-EDT']="Edited resource";
 
 /* Universal log codes (generic - not for example, resource specific) */
 $lang["log_code_a"]="Access changed";
@@ -2952,10 +2955,12 @@ $lang["start"]                          = "Start";
 
 # File integrity checks
 $lang["file_integrity_summary"]             = "File integrity report";
-$lang["file_integrity_summary_failed"]      = "Resource files have failed integrity checks or are missing. Please follow the link to see these resources and take action as required e.g. restore files from backup";
+$lang["file_integrity_summary_failed"]      = "Resource files have failed integrity checks or are missing. Please follow the link(s) to see these resources and take action as required e.g. restore files from backup.";
 $lang["file_integrity_fail_search"]         = "File integrity failures";
+$lang["file_integrity_fail_latest"]         = "View latest file integrity failures";
+$lang["file_integrity_fail_all"]            = "View all resources with file integrity failures";
 $lang["all__file_integrity_fail_email"]     = "[img_headerlogo]<br />\n[lang_file_integrity_summary_failed] <br /><br /> \n[lang_file_integrity_fail_search] <br /><br /> \n<a href=\"[url]\">[url]</a><br /><br />\n[text_footer]\n";
-$lang["team_resource_integrity_fail"]       = "View suspect resources";
+$lang["team_resource_integrity_fail"]       = "View file integrity failures";
 $lang["team_resource_integrity_fail_info"]  = "Resources with missing or possibly corrupted files";
 $lang["collection_copy_resources"]          = "Copy collection resources";
 $lang["collection_actiontype_1"]            = "Resources";
@@ -3127,4 +3132,10 @@ $lang["user_api_session_grant_access"]      = "Grant access";
 $lang["user_api_session_grant_success"]     = "Key issued successfully.";
 $lang["user_api_session_grant_error"]       = "Key issuance failed.";
 
+$lang["no_file"]                            = "No file";
+$lang["missing_file"]                       = "This file is missing. Please contact your system administrator";
+$lang["action_set_no_file"]                 = "Mark as having no file";
+$lang["action_unset_no_file"]               = "Mark as file missing";
+$lang["completed_set_no_file"]              = "Resource marked as having no file";
+$lang["completed_unset_no_file"]            = "Resource marked as file missing";
 
