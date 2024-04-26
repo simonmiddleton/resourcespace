@@ -2,10 +2,13 @@
 
     // *******************************************************************************
     //
-    //  Included within do_search() for keywords processing
-    //  To be converted to a function.
+    //  Included within do_search() for keywords processing and assembly into SQL
     //
     // *******************************************************************************
+
+    // Candidate for replacement function including the variables needed.
+    // function search_process_keyword($keyword, &$n, &$c, &$keywords, &$hidden_indexed_fields, &$search, &$searchidmatch, &$restypenames, &$ignore_filters, &$node_bucket, &$stats_logging, &$go, &$sql_keyword_union, &$sql_keyword_union_aggregation, &$sql_keyword_union_criteria, &$sql_keyword_union_or, &$omit, &$fullmatch, &$suggested, &$sql_join, &$sql_filter)
+
     $keywords_used = [];
     if ($keysearch)
         {
@@ -789,9 +792,3 @@
                 }
             } // end keywords expanded loop
         } // end keysearch if
-
-    // *******************************************************************************
-    //
-    //                                                                    END keywords
-    //
-    // *******************************************************************************
