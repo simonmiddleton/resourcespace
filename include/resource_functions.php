@@ -8470,7 +8470,7 @@ function get_download_filename(int $ref, string $size, int $alternative, string 
 
     // Remove invalid characters
     $filename = (string) preg_replace(
-        '/(:|\r\n|\r|\n)/',
+        '/(:|\r\n|\r|\n|\\\|\/)/',
         '_',
         trim(strip_tags(nl2br($filename)))
     );
