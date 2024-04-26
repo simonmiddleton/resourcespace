@@ -3355,7 +3355,7 @@ function get_recent_users($days)
  *
  * @return integer  The number of approved users
  */
-function get_total_approved_users()
+function get_total_approved_users(): int
     {
     return ps_value("SELECT COUNT(*) value FROM user WHERE approved = 1", [], 0);
     }
@@ -3366,7 +3366,7 @@ function get_total_approved_users()
  * @param  int|bool $status     Archive state to filter by if required
  * @return int                  Number of resources in the system, filtered by status if provided
  */
-function get_total_resources($status = false)
+function get_total_resources($status = false): int
 {
     $sql = new PreparedStatementQuery("SELECT COUNT(*) value FROM resource WHERE ref>0",[]);
 
