@@ -75,7 +75,7 @@ if($action == "render_clear_selected_btn")
 
 if($action == "render_edit_selected_btn")
     {
-    include_once "{$rsroot}/include/search_do.php";
+    include_once "{$rsroot}/include/do_search.php";
 
     $restypes = getval("restypes", "");
     $archive = getval("archive", "");

@@ -34,7 +34,7 @@ if(isset($propose_changes_always_allow))
                 left join collection c on c.ref=uc.collection where c.propose_changes=1", $parameters, "");
         if($proposeallowed=="" && $propose_changes_allow_open)
             {
-            include_once '../../../include/search_do.php';
+            include_once '../../../include/do_search.php';
             $proposeallowed=(get_resource_access($ref)==0)?$ref:"";
             }
         }
