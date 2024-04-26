@@ -11,7 +11,7 @@ include_once dirname(__FILE__) . '/version.php';
 include_once dirname(__FILE__) . '/general_functions.php';
 include_once dirname(__FILE__) . '/database_functions.php';
 include_once dirname(__FILE__) . '/search_functions.php';
-include_once dirname(__FILE__) . '/search_do.php';
+include_once dirname(__FILE__) . '/do_search.php';
 include_once dirname(__FILE__) . '/resource_functions.php';
 include_once dirname(__FILE__) . '/collections_functions.php';
 include_once dirname(__FILE__) . '/language_functions.php';
