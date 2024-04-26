@@ -69,6 +69,16 @@ $use_mysqli_ssl = false;
 
 # $mysqli_ssl_server_cert = '/etc/ssl/certs/server.pem';
 # $mysqli_ssl_ca_cert     = '/etc/ssl/certs/ca_chain.pem';
+
+// Optimisation options
+/**
+ * @var int $mysql_sort_buffer_size Set the database sort_buffer_size value (min: 32768; max: 4294967295)
+ *
+ * "If you see many Sort_merge_passes per second in SHOW GLOBAL STATUS output, you can consider increasing the
+ * sort_buffer_size value to speed up ORDER BY or GROUP BY operations that cannot be improved with query optimization or
+ * improved indexing." @see https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_sort_buffer_size
+ */
+$mysql_sort_buffer_size = 0;
 #######################################
 #######################################
 
