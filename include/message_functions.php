@@ -2,22 +2,22 @@
 
 /**
  * Simple class to use for user notifications
- * 
+ *
  * @internal
  */
 class ResourceSpaceUserNotification
-    {   
+    {
     /**
-     * @var array $message_parts 
+     * @var array $message_parts
      * Array of message text components and optional find/replace arrays for language strings
      */
     private $message_parts = [];
 
     /**
      * @var array $subject
-     * Array of subject parts 
+     * Array of subject parts
      */
-    private $subject = [];   
+    private $subject = [];
 
     /**
      * @var string $url
@@ -39,16 +39,16 @@ class ResourceSpaceUserNotification
      * ["user_pref_resource_access_notifications"=>["requiredvalue"=>true,"default"=>$admin_resource_access_notifications],"actions_resource_requests" =>["requiredvalue"=>false,"default"=>true]]
      * or
      * ["user_pref_system_management_notifications" => true]
-     * 
+     *
      * All preferences must be set to the required values for the notification to be sent
-     * 
+     *
      */
     public $user_preference;
 
     /**
      * @var array $eventdata  Optional array for linking the system message to a specific activity e.g. resource or account request so that it can be deleted once the request has been processed.
      *                  ["type"] e.g. MANAGED_REQUEST
-     *                  ["ref"]  
+     *                  ["ref"]
      */
     public $eventdata = [];
 
@@ -58,7 +58,7 @@ class ResourceSpaceUserNotification
      * @param  string   $text       Text or $lang string using the 'lang_' prefix
      * @param  array    $find       Array of find strings to use for str_replace() in $lang strings
      * @param  array    $replace    Array of replace strings to use for str_replace()
-     * 
+     *
      * @return void
      */
     public function set_text($text,$find=[], $replace=[])
@@ -124,7 +124,7 @@ class ResourceSpaceUserNotification
      * @param  string   $text       Text or $lang string using the 'lang_' prefix
      * @param  array    $find       Array of find strings to use for str_replace() in $lang strings
      * @param  array    $replace    Array of replace strings to use for str_replace()
-     * 
+     *
      * @return void
      */
     public function set_subject($text,$find=[], $replace=[])
@@ -240,7 +240,7 @@ function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref"
             break;
         case "seen":
             $sql_order_by = "user_message.seen";
-            break;  
+            break;
         }
 
     // Check sort value is valid
@@ -308,7 +308,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
     foreach($users as $user)
         {
         ps_query("INSERT INTO `user_message` (`user`, `message`) VALUES (?, ?)", array("i",(int)$user,"i",$message_ref));
-        
+
         // send an email if the user has notifications and emails setting and the message hasn't already been sent via email
         if(~$notification_type & MESSAGE_ENUM_NOTIFICATION_TYPE_EMAIL)
             {
@@ -331,9 +331,9 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
                     $headerimghtml = "";
                     $img_url = get_header_image(true);
                     $img_div_style = "max-height:50px;padding: 5px;";
-                    $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";        
+                    $img_div_style .= "background: " . ((isset($header_colour_style_override) && $header_colour_style_override != '') ? $header_colour_style_override : "rgba(0, 0, 0, 0.6)") . ";";
                     $headerimghtml = '<div style="' . $img_div_style . '"><img src="' . $img_url . '" style="max-height:50px;"  /></div><br /><br />';
-                                
+
                     if($url !== '' && strpos($message_text,$url) === false)
                         {
                         // Add the URL to the message if not already present
@@ -355,7 +355,7 @@ function message_add($users,$text,$url="",$owner=null,$notification_type=MESSAGE
 function message_remove($message)
     {
     ps_query("DELETE FROM user_message WHERE message = ?", array("i",$message));
-    ps_query("DELETE FROM message WHERE ref = ?", array("i",$message)); 
+    ps_query("DELETE FROM message WHERE ref = ?", array("i",$message));
     }
 
 /**
@@ -369,7 +369,7 @@ function message_seen($message,$seen_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN)
     {
     ps_query("UPDATE `user_message` SET seen = seen | ? WHERE `ref` = ?", array("i",$seen_type,"i",$message));
     }
-    
+
 /**
  * Mark a message as unseen
  *
@@ -394,14 +394,14 @@ function message_seen_all($user,$seen_type=MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN
     if (message_get($messages,$user,true))
         {
         foreach($messages as $message)
-            {             
+            {
             message_seen($message['ref']);
             }
         }
     }
 
 /**
- * Remove all messages from message and user_message tables that have expired (regardless of read). 
+ * Remove all messages from message and user_message tables that have expired (regardless of read).
  * This will be called from a cron job.
  *
  * @return void
@@ -421,17 +421,17 @@ function message_purge()
 function message_deleteselusrmsg($messages)
     {
     global $userref;
- 
+
     $parameters = array("i",(int)$userref);
     $messages = json_decode($messages, true);
-    if (count($messages) > 0) 
+    if (count($messages) > 0)
         {
         $parameters = array_merge($parameters, ps_param_fill($messages,"i"));
 
         ps_query("DELETE FROM user_message WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
         }
     }
- 
+
 /**
  * Mark all selected messages as seen
  *
@@ -441,17 +441,17 @@ function message_deleteselusrmsg($messages)
 function message_selectedseen($messages)
     {
     global $userref;
- 
+
     $parameters = array("i",(int)$userref);
     $messages = json_decode($messages, true);
     $parameters = array_merge($parameters, ps_param_fill($messages,"i"));
- 
+
     if (is_array($messages) && count($messages)>0)
         {
         ps_query("UPDATE user_message SET seen = '1' WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
         }
     }
- 
+
 /**
  * Mark all selected messages as unseen
  *
@@ -461,17 +461,17 @@ function message_selectedseen($messages)
 function message_selectedunseen($messages)
     {
     global $userref;
- 
+
     $parameters = array("i",(int)$userref);
     $messages = json_decode($messages, true);
     $parameters = array_merge($parameters, ps_param_fill($messages,"i"));
- 
+
     if (is_array($messages) && count($messages)>0)
         {
         ps_query("UPDATE user_message SET seen = '0' WHERE user = ? AND ref IN (" . ps_param_insert(count($messages)) . ")", $parameters);
         }
     }
- 
+
 /**
  * Send a summary of all unread notifications as an email
  * from the standard cron_copy_hitcount
@@ -481,22 +481,22 @@ function message_selectedunseen($messages)
 function message_send_unread_emails()
     {
     global $lang, $applicationname, $baseurl, $list_search_results_title_trim, $user_pref_daily_digest, $applicationname, $actions_on, $inactive_message_auto_digest_period, $user_pref_inactive_digest;
-    
+
     $lastrun = get_sysvar('daily_digest', '1970-01-01');
-    
+
     # Don't run if already run in last 24 hours.
     if (time()-strtotime($lastrun) < 24*60*60)
         {
         echo " - Skipping message_send_unread_emails (daily_digest) - last run: " . $lastrun . "<br />\n";
         return false;
         }
-    
+
     $sendall = array();
-    
+
     // Get all the users who have chosen to receive the digest email (or the ones that have opted out if set globally)
     if($user_pref_daily_digest)
         {
-        $allusers=get_users("","","u.username","",-1,1);        
+        $allusers=get_users("","","u.username","",-1,1);
         $nodigestusers = get_config_option_users('user_pref_daily_digest',0);
         $digestusers=array_diff(array_column($allusers,"ref"),$nodigestusers);
         }
@@ -504,7 +504,7 @@ function message_send_unread_emails()
         {
         $digestusers=get_config_option_users('user_pref_daily_digest',1);
         }
-    
+
     if($inactive_message_auto_digest_period > 0 && is_numeric($inactive_message_auto_digest_period))
         {
         // Add any users who have not logged on to the array
@@ -526,9 +526,9 @@ function message_send_unread_emails()
         $unreadmessages = [];
         foreach($digestuserschunks as $chunk)
             {
-            # Get all unread notifications created since last run, or all messages sent to inactive users. 
+            # Get all unread notifications created since last run, or all messages sent to inactive users.
             # Build array of sql query parameters
-            
+
             $parameters = array();
 
             $parameters = array_merge($parameters, ps_param_fill($chunk,"i"));
@@ -549,16 +549,16 @@ function message_send_unread_emails()
             $unreadmessages = array_merge(
                 $unreadmessages,
                 ps_query(
-                "SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
-                    FROM user_message um 
-                        JOIN user u ON u.ref = um.user 
-                        JOIN message m ON m.ref = um.message 
+                "SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url
+                    FROM user_message um
+                        JOIN user u ON u.ref = um.user
+                        JOIN message m ON m.ref = um.message
                         WHERE um.seen = 0
                         $digestusers_sql
-                        AND u.email <> '' 
-                        AND (m.created > ? 
-                            $sendall_sql) 
-                        ORDER BY m.created DESC", 
+                        AND u.email <> ''
+                        AND (m.created > ?
+                            $sendall_sql)
+                        ORDER BY m.created DESC",
                     $parameters
                 ));
             }
@@ -567,17 +567,17 @@ function message_send_unread_emails()
         {
         $parameters = array("s",$lastrun);
         $unreadmessages = ps_query(
-            "SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
-                FROM user_message um 
-                    JOIN user u ON u.ref = um.user 
-                    JOIN message m ON m.ref = um.message 
+            "SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url
+                FROM user_message um
+                    JOIN user u ON u.ref = um.user
+                    JOIN message m ON m.ref = um.message
                     WHERE um.seen = 0
-                    AND u.email <> '' 
-                    AND (m.created > ?) 
-                    ORDER BY m.created DESC", 
+                    AND u.email <> ''
+                    AND (m.created > ?)
+                    ORDER BY m.created DESC",
                 $parameters
             );
-        
+
         if (!empty($sendall))
             {
             $sendall_chunks = array_chunk($sendall,SYSTEM_DATABASE_IDS_CHUNK_SIZE);
@@ -589,18 +589,18 @@ function message_send_unread_emails()
                     $parameters_chunk  = array_merge($parameters, ps_param_fill($sendall_chunk,"i"));
                     $sendall_sql = " OR u.ref IN (" . ps_param_insert(count($sendall_chunk)) . ")";
                     }
-                    
+
                 $unreadmessages = array_merge(
                     $unreadmessages,
-                    ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url 
-                        FROM user_message um 
-                            JOIN user u ON u.ref = um.user 
-                            JOIN message m ON m.ref = um.message 
+                    ps_query("SELECT u.ref AS userref, u.email, m.ref AS messageref, m.message, m.created, m.url
+                        FROM user_message um
+                            JOIN user u ON u.ref = um.user
+                            JOIN message m ON m.ref = um.message
                             WHERE um.seen = 0
-                            AND u.email <> '' 
-                            AND (m.created > ? 
-                                $sendall_sql) 
-                            ORDER BY m.created DESC", 
+                            AND u.email <> ''
+                            AND (m.created > ?
+                                $sendall_sql)
+                            ORDER BY m.created DESC",
                         $parameters_chunk
                     )
                 );
@@ -639,19 +639,19 @@ function message_send_unread_emails()
             debug("Skipping email digest for user ref " . $digestuser . " as user or group preference disabled");
             continue;
             }
-        
+
         $usermail = $messageuser["email"];
         if(!filter_var($usermail, FILTER_VALIDATE_EMAIL))
             {
             debug("Skipping email digest for user ref " . $digestuser . " due to invalid email:  " . $usermail);
             continue;
             }
-         
+
         $messageflag=false;
         $actionflag=false;
         // Set up an array of message to delete for this user if they have chosen to purge the messages
         $messagerefs=array();
-        
+
         // Start the new email
         if(in_array($digestuser,$sendall))
             {
@@ -663,7 +663,7 @@ function message_send_unread_emails()
             }
         $message .= "<style>.InfoTable td {padding:5px; margin: 0px;border: 1px solid #000;}</style><table class='InfoTable'>";
         $message .= "<tr><th>" . $lang["columnheader-date_and_time"] . "</th><th>" . $lang["message"] . "</th><th></th></tr>";
-            
+
         foreach($unreadmessages as $unreadmessage)
             {
             if($unreadmessage["userref"] == $digestuser)
@@ -733,7 +733,7 @@ function message_send_unread_emails()
                     else
                       {
                       $actioneditlink = '';
-                      $actionviewlink = '';  
+                      $actionviewlink = '';
                       }
 
                     if($user_action["type"]=="resourcereview")
@@ -748,9 +748,9 @@ function message_send_unread_emails()
                     elseif($user_action["type"]=="userrequest")
                       {
                       $actioneditlink = $baseurl . "/pages/team/team_user_edit.php";
-                      } 
+                      }
 
-                    $linkparams["ref"] = $user_action["ref"];                            
+                    $linkparams["ref"] = $user_action["ref"];
                     $editlink=($actioneditlink=='')?'':generateURL($actioneditlink,$linkparams);
                     $viewlink=($actionviewlink=='')?'':generateURL($actionviewlink,$linkparams);
                     $message .= "<tr>";
@@ -766,18 +766,18 @@ function message_send_unread_emails()
                     } // End of each $user_actions loop
                 }
             }
-            
-        // Send the email           
+
+        // Send the email
         debug("Sending summary to user ref " . $digestuser . ", email " . $usermail);
         $message .= "</table>";
-        
+
         $userprefurl = $baseurl . "/pages/user/user_preferences.php#UserPreferenceEmailSection";
         $message .= "<br /><br />" . $lang["email_digest_disable"] . "<br /><a href='" . $userprefurl  . "'>" . $userprefurl . "</a>";
-        
+
         if($messageflag || $actionflag)
             {
             // Send mail
-            send_mail($usermail,$applicationname . ": " . $lang["email_daily_digest_subject"],$message); 
+            send_mail($usermail,$applicationname . ": " . $lang["email_daily_digest_subject"],$message);
             }
 
         get_config_option($digestuser,'user_pref_daily_digest_mark_read', $mark_read);
@@ -791,7 +791,7 @@ function message_send_unread_emails()
         }
 
     set_sysvar("daily_digest",date("Y-m-d H:i:s"));
-    return true; 
+    return true;
     }
 
 /**
@@ -820,12 +820,12 @@ function message_remove_related($remote_activity=0,$remote_refs=array())
 
 /**
 * Send a system notification or email to the system administrators according to preference
-* 
+*
 * @param string  $message      Message text
 * @param string  $url          Optional URL
-* 
+*
 * @return void
-*/ 
+*/
 function system_notification($message, $url="")
     {
     global $lang, $applicationname;
@@ -866,31 +866,31 @@ function system_notification($message, $url="")
 
 /**
 * Get all message refs for a given user
-* 
+*
 * @param string  $user      User ID
-* 
+*
 * @return void
-*/ 
+*/
 function message_getrefs($user)
     {
     $user_messages = ps_query("SELECT ref FROM user_message WHERE user = ?", array("i",$user));
- 
+
     $js_array = array_values($user_messages);
- 
+
     echo json_encode($js_array);
     }
 
 /**
  * Get all messages between the given user IDs
- *  
+ *
  * @param  int        $users    User ID
  * @param  array      $msgusers Array of other user IDs
- * 
+ *
  * @param  array    $filteropts Array of extra options to filter and sort messages returned
  *                              "msgfind"    - (string) Text to find
  *                              "sort_desc"  - (bool) Sort by message ID in descending order? False = Ascending
  *                              "limit"      - (int) Maximum number of messages to return
- * 
+ *
  * @return array   Array of messages
  */
 function message_get_conversation(int $user, $msgusers = array(),$filteropts = array()): array
@@ -958,7 +958,7 @@ function send_user_message($users,$text)
                 {
                 return $lang["error_invalid_user"];
                 }
-            $users[$n] = $uref; 
+            $users[$n] = $uref;
             }
         }
     message_add($users,$text,"",$userref,MESSAGE_ENUM_NOTIFICATION_TYPE_USER_MESSAGE + MESSAGE_ENUM_NOTIFICATION_TYPE_SCREEN,30*24*60*60);
@@ -971,14 +971,14 @@ function send_user_message($users,$text)
  * @param  array  $users            Array of user IDs or array of user details from get_users()
  * @param  ResourceSpaceUserNotification $notifymessage    An instance of a ResourceSpaceUserNotification object holding message properties
  * @param  bool   $forcemail        Force system to send email instead of notification?
- * 
+ *
  * @return array  Array containing resulting messages - can be used for testing when emails are not being sent
  *                This will contain two arrays:-
  *                          "emails"       array of emails sent, with the following elements:-
  *                              "email"     => Email address
  *                              "subject"   => Email subject
  *                              "body"      => Body text
- * 
+ *
  *                          "messages"      Array of system messages sent with the following elements :-
  *                              "user"      => User ID
  *                              "message"   => message text
@@ -1007,12 +1007,12 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
             {
             // Need full user info
             $userdetails = get_user($userdetails["ref"]);
-            }        
+            }
         if($userdetails == false)
             {
             continue;
             }
-        
+
         $send_message=true;
         // Check if preferences should prevent the notification from being sent
         if(isset($notifymessage->user_preference) && is_array($notifymessage->user_preference))
@@ -1029,7 +1029,7 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
                     if($check_pref != $requiredvalue)
                         {
                         debug("Skipping notification to user #" . $userdetails['ref']);
-                        $send_message=false;                        
+                        $send_message=false;
                         }
                     }
                 }
@@ -1068,8 +1068,8 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
 
         $headerimghtml .= '<div style="' . $img_div_style . '">';
         $headerimghtml .= '<div style="float: left;">';
-        $headerimghtml .= '<div>';        
-        
+        $headerimghtml .= '<div>';
+
         $headerimghtml .= '<img src="' . $img_url . '" style="max-height:50px;"  />';
         $headerimghtml .= '</div></div></div><br /><br />';
         }
@@ -1148,10 +1148,10 @@ function send_user_notification(array $users, $notifymessage, $forcemail=false)
 
 /**
  * Gets the user message for the given ref
- * 
+ *
  * @param  int  $ref            Message ID
  * @param  bool $checkaccess    Check if user can see the given message?
- * 
+ *
  * @return array|bool  Array with two elements: 'message' => message text,'url'=> message URL and 'owner' => message owner
  *                     False if user has no access or the requested message doesn't exist,
  */
@@ -1167,8 +1167,8 @@ function get_user_message(int $ref, bool $checkaccess=true)
             }
         }
     $message = ps_query("SELECT message, url, owner FROM message WHERE ref = ?",["i",$ref]);
-    
-    return $message ? ["message"=>$message[0]["message"],"url"=>$message[0]["url"],"owner"=>$message[0]["owner"]] : false;    
+
+    return $message ? ["message"=>$message[0]["message"],"url"=>$message[0]["url"],"owner"=>$message[0]["owner"]] : false;
     }
 
 
@@ -1177,9 +1177,7 @@ function get_user_message(int $ref, bool $checkaccess=true)
  * Send notifications about file integrity failures
  *
  * @param array $failures   Array of resources that have failed integrity check
- * 
- * @return void
- * 
+ *
  */
 function send_integrity_failure_notices( array $failures): void
 {
@@ -1192,13 +1190,13 @@ function send_integrity_failure_notices( array $failures): void
         if('cli' == PHP_SAPI) {
             echo " - Sending summary messages to administrators" . PHP_EOL;
         }
-            
+
     # Send notification
     $message = new ResourceSpaceUserNotification();
     $message->set_subject("lang_file_integrity_summary");
-    $message->set_text("lang_file_integrity_summary_failed"); 
+    $message->set_text("lang_file_integrity_summary_failed");
     $message->append_text("<br><br>");
-    if(count($failures) < 1000) {
+    if (count($failures) < 1000) {
         // Show links to the resources that have failed this time.
         // If too many have failed it will still include a link to the general search for all failed resources.
         $message->append_text("<table class='ListviewStyle'");

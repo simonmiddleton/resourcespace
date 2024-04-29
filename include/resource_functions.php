@@ -574,7 +574,7 @@ function put_resource_data($resource,$data)
     if ($sql=="") {return false;} // Nothing to do.
     $params[]="i";$params[]=$resource;
     ps_query("UPDATE resource SET $sql WHERE ref=?",$params);
-    if(count($logupdates) > 0) {
+    if (count($logupdates) > 0) {
         db_begin_transaction("resource_log_updates");
         foreach($logupdates as $logupdate) {
             resource_log($resource,$logupdate[0],0,$logupdate[1],$logupdate[2],$logupdate[3]);
@@ -9504,10 +9504,10 @@ function get_resource_preview(array $resource,array $sizes = [], int $access = -
  */
 function check_resources(array $resources = [], bool $presenceonly = false): array
 {
-    if(count($resources) === 0) {
+    if (count($resources) === 0) {
         $resources = get_resources_to_validate();
     }
-    if(count($resources) === 0)
+    if (count($resources) === 0)
         {
         echo " - No resources require integrity checks" . PHP_EOL;
         return [];
@@ -9520,8 +9520,8 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
     $return_failed = [];
     foreach (array_chunk($resources,1000) as $checkresources) {
         $checks = [];
-        $checks["is_readable"]  = true; // Always check for file presence as checksums may not have been generated yet
-        if(!$presenceonly && $GLOBALS["file_checksums"]) {
+        $checks["is_readable"] = true; // Always check for file presence as checksums may not have been generated yet
+        if (!$presenceonly && $GLOBALS["file_checksums"]) {
             $checks["get_checksum"]  = "%RESOURCE%file_checksum";
             }
         $results = validate_resource_files($checkresources,$checks);
@@ -9538,7 +9538,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
 
         db_begin_transaction("checkresources");
         if (count($failed) > 0) {
-            $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref in (" . ps_param_insert(count($failed)) . ")";
+            $failed_sql = "UPDATE resource SET integrity_fail = 1 WHERE ref IN (" . ps_param_insert(count($failed)) . ")";
             $failed_params = ps_param_fill($failed,"i");
             ps_query($failed_sql,$failed_params);
         }
@@ -9554,7 +9554,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
         // Log any newly failed resources
         db_begin_transaction("logfailedresources");
         $arr_newfails = array_diff($failed,$existingfailed);
-        foreach($arr_newfails as $newfail) {
+        foreach ($arr_newfails as $newfail) {
             resource_log($newfail, LOG_CODE_SYSTEM, 0, "Failed file integrity check", 0,1);
         }
         db_end_transaction("logfailedresources");
@@ -9562,7 +9562,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
          // Log any recovered resources
          db_begin_transaction("logrecoveredresources");
          $arr_recovered = array_intersect($succeeded,$existingfailed);
-         foreach($arr_recovered as $recovered) {
+         foreach ($arr_recovered as $recovered) {
              resource_log($recovered, LOG_CODE_SYSTEM, 0, "Passed file integrity check", 1,0);
          }
          db_end_transaction("logrecoveredresources");
@@ -9578,7 +9578,7 @@ function check_resources(array $resources = [], bool $presenceonly = false): arr
  * @return array
  *
  */
-function get_resources_to_validate(int $days = 0) : array
+function get_resources_to_validate(int $days = 0): array
 {
     $params = [];
     $filtersql = "";
@@ -9595,7 +9595,10 @@ function get_resources_to_validate(int $days = 0) : array
         $filtersql .= " AND resource_type NOT IN (" . ps_param_insert(count($restypes_ignore)) . ")";
         $params = array_merge($params,ps_param_fill($restypes_ignore, "i"));
     }
-    $dayfilter = $days > 0 ? "AND (last_verified IS NULL OR DATEDIFF(NOW(), last_verified) > {$days})" : "";
+    if($days > 0) {
+        $filtersql .= " AND (last_verified IS NULL OR DATEDIFF(NOW(), last_verified) > ?)";
+        $params = array_merge($params,["i", $days]);
+    }
     $resources = ps_query("SELECT ref,
                                   archive,
                                   file_extension,
@@ -9604,7 +9607,7 @@ function get_resources_to_validate(int $days = 0) : array
                                   last_verified,
                                   integrity_fail
                              FROM resource
-                            WHERE ref > 0 AND no_file = 0 {$dayfilter} {$filtersql}
+                            WHERE ref > 0 AND no_file = 0 {$filtersql}
                          ORDER BY integrity_fail DESC, last_verified ASC",
                             $params);
 
