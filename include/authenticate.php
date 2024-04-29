@@ -312,36 +312,11 @@ else
             }
         }
     }   /* end replacesitetextloader */
+    
+    $plugins=[];
+    register_group_access_plugins($plugins,$usergroup);
 
 
-# Load group specific plugins and reorder plugins list
-$plugins= array();
-$active_plugins = (ps_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 ORDER BY priority", array(), "plugins"));
-
-foreach($active_plugins as $plugin)
-    {
-    #Get Yaml
-    $plugin_yaml_path = get_plugin_path($plugin["name"]) ."/".$plugin["name"].".yaml";
-    $py="";
-    $py = get_plugin_yaml($plugin_yaml_path, false);
-
-    # Check group access and applicable for this user in the group, only if group access is permitted as otherwise will have been processed already
-    if(!$py['disable_group_select'] && $plugin['enabled_groups'] != '')
-        {
-        $s=explode(",",$plugin['enabled_groups']);
-        if (isset($usergroup) && in_array($usergroup,$s))
-            {
-            include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
-            register_plugin($plugin['name']);
-            register_plugin_language($plugin['name']);
-            $plugins[]=$plugin['name'];
-            }
-        }
-    else
-        {
-        $plugins[]=$plugin['name'];
-        }
-    }
 
 // Load user config options
 process_config_options($userref);

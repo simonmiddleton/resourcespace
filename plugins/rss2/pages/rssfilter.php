@@ -37,7 +37,7 @@ function xmlentities($text)
 
 # Log them in.
 setup_user(get_user(get_user_by_username($user)));
-    
+
 $search=getval("search","");
 
 # Append extra search parameters

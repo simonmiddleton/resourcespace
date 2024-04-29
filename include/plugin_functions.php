@@ -1500,3 +1500,41 @@ function plugin_decode_complex_configs(string $b64sc)
     {
     return unserialize(base64_decode($b64sc));
     }
+
+/**
+ * Load group specific plugins and reorder plugins list
+ *
+ * @param  array $plugins   Enabled Plugins
+ * @param  int   $usergroup Usergroup reference
+ * @return void
+ */
+function register_group_access_plugins(array &$plugins,int $usergroup=-1)
+{
+    # Load group specific plugins and reorder plugins list
+    $active_plugins = (ps_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 ORDER BY priority", array(), "plugins"));
+
+    foreach($active_plugins as $plugin)
+        {
+        #Get Yaml
+        $plugin_yaml_path = get_plugin_path($plugin["name"]) ."/".$plugin["name"].".yaml";
+        $py="";
+        $py = get_plugin_yaml($plugin_yaml_path, false);
+
+        # Check group access and applicable for this user in the group, only if group access is permitted as otherwise will have been processed already
+        if(!$py['disable_group_select'] && $plugin['enabled_groups'] != '')
+            {
+            $s=explode(",",$plugin['enabled_groups']);
+            if (in_array($usergroup,$s))
+                {
+                include_plugin_config($plugin['name'],$plugin['config'],$plugin['config_json']);
+                register_plugin($plugin['name']);
+                register_plugin_language($plugin['name']);
+                $plugins[]=$plugin['name'];
+                }
+            }
+        else
+            {
+            $plugins[]=$plugin['name'];
+            }
+        }
+}

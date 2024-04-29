@@ -262,6 +262,8 @@ function setup_user(array $userdata)
         $GLOBALS['actions_notify_states'] = $user_actions_notify_states;
         }
 
+    $plugins=[];
+    register_group_access_plugins($plugins,$usergroup);
     hook('after_setup_user');
     return true;
     }
