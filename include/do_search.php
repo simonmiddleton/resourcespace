@@ -258,11 +258,11 @@ function do_search(
     $select .= ", rty.order_by ";
 
     // Search pipeline - each step handles an aspect of search and adds to the assembled SQL.
-    include "do_search_keywords.php";
-    include "do_search_nodes.php";
-    $suggest=include "do_search_suggest.php";if ($suggest!==1) {return $suggest;} // Handle returns from this include.
-    include "do_search_filtering.php";
-    include "do_search_union_assembly.php";
+    $return=include "do_search_keywords.php";       if ($return!==1) {return $return;} // Forward any return from this include.
+    $return=include "do_search_nodes.php";          if ($return!==1) {return $return;} // Handle returns from this include.
+    $return=include "do_search_suggest.php";        if ($return!==1) {return $return;} // Handle returns from this include.
+    $return=include "do_search_filtering.php";      if ($return!==1) {return $return;} // Handle returns from this include.
+    $return=include "do_search_union_assembly.php"; if ($return!==1) {return $return;} // Handle returns from this include.
 
     # Handle numeric searches when $config_search_for_number=false, i.e. perform a normal search but include matches for resource ID first
     global $config_search_for_number;

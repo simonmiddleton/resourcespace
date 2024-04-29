@@ -9,11 +9,11 @@ function resolve_soundex($keyword)
     # the most commonly used keyword that starts with the same few letters.
 
     global $soundex_suggest_limit;
-    $soundex=ps_value("SELECT keyword value FROM keyword WHERE soundex = ? AND keyword NOT LIKE '% %' AND hit_count > ? ORDER BY hit_count DESC LIMIT 1",["s",soundex($keyword),"i",$soundex_suggest_limit],false);
+    $soundex=ps_value("SELECT keyword value FROM keyword WHERE soundex = ? AND keyword NOT LIKE '% %' AND hit_count >= ? ORDER BY hit_count DESC LIMIT 1",["s",soundex($keyword),"i",$soundex_suggest_limit],false);
     if (($soundex===false) && (strlen($keyword)>=4))
         {
         # No soundex match, suggest words that start with the same first few letters.
-        return ps_value("SELECT keyword value FROM keyword WHERE keyword LIKE ? AND keyword NOT LIKE '% %' ORDER BY hit_count DESC LIMIT 1",["s",substr($keyword,0,4) . "%"],0);
+        return ps_value("SELECT keyword value FROM keyword WHERE keyword LIKE ? AND keyword NOT LIKE '% %' ORDER BY hit_count DESC LIMIT 1",["s",substr($keyword,0,4) . "%"],false);
         }
     return $soundex;
     }

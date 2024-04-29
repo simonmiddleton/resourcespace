@@ -34,6 +34,6 @@ if ($fullmatch==false)
                 }
             }
         debug ("Suggesting $suggest");
-        return $suggest;
+        return $suggest; 
         }
     }
