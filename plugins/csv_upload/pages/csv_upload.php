@@ -227,7 +227,9 @@ switch($csvstep)
         $condition=1;
         while(isset($lang["csv_upload_condition" . $condition]))
             {
-            echo "<li>" . strip_tags_and_attributes($lang["csv_upload_condition" . $condition],['a','b']) . "</li>";
+            echo "<li>"
+                . strip_tags_and_attributes($lang["csv_upload_condition" . $condition],['a','b'],['href','target'])
+                . "</li>";
             $condition++;
             }
         echo "</ul>";
