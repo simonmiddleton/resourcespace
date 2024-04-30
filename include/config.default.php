@@ -2689,9 +2689,6 @@ $collection_block_restypes=array();
 # Retina mode. Use the "next size up" when rending previews and thumbs for a more crisp display on high resolution screens. Note - uses much more bandwidth also.
 $retina_mode=false;
 
-# $xframe_options - set this to DENY (prevent all), SAMEORIGIN or ALLOW-FROM with a URL to allow site to be used in an iframe. To disable completely set to "";
-$xframe_options = "SAMEORIGIN";
-
 /*
 FSTemplate - File System Template. Allows a system to contain an initial batch of resources that are stored elsewhere 
 and read only.
@@ -2917,11 +2914,20 @@ $migrating_scrambled = false;
 $CSRF_enabled = true;
 $CSRF_token_identifier = "CSRFToken";
 $CSRF_exempt_pages = array("login");
-// Allow other systems to make cross-origin requests. The elements of this configuration option should follow the 
+// Allow other systems to make cross-origin requests. The elements of this configuration option should follow the
 // "<scheme>://<hostname>" syntax
 $CORS_whitelist = array();
 ##################################################
 ##################################################
+
+// $csp_frame_ancestors - Array of valid parents that can embed pages from the site
+// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors
+//
+// If this is not enabled then frame-ancestors will be implemented based upon the legacy '$xframe_options' config if that is set
+// e.g.
+// $csp_frame_ancestors = ["'self'", "https://example.org", "https://example.com", "https://store.example.com"];
+// NOTE - single quotes are required for 'self' or 'deny'
+$csp_frame_ancestors = ["'self'"];
 
 /* Font selection */
 $global_font="Montserrat";

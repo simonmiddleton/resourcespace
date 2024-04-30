@@ -191,11 +191,30 @@ foreach(UNREGISTER_WRAPPERS as $unregwrapper)
         }
     }
 
-if((!isset($suppress_headers) || !$suppress_headers) && $xframe_options!="")
-    {
-    // Add X-Frame-Options to HTTP header, so that page cannot be shown in an iframe unless specifically set in config.
-    header('X-Frame-Options: ' . $xframe_options);
+if (!isset($suppress_headers) || !$suppress_headers) {
+    $frame_ancestors = $csp_frame_ancestors ?? [];
+    if (
+        count($frame_ancestors) == 0
+        && isset($xframe_options)
+        && $xframe_options != "SAMEORIGIN" // This is the previous default - ignore
+    ) {
+        // Set CSP frame-ancestors based on legacy $xframe_options config
+        switch ($xframe_options) {
+            case "DENY":
+                $frame_ancestors[] = "'none'";
+                break;
+            case (bool) strpos($xframe_options,"ALLOW-FROM"):
+                $frame_ancestors = explode(" ",substr($xframe_options,11));
+                break;
+            default:
+            $frame_ancestors[] = "'self'";
+                break;
+        }
     }
+    if (count($frame_ancestors) > 0) {
+        header('Content-Security-Policy: frame-ancestors ' . implode(" " , trim_array($frame_ancestors)));
+    }
+}
 
 if($system_down_redirect && getval('show', '') === '') {
     redirect($baseurl . '/pages/system_down.php?show=true');
