@@ -7,7 +7,7 @@ function HookVideo_spliceAllInitialise()
     }
 
 function HookVideo_spliceAllRender_actions_add_collection_option($top_actions, array $options){
-    global $collection,$count_result,$lang,$pagename,$baseurl_short;
+    global $collection,$lang,$pagename,$baseurl_short, $videosplice_allowed_extensions;
  
     // Make sure this check takes place before $GLOBALS["hook_return_value"] can be unset by subsequent calls to hook()
     if(isset($GLOBALS["hook_return_value"]) && is_array($GLOBALS["hook_return_value"]))
@@ -16,8 +16,18 @@ function HookVideo_spliceAllRender_actions_add_collection_option($top_actions, a
         $options = $GLOBALS["hook_return_value"];
         }
 
-    if ($pagename=="collections" && $count_result!=0)
-        {
+    $collection_resources = do_search("!collection" . $collection, '', 'collection', 0, -1, "ASC");
+    $videos = [];
+    foreach ($collection_resources as $resource) {
+        if(in_array($resource['file_extension'], $videosplice_allowed_extensions)) {
+            $videos[] = $resource;
+        }
+    }
+    $min_access = collection_min_access($videos);
+    if (
+        $pagename=="collections" && count($videos) > 0 
+        && ($min_access === 0 || checkperm('c') || checkperm('d'))
+        ) {
         $option = array(
             "value" => "video_splice",
             "label" => $lang["action-splice"],

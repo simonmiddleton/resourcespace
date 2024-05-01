@@ -34,6 +34,14 @@ foreach ($videos_data as $key => $video)
         $videos = array_values($videos);
         }
     }
+$min_access = collection_min_access($videos);
+$allowed_actions = [];
+if ($min_access === 0) {
+    $allowed_actions = ['video_splice_save_export', 'video_splice_download'];
+}
+if (checkperm('c') || checkperm('d')) {
+    $allowed_actions[] = 'video_splice_save_new';
+}
 
 // The user can decide if they want to wait for the file to be transcoded or be notified when ready when offline jobs enabled
 $transcode_now = (getval('transcode_now', '') == 'yes' ? true : false);
@@ -49,8 +57,10 @@ if (getval("splice_submit","") != "" && (count($splice_order) != count($videos))
     $notification = $lang["video_splice_incorrect_quantity"];
     }
 // Get the correct splice_order and put it into an array $videos_reordered
-elseif (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostRequest(false))
-    {
+elseif (
+    getval("splice_submit","") != "" && count($videos) > 1 
+    && enforcePostRequest(false) && in_array($video_splice_type, $allowed_actions)
+    ) {
     $videos_reordered = array();
     $videos_data_reordered = array();
 
@@ -181,6 +191,11 @@ elseif (getval("splice_submit","") != "" && count($videos) > 1 && enforcePostReq
             }
         }
     }
+elseif (getval("splice_submit","") != "")
+    {
+    $error = true;
+    $notification = escape($lang['video_splice_error_invalid_action']);
+    }
 
 // Generate front end page
 include "../../../include/header.php";
@@ -298,6 +313,9 @@ include "../../../include/header.php";
             <table cellpadding="5" cellspacing="0">
                 <tbody>
                     <tr>
+                        <?php 
+                        if(in_array('video_splice_save_new', $allowed_actions)) {
+                        ?>
                         <td>
                             <input type="radio"
                                    id="video_splice_save_new"
@@ -316,7 +334,9 @@ include "../../../include/header.php";
                                    for="video_splice_save_new"><?php echo escape($lang['video_splice_create_new']); ?></label>
                         </td>
                         <?php
-                        if ($video_export_folder !== "") {
+                        }
+
+                        if ($video_export_folder !== "" && in_array('video_splice_save_export', $allowed_actions)) {
                         ?>
                         <td>
                             <input type="radio"
@@ -334,7 +354,11 @@ include "../../../include/header.php";
                             <label class="customFieldLabel Inline"
                                    for="video_splice_save_export"><?php echo escape($lang['video_splice_save_export']); ?></label>
                         </td>
-                        <?php } ?>
+                        <?php 
+                        }
+
+                        if (in_array('video_splice_download', $allowed_actions)) { 
+                        ?>
                         <td>
                             <input type="radio"
                                    id="video_splice_download"
@@ -351,6 +375,9 @@ include "../../../include/header.php";
                             <label class="customFieldLabel Inline"
                                    for="video_splice_download"><?php echo escape($lang['download']); ?></label>
                         </td>
+                        <?php 
+                        }
+                        ?>
                     </tr>
                 </tbody>
             </table>
