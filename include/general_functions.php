@@ -5310,11 +5310,13 @@ function set_watermark_image()
     {
     global $watermark, $storagedir;
     
-    if (substr($watermark, 0, 13) == '[storage_url]')
+    $wm = (string) $watermark;
+
+    if (trim($wm) !== '' && substr($wm, 0, 13) == '[storage_url]')
         {
         $GLOBALS["watermark"] = str_replace('[storage_url]', $storagedir, $watermark);  # Watermark from system configuration page
         }
-    elseif ($watermark !== '')
+    elseif (trim($wm) !== '')
         {
         $GLOBALS["watermark"] = dirname(__FILE__). "/../" . $watermark;  # Watermark from config.php - typically "gfx/watermark.png"
         }
