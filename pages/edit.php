@@ -502,15 +502,15 @@ if (getval("regen","") != "" && enforcePostRequest($ajax)) {
     hook('edit_recreate_previews_extra', '', [$ref]);
     $result = start_previews($ref);
     switch ($result) {
-        case 0:
-        default:
-            $onload_message["text"] = $lang["error"];
+        case 2:
+            $onload_message["text"] = $lang["recreatepreviews_pending"];
             break;
         case 1:
             $onload_message["text"] = $lang["success"];
             break;
-        case 2:
-            $onload_message["text"] = $lang["recreatepreviews_pending"];
+        case 0:
+        default:
+            $onload_message["text"] = $lang["error"];
             break;
     }
 }
@@ -1045,15 +1045,15 @@ if (getval("tweak","")!="" && !$resource_file_readonly && enforcePostRequest($aj
       case "restore":
         $result = start_previews($ref);
         switch ($result) {
-            case 0:
-            default:
-                $onload_message["text"] = $lang["error"];
+            case 2:
+                $onload_message["text"] = $lang["recreatepreviews_pending"];
                 break;
             case 1:
                 $onload_message["text"] = $lang["success"];
                 break;
-            case 2:
-                $onload_message["text"] = $lang["recreatepreviews_pending"];
+            case 0:
+            default:
+                $onload_message["text"] = $lang["error"];
                 break;
         }
         break;

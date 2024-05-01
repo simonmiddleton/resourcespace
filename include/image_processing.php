@@ -3923,9 +3923,9 @@ function remove_video_previews(int $resource) : void
  * @param int $ref                  Resource ID
  * @param string $extension         File extension
  *
- * @return int                      0 if preview creation failed
- *                                  1 if all previews have been created
- *                                  2 if minimal previews created and offline jobs/scripts are required
+ * @return int                      0 Preview creation failed
+ *                                  1 All previews have been created
+ *                                  2 Minimal previews created and offline jobs/scripts are required
  *                                   to create the full set of previews/image/video $alternatives
  *
  */
