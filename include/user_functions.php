@@ -3362,7 +3362,7 @@ function get_users_by_permission(array $permissions)
     $validgroups = [];
     foreach($usergroups as $usergroup)
         {
-        $groupperms = explode(",",$usergroup["permissions"]);
+        $groupperms = explode(",",(string) $usergroup["permissions"]);
         if(count(array_diff($permissions,$groupperms)) == 0)
             {
             $validgroups[] = $usergroup["ref"];
