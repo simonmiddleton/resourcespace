@@ -3370,7 +3370,7 @@ function log_keyword_usage($keywords, $search_result)
 
 
 /**
- * Validate and set the order_by for the current search from the requested values passed to search_do()
+ * Validate and set the order_by for the current search from the requested values passed to do_search()
  *
  * @param string $search
  * @param string $order_by
