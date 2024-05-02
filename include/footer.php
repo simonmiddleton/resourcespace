@@ -78,7 +78,7 @@ draw_performance_footer();
 //titlebar modifications
 
 if ($show_resource_title_in_titlebar){
-    $general_title_pages=array("admin_content","team_archive","team_resource","team_user","team_request","team_research","team_plugins","team_mail","team_export","team_stats","team_report","team_user_log","research_request","team_user_edit","admin_content_edit","team_request_edit","team_research_edit","requests","edit","themes","collection_public","collection_manage","team_home","help","home","tag","upload_java_popup","upload_java","contact","geo_search","search_advanced","about","contribute","user_preferences","view_shares","check","index");
+    $general_title_pages=array("admin_content","team_archive","team_resource","team_user","team_request","team_research","team_plugins","team_mail","team_export","team_stats","team_report","research_request","team_user_edit","admin_content_edit","team_request_edit","team_research_edit","requests","edit","themes","collection_public","collection_manage","team_home","help","home","tag","upload_java_popup","upload_java","contact","geo_search","search_advanced","about","contribute","user_preferences","view_shares","check","index");
     $search_title_pages=array("contactsheet_settings","search","collection_edit","edit","collection_download","collection_share","collection_request");
     $resource_title_pages=array("view","delete","log","alternative_file","alternative_files","resource_email","edit","preview");
     $additional_title_pages=array(hook("additional_title_pages_array"));
@@ -216,10 +216,6 @@ if ($show_resource_title_in_titlebar){
         }
         elseif($pagename=="index"){
             $pagetitle=$lang["systemsetup"];
-        }
-        elseif($pagename=="team_user_log"){
-            global $userdata;
-            $pagetitle=$lang["userlog"] . ": " . $userdata["fullname"];
         }
         elseif($pagename=="team_user_edit"){
             $pagetitle = $lang["edituser"];
