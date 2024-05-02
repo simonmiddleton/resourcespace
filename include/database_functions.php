@@ -50,64 +50,55 @@ function errorhandler($errno, $errstr, $errfile, $errline)
     {
     global $baseurl, $pagename, $show_report_bug_link, $show_error_messages,$show_detailed_errors, $use_error_exception,$log_error_messages_url, $username, $plugins;
 
-    if (!error_reporting()) 
-        {
-        return true;
-        }
+    // $suppress = !error_reporting() || !($errno & $GLOBALS["config_error_reporting"]);
+    $suppress = !(error_reporting() && ($errno & $GLOBALS["config_error_reporting"]));
 
     $error_note = "Sorry, an error has occurred. ";
     $error_info  = "$errfile line $errline: $errstr";
 
-
-    if($use_error_exception === true)
-        {
-        $errline = ($errline == "N/A" || !is_numeric($errline) ? 0 : $errline);
-        throw new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
-        }
-    elseif (substr(PHP_SAPI, 0, 3) == 'cli')
-        {
-        // Always show errors when running on the command line.
-        echo "\n\n\n" . $error_note;
-        echo $error_info . "\n\n";
-        // Dump additional trace information to help with diagnosis.
-        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        echo PHP_EOL;
-        }
-    elseif (defined("API_CALL"))
-        {
-        // If an API call, return a standardised error format.
-        $response["error"]=true;
-        $response["error_note"]=$error_note;
-        if ($show_detailed_errors) {$response["error_info"]=$error_info;}
-        echo json_encode($response);
-        }
-    else
-        {
-        ?>
-        </select></table></table></table>
-        <div style="box-shadow: 3px 3px 20px #666;font-family:ubuntu,arial,helvetica,sans-serif;position:absolute;top:150px;left:150px; background-color:white;width:450px;padding:20px;font-size:15px;color:#fff;border-radius:5px;">
-            <div style="font-size:30px;background-color:red;border-radius:50%;min-width:35px;float:left;text-align:center;font-weight:bold;">!</div>
-            <span style="font-size:30px;color:black;padding:14px;"><?php echo $error_note; ?></span>
-            <p style="font-size:14px;color:black;margin-top:20px;">Please <a href="#" onClick="history.go(-1)">go back</a> and try something else.</p>
-            <?php 
-            if ($show_error_messages) 
-                { 
-                if (checkperm('a')) //Only show check installtion if you have permissions for that page.
-                    {?>
-                    <p style="font-size:14px;color:black;">You can <a href="<?php echo $baseurl?>/pages/check.php">check</a> your installation configuration.</p>
-                    <?php 
-                    } ?>
-                <hr style="margin-top:20px;">
+    if(!$suppress) {
+        if($use_error_exception === true) {
+            $errline = ($errline == "N/A" || !is_numeric($errline) ? 0 : $errline);
+            throw new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
+        } elseif (substr(PHP_SAPI, 0, 3) == 'cli') {
+            // Always show errors when running on the command line.
+            echo "\n\n\n" . $error_note;
+            echo $error_info . "\n\n";
+            // Dump additional trace information to help with diagnosis.
+            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            echo PHP_EOL;
+        } elseif (defined("API_CALL")) {
+            // If an API call, return a standardised error format.
+            $response["error"]=true;
+            $response["error_note"]=$error_note;
+            if ($show_detailed_errors) {$response["error_info"]=$error_info;}
+            echo json_encode($response);
+        } else {
+            ?>
+            </select></table></table></table>
+            <div style="box-shadow: 3px 3px 20px #666;font-family:ubuntu,arial,helvetica,sans-serif;position:absolute;top:150px;left:150px; background-color:white;width:450px;padding:20px;font-size:15px;color:#fff;border-radius:5px;">
+                <div style="font-size:30px;background-color:red;border-radius:50%;min-width:35px;float:left;text-align:center;font-weight:bold;">!</div>
+                <span style="font-size:30px;color:black;padding:14px;"><?php echo $error_note; ?></span>
+                <p style="font-size:14px;color:black;margin-top:20px;">Please <a href="#" onClick="history.go(-1)">go back</a> and try something else.</p>
                 <?php
-                if ($show_detailed_errors)
-                    {?>
-                    <p style="font-size:11px;color:black;"><?php echo escape($error_info); ?></p>
+                if ($show_error_messages) {
+                    if (checkperm('a')) {
+                        //Only show check installtion if you have permissions for that page.
+                        ?>
+                        <p style="font-size:14px;color:black;">You can <a href="<?php echo $baseurl?>/pages/check.php">check</a> your installation configuration.</p>
+                        <?php
+                    } ?>
+                    <hr style="margin-top:20px;">
                     <?php
+                    if ($show_detailed_errors) {?>
+                        <p style="font-size:11px;color:black;"><?php echo escape($error_info); ?></p>
+                        <?php
                     }
                 } ?>
-        </div>
-        <?php
+            </div>
+            <?php
         }
+    }
 
     // Optionally log errors to a central server.
     if (isset($log_error_messages_url))
@@ -141,6 +132,9 @@ function errorhandler($errno, $errstr, $errfile, $errline)
         }
 
     hook('after_error_handler', '', array($errno, $errstr, $errfile, $errline));
+    if($suppress) {
+        return;
+    }
     exit();
     }
 
