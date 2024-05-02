@@ -803,10 +803,16 @@ final class IIIFRequest {
             {
             $resource_access = 2;
             }
-        if($resource_access==0 && !in_array($resource["file_extension"], config_merge_non_image_types()))
-            {
+        if (
+            $resource_access == 0
+            && !in_array($resource["file_extension"], array_diff(config_merge_non_image_types(),$this->media_extensions))
+        ) {
             // Check resource actually exists and is active
-            $fulljpgsize = strtolower($resource["file_extension"]) != "jpg" ? "hpr" : "";
+            if(in_array($resource["file_extension"], $this->media_extensions)) {
+                $fulljpgsize = "pre";
+            } else {
+                $fulljpgsize = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
+            }
             $img_path = get_resource_path($this->request["id"],true,$fulljpgsize,false, "jpg");
             if(!file_exists($img_path))
                 {
@@ -996,7 +1002,12 @@ final class IIIFRequest {
                         if($this->max_width >= $this->imagewidth && $this->max_height >= $this->imageheight)
                             {
                             $this->request["getext"] = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
-                            $this->request["getsize"] = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
+                            if(in_array($resource["file_extension"], $this->media_extensions)) {
+                                // The largest available size for these is 'pre'
+                                $this->request["getsize"] = "pre";
+                            } else {
+                                $this->request["getsize"] = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
+                            }
                             }
                         else
                             {
