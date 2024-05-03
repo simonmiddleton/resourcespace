@@ -4670,7 +4670,9 @@ function write_metadata($path, $ref, $uniqid="")
                     # Other types, already set
                 }
             $filtervalue=hook("additionalmetadatafilter", "", [$write_to[$i]["exiftool_field"], $writevalue]);
-            if ($filtervalue) $writevalue=$filtervalue;
+            if ($filtervalue) {
+                $writevalue = $filtervalue;
+            }
             # Add the tag name(s) and the value to the command string.
             $group_tags = explode(",", $write_to[$i]['exiftool_field']); # Each 'exiftool field' may contain more than one tag.
             foreach ($group_tags as $group_tag)
@@ -8804,7 +8806,9 @@ function get_resource_table_joins(){
         $joins[] = $GLOBALS["related_pushed_order_by"];
         }
     $additional_joins=hook("additionaljoins");
-    if ($additional_joins) $joins=array_merge($joins,$additional_joins);
+    if ($additional_joins) {
+        $joins = array_merge($joins, $additional_joins);
+    }
     $joins=array_unique($joins);
     $n=0;
     foreach ($joins as $join){

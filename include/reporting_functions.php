@@ -2,14 +2,15 @@
 # Reporting functions
 
 function get_report_name($report)
-    {
+{
     # Translates or customizes the report name.
     $customName = hook('customreportname', '', array($report));
-    if ($customName)
+    if ($customName) {
         return $customName;
+    }
 
     return lang_or_i18n_get_translated($report["name"], "report-");
-    }
+}
 
 function get_reports()
     {

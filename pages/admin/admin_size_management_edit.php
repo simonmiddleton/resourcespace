@@ -46,14 +46,20 @@ if (getval("save", false) && enforcePostRequest(false))
     {
     $cols=array();
 
-    $name=getval("name","");
-    if ($name!="") $cols["name"]=$name;
+    $name = getval("name", "");
+    if ($name != "") {
+        $cols["name"] = $name;
+    }
 
-    $width=getval("width",-1,true);
-    if ($width>=0) $cols["width"]=$width;
+    $width = getval("width", -1, true);
+    if ($width >= 0) {
+        $cols["width"] = $width;
+    }
 
-    $height=getval("height",-1,true);
-    if ($height>=0) $cols["height"]=$height;
+    $height = getval("height", -1, true);
+    if ($height >= 0) {
+        $cols["height"] = $height;
+    }
 
     $cols["allow_preview"]=(getval('allowpreview',false) ? "1" : "0");
     $cols["allow_restricted"]=(getval('allowrestricted',false) ? "1" : "0");

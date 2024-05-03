@@ -368,7 +368,9 @@ if ($search_titles)
             $fieldref=intval(trim(substr($search,6)));
             $fieldinfo=get_resource_type_field($fieldref);
             $displayname=i18n_get_translated($fieldinfo["title"]);
-            if (trim($displayname)=="") $displayname=$fieldinfo["ref"];
+            if (trim($displayname) == "") {
+                $displayname = $fieldinfo["ref"];
+            }
             $title_string = $lang["search_title_empty"] . ' ' . $displayname;
             }
         elseif (substr($search,0,14)=="!integrityfail")

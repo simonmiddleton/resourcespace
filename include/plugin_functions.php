@@ -115,7 +115,7 @@ function purge_plugin_config($name)
  *                    blank values if a yaml isn't available
  */
 function get_plugin_yaml($path, $validate=true)
-    {
+{
     #We're not using a full YAML structure, so this parsing function will do
     $plugin_yaml['name'] = basename($path, '.yaml');
     $plugin_yaml['version'] = '0';
@@ -129,45 +129,43 @@ function get_plugin_yaml($path, $validate=true)
     $plugin_yaml['title'] = '';
     $plugin_yaml['icon'] = '';
 
-    if(!(file_exists($path) && is_readable($path)))
-        {
+    if (!(file_exists($path) && is_readable($path))) {
         return $validate ? false : $plugin_yaml;
-        }
+    }
+
     $yaml_file_ptr = fopen($path, 'r');
 
-    if ($yaml_file_ptr!=false)
-        {
-        while (($line = fgets($yaml_file_ptr))!='')
-            {
+    if ($yaml_file_ptr != false) {
+        while (($line = fgets($yaml_file_ptr)) != '') {
             if (
-                $line[0] != '#' #Exclude comments from parsing
+                $line[0] != '#' 
                 && ($pos = strpos($line,':')) != false
-                ) {
-                    $plugin_yaml[trim(substr($line,0,$pos))] = trim(substr($line, $pos+1));
-                }
-            }
-            
-        if ($plugin_yaml['config_url']!='' && $plugin_yaml['config_url'][0]=='/') # Strip leading spaces from the config url.
-            {
-            $plugin_yaml['config_url'] = trim($plugin_yaml['config_url'], '/');
-            }
-        fclose($yaml_file_ptr);
-        if ($validate)
-            {
-            if (isset($plugin_yaml['name']) && $plugin_yaml['name']==basename($path,'.yaml') && isset($plugin_yaml['version']))
-                {
-                return $plugin_yaml;
-                }
-            else return false;
+            ) {
+                # Exclude comments from parsing
+                $plugin_yaml[trim(substr($line,0,$pos))] = trim(substr($line, $pos+1));
             }
         }
-    elseif ($validate)
-        {
-        return false;
+            
+        if ($plugin_yaml['config_url'] != '' && $plugin_yaml['config_url'][0] == '/') {
+            # Strip leading spaces from the config url
+            $plugin_yaml['config_url'] = trim($plugin_yaml['config_url'], '/');
         }
 
-    return $plugin_yaml;
+        fclose($yaml_file_ptr);
+
+        if ($validate) {
+            if (isset($plugin_yaml['name']) && $plugin_yaml['name']==basename($path,'.yaml') && isset($plugin_yaml['version'])) {
+                return $plugin_yaml;
+            } else {
+                return false;
+            }
+        }
+    } elseif ($validate) {
+        return false;
     }
+
+    return $plugin_yaml;
+}
 
 /**
  * A subset json_encode function that only works on $config arrays but has none
@@ -671,24 +669,21 @@ function config_add_text_list_input($config_var, $label, $password=false, $width
  * @param integer $width the width of the input field in pixels. Default: 300.
  */
 function config_multi_select($name, $label, $current, $choices, $usekeys=true, $width=300)
-    {
+{
     global $lang;
-?>
-  <div class="Question">
-    <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
-    <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" <?php if(count($choices) > 7) echo ' size="7"'?> style="width:<?php echo $width ?>px">
-<?php
-    foreach($choices as $key => $choice)
-        {
-        $value=$usekeys?$key:$choice;
-        echo '    <option value="' . $value . '"' . ((in_array($value,$current))?' selected':'') . ">$choice</option>";
-        }
-?>
-    </select>
-    <div class="clearerleft"></div>
-  </div>
-<?php
-    }
+    ?>
+    <div class="Question">
+        <label for="<?php echo $name?>" title="<?php echo escape(str_replace('%cvn', $name, $lang['plugins-configvar'])); ?>"><?php echo escape($label); ?></label>
+        <select name="<?php echo $name?>[]" id="<?php echo $name?>" class="MultiSelect" multiple="multiple" <?php if(count($choices) > 7) {echo ' size="7"';} ?> style="width:<?php echo $width ?>px">
+            <?php foreach($choices as $key => $choice) {
+                $value = $usekeys ? $key : $choice;
+                echo '    <option value="' . $value . '"' . ((in_array($value, $current)) ? ' selected' : '') . ">$choice</option>";
+            } ?>
+        </select>
+        <div class="clearerleft"></div>
+    </div>
+    <?php
+}
 
 /**
  * Return a data structure that will instruct the configuration page generator functions to
@@ -1357,47 +1352,47 @@ function plugin_activate_for_setup($plugin_name)
     
 
 function include_plugin_config($plugin_name,$config="",$config_json="")
-    {
+{
     global $mysql_charset;
     
-    $pluginpath=get_plugin_path($plugin_name);
+    $pluginpath = get_plugin_path($plugin_name);
     
     $configpath = $pluginpath . "/config/config.default.php";
-    if (file_exists($configpath)) {include_once $configpath;}
+    if (file_exists($configpath)) {
+        include_once $configpath;
+    }
+    
     $configpath = $pluginpath . "/config/config.php";
-    if (file_exists($configpath)) {include_once $configpath;}
+    if (file_exists($configpath)) {
+        include_once $configpath;
+    }
 
-    if ($config_json != "" && function_exists('json_decode'))
-        {
-        if (!isset($mysql_charset))
-            {
+    if ($config_json != "" && function_exists('json_decode')) {
+        if (!isset($mysql_charset)) {
             $config_json = iconv('ISO-8859-1', 'UTF-8', $config_json);
-            }
+        }
+
         $config_json = json_decode($config_json, true);
-        if ($config_json)
-            {
-            foreach($config_json as $key=>$value)
-                {
+        if ($config_json) {
+            foreach ($config_json as $key => $value) {
                 $$key = $value;
-                }
             }
         }
-    elseif ($config != "")
-        {
-        $config=unserialize(base64_decode($config));
-        foreach($config as $key=>$value)
+    } elseif ($config != "") {
+        $config = unserialize(base64_decode($config));
+        foreach ($config as $key => $value) {
             $$key = $value;
         }
+    }
 
     # Copy config variables to global scope.
     unset($plugin_name, $config, $config_json, $configpath);
     $vars = get_defined_vars();
-    foreach ($vars as $name=>$value)
-        {
+    foreach ($vars as $name => $value) {
         global $$name;
         $$name = $value;
-        }
     }
+}
 
 function register_plugin_language($plugin)
     {

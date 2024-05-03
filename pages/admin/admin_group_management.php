@@ -104,12 +104,13 @@ function addColumnHeader($orderName, $labelKey)
 {
     global $baseurl, $order_by, $filter_by_parent, $filter_by_permissions, $find, $lang;
 
-    if ($order_by == $orderName)
+    if ($order_by == $orderName) {
         $image = '<span class="ASC"></span>';
-    elseif ($order_by == $orderName . ' desc')
+    } elseif ($order_by == $orderName . ' desc') {
         $image = '<span class="DESC"></span>';
-    else
+    } else {
         $image = '';
+    }
 
 ?>      <td>
             <a href="<?php echo $baseurl ?>/pages/admin/admin_group_management.php?<?php
@@ -234,7 +235,7 @@ function addColumnHeader($orderName, $labelKey)
             <label for="filterbyparent"><?php echo escape($lang['action-title_filter_by_parent_group']); ?></label>
             <div class="tickset">
                 <select name="filterbyparent" class="medwidth" onchange="this.form.submit();">
-                    <option value="" ><?php if($filter_by_parent != "") echo escape($lang["removethisfilter"]); ?></option>
+                    <option value="" ><?php if ($filter_by_parent != "") {echo escape($lang["removethisfilter"]);} ?></option>
 <?php	
 
 $groups=ps_query("

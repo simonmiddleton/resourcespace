@@ -61,12 +61,13 @@ function addColumnHeader($orderName, $labelKey)
     {
     global $baseurl, $group, $field_order_by, $field_sort, $find, $lang, $restypefilter, $url_params;
 
-    if ($field_order_by == $orderName && $field_sort=="asc")
+    if ($field_order_by == $orderName && $field_sort == "asc") {
         $arrow = '<span class="DESC"></span>';
-    elseif ($field_order_by == $orderName && $field_sort=="desc")
+    } elseif ($field_order_by == $orderName && $field_sort == "desc") {
         $arrow = '<span class="ASC"></span>';
-    else
+    } else {
         $arrow = '';
+    }
         
     $newparams = array();
     $newparams["field_order_by"] = $orderName;

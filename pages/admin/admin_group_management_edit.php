@@ -198,7 +198,9 @@ function dump_config_default_options()
         $matches[3][$i]=preg_replace('/^\s*/s','',$matches[3][$i]);     // leading white space
         $matches[3][$i]=preg_replace('/\s*$/s','',$matches[3][$i]);     // trailing white space     
 
-        if ($matches[1][$i]!="" && $matches[3][$i]!="") $matches[1][$i].="\n";
+        if ($matches[1][$i] != "" && $matches[3][$i] != "") {
+            $matches[1][$i] .= "\n";
+        }
 
         echo "<option value=\"" . nl2br (htmlentities ($matches[1][$i] . $matches[3][$i],ENT_COMPAT)) . "\">" . htmlentities ($matches[2][$i]) . "</option>\n";
         }
@@ -274,12 +276,15 @@ include "../../include/header.php";
         <div class="Question">
             <label for="parent"><?php echo escape($lang["property-parent"]); ?></label>
             <select name="parent" class="stdwidth">
-                <option value="0" ><?php if ($record['parent']) echo escape($lang["property-user_group_remove_parent"]); ?></option>
+                <option value="0" ><?php if ($record['parent']) {echo escape($lang["property-user_group_remove_parent"]);} ?></option>
                 <?php
                 $groups=get_usergroups();
                 foreach ($groups as $group)
                 {
-                    if ($group['ref']==$ref) continue;      // not allowed to be the parent of itself
+                    // Not allowed to be the parent of itself
+                    if ($group['ref'] == $ref) {
+                        continue;
+                    }
 
                     ?>              <option <?php if ($record['parent']==$group['ref']) { ?> selected="true" <?php } ?>value="<?php echo $group['ref']; ?>"><?php echo $group['name']; ?></option>
 <?php

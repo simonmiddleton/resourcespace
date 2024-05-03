@@ -119,17 +119,23 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     {
     global $lang, $date_d_m_y, $date_yyyy;
 
-    $date=trim((string)$date);
-    if($date == '') return '';
+    $date = trim((string)$date);
+    if ($date == '') {
+        return '';
+    }
 
     $date_timestamp = strtotime($date); 
-    if($date_timestamp === false) return '';
+    if ($date_timestamp === false) {
+        return '';
+    }
 
     // Check whether unix timestamp is a BCE date
     $year_zero = PHP_INT_MIN === (int)-2147483648 ? PHP_INT_MIN : strtotime("0000-00-00");
     $bce_offset = ($date_timestamp < $year_zero) ? 1 : 0;
     // BCE dates cannot return year in truncated form
-    if($bce_offset == 1 && !$date_yyyy) return '';
+    if ($bce_offset == 1 && !$date_yyyy) {
+        return '';
+    }
 
     $original_time_part = substr($date, $bce_offset + 11, 5);
     if($offset_tz && ($original_time_part !== false || $original_time_part != ''))
@@ -802,8 +808,11 @@ function filesize2bytes($str)
 function get_mime_type($path, $ext = null)
     {
     global $mime_types_by_extension;
-    if (empty($ext))
+
+    if (empty($ext)) {
         $ext = pathinfo($path, PATHINFO_EXTENSION);
+    }
+
     if (isset($mime_types_by_extension[$ext]))
         {
         return $mime_types_by_extension[$ext];
@@ -1566,27 +1575,32 @@ function rs_quoted_printable_encode($string, $linelen = 0, $linebreak="=\r\n", $
  * @return string
  */
 function rs_quoted_printable_encode_subject($string, $encoding='UTF-8')
-    {
+{
     // use this function with headers, not with the email body as it misses word wrapping
-       $len = strlen($string);
-       $result = '';
-       $enc = false;
-       for($i=0;$i<$len;++$i) {
+    $len = strlen($string);
+    $result = '';
+    $enc = false;
+
+    for ($i = 0; $i < $len; ++$i) {
         $c = $string[$i];
-        if (ctype_alpha($c))
-            $result.=$c;
-        elseif ($c==' ') {
-            $result.='_';
+        if (ctype_alpha($c)) {
+            $result .= $c;
+        } elseif ($c==' ') {
+            $result .= '_';
             $enc = true;
         } else {
-            $result.=sprintf("=%02X", ord($c));
+            $result .= sprintf("=%02X", ord($c));
             $enc = true;
         }
-       }
-       //L: so spam agents won't mark your email with QP_EXCESS
-       if (!$enc) return $string;
-       return '=?'.$encoding.'?q?'.$result.'?=';
     }
+
+    //L: so spam agents won't mark your email with QP_EXCESS
+    if (!$enc) {
+        return $string;
+    }
+
+    return '=?' . $encoding . '?q?' . $result . '?=';
+}
 
 
 /**
@@ -4115,14 +4129,17 @@ function daily_stat($activity_type,$object_ref)
  * @return string
  */
 function pagename()
-    {
-    $name=safe_file_name(getval('pagename', ''));
-    if (!empty($name))
+{
+    $name = safe_file_name(getval('pagename', ''));
+    if (!empty($name)) {
         return $name;
-    $url=str_replace("\\","/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
-    $urlparts=explode("/",$url);
-    return $urlparts[count($urlparts) - 1];
     }
+
+    $url = str_replace("\\", "/", $_SERVER["PHP_SELF"]); // To work with Windows command line scripts
+    $urlparts = explode("/", $url);
+
+    return $urlparts[count($urlparts) - 1];
+}
 
 /**
  *  Returns the site content from the language strings. These will already be overridden with site_text content if present.
@@ -4422,37 +4439,38 @@ function is_positive_int_loose($V): bool
  */
 function ip_matches($ip, $ip_restrict)
 {
-global $system_login;
-if ($system_login){return true;}    
+    global $system_login;
+    if ($system_login) {
+        return true;
+    }    
 
-if (substr($ip_restrict, 0, 1)=='!')
-    return @preg_match('/'.substr($ip_restrict, 1).'/su', $ip);
+    if (substr($ip_restrict, 0, 1) == '!') {
+        return @preg_match('/' . substr($ip_restrict, 1) . '/su', $ip);
+    }
 
-# Allow multiple IP addresses to be entered, comma separated.
-$i=explode(",",$ip_restrict);
+    # Allow multiple IP addresses to be entered, comma separated.
+    $i = explode(",", $ip_restrict);
 
-# Loop through all provided ranges
-for ($n=0;$n<count($i);$n++)
-    {
-    $ip_restrict=trim($i[$n]);
+    # Loop through all provided ranges
+    for ($n = 0; $n < count($i); $n++) {
+        $ip_restrict = trim($i[$n]);
 
-    # Match against the IP restriction.
-    $wildcard=strpos($ip_restrict,"*");
+        # Match against the IP restriction.
+        $wildcard = strpos($ip_restrict, "*");
 
-    if ($wildcard!==false)
-        {
-        # Wildcard
-        if (substr($ip,0,$wildcard)==substr($ip_restrict,0,$wildcard))
-            return true;
-        }
-    else
-        {
-        # No wildcard, straight match
-        if ($ip==$ip_restrict)
-            return true;
+        if ($wildcard !== false) {
+            # Wildcard
+            if (substr($ip, 0, $wildcard) == substr($ip_restrict, 0, $wildcard)) {
+                return true;
+            }
+        } else {
+            # No wildcard, straight match
+            if ($ip == $ip_restrict) {
+                return true;
+            }
         }
     }
-return false;
+    return false;
 }
 
 /**
@@ -5377,14 +5395,18 @@ function get_size_info(array $size, ?array $originalSize = null): string
         if ($imageWidth > $imageHeight)
             {
             // landscape
-            if ($imageWidth == 0) return '<p>&ndash;</p>';
+            if ($imageWidth == 0) {
+                return '<p>&ndash;</p>';
+            }
             $newWidth = $size['width'];
             $newHeight = round(($imageHeight * $newWidth + $imageWidth - 1) / $imageWidth);
             }
         else
             {
             // portrait or square
-            if ($imageHeight == 0) return '<p>&ndash;</p>';
+            if ($imageHeight == 0) {
+                return '<p>&ndash;</p>';
+            }
             $newHeight = $size['height'];
             $newWidth = round(($imageWidth * $newHeight + $imageHeight - 1) / $imageHeight);
             }

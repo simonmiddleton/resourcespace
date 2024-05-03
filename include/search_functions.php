@@ -3021,17 +3021,29 @@ function update_search_from_request($search)
                     {
                     $key_year=$key_part."_year";
                     $value_year=getval($key_year,"");
-                    if ($value_year!="") $value=$value_year;
-                    else $value="nnnn";
+
+                    if ($value_year != "") {
+                        $value = $value_year;
+                    } else {
+                        $value = "nnnn";
+                    } 
                     
                     $key_month=$key_part."_month";
                     $value_month=getval($key_month,"");
-                    if ($value_month=="") $value_month.="nn";
+
+                    if ($value_month == "") {
+                        $value_month .= "nn";
+                    }
                     
                     $key_day=$key_part."_day";
                     $value_day=getval($key_day,"");
-                    if ($value_day!="") $value.="|" . $value_month . "|" . $value_day;
-                    elseif ($value_month!="nn") $value.="|" . $value_month;
+
+                    if ($value_day!="") {
+                        $value .= "|" . $value_month . "|" . $value_day;
+                    } elseif ($value_month!="nn") {
+                        $value .= "|" . $value_month;
+                    }
+
                     $search=(($search=="")?"":join(", ",split_keywords($search)) . ", ") . $field . ":" . $value;
                     }
                                 

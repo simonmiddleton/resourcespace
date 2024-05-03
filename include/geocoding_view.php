@@ -229,7 +229,7 @@ if($view_panels)
             parent_element.find(this).parent().children('.Title').removeClass('Selected');
             parent_element.find(this).addClass('Selected');
             parent_element.find('#' + jQuery(this).attr('panel')).show();
-            <?php if(isset($map_container_obj)) echo $map_container_obj??"" . ".invalidateSize(true);";?>
+            <?php if (isset($map_container_obj)) { echo $map_container_obj ?? "" . ".invalidateSize(true);";} ?>
             });
         });
         </script> <?php

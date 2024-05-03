@@ -1850,9 +1850,11 @@ function display_field($n, $field, $newtab=false,$modal=false)
         $value="";
         }
 
-  if ($field["global"] == 0 && $lastglobal && $collapsible_sections)
-    {
-    ?></div><h2 class="CollapsibleSectionHead" id="resource_type_properties"><?php echo escape($lang["typespecific"]); ?></h2><div class="CollapsibleSection" id="ResourceProperties<?php if ($ref<0) echo "Upload"; ?>TypeSpecificSection"><?php
+    if ($field["global"] == 0 && $lastglobal && $collapsible_sections) { ?>
+        </div>
+        <h2 class="CollapsibleSectionHead" id="resource_type_properties"><?php echo escape($lang["typespecific"]); ?></h2>
+        <div class="CollapsibleSection" id="ResourceProperties<?php if ($ref<0) {echo "Upload";} ?>TypeSpecificSection">
+        <?php
     }
 
     # Blank form if 'reset form' has been clicked
@@ -2936,7 +2938,7 @@ function render_share_options($shareopts=array())
                 { 
                 $selected = $editaccesslevel == $n;
                 ?>
-                <option value="<?php echo $n?>" <?php if($selected) echo "selected";?>><?php echo escape($lang["access" . $n])?></option>
+                <option value="<?php echo $n?>" <?php if ($selected) {echo "selected";} ?>><?php echo escape($lang["access" . $n])?></option>
                 <?php 
                 } 
                 ?>
@@ -2969,7 +2971,7 @@ function render_share_options($shareopts=array())
                     $option_class = 'optionWeekend';
                     }
                 ?>
-                <option class="<?php echo $option_class ?>" value="<?php echo $ymd_date ?>" <?php if($selected) echo "selected"; ?>><?php echo $date_text ?></option>
+                <option class="<?php echo $option_class ?>" value="<?php echo $ymd_date ?>" <?php if ($selected) {echo "selected";} ?>><?php echo $date_text ?></option>
                 <?php
                 } ?>
             </select>
@@ -2995,7 +2997,7 @@ function render_share_options($shareopts=array())
 
                 $selected = $editgroup == $group["ref"] || ($editgroup == "" && $usergroup == $group["ref"]);
                 ?>
-                <option value="<?php echo $group["ref"]; ?>" <?php if ($selected) echo "selected" ?>><?php echo $group["name"]; ?></option>
+                <option value="<?php echo $group["ref"]; ?>" <?php if ($selected) {echo "selected";} ?>><?php echo $group["name"]; ?></option>
                 <?php
                 }
                 ?>

@@ -9,7 +9,13 @@ function comments_submit()
     {
     global $username, $anonymous_login, $userref, $regex_email, $comments_max_characters, $lang, $email_notify, $comments_email_notification_address;
 
-    if ($username == $anonymous_login && (getval("fullname","") == "" || preg_match ("/{$regex_email}/", getval("email","")) === false)) return;
+    if (
+        $username == $anonymous_login
+        && (getval("fullname","") == ""
+        || preg_match ("/{$regex_email}/", getval("email","")) === false)
+    ) {
+        return;
+    } 
 
     $comment_to_hide = getval("comment_to_hide",0,true);
 
@@ -38,17 +44,23 @@ function comments_submit()
         $comment_flag_reason = getval("comment_flag_reason","");
         $comment_flag_url = getval("comment_flag_url","");
 
-        if ($comment_flag_reason == "" || $comment_flag_url == "") return;
+        if ($comment_flag_reason == "" || $comment_flag_url == "") {
+            return;
+        }
 
         # the following line can be simplified using strstr (with before_needle boolean) but not supported < PHP 5.3.0
-        if (!strpos ($comment_flag_url, "#") === false) $comment_flag_url = substr ($comment_flag_url, 0, strpos ($comment_flag_url, "#")-1);
+        if (!strpos($comment_flag_url, "#") === false) {
+            $comment_flag_url = substr($comment_flag_url, 0, strpos($comment_flag_url, "#") - 1);
+        }
 
         $comment_flag_url .= "#comment{$comment_flag_ref}";     // add comment anchor to end of URL
 
         $comment_body = ps_query("select body from comment where ref=?",array("i",$comment_flag_ref));
         $comment_body = (!empty($comment_body[0]['body'])) ? $comment_body[0]['body'] : "";
 
-        if ($comment_body == "") return;
+        if ($comment_body == "") {
+            return;
+        }
 
         $email_subject = (text("comments_flag_notification_email_subject")!="") ?
             text("comments_flag_notification_email_subject") : $lang['comments_flag-email-default-subject'];
@@ -75,11 +87,18 @@ function comments_submit()
     }
 
     // --- process comment submission
-    if (    // we don't want to insert an empty comment or an orphan
-        (getval("body","") == "") ||
-        ((getval("collection_ref","") == "") && (getval("resource_ref","") == "") && (getval("ref_parent","") == ""))
+
+    // we don't want to insert an empty comment or an orphan
+    if (
+        (getval("body", "") == "")
+        || (
+            (getval("collection_ref", "") == "")
+            && (getval("resource_ref", "") == "")
+            && (getval("ref_parent", "") == "")
         )
+    ) {
         return;
+    }
 
     if ($username == $anonymous_login)  // anonymous user
         {
@@ -97,7 +116,9 @@ function comments_submit()
         }
 
     $body = getval("body", "");
-    if (strlen ($body) > $comments_max_characters) $body = substr ($body, 0, $comments_max_characters);     // just in case not caught in submit form
+    if (strlen($body) > $comments_max_characters) {
+        $body = substr($body, 0, $comments_max_characters); // just in case not caught in submit form
+    }
 
     $parent_ref =  getval("ref_parent", 0,true);
     $collection_ref =  getval("collection_ref", 0,true);
@@ -215,7 +236,9 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 
     $anonymous_mode = (empty ($username) || $username == $anonymous_login);     // show extra fields if commenting anonymously
 
-    if ($comments_flat_view) $bRecursive = false;
+    if ($comments_flat_view) {
+        $bRecursive = false;
+    }
 
     $bRecursive = $bRecursive && ($level < $GLOBALS['comments_responses_max_level']);
 
@@ -349,7 +372,9 @@ EOT;
             echo "<div class='CommentEntryInfoCommenter'>";
 
 
-            if (empty($comment['name'])) $comment['name'] = $comment['username'];
+            if (empty($comment['name'])) {
+                $comment['name'] = $comment['username'];
+            }
 
             if ($anonymous_mode == true)
                 {
@@ -473,11 +498,15 @@ EOT;
 
             echo "</div>";      // end of CommentEntry
 
-            if ($bRecursive) comments_show($thisRef, $bcollection_mode, true, $level+1);
+            if ($bRecursive) {
+                comments_show($thisRef, $bcollection_mode, true, $level + 1);
+            }
 
 
         }
-        if ($level == 1)  echo "</div>";  // end of comments_container
+        if ($level == 1) {
+            echo "</div>";  // end of comments_container
+        }
     }
 
 /**

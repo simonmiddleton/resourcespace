@@ -90,8 +90,9 @@ function render_bool_option($fieldname, $value){
  */
 function render_text_option($fieldname, $value, $size=20, $units=''){
     global $errorfields, $lang;
-    if (isset($errorfields[$fieldname]) && isset($_POST[$fieldname]))
+    if (isset($errorfields[$fieldname]) && isset($_POST[$fieldname])) {
         $value = $_POST[$fieldname];
+    }
     $output = '';
     $output .= "<tr><th><label for=\"$fieldname\">".$lang['cfg-'.$fieldname]."</label></th>";
     $output .= "<td><input type=\"text\" value=\"$value\" size=\"$size\" name=\"$fieldname\"/> $units ";
@@ -560,7 +561,7 @@ function config_file_input($name, $label, $current, $form_action, $width = 420, 
     ?>
     <div class="Question" id="question_<?php echo escape($name); ?>">
         <form method="POST" action="<?php echo escape($form_action); ?>" enctype="multipart/form-data">
-        <label <?php if ($file_preview && $current !== "") echo 'id="config-image-preview-label"'; ?> for="<?php echo escape($name); ?>"><?php echo escape($label); ?></label>
+        <label <?php if ($file_preview && $current !== "") {echo 'id="config-image-preview-label"';} ?> for="<?php echo escape($name); ?>"><?php echo escape($label); ?></label>
         <div class="AutoSaveStatus">
         <span id="AutoSaveStatus-<?php echo escape($name); ?>" style="display:none;"></span>
         </div>

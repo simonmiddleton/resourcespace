@@ -456,7 +456,9 @@ if ($submitted != "")
                 $filename=get_download_filename($ref,$usesize,0,$pextension);
                 collection_download_use_original_filenames_when_downloading($filename, $ref, $collection_download_tar, $filenames,$id);
 
-                if (hook("downloadfilenamealt")) $filename=hook("downloadfilenamealt");
+                if (hook("downloadfilenamealt")) {
+                    $filename = hook("downloadfilenamealt");
+                }
 
                 collection_download_process_text_file($ref, $collection, $filename);
 
@@ -550,12 +552,13 @@ if ($submitted != "")
 
     collection_download_process_command_to_file($use_zip_extension, $collection_download_tar, $id, $collection, $size, $path);
 
-    if($collection_download_tar)
-        {$suffix = '.tar';}
-    elseif ($archiver)
+    if ($collection_download_tar) {
+        $suffix = '.tar';
+    } elseif ($archiver) {
         $suffix = '.' . $collection_download_settings[$settings_id]['extension'];
-    else
+    } else {
         $suffix = '.zip';
+    }
 
     collection_download_process_collection_download_name($filename, $collection, $size, $suffix, $collectiondata);
         
@@ -740,12 +743,14 @@ if (
     $available_sizes=array_reverse($available_sizes,true);
 
     # analyze available sizes and present options
-?><select name="size" class="stdwidth" id="downloadsize"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>><?php
+?><select name="size" class="stdwidth" id="downloadsize"<?php if (!empty($submitted)) {echo ' disabled="disabled"';} ?>><?php
 
 
-if (array_key_exists('original',$available_sizes))
+if (array_key_exists('original', $available_sizes)) {
     display_size_option('original', $lang['original'], true);
-    display_size_option('largest', $lang['imagesize-largest'], true);
+}
+
+display_size_option('largest', $lang['imagesize-largest'], true);
 
 foreach ($available_sizes as $key=>$value)
     {
@@ -784,7 +789,7 @@ if (
         ?>
 <div class="Question">
 <label for="text"><?php echo escape($lang["zippedcollectiontextfile"]); ?></label>
-<select name="text" class="shrtwidth" id="text"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>>
+<select name="text" class="shrtwidth" id="text"<?php if (!empty($submitted)) {echo ' disabled="disabled"';} ?>>
 <?php if($zipped_collection_textfile_default_no){
     ?><option value="false"><?php echo escape($lang["no"]); ?></option>
     <option value="true"><?php echo escape($lang["yes"]); ?></option><?php
@@ -807,7 +812,7 @@ if ($archiver && count($collection_download_settings)>1)
     <div class="Question" id="archivesettings_question" <?php if($collection_download_tar){echo "style=\"display:none\"";}?>>
     <label for="archivesettings"><?php echo escape($lang["archivesettings"]); ?></label>
     <div class="tickset">
-    <select name="settings" class="stdwidth" id="archivesettings"<?php if (!empty($submitted)) echo ' disabled="disabled"' ?>><?php
+    <select name="settings" class="stdwidth" id="archivesettings"<?php if (!empty($submitted)) {echo ' disabled="disabled"';} ?>><?php
     foreach ($collection_download_settings as $key=>$value)
         { ?>
         <option value="<?php echo escape($key) ?>"><?php echo lang_or_i18n_get_translated($value["name"],"archive-") ?></option><?php

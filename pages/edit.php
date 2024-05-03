@@ -1524,7 +1524,7 @@ hook("editbefresmetadata"); ?>
         # Multiple method of changing resource type.
         ?>
         <h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo escape($lang["resourcetype"]) ?></h2>
-        <div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="ResourceTypeSection<?php if ($ref==-1) echo "Upload"; ?>">
+        <div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="ResourceTypeSection<?php if ($ref==-1) {echo "Upload";} ?>">
         <div class="Question">
             <input name="editresourcetype" id="editresourcetype" type="checkbox" value="yes" onClick="var q=document.getElementById('editresourcetype_question');if (this.checked) {q.style.display='block';alert('<?php echo escape($lang["editallresourcetypewarning"]) ?>');} else {q.style.display='none';}">
             &nbsp;
@@ -1638,7 +1638,7 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
    <tbody>
      <tr>        
        <td width="10" valign="middle">
-         <input type="radio" id="exif_extract" name="exif_option" value="extract" onClick="jQuery('.ExifOptions').hide();" <?php if($metadata_read_default) echo "checked" ?>>
+         <input type="radio" id="exif_extract" name="exif_option" value="extract" onClick="jQuery('.ExifOptions').hide();" <?php if ($metadata_read_default) {echo "checked";} ?>>
       </td>
       <td align="left" valign="middle">
          <label class="customFieldLabel" for="exif_extract"><?php echo escape($lang["embedded_metadata_extract_option"]) ?></label>
@@ -1646,7 +1646,7 @@ if($embedded_data_user_select && $ref<0 && !$multiple)
 
 
       <td width="10" valign="middle">
-         <input type="radio" id="no_exif" name="exif_option" value="yes" onClick="jQuery('.ExifOptions').hide();" <?php if(!$metadata_read_default) echo "checked" ?>>
+         <input type="radio" id="no_exif" name="exif_option" value="yes" onClick="jQuery('.ExifOptions').hide();" <?php if (!$metadata_read_default) {echo "checked";} ?>>
       </td>
       <td align="left" valign="middle">
          <label class="customFieldLabel" for="no_exif"><?php echo escape($lang["embedded_metadata_donot_extract_option"]) ?></label>
@@ -1850,7 +1850,7 @@ if (($edit_upload_options_at_top || $upload_review_mode) && display_upload_optio
 <h2  <?php if($collapsible_sections){echo'class="CollapsibleSectionHead"';}?> id="ResourceMetadataSectionHead"><?php echo escape($lang["resourcemetadata"])?></h2><?php
  } 
 
-?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) echo "Upload"; ?>"><?php
+?><div <?php if($collapsible_sections){echo'class="CollapsibleSection"';}?> id="ResourceMetadataSection<?php if ($ref<0) {echo "Upload";} ?>"><?php
 }
 
 # Check code signing flag and display warning if present
@@ -2043,11 +2043,11 @@ if (    (
     ) {
             if ($enable_related_resources && ($multiple || $ref>0)) # Showing relationships
             {
-              ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?> id="StatusRelationshipsSectionHead"><?php echo escape($lang["statusandrelationships"])?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusRelationshipsSection<?php if ($ref==-1) echo "Upload"; ?>"><?php
+              ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?> id="StatusRelationshipsSectionHead"><?php echo escape($lang["statusandrelationships"])?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusRelationshipsSection<?php if ($ref==-1) {echo "Upload";} ?>"><?php
            }
            else
            {
-                ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo escape($lang["status"])?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusSection<?php if ($ref==-1) echo "Upload"; ?>"><?php # Not showing relationships
+                ?><h2 <?php echo ($collapsible_sections)?"class=\"CollapsibleSectionHead\"":""?>><?php echo escape($lang["status"])?></h2><div <?php echo ($collapsible_sections)?"class=\"CollapsibleSection\"":""?> id="StatusSection<?php if ($ref==-1) {echo "Upload";} ?>"><?php # Not showing relationships
              }
 
        } /* end hook replacestatusandrelationshipsheader */
@@ -2273,7 +2273,7 @@ else
 // Multiple method of changing geolocation.
 if ($multiple && !$disable_geocoding)
     { ?>
-    </div><h2 <?php echo ($collapsible_sections) ? " class=\"CollapsibleSectionHead\"" : ""?> id="location_title"><?php echo escape($lang["location-title"]); ?></h2><div <?php echo ($collapsible_sections) ? "class=\"CollapsibleSection\"" : ""?> id="LocationSection<?php if ($ref == "new") echo "Upload"; ?>">
+    </div><h2 <?php echo ($collapsible_sections) ? " class=\"CollapsibleSectionHead\"" : ""?> id="location_title"><?php echo escape($lang["location-title"]); ?></h2><div <?php echo ($collapsible_sections) ? "class=\"CollapsibleSection\"" : ""?> id="LocationSection<?php if ($ref == "new") {echo "Upload";} ?>">
 
     <div class="Question"><input name="editlocation" id="editlocation" type="checkbox" value="yes" onClick="var q=document.getElementById('editlocation_question');if (this.checked) {q.style.display='block';} else {q.style.display='none';}">&nbsp;<label for="editlocation"><?php echo escape($lang["location"]); ?></label></div>
 

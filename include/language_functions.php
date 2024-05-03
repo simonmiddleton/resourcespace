@@ -38,39 +38,53 @@ function lang_or_i18n_get_translated($text, $mixedprefix, $suffix = "")
  * @return string
  */
 function i18n_get_translated($text)
-    {
+{
     $text ??= ''; 
         
     global $language,$defaultlanguage;
-    $asdefaultlanguage=$defaultlanguage;
-    if (!isset($asdefaultlanguage))
-        $asdefaultlanguage='en';
-    
+
+    $asdefaultlanguage = $defaultlanguage;
+
+    if (!isset($asdefaultlanguage)) {
+        $asdefaultlanguage = 'en';
+    }
+
     # Split
-    $s=explode("~",$text);
+    $s = explode("~",$text);
 
     # Not a translatable field?
-    if (count($s)<2) {return $text;}
+    if (count($s) < 2) {
+        return $text;
+    }
 
     # Find the current language and return it
-    $default="";
-    for ($n=1;$n<count($s);$n++)
-        {
+    $default = "";
+    for ($n = 1; $n < count($s); $n++) {
         # Not a translated string, return as-is
-        if (substr($s[$n],2,1)!=":" && substr($s[$n],5,1)!=":" && substr($s[$n],0,1)!=":") {return $text;}
+        if (substr($s[$n], 2, 1) != ":" && substr($s[$n], 5, 1) != ":" && substr($s[$n], 0, 1) != ":") {
+            return $text;
+        }
         
         # Support both 2 character and 5 character language codes (for example en, en-US).
-        $p=strpos($s[$n],':');
-        $textLanguage=substr($s[$n],0,$p);
-        if (strtolower($textLanguage) == strtolower($language)) {return substr($s[$n],$p+1);}
+        $p = strpos($s[$n], ':');
+        $textLanguage = substr($s[$n], 0, $p);
+        if (strtolower($textLanguage) == strtolower($language)) {
+            return substr($s[$n], $p + 1);
+        }
         
-        if (strtolower($textLanguage) == strtolower($asdefaultlanguage) || $p==0 || $n==1) {$default=substr($s[$n],$p+1);}
-        }    
+        if (strtolower($textLanguage) == strtolower($asdefaultlanguage) || $p == 0 || $n == 1) {
+            $default = substr($s[$n], $p + 1);
+        }
+    }
     
     # Translation not found? Return default language
     # No default language entry? Then consider this a broken language string and return the string unprocessed.
-    if ($default!="") {return $default;} else {return $text;}
+    if ($default != "") {
+        return $default;
+    } else {
+        return $text;
     }
+}
 
 
 /**
@@ -81,49 +95,46 @@ function i18n_get_translated($text)
  * @return string
  */
 function i18n_get_collection_name($mixedcollection, $index="name")
-    {
+{
     global $lang;
 
     # The function handles both strings and arrays.
-    if (!is_array($mixedcollection))
-        {
+    if (!is_array($mixedcollection)) {
         $name_untranslated = $mixedcollection ?? "";
-        }
-    else
-        {
+    } else {
         $name_untranslated = $mixedcollection[$index] ?? "";
 
         # Check if it is a Smart Collection
-        if (isset($mixedcollection['savedsearch']) && ($mixedcollection['savedsearch']!=null))
-            {
+        if (isset($mixedcollection['savedsearch']) && ($mixedcollection['savedsearch'] != null)) {
             return escape($lang['smartcollection'] . ": " . $name_untranslated);
-            }
         }
+    }
 
     # Check if it is a Default Collection (n)
     $name_translated = preg_replace('/(^Default Collection)(|(\s\d+))$/', $lang["mycollection"] . '$2', $name_untranslated, -1, $translated);
-    if ($translated==1) {return escape($name_translated);}
+    if ($translated == 1) {
+        return escape($name_translated);
+    }
 
     # Check if it is a Upload YYMMDDHHMMSS
     $upload_date = preg_replace('/(^Upload)\s(\d{12})$/', '$2', $name_untranslated, -1, $translated);
-    if ($translated!=1)
+    if ($translated != 1) {
         $upload_date = preg_replace('/(^Upload)\s(\d{14})$/', '$2', $name_untranslated, -1, $translated);
-    if ($translated==1)
-        {
+    }
+
+    if ($translated == 1) {
         # Translate date into MySQL ISO format to be able to use nicedate()
-        if (strlen($upload_date)==14)
-            {
+        if (strlen($upload_date) == 14) {
             $year = substr($upload_date, 0, 4);
             $upload_date=substr($upload_date, 2);
-            }
-        else
-            {
+        } else {
             $year = substr($upload_date, 0, 2);
-            if ((int)$year > (int)date('y'))
+            if ((int)$year > (int)date('y')) {
                 $year = ((int)substr(date('Y'), 0, 2)-1) . $year;
-            else
+            } else {
                 $year = substr(date('Y'), 0, 2) . $year;
             }
+        }
         $month = substr($upload_date, 2, 2);
         $day = substr($upload_date, 4, 2);
         $hour = substr($upload_date, 6, 2);
@@ -131,17 +142,16 @@ function i18n_get_collection_name($mixedcollection, $index="name")
         $second = substr($upload_date, 10, 2);
         $date = nicedate("$year-$month-$day $hour:$minute:$second", true);
         return escape($lang['upload'] . ' ' . $date);
-        }
+    }
 
     # Check if it is a Research Request
-    if(substr($name_untranslated, 0, 9) == "Research:")
-        {
+    if (substr($name_untranslated, 0, 9) == "Research:") {
         return escape("{$lang["research"]}: " . i18n_get_translated(substr($name_untranslated,9)));
-        }
+    }
 
     # Ordinary collection - translate with i18n_get_translated
     return escape(i18n_get_translated($name_untranslated));
-    }
+}
 
 /**
  * For field names / values using the i18n syntax, return all language versions, as necessary for indexing.
@@ -360,112 +370,112 @@ function normalize_keyword ($keyword,bool $user_language = false) {
 * @param string $string Text that might have accent characters
 * @return string Filtered string with replaced "nice" characters.
 */
-function remove_accents($string) {
-
-    
-    if ( !preg_match('/[\x80-\xff]/', $string) )
+function remove_accents($string)
+{
+    if (!preg_match('/[\x80-\xff]/', $string)) {
         return $string;
+    }
 
     if (seems_utf8($string)) {
         $chars = array(
-        // Decompositions for Latin-1 Supplement
-        chr(195).chr(128) => 'A', chr(195).chr(129) => 'A',
-        chr(195).chr(130) => 'A', chr(195).chr(131) => 'A',
-        chr(195).chr(132) => 'A', chr(195).chr(133) => 'A',
-        chr(195).chr(135) => 'C', chr(195).chr(136) => 'E',
-        chr(195).chr(137) => 'E', chr(195).chr(138) => 'E',
-        chr(195).chr(139) => 'E', chr(195).chr(140) => 'I',
-        chr(195).chr(141) => 'I', chr(195).chr(142) => 'I',
-        chr(195).chr(143) => 'I', chr(195).chr(145) => 'N',
-        chr(195).chr(146) => 'O', chr(195).chr(147) => 'O',
-        chr(195).chr(148) => 'O', chr(195).chr(149) => 'O',
-        chr(195).chr(150) => 'O', chr(195).chr(153) => 'U',
-        chr(195).chr(154) => 'U', chr(195).chr(155) => 'U',
-        chr(195).chr(156) => 'U', chr(195).chr(157) => 'Y',
-        chr(195).chr(159) => 's', chr(195).chr(160) => 'a',
-        chr(195).chr(161) => 'a', chr(195).chr(162) => 'a',
-        chr(195).chr(163) => 'a', chr(195).chr(164) => 'a',
-        chr(195).chr(165) => 'a', chr(195).chr(167) => 'c',
-        chr(195).chr(168) => 'e', chr(195).chr(169) => 'e',
-        chr(195).chr(170) => 'e', chr(195).chr(171) => 'e',
-        chr(195).chr(172) => 'i', chr(195).chr(173) => 'i',
-        chr(195).chr(174) => 'i', chr(195).chr(175) => 'i',
-        chr(195).chr(177) => 'n', chr(195).chr(178) => 'o',
-        chr(195).chr(179) => 'o', chr(195).chr(180) => 'o',
-        chr(195).chr(181) => 'o', chr(195).chr(182) => 'o',
-        chr(195).chr(182) => 'o', chr(195).chr(185) => 'u',
-        chr(195).chr(186) => 'u', chr(195).chr(187) => 'u',
-        chr(195).chr(188) => 'u', chr(195).chr(189) => 'y',
-        chr(195).chr(191) => 'y',
-        // Decompositions for Latin Extended-A
-        chr(196).chr(128) => 'A', chr(196).chr(129) => 'a',
-        chr(196).chr(130) => 'A', chr(196).chr(131) => 'a',
-        chr(196).chr(132) => 'A', chr(196).chr(133) => 'a',
-        chr(196).chr(134) => 'C', chr(196).chr(135) => 'c',
-        chr(196).chr(136) => 'C', chr(196).chr(137) => 'c',
-        chr(196).chr(138) => 'C', chr(196).chr(139) => 'c',
-        chr(196).chr(140) => 'C', chr(196).chr(141) => 'c',
-        chr(196).chr(142) => 'D', chr(196).chr(143) => 'd',
-        chr(196).chr(144) => 'D', chr(196).chr(145) => 'd',
-        chr(196).chr(146) => 'E', chr(196).chr(147) => 'e',
-        chr(196).chr(148) => 'E', chr(196).chr(149) => 'e',
-        chr(196).chr(150) => 'E', chr(196).chr(151) => 'e',
-        chr(196).chr(152) => 'E', chr(196).chr(153) => 'e',
-        chr(196).chr(154) => 'E', chr(196).chr(155) => 'e',
-        chr(196).chr(156) => 'G', chr(196).chr(157) => 'g',
-        chr(196).chr(158) => 'G', chr(196).chr(159) => 'g',
-        chr(196).chr(160) => 'G', chr(196).chr(161) => 'g',
-        chr(196).chr(162) => 'G', chr(196).chr(163) => 'g',
-        chr(196).chr(164) => 'H', chr(196).chr(165) => 'h',
-        chr(196).chr(166) => 'H', chr(196).chr(167) => 'h',
-        chr(196).chr(168) => 'I', chr(196).chr(169) => 'i',
-        chr(196).chr(170) => 'I', chr(196).chr(171) => 'i',
-        chr(196).chr(172) => 'I', chr(196).chr(173) => 'i',
-        chr(196).chr(174) => 'I', chr(196).chr(175) => 'i',
-        chr(196).chr(176) => 'I', chr(196).chr(177) => 'i',
-        chr(196).chr(178) => 'IJ',chr(196).chr(179) => 'ij',
-        chr(196).chr(180) => 'J', chr(196).chr(181) => 'j',
-        chr(196).chr(182) => 'K', chr(196).chr(183) => 'k',
-        chr(196).chr(184) => 'k', chr(196).chr(185) => 'L',
-        chr(196).chr(186) => 'l', chr(196).chr(187) => 'L',
-        chr(196).chr(188) => 'l', chr(196).chr(189) => 'L',
-        chr(196).chr(190) => 'l', chr(196).chr(191) => 'L',
-        chr(197).chr(128) => 'l', chr(197).chr(129) => 'L',
-        chr(197).chr(130) => 'l', chr(197).chr(131) => 'N',
-        chr(197).chr(132) => 'n', chr(197).chr(133) => 'N',
-        chr(197).chr(134) => 'n', chr(197).chr(135) => 'N',
-        chr(197).chr(136) => 'n', chr(197).chr(137) => 'N',
-        chr(197).chr(138) => 'n', chr(197).chr(139) => 'N',
-        chr(197).chr(140) => 'O', chr(197).chr(141) => 'o',
-        chr(197).chr(142) => 'O', chr(197).chr(143) => 'o',
-        chr(197).chr(144) => 'O', chr(197).chr(145) => 'o',     
-        chr(197).chr(146) => 'OE',chr(197).chr(147) => 'oe',
-        chr(197).chr(148) => 'R',chr(197).chr(149) => 'r',
-        chr(197).chr(150) => 'R',chr(197).chr(151) => 'r',
-        chr(197).chr(152) => 'R',chr(197).chr(153) => 'r',
-        chr(197).chr(154) => 'S',chr(197).chr(155) => 's',
-        chr(197).chr(156) => 'S',chr(197).chr(157) => 's',
-        chr(197).chr(158) => 'S',chr(197).chr(159) => 's',
-        chr(197).chr(160) => 'S', chr(197).chr(161) => 's',
-        chr(197).chr(162) => 'T', chr(197).chr(163) => 't',
-        chr(197).chr(164) => 'T', chr(197).chr(165) => 't',
-        chr(197).chr(166) => 'T', chr(197).chr(167) => 't',
-        chr(197).chr(168) => 'U', chr(197).chr(169) => 'u',
-        chr(197).chr(170) => 'U', chr(197).chr(171) => 'u',
-        chr(197).chr(172) => 'U', chr(197).chr(173) => 'u',
-        chr(197).chr(174) => 'U', chr(197).chr(175) => 'u',
-        chr(197).chr(176) => 'U', chr(197).chr(177) => 'u',
-        chr(197).chr(178) => 'U', chr(197).chr(179) => 'u',
-        chr(197).chr(180) => 'W', chr(197).chr(181) => 'w',
-        chr(197).chr(182) => 'Y', chr(197).chr(183) => 'y',
-        chr(197).chr(184) => 'Y', chr(197).chr(185) => 'Z',
-        chr(197).chr(186) => 'z', chr(197).chr(187) => 'Z',
-        chr(197).chr(188) => 'z', chr(197).chr(189) => 'Z',
-        chr(197).chr(190) => 'z', chr(197).chr(191) => 's',
-        // Euro Sign
-        chr(226).chr(130).chr(172) => 'E',
-        // GBP (Pound) Sign
-        chr(194).chr(163) => '');
+            // Decompositions for Latin-1 Supplement
+            chr(195).chr(128) => 'A', chr(195).chr(129) => 'A',
+            chr(195).chr(130) => 'A', chr(195).chr(131) => 'A',
+            chr(195).chr(132) => 'A', chr(195).chr(133) => 'A',
+            chr(195).chr(135) => 'C', chr(195).chr(136) => 'E',
+            chr(195).chr(137) => 'E', chr(195).chr(138) => 'E',
+            chr(195).chr(139) => 'E', chr(195).chr(140) => 'I',
+            chr(195).chr(141) => 'I', chr(195).chr(142) => 'I',
+            chr(195).chr(143) => 'I', chr(195).chr(145) => 'N',
+            chr(195).chr(146) => 'O', chr(195).chr(147) => 'O',
+            chr(195).chr(148) => 'O', chr(195).chr(149) => 'O',
+            chr(195).chr(150) => 'O', chr(195).chr(153) => 'U',
+            chr(195).chr(154) => 'U', chr(195).chr(155) => 'U',
+            chr(195).chr(156) => 'U', chr(195).chr(157) => 'Y',
+            chr(195).chr(159) => 's', chr(195).chr(160) => 'a',
+            chr(195).chr(161) => 'a', chr(195).chr(162) => 'a',
+            chr(195).chr(163) => 'a', chr(195).chr(164) => 'a',
+            chr(195).chr(165) => 'a', chr(195).chr(167) => 'c',
+            chr(195).chr(168) => 'e', chr(195).chr(169) => 'e',
+            chr(195).chr(170) => 'e', chr(195).chr(171) => 'e',
+            chr(195).chr(172) => 'i', chr(195).chr(173) => 'i',
+            chr(195).chr(174) => 'i', chr(195).chr(175) => 'i',
+            chr(195).chr(177) => 'n', chr(195).chr(178) => 'o',
+            chr(195).chr(179) => 'o', chr(195).chr(180) => 'o',
+            chr(195).chr(181) => 'o', chr(195).chr(182) => 'o',
+            chr(195).chr(182) => 'o', chr(195).chr(185) => 'u',
+            chr(195).chr(186) => 'u', chr(195).chr(187) => 'u',
+            chr(195).chr(188) => 'u', chr(195).chr(189) => 'y',
+            chr(195).chr(191) => 'y',
+            // Decompositions for Latin Extended-A
+            chr(196).chr(128) => 'A', chr(196).chr(129) => 'a',
+            chr(196).chr(130) => 'A', chr(196).chr(131) => 'a',
+            chr(196).chr(132) => 'A', chr(196).chr(133) => 'a',
+            chr(196).chr(134) => 'C', chr(196).chr(135) => 'c',
+            chr(196).chr(136) => 'C', chr(196).chr(137) => 'c',
+            chr(196).chr(138) => 'C', chr(196).chr(139) => 'c',
+            chr(196).chr(140) => 'C', chr(196).chr(141) => 'c',
+            chr(196).chr(142) => 'D', chr(196).chr(143) => 'd',
+            chr(196).chr(144) => 'D', chr(196).chr(145) => 'd',
+            chr(196).chr(146) => 'E', chr(196).chr(147) => 'e',
+            chr(196).chr(148) => 'E', chr(196).chr(149) => 'e',
+            chr(196).chr(150) => 'E', chr(196).chr(151) => 'e',
+            chr(196).chr(152) => 'E', chr(196).chr(153) => 'e',
+            chr(196).chr(154) => 'E', chr(196).chr(155) => 'e',
+            chr(196).chr(156) => 'G', chr(196).chr(157) => 'g',
+            chr(196).chr(158) => 'G', chr(196).chr(159) => 'g',
+            chr(196).chr(160) => 'G', chr(196).chr(161) => 'g',
+            chr(196).chr(162) => 'G', chr(196).chr(163) => 'g',
+            chr(196).chr(164) => 'H', chr(196).chr(165) => 'h',
+            chr(196).chr(166) => 'H', chr(196).chr(167) => 'h',
+            chr(196).chr(168) => 'I', chr(196).chr(169) => 'i',
+            chr(196).chr(170) => 'I', chr(196).chr(171) => 'i',
+            chr(196).chr(172) => 'I', chr(196).chr(173) => 'i',
+            chr(196).chr(174) => 'I', chr(196).chr(175) => 'i',
+            chr(196).chr(176) => 'I', chr(196).chr(177) => 'i',
+            chr(196).chr(178) => 'IJ',chr(196).chr(179) => 'ij',
+            chr(196).chr(180) => 'J', chr(196).chr(181) => 'j',
+            chr(196).chr(182) => 'K', chr(196).chr(183) => 'k',
+            chr(196).chr(184) => 'k', chr(196).chr(185) => 'L',
+            chr(196).chr(186) => 'l', chr(196).chr(187) => 'L',
+            chr(196).chr(188) => 'l', chr(196).chr(189) => 'L',
+            chr(196).chr(190) => 'l', chr(196).chr(191) => 'L',
+            chr(197).chr(128) => 'l', chr(197).chr(129) => 'L',
+            chr(197).chr(130) => 'l', chr(197).chr(131) => 'N',
+            chr(197).chr(132) => 'n', chr(197).chr(133) => 'N',
+            chr(197).chr(134) => 'n', chr(197).chr(135) => 'N',
+            chr(197).chr(136) => 'n', chr(197).chr(137) => 'N',
+            chr(197).chr(138) => 'n', chr(197).chr(139) => 'N',
+            chr(197).chr(140) => 'O', chr(197).chr(141) => 'o',
+            chr(197).chr(142) => 'O', chr(197).chr(143) => 'o',
+            chr(197).chr(144) => 'O', chr(197).chr(145) => 'o',     
+            chr(197).chr(146) => 'OE',chr(197).chr(147) => 'oe',
+            chr(197).chr(148) => 'R',chr(197).chr(149) => 'r',
+            chr(197).chr(150) => 'R',chr(197).chr(151) => 'r',
+            chr(197).chr(152) => 'R',chr(197).chr(153) => 'r',
+            chr(197).chr(154) => 'S',chr(197).chr(155) => 's',
+            chr(197).chr(156) => 'S',chr(197).chr(157) => 's',
+            chr(197).chr(158) => 'S',chr(197).chr(159) => 's',
+            chr(197).chr(160) => 'S', chr(197).chr(161) => 's',
+            chr(197).chr(162) => 'T', chr(197).chr(163) => 't',
+            chr(197).chr(164) => 'T', chr(197).chr(165) => 't',
+            chr(197).chr(166) => 'T', chr(197).chr(167) => 't',
+            chr(197).chr(168) => 'U', chr(197).chr(169) => 'u',
+            chr(197).chr(170) => 'U', chr(197).chr(171) => 'u',
+            chr(197).chr(172) => 'U', chr(197).chr(173) => 'u',
+            chr(197).chr(174) => 'U', chr(197).chr(175) => 'u',
+            chr(197).chr(176) => 'U', chr(197).chr(177) => 'u',
+            chr(197).chr(178) => 'U', chr(197).chr(179) => 'u',
+            chr(197).chr(180) => 'W', chr(197).chr(181) => 'w',
+            chr(197).chr(182) => 'Y', chr(197).chr(183) => 'y',
+            chr(197).chr(184) => 'Y', chr(197).chr(185) => 'Z',
+            chr(197).chr(186) => 'z', chr(197).chr(187) => 'Z',
+            chr(197).chr(188) => 'z', chr(197).chr(189) => 'Z',
+            chr(197).chr(190) => 'z', chr(197).chr(191) => 's',
+            // Euro Sign
+            chr(226).chr(130).chr(172) => 'E',
+            // GBP (Pound) Sign
+            chr(194).chr(163) => '');
 
         $string = strtr($string, $chars);
     } else {
@@ -499,20 +509,33 @@ function remove_accents($string) {
  * @param  string $str
  * @return boolean True if it's possibly UTF8
  */
-function seems_utf8($str) {
+function seems_utf8($str)
+{
     $length = strlen($str);
-    for ($i=0; $i < $length; $i++) {
+
+    for ($i = 0; $i < $length; $i++) {
         $c = ord($str[$i]);
-        if ($c < 0x80) $n = 0; # 0bbbbbbb
-        elseif (($c & 0xE0) == 0xC0) $n=1; # 110bbbbb
-        elseif (($c & 0xF0) == 0xE0) $n=2; # 1110bbbb
-        elseif (($c & 0xF8) == 0xF0) $n=3; # 11110bbb
-        elseif (($c & 0xFC) == 0xF8) $n=4; # 111110bb
-        elseif (($c & 0xFE) == 0xFC) $n=5; # 1111110b
-        else return false; # Does not match any model
-        for ($j=0; $j<$n; $j++) { # n bytes matching 10bbbbbb follow ?
-            if ((++$i == $length) || ((ord($str[$i]) & 0xC0) != 0x80))
+
+        if ($c < 0x80) {
+            $n = 0; # 0bbbbbbb
+        } elseif (($c & 0xE0) == 0xC0) {
+            $n = 1; # 110bbbbb
+        } elseif (($c & 0xF0) == 0xE0) {
+            $n = 2; # 1110bbbb
+        } elseif (($c & 0xF8) == 0xF0) {
+            $n = 3; # 11110bbb
+        } elseif (($c & 0xFC) == 0xF8) {
+            $n = 4; # 111110bb
+        } elseif (($c & 0xFE) == 0xFC) {
+            $n = 5; # 1111110b
+        } else {
+            return false; # Does not match any model
+        }
+
+        for ($j = 0; $j < $n; $j++) { # n bytes matching 10bbbbbb follow ?
+            if ((++$i == $length) || ((ord($str[$i]) & 0xC0) != 0x80)) {
                 return false;
+            }
         }
     }
     return true;
@@ -527,52 +550,56 @@ function seems_utf8($str) {
  * @param  boolean $strict_mode
  * @return string The language string the user may prefer
  */
-function http_get_preferred_language($strict_mode=false)
-    {
+function http_get_preferred_language($strict_mode = false)
+{
     global $languages;
 
-    if (empty($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+    if (empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
         return null;
+    }
 
-    $accepted_languages=preg_split('/,\s*/',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    $current_lang=false;
-    $current_quality=0;
+    $accepted_languages = preg_split('/,\s*/', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    $current_lang = false;
+    $current_quality = 0;
     $language_map = array();
-    foreach ($languages as $key => $value)
+
+    foreach ($languages as $key => $value) {
         $language_map[strtolower($key)] = $key;
+    }
 
-    foreach ($accepted_languages as $accepted_language)
-        {
-        $res=preg_match('/^([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;\s*q=(0(?:\.[0-9]{1,3})?|1(?:\.0{1,3})?))?$/i',$accepted_language,$matches);
-        if (!$res)
+    foreach ($accepted_languages as $accepted_language) {
+        $res = preg_match('/^([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;\s*q=(0(?:\.[0-9]{1,3})?|1(?:\.0{1,3})?))?$/i', $accepted_language, $matches);
+
+        if (!$res) {
             continue;
-
-        $lang_code=explode('-',$matches[1]);
-
-        // Use specified quality, if any
-        if (isset($matches[2]))
-            $lang_quality=(float)$matches[2];
-        else
-            $lang_quality=1.0;
-
-        while (count($lang_code))
-            {
-            $short=strtolower(join('-', $lang_code));
-            if (array_key_exists($short, $language_map) && $lang_quality > $current_quality)
-                {
-                $current_lang=$language_map[$short];
-                $current_quality=$lang_quality;
-                }
-
-            if ($strict_mode)
-                break;
-
-            array_pop($lang_code);
-            }
         }
 
-        return $current_lang;
+        $lang_code = explode('-', $matches[1]);
+
+        // Use specified quality, if any
+        if (isset($matches[2])) {
+            $lang_quality = (float)$matches[2];
+        } else {
+            $lang_quality = 1.0;
+        }
+
+        while (count($lang_code)) {
+            $short = strtolower(join('-', $lang_code));
+            if (array_key_exists($short, $language_map) && $lang_quality > $current_quality) {
+                $current_lang = $language_map[$short];
+                $current_quality = $lang_quality;
+            }
+
+            if ($strict_mode) {
+                break;
+            }
+
+            array_pop($lang_code);
+        }
     }
+
+    return $current_lang;
+}
 
 /**
  * Set the user's current language based on get/post/cookie values as appropriate.

@@ -36,7 +36,7 @@ jQuery(document).ready(function() {
                     jQuery('.prevLink').click();
                     break;
                 }
-                if (<?php if ($keyboard_navigation_pages_use_alt) echo "modAlt&&"; ?>(jQuery('.prevPageLink').length > 0)) {
+                if (<?php if ($keyboard_navigation_pages_use_alt) {echo "modAlt&&";} ?>(jQuery('.prevPageLink').length > 0)) {
                     jQuery('.prevPageLink').click();
                     break;
                 }
@@ -46,7 +46,7 @@ jQuery(document).ready(function() {
                     jQuery('.nextLink').click();
                     break;
                 }
-                if (<?php if ($keyboard_navigation_pages_use_alt) echo "modAlt&&"; ?>(jQuery('.nextPageLink').length > 0)) {
+                if (<?php if ($keyboard_navigation_pages_use_alt) {echo "modAlt&&";} ?>(jQuery('.nextPageLink').length > 0)) {
                     jQuery('.nextPageLink').click();
                     break;
                 } 

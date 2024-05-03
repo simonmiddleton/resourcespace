@@ -1086,7 +1086,9 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
                 }
             else
                 {
-                if (substr($keywords[$n],0,19)=="collectionkeywords:") $keywords[$n]=substr($keywords[$n],19);
+                if (substr($keywords[$n], 0, 19) == "collectionkeywords:") {
+                    $keywords[$n] = substr($keywords[$n], 19);
+                }
                 # Support field specific matching - discard the field identifier as not appropriate for collection searches.
                 if (strpos($keywords[$n],":")!==false)
                     {
@@ -2692,9 +2694,9 @@ function add_saved_search_items($collection, $search = "", $restypes = "", $arch
     if (is_array($results["data"]))
         {       
         $modifyNotAdded = hook('modifynotaddedsearchitems', '', array($results["data"], $resourcesnotadded));
-        if (is_array($modifyNotAdded))
+        if (is_array($modifyNotAdded)) {
             $resourcesnotadded = $modifyNotAdded;
-
+        }
         $n = 0;
         foreach($results["data"] as $result)
             {
@@ -7052,7 +7054,9 @@ function reorder_all_featured_collections_with_parent(?int $parent): array
         array_merge(['i', COLLECTION_TYPE_FEATURED], $sql_where_parent->parameters)
     );
 
-    if(!$GLOBALS['allow_fc_reorder'])$fcs_at_depth = array_map('set_order_by_to_zero', $fcs_at_depth);
+    if (!$GLOBALS['allow_fc_reorder']) {
+        $fcs_at_depth = array_map('set_order_by_to_zero', $fcs_at_depth);
+    }
     usort($fcs_at_depth, 'order_featured_collections');
     $new_fcs_order = array_column($fcs_at_depth, 'ref');
     sql_reorder_records('collection', $new_fcs_order);
