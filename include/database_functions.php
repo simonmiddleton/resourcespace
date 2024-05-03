@@ -50,7 +50,6 @@ function errorhandler($errno, $errstr, $errfile, $errline)
     {
     global $baseurl, $pagename, $show_report_bug_link, $show_error_messages,$show_detailed_errors, $use_error_exception,$log_error_messages_url, $username, $plugins;
 
-    // $suppress = !error_reporting() || !($errno & $GLOBALS["config_error_reporting"]);
     $suppress = !(error_reporting() && ($errno & $GLOBALS["config_error_reporting"]));
 
     $error_note = "Sorry, an error has occurred. ";
