@@ -63,8 +63,9 @@ if (getval("execute","")!="" && enforcePostRequest(false))
     }
 else
     {
-    if (!$createTableStructure && !$createIndices && !$createData)
+    if (!$createTableStructure && !$createIndices && !$createData) {
         die('Current configuration does nothing. Please alter dbstruct_create.php to your needs.');
+    }
     ?>
     <p>This tool is for ResourceSpace developers only. It (re)creates the database structures defined in the 'dbstruct' folder using the current database as a master. Do not run this unless you are sure what it does. Do not commit the changed dbstruct files back to Subversion unless you intend to alter the database structure for all installations.</p>
     <?php
@@ -80,25 +81,28 @@ else
     }
 
 function printArray($label, $show, $array)
-    {
-    if (!$show)
+{
+    if (!$show) {
         return;
-    echo '<p><b>'.$label.':</b> ';
-    if (count($array)==0)
-        {
+    }
+
+    echo '<p><b>' . $label . ':</b> ';
+
+    if (count($array) == 0) {
         echo 'for all tables</p>';
         return;
-        }
-
-    $first=true;
-    foreach ($array as $item)
-        {
-        if ($first)
-            $first=false;
-        else
-            echo ', ';
-        echo $item;
-        }
-    echo '</p>';
     }
+
+    $first = true;
+    foreach ($array as $item) {
+        if ($first) {
+            $first = false;
+        } else {
+            echo ', ';
+        }
+        echo $item;
+    }
+    
+    echo '</p>';
+}
 ?>

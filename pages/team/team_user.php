@@ -236,12 +236,13 @@ include "../../include/header.php";
     {
         global $baseurl, $group, $order_by, $find, $lang;
 
-        if ($order_by == $orderName)
+        if ($order_by == $orderName) {
             $image = '<span class="ASC"></span>';
-        elseif ($order_by == $orderName . ' desc')
+        } elseif ($order_by == $orderName . ' desc') {
             $image = '<span class="DESC"></span>';
-        else
+        } else {
             $image = '';
+        }
 
         $column_header_url = generateURL(
             $baseurl ."/pages/team/team_user.php",
@@ -260,12 +261,15 @@ include "../../include/header.php";
     <tr class="ListviewTitleStyle">
     <?php
         addColumnHeader('u.username', 'username');
-        if (!hook("replacefullnameheader"))
+        if (!hook("replacefullnameheader")) {
             addColumnHeader('u.fullname', 'fullname');
-        if (!hook("replacegroupnameheader"))
+        }
+        if (!hook("replacegroupnameheader")) {
             addColumnHeader('g.name', 'group');
-        if (!hook("replaceemailheader"))
+        }
+        if (!hook("replaceemailheader")) {
             addColumnHeader('email', 'email');
+        }
         addColumnHeader('created', 'created');
         addColumnHeader('approved', 'status');
         addColumnHeader('last_active', 'lastactive');

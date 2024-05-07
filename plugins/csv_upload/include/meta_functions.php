@@ -14,7 +14,9 @@ function meta_get_map()     // returns array of [resource_type][table][attribute
         $arr_fieldrestypes = explode(",",(string)$field['resource_types']);
         foreach($arr_fieldrestypes as $fieldrestype)
             {
-            if (!isset($meta[$fieldrestype])) $meta[$fieldrestype]=[];      // make meta[<resource_type>] if does not exist         
+            if (!isset($meta[$fieldrestype])) {
+                $meta[$fieldrestype] = []; // make meta[<resource_type>] if does not exist    
+            }     
             $meta[$fieldrestype][$field['name']]['remote_ref']=$field['ref'];
             $meta[$fieldrestype][$field['name']]['nicename']=$field['title'];   
             $meta[$fieldrestype][$field['name']]['required']=$field['required'];        
@@ -28,8 +30,12 @@ function meta_get_map()     // returns array of [resource_type][table][attribute
     {
         foreach ($columns as $column)   
         {
-            if (!isset($meta[$resource_type])) $meta[$resource_type]=array();
-            if (isset($meta[$resource_type][$column['name']]) || isset($meta[0][$column['name']])) continue;        // important, we do not want to override an existing meta field defined in resource_field_type
+            if (!isset($meta[$resource_type])) {
+                $meta[$resource_type] = array();
+            }
+            if (isset($meta[$resource_type][$column['name']]) || isset($meta[0][$column['name']])) {
+                continue; // important, we do not want to override an existing meta field defined in resource_field_type
+            }
             $meta[$resource_type][$column['name']]=array();
             $meta[$resource_type][$column['name']]['remote_table']="resource";          
             $meta[$resource_type][$column['name']]['remote_ref']=null;      // not required as mapping to resource table

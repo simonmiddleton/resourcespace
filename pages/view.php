@@ -1462,7 +1462,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                 ?>
                 <div id="Panel1" class="ViewPanel">
                     <div id="Titles1" class="ViewPanelTitles">
-                        <div class="Title Selected" panel="Metadata"><?php if (!hook("customdetailstitle")) echo escape($lang["resourcedetails"]); ?></div>
+                        <div class="Title Selected" panel="Metadata"><?php if (!hook("customdetailstitle")) {echo escape($lang["resourcedetails"]);} ?></div>
                     </div>
                 </div>
                 <?php include "view_metadata.php";

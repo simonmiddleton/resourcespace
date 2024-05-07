@@ -178,10 +178,11 @@ XML;
             else {
                 $summary .= $lang['doi_not_successfully_registered'];
             }
-            if ($key != 'xml')
+            if ($key != 'xml') {
                 $summary .= ': ' . escape($meta[$key]);
-            else
+            } else {
                 $summary .= '.';
+            }
         }
 
         global $doi_err_cache;

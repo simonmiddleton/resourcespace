@@ -149,7 +149,9 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
             if (!file_exists($imgpath)){$imgpath=get_resource_path($ref,true,"scr",false,"jpg",-1,$page,$use_watermark);}
             if (!file_exists($imgpath)){$imgpath=get_resource_path($ref,true,"",false,"jpg",-1,$page,$use_watermark);}
             if (!file_exists($imgpath)){$imgpath=get_resource_path($ref,true,"pre",false,"jpg",-1,$page,$use_watermark);}
-            if (!file_exists($imgpath))continue;
+            if (!file_exists($imgpath)) {
+                continue;
+            }
             $imagesize=getimagesize($imgpath);
             
             $whratio=$imagesize[0]/$imagesize[1];

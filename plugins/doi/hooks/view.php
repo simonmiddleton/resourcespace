@@ -94,14 +94,15 @@
                         $summary .= "[$key] ";
                         if ($value) {
                             $summary .= $lang['doi_successfully_registered'];
-                        }
-                        else {
+                        } else {
                             $summary .= $lang['doi_not_successfully_registered'];
                         }
-                        if ($key != 'xml')
+
+                        if ($key != 'xml') {
                             $summary .= ': ' . escape($meta[$key]);
-                        else
+                        } else {
                             $summary .= '.';
+                        }
                         $summary .= '\n';
                     }
 
@@ -164,7 +165,9 @@
                 $url = '';
                 $xml = '';
 
-                if ($doi && !doi_is_ours($doi)) return true;
+                if ($doi && !doi_is_ours($doi)) {
+                    return true;
+                }
 
                 $meta = doi_construct_metadata($resource, $fields);
                 $doi = $meta['doi'];
@@ -209,7 +212,7 @@ HTML;
                     <div class="RecordPanel dark" style="background-color: #F0F0E8">
                         <div class="Title">DOI</div>
                         <div id="doiMetadata">
-                            <?php if($edit_show_save_clear_buttons_at_top) echo $form;?>
+                            <?php if ($edit_show_save_clear_buttons_at_top) {echo $form;} ?>
                             <br>
                             <br>
                             <label for="doiField">DOI </label>

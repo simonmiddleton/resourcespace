@@ -50,7 +50,9 @@ if (getval("save","")!="")
             for ($i=1; $i<=1000; $i++)      # check if there are sub values, i.e. custom<n>_<n> form fields, for example a bunch of checkboxes if custom type is set to "5"
                 {
                 $custom_field_sub_value = getval("custom" . $n . "_" . $i, "");
-                if ($custom_field_sub_value == "") continue;
+                if ($custom_field_sub_value == "") {
+                    continue;
+                }
                 $custom_field_sub_value_list .= ($custom_field_sub_value_list == "" ? "" : ", ") . $custom_field_sub_value;     # we have found a sub value so append to the list
                 }
 
@@ -180,19 +182,17 @@ if (isset($custom_registration_fields))
         # Support different question types for the custom fields.
         if (isset($custom_registration_types[$custom[$n]])) {$type=$custom_registration_types[$custom[$n]];}
 
-        if ($type==4)
-            {
+        if ($type == 4) {
             # HTML type - just output the HTML.
             $html = $custom_registration_html[$custom[$n]];
-            if (is_string($html))
+            if (is_string($html)) {
                 echo $html;
-            elseif (isset($html[$language]))
+            } elseif (isset($html[$language])) {
                 echo $html[$language];
-            elseif (isset($html[$defaultlanguage]))
+            } elseif (isset($html[$defaultlanguage])) {
                 echo $html[$defaultlanguage];
             }
-        else
-            {
+        } else {
             ?>
             <div class="Question" id="Question<?php echo $n?>">
             <label for="custom<?php echo $n?>"><?php echo escape(i18n_get_translated($custom[$n]))?>

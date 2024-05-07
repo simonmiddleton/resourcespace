@@ -1142,16 +1142,21 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
         // Build the available sort sequence entries, starting with the default derived above
         $orderFields = array($default_sort_order => $rel);
-        if ($popularity_sort)
+        if ($popularity_sort) {
             $orderFields['popularity'] = $lang['popularity'];
-        if ($orderbyrating)
+        }
+        if ($orderbyrating) {
             $orderFields['rating'] = $lang['rating'];
-        if ($date_column)
+        }
+        if ($date_column) {
             $orderFields['date'] = $lang['date'];
-        if ($colour_sort)
+        }
+        if ($colour_sort) {
             $orderFields['colour'] = $lang['colour'];
-        if ($order_by_resource_id)
+        }
+        if ($order_by_resource_id) {
             $orderFields['resourceid'] = $lang['resourceid'];
+        }
         $orderFields['resourcetype'] = $lang['type'];
         
         $orderFields['modified'] = $lang['modified'];
@@ -1168,8 +1173,9 @@ if (!hook("replacesearchheader")) # Always show search header now.
             }
 
         $modifiedFields = hook('modifyorderfields', '', array($orderFields));
-        if ($modifiedFields)
+        if ($modifiedFields) {
             $orderFields = $modifiedFields;
+        }
 
         if (!hook('sortordercontainer') && $display != 'map')
             {

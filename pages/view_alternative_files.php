@@ -2,7 +2,9 @@
 # Alternative files listing
 $alt_access=hook("altfilesaccess");
 
-if ($access==0 || $alt_files_visible_when_restricted) $alt_access=true; # open access (not restricted)
+if ($access == 0 || $alt_files_visible_when_restricted) {
+    $alt_access = true; # open access (not restricted)
+}
 
 if ($alt_access) 
     {

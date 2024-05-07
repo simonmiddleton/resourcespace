@@ -67,12 +67,15 @@
 
                 # construct confirmation summary
                 $sum = '';
-                if ($doi_already > 0)
+                if ($doi_already > 0) {
                     $sum .= $doi_already . ' ' . $lang['doi_sum_of'] . " $total " . $lang['doi_sum_already_reg'] . '\n';
-                if ($not_yet_immutable > 0)
+                }
+                if ($not_yet_immutable > 0) {
                     $sum .= $not_yet_immutable . ' ' . $lang['doi_sum_of'] . " $total $lang[doi_sum_not_yet_archived] " . strtolower($lang['status' . $doi_archive_state]) . " $lang[doi_sum_not_yet_archived_2]" . '\n';
-                if ($no_title > 0)
+                }
+                if ($no_title > 0) {
                     $sum .= $no_title . ' ' . $lang['doi_sum_of'] . " $total " . $lang['doi_sum_no_title'] . '\n <' . escape($lang['doi_datacite_unknown_info_codes'][$doi_pref_title_fields_default]) . '>\n' . $lang['doi_sum_no_title_2'] . '\n';
+                }
                 if (count($ready_to_reg) > 0) {
                     $sum .= count($ready_to_reg) . ' ' . $lang['doi_sum_of'] . " $total " . $lang['doi_sum_ready_for_reg'] . '\n\n   ';
                     $sum .= str_replace('x', count($ready_to_reg), $lang['doi_sure_register_resource']);
@@ -86,8 +89,8 @@
                     <label>DOI</label>
 
                     <div class="Fixed">
-                        <a onclick="return confirm('<?php echo $sum; ?>')<?php if (count($ready_to_reg) == 0) echo ' && false'; ?>;"
-                            <?php if (count($ready_to_reg) > 0) echo 'href="' . $baseurl_short . 'pages/collection_edit.php?ref=' . $ref . '&registerdois=yes"'; ?>><?php echo escape($lang['doi_register_all']); ?>
+                        <a onclick="return confirm('<?php echo $sum; ?>')<?php if (count($ready_to_reg) == 0) {echo ' && false';} ?>;"
+                            <?php if (count($ready_to_reg) > 0) {echo 'href="' . $baseurl_short . 'pages/collection_edit.php?ref=' . $ref . '&registerdois=yes"';} ?>><?php echo escape($lang['doi_register_all']); ?>
                             &gt;</a>
                     </div>
                     <div class="clearerleft"></div>

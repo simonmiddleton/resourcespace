@@ -35,7 +35,6 @@ if ($month!="")
     $params[] = 'i'; $params[] = $month;
     }
 
-
 # Fetch results
 $results=ps_query("select year,month,day,sum(count) c from daily_stat where activity_type= ? and year= ? $sql group by year,month,day;", array_merge(['s', $activity_type, 'i', $year], $params));
 
@@ -87,11 +86,9 @@ else
     $rightmargin=10;
     }
 
-
 #white background
 $col=imagecolorallocate($graph,255,255,255);
 imagefilledrectangle($graph,0,0,$width,$height,$col);
-
 
 # Draw left hand axis
 
@@ -109,31 +106,23 @@ for ($n=0;$n<$max;$n+=$units)
     imagettftext($graph,9,0,$xoffset-$bbox[2]-$bbox[0]-5,$y+5,$black,$font,$n);
     }
 
-
-
 # Vertical lines
-$col=imagecolorallocate($graph,230,230,230);
-if ($month=="")
-    {
+$col = imagecolorallocate($graph, 230, 230, 230);
+if ($month == "") {
     # Yearly graph. 12 lines.
-    for ($n=0;$n<=12;$n++)
-        {
-        $x=$xoffset+($n/12*($width-$xoffset));
-        imageline($graph,$x,0,$x,$height-$margin+16,($n==0)?$black:$col);
-        }
+    for ($n = 0; $n <= 12; $n++) {
+        $x = $xoffset + ($n / 12 * ($width - $xoffset));
+        imageline($graph, $x, 0, $x, $height - $margin + 16, ($n == 0) ? $black : $col);
     }
-else
+} else {
     # Monthly graph. Max-X lines.
-    for ($n=$minx;$n<=$maxx;$n++)
-        {
-        $factor=($n-$minx)/($maxx-$minx);
-        $x=$xoffset+($factor*($width-$xoffset-$rightmargin));
-        imageline($graph,$x,0,$x,$height-$margin,($n==$minx)?$black:$col);
-        }
+    for ($n = $minx; $n <= $maxx; $n++) {
+        $factor = ($n - $minx) / ($maxx - $minx);
+        $x = $xoffset + ($factor * ($width - $xoffset - $rightmargin));
+        imageline($graph, $x, 0, $x, $height - $margin, ($n == $minx) ? $black : $col);
+    }
+}
 
-
-
-    
 # Plot graph
 $oldx=-1;$oldy=-1;$lastplot=0;
 $thisyear=date("Y");$thismonth=date("n");$thisday=date("z");

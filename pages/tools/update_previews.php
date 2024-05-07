@@ -46,7 +46,9 @@ $ref=getval("ref",false);
 $previewbased=getval("previewbased",false);
 
 if ($collectionid == false){
-    if (!(is_numeric($ref) && $ref > 0)) $ref = 1;
+    if (!(is_numeric($ref) && $ref > 0)) {
+        $ref = 1;
+    }
     if (update_previews($ref)){
         ?>
         <img alt="" src="<?php echo get_resource_path($ref,false,"pre",false)?>">

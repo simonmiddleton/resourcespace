@@ -135,7 +135,9 @@
                                 }
                             }
                             $result .= '(CC ';
-                            foreach ($attributes as $a) $result .= strtoupper($a) . ' ';
+                            foreach ($attributes as $a) {
+                                $result .= strtoupper($a) . ' ';
+                            }
                             $result = trim($result) . " $version)";
 
                             return $result;
@@ -281,8 +283,9 @@
                     case 'schlagwort2kurzname':
                         $keywords = explode(',', preg_replace('%(, )|;|(; )%', ',', $value));
                         foreach ($keywords as $keyword) {
-                            if (doi_has_content($keyword))
+                            if (doi_has_content($keyword)) {
                                 $subjects[] = trim($keyword);
+                            }
                         }
                         break;
 

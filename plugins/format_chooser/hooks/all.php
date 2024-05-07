@@ -58,8 +58,9 @@ function HookFormat_chooserAllReplaceuseoriginal()
 
     $disabled = '';
     $submitted = getval('submitted', null);
-    if (!empty($submitted))
+    if (!empty($submitted)) {
         $disabled = ' disabled="disabled"';
+    }
 
     # Replace the existing ajax_download() with our own that disables our widgets, too
     if ($use_zip_extension)

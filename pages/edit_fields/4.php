@@ -27,20 +27,30 @@ if (
             } 
         }
     # Extract date parts taking account of BCE dates which have a leading -
-    $value=$sd[0];
-    $sd=explode("-",$value);    
-    if (substr($value,0,1)==="-")
-        {
-        if (count($sd)>=2) $dy="-".$sd[1];
-        if (count($sd)>=3) $dm=intval($sd[2]);
-        if (count($sd)>=4) $dd=intval($sd[3]);
+    $value = $sd[0];
+    $sd = explode("-",$value);    
+
+    if (substr($value, 0, 1) === "-") {
+        if (count($sd) >= 2) {
+            $dy = "-" . $sd[1];
         }
-    else 
-        {
-        if (count($sd)>=1) $dy=$sd[0];
-        if (count($sd)>=2) $dm=intval($sd[1]);
-        if (count($sd)>=3) $dd=intval($sd[2]);
-        }    
+        if (count($sd) >= 3) {
+            $dm = intval($sd[2]);
+        }
+        if (count($sd) >= 4) {
+            $dd = intval($sd[3]);
+        }
+    } else {
+        if (count($sd) >= 1) {
+            $dy = $sd[0];
+        }
+        if (count($sd) >= 2) {
+            $dm = intval($sd[1]);
+        }
+        if (count($sd) >= 3) {
+            $dd = intval($sd[2]);
+        }
+    }    
 }
 if($date_d_m_y){  
 ?>

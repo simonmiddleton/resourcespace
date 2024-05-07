@@ -172,7 +172,12 @@ debug(sprintf('$fields_tab_names = %s', json_encode($fields_tab_names)));
     #  -----------------------------  Draw tabs ---------------------------
     $tabname="";
     $tabcount=0;
-    $tmp = hook("tweakfielddisp", "", array($ref, $fields)); if($tmp) $fields = $tmp;
+
+    $tmp = hook("tweakfielddisp", "", array($ref, $fields));
+    if ($tmp) {
+        $fields = $tmp;
+    }
+    
     if((isset($fields_tab_names) && !empty($fields_tab_names)) && count($fields) > 0)
         {
         ?>

@@ -8,16 +8,18 @@ function getDefaultOutputFormat($inputFormat = null)
     {
     global $format_chooser_default_output_format, $format_chooser_output_formats;
 
-    if (!empty($format_chooser_default_output_format))
+    if (!empty($format_chooser_default_output_format)) {
         return $format_chooser_default_output_format;
+    }
 
     $inputFormat = strtoupper((string) $inputFormat);
 
     # Use resource format by default if none given
     if (empty($inputFormat) || !in_array($inputFormat, $format_chooser_output_formats))
         {
-        if (in_array('JPG', $format_chooser_output_formats))
+        if (in_array('JPG', $format_chooser_output_formats)) {
             return 'JPG';
+        }
         return $format_chooser_output_formats[0];
         }
 
@@ -36,8 +38,9 @@ function supportsInputFormat($inputFormat)
  */
 function getImageFormat($size)
     {
-    if (empty($size))
+    if (empty($size)) {
         return array('width' => 0, 'height' => 0);
+    }
 
     $sizes = get_all_image_sizes();
     $found_idx = array_search($size, array_column($sizes, 'id'));
@@ -171,10 +174,11 @@ function showProfileChooser($class = '', $disabled = false)
     {
     global $format_chooser_profiles, $lang;
 
-    if (empty($format_chooser_profiles))
+    if (empty($format_chooser_profiles)) {
         return;
+    }
 
-    ?><select name="profile" id="profile" <?php if (!empty($class)) echo 'class="' . $class . '"';
+    ?><select name="profile" id="profile" <?php if (!empty($class)) {echo 'class="' . $class . '"';}
             echo $disabled ? ' disabled="disabled"' : ''; ?>>
         <option value="" selected="selected"><?php
                 echo escape($lang['format_chooser_keep_profile']); ?></option><?php
@@ -182,8 +186,9 @@ function showProfileChooser($class = '', $disabled = false)
     $index = 0;
     foreach (array_keys($format_chooser_profiles) as $name)
         {
-        if (empty($name))
+        if (empty($name)) {
             $name = $lang['format_chooser_remove_profile'];
+        }
         ?><option value="<?php echo $index++ ?>"><?php echo i18n_get_translated($name) ?></option><?php
         }
 

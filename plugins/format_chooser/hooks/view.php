@@ -21,13 +21,15 @@ function HookFormat_chooserViewReplacedownloadoptions()
     $inputFormat = $resource['file_extension'];
     $origpath = get_resource_path($ref,true,'',false,$resource['file_extension']);
 
-    if ((int) $resource["has_image"] === RESOURCE_PREVIEWS_NONE
+    if (
+        (int) $resource["has_image"] === RESOURCE_PREVIEWS_NONE
         || !$download_multisize
         || $save_as
         || !supportsInputFormat($inputFormat)
         || !file_exists($origpath)
-        )
+    ) {
         return false;
+    }
 
     $defaultFormat = getDefaultOutputFormat($inputFormat);
     $tableHeadersDrawn = false;
@@ -79,8 +81,9 @@ function HookFormat_chooserViewReplacedownloadoptions()
         ?><tr class="DownloadDBlend" id="DownloadBox<?php echo $n?>">
         <td class="DownloadFileName"><h2><?php echo $headline?></h2><p><?php
         echo $sizes[$n]["filesize"];
-        if (is_numeric($sizes[$n]["width"]))
+        if (is_numeric($sizes[$n]["width"])) {
             echo preg_replace('/^<p>/', ', ', get_size_info($sizes[$n]), 1);
+        }
 
         ?></p><td class="DownloadFileFormat"><?php echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["field-fileextension"]) ?></td><?php
 
@@ -102,8 +105,9 @@ function HookFormat_chooserViewReplacedownloadoptions()
     $closestSize = 0;
     if ($downloadCount > 0)
         {
-        if (!$tableHeadersDrawn)
+        if (!$tableHeadersDrawn) {
             show_table_headers();
+        }
 
         ?><tr class="DownloadDBlend">
         <td class="DownloadFileSizePicker"><select id="size"><?php
@@ -111,21 +115,27 @@ function HookFormat_chooserViewReplacedownloadoptions()
         $restrictedsizes = array();
 
         # Filter out all sizes that are larger than our image size, but not the closest one
-        for ($n = 0; $n < count($sizes); $n++)
-            {
-            if (intval($sizes[$n]['width']) >= intval($originalSize['width'])
-                    && intval($sizes[$n]['height']) >= intval($originalSize['height'])
-                    && ($closestSize == 0 || $closestSize > (int)$sizes[$n]['width']))
+        for ($n = 0; $n < count($sizes); $n++) {
+            if (
+                intval($sizes[$n]['width']) >= intval($originalSize['width'])
+                && intval($sizes[$n]['height']) >= intval($originalSize['height'])
+                && ($closestSize == 0 || $closestSize > (int)$sizes[$n]['width'])
+            ) {
                 $closestSize = (int)$sizes[$n]['width'];
             }
-        $all_sizes=$sizes;          
-        for ($n = 0; $n < count($all_sizes); $n++)
-            {
-            if (intval($sizes[$n]['width']) != $closestSize
-                    && intval($sizes[$n]['width']) > intval($originalSize['width'])
-                    && intval($sizes[$n]['height']) > intval($originalSize['height']))
+        }
+
+        $all_sizes = $sizes;          
+        for ($n = 0; $n < count($all_sizes); $n++) {
+            if (
+                intval($sizes[$n]['width']) != $closestSize
+                && intval($sizes[$n]['width']) > intval($originalSize['width'])
+                && intval($sizes[$n]['height']) > intval($originalSize['height'])
+            ) {
                 unset($sizes[$n]);
             }
+        }
+
         foreach ($sizes as $n => $size)
             {
             # Only add choice if allowed
