@@ -108,7 +108,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
 
         jQuery(document).ready(function ()
             {
-            <!--Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js-->
+            // Setup and define the Leaflet map with the initial view using leaflet.js and L.Control.Zoomslider.js
             var <?php echo $map_container_obj; ?>_geo_lat = <?php echo $resource['geo_lat']; ?>;
             var <?php echo $map_container_obj; ?>_geo_long = <?php echo $resource['geo_long']; ?>;
             var <?php echo $map_container_obj; ?>_zoom = <?php echo $zoom; ?>;
@@ -125,9 +125,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
                 }).setView([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], <?php echo $map_container_obj; ?>_zoom);
             <?php echo $map_container_obj; ?>.invalidateSize(); 
 
-
-
-            <!--Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js-->
+            // Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js
     
             var defaultLayer = new L.tileLayer.provider('<?php echo $map_default;?>', {
                 useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
@@ -136,7 +134,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
             }).addTo(<?php echo $map_container_obj; ?>);
             <?php echo $map_container_obj; ?>.invalidateSize(true);
 
-            <!--Set styled layer control options for basemaps and add to the Leaflet map using styledLayerControl.js-->
+            // Set styled layer control options for basemaps and add to the Leaflet map using styledLayerControl.js
             var options = {
                 container_maxHeight: "<?php echo $layer_controlheight?>px",
                 group_maxHeight: "180px",
@@ -146,27 +144,27 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
             var control = L.Control.styledLayerControl(baseMaps,options);
             <?php echo $map_container_obj; ?>.addControl(control);
 
-            <!--Show zoom history navigation bar and add to Leaflet map using Leaflet.NavBar.min.js-->
+            // Show zoom history navigation bar and add to Leaflet map using Leaflet.NavBar.min.js
             <?php if ($map_zoomnavbar && $view_mapheight >= 400)
                 { ?>
                 L.control.navbar().addTo(<?php echo $map_container_obj; ?>); <?php
                 } ?>
 
-            <!--Add a scale bar to the Leaflet map using leaflet.min.js-->
+            // Add a scale bar to the Leaflet map using leaflet.min.js
             new L.control.scale().addTo(<?php echo $map_container_obj; ?>);
 
-            <!--Add a KML overlay to the Leaflet map using leaflet-omnivore.min.js-->
+            // Add a KML overlay to the Leaflet map using leaflet-omnivore.min.js
             <?php if ($map_kml)
                 { ?>
                 omnivore.kml('<?php echo $baseurl?>/filestore/system/<?php echo $map_kml_file?>').addTo(<?php echo $map_container_obj; ?>); <?php
                 } ?>
 
-            <!--Limit geocoordinate values to six decimal places for display on marker hover-->
+            // Limit geocoordinate values to six decimal places for display on marker hover
             function georound(num) {
                 return +(Math.round(num + "e+6") + "e-6");
             }
 
-            <!--Add a marker for the resource-->
+            // Add a marker for the resource
             L.marker([<?php echo $map_container_obj; ?>_geo_lat, <?php echo $map_container_obj; ?>_geo_long], {
                 <?php
                 $maprestype = get_resource_types($resource['resource_type']);
@@ -176,7 +174,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
                 title: georound(<?php echo $map_container_obj; ?>_geo_lat) + ", " + georound(<?php echo $map_container_obj; ?>_geo_long) + " (WGS84)"
             }).addTo(<?php echo $map_container_obj; ?>);
 
-            <!--Add the resource footprint polygon to the map and pan/zoom to the polygon-->
+            // Add the resource footprint polygon to the map and pan/zoom to the polygon
             <?php if (is_numeric($map_polygon_field))
                 {
                 $polygon = leaflet_polygon_parsing($fields, false);
@@ -194,7 +192,7 @@ if ($resource['geo_lat'] != '' && $resource['geo_long'] != '')
                 }
 
             ?>
-            <!--Fix for Microsoft Edge and Internet Explorer browsers-->
+            // Fix for Microsoft Edge and Internet Explorer browsers
             <?php echo $map_container_obj; ?>.invalidateSize(true);
             });
 
