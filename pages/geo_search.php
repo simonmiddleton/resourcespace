@@ -73,17 +73,17 @@ if ($map_zoomslider)
     // Load available Leaflet basemap groups, layers, and attribute definitions.
     <?php include '../include/map_processing.php'; ?>
 
-    <!--Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js-->
+    // Define default Leaflet basemap layer using leaflet.js, leaflet.providers.js, and L.TileLayer.PouchDBCached.js
     var defaultLayer = new L.tileLayer.provider('<?php echo $map_default;?>', {
-        useCache: '<?php echo $map_default_cache;?>', <!--Use browser caching of tiles (recommended)?-->
-        detectRetina: '<?php echo $map_retina;?>', <!--Use retina high resolution map tiles?-->
+        useCache: '<?php echo $map_default_cache;?>', // Use browser caching of tiles (recommended)?
+        detectRetina: '<?php echo $map_retina;?>', // Use retina high resolution map tiles?
         attribution: default_attribute
     }).addTo(map1);
 
     // Load Leaflet basemap definitions.
     <?php include '../include/map_basemaps.php'; ?>
 
-    <!--Set styled layer control options for basemaps and add to the Leaflet map using styledLayerControl.js-->
+    // Set styled layer control options for basemaps and add to the Leaflet map using styledLayerControl.js
     var options = {
         container_maxHeight: '<?php echo $layer_controlheight; ?>px',
         group_maxHeight: '380px',
@@ -93,22 +93,22 @@ if ($map_zoomslider)
     var control = L.Control.styledLayerControl(baseMaps,options);
     map1.addControl(control);
 
-    <!--Add geocoder search bar using control.geocoder.min.js-->
+    // Add geocoder search bar using control.geocoder.min.js
     L.Control.geocoder().addTo(map1);
 
-    <!--Show zoom history navigation bar and add to Leaflet map using Leaflet.NavBar.min.js-->
+    // Show zoom history navigation bar and add to Leaflet map using Leaflet.NavBar.min.js
     <?php if ($map_zoomnavbar)
         { ?>
         L.control.navbar().addTo(map1); <?php
         } ?>
 
-    <!--Add a scale bar to the Leaflet map using leaflet.min.js-->
+    // Add a scale bar to the Leaflet map using leaflet.min.js
     new L.control.scale().addTo(map1);
 
     <?php
     hook("map_additional");
     ?>
-    <!--Add a KML overlay to the Leaflet map using leaflet-omnivore.min.js-->
+    // Add a KML overlay to the Leaflet map using leaflet-omnivore.min.js
     <?php if ($map_kml)
         { ?>
         omnivore.kml('<?php echo $baseurl_short . $map_kml_file?>').addTo(map1); <?php
@@ -144,21 +144,21 @@ if ($map_zoomslider)
             }
         }?>
 
-<!--Fix for Microsoft Edge and Internet Explorer browsers-->
+    // Fix for Microsoft Edge and Internet Explorer browsers
     map1.invalidateSize(true);
 
-    <!--Add an Area of Interest (AOI) selection box to the Leaflet map using leaflet-shades.js-->
+    // Add an Area of Interest (AOI) selection box to the Leaflet map using leaflet-shades.js
     var shades = new L.LeafletShades().addTo(map1);
 
-    <!--Get AOI coordinates-->
+    // Get AOI coordinates
     shades.on('shades:bounds-changed', function(e) {
-        <!--Get AOI box coordinates in World Geodetic System of 1984 (WGS84, EPSG:4326)-->
+        // Get AOI box coordinates in World Geodetic System of 1984 (WGS84, EPSG:4326)
         var trLat = e['bounds']['_northEast']['lat'];
         var trLon = e['bounds']['_northEast']['lng'];
         var blLat = e['bounds']['_southWest']['lat'];
         var blLon = e['bounds']['_southWest']['lng'];
 
-        <!--Create specially encoded geocoordinate search string to avoid keyword splitting-->
+        // Create specially encoded geocoordinate search string to avoid keyword splitting
         var url = "<?php echo $baseurl_short?>pages/search.php?search=!geo" + (blLat + "b" + blLon + "t" + trLat + "b" + trLon).replace(/\-/gi,'m').replace(/\./gi,'p');
         CentralSpaceLoad(url, true);
     });
