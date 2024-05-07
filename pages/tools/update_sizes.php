@@ -8,7 +8,7 @@
 include "../../include/boot.php";
 
 include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
-include "../../include/image_processing.php";
+include_once "../../include/image_processing.php";
 
 $max=ps_value("select max(ref) value from resource",array(), 0);
 $ref=getval("ref",1);
