@@ -313,8 +313,7 @@ else
         }
     }   /* end replacesitetextloader */
     
-    $plugins=[];
-    register_group_access_plugins($plugins,$usergroup);
+    $GLOBALS['plugins'] = register_group_access_plugins($usergroup,$plugins??[]);
 
 
 

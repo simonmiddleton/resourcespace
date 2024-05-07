@@ -1499,11 +1499,11 @@ function plugin_decode_complex_configs(string $b64sc)
 /**
  * Load group specific plugins and reorder plugins list
  *
- * @param  array $plugins   Enabled Plugins
  * @param  int   $usergroup Usergroup reference
- * @return void
+ * @param  array $plugins   Enabled Plugins
+ * @return array
  */
-function register_group_access_plugins(array &$plugins,int $usergroup=-1)
+function register_group_access_plugins(int $usergroup=-1,array $plugins = []): array
 {
     # Load group specific plugins and reorder plugins list
     $active_plugins = (ps_query("SELECT name,enabled_groups, config, config_json, disable_group_select FROM plugins WHERE inst_version >= 0 ORDER BY priority", array(), "plugins"));
@@ -1532,4 +1532,6 @@ function register_group_access_plugins(array &$plugins,int $usergroup=-1)
             $plugins[]=$plugin['name'];
             }
         }
+
+    return array_unique($plugins);
 }

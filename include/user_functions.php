@@ -121,7 +121,7 @@ function setup_user(array $userdata)
            $usersearchfilter, $usereditfilter, $userderestrictfilter, $hidden_collections, $userresourcedefaults,
            $userrequestmode, $request_adds_to_collection, $usercollection, $lang, $validcollection,
            $userorigin, $actions_enable, $actions_permissions, $actions_on, $usersession, $anonymous_login, $resource_created_by_filter,
-           $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION;
+           $user_dl_limit,$user_dl_days, $USER_SELECTION_COLLECTION, $plugins;
         
     # Hook to modify user permissions
     if (hook("userpermissions")){$userdata["permissions"]=hook("userpermissions");} 
@@ -262,8 +262,7 @@ function setup_user(array $userdata)
         $GLOBALS['actions_notify_states'] = $user_actions_notify_states;
         }
 
-    $plugins=[];
-    register_group_access_plugins($plugins,$usergroup);
+    $plugins = register_group_access_plugins($usergroup,$plugins);
     hook('after_setup_user');
     return true;
     }
