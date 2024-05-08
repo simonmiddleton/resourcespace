@@ -3,8 +3,9 @@
 include '../../../include/boot.php';
 include '../../../include/authenticate.php';
 
-if (!checkperm('a'))
+if (!checkperm('a')) {
     exit($lang['error-permissiondenied']);
+}
 
 // Specify the name of this plugin, the heading to display for the page.
 $plugin_name = 'format_chooser';

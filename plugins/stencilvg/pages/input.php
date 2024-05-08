@@ -43,7 +43,10 @@ while($s=strpos($svg_source,"[",$e))
     if ($e===false) {break;}
     $params[]=substr($svg_source,$s+1,$e-$s-1);
     }
-if (count($params)==0) exit("No template parameters found.");
+    
+if (count($params) == 0) {
+    exit("No template parameters found.");
+}
 
 foreach ($params as $param)
     {

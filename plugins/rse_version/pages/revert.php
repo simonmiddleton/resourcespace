@@ -204,111 +204,109 @@ include __DIR__ . "/../../../include/header.php";
 ?>
 
 <div class="BasicsBox">
-<p><a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo escape($resource) ?>" onClick="CentralSpaceLoad(this,true);return false;"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a></p>
+    <p>
+        <a href="<?php echo $baseurl_short ?>pages/log.php?ref=<?php echo escape($resource) ?>"
+            onClick="CentralSpaceLoad(this,true);return false;">
+            <?php echo LINK_CARET_BACK . escape($lang["back"]); ?>
+        </a>
+    </p>
 
-<?php if (isset($error)) { ?><div class="PageInfoMessage"><?php echo escape($error) ?></div><?php } ?>
+    <?php if (isset($error)) { ?>
+        <div class="PageInfoMessage"><?php echo escape($error) ?></div>
+    <?php } ?>
 
-<h1><?php echo escape($lang["revert"]); ?></h1>
-<p><?php echo escape($lang['revertingclicktoproceed']);?></p>
+    <h1><?php echo escape($lang["revert"]); ?></h1>
+    <p><?php echo escape($lang['revertingclicktoproceed']); ?></p>
 
-<form method=post name="rse_revert_form" id="rse_revert_form" action="<?php echo generateURL($baseurl_short . "plugins/rse_version/pages/revert.php",["ref"=>$ref]); ?> onSubmit="return CentralSpacePost(this,true);">
-<input type="hidden" name="ref" value="<?php echo escape($ref) ?>">
-<input type="hidden" name="revert_action" value="revert">
-<?php
-generateFormToken("form");
-if ($type==LOG_CODE_EDITED || $type==LOG_CODE_MULTI_EDITED || $type==LOG_CODE_NODE_REVERT)
-    if ($is_fixed_field)
-        {
-        if(count($nodes_to_add)>0)
-            {
-?><div class="Question">
-<label><?php echo escape($lang["revertingwilladd"]); ?></label>
-    <div class="Fixed">
+    <form method=post
+        name="rse_revert_form"
+        id="rse_revert_form"
+        action="<?php echo generateURL($baseurl_short . 'plugins/rse_version/pages/revert.php', ['ref' => $ref]); ?>"
+        onSubmit="return CentralSpacePost(this,true);">
+
+        <input type="hidden" name="ref" value="<?php echo escape($ref) ?>">
+        <input type="hidden" name="revert_action" value="revert">
+
         <?php
-        foreach($nodes_to_add as $node_to_add)
-            {
-            echo escape($cattree ? $nodes_by_ref[$node_to_add]["translated_path"] : $nodes_by_ref[$node_to_add]["translated_name"]);
-            ?><br/>
-            <?php
-            }
-?>    </div>
-    <div class="clearerleft"> </div>
-</div>
-<?php       }
-        if(count($nodes_to_remove)>0)
-            {
-?><div class="Question">
-    <label><?php echo escape($lang["revertingwillremove"]); ?></label>
-    <div class="Fixed">
-        <?php
-        foreach($nodes_to_remove as $node_to_remove)
-            {
-            echo escape($cattree ? $nodes_by_ref[$node_to_remove]["translated_path"] : $nodes_by_ref[$node_to_remove]["translated_name"]);
-            ?><br/>
-            <?php
-            }
-        ?>    </div>
-    <div class="clearerleft"> </div>
-</div>
-<?php       }
-        if(count($node_strings_not_found)>0)
-            {
-?><div class="Question">
-    <label><?php echo escape($lang["revertingwillignore"]); ?></label>
-    <div class="Fixed">
-        <?php
-        foreach($node_strings_not_found as $node_string_not_found)
-            {
-            echo escape($node_string_not_found);
-            ?><br/>
-            <?php
-            }
-?>  </div>
-    <div class="clearerleft"> </div>
-    </div>
-<?php       }
+        generateFormToken("form");
+
+        if ($type == LOG_CODE_EDITED || $type == LOG_CODE_MULTI_EDITED || $type == LOG_CODE_NODE_REVERT) {
+            if ($is_fixed_field) {
+                if (count($nodes_to_add) > 0) { ?>
+                    <div class="Question">
+                        <label><?php echo escape($lang["revertingwilladd"]); ?></label>
+                        <div class="Fixed">
+                            <?php foreach($nodes_to_add as $node_to_add) {
+                                echo escape($cattree ? $nodes_by_ref[$node_to_add]["translated_path"] : $nodes_by_ref[$node_to_add]["translated_name"]); ?>
+                                <br/>
+                            <?php } ?>
+                        </div>
+                    <div class="clearerleft"></div>
+                    </div>
+                <?php }
+
+                if (count($nodes_to_remove) > 0) { ?>
+                    <div class="Question">
+                        <label><?php echo escape($lang["revertingwillremove"]); ?></label>
+                        <div class="Fixed">
+                            <?php foreach($nodes_to_remove as $node_to_remove) {
+                                echo escape($cattree ? $nodes_by_ref[$node_to_remove]["translated_path"] : $nodes_by_ref[$node_to_remove]["translated_name"]); ?>
+                                <br/>
+                            <?php } ?>
+                        </div>
+                        <div class="clearerleft"></div>
+                    </div>
+                <?php }
+
+                if (count($node_strings_not_found) > 0) { ?>
+                    <div class="Question">
+                        <label><?php echo escape($lang["revertingwillignore"]); ?></label>
+                        <div class="Fixed">
+                            <?php foreach($node_strings_not_found as $node_string_not_found) {
+                                echo escape($node_string_not_found); ?>
+                                <br/>
+                            <?php } ?>
+                        </div>
+                        <div class="clearerleft"></div>
+                    </div>
+                <?php }
+            } else { ?>
+                <div class="Question">
+                    <label><?php echo escape($lang["revertingwillapply"]); ?></label>
+                    <div class="Fixed"><?php echo nl2br(escape($diff)) ?></div>
+                    <div class="clearerleft"></div>
+                </div>
+            <?php }
         }
-    else
-        { ?>
-<div class="Question">
-<label><?php echo escape($lang["revertingwillapply"]); ?></label>
-<div class="Fixed"><?php echo nl2br(escape($diff)) ?></div>
-<div class="clearerleft"> </div>
-</div>
-<?php   }
 
-if ($type==LOG_CODE_UPLOADED) {
-    # Fetch the thumbnail of the image
-    $alt_file=$log["previous_file_alt_ref"];
-    $alt_thumb=get_resource_path($resource, true, 'thm', true, "", -1, 1, false, "", $alt_file);
-    if (file_exists($alt_thumb))
-        { 
-        $image=get_resource_path($resource, false, 'thm', true, "", -1, 1, false, "", $alt_file);
-        }
-    else
-        {
-        // If an image is not available, fetch a nopreview image based on extension   
-        $alter_data = get_alternative_file($resource,$alt_file);    
-        $image = $baseurl_short . 'gfx/' . get_nopreview_icon('', $alter_data['file_extension'], '');
-        }?>
-    <div class="Question">
-    <label><?php echo escape($lang["revertingwillreplace"]); ?></label>
+        if ($type == LOG_CODE_UPLOADED) {
+            # Fetch the thumbnail of the image
+            $alt_file = $log["previous_file_alt_ref"];
+            $alt_thumb = get_resource_path($resource, true, 'thm', true, "", -1, 1, false, "", $alt_file);
 
-    <div class="Fixed">
-    <img src="<?php echo $image ?>" alt="<?php echo escape($lang["preview"]); ?>" />
-    </div>
-    <div class="clearerleft"> </div>
-    </div>
-        
-    
+            if (file_exists($alt_thumb)) { 
+                $image = get_resource_path($resource, false, 'thm', true, "", -1, 1, false, "", $alt_file);
+            } else {
+                // If an image is not available, fetch a nopreview image based on extension   
+                $alter_data = get_alternative_file($resource,$alt_file);    
+                $image = $baseurl_short . 'gfx/' . get_nopreview_icon('', $alter_data['file_extension'], '');
+            } ?>
 
-<?php } ?>
+            <div class="Question">
+                <label><?php echo escape($lang["revertingwillreplace"]); ?></label>
 
-<div class="QuestionSubmit">
-    <input name="revert" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["revert"]); ?>&nbsp;&nbsp;" />
-</div>
+                <div class="Fixed">
+                    <img src="<?php echo $image ?>" alt="<?php echo escape($lang["preview"]); ?>" />
+                </div>
+                <div class="clearerleft"></div>
+            </div>
+        <?php } ?>
 
-</form>
+        <div class="QuestionSubmit">
+            <input name="revert" type="submit" value="<?php echo escape($lang["revert"]); ?>" />
+        </div>
+
+    </form>
 </div>
 
 <?php

@@ -63,7 +63,9 @@ function google_visionProcess($resource, $verbose = false, $ignore_resource_type
     $context  = stream_context_create($opts);
     $result = file_get_contents($url, false, $context);
 
-    if ($verbose) echo $result;
+    if ($verbose) {
+        echo $result;
+    }
         
     $result=json_decode($result,true); # Parse and return as associative arrays
     debug("google_vision: \$result = " . print_r($result, true));

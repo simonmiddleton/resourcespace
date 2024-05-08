@@ -440,12 +440,22 @@ EOT;
                     <textarea class="CommentFlagReason" maxlength="{$comments_max_characters}" name="comment_flag_reason" placeholder="{$lang['comments_flag-reason-placeholder']}"></textarea><br />
 EOT;
 
-                if ($anonymous_mode) echo<<<EOT
+                if ($anonymous_mode) { ?>
+                    <input class="CommentFlagFullname"
+                        id="comment_flag_fullname"
+                        type="text"
+                        name="fullname" 
+                        placeholder="<?php echo escape($lang['comments_fullname-placeholder']); ?>">
+                    </input>
+                    <input class="CommentFlagEmail"
+                        id="comment_flag_email"
+                        type="text"
+                        name="email"
+                        placeholder="<?php echo escape($lang['comments_email-placeholder']); ?>">
+                    </input>
+                    <br />
+                <?php }
 
-                            <input class="CommentFlagFullname" id="comment_flag_fullname" type="text" name="fullname" placeholder="{$lang['comments_fullname-placeholder']}"></input>
-                            <input class="CommentFlagEmail" id="comment_flag_email" type="text" name="email" placeholder="{$lang['comments_email-placeholder']}"></input><br />
-
-EOT;
                 echo<<<EOT
                             <input class="CommentFlagSubmit" type="submit" value="{$lang['comments_submit-button-label']}" onClick="comment_flag_url.value=document.URL; {$validateFunction} { submitForm(this.parentNode); } else { alert ('{$lang['comments_validation-fields-failed']}') }"></input>
                         </form>

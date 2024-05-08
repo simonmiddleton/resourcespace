@@ -3,7 +3,6 @@ command_line_only();
 
 // -------------- Both old resource_keyword and node_keyword lookups ------------
 
-
 // create 3 new resources
 $resourcea=create_resource(1,0);
 $resourceb=create_resource(2,0);
@@ -51,65 +50,85 @@ update_field($resourcec,1,'large, rodent, Hydrochoerus, mammal, animal');
 
 // search for 'mammal' which will return resource a, b and c (from keywords and nodes)
 
-$results=do_search('mammal');
-if(count($results)!=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref']) ||
+$results = do_search('mammal');
+if (
+    count($results) !=3 || !isset($results[0]['ref']) || !isset($results[1]['ref']) || !isset($results[2]['ref']) ||
     (
-    ($results[0]['ref']!=$resourcea && $results[1]['ref']!=$resourcea && $results[2]['ref']!=$resourcea) &&
-    ($results[0]['ref']!=$resourceb && $results[1]['ref']!=$resourceb && $results[2]['ref']!=$resourceb) &&
-    ($results[0]['ref']!=$resourcec && $results[1]['ref']!=$resourcec && $results[2]['ref']!=$resourcec)
+        ($results[0]['ref'] != $resourcea && $results[1]['ref'] != $resourcea && $results[2]['ref'] != $resourcea) &&
+        ($results[0]['ref'] != $resourceb && $results[1]['ref'] != $resourceb && $results[2]['ref'] != $resourceb) &&
+        ($results[0]['ref'] != $resourcec && $results[1]['ref'] != $resourcec && $results[2]['ref'] != $resourcec)
     )
-) return false;
+) {
+    return false;
+}
 
 // search for 'rodent' which will produce 1 result (via resource_keyword)
-$results=do_search('rodent');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcec) return false;
+$results = do_search('rodent');
+if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcec) {
+    return false;
+}
 
 // search for 'capybara' which will produce 1 result (via resource_node->node_keyword)
-$results=do_search('giraffe');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourceb) return false;
-
+$results = do_search('giraffe');
+if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourceb) {
+    return false;
+}
 
 // search for mammal without 'swimming' which will produce 2 results (omit via resource_keyword)
-$results=do_search('mammal -swimming');
-if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
+$results = do_search('mammal -swimming');
+if (
+    count($results) !=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
     (
-        ($results[0]['ref']!=$resourcea && $results[1]['ref']!=$resourcea) &&
-        ($results[0]['ref']!=$resourcec && $results[1]['ref']!=$resourcec)
+        ($results[0]['ref'] != $resourcea && $results[1]['ref'] != $resourcea) &&
+        ($results[0]['ref'] != $resourcec && $results[1]['ref'] != $resourcec)
     )
-) return false;
+) {
+    return false;
+}
 
 // search for animal without 'giraffe' which will produce 2 results (omit via resource_node->node_keyword)
-$results=do_search('animal -giraffe');
-if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
+$results = do_search('animal -giraffe');
+if (
+    count($results) != 2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
     (
         ($results[0]['ref']!=$resourcea && $results[1]['ref']!=$resourcea) &&
         ($results[0]['ref']!=$resourcec && $results[1]['ref']!=$resourcec)
     )
-) return false;
-
+) {
+    return false;
+}
 
 // quoted search via resource_keyword
-$results=do_search('"first second third lovely"');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
+$results = do_search('"first second third lovely"');
+if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
+    return false;
+}
 
 // quoted search via node_keyword
-$results=do_search('"three blind mice"');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourceb) return false;
+$results = do_search('"three blind mice"');
+if (count($results) != 1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourceb) {
+    return false;
+}
 
 // negative test case to check that incorrect order does not return a match
-$results=do_search('"mice blind"');  // this would typically return a suggestion string 
-if(is_array($results)) return false;
+$results = do_search('"mice blind"');  // this would typically return a suggestion string 
+if (is_array($results)) {
+    return false;
+}
 
 // Test node searches after truncating resource_keyword
 ps_query("truncate resource_keyword");
 
 // search for 'capybara' which will produce 1 result (via resource_node->node_keyword)
-$results=do_search('giraffe');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourceb) return false;
+$results = do_search('giraffe');
+if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourceb) {
+    return false;
+}
 
 // quoted search via node_keyword
-$results=do_search('"first third second lovely"');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcec) return false;
-
+$results = do_search('"first third second lovely"');
+if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcec) {
+    return false;
+}
 
 return true;

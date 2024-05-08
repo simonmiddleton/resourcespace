@@ -91,8 +91,9 @@ function HookLightbox_previewViewRenderaltthumb(int $n,array $altfile)
             $offset, $sort, $order_by, $archive;
 
     $url = getPreviewURL($resource, $altfile['ref']);
-    if ($url === false)
+    if ($url === false) {
         return false;
+    }
 
     # Replace the link to add the 'altlink' ID
     ?>

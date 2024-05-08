@@ -146,15 +146,18 @@ else
 { 
      $enabled = "";
 }
-if ($ldapauth['createusers'])
-  $createusers = "checked";
-else
-  $createusers = "";
 
-if ($ldapauth['groupbased'])
-  $groupbased = "checked";
-else
-  $groupbased = "";
+if ($ldapauth['createusers']) {
+    $createusers = "checked";
+} else {
+    $createusers = "";
+}
+
+if ($ldapauth['groupbased']) {
+    $groupbased = "checked";
+} else {
+    $groupbased = "";
+}
 
 
 if (isset($ldapauth['adusesingledomain']) && $ldapauth['adusesingledomain'])
@@ -266,8 +269,9 @@ include "../../../include/header.php";
       </table>
     </fieldset>
 
-    <fieldset><legend><?php echo escape($lang['posixldapauth_resourcespace_configuration']) ?></legend>
-      <table>
+    <fieldset>
+        <legend><?php echo escape($lang['posixldapauth_resourcespace_configuration']) ?></legend>
+        <table>
             <tr>
                 <th><label for="usersuffix"><?php echo escape($lang['posixldapauth_user_suffix']) ?></label></th>
                 <td><input name="usersuffix" type="text" value="<?php echo escape($ldapauth['usersuffix']); ?>" size="30" /></td>
@@ -277,30 +281,30 @@ include "../../../include/header.php";
                 <td><input name="createusers" type="checkbox" <?php echo $createusers; ?> /></td>
             </tr>
             <tbody id="ldapconf-cu">
-                <tr><th><label for="groupbased"><?php echo escape($lang['posixldapauth_group_based_user_creation']) ?></label></th><td><input name="groupbased" type="checkbox" <?php echo $groupbased; ?> /></td></tr>
-              <tbody id="group-false">
-                <tr><th><label for="newusergroup"><?php echo escape($lang['posixldapauth_new_user_group']) ?></label></th>
-              <td>
-                    <select name="newusergroup" style="width:300px">
-                  <?php
-                  
-                foreach ($usergroups as $usergroup){
-              $ref = $usergroup['ref'];
-                  echo '<option value="'.$ref.'"';
-              if ($ref == $ldapauth['newusergroup'])
-                            echo "selected";
-
-              echo '>' . lang_or_i18n_get_translated($usergroup['name'], "usergroup-") . '</option>';
-                }
-                
-                      ?>
-            </select>
-                  </td>
-        </tr>
-              </tbody>
+                <tr>
+                    <th><label for="groupbased"><?php echo escape($lang['posixldapauth_group_based_user_creation']) ?></label></th>
+                    <td><input name="groupbased" type="checkbox" <?php echo $groupbased; ?> /></td>
+                </tr>
+                <tbody id="group-false">
+                    <tr>
+                        <th><label for="newusergroup"><?php echo escape($lang['posixldapauth_new_user_group']) ?></label></th>
+                        <td>
+                            <select name="newusergroup" style="width: 300px">
+                                <?php foreach ($usergroups as $usergroup) {
+                                    $ref = $usergroup['ref'];
+                                    echo '<option value="' . $ref . '"';
+                                    if ($ref == $ldapauth['newusergroup']) {
+                                        echo "selected";
+                                    }
+                                    echo '>' . lang_or_i18n_get_translated($usergroup['name'], "usergroup-") . '</option>';
+                                } ?>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
             </tbody>
-          </table>
-        </fieldset>
+        </table>
+    </fieldset>
         <?php
         if ($enabled && !isset($errmsg))
         {

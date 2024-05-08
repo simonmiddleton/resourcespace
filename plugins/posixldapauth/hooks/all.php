@@ -185,7 +185,9 @@ function HookPosixldapauthAllExternalauth($uname, $pword)
                         
                             // if we haven't managed to find a group match that is allowed to log into RS, then
                             // we return false! - we ned to modify this to use the group set if group based is not enabled!
-                            if (!($match)) return false;
+                            if (!($match)) {
+                                return false;
+                            }
                             // Create the user
                             if ($ldap_debug) { error_log(  __METHOD__ . " " . __LINE__ . "  Creating User: " . $nuser['username']) ; }
                             

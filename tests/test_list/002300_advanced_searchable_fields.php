@@ -33,8 +33,11 @@ function verify_field_position($fieldname, $searchfieldarray, $expectedposition)
     return false;
 }
 
-function feedback($buffer) {
-    if(ECHOFEEDBACK) echo $buffer;
+function feedback($buffer)
+{
+    if (ECHOFEEDBACK) {
+        echo $buffer;
+    }
 }
 
 # Shipped resource types are as follows
@@ -111,13 +114,27 @@ feedback(PHP_EOL.PHP_EOL);
 
 # TEST 1 VERIFY
 # Assert that the fields are in the expected sequence
-if (!verify_field_position("PhotoTwoSearch", $search_fields, 0)) return false;
-if (!verify_field_position("PhotoThreeSearch", $search_fields, 1)) return false;
-if (!verify_field_position("PhotoFiveSearch", $search_fields, 2)) return false;
-if (!verify_field_position("VideoZoneSearch", $search_fields, 3)) return false;
-if (!verify_field_position("VideoTypeSearch", $search_fields, 4)) return false;
-if (!verify_field_position("VideoAreaSearch", $search_fields, 5)) return false;
-if (!verify_field_position("Date", $search_fields, 6)) return false;
+if (!verify_field_position("PhotoTwoSearch", $search_fields, 0)) {
+    return false;
+}
+if (!verify_field_position("PhotoThreeSearch", $search_fields, 1)) {
+    return false;
+}
+if (!verify_field_position("PhotoFiveSearch", $search_fields, 2)) {
+    return false;
+}
+if (!verify_field_position("VideoZoneSearch", $search_fields, 3)) {
+    return false;
+}
+if (!verify_field_position("VideoTypeSearch", $search_fields, 4)) {
+    return false;
+}
+if (!verify_field_position("VideoAreaSearch", $search_fields, 5)) {
+    return false;
+}
+if (!verify_field_position("Date", $search_fields, 6)) {
+    return false;
+}
 
 # ############
 # TEST 2 SETUP
@@ -138,13 +155,27 @@ feedback(PHP_EOL.PHP_EOL);
 
 # TEST 2 VERIFY
 # Assert that the fields are in the expected sequence
-if (!verify_field_position("PhotoTwoSearch", $search_fields, 0)) return false;
-if (!verify_field_position("PhotoThreeSearch", $search_fields, 1)) return false;
-if (!verify_field_position("PhotoFiveSearch", $search_fields, 2)) return false;
-if (!verify_field_position("VideoDateNoSearch", $search_fields, 3)) return false;
-if (!verify_field_position("VideoZoneSearch", $search_fields, 4)) return false;
-if (!verify_field_position("VideoTypeSearch", $search_fields, 5)) return false;
-if (!verify_field_position("VideoAreaSearch", $search_fields, 6)) return false;
+if (!verify_field_position("PhotoTwoSearch", $search_fields, 0)) {
+    return false;
+}
+if (!verify_field_position("PhotoThreeSearch", $search_fields, 1)) {
+    return false;
+}
+if (!verify_field_position("PhotoFiveSearch", $search_fields, 2)) {
+    return false;
+}
+if (!verify_field_position("VideoDateNoSearch", $search_fields, 3)) {
+    return false;
+}
+if (!verify_field_position("VideoZoneSearch", $search_fields, 4)) {
+    return false;
+}
+if (!verify_field_position("VideoTypeSearch", $search_fields, 5)) {
+    return false;
+}
+if (!verify_field_position("VideoAreaSearch", $search_fields, 6)) {
+    return false;
+}
 
 feedback("TEST 002300 ADVANCED SEARCHABLE FIELDS - PASSED".PHP_EOL);
 

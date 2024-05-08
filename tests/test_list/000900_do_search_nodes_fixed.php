@@ -30,55 +30,76 @@ add_resource_nodes($resourcec,array($johnnynode));
 
 // straight search of ref
 debug("searching for resource by ref " . $resourcea );
-$results=do_search($resourcea);
+$results = do_search($resourcea);
 
-if(!isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
+if (!isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
+    return false;
+}
 debug("Successfully searched for resource by resource id");
 
 // search for 'Joey' (should be just resource b)
-$results=do_search('@@' . $joeynode);
-if(count($results)!==1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourceb) return false;
+$results = do_search('@@' . $joeynode);
+if (count($results) !== 1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourceb) {
+    return false;
+}
 debug("Successfully searched for resource by node");
 
 // search for 'Johnny' (should return both resources a and c)
-$results=do_search('@@' . $johnnynode);
-if(count($results)!=2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
-    ($results[0]['ref']!=$resourcea && $results[1]['ref']!=$resourcea) ||
-    ($results[0]['ref']!=$resourcec && $results[1]['ref']!=$resourcec)
-) return false;
+$results = do_search('@@' . $johnnynode);
+if (
+    count($results) != 2 || !isset($results[0]['ref']) || !isset($results[1]['ref']) ||
+    ($results[0]['ref'] != $resourcea && $results[1]['ref'] != $resourcea) ||
+    ($results[0]['ref'] != $resourcec && $results[1]['ref'] != $resourcec)
+) {
+    return false;
+}
 
 // search for 'Johnny' AND 'Dee Dee' (should be just resource a)
-$results=do_search('@@' . $johnnynode . ' @@' . $deedeenode);
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
+$results = do_search('@@' . $johnnynode . ' @@' . $deedeenode);
+if (count($results) != 1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
+    return false;
+}
 debug("Successfully searched for resources with two nodes");
 
 // search for everything (to get the count)
-$results=do_search('');
-$total=count($results);
+$results = do_search('');
+$total = count($results);
 // search for everything but 'Dee Dee' (should be n-1)
-$results=do_search('@@!' . $deedeenode);
+$results = do_search('@@!' . $deedeenode);
 // there should be a difference of 1
-if(count($results)!=$total-1) return false;
+if (count($results) != $total - 1) {
+    return false;
+}
 debug("Successfully searched for resources excluding node");
 
 // search for 'Johnny' or 'Dee Dee', should get 2 results 
-$results=do_search('@@' . $johnnynode . '@@' . $deedeenode);
-if(count($results)!=2 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcec || $results[1]['ref']!=$resourcea) return false;
+$results = do_search('@@' . $johnnynode . '@@' . $deedeenode);
+if (count($results) !=2 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcec || $results[1]['ref'] != $resourcea) {
+    return false;
+}
 debug("Successfully searched for resources with either of two nodes");
 
 // search for 'Johnny' and NOT 'Dee Dee' (should be resource c)
-$results=do_search('@@' . $johnnynode . ' @@!' . $deedeenode);
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcec) return false;
+$results = do_search('@@' . $johnnynode . ' @@!' . $deedeenode);
+if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcec) {
+    return false;
+}
 debug("Successfully searched for resources with one node and NOT another node");
 
 // search for 'Dee Dee' (should be resource a)
-$results=do_search('"Dee Dee"');
-if(count($results)!=1 || !isset($results[0]['ref']) || $results[0]['ref']!=$resourcea) return false;
+$results = do_search('"Dee Dee"');
+if (count($results) !=1 || !isset($results[0]['ref']) || $results[0]['ref'] != $resourcea) {
+    return false;
+}
 debug("Successfully searched for resources with quoted node string");
 
 // Add a node containing stop words and check nothing was indexed.
-$stop_list_check_node = set_node(null, 73, join(" ",$noadd),'',1000);
-if (ps_value("select count(*) value from node_keyword where node=?",array("i",$stop_list_check_node),0)>0) {echo "Kewords were indexed that are in the stop list.";print_r(ps_array("select keyword value from keyword where ref in (select keyword from node_keyword where node=?)",array("i",$stop_list_check_node),0));return false;}
+$stop_list_check_node = set_node(null, 73, join(" ", $noadd), '', 1000);
+if (ps_value("SELECT count(*) value FROM node_keyword WHERE node=?", array("i",$stop_list_check_node), 0) > 0) {
+    echo "Kewords were indexed that are in the stop list.";
+    print_r(ps_array("SELECT keyword value FROM keyword WHERE ref IN (SELECT keyword FROM node_keyword WHERE node=?)", array("i", $stop_list_check_node), 0));
+    return false;
+}
 
 // Check that searches work with $resource_field_verbatim_keyword_regex
 global $resource_field_verbatim_keyword_regex;

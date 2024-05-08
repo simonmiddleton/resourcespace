@@ -1,10 +1,11 @@
 <?php
 command_line_only();
 
-
 $ECHOFEEDBACK = false; # Whether or not to echo progress; for testing of this test script
 $feedback = function($buffer) use ($ECHOFEEDBACK) {
-    if($ECHOFEEDBACK) echo $buffer;
+    if ($ECHOFEEDBACK) {
+        echo $buffer;
+    }
 };
 
 $verify_watermark_check = function($expected, $wm_path, $wm_perm, $wm_access, $wm_open, $wm_open_search, $wm_page) use ($feedback) {
@@ -78,63 +79,159 @@ $feedback("USERPERMISSIONS BEFORE= ".implode(",",$userpermissions).PHP_EOL);
 # FIRST SET - COMBINATIONS WHERE WATERMARK AND PERMISSION-W ARE NOT BOTH PRESENT
 #           - LIMITED TO VIEW PAGE ONLY
 
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view") ) return false;
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_NOPERM, ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
 $feedback(PHP_EOL);
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view") ) return false;
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_NOPATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
 $feedback(PHP_EOL);
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view") ) return false;
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_NOPERM, ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
 $feedback(PHP_EOL);
 
 # SECOND SET - COMBINATIONS WHERE WATERMARK AND PERMISSION-W ARE BOTH PRESENT
 #            - VIEW, PREVIEW AND SEARCH PAGES
 
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "view") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view") ) return false;
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "view")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "view")) {
+    return false;
+}
 $feedback(PHP_EOL);
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "preview") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "preview") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "preview") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "preview") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "preview") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "preview") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "preview") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "preview") ) return false;
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "preview")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "preview")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "preview")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "preview")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "preview")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "preview")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "preview")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "preview")) {
+    return false;
+}
 $feedback(PHP_EOL);
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "search") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "search") ) return false;
-if ( !$verify_watermark_check( EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "search") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "search") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "search") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "search") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "search") ) return false;
-if ( !$verify_watermark_check( EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "search") ) return false;
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_FALSE, "search")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_FALSE, OPEN_SEARCH_TRUE,  "search")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_FALSE,  WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_FALSE, "search")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_OPEN,     OPEN_TRUE,  OPEN_SEARCH_TRUE,  "search")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_FALSE, "search")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_FALSE, OPEN_SEARCH_TRUE,  "search")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_FALSE, "search")) {
+    return false;
+}
+if (!$verify_watermark_check(EXPECT_TRUE,   WM_PATH, W_PERM,   ACCESS_RESTRICT, OPEN_TRUE,  OPEN_SEARCH_TRUE,  "search")) {
+    return false;
+}
 
 $feedback(PHP_EOL.PHP_EOL);
 
