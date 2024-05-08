@@ -40,14 +40,11 @@ function getSelectedItemValue(selector)
 function hideObject(selector) 
 { 
 	document.getElementById(selector).style.display = 'none'; 
-	//hide label
-	//document.getElementById("l" + selector).style.visibility = 'hidden'; 
 } 
 
 function showObject(selector) 
 { 
 	document.getElementById(selector).style.display = ''; 
-	//document.getElementById("l" + selector).style.visibility = 'visible';
 } 
 
 
@@ -57,7 +54,6 @@ function ldapsetDisplayFields()
 		It is triggered but the directory select drop down, and set on load.
 	**/
 	var ldapType = getSelectedItemValue('ldaptype');
-	//alert (ldapType);
 	
 	if (ldapType == 0)
 	{
@@ -134,7 +130,6 @@ function testLdapResponse ()
 	if (http.readyState == 4) 
 	{
 	    var response = http.responseText;
-		//alert(response	);
 		
 		// language support:
 		var lang_status_error = document.getElementById('lang_status_error').value;
