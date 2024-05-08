@@ -350,7 +350,7 @@ function validate_resource_files(array $resources,array $criteria = []): array
                 $expected = $resource[substr($expected,10)];
             }
             $testresult = call_user_func($criterion,$filepath);
-            if($cscheck && ($expected === NULL || $expected === "")) {
+            if ($cscheck && ($expected === null || $expected === "")) {
                 // No checksum is currently recorded. Update it now that it's been calculated
                 $results[$resource["ref"]] = true;
                 debug("Skipping checksum check for resource " . $resource["ref"] . " - no existing checksum");
