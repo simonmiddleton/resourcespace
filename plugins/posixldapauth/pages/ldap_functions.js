@@ -77,7 +77,6 @@ function ldapsetDisplayFields()
 		hideObject('tldapusercontainer');
 		
 	}
-	return;
 }
 
 function testLdapConn()
