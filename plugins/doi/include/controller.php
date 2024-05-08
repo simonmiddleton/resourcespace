@@ -64,7 +64,6 @@
 
         global $doi_archive_state, $anonymous_login;
 
-        # return $resource['archive'] == $doi_archive_state && isset($anonymous_login) && $resource['access'] == 0;#  FIXME temporary
         return $resource['archive'] == $doi_archive_state && $resource['access'] == 0;
     }
 
