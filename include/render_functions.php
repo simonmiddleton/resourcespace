@@ -1834,12 +1834,20 @@ function display_field($n, $field, $newtab=false,$modal=false)
             }
         }
     
-  $displaycondition=true;
-  if ($field["display_condition"]!="")
-    {
-    #Check if field has a display condition set and render the client side check display condition functions
-    $displaycondition = check_display_condition($n, $field, $fields, true, $use);
-    debug(sprintf('$displaycondition = %s', json_encode($displaycondition)));
+    $displaycondition=true;
+    if ($field["display_condition"] != "") {
+        // Check if field has a display condition set and render the client side check display condition functions
+        $displaycondition = check_display_condition($n, $field, $fields, true, $use);
+        debug(sprintf('$displaycondition = %s', json_encode($displaycondition)));
+    } else {
+        // Clear out any existing edit functions from previously visited edit pages
+        ?>
+        <script>
+            if (typeof checkDisplayCondition<?php echo $field["ref"];?> === 'function') {
+                delete window.checkDisplayCondition<?php echo $field["ref"];?>;
+            }
+        </script>
+        <?php
     }
 
     if ($multiple && 

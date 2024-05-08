@@ -294,13 +294,14 @@ jQuery('#<?php echo $name; ?>_selector').keydown(function(event)
         }
     });
 
-<?php
-debug("\$add_searched_nodes_function_call = {$add_searched_nodes_function_call}");
-echo $add_searched_nodes_function_call;
-?>
 
 jQuery(document).ready(function()
     {
+    // Run this after the page has loaded as otherwise existing invalid JS functions may still be in place from an earlier edit page
+    <?php 
+    debug("\$add_searched_nodes_function_call = {$add_searched_nodes_function_call}");
+    echo $add_searched_nodes_function_call;
+    ?>
     console.debug('<?php
         printf(
             '[document.ready](%s) Going to call updateselectedkeywords_%s(false)',
