@@ -193,8 +193,6 @@ foreach(UNREGISTER_WRAPPERS as $unregwrapper)
 
 if (!isset($suppress_headers) || !$suppress_headers) {
     $default_csp_fa = "'self'";
-    // $frame_ancestors = $csp_frame_ancestors !== [] ? array_merge($default_csp_fa, $csp_frame_ancestors) : $default_csp_fa;
-
     if ($csp_frame_ancestors === [] && isset($xframe_options) && $xframe_options !== '') {
         // Set CSP frame-ancestors based on legacy $xframe_options config
         switch ($xframe_options) {
