@@ -75,7 +75,9 @@ HTML;
                 $value = i18n_get_translated($value);
             }
         }
+        unset($value);
     }
+    unset($rtf);
 
     # then sort again lexicographically
     usort($rtfs, function (array $a, array $b) {

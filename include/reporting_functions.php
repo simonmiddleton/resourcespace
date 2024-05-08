@@ -152,7 +152,9 @@ function do_report($ref,$from_y,$from_m,$from_d,$to_y,$to_m,$to_d,$download=true
                 $value=implode("", i18n_merge_translations(explode($delimiter,$value)));
             }
         }
+        unset($value);
     }
+    unset($result);
 
     if ($download)
         {
