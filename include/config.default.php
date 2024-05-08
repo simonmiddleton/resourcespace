@@ -2926,8 +2926,8 @@ $CORS_whitelist = array();
 // If this is not enabled then frame-ancestors will be implemented based upon the legacy '$xframe_options' config if that is set
 // e.g.
 // $csp_frame_ancestors = ["'self'", "https://example.org", "https://example.com", "https://store.example.com"];
-// NOTE - single quotes are required for 'self' or 'deny'
-$csp_frame_ancestors = ["'self'"];
+// NOTE - single quotes are required for 'self' or 'none'
+$csp_frame_ancestors = [];
 
 /* Font selection */
 $global_font="Montserrat";
