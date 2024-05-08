@@ -9595,25 +9595,26 @@ function get_resources_to_validate(int $days = 0): array
         $filtersql .= " AND archive NOT IN (" . ps_param_insert(count($GLOBALS["file_integrity_ignore_states"])) . ")";
         $params = array_merge($params,ps_param_fill($GLOBALS["file_integrity_ignore_states"], "i"));
     }
+
     if(count($restypes_ignore) > 0) {
         $filtersql .= " AND resource_type NOT IN (" . ps_param_insert(count($restypes_ignore)) . ")";
         $params = array_merge($params,ps_param_fill($restypes_ignore, "i"));
     }
+    
     if($days > 0) {
         $filtersql .= " AND (last_verified IS NULL OR DATEDIFF(NOW(), last_verified) > ?)";
         $params = array_merge($params,["i", $days]);
     }
-    $resources = ps_query("SELECT ref,
-                                  archive,
-                                  file_extension,
-                                  resource_type,
-                                  file_checksum,
-                                  last_verified,
-                                  integrity_fail
-                             FROM resource
-                            WHERE ref > 0 AND no_file = 0 {$filtersql}
-                         ORDER BY integrity_fail DESC, last_verified ASC",
-                            $params);
 
-    return $resources;
+    return ps_query("SELECT ref,
+                            archive,
+                            file_extension,
+                            resource_type,
+                            file_checksum,
+                            last_verified,
+                            integrity_fail
+                    FROM resource
+                    WHERE ref > 0 AND no_file = 0 {$filtersql}
+                    ORDER BY integrity_fail DESC, last_verified ASC",
+                    $params);
 }
