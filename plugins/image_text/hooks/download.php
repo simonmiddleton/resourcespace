@@ -63,7 +63,7 @@ function HookImage_textDownloadModifydownloadfile()
             
             
         $tmpolfile= get_temp_dir() . "/" . $ref . "_image_text_" . $userref . "." . $ext;
-        $createolcommand = $convert_fullpath . ' -background "#000" -fill white -gravity "' . $image_text_position . '" -font "' . $image_text_font . '" -size ' . $width  . 'x' . $olheight . ' caption:" ' . $overlaytext .  '  " ' . escapeshellarg($tmpolfile);
+        $createolcommand = $convert_fullpath . ' -background "#000" -fill white -gravity "' . escapeshellarh($image_text_position) . '" -font "' . escapeshellarg($image_text_font) . '" -size ' . escapeshellarg($width)  . 'x' . escapeshellarg($olheight) . ' caption:" ' . escapeshellarg($overlaytext) .  '  " ' . escapeshellarg($tmpolfile);
         run_command($createolcommand);
         
         $newdlfile = get_temp_dir() . "/" . $ref . "_image_text_result_" . $userref . "." . $ext;
