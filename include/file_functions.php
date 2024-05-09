@@ -242,21 +242,14 @@ function check_valid_file_extension($uploadedfile,array $validextensions)
 
 /**
  * Is the given extension in the list of blocked extensions?
- * Also ensures extension is no longer than 10 characters due to resource.file_extension limit
+ * Also ensures extension is no longer than 10 characters due to resource.file_extension database column limit
  *
  * @param  string    $extension - file extension to check
- * 
- * @return bool
  */
-function is_banned_extension($extension)
+function is_banned_extension($extension): bool
     {
-    global $banned_extensions;    
-
-    return in_array(strtolower($extension), array_map('strtolower', $banned_extensions)) ||
-        strlen($extension) > 10 ||
-        $extension == "." ||
-        $extension == "" ||
-        $extension == '"';
+    return !preg_match('/^[a-zA-Z0-9_-]{1,10}$/', $extension)
+        || in_array(strtolower($extension), array_map('strtolower', $GLOBALS['banned_extensions']));
     }
 
 /**
