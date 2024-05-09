@@ -492,7 +492,14 @@ if ($submitted != "")
 
                     // Add link to file for use by tar to prevent full paths being included.
                     debug("collection_download adding symlink: {$p} - {$ln_link_name}");
-                    @symlink($p, $ln_link_name);
+                    $GLOBALS["use_error_exception"] = true;
+                    try {
+                        symlink($p, $ln_link_name);
+                        } catch (Exception $e) {
+                        echo $e->getMessage() . PHP_EOL;
+                        debug("collection_download symlink: {$p} - {$ln_link_name} ERROR-".$e->getMessage());
+                        }
+                    unset($GLOBALS["use_error_exception"]); 
                     }
                 elseif ($use_zip_extension)
                     {
