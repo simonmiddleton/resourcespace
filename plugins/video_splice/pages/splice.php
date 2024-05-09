@@ -38,9 +38,9 @@ $min_access = collection_min_access($videos);
 $allowed_actions = [];
 if ($min_access === 0) {
     $allowed_actions = ['video_splice_save_export', 'video_splice_download'];
-}
-if (checkperm('c') || checkperm('d')) {
-    $allowed_actions[] = 'video_splice_save_new';
+    if (checkperm('c') || checkperm('d')) {
+        $allowed_actions[] = 'video_splice_save_new';
+    }
 }
 
 // The user can decide if they want to wait for the file to be transcoded or be notified when ready when offline jobs enabled

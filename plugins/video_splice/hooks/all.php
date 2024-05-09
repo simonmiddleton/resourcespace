@@ -24,10 +24,7 @@ function HookVideo_spliceAllRender_actions_add_collection_option($top_actions, a
         }
     }
     $min_access = collection_min_access($videos);
-    if (
-        $pagename=="collections" && count($videos) > 0 
-        && ($min_access === 0 || checkperm('c') || checkperm('d'))
-        ) {
+    if ($pagename=="collections" && count($videos) > 0 && $min_access === 0) {
         $option = array(
             "value" => "video_splice",
             "label" => $lang["action-splice"],
