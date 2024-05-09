@@ -248,8 +248,10 @@ function check_valid_file_extension($uploadedfile,array $validextensions)
  */
 function is_banned_extension($extension): bool
     {
-    return !preg_match('/^[a-zA-Z0-9_-]{1,10}$/', $extension)
-        || in_array(strtolower($extension), array_map('strtolower', $GLOBALS['banned_extensions']));
+    return !(
+        preg_match('/^[a-zA-Z0-9_-]{1,10}$/', $extension) === 1
+        && !in_array(strtolower($extension), array_map('strtolower', $GLOBALS['banned_extensions']))
+    );
     }
 
 /**
