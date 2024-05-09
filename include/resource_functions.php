@@ -152,8 +152,9 @@ function get_resource_path(
                 {
                 global $syncdir;
                 $syncdirmodified=hook("modifysyncdir","all",array($ref, $fp, $alternative)); if ($syncdirmodified!=""){return $syncdirmodified;}
-                if(!($alternative>0))
-                    {return $syncdir . "/" . $fp;}
+                if ($alternative <= 0) {
+                    return $syncdir . "/" . $fp;
+                }
                 elseif(!$generate)
                     {
                     // Alternative file and using staticsync. Would not be generating path if checking for an existing file.
@@ -5551,14 +5552,18 @@ function resource_download_allowed($resource,$size,$resource_type,$alternative=-
         return false;
         }
 
-    if (checkperm('X' . $resource_type . "_" . $size) && $alternative==-1)
-        {
+    if (checkperm('X' . $resource_type . "_" . $size) && $alternative == -1) {
         # Block access to this resource type / size? Not if an alternative file
         # Only if no specific user access override (i.e. they have successfully requested this size).
-        $usercustomaccess = get_custom_access_user($resource,$userref);
-        $usergroupcustomaccess = get_custom_access($resource,$usergroup);
-        if (($usercustomaccess === false || !($usercustomaccess === 0)) && ($usergroupcustomaccess === false || !($usergroupcustomaccess === 0))) {return false;}
+        $usercustomaccess = get_custom_access_user($resource, $userref);
+        $usergroupcustomaccess = get_custom_access($resource, $usergroup);
+        if (
+            ($usercustomaccess === false || $usercustomaccess !== 0) && 
+            ($usergroupcustomaccess === false || $usergroupcustomaccess !== 0)
+        ) {
+            return false;
         }
+    }
 
     if(($size == "" || $size == "hpr" || getval("noattach","") == "")  && intval($user_dl_limit) > 0)
         {
@@ -9600,7 +9605,7 @@ function get_resources_to_validate(int $days = 0): array
         $filtersql .= " AND resource_type NOT IN (" . ps_param_insert(count($restypes_ignore)) . ")";
         $params = array_merge($params,ps_param_fill($restypes_ignore, "i"));
     }
-    
+
     if($days > 0) {
         $filtersql .= " AND (last_verified IS NULL OR DATEDIFF(NOW(), last_verified) > ?)";
         $params = array_merge($params,["i", $days]);

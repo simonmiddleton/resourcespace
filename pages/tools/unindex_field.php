@@ -13,7 +13,7 @@ include "../../include/image_processing.php";
 
 set_time_limit(0);
 
-if (!(PHP_SAPI == 'cli'))
+if (PHP_SAPI != 'cli')
     {
     include "../../include/authenticate.php";
     if (!checkperm("a"))
@@ -39,7 +39,7 @@ if($field != 0)
         }
     }
 
-if (!(PHP_SAPI == 'cli'))
+if (PHP_SAPI != 'cli')
     {
     include __DIR__ . "/../../include/header.php";
     }
@@ -52,7 +52,7 @@ if (PHP_SAPI == 'cli' || (getval("submit","")!="" && enforcePostRequest(false)))
     echo $result;
     }
 
-if (!(PHP_SAPI == 'cli'))
+if (PHP_SAPI != 'cli')
     {
     ?>
     <form method="post" action="unindex_field.php">

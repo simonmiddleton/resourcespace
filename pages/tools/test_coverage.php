@@ -1,8 +1,12 @@
 <?php
 
 include "../../include/boot.php";
-if (!(PHP_SAPI == 'cli')) {include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}}
-
+if (PHP_SAPI != 'cli') {
+    include "../../include/authenticate.php";
+    if (!checkperm("a")) {
+        exit("Permission denied");
+    }
+}
 include "../../include/header.php";
 
 $functions=array();

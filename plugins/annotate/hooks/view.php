@@ -16,10 +16,9 @@ function HookAnnotateViewRenderinnerresourcepreview()
         return false;
         }
 
-    if(!('' == $k) && !$annotate_public_view)
-        {
+    if ($k != '' && !$annotate_public_view) {
         return false;
-        }
+    }
 
     $video_preview_file = get_resource_path($ref, true, 'pre', false, $ffmpeg_preview_extension);
 

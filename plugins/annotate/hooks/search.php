@@ -3,10 +3,9 @@ function HookAnnotateSearchIcons($collections = false)
     {
     global $baseurl, $k, $search, $archive, $sort, $offset, $order_by, $result, $n, $lang, $k, $annotate_public_view;
 
-    if(!('' == $k) && !$annotate_public_view)
-        {
+    if ($k != '' && !$annotate_public_view) {
         return false;
-        }
+    }
 
     if(!is_array($result))
         {

@@ -7,7 +7,7 @@
 
 include "../../include/boot.php";
 
-if (!(PHP_SAPI == 'cli'))
+if (PHP_SAPI != 'cli')
     {
     include "../../include/authenticate.php";
     if (!checkperm("a")) {exit("Permission denied");}

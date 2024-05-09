@@ -9,7 +9,12 @@
 
 include_once '../../include/boot.php';
 include_once '../../include/general_functions.php';
-if (!(PHP_SAPI == 'cli')) {include_once "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}}
+if (PHP_SAPI != 'cli') {
+    include_once "../../include/authenticate.php";
+    if (!checkperm("a")) {
+        exit("Permission denied");
+    }
+}
 include_once '../../include/node_functions.php';
 include_once '../../include/resource_functions.php';
 

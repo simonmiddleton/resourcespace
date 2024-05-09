@@ -27,7 +27,10 @@ $resource=get_resource_data($ref);
 
 if (in_array($resource['file_extension'],$annotate_ext_exclude)){return false;}
 if (in_array($resource['resource_type'],$annotate_rt_exclude)){return false;}
-if (!($k=="") && !$annotate_public_view){return false;}
+
+if ($k != "" && !$annotate_public_view) {
+    return false;
+}
 
 if (!file_exists($path) && !file_exists($path_orig)) {
     return false;

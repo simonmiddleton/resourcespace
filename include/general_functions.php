@@ -61,9 +61,9 @@ function escape_check($text)
     $text = mysqli_real_escape_string($db_connection, (string) $text);
 
     # turn all \\' into \'
-    while (!(strpos($text,"\\\\'")===false))
+    while (strpos($text, "\\\\'") !== false)
         {
-        $text=str_replace("\\\\'","\\'",$text);
+        $text = str_replace("\\\\'", "\\'", $text);
         }
 
     # Remove any backslashes that are not being used to escape single quotes.

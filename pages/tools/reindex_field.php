@@ -8,7 +8,7 @@
 
 include "../../include/boot.php";
 
-if (!(PHP_SAPI == 'cli'))
+if (PHP_SAPI != 'cli')
     {
     include "../../include/authenticate.php";
     if (!checkperm("a"))
@@ -42,7 +42,7 @@ if($field != 0)
         exit("Field is not set to be indexed.");
         }
     }
-if (!(PHP_SAPI == 'cli'))
+if (PHP_SAPI != 'cli')
     {
     include __DIR__ . "/../../include/header.php";
     }
@@ -70,7 +70,7 @@ if (PHP_SAPI == 'cli' || (getval("submit","")!="" && enforcePostRequest(false)))
     }
 
 
-if (!(PHP_SAPI == 'cli'))
+if (PHP_SAPI != 'cli')
     {
     ?>
     <div class="BasicsBox">

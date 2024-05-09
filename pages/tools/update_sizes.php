@@ -50,7 +50,7 @@ if (count($resourceinfo)>0)
     else
         {
         # fetch source image size, if we fail, exit this function (file not an image, or file not a valid jpg/png/gif).
-        if (!((@list($sw,$sh) = @getimagesize($file))===false))
+        if ((@list($sw, $sh) = @getimagesize($file)) !== false)
             {
             $size_db= ps_query("select 'true' from resource_dimensions where resource = ?", ['i', $ref]);
             if (count($size_db))

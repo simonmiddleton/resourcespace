@@ -686,19 +686,13 @@ function render_new_node_record($form_action, $is_tree, $parent = 0, $node_depth
                 <td>
                     <select class="node_parent_chosen_selector" name="new_option_parent" form="new_node_<?php echo $parent; ?>_option">
                         <option value="">Select parent</option>
-                    <?php
-                    foreach($parent_node_options as $node)
-                        {
-                        $selected = '';
-                        if(!(trim($parent)=="") && $node['ref'] == $parent)
-                            {
-                            $selected = ' selected';
-                            }
-                        ?>
-                        <option value="<?php echo $node['ref']; ?>"<?php echo $selected; ?>><?php echo escape($node['name']); ?></option>
-                        <?php
-                        }
-                        ?>
+                        <?php foreach($parent_node_options as $node) {
+                            $selected = '';
+                            if (trim($parent) != "" && $node['ref'] == $parent) {
+                                $selected = ' selected';
+                            } ?>
+                            <option value="<?php echo $node['ref']; ?>"<?php echo $selected; ?>><?php echo escape($node['name']); ?></option>
+                        <?php } ?>
                     </select>
                 </td>
                 <td>

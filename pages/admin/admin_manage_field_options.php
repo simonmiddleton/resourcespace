@@ -49,7 +49,7 @@ $activation_action_label_for = fn(array $node): string => node_is_active($node)
 
 
 // Process form requests
-if('true' === $ajax && !(trim($node_ref)=="") && 0 < $node_ref)
+if ($ajax === 'true' && trim($node_ref) != "" && 0 < $node_ref)
     {
     $option_name     = trim(getval('option_name', ''));
     $option_parent   = trim(getval('option_parent', ''));
@@ -251,7 +251,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
     clear_query_cache("schema");
     if(getval("reload","") == "")
         {
-        if(isset($new_record_ref) && !(trim($new_record_ref)==""))
+        if (isset($new_record_ref) && trim($new_record_ref) != "")
             {
             if(FIELD_TYPE_CATEGORY_TREE != $field_data['type'] && (trim($new_option_parent)==""))
                 {
@@ -682,7 +682,7 @@ if($ajax)
 <?php
 // Category trees
 $tree_nodes = get_nodes($field,null,false,null,null,'',true,'',true);
-if($field_data['type'] == 7 && !($tree_nodes==""))
+if ($field_data['type'] == 7 && $tree_nodes != "")
     {
     $all_nodes = get_nodes($field, null, true, null, null, '', true);
 

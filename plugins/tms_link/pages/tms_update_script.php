@@ -1,6 +1,8 @@
 <?php
 
-if(!(php_sapi_name() == 'cli')){exit ("Access denied"); }
+if (php_sapi_name() != 'cli') {
+    exit ("Access denied");
+}
 
 include dirname(__FILE__) . "/../../../include/boot.php";
 

@@ -6430,10 +6430,9 @@ function create_upload_link($collection,$shareoptions)
     
     $stdshareopts = array("user","usergroup","expires");
 
-    if(!in_array($shareoptions["usergroup"],$upload_link_usergroups) && !($shareoptions["usergroup"] == $usergroup))
-        {
+    if (!in_array($shareoptions["usergroup"], $upload_link_usergroups) && $shareoptions["usergroup"] != $usergroup) {
         return $lang["error_invalid_usergroup"];
-        }
+    }
 
     if(strtotime($shareoptions["expires"]) < time())
         {
