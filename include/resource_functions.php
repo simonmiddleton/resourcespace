@@ -6284,11 +6284,6 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
         {
         $mime_content_type = get_mime_type($file);
         }
-    $is_image = strpos($mime_content_type, "image/");
-    if ($is_image === false)
-        {
-        return false;
-        }
 
     $o_size=ps_query("SELECT " . columns_in("resource_dimensions") . " FROM resource_dimensions WHERE resource=?",array("i",$ref));
     if(!empty($o_size))
@@ -6320,8 +6315,9 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
 
     $filesize=filesize_unlimited($file);
 
+    $is_image = strpos($mime_content_type, "image/");
     # imagemagick_calculate_sizes is normally turned off
-    if (isset($imagemagick_path) && $imagemagick_calculate_sizes)
+    if ($is_image && isset($imagemagick_path) && $imagemagick_calculate_sizes)
         {
         # Use ImageMagick to calculate the size
         $prefix = '';
@@ -6379,7 +6375,6 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
             }
         else
             {
-
             # Assume size cannot be calculated.
             $sw="?";$sh="?";
 
@@ -6405,7 +6400,6 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
                         }
                     }
                 }
-
             if ($sw!=='?' && $sh!=='?')
                 {
                 # Size could be calculated after all
@@ -6420,7 +6414,6 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
                 }
             else
                 {
-
                 # Size cannot be calculated.
                 $sw="?";$sh="?";
                 if(!$o_size)

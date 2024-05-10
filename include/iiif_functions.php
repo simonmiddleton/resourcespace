@@ -22,6 +22,7 @@ final class IIIFRequest {
     public bool     $preview_tiles;
     public int      $preview_tile_size;
     public array    $preview_tile_scale_factors;
+    public array    $media_extensions;
     public int      $download_chunk_size;
     public array    $data;
     public array    $headers;
@@ -55,8 +56,6 @@ final class IIIFRequest {
         $this->validrequest = false;
         $this->headers = [];
         $this->errors=[];
-
-        return $this;
         }
 
     /**
@@ -229,45 +228,42 @@ final class IIIFRequest {
     *
     */
     public function getCanvases($sequencekeys=false): void
-        {
+    {
         $canvases = [];
-        foreach ($this->searchresults as $index => $iiif_result)
-            {
-            $size = is_jpeg_extension($iiif_result["file_extension"] ?? "") ? '' : "hpr";
-            $img_path = get_resource_path($iiif_result["ref"],true,$size,false);
-
-            if(!file_exists($img_path))
-                {
+        foreach ($this->searchresults as $index => $iiif_result) {
+           if(in_array(strtolower($iiif_result["file_extension"] ?? ""),$this->media_extensions)) {
+                $size = "";
+                $media_path = get_resource_path($iiif_result["ref"],true,$size,false,$iiif_result["file_extension"]);
+            } else {
+                $size = is_jpeg_extension($iiif_result["file_extension"] ?? "") ? "" : "hpr";
+                $media_path = get_resource_path($iiif_result["ref"],true,$size,false);
+            }
+            if(!file_exists($media_path)) {
                 // If configured, try and use a preview from a related resource
                 $pullresource = related_resource_pull($iiif_result);
-                if($pullresource !== false)
-                    {
+                if($pullresource !== false) {
                     $this->processing["resource"] = $pullresource["ref"];
                     $this->processing["size_info"] = [
-                        'identifier' => (is_jpeg_extension($pullresource["file_extension"] ?? "") ? '' : 'hpr'),
+                        'identifier' => (is_jpeg_extension($pullresource["file_extension"] ?? '') ? '' : 'hpr'),
                         'return_height_width' => false,
                         ];
-                    }
                 }
+            }
             $canvas = $this->generateCanvas($index);
-            if($canvas)
-                {
+            if($canvas) {
                 $canvases[$index] = $canvas;
-                }
-            }
-
-        if($sequencekeys)
-            {
-            // keep the sequence identifiers as keys so a required canvas can be accessed by sequence id
-            $this->response["items"] = $canvases;
-            }
-
-        ksort($canvases);
-        foreach($canvases as $canvas)
-            {
-            $this->response["items"][] =  $canvas;
             }
         }
+
+        if($sequencekeys) {
+            // keep the sequence identifiers as keys so a required canvas can be accessed by sequence id
+            $this->response["items"] = $canvases;
+        }
+        ksort($canvases);
+        foreach($canvases as $canvas) {
+            $this->response["items"][] =  $canvas;
+        }
+    }
 
     /**
     * Get  thumbnail information for the specified resource id ready for IIIF JSON encoding
@@ -298,7 +294,7 @@ final class IIIFRequest {
             {
             list($tw,$th) = getimagesize($img_path);
             $thumbnail["height"] = (int) $th;
-            $thumbnail["width"] = (int) $tw;  
+            $thumbnail["width"] = (int) $tw;
             }
         catch (Exception $e)
             {
@@ -315,13 +311,13 @@ final class IIIFRequest {
         }
 
     /**
-    * Get the image for the specified identifier canvas and resource id
+    * Get the media file for the specified identifier canvas and resource id
     *
     * @param integer $resourceid  Resource ID
     * @param array $size          ResourceSpace size information. Required information: identifier and whether it
-    *                             requires to return height & width back (e.g annotations don't require it).
-    *                             Please note for the identifier - we use 'hpr' if the original file is not a JPG file it
-    *                             will be the value of this metadata field for the given resource
+    *                             is required to return the height & width (e.g annotations don't require this info).
+    *                             Please note the identifier - use 'hpr' if the original file is not a JPG file AND
+    *                             the extension is not in the $iiif_media_extensions arrays.
     *                             Example:
     *                             $size_info = array(
     *                               'identifier'          => 'hpr',
@@ -330,56 +326,69 @@ final class IIIFRequest {
     *
     * @return bool|array          Array holding image file data. Returns false if no image available.
     */
-    public function get_image(int $resource, array $size_info)
-        {
+    public function get_media(int $resource, array $size_info)
+    {
         // Quick validation of the size_info param
-        if(empty($size_info) || (!isset($size_info['identifier']) && !isset($size_info['return_height_width'])))
-            {
+        if(empty($size_info) || (!isset($size_info['identifier']) && !isset($size_info['return_height_width']))) {
             return false;
-            }
-
+        }
         $size = $size_info['identifier'];
         $return_height_width = $size_info['return_height_width'];
-        $img_path = get_resource_path($resource,true,$size,false);
-        if(!file_exists($img_path))
-            {
+
+        $resdata = get_resource_data($resource);
+        if(in_array($resdata["file_extension"],array_merge($this->media_extensions))) {
+            $media_path = get_resource_path($resource,true,$size,false,$resdata["file_extension"]);
+        } else {
+            $media_path = get_resource_path($resource,true,$size,false);
+        }
+
+        if(!file_exists($media_path)) {
             // If configured, try and use a preview from a related resource
             $resdata = get_resource_data($resource);
             $pullresource = related_resource_pull($resdata);
-            if($pullresource !== false)
-                {
+            if($pullresource !== false) {
                 $resource = $pullresource["ref"];
-                if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"] ?? ""))
-                    {
+                if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"] ?? "")) {
                     // If the related resource is a JPG file then no 'hpr' size will be available
                     $size = "";
-                    }
-                $img_path = get_resource_path($resource,true,$size,false);
                 }
-            else
-                {
+                $media_path = get_resource_path($resource,true,$size,false);
+            } else {
                 return false;
-                }
             }
-        $image_size = get_original_imagesize($resource, $img_path);
-
-        $images = [];
-        $images["id"] = $this->rootimageurl . $resource . "/full/max/0/default.jpg";
-        $images["type"] = "Image";
-        $images["format"] = "image/jpeg";
-        $images["height"] = intval($image_size[2]);
-        $images["width"] = intval($image_size[1]);
-
-        $images["service"] = [$this->generateImageService($resource)];
-
-        if($return_height_width)
-            {
-            $images["height"] = intval($image_size[2]);
-            $images["width"] = intval($image_size[1]);
-            }
-
-        return $images;
         }
+
+        $media = [];
+        if(in_array($resdata["file_extension"],array_merge($this->media_extensions))) {
+            $media["duration"] = get_video_duration($media_path); // Also works for audio
+            $accesskey = generate_temp_download_key($GLOBALS["userref"],$resource,"");
+            $url = $GLOBALS["baseurl"] . "/pages/download.php";
+            $params = [
+                "ref" => $resource,
+                "ext" => $resdata["file_extension"],
+                "noattach" => true,
+                "access_key" => $accesskey,
+            ];
+            $media["id"] = generateURL($url,$params);
+            $media["type"] = in_array(
+                strtolower($resdata["file_extension"]),
+                array_merge($GLOBALS["ffmpeg_audio_extensions"],["mp3"])
+            ) ? "Sound" : "Video";
+            $media["format"] = $GLOBALS["mime_types_by_extension"][$resdata["file_extension"]] ?? "application/octet-stream";
+            $size = "";
+        } else {
+            $media["id"] = $this->rootimageurl . $resource . "/full/max/0/default.jpg";
+            $media["type"] = "Image";
+            $media["format"] = "image/jpeg";
+            $media["service"] = [$this->generateImageService($resource)];
+        }
+        if($return_height_width) {
+            $media_size = get_original_imagesize($resource, $media_path,$resdata["file_extension"]);
+            $media["height"] = intval($media_size[2]);
+            $media["width"] = intval($media_size[1]);
+        }
+        return $media;
+    }
 
     /**
     * Handle a IIIF error.
@@ -582,13 +591,17 @@ final class IIIFRequest {
                 $useimage = $pullresource;
                 }
             }
-        $size = is_jpeg_extension((string) $useimage["file_extension"] ?? "") ? "" : "hpr";
-        $img_path = get_resource_path($useimage["ref"],true,$size,false);
-        if(!file_exists($img_path))
-            {
+
+        if(in_array(strtolower($useimage['file_extension'] ?? ""), $this->media_extensions)) {
+            $size = '';
+        } else {
+            $size = is_jpeg_extension($useimage["file_extension"] ?? "") ? "" : "hpr";
+        }
+        $media_path = get_resource_path($useimage["ref"],true,$size,false,$useimage["file_extension"]);
+        if(!file_exists($media_path)) {
             debug("IIIF: generateCanvas() No image available for identifier:" . $position);
             return false;
-            }
+        }
         $sequence_field = get_resource_type_field($this->sequence_field);
         $sequenceid = $resource["iiif_position"];
         debug("IIIF: Found resource " . $resource['ref'] . " in position " . $position . ", sequence ID: " . $sequenceid);
@@ -606,7 +619,7 @@ final class IIIFRequest {
         if(count($arr_18n_pos_prefixes) > 1 || count($arr_18n_pos_labels) > 1)
             {
             foreach(array_unique(array_merge(array_keys($arr_18n_pos_prefixes),array_keys($arr_18n_pos_labels))) as $langcode)
-                {                    
+                {
                 $prefix =  $arr_18n_pos_prefixes[$langcode] ?? ($arr_18n_pos_prefixes[$GLOBALS["defaultlanguage"]] ?? reset($arr_18n_pos_prefixes));
                 $labelvalue =  $arr_18n_pos_labels[$langcode] ?? ($arr_18n_pos_labels[$GLOBALS["defaultlanguage"]] ?? reset($arr_18n_pos_labels));
                 $canvas["label"][$langcode] = [$prefix . $labelvalue];
@@ -614,11 +627,11 @@ final class IIIFRequest {
             }
         else
             {
-            $canvas["label"]["none"] = [$sequence_prefix . $sequence_val];    
+            $canvas["label"]["none"] = [$sequence_prefix . $sequence_val];
             }
 
         // Get the size of the images
-        $image_size = get_original_imagesize($useimage["ref"],$img_path);
+        $image_size = get_original_imagesize($useimage["ref"],$media_path,$useimage["file_extension"]);
         $canvas["height"] = intval($image_size[2]);
         $canvas["width"] = intval($image_size[1]);
 
@@ -657,7 +670,7 @@ final class IIIFRequest {
         $annotation["id"] = $this->rooturl . $this->request["id"] . "/annotation/" . $position;
         $annotation["type"] = "Annotation";
         $annotation["motivation"] = "Painting";
-        $annotation["body"] = $this->get_image($this->processing["resource"], $this->processing["size_info"]);
+        $annotation["body"] = $this->get_media($this->processing["resource"], $this->processing["size_info"]);
         $annotation["target"] = $this->rooturl . $this->request["id"] . "/canvas/" . $position;
         return $annotation;
         }
@@ -790,10 +803,16 @@ final class IIIFRequest {
             {
             $resource_access = 2;
             }
-        if($resource_access==0 && !in_array($resource["file_extension"], config_merge_non_image_types()))
-            {
+        if (
+            $resource_access == 0
+            && !in_array($resource["file_extension"], array_diff(config_merge_non_image_types(),$this->media_extensions))
+        ) {
             // Check resource actually exists and is active
-            $fulljpgsize = strtolower($resource["file_extension"]) != "jpg" ? "hpr" : "";
+            if(in_array($resource["file_extension"], $this->media_extensions)) {
+                $fulljpgsize = "pre";
+            } else {
+                $fulljpgsize = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
+            }
             $img_path = get_resource_path($this->request["id"],true,$fulljpgsize,false, "jpg");
             if(!file_exists($img_path))
                 {
@@ -983,7 +1002,12 @@ final class IIIFRequest {
                         if($this->max_width >= $this->imagewidth && $this->max_height >= $this->imageheight)
                             {
                             $this->request["getext"] = strtolower($resource["file_extension"]) == "jpeg" ? "jpeg" : "jpg";
-                            $this->request["getsize"] = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
+                            if(in_array($resource["file_extension"], $this->media_extensions)) {
+                                // The largest available size for these is 'pre'
+                                $this->request["getsize"] = "pre";
+                            } else {
+                                $this->request["getsize"] = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
+                            }
                             }
                         else
                             {
@@ -1193,7 +1217,7 @@ final class IIIFRequest {
                 # iiif_get_canvases() requires unique iiif_position values.
                 $resourcepos = $resource['iiif_position'] ?? ($maxid + 1);
                 while(isset($sorted_final[$resourcepos]))
-                    {                                
+                    {
                     $resourcepos++;
                     }
 
@@ -1220,10 +1244,15 @@ final class IIIFRequest {
         // Need to find the resourceid the annotation is linked to
         if(isset($this->searchresults[$position])) {
             $this->processing["resource"] = $this->searchresults[$position]["ref"];
+            if(in_array(strtolower($this->searchresults[$position]['file_extension'] ?? ""), $this->media_extensions)) {
+                $identifier = '';
+            } else {
+                $identifier = is_jpeg_extension($this->searchresults[$position]['file_extension'] ?? "") ? "" : "hpr";
+            }
             $this->processing["size_info"] = array(
-                'identifier' => (strtolower($this->searchresults[$position]['file_extension'] ?? "") != 'jpg') ? 'hpr' : '',
-                'return_height_width' => false,
-            );                               
+                'identifier' => $identifier,
+                'return_height_width' => true,
+            );
         }
     }
 
@@ -1268,9 +1297,9 @@ final class IIIFRequest {
                 ($this->getwidth == 0 || fmod($this->regionw,$this->getwidth) == 0)
                 && ($this->getheight == 0 || fmod($this->regionh,$this->getheight) == 0)
             ) {
-                // Check this is a valid scale from the width/height requested. 
+                // Check this is a valid scale from the width/height requested.
                 // If using just e.g. "x," or ",y" then default to 1)
-                $hscale = $this->getwidth > 0 ? ceil($this->regionw / $this->getwidth) : 1; 
+                $hscale = $this->getwidth > 0 ? ceil($this->regionw / $this->getwidth) : 1;
                 $vscale = $this->getheight > 0 ? ceil($this->regionh / $this->getheight) : 1;
                 if (
                     ($this->getwidth === 0 || $this->getheight === 0 || $hscale == $vscale)
@@ -1301,23 +1330,23 @@ final class IIIFRequest {
 
 /**
 * Get an array of all the canvases for the identifier ready for JSON encoding
-* 
+*
 * @uses get_data_by_field()
 * @uses get_original_imagesize()
 * @uses get_resource_type_field()
 * @uses get_resource_path()
 * @uses iiif_get_thumbnail()
 * @uses iiif_get_image()
-* 
+*
 * @param integer $identifier        IIIF identifier (this associates resources via the metadata field set as $iiif_identifier_field
-* @param array $iiif_results        Array of ResourceSpace search results that match the $identifier, sorted 
+* @param array $iiif_results        Array of ResourceSpace search results that match the $identifier, sorted
 * @param boolean $sequencekeys      Get the array with each key matching the value set in the metadata field $iiif_sequence_field. By default the array will be sorted but have a 0 based index
-* 
+*
 * @return array
 */
 function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
     {
-    global $rooturl,$iiif_sequence_field;   
+    global $rooturl,$iiif_sequence_field;
 
     $canvases = array();
     foreach ($iiif_results as $index=>$iiif_result)
@@ -1356,7 +1385,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         $canvases[$index]["height"] = intval($image_size[2]);
         $canvases[$index]["width"] = intval($image_size[1]);
 
-        // "If the largest image's dimensions are less than 1200 pixels on either edge, then the canvas dimensions 
+        // "If the largest image's dimensions are less than 1200 pixels on either edge, then the canvas dimensions
         // should be double those of the image." - From http://iiif.io/api/presentation/2.1/#canvas
         if($image_size[1] < 1200 || $image_size[2] < 1200)
             {
@@ -1381,7 +1410,7 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
         return $canvases;
         }
 
-    ksort($canvases);   
+    ksort($canvases);
     $return=array();
     foreach($canvases as $canvas)
         {
@@ -1392,10 +1421,10 @@ function iiif_get_canvases($identifier, $iiif_results,$sequencekeys=false)
 
 /**
 * Get  thumbnail information for the specified resource id ready for IIIF JSON encoding
-* 
+*
 * @uses get_resource_path()
 * @uses getimagesize()
-* 
+*
 * @param integer $resourceid        Resource ID
 *
 * @return array
@@ -1432,7 +1461,7 @@ function iiif_get_thumbnail($resourceid)
         {
         list($tw,$th) = getimagesize($img_path);
         $thumbnail["height"] = (int) $th;
-        $thumbnail["width"] = (int) $tw;   
+        $thumbnail["width"] = (int) $tw;
         }
     catch (Exception $e)
         {
@@ -1455,25 +1484,25 @@ function iiif_get_thumbnail($resourceid)
 
 /**
 * Get the image for the specified identifier canvas and resource id
-* 
+*
 * @uses get_original_imagesize()
 * @uses get_resource_path()
-* 
+*
 * @param integer $identifier  IIIF identifier (this associates resources via the metadata field set as $iiif_identifier_field
 * @param integer $resourceid  Resource ID
 * @param string $position     The canvas identifier, i.e position in the sequence. If $iiif_sequence_field is defined
-* @param array $size          ResourceSpace size information. Required information: identifier and whether it 
-*                             requires to return height & width back (e.g annotations don't require it). 
-*                             Please note for the identifier - we use 'hpr' if the original file is not a JPG file it 
+* @param array $size          ResourceSpace size information. Required information: identifier and whether it
+*                             requires to return height & width back (e.g annotations don't require it).
+*                             Please note for the identifier - we use 'hpr' if the original file is not a JPG file it
 *                             will be the value of this metadata field for the given resource
 *                             Example:
 *                             $size_info = array(
 *                               'identifier'          => 'hpr',
 *                               'return_height_width' => true
 *                             );
-* 
+*
 * @return array
-*/  
+*/
 function iiif_get_image($identifier,$resourceid,$position, array $size_info)
     {
     global $rooturl,$rootimageurl;
@@ -1521,7 +1550,7 @@ function iiif_get_image($identifier,$resourceid,$position, array $size_info)
         $images["width"] = intval($image_size[1]);
         }
 
-    return $images;  
+    return $images;
     }
 
 /**
@@ -1537,7 +1566,7 @@ function iiif_error($errorcode = 404, $errors = array())
         {
         http_response_code($errorcode); # Send error status
         }
-    echo json_encode($errors);   
+    echo json_encode($errors);
     exit();
     }
 

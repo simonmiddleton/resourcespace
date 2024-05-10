@@ -2810,6 +2810,9 @@ $iiif_custom_sizes = false;
 $iiif_max_width  = 1024;
 $iiif_max_height = 1024;
 
+// $iiif_media_extensions - determine which video/audio file extensions can be published via IIIF
+$iiif_media_extensions = ["mp4","webm","mp3","wav"];
+
 // Tile settings (used by IIIF when $iiif_level is 1 and by $image_preview_zoom)
 $preview_tiles = false;
 // Tiles can be generated along with normal previews or created upon request.

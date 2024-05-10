@@ -12,6 +12,7 @@ $baseurl = "https://test010105.resourcespace.com/resourcespace";
 $baseurl_short = "/resourcespace/";
 
 include_once __DIR__ . "/../../include/api_functions.php";
+include_once __DIR__ . "/../../include/mime_types.php";
 // Set up a IIIF request object
 
 $iiif_options["rootlevel"] = $baseurl_short . "iiif/";
@@ -22,6 +23,7 @@ $iiif_options["description_field"] = 18;
 $iiif_options["sequence_field"] = create_resource_type_field("Page",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"page");
 $iiif_options["license_field"] = create_resource_type_field("License",0,FIELD_TYPE_DYNAMIC_KEYWORDS_LIST,"license");
 $iiif_options["title_field"] = 8;
+$iiif_options["media_extensions"] = ["mp4",",mp3"];
 $iiif = new IIIFRequest($iiif_options);
 
 // Set up some IIIF resources
@@ -53,14 +55,14 @@ update_field($resourcea,$iiif->description_field,$resourceadescription);
 update_field($resourceb,$iiif->description_field,$resourcebdescription);
 update_field($resourcec,$iiif->description_field,$resourcecdescription);
 
-
-$iiif_file = get_temp_dir() . DIRECTORY_SEPARATOR . "10105.jpg";
+$testimageid = "10105_test";
+$iiif_file_a = get_temp_dir() . DIRECTORY_SEPARATOR . $testimageid . "1.jpg";
 $image = imagecreate(800, 800);
 $bg_col = imagecolorallocate($image, 136, 204, 119);
 $text_col = imagecolorallocate($image, 255, 255, 255);
 imagestring($image, 5, 20, 15,  'IIIF', $text_col);
-imagejpeg($image, $iiif_file,50);
-upload_file($resourcea,false,false,false,$iiif_file,false,false);
+imagejpeg($image, $iiif_file_a,50);
+upload_file($resourcea,false,false,false,$iiif_file_a,false,false);
 
 // setup IIIF user and run tests
 $allresources = [$resourcea,$resourceb,$resourcec];
@@ -132,18 +134,57 @@ foreach($iiif->getresponse("metadata") as $metadata_item)
     }
 
 // Check items
-if(count($iiif->getresponse("items")) != 1)
+$items = $iiif->getresponse("items");
+if(count($items) != 1)
     {
     echo "Invalid items returned";
     return false;
     }
 
-$expected_image_url =  $iiif->rootimageurl . $resourcea . "/full/max/0/default.jpg";
-if(!isset($iiif->getresponse("items")[0]["items"][0]["items"][0]["body"]["id"]) || $iiif->getresponse("items")[0]["items"][0]["items"][0]["body"]["id"] != $expected_image_url)
-    {
-    echo "Invalid Annotation image returned. Expected '" . $expected_image_url . "' , got '" . ($iiif->getresponse("items")[0]["items"][0]["items"][0]["body"]["id"] ?? "" ). "'";
+$expected =  $iiif->rootimageurl . $resourcea . "/full/max/0/default.jpg";
+$got = $items[0]["items"][0]["items"][0]["body"]["id"] ?? "";
+
+if($expected !== $got) {
+    echo "Invalid Annotation image returned. Expected '" . $expected . "' , got '" . $got . "'";
     return false;
+}
+
+// Check for media files
+// Create video
+$iiif_file_b = get_temp_dir() . DIRECTORY_SEPARATOR . $testimageid . "2.jpg";
+imagestring($image, 5, 50, 65,  'IIIF frame 2', $text_col);
+imagejpeg($image, $iiif_file_b,50);
+$test_mp4 = get_temp_dir() . DIRECTORY_SEPARATOR . "testfile.mp4";
+$ffmpeg_fullpath = get_utility_path('ffmpeg');
+if($ffmpeg_fullpath) {
+    $cmd = $ffmpeg_fullpath . ' -framerate 1 -i ' . get_temp_dir() . DIRECTORY_SEPARATOR . $testimageid . "%d.jpg -r 1 -c:v libx264 " . $test_mp4;
+    run_command($cmd);
+    imagejpeg($image, $iiif_file_b,50);
+    upload_file($resourceb,false,false,false,$test_mp4,false,false);
+
+    $iiif = new IIIFRequest($iiif_options);
+    $iiif->parseUrl($testurl);
+    $iiif->getResources();
+    $iiif->generateManifest();
+    $items = $iiif->getresponse("items");
+    if(count($items) != 2) {
+        echo "No media items returned";
+        return false;
     }
+    $expected = 2;
+    $got = $items[1]["items"][0]["items"][0]["body"]["duration"] ?? "";
+    if($expected != $got) {
+        echo "Invalid duration returned. Expected '" . $expected . "' , got '" . $got . "' ";
+        return false;
+    }
+    $expected = "video/mp4";
+    $got = $items[1]["items"][0]["items"][0]["body"]["format"] ?? "";
+    if($expected != $got) {
+        echo "Invalid format returned. Expected '" . $expected . "' , got '" . $got . "' ";
+        return false;
+    }
+}
+
 
 // Tear down
 unset ($iiif);
