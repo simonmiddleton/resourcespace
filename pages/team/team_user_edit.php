@@ -76,7 +76,7 @@ if ($user===false)
     exit();
     }
     
-if (($user["usergroup"]==3) && ($usergroup!=3)) 
+if (!can_set_admin_usergroup($user["usergroup"])) 
     {
     error_alert($lang["error-permissiondenied"],false);
     exit();
@@ -201,11 +201,7 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
     $groups=get_usergroups(true);
     for ($n=0;$n<count($groups);$n++)
         {
-        if (($groups[$n]["ref"]==3) && ($usergroup!=3))
-            {
-            #Do not show
-            }
-        else
+        if (can_set_admin_usergroup($groups[$n]["ref"]))
             {
             ?>
             <option value="<?php echo $groups[$n]["ref"]; ?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]; ?></option>   
