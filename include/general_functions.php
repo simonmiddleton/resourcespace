@@ -745,23 +745,23 @@ function formatfilesize($bytes)
     global $lang;
     if ($bytes<$multiple)
         {
-        return number_format((double)$bytes) . "&nbsp;".$lang["byte-symbol"];
+        return number_format((double)$bytes) . "&nbsp;" . escape($lang["byte-symbol"]);
         }
     elseif ($bytes<pow($multiple,2))
         {
-        return number_format((double)ceil($bytes/$multiple)) . "&nbsp;".$lang["kilobyte-symbol" . $lang_suffix];
+        return number_format((double)ceil($bytes/$multiple)) . "&nbsp;" . escape($lang["kilobyte-symbol" . $lang_suffix]);
         }
     elseif ($bytes<pow($multiple,3))
         {
-        return number_format((double)$bytes/pow($multiple,2),1) . "&nbsp;".$lang["megabyte-symbol" . $lang_suffix];
+        return number_format((double)$bytes/pow($multiple,2),1) . "&nbsp;" . escape($lang["megabyte-symbol" . $lang_suffix]);
         }
     elseif ($bytes<pow($multiple,4))
         {
-        return number_format((double)$bytes/pow($multiple,3),1) . "&nbsp;".$lang["gigabyte-symbol" . $lang_suffix];
+        return number_format((double)$bytes/pow($multiple,3),1) . "&nbsp;" . escape($lang["gigabyte-symbol" . $lang_suffix]);
         }
     else
         {
-        return number_format((double)$bytes/pow($multiple,4),1) . "&nbsp;".$lang["terabyte-symbol" . $lang_suffix];
+        return number_format((double)$bytes/pow($multiple,4),1) . "&nbsp;" . escape($lang["terabyte-symbol" . $lang_suffix]);
         }
     }
 
