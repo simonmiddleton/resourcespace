@@ -3594,8 +3594,14 @@ function setup_command_line_user(array $setoptions = []) : bool
  *
  * @param  int  $new_usergroup   ID of user group to be set
  */
-function can_set_admin_usergroup(int $new_usergroup) : bool
+function can_set_admin_usergroup(?int $new_usergroup) : bool
     {
+    if (is_null($new_usergroup))
+        {
+        # No usergroup supplied e.g. when creating new user account.
+        return true;
+        }
+
     global $userpermissions;
 
     if (in_array('a', $userpermissions))
