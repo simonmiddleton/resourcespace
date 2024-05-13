@@ -8,6 +8,10 @@ function HookImage_textDownloadModifydownloadfile()
     $image_text_max_height, $image_text_min_height, $image_text_font, $image_text_position,
     $image_text_banner_position, $imagemagick_path;
     
+    if (getval('noattach', '') == true) {
+        return;
+    }   
+    
     # Return if not configured for this resource type or if user has requested no overlay and is permitted this
     if(!is_array($resource_data)
         ||
