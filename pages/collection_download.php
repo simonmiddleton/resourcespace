@@ -496,7 +496,6 @@ if ($submitted != "")
                     try {
                         symlink($p, $ln_link_name);
                         } catch (Exception $e) {
-                        echo $e->getMessage() . PHP_EOL;
                         debug("collection_download symlink: {$p} - {$ln_link_name} ERROR-".$e->getMessage());
                         }
                     unset($GLOBALS["use_error_exception"]); 
