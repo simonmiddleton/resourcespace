@@ -94,7 +94,7 @@ include "../../include/header.php";
 ?>
 <form method="post" 
       enctype="multipart/form-data" 
-      action="<?php echo $baseurl_short; ?>pages/admin/admin_size_management_edit.php?ref=<?php echo $ref . $url_params ?>"
+      action="<?php echo $baseurl_short; ?>pages/admin/admin_size_management_edit.php?ref=<?php echo urlencode($ref) . $url_params ?>"
       id="mainform"
       onSubmit="return CentralSpacePost(this, true);">
     <?php generateFormToken("mainform"); ?>

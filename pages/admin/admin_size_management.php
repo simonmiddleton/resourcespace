@@ -116,7 +116,7 @@ function addColumnHeader($orderName, $labelKey)
     if ($edit_url != "")
     {
 ?>                  <div class="ListTools">
-                        <a href="<?php echo $edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
+                        <a href="<?php echo escape($edit_url); ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fa fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a>
                     </div>
 <?php
     }
