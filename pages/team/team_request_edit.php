@@ -63,7 +63,7 @@ include "../../include/header.php";
     <?php
     if(!$modal)
         {?>
-        <p><a href="<?php echo $backurl != "" ? $backurl : $baseurl_short ."pages/team/team_request.php";?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $backurl!=""?$lang["back"]:$lang["managerequestsorders"]; ?></a></p>
+        <p><a href="<?php echo $backurl != "" ? generateURL($backurl) : $baseurl_short ."pages/team/team_request.php";?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo $backurl!=""?$lang["back"]:$lang["managerequestsorders"]; ?></a></p>
         <?php
         }
         ?>

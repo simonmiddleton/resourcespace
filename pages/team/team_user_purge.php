@@ -75,7 +75,7 @@ if(isset($count) && $count==0)
 
 <p><?php echo str_replace("%",$count,($user_purge_disable ? $lang["purgeusersconfirmdisable"] : $lang["purgeusersconfirm"] )) ?>
 <br /><br />
-<input type="hidden" name="months" value="<?php echo $months ?>">
+<input type="hidden" name="months" value="<?php echo escape($months); ?>">
 <input name="purge2" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["purgeusers"]); ?>&nbsp;&nbsp;" />
 </p>
 <?php $users=ps_query("select " . columns_in("user") . " from user where $condition"); ?>
