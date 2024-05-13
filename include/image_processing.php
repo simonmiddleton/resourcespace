@@ -438,6 +438,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                         }
                     }
                 }
+            autocomplete_blank_fields($ref, false);
             }
         # Extract text from documents (e.g. PDF, DOC)
         if (isset($extracted_text_field) && !(isset($unoconv_path) && in_array($extension,$unoconv_extensions)))
