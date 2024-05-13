@@ -2443,6 +2443,20 @@ function highlightkeywords($text,$search,$partial_index=false,$field_name="",$ke
 function str_highlight($text, $needle, $options = null, $highlight = null)
     {
     $text = (string) $text;
+
+    # If search text contains HTML entities, convert the search phrase to allow matching of entities e.g. &amp;
+    if (htmlspecialchars_decode($text) != $text)
+        {
+        if (is_array($needle))
+            {
+            $needle = array_map('escape', $needle);
+            }
+        else
+            {
+            $needle = escape($needle);
+            }
+        }
+
     /*
     this function requires that needle array does not contain any of the following characters: "(" ")"
     */
