@@ -275,7 +275,9 @@ function get_node($ref, array &$returned_node, $cache = true)
 * @param  integer  $resource_type_field         ID of the metadata field
 * @param  integer  $parent                      ID of parent node
 * @param  boolean  $recursive                   Set to true to get children nodes as well.
-*                                               IMPORTANT: this should be used only with category trees
+*                                               IMPORTANT: this is normally used with category trees, but can also be used with
+*                                               other fixed field types which allow multiple values eg. dynamic keywords list and checkbox list.
+*                                               This allows field type changes to be made between these three types without losing sight of all nodes.
 * @param  integer  $offset                      Specifies the offset of the first row to return
 * @param  integer  $rows                        Specifies the maximum number of rows to return.
 *                                               IMPORTANT! For non-fixed list fields this is capped at 10000

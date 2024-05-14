@@ -556,7 +556,7 @@ if($ajax)
             <tbody>
         <?php
         // Render existing nodes
-        $nodes = get_nodes($field, null, false, $offset, $per_page, $filter_by_name, true, (bool)$field_data['automatic_nodes_ordering']);
+        $nodes = get_nodes($field, null, true, $offset, $per_page, $filter_by_name, true, (bool)$field_data['automatic_nodes_ordering']);
 
         if(0 == count($nodes))
             {

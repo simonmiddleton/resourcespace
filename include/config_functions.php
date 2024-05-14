@@ -1648,6 +1648,7 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
 
     $existingfield = get_resource_type_field($ref);
     $params = [];
+    $multiple_deduplicate = false;               
 
     $resource_types=get_resource_types("",true,false,true);
 
@@ -1681,7 +1682,17 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
                 // Need to migrate field data
                 $migrate_data = true;               
                 }
-            
+
+            if($column == "type" && $val != $existingfield["type"] && $existingfield["type"] === FIELD_TYPE_CATEGORY_TREE)
+                {
+                // Need to deduplicate nodes if going from category tree to multiple value fixed field type
+                if ($postdata['type'] == FIELD_TYPE_CHECK_BOX_LIST || $postdata['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) 
+                    {
+                    $multiple_deduplicate = true;               
+                    }
+                }
+
+                
             // Set shortname if not already set or invalid
             if($column=="name" && ($val=="" || in_array($val,array("basicday","basicmonth","basicyear"))))
                 {
@@ -1767,6 +1778,21 @@ function save_resource_type_field(int $ref, array $columns, $postdata): bool
     $params[]="i";$params[]=$ref;
 
     ps_query($sql,$params);
+
+    // Deduplicate node names if necessary
+    if ($multiple_deduplicate) 
+        {
+        $deduplicate_sql =   
+        "UPDATE node n1
+            JOIN ( SELECT name, ref, ROW_NUMBER() OVER (PARTITION BY name ORDER BY ref) AS rn
+                    FROM node where resource_type_field = ?
+                ) n2 ON n1.ref = n2.ref
+            SET n1.name = CONCAT(n2.name, '_', n2.rn - 1)
+        WHERE n2.rn > 1";             
+        ps_query($deduplicate_sql, array("i",$ref));
+        }
+
+
     clear_query_cache("schema");
     clear_query_cache("featured_collections");
 
