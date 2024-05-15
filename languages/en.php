@@ -1729,6 +1729,7 @@ $lang["close"]="Close";
 $lang["repeatinstallationcheck"]="Repeat installation check";
 $lang["shouldbeversion"]="should be ? or greater"; # E.g. "should be 4.4 or greater"
 $lang["phpinivalue"]="PHP.INI value for '?'"; # E.g. "PHP.INI value for 'memory_limit'"
+$lang['filestore'] = 'Filestore';
 $lang["writeaccesstofilestore"]="Write access to ";
 $lang["nowriteaccesstofilestore"]=" not writable";
 $lang["writeaccesstoplugins"]="Write access to /plugins";

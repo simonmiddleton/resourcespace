@@ -21,6 +21,11 @@ include "../include/header.php";
     </a>
     <br/><br/>
     <table class="InfoTable">
+    <tr>
+        <td class="BorderBottom"; colspan='3'>
+            <b><?php echo escape($applicationname); ?></b>
+        </td>
+    </tr>
 <?php
 
 
@@ -45,14 +50,103 @@ if (substr($productversion, 0, 3) == 'SVN') {
         }
     }
 }
-
-# ResourceSpace version
-$p_version = substr($productversion, 0, 3) == 'SVN' ? 'SVN ' . $build : $productversion;
 ?>
 <tr>
     <td nowrap="true"><?php echo escape(str_replace("?", "ResourceSpace", $lang["softwareversion"])); ?></td>
-    <td><?php echo escape($p_version); ?></td>
+    <td><?php echo escape(substr($productversion, 0, 3) == 'SVN' ? 'SVN ' . $build : $productversion); ?></td>
     <td><br /></td>
+</tr>
+<?php
+
+# Check write access to filestore
+$success = is_writable($storagedir);
+if ($success === false) {
+    $result = $lang["status-fail"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"];
+} else {
+    $result = $lang["status-ok"];
+}
+?>
+<tr>
+    <td><?php echo escape($lang['filestore']); ?></td>
+    <td><?php echo escape($lang['writeaccesstofilestore'] . $storagedir); ?></td>
+    <td>
+        <b><?php echo escape($result); ?></b>
+    </td>
+</tr>
+<?php
+
+# Check write access to homeanim (if transform plugin is installed)
+if (in_array("transform", $plugins)) {
+    $success = is_writable(dirname(__FILE__) . "/../" . $homeanim_folder);
+    if ($success === false) {
+        $result = $lang["status-fail"] . ": " . $homeanim_folder . $lang["nowriteaccesstohomeanim"];
+    } else {
+        $result = $lang["status-ok"];
+    }
+    ?>
+    <tr>
+        <td><?php echo escape($lang['manage_slideshow']); ?></td>
+        <td><?php echo escape($lang["writeaccesstohomeanim"] . $homeanim_folder); ?></td>
+        <td>
+            <b><?php echo escape($result); ?></b>
+        </td>
+    </tr>
+    <?php
+}
+
+# Check flag set if code needs signing
+if (get_sysvar("code_sign_required") == "YES") {
+    $result = $lang["status-fail"];
+    $result2 = $lang["code_sign_required_warning"];
+} else {
+    $result = $lang["status-ok"];
+    $result2 = "";
+}
+?>
+<tr>
+    <td><?php echo escape($lang["code_sign_required"]); ?></td>
+    <td><?php echo escape($result2); ?></td>
+    <td>
+        <b><?php echo escape($result); ?></b>
+    </td>
+</tr>
+<?php
+
+# Check filestore folder browseability
+$cfb = check_filestore_browseability();
+?>
+<tr>
+    <?php
+    printf(
+        '<td colspan="2">%1$s (<a href="%2$s" target="_blank">%2$s</a>)</td>',
+        escape($lang["blockedbrowsingoffilestore"]),
+        escape($cfb['filestore_url'])
+    );
+    ?>
+    <td>
+        <b><?php echo escape($cfb['index_disabled'] ? $cfb['status'] : "{$cfb['status']}: {$cfb['info']}"); ?></b>
+    </td>
+</tr>
+<?php
+
+// Check ResourceSpace cron job
+$last_cron = ps_value(
+    "SELECT datediff(now(), `value`) AS `value` FROM sysvars WHERE `name` = 'last_cron'",
+    [],
+    $lang['status-never']
+);
+?>
+<tr>
+    <td><?php echo escape($lang["lastscheduledtaskexection"]); ?></td>
+    <td><?php echo escape($last_cron); ?></td>
+    <td><?php
+    if ($last_cron > 2 || $last_cron == $lang["status-never"]) {
+        ?><b><?php echo escape($lang["status-warning"]); ?></b><br/><?php
+        echo strip_tags_and_attributes($lang["executecronphp"]);
+    } else {
+        ?><b><?php echo escape($lang["status-ok"]); ?></b><?php
+    }
+    ?></td>
 </tr>
 <?php
 
@@ -145,75 +239,6 @@ if (ResolveKB($upload_max_filesize) < (100 * 1024)) {
     <td><?php echo escape($upload_max_filesize); ?></td>
     <td>
         <b><?php echo escape($result); ?></b>
-    </td>
-</tr>
-<?php
-
-# Check flag set if code needs signing
-if (get_sysvar("code_sign_required") == "YES") {
-    $result = $lang["status-fail"];
-    $result2 = $lang["code_sign_required_warning"];
-} else {
-    $result = $lang["status-ok"];
-    $result2 = "";
-}
-?>
-<tr>
-    <td><?php echo escape($lang["code_sign_required"]); ?></td>
-    <td><?php echo escape($result2); ?></td>
-    <td>
-        <b><?php echo escape($result); ?></b>
-    </td>
-</tr>
-<?php
-
-# Check write access to filestore
-$success = is_writable($storagedir);
-if ($success === false) {
-    $result = $lang["status-fail"] . ": " . $storagedir . $lang["nowriteaccesstofilestore"];
-} else {
-    $result = $lang["status-ok"];
-}
-?>
-<tr>
-    <td colspan="2"><?php echo escape($lang["writeaccesstofilestore"] . $storagedir); ?></td>
-    <td>
-        <b><?php echo escape($result); ?></b>
-    </td>
-</tr>
-<?php
-
-# Check write access to homeanim (if transform plugin is installed)
-if (in_array("transform", $plugins)) {
-    $success = is_writable(dirname(__FILE__) . "/../" . $homeanim_folder);
-    if ($success === false) {
-        $result = $lang["status-fail"] . ": " . $homeanim_folder . $lang["nowriteaccesstohomeanim"];
-    } else {
-        $result = $lang["status-ok"];
-    }
-    ?>
-    <tr>
-        <td colspan="2"><?php echo escape($lang["writeaccesstohomeanim"] . $homeanim_folder); ?></td>
-        <td>
-            <b><?php echo escape($result); ?></b>
-        </td>
-    </tr>
-    <?php
-}
-
-# Check filestore folder browseability
-$cfb = check_filestore_browseability();
-?>
-<tr>
-    <?php
-    printf(
-        '<td colspan="2">%1$s (<a href="%2$s" target="_blank">%2$s</a>)</td>',
-        escape($lang["blockedbrowsingoffilestore"]),
-        escape($cfb['filestore_url'])
-    );
-    ?>
-    <td>
-        <b><?php echo escape($cfb['index_disabled'] ? $cfb['status'] : "{$cfb['status']}: {$cfb['info']}"); ?></b>
     </td>
 </tr>
 <?php
@@ -322,16 +347,6 @@ if (strtoupper($php_tz) == strtoupper($mysql_tz)) {
     <td>
         <b><?php echo escape($timezone_check); ?></b>
     </td>
-</tr>
-<tr>
-    <td><?php echo escape($lang["lastscheduledtaskexection"]); ?></td>
-    <td><?php $last_cron = ps_value("select datediff(now(),value) value from sysvars where name='last_cron'", array(), $lang["status-never"]);echo $last_cron ?></td>
-    <td><?php
-    if ($last_cron > 2 || $last_cron == $lang["status-never"]) {
-        ?><b><?php echo escape($lang["status-warning"]); ?></b><br/><?php echo strip_tags_and_attributes($lang["executecronphp"]); ?><?php
-    } else {
-        ?><b><?php echo escape($lang["status-ok"]); ?></b><?php
-    } ?></td>
 </tr>
 <?php
 
