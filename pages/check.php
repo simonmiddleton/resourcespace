@@ -28,7 +28,6 @@ include "../include/header.php";
     </tr>
 <?php
 
-
 # Check ResourceSpace Build
 $build = '';
 if (substr($productversion, 0, 3) == 'SVN') {
@@ -148,26 +147,16 @@ $last_cron = ps_value(
     }
     ?></td>
 </tr>
-<?php
-
-# Check PHP version
-$phpversion = phpversion();
-$phpinifile = php_ini_loaded_file();
-if ($phpversion < '7.4') {
-    $result = $lang["status-fail"] . ": " . str_replace("?", "7.4", $lang["shouldbeversion"]);
-} else {
-    $result = $lang["status-ok"];
-}
-?>
 <tr>
-    <td><?php echo escape(str_replace("?", "PHP", $lang["softwareversion"])); ?></td>
-    <td><?php echo escape($phpversion) . '&ensp;&ensp;' . escape(str_replace("%file", $phpinifile, $lang["config_file"])); ?></td>
-    <td>
-        <b><?php echo escape($result); ?></b>
+    <td class="BorderBottom"; colspan='3'>
+        <b><?php echo escape($lang['web_server']); ?></b>
     </td>
 </tr>
+<tr>
+    <td><?php echo escape($lang["serverplatform"]); ?></td>
+    <td colspan="2"><?php echo escape($_SERVER['SERVER_SOFTWARE']); ?></td>
+</tr>
 <?php
-
 # Check MySQL version
 $mysqlversion_num = mysqli_get_server_version($db["read_write"]);
 $mysqlversion     = mysqli_get_server_info($db["read_write"]);
@@ -186,10 +175,50 @@ $db_encoding_str = str_replace("%encoding", $db_encoding, $lang["db-default-enco
 $encoding_output = "{$mysqlversion}&ensp;&ensp;{$encoding_str} {$db_encoding_str}";
 ?>
 <tr>
+    <td class="BorderBottom"; colspan='3'>
+        <b><?php echo escape($lang['setup-mysqlserver']); ?></b>
+    </td>
+</tr>
+<tr>
     <td><?php echo escape(str_replace("?", "MySQL", $lang["softwareversion"])); ?></td>
     <td><?php echo strip_tags_and_attributes($encoding_output); ?></td>
     <td>
         <b><?php echo escape($result); ?></b>
+    </td>
+</tr>
+
+<tr>
+    <td class="BorderBottom"; colspan='3'>
+        <b><?php echo escape($lang['php']); ?></b>
+    </td>
+</tr>
+<?php
+# Check PHP version
+$phpversion = phpversion();
+$phpinifile = php_ini_loaded_file();
+if ($phpversion < '7.4') {
+    $result = $lang["status-fail"] . ": " . str_replace("?", "7.4", $lang["shouldbeversion"]);
+} else {
+    $result = $lang["status-ok"];
+}
+?>
+<tr>
+    <td><?php echo escape(str_replace("?", "PHP", $lang["softwareversion"])); ?></td>
+    <td><?php
+        echo escape($phpversion) . '&ensp;&ensp;' . escape(str_replace("%file", $phpinifile, $lang["config_file"]));
+    ?></td>
+    <td>
+        <b><?php echo escape($result); ?></b>
+    </td>
+</tr>
+<?php
+
+# Check if we are running 32 bit PHP. If so, no large file support.
+?>
+<tr>
+    <td colspan='2'><?php echo escape($lang['large_file_support_64_bit']); ?></td>
+    <td>
+        <b><?php echo escape(php_is_64bit() ? $lang["status-ok"] : $lang['large_file_warning_32_bit']); ?></b>
     </td>
 </tr>
 <?php
@@ -266,16 +295,6 @@ if ($debug_log) {
     </tr>
     <?php
 }
-
-# Check if we are running 32 bit PHP. If so, no large file support.
-?>
-<tr>
-    <td colspan='2'><?php echo escape($lang['large_file_support_64_bit']); ?></td>
-    <td>
-        <b><?php echo escape(php_is_64bit() ? $lang["status-ok"] : $lang['large_file_warning_32_bit']); ?></b>
-    </td>
-</tr>
-<?php
 
 // Check system utilities
 foreach (RS_SYSTEM_UTILITIES as $sysu_name => $sysu) {
