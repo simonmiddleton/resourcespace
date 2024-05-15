@@ -70,7 +70,7 @@ if ($phpversion < '7.4') {
 # Check MySQL version
 $mysqlversion_num = mysqli_get_server_version($db["read_write"]);
 $mysqlversion     = mysqli_get_server_info($db["read_write"]);
-if ($mysqlversion_num < 50000) {
+if ($mysqlversion_num < (5 * 10_000 + 6 * 100)) {
     $result = $lang["status-fail"] . ": " . str_replace("?", "5", $lang["shouldbeversion"]);
 } else {
     $result = $lang["status-ok"];
@@ -85,9 +85,9 @@ $db_encoding_str = str_replace("%encoding", $db_encoding, $lang["db-default-enco
 $encoding_output = "{$mysqlversion}&ensp;&ensp;{$encoding_str} {$db_encoding_str}";
 ?>
 <tr>
-    <td><?php echo str_replace("?", "MySQL", $lang["softwareversion"]); ?></td>
-    <td><?php echo $encoding_output; ?></td>
-    <td><b><?php echo $result; ?></b></td>
+    <td><?php echo escape(str_replace("?", "MySQL", $lang["softwareversion"])); ?></td>
+    <td><?php echo strip_tags_and_attributes($encoding_output); ?></td>
+    <td><b><?php echo escape($result); ?></b></td>
 </tr><?php
 
 # Check GD installed
