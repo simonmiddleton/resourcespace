@@ -15,18 +15,19 @@ If a file is to be created for only a specific user to download you can create a
 
     $job_data["outputfile"] = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randomstring . $scramble_key) . ".<file extension here>";
     $job_data["url"]=$baseurl . "/pages/download.php?userfile=" . $ref . "_" . $randomstring . ".<file extension here>;
-    
 */
 
 include_once dirname(__FILE__) . "/../image_processing.php";
-                
+
 global $config_windows,$baseurl, $baseurl_short, $offline_job_prefixes;
 $jobsuccess = false;
 $job_cmd_ok = false;
 
-$shell_exec_cmd = str_replace("%%TARGETFILE%%", escapeshellarg($job_data["outputfile"]),$job_data["command"]);
+$shell_exec_cmd = $job_data["command"];
+$shell_exec_params = $job_data["command_params"];
+$shell_exec_params[$job_data["output_file_placeholder"]] = $job_data["outputfile"];
 
-// Check we are using a whitelisted command path to create file     
+// Check we are using a whitelisted command path to create file
 foreach($offline_job_prefixes as $offline_job_prefix)
     {
     $cmd_path = get_utility_path($offline_job_prefix);
@@ -42,12 +43,13 @@ if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|`)/i", $shell_exec_cmd))
     {
     if ($config_windows)
         {
+        $shell_exec_cmd = str_replace(array_keys($shell_exec_params),array_values($shell_exec_params),$shell_exec_cmd);
         file_put_contents(get_temp_dir() . "/create_download_" . $randstring . ".bat",$shell_exec_cmd);
         $shell_exec_cmd=get_temp_dir() . "/create_download_" . $randstring . ".bat";
+        $shell_exec_params= [];
         $deletebat = true;
         }
-    echo "Running command " . $shell_exec_cmd . PHP_EOL;
-    $output=run_command($shell_exec_cmd);
+    $output=run_command($shell_exec_cmd,false,$shell_exec_params);
     
      if(file_exists($job_data["outputfile"]))
         {

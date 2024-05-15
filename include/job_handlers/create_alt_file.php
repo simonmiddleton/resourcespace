@@ -26,10 +26,12 @@ $origfilename=get_data_by_field($job_data["resource"],$filename_field);
 $randstring=md5(rand() . microtime());
 
 $newaltfile=add_alternative_file($job_data["resource"],$job_data["alt_name"],$job_data["alt_description"],str_replace("." . $resource["file_extension"],"." . $job_data["alt_extension"],$origfilename),$job_data["alt_extension"]);
-$targetfile=get_resource_path($job_data["resource"],true,"",false, $job_data["alt_extension"],-1,1,false,"",$newaltfile);               
-$shell_exec_cmd = str_replace("%%TARGETFILE%%",escapeshellarg($targetfile),$job_data["command"]);
+$targetfile=get_resource_path($job_data["resource"],true,"",false, $job_data["alt_extension"],-1,1,false,"",$newaltfile);
+$shell_exec_cmd = $job_data["command"];
+$shell_exec_params = $job_data["command_params"];
+$shell_exec_params[$job_data["output_file_placeholder"]] = $targetfile;
 
-// Check we are using a whitelisted command path to create file     
+// Check we are using a whitelisted command path to create file
 foreach($offline_job_prefixes as $offline_job_prefix)
     {
     $cmd_path = get_utility_path($offline_job_prefix);
@@ -39,30 +41,32 @@ foreach($offline_job_prefixes as $offline_job_prefix)
         break;
         }
     }
-    
-    
+
 // Skip if any other unwanted characters in command (|,<,>,!,&,#,; or `)
 if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|`)/i", $shell_exec_cmd))
     {
     global $config_windows;
     if ($config_windows)
         {
+        $shell_exec_cmd = str_replace(array_keys($shell_exec_params),array_values($shell_exec_params),$shell_exec_cmd);
         file_put_contents(get_temp_dir() . "/create_alt_" . $randstring . ".bat",$shell_exec_cmd);
-        $shell_exec_cmd=get_temp_dir() . "/create_alt_" . $randstring . ".bat";
+        echo "Running command " . $shell_exec_cmd . PHP_EOL;
+        $shell_exec_cmd = get_temp_dir() . "/create_alt_" . $randstring . ".bat";
+        $shell_exec_params= [];
         $deletebat = true;
         }
-    echo "Running command " . $shell_exec_cmd . PHP_EOL;
-    $output=run_command($shell_exec_cmd);
-    
-     if(file_exists($targetfile))
+    $output = run_command($shell_exec_cmd,false,$shell_exec_params);
+    if(file_exists($targetfile))
         {
         $newfilesize=filesize_unlimited($targetfile);
         ps_query("update resource_alt_files set file_size = ? where resource = ? and ref = ?", array("i", $newfilesize, "i", $job_data["resource"], "i", $newaltfile));
         global $alternative_file_previews, $lang, $baseurl, $view_title_field, $offline_job_delete_completed;
         if ($alternative_file_previews)
-            {create_previews($job_data["resource"],false,$job_data["alt_extension"],false,false,$newaltfile);}
+            {
+            create_previews($job_data["resource"],false,$job_data["alt_extension"],false,false,$newaltfile);
+            }
         $message = ($job_success_text!="")?$job_success_text:$lang["alternative_file_created"] . ": " . str_replace(array('%ref','%title'),array($job_data['resource'],$resource['field' . $view_title_field]),$lang["ref-title"]) . "(" . $job_data["alt_name"] . "," . $job_data["alt_description"] . ")";
-        message_add($job["user"],$message,$baseurl_short . "?r=" . $job_data["resource"],0);
+        message_add($job["user"],$message,$GLOBALS["baseurl_short"] . "?r=" . $job_data["resource"],0);
         if($offline_job_delete_completed)
             {
             job_queue_delete($jobref);
@@ -70,16 +74,16 @@ if($job_cmd_ok && !preg_match("/(\||<|>|;|!|&|#|`)/i", $shell_exec_cmd))
         else
             {
             job_queue_update($jobref,$job_data,STATUS_COMPLETE);
-            }        
+            }
         $jobsuccess = true;
         }
-        
+
     if(isset($deletebat) && file_exists($shell_exec_cmd))
         {
         unlink($shell_exec_cmd);
-        }       
+        }
     }
-    
+
 if(!$jobsuccess)
     {
     // Job failed, upate job queue
