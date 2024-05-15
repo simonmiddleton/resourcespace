@@ -21,7 +21,7 @@ $collectionuser = ps_value("SELECT user AS value FROM collection WHERE ref = ?",
 
 if (!is_array($collectionresources))
     {
-    echo "Collection " . $collectionid . " contains no resources.";
+    echo "Collection " . escape($collectionid) . " contains no resources.";
     die();
     }
 

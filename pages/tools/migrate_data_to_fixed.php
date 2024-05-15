@@ -238,7 +238,7 @@ include_once "../../include/header.php";
 ?>
 <div class="BasicsBox">
     <p>    
-    <a href="<?php echo $backurl ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a>
+    <a href="<?php echo escape($backurl) ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo LINK_CARET_BACK ?><?php echo escape($lang["back"]); ?></a>
     </p>
     <h1><?php echo escape($lang["admin_resource_type_field_migrate_data"]); ?></h1>
 

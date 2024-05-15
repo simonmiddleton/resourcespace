@@ -69,7 +69,7 @@ if (count($resourceinfo)>0)
     }
 else
     {
-    echo "Skipping $ref";
+    echo "Skipping " . escape($ref);
     }
 
 if ($ref<$max && getval("only","")=="")

@@ -81,7 +81,7 @@ if($add!=='' || $all)
             {
             if(!in_array($add[$a],$resource_table_joins))
                 {
-                echo "Field {$add[$a]} is not part of \$resource_table_joins...removing from list<br/>";
+                echo "Field " . escape($add[$a]) . " is not part of \$resource_table_joins...removing from list<br/>";
                 unset($add[$a]);
                 }
             }

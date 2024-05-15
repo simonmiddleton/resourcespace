@@ -57,7 +57,7 @@ foreach ($all_node_values as $node_value)
 
 if (count($duplicate_node_values) == 0)
     {
-    die('No duplicate nodes were found in resource type field ' . $resource_type_field . '.');
+    die('No duplicate nodes were found in resource type field ' . escape($resource_type_field) . '.');
     }
 
 # If a duplicate node is found, before we remove it check for resources using it and update them to use the instance of the duplicate node being retained.
