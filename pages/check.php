@@ -88,23 +88,8 @@ $encoding_output = "{$mysqlversion}&ensp;&ensp;{$encoding_str} {$db_encoding_str
     <td><?php echo escape(str_replace("?", "MySQL", $lang["softwareversion"])); ?></td>
     <td><?php echo strip_tags_and_attributes($encoding_output); ?></td>
     <td><b><?php echo escape($result); ?></b></td>
-</tr><?php
-
-# Check GD installed
-if (function_exists("gd_info")) {
-    $gdinfo = gd_info();
-    if (is_array($gdinfo)) {
-        $version = $gdinfo["GD Version"];
-        $result = $lang["status-ok"];
-    } else {
-        $version = $lang["status-notinstalled"];
-        $result = $lang["status-fail"];
-    }
-} else {
-    $version = $lang["status-notinstalled"];
-    $result = $lang["status-fail"];
-}
-?><tr><td><?php echo str_replace("?", "GD", $lang["softwareversion"]); ?></td><td><?php echo $version?></td><td><b><?php echo $result?></b></td></tr><?php
+</tr>
+<?php
 
 # Check ini values for memory_limit, post_max_size, upload_max_filesize
 $memory_limit = ini_get("memory_limit");
