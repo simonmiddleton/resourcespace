@@ -319,7 +319,8 @@ ksort($extensions_required, SORT_STRING);
 foreach ($extensions_required as $module => $required_fn) {
     ?>
     <tr>
-        <td colspan="2">php-<?php echo escape($module); ?></td>
+        <td>php-<?php echo escape($module); ?></td>
+        <td><?php echo escape(phpversion($module)); ?></td>
         <td>
             <b><?php
             if (function_exists($required_fn)) {
