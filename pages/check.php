@@ -140,6 +140,18 @@ if ($debug_log) {
     <?php
 }
 
+# Check sql logging configured correctly
+if ($mysql_log_transactions) {
+    ?>
+    <tr>
+        <td colspan="2"><?php escape(printf('%s %s', $lang['writeaccess_sql_log'], $mysql_log_location)); ?></td>
+        <td>
+            <b><?php echo escape(is_writable($mysql_log_location) ? $lang['status-ok'] : $lang['status-fail']); ?></b>
+        </td>
+    </tr>
+    <?php
+}
+
 // Check ResourceSpace cron job
 $last_cron = ps_value(
     "SELECT datediff(now(), `value`) AS `value` FROM sysvars WHERE `name` = 'last_cron'",
@@ -329,20 +341,12 @@ sort($extensions);
     <td></td>
 </tr>
 
+<tr>
+    <td class="BorderBottom"; colspan='3'>
+        <b><?php echo escape($lang['rs_ext_dependencies']); ?></b>
+    </td>
+</tr>
 <?php
-
-# Check sql logging configured correctly
-if ($mysql_log_transactions) {
-    ?>
-    <tr>
-        <td colspan="2"><?php escape(printf('%s %s', $lang['writeaccess_sql_log'], $mysql_log_location)); ?></td>
-        <td>
-            <b><?php echo escape(is_writable($mysql_log_location) ? $lang['status-ok'] : $lang['status-fail']); ?></b>
-        </td>
-    </tr>
-    <?php
-}
-
 // Check system utilities
 foreach (RS_SYSTEM_UTILITIES as $sysu_name => $sysu) {
     // Skip utilities which are a sub program (e.g ImageMagick has convert, identify, composite etc., checking for
@@ -353,22 +357,6 @@ foreach (RS_SYSTEM_UTILITIES as $sysu_name => $sysu) {
 
     display_utility_status($sysu_name);
 }
-
-# Check Exif extension
-if (function_exists('exif_read_data')) {
-    $result = $lang["status-ok"];
-} else {
-    $version = $lang["status-notinstalled"];
-    $result = $lang["status-fail"];
-}
-?>
-<tr>
-    <td colspan="2"><?php echo escape($lang["exif_extension"]); ?></td>
-    <td>
-        <b><?php echo escape($result); ?></b>
-    </td>
-</tr>
-<?php
 
 # Check archiver
 if (
