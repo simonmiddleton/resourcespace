@@ -128,6 +128,18 @@ $cfb = check_filestore_browseability();
 </tr>
 <?php
 
+# Check debug logging configured correctly
+if ($debug_log) {
+    ?>
+    <tr>
+        <td colspan="2"><?php escape(printf('%s %s', $lang['writeaccess_debug_log'], $debug_log_location)); ?></td>
+        <td>
+            <b><?php echo escape(is_writable($debug_log_location) ? $lang['status-ok'] : $lang['status-fail']); ?></b>
+        </td>
+    </tr>
+    <?php
+}
+
 // Check ResourceSpace cron job
 $last_cron = ps_value(
     "SELECT datediff(now(), `value`) AS `value` FROM sysvars WHERE `name` = 'last_cron'",
@@ -272,6 +284,53 @@ if (ResolveKB($upload_max_filesize) < (100 * 1024)) {
 </tr>
 <?php
 
+# Check PHP timezone identical to server (MySQL will use the server one) so we need to ensure they are the same
+$php_tz = date_default_timezone_get();
+$mysql_tz = ps_value("SELECT IF(@@session.time_zone = 'SYSTEM', @@system_time_zone, @@session.time_zone) AS `value`", array(), '');
+$tz_check_fail_msg = str_replace(array('%phptz%', '%mysqltz%'), array($php_tz, $mysql_tz), $lang['server_timezone_check_fail']);
+$timezone_check = "{$lang['status-warning']}: {$tz_check_fail_msg}";
+if (strtoupper($php_tz) == strtoupper($mysql_tz)) {
+    $timezone_check = $lang['status-ok'];
+}
+?>
+<tr>
+    <td colspan="2"><?php echo escape($lang['server_timezone_check']); ?></td>
+    <td>
+        <b><?php echo escape($timezone_check); ?></b>
+    </td>
+</tr>
+<?php
+
+// Check required PHP extensions
+$extensions_required = SYSTEM_REQUIRED_PHP_MODULES;
+ksort($extensions_required, SORT_STRING);
+foreach ($extensions_required as $module => $required_fn) {
+    ?>
+    <tr>
+        <td colspan="2">php-<?php echo escape($module); ?></td>
+        <td>
+            <b><?php
+            if (function_exists($required_fn)) {
+                echo escape($lang['status-ok']);
+            } else {
+                echo escape($lang['server_' . $module . '_check_fail'] ?? $lang['status-fail']);
+            }?></b>
+        </td>
+    </tr>
+    <?php
+}
+
+$extensions = get_loaded_extensions();
+sort($extensions);
+?>
+<tr>
+    <td><?php echo escape($lang['phpextensions']); ?></td>
+    <td><?php echo escape(implode(' ', $extensions)); ?></td>
+    <td></td>
+</tr>
+
+<?php
+
 # Check sql logging configured correctly
 if ($mysql_log_transactions) {
     ?>
@@ -279,18 +338,6 @@ if ($mysql_log_transactions) {
         <td colspan="2"><?php escape(printf('%s %s', $lang['writeaccess_sql_log'], $mysql_log_location)); ?></td>
         <td>
             <b><?php echo escape(is_writable($mysql_log_location) ? $lang['status-ok'] : $lang['status-fail']); ?></b>
-        </td>
-    </tr>
-    <?php
-}
-
-# Check debug logging configured correctly
-if ($debug_log) {
-    ?>
-    <tr>
-        <td colspan="2"><?php escape(printf('%s %s', $lang['writeaccess_debug_log'], $debug_log_location)); ?></td>
-        <td>
-            <b><?php echo escape(is_writable($debug_log_location) ? $lang['status-ok'] : $lang['status-fail']); ?></b>
         </td>
     </tr>
     <?php
@@ -352,53 +399,8 @@ if (
     <?php
 }
 
-# Check PHP timezone identical to server (MySQL will use the server one) so we need to ensure they are the same
-$php_tz = date_default_timezone_get();
-$mysql_tz = ps_value("SELECT IF(@@session.time_zone = 'SYSTEM', @@system_time_zone, @@session.time_zone) AS `value`", array(), '');
-$tz_check_fail_msg = str_replace(array('%phptz%', '%mysqltz%'), array($php_tz, $mysql_tz), $lang['server_timezone_check_fail']);
-$timezone_check = "{$lang['status-warning']}: {$tz_check_fail_msg}";
-if (strtoupper($php_tz) == strtoupper($mysql_tz)) {
-    $timezone_check = $lang['status-ok'];
-}
-?>
-<tr>
-    <td colspan="2"><?php echo escape($lang['server_timezone_check']); ?></td>
-    <td>
-        <b><?php echo escape($timezone_check); ?></b>
-    </td>
-</tr>
-<?php
-
-// Check required PHP extensions
-$extensions_required = SYSTEM_REQUIRED_PHP_MODULES;
-ksort($extensions_required, SORT_STRING);
-foreach ($extensions_required as $module => $required_fn) {
-    ?>
-    <tr>
-        <td colspan="2">php-<?php echo escape($module); ?></td>
-        <td>
-            <b><?php
-            if (function_exists($required_fn)) {
-                echo escape($lang['status-ok']);
-            } else {
-                echo escape($lang['server_' . $module . '_check_fail'] ?? $lang['status-fail']);
-            }?></b>
-        </td>
-    </tr>
-    <?php
-}
-
 hook("addinstallationcheck");
-
-$extensions = get_loaded_extensions();
-sort($extensions);
 ?>
-<tr>
-    <td><?php echo escape($lang['phpextensions']); ?></td>
-    <td><?php echo escape(implode(' ', $extensions)); ?></td>
-    <td></td>
-</tr>
-
 </table>
 </div>
 <?php
