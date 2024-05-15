@@ -70,8 +70,8 @@ if($generate && enforcePostRequest(false))
         $video_track_command=$video_tracks_output_formats[$video_track_format];
         $shell_exec_params = [];
         $placeholder_extra = md5(rand() . microtime()); // To block attempts to inject code
-        $shell_exec_cmd = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i %%SOURCE%%";
-        $shell_exec_params["%%SOURCE%%"] = $filesource;
+        $shell_exec_cmd = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i %%SOURCE$placeholder_extra%%";
+        $shell_exec_params["%%SOURCE$placeholder_extra%%"] = $filesource;
 
         $probeout = run_command($ffprobe_fullpath . " -i " . escapeshellarg($filesource), true);        if(preg_match("/Duration: (\d+):(\d+):(\d+)\.\d+, start/", $probeout, $match))
             {
