@@ -54,12 +54,18 @@ $p_version = substr($productversion, 0, 3) == 'SVN' ? 'SVN ' . $build : $product
 # Check PHP version
 $phpversion = phpversion();
 $phpinifile = php_ini_loaded_file();
-if ($phpversion < '4.4') {
-    $result = $lang["status-fail"] . ": " . str_replace("?", "4.4", $lang["shouldbeversion"]);
+if ($phpversion < '7.4') {
+    $result = $lang["status-fail"] . ": " . str_replace("?", "7.4", $lang["shouldbeversion"]);
 } else {
     $result = $lang["status-ok"];
 }
-?><tr><td><?php echo str_replace("?", "PHP", $lang["softwareversion"]); ?></td><td><?php echo $phpversion . '&ensp;&ensp;' . str_replace("%file", $phpinifile, $lang["config_file"]);?></td><td><b><?php echo $result?></b></td></tr><?php
+?>
+<tr>
+    <td><?php echo escape(str_replace("?", "PHP", $lang["softwareversion"])); ?></td>
+    <td><?php echo escape($phpversion) . '&ensp;&ensp;' . escape(str_replace("%file", $phpinifile, $lang["config_file"])); ?></td>
+    <td><b><?php echo escape($result); ?></b></td>
+    </tr>
+<?php
 
 # Check MySQL version
 $mysqlversion_num = mysqli_get_server_version($db["read_write"]);
