@@ -298,8 +298,12 @@ if (ResolveKB($upload_max_filesize) < (100 * 1024)) {
 
 # Check PHP timezone identical to server (MySQL will use the server one) so we need to ensure they are the same
 $php_tz = date_default_timezone_get();
-$mysql_tz = ps_value("SELECT IF(@@session.time_zone = 'SYSTEM', @@system_time_zone, @@session.time_zone) AS `value`", array(), '');
-$tz_check_fail_msg = str_replace(array('%phptz%', '%mysqltz%'), array($php_tz, $mysql_tz), $lang['server_timezone_check_fail']);
+$mysql_tz = ps_value(
+    "SELECT IF(@@session.time_zone = 'SYSTEM', @@system_time_zone, @@session.time_zone) AS `value`",
+    [],
+    ''
+);
+$tz_check_fail_msg = str_replace(['%phptz%', '%mysqltz%'], [$php_tz, $mysql_tz], $lang['server_timezone_check_fail']);
 $timezone_check = "{$lang['status-warning']}: {$tz_check_fail_msg}";
 if (strtoupper($php_tz) == strtoupper($mysql_tz)) {
     $timezone_check = $lang['status-ok'];
@@ -475,7 +479,8 @@ function get_utility_version(string $utilityname)
 
     if ($expected == false) {
         # There was a correct path but the version check failed - unexpected output when executing the command.
-        $error_msg = $lang["status-fail"] . ":<br />" . str_replace(array("%command", "%output"), array($version_command, $version), $lang["execution_failed"]);
+        $error_msg = "{$lang["status-fail"]}:<br />"
+            . str_replace(['%command', '%output'], [$version_command, $version], $lang['execution_failed']);
         return array("name" => $name, "version" => "", "success" => false, "error" => $error_msg);
     } else {
         # There was a working path and the output was the expected - the version is returned.
