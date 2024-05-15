@@ -52,8 +52,7 @@ if (substr($productversion, 0, 3) == 'SVN') {
 ?>
 <tr>
     <td nowrap="true"><?php echo escape(str_replace("?", "ResourceSpace", $lang["softwareversion"])); ?></td>
-    <td><?php echo escape(substr($productversion, 0, 3) == 'SVN' ? 'SVN ' . $build : $productversion); ?></td>
-    <td><br /></td>
+    <td colspan="2"><?php echo escape(substr($productversion, 0, 3) == 'SVN' ? 'SVN ' . $build : $productversion); ?></td>
 </tr>
 <?php
 
@@ -67,7 +66,7 @@ if ($success === false) {
 ?>
 <tr>
     <td><?php echo escape($lang['filestore']); ?></td>
-    <td><?php echo escape($lang['writeaccesstofilestore'] . $storagedir); ?></td>
+    <td><?php echo escape($lang['write_access_to'] . $storagedir); ?></td>
     <td>
         <b><?php echo escape($result); ?></b>
     </td>
@@ -85,7 +84,7 @@ if (in_array("transform", $plugins)) {
     ?>
     <tr>
         <td><?php echo escape($lang['manage_slideshow']); ?></td>
-        <td><?php echo escape($lang["writeaccesstohomeanim"] . $homeanim_folder); ?></td>
+        <td><?php echo escape($lang['write_access_to'] . $homeanim_folder); ?></td>
         <td>
             <b><?php echo escape($result); ?></b>
         </td>
@@ -132,7 +131,8 @@ $cfb = check_filestore_browseability();
 if ($debug_log) {
     ?>
     <tr>
-        <td colspan="2"><?php escape(printf('%s %s', $lang['writeaccess_debug_log'], $debug_log_location)); ?></td>
+        <td><?php echo escape($lang['systemconsoledebuglog']); ?></td>
+        <td><?php escape(printf('%s %s', $lang['write_access_to'], $debug_log_location)); ?></td>
         <td>
             <b><?php echo escape(is_writable($debug_log_location) ? $lang['status-ok'] : $lang['status-fail']); ?></b>
         </td>
