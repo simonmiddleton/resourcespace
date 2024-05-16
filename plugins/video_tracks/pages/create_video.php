@@ -4,12 +4,12 @@ include_once '../../../include/resource_functions.php';
 include_once '../../../include/authenticate.php';
 include_once '../../../include/image_processing.php';
 
-$ref = getval("ref","", true);
+$ref = getval("ref",0, true);
 
 // for_original exists when the plugin is used to create custom video formats on the fly for the original file ($video_tracks_allow_original_custom_formats)
 $for_original = filter_var(getval('for_original', false), FILTER_VALIDATE_BOOLEAN);
 
-if($ref < 0 || $ref == '')
+if($ref <= 0)
     {
     $error   = true;
     $message = $lang['video_tracks_invalid_resource'];
@@ -42,9 +42,9 @@ if($generate && $offline && $transcode_now)
     $offline = false;
     }
 
-$altfiles=get_alternative_files($ref);
-$subtitle_alts=array();
-$audio_alts=array();
+$altfiles = get_alternative_files($ref);
+$subtitle_alts = [];
+$audio_alts = [];
 foreach($altfiles as $altfile)
     {
     if(in_array(mb_strtolower($altfile["file_extension"]),$video_tracks_subtitle_extensions)){$subtitle_alts[]=$altfile;}
@@ -54,20 +54,20 @@ foreach($altfiles as $altfile)
 if($generate && enforcePostRequest(false))
     {
     $video_track_format  = getval("video_track_format","");
-    $video_subtitle_file = getval("video_subtitle_file","");
-    $video_audio_file    = getval("video_audio_file","");
+    $video_subtitle_file = getval("video_subtitle_file",0,true,"is_int_loose");
+    $video_audio_file    = getval("video_audio_file",0,true,"is_int_loose");
     $savealt             = false;
     $download            = false;
 
-    if($video_track_format!="")
+    if($video_track_format != "" && isset($video_tracks_output_formats[$video_track_format]))
         {
         // Build up the ffmpeg command
         $ffmpeg_fullpath = get_utility_path("ffmpeg");
         $ffprobe_fullpath = get_utility_path("ffprobe");
-        $filesource=get_resource_path($ref,true,"",false,$resource["file_extension"]);
+        $filesource = get_resource_path($ref,true,"",false,$resource["file_extension"]);
         $randstring=md5(rand() . microtime());
         // Get the chosen ffmpeg command as set in the plugin config
-        $video_track_command=$video_tracks_output_formats[$video_track_format];
+        $video_track_command = $video_tracks_output_formats[$video_track_format];
         $shell_exec_params = [];
         $placeholder_extra = md5(rand() . microtime()); // To block attempts to inject code
         $shell_exec_cmd = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i %%SOURCE$placeholder_extra%%";
@@ -81,26 +81,26 @@ if($generate && enforcePostRequest(false))
             $shell_exec_params["%%DURATION$placeholder_extra%%"] = $duration;
             }
 
-        if($video_audio_file!="")
+        if(in_array($video_audio_file,$audio_alts))
             {
             $audio_info=get_alternative_file($ref,$video_audio_file);
             $audio_path=get_resource_path($ref,true,"",false,$audio_info["file_extension"],-1,1,false,"",$video_audio_file);
-           $shell_exec_cmd .= " -i %%SOURCEAUDIO$placeholder_extra%%";
+            $shell_exec_cmd .= " -i %%SOURCEAUDIO$placeholder_extra%%";
             $shell_exec_params["%%SOURCEAUDIO$placeholder_extra%%"] = $audio_path;
             $shell_exec_cmd .= " -map 0:v -map 1:a";
             }
 
-        if($video_subtitle_file!="")
+        if(in_array($video_subtitle_file,$subtitle_alts))
             {
             $subtitle_info=get_alternative_file($ref,$video_subtitle_file);
-            $subtitle_path=get_resource_path($ref,true,"",false,$subtitle_info["file_extension"],-1,1,false,"",$video_subtitle_file); 
+            $subtitle_path=get_resource_path($ref,true,"",false,$subtitle_info["file_extension"],-1,1,false,"",$video_subtitle_file);
             $shell_exec_cmd .= " -vf subtitles=%%SUBTITLES$placeholder_extra%%";
             $shell_exec_params["%%SUBTITLES$placeholder_extra%%"] = $subtitle_path;
             }
         $shell_exec_cmd .= " " . $video_track_command["command"] . " %%TARGETFILE$placeholder_extra%%";
 
         // Video requirements have been defined. What does the user want to do with the video?
-        if(getval("video_track_save_alt","")!="" && $edit_access)
+        if(getval("video_track_save_alt","") != "" && $edit_access && checkperm("A"))
             {
             // Save as alternative file.
             $savealt=true;
@@ -184,14 +184,14 @@ if($generate && enforcePostRequest(false))
                 $deletebat = true;
                 }
 
-            $output=run_command($shell_exec_cmd,false,$shell_exec_params);
+            $output = run_command($shell_exec_cmd,false,$shell_exec_params);
             if(file_exists($targetfile))
                 {
                 if($savealt)
                     {
                     // Save as alternative
                     $newfilesize=filesize_unlimited($targetfile);
-                    ps_query("update resource_alt_files set file_size=? where resource=? and ref=?",array("i",$newfilesize,"i",$ref,"i",$newaltfile));
+                    ps_query("UPDATE resource_alt_files SET file_size=? WHERE resource=? AND ref=?",array("i",$newfilesize,"i",$ref,"i",$newaltfile));
                     if ($alternative_file_previews)
                         {create_previews($ref,false,$video_track_command["extension"],false,false,$newaltfile);}
                     $message = $lang["alternative_file_created"];
@@ -363,7 +363,7 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
     if($offline)
         {
         ?>
-        <div id="question_transcode_now_or_notify_me" class="Question DisplayNone">
+        <div id="question_transcode_now_or_notify_me" class="Question" style="display:none;">
             <label><?php echo escape($lang['video_tracks_transcode_now_or_notify_me_label']); ?></label>
             <table cellpadding="5" cellspacing="0">
                 <tbody>
