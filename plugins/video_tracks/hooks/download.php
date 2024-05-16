@@ -20,11 +20,21 @@ function HookVideo_tracksDownloadModifydownloadpath()
             {
             // This is done so users don't download a file with a random name.
             $GLOBALS['filename'] = $video_track_details[1];
-            $path = get_temp_dir(false, 'video_tracks_exports') . DIRECTORY_SEPARATOR . $video_track_details[2];
+            $download_path = get_temp_dir(false, 'video_tracks_exports') . DIRECTORY_SEPARATOR . $video_track_details[2];
+            if (!validate_temp_path($download_path, 'video_tracks_exports'))
+                {
+                return false;
+                }
+            $path = $download_path;
             }
         else
             {
-            $path = get_temp_dir(false, 'video_tracks_exports') . DIRECTORY_SEPARATOR . $video_track_details[1];
+            $download_path = get_temp_dir(false, 'video_tracks_exports') . DIRECTORY_SEPARATOR . $video_track_details[1];
+            if (!validate_temp_path($download_path, 'video_tracks_exports'))
+                {
+                return false;
+                }
+            $path = $download_path;
             }
 
         return true;

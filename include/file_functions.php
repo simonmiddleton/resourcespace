@@ -363,3 +363,22 @@ function validate_resource_files(array $resources,array $criteria = []): array
     }
     return $results;
 }
+
+
+/**
+ * Block path traversal by ensuring download is only possible from the temp folder.
+ * Generates path to temp folder and checks it matches the supplied path.
+ *
+ * @param  string  $test_path     Potentially unsafe path to check.
+ * @param  string  $temp_folder   Optional name of temp folder to validate.
+ */
+function validate_temp_path(string $test_path, string $temp_folder = '') : bool
+    {
+    $temp_dir = realpath(get_temp_dir(false, $temp_folder));
+    $test_path = realpath(pathinfo($test_path, PATHINFO_DIRNAME));
+    if ($temp_dir === $test_path)
+        {
+        return true;
+        }
+    return false;
+    }
