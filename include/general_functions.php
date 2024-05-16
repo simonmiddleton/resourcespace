@@ -2015,7 +2015,13 @@ function get_temp_dir($asUrl = false,$uniqid="")
         $result .= "/$uniqid";
         if(!is_dir($result))
             {
-            mkdir($result, 0777, true);
+            $GLOBALS["use_error_exception"] = true;
+            try {
+                mkdir($result, 0777, true);
+                } catch (Exception $e) {
+                debug("get_temp_dir: {$result} ERROR-".$e->getMessage());
+                }
+            unset($GLOBALS["use_error_exception"]);
             }
         }
 
