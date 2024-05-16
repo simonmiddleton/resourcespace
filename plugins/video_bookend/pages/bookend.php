@@ -89,10 +89,10 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
 
     # ffmpeg join using text file (that stores all the files to be joined)
 
-    $shell_exec_cmd  = 'ffmpeg -f concat -safe 0 ';
-    $shell_exec_cmd .= "-i {$temp_dir}/bookend_videos.txt ";
-    $shell_exec_cmd .= '-c copy '. $final .'';
-    exec($shell_exec_cmd);
+    $shell_exec_cmd  = 'ffmpeg -f concat -safe 0';
+    $shell_exec_cmd .= " -i " . escapeshellarg($temp_dir . "/bookend_videos.txt");
+    $shell_exec_cmd .= ' -c copy '. escapeshellarg($final);
+    run_command($shell_exec_cmd);
 
     # Download the finished file to user...
 
