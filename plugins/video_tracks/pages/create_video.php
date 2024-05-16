@@ -73,7 +73,8 @@ if($generate && enforcePostRequest(false))
         $shell_exec_cmd = $ffmpeg_fullpath . " " . $ffmpeg_global_options . " -i %%SOURCE$placeholder_extra%%";
         $shell_exec_params["%%SOURCE$placeholder_extra%%"] = $filesource;
 
-        $probeout = run_command($ffprobe_fullpath . " -i " . escapeshellarg($filesource), true);        if(preg_match("/Duration: (\d+):(\d+):(\d+)\.\d+, start/", $probeout, $match))
+        $probeout = run_command($ffprobe_fullpath . " -i " . escapeshellarg($filesource), true);
+        if(preg_match("/Duration: (\d+):(\d+):(\d+)\.\d+, start/", $probeout, $match))
             {
             $duration = $match[1]*3600+$match[2]*60+$match[3];
             $shell_exec_cmd .= " -t %%DURATION$placeholder_extra%%";
