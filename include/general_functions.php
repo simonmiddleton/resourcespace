@@ -4040,6 +4040,10 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
  */
 function rcRmdir ($path,$ignore=array())
     {
+    if (!is_valid_rs_path($path)) {
+        // Not a valid path to a ResourceSpace file source
+        return false;
+    }
     debug("rcRmdir: " . $path);
     if (is_dir($path))
         {
@@ -4055,7 +4059,7 @@ function rcRmdir ($path,$ignore=array())
             if ($object->isDir() && $object->isWritable())
                 {
                 $success = rcRmdir($path . DIRECTORY_SEPARATOR . $objectname,$ignore);
-                }               
+                }
             else
                 {
                 $success = try_unlink($path . DIRECTORY_SEPARATOR . $objectname);

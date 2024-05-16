@@ -118,11 +118,11 @@ function get_resource_path(
         return generateURL(
             "{$baseurl}/pages/download.php",
             array(
-                'ref'         => $ref,
+                'ref'         => (int) $ref,
                 'size'        => $size,
                 'ext'         => $extension,
-                'page'        => $page,
-                'alternative' => $alternative,
+                'page'        => (int) $page,
+                'alternative' => (int) $alternative,
                 'watermarked' => $watermarked,
                 'k'           => $k,
                 'noattach'    => 'true',
@@ -3257,12 +3257,12 @@ function delete_resource($ref)
         }
 
 
-    //attempt to remove directory
+    // Attempt to remove directory
     $resource_path = get_resource_path($ref, true, "pre", true);
 
     $dirpath = dirname($resource_path);
     hook('delete_resource_path_extra', '', array($dirpath));
-    @rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
+    rcRmdir ($dirpath); // try to delete directory, but if we do not have permission fail silently for now
 
     hook("beforedeleteresourcefromdb","",array($ref));
 
@@ -4513,10 +4513,13 @@ function get_exiftool_fields($resource_type, string $option_separator = ",", boo
 */
 function createTempFile($path, $uniqid, $filename)
     {
-    if(!file_exists($path) || !is_readable($path))
-        {
+    if(
+        !file_exists($path) 
+        || !is_readable($path)
+        || !is_valid_rs_path($path)
+    ) {
         return false;
-        }
+    }
 
     $tmp_dir = get_temp_dir(false, $uniqid);
 
@@ -4583,6 +4586,12 @@ function stripMetadata($file_path)
 function write_metadata($path, $ref, $uniqid="")
     {
     debug_function_call('write_metadata', func_get_args());
+
+    if (!is_valid_rs_path($path)) {
+        // Not a valid path to a ResourceSpace file source
+        return false;
+    }
+
     // copys the file to tmp and runs exiftool on it
     // uniqid tells the tmp file to be placed in an isolated folder within tmp
     global $exiftool_remove_existing, $storagedir, $exiftool_write, $exiftool_write_option, $exiftool_no_process, $mysql_charset, $exiftool_write_omit_utf8_conversion;

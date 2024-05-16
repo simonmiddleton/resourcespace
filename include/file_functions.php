@@ -382,3 +382,28 @@ function validate_temp_path(string $test_path, string $temp_folder = '') : bool
         }
     return false;
     }
+
+
+/**
+ * Check if a given file path is from a valid RS accessible location
+ *
+ * @param   string   $path
+ * @param   array    $extra_paths   Array of additional valid source paths to check
+ * 
+ */
+function is_valid_rs_path(string $path, array $extra_paths = []): bool
+{
+    $sourcerealpath = realpath($path);
+    $basepaths = [
+        $GLOBALS["storagedir"],
+        // $GLOBALS["syncdir"],
+    ];
+    foreach(array_merge($basepaths,$extra_paths) as $validpath) {
+        $validpath = realpath($validpath);
+        if (strpos($sourcerealpath,$validpath) === 0) {
+            return true;
+        }
+    }
+    // Not a valid file source
+    return false;
+}
