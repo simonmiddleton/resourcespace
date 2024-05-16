@@ -107,7 +107,6 @@ if($generate && enforcePostRequest(false))
             $origfilename=get_data_by_field($ref,$filename_field);
             $altname=$video_track_format;
             $description=getval("video_track_alt_desc","");
-            $description=getval("video_track_alt_desc","");
             if($offline)
                 {
                 // Add this to the job queue for offline processing
