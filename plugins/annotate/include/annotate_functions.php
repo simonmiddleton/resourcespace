@@ -59,18 +59,22 @@ function get_annotate_file_path($ref,$getfilepath,$extension)
         }
     else
         {
-        $path= $baseurl . "/pages/download.php?tempfile=annotate_" . $ref . "_" . $annotateid . "." . $extension . "&noattach=true";
-        }    
+        $path = generateURL($baseurl . "/pages/download.php",
+            [
+            "tempfile" => "annotate_" . (int)$ref . "_" . $annotateid . "." . $extension,
+            "noattach" => "true"
+            ]);
+        }
     return $path;
     }
-    
+
 
 function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=false,$preview=false){
     # function to create annotated pdf of resources or collections.
     # This leaves the pdfs and jpg previews in filestore/annotate so that they can be grabbed later.
     # $cleanup will result in a slightly different path that is not cleaned up afterwards.
     
-    global $contact_sheet_preview_size,$annotate_pdf_output_only_annotated,$lang,$userfullname,$view_title_field,$baseurl,$imagemagick_path,$imagemagick_colorspace,$ghostscript_path,$previewpage,$storagedir,$storageurl,$annotate_font,$access,$k;
+    global $contact_sheet_preview_size,$annotate_pdf_output_only_annotated,$lang,$userfullname,$view_title_field,$baseurl,$imagemagick_path,$imagemagick_colorspace,$previewpage,$annotate_font,$access;
     $date= date("m-d-Y h:i a");
     
     include_once dirname(__FILE__) . '/../../../include/image_processing.php';
@@ -238,13 +242,18 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
         putenv("MAGICK_HOME=" . $imagemagick_path); 
         $ghostscript_fullpath = get_utility_path("ghostscript");
         
-        $command = $ghostscript_fullpath . " -sDEVICE=jpeg -dFirstPage=" . escapeshellarg($previewpage) . " -o -r100 -dLastPage=" . escapeshellarg($previewpage) . " -sOutputFile=" . escapeshellarg($jpgstoragepath) . " " . escapeshellarg($pdfstoragepath);
+        $command = $ghostscript_fullpath . " -sDEVICE=jpeg -dFirstPage=" . (int) $previewpage;
+        $command .= " -o -r100 -dLastPage=" . (int) $previewpage;
+        $command .= " -sOutputFile=" . escapeshellarg($jpgstoragepath);
+        $command .= " " . escapeshellarg($pdfstoragepath);
         run_command($command);
 
         $convert_fullpath = get_utility_path("im-convert");
         if ($convert_fullpath == false) {exit("Could not find ImageMagick 'convert' utility at location '$command'");}  
         
-        $command = $convert_fullpath . " -resize $contact_sheet_preview_size -quality 90 -colorspace ".$imagemagick_colorspace." " . escapeshellarg($jpgstoragepath) ." " . escapeshellarg($jpgstoragepath);
+        $command = $convert_fullpath . " -resize . " . escapeshellarg($contact_sheet_preview_size);
+        $command .= " -quality 90 -colorspace " . escapeshellarg($imagemagick_colorspace);
+        $command .= " " . escapeshellarg($jpgstoragepath) ." " . escapeshellarg($jpgstoragepath);
         run_command($command);
         return true;
         }
