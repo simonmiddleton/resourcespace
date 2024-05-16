@@ -5008,9 +5008,12 @@ function import_resource($path,$type,$title,$ingest=false,$createPreviews=true, 
 function get_alternative_files($resource,$order_by="",$sort="",$type="")
     {
     # Returns a list of alternative files for the given resource
-    if ($order_by!="" && $sort!=""
+    if (
+        $order_by!=""
+        && $sort!=""
         && in_array(strtoupper($order_by),array("ALT_TYPE"))
-        && in_array(strtoupper($sort),array("ASC","DESC")) )
+        && validate_sort_value($sort)
+    )
         {
         $ordersort=$order_by." ".$sort.",";
         }

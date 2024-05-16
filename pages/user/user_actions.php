@@ -18,7 +18,7 @@ if(is_array($updatedactiontypes)){$actiontypes=$updatedactiontypes;}
 $actiontype=getval("actiontype",''); // Set to ascertain if we are filtering on type
 $offset=getval("offset",0,true);
 $order_by=getval("actions_order_by","date");
-$sort=getval("actions_sort","DESC");
+$sort = getval("actions_sort", "DESC", false, 'validate_sort_value');
 $valid_order_bys=array("date","ref","description","type","user","usergroup");
 if (!in_array($order_by,$valid_order_bys)) {$order_by="date";$sort="DESC";} 
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";

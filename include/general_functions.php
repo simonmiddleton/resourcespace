@@ -5466,11 +5466,17 @@ function get_size_info(array $size, ?array $originalSize = null): string
  * Simple function to check if a given extension is associated with a JPG file
  *
  * @param string $extension     File extension
- * 
- * @return bool 
- * 
  */
-function is_jpeg_extension(string $extension)
+function is_jpeg_extension(string $extension): bool
     {
-    return in_array(strtolower((string) $extension),["jpg","jpeg"]);
+    return in_array(mb_strtolower($extension), ["jpg","jpeg"]);
     }
+
+/**
+ * Input validation helper function for sorting (ASC/DESC).
+ * @param string $val User input value to be validated
+ */
+function validate_sort_value(string $val): bool
+{
+    return in_array(mb_strtolower($val), ['asc', 'desc']);
+}

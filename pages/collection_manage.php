@@ -8,8 +8,8 @@ $k=getval("k","");
 $offset=getval("offset",0,true);
 $find=getval("find",getval("saved_find",""));rs_setcookie('saved_find', $find);
 $col_order_by=getval("col_order_by",getval("saved_col_order_by","created"));rs_setcookie('saved_col_order_by', $col_order_by);
-$sort=getval("sort",getval("saved_col_sort","ASC"));rs_setcookie('saved_col_sort', $sort);
-if (!in_array(mb_strtoupper($sort), array('ASC','DESC'))) {$sort = "ASC";}
+$sort = getval('sort', getval('saved_col_sort','ASC', false, 'validate_sort_value'), false, 'validate_sort_value');
+rs_setcookie('saved_col_sort', $sort);
 $revsort = ($sort=="ASC") ? "DESC" : "ASC";
 # pager
 $per_page=getval("per_page_list",$default_perpage_list,true);rs_setcookie('per_page_list', $per_page);

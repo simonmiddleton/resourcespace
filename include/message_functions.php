@@ -243,10 +243,8 @@ function message_get(&$messages,$user,$get_all=false,$sort="ASC",$order_by="ref"
             break;
         }
 
-    // Check sort value is valid
-    if (!in_array(strtolower($sort), array("asc", "desc")))
-    {
-    $sort = "ASC";
+    if (!validate_sort_value($sort)) {
+        $sort = "ASC";
     }
 
     $messages=ps_query("SELECT user_message.ref, message.ref AS 'message_id', user.username AS owner, user_message.seen, message.created, message.expires, message.message, message.url, message.owner as ownerid, message.type " .

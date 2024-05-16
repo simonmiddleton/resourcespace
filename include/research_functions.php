@@ -90,7 +90,7 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
     {
     $searchsql="";
     $use_order_by = "";
-    $use_sort = "";
+    $use_sort = validate_sort_value($sort) ? $sort : 'ASC';
     $parameters=array();
     if ($find!="") {
         $searchsql="WHERE name like ? or description like ? or contact like ? or ref=?"; 
@@ -100,10 +100,7 @@ function get_research_requests($find="",$order_by="name",$sort="ASC")
         {
         $use_order_by = $order_by;      
         }
-    if (in_array($sort, array("ASC","DESC")))
-        {
-        $use_sort = $sort;      
-        }
+
     return ps_query("select " . columns_in("research_request","r") . ",(select username from user u where u.ref=r.user) username, 
 		(select username from user u where u.ref=r.assigned_to) assigned_username from research_request r 
 		$searchsql 

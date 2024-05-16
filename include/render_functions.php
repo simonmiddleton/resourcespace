@@ -921,7 +921,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     // use query strings here as this is used to render elements and sometimes it
     // can depend on other params
     $modal  = ('true' == getval('modal', ''));
-    $sort = (in_array(mb_strtoupper($sort), array("ASC", "DESC")) ? mb_strtoupper($sort) : "DESC");
+    $sort = validate_sort_value($sort) ? mb_strtoupper($sort) : 'DESC';
     ?>
     <select id="sort_order_selection" onChange="UpdateResultOrder();" aria-label="<?php echo escape($lang["sortorder"]) ?>">
     
