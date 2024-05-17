@@ -2639,48 +2639,48 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
         $nodes_to_add    = [];
         $nodes_to_remove = [];
 
-        // Get all node values into an array to search
-        $fieldnodes      = get_nodes($field,null,$fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE);
-      
         // Get currently selected nodes for this field
-        $current_field_nodes = get_resource_nodes($resource, $field, false);
-        $nodes_by_ref = [];
-        foreach($fieldnodes as $fieldnode)
-            {
-            $nodes_by_ref[$fieldnode["ref"]] = $fieldnode;
-            }
+        $current_field_nodes = get_resource_nodes($resource, $field, true);
+        $current_field_node_ids = array_column($current_field_nodes,"ref");
         // Get an 'existing' value
-        $existing_nodes = array_intersect(array_column($fieldnodes,"ref"),$current_field_nodes);
-        $existing = implode(",",array_column($existing_nodes,"path"));
+        $existing = implode(",",array_column($current_field_nodes,"path"));
+
+        // Get all node values into an array to search, not for dynamic keyword fields as these can be very long
+        if ($fieldinfo['type'] != FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+            $fieldnodes = get_nodes($field,null,$fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE);
+            $nodes_by_ref = [];
+            foreach ($fieldnodes as $fieldnode) {
+                $nodes_by_ref[$fieldnode["ref"]] = $fieldnode;
+            }
+        }
 
         if($nodevalues)
             {
             // List of node IDs has been passed in comma separated form, use them directly
             $sent_nodes = explode(",",$value);
-            if(in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST]) && count($sent_nodes) > 1)
-                {
+            if (
+                in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST])
+                && count($sent_nodes) > 1
+            ) {
                 // Only a single value allowed
                 return false;
-                }
+            }
 
-            foreach($fieldnodes as $fieldnode)
-                {
-                // Add to array of nodes, unless it has been added to array already as a parent for a previous node
-                if (in_array($fieldnode["ref"],$sent_nodes) && !in_array($fieldnode["ref"],$nodes_to_add))
-                    {
-                    if(!in_array($fieldnode["ref"],$current_field_nodes))
-                        {
-                        $nodes_to_add[] = $fieldnode["ref"];
-                        }
-                    $newnodes[] = $fieldnode["ref"];
-                    }
-                elseif(in_array($fieldnode["ref"],$current_field_nodes) && !in_array($fieldnode["ref"],$sent_nodes))
-                    {
-                    $nodes_to_remove[] = $fieldnode["ref"];
-                    }
+            // Validate each node
+            foreach($sent_nodes as $sent_node) {
+                $node_details = [];
+                $valid_node = get_node($sent_node,$node_details);
+                if (!$valid_node || $node_details["resource_type_field"] !== $field) {
+                    return false;
                 }
-            if(count($newnodes) != count($sent_nodes))
-                {
+                $nodes_to_add[] = $sent_node;
+                if (!in_array($sent_node,$current_field_node_ids)) {
+                    $newnodes[] = $sent_node;
+                }
+            }
+
+            $nodes_to_remove = array_diff($nodes_to_add,$current_field_node_ids);
+            if(count($nodes_to_add) != count($sent_nodes)) {
                 // Unable to find all node values that were passed
                 return false;
                 }
@@ -2692,7 +2692,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             if(strpos($value,NODE_NAME_STRING_SEPARATOR) != false)
                 {
                 $newvalues = array_map('trim', explode(NODE_NAME_STRING_SEPARATOR, $value));
-                }                
+                }
             else
                 {
                 if (strlen($value) > 0 && (($value[0] == "'" && $value[strlen($value)-1] == "'")
@@ -2746,14 +2746,14 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                     $nodes_available_keys[mb_strtolower($fieldnode["translated_name"])] = $fieldnode["ref"];
                     }                
 
-                $newvalues = array_map('mb_strtolower', $newvalues);
-                foreach($newvalues as $newvalue)
+                $lowernewvalues = array_map('mb_strtolower', $newvalues);
+                foreach($lowernewvalues as $newvalue)
                     {
                     $validval = false;
                     // Check if a full node path has been passed
                     if(isset($nodes_available_keys[$newvalue]))
                         {
-                        debug("update_field: Found node# " . $newvalue  . " for tree value: '" . trim($newvalue) . "'");
+                        debug("update_field: Found node #" . $newvalue  . " for tree value: '" . trim($newvalue) . "'");
                         $nodes_to_add[] = $nodes_available_keys[$newvalue];
                         $validval = true;
                         }
@@ -2767,7 +2767,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                             # Check if each new value exists in current options list
                             if(isset($nodes_available_keys[$splitvalue]))
                                 {
-                                debug("update_field: Found node# " . $nodes_available_keys[$splitvalue]  . " for tree value: '" . trim($splitvalue) . "'");
+                                debug("update_field: Found node # " . $nodes_available_keys[$splitvalue]  . " for tree value: '" . trim($splitvalue) . "'");
                                 $nodes_to_add[] = $nodes_available_keys[$splitvalue];
                                 $validval = true;
                                 }
@@ -2800,89 +2800,61 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                                 }
                             }
                         }
-                        
                     }
                 }
-            elseif($fieldinfo['type'] == FIELD_TYPE_DYNAMIC_KEYWORDS_LIST && !checkperm('bdk' . $field))
+            else
                 {
-                // If this is a dynamic keyword field need to add any new entries to the field nodes
-                $currentoptions = array();
-                foreach($fieldnodes as $fieldnode)
-                    {
-                    $fieldoptiontranslations = explode('~', $fieldnode['name']);
-                    if(count($fieldoptiontranslations) < 2)
-                        {
-                        $currentoptions[]=trim($fieldnode['name']); # Not a translatable field
-                        debug("update_field: current field option: '" . trim($fieldnode['name']) . "'");
+                // Check to see other nodes that need to be added
+                foreach ($newvalues as $newvalue) {
+                    $valuenode = get_node_id($newvalue,$field);
+                    if ($valuenode) {
+                        // Add to array of nodes, unless it has been added to array already as a parent for a previous node
+                        if(!in_array($valuenode, $nodes_to_add)) {
+                            $nodes_to_add[] = $valuenode;
                         }
-                    else
-                        {
-                        for ($n=1;$n<count($fieldoptiontranslations);$n++)
-                            {
-                            # Not a translated string, return as-is
-                            if (substr($fieldoptiontranslations[$n],2,1)!=":" && substr($fieldoptiontranslations[$n],5,1)!=":" && substr($fieldoptiontranslations[$n],0,1)!=":")
-                                {
-                                $currentoptions[]=trim($fieldnode['name']);
-                                debug("update_field: current field option: '" . $fieldnode['name']);
-                                }
-                            else
-                                {
-                                # Support both 2 character and 5 character language codes (for example en, en-US).
-                                $p=strpos($fieldoptiontranslations[$n],':');
-                                $currentoptions[]=trim(substr($fieldoptiontranslations[$n],$p+1));
-                                debug("update_field: current field option: '" . trim(substr($fieldoptiontranslations[$n],$p+1)));
-                                }
+                        if (!in_array($valuenode,$current_field_node_ids)) {
+                            $newnodes[] = $valuenode;
+                        }
+                    } elseif ($fieldinfo['type'] !== FIELD_TYPE_DYNAMIC_KEYWORDS_LIST) {
+                        // Check for translated versions and different cases
+                        // This is not performed for dynamic keyword fields as there are likely to be too many
+                        $matchnode = 0;
+                        foreach($fieldnodes as $fieldnode) {
+                            if (
+                                i18n_get_translated($fieldnode["name"]) == i18n_get_translated($newvalue)
+                                && !in_array($fieldnode["ref"], $nodes_to_add)
+                            ) {
+                                $matchnode = $fieldnode["ref"];
+                                break;
+                            } elseif (
+                                mb_strtolower(i18n_get_translated($fieldnode["name"])) == mb_strtolower(i18n_get_translated($newvalue))
+                                && !in_array($fieldnode["ref"], $nodes_to_add)
+                            ) {
+                                // Check for node with same text in different case
+                                $matchnode = $fieldnode["ref"];
+                                break;
                             }
                         }
-                    }
-                
-                foreach($newvalues as $newvalue)
-                    {
-                    # Check if each new value exists in current options list
-                    if(!in_array($newvalue, $currentoptions) && $newvalue != '')
-                        {
-                        # Append the option and update the field
+                        if ($matchnode > 0) {
+                            if(!in_array($matchnode, $nodes_to_add)) {
+                                $nodes_to_add[] = $matchnode;
+                            }
+                            if (!in_array($matchnode,$current_field_node_ids)) {
+                                $newnodes[] = $matchnode;
+                            }
+                        }
+                    } elseif (!checkperm('bdk' . $field)) {
+                        // Dynamic keyword, add as new node
+                        // Append the option and update the field
                         $newnode            = set_node(null, $field, trim($newvalue), null, null);
                         $nodes_to_add[]     = $newnode;
-                        $currentoptions[]   = trim($newvalue);
-                        $fieldnodes[]       = array("ref" => $newnode,"name" => trim($newvalue));
                         debug("update_field: field option added: '" . trim($newvalue));
                         clear_query_cache("schema");
-                        }
                     }
-                } // End of FIELD_TYPE_DYNAMIC_KEYWORDS_LIST
-           
-            // Check to see other nodes that need to be added
-            $newvalues_translated = $newvalues;
-            array_walk(
-                $newvalues_translated,
-                function (&$value, $index)
-                    {
-                    $value = mb_strtolower(i18n_get_translated($value));
-                    }
-                );
-        
-            // Set up array of nodes to remove
-            foreach($fieldnodes as $fieldnode)
-                {
-                // Add to array of nodes, unless it has been added to array already as a parent for a previous node
-                if (in_array(mb_strtolower(i18n_get_translated($fieldnode["name"])), $newvalues_translated)
-                    && !in_array($fieldnode["ref"], $nodes_to_add)
-                    )
-                    {
-                    $nodes_to_add[] = $fieldnode["ref"];                  
-                    }
-                }
-
-            // Get all nodes to remove
-            foreach($fieldnodes as $fieldnode)
-                {
-                if(!in_array($fieldnode["ref"], $nodes_to_add))
-                    {
-                    $nodes_to_remove[] = $fieldnode["ref"];
-                    }
-                }     
-            } // End of $nodevalues test
+                } // End of foreach $newvalue
+            }
+            $nodes_to_remove = array_diff($current_field_node_ids,$nodes_to_add);
+        } // End of $nodevalues test
 
 
         // Now carry out the node additions and removals
@@ -2890,13 +2862,10 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             {
             # Work out what nodes need to be added/removed/kept
             $nodes_to_add       = array_unique($nodes_to_add);
-            $nodes_to_remove    = array_intersect(array_unique($nodes_to_remove),$current_field_nodes);
-            $added_nodes        = array_diff($nodes_to_add,$current_field_nodes);
-            $removed_nodes      = array_intersect($nodes_to_remove,$current_field_nodes);
-
+            $added_nodes        = array_diff($nodes_to_add,$current_field_node_ids);
             if(in_array($fieldinfo['type'],[FIELD_TYPE_RADIO_BUTTONS,FIELD_TYPE_DROP_DOWN_LIST])
                 &&
-                (count($added_nodes) + count($current_field_nodes) - count($removed_nodes)) > 1)
+                (count($added_nodes) + count($current_field_node_ids) - count($nodes_to_remove)) > 1)
                 {
                 // Only a single value allowed
                 return false;
@@ -2916,7 +2885,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
             // Update log
             if($log && (count($nodes_to_add)>0 || count($nodes_to_remove)>0))
                 {
-                log_node_changes($resource,$nodes_to_add,$current_field_nodes);
+                log_node_changes($resource,$nodes_to_add,$current_field_node_ids);
                 // Don't need to log this later
                 $log = false;
                 }
@@ -2944,7 +2913,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 $value = implode(",",$node_names);
                 $data_joins_field_value = implode($GLOBALS['field_column_string_separator'], $node_names);
                 }
-            }
+            } // End of adding/removing nodes
         }
     else
         {
