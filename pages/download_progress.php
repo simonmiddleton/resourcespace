@@ -7,7 +7,9 @@ $k=getval("k","");if (($k=="") || (!check_access_key(getval("ref","",true),$k)))
 $ref=getval("ref","");
 $size=getval("size","");
 $ext=getval("ext","");
-if(!preg_match('/^[a-zA-Z0-9]+$/', $ext)){$ext="jpg";} # Mitigate path injection
+if (is_banned_extension($ext)) {
+    $ext = 'jpg';
+}
 $alternative=getval("alternative",-1);
 $search=getval("search","");
 $iaccept=getval("iaccept","off");
