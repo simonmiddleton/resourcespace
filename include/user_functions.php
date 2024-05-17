@@ -3575,3 +3575,34 @@ function setup_command_line_user(array $setoptions = []) : bool
         }
     return setup_user($dummyuserdata);
     }
+
+/**
+ * Update user table to record access by a user
+ *
+ * @param array $set_values     Optional array of column names and values to set
+*/
+function update_user_access(array $set_values = []): bool
+{
+    if (!isset($GLOBALS["userref"])) {
+        return false;
+    }
+    $validcolumns = [
+        "lang" => ["s",$GLOBALS["language"] ?? $GLOBALS["defaultlanguage"]],
+        "last_browser" => ["s",isset($_SERVER["HTTP_USER_AGENT"]) ? substr($_SERVER["HTTP_USER_AGENT"],0,250) : ""],
+        "last_ip" => ["s",get_ip()],
+        "logged_in" => ["i",0],
+    ];
+    $col_sql = [];
+    $update_params = [];
+    foreach ($validcolumns as $column => $setparams) {
+        $col_sql[] = $column . " = ?";
+        $update_params = array_merge(
+            $update_params,
+            [$setparams[0],$set_values[$column] ?? $setparams[1]] // Override the default if passed
+            );
+    }
+    $update_sql = "UPDATE user SET last_active = NOW(), " . implode(",",$col_sql) . " WHERE ref = ?";
+    $update_params = array_merge($update_params,["i",$GLOBALS["userref"]]);
+    ps_query($update_sql,$update_params,'',-1,true,0);
+    return true;
+}
