@@ -262,7 +262,7 @@ else
 
 // don't update this table if the System is doing its own operations
 if (!isset($system_login)){
-    update_user_access(["logged_in" => 1]);
+    update_user_access($userref, ["logged_in" => 1]);
 }
 
 # Add group specific text (if any) when logged in.

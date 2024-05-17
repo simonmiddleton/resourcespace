@@ -3579,30 +3579,36 @@ function setup_command_line_user(array $setoptions = []) : bool
 /**
  * Update user table to record access by a user
  *
+ * @param int $user             User ID
  * @param array $set_values     Optional array of column names and values to set
 */
-function update_user_access(array $set_values = []): bool
+function update_user_access(int $user = 0, array $set_values = []): bool
 {
-    if (!isset($GLOBALS["userref"])) {
+    $user = $user > 0 ? $user : ($GLOBALS["userref"] ?? 0);
+    if ($user == 0) {
         return false;
     }
     $validcolumns = [
         "lang" => ["s",$GLOBALS["language"] ?? $GLOBALS["defaultlanguage"]],
-        "last_browser" => ["s",isset($_SERVER["HTTP_USER_AGENT"]) ? substr($_SERVER["HTTP_USER_AGENT"],0,250) : ""],
+        "last_browser" => ["s",isset($_SERVER["HTTP_USER_AGENT"]) ? substr($_SERVER["HTTP_USER_AGENT"],0,250) : false],
         "last_ip" => ["s",get_ip()],
         "logged_in" => ["i",0],
+        "session" => ["s"],
     ];
     $col_sql = [];
     $update_params = [];
     foreach ($validcolumns as $column => $setparams) {
-        $col_sql[] = $column . " = ?";
-        $update_params = array_merge(
-            $update_params,
-            [$setparams[0],$set_values[$column] ?? $setparams[1]] // Override the default if passed
-            );
+        $setval = $set_values[$column] ?? ($setparams[1] ?? false);
+        if($setval) {
+            // Only update if a value has been passed or we have a default - so session is not accidentally wiped
+            $col_sql[] = $column . " = ?";  $update_params = array_merge(
+                $update_params,
+                [$setparams[0],$setval] // Override the default if passed
+                );
+        }
     }
     $update_sql = "UPDATE user SET last_active = NOW(), " . implode(",",$col_sql) . " WHERE ref = ?";
-    $update_params = array_merge($update_params,["i",$GLOBALS["userref"]]);
+    $update_params = array_merge($update_params,["i",$user]);
     ps_query($update_sql,$update_params,'',-1,true,0);
     return true;
 }

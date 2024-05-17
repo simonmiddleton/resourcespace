@@ -83,7 +83,7 @@ if($function != "login")
                 ]]
             );
             }
-        update_user_access(["last_browser" => isset($_SERVER["HTTP_USER_AGENT"]) ? substr($_SERVER["HTTP_USER_AGENT"],0,250) : "API"]);
+        update_user_access(0,["last_browser" => isset($_SERVER["HTTP_USER_AGENT"]) ? substr($_SERVER["HTTP_USER_AGENT"],0,250) : "API"]);
         }
     }
 
