@@ -81,7 +81,7 @@ if($generate && enforcePostRequest(false))
             $shell_exec_params["%%DURATION$placeholder_extra%%"] = $duration;
             }
 
-        if(in_array($video_audio_file,$audio_alts))
+        if(in_array($video_audio_file,array_column($audio_alts,"ref")))
             {
             $audio_info=get_alternative_file($ref,$video_audio_file);
             $audio_path=get_resource_path($ref,true,"",false,$audio_info["file_extension"],-1,1,false,"",$video_audio_file);
@@ -90,7 +90,7 @@ if($generate && enforcePostRequest(false))
             $shell_exec_cmd .= " -map 0:v -map 1:a";
             }
 
-        if(in_array($video_subtitle_file,$subtitle_alts))
+        if(in_array($video_subtitle_file,array_column($subtitle_alts,"ref")))
             {
             $subtitle_info=get_alternative_file($ref,$video_subtitle_file);
             $subtitle_path=get_resource_path($ref,true,"",false,$subtitle_info["file_extension"],-1,1,false,"",$video_subtitle_file);
