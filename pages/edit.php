@@ -1305,7 +1305,7 @@ else
 
         <h1 id="editmultipleresources"><?php echo escape($lang["editmultipleresources"])?></h1>
         <p style="padding-bottom:20px;"><?php $qty = count($items);
-        echo ($qty==1 ? $lang["resources_selected-1"] : str_replace("%number", $qty, $lang["resources_selected-2"])) . ". ";
+        echo escape($qty==1 ? $lang["resources_selected-1"] : str_replace("%number", $qty, $lang["resources_selected-2"])) . ". ";
         # The script doesn't allow editing of empty collections, no need to handle that case here.
         echo text("multiple");
         ?> </p> <?php
@@ -1580,7 +1580,9 @@ if(isset($metadata_template_resource_type) && isset($metadata_template_title_fie
             }?>
         </label>
         <select name="metadatatemplate" class="stdwidth" onchange="MetadataTemplateOptionChanged(jQuery(this).val());">
-            <option value=""<?php echo $first_option_conditions ? ' selected' : ''; ?>><?php echo $first_option_conditions ? $lang['select'] : $lang['undometadatatemplate']; ?></option>
+            <option value=""<?php echo $first_option_conditions ? ' selected' : ''; ?>><?php
+                echo escape($first_option_conditions ? $lang['select'] : $lang['undometadatatemplate']);
+            ?></option>
         <?php
         foreach($templates as $template)
             {
@@ -2069,7 +2071,7 @@ if (
     ?>
       <div class="Question <?php if($upload_review_mode && in_array("archive",$locked_fields)){echo "lockedQuestion ";} if(isset($save_errors) && is_array($save_errors) && array_key_exists('status',$save_errors)) { echo 'FieldSaveError'; } ?>" id="question_status" <?php if ($multiple) {?>style="display:none;"<?php } ?>>
          <label for="status">
-         <?php echo $multiple ? "" : $lang["status"];
+         <?php echo $multiple ? "" : escape($lang["status"]);
          if ($upload_review_mode)
             {
             renderLockButton('archive', $locked_fields);
@@ -2093,7 +2095,15 @@ if (
             }
          foreach ($additional_archive_states as $additional_archive_state)
             {
-            if (checkperm("e" . $additional_archive_state) || $additional_archive_state==$setarchivestate) { ?><option value="<?php echo $additional_archive_state?>" <?php if ($setarchivestate==$additional_archive_state) { ?>selected<?php } ?>><?php echo isset($lang["status" . $additional_archive_state])?$lang["status" . $additional_archive_state]:$additional_archive_state ?></option><?php }
+            if (checkperm("e" . $additional_archive_state) || $additional_archive_state==$setarchivestate)
+                {
+                ?><option value="<?php echo escape($additional_archive_state); ?>" <?php
+                    if ($setarchivestate==$additional_archive_state) {
+                        ?>selected<?php
+                    } ?>><?php
+                    echo escape($lang["status{$additional_archive_state}"] ?? $additional_archive_state);
+                ?></option><?php
+                }
             }?>
          </select>
          <div class="clearerleft"> </div>
@@ -2444,7 +2454,8 @@ if ($ref>0 && !$multiple)
                 if(file_exists($orig_path))
                     {
                     $filesize = filesize_unlimited($orig_path);
-                    echo str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]) . " (" . formatfilesize($filesize) . ")";
+                    echo escape(str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["cell-fileoftype"]))
+                        . " (" . formatfilesize($filesize) . ")";
                     }                
                 ?>
                 </strong>

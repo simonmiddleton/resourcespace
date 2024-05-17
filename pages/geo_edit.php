@@ -120,7 +120,7 @@ if ($valid_coords == false && getval('geo-loc','') != '')
 
 <?php if (!hook('customgeobacklink'))
     { ?>
-    <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short . ($geocol != '' ? "pages/geolocate_collection.php?ref=" . $geocol : "pages/view.php?ref=" . $ref) ?>"><?php echo LINK_CARET_BACK . ($geocol != '' ? $lang['backtogeolocatecollection'] : $lang['backtoresourceview']) ?></a></p> <?php
+    <p><a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $baseurl_short . ($geocol != '' ? "pages/geolocate_collection.php?ref=" . $geocol : "pages/view.php?ref=" . $ref) ?>"><?php echo LINK_CARET_BACK . escape($geocol != '' ? $lang['backtogeolocatecollection'] : $lang['backtoresourceview']); ?></a></p> <?php
     }
 
 

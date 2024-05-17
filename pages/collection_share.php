@@ -337,7 +337,11 @@ if (isset($show_error)) { ?>
             <?php
             if($editing)
                 {
-                echo "<div class='Question'><label>" . $lang["collectionname"]  . "</label><div class='Fixed'>" . i18n_get_collection_name($collection) . "</div><div class='clearerleft'></div></div>";
+                echo "<div class='Question'><label>"
+                    . escape($lang["collectionname"])
+                    . "</label><div class='Fixed'>"
+                    . i18n_get_collection_name($collection)
+                    . "</div><div class='clearerleft'></div></div>";
                 }
             $shareoptions = array(
                 "password"          => ($sharepwd != "" ? true : false),
@@ -402,7 +406,12 @@ if (isset($show_error)) { ?>
         if ($editexternalurl)
             {
             $editsuccess=edit_collection_external_access($editaccess,$access,$expires,getval("usergroup",""),$sharepwd);
-            if($editsuccess){echo "<span style='font-weight:bold;'>".$lang['changessaved']." - <em>".$editaccess."</em>";}
+            if ($editsuccess)
+                {
+                echo "<span style='font-weight:bold;'>"
+                    . escape($lang['changessaved'])
+                    . " - <em>". escape($editaccess) . "</em>";
+                }
             }
         }
 

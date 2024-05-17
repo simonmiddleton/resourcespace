@@ -37,7 +37,10 @@ if (!checkperm("b"))
 ?>
 
 <div class="BasicsBox">
-<h1><?php echo str_replace("%collection", $colname, $lang["collectionlogheader"]);render_help_link("user/collection-options");?></h1>
+<h1><?php
+    echo str_replace("%collection", $colname, escape($lang["collectionlogheader"]));
+    render_help_link("user/collection-options");
+?></h1>
 <?php
 $intro=text("introtext");
 if ($intro!="") { ?><p><?php echo $intro ?></p><?php } 

@@ -460,7 +460,7 @@ function clearsharefilter()
 
     if(checkperm('a') && $expiredshares > 0)
         {
-        echo "<p><a href='#' onclick='purge_expired_shares();return false;'>" . LINK_CARET . $lang["share_purge_text"] . "</a></p>";
+        echo "<p><a href='#' onclick='purge_expired_shares();return false;'>" . LINK_CARET . escape($lang["share_purge_text"]) . "</a></p>";
         }
 
     ?>

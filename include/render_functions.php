@@ -3328,12 +3328,12 @@ function generate_browse_bar_item($id, $text)
 */
 function render_help_link($page='',$return_string=false)
     {
-    global $pagename,$lang,$help_modal,$baseurl;
+    global $lang,$help_modal,$baseurl;
 
     // Build html for link into a string
     $help_link_html  =      '<a ';
-    $help_link_html .=          'href="' . $baseurl . '/pages/help.php?page=' . $page . '" ';
-    $help_link_html .=          'title="' . $lang["help-tooltip"] . '" ';
+    $help_link_html .=          'href="' . $baseurl . '/pages/help.php?page=' . escape($page) . '" ';
+    $help_link_html .=          'title="' . escape($lang["help-tooltip"]) . '" ';
     $help_link_html .=          'class="HelpLink" ';
     if ($help_modal) 
         { $help_link_html .=    'onClick="return ModalLoad(this, true);" ';}
