@@ -319,7 +319,7 @@ switch ($returntype)
                 "id" => "{$id}-{$id_part}:{$fc["ref"]}",
                 "name" => escape(strip_prefix_chars(i18n_get_translated($fc["name"]),"*")),
                 "class" => ($is_featured_collection_category ? "Featured" : "Col"),
-                "expandable" => (($is_featured_collection_category && $child_collection_count > 0) || $can_create ? "true" : "false"), # lib/js/browsebar_js.php requires this to be a string.
+                "expandable" => (($is_featured_collection_category && $child_collection_count > 0) || $can_create ? "true" : "false"), # js/browsebar_js.php requires this to be a string.
                 "link" => $link,
                 "modal" => false,
                 "drop" => !$is_featured_collection_category,

@@ -456,7 +456,7 @@ if (getval("ajax","") == "")
         {
         ?>
         <!-- Responsive -->
-        <script src="<?php echo $baseurl_short; ?>lib/js/responsive.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+        <script src="<?php echo $baseurl_short; ?>js/responsive.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
         <script>
         function toggleSimpleSearch()
             {

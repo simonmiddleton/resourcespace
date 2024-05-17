@@ -44,10 +44,9 @@ function HookEmbedvideoViewAfterresourceactions()
 
     if (!hook("replaceembedcode"))
         {            
-        echo escape('<script type="text/javascript" src="' . $baseurl . '/lib/js/videojs-extras.js"></script>
-        <link href="' . $baseurl . '/lib/videojs/video-js.css" rel="stylesheet">
+        echo escape('<link href="' . $baseurl . '/lib/videojs/video-js.css" rel="stylesheet">
         <script src="' . $baseurl . '/lib/videojs/video.dev.js"></script>
-        <script src="' . $baseurl . '/lib/js/videojs-extras.js"></script>
+        <script src="' . $baseurl . '/js/videojs-extras.js"></script>
         <script src="' . $baseurl . '/lib/videojs/video.min.js"></script>
         <!-- START VIDEOJS -->
         <video 

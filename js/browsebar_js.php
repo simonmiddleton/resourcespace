@@ -5,9 +5,8 @@
 * @package ResourceSpace
 */
 
-include_once "../../include/boot.php";
-
-include_once "../../include/authenticate.php";
+include_once "../include/boot.php";
+include_once "../include/authenticate.php";
 header("Content-type: text/javascript");
 ?>
 

@@ -266,7 +266,7 @@ include "../include/header.php";
 if ($metadata_report && isset($exiftool_path))
     {
     ?>
-    <script src="<?php echo $baseurl ?>/lib/js/metadata_report.js?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
+    <script src="<?php echo $baseurl ?>/js/metadata_report.js?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
     <?php
     }
 
