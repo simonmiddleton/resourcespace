@@ -21,7 +21,7 @@ if ($on_upload || (isset($ref) && $ref<0))
         {
         ?>
         <div id="question_resourcetype" class="Question">
-            <label for="resourcetype"><?php echo "{$lang["resourcetype"]}" . " <sup>*</sup>"; ?></label>
+            <label for="resourcetype"><?php echo escape($lang["resourcetype"]); ?> <sup>*</sup></label>
             <select id="resourcetype"
                     class="stdwidth"
                     name="resource_type"

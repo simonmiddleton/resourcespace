@@ -411,7 +411,7 @@ EOT;
                 }
             else
                 {
-                    echo "[" . $lang["deleted"] . "]";
+                    echo "[" . escape($lang["deleted"]) . "]";
                 }
             }
             else
@@ -480,7 +480,9 @@ EOT;
                 echo "<div class='CommentEntryInfoFlag'>";
                 if (getval("comment{$thisRef}flagged",""))
                     {
-                    echo "<div class='CommentFlagged'><i aria-hidden='true' class='fa fa-fw fa-flag'>&nbsp;</i>{$lang['comments_flag-has-been-flagged']}</div>";
+                    echo '<div class="CommentFlagged"><i aria-hidden="true" class="fa fa-fw fa-flag">&nbsp;</i>'
+                        . escape($lang['comments_flag-has-been-flagged'])
+                        . '</div>';
                     }
                 else
                     {

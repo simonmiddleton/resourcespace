@@ -29,7 +29,7 @@ $rl_params_override = array(
 <table cellpadding="0" cellspacing="0">
 <tr>
     <td colspan=2>
-        <a href="<?php echo generateURL($rl_url, $rl_params, $rl_params_override); ?>" onclick="return ModalLoad(this, true);"><?php echo LINK_CARET . $lang["usagetotal"]; ?></a>
+        <a href="<?php echo generateURL($rl_url, $rl_params, $rl_params_override); ?>" onclick="return ModalLoad(this, true);"><?php echo LINK_CARET . escape($lang["usagetotal"]); ?></a>
     </td>
 </tr>
 <tr class="DownloadDBlend" >

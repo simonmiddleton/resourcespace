@@ -69,7 +69,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
             <?php }
         } ?>
         <?php if (!hook("replacecollectiontools")){?>
-        <div class="ResourcePanelIcons" style="float:right;"><a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]; ?>" onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]; ?></a>&nbsp;&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . $lang["view"]; ?></a></div>     
+        <div class="ResourcePanelIcons" style="float:right;"><a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo escape($collections[$n]["ref"]); ?>" onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . escape($lang["action-select"]); ?></a>&nbsp;&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . escape($lang["view"]); ?></a></div>
         <?php } ?>
         <?php hook("searchiconpublic");?>
         <div class="clearer"></div>
@@ -106,7 +106,7 @@ for ($n=$offset;(($n<$result_count && $n < $colcount) && ($n<($rowstoretrieve)))
         <?php hook("addlistviewcolumnpublic");?>
         <td><div class="ListTools">
         <?php if (!hook("replacecollectiontools")){?>
-        <a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo $collections[$n]["ref"]; ?>"  onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . $lang["action-select"]; ?></a>&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . $lang["viewall"]; ?></a>
+        <a href="<?php echo $baseurl_short?>pages/collections.php?collection=<?php echo escape($collections[$n]["ref"]); ?>"  onClick="return CollectionDivLoad(this);"><?php echo LINK_CARET . escape($lang["action-select"]); ?></a>&nbsp;&nbsp;<a onClick="return CentralSpaceLoad(this,true);" href="<?php echo $pub_url?>"><?php echo LINK_CARET . escape($lang["viewall"]); ?></a>
         <?php } ?>
         </div></td>
         <?php } ?>

@@ -111,7 +111,7 @@ if ($contact_sheet)
     {?>
     <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/contactsheet.js"></script>
     <script>
-    contactsheet_previewimage_prefix = '<?php echo addslashes($storageurl)?>';
+    contactsheet_previewimage_prefix = '<?php echo escape($storageurl)?>';
     </script>
     <script type="text/javascript">
     jQuery.noConflict();
