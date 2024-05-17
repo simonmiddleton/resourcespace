@@ -69,7 +69,7 @@ function HookImage_textCollection_downloadModifydownloadfile()
     
     
     $tmpolfile= get_temp_dir() . "/" . $result[$n]["ref"] . "_image_text_" . $userref . "." . $pextension;
-    $createolcommand = $convert_fullpath . ' -background "#000" -fill white -gravity "' . escapeshellarg($image_text_position) . '" -font "' . escapeshellarg($image_text_font) . '" -size ' . escapeshellarg($width  . 'x' . $olheight) . ' caption:" ' . escapeshellarg($overlaytext) .  ' " ' . escapeshellarg($tmpolfile);
+    $createolcommand = $convert_fullpath . ' -background "#000" -fill white -gravity ' . escapeshellarg($image_text_position) . ' -font ' . escapeshellarg($image_text_font) . ' -size ' . escapeshellarg($width  . 'x' . $olheight) . ' caption:' . escapeshellarg($overlaytext) .  ' ' . escapeshellarg($tmpolfile);
     run_command($createolcommand);
     
     $newdlfile = get_temp_dir() . "/" . $result[$n]["ref"] . "_image_text_result_" . $userref . "." . $pextension;
