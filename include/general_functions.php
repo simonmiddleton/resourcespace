@@ -5478,9 +5478,9 @@ function is_jpeg_extension(string $extension): bool
 
 /**
  * Input validation helper function for sorting (ASC/DESC).
- * @param string $val User input value to be validated
+ * @param mixed $val User input value to be validated
  */
-function validate_sort_value(string $val): bool
+function validate_sort_value($val): bool
 {
-    return in_array(mb_strtolower($val), ['asc', 'desc']);
+    return is_string($val) && in_array(mb_strtolower($val), ['asc', 'desc']);
 }
