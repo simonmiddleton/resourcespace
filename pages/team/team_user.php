@@ -320,7 +320,7 @@ include "../../include/header.php";
         <td><?php echo $approval_state_text[$users[$n]["approved"]]; ?></td>
         <td><?php echo nicedate($users[$n]["last_active"],true,true,true) ?></td>
         <?php hook("additional_user_column");?>
-        <td><?php if (can_set_admin_usergroup($users[$n]["usergroup"])) { ?><div class="ListTools">
+        <td><?php if (($usergroup==3) || ($users[$n]["usergroup"]!=3)) { ?><div class="ListTools">
         <a href="<?php echo $team_user_log_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-history"></i>&nbsp;<?php echo escape($lang["log"])?></a>
         &nbsp;
         <a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"])?></a>

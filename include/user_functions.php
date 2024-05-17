@@ -757,18 +757,8 @@ function save_user($ref)
 
         if((isset($current_user_data['usergroup']) && '' != $current_user_data['usergroup']) && $current_user_data['usergroup'] != $usergroup)
             {
-            if (can_set_admin_usergroup($usergroup))
-                {
-                log_activity(null, LOG_CODE_EDITED, $usergroup, 'user', 'usergroup', $ref);
-                ps_query("DELETE FROM resource WHERE ref = -?", array("i", $ref));
-                }
-            else
-                {
-                # User cannot set $usergroup to one with "super admin" level permissions - "a". Make no changes.
-                global $userref;
-                debug("User $userref unable to change user group for user $ref from user group {$current_user_data['usergroup']} to user group $usergroup as this would grant the 'a' permission which they do not them self have.");
-                $usergroup = $current_user_data['usergroup'];
-                }
+            log_activity(null, LOG_CODE_EDITED, $usergroup, 'user', 'usergroup', $ref);
+            ps_query("DELETE FROM resource WHERE ref = -?", array("i", $ref));
             }
 
         if($email != $current_user_data["email"])
@@ -3584,38 +3574,4 @@ function setup_command_line_user(array $setoptions = []) : bool
         $dummyuserdata[$setoption] = $setvalue;
         }
     return setup_user($dummyuserdata);
-    }
-
-
-/**
- * Consider if the current user is able to escalate the permissions of a user to the level of a "super admin".
- * Only users with "a" permission should be able to make other users super admins (user groups with "a" permission).
- * Also used to determine if "super admin" level user groups should be displayed.
- *
- * @param  int  $new_usergroup   ID of user group to be set
- */
-function can_set_admin_usergroup(?int $new_usergroup) : bool
-    {
-    if (is_null($new_usergroup))
-        {
-        # No usergroup supplied e.g. when creating new user account.
-        return true;
-        }
-
-    global $userpermissions;
-
-    if (in_array('a', $userpermissions))
-        {
-        return true;
-        }
-
-    $new_usergroup_permissions = ps_value("SELECT permissions AS `value` FROM usergroup WHERE ref = ?;", array('i', $new_usergroup), "");
-    $new_usergroup_permissions = explode(',', str_replace(' ', '', $new_usergroup_permissions));
-    if (in_array('a', $new_usergroup_permissions))
-        {
-        // New user group is "super admin" level but the user making the change isn't.
-        return false;
-        }
-
-    return true;
     }
