@@ -246,13 +246,13 @@ function check_valid_file_extension($uploadedfile,array $validextensions)
  *
  * @param  string    $extension - file extension to check
  */
-function is_banned_extension($extension): bool
-    {
+function is_banned_extension(string $extension): bool
+{
     return !(
         preg_match('/^[a-zA-Z0-9_-]{1,10}$/', $extension) === 1
-        && !in_array(strtolower($extension), array_map('strtolower', $GLOBALS['banned_extensions']))
+        && !in_array(mb_strtolower($extension), array_map('mb_strtolower', $GLOBALS['banned_extensions']))
     );
-    }
+}
 
 /**
  * Remove empty folder from path to file. Helpful to remove a temp directory once the file it was created to hold no longer exists.

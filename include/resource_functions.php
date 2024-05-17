@@ -55,6 +55,9 @@ function get_resource_path(
 
     $size = safe_file_name((string) $size);
     $extension = safe_file_name((string) $extension);
+    if (is_banned_extension($extension)) {
+        $extension = 'jpg';
+    }
 
     if (!is_int_loose($file_modified)) {
         $file_modified = '';
@@ -62,10 +65,6 @@ function get_resource_path(
 
     # Returns the correct path to resource $ref of size $size ($size==empty string is original resource)
     # If one or more of the folders do not exist, and $generate=true, then they are generated
-    if(!preg_match('/^[a-zA-Z0-9]+$/',(string) $extension))
-        {
-        $extension = 'jpg';
-        }
     if($extension=='icc')
         {
         # use the preview path
