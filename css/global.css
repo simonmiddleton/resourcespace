@@ -1435,6 +1435,12 @@ div.video-js {margin:auto;}
     margin-bottom: 10px;
     }
 
+#modal_dialog .MessageText ul{
+    padding-top: 1em;
+    padding-bottom: 0px;
+    list-style-type: none;
+    }
+
 #modal .TopInpageNav {
     margin: 0;
     padding: 0 20px 10px 5px;

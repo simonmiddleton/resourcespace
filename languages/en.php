@@ -2661,6 +2661,9 @@ $lang["emailandmessagesent"]="Email and message sent";
 $lang["confirm_remove_custom_usergroup_access"]="This will revoke all custom user group access. Are you sure?";
 $lang["applogo_does_not_exists"]="The uploaded logo is no longer available";
 
+$lang["show_affected_resources"] = "Show affected resources";
+$lang["group_no"] = "Group";
+
 /* Edit field options */
 $lang["manage_metadata_field_options"] = "Metadata field options";
 $lang['manage_metadata_field_options_import_options'] = 'Import options';

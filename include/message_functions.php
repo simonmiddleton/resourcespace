@@ -1218,3 +1218,64 @@ function send_integrity_failure_notices( array $failures): void
     set_sysvar("last_integrity_check_notify",date("Y-m-d H:i:s"));
     }
 }
+
+
+/**
+ * Limit the length of !list special search url by adding a maximum of 650 characters of resource references per link including separators.
+ * Mail servers may break very long text strings into multiple lines and this will cause the special search to fail.
+ * Loading URLs of great length may also cause a Request-URI Too Long error in the browser.
+ * Multiple urls will be returned, formatted to include in action dates notifications.
+ *
+ * @param  array   $resource_refs   Array containing resource references to include in url.
+ * 
+ * @return array   Array containing 'single' value of url (650 characters of resources or less) and 'multiple' value of url (more than 650 characters of resources).
+ */
+function build_specialsearch_list_urls(array $resource_refs)
+    {
+    global $baseurl, $lang;
+
+    $return_urls['single'] = ''; // Two values returned to determine where the url is placed in message_add() - multiple urls must be passed in message, not url parameter.
+    $return_urls['multiple'] = '';
+
+    if (count($resource_refs) === 0)
+        {
+        return $return_urls;
+        }
+
+    $total_string_length = 0;
+    $link = 1;
+    $resource_links = array();
+    foreach ($resource_refs as $cur_ref)
+        {
+        $cur_ref_length = strlen($cur_ref) + 1; // +1 represents separator ':'
+        $total_string_length = $total_string_length + $cur_ref_length;
+        if ($total_string_length > 650)
+            {
+            $total_string_length = $cur_ref_length;
+            $link = ++$link;
+            }
+        $resource_links[$link][] = $cur_ref;
+        }
+
+    if (count($resource_links) === 1)
+        {
+        $return_urls['single'] = "$baseurl/pages/search.php?search=!list" . implode(":", $resource_refs);
+        }
+    else
+        {
+        $urls = array('<br /><div><ul>');
+
+        foreach($resource_links as $link_no => $refs_chunk)
+            {
+            $url = $baseurl . "/pages/search.php?search=!list";
+            $url .= implode(":", $refs_chunk);
+            $url = '<li><a href="' . $url . '">' . escape($lang["show_affected_resources"]) . ' [' . escape($lang["group_no"]) . ' ' . $link_no . ']</a></li>';
+            $urls[] = $url;
+            }
+        
+        $urls[] = '</ul></div>';
+        $return_urls['multiple'] = implode("", $urls);
+        }
+
+    return $return_urls;
+    }
