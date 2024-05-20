@@ -2736,43 +2736,52 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
                 }
             elseif($fieldinfo['type'] == FIELD_TYPE_CATEGORY_TREE)
                 {
+                // Values may have been passed as full paths or the individual node names
                 // Create array with indexes as the values to look for
-                $nodes_available_keys   = [];         
+                $nodes_available_keys  = [];
+                $nodes_available_lower_keys  = [];
                 foreach($fieldnodes as $fieldnode)
                     {
-                    $nodes_available_keys[mb_strtolower($fieldnode["path"])] = $fieldnode["ref"];
-                    $nodes_available_keys[mb_strtolower($fieldnode["translated_path"])] = $fieldnode["ref"];
-                    $nodes_available_keys[mb_strtolower($fieldnode["name"])] = $fieldnode["ref"];
-                    $nodes_available_keys[mb_strtolower($fieldnode["translated_name"])] = $fieldnode["ref"];
-                    }                
+                    $nodes_available_keys[$fieldnode["path"]] = $fieldnode["ref"];
+                    $nodes_available_keys[$fieldnode["translated_path"]] = $fieldnode["ref"];
+                    $nodes_available_keys[$fieldnode["name"]] = $fieldnode["ref"];
+                    $nodes_available_keys[$fieldnode["translated_name"]] = $fieldnode["ref"];
+                    // Add case insensitive to check in case matching fails
+                    $nodes_available_lower_keys[mb_strtolower($fieldnode["path"])] = $fieldnode["ref"];
+                    $nodes_available_lower_keys[mb_strtolower($fieldnode["translated_path"])] = $fieldnode["ref"];
+                    $nodes_available_lower_keys[mb_strtolower($fieldnode["name"])] = $fieldnode["ref"];
+                    $nodes_available_lower_keys[mb_strtolower($fieldnode["translated_name"])] = $fieldnode["ref"];
+                    }
 
-                $lowernewvalues = array_map('mb_strtolower', $newvalues);
-                foreach($lowernewvalues as $newvalue)
+                foreach($newvalues as $newvalue)
                     {
                     $validval = false;
                     // Check if a full node path has been passed
-                    if(isset($nodes_available_keys[$newvalue]))
-                        {
+                    if (isset($nodes_available_keys[$newvalue])) {
                         debug("update_field: Found node #" . $newvalue  . " for tree value: '" . trim($newvalue) . "'");
                         $nodes_to_add[] = $nodes_available_keys[$newvalue];
                         $validval = true;
-                        }
-                    
-                    if(!$validval)
-                        {
+                    } elseif (isset($nodes_available_lower_keys[mb_strtolower($newvalue)])) {
+                        debug("update_field: Found node #" . $newvalue  . " for tree value: '" . trim($newvalue) . "'");
+                        $nodes_to_add[] = $nodes_available_lower_keys[$newvalue];
+                        $validval = true;
+                    }
+                    if(!$validval) {
                         // Check for separate name values
                         $splitvalues = array_map('trim', explode('/', $newvalue));
-                        foreach($splitvalues as $splitvalue)
-                            {
+                        foreach($splitvalues as $splitvalue) {
                             # Check if each new value exists in current options list
-                            if(isset($nodes_available_keys[$splitvalue]))
-                                {
+                            if (isset($nodes_available_keys[$splitvalue])) {
                                 debug("update_field: Found node # " . $nodes_available_keys[$splitvalue]  . " for tree value: '" . trim($splitvalue) . "'");
                                 $nodes_to_add[] = $nodes_available_keys[$splitvalue];
                                 $validval = true;
-                                }
+                            } elseif (isset($nodes_available_lower_keys[mb_strtolower($splitvalue)])) {
+                                debug("update_field: Found node # " . $nodes_available_lower_keys[$splitvalue]  . " for tree value: '" . trim($splitvalue) . "'");
+                                $nodes_to_add[] = $nodes_available_lower_keys[$splitvalue];
+                                $validval = true;
                             }
                         }
+                    }
                     if(!$validval)
                         {
                         // Still not found - invalid option passed
