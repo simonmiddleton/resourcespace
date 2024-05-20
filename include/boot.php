@@ -440,8 +440,8 @@ if($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers && !in_array($pagena
 
     // Verifying the Two Origins Match
     if(
-        $CSRF_source_origin !== $CSRF_target_origin && !in_array($CSRF_source_origin, $CORS_whitelist)
-        && !hook('modified_cors_process')
+        !hook('modified_cors_process')
+        && $CSRF_source_origin !== $CSRF_target_origin && !in_array($CSRF_source_origin, $CORS_whitelist)
     )
         {
         debug("CSRF: Cross-origin request detected and not white listed!");

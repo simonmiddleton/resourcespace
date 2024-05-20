@@ -51,7 +51,7 @@ function VrViewRenderPlayer($ref,$source, $isvideo = false,$width=852, $height=6
     {
     global $vr_view_projection_field, $vr_view_projection_value, $vr_view_stereo_field, $vr_view_stereo_value;
     global $vr_view_yaw_only_field, $vr_view_yaw_only_value, $vr_view_autopan, $vr_view_vr_mode_off;
-    global $NODE_FIELDS;
+    global $NODE_FIELDS, $baseurl;
     
     // Check for stereo value 
     $stereo = false;
@@ -96,7 +96,7 @@ function VrViewRenderPlayer($ref,$source, $isvideo = false,$width=852, $height=6
             $yaw_only = true;
             }
         }
-        
+        $source = generateURL($baseurl . '/plugins/vr_view/pages/download.php', ['url' => urlencode($source)]);
     ?>
     <div id="<?php echo $parentdivid; ?>">
         <div id="<?php echo escape($scope); ?>vrview" style="width:<?php echo escape($width); ?>px;margin:auto;"></div>
