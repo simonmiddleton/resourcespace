@@ -884,7 +884,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             }
                                                             ?>
                                                     </td>
-                                                    <td class="DownloadFileSize"><?php echo escape($sizes[$n]["filesize"]); ?></td>
+                                                    <td class="DownloadFileSize"><?php echo strip_tags_and_attributes($sizes[$n]["filesize"]); ?></td>
                                                     <?php 
                                                     if ($fulldownload && $missing_original) { ?>
                                                         <td class="MissingFile">
