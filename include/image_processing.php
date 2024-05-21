@@ -2128,7 +2128,17 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
         $thumbpath = get_resource_path($ref,true,"thm",false,"jpg",-1,1,false,"",$alternative);
         if(file_exists($thumbpath))
             {
-            $target = imagecreatefromjpeg($thumbpath);
+            $GLOBALS["use_error_exception"] = true;
+            try
+                {
+                $target = imagecreatefromjpeg($thumbpath);
+                }
+            catch (Throwable $e)
+                {
+                $target = false;
+                debug('Error when opening thm size for calling extract_mean_colour(): ' . $e->getMessage());
+                }
+            unset($GLOBALS["use_error_exception"]);
             }
         else
             {
