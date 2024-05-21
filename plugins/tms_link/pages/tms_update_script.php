@@ -28,8 +28,8 @@ if(!in_array("tms_link",$plugins))
 if($tms_link_email_notify!=""){$email_notify=$tms_link_email_notify;}
 
 // Check when this script was last run - do it now in case of permanent process locks
-$scriptlaststarted=ps_value("select value from sysvars where name='last_tms_import_start'", array(), "");
-$scriptlastran=ps_value("select value from sysvars where name='last_tms_import'", array(), "");
+$scriptlaststarted=ps_value("SELECT VALUE FROM sysvars WHERE name='last_tms_import_start'", array(), "");
+$scriptlastran=ps_value("SELECT VALUE FROM sysvars WHERE name='last_tms_import'", array(), "");
 
 $tms_link_script_failure_notify_seconds=intval($tms_link_script_failure_notify_days)*60*60*24;
 
