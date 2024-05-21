@@ -1004,7 +1004,14 @@ function delete_user_dash_tile($usertile,$user)
 function empty_user_dash($user,$purge=true)
     {
     global $lang;
-    $usertiles = ps_query("SELECT dash_tile FROM user_dash_tile WHERE user_dash_tile.user= ?", ['i', $user]);
+    $usertiles = ps_query(
+        "SELECT udt.dash_tile,dt.title
+            FROM user_dash_tile udt
+                JOIN dash_tile dt ON udt.dash_tile=dt.ref
+            WHERE udt.user= ?",
+        ['i', $user]
+    );
+
     ps_query("DELETE FROM user_dash_tile WHERE user= ?", ['i', $user]);
     if($purge)
         {
@@ -1017,7 +1024,7 @@ function empty_user_dash($user,$purge=true)
                 log_activity($lang['manage_all_dash'],LOG_CODE_DELETED,$tile["title"],'dash_tile',null,$tile["dash_tile"]);
                 }
             }
-        }   
+        }
     }
 
 
