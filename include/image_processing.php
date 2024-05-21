@@ -1453,6 +1453,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
         $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
         $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
+        if (!$ps)
+            {
+            return false;
+            }
 
         # Locate imagemagick.
         $convert_fullpath = get_utility_path("im-convert");
@@ -3987,7 +3991,7 @@ function start_previews(int $ref, string $extension = ""): int
  * @param bool $previewonly         Generate 'scr', 'pre', 'thm' and 'col' only
  * @param array $onlysizes          Array of requested size IDs to generate
  *
- * @return array
+ * @return array|bool   Array of size IDs or false on failure.
  *
  */
 function get_sizes_to_generate(
