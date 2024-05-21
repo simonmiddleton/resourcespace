@@ -39,7 +39,7 @@ $url_params=array(
     "actions_order_by"=>$order_by,
     "actions_sort"=>$sort,
     "actiontype"=>$actiontype,
-    "per_page"=>$per_page,
+    "per_page_list"=>$per_page,
     "paging"=>true
    );
 
