@@ -137,11 +137,11 @@ elseif (isset($message))
             <?php 
             if($offline_job_queue)
                 {
-                echo "<input type='checkbox' id='process_offline' name='process_offline' value='1' " . ($resultcount > $metadata_export_offline_limit ? "onclick='styledalert(\"" .  $lang["csvExportResultsMetadata"]  . "\",\"" . str_replace("%%RESOURCE_COUNT%%",$metadata_export_offline_limit,$lang['csv_export_offline_only']) . "\");return false;' checked" : ($submitted && !$offline ? "" : " checked ")) . ">";
+                echo "<input type='checkbox' id='process_offline' name='process_offline' value='1' " . ($resultcount > $metadata_export_offline_limit ? "onclick='styledalert(\"" .  escape($lang["csvExportResultsMetadata"])  . "\",\"" . escape(str_replace("%%RESOURCE_COUNT%%",$metadata_export_offline_limit,$lang['csv_export_offline_only'])) . "\");return false;' checked" : ($submitted && !$offline ? "" : " checked ")) . ">";
                 }
             else
                 {
-                echo "<div class='Fixed'>" . $lang["offline_processing_disabled"] . "</div>";
+                echo "<div class='Fixed'>" . escape($lang["offline_processing_disabled"]) . "</div>";
                 }?>
             <div class="clearerleft"> </div>
         </div>
