@@ -1,4 +1,5 @@
 <?php
+command_line_only();
 # Test overriding variables in the global scope by eval - replicating config override.
 # Testing with config who's value is changed from the default in config.default.php
 
