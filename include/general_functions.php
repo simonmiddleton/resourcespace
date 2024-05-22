@@ -2102,6 +2102,16 @@ function run_command($command, $geterrors = false, array $params = array())
     $command = escape_command_args($command, $params);
     debug("CLI command: $command");
 
+    $cmd_tmp_file = false;
+    if ($config_windows) {
+        // Windows systems have a hard time with the long paths (often used for video generation)
+        // This work-around creates a batch file containing the command, then executes that.
+        $unique_key = generateSecureKey(32);
+        $cmd_tmp_file = get_temp_dir() . "/run_command_" . $unique_key . ".bat";
+        file_put_contents($cmd_tmp_file,$command);
+        $command = $cmd_tmp_file;
+        }
+
     $descriptorspec = array(
         1 => array("pipe", "w") // stdout is a pipe that the child will write to
     );
@@ -2120,7 +2130,12 @@ function run_command($command, $geterrors = false, array $params = array())
         }
     $process = @proc_open($command, $descriptorspec, $pipe, null, null, array('bypass_shell' => true));
 
-    if (!is_resource($process)) { return ''; }
+    if (!is_resource($process)) {
+        if($cmd_tmp_file) {
+            unlink($cmd_tmp_file);
+        }
+        return '';
+    }
 
     $output = trim(stream_get_contents($pipe[1]));
     if($geterrors)
@@ -2132,8 +2147,13 @@ function run_command($command, $geterrors = false, array $params = array())
         debug("CLI output: $output");
         debug("CLI errors: " . trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2])));
         }
-    if($config_windows && isset($log_location)){unlink($log_location);}
+    if ($config_windows && isset($log_location)) {
+        unlink($log_location);
+    }
     proc_close($process);
+    if($cmd_tmp_file) {
+        unlink($cmd_tmp_file);
+    }
     return $output;
     }
 

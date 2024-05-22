@@ -1,47 +1,8 @@
 <?php
+// Included from preview_preprocessing.php
+use Montala\ResourceSpace\CommandPlaceholderArg;
 
-if (!defined("RUNNING_ASYNC")) {define("RUNNING_ASYNC", !isset($ffmpeg_preview));}
-
-if (RUNNING_ASYNC)
-    {
-    if(!isset($_SERVER['HTTP_HOST']) && isset($_SERVER['argv'][8]))
-        {
-        $_SERVER['HTTP_HOST'] = $_SERVER['argv'][8];
-        }
-
-    require dirname(__FILE__)."/boot.php";
-    
-    if (empty($_SERVER['argv'][1]) || $scramble_key!==$_SERVER['argv'][1]) {exit("Incorrect scramble_key");}
-    
-    if (empty($_SERVER['argv'][2])) {exit("Ref param missing");}
-    $ref=$_SERVER['argv'][2];
-    
-    if (empty($_SERVER['argv'][3])) {exit("File param missing");}
-    $file=$_SERVER['argv'][3];
-    
-    if (empty($_SERVER['argv'][4])) {exit("Target param missing");}
-    $target=$_SERVER['argv'][4];
-    
-    if (!isset($_SERVER['argv'][5])) {exit("Previewonly param missing");}
-    $previewonly=$_SERVER['argv'][5];
-    
-    if (!isset($_SERVER['argv'][6])) {exit("Snapshottime param missing");}
-    $snapshottime=$_SERVER['argv'][6];
-
-    if (!isset($_SERVER['argv'][7])) {exit("Alternative param missing");}
-    $alternative=$_SERVER['argv'][7];
-
-    debug ("Starting ffmpeg_processing.php async with parameters: ref=$ref, file=$file, target=$target, previewonly=$previewonly, snapshottime=$snapshottime, alternative=$alternative",$ref);
-
-    ps_query("UPDATE resource SET is_transcoding = 1 WHERE ref = ?", array("i", $ref));
-    }
-
-if(!is_numeric($ref))
-    {
-    trigger_error("Parameter 'ref' must be numeric!");
-    }
-
-# Increase timelimit
+# Increase time limit
 set_time_limit(0);
 
 $ffmpeg_fullpath = get_utility_path("ffmpeg");
@@ -61,24 +22,17 @@ if($generateall) {
         {
         $par = 1;
         # Find out the Pixel Aspect Ratio
-        $shell_exec_cmd = $ffmpeg_fullpath . " -i " . escapeshellarg($file) . " 2>&1";
-        
-        if (isset($ffmpeg_command_prefix))
-        {$shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;}
-        
-        if ($config_windows)
-            {
-            # Windows systems have a hard time with the long paths used for video generation. This work-around creates a batch file containing the command, then executes that.
-            $tmp_ffmpeg_file = get_temp_dir() . "/ffmpeg_" . $ref . "_" . uniqid() . ".bat";
-            file_put_contents($tmp_ffmpeg_file,$shell_exec_cmd);
-            $shell_exec_cmd = $tmp_ffmpeg_file;
-            $deletefiles[] = $tmp_ffmpeg_file;
-            }
-        
-        $output=run_command($shell_exec_cmd);
-            
+        $shell_exec_cmd = $ffmpeg_fullpath . " -i %%FILE%% 2>&1";
+        $shell_exec_params = ["%%FILE%%" => $file];
+
+        if (isset($ffmpeg_command_prefix)) {$
+            $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
+        }
+
+        $output = run_command($shell_exec_cmd, false, $shell_exec_params);
+
         preg_match('/PAR ([0-9]+):([0-9]+)/m', $output, $matches);
-        
+
         if (intval($matches[1]??0) > 0 && intval($matches[2]??0) > 0)
             {
             $par = $matches[1] / $matches[2];
@@ -108,7 +62,7 @@ if($generateall) {
         $width=ceil($width*($ffmpeg_preview_max_height/$height));
         $height=$ffmpeg_preview_max_height;
         }
-        
+
     if($width>$ffmpeg_preview_max_width)
         {
         $height=ceil($height*($ffmpeg_preview_max_width/$width));
@@ -142,13 +96,13 @@ if($generateall) {
         {
         // Start the content for the main m3u8 file
         $hlscontent="#EXTM3U\n";
-        $hlscontent="#EXT-X-VERSION:3\n";       
+        $hlscontent="#EXT-X-VERSION:3\n";
 
         $n=1;
         // Generate the separate video chunks for HTTP Live streaming support
         foreach ($video_hls_streams as $video_hls_stream)
             {
-            $hlsfile=get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative);
+            $hlsfile = get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative);
             if($video_hls_stream["resolution"]==""){$hlswidth= $width;$hlsheight=$height;}
             else
             {
@@ -168,40 +122,34 @@ if($generateall) {
             if ($hlswidth % 2){$hlswidth++;}
             if ($hlsheight % 2) {$hlsheight++;}
             }
-            $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " $ffmpeg_hls_preview_options -b " . $video_hls_stream["bitrate"] . "k -ab " . $video_hls_stream["audio_bitrate"] . "k -t $ffmpeg_preview_seconds -s " .  $hlswidth . "x" . $hlsheight . " " . "-start_number 0 -hls_time 10 -hls_list_size 0 -f hls" . " " . escapeshellarg($hlsfile);
-            if (isset($ffmpeg_command_prefix))
-            {$shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;}
 
-            $tmp = hook("ffmpegmodpreparams", "", array($shell_exec_cmd, $ffmpeg_fullpath, $file));
-            if ($tmp) {$shell_exec_cmd = $tmp;}
+            $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i %%FILE%% " . $video_hls_preview_options . " -b %%BITRATE%%k -ab %%AUDIOBITRATE%%k -t %%SECONDS%% -s %%HEIGHT%%x%%WIDTH%% -start_number 0 -hls_time 10 -hls_list_size 0 -f hls" . " %%HLSFILE%%";
 
-        if ($config_windows)
-            {
-            # Windows systems have a hard time with the long paths used for video generation. This work-around creates a batch file containing the command, then executes that.
-            $tmp_ffmpeg_file = get_temp_dir() . "/ffmpeg_" . $ref . "_" . uniqid() . ".bat";
-            file_put_contents($tmp_ffmpeg_file,$shell_exec_cmd);
-            $shell_exec_cmd = $tmp_ffmpeg_file;
-            $deletefiles[] = $tmp_ffmpeg_file;
+            $shell_exec_params = [
+                "%%FILE%%" => $file,
+                "%%BITRATE%%" => (int) $video_hls_stream["bitrate"],
+                "%%AUDIOBITRATE%%" => (int) $video_hls_stream["audio_bitrate"],
+                "%%SECONDS%%" => (int) $ffmpeg_preview_seconds,
+                "%%HEIGHT%%" => (int) $hlsheight,
+                "%%WIDTH%%" => (int) $hlswidth,
+                "%%HLSFILE%%" => $hlsfile,
+            ];
+
+            if (isset($ffmpeg_command_prefix)) {
+                $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
             }
-                
-        $output=run_external($shell_exec_cmd);
-        
+
+        $output = run_command($shell_exec_cmd, false, $shell_exec_params);
+
         if (
             !file_exists($hlsfile)
             // Check if '-strict experimental' flag
             && strpos($shell_exec_cmd,"experimental") == false
             ) {
-                $shell_exec_cmd = str_replace($hlswidth . "x" . $hlsheight,$hlswidth . "x" . $hlsheight . " -strict experimental ",$shell_exec_cmd);
-               
-                if ($config_windows)
-                    {
-                    file_put_contents($tmp_ffmpeg_file,$shell_exec_cmd);
-                    $shell_exec_cmd = $tmp_ffmpeg_file;
-                    $deletefiles[] = $tmp_ffmpeg_file;
-                    }
-                $output=run_command($shell_exec_cmd);
+                $shell_exec_cmd = str_replace("%%HEIGHT%%x%%WIDTH%%","%%HEIGHT%%x%%WIDTH%% -strict experimental ",$shell_exec_cmd);
+                $output=run_command($shell_exec_cmd, false, $shell_exec_params);
             }
-                
+
         if(file_exists($hlsfile))
             {
             if(!isset($hls_codec_info))
@@ -370,12 +318,6 @@ if($generateall) {
                         delete_alternative_file($ref,$existing[$m]["ref"]);
                         }
                     }
-
-                    if(!file_exists($apath) && file_exists($targetfile) && RUNNING_ASYNC) {
-                        debug('FFmpeg alternative failed: ' . $shell_exec_cmd);
-                        # Change flag as the preview was created and that is the most important of them all
-                        ps_query("UPDATE resource SET is_transcoding = 0 WHERE ref = ?", array("i", $ref));
-                    }
                 }
         }
     }
@@ -386,16 +328,6 @@ if(isset($deletefiles))
     foreach($deletefiles as $deletefile)
         {
         unlink($deletefile);
-        }
-    }
-
-if (RUNNING_ASYNC)
-    {
-    ps_query("UPDATE resource SET is_transcoding = 0 WHERE ref = ?", array("i", $ref));
-    
-    if ($previewonly)
-        {
-        unlink($file);
         }
     }
 
