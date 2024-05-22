@@ -3612,3 +3612,13 @@ function update_user_access(int $user = 0, array $set_values = []): bool
     ps_query($update_sql,$update_params,'',-1,true,0);
     return true;
 }
+
+/**
+ * Check if the user can manage users.
+ *
+ * @return boolean
+ */
+function checkPermission_manage_users() : bool
+    {
+    return checkperm('t') && checkperm('u');
+    }

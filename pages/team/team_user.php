@@ -6,7 +6,11 @@
  * @Subpackage Pages_Team
  */
 include "../../include/boot.php";
-include "../../include/authenticate.php";if (!checkperm("u")) {exit ("Permission denied.");}
+include "../../include/authenticate.php";
+if (!checkPermission_manage_users())
+    {
+    exit(escape($lang["error-permissiondenied"]));
+    }
 
 $offset=getval("offset",0,true);
 $find=trim(getval("find",""));
@@ -320,7 +324,7 @@ include "../../include/header.php";
         <td><?php echo $approval_state_text[$users[$n]["approved"]]; ?></td>
         <td><?php echo nicedate($users[$n]["last_active"],true,true,true) ?></td>
         <?php hook("additional_user_column");?>
-        <td><?php if (($usergroup==3) || ($users[$n]["usergroup"]!=3)) { ?><div class="ListTools">
+        <td><div class="ListTools">
         <a href="<?php echo $team_user_log_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-history"></i>&nbsp;<?php echo escape($lang["log"])?></a>
         &nbsp;
         <a href="<?php echo $team_user_edit_url; ?>" onClick="return CentralSpaceLoad(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"])?></a>
@@ -341,7 +345,7 @@ include "../../include/header.php";
             <?php
             }
         hook("usertool")?>
-        </div><?php } ?>
+        </div>
         </td>
         </tr>
         <?php
