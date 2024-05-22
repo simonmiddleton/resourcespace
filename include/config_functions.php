@@ -1409,22 +1409,44 @@ function override_rs_variables_by_eval(array $variables, string $code)
         {
         foreach($configs_overwritten as $option => $value)
             {
-            $variables[$option] = $value;
+            if ($value === 'UNSET_override_rs_variables_by_eval')
+                {
+                unset($GLOBALS[$option]);
+                unset($variables[$option]);
+                }
+            else
+                {
+                $variables[$option] = $value;
+                }
             }
         }
 
     $temp_variables = $variables;
+
+    // Copy keys to a new array to prevent loss of original values.
+    // This is a temporary solution for PHP versions 7.4 and 8.0 where eval() is applied to the keys in both %$temp_variables and $variables;
+    foreach ($variables as $variable => $var_val)
+        {
+        $original['copy_' . $variable] = $var_val;
+        }
+
     extract($temp_variables, EXTR_REFS | EXTR_SKIP);
-    eval(eval_check_signed($code));
+    eval(eval_check_signed($code)); 
+
     $temp_array = [];
     foreach($temp_variables as $temp_variable_name => $temp_variable_val)
         {
-        if($variables[$temp_variable_name] !== $temp_variable_val)
+        if($original['copy_' . $temp_variable_name] !== $temp_variable_val)
             {
-            $temp_array[$temp_variable_name] = $GLOBALS[$temp_variable_name];
+            $temp_array[$temp_variable_name] = $original['copy_' . $temp_variable_name];
+            if ($original['copy_' . $temp_variable_name] === null)
+                {
+                $temp_array[$temp_variable_name] = 'UNSET_override_rs_variables_by_eval';
+                }
             }
         $GLOBALS[$temp_variable_name] = $temp_variable_val;
         }
+
     $configs_overwritten = $temp_array;
     }
 
