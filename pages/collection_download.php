@@ -495,9 +495,9 @@ if ($submitted != "")
                     $GLOBALS["use_error_exception"] = true;
                     try {
                         symlink($p, $ln_link_name);
-                        } catch (Exception $e) {
+                    } catch (Exception $e) {
                         debug("collection_download symlink: {$p} - {$ln_link_name} ERROR-".$e->getMessage());
-                        }
+                    }
                     unset($GLOBALS["use_error_exception"]); 
                     }
                 elseif ($use_zip_extension)

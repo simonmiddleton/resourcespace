@@ -2018,9 +2018,9 @@ function get_temp_dir($asUrl = false,$uniqid="")
             $GLOBALS["use_error_exception"] = true;
             try {
                 mkdir($result, 0777, true);
-                } catch (Exception $e) {
+            } catch (Exception $e) {
                 debug("get_temp_dir: {$result} ERROR-".$e->getMessage());
-                }
+            }
             unset($GLOBALS["use_error_exception"]);
             }
         }
