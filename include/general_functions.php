@@ -6,6 +6,8 @@
 # PLEASE NOTE - Don't add search/resource/collection/user etc. functions here - use the separate include files.
 #
 
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 /**
  * Retrieve a user-submitted parameter from the browser via post/get/cookies, in that order.
  *
@@ -2060,27 +2062,26 @@ function convert_path_to_url($abs_path)
 * 
 * @return string Escaped command string
 */
-function escape_command_args($cmd, array $args)
-    {
-    debug("escape_command_args(\$cmd = '{$cmd}', \$args = " . str_replace(PHP_EOL, "", print_r($args, true)) . ")");
-
-    if(empty($args))
-        {
+function escape_command_args($cmd, array $args): string
+{
+    debug_function_call(__FUNCTION__, func_get_args());
+    if ($args === []) {
         return $cmd;
+    }
+
+    foreach ($args as $placeholder => $value) {
+        if (strpos($cmd, $placeholder) === false) {
+            trigger_error("Unable to find arg '{$placeholder}' in '{$cmd}'. Make sure the placeholder exists in the command string", E_USER_ERROR);
+        }
+        elseif (!($value instanceof CommandPlaceholderArg)) {
+            $value = new CommandPlaceholderArg($value, null);
         }
 
-    foreach($args as $placeholder => $value)
-        {
-        if(strpos($cmd, $placeholder) === false)
-            {
-            trigger_error("Unable to find arg '{$placeholder}' in '{$cmd}'. Make sure the placeholder exists in the command string");
-            }
-
-        $cmd = str_replace($placeholder, escapeshellarg($value), $cmd);
-        }
+        $cmd = str_replace($placeholder, escapeshellarg($value->__toString()), $cmd);
+    }
 
     return $cmd;
-    }
+}
 
 
 /**

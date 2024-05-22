@@ -1,5 +1,7 @@
 <?php
 
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 function resource_random_jpg($resource,$width, $height)
     {
     // Set random colours 
@@ -85,6 +87,9 @@ function create_random_video(array $info): array
     $height = $info['height'] ?? 300;
     $filename = $info['filename'] ?? generateSecureKey(32);
     $extension = $info['extension'] ?? 'mp4';
+    if (is_banned_extension($extension)) {
+        $extension = 'mp4';
+    }
 
     $ffmpeg = get_utility_path('ffmpeg');
     if ($ffmpeg !== false && in_array($extension, $GLOBALS['ffmpeg_supported_extensions']))
@@ -92,10 +97,13 @@ function create_random_video(array $info): array
         // Add text to video only if supported
         if (isset($info['text']) && mb_strpos(run_command($ffmpeg, true), '--enable-libfontconfig') !== false)
             {
-            $cmd_vf = '-vf %filtergraph';
+            $cmd_vf = '-vf drawtext=text=%info_text'
+                    . ":font='Times New Roman':fontsize=10:fontcolor=black:box=1:boxcolor=white:boxborderw=5";
             $cmd_vf_params = [
-                '%filtergraph' => "drawtext=text='{$info['text']}'"
-                    . ":font='Times New Roman':fontsize=10:fontcolor=black:box=1:boxcolor=white:boxborderw=5",
+                '%info_text' => new CommandPlaceholderArg(
+                    $info['text'],
+                    fn($val): bool => preg_match('/^[a-zA-Z0-9\#\s]*$/', $val) === 1
+                ),
             ];
             }
         else
@@ -105,16 +113,16 @@ function create_random_video(array $info): array
             }
 
         // Create video file
-        $path = get_temp_dir() . DIRECTORY_SEPARATOR . "{$filename}.{$extension}";
+        $path = get_temp_dir() . DIRECTORY_SEPARATOR . safe_file_name($filename) . ".{$extension}";
         $cmd_output = run_command(
             "$ffmpeg -i testsrc=duration=%duration:size=%wx%h:rate=30 $cmd_vf %outfile",
             true,
             array_merge(
                 [
-                    '%duration' => $duration,
-                    '%w' => $width,
-                    '%h' => $height,
-                    '%outfile' => $path,
+                    '%duration' => (int) $duration,
+                    '%w' => (int) $width,
+                    '%h' => (int) $height,
+                    '%outfile' => new CommandPlaceholderArg($path, fn(): bool => true),
                 ]
                 ,
                 $cmd_vf_params
