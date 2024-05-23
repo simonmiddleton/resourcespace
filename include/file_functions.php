@@ -407,3 +407,15 @@ function is_valid_rs_path(string $path, array $extra_paths = []): bool
     // Not a valid file source
     return false;
 }
+
+/**
+ * Validation helper function to determine if a path base name is unsafe (e.g OS command injection, path traversal etc.)
+ */
+function is_safe_basename(string $val): bool
+{
+    $file_name = pathinfo($val, PATHINFO_FILENAME);
+    return (
+        safe_file_name($file_name) === str_replace(' ', '_', $file_name)
+        && !is_banned_extension(pathinfo($val, PATHINFO_EXTENSION))
+    );
+}

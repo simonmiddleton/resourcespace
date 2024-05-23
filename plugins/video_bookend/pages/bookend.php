@@ -1,5 +1,7 @@
 <?php
 
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 ob_start(); 
 
 $nocache = true;
@@ -52,18 +54,27 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
 
             if ($extension == 'jpg' || $extension == 'png')
                 {
-                $shell_exec_cmd  = $ffmpeg_fullpath . " -y -loop 1 -i " . escapeshellarg($image);
-                $shell_exec_cmd .= " -t " . escapeshellarg($video_bookend_seconds) . " ";
-                $shell_exec_cmd .= escapeshellarg($path[$n]);
-                exec($shell_exec_cmd);
+                run_command(
+                    "{$ffmpeg_fullpath} -y -loop 1 -i image -t video_bookend_seconds path_n",
+                    false,
+                    [
+                        'image' => new CommandPlaceholderArg($image, 'is_valid_rs_path'),
+                        'video_bookend_seconds' => new CommandPlaceholderArg($video_bookend_seconds, 'is_int_loose'),
+                        'path_n' => new CommandPlaceholderArg($path[$n], 'is_safe_basename'),
+                    ]
+                );
                 }
 
             if($extension == 'gif')
                 {
-                $shell_exec_cmd  = $ffmpeg_fullpath . " -i " . escapeshellarg($image);
-                $shell_exec_cmd .= " ";
-                $shell_exec_cmd .= escapeshellarg($path[$n]);
-                exec($shell_exec_cmd);    
+                run_command(
+                    "{$ffmpeg_fullpath} -i image path_n",
+                    false,
+                    [
+                        'image' => new CommandPlaceholderArg($image, 'is_valid_rs_path'),
+                        'path_n' => new CommandPlaceholderArg($path[$n], 'is_safe_basename'),
+                    ]
+                );
                 }
             }
         }
@@ -88,11 +99,14 @@ if(getval("submit", "") != "" && enforcePostRequest(false))
     fclose($myfile);
 
     # ffmpeg join using text file (that stores all the files to be joined)
-
-    $shell_exec_cmd  = 'ffmpeg -f concat -safe 0';
-    $shell_exec_cmd .= " -i " . escapeshellarg($temp_dir . "/bookend_videos.txt");
-    $shell_exec_cmd .= ' -c copy '. escapeshellarg($final);
-    run_command($shell_exec_cmd);
+    run_command(
+        'ffmpeg -f concat -safe 0 -i bookend_videos -c copy final',
+        false,
+        [
+            'bookend_videos' => new CommandPlaceholderArg("{$temp_dir}/bookend_videos.txt", 'is_valid_rs_path'),
+            'final' => new CommandPlaceholderArg($final, 'is_safe_basename'),
+        ]
+    );
 
     # Download the finished file to user...
 

@@ -6,7 +6,7 @@ namespace Montala\ResourceSpace;
 
 use ValueError;
 
-class CommandPlaceholderArg
+final class CommandPlaceholderArg
 {
     /**
      * A placeholders' value representing ONE command argument value (highly contextual).
