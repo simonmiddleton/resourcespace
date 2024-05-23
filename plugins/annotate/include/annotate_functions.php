@@ -1,4 +1,7 @@
 <?php
+
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 include_once dirname(__FILE__) . '/../../../lib/html2pdf/vendor/tecnickcom/tcpdf/tcpdf.php';
 
 class MYPDF extends TCPDF {
@@ -241,20 +244,34 @@ function create_annotated_pdf($ref,$is_collection=false,$size="letter",$cleanup=
         # Set up  
         putenv("MAGICK_HOME=" . $imagemagick_path); 
         $ghostscript_fullpath = get_utility_path("ghostscript");
-        
-        $command = $ghostscript_fullpath . " -sDEVICE=jpeg -dFirstPage=" . (int) $previewpage;
-        $command .= " -o -r100 -dLastPage=" . (int) $previewpage;
-        $command .= " -sOutputFile=" . escapeshellarg($jpgstoragepath);
-        $command .= " " . escapeshellarg($pdfstoragepath);
-        run_command($command);
+        run_command(
+            "{$ghostscript_fullpath} -sDEVICE=jpeg -dFirstPage=previewpage -o -r100 -dLastPage=previewpage"
+            . " -sOutputFile=jpgstoragepath pdfstoragepath",
+            false,
+            [
+                'previewpage' => (int) $previewpage,
+                'jpgstoragepath' => new CommandPlaceholderArg($jpgstoragepath, 'is_safe_basename'),
+                'pdfstoragepath' => new CommandPlaceholderArg($pdfstoragepath, 'is_safe_basename'),
+            ]
+        );
 
         $convert_fullpath = get_utility_path("im-convert");
         if ($convert_fullpath == false) {exit("Could not find ImageMagick 'convert' utility at location '$command'");}  
         
-        $command = $convert_fullpath . " -resize . " . escapeshellarg($contact_sheet_preview_size);
-        $command .= " -quality 90 -colorspace " . escapeshellarg($imagemagick_colorspace);
-        $command .= " " . escapeshellarg($jpgstoragepath) ." " . escapeshellarg($jpgstoragepath);
-        run_command($command);
+        run_command(
+            "{$convert_fullpath} -resize contact_sheet_preview_size -quality 90 -colorspace imagemagick_colorspace"
+            . " jpgstoragepath jpgstoragepath",
+            false,
+            [
+                'contact_sheet_preview_size' => new CommandPlaceholderArg(
+                    $contact_sheet_preview_size,
+                    'is_valid_contact_sheet_preview_size'
+                ),
+                'imagemagick_colorspace' => $imagemagick_colorspace,
+                'jpgstoragepath' => new CommandPlaceholderArg($jpgstoragepath, 'is_safe_basename'),
+
+            ]
+        );
         return true;
         }
         
