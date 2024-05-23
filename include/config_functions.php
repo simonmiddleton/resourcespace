@@ -1889,5 +1889,5 @@ function get_resource_type_field_columns()
  */
 function is_valid_contact_sheet_preview_size(string $val): bool
 {
-    return preg_match('^\d+x\d+$', $val);
+    return preg_match('/^\d+x\d+$/', $val);
 }
