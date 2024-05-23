@@ -27,7 +27,7 @@ function HookVr_viewAllmodified_Cors_Process()
     {
     global $vr_view_google_hosted, $vr_view_js_url, $CORS_whitelist;
 
-    if(trim($vr_view_js_url) !== '' && filter_var($vr_view_js_url, FILTER_VALIDATE_URL) == false) {
+    if ($vr_view_google_hosted == false && filter_var($vr_view_js_url, FILTER_VALIDATE_URL) == false) {
         return; 
     } 
 
