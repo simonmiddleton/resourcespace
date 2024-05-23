@@ -7,23 +7,22 @@ set_time_limit(0);
 
 $ffmpeg_fullpath = get_utility_path("ffmpeg");
 
-if($generateall) {
+if ($generateall) {
     # Create a preview video
-    $targetfile=get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative); 
+    $targetfile = get_resource_path($ref,true,"pre",false,$ffmpeg_preview_extension,-1,1,false,"",$alternative); 
 
-    $snapshotsize=getimagesize($target);
+    $snapshotsize = getimagesize($target);
     $width=$snapshotsize[0];
     $height=$snapshotsize[1];
     $sourcewidth=$width;
     $sourceheight=$height;
-    $deletefiles = array();
     global $config_windows, $ffmpeg_get_par;
     if ($ffmpeg_get_par)
         {
         $par = 1;
         # Find out the Pixel Aspect Ratio
         $shell_exec_cmd = $ffmpeg_fullpath . " -i %%FILE%% 2>&1";
-        $shell_exec_params = ["%%FILE%%" => $file];
+        $shell_exec_params = ["%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename')];
 
         if (isset($ffmpeg_command_prefix)) {$
             $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
@@ -68,7 +67,7 @@ if($generateall) {
         $height=ceil($height*($ffmpeg_preview_max_width/$width));
         $width=$ffmpeg_preview_max_width;
         }
-        
+
     # Frame size must be a multiple of two
     if ($width % 2){$width++;}
     if ($height % 2) {$height++;}
@@ -92,242 +91,208 @@ if($generateall) {
         $ffmpeg_preview_options = $ffmpeg_preview_gif_options;
         }
 
-    if($video_preview_hls_support!=0)
-        {
+    if ($video_preview_hls_support != 0) {
         // Start the content for the main m3u8 file
         $hlscontent="#EXTM3U\n";
         $hlscontent="#EXT-X-VERSION:3\n";
 
         $n=1;
         // Generate the separate video chunks for HTTP Live streaming support
-        foreach ($video_hls_streams as $video_hls_stream)
-            {
+        foreach ($video_hls_streams as $video_hls_stream) {
             $hlsfile = get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative);
-            if($video_hls_stream["resolution"]==""){$hlswidth= $width;$hlsheight=$height;}
-            else
-            {
-            $tgt_res=explode("x",$video_hls_stream["resolution"]);
-            $hlswidth=$tgt_res[0];
-            $hlsheight=$tgt_res[1];
-            $aspect_ratio=$width/$height;
-            if($hlswidth/$hlsheight > $aspect_ratio)
-                {
-                $hlswidth=floor($hlsheight*$aspect_ratio);
+            if ($video_hls_stream["resolution"]=="") {
+                $hlswidth= $width;
+                $hlsheight=$height;
+            } else {
+                $tgt_res = explode("x",$video_hls_stream["resolution"]);
+                $hlswidth = $tgt_res[0];
+                $hlsheight = $tgt_res[1];
+                $aspect_ratio=$width/$height;
+                if ($hlswidth/$hlsheight > $aspect_ratio) {
+                    $hlswidth = floor($hlsheight*$aspect_ratio);
+                } elseif($hlswidth/$hlsheight < $aspect_ratio) {
+                    $hlsheight = floor($hlswidth/$aspect_ratio);
                 }
-            elseif($hlswidth/$hlsheight < $aspect_ratio)
-                {
-                $hlsheight=floor($hlswidth/$aspect_ratio);
-                }
-            # Frame size must be a multiple of two
-            if ($hlswidth % 2){$hlswidth++;}
-            if ($hlsheight % 2) {$hlsheight++;}
+                # Frame size must be a multiple of two
+                if ($hlswidth % 2) {$hlswidth++;}
+                if ($hlsheight % 2) {$hlsheight++;}
             }
 
-            $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i %%FILE%% " . $video_hls_preview_options . " -b %%BITRATE%%k -ab %%AUDIOBITRATE%%k -t %%SECONDS%% -s %%HEIGHT%%x%%WIDTH%% -start_number 0 -hls_time 10 -hls_list_size 0 -f hls" . " %%HLSFILE%%";
+            $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i %%FILE%% " . $video_hls_preview_options . " -b %%BITRATE%%k -ab %%AUDIOBITRATE%%k -t %%SECONDS%% -s %%WIDTH%%x%%HEIGHT%% -start_number 0 -hls_time 10 -hls_list_size 0 -f hls" . " %%HLSFILE%%";
 
             $shell_exec_params = [
-                "%%FILE%%" => $file,
+                "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
                 "%%BITRATE%%" => (int) $video_hls_stream["bitrate"],
                 "%%AUDIOBITRATE%%" => (int) $video_hls_stream["audio_bitrate"],
                 "%%SECONDS%%" => (int) $ffmpeg_preview_seconds,
-                "%%HEIGHT%%" => (int) $hlsheight,
                 "%%WIDTH%%" => (int) $hlswidth,
-                "%%HLSFILE%%" => $hlsfile,
+                "%%HEIGHT%%" => (int) $hlsheight,
+                "%%HLSFILE%%" => new CommandPlaceholderArg($hlsfile, 'is_safe_basename'),
             ];
 
             if (isset($ffmpeg_command_prefix)) {
                 $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
             }
 
+        $tmp = hook("ffmpegmodpreparams", "", [$shell_exec_cmd, $ffmpeg_fullpath, $file, $shell_exec_params]);
+        if ($tmp) {
+            $shell_exec_cmd = $tmp;
+        }
+
         $output = run_command($shell_exec_cmd, false, $shell_exec_params);
 
-        if (
-            !file_exists($hlsfile)
-            // Check if '-strict experimental' flag
-            && strpos($shell_exec_cmd,"experimental") == false
-            ) {
-                $shell_exec_cmd = str_replace("%%HEIGHT%%x%%WIDTH%%","%%HEIGHT%%x%%WIDTH%% -strict experimental ",$shell_exec_cmd);
-                $output=run_command($shell_exec_cmd, false, $shell_exec_params);
-            }
-
-        if(file_exists($hlsfile))
-            {
-            if(!isset($hls_codec_info))
-            {
-            // Get codec profile and level to add to CODECS element for stream in M3U8 file. Set to profile:high, level:5.1  if not worked out so that a high bitrate stream is not used in error
-            $ffprobe_array=get_video_info($hlsfile);
-            $hls_codec_info["profile"]=(isset($ffprobe_array["streams"][0]["profile"]) && isset($h264_profiles[$ffprobe_array["streams"][0]["profile"]]))?$h264_profiles[$ffprobe_array["streams"][0]["profile"]]:"58A0";               
-            $hls_codec_info["level"]="1e";
+        if (file_exists($hlsfile)) {
+            if (!isset($hls_codec_info)) {
+                // Get codec profile and level to add to CODECS element for stream in M3U8 file. Set to profile:high, level:5.1  if not worked out so that a high bitrate stream is not used in error
+                $ffprobe_array = get_video_info($hlsfile);
+                $hls_codec_info["profile"] = (isset($ffprobe_array["streams"][0]["profile"]) && isset($h264_profiles[$ffprobe_array["streams"][0]["profile"]])) ? $h264_profiles[$ffprobe_array["streams"][0]["profile"]] : "58A0";
+                $hls_codec_info["level"]="1e";
             }
             // Set stream info, allowing for overhead of bitrate (this is why it is not 1024)
             $hlscontent.="#EXT-X-STREAM-INF:PROGRAM-ID=" . $n . ",BANDWIDTH=" . (($video_hls_stream["bitrate"] + $video_hls_stream["audio_bitrate"])*1200) . (isset($hls_codec_info)?",CODECS=\"mp4a.40.2, avc1." . $hls_codec_info["profile"] . $hls_codec_info["level"] . "\"":"") . ",RESOLUTION=" . $video_hls_stream["resolution"] . "\n";
-            $hlsfileparts=pathinfo($hlsfile);
-            $hlscontent.=$hlsfileparts["basename"] ."\n";
+            $hlsfileparts = pathinfo($hlsfile);
+            $hlscontent .= $hlsfileparts["basename"] ."\n";
             }
         unset($hls_codec_info);
         }
-        $hlsmainfile=get_resource_path($ref,true,"pre",false,"m3u8",-1,1,false,"",$alternative); 
-        
+        $hlsmainfile=get_resource_path($ref,true,"pre",false,"m3u8",-1,1,false,"",$alternative);
+
         file_put_contents($hlsmainfile,$hlscontent);
-        }
-    
-    if($video_preview_hls_support!=1)
-        {
-        $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i " . escapeshellarg($file) . " $ffmpeg_preview_options -t $ffmpeg_preview_seconds -s {$width}x{$height} " . escapeshellarg($targetfile);
-        
-        if (isset($ffmpeg_command_prefix))
-            {
+    } elseif ($video_preview_hls_support != 1) {
+        $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i %%FILE%% " . $ffmpeg_preview_options . " -t %%SECONDS%% -s %%HEIGHT%%x%%WIDTH%%  %%TARGETFILE%%";
+
+        $shell_exec_params = [
+            "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
+            "%%SECONDS%%" => (int) $ffmpeg_preview_seconds,
+            "%%HEIGHT%%" => (int) $hlsheight,
+            "%%WIDTH%%" => (int) $hlswidth,
+            "%%TARGETFILE%%" => new CommandPlaceholderArg($targetfile, 'is_safe_basename'),
+        ];
+
+        if (isset($ffmpeg_command_prefix)) {
             $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
-            }
-        
-        $tmp = hook("ffmpegmodpreparams", "", array($shell_exec_cmd, $ffmpeg_fullpath, $file));
-        if ($tmp)
-            {
-            $shell_exec_cmd = $tmp;
-            }
-        
-        // Store the command so it can be tweaked if required
-        $ffmpeg_command = $shell_exec_cmd;
-        
-        if ($config_windows)
-            {
-            # Windows systems have a hard time with the long paths used for video generation. This work-around creates a batch file containing the command, then executes that.
-            $tmp_ffmpeg_file = get_temp_dir() . "/ffmpeg_" . $ref . "_" . uniqid() . ".bat";
-            file_put_contents($tmp_ffmpeg_file,$shell_exec_cmd);
-            $shell_exec_cmd = $tmp_ffmpeg_file;
-            }
-        
-        $output=run_command($shell_exec_cmd);
-        
-        if (!file_exists($targetfile))
-            {
-            // Check if trying to create MP4 file as this may require the '-strict experimental' flag due to the AAC codec required for most MP4 web video
-            if($ffmpeg_preview_extension == "mp4" && strpos($ffmpeg_preview_options,"experimental") == false)
-                {
-                $shell_exec_cmd = str_replace($ffmpeg_preview_options,$ffmpeg_preview_options . " -strict experimental ",$ffmpeg_command);
-                if ($config_windows)
-                    {
-                    file_put_contents($tmp_ffmpeg_file,$shell_exec_cmd . '" > NUL"');
-                    $shell_exec_cmd = $tmp_ffmpeg_file;
-                    $deletefiles[] = $tmp_ffmpeg_file;
-                    }
-                }
-            
-            $output=run_command($shell_exec_cmd);
-                    
-            if (!file_exists($targetfile))
-                {
-                debug("FFmpeg failed: " . $shell_exec_cmd);
-                }
-            }
         }
+
+        $tmp = hook("ffmpegmodpreparams", "", [$shell_exec_cmd, $ffmpeg_fullpath, $file, $shell_exec_params]);
+        if ($tmp) {
+            $shell_exec_cmd = $tmp;
+        }
+        $output=run_command($shell_exec_cmd);
+    }
 
 
     if (
-        $ffmpeg_get_par 
-        && (isset($snapshotcheck) 
+        $ffmpeg_get_par
+        && (isset($snapshotcheck)
         && $snapshotcheck==false)
-        && $par > 0 
+        && $par > 0
         && $par <> 1
-        ) {
+    ) {
         # recreate snapshot with correct PAR
         $width=$sourcewidth;
         $height=$sourceheight;
-        if($par < 1)
-            {
+        if ($par < 1) {
             $width = ceil($sourcewidth * $par);
-            }
-        elseif($par > 1)
-            {
+        } elseif ($par > 1) {
             $height = ceil($sourceheight / $par);
-            }
+        }
         # Frame size must be a multiple of two
         if ($width % 2){$width++;}
         if ($height % 2) {$height++;}
-        $shell_exec_cmd = $ffmpeg_fullpath . "  $ffmpeg_global_options -y -i " . escapeshellarg($file) . " -s {$width}x{$height} -f image2 -vframes 1 -ss ".$snapshottime." " . escapeshellarg($target);
+
+        $shell_exec_cmd = "$ffmpeg_fullpath $ffmpeg_global_options -y -i %%FILE%% -s %%WIDTH%%x%%HEIGHT%%  %%TARGETFILE%% -f image2 -vframes 1 -ss %%SNAPSHOTTIME%% %%TARGETFILE%%";
+        $shell_exec_params = [
+            "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
+            "%%WIDTH%%" => (int) $width,
+            "%%HEIGHT%%" => (int) $height,
+            "%%SNAPSHOTTIME%%" => (int) $snapshottime,
+            "%%TARGETFILE%%" => new CommandPlaceholderArg($targetfile, 'is_safe_basename'),
+        ];
+
         $output = run_command($shell_exec_cmd);
-        }
+    }
 
-    if (!file_exists($targetfile))
-        {
+    if (!file_exists($targetfile)) {
         debug("FFmpeg failed: ".$shell_exec_cmd);
-        }
+    }
 
-    # Handle alternative files.
+    // Handle alternative files.
     global $ffmpeg_alternatives;
-    if (isset($ffmpeg_alternatives) && $generateall)
-        {
+    if (isset($ffmpeg_alternatives) && $generateall) {
         $ffmpeg_alt_previews=array();
-        for($n=0;$n<count($ffmpeg_alternatives);$n++)
-            {
+        for ($n=0;$n<count($ffmpeg_alternatives);$n++) {
             $generate=true;
             if (
                 isset($ffmpeg_alternatives[$n]["lines_min"])
-                # If this alternative size is larger than the source, do not generate.
-               && $ffmpeg_alternatives[$n]["lines_min"] >= $sourceheight
-                ) {
-                $generate=false;
+                // If this alternative size is larger than the source, do not generate.
+                && $ffmpeg_alternatives[$n]["lines_min"] >= $sourceheight
+            ) {
+                $generate = false;
             }
 
-            $tmp = hook("preventgeneratealt", "", array($file));
+            $tmp = hook("preventgeneratealt", "", [$file]);
             if ($tmp===true) {$generate = false;}
 
-            if ($generate) # OK to generate this alternative?
-                {
-                # Remove any existing alternative file(s) with this name.
+            if ($generate) {
+                // Remove any existing alternative file(s) with this name.
                 $existing = ps_query("select ref from resource_alt_files where resource = ? and name = ?", array("i", $ref, "s", $ffmpeg_alternatives[$n]["name"]));
-                for ($m=0;$m<count($existing);$m++)
-                    {
+                for ($m=0;$m<count($existing);$m++) {
                     delete_alternative_file($ref,$existing[$m]["ref"]);
-                    }
+                }
 
                 $alt_type = '';
-                if(isset($ffmpeg_alternatives[$n]['alt_type'])) {
+                if (isset($ffmpeg_alternatives[$n]['alt_type'])) {
                     $alt_type = $ffmpeg_alternatives[$n]["alt_type"];
                 }
 
                 # Create the alternative file.
-                $aref=add_alternative_file($ref,$ffmpeg_alternatives[$n]["name"],'', '', '', 0, $alt_type);
-                $apath=get_resource_path($ref,true,"",true,$ffmpeg_alternatives[$n]["extension"],-1,1,false,"",$aref);
-                
-                # Process the video 
-                $shell_exec_cmd = $ffmpeg_fullpath . "  $ffmpeg_global_options -y -i " . escapeshellarg($file) . " " . $ffmpeg_alternatives[$n]["params"] . " " . escapeshellarg($apath);
+                $aref = add_alternative_file($ref,$ffmpeg_alternatives[$n]["name"],'', '', '', 0, $alt_type);
+                $apath = get_resource_path($ref,true,"",true,$ffmpeg_alternatives[$n]["extension"],-1,1,false,"",$aref);
 
-                $tmp = hook("ffmpegmodaltparams", "", array($shell_exec_cmd, $ffmpeg_fullpath, $file, $n, $aref));
-                if($tmp) {$shell_exec_cmd = $tmp;}
-                
-                $output = run_command($shell_exec_cmd);  
+                # Process the video
+                $shell_exec_cmd = "$ffmpeg_fullpath $ffmpeg_global_options -y -i %%FILE%% " . $ffmpeg_alternatives[$n]["params"] . " %%TARGETFILE%%";
+                $shell_exec_params = [
+                    "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
+                    "%%WIDTH%%" => (int) $width,
+                    "%%HEIGHT%%" => (int) $height,
+                    "%%SNAPSHOTTIME%%" => (int) $snapshottime,
+                    "%%TARGETFILE%%" => new CommandPlaceholderArg($apath, 'is_safe_basename'),
+                ];
 
-                if (file_exists($apath))
-                    {
+                $tmp = hook("ffmpegmodaltparams", "", array($shell_exec_cmd, $ffmpeg_fullpath, $file, $n, $aref, $shell_exec_params));
+                if ($tmp) {
+                    $shell_exec_cmd = $tmp;
+                }
+                $output = run_command($shell_exec_cmd);
+
+                if (file_exists($apath)) {
                     # Update the database with the new file details.
-                    $file_size = filesize_unlimited($apath);    
-                    ps_query("update resource_alt_files set file_name = ?, file_extension = ?, file_size = ?, creation_date = now() where ref = ?", 
-                        array("s", $ffmpeg_alternatives[$n]["filename"] . "." . $ffmpeg_alternatives[$n]["extension"], "s", $ffmpeg_alternatives[$n]["extension"], "i", $file_size, "i", $aref));
+                    $file_size = filesize_unlimited($apath);
+                    ps_query("UPDATE resource_alt_files
+                                 SET file_name = ?,
+                                     file_extension = ?,
+                                     file_size = ?,
+                                     creation_date = NOW()
+                               WHERE ref = ?",
+                        [
+                        "s", $ffmpeg_alternatives[$n]["filename"] . "." . $ffmpeg_alternatives[$n]["extension"],
+                        "s", $ffmpeg_alternatives[$n]["extension"],
+                         "i", $file_size, "i", $aref
+                        ]
+                    );
                     // add this filename to be added to resource.ffmpeg_alt_previews
-                    if (isset($ffmpeg_alternatives[$n]['alt_preview']) && $ffmpeg_alternatives[$n]['alt_preview']==true){
-                        $ffmpeg_alt_previews[]=basename($apath);
-                        }
+                    if (isset($ffmpeg_alternatives[$n]['alt_preview']) && $ffmpeg_alternatives[$n]['alt_preview']==true) {
+                        $ffmpeg_alt_previews[] = basename($apath);
                     }
-                else 
-                    {
+                } else {
                     # Remove the alternative file entries with this name as ffmpeg has failed to create file.
-                    $existing = ps_query("select ref from resource_alt_files where resource = ? and name = ?", array("i", $ref, "s", $ffmpeg_alternatives[$n]["name"]));
-                    for ($m=0;$m<count($existing);$m++)
-                        {
+                    $existing = ps_query("SELECT ref FROM resource_alt_files WHERE resource = ? AND name = ?", array("i", $ref, "s", $ffmpeg_alternatives[$n]["name"]));
+                    for ($m=0;$m<count($existing);$m++) {
                         delete_alternative_file($ref,$existing[$m]["ref"]);
-                        }
                     }
                 }
+            }
         }
     }
 }
-
-if(isset($deletefiles))
-    {
-    foreach($deletefiles as $deletefile)
-        {
-        unlink($deletefile);
-        }
-    }
 
