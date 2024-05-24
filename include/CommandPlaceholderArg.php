@@ -15,7 +15,7 @@ final class CommandPlaceholderArg
 
     /**
      * Constructor
-     * 
+     *
      * @param string $value The actual placeholder value
      * @param null|callable $validator Use null for the default one, otherwise any callable where the value to be
      * tested is the first argument.
@@ -28,7 +28,8 @@ final class CommandPlaceholderArg
             return;
         }
 
-        throw new Exception('Invalid placeholder argument value!');
+        debug('Invalid placeholder argument value: ' . $value);
+        throw new Exception('Invalid placeholder argument value: ' . $value);
     }
 
     /**
