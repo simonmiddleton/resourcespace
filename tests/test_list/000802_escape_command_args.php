@@ -13,10 +13,7 @@ $use_cases = [
                 '%Y-%m-%d %H:%M:%S',
                 fn($val): bool => preg_match('/[%Y\-mdH:MS[:space:]]/', $val)
             ),
-            'output_file' => new CommandPlaceholderArg(
-                '/path/to/file.jpg',
-                'is_safe_basename'
-            ),
+            'output_file' => new CommandPlaceholderArg('/path/to/file.jpg', 'is_safe_basename'),
         ],
         'expected' => "'/usr/bin/madeupcmd' -d '%Y-%m-%d %H:%M:%S' -o '/path/to/file.jpg'",
     ],
