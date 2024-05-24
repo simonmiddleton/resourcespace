@@ -5,7 +5,6 @@ $lang["action-trim"]='Leikkaa';
 $lang["video-trim"]='Videon leikkaus';
 $lang["video-trim-warning"]='Leikkausvaroitus';
 $lang["video-trim-warning-text"]='Leikkauspisteiden aloitus- tai lopetuskohta ylittää videon esikatselun pituuden.<br><br>Esikatselussa näkyvä kuva ei välttämättä vastaa lopullista lopputulosta. Jos haluat esikatsella leikattua videota, harkitse videon esikatselun pituuden lisäämistä ja esikatselutiedostojen uudelleen luomista.';
-$lang["video-trim_upload-type"]='Lataustyyppi';
 $lang["video-trim_new-response"]='Uusi(a) resurssi(t) luotu: Resurssin tunnus(t) [ %links]. Voit jatkaa lisäleikkausten tekemistä alla.';
 $lang["video-trim_alt-response"]='Vaihtoehtoiset tiedostot luotiin resurssille %ref: Vaihtoehtoiset tunnisteet [ %links]. Voit jatkaa lisäleikkausten tekemistä alla.';
 $lang["videospliceconfiguration"]='Videon liitoskohtien asetukset';

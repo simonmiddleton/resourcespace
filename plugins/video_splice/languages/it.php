@@ -5,7 +5,6 @@ $lang["action-trim"]='Taglio';
 $lang["video-trim"]='Taglio video';
 $lang["video-trim-warning"]='Avviso di ritaglio';
 $lang["video-trim-warning-text"]='Il punto di inizio o fine del taglio supera la lunghezza dell\'anteprima video.<br><br>L\'anteprima fornita non rappresenta completamente il risultato finale, si consiglia di aumentare la lunghezza dell\'anteprima video e di ricreare i file di anteprima se si desidera visualizzare il risultato del taglio.';
-$lang["video-trim_upload-type"]='Tipo di caricamento';
 $lang["video-trim_new-response"]='Nuova/e risorsa/e creata/e: ID risorsa/e [ %links]. Puoi continuare a effettuare ulteriori ritagli qui sotto.';
 $lang["video-trim_alt-response"]='File alternative creati per la risorsa %ref: ID alternativi [ %links]. Puoi continuare a effettuare ulteriori ritagli qui sotto.';
 $lang["videospliceconfiguration"]='Configurazione di unione video';

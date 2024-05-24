@@ -5,7 +5,6 @@ $lang["action-trim"]='Orezať';
 $lang["video-trim"]='Strih videa';
 $lang["video-trim-warning"]='Upozornenie na orezanie (or simply "Orezanie")';
 $lang["video-trim-warning-text"]='Váš začiatočný alebo koncový bod orezania prekračuje dĺžku náhľadu videa.<br><br>Náhľad poskytnutý nezobrazuje úplne finálny výsledok. Ak chcete vidieť výsledok orezania, zvážte zvýšenie dĺžky náhľadu videa a vytvorenie nových súborov náhľadu.';
-$lang["video-trim_upload-type"]='Typ nahrávania';
 $lang["video-trim_new-response"]='Nové prostriedky vytvorené: ID prostriedku(ov) [ %links]. Môžete pokračovať v pridávaní ďalších úprav nižšie.';
 $lang["video-trim_alt-response"]='Vytvorené alternatívne súbory pre zdroj %ref: Alternatívne ID(s) [ %links]. Môžete pokračovať v tvorbe ďalších úprav nižšie.';
 $lang["videospliceconfiguration"]='Konfigurácia spojenia videa';

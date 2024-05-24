@@ -5,7 +5,6 @@ $lang["action-trim"]='Przyciąć';
 $lang["video-trim"]='Przycięcie wideo';
 $lang["video-trim-warning"]='Ostrzeżenie o przycięciu';
 $lang["video-trim-warning-text"]='Twój punkt początkowy lub końcowy przycięcia przekracza długość podglądu wideo.<br><br>Podgląd nie przedstawia w pełni ostatecznego wyniku, rozważ zwiększenie długości podglądu wideo i ponowne utworzenie plików podglądu, jeśli chcesz zobaczyć przycięty wynik.';
-$lang["video-trim_upload-type"]='Typ wgrywania';
 $lang["video-trim_new-response"]='Nowo utworzone zasoby: ID zasobów [ %links]. Możesz kontynuować dodawanie kolejnych przycięć poniżej.';
 $lang["video-trim_alt-response"]='Utworzono alternatywny plik/pliki dla zasobu %ref: Alternatywne ID [ %links]. Możesz kontynuować dodawanie dodatkowych wycinków poniżej.';
 $lang["videospliceconfiguration"]='Konfiguracja łączenia wideo';
