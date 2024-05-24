@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Montala\ResourceSpace;
 
-use ValueError;
+use Exception;
 
 final class CommandPlaceholderArg
 {
@@ -28,7 +28,7 @@ final class CommandPlaceholderArg
             return;
         }
 
-        throw new ValueError('Invalid placeholder argument value!');
+        throw new Exception('Invalid placeholder argument value!');
     }
 
     /**

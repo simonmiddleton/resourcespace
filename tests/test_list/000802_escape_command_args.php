@@ -24,7 +24,7 @@ $use_cases = [
         'name' => 'Block by default metacharacters (throws exception)',
         'cmd' => "ls --ignore=%arg /tmp",
         'args' => ['%arg' => "sth' -l"],
-        'expected' => 'ValueError',
+        'expected' => 'Exception',
     ],
 ];
 $GLOBALS['use_error_exception'] = true;
@@ -33,7 +33,7 @@ foreach($use_cases as $uc)
     try {
         $result = escape_command_args($uc['cmd'], $uc['args']);
     } catch (Throwable $t) {
-        $result = $t::class;
+        $result = get_class($t);
     }
 
     if($uc['expected'] !== $result)
