@@ -394,13 +394,17 @@ function validate_temp_path(string $test_path, string $temp_folder = '') : bool
 function is_valid_rs_path(string $path, array $extra_paths = []): bool
 {
     $sourcerealpath = realpath($path);
+    if (!$sourcerealpath) {
+        return false;
+    }
+
     $basepaths = [
         $GLOBALS["storagedir"],
         // $GLOBALS["syncdir"],
     ];
     foreach(array_merge($basepaths,$extra_paths) as $validpath) {
         $validpath = realpath($validpath);
-        if (strpos($sourcerealpath,$validpath) === 0) {
+        if ($validpath !== false && strpos($sourcerealpath,$validpath) === 0) {
             return true;
         }
     }
