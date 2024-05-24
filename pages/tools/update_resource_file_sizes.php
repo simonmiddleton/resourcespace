@@ -5,14 +5,14 @@
 # This puts values gained from filesize_unlimited into resource_dimensions and resource_alt_files
 # also updates disk usage in case cron job isn't running.
 
-
-
 include "../../include/boot.php";
 
-if (!(PHP_SAPI == 'cli'))
-    {
-    include "../../include/authenticate.php"; if (!checkperm("a")) {exit("Permission denied");}
+if (PHP_SAPI != 'cli') {
+    include "../../include/authenticate.php";
+    if (!checkperm("a")) {
+        exit("Permission denied");
     }
+}
 
 set_time_limit(0);
 
