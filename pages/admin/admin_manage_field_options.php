@@ -263,7 +263,7 @@ if('true' === $ajax && '' != trim($submit_new_option) && 'add_new' === $submit_n
                     <td align="left">0</td>
                     
                         <div class="ListTools">
-                            <form id="option_<?php echo $new_record_ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
+                            <form id="option_<?php echo $new_record_ref; ?>" method="post" action="/pages/admin/admin_manage_field_options.php?field=<?php echo urlencode($field); ?>">
                                 <td>
                                     <input type="hidden" name="node_ref" value="<?php echo $new_record_ref; ?>">
                                     <input 
@@ -589,7 +589,7 @@ if($ajax)
                 </td>
 
                     <div class="ListTools">
-                        <form id="option_<?php echo escape($node['ref']); ?>" method="post" action="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>">
+                        <form id="option_<?php echo escape($node['ref']); ?>" method="post" action="<?php echo $baseurl_short ?>pages/admin/admin_manage_field_options.php?field=<?php echo urlencode($field); ?>">
                             <td>
                                 <input type="hidden" name="node_ref" value="<?php echo escape($node['ref']); ?>">
                                 <input 
@@ -787,7 +787,7 @@ function AddNode(parent)
     var post_data = 
         {
         ajax: true,
-        field: <?php echo $field; ?>,
+        field: <?php echo escape($field); ?>,
         submit_new_option: 'add_new',
         new_option_name: new_option_name.val(),
         new_option_parent: new_option_parent.val(),
@@ -806,7 +806,7 @@ function AddNode(parent)
                 // Mark node as parent on the UI
                 jQuery('#node_' + new_option_parent_val).data('toggleNodeMode', 'ex');
                 jQuery('#node_' + new_option_parent_val + '_toggle_button').attr('src', '<?php echo $baseurl_short; ?>gfx/interface/node_ex.gif');
-                jQuery('#node_' + new_option_parent_val + '_toggle_button').attr('onclick', 'ToggleTreeNode(' + new_option_parent_val + ', <?php echo $field; ?>);');
+                jQuery('#node_' + new_option_parent_val + '_toggle_button').attr('onclick', 'ToggleTreeNode(' + new_option_parent_val + ', <?php echo escape($field); ?>);');
                 }
             else
                 {
@@ -865,7 +865,7 @@ function SaveNode(ref)
     var post_data = 
         {
         ajax: true,
-        field: <?php echo $field; ?>,
+        field: <?php echo escape($field); ?>,
         node_ref: ref,
         node_action: 'save',
         option_name: option_name,
@@ -895,7 +895,7 @@ function DeleteNode(ref)
     var post_data = 
         {
         ajax: true,
-        field: <?php echo $field; ?>,
+        field: <?php echo escape($field); ?>,
         node_ref: ref,
         node_action: 'delete',
         <?php echo generateAjaxToken("DeleteNode"); ?>
@@ -952,7 +952,7 @@ function ReorderNode(ref, direction, move_to)
     var post_data =
         {
         ajax: true,
-        field: <?php echo $field; ?>,
+        field: <?php echo escape($field); ?>,
         node_ref: ref,
         node_action: direction,
         node_order_by: move_to,
@@ -1187,7 +1187,7 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
     ?>
 
     <div class="Question">
-        <form id="import_nodes_form" method="POST" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?field=<?php echo $field; ?>" enctype="multipart/form-data">
+        <form id="import_nodes_form" method="POST" action="<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?field=<?php echo urlencode($field); ?>" enctype="multipart/form-data">
             <label for="import_nodes"><?php echo escape($lang['import']); ?></label>
             <?php generateFormToken("import_nodes_form"); ?>
             <input type="file" name="import_nodes">
@@ -1208,7 +1208,7 @@ if(FIELD_TYPE_CATEGORY_TREE == $field_data['type'])
                 import_export_parent = '';
                 }
 
-            window.location.href = '<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?ajax=true&field=<?php echo $field; ?>&action=export&import_export_parent=' + import_export_parent;
+            window.location.href = '<?php echo $baseurl; ?>/pages/admin/admin_manage_field_options.php?ajax=true&field=<?php echo urlencode($field); ?>&action=export&import_export_parent=' + import_export_parent;
 
             return false;
             }
