@@ -4932,10 +4932,9 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
                     'ignoremaxsize' => false,
                     'ingested' => $ingest
                 );
-                $create_previews_job_success_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_success_text']);
                 $create_previews_job_failure_text = str_replace('%RESOURCE', $r, $lang['jq_create_previews_failure_text']);
 
-                job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+                job_queue_add('create_previews', $create_previews_job_data, '', '', '', $create_previews_job_failure_text);
                 }
             }
         }
@@ -4956,9 +4955,8 @@ function update_resource($r, $path, $type, $title, $ingest=false, $createPreview
                 }
 
             $job_code=$r . md5($job_data["r"] . strtotime('now'));
-            $job_success_lang="update_resource success " . str_replace(array('%ref', '%title'), array($r, $filename), $lang["ref-title"]);
             $job_failure_lang="update_resource fail " . ": " . str_replace(array('%ref', '%title'), array($r, $filename), $lang["ref-title"]);
-            job_queue_add("update_resource", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);
+            job_queue_add("update_resource", $job_data, $userref, '', '', $job_failure_lang, $job_code);
             }
 
     hook('after_update_resource', '', array("resourceId" => $r ));

@@ -545,9 +545,8 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             }
 
         $job_code=$ref . md5($job_data["resource"] . strtotime('now'));
-        $job_success_lang="upload processing success " . str_replace(array('%ref','%title'),array($ref,$filename),$lang["ref-title"]);
         $job_failure_lang="upload processing fail " . ": " . str_replace(array('%ref','%title'),array($ref,$filename),$lang["ref-title"]);
-        job_queue_add("upload_processing", $job_data, $userref, '', $job_success_lang, $job_failure_lang, $job_code);
+        job_queue_add("upload_processing", $job_data, $userref, '', '', $job_failure_lang, $job_code);
         }
 
     hook("uploadfilesuccess", "", array( "resource_ref" => $ref ) );
@@ -1208,10 +1207,8 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
                     'thumbonly' => false,
                     'extension' => $extension
                 );
-                $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
                 $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
-
-                job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+                job_queue_add('create_previews', $create_previews_job_data, '', '', '', $create_previews_job_failure_text);
                 }
 
             return false;
@@ -3965,9 +3962,8 @@ function start_previews(int $ref, string $extension = ""): int
             'alternative' => -1,
             'ignoremaxsize' => true,
         ];
-        $create_previews_job_success_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_success_text']);
         $create_previews_job_failure_text = str_replace('%RESOURCE', $ref, $lang['jq_create_previews_failure_text']);
-        job_queue_add('create_previews', $create_previews_job_data, '', '', $create_previews_job_success_text, $create_previews_job_failure_text);
+        job_queue_add('create_previews', $create_previews_job_data, '', '', '', $create_previews_job_failure_text);
         $minimal_previews = true;
     } elseif (
         $GLOBALS["enable_thumbnail_creation_on_upload"] === false

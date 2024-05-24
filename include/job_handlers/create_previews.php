@@ -39,14 +39,9 @@ foreach($job_data as $arg => $value)
 
 if($resource > 0 && create_previews($resource, $thumbonly, $extension, $previewonly, $previewbased, $alternative, $ignoremaxsize, $ingested, $checksum_required))
     {
-    // success
-    $create_previews_job_success_text = str_replace('%RESOURCE', $resource, $lang['jq_create_previews_success_text']);
-    $message = $job_success_text != '' ? $job_success_text : $create_previews_job_success_text;
-
+    // Success - no message required
     # Update disk usage
     update_disk_usage($resource);
-
-    message_add($job['user'], $message, $url, 0);
     }
 else
     {
