@@ -418,8 +418,7 @@ function is_valid_rs_path(string $path, array $extra_paths = []): bool
 function is_safe_basename(string $val): bool
 {
     $file_name = pathinfo($val, PATHINFO_FILENAME);
-    return (
+    return
         safe_file_name($file_name) === str_replace(' ', '_', $file_name)
-        && !is_banned_extension(pathinfo($val, PATHINFO_EXTENSION))
-    );
+        && !is_banned_extension(pathinfo($val, PATHINFO_EXTENSION));
 }
