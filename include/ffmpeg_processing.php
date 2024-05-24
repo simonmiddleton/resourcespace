@@ -177,7 +177,7 @@ if ($generateall) {
         if ($tmp) {
             $shell_exec_cmd = $tmp;
         }
-        $output=run_command($shell_exec_cmd);
+        $output = run_command($shell_exec_cmd, false, $shell_exec_params);
     }
 
 
@@ -209,7 +209,7 @@ if ($generateall) {
             "%%TARGETFILE%%" => new CommandPlaceholderArg($targetfile, 'is_safe_basename'),
         ];
 
-        $output = run_command($shell_exec_cmd);
+        $output = run_command($shell_exec_cmd, false, $shell_exec_params);
     }
 
     if (!file_exists($targetfile)) {
@@ -263,7 +263,7 @@ if ($generateall) {
                 if ($tmp) {
                     $shell_exec_cmd = $tmp;
                 }
-                $output = run_command($shell_exec_cmd);
+                $output = run_command($shell_exec_cmd, false, $shell_exec_params);
 
                 if (file_exists($apath)) {
                     # Update the database with the new file details.
