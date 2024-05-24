@@ -24,7 +24,7 @@ if ($generateall) {
         $shell_exec_cmd = $ffmpeg_fullpath . " -i %%FILE%% 2>&1";
         $shell_exec_params = ["%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename')];
 
-        if (isset($ffmpeg_command_prefix)) {$
+        if (isset($ffmpeg_command_prefix)) {
             $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
         }
 
