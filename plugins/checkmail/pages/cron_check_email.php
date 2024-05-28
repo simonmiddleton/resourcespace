@@ -61,18 +61,30 @@ $delete=false; // set to true only after all files are transferred
 $build_collection=false;
 $collection="";
 
-$GLOBALS["use_error_exception"] = true;
-try
+if ($checkmail_imap_server == '' || $checkmail_email == '' || $checkmail_password == '')
     {
-    // get the first unseen message, one email is processed in this script
-    $imap=imap_open("{".$checkmail_imap_server. "}INBOX", $checkmail_email, $checkmail_password ) or die("can't connect: " . imap_last_error());
+    $imap = false;
     }
-catch (Exception $e)
+else
     {
+    $GLOBALS["use_error_exception"] = true;
+    try
+        {
+        // get the first unseen message, one email is processed in this script
+        $imap = imap_open("{".$checkmail_imap_server. "}INBOX", $checkmail_email, $checkmail_password);
+        }
+    catch (Exception $e)
+        {
+        $imap = false;
+        }
+    unset($GLOBALS["use_error_exception"]);
+    }
+
+if (!$imap)
+    {
+    clear_process_lock("checkmail");
     die("can't open IMAP connection" . PHP_EOL);
     }
-unset($GLOBALS["use_error_exception"]);
-
 
 ps_query("delete from sysvars where name = 'last_checkmail'", array());
 ps_query("insert into sysvars (value,name) values (now(),'last_checkmail')", array());
