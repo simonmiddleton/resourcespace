@@ -605,8 +605,7 @@ $php_fullpath    = get_utility_path("php");
 
 global $ffmpeg_preview,$ffmpeg_preview_seconds,$ffmpeg_preview_extension,$ffmpeg_preview_options,
        $ffmpeg_preview_min_width, $ffmpeg_preview_min_height, $ffmpeg_preview_max_width,
-       $ffmpeg_preview_max_height, $ffmpeg_preview_force,
-       $ffmpeg_snapshot_frames, $video_preview_hls_support,$video_hls_preview_options, $video_hls_streams, $h264_profiles;
+       $ffmpeg_preview_max_height, $ffmpeg_preview_force, $ffmpeg_snapshot_frames, $h264_profiles;
 
 debug('FFMPEG-VIDEO: ####################################################################');
 debug('FFMPEG-VIDEO: Start trying FFMPeg for video files -- resource ID ' . $ref);
@@ -740,7 +739,7 @@ if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpe
         debug('FFMPEG-VIDEO: $newfile = ' . $newfile);
        
 
-        if ($ffmpeg_preview && ($extension!=$ffmpeg_preview_extension || $ffmpeg_preview_force || $video_preview_hls_support!=0) )
+        if ($ffmpeg_preview && ($extension!=$ffmpeg_preview_extension || $ffmpeg_preview_force) )
             {
             debug('FFMPEG-VIDEO: include ffmpeg_processing.php file...');
             include dirname(__FILE__)."/ffmpeg_processing.php";

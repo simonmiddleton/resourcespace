@@ -69,7 +69,7 @@ $video_preview_file = get_resource_path(
     true,
     "pre",
     false,
-    (1 == $video_preview_hls_support || 2 == $video_preview_hls_support) ? "m3u8" : $ffmpeg_preview_extension
+    $ffmpeg_preview_extension
 );
 // get original file to find full duration
 $video_original_file = get_resource_path(
