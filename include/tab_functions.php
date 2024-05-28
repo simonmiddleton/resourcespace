@@ -42,13 +42,10 @@ function get_tabs_by_refs(array $refs)
  * */
 function get_tabs_with_usage_count(array $criteria)
     {
-    $order_by_columns = ['order_by', 'ref'];
-    $sort_options = ['ASC', 'DESC'];
-
-    $order_by = isset($criteria['order_by'][0]) && in_array($criteria['order_by'][0], $order_by_columns)
+    $order_by = isset($criteria['order_by'][0]) && in_array($criteria['order_by'][0], ['order_by', 'ref'])
                 ? $criteria['order_by'][0]
                 : 'order_by';
-    $sort = isset($criteria['order_by'][1]) && in_array($criteria['order_by'][1], $sort_options)
+    $sort = isset($criteria['order_by'][1]) && validate_sort_value($criteria['order_by'][1])
             ? $criteria['order_by'][1]
             : 'ASC';
 

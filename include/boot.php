@@ -30,6 +30,7 @@ include_once dirname(__FILE__) . '/metadata_functions.php';
 include_once dirname(__FILE__) . '/job_functions.php';
 include_once dirname(__FILE__) . '/tab_functions.php';
 include_once dirname(__FILE__) . '/mime_types.php';
+include_once dirname(__FILE__) . '/CommandPlaceholderArg.php';
 
 # Switch on output buffering.
 ob_start(null,4096);
@@ -440,8 +441,8 @@ if($CSRF_enabled && PHP_SAPI != 'cli' && !$suppress_headers && !in_array($pagena
 
     // Verifying the Two Origins Match
     if(
-        $CSRF_source_origin !== $CSRF_target_origin && !in_array($CSRF_source_origin, $CORS_whitelist)
-        && !hook('modified_cors_process')
+        !hook('modified_cors_process')
+        && $CSRF_source_origin !== $CSRF_target_origin && !in_array($CSRF_source_origin, $CORS_whitelist)
     )
         {
         debug("CSRF: Cross-origin request detected and not white listed!");

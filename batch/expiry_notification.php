@@ -24,9 +24,9 @@ if (count($expired_resources)>0)
         $body.="\n" . $resource["ref"] . " - " . $resource["title"];
         $body.="\n" . $baseurl . "/?r=" . $resource["ref"] . "\n";
         }
-    
-    $url = $baseurl . "/pages/search.php?search=!list" . implode(":",$refs);
-    
+
+    $url = build_specialsearch_list_urls($refs);
+
     $admin_notify_emails = array();
     $admin_notify_users = array();
     if (isset($expiry_notification_mail))
@@ -56,17 +56,17 @@ if (count($expired_resources)>0)
                 }
             }
         }
-        
+
     foreach($admin_notify_emails as $admin_notify_email)
-            {
-            # Send mail
-            send_mail($admin_notify_email,$lang["resourceexpiry"],$body);
-            }
+        {
+        # Send mail
+        send_mail($admin_notify_email,$lang["resourceexpiry"],$body);
+        }
             
     if (count($admin_notify_users)>0)
         {
         echo "Sending notification to user refs: " . implode(",",$admin_notify_users) . "\r\n";
-        message_add($admin_notify_users,$lang["resourceexpirymail"],$url,0);
+        message_add($admin_notify_users,$lang["resourceexpirymail"] . $url['multiple'], $url['single'],0);
         }   
 
     # Update notification flag so an expiry is not sent again until the expiry field(s) is edited.

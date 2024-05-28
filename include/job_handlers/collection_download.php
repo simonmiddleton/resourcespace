@@ -276,15 +276,7 @@ for($n = 0; $n < count($collection_resources); $n++)
     $filename = '';
     # Compute a filename for this resource
     $filename=get_download_filename($ref,$usesize,0,$pextension);
-
-    if($GLOBALS["original_filenames_when_downloading"])
-        {
-        collection_download_use_original_filenames_when_downloading($filename, $ref, false, $filenames,$id);
-        }
-    else
-        {
-        $newfile = set_unique_filename($filename,$filenames);    
-        }
+    collection_download_use_original_filenames_when_downloading($filename, $ref, false, $filenames,$id);
 
     if(hook("downloadfilenamealt"))
         {

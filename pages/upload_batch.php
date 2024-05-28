@@ -1792,12 +1792,12 @@ function postUploadActions()
                 <?php
                 if ($redirecturl != "")
                     {
-                    echo "'" . $lang['upload_process_successful'] . "' : function() {
+                    echo "'" . escape($lang['upload_process_successful']) . "' : function() {
                         jQuery(this).dialog('close');
                         CentralSpaceLoad('" . $redirecturl . "',true);
                     },";
                     }
-                echo "'" . $lang['upload_view_log'] . "' : function() {
+                echo "'" . escape($lang['upload_view_log']) . "' : function() {
                         jQuery(this).dialog('close');
                         if(!jQuery('#UploadLogSection').is(':visible'))
                             {
@@ -1818,7 +1818,7 @@ function postUploadActions()
 <div class="BasicsBox" >
 <?php if ($overquota)
 {
-echo "<h1>" . $lang["diskerror"] . "</h1><p>" . $lang["overquota"] . "</p>";
+echo "<h1>" . escape($lang["diskerror"]) . "</h1><p>" . escape($lang["overquota"]) . "</p>";
 include "../include/footer.php";
 exit();
 }
@@ -1906,7 +1906,7 @@ if (isset($upload_max_file_size))
         {
         $sizeText = formatfilesize(filesize2bytes($upload_max_file_size));
         }
-    echo ' '.sprintf($lang['plupload-maxfilesize'], $sizeText);
+    echo ' '.sprintf(escape($lang['plupload-maxfilesize']), $sizeText);
     }
 
 hook("additionaluploadtext");

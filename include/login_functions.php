@@ -115,15 +115,16 @@ function perform_login($loginuser="",$loginpass="")
 
         
         $language = getval("language", "");
-        ps_query("
-            UPDATE user
-               SET session=?,
-                   last_active = NOW(),
-                   login_tries = 0,
-                   lang = ?
-             WHERE ref = ?
-        ", array("s",$session_hash,"s",$language,"i",$userref));
 
+        update_user_access($userref,
+            [
+            "session" => $session_hash,
+            "lang" => $language,
+            "login_tries" => 0,
+            "last_ip" => $ip,
+            ]
+        );
+        
         // Update user local time zone (if provided)
         $get_user_local_timezone = getval('user_local_timezone', null);
         set_config_option($userref, 'user_local_timezone', $get_user_local_timezone);

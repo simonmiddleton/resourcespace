@@ -116,7 +116,7 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
         {
         // Find out if the image does already have a profile
         $identify = get_utility_path("im-identify");
-        $identify .= ' -verbose "' . $path . '"';
+        $identify .= " -verbose " . escapeshellarg($path);
         $info = run_command($identify);
 
         $basePath = dirname(__FILE__, 4) . '/';

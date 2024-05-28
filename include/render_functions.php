@@ -921,7 +921,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
     // use query strings here as this is used to render elements and sometimes it
     // can depend on other params
     $modal  = ('true' == getval('modal', ''));
-    $sort = (in_array(mb_strtoupper($sort), array("ASC", "DESC")) ? mb_strtoupper($sort) : "DESC");
+    $sort = validate_sort_value($sort) ? mb_strtoupper($sort) : 'DESC';
     ?>
     <select id="sort_order_selection" onChange="UpdateResultOrder();" aria-label="<?php echo escape($lang["sortorder"]) ?>">
     
@@ -3328,12 +3328,12 @@ function generate_browse_bar_item($id, $text)
 */
 function render_help_link($page='',$return_string=false)
     {
-    global $pagename,$lang,$help_modal,$baseurl;
+    global $lang,$help_modal,$baseurl;
 
     // Build html for link into a string
     $help_link_html  =      '<a ';
-    $help_link_html .=          'href="' . $baseurl . '/pages/help.php?page=' . $page . '" ';
-    $help_link_html .=          'title="' . $lang["help-tooltip"] . '" ';
+    $help_link_html .=          'href="' . $baseurl . '/pages/help.php?page=' . escape($page) . '" ';
+    $help_link_html .=          'title="' . escape($lang["help-tooltip"]) . '" ';
     $help_link_html .=          'class="HelpLink" ';
     if ($help_modal) 
         { $help_link_html .=    'onClick="return ModalLoad(this, true);" ';}
@@ -5509,7 +5509,7 @@ function render_share_password_question($blank=true)
     <div class="Question">
     <label for="sharepassword"><?php echo escape($lang["share-set-password"]) ?></label>
     <input type="password" id="sharepassword" name="sharepassword" autocomplete="new-password" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : escape($lang["password_unchanged"]); ?>">
-    <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('sharepassword');"></span>
+    <span class="fa fa-fw fa-eye-slash infield-icon" id="share-password-icon" onclick="togglePassword('sharepassword');"></span>
     <script>
 
     function togglePassword(pwdelement)
@@ -5518,10 +5518,12 @@ function render_share_password_question($blank=true)
         if (input.attr("type") == "password")
             {
             input.attr("type", "text");
+            jQuery('#share-password-icon').removeClass('fa-eye-slash').addClass('fa-eye');
             }
         else
             {
             input.attr("type", "password");
+            jQuery('#share-password-icon').removeClass('fa-eye').addClass('fa-eye-slash');
             }
         }
     var passInput="";

@@ -1435,17 +1435,12 @@ if($import && isset($folder_path))
             "upload_file_by_url" => $src_resource["merge_rs_systems_file_url"],
         );
         $job_code = "merge_rs_systems_{$src_resource["ref"]}_{$new_resource_ref}_" . md5("{$src_resource["ref"]}_{$new_resource_ref}");
-        $job_success_lang = "Merge RS systems - upload processing success "
-            . str_replace(
-                array('%ref', '%title'),
-                array($new_resource_ref, ""),
-                $lang["ref-title"]);
         $job_failure_lang = "Merge RS systems - upload processing fail "
             . str_replace(
                 array('%ref', '%title'),
                 array($new_resource_ref, ""),
                 $lang["ref-title"]);
-        $job_queue_added = job_queue_add("upload_processing", $job_data, $userref, "", $job_success_lang, $job_failure_lang, $job_code);
+        $job_queue_added = job_queue_add("upload_processing", $job_data, $userref, "", "", $job_failure_lang, $job_code);
         if($job_queue_added === false)
             {
             logScript("ERROR: unable to create job queue for uploading (copying) resource original file from SRC system");
@@ -1779,18 +1774,13 @@ if($import && isset($folder_path))
         );
         $job_code = "merge_rs_systems_{$src_raf["ref"]}_{$resources_mapping[$src_raf["resource"]]}_"
                     . md5("{$src_raf["ref"]}_{$resources_mapping[$src_raf["resource"]]}");
-        $job_success_lang = "Merge RS systems - alternative upload processing success "
-            . str_replace(
-                array('%ref', '%title'),
-                array($src_raf["ref"], ""),
-                $lang["ref-title"]);
         $job_failure_lang = "Merge RS systems - alternative upload processing fail "
             . str_replace(
                 array('%ref', '%title'),
                 array($src_raf["ref"], ""),
                 $lang["ref-title"]);
 
-        $job_queue_added = job_queue_add("upload_processing", $job_data, $userref, "", $job_success_lang, $job_failure_lang, $job_code);
+        $job_queue_added = job_queue_add("upload_processing", $job_data, $userref, "", "", $job_failure_lang, $job_code);
         if($job_queue_added === false)
             {
             logScript("ERROR: unable to create job queue for uploading (copying) resource alternative file from SRC system");

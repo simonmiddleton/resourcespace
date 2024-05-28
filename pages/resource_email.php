@@ -93,7 +93,7 @@ hook("resemailmoreinfo"); ?>
 <?php if(!hook("replaceemailtousers")){?>
 <div class="Question">
     <label for="users">
-    <?php echo ($user_select_internal)?$lang["emailtousers_internal"]:$lang["emailtousers"]; ?>
+    <?php echo escape($user_select_internal ? $lang["emailtousers_internal"] : $lang["emailtousers"]); ?>
     </label>
 
     <?php
@@ -144,8 +144,9 @@ if(!$user_select_internal)
 
 <?php if ($cc_me && $useremail!=""){?>
 <div class="Question">
-<label for="ccme"><?php echo str_replace("%emailaddress", $useremail, $lang["cc-emailaddress"]); ?></label><input type=checkbox checked id="ccme" name="ccme">
-<div class="clearerleft"> </div>
+    <label for="ccme"><?php echo escape(str_replace("%emailaddress", $useremail, $lang["cc-emailaddress"])); ?></label>
+    <input type=checkbox checked id="ccme" name="ccme">
+    <div class="clearerleft"> </div>
 </div>
 <?php } ?>
 

@@ -118,7 +118,7 @@ if(file_exists($originalpath))
         if ($origsizes === false)
             {
             $identify_path = get_utility_path('im-identify');
-            $command = $identify_path . " -format '%w,%h' " . $originalpath;
+            $command = $identify_path . " -format '%w,%h' " . escapeshellarg($originalpath);
             $identify_results = run_command($command);
             if(preg_match("~\d+,\d+~",$identify_results))
                 {

@@ -207,6 +207,13 @@ include "../../include/header.php";
                     }
                 $message = strip_tags_and_attributes($message); 
                 $message = nl2br($message);
+                // Attempt to tidy up message text for action dates / expiry notification messages with embedded links.
+                $div_pos = mb_strpos($message, '<div');
+                if ($div_pos !== false)
+                    {
+                    $message = mb_substr($message, 0, $div_pos);
+                    $message = str_replace(array('<p>', '</p>'), '', $message);
+                    }
                 $url_encoded = urlencode($messages[$n]["url"]);
                 $unread_css = ($messages[$n]["seen"] == 0 ? " MessageUnread" : "");
                 $userbyname = get_user_by_username($messages[$n]["owner"]);

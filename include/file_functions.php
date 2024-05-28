@@ -246,13 +246,13 @@ function check_valid_file_extension($uploadedfile,array $validextensions)
  *
  * @param  string    $extension - file extension to check
  */
-function is_banned_extension($extension): bool
-    {
+function is_banned_extension(string $extension): bool
+{
     return !(
         preg_match('/^[a-zA-Z0-9_-]{1,10}$/', $extension) === 1
-        && !in_array(strtolower($extension), array_map('strtolower', $GLOBALS['banned_extensions']))
+        && !in_array(mb_strtolower($extension), array_map('mb_strtolower', $GLOBALS['banned_extensions']))
     );
-    }
+}
 
 /**
  * Remove empty folder from path to file. Helpful to remove a temp directory once the file it was created to hold no longer exists.
@@ -362,4 +362,63 @@ function validate_resource_files(array $resources,array $criteria = []): array
         }
     }
     return $results;
+}
+
+
+/**
+ * Block path traversal by ensuring download is only possible from the temp folder.
+ * Generates path to temp folder and checks it matches the supplied path.
+ *
+ * @param  string  $test_path     Potentially unsafe path to check.
+ * @param  string  $temp_folder   Optional name of temp folder to validate.
+ */
+function validate_temp_path(string $test_path, string $temp_folder = '') : bool
+    {
+    $temp_dir = realpath(get_temp_dir(false, $temp_folder));
+    $test_path = realpath(pathinfo($test_path, PATHINFO_DIRNAME));
+    if ($temp_dir === $test_path)
+        {
+        return true;
+        }
+    return false;
+    }
+
+
+/**
+ * Check if a given file path is from a valid RS accessible location
+ *
+ * @param   string   $path
+ * @param   array    $extra_paths   Array of additional valid source paths to check
+ * 
+ */
+function is_valid_rs_path(string $path, array $extra_paths = []): bool
+{
+    $sourcerealpath = realpath($path);
+    if (!$sourcerealpath) {
+        return false;
+    }
+
+    $basepaths = [
+        $GLOBALS["storagedir"],
+        // $GLOBALS["syncdir"],
+    ];
+    foreach(array_merge($basepaths,$extra_paths) as $validpath) {
+        $validpath = realpath($validpath);
+        if ($validpath !== false && strpos($sourcerealpath,$validpath) === 0) {
+            return true;
+        }
+    }
+    // Not a valid file source
+    return false;
+}
+
+/**
+ * Validation helper function to determine if a path base name is unsafe (e.g OS command injection, path traversal etc.)
+ */
+function is_safe_basename(string $val): bool
+{
+    $file_name = pathinfo($val, PATHINFO_FILENAME);
+    return
+        safe_file_name($file_name) === str_replace(' ', '_', $file_name)
+        && !is_banned_extension(pathinfo($val, PATHINFO_EXTENSION));
 }

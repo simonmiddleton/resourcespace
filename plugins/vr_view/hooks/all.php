@@ -22,3 +22,17 @@ function HookVr_viewAllAdditionalheaderjs()
         <?php
         }
     }
+
+function HookVr_viewAllmodified_Cors_Process()
+    {
+    global $vr_view_google_hosted, $vr_view_js_url, $CORS_whitelist;
+
+    if ($vr_view_google_hosted == false && filter_var($vr_view_js_url, FILTER_VALIDATE_URL) == false) {
+        return; 
+    } 
+
+    $viewer_url  = ($vr_view_google_hosted ? 'storage.googleapis.com' : parse_url($vr_view_js_url)['host']);
+    $viewer_urls = ['https://'.$viewer_url, 'http://'.$viewer_url];
+
+    $CORS_whitelist = array_merge($CORS_whitelist, $viewer_urls);
+    }

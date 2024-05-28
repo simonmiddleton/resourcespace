@@ -143,7 +143,7 @@ global $ffmpeg_preview_extension,$css_reload_key,$context;
 ?>
 <link href="<?php echo $baseurl_short?>lib/videojs/video-js.min.css?r=<?php echo $css_reload_key?>" rel="stylesheet">
 <script src="<?php echo $baseurl_short?>lib/videojs/video.min.js?r=<?php echo $css_reload_key?>"></script>
-<script src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?r=<?php echo $css_reload_key?>"></script>
+<script src="<?php echo $baseurl_short?>js/videojs-extras.js?r=<?php echo $css_reload_key?>"></script>
 <?php
 
 if(isset($videojs_resolution_selection))

@@ -25,7 +25,7 @@ function HookVr_viewPreviewFullpreviewresultnav()
 function HookVr_viewPreviewcustomflvplay()
     {
     global $ref, $resource, $baseurl, $access, $use_vr_view;
-    global $vr_view_restypes, $vr_view_metadata, $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $vr_view_orig_video;
+    global $vr_view_restypes, $vr_view_metadata, $ffmpeg_supported_extensions, $ffmpeg_preview_extension, $vr_view_orig_video, $userref;
     
     if(!$use_vr_view || $access !=0)
         {
@@ -53,15 +53,14 @@ function HookVr_viewPreviewcustomflvplay()
     
     if(file_exists($sourcefile))
         {
-        // We can't use $hide_real_filepath with this plugin
-        global $hide_real_filepath;
-        $saved_hide_real_filepath = $hide_real_filepath;
-        $hide_real_filepath = false;        
-        
-        $sourcepath=get_resource_path($ref,false,$preview_size,false,$preview_ext);
+        $sourcepath = generateURL($baseurl . '/pages/download.php', [
+           'ref' => $ref,
+           'size' => $preview_size,
+           'ext' => $preview_ext,
+           'access_key' => generate_temp_download_key($userref, $ref, $preview_size)
+        ]);
         // Show the player
         $vrview = VrViewRenderPlayer($ref,$sourcepath, true, 852,600,"PreviewImageLarge",$context);
-        $hide_real_filepath = $saved_hide_real_filepath;
         if($vrview)
             {
             return true;
@@ -74,7 +73,7 @@ function HookVr_viewPreviewcustomflvplay()
 function HookVr_viewPreviewReplacepreviewimage()
     {
     global $ref, $resource, $baseurl, $access, $use_vr_view;
-    global $vr_view_restypes, $vr_view_metadata, $vr_view_orig_image, $vr_view_orig_video;
+    global $vr_view_restypes, $vr_view_metadata, $vr_view_orig_image, $vr_view_orig_video, $userref;
     
     $context = (getval("modal","") != "") ? "Modal" : "CentralSpace";
 
@@ -93,18 +92,18 @@ function HookVr_viewPreviewReplacepreviewimage()
         $preview_ext = "jpg";
         $preview_size = "lpr";
         }
-    // We can't use $hide_real_filepath with this plugin
-    global $hide_real_filepath;
-    $saved_hide_real_filepath = $hide_real_filepath;
-    $hide_real_filepath = false;  
     
     $sourcefile = get_resource_path($ref,true,$preview_size,false,$preview_ext);
     if(file_exists($sourcefile))
         {
-        $sourcepath=get_resource_path($ref,false,$preview_size,false,$preview_ext);
+        $sourcepath = generateURL($baseurl . '/pages/download.php', [
+            'ref' => $ref,
+            'size' => $preview_size,
+            'ext' => $preview_ext,
+            'access_key' => generate_temp_download_key($userref, $ref, $preview_size)
+            ]);
         // Show the player
         $vrview = VrViewRenderPlayer($ref,$sourcepath,false,852,600,"PreviewImageLarge",$context);
-        $hide_real_filepath = $saved_hide_real_filepath;
         if($vrview)
             {
             return true;

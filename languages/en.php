@@ -922,6 +922,8 @@ $lang["not_allowed"] = "Not allowed";
 $lang["no_results_found"] = "No results found";
 $lang["function_not_enabled"] = "This function is not enabled.";
 $lang['remaining'] = 'remaining';
+$lang['web_server'] = 'Web Server';
+$lang['php'] = 'PHP';
 
 # Pager
 $lang["next"]="Next";
@@ -1729,13 +1731,13 @@ $lang["close"]="Close";
 $lang["repeatinstallationcheck"]="Repeat installation check";
 $lang["shouldbeversion"]="should be ? or greater"; # E.g. "should be 4.4 or greater"
 $lang["phpinivalue"]="PHP.INI value for '?'"; # E.g. "PHP.INI value for 'memory_limit'"
-$lang["writeaccesstofilestore"]="Write access to ";
+$lang['filestore'] = 'Filestore';
+$lang['rs_ext_dependencies'] = 'ResourceSpace External Dependencies';
 $lang["nowriteaccesstofilestore"]=" not writable";
 $lang["writeaccesstoplugins"]="Write access to /plugins";
 $lang["nowriteaccesstoplugins"]="/plugins folder not writable";
-$lang["writeaccesstohomeanim"]="Write access to ";
 $lang["writeaccess_sql_log"]="Write access to SQL log:";
-$lang["writeaccess_debug_log"]="Write access to debug log:";
+$lang['write_access_to'] = 'Write access to ';
 $lang["nowriteaccesstohomeanim"]=" not writable. Open permissions to enable home animation cropping feature in the transform plugin.";
 $lang["blockedbrowsingoffilestore"]="Blocked browsing of 'filestore' directory";
 $lang["noblockedbrowsingoffilestore"]="filestore folder appears to be browseable. Please remove 'Indexes' from Apache 'Options' list or disable the 'autoindex' module from Apache.";
@@ -2658,6 +2660,9 @@ $lang["emailandmessagesent"]="Email and message sent";
 
 $lang["confirm_remove_custom_usergroup_access"]="This will revoke all custom user group access. Are you sure?";
 $lang["applogo_does_not_exists"]="The uploaded logo is no longer available";
+
+$lang["show_affected_resources"] = "Show affected resources";
+$lang["group_no"] = "Group";
 
 /* Edit field options */
 $lang["manage_metadata_field_options"] = "Metadata field options";

@@ -294,11 +294,11 @@ function HookAction_datesCronCron()
 
     $subject_state = $lang['action_dates_email_subject_state'];
     if ( count($email_state_days)==0 || (min($email_state_days) == max($email_state_days)) ) {
-        $message_state=str_replace("%%DAYS",(count($email_state_days)>0 ? min($email_state_days) : $action_dates_email_admin_days),$lang['action_dates_email_text_state'])."\r\n";
+        $message_state=str_replace("%%DAYS",(count($email_state_days)>0 ? min($email_state_days) : $action_dates_email_admin_days),$lang['action_dates_email_text_state']);
     }
     else {
         $message_state=str_replace("%%DAYSMIN",(count($email_state_days)>0 ? min($email_state_days) : $action_dates_email_admin_days),$lang['action_dates_email_range_state']);
-        $message_state=str_replace("%%DAYSMAX",(count($email_state_days)>0 ? max($email_state_days) : $action_dates_email_admin_days),$message_state) . "\r\n";
+        $message_state=str_replace("%%DAYSMAX",(count($email_state_days)>0 ? max($email_state_days) : $action_dates_email_admin_days),$message_state);
     }
 
     $subject_restrict = $lang['action_dates_email_subject_restrict'];
@@ -307,7 +307,7 @@ function HookAction_datesCronCron()
     }
     else {
         $message_restrict=str_replace("%%DAYSMIN",(count($email_restrict_days)>0 ? min($email_restrict_days) : $action_dates_email_admin_days),$lang['action_dates_email_range_restrict']);
-        $message_restrict=str_replace("%%DAYSMAX",(count($email_restrict_days)>0 ? max($email_restrict_days) : $action_dates_email_admin_days),$message_restrict) . "\r\n";
+        $message_restrict=str_replace("%%DAYSMAX",(count($email_restrict_days)>0 ? max($email_restrict_days) : $action_dates_email_admin_days),$message_restrict);
     }
 
     # Determine how and to whom notifications are to be sent
@@ -358,8 +358,8 @@ function HookAction_datesCronCron()
         $templatevars['message']=$message_combined;
 
         # Construct url lists for message_add function
-        $url_restrict = build_actiondates_urls($email_restrict_refs);
-        $url_state = build_actiondates_urls($email_state_refs);
+        $url_restrict = build_specialsearch_list_urls($email_restrict_refs);
+        $url_state = build_specialsearch_list_urls($email_state_refs);
 
         foreach($admin_notify_emails as $admin_notify_email)
             {
@@ -388,7 +388,7 @@ function HookAction_datesCronCron()
         # Send a notification for the resources whose date is within the specified number of days
         $notification_state = $message_state; 
         $message_state.= $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$email_state_refs) . "\r\n";
-        $url = build_actiondates_urls($email_state_refs);
+        $url = build_specialsearch_list_urls($email_state_refs);
         $templatevars['message']=$message_state;
 
         foreach($admin_notify_emails as $admin_notify_email)
@@ -413,7 +413,7 @@ function HookAction_datesCronCron()
         # Send a notification for the resources whose date is within the specified number of days
         $notification_restrict = $message_restrict; 
         $message_restrict.= $baseurl . "?r=" . implode("\r\n" . $baseurl . "?r=",$email_restrict_refs) . "\r\n";
-        $url = build_actiondates_urls($email_restrict_refs);
+        $url = build_specialsearch_list_urls($email_restrict_refs);
         $templatevars['message']=$message_restrict;
 
         foreach($admin_notify_emails as $admin_notify_email)
@@ -502,65 +502,6 @@ function HookAction_datesCronCron()
 
     # Update last run date/time.
     set_sysvar("last_action_dates_cron",$this_run_start);
-    }
-
-/**
- * Limit the length of !list special search url by adding a maximum of 650 characters of resource references per link including separators.
- * Mail servers may break very long text strings into multiple lines and this will cause the special search to fail.
- * Multiple urls will be returned, formatted to include in action dates notifications.
- *
- * @param  array   $resource_refs   Array containing resource references to include in url.
- * 
- * @return array   Array containing 'single' value of url (650 characters of resources or less) and 'multiple' value of url (more than 650 characters of resources).
- */
-function build_actiondates_urls(array $resource_refs)
-    {
-    global $baseurl, $lang;
-
-    $return_urls['single'] = ''; // Two values returned to determine where the url is placed in message_add() - multiple urls must be passed in message, not url parameter.
-    $return_urls['multiple'] = '';
-
-    if (count($resource_refs) === 0)
-        {
-        return $return_urls;
-        }
-
-    $total_string_length = 0;
-    $link = 1;
-    $resource_links = array();
-    foreach ($resource_refs as $cur_ref)
-        {
-        $cur_ref_length = strlen($cur_ref) + 1; // +1 represents separator ':'
-        $total_string_length = $total_string_length + $cur_ref_length;
-        if ($total_string_length > 650)
-            {
-            $total_string_length = $cur_ref_length;
-            $link = ++$link;
-            }
-        $resource_links[$link][] = $cur_ref;
-        }
-
-    if (count($resource_links) === 1)
-        {
-        $return_urls['single'] = "$baseurl/pages/search.php?search=!list" . implode(":", $resource_refs);
-        }
-    else
-        {
-        $urls = array('<br /><div><ul>');
-
-        foreach($resource_links as $link_no => $refs_chunk)
-            {
-            $url = $baseurl . "/pages/search.php?search=!list";
-            $url .= implode(":", $refs_chunk);
-            $url = '<li><a href="' . $url . '">' . escape($lang["show_affected_resources"]) . ' [' . escape($lang["group_no"]) . ' ' . $link_no . ']</a></li>';
-            $urls[] = $url;
-            }
-        
-        $urls[] = '</ul></div>';
-        $return_urls['multiple'] = implode("", $urls);
-        }
-
-    return $return_urls;
     }
 
 // This is required if cron task is run via pages/tools/cron_copy_hitcount.php

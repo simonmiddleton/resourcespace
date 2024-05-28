@@ -6,6 +6,8 @@
 # PLEASE NOTE - Don't add search/resource/collection/user etc. functions here - use the separate include files.
 #
 
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 /**
  * Retrieve a user-submitted parameter from the browser via post/get/cookies, in that order.
  *
@@ -2018,9 +2020,9 @@ function get_temp_dir($asUrl = false,$uniqid="")
             $GLOBALS["use_error_exception"] = true;
             try {
                 mkdir($result, 0777, true);
-                } catch (Exception $e) {
+            } catch (Exception $e) {
                 debug("get_temp_dir: {$result} ERROR-".$e->getMessage());
-                }
+            }
             unset($GLOBALS["use_error_exception"]);
             }
         }
@@ -2060,27 +2062,26 @@ function convert_path_to_url($abs_path)
 * 
 * @return string Escaped command string
 */
-function escape_command_args($cmd, array $args)
-    {
-    debug("escape_command_args(\$cmd = '{$cmd}', \$args = " . str_replace(PHP_EOL, "", print_r($args, true)) . ")");
-
-    if(empty($args))
-        {
+function escape_command_args($cmd, array $args): string
+{
+    debug_function_call(__FUNCTION__, func_get_args());
+    if ($args === []) {
         return $cmd;
+    }
+
+    foreach ($args as $placeholder => $value) {
+        if (strpos($cmd, $placeholder) === false) {
+            trigger_error("Unable to find arg '{$placeholder}' in '{$cmd}'. Make sure the placeholder exists in the command string", E_USER_ERROR);
+        }
+        elseif (!($value instanceof CommandPlaceholderArg)) {
+            $value = new CommandPlaceholderArg($value, null);
         }
 
-    foreach($args as $placeholder => $value)
-        {
-        if(strpos($cmd, $placeholder) === false)
-            {
-            trigger_error("Unable to find arg '{$placeholder}' in '{$cmd}'. Make sure the placeholder exists in the command string");
-            }
-
-        $cmd = str_replace($placeholder, escapeshellarg($value), $cmd);
-        }
+        $cmd = str_replace($placeholder, escapeshellarg($value->__toString()), $cmd);
+    }
 
     return $cmd;
-    }
+}
 
 
 /**
@@ -2101,6 +2102,16 @@ function run_command($command, $geterrors = false, array $params = array())
     $command = escape_command_args($command, $params);
     debug("CLI command: $command");
 
+    $cmd_tmp_file = false;
+    if ($config_windows) {
+        // Windows systems have a hard time with the long paths (often used for video generation)
+        // This work-around creates a batch file containing the command, then executes that.
+        $unique_key = generateSecureKey(32);
+        $cmd_tmp_file = get_temp_dir() . "/run_command_" . $unique_key . ".bat";
+        file_put_contents($cmd_tmp_file,$command);
+        $command = $cmd_tmp_file;
+        }
+
     $descriptorspec = array(
         1 => array("pipe", "w") // stdout is a pipe that the child will write to
     );
@@ -2119,7 +2130,12 @@ function run_command($command, $geterrors = false, array $params = array())
         }
     $process = @proc_open($command, $descriptorspec, $pipe, null, null, array('bypass_shell' => true));
 
-    if (!is_resource($process)) { return ''; }
+    if (!is_resource($process)) {
+        if($cmd_tmp_file) {
+            unlink($cmd_tmp_file);
+        }
+        return '';
+    }
 
     $output = trim(stream_get_contents($pipe[1]));
     if($geterrors)
@@ -2131,8 +2147,13 @@ function run_command($command, $geterrors = false, array $params = array())
         debug("CLI output: $output");
         debug("CLI errors: " . trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2])));
         }
-    if($config_windows && isset($log_location)){unlink($log_location);}
+    if ($config_windows && isset($log_location)) {
+        unlink($log_location);
+    }
     proc_close($process);
+    if($cmd_tmp_file) {
+        unlink($cmd_tmp_file);
+    }
     return $output;
     }
 
@@ -4040,6 +4061,10 @@ function debug($text,$resource_log_resource_ref=null,$resource_log_code=LOG_CODE
  */
 function rcRmdir ($path,$ignore=array())
     {
+    if (!is_valid_rs_path($path)) {
+        // Not a valid path to a ResourceSpace file source
+        return false;
+    }
     debug("rcRmdir: " . $path);
     if (is_dir($path))
         {
@@ -4055,7 +4080,7 @@ function rcRmdir ($path,$ignore=array())
             if ($object->isDir() && $object->isWritable())
                 {
                 $success = rcRmdir($path . DIRECTORY_SEPARATOR . $objectname,$ignore);
-                }               
+                }
             else
                 {
                 $success = try_unlink($path . DIRECTORY_SEPARATOR . $objectname);
@@ -5466,11 +5491,17 @@ function get_size_info(array $size, ?array $originalSize = null): string
  * Simple function to check if a given extension is associated with a JPG file
  *
  * @param string $extension     File extension
- * 
- * @return bool 
- * 
  */
-function is_jpeg_extension(string $extension)
+function is_jpeg_extension(string $extension): bool
     {
-    return in_array(strtolower((string) $extension),["jpg","jpeg"]);
+    return in_array(mb_strtolower($extension), ["jpg","jpeg"]);
     }
+
+/**
+ * Input validation helper function for sorting (ASC/DESC).
+ * @param mixed $val User input value to be validated
+ */
+function validate_sort_value($val): bool
+{
+    return is_string($val) && in_array(mb_strtolower($val), ['asc', 'desc']);
+}

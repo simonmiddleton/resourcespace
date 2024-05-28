@@ -12,10 +12,9 @@ include "../../include/api_functions.php";
 $backurl=getval("backurl","");
 $modal=(getval("modal","")=="true");
 $url=$baseurl_short."pages/team/team_user_edit.php?ref=" .getval("ref","",true) . "&backurl=" . urlencode($backurl);
-if (!checkperm("u"))
+if (!checkPermission_manage_users())
     {
-    error_alert($lang["error-permissiondenied"],true);
-    exit();
+    exit(escape($lang["error-permissiondenied"]));
     }
 
 $ref=getval("ref","",true);
@@ -73,12 +72,6 @@ if ($user===false)
         $onload_message = array("title" => $lang["error"],"text" => $error);
         include __DIR__ . "/../../include/footer.php";
         }
-    exit();
-    }
-    
-if (!can_set_admin_usergroup($user["usergroup"])) 
-    {
-    error_alert($lang["error-permissiondenied"],false);
     exit();
     }
 
@@ -201,12 +194,9 @@ if (($user["login_tries"]>=$max_login_attempts_per_username) && (strtotime($user
     $groups=get_usergroups(true);
     for ($n=0;$n<count($groups);$n++)
         {
-        if (can_set_admin_usergroup($groups[$n]["ref"]))
-            {
-            ?>
-            <option value="<?php echo $groups[$n]["ref"]; ?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]; ?></option>   
-            <?php
-            }
+        ?>
+        <option value="<?php echo $groups[$n]["ref"]; ?>" <?php if (getval("usergroup",$user["usergroup"])==$groups[$n]["ref"]) {?>selected<?php } ?>><?php echo $groups[$n]["name"]; ?></option>   
+        <?php
         }
 ?>
 </select>

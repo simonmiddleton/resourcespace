@@ -104,14 +104,14 @@ if(strpos($header_favicon, '[storage_url]') !== false)
 <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/jquery-periodical-updater.js"></script>
 
 <script type="text/javascript">StaticSlideshowImage=<?php echo $static_slideshow_image?"true":"false";?>;</script>
-<script type="text/javascript" src="<?php echo $baseurl?>/lib/js/slideshow_big.js?css_reload_key=<?php echo $css_reload_key?>"></script>
+<script type="text/javascript" src="<?php echo $baseurl?>/js/slideshow_big.js?css_reload_key=<?php echo $css_reload_key?>"></script>
 
 <?php
 if ($contact_sheet)
     {?>
-    <script type="text/javascript" src="<?php echo $baseurl?>/lib/js/contactsheet.js"></script>
+    <script type="text/javascript" src="<?php echo $baseurl?>/js/contactsheet.js"></script>
     <script>
-    contactsheet_previewimage_prefix = '<?php echo addslashes($storageurl)?>';
+    contactsheet_previewimage_prefix = '<?php echo escape($storageurl)?>';
     </script>
     <script type="text/javascript">
     jQuery.noConflict();
@@ -130,7 +130,7 @@ if ($enable_ckeditor) { ?>
 <?php } 
 
 if (!hook("ajaxcollections")) { ?>
-    <script src="<?php echo $baseurl;?>/lib/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
+    <script src="<?php echo $baseurl;?>/js/ajax_collections.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <?php } ?>
 
 <!--  UPPY -->
@@ -142,7 +142,7 @@ if (!hook("ajaxcollections")) { ?>
 if ($keyboard_navigation_video_search || $keyboard_navigation_video_view || $keyboard_navigation_video_preview)
     {
     ?>
-    <script type="text/javascript" src="<?php echo $baseurl_short?>lib/js/videojs-extras.js?<?php echo $css_reload_key?>"></script>
+    <script type="text/javascript" src="<?php echo $baseurl_short?>js/videojs-extras.js?<?php echo $css_reload_key?>"></script>
     <?php
     }
 
@@ -164,7 +164,7 @@ if($simple_search_pills_view)
 <!-- jsTree -->
 <link rel="stylesheet" href="<?php echo $baseurl_short; ?>lib/jstree/themes/default-dark/style.min.css">
 <script src="<?php echo $baseurl_short; ?>lib/jstree/jstree.min.js"></script>
-<script src="<?php echo $baseurl_short; ?>lib/js/category_tree.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
+<script src="<?php echo $baseurl_short; ?>js/category_tree.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
 <!-- DOMPurify -->
 <script src="<?php echo $baseurl; ?>/lib/js/purify.min.js"></script>
@@ -181,7 +181,7 @@ $browse_on = has_browsebar();
 if($browse_on)
     {
     ?>
-    <script src="<?php echo $baseurl_short ?>lib/js/browsebar_js.php" type="text/javascript"></script>
+    <script src="<?php echo $baseurl_short ?>js/browsebar_js.php" type="text/javascript"></script>
     <?php
     }
 $selected_search_tab = getval("selected_search_tab","");
@@ -220,7 +220,7 @@ if($browse_on)
 ?>
 </script>
 
-<script src="<?php echo $baseurl_short?>lib/js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
+<script src="<?php echo $baseurl_short?>js/global.js?css_reload_key=<?php echo $css_reload_key?>" type="text/javascript"></script>
 <script src="<?php echo $baseurl_short?>lib/js/polyfills.js?css_reload_key=<?php echo $css_reload_key; ?>"></script>
 
 <?php if ($keyboard_navigation)

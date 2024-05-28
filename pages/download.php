@@ -74,10 +74,9 @@ if ($download_usage && $checktermsusage)
         }            
     }
 
-if(!preg_match('/^[a-zA-Z0-9]+$/', $ext))
-    {
-    $ext='jpg';
-    }
+if (is_banned_extension($ext)) {
+    $ext = 'jpg';
+}
 
 $override_key = false;
 if($ref > 0 && $override_temp_key !== '')

@@ -266,7 +266,7 @@ include "../include/header.php";
 if ($metadata_report && isset($exiftool_path))
     {
     ?>
-    <script src="<?php echo $baseurl ?>/lib/js/metadata_report.js?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
+    <script src="<?php echo $baseurl ?>/js/metadata_report.js?css_reload_key=<?php echo $css_reload_key; ?>" type="text/javascript"></script>
     <?php
     }
 
@@ -884,7 +884,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             }
                                                             ?>
                                                     </td>
-                                                    <td class="DownloadFileSize"><?php echo escape($sizes[$n]["filesize"]); ?></td>
+                                                    <td class="DownloadFileSize"><?php echo strip_tags_and_attributes($sizes[$n]["filesize"]); ?></td>
                                                     <?php 
                                                     if ($fulldownload && $missing_original) { ?>
                                                         <td class="MissingFile">

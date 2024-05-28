@@ -262,7 +262,7 @@ else
 
 // don't update this table if the System is doing its own operations
 if (!isset($system_login)){
-    ps_query("update user set lang = ?, last_active = now(), logged_in = 1, last_ip = ? , last_browser = ? where ref = ?", array("s",$language,"s",get_ip(),"s",$last_browser,"s",$userref), false, -1, true, 0);
+    update_user_access($userref, ["logged_in" => 1]);
 }
 
 # Add group specific text (if any) when logged in.

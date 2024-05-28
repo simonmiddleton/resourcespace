@@ -261,7 +261,7 @@ function comments_show($ref, $bcollection_mode = false, $bRecursive = true, $lev
 
         echo<<<EOT
 
-        <script src="{$baseurl_short}lib/js/tagging.js"></script>
+        <script src="{$baseurl_short}js/tagging.js"></script>
         <script type="text/javascript">
 
             var regexEmail = new RegExp ("{$regex_email}");
@@ -411,7 +411,7 @@ EOT;
                 }
             else
                 {
-                    echo "[" . $lang["deleted"] . "]";
+                    echo "[" . escape($lang["deleted"]) . "]";
                 }
             }
             else
@@ -480,7 +480,9 @@ EOT;
                 echo "<div class='CommentEntryInfoFlag'>";
                 if (getval("comment{$thisRef}flagged",""))
                     {
-                    echo "<div class='CommentFlagged'><i aria-hidden='true' class='fa fa-fw fa-flag'>&nbsp;</i>{$lang['comments_flag-has-been-flagged']}</div>";
+                    echo '<div class="CommentFlagged"><i aria-hidden="true" class="fa fa-fw fa-flag">&nbsp;</i>'
+                        . escape($lang['comments_flag-has-been-flagged'])
+                        . '</div>';
                     }
                 else
                     {

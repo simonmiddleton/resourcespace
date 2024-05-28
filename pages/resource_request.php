@@ -172,7 +172,7 @@ $back_url = generateURL(
         </a>
     </p>
 
-  <h1><?php echo i18n_get_translated($lang["requestresource"]); ?></h1>
+  <h1><?php echo escape(i18n_get_translated($lang["requestresource"])); ?></h1>
   <p><?php echo text("introtext");render_help_link("resourceadmin/user-resource-requests")?></p>
     <?php render_top_page_error_style($error); ?>
     <form method="post" action="<?php echo $baseurl_short?>pages/resource_request.php" onsubmit="return CentralSpacePost(this,true);">
@@ -293,7 +293,7 @@ hook("resource_request_form_bottom");
     <div class="QuestionSubmit">        
     <input name="save" value="true" type="hidden" />
     <input name="cancel" type="button" value="&nbsp;&nbsp;<?php echo escape($lang["cancel"]); ?>&nbsp;&nbsp;" onclick="document.location='view.php?ref=<?php echo escape($ref)?>';"/>&nbsp;
-    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo i18n_get_translated($lang["requestresource"])?>&nbsp;&nbsp;" />
+    <input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape(i18n_get_translated($lang["requestresource"])); ?>&nbsp;&nbsp;" />
     </div>
     </form>
 </div>

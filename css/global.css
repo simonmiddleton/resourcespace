@@ -209,6 +209,7 @@ select::-ms-expand
 .AbsoluteTopLeft { position: absolute; top: 0; left: 0; }
 .PointerEventsNone { pointer-events: none; }
 .MarginLeft1rem { margin-left: 1rem; }
+.BorderBottom { border-bottom: 2px solid; }
 
 /* General Form tags */
 .checkoption {vertical-align: top;display: inline-block;width: 195px;margin: 2px;}
@@ -1434,6 +1435,12 @@ div.video-js {margin:auto;}
     margin-bottom: 10px;
     }
 
+#modal_dialog .MessageText ul{
+    padding-top: 1em;
+    padding-bottom: 0px;
+    list-style-type: none;
+    }
+
 #modal .TopInpageNav {
     margin: 0;
     padding: 0 20px 10px 5px;
@@ -2305,9 +2312,11 @@ a.BrowseRefresh{
 }
 
 .infield-icon {
-    margin-left: -30px;
-    position: relative;
-  }
+    margin-left: -26px;
+    margin-top: 12px;
+    position: absolute;
+    cursor: pointer;
+}
 
 .toolbox {
     border: 1px solid transparent;

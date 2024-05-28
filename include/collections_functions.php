@@ -986,7 +986,7 @@ function search_public_collections($search="", $order_by="name", $sort="ASC", $e
     $select_extra = "";
     debug_function_call("search_public_collections", func_get_args());
     // Validate sort & order_by
-    $sort = (in_array($sort, array("ASC", "DESC")) ? $sort : "ASC");
+    $sort = validate_sort_value($sort) ? $sort : 'ASC';
     $valid_order_bys = array("fullname", "name", "ref", "count", "type", "created");
     $order_by = (in_array($order_by, $valid_order_bys) ? $order_by : "name");
 
