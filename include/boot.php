@@ -228,8 +228,8 @@ if($system_down_redirect && getval('show', '') === '') {
 set_time_limit($php_time_limit);
 
 # Set the storage directory and URL if not already set.
-if (!isset($storagedir)) {$storagedir=dirname(__FILE__)."/../filestore";}
-if (!isset($storageurl)) {$storageurl=$baseurl."/filestore";}
+$storagedir ??= dirname(__DIR__) . '/filestore';
+$storageurl ??= "{$baseurl}/filestore";
 
 // Reset prepared statement cache before reconnecting
 unset($prepared_statement_cache);

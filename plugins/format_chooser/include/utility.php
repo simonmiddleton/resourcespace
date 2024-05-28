@@ -1,4 +1,7 @@
 <?php
+
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 include_once dirname(__DIR__, 3) . '/include/image_processing.php';
 
 /**
@@ -116,8 +119,13 @@ function convertImage($resource, $page, $alternative, $target, $width, $height, 
         {
         // Find out if the image does already have a profile
         $identify = get_utility_path("im-identify");
-        $identify .= " -verbose " . escapeshellarg($path);
-        $info = run_command($identify);
+        $info = run_command(
+            "{$identify} -verbose path",
+            false,
+            [
+                'path' => new CommandPlaceholderArg($path, 'is_valid_rs_path'),
+            ]
+        );
 
         $basePath = dirname(__FILE__, 4) . '/';
         if(preg_match("/Profile-icc:/", $info) != 1)

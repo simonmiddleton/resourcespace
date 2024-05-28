@@ -9,6 +9,8 @@
  * @todo Document
  */
 
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 include_once 'metadata_functions.php';
 
 /**
@@ -3618,7 +3620,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
             if(is_bool($profile_data['strip']) && trim($profile_data['path']) !== '')
                 {
                 $profile_placeholder = "%profile{$i}";
-                $cmd_args[$profile_placeholder] = $profile_data['path'];
+                $cmd_args[$profile_placeholder] = new CommandPlaceholderArg($profile_data['path'], 'is_safe_basename');
                 $profile .= sprintf(' %sprofile %s',
                     ($profile_data['strip'] ? '+' : '-'),
                     $profile_placeholder
@@ -3638,24 +3640,24 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     if(isset($actions['background']) && $actions['background'] !== '')
         {
         $cmd_args['%background'] = $actions['background'];
-        $cmd_args['%sourcepath'] = $sourcepath;
+        $cmd_args['%sourcepath'] = new CommandPlaceholderArg($sourcepath, 'is_valid_rs_path');
         $command .= ' -background %background %sourcepath[0]';
         }
     elseif (strtoupper($of_parts["extension"])=="PNG" || strtoupper($of_parts["extension"])=="GIF")
         {
         $keep_transparency=true;
-        $cmd_args['%sourcepath'] = $sourcepath;
+        $cmd_args['%sourcepath'] = new CommandPlaceholderArg($sourcepath, 'is_valid_rs_path');
         $command .= ' -background transparent %sourcepath[0]';
         }
     else
         {
-        $cmd_args['%sourcepath'] = $sourcepath;
+        $cmd_args['%sourcepath'] = new CommandPlaceholderArg($sourcepath, 'is_valid_rs_path');
         $command .= ' %sourcepath[0]';
         }
 
     if(array_key_exists('transparent', $actions))
         {
-        $cmd_args['%transparent'] = $actions['transparent'];
+        $cmd_args['%transparent'] = new CommandPlaceholderArg($actions['transparent'], 'is_valid_imagemagick_color');
         $command .= ' -transparent%transparent';
         }
 
@@ -3706,7 +3708,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
 
     if(isset($actions["gamma"]) && is_int_loose($actions["gamma"]) && $actions["gamma"] <> 50)
         {
-        $cmd_args['%gamma'] = round($actions['gamma'] / 50, 2);
+        $cmd_args['%gamma'] = new CommandPlaceholderArg(round($actions['gamma'] / 50, 2), 'is_numeric');
         $command .= ' -gamma %gamma';
         }
 
@@ -3867,11 +3869,14 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
     )
         {
         # Apply resize ('>' means: never enlarge)
-        $cmd_args['%resize_dimensions'] = $actions['resize']['width'] . ($actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : '') . ">";
-        $command .= ' -resize %resize_dimensions';
+        $command .= ' -resize %resize_dimensions>';
+        $cmd_args['%resize_dimensions'] = new CommandPlaceholderArg(
+            $actions['resize']['width'] . ($actions['resize']['height'] > 0 ? "x{$actions['resize']['height']}" : ''),
+            fn($val): bool => preg_match('/^\d+x?\d*$/', $val)
+        );
         }
 
-    $cmd_args['%outputpath'] = $outputpath;
+    $cmd_args['%outputpath'] = new CommandPlaceholderArg($outputpath, 'is_valid_rs_path');
     $command .= $profile . ' %outputpath';
     run_command($command, false, $cmd_args);
 
@@ -3882,7 +3887,7 @@ function transform_file(string $sourcepath, string $outputpath, array $actions)
         if (($exiftool_fullpath!=false) && !in_array($of_parts["extension"],$exiftool_no_process))
             {
             $exifcommand = $exiftool_fullpath . ' -m -overwrite_original -E -Orientation#=1 ';
-            $exifargs = ['%outputfile%' => $outputpath];
+            $exifargs = ['%outputfile%' => new CommandPlaceholderArg($outputpath, 'is_valid_rs_path')];
 
             if(isset($actions["resolution"]) && $actions["resolution"] != "")
                 {
@@ -4190,4 +4195,15 @@ function create_image_alternatives(int $ref, array $params, $force = false)
             );
         }
     }
+}
+
+/**
+ * Input validation helper function for ImageMagick's color values (e.g. blue, #ddddff and rgb(255,255,255))
+ *
+ * @see https://imagemagick.org/script/command-line-options.php#transparent
+ * @see https://imagemagick.org/script/command-line-options.php#fill
+ */
+function is_valid_imagemagick_color(string $val): bool
+{
+    return preg_match('/^#?[a-zA-Z]+$|^rgb\(\d{1,3},\d{1,3},\d{1,3}\)$/', $val);
 }

@@ -389,26 +389,42 @@ function validate_temp_path(string $test_path, string $temp_folder = '') : bool
  *
  * @param   string   $path
  * @param   array    $extra_paths   Array of additional valid source paths to check
- * 
  */
 function is_valid_rs_path(string $path, array $extra_paths = []): bool
 {
     $sourcerealpath = realpath($path);
-    if (!$sourcerealpath) {
+    $source_path_not_real = !$sourcerealpath || !file_exists($sourcerealpath);
+
+    if (
+        $source_path_not_real
+        && !(preg_match('/^[a-zA-Z0-9_\-[:space:]\/]+$/', pathinfo($path, PATHINFO_DIRNAME)) && is_safe_basename($path))
+    ) {
         return false;
     }
 
-    $basepaths = [
-        $GLOBALS["storagedir"],
-        // $GLOBALS["syncdir"],
-    ];
-    foreach(array_merge($basepaths,$extra_paths) as $validpath) {
+    $path_to_validate = $source_path_not_real ? $path : $sourcerealpath;
+    $allowed_paths = array_filter(
+        array_map(
+            'trim',
+            array_unique(
+                array_merge(
+                    [
+                        $GLOBALS['storagedir'],
+                        $GLOBALS['syncdir'],
+                    ],
+                    $extra_paths
+                )
+            )
+        )
+    );
+
+    foreach ($allowed_paths as $validpath) {
         $validpath = realpath($validpath);
-        if ($validpath !== false && strpos($sourcerealpath,$validpath) === 0) {
+        if ($validpath !== false && mb_strpos($path_to_validate, $validpath) === 0) {
             return true;
         }
     }
-    // Not a valid file source
+
     return false;
 }
 
