@@ -619,4 +619,10 @@ function show_hide_collection_add(){
         jQuery('#question_collectionadd').hide();
         }
 }
+
+jQuery('#trimform').submit(function() {
+    if (jQuery('#uploadtype').val() != 'download') {
+        return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this, true);
+    }
+});
 </script>

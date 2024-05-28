@@ -31,8 +31,8 @@ function generate_video_trim(string $target, string $source_video_file, int $res
         $source_temp = get_temp_dir() . "/vs_s" . $resource_ref . '.' . $source_ext;
         $source_temp = str_replace("/", "\\", $source_temp);
         copy($source_video_file, $source_temp);
-        $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_temp) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target_temp);
-        run_command($shell_exec_cmd);
+        $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss %FFMPEG_START_TIME% -i %SOURCE_TEMP% -t %FFMPEG_DURATION_TIME%" . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . '%TARGET_TEMP%';
+        run_command($shell_exec_cmd, false, array('%$FFMPEG_START_TIME%' => $ffmpeg_start_time, '%SOURCE_TEMP%' => $source_temp, '%FFMPEG_DURATION_TIME%' => $ffmpeg_duration_time, '%TARGET_TEMP%' => $target_temp));
         rename($target_temp, $target);
         unlink($source_temp);
         }
@@ -42,13 +42,13 @@ function generate_video_trim(string $target, string $source_video_file, int $res
         if(isset($ffprobe_array['streams'][1]['codec_name']) && $ffprobe_array['streams'][1]['codec_name'] = "pcm_s24le")
             {
             # ffmpeg does not support PCM in the MP4 container
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_video_file) . " -t $ffmpeg_duration_time -c copy -c:a aac " . escapeshellarg($target);
-            run_command($shell_exec_cmd);
+            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss %FFMPEG_START_TIME% -i %SOURCE_VIDEO_FILE% -t '%FFMPEG_DURATION_TIME%' -c copy -c:a aac %TARGET%";
+            run_command($shell_exec_cmd, false, array('%FFMPEG_START_TIME%' => $ffmpeg_start_time, '%SOURCE_VIDEO_FILE%' => $source_video_file, '%FFMPEG_DURATION_TIME%' => $ffmpeg_duration_time, '%TARGET%' => $target));
             }
         else
             {
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_video_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-            run_command($shell_exec_cmd);
+            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss %FFMPEG_START_TIME% -i %SOURCE_VIDEO_FILE% -t %FFMPEG_DURATION_TIME% " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . '%TARGET%';
+            run_command($shell_exec_cmd, false, array('%FFMPEG_START_TIME%' => $ffmpeg_start_time, '%SOURCE_VIDEO_FILE%' => $source_video_file, '%FFMPEG_DURATION_TIME%' => $ffmpeg_duration_time, '%TARGET%' => $target));
             }
         }
     }
