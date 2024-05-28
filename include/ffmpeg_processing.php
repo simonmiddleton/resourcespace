@@ -85,100 +85,29 @@ if ($generateall) {
 
     if ($extension == 'gif')
         {
-        # When processing a GIF file $video_preview_hls_support is unavailable.
-        $video_preview_hls_support = 0;
         global $ffmpeg_preview_gif_options;
         $ffmpeg_preview_options = $ffmpeg_preview_gif_options;
         }
 
-    if ($video_preview_hls_support != 0) {
-        // Start the content for the main m3u8 file
-        $hlscontent="#EXTM3U\n";
-        $hlscontent="#EXT-X-VERSION:3\n";
+    $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i %%FILE%% " . $ffmpeg_preview_options . " -t %%SECONDS%% -s %%HEIGHT%%x%%WIDTH%%  %%TARGETFILE%%";
 
-        $n=1;
-        // Generate the separate video chunks for HTTP Live streaming support
-        foreach ($video_hls_streams as $video_hls_stream) {
-            $hlsfile = get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative);
-            if ($video_hls_stream["resolution"]=="") {
-                $hlswidth= $width;
-                $hlsheight=$height;
-            } else {
-                $tgt_res = explode("x",$video_hls_stream["resolution"]);
-                $hlswidth = $tgt_res[0];
-                $hlsheight = $tgt_res[1];
-                $aspect_ratio=$width/$height;
-                if ($hlswidth/$hlsheight > $aspect_ratio) {
-                    $hlswidth = floor($hlsheight*$aspect_ratio);
-                } elseif($hlswidth/$hlsheight < $aspect_ratio) {
-                    $hlsheight = floor($hlswidth/$aspect_ratio);
-                }
-                # Frame size must be a multiple of two
-                if ($hlswidth % 2) {$hlswidth++;}
-                if ($hlsheight % 2) {$hlsheight++;}
-            }
+    $shell_exec_params = [
+        "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
+        "%%SECONDS%%" => (int) $ffmpeg_preview_seconds,
+        "%%HEIGHT%%" => (int) $hlsheight,
+        "%%WIDTH%%" => (int) $hlswidth,
+        "%%TARGETFILE%%" => new CommandPlaceholderArg($targetfile, 'is_safe_basename'),
+    ];
 
-            $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i %%FILE%% " . $video_hls_preview_options . " -b %%BITRATE%%k -ab %%AUDIOBITRATE%%k -t %%SECONDS%% -s %%WIDTH%%x%%HEIGHT%% -start_number 0 -hls_time 10 -hls_list_size 0 -f hls" . " %%HLSFILE%%";
-
-            $shell_exec_params = [
-                "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
-                "%%BITRATE%%" => (int) $video_hls_stream["bitrate"],
-                "%%AUDIOBITRATE%%" => (int) $video_hls_stream["audio_bitrate"],
-                "%%SECONDS%%" => (int) $ffmpeg_preview_seconds,
-                "%%WIDTH%%" => (int) $hlswidth,
-                "%%HEIGHT%%" => (int) $hlsheight,
-                "%%HLSFILE%%" => new CommandPlaceholderArg($hlsfile, 'is_safe_basename'),
-            ];
-
-            if (isset($ffmpeg_command_prefix)) {
-                $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
-            }
-
-        $tmp = hook("ffmpegmodpreparams", "", [$shell_exec_cmd, $ffmpeg_fullpath, $file, $shell_exec_params]);
-        if ($tmp) {
-            $shell_exec_cmd = $tmp;
-        }
-
-        $output = run_command($shell_exec_cmd, false, $shell_exec_params);
-
-        if (file_exists($hlsfile)) {
-            if (!isset($hls_codec_info)) {
-                // Get codec profile and level to add to CODECS element for stream in M3U8 file. Set to profile:high, level:5.1  if not worked out so that a high bitrate stream is not used in error
-                $ffprobe_array = get_video_info($hlsfile);
-                $hls_codec_info["profile"] = (isset($ffprobe_array["streams"][0]["profile"]) && isset($h264_profiles[$ffprobe_array["streams"][0]["profile"]])) ? $h264_profiles[$ffprobe_array["streams"][0]["profile"]] : "58A0";
-                $hls_codec_info["level"]="1e";
-            }
-            // Set stream info, allowing for overhead of bitrate (this is why it is not 1024)
-            $hlscontent.="#EXT-X-STREAM-INF:PROGRAM-ID=" . $n . ",BANDWIDTH=" . (($video_hls_stream["bitrate"] + $video_hls_stream["audio_bitrate"])*1200) . (isset($hls_codec_info)?",CODECS=\"mp4a.40.2, avc1." . $hls_codec_info["profile"] . $hls_codec_info["level"] . "\"":"") . ",RESOLUTION=" . $video_hls_stream["resolution"] . "\n";
-            $hlsfileparts = pathinfo($hlsfile);
-            $hlscontent .= $hlsfileparts["basename"] ."\n";
-            }
-        unset($hls_codec_info);
-        }
-        $hlsmainfile=get_resource_path($ref,true,"pre",false,"m3u8",-1,1,false,"",$alternative);
-
-        file_put_contents($hlsmainfile,$hlscontent);
-    } elseif ($video_preview_hls_support != 1) {
-        $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i %%FILE%% " . $ffmpeg_preview_options . " -t %%SECONDS%% -s %%HEIGHT%%x%%WIDTH%%  %%TARGETFILE%%";
-
-        $shell_exec_params = [
-            "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
-            "%%SECONDS%%" => (int) $ffmpeg_preview_seconds,
-            "%%HEIGHT%%" => (int) $hlsheight,
-            "%%WIDTH%%" => (int) $hlswidth,
-            "%%TARGETFILE%%" => new CommandPlaceholderArg($targetfile, 'is_safe_basename'),
-        ];
-
-        if (isset($ffmpeg_command_prefix)) {
-            $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
-        }
-
-        $tmp = hook("ffmpegmodpreparams", "", [$shell_exec_cmd, $ffmpeg_fullpath, $file, $shell_exec_params]);
-        if ($tmp) {
-            $shell_exec_cmd = $tmp;
-        }
-        $output = run_command($shell_exec_cmd, false, $shell_exec_params);
+    if (isset($ffmpeg_command_prefix)) {
+        $shell_exec_cmd = $ffmpeg_command_prefix . " " . $shell_exec_cmd;
     }
+
+    $tmp = hook("ffmpegmodpreparams", "", [$shell_exec_cmd, $ffmpeg_fullpath, $file, $shell_exec_params]);
+    if ($tmp) {
+        $shell_exec_cmd = $tmp;
+    }
+    $output = run_command($shell_exec_cmd, false, $shell_exec_params);
 
 
     if (
