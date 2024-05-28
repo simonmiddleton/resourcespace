@@ -6,6 +6,7 @@ command_line_only();
 $run_id = test_generate_random_ID(5);
 $test_tmp_dir = get_temp_dir(false);
 $resource_a = create_resource(1, 0);
+$resource_a_original_path = get_resource_path($resource_a, true, '', true, 'jpg');
 
 $syncdir = sys_get_temp_dir() . "/statissync/test_{$run_id}";
 mkdir($syncdir, 0777, true);
@@ -24,6 +25,11 @@ $use_cases = [
         'name' => 'Allow temp dir files',
         'setup' => fn() => file_put_contents("{$test_tmp_dir}/test_{$run_id}.txt", ''),
         'input' => ["{$test_tmp_dir}/test_{$run_id}.txt"],
+        'expected' => true,
+    ],
+    [
+        'name' => 'Allow static sync path',
+        'input' => [$static_sync_test_path],
         'expected' => true,
     ],
     [
@@ -48,9 +54,15 @@ $use_cases = [
         'expected' => false,
     ],
     [
-        'name' => 'Allow static sync path',
-        'input' => [$static_sync_test_path],
-        'expected' => true,
+        'name' => 'Block path injection via the basename',
+        'input' => [
+            str_replace(
+                pathinfo($resource_a_original_path, PATHINFO_BASENAME),
+                "some'bad_file.jpg",
+                $resource_a_original_path
+            )
+        ],
+        'expected' => false,
     ],
 ];
 foreach($use_cases as $uc)
