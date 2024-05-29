@@ -309,7 +309,6 @@ $lang["lastactive"]="上一位活跃者";
 $lang["lastbrowser"]="上一位浏览者";
 $lang["searchusers"]="搜索用户";
 $lang["createuserwithusername"]="以该用户名称建立账号";
-$lang["emailnotfound"]="未能发现相关的电邮地址";
 $lang["yourname"]="你的全名";
 $lang["youremailaddress"]="你的电邮地址";
 $lang["sendreminder"]="发送提示";
@@ -571,8 +570,6 @@ $lang["donotcopycollection"]="不要从收藏夹中复制";
 
 $lang["resourcesincollection"]="收藏夹中的资源"; # E.g. 此收藏夹中有3个资源
 $lang["removefromcurrentcollection"]="从现有的收藏夹中移除";
-$lang["showtranslations"]="+ 显示译文";
-$lang["hidetranslations"]="- 隐藏译文";
 $lang["archivedresource"]="已存档的资源";
 
 $lang["managerelatedkeywords"]="管理相关的关键词";

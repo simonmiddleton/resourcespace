@@ -1019,10 +1019,6 @@ $file_integrity_verify_window = [0,0];     # Off by default
 $file_integrity_ignore_states = [];
 // Resource types to ignore when verifying file integrity. This will include $data_only_resource_types automatically.
 $file_integrity_ignore_resource_types = [];
- 
-# Workflow states to ignore when verifying file integrity (to verify file integrity using checksums requires $file_checksums_50k=false;)
-$file_integrity_ignore_states = [];
-
 
 # Default group when adding new users;
 $default_group=2;
@@ -3140,8 +3136,6 @@ $vendor_tus_cache_adapter = 'file';
 // See https://www.resourcespace.com/knowledge-base/resourceadmin/push-metadata for more information
 // $related_pushed_order_by = 0;
 
-
-
 /* 
 ===============================================================================
 Offline preview generation options
@@ -3197,7 +3191,6 @@ Optionally use this array to prevent the immediate creation at upload of core pr
 for the specified file extensions when one of the offline preview options above are configured.
 */
 $minimal_preview_creation_exclude_extensions = [];
-
 
 // Option to automatically send a digest of all messages if a user has not logged on for the specified number of days
 $inactive_message_auto_digest_period=7;

@@ -289,7 +289,6 @@ $lang["lastactive"]="最新の活動";
 $lang["lastbrowser"]="最新のブラウズ";
 $lang["searchusers"]="検索ユーザ";
 $lang["createuserwithusername"]="ユーザ名でユーザ作成...";
-$lang["emailnotfound"]="指定されたeメールアドレスが見つかりません";
 $lang["yourname"]="あなたの名前";
 $lang["youremailaddress"]="あなたのEメール・アドレス";
 $lang["sendreminder"]="リマインダー送信";

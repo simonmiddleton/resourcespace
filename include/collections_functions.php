@@ -4692,8 +4692,8 @@ function collection_download_use_original_filenames_when_downloading(&$filename,
         return;
         }
 
-    global $pextension, $usesize, $subbed_original,
-           $download_filename_id_only, $deletion_array, $use_zip_extension, $copy, $exiftool_write_option, $p, $size, $lang;
+    global $pextension, $usesize, $subbed_original, $deletion_array, $use_zip_extension, $copy, $exiftool_write_option,
+        $p, $size, $lang;
 
     # Only perform the copy if an original filename is set.
 

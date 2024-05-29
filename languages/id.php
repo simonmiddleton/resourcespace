@@ -287,7 +287,6 @@ $lang["lastactive"]="Aktif terakhir";
 $lang["lastbrowser"]="Pencari terakhir";
 $lang["searchusers"]="Mencari Pengguna";
 $lang["createuserwithusername"]="Mencari pengguna dengan nama ";
-$lang["emailnotfound"]="Alamat Email yang dimasukkan tidak bisa diketemukan";
 $lang["yourname"]="Nama Anda";
 $lang["youremailaddress"]="Alamat Email Anda";
 $lang["sendreminder"]="Kirim pengingatr";
@@ -535,8 +534,6 @@ $lang["donotcopycollection"]="jangan membuat duplikat dari sebuah koleksi";
 
 $lang["resourcesincollection"]="aset-aset di dalam koleksi ini"; # Contoh 3 aset dalam koleksi ini
 $lang["removefromcurrentcollection"]="Singkirkan dari koleksi aktuil";
-$lang["showtranslations"]="+ Tampilkan terjemahan";
-$lang["hidetranslations"]="- Sembunyikan terjemahan";
 $lang["archivedresource"]="Aset dalam arsip";
 
 $lang["managerelatedkeywords"]="Mengatur Kata Kunci yang berhubungan";

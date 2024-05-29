@@ -518,7 +518,6 @@ $lang["lastactive"]="Viimeksi aktiivinen";
 $lang["lastbrowser"]="Viimeinen selain";
 $lang["searchusers"]="Etsi käyttäjiä";
 $lang["createuserwithusername"]="Luo käyttäjä käyttäjänimellä...";
-$lang["emailnotfound"]="Määrittämääsi sähköpostiosoitetta ei löytynyt";
 $lang["yourname"]="Koko nimesi";
 $lang["youremailaddress"]="Sähköpostiosoitteesi";
 $lang["sendreminder"]="Lähetä muistutus";
@@ -838,8 +837,6 @@ $lang["donotcopycollection"]="Älä kopioi kokoelmasta";
 
 $lang["resourcesincollection"]="resurssia tässä kokoelmassa"; # E.g. 3 resources in this collection
 $lang["removefromcurrentcollection"]="Poista nykyisestä kokoelmasta";
-$lang["showtranslations"]="+ Näytä käännökset";
-$lang["hidetranslations"]="- Piilota käännökset";
 $lang["archivedresource"]="Arkistoitu resurssi";
 
 $lang["managerelatedkeywords"]="Hallitse liittyviä avainsanoja";

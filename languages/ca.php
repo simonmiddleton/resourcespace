@@ -271,7 +271,6 @@ $lang["lastactive"]="Darrera vegada actiu";
 $lang["lastbrowser"]="Darrera navegació";
 $lang["searchusers"]="Cercar usuaris";
 $lang["createuserwithusername"]="Crear usuari amb nom d'usuari...";
-$lang["emailnotfound"]="No es pot trobar la direcció d'e-mail especificada ";
 $lang["yourname"]="El teu nom";
 $lang["youremailaddress"]="El teu e-mail";
 $lang["sendreminder"]="Enviar recordatori";
@@ -510,8 +509,6 @@ $lang["donotcopycollection"]="No copiar des de la col·lecció";
 
 $lang["resourcesincollection"]="materials d'aquesta col·lecció"; # E.g. 3 resources in this collection
 $lang["removefromcurrentcollection"]="Treure des de la col·lecció actual";
-$lang["showtranslations"]="+ Mostrar traduccions";
-$lang["hidetranslations"]="- Ocultar traduccions";
 $lang["archivedresource"]="Arxivar material";
 
 $lang["managerelatedkeywords"]="Gestionar paraules clau relacionades";

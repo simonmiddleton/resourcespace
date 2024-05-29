@@ -72,12 +72,7 @@ function escape_check($text)
     $text=str_replace("\\'","{bs}'",$text);
     $text=str_replace("\\n","{bs}n",$text);
     $text=str_replace("\\r","{bs}r",$text);
-
-    if (!$GLOBALS['mysql_verbatim_queries'])
-        {
-        $text=str_replace("\\","",$text);
-        }
-
+    $text=str_replace("\\","",$text);
     $text=str_replace("{bs}'","\\'",$text);            
     $text=str_replace("{bs}n","\\n",$text);            
     $text=str_replace("{bs}r","\\r",$text);  

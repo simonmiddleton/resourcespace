@@ -302,7 +302,6 @@ $lang["lastactive"]="Ostatnio aktywny";
 $lang["lastbrowser"]="Ostatnio przeglądane";
 $lang["searchusers"]="Szukaj użytkowników";
 $lang["createuserwithusername"]="Stwórz użytkownika z tą nazwą...";
-$lang["emailnotfound"]="Nie można znaleźć podanego adresu e-mail";
 $lang["yourname"]="Twoja Imię i Nazwisko";
 $lang["youremailaddress"]="Twój E-mail";
 $lang["sendreminder"]="Wyślij przypomnienie";
@@ -562,8 +561,6 @@ $lang["donotcopycollection"]="Do not copy from a collection";
 
 $lang["resourcesincollection"]="resources in this collection"; # E.g. 3 resources in this collection
 $lang["removefromcurrentcollection"]="Remove from current collection";
-$lang["showtranslations"]="+ Show translations";
-$lang["hidetranslations"]="- Hide translations";
 $lang["archivedresource"]="Archived Resource";
 
 $lang["managerelatedkeywords"]="Manage Related Keywords";
