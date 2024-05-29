@@ -2826,7 +2826,7 @@ function allow_multi_edit($collection,$collectionid = 0)
 */
 function get_featured_collection_resources(array $c, array $ctx)
     {
-    global $usergroup, $userref, $CACHE_FC_RESOURCES, $themes_simple_images;
+    global $usergroup, $userref, $CACHE_FC_RESOURCES, $themes_simple_images,$collection_allow_not_approved_share;
     global $FEATURED_COLLECTION_BG_IMG_SELECTION_OPTIONS, $theme_images_number;
 
     if(!isset($c["ref"]) || !is_int((int) $c["ref"]))
@@ -2917,6 +2917,10 @@ function get_featured_collection_resources(array $c, array $ctx)
             }
         }
 
+    $resource_join="JOIN resource AS r ON r.ref = cr.resource AND r.ref > 0";
+    if (!$collection_allow_not_approved_share) {
+        $resource_join .= " AND r.archive = 0";
+        }
     // A SQL statement. Each array index represents a different SQL clause.
     $subquery = array(
         "select" => "SELECT r.ref, cr.use_as_theme_thumbnail, r.hit_count",
@@ -2924,7 +2928,7 @@ function get_featured_collection_resources(array $c, array $ctx)
         "join" => array_merge(
             array(
                 "JOIN collection_resource AS cr ON cr.collection = c.ref",
-                "JOIN resource AS r ON r.ref = cr.resource AND r.archive = 0 AND r.ref > 0",
+                $resource_join,
             ),
             $rca_joins
         ),
@@ -2960,7 +2964,10 @@ function get_featured_collection_resources(array $c, array $ctx)
                     // The join defined above specifically excludes any resources that are not in the active archive state,
                     // for the limiting via $ctx to function correctly we'll need to check for each resources state before adding it  to fcresources
                     $resources = get_resource_data_batch($subfcimages);
-                    $fcresources = array_merge($fcresources,array_column(array_filter($resources, function($r){return $r['archive'] == "0";}), 'ref'));
+                    if (!$collection_allow_not_approved_share) {
+                        $resources = array_filter($resources, function($r){return $r['archive'] == "0";});
+                    }
+                    $fcresources = array_merge($fcresources,array_column($resources, 'ref'));
                     } 
                 continue;
                 }
