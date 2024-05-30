@@ -2098,7 +2098,7 @@ function run_command($command, $geterrors = false, array $params = array())
     debug("CLI command: $command");
 
     $cmd_tmp_file = false;
-    if ($config_windows) {
+    if ($config_windows && strlen($command) > 8191) {
         // Windows systems have a hard time with the long paths (often used for video generation)
         // This work-around creates a batch file containing the command, then executes that.
         $unique_key = generateSecureKey(32);
