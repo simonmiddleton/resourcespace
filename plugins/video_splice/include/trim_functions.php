@@ -32,7 +32,7 @@ function generate_video_trim(string $target, string $source_video_file, int $res
         $source_temp = str_replace("/", "\\", $source_temp);
         copy($source_video_file, $source_temp);
         $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss %FFMPEG_START_TIME% -i %SOURCE_TEMP% -t %FFMPEG_DURATION_TIME%" . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . '%TARGET_TEMP%';
-        run_command($shell_exec_cmd, false, array('%$FFMPEG_START_TIME%' => $ffmpeg_start_time, '%SOURCE_TEMP%' => $source_temp, '%FFMPEG_DURATION_TIME%' => $ffmpeg_duration_time, '%TARGET_TEMP%' => $target_temp));
+        run_command($shell_exec_cmd, false, array('%FFMPEG_START_TIME%' => $ffmpeg_start_time, '%SOURCE_TEMP%' => $source_temp, '%FFMPEG_DURATION_TIME%' => $ffmpeg_duration_time, '%TARGET_TEMP%' => $target_temp));
         rename($target_temp, $target);
         unlink($source_temp);
         }
