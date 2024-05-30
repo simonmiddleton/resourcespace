@@ -216,7 +216,9 @@ if($editing && !$editexternalurl)
                     if (!($editexternalurl || $generateurl))
                         {
                         ?>                    
-                        <p><?php if (!$editing || $editexternalurl){ echo escape($lang["selectgenerateurlexternal"]); } ?></p>
+                        <p><?php if (!$editing || $editexternalurl) {
+                            echo strip_tags_and_attributes($lang["selectgenerateurlexternal"],["p"],["style"]);
+                            } ?></p>
                         <?php
                         $shareoptions = array(
                             "password"          => ($sharepwd != "" ? true : false),
