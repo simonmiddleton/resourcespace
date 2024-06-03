@@ -2611,3 +2611,9 @@ input[type="text"]#iconpicker-input {
     font-size: 16px;
     padding-right:5px;
 }
+
+.displayexisting_options {
+    width: 420px;
+    overflow-y: scroll;
+    max-height: 150px;
+}

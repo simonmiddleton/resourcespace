@@ -1990,8 +1990,24 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
       <?php hook ("edit_all_after_findreplace","",array($field,$n)); 
       }
-      ?>
+      
+      if ($multiple && in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+          {?>
+          
+<div class="Question" class="stdwidth" style="display:none;" id="displayexisting_<?php echo (int) $n; ?>" data-rtfid="<?php echo (int) $field['ref']; ?>">
+    <label></label>
+        <p><?php echo escape($lang["edit_multiple_existing_values"]) . ':'; ?></p>
+    <label></label>
+        <div>
+            <div class="displayexisting_options" id="displayexisting_options_<?php echo (int) $n; ?>" data-questionid="<?php echo (int) $n; ?>"></div>
+        <label></label>
+            <input type="button" id="displayexisting_options_more_<?php echo (int) $n; ?>" style="display:none;" value="+ <?php echo escape($lang["edit_multiple_show_more"]); ?>" onclick="showMoreSelectedOptions(<?php echo (int) $n; ?>);">
+        </div>
+</div>
 
+<?php
+          }
+          ?>
       <div class="Question <?php if($upload_review_mode && in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n . ($multiple ? '' : '_' . $use); ?>" <?php
       if (($multiple && !$field_save_error) || !$displaycondition || $newtab)
         {?>style="border-top:none;<?php 
