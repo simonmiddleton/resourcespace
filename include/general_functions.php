@@ -4136,11 +4136,12 @@ function daily_stat($activity_type,$object_ref)
     if (getval("k","")!="") {$external=1;}
 
     # First check to see if there's a row
-    $count = ps_value("select count(*) value from daily_stat where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), 0);
+    $count = ps_value("select count(*) value from daily_stat where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), 0, "daily_stat"); // Cache this as it can be moderately intensive and is called often.
     if ($count == 0)
         {
         # insert
         ps_query("insert into daily_stat (year, month, day, usergroup, activity_type, object_ref, external, count) values (? ,? ,? ,? ,? ,? ,? , '1')", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
+        clear_query_cache("daily_stat"); // Clear the cache to flag there's a row to the query above.
         }
     else
         {
