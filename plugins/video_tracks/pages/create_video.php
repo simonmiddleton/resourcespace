@@ -5,10 +5,28 @@ include_once '../../../include/authenticate.php';
 include_once '../../../include/image_processing.php';
 
 $ref = getval("ref",0, true);
+$search     = getval("search","");
+$offset     = getval("offset",0,true);
+$order_by   = getval("order_by","");
+$sort       = getval("sort","");
+$k          = getval("k","");
+
+// Build view url for redirect
+$urlparams = array(
+    "ref"       =>  $ref,
+    "search"    =>  $search,
+    "offset"    =>  $offset,
+    "order_by"  =>  $order_by,
+    "sort"      =>  $sort,
+    "k"         =>  $k
+    );
+$view_url = generateURL($baseurl_short . 'pages/view.php',$urlparams);
 
 // for_original exists when the plugin is used to create custom video formats on the fly for the original file ($video_tracks_allow_original_custom_formats)
 $for_original = filter_var(getval('for_original', false), FILTER_VALIDATE_BOOLEAN);
 
+// Validation for errors which prevent the use of this plugin
+$message = '';
 if($ref <= 0)
     {
     $error   = true;
@@ -28,7 +46,6 @@ if(isset($error))
     exit();
     }
 
-$message                     = '';
 $video_tracks_output_formats ??= $video_tracks_output_formats_default;
 $resource                    = get_resource_data($ref);
 $edit_access                 = get_edit_access($ref, $resource['archive']);
@@ -51,22 +68,37 @@ foreach($altfiles as $altfile)
     if(in_array(mb_strtolower($altfile["file_extension"]),$video_tracks_audio_extensions)){$audio_alts[]=$altfile;}
     }
 
-if($generate && enforcePostRequest(false))
-    {
+// Generate request processing
+if($generate && enforcePostRequest(false)) {
     $video_track_format  = getval("video_track_format","");
     $video_subtitle_file = getval("video_subtitle_file",0,true,"is_int_loose");
     $video_audio_file    = getval("video_audio_file",0,true,"is_int_loose");
-    $savealt             = false;
-    $download            = false;
+    $track_save_alt      = (getval("video_track_save_alt", '') == "yes" ? true: false);
+    $track_download      = (getval("video_track_download", '') == "yes" ? true: false);
+    $continue            = true;
 
-    if($video_track_format != "" && isset($video_tracks_output_formats[$video_track_format]))
-        {
-        // Build up the ffmpeg command
+    // Validate the user generate request
+    if(!isset($video_tracks_output_formats[$video_track_format])) {
+        $message=$lang["video_tracks_invalid_option"];
+        $continue=false;
+    }
+    if(!$track_save_alt && !$track_download)  {
+        $message=$lang["video_tracks_select_generate_opt"];
+        $continue=false;
+    } 
+    if($track_save_alt && !checkperm("A") )  {
+        $message=$lang["video_tracks_save_alt_not_perm"];
+        $continue=false;
+    } 
+
+    if($continue) {
+        // Prepare file names and paths for the selected track format 
         $ffmpeg_fullpath = get_utility_path("ffmpeg");
         $ffprobe_fullpath = get_utility_path("ffprobe");
         $filesource = get_resource_path($ref,true,"",false,$resource["file_extension"]);
         $randstring=md5(rand() . microtime());
-        // Get the chosen ffmpeg command as set in the plugin config
+
+        // Get the ffmpeg command for the selected track format
         $video_track_command = $video_tracks_output_formats[$video_track_format];
         $shell_exec_params = [];
         $placeholder_extra = md5(rand() . microtime()); // To block attempts to inject code
@@ -99,16 +131,12 @@ if($generate && enforcePostRequest(false))
             }
         $shell_exec_cmd .= " " . $video_track_command["command"] . " %%TARGETFILE$placeholder_extra%%";
 
-        // Video requirements have been defined. What does the user want to do with the video?
-        if(getval("video_track_save_alt","") != "" && $edit_access && checkperm("A"))
-            {
-            // Save as alternative file.
-            $savealt=true;
+        // Alternative file save
+        if($track_save_alt) {
             $origfilename=get_data_by_field($ref,$filename_field);
             $altname=$video_track_format;
             $description=getval("video_track_alt_desc","");
-            if($offline)
-                {
+            if($offline) {
                 // Add this to the job queue for offline processing
                 $job_data=array();
                 $job_data["resource"]=$ref;
@@ -122,28 +150,19 @@ if($generate && enforcePostRequest(false))
                 $job_success_lang="alternative_file_created" . str_replace(array('%ref','%title'),array($ref,$resource['field' . $view_title_field]),$lang["ref-title"]);
                 $job_failure_lang="alternative_file_creation_failed" . ": " . str_replace(array('%ref','%title'),array($ref,$resource['field' . $view_title_field]),$lang["ref-title"]);
                 $jobadded=job_queue_add("create_alt_file",$job_data,$userref,'',$job_success_lang,$job_failure_lang,$job_code);
-                if(!is_int_loose($jobadded))
-                    {
+                if(!is_int_loose($jobadded)) {
                     $message =  $jobadded;
-                    }
-                else
-                    {
+                } else {
                     $message=$lang["video_tracks_offline_notice"];
-                    }
                 }
-            else
-                {
+            } else {
                 $newaltfile=add_alternative_file($ref,$altname,$description,str_replace("." . $resource["file_extension"],"." . $video_track_command["extension"],$origfilename),$video_track_command["extension"]);
                 $targetfile=get_resource_path($ref,true,"",false, $video_track_command["extension"],-1,1,false,"",$newaltfile);
-                }
             }
-        else
-            {
-            // Download
-            // Generate a path based on userref
+        } else {
+            // Else it must be a download; generate a path based on userref
             $targetfile = get_temp_dir(false,'user_downloads') . "/" . $ref . "_" . md5($username . $randstring . $scramble_key) . "." . $video_track_command["extension"];
-            if($offline)
-                {
+            if($offline) {
                 $job_data=array();
                 $job_success_lang=$lang["download_file_created"]  . " - " . str_replace(array('%ref','%title'),array($ref,$resource['field' . $view_title_field]),$lang["ref-title"]);
                 $job_failure_lang=$lang["download_file_creation_failed"] . " - " . str_replace(array('%ref','%title'),array($ref,$resource['field' . $view_title_field]),$lang["ref-title"]);
@@ -156,48 +175,40 @@ if($generate && enforcePostRequest(false))
                 $job_data["lifetime"]=DOWNLOAD_FILE_LIFETIME;
                 $job_code=$ref . $userref . md5($job_data["command"]); // unique code for this job, used to prevent duplicate job creation
                 $jobadded=job_queue_add("create_download_file",$job_data,$userref,'',$job_success_lang,$job_failure_lang,$job_code);
-                if(!is_int_loose($jobadded))
-                    {
+                if(!is_int_loose($jobadded)) {
                     $message =  $jobadded;
-                    }
-                else
-                    {
+                } else {
                     $message=$lang["video_tracks_offline_notice"];
-                    }
                 }
-            else
-                {
+            } else {
                 $filename=get_download_filename($ref,"",-1,$video_track_command["extension"]);
-                $download=true;
-                }
+                $track_download=true;
             }
-
-        if(!$offline)
-            {
+        }
+        
+        // Now run the generate command
+        if(!$offline) {
             $shell_exec_params["%%TARGETFILE$placeholder_extra%%"] = $targetfile;
-            if ($config_windows)
-                {
+            if ($config_windows) {
                 $shell_exec_cmd = str_replace(array_keys($shell_exec_params),array_values($shell_exec_params),$shell_exec_cmd);
                 file_put_contents(get_temp_dir() . "/ffmpeg_" . $randstring . ".bat",$shell_exec_cmd);
                 $shell_exec_cmd=get_temp_dir() . "/ffmpeg_" . $randstring . ".bat";
                 $shell_exec_params= [];
                 $deletebat = true;
-                }
+            }
 
             $output = run_command($shell_exec_cmd,false,$shell_exec_params);
-            if(file_exists($targetfile))
-                {
-                if($savealt)
-                    {
+            if(file_exists($targetfile)) {
+                if($track_save_alt) {
                     // Save as alternative
                     $newfilesize=filesize_unlimited($targetfile);
                     ps_query("UPDATE resource_alt_files SET file_size=? WHERE resource=? AND ref=?",array("i",$newfilesize,"i",$ref,"i",$newaltfile));
-                    if ($alternative_file_previews)
-                        {create_previews($ref,false,$video_track_command["extension"],false,false,$newaltfile);}
-                    $message = $lang["alternative_file_created"];
+                    if ($alternative_file_previews) {
+                        create_previews($ref,false,$video_track_command["extension"],false,false,$newaltfile);
                     }
-                elseif($download)
-                    {
+                    $message = $lang["alternative_file_created"];
+                }
+                elseif($track_download) {
                     // Download file
                     $filesize=filesize_unlimited($targetfile);
                     ob_flush();
@@ -218,24 +229,18 @@ if($generate && enforcePostRequest(false))
                         }
                     #Delete File:
                     unlink($targetfile);
-                    }
-                }
-                else
-                {
+                } 
+            } else {
                 $message=$lang["error"];
-                }
-            if(isset($deletebat) && file_exists($shell_exec_cmd))
-                {
+            }
+
+            if(isset($deletebat) && file_exists($shell_exec_cmd)) {
                 unlink($shell_exec_cmd);
-                }
             }
         }
-    else
-        {
-        //  No audio or subtitle track selected
-        $message=$lang["video_tracks_invalid_option"];
-        }
-    }?>
+
+    } // End continue 
+}?>
 <script>
 var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
 </script>
@@ -410,7 +415,9 @@ var video_tracks_offline = <?php echo $offline ? 'true' : 'false'; ?>;
                             return false;
                             }
                     ">
-            <input type="submit" name="submit" class="video_tracks_button" value="<?php echo escape($lang["close"]); ?>" onClick="ModalClose();return false;"/>
+            <input type="submit" name="submit" class="video_tracks_button" value="<?php echo escape($lang["close"]); ?>" 
+                onclick="return CentralSpaceLoad('<?php echo $view_url; ?>', true);"/>
+
         </div>
     </form>
 </div><!--End of BasicsBox -->
