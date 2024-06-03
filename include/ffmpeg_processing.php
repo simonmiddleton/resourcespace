@@ -94,8 +94,8 @@ if ($generateall) {
     $shell_exec_params = [
         "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
         "%%SECONDS%%" => (int) $ffmpeg_preview_seconds,
-        "%%HEIGHT%%" => (int) $hlsheight,
-        "%%WIDTH%%" => (int) $hlswidth,
+        "%%HEIGHT%%" => (int) $height,
+        "%%WIDTH%%" => (int) $width,
         "%%TARGETFILE%%" => new CommandPlaceholderArg($targetfile, 'is_safe_basename'),
     ];
 
