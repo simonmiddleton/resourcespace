@@ -993,6 +993,7 @@ $lang["showexistingthemeshares"]="Show existing shares for featured collections 
 $lang["internalusersharing"]="Internal user sharing";
 $lang["externalusersharing"]="External user sharing";
 $lang["externalusersharing-name"]="External user sharing - %collectionname%"; # %collectionname will be replaced, e.g. External User Sharing - Cars
+$lang["external"] = "External";
 $lang["accesskey"]="Access key";
 $lang["sharedby"]="Shared by";
 $lang["sharedwith"]="Shared with";

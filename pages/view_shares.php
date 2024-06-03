@@ -42,9 +42,9 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
         
             <div class="clearerright"> </div>
         </div><!-- End of RecordHeader --> 
-        <div class="Listview" style="margin-top:10px;margin-bottom:5px;clear:left;">
+        <div class="Listview">
             <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
-                <tr class="ListviewBoxedTitleStyle">
+                <tr class="ListviewTitleStyle">
                     <td width="15%">
                     <?php echo escape($lang["sharedwith"]); ?>
                     </td>
@@ -65,61 +65,87 @@ for ($n=$offset;(($n<count($collections)) && ($n<($offset+$per_page)));$n++)
 								   FROM external_access_keys 
 								  WHERE collection=? and (expires is null or expires>now()) group by collection", array("i",$colref));
             
-            if(count($extshares)!=0)
-                {           
-                foreach($extshares as $extshare)
-                    {
-                    echo "<tr>";
-                    echo "<td>" . "External " . "</td>";
-                    echo "<td>" . escape($extshare["access"]==0 ? $lang["access0"] : $lang["access1"]) . "</td>";
-                    echo "<td>" .  escape(str_replace("%date%",(($extshare["expires"]!="")?nicedate($extshare["expires"]):$lang["never"]),$lang["expires-date"])) . "</td>";
-                    echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_share.php?ref=" . escape($collections[$n]["ref"]) . "\"><?php echo LINK_CARET ?>" . escape($lang["action-edit"]) . "</a></div></td>";
-                    echo "</tr>";
-                    }                   
+            if (count($extshares) != 0) {           
+                foreach ($extshares as $extshare) { ?>
+                    <tr>
+                        <td><?php echo escape($lang["external"]); ?></td>
+                        <td><?php echo escape($extshare["access"] == 0 ? $lang["access0"] : $lang["access1"]); ?></td>
+                        <td><?php echo escape(str_replace("%date%", (($extshare["expires"] != "") ? nicedate($extshare["expires"]) : $lang["never"]), $lang["expires-date"])); ?></td>
+                        <td>
+                            <div class="ListTools">
+                                <a onclick="return CentralSpaceLoad(this, true);"
+                                    href="<?php echo $baseurl . '/pages/collection_share.php?ref=' . escape($collections[$n]["ref"]); ?>">
+                                    <?php echo LINK_CARET . escape($lang["action-edit"]); ?>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
                 }
+            }
                 
             // Check for attached users
             $colusers=ps_query("SELECT u.fullname, u.username 
 						          FROM user_collection uc LEFT JOIN user u on u.ref=uc.user and user<>? 
 								 WHERE uc.collection=?",array("i",$userref, "i",$colref));
             
-            if(count($colusers)!=0)
-                {
-                echo "<tr>";
-                echo "<td>" . escape($lang["users"]) . "</td>";
-                echo "<td>" . escape(($collections[$n]["allow_changes"]==0)?$lang["view"]:$lang["addremove"]) . "</td>";
-                echo "<td>" . escape($lang["users"]) . ":<br />";
-                foreach($colusers as $coluser)
-                    {
-                    echo escape(($coluser["fullname"]!="")?$coluser["fullname"]:$coluser["username"]) . "<br />";                                         
-                    }
-                echo "</td>";
-                echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_edit.php?ref=" . escape($collections[$n]["ref"]) . "\"><?php echo LINK_CARET ?>" . escape($lang["action-edit"]) . "</a></div></td>";
-                echo "</tr>";
-                }
+            if (count($colusers) != 0) { ?>
+                <tr>
+                    <td><?php echo escape($lang["users"]); ?></td>
+                    <td><?php echo escape(($collections[$n]["allow_changes"] == 0) ? $lang["view"] : $lang["addremove"]); ?></td>
+                    <td><?php echo escape($lang["users"]) . ":"; ?>
+                        <br />
+                        <?php foreach ($colusers as $coluser) {
+                            echo escape(($coluser["fullname"] != "") ? $coluser["fullname"] : (string) $coluser["username"]) . "<br />";                                         
+                        } ?>
+                    </td>
+                    <td>
+                        <div class="ListTools">
+                            <a onclick="return CentralSpaceLoad(this, true);"
+                                href="<?php echo $baseurl . '/pages/collection_edit.php?ref=' . escape($collections[$n]["ref"]); ?>">
+                                <?php echo LINK_CARET . escape($lang["action-edit"]); ?>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            }
                 
-            if(in_array($collections[$n]["type"], $COLLECTION_PUBLIC_TYPES))
-                {
-                if ($collections[$n]["type"] == COLLECTION_TYPE_FEATURED)
-                    {
-                    echo "<tr>";
-                    echo "<td>" . escape($lang["theme"]) . "</td>";
-                    echo "<td>" . escape(($collections[$n]["allow_changes"]==0)?$lang["view"]:$lang["addremove"])  . "</td>";
-                    echo "<td>" . escape($lang["notavailableshort"]) . "</td>";
-                    echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_edit.php?ref=" . escape($collections[$n]["ref"]) . "\"><?php echo LINK_CARET ?>" . escape($lang["action-edit"]) . "</a></div></td>";
-                    echo "</tr>";
-                    }
-                else
-                    {
-                    echo "<tr>";
-                    echo "<td>" . escape($lang["public"]) . "</td>";
-                    echo "<td>" . escape(($collections[$n]["allow_changes"]==0)?$lang["view"]:$lang["addremove"])  . "</td>";
-                    echo "<td>" . escape($lang["notavailableshort"]) . "</td>";
-                    echo "<td><div class=\"ListTools\"><a onclick=\"return CentralSpaceLoad(this,true);\" href=\"" . $baseurl . "/pages/collection_edit.php?ref=" . escape($collections[$n]["ref"]) . "\"><?php echo LINK_CARET ?>" . escape($lang["action-edit"]) . "</a></div></td>";
-                    echo "</tr>";           
-                    }
+            if (in_array($collections[$n]["type"], $COLLECTION_PUBLIC_TYPES)) {
+                if ($collections[$n]["type"] == COLLECTION_TYPE_FEATURED) { ?>
+                    <tr>
+                        <td><?php echo escape($lang["theme"]); ?></td>
+                        <td><?php echo escape(($collections[$n]["allow_changes"] == 0) ? $lang["view"] : $lang["addremove"]); ?></td>
+                        <td><?php echo escape($lang["notavailableshort"]); ?></td>
+                        <td>
+                            <div class="ListTools">
+                                <a onclick="return CentralSpaceLoad(this, true);"
+                                    href="<?php echo $baseurl . '/pages/collection_edit.php?ref=' . escape($collections[$n]["ref"]); ?>">
+                                    <?php echo LINK_CARET . escape($lang["action-edit"]); ?>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                } else {
+                    ?>
+                    <tr>
+                        <td><?php echo escape($lang["public"]); ?></td>
+                        <td><?php echo escape(($collections[$n]["allow_changes"] == 0) ? $lang["view"] : $lang["addremove"]); ?></td>
+                        <td><?php echo escape($lang["notavailableshort"]); ?></td>
+                        <td>
+                            <div class="ListTools">
+                                <a onclick="return CentralSpaceLoad(this, true);"
+                                    href="<?php echo $baseurl . '/pages/collection_edit.php?ref=' . escape($collections[$n]["ref"]); ?>">
+                                    <?php echo LINK_CARET . escape($lang["action-edit"]); ?>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php           
                 }
-                ?>
+            }
+            ?>
         
             </table>
         </div><!-- End of Listview --> 
