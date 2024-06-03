@@ -2322,7 +2322,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
         $keyword=GetStem($keyword);
         }
 
-    $return=ps_value("SELECT ref value FROM keyword WHERE keyword = ?",array("s",trim($keyword)),0);
+    $return=ps_value("SELECT ref value FROM keyword WHERE keyword = ?",array("s",trim($keyword)),0,"keyword");
     if ($return===0)
         {
         if($create)
@@ -2331,6 +2331,7 @@ function resolve_keyword($keyword,$create=false,$normalize=true,$stem=true)
             debug("resolve_keyword: Creating new keyword for " . $keyword);
             ps_query("insert into keyword (keyword,soundex,hit_count) values (?,left(?,10),0)",array("s",$keyword,"s",soundex($keyword)));
             $return=sql_insert_id();
+            clear_query_cache("keyword");
             }
         else
             {
@@ -2596,10 +2597,10 @@ function get_related_keywords($keyref)
         return $related_keywords_cache[$keyref];
     } else {
         if ($keyword_relationships_one_way) {
-            $related_keywords_cache[$keyref] = ps_array("SELECT related value FROM keyword_related WHERE keyword = ?", array("i", $keyref));
+            $related_keywords_cache[$keyref] = ps_array("SELECT related value FROM keyword_related WHERE keyword = ?", array("i", $keyref),"keywords_related");
             return $related_keywords_cache[$keyref];
         } else {
-            $related_keywords_cache[$keyref] = ps_array("SELECT keyword value FROM keyword_related WHERE related = ? UNION SELECT related value FROM keyword_related WHERE (keyword = ? OR keyword IN (SELECT keyword value FROM keyword_related WHERE related = ?)) AND related <> ?", array("i", $keyref, "i", $keyref, "i", $keyref, "i", $keyref));
+            $related_keywords_cache[$keyref] = ps_array("SELECT keyword value FROM keyword_related WHERE related = ? UNION SELECT related value FROM keyword_related WHERE (keyword = ? OR keyword IN (SELECT keyword value FROM keyword_related WHERE related = ?)) AND related <> ?", array("i", $keyref, "i", $keyref, "i", $keyref, "i", $keyref),"keywords_related");
             return $related_keywords_cache[$keyref];
         }
     }
@@ -2632,7 +2633,7 @@ function get_grouped_related_keywords($find="",$specific="")
             join keyword k2 on kr.related=k2.ref
         $sql
         group by k1.keyword order by k1.keyword
-        ",$params);
+        ",$params,"keywords_related");
     }
 
 function save_related_keywords($keyword,$related)
@@ -2650,6 +2651,7 @@ function save_related_keywords($keyword,$related)
             ps_query("insert into keyword_related (keyword,related) values (?,?)",array("i",$keyref,"i",resolve_keyword($s[$n],true,false,false)));
             }
         }
+    clear_query_cache("keywords_related");
     return true;
     }
 
