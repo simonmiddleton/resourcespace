@@ -8,7 +8,7 @@ $test_tmp_dir = get_temp_dir(false);
 $resource_a = create_resource(1, 0);
 $resource_a_original_path = get_resource_path($resource_a, true, '', true, 'jpg');
 
-$syncdir = sys_get_temp_dir() . "/statissync/test_{$run_id}";
+$syncdir = sys_get_temp_dir() . "/staticsync/test_{$run_id}";
 mkdir($syncdir, 0777, true);
 $static_sync_test_path = "{$syncdir}/test_static_sync.jpg";
 copy(dirname(__DIR__, 2) . '/gfx/homeanim/1.jpg', $static_sync_test_path);
