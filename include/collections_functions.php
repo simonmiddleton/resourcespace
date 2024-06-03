@@ -4792,7 +4792,7 @@ function collection_download_process_text_file($ref, $collection, $filename)
                     {
                     $value=$fields[$i]["value"];
                     $title=str_replace('Keywords - ', '', $fields[$i]["title"]);
-                    if ((trim($value)!="")&&(trim($value) != ','))
+                    if ((trim((string) $value)!="") && (trim((string) $value) != ','))
                         {
                         $text .= wordwrap('* ' . $title . ': ' . i18n_get_translated($value) . "\r\n", 65);
                         }
