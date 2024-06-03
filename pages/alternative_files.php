@@ -36,7 +36,10 @@ $urlparams= array(
 
 # Fetch resource data.
 $resource=get_resource_data($ref);
-
+if (!is_array($resource)) {
+    http_response_code(403);
+    exit($lang['resourcenotfound']);
+}
 $editaccess = get_edit_access($ref,$resource["archive"],$resource);
 
 # Not allowed to edit this resource?
