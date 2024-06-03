@@ -205,6 +205,11 @@ class SessionHandlerPHP extends SessionHandler
             return $_COOKIE[$this->cookie_name];
         }
 
+        // validate that the session cookie has the right composition
+        if (!preg_match('/^[a-z0-9,-]{1,128}$/', $_COOKIE[$this->cookie_name])) {
+            return null;
+        }
+
         // do not rely on session_id() as it can return the ID of a previous session. Get it from the cookie instead.
         session_id($_COOKIE[$this->cookie_name]);
 
