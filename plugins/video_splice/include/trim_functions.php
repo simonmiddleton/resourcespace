@@ -65,7 +65,8 @@ function generate_video_trim(string $target, string $source_video_file, int $res
                 '%FFMPEG_START_TIME%' => $ffmpeg_start_time,
                 '%SOURCE_VIDEO_FILE%' => new CommandPlaceholderArg($source_video_file, 'is_safe_basename'),
                 '%FFMPEG_DURATION_TIME%' => $ffmpeg_duration_time,
-                '%TARGET%' => new CommandPlaceholderArg($target, 'is_safe_basename'));
+                '%TARGET%' => new CommandPlaceholderArg($target, 'is_safe_basename')
+                );
             run_command($shell_exec_cmd, false, $shell_exec_params);
             }
         }
