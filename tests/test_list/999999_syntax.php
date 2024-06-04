@@ -39,13 +39,17 @@ foreach ($Iterator as $i)
 
     $pages[] = $path; 
     }
- 
+
+$counter = 0;
 # Test each page.
 foreach ($pages as $page)
     {
+    echo "\e[4D" . str_pad(round($counter*100/count($pages)),"3"," ",STR_PAD_LEFT) . "%";
+    ob_flush();
     if (!$TestPage($page)) {echo $page;return false;}
+    $counter++;
     }
-
+    echo "\e[4D";
 // Teardown
 unset($TestPage);
 
