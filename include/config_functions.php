@@ -273,7 +273,7 @@ function get_config_option($user_id, $name, &$returned_value, $default = null)
 
     $query = "SELECT `value` FROM user_preferences WHERE ". $user_query ." AND parameter = ?";
     $params[] = "s"; $params[] = $name;
-    $config_option = ps_value($query,$params, null);
+    $config_option = ps_value($query,$params, null, "preferences");
 
     if(is_null($default) && isset($GLOBALS[$name]))
         {

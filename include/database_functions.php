@@ -273,18 +273,14 @@ function sql_connect()
         }
 
         db_set_connection_mode($db_connection_mode);
-        $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
-        if(version_compare($mysql_version[0]['ver'], '5.6', '>')) 
-            {
-            db_set_connection_mode($db_connection_mode);
-            $sql_mode_current = ps_query('select @@SESSION.sql_mode');
-            $sql_mode_string = implode(" ", $sql_mode_current[0]);
-            $sql_mode_array_new = array_diff(explode(",",$sql_mode_string), array("ONLY_FULL_GROUP_BY", "NO_ZERO_IN_DATE", "NO_ZERO_DATE"));
-            $sql_mode_string_new = implode (",", $sql_mode_array_new);
+        db_set_connection_mode($db_connection_mode);
+        $sql_mode_current = ps_query('select @@SESSION.sql_mode');
+        $sql_mode_string = implode(" ", $sql_mode_current[0]);
+        $sql_mode_array_new = array_diff(explode(",",$sql_mode_string), array("ONLY_FULL_GROUP_BY", "NO_ZERO_IN_DATE", "NO_ZERO_DATE"));
+        $sql_mode_string_new = implode (",", $sql_mode_array_new);
 
-            db_set_connection_mode($db_connection_mode);
-            ps_query("SET SESSION sql_mode = '$sql_mode_string_new'", [], '', -1, false, 0);
-            }
+        db_set_connection_mode($db_connection_mode);
+        ps_query("SET SESSION sql_mode = '$sql_mode_string_new'", [], '', -1, false, 0);
         }
 
     db_clear_connection_mode();

@@ -37,6 +37,7 @@
         $debug_expires += time();
         ps_query("INSERT INTO sysvars VALUES ('debug_override_user',?), ('debug_override_expires',?)",
         array("s",$debug_user,"s",$debug_expires));
+        clear_query_cache("sysvars");
         }
 
 

@@ -88,6 +88,7 @@ if (!$imap)
 
 ps_query("delete from sysvars where name = 'last_checkmail'", array());
 ps_query("insert into sysvars (value,name) values (now(),'last_checkmail')", array());
+clear_query_cache("sysvars");
 
 $msgnos=imap_search($imap, 'UNSEEN');
 if ($msgnos==null)
