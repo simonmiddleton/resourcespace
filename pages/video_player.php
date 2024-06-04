@@ -3,7 +3,7 @@
 include_once __DIR__ . '/../include/video_functions.php';
 global $alternative,$css_reload_key,$display,$video_search_play_hover,$video_view_play_hover,$video_preview_play_hover,
 $keyboard_navigation_video_search,$keyboard_navigation_video_view,$keyboard_navigation_video_preview,
-$video_hls_streams,$video_preview_player_hls,$video_preview_hls_support,$resource, $ffmpeg_preview_gif;
+$resource, $ffmpeg_preview_gif;
 
 # Check for search page and the use of an alt file for video playback
 $use_video_alts = false;
@@ -17,65 +17,41 @@ $view_as_gif = false;
 if ($ffmpeg_preview_gif && $resource['file_extension'] == 'gif' && $alternative === -1)
     {
     $view_as_gif = true;
-    $video_preview_hls_support = 0;
     }
 
-if($video_preview_hls_support!=1 || !$video_preview_player_hls) 
+// Look for a standard preview video with the expected extension.
+$video_preview = get_resource_path($ref, true, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative);
+if(file_exists($video_preview))
     {
-    // Look for a standard preview video with the expected extension.
-    $video_preview = get_resource_path($ref, true, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative);
-
-    if(file_exists($video_preview))
-        {
-        $video_preview_path = get_resource_path($ref, false, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, true);
-        $video_preview_type = "video/{$ffmpeg_preview_extension}";
-        }       
-            
-    if((!file_exists($video_preview) || $video_preview_original) && get_resource_access($ref) == 0)
-        {
-        # Attempt to play the source file direct (not a preview). For direct MP4 upload support - the file itself is an MP4. Or, with the preview functionality disabled, we simply allow playback of uploaded video files.
-        $origvideofile = get_resource_path($ref, true, '', false, $resource['file_extension'], true, 1, false, '', $alternative);
-
-        if(file_exists($origvideofile) && strtolower($resource['file_extension']) == "mp4") # Check video js supported file type
-            {
-            $video_preview_path = get_resource_path($ref, false, $hide_real_filepath ? 'videojs' : '', false, $resource['file_extension'], true, 1, false, '', $alternative, false);
-            if (!$hide_real_filepath && strpos($video_preview_path, 'download.php') !== false)
-                {
-                // A direct URL to the file was expected but download.php was used instead. Original file maybe within staticsync's $syncdir (no ingest mode).
-                $video_preview_path = str_replace('size=&', 'size=videojs&', $video_preview_path);
-                }
-            $video_preview_type = "video/{$ffmpeg_preview_extension}";
-            }
-        }
-
-    if(isset($video_preview_path))
-        {
-        $video_preview_sources[$vidindex]['url']         = $video_preview_path;
-        $video_preview_sources[$vidindex]['url_encoded'] = urlencode($video_preview_path);
-        $video_preview_sources[$vidindex]['type']        = $video_preview_type;
-        $video_preview_sources[$vidindex]['label']       = '';
-
-        $vidindex++;
-        }
-    }
-
-if($video_preview_hls_support!=0 && !$view_as_gif)
-    {
-    $playlistfile=get_resource_path($ref,true,"pre",false,"m3u8",-1,1,false,"",$alternative,false);
-    if(file_exists($playlistfile))
-        {
-        $hide_real_filepath = false;
-
-        $playlisturl=get_resource_path($ref,false,"pre",false,"m3u8",-1,1,false,"",$alternative,false);
-        $video_preview_sources[$vidindex]["url"]=$playlisturl;
-        $video_preview_sources[$vidindex]["type"]="application/x-mpegURL";
-        $video_preview_sources[$vidindex]["label"]="Auto";
-        $vidindex++;
-
-        $hide_real_filepath = true;
-        }
-    $videojs_resolution_selection_default_res="Auto";
+    $video_preview_path = get_resource_path($ref, false, 'pre', false, $ffmpeg_preview_extension, true, 1, false, '', $alternative, true);
+    $video_preview_type = "video/{$ffmpeg_preview_extension}";
     }       
+        
+if((!file_exists($video_preview) || $video_preview_original) && get_resource_access($ref) == 0)
+    {
+    # Attempt to play the source file direct (not a preview). For direct MP4 upload support - the file itself is an MP4. Or, with the preview functionality disabled, we simply allow playback of uploaded video files.
+    $origvideofile = get_resource_path($ref, true, '', false, $resource['file_extension'], true, 1, false, '', $alternative);
+    if(file_exists($origvideofile) && strtolower($resource['file_extension']) == "mp4") # Check video js supported file type
+        {
+        $video_preview_path = get_resource_path($ref, false, $hide_real_filepath ? 'videojs' : '', false, $resource['file_extension'], true, 1, false, '', $alternative, false);
+        if (!$hide_real_filepath && strpos($video_preview_path, 'download.php') !== false)
+            {
+            // A direct URL to the file was expected but download.php was used instead. Original file maybe within staticsync's $syncdir (no ingest mode).
+            $video_preview_path = str_replace('size=&', 'size=videojs&', $video_preview_path);
+            }
+        $video_preview_type = "video/{$ffmpeg_preview_extension}";
+        }
+    }
+
+if(isset($video_preview_path))
+    {
+    $video_preview_sources[$vidindex]['url']         = $video_preview_path;
+    $video_preview_sources[$vidindex]['url_encoded'] = urlencode($video_preview_path);
+    $video_preview_sources[$vidindex]['type']        = $video_preview_type;
+    $video_preview_sources[$vidindex]['label']       = '';
+
+    $vidindex++;
+    }
 
 if($use_video_alts)
     {
@@ -85,24 +61,6 @@ if($use_video_alts)
     
 if(isset($videojs_resolution_selection) && !$view_as_gif)
     {
-    // Add in each version of the hls stream
-    foreach ($video_hls_streams as $video_hls_stream)
-        {
-        $hlsfile=get_resource_path($ref,true,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative,false);
-        if(file_exists($hlsfile))
-            {
-            $hide_real_filepath = false;
-
-            $hlsurl=get_resource_path($ref,false,"pre_" . $video_hls_stream["id"],false,"m3u8",-1,1,false,"",$alternative,false);
-            $video_preview_sources[$vidindex]["url"]=$hlsurl;
-            $video_preview_sources[$vidindex]["type"]="application/x-mpegURL";
-            $video_preview_sources[$vidindex]["label"]=i18n_get_translated($video_hls_stream['label']);
-            $vidindex++;
-
-            $hide_real_filepath = true;
-            }
-        }
-    
     // Add in each of the videojs_resolution_selection items that use alternative files for previews
     $s_count = is_array($videojs_resolution_selection) ? count($videojs_resolution_selection) : 0;
     for($s=0;$s<$s_count;$s++)
@@ -181,7 +139,7 @@ if (
     $playback_hotkeys=true;
 }
 
-global $ffmpeg_preview_extension,$css_reload_key,$context,$video_preview_hls_support;
+global $ffmpeg_preview_extension,$css_reload_key,$context;
 ?>
 <link href="<?php echo $baseurl_short?>lib/videojs/video-js.min.css?r=<?php echo $css_reload_key?>" rel="stylesheet">
 <script src="<?php echo $baseurl_short?>lib/videojs/video.min.js?r=<?php echo $css_reload_key?>"></script>

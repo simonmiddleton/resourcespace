@@ -728,7 +728,6 @@ $lang["lastactive"]="Last active";
 $lang["lastbrowser"]="Last browser";
 $lang["searchusers"]="Search users";
 $lang["createuserwithusername"]="Create user with username...";
-$lang["emailnotfound"]="The e-mail address specified could not be found";
 $lang["yourname"]="Your full name";
 $lang["youremailaddress"]="Your e-mail address";
 $lang["sendreminder"]="Send reminder";
@@ -994,6 +993,7 @@ $lang["showexistingthemeshares"]="Show existing shares for featured collections 
 $lang["internalusersharing"]="Internal user sharing";
 $lang["externalusersharing"]="External user sharing";
 $lang["externalusersharing-name"]="External user sharing - %collectionname%"; # %collectionname will be replaced, e.g. External User Sharing - Cars
+$lang["external"] = "External";
 $lang["accesskey"]="Access key";
 $lang["sharedby"]="Shared by";
 $lang["sharedwith"]="Shared with";
@@ -1157,8 +1157,6 @@ $lang["donotcopycollection"]="Do not copy from a collection";
 
 $lang["resourcesincollection"]="resources in this collection"; # E.g. 3 resources in this collection
 $lang["removefromcurrentcollection"]="Remove from current collection";
-$lang["showtranslations"]="+ Show translations";
-$lang["hidetranslations"]="- Hide translations";
 $lang["archivedresource"]="Archived resource";
 
 $lang["managerelatedkeywords"]="Related keywords";

@@ -671,7 +671,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                     true,
                                     $videosize,
                                     false,
-                                    ((1 == $video_preview_hls_support || 2 == $video_preview_hls_support) && !($ffmpeg_preview_gif && $resource["file_extension"] == 'gif')) ? 'm3u8' : $videoextension
+                                    $videoextension
                                 );
 
                                 if (file_exists($video_preview_file)

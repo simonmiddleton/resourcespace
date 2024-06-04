@@ -5509,7 +5509,7 @@ function render_share_password_question($blank=true)
     <div class="Question">
     <label for="sharepassword"><?php echo escape($lang["share-set-password"]) ?></label>
     <input type="password" id="sharepassword" name="sharepassword" autocomplete="new-password" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : escape($lang["password_unchanged"]); ?>">
-    <span class="fa fa-fw fa-eye infield-icon" onclick="togglePassword('sharepassword');"></span>
+    <span class="fa fa-fw fa-eye-slash infield-icon" id="share-password-icon" onclick="togglePassword('sharepassword');"></span>
     <script>
 
     function togglePassword(pwdelement)
@@ -5518,10 +5518,12 @@ function render_share_password_question($blank=true)
         if (input.attr("type") == "password")
             {
             input.attr("type", "text");
+            jQuery('#share-password-icon').removeClass('fa-eye-slash').addClass('fa-eye');
             }
         else
             {
             input.attr("type", "password");
+            jQuery('#share-password-icon').removeClass('fa-eye').addClass('fa-eye-slash');
             }
         }
     var passInput="";

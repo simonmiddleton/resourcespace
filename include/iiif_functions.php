@@ -235,7 +235,7 @@ final class IIIFRequest {
                 $size = "";
                 $media_path = get_resource_path($iiif_result["ref"],true,$size,false,$iiif_result["file_extension"]);
             } else {
-                $size = is_jpeg_extension($iiif_result["file_extension"] ?? "") ? "" : "hpr";
+                $size = $this->largest_jpg_size($iiif_result);
                 $media_path = get_resource_path($iiif_result["ref"],true,$size,false);
             }
             if(!file_exists($media_path)) {
@@ -244,7 +244,7 @@ final class IIIFRequest {
                 if($pullresource !== false) {
                     $this->processing["resource"] = $pullresource["ref"];
                     $this->processing["size_info"] = [
-                        'identifier' => (is_jpeg_extension($pullresource["file_extension"] ?? '') ? '' : 'hpr'),
+                        'identifier' => $this->largest_jpg_size($pullresource),
                         'return_height_width' => false,
                         ];
                 }
@@ -348,11 +348,7 @@ final class IIIFRequest {
             $pullresource = related_resource_pull($resdata);
             if($pullresource !== false) {
                 $resource = $pullresource["ref"];
-                if($size == "hpr" && is_jpeg_extension($pullresource["file_extension"] ?? "")) {
-                    // If the related resource is a JPG file then no 'hpr' size will be available
-                    $size = "";
-                }
-                $media_path = get_resource_path($resource,true,$size,false);
+                $media_path = get_resource_path($resource,true,$this->largest_jpg_size($pullresource),false);
             } else {
                 return false;
             }
@@ -592,12 +588,13 @@ final class IIIFRequest {
                 }
             }
 
-        if(in_array(strtolower($useimage['file_extension'] ?? ""), $this->media_extensions)) {
+        if (in_array(strtolower($useimage['file_extension'] ?? ""), $this->media_extensions)) {
             $size = '';
+            $media_path = get_resource_path($useimage["ref"],true,$size,false,$useimage["file_extension"]);
         } else {
-            $size = is_jpeg_extension($useimage["file_extension"] ?? "") ? "" : "hpr";
+            $size = $this->largest_jpg_size($useimage);
+            $media_path = get_resource_path($useimage["ref"],true,$size,false);
         }
-        $media_path = get_resource_path($useimage["ref"],true,$size,false,$useimage["file_extension"]);
         if(!file_exists($media_path)) {
             debug("IIIF: generateCanvas() No image available for identifier:" . $position);
             return false;
@@ -811,7 +808,7 @@ final class IIIFRequest {
             if(in_array($resource["file_extension"], $this->media_extensions)) {
                 $fulljpgsize = "pre";
             } else {
-                $fulljpgsize = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
+                $fulljpgsize = $this->largest_jpg_size($resource);
             }
             $img_path = get_resource_path($this->request["id"],true,$fulljpgsize,false, "jpg");
             if(!file_exists($img_path))
@@ -1006,7 +1003,7 @@ final class IIIFRequest {
                                 // The largest available size for these is 'pre'
                                 $this->request["getsize"] = "pre";
                             } else {
-                                $this->request["getsize"] = is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
+                                $this->request["getsize"] = $this->largest_jpg_size($resource);
                             }
                             }
                         else
@@ -1247,7 +1244,7 @@ final class IIIFRequest {
             if(in_array(strtolower($this->searchresults[$position]['file_extension'] ?? ""), $this->media_extensions)) {
                 $identifier = '';
             } else {
-                $identifier = is_jpeg_extension($this->searchresults[$position]['file_extension'] ?? "") ? "" : "hpr";
+                $identifier = $this->largest_jpg_size($this->searchresults[$position]);
             }
             $this->processing["size_info"] = array(
                 'identifier' => $identifier,
@@ -1321,6 +1318,19 @@ final class IIIFRequest {
     public function is_image_response()
         {
         return isset($this->response["image"]);
+        }
+
+    /**
+     * Get the largest resource JPG size available for a given resource in search result set
+     *
+     * @param array $resource   Array of resource data from do_search()
+     *
+     * @return string           Size to use - 'hpr', or '' to use original size
+     *
+     */
+    public function largest_jpg_size($resource)
+        {
+        return is_jpeg_extension($resource["file_extension"] ?? "") ? "" : "hpr";
         }
     }
 

@@ -646,6 +646,10 @@ function save_user($ref)
 
     $current_user_data = get_user($ref);
 
+    if ($current_user_data == false) {
+        return $lang['accountdoesnotexist'];
+    }
+
     // Save user details, data is taken from the submitted form.
     if('' != getval('deleteme', ''))
         {

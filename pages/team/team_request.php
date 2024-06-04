@@ -80,7 +80,7 @@ for ($n=$offset;(($n<count($requests)) && ($n<($offset+$per_page)));$n++)
     <td><?php echo escape(nicedate($requests[$n]["created"],true, true, true));?></td>
     <td><?php echo escape($requests[$n]["c"]); ?></td>
     <td><?php echo escape($lang["resourcerequesttype" . $requests[$n]["request_mode"]]); ?></td>
-    <td><?php echo escape($requests[$n]["assigned_to_username"]); ?></td>
+    <td><?php echo escape((string) $requests[$n]["assigned_to_username"]); ?></td>
     <td><?php echo escape($lang["resourcerequeststatus" . $requests[$n]["status"]]); ?></td>
     <td><div class="ListTools"><a href="<?php echo $baseurl_short?>pages/team/team_request_edit.php?ref=<?php echo escape($requests[$n]["ref"]); ?>" onClick="return <?php echo $modal_default ? "Modal" : "CentralSpace"; ?>Load(this,true);"><i class="fas fa-edit"></i>&nbsp;<?php echo escape($lang["action-edit"]); ?></a></a></div></td>
 <?php endif; ?>

@@ -386,7 +386,6 @@ $lang["lastactive"]="Sist aktiv";
 $lang["lastbrowser"]="Siste nettleser brukt";
 $lang["searchusers"]="Søk etter brukere";
 $lang["createuserwithusername"]="Opprett bruker med brukernavn...";
-$lang["emailnotfound"]="Den oppgitte e-postadressen ble ikke funnet";
 $lang["yourname"]="Ditt navn";
 $lang["youremailaddress"]="Din e-postadresse";
 $lang["sendreminder"]="Send påminnelse";
@@ -670,8 +669,6 @@ $lang["donotcopycollection"]="Ikke kopier fra lysbordet";
 
 $lang["resourcesincollection"]="filer i dette lysbordet"; # E.g. 3 resources in this collection
 $lang["removefromcurrentcollection"]="Fjern fra dette lysbordet";
-$lang["showtranslations"]="+ Vis oversettelser";
-$lang["hidetranslations"]="- Skjul oversettelser";
 $lang["archivedresource"]="Arkivert fil";
 
 $lang["managerelatedkeywords"]="Behandle beslektede nøkkelord";

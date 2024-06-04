@@ -23,7 +23,7 @@ $alljobs = job_queue_get_jobs("extract_text",STATUS_ACTIVE,$userref);
 
 ob_start();
 job_queue_run_job($alljobs[0], true);
-ob_clean();
+ob_end_clean();
 
 $gettext = get_data_by_field($testresource,$extracted_text_field);
 

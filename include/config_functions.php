@@ -1884,3 +1884,10 @@ function get_resource_type_field_columns()
     return $resource_type_field_column_definitions;
     }
 
+/**
+ * Input validation helper function to determine if the $contact_sheet_preview_size config is valid.
+ */
+function is_valid_contact_sheet_preview_size(string $val): bool
+{
+    return preg_match('/^\d+x\d+$/', $val);
+}

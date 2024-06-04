@@ -53,11 +53,6 @@ function HookVr_viewPreviewcustomflvplay()
     
     if(file_exists($sourcefile))
         {
-        // We can't use $hide_real_filepath with this plugin
-        global $hide_real_filepath;
-        $saved_hide_real_filepath = $hide_real_filepath;
-        $hide_real_filepath = false;        
-        
         $sourcepath = generateURL($baseurl . '/pages/download.php', [
            'ref' => $ref,
            'size' => $preview_size,
@@ -66,7 +61,6 @@ function HookVr_viewPreviewcustomflvplay()
         ]);
         // Show the player
         $vrview = VrViewRenderPlayer($ref,$sourcepath, true, 852,600,"PreviewImageLarge",$context);
-        $hide_real_filepath = $saved_hide_real_filepath;
         if($vrview)
             {
             return true;
@@ -98,10 +92,6 @@ function HookVr_viewPreviewReplacepreviewimage()
         $preview_ext = "jpg";
         $preview_size = "lpr";
         }
-    // We can't use $hide_real_filepath with this plugin
-    global $hide_real_filepath;
-    $saved_hide_real_filepath = $hide_real_filepath;
-    $hide_real_filepath = false;  
     
     $sourcefile = get_resource_path($ref,true,$preview_size,false,$preview_ext);
     if(file_exists($sourcefile))
@@ -114,7 +104,6 @@ function HookVr_viewPreviewReplacepreviewimage()
             ]);
         // Show the player
         $vrview = VrViewRenderPlayer($ref,$sourcepath,false,852,600,"PreviewImageLarge",$context);
-        $hide_real_filepath = $saved_hide_real_filepath;
         if($vrview)
             {
             return true;

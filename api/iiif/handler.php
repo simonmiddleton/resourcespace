@@ -3,7 +3,6 @@ $suppress_headers = true;
 include_once __DIR__ . "/../../include/boot.php";
 include_once __DIR__ . "/../../include/image_processing.php";
 include_once __DIR__ . "/../../include/video_functions.php";
-include_once __DIR__ . "/../../include/mime_types.php";
 
 // Some viewer pre-flight checks seem to require this to be explicitly set
 header("Access-Control-Allow-Origin: *");

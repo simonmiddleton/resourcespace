@@ -376,11 +376,7 @@ function validate_temp_path(string $test_path, string $temp_folder = '') : bool
     {
     $temp_dir = realpath(get_temp_dir(false, $temp_folder));
     $test_path = realpath(pathinfo($test_path, PATHINFO_DIRNAME));
-    if ($temp_dir === $test_path)
-        {
-        return true;
-        }
-    return false;
+    return $test_path !== false && $temp_dir !== false && $temp_dir === $test_path;
     }
 
 
@@ -389,21 +385,53 @@ function validate_temp_path(string $test_path, string $temp_folder = '') : bool
  *
  * @param   string   $path
  * @param   array    $extra_paths   Array of additional valid source paths to check
- * 
  */
 function is_valid_rs_path(string $path, array $extra_paths = []): bool
 {
     $sourcerealpath = realpath($path);
-    $basepaths = [
-        $GLOBALS["storagedir"],
-        // $GLOBALS["syncdir"],
-    ];
-    foreach(array_merge($basepaths,$extra_paths) as $validpath) {
+    $source_path_not_real = !$sourcerealpath || !file_exists($sourcerealpath);
+
+    if (
+        $source_path_not_real
+        && !(preg_match('/^[a-zA-Z0-9_\-[:space:]\/]+$/', pathinfo($path, PATHINFO_DIRNAME)) && is_safe_basename($path))
+    ) {
+        return false;
+    }
+
+    $path_to_validate = $source_path_not_real ? $path : $sourcerealpath;
+    $allowed_paths = array_filter(
+        array_map(
+            'trim',
+            array_unique(
+                array_merge(
+                    [
+                        $GLOBALS['storagedir'],
+                        $GLOBALS['syncdir'],
+                    ],
+                    $extra_paths
+                )
+            )
+        )
+    );
+
+    foreach ($allowed_paths as $validpath) {
         $validpath = realpath($validpath);
-        if (strpos($sourcerealpath,$validpath) === 0) {
+        if ($validpath !== false && mb_strpos($path_to_validate, $validpath) === 0) {
             return true;
         }
     }
-    // Not a valid file source
+
     return false;
+}
+
+/**
+ * Validation helper function to determine if a path base name is unsafe (e.g OS command injection, path traversal etc.)
+ */
+function is_safe_basename(string $val): bool
+{
+    $file_name = pathinfo($val, PATHINFO_FILENAME);
+    // Note that '=' characters are found in the TUS filenames generated at upload
+    return
+        safe_file_name($file_name) === str_replace([' ',"="],['_',""], $file_name)
+        && !is_banned_extension(pathinfo($val, PATHINFO_EXTENSION));
 }

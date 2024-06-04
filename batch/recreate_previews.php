@@ -30,7 +30,7 @@ elseif(isset($argv[1]) && strtolower($argv[1]) == "resource" && isset($argv[2]) 
 else
     {
     echo "recreate_previews.php - update previews for all/selected resources\n\n";
-    echo "- extra options to use existing uploaded previews or to force recreation of video previews e.g. when changing to mp4/hls previews\n";
+    echo "- extra options to use existing uploaded previews or to force recreation of video previews e.g. when changing to mp4 previews\n";
     echo "USAGE:\n";
     echo "php recreate_previews.php [collection|resource] [id] [maxref] [sizes] [comma separated size ids] [types] [comma separated type ids] [-previewbased] [-videoupdate]\n\n";
     echo "examples\n";
@@ -43,7 +43,7 @@ else
     echo "php recreate_previews.php resource 19564 19800\n";
     echo "- this will update previews for resources starting with resource ID #19564 and ending with resource 19800\n\n";
     echo "php recreate_previews.php resource 1 -videoupdate\n";
-    echo "- this will update previews for all video resources that do not have the required '\$ffmpeg_preview_extension' extension or hls m3u8 playlist files\n\n";
+    echo "- this will update previews for all video resources that do not have the required '\$ffmpeg_preview_extension' extension\n\n";
     echo "php recreate_previews.php collection 247 sizes scr,col\n";
     echo "- this will update only the col and scr preview sizes for all resources in collection #247\n\n";
     echo "php recreate_previews.php resource 110 types 1,2\n";
@@ -133,14 +133,7 @@ if(is_array($resources) && count($resources) > 0)
         if($videoupdate)
             {
             $checkflvpreview = get_resource_path($resource, true, 'pre', false, 'flv', true, 1, false, '');
-            if($video_preview_player_hls != 0)
-                {
-                $correctvideo_preview = get_resource_path($resource, true, "pre", false, "m3u8", true, 1, false);
-                }
-            else
-                {
-                $correctvideo_preview = get_resource_path($resource, true, 'pre', false, $ffmpeg_preview_extension, true, 1, false);
-                }
+            $correctvideo_preview = get_resource_path($resource, true, 'pre', false, $ffmpeg_preview_extension, true, 1, false);
             echo "Checking for video preview of resource #" . $resource .  ".....";
             if(file_exists($correctvideo_preview))
                 {

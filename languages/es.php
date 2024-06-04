@@ -281,7 +281,6 @@ $lang["lastactive"]="Última vez activo";
 $lang["lastbrowser"]="Última navegación";
 $lang["searchusers"]="Buscar usuarios";
 $lang["createuserwithusername"]="Crear usuario con nombre de usuario...";
-$lang["emailnotfound"]="No se pudo encontrar la dirección de correo electrónico especificada ";
 $lang["yourname"]="Tu nombre";
 $lang["youremailaddress"]="Tu correo electrónico";
 $lang["sendreminder"]="Enviar recordatorio";
@@ -520,8 +519,6 @@ $lang["donotcopycollection"]="No copiar desde la colección";
 
 $lang["resourcesincollection"]="materiales de esta colección"; # E.g. 3 resources in this collection
 $lang["removefromcurrentcollection"]="Quitar de la colección actual";
-$lang["showtranslations"]="+ Mostrar traducciones";
-$lang["hidetranslations"]="- Ocultar traducciones";
 $lang["archivedresource"]="Archivar material";
 
 $lang["managerelatedkeywords"]="Gestionar palabras claves relacionadas";

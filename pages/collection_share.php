@@ -333,7 +333,9 @@ if (isset($show_error)) { ?>
         if ($access==-1 || ($editing && !$editexternalurl))
             {
             ?>
-            <p><?php if (!$editing || $editexternalurl){echo escape($lang["selectgenerateurlexternal"]);} ?></p>
+            <p><?php if (!$editing || $editexternalurl) {
+                echo strip_tags_and_attributes($lang["selectgenerateurlexternal"],["p"],["style"]);
+                } ?></p>
             <?php
             if($editing)
                 {

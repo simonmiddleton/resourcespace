@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Montala\ResourceSpace;
 
-use ValueError;
+use Exception;
 
-class CommandPlaceholderArg
+final class CommandPlaceholderArg
 {
     /**
      * A placeholders' value representing ONE command argument value (highly contextual).
@@ -15,7 +15,7 @@ class CommandPlaceholderArg
 
     /**
      * Constructor
-     * 
+     *
      * @param string $value The actual placeholder value
      * @param null|callable $validator Use null for the default one, otherwise any callable where the value to be
      * tested is the first argument.
@@ -28,7 +28,8 @@ class CommandPlaceholderArg
             return;
         }
 
-        throw new ValueError('Invalid placeholder argument value!');
+        debug('Invalid placeholder argument value: ' . $value);
+        throw new Exception('Invalid placeholder argument value: ' . $value);
     }
 
     /**

@@ -72,12 +72,7 @@ function escape_check($text)
     $text=str_replace("\\'","{bs}'",$text);
     $text=str_replace("\\n","{bs}n",$text);
     $text=str_replace("\\r","{bs}r",$text);
-
-    if (!$GLOBALS['mysql_verbatim_queries'])
-        {
-        $text=str_replace("\\","",$text);
-        }
-
+    $text=str_replace("\\","",$text);
     $text=str_replace("{bs}'","\\'",$text);            
     $text=str_replace("{bs}n","\\n",$text);            
     $text=str_replace("{bs}r","\\r",$text);  
@@ -2103,7 +2098,7 @@ function run_command($command, $geterrors = false, array $params = array())
     debug("CLI command: $command");
 
     $cmd_tmp_file = false;
-    if ($config_windows) {
+    if ($config_windows && strlen($command) > 8191) {
         // Windows systems have a hard time with the long paths (often used for video generation)
         // This work-around creates a batch file containing the command, then executes that.
         $unique_key = generateSecureKey(32);
@@ -4141,11 +4136,12 @@ function daily_stat($activity_type,$object_ref)
     if (getval("k","")!="") {$external=1;}
 
     # First check to see if there's a row
-    $count = ps_value("select count(*) value from daily_stat where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), 0);
+    $count = ps_value("select count(*) value from daily_stat where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), 0, "daily_stat"); // Cache this as it can be moderately intensive and is called often.
     if ($count == 0)
         {
         # insert
         ps_query("insert into daily_stat (year, month, day, usergroup, activity_type, object_ref, external, count) values (? ,? ,? ,? ,? ,? ,? , '1')", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
+        clear_query_cache("daily_stat"); // Clear the cache to flag there's a row to the query above.
         }
     else
         {

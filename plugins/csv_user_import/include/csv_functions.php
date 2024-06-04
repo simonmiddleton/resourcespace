@@ -76,7 +76,7 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
     while( ( false !== ($line = fgetcsv($file)) ) && $error_count < $max_error_count)
         {
         $line_count++;
-        if (is_line_empty($line)){
+        if (array_filter(array_map('trim', $line)) == []) {
             continue;
         }
         // Check that the current row has the correct number of columns
@@ -211,15 +211,3 @@ function csv_user_import_process($csv_file, $user_group_id, &$messages, $process
 
     return true;
     }
-
-function is_line_empty(array $line) : bool 
-{
-return  count(
-            array_filter(
-                    array_map('trim', $line), 
-                    function ($cell) {
-                        return !empty($cell);
-                    }
-                )
-            ) == 0;
-}

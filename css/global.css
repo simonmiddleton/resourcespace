@@ -2312,9 +2312,11 @@ a.BrowseRefresh{
 }
 
 .infield-icon {
-    margin-left: -30px;
-    position: relative;
-  }
+    margin-left: -26px;
+    margin-top: 12px;
+    position: absolute;
+    cursor: pointer;
+}
 
 .toolbox {
     border: 1px solid transparent;

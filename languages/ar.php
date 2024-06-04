@@ -299,7 +299,6 @@ $lang["lastactive"]=" آخر بالموقع ";
 $lang["lastbrowser"]=" متصفح آخر ";
 $lang["searchusers"]=" للمستخدمين البحث ";
 $lang["createuserwithusername"]=" إنشاء مستخدم مع المستخدم... ";
-$lang["emailnotfound"]=" ويمكن أن البريد الإلكتروني المحدد لم يتم العثور على عنوان ";
 $lang["yourname"]=" الاسم الكامل ";
 $lang["youremailaddress"]=" بك البريد الإلكتروني ";
 $lang["sendreminder"]=" إرسال تذكير ";
@@ -552,8 +551,6 @@ $lang["donotcopycollection"]=" لا نسخة من مجموعة ";
 
 $lang["resourcesincollection"]=" الموارد في هذه المجموعة ";
 $lang["removefromcurrentcollection"]=" إزالة من المجموعة الحالية ";
-$lang["showtranslations"]=" # الاسم؟ ";
-$lang["hidetranslations"]=" # الاسم؟ ";
 $lang["archivedresource"]=" المؤرشفة من الموارد ";
 
 $lang["managerelatedkeywords"]=" إدارة ذات صلة ";

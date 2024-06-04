@@ -665,7 +665,6 @@ $lang["lastactive"]="Posledná aktívita";
 $lang["lastbrowser"]="Posledne použitý prehliadač";
 $lang["searchusers"]="Vyhľadať používateľov";
 $lang["createuserwithusername"]="Vytvoriť používateľa s používateľským menom ...";
-$lang["emailnotfound"]="Zadanú e-mailovú adresu nebolo možné nájsť";
 $lang["yourname"]="Vaše celé meno";
 $lang["youremailaddress"]="Vaša emailová adresa";
 $lang["sendreminder"]="Odoslať pripomienku";
@@ -1064,8 +1063,6 @@ $lang["donotcopycollection"]="Nekopírovať zo zbierky";
 
 $lang["resourcesincollection"]="zdrojov v tejto zbierke"; # E.g. 3 resources in this collection
 $lang["removefromcurrentcollection"]="Odstrániť z aktuálnej zbierky";
-$lang["showtranslations"]="+ Zobraziť preklady";
-$lang["hidetranslations"]="- Skryť preklady";
 $lang["archivedresource"]="Archivovaný zdroj";
 
 $lang["managerelatedkeywords"]="Spravovať súvisiace kľúčové slová";

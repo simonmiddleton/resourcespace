@@ -545,7 +545,6 @@ $lang["lastactive"]="Senast aktiv";
 $lang["lastbrowser"]="Senaste använd webbläsare";
 $lang["searchusers"]="Sök användare";
 $lang["createuserwithusername"]="Skapa användare med användarnamn";
-$lang["emailnotfound"]="E-postadressen kunde inte hittas";
 $lang["yourname"]="Ditt fullständiga namn";
 $lang["youremailaddress"]="Din e-postadress";
 $lang["sendreminder"]="Skicka påminnelse";
@@ -884,8 +883,6 @@ $lang["donotcopycollection"]="Kopiera inte från en samling";
 
 $lang["resourcesincollection"]="material i den här samlingen"; # E.g. 3 resources in this collection
 $lang["removefromcurrentcollection"]="Avlägsna från aktuell samling";
-$lang["showtranslations"]="+ Visa översättningar";
-$lang["hidetranslations"]="&minus; Dölj översättningar";
 $lang["archivedresource"]="Arkiverat material";
 
 $lang["managerelatedkeywords"]="Hantera relaterade nyckelord";

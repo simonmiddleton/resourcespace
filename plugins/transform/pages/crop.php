@@ -1,5 +1,7 @@
 <?php
 
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 include_once "../../../include/boot.php";
 include_once "../../../include/authenticate.php";
 include_once "../../../include/image_processing.php";
@@ -118,8 +120,13 @@ if(file_exists($originalpath))
         if ($origsizes === false)
             {
             $identify_path = get_utility_path('im-identify');
-            $command = $identify_path . " -format '%w,%h' " . escapeshellarg($originalpath);
-            $identify_results = run_command($command);
+            $identify_results = run_command(
+                "{$identify_path} -format '%w,%h' originalpath",
+                false,
+                [
+                    'originalpath' => new CommandPlaceholderArg($originalpath, 'is_valid_rs_path'),
+                ]
+            );
             if(preg_match("~\d+,\d+~",$identify_results))
                 {
                 $origsizes = explode(',',$identify_results);
