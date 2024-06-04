@@ -8,7 +8,7 @@ if ($access == 0 || $alt_files_visible_when_restricted) {
 
 if ($alt_access) 
     {
-    global $use_larger_layout, $request_adds_to_collection;
+    global $request_adds_to_collection;
     $alt_order_by="";$alt_sort="";
     if ($alt_types_organize){$alt_order_by="alt_type";$alt_sort="asc";}
     if(!isset($altfiles))
@@ -91,7 +91,7 @@ if ($alt_access)
             </script>
         <?php
             } ?>
-        <td class="DownloadFileName AlternativeFile"<?php echo $use_larger_layout ? ' colspan="2"' : ''; ?> rowspan="<?php echo escape((string)$rowspan);?>">
+        <td class="DownloadFileName AlternativeFile" rowspan="<?php echo escape((string)$rowspan);?>">
         <?php
         if (
             !hook("renderaltthumb","",[$n,$altfiles[$n]])

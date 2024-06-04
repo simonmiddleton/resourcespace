@@ -133,28 +133,6 @@ if (
     $missing_original = count(array_intersect(check_resources([$resource]),[$ref])) === 1;
 }
 
-# Should the page use a larger resource preview layout?
-$use_larger_layout = true;
-if (isset($resource_view_large_ext))
-    {
-    if (!in_array($resource["file_extension"], $resource_view_large_ext))
-        {
-        $use_larger_layout = false;
-        }
-    }
-else
-    {
-    if (
-        isset($resource_view_large_orientation)
-        && $resource_view_large_orientation == true
-        && $resource["has_image"] == 1
-        && ($resource["thumb_height"] >= $resource["thumb_width"])
-        ) {
-            # Portrait or square image
-           $use_larger_layout = false;
-        }
-    }
-
 // Set $use_mp3_player switch if appropriate
 $use_mp3_player = (
     !(isset($resource['is_transcoding']) && 1 == $resource['is_transcoding'])
@@ -481,7 +459,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
 <!--Panel for record and details-->
 <div class="RecordBox">
-    <div class="RecordPanel<?php echo $use_larger_layout ? ' RecordPanelLarge' : ''; ?>">
+    <div class="RecordPanel">
         <div class="RecordHeader">
             <?php
             if (!hook("renderinnerresourceheader"))
@@ -790,7 +768,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 ?>
                                 <div class="Tab" id="RecordDownloadSummaryButton">
                                     <a href="#" onclick="selectDownloadTab('RecordDownloadSummary',<?php echo $modal ? 'true' : 'false'; ?>);">
-                                        <?php echo $use_larger_layout ? escape($lang["usagehistory"]) : escape($lang["usage"]) ?>
+                                        <?php echo escape($lang["usage"]); ?>
                                     </a>
                                 </div>
                                 <?php
@@ -866,7 +844,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     ) {
                                                         ?>
                                                         <td><?php echo escape($lang["fileinformation"]); ?></td>
-                                                        <?php echo $use_larger_layout ? "<td>" . $lang["filedimensions"] . "</td>" : ''; ?>
                                                         <td><?php echo escape($lang["filesize"]); ?></td>
                                                         <td class="textcenter"><?php echo escape($lang["options"]); ?></td>
                                                         </tr>
@@ -875,9 +852,8 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     } # end hook("replacedownloadspacetableheaders") ?>
 
                                                 <tr class="DownloadDBlend" id="DownloadBox<?php echo $n?>">
-                                                    <td class="DownloadFileName"><h2><?php echo escape($headline); ?></h2><?php
-                                                        echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';
-
+                                                    <td class="DownloadFileName">
+                                                        <h2><?php echo escape($headline); ?></h2><?php
                                                         if (is_numeric($sizes[$n]["width"]))
                                                             {
                                                             echo get_size_info($sizes[$n]);
@@ -921,7 +897,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     <tr class="DownloadDBlend">
                                                         <td class="DownloadFileName">
                                                             <h2><?php echo escape($lang["preview"]); ?></h2>
-                                                            <?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : ''; ?>
                                                             <p><?php echo $preview_with_sizename; ?></p>
                                                         </td>
                                                         <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
@@ -951,7 +926,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     {
                                                     ?>
                                                     <tr class="DownloadDBlend">
-                                                        <td class="DownloadFileName" <?php echo $use_larger_layout ? ' colspan="2"' : ''; ?>>
+                                                        <td class="DownloadFileName">
                                                             <h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2>
                                                         </td>
                                                         <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path)); ?></td>
@@ -964,7 +939,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     </tr>
                                                     <?php
                                                     // add link to mp3 preview file if resource is a wav file
-                                                    render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang, $use_larger_layout);
+                                                    render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang);
                                                     }
                                                 }
                                             else
@@ -1016,11 +991,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 <tr class="DownloadDBlend">
                                                     <td class="DownloadFileName">
                                                         <h2><?php echo escape($lang["view_directly_in_browser"]); ?></h2>
-                                                        <?php if ($use_larger_layout)
-                                                            {
-                                                            ?></td><td class="DownloadFileDimensions"><?php
-                                                            }
-
+                                                        <?php
                                                         if ($resource["has_image"] !== RESOURCE_PREVIEWS_NONE)
                                                             {
                                                             $sizes=get_image_sizes($ref,false,$resource["file_extension"]);

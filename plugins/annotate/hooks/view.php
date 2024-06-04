@@ -129,7 +129,7 @@ function HookAnnotateViewRenderinnerresourcepreview()
 
 function HookAnnotateViewpreviewlinkbar()
     {
-        global $sizes, $downloadthissize, $data_viewsize, $n, $lang, $use_larger_layout, $userrequestmode, $baseurl, $resource, $urlparams;
+        global $sizes, $downloadthissize, $data_viewsize, $n, $lang, $userrequestmode, $baseurl, $resource, $urlparams;
         if ($downloadthissize && $sizes[$n]["allow_preview"]==1)
         { 
         $data_viewsize=$sizes[$n]["id"];
@@ -139,7 +139,6 @@ function HookAnnotateViewpreviewlinkbar()
         <tr class="DownloadDBlend">
             <td class="DownloadFileName">
                 <h2><?php echo escape($lang["preview"])?></h2>
-                <?php echo $use_larger_layout ? '</td><td class="DownloadFileDimensions">' : '';?>
                 <p><?php echo escape($preview_with_sizename); ?></p>
             </td>
             <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]; ?></td>

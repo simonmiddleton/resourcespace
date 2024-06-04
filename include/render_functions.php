@@ -5152,11 +5152,9 @@ function show_upgrade_in_progress($dbstructonly=false)
 * @param array      $ffmpeg_audio_extensions - config var containing a list of extensions which will be ported to mp3 format for preview      
 * @param string     $baseurl                - config base url
 * @param array      $lang                   - array containing language strings         
-* @param boolean    $use_larger_layout      - should the page use a larger resource preview layout?                        
  * 
  */
-
-function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang, $use_larger_layout)
+function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang)
 {
 
 // if resource is a .wav file and user has permissions to download then allow user also to download the mp3 preview file if available
@@ -5168,8 +5166,11 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
 
     if (in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
         {
-        $colspan = $use_larger_layout ? ' colspan="2"' : '';
-        echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>" . escape($lang['mp3_preview_file']) . "</h2></td><td class=\"DownloadFileSize\">" . escape(formatfilesize(filesize_unlimited($path))) . "</td>" ; 
+        echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\"><h2>"
+            . escape($lang['mp3_preview_file'])
+            . "</h2></td><td class=\"DownloadFileSize\">"
+            . formatfilesize(filesize_unlimited($path))
+            . "</td>" ; 
         add_download_column($ref,$size_info, true);
         echo "</tr>";
         }   
