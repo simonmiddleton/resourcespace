@@ -4,7 +4,6 @@
 $lang["video-trim"]='Coupe vidéo';
 $lang["video-trim-warning"]='Avertissement de recadrage';
 $lang["video-trim-warning-text"]='Votre point de début ou de fin de rognage dépasse la durée de prévisualisation de la vidéo.<br><br>La prévisualisation fournie ne représentera pas entièrement le résultat final. Veuillez envisager d\'augmenter la durée de prévisualisation de votre vidéo et de recréer les fichiers de prévisualisation si vous souhaitez prévisualiser le résultat rogné.';
-$lang["video-trim_upload-type"]='Type de téléchargement';
 $lang["video-trim_new-response"]='Nouvelle(s) ressource(s) créée(s) : ID(s) de ressource(s) [ %liens]. Vous pouvez continuer à effectuer des coupes supplémentaires ci-dessous.';
 $lang["video-trim_alt-response"]='Fichier(s) alternatif(s) créé(s) pour la ressource %ref : ID(s) alternatif(s) [ %links]. Vous pouvez continuer à effectuer des coupes supplémentaires ci-dessous.';
 $lang["videospliceconfiguration"]='Configuration de la coupe vidéo';

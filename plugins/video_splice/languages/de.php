@@ -5,7 +5,6 @@ $lang["action-trim"]='Kürzen';
 $lang["video-trim"]='Video zuschneiden';
 $lang["video-trim-warning"]='Beschnittwarnung';
 $lang["video-trim-warning-text"]='Ihr Start- oder Endtrimmpunkt/-punkte liegen außerhalb der Länge der Video-Vorschau.<br><br>Die bereitgestellte Vorschau wird das endgültige Ergebnis nicht vollständig darstellen. Wenn Sie eine Vorschau des zugeschnittenen Ergebnisses anzeigen möchten, sollten Sie die Länge der Video-Vorschau erhöhen und Vorschau-Dateien neu erstellen.';
-$lang["video-trim_upload-type"]='Upload-Typ';
 $lang["video-trim_new-response"]='Neue(s) Ressource(n) erstellt: Ressourcen-ID(s) [%links]. Sie können unten weitere Anpassungen vornehmen.';
 $lang["video-trim_alt-response"]='Alternative Datei(en) erstellt für Ressource %ref: Alternative ID(s) [ %links]. Sie können weiterhin zusätzliche Ausschnitte unten erstellen.';
 $lang["videospliceconfiguration"]='Videosplice-Konfiguration';

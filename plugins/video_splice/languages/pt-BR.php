@@ -5,7 +5,6 @@ $lang["action-trim"]='Cortar';
 $lang["video-trim"]='Recorte de Vídeo';
 $lang["video-trim-warning"]='Aviso de Corte';
 $lang["video-trim-warning-text"]='Seu ponto de corte inicial ou final ultrapassa o comprimento da pré-visualização do vídeo.<br><br>A pré-visualização fornecida não representará completamente o resultado final, considere aumentar o comprimento da pré-visualização do vídeo e recriar os arquivos de pré-visualização caso deseje visualizar o resultado do corte.';
-$lang["video-trim_upload-type"]='Tipo de Upload';
 $lang["video-trim_new-response"]='Novo(s) recurso(s) criado(s): ID(s) do recurso [ %links]. Você pode continuar a fazer cortes adicionais abaixo.';
 $lang["video-trim_alt-response"]='Arquivo(s) alternativo(s) criado(s) para o recurso %ref: ID(s) alternativo(s) [ %links]. Você pode continuar a fazer cortes adicionais abaixo.';
 $lang["videospliceconfiguration"]='Configuração de Edição de Vídeo';
