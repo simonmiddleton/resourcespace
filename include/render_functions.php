@@ -6762,7 +6762,6 @@ function render_resource_view_image(array $resource, array $context)
     hook('aftersearchimg', '', array($resource["ref"]));
     hook('previewextras'); ?>
         
-    </div>
     <?php
     if($validimage)
         {
@@ -6981,7 +6980,7 @@ function render_resource_view_image(array $resource, array $context)
                             preview_image_copy.width( preview_image_width );
                             preview_image_copy.height( preview_image_height );
 
-                            preview_image_copy.appendTo(preview_image_link.parent());
+                            preview_image_copy.insertAfter(preview_image_link);
                             preview_image_link.hide();
 
                             anno.makeAnnotatable(document.getElementById(img_copy_id));
@@ -7069,4 +7068,7 @@ function render_resource_view_image(array $resource, array $context)
             <?php
             } /* end of canSeePreviewTools() */
         }
+        ?>
+    </div>
+    <?php
     }

@@ -609,7 +609,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RequiredFieldLabel {display: inline-block; margin-left: 10px;}
 
 .RecordPanel .RecordResource {position:relative;clear: left;} 
-.RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 720px;}
+.RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 740px;}
 #previewimagewrapper {float:left;margin: 0 15px 15px 0; position: relative; min-width: 740px; }
 #openseadragon_viewer { width: 100%; height: 500px; } /* width and height in line with #previewimagewrapper and #previewimage, as best as it can. */
 
@@ -1860,7 +1860,6 @@ form.FormFilter button.ClearButton {
     height: 41px;
     position: relative;
     width: 100%;
-    margin-top:3px;
 }
 
 #PreviewToolsOptionsWrapper {
