@@ -77,6 +77,11 @@ if ($total_nodes_count > 0)
         $return .= '>' . escape($node_to_return) . " ($count)</div>";
         $show ++;
         }
+    
+    if ($total_nodes_count > 100)
+        {
+        $return .=  '<div class="currentmultiquestion' . (int) $question_ref .'" style="display:none;">' . escape($lang["edit_multiple_too_many"]) . '</div>';
+        }
 
     echo $return;
     }

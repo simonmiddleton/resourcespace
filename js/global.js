@@ -1532,6 +1532,7 @@ function batch_edit_toggle_edit_multi_checkbox_question(question_ref)
             {
             displayexisting.style.display = 'block';
             getCurrentFixedListFieldVals(question_ref);
+            setActionPromptText(question_ref);
             }
         }
     else

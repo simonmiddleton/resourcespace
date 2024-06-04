@@ -2389,6 +2389,10 @@ if ($multiple)
             {
             jQuery("#displayexisting_options_" + question_ref).empty().html(response);
             let selectedValuesFound = jQuery("#displayexisting_options_" + question_ref + " div").length;
+            if (selectedValuesFound == 0)
+                {
+                jQuery('#displayexisting_' + question_ref).hide();
+                }
             if (selectedValuesFound > 5)
                 {
                 jQuery('#displayexisting_options_more_' + question_ref).show();
@@ -2400,6 +2404,35 @@ if ($multiple)
         {
         jQuery('div .currentmultiquestion' + question_ref).show();
         jQuery('#displayexisting_options_more_' + question_ref).hide();
+        }
+
+    function setActionPromptText(question_ref)
+        {
+        let selectedModeValue = jQuery('#modeselectinput_' + question_ref).val();
+        let textToDisplay = 'none';
+        switch (selectedModeValue) {
+        case 'RT':
+            textToDisplay = '<?php echo escape($lang["edit_multiple_action_text_rt"]); ?>';
+            break;
+        case 'AP':
+            textToDisplay = '<?php echo escape($lang["edit_multiple_action_text_ap"]); ?>';
+            break;
+        case 'RM':
+            textToDisplay = '<?php echo escape($lang["edit_multiple_action_text_rm"]); ?>';
+            break;
+        default:
+            textToDisplay = 'none';
+        }
+        if (textToDisplay == 'none')
+            {
+            jQuery('#ActionPrompt_' + question_ref).hide();
+            }
+        else
+            {
+            jQuery('#ActionPrompt_' + question_ref).show();
+            jQuery('#ActionPromptText_' + question_ref).text(textToDisplay + ':');
+            }
+
         }
     </script>
     <?php
