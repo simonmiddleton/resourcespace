@@ -1,7 +1,6 @@
 <?php
 command_line_only();
 
-echo implode(",",$userpermissions);
 // Setup
 $collection_allow_not_approved_share_cache = $GLOBALS["collection_allow_not_approved_share"];
 
