@@ -3569,6 +3569,8 @@ function set_sysvar($name,$value=null)
 
     // Clear query cache so the change takes effect
     clear_query_cache("sysvars");
+    
+    return true;
     }
 
 /**
