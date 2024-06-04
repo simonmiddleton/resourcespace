@@ -1,5 +1,5 @@
 <?php
-include "../../include/boot.php";
+include_once "../../include/boot.php";
 
 if (PHP_SAPI != 'cli') {
     include "../../include/authenticate.php";

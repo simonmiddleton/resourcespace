@@ -49,7 +49,7 @@ foreach ($pages as $page)
     if (!$TestPage($page)) {echo $page;return false;}
     $counter++;
     }
-    echo "\e[4D";
+    echo "\e[4D    ";
 // Teardown
 unset($TestPage);
 
