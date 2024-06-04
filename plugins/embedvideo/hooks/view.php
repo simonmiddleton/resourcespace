@@ -47,7 +47,7 @@ function HookEmbedvideoViewAfterresourceactions()
         <!-- START VIDEOJS -->
         <video id="introvideo' .  (int) $ref . '"
             controls
-            preload="' . escape($preload)  . '"
+            preload="' . escape((string) $preload)  . '"
             width="' . escape($ffmpeg_preview_max_width) . '" 
             height="' . escape($ffmpeg_preview_max_height) . '" 
             class="Picture"
