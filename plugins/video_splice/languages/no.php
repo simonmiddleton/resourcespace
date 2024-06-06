@@ -5,7 +5,6 @@ $lang["action-trim"]='Beskjær';
 $lang["video-trim"]='Trim video';
 $lang["video-trim-warning"]='Beskjæringsadvarsel';
 $lang["video-trim-warning-text"]='Ditt start- eller sluttpunkt for beskjæringen går utover videoforhåndsvisningslengden.<br><br>Forhåndsvisningen som er gitt vil ikke fullt ut representere det endelige resultatet. Vennligst vurder å øke lengden på videoforhåndsvisningen og opprette nye forhåndsvisningsfiler hvis du ønsker å forhåndsvise det beskjærte resultatet.';
-$lang["video-trim_upload-type"]='Opplastningstype';
 $lang["video-trim_new-response"]='Nye ressurser opprettet: Ressurs-ID(er) [%links]. Du kan fortsette å gjøre ytterligere beskjæringer nedenfor.';
 $lang["video-trim_alt-response"]='Alternative fil(er) opprettet for ressurs %ref: Alternative ID(er) [ %links]. Du kan fortsette å lage flere beskjæringer nedenfor.';
 $lang["videospliceconfiguration"]='Video Splice-konfigurasjon';

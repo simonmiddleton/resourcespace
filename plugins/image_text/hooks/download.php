@@ -63,7 +63,7 @@ function HookImage_textDownloadModifydownloadfile()
         "%%POSITION%%" => new CommandPlaceholderArg($image_text_position,fn($val): bool => in_array($val, ["east","west","center"])),
         "%%FONT%%" => new CommandPlaceholderArg($image_text_font, fn($val): bool => preg_match('/^[a-zA-Z0-9\#\s\-]*$/', $val) === 1),
         "%%WIDTHHEIGHT%%" => (int) $width . "x" . (int) $olheight,
-        "%%CAPTION%%" => $overlaytext,
+        "%%CAPTION%%" => new CommandPlaceholderArg($overlaytext, 'is_string'),
         "%%TMPOLFILE%%" => $tmpolfile,
     ];
 
@@ -75,8 +75,9 @@ function HookImage_textDownloadModifydownloadfile()
     } else {
         $convertcommand = $convert_fullpath . " %%TMPOLFILE%% %%PATH%% -append %%NEWDLFILE%%";
     }
+
     $convertparams = [
-        "%%PATH%%" => new CommandPlaceholderArg($path, 'is_safe_basename'),
+        "%%PATH%%" => new CommandPlaceholderArg($path, 'is_valid_rs_path'),
         "%%TMPOLFILE%%" => new CommandPlaceholderArg($tmpolfile, 'is_safe_basename'),
         "%%NEWDLFILE%%" => new CommandPlaceholderArg($newdlfile, 'is_safe_basename'),
     ];

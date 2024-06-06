@@ -28,8 +28,8 @@ if(!in_array("tms_link",$plugins))
 if($tms_link_email_notify!=""){$email_notify=$tms_link_email_notify;}
 
 // Check when this script was last run - do it now in case of permanent process locks
-$scriptlaststarted=ps_value("SELECT VALUE FROM sysvars WHERE name='last_tms_import_start'", array(), "");
-$scriptlastran=ps_value("SELECT VALUE FROM sysvars WHERE name='last_tms_import'", array(), "");
+$scriptlaststarted=get_sysvar("last_tms_import_start","");
+$scriptlastran=get_sysvar("last_tms_import","");
 
 $tms_link_script_failure_notify_seconds=intval($tms_link_script_failure_notify_days)*60*60*24;
 
@@ -75,8 +75,7 @@ set_process_lock("tms_link");
 
 // Record the start time
 $tms_script_start_time = microtime(true);
-ps_query("DELETE FROM sysvars WHERE name='last_tms_import_start'");
-ps_query("INSERT INTO sysvars VALUES('last_tms_import_start', NOW())");
+set_sysvar("last_tms_import_start",date("Y_m_d_H_i"));
 
 $tms_log = false;
 if(trim($tms_link_log_directory)!="")
@@ -298,8 +297,7 @@ foreach(tms_link_get_modules_mappings() as $module)
 
         // Update pointer and go onto next set of resources
         $tmspointer = $tmspointer+$tms_link_query_chunk_size;
-        ps_query("DELETE FROM sysvars WHERE name='last_tms_import_update'");
-        ps_query("INSERT INTO sysvars VALUES('last_tms_import_update', CONCAT(now(),' pointer: ',?)",["s",]);
+        set_sysvar('last_tms_import_update',date("Y-m-d H:i:s") . " pointer: " . $tmspointer);
         } # end of while loop
     } # end of tms_link_get_modules_mappings()
 
@@ -373,5 +371,4 @@ if($tms_log)
     }
 
 clear_process_lock("tms_link");
-ps_query("DELETE FROM sysvars WHERE name='last_tms_import'");
-ps_query("INSERT INTO sysvars VALUES('last_tms_import', NOW())");
+set_sysvar("last_tms_import",date("Y-m-d H:i"));

@@ -51,5 +51,5 @@ foreach($use_cases as $use_case)
 // Tear down
 $userpermissions = $orig_userpermissions;
 unset($orig_userpermissions, $use_cases);
-
+unset($GLOBALS['CACHE_FC_ACCESS_CONTROL']);
 return true;

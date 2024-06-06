@@ -52,12 +52,15 @@ function errorhandler($errno, $errstr, $errfile, $errline)
 
     $suppress = !(error_reporting() && ($errno & $GLOBALS["config_error_reporting"]));
 
+    if (strlen($errstr) > 1024) {
+        // MySQL errors may be very long. Trim the middle
+        $errstr = mb_substr($errstr,0,500) . "...(TRUNCATED TEXT)..." . mb_substr($errstr,-500);
+    }
     $error_note = "Sorry, an error has occurred. ";
     $error_info  = "$errfile line $errline: $errstr";
 
     if(!$suppress) {
         if($use_error_exception === true) {
-            $errline = ($errline == "N/A" || !is_numeric($errline) ? 0 : $errline);
             throw new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
         } elseif (substr(PHP_SAPI, 0, 3) == 'cli') {
             // Always show errors when running on the command line.
@@ -102,7 +105,6 @@ function errorhandler($errno, $errstr, $errfile, $errline)
     // Optionally log errors to a central server.
     if (isset($log_error_messages_url))
         {
-        $errline = ($errline == "N/A" || !is_numeric($errline) ? 0 : $errline);
         $exception = new ErrorException($error_info, 0, E_ALL, $errfile, $errline);
         // Remove the actual errorhandler from the stack trace. This will remove other global data which otherwise could leak sensitive information
         $backtrace = json_encode(
@@ -263,7 +265,6 @@ function sql_connect()
         # Group concat limit increased to support option based metadata with more realistic limit for option entries
         # Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)
         db_set_connection_mode($db_connection_mode);
-        ps_query("SET SESSION group_concat_max_len = 32767", [], '', -1, false, 0); 
         if (
             is_int($mysql_sort_buffer_size)
             && $mysql_sort_buffer_size > 32768
@@ -273,18 +274,14 @@ function sql_connect()
         }
 
         db_set_connection_mode($db_connection_mode);
-        $mysql_version = ps_query('SELECT LEFT(VERSION(), 3) AS ver');
-        if(version_compare($mysql_version[0]['ver'], '5.6', '>')) 
-            {
-            db_set_connection_mode($db_connection_mode);
-            $sql_mode_current = ps_query('select @@SESSION.sql_mode');
-            $sql_mode_string = implode(" ", $sql_mode_current[0]);
-            $sql_mode_array_new = array_diff(explode(",",$sql_mode_string), array("ONLY_FULL_GROUP_BY", "NO_ZERO_IN_DATE", "NO_ZERO_DATE"));
-            $sql_mode_string_new = implode (",", $sql_mode_array_new);
+        db_set_connection_mode($db_connection_mode);
+        $sql_mode_current = ps_query('select @@SESSION.sql_mode');
+        $sql_mode_string = implode(" ", $sql_mode_current[0]);
+        $sql_mode_array_new = array_diff(explode(",",$sql_mode_string), array("ONLY_FULL_GROUP_BY", "NO_ZERO_IN_DATE", "NO_ZERO_DATE"));
+        $sql_mode_string_new = implode (",", $sql_mode_array_new);
 
-            db_set_connection_mode($db_connection_mode);
-            ps_query("SET SESSION sql_mode = '$sql_mode_string_new'", [], '', -1, false, 0);
-            }
+        db_set_connection_mode($db_connection_mode);
+        ps_query("SET SESSION sql_mode = '$sql_mode_string_new'", [], '', -1, false, 0);
         }
 
     db_clear_connection_mode();
@@ -505,7 +502,18 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                     return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
                     }
                 $error="Bad prepared SQL statement: " . $sql . "  Parameters: " . json_encode($parameters) . " - " . $db_connection->error;
-                errorhandler("N/A", $error, "(database)", "N/A");
+
+                // Get the details of the problematic query. It is useful to find the first call that was not
+                // from this file so as to avoid CheckDBStruct() confusing matters
+                $backtrace = debug_backtrace();
+                foreach ($backtrace as $backtracedetail) {
+                        $errorfile = $backtracedetail["file"];
+                        $errorline = $backtracedetail["line"];
+                    if ($backtracedetail["file"] != __FILE__) {
+                        break;
+                    }
+                }
+                errorhandler(E_ERROR, $error, $errorfile, $errorline);
                 exit();
                 }
             }
@@ -667,7 +675,17 @@ function ps_query($sql,array $parameters=array(),$cache="",$fetchrows=-1,$dbstru
                 return ps_query($sql,$parameters,$cache,$fetchrows,false,$logthis,$reconnect,$fetch_specific_columns);
                 }
 
-            errorhandler("N/A", $error . "<br/><br/>" . $sql, "(database)", "N/A");
+            // Get the details of the problematic query. It is useful to find the first call that was not
+            // from this file so as to avoid CheckDBStruct() confusing matters
+            $backtrace = debug_backtrace();
+            foreach ($backtrace as $backtracedetail) {
+                    $errorfile = $backtracedetail["file"];
+                    $errorline = $backtracedetail["line"];
+                if ($backtracedetail["file"] != __FILE__) {
+                    break;
+                }
+            }
+            errorhandler(E_ERROR, $error, $errorfile, $errorline);
             }
 
         exit();

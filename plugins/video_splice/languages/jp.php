@@ -5,7 +5,6 @@ $lang["action-trim"]='トリム (Torimu)';
 $lang["video-trim"]='ビデオトリム';
 $lang["video-trim-warning"]='トリム警告';
 $lang["video-trim-warning-text"]='あなたの開始または終了トリムポイントは、ビデオプレビューの長さを超えています。<br><br>提供されたプレビューは最終的な結果を完全に表現していないため、トリムされた結果をプレビューする場合は、ビデオプレビューの長さを増やしてプレビューファイルを再作成することを検討してください。';
-$lang["video-trim_upload-type"]='アップロードタイプ';
 $lang["video-trim_new-response"]='新しいリソースが作成されました：リソースID [ %links]。以下で追加のトリムを続けることができます。';
 $lang["video-trim_alt-response"]='リソース %ref の代替ファイルが作成されました。代替ID [ %links ]。以下で追加のトリムを続けることができます。';
 $lang["videospliceconfiguration"]='ビデオスプライスの設定';

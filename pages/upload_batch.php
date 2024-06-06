@@ -26,12 +26,14 @@ if(isset($_SERVER['HTTP_TUS_RESUMABLE']) && isset($_SERVER['HTTP_UPPY_AUTH_TOKEN
                     $upfilename = base64_decode($upfilename);
                     }
                 $uploadpathinfo     = pathinfo($upfilename);
-                $uploaded_extension = $uploadpathinfo['extension'] ?? ""; 
+                $uploaded_extension = $uploadpathinfo['extension'] ?? "";
                 if(is_banned_extension($uploaded_extension))
-                    {                    
+                    {
                     debug("upload_batch - invalid file extension received. File name: '" . $upfilename . "'");
                     http_response_code(401);
-                    die(str_replace("%%FILETYPE%%",$uploaded_extension,$lang["error_upload_invalid_file"]));
+                    $result["message"] = str_replace("%%FILETYPE%%",$upfilename,$lang["error_upload_invalid_file"]);
+                    $result["error"] = 112;
+                    die(json_encode($result));
                     }
                 }
             }

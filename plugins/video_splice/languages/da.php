@@ -4,7 +4,6 @@
 $lang["video-trim"]='Video Trim på dansk er "Video beskæring"';
 $lang["video-trim-warning"]='Beskæring Advarsel';
 $lang["video-trim-warning-text"]='Dine start- eller slutklip punkter overskrider længden af video-previewet.<br><br>Det viste preview vil ikke fuldt ud repræsentere det endelige resultat. Overvej venligst at øge længden af dit video-preview og genskabe preview-filer, hvis du ønsker at forhåndsvise det beskårne resultat.';
-$lang["video-trim_upload-type"]='Uploadtype';
 $lang["video-trim_new-response"]='Nye ressourcer oprettet: Ressource-ID(er) [%links]. Du kan fortsætte med at foretage yderligere beskæringer nedenfor.';
 $lang["video-trim_alt-response"]='Alternative fil(er) oprettet for ressource %ref: Alternative ID(er) [ %links]. Du kan fortsætte med at lave yderligere beskæringer nedenfor.';
 $lang["videospliceconfiguration"]='Video Splice Konfiguration';

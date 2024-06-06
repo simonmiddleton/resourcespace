@@ -489,7 +489,7 @@ $headerinsert="";
 
 # Load the sysvars into an array. Useful so we can check migration status etc.
 # Needs to be actioned before the 'initialise' hook or plugins can't use get_sysvar()
-$systemvars = ps_query("SELECT name, value FROM sysvars",array());
+$systemvars = ps_query("SELECT name, value FROM sysvars",array(),"sysvars");
 $sysvars = array();
 foreach($systemvars as $systemvar)
     {

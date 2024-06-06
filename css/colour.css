@@ -200,13 +200,11 @@ div.autocomplete ul li {color: #000;}
 #InfoBoxCollectionInner {color:black;}
 #InfoBoxCollectionInner h2 {color:black;}
 #InfoBoxCollectionInner p {color:black;}
-.ListviewBoxedTitleStyle td {background-color:#fff;}
 .NewFlag { background-color: #fff; color: #737373; text-shadow: none;}
 
 /* Mouseover effect on list views */
 .ListviewStyle tr:hover td {background-color: #EEE;} 
-.ListviewStyle tr.ListviewTitleStyle:hover td {background:none;background-color:#555;} 
-.ListviewStyle tr.ListviewBoxedTitleStyle:hover td {background:none;background-color:#555;} 
+.ListviewStyle tr.ListviewTitleStyle:hover td {background:none;background-color:#555;}
 
 /* Single file upload progress bar */
 .meter-value {background-color: #BBBBBB;}

@@ -200,7 +200,7 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
             {
             # first try to get it from the filename
             $extension=explode(".",$filename);
-            if(count($extension)>1)
+            if (count($extension)>1)
                 {
                 $extension=trim(strtolower($extension[count($extension)-1]));
                 }
@@ -209,16 +209,16 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 {
                 if(isset($file_path))
                     {
-                    $cmd=$exiftool_fullpath." -filetype -s -s -s ".escapeshellarg($file_path);
-                    $file_type_by_exiftool=run_command($cmd);
+                    $cmd = "{$exiftool_fullpath} -filetype -s -s -s %%PATH%%";
+                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($file_path, 'is_safe_basename')]);
                     }
                 else
                     {
-                    $cmd=$exiftool_fullpath." -filetype -s -s -s ".escapeshellarg($processfile['tmp_name']);
-                    $file_type_by_exiftool=run_command($cmd);
+                    $cmd = "{$exiftool_fullpath} -filetype -s -s -s %%PATH%%";
+                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($processfile['tmp_name'], 'is_safe_basename')]);
                     }
 
-                if (strlen($file_type_by_exiftool)>0)
+                if (strlen($file_type_by_exiftool) > 0)
                     {
                     $extension=str_replace(" ","_",trim(strtolower($file_type_by_exiftool)));
                     $filename = $filename . "." . $extension;
@@ -607,8 +607,8 @@ function extract_exif_comment($ref,$extension="")
         # run exiftool to get all the valid fields. Use -s -s option so that
         # the command result isn't printed in columns, which will help in parsing
         # We then split the lines in the result into an array
-        $command = $exiftool_fullpath . " -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -a -G1 " . escapeshellarg($image);
-        $output=run_command($command);
+        $command = "{$exiftool_fullpath} -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -a -G1 %%IMAGE%%";
+        $output = run_command($command, false, ["%%IMAGE%%" => new CommandPlaceholderArg($image, 'is_safe_basename')]);
         $metalines = explode("\n",$output);
 
         $metadata = array(); # an associative array to hold metadata field/value pairs

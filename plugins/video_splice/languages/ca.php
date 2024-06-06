@@ -5,7 +5,6 @@ $lang["action-trim"]='Retallar';
 $lang["video-trim"]='Retallar vídeo';
 $lang["video-trim-warning"]='Avís de retallada';
 $lang["video-trim-warning-text"]='El punt de tall d\'inici o final excedeix la longitud de la vista prèvia del vídeo.<br><br>La vista prèvia proporcionada no representarà completament el resultat final, si us plau, consideri augmentar la longitud de la vista prèvia del vídeo i recrear els fitxers de vista prèvia si desitja previsualitzar el resultat retallat.';
-$lang["video-trim_upload-type"]='Tipus de càrrega';
 $lang["video-trim_new-response"]='Nou(s) recurs(s) creat(s): ID(s) de recurs [ %links]. Podeu continuar fent ajustaments addicionals a continuació.';
 $lang["video-trim_alt-response"]='S\'han creat fitxers alternatius per al recurs %ref: ID alternatius [ %links]. Podeu continuar fent retalls addicionals a continuació.';
 $lang["videospliceconfiguration"]='Configuració de tall de vídeo';

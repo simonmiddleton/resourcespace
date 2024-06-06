@@ -70,7 +70,7 @@ if (count($expired_resources)>0)
         }   
 
     # Update notification flag so an expiry is not sent again until the expiry field(s) is edited.
-    $chunks = array_chunk($refs, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+    $chunks = db_chunk_id_list($refs);
     foreach ($chunks as $chunk)
         {
         ps_query("UPDATE resource SET expiry_notification_sent = 1 WHERE ref IN (" . ps_param_insert(count($chunk)) . ")", ps_param_fill($chunk, "i"));

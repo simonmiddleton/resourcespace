@@ -5,7 +5,6 @@ $lang["action-trim"]='修剪';
 $lang["video-trim"]='视频剪辑';
 $lang["video-trim-warning"]='修剪警告';
 $lang["video-trim-warning-text"]='您的开始或结束修剪点超出了视频预览长度。<br><br>提供的预览将无法完全代表最终结果，请考虑增加视频预览长度并重新创建预览文件，以便预览修剪后的结果。';
-$lang["video-trim_upload-type"]='上传类型';
 $lang["video-trim_new-response"]='新资源已创建：资源ID（%links）。您可以继续在下面进行其他修剪。';
 $lang["video-trim_alt-response"]='为资源 %ref 创建了备选文件 %links。您可以继续在下面进行其他修剪。';
 $lang["videospliceconfiguration"]='视频拼接配置';

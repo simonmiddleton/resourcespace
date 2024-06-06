@@ -47,12 +47,17 @@ function openai_gpt_update_field($resources,array $target_field,array $values, s
         $messages[] = ["role"=>"system","content"=>$system_message];
 
         $messages[] = [
-            "role"=>"user",
-            "content"=> [
-                ["type" => "text", "text"=>$target_field["openai_gpt_prompt"]],
-                ["type" => "image_url", "image_url" => "data:image/jpeg;base64, " . $file_data_base64],
+            "role" => "user",
+            "content" => [
+                ["type" => "text", "text" => $target_field["openai_gpt_prompt"]],
+                ["type" => "image_url",
+                    "image_url" => [
+                    "url" => "data:image/jpeg;base64, " . $file_data_base64,
+                    "detail" => "high"
+                    ]
                 ]
-            ];
+            ]
+        ];
 
         debug("openai_gpt - sending request prompt for image");
         }

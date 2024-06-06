@@ -1,11 +1,13 @@
 <?php
-include "../../include/boot.php";
+include_once "../../include/boot.php";
 
+$output_newline = PHP_EOL;
 if (PHP_SAPI != 'cli') {
     include "../../include/authenticate.php";
     if (!checkperm("a")) {
         exit("Permission denied");
     }
+    $output_newline = '<br>';
 }
 
 # A script to set the geo coordinates based on a country field (if available) for resources with no geolocation information set.
@@ -16,13 +18,7 @@ $codes = build_codes();
 # Find country field
 $country_field = ps_query("SELECT ref,type FROM resource_type_field WHERE name='country'", [], "schema");
 if (count($country_field) == 0 || $country_field[0]["ref"] == "") {
-    echo " - Country field not found. Must have a field with shorthand name set to 'country'.";
-    if (PHP_SAPI != 'cli') {
-        echo '<br>';
-    }
-    else {
-        echo PHP_EOL;
-    }
+    echo " - Country field not found. Must have a field with shorthand name set to 'country'." . $output_newline;
 } else {
     $country_ref = $country_field[0]["ref"];
     $country_type = $country_field[0]["type"];
@@ -48,13 +44,7 @@ if (count($country_field) == 0 || $country_field[0]["ref"] == "") {
             if($last_country != "") {
                 $coord_latlong = fetch_country_coords($last_country,$codes,$coords);
 
-                echo escape(" - Country=" . $last_country . "; Refs=" . join(",",$refs));
-                if (PHP_SAPI != 'cli') {
-                    echo '<br>';
-                }
-                else {
-                    echo PHP_EOL;
-                }
+                echo escape(" - Country=" . $last_country . "; Refs=" . join(",",$refs)) . $output_newline;
 
                 update_country_coords($refs,$coord_latlong);
             }
@@ -66,13 +56,7 @@ if (count($country_field) == 0 || $country_field[0]["ref"] == "") {
     if($last_country != "") {
         $coord_latlong = fetch_country_coords($last_country,$codes,$coords);
 
-        echo escape(" - Country=" . $last_country . "; Refs=" . join(",",$refs));
-        if (PHP_SAPI != 'cli') {
-            echo '<br>';
-        }
-        else {
-            echo PHP_EOL;
-        }
+        echo escape(" - Country=" . $last_country . "; Refs=" . join(",",$refs)) . $output_newline;
 
         update_country_coords($refs,$coord_latlong);
     }
