@@ -418,3 +418,5 @@ input:checked + .customFieldLabel, .keywordselected {
     {
     background-color:black;color:white;border-left:10px solid #666;
     }
+
+.currenteditmulti {background-color: #8a8d8f !important;}
