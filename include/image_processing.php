@@ -210,12 +210,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 if(isset($file_path))
                     {
                     $cmd = "{$exiftool_fullpath} -filetype -s -s -s %%PATH%%";
-                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($file_path, 'is_safe_basename')]);
+                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($file_path, 'is_valid_rs_path')]);
                     }
                 else
                     {
                     $cmd = "{$exiftool_fullpath} -filetype -s -s -s %%PATH%%";
-                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($processfile['tmp_name'], 'is_safe_basename')]);
+                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($processfile['tmp_name'], 'is_valid_rs_path')]);
                     }
 
                 if (strlen($file_type_by_exiftool) > 0)
