@@ -384,9 +384,9 @@ function validate_temp_path(string $test_path, string $temp_folder = '') : bool
  * Check if a given file path is from a valid RS accessible location
  *
  * @param   string   $path
- * @param   array    $extra_paths   Array of additional valid source paths to check
+ * @param   array    $override_paths   Override checking of the default RS paths to check a specific location only.
  */
-function is_valid_rs_path(string $path, array $extra_paths = []): bool
+function is_valid_rs_path(string $path, array $override_paths = []): bool
 {
     $sourcerealpath = realpath($path);
     $source_path_not_real = !$sourcerealpath || !file_exists($sourcerealpath);
@@ -399,20 +399,23 @@ function is_valid_rs_path(string $path, array $extra_paths = []): bool
     }
 
     $path_to_validate = $source_path_not_real ? $path : $sourcerealpath;
-    $allowed_paths = array_filter(
-        array_map(
-            'trim',
-            array_unique(
-                array_merge(
-                    [
-                        $GLOBALS['storagedir'],
-                        $GLOBALS['syncdir'],
-                    ],
-                    $extra_paths
+    if (count($override_paths) > 0) {
+        $allowed_paths = array_map('trim', $override_paths);
+    }
+    else {
+        $default_paths[] = $GLOBALS['storagedir'];
+        $default_paths[] = $GLOBALS['syncdir'];
+        if (isset($GLOBALS['tempdir'])) {
+            $default_paths[] = $GLOBALS['tempdir'];
+        }
+
+        $allowed_paths = array_filter(
+            array_map(
+                'trim',
+                array_unique($default_paths)
                 )
-            )
-        )
-    );
+            );
+    }
 
     foreach ($allowed_paths as $validpath) {
         $validpath = realpath($validpath);
@@ -425,7 +428,8 @@ function is_valid_rs_path(string $path, array $extra_paths = []): bool
 }
 
 /**
- * Validation helper function to determine if a path base name is unsafe (e.g OS command injection, path traversal etc.)
+ * Validation helper function to determine if a path base name is unsafe (e.g OS command injection).
+ * Very strict, limited to specific characters only. Should only be used for filenames originating in ResourceSpace.
  */
 function is_safe_basename(string $val): bool
 {
