@@ -608,7 +608,7 @@ function extract_exif_comment($ref,$extension="")
         # the command result isn't printed in columns, which will help in parsing
         # We then split the lines in the result into an array
         $command = "{$exiftool_fullpath} -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -a -G1 %%IMAGE%%";
-        $output = run_command($command, false, ["%%IMAGE%%" => new CommandPlaceholderArg($image, 'is_safe_basename')]);
+        $output = run_command($command, false, ["%%IMAGE%%" => new CommandPlaceholderArg($image, 'is_valid_rs_path')]);
         $metalines = explode("\n",$output);
 
         $metadata = array(); # an associative array to hold metadata field/value pairs
