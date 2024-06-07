@@ -2,6 +2,7 @@
 include "../../../include/boot.php";
 include "../../../include/authenticate.php";
 include_once "../../../include/image_processing.php";
+include_once "../include/trim_functions.php";
 
 $ref=getval("ref","",true);
 $alt=getval("alternative","",true);
@@ -25,7 +26,7 @@ $trimmed_resources_alt = empty(getval("trimmed_resources_alt",null))?null:explod
 $collection_add = getval("collection_add",null);
 $start_time = getval("input_start",null);
 $end_time = getval("input_end",null);
-$upload_type = getval("upload_type",null);
+$output_type = getval("output_type",null);
 $access = get_resource_access($ref);
 
 $urlparams= array(
@@ -51,10 +52,17 @@ if(!is_array($resource))
     error_alert($lang['error-pageload'],false);
     exit();
     }
-$editaccess = get_edit_access($ref,$resource["archive"],$resource);
 
-// not allowed to edit this resource?
-if (!($editaccess || !checkperm("A")) && $ref>0) {exit ("Permission denied.");}
+$editaccess = get_edit_access($resource['ref'], $resource["archive"], $resource);
+
+$can_create_resource = $editaccess && (checkperm("d") || checkperm("c"));
+$can_create_alternative = $editaccess && !checkperm("A");
+$can_download = $access === RESOURCE_ACCESS_FULL;
+
+if ($ref < 0 || !$can_create_resource && !$can_create_alternative && !$can_download)
+    {
+    exit ("Permission denied.");
+    }
 
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {
@@ -92,7 +100,7 @@ if(!$video_preview_original && ($preview_duration < $original_duration) && $prev
     $preview_cap = $preview_duration;
     }
 
-if(isset($start_time) && isset($end_time) && isset($upload_type))
+if(isset($start_time) && isset($end_time) && isset($output_type))
     {
     global $ffmpeg_preview_extension, $videosplice_description_field, $alternative_file_previews, $notify_on_resource_change_days, $usercollection;
 
@@ -102,13 +110,8 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
     $ffmpeg_end_time = gmdate("H:i:s", $end_time);
     $ffmpeg_duration_time = gmdate("H:i:s", $end_time - $start_time);
 
-    // establish FFMPEG location.
-    $ffmpeg_fullpath = get_utility_path("ffmpeg");
-    $use_avconv = false;
-    if(strpos($ffmpeg_fullpath, 'avconv') == true){$use_avconv = true;}
-
     // create new resource
-    if ($upload_type == "new" && get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c")))
+    if ($output_type == "new" && $can_create_resource)
         {
         // create a new resource.
         $newref=copy_resource($ref,-1,$lang["video_splice_createdfromvideosplice"]);
@@ -137,44 +140,9 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
             // Unlink the target
         if (file_exists($target)) {unlink ($target);}
 
-        if ($config_windows)
-            {
-            // Windows systems have a hard time with the long paths used for video generation.
-            $target_ext = strrchr($target, '.');
-            $source_ext = strrchr($video_original_file, '.');
-            $target_temp = get_temp_dir() . "/vs_t" . $newref . $target_ext;
-            $target_temp = str_replace("/", "\\", $target_temp);
-            $source_temp = get_temp_dir() . "/vs_s" . $ref . $source_ext;
-            $source_temp = str_replace("/", "\\", $source_temp);
-            copy($video_original_file, $source_temp);
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_temp) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target_temp);
-            $output = exec($shell_exec_cmd);
-            rename($target_temp, $target);
-            unlink($source_temp);
-            }
-        else
-            {
-            $ffprobe_array = get_video_info($video_original_file);
-            if(isset($ffprobe_array['streams'][1]['codec_name']) && $ffprobe_array['streams'][1]['codec_name'] = "pcm_s24le")
-                {
-                # ffmpeg does not support PCM in the MP4 container
-                $ffmpeg_local_preview_seconds = $ffmpeg_preview_seconds;
-                $duration = intval(gmdate("i", $end_time - $start_time))*60 + intval(gmdate("s", $end_time - $start_time))+intval(gmdate("H", $end_time - $start_time))*3600;
-                $ffmpeg_preview_seconds=$duration;
-                $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time -c copy -c:a aac " . escapeshellarg($target);
-                $output = run_command($shell_exec_cmd);
-                }
-            else
-                {
-                $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-                $output = exec($shell_exec_cmd);
-                }
-            }
-
-        create_previews($newref,false,$ffmpeg_preview_extension);
+        generate_video_trim($target, $video_original_file, $ref, $ffmpeg_start_time, $ffmpeg_duration_time);
         
-        # Restore default value of $ffmpeg_preview_seconds
-        $ffmpeg_preview_seconds = $ffmpeg_local_preview_seconds??$ffmpeg_preview_seconds;
+        create_previews($newref,false,$ffmpeg_preview_extension);
 
         if ($collection_add == "yes")
             {
@@ -185,7 +153,7 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         // add ref to list
         $trimmed_resources_new[] = $newref;
         }
-    elseif ($upload_type == "alt" && !checkperm("A"))
+    elseif ($output_type == "alt" && $can_create_alternative)
         {
         // Upload an alternative file
         $resource_data = get_resource_data($ref);
@@ -211,39 +179,8 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         // Unlink the target
         if (file_exists($target)) {unlink ($target);}
 
-        if ($config_windows)
-            {
-            // Windows systems have a hard time with the long paths used for video generation.
-            $target_ext = strrchr($target, '.');
-            $source_ext = strrchr($video_original_file, '.');
-            $target_temp = get_temp_dir() . "/vs_t" . $alt_ref . $target_ext;
-            $target_temp = str_replace("/", "\\", $target_temp);
-            $source_temp = get_temp_dir() . "/vs_s" . $ref . $source_ext;
-            $source_temp = str_replace("/", "\\", $source_temp);
-            copy($video_original_file, $source_temp);
-            $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($source_temp) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target_temp);
-            $output = exec($shell_exec_cmd);
-            rename($target_temp, $target);
-            unlink($source_temp);
-            }
-        else
-            {
-            $ffprobe_array = get_video_info($video_original_file);
-            if(isset($ffprobe_array['streams'][1]['codec_name']) && $ffprobe_array['streams'][1]['codec_name'] = "pcm_s24le")
-                {
-                # ffmpeg does not support PCM in the MP4 container
-                $ffmpeg_local_preview_seconds = $ffmpeg_preview_seconds;
-                $ffmpeg_preview_seconds=0;
-                $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time -c copy -c:a aac " . escapeshellarg($target);
-                $output = run_command($shell_exec_cmd);
-                }
-            else
-                {
-                $shell_exec_cmd = $ffmpeg_fullpath . " -y -ss $ffmpeg_start_time -i " . escapeshellarg($video_original_file) . " -t $ffmpeg_duration_time " . ($use_avconv ? '-strict experimental -acodec copy ' : ' -c copy ') . escapeshellarg($target);
-                $output = exec($shell_exec_cmd);
-                }
-            }
-
+        generate_video_trim($target, $video_original_file, $ref, $ffmpeg_start_time, $ffmpeg_duration_time);
+        
         chmod($target,0777);
         $file_size = @filesize_unlimited($target);
 
@@ -279,8 +216,42 @@ if(isset($start_time) && isset($end_time) && isset($upload_type))
         // add ref to list
         $trimmed_resources_alt[] = $alt_ref;
         }
-        # Restore default value of $ffmpeg_preview_seconds
-        $ffmpeg_preview_seconds = $ffmpeg_local_preview_seconds??$ffmpeg_preview_seconds;
+    elseif ($output_type == "download" && $can_download)
+        {
+        $randstring = md5(rand() . microtime() . $userref);
+        $target = get_temp_dir(false, 'user_downloads') . "/" . $userref . "_" . md5($username . $randstring . $scramble_key). '.' . $ffmpeg_preview_extension;
+        $download_filename = escape($lang["action-trim"]) . "_{$ref}_{$ffmpeg_start_time}_{$ffmpeg_end_time}.{$ffmpeg_preview_extension}";
+
+        generate_video_trim($target, $video_original_file, $ref, $ffmpeg_start_time, $ffmpeg_duration_time);
+        
+        // Download file
+        $filesize = filesize_unlimited($target);
+        ob_flush();
+
+        header(sprintf('Content-Disposition: attachment; filename="%s"', $download_filename));
+        header("Content-Length: " . $filesize);
+        set_time_limit(0);
+
+        $sent = 0;
+        $handle = fopen($target, "r");
+
+        global $download_chunk_size;
+
+        // Now we need to loop through the file and echo out chunks of file data
+        while($sent < $filesize)
+            {
+            echo fread($handle, $download_chunk_size);
+            ob_flush();
+            $sent += $download_chunk_size;
+            }
+
+        fclose($handle);
+
+        resource_log($ref, LOG_CODE_DOWNLOADED, 0, " - Video trimmed from $ffmpeg_start_time to $ffmpeg_end_time");
+
+        #Delete File:
+        unlink($target);
+        }
     }
 ?>
 
@@ -400,8 +371,7 @@ if(isset($resource["field".$view_title_field]))
     <form method="post"
           action="<?php echo $form_action; ?>"
           id="trimform"
-          onsubmit="
-            return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this, true);">
+          onsubmit="">
             <?php generateFormToken("trimform"); ?>
             <div class="Question" id="video_trim_tool">
             <label><?php echo escape($lang["video-trim"]); ?></label>
@@ -480,10 +450,11 @@ if(isset($resource["field".$view_title_field]))
             <div class="clearerleft"> </div>
         </div>
         <div class="Question" id="question_uploadtype">
-            <label><?php echo escape($lang["video-trim_upload-type"]); ?></label>
-            <select name="upload_type" id="uploadtype" class="stdwidth" onChange="var q=document.getElementById('question_collectionadd');if (q.style.display!='block') {q.style.display='block';} else {q.style.display='none';}">
-            <?php if(!checkperm("A")){?><option value="alt"><?php echo escape($lang["addalternativefile"]); ?></option><?php }?>
-            <?php if(get_edit_access($resource['ref'],$resource["archive"],$resource) && (checkperm("d") || checkperm("c"))){?><option value="new"><?php echo escape($lang["createnewresource"]); ?></option><?php }?>
+            <label><?php echo escape($lang["video-trim_output"]); ?></label>
+            <select name="output_type" id="uploadtype" class="stdwidth" onChange="show_hide_collection_add()">
+            <?php if($can_create_alternative) { ?><option value="alt"><?php echo escape($lang["addalternativefile"]); ?></option><?php } ?>
+            <?php if($can_create_resource) { ?><option value="new"><?php echo escape($lang["createnewresource"]); ?></option><?php } ?>
+            <?php if($can_download) { ?><option value="download"><?php echo escape($lang["download"]); ?></option><?php } ?>
             </select>
             <div class="clearerleft"> </div>
         </div>
@@ -637,4 +608,21 @@ function setHandlePriority(lastHandleTouched){
     inputEnd.style.zIndex = "";
     lastHandleTouched.style.zIndex = "4";
     }
+
+function show_hide_collection_add(){
+    if (jQuery('#uploadtype').val() == 'new')
+        {
+        jQuery('#question_collectionadd').show();
+        }
+    else
+        {
+        jQuery('#question_collectionadd').hide();
+        }
+}
+
+jQuery('#trimform').submit(function() {
+    if (jQuery('#uploadtype').val() != 'download') {
+        return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(this, true);
+    }
+});
 </script>

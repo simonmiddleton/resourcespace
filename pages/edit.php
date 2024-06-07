@@ -2366,6 +2366,78 @@ if ($multiple && !$disable_geocoding)
     hook("locationextras");
     }
 
+if ($multiple)
+    {
+    ?>
+    <script>
+    function getCurrentFixedListFieldVals(question_ref)
+        {
+        let resource_type_field = jQuery("#displayexisting_" + question_ref).data("rtfid");
+        let collection = <?php echo escape($collection); ?>
+
+        var post_data = 
+            {
+            ajax: true,
+            field: resource_type_field,
+            question: question_ref,
+            search: "<?php echo escape($search); ?>",
+            restypes: "<?php echo escape($restypes); ?>",
+            $archive: "<?php echo escape($archive); ?>",
+            <?php echo generateAjaxToken("CurrentFixedListFieldVals"); ?>
+            };
+        jQuery.post('<?php echo $baseurl; ?>/pages/ajax/current_resource_nodes.php', post_data, function(response) 
+            {
+            jQuery("#displayexisting_options_" + question_ref).empty().html(response);
+            let selectedValuesFound = jQuery("#displayexisting_options_" + question_ref + " div").length;
+            if (selectedValuesFound == 0)
+                {
+                jQuery('#displayexisting_' + question_ref).hide();
+                }
+            if (selectedValuesFound > 5)
+                {
+                jQuery('#displayexisting_options_more_' + question_ref).show();
+                }
+            })
+        }
+
+    function showMoreSelectedOptions(question_ref)
+        {
+        jQuery('div .currentmultiquestion' + question_ref).show();
+        jQuery('#displayexisting_options_more_' + question_ref).hide();
+        }
+
+    function setActionPromptText(question_ref)
+        {
+        let selectedModeValue = jQuery('#modeselectinput_' + question_ref).val();
+        let textToDisplay = 'none';
+        switch (selectedModeValue) {
+        case 'RT':
+            textToDisplay = '<?php echo escape($lang["edit_multiple_action_text_rt"]); ?>';
+            break;
+        case 'AP':
+            textToDisplay = '<?php echo escape($lang["edit_multiple_action_text_ap"]); ?>';
+            break;
+        case 'RM':
+            textToDisplay = '<?php echo escape($lang["edit_multiple_action_text_rm"]); ?>';
+            break;
+        default:
+            textToDisplay = 'none';
+        }
+        if (textToDisplay == 'none')
+            {
+            jQuery('#ActionPrompt_' + question_ref).hide();
+            }
+        else
+            {
+            jQuery('#ActionPrompt_' + question_ref).show();
+            jQuery('#ActionPromptText_' + question_ref).text(textToDisplay + ':');
+            }
+
+        }
+    </script>
+    <?php
+    }
+
 if($disablenavlinks)
     { ?>
     <input type=hidden name="disablenav" value="true">

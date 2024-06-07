@@ -5,7 +5,6 @@ $lang["action-trim"]='Memotong';
 $lang["video-trim"]='Memotong Video';
 $lang["video-trim-warning"]='Peringatan Pemangkasan';
 $lang["video-trim-warning-text"]='Titik potong awal atau akhir Anda melebihi panjang pratinjau video.<br><br>Pratinjau yang disediakan tidak akan sepenuhnya mewakili hasil akhir, pertimbangkan untuk meningkatkan panjang pratinjau video dan membuat ulang file pratinjau jika Anda ingin melihat hasil potongan.';
-$lang["video-trim_upload-type"]='Jenis Unggahan';
 $lang["video-trim_new-response"]='Sumber daya baru telah dibuat: ID Sumber Daya [ %links]. Anda dapat melanjutkan untuk membuat pemangkasan tambahan di bawah ini.';
 $lang["video-trim_alt-response"]='File alternatif telah dibuat untuk sumber daya %ref: ID Alternatif [ %links], Anda dapat melanjutkan untuk membuat pemangkasan tambahan di bawah ini.';
 $lang["videospliceconfiguration"]='Konfigurasi Potongan Video';

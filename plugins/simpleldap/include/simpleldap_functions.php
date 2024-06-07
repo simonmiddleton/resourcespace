@@ -1,6 +1,15 @@
 <?php
 
-function simpleldap_authenticate($username,$password)
+/**
+ * Authenticate to directory by binding and performing LDAP search
+ *
+ * @param string $username   Username
+ * @param string $password   Password
+ * 
+ * @return array | bool     Array of user data or false if failed to authenticate
+ * 
+ */
+function simpleldap_authenticate(string $username,string $password)
 {
     if (!function_exists('ldap_connect')) {
         return false;
@@ -13,7 +22,7 @@ function simpleldap_authenticate($username,$password)
     $phone_attribute = mb_strtolower($simpleldap['phone_attribute']);
     $loginfield = $simpleldap['loginfield'];
     $userdomain = $simpleldap['domain'];
-    $searchdns = explode(";",$simpleldap['basedn']); // Thse can be searched in parallel
+    $searchdns = explode(";",$simpleldap['basedn']); // These can be searched in parallel
 
     if (!(strlen($password) > 0 && strlen($username) > 0)){
         return false;
@@ -25,7 +34,7 @@ function simpleldap_authenticate($username,$password)
     // ldap escape username
     $ldap_username = (function_exists('ldap_escape')) ? ldap_escape($username, '', LDAP_ESCAPE_DN) : $username;
 
-    debug("LDAP " . __LINE__);    // Set up first connection
+    // Set up first connection
     debug("LDAP - Connecting to LDAP server: " . $simpleldap['ldapserver'] . " on port " . $simpleldap['port']);
     if ($simpleldap['port'] == 636) {
         $ds = ldap_connect('ldaps://' . $simpleldap['ldapserver'] . ':636');
@@ -43,21 +52,22 @@ function simpleldap_authenticate($username,$password)
      ldap_set_option(null, LDAP_OPT_NETWORK_TIMEOUT, 2);
      ldap_set_option(null, LDAP_OPT_PROTOCOL_VERSION, 3);
      if (!isset($simpleldap['ldaptype']) || $simpleldap['ldaptype'] == 1) {
-        // AD - need to set this{
+        // AD - need to set this
         ldap_set_option(null, LDAP_OPT_REFERRALS, 0);
     }
 
     // Bind to server
     $binddomains = explode(";",$simpleldap['basedn']);
     foreach ($binddomains as $binddomain) {
-        // set up array of formats to try
+        // Set up array of different username formats to try and bind with
         $bindnames[] = $loginfield . "=" . $ldap_username;
         $bindnames[] = "cn=" . $ldap_username;
         if (strpos($ldap_username, "@" .  $userdomain) !== false) {
-            // Try without domain suffix
+            // Remove domain suffix
             $bindnames[] = $loginfield . "=" . str_replace("@" .  $userdomain,"",$ldap_username);
             $bindnames[] = "cn=" . str_replace("@" .  $userdomain,"",$ldap_username);
-        } else { // Try with the domain suffix
+        } else {
+            // Add domain suffix
             $bindnames[] = $loginfield . "=" . $ldap_username . "@" .  $userdomain;
             $bindnames[] = "cn=" . $ldap_username . "@" .  $userdomain;
         }
@@ -90,7 +100,7 @@ function simpleldap_authenticate($username,$password)
     debug("LDAP - retrieving attributes: " . implode(",",$attributes));
 
     $foundmatch = false;
-    foreach($searchdns as $searchdn)
+    foreach ($searchdns as $searchdn)
         {
         debug("LDAP - preparing search DN: " . $searchdn);
         $ldapresult = ldap_search($ds, $searchdn, $filter, $attributes);
@@ -146,16 +156,15 @@ function simpleldap_authenticate($username,$password)
                     !isset($knowndept[strtolower($usermemberofgroup)]) // This group is not in the current list
                     && !is_numeric($usermemberofgroup)
                     ) {
-                    // ignore numbers; this is a kludgey way to deal with the fact
-                    // that some ldap servers seem to return a result count as the first value
+                    // Ignore numbers; some ldap servers return a result count as the first value
                     $newdept = simpleldap_to_utf8($usermemberofgroup);
                     $usermemberof[]=$newdept;
                     ps_query("REPLACE INTO simpleldap_groupmap (ldapgroup, rsgroup) VALUES (?, NULL)", ['s', $newdept]);
                 }
             }
         }
-        //Extract email info
-        if ((isset($entries[0][$email_attribute])) && count($entries[0][$email_attribute]) > 0) {
+        // Extract email info
+        if (isset($entries[0][$email_attribute]) && count($entries[0][$email_attribute]) > 0) {
             $email = simpleldap_to_utf8($entries[0][$email_attribute][0]);
         } elseif (strpos($username, "@" . $simpleldap['emailsuffix']) === false) {
             $email = $username . '@' . $simpleldap['emailsuffix'];
@@ -167,7 +176,7 @@ function simpleldap_authenticate($username,$password)
         if (isset($entries[0][$phone_attribute]) && count($entries[0][$phone_attribute]) > 0) {
             $phone = simpleldap_to_utf8($entries[0][$phone_attribute][0]);
         } else {
-            $phone = 'Unknown';
+            $phone = $GLOBALS["lang"]['unknown'];
         }
 
         $return['domain'] = $userdomain;

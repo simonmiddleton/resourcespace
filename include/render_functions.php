@@ -1915,8 +1915,13 @@ function display_field($n, $field, $newtab=false,$modal=false)
   if ($multiple && !hook("replace_edit_all_mode_select","",array($field["ref"])))
       {
       # When editing multiple, give option to select Replace All Text or Find and Replace
-      $onchangejs = "var fr=document.getElementById('findreplace_" . $n . "');\n";
-      $onchangejs .= "var q=document.getElementById('question_" . $n . "');\n";
+      $onchangejs = '';
+      if (in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+          {
+          $onchangejs = 'setActionPromptText(' . (int) $n . '); ';
+          }
+      $onchangejs .= "var fr=document.getElementById('findreplace_" . (int) $n . "');\n";
+      $onchangejs .= "var q=document.getElementById('question_" . (int) $n . "');\n";
       if ($field["type"] == FIELD_TYPE_CATEGORY_TREE)
         {
         $onchangejs .= "if (this.value=='RM'){branch_limit_field['field_" . $field["ref"] . "']=1;}else{branch_limit_field['field_" . $field["ref"] . "']=0;}";
@@ -1990,9 +1995,24 @@ function display_field($n, $field, $newtab=false,$modal=false)
 
       <?php hook ("edit_all_after_findreplace","",array($field,$n)); 
       }
-      ?>
 
-      <div class="Question <?php if($upload_review_mode && in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n . ($multiple ? '' : '_' . $use); ?>" <?php
+      if ($multiple && in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+          {
+          ?>
+          <div class="Question" class="stdwidth" style="display:none;" id="displayexisting_<?php echo (int) $n; ?>" data-rtfid="<?php echo (int) $field['ref']; ?>">
+            <label></label>
+            <p><?php echo escape($lang["edit_multiple_existing_values"]) . ':'; ?></p>
+            <label></label>
+            <div>
+              <div class="displayexisting_options" id="displayexisting_options_<?php echo (int) $n; ?>" data-questionid="<?php echo (int) $n; ?>"></div>
+              <label></label>
+              <input type="button" id="displayexisting_options_more_<?php echo (int) $n; ?>" style="display:none;" value="+ <?php echo escape($lang["edit_multiple_show_more"]); ?>" onclick="showMoreSelectedOptions(<?php echo (int) $n; ?>);">
+              </div>
+          </div>
+          <?php
+          }
+          ?>
+      <div class="Question <?php if($upload_review_mode && in_array($field["ref"],$locked_fields)){echo " lockedQuestion ";} if($field_save_error) { echo 'FieldSaveError'; } ?>" id="question_<?php echo $n . ($multiple ? '' : '_' . $use); ?>"<?php
       if (($multiple && !$field_save_error) || !$displaycondition || $newtab)
         {?>style="border-top:none;<?php 
         if (($multiple && $value=="") || !$displaycondition)
@@ -2005,7 +2025,16 @@ function display_field($n, $field, $newtab=false,$modal=false)
         ?>"<?php
         }
      ?>>
-     <?php 
+     <?php
+     if ($multiple && in_array($field['type'], $FIXED_LIST_FIELD_TYPES))
+        {
+        ?>
+        <div id="ActionPrompt_<?php echo (int) $n; ?>">
+          <label></label>
+          <p id="ActionPromptText_<?php echo (int) $n; ?>"></p>
+       </div>
+     <?php
+        }
      $labelname = $name;
 
      // For batch editing, CKEditor renders as a text box, as it does not work at all well when appending / prepending (it expects to work with HTML only)
@@ -5508,7 +5537,7 @@ function render_share_password_question($blank=true)
     global $lang;
     ?>
     <div class="Question">
-    <label for="sharepassword"><?php echo escape($lang["share-set-password"]) ?></label>
+    <label for="sharepassword"><?php echo strip_tags_and_attributes($lang["share-set-password"]) ?></label>
     <input type="password" id="sharepassword" name="sharepassword" autocomplete="new-password" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : escape($lang["password_unchanged"]); ?>">
     <span class="fa fa-fw fa-eye-slash infield-icon" id="share-password-icon" onclick="togglePassword('sharepassword');"></span>
     <script>

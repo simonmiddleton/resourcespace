@@ -1,7 +1,6 @@
 <?php
 command_line_only();
 
-echo implode(",",$userpermissions);
 // Setup
 $collection_allow_not_approved_share_cache = $GLOBALS["collection_allow_not_approved_share"];
 
@@ -103,7 +102,7 @@ $use_cases = [
         "collection_allow_not_approved_share" => false,
     ],
     [
-        "name" => "07 - All from parent",
+        "name" => "08 - All from parent",
         "collection" => get_featured_collections(0,[])[0],
         "result" => $resources["all"],
         "collection_allow_not_approved_share" => true,

@@ -5,7 +5,6 @@ $lang["action-trim"]='Recortar';
 $lang["video-trim"]='Recorte de video';
 $lang["video-trim-warning"]='Advertencia de recorte';
 $lang["video-trim-warning-text"]='El punto de recorte de inicio o fin excede la longitud de la vista previa del video.<br><br>La vista previa proporcionada no representará completamente el resultado final, considere aumentar la longitud de la vista previa del video y recrear los archivos de vista previa si desea previsualizar el resultado recortado.';
-$lang["video-trim_upload-type"]='Tipo de carga';
 $lang["video-trim_new-response"]='Nuevos recurso(s) creados: ID(s) de recurso(s) [ %links]. Puede continuar haciendo recortes adicionales a continuación.';
 $lang["video-trim_alt-response"]='Se crearon archivo(s) alternativo(s) para el recurso %ref: ID(s) alternativo(s) [ %links]. Puede continuar haciendo recortes adicionales a continuación.';
 $lang["videospliceconfiguration"]='Configuración de unión de video';

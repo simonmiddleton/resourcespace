@@ -334,7 +334,7 @@ if (isset($show_error)) { ?>
             {
             ?>
             <p><?php if (!$editing || $editexternalurl) {
-                echo strip_tags_and_attributes($lang["selectgenerateurlexternal"],["p"],["style"]);
+                echo strip_tags_and_attributes($lang["selectgenerateurlexternal"]);
                 } ?></p>
             <?php
             if($editing)

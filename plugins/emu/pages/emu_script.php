@@ -306,3 +306,4 @@ clear_process_lock('emu_import');
 
 ps_query('DELETE FROM sysvars WHERE name = "last_emu_import"',[]);
 ps_query('INSERT INTO sysvars VALUES ("last_emu_import", NOW())',[]);
+clear_query_cache("sysvars");

@@ -36,6 +36,12 @@ function HookRse_versionEditEdit_all_mode_js()
             // the variable is defined
             cf.style.display='none';
             }
+        
+        let existingoptions = document.getElementById('displayexisting_<?php echo (int) $n?>');
+        if (existingoptions !== null)
+            {
+            existingoptions.style.display='none';
+            }
 
         }
     else 

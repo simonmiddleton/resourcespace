@@ -2098,7 +2098,7 @@ function run_command($command, $geterrors = false, array $params = array())
     debug("CLI command: $command");
 
     $cmd_tmp_file = false;
-    if ($config_windows && strlen($command) > 8191) {
+    if ($config_windows && mb_strlen($command) > 8191) {
         // Windows systems have a hard time with the long paths (often used for video generation)
         // This work-around creates a batch file containing the command, then executes that.
         $unique_key = generateSecureKey(32);
@@ -3551,7 +3551,7 @@ function bypass_permissions(array $perms, callable $f, array $p = array())
  *
  * @param  mixed $name      Variable name
  * @param  mixed $value     String to set a new value; null to remove any existing value.
- * @return void
+ * @return bool
  */
 function set_sysvar($name,$value=null)
     {
@@ -3566,6 +3566,11 @@ function set_sysvar($name,$value=null)
 
     //Update the $sysvars array or get_sysvar() won't be aware of this change
     $sysvars[$name] = $value;
+
+    // Clear query cache so the change takes effect
+    clear_query_cache("sysvars");
+    
+    return true;
     }
 
 /**
@@ -3585,7 +3590,7 @@ function get_sysvar($name, $default=false)
         }
 
     // Load from db or return default
-    return ps_value("SELECT `value` FROM `sysvars` WHERE `name` = ?", array("s", $name), $default);
+    return ps_value("SELECT `value` FROM `sysvars` WHERE `name` = ?", array("s", $name), $default, "sysvars");
     }
 
 /**

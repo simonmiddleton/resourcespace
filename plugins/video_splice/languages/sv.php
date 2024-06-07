@@ -5,7 +5,6 @@ $lang["action-trim"]='Beskära';
 $lang["video-trim"]='Videoredigering';
 $lang["video-trim-warning"]='Beskärningsvarning';
 $lang["video-trim-warning-text"]='Din start- eller slutklipppunkt går utöver videovisningslängden.<br><br>Visningen som tillhandahålls kommer inte att helt representera det slutliga resultatet. Överväg att öka videovisningslängden och återskapa förhandsvisningsfiler om du vill förhandsgranska det klippta resultatet.';
-$lang["video-trim_upload-type"]='Ladda upp typ';
 $lang["video-trim_new-response"]='Nya resurser skapade: Resurs-ID(n) [ %länkar]. Du kan fortsätta att göra ytterligare beskärningar nedan.';
 $lang["video-trim_alt-response"]='Alternativa fil(er) skapade för resurs %ref: Alternativa ID:n [ %länkar] du kan fortsätta att göra ytterligare beskärningar nedan.';
 $lang["videospliceconfiguration"]='Videoredigeringskonfiguration';

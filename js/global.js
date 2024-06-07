@@ -1522,10 +1522,18 @@ function batch_edit_toggle_edit_multi_checkbox_question(question_ref)
     var this_checkbox=document.getElementById('editthis_' + question_ref);
     var copyfrom = document.getElementById('copy_from_field_' + this_checkbox.name.substring(15));
 
+    var displayexisting = document.getElementById('displayexisting_' + question_ref);
+
     if(jQuery("#editthis_" + question_ref).prop("checked"))
         {
         question.style.display = 'block';
         modeselect.style.display = 'block';
+        if(displayexisting)
+            {
+            displayexisting.style.display = 'block';
+            getCurrentFixedListFieldVals(question_ref);
+            setActionPromptText(question_ref);
+            }
         }
     else
         {
@@ -1542,12 +1550,19 @@ function batch_edit_toggle_edit_multi_checkbox_question(question_ref)
             {
             copyfrom.style.display = 'none';
             }
+        // Only present for fixed list fields.
+        if(displayexisting)
+            {
+            displayexisting.style.display = 'none';
+            jQuery('div .currentmultiquestion' + question_ref).hide();
+            }
 
         document.getElementById('modeselectinput_' + question_ref).selectedIndex = 0;
         }
 
     return;
     }
+
 
 /*
 * 

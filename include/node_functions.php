@@ -288,28 +288,31 @@ function get_node($ref, array &$returned_node, $cache = true)
 * 
 * @return array
 */
-function get_nodes($resource_type_field, $parent = null, $recursive = false, $offset = null, $rows = null, $name = '', 
+function get_nodes($resource_type_field = null, $parent = null, $recursive = false, $offset = null, $rows = null, $name = '', 
     $use_count = false, $order_by_translated_name = false)
     {
     global $FIXED_LIST_FIELD_TYPES;
     debug_function_call("get_nodes", func_get_args());
 
-    if(!is_int_loose( $resource_type_field))
+    if(!is_int_loose( $resource_type_field) && !is_null($resource_type_field))
         {
         return [];    
         }
-        
+
     if(!is_null($parent))
         {
         if ($parent == ""){$parent=null;}
         else {$parent = (int) $parent;}
         }
 
-    $fieldinfo  = get_resource_type_field($resource_type_field);
-    if($fieldinfo === false){return false;}
-    if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) && (is_null($rows) || (int)$rows > 10000 ))
+    if (!is_null($resource_type_field))
         {
-        $rows = 10000;
+        $fieldinfo  = get_resource_type_field($resource_type_field);
+        if($fieldinfo === false){return false;}
+        if(!in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) && (is_null($rows) || (int)$rows > 10000 ))
+            {
+            $rows = 10000;
+            }
         }
 
     $return_nodes = array();
@@ -318,7 +321,13 @@ function get_nodes($resource_type_field, $parent = null, $recursive = false, $of
     $sql = "";
     add_sql_node_language($sql,$parameters);
 
-    $parameters[] = "i";$parameters[] = $resource_type_field;
+    // Filter by resource type if required
+    $filter_by_resource_type_field="true";
+    if (!is_null($resource_type_field))
+        {
+        $filter_by_resource_type_field="resource_type_field=?";
+        $parameters[]="i";$parameters[]=$resource_type_field;
+        }
 
     // Filter by name if required
     $filter_by_name = '';
@@ -368,13 +377,13 @@ function get_nodes($resource_type_field, $parent = null, $recursive = false, $of
         
     $query = "SELECT " . columns_in("node") . $sql . $use_count_sql . "
         FROM node 
-        WHERE resource_type_field = ?
-        " . $filter_by_name . "
+        WHERE 
+        " . $filter_by_resource_type_field . $filter_by_name . "
         AND " . $parent_sql . "
         ORDER BY " . $order_by . ", ref ASC
         " . $limit;
 
-    $sqlcache = in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES) ? "schema" : "";
+    $sqlcache = (is_null($resource_type_field) || in_array($fieldinfo["type"],$FIXED_LIST_FIELD_TYPES)) ? "schema" : "";
     $nodes = ps_query($query,$parameters,$sqlcache);
   
     // No need to recurse if no parent was specified as we already have all nodes

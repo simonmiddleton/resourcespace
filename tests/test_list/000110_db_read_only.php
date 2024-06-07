@@ -28,6 +28,7 @@ $case0=false;
 try
     {
     ps_query("INSERT INTO sysvars (`name`, `value`) VALUES ('test_read_only_mode','true')");
+    clear_query_cache("sysvars");
     }
 catch(Throwable $e)
     {
@@ -41,6 +42,8 @@ $case1=false;
 try
     {
     ps_query("INSERT INTO sysvars (`name`, `value`) VALUES ('test_read_only_mode1','true')");
+    clear_query_cache("sysvars");
+    
     echo "POP";
     }
 catch(Throwable $e)

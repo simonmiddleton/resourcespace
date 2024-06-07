@@ -5,7 +5,6 @@ $lang["action-trim"]='Tăiere';
 $lang["video-trim"]='Tăiere video';
 $lang["video-trim-warning"]='Avertisment de tăiere';
 $lang["video-trim-warning-text"]='Punctul sau punctele de tăiere de început sau de sfârșit depășesc lungimea previzualizării video.<br><br>Previzualizarea furnizată nu va reprezenta complet rezultatul final, vă rugăm să luați în considerare creșterea lungimii previzualizării video și recrearea fișierelor de previzualizare dacă doriți să previzualizați rezultatul tăiat.';
-$lang["video-trim_upload-type"]='Tipul de încărcare';
 $lang["video-trim_new-response"]='Resurs(e) noi create: ID-uri resurse [ %links]. Puteți continua să faceți tăieri suplimentare mai jos.';
 $lang["video-trim_alt-response"]='Fișier(e) alternative create pentru resursa %ref: ID-uri alternative [ %links]. Puteți continua să faceți tăieri suplimentare mai jos.';
 $lang["videospliceconfiguration"]='Configurarea de îmbinare a videoclipurilor';

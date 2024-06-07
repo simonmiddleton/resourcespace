@@ -5500,6 +5500,7 @@ function get_featured_collections(int $parent, array $ctx)
                       c.bg_img_resource_ref,
                       c.order_by,
                       c.created,
+                      c.savedsearch,
                       count(DISTINCT cr.resource) > 0 AS has_resources,
                       count(DISTINCT cc.ref) > 0 AS has_children
                  FROM collection AS c
@@ -5748,7 +5749,7 @@ function is_featured_collection_category(array $fc)
         return false;
         }
 
-    return $fc["type"] == COLLECTION_TYPE_FEATURED && $fc["has_resources"] == 0;
+    return $fc["type"] == COLLECTION_TYPE_FEATURED && $fc["has_resources"] == 0 && is_null($fc["savedsearch"]);
     }
 
 /**
