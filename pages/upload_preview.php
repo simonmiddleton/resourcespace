@@ -9,12 +9,14 @@ $ref=getval("ref","",true);
 $status="";
 $error = false;
 $resource=get_resource_data($ref);
-# Not allowed to edit this resource?
-if (!get_edit_access($ref,$resource["archive"],$resource)) {
-        $error=$lang['error-permissiondenied'];
-        error_alert($error);
-        exit();
-        }
+
+if (!is_array($resource)) {
+    error_alert($lang['resourcenotfound']);
+    exit();
+} elseif (!get_edit_access($ref,$resource["archive"],$resource)) {
+    error_alert($lang['error-permissiondenied']);
+    exit();
+}
         
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
     {
