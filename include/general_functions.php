@@ -5484,6 +5484,10 @@ function get_size_info(array $size, ?array $originalSize = null): string
                 escape($lang['ppi']),
             );
         }
+    
+    if (isset($size["filesize"])) {
+        $output .= sprintf('<p>%s</p>', strip_tags_and_attributes($size["filesize"]));
+    }
 
     return $output;
     }
