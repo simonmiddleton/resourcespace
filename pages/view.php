@@ -789,7 +789,8 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 {
                                 }
                             else
-                                { 
+                                {
+                                // TODO: marker point
                                 ?>
                                 <table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions">
                                     <tr <?php hook("downloadtableheaderattributes"); ?> id="ResourceDownloadOptionsHeader">
@@ -844,7 +845,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     ) {
                                                         ?>
                                                         <td><?php echo escape($lang["fileinformation"]); ?></td>
-                                                        <td><?php echo escape($lang["filesize"]); ?></td>
+                                                        <!-- <td><?php echo escape($lang["filesize"]); ?></td> -->
                                                         <td class="textcenter"><?php echo escape($lang["options"]); ?></td>
                                                         </tr>
                                                         <?php
@@ -860,7 +861,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             }
                                                             ?>
                                                     </td>
-                                                    <td class="DownloadFileSize"><?php echo strip_tags_and_attributes($sizes[$n]["filesize"]); ?></td>
+                                                    <!-- <td class="DownloadFileSize"><?php echo strip_tags_and_attributes($sizes[$n]["filesize"]); ?></td> -->
                                                     <?php 
                                                     if ($fulldownload && $missing_original) { ?>
                                                         <td class="MissingFile">
@@ -883,6 +884,8 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 </tr>
 
                                                 <?php
+                                                /* 
+                                                TODO: remove if not required as a reference anymore - check implementation inside render_resource_tools_size_download_options()
                                                 if (
                                                     !hook("previewlinkbar")
                                                     && $downloadthissize
@@ -911,8 +914,17 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                         </td>
                                                     </tr>
 <?php
-                                                    }
+                                                    } */
                                                 }
+
+                                            render_resource_tools_size_download_options(
+                                                $resource,
+                                                [
+                                                    'download_multisize' => $download_multisize,
+                                                    'sizes' => $sizes,
+                                                    'urlparams' => $urlparams,
+                                                ]
+                                            );
                                             }
                                         elseif (strlen((string) $resource["file_extension"])>0 && !($access==1 && $restricted_full_download==false))
                                             {
@@ -1111,6 +1123,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
 <?php
                                             }
 
+                                        // render_resource_tools_size_download_options();
                                         hook('additionalresourcetools2', '', array($resource, $access));
                                         include "view_alternative_files.php";
                                     ?>

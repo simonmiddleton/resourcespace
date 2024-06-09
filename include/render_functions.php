@@ -7101,3 +7101,79 @@ function render_resource_view_image(array $resource, array $context)
     </div>
     <?php
     }
+
+function render_resource_tools_size_download_options(array $resource, array $ctx)
+{
+    $ref = $resource['ref'];
+    $download_multisize = $ctx['download_multisize'];
+    $sizes = $ctx['sizes'] ?? get_image_sizes($resource['ref'], false, $resource['file_extension'], false);
+    $urlparams = $ctx['urlparams'];
+
+    if (!($resource['has_image'] !== RESOURCE_PREVIEWS_NONE && $download_multisize)) {
+        return;
+    }
+
+    $allowed_sizes = [];
+    foreach ($sizes as $size) {
+        if ($size['id'] === '') {
+            continue;
+        }
+
+        $downloadthissize = resource_download_allowed($ref, $size['id'], $resource['resource_type']);
+        if ($GLOBALS['hide_restricted_download_sizes'] && !$downloadthissize && !checkperm('q')) {
+            continue;
+        }
+
+        if ($downloadthissize && $size['allow_preview'] == 1 && !hook('previewlinkbar')) {
+            // Fake a sizes' key entry to use it later in JS land when updating the View button
+            $size['allow_preview_data'] = [
+                // 'viewsize' => $data_viewsize, # this could also not be set as we already have $size['id'], unsure if its globaling is required
+                'viewsizeurl' => hook('getpreviewurlforsize'),
+                'href' => generateURL(
+                        "{$GLOBALS['baseurl']}/pages/preview.php",
+                        $urlparams,
+                        ['ext' => $resource['file_extension']]
+                    )
+                    . '&' . hook('previewextraurl'),
+            ];
+        }
+
+        $allowed_sizes[] = $size;
+        // add_download_column($ref, $size, $downloadthissize); # todo: this needs generated on the fly or something more generic
+    }
+
+    if ($allowed_sizes === []) {
+        return;
+    }
+?>
+<tr class="DownloadDBlend">
+    <td class="DownloadFileName Picker">
+        <select id="size">
+            <?php
+            foreach ($allowed_sizes as $allowed_size) {
+                echo render_dropdown_option($allowed_size['id'], $allowed_size['name']);
+            }
+            ?>
+        </select>
+        <p id="sizeInfo"></p>
+    </td>
+    <!-- <td class="Picker">
+        <select id="format">
+        </select>
+    </td> -->
+    <td class="DownloadButton">
+        <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php echo escape($GLOBALS['lang']['action-download']); ?></a>
+        <a
+            id="previewlink"
+            class="enterLink previewsizelink previewsize-AAA"
+            href="AAA"
+            data-viewsize="AAA"
+            data-viewsizeurl="AAA"
+        ><?php echo escape($GLOBALS['lang']["action-view"]); ?></a>
+    </td>
+</tr>
+<script>
+// todo: update view button based on allowed_size['allow_preview_data'] details. Replace AAA placeholders as needed
+</script>
+<?php
+}

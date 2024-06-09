@@ -296,7 +296,7 @@ function HookFormat_chooserViewReplacedownloadoptions()
     include __DIR__ . "/../../../pages/view_alternative_files.php";
     # --- end of alternative files listing
     ?></table><?php
-    return true;
+    return false; #todo: temporary so I can compare existing with new rendering
     }
 
 ?>
