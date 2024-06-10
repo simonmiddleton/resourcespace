@@ -94,13 +94,6 @@ $thumb     = get_resource_path($ref, false, 'pre', false, 'jpg', true, 1, false,
 $thumb_raw = $thumb;
 $thumb     = urlencode($thumb);
 
-# Choose a colour based on the theme.
-$theme=(isset($userfixedtheme) && $userfixedtheme!="")?$userfixedtheme:getval("colourcss","greyblu");
-$color="505050";$bgcolor1="666666";$bgcolor2="111111";$buttoncolor="999999";
-if ($theme=="greyblu") {$color="446693";$bgcolor1="6883a8";$bgcolor2="203b5e";$buttoncolor="adb4bb";}   
-if ($theme=="whitegry") {$color="ffffff";$bgcolor1="ffffff";$bgcolor2="dadada";$buttoncolor="666666";}  
-if ($theme=="black") {$bgcolor1="666666";$bgcolor2="111111";$buttoncolor="999999";} 
-
 $width=$ffmpeg_preview_max_width;
 $height=$ffmpeg_preview_max_height;
 
