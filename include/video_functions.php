@@ -79,3 +79,57 @@ function display_video_subtitles($ref,$access)
             }
         }
     }
+
+/**
+ * Generate JSON array of VideoJS options to be used in the data-setup attribute
+ * 
+ * @param bool  $view_as_gif            True if the video is a GIF file
+ * @param bool  $play_on_hover          True if playing video on hover
+ * @param array $video_preview_sources  Array of preview sources, including URL, type and label
+ *
+ * @return string|false
+ */
+function generate_videojs_options(bool $view_as_gif, bool $play_on_hover, array $video_preview_sources)
+{
+    global $videojs_resolution_selection, $videojs_resolution_selection_default_res;
+
+    $data_setup = ["playbackRates" => [0.5, 1, 1.5, 2]];
+
+    if ($view_as_gif) {
+        $data_setup = array_merge($data_setup, [
+            "controls" => false,
+            "autoplay" => true,
+            "loop" => true,
+            "muted" => true
+        ]);
+    }
+
+    if ($play_on_hover && !$view_as_gif) {
+        $data_setup = array_merge($data_setup, [
+            "loadingSpinner" => false,
+            "TextTrackDisplay" => true,
+            "nativeTextTracks" => false,
+            "children" => [
+                "bigPlayButton" => false,
+                "controlBar" => [
+                    "children" => [
+                        "playToggle" => false,
+                        "volumeControl" => false
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    if (isset($videojs_resolution_selection) && count($video_preview_sources) > 0 && !$view_as_gif) {
+        $data_setup = array_merge($data_setup, [
+            "plugins" => [
+                "videoJsResolutionSwitcher" => [
+                    "default" => $videojs_resolution_selection_default_res
+                ]
+            ]
+        ]);
+    }
+
+    return json_encode($data_setup);
+}
