@@ -1871,7 +1871,7 @@ function create_previews_using_im(
                         $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize %%TARGETDIMENSIONSWM%% -tile %%WMFILE%% -draw %%REC_DIMENSIONS%% %%WMTARGET%%";
 
                         $cmdparams = [];
-                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_safe_basename");
+                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_valid_rs_path");
                         $cmdparams["%%REC_DIMENSIONS%%"] = new CommandPlaceholderArg("rectangle 0,0 " . (int) $tw . "," . (int)$th,"is_string");
                         $cmdparams["%%WMTARGET%%"] = new CommandPlaceholderArg($wmpath,"is_safe_basename");
                         }
@@ -1884,7 +1884,7 @@ function create_previews_using_im(
                         $cmdparams = [];
                         $cmdparams["%%PATH%%"] = new CommandPlaceholderArg($path, 'is_safe_basename');
                         $cmdparams["%%QUALITY%%"] = (int) $imagemagick_quality;
-                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_safe_basename");
+                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_valid_rs_path");
                         $cmdparams["%%REC_DIMENSIONS%%"] = new CommandPlaceholderArg("rectangle 0,0 " . (int) $tw . "," . (int)$th,"is_string");
                         $cmdparams["%%WMTARGET%%"] = new CommandPlaceholderArg($wmpath,"is_safe_basename");
                         }
@@ -1953,7 +1953,7 @@ function create_previews_using_im(
                         $runcommand = "{$convert_fullpath} %%FILE%% %%WMFILE%% -flatten %%WMPOSITION%% %%WM_SCALED_DIMS%% %%TARGETDIMENSIONSWM%% %%WMTARGET%%";
                         $cmdparams = [];
                         $cmdparams["%%FILE%%"] = new CommandPlaceholderArg($file,"is_safe_basename");
-                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_safe_basename");
+                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_valid_rs_path");
                         $cmdparams["%%WMPOSITION%%"] = new CommandPlaceholderArg(
                             $watermark_single_image['position'],
                             fn($val): bool => in_array($val,
@@ -1974,6 +1974,11 @@ function create_previews_using_im(
                         }
                     if(!$imagemagick_mpr)
                         {
+                        $cmdparams["%%IMAGEMAGICK_COLORSPACE%%"] = new CommandPlaceholderArg($imagemagick_colorspace, null); $cmdparams["%%TARGETDIMENSIONSWM%%"] = new CommandPlaceholderArg(
+                            (int)$tw . "x" . (int)$th
+                            . (($previews_allow_enlarge && $id != "hpr") ? "" : ">")
+                            , "is_string"
+                        );
                         run_command($runcommand, false, $cmdparams);
                         }
 
@@ -2648,8 +2653,11 @@ function extract_indd_pages($filename)
     $exiftool_fullpath = get_utility_path('exiftool');
     if ($exiftool_fullpath)
         {
-        $cmd=$exiftool_fullpath.' -b -j -pageimage ' . escapeshellarg($filename);
-        $array = run_command($cmd);
+        $cmd = $exiftool_fullpath . ' -b -j -pageimage %%FILENAME%%';
+        $array = run_command($cmd,
+            false,
+            ["%%FILENAME%%" => new CommandPlaceholderArg($filename,"is_safe_basename")],
+        );
         $array = json_decode($array);
         if(isset($array[0]->PageImage))
             {
