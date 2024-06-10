@@ -4914,23 +4914,12 @@ function get_system_status()
             {
             $return['results']['quota_limit'] = [
                 'status' => 'FAIL',
-                'info' => $percent . '% used - nearly full.',
+                'info' => $percent . '% used',
                 'avail' => $avail, 'used' => $used, 'percent' => $percent,
                 'severity' => SEVERITY_WARNING,
                 'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
             ];
             ++$fail_tests;
-            }
-        elseif($percent >= 100)
-            {
-            $return['results']['quota_limit'] = [
-                'status' => 'FAIL',
-                'info' => $percent . '% used - over quota.',
-                'avail' => $avail, 'used' => $used, 'percent' => $percent,
-                'severity' => SEVERITY_CRITICAL,
-                'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_CRITICAL],
-            ];
-            return $return;
             }
         else
             {
