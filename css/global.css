@@ -109,7 +109,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     padding: 0 1rem;
     vertical-align: middle;
     display: block;
-    margin: 0.3rem 0;
+    margin: 0.15rem 0 0.3rem 0;
 }
 
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
