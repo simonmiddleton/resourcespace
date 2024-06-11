@@ -1014,7 +1014,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
 */
 function render_dropdown_option($value, $label, array $data_attr = array(), $extra_tag_attributes  = '')
     {
-    $result = '<option value="' . $value . '"';
+    $result = '<option value="' . escape($value) . '"';
 
     // Add any extra tag attributes
     if(trim($extra_tag_attributes) !== '')
@@ -7102,7 +7102,7 @@ function render_resource_view_image(array $resource, array $context)
     <?php
     }
 
-function render_resource_tools_size_download_options(array $resource, array $ctx)
+function render_resource_tools_size_download_options(array $resource, array $ctx): void
 {
     $ref = $resource['ref'];
     $download_multisize = $ctx['download_multisize'];
@@ -7127,8 +7127,7 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
         if ($downloadthissize && $size['allow_preview'] == 1 && !hook('previewlinkbar')) {
             // Fake a sizes' key entry to use it later in JS land when updating the View button
             $size['allow_preview_data'] = [
-                // 'viewsize' => $data_viewsize, # this could also not be set as we already have $size['id'], unsure if its globaling is required
-                'viewsizeurl' => hook('getpreviewurlforsize'),
+                'viewsizeurl' => (string) hook('getpreviewurlforsize'),
                 'href' => generateURL(
                         "{$GLOBALS['baseurl']}/pages/preview.php",
                         $urlparams,
@@ -7165,15 +7164,64 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
         <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php echo escape($GLOBALS['lang']['action-download']); ?></a>
         <a
             id="previewlink"
-            class="enterLink previewsizelink previewsize-AAA"
-            href="AAA"
-            data-viewsize="AAA"
-            data-viewsizeurl="AAA"
+            class="enterLink previewsizelink DisplayNone"
+            href="#"
+            data-viewsize=""
+            data-viewsizeurl=""
+            data-viewsizedata="<?php
+                echo base64_encode(
+                    json_encode(
+                        array_map(
+                            get_sub_array_with(['allow_preview', 'allow_preview_data']),
+                            array_column($allowed_sizes, null, 'id')
+                        ),
+                        JSON_NUMERIC_CHECK
+                    )
+                );
+            ?>"
         ><?php echo escape($GLOBALS['lang']["action-view"]); ?></a>
     </td>
 </tr>
 <script>
-// todo: update view button based on allowed_size['allow_preview_data'] details. Replace AAA placeholders as needed
+jQuery('select#size').change(function() {
+    let picker = jQuery(this);
+    let selected_size = picker.val();
+    let view_btn = picker.parent().siblings('.DownloadButton').children('a#previewlink');
+    let preview_size_data = jQuery.parseJSON(atob(view_btn.data('viewsizedata')));
+
+    view_btn[0].classList.forEach(function(value) {
+        console.debug('Class = %o', value);
+        if (value.startsWith('previewsize-')) {
+            view_btn.removeClass(value);
+        }
+    });
+
+    // View button (toggle display and update link)
+    if (
+        preview_size_data.hasOwnProperty(selected_size)
+        && preview_size_data[selected_size].hasOwnProperty('allow_preview')
+        && preview_size_data[selected_size].hasOwnProperty('allow_preview_data')
+        && preview_size_data[selected_size]['allow_preview'] === 1
+    ) {
+        view_btn.attr('data-viewsize', selected_size);
+        view_btn.attr('data-viewsizeurl', preview_size_data[selected_size]['allow_preview_data']['viewsizeurl']);
+        view_btn.prop('href', preview_size_data[selected_size]['allow_preview_data']['href']);
+        view_btn.addClass('previewsize-' + selected_size);
+        view_btn.removeClass('DisplayNone');
+    } else {
+        view_btn.addClass('DisplayNone');
+        view_btn.attr('data-viewsize', '');
+        view_btn.attr('data-viewsizeurl', '');
+        view_btn.prop('href', '#');
+    }
+
+
+
+
+
+    // updateSizeInfo();
+    // updateDownloadLink();
+});
 </script>
 <?php
 }
