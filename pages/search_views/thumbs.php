@@ -219,7 +219,7 @@ if (!hook("renderresultthumb"))
                 {continue;}
 
             #value filter plugin -tbd   
-            $value=@$result[$n]['field'.$df[$x]['ref']];
+            $value=$result[$n]['field'.$df[$x]['ref']] ?? "";
             $plugin="../plugins/value_filter_" . $df[$x]['name'] . ".php";
             if ($df[$x]['value_filter']!="")
                 {eval(eval_check_signed($df[$x]['value_filter']));}
