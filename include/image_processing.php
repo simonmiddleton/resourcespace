@@ -1367,11 +1367,11 @@ function create_previews_using_im(
     array $onlysizes = []
     ): bool
     {
-    global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
+    global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$previews_allow_enlarge,$alternative_file_previews;
     global $imagemagick_mpr, $imagemagick_mpr_preserve_profiles, $imagemagick_mpr_preserve_metadata_profiles, $config_windows;
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors, $watermark;
-    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
+    global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension, $watermark_single_image;
 
     $icc_transform_complete=false;
     debug_function_call(__FUNCTION__, func_get_args());
@@ -1488,6 +1488,25 @@ function create_previews_using_im(
                 $command_parts = [];
                 }
             }
+
+        // Set up common command parameters
+        $cmdparams["%%IMAGEMAGICK_COLORSPACE%%"] = new CommandPlaceholderArg($GLOBALS["imagemagick_colorspace"], null);
+        $cmdparams["%%QUALITY%%"] = new CommandPlaceholderArg($imagemagick_quality,  'is_int_loose');
+        if (trim($watermark ?? "") !== "") {
+            $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"file_exists");
+        }
+        if(isset($watermark_single_image)) {
+            $cmdparams["%%WMPOSITION%%"] = new CommandPlaceholderArg(
+                $watermark_single_image['position'] ?? "Center",
+                fn($val): bool => in_array($val,
+                    ["NorthWest","North","NorthEast","West","Center","East","SouthWest","South","SouthEast"]
+                )
+            );
+        }
+
+        if(isset($default_icc_file)) {
+            $cmdparams["%%DEFAULT_ICC_FILE%%"] = new CommandPlaceholderArg($default_icc_file, 'is_safe_basename');
+        }
 
         $created_count=0;
         $override_size = false;
@@ -1659,7 +1678,7 @@ function create_previews_using_im(
 
             # Find the target path
             $path=get_resource_path($ref,true,$ps[$n]["id"],($imagemagick_mpr ? true : false),"jpg",-1,1,false,"",$alternative);
-
+            $cmdparams["%%PATH%%"] = new CommandPlaceholderArg($path, 'is_valid_rs_path');
             if($imagemagick_mpr)
                 {
                 $mpr_parts['targetpath']=$path;
@@ -1689,7 +1708,6 @@ function create_previews_using_im(
             # Always make pre/thm/col sizes regardless of source image size.
             if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && $watermark !== '') || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
                 {
-                $cmdparams = [];
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',"Generating preview size " . $ps[$n]["id"]); // log the size being created but not the path
                 debug("Generating preview size " . $ps[$n]["id"] . " to " . $path);
 
@@ -1716,7 +1734,8 @@ function create_previews_using_im(
                     // we have an extracted ICC profile, so use it as source
                     if ($icc_preview_profile != "" && $icc_preview_profile_embed)
                         {
-                        $targetprofile = dirname(__FILE__) . '/../iccprofiles/' . $icc_preview_profile;
+                        $profilepath = dirname(__FILE__,2) . "/iccprofiles/" . $icc_preview_profile;
+                        $targetprofile = file_exists($profilepath) ? $profilepath : "";
                         }
                     else
                         {
@@ -1733,9 +1752,9 @@ function create_previews_using_im(
                     else
                         {
                         $profile  = " -strip -profile %%ICCPATH%% " . $icc_preview_options . ' ' . ($targetprofile != "" ? "-profile %%TARGETPROFILE%% " : "");
-                        $cmdparams["%%ICCPATH%%"] = new CommandPlaceholderArg($iccpath, 'realpath');
+                        $cmdparams["%%ICCPATH%%"] = new CommandPlaceholderArg($iccpath, 'is_valid_rs_path');
                         if($targetprofile != "") {
-                            $cmdparams["%%TARGETPROFILE%%"] = new CommandPlaceholderArg($targetprofile, 'is_safe_basename');
+                            $cmdparams["%%TARGETPROFILE%%"] = new CommandPlaceholderArg($targetprofile, 'file_exists');
                         }
                         }
 
@@ -1779,7 +1798,6 @@ function create_previews_using_im(
                             else
                                 {
                                 $profile = "-profile %%DEFAULT_ICC_FILE%%";
-                                $cmdparams["%%DEFAULT_ICC_FILE%%"] = new CommandPlaceholderArg($default_icc_file, 'is_safe_basename');
                                 }
                             }
                         else
@@ -1795,13 +1813,11 @@ function create_previews_using_im(
                                 {
                                 // Keep any profile extracted (don't use -strip).
                                 $profile ="  -colorspace %%IMAGEMAGICK_COLORSPACE%% ";
-                                $cmdparams["%%IMAGEMAGICK_COLORSPACE%%"] = new CommandPlaceholderArg($imagemagick_colorspace, null);
                                 }
                             else
                                 {
                                 # By default, strip the colour profiles ('+' is remove the profile, confusingly)
                                 $profile = "-strip -colorspace %%IMAGEMAGICK_COLORSPACE%% ";
-                                $cmdparams["%%IMAGEMAGICK_COLORSPACE%%"] = new CommandPlaceholderArg($imagemagick_colorspace, null);
                                 }
                             }
                         }
@@ -1821,7 +1837,6 @@ function create_previews_using_im(
                             (int)$tw . "x" . (int)$th
                             . (($previews_allow_enlarge && $id != "hpr") ? "" : ">")
                             , "is_string");
-                        $cmdparams["%%PATH%%"] = new CommandPlaceholderArg($path, 'is_safe_basename');
                         if(!hook("imagepskipthumb"))
                             {
                             run_command($runcommand, false, $cmdparams);
@@ -1852,7 +1867,6 @@ function create_previews_using_im(
                     }
 
                 # Add a watermarked image too?
-                global $watermark, $watermark_single_image;
 
                 if (!hook("replacewatermarkcreation","",array($ref, $ps, $n, $alternative, $profile, $command))
                      && ($alternative==-1 || ($alternative!==-1 && $alternative_file_previews))
@@ -1860,7 +1874,13 @@ function create_previews_using_im(
                     {
                     $wmpath=get_resource_path($ref,true,$ps[$n]["id"],false,"jpg",-1,1,true,'',$alternative);
                     if (file_exists($wmpath)) {unlink($wmpath);}
-
+                    $cmdparams["%%WMTARGET%%"] = new CommandPlaceholderArg($wmpath,"is_safe_basename");
+                    $cmdparams["%%REC_DIMENSIONS%%"] = new CommandPlaceholderArg("rectangle 0,0 " . (int) $tw . "," . (int)$th,"is_string");
+                    $cmdparams["%%TARGETDIMENSIONSWM%%"] = new CommandPlaceholderArg(
+                        (int)$tw . "x" . (int)$th
+                        . (($previews_allow_enlarge && $id != "hpr") ? "" : ">")
+                        , "is_string"
+                    );
                     if($imagemagick_mpr)
                         {
                         $mpr_parts['wmpath']=$wmpath;
@@ -1869,24 +1889,12 @@ function create_previews_using_im(
                     if(!isset($watermark_single_image))
                         {
                         $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize %%TARGETDIMENSIONSWM%% -tile %%WMFILE%% -draw %%REC_DIMENSIONS%% %%WMTARGET%%";
-
-                        $cmdparams = [];
-                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_valid_rs_path");
-                        $cmdparams["%%REC_DIMENSIONS%%"] = new CommandPlaceholderArg("rectangle 0,0 " . (int) $tw . "," . (int)$th,"is_string");
-                        $cmdparams["%%WMTARGET%%"] = new CommandPlaceholderArg($wmpath,"is_safe_basename");
                         }
 
                     // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
                     if (in_array($extension,array("png","gif","tif","tiff")) )
                         {
                         $runcommand = $convert_fullpath . ' %%PATH%% ' . $profile . " " . $flatten . ' -quality %%QUALITY%% -tile %%WMFILE%% -draw %%REC_DIMENSIONS%% %%WMTARGET%%';
-
-                        $cmdparams = [];
-                        $cmdparams["%%PATH%%"] = new CommandPlaceholderArg($path, 'is_safe_basename');
-                        $cmdparams["%%QUALITY%%"] = (int) $imagemagick_quality;
-                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_valid_rs_path");
-                        $cmdparams["%%REC_DIMENSIONS%%"] = new CommandPlaceholderArg("rectangle 0,0 " . (int) $tw . "," . (int)$th,"is_string");
-                        $cmdparams["%%WMTARGET%%"] = new CommandPlaceholderArg($wmpath,"is_safe_basename");
                         }
 
                     // Generate the command for a single watermark instead of a tiled one
@@ -1908,6 +1916,12 @@ function create_previews_using_im(
 
                             debug("create_previews: reversed sw - sh with tw - th : $sw - $sh with $tw - $th");
                             }
+                        
+                        $cmdparams["%%TARGETDIMENSIONSWM%%"] = new CommandPlaceholderArg(
+                            (int)$tw . "x" . (int)$th
+                            . (($previews_allow_enlarge && $id != "hpr") ? "" : ">")
+                            , "is_string"
+                        );
 
                         // Work out minimum of target dimensions, by calulating targets dimensions based on actual file ratio to get minimum dimension, essential to calulate correct values based on ratio of watermark
                         // Landscape
@@ -1951,34 +1965,15 @@ function create_previews_using_im(
 
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
                         $runcommand = "{$convert_fullpath} %%FILE%% %%WMFILE%% -flatten %%WMPOSITION%% %%WM_SCALED_DIMS%% %%TARGETDIMENSIONSWM%% %%WMTARGET%%";
-                        $cmdparams = [];
                         $cmdparams["%%FILE%%"] = new CommandPlaceholderArg($file,"is_safe_basename");
-                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_valid_rs_path");
-                        $cmdparams["%%WMPOSITION%%"] = new CommandPlaceholderArg(
-                            $watermark_single_image['position'],
-                            fn($val): bool => in_array($val,
-                                ["NorthWest","North","NorthEast","West","Center","East","SouthWest","South","SouthEast"]
-                            )
-                        );
                         $cmdparams["%%WM_SCALED_DIMS%%"] = new CommandPlaceholderArg(
                             (int)$wm_scaled_width . "x" . (int)$wm_scaled_height . "+0+0",
                             "is_string"
                         );
-                        $cmdparams["%%TARGETDIMENSIONSWM%%"] = new CommandPlaceholderArg(
-                            (int)$tw . "x" . (int)$th
-                            . (($previews_allow_enlarge && $id != "hpr") ? "" : ">")
-                            , "is_string"
-                        );
-
                         $cmdparams["%%WMTARGET%%"] = new CommandPlaceholderArg($wmpath,"is_safe_basename");
                         }
                     if(!$imagemagick_mpr)
                         {
-                        $cmdparams["%%IMAGEMAGICK_COLORSPACE%%"] = new CommandPlaceholderArg($imagemagick_colorspace, null); $cmdparams["%%TARGETDIMENSIONSWM%%"] = new CommandPlaceholderArg(
-                            (int)$tw . "x" . (int)$th
-                            . (($previews_allow_enlarge && $id != "hpr") ? "" : ">")
-                            , "is_string"
-                        );
                         run_command($runcommand, false, $cmdparams);
                         }
 
@@ -3124,8 +3119,8 @@ function extract_icc($infile, $ref='') {
 
    // Detect the ":" prefix in $infile used for RAW images
     $cmdparams = [
-    "%%INFILE%%" => ((!$config_windows && strpos($infile, ':') !== false) ? strtolower($path_parts['extension']) . ':' : '') . $infile . "[0]",
-    "%%OUTFILE%%" => $outfile,
+        "%%INFILE%%" => ((!$config_windows && strpos($infile, ':') !== false) ? strtolower($path_parts['extension']) . ':' : '') . $infile . "[0]",
+        "%%OUTFILE%%" => $outfile,
     ];
     $cmdout = run_command($cmd, false, $cmdparams);
 
