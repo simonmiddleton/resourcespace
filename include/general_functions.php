@@ -2066,7 +2066,8 @@ function escape_command_args($cmd, array $args): string
 
     foreach ($args as $placeholder => $value) {
         if (strpos($cmd, $placeholder) === false) {
-            trigger_error("Unable to find arg '{$placeholder}' in '{$cmd}'. Make sure the placeholder exists in the command string", E_USER_ERROR);
+            debug("Unable to find arg '{$placeholder}' in '{$cmd}'. Make sure the placeholder exists in the command string");
+            continue;
         }
         elseif (!($value instanceof CommandPlaceholderArg)) {
             $value = new CommandPlaceholderArg($value, null);
