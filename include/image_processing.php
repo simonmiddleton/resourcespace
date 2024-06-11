@@ -4179,11 +4179,17 @@ function create_image_alternatives(int $ref, array $params, $force = false)
         {
         $alternate_config = $GLOBALS["image_alternatives"][$n];
         debug("Considering image alternative. Name: ''" . $alternate_config['name'] . "', description: '" . ($alternate_config['description'] ?? "") . "'");
-        $exts = explode(',', $alternate_config['source_extensions']);
-        foreach($arrexisting as $existing)
-             {
-            if(in_array($resource_extension, $exts)
-                && $alternate_config['name'] == $existing["name"]
+        $exts = array_filter(explode(',',trim($alternate_config['source_extensions'])));
+        foreach($arrexisting as $existing) {
+            if (
+                (!empty($exts) && !in_array($resource_extension, $exts))
+            ) {
+                // Not required for this resource extension
+               continue;
+            }
+
+            if (
+                $alternate_config['name'] == $existing["name"]
                 && (!isset($alternate_config['description']) || $alternate_config['description'] == $existing["description"])
                 && $alternate_config['target_extension'] == $existing["file_extension"]
                 )
