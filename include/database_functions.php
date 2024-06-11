@@ -262,8 +262,6 @@ function sql_connect()
 
     foreach($db as $db_connection_mode => $db_connection)
         {
-        # Group concat limit increased to support option based metadata with more realistic limit for option entries
-        # Chose number of countries (approx 200 * 30 bytes) = 6000 as an example and scaled this up by factor of 5 (arbitrary)
         db_set_connection_mode($db_connection_mode);
         if (
             is_int($mysql_sort_buffer_size)
