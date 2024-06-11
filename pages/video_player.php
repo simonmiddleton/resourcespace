@@ -94,13 +94,6 @@ $thumb     = get_resource_path($ref, false, 'pre', false, 'jpg', true, 1, false,
 $thumb_raw = $thumb;
 $thumb     = urlencode($thumb);
 
-# Choose a colour based on the theme.
-$theme=(isset($userfixedtheme) && $userfixedtheme!="")?$userfixedtheme:getval("colourcss","greyblu");
-$color="505050";$bgcolor1="666666";$bgcolor2="111111";$buttoncolor="999999";
-if ($theme=="greyblu") {$color="446693";$bgcolor1="6883a8";$bgcolor2="203b5e";$buttoncolor="adb4bb";}   
-if ($theme=="whitegry") {$color="ffffff";$bgcolor1="ffffff";$bgcolor2="dadada";$buttoncolor="666666";}  
-if ($theme=="black") {$bgcolor1="666666";$bgcolor2="111111";$buttoncolor="999999";} 
-
 $width=$ffmpeg_preview_max_width;
 $height=$ffmpeg_preview_max_height;
 
@@ -154,48 +147,13 @@ if(isset($videojs_resolution_selection))
     <?php
     }
     
-    
-    
 ?>
 <!-- START VIDEOJS -->
 <div class="videojscontent">
     <video 
         id="<?php echo $context ?>_<?php echo $display ?>_introvideo<?php echo $ref?>"
         controls
-        data-setup='{ 
-                <?php if ($view_as_gif)
-                     {
-                     ?>
-                     "controls": false,
-                     "autoplay": true,
-                     "loop": true,
-                     "muted": true
-                     <?php
-                     }
-                ?>
-            <?php if($play_on_hover && !$view_as_gif) { ?>
-                "loadingSpinner" : false,
-                "TextTrackDisplay" : true,
-                "nativeTextTracks": false,
-                "children": { 
-                    "bigPlayButton":false, 
-                    "controlBar": { 
-                        "children": { 
-                            "playToggle": false, 
-                            "volumeControl":false
-                        }
-                    }
-                }
-            <?php }
-            if(isset($videojs_resolution_selection) && count($video_preview_sources)>0 && !$view_as_gif)
-                {?>
-                "plugins": {
-                        "videoJsResolutionSwitcher": {
-                            "default": "<?php echo $videojs_resolution_selection_default_res?>"
-                        }
-                        }
-            <?php } ?>
-        }'
+        data-setup="<?php echo escape(generate_videojs_options($view_as_gif, $play_on_hover, $video_preview_sources)); ?>"
         preload="<?php echo $preload?>"
         width="<?php echo $width?>" 
         height="<?php echo $height?>" 

@@ -210,12 +210,12 @@ function upload_file($ref,$no_exif=false,$revert=false,$autorotate=false,$file_p
                 if(isset($file_path))
                     {
                     $cmd = "{$exiftool_fullpath} -filetype -s -s -s %%PATH%%";
-                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($file_path, 'is_safe_basename')]);
+                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($file_path, 'is_valid_rs_path')]);
                     }
                 else
                     {
                     $cmd = "{$exiftool_fullpath} -filetype -s -s -s %%PATH%%";
-                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($processfile['tmp_name'], 'is_safe_basename')]);
+                    $file_type_by_exiftool = run_command($cmd, false, ["%%PATH%%" => new CommandPlaceholderArg($processfile['tmp_name'], 'is_valid_rs_path')]);
                     }
 
                 if (strlen($file_type_by_exiftool) > 0)
@@ -608,7 +608,7 @@ function extract_exif_comment($ref,$extension="")
         # the command result isn't printed in columns, which will help in parsing
         # We then split the lines in the result into an array
         $command = "{$exiftool_fullpath} -s -s -f -m -d \"%Y-%m-%d %H:%M:%S\" -a -G1 %%IMAGE%%";
-        $output = run_command($command, false, ["%%IMAGE%%" => new CommandPlaceholderArg($image, 'is_safe_basename')]);
+        $output = run_command($command, false, ["%%IMAGE%%" => new CommandPlaceholderArg($image, 'is_valid_rs_path')]);
         $metalines = explode("\n",$output);
 
         $metadata = array(); # an associative array to hold metadata field/value pairs
@@ -1177,11 +1177,11 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     # first reset preview tweaks to 0
     ps_query("UPDATE resource SET preview_tweaks = '0|1' WHERE ref = ?", ['i', $ref]);
     // for compatibility with transform plugin, remove any
-        // transform previews for this resource when regenerating previews
-        $tpdir = get_temp_dir() . "/transform_plugin";
-        if(is_dir($tpdir) && file_exists("$tpdir/pre_$ref.jpg")){
-            unlink("$tpdir/pre_$ref.jpg");
-        }
+    // transform previews for this resource when regenerating previews
+    $tpdir = get_temp_dir() . "/transform_plugin";
+    if(is_dir($tpdir) && file_exists("$tpdir/pre_$ref.jpg")){
+        unlink("$tpdir/pre_$ref.jpg");
+    }
 
     # pages/tools/update_previews.php?previewbased=true
     # use previewbased to avoid touching original files (to preserve manually-uploaded preview images
@@ -1356,7 +1356,16 @@ function create_previews($ref,$thumbonly=false,$extension="jpg",$previewonly=fal
     return true;
     }
 
-function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previewonly=false,$previewbased=false,$alternative=-1,$ingested=false,$onlysizes = array())
+function create_previews_using_im(
+    int $ref,
+    bool $thumbonly = false,
+    string $extension = "jpg",
+    bool $previewonly = false,
+    bool $previewbased = false,
+    int $alternative = -1,
+    bool $ingested = false,
+    array $onlysizes = []
+    ): bool
     {
     global $keep_for_hpr,$imagemagick_path,$imagemagick_preserve_profiles,$imagemagick_quality,$imagemagick_colorspace,$default_icc_file;
     global $autorotate_no_ingest,$always_make_previews,$previews_allow_enlarge,$alternative_file_previews;
@@ -1364,13 +1373,12 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
     global $preview_tiles, $preview_tiles_create_auto, $camera_autorotation_ext, $preview_tile_scale_factors, $watermark;
     global $syncdir, $preview_no_flatten_extensions, $preview_keep_alpha_extensions, $icc_extraction, $ffmpeg_preview_gif, $ffmpeg_preview_extension;
 
-    if(!is_numeric($ref))
-        {
-        trigger_error("Parameter 'ref' must be numeric!");
-        }
-
     $icc_transform_complete=false;
-    debug("create_previews_using_im(ref=$ref,thumbonly=$thumbonly,extension=$extension,previewonly=$previewonly,previewbased=$previewbased,alternative=$alternative,ingested=$ingested,onlysizes=" . json_encode($onlysizes) . ")");
+    debug_function_call(__FUNCTION__, func_get_args());
+    if(!is_numeric($ref)) {
+        debug("Parameter 'ref' must be numeric!");
+        return false;
+    }
 
     if (isset($imagemagick_path))
         {
@@ -1425,7 +1433,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
         # Locate imagemagick.
         $identify_fullpath = get_utility_path("im-identify");
-        if ($identify_fullpath==false) {debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'."); return false;}
+        if ($identify_fullpath==false) {
+            debug("ERROR: Could not find ImageMagick 'identify' utility at location '$imagemagick_path'.");
+            return false;
+        }
 
         $imversion = get_imagemagick_version();
         // Set correct syntax for commands to remove alpha channel
@@ -1438,11 +1449,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             $alphaoff = "+matte";
             }
         list($sw, $sh) = getFileDimensions($identify_fullpath, $prefix, $file, $extension);
-        if(is_null($sw) || is_null($sh))
-            {
+        if(is_null($sw) || is_null($sh)) {
             // This is not a valid image
             return false;
-            }
+        }
 
         if($extension == "svg")
             {
@@ -1452,14 +1462,16 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
         $generateall = !($thumbonly || $previewonly || (count($onlysizes) > 0));
         $ps = get_sizes_to_generate($extension,[$sw,$sh],$thumbonly,$previewonly,$onlysizes);
-        if (!$ps)
-            {
+        if (!$ps) {
             return false;
-            }
+        }
 
         # Locate imagemagick.
         $convert_fullpath = get_utility_path("im-convert");
-        if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
+        if ($convert_fullpath==false) {
+            debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.");
+            return false;
+        }
 
         if($imagemagick_mpr)
             {
@@ -1472,8 +1484,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             else
                 {
                 global $imagemagick_mpr_depth;
-                $command='';
-                $command_parts=array();
+                $command = '';
+                $command_parts = [];
                 }
             }
 
@@ -1483,7 +1495,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             {
             if($imagemagick_mpr)
                 {
-                $mpr_parts=array();
+                $mpr_parts = [];
                 }
 
             # If this is just a jpg resource, we avoid the hpr size because the resource itself is an original sized jpg.
@@ -1561,7 +1573,10 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
             # Locate imagemagick.
             $convert_fullpath = get_utility_path("im-convert");
-            if ($convert_fullpath==false) {debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'."); return false;}
+            if ($convert_fullpath==false) {
+                debug("ERROR: Could not find ImageMagick 'convert' utility at location '$imagemagick_path'.");
+                return false;
+            }
 
             // Option -flatten removes all transparency; option +matte turns off alpha channel (+matte is deprecated and has been replaced by -alpha off)
             // Extensions for which the alpha/matte channel should not be disabled (and therefore option -flatten is unnecessary)
@@ -1674,8 +1689,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
             # Always make pre/thm/col sizes regardless of source image size.
             if (($id == "hpr" && !($extension=="jpg" || $extension=="jpeg")) || ($id=='scr' && $extension=='jpg' && $watermark !== '') || $previews_allow_enlarge || ($id == "scr" && !($extension=="jpg" || $extension=="jpeg")) || ($sw>$tw) || ($sh>$th) || ($id == "pre") || ($id=="thm") || ($id=="col") || in_array($id,$always_make_previews) || hook('force_preview_creation','',array($ref, $ps, $n, $alternative)))
                 {
-
-                # Debug
+                $cmdparams = [];
                 resource_log(RESOURCE_LOG_APPEND_PREVIOUS,LOG_CODE_TRANSFORMED,'','','',"Generating preview size " . $ps[$n]["id"]); // log the size being created but not the path
                 debug("Generating preview size " . $ps[$n]["id"] . " to " . $path);
 
@@ -1711,14 +1725,18 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
                     if($imagemagick_mpr)
                         {
-                        $mpr_parts['strip_source']=(!$imagemagick_mpr_preserve_profiles ? true : false);
-                        $mpr_parts['sourceprofile']=(!$imagemagick_mpr_preserve_profiles ? escapeshellarg($iccpath) : ''). " " . $icc_preview_options;
-                        $mpr_parts['strip_target']=($icc_preview_profile_embed ? false : true);
-                        $mpr_parts['targetprofile']=escapeshellarg($targetprofile);
+                        $mpr_parts['strip_source'] = !$imagemagick_mpr_preserve_profiles ? true : false;
+                        $mpr_parts['sourceprofile'] = (!$imagemagick_mpr_preserve_profiles ? $iccpath : ''). " " . $icc_preview_options;
+                        $mpr_parts['strip_target'] = ($icc_preview_profile_embed ? false : true);
+                        $mpr_parts['targetprofile'] = $targetprofile;
                         }
                     else
                         {
-                        $profile  = " -strip -profile " . escapeshellarg($iccpath) . ' ' . $icc_preview_options . ' ' . ($targetprofile != "" ? "-profile " . escapeshellarg($targetprofile) : "");
+                        $profile  = " -strip -profile %%ICCPATH%% " . $icc_preview_options . ' ' . ($targetprofile != "" ? "-profile %%TARGETPROFILE%% " : "");
+                        $cmdparams["%%ICCPATH%%"] = new CommandPlaceholderArg($iccpath, 'realpath');
+                        if($targetprofile != "") {
+                            $cmdparams["%%TARGETPROFILE%%"] = new CommandPlaceholderArg($targetprofile, 'is_safe_basename');
+                        }
                         }
 
                     // consider ICC transformation complete, if one of the sizes has been rendered that will be used for the smaller sizes
@@ -1760,7 +1778,8 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                                 }
                             else
                                 {
-                                $profile="-profile " . escapeshellarg($default_icc_file);
+                                $profile = "-profile %%DEFAULT_ICC_FILE%%";
+                                $cmdparams["%%DEFAULT_ICC_FILE%%"] = new CommandPlaceholderArg($default_icc_file, 'is_safe_basename');
                                 }
                             }
                         else
@@ -1775,12 +1794,14 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             elseif ($icc_extraction)
                                 {
                                 // Keep any profile extracted (don't use -strip).
-                                $profile=" -colorspace ".escapeshellarg($imagemagick_colorspace);
+                                $profile ="  -colorspace %%IMAGEMAGICK_COLORSPACE%% ";
+                                $cmdparams["%%IMAGEMAGICK_COLORSPACE%%"] = new CommandPlaceholderArg($imagemagick_colorspace, null);
                                 }
                             else
                                 {
                                 # By default, strip the colour profiles ('+' is remove the profile, confusingly)
-                                $profile="-strip -colorspace ". escapeshellarg($imagemagick_colorspace);
+                                $profile = "-strip -colorspace %%IMAGEMAGICK_COLORSPACE%% ";
+                                $cmdparams["%%IMAGEMAGICK_COLORSPACE%%"] = new CommandPlaceholderArg($imagemagick_colorspace, null);
                                 }
                             }
                         }
@@ -1788,17 +1809,22 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                     if(!$imagemagick_mpr)
                         {
                         $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff  . " " . $profile : $profile);
-
                         if($crop)
                             {
                             // Add crop argument for tiling
-                            $runcommand .= " -crop " . escapeshellarg($cropw . "x" . $croph . "+" . $cropx . "+" . $cropy);
+                            $runcommand .= " -crop %%CROPDIMENSIONS%% ";
+                            $cmdparams["%%CROPDIMENSIONS%%"] = (int)$cropw . "x" . (int)$croph . "+" . (int)$cropx . "+" . (int)$cropy;
                             }
 
-                        $runcommand .= " -resize " . escapeshellarg($tw . "x" . $th . (($previews_allow_enlarge && $id!="hpr")?"":">")) . " " . $addcheckbdafter . escapeshellarg($path);
+                        $runcommand .= " -resize %%TARGETDIMENSIONS%% " . $addcheckbdafter . " %%PATH%% ";
+                        $cmdparams["%%TARGETDIMENSIONS%%"] = new CommandPlaceholderArg(
+                            (int)$tw . "x" . (int)$th
+                            . (($previews_allow_enlarge && $id != "hpr") ? "" : ">")
+                            , "is_string");
+                        $cmdparams["%%PATH%%"] = new CommandPlaceholderArg($path, 'is_safe_basename');
                         if(!hook("imagepskipthumb"))
                             {
-                            run_command($runcommand);
+                            run_command($runcommand, false, $cmdparams);
                             $created_count++;
                             # if this is the first file generated or the original file is used as the source, for non-ingested resources check rotation
                             if($autorotate_no_ingest
@@ -1842,13 +1868,25 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
 
                     if(!isset($watermark_single_image))
                         {
-                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize " . escapeshellarg($tw) . "x" . escapeshellarg($th) . "\">\" -tile ".escapeshellarg($watermark)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath);
+                        $runcommand = $command . " " . (!in_array(strtolower($extension), $preview_keep_alpha_extensions) ? $alphaoff : "") . " $profile -resize %%TARGETDIMENSIONSWM%% -tile %%WMFILE%% -draw %%REC_DIMENSIONS%% %%WMTARGET%%";
+
+                        $cmdparams = [];
+                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_valid_rs_path");
+                        $cmdparams["%%REC_DIMENSIONS%%"] = new CommandPlaceholderArg("rectangle 0,0 " . (int) $tw . "," . (int)$th,"is_string");
+                        $cmdparams["%%WMTARGET%%"] = new CommandPlaceholderArg($wmpath,"is_safe_basename");
                         }
 
                     // Image formats which support layers must be flattened to eliminate multiple layer watermark outputs; Use the path from above, and omit resizing
-                    if ( in_array($extension,array("png","gif","tif","tiff")) )
+                    if (in_array($extension,array("png","gif","tif","tiff")) )
                         {
-                        $runcommand = $convert_fullpath . ' '. escapeshellarg($path) . ' ' . $profile . " " . $flatten . ' -quality ' . $imagemagick_quality ." -tile ".escapeshellarg($watermark)." -draw " . escapeshellarg("rectangle 0,0 $tw,$th")." ".escapeshellarg($wmpath);
+                        $runcommand = $convert_fullpath . ' %%PATH%% ' . $profile . " " . $flatten . ' -quality %%QUALITY%% -tile %%WMFILE%% -draw %%REC_DIMENSIONS%% %%WMTARGET%%';
+
+                        $cmdparams = [];
+                        $cmdparams["%%PATH%%"] = new CommandPlaceholderArg($path, 'is_safe_basename');
+                        $cmdparams["%%QUALITY%%"] = (int) $imagemagick_quality;
+                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_valid_rs_path");
+                        $cmdparams["%%REC_DIMENSIONS%%"] = new CommandPlaceholderArg("rectangle 0,0 " . (int) $tw . "," . (int)$th,"is_string");
+                        $cmdparams["%%WMTARGET%%"] = new CommandPlaceholderArg($wmpath,"is_safe_basename");
                         }
 
                     // Generate the command for a single watermark instead of a tiled one
@@ -1912,20 +1950,36 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                             }
 
                         // Command example: convert input.jpg watermark.png -gravity Center -geometry 40x40+0+0 -resize 1100x800 -composite wm_version.jpg
-                        $runcommand = sprintf('%s %s -flatten %s -gravity %s -geometry %s -resize %s -composite %s',
-
-                            $convert_fullpath,
-                            escapeshellarg($file),
-                            escapeshellarg($watermark),
-                            escapeshellarg($watermark_single_image['position']),
-                            escapeshellarg("{$wm_scaled_width}x{$wm_scaled_height}+0+0"),
-                            escapeshellarg("{$tw}x{$th}" . ($previews_allow_enlarge && $id != "hpr" ? "" : ">")),
-                            escapeshellarg($wmpath)
+                        $runcommand = "{$convert_fullpath} %%FILE%% %%WMFILE%% -flatten %%WMPOSITION%% %%WM_SCALED_DIMS%% %%TARGETDIMENSIONSWM%% %%WMTARGET%%";
+                        $cmdparams = [];
+                        $cmdparams["%%FILE%%"] = new CommandPlaceholderArg($file,"is_safe_basename");
+                        $cmdparams["%%WMFILE%%"] = new CommandPlaceholderArg($watermark,"is_valid_rs_path");
+                        $cmdparams["%%WMPOSITION%%"] = new CommandPlaceholderArg(
+                            $watermark_single_image['position'],
+                            fn($val): bool => in_array($val,
+                                ["NorthWest","North","NorthEast","West","Center","East","SouthWest","South","SouthEast"]
+                            )
                         );
+                        $cmdparams["%%WM_SCALED_DIMS%%"] = new CommandPlaceholderArg(
+                            (int)$wm_scaled_width . "x" . (int)$wm_scaled_height . "+0+0",
+                            "is_string"
+                        );
+                        $cmdparams["%%TARGETDIMENSIONSWM%%"] = new CommandPlaceholderArg(
+                            (int)$tw . "x" . (int)$th
+                            . (($previews_allow_enlarge && $id != "hpr") ? "" : ">")
+                            , "is_string"
+                        );
+
+                        $cmdparams["%%WMTARGET%%"] = new CommandPlaceholderArg($wmpath,"is_safe_basename");
                         }
                     if(!$imagemagick_mpr)
                         {
-                        run_command($runcommand);
+                        $cmdparams["%%IMAGEMAGICK_COLORSPACE%%"] = new CommandPlaceholderArg($imagemagick_colorspace, null); $cmdparams["%%TARGETDIMENSIONSWM%%"] = new CommandPlaceholderArg(
+                            (int)$tw . "x" . (int)$th
+                            . (($previews_allow_enlarge && $id != "hpr") ? "" : ">")
+                            , "is_string"
+                        );
+                        run_command($runcommand, false, $cmdparams);
                         }
 
                     }// end hook replacewatermarkcreation
@@ -2121,7 +2175,7 @@ function create_previews_using_im($ref,$thumbonly=false,$extension="jpg",$previe
                 }
             $modified_mpr_command=hook('modify_mpr_command','',array($command,$ref,$extension));
             if($modified_mpr_command!=''){$command=$modified_mpr_command;}
-            run_command($command);
+            run_command($command, false, $cmdparams);
             }
         # For the thumbnail image, call extract_mean_colour() to save the colour/size information
         $thumbpath = get_resource_path($ref,true,"thm",false,"jpg",-1,1,false,"",$alternative);
@@ -2599,8 +2653,11 @@ function extract_indd_pages($filename)
     $exiftool_fullpath = get_utility_path('exiftool');
     if ($exiftool_fullpath)
         {
-        $cmd=$exiftool_fullpath.' -b -j -pageimage ' . escapeshellarg($filename);
-        $array = run_command($cmd);
+        $cmd = $exiftool_fullpath . ' -b -j -pageimage %%FILENAME%%';
+        $array = run_command($cmd,
+            false,
+            ["%%FILENAME%%" => new CommandPlaceholderArg($filename,"is_safe_basename")],
+        );
         $array = json_decode($array);
         if(isset($array[0]->PageImage))
             {
@@ -3063,9 +3120,14 @@ function extract_icc($infile, $ref='') {
       // extracted profile already existed. We'll remove it and start over
       unlink($outfile);
    }
+    $cmd = $convert_fullpath . " %%INFILE%% %%OUTFILE%% " .  $stderrclause;
 
-    $cmd = $convert_fullpath . " \"" . (!$config_windows && strpos($infile, ':')!==false ? strtolower($path_parts['extension']) . ':' : '') . $infile . "[0]\" \"" . $outfile . "\" " .  $stderrclause;
-    $cmdout = run_command($cmd);
+   // Detect the ":" prefix in $infile used for RAW images
+    $cmdparams = [
+    "%%INFILE%%" => ((!$config_windows && strpos($infile, ':') !== false) ? strtolower($path_parts['extension']) . ':' : '') . $infile . "[0]",
+    "%%OUTFILE%%" => $outfile,
+    ];
+    $cmdout = run_command($cmd, false, $cmdparams);
 
    if ( preg_match("/no color profile is available/",$cmdout) || !file_exists($outfile) ||filesize_unlimited($outfile) == 0){
    // the icc profile extraction failed. So delete file.
@@ -4042,7 +4104,7 @@ function get_sizes_to_generate(
 
     $condition = count($getsizes) > 0 ? " WHERE id IN (" . implode(",",$getsizes) . ")" : "";
     $ps = ps_query(
-        "SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition,
+        "SELECT " . columns_in("preview_size") . " FROM preview_size " . $condition . " ORDER BY width DESC",
         $params
         );
 

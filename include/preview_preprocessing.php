@@ -824,11 +824,11 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             }
             }
     }
-
    if (($extension=="pdf") || (($extension=="eps") && !$photoshop_eps) || ($extension=="ai") || ($extension=="ps")) 
         {
         debug("PDF multi page preview generation starting",RESOURCE_LOG_APPEND_PREVIOUS);
-        
+        $preview_preprocessing_success = false;
+
     # For EPS/PS/PDF files, use GS directly and allow multiple pages.
     # EPS files are always single pages:
     if (in_array($extension,["eps","ai","ps"]) || !$generateall) {
@@ -842,7 +842,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
     }
     $scr_width=$scr_size[0]['width'];
     $scr_height=$scr_size[0]['height'];
-    
+
         if ($pdf_dynamic_rip) {
 
         /* We want to rip at ~150 dpi by default because it provides decent 
@@ -930,13 +930,13 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
                 }
             }
         }
-        
+
     # Create multiple pages.
     for ($n=1;$n<=$pdf_pages;$n++)
         {
         # Set up target file
         $size="";if ($n>1) {$resource_view_use_pre?$size="pre":$size="scr";}
-        $target=get_resource_path($ref,true,$size,false,"jpg",-1,$n,false,"",$alternative); 
+        $target=get_resource_path($ref,true,$size,false,"jpg",-1,$n,false,"",$alternative);
         if (file_exists($target)) {unlink($target);}
 
         if ($dUseCIEColor){$dUseCIEColor=" -dUseCIEColor ";} else {$dUseCIEColor="";}
@@ -951,14 +951,13 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
 
         debug("PDF multi page preview: page $n, executing " . $gscommand2);
 
-    
         # Set that this is the file to be used.
         if (file_exists($target) && $n==1)
             {
             $newfile=$target;$pagecount=$n;
             debug("Page $n generated successfully",RESOURCE_LOG_APPEND_PREVIOUS);
             }
-            
+
         # resize directly to the screen size (no other sizes needed)
          if (file_exists($target)&& $n!=1)
             {
@@ -1027,13 +1026,12 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
     else
         {
         # Not a PDF file, so single extraction only.
-        create_previews_using_im($ref, false, $extension, $previewonly, false, $alternative, $ingested, $onlysizes);
+        $preview_preprocessing_success = create_previews_using_im($ref, false, $extension, $previewonly, false, $alternative, $ingested, $onlysizes);
         }
     }
 
 $non_image_types = config_merge_non_image_types();
 
-$preview_preprocessing_success = false;
 # If a file has been created, generate previews just as if a JPG was uploaded.
 if (isset($newfile) && file_exists($newfile)) {
     if($GLOBALS['non_image_types_generate_preview_only'] && in_array($extension,config_merge_non_image_types())) {
@@ -1046,9 +1044,9 @@ if (isset($newfile) && file_exists($newfile)) {
             debug("preview_preprocessing: changing previewonly = true for non-image file");
             }
         }
-    
+
     $preview_preprocessing_success = create_previews($ref,false,"jpg",false,false,$alternative,$ignoremaxsize,true,$checksum_required,$onlysizes);
-    if(            
+    if(
         $GLOBALS['non_image_types_generate_preview_only']
         && in_array($extension, $GLOBALS['non_image_types'])
         && file_exists($file_used_for_previewonly)

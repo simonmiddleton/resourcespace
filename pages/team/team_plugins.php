@@ -16,7 +16,7 @@ include "../../include/authenticate.php";
 if(!checkperm('a'))
     {
     header('HTTP/1.1 401 Unauthorized');
-    exit($lang['error-permissiondenied']);
+    exit(escape($lang['error-permissiondenied']));
     }
 
 if (isset($_REQUEST['activate']) && enforcePostRequest(false))
@@ -338,11 +338,11 @@ if($searching)
                         }
                 if ($plugin['info_url']!='')
                    {
-                   echo '<a class="nowrap" href="'.$plugin['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;' . $lang['plugins-moreinfo'].'</a> ';
+                   echo '<a class="nowrap" href="'.$plugin['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;' . escape($lang['plugins-moreinfo']) .'</a> ';
                    }
                 if (!$plugin['disable_group_select'])
                     {
-                    echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '"><i class="fas fa-users"></i>&nbsp;' . $lang['groupaccess'] . ((isset($plugin['enabled_groups']) && trim($plugin['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '') . '</a> ';
+                    echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($plugin['name']) . '"><i class="fas fa-users"></i>&nbsp;' . escape($lang['groupaccess']) . ((isset($plugin['enabled_groups']) && trim($plugin['enabled_groups']) != '') ? ' (' . escape($lang["on"]) . ')': '') . '</a> ';
                     $plugin['enabled_groups'] = (isset($plugin['enabled_groups']) ? array($plugin['enabled_groups']) : array());
                     }
                 if ($plugin['config_url']!='')        
@@ -425,19 +425,19 @@ if (count($inst_plugins)>0)
             echo '<td><div class="ListTools">';
             if (isset($p['legacy_inst']))
                {
-               echo '<a class="nowrap" href="#"><i class="fas fa-check"></i>&nbsp;' . $lang['plugins-legacyinst'].'</a> '; # TODO: Update this link to point to a help page on the wiki
+               echo '<a class="nowrap" href="#"><i class="fas fa-check"></i>&nbsp;' . escape($lang['plugins-legacyinst']).'</a> '; # TODO: Update this link to point to a help page on the wiki
                }
             else
                {
-               echo '<a href="#'.$p['name'].'" class="p-deactivate"><i class="fas fa-times"></i>&nbsp;' . $lang['plugins-deactivate'].'</a> ';
+               echo '<a href="#'.escape($p['name']).'" class="p-deactivate"><i class="fas fa-times"></i>&nbsp;' . escape($lang['plugins-deactivate']).'</a> ';
                }
             if ($p['info_url']!='')
                {
-               echo '<a class="nowrap" href="'.$p['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;' . $lang['plugins-moreinfo'].'</a> ';
+               echo '<a class="nowrap" href="'.$p['info_url'].'" target="_blank"><i class="fas fa-info"></i>&nbsp;' . escape($lang['plugins-moreinfo']).'</a> ';
                }
             if (!$p['disable_group_select'])
                 {
-                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '"><i class="fas fa-users"></i>&nbsp;' . $lang['groupaccess'] . ((trim((string) $p['enabled_groups']) != '') ? ' (' . $lang["on"] . ')': '')  . '</a> ';
+                echo '<a onClick="return CentralSpaceLoad(this,true);" class="nowrap" href="'.$baseurl_short.'pages/team/team_plugins_groups.php?plugin=' . urlencode($p['name']) . '"><i class="fas fa-users"></i>&nbsp;' . escape($lang['groupaccess']) . ((trim((string) $p['enabled_groups']) != '') ? ' (' . escape($lang["on"]) . ')': '')  . '</a> ';
                 $p['enabled_groups'] = array($p['enabled_groups']);
                 }
             if ($p['config_url']!='')        
@@ -461,7 +461,7 @@ if (count($inst_plugins)>0)
    } 
 else 
    {
-   echo "<p>".$lang['plugins-noneinstalled']."</p>";
+   echo "<p>".escape($lang['plugins-noneinstalled'])."</p>";
    } ?>
 
 <h2 class="pageline"><?php echo escape($lang['plugins-availableheader']); ?></h2>
@@ -611,7 +611,7 @@ function display_plugin_category($plugins,$category,$header=true)
    } 
 else 
    {
-   echo ",p>".$lang['plugins-noneavailable']."</p>";
+   echo ",p>".escape($lang['plugins-noneavailable'])."</p>";
    }
 
 ?>

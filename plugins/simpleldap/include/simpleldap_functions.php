@@ -60,6 +60,7 @@ function simpleldap_authenticate(string $username,string $password)
     $binddomains = explode(";",$simpleldap['basedn']);
     foreach ($binddomains as $binddomain) {
         // Set up array of different username formats to try and bind with
+        $bindnames[] = $ldap_username;
         $bindnames[] = $loginfield . "=" . $ldap_username;
         $bindnames[] = "cn=" . $ldap_username;
         if (strpos($ldap_username, "@" .  $userdomain) !== false) {
@@ -74,13 +75,14 @@ function simpleldap_authenticate(string $username,string $password)
 
         // Try binding with each
         $login = false;
-        foreach ($bindnames as $bindname) {
+        foreach (array_unique($bindnames) as $bindname) {
             $binduserstring = $bindname . "," . $binddomain;
             debug("LDAP - Attempting to bind to LDAP server as : " . $binduserstring);
             try {
                 $GLOBALS["use_error_exception"] = true;
                 $login = ldap_bind($ds, $binduserstring, $password);
                 debug("LDAP bind success");
+                break;
             } catch(Exception $e) {
                 debug("LDAP ERROR: LDAP bind failed " . $e->getMessage());
             }
@@ -94,6 +96,10 @@ function simpleldap_authenticate(string $username,string $password)
     // Search
     $ldapgroupfield = $simpleldap['ldapgroupfield'];
     $attributes = array("displayname",$ldapgroupfield,$email_attribute,$phone_attribute);
+    if (strpos($ldap_username, "@" .  $userdomain) !== false) {
+        // Remove domain suffix for search
+        $ldap_username = str_replace("@" .  $userdomain,"",$ldap_username);
+    }
     $filter = "(&(objectClass=person)(". $loginfield . "=" . ldap_escape($ldap_username,'',LDAP_ESCAPE_FILTER) . "))";
 
     debug("LDAP - performing search: filter=" . $filter);

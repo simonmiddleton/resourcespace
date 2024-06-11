@@ -13,9 +13,9 @@ if (php_sapi_name()!=="cli") {
 
   */
 
-include_once "../include/boot.php";
-include_once "../include/test_functions.php";
-include_once "../include/image_processing.php";
+include_once __DIR__ . "/../include/boot.php";
+include_once __DIR__ . "/../include/test_functions.php";
+include_once __DIR__ . "/../include/image_processing.php";
 
 $suppress_headers=true;
 $argv=preg_replace('/^(-|--|\/)/','',$argv);    // remove leading /, -- or -
@@ -108,8 +108,8 @@ foreach($savedconfigs as $savedconfig) {
 // Save existing $baseurl so tests will still use valid URLs
 
 $saved_url = $baseurl != "http://my.site/resourcespace" ? $baseurl : "http://localhost";
-include "../include/config.default.php";
-eval(file_get_contents("../include/config.new_installs.php"));
+include __DIR__ . "/../include/config.default.php";
+eval(file_get_contents(__DIR__ . "/../include/config.new_installs.php"));
 $baseurl = $saved_url;
 $query_cache_enabled = false;
 
@@ -165,7 +165,7 @@ $password_min_length = 7;
 $password_min_alpha = $password_min_numeric = 1;
 $password_min_uppercase = $password_min_special = 0;
 
-$test_dir = $performancetest ? "performance_tests" : "test_list";
+$test_dir = __DIR__ . "/" . ($performancetest ? "performance_tests" : "test_list");
 # Get a list of core tests
 $core_tests = scandir($test_dir);
 $core_tests = array_filter($core_tests, function ($string) {
@@ -192,8 +192,8 @@ $core_tests = array($test_dir => $core_tests);
 $plugin_tests = array();
 if(!$performancetest) {
     foreach ($inst_plugins as $plugin) {
-        if (file_exists('../plugins/' . $plugin['name'] . '/tests')) {
-            $plugin_tests['../plugins/' . $plugin['name'] . '/tests'] = scandir('../plugins/' . $plugin['name'] . '/tests');
+        if (file_exists(__DIR__ . '/../plugins/' . $plugin['name'] . '/tests')) {
+            $plugin_tests[__DIR__ . '/../plugins/' . $plugin['name'] . '/tests'] = scandir(__DIR__ . '/../plugins/' . $plugin['name'] . '/tests');
         }
     }
     foreach ($plugin_tests as $key => $tests) {

@@ -4910,38 +4910,16 @@ function get_system_status()
         $used = get_total_disk_usage(); # Total usage in bytes
         $percent = ceil(((int) $used / $avail) * 100);
 
-        if($percent >= 95 && $percent < 99)
+        if($percent >= 95)
             {
             $return['results']['quota_limit'] = [
                 'status' => 'FAIL',
-                'info' => $percent . '% used - nearly full.',
+                'info' => $percent . '% used',
                 'avail' => $avail, 'used' => $used, 'percent' => $percent,
                 'severity' => SEVERITY_WARNING,
                 'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_WARNING],
             ];
             ++$fail_tests;
-            }
-        elseif($percent >= 99 && $percent < 100)
-            {
-            $return['results']['quota_limit'] = [
-                'status' => 'FAIL',
-                'info' => $percent . '% used - nearly full.',
-                'avail' => $avail, 'used' => $used, 'percent' => $percent,
-                'severity' => SEVERITY_CRITICAL,
-                'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_CRITICAL],
-            ];
-            return $return;
-            }
-        elseif($percent >= 100)
-            {
-            $return['results']['quota_limit'] = [
-                'status' => 'FAIL',
-                'info' => $percent . '% used - over quota.',
-                'avail' => $avail, 'used' => $used, 'percent' => $percent,
-                'severity' => SEVERITY_CRITICAL,
-                'severity_text' => $GLOBALS["lang"]["severity-level_" . SEVERITY_CRITICAL],
-            ];
-            return $return;
             }
         else
             {

@@ -5749,7 +5749,7 @@ function is_featured_collection_category(array $fc)
         return false;
         }
 
-    return $fc["type"] == COLLECTION_TYPE_FEATURED && $fc["has_resources"] == 0 && is_null($fc["savedsearch"]);
+    return $fc["type"] == COLLECTION_TYPE_FEATURED && $fc["has_resources"] == 0 && is_null($fc["savedsearch"]??null);
     }
 
 /**

@@ -80,7 +80,15 @@ if ($request !== false)
     $show_this_request=resource_request_visible($request);    
     if (!$show_this_request)
         {
-        ?><p><?php echo str_replace("%","<b>" . ($request["assigned_to_username"]==""?"(unassigned)":$request["assigned_to_username"]) . "</b>",$lang["requestnotassignedtoyou"]) ?></p><?php
+        ?><p><?php
+        echo strip_tags_and_attributes(
+            str_replace(
+                "%",
+                "<b>" . ($request["assigned_to_username"]==""?"(unassigned)":$request["assigned_to_username"]) . "</b>",
+                $lang["requestnotassignedtoyou"]
+            )
+        );
+        ?></p><?php
         }
     else
         {
@@ -145,7 +153,21 @@ if ($request !== false)
                 { ?>
                 <div class="Question">
                     <div class="FormError">
-                        <?php echo str_replace("%","<a onClick='return CentralSpaceLoad(this,true);' href=".$baseurl_short."pages/view.php?ref=" . $warning["resource"] . ">" . $warning["resource"] . "</a>",$lang["warningrequestapprovalfield"]) ?><br/>
+                        <?php
+                        echo strip_tags_and_attributes(
+                            str_replace(
+                                "%",
+                                sprintf(
+                                    '<a onclick="return CentralSpaceLoad(this,true);" href="%s">%s</a>',
+                                    generateURL("{$baseurl_short}pages/view.php", ['ref' => $warning['resource']]),
+                                    $warning['resource']
+                                ),
+                                $lang["warningrequestapprovalfield"]
+                            ),
+                            ['a'],
+                            ['href', 'onclick']
+                        );
+                        ?><br/>
                         <?php echo $warning["name"]; ?>
                     </div>
                     <div class="clearerleft"></div>

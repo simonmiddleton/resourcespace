@@ -364,29 +364,13 @@ function validate_resource_files(array $resources,array $criteria = []): array
     return $results;
 }
 
-
-/**
- * Block path traversal by ensuring download is only possible from the temp folder.
- * Generates path to temp folder and checks it matches the supplied path.
- *
- * @param  string  $test_path     Potentially unsafe path to check.
- * @param  string  $temp_folder   Optional name of temp folder to validate.
- */
-function validate_temp_path(string $test_path, string $temp_folder = '') : bool
-    {
-    $temp_dir = realpath(get_temp_dir(false, $temp_folder));
-    $test_path = realpath(pathinfo($test_path, PATHINFO_DIRNAME));
-    return $test_path !== false && $temp_dir !== false && $temp_dir === $test_path;
-    }
-
-
 /**
  * Check if a given file path is from a valid RS accessible location
  *
  * @param   string   $path
- * @param   array    $extra_paths   Array of additional valid source paths to check
+ * @param   array    $override_paths   Override checking of the default RS paths to check a specific location only.
  */
-function is_valid_rs_path(string $path, array $extra_paths = []): bool
+function is_valid_rs_path(string $path, array $override_paths = []): bool
 {
     $sourcerealpath = realpath($path);
     $source_path_not_real = !$sourcerealpath || !file_exists($sourcerealpath);
@@ -399,20 +383,23 @@ function is_valid_rs_path(string $path, array $extra_paths = []): bool
     }
 
     $path_to_validate = $source_path_not_real ? $path : $sourcerealpath;
-    $allowed_paths = array_filter(
-        array_map(
-            'trim',
-            array_unique(
-                array_merge(
-                    [
-                        $GLOBALS['storagedir'],
-                        $GLOBALS['syncdir'],
-                    ],
-                    $extra_paths
+    if (count($override_paths) > 0) {
+        $allowed_paths = array_map('trim', $override_paths);
+    }
+    else {
+        $default_paths[] = $GLOBALS['storagedir'];
+        $default_paths[] = $GLOBALS['syncdir'];
+        if (isset($GLOBALS['tempdir'])) {
+            $default_paths[] = $GLOBALS['tempdir'];
+        }
+
+        $allowed_paths = array_filter(
+            array_map(
+                'trim',
+                array_unique($default_paths)
                 )
-            )
-        )
-    );
+            );
+    }
 
     foreach ($allowed_paths as $validpath) {
         $validpath = realpath($validpath);
@@ -425,13 +412,13 @@ function is_valid_rs_path(string $path, array $extra_paths = []): bool
 }
 
 /**
- * Validation helper function to determine if a path base name is unsafe (e.g OS command injection, path traversal etc.)
+ * Validation helper function to determine if a path base name is unsafe (e.g OS command injection).
+ * Very strict, limited to specific characters only. Should only be used for filenames originating in ResourceSpace.
  */
 function is_safe_basename(string $val): bool
 {
     $file_name = pathinfo($val, PATHINFO_FILENAME);
-    // Note that '=' characters are found in the TUS filenames generated at upload
     return
-        safe_file_name($file_name) === str_replace([' ',"="],['_',""], $file_name)
+        safe_file_name($file_name) === str_replace(' ', '_', $file_name)
         && !is_banned_extension(pathinfo($val, PATHINFO_EXTENSION));
 }
