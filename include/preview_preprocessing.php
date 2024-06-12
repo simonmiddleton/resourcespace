@@ -304,12 +304,12 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
     if ($unoconvert)
         {
         // Use newer unoconvert utility (note - does not have a verbose mode)
-        $output = run_command("{$unocommand} %file %pdffile", false, ['%file' => $file,'%pdffile' => $pdffile]);
+        $output = run_command("{$unocommand} %file %pdffile", false, ['%file' => $file,'%pdffile' => $pdffile], false, 60);
         }
     else    
         {
         // Legacy support for unoconv
-        $output = run_command("{$unocommand} " . ($debug_log || $debug_log_override ? '-v' : '') . " --format=pdf %file", false, ['%file' => $file]);
+        $output = run_command("{$unocommand} " . ($debug_log || $debug_log_override ? '-v' : '') . " --format=pdf %file", false, ['%file' => $file], false, 60);
         }
 
     debug('Preview_preprocessing : ' . $output);
