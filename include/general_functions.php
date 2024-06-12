@@ -2082,18 +2082,17 @@ function escape_command_args($cmd, array $args): string
 
 /**
 * Utility function which works like system(), but returns the complete output string rather than just the last line of it.
-* 
+*
 * @uses escape_command_args()
-* 
-* @param  string   $command         Command to run
-* @param  boolean  $geterrors       Set to TRUE to include errors in the output
-* @param  array    $params          List of placeholders and their values which will have to be escapedshellarg()d.
-* @param  boolean  $suppressoutput  Set to TRUE to suppress any output from the command
-* @param  int      $timeout         Maximum time in seconds before a command is forcibly stopped
-* 
+*
+* @param  string   $command    Command to run
+* @param  boolean  $geterrors  Set to TRUE to include errors in the output
+* @param  array    $params     List of placeholders and their values which will have to be escapedshellarg()d.
+* @param  int      $timeout    Maximum time in seconds before a command is forcibly stopped
+*
 * @return string Command output
 */
-function run_command($command, $geterrors = false, array $params = array(), bool $suppressoutput = false, $timeout = 0)
+function run_command($command, $geterrors = false, array $params = array(), $timeout = 0)
     {
     global $debug_log,$config_windows;
 
@@ -2110,35 +2109,40 @@ function run_command($command, $geterrors = false, array $params = array(), bool
         $command = $cmd_tmp_file;
         }
 
-    $descriptorspec = $suppressoutput ? [] : [1 => ["pipe", "w"]]; // stdout is a pipe that the child will write to
-    
-    if (!$suppressoutput || $debug_log || $geterrors) {
-        if ($config_windows) {
+    $descriptorspec = array(
+        1 => array("pipe", "w") // stdout is a pipe that the child will write to
+    );
+    if($debug_log || $geterrors)
+        {
+        if($config_windows)
+            {
             $pid = getmypid();
             $log_location = get_temp_dir()."/error_".md5($command . serialize($params). $pid).".txt";
-            $descriptorspec[2] = ["file", $log_location, "w"]; // stderr is a file that the child will write to
-        } else {
-            $descriptorspec[2] = ["pipe", "w"]; // stderr is a pipe that the child will write to
+            $descriptorspec[2] = array("file", $log_location, "w"); // stderr is a file that the child will write to
+            }
+        else
+            {
+            $descriptorspec[2] = array("pipe", "w"); // stderr is a pipe that the child will write to
+            }
         }
-    }
 
     $child_process = -1;
-    if ( 
-        !$config_windows && $timeout > 0 
+    if (
+        !$config_windows && $timeout > 0
         && shell_exec('which timeout') !== null
     ) {
         $command = 'timeout ' . escapeshellarg($timeout) . ' ' . $command;
     } elseif ($timeout > 0 && function_exists('pcntl_fork')) {
-        // Branch child process if a timeout is specified and the timeout utility isn't available   
+        // Branch child process if a timeout is specified and the timeout utility isn't available
         // Create output file so that we can retrieve the output of the child process from the parent process
         $pid = getmypid();
         $command_output = get_temp_dir() . '/output_' . md5($command . serialize($params) . $pid) . ".txt";
         $child_process  = pcntl_fork();
-    } 
-    // Await output from child, or timeout. 
+    }
+    // Await output from child, or timeout.
     if ($child_process > 0) {
         $start_time = time();
-        while (time() - $start_time < $timeout) { 
+        while (time() - $start_time < $timeout) {
             if (file_exists($command_output)) {
                 $output = file_get_contents($command_output);
                 unlink($command_output);
@@ -2146,38 +2150,38 @@ function run_command($command, $geterrors = false, array $params = array(), bool
             }
             sleep(1);
         }
-
         // Kill the child process to free up resources
         exec(($config_windows ? 'taskkill /F /PID ' : 'kill ') . escapeshellarg($child_process));
-
-        return null;
+        return "";
     }
 
-    $process = @proc_open($command, $descriptorspec, $pipe, null, null, ['bypass_shell' => true]);
+    $process = @proc_open($command, $descriptorspec, $pipe, null, null, array('bypass_shell' => true));
 
     if (!is_resource($process)) {
-        if ($cmd_tmp_file) {
+        if($cmd_tmp_file) {
             unlink($cmd_tmp_file);
         }
         return '';
     }
 
-    $output = $suppressoutput ? "" : trim(stream_get_contents($pipe[1]));
-    if ($geterrors) {
-        $output .= trim($config_windows ? file_get_contents($log_location) : stream_get_contents($pipe[2]));
-    }
-    if ($debug_log) {
+    $output = trim(stream_get_contents($pipe[1]));
+    if($geterrors)
+        {
+        $output .= trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2]));
+        }
+    if ($debug_log)
+        {
         debug("CLI output: $output");
-        debug("CLI errors: " . trim($config_windows ? file_get_contents($log_location) : stream_get_contents($pipe[2])));
-    }
+        debug("CLI errors: " . trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2])));
+        }
     if ($config_windows && isset($log_location)) {
         unlink($log_location);
     }
     proc_close($process);
-    if ($cmd_tmp_file) {
+    if($cmd_tmp_file) {
         unlink($cmd_tmp_file);
     }
-    //If this is a child process put the output into the output file and kill the process here.
+    // If this is a child process put the output into the output file and kill the process here.
     if ($child_process === 0) {
         file_put_contents($command_output, $output);
         exit();
