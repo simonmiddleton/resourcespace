@@ -1247,13 +1247,13 @@ function search_special($search,$sql_join,$fetchrows,$sql_prefix,$sql_suffix,$or
                             AND file_checksum = (
                                 SELECT file_checksum
                                     FROM resource
-                                    WHERE ref= %s
+                                    WHERE ref= ?
                                         AND (file_checksum <> '' AND file_checksum IS NOT NULL)
                                 )
                         GROUP BY r.ref
                         ORDER BY file_checksum, ref",
-                    $select,$sql_join->sql,$sql_filter->sql,$ref);
-                $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters);
+                    $select,$sql_join->sql,$sql_filter->sql);
+                $sql->parameters = array_merge($sql_join->parameters,$sql_filter->parameters,["i",$ref]);
                 }
             else
                 {
