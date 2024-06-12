@@ -2085,13 +2085,14 @@ function escape_command_args($cmd, array $args): string
 * 
 * @uses escape_command_args()
 * 
-* @param  string   $command    Command to run
-* @param  boolean  $geterrors  Set to TRUE to include errors in the output
-* @param  array    $params     List of placeholders and their values which will have to be escapedshellarg()d.
+* @param  string   $command         Command to run
+* @param  boolean  $geterrors       Set to TRUE to include errors in the output
+* @param  array    $params          List of placeholders and their values which will have to be escapedshellarg()d.
+* @param  boolean  $suppressoutput  Set to TRUE to suppress any output from the command
 * 
 * @return string Command output
 */
-function run_command($command, $geterrors = false, array $params = array())
+function run_command($command, $geterrors = false, array $params = array(), bool $suppressoutput = false)
     {
     global $debug_log,$config_windows;
 
@@ -2108,46 +2109,40 @@ function run_command($command, $geterrors = false, array $params = array())
         $command = $cmd_tmp_file;
         }
 
-    $descriptorspec = array(
-        1 => array("pipe", "w") // stdout is a pipe that the child will write to
-    );
-    if($debug_log || $geterrors) 
-        {
-        if($config_windows)
-            {
+    $descriptorspec = $suppressoutput ? [] : [1 => ["pipe", "w"]]; // stdout is a pipe that the child will write to
+    
+    if (!$suppressoutput || $debug_log || $geterrors) {
+        if ($config_windows) {
             $pid = getmypid();
             $log_location = get_temp_dir()."/error_".md5($command . serialize($params). $pid).".txt";
-            $descriptorspec[2] = array("file", $log_location, "w"); // stderr is a file that the child will write to
-            }
-        else
-            {
-            $descriptorspec[2] = array("pipe", "w"); // stderr is a pipe that the child will write to
-            }
+            $descriptorspec[2] = ["file", $log_location, "w"]; // stderr is a file that the child will write to
+        } else {
+            $descriptorspec[2] = ["pipe", "w"]; // stderr is a pipe that the child will write to
         }
-    $process = @proc_open($command, $descriptorspec, $pipe, null, null, array('bypass_shell' => true));
+    }
+
+    $process = @proc_open($command, $descriptorspec, $pipe, null, null, ['bypass_shell' => true]);
 
     if (!is_resource($process)) {
-        if($cmd_tmp_file) {
+        if ($cmd_tmp_file) {
             unlink($cmd_tmp_file);
         }
         return '';
     }
 
-    $output = trim(stream_get_contents($pipe[1]));
-    if($geterrors)
-        {
-        $output .= trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2]));
-        }
-    if ($debug_log)
-        {
+    $output = $suppressoutput ? "" : trim(stream_get_contents($pipe[1]));
+    if ($geterrors) {
+        $output .= trim($config_windows ? file_get_contents($log_location) : stream_get_contents($pipe[2]));
+    }
+    if ($debug_log) {
         debug("CLI output: $output");
-        debug("CLI errors: " . trim($config_windows?file_get_contents($log_location):stream_get_contents($pipe[2])));
-        }
+        debug("CLI errors: " . trim($config_windows ? file_get_contents($log_location) : stream_get_contents($pipe[2])));
+    }
     if ($config_windows && isset($log_location)) {
         unlink($log_location);
     }
     proc_close($process);
-    if($cmd_tmp_file) {
+    if ($cmd_tmp_file) {
         unlink($cmd_tmp_file);
     }
     return $output;
