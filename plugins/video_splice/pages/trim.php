@@ -61,7 +61,7 @@ $can_download = $access === RESOURCE_ACCESS_FULL;
 
 if ($ref < 0 || !$can_create_resource && !$can_create_alternative && !$can_download)
     {
-    exit ("Permission denied.");
+    exit(escape($lang["error-permissiondenied"]));
     }
 
 if($resource["lock_user"] > 0 && $resource["lock_user"] != $userref)
@@ -218,8 +218,7 @@ if(isset($start_time) && isset($end_time) && isset($output_type))
         }
     elseif ($output_type == "download" && $can_download)
         {
-        $randstring = md5(rand() . microtime() . $userref);
-        $target = get_temp_dir(false, 'user_downloads') . "/" . $userref . "_" . md5($username . $randstring . $scramble_key). '.' . $ffmpeg_preview_extension;
+        $target = get_temp_dir(false, 'user_downloads') . "/" . generateSecureKey(16) . "_$userref." . $ffmpeg_preview_extension;
         $download_filename = escape($lang["action-trim"]) . "_{$ref}_{$ffmpeg_start_time}_{$ffmpeg_end_time}.{$ffmpeg_preview_extension}";
 
         generate_video_trim($target, $video_original_file, $ref, $ffmpeg_start_time, $ffmpeg_duration_time);
