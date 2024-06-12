@@ -4175,32 +4175,28 @@ function create_image_alternatives(int $ref, array $params, $force = false)
         $alternate_config = $GLOBALS["image_alternatives"][$n];
         debug("Considering image alternative. Name: ''" . $alternate_config['name'] . "', description: '" . ($alternate_config['description'] ?? "") . "'");
         $exts = array_filter(explode(',',trim($alternate_config['source_extensions'])));
-        foreach($arrexisting as $existing) {
-            if (
-                (!empty($exts) && !in_array($resource_extension, $exts))
-            ) {
-                // Not required for this resource extension
-               continue;
-            }
+        if (
+            (!in_array($resource_extension, $exts))
+        ) {
+            // Not required for this resource extension
+           continue;
+        }
 
+        foreach ($arrexisting as $existing) {
             if (
                 $alternate_config['name'] == $existing["name"]
                 && (!isset($alternate_config['description']) || $alternate_config['description'] == $existing["description"])
                 && $alternate_config['target_extension'] == $existing["file_extension"]
-                )
-                 {
-                if($force)
-                    {
+            ) {
+                if ($force){
                     debug("Deleting existing image alternative for resource #" . $ref . ", alternative id #" . $existing['ref']);
                     delete_alternative_file($ref,$existing["ref"]);
-                    }
-                else
-                    {
+                } else {
                     debug("Skipping creation of image alternative " . $alternate_config['name'] . " for resource #" . $ref . " as already exists. Alternative id #" . $existing['ref']);
                     continue 2;
-                    }
-                 }
-             }
+                }
+            }
+        }
 
         // Create the alternative file.
         $aref  = add_alternative_file($ref, $alternate_config['name'],$alternate_config['description'] ?? "");
