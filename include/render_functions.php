@@ -4107,7 +4107,7 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
 */   
 function has_browsebar()
     {
-    global $username, $pagename,$not_authenticated_pages, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
+    global $username, $pagename, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
     return isset($username)
     && is_array($not_authenticated_pages) && !in_array($pagename, $not_authenticated_pages)
     && ('' == $k || $internal_share_access)

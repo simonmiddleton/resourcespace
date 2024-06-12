@@ -203,6 +203,7 @@ $found_year="";if (isset($set_fields["basicyear"])) {$found_year=$set_fields["ba
 $found_month="";if (isset($set_fields["basicmonth"])) {$found_month=$set_fields["basicmonth"];}
 $found_day="";if (isset($set_fields["basicday"])) {$found_day=$set_fields["basicday"];}
 
+$selected_search_tab = getval("selected_search_tab","");
 ?>
 <script>
 var categoryTreeChecksArray = [];
@@ -210,14 +211,14 @@ var categoryTreeChecksArray = [];
 <div id="SearchBox">
     <div id="SearchBarTabsContainer">
         <a href="#" onclick="selectSearchBarTab('search');">
-            <div class="SearchBarTab SearchTab SearchBarTabSelected">
+            <div class="SearchBarTab SearchTab <?php echo ($selected_search_tab ==="search") ? "SearchBarTabSelected" : ""; ?>">
                 <i class="fa-solid fa-fw fa-magnifying-glass"></i>
                 <?php echo escape($lang["searchbutton"]); ?>
             </div>
         </a>
         <?php if ($browse_bar) { ?>
             <a href="#" onclick="selectSearchBarTab('browse');" >
-                <div class="SearchBarTab BrowseTab">
+                <div class="SearchBarTab BrowseTab <?php echo ($selected_search_tab ==="browse") ? "SearchBarTabSelected" : ""; ?>">
                     <i class="fa-solid fa-fw fa-list"></i>
                     <?php echo escape($lang["browse_bar_text"]); ?>
                 </div>
@@ -1022,8 +1023,9 @@ if ($simple_search_pills_view)
 
 hook("searchbarbottom");
 
-global $selected_search_tab, $browse_on;
-if ($selected_search_tab == "browse" && $browse_on)
+global $selected_search_tab;
+
+if ($selected_search_tab == "browse")
     {
     ?>
     <script>
