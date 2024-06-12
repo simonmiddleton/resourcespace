@@ -2403,7 +2403,8 @@ $email_sharing=true;
 # $email_rate_limit=10;
 
 #Resource Share Expiry Controls
-$resource_share_expire_days=150; #Maximum number of days allowed for the share 
+$resource_share_expire_days=150; #Maximum number of days allowed for the share.
+$resource_share_expire_days_default = 0; #Default number of days ahead to select for share expiry, set to 0 to use first option.
 $resource_share_expire_never=true; #Allow the 'Never' option.
 
 # Having keywords_remove_diacritics set to true means that diacritics will be removed for indexing e.g. 'zwälf' is indexed as 'zwalf', 'café' is indexed as 'cafe'.
