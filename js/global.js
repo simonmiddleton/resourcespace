@@ -1064,7 +1064,7 @@ function ModalCentre()
     }
 function ModalClose()
 	{
-	jQuery('#modal_overlay').hide();
+	jQuery('#modal_overlay').fadeOut('fast');
 	jQuery('#modal').hide();
 	jQuery('#modal').html('');
     // Trigger an event so we can detect when a modal is closed
@@ -2155,5 +2155,14 @@ function resourcespace_get_global_state() {
     for (let i in T) {
         let prop = T[i];
         console.debug('%s: %s = %o', prop, typeof window[prop], window[prop]);
+    }
+}
+
+function enforceSharePassword(error_text)
+{
+    let passwordInput = document.getElementById('sharepassword');
+    if (passwordInput.hasAttribute('required') && passwordInput.value === '') {
+        alert(error_text);
+        return false; 
     }
 }
