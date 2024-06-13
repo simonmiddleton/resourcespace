@@ -109,30 +109,22 @@ function ClearLoadingTimers()
 
 /* AJAX loading of searchbar contents for search executed outside of searchbar */
 function ReloadSearchBar()
-	{
-	var SearchBar=jQuery('#SearchBarContainer');
-	SearchBar.load(baseurl_short+"pages/ajax/reload_searchbar.php?ajax=true&pagename="+pagename, function (response, status, xhr)
-			{
-			if (status=="error")
-				{				
-				SearchBar.html(errorpageload  + xhr.status + " " + xhr.statusText + "<br/>" + response);		
-				}
-			else
-				{
-				// Load completed	
-				
-				// Add Chosen dropdowns, if configured
-				if (typeof chosen_config !== 'undefined' && chosen_config['#SearchBox select']!=='undefined')
-					{
-					jQuery('#SearchBox select').each(function()
-						{
-						ChosenDropdownInit(this, '#SearchBox select');
-						});
-					}
-				}		
-			});		
+{
+	var SearchBar = jQuery('#SearchBarContainer');
+
+	SearchBar.load(baseurl_short + "pages/ajax/reload_searchbar.php?ajax=true&pagename=" + pagename, function (response, status, xhr) {
+        if (status=="error") {				
+            SearchBar.html(errorpageload  + xhr.status + " " + xhr.statusText + "<br/>" + response);		
+        } else if (typeof chosen_config !== 'undefined' && chosen_config['#SearchBox select']!=='undefined') {
+            // Load completed, add Chosen dropdowns if configured
+            jQuery('#SearchBox select').each(function() {
+                ChosenDropdownInit(this, '#SearchBox select');
+            });
+        }		
+	});
+
 	return false;
-    }
+}
 
 /* Scroll to top if parameter set - used when changing pages */
 function pageScrolltop(element)
@@ -849,15 +841,13 @@ function passQueryStrings(params, formID)
 	var query_string = '';
 	var qs = getQueryStrings();
 
-	if(params.constructor !== Array) {
-		//console.log('Error - params in passQueryStrings function should be an array!');
+	if (params.constructor !== Array) {
 		return false;
 	}
 
 	// Pass only specified params to the query string
-	for(var i = 0; i < params.length; i++) {
-		// console.log(params[i]);
-		if(qs.hasOwnProperty(params[i]) && query_string === '') {
+	for (var i = 0; i < params.length; i++) {
+		if (qs.hasOwnProperty(params[i]) && query_string === '') {
 			query_string = params[i] + '=' + qs[params[i]];
 		} else if(qs.hasOwnProperty(params[i]) && query_string !== '') {
 			query_string += '&' + params[i] + '=' + qs[params[i]];
@@ -866,7 +856,7 @@ function passQueryStrings(params, formID)
 
     form_action = document.getElementById(formID).action + '?' + query_string;
 
-    if(document.getElementById(formID).action !== form_action) {
+    if (document.getElementById(formID).action !== form_action) {
     	document.getElementById(formID).action = form_action;
 	}
 
@@ -879,15 +869,11 @@ function is_special_search(special_search, string_length)
 {
 	var query_strings = getQueryStrings();
 
-	if(is_empty(query_strings)) {
+	if (is_empty(query_strings)) {
 		return false;
 	}
 
-	if(query_strings.search.substring(0, string_length) === special_search) {
-		return true;
-	}
-
-	return false;
+	return query_strings.search.substring(0, string_length) === special_search;
 }
 
 // Check if object is empty or not
@@ -909,29 +895,24 @@ function is_empty(object)
 // Note: should be used when the location does not have the correct URL
 function get_query_strings(url)
 {
-	if(url.trim() === '')
-		{
-		//console.error('RS_debug: get_query_strings, parameter "url" can\'t be an empty string!');
+	if (url.trim() === '') {
 		return {};
-		}
+	}
 
 	var query_strings = {};
-	var url_split     = url.split('?');
+	var url_split = url.split('?');
 
-	if(url_split.length === 1)
-		{
-		//console.log('RS_debug: no query strings found on ' + url);
+	if (url_split.length === 1) {
 		return query_strings;
-		}
+	}
 
 	url_split = url_split[1];
 	url_split = url_split.split('&');
 
-	for(var i = 0; i < url_split.length; i++)
-		{
+	for (var i = 0; i < url_split.length; i++) {
 		var var_value_pair = url_split[i].split('=');
 		query_strings[var_value_pair[0]] = decodeURI(var_value_pair[1]);
-		}
+	}
 
 	return query_strings;
 }
@@ -958,21 +939,21 @@ function ModalLoad(url,jump,fittosize,align)
 	jQuery('#modal').draggable({ handle: ".RecordHeader", opacity: 0.7 });
 	
     // Set modalfit so that resizing does not change the size
-    modalfit=false;
-    if ((!(typeof fittosize=='undefined') && fittosize)) {
-        modalfit=true;
+    modalfit = false;
+    if ((typeof fittosize != 'undefined') && fittosize) {
+        modalfit = true;
     }
 	
     // Set modalalign to store the alignment of the current modal (needs to be global so that resizing the window still correctly aligns the modal)
-    modalalign=false;
-    if ((!(typeof align=='undefined'))) {
-        modalalign=align;
+    modalalign = false;
+    if (typeof align != 'undefined') {
+        modalalign = align;
     }
     
     // To help with calling of a popup modal from full modal, can return to previous modal location
-    if (!(typeof modalurl=='undefined')) {
-            modalbackurl=modalurl;
-            }
+    if (typeof modalurl != 'undefined') {
+        modalbackurl = modalurl;
+    }
     
     url=SetContext(url);
     modalurl=url;
@@ -992,41 +973,39 @@ function ModalPost(form,jump,fittosize)
 	
      // Set modalfit so that resizing does not change the size
     modalfit=false;
-    if ((!(typeof fittosize=='undefined') && fittosize)) {
-        modalfit=true;
+    if ((typeof fittosize != 'undefined') && fittosize) {
+        modalfit = true;
     }
     
 	ModalCentre();
     
-    if (!(typeof modalurl=='undefined')) {
-			modalbackurl=modalurl;
-			}
+    if (typeof modalurl != 'undefined') {
+		modalbackurl = modalurl;
+	}
+
     modalurl=url;
 	return CentralSpacePost(form,jump,true);
 	}
     
 function ModalCentre()
-	{
+{
 	// Centre the modal and overlay on the screen. Called automatically when opened and also when the browser is resized, but can also be called manually.
 	
     // If modalfit is not specified default to the full modal dimensions
-	if (modalalign=='right')
-	    {
-        modalmaxheight=Math.max(jQuery(window).height() - 100);
-	    modalwidth=500;
-		if (!TileNav) {modalwidth=250;} // Smaller menu if tile navigation disabled.
-	    }
-	else if ((!(typeof modalfit=='undefined') && modalfit))
-	    {
-        modalmaxheight='auto';
-	    modalwidth='auto';
-	    }
-	else
-	    {
-        modalmaxheight=jQuery('.ui-layout-container').height() - 60;
-	    modalwidth=1235;
-	    }
-    
+	if (modalalign == 'right') {
+        modalmaxheight = Math.max(jQuery(window).height() - 100);
+	    modalwidth = 500;
+		if (!TileNav) {
+            // Smaller menu if tile navigation disabled.
+            modalwidth = 250;
+        }
+	} else if ((typeof modalfit != 'undefined') && modalfit) {
+        modalmaxheight = 'auto';
+	    modalwidth = 'auto';
+	} else {
+        modalmaxheight = jQuery('.ui-layout-container').height() - 60;
+	    modalwidth = 1235;
+	}
     
     jQuery('#modal').css({	
         maxHeight: modalmaxheight,
@@ -1034,45 +1013,41 @@ function ModalCentre()
     });
 
     // Support alignment of modal (e.g. for 'My Account')
-    topmargin=30;
-    if (modalalign=='right')
-	{
+    topmargin = 30;
+    if (modalalign == 'right') {
         left = Math.max(jQuery(window).width() - jQuery('#modal').outerWidth(), 0) - 20;
-        topmargin=50;
-	}
-    else
-	{
+        topmargin = 50;
+	} else {
         left = Math.max(jQuery(window).width() - jQuery('#modal').outerWidth(), 0) / 2;
 	}    
 
     jQuery('#modal').css({
-	top:topmargin + jQuery(window).scrollTop(), 
-	left:left + jQuery(window).scrollLeft()
+        top: topmargin + jQuery(window).scrollTop(), 
+        left: left + jQuery(window).scrollLeft()
 	});
 
     // Resize knowledge base iframe to correct size if present
-    if (jQuery('#knowledge_base').length)
-        {
+    if (jQuery('#knowledge_base').length) {
         jQuery('#knowledge_base').css('height', modalmaxheight);
         jQuery('#modal').css('overflow', 'hidden');
-        }
-    else
-        {
+    } else {
         jQuery('#modal').css('overflow', 'auto');
-        }
-
     }
+
+}
+
 function ModalClose()
-	{
+{
 	jQuery('#modal_overlay').fadeOut('fast');
 	jQuery('#modal').hide();
 	jQuery('#modal').html('');
+
     // Trigger an event so we can detect when a modal is closed
-	if (!(typeof modalurl=='undefined')) {
-			jQuery('#CentralSpace').trigger('ModalClosed',[{url: modalurl}]);
-			delete modalurl;
-			}
-	}
+	if (typeof modalurl != 'undefined') {
+        jQuery('#CentralSpace').trigger('ModalClosed', [{url: modalurl}]);
+        delete modalurl;
+    }
+}
 	
 // For modals, set what context the modal was called from and insert if missing
 function SetContext(url)
@@ -1287,44 +1262,36 @@ function array_diff(array_1, array_2)
     }
    
 function StripResizeResults(targetImageHeight)
-    {
+{
     var screenWidth = jQuery('#CentralSpaceResources').width()-15;
     var images = jQuery('.ImageStrip');
     var accumulatedWidth = 0;
     var imageGap = 15;
     var processArray = [];
 
-    for (var i = 0; i < images.length; i++)
-        {
+    for (var i = 0; i < images.length; i++) {
         // Take a copy to get the unscaled image size
         var imageCopy = new Image();imageCopy.src=images[i].src;
         var ratio = imageCopy.width/imageCopy.height;
-        var presentationWidth=(targetImageHeight * ratio);
-        accumulatedWidth+=presentationWidth+imageGap; // add to our calculation of the row width
+        var presentationWidth = (targetImageHeight * ratio);
+        accumulatedWidth += presentationWidth+imageGap; // add to our calculation of the row width
 
-        if (accumulatedWidth>screenWidth)
-            {
+        if (accumulatedWidth > screenWidth) {
             // Work out a height for the row (excluding the current image which will fall to the next row)
-            var factor=screenWidth / (accumulatedWidth-presentationWidth - imageGap);
-            //jQuery(images[i]).css("border-color","red");
-
-            // Break at this image (in case we're out of step - this will realign rows)
-            //jQuery(images[i]).before("<br />");
+            var factor = screenWidth / (accumulatedWidth-presentationWidth - imageGap);
 
             // Rescale images on current row
-            for (var n=0; n< processArray.length; n++)
-                {
-                jQuery(processArray[n]).css("height",Math.floor(factor * targetImageHeight) + "px");
-                }
+            for (var n=0; n< processArray.length; n++) {
+                jQuery(processArray[n]).css("height", Math.floor(factor * targetImageHeight) + "px");
+            }
 
             // Empty process array
             processArray = [];
-            accumulatedWidth=images[i].width+imageGap;
-            }  
-
+            accumulatedWidth = images[i].width + imageGap;
+            }
         processArray.push(images[i]);
-        }
     }
+}
 
 /**
  * Load unified dropdown actions
@@ -1412,22 +1379,18 @@ function getFilePathExtension(path)
 *
 */
 function toggleFieldLock(field) 
-    {
-    if(typeof lockedfields === 'undefined')
-        {
+{
+    if (typeof lockedfields === 'undefined') {
         lockedfields = new Array();
-        }
-    if (lockedfields.indexOf(field.toString())!=-1)
-        {
+    }
+
+    if (lockedfields.indexOf(field.toString())!=-1) {
         jQuery('#lock_icon_' + field + '> i').removeClass('fa-lock');
         jQuery('#lock_icon_' + field + '> i').addClass('fa-unlock');
         jQuery('#lock_icon_' + field).parent().closest('div').removeClass('lockedQuestion');
         lockedfields = jQuery.grep(lockedfields, function(value) {return value != field.toString();});
-        //console.log('Unlocking field ' + field);
 		SetCookie('lockedfields',lockedfields.map(String));
-        }
-    else
-        {
+    } else {
         jQuery('#lock_icon_' + field + '> i').removeClass('fa-unlock');
         jQuery('#lock_icon_' + field + '> i').addClass('fa-lock');
         jQuery('#lock_icon_' + field).parent().closest('div').addClass('lockedQuestion');
@@ -1435,19 +1398,17 @@ function toggleFieldLock(field)
         jQuery('#field_' + field + '_checksum').val("");
         jQuery('#' + field + '_checksum').val("");
         lockedfields.push(field.toString());
-        //console.log('Locking field ' + field);
-		SetCookie('lockedfields',lockedfields);
-        }
-    if(lockedfields.length > 0)
-        {
-        jQuery(".save_auto_next").show();
-        }
-    else
-        {
-        jQuery(".save_auto_next").hide();
-        }
-    return true;
+		SetCookie('lockedfields', lockedfields);
     }
+
+    if (lockedfields.length > 0) {
+        jQuery(".save_auto_next").show();
+    } else {
+        jQuery(".save_auto_next").hide();
+    }
+
+    return true;
+}
 
 /*
 *
@@ -1559,10 +1520,7 @@ function batch_edit_toggle_edit_multi_checkbox_question(question_ref)
 
         document.getElementById('modeselectinput_' + question_ref).selectedIndex = 0;
         }
-
-    return;
     }
-
 
 /*
 * 
@@ -1726,7 +1684,7 @@ function unsetCookie(cookieName, cpath)
 * @return void
 */
 function check_upgrade_in_progress()
-    {
+{
     jQuery.ajax({
         type: 'GET',
         url: baseurl + "/pages/ajax/message.php",
@@ -1735,23 +1693,16 @@ function check_upgrade_in_progress()
             check_upgrade_in_progress: true
         },
         dataType: "json"
-        })
-        .done(function(response)
-            {
-            if(response.status != "success")
-                {
-                return;
-                }
+    }).done(function(response) {
+        if (response.status != "success") {
+            return;
+        }
 
-            if(response.data.upgrade_in_progress)
-                {
-                window.location.reload(true);
-                return;
-                }
-            });
-    
-    return;
-    }
+        if (response.data.upgrade_in_progress) {
+            window.location.reload(true);
+        }
+    });
+}
 
 /**
 * Add hidden input dynamically to help further requests maintain modals.
@@ -1831,38 +1782,27 @@ function api(name, params, callback, post_data_extra = {})
 *
 * @return void
 */
-function deselect_children_of_jstree_node(theJstree, nodeId) {
-
+function deselect_children_of_jstree_node(theJstree, nodeId)
+{
 	// Node is open by the time we get here so that its children can also be deselected if necessary
 	var children_of_this = theJstree.jstree('get_children_dom', nodeId);
-	for(var i = 0; i < children_of_this.length; i++) {
+
+	for (var i = 0; i < children_of_this.length; i++) {
 		// Trigger deselection of each child if necessary
-		if(theJstree.jstree('is_selected', children_of_this[i].id)) {
-			// console.log("-- CHILD NODE "+children_of_this[i].id+" IS SELECTED - DESELECT IT");
+		if (theJstree.jstree('is_selected', children_of_this[i].id)) {
 			theJstree.jstree('deselect_node', children_of_this[i].id);
-		}
-		else { 
+		} else if (theJstree.jstree('is_parent', children_of_this[i].id)) {
 			// Child is not selected; but continue to process the descendents to cater for tier gaps
-			// console.log("-- CHILD NODE "+children_of_this[i].id+" NOT SELECTED");
-			if(theJstree.jstree('is_parent', children_of_this[i].id)) {
-
-				if(theJstree.jstree('is_closed', children_of_this[i].id)) {
-					// console.log("-- -- CHILD NODE "+children_of_this[i].id+" IS A CLOSED PARENT - OPEN IT");
-					theJstree.jstree('open_node', children_of_this[i].id, function(e, data) {
-						// console.log("-- -- NODE "+e.id+" OPENED CALLBACK ");
-						deselect_children_of_jstree_node(theJstree, e.id);   
-						});
-				}
-				else {
-					// Child is already open
-					// console.log("-- CHILD NODE "+children_of_this[i].id+" ALREADY OPEN - DESELECT ITS CHILDREN");
-					deselect_children_of_jstree_node(theJstree, children_of_this[i].id);
-				}
-
-			}
+            if (theJstree.jstree('is_closed', children_of_this[i].id)) {
+                theJstree.jstree('open_node', children_of_this[i].id, function(e, data) {
+                    deselect_children_of_jstree_node(theJstree, e.id);   
+                });
+            } else {
+                // Child is already open
+                deselect_children_of_jstree_node(theJstree, children_of_this[i].id);
+            }
 		}
 	}
-
 }
 
 /**

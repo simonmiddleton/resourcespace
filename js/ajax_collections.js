@@ -378,8 +378,6 @@ function UpdateSelColSearchFilterBar()
         UpdateSelectedUnifiedActions(clear);
         UpdateSelectedBtns(clear);
         });
-
-    return;
     }
 
 function UpdateSelectedResourcesCounter(clear)
@@ -445,8 +443,6 @@ function UpdateSelectedResourcesCounter(clear)
             {
             CentralSpaceHideLoading();
             });
-
-    return;
     }
 
 function UpdateSelectedBtns(clear)
@@ -495,11 +491,7 @@ function UpdateSelectedBtns(clear)
                 {
                 TopInpageNavLeft.append(clear_btn_response[0]);
                 }
-
-            return;
             });
-
-    return;
     }
 
 function UpdateSelectedUnifiedActions(clear)
@@ -533,10 +525,7 @@ function UpdateSelectedUnifiedActions(clear)
 
         let actions_html = actionspace_parent.find('.ActionsContainer.InpageNavLeftBlock').html();
         actionspace_parent.empty().append(actions_html);
-
-        return;
         });
-    return;
     }
 
 function RemoveSelectedFromCollection(csrf_id, csrf_token)
@@ -570,8 +559,6 @@ function RemoveSelectedFromCollection(csrf_id, csrf_token)
 
     return true;
         }, csrf_data);
-
-    return;
     }
 
 
@@ -692,7 +679,6 @@ function toggle_fc_bg_image_txt_input(el, show_on_val)
         }
 
     jQuery('#question_bg_img_resource_ref').addClass('DisplayNone');
-    return;
     }
 
 function featured_collection_category_select_onchange(el, form)
@@ -704,5 +690,4 @@ function featured_collection_category_select_onchange(el, form)
 
     document.getElementsByName('update_parent')[0].value = 'true';
     document.getElementById('redirect').value = '';
-    return;
     }
