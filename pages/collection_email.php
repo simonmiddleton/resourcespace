@@ -259,7 +259,7 @@ else
 <div class="Question">
 
 <label for="users">
-<?php echo ($internal_share_only)?$lang["emailtousers_internal"]:$lang["emailtousers"]; ?>
+<?php echo strip_tags_and_attributes($internal_share_only ? $lang["emailtousers_internal"] : $lang["emailtousers"]); ?>
 </label><?php $userstring=getval("users","");include "../include/user_select.php"; ?>
 <div class="clearerleft"> </div>
 <?php if ($errors!="") { ?><div class="FormError">!! <?php echo $errors?> !!</div><?php } ?>
