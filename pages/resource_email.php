@@ -39,12 +39,15 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
     $expires=getval("expires","");
     $group=getval("usergroup","");
     $sharepwd = getval('sharepassword', '');
+
     $list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
 
     $user_email=""; 
     $from_name=$userfullname; 
 
     if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
+
+    enforceSharePassword($sharepwd);
 
     // Email single resource
     $errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$minaccess,$group);
@@ -154,7 +157,7 @@ if(!$user_select_internal)
 
 <?php if(!hook("replaceemailsubmitbutton")){?>
 <div class="QuestionSubmit">        
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["emailresourcetitle"])?>&nbsp;&nbsp;" />
+<input name="save" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="&nbsp;&nbsp;<?php echo escape($lang["emailresourcetitle"])?>&nbsp;&nbsp;" />
 </div>
 <?php } // end replaceemailsubmitbutton ?>
 

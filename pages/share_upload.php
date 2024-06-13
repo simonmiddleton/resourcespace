@@ -95,6 +95,8 @@ if($submitted)
         $messages[] = $lang["error_invalid_usergroup"];
         }
 
+    enforceSharePassword($sharepwd);
+
     if(count($messages) == 0)
         {
         $shareoptions = array(
@@ -214,7 +216,7 @@ include "../include/header.php";
             if($editing)
                 {?>
                 <div class="QuestionSubmit">        
-                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo escape($lang["save"]);}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
+                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo escape($lang["save"]);}?>&nbsp;&nbsp;" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>return CentralSpacePost(this.form,true);" />
                 </div><?php
                 }
             else
@@ -234,7 +236,7 @@ include "../include/header.php";
                     </div>
                 </div>
                 <div class="QuestionSubmit">        
-                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo escape($lang["button-upload-link-create"]);}?>&nbsp;&nbsp;" onclick="return CentralSpacePost(this.form,true);" />
+                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo escape($lang["button-upload-link-create"]);}?>&nbsp;&nbsp;" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>return CentralSpacePost(this.form,true);" />
                 </div><?php
                 }
                 ?>

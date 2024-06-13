@@ -2165,4 +2165,5 @@ function enforceSharePassword(error_text)
         alert(error_text);
         return false; 
     }
+return true;
 }

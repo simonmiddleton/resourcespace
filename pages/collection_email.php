@@ -143,11 +143,13 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
     $add_internal_access=(getval("grant_internal_access","")!="");
     $feedback=getval("request_feedback","");    if ($feedback=="") {$feedback=false;} else {$feedback=true;}
     $list_recipients=getval("list_recipients",""); if ($list_recipients=="") {$list_recipients=false;} else {$list_recipients=true;}
-
+    
     $user_email=""; 
     $from_name=$userfullname;
 
     if (getval("ccme",false)){ $cc=$useremail;} else {$cc="";}
+
+    enforceSharePassword($sharepwd);
 
     $errors = email_collection($ref,i18n_get_collection_name($collection),$userfullname,$users,$message,$feedback,$access,$expires,$user_email,$from_name,$cc,$themeshare,$themename, "?parent=" . $collection["ref"],$list_recipients,$add_internal_access,$group, $sharepwd);
     if ($errors=="")
@@ -319,7 +321,7 @@ if(!$internal_share_only)
 
 <?php if(!hook("replaceemailsubmitbutton")){?>
 <div class="QuestionSubmit">
-<input name="save" type="submit" value="&nbsp;&nbsp;<?php if ($themeshare){echo escape($lang["email_theme_category"]);} else {echo escape($lang["emailcollectiontitle"]);}?>&nbsp;&nbsp;" />
+<input name="save" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="&nbsp;&nbsp;<?php if ($themeshare){echo escape($lang["email_theme_category"]);} else {echo escape($lang["emailcollectiontitle"]);}?>&nbsp;&nbsp;" />
 </div>
 <?php } # end hook replaceemailsubmitbutton ?>
 
