@@ -54,6 +54,7 @@ if (getval("save",'') != '' && enforcePostRequest(false))
             {
             $download_url_suffix_params["collection"] = $col;
             $redirect_url = "pages/collection_download.php";
+            $download_url_suffix_params = array_merge($download_url_suffix_params, array("email" => $email));
             } 
         else 
             {

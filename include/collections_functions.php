@@ -4826,7 +4826,7 @@ function collection_download_process_text_file($ref, $collection, $filename)
  * 
  * @return void
  */
-function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref, $size)
+function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref, $size, string $email = "")
     {
     global $usage, $usagecomment, $resource_hit_count_on_downloads;
 
@@ -4834,8 +4834,9 @@ function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref
     if($tmpfile!==false && file_exists($tmpfile)){$deletion_array[]=$tmpfile;}
 
     daily_stat("Resource download", $ref);
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment, "", "", (int) $usage);
-    
+    $email_add_to_log = ($email != "") ? ' Downloaded by ' . $email : "";
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, "", "", (int) $usage);
+
     # update hit count if tracking downloads only
     if ($resource_hit_count_on_downloads)
         { 
