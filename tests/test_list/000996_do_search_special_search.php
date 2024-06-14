@@ -14,32 +14,32 @@ ps_query(
 
 $use_cases = [
     [
-        "name"          => "A",
+        "name"          => "!list search for single resource",
         "search_string" => "!list$resourcea",
         "results"       => [$resourcea],
     ],
     [
-        "name"          => "B",
+        "name"          => "!list search for single resource and node",
         "search_string" => "!list$resourcea,@@$node996",
         "results"        => [$resourcea],
     ],
     [
-        "name"          => "C",
+        "name"          => "!list search for single resource excluded by node",
         "search_string" => "!list$resourceb,@@$node996",
         "results"        => [],
     ],
     [
-        "name"          => "D",
+        "name"          => "!unused search with node",
         "search_string" => "!unused,@@$node996",
         "results"        => [$resourcea],
     ],
     [
-        "name"          => "E",
+        "name"          => "!duplicates for specific resource search",
         "search_string" => "!duplicates$resourceb",
         "results"        => [$resourcea,$resourceb,$resourcec],
     ],
     [
-        "name"          => "F",
+        "name"          => "!duplicates for specific resource search with node",
         "search_string" => "!duplicates$resourceb,@@$node996",
         "results"        => [$resourcea],
     ],
