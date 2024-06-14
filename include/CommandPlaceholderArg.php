@@ -46,4 +46,14 @@ final class CommandPlaceholderArg
     {
         return $this->value;
     }
+
+    /**
+     * Basic function to enable bypassing of any validation of the provided value.
+     * Only to be used when the value has been constructed without any unpredictable user input or
+     * has been thoroughly pre-sanitized
+    */
+    public static function alwaysValid(string $val): bool
+    {
+        return true;
+    }
 }
