@@ -2870,14 +2870,11 @@ function extract_text($ref,$extension,$path="")
         $text=file_get_contents($path);
         }
 
-    if ($extension=="zip")
-        {
+    if ($extension == "zip") {
         # Zip files - map the field
-        $path=escapeshellarg($path);
-
-        $cmd="unzip -l $path";
-        $text=run_command($cmd);
-        }
+        $cmd="unzip -l %%PATH%%";
+        $text = run_command($cmd, false, ['%%PATH%%' => new CommandPlaceholderArg($path, 'is_valid_rs_path')]);
+    }
 
     hook("textextraction", "all", array($extension,$path));
 
@@ -2911,29 +2908,24 @@ function extract_text($ref,$extension,$path="")
 function get_image_orientation($file)
     {
     $exiftool_fullpath = get_utility_path('exiftool');
-    if ($exiftool_fullpath == false)
-        {
+    if ($exiftool_fullpath == false) {
         return 0;
-        }
+    }
 
-    $cmd=$exiftool_fullpath . ' -s -s -s -orientation ' . escapeshellarg($file);
-    $orientation = run_command($cmd);
+    $cmd = $exiftool_fullpath . ' -s -s -s -orientation %%FILE%%';
+    $orientation = run_command($cmd, false, ['%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path')]);
     $orientation = str_replace('Rotate', '', $orientation);
 
-    if (strpos($orientation, 'CCW'))
-        {
+    if (strpos($orientation, 'CCW')) {
         $orientation = trim(str_replace('CCW', '', 360-$orientation));
-        }
-    else
-        {
+    } else {
         $orientation = trim(str_replace('CW', '', $orientation));
-        }
+    }
 
     // Failed or no orientation available
-    if (!is_numeric($orientation))
-        {
+    if (!is_numeric($orientation)) {
         return 0;
-        }
+    }
 
     return $orientation;
     }
@@ -2946,8 +2938,7 @@ function AutoRotateImage($src_image, $ref = false)
 
     debug("AutoRotateImage(src_image = $src_image, ref = $ref)");
 
-    if (!isset($imagemagick_path))
-        {
+    if (!isset($imagemagick_path)){
         return false;
         # for the moment, this only works for imagemagick
         # note that it would be theoretically possible to implement this
@@ -2956,10 +2947,9 @@ function AutoRotateImage($src_image, $ref = false)
 
     # Locate imagemagick.
     $convert_fullpath = get_utility_path("im-convert");
-    if ($convert_fullpath == false)
-        {
+    if ($convert_fullpath == false) {
         return false;
-        }
+    }
 
     $exploded_src = explode('.', $src_image);
     $ext = $exploded_src[count($exploded_src) - 1];
@@ -2975,48 +2965,37 @@ function AutoRotateImage($src_image, $ref = false)
     $exiftool_fullpath = get_utility_path("exiftool");
     $new_image = $noext . '-autorotated.' . $ext;
 
-    if ($camera_autorotation_gm)
-        {
+    if ($ref != false) {
+        # use the original file to get the orientation info
+        $extension = ps_value("select file_extension value from resource where ref=?", array("i",$ref), '');
+        $file = get_resource_path($ref, true, "", false, $extension, -1, 1, false, "", -1);
+        # get the orientation
+        $orientation = get_image_orientation($file);
+        if ($orientation != 0) {
+            $cmd = $convert_fullpath . ' -rotate %%ORIENTATION%% %%SOURCE%% %%DESTINATION%%';
+            $params = [
+                '%%ORIENTATION%%' => new CommandPlaceholderArg('+' . (int) $orientation, [CommandPlaceholderArg::class, 'alwaysValid']),
+                '%%SOURCE%%' => new CommandPlaceholderArg($src_image, 'is_valid_rs_path'),
+                '%%DESTINATION%%' => new CommandPlaceholderArg($new_image,[CommandPlaceholderArg::class, 'alwaysValid']),
+            ];
+            run_command($cmd,false,$params);
+        }
+    } else {
         $orientation = get_image_orientation($src_image);
-        if ($orientation != 0)
-            {
-            $command = $convert_fullpath . ' ' . escapeshellarg($src_image) . ' -rotate +' . $orientation . ' ' . escapeshellarg($new_image);
-            run_command($command);
-            }
+        if ($orientation != 0) {
+            $cmd = $convert_fullpath . ' %%SOURCE%% -auto-orient %%DESTINATION%%';
+            $params = [
+                '%%SOURCE%%' => new CommandPlaceholderArg($src_image, 'is_valid_rs_path'),
+                '%%DESTINATION%%' => new CommandPlaceholderArg($new_image,[CommandPlaceholderArg::class, 'alwaysValid']),
+            ];
         }
-    else
-        {
-        if ($ref != false)
-            {
-            # use the original file to get the orientation info
-            $extension = ps_value("select file_extension value from resource where ref=?", array("i",$ref), '');
-            $file = get_resource_path($ref, true, "", false, $extension, -1, 1, false, "", -1);
-            # get the orientation
-            $orientation = get_image_orientation($file);
-            if ($orientation != 0)
-                {
-                $command = $convert_fullpath . ' -rotate +' . $orientation . ' ' . escapeshellarg($src_image) . ' ' . escapeshellarg($new_image);
-                run_command($command);
-                }
-            }
-        else
-            {
-            $orientation = get_image_orientation($src_image);
-            if ($orientation != 0)
-                {
-                $command = $convert_fullpath . ' ' . escapeshellarg($src_image) . ' -auto-orient ' . escapeshellarg($new_image);
-                run_command($command);
-                }
-            }
-        }
+    }
 
-    if (!file_exists($new_image))
-        {
+    if (!file_exists($new_image)) {
         return false;
-        }
+    }
 
-    if (!$ref)
-        {
+    if (!$ref) {
         # preserve custom metadata fields with exiftool
         # save the new orientation
         # $new_orientation=run_command($exiftool_fullpath.' -s -s -s -orientation -n '.$new_image);
@@ -3039,7 +3018,7 @@ function AutoRotateImage($src_image, $ref = false)
             {
             unlink($new_image . '_original');
             }
-        }
+       }
 
     unlink($src_image);
     rename($new_image, $src_image);
