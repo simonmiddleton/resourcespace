@@ -816,10 +816,6 @@ $disabled_plugins_message = "";
         "http://test.com" => "guest2"
         ); */
 
-# Alternative anonymous login mode. Automatically create a separate user for each anonymous session and log them in.
-# EXPERIMENTAL - use with caution!
-# $anonymous_autouser_group=2;
-
 $anonymous_user_session_collection=true;
 
 # Enable collection commenting and ranking
