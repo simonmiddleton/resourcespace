@@ -2835,33 +2835,28 @@ function extract_text($ref,$extension,$path="")
     }
 
     # OpenOffice Text (ODT)
-    if ($extension=="odt"||$extension=="ods"||$extension=="odp")
-        {
-        $path=escapeshellarg($path);
-
+    if ($extension=="odt"||$extension=="ods"||$extension=="odp") {
         # ODT files are zip files and the content is in content.xml.
         # We extract this then remove tags.
-        $cmd="unzip -p $path \"content.xml\"";
-        $text=run_command($cmd);
+        $cmd = "unzip -p %%PATH%% \"content.xml\"";
+        $text = run_command($cmd, false, ['%%PATH%%' => new CommandPlaceholderArg($path, 'is_valid_rs_path')]);
 
         # Remove tags, but add newlines as appropriate (without this, separate text blocks are joined together with no spaces).
         $text=str_replace("<","\n<",$text);
         $text=trim(strip_tags($text));
-        while (strpos($text,"\n\n")!==false) {$text=str_replace("\n\n","\n",$text);} # condense multiple line breaks
-        }
+        while (strpos($text,"\n\n") !== false) {$text=str_replace("\n\n","\n",$text);} # condense multiple line breaks
+    }
 
     # PDF extraction using pdftotext (part of the XPDF project)
-    if (($extension=="pdf" || $extension=="ai") && isset($pdftotext_path))
-        {
+    if (($extension=="pdf" || $extension=="ai") && isset($pdftotext_path)) {
         $command = get_utility_path('pdftotext');
-        if (!$command)
-            {
+        if (!$command) {
             debug("ERROR: pdftotext executable not found at '$pdftotext_path'");
             return false;
-            }
-
-        $text = run_command("{$command} -enc UTF-8 %path -", false, ['%path' => $path]);
         }
+        $cmd = "{$command} -enc UTF-8 %%PATH%% -";
+        $text = run_command($cmd, false, ['%%PATH%%' => new CommandPlaceholderArg($path, 'is_valid_rs_path')]);
+    }
 
     # HTML extraction
     if ($extension=="html" || $extension=="htm")
