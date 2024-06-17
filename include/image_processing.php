@@ -2967,7 +2967,7 @@ function AutoRotateImage($src_image, $ref = false)
 
     if ($ref != false) {
         # use the original file to get the orientation info
-        $extension = ps_value("select file_extension value from resource where ref=?", array("i",$ref), '');
+        $extension = ps_value("SELECT file_extension value FROM resource WHERE ref=?", array("i",$ref), '');
         $file = get_resource_path($ref, true, "", false, $extension, -1, 1, false, "", -1);
         # get the orientation
         $orientation = get_image_orientation($file);
@@ -2999,27 +2999,31 @@ function AutoRotateImage($src_image, $ref = false)
     if (!$ref) {
         # preserve custom metadata fields with exiftool
         # save the new orientation
-        # $new_orientation=run_command($exiftool_fullpath.' -s -s -s -orientation -n '.$new_image);
-        $cmd=$exiftool_fullpath . ' -s -s -s -orientation -n ' . escapeshellarg($src_image);
-        $old_orientation = run_command($cmd);
-        $exiftool_copy_command = $exiftool_fullpath . " -TagsFromFile " . escapeshellarg($src_image) . " -all:all " . escapeshellarg($new_image);
+        $cmd = $exiftool_fullpath .  ' -s -s -s -orientation -n %%SOURCE%%';
+        $old_orientation = run_command($cmd,false,['%%SOURCE%%' => new CommandPlaceholderArg($src_image, 'is_valid_rs_path')]);
 
-        run_command($exiftool_copy_command);
+        $exiftool_copy_command = $exiftool_fullpath . " -TagsFromFile %%SOURCE%% -all:all %%DESTINATION%%";
+        $params = [
+            '%%SOURCE%%' => new CommandPlaceholderArg($src_image, 'is_valid_rs_path'),
+            '%%DESTINATION%%' => new CommandPlaceholderArg($new_image, 'is_valid_rs_path'),
+        ];
+        run_command($exiftool_copy_command,false,$params);
 
         # If orientation was empty there's no telling if rotation happened, so don't assume.
         # Also, don't go through this step if the old orientation was set to normal
-        if ($old_orientation != '' && $old_orientation != 1)
-            {
-            $fix_orientation = $exiftool_fullpath . ' -Orientation=1 -n ' . escapeshellarg($new_image);
-            run_command($fix_orientation);
-            }
+        if ($old_orientation != '' && $old_orientation != 1) {
+            $fix_orientation = $exiftool_fullpath . " -Orientation=1 -n %%DESTINATION%%";
+            $params = [
+                '%%DESTINATION%%' => new CommandPlaceholderArg($new_image, 'is_valid_rs_path'),
+            ];
+            run_command($fix_orientation,false,$params);
+        }
 
         # we'll remove the exiftool created file copy (as a result of using -TagsFromFile)
-        if (file_exists($new_image . '_original'))
-            {
+        if (file_exists($new_image . '_original')) {
             unlink($new_image . '_original');
-            }
-       }
+        }
+    }
 
     unlink($src_image);
     rename($new_image, $src_image);
