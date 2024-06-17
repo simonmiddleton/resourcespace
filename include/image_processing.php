@@ -2976,7 +2976,7 @@ function AutoRotateImage($src_image, $ref = false)
             $params = [
                 '%%ORIENTATION%%' => new CommandPlaceholderArg('+' . (int) $orientation, [CommandPlaceholderArg::class, 'alwaysValid']),
                 '%%SOURCE%%' => new CommandPlaceholderArg($src_image, 'is_valid_rs_path'),
-                '%%DESTINATION%%' => new CommandPlaceholderArg($new_image,[CommandPlaceholderArg::class, 'alwaysValid']),
+                '%%DESTINATION%%' => new CommandPlaceholderArg($new_image,[CommandPlaceholderArg::class, 'is_valid_rs_path']),
             ];
             run_command($cmd,false,$params);
         }
@@ -2986,7 +2986,7 @@ function AutoRotateImage($src_image, $ref = false)
             $cmd = $convert_fullpath . ' %%SOURCE%% -auto-orient %%DESTINATION%%';
             $params = [
                 '%%SOURCE%%' => new CommandPlaceholderArg($src_image, 'is_valid_rs_path'),
-                '%%DESTINATION%%' => new CommandPlaceholderArg($new_image,[CommandPlaceholderArg::class, 'alwaysValid']),
+                '%%DESTINATION%%' => new CommandPlaceholderArg($new_image,[CommandPlaceholderArg::class, 'is_valid_rs_path']),
             ];
             run_command($cmd,false,$params);
         }
