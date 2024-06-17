@@ -2988,6 +2988,7 @@ function AutoRotateImage($src_image, $ref = false)
                 '%%SOURCE%%' => new CommandPlaceholderArg($src_image, 'is_valid_rs_path'),
                 '%%DESTINATION%%' => new CommandPlaceholderArg($new_image,[CommandPlaceholderArg::class, 'alwaysValid']),
             ];
+            run_command($cmd,false,$params);
         }
     }
 
