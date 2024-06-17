@@ -3346,38 +3346,39 @@ function delete_previews($resource,$alternative=-1)
  * @return array width and height of image, elements are null if not possible e.g. not an image file
  */
 function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
-    {
+{
     # Get image's dimensions.
-    $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
-    $identoutput=run_command($identcommand);
-
-    if (strtolower($extension) == "svg")
-        {
+    $identcommand = $identify_fullpath . ' -format %wx%h %%PREFIX%%%%SOURCE%%[0]';
+    global $debug_log;$debug_log=true;
+    $params = [
+        '%%PREFIX%%' => new CommandPlaceholderArg($prefix,
+            fn($val): bool => preg_match('/^\w\w\w:$|^$/', $val, $matches)
+        ),
+        '%%SOURCE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+    ];
+    $identoutput = run_command($identcommand,false,$params);
+    if (strtolower($extension) == "svg") {
         list($w, $h) = getSvgSize($file);
-        }
-    elseif (!empty($identoutput))
-        {
+    } elseif (!empty($identoutput)) {
         $wh=explode("x",$identoutput);
         $w = $wh[0];
         $h = $wh[1];
-        }
-    else
-        {
+    } else {
         // we really need dimensions here, so fallback to php's method
-        if (is_readable($file) && filesize_unlimited($file) > 0 && !in_array($extension,config_merge_non_image_types()))
-            {
-            list($w,$h) = try_getimagesize($file)?:[null,null];
-            }
-        else
-            {
+        if (
+            is_readable($file)
+            && filesize_unlimited($file) > 0
+            && !in_array($extension,config_merge_non_image_types())
+        ) {
+            list($w,$h) = try_getimagesize($file) ?: [null,null];
+        } else {
             $w = null;
             $h = null;
             debug("getFileDimensions: Unable to get image size for file: $file");
-            }
         }
-
-    return array($w, $h);
     }
+    return array($w, $h);
+}
 
 /**
 * Get SVG size by reading the file and looking for dimensions at either width and height OR at Viewbox attribute(s)
