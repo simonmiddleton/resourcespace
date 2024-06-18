@@ -157,7 +157,7 @@ imagejpeg($image, $iiif_file_b,50);
 $test_mp4 = get_temp_dir() . DIRECTORY_SEPARATOR . "testfile.mp4";
 $ffmpeg_fullpath = get_utility_path('ffmpeg');
 if($ffmpeg_fullpath) {
-    $cmd = $ffmpeg_fullpath . ' -framerate 1 -i ' . get_temp_dir() . DIRECTORY_SEPARATOR . $testimageid . "%d.jpg -r 1 -c:v libx264 " . $test_mp4;
+    $cmd = $ffmpeg_fullpath . ' -framerate 1 -loglevel error -i ' . get_temp_dir() . DIRECTORY_SEPARATOR . $testimageid . "%d.jpg -r 1 -c:v libx264 " . $test_mp4;
     run_command($cmd);
     imagejpeg($image, $iiif_file_b,50);
     upload_file($resourceb,false,false,false,$test_mp4,false,false);

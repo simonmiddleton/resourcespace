@@ -2948,12 +2948,20 @@ function calculate_image_display(array $imagedata, string $img_url, string $disp
  */
 function render_share_options($shareopts=array())
     {
-    global $lang, $usergroup, $resource_share_expire_never, $resource_share_expire_days,$minaccess,$allowed_external_share_groups;
+    global $lang, $usergroup,$minaccess,$allowed_external_share_groups,$resource_share_expire_never;
+    global $resource_share_expire_days,$resource_share_expire_days_default;
 
     $password = $shareopts['password'] ?? getval('password', '');
     $editaccesslevel = $shareopts['editaccesslevel'] ?? getval('editaccesslevel', '');
-    $editexpiration = $shareopts['editexpiration'] ?? getval('editexpiration', '');
+    $editexpiration = $shareopts['editexpiration'] ?? getval('editexpiration', null);
     $editgroup = $shareopts['editgroup'] ?? getval('editgroup', '');
+
+    if (
+        $editexpiration === "" && $resource_share_expire_days_default > 0
+        || $editexpiration != "" && date('Y-m-d', strtotime($editexpiration)) < date('Y-m-d',time())
+        ) {
+        $editexpiration = date('Y-m-d',time() + (60*60*24*$resource_share_expire_days_default));
+    }
 
     if(!hook('replaceemailaccessselector'))
         {?>
@@ -2981,12 +2989,12 @@ function render_share_options($shareopts=array())
         <div class="Question">
             <label><?php echo escape($lang["expires"]) ?></label>
             <select name="expires" class="stdwidth">
-            <?php 
+            <?php
             if($resource_share_expire_never) 
                 { ?>
                 <option value=""><?php echo escape($lang["never"])?></option><?php 
                 } 
-            for ($n=0;$n<=$resource_share_expire_days;$n++)
+            for ($n=1;$n<=$resource_share_expire_days;$n++)
                 {
                 $date       = time() + (60*60*24*$n);
                 $ymd_date   = date('Y-m-d', $date);
@@ -4099,7 +4107,7 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
 */   
 function has_browsebar()
     {
-    global $username, $pagename,$not_authenticated_pages, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
+    global $username, $pagename, $loginterms, $not_authenticated_pages, $k, $internal_share_access, $browse_bar;
     return isset($username)
     && is_array($not_authenticated_pages) && !in_array($pagename, $not_authenticated_pages)
     && ('' == $k || $internal_share_access)

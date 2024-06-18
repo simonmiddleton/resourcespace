@@ -5,6 +5,8 @@
 # for example types that use GhostScript or FFmpeg.
 #
 
+use Montala\ResourceSpace\CommandPlaceholderArg;
+
 global $imagemagick_path, $imagemagick_preserve_profiles, $imagemagick_quality, $imagemagick_colorspace,
 $ghostscript_path, $pdf_pages, $antiword_path, $unoconv_path, $pdf_resolution, $pdf_dynamic_rip,
 $ffmpeg_audio_extensions, $ffmpeg_audio_params,$ffmpeg_supported_extensions, $ffmpeg_global_options,
@@ -304,12 +306,12 @@ if (in_array($extension,$unoconv_extensions) && $extension!='pdf' && isset($unoc
     if ($unoconvert)
         {
         // Use newer unoconvert utility (note - does not have a verbose mode)
-        $output = run_command("{$unocommand} %file %pdffile", false, ['%file' => $file,'%pdffile' => $pdffile]);
+        $output = run_command("{$unocommand} %file %pdffile", false, ['%file' => $file,'%pdffile' => $pdffile], 60);
         }
     else    
         {
         // Legacy support for unoconv
-        $output = run_command("{$unocommand} " . ($debug_log || $debug_log_override ? '-v' : '') . " --format=pdf %file", false, ['%file' => $file]);
+        $output = run_command("{$unocommand} " . ($debug_log || $debug_log_override ? '-v' : '') . " --format=pdf %file", false, ['%file' => $file], 60);
         }
 
     debug('Preview_preprocessing : ' . $output);
@@ -707,7 +709,7 @@ if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpe
                 {
                 $escaped_snapshot_target = str_replace('snapshot', "snapshot_{$i}", $escaped_target);
 
-                $cmd = "{$ffmpeg_fullpath} {$ffmpeg_global_options} -y -ss {$snapshot_point} -i {$escaped_file} {$snapshot_scale} -frames:v 1 {$escaped_snapshot_target}";
+                $cmd = "{$ffmpeg_fullpath} {$ffmpeg_global_options} -loglevel error -y -ss {$snapshot_point} -i {$escaped_file} {$snapshot_scale} -frames:v 1 {$escaped_snapshot_target}";
                 run_command($cmd);
                 }
             }
@@ -722,13 +724,20 @@ if (($ffmpeg_fullpath!=false) && !isset($newfile) && in_array($extension, $ffmpe
         {
         $scale = '';
         if ($exiftool_fullpath != false) {
-            $output = run_command($exiftool_fullpath . ' -s3 -ImageWidth -ImageHeight %FILEPATH%', false, ['%FILEPATH%' => $file]);
+            $cmdparams = ["%%FILEPATH%%" => new CommandPlaceholderArg($file, 'is_valid_rs_path')];
+            $output = run_command($exiftool_fullpath . ' -s3 -ImageWidth -ImageHeight %%FILEPATH%%', false, $cmdparams);
             $dimensions = explode("\n",$output);
             if (count(array_filter($dimensions, 'is_int_loose')) == 2) {
                 $scale = '-vf scale=' . escapeshellarg(implode(':', $dimensions));
             }
         }
-        $output = run_command($ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y -ss ' . $snapshottime . ' -i %FILEPATH% ' . $scale . ' -f image2 -vframes 1 %TARGET%', false, ['%FILEPATH%' => $file, '%TARGET%' => $target]);
+
+        $cmdparams = [
+            "%%SNAPSHOTTIME%%" => new CommandPlaceholderArg($snapshottime, 'is_int_loose'),
+            "%%FILEPATH%%" => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+            "%%TARGET%%" => new CommandPlaceholderArg($target, 'is_valid_rs_path'),
+        ];
+        $output = run_command($ffmpeg_fullpath . ' ' . $ffmpeg_global_options . ' -y  -loglevel error -ss %%SNAPSHOTTIME%% -i %%FILEPATH%% ' . $scale . ' -f image2 -vframes 1 %%TARGET%%', false, $cmdparams); // $scale can't be a parameter - see how it is constructed above
 
         debug("FFMPEG-VIDEO: Get snapshot: {$cmd}");
         }

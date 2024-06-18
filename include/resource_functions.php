@@ -6247,7 +6247,7 @@ function overquota()
  * @param  string $extension    File extension
  * @param  bool $forcefromfile  Get info from file instead of database cache
  *
- * @return array|bool           Fil size info. Returns false if not available
+ * @return array|bool           File size info. Returns false if not available
  */
 function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfile=false)
     {
@@ -6318,6 +6318,9 @@ function get_original_imagesize($ref="",$path="", $extension="jpg", $forcefromfi
         $identcommand = $identify_fullpath . ' -format %wx%h '. escapeshellarg($prefix . $file) .'[0]';
         $identoutput=run_command($identcommand);
         preg_match('/^([0-9]+)x([0-9]+)$/ims',$identoutput,$smatches);
+        if (count($smatches) < 3) {
+            return false;
+        }
         @list(,$sw,$sh) = $smatches;
         if (($sw!='') && ($sh!=''))
             {

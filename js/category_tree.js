@@ -82,46 +82,46 @@ function DrawFromNode( field, node, inner, search )
 }
 
 
-function CheckNode( field, node, isuseraction, search )
+function CheckNode(field, node, isuseraction, search)
 {
-	if( (branch_limit == 1 || branch_limit_field[field] == 1)  && search!=true)	{
-	var n = TreeChecked[field][node];
-	DeselectAll( field );
-	} else {var n = node;}
-
-
-	if( TreeChecked[field][node] != 1 )  {
-		TreeChecked[field][node] = 1;
-
-		if( search != true) {
-
-			//Make sure all parents are ticked unless in search mode
-
-			var p = TreeParents[field][n];
-
-			if( p > -1 ) {
-				TreeTickedDesc[field][p] = true;
-				if( TreeChecked[field][p] != 1 ) {
-					CheckNode( field, p, false, search );
-					unode = TreeParents[field][p];
-					if( unode == -1 ) {
-						DrawTree( field, search );
-					} else {
-						UpdateNode( field, unode, search );
-					}
-				}
-			}
-		}if ((branch_limit==1 || branch_limit_field[field] == 1) && search!=true){
-			DrawTree(field,search);
-			}
+	if ((branch_limit == 1 || branch_limit_field[field] == 1) && search != true) {
+		var n = TreeChecked[field][node];
+		DeselectAll(field);
 	} else {
-		TreeChecked[field][node] = 0;
-		ResetChildren( field, node, search );
-		UpdateNode( field, node, search );
+		var n = node;
 	}
 
-	UpdateStatusBox( field, search );
-	UpdateHiddenField( field , isuseraction);
+	if (TreeChecked[field][node] != 1) {
+		TreeChecked[field][node] = 1;
+		if (search != true) {
+			//Make sure all parents are ticked unless in search mode
+			var p = TreeParents[field][n];
+			if (p > -1) {
+				TreeTickedDesc[field][p] = true;
+				if (TreeChecked[field][p] != 1) {
+					CheckNode(field, p, false, search);
+					unode = TreeParents[field][p];
+					if (unode == -1) {
+						DrawTree(field, search);
+					} else {
+						UpdateNode(field, unode, search);
+					}
+				}
+			}	
+		}
+
+		if ((branch_limit==1 || branch_limit_field[field] == 1) && search != true) {
+			DrawTree(field, search);
+		}
+
+	} else {
+		TreeChecked[field][node] = 0;
+		ResetChildren(field, node, search);
+		UpdateNode(field, node, search);
+	}
+
+	UpdateStatusBox(field, search);
+	UpdateHiddenField(field, isuseraction);
 }
 	
 
@@ -187,7 +187,7 @@ function ResetChildren( field, node, search )
 
 function ToggleNode( field, node, search )
 { 
-	TreeExpand[field][node] =! TreeExpand[field][node];
+	TreeExpand[field][node] = !TreeExpand[field][node];
 	UpdateNode( field, TreeParents[field][node], search );
 }
 
@@ -228,30 +228,28 @@ function CountTickedChildren( field, node )
 }
 
 
-function HasTickedDescendants( field, node )
+function HasTickedDescendants(field, node)
 {
-		var hasTickedDescendants = false;
+	var hasTickedDescendants = false;
 
-		if (typeof TreeTickedDesc[field][node] != 'undefined') {
-    		return TreeTickedDesc[field][node];
-		}
+	if (typeof TreeTickedDesc[field][node] != 'undefined') {
+		return TreeTickedDesc[field][node];
+	}
 
-		for( var i = 0, il = TreeParents[field].length; i < il; i++ ) {
-			if( ( TreeParents[field][i] == node ) && ( TreeChecked[field][i] == 1 ) ) {
-				hasTickedDescendants = true;
-				break;	
-			} else {
-				if( TreeParents[field][i] == node ) {
-					hasTickedDescendants = HasTickedDescendants( field, i );
-					 if( hasTickedDescendants ) { 
-						break; 
-					 } 
-				}
+	for (var i = 0, il = TreeParents[field].length; i < il; i++) {
+		if ((TreeParents[field][i] == node ) && (TreeChecked[field][i] == 1)) {
+			hasTickedDescendants = true;
+			break;	
+		} else if (TreeParents[field][i] == node) {
+			hasTickedDescendants = HasTickedDescendants( field, i );
+			if (hasTickedDescendants) { 
+				break;
 			}
 		}
+	}
 
 	TreeTickedDesc[field][node] = hasTickedDescendants;
-	return( hasTickedDescendants );
+	return(hasTickedDescendants);
 }
 
 
@@ -283,21 +281,13 @@ function DrawTree( field, search )
 	document.getElementById( field + "_tree" ).innerHTML = DrawFromNode( field, -1, false, search );
 }
 
-
-function AddNode( field, nodeparent, nodeid, nodename, nodeclickable, nodechecked, nodeexpand )
-	{
+function AddNode(field, nodeparent, nodeid, nodename, nodeclickable, nodechecked, nodeexpand)
+{
     //try to find an empty space first
 
-    var found	= false;
-/*    
-	for( var c = 0, cl = TreeParents[field].length; c < cl; c++ ) {
-		if( TreeParents[field][c] == -100 ) {
-			found = true;
-			break;
-		}	
-	}
-*/	
-    if( found == false ) {
+    var found = false;
+
+    if (found == false) {
     	c = TreeParents[field].length;
     }
     
@@ -311,7 +301,6 @@ function AddNode( field, nodeparent, nodeid, nodename, nodeclickable, nodechecke
     TreeExpand[field][c]		= false;
     TreeTickedDesc[field][c]	= false;
 }
-
 
 function ResolveParents( field )
 {

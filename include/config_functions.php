@@ -1436,6 +1436,11 @@ function override_rs_variables_by_eval(array $variables, string $code)
     $temp_array = [];
     foreach($temp_variables as $temp_variable_name => $temp_variable_val)
         {
+        if(!isset($original['copy_' . $temp_variable_name]))
+            {
+            $original['copy_' . $temp_variable_name] = null;
+            }
+
         if($original['copy_' . $temp_variable_name] !== $temp_variable_val)
             {
             $temp_array[$temp_variable_name] = $original['copy_' . $temp_variable_name];

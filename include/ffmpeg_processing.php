@@ -89,7 +89,7 @@ if ($generateall) {
         $ffmpeg_preview_options = $ffmpeg_preview_gif_options;
         }
 
-    $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -i %%FILE%% " . $ffmpeg_preview_options . " -t %%SECONDS%% -s %%HEIGHT%%x%%WIDTH%%  %%TARGETFILE%%";
+    $shell_exec_cmd = $ffmpeg_fullpath . " $ffmpeg_global_options -y -loglevel error -i %%FILE%% " . $ffmpeg_preview_options . " -t %%SECONDS%% -s %%HEIGHT%%x%%WIDTH%%  %%TARGETFILE%%";
 
     $shell_exec_params = [
         "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
@@ -107,7 +107,7 @@ if ($generateall) {
     if ($tmp) {
         $shell_exec_cmd = $tmp;
     }
-    $output = run_command($shell_exec_cmd, false, $shell_exec_params);
+    run_command($shell_exec_cmd, false, $shell_exec_params);
 
 
     if (
@@ -129,7 +129,7 @@ if ($generateall) {
         if ($width % 2){$width++;}
         if ($height % 2) {$height++;}
 
-        $shell_exec_cmd = "$ffmpeg_fullpath $ffmpeg_global_options -y -i %%FILE%% -s %%WIDTH%%x%%HEIGHT%%  %%TARGETFILE%% -f image2 -vframes 1 -ss %%SNAPSHOTTIME%% %%TARGETFILE%%";
+        $shell_exec_cmd = "$ffmpeg_fullpath $ffmpeg_global_options -y -loglevel error -i %%FILE%% -s %%WIDTH%%x%%HEIGHT%%  %%TARGETFILE%% -f image2 -vframes 1 -ss %%SNAPSHOTTIME%% %%TARGETFILE%%";
         $shell_exec_params = [
             "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
             "%%WIDTH%%" => (int) $width,
@@ -138,7 +138,7 @@ if ($generateall) {
             "%%TARGETFILE%%" => new CommandPlaceholderArg($targetfile, 'is_safe_basename'),
         ];
 
-        $output = run_command($shell_exec_cmd, false, $shell_exec_params);
+        run_command($shell_exec_cmd, false, $shell_exec_params);
     }
 
     if (!file_exists($targetfile)) {
@@ -179,7 +179,7 @@ if ($generateall) {
                 $apath = get_resource_path($ref,true,"",true,$ffmpeg_alternatives[$n]["extension"],-1,1,false,"",$aref);
 
                 # Process the video
-                $shell_exec_cmd = "$ffmpeg_fullpath $ffmpeg_global_options -y -i %%FILE%% " . $ffmpeg_alternatives[$n]["params"] . " %%TARGETFILE%%";
+                $shell_exec_cmd = "$ffmpeg_fullpath $ffmpeg_global_options -y -loglevel error -i %%FILE%% " . $ffmpeg_alternatives[$n]["params"] . " %%TARGETFILE%%";
                 $shell_exec_params = [
                     "%%FILE%%" => new CommandPlaceholderArg($file, 'is_safe_basename'),
                     "%%WIDTH%%" => (int) $width,
@@ -192,7 +192,7 @@ if ($generateall) {
                 if ($tmp) {
                     $shell_exec_cmd = $tmp;
                 }
-                $output = run_command($shell_exec_cmd, false, $shell_exec_params);
+                run_command($shell_exec_cmd, false, $shell_exec_params);
 
                 if (file_exists($apath)) {
                     # Update the database with the new file details.

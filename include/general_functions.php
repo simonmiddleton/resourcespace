@@ -154,7 +154,7 @@ function nicedate($date, $time = false, $wordy = true, $offset_tz = false)
     $month_part = substr($date, $bce_offset + 5, 2);
     if(!is_numeric($month_part))
         {
-        return '-';
+        return $y;
         }
     $m = $wordy ? ($lang["months"][$month_part - 1]??"") : $month_part;
     if($m == "")
@@ -2066,7 +2066,8 @@ function escape_command_args($cmd, array $args): string
 
     foreach ($args as $placeholder => $value) {
         if (strpos($cmd, $placeholder) === false) {
-            trigger_error("Unable to find arg '{$placeholder}' in '{$cmd}'. Make sure the placeholder exists in the command string", E_USER_ERROR);
+            debug("Unable to find arg '{$placeholder}' in '{$cmd}'. Make sure the placeholder exists in the command string");
+            continue;
         }
         elseif (!($value instanceof CommandPlaceholderArg)) {
             $value = new CommandPlaceholderArg($value, null);
@@ -2081,16 +2082,17 @@ function escape_command_args($cmd, array $args): string
 
 /**
 * Utility function which works like system(), but returns the complete output string rather than just the last line of it.
-* 
+*
 * @uses escape_command_args()
-* 
+*
 * @param  string   $command    Command to run
 * @param  boolean  $geterrors  Set to TRUE to include errors in the output
 * @param  array    $params     List of placeholders and their values which will have to be escapedshellarg()d.
-* 
+* @param  int      $timeout    Maximum time in seconds before a command is forcibly stopped
+*
 * @return string Command output
 */
-function run_command($command, $geterrors = false, array $params = array())
+function run_command($command, $geterrors = false, array $params = array(), $timeout = 0)
     {
     global $debug_log,$config_windows;
 
@@ -2110,7 +2112,7 @@ function run_command($command, $geterrors = false, array $params = array())
     $descriptorspec = array(
         1 => array("pipe", "w") // stdout is a pipe that the child will write to
     );
-    if($debug_log || $geterrors) 
+    if($debug_log || $geterrors)
         {
         if($config_windows)
             {
@@ -2123,6 +2125,36 @@ function run_command($command, $geterrors = false, array $params = array())
             $descriptorspec[2] = array("pipe", "w"); // stderr is a pipe that the child will write to
             }
         }
+
+    $child_process = -1;
+    if (
+        !$config_windows && $timeout > 0
+        && shell_exec('which timeout') !== null
+    ) {
+        $command = 'timeout ' . escapeshellarg($timeout) . ' ' . $command;
+    } elseif ($timeout > 0 && function_exists('pcntl_fork')) {
+        // Branch child process if a timeout is specified and the timeout utility isn't available
+        // Create output file so that we can retrieve the output of the child process from the parent process
+        $pid = getmypid();
+        $command_output = get_temp_dir() . '/output_' . md5($command . serialize($params) . $pid) . ".txt";
+        $child_process  = pcntl_fork();
+    }
+    // Await output from child, or timeout.
+    if ($child_process > 0) {
+        $start_time = time();
+        while (time() - $start_time < $timeout) {
+            if (file_exists($command_output)) {
+                $output = file_get_contents($command_output);
+                unlink($command_output);
+                return $output;
+            }
+            sleep(1);
+        }
+        // Kill the child process to free up resources
+        exec(($config_windows ? 'taskkill /F /PID ' : 'kill ') . escapeshellarg($child_process));
+        return "";
+    }
+
     $process = @proc_open($command, $descriptorspec, $pipe, null, null, array('bypass_shell' => true));
 
     if (!is_resource($process)) {
@@ -2148,6 +2180,11 @@ function run_command($command, $geterrors = false, array $params = array())
     proc_close($process);
     if($cmd_tmp_file) {
         unlink($cmd_tmp_file);
+    }
+    // If this is a child process put the output into the output file and kill the process here.
+    if ($child_process === 0) {
+        file_put_contents($command_output, $output);
+        exit();
     }
     return $output;
     }

@@ -466,6 +466,7 @@ function resolve_given_nodes(&$search, &$node_bucket, &$node_bucket_not)
     foreach ($words[0] as $word)
         {
         $search=str_replace($word,'',$search);        // remove the entire word from the search string
+        $search = trim(trim($search), ',');
 
         preg_match_all('/' . NODE_TOKEN_PREFIX . '(' . NODE_TOKEN_NOT . '*)(\d+)/',$word,$tokens);
 
