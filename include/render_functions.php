@@ -7135,6 +7135,9 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
         // Fake $size key entry used in JS land to display the info to the user when selecting a size
         $size['html_size_info'] = get_size_info($size);
 
+        // Fake $size key entry used in JS land to update the download button when selecting a size
+        $size['html_download_column'] = cast_echo_to_string('add_download_column', [$ref, $size, $downloadthissize]);
+
         if ($downloadthissize && $size['allow_preview'] == 1 && !hook('previewlinkbar')) {
             // Fake $size key entry used in JS land to update the View button before showing it to the user
             $size['allow_preview_data'] = [
@@ -7149,7 +7152,6 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
         }
 
         $allowed_sizes[$size['id']] = $size;
-        // add_download_column($ref, $size, $downloadthissize); # todo: this needs generated on the fly or something more generic
     }
 
     if ($allowed_sizes === []) {
@@ -7175,9 +7177,20 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
         </select>
     </td> -->
     <td class="DownloadButton">
-        <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php
-            echo escape($GLOBALS['lang']['action-download']);
-        ?></a>
+        <a
+            id="downloadlink"
+            onclick="return CentralSpaceLoad(this, true);"
+            data-sizeurls="<?php
+                echo base64_encode(
+                    json_encode(
+                        array_column(
+                            array_map(get_sub_array_with(['id', 'html_download_column']), $allowed_sizes),
+                            'html_download_column',
+                            'id'
+                        )
+                    )
+                );
+        ?>"><?php echo escape($GLOBALS['lang']['action-download']); ?></a>
         <a
             id="previewlink"
             class="enterLink previewsizelink DisplayNone"
@@ -7196,18 +7209,51 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
     </td>
 </tr>
 <script>
-function updateSizeInfo(selected_size) {
+function updateSizeInfo(selected_size)
+{
     if(typeof selected_size === 'undefined') {
         selected_size = jQuery('select#size').find(':selected').val();
     }
 
     let file_size_info = jQuery.parseJSON(atob(jQuery('div#sizeInfo').data('filesizeinfo')));
-    jQuery('#sizeInfo').html(DOMPurify.sanitize(file_size_info[selected_size]['html_size_info']));
+    jQuery('#sizeInfo').html(
+        DOMPurify.sanitize(
+            file_size_info[selected_size]['html_size_info'],
+            {
+                SAFE_FOR_JQUERY: true,
+                ALLOWED_TAGS: ['p'],
+            }
+        )
+    );
+}
+
+function updateDownloadLink(picker)
+{
+    if(typeof picker === 'undefined') {
+        picker = jQuery('select#size');
+    }
+
+    let download_btn = picker.parent().siblings('.DownloadButton').children('a#downloadlink');
+    let size_urls = jQuery.parseJSON(atob(download_btn.data('sizeurls')));
+
+    let cleanHTML = DOMPurify.sanitize(
+        size_urls[picker.val()],
+        {
+            SAFE_FOR_JQUERY: true,
+            ALLOWED_TAGS: ['a'],
+            ALLOWED_ATTR: ['id', 'class', 'href', 'onclick'],
+        }
+    );
+    let size_link = jQuery(cleanHTML);
+    console.debug('cleanHTML = %o', cleanHTML);
+    download_btn.prop('href', size_link.attr('href'));
+    download_btn.attr('onclick', size_link.attr('onclick'));
+    download_btn.text(size_link.text().trim());
 }
 
 jQuery(document).ready(function() {
     updateSizeInfo();
-    // updateDownloadLink();
+    updateDownloadLink();
 });
 
 jQuery('select#size').change(function() {
@@ -7242,7 +7288,7 @@ jQuery('select#size').change(function() {
     }
 
     updateSizeInfo(selected_size);
-    // updateDownloadLink();
+    updateDownloadLink(picker);
 });
 </script>
 <?php
