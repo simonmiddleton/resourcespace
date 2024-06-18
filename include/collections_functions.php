@@ -4816,11 +4816,11 @@ function collection_download_process_text_file($ref, $collection, $filename)
                         $text .= wordwrap('* ' . $title . ': ' . i18n_get_translated($value) . "\r\n", 65);
                         }
                     }
-                if(trim($commentdata['comment']) != '')
+                if(trim((string)$commentdata['comment']) != '')
                     {
                     $text .= wordwrap($lang['comment'] . ': ' . $commentdata['comment'] . "\r\n", 65);
                     }
-                if(trim($commentdata['rating']) != '')
+                if(trim((string)$commentdata['rating']) != '')
                     {
                     $text .= wordwrap($lang['rating'] . ': ' . $commentdata['rating'] . "\r\n", 65);
                     }
