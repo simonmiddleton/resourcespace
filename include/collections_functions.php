@@ -3517,11 +3517,7 @@ function remove_from_collection_link($resource, $class="", string $onclick = '',
     $resource = (int) $resource;
     $class = escape($class);
     $pagename = escape($pagename);
-    $title = escape($lang["removefromcurrentcollection"]);
-
-    if ($view_title != "") {
-        $title .= " - " . $view_title;
-    }
+    $title = escape($lang["removefromcurrentcollection"] . (trim($view_title) != "" ? " - " . $view_title : ""));
 
     return "<a class=\"removeFromCollection {$class}\" href=\"#\" title=\"{$title}\" "
         . "onClick=\"RemoveResourceFromCollection(event,'{$resource}','{$pagename}'); {$onclick} return false;\""
