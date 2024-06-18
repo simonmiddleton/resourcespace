@@ -10,7 +10,7 @@
 */
 function antivirus_scan($file_path)
     {
-    global $lang, $antivirus_path, $antivirus_silent_options;
+    global $lang, $antivirus_path, $antivirus_silent_options, $config_windows;
 
     if(!isset($antivirus_path) || trim($antivirus_path) == '')
         {
@@ -18,6 +18,10 @@ function antivirus_scan($file_path)
         }
 
     $file_path = escapeshellarg($file_path);
+    if ($config_windows)
+        {
+        $file_path = str_replace('/', '\\', $file_path);
+        }
     $av_path   = escapeshellarg($antivirus_path);
 
     $av_options         = explode(' ', $antivirus_silent_options);
@@ -32,7 +36,7 @@ function antivirus_scan($file_path)
 
     debug("ANTIVIRUS: Running command {$cmd}");
 
-    $cmd_output = run_command($cmd);
+    $cmd_output = run_command($cmd, true); # 2nd parameter is important - an error to standard error could indicate the scan is unsuccessful.
 
     debug("Antivirus plugin scan result for path: $file_path : $cmd_output");
 
