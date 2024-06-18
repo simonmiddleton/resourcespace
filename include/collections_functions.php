@@ -2480,20 +2480,39 @@ function remove_saved_search($collection,$search)
  */
 function add_smart_collection()
     {
-    global $userref;
+    global $userref, $search_all_workflow_states, $lang;
 
     $search=getval("addsmartcollection","");
     $restypes=getval("restypes","");
     if($restypes=="Global"){$restypes="";}
     # archive can be a string of values
     $archive = getval('archive', 0, false);
-    if($archive==""){$archive=0;}
-    
+    if ($search_all_workflow_states && $archive == "")
+        {
+        $archive = 'all';
+        }
+
+    if ($archive == "")
+        {
+        $archive = 0;
+        }
+
     // more compact search strings should work with get_search_title
     $searchstring=array();
     if ($search!=""){$searchstring[]="search=$search";}
     if ($restypes!=""){$searchstring[]="restypes=$restypes";}
-    if ($archive!=0){$searchstring[]="archive=$archive";}
+    if ($archive != 0)
+        {
+        if ($archive === 'all')
+            {
+            $archive_label = $lang['all_workflow_states'];
+            }
+        else
+            {
+            $archive_label = $archive;
+            }
+        $searchstring[] = "archive=$archive_label";
+        }
     $searchstring=implode("&",$searchstring);
     
     $newcollection=create_collection($userref,get_search_title($searchstring),1);   
@@ -4797,11 +4816,11 @@ function collection_download_process_text_file($ref, $collection, $filename)
                         $text .= wordwrap('* ' . $title . ': ' . i18n_get_translated($value) . "\r\n", 65);
                         }
                     }
-                if(trim($commentdata['comment']) != '')
+                if(trim((string)$commentdata['comment']) != '')
                     {
                     $text .= wordwrap($lang['comment'] . ': ' . $commentdata['comment'] . "\r\n", 65);
                     }
-                if(trim($commentdata['rating']) != '')
+                if(trim((string)$commentdata['rating']) != '')
                     {
                     $text .= wordwrap($lang['rating'] . ': ' . $commentdata['rating'] . "\r\n", 65);
                     }
@@ -4826,7 +4845,7 @@ function collection_download_process_text_file($ref, $collection, $filename)
  * 
  * @return void
  */
-function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref, $size)
+function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref, $size, string $email = "")
     {
     global $usage, $usagecomment, $resource_hit_count_on_downloads;
 
@@ -4834,8 +4853,9 @@ function collection_download_log_resource_ready($tmpfile, &$deletion_array, $ref
     if($tmpfile!==false && file_exists($tmpfile)){$deletion_array[]=$tmpfile;}
 
     daily_stat("Resource download", $ref);
-    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment, "", "", (int) $usage);
-    
+    $email_add_to_log = ($email != "") ? ' Downloaded by ' . $email : "";
+    resource_log($ref, LOG_CODE_DOWNLOADED, 0, $usagecomment . $email_add_to_log, "", "", (int) $usage);
+
     # update hit count if tracking downloads only
     if ($resource_hit_count_on_downloads)
         { 
@@ -6915,13 +6935,25 @@ function update_smart_collection(int $smartsearch_ref)
         {
         $smartsearch=$smartsearch[0];
         $collection = $smartsearch['collection'];
+        $smartsearch_archives = $smartsearch['archive'];
+        $search_all_archives = $smartsearch_archives === 'all';
 
         # Option to limit results;
         $result_limit=$smartsearch["result_limit"]; if ($result_limit=="" || $result_limit==0) {$result_limit=-1;}
 
         $startTime = microtime(true);
         global $smartsearch_accessoverride;
-        $results=do_search($smartsearch['search'], $smartsearch['restypes'], "relevance", $smartsearch['archive'],$result_limit,"desc",$smartsearch_accessoverride,$smartsearch['starsearch'],false,false,"",false,true,false,false,false,null,true);
+        
+        $search_all_workflow_states_original =  $GLOBALS['search_all_workflow_states'];
+        if ($search_all_archives)
+            {
+            # Search saved for all states when $search_all_workflow_states was true so make sure we always apply it for the search.
+            $GLOBALS['search_all_workflow_states'] = true;
+            }
+
+        $results = do_search($smartsearch['search'], $smartsearch['restypes'], "relevance", $smartsearch_archives, $result_limit, "desc", $smartsearch_accessoverride, $smartsearch['starsearch'], false, false, "", false, true, false, false, false, null, true);
+
+        $GLOBALS['search_all_workflow_states'] = $search_all_workflow_states_original;
 
         # results is a list of the current search without any restrictions
         # we need to compare against the current collection contents to minimize inserts and deletions
@@ -6954,21 +6986,25 @@ function update_smart_collection(int $smartsearch_ref)
             # Add any new resources
             debug( "smart_collections" . (($smart_collections_async) ? "_async:" : ":") . " Adding $count_results resources to collection...");
 
-            # Selected archive states returned as a string
-            $smartsearch_archives=ps_value("select archive AS value from collection_savedsearch where ref= ?", ['i', $smartsearch_ref],"");
-
-            if(isset($smartsearch_archives))
+            if($smartsearch_archives !== '')
                 {
                 $smartsearch_archives=explode(",",$smartsearch_archives);
 
                 for ($n=0;$n<$count_results;$n++)
                     {
-                    # Check the resource archive state  
-                    $archivestatus=ps_value("SELECT archive AS value FROM resource WHERE ref = ?",["i",$results_contents_add[$n]],"");
-                
-                    if (in_array($archivestatus, $smartsearch_archives))
+                    if ($search_all_archives)
                         {
                         add_resource_to_collection($results_contents_add[$n],$collection,true);
+                        }
+                    else
+                        {
+                        # Check the resource archive state	
+                        $archivestatus=ps_value("SELECT archive AS value FROM resource WHERE ref = ?",["i",$results_contents_add[$n]],"");
+                    
+                        if (in_array($archivestatus, $smartsearch_archives))
+                            {
+                            add_resource_to_collection($results_contents_add[$n],$collection,true);
+                            }
                         }
                     }
                 }

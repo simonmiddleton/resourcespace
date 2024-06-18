@@ -42,6 +42,7 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
 
     $csv_field_headers["resource_type"] = $lang["resourcetype"];
     $csv_field_headers["status"] = $lang['status'];
+    $alldata ? $csv_field_headers["access"] = $lang['access'] : '';
     $csv_field_headers["created_by"] = $lang["contributedby"];
     if($file_checksums && $alldata)
         {
@@ -74,6 +75,11 @@ function generateResourcesMetadataCSV(array $resources,$personal=false,$alldata=
 
             // Add resource status
             $resources_fields_data[$resource]['status'] = $lang["status{$resource_data_array[$resource]['archive']}"] ?? $lang['unknown'];
+            
+            if ($alldata) {
+            // Add resource access
+            $resources_fields_data[$resource]['access'] = $lang["access{$resource_data_array[$resource]['access']}"] ?? $lang['unknown'];
+            }
 
             // Add contributor
             $udata=get_user($resdata["created_by"]);

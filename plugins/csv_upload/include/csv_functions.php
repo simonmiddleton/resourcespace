@@ -51,8 +51,18 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
     $logfile = fopen($log, 'a');
 
     // Get system archive states and access levels for validating uploaded values
-    $archivestates = ps_array("SELECT code value FROM archive_states", []);
-    $accessstates = array('0','1','2');
+    $archivestates = ps_query("SELECT code, name FROM archive_states", []);
+    $archivestate_strings = [];
+    foreach ($archivestates as $key => $state) {
+        $translation = strtolower(i18n_get_translated($state['name']));
+        $archivestate_strings[$translation] = $state['code']; 
+    }
+    $archivestates = $archivestate_strings;
+    $accessstates = [
+        strtolower($lang['access0']) => 0,
+        strtolower($lang['access1']) => 1,
+        strtolower($lang['access2']) => 2
+    ];
     
     csv_upload_log($logfile,"CSV upload started at " . date("Y-m-d H:i",time()));
     csv_upload_log($logfile,"Using CSV file: " . $filename);
@@ -393,6 +403,78 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
                     continue;
                     }
                 }
+
+            if ($processcsv) {
+
+                // Get status to set
+                if ($csv_set_options["status_column"] != "" && in_array($csv_set_options["status_column"],array_keys($line))) {
+                    $setstatus = $line[$csv_set_options["status_column"]]; 
+
+                    if (!is_numeric($setstatus)) {
+                        
+                        if (array_key_exists(strtolower($setstatus), $archivestates)) {
+                            $setstatus = $archivestates[strtolower($setstatus)];
+                        }
+
+                        if (!in_array($setstatus,$archivestates)) {
+                            
+                            $setstatus = $csv_set_options['status_default'];
+                            csv_upload_log($logfile,"Invalid resource workflow state, using default value");
+                            $messages[] = "Invalid resource workflow state, using default value";
+                        }
+                    }
+
+                    // Run the check again as there might not be a default set
+                    if (!checkperm('z' . $setstatus) && is_numeric($setstatus) && in_array($setstatus,$archivestates)) {
+                        update_archive_status($resourcerefs, $setstatus);
+                    }
+
+                    $processed_columns[] = (int)$csv_set_options["status_column"];
+                }
+                // Get access to set
+                if ($csv_set_options["access_column"] != "" && in_array($csv_set_options["access_column"],array_keys($line))) {
+                    $setaccess = $line[$csv_set_options["access_column"]];
+
+                    if (!is_numeric($setaccess)) {
+                        
+                        if (array_key_exists(strtolower($setaccess), $accessstates)) {
+                            $setaccess = $accessstates[strtolower($setaccess)];
+                        }
+
+                        if (!in_array($setaccess,$accessstates)) {
+
+                        $setaccess = $csv_set_options['access_default'];
+                        csv_upload_log($logfile,"Invalid resource access level, using default value");
+                        $messages[] = "Invalid resource access level, using default value";
+                        }
+                    }
+                    
+                    // Run the check again as there might not de a default set
+                    if (!checkperm('rws' . $setaccess) && is_numeric($setaccess) && in_array($setaccess, $accessstates)) {
+
+                        $chunks = array_chunk($resourcerefs, SYSTEM_DATABASE_IDS_CHUNK_SIZE);
+                        foreach ($chunks as $resource_batch) {
+
+                            // Get old access for logging purposes
+                            $old_access = ps_query('SELECT ref, access FROM resource WHERE ref IN ('. ps_param_insert(count($resource_batch)) .')', ps_param_fill($resource_batch, 'i'));
+                            $old_access = array_column($old_access, 'access', 'ref');
+
+                            ps_query('UPDATE resource SET access = ? WHERE ref IN ('. ps_param_insert(count($resource_batch)) .')', array_merge(['i', $setaccess], ps_param_fill($resource_batch, 'i')));
+
+                            // Remove potential old custom access 
+                            if ($setaccess != 3) { 
+                                ps_query('DELETE FROM resource_custom_access WHERE resource IN ('. ps_param_insert(count($resource_batch)) .') AND usergroup IS NOT NULL',  ps_param_fill($resource_batch, 'i'));
+                            }
+
+                            foreach ($resource_batch as $resource_ref) {
+                                resource_log($resource_ref,LOG_CODE_ACCESS_CHANGED,0,"",$old_access[$resource_ref],$setaccess);
+                            }
+                        }
+                    }
+                    $processed_columns[] = $csv_set_options["access_column"];
+                }
+            }
+
             }
         else
             {
@@ -400,12 +482,18 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             if($csv_set_options["status_column"] != "" && in_array($csv_set_options["status_column"],array_keys($line)))
                 {
                 $setstatus = $line[$csv_set_options["status_column"]];
-                if (!is_numeric($setstatus) || !in_array($setstatus,$archivestates))
+                if (!in_array($setstatus,$archivestates))
                     {
-                    $setstatus = (int)$csv_set_options["status_default"];
-                    $logtext = "Invalid resource workflow state, using default value.";
-                    csv_upload_log($logfile,$logtext);
-                    array_push ($messages,$logtext);
+                    if (array_key_exists(strtolower($setstatus), $archivestates)) {
+                        $setstatus = $archivestates[strtolower($setstatus)];
+                    }
+                        
+                    if (!in_array($setstatus,$archivestates)) {
+                        $setstatus = (int)$csv_set_options["status_default"];
+                        $logtext = "Invalid resource workflow state, using default value.";
+                        csv_upload_log($logfile,$logtext);
+                        array_push ($messages,$logtext);
+                    }
                     }
                 $processed_columns[] = (int)$csv_set_options["status_column"];
                 }
@@ -418,12 +506,18 @@ function csv_upload_process($filename,&$meta,$resource_types,&$messages,$csv_set
             if($csv_set_options["access_column"] != "" && in_array($csv_set_options["access_column"],array_keys($line)))
                 {
                 $setaccess = $line[$csv_set_options["access_column"]];
-                if (!is_numeric($setaccess) || !in_array($setaccess,$accessstates))
+                if (!is_numeric($setaccess))
                     {
-                    $setaccess = (int)$csv_set_options["access_default"];
-                    $logtext = "Invalid resource access level, using default value.";
-                    csv_upload_log($logfile,$logtext);
-                    array_push ($messages,$logtext);
+                    if (array_key_exists(strtolower($setaccess), $accessstates)) {
+                        $setaccess = $accessstates[strtolower($setaccess)];
+                    }
+
+                    if (!in_array($setaccess,$accessstates)) {
+                        $setaccess = (int)$csv_set_options["access_default"];
+                        $logtext = "Invalid resource access level, using default value.";
+                        csv_upload_log($logfile,$logtext);
+                        array_push ($messages,$logtext);
+                    }
                     }
                 $processed_columns[] = $csv_set_options["access_column"];
                 }

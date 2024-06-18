@@ -96,7 +96,7 @@ hook("resemailmoreinfo"); ?>
 <?php if(!hook("replaceemailtousers")){?>
 <div class="Question">
     <label for="users">
-    <?php echo escape($user_select_internal ? $lang["emailtousers_internal"] : $lang["emailtousers"]); ?>
+    <?php echo strip_tags_and_attributes($user_select_internal ? $lang["emailtousers_internal"] : $lang["emailtousers"]); ?>
     </label>
 
     <?php

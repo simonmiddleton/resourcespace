@@ -17,6 +17,7 @@ $useoriginal=getval("use_original","no");
 $collectiondata=get_collection($collection);
 $tardisabled=getval("tardownload","")=="off";
 $include_csv_file = getval('include_csv_file', '');
+$email = getval('email', '');
 
 if($k != "" || (isset($anonymous_login) && $username == $anonymous_login))
     {
@@ -510,7 +511,7 @@ if ($submitted != "")
                     update_zip_progress_file("file ".$n);
                     }
 
-                collection_download_log_resource_ready($tmpfile, $deletion_array, $ref, $usesize);
+                collection_download_log_resource_ready($tmpfile, $deletion_array, $ref, $usesize, $email);
                 }
             }
 
@@ -849,6 +850,11 @@ if($exiftool_write && !$force_exiftool_write_metadata)
         <div class="clearerleft"></div>
     </div>
     <?php
+    }
+
+if ($download_usage_email)
+    {
+    ?><input type="hidden" name="email" value="<?php echo escape($email); ?>"/><?php
     }
 ?>
 

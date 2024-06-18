@@ -529,6 +529,77 @@ switch($csvstep)
                     </select>
                     <div class="clearerleft"> </div>
                 </div>   
+                
+                <div class="Question" id="status_question">
+                    <label for="status_column"><?php echo escape($lang["csv_upload_workflow_column"]); ?></label>
+                    <select id="status_column" name="status_column"  class="stdwidth columnselect">                    
+                        <option value=""><?php echo escape($lang["select"]); ?></option>
+                        <?php
+                        foreach($csv_info as $csv_column => $csv_field_data)
+                            {
+                            echo "<option value=\"" . escape($csv_column) . "\" " . (($csv_set_options["status_column"] === $csv_column || strtolower($csv_field_data["header"]) == strtolower($lang["status"])) ? " selected " : "") . ">" . escape($csv_field_data["header"]) . "</option>\n";
+                            }
+                            ?>
+                    </select>
+                    <div class="clearerleft"> </div>
+                </div>
+
+                <div class="Question" id="status_default_question">
+                    <label for="status_default"><?php echo escape($lang["csv_upload_workflow_default"]); ?></label>
+                    <select id="status_default" name="status_default" class="stdwidth" onchange="if (this.options[this.selectedIndex].value=='default') { jQuery('.override').hide();jQuery('.override').attr('disabled','disabled'); } else { jQuery('.override').removeAttr('disabled');jQuery('.override').show(); }">                                     
+                            <option value=""><?php echo escape($lang["select"]); ?></option>
+                            <?php   
+                            $workflow_states = get_editable_states($userref);
+                            foreach($workflow_states as $workflow_state)
+                                {
+                                ?><option value="<?php echo (int) $workflow_state["id"]; ?>" <?php if($csv_set_options["status_default"] == $workflow_state["id"]){echo " selected ";} ?>><?php echo escape($workflow_state["name"]); ?></option>                                   
+                                <?php
+                                }
+                            ?>
+                    </select>
+                    <div class="clearerleft"> </div>
+                </div>
+
+                <div class="Question" id="access_question">
+                    <label for="access_column"><?php echo escape($lang["csv_upload_access_column"]); ?></label>
+                    <select id="access_column" name="access_column" class="stdwidth columnselect">                    
+                        <option value=""><?php echo escape($lang["select"]); ?></option>
+                        <?php
+                        foreach($csv_info as $csv_column => $csv_field_data)
+                            {
+                            echo "<option value=\"" . escape($csv_column) . "\" ";
+                            if(
+                                ($csv_set_options["access_column"] != "" && $csv_set_options["access_column"] == $csv_column)
+                                || 
+                                strtolower($csv_field_data["header"]) == strtolower($lang["access"])
+                                )
+                                {
+                                echo " selected ";
+                                }
+                            echo  ">" . escape($csv_field_data["header"]) . "</option>\n";
+                            }                            
+                            ?>
+                    </select>
+                    <div class="clearerleft"> </div>
+                </div>
+
+                <div class="Question" id="access_default_question">
+                    <label for="access_default"><?php echo escape($lang["csv_upload_access_default"]); ?></label>
+                    <select id="access_default" name="access_default" class="stdwidth" onchange="if (this.options[this.selectedIndex].value=='default') { jQuery('.override').hide();jQuery('.override').attr('disabled','disabled'); } else { jQuery('.override').removeAttr('disabled');jQuery('.override').show(); }">                                     
+                            <option value=""><?php echo escape($lang["select"]); ?></option>
+                            <?php   
+                             // Get applicable access options - custom access omitted as can be added by batch editing later
+                            for($n=0;$n<3;$n++)
+                                {
+                                if(!checkperm("ea" . $n) || checkperm("v"))
+                                    {
+                                    echo "<option value=\"" . $n . "\" " . (($csv_set_options["access_default"] == $n) ? " selected " : "") . ">" . escape($lang["access" . $n]) . "</option>\n";
+                                    }
+                                }
+                                ?>
+                            ?>
+                    </select>
+                    <div class="clearerleft"> </div>
 
                 <div class="QuestionSubmit NoPaddingSaveClear QuestionSticky">
                     <input type="button" id="back" value="<?php echo escape($lang["back"]); ?>"  onClick="CentralSpaceLoad('<?php echo generateURL($_SERVER["SCRIPT_NAME"],array("csvstep"=>$csvstep-1)); ?>',true);return false;" > 

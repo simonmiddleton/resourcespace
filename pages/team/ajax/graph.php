@@ -336,83 +336,59 @@ if ($type=="line")
     render_bar_graph($id,$newdata);
     }
 
-if ($type=="summary")
-    {
-    $cells=3;
-    $cellwidth=100/$cells;
-    if ($from_dash)
-        {
-        # Define styles locally for dash display
-        ?>
+if ($type == "summary") {
+    # Define styles locally for dash display
+    if ($from_dash) { ?>
         <style>
-        .ReportSummary {background: none;color:inherit;}
-        .ReportSummary td {padding:0;display:block;width:45%;border:none;color:inherit;}
-        .ReportMetric {font-size:200%;padding-left:5px;color:inherit;background:none;}
+            .ReportSummary {background: none; color: inherit;}
+            .ReportSummary td {padding: 0; display: block; border: none; color: inherit;}
+            .ReportMetric {font-size: 200%; padding-left: 5px; color: inherit; background: none;}
         </style>
-<?php
-        }
-
-    ?>
+        <?php
+    } ?>
     <table style="width:100%;" class="ReportSummary">
-    <tr>
-    <td
-        width="<?php echo (int) $cellwidth ?>%"
-        ><?php
-            if($from_dash)
-                {
-                echo "<span style=\"display:block;\">" . escape($lang["report_total"]) . "</span>";
-                }
-            else
-                {
-                echo escape($lang["report_total"]);
-                }
-        ?>
-
-        <span
-            class="ReportMetric"
-            ><?php echo escape(ps_value(
-                "SELECT IFNULL(format(sum(count),0),0) `value` FROM daily_stat d $join $condition",
-                $params,
-                0
-                ));
-            ?>
-        </span>
-    </td>
-    <td
-        width="<?php echo (int) $cellwidth ?>%"
-        ><?php
-            if ($from_dash)
-                {
-                echo "<span style=\"display:block;\">" . escape($lang["report_average"]) . "</span>";
-                }
-            else
-                {
-                echo escape($lang["report_average"]);
-                }
-        ?>
-
-        <span
-            class="ReportMetric"
-            ><?php echo escape(ps_value(
-                "SELECT
-                    IFNULL(format(avg(c),1),0) `value`
-                FROM
-                    (SELECT
-                        year,month,day,sum(count) c
-                    FROM
-                        daily_stat d
-                    $join
-                    $condition
-                    GROUP BY year,month,day) intable",
-                $params,
-                0
-                ));
-                ?>
-        </span>
-    </td>
+        <tr>
+            <td>
+                <?php if ($from_dash) {
+                    echo "<span style=\"display:block;\">" . escape($lang["report_total"]) . "</span>";
+                } else {
+                    echo escape($lang["report_total"]);
+                } ?>
+                <span class="ReportMetric">
+                    <?php echo escape(ps_value(
+                        "SELECT IFNULL(format(sum(count),0),0) `value` FROM daily_stat d $join $condition",
+                        $params,
+                        0
+                    )); ?>
+                </span>
+            </td>
+            <td>
+                <?php if ($from_dash) {
+                    echo "<span style=\"display:block;\">" . escape($lang["report_average"]) . "</span>";
+                } else {
+                    echo escape($lang["report_average"]);
+                } ?>
+                <span class="ReportMetric">
+                    <?php echo escape(ps_value(
+                        "SELECT
+                            IFNULL(format(avg(c),1),0) `value`
+                        FROM
+                            (SELECT
+                                year,month,day,sum(count) c
+                            FROM
+                                daily_stat d
+                            $join
+                            $condition
+                            GROUP BY year,month,day) intable",
+                        $params,
+                        0
+                    )); ?>
+                </span>
+            </td>
+        </tr>
     </table>
     <?php
-    }
+}
 
 if ($from_dash)
     {

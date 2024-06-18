@@ -106,16 +106,16 @@ $config_windows=false;
 
 # ---- Paths to various external utilities ----
 
-# If using ImageMagick/GraphicsMagick, uncomment and set next 2 lines
-# $imagemagick_path='/sw/bin';
-# $ghostscript_path='/sw/bin';
+# Imagemagick (required as standard)
+# $imagemagick_path='/usr/bin';
+# $ghostscript_path='/usr/bin';
 $ghostscript_executable='gs';
 
 # If using FFMpeg to generate video thumbs and previews, uncomment and set next line.
 # $ffmpeg_path='/usr/bin';
 
 # Install Exiftool and set this path to enable metadata-writing when resources are downloaded
-# $exiftool_path='/usr/local/bin';
+# $exiftool_path='/usr/bin';
 
 # Path to Antiword - for text extraction / indexing of Microsoft Word Document (.doc) files
 # $antiword_path='/usr/bin';
@@ -433,7 +433,6 @@ $internal_preview_sizes_editable=false;
 
 # Colorspace usage
 # Use "RGB" for ImageMagick versions before 6.7.6-4
-# Use "RGB" for GraphicsMagick
 # Use "sRGB" for ImageMagick version 6.7.6-4 and newer
 $imagemagick_colorspace="RGB";
 
@@ -464,7 +463,7 @@ $photoshop_eps_miff=false;
 # (enabling may cause a slowdown on viewing resources when large files are used)
 $imagemagick_calculate_sizes=false;
 
-# Experimental ImageMagic optimizations. This will not work for GraphicsMagick.
+# Experimental ImageMagic optimizations
 $imagemagick_mpr = false;
 
 # Set the depth to be passed to mpr command.
@@ -815,10 +814,6 @@ $disabled_plugins_message = "";
         "http://example.com" => "guest",
         "http://test.com" => "guest2"
         ); */
-
-# Alternative anonymous login mode. Automatically create a separate user for each anonymous session and log them in.
-# EXPERIMENTAL - use with caution!
-# $anonymous_autouser_group=2;
 
 $anonymous_user_session_collection=true;
 
@@ -1663,7 +1658,7 @@ $request_adds_to_collection=false;
 # Option to change the original download filename (Use %EXTENSION, %extension or %Extension as a placeholder. Using ? is now DEPRECATED. The placeholder will be replaced with the filename extension, using the same case. E.g. "Original %EXTENSION file" -> "Original WMV file")
 # $original_download_name="Original %EXTENSION file";
 
-# Generation of alternative image file sizes/formats using ImageMagick/GraphicMagick
+# Generation of alternative image file sizes/formats using ImageMagick
 # It is possible to automatically generate different file sizes and have them attached as alternative files.
 # This works in a similar way to video file alternatives.
 # See below for examples.
@@ -2171,7 +2166,6 @@ $collection_purge=false;
 # requires ImageMagick to work.
 $camera_autorotation = true;
 $camera_autorotation_ext = array('jpg','jpeg','tif','tiff','png'); // only try to autorotate these formats
-$camera_autorotation_gm = false;
 
 // Default for upload rotation. Will be overridden by user preference.
 $camera_autorotation_checked = true;
