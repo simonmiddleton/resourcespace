@@ -7132,8 +7132,11 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
             continue;
         }
 
+        // Fake $size key entry used in JS land to display the info to the user when selecting a size
+        $size['html_size_info'] = get_size_info($size);
+
         if ($downloadthissize && $size['allow_preview'] == 1 && !hook('previewlinkbar')) {
-            // Fake a sizes' key entry to use it later in JS land when updating the View button
+            // Fake $size key entry used in JS land to update the View button before showing it to the user
             $size['allow_preview_data'] = [
                 'viewsizeurl' => (string) hook('getpreviewurlforsize'),
                 'href' => generateURL(
@@ -7145,7 +7148,7 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
             ];
         }
 
-        $allowed_sizes[] = $size;
+        $allowed_sizes[$size['id']] = $size;
         // add_download_column($ref, $size, $downloadthissize); # todo: this needs generated on the fly or something more generic
     }
 
@@ -7162,14 +7165,19 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
             }
             ?>
         </select>
-        <p id="sizeInfo"></p>
+        <div id="sizeInfo" data-filesizeinfo="<?php
+            echo base64_encode(json_encode(array_map(get_sub_array_with(['html_size_info']), $allowed_sizes)));
+        ?>"></div>
     </td>
-    <!-- <td class="Picker">
+    <!-- todo: this has to be added by plugins, if required
+    <td class="Picker">
         <select id="format">
         </select>
     </td> -->
     <td class="DownloadButton">
-        <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php echo escape($GLOBALS['lang']['action-download']); ?></a>
+        <a id="convertDownload" onclick="return CentralSpaceLoad(this, true);"><?php
+            echo escape($GLOBALS['lang']['action-download']);
+        ?></a>
         <a
             id="previewlink"
             class="enterLink previewsizelink DisplayNone"
@@ -7179,10 +7187,7 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
             data-viewsizedata="<?php
                 echo base64_encode(
                     json_encode(
-                        array_map(
-                            get_sub_array_with(['allow_preview', 'allow_preview_data']),
-                            array_column($allowed_sizes, null, 'id')
-                        ),
+                        array_map(get_sub_array_with(['allow_preview', 'allow_preview_data']), $allowed_sizes),
                         JSON_NUMERIC_CHECK
                     )
                 );
@@ -7191,20 +7196,33 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
     </td>
 </tr>
 <script>
+function updateSizeInfo(selected_size) {
+    if(typeof selected_size === 'undefined') {
+        selected_size = jQuery('select#size').find(':selected').val();
+    }
+
+    let file_size_info = jQuery.parseJSON(atob(jQuery('div#sizeInfo').data('filesizeinfo')));
+    jQuery('#sizeInfo').html(DOMPurify.sanitize(file_size_info[selected_size]['html_size_info']));
+}
+
+jQuery(document).ready(function() {
+    updateSizeInfo();
+    // updateDownloadLink();
+});
+
 jQuery('select#size').change(function() {
     let picker = jQuery(this);
     let selected_size = picker.val();
     let view_btn = picker.parent().siblings('.DownloadButton').children('a#previewlink');
     let preview_size_data = jQuery.parseJSON(atob(view_btn.data('viewsizedata')));
 
+    // View button (toggle display and update link)
     view_btn[0].classList.forEach(function(value) {
-        console.debug('Class = %o', value);
         if (value.startsWith('previewsize-')) {
             view_btn.removeClass(value);
         }
     });
 
-    // View button (toggle display and update link)
     if (
         preview_size_data.hasOwnProperty(selected_size)
         && preview_size_data[selected_size].hasOwnProperty('allow_preview')
@@ -7223,11 +7241,7 @@ jQuery('select#size').change(function() {
         view_btn.prop('href', '#');
     }
 
-
-
-
-
-    // updateSizeInfo();
+    updateSizeInfo(selected_size);
     // updateDownloadLink();
 });
 </script>

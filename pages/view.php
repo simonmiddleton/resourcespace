@@ -845,7 +845,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     ) {
                                                         ?>
                                                         <td><?php echo escape($lang["fileinformation"]); ?></td>
-                                                        <!-- <td><?php echo escape($lang["filesize"]); ?></td> -->
                                                         <td class="textcenter"><?php echo escape($lang["options"]); ?></td>
                                                         </tr>
                                                         <?php
@@ -861,7 +860,6 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             }
                                                             ?>
                                                     </td>
-                                                    <!-- <td class="DownloadFileSize"><?php echo strip_tags_and_attributes($sizes[$n]["filesize"]); ?></td> -->
                                                     <?php 
                                                     if ($fulldownload && $missing_original) { ?>
                                                         <td class="MissingFile">
