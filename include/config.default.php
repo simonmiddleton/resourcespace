@@ -2590,6 +2590,10 @@ $allowed_external_share_groups = array();
 # When sharing externally as a specific user group (permission x), honor group config options (meant to respect settings like $collection_download).
 $external_share_groups_config_options=false;
 
+# Require a password to be set when creating an external share. The password is then needed for anyone accessing the share.
+# Also helpful to prevent wider access if search engines pick up the sharing link.
+$share_password_required = false;
+
 // CSV Download - add original URL column
 $csv_export_add_original_size_url_column = false;
 

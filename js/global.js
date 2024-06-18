@@ -2098,3 +2098,12 @@ function resourcespace_get_global_state() {
     }
 }
 
+function enforceSharePassword(error_text)
+{
+    let passwordInput = document.getElementById('sharepassword');
+    if (passwordInput.hasAttribute('required') && passwordInput.value === '') {
+        alert(error_text);
+        return false; 
+    }
+return true;
+}

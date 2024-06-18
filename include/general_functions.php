@@ -5521,3 +5521,18 @@ function validate_sort_value($val): bool
 {
     return is_string($val) && in_array(mb_strtolower($val), ['asc', 'desc']);
 }
+
+/**
+ * Server side check to backup front end javascript validation.
+ *
+ * @param  string  $password   Password supplied when creating or editing external share.
+
+ */
+function enforceSharePassword(string $password) : void
+    {
+    global $share_password_required, $lang;
+    if ($share_password_required && trim($password) === '')
+        {
+        exit(escape($lang["error-permissiondenied"]));
+        }
+    }

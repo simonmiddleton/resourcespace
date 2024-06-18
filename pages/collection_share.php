@@ -360,12 +360,12 @@ if (isset($show_error)) { ?>
             <?php 
             if ($editing  && !$editexternalurl)
                 {?>
-                <input name="editexternalurl" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["save"])?>&nbsp;&nbsp;" />
+                <input name="editexternalurl" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="&nbsp;&nbsp;<?php echo escape($lang["save"])?>&nbsp;&nbsp;" />
                 <?php
                 }
             else
                 {?>
-                <input name="generateurl" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["generateexternalurl"])?>&nbsp;&nbsp;" />
+                <input name="generateurl" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="&nbsp;&nbsp;<?php echo escape($lang["generateexternalurl"])?>&nbsp;&nbsp;" />
                 <?php 
                 }
                 ?>
@@ -376,6 +376,8 @@ if (isset($show_error)) { ?>
             {
             // Access has been selected. Generate a new URL.
             $generated_access_key = '';
+
+            enforceSharePassword($sharepwd);
 
             if(empty($allowed_external_share_groups) || (!empty($allowed_external_share_groups) && in_array($user_group, $allowed_external_share_groups)))
                 {
@@ -407,6 +409,7 @@ if (isset($show_error)) { ?>
         # Process editing of external share
         if ($editexternalurl)
             {
+            enforceSharePassword($sharepwd);
             $editsuccess=edit_collection_external_access($editaccess,$access,$expires,getval("usergroup",""),$sharepwd);
             if ($editsuccess)
                 {

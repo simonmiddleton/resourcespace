@@ -2883,9 +2883,10 @@ $lang['user_registration_opt_in_message'] = "I consent to the personal data I ha
 $lang['activity_log_admin_log_in_as'] = "Admin user '%USERNAME_FROM' logged in as '%USERNAME_TO'";
 
 $lang["property-include_in_csv_export"]="Include in CSV export";
-$lang["share-set-password"] = "Share password (optional)";
+$lang["share-set-password"] = "Share password";
 $lang["share-enter-password"] = "Please enter the access password to continue";
 $lang["share-invalid"] = "Invalid access key or password";
+$lang["share-password-not-set"] = "External shares must be protected by a password. Please enter a share password to continue.";
 
 /* Offline jobs */
 $lang["oj-collection-download-success-text"] = "Collection ready for download";
