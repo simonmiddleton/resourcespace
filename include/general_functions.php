@@ -5531,7 +5531,7 @@ function validate_sort_value($val): bool
 function enforceSharePassword(string $password) : void
     {
     global $share_password_required, $lang;
-    if ($share_password_required && $password === '')
+    if ($share_password_required && trim($password) === '')
         {
         exit(escape($lang["error-permissiondenied"]));
         }
