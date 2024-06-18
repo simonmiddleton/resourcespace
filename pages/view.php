@@ -880,39 +880,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                         } 
                                                     ?>
                                                 </tr>
-
                                                 <?php
-                                                /* 
-                                                TODO: remove if not required as a reference anymore - check implementation inside render_resource_tools_size_download_options()
-                                                if (
-                                                    !hook("previewlinkbar")
-                                                    && $downloadthissize
-                                                    && $sizes[$n]["allow_preview"] == 1
-                                                    ) {
-                                                    # Add an extra line for previewing
-                                                    global $data_viewsize;
-                                                    $data_viewsize=$sizes[$n]["id"];
-                                                    $data_viewsizeurl=hook('getpreviewurlforsize');
-                                                    $preview_with_sizename=str_replace('%sizename', $sizes[$n]["name"], $lang['previewithsizename']);
-                                                    ?> 
-                                                    <tr class="DownloadDBlend">
-                                                        <td class="DownloadFileName">
-                                                            <h2><?php echo escape($lang["preview"]); ?></h2>
-                                                            <p><?php echo $preview_with_sizename; ?></p>
-                                                        </td>
-                                                        <td class="DownloadFileSize"><?php echo $sizes[$n]["filesize"]?></td>
-                                                        <td class="DownloadButton">
-                                                            <a class="enterLink previewsizelink previewsize-<?php echo $data_viewsize; ?>" 
-                                                                id="previewlink"
-                                                                data-viewsize="<?php echo $data_viewsize; ?>"
-                                                                data-viewsizeurl="<?php echo $data_viewsizeurl; ?>"  
-                                                                href="<?php echo generateURL($baseurl . "/pages/preview.php",$urlparams,array("ext"=>$resource["file_extension"])) . "&" . hook("previewextraurl") ?>">
-                                                                <?php echo escape($lang["action-view"]); ?>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-<?php
-                                                    } */
                                                 }
 
                                             render_resource_tools_size_download_options(
