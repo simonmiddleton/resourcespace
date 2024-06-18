@@ -962,6 +962,7 @@ $lang["stat-resourceview"]="Resource view";
 $lang["stat-search"]="Search";
 $lang["stat-usersession"]="User session";
 $lang["stat-addedsmartcollection"]="Added smart collection";
+$lang['all_workflow_states'] = 'All workflow states';
 $lang["stat-removedresourcefromcollection"]="Removed resource from collection";
 $lang["stat-keywordusage-noresultsfound"]="Keyword usage - no results found";
 
