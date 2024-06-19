@@ -12,6 +12,47 @@ function show_table_headers()
     } # end hook("replacedownloadspacetableheaders")
     }
 
+function HookFormat_chooserViewAppend_to_download_filename_td(array $resource, $ns)
+{
+    // IMPORTANT: the namespace variables (i.e. "ns") exist in both PHP and JS worlds and are generated
+    // by render_resource_tools_size_download_options() which are then relied upon on the view page.
+    ?>
+    <select id="<?php echo escape($ns); ?>format"><?php
+    foreach ($GLOBALS['format_chooser_output_formats'] as $format) {
+        echo render_dropdown_option(
+            $format,
+            str_replace_formatted_placeholder('%extension', $format, $GLOBALS['lang']['field-fileextension']),
+            [],
+            $format === getDefaultOutputFormat($resource['file_extension']) ? 'selected' : ''
+        );
+    }
+    ?></select>
+    <?php
+    showProfileChooser('', false, $ns);
+    ?>
+    <script>
+    jQuery('select#<?php echo escape($ns); ?>format').change(function() {
+        updateDownloadLink('<?php echo escape($ns); ?>');
+    });
+    jQuery('select#<?php echo escape($ns); ?>profile').change(function() {
+        updateDownloadLink('<?php echo escape($ns); ?>');
+    });
+    </script>
+    <?php
+}
+
+function HookFormat_chooserViewAppend_to_updateDownloadLink_js()
+{
+    // Directly within Javascript world on the view page!
+    ?>
+    let format = jQuery('select#' + ns + 'format').find(":selected").val();
+    console.debug('HookFormat_chooserViewAppend_to_updateDownloadLink_js: format = %o', format);
+
+    let profile = jQuery('select#' + ns + 'profile').find(":selected").val();
+    console.debug('HookFormat_chooserViewAppend_to_updateDownloadLink_js: profile = %o', profile);
+    <?php
+}
+
 function HookFormat_chooserViewReplacedownloadoptions()
     {
     global $resource, $ref, $counter, $headline, $lang, $download_multisize, $save_as, 
@@ -215,11 +256,6 @@ function HookFormat_chooserViewReplacedownloadoptions()
                 <?php } ?>
             };
 
-            function updateSizeInfo() {
-                var selected = jQuery('select#size').find(":selected").val();
-                jQuery('#sizeInfo').html(sizeInfo[selected]['info']);
-            }
-
             function updateDownloadLink() {
                 var index = jQuery('select#size').find(":selected").val();
                 var selectedFormat = jQuery('select#format').find(":selected").val();
@@ -272,21 +308,6 @@ function HookFormat_chooserViewReplacedownloadoptions()
 
                 return;
             }
-
-            jQuery(document).ready(function() {
-                updateSizeInfo();
-                updateDownloadLink();
-            });
-            jQuery('select#size').change(function() {
-                updateSizeInfo();
-                updateDownloadLink();
-            });
-            jQuery('select#format').change(function() {
-                updateDownloadLink();
-            });
-            jQuery('select#profile').change(function() {
-                updateDownloadLink();
-            });
         </script>
         <?php
         }
@@ -298,5 +319,4 @@ function HookFormat_chooserViewReplacedownloadoptions()
     ?></table><?php
     return false; #todo: temporary so I can compare existing with new rendering
     }
-
 ?>

@@ -7173,12 +7173,8 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
             ?>
         </select>
         <div id="<?php echo escape($ns); ?>sizeInfo"></div>
+        <?php hook('append_to_download_filename_td', '', [$resource, $ns]); ?>
     </td>
-    <!-- todo: this has to be added by plugins, if required
-    <td class="Picker">
-        <select id="format">
-        </select>
-    </td> -->
     <td class="DownloadButton">
         <a id="<?php echo escape($ns); ?>downloadlink" onclick="return CentralSpaceLoad(this, true);"><?php
             echo escape($GLOBALS['lang']['action-download']);

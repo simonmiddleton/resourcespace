@@ -1861,6 +1861,7 @@ function updateDownloadLink(ns, picker)
     download_btn.prop('href', link.attr('href'));
     download_btn.attr('onclick', link.attr('onclick'));
     download_btn.text(link.text().trim());
+    <?php hook('append_to_updateDownloadLink_js'); ?>
 }
 
     jQuery('document').ready(function(){
