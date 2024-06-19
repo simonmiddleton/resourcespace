@@ -124,6 +124,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     padding: 0px;
 }
 
+.AlternativeFileText { max-width: 180px; }
 .AlternativeFileImage, .AlternativeFileText {
     float: left;
     word-break: break-word; 

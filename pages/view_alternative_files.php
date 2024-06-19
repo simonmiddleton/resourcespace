@@ -25,7 +25,7 @@ if ($alt_access)
                 hook("viewbeforealtheader");
                 ?>
                 <tr class="DownloadDBlend">
-                <td colspan="3" id="altfileheader"><h2><?php echo $alt_type_header?></h2></td>
+                <td colspan="2" id="altfileheader"><h2><?php echo $alt_type_header?></h2></td>
                 </tr>
                 <?php
             }
@@ -36,7 +36,7 @@ if ($alt_access)
             hook("viewbeforealtheader");
             ?>
             <tr>
-            <td colspan="3" id="altfileheader"><?php echo escape($lang["alternativefiles"]); ?></td>
+            <td colspan="2" id="altfileheader"><?php echo escape($lang["alternativefiles"]); ?></td>
             </tr>
             <?php
             }
@@ -120,14 +120,16 @@ if ($alt_access)
                 <?php
             }        
         ?>
-        <div class="AlternativeFileText"><h2><?php echo escape($altfiles[$n]["name"])?></h2>
-        <p><?php echo escape($altfiles[$n]["description"])?></p>
-        <div>
+            <div class="AlternativeFileText">
+                <h2><?php echo escape($altfiles[$n]["name"]); ?></h2>
+                <p><?php echo escape($altfiles[$n]["description"]); ?></p>
+                <p><?php echo escape(str_replace('&nbsp;', ' ',formatfilesize($altfiles[$n]["file_size"]))); ?></p>
+            </div>
         </td>
-        <?php hook('view_altfiles_table', '', array($altfiles[$n])); ?>
-        <td class="DownloadFileSize" rowspan="<?php echo escape((string)$rowspan);?>"><?php echo escape(str_replace('&nbsp;', ' ',formatfilesize($altfiles[$n]["file_size"])))?></td>
+        <?php
+        hook('view_altfiles_table', '', array($altfiles[$n]));
 
-        <?php if ($access==0 && resource_download_allowed($ref,"",$resource["resource_type"],$altfiles[$n]["ref"])){?>
+        if ($access==0 && resource_download_allowed($ref,"",$resource["resource_type"],$altfiles[$n]["ref"])){?>
         <td <?php hook("modifydownloadbutton") ?> class="DownloadButton">
         <?php       
         if ($terms_download || $save_as)
