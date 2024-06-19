@@ -659,7 +659,7 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .RecordDownload {float: left;width: 425px;margin: 0 0 10px 0;}
 .RecordPanel .RecordDownload table {width: 100%;margin: 0;padding: 0;}
 .RecordPanel .RecordDownload table tbody { display: block; max-height: 320px; overflow-y: auto; }
-.RecordPanel .RecordDownload td {padding: 5px 5px 5px 0;margin: 0;}
+.RecordPanel .RecordDownload td { width: 100%; padding: 5px 5px 5px 0;margin: 0;}
 .RecordPanel .RecordDownload .DownloadDBlend td {margin: 0;vertical-align: middle;padding: 0.4rem 0.2rem;}
 .RecordPanel .RecordDownload .DownloadDBlend td.Picker,
 .RecordPanel .RecordDownload .DownloadDBlend td.DownloadButton { vertical-align: top; }
