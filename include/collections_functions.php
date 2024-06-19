@@ -515,7 +515,7 @@ function remove_resource_from_collection($resource,$collection,$smartadd=false)
         return $lang["cantmodifycollection"];
         }
 
-    if (collection_writeable($collection)||$smartadd)
+    if ($smartadd || collection_writeable($collection))
         {   
         hook("Removefromcollectionsuccess", "", array( "resourceId" => $resource, "collectionId" => $collection ) );
         
