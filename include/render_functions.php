@@ -7116,6 +7116,9 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
     $download_multisize = $ctx['download_multisize'];
     $sizes = $ctx['sizes'] ?? get_image_sizes($resource['ref'], false, $resource['file_extension'], false);
     $urlparams = $ctx['urlparams'];
+    
+    /** @var string Client side namespace to prevent clashes */
+    $ns = "Resource{$ref}{$ctx['context']}";
 
     if (!($resource['has_image'] !== RESOURCE_PREVIEWS_NONE && $download_multisize)) {
         return;
@@ -7132,15 +7135,17 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
             continue;
         }
 
-        // Fake $size key entry used in JS land to display the info to the user when selecting a size
-        $size['html_size_info'] = get_size_info($size);
-
-        // Fake $size key entry used in JS land to update the download button when selecting a size
-        $size['html_download_column'] = cast_echo_to_string('add_download_column', [$ref, $size, $downloadthissize]);
+        // Fake $size key entry used in JS land
+        $size['html'] = [
+            // to display the preview size info to the user when selecting a size
+            'size_info' => get_size_info($size),
+            // to update the download button when selecting a size
+            'download_column' => cast_echo_to_string('add_download_column', [$ref, $size, $downloadthissize]),
+        ];
 
         if ($downloadthissize && $size['allow_preview'] == 1 && !hook('previewlinkbar')) {
             // Fake $size key entry used in JS land to update the View button before showing it to the user
-            $size['allow_preview_data'] = [
+            $size['html']['view_btn'] = [
                 'viewsizeurl' => (string) hook('getpreviewurlforsize'),
                 'href' => generateURL(
                         "{$GLOBALS['baseurl']}/pages/preview.php",
@@ -7160,16 +7165,14 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
 ?>
 <tr class="DownloadDBlend">
     <td class="DownloadFileName Picker">
-        <select id="size">
+        <select id="<?php echo escape($ns); ?>size">
             <?php
             foreach ($allowed_sizes as $allowed_size) {
                 echo render_dropdown_option($allowed_size['id'], $allowed_size['name']);
             }
             ?>
         </select>
-        <div id="sizeInfo" data-filesizeinfo="<?php
-            echo base64_encode(json_encode(array_map(get_sub_array_with(['html_size_info']), $allowed_sizes)));
-        ?>"></div>
+        <div id="<?php echo escape($ns); ?>sizeInfo"></div>
     </td>
     <!-- todo: this has to be added by plugins, if required
     <td class="Picker">
@@ -7177,118 +7180,48 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
         </select>
     </td> -->
     <td class="DownloadButton">
+        <a id="<?php echo escape($ns); ?>downloadlink" onclick="return CentralSpaceLoad(this, true);"><?php
+            echo escape($GLOBALS['lang']['action-download']);
+        ?></a>
         <a
-            id="downloadlink"
-            onclick="return CentralSpaceLoad(this, true);"
-            data-sizeurls="<?php
-                echo base64_encode(
-                    json_encode(
-                        array_column(
-                            array_map(get_sub_array_with(['id', 'html_download_column']), $allowed_sizes),
-                            'html_download_column',
-                            'id'
-                        )
-                    )
-                );
-        ?>"><?php echo escape($GLOBALS['lang']['action-download']); ?></a>
-        <a
-            id="previewlink"
+            id="<?php echo escape($ns); ?>previewlink"
             class="enterLink previewsizelink DisplayNone"
             href="#"
             data-viewsize=""
             data-viewsizeurl=""
-            data-viewsizedata="<?php
-                echo base64_encode(
-                    json_encode(
-                        array_map(get_sub_array_with(['allow_preview', 'allow_preview_data']), $allowed_sizes),
-                        JSON_NUMERIC_CHECK
-                    )
-                );
-            ?>"
         ><?php echo escape($GLOBALS['lang']["action-view"]); ?></a>
     </td>
 </tr>
 <script>
-function updateSizeInfo(selected_size)
+function <?php echo escape($ns); ?>_get_preview_size_info()
 {
-    if(typeof selected_size === 'undefined') {
-        selected_size = jQuery('select#size').find(':selected').val();
-    }
-
-    let file_size_info = jQuery.parseJSON(atob(jQuery('div#sizeInfo').data('filesizeinfo')));
-    jQuery('#sizeInfo').html(
-        DOMPurify.sanitize(
-            file_size_info[selected_size]['html_size_info'],
-            {
-                SAFE_FOR_JQUERY: true,
-                ALLOWED_TAGS: ['p'],
-            }
-        )
-    );
-}
-
-function updateDownloadLink(picker)
-{
-    if(typeof picker === 'undefined') {
-        picker = jQuery('select#size');
-    }
-
-    let download_btn = picker.parent().siblings('.DownloadButton').children('a#downloadlink');
-    let size_urls = jQuery.parseJSON(atob(download_btn.data('sizeurls')));
-
-    let cleanHTML = DOMPurify.sanitize(
-        size_urls[picker.val()],
-        {
-            SAFE_FOR_JQUERY: true,
-            ALLOWED_TAGS: ['a'],
-            ALLOWED_ATTR: ['id', 'class', 'href', 'onclick'],
-        }
-    );
-    let size_link = jQuery(cleanHTML);
-    console.debug('cleanHTML = %o', cleanHTML);
-    download_btn.prop('href', size_link.attr('href'));
-    download_btn.attr('onclick', size_link.attr('onclick'));
-    download_btn.text(size_link.text().trim());
+    return <?php
+        echo json_encode(
+            array_map(
+                get_sub_array_with(
+                    [
+                        'allow_preview',
+                        'html',
+                    ]
+                ),
+                $allowed_sizes
+            ),
+            JSON_NUMERIC_CHECK
+        );
+    ?>;
 }
 
 jQuery(document).ready(function() {
-    updateSizeInfo();
-    updateDownloadLink();
+    updateSizeInfo('<?php echo escape($ns); ?>');
+    updatePreviewLink('<?php echo escape($ns); ?>');
+    updateDownloadLink('<?php echo escape($ns); ?>');
 });
 
-jQuery('select#size').change(function() {
+jQuery('select#<?php echo escape($ns); ?>size').change(function() {
     let picker = jQuery(this);
-    let selected_size = picker.val();
-    let view_btn = picker.parent().siblings('.DownloadButton').children('a#previewlink');
-    let preview_size_data = jQuery.parseJSON(atob(view_btn.data('viewsizedata')));
-
-    // View button (toggle display and update link)
-    view_btn[0].classList.forEach(function(value) {
-        if (value.startsWith('previewsize-')) {
-            view_btn.removeClass(value);
-        }
-    });
-
-    if (
-        preview_size_data.hasOwnProperty(selected_size)
-        && preview_size_data[selected_size].hasOwnProperty('allow_preview')
-        && preview_size_data[selected_size].hasOwnProperty('allow_preview_data')
-        && preview_size_data[selected_size]['allow_preview'] === 1
-    ) {
-        view_btn.attr('data-viewsize', selected_size);
-        view_btn.attr('data-viewsizeurl', preview_size_data[selected_size]['allow_preview_data']['viewsizeurl']);
-        view_btn.prop('href', preview_size_data[selected_size]['allow_preview_data']['href']);
-        view_btn.addClass('previewsize-' + selected_size);
-        view_btn.removeClass('DisplayNone');
-    } else {
-        view_btn.addClass('DisplayNone');
-        view_btn.attr('data-viewsize', '');
-        view_btn.attr('data-viewsizeurl', '');
-        view_btn.prop('href', '#');
-    }
-
-    updateSizeInfo(selected_size);
-    updateDownloadLink(picker);
+    updateSizeInfo('<?php echo escape($ns); ?>', picker.val());
+    updatePreviewLink('<?php echo escape($ns); ?>', picker);
+    updateDownloadLink('<?php echo escape($ns); ?>', picker);
 });
 </script>
 <?php

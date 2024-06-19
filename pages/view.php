@@ -819,6 +819,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                 $fulldownload=false;
                                                 if ($sizes[$n]["id"]=="") {$fulldownload=true;}
 
+                                                if (!$fulldownload) {
+                                                    // todo: allow this once render_resource_tools_size_download_options()
+                                                    // can handle sizes
+                                                    // break;
+                                                }
+
                                                 $counter++;
 
                                                 # Should we allow this download?
@@ -889,6 +895,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     'download_multisize' => $download_multisize,
                                                     'sizes' => $sizes,
                                                     'urlparams' => $urlparams,
+                                                    'context' => $context,
                                                 ]
                                             );
                                             }
@@ -1779,6 +1786,83 @@ if($GLOBALS["image_preview_zoom"])
     ?>
 
 <script>
+function updateSizeInfo(ns, selected_size)
+{
+    if(typeof selected_size === 'undefined') {
+        selected_size = jQuery('select#' + ns + 'size').val();
+    }
+
+    const preview_size_info = window[ns + '_get_preview_size_info']();
+    jQuery('#' + ns + 'sizeInfo').html(
+        DOMPurify.sanitize(
+            preview_size_info[selected_size]['html']['size_info'],
+            {
+                SAFE_FOR_JQUERY: true,
+                ALLOWED_TAGS: ['p'],
+            }
+        )
+    );
+}
+
+function updatePreviewLink(ns, picker)
+{
+    if(typeof picker === 'undefined') {
+        picker = jQuery('select#' + ns + 'size');
+    }
+
+    const preview_size_info = window[ns + '_get_preview_size_info']();
+    const selected_size = picker.val();
+
+    let view_btn = picker.parent().siblings('.DownloadButton').children('a#' + ns + 'previewlink');
+    view_btn[0].classList.forEach(function(value) {
+        if (value.startsWith('previewsize-')) {
+            view_btn.removeClass(value);
+        }
+    });
+
+    if (
+        preview_size_info.hasOwnProperty(selected_size)
+        && preview_size_info[selected_size].hasOwnProperty('allow_preview')
+        && preview_size_info[selected_size]['allow_preview'] === 1
+        && preview_size_info[selected_size]['html'].hasOwnProperty('view_btn')
+    ) {
+        view_btn.attr('data-viewsize', selected_size);
+        view_btn.attr('data-viewsizeurl', preview_size_info[selected_size]['html']['view_btn']['viewsizeurl']);
+        view_btn.prop('href', preview_size_info[selected_size]['html']['view_btn']['href']);
+        view_btn.addClass('previewsize-' + selected_size);
+        view_btn.removeClass('DisplayNone');
+    } else {
+        view_btn.addClass('DisplayNone');
+        view_btn.attr('data-viewsize', '');
+        view_btn.attr('data-viewsizeurl', '');
+        view_btn.prop('href', '#');
+    }
+
+}
+
+function updateDownloadLink(ns, picker)
+{
+    if(typeof picker === 'undefined') {
+        picker = jQuery('select#' + ns + 'size');
+    }
+
+    let download_btn = picker.parent().siblings('.DownloadButton').children('a#' + ns + 'downloadlink');
+    const preview_size_info = window[ns + '_get_preview_size_info']();
+    const link = jQuery(
+        DOMPurify.sanitize(
+            preview_size_info[picker.val()]['html']['download_column'],
+            {
+                SAFE_FOR_JQUERY: true,
+                ALLOWED_TAGS: ['a'],
+                ALLOWED_ATTR: ['href', 'onclick'],
+            }
+        )
+    );
+    download_btn.prop('href', link.attr('href'));
+    download_btn.attr('onclick', link.attr('onclick'));
+    download_btn.text(link.text().trim());
+}
+
     jQuery('document').ready(function(){
         /* Call SelectTab upon page load to select first tab*/
         SelectMetaTab(<?php echo $ref.",0,".($modal ? "true" : "false") ?>);
