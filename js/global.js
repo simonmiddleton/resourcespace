@@ -2087,27 +2087,3 @@ function resourcespace_get_global_state() {
     }
 }
 
-/**
- * Hash (digest) message using algorithm
- *
- * @example Generate SHA-256 ```hash(yourText).then((hash_value) => console.log(hash_value));```
- * @see https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
- *
- * @param {string} message 
- * @param {string} algorithm Algorithm to use (available: SHA-1, SHA-256, SHA-384, SHA-512) 
- *
- * @returns string
- */
-async function hash(message, algorithm)
-{
-    if(typeof algorithm === 'undefined') {
-        algorithm = 'SHA-256';
-    }
-  
-    // Convert hash buffer to byte array and then convert it to a hex string
-    const hash_buffer = await window.crypto.subtle.digest(algorithm, new TextEncoder().encode(message));
-    return Array
-        .from(new Uint8Array(hash_buffer))
-        .map((b) => b.toString(16).padStart(2, '0'))
-        .join('');
-}
