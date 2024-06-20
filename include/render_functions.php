@@ -7144,6 +7144,8 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
         ];
 
         if ($downloadthissize && $size['allow_preview'] == 1 && !hook('previewlinkbar')) {
+            $GLOBALS['data_viewsize'] = $size['id']; # relied upon by some plugins (e.g lightbox)
+
             // Fake $size key entry used in JS land to update the View button before showing it to the user
             $size['html']['view_btn'] = [
                 'viewsizeurl' => (string) hook('getpreviewurlforsize'),
