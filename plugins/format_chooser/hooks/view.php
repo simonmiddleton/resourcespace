@@ -59,7 +59,9 @@ function HookFormat_chooserViewAppend_to_updateDownloadLink_js()
         const orig_url = direct_dld_regex.exec(dld_btn_onclick)[1];
         let format_chooser_modified = new URL(orig_url);
         format_chooser_modified.searchParams.set('ext', format);
-        format_chooser_modified.searchParams.set('profile', profile);
+        if (profile) {
+            format_chooser_modified.searchParams.set('profile', profile);
+        }
         download_btn.attr('onclick', dld_btn_onclick.replace(orig_url, format_chooser_modified.toString()));
     } else if (
         dld_btn_href.startsWith('<?php echo "{$baseurl}/pages/download_usage.php"; ?>')
@@ -69,7 +71,9 @@ function HookFormat_chooserViewAppend_to_updateDownloadLink_js()
         let format_chooser_modified = new URL(dld_btn_href);
         let inner_url = new URL(orig_url.searchParams.get('url'));
         inner_url.searchParams.set('ext', format);
-        inner_url.searchParams.set('profile', profile);
+        if (profile) {
+            inner_url.searchParams.set('profile', profile);
+        }
         format_chooser_modified.searchParams.set('url', inner_url.toString());
         download_btn.prop('href', dld_btn_href.replace(orig_url, format_chooser_modified.toString()));
     }
