@@ -5203,13 +5203,15 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
 
     if (in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
         {
-        echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\"><h2>"
-            . escape($lang['mp3_preview_file'])
-            . "</h2></td><td class=\"DownloadFileSize\">"
-            . formatfilesize(filesize_unlimited($path))
-            . "</td>" ; 
-        add_download_column($ref,$size_info, true);
-        echo "</tr>";
+        ?>
+        <tr class="DownloadDBlend">
+            <td class="DownloadFileName">
+                <h2><?php echo escape($lang['mp3_preview_file']); ?></h2>
+                <p><?php echo formatfilesize(filesize_unlimited($path)); ?></p>
+            </td>
+            <?php add_download_column($ref,$size_info, true); ?>
+        </tr>
+        <?php
         }   
 }
 

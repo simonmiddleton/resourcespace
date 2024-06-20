@@ -907,8 +907,8 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                     <tr class="DownloadDBlend">
                                                         <td class="DownloadFileName">
                                                             <h2><?php echo (isset($original_download_name)) ? str_replace_formatted_placeholder("%extension", $resource["file_extension"], $original_download_name, true) : str_replace_formatted_placeholder("%extension", $resource["file_extension"], $lang["originalfileoftype"]); ?></h2>
+                                                            <p><?php echo formatfilesize(filesize_unlimited($path)); ?></p>
                                                         </td>
-                                                        <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path)); ?></td>
 
                                                         <?php
                                                         $size_info = array('id' => '', 'extension' => $resource['file_extension']);
@@ -986,8 +986,8 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             echo $original_size;
                                                             }
                                                         ?>
+                                                        <p><?php echo formatfilesize(filesize_unlimited($path)); ?></p>
                                                     </td>
-                                                    <td class="DownloadFileSize"><?php echo formatfilesize(filesize_unlimited($path)); ?></td>
                                                     <?php
                                                     $size_info = array('id' => '', 'extension' => $resource['file_extension']);
                                                     add_download_column($ref, $size_info, $downloadthissize, true);
