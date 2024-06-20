@@ -1517,7 +1517,6 @@ $lang["indicateusagemedium"]='Средство использования';
 $lang["usageincorrect"]='Вы должны описать запланированное использование и выбрать средство';
 $lang["dosavedsearch"]='Сохранить поиск';
 $lang["continuetoresults"]='Продолжить к результатам';
-$lang["usagehistory"]='История использования';
 $lang["usagebreakdown"]='Разбивка использования';
 $lang["usagetotal"]='Общее количество загрузок';
 $lang["usagetotalno"]='Общее количество загрузок';

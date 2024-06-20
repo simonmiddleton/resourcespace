@@ -1479,7 +1479,6 @@ $lang["allresourcessearchbar"]='Alle bronnen';
 $lang["allcollectionssearchbar"]='Alle collecties';
 $lang["backtoresults"]='Terug naar resultaten';
 $lang["continuetoresults"]='Ga verder naar de resultaten';
-$lang["usagehistory"]='Gebruiksgeschiedenis';
 $lang["usagebreakdown"]='Gebruiksverdeling';
 $lang["usagetotal"]='Totaal aantal downloads';
 $lang["usagetotalno"]='Totaal aantal downloads';

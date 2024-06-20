@@ -1552,7 +1552,6 @@ $lang["allresourcessearchbar"]='すべてのリソース';
 $lang["allcollectionssearchbar"]='すべてのコレクション';
 $lang["backtoresults"]='結果に戻る';
 $lang["continuetoresults"]='結果に進む。';
-$lang["usagehistory"]='利用履歴';
 $lang["usagebreakdown"]='使用状況の分析';
 $lang["usagetotal"]='総ダウンロード数';
 $lang["usagetotalno"]='ダウンロードの総数';

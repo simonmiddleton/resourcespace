@@ -1544,7 +1544,6 @@ $lang["allresourcessearchbar"]='جميع الموارد';
 $lang["allcollectionssearchbar"]='جميع المجموعات';
 $lang["backtoresults"]='العودة إلى النتائج';
 $lang["continuetoresults"]='المتابعة إلى النتائج';
-$lang["usagehistory"]='سجل الاستخدام';
 $lang["usagebreakdown"]='تفصيل استخدام الموارد';
 $lang["usagetotal"]='إجمالي التنزيلات';
 $lang["usagetotalno"]='إجمالي عدد التنزيلات';

@@ -1645,7 +1645,6 @@ $lang["allcollectionssearchbar"]="All collections";
 $lang["backtoresults"]="Back to results";
 $lang["continuetoresults"]="Continue to results";
 
-$lang["usagehistory"]="Usage history";
 $lang["usagebreakdown"]="Usage breakdown";
 $lang["usagetotal"]="Total downloads";
 $lang["usagetotalno"]="Total number of downloads";
