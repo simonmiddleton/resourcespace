@@ -4197,17 +4197,27 @@ function create_image_alternatives(int $ref, array $params, $force = false)
             }
 
         # Process the image
-        if ($imversion[0] > 5 || ($imversion[0] == 5 && $imversion[1] > 5) || ($imversion[0] == 5 && $imversion[1] == 5 && $imversion[2] > 7 ))
-            {
+        if (
+            $imversion[0] > 5 
+            || ($imversion[0] == 5 && $imversion[1] > 5)
+            || ($imversion[0] == 5 && $imversion[1] == 5 && $imversion[2] > 7 )
+        ) {
             // Use the new imagemagick command syntax (file then parameters)
-            $command = $convert_fullpath . $source_params . escapeshellarg($file) . (($extension == 'psd') ? '[0] ' . (!in_array(strtolower($extension), $GLOBALS["preview_keep_alpha_extensions"]) ? $alphaoff : "") : '') . $source_profile . ' ' . $alternate_config['params'] . ' ' . escapeshellarg($apath);
-            }
-        else
-            {
+            // Note that $source_params can't be set as a run_command() parameter or the whole thing will be escaped
+            $command = $convert_fullpath . $source_params . " %%FILE%% ";
+            $command .= ($extension == 'psd') ? '[0] ' .
+                (!in_array(strtolower($extension), $GLOBALS["preview_keep_alpha_extensions"]) ? $alphaoff : "")
+                 : '';
+            $command .= $source_profile . ' ' . $alternate_config['params'] . " %%APATH%%";
+        } else {
             // Use the old imagemagick command syntax (parameters then file)
-            $command = $convert_fullpath . $source_profile . ' ' . $alternate_config['params'] . ' ' . escapeshellarg($file) . ' ' . escapeshellarg($apath);
-            }
-        $output = run_command($command);
+            $command = $convert_fullpath . $source_profile . ' ' . $alternate_config['params'] . ' %%FILE%% %%APATH%%';
+        }
+        $cmdparams = [
+            '%%FILE%%' => new CommandPlaceholderArg($file, 'is_valid_rs_path'),
+            '%%APATH%%' => new CommandPlaceholderArg($apath, 'is_valid_rs_path'),
+        ];
+        $output = run_command($command, false, $cmdparams);
 
         if (file_exists($apath))
             {
