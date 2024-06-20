@@ -790,13 +790,12 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                 }
                             else
                                 {
-                                // TODO: marker point
                                 ?>
                                 <table cellpadding="0" cellspacing="0" id="ResourceDownloadOptions">
                                     <tr <?php hook("downloadtableheaderattributes"); ?> id="ResourceDownloadOptionsHeader">
                                         <?php
                                         $table_headers_drawn=false;
-                                        $nodownloads=false;$counter=0;$fulldownload=false;
+                                        $nodownloads=false;$counter=0;
                                         hook("additionalresourcetools");
                                         if ($resource["has_image"] !== RESOURCE_PREVIEWS_NONE && $download_multisize)
                                             {
@@ -814,15 +813,10 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
 
                                             for ($n=0;$n<count($sizes);$n++)
                                                 {
-                                                # Is this the original file? Set that the user can download the original file
-                                                # so the request box does not appear.
-                                                $fulldownload=false;
-                                                if ($sizes[$n]["id"]=="") {$fulldownload=true;}
-
-                                                if (!$fulldownload) {
-                                                    // todo: allow this once render_resource_tools_size_download_options()
-                                                    // can handle sizes
-                                                    // break;
+                                                // Only the original file is rendered on its own row. For all the other
+                                                // sizes, please see render_resource_tools_size_download_options()
+                                                if ($sizes[$n]['id'] !== '') {
+                                                    break;
                                                 }
 
                                                 $counter++;
@@ -867,7 +861,7 @@ if ($k!="" && !$internal_share_access) {$edit_access=0;}
                                                             ?>
                                                     </td>
                                                     <?php 
-                                                    if ($fulldownload && $missing_original) { ?>
+                                                    if ($missing_original) { ?>
                                                         <td class="MissingFile">
                                                             <a 
                                                                 title="<?php echo escape($lang["missing_file"]); ?>" 
