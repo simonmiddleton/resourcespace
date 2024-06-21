@@ -7171,19 +7171,58 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
     if ($allowed_sizes === []) {
         return;
     }
+
+    $use_selector = count($allowed_sizes) > 1;
+    $render = function(bool $show_selector) use ($ns, $allowed_sizes, $resource): void {
+        if ($show_selector) {
+            ?>
+            <select id="<?php echo escape($ns); ?>size">
+                <?php
+                foreach ($allowed_sizes as $allowed_size) {
+                    echo render_dropdown_option($allowed_size['id'], $allowed_size['name']);
+                }
+                ?>
+            </select>
+            <?php hook('append_to_download_filename_td', '', [$resource, $ns]); ?>
+            <div id="<?php echo escape($ns); ?>sizeInfo"><?php
+                echo $allowed_sizes[array_key_first($allowed_sizes)]['html']['size_info'];
+            ?></div>
+            <?php
+            return;
+        }
+
+        // If only one size is available, render in the same way as the original file (ie not as a drop down selector).
+        $allowed_size = $allowed_sizes[array_key_first($allowed_sizes)];
+        ?>
+        <h2><?php echo escape($allowed_size['name']); ?></h2>
+        <?php hook('append_to_download_filename_td', '', [$resource, $ns]); ?>
+        <div id="<?php echo escape($ns); ?>sizeInfo"><?php echo $allowed_size['html']['size_info']; ?></div>
+        <?php
+    };
+    $render_js_picker = function(bool $show_selector) use ($ns, $allowed_sizes) {
+        if ($show_selector) {
+            ?>
+            const picker = jQuery('select#<?php echo escape($ns); ?>size');
+            const selected_size = picker.val();
+            updateSizeInfo('<?php echo escape($ns); ?>', selected_size);
+            updatePreviewLink('<?php echo escape($ns); ?>', selected_size, picker);
+            updateDownloadLink('<?php echo escape($ns); ?>', selected_size, picker);
+            <?php
+            return;
+        }
+
+        // If only one size is available, there's no "size" to select from so ensure functions get called correctly to
+        // the context.
+        $allowed_size = $allowed_sizes[array_key_first($allowed_sizes)];
+        ?>
+        const picker = jQuery('.Picker #<?php echo escape($ns); ?>sizeInfo');
+        updatePreviewLink('<?php echo escape($ns); ?>', '<?php echo escape($allowed_size['id']); ?>', picker);
+        updateDownloadLink('<?php echo escape($ns); ?>', '<?php echo escape($allowed_size['id']); ?>', picker);
+        <?php
+    };
 ?>
 <tr class="DownloadDBlend">
-    <td class="DownloadFileName Picker">
-        <select id="<?php echo escape($ns); ?>size">
-            <?php
-            foreach ($allowed_sizes as $allowed_size) {
-                echo render_dropdown_option($allowed_size['id'], $allowed_size['name']);
-            }
-            ?>
-        </select>
-        <?php hook('append_to_download_filename_td', '', [$resource, $ns]); ?>
-        <div id="<?php echo escape($ns); ?>sizeInfo"></div>
-    </td>
+    <td class="DownloadFileName Picker"><?php $render($use_selector); ?></td>
     <td class="DownloadButton">
         <a id="<?php echo escape($ns); ?>downloadlink" onclick="return CentralSpaceLoad(this, true);"><?php
             echo escape($GLOBALS['lang']['action-download']);
@@ -7217,17 +7256,17 @@ function <?php echo escape($ns); ?>_get_preview_size_info()
 }
 
 jQuery(document).ready(function() {
-    updateSizeInfo('<?php echo escape($ns); ?>');
-    updatePreviewLink('<?php echo escape($ns); ?>');
-    updateDownloadLink('<?php echo escape($ns); ?>');
+    <?php $render_js_picker($use_selector); ?>
 });
 
 jQuery('select#<?php echo escape($ns); ?>size').change(function() {
-    let picker = jQuery(this);
-    updateSizeInfo('<?php echo escape($ns); ?>', picker.val());
-    updatePreviewLink('<?php echo escape($ns); ?>', picker);
-    updateDownloadLink('<?php echo escape($ns); ?>', picker);
+    const picker = jQuery(this);
+    const selected_size = picker.val();
+    updateSizeInfo('<?php echo escape($ns); ?>', selected_size);
+    updatePreviewLink('<?php echo escape($ns); ?>', selected_size, picker);
+    updateDownloadLink('<?php echo escape($ns); ?>', selected_size, picker);
 });
+<?php hook('append_to_resource_tools_size_download_options_script', '', [$ns, $allowed_sizes]); ?>
 </script>
 <?php
 }

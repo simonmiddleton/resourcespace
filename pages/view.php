@@ -1798,15 +1798,13 @@ function updateSizeInfo(ns, selected_size)
     );
 }
 
-function updatePreviewLink(ns, picker)
+function updatePreviewLink(ns, selected_size, picker)
 {
     if(typeof picker === 'undefined') {
         picker = jQuery('select#' + ns + 'size');
     }
 
     const preview_size_info = window[ns + '_get_preview_size_info']();
-    const selected_size = picker.val();
-
     let view_btn = picker.parent().siblings('.DownloadButton').children('a#' + ns + 'previewlink');
     view_btn[0].classList.forEach(function(value) {
         if (value.startsWith('previewsize-')) {
@@ -1834,7 +1832,7 @@ function updatePreviewLink(ns, picker)
 
 }
 
-function updateDownloadLink(ns, picker)
+function updateDownloadLink(ns, selected_size, picker)
 {
     if(typeof picker === 'undefined') {
         picker = jQuery('select#' + ns + 'size');
@@ -1844,7 +1842,7 @@ function updateDownloadLink(ns, picker)
     const preview_size_info = window[ns + '_get_preview_size_info']();
     const link = jQuery(
         DOMPurify.sanitize(
-            preview_size_info[picker.val()]['html']['download_column'],
+            preview_size_info[selected_size]['html']['download_column'],
             {
                 SAFE_FOR_JQUERY: true,
                 ALLOWED_TAGS: ['a'],

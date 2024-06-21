@@ -1,5 +1,5 @@
 <?php
-function HookFormat_chooserViewAppend_to_download_filename_td(array $resource, $ns)
+function HookFormat_chooserViewAppend_to_download_filename_td(array $resource, string $ns)
 {
     // IMPORTANT: the namespace variables (i.e. "ns") exist in both PHP and JS worlds and are generated
     // by render_resource_tools_size_download_options() which are then relied upon on the view page.
@@ -16,15 +16,45 @@ function HookFormat_chooserViewAppend_to_download_filename_td(array $resource, $
     ?></select>
     <?php
     showProfileChooser('', false, $ns);
+}
+
+function HookFormat_chooserViewAppend_to_resource_tools_size_download_options_script(string $ns, array $allowed_sizes)
+{
+    // IMPORTANT: Directly within Javascript world on the view page (via render_resource_tools_size_download_options())!
+
+    if (count($allowed_sizes) > 1) {
+        // Size selector available
+        ?>
+        jQuery('select#<?php echo escape($ns); ?>format').change(function() {
+            const picker = jQuery('select#<?php echo escape($ns); ?>size');
+            updateDownloadLink('<?php echo escape($ns); ?>', picker.val(), picker);
+        });
+        jQuery('select#<?php echo escape($ns); ?>profile').change(function() {
+            const picker = jQuery('select#<?php echo escape($ns); ?>size');
+            updateDownloadLink('<?php echo escape($ns); ?>', picker.val(), picker);
+        });
+        <?php
+        return;
+    }
+
+    // If only one size is available, there's no "size" to select from so ensure functions get called correctly to
+    // the context.
+    $selected_size = $allowed_sizes[array_key_first($allowed_sizes)]['id'];
     ?>
-    <script>
     jQuery('select#<?php echo escape($ns); ?>format').change(function() {
-        updateDownloadLink('<?php echo escape($ns); ?>');
+        updateDownloadLink(
+            '<?php echo escape($ns); ?>',
+            '<?php echo escape($selected_size); ?>',
+            jQuery('.Picker #<?php echo escape($ns); ?>sizeInfo')
+        );
     });
     jQuery('select#<?php echo escape($ns); ?>profile').change(function() {
-        updateDownloadLink('<?php echo escape($ns); ?>');
+        updateDownloadLink(
+            '<?php echo escape($ns); ?>',
+            '<?php echo escape($selected_size); ?>',
+            jQuery('.Picker #<?php echo escape($ns); ?>sizeInfo')
+        );
     });
-    </script>
     <?php
 }
 
