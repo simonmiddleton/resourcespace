@@ -5,7 +5,7 @@ include "../include/authenticate.php"; if (!checkperm("s")) {exit ("Permission d
 
 $selected_archive_states=array();
 
-$archivechoices=getval("archive",getval("saved_archive", false));
+$archivechoices = getval("archive", getval("saved_archive", false), false, 'is_array');
 if($archivechoices !== false)
     {
     $search_all_workflow_states = false;
