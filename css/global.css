@@ -124,7 +124,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     padding: 0px;
 }
 
-.AlternativeFileText { max-width: 180px; }
+.AlternativeFileText { max-width: 165px; }
 .AlternativeFileImage, .AlternativeFileText {
     float: left;
     word-break: break-word; 
@@ -850,7 +850,7 @@ div.autocomplete ul li {
 
 .DownloadDisabled {font-weight: normal;}
 
-.AltThumb {padding-right:5px;max-width:85px;max-height:75px;}
+.AltThumb { padding-right:5px; }
 
 /* single file upload progress bar */
 .meter-wrap{position: relative;width:290px;}
