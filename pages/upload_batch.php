@@ -490,9 +490,10 @@ if ($processupload)
 
      // Clean the filename
     $origuploadedfilename= $upfilename;
-    $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly));
+    $encodedname = str_replace("/","RS_FORWARD_SLASH", base64_encode($filenameonly)) . ((!empty($origextension)) ? ".{$origextension}" : '');
+    $encodedname = substr($encodedname, -30); // Keep temp filename short to avoid full path exceeding path length limits.
+    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname;
 
-    $upfilepath = $targetDir . DIRECTORY_SEPARATOR . $encodedname . ((!empty($origextension)) ? ".{$origextension}" : '');
     debug("upload_batch - processing. Looking for file at " . $upfilepath);
 
     if(!file_exists($upfilepath) || is_dir($upfilepath))
@@ -1171,7 +1172,8 @@ jQuery(document).ready(function () {
                 parts = files[fileid].name.split('.');
                 extension = parts.pop();
                 safefilename = base64encode(`${parts.join('.')}`) + `.${extension}`;
-                updatedFiles[fileid].meta.name = safefilename.replace(/\//g,'RS_FORWARD_SLASH'); // To fix issue with forward slashes in base64 string
+                upload_name = safefilename.replace(/\//g,'RS_FORWARD_SLASH');  // To fix issue with forward slashes in base64 string
+                updatedFiles[fileid].meta.name = upload_name.substring(upload_name.length - 30);
                 console.debug('file obj')
                 console.debug(files[fileid].id)
                 });
