@@ -2501,7 +2501,7 @@ function add_smart_collection()
     $searchstring=array();
     if ($search!=""){$searchstring[]="search=$search";}
     if ($restypes!=""){$searchstring[]="restypes=$restypes";}
-    if ($archive != 0)
+    if ($archive !== 0)
         {
         if ($archive === 'all')
             {
