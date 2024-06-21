@@ -7220,53 +7220,53 @@ function render_resource_tools_size_download_options(array $resource, array $ctx
         updateDownloadLink('<?php echo escape($ns); ?>', '<?php echo escape($allowed_size['id']); ?>', picker);
         <?php
     };
-?>
-<tr class="DownloadDBlend">
-    <td class="DownloadFileName Picker"><?php $render($use_selector); ?></td>
-    <td class="DownloadButton">
-        <a id="<?php echo escape($ns); ?>downloadlink" onclick="return CentralSpaceLoad(this, true);"><?php
-            echo escape($GLOBALS['lang']['action-download']);
-        ?></a>
-        <a
-            id="<?php echo escape($ns); ?>previewlink"
-            class="enterLink previewsizelink DisplayNone"
-            href="#"
-            data-viewsize=""
-            data-viewsizeurl=""
-        ><?php echo escape($GLOBALS['lang']["action-view"]); ?></a>
-    </td>
-</tr>
-<script>
-function <?php echo escape($ns); ?>_get_preview_size_info()
-{
-    return <?php
-        echo json_encode(
-            array_map(
-                get_sub_array_with(
-                    [
-                        'allow_preview',
-                        'html',
-                    ]
+    ?>
+    <tr class="DownloadDBlend">
+        <td class="DownloadFileName Picker"><?php $render($use_selector); ?></td>
+        <td class="DownloadButton">
+            <a id="<?php echo escape($ns); ?>downloadlink" onclick="return CentralSpaceLoad(this, true);"><?php
+                echo escape($GLOBALS['lang']['action-download']);
+            ?></a>
+            <a
+                id="<?php echo escape($ns); ?>previewlink"
+                class="enterLink previewsizelink DisplayNone"
+                href="#"
+                data-viewsize=""
+                data-viewsizeurl=""
+            ><?php echo escape($GLOBALS['lang']["action-view"]); ?></a>
+        </td>
+    </tr>
+    <script>
+    function <?php echo escape($ns); ?>_get_preview_size_info()
+    {
+        return <?php
+            echo json_encode(
+                array_map(
+                    get_sub_array_with(
+                        [
+                            'allow_preview',
+                            'html',
+                        ]
+                    ),
+                    $allowed_sizes
                 ),
-                $allowed_sizes
-            ),
-            JSON_NUMERIC_CHECK
-        );
-    ?>;
-}
+                JSON_NUMERIC_CHECK
+            );
+        ?>;
+    }
 
-jQuery(document).ready(function() {
-    <?php $render_js_picker($use_selector); ?>
-});
+    jQuery(document).ready(function() {
+        <?php $render_js_picker($use_selector); ?>
+    });
 
-jQuery('select#<?php echo escape($ns); ?>size').change(function() {
-    const picker = jQuery(this);
-    const selected_size = picker.val();
-    updateSizeInfo('<?php echo escape($ns); ?>', selected_size);
-    updatePreviewLink('<?php echo escape($ns); ?>', selected_size, picker);
-    updateDownloadLink('<?php echo escape($ns); ?>', selected_size, picker);
-});
-<?php hook('append_to_resource_tools_size_download_options_script', '', [$ns, $allowed_sizes]); ?>
-</script>
+    jQuery('select#<?php echo escape($ns); ?>size').change(function() {
+        const picker = jQuery(this);
+        const selected_size = picker.val();
+        updateSizeInfo('<?php echo escape($ns); ?>', selected_size);
+        updatePreviewLink('<?php echo escape($ns); ?>', selected_size, picker);
+        updateDownloadLink('<?php echo escape($ns); ?>', selected_size, picker);
+    });
+    <?php hook('append_to_resource_tools_size_download_options_script', '', [$ns, $allowed_sizes]); ?>
+    </script>
 <?php
 }
