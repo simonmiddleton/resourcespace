@@ -7112,6 +7112,11 @@ function render_resource_view_image(array $resource, array $context)
     <?php
     }
 
+/**
+ * Render the resource tools for preview sizes
+ * @param array $resource Resource data - {@see get_resource_data()} 
+ * @param array{'download_multisize': bool, "sizes"?: array, 'urlparams': array} $ctx Contextual information.
+ */
 function render_resource_tools_size_download_options(array $resource, array $ctx): void
 {
     $ref = $resource['ref'];
