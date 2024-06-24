@@ -475,30 +475,27 @@ header('Accept-Ranges: bytes');
 
 set_time_limit(0);
 
-if(!hook('replacefileoutput'))
+$sent = (0 == fseek($file_handle, $seek_start) ? $seek_start : 0);
+
+while($sent < $file_size)
     {
-    $sent = (0 == fseek($file_handle, $seek_start) ? $seek_start : 0);
+    echo fread($file_handle, $download_chunk_size);
 
-    while($sent < $file_size)
+    ob_flush();
+    flush();
+
+    $sent += $download_chunk_size;
+
+    if(0 != connection_status()) 
         {
-        echo fread($file_handle, $download_chunk_size);
-
-        ob_flush();
-        flush();
-
-        $sent += $download_chunk_size;
-
-        if(0 != connection_status()) 
-            {
-            break;
-            }
+        break;
         }
-
-    fclose($file_handle);
     }
 
+fclose($file_handle);
+
 // File send complete, log to daily stat
-daily_stat('Download bandwidth KB', $ref, floor($total_to_send/1024));
+daily_stat('Downloaded KB', $ref, floor($total_to_send/1024));
 
 
 // Deleting Exiftool temp File:

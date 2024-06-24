@@ -965,7 +965,7 @@ $lang["stat-addedsmartcollection"]="Added smart collection";
 $lang['all_workflow_states'] = 'All workflow states';
 $lang["stat-removedresourcefromcollection"]="Removed resource from collection";
 $lang["stat-keywordusage-noresultsfound"]="Keyword usage - no results found";
-$lang["stat-downloadbandwidthkb"]="Download bandwidth (KB)";
+$lang["stat-downloadedkb"]="Downloaded file data (KB)";
 
 # Access
 $lang["access0"]="Open";
