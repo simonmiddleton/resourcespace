@@ -4154,9 +4154,10 @@ function rcRmdir ($path,$ignore=array())
  *
  * @param  string $activity_type
  * @param  integer $object_ref
+ * @param  integer $to_add      Optional, how many counts to add, defaults to 1.
  * @return void
  */
-function daily_stat($activity_type,$object_ref)
+function daily_stat($activity_type,$object_ref,int $to_add=1)
     {
     global $disable_daily_stat;
 
@@ -4182,13 +4183,13 @@ function daily_stat($activity_type,$object_ref)
     if ($count == 0)
         {
         # insert
-        ps_query("insert into daily_stat (year, month, day, usergroup, activity_type, object_ref, external, count) values (? ,? ,? ,? ,? ,? ,? , '1')", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
+        ps_query("insert into daily_stat (year, month, day, usergroup, activity_type, object_ref, external, count) values (? ,? ,? ,? ,? ,? ,? , ?)", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external, "i", $to_add), false, -1, true, 0);
         clear_query_cache("daily_stat"); // Clear the cache to flag there's a row to the query above.
         }
     else
         {
         # update
-        ps_query("update daily_stat set count = count+1 where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
+        ps_query("update daily_stat set count = count+? where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i",$to_add,"i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
         }
     }
 
@@ -5027,6 +5028,17 @@ function get_system_status()
         'status' => 'OK',
         'total' => get_total_resources(),
         'active' => get_total_resources(0),
+    ];
+
+    // Return bandwidth usage last 30 days
+    $return['results']['download_bandwidth_last_30_days_gb'] = [
+        'status' => 'OK',
+        'total' => round(ps_value("select sum(`count`) value from daily_stat where
+            activity_type='Download bandwidth KB'
+        and (`year`=year(now()) or (month(now())=1 and `year`=year(now())-1))
+        and (`month`=month(now()) or `month`=month(now())-1 or (month(now())=1 and `month`=12))
+        and datediff(now(), concat(`year`,'-',lpad(`month`,2,'0'),'-',lpad(`day`,2,'0')))<=30
+            ",[],0)/(1024*1024),3) // Note - limit to this month and last month before the concat to get the exact period; ensures not performing the concat on a large set of data.
     ];
 
     // Check if plugins have any warnings

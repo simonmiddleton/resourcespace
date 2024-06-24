@@ -456,13 +456,20 @@ if(0 < $seek_start || $seek_end < ($file_size - 1))
 
     debug("PAGES/DOWNLOAD.PHP: Content-Range: bytes {$seek_start}-{$seek_end}/{$file_size}");
     debug('PAGES/DOWNLOAD.PHP: Content-Length: ' . ($seek_end - $seek_start +1));
+
+    $total_to_send=$seek_end - $seek_start + 1;
     }
 else
     {
     header("Content-Length: {$file_size}");
 
     debug("PAGES/DOWNLOAD.PHP: Content-Length: {$file_size}");
+
+    $total_to_send=$file_size;
     }
+
+
+daily_stat('Resource download', $ref);
 
 header('Accept-Ranges: bytes');
 
@@ -489,6 +496,10 @@ if(!hook('replacefileoutput'))
 
     fclose($file_handle);
     }
+
+// File send complete, log to daily stat
+daily_stat('Download bandwidth KB', $ref, floor($total_to_send/1024));
+
 
 // Deleting Exiftool temp File:
 // Note: Only for downloads (not previews)
