@@ -3001,7 +3001,7 @@ function update_field($resource, $field, $value, array &$errors = array(), $log=
     return true;
     }
 
-function email_resource($resource,$resourcename,$fromusername,$userlist,$message,$access=-1,$expires="",$useremail="",$from_name="",$cc="",$list_recipients=false, $open_internal_access=false, $useraccess=2,$group="")
+function email_resource($resource,$resourcename,$fromusername,$userlist,$message,$access=-1,$expires="",$sharepwd = "",$useremail="",$from_name="",$cc="",$list_recipients=false, $open_internal_access=false, $useraccess=2,$group="")
     {
     # Attempt to resolve all users in the string $userlist to user references.
 
@@ -3070,7 +3070,7 @@ function email_resource($resource,$resourcename,$fromusername,$userlist,$message
         # Do we need to add an external access key for this user (e-mail specified rather than username)?
         if ($key_required[$n])
             {
-            $k=generate_resource_access_key($resource,$userref,$access,$expires,$emails[$n],$group);
+            $k=generate_resource_access_key($resource,$userref,$access,$expires,$emails[$n],$group, $sharepwd);
             $key="&k=". $k;
             }
         elseif ($useraccess==0 && $open_internal_access && !$resolve_open_access)

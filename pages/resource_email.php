@@ -50,7 +50,7 @@ if (getval("save","")!="" && enforcePostRequest(getval("ajax", false)))
     enforceSharePassword($sharepwd);
 
     // Email single resource
-    $errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$minaccess,$group);
+    $errors=email_resource($ref,i18n_get_translated($resource["field".$view_title_field]),$userfullname,$users,$message,$access,$expires,$sharepwd,$user_email,$from_name,$cc,$list_recipients,$add_internal_access,$minaccess,$group);
     if ($errors=="")
         {
         // Log this         
