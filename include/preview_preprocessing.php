@@ -866,7 +866,7 @@ if ((!isset($newfile)) && (!in_array($extension, $ffmpeg_audio_extensions))&& (!
             if ($extension == "pdf")
                 {
                 $pdfinfocommand = "pdfinfo " . escapeshellarg($file);
-                $pdfinfo = shell_exec($pdfinfocommand);
+                $pdfinfo = run_command($pdfinfocommand);
                 $pdfinfo = explode("\n", $pdfinfo);
                 $pdfinfo = preg_grep("/\bPage\b.+\bsize\b/", $pdfinfo);
                 sort($pdfinfo);

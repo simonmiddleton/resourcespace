@@ -1912,15 +1912,15 @@ function filesize_unlimited($path)
                 }
             }
 
-        return exec('for %I in (' . escapeshellarg($path) . ') do @echo %~zI' );
+        return run_command('for %I in (' . escapeshellarg($path) . ') do @echo %~zI' );
         }
     elseif('Darwin' == PHP_OS || 'FreeBSD' == PHP_OS)
         {
-        $bytesize = exec("stat -f '%z' " . escapeshellarg($path));
+        $bytesize = run_command("stat -f '%z' " . escapeshellarg($path));
         }
     else 
         {
-        $bytesize = exec("stat -c '%s' " . escapeshellarg($path));
+        $bytesize = run_command("stat -c '%s' " . escapeshellarg($path));
         }
 
     if(!is_int_loose($bytesize))

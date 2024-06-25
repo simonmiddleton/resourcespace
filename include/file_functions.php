@@ -375,9 +375,15 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
     $sourcerealpath = realpath($path);
     $source_path_not_real = !$sourcerealpath || !file_exists($sourcerealpath);
 
+    $checkname  = $path;
+    if (pathinfo($path, PATHINFO_EXTENSION) === "icc") {
+        // ResourceSpace generated .icc files have a double extension, need to strip extension again before checking
+        $checkname = pathinfo($path, PATHINFO_FILENAME);
+    }
+
     if (
         $source_path_not_real
-        && !(preg_match('/^[a-zA-Z0-9_\-[:space:]\/]+$/', pathinfo($path, PATHINFO_DIRNAME)) && is_safe_basename($path))
+        && !(preg_match('/^[a-zA-Z0-9_\-[:space:]\/]+$/', pathinfo($path, PATHINFO_DIRNAME)) && is_safe_basename($checkname))
     ) {
         return false;
     }

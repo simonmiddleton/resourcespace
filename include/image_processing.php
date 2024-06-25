@@ -1426,7 +1426,7 @@ function create_previews_using_im(
             {
             $prefix = $rawext[0] .':';
             }
-        elseif (!$config_windows && strpos($file, ':')!==false)
+        elseif (!$config_windows && preg_match('/^\w\w\w:/', $file) === 1)
             {
             $prefix = $extension .':';
             }
@@ -1642,7 +1642,14 @@ function create_previews_using_im(
 
             if (!$imagemagick_mpr)
                 {
-                $command = $convert_fullpath . ' '. $addcheckbdpre . ($extension != 'svg' ? escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . '[0]' : "\( " . escapeshellarg((!$config_windows && strpos($file, ':')!==false ? $extension .':' : '') . $file) . "[0] -transparent none \)") . ' ' . $flatten . ' -quality ' . $imagemagick_quality;
+                $useprefix = !$config_windows && preg_match('/^\w\w\w:/', $file) === 1;
+                $command = $convert_fullpath . ' '. $addcheckbdpre . " %%SOURCEFILE%%[0] ";
+                $sourcefile = ($useprefix ? $extension . ':' : '') . $file;
+                $cmdparams["%%SOURCEFILE%%"] =  new CommandPlaceholderArg($sourcefile, 'is_valid_rs_path');
+                if (strtolower($extension) === 'svg') {
+                    $command .= "  -transparent none ";
+                }
+                $command .= $flatten . ' -quality ' . $imagemagick_quality;
                 }
 
             # fetch target width and height
@@ -2934,7 +2941,7 @@ function AutoRotateImage($src_image, $ref = false)
     {
     # use $ref to pass a resource ID in case orientation data needs to be taken
     # from a non-ingested image to properly rotate a preview image
-    global $imagemagick_path, $camera_autorotation_ext, $camera_autorotation_gm;
+    global $imagemagick_path, $camera_autorotation_ext;
 
     debug("AutoRotateImage(src_image = $src_image, ref = $ref)");
 
@@ -3059,49 +3066,45 @@ function extract_icc_profile($ref, $extension, $alternative = -1)
 
 
 function extract_icc($infile, $ref='') {
-   global $config_windows, $syncdir;
+    global $config_windows, $syncdir;
 
-   # Locate imagemagick, or fail this if it isn't installed
-   $convert_fullpath = get_utility_path("im-convert");
-   if ($convert_fullpath==false) {return false;}
+    # Locate imagemagick, or fail this if it isn't installed
+    $convert_fullpath = get_utility_path("im-convert");
+    if ($convert_fullpath==false) {return false;}
 
-   if ($config_windows){ $stderrclause = ''; } else { $stderrclause = '2>&1'; }
+    if ($config_windows){ $stderrclause = ''; } else { $stderrclause = '2>&1'; }
+    $path_parts = pathinfo($infile);
+    if (!is_valid_rs_path($infile)) {
+        return false;
+    }
 
-   //$outfile=get_resource_path($ref,true,"",false,$extension.".icc");
-   //new, more flexible approach: we will just create a file for anything the caller hands to us.
-   //this makes things work with alternatives, the deepzoom plugin, etc.
-   $path_parts = pathinfo($infile);
-
-   if ($syncdir === "" || strpos($infile, $syncdir)===false)
-        {
+    if ($syncdir === "" || strpos($infile, $syncdir)===false) {
         $outfile = $path_parts['dirname'] . '/' . $path_parts['filename'] .'.'. $path_parts['extension'] .'.icc';
-        }
-    else
-        {
+    } else {
         $outfile = get_resource_path($ref,true,'',false,'icc',-1);
-        }
+    }
 
-   if (file_exists($outfile)){
-      // extracted profile already existed. We'll remove it and start over
-      unlink($outfile);
-   }
+    if (file_exists($outfile)){
+        // extracted profile already existed. We'll remove it and start over
+        unlink($outfile);
+    }
     $cmd = $convert_fullpath . " %%INFILE%% %%OUTFILE%% " .  $stderrclause;
 
-   // Detect the ":" prefix in $infile used for RAW images
+    // Detect the ":" prefix in $infile used for RAW images
+    $infile = ((!$config_windows && preg_match('/^\w\w\w:/', $infile, $matches) === 1) ? "" : '') . $infile . "[0]";
+    // Path to $infile is checked using is_valid_rs_path() above
     $cmdparams = [
-        "%%INFILE%%" => ((!$config_windows && strpos($infile, ':') !== false) ? strtolower($path_parts['extension']) . ':' : '') . $infile . "[0]",
-        "%%OUTFILE%%" => $outfile,
+        "%%INFILE%%" => new CommandPlaceholderArg($infile, [CommandPlaceholderArg::class, 'alwaysValid']),
+        "%%OUTFILE%%" => new CommandPlaceholderArg($outfile, 'is_valid_rs_path')
     ];
     $cmdout = run_command($cmd, false, $cmdparams);
+    if ( preg_match("/no color profile is available/",$cmdout) || !file_exists($outfile) ||filesize_unlimited($outfile) == 0){
+    // the icc profile extraction failed. So delete file.
+    if (file_exists($outfile)){ unlink ($outfile); }
+    return false;
+    }
 
-   if ( preg_match("/no color profile is available/",$cmdout) || !file_exists($outfile) ||filesize_unlimited($outfile) == 0){
-   // the icc profile extraction failed. So delete file.
-   if (file_exists($outfile)){ unlink ($outfile); }
-   return false;
-   }
-
-   return file_exists($outfile);
-
+    return file_exists($outfile);
 }
 
 function get_imagemagick_version($array=true){
@@ -3349,7 +3352,6 @@ function getFileDimensions($identify_fullpath, $prefix, $file, $extension)
 {
     # Get image's dimensions.
     $identcommand = $identify_fullpath . ' -format %wx%h %%PREFIX%%%%SOURCE%%[0]';
-    global $debug_log;$debug_log=true;
     $params = [
         '%%PREFIX%%' => new CommandPlaceholderArg($prefix,
             fn($val): bool => preg_match('/^\w\w\w:$|^$/', $val, $matches)
