@@ -190,10 +190,14 @@ function HookSimplesamlAllProvideusercredentials()
             }
 
         // Return false if not already authenticated and local login option is preferred
-        if(!simplesaml_is_authenticated() && $simplesaml_allow_standard_login  && $simplesaml_prefer_standard_login && getval("usesso","")=="" )
-            {
+        if (
+            !simplesaml_is_authenticated()
+            && $simplesaml_allow_standard_login
+            && $simplesaml_prefer_standard_login
+            && getval("usesso","") == ""
+        ) {
             return false;
-            }
+        }
 
         if(!simplesaml_is_authenticated())
             {
@@ -528,39 +532,29 @@ function HookSimplesamlAllProvideusercredentials()
         }
 
 function HookSimplesamlAllLoginformlink()
-        {
-        if(!simplesaml_php_check())
-            {
-            return false;
-            }
+    {
+    // Add a link to login.php, as this page may still be seen if $simplesaml_allow_standard_login is set to true
+    global $baseurl, $lang, $simplesaml_login;
+    if (!simplesaml_php_check() || !$simplesaml_login) {
+        return false;
+    }
 
-        // Include in redirect any resource or collection parameter if present so we load to that page rather than home.
-        $parameters = array('usesso' => 'true');
-        $url_params = explode('?', getval("url",""));
-        parse_str(str_replace('&amp;', '&', ($url_params[1] ?? "")), $url_params);
+    // Include URL redirect for RelayState
+    $requested = parse_url(getval("url",""));
+    $relpath = trim($requested["path"]) ?? "/";
 
-        if (isset($url_params['c']))
-            {
-            $parameters['c'] = $url_params['c'];
-            }
-            
-        if (isset($url_params['r']))
-            {
-            $parameters['r'] = $url_params['r'];
-            }
+    if (file_exists(dirname(__DIR__,3) . str_replace("../","",$relpath))) {
+        // Only add if this is a valid file
+        parse_str($requested["query"] ?? "", $params);
+    } else {
+        $relpath = "/";
+    }
+    $params['usesso'] = 'true';
 
-        // Add a link to login.php, as this page may still be seen if $simplesaml_allow_standard_login is set to true
-        global $baseurl, $lang, $simplesaml_login;
-
-        // Don't show link to use SSO to login if this has been disabled
-        if(!$simplesaml_login)
-            {
-            return false;
-            }
-        ?>
-        <a href="<?php echo generateURL($baseurl, $parameters); ?>"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo strip_tags_and_attributes($lang['simplesaml_use_sso']); ?></a><br/>
-        <?php
-        }
+    ?>
+    <a href="<?php echo generateURL($baseurl . $relpath, $params); ?>"><i class="fas fa-fw fa-key"></i>&nbsp;<?php echo strip_tags_and_attributes($lang['simplesaml_use_sso']); ?></a><br/>
+    <?php
+    }
 
 function HookSimplesamlLoginPostlogout()
         {        
