@@ -67,6 +67,11 @@ function simpleldap_authenticate(string $username,string $password)
             $binduserstrings[] = $loginfield . "=" . $ldap_username . "," . $binddomain;
             $binduserstrings[] = "cn=" . $ldap_username . "," . $binddomain;
         }
+    } else {
+        foreach ($binddomains as $binddomain) {
+            $binduserstrings[] = $loginfield . "=" . str_replace("@" .  $userdomain,"",$ldap_username) . "," . $binddomain;
+            $binduserstrings[] = "cn=" . str_replace("@" .  $userdomain,"",$ldap_username) . "," . $binddomain;
+        }
     }
     // Try binding with each
     $login = false;
