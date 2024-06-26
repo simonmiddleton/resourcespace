@@ -313,7 +313,7 @@ include "../../include/header.php";
             <label for="search_filter_id"><?php echo escape($lang["property-search_filter"]); ?></label>
             <select name="search_filter_id" class="stdwidth">
                 <?php
-                echo "<option value='0' >" . ($record['search_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
+                echo "<option value='0' >" . escape($record['search_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
                 foreach ($filters as $filter)
                     {
                     echo "<option value='" . $filter['ref'] . "' " . ($record['search_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
@@ -326,7 +326,7 @@ include "../../include/header.php";
             <label for="edit_filter_id"><?php echo escape($lang["property-edit_filter"]); ?></label>
             <select name="edit_filter_id" class="stdwidth">
                 <?php
-                echo "<option value='0' >" . ($record['edit_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
+                echo "<option value='0' >" . escape($record['edit_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
                 foreach ($filters as $filter)
                     {
                     echo "<option value='" . $filter['ref'] . "' " . ($record['edit_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";
@@ -339,7 +339,7 @@ include "../../include/header.php";
             <label for="derestrict_filter_id"><?php echo escape($lang["fieldtitle-derestrict_filter"]); ?></label>
             <select name="derestrict_filter_id" class="stdwidth">
                 <?php
-                echo "<option value='0' >" . ($record['derestrict_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
+                echo "<option value='0' >" . escape($record['derestrict_filter_id'] ? $lang["filter_none"] : $lang["select"]) . "</option>";
                 foreach ($filters as $filter)
                     {
                     echo "<option value='" . $filter['ref'] . "' " . ($record['derestrict_filter_id'] == $filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($filter['name']) . "</option>";

@@ -240,7 +240,7 @@ for ($n=0;$n<count($fields);$n++)
         <td>
             <?php
             // If no field value is set it is treated as type 0 (single line text) 
-            echo ($fields[$n]["type"]!="") ? $lang[$field_types[$fields[$n]["type"]]] : $lang[$field_types[0]];
+            echo escape($fields[$n]["type"]!="" ? $lang[$field_types[$fields[$n]["type"]]] : $lang[$field_types[0]]);
             ?>
         </td>
         <?php 

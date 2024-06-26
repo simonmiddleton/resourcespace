@@ -239,10 +239,10 @@ $select_table_url = generateURL(
         <select class="SplitSearch" id="logmonth" name="logmonth">
             <?php                
             // Not filtered by default when searching, add option to filter by month
-            echo "<option " .  ($logmonth == "" ? " selected" : "") . " value='0'>" . $lang["anymonth"] . "</option>\n";                   
+            echo "<option " .  ($logmonth == "" ? " selected" : "") . " value='0'>" . escape($lang["anymonth"]) . "</option>\n";                   
                 for ($m=1;$m<=12;$m++)
                 {
-                echo "<option " .  ($m == $logmonth ? " selected" : "") . " value=\"" .  sprintf("%02d",$m) . "\">" . $lang["months"][$m-1] . "</option>\n";
+                echo "<option " .  ($m == $logmonth ? " selected" : "") . " value=\"" .  sprintf("%02d",$m) . "\">" . escape($lang["months"][$m-1]) . "</option>\n";
                 }
             ?>
         </select>    
@@ -252,7 +252,7 @@ $select_table_url = generateURL(
         <select class="SplitSearch" id="logyear" name="logyear">
             <?php 
             // Not filtered by default when searching, add option to filter by month
-                echo "<option " .  ($logyear == "" ? " selected" : "") . " value='0'>" . $lang["anyyear"] . "</option>\n";                   
+            echo "<option " .  ($logyear == "" ? " selected" : "") . " value='0'>" . escape($lang["anyyear"]) . "</option>\n";                   
             for ($n=$curyear;$n>=$minyear;$n--)
                 {
                 echo "<option " .  ($n == $logyear ? " selected" : "") . " value=\"" .  $n . "\">" . $n . "</option>\n";
