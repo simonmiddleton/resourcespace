@@ -62,7 +62,7 @@ function simpleldap_authenticate(string $username,string $password)
     $binduserstrings[] = $ldap_username;
     if (strpos($ldap_username, "@" .  $userdomain) === false) {
         // Not in username@domain format, add that and cn
-        $binduserstrings[] = $ldap_username . "@" . $userdomain;
+        $binduserstrings[] = $ldap_username . "@" . ldap_escape($userdomain, '', LDAP_ESCAPE_DN);
         foreach ($binddomains as $binddomain) {
             $binduserstrings[] = $loginfield . "=" . $ldap_username . "," . $binddomain;
             $binduserstrings[] = "cn=" . $ldap_username . "," . $binddomain;
