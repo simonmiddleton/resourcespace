@@ -789,15 +789,15 @@ function render_pie_graph($id,$data,$total=null)
         $values[] = $total-$rt;
         $labels[] = "Other";
         }
+
+    $labels = array_map(fn($v) => substr(json_encode($v),1,-1), $labels);
     ?>
     <script type="text/javascript">
     // Setup Styling
-
-
     new Chart(document.getElementById('<?php echo escape($id) ?>'), {
         type: 'pie',
         data: {
-            labels: ['<?php echo escape(implode("', '",$labels)) ?>'],
+            labels: ['<?php echo implode("', '",$labels) ?>'],
                 datasets: [
                         {
                     data: [<?php echo escape(implode(", ",$values)) ?>]
@@ -805,10 +805,7 @@ function render_pie_graph($id,$data,$total=null)
             ]
         },
         options: chartstyling<?php echo escape($id)?>,
-
-
     });
-
     </script>
     <?php
     }
