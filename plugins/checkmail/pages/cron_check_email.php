@@ -417,7 +417,7 @@ for ($n=0;$n<count($files);$n++){
     }
          
     if (!$build_collection && $checkmail_confirm){
-        email_resource($r,$subject,$applicationname,$fromusername,$lang['yourresourcehasbeenuploaded'],0,$expires="", "",$fromaddress,$applicationname);
+        email_resource($r,$subject,$applicationname,$fromusername,$lang['yourresourcehasbeenuploaded'],0, "", "",$fromaddress,$applicationname);
         echo "Email Confirmation sent. \r\n";
     }
 
@@ -427,7 +427,7 @@ for ($n=0;$n<count($files);$n++){
 }
 
 if ($build_collection && $checkmail_confirm){
-    email_collection($collection,$subject,$email_from,$fromaddress,$lang['yourresourceshavebeenuploaded'],false,0,$expires="",$fromaddress,$applicationname);
+    email_collection($collection,$subject,$email_from,$fromaddress,$lang['yourresourceshavebeenuploaded'],false,0, "",$fromaddress,$applicationname);
     echo "Email Confirmation sent. \r\n";
 }
 
