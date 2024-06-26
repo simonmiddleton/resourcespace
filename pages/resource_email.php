@@ -157,7 +157,7 @@ if(!$user_select_internal)
 
 <?php if(!hook("replaceemailsubmitbutton")){?>
 <div class="QuestionSubmit">        
-<input name="save" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="&nbsp;&nbsp;<?php echo escape($lang["emailresourcetitle"])?>&nbsp;&nbsp;" />
+<input name="save" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="<?php echo escape($lang["emailresourcetitle"])?>" />
 </div>
 <?php } // end replaceemailsubmitbutton ?>
 

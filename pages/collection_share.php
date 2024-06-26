@@ -360,12 +360,12 @@ if (isset($show_error)) { ?>
             <?php 
             if ($editing  && !$editexternalurl)
                 {?>
-                <input name="editexternalurl" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="&nbsp;&nbsp;<?php echo escape($lang["save"])?>&nbsp;&nbsp;" />
+                <input name="editexternalurl" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="<?php echo escape($lang["save"])?>" />
                 <?php
                 }
             else
                 {?>
-                <input name="generateurl" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="&nbsp;&nbsp;<?php echo escape($lang["generateexternalurl"])?>&nbsp;&nbsp;" />
+                <input name="generateurl" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="<?php echo escape($lang["generateexternalurl"])?>" />
                 <?php 
                 }
                 ?>

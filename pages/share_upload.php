@@ -211,12 +211,12 @@ include "../include/header.php";
             </div>
 
             <?php 
-            render_share_password_question($sharepwd == "");            
+            render_share_password_question($sharepwd == "");
 
             if($editing)
                 {?>
-                <div class="QuestionSubmit">        
-                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo escape($lang["save"]);}?>&nbsp;&nbsp;" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>return CentralSpacePost(this.form,true);" />
+                <div class="QuestionSubmit">
+                    <input name="submit" type="submit" value="<?php echo escape($lang["save"]); ?>" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>return CentralSpacePost(this.form,true);" />
                 </div><?php
                 }
             else
@@ -235,8 +235,8 @@ include "../include/header.php";
                         <div class="clearerleft"> </div>
                     </div>
                 </div>
-                <div class="QuestionSubmit">        
-                    <input name="submit" type="submit" value="&nbsp;&nbsp;<?php {echo escape($lang["button-upload-link-create"]);}?>&nbsp;&nbsp;" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>return CentralSpacePost(this.form,true);" />
+                <div class="QuestionSubmit">
+                    <input name="submit" type="submit" value="<?php echo escape($lang["button-upload-link-create"]); ?>" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>return CentralSpacePost(this.form,true);" />
                 </div><?php
                 }
                 ?>

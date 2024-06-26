@@ -321,7 +321,7 @@ if(!$internal_share_only)
 
 <?php if(!hook("replaceemailsubmitbutton")){?>
 <div class="QuestionSubmit">
-<input name="save" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="&nbsp;&nbsp;<?php if ($themeshare){echo escape($lang["email_theme_category"]);} else {echo escape($lang["emailcollectiontitle"]);}?>&nbsp;&nbsp;" />
+<input name="save" type="submit" onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?>" value="<?php if ($themeshare){echo escape($lang["email_theme_category"]);} else {echo escape($lang["emailcollectiontitle"]);}?>" />
 </div>
 <?php } # end hook replaceemailsubmitbutton ?>
 
