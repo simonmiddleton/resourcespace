@@ -12,6 +12,7 @@
     $keywords_used = [];
     if ($keysearch)
         {
+        $date_parts = [];
         for ($n=0;$n<count($keywords);$n++)
             {
             $canskip = false;
@@ -185,21 +186,15 @@
 
                             if('basicday' == $kw[0])
                                 {
-                                $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "rdn" . $datefieldjoin . ".name like ? ";
-                                array_push($sql_filter->parameters,"s","____-__-" . $keystring . "%");
-                                $c++;
+                                $date_parts['day'] = $keystring;
                                 }
                             elseif('basicmonth' == $kw[0])
                                 {
-                                $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "rdn" . $datefieldjoin . ".name like ? ";
-                                array_push($sql_filter->parameters,"s","____-" . $keystring . "%");
-                                $c++;
+                                $date_parts['month'] = $keystring;
                                 }
                             elseif('basicyear' == $kw[0])
                                 {
-                                $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "rdn" . $datefieldjoin . ".name like ? ";
-                                array_push($sql_filter->parameters,"s",$keystring . "%");
-                                $c++;
+                                $date_parts['year'] = $keystring;
                                 }
                             }
                         # Additional date range filtering
@@ -791,4 +786,13 @@
                 $c++;
                 }
             } // end keywords expanded loop
+            if (isset($datefieldjoin)) {
+                $date_string = sprintf("%s-%s-%s",
+                    $date_parts['year']  ?? '____',
+                    $date_parts['month'] ?? '__',
+                    $date_parts['day']   ?? '__'
+                ) . '%';
+                $sql_filter->sql .= ($sql_filter->sql != "" ? " AND " : "") . "rdn" . $datefieldjoin . ".name like ? ";
+                array_push($sql_filter->parameters,"s", $date_string);
+            }
         } // end keysearch if
