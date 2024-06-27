@@ -1912,15 +1912,15 @@ function filesize_unlimited($path)
                 }
             }
 
-        return run_command('for %I in (' . escapeshellarg($path) . ') do @echo %~zI' );
+        return exec('for %I in (' . escapeshellarg($path) . ') do @echo %~zI' );
         }
     elseif('Darwin' == PHP_OS || 'FreeBSD' == PHP_OS)
         {
-        $bytesize = run_command("stat -f '%z' " . escapeshellarg($path));
+        $bytesize = exec("stat -f '%z' " . escapeshellarg($path));
         }
     else 
         {
-        $bytesize = run_command("stat -c '%s' " . escapeshellarg($path));
+        $bytesize = exec("stat -c '%s' " . escapeshellarg($path));
         }
 
     if(!is_int_loose($bytesize))
@@ -2539,14 +2539,18 @@ function get_utility_path($utilityname, &$checked_path = null)
 
             // Note that $check_exe is set to true. In that way get_utility_path()
             // becomes backwards compatible with get_ghostscript_command()
-            return get_executable_path(
+            $path = get_executable_path(
                 $ghostscript_path,
                 array(
                     'unix' => $ghostscript_executable,
                     'win'  => $ghostscript_executable
                 ),
                 $checked_path,
-                true) . ' -dPARANOIDSAFER'; 
+                true);
+			if ($path === false) {
+                return false;
+            }
+			return $path . ' -dPARANOIDSAFER'; 
 
         case 'ffmpeg':
             // FFmpeg path not configured
@@ -2607,13 +2611,18 @@ function get_utility_path($utilityname, &$checked_path = null)
         case 'exiftool':
             global $exiftool_global_options;
 
-            return get_executable_path(
+            $path = get_executable_path(
                 $exiftool_path,
                 array(
                     'unix' => 'exiftool',
                     'win'  => 'exiftool.exe'
                 ),
-                $checked_path) . " {$exiftool_global_options} ";
+                $checked_path);
+            
+			if ($path === false) {
+                return false;
+            }
+            return $path . " {$exiftool_global_options} ";
 
         case 'antiword':
             if(!isset($antiword_path) || $antiword_path === '')

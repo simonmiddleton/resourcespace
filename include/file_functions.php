@@ -372,6 +372,10 @@ function validate_resource_files(array $resources,array $criteria = []): array
  */
 function is_valid_rs_path(string $path, array $override_paths = []): bool
 {
+    if ($GLOBALS["config_windows"]) {
+        $path = str_replace("\\", "/", $path);
+    }
+
     $sourcerealpath = realpath($path);
     $source_path_not_real = !$sourcerealpath || !file_exists($sourcerealpath);
 
@@ -381,11 +385,11 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
         $checkname = pathinfo($path, PATHINFO_FILENAME);
     }
 
-    if (
-        $source_path_not_real
-        && !(preg_match('/^[a-zA-Z0-9_\-[:space:]\/]+$/', pathinfo($path, PATHINFO_DIRNAME)) && is_safe_basename($checkname))
-    ) {
-        return false;
+    if ($source_path_not_real) {
+        if (!(preg_match('/^[a-zA-Z0-9_\-[:space:]\/:]+$/', pathinfo($path, PATHINFO_DIRNAME)) && is_safe_basename($checkname))
+        ) {
+            return false;
+        }
     }
 
     $path_to_validate = $source_path_not_real ? $path : $sourcerealpath;
@@ -409,6 +413,10 @@ function is_valid_rs_path(string $path, array $override_paths = []): bool
 
     foreach ($allowed_paths as $validpath) {
         $validpath = realpath($validpath);
+        if ($GLOBALS["config_windows"]) {
+            $validpath = str_replace("\\","/", $validpath);
+            $path_to_validate = str_replace("\\","/", $path_to_validate);
+        }
         if ($validpath !== false && mb_strpos($path_to_validate, $validpath) === 0) {
             return true;
         }
