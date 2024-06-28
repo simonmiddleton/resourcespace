@@ -73,7 +73,7 @@ if(isset($count) && $count==0)
 
 <?php } elseif (isset($count)) { ?>
 
-<p><?php echo str_replace("%",$count,($user_purge_disable ? $lang["purgeusersconfirmdisable"] : $lang["purgeusersconfirm"] )) ?>
+<p><?php echo escape(str_replace("%",$count,($user_purge_disable ? $lang["purgeusersconfirmdisable"] : $lang["purgeusersconfirm"] ))); ?>
 <br /><br />
 <input type="hidden" name="months" value="<?php echo escape($months); ?>">
 <input name="purge2" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["purgeusers"]); ?>&nbsp;&nbsp;" />
@@ -103,7 +103,7 @@ if(isset($count) && $count==0)
 
 <?php } else { ?>
 
-<p><?php echo str_replace("%","<input type='number' class='PurgeUsersMonths' name=months value=12>",$lang["purgeuserscommand"]) ?>
+<p><?php echo str_replace("%","<input type='number' class='PurgeUsersMonths' name=months value=12>", escape($lang["purgeuserscommand"])); ?>
 <br /><br />
 <input name="purge1" type="submit" value="&nbsp;&nbsp;<?php echo escape($lang["purgeusers"]); ?>&nbsp;&nbsp;" />
 </p>

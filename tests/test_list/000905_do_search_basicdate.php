@@ -18,44 +18,106 @@ update_field($resourcea,$newdatefield,"2017-07-15");
 update_field($resourceb,$newdatefield,"2017-07-02");
 update_field($resourcec,$newdatefield,"2017-04-08");
 
-// SUBTEST A
-// Ensure that params are converted correctly into a search string
-$search="";
-$_POST["basicyear"]     = "2017";
-$_POST["basicmonth"]    = "07";
-$_POST["basicday"]      = "15";
+$test_cases = [
+    'SUBTEST A' => [
+        'year'   => '2017', 
+        'month'  => '07', 
+        'day'    => '15', 
+        'search' => false,
+        'result' => 'basicyear:2017, basicmonth:07, basicday:15'
+    ],
+    'SUBTEST B' => [
+        'year'   => '2017', 
+        'month'  => '07', 
+        'day'    => '15', 
+        'search' => true,
+        'result' => [
+            'count'     => 1,
+            'contains'  => [$resourcea]
+            ]
+    ],
+    'SUBTEST C' => [
+        'year'   => '2017', 
+        'month'  => '07', 
+        'search' => true,
+        'result' => [
+            'count'     => 2,
+            'contains'  => [$resourcea, $resourceb]
+            ]
+    ],
+    'SUBTEST D' => [
+        'month'  => '07',
+        'day'    => '02', 
+        'search' => true,
+        'result' => [
+            'count'     => 1,
+            'contains'  => [$resourceb]
+            ]
+    ],
+    'SUBTEST E' => [
+        'year'   => '2017',
+        'day'    => '08', 
+        'search' => true,
+        'result' => [
+            'count'     => 1,
+            'contains'  => [$resourcec]
+            ]
+    ],
+    'SUBTEST F' => [
+        'year'   => '2017',
+        'search' => true,
+        'result' => [
+            'count'     => 3,
+            'contains'  => [$resourcea, $resourceb, $resourcec]
+            ]
+    ],
+    'SUBTEST G' => [
+        'month'  => '07',
+        'search' => true,
+        'result' => [
+            'count'     => 2,
+            'contains'  => [$resourcea, $resourceb]
+            ]
+    ],
+    'SUBTEST H' => [
+        'day'    => '08',
+        'search' => true,
+        'result' => [
+            'count'     => 1,
+            'contains'  => [$resourcec]
+            ]
+    ]
+];
 
-$search = update_search_from_request($search);
-if($search != "basicyear:2017, basicmonth:07, basicday:15")
-    {
-    echo "ERROR - SUBTEST A\n";
-    return false;
+foreach ($test_cases as $test_name => $test_case) { 
+
+    $search = "";
+    $_POST["basicyear"]     = $test_case['year'] ?? "";
+    $_POST["basicmonth"]    = $test_case['month'] ?? "";
+    $_POST["basicday"]      = $test_case['day'] ?? "";
+
+    $search = update_search_from_request($search);
+    if (!$test_case['search']) {
+        if ($search !== $test_case['result']) {
+            echo 'ERROR - ' . $test_name . "\n";
+            return false;
+        }
+    } else { 
+        $results = do_search($search);
+        if (count($results) !== $test_case['result']['count']) {
+            echo 'ERROR - ' . $test_name . "\n";
+            return false;
+        } else { 
+            $search_refs = array_column($results, 'ref');
+            foreach ($test_case['result']['contains'] as $ref) { 
+                if (!in_array($ref, $search_refs)) {
+                    echo 'ERROR - ' . $test_name . "\n";
+                    return false;
+                }
+            } 
+        }
     }
-
-// SUBTEST B
-// Do the actual search - should return only resource A
-$results = do_search($search);
-if(count($results) !=  1 || !in_array($resourcea, array_column($results,"ref"))) 
-    {
-    echo "ERROR - SUBTEST B\n";
-    return false;
-    }
-
-// SUBTEST C
-// Do another search - return A and B
-$search="";
-$_POST["basicyear"]     = "2017";
-$_POST["basicmonth"]    = "07";
-unset($_POST["basicday"]);
-$search = update_search_from_request($search);
-$results = do_search($search);
-if(count($results) !=  2 || !in_array($resourcea, array_column($results,"ref")) || !in_array($resourceb, array_column($results,"ref")) || in_array($resourcec, array_column($results,"ref"))) 
-    {
-    echo "ERROR - SUBTEST C\n";
-    return false;
-    }
-
-// Reset settings
+}
 $date_field = $saved_date_field;
 
 return true;

@@ -456,39 +456,45 @@ if(0 < $seek_start || $seek_end < ($file_size - 1))
 
     debug("PAGES/DOWNLOAD.PHP: Content-Range: bytes {$seek_start}-{$seek_end}/{$file_size}");
     debug('PAGES/DOWNLOAD.PHP: Content-Length: ' . ($seek_end - $seek_start +1));
+
+    $total_to_send=$seek_end - $seek_start + 1;
     }
 else
     {
     header("Content-Length: {$file_size}");
 
     debug("PAGES/DOWNLOAD.PHP: Content-Length: {$file_size}");
+
+    $total_to_send=$file_size;
     }
+
 
 header('Accept-Ranges: bytes');
 
 set_time_limit(0);
 
-if(!hook('replacefileoutput'))
+$sent = (0 == fseek($file_handle, $seek_start) ? $seek_start : 0);
+
+while($sent < $file_size)
     {
-    $sent = (0 == fseek($file_handle, $seek_start) ? $seek_start : 0);
+    echo fread($file_handle, $download_chunk_size);
 
-    while($sent < $file_size)
+    ob_flush();
+    flush();
+
+    $sent += $download_chunk_size;
+
+    if(0 != connection_status()) 
         {
-        echo fread($file_handle, $download_chunk_size);
-
-        ob_flush();
-        flush();
-
-        $sent += $download_chunk_size;
-
-        if(0 != connection_status()) 
-            {
-            break;
-            }
+        break;
         }
-
-    fclose($file_handle);
     }
+
+fclose($file_handle);
+
+// File send complete, log to daily stat
+daily_stat('Downloaded KB', $ref, floor($total_to_send/1024));
+
 
 // Deleting Exiftool temp File:
 // Note: Only for downloads (not previews)

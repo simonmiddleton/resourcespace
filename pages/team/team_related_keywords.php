@@ -41,7 +41,7 @@ $jumpcount=1;
 <table border="0" cellspacing="0" cellpadding="0" class="ListviewStyle">
 <tr class="ListviewTitleStyle">
 <td><?php echo escape($lang["keyword"]); ?></td>
-<td><?php echo $find==""?$lang["relatedkeywords"]:$lang["matchingrelatedkeywords"]; ?></td>
+<td><?php echo escape($find==""?$lang["relatedkeywords"]:$lang["matchingrelatedkeywords"]); ?></td>
 <td><div class="ListTools"><?php echo escape($lang["tools"]); ?></div></td>
 </tr>
 

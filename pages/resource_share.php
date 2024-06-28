@@ -235,15 +235,14 @@ if($editing && !$editexternalurl)
                             if ($editing  && !$editexternalurl)
                                 { ?>
                                 <input name="editexternalurl" type="button" value="&nbsp;&nbsp;<?php echo escape($lang["save"]); ?>&nbsp;&nbsp;"
-                                onclick="
-                                document.getElementById('editexternalurl').value = '<?php echo escape($lang["save"]); ?>';
+                                onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?> document.getElementById('editexternalurl').value = '<?php echo escape($lang["save"]); ?>';
                                 return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resourceshareform'), true);">
                                 <?php
                                 }
                             else
                                 { ?>
                                 <input name="generateurl" type="button" value="&nbsp;&nbsp;<?php echo escape($lang["generateexternalurl"]); ?>&nbsp;&nbsp;"
-                                onclick="document.getElementById('generateurl').value = '<?php echo escape($lang["save"]); ?>';return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resourceshareform'), true);">
+                                onclick="<?php if ($share_password_required) { echo 'if (!enforceSharePassword(\'' . escape($lang['share-password-not-set']) . '\')) { return false; }; '; } ?> document.getElementById('generateurl').value = '<?php echo escape($lang["save"]); ?>';return <?php echo $modal ? "Modal" : "CentralSpace"; ?>Post(document.getElementById('resourceshareform'), true);">
                                 <?php 
                                 }
                             ?>
@@ -254,7 +253,7 @@ if($editing && !$editexternalurl)
                         {
                         // Access has been selected. Generate a new URL.
                         $generated_access_key = '';
-
+                        enforceSharePassword($sharepwd);
                         if(empty($allowed_external_share_groups) || (!empty($allowed_external_share_groups) && in_array($user_group, $allowed_external_share_groups)))
                             {
                             $generated_access_key = generate_resource_access_key($ref, $userref, $access, $expires, 'URL', $user_group, $sharepwd);
@@ -285,6 +284,7 @@ if($editing && !$editexternalurl)
                     # Process editing of external share
                     if ($editexternalurl && $access > -1 && enforcePostRequest(false))
                         {
+                        enforceSharePassword($sharepwd);
                         edit_resource_external_access($editaccess,$access,$expires,$user_group,$sharepwd);
                         }
                     }

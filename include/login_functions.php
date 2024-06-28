@@ -224,7 +224,7 @@ function generate_session_hash($password_hash)
         # Completely randomised session hashes. May be more secure, but allows only one user at a time.
         while (true)
             {
-            $session=md5(rand() . microtime());
+            $session=md5(generateSecureKey(128));
             if (ps_value("select count(*) value from user where session=?",array("s",$session),0)==0) {return $session;} # Return a unique hash only.
             }
         }

@@ -193,7 +193,7 @@ include "../../include/header.php";
 <div id="CentralSpaceContainer">
     <div id="CentralSpace">
         <div class="BasicsBox">
-            <h1><?php echo $filterid == 0 ? $lang["filter_new"] : $lang["filter_edit"]; ?></h1>
+            <h1><?php echo escape($filterid == 0 ? $lang["filter_new"] : $lang["filter_edit"]); ?></h1>
             <?php
             $links_trail = array(
                 array(
@@ -230,7 +230,7 @@ include "../../include/header.php";
                         <?php
                         foreach(array(RS_FILTER_ALL => "filter_criteria_all",RS_FILTER_NONE => "filter_criteria_none",RS_FILTER_ANY => "filter_criteria_any") as $filter_condition => $description)
                             {
-                            echo "<option value='" . $filter_condition . "' " . ($filter["filter_condition"] == $filter_condition ? "selected " : "")  . ">" . $lang[$description] . "</option>";
+                            echo "<option value='" . escape($filter_condition) . "' " . ($filter["filter_condition"] == $filter_condition ? "selected " : "")  . ">" . escape($lang[$description]) . "</option>";
                             }?>
                     </select>  
                     <div class="clearerleft"> </div>
@@ -264,7 +264,7 @@ include "../../include/header.php";
                                     }
                                 
                                 $rule_edit_url = generateURL($baseurl . "/pages/admin/ajax/admin_filter_rule_edit.php",array("ref"=>$ruleid,"filter"=>$filterid));
-                                echo "<tr><td><div class='keywordselected tag_inline' id='filter_rule_" . $ruleid . "'> <a href={$rule_edit_url} onclick ='return ModalLoad(this,true);'>" . implode("&nbsp;" . $lang["filter_or"] . "&nbsp;",$ruletext) . "</a><a href='#' onclick ='deleteFilterRule(" . $ruleid . ");return false;'>[<i class='fa fa-remove'></i>]</a></input></td></tr>";
+                                echo "<tr><td><div class='keywordselected tag_inline' id='filter_rule_" . escape($ruleid) . "'> <a href={$rule_edit_url} onclick ='return ModalLoad(this,true);'>" . implode("&nbsp;" . escape($lang["filter_or"]) . "&nbsp;",$ruletext) . "</a><a href='#' onclick ='deleteFilterRule(" . escape($ruleid) . ");return false;'>[<i class='fa fa-remove'></i>]</a></input></td></tr>";
                                 }
                             }
                             ?>

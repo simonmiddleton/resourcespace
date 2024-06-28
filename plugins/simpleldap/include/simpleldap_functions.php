@@ -57,35 +57,33 @@ function simpleldap_authenticate(string $username,string $password)
     }
 
     // Bind to server
+    // Set up array of different username formats to try and bind with
     $binddomains = explode(";",$simpleldap['basedn']);
-    foreach ($binddomains as $binddomain) {
-        // Set up array of different username formats to try and bind with
-        $bindnames[] = $ldap_username;
-        $bindnames[] = $loginfield . "=" . $ldap_username;
-        $bindnames[] = "cn=" . $ldap_username;
-        if (strpos($ldap_username, "@" .  $userdomain) !== false) {
-            // Remove domain suffix
-            $bindnames[] = $loginfield . "=" . str_replace("@" .  $userdomain,"",$ldap_username);
-            $bindnames[] = "cn=" . str_replace("@" .  $userdomain,"",$ldap_username);
-        } else {
-            // Add domain suffix
-            $bindnames[] = $loginfield . "=" . $ldap_username . "@" .  $userdomain;
-            $bindnames[] = "cn=" . $ldap_username . "@" .  $userdomain;
+    $binduserstrings[] = $ldap_username;
+    if (strpos($ldap_username, "@" .  $userdomain) === false) {
+        // Not in username@domain format, add that and cn
+        $binduserstrings[] = $ldap_username . "@" . ldap_escape($userdomain, '', LDAP_ESCAPE_DN);
+        foreach ($binddomains as $binddomain) {
+            $binduserstrings[] = $loginfield . "=" . $ldap_username . "," . $binddomain;
+            $binduserstrings[] = "cn=" . $ldap_username . "," . $binddomain;
         }
-
-        // Try binding with each
-        $login = false;
-        foreach (array_unique($bindnames) as $bindname) {
-            $binduserstring = $bindname . "," . $binddomain;
-            debug("LDAP - Attempting to bind to LDAP server as : " . $binduserstring);
-            try {
-                $GLOBALS["use_error_exception"] = true;
-                $login = ldap_bind($ds, $binduserstring, $password);
-                debug("LDAP bind success");
-                break;
-            } catch(Exception $e) {
-                debug("LDAP ERROR: LDAP bind failed " . $e->getMessage());
-            }
+    } else {
+        foreach ($binddomains as $binddomain) {
+            $binduserstrings[] = $loginfield . "=" . str_replace("@" .  $userdomain,"",$ldap_username) . "," . $binddomain;
+            $binduserstrings[] = "cn=" . str_replace("@" .  $userdomain,"",$ldap_username) . "," . $binddomain;
+        }
+    }
+    // Try binding with each
+    $login = false;
+    foreach (array_unique($binduserstrings) as $binduserstring) {
+        debug("LDAP - Attempting to bind to LDAP server as : " . $binduserstring);
+        try {
+            $GLOBALS["use_error_exception"] = true;
+            $login = ldap_bind($ds, $binduserstring, $password);
+            debug("LDAP bind success");
+            break;
+        } catch(Exception $e) {
+            debug("LDAP ERROR: LDAP bind failed " . $e->getMessage());
         }
     }
     if (!$login) {

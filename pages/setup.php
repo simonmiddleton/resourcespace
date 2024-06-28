@@ -20,7 +20,7 @@ include_once '../include/render_functions.php';
  **/
 function get_post($key)
     {
-    return isset($_REQUEST[$key]) ? filter_var($_REQUEST[$key], FILTER_SANITIZE_STRING) : "";
+    return isset($_REQUEST[$key]) ? filter_var($_REQUEST[$key], FILTER_SANITIZE_FULL_SPECIAL_CHARS) : "";
     }
 /**
  * Returns true if a given $_REQUEST key is set.

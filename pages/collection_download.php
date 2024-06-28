@@ -597,20 +597,20 @@ if ($submitted != "")
     ignore_user_abort(true); // collection download has a problem with leaving junk files when this script is aborted client side. This seems to fix that by letting the process run its course.
     set_time_limit(0);
 
-    if (!hook("replacefileoutput"))
+    # New method
+    $sent = 0;
+    $handle = fopen($zipfile, "r");
+
+    // Now we need to loop through the file and echo out chunks of file data
+    while($sent < $filesize)
         {
-        # New method
-        $sent = 0;
-        $handle = fopen($zipfile, "r");
-    
-        // Now we need to loop through the file and echo out chunks of file data
-        while($sent < $filesize)
-            {
-            echo fread($handle, $download_chunk_size);
-            $sent += $download_chunk_size;
-            }
+        echo fread($handle, $download_chunk_size);
+        $sent += $download_chunk_size;
         }
-        
+
+    // File send complete, log to daily stat
+    daily_stat('Downloaded KB', 0, floor($sent/1024));
+    
     # Remove archive.
     if ($use_zip_extension)
         {

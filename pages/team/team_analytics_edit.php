@@ -122,7 +122,7 @@ else
 ?>
 
 <div class="BasicsBox">
-    <h1><?php echo $ref != "" ? $lang["edit_report"] : $lang["new_report"]; ?></h1>
+    <h1><?php echo escape($ref != "" ? $lang["edit_report"] : $lang["new_report"]); ?></h1>
     <?php
     $links_trail = array(
         array(
@@ -375,7 +375,7 @@ for ($n=0;$n<count($types);$n++)
             $counter++;
             }
         }
-if ($counter==0) {echo "<p>" . $lang["report_no_matching_activity_types"] . "</p>";}
+if ($counter==0) {echo "<p>" . escape($lang["report_no_matching_activity_types"]) . "</p>";}
 ?>
 </div>
 <div style="clear:both;"> </div>

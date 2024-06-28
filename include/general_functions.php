@@ -2092,7 +2092,7 @@ function escape_command_args($cmd, array $args): string
 *
 * @return string Command output
 */
-function run_command($command, $geterrors = false, array $params = array(), $timeout = 0)
+function run_command($command, $geterrors = false, array $params = array(), int $timeout = 0)
     {
     global $debug_log,$config_windows;
 
@@ -2142,13 +2142,12 @@ function run_command($command, $geterrors = false, array $params = array(), $tim
     // Await output from child, or timeout.
     if ($child_process > 0) {
         $start_time = time();
-        while (time() - $start_time < $timeout) {
+        while ((time() - $start_time) < $timeout) {
             if (file_exists($command_output)) {
                 $output = file_get_contents($command_output);
                 unlink($command_output);
                 return $output;
             }
-            sleep(1);
         }
         // Kill the child process to free up resources
         exec(($config_windows ? 'taskkill /F /PID ' : 'kill ') . escapeshellarg($child_process));
@@ -2539,14 +2538,18 @@ function get_utility_path($utilityname, &$checked_path = null)
 
             // Note that $check_exe is set to true. In that way get_utility_path()
             // becomes backwards compatible with get_ghostscript_command()
-            return get_executable_path(
+            $path = get_executable_path(
                 $ghostscript_path,
                 array(
                     'unix' => $ghostscript_executable,
                     'win'  => $ghostscript_executable
                 ),
                 $checked_path,
-                true) . ' -dPARANOIDSAFER'; 
+                true);
+			if ($path === false) {
+                return false;
+            }
+			return $path . ' -dPARANOIDSAFER'; 
 
         case 'ffmpeg':
             // FFmpeg path not configured
@@ -2607,13 +2610,18 @@ function get_utility_path($utilityname, &$checked_path = null)
         case 'exiftool':
             global $exiftool_global_options;
 
-            return get_executable_path(
+            $path = get_executable_path(
                 $exiftool_path,
                 array(
                     'unix' => 'exiftool',
                     'win'  => 'exiftool.exe'
                 ),
-                $checked_path) . " {$exiftool_global_options} ";
+                $checked_path);
+            
+			if ($path === false) {
+                return false;
+            }
+            return $path . " {$exiftool_global_options} ";
 
         case 'antiword':
             if(!isset($antiword_path) || $antiword_path === '')
@@ -4154,9 +4162,10 @@ function rcRmdir ($path,$ignore=array())
  *
  * @param  string $activity_type
  * @param  integer $object_ref
+ * @param  integer $to_add      Optional, how many counts to add, defaults to 1.
  * @return void
  */
-function daily_stat($activity_type,$object_ref)
+function daily_stat($activity_type,$object_ref,int $to_add=1)
     {
     global $disable_daily_stat;
 
@@ -4182,13 +4191,13 @@ function daily_stat($activity_type,$object_ref)
     if ($count == 0)
         {
         # insert
-        ps_query("insert into daily_stat (year, month, day, usergroup, activity_type, object_ref, external, count) values (? ,? ,? ,? ,? ,? ,? , '1')", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
+        ps_query("insert into daily_stat (year, month, day, usergroup, activity_type, object_ref, external, count) values (? ,? ,? ,? ,? ,? ,? , ?)", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external, "i", $to_add), false, -1, true, 0);
         clear_query_cache("daily_stat"); // Clear the cache to flag there's a row to the query above.
         }
     else
         {
         # update
-        ps_query("update daily_stat set count = count+1 where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
+        ps_query("update daily_stat set count = count+? where year = ? and month = ? and day = ? and usergroup = ? and activity_type = ? and object_ref = ? and external = ?", array("i",$to_add,"i", $year, "i", $month, "i", $day, "i", $usergroup, "s", $activity_type, "i", $object_ref, "i", $external), false, -1, true, 0);
         }
     }
 
@@ -5029,6 +5038,17 @@ function get_system_status()
         'active' => get_total_resources(0),
     ];
 
+    // Return bandwidth usage last 30 days
+    $return['results']['download_bandwidth_last_30_days_gb'] = [
+        'status' => 'OK',
+        'total' => round(ps_value("select sum(`count`) value from daily_stat where
+            activity_type='Downloaded KB'
+        and (`year`=year(now()) or (month(now())=1 and `year`=year(now())-1))
+        and (`month`=month(now()) or `month`=month(now())-1 or (month(now())=1 and `month`=12))
+        and datediff(now(), concat(`year`,'-',lpad(`month`,2,'0'),'-',lpad(`day`,2,'0')))<=30
+            ",[],0)/(1024*1024),3) // Note - limit to this month and last month before the concat to get the exact period; ensures not performing the concat on a large set of data.
+    ];
+
     // Check if plugins have any warnings
     $extra_checks = hook('extra_checks');
     if($extra_checks !== false && is_array($extra_checks))
@@ -5535,3 +5555,18 @@ function get_sub_array_with(array $keys): callable
 {
     return fn(array $input): array => array_intersect_key($input, array_flip($keys));
 }
+
+/**
+ * Server side check to backup front end javascript validation.
+ *
+ * @param  string  $password   Password supplied when creating or editing external share.
+
+ */
+function enforceSharePassword(string $password) : void
+    {
+    global $share_password_required, $lang;
+    if ($share_password_required && trim($password) === '')
+        {
+        exit(escape($lang["error-permissiondenied"]));
+        }
+    }

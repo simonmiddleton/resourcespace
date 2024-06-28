@@ -97,8 +97,8 @@ include "../../include/header.php";
                     </td>
                     <td>
                         <div class="ListTools">
-                            <a href="#" onClick="jQuery('#form_copy_from').val('<?php echo $filters[$n]["ref"]; ?>');return CentralSpacePost(document.getElementById('admin_filter_form'),true)" ><?php echo '<i class="fas fa-copy"></i>&nbsp;' .  $lang["copy"]; ?></a>
-                            <a href="<?php echo generateURL($filter_edit_url,$params, array("filter" => $filters[$n]["ref"])); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-edit"></i>&nbsp;' . $lang["action-edit"]; ?> </a>
+                            <a href="#" onClick="jQuery('#form_copy_from').val('<?php echo escape($filters[$n]["ref"]); ?>');return CentralSpacePost(document.getElementById('admin_filter_form'),true)" ><?php echo '<i class="fas fa-copy"></i>&nbsp;' .  escape($lang["copy"]); ?></a>
+                            <a href="<?php echo generateURL($filter_edit_url,$params, array("filter" => $filters[$n]["ref"])); ?>" onClick="return CentralSpaceLoad(this,true);"><?php echo '<i class="fas fa-edit"></i>&nbsp;' . escape($lang["action-edit"]); ?> </a>
                             <a href="#"
                             onClick='
                                     event.preventDefault();
@@ -129,7 +129,7 @@ include "../../include/header.php";
                                                     errors += response.errors[i] + "<br />";
                                                     }
                                                  
-                                                styledalert("<?php echo urlencode($lang["error"]) ?>",errors);
+                                                styledalert("<?php echo escape($lang["error"]); ?>",errors);
                                                 }
                                         }, "json"); 
             
@@ -139,7 +139,7 @@ include "../../include/header.php";
                                         {
                                         return false;
                                         }
-                                '><?php echo '<i class="fa fa-trash"></i>&nbsp;' . $lang["action-delete"]; ?></a>
+                                '><?php echo '<i class="fa fa-trash"></i>&nbsp;' . escape($lang["action-delete"]); ?></a>
                             
                         </div>
                     </td>

@@ -535,7 +535,7 @@ function managed_collection_request($ref,$details,$ref_is_resource=false)
             {
             if(!in_array($colresource,array_column($col_visible,"ref")))
                 {
-                remove_resource_from_collection($colresource,$c,false);
+                remove_resource_from_collection($colresource, $c, true);
                 }
             }
 

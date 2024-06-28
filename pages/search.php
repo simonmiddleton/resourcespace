@@ -987,14 +987,14 @@ if (!hook("replacesearchheader")) # Always show search header now.
         ?>
         <span class="Selected">
         <?php
-        echo number_format($result_count)?> </span><?php echo ($result_count==1) ? $lang["youfoundresult"] : $lang["youfoundresults"];
+        echo number_format($result_count); ?> </span><?php echo escape($result_count==1 ? $lang["youfoundresult"] : $lang["youfoundresults"]);
         }
     else
         {
         ?>
         <span class="Selected">
         <?php
-        echo number_format($resources_count)?> </span><?php echo ($resources_count==1)? $lang["youfoundresource"] : $lang["youfoundresources"];
+        echo number_format($resources_count)?> </span><?php echo escape($resources_count==1 ? $lang["youfoundresource"] : $lang["youfoundresources"]);
         }
      ?></div>
     <?php
@@ -1069,10 +1069,10 @@ if (!hook("replacesearchheader")) # Always show search header now.
                     }
                 else
                     { ?>
-                    <a  id="map_view_link" href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo ($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle']; ?>' onClick="<?php
+                    <a  id="map_view_link" href="<?php echo generateURL($baseurl_short . "pages/search.php",$searchparams,array('display'=>'map')); ?>" title='<?php echo escape(($search_map_max_results > 0 && $resources_count > $search_map_max_results)? $lang['search_results_overlimit'] : $lang['maptitle']); ?>' onClick="<?php
                     if($search_map_max_results > 0  && $resources_count > $search_map_max_results)
                         {
-                        echo "styledalert('" . $lang["error"] . "','" . $lang['search_results_overlimit'] . "');return false;";
+                        echo "styledalert('" . escape($lang["error"]) . "','" . escape($lang['search_results_overlimit']) . "');return false;";
                         }
                     else
                         {
@@ -1105,7 +1105,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                     &nbsp;|&nbsp;<a href="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array('display'=>'map')) ?>" onClick="<?php
                     if($resources_count > $search_map_max_results)
                         {
-                        echo "styledalert('" . $lang["error"] . "','" . $lang['search_results_overlimit'] . "');return false;";
+                        echo "styledalert('" . escape($lang["error"]) . "','" . escape($lang['search_results_overlimit']) . "');return false;";
                         }
                     else
                         {
@@ -1209,7 +1209,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                     $new_offset = floor($searchparams["offset"] / max($results_display_array[$n],1)) * $results_display_array[$n];
                     }
                 ?>
-                <option <?php if($per_page == $results_display_array[$n]) { ?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n],"offset"=>$new_offset)); ?>"><?php echo str_replace("?",$results_display_array[$n],$lang["perpage_option"]); ?></option>
+                <option <?php if($per_page == $results_display_array[$n]) { ?>selected="selected"<?php } ?> value="<?php echo generateURL($baseurl_short."pages/search.php",$searchparams,array("per_page"=>$results_display_array[$n],"offset"=>$new_offset)); ?>"><?php echo escape(str_replace("?",$results_display_array[$n],$lang["perpage_option"])); ?></option>
                 <?php
                 }
                 ?>
@@ -1534,7 +1534,7 @@ if (!hook("replacesearchheader")) # Always show search header now.
                             }
                         else
                             {
-                            echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . $lang['unknown'] .  "</h1>";
+                            echo "<h1 class=\"SearchResultsDivider\" style=\"clear:left;\">" . escape($lang['unknown']) .  "</h1>";
                             }
                     }
 

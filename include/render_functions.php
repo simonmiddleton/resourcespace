@@ -3996,6 +3996,13 @@ function check_display_condition($n, array $field, array $fields, $render_js, in
         function checkDisplayCondition<?php echo $field["ref"];?>()
             {
             console.debug('(<?php echo str_replace(dirname(__DIR__), '', __FILE__) . ':' . __LINE__?>) checkDisplayCondition<?php echo $field["ref"]; ?>()');
+
+            if (jQuery('#field_<?php echo (int) $field["ref"]; ?>_displayed').length === 0)
+                {
+                console.debug('Skipping - field <?php echo (int) $field["ref"]; ?> not found on form');
+                return;
+                }
+
             // Get current display state for governed field ("block" or "none")
             field<?php echo $field['ref']; ?>status    = jQuery('<?php echo escape($question_id); ?>').css('display');
             newfield<?php echo $field['ref']; ?>status = 'none';
@@ -5544,11 +5551,11 @@ function render_workflow_state_question($current=null, $checkaccess=true)
 
 function render_share_password_question($blank=true)
     {
-    global $lang;
+    global $lang, $share_password_required; 
     ?>
     <div class="Question">
-    <label for="sharepassword"><?php echo strip_tags_and_attributes($lang["share-set-password"]) ?></label>
-    <input type="password" id="sharepassword" name="sharepassword" autocomplete="new-password" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : escape($lang["password_unchanged"]); ?>">
+    <label for="sharepassword"><?php echo strip_tags_and_attributes($lang["share-set-password"]); echo $share_password_required ? '<sup>*</sup>' : ''; ?></label>
+    <input type="password" <?php echo $share_password_required ? 'required' : ''; ?> id="sharepassword" name="sharepassword" autocomplete="new-password" maxlength="40" class="stdwidth" value="<?php echo $blank ? "" : escape($lang["password_unchanged"]); ?>">
     <span class="fa fa-fw fa-eye-slash infield-icon" id="share-password-icon" onclick="togglePassword('sharepassword');"></span>
     <script>
 

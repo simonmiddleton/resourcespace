@@ -59,7 +59,7 @@ $jumpcount=1;
 
 
 <div class="TopInpageNav">
-<a href="<?php echo $baseurl_short ?>pages/team/team_analytics_edit.php" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET . $lang["report_create_new"]; ?></a>
+<a href="<?php echo $baseurl_short ?>pages/team/team_analytics_edit.php" onClick="return CentralSpaceLoad(this);"><?php echo LINK_CARET . escape($lang["report_create_new"]); ?></a>
 
 <?php pager(); ?></div>
 

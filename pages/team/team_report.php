@@ -307,7 +307,7 @@ foreach($report_options as $report_opt)
             <div class="Fixed" style="width: 400px;">
             <?php
             $textbox="<input type=\"text\" id=\"email_days\" name=\"email_days\" size=\"4\" value=\"7\">";
-            echo str_replace("?",$textbox,$lang["emaileveryndays"]);
+            echo escape(str_replace("?",$textbox,$lang["emaileveryndays"]));
             ?>
            <br />
            <br />

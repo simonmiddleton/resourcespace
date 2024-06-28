@@ -267,7 +267,7 @@ $filters[] = array("ref" => -1, "name" => $lang["disabled"]);
     <label for="search_filter_o_id"><?php echo escape($lang["searchfilteroverride"]); ?></label>
     <select id="user_edit_search_filter" name="search_filter_o_id" class="stdwidth">
         <?php
-        echo "<option value='0' >" . $lang["filter_none"] . "</option>";
+        echo "<option value='0' >" . escape($lang["filter_none"]) . "</option>";
         foreach ($search_filters as $search_filter)
             {
             echo "<option value='" . $search_filter['ref'] . "' " . ($user['search_filter_o_id'] == $search_filter['ref'] ? " selected " : "") . ">" . i18n_get_translated($search_filter['name']) . "</option>";
