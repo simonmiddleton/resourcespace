@@ -1473,7 +1473,6 @@ $lang["allresourcessearchbar"]='Tutte le risorse';
 $lang["allcollectionssearchbar"]='Tutte le collezioni';
 $lang["backtoresults"]='Torna ai risultati';
 $lang["continuetoresults"]='Continua ai risultati';
-$lang["usagehistory"]='Storico di utilizzo';
 $lang["usagebreakdown"]='Suddivisione dell\'utilizzo';
 $lang["usagetotal"]='Download totali';
 $lang["usagetotalno"]='Numero totale di download';

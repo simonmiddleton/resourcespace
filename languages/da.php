@@ -1420,7 +1420,6 @@ $lang["allresourcessearchbar"]='Alle ressourcer';
 $lang["allcollectionssearchbar"]='Alle samlinger';
 $lang["backtoresults"]='Tilbage til resultater';
 $lang["continuetoresults"]='Fortsæt til resultater';
-$lang["usagehistory"]='Brugshistorik';
 $lang["usagebreakdown"]='Anvendelsesopdeling';
 $lang["usagetotal"]='Samlede downloads';
 $lang["usagetotalno"]='Samlet antal downloads';

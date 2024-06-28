@@ -871,7 +871,6 @@ $lang["getjava"]="确定你有最新版本的Java, 请浏览 Java 网站";
 $lang["all"]="全部";
 $lang["backtoresults"]="返回搜索结果";
 
-$lang["usagehistory"]="使用纪录";
 $lang["usagebreakdown"]="使用分类";
 $lang["usagetotal"]="总下载";
 $lang["usagetotalno"]="总下载数量";

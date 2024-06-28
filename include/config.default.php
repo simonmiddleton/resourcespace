@@ -2484,13 +2484,6 @@ $modal_default=false;
 # Use the "preview" size on the resource view page
 $resource_view_use_pre = false;
 
-# Only use use the larger layout on the view page for certain file extensions.
-# $resource_view_large_ext = array("jpg", "jpeg", "tif", "tiff", "gif", "png", "svg");
-
-# Use the larger layout on the view page for landscape images, smaller layout for portrait images.
-# NOTE: Enabling $resource_view_large_ext will override this.
-$resource_view_large_orientation = true;
-
 # Frequency at which the page header will poll for new messages for the user.  Set to 0 (zero) to disable.
 $message_polling_interval_seconds = 10;
 

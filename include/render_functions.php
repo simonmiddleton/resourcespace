@@ -1014,7 +1014,7 @@ function render_sort_order(array $order_fields,$default_sort_order)
 */
 function render_dropdown_option($value, $label, array $data_attr = array(), $extra_tag_attributes  = '')
     {
-    $result = '<option value="' . $value . '"';
+    $result = '<option value="' . escape($value) . '"';
 
     // Add any extra tag attributes
     if(trim($extra_tag_attributes) !== '')
@@ -5196,11 +5196,9 @@ function show_upgrade_in_progress($dbstructonly=false)
 * @param array      $ffmpeg_audio_extensions - config var containing a list of extensions which will be ported to mp3 format for preview      
 * @param string     $baseurl                - config base url
 * @param array      $lang                   - array containing language strings         
-* @param boolean    $use_larger_layout      - should the page use a larger resource preview layout?                        
  * 
  */
-
-function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang, $use_larger_layout)
+function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extensions, $baseurl, $lang)
 {
 
 // if resource is a .wav file and user has permissions to download then allow user also to download the mp3 preview file if available
@@ -5212,10 +5210,15 @@ function render_audio_download_link($resource, $ref, $k, $ffmpeg_audio_extension
 
     if (in_array($resource['file_extension'], $ffmpeg_audio_extensions) && file_exists($path) && $resource_download_allowed)
         {
-        $colspan = $use_larger_layout ? ' colspan="2"' : '';
-        echo "<tr class=\"DownloadDBlend\"><td class=\"DownloadFileName\" $colspan><h2>" . escape($lang['mp3_preview_file']) . "</h2></td><td class=\"DownloadFileSize\">" . escape(formatfilesize(filesize_unlimited($path))) . "</td>" ; 
-        add_download_column($ref,$size_info, true);
-        echo "</tr>";
+        ?>
+        <tr class="DownloadDBlend">
+            <td class="DownloadFileName">
+                <h2><?php echo escape($lang['mp3_preview_file']); ?></h2>
+                <p><?php echo formatfilesize(filesize_unlimited($path)); ?></p>
+            </td>
+            <?php add_download_column($ref,$size_info, true); ?>
+        </tr>
+        <?php
         }   
 }
 
@@ -6805,7 +6808,6 @@ function render_resource_view_image(array $resource, array $context)
     hook('aftersearchimg', '', array($resource["ref"]));
     hook('previewextras'); ?>
         
-    </div>
     <?php
     if($validimage)
         {
@@ -7024,7 +7026,7 @@ function render_resource_view_image(array $resource, array $context)
                             preview_image_copy.width( preview_image_width );
                             preview_image_copy.height( preview_image_height );
 
-                            preview_image_copy.appendTo(preview_image_link.parent());
+                            preview_image_copy.insertAfter(preview_image_link);
                             preview_image_link.hide();
 
                             anno.makeAnnotatable(document.getElementById(img_copy_id));
@@ -7112,4 +7114,166 @@ function render_resource_view_image(array $resource, array $context)
             <?php
             } /* end of canSeePreviewTools() */
         }
+        ?>
+    </div>
+    <?php
     }
+
+/**
+ * Render the resource tools for preview sizes
+ * @param array $resource Resource data - {@see get_resource_data()} 
+ * @param array{'download_multisize': bool, "sizes"?: array, 'urlparams': array} $ctx Contextual information.
+ */
+function render_resource_tools_size_download_options(array $resource, array $ctx): void
+{
+    $ref = $resource['ref'];
+    $download_multisize = $ctx['download_multisize'];
+    $sizes = $ctx['sizes'] ?? get_image_sizes($resource['ref'], false, $resource['file_extension'], false);
+    $urlparams = $ctx['urlparams'];
+    
+    /** @var string Client side namespace to prevent clashes */
+    $ns = "Resource{$ref}{$ctx['context']}";
+
+    if (!($resource['has_image'] !== RESOURCE_PREVIEWS_NONE && $download_multisize)) {
+        return;
+    }
+
+    $allowed_sizes = [];
+    foreach ($sizes as $size) {
+        if ($size['id'] === '') {
+            continue;
+        }
+
+        $downloadthissize = resource_download_allowed($ref, $size['id'], $resource['resource_type']);
+        if ($GLOBALS['hide_restricted_download_sizes'] && !$downloadthissize && !checkperm('q')) {
+            continue;
+        }
+
+        // Fake $size key entry used in JS land
+        $size['html'] = [
+            // to display the preview size info to the user when selecting a size
+            'size_info' => get_size_info($size),
+            // to update the download button when selecting a size
+            'download_column' => cast_echo_to_string('add_download_column', [$ref, $size, $downloadthissize]),
+        ];
+
+        if ($downloadthissize && $size['allow_preview'] == 1 && !hook('previewlinkbar')) {
+            $GLOBALS['data_viewsize'] = $size['id']; # relied upon by some plugins (e.g lightbox)
+
+            // Fake $size key entry used in JS land to update the View button before showing it to the user
+            $size['html']['view_btn'] = [
+                'viewsizeurl' => (string) hook('getpreviewurlforsize'),
+                'href' => generateURL(
+                        "{$GLOBALS['baseurl']}/pages/preview.php",
+                        $urlparams,
+                        ['ext' => $resource['file_extension']]
+                    )
+                    . '&' . hook('previewextraurl'),
+            ];
+        }
+
+        $allowed_sizes[$size['id']] = $size;
+    }
+
+    if ($allowed_sizes === []) {
+        return;
+    }
+
+    $use_selector = count($allowed_sizes) > 1;
+    $render = function(bool $show_selector) use ($ns, $allowed_sizes, $resource): void {
+        if ($show_selector) {
+            ?>
+            <select id="<?php echo escape($ns); ?>size">
+                <?php
+                foreach ($allowed_sizes as $allowed_size) {
+                    echo render_dropdown_option($allowed_size['id'], $allowed_size['name']);
+                }
+                ?>
+            </select>
+            <?php hook('append_to_download_filename_td', '', [$resource, $ns]); ?>
+            <div id="<?php echo escape($ns); ?>sizeInfo"><?php
+                echo $allowed_sizes[array_key_first($allowed_sizes)]['html']['size_info'];
+            ?></div>
+            <?php
+            return;
+        }
+
+        // If only one size is available, render in the same way as the original file (ie not as a drop down selector).
+        $allowed_size = $allowed_sizes[array_key_first($allowed_sizes)];
+        ?>
+        <h2><?php echo escape($allowed_size['name']); ?></h2>
+        <?php hook('append_to_download_filename_td', '', [$resource, $ns]); ?>
+        <div id="<?php echo escape($ns); ?>sizeInfo"><?php echo $allowed_size['html']['size_info']; ?></div>
+        <?php
+    };
+    $render_js_picker = function(bool $show_selector) use ($ns, $allowed_sizes) {
+        if ($show_selector) {
+            ?>
+            const picker = jQuery('select#<?php echo escape($ns); ?>size');
+            const selected_size = picker.val();
+            updateSizeInfo('<?php echo escape($ns); ?>', selected_size);
+            updatePreviewLink('<?php echo escape($ns); ?>', selected_size, picker);
+            updateDownloadLink('<?php echo escape($ns); ?>', selected_size, picker);
+            <?php
+            return;
+        }
+
+        // If only one size is available, there's no "size" to select from so ensure functions get called correctly to
+        // the context.
+        $allowed_size = $allowed_sizes[array_key_first($allowed_sizes)];
+        ?>
+        const picker = jQuery('.Picker #<?php echo escape($ns); ?>sizeInfo');
+        updatePreviewLink('<?php echo escape($ns); ?>', '<?php echo escape($allowed_size['id']); ?>', picker);
+        updateDownloadLink('<?php echo escape($ns); ?>', '<?php echo escape($allowed_size['id']); ?>', picker);
+        <?php
+    };
+    ?>
+    <tr class="DownloadDBlend">
+        <td class="DownloadFileName Picker"><?php $render($use_selector); ?></td>
+        <td class="DownloadButton">
+            <a id="<?php echo escape($ns); ?>downloadlink" onclick="return CentralSpaceLoad(this, true);"><?php
+                echo escape($GLOBALS['lang']['action-download']);
+            ?></a>
+            <a
+                id="<?php echo escape($ns); ?>previewlink"
+                class="enterLink previewsizelink DisplayNone"
+                href="#"
+                data-viewsize=""
+                data-viewsizeurl=""
+            ><?php echo escape($GLOBALS['lang']["action-view"]); ?></a>
+        </td>
+    </tr>
+    <script>
+    function <?php echo escape($ns); ?>_get_preview_size_info()
+    {
+        return <?php
+            echo json_encode(
+                array_map(
+                    get_sub_array_with(
+                        [
+                            'allow_preview',
+                            'html',
+                        ]
+                    ),
+                    $allowed_sizes
+                ),
+                JSON_NUMERIC_CHECK
+            );
+        ?>;
+    }
+
+    jQuery(document).ready(function() {
+        <?php $render_js_picker($use_selector); ?>
+    });
+
+    jQuery('select#<?php echo escape($ns); ?>size').change(function() {
+        const picker = jQuery(this);
+        const selected_size = picker.val();
+        updateSizeInfo('<?php echo escape($ns); ?>', selected_size);
+        updatePreviewLink('<?php echo escape($ns); ?>', selected_size, picker);
+        updateDownloadLink('<?php echo escape($ns); ?>', selected_size, picker);
+    });
+    <?php hook('append_to_resource_tools_size_download_options_script', '', [$ns, $allowed_sizes]); ?>
+    </script>
+<?php
+}

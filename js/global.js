@@ -664,21 +664,10 @@ function directDownload(url, element = undefined)
             let options_td = jQuery(element).parents('tbody').children('tr:first').children('td:last');
             options_td.attr('style', 'width: ' + options_td.width() + 'px;');
 
-            // Add temporary replacement button with loading spinner and hide original
-            var clone = jQuery(element).clone()
-            clone.appendTo(jQuery(element).parent())
-                .html(jQuery('<i></i>')
-                    .attr('id', 'download_spinner')
-                    .attr('class', 'fa fa-circle-o-notch fa-spin fa-3x fa-fw')
-                    .attr('style', 'font-size: 100%')
-                    )
-            jQuery(element).hide();
-
-            // Revert everything once the download starts
-            jQuery(dlIFrma).one('load', function(){
-                 jQuery('#download_spinner').parent().prev().show()
-                 jQuery('#download_spinner').parent().remove();
-            })
+            let el = jQuery(element);
+            let el_txt = el.text();
+            el.html('<i id="download_spinner" class="fa fa-circle-o-notch fa-spin fa-3x fa-fw" style="font-size: 100%"></i>');
+            jQuery(dlIFrma).one('load', () => el.text(el_txt));
         }
         }
     else

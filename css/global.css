@@ -109,6 +109,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     padding: 0 1rem;
     vertical-align: middle;
     display: block;
+    margin: 0.15rem 0 0.3rem 0;
 }
 
 button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpace .DownloadDBlend a {
@@ -123,6 +124,7 @@ button, input[type=submit], input[type=button], .RecordPanel .RecordDownloadSpac
     padding: 0px;
 }
 
+.AlternativeFileText { max-width: 165px; }
 .AlternativeFileImage, .AlternativeFileText {
     float: left;
     word-break: break-word; 
@@ -609,9 +611,9 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RequiredFieldLabel {display: inline-block; margin-left: 10px;}
 
 .RecordPanel .RecordResource {position:relative;clear: left;} 
-.RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 720px;}
-#previewimagewrapper {float:left;margin: 0 15px 15px 0; position: relative; min-width: 720px;margin-top:40px}
-#openseadragon_viewer { width: 100%; height: 600px; } /* width and height in line with #previewimagewrapper and #previewimage, as best as it can. */
+.RecordPanel .Picture {margin: 0 auto;display: block;width: auto;max-width: 740px;}
+#previewimagewrapper {float:left;margin: 0 15px 15px 0; position: relative; min-width: 740px; }
+#openseadragon_viewer { width: 100%; height: 500px; } /* width and height in line with #previewimagewrapper and #previewimage, as best as it can. */
 
 /* Larger layout changes */
 .RecordPanelLarge #previewimagewrapper {float: none; text-align: center; margin: 0 0 10px 0;}
@@ -654,16 +656,22 @@ a:hover .fa,.fa:hover {text-decoration:none !important;} /* Never underline a Fo
 .RecordPanel .item {word-wrap: break-word; float: left;margin-left: 10px;margin-top: 10px;margin-right: 10px;position:relative;}
 .RecordPanel .item h3, .RecordPanel .itemNarrow h3, th {margin: 0;padding: 0;text-transform: uppercase; font-size: 0.875rem; color: #767676;}
 .RecordPanel .item p, .RecordPanel .itemNarrow p {margin: 0;padding: 0;}
-.RecordPanel .RecordDownload {float: left;width: 445px;margin: 0 0 10px 0;}
+.RecordPanel .RecordDownload {float: left;width: 425px;margin: 0 0 10px 0;}
 .RecordPanel .RecordDownload table {width: 100%;margin: 0;padding: 0;}
-.RecordPanel .RecordDownload td {padding: 5px 5px 5px 0;margin: 0;}
+.RecordPanel .RecordDownload table tbody { display: block; max-height: 320px; overflow-y: auto; }
+.RecordPanel .RecordDownload td { padding: 5px 5px 5px 0;margin: 0;}
 .RecordPanel .RecordDownload .DownloadDBlend td {margin: 0;vertical-align: middle;padding: 0.4rem 0.2rem;}
+.RecordPanel .RecordDownload .DownloadDBlend td.Picker,
+.RecordPanel .RecordDownload .DownloadDBlend td.DownloadButton { vertical-align: top; }
+.RecordPanel .RecordDownload .DownloadDBlend td.Picker select { max-width: 280px; }
+.RecordPanel .RecordDownload .DownloadDBlend td.Picker select[id$="size"] { min-width: 150px; }
 .RecordPanel .RecordDownloadSpace {padding: 5px 10px 0 10px; border-top-right-radius: 8px;}
 .RecordPanel .RecordDownloadSpace ul {padding:0.2em 0;margin:0;margin-top: 5px;list-style:none;}
 .RecordPanel .RecordDownloadSpace li {padding:0;margin:0 12px 3px 0;float:left;min-width:198px;}
 .RecordPanel .RecordDownloadSpace li a:hover {text-decoration:none;}
 
 .RecordPanel .RecordDownloadSpace#DownloadsTab {overflow: hidden;}
+.RecordPanel .RecordDownloadSpace#DownloadsTab td { width: 100%;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {text-align: center;font-weight: bold;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend h2 {margin:0;padding:0;font-size: 1em;    text-align: left;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend p {margin:0;padding:0;    text-align: left;}
@@ -722,6 +730,7 @@ a.HomePanel {text-decoration:none; cursor:pointer;}
 .RecordPanelLarge #RecordDownloadTabButtons {width: 100%;}
 .NonMetadataProperties { padding-bottom: 8px; }
 div#Metadata > div.Title { padding-top: 0.3em; }
+.RecordResource .RecordDownload .TabBar { padding: unset; }
 
 .infotable {border-top: 1px solid #999999;}
 .infotable td,.infotable th {border-bottom: 1px solid #999999;}
@@ -805,7 +814,8 @@ div.autocomplete ul li {
 #UserRatingMessage {padding-left: 10px;}
 
 /* CSS for the lightbox (for resource feedback) */
-#lightbox{  position: absolute; left: 0; width: 100%; z-index: 120; text-align: center; line-height: 0;}
+
+#lightbox{  position: fixed; left: 0; top:0;width: 100%; z-index: 120; text-align: center; line-height: 0;}
 #lightbox img{ width: auto; height: auto;}
 #lightbox a img{ border: none; }
 .lightboxOverlay {z-index: 110;}
@@ -841,7 +851,7 @@ div.autocomplete ul li {
 
 .DownloadDisabled {font-weight: normal;}
 
-.AltThumb {padding-right:5px;max-width:85px;max-height:75px;}
+.AltThumb { padding-right:5px; }
 
 /* single file upload progress bar */
 .meter-wrap{position: relative;width:290px;}
@@ -1858,7 +1868,6 @@ form.FormFilter button.ClearButton {
     height: 41px;
     position: relative;
     width: 100%;
-    margin-top:3px;
 }
 
 #PreviewToolsOptionsWrapper {
@@ -1998,7 +2007,7 @@ a.Enabled, a:visited.Enabled {
 }
 
 #previewimage {
-    max-height: 600px;
+    max-height: 500px;
 }
 
 #preview, #wmpreview {

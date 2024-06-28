@@ -5519,6 +5519,10 @@ function get_size_info(array $size, ?array $originalSize = null): string
                 escape($lang['ppi']),
             );
         }
+    
+    if (isset($size["filesize"])) {
+        $output .= sprintf('<p>%s</p>', strip_tags_and_attributes($size["filesize"]));
+    }
 
     return $output;
     }
@@ -5540,6 +5544,16 @@ function is_jpeg_extension(string $extension): bool
 function validate_sort_value($val): bool
 {
     return is_string($val) && in_array(mb_strtolower($val), ['asc', 'desc']);
+}
+
+/**
+ * Helper function to get an array of values with a subset of their original keys.
+ *
+ * @param list<string> List of keys to extract from the values
+ */
+function get_sub_array_with(array $keys): callable
+{
+    return fn(array $input): array => array_intersect_key($input, array_flip($keys));
 }
 
 /**

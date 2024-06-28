@@ -178,7 +178,7 @@ function sendFile($filename, string $download_filename, $usage = -1, $usagecomme
     redirect($user_download_url);
     }
 
-function showProfileChooser($class = '', $disabled = false)
+function showProfileChooser($class = '', $disabled = false, $ns = '')
     {
     global $format_chooser_profiles, $lang;
 
@@ -186,7 +186,7 @@ function showProfileChooser($class = '', $disabled = false)
         return;
     }
 
-    ?><select name="profile" id="profile" <?php if (!empty($class)) {echo 'class="' . $class . '"';}
+    ?><select name="profile" id="<?php echo escape($ns); ?>profile" <?php if (!empty($class)) {echo 'class="' . escape($class) . '"';}
             echo $disabled ? ' disabled="disabled"' : ''; ?>>
         <option value="" selected="selected"><?php
                 echo escape($lang['format_chooser_keep_profile']); ?></option><?php

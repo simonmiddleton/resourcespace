@@ -1229,7 +1229,6 @@ $lang["markers"] = "Markierungen";
  $lang["backtoresults"]="Zurück zu den Suchergebnissen";
  $lang["continuetoresults"]="Weiter zu den Suchergebnissen";
 
- $lang["usagehistory"]="Nutzungsprotokoll";
  $lang["usagebreakdown"]="Nutzungsanalyse";
  $lang["usagetotal"]="Downloads gesamt";
  $lang["usagetotalno"]="Gesamtzahl der Downloads";

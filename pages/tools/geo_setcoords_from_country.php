@@ -1,5 +1,5 @@
 <?php
-include_once "../../include/boot.php";
+include_once dirname(__DIR__, 2) . "/include/boot.php";
 
 $output_newline = PHP_EOL;
 if (PHP_SAPI != 'cli') {

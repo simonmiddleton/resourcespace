@@ -156,7 +156,7 @@ div.autocomplete ul li {color: #000;}
 .RecordDownloadSpace {  background: #fff;}
 .RecordPanel .RecordDownload .DownloadDBlend td {border-top: 1px solid #ddd;color: #333;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend .DownloadButton {background-color: transparent;}
-.RecordPanel .RecordDownloadSpace .DownloadDBlend p {color: #757575;text-align: left;font-size: 0.75rem;}
+.RecordPanel .RecordDownloadSpace .DownloadDBlend p {color: #757575;text-align: left;font-size: 0.80rem;}
 .RecordPanel .RecordDownloadSpace .DownloadDBlend, .toolbox {background: #fff; border-color: #6D6D6D;}
 .ArchiveResourceTitle, .ResourcePendingSubmissionTitle, .ResourcePendingReviewTitle {color: #888;}
 .DeletedResourceTitle {color: #FF0000;}
