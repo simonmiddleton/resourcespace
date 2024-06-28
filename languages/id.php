@@ -2690,3 +2690,272 @@ $lang["batch_edit_save_warning_message"]='Kesalahan terjadi saat mengedit sumber
 $lang["batch_edit_save_warning_alert"]='Beberapa kesalahan terjadi saat melakukan operasi ini. Silakan lihat pesan Anda untuk lebih detail';
 $lang["dashtilesmalldevice"]='Fungsionalitas drag yang diperlukan tidak tersedia pada perangkat dengan layar kecil';
 $lang["systemconfig_description"]='Opsi pada halaman ini bersifat sistemik dan dapat mengubah beberapa fungsi yang tersedia untuk pengguna. Harap dicatat bahwa opsi yang juga bersifat khusus pengguna akan memiliki prioritas jika diatur.';
+
+$lang["fieldtitle-album"]='Kumpulan';
+$lang["information_field_restype_deselect_cleanup"]='Untuk menghapus data bidang yang ada dari jenis sumber daya yang tidak dipilih, klik tautan berikut %%CLEANUP_LINK%%';
+$lang["property-id"]='Id
+';
+$lang["mainmenu"]='Menu Utama';
+$lang["xlthumbs"]='Sangat Besar';
+$lang["perpage_option"]='? per halaman';
+$lang["collectionidprefix"]='ID Koleksi';
+$lang["_dupe"]='duplikat';
+$lang["edit_multiple_existing_values"]='Kata kunci yang ada pada sumber daya dalam pilihan ini';
+$lang["edit_multiple_show_more"]='Tampilkan lebih banyak';
+$lang["edit_multiple_too_many"]='Menampilkan 100 nilai yang paling sering digunakan. Nilai lain juga ada.';
+$lang["edit_multiple_action_text_rt"]='Semua teks / opsi akan digantikan dengan kata kunci berikut';
+$lang["edit_multiple_action_text_ap"]='Kata kunci ini akan ditambahkan';
+$lang["edit_multiple_action_text_rm"]='Kata kunci ini akan dihapus';
+$lang["sortorder-desc"]='Deskripsi';
+$lang["title"]='Judul';
+$lang["fileoftype"]='File?';
+$lang["field-fileextension"]='Silakan terjemahkan: %EXTENSION';
+$lang["fileextension-inside-brackets"]='Silakan terjemahkan: [%EXTENSION]';
+$lang["fileextension"]='Silakan terjemahkan: %EXTENSION';
+$lang["log-rtchange"]='Jenis sumber daya yang diedit';
+$lang["log-missinglang"]='Jenis (bahasa hilang)';
+$lang["log-NOFIL"]='Ditandai sebagai tidak memiliki file';
+$lang["log-FIL"]='Ditandai sebagai memiliki file';
+$lang["log-EDT"]='Sumber daya yang diedit';
+$lang["accountnotfound-reset-not-emailed"]='Tautan reset kata sandi tidak dikirim karena tidak ada akun dengan email tersebut';
+$lang["accountnoemail-reset-not-emailed"]='Tautan reset kata sandi tidak dikirim karena akun tidak memiliki alamat email';
+$lang["accountexpired-reset-not-emailed"]='Tautan reset kata sandi tidak dikirim karena akun telah kedaluwarsa';
+$lang["accountnotapproved-reset-not-emailed"]='Tautan reset kata sandi tidak dikirim karena akun belum disetujui';
+$lang["hour-abbreviated"]='Jam';
+$lang["notavailableshort"]='Tidak Tersedia';
+$lang["remaining"]='sisa';
+$lang["web_server"]='Server Web';
+$lang["php"]='PHP (Hypertext Preprocessor)';
+$lang["all_workflow_states"]='Semua status alur kerja';
+$lang["stat-downloadedkb"]='Data file yang diunduh (KB)';
+$lang["plugin_field_fmt"]='Mohon diterjemahkan: %A (%B)';
+$lang["external"]='Eksternal';
+$lang["email_error_user_list_some_skipped"]='Pemberitahuan yang dilewati untuk pengguna-pengguna berikut (pengguna mungkin belum disetujui)';
+$lang["unrelateallresources"]='Putuskan hubungan semua sumber daya dalam koleksi ini';
+$lang["unrelateallresources_confirmation"]='Tidak ada sumber daya dalam koleksi ini yang sekarang terkait';
+$lang["setup-download_filename_format"]='Format nama file unduhan';
+$lang["editrequestorder"]='Edit permintaan';
+$lang["ppi"]='PPI';
+$lang["addremove"]='Tidak dapat diterjemahkan.';
+$lang["map_stamentoner"]='Tinta toner';
+$lang["map_esri_group"]='ESRI';
+$lang["map_esridelorme"]='DeLorme';
+$lang["map_esrinatgeo"]='National Geographic';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapbox_group"]='Mapbox';
+$lang["map_mapboxid"]='ID
+ID';
+$lang["field_ref_and_name"]='%ref% - %name% can be translated as %ref% - %name%.';
+$lang["filestore"]='Penyimpanan Berkas';
+$lang["rs_ext_dependencies"]='Ketergantungan Eksternal ResourceSpace';
+$lang["write_access_to"]='Akses menulis ke';
+$lang["inch-short"]='dalam';
+$lang["megapixel-short"]='Silakan terjemahkan: MP';
+$lang["error-invalid_name"]='Nama tidak valid';
+$lang["inactive_entry_matched"]='Entri tidak aktif cocok untuk';
+$lang["yyyy-mm-dd"]='Tahun-Bulan-Tanggal';
+$lang["kilobyte-symbol"]='Kilobita';
+$lang["megabyte-symbol"]='Megabita';
+$lang["gigabyte-symbol"]='Gigabyte';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='Megabita (MiB)';
+$lang["gigabyte-symbol-binary"]='GiB stands for "Gibibyte" which is a unit of digital information storage capacity. In Bahasa Indonesia, it can be translated as "GiB" as it is a technical term commonly used in the context of digital asset management software.';
+$lang["terabyte-symbol-binary"]='Tebibait (TiB)';
+$lang["ref-title"]='Silakan terjemahkan: %ref - %title';
+$lang["user_group"]='Grup pengguna';
+$lang["all__emailbulk"]='Tolong terjemahkan: <br /><br />
+[teks]<br /><br />
+[kaki_teks]';
+$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='Mohon terjemahkan: <br />
+[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list] 
+
+Dari: [fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[Pesan] : [message]<br /><br /> 
+[Klik tautan untuk melihat koleksi] [list]';
+$lang["all__emailcontactadmin"]='[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='Selamat datang <br /><br />
+Detail login baru <br /><br />
+Nama pengguna : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]: [name]<br /><br />
+[lang_descriptionofproject]: [description]<br /><br />
+[lang_deadline]: [deadline]<br /><br />
+[lang_contacttelephone]: [contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
+[list]
+[lang_viewcontributedsubittedl]
+
+<a href="[url]">[url]</a>
+
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer] 
+
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer] 
+
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
+Permintaan penelitian telah ditugaskan kepada Anda.
+
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage]
+Permintaan penelitian telah selesai. Silakan klik tautan di bawah ini untuk melihat koleksi.
+
+[lang_clicklinkviewcollection]
+
+<a href="[url]">[url]</a>
+
+[text_footer]';
+$lang["all__emailresource"]='Mohon diterjemahkan: <br />
+[dariusername] [lang_hasemailedyouaresource]<br /><br />
+[pesan]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[nameresource] - [url]</a><br /><br />
+[teks_footer]';
+$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["dash"]='Garis Bawah';
+$lang["upgrade_script"]='Skrip Pembaruan';
+$lang["upgrade_026_notification"]='Peningkatan ini telah menonaktifkan beberapa opsi konfigurasi yang sedang digantikan oleh %entity% Anda.
+
+Untuk tetap memiliki nama file unduhan diformat sesuai dengan cara lama sebisa mungkin, harap perbarui penimpaan konfigurasinya dengan:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='Tidak dapat mengatur opsi konfigurasi sistem secara keseluruhan \'download_filename_format\' ke \'%format%\'. Silakan coba lagi secara manual.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='Tidak dapat memproses opsi konfigurasi yang sudah tidak digunakan untuk %entity%. Silakan coba lagi secara manual. Alasan:-
+
+%error%';
+$lang["tile_multi"]='Multi
+';
+$lang["plugin_category_api"]='Antarmuka Pemrograman Aplikasi';
+$lang["userpreference_default_sort_order_label"]='Arah penyortiran default';
+$lang["userpreference_high_contrast_mode"]='Mode kontras yang lebih tinggi';
+$lang["watermark_header"]='Tanda air';
+$lang["watermark_label"]='Gambar Watermark - Buat ulang pratinjau setelah mengubah watermark untuk memperbarui sumber daya yang sudah ada. Menghapus file akan menonaktifkan watermark.';
+$lang["systemconfig_debug"]='Debug
+Perbaiki Bug';
+$lang["systemconfig_debug_log_on_specific_user"]='Pada (pengguna tertentu)';
+$lang["systemconfig_use_native_input_for_date_field"]='Gunakan input tanggal bawaan untuk menampilkan tipe bidang metadata \'tanggal\'';
+$lang["systemconfig_native_date_input_no_partials_supported"]='PENTING: Jika diaktifkan, tanggal parsial (misalnya Mei 2023) tidak akan lagi didukung dan data yang ada akan dihapus setelah pengeditan sumber daya berikutnya.';
+$lang["show_affected_resources"]='Tampilkan sumber daya yang terpengaruh';
+$lang["group_no"]='Grup';
+$lang["confirm_delete_field_value"]='Apakah Anda yakin ingin MENGHAPUS opsi bidang ini? Ini akan menghapus nilai secara permanen dari semua sumber daya yang diterapkan padanya.';
+$lang["media"]='Media
+';
+$lang["external_shares_options"]='Opsi berbagi eksternal';
+$lang["email_shares_options_summary"]='Pilihan-pilihan ini hanya akan berlaku untuk berbagi yang dibuat menggunakan alamat email eksternal';
+$lang["report-graph-by-pie"]='kerusakan';
+$lang["report_breakdown_pie"]='Pemecahan diagram lingkaran';
+$lang["responsive_main_menu"]='Menu
+';
+$lang["actions_email_new_actions_title"]='Tindakan Baru';
+$lang["actions_email_new_actions_intro"]='Ada tindakan baru yang harus diselesaikan.';
+$lang["email_actions_truncated"]='Hanya 1000 tindakan terbaru yang ditampilkan di sini. Anda memiliki %%TOTAL%% tindakan. Login ke %%APPLICATIONNAME%% untuk melihat semuanya.';
+$lang["annotate_select"]='Pilih bidang...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='Gagal mengganti file sumber daya. Referensi koleksi yang diberikan tidak valid.';
+$lang["image_quality_80"]='Laman Web';
+$lang["systemconfig_api"]='Antarmuka Program Aplikasi (API)';
+$lang["api-curl-example"]='Contoh cURL';
+$lang["api-curl-help"]='Skrip bash satu baris di bawah ini dapat dijalankan pada sistem UNIX mana pun dengan OpenSSL dan cURL terpasang.';
+$lang["share-password-not-set"]='Bagikan eksternal harus dilindungi dengan kata sandi. Silakan masukkan kata sandi berbagi untuk melanjutkan.';
+$lang["job_priority_immediate"]='Pekerjaan Mendesak';
+$lang["job_priority_user"]='Pekerjaan Pengguna';
+$lang["job_priority_system"]='Pekerjaan sistem';
+$lang["job_priority_completed"]='Pekerjaan selesai';
+$lang["job_status_error"]='Terjadi kesalahan';
+$lang["filter_is_in"]='ADALAH';
+$lang["file_integrity_fail_latest"]='Lihat kegagalan integritas file terbaru';
+$lang["file_integrity_fail_all"]='Lihat semua sumber daya dengan kegagalan integritas file';
+$lang["sortorder-asc"]='ASC';
+$lang["geodragmodepan"]='wajan';
+$lang["centimetre-short"]='cm';
+$lang["terabyte-symbol"]='TB';
+$lang["collectiontypes_separator"]=',';
+$lang["iiif"]='IIIF';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[ringkasan_integritas_berkas_gagal] <br /><br /> 
+[pencarian_gagal_integritas_berkas] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[teks_footer]';
+$lang["error-edit_noaccess_related_resources"]='Tidak dapat menghubungkan sumber daya. Tidak ada akses ke:';
+$lang["csv_export_filename"]='ekspor_metadata_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='[dari_nama] [teks_email_bagikan_upload] [namaplikasi]<br /><br /> 
+[pesan] : [pesan]<br /><br />
+[kliklink_email_bagikan_upload]<br />
+<br />
+[tautan]
+<br />
+<br />
+[tekskata_sandi]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["share_expired_icon_title"]='Kedaluwarsa';
+$lang["error_invalid_date_format"]='"%%VALUE%%" adalah tanggal yang tidak valid. Semua nilai di bidang ini harus diformat sebagai YYYY-MM-DD';
+$lang["related_resource_create"]='Buat sumber daya terkait baru';
+$lang["skip-to-main-content"]='Lompat ke konten utama';
+$lang["cleanup_invalid_nodes"]='Bersihkan data bidang dari jenis sumber daya yang tidak valid';
+$lang["cleanup_invalid_node_dry_run"]='Jangan hapus data, hanya kembalikan jumlah baris yang akan dihapus?';
+$lang["advancedsearch_resource_section"]='Data sumber daya';
+$lang["error-reload-required"]='ResourceSpace telah diperbarui. Silakan muat ulang halaman';
+$lang["user_pref_new_action_emails"]='Email saya jika tindakan baru dibuat';
+$lang["email_rate_limit_active"]='Jumlah maksimum e-mail per jam yang dikirim oleh sistem ini telah terlampaui. E-mail saat ini tidak sedang dikirim oleh sistem ini.';
+$lang["email_rate_limit_inactive"]='Batas e-mail telah dihapus dan e-mail sekarang sedang dikirim.';
+$lang["severity-level_0"]='Kritis';
+$lang["severity-level_1"]='Peringatan';
+$lang["severity-level_2"]='Pemberitahuan';
+$lang["pull_images"]='Tarik gambar';
+$lang["pull_images_text"]='Gunakan gambar dari sumber terkait jika tidak tersedia';
+$lang["system_user_default"]='SISTEM';
+$lang["userlimitreached"]='Anda telah mencapai batas pengguna Anda. Seorang pengguna yang ada harus dinonaktifkan atau dihapus sebelum Anda dapat membuat akun baru atau mengaktifkan akun yang ada.';
+$lang["user_api_session_title"]='Akses API sistem jarak jauh';
+$lang["user_api_session_text"]='Sistem jarak jauh \'%system%\' meminta akses ke %applicationname% menggunakan kredensial Anda. Klik \'Berikan akses\' hanya jika Anda telah memulai permintaan ini';
+$lang["user_api_session_invalid_system"]='Sistem yang diminta tidak valid';
+$lang["user_api_session_grant_access"]='Beri akses';
+$lang["user_api_session_grant_success"]='Kunci berhasil diterbitkan.';
+$lang["user_api_session_grant_error"]='Penerbitan kunci gagal.';
+$lang["no_file"]='Tidak ada file';
+$lang["missing_file"]='File ini hilang. Silakan hubungi administrator sistem Anda';
+$lang["action_set_no_file"]='Tandai sebagai tidak memiliki file';
+$lang["action_unset_no_file"]='Tandai sebagai file hilang';
+$lang["completed_set_no_file"]='Sumber ditandai sebagai tidak memiliki file';
+$lang["completed_unset_no_file"]='Sumber ditandai sebagai file hilang';
+$lang["resourcetypes_separator"]=', ';
+
+$lang["minute-abbreviated"]='MM';

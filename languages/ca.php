@@ -2637,3 +2637,263 @@ $lang["report-resources_with_zero_downloads"]='Recursos sense cap descàrrega';
 $lang["view__storyextract"]='Extracte de la història:';
 $lang["tile_custm"]='Personalitzat';
 $lang["system_notification"]='%%APPLICATION_NAME%% - notificació del sistema';
+
+$lang["resourcetype-document-2"]='Documents';
+$lang["fieldtitle-notes"]='Notes';
+$lang["fieldtitle-channel_mode"]='Mode canal';
+$lang["information_field_restype_deselect_cleanup"]='Per eliminar les dades de camp existents dels tipus de recursos deseleccionats, feu clic en el següent enllaç %%CLEANUP_LINK%%';
+$lang["property-id"]='Id';
+$lang["mainmenu"]='Menú principal';
+$lang["xlthumbs"]='Molt gran';
+$lang["collectionidprefix"]='ID_Col';
+$lang["archive-zip"]='ZIP';
+$lang["archive-7z"]='7Z';
+$lang["edit_multiple_existing_values"]='Paraules clau existents en els recursos d\'aquesta selecció';
+$lang["edit_multiple_show_more"]='Mostra més';
+$lang["edit_multiple_too_many"]='Mostrant els 100 valors més utilitzats. També n\'hi ha d\'altres.';
+$lang["edit_multiple_action_text_rt"]='Tot el text / opció(ns) seran reemplaçats amb les següents paraules clau';
+$lang["edit_multiple_action_text_ap"]='Aquestes paraules clau s\'afegiran';
+$lang["edit_multiple_action_text_rm"]='Aquests mots clau seran eliminats';
+$lang["sortorder-asc"]='ASC';
+$lang["sortorder-desc"]='DESCàrrega';
+$lang["title"]='Títol';
+$lang["fileoftype"]='? Fitxer';
+$lang["field-fileextension"]='%EXTENSIÓ';
+$lang["fileextension-inside-brackets"]='[%EXTENSIÓ]';
+$lang["fileextension"]='%EXTENSIÓ';
+$lang["log-o"]='Canviat contribuït per';
+$lang["log-rtchange"]='Tipus de recurs editat';
+$lang["log-missinglang"]='[tipus] (falta idioma)';
+$lang["log-NOFIL"]='Marcat com a sense fitxer';
+$lang["log-FIL"]='Marcat com a que té fitxer';
+$lang["log-EDT"]='Recurs editat';
+$lang["accountnotfound-reset-not-emailed"]='L\'enllaç de restabliment de la contrasenya no s\'ha enviat perquè no hi ha cap compte amb aquest correu electrònic';
+$lang["accountnoemail-reset-not-emailed"]='L\'enllaç de restabliment de la contrasenya no s\'ha enviat perquè el compte no té adreça de correu electrònic';
+$lang["accountexpired-reset-not-emailed"]='L\'enllaç de restabliment de la contrasenya no s\'ha enviat perquè el compte ha caducat';
+$lang["accountnotapproved-reset-not-emailed"]='L\'enllaç de restabliment de la contrasenya no s\'ha enviat perquè el compte no està aprovat';
+$lang["minute-abbreviated"]='MM';
+$lang["notavailableshort"]='N/D';
+$lang["single"]='Individual';
+$lang["remaining"]='restant';
+$lang["web_server"]='Servidor web';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='Tots els estats del flux de treball';
+$lang["stat-downloadedkb"]='Dades del fitxer descarregat (KB)';
+$lang["plugin_field_fmt"]='%A (%B)';
+$lang["external"]='Extern';
+$lang["email_error_user_list_some_skipped"]='S\'han omès les notificacions per als següents usuaris (els usuaris podrien no estar aprovats)';
+$lang["unrelateallresources"]='Desrelaciona tots els recursos d\'aquesta col·lecció';
+$lang["unrelateallresources_confirmation"]='Cap dels recursos d\'aquesta col·lecció estan ara relacionats';
+$lang["setup-download_filename_format"]='Format del nom del fitxer de descàrrega';
+$lang["editrequestorder"]='Edita la sol·licitud';
+$lang["ppi"]='PPI';
+$lang["addremove"]='+/-';
+$lang["openstreetmap"]='OpenStreetMap';
+$lang["map_osm_group"]='OpenStreetMap (OSM)';
+$lang["map_tf_group"]='Thunderforest';
+$lang["map_tfocm"]='OpenCycleMap (OCM)';
+$lang["map_hyddabase"]='Base';
+$lang["map_esri_group"]='ESRI';
+$lang["map_esrinatgeo"]='National Geographic';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapbox_group"]='Mapbox';
+$lang["map_mapboxid"]='ID';
+$lang["error"]='Error';
+$lang["field_ref_and_name"]='%ref% - %nom%';
+$lang["subcategories"]='Subcategories';
+$lang["back"]='Enrere';
+$lang["filestore"]='Magatzem de fitxers';
+$lang["rs_ext_dependencies"]='Dependències Externes de ResourceSpace';
+$lang["write_access_to"]='Accés d\'escriptura a';
+$lang["latlong"]='Lat / long';
+$lang["geodragmodepan"]='pan';
+$lang["inch-short"]='en';
+$lang["centimetre-short"]='cm';
+$lang["megapixel-short"]='MP';
+$lang["error-invalid_name"]='Nom invàlid';
+$lang["inactive_entry_matched"]='Entrada inactiva coincident per a';
+$lang["kilobyte-symbol"]='KB';
+$lang["megabyte-symbol"]='MB';
+$lang["gigabyte-symbol"]='GB';
+$lang["terabyte-symbol"]='TB';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["ref-title"]='%ref - %title';
+$lang["comments_flag-this-comment"]='Marcar';
+$lang["resourcetypes_separator"]=',';
+$lang["collectiontypes_separator"]=', ';
+$lang["user_group"]='grup d\'usuaris';
+$lang["all__comments_removal_message"]='I need the text you want to be translated in order to proceed.';
+$lang["all__emailbulk"]='<br /><br />
+[text]<br /><br />
+[text_footer]';
+$lang["all__emailcollection"]='<br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[benvingut]<br /><br /> 
+[nous_detalls_d\'inici_de_sessió]<br /><br /> 
+[nom_d\'usuari] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_peu_de_pàgina]';
+$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[llista] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[llista] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[llista] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
+
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
+[llista] <br />
+[detalls]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["team_content__introtext"]='I need the text you want to be translated in order to proceed.';
+$lang["upload__introtext"]='I need the text you want to be translated in order to proceed.';
+$lang["dash"]='Quadre de comandament';
+$lang["last"]='Últim';
+$lang["upgrade_script"]='Script d\'actualització';
+$lang["upgrade_026_notification"]='L\'actualització ha obsolet algunes opcions de configuració que el vostre %entity% està substituint.
+
+Per continuar tenint el nom del fitxer de descàrrega formatat tan a prop com sigui possible de l\'antiga manera, actualitzeu la seva substitució de configuració amb:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='No es pot establir l\'opció de configuració del sistema \'download_filename_format\' a \'%format%\'. Si us plau, torneu-ho a intentar manualment.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='No es poden processar les opcions de configuració obsoletes per a %entity%. Si us plau, torneu-ho a intentar manualment. Motiu:-
+
+%error%';
+$lang["tile_thmbs"]='Individual';
+$lang["tile_multi"]='Múltiple';
+$lang["tile_blank"]='En blanc';
+$lang["plugin_category_general"]='General';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='Direcció de classificació per defecte';
+$lang["userpreference_high_contrast_mode"]='Mode de contrast més alt';
+$lang["watermark_header"]='Filigrana';
+$lang["watermark_label"]='Imatge de marca d\'aigua - Recrear previsualitzacions després de canviar la marca d\'aigua per actualitzar els recursos existents. Eliminar l\'arxiu desactivarà la marca d\'aigua.';
+$lang["systemconfig_debug"]='Depuració';
+$lang["systemconfig_debug_log_on_specific_user"]='En (usuari específic)';
+$lang["systemconfig_use_native_input_for_date_field"]='Utilitza l\'entrada de data nativa per mostrar un tipus de camp de metadades \'data\'';
+$lang["systemconfig_native_date_input_no_partials_supported"]='IMPORTANT: Si està habilitat, les dates parcials (per exemple, maig 2023) ja no seran compatibles i les dades existents s\'esborraran després de la següent edició del recurs.';
+$lang["show_affected_resources"]='Mostra els recursos afectats';
+$lang["group_no"]='Grup';
+$lang["confirm_delete_field_value"]='Esteu segur que voleu ESBORRAR aquesta opció de camp? Això eliminarà permanentment el valor de tots els recursos als quals s\'aplica.';
+$lang["external_shares_options"]='Opcions de compartició externa';
+$lang["email_shares_options_summary"]='Aquestes opcions només s\'aplicaran per a comparticions creades utilitzant una adreça de correu electrònic externa';
+$lang["report_breakdown_pie"]='Desglossament en forma de pastís';
+$lang["actions_email_new_actions_title"]='Accions noves';
+$lang["actions_email_new_actions_intro"]='Hi ha noves accions per completar.';
+$lang["email_actions_truncated"]='Només es mostren aquí les 1000 accions més recents. Tens %%TOTAL%% accions. Inicia sessió a %%APPLICATIONNAME%% per veure-les totes.';
+$lang["annotate_select"]='Selecciona camp...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='No s\'ha pogut substituir l\'arxiu del recurs. La referència de la col·lecció subministrada no és vàlida.';
+$lang["image_quality_50"]='Baix';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='exemple de cURL';
+$lang["api-curl-help"]='El següent script d\'una línia de bash es pot executar en qualsevol sistema UNIX amb OpenSSL i cURL instal·lats.';
+$lang["share-password-not-set"]='Les comparticions externes han d\'estar protegides per una contrasenya. Si us plau, introdueix una contrasenya de compartició per continuar.';
+$lang["job_priority_immediate"]='Treball urgent';
+$lang["job_priority_user"]='Treball d\'usuari';
+$lang["job_priority_system"]='Treball del sistema';
+$lang["job_priority_completed"]='Treball completat';
+$lang["job_status_error"]='S\'ha produït un error';
+$lang["filter_is_in"]='ÉS';
+$lang["file_integrity_fail_latest"]='Veure els últims errors d\'integritat dels fitxers';
+$lang["file_integrity_fail_all"]='Veure tots els recursos amb errors d\'integritat de fitxers';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[resum_integritat_fitxer_fallida] <br /><br /> 
+[cerca_fallida_integritat_fitxer] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["error-edit_noaccess_related_resources"]='No es poden relacionar els recursos. No hi ha accés a:';
+$lang["csv_export_filename"]='exportació_de_metadades_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='<br />
+[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["share_expired_icon_title"]='Caducat';
+$lang["error_invalid_date_format"]='"%%VALUE%%" no és una data vàlida. Tots els valors en aquest camp han d\'estar formats com YYYY-MM-DD';
+$lang["related_resource_create"]='Crear nou recurs relacionat';
+$lang["skip-to-main-content"]='Salta al contingut principal';
+$lang["cleanup_invalid_nodes"]='Neteja les dades del camp de tipus de recursos no vàlids';
+$lang["cleanup_invalid_node_dry_run"]='No eliminis dades, només retorna el nombre de files a eliminar?';
+$lang["advancedsearch_resource_section"]='Dades del recurs';
+$lang["error-reload-required"]='ResourceSpace s\'ha actualitzat. Si us plau, recarregueu la pàgina';
+$lang["user_pref_new_action_emails"]='Envia\'m un correu electrònic si es creen noves accions';
+$lang["email_rate_limit_active"]='S\'ha superat el nombre màxim de correus electrònics per hora enviats per aquest sistema. Actualment, aquest sistema no està enviant correus electrònics.';
+$lang["email_rate_limit_inactive"]='S\'ha eliminat el límit de correus electrònics i ara s\'estan enviant.';
+$lang["severity-level_0"]='Crític';
+$lang["severity-level_1"]='Advertència';
+$lang["severity-level_2"]='Avís';
+$lang["pull_images"]='Descarregar imatges';
+$lang["pull_images_text"]='Utilitza imatges dels recursos relacionats si no n\'hi ha disponibles';
+$lang["system_user_default"]='SISTEMA';
+$lang["userlimitreached"]='Has assolit el límit d\'usuaris. Cal desactivar o eliminar un usuari existent abans de poder crear nous comptes o habilitar comptes existents.';
+$lang["user_api_session_title"]='Accés a l\'API del sistema remot';
+$lang["user_api_session_text"]='El sistema remot \'%system%\' està sol·licitant accés a %applicationname% utilitzant les teves credencials. Fes clic a \'Concedir accés\' només si has iniciat aquesta sol·licitud';
+$lang["user_api_session_invalid_system"]='Sistema sol·licitat no vàlid';
+$lang["user_api_session_grant_access"]='Concedir accés';
+$lang["user_api_session_grant_success"]='Clau emesa amb èxit.';
+$lang["user_api_session_grant_error"]='Emissió de clau fallida.';
+$lang["no_file"]='Cap fitxer';
+$lang["missing_file"]='Aquest fitxer falta. Si us plau, contacta amb el teu administrador del sistema';
+$lang["action_set_no_file"]='Marcar com a sense fitxer';
+$lang["action_unset_no_file"]='Marcar com a fitxer desaparegut';
+$lang["completed_set_no_file"]='Recurs marcat com a sense fitxer';
+$lang["completed_unset_no_file"]='Recurs marcat com a fitxer desaparegut';
+$lang["hour-abbreviated"]='HH';

@@ -2892,3 +2892,229 @@ $lang["error_invalid_revert_option"]='Der zuvor gespeicherte Wert \'%%VALUE%%\' 
 $lang["error_invalid_revert_date"]='Das zuvor gespeicherte Datum \'%%VALUE%%\' ist ungültig. Bitte aktualisieren Sie die Ressource manuell, falls erforderlich.';
 $lang["batch_edit_save_warning_message"]='Fehler traten auf, während die folgenden Ressourcen bearbeitet wurden:';
 $lang["batch_edit_save_warning_alert"]='Es traten einige Fehler bei der Durchführung dieser Operation auf. Bitte schauen Sie in Ihre Nachrichten für weitere Details';
+
+$lang["information_field_restype_deselect_cleanup"]='Um vorhandene Felddaten von den abgewählten Ressourcentypen zu entfernen, klicken Sie auf den folgenden Link %%CLEANUP_LINK%%';
+$lang["property-code"]='Code';
+$lang["property-operation"]='Operation';
+$lang["mainmenu"]='Hauptmenü';
+$lang["perpage_option"]='? pro Seite';
+$lang["off"]='Aus';
+$lang["pause"]='Pause';
+$lang["edit_multiple_existing_values"]='Vorhandene Schlüsselwörter bei Ressourcen in dieser Auswahl';
+$lang["edit_multiple_show_more"]='Mehr anzeigen';
+$lang["edit_multiple_too_many"]='Anzeige der 100 am häufigsten verwendeten Werte. Weitere existieren ebenfalls.';
+$lang["edit_multiple_action_text_rt"]='Alle Texte / Optionen werden durch die folgenden Schlüsselwörter ersetzt';
+$lang["edit_multiple_action_text_ap"]='Diese Schlüsselwörter werden angehängt';
+$lang["edit_multiple_action_text_rm"]='Diese Schlüsselwörter werden entfernt';
+$lang["sortorder-asc"]='ASC';
+$lang["sortorder-desc"]='BESCHREIBUNG';
+$lang["title"]='Titel';
+$lang["log-rtchange"]='Bearbeiteter Ressourcentyp';
+$lang["log-NOFIL"]='Als dateilos markiert';
+$lang["log-FIL"]='Als Datei markiert';
+$lang["log-EDT"]='Bearbeitete Ressource';
+$lang["accountnotfound-reset-not-emailed"]='Der Link zum Zurücksetzen des Passworts wurde nicht gesendet, da kein Konto mit dieser E-Mail existiert';
+$lang["accountnoemail-reset-not-emailed"]='Der Link zum Zurücksetzen des Passworts wurde nicht gesendet, da das Konto keine E-Mail-Adresse hat';
+$lang["accountexpired-reset-not-emailed"]='Der Link zum Zurücksetzen des Passworts wurde nicht gesendet, da das Konto abgelaufen ist';
+$lang["accountnotapproved-reset-not-emailed"]='Der Link zum Zurücksetzen des Passworts wurde nicht gesendet, da das Konto nicht genehmigt ist';
+$lang["remaining"]='verbleibend';
+$lang["web_server"]='Webserver';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='Alle Workflow-Zustände';
+$lang["stat-downloadedkb"]='Heruntergeladene Dateidaten (KB)';
+$lang["external"]='Extern';
+$lang["email_error_user_list_some_skipped"]='Benachrichtigungen für folgende Benutzer übersprungen (Benutzer sind möglicherweise nicht genehmigt)';
+$lang["unrelateallresources"]='Alle Ressourcen in dieser Sammlung entkoppeln';
+$lang["unrelateallresources_confirmation"]='Keine der Ressourcen in dieser Sammlung sind jetzt verwandt';
+$lang["exportdata-instructions"]='Dies wird Systemkonfigurationsdaten aus Ihrem System für Fehlerbehebungszwecke exportieren. Alle Daten (Feldoptionen, Benutzernamen, E-Mails und Metadaten usw.) werden verschleiert, es sei denn, Ihr Serveradministrator erlaubt es.</br>Wählen Sie die Informationen aus, die Sie exportieren möchten, und klicken Sie auf \'Exportieren\'. Ein Offline-Job wird erstellt und Sie erhalten eine Benachrichtigung, wenn Ihr Download bereit ist.';
+$lang["setup-download_filename_format"]='Format des Dateinamens für den Download';
+$lang["setup-if-smtpsecure"]='\'\', \'tls\' oder \'ssl\'. Für Gmail ist \'tls\' oder \'ssl\' erforderlich.';
+$lang["addremove"]='+/-';
+$lang["map_introtext1"]='Die untenstehende Karte zeigt Ressourcen aus dem Suchergebnis, die mit einer Geolokation verknüpft sind. Die Markierungsfarbe ist auf den Ressourcentyp oder ein benutzerdefiniertes Metadatenfeld eingestellt (Schlüssel unter der Karte). Wenn Markierungen andere Markierungen überdrucken würden, wird eine grünfarbene Clusterung mit einer Zahl verwendet, die die Anzahl der geclusterten Markierungen angibt. Zoomen Sie hinein oder doppelklicken Sie auf ein Cluster. Klicken Sie auf eine einzelne Markierung, um ein Popup für diese Ressource mit einer Vorschau anzuzeigen. Klicken Sie auf das Vorschaubild, um ein Fenster für diese Ressource zu laden. Fahren Sie mit der Maus über eine einzelne Markierung, um die Geokoordinaten anzuzeigen. Ändern Sie die Grundkarte mit der Schaltfläche oben rechts auf der Karte. Speichern Sie die Karte als PNG-Datei mit der Schaltfläche unten links auf der Karte.';
+$lang["geolocate_collection_map_text"]='Die untenstehende Karte zeigt Ressourcen aus dieser Sammlung, die eine Geolokation zugeordnet haben. Die Markierungsfarbe ist auf den Ressourcentyp oder ein benutzerdefiniertes Metadatenfeld eingestellt (Schlüssel unter der Karte). Wenn Markierungen andere Markierungen überdrucken würden, wird eine grünfarbene Clusterung verwendet, wobei eine Zahl die Anzahl der gruppierten Markierungen angibt. Zoomen Sie hinein oder doppelklicken Sie auf ein Cluster. Klicken Sie auf eine einzelne Markierung, um ein Popup für diese Ressource mit einer Vorschau anzuzeigen. Klicken Sie auf das Vorschaubild, um ein Fenster für diese Ressource zu laden. Fahren Sie mit der Maus über eine einzelne Markierung, um die Geokoordinaten anzuzeigen. Ändern Sie die Grundkarte mit der Schaltfläche oben rechts auf der Karte. Speichern Sie die Karte als PNG-Datei mit der Schaltfläche unten links auf der Karte.';
+$lang["map_osmfrance"]='OSM Frankreich';
+$lang["map_tf_group"]='Thunderforest';
+$lang["map_tfmobileatlas"]='Mobiler Atlas';
+$lang["map_esri_group"]='ESRI';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapbox_group"]='Mapbox';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["filestore"]='Dateispeicher';
+$lang["rs_ext_dependencies"]='ResourceSpace Externe Abhängigkeiten';
+$lang["write_access_to"]='Schreibzugriff auf';
+$lang["error-invalid_name"]='Ungültiger Name';
+$lang["inactive_entry_matched"]='Inaktiver Eintrag gefunden für';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["user_group"]='Benutzergruppe';
+$lang["all__emailbulk"]='<br /><br />
+[text]<br /><br />
+[text_footer]';
+$lang["all__emailcollection"]='<br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='<br />
+[vonbenutzername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_nachricht] : [nachricht]<br /><br /> 
+[lang_klickenumsammlunganzusehen] [liste]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[willkommen]<br /><br /> 
+[lang_neueanmeldedetails]<br /><br /> 
+[lang_benutzername] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_fußzeile]';
+$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
+
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hatIhnenEineRessourceGesendet]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_klickenUmRessourceAnzusehen]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='[lang_benutzername] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_klickenumsressourcenzusehen] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["dash"]='Armaturenbrett';
+$lang["last"]='Letzte';
+$lang["upgrade_script"]='Upgrade-Skript';
+$lang["upgrade_026_notification"]='Das Upgrade hat einige Konfigurationsoptionen veraltet, die Ihre %entity% überschreibt.
+
+Um den Dateinamen des Downloads so nah wie möglich an der alten Weise zu formatieren, aktualisieren Sie bitte die Konfigurationsüberschreibung mit:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='Kann die systemweite Konfigurationsoption \'download_filename_format\' nicht auf \'%format%\' setzen. Bitte manuell erneut versuchen.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='Kann veraltete Konfigurationsoptionen für %entity% nicht verarbeiten. Bitte manuell erneut versuchen. Grund:-
+
+%error%';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='Standard-Sortierreihenfolge';
+$lang["userpreference_high_contrast_mode"]='Modus mit höherem Kontrast';
+$lang["watermark_header"]='Wasserzeichen';
+$lang["watermark_label"]='Wasserzeichenbild - Vorschauen nach dem Ändern des Wasserzeichens neu erstellen, um vorhandene Ressourcen zu aktualisieren. Das Entfernen der Datei deaktiviert die Wasserzeichenfunktion.';
+$lang["systemconfig_debug"]='Debuggen';
+$lang["systemconfig_debug_log_on_specific_user"]='Bei (spezifischer Benutzer)';
+$lang["systemconfig_use_native_input_for_date_field"]='Verwenden Sie native Datumeingabe zur Anzeige eines \'Datum\'-Metadatenfeldtyps';
+$lang["systemconfig_native_date_input_no_partials_supported"]='WICHTIG: Wenn aktiviert, werden teilweise Datumsangaben (z.B. Mai 2023) nicht mehr unterstützt und vorhandene Daten werden nach der nächsten Ressourcenbearbeitung gelöscht.';
+$lang["show_affected_resources"]='Betroffene Ressourcen anzeigen';
+$lang["group_no"]='Gruppe';
+$lang["confirm_delete_field_value"]='Sind Sie sicher, dass Sie diese Feldoption LÖSCHEN möchten? Dies wird den Wert dauerhaft aus allen Ressourcen entfernen, auf die er angewendet wurde.';
+$lang["job_queue_manage_job"]='Aufgabe';
+$lang["external_shares_options"]='Externe Freigabeoptionen';
+$lang["email_shares_options_summary"]='Diese Optionen gelten nur für Freigaben, die mit einer externen E-Mail-Adresse erstellt wurden';
+$lang["report_breakdown_pie"]='Aufschlüsselungstorte';
+$lang["actions_email_new_actions_title"]='Neue Aktionen';
+$lang["actions_email_new_actions_intro"]='Es gibt neue Aktionen, die abgeschlossen werden müssen.';
+$lang["email_actions_truncated"]='Es werden nur die letzten 1000 Aktionen angezeigt. Sie haben %%TOTAL%% Aktionen. Melden Sie sich bei %%APPLICATIONNAME%% an, um alle anzuzeigen.';
+$lang["annotate_select"]='Feld auswählen...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='Fehler beim Ersetzen der Ressourcendatei. Die angegebene Sammlungsreferenz ist ungültig.';
+$lang["image_quality_50"]='Niedrig';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='cURL-Beispiel';
+$lang["api-curl-help"]='Das untenstehende einzeilige Bash-Skript kann auf jedem UNIX-System mit installiertem OpenSSL und cURL ausgeführt werden.';
+$lang["share-password-not-set"]='Externe Freigaben müssen durch ein Passwort geschützt werden. Bitte geben Sie ein Freigabepasswort ein, um fortzufahren.';
+$lang["job_priority_immediate"]='Dringender Auftrag';
+$lang["job_priority_user"]='Benutzerauftrag';
+$lang["job_priority_system"]='Systemaufgabe';
+$lang["job_priority_completed"]='Aufgabe abgeschlossen';
+$lang["job_status_error"]='Ein Fehler ist aufgetreten';
+$lang["filter_is_in"]='IST';
+$lang["filter_or"]='ODER';
+$lang["file_integrity_fail_latest"]='Neueste Dateiintegritätsfehler anzeigen';
+$lang["file_integrity_fail_all"]='Alle Ressourcen mit Dateiintegritätsfehlern anzeigen';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["date_format_error"]='Fehler: %row% \'%date%\' in [%field%] ungültiger Eintrag in den %parts% Teil(e)';
+$lang["error-edit_noaccess_related_resources"]='Ressourcen können nicht verknüpft werden. Kein Zugriff auf:';
+$lang["job_text"]='Aufgabe';
+$lang["csv_export_filename"]='metadata_export_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='<br />
+[von_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [nachricht]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passworttext]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["share_expired_icon_title"]='Abgelaufen';
+$lang["error_invalid_date_format"]='"%%VALUE%%" ist ein ungültiges Datum. Alle Werte in diesem Feld müssen im Format JJJJ-MM-TT sein';
+$lang["related_resource_create"]='Neues verwandtes Medium erstellen';
+$lang["skip-to-main-content"]='Zum Hauptinhalt springen';
+$lang["cleanup_invalid_nodes"]='Bereinigen Sie Felddaten von ungültigen Ressourcentypen';
+$lang["cleanup_invalid_node_dry_run"]='Löschen Sie keine Daten, geben Sie nur die Anzahl der zu löschenden Zeilen zurück?';
+$lang["advancedsearch_resource_section"]='Ressourcendaten';
+$lang["error-reload-required"]='ResourceSpace wurde aktualisiert. Bitte laden Sie die Seite neu';
+$lang["user_pref_new_action_emails"]='E-Mail an mich, wenn neue Aktionen erstellt werden';
+$lang["email_rate_limit_active"]='Die maximale Anzahl von E-Mails pro Stunde, die von diesem System gesendet werden, wurde überschritten. Derzeit werden keine E-Mails von diesem System gesendet.';
+$lang["email_rate_limit_inactive"]='Das E-Mail-Limit wurde aufgehoben und E-Mails werden jetzt gesendet.';
+$lang["severity-level_0"]='Kritisch';
+$lang["severity-level_1"]='Warnung';
+$lang["severity-level_2"]='Hinweis';
+$lang["pull_images"]='Bilder abrufen';
+$lang["pull_images_text"]='Verwenden Sie Bilder von verwandten Ressourcen, wenn keine verfügbar sind';
+$lang["system_user_default"]='SYSTEM';
+$lang["userlimitreached"]='Sie haben Ihr Benutzerlimit erreicht. Ein bestehender Benutzer muss deaktiviert oder gelöscht werden, bevor Sie neue Konten erstellen oder bestehende Konten aktivieren können.';
+$lang["user_api_session_title"]='API-Zugriff auf Remote-System';
+$lang["user_api_session_text"]='Das entfernte System \'%system%\' fordert Zugriff auf %applicationname% mit Ihren Anmeldedaten an. Klicken Sie auf \'Zugriff gewähren\' nur, wenn Sie diese Anfrage initiiert haben.';
+$lang["user_api_session_invalid_system"]='Ungültiges System angefordert';
+$lang["user_api_session_grant_access"]='Zugriff gewähren';
+$lang["user_api_session_grant_success"]='Schlüssel erfolgreich ausgegeben.';
+$lang["user_api_session_grant_error"]='Schlüsselausgabe fehlgeschlagen.';
+$lang["no_file"]='Keine Datei';
+$lang["missing_file"]='Diese Datei fehlt. Bitte wenden Sie sich an Ihren Systemadministrator';
+$lang["action_set_no_file"]='Als ohne Datei markieren';
+$lang["action_unset_no_file"]='Als Datei fehlt markieren';
+$lang["completed_set_no_file"]='Ressource als dateilos markiert';
+$lang["completed_unset_no_file"]='Ressource als Datei fehlt markiert';

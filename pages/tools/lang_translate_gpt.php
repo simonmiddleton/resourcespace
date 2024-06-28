@@ -88,15 +88,19 @@ foreach ($plugins as $plugin)
         foreach ($missing as $mkey)
             {
             if (!is_string($lang_en[$mkey])) {continue;}
+            if (strlen(trim($lang_en[$mkey]))<=1) {continue;}
                 
             $count++;
             echo $plugin_path . " " . $count . "/" . count($missing) . ": Processing $mkey (" . $lang_en[$mkey] . ") for language $language\n\n";flush();ob_flush();
             
             $messages=array();
-            $messages[]=array("role"=>"system","content"=>"Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads. Where the context is unclear, make a best guess. Don't add the period character at the start or end of the translation if one isn't at the start or end of the value being translated. In the event that you cannot provide a translation, return the word CALAMITY.");
+            $messages[]=array("role"=>"system","content"=>"Your task is to convert language strings used by the digital asset management software ResourceSpace from English to " . $lang_name . ". Ensure that the translation accurately reflects the intended meaning of the string in the context of digital asset management software, including any relevant objects/terminology used in ResourceSpace such as resources, collections, metadata, tags, users, groups, workflows and downloads.
+ Where the context is unclear, make a best guess. Don't add the period character at the start or end of the translation if one isn't at the start or end of the value being translated.
+Text within square brackets or percent signs indicates a system parameter that must not itself be translated.
+In the event that you cannot provide a translation, return the word CALAMITY. Do not output anything that is not either a valid translation or the word CALAMITY.");
             $messages[]=array("role"=>"user","content"=>"Please translate: " . $lang_en[$mkey]);
             
-            $result=generateChatCompletions($openai_key,"gpt-3.5-turbo",0,2048,$messages);
+            $result=generateChatCompletions($openai_key,"gpt-4o",0,2048,$messages);
     echo "\n";print_r($result);echo "\n\n";
             // Append it to the appropriate file.
             if (is_string($result) && strlen($result)>0 && strpos(strtolower($result),"calamity")===false && strpos(strtolower($result),"[error]")===false)

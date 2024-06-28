@@ -2656,3 +2656,247 @@ $lang["error_invalid_revert_option"]='De eerder opgeslagen waarde \'%%VALUE%%\' 
 $lang["error_invalid_revert_date"]='De eerder opgeslagen datum \'%%VALUE%%\' is ongeldig. Werk de bron handmatig bij indien nodig.';
 $lang["batch_edit_save_warning_message"]='Er zijn fouten opgetreden tijdens het bewerken van de volgende bronnen -';
 $lang["batch_edit_save_warning_alert"]='Er zijn enkele fouten opgetreden bij het uitvoeren van deze operatie. Raadpleeg uw berichten voor meer details';
+
+$lang["information_field_restype_deselect_cleanup"]='Om bestaande veldgegevens van de gedeselecteerde brontypen te verwijderen, klik op de volgende link %%CLEANUP_LINK%%';
+$lang["property-id"]='Id';
+$lang["mainmenu"]='Hoofdmenu';
+$lang["xlthumbs"]='X-large';
+$lang["strip"]='Verwijder';
+$lang["collectionidprefix"]='Col_ID';
+$lang["_dupe"]='_dupe';
+$lang["archive-7z"]='7Z';
+$lang["edit_multiple_existing_values"]='Bestaande trefwoorden op bronnen in deze selectie';
+$lang["edit_multiple_show_more"]='Toon meer';
+$lang["edit_multiple_too_many"]='Toont de 100 meest gebruikte waarden. Andere bestaan ook.';
+$lang["edit_multiple_action_text_rt"]='Alle tekst / optie(s) zullen worden vervangen door de volgende trefwoorden';
+$lang["edit_multiple_action_text_ap"]='Deze trefwoorden worden toegevoegd';
+$lang["edit_multiple_action_text_rm"]='Deze trefwoorden zullen worden verwijderd';
+$lang["sortorder-asc"]='Oplopend';
+$lang["sortorder-desc"]='BESCHRIJVING';
+$lang["title"]='Titel';
+$lang["fileoftype"]='? Bestand';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["fileextension-inside-brackets"]='[%EXTENSION]';
+$lang["fileextension"]='%EXTENSION';
+$lang["log-rtchange"]='Bewerkte brontype';
+$lang["log-missinglang"]='[type] (ontbrekende taal)';
+$lang["log-NOFIL"]='Gemarkeerd als geen bestand hebbend';
+$lang["log-FIL"]='Gemarkeerd als met bestand';
+$lang["log-EDT"]='Bewerkte bron';
+$lang["accountnotfound-reset-not-emailed"]='De link voor het opnieuw instellen van het wachtwoord is niet verzonden omdat er geen account is met dat e-mailadres';
+$lang["accountnoemail-reset-not-emailed"]='Wachtwoord reset link is niet verzonden omdat het account geen e-mailadres heeft';
+$lang["accountexpired-reset-not-emailed"]='De link voor het opnieuw instellen van het wachtwoord is niet verzonden omdat het account is verlopen';
+$lang["accountnotapproved-reset-not-emailed"]='Wachtwoord reset link is niet verzonden omdat het account niet is goedgekeurd';
+$lang["minute-abbreviated"]='MM';
+$lang["itemstitle"]='Items';
+$lang["notavailableshort"]='N.v.t.';
+$lang["remaining"]='resterend';
+$lang["web_server"]='Webserver';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='Alle workflowstatussen';
+$lang["stat-downloadedkb"]='Gedownloade bestandgegevens (KB)';
+$lang["plugin_field_fmt"]='%A (%B)';
+$lang["external"]='Extern';
+$lang["email_error_user_list_some_skipped"]='Meldingen overgeslagen voor de volgende gebruikers (gebruikers zijn mogelijk niet goedgekeurd)';
+$lang["unrelateallresources"]='Maak alle bronnen in deze collectie niet-gerelateerd';
+$lang["unrelateallresources_confirmation"]='Geen van de bronnen in deze collectie zijn nu gerelateerd';
+$lang["setup-download_filename_format"]='Bestandsnaamformaat downloaden';
+$lang["ppi"]='PPI';
+$lang["addremove"]='+/-';
+$lang["map_introtext1"]='De onderstaande kaart toont bronnen uit het zoekresultaat die een geolocatie hebben. De markerkleur is ingesteld op het brontype of een aangepast metadata-veld (sleutel onder de kaart). Wanneer markeringen andere markeringen zouden overlappen, wordt groene clustering gebruikt met een nummer dat het aantal gegroepeerde markeringen aangeeft, zoom in of dubbelklik op een cluster. Klik op een individuele markering om een popup voor die bron te laden met een voorbeeldafbeelding. Klik op de voorbeeldafbeelding om een venster voor die bron te laden. Beweeg de muis over een individuele markering voor de geocoördinaten. Verander de basiskaart met de knop rechtsboven op de kaart. Sla de kaart op als een PNG-bestand met de knop linksonder op de kaart.';
+$lang["geolocate_collection_map_text"]='De onderstaande kaart toont bronnen uit deze collectie die een geolocatie hebben. De markerkleur is ingesteld op het brontype of een aangepast metadata-veld (sleutel onder de kaart). Wanneer markeringen andere markeringen zouden overlappen, wordt groene clustering gebruikt met een nummer dat het aantal gegroepeerde markeringen aangeeft, zoom in of dubbelklik op een cluster. Klik op een individuele markering om een popup voor die bron te laden met een voorbeeldafbeelding. Klik op de voorbeeldafbeelding om een venster voor die bron te laden. Beweeg de muis over een individuele markering voor de geocoördinaten. Verander de basiskaart met de knop rechtsboven op de kaart. Sla de kaart op als een PNG-bestand met de knop linksonder op de kaart.';
+$lang["map_tfocm"]='OpenCycleMap (OCM)';
+$lang["map_esri_group"]='ESRI';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["report_periodic_email_option_me"]='mij';
+$lang["filestore"]='Bestandsopslag';
+$lang["rs_ext_dependencies"]='ResourceSpace Externe Afhankelijkheden';
+$lang["write_access_to"]='Schrijftoegang tot';
+$lang["latlong"]='Lat / long';
+$lang["geodragmodepan"]='pan';
+$lang["inch-short"]='in';
+$lang["centimetre-short"]='cm';
+$lang["megapixel-short"]='MP';
+$lang["error-invalid_name"]='Ongeldige naam';
+$lang["inactive_entry_matched"]='Inactieve invoer gevonden voor';
+$lang["yyyy-mm-dd"]='YYYY-MM-DD';
+$lang["kilobyte-symbol"]='KB';
+$lang["megabyte-symbol"]='MB';
+$lang["gigabyte-symbol"]='GB';
+$lang["terabyte-symbol"]='TB';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["ref-title"]='%ref - %titel';
+$lang["resourcetypes_separator"]=',';
+$lang["collectiontypes_separator"]=', ';
+$lang["user_group"]='gebruikersgroep';
+$lang["all__emailbulk"]='<br /><br />
+[tekst]<br /><br />
+[tekst_voettekst]';
+$lang["all__emailcollection"]='<br />
+[vangebruikersnaam] [lang_emailcollectiebericht] <br /><br /> 
+[lang_bericht] : [bericht]<br /><br /> 
+[lang_kliklinkbekijkcollectie] [lijst]';
+$lang["all__emailcollectionexternal"]='<br />
+[vangebruikersnaam] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_bericht] : [bericht]<br /><br /> 
+[lang_kliklinkbekijkcollectie] [lijst]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[welkom]<br /><br /> 
+[lang_nieuweinloggegevens]<br /><br /> 
+[lang_gebruikersnaam] : [gebruikersnaam] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[tekst_voettekst]';
+$lang["all__emailnewresearchrequestwaiting"]='[gebruikersnaam] ([gebruikersvolledige naam] - [gebruikersemail])
+[lang_heeftonderzoeksverzoekgeplaatst]<br /><br />
+[lang_naamvanhetproject]:[naam]<br /><br />
+[lang_beschrijvingvanhetproject]:[beschrijving]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelefoon]:[contact]<br /><br />
+[lang_eindgebruik]: [eindgebruik]<br /><br />
+[lang_vormvereist]: [vorm]<br /><br />
+[lang_aantalvereistebronnen]: [aantalbronnen]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
+[lijst]
+[lang_viewalluserpending]
+
+<a href="[url]">[url]</a>
+
+[tekst_voettekst]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[lijst] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
+
+[tekst_voettekst]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[vangebruikersnaam] heeft u een bron gemaild<br /><br />
+[bericht]<br /><br />
+<a href="[url]">[ingesloten_thumbnail]</a><br /><br />
+klik om de bron te bekijken<br /><a href="[url]">[bronnaam] - [url]</a><br /><br />
+[tekst_voettekst]';
+$lang["all__emailresourcerequest"]='[lang_gebruikersnaam] : [username] <br />
+[lijst] <br />
+[details]<br /><br />
+[lang_klikomresourcewebbekijken] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["team_research__introtext"]='Organiseer en beheer \'Onderzoeksverzoeken\'. <br /><br />Kies \'onderzoek bewerken\' om de details van het verzoek te bekijken en het onderzoek aan een teamlid toe te wijzen. Het is mogelijk om een onderzoeksverzoek te baseren op een eerdere collectie door de collectie-ID in te voeren op het \'bewerken\' scherm. <br /><br />Zodra het onderzoeksverzoek is toegewezen, kies \'collectie bewerken\' om het onderzoeksverzoek toe te voegen aan het \'Standaard collectie\' paneel. Met behulp van de standaardtools is het dan mogelijk om bronnen aan het onderzoek toe te voegen. <br /><br />Zodra het onderzoek is voltooid, kies \'onderzoek bewerken\', verander de status naar voltooid en er wordt automatisch een e-mail gestuurd naar de gebruiker die het onderzoek heeft aangevraagd. De e-mail bevat een link naar het onderzoek en het wordt ook automatisch toegevoegd aan hun \'Standaard Collectie\' paneel.';
+$lang["themes__manage"]='Organiseer en bewerk de uitgelichte collecties die online beschikbaar zijn. Uitgelichte collecties zijn speciaal gepromote collecties. <br /><br /> <strong>1 Om een nieuwe vermelding onder een uitgelichte collectie te maken - maak een collectie</strong><br /> Kies <strong>Mijn Collecties</strong> uit het hoofdmenu bovenaan en stel een gloednieuwe <strong>publieke</strong> collectie in. Vergeet niet een naam voor de uitgelichte collectie op te geven tijdens het instellen. Gebruik een bestaande naam van een uitgelichte collectie om de collectie onder een huidige uitgelichte collectie te groeperen (zorg ervoor dat je deze exact hetzelfde typt), of kies een nieuwe titel om een gloednieuwe uitgelichte collectie te maken. Sta gebruikers nooit toe om bronnen toe te voegen of te verwijderen uit uitgelichte collecties. <br /> <br /><strong>2 Om de inhoud van een bestaande vermelding onder een uitgelichte collectie te bewerken</strong><br /> Kies <strong>collectie bewerken</strong>. De items in die collectie verschijnen in het <strong>Mijn Collecties</strong> paneel onderaan het scherm. Gebruik de standaardtools om bronnen te bewerken, te verwijderen of toe te voegen. <br /> <br /><strong>3 Om een naam van een uitgelichte collectie te wijzigen of een collectie te verplaatsen om onder een andere uitgelichte collectie te verschijnen</strong><br /> Kies <strong>eigenschappen bewerken</strong> en bewerk de categorie van de uitgelichte collectie of de naam van de collectie. Gebruik een bestaande naam van een uitgelichte collectie om de collectie onder een huidige uitgelichte collectie te groeperen (zorg ervoor dat je deze exact hetzelfde typt), of kies een nieuwe titel om een gloednieuwe uitgelichte collectie te maken. <br /> <br /><strong>4 Om een collectie uit een uitgelichte collectie te verwijderen</strong><br /> Kies <strong>eigenschappen bewerken</strong> en verwijder de woorden in het vak van de categorie van de uitgelichte collectie.';
+$lang["upgrade_script"]='Upgrade script';
+$lang["upgrade_026_notification"]='De upgrade heeft enkele configuratie-opties verouderd die door uw %entity% worden overschreven.
+
+Om de bestandsnaam van de download zo dicht mogelijk bij de oude manier te houden, werk de configuratie-overschrijving bij met:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='Kan systeem brede configuratieoptie \'download_filename_format\' niet instellen op \'%format%\'. Probeer het handmatig opnieuw.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='Kan verouderde configuratie-opties voor %entity% niet verwerken. Probeer handmatig opnieuw. Reden:-
+
+%error%';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='Standaard sorteerrichting';
+$lang["userpreference_high_contrast_mode"]='Hogere contrastmodus';
+$lang["watermark_header"]='Watermerk';
+$lang["watermark_label"]='Watermerk afbeelding - Voorvertoningen opnieuw maken na het wijzigen van het watermerk om bestaande bronnen bij te werken. Het verwijderen van het bestand zal het watermerken uitschakelen.';
+$lang["systemconfig_debug"]='Foutopsporing';
+$lang["systemconfig_debug_log_on_specific_user"]='Op (specifieke gebruiker)';
+$lang["systemconfig_use_native_input_for_date_field"]='Gebruik native datum invoer voor het weergeven van een \'datum\' metadata veldtype';
+$lang["systemconfig_native_date_input_no_partials_supported"]='BELANGRIJK: Als ingeschakeld, worden gedeeltelijke datums (bijv. mei 2023) niet langer ondersteund en bestaande gegevens worden gewist na de volgende bewerking van de bron.';
+$lang["show_affected_resources"]='Toon getroffen bronnen';
+$lang["group_no"]='Groep';
+$lang["confirm_delete_field_value"]='Weet u zeker dat u deze veldoptie wilt VERWIJDEREN? Dit zal de waarde permanent verwijderen uit alle bronnen waarop het is toegepast.';
+$lang["external_shares_options"]='Externe deelopties';
+$lang["email_shares_options_summary"]='Deze opties zijn alleen van toepassing op gedeelde items die zijn aangemaakt met een extern e-mailadres';
+$lang["report-graph-by-pie"]='uitsplitsing';
+$lang["report_breakdown_pie"]='Taartdiagram uitsplitsing';
+$lang["responsive_settings_menu"]='Account';
+$lang["actions_email_new_actions_title"]='Nieuwe acties';
+$lang["actions_email_new_actions_intro"]='Er zijn nieuwe acties die moeten worden voltooid.';
+$lang["email_actions_truncated"]='Alleen de meest recente 1000 acties worden hier getoond. Je hebt %%TOTAL%% acties. Log in op %%APPLICATIONNAME%% om ze allemaal te bekijken.';
+$lang["annotate_select"]='Selecteer veld...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='Kan het bronbestand niet vervangen. De opgegeven collectie referentie is ongeldig.';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='cURL voorbeeld';
+$lang["api-curl-help"]='Het onderstaande eenregelige bash-script kan worden uitgevoerd op elk UNIX-systeem met OpenSSL en cURL geïnstalleerd.';
+$lang["share-password-not-set"]='Externe gedeelde items moeten worden beschermd met een wachtwoord. Voer een gedeeld wachtwoord in om door te gaan.';
+$lang["job_priority_immediate"]='Dringende taak';
+$lang["job_priority_user"]='Gebruikersopdracht';
+$lang["job_priority_system"]='Systeemtaak';
+$lang["job_priority_completed"]='Taak voltooid';
+$lang["job_status_error"]='Er is een fout opgetreden';
+$lang["filter_is_in"]='IS';
+$lang["file_integrity_fail_latest"]='Bekijk laatste bestandsintegriteitsfouten';
+$lang["file_integrity_fail_all"]='Bekijk alle bronnen met fouten in de bestandsintegriteit';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["error-edit_noaccess_related_resources"]='Kan bronnen niet relateren. Geen toegang tot:';
+$lang["csv_export_filename"]='metadata_export_%%ZOEKEN%%_%%TIJD%%';
+$lang["upload_share_email_template"]='<br />
+[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["share_expired_icon_title"]='Verlopen';
+$lang["error_invalid_date_format"]='"%%VALUE%%" is een ongeldige datum. Alle waarden in dit veld moeten worden geformatteerd als JJJJ-MM-DD';
+$lang["related_resource_create"]='Maak nieuwe gerelateerde bron';
+$lang["skip-to-main-content"]='Ga naar hoofdinhoud';
+$lang["cleanup_invalid_nodes"]='Maak veldgegevens schoon van ongeldige brontypen';
+$lang["cleanup_invalid_node_dry_run"]='Verwijder geen gegevens, geef alleen het aantal te verwijderen rijen terug?';
+$lang["advancedsearch_resource_section"]='Resourcegegevens';
+$lang["error-reload-required"]='ResourceSpace is bijgewerkt. Gelieve de pagina te herladen';
+$lang["user_pref_new_action_emails"]='E-mail mij als er nieuwe acties worden aangemaakt';
+$lang["email_rate_limit_active"]='Het maximum aantal e-mails per uur dat door dit systeem wordt verzonden, is overschreden. E-mails worden momenteel niet door dit systeem verzonden.';
+$lang["email_rate_limit_inactive"]='De e-maillimiet is opgeheven en e-mails worden nu verzonden.';
+$lang["severity-level_0"]='Kritiek';
+$lang["severity-level_1"]='Waarschuwing';
+$lang["severity-level_2"]='Kennisgeving';
+$lang["pull_images"]='Afbeeldingen ophalen';
+$lang["pull_images_text"]='Gebruik afbeeldingen van gerelateerde bronnen als er geen beschikbaar zijn';
+$lang["system_user_default"]='SYSTEEM';
+$lang["userlimitreached"]='Je hebt je gebruikerslimiet bereikt. Een bestaande gebruiker moet worden uitgeschakeld of verwijderd voordat je nieuwe accounts kunt aanmaken of bestaande accounts kunt inschakelen.';
+$lang["user_api_session_title"]='Toegang tot API van extern systeem';
+$lang["user_api_session_text"]='Het externe systeem \'%system%\' vraagt toegang tot %applicationname% met behulp van uw inloggegevens. Klik op \'Toegang verlenen\' alleen als u dit verzoek heeft geïnitieerd';
+$lang["user_api_session_invalid_system"]='Ongeldig systeem aangevraagd';
+$lang["user_api_session_grant_access"]='Toegang verlenen';
+$lang["user_api_session_grant_success"]='Sleutel succesvol uitgegeven.';
+$lang["user_api_session_grant_error"]='Sleuteluitgifte mislukt.';
+$lang["no_file"]='Geen bestand';
+$lang["missing_file"]='Dit bestand ontbreekt. Neem contact op met uw systeembeheerder';
+$lang["action_set_no_file"]='Markeren als geen bestand hebbend';
+$lang["action_unset_no_file"]='Markeren als bestand ontbreekt';
+$lang["completed_set_no_file"]='Resource gemarkeerd als geen bestand hebbend';
+$lang["completed_unset_no_file"]='Resource gemarkeerd als bestand ontbreekt';

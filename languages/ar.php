@@ -2729,3 +2729,267 @@ $lang["batch_edit_save_warning_alert"]='تم اكتشاف بعض الأخطاء 
 $lang["page_collections_message"]='الاستمرار سيؤدي إلى إلغاء تحديد المجموعات المحددة للحذف على هذه الصفحة';
 $lang["enterantispamcode"]='مكافحة البريد العشوائي ، الرجاء إدخال الرمز التالي';
 $lang["job_status_2"]='اكتمال';
+
+$lang["information_field_restype_deselect_cleanup"]='لإزالة بيانات الحقل الحالية من أنواع الموارد التي تم إلغاء تحديدها، انقر فوق الرابط التالي %%CLEANUP_LINK%%';
+$lang["property-id"]='معرف';
+$lang["mainmenu"]='القائمة الرئيسية';
+$lang["strip"]='قطاعة';
+$lang["collectionidprefix"]='معرّف_المجموعة';
+$lang["_dupe"]='نسخة مكررة';
+$lang["edit_multiple_existing_values"]='الكلمات الرئيسية الموجودة على الموارد في هذا التحديد';
+$lang["edit_multiple_show_more"]='عرض المزيد';
+$lang["edit_multiple_too_many"]='عرض أعلى 100 قيمة تستخدم بشكل أكثر. القيم الأخرى موجودة أيضًا.';
+$lang["edit_multiple_action_text_rt"]='سيتم استبدال جميع النصوص / الخيارات بالكلمات الرئيسية التالية';
+$lang["edit_multiple_action_text_ap"]='سيتم إلحاق هذه الكلمات الرئيسية';
+$lang["edit_multiple_action_text_rm"]='سيتم إزالة هذه الكلمات الرئيسية';
+$lang["sortorder-desc"]='الوصف';
+$lang["title"]='العنوان';
+$lang["fileoftype"]='ملف؟';
+$lang["field-fileextension"]='امتداد الملف';
+$lang["fileextension-inside-brackets"]='الامتداد: [%EXTENSION]';
+$lang["fileextension"]='امتداد الملف';
+$lang["log-rtchange"]='نوع المورد المحرر';
+$lang["log-missinglang"]='النوع (لغة مفقودة)';
+$lang["log-NOFIL"]='تم وضع علامة على أنه لا يحتوي على ملف';
+$lang["log-FIL"]='تم وضع علامة كوجود ملف';
+$lang["log-EDT"]='المورد المحرر';
+$lang["accountnotfound-reset-not-emailed"]='لم يتم إرسال رابط إعادة تعيين كلمة المرور لعدم وجود حساب مرتبط بهذا البريد الإلكتروني';
+$lang["accountnoemail-reset-not-emailed"]='لم يتم إرسال رابط إعادة تعيين كلمة المرور لعدم وجود عنوان بريد إلكتروني مرتبط بالحساب';
+$lang["accountexpired-reset-not-emailed"]='لم يتم إرسال رابط إعادة تعيين كلمة المرور لأن الحساب قد انتهت صلاحيته';
+$lang["accountnotapproved-reset-not-emailed"]='لم يتم إرسال رابط إعادة تعيين كلمة المرور لأن الحساب غير معتمد';
+$lang["notavailableshort"]='غ/أ (غير متاح/غير مطبق)';
+$lang["remaining"]='المتبقي';
+$lang["web_server"]='خادم الويب';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='جميع حالات سير العمل';
+$lang["stat-downloadedkb"]='بيانات الملف المُحمَّل (كيلوبايت)';
+$lang["plugin_field_fmt"]='الرجاء ترجمة: %A (%B)';
+$lang["external"]='خارجي';
+$lang["email_error_user_list_some_skipped"]='تم تخطي الإخطارات للمستخدمين التاليين (قد لا يكون المستخدمون معتمدين)';
+$lang["unrelateallresources"]='إلغاء الصلة بين جميع الموارد في هذه المجموعة';
+$lang["unrelateallresources_confirmation"]='لا توجد موارد في هذه المجموعة مرتبطة الآن';
+$lang["setup-download_filename_format"]='صيغة اسم ملف التنزيل';
+$lang["ppi"]='معلومات البكسل لكل بوصة';
+$lang["map_esri_group"]='ESRI';
+$lang["map_esridelorme"]='DeLorme
+';
+$lang["map_nasagibs_group"]='ناسا جيبس';
+$lang["map_mapbox_group"]='خريطة الصندوق';
+$lang["map_mapboxid"]='معرف';
+$lang["field_ref_and_name"]='%ref% - %name% translated to العربية is %ref% - %name%';
+$lang["filestore"]='مستودع الملفات';
+$lang["rs_ext_dependencies"]='الاعتماديات الخارجية لنظام إدارة الموارد الرقمية';
+$lang["write_access_to"]='صلاحية الكتابة إلى';
+$lang["geodragmodepan"]='مقلاة';
+$lang["inch-short"]='في';
+$lang["centimetre-short"]='سم';
+$lang["error-invalid_name"]='اسم غير صالح';
+$lang["inactive_entry_matched"]='تم العثور على إدخال غير نشط مُطابق ل';
+$lang["yyyy-mm-dd"]='YYYY-MM-DD
+
+YYYY-MM-DD';
+$lang["kilobyte-symbol"]='ميجابايت';
+$lang["megabyte-symbol"]='ميجابايت';
+$lang["gigabyte-symbol"]='جيجابايت';
+$lang["kilobyte-symbol-binary"]='كيلوبايت (KiB)';
+$lang["megabyte-symbol-binary"]='ميغابايت';
+$lang["gigabyte-symbol-binary"]='جيبي (GiB)';
+$lang["terabyte-symbol-binary"]='تيرابايت';
+$lang["ref-title"]='المرجع - العنوان';
+$lang["resourcetypes-collections"]='جميع أنواع الموارد وجميع أنواع المجموعات';
+$lang["merge_filename_title_suffix"]='لاحقة';
+$lang["user_group"]='مجموعة المستخدمين';
+$lang["all__emailbulk"]='يرجى ترجمة: <br /><br />
+[نص]<br /><br />
+[نص_تذييل]';
+$lang["all__emailcollection"]='يرجى ترجمة: <br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='يرجى ترجمة: <br />
+[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emaillogindetails"]='[مرحبًا]<br /><br />
+[lang_newlogindetails]<br /><br />
+[lang_username] : [اسم المستخدم] <br /><br />
+<a href="[رابط]">[رابط]</a><br /><br />
+[نص_تذييلي]';
+$lang["all__emailnewresearchrequestwaiting"]='الرجاء ترجمة: <br />
+[اسم المستخدم] ([الاسم الكامل للمستخدم] - [البريد الإلكتروني للمستخدم])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[الاسم]<br /><br />
+[lang_descriptionofproject]:[الوصف]<br /><br />
+[lang_deadline]:[الموعد النهائي]<br /><br />
+[lang_contacttelephone]:[الاتصال]<br /><br />
+[lang_finaluse]: [الاستخدام النهائي]<br /><br />
+[lang_shaperequired]: [الشكل المطلوب]<br /><br />
+[lang_noresourcesrequired]: [لا توجد موارد مطلوبة]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
+[list]
+[lang_viewcontributedsubittedl]
+
+<a href="[url]">[url]</a>
+
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer] <br />
+
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer] <br />';
+$lang["all__emailnotifyresourcesunsubmitted"]='الموارد غير المقدمة من قبل المستخدمين:
+[list]
+عرض جميع الموارد المعلقة لدى المستخدمين
+<br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage]
+تم استكمال طلب البحث بنجاح.
+
+[lang_clicklinkviewcollection]
+انقر على الرابط لعرض المجموعة:
+
+<a href="[url]">[url]</a>
+
+[text_footer]
+نهاية الرسالة';
+$lang["all__emailresource"]='يرجى ترجمة: <br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='[lang_username] : [اسم المستخدم] <br />
+[list] <br />
+[details]<br /><br />
+[lang_clicktoviewresource] <br/><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["dash"]='لوحة القيادة';
+$lang["upgrade_script"]='سكريبت الترقية';
+$lang["upgrade_026_notification"]='تم تحديث بعض خيارات التكوين التي تم تجاوزها بواسطة %entity% الخاص بك.
+
+للحفاظ على تنسيق اسم الملف المُنزل بأقرب ما يكون إلى الطريقة القديمة، يرجى تحديث تجاوز التكوين الخاص به باستخدام:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='غير قادر على تعيين خيار تكوين النظام على مستوى النظام \'download_filename_format\' إلى \'%format%\'. يرجى إعادة المحاولة يدويًا.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='غير قادر على معالجة خيارات التكوين المهجورة للكيان %entity%. يرجى إعادة المحاولة يدويًا. السبب:-
+
+%error%';
+$lang["plugin_category_api"]='واجهة برمجة التطبيقات';
+$lang["userpreference_default_sort_order_label"]='اتجاه الترتيب الافتراضي';
+$lang["userpreference_high_contrast_mode"]='وضع التباين الأعلى';
+$lang["watermark_header"]='علامة ماءية';
+$lang["watermark_label"]='صورة العلامة المائية - إعادة إنشاء المعاينات بعد تغيير العلامة المائية لتحديث الموارد الحالية. إزالة الملف ستعطل عملية وضع العلامة المائية.';
+$lang["systemconfig_debug"]='تصحيح الأخطاء';
+$lang["systemconfig_debug_log_on_specific_user"]='على (المستخدم المحدد)';
+$lang["systemconfig_use_native_input_for_date_field"]='استخدم إدخال التاريخ الأصلي لعرض نوع حقل البيانات التوصيفية \'تاريخ\'';
+$lang["systemconfig_native_date_input_no_partials_supported"]='مهم: إذا تم تمكينها، فإن التواريخ الجزئية (على سبيل المثال، مايو 2023) لن تعد مدعومة وسيتم مسح البيانات الحالية بعد تحرير المورد التالي.';
+$lang["show_affected_resources"]='عرض الموارد المتأثرة';
+$lang["group_no"]='مجموعة';
+$lang["confirm_delete_field_value"]='هل أنت متأكد أنك ترغب في حذف هذا الخيار من الحقل؟ سيتم إزالة القيمة بشكل دائم من جميع الموارد التي تم تطبيقها عليها.';
+$lang["external_shares_options"]='خيارات المشاركة الخارجية';
+$lang["email_shares_options_summary"]='هذه الخيارات ستنطبق فقط على المشاركات التي تم إنشاؤها باستخدام عنوان بريد إلكتروني خارجي';
+$lang["report_breakdown_pie"]='كسر الفطيرة';
+$lang["actions_email_new_actions_title"]='إجراءات جديدة';
+$lang["actions_email_new_actions_intro"]='هناك إجراءات جديدة يجب إكمالها.';
+$lang["email_actions_truncated"]='يتم عرض فقط أحدث 1000 إجراء هنا. لديك %%TOTAL%% إجراء. قم بتسجيل الدخول إلى %%APPLICATIONNAME%% لعرضها جميعًا.';
+$lang["annotate_select"]='حدد الحقل...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='فشل في استبدال ملف المورد. مرجع المجموعة المقدم غير صالح.';
+$lang["systemconfig_api"]='واجهة برمجة التطبيقات';
+$lang["iiif"]='التحالف الدولي للصور الرقمية التفاعلية';
+$lang["api-curl-example"]='مثال cURL';
+$lang["api-curl-help"]='يمكن تنفيذ السكربت الباش المكون من سطر واحد أدناه على أي نظام يونكس مع تثبيت OpenSSL و cURL.';
+$lang["share-password-not-set"]='يجب حماية المشاركات الخارجية بواسطة كلمة مرور. يرجى إدخال كلمة مرور للمشاركة للمتابعة.';
+$lang["job_priority_immediate"]='مهمة عاجلة';
+$lang["job_priority_user"]='وظيفة المستخدم';
+$lang["job_priority_system"]='وظيفة النظام';
+$lang["job_priority_completed"]='المهمة تمت إكمالها';
+$lang["job_status_error"]='حدث خطأ';
+$lang["filter_is_in"]='الموارد';
+$lang["file_integrity_fail_latest"]='عرض أحدث فشل في سلامة الملفات';
+$lang["file_integrity_fail_all"]='عرض جميع الموارد ذات فشل في سلامة الملفات';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["error-edit_noaccess_related_resources"]='غير قادر على ربط الموارد. لا يوجد وصول إلى:';
+$lang["csv_export_filename"]='تصدير_البيانات_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='الرجاء ترجمة: <br />
+[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new]
+تم مشاركة ملف جديد معك.
+
+[lang_clicklinkviewcollection]
+انقر على الرابط التالي لعرض المجموعة:
+
+<a href="[url]">[url]</a>
+
+[text_footer]
+نشكرك على استخدام ResourceSpace.';
+$lang["share_expired_icon_title"]='منتهية الصلاحية';
+$lang["error_invalid_date_format"]='"%%VALUE%%" تاريخ غير صالح. يجب تنسيق جميع القيم في هذا الحقل على أنها YYYY-MM-DD';
+$lang["related_resource_create"]='إنشاء مورد ذي صلة جديد';
+$lang["skip-to-main-content"]='انتقل إلى المحتوى الرئيسي';
+$lang["cleanup_invalid_nodes"]='تنظيف بيانات الحقل من أنواع الموارد غير الصالحة';
+$lang["cleanup_invalid_node_dry_run"]='لا تحذف البيانات، فقط ارجع عدد الصفوف التي سيتم حذفها';
+$lang["advancedsearch_resource_section"]='بيانات المورد';
+$lang["error-reload-required"]='تم تحديث ResourceSpace. يرجى إعادة تحميل الصفحة';
+$lang["user_pref_new_action_emails"]='أرسل لي بريدًا إلكترونيًا إذا تم إنشاء إجراءات جديدة';
+$lang["email_rate_limit_active"]='تم تجاوز الحد الأقصى لعدد الرسائل الإلكترونية في الساعة التي يتم إرسالها بواسطة هذا النظام. لا تتم إرسال الرسائل الإلكترونية حاليًا بواسطة هذا النظام.';
+$lang["email_rate_limit_inactive"]='تم رفع حد البريد الإلكتروني ويتم الآن إرسال الرسائل الإلكترونية.';
+$lang["severity-level_0"]='حرجية';
+$lang["severity-level_1"]='تحذير';
+$lang["severity-level_2"]='إشعار';
+$lang["pull_images"]='استرد الصور';
+$lang["pull_images_text"]='استخدم الصور من الموارد ذات الصلة إذا لم تتوفر أي واحدة';
+$lang["system_user_default"]='النظام';
+$lang["userlimitreached"]='لقد وصلت إلى حد الحسابات الخاصة بالمستخدمين الخاص بك. يجب تعطيل أو حذف مستخدم موجود قبل أن تتمكن من إنشاء حسابات جديدة أو تمكين الحسابات الحالية.';
+$lang["user_api_session_title"]='الوصول إلى واجهة برمجة التطبيقات عن بُعد';
+$lang["user_api_session_text"]='النظام البعيد \'%system%\' يطلب الوصول إلى %applicationname% باستخدام بيانات اعتمادك. انقر فقط على \'منح الوصول\' إذا كنت قد بدأت هذا الطلب';
+$lang["user_api_session_invalid_system"]='النظام المطلوب غير صالح';
+$lang["user_api_session_grant_access"]='منح الوصول';
+$lang["user_api_session_grant_success"]='تم إصدار المفتاح بنجاح.';
+$lang["user_api_session_grant_error"]='فشل إصدار المفتاح.';
+$lang["no_file"]='لا يوجد ملف';
+$lang["missing_file"]='هذا الملف مفقود. يرجى الاتصال بمسؤول النظام الخاص بك.';
+$lang["action_set_no_file"]='وضع علامة بأنه لا يحتوي على ملف';
+$lang["action_unset_no_file"]='وسم كملف مفقود';
+$lang["completed_set_no_file"]='المورد معلم كأنه ليس لديه ملف';
+$lang["completed_unset_no_file"]='المورد معلم كملف مفقود';
+$lang["sortorder-asc"]='تصاعدي';
+$lang["addremove"]='+/-';
+$lang["map_hydda_group"]='هيدا';
+$lang["megapixel-short"]='MP';
+$lang["at-resolution"]='@';
+$lang["byte-symbol"]='ب';
+$lang["terabyte-symbol"]='تيرابايت';
+$lang["resourcetypes_separator"]='،';
+$lang["collectiontypes_separator"]='،';
+$lang["all__comments_flag_notification_email_body"]='من فضلك ترجم:';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emailresearchrequestassigned"]='<br />
+[lang_researchrequestassignedmessage]<br /><br />
+[نص التذييل]';
+$lang["upload__introtext"]='من فضلك ترجم';
+
+$lang["all__comments_flag_notification_email_subject"]='من فضلك ترجم';
+$lang["all__comments_policy"]='من فضلك ترجم';
+$lang["edit__batch"]='من فضلك ترجم';
+$lang["team_content__introtext"]='من فضلك ترجم';

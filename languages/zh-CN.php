@@ -2733,3 +2733,261 @@ $lang["error_invalid_revert_option"]='之前存储的值 \'%%VALUE%%\' 在当前
 $lang["error_invalid_revert_date"]='先前存储的日期“%%VALUE%%”无效。如有需要，请手动更新资源。';
 $lang["batch_edit_save_warning_message"]='编辑以下资源时遇到了错误。';
 $lang["batch_edit_save_warning_alert"]='执行此操作时遇到了一些错误。请查看您的消息以获取更多详细信息。';
+
+$lang["property-exiftool_field"]='Exiftool 字段';
+$lang["information_field_restype_deselect_cleanup"]='要从取消选择的资源类型中删除现有字段数据，请点击以下链接 %%CLEANUP_LINK%%';
+$lang["property-id"]='编号';
+$lang["mainmenu"]='主菜单';
+$lang["perpage_option"]='每页 ?';
+$lang["collectionidprefix"]='Col_ID';
+$lang["_dupe"]='重复';
+$lang["forthispackage"]='对于此软件包';
+$lang["edit_multiple_existing_values"]='此选择中的资源现有关键词';
+$lang["edit_multiple_show_more"]='显示更多';
+$lang["edit_multiple_too_many"]='显示最常用的前100个值。其他值也存在。';
+$lang["edit_multiple_action_text_rt"]='所有文本/选项将被以下关键词替换';
+$lang["edit_multiple_action_text_ap"]='这些关键词将被附加';
+$lang["edit_multiple_action_text_rm"]='这些关键词将被删除';
+$lang["sortorder-asc"]='升序';
+$lang["sortorder-desc"]='描述';
+$lang["title"]='标题';
+$lang["fileoftype"]='？文件';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["fileextension-inside-brackets"]='[%EXTENSION]';
+$lang["fileextension"]='%EXTENSION';
+$lang["log-rtchange"]='编辑资源类型';
+$lang["log-NOFIL"]='标记为无文件';
+$lang["log-FIL"]='标记为有文件';
+$lang["log-EDT"]='编辑资源';
+$lang["accountnotfound-reset-not-emailed"]='由于没有与该电子邮件关联的账户，密码重置链接未发送';
+$lang["accountnoemail-reset-not-emailed"]='由于账户没有电子邮件地址，密码重置链接未发送';
+$lang["accountexpired-reset-not-emailed"]='由于账户已过期，密码重置链接未发送';
+$lang["accountnotapproved-reset-not-emailed"]='密码重置链接未发送，因为账户未被批准';
+$lang["notavailableshort"]='不适用';
+$lang["status-note"]='注意';
+$lang["remaining"]='剩余';
+$lang["web_server"]='网络服务器';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='所有工作流状态';
+$lang["stat-downloadedkb"]='下载文件数据 (KB)';
+$lang["plugin_field_fmt"]='%A (%B)';
+$lang["external"]='外部';
+$lang["email_error_user_list_some_skipped"]='跳过以下用户的通知（用户可能未被批准）';
+$lang["unrelateallresources"]='取消关联此集合中的所有资源';
+$lang["unrelateallresources_confirmation"]='此集合中的资源现在都没有关联';
+$lang["ratingremovehover"]='删除您的评分';
+$lang["setup-download_filename_format"]='下载文件名格式';
+$lang["setup-if-smtpsecure"]='\'\', \'tls\' 或 \'ssl\'。对于 Gmail，需要 \'tls\' 或 \'ssl\'。';
+$lang["addremove"]='+/-';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapbox_group"]='Mapbox';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["dosavedsearch"]='执行已保存的搜索';
+$lang["period"]='句号';
+$lang["filestore"]='文件存储';
+$lang["rs_ext_dependencies"]='ResourceSpace 外部依赖项';
+$lang["write_access_to"]='写入访问权限到';
+$lang["latlong"]='纬度 / 经度';
+$lang["geodragmodepan"]='全景';
+$lang["inch-short"]='在';
+$lang["centimetre-short"]='厘米';
+$lang["megapixel-short"]='MP';
+$lang["cc-emailaddress"]='抄送 %emailaddress';
+$lang["error-invalid_name"]='无效名称';
+$lang["inactive_entry_matched"]='匹配到的非活动条目';
+$lang["kilobyte-symbol"]='千字节';
+$lang["megabyte-symbol"]='MB';
+$lang["gigabyte-symbol"]='GB';
+$lang["terabyte-symbol"]='TB';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["ref-title"]='%ref - %title';
+$lang["comments_flag-this-comment"]='标记';
+$lang["resourcetypes-collections"]='所有 %resourcetypes% 和所有 %collectiontypes%';
+$lang["resourcetypes_separator"]=', ';
+$lang["collectiontypes_separator"]=', ';
+$lang["embedded_metadata_prepend_option"]='前置';
+$lang["user_group"]='用户组';
+$lang["all__emailbulk"]='<br /><br />
+[文本]<br /><br />
+[文本_页脚]';
+$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[欢迎]<br /><br /> 
+[新登录详情]<br /><br /> 
+[用户名] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[文本页脚]';
+$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]
+
+[lang_nameofproject]:[name]
+
+[lang_descriptionofproject]:[description]
+
+[lang_deadline]:[deadline]
+
+[lang_contacttelephone]:[contact]
+
+[lang_finaluse]: [finaluse]
+
+[lang_shaperequired]: [shape]
+
+[lang_noresourcesrequired]: [noresources]
+
+<a href="[url]">[url]</a>
+
+<a href="[teamresearchurl]">[teamresearchurl]</a>
+
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[列表] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[文本页脚]';
+$lang["all__emailresearchrequestassigned"]='<br />
+[lang_researchrequestassignedmessage]<br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='<br />
+[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["home__restrictedtext"]='请点击您收到的电子邮件中的链接以访问为您选择的资源。';
+$lang["research_request__introtext"]='我们的专业研究人员在这里帮助您找到最适合您项目的资源。请尽可能详细地填写此表格，以便我们能够准确地满足您的要求。<br /><br />研究团队的一名成员将被分配处理您的请求。在整个过程中，我们将通过电子邮件与您保持联系，一旦我们完成研究，您将收到一封包含所有推荐资源链接的电子邮件。';
+$lang["team_research__introtext"]='组织和管理“研究请求”。<br /><br />选择“编辑研究”以查看请求详情并将研究分配给团队成员。可以通过在“编辑”屏幕中输入集合ID，基于以前的集合创建研究请求。<br /><br />一旦研究请求被分配，选择“编辑集合”将研究请求添加到“默认集合”面板。使用标准工具，然后可以将资源添加到研究中。<br /><br />研究完成后，选择“编辑研究”，将状态更改为完成，并自动向请求研究的用户发送电子邮件。电子邮件包含研究的链接，并且它也会自动添加到他们的“默认集合”面板。';
+$lang["themes__manage"]='组织和编辑在线可用的精选集合。精选集合是特别推广的集合。<br /><br /><strong>1 要在精选集合下创建新条目 - 创建一个集合</strong><br /> 从顶部主菜单中选择<strong>我的集合</strong>，并设置一个全新的<strong>公共</strong>集合。记得在设置过程中包含一个精选集合名称。使用现有的精选集合名称将集合分组到当前的精选集合下（确保你输入的名称完全相同），或者选择一个新标题来创建一个全新的精选集合。绝不允许用户添加/删除精选集合中的资源。<br /><br /><strong>2 要编辑精选集合下现有条目的内容</strong><br /> 选择<strong>编辑集合</strong>。该集合中的项目将出现在屏幕底部的<strong>我的集合</strong>面板中。使用标准工具编辑、删除或添加资源。<br /><br /><strong>3 要更改精选集合名称或将集合移动到不同的精选集合下</strong><br /> 选择<strong>编辑属性</strong>并编辑精选集合类别或集合名称。使用现有的精选集合名称将集合分组到当前的精选集合下（确保你输入的名称完全相同），或者选择一个新标题来创建一个全新的精选集合。<br /><br /><strong>4 要从精选集合中移除一个集合</strong><br /> 选择<strong>编辑属性</strong>并删除精选集合类别框中的文字。';
+$lang["upgrade_script"]='升级脚本';
+$lang["upgrade_026_notification"]='升级已弃用了一些配置选项，而您的 %entity% 正在覆盖这些选项。
+
+为了继续以尽可能接近旧方式的格式化下载文件名，请更新其配置覆盖：
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='无法将系统范围的配置选项 \'download_filename_format\' 设置为 \'%format%\'。请手动重试。';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='无法处理 %entity% 的弃用配置选项。请手动重试。原因：-
+
+%error%';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='默认排序方向';
+$lang["userpreference_high_contrast_mode"]='高对比度模式';
+$lang["watermark_header"]='水印';
+$lang["watermark_label"]='水印图像 - 更改水印后重新创建预览以更新现有资源。删除文件将禁用水印。';
+$lang["systemconfig_debug"]='调试';
+$lang["systemconfig_debug_log_on_specific_user"]='在（特定用户）';
+$lang["systemconfig_use_native_input_for_date_field"]='使用本地日期输入显示“日期”元数据字段类型';
+$lang["systemconfig_native_date_input_no_partials_supported"]='重要提示：如果启用，部分日期（例如 2023年5月）将不再受支持，现有数据将在下次资源编辑后被清除。';
+$lang["show_affected_resources"]='显示受影响的资源';
+$lang["group_no"]='组';
+$lang["confirm_delete_field_value"]='您确定要删除此字段选项吗？这将永久从所有应用了该值的资源中移除。';
+$lang["external_shares_options"]='外部共享选项';
+$lang["email_shares_options_summary"]='这些选项仅适用于使用外部电子邮件地址创建的共享';
+$lang["report-graph-by-summary"]='摘要';
+$lang["report_breakdown_pie"]='分解饼图';
+$lang["actions_email_new_actions_title"]='新操作';
+$lang["actions_email_new_actions_intro"]='有新的操作需要完成。';
+$lang["actions_resource_types_hide"]='不要显示以下类型的可编辑资源';
+$lang["actions_approve_hide_groups"]='不显示以下组的账户请求';
+$lang["email_actions_truncated"]='这里只显示最近的1000个操作。您有%%TOTAL%%个操作。登录%%APPLICATIONNAME%%查看全部。';
+$lang["annotate_select"]='选择字段...';
+$lang["byte_prefix_mode_decimal"]='使用十进制文件大小（1000倍数，KB/MB/GB/TB）而不是二进制（1024倍数，KiB/MiB/GiB/TiB）';
+$lang["error_upload_replace_file_fail_invalid_collection"]='无法替换资源文件。提供的集合引用无效。';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='cURL 示例';
+$lang["api-curl-help"]='以下单行 bash 脚本可以在安装了 OpenSSL 和 cURL 的任何 UNIX 系统上执行。';
+$lang["share-password-not-set"]='外部共享必须受密码保护。请输入共享密码以继续。';
+$lang["oj-creation-failure-text"]='发生错误。创建离线作业失败';
+$lang["job_priority_immediate"]='紧急任务';
+$lang["job_priority_user"]='用户任务';
+$lang["job_priority_system"]='系统任务';
+$lang["job_priority_completed"]='任务完成';
+$lang["job_status_error"]='发生错误';
+$lang["filter_is_in"]='是';
+$lang["filter_or"]='或';
+$lang["file_integrity_fail_latest"]='查看最新文件完整性失败';
+$lang["file_integrity_fail_all"]='查看所有文件完整性失败的资源';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["error-edit_noaccess_related_resources"]='无法关联资源。无权访问：';
+$lang["csv_export_filename"]='元数据导出_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["share_expired_icon_title"]='已过期';
+$lang["error_invalid_date_format"]='“%%VALUE%%” 是无效日期。此字段中的所有值必须格式化为 YYYY-MM-DD';
+$lang["related_resource_create"]='创建新的相关资源';
+$lang["skip-to-main-content"]='跳到主要内容';
+$lang["cleanup_invalid_nodes"]='清理无效资源类型的字段数据';
+$lang["cleanup_invalid_node_dry_run"]='不要删除数据，只返回要删除的行数？';
+$lang["advancedsearch_resource_section"]='资源数据';
+$lang["error-reload-required"]='ResourceSpace 已更新。请重新加载页面';
+$lang["user_pref_new_action_emails"]='如果创建了新操作，请给我发邮件';
+$lang["email_rate_limit_active"]='该系统每小时发送的电子邮件数量已超出上限。目前该系统未发送电子邮件。';
+$lang["email_rate_limit_inactive"]='电子邮件限制已解除，现在正在发送电子邮件。';
+$lang["severity-level_0"]='关键';
+$lang["severity-level_1"]='警告';
+$lang["severity-level_2"]='通知';
+$lang["pull_images"]='拉取图像';
+$lang["pull_images_text"]='如果没有可用的图像，请使用相关资源中的图像';
+$lang["system_user_default"]='系统';
+$lang["userlimitreached"]='您已达到用户限制。必须禁用或删除现有用户，才能创建新账户或启用现有账户。';
+$lang["user_api_session_title"]='远程系统API访问';
+$lang["user_api_session_text"]='远程系统 \'%system%\' 正在使用您的凭据请求访问 %applicationname%。只有在您发起此请求时才点击“授予访问权限”';
+$lang["user_api_session_invalid_system"]='请求的系统无效';
+$lang["user_api_session_grant_access"]='授予访问权限';
+$lang["user_api_session_grant_success"]='密钥成功发放。';
+$lang["user_api_session_grant_error"]='密钥发放失败。';
+$lang["no_file"]='无文件';
+$lang["missing_file"]='此文件丢失。请联系您的系统管理员';
+$lang["action_set_no_file"]='标记为无文件';
+$lang["action_unset_no_file"]='标记为文件丢失';
+$lang["completed_set_no_file"]='资源标记为无文件';
+$lang["completed_unset_no_file"]='资源标记为文件丢失';
+$lang["map_esri_group"]='ESRI';

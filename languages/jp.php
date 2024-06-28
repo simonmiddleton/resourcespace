@@ -2673,3 +2673,251 @@ $lang["error_invalid_revert_option"]='以前に保存された値 \'%%VALUE%%\' 
 $lang["error_invalid_revert_date"]='以前に保存された日付 \'%%VALUE%%\' が無効です。必要に応じて、リソースを手動で更新してください。';
 $lang["batch_edit_save_warning_message"]='次のリソースを編集中にエラーが発生しました。';
 $lang["batch_edit_save_warning_alert"]='この操作の実行中にいくつかのエラーが発生しました。詳細についてはメッセージを参照してください。';
+
+$lang["information-copy_field"]='<a href=field_copy.php?ref=%ref>フィールドをコピー</a>';
+$lang["information-display_condition"]='表示条件: 次の条件が満たされている場合にのみこのフィールドが表示されます。チェックされる条件フィールドは、ドロップダウンリスト、チェックボックスリスト、ラジオボタン、動的キーワード、またはカテゴリツリーのいずれかの固定タイプでなければなりません。グループ検索フィルターと同じ形式を使用します。すなわち、shortname=value1|value2, shortnamea=validoptiona;shortnameb=validoptionb1|validoptionb2';
+$lang["information-push_metadata"]='設定されている場合、このリソースのメタデータは関連するリソースのリソース表示ページに表示されます。例えば、複数の写真を人物リソースに関連付けることができます。このプロパティが人物リソースに設定されている場合、人物のメタデータはすべての関連する写真リソースレコードに表示され、システム内のデータの重複を避けることができます。';
+$lang["information_field_restype_deselect_cleanup"]='既存のフィールドデータを選択解除されたリソースタイプから削除するには、次のリンクをクリックしてください %%CLEANUP_LINK%%';
+$lang["property-id"]='ID';
+$lang["mainmenu"]='メインメニュー';
+$lang["xlthumbs"]='特大';
+$lang["perpage_option"]='ページあたり ?';
+$lang["collectionidprefix"]='コレクション_ID';
+$lang["_dupe"]='重複';
+$lang["archive-zip"]='ZIPファイル';
+$lang["archive-7z"]='7Z';
+$lang["edit_multiple_existing_values"]='この選択内のリソースに既存のキーワード';
+$lang["edit_multiple_show_more"]='もっと表示';
+$lang["edit_multiple_too_many"]='上位100件の最も使用されている値を表示しています。他にも存在します。';
+$lang["edit_multiple_action_text_rt"]='すべてのテキスト/オプションは次のキーワードに置き換えられます';
+$lang["edit_multiple_action_text_ap"]='これらのキーワードが追加されます';
+$lang["edit_multiple_action_text_rm"]='これらのキーワードは削除されます';
+$lang["sortorder-asc"]='昇順';
+$lang["sortorder-desc"]='DESC';
+$lang["title"]='タイトル';
+$lang["fileoftype"]='？ファイル';
+$lang["cell-fileoftype"]='%EXTENSION ファイル';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["fileextension-inside-brackets"]='[%EXTENSION]';
+$lang["fileextension"]='%EXTENSION';
+$lang["log-rtchange"]='編集されたリソースタイプ';
+$lang["log-missinglang"]='[type] (言語がありません)';
+$lang["log-NOFIL"]='ファイルなしとしてマークされました';
+$lang["log-FIL"]='ファイルありとマーク済み';
+$lang["log-EDT"]='編集されたリソース';
+$lang["accountnotfound-reset-not-emailed"]='パスワードリセットリンクは送信されませんでした。そのメールアドレスのアカウントが存在しないためです';
+$lang["accountnoemail-reset-not-emailed"]='アカウントにメールアドレスがないため、パスワードリセットリンクは送信されませんでした';
+$lang["accountexpired-reset-not-emailed"]='アカウントの有効期限が切れているため、パスワードリセットリンクは送信されませんでした';
+$lang["accountnotapproved-reset-not-emailed"]='アカウントが承認されていないため、パスワードリセットリンクは送信されませんでした';
+$lang["minute-abbreviated"]='MM';
+$lang["notavailableshort"]='該当なし';
+$lang["remaining"]='残り';
+$lang["web_server"]='ウェブサーバー';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='すべてのワークフロー状態';
+$lang["stat-downloadedkb"]='ダウンロードされたファイルデータ (KB)';
+$lang["plugin_field_fmt"]='%A (%B)';
+$lang["external"]='外部';
+$lang["email_error_user_list_some_skipped"]='次のユーザーに対する通知をスキップしました（ユーザーが承認されていない可能性があります）';
+$lang["unrelateallresources"]='このコレクション内のすべてのリソースの関連付けを解除';
+$lang["unrelateallresources_confirmation"]='このコレクション内のリソースは現在関連付けられていません';
+$lang["exportdata-instructions"]='これは、トラブルシューティングのためにシステム構成データをシステムからエクスポートします。すべてのデータ（フィールドオプション、ユーザー名、メールアドレス、メタデータなど）は、サーバー管理者によって許可されない限り、難読化されます。</br>エクスポートしたい情報を選択し、「エクスポート」をクリックしてください。オフラインジョブが作成され、ダウンロードの準備ができたら通知が届きます。';
+$lang["setup-download_filename_format"]='ダウンロードファイル名形式';
+$lang["ppi"]='PPI';
+$lang["addremove"]='+/-';
+$lang["map_introtext1"]='以下の地図は、検索結果からジオロケーションが関連付けられているリソースを示しています。マーカーの色はリソースタイプまたはカスタムメタデータフィールドに設定されています（地図の下にキーがあります）。マーカーが他のマーカーと重なる場合、緑色のクラスタリングが使用され、クラスタリングされたマーカーの数を示す数字が表示されます。クラスタをズームインするか、ダブルクリックしてください。個々のマーカーをクリックすると、そのリソースのプレビュー画像を表示するポップアップが読み込まれます。プレビュー画像をクリックすると、そのリソースのウィンドウが読み込まれます。個々のマーカーにカーソルを合わせると、ジオコーディネートが表示されます。右上の地図ボタンを使用してベースマップを変更します。左下の地図ボタンを使用して地図をPNGファイルに保存します。';
+$lang["edit_map_introtext"]='地図ビューをパンおよびズームして目的の場所に移動し、地図をクリックしてリソースの位置マーカーを配置します。最新のジオロケーションを保存ボタンを使用して保存し、「リソース編集に戻るまたはコレクションをジオロケート」をクリックして戻ります。特定の場所や地理的特徴名を検索するには、右上の検索ボタンを使用します。右上の地図レイヤーボタンを使用してベースマップを変更します。左下の地図ボタンを使用して地図をPNGファイルに保存します。';
+$lang["geolocate_collection_map_text"]='以下の地図には、ジオロケーションが関連付けられているこのコレクションのリソースが表示されています。マーカーの色はリソースタイプまたはカスタムメタデータフィールドに設定されています（地図の下にキーがあります）。マーカーが他のマーカーと重なる場合、緑色のクラスタリングが使用され、クラスタリングされたマーカーの数が表示されます。クラスタをズームインするか、ダブルクリックしてください。個々のマーカーをクリックすると、そのリソースのプレビュー画像を表示するポップアップが読み込まれます。プレビュー画像をクリックすると、そのリソースのウィンドウが読み込まれます。個々のマーカーにカーソルを合わせると、ジオコーディネートが表示されます。右上の地図ボタンを使用してベースマップを変更します。左下の地図ボタンを使用して地図をPNGファイルに保存します。';
+$lang["map_tf_group"]='Thunderforest';
+$lang["map_tfocm"]='OpenCycleMap (OCM)';
+$lang["map_esri_group"]='ESRI';
+$lang["map_esrinatgeo"]='ナショナルジオグラフィック';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapbox_group"]='Mapbox';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["phpinivalue"]='PHP.INI の値 \'?\'';
+$lang["filestore"]='ファイルストア';
+$lang["rs_ext_dependencies"]='ResourceSpace 外部依存関係';
+$lang["write_access_to"]='書き込みアクセス';
+$lang["geodragmodepan"]='パノラマ';
+$lang["inch-short"]='に';
+$lang["centimetre-short"]='cm';
+$lang["megapixel-short"]='MP';
+$lang["error-invalid_name"]='無効な名前';
+$lang["inactive_entry_matched"]='一致する非アクティブエントリ';
+$lang["yyyy-mm-dd"]='YYYY-MM-DD';
+$lang["resources-with-requeststatus0-2"]='（%number 保留中）';
+$lang["kilobyte-symbol"]='KB';
+$lang["megabyte-symbol"]='MB';
+$lang["gigabyte-symbol"]='GB';
+$lang["terabyte-symbol"]='TB';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["ref-title"]='%ref - %title';
+$lang["user_group"]='ユーザーグループ';
+$lang["all__emailbulk"]='<br /><br />
+[テキスト]<br /><br />
+[テキスト_フッター]';
+$lang["all__emailcollection"]='[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[ようこそ]<br /><br /> 
+[新しいログイン情報]<br /><br /> 
+[ユーザー名] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[フッターテキスト]';
+$lang["all__emailnewresearchrequestwaiting"]='<br />
+[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[リスト] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[リスト] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[テキストフッター]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[リスト] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='<br />
+[lang_researchrequestassignedmessage]<br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='<br />
+[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
+[リスト] <br />
+[詳細]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["upgrade_script"]='アップグレードスクリプト';
+$lang["upgrade_026_notification"]='アップグレードにより、%entity%が上書きしているいくつかの設定オプションが廃止されました。
+
+ダウンロードファイル名を旧方式にできるだけ近づけるためには、設定の上書きを次のように更新してください：
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='システム全体の設定オプション \'download_filename_format\' を \'%format%\' に設定できません。手動で再試行してください。';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='%entity%の廃止された設定オプションを処理できません。手動で再試行してください。理由:-
+
+%error%';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='デフォルトの並び順方向';
+$lang["userpreference_high_contrast_mode"]='高コントラストモード';
+$lang["watermark_header"]='透かし';
+$lang["watermark_label"]='透かし画像 - 透かしを変更した後にプレビューを再作成して既存のリソースを更新します。ファイルを削除すると透かしが無効になります。';
+$lang["systemconfig_debug"]='デバッグ';
+$lang["systemconfig_debug_log_on_specific_user"]='(特定のユーザー)上';
+$lang["systemconfig_use_native_input_for_date_field"]='\'日付\'メタデータフィールドタイプの表示にネイティブ日付入力を使用';
+$lang["systemconfig_native_date_input_no_partials_supported"]='重要: 有効にすると、部分的な日付（例: 2023年5月）はサポートされなくなり、次回のリソース編集後に既存のデータが消去されます。';
+$lang["show_affected_resources"]='影響を受けたリソースを表示';
+$lang["group_no"]='グループ';
+$lang["confirm_delete_field_value"]='このフィールドオプションを削除してもよろしいですか？これにより、適用されているすべてのリソースから値が永久に削除されます。';
+$lang["external_shares_options"]='外部共有オプション';
+$lang["email_shares_options_summary"]='これらのオプションは、外部のメールアドレスを使用して作成された共有にのみ適用されます';
+$lang["report_breakdown_pie"]='内訳円グラフ';
+$lang["actions_noactions"]='未処理のアクションはありません';
+$lang["actions_email_new_actions_title"]='新しいアクション';
+$lang["actions_email_new_actions_intro"]='新しいアクションを完了する必要があります。';
+$lang["email_actions_truncated"]='ここには最新の1000件のアクションのみが表示されます。あなたには%%TOTAL%%件のアクションがあります。すべてを表示するには%%APPLICATIONNAME%%にログインしてください。';
+$lang["annotate_select"]='フィールドを選択...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='リソースファイルの置換に失敗しました。提供されたコレクション参照が無効です。';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='cURLの例';
+$lang["api-curl-help"]='以下の1行バッシュスクリプトは、OpenSSLとcURLがインストールされた任意のUNIXシステムで実行できます。';
+$lang["share-password-not-set"]='外部共有はパスワードで保護する必要があります。続行するには共有パスワードを入力してください。';
+$lang["job_priority_immediate"]='緊急の仕事';
+$lang["job_priority_user"]='ユーザージョブ';
+$lang["job_priority_system"]='システムジョブ';
+$lang["job_priority_completed"]='ジョブ完了';
+$lang["job_status_error"]='エラーが発生しました';
+$lang["filter_is_in"]='です';
+$lang["filter_or"]='または';
+$lang["filter_and"]='AND';
+$lang["file_integrity_fail_latest"]='最新のファイル整合性エラーを表示';
+$lang["file_integrity_fail_all"]='ファイル整合性エラーのあるすべてのリソースを表示';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["error-edit_noaccess_related_resources"]='リソースを関連付けできません。アクセスできません:';
+$lang["csv_export_filename"]='メタデータエクスポート_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["share_expired_icon_title"]='期限切れ';
+$lang["error_invalid_date_format"]='「%%VALUE%%」は無効な日付です。このフィールドのすべての値はYYYY-MM-DD形式で入力してください';
+$lang["related_resource_create"]='新しい関連リソースを作成';
+$lang["skip-to-main-content"]='メインコンテンツにスキップ';
+$lang["cleanup_invalid_nodes"]='無効なリソースタイプからフィールドデータをクリーンアップ';
+$lang["cleanup_invalid_node_dry_run"]='データを削除せず、削除される行数を返しますか？';
+$lang["advancedsearch_resource_section"]='リソースデータ';
+$lang["error-reload-required"]='ResourceSpaceが更新されました。ページを再読み込みしてください';
+$lang["user_pref_new_action_emails"]='新しいアクションが作成された場合はメールで通知してください';
+$lang["email_rate_limit_active"]='このシステムによって送信される1時間あたりの最大メール数を超えました。現在、このシステムからメールは送信されていません。';
+$lang["email_rate_limit_inactive"]='メールの制限が解除され、メールが送信されています。';
+$lang["severity-level_0"]='重要';
+$lang["severity-level_1"]='警告';
+$lang["severity-level_2"]='通知';
+$lang["pull_images"]='画像を取得';
+$lang["pull_images_text"]='関連リソースの画像を使用（利用可能な画像がない場合）';
+$lang["system_user_default"]='システム';
+$lang["userlimitreached"]='ユーザーの上限に達しました。新しいアカウントを作成するか、既存のアカウントを有効にする前に、既存のユーザーを無効にするか削除する必要があります。';
+$lang["user_api_session_title"]='リモートシステムAPIアクセス';
+$lang["user_api_session_text"]='リモートシステム「%system%」があなたの資格情報を使用して%applicationname%へのアクセスを要求しています。このリクエストを開始した場合のみ「アクセスを許可」をクリックしてください';
+$lang["user_api_session_invalid_system"]='無効なシステムが要求されました';
+$lang["user_api_session_grant_access"]='アクセスを許可';
+$lang["user_api_session_grant_success"]='キーが正常に発行されました。';
+$lang["user_api_session_grant_error"]='キー発行に失敗しました。';
+$lang["no_file"]='ファイルなし';
+$lang["missing_file"]='このファイルが見つかりません。システム管理者に連絡してください';
+$lang["action_set_no_file"]='ファイルなしとしてマーク';
+$lang["action_unset_no_file"]='ファイルが見つからないとマーク';
+$lang["completed_set_no_file"]='リソースがファイルなしとしてマークされました';
+$lang["completed_unset_no_file"]='リソースがファイル欠落としてマークされました';

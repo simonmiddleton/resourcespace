@@ -2587,3 +2587,266 @@ $lang["error_invalid_revert_option"]='Prethodno pohranjena vrijednost \'%%VALUE%
 $lang["error_invalid_revert_date"]='Prethodno pohranjeni datum \'%%VALUE%%\' nije valjan. Ako je potrebno, ručno ažurirajte resurs.';
 $lang["batch_edit_save_warning_message"]='Tijekom uređivanja sljedećih resursa došlo je do pogrešaka';
 $lang["batch_edit_save_warning_alert"]='Neki su se problemi pojavili prilikom izvođenja ove operacije. Molimo pogledajte svoje poruke za više detalja';
+
+$lang["fieldtitle-genre"]='Žanr';
+$lang["property-reference"]='Referenca';
+$lang["information-display_condition"]='Uvjet prikaza: ovo polje će se prikazati samo ako su ispunjeni sljedeći uvjeti. Polje koje se provjerava mora biti jedan od fiksnih tipova: padajući popis, popis s potvrdnim okvirima, radio gumbi, dinamička ključna riječ ili stablo kategorija. Koristi isti format kao filtar pretraživanja grupe, tj. kratkoime=vrijednost1|vrijednost2, kratkoimea=važećaopcija;kratkoimeb=važećaopcijab1|važećaopcijab2';
+$lang["information_field_restype_deselect_cleanup"]='Da biste uklonili postojeće podatke polja iz neodabranih vrsta resursa, kliknite na sljedeću poveznicu %%CLEANUP_LINK%%';
+$lang["property-id"]='Id';
+$lang["mainmenu"]='Glavni izbornik';
+$lang["strip"]='Ukloni';
+$lang["perpage_option"]='? po stranici';
+$lang["off"]='Isključeno';
+$lang["collectionidprefix"]='ID_kolekcije';
+$lang["_dupe"]='_dupe';
+$lang["archive-7z"]='7Z';
+$lang["edit_multiple_existing_values"]='Postojeće ključne riječi na resursima u ovom odabiru';
+$lang["edit_multiple_show_more"]='Prikaži više';
+$lang["edit_multiple_too_many"]='Prikazuje se 100 najčešće korištenih vrijednosti. Postoje i druge.';
+$lang["edit_multiple_action_text_rt"]='Sav tekst / opcije će biti zamijenjene sljedećim ključnim riječima';
+$lang["edit_multiple_action_text_ap"]='Ove ključne riječi će biti dodane';
+$lang["edit_multiple_action_text_rm"]='Ove ključne riječi će biti uklonjene';
+$lang["sortorder-asc"]='UZL';
+$lang["sortorder-desc"]='OPIS';
+$lang["title"]='Naslov';
+$lang["fileoftype"]='? Datoteka';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["fileextension-inside-brackets"]='[%EXTENSION]';
+$lang["fileextension"]='%EXTENSION';
+$lang["log-rtchange"]='Uređena vrsta resursa';
+$lang["log-missinglang"]='[type] (nedostaje jezik)';
+$lang["log-NOFIL"]='Označeno kao da nema datoteku';
+$lang["log-FIL"]='Označeno kao da ima datoteku';
+$lang["log-EDT"]='Uređeni resurs';
+$lang["accountnotfound-reset-not-emailed"]='Poveznica za resetiranje lozinke nije poslana jer ne postoji račun s tom e-poštom';
+$lang["accountnoemail-reset-not-emailed"]='Veza za poništavanje lozinke nije poslana jer račun nema adresu e-pošte';
+$lang["accountexpired-reset-not-emailed"]='Veza za poništavanje lozinke nije poslana jer je račun istekao';
+$lang["accountnotapproved-reset-not-emailed"]='Poveznica za resetiranje lozinke nije poslana jer račun nije odobren';
+$lang["minute-abbreviated"]='MM';
+$lang["notavailableshort"]='Nije primjenjivo';
+$lang["remaining"]='preostalo';
+$lang["web_server"]='Web poslužitelj';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='Sva stanja tijeka rada';
+$lang["stat-downloadedkb"]='Preuzeti podaci datoteke (KB)';
+$lang["plugin_field_fmt"]='%A (%B)';
+$lang["external"]='Vanjski';
+$lang["email_error_user_list_some_skipped"]='Preskočene obavijesti za sljedeće korisnike (korisnici možda nisu odobreni)';
+$lang["unrelateallresources"]='Poništi povezivanje svih resursa u ovoj kolekciji';
+$lang["unrelateallresources_confirmation"]='Nijedan od resursa u ovoj kolekciji sada nije povezan';
+$lang["exportdata-instructions"]='Ovo će izvesti podatke o konfiguraciji sustava iz vašeg sustava za potrebe rješavanja problema. Svi podaci (opcije polja, korisnička imena, e-mailovi i metapodaci itd.) bit će zamagljeni osim ako vaš administrator poslužitelja ne dopusti drugačije.</br>Odaberite informacije koje želite izvesti i kliknite \'Izvoz\'. Bit će kreiran offline zadatak i dobit ćete obavijest kada vaša preuzimanje bude spremno.';
+$lang["setup-download_filename_format"]='Format naziva datoteke za preuzimanje';
+$lang["setup-if-smtpsecure"]='\'\', \'tls\' ili \'ssl\'. Za Gmail je potreban \'tls\' ili \'ssl\'.';
+$lang["ppi"]='PPI';
+$lang["addremove"]='+/-';
+$lang["location-add"]='Dodaj lokaciju';
+$lang["map_introtext1"]='Karta ispod prikazuje resurse iz rezultata pretraživanja koji imaju pridruženu geolokaciju. Boja markera je postavljena prema vrsti resursa ili prilagođenom metapodatkovnom polju (ključ ispod karte). Kada bi se markeri preklapali, koristi se grupiranje zelene boje s brojem koji označava broj grupiranih markera, povećajte ili dvaput kliknite na grupu. Kliknite na pojedinačni marker kako biste učitali skočni prozor za taj resurs koji prikazuje preglednu sliku. Kliknite na preglednu sliku kako biste učitali prozor za taj resurs. Pređite mišem preko pojedinačnog markera za geokoordinate. Promijenite osnovnu kartu pomoću gumba u gornjem desnom kutu karte. Spremite kartu u PNG datoteku pomoću gumba u donjem lijevom kutu karte.';
+$lang["edit_map_introtext"]='Pomaknite i zumirajte na željeni prikaz karte, zatim kliknite na kartu kako biste postavili oznaku lokacije resursa. Spremite najnoviju geolokaciju pomoću gumba Spremi, a zatim kliknite \'Natrag na uređivanje resursa ili geolociranje kolekcije\' za povratak. Za pretraživanje određene lokacije ili naziva geografskog obilježja, koristite gumb za pretraživanje u gornjem desnom kutu. Promijenite osnovnu kartu pomoću gumba za slojeve karte u gornjem desnom kutu. Spremite kartu u PNG datoteku pomoću gumba u donjem lijevom kutu karte.';
+$lang["geolocate_collection_map_text"]='Karta ispod prikazuje resurse iz ove kolekcije koji imaju pridruženu geolokaciju. Boja markera je postavljena prema vrsti resursa ili prilagođenom metapodatkovnom polju (ključ ispod karte). Kada bi se markeri preklapali s drugim markerima, koristi se zeleno grupiranje s brojem koji označava broj grupiranih markera, zumirajte ili dvaput kliknite na grupu. Kliknite na pojedinačni marker kako biste učitali skočni prozor za taj resurs koji prikazuje preglednu sliku. Kliknite na preglednu sliku kako biste učitali prozor za taj resurs. Pređite mišem preko pojedinačnog markera za geokoordinate. Promijenite osnovnu kartu pomoću gumba u gornjem desnom kutu karte. Spremite kartu u PNG datoteku pomoću gumba u donjem lijevom kutu karte.';
+$lang["map_osmbzh"]='OSM Luksemburg';
+$lang["map_stamen_group"]='Stamen';
+$lang["map_esri_group"]='ESRI';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["dosavedsearch"]='Izvrši spremljenu pretragu';
+$lang["back"]='Natrag';
+$lang["report_periodic_email_option_me"]='ja';
+$lang["filestore"]='Datoteka pohrane';
+$lang["rs_ext_dependencies"]='ResourceSpace Vanjske Ovisnosti';
+$lang["write_access_to"]='Pristup pisanju na';
+$lang["other"]='Ostalo';
+$lang["latlong"]='Širina / dužina';
+$lang["geodragmodepan"]='pomicanje';
+$lang["centimetre-short"]='cm';
+$lang["megapixel-short"]='MP';
+$lang["cc-emailaddress"]='CC %emailaddress';
+$lang["error-invalid_name"]='Neispravno ime';
+$lang["inactive_entry_matched"]='Neaktivni unos podudara se za';
+$lang["kilobyte-symbol"]='KB';
+$lang["megabyte-symbol"]='MB';
+$lang["gigabyte-symbol"]='GB';
+$lang["terabyte-symbol"]='TB';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["ref-title"]='%ref - %title';
+$lang["resourcetypes-no_collections"]='Svi %resourcetypes%';
+$lang["resourcetypes_separator"]=',';
+$lang["collectiontypes_separator"]=',';
+$lang["user_group"]='korisnička grupa';
+$lang["fieldtitle-tick_to_delete_size"]='Označite za brisanje ove veličine';
+$lang["all__emailbulk"]='<br /><br />
+[tekst]<br /><br />
+[tekst_podnožje]';
+$lang["all__emailcollection"]='<br />
+[odkorisnickoime] [lang_emailcollectionmessage] <br /><br /> 
+[lang_poruka] : [poruka]<br /><br /> 
+[lang_kliknitepovezavidi] [popis]';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] vam je poslao poruku o zbirci <br /><br /> 
+Poruka: [message]<br /><br /> 
+Kliknite na poveznicu za pregled zbirke: [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[dobrodošli]<br /><br /> 
+[novi_podaci_za_prijavu]<br /><br /> 
+[korisničko_ime] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[tekst_podnožja]';
+$lang["all__emailnewresearchrequestwaiting"]='<br />
+[korisničko ime] ([puno ime korisnika] - [email korisnika])
+[lang_haspostedresearchrequest]<br /><br />
+[naziv projekta]:[name]<br /><br />
+[opis projekta]:[description]<br /><br />
+[rok]:[deadline]<br /><br />
+[kontakt telefon]:[contact]<br /><br />
+[konačna upotreba]: [finaluse]<br /><br />
+[potreban oblik]: [shape]<br /><br />
+[broj potrebnih resursa]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[Korisnički resursi odobreni]
+[popis] <br />
+[Pogledaj pridonijete resurse] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[tekst_podnožje]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='<br />
+[lang_researchrequestassignedmessage]<br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_vamjeposlaoresurs]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_kliknitezapregledresursa]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='<br />
+[lang_username] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["research_request__introtext"]='Naši profesionalni istraživači su ovdje kako bi vam pomogli pronaći najbolje resurse za vaše projekte. Ispunite ovaj obrazac što je moguće temeljitije kako bismo mogli točno ispuniti vaše kriterije. <br /><br />Član istraživačkog tima bit će dodijeljen vašem zahtjevu. Održavat ćemo kontakt putem e-pošte tijekom cijelog procesa, a nakon što završimo istraživanje, dobit ćete e-poruku s poveznicom na sve resurse koje preporučujemo.';
+$lang["team_research__introtext"]='Organizirajte i upravljajte \'Zahtjevima za istraživanje\'. <br /><br />Odaberite \'uredi istraživanje\' kako biste pregledali detalje zahtjeva i dodijelili istraživanje članu tima. Moguće je temeljiti zahtjev za istraživanjem na prethodnoj kolekciji unosom ID-a kolekcije na ekranu za uređivanje. <br /><br />Nakon što je zahtjev za istraživanjem dodijeljen, odaberite \'uredi kolekciju\' kako biste dodali zahtjev za istraživanjem na panel \'Zadana kolekcija\'. Korištenjem standardnih alata, tada je moguće dodati resurse istraživanju. <br /><br />Nakon što je istraživanje završeno, odaberite \'uredi istraživanje\', promijenite status u završeno i automatski se šalje email korisniku koji je zatražio istraživanje. Email sadrži poveznicu na istraživanje i također se automatski dodaje na njihov panel \'Zadana kolekcija\'.';
+$lang["dash"]='Nadzorna ploča';
+$lang["upgrade_script"]='Skripta za nadogradnju';
+$lang["upgrade_026_notification"]='Nadogradnja je zastarjela neke opcije konfiguracije koje vaš %entity% nadjačava.
+
+Kako biste nastavili imati naziv datoteke za preuzimanje formatiran što bliže starom načinu, ažurirajte njegovu konfiguraciju nadjačavanja s:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='Nije moguće postaviti sistemsku konfiguracijsku opciju \'download_filename_format\' na \'%format%\'. Molimo pokušajte ponovno ručno.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='Nije moguće obraditi zastarjele opcije konfiguracije za %entity%. Molimo pokušajte ponovno ručno. Razlog:-
+
+%error%';
+$lang["tile_multi"]='Više';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='Zadani smjer sortiranja';
+$lang["userpreference_high_contrast_mode"]='Način visokog kontrasta';
+$lang["watermark_header"]='Vodni žig';
+$lang["watermark_label"]='Vodni žig slike - Ponovno stvorite preglede nakon promjene vodnog žiga kako biste ažurirali postojeće resurse. Uklanjanje datoteke će onemogućiti vodni žig.';
+$lang["systemconfig_debug"]='Otklanjanje pogrešaka';
+$lang["systemconfig_debug_log_on_specific_user"]='Na (određeni korisnik)';
+$lang["systemconfig_use_native_input_for_date_field"]='Koristite izvorni unos datuma za prikazivanje metapodatkovnog polja tipa \'datum\'';
+$lang["systemconfig_native_date_input_no_partials_supported"]='VAŽNO: Ako je omogućeno, djelomični datumi (npr. svibanj 2023.) više neće biti podržani i postojeći podaci će biti izbrisani nakon sljedećeg uređivanja resursa.';
+$lang["show_affected_resources"]='Prikaži pogođene resurse';
+$lang["group_no"]='Grupa';
+$lang["confirm_delete_field_value"]='Jeste li sigurni da želite OBRISATI ovu opciju polja? Time će se trajno ukloniti vrijednost sa svih resursa na koje je primijenjena.';
+$lang["external_shares_options"]='Opcije vanjskog dijeljenja';
+$lang["email_shares_options_summary"]='Ove opcije će se primjenjivati samo za dijeljenja stvorena pomoću vanjske e-mail adrese';
+$lang["report_breakdown_pie"]='Razlaganje pita';
+$lang["actions_email_new_actions_title"]='Nove radnje';
+$lang["actions_email_new_actions_intro"]='Postoje nove radnje koje treba dovršiti.';
+$lang["email_actions_truncated"]='Prikazano je samo najnovijih 1000 radnji. Imate %%TOTAL%% radnji. Prijavite se u %%APPLICATIONNAME%% kako biste ih sve pregledali.';
+$lang["annotate_select"]='Odaberite polje...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='Nije uspjelo zamijeniti datoteku resursa. Pružena referenca kolekcije je nevažeća.';
+$lang["image_quality_80"]='Web';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='cURL primjer';
+$lang["api-curl-help"]='Sljedeći jednoslojni bash skript može se izvršiti na bilo kojem UNIX sustavu s instaliranim OpenSSL i cURL.';
+$lang["share-password-not-set"]='Vanjske dijeljenja moraju biti zaštićena lozinkom. Molimo unesite lozinku za dijeljenje kako biste nastavili.';
+$lang["job_priority_immediate"]='Hitni posao';
+$lang["job_priority_user"]='Korisnički posao';
+$lang["job_priority_system"]='Sistemski posao';
+$lang["job_priority_completed"]='Posao dovršen';
+$lang["job_status_error"]='Došlo je do pogreške';
+$lang["filter_is_in"]='JE';
+$lang["file_integrity_fail_latest"]='Pogledaj najnovije neuspjehe integriteta datoteka';
+$lang["file_integrity_fail_all"]='Prikaži sve resurse s neuspjelom provjerom integriteta datoteka';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["collection_actiontype_999"]='Ostalo';
+$lang["error-edit_noaccess_related_resources"]='Nije moguće povezati resurse. Nema pristupa:';
+$lang["job_status_2"]='Dovršeno';
+$lang["csv_export_filename"]='izvoz_metapodataka_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='<br />
+[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+Kliknite na poveznicu za pregled kolekcije <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["share_expired_icon_title"]='Isteklo';
+$lang["error_invalid_date_format"]='"%%VALUE%%" nije valjan datum. Sve vrijednosti u ovom polju moraju biti u formatu YYYY-MM-DD';
+$lang["related_resource_create"]='Kreiraj novi povezani resurs';
+$lang["skip-to-main-content"]='Preskoči na glavni sadržaj';
+$lang["cleanup_invalid_nodes"]='Očisti podatke polja od nevažećih vrsta resursa';
+$lang["cleanup_invalid_node_dry_run"]='Nemojte brisati podatke, samo vratite broj redaka za brisanje?';
+$lang["advancedsearch_resource_section"]='Podaci resursa';
+$lang["error-reload-required"]='ResourceSpace je ažuriran. Molimo ponovno učitajte stranicu';
+$lang["user_pref_new_action_emails"]='Pošaljite mi e-poštu ako se stvore nove radnje';
+$lang["email_rate_limit_active"]='Maksimalni broj e-mailova po satu koje ovaj sustav može poslati je premašen. E-mailovi trenutno nisu poslani od strane ovog sustava.';
+$lang["email_rate_limit_inactive"]='Ograničenje e-pošte je uklonjeno i e-poruke se sada šalju.';
+$lang["severity-level_0"]='Kritično';
+$lang["severity-level_1"]='Upozorenje';
+$lang["severity-level_2"]='Obavijest';
+$lang["pull_images"]='Povuci slike';
+$lang["pull_images_text"]='Koristite slike iz povezanih resursa ako nisu dostupne';
+$lang["system_user_default"]='SUSTAV';
+$lang["userlimitreached"]='Dosegnuli ste svoj korisnički limit. Postojeći korisnik mora biti onemogućen ili izbrisan prije nego što možete stvoriti nove račune ili omogućiti postojeće račune.';
+$lang["user_api_session_title"]='Pristup API-ju udaljenog sustava';
+$lang["user_api_session_text"]='Udaljeni sustav \'%system%\' traži pristup %applicationname% koristeći vaše vjerodajnice. Kliknite \'Dodijeli pristup\' samo ako ste vi pokrenuli ovaj zahtjev';
+$lang["user_api_session_invalid_system"]='Neispravan sustav zatražen';
+$lang["user_api_session_grant_access"]='Dodijeli pristup';
+$lang["user_api_session_grant_success"]='Ključ uspješno izdan.';
+$lang["user_api_session_grant_error"]='Izdavanje ključa nije uspjelo.';
+$lang["no_file"]='Nema datoteke';
+$lang["missing_file"]='Ova datoteka nedostaje. Molimo kontaktirajte svog sistemskog administratora';
+$lang["action_set_no_file"]='Označi kao da nema datoteku';
+$lang["action_unset_no_file"]='Označi kao datoteka nedostaje';
+$lang["completed_set_no_file"]='Resurs označen kao da nema datoteku';
+$lang["completed_unset_no_file"]='Resurs označen kao datoteka nedostaje';
+$lang["hour-abbreviated"]='HH';
+$lang["map_esridelorme"]='DeLorme';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[korisnički_resursi_neposlani]
+[popis] <br />
+[pogledaj_sve_korisničke_načekanju] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[tekst_podnožje]';
+$lang["themes__manage"]='Organizirajte i uredite istaknute kolekcije dostupne online. Istaknute kolekcije su posebno promovirane kolekcije. <br /><br /> <strong>1 Za stvaranje novog unosa pod Istaknutom kolekcijom - izgradite kolekciju</strong><br /> Odaberite <strong>Moje kolekcije</strong> iz glavnog gornjeg izbornika i postavite potpuno novu <strong>javnu</strong> kolekciju. Ne zaboravite uključiti naziv istaknute kolekcije tijekom postavljanja. Koristite postojeći naziv istaknute kolekcije za grupiranje kolekcije pod trenutnom istaknutom kolekcijom (pazite da ga upišete točno), ili odaberite novi naslov za stvaranje potpuno nove istaknute kolekcije. Nikada ne dopustite korisnicima da dodaju/uklanjaju resurse iz istaknutih kolekcija. <br /> <br /><strong>2 Za uređivanje sadržaja postojećeg unosa pod istaknutom kolekcijom</strong><br /> Odaberite <strong>uredi kolekciju</strong>. Stavke u toj kolekciji će se pojaviti u panelu <strong>Moje kolekcije</strong> na dnu ekrana. Koristite standardne alate za uređivanje, uklanjanje ili dodavanje resursa. <br /> <br /><strong>3 Za promjenu naziva istaknute kolekcije ili premještanje kolekcije da se pojavi pod drugom istaknutom kolekcijom</strong><br /> Odaberite <strong>uredi svojstva</strong> i uredite kategoriju istaknute kolekcije ili naziv kolekcije. Koristite postojeći naziv istaknute kolekcije za grupiranje kolekcije pod trenutnom istaknutom kolekcijom (pazite da ga upišete točno), ili odaberite novi naslov za stvaranje potpuno nove istaknute kolekcije. <br /> <br /><strong>4 Za uklanjanje kolekcije iz istaknute kolekcije</strong><br /> Odaberite <strong>uredi svojstva</strong> i izbrišite riječi u polju kategorije istaknute kolekcije.';

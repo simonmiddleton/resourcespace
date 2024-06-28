@@ -2729,3 +2729,261 @@ $lang["error_invalid_revert_option"]='Poprzednio zapisana wartość \'%%VALUE%%\
 $lang["error_invalid_revert_date"]='Poprzednio zapisana data \'%%VALUE%%\' jest nieprawidłowa. Zaktualizuj zasób ręcznie, jeśli jest to konieczne.';
 $lang["batch_edit_save_warning_message"]='Wystąpiły błędy podczas edycji następujących zasobów-';
 $lang["batch_edit_save_warning_alert"]='Wystąpiły pewne błędy podczas wykonywania tej operacji. Aby uzyskać więcej informacji, odwołaj się do swoich wiadomości';
+
+$lang["fieldtitle-album"]='Album';
+$lang["information_field_restype_deselect_cleanup"]='Aby usunąć istniejące dane pola z odznaczonych typów zasobów, kliknij na następujący link %%CLEANUP_LINK%%';
+$lang["property-id"]='Id';
+$lang["mainmenu"]='Główne menu';
+$lang["xlthumbs"]='Bardzo duży';
+$lang["strip"]='Usuń';
+$lang["perpage_option"]='? na stronę';
+$lang["systemlog"]='Dziennik';
+$lang["_dupe"]='_duplikat';
+$lang["archive-7z"]='7Z';
+$lang["purgeanddelete"]='Wyczyść';
+$lang["range_no_start"]='Nie można zakończyć zakresu bez rozpoczęcia. Proszę zwolnić klawisz Shift.';
+$lang["edit_multiple_existing_values"]='Istniejące słowa kluczowe w zasobach w tym wyborze';
+$lang["edit_multiple_show_more"]='Pokaż więcej';
+$lang["edit_multiple_too_many"]='Wyświetlanie 100 najczęściej używanych wartości. Istnieją również inne.';
+$lang["edit_multiple_action_text_rt"]='Cały tekst / opcje zostaną zastąpione następującymi słowami kluczowymi';
+$lang["edit_multiple_action_text_ap"]='Te słowa kluczowe zostaną dodane';
+$lang["edit_multiple_action_text_rm"]='Te słowa kluczowe zostaną usunięte';
+$lang["sortorder-asc"]='ROSNĄCO';
+$lang["sortorder-desc"]='OPIS';
+$lang["title"]='Tytuł';
+$lang["fileoftype"]='? Plik';
+$lang["cell-fileoftype"]='Plik %EXTENSION';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["fileextension-inside-brackets"]='[%EXTENSION]';
+$lang["fileextension"]='%EXTENSION';
+$lang["log-rtchange"]='Edytowany typ zasobu';
+$lang["log-missinglang"]='[type] (brak języka)';
+$lang["log-NOFIL"]='Oznaczone jako nieposiadające pliku';
+$lang["log-FIL"]='Oznaczone jako posiadające plik';
+$lang["log-EDT"]='Edytowany zasób';
+$lang["accountnotfound-reset-not-emailed"]='Link do resetowania hasła nie został wysłany, ponieważ nie ma konta z tym adresem e-mail';
+$lang["accountnoemail-reset-not-emailed"]='Link do resetowania hasła nie został wysłany, ponieważ konto nie ma adresu e-mail';
+$lang["accountexpired-reset-not-emailed"]='Link do resetowania hasła nie został wysłany, ponieważ konto wygasło';
+$lang["accountnotapproved-reset-not-emailed"]='Link do resetowania hasła nie został wysłany, ponieważ konto nie zostało zatwierdzone';
+$lang["notavailableshort"]='N/D';
+$lang["remaining"]='pozostałe';
+$lang["web_server"]='Serwer WWW';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='Wszystkie stany przepływu pracy';
+$lang["stat-downloadedkb"]='Pobrane dane pliku (KB)';
+$lang["plugin_field_fmt"]='%A (%B)';
+$lang["external"]='Zewnętrzny';
+$lang["email_error_user_list_some_skipped"]='Pominięto powiadomienia dla następujących użytkowników (użytkownicy mogą nie być zatwierdzeni)';
+$lang["unrelateallresources"]='Usuń powiązania wszystkich zasobów w tej kolekcji';
+$lang["unrelateallresources_confirmation"]='Żaden z zasobów w tej kolekcji nie jest teraz powiązany';
+$lang["setup-download_filename_format"]='Format nazwy pliku do pobrania';
+$lang["addremove"]='+/-';
+$lang["map_introtext1"]='Poniższa mapa pokazuje zasoby z wyników wyszukiwania, które mają przypisaną geolokalizację. Kolor znacznika jest ustawiony na typ zasobu lub niestandardowe pole metadanych (klucz poniżej mapy). Gdy znaczniki nakładają się na inne znaczniki, używane jest zielone grupowanie z liczbą wskazującą liczbę zgrupowanych znaczników, powiększ lub dwukrotnie kliknij klaster. Kliknij pojedynczy znacznik, aby załadować okno podręczne dla tego zasobu z podglądem obrazu. Kliknij obraz podglądu, aby załadować okno dla tego zasobu. Najedź kursorem na pojedynczy znacznik, aby zobaczyć współrzędne geograficzne. Zmień mapę bazową za pomocą przycisku mapy w prawym górnym rogu. Zapisz mapę do pliku PNG za pomocą przycisku mapy w lewym dolnym rogu.';
+$lang["edit_map_introtext"]='Przesuń i powiększ widok mapy do interesującego Cię obszaru, a następnie kliknij na mapę, aby umieścić znacznik lokalizacji zasobu. Zapisz najnowszą geolokalizację za pomocą przycisku Zapisz, a następnie kliknij \'Powrót do edycji zasobu lub geolokalizacji kolekcji\', aby wrócić. Aby wyszukać konkretną lokalizację lub nazwę cechy geograficznej, użyj przycisku wyszukiwania w prawym górnym rogu. Zmień mapę bazową za pomocą przycisku warstw mapy w prawym górnym rogu. Zapisz mapę do pliku PNG za pomocą przycisku mapy w lewym dolnym rogu.';
+$lang["geolocate_collection_map_text"]='Poniższa mapa pokazuje zasoby z tej kolekcji, które mają przypisaną geolokalizację. Kolor znacznika jest ustawiony na typ zasobu lub niestandardowe pole metadanych (klucz poniżej mapy). Gdy znaczniki nakładają się na inne znaczniki, używane jest zielone grupowanie z liczbą wskazującą liczbę zgrupowanych znaczników, powiększ lub kliknij dwukrotnie klaster. Kliknij pojedynczy znacznik, aby załadować okienko dla tego zasobu z podglądem obrazu. Kliknij obraz podglądu, aby załadować okno dla tego zasobu. Najedź kursorem na pojedynczy znacznik, aby zobaczyć współrzędne geograficzne. Zmień mapę bazową za pomocą przycisku mapy w prawym górnym rogu. Zapisz mapę do pliku PNG za pomocą przycisku mapy w lewym dolnym rogu.';
+$lang["map_tf_group"]='Thunderforest';
+$lang["map_stamen_group"]='Stamen';
+$lang["map_stamentoner"]='Toner';
+$lang["map_esri_group"]='ESRI';
+$lang["map_esridelorme"]='DeLorme';
+$lang["map_esrinatgeo"]='National Geographic';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapbox_group"]='Mapbox';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["back"]='Wstecz';
+$lang["report_periodic_email_option_me"]='mnie';
+$lang["filestore"]='Magazyn plików';
+$lang["rs_ext_dependencies"]='Zewnętrzne zależności ResourceSpace';
+$lang["write_access_to"]='Dostęp do zapisu do';
+$lang["geodragmodepan"]='pan';
+$lang["inch-short"]='w';
+$lang["centimetre-short"]='cm';
+$lang["megapixel-short"]='MP';
+$lang["error-invalid_name"]='Nieprawidłowa nazwa';
+$lang["inactive_entry_matched"]='Nieaktywne dopasowanie dla';
+$lang["kilobyte-symbol"]='KB';
+$lang["megabyte-symbol"]='MB';
+$lang["gigabyte-symbol"]='GB';
+$lang["terabyte-symbol"]='TB';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["ref-title"]='%ref - %title';
+$lang["contact_sheet-field_name_option"]='Dołączyć nazwy pól z danymi?';
+$lang["resourcetypes_separator"]=', ';
+$lang["collectiontypes_separator"]=', ';
+$lang["user_group"]='grupa użytkowników';
+$lang["admin_report_create"]='Utwórz raport o nazwie...';
+$lang["all__emailbulk"]='<br /><br />
+[tekst]<br /><br />
+[tekst_stopka]';
+$lang["all__emailcollection"]='<br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] wysłał(a) Ci wiadomość dotyczącą kolekcji <br /><br /> 
+Wiadomość : [message]<br /><br /> 
+Kliknij link, aby zobaczyć kolekcję: [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[witaj]<br /><br /> 
+[lang_nowe_szczegóły_logowania]<br /><br /> 
+[lang_nazwa_użytkownika] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_stopka]';
+$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='[lang_userresourcesunsubmitted]
+[lista]
+[lang_viewalluserpending]
+
+<a href="[url]">[url]</a>
+
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
+
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
+[lista] <br />
+[szczegóły]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["themes__manage"]='Organizuj i edytuj wyróżnione kolekcje dostępne online. Wyróżnione kolekcje to specjalnie promowane kolekcje. <br /><br /> <strong>1 Aby utworzyć nowy wpis w wyróżnionej kolekcji - zbuduj kolekcję</strong><br /> Wybierz <strong>Moje Kolekcje</strong> z głównego menu u góry i utwórz nową <strong>publiczną</strong> kolekcję. Pamiętaj, aby podczas konfiguracji uwzględnić nazwę wyróżnionej kolekcji. Użyj istniejącej nazwy wyróżnionej kolekcji, aby pogrupować kolekcję pod obecną wyróżnioną kolekcją (upewnij się, że wpisujesz ją dokładnie tak samo), lub wybierz nowy tytuł, aby utworzyć zupełnie nową wyróżnioną kolekcję. Nigdy nie pozwalaj użytkownikom na dodawanie/usuwanie zasobów z wyróżnionych kolekcji. <br /> <br /><strong>2 Aby edytować zawartość istniejącego wpisu w wyróżnionej kolekcji</strong><br /> Wybierz <strong>edytuj kolekcję</strong>. Elementy w tej kolekcji pojawią się w panelu <strong>Moje Kolekcje</strong> na dole ekranu. Użyj standardowych narzędzi do edycji, usuwania lub dodawania zasobów. <br /> <br /><strong>3 Aby zmienić nazwę wyróżnionej kolekcji lub przenieść kolekcję, aby pojawiła się pod inną wyróżnioną kolekcją</strong><br /> Wybierz <strong>edytuj właściwości</strong> i edytuj kategorię wyróżnionej kolekcji lub nazwę kolekcji. Użyj istniejącej nazwy wyróżnionej kolekcji, aby pogrupować kolekcję pod obecną wyróżnioną kolekcją (upewnij się, że wpisujesz ją dokładnie tak samo), lub wybierz nowy tytuł, aby utworzyć zupełnie nową wyróżnioną kolekcję. <br /> <br /><strong>4 Aby usunąć kolekcję z wyróżnionej kolekcji</strong><br /> Wybierz <strong>edytuj właściwości</strong> i usuń słowa w polu kategorii wyróżnionej kolekcji.';
+$lang["dash"]='Pulpit';
+$lang["dashtiletext"]='Tekst';
+$lang["upgrade_script"]='Skrypt aktualizacji';
+$lang["upgrade_026_notification"]='Aktualizacja zdezaktualizowała niektóre opcje konfiguracji, które są nadpisywane przez %entity%.
+
+Aby nadal mieć nazwę pliku do pobrania sformatowaną jak najbliżej starego sposobu, zaktualizuj jego nadpisanie konfiguracji za pomocą:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='Nie można ustawić opcji konfiguracyjnej systemu \'download_filename_format\' na \'%format%\'. Proszę spróbować ponownie ręcznie.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='Nie można przetworzyć przestarzałych opcji konfiguracji dla %entity%. Proszę spróbować ponownie ręcznie. Powód:-
+
+%error%';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='Domyślny kierunek sortowania';
+$lang["userpreference_high_contrast_mode"]='Tryb wyższego kontrastu';
+$lang["team_research__introtext"]='Organizuj i zarządzaj \'Zleceniami Badawczymi\'. <br /><br />Wybierz \'edytuj badanie\', aby przejrzeć szczegóły zlecenia i przypisać badanie do członka zespołu. Możliwe jest oparcie zlecenia badawczego na poprzedniej kolekcji, wprowadzając identyfikator kolekcji na ekranie \'edytuj\'. <br /><br />Po przypisaniu zlecenia badawczego, wybierz \'edytuj kolekcję\', aby dodać zlecenie badawcze do panelu \'Domyślna kolekcja\'. Korzystając ze standardowych narzędzi, można następnie dodać zasoby do badania. <br /><br />Po zakończeniu badania, wybierz \'edytuj badanie\', zmień status na zakończone i automatycznie zostanie wysłany e-mail do użytkownika, który zlecił badanie. E-mail zawiera link do badania i jest również automatycznie dodawany do ich panelu \'Domyślna kolekcja\'.';
+$lang["watermark_header"]='Znak wodny';
+$lang["watermark_label"]='Obraz znaku wodnego - Odtwórz podglądy po zmianie znaku wodnego, aby zaktualizować istniejące zasoby. Usunięcie pliku wyłączy znakowanie wodne.';
+$lang["systemconfig_debug"]='Debugowanie';
+$lang["systemconfig_debug_log_on_specific_user"]='Na (konkretny użytkownik)';
+$lang["systemconfig_use_native_input_for_date_field"]='Użyj natywnego wejścia daty do wyświetlania typu pola metadanych \'data\'';
+$lang["systemconfig_native_date_input_no_partials_supported"]='WAŻNE: Jeśli włączone, częściowe daty (np. maj 2023) nie będą już obsługiwane, a istniejące dane zostaną usunięte po następnej edycji zasobu.';
+$lang["show_affected_resources"]='Pokaż dotknięte zasoby';
+$lang["group_no"]='Grupa';
+$lang["confirm_delete_field_value"]='Czy na pewno chcesz USUNĄĆ tę opcję pola? Spowoduje to trwałe usunięcie wartości ze wszystkich zasobów, do których jest zastosowana.';
+$lang["media"]='Media';
+$lang["external_shares_options"]='Opcje udostępniania zewnętrznego';
+$lang["email_shares_options_summary"]='Te opcje będą miały zastosowanie tylko do udostępnień utworzonych przy użyciu zewnętrznego adresu e-mail';
+$lang["report-graph-by-pie"]='rozkład';
+$lang["report-graph-by-summary"]='podsumowanie';
+$lang["report_breakdown_pie"]='Wykres kołowy';
+$lang["responsive_main_menu"]='Menu';
+$lang["actions_email_new_actions_title"]='Nowe akcje';
+$lang["actions_email_new_actions_intro"]='Są nowe działania do wykonania.';
+$lang["email_actions_truncated"]='Wyświetlane są tylko ostatnie 1000 działań. Masz %%TOTAL%% działań. Zaloguj się do %%APPLICATIONNAME%%, aby zobaczyć wszystkie.';
+$lang["annotate_select"]='Wybierz pole...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='Nie udało się zastąpić pliku zasobu. Podany odnośnik do kolekcji jest nieprawidłowy.';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='przykład cURL';
+$lang["api-curl-help"]='Poniższy jednolinijkowy skrypt bash można uruchomić na dowolnym systemie UNIX z zainstalowanymi OpenSSL i cURL.';
+$lang["share-password-not-set"]='Udostępnienia zewnętrzne muszą być chronione hasłem. Proszę wprowadzić hasło udostępnienia, aby kontynuować.';
+$lang["job_priority_immediate"]='Pilna praca';
+$lang["job_priority_user"]='Zadanie użytkownika';
+$lang["job_priority_system"]='Zadanie systemowe';
+$lang["job_priority_completed"]='Zadanie zakończone';
+$lang["job_status_error"]='Wystąpił błąd';
+$lang["filter_is_in"]='JEST';
+$lang["error_saveorigalternative"]='Błąd podczas zapisywania oryginału jako pliku alternatywnego';
+$lang["file_integrity_fail_latest"]='Zobacz najnowsze awarie integralności plików';
+$lang["file_integrity_fail_all"]='Wyświetl wszystkie zasoby z błędami integralności plików';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["error-edit_noaccess_related_resources"]='Nie można powiązać zasobów. Brak dostępu do:';
+$lang["csv_export_filename"]='eksport_metadanych_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='<br />
+[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["share_expired_icon_title"]='Wygasło';
+$lang["error_invalid_date_format"]='"%%VALUE%%" jest nieprawidłową datą. Wszystkie wartości w tym polu muszą być sformatowane jako RRRR-MM-DD';
+$lang["related_resource_create"]='Utwórz nowy powiązany zasób';
+$lang["skip-to-main-content"]='Przejdź do głównej treści';
+$lang["cleanup_invalid_nodes"]='Wyczyść dane pola z nieprawidłowych typów zasobów';
+$lang["cleanup_invalid_node_dry_run"]='Nie usuwaj danych, tylko zwróć liczbę wierszy do usunięcia?';
+$lang["advancedsearch_resource_section"]='Dane zasobu';
+$lang["error-reload-required"]='ResourceSpace został zaktualizowany. Proszę odświeżyć stronę';
+$lang["user_pref_new_action_emails"]='Powiadom mnie e-mailem, jeśli zostaną utworzone nowe działania';
+$lang["email_rate_limit_active"]='Maksymalna liczba e-maili na godzinę wysyłanych przez ten system została przekroczona. E-maile nie są obecnie wysyłane przez ten system.';
+$lang["email_rate_limit_inactive"]='Limit e-maili został zniesiony i e-maile są teraz wysyłane.';
+$lang["severity-level_0"]='Krytyczny';
+$lang["severity-level_1"]='Ostrzeżenie';
+$lang["severity-level_2"]='Powiadomienie';
+$lang["pull_images"]='Pobierz obrazy';
+$lang["pull_images_text"]='Użyj obrazów z powiązanych zasobów, jeśli żadne nie są dostępne';
+$lang["system_user_default"]='SYSTEM';
+$lang["userlimitreached"]='Osiągnąłeś limit użytkowników. Istniejący użytkownik musi zostać wyłączony lub usunięty, zanim będziesz mógł utworzyć nowe konta lub włączyć istniejące konta.';
+$lang["user_api_session_title"]='Zdalny dostęp do API systemu';
+$lang["user_api_session_text"]='Zdalny system \'%system%\' prosi o dostęp do %applicationname% przy użyciu Twoich poświadczeń. Kliknij \'Zezwól na dostęp\' tylko jeśli Ty zainicjowałeś to żądanie';
+$lang["user_api_session_invalid_system"]='Nieprawidłowy system żądany';
+$lang["user_api_session_grant_access"]='Przyznaj dostęp';
+$lang["user_api_session_grant_success"]='Klucz wydany pomyślnie.';
+$lang["user_api_session_grant_error"]='Wydanie klucza nie powiodło się.';
+$lang["no_file"]='Brak pliku';
+$lang["missing_file"]='Ten plik jest brakujący. Proszę skontaktować się z administratorem systemu';
+$lang["action_set_no_file"]='Oznacz jako nieposiadający pliku';
+$lang["action_unset_no_file"]='Oznacz jako brakujący plik';
+$lang["completed_set_no_file"]='Zasób oznaczony jako nieposiadający pliku';
+$lang["completed_unset_no_file"]='Zasób oznaczony jako brakujący plik';
