@@ -1728,16 +1728,11 @@ if ($ref < 0 && !$upload_review_mode)
 
 $fields=get_resource_field_data($use,$multiple,!hook("customgetresourceperms"),$originalref,"",$tabs_on_edit);
 $resource = get_resource_data($ref, false); # By this point the resource type might've been changed
-$edit_valid_fields = array_column(get_resource_type_fields($resource['resource_type']), 'ref');
-debug(sprintf('$fields = %s', json_encode(array_column($fields, 'ref'))));
-debug(sprintf('$edit_valid_fields = %s', json_encode($edit_valid_fields)));
 
 # Only include fields whose resource type is global or is present in the resource(s) being edited
-if ($multiple) 
-    {
+if ($multiple) {
     $edit_valid_fields = get_resource_type_fields($items_resource_types);
     $edit_valid_fields = array_column($edit_valid_fields,"ref");
-    debug(sprintf('$edit_valid_fields = %s', json_encode($edit_valid_fields)));
     $fields_to_include = array();
     foreach ($fields as $field_candidate) 
         {
@@ -1747,7 +1742,16 @@ if ($multiple)
             }
         }
     $fields=$fields_to_include;
+} else { 
+    if (!$is_template) { 
+        $edit_valid_fields = array_column(get_resource_type_fields($resource['resource_type']), 'ref');
+    } else { 
+        $edit_valid_fields = array_column(get_resource_type_fields(array_column(get_all_resource_types(), 'ref')), 'ref');
     }
+}
+
+debug(sprintf('$fields = %s', json_encode(array_column($fields, 'ref'))));
+debug(sprintf('$edit_valid_fields = %s', json_encode($edit_valid_fields)));
 
 $all_selected_nodes = get_resource_nodes($use);
 debug(sprintf('$all_selected_nodes = %s', json_encode($all_selected_nodes)));
