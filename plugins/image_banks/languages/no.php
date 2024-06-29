@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Shutterstock-token (<a href=\'https://w
 $lang["image_banks_shutterstock_result_limit"]='Resultatgrense (maks. 1000 for gratis kontoer)';
 $lang["image_banks_shutterstock_id"]='Shutterstock bilde-ID';
 $lang["image_banks_createdfromimagebanks"]='Opprettet fra Image Banks-tillegget';
+$lang["image_banks_image_bank_source"]='Bildebank kilde';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Tilgang til instanser (format: i18n navn|baseURL|brukernavn|nøkkel|konfig)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace %SIZE_CODE størrelse';
+$lang["image_banks_label_select_providers"]='Velg aktive leverandører';
+$lang["image_banks_view_on_provider_system"]='Vis på %PROVIDER-systemet';
+$lang["image_banks_system_unmet_dependencies"]='ImageBanks-pluginen har uoppfylte systemavhengigheter!';
+$lang["image_banks_error_generic_parse"]='Kan ikke analysere leverandørenes konfigurasjon (for flere instanser)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Ugyldig konfigurasjonsformat for \'%PROVIDER\' (leverandør) instans';
+$lang["image_banks_error_bad_url_scheme"]='Ugyldig URL-skjema funnet for \'%PROVIDER\' (leverandør) instans';
+$lang["image_banks_error_unexpected_response"]='Beklager, mottok et uventet svar fra leverandøren. Vennligst kontakt systemadministratoren din for videre undersøkelse (se feilsøkingslogg).';

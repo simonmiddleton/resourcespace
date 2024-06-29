@@ -20,3 +20,4 @@ $lang["google_vision_translation_intro"]='Google Vision 只返回英文关键词
 $lang["google_vision_translation_api_key"]='启用通过翻译 API 翻译 Vision 关键词，需输入有效的 Google API 密钥。';
 $lang["google_vision_translation_languages"]='语言代码的逗号分隔列表，例如“no,es”。';
 $lang["google_vision_translation_keep_english"]='保留原始的英文关键词？';
+$lang["google_vision_api"]='谷歌视觉API';

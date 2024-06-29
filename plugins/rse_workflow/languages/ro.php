@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Închideți';
 $lang["rse_workflow_more_notes_title"]='Note:';
 $lang["rse_workflow_email_from"]='Adresa de email de la care se vor trimite notificări (se va folosi %EMAILFROM% dacă este necompletată):';
 $lang["rse_workflow_bcc_admin"]='Notificați administratorii de sistem când contributorul este notificat';
+$lang["rse_workflow_state_notify_help"]='Utilizatorii vor vedea resursele în această stare apărând ca acțiuni, în loc să primească notificări simple';

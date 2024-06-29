@@ -27,3 +27,4 @@ $lang["selectlicence"]='Prosím, vyberte ID licencie';
 $lang["confirmdeletelicensefile"]='Ste si istý, že chcete VYMAZAŤ tento súbor? Táto akcia sa nedá vrátiť späť.';
 $lang["license_manager_mediums"]='Použitie licencie na médiá';
 $lang["license_manager_access"]='Spravovať údaje o licenciách (ak nie sú už povolené prostredníctvom oprávnenia "Môže pristupovať k oblasti nastavenia systému")';
+$lang["inbound"]='Prichodný';

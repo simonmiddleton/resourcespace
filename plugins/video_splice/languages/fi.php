@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='Videoleikkaus: Jotain on mennyt pieleen. Ota yhte
 $lang["video_splice_no_export_folder"]='Ei voida suorittaa vientiä, koska videon vientikansion tiedostopolkua ei ole määritetty konfiguraatiotiedostossa.';
 $lang["video_splice_incorrect_quantity"]='Kelvollinen resurssi on joko poistettu tai lisätty kokoelmaan sen jälkeen kun tämä sivu on ladattu. Yritä uudelleen.';
 $lang["video_splice_createdfromvideosplice"]='Luotu Video Splice -liitännäisellä';
+$lang["video-trim_output"]='Tuloste';
+$lang["video_splice_error_invalid_action"]='Virhe: Virheellinen toiminto';

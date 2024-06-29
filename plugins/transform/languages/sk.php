@@ -74,3 +74,4 @@ $lang["cropper_use_srgb"]='Použite sRGB';
 $lang["transform_update_preview"]='Aktualizovať náhľad';
 $lang["transform_preset_sizes"]='Vyberte preddefinovanú cieľovú veľkosť';
 $lang["error_crop_invalid"]='Prosím, vyberte oblasť obrázka';
+$lang["px"]='px';

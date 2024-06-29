@@ -3117,3 +3117,4 @@ $lang["action_set_no_file"]='Als ohne Datei markieren';
 $lang["action_unset_no_file"]='Als Datei fehlt markieren';
 $lang["completed_set_no_file"]='Ressource als dateilos markiert';
 $lang["completed_unset_no_file"]='Ressource als Datei fehlt markiert';
+$lang["map_esridelorme"]='DeLorme';

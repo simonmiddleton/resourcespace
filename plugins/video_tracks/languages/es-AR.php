@@ -29,3 +29,6 @@ $lang["video_tracks_custom_video_formats_label"]='Formatos personalizados';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='¿Permitir que las opciones de salida de archivo disponibles se utilicen para crear formatos de video personalizados para el archivo original?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Marque para iniciar la transcodificación ahora. Si no está marcado, recibirá una notificación cuando el archivo esté listo';
 $lang["video_tracks_transcode_now_label"]='Transcodificar ahora';
+$lang["video_tracks_select_generate_opt"]='Por favor, elija una opción de generación';
+$lang["video_tracks_save_alt_not_perm"]='No se puede guardar la alternativa sin permiso';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='¡IMPORTANTE! El plugin de Pistas de Video ha desaprobado la configuración de formatos de salida. Solo se pueden configurar en config.php. El plugin no funcionará como se espera hasta que la opción de configuración haya sido copiada. Por favor, copie lo siguiente:- %nl%####%nl%%output_formats_config%####%nl%';

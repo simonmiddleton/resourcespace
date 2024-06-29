@@ -49,3 +49,4 @@ $lang["simpleldap_usercomment"]='Criado pelo plugin SimpleLDAP.';
 $lang["simpleldap_usermatchcomment"]='Atualizado para usuário LDAP pelo SimpleLDAP.';
 $lang["origin_simpleldap"]='Plugin SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Não verifique o FQDN do servidor em relação ao CN do certificado';
+$lang["basedn"]='Base DN. Se os usuários estiverem em múltiplos DNs, separe com ponto e vírgula';

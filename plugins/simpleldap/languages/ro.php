@@ -49,3 +49,4 @@ $lang["simpleldap_usercomment"]='Creat de pluginul SimpleLDAP.';
 $lang["simpleldap_usermatchcomment"]='Actualizat la utilizator LDAP de SimpleLDAP.';
 $lang["origin_simpleldap"]='Pluginul SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Nu verificați FQDN-ul serverului cu CN-ul certificatului';
+$lang["port"]='Port';

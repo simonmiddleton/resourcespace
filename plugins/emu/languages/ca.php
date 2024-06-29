@@ -34,3 +34,4 @@ $lang["emu_no_resource"]='No s\'ha especificat cap ID de recurs!';
 $lang["emu_upload_nodata"]='No s\'ha trobat cap dada EMu per a aquest IRN:';
 $lang["emu_nodata_returned"]='No s\'ha trobat cap dada EMu per a l\'IRN especificat.';
 $lang["emu_createdfromemu"]='Creat per al connector EMU';
+$lang["emu_upload_emu_field_label"]='EMu IRN';

@@ -60,3 +60,4 @@ $lang["doi_sure_register_resource"]='Procedere con la registrazione di x risorsa
 $lang["doi_show_meta"]='Mostra i metadati DOI';
 $lang["doi_hide_meta"]='Nascondi i metadati DOI';
 $lang["doi_fetched_xml_from_MDS"]='I metadati XMl correnti sono stati recuperati con successo dallo store di metadati di DataCite';
+$lang["doi_info_wikipedia"]='https://it.wikipedia.org/wiki/Digital_Object_Identifier';

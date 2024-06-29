@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='Συγχώνευση βίντεο: Κάτι πή�
 $lang["video_splice_no_export_folder"]='Δεν είναι δυνατή η εξαγωγή καθώς δεν έχει οριστεί διαδρομή αρχείου για τον φάκελο εξαγωγής βίντεο στο αρχείο διαμόρφωσης.';
 $lang["video_splice_incorrect_quantity"]='Ένα έγκυρο αντικείμενο έχει είτε αφαιρεθεί είτε προστεθεί στη συλλογή από τη στιγμή που φορτώθηκε αυτή η σελίδα. Παρακαλώ δοκιμάστε ξανά.';
 $lang["video_splice_createdfromvideosplice"]='Δημιουργήθηκε από το πρόσθετο Video Splice';
+$lang["video-trim_output"]='Έξοδος';
+$lang["video_splice_error_invalid_action"]='Σφάλμα: Μη έγκυρη ενέργεια';

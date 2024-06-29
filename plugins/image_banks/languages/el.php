@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Δείγμα Shutterstock (<a href=\'ht
 $lang["image_banks_shutterstock_result_limit"]='Όριο αποτελεσμάτων (μέγ. 1000 για δωρεάν λογαριασμούς)';
 $lang["image_banks_shutterstock_id"]='Αναγνωριστικό εικόνας Shutterstock';
 $lang["image_banks_createdfromimagebanks"]='Δημιουργήθηκε από το πρόσθετο Image Banks';
+$lang["image_banks_image_bank_source"]='Πηγή Τράπεζας Εικόνων';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Πρόσβαση σε περιπτώσεις (μορφή: όνομα i18n|baseURL|όνομα χρήστη|κλειδί|διαμόρφωση)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace μέγεθος %SIZE_CODE';
+$lang["image_banks_label_select_providers"]='Επιλέξτε ενεργούς παρόχους';
+$lang["image_banks_view_on_provider_system"]='Προβολή στο σύστημα %PROVIDER';
+$lang["image_banks_system_unmet_dependencies"]='Το πρόσθετο ImageBanks έχει ανεκπλήρωτες εξαρτήσεις συστήματος!';
+$lang["image_banks_error_generic_parse"]='Αδυναμία ανάλυσης της διαμόρφωσης των παρόχων (για πολλαπλές περιπτώσεις)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Μη έγκυρη μορφή διαμόρφωσης για την περίπτωση \'%PROVIDER\' (πάροχος)';
+$lang["image_banks_error_bad_url_scheme"]='Βρέθηκε μη έγκυρο σχήμα URL για την περίπτωση του \'%PROVIDER\' (πάροχος)';
+$lang["image_banks_error_unexpected_response"]='Λυπούμαστε, λάβαμε μια απροσδόκητη απάντηση από τον πάροχο. Παρακαλώ επικοινωνήστε με τον διαχειριστή του συστήματός σας για περαιτέρω διερεύνηση (δείτε το αρχείο καταγραφής σφαλμάτων).';

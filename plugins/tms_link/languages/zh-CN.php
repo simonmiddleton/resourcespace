@@ -68,3 +68,5 @@ $lang["tms_link_not_deleted_error_detail"]='无法删除所请求的模块配置
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field 的翻译是：TMS %模块名称 %TMS_UID_字段';
 $lang["tms_link_confirm_delete_module_config"]='您确定要删除此模块配置吗？此操作无法撤销！';
 $lang["tms_link_column_name"]='TMS列';
+$lang["tms_link_mediapaths_resource_reference_column"]='在MediaMaster表中用于存储资源ID的列。这是可选的，用于避免多个资源使用相同的Media Master ID。';
+$lang["tms_link_write_to_debug_log"]='在系统调试日志中包含脚本进度（需要单独配置调试日志记录）。注意：将导致调试日志文件快速增长。';

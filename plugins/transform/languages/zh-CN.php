@@ -71,3 +71,7 @@ $lang["cropper_jpeg_rgb"]='强制使用 sRGB（覆盖用户选项）';
 $lang["transform_update_preview"]='更新预览';
 $lang["transform_preset_sizes"]='从预定义的目标尺寸中选择。';
 $lang["error_crop_invalid"]='请选择图像的一个区域。';
+$lang["px"]='像素';
+$lang["rotation90"]='顺时针90度';
+$lang["rotation270"]='逆时针旋转90度';
+$lang["cropper_use_srgb"]='使用sRGB';

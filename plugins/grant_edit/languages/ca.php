@@ -8,3 +8,4 @@ $lang["grant_edit_add"]='Habilitar accés d\'edició per als següents usuaris/g
 $lang["grant_edit_date"]='Data de caducitat per a l\'accés d\'edició';
 $lang["grant_edit_list"]='Usuaris actuals amb accés addicional d\'edició';
 $lang["grant_edit_delete_user"]='Confirma la eliminació de l\'accés millorat per a';
+$lang["grant_edit_group_list"]='Grups actuals amb accés d\'edició addicional';

@@ -42,3 +42,6 @@ $lang["video_splice_failure"]='Unire video: Ceva nu a mers bine. Vă rugăm să 
 $lang["video_splice_no_export_folder"]='Nu se poate efectua exportul deoarece nu este setat niciun fișier de cale către folderul de export video în fișierul de configurare.';
 $lang["video_splice_incorrect_quantity"]='Un resurs valid a fost fie eliminat, fie adăugat la colecție de când această pagină a fost încărcată. Vă rugăm să încercați din nou.';
 $lang["video_splice_createdfromvideosplice"]='Creat din pluginul Video Splice';
+$lang["video-trim_output"]='Ieșire';
+$lang["action-splice"]='Îmbinare';
+$lang["video_splice_error_invalid_action"]='Eroare: Acțiune invalidă';

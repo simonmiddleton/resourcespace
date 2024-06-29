@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Token de Shutterstock (<a href=\'https:
 $lang["image_banks_shutterstock_result_limit"]='Límit de resultats (màxim 1000 per a comptes gratuïts)';
 $lang["image_banks_shutterstock_id"]='Identificador d\'imatge de Shutterstock';
 $lang["image_banks_createdfromimagebanks"]='Creat a partir del connector de bancs d\'imatges';
+$lang["image_banks_image_bank_source"]='Font de la Banc d\'Imatges';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Accés a instàncies (format: nom i18n|baseURL|nom d\'usuari|clau|configuració)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace mida %SIZE_CODE';
+$lang["image_banks_label_select_providers"]='Selecciona proveïdors actius';
+$lang["image_banks_view_on_provider_system"]='Veure al sistema de %PROVIDER';
+$lang["image_banks_system_unmet_dependencies"]='El complement ImageBanks té dependències del sistema no satisfetes!';
+$lang["image_banks_error_generic_parse"]='No es pot analitzar la configuració dels proveïdors (per a múltiples instàncies)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Format de configuració no vàlid per a la instància de \'%PROVIDER\' (proveïdor)';
+$lang["image_banks_error_bad_url_scheme"]='S\'ha trobat un esquema d\'URL no vàlid per a la instància de \'%PROVIDER\' (proveïdor)';
+$lang["image_banks_error_unexpected_response"]='Ho sentim, hem rebut una resposta inesperada del proveïdor. Si us plau, contacteu amb l\'administrador del sistema per a una investigació més detallada (vegeu el registre de depuració).';

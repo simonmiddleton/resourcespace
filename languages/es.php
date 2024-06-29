@@ -2901,3 +2901,4 @@ $lang["action_set_no_file"]='Marcar como sin archivo';
 $lang["action_unset_no_file"]='Marcar como archivo faltante';
 $lang["completed_set_no_file"]='Recurso marcado como sin archivo';
 $lang["completed_unset_no_file"]='Recurso marcado como archivo faltante';
+$lang["map_esridelorme"]='DeLorme';

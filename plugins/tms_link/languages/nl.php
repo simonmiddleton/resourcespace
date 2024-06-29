@@ -67,3 +67,6 @@ $lang["tms_link_encoding"]='codering';
 $lang["tms_link_not_found_error_title"]='Niet gevonden';
 $lang["tms_link_not_deleted_error_detail"]='Kan de gevraagde module configuratie niet verwijderen.';
 $lang["tms_link_confirm_delete_module_config"]='Weet u zeker dat u deze module configuratie wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt!';
+$lang["tms_link_mediapaths_resource_reference_column"]='Kolom te gebruiken in de MediaMaster-tabel om Resource ID op te slaan. Dit is optioneel en wordt gebruikt om te voorkomen dat meerdere resources dezelfde Media Master ID gebruiken.';
+$lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
+$lang["tms_link_write_to_debug_log"]='Scriptvoortgang opnemen in systeemdebuglogboek (vereist afzonderlijke configuratie van debuglogging). Let op: Zal snelle groei van het debuglogboek veroorzaken.';

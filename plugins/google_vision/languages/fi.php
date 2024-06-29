@@ -20,3 +20,4 @@ $lang["google_vision_translation_intro"]='Google Vision palauttaa vain englannin
 $lang["google_vision_translation_api_key"]='Ota käyttöön Vision-avainsanojen kääntäminen käännösrajapinnan kautta syöttämällä kelvollinen Google API -avain';
 $lang["google_vision_translation_languages"]='Pilkulla eroteltu luettelo kielikoodeista, esim. "no,es"';
 $lang["google_vision_translation_keep_english"]='Säilytetäänkö alkuperäiset englanninkieliset avainsanat?';
+$lang["google_vision_api"]='Google Vision API';

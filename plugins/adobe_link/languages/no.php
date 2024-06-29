@@ -11,3 +11,4 @@ $lang["adobe_link_import_successful"]='Filen blir importert';
 $lang["adobe_link_upload_document"]='Lagre';
 $lang["adobe_link_saving"]='Lagrer..';
 $lang["adobe_link_saving_wait"]='Filen blir lagret, vennligst vent på bekreftelsesmeldingen. Du må kanskje oppdatere siden for å oppdatere forhåndsvisningsbildet.';
+$lang["adobe_link_title"]='Adobe Link';

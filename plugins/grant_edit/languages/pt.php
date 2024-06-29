@@ -8,3 +8,4 @@ $lang["grant_edit_add"]='Permitir acesso de edição para os seguintes usuários
 $lang["grant_edit_date"]='Data de validade para acesso de edição';
 $lang["grant_edit_list"]='Usuários atuais com acesso adicional de edição';
 $lang["grant_edit_delete_user"]='Confirmar remoção de acesso aprimorado para';
+$lang["grant_edit_group_list"]='Grupos atuais com acesso adicional de edição';

@@ -29,3 +29,6 @@ $lang["video_tracks_custom_video_formats_label"]='Aangepaste formaten';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Sta de beschikbare bestandsuitvoeropties toe om te worden gebruikt om aangepaste videoformaten te maken voor het originele bestand?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Vink aan om de transcodering nu te starten. Als het niet is aangevinkt, ontvangt u een melding wanneer het bestand gereed is';
 $lang["video_tracks_transcode_now_label"]='Nu transcoderen';
+$lang["video_tracks_select_generate_opt"]='Kies een genereeroptie alstublieft';
+$lang["video_tracks_save_alt_not_perm"]='Kan alternatief niet opslaan zonder toestemming';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='BELANGRIJK! De Video Tracks plugin heeft de uitvoerformaten-instellingen verouderd. Ze kunnen alleen worden ingesteld in config.php. De plugin zal niet correct werken totdat de configuratieoptie is overgenomen. Kopieer alstublieft het volgende:- %nl%####%nl%%output_formats_config%####%nl%';

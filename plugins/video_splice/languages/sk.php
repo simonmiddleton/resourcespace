@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='Zrežírovanie videa: Niečo sa pokazilo. Prosím
 $lang["video_splice_no_export_folder"]='Nemožné vykonať export, pretože nie je nastavená cesta k priečinku pre export videa v konfiguračnom súbore.';
 $lang["video_splice_incorrect_quantity"]='Platný zdroj buď bol odstránený alebo pridaný do zbierky od načítania tejto stránky. Prosím, skúste to znova.';
 $lang["video_splice_createdfromvideosplice"]='Vytvorené pomocou pluginu Video Splice';
+$lang["video-trim_output"]='Výstup';
+$lang["video_splice_error_invalid_action"]='Napaka: Neveljavna akcija';

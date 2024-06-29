@@ -2468,7 +2468,6 @@ $lang["filter_is_not_in"]='No és';
 $lang["filter_or"]='Per favor, tradueix: OR
 
 "OR" es pot traduir com "O" en català.';
-$lang["filter_and"]='I translates as "I" in Catalan. However, if you meant to translate the English word "and" to Catalan, it is "i"';
 $lang["browse_bar_text"]='Navegar';
 $lang["field_show_in_browse_bar"]='Mostra a la barra de navegació';
 $lang["error-sessionexpired"]='La teva sessió ha caducat o no és vàlida';
@@ -2724,7 +2723,6 @@ $lang["comments_flag-this-comment"]='Marcar';
 $lang["resourcetypes_separator"]=',';
 $lang["collectiontypes_separator"]=', ';
 $lang["user_group"]='grup d\'usuaris';
-$lang["all__comments_removal_message"]='I need the text you want to be translated in order to proceed.';
 $lang["all__emailbulk"]='<br /><br />
 [text]<br /><br />
 [text_footer]';
@@ -2791,8 +2789,6 @@ $lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
 [detalls]<br /><br />
 [lang_clicktoviewresource] <br /><br />
 <a href="[url]">[url]</a>';
-$lang["team_content__introtext"]='I need the text you want to be translated in order to proceed.';
-$lang["upload__introtext"]='I need the text you want to be translated in order to proceed.';
 $lang["dash"]='Quadre de comandament';
 $lang["last"]='Últim';
 $lang["upgrade_script"]='Script d\'actualització';
@@ -2896,3 +2892,5 @@ $lang["action_unset_no_file"]='Marcar com a fitxer desaparegut';
 $lang["completed_set_no_file"]='Recurs marcat com a sense fitxer';
 $lang["completed_unset_no_file"]='Recurs marcat com a fitxer desaparegut';
 $lang["hour-abbreviated"]='HH';
+$lang["map_esridelorme"]='DeLorme';
+$lang["filter_and"]='I';

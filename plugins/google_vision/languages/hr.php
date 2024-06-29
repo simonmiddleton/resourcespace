@@ -20,3 +20,4 @@ $lang["google_vision_translation_intro"]='Google Vision vraća samo engleske klj
 $lang["google_vision_translation_api_key"]='Omogućite prijevod ključnih riječi Vizije putem API-ja za prijevod unosom valjanog Google API ključa';
 $lang["google_vision_translation_languages"]='Popis jezika odvojen zarezima, npr. "no,es"';
 $lang["google_vision_translation_keep_english"]='Zadržati originalne engleske ključne riječi?';
+$lang["google_vision_api"]='Google Vision API';

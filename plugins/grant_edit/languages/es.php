@@ -8,3 +8,4 @@ $lang["grant_edit_date"]='Fecha de caducidad para el acceso de edición';
 $lang["grant_edit_list"]='Usuarios actuales con acceso adicional de edición';
 $lang["grant_edit_delete_user"]='Confirmar la eliminación del acceso mejorado para';
 $lang["grant_edit_title"]='Conceder Edición';
+$lang["grant_edit_group_list"]='Grupos actuales con acceso adicional de edición';

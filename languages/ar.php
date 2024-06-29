@@ -2775,7 +2775,6 @@ $lang["map_esridelorme"]='DeLorme
 $lang["map_nasagibs_group"]='ناسا جيبس';
 $lang["map_mapbox_group"]='خريطة الصندوق';
 $lang["map_mapboxid"]='معرف';
-$lang["field_ref_and_name"]='%ref% - %name% translated to العربية is %ref% - %name%';
 $lang["filestore"]='مستودع الملفات';
 $lang["rs_ext_dependencies"]='الاعتماديات الخارجية لنظام إدارة الموارد الرقمية';
 $lang["write_access_to"]='صلاحية الكتابة إلى';
@@ -2992,3 +2991,6 @@ $lang["all__comments_flag_notification_email_subject"]='من فضلك ترجم';
 $lang["all__comments_policy"]='من فضلك ترجم';
 $lang["edit__batch"]='من فضلك ترجم';
 $lang["team_content__introtext"]='من فضلك ترجم';
+
+$lang["field_ref_and_name"]='%ref% - %name%  
+';

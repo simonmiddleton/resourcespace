@@ -37,3 +37,4 @@ $lang["yourresourcehasbeenuploaded"]='تم تحميل موردك';
 $lang["yourresourceshavebeenuploaded"]='تم تحميل مواردك';
 $lang["checkmail_not_allowed_error_template"]='المستخدم [user-fullname] ([username])، برقم [user-ref] والبريد الإلكتروني [user-email] غير مسموح له بالرفع عبر البريد الإلكتروني (يرجى التحقق من الأذونات "c" أو "d" أو المستخدمين المحظورين في صفحة إعدادات البريد الإلكتروني). تم تسجيل هذا في: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='تم إنشاؤها من مكوّن إضافة تحقق البريد الإلكتروني';
+$lang["checkmail_resource_type_population"]='<br />(من allowed_extensions)';

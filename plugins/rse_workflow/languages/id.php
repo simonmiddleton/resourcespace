@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Tutup';
 $lang["rse_workflow_more_notes_title"]='Catatan:';
 $lang["rse_workflow_email_from"]='Alamat email untuk mengirim pemberitahuan (akan menggunakan %EMAILFROM% jika kosong):';
 $lang["rse_workflow_bcc_admin"]='Memberitahu administrator sistem ketika kontributor diberitahu';
+$lang["rse_workflow_state_notify_help"]='Pengguna akan melihat sumber daya dalam keadaan ini muncul sebagai tindakan, daripada menerima pemberitahuan sederhana';

@@ -34,3 +34,4 @@ $lang["emu_upload_nodata"]='Tälle IRN:lle ei löytynyt EMu-tietoja';
 $lang["emu_nodata_returned"]='Määriteltyä IRN-tunnusta vastaavia EMu-tietoja ei löytynyt.';
 $lang["emu_createdfromemu"]='Luotu EMU-liitännäisestä';
 $lang["emu_last_run_date"]='Skripti viimeksi suoritettu';
+$lang["emu_upload_emu_field_label"]='EMu IRN';

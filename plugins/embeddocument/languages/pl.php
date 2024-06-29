@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='maksymalizować';
 $lang["embeddocument_heading"]='Konfiguracja zdalnego przeglądarki dokumentów';
 $lang["embeddocument_specify_resourcetype"]='Proszę określić dla jakiego typu zasobu funkcjonalność „osadzania” powinna być dostępna.';
 $lang["embeddocument_document_resourcetype"]='Zdalny przeglądarka dokumentów - Typ zasobu:';
+$lang["embeddocument_embed_share"]='Osadź dokument';

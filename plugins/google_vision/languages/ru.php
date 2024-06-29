@@ -20,3 +20,4 @@ $lang["google_vision_translation_intro"]='Google Vision возвращает т�
 $lang["google_vision_translation_api_key"]='Включите перевод ключевых слов Vision через API перевода, введя действительный ключ API Google';
 $lang["google_vision_translation_languages"]='Список языковых кодов, разделенных запятыми, например, "no,es"';
 $lang["google_vision_translation_keep_english"]='Сохранить оригинальные ключевые слова на английском языке?';
+$lang["google_vision_api"]='Google Vision API';

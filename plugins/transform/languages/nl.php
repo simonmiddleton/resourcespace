@@ -74,3 +74,4 @@ $lang["transform_update_preview"]='Bijwerken voorbeeldweergave';
 $lang["transform_preset_sizes"]='Selecteer een vooraf gedefinieerde doelgrootte';
 $lang["error_crop_invalid"]='Selecteer alstublieft een regio van de afbeelding';
 $lang["input_formats"]='Invoerformaten';
+$lang["px"]='px';

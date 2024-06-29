@@ -60,3 +60,4 @@ $lang["doi_sure_register_resource"]='Pokračovať v registrácii x zdrojov?';
 $lang["doi_show_meta"]='Zobraziť metadáta DOI';
 $lang["doi_hide_meta"]='Skryť metadáta DOI';
 $lang["doi_fetched_xml_from_MDS"]='Aktuálne XML metadáta boli úspešne získané z úložiska metadát DataCite';
+$lang["doi_info_wikipedia"]='https://sl.wikipedia.org/wiki/Digitalni_objektni_oznacevalnik';

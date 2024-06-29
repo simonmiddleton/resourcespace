@@ -8,3 +8,4 @@ $lang["grant_edit_add"]='Schakel bewerkingsrechten in voor de volgende gebruiker
 $lang["grant_edit_date"]='Vervaldatum voor bewerktoegang';
 $lang["grant_edit_list"]='Huidige gebruikers met extra bewerkingsrechten';
 $lang["grant_edit_delete_user"]='Bevestig verwijdering van verbeterde toegang voor';
+$lang["grant_edit_group_list"]='Huidige groepen met extra bewerkingsrechten';

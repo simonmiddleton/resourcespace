@@ -8,3 +8,4 @@ $lang["new_content_rss_feed"]='新しいコンテンツのRSSフィード';
 $lang["subject"]='件名';
 $lang["rss_feed_for_search_filter"]='このクエリのためのRSSフィードを作成する。';
 $lang["filtered_resource_update_for"]='検索 [%search%] のためのフィルターされたリソースの更新';
+$lang["rss_ttl"]='RSS TTL:';

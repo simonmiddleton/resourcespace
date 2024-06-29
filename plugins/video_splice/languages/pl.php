@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='Łączenie wideo: Coś poszło nie tak. Skontaktu
 $lang["video_splice_no_export_folder"]='Nie można wykonać eksportu, ponieważ nie ustawiono ścieżki dostępu do folderu eksportu w pliku konfiguracyjnym.';
 $lang["video_splice_incorrect_quantity"]='Poprawny zasób został usunięty lub dodany do kolekcji od czasu załadowania tej strony. Proszę spróbuj ponownie.';
 $lang["video_splice_createdfromvideosplice"]='Utworzono za pomocą wtyczki Video Splice';
+$lang["video-trim_output"]='Wynik';
+$lang["video_splice_error_invalid_action"]='Błąd: Nieprawidłowa akcja';

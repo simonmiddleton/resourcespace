@@ -2829,3 +2829,230 @@ $lang["error_invalid_revert_option"]='Aiemmin tallennettua arvoa \'%%VALUE%%\' e
 $lang["error_invalid_revert_date"]='Aiemmin tallennettu päivämäärä \'%%VALUE%%\' on virheellinen. Päivitä resurssi manuaalisesti tarvittaessa.';
 $lang["batch_edit_save_warning_message"]='Seuraavia resursseja muokatessa ilmeni virheitä -';
 $lang["batch_edit_save_warning_alert"]='Joitakin virheitä ilmeni tämän toiminnon suorittamisessa. Katso lisätietoja viesteistäsi';
+
+$lang["information_field_restype_deselect_cleanup"]='Poistaaksesi olemassa olevat kenttätiedot valitsemattomista resurssityypeistä, napsauta seuraavaa linkkiä %%CLEANUP_LINK%%';
+$lang["mainmenu"]='Päävalikko';
+$lang["perpage_option"]='? per sivu';
+$lang["off"]='Pois päältä';
+$lang["reload"]='Lataa uudelleen';
+$lang["delete_all_selected"]='Poista kaikki valitut';
+$lang["edit_multiple_existing_values"]='Olemassa olevat avainsanat tämän valinnan resursseissa';
+$lang["edit_multiple_show_more"]='Näytä lisää';
+$lang["edit_multiple_too_many"]='Näytetään 100 eniten käytettyä arvoa. Muita arvoja on myös olemassa.';
+$lang["edit_multiple_action_text_rt"]='Kaikki teksti / vaihtoehdot korvataan seuraavilla avainsanoilla';
+$lang["edit_multiple_action_text_ap"]='Nämä avainsanat liitetään';
+$lang["edit_multiple_action_text_rm"]='Nämä avainsanat poistetaan';
+$lang["sortorder-asc"]='NOUSEVA';
+$lang["sortorder-desc"]='KUVAUS';
+$lang["title"]='Otsikko';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["log-rtchange"]='Muokattu resurssityyppi';
+$lang["log-XK"]='Poistettu ulkoinen pääsyavain';
+$lang["log-NOFIL"]='Merkitty tiedostottomaksi';
+$lang["log-FIL"]='Merkitty tiedostolliseksi';
+$lang["log-EDT"]='Muokattu resurssi';
+$lang["accountnotfound-reset-not-emailed"]='Salasanan palautuslinkkiä ei lähetetty, koska kyseisellä sähköpostiosoitteella ei ole tiliä';
+$lang["accountnoemail-reset-not-emailed"]='Salasanan palautuslinkkiä ei lähetetty, koska tilillä ei ole sähköpostiosoitetta';
+$lang["accountexpired-reset-not-emailed"]='Salasanan palautuslinkkiä ei lähetetty, koska tili on vanhentunut';
+$lang["accountnotapproved-reset-not-emailed"]='Salasanan palautuslinkkiä ei lähetetty, koska tiliä ei ole hyväksytty';
+$lang["notavailableshort"]='Ei saatavilla';
+$lang["remaining"]='jäljellä';
+$lang["web_server"]='Verkkopalvelin';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='Kaikki työnkulun tilat';
+$lang["stat-downloadedkb"]='Ladattujen tiedostojen tiedot (KB)';
+$lang["external"]='Ulkoinen';
+$lang["email_error_user_list_some_skipped"]='Ohitetut ilmoitukset seuraaville käyttäjille (käyttäjiä ei ehkä ole hyväksytty)';
+$lang["unrelateallresources"]='Poista kaikkien tämän kokoelman resurssien yhteydet';
+$lang["unrelateallresources_confirmation"]='Mitkään tämän kokoelman resurssit eivät ole nyt liittyviä';
+$lang["alternatetype"]='Vaihtoehtoinen tyyppi';
+$lang["setup-download_filename_format"]='Lataa tiedoston nimen muoto';
+$lang["addremove"]='+/-';
+$lang["map_introtext1"]='Alla oleva kartta näyttää hakutuloksista resurssit, joilla on geosijainti. Merkkien väri on asetettu resurssityypin tai mukautetun metatietokentän mukaan (avain kartan alla). Kun merkit menevät päällekkäin, käytetään vihreää klusterointia, jossa numero ilmaisee klusteroitujen merkkien määrän; zoomaa sisään tai kaksoisnapsauta klusteria. Napsauta yksittäistä merkkiä avataksesi resurssin ponnahdusikkunan, joka näyttää esikatselukuvan. Napsauta esikatselukuvaa avataksesi resurssin ikkunan. Vie hiiri yksittäisen merkin päälle nähdäksesi geokoordinaatit. Vaihda taustakarttaa oikean yläkulman karttapainikkeella. Tallenna kartta PNG-tiedostona vasemman alakulman karttapainikkeella.';
+$lang["geolocate_collection_map_text"]='Alla oleva kartta näyttää tämän kokoelman resurssit, joilla on geosijainti. Merkkien väri on asetettu resurssityypin tai mukautetun metatietokentän mukaan (avain kartan alla). Kun merkit menevät päällekkäin, käytetään vihreää klusterointia, jossa numero ilmaisee klusteroitujen merkkien määrän; zoomaa sisään tai kaksoisnapsauta klusteria. Napsauta yksittäistä merkkiä avataksesi resurssin ponnahdusikkunan, jossa näkyy esikatselukuva. Napsauta esikatselukuvaa avataksesi resurssin ikkunan. Vie hiiri yksittäisen merkin päälle nähdäksesi geokoordinaatit. Vaihda taustakarttaa oikean yläkulman karttapainikkeella. Tallenna kartta PNG-tiedostona vasemman alakulman karttapainikkeella.';
+$lang["map_stamentonerback"]='Taustaväri';
+$lang["map_esri_group"]='ESRI';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["subcategories"]='Alakategoriat';
+$lang["subcategory"]='Alakategoria';
+$lang["back"]='Takaisin';
+$lang["user_pref_autorotate"]='Käännä kuvat automaattisesti latauksen yhteydessä?';
+$lang["report_periodic_email_option_me"]='minä';
+$lang["filestore"]='Tiedostovarasto';
+$lang["rs_ext_dependencies"]='ResourceSpace Ulkoiset Riippuvuudet';
+$lang["write_access_to"]='Kirjoitusoikeus ';
+$lang["error-invalid_name"]='Virheellinen nimi';
+$lang["inactive_entry_matched"]='Passiivinen merkintä vastaa';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["comments_in-response-to-on"]='päällä';
+$lang["user_group"]='käyttäjäryhmä';
+$lang["all__emailbulk"]='<br /><br />
+[teksti]<br /><br />
+[teksti_alaosa]';
+$lang["all__emailcollection"]='<br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='<br />
+[käyttäjänimi] [kokoelman ulkoinen viesti] <br /><br /> 
+[viesti] : [message]<br /><br /> 
+[napsauta linkkiä nähdäksesi kokoelman] [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[tervetuloa]<br /><br /> 
+[uudet kirjautumistiedot]<br /><br /> 
+[käyttäjänimi] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[teksti_alatunniste]';
+$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[käyttäjän lähettämät resurssit]
+[lista] <br />
+[näytä kaikki käyttäjän odottavat] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[tekstin alatunniste]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[käyttäjänresurssitlähettämättömät]
+[lista] <br />
+[näytäkaikkikäyttäjänodottavat] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[teksti_alatunniste]';
+$lang["all__emailresearchrequestassigned"]='<br />
+[tutkimuspyyntöön on osoitettu viesti]<br /><br />
+[tekstin alatunniste]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='[käyttäjänimi] : [username] <br />
+[lista] <br />
+[yksityiskohdat]<br /><br />
+[napsauta nähdäksesi resurssin] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["team_research__introtext"]='Järjestä ja hallinnoi \'Tutkimuspyyntöjä\'. <br /><br />Valitse \'muokkaa tutkimusta\' tarkistaaksesi pyynnön tiedot ja osoittaaksesi tutkimuksen tiimin jäsenelle. On mahdollista perustaa tutkimuspyyntö aiempaan kokoelmaan syöttämällä kokoelman tunnus \'muokkaa\' -näyttöön. <br /><br />Kun tutkimuspyyntö on osoitettu, valitse \'muokkaa kokoelmaa\' lisätäksesi tutkimuspyynnön \'Oletuskokoelma\' -paneeliin. Käyttämällä vakiotyökaluja on sitten mahdollista lisätä resursseja tutkimukseen. <br /><br />Kun tutkimus on valmis, valitse \'muokkaa tutkimusta\', muuta tila valmiiksi ja sähköposti lähetetään automaattisesti käyttäjälle, joka pyysi tutkimusta. Sähköposti sisältää linkin tutkimukseen ja se lisätään myös automaattisesti heidän \'Oletuskokoelma\' -paneeliinsa.';
+$lang["dash"]='Kojelauta';
+$lang["upgrade_script"]='Päivitysskripti';
+$lang["upgrade_026_notification"]='Päivitys on poistanut käytöstä joitakin määritysasetuksia, joita %entity% ohittaa.
+
+Jotta lataustiedoston nimi muotoiltaisiin mahdollisimman lähelle vanhaa tapaa, päivitä sen määrityksen ohitus seuraavasti:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='Ei voida asettaa järjestelmänlaajuista asetusta \'download_filename_format\' arvoon \'%format%\'. Yritä uudelleen manuaalisesti.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='Ei voida käsitellä vanhentuneita asetuksia kohteelle %entity%. Yritä uudelleen manuaalisesti. Syy:-
+
+%error%';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='Oletuslajittelusuunta';
+$lang["userpreference_high_contrast_mode"]='Korkeamman kontrastin tila';
+$lang["watermark_header"]='Vesileima';
+$lang["watermark_label"]='Vesileimakuva - Luo esikatselut uudelleen vesileiman muuttamisen jälkeen päivittääksesi olemassa olevat resurssit. Tiedoston poistaminen poistaa vesileimauksen käytöstä.';
+$lang["systemconfig_debug"]='Vianmääritys';
+$lang["systemconfig_debug_log_on_specific_user"]='Päällä (tietty käyttäjä)';
+$lang["systemconfig_use_native_input_for_date_field"]='Käytä natiivia päivämäärän syöttöä \'päivämäärä\' metatietokentän tyypin näyttämiseen';
+$lang["systemconfig_native_date_input_no_partials_supported"]='TÄRKEÄÄ: Jos tämä on käytössä, osittaisia päivämääriä (esim. toukokuu 2023) ei enää tueta ja olemassa olevat tiedot poistetaan seuraavan resurssin muokkauksen jälkeen.';
+$lang["show_affected_resources"]='Näytä vaikuttavat resurssit';
+$lang["group_no"]='Ryhmä';
+$lang["confirm_delete_field_value"]='Oletko varma, että haluat POISTAA tämän kenttävalinnan? Tämä poistaa pysyvästi arvon kaikista resursseista, joihin se on sovellettu.';
+$lang["media"]='Media';
+$lang["external_shares_options"]='Ulkoinen jakamisvaihtoehdot';
+$lang["email_shares_options_summary"]='Nämä vaihtoehdot koskevat vain jaettuja kohteita, jotka on luotu käyttämällä ulkoista sähköpostiosoitetta';
+$lang["report_breakdown_pie"]='Erottelukaavio';
+$lang["actions_email_new_actions_title"]='Uudet toiminnot';
+$lang["actions_email_new_actions_intro"]='On uusia toimintoja, jotka on suoritettava.';
+$lang["email_actions_truncated"]='Vain viimeisimmät 1000 toimintoa näytetään tässä. Sinulla on %%TOTAL%% toimintoa. Kirjaudu sisään %%APPLICATIONNAME%% nähdäksesi ne kaikki.';
+$lang["annotate_select"]='Valitse kenttä...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='Epäonnistui resurssitiedoston korvaamisessa. Annettu kokoelman viite on virheellinen.';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='cURL-esimerkki';
+$lang["api-curl-help"]='Alla oleva yhden rivin bash-skripti voidaan suorittaa missä tahansa UNIX-järjestelmässä, jossa on asennettuna OpenSSL ja cURL.';
+$lang["share-password-not-set"]='Ulkopuoliset jaot on suojattava salasanalla. Syötä jaon salasana jatkaaksesi.';
+$lang["job_priority_immediate"]='Kiireellinen työ';
+$lang["job_priority_user"]='Käyttäjän tehtävä';
+$lang["job_priority_system"]='Järjestelmätehtävä';
+$lang["job_priority_completed"]='Työ suoritettu';
+$lang["job_status_error"]='Tapahtui virhe';
+$lang["filter_is_in"]='ON';
+$lang["file_integrity_fail_latest"]='Näytä viimeisimmät tiedostojen eheysvirheet';
+$lang["file_integrity_fail_all"]='Näytä kaikki resurssit, joilla on tiedoston eheyden virheitä';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[tiedoston_eheys_yhteenveto_epäonnistui] <br /><br /> 
+[tiedoston_eheys_epäonnistui_haku] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[teksti_alatunniste]';
+$lang["error-edit_noaccess_related_resources"]='Ei voida yhdistää resursseja. Ei pääsyä:';
+$lang["csv_export_filename"]='metadata_vienti_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='<br />
+[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[tekstin_alaosa]';
+$lang["share_expired_icon_title"]='Vanhentunut';
+$lang["error_invalid_date_format"]='"%%VALUE%%" on virheellinen päivämäärä. Kaikkien tämän kentän arvojen on oltava muodossa VVVV-KK-PP';
+$lang["related_resource_create"]='Luo uusi liittyvä resurssi';
+$lang["skip-to-main-content"]='Siirry pääsisältöön';
+$lang["cleanup_invalid_nodes"]='Puhdista kenttätiedot virheellisistä resurssityypeistä';
+$lang["cleanup_invalid_node_dry_run"]='Älä poista tietoja, palauta vain poistettavien rivien määrä?';
+$lang["advancedsearch_resource_section"]='Resurssitiedot';
+$lang["error-reload-required"]='ResourceSpace on päivitetty. Lataa sivu uudelleen';
+$lang["user_pref_new_action_emails"]='Lähetä minulle sähköpostia, jos uusia toimintoja luodaan';
+$lang["email_rate_limit_active"]='Järjestelmän lähettämien sähköpostien enimmäismäärä tunnissa on ylitetty. Järjestelmä ei tällä hetkellä lähetä sähköposteja.';
+$lang["email_rate_limit_inactive"]='Sähköpostirajoitus on poistettu ja sähköposteja lähetetään nyt.';
+$lang["severity-level_0"]='Kriittinen';
+$lang["severity-level_1"]='Varoitus';
+$lang["severity-level_2"]='Ilmoitus';
+$lang["pull_images"]='Vedä kuvat';
+$lang["pull_images_text"]='Käytä kuvia liittyvistä resursseista, jos ei ole saatavilla';
+$lang["system_user_default"]='JÄRJESTELMÄ';
+$lang["userlimitreached"]='Olet saavuttanut käyttäjärajan. Nykyinen käyttäjä on poistettava käytöstä tai poistettava ennen kuin voit luoda uusia tilejä tai ottaa käyttöön olemassa olevia tilejä.';
+$lang["user_api_session_title"]='Etäjärjestelmän API-pääsy';
+$lang["user_api_session_text"]='Etäjärjestelmä \'%system%\' pyytää pääsyä %applicationname%:iin käyttäen tunnuksiasi. Napsauta \'Myönnä pääsy\' vain, jos olet itse tehnyt tämän pyynnön';
+$lang["user_api_session_invalid_system"]='Virheellinen järjestelmä pyydetty';
+$lang["user_api_session_grant_access"]='Myönnä pääsy';
+$lang["user_api_session_grant_success"]='Avain myönnetty onnistuneesti.';
+$lang["user_api_session_grant_error"]='Avaimen myöntäminen epäonnistui.';
+$lang["no_file"]='Ei tiedostoa';
+$lang["missing_file"]='Tämä tiedosto puuttuu. Ota yhteyttä järjestelmänvalvojaan';
+$lang["action_set_no_file"]='Merkitse tiedostottomaksi';
+$lang["action_unset_no_file"]='Merkitse tiedosto puuttuvaksi';
+$lang["completed_set_no_file"]='Resurssi merkitty tiedostottomaksi';
+$lang["completed_unset_no_file"]='Resurssi merkitty tiedosto puuttuvaksi';
+$lang["map_tf_group"]='Thunderforest';
+$lang["themes__manage"]='Järjestä ja muokkaa verkossa saatavilla olevia esittelykokoelmia. Esittelykokoelmat ovat erityisesti mainostettuja kokoelmia. <br /><br /> <strong>1 Uuden merkinnän luominen esittelykokoelman alle - rakenna kokoelma</strong><br /> Valitse <strong>Omat kokoelmat</strong> päävalikosta ja luo uusi <strong>julkinen</strong> kokoelma. Muista sisällyttää esittelykokoelman nimi asetusten aikana. Käytä olemassa olevaa esittelykokoelman nimeä ryhmitelläksesi kokoelman nykyisen esittelykokoelman alle (varmista, että kirjoitat sen täsmälleen samalla tavalla), tai valitse uusi nimi luodaksesi täysin uuden esittelykokoelman. Älä koskaan salli käyttäjien lisätä/poistaa resursseja esittelykokoelmista. <br /> <br /><strong>2 Olemassa olevan merkinnän sisällön muokkaaminen esittelykokoelman alla</strong><br /> Valitse <strong>muokkaa kokoelmaa</strong>. Tämän kokoelman kohteet näkyvät <strong>Omat kokoelmat</strong> -paneelissa näytön alareunassa. Käytä vakiotyökaluja resurssien muokkaamiseen, poistamiseen tai lisäämiseen. <br /> <br /><strong>3 Esittelykokoelman nimen muuttaminen tai kokoelman siirtäminen toisen esittelykokoelman alle</strong><br /> Valitse <strong>muokkaa ominaisuuksia</strong> ja muokkaa esittelykokoelman kategoriaa tai kokoelman nimeä. Käytä olemassa olevaa esittelykokoelman nimeä ryhmitelläksesi kokoelman nykyisen esittelykokoelman alle (varmista, että kirjoitat sen täsmälleen samalla tavalla), tai valitse uusi nimi luodaksesi täysin uuden esittelykokoelman. <br /> <br /><strong>4 Kokoelman poistaminen esittelykokoelmasta</strong><br /> Valitse <strong>muokkaa ominaisuuksia</strong> ja poista sanat esittelykokoelman kategoria -laatikosta.';

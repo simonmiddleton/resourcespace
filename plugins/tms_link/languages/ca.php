@@ -70,3 +70,5 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field
 
 TMS %module_name %tms_uid_field (Camp d\'identificació d\'usuari TMS del mòdul %module_name)';
 $lang["tms_link_confirm_delete_module_config"]='Esteu segur que voleu eliminar la configuració d\'aquest mòdul? Aquesta acció no es pot desfer!';
+$lang["tms_link_mediapaths_resource_reference_column"]='Columna a utilitzar a la taula MediaMaster per emmagatzemar l\'ID del recurs. Això és opcional i s\'utilitza per evitar que múltiples recursos utilitzin el mateix ID de Media Master.';
+$lang["tms_link_write_to_debug_log"]='Inclou el progrés del script al registre de depuració del sistema (requereix la configuració de la depuració per separat). Precaució: Això farà que el fitxer de registre de depuració creixi ràpidament.';

@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Zatvori';
 $lang["rse_workflow_more_notes_title"]='Bilješke:';
 $lang["rse_workflow_email_from"]='Adresa e-pošte za slanje obavijesti (koristit će se %EMAILFROM% ako je prazno):';
 $lang["rse_workflow_bcc_admin"]='Obavijestite sistemskog administratora kada se obavijesti suradnik';
+$lang["rse_workflow_state_notify_help"]='Korisnici će vidjeti resurse u ovom stanju kao radnje, umjesto da primaju jednostavne obavijesti';

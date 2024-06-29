@@ -2694,3 +2694,247 @@ $lang["error_invalid_revert_option"]='O valor armazenado anteriormente \'%%VALUE
 $lang["error_invalid_revert_date"]='A data armazenada anteriormente \'%%VALUE%%\' é inválida. Atualize o recurso manualmente, se necessário.';
 $lang["batch_edit_save_warning_message"]='Foram encontrados erros ao editar os seguintes recursos -';
 $lang["batch_edit_save_warning_alert"]='Alguns erros foram encontrados ao realizar esta operação. Por favor, consulte suas mensagens para mais detalhes';
+
+$lang["usergroup-general_users"]='Usuários Gerais';
+$lang["information-enable_partial_indexing"]='O indexação parcial de palavras-chave (indexação de prefixo+infixo) deve ser usada com moderação, pois aumentará significativamente o tamanho do índice. Consulte a Base de Conhecimento para mais detalhes.';
+$lang["information_field_restype_deselect_cleanup"]='Para remover os dados de campo existentes dos tipos de recursos desmarcados, clique no seguinte link %%CLEANUP_LINK%%';
+$lang["property-id"]='Id';
+$lang["mainmenu"]='Menu principal';
+$lang["xlthumbs"]='Extra-grande';
+$lang["collectionidprefix"]='Col_ID';
+$lang["_dupe"]='_dupe';
+$lang["emailthemecollectionmessageexternal"]='enviou para você coleções de recursos do %applicationname%.';
+$lang["edit_multiple_existing_values"]='Palavras-chave existentes nos recursos desta seleção';
+$lang["edit_multiple_show_more"]='Mostrar mais';
+$lang["edit_multiple_too_many"]='Mostrando os 100 valores mais usados. Outros também existem.';
+$lang["edit_multiple_action_text_rt"]='Todo o texto / opção(ões) será substituído pelos seguintes palavras-chave';
+$lang["edit_multiple_action_text_ap"]='Essas palavras-chave serão adicionadas';
+$lang["edit_multiple_action_text_rm"]='Essas palavras-chave serão removidas';
+$lang["sortorder-asc"]='ASC';
+$lang["sortorder-desc"]='DESC';
+$lang["title"]='Título';
+$lang["fileoftype"]='? Arquivo';
+$lang["cell-fileoftype"]='Arquivo %EXTENSION';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["fileextension-inside-brackets"]='[%EXTENSION]';
+$lang["fileextension"]='%EXTENSION';
+$lang["log-rtchange"]='Tipo de recurso editado';
+$lang["log-missinglang"]='[tipo] (idioma ausente)';
+$lang["log-NOFIL"]='Marcado como sem arquivo';
+$lang["log-FIL"]='Marcado como tendo arquivo';
+$lang["log-EDT"]='Recurso editado';
+$lang["backtoshareresource"]='Voltar para compartilhar recurso';
+$lang["accountnotfound-reset-not-emailed"]='O link de redefinição de senha não foi enviado porque não há conta com esse e-mail';
+$lang["accountnoemail-reset-not-emailed"]='O link de redefinição de senha não foi enviado porque a conta não possui endereço de e-mail';
+$lang["accountexpired-reset-not-emailed"]='O link de redefinição de senha não foi enviado porque a conta expirou';
+$lang["accountnotapproved-reset-not-emailed"]='O link de redefinição de senha não foi enviado porque a conta não está aprovada';
+$lang["minute-abbreviated"]='MM';
+$lang["remaining"]='restante';
+$lang["web_server"]='Servidor Web';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='Todos os estados do fluxo de trabalho';
+$lang["stat-downloadedkb"]='Dados do arquivo baixado (KB)';
+$lang["plugin_field_fmt"]='%A (%B)';
+$lang["external"]='Externo';
+$lang["email_error_user_list_some_skipped"]='Notificações ignoradas para os seguintes usuários (usuários podem não estar aprovados)';
+$lang["unrelateallresources"]='Desrelacionar todos os recursos nesta coleção';
+$lang["unrelateallresources_confirmation"]='Nenhum dos recursos nesta coleção está relacionado agora';
+$lang["setup-download_filename_format"]='Formato do nome do arquivo para download';
+$lang["setup-if-smtpsecure"]='\'\', \'tls\' ou \'ssl\'. Para Gmail, \'tls\' ou \'ssl\' é necessário.';
+$lang["ppi"]='PPI';
+$lang["addremove"]='+/-';
+$lang["map_tf_group"]='Thunderforest';
+$lang["map_esri_group"]='ESRI';
+$lang["map_esridelorme"]='DeLorme';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["unsubscribed"]='Cancelada a inscrição';
+$lang["filestore"]='Armazenamento de Arquivos';
+$lang["rs_ext_dependencies"]='Dependências Externas do ResourceSpace';
+$lang["write_access_to"]='Acesso de escrita para';
+$lang["shouldbeormore"]='deve ser ? ou maior';
+$lang["latlong"]='Lat / long';
+$lang["geodragmodepan"]='pan';
+$lang["centimetre-short"]='cm';
+$lang["megapixel-short"]='MP';
+$lang["cc-emailaddress"]='CC %emailaddress%';
+$lang["error-invalid_name"]='Nome inválido';
+$lang["inactive_entry_matched"]='Entrada inativa correspondente para';
+$lang["kilobyte-symbol"]='KB';
+$lang["megabyte-symbol"]='MB';
+$lang["gigabyte-symbol"]='GB';
+$lang["terabyte-symbol"]='TB';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["ref-title"]='%ref - %title';
+$lang["comments_flag-this-comment"]='Marcar';
+$lang["user_group"]='grupo de usuários';
+$lang["all__emailbulk"]='<br /><br />
+[text]<br /><br />
+[text_footer]';
+$lang["all__emailcollection"]='<br />
+[fromusername] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[bem-vindo]<br /><br /> 
+[lang_novosdetalhesdologin]<br /><br /> 
+[lang_nomeusuario] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_rodape]';
+$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[lista] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]<br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='<br />
+[mensagem_completapesquisapedido] <br /><br /> 
+[cliquelinkvercolecao] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[rodape_texto]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["themes__manage"]='Organize e edite as coleções em destaque disponíveis online. Coleções em destaque são coleções especialmente promovidas. <br /><br /> <strong>1 Para criar uma nova entrada em uma Coleção em Destaque - crie uma coleção</strong><br /> Escolha <strong>Minhas Coleções</strong> no menu principal superior e configure uma nova coleção <strong>pública</strong>. Lembre-se de incluir um nome de coleção em destaque durante a configuração. Use um nome de coleção em destaque existente para agrupar a coleção sob uma coleção em destaque atual (certifique-se de digitá-lo exatamente igual) ou escolha um novo título para criar uma nova coleção em destaque. Nunca permita que os usuários adicionem/removam recursos das coleções em destaque. <br /> <br /><strong>2 Para editar o conteúdo de uma entrada existente em uma coleção em destaque</strong><br /> Escolha <strong>editar coleção</strong>. Os itens dessa coleção aparecerão no painel <strong>Minhas Coleções</strong> na parte inferior da tela. Use as ferramentas padrão para editar, remover ou adicionar recursos. <br /> <br /><strong>3 Para alterar o nome de uma coleção em destaque ou mover uma coleção para aparecer sob uma coleção em destaque diferente</strong><br /> Escolha <strong>editar propriedades</strong> e edite a categoria da coleção em destaque ou o nome da coleção. Use um nome de coleção em destaque existente para agrupar a coleção sob uma coleção em destaque atual (certifique-se de digitá-lo exatamente igual) ou escolha um novo título para criar uma nova coleção em destaque. <br /> <br /><strong>4 Para remover uma coleção de uma coleção em destaque</strong><br /> Escolha <strong>editar propriedades</strong> e apague as palavras na caixa de categoria da coleção em destaque.';
+$lang["upgrade_script"]='Script de atualização';
+$lang["upgrade_026_notification"]='A atualização descontinuou algumas opções de configuração que seu %entity% está substituindo.
+
+Para continuar tendo o nome do arquivo de download formatado o mais próximo possível do modo antigo, por favor, atualize sua substituição de configuração com:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='Não foi possível definir a opção de configuração do sistema \'download_filename_format\' para \'%format%\'. Por favor, tente novamente manualmente.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='Não foi possível processar as opções de configuração obsoletas para %entity%. Por favor, tente novamente manualmente. Motivo:-
+
+%error%';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='Direção de ordenação padrão';
+$lang["userpreference_high_contrast_mode"]='Modo de maior contraste';
+$lang["watermark_header"]='Marca d\'água';
+$lang["watermark_label"]='Imagem de marca d\'água - Recrie as pré-visualizações após alterar a marca d\'água para atualizar os recursos existentes. Remover o arquivo desativará a marca d\'água.';
+$lang["systemconfig_user_accounts"]='Contas de usuário';
+$lang["systemconfig_debug"]='Depurar';
+$lang["systemconfig_debug_log_on_specific_user"]='Em (usuário específico)';
+$lang["systemconfig_use_native_input_for_date_field"]='Usar entrada de data nativa para exibir um tipo de campo de metadados \'data\'';
+$lang["systemconfig_native_date_input_no_partials_supported"]='IMPORTANTE: Se ativado, datas parciais (por exemplo, maio de 2023) não serão mais suportadas e os dados existentes serão apagados após a próxima edição do recurso.';
+$lang["show_affected_resources"]='Mostrar recursos afetados';
+$lang["group_no"]='Grupo';
+$lang["confirm_delete_field_value"]='Tem certeza de que deseja EXCLUIR esta opção de campo? Isso removerá permanentemente o valor de todos os recursos aos quais ele está aplicado.';
+$lang["external_shares_options"]='Opções de compartilhamento externo';
+$lang["email_shares_options_summary"]='Essas opções se aplicarão apenas para compartilhamentos criados usando um endereço de e-mail externo';
+$lang["report_breakdown_pie"]='Gráfico de pizza';
+$lang["actions_email_new_actions_title"]='Novas ações';
+$lang["actions_email_new_actions_intro"]='Há novas ações a serem concluídas.';
+$lang["email_actions_truncated"]='Apenas as 1000 ações mais recentes são mostradas aqui. Você tem %%TOTAL%% ações. Faça login no %%APPLICATIONNAME%% para ver todas.';
+$lang["annotate_select"]='Selecionar campo...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='Falha ao substituir o arquivo do recurso. A referência da coleção fornecida é inválida.';
+$lang["image_quality_80"]='Web';
+$lang["image_quality_50"]='Baixo';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='exemplo de cURL';
+$lang["api-curl-help"]='O script bash de uma linha abaixo pode ser executado em qualquer sistema UNIX com OpenSSL e cURL instalados.';
+$lang["share-password-not-set"]='Compartilhamentos externos devem ser protegidos por uma senha. Por favor, insira uma senha de compartilhamento para continuar.';
+$lang["job_priority_immediate"]='Trabalho urgente';
+$lang["job_priority_user"]='Trabalho do usuário';
+$lang["job_priority_system"]='Tarefa do sistema';
+$lang["job_priority_completed"]='Trabalho concluído';
+$lang["job_status_error"]='Ocorreu um erro';
+$lang["user_pref_inactive_digest"]='Enviar um e-mail diário com todas as notificações não lidas se não fizer login por mais de %%DAYS%% dias?';
+$lang["filter_is_in"]='É';
+$lang["file_integrity_fail_latest"]='Ver falhas recentes de integridade de arquivos';
+$lang["file_integrity_fail_all"]='Ver todos os recursos com falhas de integridade de arquivo';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["error-edit_noaccess_related_resources"]='Incapaz de relacionar recursos. Sem acesso a:';
+$lang["csv_export_filename"]='exportação_de_metadados_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='<br />
+[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["share_expired_icon_title"]='Expirado';
+$lang["error_invalid_date_format"]='"%%VALUE%%" é uma data inválida. Todos os valores neste campo devem estar formatados como AAAA-MM-DD';
+$lang["related_resource_create"]='Criar novo recurso relacionado';
+$lang["skip-to-main-content"]='Pular para o conteúdo principal';
+$lang["cleanup_invalid_nodes"]='Limpar dados de campo de tipos de recursos inválidos';
+$lang["cleanup_invalid_node_dry_run"]='Não exclua os dados, apenas retorne o número de linhas a serem excluídas?';
+$lang["advancedsearch_resource_section"]='Dados do recurso';
+$lang["error-reload-required"]='ResourceSpace foi atualizado. Por favor, recarregue a página';
+$lang["user_pref_new_action_emails"]='Envie-me um e-mail se novas ações forem criadas';
+$lang["email_rate_limit_active"]='O número máximo de e-mails por hora enviados por este sistema foi excedido. E-mails não estão sendo enviados por este sistema no momento.';
+$lang["email_rate_limit_inactive"]='O limite de e-mails foi removido e os e-mails estão sendo enviados.';
+$lang["severity-level_0"]='Crítico';
+$lang["severity-level_1"]='Aviso';
+$lang["severity-level_2"]='Aviso';
+$lang["pull_images"]='Puxar imagens';
+$lang["pull_images_text"]='Usar imagens de recursos relacionados se nenhuma estiver disponível';
+$lang["system_user_default"]='SISTEMA';
+$lang["userlimitreached"]='Você atingiu o limite de usuários. Um usuário existente deve ser desativado ou excluído antes que você possa criar novas contas ou habilitar contas existentes.';
+$lang["user_api_session_title"]='Acesso à API do sistema remoto';
+$lang["user_api_session_text"]='O sistema remoto \'%system%\' está solicitando acesso ao %applicationname% usando suas credenciais. Clique em \'Conceder acesso\' apenas se você tiver iniciado esta solicitação';
+$lang["user_api_session_invalid_system"]='Sistema solicitado inválido';
+$lang["user_api_session_grant_access"]='Conceder acesso';
+$lang["user_api_session_grant_success"]='Chave emitida com sucesso.';
+$lang["user_api_session_grant_error"]='Falha na emissão da chave.';
+$lang["no_file"]='Nenhum arquivo';
+$lang["missing_file"]='Este arquivo está faltando. Por favor, entre em contato com o administrador do sistema';
+$lang["action_set_no_file"]='Marcar como sem arquivo';
+$lang["action_unset_no_file"]='Marcar como arquivo ausente';
+$lang["completed_set_no_file"]='Recurso marcado como sem arquivo';
+$lang["completed_unset_no_file"]='Recurso marcado como arquivo ausente';

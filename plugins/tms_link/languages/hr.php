@@ -70,3 +70,5 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field
 TMS %module_name %tms_uid_field (TMS %naziv_modula %TMS_UID_polje)';
 $lang["tms_link_confirm_delete_module_config"]='Jeste li sigurni da želite izbrisati konfiguraciju ovog modula? Ova radnja se ne može poništiti!';
 $lang["tms_link_modules_mappings"]='Sinkronizacija iz dodatnih modula (tablica/prikaza)';
+$lang["tms_link_mediapaths_resource_reference_column"]='Stupac za korištenje u MediaMaster tablici za pohranu ID-a resursa. Ovo je opcionalno i koristi se kako bi se izbjeglo korištenje istog Media Master ID-a za više resursa.';
+$lang["tms_link_write_to_debug_log"]='Uključi napredak skripte u sistemski debug zapisnik (zahtijeva zasebno konfigurirano debug zapisivanje). Oprez: Uzrokovat će brzo povećanje debug zapisnika.';

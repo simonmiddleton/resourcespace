@@ -79,3 +79,4 @@ $lang["simplesaml_start_url"]='Start/Påloggings-URL';
 $lang["simplesaml_existing_config"]='Følg instruksjonene i Kunnskapsbasen for å migrere din eksisterende SAML-konfigurasjon';
 $lang["simplesaml_test_site_url"]='EnkelSAML testnettstedets URL';
 $lang["simplesaml_sp_samlphp_link"]='Besøk SimpleSAMLphp testnettsted';
+$lang["simplesaml_acs_url"]='ACS URL / Svar-URL';

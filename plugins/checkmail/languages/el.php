@@ -36,3 +36,4 @@ $lang["yourresourcehasbeenuploaded"]='Ο πόρος σας έχει μεταφο
 $lang["yourresourceshavebeenuploaded"]='Οι πόροι σας έχουν μεταφορτωθεί';
 $lang["checkmail_not_allowed_error_template"]='Ο χρήστης [user-fullname] ([username]), με ID [user-ref] και ηλεκτρονική διεύθυνση [user-email] δεν επιτρέπεται να ανεβάζει μέσω ηλεκτρονικού ταχυδρομείου (ελέγξτε τα δικαιώματα "c" ή "d" ή τους αποκλεισμένους χρήστες στη σελίδα ρύθμισης ελέγχου ταχυδρομείου). Καταγράφηκε στις: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Δημιουργήθηκε από το πρόσθετο Ελέγχου Ηλεκτρονικού Ταχυδρομείου';
+$lang["checkmail_resource_type_population"]='<br />(από επιτρεπόμενες επεκτάσεις)';

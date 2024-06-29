@@ -70,3 +70,5 @@ $lang["tms_link_not_found_error_title"]='Tidak ditemukan';
 $lang["tms_link_not_deleted_error_detail"]='Tidak dapat menghapus konfigurasi modul yang diminta.';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field dapat diterjemahkan menjadi "TMS %nama_modul %tms_kolom_uid"';
 $lang["tms_link_confirm_delete_module_config"]='Apakah Anda yakin ingin menghapus konfigurasi modul ini? Tindakan ini tidak dapat dibatalkan!';
+$lang["tms_link_mediapaths_resource_reference_column"]='Kolom yang digunakan dalam tabel MediaMaster untuk menyimpan ID Sumber Daya. Ini opsional dan digunakan untuk menghindari beberapa sumber daya menggunakan ID Media Master yang sama.';
+$lang["tms_link_write_to_debug_log"]='Sertakan kemajuan skrip dalam log debug sistem (memerlukan konfigurasi logging debug secara terpisah). Peringatan: Akan menyebabkan pertumbuhan cepat file log debug.';

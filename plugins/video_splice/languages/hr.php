@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='Spajanje videa: Nešto je pošlo po zlu. Molimo k
 $lang["video_splice_no_export_folder"]='Nije moguće izvršiti izvoz jer nije postavljen putanja do mape izvoza videa u konfiguracijskoj datoteci.';
 $lang["video_splice_incorrect_quantity"]='Valjani resurs je ili uklonjen ili dodan u kolekciju od trenutka učitavanja ove stranice. Molimo pokušajte ponovno.';
 $lang["video_splice_createdfromvideosplice"]='Stvoreno pomoću dodatka Video Splice';
+$lang["video-trim_output"]='Izlaz';
+$lang["video_splice_error_invalid_action"]='Pogreška: Nevažeća radnja';

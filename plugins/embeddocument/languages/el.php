@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='μεγιστοποίηση';
 $lang["embeddocument_heading"]='Ρύθμιση Απομακρυσμένου Προβολέα Εγγράφων';
 $lang["embeddocument_specify_resourcetype"]='Παρακαλώ καθορίστε για ποιον τύπο πόρου θα πρέπει να εμφανίζεται η λειτουργία \'ενσωμάτωση\'.';
 $lang["embeddocument_document_resourcetype"]='Τύπος Πόρου Απομακρυσμένου Προβολέα Εγγράφων';
+$lang["embeddocument_embed_share"]='Ενσωμάτωση εγγράφου';

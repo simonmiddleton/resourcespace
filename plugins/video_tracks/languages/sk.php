@@ -29,3 +29,6 @@ $lang["video_tracks_custom_video_formats_label"]='Vlastné formáty';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Povolit použitie dostupných možností výstupu súborov na vytvorenie vlastných video formátov pre pôvodný súbor?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Začnite pretvorbo zdaj s potrditvijo. Če ni potrjeno, boste prejeli obvestilo, ko bo datoteka pripravljena';
 $lang["video_tracks_transcode_now_label"]='Previesť kódovanie teraz';
+$lang["video_tracks_select_generate_opt"]='Prosimo, izberite možnost generiranja';
+$lang["video_tracks_save_alt_not_perm"]='Ni mogoče shraniti alternative brez dovoljenja';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='DŮLEŽITÉ! Plugin Video Tracks zastaral nastavení výstupních formátov. Môžu byť nastavené iba v config.php. Plugin nebude fungovať podľa očakávania, kým nebude možnosť konfigurácie skopírovaná. Prosím, skopírujte nasledujúce:- %nl%####%nl%%output_formats_config%####%nl%';

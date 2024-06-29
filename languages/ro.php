@@ -2595,3 +2595,270 @@ $lang["error_invalid_revert_option"]='Valoarea stocată anterior \'%%VALUE%%\' n
 $lang["error_invalid_revert_date"]='Data stocată anterior \'%%VALUE%%\' nu este validă. Vă rugăm să actualizați resursa manual dacă este necesar.';
 $lang["batch_edit_save_warning_message"]='Au fost întâmpinate erori în timpul editării următoarelor resurse -';
 $lang["batch_edit_save_warning_alert"]='Au fost întâmpinate unele erori în timpul efectuării acestei operațiuni. Vă rugăm să consultați mesajele pentru mai multe detalii';
+
+$lang["property-tab_name"]='Nume filă';
+$lang["information_field_restype_deselect_cleanup"]='Pentru a elimina datele existente ale câmpului din tipurile de resurse deselectate, faceți clic pe următorul link %%CLEANUP_LINK%%';
+$lang["property-id"]='Id';
+$lang["mainmenu"]='Meniu principal';
+$lang["xlthumbs"]='Foarte mare';
+$lang["strip"]='Eliminare';
+$lang["perpage_option"]='? pe pagină';
+$lang["upload_summary"]='Rezumat încărcare';
+$lang["private"]='Privat';
+$lang["public"]='Public';
+$lang["_dupe"]='_dublură';
+$lang["archive-7z"]='7Z';
+$lang["listfile-argument-not-defined"]='$archiver_listfile_argument nu este definit.';
+$lang["featured_collection_root_category"]='(nivel superior)';
+$lang["edit_multiple_existing_values"]='Cuvinte cheie existente pe resursele din această selecție';
+$lang["edit_multiple_show_more"]='Arată mai mult';
+$lang["edit_multiple_too_many"]='Afișare top 100 cele mai utilizate valori. Există și altele.';
+$lang["edit_multiple_action_text_rt"]='Tot textul / opțiunile vor fi înlocuite cu următoarele cuvinte cheie';
+$lang["edit_multiple_action_text_ap"]='Aceste cuvinte cheie vor fi adăugate';
+$lang["edit_multiple_action_text_rm"]='Aceste cuvinte cheie vor fi eliminate';
+$lang["sortorder-asc"]='ASC';
+$lang["sortorder-desc"]='DESC';
+$lang["title"]='Titlu';
+$lang["fileoftype"]='? Fișier';
+$lang["cell-fileoftype"]='Fișier %EXTENSION';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["fileextension-inside-brackets"]='[%EXTENSION]';
+$lang["fileextension"]='%EXTENSION';
+$lang["log-rtchange"]='Tip resursă editat';
+$lang["log-missinglang"]='[type] (limbă lipsă)';
+$lang["log-NOFIL"]='Marcat ca neavând fișier';
+$lang["log-FIL"]='Marcat ca având fișier';
+$lang["log-EDT"]='Resursă editată';
+$lang["max"]='Maxim';
+$lang["accountnotfound-reset-not-emailed"]='Linkul pentru resetarea parolei nu a fost trimis deoarece nu există niciun cont cu acel email';
+$lang["accountnoemail-reset-not-emailed"]='Linkul de resetare a parolei nu a fost trimis deoarece contul nu are adresă de email';
+$lang["accountexpired-reset-not-emailed"]='Linkul de resetare a parolei nu a fost trimis deoarece contul a expirat';
+$lang["accountnotapproved-reset-not-emailed"]='Linkul pentru resetarea parolei nu a fost trimis deoarece contul nu este aprobat';
+$lang["email"]='E-mail';
+$lang["minute-abbreviated"]='MM';
+$lang["field"]='Câmp';
+$lang["text"]='Text';
+$lang["action-email"]='E-mail';
+$lang["notavailableshort"]='N/A';
+$lang["remaining"]='rămase';
+$lang["web_server"]='Server Web';
+$lang["php"]='PHP';
+$lang["of"]='de';
+$lang["all_workflow_states"]='Toate stările fluxului de lucru';
+$lang["stat-downloadedkb"]='Date fișier descărcat (KB)';
+$lang["plugin_field_fmt"]='%A (%B)';
+$lang["external"]='Extern';
+$lang["email_error_user_list_some_skipped"]='Notificări omise pentru următorii utilizatori (utilizatorii ar putea să nu fie aprobați)';
+$lang["recent"]='Recent';
+$lang["unrelateallresources"]='Dezactivează relația pentru toate resursele din această colecție';
+$lang["unrelateallresources_confirmation"]='Niciuna dintre resursele din această colecție nu mai este legată';
+$lang["setup-download_filename_format"]='Format nume fișier descărcare';
+$lang["setup-binpath"]='Calea %bin';
+$lang["editrequestorder"]='Editează cererea';
+$lang["ppi"]='PPI';
+$lang["addremove"]='+/-';
+$lang["map_introtext1"]='Harta de mai jos arată resursele din rezultatul căutării care au o geolocație asociată. Culoarea markerului este setată la tipul resursei sau la un câmp de metadate personalizat (cheie sub hartă). Când markerii s-ar suprapune, se folosește gruparea de culoare verde cu un număr care indică numărul de markeri grupați, măriți sau faceți dublu clic pe un grup. Faceți clic pe un marker individual pentru a încărca un popup pentru acea resursă care arată o imagine de previzualizare. Faceți clic pe imaginea de previzualizare pentru a încărca o fereastră pentru acea resursă. Plasați cursorul peste un marker individual pentru a vedea coordonatele geografice. Schimbați harta de bază folosind butonul din dreapta sus al hărții. Salvați harta într-un fișier PNG folosind butonul din stânga jos al hărții.';
+$lang["geolocate_collection_map_text"]='Harta de mai jos arată resurse din această colecție care au o geolocație asociată. Culoarea markerului este setată la tipul de resursă sau un câmp de metadate personalizat (cheie sub hartă). Când markerii s-ar suprapune, se folosește o grupare de culoare verde cu un număr care indică numărul de markeri grupați, măriți sau faceți dublu clic pe un grup. Faceți clic pe un marker individual pentru a încărca un popup pentru acea resursă care arată o imagine de previzualizare. Faceți clic pe imaginea de previzualizare pentru a încărca o fereastră pentru acea resursă. Plasați cursorul peste un marker individual pentru a vedea coordonatele geografice. Schimbați harta de bază folosind butonul din dreapta sus al hărții. Salvați harta într-un fișier PNG folosind butonul din stânga jos al hărții.';
+$lang["map_tf_group"]='Thunderforest';
+$lang["map_tftransportdark"]='Transport Întunecat';
+$lang["map_stamen_group"]='Stamen';
+$lang["map_esri_group"]='ESRI';
+$lang["map_esrinatgeo"]='National Geographic';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapbox_group"]='Mapbox';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["report_periodic_email_option_me"]='eu';
+$lang["columnheader-sent"]='Trimis';
+$lang["filestore"]='Depozit fișiere';
+$lang["rs_ext_dependencies"]='Dependențe externe ResourceSpace';
+$lang["write_access_to"]='Acces de scriere la';
+$lang["latlong"]='Lat / long';
+$lang["geodragmodepan"]='panou';
+$lang["inch-short"]='în';
+$lang["centimetre-short"]='cm';
+$lang["megapixel-short"]='MP';
+$lang["cc-emailaddress"]='CC %emailaddress';
+$lang["error-invalid_name"]='Nume nevalid';
+$lang["inactive_entry_matched"]='Intrare inactivă potrivită pentru';
+$lang["yyyy-mm-dd"]='AAAA-LL-ZZ';
+$lang["kilobyte-symbol"]='KB';
+$lang["gigabyte-symbol"]='GB';
+$lang["terabyte-symbol"]='TB';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiO';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiO';
+$lang["ref-title"]='%ref - %title';
+$lang["merge_filename_title_spacer"]='Distanțier';
+$lang["user_group"]='grup de utilizatori';
+$lang["all__emailbulk"]='<br /><br />
+[text]<br /><br />
+[text_footer]';
+$lang["all__emailcollection"]='<br />
+[de la utilizator] [lang_emailcollectionmessage] <br /><br /> 
+[lang_message] : [mesaj]<br /><br /> 
+[lang_clicklinkviewcollection] [listă]';
+$lang["all__emailcollectionexternal"]='<br />
+[de la utilizator] [lang_emailcollectionmessageexternal] <br /><br /> 
+[mesaj] : [message]<br /><br /> 
+[faceți clic pe link pentru a vizualiza colecția] [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[bun venit]<br /><br /> 
+[detalii_noi_autentificare]<br /><br /> 
+[nume_utilizator] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='[mesaj_cereredecercetareatribuită]
+
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_hasemailedyouaresource]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_clicktoviewresource]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["team_research__introtext"]='Organizează și gestionează \'Cereri de Cercetare\'. <br /><br />Alege \'editează cercetare\' pentru a revizui detaliile cererii și a atribui cercetarea unui membru al echipei. Este posibil să bazezi o cerere de cercetare pe o colecție anterioară introducând ID-ul colecției în ecranul de \'editare\'. <br /><br />Odată ce cererea de cercetare este atribuită, alege \'editează colecție\' pentru a adăuga cererea de cercetare în panoul \'Colecția Implicită\'. Folosind instrumentele standard, este apoi posibil să adaugi resurse la cercetare. <br /><br />Odată ce cercetarea este completă, alege \'editează cercetare\', schimbă starea la complet și un email este trimis automat utilizatorului care a solicitat cercetarea. Emailul conține un link către cercetare și este de asemenea adăugat automat în panoul \'Colecția Implicită\' al acestuia.';
+$lang["themes__manage"]='Organizează și editează colecțiile prezentate disponibile online. Colecțiile prezentate sunt colecții promovate special. <br /><br /> <strong>1 Pentru a crea o nouă intrare sub o colecție prezentată - construiește o colecție</strong><br /> Alege <strong>Colecțiile Mele</strong> din meniul principal de sus și creează o nouă colecție <strong>publică</strong>. Nu uita să incluzi un nume de colecție prezentată în timpul configurării. Folosește un nume de colecție prezentată existent pentru a grupa colecția sub o colecție prezentată curentă (asigură-te că îl tastezi exact la fel) sau alege un nou titlu pentru a crea o nouă colecție prezentată. Nu permite niciodată utilizatorilor să adauge/elimine resurse din colecțiile prezentate. <br /> <br /><strong>2 Pentru a edita conținutul unei intrări existente sub o colecție prezentată</strong><br /> Alege <strong>editează colecția</strong>. Elementele din acea colecție vor apărea în panoul <strong>Colecțiile Mele</strong> din partea de jos a ecranului. Folosește instrumentele standard pentru a edita, elimina sau adăuga resurse. <br /> <br /><strong>3 Pentru a modifica numele unei colecții prezentate sau pentru a muta o colecție să apară sub o altă colecție prezentată</strong><br /> Alege <strong>editează proprietățile</strong> și editează categoria colecției prezentate sau numele colecției. Folosește un nume de colecție prezentată existent pentru a grupa colecția sub o colecție prezentată curentă (asigură-te că îl tastezi exact la fel) sau alege un nou titlu pentru a crea o nouă colecție prezentată. <br /> <br /><strong>4 Pentru a elimina o colecție dintr-o colecție prezentată</strong><br /> Alege <strong>editează proprietățile</strong> și șterge cuvintele din caseta categoriei colecției prezentate.';
+$lang["dash"]='Tablou de bord';
+$lang["dashtiletext"]='Text';
+$lang["upgrade_script"]='Script de actualizare';
+$lang["upgrade_026_notification"]='Actualizarea a depreciat unele opțiuni de configurare pe care %entity% le suprascrie.
+
+Pentru a continua să aveți numele fișierului de descărcare formatat cât mai aproape de vechiul mod, vă rugăm să actualizați suprascrierea configurației cu:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='Nu se poate seta opțiunea de configurare la nivel de sistem \'download_filename_format\' la \'%format%\'. Vă rugăm să încercați manual.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='Nu se pot procesa opțiunile de configurare depreciate pentru %entity%. Vă rugăm să încercați manual. Motiv:-
+
+%error%';
+$lang["tile_multi"]='Multi';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='Direcția implicită de sortare';
+$lang["userpreference_high_contrast_mode"]='Mod de contrast mai ridicat';
+$lang["watermark_header"]='Filigran';
+$lang["watermark_label"]='Imagine filigran - Recreează previzualizările după schimbarea filigranului pentru a actualiza resursele existente. Eliminarea fișierului va dezactiva filigranul.';
+$lang["systemconfig_debug"]='Depanare';
+$lang["systemconfig_debug_log_on_specific_user"]='Pe (utilizator specific)';
+$lang["systemconfig_use_native_input_for_date_field"]='Utilizați introducerea nativă a datei pentru afișarea unui tip de câmp de metadate \'dată\'';
+$lang["systemconfig_native_date_input_no_partials_supported"]='IMPORTANT: Dacă este activat, datele parțiale (de exemplu, mai 2023) nu vor mai fi acceptate și datele existente vor fi șterse după următoarea editare a resursei.';
+$lang["show_affected_resources"]='Afișează resursele afectate';
+$lang["group_no"]='Grup';
+$lang["confirm_delete_field_value"]='Sigur doriți să ȘTERGEȚI această opțiune de câmp? Aceasta va elimina permanent valoarea din toate resursele la care este aplicată.';
+$lang["media"]='Media';
+$lang["external_shares_options"]='Opțiuni de partajare externă';
+$lang["email_shares_options_summary"]='Aceste opțiuni se vor aplica doar pentru partajările create folosind o adresă de email externă';
+$lang["report_breakdown_pie"]='Diagramă circulară';
+$lang["report_please_enter_name"]='Vă rugăm să introduceți un nume de raport pentru a salva acest raport.';
+$lang["actions_email_new_actions_title"]='Acțiuni noi';
+$lang["actions_email_new_actions_intro"]='Există acțiuni noi de finalizat.';
+$lang["email_actions_truncated"]='Sunt afișate doar cele mai recente 1000 de acțiuni. Aveți %%TOTAL%% acțiuni. Conectați-vă la %%APPLICATIONNAME%% pentru a le vizualiza pe toate.';
+$lang["annotate_select"]='Selectează câmpul...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='Nu s-a reușit înlocuirea fișierului resursei. Referința colecției furnizate este invalidă.';
+$lang["image_quality_80"]='Web';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='exemplu cURL';
+$lang["api-curl-help"]='Scriptul bash de mai jos poate fi executat pe orice sistem UNIX cu OpenSSL și cURL instalate.';
+$lang["font"]='Font';
+$lang["share-password-not-set"]='Partajările externe trebuie protejate printr-o parolă. Vă rugăm să introduceți o parolă pentru a continua.';
+$lang["job_priority_immediate"]='Lucrare urgentă';
+$lang["job_priority_user"]='Job utilizator';
+$lang["job_priority_system"]='Job de sistem';
+$lang["job_priority_completed"]='Job finalizat';
+$lang["job_status_error"]='A apărut o eroare';
+$lang["filter_is_in"]='ESTE';
+$lang["browse_by_workflow_state"]='Flux de lucru';
+$lang["file_integrity_fail_latest"]='Vizualizați cele mai recente eșecuri de integritate a fișierelor';
+$lang["file_integrity_fail_all"]='Vizualizați toate resursele cu erori de integritate a fișierelor';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+Rezumatul integrității fișierului a eșuat <br /><br /> 
+Căutarea integrității fișierului a eșuat <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["error-edit_noaccess_related_resources"]='Nu se pot relaționa resursele. Fără acces la:';
+$lang["csv_export_filename"]='exportare_metadata_%%SEARCH%%_%%TIME%%';
+$lang["upload_share_email_template"]='<br />
+[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["share_expired_icon_title"]='Expirat';
+$lang["error_invalid_date_format"]='"%%VALUE%%" este o dată nevalidă. Toate valorile din acest câmp trebuie să fie formate ca YYYY-MM-DD';
+$lang["related_resource_create"]='Creează resursă nouă asociată';
+$lang["skip-to-main-content"]='Sari la conținutul principal';
+$lang["cleanup_invalid_nodes"]='Curăță datele câmpului de tipuri de resurse nevalide';
+$lang["cleanup_invalid_node_dry_run"]='Nu șterge datele, doar returnează numărul de rânduri care urmează să fie șterse?';
+$lang["advancedsearch_resource_section"]='Date resursă';
+$lang["error-reload-required"]='ResourceSpace a fost actualizat. Vă rugăm să reîncărcați pagina';
+$lang["user_pref_new_action_emails"]='Trimite-mi un e-mail dacă sunt create acțiuni noi';
+$lang["email_rate_limit_active"]='Numărul maxim de e-mailuri pe oră trimise de acest sistem a fost depășit. În prezent, e-mailurile nu sunt trimise de acest sistem.';
+$lang["email_rate_limit_inactive"]='Limita de e-mail a fost ridicată și e-mailurile sunt acum trimise.';
+$lang["severity-level_0"]='Critic';
+$lang["severity-level_1"]='Avertisment';
+$lang["severity-level_2"]='Notificare';
+$lang["pull_images"]='Trage imagini';
+$lang["pull_images_text"]='Folosește imagini din resursele conexe dacă nu sunt disponibile';
+$lang["system_user_default"]='SISTEM';
+$lang["userlimitreached"]='Ați atins limita de utilizatori. Un utilizator existent trebuie dezactivat sau șters înainte de a putea crea conturi noi sau activa conturi existente.';
+$lang["user_api_session_title"]='Acces API sistem la distanță';
+$lang["user_api_session_text"]='Sistemul la distanță \'%system%\' solicită acces la %applicationname% folosind acreditările tale. Apasă \'Acordă acces\' doar dacă ai inițiat această cerere';
+$lang["user_api_session_invalid_system"]='Sistem solicitat invalid';
+$lang["user_api_session_grant_access"]='Acordă acces';
+$lang["user_api_session_grant_success"]='Cheia a fost emisă cu succes.';
+$lang["user_api_session_grant_error"]='Eșuarea emiterii cheii.';
+$lang["no_file"]='Niciun fișier';
+$lang["missing_file"]='Acest fișier lipsește. Vă rugăm să contactați administratorul de sistem';
+$lang["action_set_no_file"]='Marchează ca neavând fișier';
+$lang["action_unset_no_file"]='Marchează ca fișier lipsă';
+$lang["completed_set_no_file"]='Resursa marcată ca neavând fișier';
+$lang["completed_unset_no_file"]='Resursa marcată ca fișier lipsă';

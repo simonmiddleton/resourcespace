@@ -48,3 +48,5 @@ $lang["simpleldap_usercomment"]='Dibuat oleh plugin SimpleLDAP.';
 $lang["simpleldap_usermatchcomment"]='Diperbarui menjadi pengguna LDAP oleh SimpleLDAP.';
 $lang["origin_simpleldap"]='Plugin SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Jangan periksa FQDN server dengan CN sertifikat';
+$lang["port"]='Port';
+$lang["simpleldap_domain"]='Domain';

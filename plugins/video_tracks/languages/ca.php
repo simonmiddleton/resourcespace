@@ -29,3 +29,6 @@ $lang["video_tracks_custom_video_formats_label"]='Formats personalitzats';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Permetre l\'ús de les opcions de sortida de fitxers disponibles per crear formats de vídeo personalitzats per al fitxer original?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Marqueu per iniciar la transcodificació ara. Si no està marcat, rebreu una notificació quan el fitxer estigui llest';
 $lang["video_tracks_transcode_now_label"]='Transcodifica ara';
+$lang["video_tracks_select_generate_opt"]='Si us plau, trieu una opció de generació';
+$lang["video_tracks_save_alt_not_perm"]='No es pot desar l\'alternativa sense permís';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='IMPORTANT! El complement de Pistes de Vídeo ha desaprovat la configuració dels formats de sortida. Només es poden establir a config.php. El complement no funcionarà com s\'espera fins que l\'opció de configuració s\'hagi copiat. Si us plau, copieu el següent:- %nl%####%nl%%output_formats_config%####%nl%';

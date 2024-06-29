@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='Maksimere';
 $lang["embeddocument_heading"]='Fjernbetjent konfiguration af dokumentvisning';
 $lang["embeddocument_specify_resourcetype"]='Venligst specificer hvilken ressource type, \'embed\' funktionaliteten skal vises for.';
 $lang["embeddocument_document_resourcetype"]='Fjernbetjent dokumentvisning ressourcetype:';
+$lang["embeddocument_embed_share"]='Indlejr dokument';

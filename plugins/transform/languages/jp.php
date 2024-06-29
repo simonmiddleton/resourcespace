@@ -74,3 +74,4 @@ $lang["cropper_use_srgb"]='sRGB を使用してください。';
 $lang["transform_update_preview"]='プレビューを更新する';
 $lang["transform_preset_sizes"]='事前定義されたターゲットサイズから選択してください。';
 $lang["error_crop_invalid"]='画像の領域を選択してください。';
+$lang["px"]='px';

@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Zatvoriť';
 $lang["rse_workflow_more_notes_title"]='Poznámky:';
 $lang["rse_workflow_email_from"]='E-mailová adresa pre odosielanie upozornení (použije sa %EMAILFROM%, ak je prázdna):';
 $lang["rse_workflow_bcc_admin"]='Upozorniť systémových administrátorov, keď je upozornený prispievateľ';
+$lang["rse_workflow_state_notify_help"]='Uporabniki bodo videli vire v tem stanju kot dejanja, namesto da bi prejemali preprosta obvestila';

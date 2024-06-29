@@ -10,3 +10,5 @@ $lang["embeddocument_minimise"]='Réduire au minimum';
 $lang["embeddocument_heading"]='Configuration du visualiseur de documents à distance';
 $lang["embeddocument_specify_resourcetype"]='Veuillez préciser pour quel type de ressource la fonctionnalité "intégrer" doit apparaître.';
 $lang["embeddocument_document_resourcetype"]='Type de ressource de visualisation de document à distance';
+$lang["embeddocument_embed_share"]='Intégrer le document';
+$lang["embeddocument_maximise"]='maximiser';

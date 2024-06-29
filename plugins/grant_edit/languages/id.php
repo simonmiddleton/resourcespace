@@ -8,3 +8,4 @@ $lang["grant_edit_add"]='Aktifkan akses pengeditan untuk pengguna/grup berikut';
 $lang["grant_edit_date"]='Tanggal kadaluarsa untuk akses pengeditan';
 $lang["grant_edit_list"]='Pengguna saat ini dengan akses edit tambahan';
 $lang["grant_edit_delete_user"]='Konfirmasi penghapusan akses ditingkatkan untuk';
+$lang["grant_edit_group_list"]='Grup saat ini dengan akses edit tambahan';

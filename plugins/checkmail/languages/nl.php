@@ -39,3 +39,4 @@ $lang["yourresourcehasbeenuploaded"]='Je bronbestand is geüpload';
 $lang["yourresourceshavebeenuploaded"]='Uw bronnen zijn geüpload';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), met ID [user-ref] en e-mail [user-email] is niet toegestaan om via e-mail te uploaden (controleer de machtigingen "c" of "d" of de geblokkeerde gebruikers in de checkmail-instellingenpagina). Opgenomen op: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Gemaakt vanuit de Check Mail plugin';
+$lang["checkmail_resource_type_population"]='(van toegestane_extensies)';

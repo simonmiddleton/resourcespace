@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Token Shutterstock (<a href=\'https://w
 $lang["image_banks_shutterstock_result_limit"]='Batas hasil (maks. 1000 untuk akun gratis)';
 $lang["image_banks_shutterstock_id"]='ID gambar Shutterstock';
 $lang["image_banks_createdfromimagebanks"]='Dibuat dari plugin Bank Gambar';
+$lang["image_banks_image_bank_source"]='Sumber Bank Gambar';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Akses instansi (format: nama i18n|baseURL|nama pengguna|kunci|konfigurasi)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace ukuran %SIZE_CODE';
+$lang["image_banks_label_select_providers"]='Pilih penyedia aktif';
+$lang["image_banks_view_on_provider_system"]='Lihat di sistem %PROVIDER';
+$lang["image_banks_system_unmet_dependencies"]='Plugin ImageBanks memiliki ketergantungan sistem yang belum terpenuhi!';
+$lang["image_banks_error_generic_parse"]='Tidak dapat mem-parsing konfigurasi penyedia (untuk multi-instance)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Format konfigurasi tidak valid untuk instance \'%PROVIDER\' (penyedia)';
+$lang["image_banks_error_bad_url_scheme"]='Skema URL tidak valid ditemukan untuk instance \'%PROVIDER\' (penyedia)';
+$lang["image_banks_error_unexpected_response"]='Maaf, menerima respons yang tidak terduga dari penyedia. Silakan hubungi administrator sistem Anda untuk penyelidikan lebih lanjut (lihat log debug).';

@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Shutterstock token (generiraj <a href=\
 $lang["image_banks_shutterstock_result_limit"]='Ograničenje rezultata (maks. 1000 za besplatne račune)';
 $lang["image_banks_shutterstock_id"]='Identifikacija slike na Shutterstocku';
 $lang["image_banks_createdfromimagebanks"]='Stvoreno pomoću dodatka za banke slika';
+$lang["image_banks_image_bank_source"]='Izvor banke slika';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Pristup instancama (format: i18n ime|osnovniURL|korisničko ime|ključ|konfiguracija)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace %SIZE_CODE veličina';
+$lang["image_banks_label_select_providers"]='Odaberite aktivne pružatelje usluga';
+$lang["image_banks_view_on_provider_system"]='Pogledaj na %PROVIDER sustavu';
+$lang["image_banks_system_unmet_dependencies"]='ImageBanks dodatak ima neispunjene sistemske zavisnosti!';
+$lang["image_banks_error_generic_parse"]='Nije moguće parsirati konfiguraciju pružatelja usluga (za više instanci)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Neispravan format konfiguracije za instancu \'%PROVIDER\' (pružatelj usluga)';
+$lang["image_banks_error_bad_url_scheme"]='Pronađen nevažeći URL shema za instancu \'%PROVIDER\' (pružatelj usluga)';
+$lang["image_banks_error_unexpected_response"]='Žao nam je, primili smo neočekivani odgovor od pružatelja usluge. Molimo kontaktirajte svog sistemskog administratora za daljnju istragu (pogledajte zapisnik za otklanjanje grešaka).';

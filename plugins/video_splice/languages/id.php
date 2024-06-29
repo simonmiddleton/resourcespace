@@ -42,3 +42,6 @@ $lang["video_splice_failure"]='Penggabungan video: Terjadi kesalahan. Silakan hu
 $lang["video_splice_no_export_folder"]='Tidak dapat melakukan ekspor karena tidak ada jalur file ke folder ekspor video yang diatur dalam file konfigurasi.';
 $lang["video_splice_incorrect_quantity"]='Sumber daya yang valid telah dihapus atau ditambahkan ke dalam koleksi sejak halaman ini dimuat. Silakan coba lagi.';
 $lang["video_splice_createdfromvideosplice"]='Dibuat dari plugin Video Splice';
+$lang["video-trim_output"]='Keluaran';
+$lang["action-splice"]='Sambung';
+$lang["video_splice_error_invalid_action"]='Kesalahan: Tindakan tidak valid';

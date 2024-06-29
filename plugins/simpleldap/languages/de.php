@@ -49,3 +49,4 @@ $lang["simpleldap_usercomment"]='Erstellt durch das SimpleLDAP-Plugin.';
 $lang["simpleldap_usermatchcomment"]='Aktualisiert auf LDAP-Benutzer durch SimpleLDAP.';
 $lang["origin_simpleldap"]='SimpleLDAP-Plugin';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Bitte prüfen Sie nicht den FQDN des Servers gegen den CN des Zertifikats';
+$lang["port"]='Port';

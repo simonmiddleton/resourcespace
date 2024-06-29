@@ -6,3 +6,4 @@ $lang["embed_help"]='Copiați și lipiți codul HTML de mai jos pentru a încorp
 $lang["embed_video_configuration"]='Configurare încorporare video';
 $lang["specify_resourcetype"]='Vă rugăm să specificați pentru ce tip de resurse ar trebui să apară funcționalitatea "încorporare".';
 $lang["video_resourcetype"]='Tip resursă video';
+$lang["embedvideo_share"]='Incorporează video';

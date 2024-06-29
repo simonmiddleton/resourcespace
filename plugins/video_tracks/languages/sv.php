@@ -29,3 +29,6 @@ $lang["video_tracks_custom_video_formats_label"]='Anpassade format';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Tillåt att tillgängliga filutdataalternativ kan användas för att skapa anpassade videoformat för den ursprungliga filen?';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Markera för att starta transkodningen nu. Om det inte är markerat kommer du att få en avisering när filen är klar';
 $lang["video_tracks_transcode_now_label"]='Omkoda nu';
+$lang["video_tracks_select_generate_opt"]='Vänligen välj ett genereringsalternativ';
+$lang["video_tracks_save_alt_not_perm"]='Kan inte spara alternativ utan tillstånd';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='VIKTIGT! Video Tracks-pluginet har avvecklat inställningarna för utdataformat. De kan endast ställas in i config.php. Pluginet kommer inte att fungera som avsett förrän konfigurationsalternativet har kopierats över. Vänligen kopiera följande:- %nl%####%nl%%output_formats_config%####%nl%';

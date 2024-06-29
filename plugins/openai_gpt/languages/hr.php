@@ -13,3 +13,4 @@ $lang["openai_gpt_prompt_return_text"]='Završni nastavak upute (za vraćanje te
 $lang["openai_gpt_temperature"]='Uzorkovanje temperature između 0 i 1 (više vrijednosti znači da će model preuzeti više rizika)';
 $lang["openai_gpt_max_tokens"]='Maksimalni tokeni';
 $lang["openai_gpt_advanced"]='UPOZORENJE - Ovaj odjeljak je namijenjen samo za testiranje i ne bi se trebao mijenjati na aktivnim sustavima. Promjena bilo koje opcije dodatka ovdje će utjecati na ponašanje svih polja metapodataka koja su konfigurirana. Promijenite s oprezom!';
+$lang["openai_gpt_system_message"]='Početni tekst sistemske poruke. Zamjenski znakovi %%IN_TYPE%% i %%OUT_TYPE%% bit će zamijenjeni s \'text\' ili \'json\' ovisno o vrstama izvornog/ciljnog polja';

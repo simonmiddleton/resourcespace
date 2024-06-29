@@ -59,3 +59,5 @@ $lang["doi_sure_register_resource"]='Nastaviti s registracijom x resurs(a)?';
 $lang["doi_show_meta"]='Prikaži DOI metapodatke';
 $lang["doi_hide_meta"]='Sakrij DOI metapodatke';
 $lang["doi_fetched_xml_from_MDS"]='Trenutni XML metapodaci uspješno su dohvaćeni iz DataCite-ove pohrane metapodataka';
+$lang["doi_info_wikipedia"]='https://hr.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["doi_sum_of"]='od';

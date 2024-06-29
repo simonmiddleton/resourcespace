@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Token Shutterstock (<a href=\'https://w
 $lang["image_banks_shutterstock_result_limit"]='Limită de rezultate (maxim 1000 pentru conturile gratuite)';
 $lang["image_banks_shutterstock_id"]='Identificatorul imaginii Shutterstock';
 $lang["image_banks_createdfromimagebanks"]='Creat cu ajutorul plugin-ului Bănci de imagini';
+$lang["image_banks_image_bank_source"]='Sursă Bancă de Imagini';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Acces instanțe (format: i18n nume|URL de bază|nume utilizator|cheie|config)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace dimensiune %SIZE_CODE';
+$lang["image_banks_label_select_providers"]='Selectați furnizorii activi';
+$lang["image_banks_view_on_provider_system"]='Vizualizați pe sistemul %PROVIDER';
+$lang["image_banks_system_unmet_dependencies"]='Pluginul ImageBanks are dependențe de sistem nesatisfăcute!';
+$lang["image_banks_error_generic_parse"]='Nu se poate analiza configurația furnizorilor (pentru instanțe multiple)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Format de configurare nevalid pentru instanța \'%PROVIDER\' (provider)';
+$lang["image_banks_error_bad_url_scheme"]='Schemă URL nevalidă găsită pentru instanța \'%PROVIDER\' (furnizor)';
+$lang["image_banks_error_unexpected_response"]='Ne pare rău, am primit un răspuns neașteptat de la furnizor. Vă rugăm să contactați administratorul de sistem pentru investigații suplimentare (consultați jurnalul de depanare).';

@@ -6,3 +6,4 @@ $lang["embed_help"]='Скопируйте и вставьте HTML-код ниж
 $lang["embed_video_configuration"]='Конфигурация вставки видео';
 $lang["specify_resourcetype"]='Пожалуйста, укажите для какого типа ресурсов должна быть доступна функция "вставки".';
 $lang["video_resourcetype"]='Тип ресурса: Видео';
+$lang["embedvideo_share"]='Встроить видео';

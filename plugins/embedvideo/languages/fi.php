@@ -6,3 +6,4 @@ $lang["embed_help"]='Kopioi ja liitä alla oleva HTML-koodi upottaaksesi tämän
 $lang["embed_video_configuration"]='Upotetun videon asetukset';
 $lang["specify_resourcetype"]='Määritä, mille resurssityypille "upotus" -toiminto tulisi näkyä.';
 $lang["video_resourcetype"]='Videotyyppi resurssina';
+$lang["embedvideo_share"]='Upota video';

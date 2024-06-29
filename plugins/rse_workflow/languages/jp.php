@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='閉じる';
 $lang["rse_workflow_more_notes_title"]='ノート:';
 $lang["rse_workflow_email_from"]='通知を送信するためのメールアドレス（空白の場合は%EMAILFROM%を使用します）：';
 $lang["rse_workflow_bcc_admin"]='投稿者に通知が送信された場合、システム管理者に通知します。';
+$lang["rse_workflow_state_notify_help"]='ユーザーは、この状態のリソースを単純な通知として受け取るのではなく、アクションとして表示されます';

@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='تعظيم';
 $lang["embeddocument_heading"]='تكوين عارض الوثائق عن بُعد';
 $lang["embeddocument_specify_resourcetype"]='يرجى تحديد نوع المورد الذي يجب أن تظهر فيه وظيفة "تضمين".';
 $lang["embeddocument_document_resourcetype"]='نوع مورد المصدر لعارض المستندات عن بعد';
+$lang["embeddocument_embed_share"]='تضمين المستند';

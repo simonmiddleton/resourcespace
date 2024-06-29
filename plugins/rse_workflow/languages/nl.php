@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Sluiten';
 $lang["rse_workflow_more_notes_title"]='Notities:';
 $lang["rse_workflow_email_from"]='E-mailadres om meldingen van te verzenden (zal %EMAILFROM% gebruiken indien leeg):';
 $lang["rse_workflow_bcc_admin"]='Waarschuw systeembeheerders wanneer de bijdrager op de hoogte wordt gesteld';
+$lang["rse_workflow_state_notify_help"]='Gebruikers zullen bronnen in deze staat zien verschijnen als acties, in plaats van eenvoudige meldingen te ontvangen';

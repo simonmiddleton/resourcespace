@@ -8,3 +8,4 @@ $lang["grant_edit_add"]='Omogući pristup uređivanju sljedećim korisnicima/gru
 $lang["grant_edit_date"]='Datum isteka za uređivanje pristupa';
 $lang["grant_edit_list"]='Trenutni korisnici s dodatnim uređivačkim pristupom';
 $lang["grant_edit_delete_user"]='Potvrdite uklanjanje poboljšanog pristupa za';
+$lang["grant_edit_group_list"]='Trenutne grupe s dodatnim pristupom za uređivanje';

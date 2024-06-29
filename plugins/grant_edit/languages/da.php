@@ -8,3 +8,4 @@ $lang["grant_edit_add"]='Aktivér redigeringsadgang for følgende brugere/gruppe
 $lang["grant_edit_date"]='Udløbsdato for redigeringsadgang';
 $lang["grant_edit_list"]='Nuværende brugere med yderligere redigeringsadgang';
 $lang["grant_edit_delete_user"]='Bekræft fjernelse af forbedret adgang til';
+$lang["grant_edit_group_list"]='Nuværende grupper med ekstra redigeringsadgang';

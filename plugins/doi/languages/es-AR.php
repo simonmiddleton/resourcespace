@@ -60,3 +60,5 @@ $lang["doi_sure_register_resource"]='¿Desea proceder con el registro de x recur
 $lang["doi_show_meta"]='Mostrar metadatos de DOI';
 $lang["doi_hide_meta"]='Ocultar metadatos DOI';
 $lang["doi_fetched_xml_from_MDS"]='Los metadatos XML actuales se pudieron obtener correctamente del almacén de metadatos de DataCite';
+$lang["doi_info_wikipedia"]='https://es.wikipedia.org/wiki/Identificador_de_objeto_digital';
+$lang["doi_sum_no_title_2"]='como un título en su lugar entonces';

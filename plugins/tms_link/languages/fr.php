@@ -67,3 +67,6 @@ $lang["tms_link_not_found_error_title"]='Introuvable';
 $lang["tms_link_not_deleted_error_detail"]='Impossible de supprimer la configuration du module demandé.';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field se traduit en français par : %module_name TMS champ UID %tms_uid_field';
 $lang["tms_link_confirm_delete_module_config"]='Êtes-vous sûr(e) de vouloir supprimer cette configuration de module ? Cette action ne peut pas être annulée !';
+$lang["tms_link_upload_tms_field"]='ID d\'objet TMS';
+$lang["tms_link_mediapaths_resource_reference_column"]='Colonne à utiliser dans la table MediaMaster pour stocker l\'ID de la ressource. Ceci est facultatif et est utilisé pour éviter que plusieurs ressources utilisent le même ID Media Master.';
+$lang["tms_link_write_to_debug_log"]='Inclure la progression du script dans le journal de débogage du système (nécessite une configuration séparée du journal de débogage). Attention : Cela entraînera une croissance rapide du fichier de journal de débogage.';

@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='Unión de video: Algo ha salido mal. Por favor, c
 $lang["video_splice_no_export_folder"]='No se puede realizar la exportación ya que no se ha establecido una ruta de acceso al directorio de exportación de video en el archivo de configuración.';
 $lang["video_splice_incorrect_quantity"]='Un recurso válido ha sido eliminado o agregado a la colección desde que se cargó esta página. Por favor, inténtelo de nuevo.';
 $lang["video_splice_createdfromvideosplice"]='Creado desde el plugin de edición de video Splice';
+$lang["video-trim_output"]='Salida';
+$lang["video_splice_error_invalid_action"]='Error: Acción inválida';

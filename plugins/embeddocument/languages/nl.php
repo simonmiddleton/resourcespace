@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='maximaliseren';
 $lang["embeddocument_heading"]='Configuratie van de externe documentviewer';
 $lang["embeddocument_specify_resourcetype"]='Gelieve aan te geven voor welk type bron de \'insluiten\' functionaliteit beschikbaar moet zijn.';
 $lang["embeddocument_document_resourcetype"]='Type van Externe Document Viewer Resource:';
+$lang["embeddocument_embed_share"]='Document insluiten';

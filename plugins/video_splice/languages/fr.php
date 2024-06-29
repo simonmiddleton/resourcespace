@@ -42,3 +42,6 @@ $lang["video_splice_failure"]='Montage vidéo : Quelque chose s\'est mal passé.
 $lang["video_splice_no_export_folder"]='Impossible d\'effectuer l\'exportation car aucun chemin d\'accès n\'a été défini dans le fichier de configuration pour le dossier d\'exportation vidéo.';
 $lang["video_splice_incorrect_quantity"]='Une ressource valide a été soit supprimée, soit ajoutée à la collection depuis le chargement de cette page. Veuillez réessayer.';
 $lang["video_splice_createdfromvideosplice"]='Créé à partir du plugin Video Splice';
+$lang["action-trim"]='Couper';
+$lang["video-trim_output"]='Sortie';
+$lang["video_splice_error_invalid_action"]='Erreur : Action invalide';

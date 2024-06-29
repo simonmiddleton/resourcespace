@@ -61,3 +61,5 @@ $lang["doi_sure_register_resource"]='Doorgaan met het registreren van x resource
 $lang["doi_show_meta"]='Toon DOI-metadata';
 $lang["doi_hide_meta"]='Verberg DOI-metadata';
 $lang["doi_fetched_xml_from_MDS"]='Huidige XML-metadata konden succesvol worden opgehaald uit de metadata-opslag van DataCite';
+$lang["doi_info_wikipedia"]='https://nl.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["doi_sum_of"]='van';

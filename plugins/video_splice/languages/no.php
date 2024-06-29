@@ -42,3 +42,6 @@ $lang["video_splice_failure"]='Video-spleis: Noe har gått galt. Vennligst konta
 $lang["video_splice_no_export_folder"]='Kan ikke utføre eksport fordi ingen filbane til eksportmappe for video er satt i konfigurasjonsfilen.';
 $lang["video_splice_incorrect_quantity"]='En gyldig ressurs har enten blitt fjernet eller lagt til i samlingen siden denne siden ble lastet. Vennligst prøv igjen.';
 $lang["video_splice_createdfromvideosplice"]='Opprettet fra Video Splice-tillegget';
+$lang["video-trim_output"]='Utdata';
+$lang["video-splice"]='Videoklipp';
+$lang["video_splice_error_invalid_action"]='Feil: Ugyldig handling';

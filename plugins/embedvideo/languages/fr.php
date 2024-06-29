@@ -6,3 +6,4 @@ $lang["embed_help"]='Copiez et collez le code HTML ci-dessous pour intégrer cet
 $lang["embed_video_configuration"]='Configuration d\'intégration de vidéo';
 $lang["specify_resourcetype"]='Veuillez préciser pour quel type de ressource la fonctionnalité "intégrer" doit apparaître.';
 $lang["video_resourcetype"]='Type de ressource vidéo';
+$lang["embedvideo_share"]='Intégrer la vidéo';

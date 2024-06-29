@@ -34,3 +34,4 @@ $lang["emu_no_resource"]='Nie określono identyfikatora zasobu!';
 $lang["emu_upload_nodata"]='Nie znaleziono danych EMu dla tego IRN:';
 $lang["emu_nodata_returned"]='Nie znaleziono danych EMu dla określonego numeru identyfikacyjnego IRN.';
 $lang["emu_createdfromemu"]='Utworzono z wtyczki EMU';
+$lang["emu_upload_emu_field_label"]='EMu IRN';

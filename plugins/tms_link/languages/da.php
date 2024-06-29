@@ -68,3 +68,5 @@ $lang["tms_link_not_found_error_title"]='Ikke fundet';
 $lang["tms_link_not_deleted_error_detail"]='Kan ikke slette den ønskede modulkonfiguration.';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field oversættes til: TMS %module_navn %tms_uid_felt';
 $lang["tms_link_confirm_delete_module_config"]='Er du sikker på, at du vil slette denne modulkonfiguration? Denne handling kan ikke fortrydes!';
+$lang["tms_link_mediapaths_resource_reference_column"]='Kolonne til brug i MediaMaster-tabellen til at gemme Resource ID. Dette er valgfrit og bruges til at undgå, at flere ressourcer bruger det samme Media Master ID.';
+$lang["tms_link_write_to_debug_log"]='Inkluder scriptfremskridt i systemets fejlfinding log (kræver fejlfinding log konfigureret separat). Forsigtighed: Vil forårsage hurtig vækst af fejlfinding logfilen.';

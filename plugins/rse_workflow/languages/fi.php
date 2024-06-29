@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Sulje';
 $lang["rse_workflow_more_notes_title"]='Muistiinpanot:';
 $lang["rse_workflow_email_from"]='Lähetysosoite ilmoitusten lähettämiseen (käyttää %EMAILFROM%-osoitetta, jos tyhjä):';
 $lang["rse_workflow_bcc_admin"]='Ilmoita järjestelmänvalvojille, kun tekijälle ilmoitetaan';
+$lang["rse_workflow_state_notify_help"]='Käyttäjät näkevät tässä tilassa olevat resurssit toimintoina, sen sijaan että saisivat yksinkertaisia ilmoituksia';

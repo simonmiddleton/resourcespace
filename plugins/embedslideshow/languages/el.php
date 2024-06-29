@@ -23,3 +23,4 @@ $lang["embedslideshow_notransition"]='Χωρίς αυτόματη μετάβασ
 $lang["embedslideshow_directlink"]='Μη ενσωματωμένος άμεσος σύνδεσμος URL';
 $lang["embedslideshow_directlinkopen"]='Άνοιγμα άμεσου συνδέσμου (νέα σελίδα)';
 $lang["embedslideshow_dynamic_size"]='Δυναμική αλλαγή μεγέθους προεπισκόπησης βάσει μεγέθους του παίκτη;';
+$lang["embedslideshow_minimise"]='&minus; ελαχιστοποίηση παρουσίασης διαφανειών';

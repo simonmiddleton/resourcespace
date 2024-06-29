@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='رمز Shutterstock (<a href=\'https://
 $lang["image_banks_shutterstock_result_limit"]='الحد الأقصى للنتائج (1000 كحد أقصى للحسابات المجانية)';
 $lang["image_banks_shutterstock_id"]='مُعرّف صورة شترستوك';
 $lang["image_banks_createdfromimagebanks"]='تم إنشاؤها باستخدام مكون إضافي لمصارف الصور';
+$lang["image_banks_image_bank_source"]='مصدر بنك الصور';
+$lang["image_banks_label_resourcespace_instances_cfg"]='الوصول إلى الحالات (التنسيق: i18n name|baseURL|username|key|config)';
+$lang["image_banks_resourcespace_file_information_description"]='حجم ResourceSpace %SIZE_CODE';
+$lang["image_banks_label_select_providers"]='اختر المزودين النشطين';
+$lang["image_banks_view_on_provider_system"]='عرض على نظام %PROVIDER';
+$lang["image_banks_system_unmet_dependencies"]='الملحق ImageBanks لديه تبعيات نظام غير مستوفاة!';
+$lang["image_banks_error_generic_parse"]='غير قادر على تحليل تكوين المزودين (للحالات المتعددة)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='تنسيق تكوين غير صالح لمثيل \'%PROVIDER\' (المزود)';
+$lang["image_banks_error_bad_url_scheme"]='تم العثور على مخطط URL غير صالح لمزود \'%PROVIDER\' (المزود)';
+$lang["image_banks_error_unexpected_response"]='عذرًا، تلقينا استجابة غير متوقعة من المزود. يرجى الاتصال بمسؤول النظام الخاص بك لمزيد من التحقيق (راجع سجل التصحيح).';

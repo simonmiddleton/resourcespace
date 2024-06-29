@@ -22,3 +22,5 @@ $lang["embedslideshow_notransition"]='لا يوجد انتقال تلقائي';
 $lang["embedslideshow_directlink"]='URL مباشر غير مضمّن';
 $lang["embedslideshow_directlinkopen"]='فتح رابط مباشر (صفحة جديدة)';
 $lang["embedslideshow_dynamic_size"]='تغيير حجم المعاينة بشكل ديناميكي بناءً على حجم المشغل؟';
+$lang["embedslideshow_minimise"]='&minus; تصغير عرض الشرائح';
+$lang["sizename_pixels"]='%name (%pixels بكسل)';

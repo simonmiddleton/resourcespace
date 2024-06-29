@@ -11,3 +11,4 @@ $lang["outofrange"]='Mimo rozsahu';
 $lang["invalidrange"]='Neplatný rozsah';
 $lang["splitpdf_createnewresource"]='Vytvorte nový zdroj pre každý rozsah';
 $lang["splitpdf_createnewalternativefile"]='Vytvoriť nový alternatívny súbor pre každý rozsah na tomto zdroji';
+$lang["to-page"]='do';

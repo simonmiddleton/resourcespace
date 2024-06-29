@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='ビデオのスパイス：何かがうまくい�
 $lang["video_splice_no_export_folder"]='設定ファイルにビデオエクスポートフォルダのファイルパスが設定されていないため、エクスポートを実行できません。';
 $lang["video_splice_incorrect_quantity"]='このページが読み込まれてから、有効なリソースがコレクションから削除されたか追加された可能性があります。もう一度お試しください。';
 $lang["video_splice_createdfromvideosplice"]='ビデオスプライスプラグインから作成されました。';
+$lang["video-trim_output"]='出力';
+$lang["video_splice_error_invalid_action"]='エラー：無効な操作';

@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='maximieren';
 $lang["embeddocument_heading"]='Konfiguration des Remote-Dokumentenbetrachters';
 $lang["embeddocument_specify_resourcetype"]='Bitte geben Sie an, für welchen Ressourcentyp die "Einbetten" Funktion angezeigt werden soll.';
 $lang["embeddocument_document_resourcetype"]='Entfernter Dokumentenbetrachter Ressourcentyp:';
+$lang["embeddocument_embed_share"]='Dokument einbetten';

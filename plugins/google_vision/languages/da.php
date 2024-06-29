@@ -20,3 +20,4 @@ $lang["google_vision_translation_intro"]='Google Vision returnerer kun engelske 
 $lang["google_vision_translation_api_key"]='Aktivér oversættelse af Vision-nøgleord via oversættelses-API ved at indtaste en gyldig Google API-nøgle';
 $lang["google_vision_translation_languages"]='Komma-separeret liste over sprogkoder, f.eks. "no,es"';
 $lang["google_vision_translation_keep_english"]='Skal de originale engelske nøgleord bevares?';
+$lang["google_vision_api"]='Google Vision API';

@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Token de Shutterstock (<a href=\'https:
 $lang["image_banks_shutterstock_result_limit"]='Límite de resultados (máximo 1000 para cuentas gratuitas)';
 $lang["image_banks_shutterstock_id"]='Identificación de imagen de Shutterstock';
 $lang["image_banks_createdfromimagebanks"]='Creado desde el plugin de Bancos de Imágenes';
+$lang["image_banks_image_bank_source"]='Fuente del Banco de Imágenes';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Acceso a instancias (formato: nombre i18n|URL base|nombre de usuario|clave|configuración)';
+$lang["image_banks_resourcespace_file_information_description"]='Tamaño %SIZE_CODE de ResourceSpace';
+$lang["image_banks_label_select_providers"]='Seleccionar proveedores activos';
+$lang["image_banks_view_on_provider_system"]='Ver en el sistema de %PROVIDER';
+$lang["image_banks_system_unmet_dependencies"]='¡El plugin ImageBanks tiene dependencias del sistema no satisfechas!';
+$lang["image_banks_error_generic_parse"]='No se puede analizar la configuración de los proveedores (para múltiples instancias)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Formato de configuración inválido para la instancia de \'%PROVIDER\' (proveedor)';
+$lang["image_banks_error_bad_url_scheme"]='Esquema de URL inválido encontrado para la instancia de \'%PROVIDER\' (proveedor)';
+$lang["image_banks_error_unexpected_response"]='Lo sentimos, se recibió una respuesta inesperada del proveedor. Por favor, contacte a su administrador del sistema para una investigación más detallada (vea el registro de depuración).';

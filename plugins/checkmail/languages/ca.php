@@ -36,3 +36,4 @@ $lang["yourresourcehasbeenuploaded"]='El teu recurs ha estat pujat';
 $lang["yourresourceshavebeenuploaded"]='Els teus recursos han estat pujats';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), amb ID [user-ref] i correu electrònic [user-email], no té permisos per carregar per correu electrònic (comproveu els permisos "c" o "d" o els usuaris bloquejats a la pàgina de configuració de comprovació de correu electrònic). Enregistrat el: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Creat a partir del connector "Comprova el correu"';
+$lang["checkmail_resource_type_population"]='<br />(de allowed_extensions)';

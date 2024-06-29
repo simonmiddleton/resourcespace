@@ -17,3 +17,5 @@ $lang["embeddocument_maximise"] = "Maximera";
 $lang["embeddocument_heading"] = "Bädda in dokument – inställningar";
 $lang["embeddocument_specify_resourcetype"] = "Ange materialtypen som verktyget <b>Bädda in</b> ska visas för.";
 $lang["embeddocument_document_resourcetype"] = "Dokumentmaterialtyp:";
+
+$lang["embeddocument_embed_share"]='Bädda in dokument';

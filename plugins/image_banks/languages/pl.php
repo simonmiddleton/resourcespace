@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Token Shutterstock (<a href=\'https://w
 $lang["image_banks_shutterstock_result_limit"]='Limit wyników (maks. 1000 dla darmowych kont)';
 $lang["image_banks_shutterstock_id"]='Identyfikator obrazu Shutterstock';
 $lang["image_banks_createdfromimagebanks"]='Utworzono za pomocą wtyczki Banków Obrazów';
+$lang["image_banks_image_bank_source"]='Źródło Banku Obrazów';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Dostęp do instancji (format: i18n name|baseURL|nazwa użytkownika|klucz|konfiguracja)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace rozmiar %SIZE_CODE';
+$lang["image_banks_label_select_providers"]='Wybierz aktywnych dostawców';
+$lang["image_banks_view_on_provider_system"]='Zobacz w systemie %PROVIDER';
+$lang["image_banks_system_unmet_dependencies"]='Wtyczka ImageBanks ma niespełnione zależności systemowe!';
+$lang["image_banks_error_generic_parse"]='Nie można przetworzyć konfiguracji dostawców (dla wielu instancji)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Nieprawidłowy format konfiguracji dla instancji \'%PROVIDER\' (dostawca)';
+$lang["image_banks_error_bad_url_scheme"]='Nieprawidłowy schemat URL znaleziony dla instancji \'%PROVIDER\' (dostawca)';
+$lang["image_banks_error_unexpected_response"]='Przepraszamy, otrzymano nieoczekiwaną odpowiedź od dostawcy. Proszę skontaktować się z administratorem systemu w celu dalszego zbadania (zobacz dziennik debugowania).';

@@ -20,3 +20,4 @@ $lang["google_vision_translation_intro"]='Google Vision gibt nur englische Schl�
 $lang["google_vision_translation_api_key"]='Aktivieren Sie die Übersetzung von Vision-Schlüsselwörtern über die Übersetzungs-API, indem Sie einen gültigen Google API-Schlüssel eingeben';
 $lang["google_vision_translation_languages"]='Komma-separierte Liste von Sprachcodes, z.B. "no,es"';
 $lang["google_vision_translation_keep_english"]='Original Englische Schlüsselwörter beibehalten?';
+$lang["google_vision_api"]='Google Vision API';

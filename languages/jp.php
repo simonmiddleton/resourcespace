@@ -2920,3 +2920,4 @@ $lang["action_set_no_file"]='ファイルなしとしてマーク';
 $lang["action_unset_no_file"]='ファイルが見つからないとマーク';
 $lang["completed_set_no_file"]='リソースがファイルなしとしてマークされました';
 $lang["completed_unset_no_file"]='リソースがファイル欠落としてマークされました';
+$lang["map_stamen_group"]='ステイメン';

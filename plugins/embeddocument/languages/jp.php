@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='最大化する';
 $lang["embeddocument_heading"]='リモート文書ビューアーの設定';
 $lang["embeddocument_specify_resourcetype"]='\'埋め込み\'機能が表示されるべきリソースタイプを指定してください。';
 $lang["embeddocument_document_resourcetype"]='リモート文書ビューアー リソースタイプ:';
+$lang["embeddocument_embed_share"]='ドキュメントを埋め込む';

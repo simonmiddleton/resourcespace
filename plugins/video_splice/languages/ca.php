@@ -42,3 +42,6 @@ $lang["video_splice_failure"]='Edició de vídeo: Alguna cosa ha anat malament. 
 $lang["video_splice_no_export_folder"]='No es pot realitzar l\'exportació ja que no s\'ha establert cap ruta d\'accés per a la carpeta d\'exportació de vídeos en el fitxer de configuració.';
 $lang["video_splice_incorrect_quantity"]='Un recurs vàlid ha estat eliminat o afegit a la col·lecció des que aquesta pàgina es va carregar. Si us plau, intenta-ho de nou.';
 $lang["video_splice_createdfromvideosplice"]='Creat a partir del connector Video Splice';
+$lang["video-trim_output"]='Sortida';
+$lang["action-splice"]='Empalmar';
+$lang["video_splice_error_invalid_action"]='Error: Acció no vàlida';

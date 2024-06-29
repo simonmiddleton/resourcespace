@@ -8,3 +8,4 @@ $lang["grant_edit_add"]='Permiteți accesul pentru editare pentru următorii uti
 $lang["grant_edit_date"]='Data de expirare pentru accesul la editare';
 $lang["grant_edit_list"]='Utilizatori actuali cu acces suplimentar de editare';
 $lang["grant_edit_delete_user"]='Confirmați eliminarea accesului îmbunătățit pentru';
+$lang["grant_edit_group_list"]='Grupuri curente cu acces suplimentar de editare';

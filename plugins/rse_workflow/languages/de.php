@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Schließen';
 $lang["rse_workflow_more_notes_title"]='Notizen:';
 $lang["rse_workflow_email_from"]='E-Mail-Adresse, von der Benachrichtigungen gesendet werden (wird %EMAILFROM% verwenden, wenn leer):';
 $lang["rse_workflow_bcc_admin"]='Benachrichtige Systemadministratoren, wenn der Beitragende benachrichtigt wird';
+$lang["rse_workflow_state_notify_help"]='Benutzer werden Ressourcen in diesem Zustand als Aktionen sehen, anstatt einfache Benachrichtigungen zu erhalten';

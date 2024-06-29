@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Chiudi';
 $lang["rse_workflow_more_notes_title"]='Note:';
 $lang["rse_workflow_email_from"]='Indirizzo email da cui inviare le notifiche (verrà utilizzato %EMAILFROM% se vuoto):';
 $lang["rse_workflow_bcc_admin"]='Notificare gli amministratori di sistema quando il contributore viene notificato';
+$lang["rse_workflow_state_notify_help"]='Gli utenti vedranno le risorse in questo stato apparire come azioni, piuttosto che ricevere semplici notifiche';

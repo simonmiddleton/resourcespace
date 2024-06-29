@@ -59,3 +59,5 @@ $lang["doi_sure_register_resource"]='Czy kontynuować rejestrację x zasobów?';
 $lang["doi_show_meta"]='Pokaż metadane DOI';
 $lang["doi_hide_meta"]='Ukryj metadane DOI';
 $lang["doi_fetched_xml_from_MDS"]='Aktualne metadane XML zostały pomyślnie pobrane z magazynu metadanych DataCite';
+$lang["doi_info_wikipedia"]='https://pl.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["doi_sum_of"]='z';

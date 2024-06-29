@@ -71,3 +71,7 @@ $lang["cropper_use_srgb"]='Gunakan sRGB';
 $lang["transform_update_preview"]='Perbarui pratinjau';
 $lang["transform_preset_sizes"]='Pilih dari ukuran target yang telah ditentukan sebelumnya';
 $lang["error_crop_invalid"]='Silakan pilih wilayah gambar';
+$lang["transform"]='Transformasi';
+$lang["transformed"]='Transformasi';
+$lang["px"]='px';
+$lang["scaled"]='Berskala';

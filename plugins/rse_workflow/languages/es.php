@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Cerrar';
 $lang["rse_workflow_more_notes_title"]='Notas:';
 $lang["rse_workflow_email_from"]='Dirección de correo electrónico para enviar notificaciones (se usará %EMAILFROM% si está vacío):';
 $lang["rse_workflow_bcc_admin"]='Notificar a los administradores del sistema cuando se notifique al contribuyente';
+$lang["rse_workflow_state_notify_help"]='Los usuarios verán los recursos en este estado apareciendo como acciones, en lugar de recibir notificaciones simples';

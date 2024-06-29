@@ -76,3 +76,4 @@ $lang["cropper_use_srgb"]='Используйте sRGB';
 $lang["transform_update_preview"]='Обновить предпросмотр';
 $lang["transform_preset_sizes"]='Выберите из предопределенных размеров целевого объекта';
 $lang["error_crop_invalid"]='Пожалуйста, выберите область изображения';
+$lang["px"]='пиксель';

@@ -53,3 +53,4 @@ $lang["rse_workflow_email_from"]='Adresse e-mail pour envoyer les notifications 
 $lang["rse_workflow_bcc_admin"]='Notifier les administrateurs système lorsque le contributeur est notifié';
 $lang["rse_workflow_configuration"]='Configuration de flux de travail';
 $lang["rse_workflow_state_notify_message"]='Il y a de nouvelles ressources dans l\'état de flux de travail:';
+$lang["rse_workflow_state_notify_help"]='Les utilisateurs verront les ressources dans cet état apparaître comme des actions, plutôt que de recevoir de simples notifications';

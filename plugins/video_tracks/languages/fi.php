@@ -29,3 +29,6 @@ $lang["video_tracks_custom_video_formats_label"]='Mukautetut formaatit';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Salli käytettävissä olevien tiedostotulostusvaihtoehtojen käyttö alkuperäistiedoston mukautettujen videomuotojen luomiseen';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Valitse aloittaaksesi transkoodauksen nyt. Jos valintaa ei ole tehty, saat ilmoituksen kun tiedosto on valmis';
 $lang["video_tracks_transcode_now_label"]='Muunna koodaus nyt';
+$lang["video_tracks_select_generate_opt"]='Valitse luontivaihtoehto';
+$lang["video_tracks_save_alt_not_perm"]='Ei voida tallentaa vaihtoehtoa ilman lupaa';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='TÄRKEÄÄ! Video Tracks -lisäosa on poistanut käytöstä tulostusmuotojen asetukset. Ne voidaan asettaa vain config.php-tiedostossa. Lisäosa ei toimi odotetulla tavalla, ennen kuin määritysasetus on kopioitu. Kopioi seuraava:- %nl%####%nl%%output_formats_config%####%nl%';

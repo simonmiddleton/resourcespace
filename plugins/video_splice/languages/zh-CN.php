@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='视频拼接：出现了问题。请联系管理�
 $lang["video_splice_no_export_folder"]='无法执行导出操作，因为在配置文件中未设置视频导出文件夹的文件路径。';
 $lang["video_splice_incorrect_quantity"]='有效的资源自此页面加载以来已被移除或添加到集合中。请重试。';
 $lang["video_splice_createdfromvideosplice"]='由视频拼接插件创建';
+$lang["video-trim_output"]='输出';
+$lang["video_splice_error_invalid_action"]='错误：无效操作';

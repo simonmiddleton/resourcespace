@@ -42,3 +42,6 @@ $lang["video_splice_failure"]='Videobearbeitung: Etwas ist schief gelaufen. Bitt
 $lang["video_splice_no_export_folder"]='Konnte den Export nicht durchführen, da kein Dateipfad zum Video-Exportordner in der Konfigurationsdatei festgelegt wurde.';
 $lang["video_splice_incorrect_quantity"]='Ein gültiges Ressource-Objekt wurde entweder aus der Sammlung entfernt oder seit dem Laden dieser Seite hinzugefügt. Bitte versuchen Sie es erneut.';
 $lang["video_splice_createdfromvideosplice"]='Erstellt mit dem Video Splice-Plugin';
+$lang["video-trim_output"]='Ausgabe';
+$lang["action-splice"]='Spleißen';
+$lang["video_splice_error_invalid_action"]='Fehler: Ungültige Aktion';

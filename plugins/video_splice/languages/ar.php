@@ -42,3 +42,6 @@ $lang["video_splice_failure"]='تقطيع الفيديو: هناك خطأ ما. 
 $lang["video_splice_no_export_folder"]='غير قادر على القيام بالتصدير حيث لم يتم تعيين مسار لمجلد تصدير الفيديو في ملف التكوين.';
 $lang["video_splice_incorrect_quantity"]='تمت إزالة مورد صالح أو إضافته إلى المجموعة منذ تحميل هذه الصفحة. يرجى المحاولة مرة أخرى.';
 $lang["video_splice_createdfromvideosplice"]='تم إنشاؤه باستخدام مكون إضافي Video Splice';
+$lang["video-trim_output"]='إخراج';
+$lang["action-splice"]='دمج';
+$lang["video_splice_error_invalid_action"]='خطأ: إجراء غير صالح';

@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='maksimiziraj';
 $lang["embeddocument_heading"]='Konfiguracija udaljenog preglednika dokumenata';
 $lang["embeddocument_specify_resourcetype"]='Molimo navedite za koji tip resursa bi funkcionalnost \'ugrađivanja\' trebala biti dostupna.';
 $lang["embeddocument_document_resourcetype"]='Vrsta izvora udaljenog preglednika dokumenata';
+$lang["embeddocument_embed_share"]='Ugradi dokument';

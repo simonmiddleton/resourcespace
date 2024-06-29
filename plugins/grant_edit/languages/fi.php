@@ -8,3 +8,4 @@ $lang["grant_edit_add"]='Ota muokkausoikeus käyttöön seuraaville käyttäjill
 $lang["grant_edit_date"]='Voimassaolon päättymispäivä muokkausoikeuksille';
 $lang["grant_edit_list"]='Nykyiset käyttäjät, joilla on lisämuokkausoikeudet';
 $lang["grant_edit_delete_user"]='Vahvista parannetun käyttöoikeuden poistaminen kohteesta';
+$lang["grant_edit_group_list"]='Nykyiset ryhmät, joilla on lisämuokkausoikeudet';

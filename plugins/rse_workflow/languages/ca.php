@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Tancar';
 $lang["rse_workflow_more_notes_title"]='Notes: Notes';
 $lang["rse_workflow_email_from"]='Adreça de correu electrònic per enviar notificacions (s\'utilitzarà %EMAILFROM% si està en blanc):';
 $lang["rse_workflow_bcc_admin"]='Notificar als administradors del sistema quan es notifiqui el contribuent';
+$lang["rse_workflow_state_notify_help"]='Els usuaris veuran els recursos en aquest estat apareixent com a accions, en lloc de rebre notificacions simples';

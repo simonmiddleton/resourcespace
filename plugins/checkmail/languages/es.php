@@ -37,3 +37,4 @@ $lang["yourresourcehasbeenuploaded"]='Su recurso ha sido cargado';
 $lang["yourresourceshavebeenuploaded"]='Tus recursos han sido subidos';
 $lang["checkmail_not_allowed_error_template"]='[Nombre completo del usuario] ([nombre de usuario]), con ID [referencia de usuario] y correo electrónico [correo electrónico del usuario] no tiene permiso para cargar archivos por correo electrónico (verifique los permisos "c" o "d" o los usuarios bloqueados en la página de configuración de checkmail). Registrado en: [fecha y hora].';
 $lang["checkmail_createdfromcheckmail"]='Creado desde el plugin de Revisión de Correo';
+$lang["checkmail_resource_type_population"]='(de extensiones permitidas)';

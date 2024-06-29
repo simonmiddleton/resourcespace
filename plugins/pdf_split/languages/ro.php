@@ -11,3 +11,4 @@ $lang["outofrange"]='În afara intervalului';
 $lang["invalidrange"]='Interval nevalid';
 $lang["splitpdf_createnewresource"]='Creați o resursă nouă pentru fiecare interval';
 $lang["splitpdf_createnewalternativefile"]='Creați un fișier alternativ nou pentru fiecare interval pe această resursă';
+$lang["to-page"]='la';

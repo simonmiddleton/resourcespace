@@ -3035,3 +3035,192 @@ $lang["error_invalid_revert_option"]='Predtým uložená hodnota \'%%VALUE%%\' s
 $lang["error_invalid_revert_date"]='Predtým uložený dátum \'%%VALUE%%\' je neplatný. Ak je to potrebné, aktualizujte zdrojový súbor manuálne.';
 $lang["batch_edit_save_warning_message"]='Pri úprave nasledujúcich zdrojov sa vyskytli chyby';
 $lang["batch_edit_save_warning_alert"]='Pri vykonávaní tejto operácie sa vyskytli niektoré chyby. Pre viac informácií sa pozrite do svojich správ';
+
+$lang["information_field_restype_deselect_cleanup"]='Če želite odstraniti obstoječe podatke polja iz neizbranih vrst virov, kliknite na naslednjo povezavo %%CLEANUP_LINK%%';
+$lang["mainmenu"]='Glavni meni';
+$lang["edit_multiple_existing_values"]='Obstoječe ključne besede na virih v tej izbiri';
+$lang["edit_multiple_show_more"]='Pokaži več';
+$lang["edit_multiple_too_many"]='Prikazujem 100 najpogosteje uporabljenih vrednosti. Obstajajo tudi druge.';
+$lang["edit_multiple_action_text_rt"]='Vse besedilo / možnosti bodo zamenjane z naslednjimi ključnimi besedami';
+$lang["edit_multiple_action_text_ap"]='Te ključne besede bodo dodane';
+$lang["edit_multiple_action_text_rm"]='Te ključne besede bodo odstranjene';
+$lang["sortorder-asc"]='VZHODNO';
+$lang["sortorder-desc"]='OPIS';
+$lang["title"]='Naslov';
+$lang["log-rtchange"]='Urejen tip vira';
+$lang["log-NOFIL"]='Označeno kot brez datoteke';
+$lang["log-FIL"]='Označeno ako majúce súbor';
+$lang["log-EDT"]='Urejeni vir';
+$lang["accountnotfound-reset-not-emailed"]='Povezava za ponastavitev gesla ni bila poslana, ker ni računa s tem e-poštnim naslovom';
+$lang["accountnoemail-reset-not-emailed"]='Povezava za ponastavitev gesla ni bila poslana, ker račun nima e-poštnega naslova';
+$lang["accountexpired-reset-not-emailed"]='Povezava za ponastavitev gesla ni bila poslana, ker je račun potekel';
+$lang["accountnotapproved-reset-not-emailed"]='Povezava za ponastavitev gesla ni bila poslana, ker račun ni odobren';
+$lang["remaining"]='ostaja';
+$lang["web_server"]='Spletni strežnik';
+$lang["php"]='PHP';
+$lang["all_workflow_states"]='Vsa stanja delovnega toka';
+$lang["stat-downloadedkb"]='Preneseni podatki datoteke (KB)';
+$lang["external"]='Zunanji';
+$lang["email_error_user_list_some_skipped"]='Preskočena obvestila za naslednje uporabnike (uporabniki morda niso odobreni)';
+$lang["unrelateallresources"]='Odstrani povezavo vseh virov v tej zbirki';
+$lang["unrelateallresources_confirmation"]='Noben vir v tej zbirki ni več povezan';
+$lang["setup-download_filename_format"]='Formát názvu súboru na stiahnutie';
+$lang["addremove"]='+/-';
+$lang["map_introtext1"]='Zemljevid spodaj prikazuje vire iz rezultatov iskanja, ki imajo povezano geolokacijo. Barva označevalca je nastavljena glede na vrsto vira ali polje z metapodatki po meri (ključ pod zemljevidom). Ko bi se označevalci prekrivali, se uporablja zeleno barvno združevanje s številom, ki označuje število združenih označevalcev; povečajte ali dvokliknite na skupino. Kliknite na posamezen označevalec, da naložite pojavno okno za ta vir, ki prikazuje predogledno sliko. Kliknite predogledno sliko, da naložite okno za ta vir. Premaknite kazalec nad posamezen označevalec za geokoordinate. Spremenite osnovni zemljevid z gumbom zgoraj desno na zemljevidu. Shranite zemljevid v datoteko PNG z gumbom spodaj levo na zemljevidu.';
+$lang["geolocate_collection_map_text"]='Zemljevid spodaj prikazuje vire iz te zbirke, ki imajo povezano geolokacijo. Barva označevalca je nastavljena glede na vrsto vira ali polje po meri (ključ pod zemljevidom). Ko bi se označevalci prekrivali, se uporablja zeleno združevanje z številom, ki označuje število združenih označevalcev; povečajte ali dvokliknite združitev. Kliknite na posamezen označevalec, da naložite pojavno okno za ta vir, ki prikazuje predogledno sliko. Kliknite predogledno sliko, da naložite okno za ta vir. Premaknite kazalec nad posamezen označevalec za geokoordinate. Spremenite osnovni zemljevid z gumbom zgoraj desno na zemljevidu. Shranite zemljevid v datoteko PNG z gumbom spodaj levo na zemljevidu.';
+$lang["map_osmbzh"]='OSM Luksemburg';
+$lang["map_tf_group"]='Thunderforest';
+$lang["map_tfocm"]='OpenCycleMap (OCM)';
+$lang["map_hyddabase"]='Základňa';
+$lang["map_stamen_group"]='Stamen';
+$lang["map_esri_group"]='ESRI';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapbox_group"]='Mapbox';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["filestore"]='Skladišče datotek';
+$lang["rs_ext_dependencies"]='Zunanje odvisnosti ResourceSpace';
+$lang["write_access_to"]='Dostop za pisanje do';
+$lang["error-invalid_name"]='Neveljavno ime';
+$lang["inactive_entry_matched"]='Neaktivni vnos ustreza za';
+$lang["user_group"]='uporabniška skupina';
+$lang["all__emailbulk"]='<br /><br />
+[besedilo]<br /><br />
+[besedilo_noga]';
+$lang["all__emailcollection"]='<br />
+[oduporabnika] [lang_emailcollectionmessage] <br /><br /> 
+[lang_sporočilo] : [sporočilo]<br /><br /> 
+[lang_kliknitezapogledzbirke] [seznam]';
+$lang["all__emailcollectionexternal"]='<br />
+[fromusername] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_message] : [message]<br /><br /> 
+[lang_clicklinkviewcollection] [list]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[welcome]<br /><br /> 
+[nove_podrobnosti_prijave]<br /><br /> 
+[uporabniško_ime] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[besedilo_podpis]';
+$lang["all__emailnewresearchrequestwaiting"]='[username] ([userfullname] - [useremail])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[name]<br /><br />
+[lang_descriptionofproject]:[description]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[contact]<br /><br />
+[lang_finaluse]: [finaluse]<br /><br />
+[lang_shaperequired]: [shape]<br /><br />
+[lang_noresourcesrequired]: [noresources]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[seznam] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[besedilo_podnožja]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[seznam] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[besedilo_podnožja]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[seznam] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[besedilo_podnožja]';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
+
+[besedilo_noga]';
+$lang["all__emailresearchrequestcomplete"]='<br />
+[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_vamposlalvir]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_kliknitezaviditeresurs]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='<br />
+[lang_username] : [username] <br />
+[seznam] <br />
+[podrobnosti]<br /><br />
+[lang_clicktoviewresource] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["upgrade_script"]='Skript za nadgradnjo';
+$lang["upgrade_026_notification"]='Aktualizacija je zastarala nekatere možnosti konfiguracije, ki jih vaš %entity% prepisuje.
+
+Če želite, da se ime datoteke za prenos oblikuje čim bližje staremu načinu, posodobite njegovo konfiguracijo z:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='Ni mogoče nastaviti sistemske možnosti konfiguracije \'download_filename_format\' na \'%format%\'. Prosimo, poskusite znova ročno.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='Ni mogoče obdelati zastarelih možnosti konfiguracije za %entity%. Prosimo, poskusite znova ročno. Razlog:-
+
+%error%';
+$lang["userpreference_default_sort_order_label"]='Privzeta smer razvrščanja';
+$lang["userpreference_high_contrast_mode"]='Način z višjim kontrastom';
+$lang["watermark_header"]='Vodni žig';
+$lang["watermark_label"]='Vodna oznaka slike - Ponovno ustvarite predoglede po spremembi vodne oznake, da posodobite obstoječe vire. Odstranitev datoteke bo onemogočila vodne oznake.';
+$lang["systemconfig_debug"]='Ladenje';
+$lang["systemconfig_debug_log_on_specific_user"]='Na (določen uporabnik)';
+$lang["systemconfig_use_native_input_for_date_field"]='Uporabite domači vnos datuma za prikaz vrste metapodatkov \'datum\'';
+$lang["systemconfig_native_date_input_no_partials_supported"]='DŌLEŽITO: Ak je povolené, čiastočné dátumy (napr. máj 2023) už nebudú podporované a existujúce údaje budú vymazané po ďalšej úprave zdroja.';
+$lang["show_affected_resources"]='Pokaži prizadete vire';
+$lang["group_no"]='Skupina';
+$lang["confirm_delete_field_value"]='Ste prepričani, da želite IZBRISATI to možnost polja? To bo trajno odstranilo vrednost iz vseh virov, na katere je uporabljena.';
+$lang["external_shares_options"]='Možnosti zunanje delitve';
+$lang["email_shares_options_summary"]='Te možnosti bodo veljale samo za delitve, ustvarjene z uporabo zunanjega e-poštnega naslova';
+$lang["actions_email_new_actions_title"]='Nove akcije';
+$lang["actions_email_new_actions_intro"]='Obstajajo nova dejanja, ki jih je treba dokončati.';
+$lang["email_actions_truncated"]='Prikazanih je le zadnjih 1000 dejanj. Imate %%TOTAL%% dejanj. Prijavite se v %%APPLICATIONNAME%%, da si jih ogledate vse.';
+$lang["annotate_select"]='Izberite polje...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='Nepodarilo sa nahradiť súbor zdroja. Dodaná referencia kolekcie je neplatná.';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='príklad cURL';
+$lang["api-curl-help"]='Naslednji enovrstični bash skript se lahko izvede na katerem koli UNIX sistemu z nameščenima OpenSSL in cURL.';
+$lang["share-password-not-set"]='Zunanje delitve morajo biti zaščitene z geslom. Prosimo, vnesite geslo za delitev, da nadaljujete.';
+$lang["job_priority_immediate"]='Nujna naloga';
+$lang["job_priority_user"]='Používateľská úloha';
+$lang["job_priority_system"]='Sistemska naloga';
+$lang["job_priority_completed"]='Naloga dokončana';
+$lang["job_status_error"]='Prišlo je do napake';
+$lang["file_integrity_fail_latest"]='Ogled najnovejših napak celovitosti datotek';
+$lang["file_integrity_fail_all"]='Oglejte si vse vire z napakami celovitosti datotek';
+$lang["error-edit_noaccess_related_resources"]='Ni mogoče povezati virov. Brez dostopa do:';
+$lang["csv_export_filename"]='izvoz_metapodatkov_%%SEARCH%%_%%TIME%%';
+$lang["share_expired_icon_title"]='Poteklo';
+$lang["error_invalid_date_format"]='"%%VALUE%%" je neveljaven datum. Vsa vrednosti v tem polju morajo biti v formatu LLLL-MM-DD';
+$lang["related_resource_create"]='Ustvari nov povezan vir';
+$lang["skip-to-main-content"]='Preskoči na glavno vsebino';
+$lang["cleanup_invalid_nodes"]='Vyčistiť údaje poľa z neplatných typov zdrojov';
+$lang["cleanup_invalid_node_dry_run"]='Ne izbriši podatkov, samo vrni število vrstic za brisanje?';
+$lang["advancedsearch_resource_section"]='Podatki o virih';
+$lang["error-reload-required"]='ResourceSpace je bil posodobljen. Prosimo, ponovno naložite stran';
+$lang["user_pref_new_action_emails"]='Pošlji mi e-pošto, če so ustvarjena nova dejanja';
+$lang["email_rate_limit_active"]='Največje število e-poštnih sporočil na uro, ki jih pošlje ta sistem, je bilo preseženo. E-poštna sporočila trenutno niso poslana s tem sistemom.';
+$lang["email_rate_limit_inactive"]='Omejitev e-pošte je bila odstranjena in e-pošte se zdaj pošiljajo.';
+$lang["severity-level_0"]='Kritično';
+$lang["severity-level_1"]='Opozorilo';
+$lang["severity-level_2"]='Obvestilo';
+$lang["pull_images"]='Prenesi slike';
+$lang["pull_images_text"]='Uporabite slike iz povezanih virov, če niso na voljo';
+$lang["system_user_default"]='SISTEM';
+$lang["userlimitreached"]='Dosegli ste omejitev uporabnikov. Obstoječega uporabnika je treba onemogočiti ali izbrisati, preden lahko ustvarite nove račune ali omogočite obstoječe račune.';
+$lang["user_api_session_title"]='Dostop do API oddaljenega sistema';
+$lang["user_api_session_text"]='Oddaljeni sistem \'%system%\' zahteva dostop do %applicationname% z uporabo vaših poverilnic. Kliknite \'Dovoli dostop\' samo, če ste to zahtevo sprožili vi';
+$lang["user_api_session_invalid_system"]='Neveljaven sistem zahtevan';
+$lang["user_api_session_grant_access"]='Dodeli dostop';
+$lang["user_api_session_grant_success"]='Ključ uspešno izdan.';
+$lang["user_api_session_grant_error"]='Izdaja ključa ni uspela.';
+$lang["no_file"]='Ni datoteke';
+$lang["missing_file"]='Ta datoteka manjka. Prosimo, obrnite se na svojega sistemskega administratorja';
+$lang["action_set_no_file"]='Označi kot brez datoteke';
+$lang["action_unset_no_file"]='Označi kot manjkajočo datoteko';
+$lang["completed_set_no_file"]='Viro označen kot brez datoteke';
+$lang["completed_unset_no_file"]='Označeno kot manjkajoča datoteka';
+$lang["map_esridelorme"]='DeLorme';

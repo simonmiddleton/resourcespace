@@ -34,3 +34,4 @@ $lang["emu_upload_nodata"]='このIRNに対するEMuデータが見つかりま�
 $lang["emu_nodata_returned"]='指定されたIRNに対するEMuデータが見つかりませんでした。';
 $lang["emu_createdfromemu"]='EMUプラグインから作成されました。';
 $lang["emu_rs_mappings_header"]='EMu - ResourceSpaceのマッピングルール';
+$lang["emu_upload_emu_field_label"]='EMu IRN';

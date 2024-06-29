@@ -11,3 +11,4 @@ $lang["outofrange"]='Fora de rang';
 $lang["invalidrange"]='Rang no vàlid';
 $lang["splitpdf_createnewresource"]='Crear un nou recurs per a cada rang';
 $lang["splitpdf_createnewalternativefile"]='Crear un nou fitxer alternatiu per a aquest recurs per a cada rang';
+$lang["range"]='Rang';

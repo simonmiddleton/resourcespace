@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Shutterstock-Token (<a href=\'https://w
 $lang["image_banks_shutterstock_result_limit"]='Ergebnislimit (max. 1000 für kostenlose Konten)';
 $lang["image_banks_shutterstock_id"]='Shutterstock-Bild-ID';
 $lang["image_banks_createdfromimagebanks"]='Erstellt mit dem Image Banks-Plugin';
+$lang["image_banks_image_bank_source"]='Bilddatenbankquelle';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Instanzenzugriff (Format: i18n Name|Basis-URL|Benutzername|Schlüssel|Konfiguration)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace %SIZE_CODE Größe';
+$lang["image_banks_label_select_providers"]='Wählen Sie aktive Anbieter';
+$lang["image_banks_view_on_provider_system"]='Ansehen im %PROVIDER System';
+$lang["image_banks_system_unmet_dependencies"]='ImageBanks-Plugin hat nicht erfüllte Systemabhängigkeiten!';
+$lang["image_banks_error_generic_parse"]='Konfiguration der Anbieter (für Multi-Instanz) konnte nicht geparst werden';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Ungültiges Konfigurationsformat für \'%PROVIDER\' (Anbieter) Instanz';
+$lang["image_banks_error_bad_url_scheme"]='Ungültiges URL-Schema für \'%PROVIDER\' (Anbieter) Instanz gefunden';
+$lang["image_banks_error_unexpected_response"]='Entschuldigung, eine unerwartete Antwort vom Anbieter erhalten. Bitte wenden Sie sich an Ihren Systemadministrator für weitere Untersuchungen (siehe Debug-Log).';

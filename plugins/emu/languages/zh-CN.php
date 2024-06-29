@@ -33,3 +33,5 @@ $lang["emu_no_resource"]='未指定资源ID！';
 $lang["emu_upload_nodata"]='未找到此IRN的EMu数据：';
 $lang["emu_nodata_returned"]='指定的IRN未找到EMu数据。';
 $lang["emu_createdfromemu"]='从EMU插件创建';
+$lang["emu_interval_run"]='在以下间隔运行脚本（例如 +1 天，+2 周，双周）。留空则每次 cron_copy_hitcount.php 运行时都会运行';
+$lang["emu_upload_emu_field_label"]='EMu IRN';

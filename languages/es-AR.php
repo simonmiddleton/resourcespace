@@ -2757,7 +2757,6 @@ $lang["all__emailresourcerequest"]='[lang_username] : [username] <br />
 [lang_clicktoviewresource] <br /><br />
 <a href="[url]">[url]</a>';
 $lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
-$lang["upload__introtext"]='I need the text you want to be translated in order to proceed.';
 $lang["dash"]='Tablero';
 $lang["upgrade_script"]='Script de actualización';
 $lang["upgrade_026_notification"]='La actualización ha desaprobado algunas opciones de configuración que su %entity% está sobrescribiendo.

@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='关闭';
 $lang["rse_workflow_more_notes_title"]='注释：';
 $lang["rse_workflow_email_from"]='发送通知的电子邮件地址（如果为空将使用％EMAILFROM％）：';
 $lang["rse_workflow_bcc_admin"]='当通知贡献者时，通知系统管理员。';
+$lang["rse_workflow_state_notify_help"]='用户将看到处于此状态的资源显示为操作，而不是接收简单的通知';

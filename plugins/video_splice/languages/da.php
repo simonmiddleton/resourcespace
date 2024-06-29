@@ -41,3 +41,7 @@ $lang["video_splice_failure"]='Video-splejsning: Noget er gået galt. Kontakt ve
 $lang["video_splice_no_export_folder"]='Kan ikke udføre eksport, da der ikke er angivet en filsti til video eksportmappen i konfigurationsfilen.';
 $lang["video_splice_incorrect_quantity"]='En gyldig ressource er enten blevet fjernet eller tilføjet til samlingen, siden denne side blev indlæst. Prøv venligst igen.';
 $lang["video_splice_createdfromvideosplice"]='Oprettet fra Video Splice-plugin';
+$lang["action-trim"]='Beskær';
+$lang["video-trim_output"]='Output';
+$lang["action-splice"]='Splejs';
+$lang["video_splice_error_invalid_action"]='Fejl: Ugyldig handling';

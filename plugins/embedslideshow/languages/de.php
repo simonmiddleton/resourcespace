@@ -23,3 +23,4 @@ $lang["embedslideshow_notransition"]='Kein automatischer Übergang';
 $lang["embedslideshow_directlink"]='Nicht eingebettete direkte URL';
 $lang["embedslideshow_directlinkopen"]='Direkten Link öffnen (neue Seite)';
 $lang["embedslideshow_dynamic_size"]='Dynamische Größenanpassung der Vorschau basierend auf der Größe des Players?';
+$lang["sizename_pixels"]='%name (%pixels Pixel)';

@@ -10,3 +10,5 @@ $lang["adobe_link_import_successful"]='Het bestand wordt geïmporteerd';
 $lang["adobe_link_upload_document"]='Opslaan';
 $lang["adobe_link_saving"]='Opslaan..';
 $lang["adobe_link_saving_wait"]='Het bestand wordt opgeslagen, wacht op het bevestigingsbericht. Mogelijk moet u de pagina vernieuwen om de voorbeeldafbeelding bij te werken.';
+$lang["adobe_link_title"]='Adobe Link';
+$lang["adobe_link_configuration"]='Adobe-koppeling instellen';

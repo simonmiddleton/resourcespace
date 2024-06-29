@@ -45,3 +45,4 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Kunne ikke koble til LD
 $lang["posixldapauth_unable_to_search_ldap_server"]='Kan ikke søke i LDAP-serveren.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% mislyktes, vennligst sjekk innstillingene.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP-søk vellykket, men ingen grupper funnet.';
+$lang["posixldapauth_test"]='Test';

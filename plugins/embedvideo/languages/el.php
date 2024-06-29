@@ -6,3 +6,4 @@ $lang["embed_help"]='Αντιγράψτε και επικολλήστε τον �
 $lang["embed_video_configuration"]='Ρύθμιση Ενσωμάτωσης Βίντεο';
 $lang["specify_resourcetype"]='Παρακαλώ καθορίστε για ποιον τύπο πόρου θα πρέπει να εμφανίζεται η λειτουργία \'ενσωμάτωση\'.';
 $lang["video_resourcetype"]='Τύπος Πόρου Βίντεο';
+$lang["embedvideo_share"]='Ενσωμάτωση βίντεο';

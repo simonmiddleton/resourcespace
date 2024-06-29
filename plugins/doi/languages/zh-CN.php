@@ -59,3 +59,5 @@ $lang["doi_sure_register_resource"]='继续注册 x 个资源？';
 $lang["doi_show_meta"]='显示DOI元数据';
 $lang["doi_hide_meta"]='隐藏DOI元数据';
 $lang["doi_fetched_xml_from_MDS"]='当前的XML元数据可以成功地从DataCite的元数据存储中获取。';
+$lang["doi_info_wikipedia"]='https://en.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["doi_info_publisher"]='在<a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=10">出版商</a>字段。';

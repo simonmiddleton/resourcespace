@@ -2899,3 +2899,4 @@ $lang["action_set_no_file"]='Markeren als geen bestand hebbend';
 $lang["action_unset_no_file"]='Markeren als bestand ontbreekt';
 $lang["completed_set_no_file"]='Resource gemarkeerd als geen bestand hebbend';
 $lang["completed_unset_no_file"]='Resource gemarkeerd als bestand ontbreekt';
+$lang["map_tf_group"]='Thunderforest';

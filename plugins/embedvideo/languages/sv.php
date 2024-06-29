@@ -10,3 +10,5 @@ $lang["embed_help"]="Kopiera html-koden nedan och klistra in den för att bädda
 $lang["embed_video_configuration"]="Bädda in video – inställningar";
 $lang["specify_resourcetype"]="Ange materialtypen som verktyget <b>Bädda in</b> ska visas för.";
 $lang["video_resourcetype"]="Videomaterialtyp";
+
+$lang["embedvideo_share"]='Bädda in video';

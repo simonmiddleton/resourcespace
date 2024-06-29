@@ -78,3 +78,5 @@ $lang["simplesaml_start_url"]='開始/サインオンURL';
 $lang["simplesaml_existing_config"]='既存のSAML設定を移行するために、ナレッジベースの手順に従ってください。';
 $lang["simplesaml_test_site_url"]='SimpleSAMLのテストサイトのURL';
 $lang["simplesaml_sp_cert_emailaddress"]='メールアドレス';
+$lang["simplesaml_idp_section"]='IdP';
+$lang["simplesaml_acs_url"]='ACS URL / 返信URL';

@@ -49,3 +49,4 @@ $lang["simpleldap_usercomment"]='Oprettet af SimpleLDAP-pluginet.';
 $lang["simpleldap_usermatchcomment"]='Opdateret til LDAP-bruger af SimpleLDAP.';
 $lang["origin_simpleldap"]='EnkelLDAP-plugin';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Kontroller ikke FQDN af serveren mod CN på certifikatet';
+$lang["port"]='Port';

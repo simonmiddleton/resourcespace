@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='massimizzare';
 $lang["embeddocument_heading"]='Configurazione del visualizzatore remoto di documenti';
 $lang["embeddocument_specify_resourcetype"]='Si prega di specificare per quale tipo di risorsa dovrebbe apparire la funzionalità "embed".';
 $lang["embeddocument_document_resourcetype"]='Tipo di risorsa Visualizzatore di documenti remoto';
+$lang["embeddocument_embed_share"]='Incorpora documento';

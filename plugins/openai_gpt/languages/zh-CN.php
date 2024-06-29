@@ -13,3 +13,4 @@ $lang["openai_gpt_prompt_return_text"]='完成提示后缀（用于返回文本�
 $lang["openai_gpt_temperature"]='采样温度在0到1之间（数值越高，模型将承担更多风险）';
 $lang["openai_gpt_max_tokens"]='最大标记数';
 $lang["openai_gpt_advanced"]='警告 - 此部分仅用于测试目的，不应在实际系统中更改。在此更改任何插件选项将影响已配置的所有元数据字段的行为。请谨慎更改！';
+$lang["openai_gpt_system_message"]='初始系统消息文本。占位符 %%IN_TYPE%% 和 %%OUT_TYPE%% 将根据源/目标字段类型替换为“text”或“json”';

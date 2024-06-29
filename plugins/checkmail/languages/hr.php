@@ -37,3 +37,4 @@ $lang["yourresourcehasbeenuploaded"]='Vaš resurs je prenesen';
 $lang["yourresourceshavebeenuploaded"]='Vaši resursi su učitani';
 $lang["checkmail_not_allowed_error_template"]='[user-fullname] ([username]), s ID-om [user-ref] i e-mailom [user-email], nema dopuštenje za slanje datoteka e-poštom (provjerite dozvole "c" ili "d" ili blokirane korisnike na stranici za provjeru e-pošte). Zabilježeno: [datetime].';
 $lang["checkmail_createdfromcheckmail"]='Stvoreno iz dodatka Provjeri poštu';
+$lang["checkmail_resource_type_population"]='<br />(iz dopuštenih_proširenja)';

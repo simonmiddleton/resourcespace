@@ -19,3 +19,4 @@ $lang["feedback_text-html"]='文本/HTML';
 $lang["feedback_options-comma_separated"]='选项：（逗号分隔）';
 $lang["feedback_add_new_field"]='添加新字段';
 $lang["feedback_back_to_plugin_manager"]='返回插件管理器';
+$lang["feedback_questions"]='问题';

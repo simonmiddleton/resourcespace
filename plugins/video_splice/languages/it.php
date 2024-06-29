@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='Unione video: Qualcosa è andato storto. Si prega
 $lang["video_splice_no_export_folder"]='Impossibile eseguire l\'esportazione poiché il percorso del file per la cartella di esportazione video non è stato impostato nel file di configurazione.';
 $lang["video_splice_createdfromvideosplice"]='Creato dal plugin Video Splice';
 $lang["video_splice_incorrect_quantity"]='Una risorsa valida è stata rimossa o aggiunta alla collezione dopo il caricamento di questa pagina. Si prega di riprovare.';
+$lang["video-trim_output"]='Output';
+$lang["video_splice_error_invalid_action"]='Errore: Azione non valida';

@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='maksimalkan';
 $lang["embeddocument_heading"]='Konfigurasi Penampil Dokumen Jarak Jauh';
 $lang["embeddocument_specify_resourcetype"]='Harap tentukan jenis sumber daya mana yang fungsi \'embed\' harus muncul untuk.';
 $lang["embeddocument_document_resourcetype"]='Jenis Sumber Daya Pemirsa Dokumen Jarak Jauh';
+$lang["embeddocument_embed_share"]='Sematkan dokumen';

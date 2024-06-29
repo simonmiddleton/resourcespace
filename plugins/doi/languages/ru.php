@@ -59,3 +59,5 @@ $lang["doi_show_meta"]='Показать метаданные DOI';
 $lang["doi_hide_meta"]='Скрыть метаданные DOI';
 $lang["doi_fetched_xml_from_MDS"]='Текущие метаданные XMl были успешно получены из хранилища метаданных DataCite';
 $lang["doi_info_publisher"]='на поле <a target="_blank" href="https://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf#page=10">издатель</a>';
+$lang["doi_info_wikipedia"]='https://ru.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["doi_sum_of"]='из';

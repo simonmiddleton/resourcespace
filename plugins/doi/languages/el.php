@@ -59,3 +59,5 @@ $lang["doi_sure_register_resource"]='Να συνεχίσω την εγγραφή
 $lang["doi_show_meta"]='Εμφάνιση μεταδεδομένων DOI';
 $lang["doi_hide_meta"]='Απόκρυψη μεταδεδομένων DOI';
 $lang["doi_fetched_xml_from_MDS"]='Τα τρέχοντα μεταδεδομένα XML μπορούν να ανακτηθούν με επιτυχία από το αποθετήριο μεταδεδομένων του DataCite';
+$lang["doi_info_wikipedia"]='https://en.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["doi_sum_of"]='του';

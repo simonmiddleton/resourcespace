@@ -20,3 +20,4 @@ $lang["google_vision_translation_intro"]='Google Vision zwraca tylko angielskie 
 $lang["google_vision_translation_api_key"]='Włącz tłumaczenie słów kluczowych Vision poprzez API tłumaczeń, wprowadzając prawidłowy klucz API Google';
 $lang["google_vision_translation_languages"]='Lista kodów języków oddzielonych przecinkami, np. "no,es"';
 $lang["google_vision_translation_keep_english"]='Zachowaj oryginalne angielskie słowa kluczowe?';
+$lang["google_vision_api"]='Google Vision API';

@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Stäng';
 $lang["rse_workflow_more_notes_title"]='Anteckningar:';
 $lang["rse_workflow_email_from"]='E-postadress att skicka notifieringar från (kommer att använda %EMAILFROM% om tom):';
 $lang["rse_workflow_bcc_admin"]='Meddela systemadministratörerna när bidragsgivaren har meddelats';
+$lang["rse_workflow_state_notify_help"]='Användare kommer att se resurser i detta tillstånd som åtgärder, snarare än att få enkla aviseringar';

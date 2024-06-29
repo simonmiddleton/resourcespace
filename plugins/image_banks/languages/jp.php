@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Shutterstockトークン (<a href=\'htt
 $lang["image_banks_shutterstock_result_limit"]='結果の制限（無料アカウントの場合、最大1000件）';
 $lang["image_banks_shutterstock_id"]='Shutterstockの画像ID';
 $lang["image_banks_createdfromimagebanks"]='画像バンクプラグインから作成されました。';
+$lang["image_banks_image_bank_source"]='画像バンクソース';
+$lang["image_banks_label_resourcespace_instances_cfg"]='インスタンスアクセス (形式: i18n名|ベースURL|ユーザー名|キー|設定)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace %SIZE_CODE サイズ';
+$lang["image_banks_label_select_providers"]='アクティブなプロバイダーを選択';
+$lang["image_banks_view_on_provider_system"]='%PROVIDER システムで表示';
+$lang["image_banks_system_unmet_dependencies"]='ImageBanksプラグインには未解決のシステム依存関係があります！';
+$lang["image_banks_error_generic_parse"]='プロバイダーの設定を解析できません（マルチインスタンス用）';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='\'%PROVIDER\'（プロバイダー）インスタンスの無効な構成形式';
+$lang["image_banks_error_bad_url_scheme"]='\'%PROVIDER\' (プロバイダー) インスタンスに無効なURLスキームが見つかりました';
+$lang["image_banks_error_unexpected_response"]='申し訳ありませんが、プロバイダーから予期しない応答がありました。詳細な調査についてはシステム管理者に連絡してください（デバッグログを参照）。';

@@ -70,3 +70,5 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field
 
 TMS %module_name %tms_uid_field oznacza "System zarządzania zasobami" (TMS) %module_name %tms_uid_field, gdzie %module_name to nazwa modułu, a %tms_uid_field to pole identyfikatora unikalnego dla zasobów.';
 $lang["tms_link_confirm_delete_module_config"]='Czy na pewno chcesz usunąć konfigurację tego modułu? Ta czynność nie może zostać cofnięta!';
+$lang["tms_link_mediapaths_resource_reference_column"]='Kolumna do użycia w tabeli MediaMaster do przechowywania ID zasobu. Jest to opcjonalne i służy do uniknięcia używania tego samego ID Media Master przez wiele zasobów.';
+$lang["tms_link_write_to_debug_log"]='Uwzględnij postęp skryptu w dzienniku debugowania systemu (wymaga osobnej konfiguracji logowania debugowania). Uwaga: Spowoduje szybki wzrost pliku dziennika debugowania.';

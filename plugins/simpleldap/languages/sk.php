@@ -49,3 +49,4 @@ $lang["simpleldap_usercomment"]='Vytvorené pomocou doplnku SimpleLDAP.';
 $lang["simpleldap_usermatchcomment"]='Aktualizované na LDAP používateľa pomocou SimpleLDAP.';
 $lang["origin_simpleldap"]='Jednoduchý doplnok SimpleLDAP';
 $lang["simpleldap_LDAPTLS_REQCERT_never_label"]='Ne preverjajte FQDN strežnika proti CN certifikatu';
+$lang["port"]='Vrata';

@@ -45,3 +45,5 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Nije bilo moguće povez
 $lang["posixldapauth_unable_to_search_ldap_server"]='Nije moguće pretražiti LDAP poslužitelj.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% nije uspio, molimo provjerite postavke.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP pretraživanje uspješno, ali nije pronađena niti jedna grupa.';
+$lang["posixldapauth_rdn"]='RDN';
+$lang["posixldapauth_test"]='Test';

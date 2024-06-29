@@ -70,3 +70,5 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field
 TMS %Modulname %TMS_UID_Feld';
 $lang["tms_link_confirm_delete_module_config"]='Sind Sie sicher, dass Sie diese Modulkonfiguration löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden!';
 $lang["tms_link_add_new_tms_module"]='Neues zusätzliches TMS-Modul hinzufügen';
+$lang["tms_link_mediapaths_resource_reference_column"]='Spalte zur Verwendung in der MediaMaster-Tabelle zur Speicherung der Ressourcen-ID. Dies ist optional und wird verwendet, um zu vermeiden, dass mehrere Ressourcen dieselbe Media Master-ID verwenden.';
+$lang["tms_link_write_to_debug_log"]='Skriptfortschritt in System-Debug-Log aufnehmen (erfordert separat konfiguriertes Debug-Logging). Vorsicht: Führt zu schnellem Wachstum der Debug-Log-Datei.';

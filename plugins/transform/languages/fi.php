@@ -74,3 +74,4 @@ $lang["cropper_use_srgb"]='Käytä sRGB:tä';
 $lang["transform_update_preview"]='Päivitä esikatselu';
 $lang["transform_preset_sizes"]='Valitse esiasetettu kohdekoko';
 $lang["error_crop_invalid"]='Valitse kuva-alue';
+$lang["px"]='px';

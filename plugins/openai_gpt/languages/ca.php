@@ -13,3 +13,4 @@ $lang["openai_gpt_temperature"]='Mostra de temperatura entre 0 i 1 (valors més 
 $lang["openai_gpt_max_tokens"]='Màxim de tokens';
 $lang["openai_gpt_advanced"]='ATENCIÓ - Aquesta secció és només per a propòsits de prova i no s\'hauria de modificar en sistemes en viu. El canvi de qualsevol opció del connector aquí afectarà el comportament de tots els camps de metadades que s\'hagin configurat. Altereu amb precaució!';
 $lang["openai_gpt_prompt_return_json"]='Sufix de la indicació de finalització (per retornar JSON per als camps de llista fixa)';
+$lang["openai_gpt_system_message"]='Text inicial del sistema. Els espais reservats %%IN_TYPE%% i %%OUT_TYPE%% seran substituïts per \'text\' o \'json\' depenent dels tipus de camp d\'origen/destinació';

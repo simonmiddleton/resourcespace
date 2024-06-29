@@ -48,3 +48,5 @@ $lang["youtube_chunk_size"]='Dimensiunea bucății de încărcare de utilizat la
 $lang["youtube_publish_add_anchor"]='Adăugați etichete ancoră la URL-ul atunci când salvați în câmpul de metadate al URL-ului YouTube?';
 $lang["youtube_publish_video_title"]='Titlu video';
 $lang["youtube_publish_authentication"]='Autentificare';
+$lang["youtube_publish_public"]='Public';
+$lang["youtube_publish_private"]='Privat';

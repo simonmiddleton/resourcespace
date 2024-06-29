@@ -6,3 +6,4 @@ $lang["embed_help"]='Skopiuj i wklej poniższy kod HTML, aby osadzić ten film n
 $lang["embed_video_configuration"]='Konfiguracja osadzenia wideo';
 $lang["specify_resourcetype"]='Proszę określić dla jakiego typu zasobu funkcjonalność „osadzania” powinna być dostępna.';
 $lang["video_resourcetype"]='Typ zasobu wideo';
+$lang["embedvideo_share"]='Osadź wideo';

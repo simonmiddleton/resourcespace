@@ -29,3 +29,6 @@ $lang["video_tracks_custom_video_formats_label"]='تنسيقات مخصصة';
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='السماح باستخدام خيارات إخراج الملفات المتاحة لإنشاء تنسيقات فيديو مخصصة للملف الأصلي؟';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='تحقق لبدء الترميز الآن. إذا لم يتم التحقق، ستتلقى إشعارًا عندما يكون الملف جاهزًا';
 $lang["video_tracks_transcode_now_label"]='تحويل الترميز الآن';
+$lang["video_tracks_select_generate_opt"]='يرجى اختيار خيار التوليد';
+$lang["video_tracks_save_alt_not_perm"]='غير قادر على حفظ البديل بدون إذن';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='هام! لقد تم إهمال إعدادات تنسيقات الإخراج في إضافة مسارات الفيديو. يمكن تعيينها فقط في config.php. لن تعمل الإضافة كما هو مقصود حتى يتم نسخ خيار التكوين. يرجى نسخ ما يلي:- %nl%####%nl%%output_formats_config%####%nl%';

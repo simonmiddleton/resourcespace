@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Shutterstock令牌（<a href=\'https://
 $lang["image_banks_shutterstock_result_limit"]='结果限制（免费帐户最多1000个）';
 $lang["image_banks_shutterstock_id"]='Shutterstock 图片 ID';
 $lang["image_banks_createdfromimagebanks"]='从图像库插件创建';
+$lang["image_banks_image_bank_source"]='图片库来源';
+$lang["image_banks_label_resourcespace_instances_cfg"]='实例访问（格式：i18n 名称|基本URL|用户名|密钥|配置）';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace %SIZE_CODE 大小';
+$lang["image_banks_label_select_providers"]='选择活跃的提供者';
+$lang["image_banks_view_on_provider_system"]='在 %PROVIDER 系统上查看';
+$lang["image_banks_system_unmet_dependencies"]='ImageBanks 插件有未满足的系统依赖！';
+$lang["image_banks_error_generic_parse"]='无法解析提供者的配置（用于多实例）';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='\'%PROVIDER\'（提供者）实例的配置格式无效';
+$lang["image_banks_error_bad_url_scheme"]='发现无效的 URL 方案用于 \'%PROVIDER\'（提供者）实例';
+$lang["image_banks_error_unexpected_response"]='对不起，收到来自提供者的意外响应。请联系您的系统管理员以进一步调查（请参阅调试日志）。';

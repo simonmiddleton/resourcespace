@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='maximalizovať';
 $lang["embeddocument_heading"]='Konfigurácia vzdialeného prehliadača dokumentov';
 $lang["embeddocument_specify_resourcetype"]='Prosím, určite, pre ktorý typ zdroja by sa mala zobrazovať funkcia "vložiť".';
 $lang["embeddocument_document_resourcetype"]='Typ zdroja vzdialeného prehliadača dokumentov';
+$lang["embeddocument_embed_share"]='Vdelaj dokument';

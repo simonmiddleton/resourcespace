@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='Videoredigering: Något har gått fel. Vänligen 
 $lang["video_splice_no_export_folder"]='Kan inte utföra export eftersom sökvägen till mappen för videoutförsel inte är inställd i konfigurationsfilen.';
 $lang["video_splice_incorrect_quantity"]='En giltig resurs har antingen tagits bort eller lagts till i samlingen sedan den här sidan laddades. Försök igen.';
 $lang["video_splice_createdfromvideosplice"]='Skapad från Video Splice-plugin';
+$lang["video-trim_output"]='Utdata';
+$lang["video_splice_error_invalid_action"]='Fel: Ogiltig åtgärd';

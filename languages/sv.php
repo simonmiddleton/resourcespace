@@ -2863,3 +2863,228 @@ $lang["error_invalid_revert_option"]='Det tidigare sparade värdet \'%%VALUE%%\'
 $lang["error_invalid_revert_date"]='Den tidigare sparade datumet \'%%VALUE%%\' är ogiltigt. Uppdatera resursen manuellt om det behövs.';
 $lang["batch_edit_save_warning_message"]='Fel uppstod vid redigering av följande resurser -';
 $lang["batch_edit_save_warning_alert"]='Några fel uppstod vid utförandet av denna operation. Se dina meddelanden för mer detaljer';
+
+$lang["information_field_restype_deselect_cleanup"]='För att ta bort befintliga fältdata från de avmarkerade resurstyperna, klicka på följande länk %%CLEANUP_LINK%%';
+$lang["property-operation"]='Operation';
+$lang["mainmenu"]='Huvudmeny';
+$lang["reload"]='Ladda om';
+$lang["_dupe"]='_dublett';
+$lang["edit_multiple_existing_values"]='Befintliga nyckelord på resurser i detta urval';
+$lang["edit_multiple_show_more"]='Visa mer';
+$lang["edit_multiple_too_many"]='Visar de 100 mest använda värdena. Andra finns också.';
+$lang["edit_multiple_action_text_rt"]='All text / alternativ(en) kommer att ersättas med följande nyckelord';
+$lang["edit_multiple_action_text_ap"]='Dessa nyckelord kommer att läggas till';
+$lang["edit_multiple_action_text_rm"]='Dessa nyckelord kommer att tas bort';
+$lang["sortorder-asc"]='STIGANDE';
+$lang["sortorder-desc"]='BESKRIVNING';
+$lang["title"]='Titel';
+$lang["cell-fileoftype"]='%EXTENSION Fil';
+$lang["field-fileextension"]='%EXTENSION';
+$lang["fileextension-inside-brackets"]='[%EXTENSION]';
+$lang["fileextension"]='%EXTENSION';
+$lang["log-rtchange"]='Redigerad resurstyp';
+$lang["log-NOFIL"]='Markerad som utan fil';
+$lang["log-FIL"]='Markerad som har fil';
+$lang["log-EDT"]='Redigerad resurs';
+$lang["accountnotfound-reset-not-emailed"]='Länken för återställning av lösenord skickades inte eftersom det inte finns något konto med den e-postadressen';
+$lang["accountnoemail-reset-not-emailed"]='Länken för återställning av lösenord skickades inte eftersom kontot saknar e-postadress';
+$lang["accountexpired-reset-not-emailed"]='Länken för återställning av lösenord skickades inte eftersom kontot har gått ut';
+$lang["accountnotapproved-reset-not-emailed"]='Länken för återställning av lösenord skickades inte eftersom kontot inte är godkänt';
+$lang["notavailableshort"]='Ej tillämpligt';
+$lang["remaining"]='återstående';
+$lang["web_server"]='Webbserver';
+$lang["all_workflow_states"]='Alla arbetsflödesstatusar';
+$lang["stat-downloadedkb"]='Nedladdad fildata (KB)';
+$lang["external"]='Extern';
+$lang["email_error_user_list_some_skipped"]='Hoppade över aviseringar för följande användare (användare kanske inte är godkända)';
+$lang["unrelateallresources"]='Avrelatera alla resurser i denna samling';
+$lang["unrelateallresources_confirmation"]='Inga av resurserna i denna samling är nu relaterade';
+$lang["alternatetype"]='Alternativ typ';
+$lang["setup-download_filename_format"]='Format för filnamn vid nedladdning';
+$lang["addremove"]='+/-';
+$lang["map_osmbzh"]='OSM Luxemburg';
+$lang["map_tf_group"]='Thunderforest';
+$lang["map_esri_group"]='ESRI';
+$lang["map_esridelorme"]='DeLorme';
+$lang["map_esrinatgeo"]='National Geographic';
+$lang["map_nasagibs_group"]='NASA GIBS';
+$lang["map_mapbox_group"]='Mapbox';
+$lang["map_mapboxid"]='ID';
+$lang["field_ref_and_name"]='%ref% - %namn%';
+$lang["filestore"]='Filbutik';
+$lang["rs_ext_dependencies"]='ResourceSpace Externa Beroenden';
+$lang["write_access_to"]='Skrivåtkomst till';
+$lang["error-invalid_name"]='Ogiltigt namn';
+$lang["inactive_entry_matched"]='Inaktiv post matchad för';
+$lang["kilobyte-symbol-binary"]='KiB';
+$lang["megabyte-symbol-binary"]='MiB';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["terabyte-symbol-binary"]='TiB';
+$lang["ref-title"]='%ref - %title';
+$lang["user_group"]='användargrupp';
+$lang["all__emailbulk"]='<br /><br />
+[text]<br /><br />
+[text_footer]';
+$lang["all__emailcollection"]='<br />
+[från användarnamn] [lang_emailcollectionmessage] <br /><br /> 
+[lang_meddelande] : [meddelande]<br /><br /> 
+[lang_klickalänkenförattsekollektionen] [lista]';
+$lang["all__emailcollectionexternal"]='<br />
+[från användarnamn] [lang_emailcollectionmessageexternal] <br /><br /> 
+[lang_meddelande] : [meddelande]<br /><br /> 
+[lang_klickalänkenförattvisasamlingen] [lista]';
+$lang["all__emailcontactadmin"]='<br />[fromusername] ([emailfrom])[lang_contactadminemailtext]<br /><br />[message]<br /><br /><a href="[url]">[embed_thumbnail]</a><br /><br />[text_footer]';
+$lang["all__emaillogindetails"]='<br />
+[välkommen]<br /><br /> 
+[lang_nyainloggningsuppgifter]<br /><br /> 
+[lang_användarnamn] : [username] <br /><br />
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnewresearchrequestwaiting"]='[användarnamn] ([användarens fullständiga namn] - [användarens e-post])
+[lang_haspostedresearchrequest]<br /><br />
+[lang_nameofproject]:[namn]<br /><br />
+[lang_descriptionofproject]:[beskrivning]<br /><br />
+[lang_deadline]:[deadline]<br /><br />
+[lang_contacttelephone]:[kontakt]<br /><br />
+[lang_finaluse]: [slutanvändning]<br /><br />
+[lang_shaperequired]: [form]<br /><br />
+[lang_noresourcesrequired]: [antalresurser]<br /><br />
+<a href="[url]">[url]</a><br /><br />
+<a href="[teamresearchurl]">[teamresearchurl]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesapproved"]='<br />
+[lang_userresourcesapproved]
+[list] <br />
+[lang_viewcontributedsubittedl] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcessubmitted"]='<br />
+[lang_userresourcessubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailnotifyresourcesunsubmitted"]='<br />
+[lang_userresourcesunsubmitted]
+[list] <br />
+[lang_viewalluserpending] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresearchrequestassigned"]='[lang_researchrequestassignedmessage]
+[text_footer]';
+$lang["all__emailresearchrequestcomplete"]='[lang_researchrequestcompletemessage] <br /><br /> 
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresource"]='<br />
+[fromusername] [lang_har_mailat_dig_en_resurs]<br /><br />
+[message]<br /><br />
+<a href="[url]">[embed_thumbnail]</a><br /><br />
+[lang_klicka_för_att_se_resursen]<br /><a href="[url]">[resourcename] - [url]</a><br /><br />
+[text_footer]';
+$lang["all__emailresourcerequest"]='[lang_användarnamn] : [username] <br />
+[list] <br />
+[details]<br /><br />
+[lang_klickaförattvisaresurs] <br /><br />
+<a href="[url]">[url]</a>';
+$lang["help__introtext"]='<iframe src="https://www.resourcespace.com/knowledge-base/?from_rs=true" style="width:1235px;height:600px;border:none;margin:-20px;" id="knowledge_base" />';
+$lang["externalshare_using_permissions_from_user_group"]='Om du skickar e-post till externa användare, vänligen välj användargruppen som ska användas för åtkomst';
+$lang["dash"]='Instrumentpanel';
+$lang["upgrade_script"]='Uppgraderingsskript';
+$lang["upgrade_026_notification"]='Uppgraderingen har föråldrat vissa konfigurationsalternativ som din %entity% åsidosätter.
+
+För att fortsätta ha nedladdningsfilnamnet formaterat så nära som möjligt till det gamla sättet, uppdatera dess konfigurationsåsidigande med:
+$download_filename_format = \'%format%\';';
+$lang["upgrade_026_error_unable_to_set_config_system_wide"]='Det går inte att ställa in systemomfattande konfigurationsalternativ \'download_filename_format\' till \'%format%\'. Försök igen manuellt.';
+$lang["upgrade_026_error_unable_to_process_deprecated_config_options"]='Kan inte bearbeta föråldrade konfigurationsalternativ för %entity%. Försök igen manuellt. Orsak:-
+
+%error%';
+$lang["tile_multi"]='Flera';
+$lang["plugin_category_api"]='API';
+$lang["userpreference_default_sort_order_label"]='Standard sorteringsriktning';
+$lang["userpreference_high_contrast_mode"]='Högre kontrastläge';
+$lang["watermark_header"]='Vattenstämpel';
+$lang["watermark_label"]='Vattenstämpelbild - Återskapa förhandsvisningar efter att ha ändrat vattenstämpel för att uppdatera befintliga resurser. Att ta bort filen kommer att inaktivera vattenstämpling.';
+$lang["systemconfig_debug"]='Felsökning';
+$lang["systemconfig_debug_log_on_specific_user"]='På (specifik användare)';
+$lang["systemconfig_use_native_input_for_date_field"]='Använd inbyggd datuminmatning för att visa en \'datum\' metadatafältstyp';
+$lang["systemconfig_native_date_input_no_partials_supported"]='VIKTIGT: Om aktiverat, kommer delvisa datum (t.ex. maj 2023) inte längre att stödjas och befintliga data kommer att raderas efter nästa resursredigering.';
+$lang["show_affected_resources"]='Visa påverkade resurser';
+$lang["group_no"]='Grupp';
+$lang["confirm_delete_field_value"]='Är du säker på att du vill RADERA detta fältalternativ? Detta kommer permanent att ta bort värdet från alla resurser det är tillämpat på.';
+$lang["media"]='Media';
+$lang["external_shares_options"]='Externa delningsalternativ';
+$lang["email_shares_options_summary"]='Dessa alternativ gäller endast för delningar skapade med en extern e-postadress';
+$lang["report-graph-by-pie"]='uppdelning';
+$lang["report_breakdown_pie"]='Uppdelningsdiagram';
+$lang["actions_email_new_actions_title"]='Nya åtgärder';
+$lang["actions_email_new_actions_intro"]='Det finns nya åtgärder att slutföra.';
+$lang["email_actions_truncated"]='Endast de senaste 1000 åtgärderna visas här. Du har %%TOTAL%% åtgärder. Logga in på %%APPLICATIONNAME%% för att se alla.';
+$lang["annotate_select"]='Välj fält...';
+$lang["error_upload_replace_file_fail_invalid_collection"]='Misslyckades med att ersätta resursfilen. Angiven samlingsreferens är ogiltig.';
+$lang["systemconfig_api"]='API';
+$lang["iiif"]='IIIF';
+$lang["api-curl-example"]='cURL-exempel';
+$lang["api-curl-help"]='Nedan enradiga bash-skript kan köras på vilket UNIX-system som helst med OpenSSL och cURL installerat.';
+$lang["share-password-not-set"]='Externa delningar måste skyddas med ett lösenord. Vänligen ange ett delningslösenord för att fortsätta.';
+$lang["job_priority_immediate"]='Brådskande uppgift';
+$lang["job_priority_user"]='Användarjobb';
+$lang["job_priority_system"]='Systemjobb';
+$lang["job_priority_completed"]='Jobb slutfört';
+$lang["job_status_error"]='Ett fel inträffade';
+$lang["filter_is_in"]='ÄR';
+$lang["file_integrity_fail_latest"]='Visa senaste filintegritetsfel';
+$lang["file_integrity_fail_all"]='Visa alla resurser med filintegritetsfel';
+$lang["all__file_integrity_fail_email"]='[img_headerlogo]<br />
+[lang_file_integrity_summary_failed] <br /><br /> 
+[lang_file_integrity_fail_search] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["error-edit_noaccess_related_resources"]='Kan inte relatera resurser. Ingen åtkomst till:';
+$lang["csv_export_filename"]='metadata_export_%%SÖK%%_%%TID%%';
+$lang["upload_share_email_template"]='<br />
+[from_name] [lang_upload_share_email_text] [applicationname]<br /><br /> 
+[lang_message] : [message]<br /><br />
+[lang_upload_share_email_clicklink]<br />
+<br />
+[link]
+<br />
+<br />
+[passwordtext]';
+$lang["all__emailnotifyuploadsharenew"]='<br />
+[lang_notify_upload_share_new]
+<br />
+[lang_clicklinkviewcollection] <br /><br /> 
+<a href="[url]">[url]</a><br /><br />
+[text_footer]';
+$lang["share_expired_icon_title"]='Utgånget';
+$lang["error_invalid_date_format"]='"%%VALUE%%" är ett ogiltigt datum. Alla värden i detta fält måste vara formaterade som ÅÅÅÅ-MM-DD';
+$lang["related_resource_create"]='Skapa ny relaterad resurs';
+$lang["skip-to-main-content"]='Hoppa till huvudinnehåll';
+$lang["cleanup_invalid_nodes"]='Rensa fältdata från ogiltiga resurstyper';
+$lang["cleanup_invalid_node_dry_run"]='Radera inte data, returnera bara antalet rader som ska raderas?';
+$lang["advancedsearch_resource_section"]='Resursdata';
+$lang["error-reload-required"]='ResourceSpace har uppdaterats. Vänligen ladda om sidan';
+$lang["user_pref_new_action_emails"]='Mejla mig om nya åtgärder skapas';
+$lang["email_rate_limit_active"]='Det maximala antalet e-postmeddelanden per timme som skickas av detta system har överskridits. E-postmeddelanden skickas för närvarande inte av detta system.';
+$lang["email_rate_limit_inactive"]='E-postgränsen har tagits bort och e-postmeddelanden skickas nu.';
+$lang["severity-level_0"]='Kritisk';
+$lang["severity-level_1"]='Varning';
+$lang["severity-level_2"]='Meddelande';
+$lang["pull_images"]='Hämta bilder';
+$lang["pull_images_text"]='Använd bilder från relaterade resurser om inga finns tillgängliga';
+$lang["system_user_default"]='SYSTEM';
+$lang["userlimitreached"]='Du har nått din användargräns. En befintlig användare måste inaktiveras eller raderas innan du kan skapa nya konton eller aktivera befintliga konton.';
+$lang["user_api_session_title"]='Fjärrsystem API-åtkomst';
+$lang["user_api_session_text"]='Det fjärrsystemet \'%system%\' begär åtkomst till %applicationname% med dina inloggningsuppgifter. Klicka på \'Bevilja åtkomst\' endast om du har initierat denna begäran';
+$lang["user_api_session_invalid_system"]='Ogiltigt system begärt';
+$lang["user_api_session_grant_access"]='Bevilja åtkomst';
+$lang["user_api_session_grant_success"]='Nyckel utfärdad framgångsrikt.';
+$lang["user_api_session_grant_error"]='Nyckelutfärdande misslyckades.';
+$lang["no_file"]='Ingen fil';
+$lang["missing_file"]='Den här filen saknas. Vänligen kontakta din systemadministratör';
+$lang["action_set_no_file"]='Markera som utan fil';
+$lang["action_unset_no_file"]='Markera som fil saknas';
+$lang["completed_set_no_file"]='Resurs markerad som utan fil';
+$lang["completed_unset_no_file"]='Resurs markerad som fil saknas';
+$lang["php"]='PHP';

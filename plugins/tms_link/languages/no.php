@@ -66,3 +66,7 @@ $lang["tms_link_encoding"]='koding';
 $lang["tms_link_not_found_error_title"]='Ikke funnet';
 $lang["tms_link_not_deleted_error_detail"]='Kan ikke slette den forespurte modulkonfigurasjonen.';
 $lang["tms_link_confirm_delete_module_config"]='Er du sikker på at du vil slette denne modulkonfigurasjonen? Denne handlingen kan ikke angres!';
+$lang["tms_link_field_mappings"]='TMS-felt til ResourceSpace-feltkartlegginger';
+$lang["tms_link_mediapaths_resource_reference_column"]='Kolonne som skal brukes i MediaMaster-tabellen for å lagre Ressurs-ID. Dette er valgfritt og brukes for å unngå at flere ressurser bruker samme Media Master-ID.';
+$lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
+$lang["tms_link_write_to_debug_log"]='Inkluder skriptfremdrift i systemets feilsøkingslogg (krever at feilsøkingslogging er konfigurert separat). Forsiktig: Vil føre til rask vekst av feilsøkingsloggfilen.';

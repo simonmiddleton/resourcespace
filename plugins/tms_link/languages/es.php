@@ -67,3 +67,6 @@ $lang["tms_link_not_found_error_title"]='No encontrado';
 $lang["tms_link_not_deleted_error_detail"]='No se puede eliminar la configuración del módulo solicitado.';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field se traduce como: %module_name de TMS %tms_uid_field';
 $lang["tms_link_confirm_delete_module_config"]='¿Está seguro de que desea eliminar esta configuración del módulo? ¡Esta acción no se puede deshacer!';
+$lang["tms_link_checksum"]='Suma de verificación';
+$lang["tms_link_mediapaths_resource_reference_column"]='Columna a usar en la tabla MediaMaster para almacenar el ID del Recurso. Esto es opcional y se utiliza para evitar que múltiples recursos usen el mismo ID de Media Master.';
+$lang["tms_link_write_to_debug_log"]='Incluir el progreso del script en el registro de depuración del sistema (requiere que la depuración esté configurada por separado). Precaución: Causará un rápido crecimiento del archivo de registro de depuración.';

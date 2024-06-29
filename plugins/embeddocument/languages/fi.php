@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='suurentaa';
 $lang["embeddocument_heading"]='Etäasiakirjan katseluohjelman määritys';
 $lang["embeddocument_specify_resourcetype"]='Määritä, mille resurssityypille "upotus" -toiminto tulisi näkyä.';
 $lang["embeddocument_document_resourcetype"]='Etäasiakirjan katselu resurssityyppi:';
+$lang["embeddocument_embed_share"]='Upota asiakirja';

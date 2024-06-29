@@ -34,3 +34,4 @@ $lang["emu_no_resource"]='Δεν έχει καθοριστεί αναγνωρι�
 $lang["emu_upload_nodata"]='Δεν βρέθηκαν δεδομένα EMu για αυτό το IRN:';
 $lang["emu_nodata_returned"]='Δεν βρέθηκαν δεδομένα EMu για το συγκεκριμένο IRN.';
 $lang["emu_createdfromemu"]='Δημιουργήθηκε από το πρόσθετο EMU';
+$lang["emu_upload_emu_field_label"]='EMu IRN';

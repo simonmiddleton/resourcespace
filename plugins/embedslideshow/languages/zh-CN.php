@@ -22,3 +22,5 @@ $lang["embedslideshow_notransition"]='没有自动转换。';
 $lang["embedslideshow_directlink"]='非嵌入式直接URL';
 $lang["embedslideshow_directlinkopen"]='打开直接链接（新页面）';
 $lang["embedslideshow_dynamic_size"]='基于播放器大小的动态预览调整？';
+$lang["embedslideshow_minimise"]='&minus; 最小化幻灯片';
+$lang["sizename_pixels"]='%name (%pixels 像素)';

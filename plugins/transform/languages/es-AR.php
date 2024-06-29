@@ -74,3 +74,4 @@ $lang["transform_preset_sizes"]='Seleccionar de tamaño de destino predefinido';
 $lang["error_crop_invalid"]='Por favor, seleccione una región de la imagen';
 $lang["imagetoolstransform"]='Herramientas de imagen - Transformar';
 $lang["resources_transformed_successfully-0"]='0 recursos transformados exitosamente.';
+$lang["px"]='px';

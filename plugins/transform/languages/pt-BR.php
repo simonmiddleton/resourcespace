@@ -74,3 +74,4 @@ $lang["cropper_use_srgb"]='Usar sRGB';
 $lang["transform_update_preview"]='Atualizar visualização';
 $lang["transform_preset_sizes"]='Selecionar a partir do tamanho de destino pré-definido';
 $lang["error_crop_invalid"]='Por favor, selecione uma região da imagem';
+$lang["px"]='px';

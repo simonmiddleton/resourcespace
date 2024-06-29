@@ -68,3 +68,5 @@ $lang["tms_link_not_deleted_error_detail"]='Pyydetyn moduulin asetuskonfiguraati
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field kääntyy suomeksi muotoon: TMS %moduulin_nimi %tms_uid_kenttä';
 $lang["tms_link_confirm_delete_module_config"]='Oletko varma, että haluat poistaa tämän moduulin kokoonpanon? Tätä toimintoa ei voi peruuttaa!';
 $lang["tms_link_test_link"]='Testilinkki TMS:ään';
+$lang["tms_link_mediapaths_resource_reference_column"]='Sarake, jota käytetään MediaMaster-taulukossa tallentamaan resurssin tunnus. Tämä on valinnainen ja sitä käytetään välttämään useiden resurssien käyttämistä samalla Media Master -tunnuksella.';
+$lang["tms_link_write_to_debug_log"]='Sisällytä skriptin eteneminen järjestelmän virhelokiin (vaatii erillisen virhelokin määrityksen). Varoitus: Aiheuttaa virhelokitiedoston nopean kasvun.';

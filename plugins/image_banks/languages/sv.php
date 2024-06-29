@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Shutterstock-token (<a href=\'https://w
 $lang["image_banks_shutterstock_result_limit"]='Resultatgräns (max. 1000 för gratis konton)';
 $lang["image_banks_shutterstock_id"]='Shutterstock bild-ID';
 $lang["image_banks_createdfromimagebanks"]='Skapad från Image Banks tillägg';
+$lang["image_banks_image_bank_source"]='Bildbank källa';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Instanser åtkomst (format: i18n namn|basURL|användarnamn|nyckel|konfiguration)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace %SIZE_CODE storlek';
+$lang["image_banks_label_select_providers"]='Välj aktiva leverantörer';
+$lang["image_banks_view_on_provider_system"]='Visa på %PROVIDER system';
+$lang["image_banks_system_unmet_dependencies"]='ImageBanks-plugin har ouppfyllda systemberoenden!';
+$lang["image_banks_error_generic_parse"]='Kan inte tolka leverantörers konfiguration (för flera instanser)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Ogiltigt konfigurationsformat för \'%PROVIDER\' (leverantör) instans';
+$lang["image_banks_error_bad_url_scheme"]='Ogiltigt URL-schema hittades för \'%PROVIDER\' (leverantör) instans';
+$lang["image_banks_error_unexpected_response"]='Tyvärr, fick ett oväntat svar från leverantören. Vänligen kontakta din systemadministratör för vidare undersökning (se felsökningslogg).';

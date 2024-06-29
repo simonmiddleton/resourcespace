@@ -13,3 +13,4 @@ $lang["openai_gpt_prompt_return_text"]='Avslutningstekst for utfylling (for å r
 $lang["openai_gpt_temperature"]='Prøvetakingstemperatur mellom 0 og 1 (høyere verdier betyr at modellen vil ta flere risikoer)';
 $lang["openai_gpt_max_tokens"]='Maksimum antall tokens';
 $lang["openai_gpt_advanced"]='ADVARSEL - Denne seksjonen er kun for testformål og bør ikke endres på live systemer. Å endre noen av plugin-alternativene her vil påvirke oppførselen til alle metadatafeltene som er konfigurert. Endre med forsiktighet!';
+$lang["openai_gpt_system_message"]='Opprinnelig systemmeldingstekst. Plassholdere %%IN_TYPE%% og %%OUT_TYPE%% vil bli erstattet med \'tekst\' eller \'json\' avhengig av kilde-/mål-felttypene';

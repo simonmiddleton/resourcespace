@@ -29,3 +29,6 @@ $lang["video_tracks_custom_video_formats_label"]='Προσαρμοσμένες �
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Να επιτραπεί η χρήση των διαθέσιμων επιλογών εξόδου αρχείων για τη δημιουργία προσαρμοσμένων μορφών βίντεο για το αρχικό αρχείο';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Επιλέξτε για να ξεκινήσει η μετατροπή του αρχείου τώρα. Αν δεν επιλεγεί, θα λάβετε ειδοποίηση όταν το αρχείο είναι έτοιμο';
 $lang["video_tracks_transcode_now_label"]='Μετατροπή κωδικοποίησης τώρα';
+$lang["video_tracks_select_generate_opt"]='Παρακαλώ επιλέξτε μια επιλογή δημιουργίας';
+$lang["video_tracks_save_alt_not_perm"]='Αδυναμία αποθήκευσης εναλλακτικής χωρίς άδεια';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='ΣΗΜΑΝΤΙΚΟ! Το πρόσθετο Video Tracks έχει καταργήσει τις ρυθμίσεις μορφών εξόδου. Μπορούν να οριστούν μόνο στο config.php. Το πρόσθετο δεν θα λειτουργήσει όπως προβλέπεται μέχρι να αντιγραφεί η επιλογή διαμόρφωσης. Παρακαλώ αντιγράψτε τα εξής:- %nl%####%nl%%output_formats_config%####%nl%';

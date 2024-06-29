@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='maximitzar';
 $lang["embeddocument_heading"]='Configuració del visualitzador de documents remot';
 $lang["embeddocument_specify_resourcetype"]='Si us plau, especifiqueu per a quin tipus de recurs hauria d\'aparèixer la funcionalitat \'incrustar\'.';
 $lang["embeddocument_document_resourcetype"]='Tipus de recurs Visualitzador de documents remots';
+$lang["embeddocument_embed_share"]='Incrusta document';

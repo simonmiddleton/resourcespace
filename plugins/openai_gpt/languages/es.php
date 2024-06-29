@@ -13,3 +13,4 @@ $lang["openai_gpt_prompt_return_text"]='Sufijo de indicación de finalización (
 $lang["openai_gpt_temperature"]='Muestreo de temperatura entre 0 y 1 (valores más altos significan que el modelo tomará más riesgos)';
 $lang["openai_gpt_max_tokens"]='Máximo de tokens';
 $lang["openai_gpt_advanced"]='ADVERTENCIA: Esta sección es solo para fines de prueba y no debe ser modificada en sistemas en vivo. Cambiar cualquiera de las opciones del complemento aquí afectará el comportamiento de todos los campos de metadatos que se hayan configurado. ¡Realice cambios con precaución!';
+$lang["openai_gpt_system_message"]='Texto inicial del mensaje del sistema. Los marcadores %%IN_TYPE%% y %%OUT_TYPE%% serán reemplazados por \'texto\' o \'json\' dependiendo de los tipos de campo de origen/destino';

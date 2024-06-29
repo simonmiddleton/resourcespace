@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Токен Shutterstock (<a href=\'http
 $lang["image_banks_shutterstock_result_limit"]='Ограничение результата (максимум 1000 для бесплатных аккаунтов)';
 $lang["image_banks_shutterstock_id"]='Идентификатор изображения Shutterstock';
 $lang["image_banks_createdfromimagebanks"]='Создано с помощью плагина "Банки изображений"';
+$lang["image_banks_image_bank_source"]='Источник банка изображений';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Доступ к экземплярам (формат: i18n имя|базовый URL|имя пользователя|ключ|конфигурация)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace размер %SIZE_CODE';
+$lang["image_banks_label_select_providers"]='Выберите активных поставщиков';
+$lang["image_banks_view_on_provider_system"]='Просмотр в системе %PROVIDER';
+$lang["image_banks_system_unmet_dependencies"]='Плагин ImageBanks имеет неудовлетворенные системные зависимости!';
+$lang["image_banks_error_generic_parse"]='Не удалось разобрать конфигурацию провайдеров (для нескольких экземпляров)';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Неверный формат конфигурации для экземпляра \'%PROVIDER\' (поставщик)';
+$lang["image_banks_error_bad_url_scheme"]='Обнаружена недопустимая схема URL для экземпляра \'%PROVIDER\' (поставщик)';
+$lang["image_banks_error_unexpected_response"]='Извините, получен неожиданный ответ от провайдера. Пожалуйста, свяжитесь с системным администратором для дальнейшего расследования (см. журнал отладки).';

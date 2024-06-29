@@ -79,3 +79,4 @@ $lang["simplesaml_single_logout_url"]='Jedinstveni URL za odjavu';
 $lang["simplesaml_start_url"]='Početna/URL za prijavu';
 $lang["simplesaml_existing_config"]='Slijedite upute u bazi znanja kako biste migrirali svoju postojeću SAML konfiguraciju';
 $lang["simplesaml_test_site_url"]='URL testnog mjesta SimpleSAML-a';
+$lang["simplesaml_acs_url"]='ACS URL / URL za odgovor';

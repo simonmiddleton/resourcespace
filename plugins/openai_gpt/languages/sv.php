@@ -13,3 +13,4 @@ $lang["openai_gpt_prompt_return_text"]='Avslutningsprompt suffix (för att retur
 $lang["openai_gpt_temperature"]='Provtagningstemperatur mellan 0 och 1 (högre värden innebär att modellen tar större risker)';
 $lang["openai_gpt_max_tokens"]='Maximala tokens';
 $lang["openai_gpt_advanced"]='VARNING - Denna sektion är endast för teständamål och bör inte ändras på live-system. Att ändra några av plugin-alternativen här kommer att påverka beteendet hos alla metadatafält som har konfigurerats. Ändra med försiktighet!';
+$lang["openai_gpt_system_message"]='Ursprungligt systemmeddelande. Platshållare %%IN_TYPE%% och %%OUT_TYPE%% kommer att ersättas med \'text\' eller \'json\' beroende på käll-/måltypfält.';

@@ -25,3 +25,13 @@ $lang["image_banks_shutterstock_token"]='Shutterstock-token (<a href=\'https://w
 $lang["image_banks_shutterstock_result_limit"]='Limiet resultaten (max. 1000 voor gratis accounts)';
 $lang["image_banks_shutterstock_id"]='Shutterstock afbeeldings-ID';
 $lang["image_banks_createdfromimagebanks"]='Gemaakt met de Image Banks plugin';
+$lang["image_banks_image_bank_source"]='Beeldbank bron';
+$lang["image_banks_label_resourcespace_instances_cfg"]='Instanties toegang (formaat: i18n naam|basisURL|gebruikersnaam|sleutel|configuratie)';
+$lang["image_banks_resourcespace_file_information_description"]='ResourceSpace %SIZE_CODE grootte';
+$lang["image_banks_label_select_providers"]='Selecteer actieve aanbieders';
+$lang["image_banks_view_on_provider_system"]='Bekijk op %PROVIDER systeem';
+$lang["image_banks_system_unmet_dependencies"]='ImageBanks plugin heeft niet-voldane systeemafhankelijkheden!';
+$lang["image_banks_error_generic_parse"]='Kan de configuratie van providers (voor multi-instance) niet verwerken';
+$lang["image_banks_error_resourcespace_invalid_instance_cfg"]='Ongeldig configuratieformaat voor \'%PROVIDER\' (provider) instantie';
+$lang["image_banks_error_bad_url_scheme"]='Ongeldig URL-schema gevonden voor \'%PROVIDER\' (provider) instantie';
+$lang["image_banks_error_unexpected_response"]='Sorry, een onverwachte reactie ontvangen van de provider. Neem contact op met uw systeembeheerder voor verder onderzoek (zie debuglog).';

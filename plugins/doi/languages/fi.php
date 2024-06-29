@@ -59,3 +59,5 @@ $lang["doi_sure_register_resource"]='Jatketaanko x resurssin rekisteröintiä?';
 $lang["doi_show_meta"]='Näytä DOI:n metatiedot';
 $lang["doi_hide_meta"]='Piilota DOI metatiedot';
 $lang["doi_fetched_xml_from_MDS"]='Nykyinen XML-metatieto saatiin haettua onnistuneesti DataCiten metatietovarastosta';
+$lang["doi_info_wikipedia"]='https://fi.wikipedia.org/wiki/Digital_Object_Identifier';
+$lang["doi_sum_of"]='of';

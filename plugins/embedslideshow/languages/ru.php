@@ -23,3 +23,4 @@ $lang["embedslideshow_notransition"]='Нет автоматического пе
 $lang["embedslideshow_directlink"]='Не встроенный прямой URL-адрес';
 $lang["embedslideshow_directlinkopen"]='Открыть прямую ссылку (новая страница)';
 $lang["embedslideshow_dynamic_size"]='Динамическое изменение размера предварительного просмотра на основе размера плеера?';
+$lang["sizename_pixels"]='%name (%pixels пикселей)';

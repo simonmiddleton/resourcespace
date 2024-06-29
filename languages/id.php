@@ -2327,12 +2327,6 @@ $lang["message_type"]='Jenis Pesan';
 $lang["message_url"]='URL Pesan';
 $lang["sendbulkmessage"]='Kirim pesan massal';
 $lang["message_sent"]='Pesan terkirim';
-$lang["email_and_screen"]='Sure! Here\'s the translation:
-
-- Email: Surel
-- Screen: Layar
-
-I hope that helps! Let me know if you have any other strings you need translated.';
 $lang["sendbulkmailandmessage"]='Kirim email dan pesan massal';
 $lang["emailandmessagesent"]='Email dan pesan telah dikirim';
 $lang["confirm_remove_custom_usergroup_access"]='Ini akan mencabut akses grup pengguna khusus. Apakah Anda yakin?';
@@ -2744,7 +2738,6 @@ $lang["map_nasagibs_group"]='NASA GIBS';
 $lang["map_mapbox_group"]='Mapbox';
 $lang["map_mapboxid"]='ID
 ID';
-$lang["field_ref_and_name"]='%ref% - %name% can be translated as %ref% - %name%.';
 $lang["filestore"]='Penyimpanan Berkas';
 $lang["rs_ext_dependencies"]='Ketergantungan Eksternal ResourceSpace';
 $lang["write_access_to"]='Akses menulis ke';
@@ -2758,7 +2751,6 @@ $lang["megabyte-symbol"]='Megabita';
 $lang["gigabyte-symbol"]='Gigabyte';
 $lang["kilobyte-symbol-binary"]='KiB';
 $lang["megabyte-symbol-binary"]='Megabita (MiB)';
-$lang["gigabyte-symbol-binary"]='GiB stands for "Gibibyte" which is a unit of digital information storage capacity. In Bahasa Indonesia, it can be translated as "GiB" as it is a technical term commonly used in the context of digital asset management software.';
 $lang["terabyte-symbol-binary"]='Tebibait (TiB)';
 $lang["ref-title"]='Silakan terjemahkan: %ref - %title';
 $lang["user_group"]='Grup pengguna';
@@ -2958,3 +2950,6 @@ $lang["completed_unset_no_file"]='Sumber ditandai sebagai file hilang';
 $lang["resourcetypes_separator"]=', ';
 
 $lang["minute-abbreviated"]='MM';
+$lang["field_ref_and_name"]='%ref% - %name%';
+$lang["gigabyte-symbol-binary"]='GiB';
+$lang["email_and_screen"]='Email dan layar';

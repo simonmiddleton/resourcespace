@@ -70,3 +70,5 @@ $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field
 TMS %nome_do_módulo %campo_uid_tms';
 $lang["tms_link_confirm_delete_module_config"]='Você tem certeza de que deseja excluir esta configuração de módulo? Esta ação não pode ser desfeita!';
 $lang["tms_link_database_setup"]='Conexão de banco de dados TMS';
+$lang["tms_link_mediapaths_resource_reference_column"]='Coluna a ser usada na tabela MediaMaster para armazenar o ID do Recurso. Isso é opcional e é usado para evitar que vários recursos usem o mesmo ID de Media Master.';
+$lang["tms_link_write_to_debug_log"]='Incluir progresso do script no log de depuração do sistema (requer configuração de log de depuração separadamente). Atenção: Causará crescimento rápido do arquivo de log de depuração.';

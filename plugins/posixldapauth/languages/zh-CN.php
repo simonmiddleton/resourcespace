@@ -46,3 +46,4 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='无法连接到LDAP服�
 $lang["posixldapauth_unable_to_search_ldap_server"]='无法搜索LDAP服务器。';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% 失败，请检查设置。';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP搜索成功，但未找到0个组。';
+$lang["posixldapauth_rdn"]='RDN';

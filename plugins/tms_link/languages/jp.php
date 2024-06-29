@@ -67,3 +67,6 @@ $lang["tms_link_encoding"]='エンコーディング';
 $lang["tms_link_not_found_error_title"]='見つかりませんでした。';
 $lang["tms_link_not_deleted_error_detail"]='要求されたモジュール構成を削除できません。';
 $lang["tms_link_confirm_delete_module_config"]='このモジュールの設定を削除してもよろしいですか？この操作は元に戻すことができません！';
+$lang["tms_link_mediapaths_resource_reference_column"]='MediaMasterテーブルでリソースIDを保存するために使用する列。これはオプションであり、複数のリソースが同じMedia Master IDを使用するのを避けるために使用されます。';
+$lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field';
+$lang["tms_link_write_to_debug_log"]='システムデバッグログにスクリプトの進行状況を含める（デバッグログの設定が別途必要です）。注意：デバッグログファイルが急速に増加します。';

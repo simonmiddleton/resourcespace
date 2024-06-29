@@ -13,3 +13,4 @@ $lang["openai_gpt_prompt_return_text"]='Suffisso di completamento prompt (per re
 $lang["openai_gpt_temperature"]='Temperatura di campionamento compresa tra 0 e 1 (valori più alti significano che il modello assumerà maggiori rischi)';
 $lang["openai_gpt_max_tokens"]='Massimo numero di token';
 $lang["openai_gpt_advanced"]='ATTENZIONE - Questa sezione è solo per scopi di test e non dovrebbe essere modificata sui sistemi in produzione. La modifica di qualsiasi opzione del plugin qui influenzerà il comportamento di tutti i campi di metadati che sono stati configurati. Modificare con cautela!';
+$lang["openai_gpt_system_message"]='Testo iniziale del messaggio di sistema. I segnaposto %%IN_TYPE%% e %%OUT_TYPE%% saranno sostituiti da \'text\' o \'json\' a seconda dei tipi di campo sorgente/target';

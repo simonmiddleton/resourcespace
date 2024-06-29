@@ -6,3 +6,4 @@ $lang["embed_help"]='以下のHTMLをコピーして、このビデオをあな�
 $lang["embed_video_configuration"]='ビデオの埋め込み設定';
 $lang["specify_resourcetype"]='\'埋め込み\'機能が表示されるべきリソースタイプを指定してください。';
 $lang["video_resourcetype"]='ビデオリソースタイプ';
+$lang["embedvideo_share"]='ビデオを埋め込む';

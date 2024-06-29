@@ -53,3 +53,4 @@ $lang["rse_workflow_link_close"]='Lukk';
 $lang["rse_workflow_more_notes_title"]='Notater:';
 $lang["rse_workflow_email_from"]='E-postadresse å sende varsler fra (vil bruke %EMAILFROM% hvis tom):';
 $lang["rse_workflow_bcc_admin"]='Varsle systemadministratorer når bidragsyteren blir varslet';
+$lang["rse_workflow_state_notify_help"]='Brukere vil se ressurser i denne tilstanden som handlinger, i stedet for å motta enkle varsler';

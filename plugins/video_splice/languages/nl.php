@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='Video samenvoegen: Er is iets misgegaan. Neem con
 $lang["video_splice_no_export_folder"]='Kan export niet uitvoeren omdat er geen bestandspad is ingesteld voor de map voor video-export in het configuratiebestand.';
 $lang["video_splice_incorrect_quantity"]='Een geldige bron is toegevoegd aan of verwijderd uit de collectie sinds deze pagina is geladen. Probeer het opnieuw.';
 $lang["video_splice_createdfromvideosplice"]='Gemaakt met de Video Splice plugin';
+$lang["video-trim_output"]='Uitvoer';
+$lang["video_splice_error_invalid_action"]='Fout: Ongeldige actie';

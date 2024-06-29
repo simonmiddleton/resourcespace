@@ -68,3 +68,5 @@ $lang["tms_link_not_found_error_title"]='Inte hittad';
 $lang["tms_link_not_deleted_error_detail"]='Det går inte att ta bort den begärda modulkonfigurationen.';
 $lang["tms_link_uid_field"]='TMS %module_name %tms_uid_field översätts till "TMS %modulnamn %tms_uid_fält"';
 $lang["tms_link_confirm_delete_module_config"]='Är du säker på att du vill ta bort denna modulkonfiguration? Denna åtgärd kan inte ångras!';
+$lang["tms_link_mediapaths_resource_reference_column"]='Kolumn att använda i MediaMaster-tabellen för att lagra Resurs-ID. Detta är valfritt och används för att undvika att flera resurser använder samma Media Master-ID.';
+$lang["tms_link_write_to_debug_log"]='Inkludera skriptframsteg i systemets felsökningslogg (kräver att felsökningsloggning konfigureras separat). Varning: Kommer att orsaka snabb tillväxt av felsökningsloggfilen.';

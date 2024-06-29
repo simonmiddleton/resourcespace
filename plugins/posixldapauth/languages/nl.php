@@ -47,3 +47,4 @@ $lang["posixldapauth_could_not_connect_to_ldap_server"]='Kon geen verbinding mak
 $lang["posixldapauth_unable_to_search_ldap_server"]='Kan LDAP-server niet doorzoeken.';
 $lang["posixldapauth_ldap_call_failed_please_check_settings"]='%call% mislukt, controleer alstublieft de instellingen.';
 $lang["posixldapauth_ldap_search_successfull_but_no_groups_found"]='LDAP-zoekopdracht succesvol, maar er zijn geen groepen gevonden.';
+$lang["posixldapauth_test"]='Test';

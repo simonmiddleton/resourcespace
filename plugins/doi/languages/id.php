@@ -60,3 +60,4 @@ $lang["doi_sure_register_resource"]='Lanjutkan mendaftarkan x sumber daya?';
 $lang["doi_hide_meta"]='Sembunyikan metadata DOI';
 $lang["doi_fetched_xml_from_MDS"]='Metadata XMl saat ini berhasil diambil dari toko metadata DataCite';
 $lang["doi_show_meta"]='Tampilkan metadata DOI';
+$lang["doi_info_wikipedia"]='https://id.wikipedia.org/wiki/Digital_Object_Identifier';

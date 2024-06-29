@@ -43,3 +43,5 @@ $lang["video_splice_failure"]='Edição de vídeo: Algo deu errado. Por favor, e
 $lang["video_splice_no_export_folder"]='Não é possível realizar a exportação, pois nenhum caminho de arquivo para a pasta de exportação de vídeo foi definido no arquivo de configuração.';
 $lang["video_splice_incorrect_quantity"]='Um recurso válido foi removido ou adicionado à coleção desde que esta página foi carregada. Por favor, tente novamente.';
 $lang["video_splice_createdfromvideosplice"]='Criado a partir do plugin Video Splice';
+$lang["video-trim_output"]='Saída';
+$lang["video_splice_error_invalid_action"]='Erro: Ação inválida';

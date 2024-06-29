@@ -29,3 +29,6 @@ $lang["video_tracks_custom_video_formats_label"]='Пользовательски
 $lang["video_tracks_use_for_custom_video_formats_of_original_label"]='Разрешить использование доступных опций вывода файла для создания пользовательских форматов видео для исходного файла';
 $lang["video_tracks_transcode_now_or_notify_me_label"]='Отметьте, чтобы начать транскодирование сейчас. Если не отмечено, вы получите уведомление, когда файл будет готов';
 $lang["video_tracks_transcode_now_label"]='Транскодировать сейчас';
+$lang["video_tracks_select_generate_opt"]='Пожалуйста, выберите вариант генерации';
+$lang["video_tracks_save_alt_not_perm"]='Невозможно сохранить альтернативу без разрешения';
+$lang["video_tracks_upgrade_msg_deprecated_output_format"]='ВАЖНО! Плагин Video Tracks устарел настройки форматов вывода. Их можно установить только в config.php. Плагин не будет работать должным образом, пока параметр конфигурации не будет скопирован. Пожалуйста, скопируйте следующее:- %nl%####%nl%%output_formats_config%####%nl%';

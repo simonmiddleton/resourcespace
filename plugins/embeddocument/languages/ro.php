@@ -11,3 +11,4 @@ $lang["embeddocument_maximise"]='maximizați';
 $lang["embeddocument_heading"]='Configurare vizualizator documente la distanță';
 $lang["embeddocument_specify_resourcetype"]='Vă rugăm să specificați pentru ce tip de resurse ar trebui să apară funcționalitatea "încorporare".';
 $lang["embeddocument_document_resourcetype"]='Tip resursă: Vizualizator de documente la distanță';
+$lang["embeddocument_embed_share"]='Incorporează documentul';

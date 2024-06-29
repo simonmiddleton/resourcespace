@@ -60,3 +60,4 @@ $lang["doi_sure_register_resource"]='Fortsæt med at registrere x ressource(r)?'
 $lang["doi_show_meta"]='Vis DOI-metadata';
 $lang["doi_hide_meta"]='Skjul DOI-metadata';
 $lang["doi_fetched_xml_from_MDS"]='Nuværende XML-metadata kunne hentes succesfuldt fra DataCites metadata-lager';
+$lang["doi_info_wikipedia"]='https://da.wikipedia.org/wiki/Digital_Object_Identifier';

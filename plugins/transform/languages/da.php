@@ -76,3 +76,4 @@ $lang["cropper_use_srgb"]='Brug sRGB';
 $lang["transform_update_preview"]='Opdater forhåndsvisning';
 $lang["transform_preset_sizes"]='Vælg fra foruddefineret målstørrelse';
 $lang["error_crop_invalid"]='Vælg venligst en region af billedet';
+$lang["px"]='px';

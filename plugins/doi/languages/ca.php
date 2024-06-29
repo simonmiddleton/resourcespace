@@ -60,3 +60,4 @@ $lang["doi_sure_register_resource"]='Voleu continuar registrant x recurs(sos)?';
 $lang["doi_show_meta"]='Mostra les metadades del DOI';
 $lang["doi_hide_meta"]='Amaga les metadades DOI';
 $lang["doi_fetched_xml_from_MDS"]='Les metadades XML actuals s\'han pogut obtenir correctament del magatzem de metadades de DataCite';
+$lang["doi_info_wikipedia"]='https://ca.wikipedia.org/wiki/Digital_Object_Identifier';

@@ -8,3 +8,4 @@ $lang["grant_edit_add"]='Abilita l\'accesso alla modifica per i seguenti utenti/
 $lang["grant_edit_date"]='Data di scadenza per l\'accesso alla modifica';
 $lang["grant_edit_list"]='Utenti attuali con accesso aggiuntivo di modifica';
 $lang["grant_edit_delete_user"]='Conferma la rimozione dell\'accesso potenziato per';
+$lang["grant_edit_group_list"]='Gruppi attuali con accesso di modifica aggiuntivo';

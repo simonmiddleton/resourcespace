@@ -23,3 +23,4 @@ $lang["embedslideshow_notransition"]='Sem transição automática';
 $lang["embedslideshow_directlink"]='URL direto não incorporado';
 $lang["embedslideshow_directlinkopen"]='Abrir link direto (nova página)';
 $lang["embedslideshow_dynamic_size"]='Redimensionamento dinâmico da pré-visualização com base no tamanho do reprodutor?';
+$lang["sizename_pixels"]='%name (%pixels pixels)';

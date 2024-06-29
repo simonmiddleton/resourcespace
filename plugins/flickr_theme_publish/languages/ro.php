@@ -51,3 +51,5 @@ $lang["flickr_nice_progress_min_timeout"]='Timpul dintre semnalele de progres (m
 $lang["flickr_api_key"]='Cheie API Flickr';
 $lang["flickr_api_secret"]='Cheia API secretă Flickr';
 $lang["flickr_warn_no_title_access"]='Publicarea nu este permisă fără acces la câmpul de titlu (ID #%id). Vă rugăm să contactați un administrator!';
+$lang["flickr-publish-public"]='Public';
+$lang["flickr-publish-private"]='Privat';
