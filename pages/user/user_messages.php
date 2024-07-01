@@ -275,7 +275,7 @@ include "../../include/header.php";
  
     jQuery(document).ready(function()
         {
-        // Selecting and deselecting all messages
+        // Selecting and deselecting all messages shown
         jQuery("#messages-select-all").click(function(e)
             {
             var input = e.target;
@@ -290,20 +290,14 @@ include "../../include/header.php";
                 }
             else
                 {
-                jQuery.get('<?php echo $baseurl; ?>/pages/ajax/message.php?getrefs=<?php echo $userref; ?>',function(data) {
-                    var json_refs = JSON.parse(data);
-                    for (var i = 0; i < json_refs.length; i++)
-                        {
-                        var message_ref = parseInt(json_refs[i].ref);
-                        var message_array_index = selected_messages.indexOf(message_ref);
-                        if (message_array_index < 0)
-                            {
-                            selected_messages.push(message_ref);
-                            }
-                        }
-                    display_message_actions(selected_messages.length > 0);
-                    });
                 jQuery('.message-checkbox').prop('checked', true);
+                
+                jQuery('.message-checkbox').each(function() {
+                    var message_ref = jQuery(this).data('message');
+                    selected_messages.push(message_ref);
+                });
+
+                display_message_actions(selected_messages.length > 0);
                 select_all_checkbox = true;
                 }
             });
